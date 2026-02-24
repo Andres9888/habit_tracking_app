@@ -5,7 +5,7 @@
 import { StyleSheet } from 'react-native';
 
 import { borderRadius } from '../../../theme/spacing';
-import { typography } from '@/theme/typography';
+import { typography, fontFamilies} from '@/theme/typography';
 
 export const scienceStyles = StyleSheet.create({
   researchLinkButton: {
@@ -23,6 +23,7 @@ export const scienceStyles = StyleSheet.create({
   },
   researchLinkText: {
     color: '#2563EB',
+    fontFamily: fontFamilies.primary.text,
     fontSize: typography.bodySmall.fontSize,
     fontWeight: '600',
   },
@@ -51,6 +52,7 @@ export const scienceStyles = StyleSheet.create({
   },
   scienceLabel: {
     color: '#166534',
+    fontFamily: fontFamilies.primary.text,
     fontSize: typography.caption.fontSize,
     fontWeight: '700',
     letterSpacing: 0.8,
@@ -58,6 +60,7 @@ export const scienceStyles = StyleSheet.create({
   },
   scienceQuote: {
     color: '#166534',
+    fontFamily: fontFamilies.primary.text,
     fontSize: 13,
     fontStyle: 'italic',
     lineHeight: 24,

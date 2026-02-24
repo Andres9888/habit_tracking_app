@@ -5,7 +5,7 @@
 // Intentional: static color for share card rendering — white text on gradient backgrounds
 import { StyleSheet } from 'react-native';
 import { colors } from '@/theme/colors';
-import { typography } from '../../../theme/typography';
+import { typography, fontFamilies} from '../../../theme/typography';
 
 export const shareCardFooterStyles = StyleSheet.create({
   appInfo: {
@@ -14,6 +14,7 @@ export const shareCardFooterStyles = StyleSheet.create({
   },
   appName: {
     color: colors.text.inverse,
+    fontFamily: fontFamilies.primary.text,
     fontSize: 17,
     fontWeight: '600',
     textShadowColor: 'rgba(0, 0, 0, 0.3)',
@@ -34,11 +35,13 @@ export const shareCardFooterStyles = StyleSheet.create({
   },
   scienceBadgeText: {
     color: colors.text.inverse,
+    fontFamily: fontFamilies.primary.text,
     fontSize: typography.bodySmall.fontSize,
     fontWeight: '500',
   },
   userName: {
     color: 'rgba(255, 255, 255, 0.9)',
+    fontFamily: fontFamilies.primary.text,
     fontSize: typography.bodySmall.fontSize,
     fontWeight: '400',
   },

@@ -1,120 +1,94 @@
 /**
- * BottomActionBar — Symmetric three-zone layout.
- * Left: Settings pill · Center: Raised Add button · Right: Templates pill.
+ * BottomActionBar — Symmetric three-zone layout with frosted glass.
+ * Left: Settings pill · Center: Raised squircle Add · Right: Templates pill.
  */
 
 import { memo } from 'react';
-import { View, Text, Pressable } from 'react-native';
+import { View, Pressable } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated, { FadeInUp } from 'react-native-reanimated';
+import { BlurView } from 'expo-blur';
 import { BookOpen, Settings, Plus } from 'lucide-react-native';
-import { useIsDark } from '../../../../theme/ThemeContext';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import { useBarAnimations } from './useBarAnimations';
+import { PillButton } from './PillButton';
 import { styles } from './BottomActionBar.styles';
 import type { BottomActionBarProps } from './types';
 
 const ENTERING = FadeInUp.duration(320).springify().damping(18);
-const BG_LIGHT = 'rgba(255,255,255,0.92)';
-const BG_DARK = 'rgba(17,17,17,0.92)';
+const BLUR_INTENSITY = 40;
+const BORDER_LIGHT = 'rgba(221,216,210,0.45)';
+const BORDER_DARK = 'rgba(55,65,81,0.3)';
+const FAB_BORDER_LIGHT = 'rgba(245,241,237,0.9)';
+const FAB_BORDER_DARK = 'rgba(17,24,39,0.9)';
 
 function BottomActionBarComponent(props: BottomActionBarProps) {
   const insets = useSafeAreaInsets();
-  const isDark = useIsDark();
+  const { colors, isDark } = useThemeColors();
   const anim = useBarAnimations();
-  const iconColor = isDark ? '#9ca3af' : '#44403c';
 
   return (
     <Animated.View entering={ENTERING}>
-      <View
-        style={[
-          styles.container,
-          isDark ? styles.containerBorderDark : styles.containerBorderLight,
-          {
-            backgroundColor: isDark ? BG_DARK : BG_LIGHT,
-            paddingBottom: Math.max(insets.bottom, 12),
-          },
-        ]}
-      >
-        {/* Left zone: Settings pill */}
-        <View style={styles.leftZone}>
-          <Animated.View style={anim.settingsStyle}>
-            <Pressable
-              accessibilityLabel='Open settings'
-              accessibilityRole='button'
-              style={[
-                styles.settingsButton,
-                isDark ? styles.settingsDark : styles.settingsLight,
-              ]}
-              onPress={props.onOpenSettings}
-              onPressIn={anim.onSettingsPressIn}
-              onPressOut={anim.onSettingsPressOut}
-            >
-              <Settings color={iconColor} size={15} strokeWidth={2.25} />
-              <Text
-                style={[
-                  styles.settingsLabel,
-                  isDark ? styles.settingsLabelDark : styles.settingsLabelLight,
-                ]}
-              >
-                Settings
-              </Text>
-            </Pressable>
-          </Animated.View>
-        </View>
+      <BlurView intensity={BLUR_INTENSITY} tint={isDark ? 'dark' : 'light'}>
+        <View
+          style={[
+            styles.container,
+            {
+              borderTopColor: isDark ? BORDER_DARK : BORDER_LIGHT,
+              paddingBottom: Math.max(insets.bottom, 12),
+            },
+          ]}
+        >
+          <View style={styles.leftZone}>
+            <Animated.View style={anim.settingsStyle}>
+              <PillButton
+                accessibilityLabel='Open settings'
+                icon={<Settings color={colors.text.primary} size={15} strokeWidth={2.25} />}
+                label='Settings'
+                labelColor={colors.text.primary}
+                onPress={props.onOpenSettings}
+                onPressIn={anim.onSettingsPressIn}
+                onPressOut={anim.onSettingsPressOut}
+              />
+            </Animated.View>
+          </View>
 
-        {/* Center zone: Raised Add button */}
-        <View style={styles.centerZone}>
-          <Animated.View style={anim.addStyle}>
-            <Pressable
-              accessibilityLabel='Add new habit'
-              accessibilityRole='button'
-              style={[
-                styles.addButton,
-                isDark
-                  ? [styles.addBorderDark, styles.addButtonDark]
-                  : styles.addBorderLight,
-              ]}
-              onPress={props.onAddHabit}
-              onPressIn={anim.onAddPressIn}
-              onPressOut={anim.onAddPressOut}
-            >
-              <Plus color='#ffffff' size={22} strokeWidth={2.5} />
-            </Pressable>
-          </Animated.View>
-        </View>
-
-        {/* Right zone: Templates pill with badge */}
-        <View style={styles.rightZone}>
-          <Animated.View style={anim.templatesStyle}>
-            <View style={styles.templatesWrapper}>
+          <View style={styles.centerZone}>
+            <Animated.View style={anim.addStyle}>
               <Pressable
-                accessibilityLabel='Browse habit templates'
+                accessibilityLabel='Add new habit'
                 accessibilityRole='button'
-                style={styles.templatesButton}
-                onPress={() => {
-                  props.onDismissTemplateBadge();
-                  props.onOpenTemplates();
-                }}
+                style={[
+                  styles.addButton,
+                  {
+                    backgroundColor: colors.primary[600],
+                    borderColor: isDark ? FAB_BORDER_DARK : FAB_BORDER_LIGHT,
+                  },
+                ]}
+                onPress={props.onAddHabit}
+                onPressIn={anim.onAddPressIn}
+                onPressOut={anim.onAddPressOut}
+              >
+                <Plus color='#ffffff' size={24} strokeWidth={2.5} />
+              </Pressable>
+            </Animated.View>
+          </View>
+
+          <View style={styles.rightZone}>
+            <Animated.View style={anim.templatesStyle}>
+              <PillButton
+                accessibilityLabel='Browse habit templates'
+                icon={<BookOpen color={colors.text.secondary} size={14} strokeWidth={2.25} />}
+                label='Templates'
+                labelColor={colors.text.secondary}
+                onPress={props.onOpenTemplates}
                 onPressIn={anim.onTemplatesPressIn}
                 onPressOut={anim.onTemplatesPressOut}
-              >
-                <BookOpen color='#ffffff' size={14} strokeWidth={2.25} />
-                <Text style={styles.templatesLabel}>Templates</Text>
-              </Pressable>
-              {props.showTemplateBadge && (
-                <View
-                  style={[
-                    styles.badgeDot,
-                    isDark
-                      ? styles.badgeDotBorderDark
-                      : styles.badgeDotBorderLight,
-                  ]}
-                />
-              )}
-            </View>
-          </Animated.View>
+              />
+            </Animated.View>
+          </View>
         </View>
-      </View>
+      </BlurView>
     </Animated.View>
   );
 }

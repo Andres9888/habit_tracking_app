@@ -44,6 +44,7 @@ export const statusStyles = StyleSheet.create({
   },
   checkmarkText: {
     color: colors.text.inverse,
+    fontFamily: fontFamilies.primary.text,
     fontSize: typography.bodySmall.fontSize,
     fontWeight: 'bold',
   },
@@ -83,5 +84,5 @@ export const statusStyles = StyleSheet.create({
     justifyContent: 'center',
     width: 24,
   },
-  warningText: { fontSize: typography.caption.fontSize },
+  warningText: { fontFamily: fontFamilies.primary.text, fontSize: typography.caption.fontSize },
 });

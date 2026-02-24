@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { fontFamilies } from '@/theme/typography';
 
 export const customizeStyles = StyleSheet.create({
   customizeSection: {
@@ -8,6 +9,7 @@ export const customizeStyles = StyleSheet.create({
     backgroundColor: '#f3f4f6',
     borderRadius: 8,
     color: '#78716c',
+    fontFamily: fontFamilies.primary.text,
     fontSize: 13,
     fontWeight: '500',
     overflow: 'hidden',
@@ -16,6 +18,7 @@ export const customizeStyles = StyleSheet.create({
   },
   customizeTitle: {
     color: '#1c1917',
+    fontFamily: fontFamilies.primary.text,
     fontSize: 17,
     fontWeight: '700',
     letterSpacing: -0.2,

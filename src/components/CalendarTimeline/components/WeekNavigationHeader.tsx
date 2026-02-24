@@ -1,22 +1,17 @@
 import React from 'react';
-import { View, Text, Pressable } from 'react-native';
+import { View, Text } from 'react-native';
 import { ChevronLeft, ChevronRight } from 'lucide-react-native';
 
-import type { CalendarColors } from '../CalendarTimeline.types';
+import { AnimatedPressable } from '../../ui/AnimatedPressable';
+import { colors } from '../../../theme/colors';
+import type { WeekNavigationHeaderProps } from '../CalendarTimeline.types';
 import { CompletionRing } from './CompletionRing';
 
-interface WeekNavigationHeaderProps {
-  dateRangeText: string;
-  onPreviousWeek?: () => void;
-  onNextWeek?: () => void;
-  canNavigateForward: boolean;
-  colors: CalendarColors;
-  onJumpToToday?: () => void;
-  onDateRangePress?: () => void;
-  completedToday?: number;
-  totalHabits?: number;
-  reduceMotion?: boolean;
-}
+const NAV_BUTTON_STYLE = {
+  backgroundColor: colors.gray[50],
+  borderWidth: 1,
+  borderColor: colors.gray[200],
+};
 
 /** Header row: ◀ [Title] ▶ on left, completion ring on right */
 export const WeekNavigationHeader: React.FC<WeekNavigationHeaderProps> = ({
@@ -24,7 +19,7 @@ export const WeekNavigationHeader: React.FC<WeekNavigationHeaderProps> = ({
   onPreviousWeek,
   onNextWeek,
   canNavigateForward,
-  colors,
+  colors: calColors,
   onJumpToToday,
   onDateRangePress,
   completedToday = 0,
@@ -34,68 +29,64 @@ export const WeekNavigationHeader: React.FC<WeekNavigationHeaderProps> = ({
   const isViewingPast = canNavigateForward && !!onJumpToToday;
 
   return (
-    <View className='mb-3 flex-row items-center justify-between'>
+    <View className='mb-2.5 flex-row items-center justify-between'>
       {/* LEFT: nav arrows flanking title */}
       <View className='flex-row items-center' style={{ gap: 6 }}>
-        <Pressable
+        <AnimatedPressable
           accessibilityLabel='Previous week'
           accessibilityRole='button'
-          className='h-7 w-7 items-center justify-center rounded-full'
-          style={{
-            backgroundColor: '#fafaf9',
-            borderWidth: 1,
-            borderColor: '#e7e5e4',
-          }}
+          animationConfig={{ pressScale: 0.85 }}
+          className='h-[26px] w-[26px] items-center justify-center rounded-full'
+          style={NAV_BUTTON_STYLE}
           hitSlop={{ bottom: 8, left: 8, right: 8, top: 8 }}
           onPress={onPreviousWeek}
         >
-          <ChevronLeft color='#57534e' size={14} strokeWidth={2.5} />
-        </Pressable>
+          <ChevronLeft color={colors.gray[600]} size={13} strokeWidth={2.5} />
+        </AnimatedPressable>
 
-        <Pressable
-          accessibilityHint={
-            isViewingPast ? 'Tap to return to today' : 'Tap to open calendar'
-          }
+        <AnimatedPressable
+          accessibilityHint={isViewingPast ? 'Tap to return to today' : 'Tap to open calendar'}
           accessibilityLabel={dateRangeText}
+          animationConfig={{ pressScale: 0.97 }}
           onPress={isViewingPast ? onJumpToToday : onDateRangePress}
         >
           <Text
-            className='text-[17px] font-extrabold leading-[22px]'
-            style={{ color: colors.primaryText, letterSpacing: -0.3 }}
+            className='text-[16px] font-extrabold leading-[20px]'
+            style={{ color: calColors.primaryText, letterSpacing: -0.3 }}
           >
             {dateRangeText}
           </Text>
           {isViewingPast && (
             <Text
               className='text-[11px] font-medium'
-              style={{ color: '#f59e0b' }}
+              style={{ color: colors.streak[300] }}
             >
               Today →
             </Text>
           )}
-        </Pressable>
+        </AnimatedPressable>
 
-        <Pressable
+        <AnimatedPressable
           accessibilityLabel='Next week'
           accessibilityRole='button'
           accessibilityState={{ disabled: !canNavigateForward }}
-          className='h-7 w-7 items-center justify-center rounded-full'
+          animationConfig={{ pressScale: 0.85 }}
+          className='h-[26px] w-[26px] items-center justify-center rounded-full'
           style={{
-            backgroundColor: '#fafaf9',
-            borderWidth: 1,
-            borderColor: '#e7e5e4',
+            ...NAV_BUTTON_STYLE,
             opacity: canNavigateForward ? 1 : 0.3,
           }}
           disabled={!canNavigateForward}
+          disableAnimation={!canNavigateForward}
           hitSlop={{ bottom: 8, left: 8, right: 8, top: 8 }}
           onPress={onNextWeek}
         >
           <ChevronRight
-            color={canNavigateForward ? '#57534e' : '#a8a29e'}
-            size={14}
+            color={canNavigateForward ? colors.gray[600] : colors.gray[400]}
+            size={13}
             strokeWidth={2.5}
           />
-        </Pressable>
+        </AnimatedPressable>
       </View>
 
       {/* RIGHT: completion ring */}

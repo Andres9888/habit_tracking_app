@@ -12,7 +12,7 @@
 import React, { memo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
-import { typography } from '@/theme/typography';
+import { typography, fontFamilies} from '@/theme/typography';
 import type { HeatmapLegendProps } from './types';
 import { LEGEND_INDICATOR_SIZE, COLORS, CELL_BORDER_RADIUS } from './constants';
 
@@ -90,6 +90,7 @@ export const HeatmapLegend = memo(function HeatmapLegend({
 
 const styles = StyleSheet.create({
   completionText: {
+    fontFamily: fontFamilies.primary.text,
     fontSize: typography.caption.fontSize,
     fontWeight: '600',
   },
@@ -107,6 +108,7 @@ const styles = StyleSheet.create({
   },
   indicatorLabel: {
     color: COLORS.TEXT_SECONDARY,
+    fontFamily: fontFamilies.primary.text,
     fontSize: typography.tabBar.fontSize,
     marginLeft: 4,
   },

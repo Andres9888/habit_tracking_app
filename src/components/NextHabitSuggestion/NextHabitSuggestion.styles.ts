@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { fontFamilies } from '@/theme/typography';
 
 export const styles = StyleSheet.create({
   badge: {
@@ -10,7 +11,7 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 4,
   },
-  badgeText: { color: '#b45309', fontSize: 12, fontWeight: '600' },
+  badgeText: { color: '#b45309', fontFamily: fontFamilies.primary.text, fontSize: 12, fontWeight: '600' },
   completedContainer: {
     alignItems: 'center',
     backgroundColor: '#ecfdf5',
@@ -20,9 +21,10 @@ export const styles = StyleSheet.create({
     padding: 20,
   },
   completedEmoji: { fontSize: 36, marginBottom: 8 },
-  completedSubtitle: { color: '#059669', fontSize: 14 },
+  completedSubtitle: { color: '#059669', fontFamily: fontFamilies.primary.text, fontSize: 14 },
   completedTitle: {
     color: '#065f46',
+    fontFamily: fontFamilies.primary.text,
     fontSize: 17,
     fontWeight: '600',
     marginBottom: 4,
@@ -48,11 +50,12 @@ export const styles = StyleSheet.create({
     right: 0,
     top: 0,
   },
-  habitHint: { color: '#a8a29e', fontSize: 13 },
+  habitHint: { color: '#a8a29e', fontFamily: fontFamilies.primary.text, fontSize: 13 },
   habitIcon: { fontSize: 32 },
   habitInfo: { flex: 1 },
   habitName: {
     color: '#1c1917',
+    fontFamily: fontFamilies.primary.text,
     fontSize: 17,
     fontWeight: '600',
     marginBottom: 2,
@@ -64,5 +67,5 @@ export const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginBottom: 12,
   },
-  progress: { color: '#a8a29e', fontSize: 13, fontWeight: '500' },
+  progress: { color: '#a8a29e', fontFamily: fontFamilies.primary.text, fontSize: 13, fontWeight: '500' },
 });

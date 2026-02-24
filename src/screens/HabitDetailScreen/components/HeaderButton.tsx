@@ -8,6 +8,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import * as Haptics from 'expo-haptics';
 import { useThemeColors } from '../../../theme/ThemeContext';
+import { fontFamilies } from '../../../theme/typography';
 import { buttonShadow } from './DetailHeader.constants';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
@@ -104,6 +105,7 @@ const s = StyleSheet.create({
     paddingHorizontal: 14,
   },
   textLabel: {
+    fontFamily: fontFamilies.primary.text,
     fontSize: 14,
     fontWeight: '500',
     letterSpacing: -0.2,

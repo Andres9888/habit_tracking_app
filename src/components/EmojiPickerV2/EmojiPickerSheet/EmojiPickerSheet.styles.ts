@@ -6,7 +6,7 @@ import { StyleSheet, Dimensions } from 'react-native';
 
 import { colors } from '../../../theme/colors';
 import { borderRadius, shadows, spacing } from '../../../theme/spacing';
-import { typography } from '../../../theme/typography';
+import { typography, fontFamilies} from '../../../theme/typography';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 export const SHEET_HEIGHT_COLLAPSED = SCREEN_HEIGHT * 0.6;
@@ -65,6 +65,7 @@ export const styles = StyleSheet.create({
   searchInput: {
     color: colors.gray[900],
     flex: 1,
+    fontFamily: fontFamilies.primary.text,
     fontSize: typography.body.fontSize,
     marginLeft: spacing.sm,
   },

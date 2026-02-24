@@ -1,11 +1,8 @@
 import { colors } from '../../../theme/colors';
+import { shadows } from '../../../theme/spacing';
 
 export const buttonShadow = {
-  elevation: 4,
-  shadowColor: '#1c1917',
-  shadowOffset: { height: 4, width: 0 },
-  shadowOpacity: 0.08,
-  shadowRadius: 16,
+  ...shadows.floatingActionButton,
 } as const;
 
 export const iconShadow = {

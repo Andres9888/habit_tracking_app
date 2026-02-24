@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { colors } from '../../theme/colors';
+import { fontFamilies } from '../../theme/typography';
 
 export const styles = StyleSheet.create({
   bottomContainer: {
@@ -28,6 +29,7 @@ export const styles = StyleSheet.create({
   },
   ctaText: {
     color: '#FFFFFF',
+    fontFamily: fontFamilies.primary.text,
     fontSize: 17,
     fontWeight: '600',
   },
@@ -53,6 +55,7 @@ export const styles = StyleSheet.create({
   },
   nextText: {
     color: '#FFFFFF',
+    fontFamily: fontFamilies.primary.text,
     fontSize: 17,
     fontWeight: '600',
   },
@@ -75,6 +78,7 @@ export const styles = StyleSheet.create({
   },
   skipText: {
     color: '#6B7280',
+    fontFamily: fontFamilies.primary.text,
     fontSize: 17,
     fontWeight: '500',
   },

@@ -16,6 +16,7 @@ import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { useThemeColors } from '../../theme/ThemeContext';
+import { fontFamilies } from '@/theme/typography';
 
 interface RetryableErrorViewProps {
   /** The error object or message string */
@@ -59,6 +60,7 @@ export function RetryableErrorView({
     },
     description: {
       color: colors.text.secondary,
+      fontFamily: fontFamilies.primary.text,
       fontSize: 13,
       lineHeight: 20,
       marginBottom: 20,
@@ -82,6 +84,7 @@ export function RetryableErrorView({
     },
     retryText: {
       color: colors.text.inverse,
+      fontFamily: fontFamilies.primary.text,
       fontSize: 15,
       fontWeight: '600',
     },
@@ -91,11 +94,13 @@ export function RetryableErrorView({
     },
     secondaryText: {
       color: colors.text.secondary,
+      fontFamily: fontFamilies.primary.text,
       fontSize: 15,
       fontWeight: '500',
     },
     title: {
       color: colors.text.primary,
+      fontFamily: fontFamilies.primary.text,
       fontSize: compact ? 17 : 20,
       fontWeight: '600',
       marginBottom: 6,

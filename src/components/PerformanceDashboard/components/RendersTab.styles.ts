@@ -3,6 +3,7 @@
  */
 
 import { StyleSheet } from 'react-native';
+import { fontFamilies } from '@/theme/typography';
 
 export const rendersStyles = StyleSheet.create({
   compDuration: {
@@ -11,7 +12,7 @@ export const rendersStyles = StyleSheet.create({
     fontSize: 10,
     width: 45,
   },
-  compName: { color: 'rgba(255,255,255,0.8)', flex: 1, fontSize: 10 },
+  compName: { color: 'rgba(255,255,255,0.8)', flex: 1, fontFamily: fontFamilies.monospace, fontSize: 10 },
   compRenders: {
     color: 'rgba(255,255,255,0.5)',
     fontFamily: 'monospace',

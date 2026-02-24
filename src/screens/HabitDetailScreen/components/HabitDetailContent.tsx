@@ -6,7 +6,7 @@ import { MonthlyCalendarGrid } from '../../../components/BinaryHeatmap';
 import ErrorBoundary from '../../../components/ErrorBoundary';
 import { HabitStrengthSection } from '../../../components/HabitStrengthSection';
 import { useThemeColors } from '../../../theme';
-import { colors } from '../../../theme/colors';
+import { shadows } from '../../../theme/spacing';
 import type { Habit } from '../../../features/habits/types';
 
 interface HabitDetailContentProps {
@@ -56,7 +56,6 @@ export function HabitDetailContent({
 }: HabitDetailContentProps) {
   const { colors, isDark } = useThemeColors();
   const cardBg = isDark ? colors.card : '#FFFFFF';
-  const shadowColor = isDark ? '#000000' : '#1c1917';
   const borderColor = isDark ? colors.border : '#DDD8D2';
   const labelColor = isDark ? colors.text.tertiary : '#9C958D';
 
@@ -76,11 +75,7 @@ export function HabitDetailContent({
             entering={anim(300)}
             style={{
               backgroundColor: cardBg,
-              elevation: 4,
-              shadowColor,
-              shadowOffset: { height: 4, width: 0 },
-              shadowOpacity: isDark ? 0.3 : 0.08,
-              shadowRadius: 16,
+              ...shadows.card,
             }}
           >
             <ErrorBoundary>
@@ -103,11 +98,7 @@ export function HabitDetailContent({
         entering={anim(420)}
         style={{
           backgroundColor: cardBg,
-          elevation: 4,
-          shadowColor,
-          shadowOffset: { height: 4, width: 0 },
-          shadowOpacity: isDark ? 0.3 : 0.08,
-          shadowRadius: 16,
+          ...shadows.card,
         }}
       >
         <ErrorBoundary>

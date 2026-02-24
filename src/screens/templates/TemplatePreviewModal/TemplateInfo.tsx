@@ -5,6 +5,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { useThemeColors } from '../../../theme/ThemeContext';
+import { fontFamilies } from '../../../theme/typography';
 import type { TemplateInfoProps } from './types';
 
 const localStyles = StyleSheet.create({
@@ -19,12 +20,14 @@ const localStyles = StyleSheet.create({
     padding: 12,
   },
   infoPillLabel: {
+    fontFamily: fontFamilies.primary.text,
     fontSize: 13,
     fontWeight: '600',
     marginBottom: 4,
     textTransform: 'uppercase',
   },
   infoPillValue: {
+    fontFamily: fontFamilies.primary.text,
     fontSize: 17,
     fontWeight: '700',
   },

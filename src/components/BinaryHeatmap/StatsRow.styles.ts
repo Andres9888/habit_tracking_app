@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 
 import { COLORS, FOCUS } from './constants';
-import { typography } from '@/theme/typography';
+import { typography, fontFamilies} from '@/theme/typography';
 import { useThemeColors } from '@/theme/ThemeContext';
 
 const STATS_CONFIG = {
@@ -41,6 +41,7 @@ export const styles = StyleSheet.create({
   } as ViewStyle,
   frequencyText: {
     color: COLORS.TEXT_PRIMARY,
+    fontFamily: fontFamilies.primary.text,
     fontSize: typography.caption.fontSize,
     fontWeight: '600',
   } as TextStyle,
@@ -62,6 +63,7 @@ export const styles = StyleSheet.create({
     paddingVertical: STATS_CONFIG.BADGE_PADDING_Y,
   } as ViewStyle,
   streakText: {
+    fontFamily: fontFamilies.primary.text,
     fontSize: typography.caption.fontSize,
     fontWeight: '600',
   } as TextStyle,

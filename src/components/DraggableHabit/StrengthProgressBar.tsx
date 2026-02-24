@@ -17,7 +17,7 @@ import { getStrengthEmoji } from './strengthUtils';
 import { useCountingPercent } from './useCountingPercent';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { borderRadius } from '../../theme/spacing';
-import { typography } from '../../theme/typography';
+import { typography, fontFamilies} from '../../theme/typography';
 
 interface StrengthProgressBarProps {
   strengthPercent: number;
@@ -39,6 +39,7 @@ export function StrengthProgressBar({
       <View className='flex-1 items-center justify-center'>
         <ReAnimated.Text
           style={[
+            { fontFamily: fontFamilies.primary.text },
             { fontSize: typography.heading2.fontSize, textAlign: 'center' },
             strengthEmojiAnimatedStyle,
           ]}

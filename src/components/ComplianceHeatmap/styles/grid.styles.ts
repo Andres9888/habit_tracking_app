@@ -3,7 +3,8 @@
  */
 
 import { StyleSheet } from 'react-native';
-import { colors } from '../../../theme/colors';
+import { colors } from '../../../theme/colors'
+import { fontFamilies } from '../../../theme/typography';;
 import { spacing } from '../../../theme/spacing';
 import { CELL_SIZE } from '../ComplianceHeatmap.constants';
 
@@ -18,6 +19,7 @@ export const gridStyles = StyleSheet.create({
   },
   cellText: {
     color: colors.surface,
+    fontFamily: fontFamilies.primary.text,
     fontSize: 8,
     fontWeight: '600',
   },

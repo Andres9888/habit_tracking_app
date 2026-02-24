@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { typography } from '@/theme/typography';
+import { typography, fontFamilies} from '@/theme/typography';
 
 export const celebrationStyles = StyleSheet.create({
   celebrationContainer: {
@@ -18,17 +18,20 @@ export const celebrationStyles = StyleSheet.create({
   },
   celebrationSubtext: {
     color: '#92400e', // amber-800
+    fontFamily: fontFamilies.primary.text,
     fontSize: 13,
     fontWeight: '500',
   },
   celebrationTitle: {
     color: '#78350f', // amber-900
+    fontFamily: fontFamilies.primary.text,
     fontSize: typography.body.fontSize,
     fontWeight: '700',
     marginBottom: 2,
   },
   nextMilestoneText: {
     color: '#92400e', // amber-800
+    fontFamily: fontFamilies.primary.text,
     fontSize: typography.caption.fontSize,
     marginTop: 8,
   },

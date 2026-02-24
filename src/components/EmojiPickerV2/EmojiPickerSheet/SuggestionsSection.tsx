@@ -10,7 +10,7 @@ import { SuggestionEmojiCell } from './SuggestionEmojiCell';
 
 import { colors } from '../../../theme/colors';
 import { borderRadius, spacing } from '../../../theme/spacing';
-import { typography } from '../../../theme/typography';
+import { typography, fontFamilies} from '../../../theme/typography';
 
 interface SuggestionsSectionProps {
   habitName: string;
@@ -70,6 +70,7 @@ export const suggestionStyles = StyleSheet.create({
   },
   headerText: {
     color: colors.warning[700],
+    fontFamily: fontFamilies.primary.text,
     fontSize: typography.bodySmall.fontSize,
     fontWeight: '600',
     marginLeft: spacing.sm,

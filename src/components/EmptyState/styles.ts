@@ -3,7 +3,7 @@
  */
 
 import { StyleSheet } from 'react-native';
-import { typography } from '../../theme/typography';
+import { typography, fontFamilies} from '../../theme/typography';
 
 export const styles = StyleSheet.create({
   container: {
@@ -49,6 +49,7 @@ export const styles = StyleSheet.create({
     fontSize: typography.body.fontSize,
   },
   templateName: {
+    fontFamily: fontFamilies.primary.text,
     fontSize: typography.bodySmall.fontSize,
     fontWeight: '500',
   },

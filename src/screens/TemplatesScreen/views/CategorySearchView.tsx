@@ -4,6 +4,7 @@
 
 import { Pressable, View } from 'react-native';
 import Toast from '../../../components/Toast';
+import { useThemeColors } from '../../../theme/ThemeContext';
 import { styles } from '../../templates/templatesScreenStyles';
 import {
   CategoryHeader,
@@ -16,11 +17,12 @@ import type { CategorySearchViewProps } from './CategorySearchView.types';
 import { TemplatesList } from './TemplatesList';
 
 export function CategorySearchView(p: CategorySearchViewProps) {
+  const { colors } = useThemeColors();
   const { handlers: h, filteredTemplates: templates } = p;
   const toggle = () => p.setResearchOnly((v) => !v);
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
       <CategoryHeader
         categories={p.categories}
         filteredCount={templates.length}

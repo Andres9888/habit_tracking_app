@@ -6,6 +6,7 @@ import React from 'react';
 import { Text } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import { useThemeColors } from '../../../theme/ThemeContext';
+import { fontFamilies } from '@/theme/typography';
 
 interface EmptyStateProps {
   height: number;
@@ -29,7 +30,7 @@ export function NoDataState({ height }: EmptyStateProps) {
       }}
     >
       <Text style={{ fontSize: 28, marginBottom: 6 }}>⚡</Text>
-      <Text style={{ color: colors.text.tertiary, fontSize: 14 }}>
+      <Text style={{ color: colors.text.tertiary, fontFamily: fontFamilies.primary.text, fontSize: 14 }}>
         Building your strength history...
       </Text>
     </Animated.View>
@@ -57,6 +58,7 @@ export function BuildingHistoryState({ height }: EmptyStateProps) {
       <Text
         style={{
           color: colors.text.secondary,
+          fontFamily: fontFamilies.primary.text,
           fontSize: 14,
           textAlign: 'center',
         }}

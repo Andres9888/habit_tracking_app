@@ -9,6 +9,7 @@ import Animated, { FadeIn } from 'react-native-reanimated';
 import { Quote, RefreshCw } from 'lucide-react-native';
 import { QUOTES } from './quotes';
 import { useThemeColors } from '../../theme/ThemeContext';
+import { fontFamilies } from '@/theme/typography';
 
 interface DailyQuoteProps {
   /** Override the quote (optional) */
@@ -46,6 +47,7 @@ export function DailyQuote({
       StyleSheet.create({
         author: {
           color: colors.gray[500],
+          fontFamily: fontFamilies.primary.text,
           fontSize: 13,
           fontWeight: '500',
         },
@@ -69,6 +71,7 @@ export function DailyQuote({
         },
         quoteText: {
           color: colors.gray[600],
+          fontFamily: fontFamilies.primary.text,
           fontSize: 13,
           fontStyle: 'italic',
           lineHeight: 22,

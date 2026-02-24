@@ -4,10 +4,11 @@
 
 import { StyleSheet } from 'react-native';
 import { colors } from '@/theme/colors';
-import { typography } from '../../../theme/typography';
+import { typography, fontFamilies} from '../../../theme/typography';
 
 export const containerStyles = StyleSheet.create({
   closeButton: {
+    fontFamily: fontFamilies.primary.text,
     fontSize: 17,
     fontWeight: '600',
   },
@@ -41,6 +42,7 @@ export const containerStyles = StyleSheet.create({
     paddingVertical: 24,
   },
   title: {
+    fontFamily: fontFamilies.primary.text,
     fontSize: typography.heading2.fontSize,
     fontWeight: '600',
   },

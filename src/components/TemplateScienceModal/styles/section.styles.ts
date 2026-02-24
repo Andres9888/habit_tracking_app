@@ -5,7 +5,7 @@
 import { StyleSheet } from 'react-native';
 
 import { shadows } from '../../../theme/spacing';
-import { typography } from '../../../theme/typography';
+import { typography, fontFamilies} from '../../../theme/typography';
 import type { SemanticColors } from '../../../theme/darkColors';
 
 export const sectionStyles = StyleSheet.create({
@@ -31,6 +31,7 @@ export function themedSectionStyles(colors: SemanticColors) {
   return StyleSheet.create({
     descriptionText: {
       color: colors.text.secondary,
+      fontFamily: fontFamilies.primary.text,
       fontSize: typography.body.fontSize,
       lineHeight: 26,
     },
@@ -47,6 +48,7 @@ export function themedSectionStyles(colors: SemanticColors) {
     },
     sectionTitle: {
       color: colors.text.primary,
+      fontFamily: fontFamilies.primary.text,
       fontSize: 17,
       fontWeight: '700',
       letterSpacing: -0.3,

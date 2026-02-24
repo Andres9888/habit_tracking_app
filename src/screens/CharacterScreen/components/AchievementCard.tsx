@@ -2,6 +2,7 @@ import { View, Text } from 'react-native';
 import { Trophy } from 'lucide-react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useThemeColors } from '../../../theme/ThemeContext';
+import { fontFamilies } from '../../../theme/typography';
 import type { Achievement } from '../types';
 
 interface AchievementCardProps {
@@ -44,7 +45,7 @@ export function AchievementCard({
           {achievement.title}
         </Text>
         <Text
-          style={{ fontSize: 13, letterSpacing: -0.08, lineHeight: 18, color: colors.text.secondary }}
+          style={{ fontFamily: fontFamilies.primary.text, fontSize: 13, letterSpacing: -0.08, lineHeight: 18, color: colors.text.secondary }}
         >
           {achievement.description}
         </Text>

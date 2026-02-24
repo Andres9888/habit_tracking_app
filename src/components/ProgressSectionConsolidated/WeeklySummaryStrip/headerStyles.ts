@@ -5,11 +5,12 @@
 import { StyleSheet } from 'react-native';
 
 import { borderRadius } from '../../../theme/spacing';
-import { typography } from '@/theme/typography';
+import { typography, fontFamilies} from '@/theme/typography';
 
 export const headerStyles = StyleSheet.create({
   comparisonText: {
     color: '#78716c', // stone-500
+    fontFamily: fontFamilies.primary.text,
     fontSize: 13,
   },
   header: {
@@ -30,6 +31,7 @@ export const headerStyles = StyleSheet.create({
   },
   headerTitle: {
     color: '#1c1917', // stone-900
+    fontFamily: fontFamilies.primary.text,
     fontSize: typography.body.fontSize,
     fontWeight: '600',
   },
@@ -41,6 +43,7 @@ export const headerStyles = StyleSheet.create({
   },
   perfectBadgeText: {
     color: '#ffffff',
+    fontFamily: fontFamilies.primary.text,
     fontSize: typography.tabBar.fontSize,
     fontWeight: '600',
   },

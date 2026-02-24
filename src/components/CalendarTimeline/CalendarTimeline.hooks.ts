@@ -1,5 +1,12 @@
 import { format } from 'date-fns';
-import { useCallback } from 'react';
+import { useMemo, useCallback, useEffect, useRef } from 'react';
+import {
+  Easing,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated';
+import { CONTAINER_SHADOW, getColors } from './CalendarTimeline.styles';
 import type {
   CompletionStatus,
   DayCompletionStatus,
@@ -26,6 +33,57 @@ export const useCalendarTimelineLogic = () => {
 
   return { isFuture, isToday };
 };
+
+/** Derives card style, themed colors, and augmented colors for the timeline card */
+export function useCardStyle(
+  highContrastMode: boolean,
+  isDark: boolean,
+  themeColors: { card: string; cardBorder: string }
+) {
+  const colors = getColors(highContrastMode, isDark);
+  return useMemo(() => {
+    const hc = highContrastMode;
+    const augmentedColors = {
+      ...colors,
+      borderWidth: hc ? 2 : 0,
+      highContrastBorder: hc ? colors.dayBorder : undefined,
+    };
+    const cardStyle = {
+      backgroundColor: hc ? 'transparent' : themeColors.card,
+      borderColor: hc ? 'transparent' : themeColors.cardBorder,
+      borderWidth: hc ? 0 : 1,
+      ...CONTAINER_SHADOW,
+    };
+    return { augmentedColors, cardStyle, colors };
+  }, [colors, highContrastMode, themeColors.card, themeColors.cardBorder]);
+}
+
+const SLIDE_OFFSET = 24;
+const TRANSITION_EASING = { duration: 300, easing: Easing.out(Easing.cubic) };
+
+/** Animates day cells entrance when the displayed week changes */
+export function useWeekTransition(dates: Date[], reduceMotion: boolean) {
+  const translateX = useSharedValue(0);
+  const opacity = useSharedValue(1);
+  const prevFirstIso = useRef<string | null>(null);
+
+  useEffect(() => {
+    const firstIso = dates[0]?.toISOString() ?? '';
+    if (prevFirstIso.current && prevFirstIso.current !== firstIso && !reduceMotion) {
+      const forward = firstIso > prevFirstIso.current;
+      translateX.value = forward ? SLIDE_OFFSET : -SLIDE_OFFSET;
+      opacity.value = 0.3;
+      translateX.value = withTiming(0, TRANSITION_EASING);
+      opacity.value = withTiming(1, { duration: 200 });
+    }
+    prevFirstIso.current = firstIso;
+  }, [dates, reduceMotion, translateX, opacity]);
+
+  return useAnimatedStyle(() => ({
+    opacity: opacity.value,
+    transform: [{ translateX: translateX.value }],
+  }));
+}
 
 /** Returns a function that resolves a Date to its CompletionStatus */
 export function useCompletionStatus(

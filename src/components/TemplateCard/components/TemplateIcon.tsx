@@ -6,7 +6,8 @@
 
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { borderRadius } from '../../../theme/spacing';
+import { borderRadius } from '../../../theme/spacing'
+import { fontFamilies } from '../../../theme/typography';;
 
 interface TemplateIconProps {
   icon: string;

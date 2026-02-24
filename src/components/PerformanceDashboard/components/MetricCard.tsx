@@ -6,6 +6,7 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { StatusIndicator } from './StatusIndicator';
+import { fontFamilies } from '@/theme/typography';
 import type { StatusLevel } from '../types';
 
 interface MetricCardProps {
@@ -50,12 +51,14 @@ const styles = StyleSheet.create({
   },
   label: {
     color: 'rgba(255,255,255,0.7)',
+    fontFamily: fontFamilies.monospace,
     fontSize: 10,
     fontWeight: '500',
     textTransform: 'uppercase',
   },
   subtitle: {
     color: 'rgba(255,255,255,0.5)',
+    fontFamily: fontFamilies.monospace,
     fontSize: 9,
     marginTop: 2,
   },

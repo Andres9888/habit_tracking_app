@@ -20,7 +20,6 @@ export function HabitsModals({ state }: HabitsModalsProps) {
   const shouldRenderCreateHabit = state.showCreateHabit;
   const shouldRenderCalendarAndDetail =
     state.showHabitCalendar || state.showHabitDetail || state.showEditScreen;
-  const shouldRenderTemplates = state.showTemplatesScreen;
   const shouldRenderVisualization = state.showVisualizationExercise;
   const shouldRenderActivation = state.showActivationModal;
 
@@ -52,15 +51,13 @@ export function HabitsModals({ state }: HabitsModalsProps) {
         </ErrorBoundary>
       )}
       <ShareAndPauseModals {...getShareAndPauseProps(state)} />
-      {shouldRenderTemplates && (
-        <ErrorBoundary fallback={null}>
-          <TemplatesModalSection
-            closeTemplatesScreen={state.closeTemplatesScreen}
-            reduceMotionPreference={state.reduceMotionPreference}
-            showTemplatesScreen={state.showTemplatesScreen}
-          />
-        </ErrorBoundary>
-      )}
+      <ErrorBoundary fallback={null}>
+        <TemplatesModalSection
+          closeTemplatesScreen={state.closeTemplatesScreen}
+          reduceMotionPreference={state.reduceMotionPreference}
+          showTemplatesScreen={state.showTemplatesScreen}
+        />
+      </ErrorBoundary>
       <QuickActionsSection {...getQuickActionsProps(state)} />
       {shouldRenderVisualization && (
         <ErrorBoundary fallback={null}>

@@ -60,5 +60,9 @@ export function AnimatedEntrance({
     transform: [{ translateY: translateY.value }],
   }));
 
-  return <Animated.View style={animatedStyle}>{children}</Animated.View>;
+  return (
+    <Animated.View style={[{ alignSelf: 'stretch' as const }, animatedStyle]}>
+      {children}
+    </Animated.View>
+  );
 }

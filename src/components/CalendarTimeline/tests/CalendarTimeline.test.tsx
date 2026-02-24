@@ -32,17 +32,6 @@ describe('CalendarTimeline', () => {
     expect(UNSAFE_root).toBeTruthy();
   });
 
-  it('renders without separator when showSeparator is false', () => {
-    const dates = Array.from({ length: 3 }, (_, i) => addDays(today, i));
-
-    const { UNSAFE_root } = render(
-      <CalendarTimeline dates={dates} showSeparator={false} />
-    );
-
-    // Component should render without errors
-    expect(UNSAFE_root).toBeTruthy();
-  });
-
   it('handles empty dates array gracefully', () => {
     const { UNSAFE_root } = render(<CalendarTimeline dates={[]} />);
 

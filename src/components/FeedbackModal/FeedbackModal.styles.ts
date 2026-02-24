@@ -3,7 +3,8 @@
  */
 
 import { StyleSheet } from 'react-native';
-import { colors } from '../../theme/colors';
+import { colors } from '../../theme/colors'
+import { fontFamilies } from '../../theme/typography';;
 
 const WHITE = '#FFFFFF';
 
@@ -20,12 +21,14 @@ export const styles = StyleSheet.create({
     marginBottom: 24,
   },
   headerTitle: {
+    fontFamily: fontFamilies.primary.display,
     fontSize: 34,
     fontWeight: '700',
     color: colors.gray[900],
     marginBottom: 4,
   },
   headerSubtitle: {
+    fontFamily: fontFamilies.primary.text,
     fontSize: 17,
     color: colors.gray[600],
   },
@@ -33,6 +36,7 @@ export const styles = StyleSheet.create({
     marginBottom: 24,
   },
   sectionLabel: {
+    fontFamily: fontFamilies.primary.text,
     fontSize: 17,
     fontWeight: '600',
     color: colors.gray[900],
@@ -66,12 +70,14 @@ export const styles = StyleSheet.create({
     flex: 1,
   },
   typeLabel: {
+    fontFamily: fontFamilies.primary.text,
     fontSize: 17,
     fontWeight: '600',
     color: colors.gray[900],
     marginBottom: 2,
   },
   typeDescription: {
+    fontFamily: fontFamilies.primary.text,
     fontSize: 13,
     color: colors.gray[600],
   },
@@ -85,6 +91,7 @@ export const styles = StyleSheet.create({
     borderColor: colors.gray[300],
     borderRadius: 12,
     padding: 16,
+    fontFamily: fontFamilies.primary.text,
     fontSize: 17,
     color: colors.gray[900],
     backgroundColor: WHITE,
@@ -94,6 +101,7 @@ export const styles = StyleSheet.create({
     maxHeight: 200,
   },
   charCount: {
+    fontFamily: fontFamilies.monospace,
     fontSize: 13,
     color: colors.gray[500],
     textAlign: 'right',

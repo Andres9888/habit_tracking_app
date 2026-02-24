@@ -9,6 +9,7 @@ import { Platform, Text, View } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { SettingsRow } from './SettingsRow';
 import { SettingsSection } from './SettingsSection';
+import { fontFamilies } from '@/theme/typography';
 import {
   timeStringToDate,
   dateToTimeString,
@@ -88,7 +89,14 @@ export function StreakRemindersSection({
       )}
       {!enabled && (
         <View style={{ paddingBottom: 12, paddingHorizontal: 16 }}>
-          <Text style={{ color: '#78716c', fontSize: 13, lineHeight: 18 }}>
+          <Text
+            style={{
+              color: '#78716c',
+              fontSize: 13,
+              fontFamily: fontFamilies.primary.text,
+              lineHeight: 18,
+            }}
+          >
             Get a reminder if you haven't completed a habit with an active
             streak by your chosen time.
           </Text>

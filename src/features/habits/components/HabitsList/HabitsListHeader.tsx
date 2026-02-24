@@ -47,7 +47,6 @@ function HabitsListHeaderComponent(
         >
           <CalendarTimeline
             disableFutureDayPress
-            showSeparator
             canNavigateForward={props.canNavigateForward}
             completedToday={computed.completedToday}
             completionByDay={computed.completionByDay}

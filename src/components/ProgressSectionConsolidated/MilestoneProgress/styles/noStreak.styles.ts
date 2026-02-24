@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { typography } from '@/theme/typography';
+import { typography, fontFamilies} from '@/theme/typography';
 
 export const noStreakStyles = StyleSheet.create({
   noStreakContainer: {
@@ -12,6 +12,7 @@ export const noStreakStyles = StyleSheet.create({
   },
   noStreakSubtext: {
     color: '#6b7280', // gray-500
+    fontFamily: fontFamilies.primary.text,
     fontSize: typography.caption.fontSize,
     marginTop: 2,
   },
@@ -20,6 +21,7 @@ export const noStreakStyles = StyleSheet.create({
   },
   noStreakTitle: {
     color: '#374151', // gray-700
+    fontFamily: fontFamilies.primary.text,
     fontSize: typography.bodySmall.fontSize,
     fontWeight: '600',
   },

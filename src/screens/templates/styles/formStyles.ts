@@ -1,8 +1,10 @@
 import { StyleSheet } from 'react-native';
+import { fontFamilies } from '@/theme/typography';
 
 export const formStyles = StyleSheet.create({
   charCount: {
     color: '#a8a29e',
+    fontFamily: fontFamilies.primary.text,
     fontSize: 13,
     marginTop: 4,
     textAlign: 'right',
@@ -23,6 +25,7 @@ export const formStyles = StyleSheet.create({
   },
   inputLabel: {
     color: '#475467',
+    fontFamily: fontFamilies.primary.text,
     fontSize: 13,
     fontWeight: '600',
     marginTop: 16,
@@ -36,6 +39,7 @@ export const formStyles = StyleSheet.create({
     borderColor: '#e7e5e4',
     borderRadius: 12,
     borderWidth: 1,
+    fontFamily: fontFamilies.primary.text,
     fontSize: 17,
     paddingHorizontal: 16,
     paddingVertical: 12,
@@ -52,6 +56,7 @@ export const formStyles = StyleSheet.create({
     borderColor: '#111827',
   },
   reminderChipText: {
+    fontFamily: fontFamilies.primary.text,
     fontSize: 13,
     fontWeight: '600',
   },

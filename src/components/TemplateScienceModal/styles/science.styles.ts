@@ -4,7 +4,7 @@
 
 import { StyleSheet } from 'react-native';
 import { borderRadius } from '../../../theme/spacing';
-import { typography } from '@/theme/typography';
+import { typography, fontFamilies} from '@/theme/typography';
 import type { SemanticColors } from '../../../theme/darkColors';
 
 export const scienceStyles = StyleSheet.create({
@@ -20,12 +20,14 @@ export const scienceStyles = StyleSheet.create({
     marginBottom: 10,
   },
   citationLabel: {
+    fontFamily: fontFamilies.primary.text,
     fontSize: typography.caption.fontSize,
     fontWeight: '700',
     letterSpacing: 0.8,
     textTransform: 'uppercase',
   },
   citationText: {
+    fontFamily: fontFamilies.primary.text,
     fontSize: 15,
     fontStyle: 'italic',
     lineHeight: 24,
@@ -41,6 +43,7 @@ export const scienceStyles = StyleSheet.create({
     paddingVertical: 14,
   },
   linkText: {
+    fontFamily: fontFamilies.primary.text,
     fontSize: typography.bodySmall.fontSize,
     fontWeight: '700',
   },
@@ -59,10 +62,12 @@ export const scienceStyles = StyleSheet.create({
     marginBottom: 12,
   },
   whyItWorksText: {
+    fontFamily: fontFamilies.primary.text,
     fontSize: 15,
     lineHeight: 24,
   },
   whyItWorksTitle: {
+    fontFamily: fontFamilies.primary.text,
     fontSize: 15,
     fontWeight: '700',
   },

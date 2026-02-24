@@ -5,6 +5,7 @@
  */
 
 import { View, Text } from 'react-native';
+import { fontFamilies } from '@/theme/typography';
 
 interface ErrorIconProps {
   iconColor?: string;
@@ -25,6 +26,7 @@ export function ErrorIcon({ iconColor = '#EF4444' }: ErrorIconProps) {
       <Text
         style={{
           color: '#FFFFFF',
+          fontFamily: fontFamilies.primary.text,
           fontSize: 13,
           fontWeight: '700',
           lineHeight: 18,

@@ -10,6 +10,7 @@ import { View, Text, ActivityIndicator } from 'react-native';
 import { useQuery } from 'convex/react';
 import { api } from '../../convex/_generated/api';
 import { useThemeColors } from '../theme/ThemeContext';
+import { fontFamilies } from '@/theme/typography';
 
 export function ConvexConnectionGuard({ children }: PropsWithChildren) {
   const { colors } = useThemeColors();
@@ -45,6 +46,7 @@ export function ConvexConnectionGuard({ children }: PropsWithChildren) {
         <Text
           style={{
             color: colors.text.primary,
+            fontFamily: fontFamilies.primary.text,
             fontSize: 22,
             fontWeight: '600',
             marginBottom: 12,
@@ -56,6 +58,7 @@ export function ConvexConnectionGuard({ children }: PropsWithChildren) {
         <Text
           style={{
             color: colors.text.secondary,
+            fontFamily: fontFamilies.primary.text,
             fontSize: 17,
             marginBottom: 24,
             textAlign: 'center',

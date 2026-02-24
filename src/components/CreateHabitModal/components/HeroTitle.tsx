@@ -5,6 +5,7 @@
 
 import { Text } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
+import { fontFamilies } from '@/theme/typography';
 
 interface HeroTitleProps {
   text?: string;
@@ -20,7 +21,7 @@ export const HeroTitle = ({
     <Text
       accessibilityRole='header'
       className='text-center font-bold text-stone-900'
-      style={{ fontSize: 34, letterSpacing: -34 * 0.02, lineHeight: 34 * 1.2 }}
+      style={{ fontFamily: fontFamilies.primary.text, fontSize: 34, letterSpacing: -34 * 0.02, lineHeight: 34 * 1.2 }}
     >
       {text}
     </Text>

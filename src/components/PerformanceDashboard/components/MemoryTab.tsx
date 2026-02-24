@@ -10,6 +10,7 @@ import { StatRow } from './StatRow';
 import { HistoryChart } from './HistoryChart';
 import { tabStyles, valueStyles } from './tabStyles';
 import type { MemoryData } from '../types';
+import { fontFamilies } from '@/theme/typography';
 
 interface MemoryTabProps {
   data: MemoryData;
@@ -87,6 +88,7 @@ const styles = StyleSheet.create({
   unsupported: { alignItems: 'center', justifyContent: 'center', padding: 20 },
   unsupportedText: {
     color: 'rgba(255,255,255,0.5)',
+    fontFamily: fontFamilies.primary.text,
     fontSize: 12,
     textAlign: 'center',
   },

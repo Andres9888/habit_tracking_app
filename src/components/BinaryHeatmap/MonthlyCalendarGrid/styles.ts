@@ -7,7 +7,7 @@
 import { StyleSheet } from 'react-native';
 
 import { shadows } from '../../../theme/spacing';
-import { typography } from '@/theme/typography';
+import { typography, fontFamilies} from '@/theme/typography';
 import { COLORS } from './colors';
 
 export const styles = StyleSheet.create({
@@ -28,6 +28,7 @@ export const styles = StyleSheet.create({
     width: 36,
   },
   dayText: {
+    fontFamily: fontFamilies.primary.text,
     fontSize: typography.bodySmall.fontSize,
     fontWeight: '500',
   },
@@ -50,6 +51,7 @@ export const styles = StyleSheet.create({
   },
   headerText: {
     color: COLORS.TEXT_SECONDARY,
+    fontFamily: fontFamilies.primary.text,
     fontSize: typography.tabBar.fontSize,
     fontWeight: '500',
   },
@@ -65,6 +67,7 @@ export const styles = StyleSheet.create({
   },
   monthText: {
     color: COLORS.TEXT_PRIMARY,
+    fontFamily: fontFamilies.primary.text,
     fontSize: 13,
     fontWeight: '600',
   },

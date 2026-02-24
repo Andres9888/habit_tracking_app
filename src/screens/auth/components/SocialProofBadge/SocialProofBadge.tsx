@@ -4,6 +4,7 @@
 
 import React, { useEffect } from 'react';
 import { Text, StyleSheet } from 'react-native';
+import { fontFamilies } from '@/theme/typography';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -69,6 +70,7 @@ const styles = StyleSheet.create({
   text: {
     // caption scale
     color: '#92400e',
+    fontFamily: fontFamilies.primary.text,
     fontSize: 13, // amber-800
   },
 });

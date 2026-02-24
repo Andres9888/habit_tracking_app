@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ChainDay — CalendarTimeline UX Pass</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #08080a;
+    --surface: #111113;
+    --surface-2: #19191c;
+    --border: #1e1e22;
+    --border-2: #2a2a30;
+    --text: #e8e4df;
+    --text-muted: #7a756e;
+    --text-dim: #4a4640;
+    --emerald: #10b981;
+    --emerald-soft: rgba(16,185,129,0.12);
+    --amber: #e8b94d;
+    --amber-soft: rgba(232,185,77,0.12);
+    --red-soft: rgba(239,68,68,0.12);
+    --red: #ef4444;
+    --card-bg: #EDEAE5;
+    --card-border: #DDD8D2;
+    --gray-50: #FAF8F5;
+    --gray-200: #DDD8D2;
+    --gray-300: #C4BFB7;
+    --gray-400: #6E6660;
+    --gray-600: #524D47;
+    --gray-800: #2D2A26;
+    --today-bg: #FEF3CD;
+    --today-border: #E8B94D;
+    --today-text: #7D5907;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page { max-width: 1200px; margin: 0 auto; padding: 56px 40px 100px; }
+
+  /* ── Header ── */
+  .page-header { text-align: center; margin-bottom: 56px; }
+  .eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--emerald); margin-bottom: 14px;
+  }
+  .page-header h1 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 44px; font-weight: 400; line-height: 1.12;
+    color: var(--text); letter-spacing: -0.02em; margin-bottom: 14px;
+  }
+  .page-header h1 em { font-style: italic; color: var(--amber); }
+  .page-header .subtitle {
+    font-size: 15px; color: var(--text-muted); max-width: 560px;
+    margin: 0 auto; line-height: 1.65;
+  }
+
+  /* ── Section headers ── */
+  .section { margin-bottom: 64px; }
+  .section-header {
+    display: flex; align-items: baseline; gap: 16px;
+    margin-bottom: 28px; padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; font-weight: 600; color: var(--emerald);
+    background: var(--emerald-soft); padding: 3px 8px; border-radius: 4px;
+  }
+  .section-title {
+    font-family: 'Instrument Serif', serif;
+    font-size: 28px; font-weight: 400; color: var(--text);
+  }
+  .severity-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; font-weight: 600; letter-spacing: 0.08em;
+    text-transform: uppercase; padding: 3px 8px; border-radius: 4px;
+    margin-left: auto;
+  }
+  .sev-high { background: var(--red-soft); color: var(--red); }
+  .sev-med { background: var(--amber-soft); color: var(--amber); }
+  .sev-low { background: var(--emerald-soft); color: var(--emerald); }
+
+  /* ── Before/after panels ── */
+  .ba-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  .ba-panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+  .ba-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; font-weight: 600; letter-spacing: 0.1em;
+    text-transform: uppercase; padding: 12px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .ba-label .dot { width: 6px; height: 6px; border-radius: 50%; }
+  .ba-label .dot-before { background: var(--text-dim); }
+  .ba-label .dot-after { background: var(--emerald); }
+  .ba-content { padding: 20px; }
+  .ba-desc {
+    font-size: 13px; color: var(--text-muted); line-height: 1.6;
+    margin-top: 16px; padding: 12px 16px;
+    background: var(--surface-2); border-radius: 8px;
+    border-left: 2px solid var(--border-2);
+  }
+
+  /* ══════════════════════════════════
+     PHONE MOCK COMPONENTS
+     ══════════════════════════════════ */
+  .phone-mock {
+    width: 280px; margin: 0 auto;
+    background: #f7f5f0; border-radius: 28px;
+    padding: 10px; box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+  }
+  .phone-screen {
+    background: #f7f5f0; border-radius: 20px;
+    overflow: hidden; padding: 14px 12px 16px;
+  }
+
+  /* ── Calendar card (shared) ── */
+  .ct {
+    background: var(--card-bg); border: 1px solid var(--card-border);
+    border-radius: 16px; padding: 8px 12px 12px;
+    box-shadow: 0 1px 8px rgba(107,101,96,0.04);
+  }
+  .ct-head {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .ct-head-left { display: flex; align-items: center; gap: 6px; }
+  .nav-btn {
+    width: 26px; height: 26px; border-radius: 50%;
+    background: var(--gray-50); border: 1px solid var(--gray-200);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .nav-btn svg { width: 12px; height: 12px; stroke: var(--gray-600); stroke-width: 2.5; fill: none; }
+  .date-txt {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px; font-weight: 800; color: var(--gray-800);
+    letter-spacing: -0.3px; margin-left: 4px;
+  }
+  .ring-wrap { width: 36px; height: 36px; position: relative; flex-shrink: 0; }
+  .ring-wrap svg { width: 36px; height: 36px; transform: rotate(-90deg); }
+  .ring-text {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 10px; font-weight: 800; color: #44403c;
+  }
+
+  .days-row { display: flex; justify-content: space-between; }
+  .day-col { display: flex; flex-direction: column; align-items: center; gap: 2px; flex: 1; }
+  .day-lbl {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 9px; font-weight: 400; color: var(--gray-400);
+  }
+  .day-lbl.is-today { font-weight: 700; }
+  .day-box {
+    width: 36px; height: 36px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px; font-weight: 600;
+  }
+  .day-box.done { background: var(--emerald); color: #fff; font-weight: 700; box-shadow: 0 0 10px rgba(16,185,129,0.3); }
+  .day-box.today { background: var(--today-bg); border: 2px solid var(--today-border); color: var(--today-text); font-weight: 700; }
+  .day-box.future { background: var(--gray-50); color: var(--gray-300); }
+  .day-dot { width: 5px; height: 5px; border-radius: 50%; margin-top: 1px; }
+  .day-dot.dot-partial { background: var(--amber); width: 6px; height: 6px; }
+  .day-dot.dot-none { background: var(--gray-200); }
+  .day-dot.dot-future { background: transparent; }
+
+  /* ── Streak chain connector (improvement) ── */
+  .streak-connector {
+    position: absolute; top: 50%; height: 3px;
+    background: linear-gradient(90deg, var(--emerald), rgba(16,185,129,0.6));
+    border-radius: 2px; z-index: 0;
+    transform: translateY(-50%);
+  }
+  .days-row-streak { position: relative; display: flex; justify-content: space-between; }
+  .day-col-streak { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 2px; flex: 1; }
+  .streak-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px; font-weight: 600; color: var(--emerald);
+    background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.2);
+    padding: 1px 5px; border-radius: 3px; margin-top: 2px;
+    letter-spacing: 0.02em;
+  }
+
+  /* ── Swipe animation mock ── */
+  .swipe-demo { position: relative; overflow: hidden; border-radius: 10px; }
+  .swipe-old {
+    opacity: 0.3; transform: translateX(-20px);
+    transition: none;
+  }
+  .swipe-new {
+    opacity: 1; transform: translateX(0);
+  }
+  @keyframes slideInRight {
+    from { opacity: 0; transform: translateX(30px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+  .animate-slide { animation: slideInRight 0.4s ease-out; }
+
+  /* ── Empty state mock ── */
+  .empty-state-card {
+    background: var(--card-bg); border: 1px solid var(--card-border);
+    border-radius: 16px; padding: 16px 12px;
+    text-align: center;
+  }
+  .empty-days { display: flex; justify-content: space-between; margin-bottom: 12px; }
+  .empty-day {
+    display: flex; flex-direction: column; align-items: center; gap: 2px; flex: 1;
+  }
+  .empty-day-box {
+    width: 36px; height: 36px; border-radius: 10px;
+    background: var(--gray-50); border: 2px dashed var(--gray-200);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px; font-weight: 500; color: var(--gray-300);
+  }
+  .empty-day-box.today-empty {
+    border-color: var(--today-border);
+    background: rgba(254,243,205,0.3);
+    color: var(--today-text);
+  }
+  .empty-msg {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px; font-weight: 500; color: var(--gray-400);
+    line-height: 1.5;
+  }
+  .empty-cta {
+    display: inline-block; margin-top: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px; font-weight: 700; color: var(--emerald);
+    background: rgba(16,185,129,0.08);
+    border: 1px solid rgba(16,185,129,0.15);
+    padding: 4px 12px; border-radius: 8px;
+  }
+
+  /* ── Today completed identity ── */
+  .day-box.done-today {
+    background: var(--emerald); color: #fff; font-weight: 700;
+    box-shadow: 0 0 10px rgba(16,185,129,0.3);
+    position: relative;
+  }
+  .today-ring {
+    position: absolute; inset: -3px;
+    border: 2px solid var(--today-border);
+    border-radius: 13px;
+    opacity: 0.6;
+  }
+
+  /* ── Celebration mock ── */
+  .celebration-overlay {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    pointer-events: none;
+  }
+  .celebration-text {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 10px; font-weight: 800; color: var(--emerald);
+    background: rgba(16,185,129,0.12);
+    border: 1px solid rgba(16,185,129,0.25);
+    padding: 3px 10px; border-radius: 6px;
+    animation: celebPop 0.5s ease-out;
+  }
+  @keyframes celebPop {
+    0% { transform: scale(0.5) translateY(10px); opacity: 0; }
+    60% { transform: scale(1.1) translateY(-2px); opacity: 1; }
+    100% { transform: scale(1) translateY(0); opacity: 1; }
+  }
+
+  /* ── Streak recovery nudge ── */
+  .recovery-nudge {
+    background: linear-gradient(135deg, rgba(232,185,77,0.08), rgba(239,68,68,0.06));
+    border: 1px solid rgba(232,185,77,0.15);
+    border-radius: 10px; padding: 8px 12px;
+    display: flex; align-items: center; gap: 8px;
+    margin-top: 8px;
+  }
+  .recovery-icon { font-size: 16px; }
+  .recovery-text {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px; font-weight: 500; color: var(--gray-600);
+    line-height: 1.4; flex: 1;
+  }
+  .recovery-text strong { font-weight: 700; color: var(--today-text); }
+  .recovery-btn {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 10px; font-weight: 700; color: #fff;
+    background: var(--amber); padding: 4px 10px;
+    border-radius: 6px; white-space: nowrap;
+  }
+
+  /* ── Summary table ── */
+  .summary-table {
+    width: 100%; border-collapse: collapse; margin-top: 24px;
+  }
+  .summary-table thead th {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; font-weight: 600; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--text-muted);
+    text-align: left; padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  .summary-table tbody td {
+    padding: 12px 14px; border-bottom: 1px solid rgba(255,255,255,0.025);
+    font-size: 13px; line-height: 1.5;
+  }
+  .summary-table tbody tr:hover { background: rgba(255,255,255,0.012); }
+  .feat-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; font-weight: 500; color: var(--text);
+  }
+  .effort-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; font-weight: 600; padding: 2px 7px;
+    border-radius: 3px; display: inline-block;
+  }
+  .effort-sm { background: var(--emerald-soft); color: var(--emerald); }
+  .effort-md { background: var(--amber-soft); color: var(--amber); }
+  .effort-lg { background: var(--red-soft); color: var(--red); }
+
+  .divider { height: 1px; background: linear-gradient(90deg, transparent, var(--border), transparent); margin: 8px 0; }
+  .grain {
+    position: fixed; inset: 0; pointer-events: none; opacity: 0.02;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 256px; z-index: 9999;
+  }
+</style>
+</head>
+<body>
+
+<div class="grain"></div>
+
+<div class="page">
+
+  <!-- ═══ HEADER ═══ -->
+  <header class="page-header">
+    <div class="eyebrow">ChainDay · CalendarTimeline · UX Improvement Pass</div>
+    <h1>Six improvements for a <em>stickier</em> timeline</h1>
+    <p class="subtitle">A comprehensive UX pass addressing streak visibility, animation feedback, empty states, recovery nudges, celebration moments, and header balance — ordered by user impact.</p>
+  </header>
+
+  <!-- ═══ 1. STREAK VISIBILITY ═══ -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">01</span>
+      <span class="section-title">Streak chain visualization</span>
+      <span class="severity-tag sev-high">High Impact</span>
+    </div>
+    <div class="ba-grid">
+      <div class="ba-panel">
+        <div class="ba-label"><span class="dot dot-before"></span> Before</div>
+        <div class="ba-content">
+          <div class="phone-mock">
+            <div class="phone-screen">
+              <div class="ct">
+                <div class="ct-head">
+                  <div class="ct-head-left">
+                    <div class="nav-btn"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></div>
+                    <div class="nav-btn"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
+                    <span class="date-txt">Feb 17 – 23</span>
+                  </div>
+                  <div class="ring-wrap">
+                    <svg viewBox="0 0 36 36"><circle cx="18" cy="18" r="15" fill="none" stroke="#f5f5f4" stroke-width="3"/><circle cx="18" cy="18" r="15" fill="none" stroke="#10b981" stroke-width="3" stroke-dasharray="94.25" stroke-dashoffset="27" stroke-linecap="round"/></svg>
+                    <span class="ring-text">5/7</span>
+                  </div>
+                </div>
+                <div class="days-row">
+                  <div class="day-col"><span class="day-lbl">Mon</span><div class="day-box done">17</div></div>
+                  <div class="day-col"><span class="day-lbl">Tue</span><div class="day-box done">18</div></div>
+                  <div class="day-col"><span class="day-lbl">Wed</span><div class="day-box done">19</div></div>
+                  <div class="day-col"><span class="day-lbl is-today">Thu</span><div class="day-box today">20</div></div>
+                  <div class="day-col"><span class="day-lbl">Fri</span><div class="day-box future">21</div></div>
+                  <div class="day-col"><span class="day-lbl">Sat</span><div class="day-box future">22</div></div>
+                  <div class="day-col"><span class="day-lbl">Sun</span><div class="day-box future">23</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="ba-desc">Individual day completion is shown, but there's zero visual indication that Mon→Wed form a 3-day streak. Users can't gauge streak health at a glance.</div>
+        </div>
+      </div>
+      <div class="ba-panel">
+        <div class="ba-label"><span class="dot dot-after"></span> After — streak chain</div>
+        <div class="ba-content">
+          <div class="phone-mock">
+            <div class="phone-screen">
+              <div class="ct">
+                <div class="ct-head">
+                  <div class="ct-head-left">
+                    <div class="nav-btn"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></div>
+                    <div class="nav-btn"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
+                    <span class="date-txt">Feb 17 – 23</span>
+                  </div>
+                  <div class="ring-wrap">
+                    <svg viewBox="0 0 36 36"><circle cx="18" cy="18" r="15" fill="none" stroke="#f5f5f4" stroke-width="3"/><circle cx="18" cy="18" r="15" fill="none" stroke="#10b981" stroke-width="3" stroke-dasharray="94.25" stroke-dashoffset="27" stroke-linecap="round"/></svg>
+                    <span class="ring-text">5/7</span>
+                  </div>
+                </div>
+                <div class="days-row-streak">
+                  <!-- Streak connector line behind completed days -->
+                  <div class="streak-connector" style="left: calc(0% + 18px); width: calc(42.8% - 18px + 18px);"></div>
+                  <div class="day-col-streak"><span class="day-lbl">Mon</span><div class="day-box done">17</div></div>
+                  <div class="day-col-streak"><span class="day-lbl">Tue</span><div class="day-box done">18</div></div>
+                  <div class="day-col-streak"><span class="day-lbl">Wed</span><div class="day-box done">19</div></div>
+                  <div class="day-col-streak">
+                    <span class="day-lbl is-today">Thu</span>
+                    <div class="day-box today">20</div>
+                    <span class="streak-badge">3d 🔥</span>
+                  </div>
+                  <div class="day-col-streak"><span class="day-lbl">Fri</span><div class="day-box future">21</div></div>
+                  <div class="day-col-streak"><span class="day-lbl">Sat</span><div class="day-box future">22</div></div>
+                  <div class="day-col-streak"><span class="day-lbl">Sun</span><div class="day-box future">23</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="ba-desc">A subtle horizontal connector links consecutive completed days. A "3d 🔥" streak badge below today shows the streak is alive and waiting to be extended.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ 2. STREAK RECOVERY NUDGE ═══ -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <span class="section-title">Streak recovery nudge</span>
+      <span class="severity-tag sev-high">High Impact</span>
+    </div>
+    <div class="ba-grid">
+      <div class="ba-panel">
+        <div class="ba-label"><span class="dot dot-before"></span> Before — missed day scenario</div>
+        <div class="ba-content">
+          <div class="phone-mock">
+            <div class="phone-screen">
+              <div class="ct">
+                <div class="ct-head">
+                  <div class="ct-head-left">
+                    <div class="nav-btn"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></div>
+                    <div class="nav-btn"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
+                    <span class="date-txt">Feb 17 – 23</span>
+                  </div>
+                  <div class="ring-wrap">
+                    <svg viewBox="0 0 36 36"><circle cx="18" cy="18" r="15" fill="none" stroke="#f5f5f4" stroke-width="3"/><circle cx="18" cy="18" r="15" fill="none" stroke="#10b981" stroke-width="3" stroke-dasharray="94.25" stroke-dashoffset="94.25" stroke-linecap="round"/></svg>
+                    <span class="ring-text">0/7</span>
+                  </div>
+                </div>
+                <div class="days-row">
+                  <div class="day-col"><span class="day-lbl">Mon</span><div class="day-box done">17</div></div>
+                  <div class="day-col"><span class="day-lbl">Tue</span><div class="day-box done">18</div></div>
+                  <div class="day-col"><span class="day-lbl">Wed</span><div class="day-box" style="background:var(--gray-50);color:var(--gray-600);">19</div><div class="day-dot dot-none"></div></div>
+                  <div class="day-col"><span class="day-lbl is-today">Thu</span><div class="day-box today">20</div></div>
+                  <div class="day-col"><span class="day-lbl">Fri</span><div class="day-box future">21</div></div>
+                  <div class="day-col"><span class="day-lbl">Sat</span><div class="day-box future">22</div></div>
+                  <div class="day-col"><span class="day-lbl">Sun</span><div class="day-box future">23</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="ba-desc">Wednesday was missed — the empty dot is easy to overlook. No prompt to recover. The user's 2-day streak is silently broken.</div>
+        </div>
+      </div>
+      <div class="ba-panel">
+        <div class="ba-label"><span class="dot dot-after"></span> After — recovery prompt</div>
+        <div class="ba-content">
+          <div class="phone-mock">
+            <div class="phone-screen">
+              <div class="ct">
+                <div class="ct-head">
+                  <div class="ct-head-left">
+                    <div class="nav-btn"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></div>
+                    <div class="nav-btn"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
+                    <span class="date-txt">Feb 17 – 23</span>
+                  </div>
+                  <div class="ring-wrap">
+                    <svg viewBox="0 0 36 36"><circle cx="18" cy="18" r="15" fill="none" stroke="#f5f5f4" stroke-width="3"/><circle cx="18" cy="18" r="15" fill="none" stroke="#10b981" stroke-width="3" stroke-dasharray="94.25" stroke-dashoffset="94.25" stroke-linecap="round"/></svg>
+                    <span class="ring-text">0/7</span>
+                  </div>
+                </div>
+                <div class="days-row">
+                  <div class="day-col"><span class="day-lbl">Mon</span><div class="day-box done">17</div></div>
+                  <div class="day-col"><span class="day-lbl">Tue</span><div class="day-box done">18</div></div>
+                  <div class="day-col"><span class="day-lbl">Wed</span><div class="day-box" style="background:rgba(239,68,68,0.08);color:#b91c1c;border:1.5px dashed rgba(239,68,68,0.3);">19</div></div>
+                  <div class="day-col"><span class="day-lbl is-today">Thu</span><div class="day-box today">20</div></div>
+                  <div class="day-col"><span class="day-lbl">Fri</span><div class="day-box future">21</div></div>
+                  <div class="day-col"><span class="day-lbl">Sat</span><div class="day-box future">22</div></div>
+                  <div class="day-col"><span class="day-lbl">Sun</span><div class="day-box future">23</div></div>
+                </div>
+                <div class="recovery-nudge">
+                  <span class="recovery-icon">⛓️‍💥</span>
+                  <span class="recovery-text"><strong>Yesterday broke your 2-day streak.</strong> Tap to log it and recover.</span>
+                  <span class="recovery-btn">Log Wed</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="ba-desc">The missed day gets a red dashed outline. A contextual nudge appears below the grid with a one-tap recovery action. This directly fights churn by making streak recovery effortless.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ 3. EMPTY STATE ═══ -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">03</span>
+      <span class="section-title">Empty state for new users</span>
+      <span class="severity-tag sev-med">Medium Impact</span>
+    </div>
+    <div class="ba-grid">
+      <div class="ba-panel">
+        <div class="ba-label"><span class="dot dot-before"></span> Before — bare timeline</div>
+        <div class="ba-content">
+          <div class="phone-mock">
+            <div class="phone-screen">
+              <div class="ct">
+                <div class="ct-head">
+                  <div class="ct-head-left">
+                    <div class="nav-btn"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></div>
+                    <div class="nav-btn"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
+                    <span class="date-txt">Feb 17 – 23</span>
+                  </div>
+                </div>
+                <div class="days-row">
+                  <div class="day-col"><span class="day-lbl">Mon</span><div class="day-box future">17</div></div>
+                  <div class="day-col"><span class="day-lbl">Tue</span><div class="day-box future">18</div></div>
+                  <div class="day-col"><span class="day-lbl">Wed</span><div class="day-box future">19</div></div>
+                  <div class="day-col"><span class="day-lbl is-today">Thu</span><div class="day-box" style="background:var(--today-bg);border:2px solid var(--today-border);color:var(--today-text);">20</div></div>
+                  <div class="day-col"><span class="day-lbl">Fri</span><div class="day-box future">21</div></div>
+                  <div class="day-col"><span class="day-lbl">Sat</span><div class="day-box future">22</div></div>
+                  <div class="day-col"><span class="day-lbl">Sun</span><div class="day-box future">23</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="ba-desc">Seven gray circles with no context. No completion ring. No indication this is waiting for habits to be created. Looks like a broken state.</div>
+        </div>
+      </div>
+      <div class="ba-panel">
+        <div class="ba-label"><span class="dot dot-after"></span> After — guided empty state</div>
+        <div class="ba-content">
+          <div class="phone-mock">
+            <div class="phone-screen">
+              <div class="empty-state-card">
+                <div class="ct-head" style="justify-content: center; margin-bottom: 8px;">
+                  <span class="date-txt" style="margin: 0;">Feb 17 – 23</span>
+                </div>
+                <div class="empty-days">
+                  <div class="empty-day"><span class="day-lbl">Mon</span><div class="empty-day-box">17</div></div>
+                  <div class="empty-day"><span class="day-lbl">Tue</span><div class="empty-day-box">18</div></div>
+                  <div class="empty-day"><span class="day-lbl">Wed</span><div class="empty-day-box">19</div></div>
+                  <div class="empty-day"><span class="day-lbl is-today">Thu</span><div class="empty-day-box today-empty">20</div></div>
+                  <div class="empty-day"><span class="day-lbl">Fri</span><div class="empty-day-box">21</div></div>
+                  <div class="empty-day"><span class="day-lbl">Sat</span><div class="empty-day-box">22</div></div>
+                  <div class="empty-day"><span class="day-lbl">Sun</span><div class="empty-day-box">23</div></div>
+                </div>
+                <div class="empty-msg">Your week is ready — add your first habit<br>and these cells will come alive.</div>
+                <span class="empty-cta">+ Create a Habit</span>
+              </div>
+            </div>
+          </div>
+          <div class="ba-desc">Dashed borders signal "empty slot". A friendly message explains the state. A CTA button guides users directly to habit creation. Today still gets a subtle amber highlight.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ 4. WEEK TRANSITION ANIMATION ═══ -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">04</span>
+      <span class="section-title">Week transition animation</span>
+      <span class="severity-tag sev-med">Medium Impact</span>
+    </div>
+    <div class="ba-grid">
+      <div class="ba-panel">
+        <div class="ba-label"><span class="dot dot-before"></span> Before — instant snap</div>
+        <div class="ba-content" style="text-align: center; padding: 32px 20px;">
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-muted); line-height: 2;">
+            <div>User taps → button</div>
+            <div style="color: var(--red);">Content snaps instantly ⚡</div>
+            <div>No transition, no feedback</div>
+            <div>Dates appear to "blink"</div>
+            <div style="margin-top: 12px; color: var(--text-dim);">
+              useTimelineSwipe.ts calls<br>
+              <code style="color: var(--text); background: var(--surface-2); padding: 2px 6px; border-radius: 3px;">runOnJS(onNextWeek)</code><br>
+              with zero animation
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="ba-panel">
+        <div class="ba-label"><span class="dot dot-after"></span> After — directional slide</div>
+        <div class="ba-content" style="text-align: center; padding: 32px 20px;">
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-muted); line-height: 2;">
+            <div>User taps → button</div>
+            <div style="color: var(--emerald);">Old dates fade + slide out ← 150ms</div>
+            <div style="color: var(--emerald);">New dates slide in → 200ms</div>
+            <div>Direction matches navigation</div>
+            <div style="margin-top: 12px; color: var(--text-dim);">
+              Reanimated <code style="color: var(--text); background: var(--surface-2); padding: 2px 6px; border-radius: 3px;">useAnimatedStyle</code><br>
+              with <code style="color: var(--text); background: var(--surface-2); padding: 2px 6px; border-radius: 3px;">withTiming(350ms)</code>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ 5. TODAY IDENTITY AFTER COMPLETION ═══ -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">05</span>
+      <span class="section-title">Today keeps its identity when complete</span>
+      <span class="severity-tag sev-low">Low Impact</span>
+    </div>
+    <div class="ba-grid">
+      <div class="ba-panel">
+        <div class="ba-label"><span class="dot dot-before"></span> Before — today becomes generic green</div>
+        <div class="ba-content">
+          <div style="display: flex; align-items: center; justify-content: center; gap: 20px; padding: 24px;">
+            <div style="text-align: center;">
+              <div class="day-box today" style="margin: 0 auto 6px;">20</div>
+              <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--text-dim);">Incomplete</span>
+            </div>
+            <span style="font-size: 18px; color: var(--text-dim);">→</span>
+            <div style="text-align: center;">
+              <div class="day-box done" style="margin: 0 auto 6px;">20</div>
+              <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--text-dim);">Complete</span>
+            </div>
+          </div>
+          <div class="ba-desc">Once all habits are done, today's amber identity is fully replaced by green. Users lose the visual anchor for "where am I in the week?"</div>
+        </div>
+      </div>
+      <div class="ba-panel">
+        <div class="ba-label"><span class="dot dot-after"></span> After — amber ring persists</div>
+        <div class="ba-content">
+          <div style="display: flex; align-items: center; justify-content: center; gap: 20px; padding: 24px;">
+            <div style="text-align: center;">
+              <div class="day-box today" style="margin: 0 auto 6px;">20</div>
+              <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--text-dim);">Incomplete</span>
+            </div>
+            <span style="font-size: 18px; color: var(--text-dim);">→</span>
+            <div style="text-align: center; position: relative;">
+              <div class="day-box done-today" style="margin: 0 auto 6px;">20<div class="today-ring"></div></div>
+              <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--text-dim);">Complete</span>
+            </div>
+          </div>
+          <div class="ba-desc">A subtle amber outline ring wraps the green cell, maintaining today's identity even after completion. The user always knows which day is "now".</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ 6. COMPLETION RING DARK MODE ═══ -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">06</span>
+      <span class="section-title">CompletionRing dark mode fix</span>
+      <span class="severity-tag sev-med">Medium Impact</span>
+    </div>
+    <div class="ba-grid">
+      <div class="ba-panel">
+        <div class="ba-label"><span class="dot dot-before"></span> Before — hardcoded light colors</div>
+        <div class="ba-content" style="display: flex; align-items: center; justify-content: center; padding: 28px;">
+          <div style="display: flex; gap: 24px; align-items: center;">
+            <div style="text-align: center;">
+              <div class="ring-wrap" style="margin: 0 auto 8px;">
+                <svg viewBox="0 0 36 36"><circle cx="18" cy="18" r="15" fill="none" stroke="#f5f5f4" stroke-width="3"/><circle cx="18" cy="18" r="15" fill="none" stroke="#10b981" stroke-width="3" stroke-dasharray="94.25" stroke-dashoffset="27" stroke-linecap="round"/></svg>
+                <span class="ring-text">5/7</span>
+              </div>
+              <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--text-dim);">Light ✓</span>
+            </div>
+            <div style="text-align: center; background: #1f2937; padding: 12px; border-radius: 12px;">
+              <div class="ring-wrap" style="margin: 0 auto 8px;">
+                <svg viewBox="0 0 36 36"><circle cx="18" cy="18" r="15" fill="none" stroke="#f5f5f4" stroke-width="3"/><circle cx="18" cy="18" r="15" fill="none" stroke="#10b981" stroke-width="3" stroke-dasharray="94.25" stroke-dashoffset="27" stroke-linecap="round"/></svg>
+                <span class="ring-text" style="color: #44403c;">5/7</span>
+              </div>
+              <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--text-dim);">Dark ✗</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="ba-panel">
+        <div class="ba-label"><span class="dot dot-after"></span> After — theme-aware colors</div>
+        <div class="ba-content" style="display: flex; align-items: center; justify-content: center; padding: 28px;">
+          <div style="display: flex; gap: 24px; align-items: center;">
+            <div style="text-align: center;">
+              <div class="ring-wrap" style="margin: 0 auto 8px;">
+                <svg viewBox="0 0 36 36"><circle cx="18" cy="18" r="15" fill="none" stroke="#f5f5f4" stroke-width="3"/><circle cx="18" cy="18" r="15" fill="none" stroke="#10b981" stroke-width="3" stroke-dasharray="94.25" stroke-dashoffset="27" stroke-linecap="round"/></svg>
+                <span class="ring-text">5/7</span>
+              </div>
+              <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--text-dim);">Light ✓</span>
+            </div>
+            <div style="text-align: center; background: #1f2937; padding: 12px; border-radius: 12px;">
+              <div class="ring-wrap" style="margin: 0 auto 8px;">
+                <svg viewBox="0 0 36 36"><circle cx="18" cy="18" r="15" fill="none" stroke="#374151" stroke-width="3"/><circle cx="18" cy="18" r="15" fill="none" stroke="#10b981" stroke-width="3" stroke-dasharray="94.25" stroke-dashoffset="27" stroke-linecap="round"/></svg>
+                <span class="ring-text" style="color: #E5E7EB;">5/7</span>
+              </div>
+              <span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--emerald);">Dark ✓</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ DIVIDER ═══ -->
+  <div class="divider" style="margin: 48px 0;"></div>
+
+  <!-- ═══ IMPLEMENTATION SUMMARY ═══ -->
+  <div class="section" style="margin-bottom: 0;">
+    <div class="section-header">
+      <span class="section-title">Implementation priority</span>
+    </div>
+
+    <table class="summary-table">
+      <thead>
+        <tr>
+          <th style="width: 5%;">#</th>
+          <th style="width: 28%;">Feature</th>
+          <th style="width: 12%;">Severity</th>
+          <th style="width: 12%;">Effort</th>
+          <th>What changes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="color: var(--text-dim);">01</td>
+          <td class="feat-name">Streak chain viz</td>
+          <td><span class="severity-tag sev-high" style="font-size: 9px;">High</span></td>
+          <td><span class="effort-tag effort-md">~50 LOC</span></td>
+          <td style="color: var(--text-muted); font-size: 12px;">New streak connector + badge in DayCellContent. Requires currentStreakLength prop from parent.</td>
+        </tr>
+        <tr>
+          <td style="color: var(--text-dim);">02</td>
+          <td class="feat-name">Recovery nudge</td>
+          <td><span class="severity-tag sev-high" style="font-size: 9px;">High</span></td>
+          <td><span class="effort-tag effort-md">~40 LOC</span></td>
+          <td style="color: var(--text-muted); font-size: 12px;">New RecoveryNudge component. Detects gap in completionByDay, renders below grid with onDayPress action.</td>
+        </tr>
+        <tr>
+          <td style="color: var(--text-dim);">03</td>
+          <td class="feat-name">Empty state</td>
+          <td><span class="severity-tag sev-med" style="font-size: 9px;">Med</span></td>
+          <td><span class="effort-tag effort-sm">~30 LOC</span></td>
+          <td style="color: var(--text-muted); font-size: 12px;">Conditional render when totalHabits === 0. Dashed day boxes + CTA button. New TimelineEmptyState component.</td>
+        </tr>
+        <tr>
+          <td style="color: var(--text-dim);">04</td>
+          <td class="feat-name">Week transition</td>
+          <td><span class="severity-tag sev-med" style="font-size: 9px;">Med</span></td>
+          <td><span class="effort-tag effort-md">~35 LOC</span></td>
+          <td style="color: var(--text-muted); font-size: 12px;">Wrap day row in Animated.View. Add fade+slide via useAnimatedStyle in useTimelineSwipe.</td>
+        </tr>
+        <tr>
+          <td style="color: var(--text-dim);">05</td>
+          <td class="feat-name">Today ring persist</td>
+          <td><span class="severity-tag sev-low" style="font-size: 9px;">Low</span></td>
+          <td><span class="effort-tag effort-sm">~10 LOC</span></td>
+          <td style="color: var(--text-muted); font-size: 12px;">Add amber outline when isToday && isComplete in DayCellContent styles.</td>
+        </tr>
+        <tr>
+          <td style="color: var(--text-dim);">06</td>
+          <td class="feat-name">Ring dark mode</td>
+          <td><span class="severity-tag sev-med" style="font-size: 9px;">Med</span></td>
+          <td><span class="effort-tag effort-sm">~10 LOC</span></td>
+          <td style="color: var(--text-muted); font-size: 12px;">Pass isDark to CompletionRing. Theme-aware track color and text color.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+</body>
+</html>

@@ -11,6 +11,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import * as Haptics from 'expo-haptics';
 import { useThemeColors } from '../../../theme/ThemeContext';
+import { fontFamilies } from '@/theme/typography';
 
 interface NotesEmptyStateProps {
   onAddNote: () => void;
@@ -84,6 +85,7 @@ export function NotesEmptyState({ onAddNote }: NotesEmptyStateProps) {
         <Text
           style={{
             color: colors.text.primary,
+            fontFamily: fontFamilies.primary.text,
             fontSize: 17,
             marginBottom: 4,
             textAlign: 'center',
@@ -109,6 +111,7 @@ export function NotesEmptyState({ onAddNote }: NotesEmptyStateProps) {
           <Text
             style={{
               color: colors.text.inverse,
+              fontFamily: fontFamilies.primary.text,
               fontSize: 13,
               fontWeight: '600',
             }}

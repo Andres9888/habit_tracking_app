@@ -5,7 +5,7 @@
 import { StyleSheet } from 'react-native';
 
 import { borderRadius, shadows } from '../../theme/spacing';
-import { typography } from '@/theme/typography';
+import { typography, fontFamilies} from '@/theme/typography';
 
 export const styles = StyleSheet.create({
   background: {
@@ -37,6 +37,7 @@ export const styles = StyleSheet.create({
     paddingVertical: 2,
   },
   countText: {
+    fontFamily: fontFamilies.monospace,
     fontSize: typography.caption.fontSize,
     fontWeight: '700',
   },
@@ -67,6 +68,7 @@ export const styles = StyleSheet.create({
     width: 24,
   },
   label: {
+    fontFamily: fontFamilies.primary.text,
     fontSize: typography.bodySmall.fontSize,
     fontWeight: '600',
   },

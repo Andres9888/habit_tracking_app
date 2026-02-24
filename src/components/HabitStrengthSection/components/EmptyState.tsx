@@ -6,6 +6,7 @@ import React from 'react';
 import { Text, View } from 'react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { useThemeColors } from '../../../theme/ThemeContext';
+import { fontFamilies } from '@/theme/typography';
 
 const anim = (delay: number) =>
   FadeInUp.duration(280).delay(delay).springify().damping(18);
@@ -28,6 +29,7 @@ export function EmptyState() {
       <Text
         style={{
           color: colors.text.primary,
+          fontFamily: fontFamilies.primary.text,
           fontSize: 17,
           fontWeight: '700',
           marginBottom: 8,
@@ -43,6 +45,7 @@ export function EmptyState() {
           entering={anim(60)}
           style={{
             color: colors.text.secondary,
+            fontFamily: fontFamilies.primary.text,
             fontSize: 15,
             textAlign: 'center',
           }}

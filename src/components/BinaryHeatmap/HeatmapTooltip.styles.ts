@@ -5,6 +5,7 @@
 import { StyleSheet } from 'react-native';
 
 import { COLORS, TOOLTIP } from './constants';
+import { fontFamilies } from '@/theme/typography';
 
 export const styles = StyleSheet.create({
   arrow: {
@@ -35,6 +36,7 @@ export const styles = StyleSheet.create({
   },
   tooltipText: {
     color: COLORS.TOOLTIP_TEXT,
+    fontFamily: fontFamilies.primary.text,
     fontSize: TOOLTIP.FONT_SIZE,
     fontWeight: '500',
   },

@@ -3,6 +3,7 @@
  */
 
 import { StyleSheet } from 'react-native';
+import { fontFamilies } from '@/theme/typography';
 
 export const networkStyles = StyleSheet.create({
   requestDuration: {
@@ -25,6 +26,6 @@ export const networkStyles = StyleSheet.create({
     paddingVertical: 4,
   },
   requests: { gap: 4 },
-  requestUrl: { color: 'rgba(255,255,255,0.6)', flex: 1, fontSize: 10 },
+  requestUrl: { color: 'rgba(255,255,255,0.6)', flex: 1, fontFamily: fontFamilies.monospace, fontSize: 10 },
   slowRequest: { color: '#f59e0b' },
 });

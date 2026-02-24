@@ -8,6 +8,7 @@ import { View, Text } from 'react-native';
 import { Flame } from 'lucide-react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { useThemeColors } from '../../../theme/ThemeContext';
+import { fontFamilies } from '@/theme/typography';
 
 const anim = (delay: number) =>
   FadeInUp.duration(280).delay(delay).springify().damping(18);
@@ -49,6 +50,7 @@ export function StreakEmptyState() {
       <Text
         style={{
           color: colors.text.primary,
+          fontFamily: fontFamilies.primary.text,
           fontSize: 17,
           fontWeight: '600',
           marginBottom: 4,
@@ -60,6 +62,7 @@ export function StreakEmptyState() {
       <Text
         style={{
           color: colors.text.secondary,
+          fontFamily: fontFamilies.primary.text,
           fontSize: 13,
           textAlign: 'center',
         }}

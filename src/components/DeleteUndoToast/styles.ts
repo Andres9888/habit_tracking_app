@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native';
 
 import { borderRadius, shadows } from '../../theme/spacing';
-import { typography } from '../../theme/typography';
+import { typography, fontFamilies} from '../../theme/typography';
 import { useThemeColors } from '../../theme/ThemeContext';
 
 export const DISMISS_THRESHOLD = 50;
@@ -39,6 +39,7 @@ export function useToastStyles() {
     },
     message: {
       flex: 1,
+      fontFamily: fontFamilies.primary.text,
       fontSize: typography.bodySmall.fontSize,
     },
     messageText: {
@@ -81,6 +82,7 @@ export function useToastStyles() {
     },
     undoText: {
       color: isDark ? '#FCA5A5' : '#dc2626',
+      fontFamily: fontFamilies.primary.text,
       fontSize: 13,
       fontWeight: '700',
       letterSpacing: 0.3,

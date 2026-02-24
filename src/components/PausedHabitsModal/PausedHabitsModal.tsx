@@ -11,6 +11,7 @@ import { useThemeColors } from '../../theme/ThemeContext';
 import { usePausedHabitsModalLogic } from './PausedHabitsModal.hooks';
 import { PausedHabitCard } from './PausedHabitCard';
 import { PausedEmptyState } from './PausedEmptyState';
+import { fontFamilies } from '@/theme/typography';
 
 interface PausedHabitsModalProps {
   onClose: () => void;
@@ -57,7 +58,7 @@ export default function PausedHabitsModal({
           </Pressable>
           <Text
             className='flex-1 text-center font-bold'
-            style={{ fontSize: 22, color: themeColors.text.primary }}
+            style={{ fontFamily: fontFamilies.primary.text, fontSize: 22, color: themeColors.text.primary }}
           >
             Paused Habits
           </Text>

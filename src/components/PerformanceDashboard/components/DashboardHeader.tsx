@@ -7,6 +7,7 @@ import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { StatusIndicator } from './StatusIndicator';
 import type { StatusLevel } from '../types';
+import { fontFamilies } from '@/theme/typography';
 
 interface DashboardHeaderProps {
   isExpanded: boolean;
@@ -52,6 +53,7 @@ export function DashboardHeader({
 const styles = StyleSheet.create({
   closeButton: {
     color: 'rgba(255,255,255,0.6)',
+    fontFamily: fontFamilies.primary.text,
     fontSize: 20,
     fontWeight: '300',
     marginLeft: 8,
@@ -80,6 +82,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     color: '#ffffff',
+    fontFamily: fontFamilies.primary.text,
     fontSize: 14,
     fontWeight: '600',
   },

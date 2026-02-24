@@ -1,9 +1,11 @@
 import React, { useState, useCallback } from 'react';
-import { View, Text, Pressable, Modal } from 'react-native';
+import { Text, Pressable, Modal } from 'react-native';
 import { addMonths, subMonths } from 'date-fns';
 
+import { useThemeColors } from '../../../theme/ThemeContext';
 import { MiniCalendarGrid } from './MiniCalendarGrid';
 import { MiniCalendarNav } from './MiniCalendarNav';
+import { fontFamilies } from '@/theme/typography';
 
 interface MiniCalendarPopupProps {
   visible: boolean;
@@ -19,6 +21,7 @@ export const MiniCalendarPopup: React.FC<MiniCalendarPopupProps> = ({
   onSelectDate,
   completionByDay = {},
 }) => {
+  const { isDark, colors: themeColors } = useThemeColors();
   const [month, setMonth] = useState(new Date());
   const prev = useCallback(() => setMonth((m) => subMonths(m, 1)), []);
   const next = useCallback(() => setMonth((m) => addMonths(m, 1)), []);
@@ -31,49 +34,26 @@ export const MiniCalendarPopup: React.FC<MiniCalendarPopupProps> = ({
     [onSelectDate, onClose]
   );
 
+  const cardBg = isDark ? themeColors.card : '#fff';
+  const closeColor = isDark ? '#9CA3AF' : '#a8a29e';
+
   return (
-    <Modal
-      animationType='fade'
-      transparent
-      visible={visible}
-      onRequestClose={onClose}
-    >
+    <Modal animationType='fade' transparent visible={visible} onRequestClose={onClose}>
       <Pressable
-        style={{
-          flex: 1,
-          backgroundColor: 'rgba(0,0,0,0.4)',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
+        style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.4)', justifyContent: 'center', alignItems: 'center' }}
         onPress={onClose}
       >
         <Pressable
-          style={{
-            backgroundColor: '#fff',
-            borderRadius: 16,
-            padding: 16,
-            width: 300,
-          }}
+          style={{ backgroundColor: cardBg, borderRadius: 16, padding: 16, width: 300 }}
           onPress={(e) => e.stopPropagation()}
         >
           <MiniCalendarNav month={month} onNext={next} onPrev={prev} />
-          <MiniCalendarGrid
-            completionByDay={completionByDay}
-            month={month}
-            onSelectDate={handleSelect}
-          />
+          <MiniCalendarGrid completionByDay={completionByDay} month={month} onSelectDate={handleSelect} />
           <Pressable
-            style={{
-              alignSelf: 'center',
-              marginTop: 8,
-              paddingVertical: 4,
-              paddingHorizontal: 12,
-            }}
+            style={{ alignSelf: 'center', marginTop: 8, paddingVertical: 4, paddingHorizontal: 12 }}
             onPress={onClose}
           >
-            <Text style={{ fontSize: 12, fontWeight: '600', color: '#a8a29e' }}>
-              Close
-            </Text>
+            <Text style={{ fontFamily: fontFamilies.primary.text, fontSize: 12, fontWeight: '600', color: closeColor }}>Close</Text>
           </Pressable>
         </Pressable>
       </Pressable>

@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { fontFamilies } from '@/theme/typography';
 
 export const styles = StyleSheet.create({
   buttonPressed: {
@@ -13,6 +14,7 @@ export const styles = StyleSheet.create({
   },
   label: {
     color: '#ffffff',
+    fontFamily: fontFamilies.primary.text,
     fontSize: 13,
     fontWeight: '600',
     marginLeft: 6,

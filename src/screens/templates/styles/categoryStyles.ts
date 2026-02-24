@@ -1,4 +1,6 @@
 import { StyleSheet } from 'react-native';
+import { shadows } from '@/theme/spacing';
+import { fontFamilies } from '@/theme/typography';
 
 export const categoryStyles = StyleSheet.create({
   categoriesContainer: {
@@ -15,16 +17,12 @@ export const categoryStyles = StyleSheet.create({
   },
   categoryChip: {
     alignItems: 'center',
-    elevation: 1,
     flexDirection: 'row',
     gap: 6,
     marginRight: 8,
     paddingHorizontal: 14,
     paddingVertical: 10,
-    shadowColor: '#1c1917',
-    shadowOffset: { height: 1, width: 0 },
-    shadowOpacity: 0.05,
-    shadowRadius: 2,
+    ...shadows.subtle,
   },
   categoryColorDot: {
     borderRadius: 999,
@@ -38,6 +36,7 @@ export const categoryStyles = StyleSheet.create({
     paddingVertical: 2,
   },
   categoryCountText: {
+    fontFamily: fontFamilies.primary.text,
     fontSize: 13,
     fontWeight: '600',
   },

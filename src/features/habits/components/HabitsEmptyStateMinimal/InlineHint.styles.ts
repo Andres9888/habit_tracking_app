@@ -1,40 +1,27 @@
+import { colors } from '../../../../theme/colors';
+import { borderRadius, spacing } from '../../../../theme/spacing';
+import { fontFamilies } from '../../../../theme/typography';
+
 const templatesButtonBaseStyle = {
-  borderRadius: 14,
+  borderRadius: borderRadius.medium,
   elevation: 4,
   height: 52,
   overflow: 'hidden',
-  shadowColor: '#047857',
+  shadowColor: colors.primary[700],
   shadowOffset: { height: 4, width: 0 },
   shadowRadius: 16,
   width: '100%',
 } as const;
 
-export const containerStyle = {
-  alignItems: 'center',
-  marginTop: 16,
-  width: '100%',
-} as const;
-
-export const dividerStyle = {
-  alignItems: 'center',
-  flexDirection: 'row',
-  gap: 10,
-  marginBottom: 10,
-  width: '100%',
-} as const;
-
+export const containerStyle = { alignItems: 'center', marginTop: spacing.base, width: '100%' } as const;
+export const dividerStyle = { alignItems: 'center', flexDirection: 'row', gap: 10, marginBottom: 10, width: '100%' } as const;
 export const dividerLineStyle = { flex: 1, height: 0.5 } as const;
-
-export const dividerTextBaseStyle = {
-  fontSize: 13,
-  lineHeight: 18,
-  textAlign: 'center',
-} as const;
-
-export const actionsColumnStyle = { gap: 8, width: '100%' } as const;
+export const dividerTextBaseStyle = { fontFamily: fontFamilies.primary.text, fontSize: 13, lineHeight: 18, textAlign: 'center' } as const;
+export const actionsColumnStyle = { gap: spacing.sm, width: '100%' } as const;
 
 export const buildMyOwnLabelStyle = {
   flex: 1,
+  fontFamily: fontFamilies.primary.text,
   fontSize: 13,
   fontWeight: '600',
   letterSpacing: -0.1,
@@ -42,7 +29,7 @@ export const buildMyOwnLabelStyle = {
 
 export const templatesGradientStyle = {
   alignItems: 'center',
-  borderRadius: 14,
+  borderRadius: borderRadius.medium,
   flex: 1,
   flexDirection: 'row',
   gap: 10,
@@ -53,6 +40,7 @@ export const templatesGradientStyle = {
 
 export const templatesLabelStyle = {
   flex: 1,
+  fontFamily: fontFamilies.primary.text,
   fontSize: 14,
   fontWeight: '700',
   letterSpacing: -0.2,
@@ -60,19 +48,20 @@ export const templatesLabelStyle = {
 
 export const badgeContainerStyle = {
   backgroundColor: 'rgba(255,255,255,0.22)',
-  borderRadius: 8,
+  borderRadius: borderRadius.small,
   paddingHorizontal: 9,
   paddingVertical: 3,
 } as const;
 
 export const badgeTextStyle = {
+  fontFamily: fontFamilies.primary.text,
   fontSize: 11,
   fontWeight: '800',
 } as const;
 
 export const accentStripeStyle = {
-  backgroundColor: '#6EE7B7',
-  borderRadius: 2,
+  backgroundColor: colors.primary[300],
+  borderRadius: borderRadius.xs,
   bottom: 0,
   left: 0,
   position: 'absolute',
@@ -82,22 +71,22 @@ export const accentStripeStyle = {
 
 export function getBuildMyOwnCardStyle(
   pressed: boolean,
-  colors: { bg: string; bgPressed: string; borderColor: string }
+  btnColors: { bg: string; bgPressed: string; borderColor: string }
 ) {
   return {
     alignItems: 'center',
-    backgroundColor: pressed ? colors.bgPressed : colors.bg,
-    borderColor: colors.borderColor,
-    borderRadius: 12,
+    backgroundColor: pressed ? btnColors.bgPressed : btnColors.bg,
+    borderColor: btnColors.borderColor,
+    borderRadius: borderRadius.medium,
     borderWidth: 1,
     elevation: 1,
     flexDirection: 'row',
     gap: 10,
     height: 44,
     overflow: 'hidden',
-    paddingLeft: 16,
+    paddingLeft: spacing.base,
     paddingRight: 14,
-    shadowColor: '#000000',
+    shadowColor: colors.gray[900],
     shadowOffset: { height: 1, width: 0 },
     shadowOpacity: 0.06,
     shadowRadius: 3,

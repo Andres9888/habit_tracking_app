@@ -11,7 +11,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import { Modal } from './Modal';
 import { Button } from './Button/Button';
 import { useAppTheme } from '../theme';
-import { typography } from '../theme/typography';
+import { typography, fontFamilies} from '../theme/typography';
 
 interface PauseHabitModalProps {
   visible: boolean;
@@ -68,12 +68,14 @@ const styles = StyleSheet.create({
     // Modal already has padding, but we can add vertical spacing
   },
   message: {
+    fontFamily: fontFamilies.primary.text,
     fontSize: typography.body.fontSize,
     lineHeight: 24,
     marginBottom: 24,
     textAlign: 'center',
   },
   title: {
+    fontFamily: fontFamilies.primary.text,
     fontSize: typography.heading2.fontSize,
     fontWeight: '600',
     marginBottom: 12,

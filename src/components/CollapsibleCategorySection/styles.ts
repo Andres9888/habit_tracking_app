@@ -5,7 +5,7 @@
 import { StyleSheet } from 'react-native';
 
 import { borderRadius } from '../../theme/spacing';
-import { typography } from '../../theme/typography';
+import { typography, fontFamilies} from '../../theme/typography';
 
 import { useThemeColors } from '../../theme/ThemeContext';
 
@@ -24,6 +24,7 @@ const baseStyles = StyleSheet.create({
     marginTop: 8,
   },
   countText: {
+    fontFamily: fontFamilies.monospace,
     fontSize: 13,
     fontWeight: '500',
     marginTop: 2,
@@ -49,6 +50,7 @@ const baseStyles = StyleSheet.create({
     width: 48,
   },
   label: {
+    fontFamily: fontFamilies.primary.text,
     fontSize: typography.body.fontSize,
     fontWeight: '700',
   },

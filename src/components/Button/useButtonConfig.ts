@@ -1,4 +1,4 @@
-import { useAppTheme } from '../../theme';
+import { useAppTheme, fontFamilies} from '../../theme';
 import type {
   ButtonSize,
   ButtonVariant,
@@ -20,18 +20,21 @@ export function useButtonConfig(
 
   const sizeConfigs: Record<ButtonSize, SizeConfig> = {
     large: {
+      fontFamily: fontFamilies.primary.text,
       fontSize: 17,
       height: 56,
       iconSize: 24,
       paddingHorizontal: theme.custom.spacing.xl,
     },
     medium: {
+      fontFamily: fontFamilies.primary.text,
       fontSize: 17,
       height: theme.custom.componentSpacing.button.height,
       iconSize: 20,
       paddingHorizontal: theme.custom.spacing.lg,
     },
     small: {
+      fontFamily: fontFamilies.primary.text,
       fontSize: 15,
       height: 44,
       iconSize: 16,

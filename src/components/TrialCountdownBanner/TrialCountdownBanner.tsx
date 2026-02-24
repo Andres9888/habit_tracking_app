@@ -6,6 +6,7 @@ import React from 'react';
 import { Text, View, Pressable, StyleSheet } from 'react-native';
 import type { TrialCountdownBannerProps } from './types';
 import { getTrialMessage } from './styles';
+import { fontFamilies } from '@/theme/typography';
 
 export function TrialCountdownBanner({
   daysRemaining,
@@ -54,13 +55,13 @@ const localStyles = StyleSheet.create({
     marginLeft: 4,
     width: 44,
   },
-  dismissText: { color: '#6b7280', fontSize: 17 },
-  text: { color: '#1f2937', flex: 1, fontSize: 13, fontWeight: '500' },
+  dismissText: { color: '#6b7280', fontFamily: fontFamilies.primary.text, fontSize: 17 },
+  text: { color: '#1f2937', flex: 1, fontFamily: fontFamilies.primary.text, fontSize: 13, fontWeight: '500' },
   upgradeButton: {
     backgroundColor: '#7c3aed',
     borderRadius: 8,
     paddingHorizontal: 16,
     paddingVertical: 8,
   },
-  upgradeText: { color: '#ffffff', fontSize: 13, fontWeight: '600' },
+  upgradeText: { color: '#ffffff', fontFamily: fontFamilies.primary.text, fontSize: 13, fontWeight: '600' },
 });

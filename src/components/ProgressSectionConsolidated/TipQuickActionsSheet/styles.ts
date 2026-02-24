@@ -5,7 +5,7 @@
 import { StyleSheet } from 'react-native';
 
 import { borderRadius } from '../../../theme/spacing';
-import { typography } from '../../../theme/typography';
+import { typography, fontFamilies} from '../../../theme/typography';
 
 export const styles = StyleSheet.create({
   actionItem: {
@@ -20,6 +20,7 @@ export const styles = StyleSheet.create({
   },
   actionLabel: {
     color: '#1c1917',
+    fontFamily: fontFamilies.primary.text,
     fontSize: 15,
     fontWeight: '600',
   },
@@ -30,6 +31,7 @@ export const styles = StyleSheet.create({
   },
   actionSubtitle: {
     color: '#78716c',
+    fontFamily: fontFamilies.primary.text,
     fontSize: 13,
     marginTop: 2,
   },
@@ -63,6 +65,7 @@ export const styles = StyleSheet.create({
   },
   headerSubtitle: {
     color: '#78716c',
+    fontFamily: fontFamilies.primary.text,
     fontSize: typography.bodySmall.fontSize,
     marginTop: 4,
   },
@@ -72,6 +75,7 @@ export const styles = StyleSheet.create({
   },
   headerTitle: {
     color: '#1c1917',
+    fontFamily: fontFamilies.primary.text,
     fontSize: 17,
     fontWeight: '700',
   },

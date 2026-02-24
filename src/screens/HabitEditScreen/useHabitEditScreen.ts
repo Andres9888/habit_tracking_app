@@ -6,6 +6,7 @@ import { createDateFromTimeString, getDefaultReminderTime } from '../../utils/no
 import useHapticFeedback from '../../hooks/useHapticFeedback';
 import { useHabitSaveHandler } from './useHabitSaveHandler';
 import { useHabitActions } from './useHabitActions';
+import { parseHabitName } from '../../components/CreateHabitModal/utils';
 
 interface UseHabitEditScreenProps {
   habitId: Id<'habits'> | null;
@@ -14,6 +15,7 @@ interface UseHabitEditScreenProps {
 
 export function useHabitEditScreen({ habitId, onClose }: UseHabitEditScreenProps) {
   const { triggerSelection, triggerSuccess } = useHapticFeedback();
+  const defaultEmoji = '💪';
 
   const habit = useQuery(api.habits.get, habitId ? { habitId } : 'skip');
 
@@ -25,12 +27,11 @@ export function useHabitEditScreen({ habitId, onClose }: UseHabitEditScreenProps
 
   useEffect(() => {
     if (habit) {
-      const parts = (habit.name ?? '').split(' ');
-      const emoji = parts[0] ?? '💪';
-      const name = parts.slice(1).join(' ');
+      const parsedName = parseHabitName(habit.name ?? '');
+      const selectedIcon = habit.icon ?? parsedName.emoji;
 
-      setHabitName(name || habit.name || '');
-      setSelectedEmoji(emoji || '💪');
+      setHabitName(parsedName.name || habit.name || '');
+      setSelectedEmoji(selectedIcon || defaultEmoji);
       setSelectedColor(habit.color || habit.iconColor || '#10B981');
       setRemindersEnabled(habit.remindersEnabled ?? false);
       setReminderTime(createDateFromTimeString(habit.reminderTime, getDefaultReminderTime()));

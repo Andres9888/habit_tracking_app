@@ -2,7 +2,7 @@ import { StyleSheet } from 'react-native';
 
 import { colors } from '../../theme/colors';
 import { borderRadius, shadows, spacing } from '../../theme/spacing';
-import { typography } from '../../theme/typography';
+import { typography, fontFamilies} from '../../theme/typography';
 
 export const styles = StyleSheet.create({
   categoriesContent: {
@@ -31,6 +31,7 @@ export const styles = StyleSheet.create({
   },
   categoryPillText: {
     color: colors.gray[500],
+    fontFamily: fontFamilies.primary.text,
     fontSize: typography.bodySmall.fontSize,
     fontWeight: '500',
     marginLeft: spacing.xs,

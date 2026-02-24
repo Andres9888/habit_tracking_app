@@ -5,7 +5,7 @@
 import { StyleSheet } from 'react-native';
 
 import { borderRadius } from '../../../theme/spacing';
-import { typography } from '../../../theme/typography';
+import { typography, fontFamilies} from '../../../theme/typography';
 
 export const heroStyles = StyleSheet.create({
   descriptionSection: {
@@ -14,6 +14,7 @@ export const heroStyles = StyleSheet.create({
   },
   descriptionText: {
     color: '#4B5563',
+    fontFamily: fontFamilies.primary.text,
     fontSize: typography.body.fontSize,
     lineHeight: 26,
     textAlign: 'center',
@@ -60,6 +61,7 @@ export const heroStyles = StyleSheet.create({
     paddingVertical: 8,
   },
   metadataPillText: {
+    fontFamily: fontFamilies.monospace,
     fontSize: 13,
     fontWeight: '600',
   },
@@ -72,6 +74,7 @@ export const heroStyles = StyleSheet.create({
   },
   templateName: {
     color: '#1c1917',
+    fontFamily: fontFamilies.primary.text,
     fontSize: 28,
     fontWeight: '800',
     letterSpacing: -0.5,

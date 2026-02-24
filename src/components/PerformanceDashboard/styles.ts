@@ -4,10 +4,12 @@
  */
 
 import { StyleSheet } from 'react-native';
+import { fontFamilies } from '@/theme/typography';
 
 export const styles = StyleSheet.create({
   closeButton: {
     color: 'rgba(255,255,255,0.6)',
+    fontFamily: fontFamilies.monospace,
     fontSize: 20,
     fontWeight: '300',
     marginLeft: 8,
@@ -35,6 +37,7 @@ export const styles = StyleSheet.create({
   },
   expandIcon: {
     color: 'rgba(255,255,255,0.6)',
+    fontFamily: fontFamilies.monospace,
     fontSize: 10,
   },
   fab: {
@@ -77,11 +80,13 @@ export const styles = StyleSheet.create({
   },
   headerTitle: {
     color: '#ffffff',
+    fontFamily: fontFamilies.monospace,
     fontSize: 14,
     fontWeight: '600',
   },
   miniLabel: {
     color: 'rgba(255,255,255,0.5)',
+    fontFamily: fontFamilies.monospace,
     fontSize: 9,
     fontWeight: '500',
   },

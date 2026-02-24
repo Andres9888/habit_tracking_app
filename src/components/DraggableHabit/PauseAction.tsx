@@ -2,7 +2,7 @@ import React from 'react';
 import { Animated, View, Text, Pressable } from 'react-native';
 import { Pause, Play } from 'lucide-react-native';
 import { borderRadius } from '../../theme/spacing';
-import { typography } from '@/theme/typography';
+import { typography, fontFamilies} from '@/theme/typography';
 
 interface PauseActionProps {
   dragX: Animated.AnimatedInterpolation<number>;
@@ -81,6 +81,7 @@ export function PauseAction({
           <Text
             style={{
               color: 'white',
+              fontFamily: fontFamilies.primary.text,
               fontSize: typography.tabBar.fontSize,
               fontWeight: '600',
               letterSpacing: 0.2,

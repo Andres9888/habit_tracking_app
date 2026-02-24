@@ -5,7 +5,8 @@
 
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
-import { colors } from '../../theme/colors';
+import { colors } from '../../theme/colors'
+import { fontFamilies } from '../../theme/typography';;
 
 interface LoadingTimeoutCardProps {
   onRetry: () => void;
@@ -40,6 +41,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: colors.text.inverse,
+    fontFamily: fontFamilies.primary.text,
     fontSize: 17,
     fontWeight: '600',
   },
@@ -59,6 +61,7 @@ const styles = StyleSheet.create({
   },
   description: {
     color: colors.text.secondary,
+    fontFamily: fontFamilies.primary.text,
     fontSize: 13,
     lineHeight: 20,
     marginBottom: 20,
@@ -66,6 +69,7 @@ const styles = StyleSheet.create({
   },
   title: {
     color: colors.text.primary,
+    fontFamily: fontFamilies.primary.text,
     fontSize: 17,
     fontWeight: '600',
     marginBottom: 8,

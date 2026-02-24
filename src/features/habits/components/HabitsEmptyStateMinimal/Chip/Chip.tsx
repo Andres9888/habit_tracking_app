@@ -6,6 +6,7 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import { useHapticFeedback } from '../../../../../hooks/useHapticFeedback';
+import { fontFamilies } from '@/theme/typography';
 import { BORDER_RADIUS, TOUCH_TARGETS } from '../constants';
 import type { SuggestionChip } from '../types';
 import { useEmptyStateColors } from '../useEmptyStateColors';
@@ -99,7 +100,7 @@ export function Chip({ chip, isSelected, onPress, staggerDelay }: ChipProps) {
       onPressOut={handlePressOut}
     >
       <Text style={{ fontSize: 17 }}>{chip.emoji}</Text>
-      <Animated.Text style={[textStyle, { fontSize: 13, fontWeight: '600' }]}>
+      <Animated.Text style={[textStyle, { fontFamily: fontFamilies.primary.text, fontSize: 13, fontWeight: '600' }]}>
         {chip.label}
       </Animated.Text>
     </AnimatedPressable>

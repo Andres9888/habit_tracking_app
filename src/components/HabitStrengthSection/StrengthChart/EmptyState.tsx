@@ -10,6 +10,7 @@ import Animated, { FadeIn } from 'react-native-reanimated';
 import { useThemeColors } from '../../../theme/ThemeContext';
 
 import { CHART_HEIGHT } from '../constants';
+import { fontFamilies } from '@/theme/typography';
 
 /**
  * Displays a message when chart has insufficient data.
@@ -33,6 +34,7 @@ export const EmptyState = React.memo(function EmptyState() {
       <Text
         style={{
           color: colors.text.secondary,
+          fontFamily: fontFamilies.primary.text,
           fontSize: 14,
           textAlign: 'center',
         }}

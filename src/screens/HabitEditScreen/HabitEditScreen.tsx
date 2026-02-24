@@ -6,6 +6,7 @@ import Animated, { FadeIn, FadeInUp } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 import { useThemeColors } from '../../theme/ThemeContext';
+import { shadows } from '../../theme/spacing';
 import { EditHeader } from './EditHeader';
 import { HabitEditSkeleton } from './HabitEditSkeleton';
 import { NameInputSection } from './NameInputSection';
@@ -23,7 +24,7 @@ function HabitEditScreenContent({
 }: HabitEditScreenProps) {
   const insets = useSafeAreaInsets();
   const state = useHabitEditScreen({ habitId, onClose });
-  const { colors: themeColors, isDark } = useThemeColors();
+  const { colors: themeColors } = useThemeColors();
   return (
     <Modal
       accessibilityViewIsModal
@@ -94,11 +95,7 @@ function HabitEditScreenContent({
                   entering={FadeInUp.delay(400).springify().damping(18)}
                   style={{
                     backgroundColor: themeColors.card,
-                    elevation: 4,
-                    shadowColor: isDark ? '#000000' : '#1c1917',
-                    shadowOffset: { height: 4, width: 0 },
-                    shadowOpacity: isDark ? 0.3 : 0.08,
-                    shadowRadius: 16,
+                    ...shadows.card,
                   }}
                 >
                   <DangerZone

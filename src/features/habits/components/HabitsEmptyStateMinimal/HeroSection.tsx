@@ -1,4 +1,5 @@
 import Animated, { AnimatedStyle } from 'react-native-reanimated';
+import { fontFamilies } from '@/theme/typography';
 import { AnimatedEntrance } from './AnimatedEntrance';
 import { ENTRANCE_DELAYS } from './animations';
 import { COPY } from './constants';
@@ -37,6 +38,7 @@ export function HeroSection({
           style={[
             {
               color: colors.textPrimary,
+              fontFamily: fontFamilies.primary.display,
               fontSize: 28,
               fontWeight: '800',
               letterSpacing: -0.5,

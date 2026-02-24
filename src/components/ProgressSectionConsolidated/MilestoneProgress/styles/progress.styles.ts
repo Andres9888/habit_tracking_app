@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { borderRadius } from '../../../../theme/spacing';
-import { typography } from '@/theme/typography';
+import { typography, fontFamilies} from '@/theme/typography';
 
 export const progressStyles = StyleSheet.create({
   badgeIcon: {
@@ -17,6 +17,7 @@ export const progressStyles = StyleSheet.create({
   },
   daysAway: {
     color: '#6b7280', // gray-500
+    fontFamily: fontFamilies.primary.text,
     fontSize: 13,
     fontWeight: '500',
   },
@@ -32,11 +33,13 @@ export const progressStyles = StyleSheet.create({
   },
   headerTitle: {
     color: '#1f2937', // gray-800
+    fontFamily: fontFamilies.primary.text,
     fontSize: 15,
     fontWeight: '600',
   },
   milestoneName: {
     color: '#78716c', // gray-500 (WCAG AA compliant)
+    fontFamily: fontFamilies.primary.text,
     fontSize: typography.caption.fontSize,
     marginBottom: 12,
   },
@@ -52,6 +55,7 @@ export const progressStyles = StyleSheet.create({
     width: 24,
   },
   progressBadgeText: {
+    fontFamily: fontFamilies.primary.text,
     fontSize: typography.caption.fontSize,
   },
   progressBarContainer: {
@@ -77,6 +81,7 @@ export const progressStyles = StyleSheet.create({
   },
   progressLabelText: {
     color: '#78716c', // gray-500 (WCAG AA compliant)
+    fontFamily: fontFamilies.primary.text,
     fontSize: typography.tabBar.fontSize,
   },
 });

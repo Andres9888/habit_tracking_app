@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>InlineHint H4 Mock — Gradient + Accent Border</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      background: #1a1a1a;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+    }
+
+    h2, h3, p {
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+
+    .comparison {
+      display: flex;
+      gap: 40px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .variant {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .variant-label {
+      color: #a8a29e;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    /* Phone frame */
+    .phone-frame {
+      width: 390px;
+      border-radius: 40px;
+      overflow: hidden;
+      box-shadow: 0 25px 80px rgba(0,0,0,0.5), inset 0 0 0 10px #000;
+      position: relative;
+    }
+
+    .notch {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 120px;
+      height: 28px;
+      background: #000;
+      border-radius: 0 0 16px 16px;
+      z-index: 100;
+    }
+
+    /* Light mode screen */
+    .screen-light {
+      background: linear-gradient(180deg, #f0fdf4 0%, #fafaf9 40%);
+      padding: 80px 24px 40px;
+    }
+
+    /* Dark mode screen */
+    .screen-dark {
+      background: linear-gradient(180deg, #111827 0%, #0f172a 40%);
+      padding: 80px 24px 40px;
+    }
+
+    /* === CONTEXT AREA (above InlineHint) === */
+    .context-area {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .context-emoji {
+      font-size: 48px;
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    .context-headline-light {
+      font-size: 24px;
+      font-weight: 700;
+      color: #1c1917;
+      margin-bottom: 8px !important;
+    }
+
+    .context-headline-dark {
+      font-size: 24px;
+      font-weight: 700;
+      color: #f5f5f4;
+      margin-bottom: 8px !important;
+    }
+
+    .context-input-light {
+      width: 100%;
+      height: 52px;
+      border-radius: 14px;
+      border: 1.5px solid #E7E5E4;
+      background: #fff;
+      padding: 0 16px;
+      font-size: 16px;
+      color: #A8A29E;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+    }
+
+    .context-input-dark {
+      width: 100%;
+      height: 52px;
+      border-radius: 14px;
+      border: 1.5px solid #374151;
+      background: #1f2937;
+      padding: 0 16px;
+      font-size: 16px;
+      color: #6b7280;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+    }
+
+    .context-cta {
+      width: 100%;
+      height: 52px;
+      border-radius: 14px;
+      background: #d6d3d1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      font-weight: 700;
+      color: #a8a29e;
+      margin-bottom: 0;
+    }
+
+    .context-cta-dark {
+      background: #374151;
+      color: #6b7280;
+    }
+
+    /* === INLINE HINT COMPONENT (this is what we're mocking) === */
+    .inline-hint {
+      width: 100%;
+      margin-top: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* Divider */
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      margin-bottom: 10px;
+    }
+
+    .divider-line-light {
+      flex: 1;
+      height: 0.5px;
+      background: #E7E5E4;
+    }
+
+    .divider-line-dark {
+      flex: 1;
+      height: 0.5px;
+      background: #374151;
+    }
+
+    .divider-text-light {
+      font-size: 13px;
+      font-weight: 500;
+      color: #78716c;
+      line-height: 18px;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .divider-text-dark {
+      font-size: 13px;
+      font-weight: 500;
+      color: #9ca3af;
+      line-height: 18px;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    /* Actions column */
+    .actions-column {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      width: 100%;
+    }
+
+    /* Browse templates gradient button */
+    .templates-button {
+      width: 100%;
+      height: 52px;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 4px 16px rgba(4, 120, 87, 0.3);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .templates-button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(4, 120, 87, 0.4);
+    }
+
+    .templates-button:active {
+      transform: scale(0.97);
+      box-shadow: 0 2px 10px rgba(4, 120, 87, 0.15);
+    }
+
+    .templates-gradient-light {
+      background: linear-gradient(110deg, #047857 0%, #059669 55%, #10B981 100%);
+    }
+
+    .templates-gradient-dark {
+      background: linear-gradient(110deg, rgba(4,120,87,0.85) 0%, rgba(5,150,105,0.85) 55%, rgba(16,185,129,0.85) 100%);
+    }
+
+    .templates-inner {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 18px;
+      height: 100%;
+      width: 100%;
+    }
+
+    .templates-emoji {
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .templates-label {
+      flex: 1;
+      font-size: 14px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: -0.2px;
+    }
+
+    .templates-badge {
+      background: rgba(255, 255, 255, 0.22);
+      border-radius: 8px;
+      padding: 3px 9px;
+      flex-shrink: 0;
+    }
+
+    .templates-badge-text {
+      font-size: 11px;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    /* Build my own card */
+    .build-card {
+      width: 100%;
+      height: 44px;
+      border-radius: 12px;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .build-card-light {
+      background: #FFFFFF;
+      border: 1px solid #E7E5E4;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+    }
+
+    .build-card-dark {
+      background: #1F2937;
+      border: 1px solid #374151;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    }
+
+    .build-card:hover {
+      transform: translateY(-1px);
+    }
+
+    .build-card-light:hover {
+      background: #fafaf9;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    }
+
+    .build-card-dark:hover {
+      background: #283548;
+    }
+
+    .build-card:active {
+      transform: scale(0.97);
+    }
+
+    .build-card-light:active {
+      background: #F5F5F4;
+    }
+
+    .build-card-dark:active {
+      background: #283548;
+    }
+
+    /* Accent stripe */
+    .accent-stripe {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      width: 3.5px;
+      border-radius: 2px;
+    }
+
+    .accent-stripe-light {
+      background: #6EE7B7;
+    }
+
+    .accent-stripe-dark {
+      background: #34D399;
+    }
+
+    .build-inner {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      height: 100%;
+      padding-left: 16px;
+      padding-right: 14px;
+    }
+
+    .build-emoji {
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .build-label-light {
+      flex: 1;
+      font-size: 13px;
+      font-weight: 600;
+      color: #44403C;
+      letter-spacing: -0.1px;
+    }
+
+    .build-label-dark {
+      flex: 1;
+      font-size: 13px;
+      font-weight: 600;
+      color: #d1d5db;
+      letter-spacing: -0.1px;
+    }
+
+    .build-arrow-light {
+      font-size: 13px;
+      color: #A8A29E;
+      flex-shrink: 0;
+    }
+
+    .build-arrow-dark {
+      font-size: 13px;
+      color: #6b7280;
+      flex-shrink: 0;
+    }
+
+    /* Annotation */
+    .annotation {
+      margin-top: 20px;
+      padding: 12px 16px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      width: 100%;
+    }
+
+    .annotation-title {
+      font-size: 10px;
+      font-weight: 700;
+      color: #10b981;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 6px !important;
+    }
+
+    .annotation-item {
+      font-size: 11px;
+      color: #a8a29e;
+      line-height: 1.6;
+    }
+
+    .annotation-item span {
+      color: #e7e5e4;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <div class="comparison">
+
+    <!-- LIGHT MODE -->
+    <div class="variant">
+      <div class="variant-label">Light Mode</div>
+      <div class="phone-frame">
+        <div class="notch"></div>
+        <div class="screen-light">
+          <div class="context-area">
+            <span class="context-emoji">🌱</span>
+            <h2 class="context-headline-light">What habit do you<br>want to build?</h2>
+          </div>
+
+          <div class="context-input-light">Type a habit name...</div>
+          <div class="context-cta">Start tracking</div>
+
+          <!-- === InlineHint Component === -->
+          <div class="inline-hint">
+            <div class="divider">
+              <div class="divider-line-light"></div>
+              <span class="divider-text-light">or explore</span>
+              <div class="divider-line-light"></div>
+            </div>
+
+            <div class="actions-column">
+              <!-- Browse templates gradient button -->
+              <div class="templates-button templates-gradient-light">
+                <div class="templates-inner">
+                  <span class="templates-emoji">📚</span>
+                  <span class="templates-label">browse templates</span>
+                  <div class="templates-badge">
+                    <span class="templates-badge-text">200+</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Build my own card with accent stripe -->
+              <div class="build-card build-card-light">
+                <div class="accent-stripe accent-stripe-light"></div>
+                <div class="build-inner">
+                  <span class="build-emoji">✏️</span>
+                  <span class="build-label-light">Build my own</span>
+                  <span class="build-arrow-light">→</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Light mode annotations -->
+      <div class="annotation" style="width: 390px;">
+        <div class="annotation-title">Spec Values (Light)</div>
+        <div class="annotation-item"><span>Gradient:</span> #047857 → #059669 → #10B981 (110deg)</div>
+        <div class="annotation-item"><span>Shadow:</span> 0 4px 16px rgba(4,120,87,0.3) — emerald tinted</div>
+        <div class="annotation-item"><span>Badge:</span> rgba(255,255,255,0.22) — frosted glass</div>
+        <div class="annotation-item"><span>Card bg:</span> #FFFFFF — hardcoded white</div>
+        <div class="annotation-item"><span>Stripe:</span> 3.5px #6EE7B7 (emerald-300)</div>
+        <div class="annotation-item"><span>Card shadow:</span> 0 1px 3px rgba(0,0,0,0.06)</div>
+        <div class="annotation-item"><span>Gap:</span> 8px between CTAs</div>
+      </div>
+    </div>
+
+    <!-- DARK MODE -->
+    <div class="variant">
+      <div class="variant-label">Dark Mode</div>
+      <div class="phone-frame">
+        <div class="notch"></div>
+        <div class="screen-dark">
+          <div class="context-area">
+            <span class="context-emoji">🌱</span>
+            <h2 class="context-headline-dark">What habit do you<br>want to build?</h2>
+          </div>
+
+          <div class="context-input-dark">Type a habit name...</div>
+          <div class="context-cta context-cta-dark">Start tracking</div>
+
+          <!-- === InlineHint Component === -->
+          <div class="inline-hint">
+            <div class="divider">
+              <div class="divider-line-dark"></div>
+              <span class="divider-text-dark">or explore</span>
+              <div class="divider-line-dark"></div>
+            </div>
+
+            <div class="actions-column">
+              <!-- Browse templates gradient button -->
+              <div class="templates-button templates-gradient-dark">
+                <div class="templates-inner">
+                  <span class="templates-emoji">📚</span>
+                  <span class="templates-label">browse templates</span>
+                  <div class="templates-badge">
+                    <span class="templates-badge-text">200+</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Build my own card with accent stripe -->
+              <div class="build-card build-card-dark">
+                <div class="accent-stripe accent-stripe-dark"></div>
+                <div class="build-inner">
+                  <span class="build-emoji">✏️</span>
+                  <span class="build-label-dark">Build my own</span>
+                  <span class="build-arrow-dark">→</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dark mode annotations -->
+      <div class="annotation" style="width: 390px;">
+        <div class="annotation-title">Spec Values (Dark)</div>
+        <div class="annotation-item"><span>Gradient:</span> rgba(4,120,87,0.85) → rgba(16,185,129,0.85)</div>
+        <div class="annotation-item"><span>Card bg:</span> #1F2937 (gray-800, one level above bg)</div>
+        <div class="annotation-item"><span>Stripe:</span> 3.5px #34D399 (emerald-400, brighter)</div>
+        <div class="annotation-item"><span>Card pressed:</span> #283548</div>
+        <div class="annotation-item"><span>Text colors:</span> via useEmptyStateColors hook</div>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>

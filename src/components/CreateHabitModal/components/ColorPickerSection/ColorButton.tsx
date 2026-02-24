@@ -7,6 +7,7 @@ import {
   View,
 } from 'react-native';
 import useHapticFeedback from '../../../../hooks/useHapticFeedback';
+import { shadows } from '../../../../theme/spacing';
 import { getColorName } from '../../constants';
 import type { ColorButtonProps } from './types';
 import { useColorButtonAnimations } from './useColorButtonAnimations';
@@ -43,11 +44,8 @@ const ColorButtonComponent = ({
 
   const selectedShadowStyle = isSelected
     ? {
-        elevation: 6,
-        shadowColor: '#1c1917',
-        shadowOffset: { height: 2, width: 0 },
+        ...shadows.floatingActionButton,
         shadowOpacity: 0.3,
-        shadowRadius: 4,
       }
     : undefined;
 

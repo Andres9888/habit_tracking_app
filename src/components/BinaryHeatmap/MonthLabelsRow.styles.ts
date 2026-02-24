@@ -5,6 +5,7 @@
 import { StyleSheet } from 'react-native';
 
 import { CELL_GAP, COLORS, MONTH_LABEL } from './constants';
+import { fontFamilies } from '@/theme/typography';
 
 export const styles = StyleSheet.create({
   container: {
@@ -21,6 +22,7 @@ export const styles = StyleSheet.create({
   },
   labelText: {
     color: COLORS.TEXT_SECONDARY,
+    fontFamily: fontFamilies.primary.text,
     fontSize: MONTH_LABEL.FONT_SIZE,
     fontWeight: '500',
   },

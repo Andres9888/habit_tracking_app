@@ -4,6 +4,7 @@ import { Pressable, Text } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { ModalCloseButton } from '../ui/ModalCloseButton';
 import { useThemeColors } from '../../theme/ThemeContext';
+import { fontFamilies } from '@/theme/typography';
 
 const anim = (delay: number) =>
   FadeInDown.duration(280).delay(delay).springify().damping(18);
@@ -35,6 +36,7 @@ export const StatsNotesHeader = memo(function StatsNotesHeader({
         <Text
           className='font-bold'
           style={{
+            fontFamily: fontFamilies.primary.text,
             fontSize: 22,
             letterSpacing: -0.35,
             color: colors.text.primary,
@@ -67,6 +69,7 @@ export const StatsNotesHeader = memo(function StatsNotesHeader({
               className='font-semibold'
               style={{
                 color: activeTab === tab ? activeColor : colors.text.secondary,
+                fontFamily: fontFamilies.primary.text,
                 fontSize: 17,
               }}
             >

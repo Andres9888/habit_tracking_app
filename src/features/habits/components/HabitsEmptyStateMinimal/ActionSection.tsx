@@ -46,20 +46,28 @@ export function ActionSection({
         <ErrorMessage message={errorMessage} onDismiss={onDismissError} />
       )}
 
-      <Animated.View
-        accessibilityElementsHidden={isKeyboardVisible}
-        importantForAccessibility={
-          isKeyboardVisible ? 'no-hide-descendants' : 'auto'
-        }
-        style={secondaryLinksAnimatedStyle}
+      <View
+        style={{
+          display: isKeyboardVisible ? 'none' : 'flex',
+          maxWidth: 343,
+          width: '100%',
+        }}
       >
-        <AnimatedEntrance delay={ENTRANCE_DELAYS.secondaryLinks}>
-          <InlineHint
-            onBrowseTemplates={onBrowseTemplates ?? (() => {})}
-            onCreateCustom={onCreateCustom ?? (() => {})}
-          />
-        </AnimatedEntrance>
-      </Animated.View>
+        <Animated.View
+          accessibilityElementsHidden={isKeyboardVisible}
+          importantForAccessibility={
+            isKeyboardVisible ? 'no-hide-descendants' : 'auto'
+          }
+          style={[{ width: '100%' }, secondaryLinksAnimatedStyle]}
+        >
+          <AnimatedEntrance delay={ENTRANCE_DELAYS.secondaryLinks}>
+            <InlineHint
+              onBrowseTemplates={onBrowseTemplates ?? (() => {})}
+              onCreateCustom={onCreateCustom ?? (() => {})}
+            />
+          </AnimatedEntrance>
+        </Animated.View>
+      </View>
     </>
   );
 }

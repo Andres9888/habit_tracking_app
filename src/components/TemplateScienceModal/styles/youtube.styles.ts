@@ -3,7 +3,7 @@
  */
 
 import { StyleSheet } from 'react-native';
-import { typography } from '../../../theme/typography';
+import { typography, fontFamilies} from '../../../theme/typography';
 
 export const youtubeStyles = StyleSheet.create({
   youtubeButton: {
@@ -25,6 +25,7 @@ export const youtubeStyles = StyleSheet.create({
   },
   youtubeSubtitle: {
     color: '#DC2626',
+    fontFamily: fontFamilies.primary.text,
     fontSize: 13,
     fontWeight: '500',
   },
@@ -33,6 +34,7 @@ export const youtubeStyles = StyleSheet.create({
   },
   youtubeTitle: {
     color: '#111827',
+    fontFamily: fontFamilies.primary.text,
     fontSize: typography.body.fontSize,
     fontWeight: '700',
     marginBottom: 2,

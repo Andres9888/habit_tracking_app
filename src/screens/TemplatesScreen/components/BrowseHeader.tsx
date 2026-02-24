@@ -9,6 +9,7 @@ import Animated, {
   type AnimatedStyle,
 } from 'react-native-reanimated';
 import { useThemeColors } from '../../../theme/ThemeContext';
+import { fontFamilies } from '../../../theme/typography';
 import { styles } from '../../templates/templatesScreenStyles';
 
 interface BrowseHeaderProps {
@@ -25,6 +26,7 @@ export function BrowseHeader({ animatedStyle }: BrowseHeaderProps) {
           entering={FadeInDown.delay(0).springify().damping(18)}
           style={{
             color: colors.text.primary,
+            fontFamily: fontFamilies.primary.display,
             fontSize: 28,
             fontWeight: '800',
             letterSpacing: -0.5,
@@ -37,6 +39,7 @@ export function BrowseHeader({ animatedStyle }: BrowseHeaderProps) {
           entering={FadeInDown.delay(50).springify().damping(18)}
           style={{
             color: colors.text.secondary,
+            fontFamily: fontFamilies.primary.text,
             fontSize: 17,
             letterSpacing: -0.41,
             lineHeight: 22,

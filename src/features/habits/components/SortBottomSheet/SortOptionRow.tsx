@@ -1,6 +1,7 @@
 import { Check } from 'lucide-react-native';
 import type { LucideIcon } from 'lucide-react-native';
-import { Pressable, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
+import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useHaptics } from '../../../../utils/haptics/useHaptics';
 import { useThemeColors } from '../../../../theme/ThemeContext';
@@ -60,7 +61,7 @@ export function SortOptionRow({
   };
 
   return (
-    <Pressable
+    <AnimatedPressable
       accessibilityHint={`Select ${title} sort option`}
       accessibilityLabel={`${title}. ${description}`}
       accessibilityRole='radio'
@@ -117,7 +118,7 @@ export function SortOptionRow({
           />
         </View>
       )}
-    </Pressable>
+    </AnimatedPressable>
   );
 }
 

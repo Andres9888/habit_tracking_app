@@ -7,7 +7,8 @@ import React from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { ArrowRight } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
-import { shadows } from '../../../theme/spacing';
+import { shadows } from '../../../theme/spacing'
+import { fontFamilies } from '../../../theme/typography';;
 
 interface ActionButtonsProps {
   iconColor: string;
@@ -86,6 +87,7 @@ const styles = StyleSheet.create({
   },
   importButtonText: {
     color: '#ffffff',
+    fontFamily: fontFamilies.primary.text,
     fontSize: 17,
     fontWeight: '600',
   },
@@ -99,6 +101,7 @@ const styles = StyleSheet.create({
   },
   previewButtonText: {
     color: '#1c1917',
+    fontFamily: fontFamilies.primary.text,
     fontSize: 17,
     fontWeight: '600',
   },

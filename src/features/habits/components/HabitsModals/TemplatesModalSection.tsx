@@ -22,6 +22,7 @@ const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 export function TemplatesModalSection({
   showTemplatesScreen,
   closeTemplatesScreen,
+  reduceMotionPreference,
 }: TemplatesModalSectionProps) {
   const insets = useSafeAreaInsets();
   const { colors } = useThemeColors();
@@ -37,41 +38,38 @@ export function TemplatesModalSection({
     closeTemplatesScreen();
   };
 
-  if (!showTemplatesScreen) {
-    return null;
-  }
-
   return (
     <CustomModal
       variant='fullScreen'
       visible={showTemplatesScreen}
       onClose={handleClose}
+      respectReduceMotion={!reduceMotionPreference}
     >
-      <View className='flex-1' style={{ paddingTop: insets.top }}>
+      <View className='flex-1' style={{ paddingTop: insets.top, backgroundColor: colors.background }}>
         <ErrorBoundary>
           <TemplatesScreen />
         </ErrorBoundary>
-        <View className='absolute right-4' style={{ top: insets.top + 8 }}>
-          <AnimatedPressable
-            accessibilityHint='Close the templates screen'
-            accessibilityLabel='Close templates'
-            accessibilityRole='button'
-            className='h-10 w-10 items-center justify-center rounded-full shadow-md'
-            style={[{ backgroundColor: colors.card }, closeAnimatedStyle]}
-            onPress={handleClose}
-            onPressIn={() => {
-              closeScale.value = withSpring(0.9, {
-                damping: 15,
-                stiffness: 200,
-              });
-            }}
-            onPressOut={() => {
-              closeScale.value = withSpring(1, { damping: 18, stiffness: 150 });
-            }}
-          >
-            <X color='#57534e' size={24} />
-          </AnimatedPressable>
-        </View>
+      </View>
+      <View className='absolute right-4' style={{ top: insets.top + 8 }}>
+        <AnimatedPressable
+          accessibilityHint='Close the templates screen'
+          accessibilityLabel='Close templates'
+          accessibilityRole='button'
+          className='h-10 w-10 items-center justify-center rounded-full shadow-md'
+          style={[{ backgroundColor: colors.card }, closeAnimatedStyle]}
+          onPress={handleClose}
+          onPressIn={() => {
+            closeScale.value = withSpring(0.9, {
+              damping: 15,
+              stiffness: 200,
+            });
+          }}
+          onPressOut={() => {
+            closeScale.value = withSpring(1, { damping: 18, stiffness: 150 });
+          }}
+        >
+          <X color='#57534e' size={24} />
+        </AnimatedPressable>
       </View>
     </CustomModal>
   );

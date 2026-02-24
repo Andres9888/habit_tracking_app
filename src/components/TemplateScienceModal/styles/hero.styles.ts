@@ -4,7 +4,8 @@
 
 import { StyleSheet } from 'react-native';
 
-import { borderRadius } from '../../../theme/spacing';
+import { borderRadius } from '../../../theme/spacing'
+import { fontFamilies } from '../../../theme/typography';;
 
 export const heroStyles = StyleSheet.create({
   categoryBadge: {
@@ -16,6 +17,7 @@ export const heroStyles = StyleSheet.create({
     paddingVertical: 8,
   },
   categoryText: {
+    fontFamily: fontFamilies.primary.text,
     fontSize: 13,
     fontWeight: '700',
     letterSpacing: 0.3,
@@ -31,6 +33,7 @@ export const heroStyles = StyleSheet.create({
   },
   frequencyPillText: {
     color: '#6B7280',
+    fontFamily: fontFamilies.primary.text,
     fontSize: 13,
     fontWeight: '600',
   },

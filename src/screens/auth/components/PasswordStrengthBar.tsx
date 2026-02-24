@@ -7,6 +7,7 @@ import { useMemo } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { colors } from '../../../theme/colors';
+import { fontFamilies } from '../../../theme/typography';
 
 interface PasswordStrengthBarProps {
   password: string;
@@ -76,6 +77,7 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   label: {
+    fontFamily: fontFamilies.primary.text,
     fontSize: 13,
     fontWeight: '600',
   },

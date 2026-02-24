@@ -12,7 +12,8 @@ import React from 'react';
 import { View, Text, StyleSheet, type ViewStyle } from 'react-native';
 import { Lock, Flame, Sparkles } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { shadows, borderRadius } from '../theme/spacing';
+import { shadows, borderRadius } from '../theme/spacing'
+import { fontFamilies } from '../theme/typography';;
 import { colors } from '../theme/colors';
 
 type PremiumBadgeVariant = 'pro' | 'popular' | 'new';
@@ -71,6 +72,7 @@ const styles = StyleSheet.create({
     zIndex: 10,
   },
   badgeText: {
+    fontFamily: fontFamilies.primary.text,
     fontSize: 13,
     fontWeight: '600',
     letterSpacing: 0.5,

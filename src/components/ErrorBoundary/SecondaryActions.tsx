@@ -3,6 +3,7 @@
 import { Pressable, Text, View, StyleSheet } from 'react-native';
 
 import { useThemeColors } from '../../theme/ThemeContext';
+import { fontFamilies } from '@/theme/typography';
 
 interface SecondaryActionsProps {
   onOpenSettings?: () => void;
@@ -18,7 +19,7 @@ export function SecondaryActions({
   const styles = StyleSheet.create({
     actions: { flexDirection: 'row', gap: 16, marginTop: 16 },
     link: { padding: 8 },
-    linkText: { color: colors.primary[600], fontSize: 13, fontWeight: '500' },
+    linkText: { color: colors.primary[600], fontFamily: fontFamilies.primary.text, fontSize: 13, fontWeight: '500' },
   });
 
   return (

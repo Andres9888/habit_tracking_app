@@ -4,6 +4,7 @@
 
 import { StyleSheet } from 'react-native';
 
+import { fontFamilies } from '@/theme/typography';
 import {
   CELL_SIZE,
   CELL_GAP,
@@ -30,6 +31,7 @@ export const styles = StyleSheet.create({
   },
   dayLabelText: {
     color: COLORS.TEXT_SECONDARY,
+    fontFamily: fontFamilies.primary.text,
     fontSize: 10,
     fontWeight: '500',
     paddingRight: 4,

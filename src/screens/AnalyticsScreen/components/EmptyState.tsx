@@ -7,6 +7,7 @@ import { View, Text } from 'react-native';
 import { BarChart3, Sparkles } from 'lucide-react-native';
 import Animated from 'react-native-reanimated';
 import { useThemeColors } from '../../../theme/ThemeContext';
+import { fontFamilies } from '../../../theme/typography';
 import { useReducedMotionEntry } from '../../../components/EmptyState/useReducedMotionEntry';
 
 export const EmptyState: React.FC = () => {
@@ -45,6 +46,7 @@ export const EmptyState: React.FC = () => {
         entering={entry(50)}
         style={{
           color: colors.text.primary,
+          fontFamily: fontFamilies.primary.display,
           fontSize: 22,
           fontWeight: '700',
           letterSpacing: -0.5,
@@ -60,6 +62,7 @@ export const EmptyState: React.FC = () => {
         entering={entry(100)}
         style={{
           color: colors.text.secondary,
+          fontFamily: fontFamilies.primary.text,
           fontSize: 17,
           lineHeight: 22,
           marginBottom: 32,
@@ -87,7 +90,7 @@ export const EmptyState: React.FC = () => {
       >
         <View style={{ alignItems: 'center', flexDirection: 'row', gap: 8, marginBottom: 12 }}>
           <Sparkles color={isDark ? '#FCD34D' : '#F59E0B'} size={16} />
-          <Text style={{ color: isDark ? '#FCD34D' : '#D97706', fontSize: 13, fontWeight: '600' }}>
+          <Text style={{ color: isDark ? '#FCD34D' : '#D97706', fontFamily: fontFamilies.primary.text, fontSize: 13, fontWeight: '600' }}>
             GET STARTED
           </Text>
         </View>
@@ -115,11 +118,11 @@ function StepItem({ number, text, colors }: { number: string; text: string; colo
           width: 28,
         }}
       >
-        <Text style={{ color: colors.text.secondary, fontSize: 13, fontWeight: '600' }}>
+        <Text style={{ color: colors.text.secondary, fontFamily: fontFamilies.primary.text, fontSize: 13, fontWeight: '600' }}>
           {number}
         </Text>
       </View>
-      <Text style={{ color: colors.text.primary, fontSize: 17 }}>{text}</Text>
+      <Text style={{ color: colors.text.primary, fontFamily: fontFamilies.primary.text, fontSize: 17 }}>{text}</Text>
     </View>
   );
 }

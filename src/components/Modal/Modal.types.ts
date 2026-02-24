@@ -35,6 +35,9 @@ export interface ModalProps {
 
   /** Respect system reduce motion preference (default: true) */
   respectReduceMotion?: boolean;
+
+  /** Skip open/close entrance animations (instant show/hide) */
+  skipAnimation?: boolean;
 }
 
 export interface ModalAnimationValues {

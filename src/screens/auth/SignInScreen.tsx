@@ -36,6 +36,7 @@ import { EXTERNAL_URLS } from '@/constants';
 import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 import { colors } from '../../theme/colors';
 import { useThemeColors } from '../../theme/ThemeContext';
+import { fontFamilies } from '../../theme/typography';
 
 interface SignInScreenProps {
   /** Auto-focus the email input on mount */
@@ -273,6 +274,7 @@ function useScreenStyles() {
   return StyleSheet.create({
     appName: {
       color: themeColors.text.primary,
+      fontFamily: fontFamilies.primary.display,
       fontSize: 22,
       fontWeight: '700',
       letterSpacing: -0.5,
@@ -302,6 +304,7 @@ function useScreenStyles() {
     },
     footerText: {
       color: themeColors.text.tertiary,
+      fontFamily: fontFamilies.primary.text,
       fontSize: 13,
       lineHeight: 18,
       textAlign: 'center',
@@ -336,6 +339,7 @@ function useScreenStyles() {
     },
     tagline: {
       color: themeColors.text.secondary,
+      fontFamily: fontFamilies.primary.text,
       fontSize: 13,
       marginTop: 4,
       textAlign: 'center',
@@ -345,6 +349,7 @@ function useScreenStyles() {
     },
     welcomeSubtitle: {
       color: themeColors.text.secondary,
+      fontFamily: fontFamilies.primary.text,
       fontSize: 17,
       lineHeight: 24,
       paddingHorizontal: 16,
@@ -352,6 +357,7 @@ function useScreenStyles() {
     },
     welcomeTitle: {
       color: themeColors.text.primary,
+      fontFamily: fontFamilies.primary.display,
       fontSize: 22,
       fontWeight: '700',
       marginBottom: 8,

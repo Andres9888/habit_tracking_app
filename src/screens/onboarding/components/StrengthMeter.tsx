@@ -1,4 +1,5 @@
 import { colors } from '../../../theme/colors';
+import { fontFamilies } from '../../../theme/typography';
 import { StyleSheet, Text, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 
@@ -53,6 +54,7 @@ const styles = StyleSheet.create({
   },
   label: {
     color: '#6B7280',
+    fontFamily: fontFamilies.primary.text,
     fontSize: 13,
     fontWeight: '500',
   },

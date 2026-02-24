@@ -5,6 +5,7 @@
 
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import { fontFamilies } from '@/theme/typography';
 
 interface MiniMetricProps {
   label: string;
@@ -27,6 +28,7 @@ const styles = StyleSheet.create({
   },
   label: {
     color: 'rgba(255,255,255,0.5)',
+    fontFamily: fontFamilies.monospace,
     fontSize: 9,
     fontWeight: '500',
   },

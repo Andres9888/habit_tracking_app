@@ -5,6 +5,7 @@
 import { View } from 'react-native';
 import Animated from 'react-native-reanimated';
 import Toast from '../../../components/Toast';
+import { useThemeColors } from '../../../theme/ThemeContext';
 import { styles } from '../../templates/templatesScreenStyles';
 import { BrowseHeader, SearchBar, TabBar, TemplateModals } from '../components';
 import { BrowseAllTab } from './BrowseAllTab';
@@ -12,11 +13,12 @@ import { BrowseCategoriesTab } from './BrowseCategoriesTab';
 import type { BrowseViewProps } from './BrowseView.types';
 
 export function BrowseView(p: BrowseViewProps) {
+  const { colors } = useThemeColors();
   const { animations: a, handlers: h, tabIndicator: ti, categories: cats } = p;
   const catCount = cats?.filter((c) => c.id !== 'all').length || 0;
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
       <BrowseHeader animatedStyle={a.headerAnimatedStyle} />
       <Animated.View style={[styles.searchSection, a.searchAnimatedStyle]}>
         <SearchBar

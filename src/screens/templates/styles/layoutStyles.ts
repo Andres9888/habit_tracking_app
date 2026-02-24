@@ -2,7 +2,6 @@ import { StyleSheet } from 'react-native';
 
 export const layoutStyles = StyleSheet.create({
   container: {
-    backgroundColor: '#FAF8F5',
     flex: 1,
   },
   emptyStateWrapper: {

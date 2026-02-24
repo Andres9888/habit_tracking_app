@@ -4,10 +4,11 @@
 
 import { StyleSheet } from 'react-native';
 import { colors } from '@/theme/colors';
-import { typography } from '@/theme/typography';
+import { typography, fontFamilies} from '@/theme/typography';
 
 export const controlsStyles = StyleSheet.create({
   characterCount: {
+    fontFamily: fontFamilies.monospace,
     fontSize: typography.caption.fontSize,
     marginTop: 4,
     textAlign: 'right',
@@ -33,6 +34,7 @@ export const controlsStyles = StyleSheet.create({
   messageInput: {
     borderRadius: 8,
     borderWidth: 1,
+    fontFamily: fontFamilies.primary.text,
     fontSize: 17,
     minHeight: 80,
     padding: 12,
@@ -42,6 +44,7 @@ export const controlsStyles = StyleSheet.create({
     marginBottom: 24,
   },
   optionLabel: {
+    fontFamily: fontFamilies.primary.text,
     fontSize: 17,
     fontWeight: '600',
     marginBottom: 12,
@@ -61,6 +64,7 @@ export const controlsStyles = StyleSheet.create({
   },
   platformButtonText: {
     color: colors.gray[600],
+    fontFamily: fontFamilies.primary.text,
     fontSize: typography.bodySmall.fontSize,
     fontWeight: '500',
     textTransform: 'capitalize',
@@ -80,6 +84,7 @@ export const controlsStyles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   toggleSubtext: {
+    fontFamily: fontFamilies.primary.text,
     fontSize: 13,
     marginTop: 4,
   },

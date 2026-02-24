@@ -36,13 +36,15 @@ export function HabitsListContent({
   const { list, modals, onUpgradeIntent } = props;
   const { upgradePromptVisible, onUpgradeDismiss, onUpgradeConfirm } = props;
 
+  const isEmpty = list.habits.length === 0;
   const contentContainerStyle = useMemo(
     () => ({
+      flexGrow: isEmpty ? 1 : undefined,
       paddingBottom: list.contentPadding.paddingBottom,
-      paddingHorizontal: list.contentPadding.paddingHorizontal,
+      paddingHorizontal: isEmpty ? 0 : list.contentPadding.paddingHorizontal,
       paddingTop: 0,
     }),
-    [list.contentPadding.paddingBottom, list.contentPadding.paddingHorizontal]
+    [isEmpty, list.contentPadding.paddingBottom, list.contentPadding.paddingHorizontal]
   );
 
   const listEmptyComponent = useMemo(
@@ -92,8 +94,8 @@ export function HabitsListContent({
         data={list.habits}
         keyExtractor={handlers.keyExtractor}
         ListEmptyComponent={listEmptyComponent}
-        ListFooterComponent={listFooterComponent}
-        ListHeaderComponent={listHeaderComponent}
+        ListFooterComponent={isEmpty ? undefined : listFooterComponent}
+        ListHeaderComponent={isEmpty ? undefined : listHeaderComponent}
         renderItem={renderHabitItem}
         showsVerticalScrollIndicator={false}
         onDragBegin={handlers.handleDragBegin}

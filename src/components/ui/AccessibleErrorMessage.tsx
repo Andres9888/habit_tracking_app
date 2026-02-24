@@ -5,6 +5,7 @@
 
 import { View, type ViewStyle } from 'react-native';
 import { AccessibleText } from './AccessibleText';
+import { fontFamilies } from '@/theme/typography';
 
 export interface AccessibleErrorMessageProps {
   /**
@@ -63,7 +64,10 @@ export function AccessibleErrorMessage({
     >
       <AccessibleText
         scalingType="body"
-        style={[{ fontSize: 13, color: '#B53030' }, textStyle]}
+        style={[
+          { fontFamily: fontFamilies.primary.text, fontSize: 13, color: '#B53030' },
+          textStyle,
+        ]}
       >
         {message}
       </AccessibleText>

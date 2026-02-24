@@ -4,7 +4,8 @@
  */
 
 import React from 'react';
-import { View, Text, Pressable, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
+import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import * as Haptics from 'expo-haptics';
 import { Clock } from 'lucide-react-native';
@@ -64,7 +65,7 @@ export function ReminderTimePicker({
       >
         Reminder Time
       </Text>
-      <Pressable
+      <AnimatedPressable
         accessibilityHint='Opens time picker'
         accessibilityLabel={`Reminder time: ${reminderTime.toLocaleTimeString(
           'en-US',
@@ -101,7 +102,7 @@ export function ReminderTimePicker({
             minute: '2-digit',
           })}
         </Text>
-      </Pressable>
+      </AnimatedPressable>
 
       {showTimePicker && (
         <DateTimePicker

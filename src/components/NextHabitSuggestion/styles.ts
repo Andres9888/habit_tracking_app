@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { fontFamilies } from '@/theme/typography';
 
 export const styles = StyleSheet.create({
   badge: {
@@ -12,6 +13,7 @@ export const styles = StyleSheet.create({
   },
   badgeText: {
     color: '#b45309',
+    fontFamily: fontFamilies.primary.text,
     fontSize: 12,
     fontWeight: '600',
   },
@@ -52,10 +54,12 @@ export const styles = StyleSheet.create({
   },
   habitHint: {
     color: '#a8a29e',
+    fontFamily: fontFamilies.primary.text,
     fontSize: 13,
   },
   completedSubtitle: {
     color: '#059669',
+    fontFamily: fontFamilies.primary.text,
     fontSize: 14,
   },
   habitIcon: {
@@ -63,6 +67,7 @@ export const styles = StyleSheet.create({
   },
   completedTitle: {
     color: '#065f46',
+    fontFamily: fontFamilies.primary.text,
     fontSize: 17,
     fontWeight: '600',
     marginBottom: 4,
@@ -83,11 +88,13 @@ export const styles = StyleSheet.create({
   },
   habitName: {
     color: '#1c1917',
+    fontFamily: fontFamilies.primary.text,
     fontSize: 17,
     fontWeight: '600',
     marginBottom: 2,
   },
   progress: {
+    fontFamily: fontFamilies.primary.text,
     fontSize: 13,
     color: '#a8a29e',
     fontWeight: '500',

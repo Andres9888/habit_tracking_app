@@ -9,6 +9,7 @@ import Animated, { FadeInDown } from 'react-native-reanimated';
 import { BarChart3, Calendar } from 'lucide-react-native';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import type { EmptyInsightsStateProps } from '../InsightsSection.types';
+import { fontFamilies } from '@/theme/typography';
 
 export function EmptyInsightsState({ daysRemaining }: EmptyInsightsStateProps) {
   const { colors, isDark } = useThemeColors();
@@ -48,7 +49,7 @@ export function EmptyInsightsState({ daysRemaining }: EmptyInsightsStateProps) {
           >
             <BarChart3 color={isDark ? '#C4B5FD' : '#A78BFA'} size={16} />
           </View>
-          <Text style={{ color: colors.text.secondary, fontSize: 17, fontWeight: '700' }}>
+          <Text style={{ color: colors.text.secondary, fontFamily: fontFamilies.primary.text, fontSize: 17, fontWeight: '700' }}>
             Insights
           </Text>
         </View>
@@ -61,12 +62,13 @@ export function EmptyInsightsState({ daysRemaining }: EmptyInsightsStateProps) {
           }}
         >
           <Calendar color={colors.text.tertiary} size={28} style={{ marginBottom: 8 }} />
-          <Text style={{ color: colors.text.secondary, fontSize: 14, textAlign: 'center' }}>
+          <Text style={{ color: colors.text.secondary, fontFamily: fontFamilies.primary.text, fontSize: 14, textAlign: 'center' }}>
             Keep tracking for insights
           </Text>
           <Text
             style={{
               color: colors.text.tertiary,
+              fontFamily: fontFamilies.primary.text,
               fontSize: 12,
               marginTop: 4,
               textAlign: 'center',

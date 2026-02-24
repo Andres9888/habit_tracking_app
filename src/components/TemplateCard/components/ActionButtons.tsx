@@ -12,7 +12,7 @@ import * as Haptics from 'expo-haptics';
 import Button from '../../Button/Button';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { borderRadius, spacing } from '../../../theme/spacing';
-import { typography } from '../../../theme/typography';
+import { typography, fontFamilies} from '../../../theme/typography';
 import type { ActionButtonsProps } from './ActionButtons.types';
 
 export function ActionButtons({
@@ -100,6 +100,7 @@ export const styles = StyleSheet.create({
   },
   successButtonText: {
     color: '#fff',
+    fontFamily: fontFamilies.primary.text,
     fontSize: typography.body.fontSize,
     fontWeight: '700',
   },

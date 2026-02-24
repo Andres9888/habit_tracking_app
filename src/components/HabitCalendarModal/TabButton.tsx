@@ -1,6 +1,7 @@
 import { useCallback } from 'react';
 import { Pressable, Text } from 'react-native';
 import * as Haptics from 'expo-haptics';
+import { fontFamilies } from '@/theme/typography';
 
 type CalendarView = 'month' | 'year';
 
@@ -37,6 +38,7 @@ export function TabButton({
       <Text
         style={{
           color: isActive ? '#059669' : '#78716c',
+          fontFamily: fontFamilies.primary.text,
           fontSize: 13,
           fontWeight: '600',
         }}

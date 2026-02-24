@@ -8,6 +8,7 @@ import { ClipboardList } from 'lucide-react-native';
 import Animated from 'react-native-reanimated';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { useReducedMotionEntry } from '../../EmptyState/useReducedMotionEntry';
+import { fontFamilies } from '@/theme/typography';
 
 export function EmptyState() {
   const { colors } = useThemeColors();
@@ -42,6 +43,7 @@ export function EmptyState() {
         entering={entry(60)}
         style={{
           color: colors.text.primary,
+          fontFamily: fontFamilies.primary.text,
           fontSize: 17,
           fontWeight: '600',
           marginBottom: 4,
@@ -54,6 +56,7 @@ export function EmptyState() {
         entering={entry(120)}
         style={{
           color: colors.text.secondary,
+          fontFamily: fontFamilies.primary.text,
           fontSize: 13,
           textAlign: 'center',
         }}

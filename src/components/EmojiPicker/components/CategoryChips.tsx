@@ -1,7 +1,7 @@
 import { memo } from 'react';
 import { Pressable, ScrollView, Text } from 'react-native';
 import { shadows } from '../../../theme/spacing';
-import { typography } from '../../../theme/typography';
+import { typography, fontFamilies} from '../../../theme/typography';
 import { HABIT_CATEGORIES } from '../../../constants/habitEmojis';
 
 interface CategoryChipsProps {
@@ -50,6 +50,7 @@ export const CategoryChips = memo(
               style={[
                 {
                   color: isSelected ? 'white' : '#1c1917',
+                  fontFamily: fontFamilies.primary.text,
                   fontSize: typography.bodySmall.fontSize,
                   fontWeight: '500',
                 },

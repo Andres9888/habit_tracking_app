@@ -4,7 +4,8 @@
 
 import type { ViewStyle, TextStyle } from 'react-native';
 
-import { borderRadius } from '../../../theme/spacing';
+import { borderRadius } from '../../../theme/spacing'
+import { fontFamilies } from '../../../theme/typography';;
 
 export const headerStyles: Record<string, ViewStyle | TextStyle> = {
   chevronContainer: {

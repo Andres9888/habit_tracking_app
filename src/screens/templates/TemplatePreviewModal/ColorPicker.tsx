@@ -3,7 +3,8 @@
  */
 
 import React from 'react';
-import { View, Text, Pressable } from 'react-native';
+import { View, Text } from 'react-native';
+import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import { useAppTheme } from '../../../theme';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { styles } from './styles';
@@ -48,7 +49,7 @@ export function ColorPicker({
           const isSelected = customColor === color;
           const colorName = COLOR_NAMES[color] || color;
           return (
-            <Pressable
+            <AnimatedPressable
               key={color}
               accessibilityLabel={`${colorName}${isSelected ? ', selected' : ''}`}
               accessibilityRole='button'

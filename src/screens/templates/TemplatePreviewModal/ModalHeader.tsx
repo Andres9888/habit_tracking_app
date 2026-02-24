@@ -3,7 +3,8 @@
  */
 
 import React from 'react';
-import { View, Text, Pressable } from 'react-native';
+import { View, Text } from 'react-native';
+import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import { X } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAppTheme } from '../../../theme';
@@ -31,7 +32,7 @@ export function ModalHeader({ disabled, onClose }: ModalHeaderProps) {
       >
         Customize Habit
       </Text>
-      <Pressable
+      <AnimatedPressable
         accessible
         accessibilityLabel='Close customize modal'
         accessibilityRole='button'
@@ -40,7 +41,7 @@ export function ModalHeader({ disabled, onClose }: ModalHeaderProps) {
         onPress={onClose}
       >
         <X color={colors.text.secondary} size={24} strokeWidth={2.5} />
-      </Pressable>
+      </AnimatedPressable>
     </View>
   );
 }

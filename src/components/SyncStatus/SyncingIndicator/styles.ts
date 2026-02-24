@@ -7,7 +7,7 @@
 
 import { StyleSheet } from 'react-native';
 import { borderRadius } from '../../../theme/spacing';
-import { typography } from '@/theme/typography';
+import { typography, fontFamilies} from '@/theme/typography';
 import { colors } from '../../../theme/colors';
 
 export const styles = StyleSheet.create({
@@ -34,6 +34,7 @@ export const styles = StyleSheet.create({
 
   countText: {
     color: colors.text.inverse,
+    fontFamily: fontFamilies.monospace,
     fontSize: 10,
     fontWeight: '600',
     textAlign: 'center',
@@ -50,6 +51,7 @@ export const styles = StyleSheet.create({
 
   text: {
     color: '#92400e', // amber-800 - visible but not harsh
+    fontFamily: fontFamilies.primary.text,
     fontSize: typography.caption.fontSize,
     fontWeight: '500',
     letterSpacing: 0.2,

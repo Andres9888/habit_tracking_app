@@ -7,6 +7,7 @@ import React from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useThemeColors } from '../../theme/ThemeContext';
+import { fontFamilies } from '../../theme/typography';
 
 interface ScreenErrorFallbackProps {
   screenName: string;
@@ -70,6 +71,7 @@ export function ScreenErrorFallback({
     },
     primaryButtonText: {
       color: colors.text.inverse,
+      fontFamily: fontFamilies.primary.text,
       fontSize: 17,
       fontWeight: '600',
     },
@@ -80,11 +82,13 @@ export function ScreenErrorFallback({
     },
     secondaryButtonText: {
       color: colors.text.secondary,
+      fontFamily: fontFamilies.primary.text,
       fontSize: 17,
       fontWeight: '500',
     },
     subtitle: {
       color: colors.text.secondary,
+      fontFamily: fontFamilies.primary.text,
       fontSize: 15,
       lineHeight: 22,
       marginTop: 8,
@@ -92,6 +96,7 @@ export function ScreenErrorFallback({
     },
     title: {
       color: colors.text.primary,
+      fontFamily: fontFamilies.primary.display,
       fontSize: 22,
       fontWeight: '600',
       textAlign: 'center',

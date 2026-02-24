@@ -5,7 +5,6 @@
 
 import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 import { TemplatesEmptyState } from './components/TemplatesEmptyState';
-import { TemplatesLoadingState } from './components/TemplatesLoadingState';
 import { useTemplatesScreenProps } from './hooks/useTemplatesScreenProps';
 import { BrowseView, CategorySearchView } from './views';
 
@@ -13,8 +12,7 @@ function TemplatesScreenContent() {
   const props = useTemplatesScreenProps();
   const { data, state, handlers, filteredTemplates, getCategoryLabel } = props;
 
-  if (data.isLoading) return <TemplatesLoadingState />;
-  if (!data.allTemplates?.length) {
+  if (!data.isLoading && !data.allTemplates?.length) {
     return (
       <TemplatesEmptyState
         isSeeding={state.isSeeding}

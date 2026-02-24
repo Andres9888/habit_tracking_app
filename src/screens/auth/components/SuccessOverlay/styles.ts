@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { fontFamilies } from '@/theme/typography';
 
 export const styles = StyleSheet.create({
   checkmark: {
@@ -11,6 +12,7 @@ export const styles = StyleSheet.create({
   },
   checkmarkText: {
     color: '#ffffff',
+    fontFamily: fontFamilies.primary.text,
     fontSize: 34,
     fontWeight: 'bold',
   },
@@ -41,6 +43,7 @@ export const styles = StyleSheet.create({
   },
   successText: {
     color: '#1c1917',
+    fontFamily: fontFamilies.primary.display,
     fontSize: 22,
     fontWeight: '700',
     letterSpacing: 0.5,

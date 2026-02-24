@@ -8,6 +8,7 @@ import React, { useRef, useState } from 'react';
 import { StyleSheet, Text, View, Pressable, Linking } from 'react-native';
 
 import { useThemeColors } from '../../../theme/ThemeContext';
+import { fontFamilies } from '../../../theme/typography';
 
 interface ErrorFallbackProps {
   error: Error | null;
@@ -49,6 +50,7 @@ export function ErrorFallback({ error, onRetry }: ErrorFallbackProps) {
     },
     buttonText: {
       color: colors.text.inverse,
+      fontFamily: fontFamilies.primary.text,
       fontSize: 14,
       fontWeight: '600',
     },
@@ -79,6 +81,7 @@ export function ErrorFallback({ error, onRetry }: ErrorFallbackProps) {
     },
     message: {
       color: colors.text.secondary,
+      fontFamily: fontFamilies.primary.text,
       fontSize: 14,
       lineHeight: 20,
       marginBottom: 8,
@@ -86,6 +89,7 @@ export function ErrorFallback({ error, onRetry }: ErrorFallbackProps) {
     },
     safetyNote: {
       color: colors.text.primary,
+      fontFamily: fontFamilies.primary.text,
       fontSize: 14,
       fontWeight: '600',
       marginBottom: 16,
@@ -98,12 +102,14 @@ export function ErrorFallback({ error, onRetry }: ErrorFallbackProps) {
     },
     supportButtonText: {
       color: colors.text.secondary,
+      fontFamily: fontFamilies.primary.text,
       fontSize: 13,
       fontWeight: '500',
       textDecorationLine: 'underline',
     },
     title: {
       color: colors.text.primary,
+      fontFamily: fontFamilies.primary.display,
       fontSize: 22,
       fontWeight: '600',
       marginBottom: 8,

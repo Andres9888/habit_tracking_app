@@ -1,0 +1,162 @@
+# InlineHint H4 Design Validation Flow
+# Validates the empty habits page InlineHint component matches the H4 mock spec.
+#
+# Reference: docs/specs/inline-hint-cta-polish/frontend-spec.md
+# Mock: .superdesign/design_iterations/inline_hint_h4_mock_1.html
+#
+# Prerequisites:
+#   - App built and installed on simulator
+#   - User signed in (Clerk auth)
+#   - No habits created (empty state visible)
+#
+# Run: JAVA_HOME=~/java/jdk-21.0.10+7/Contents/Home maestro test .maestro/inline-hint-h4-validation.yaml
+
+appId: com.chainday.app
+
+---
+
+# ──────────────────────────────────────────────
+# Phase 1: Launch app and wait for empty state
+# ──────────────────────────────────────────────
+
+- launchApp:
+    appId: com.chainday.app
+    clearState: false
+    clearKeychain: false
+
+# Wait for the app to load and settle (auth + data fetch)
+- extendedWaitUntil:
+    visible: "What habit do you"
+    timeout: 15000
+
+# Let entrance animations complete
+- waitForAnimationToEnd
+
+# ──────────────────────────────────────────────
+# Phase 2: Validate "or explore" divider
+# ──────────────────────────────────────────────
+
+- assertVisible:
+    id: "inline-hint-divider"
+
+- assertVisible:
+    id: "inline-hint-divider-line-left"
+
+- assertVisible:
+    id: "inline-hint-divider-line-right"
+
+- assertVisible:
+    text: "or explore"
+
+# ──────────────────────────────────────────────
+# Phase 3: Validate "Browse templates" gradient button
+# ──────────────────────────────────────────────
+
+- assertVisible:
+    id: "inline-hint-browse-templates"
+
+# Emoji present
+- assertVisible:
+    text: "📚"
+
+# Label text
+- assertVisible:
+    text: "browse templates"
+
+# 200+ badge
+- assertVisible:
+    id: "inline-hint-badge"
+
+- assertVisible:
+    text: "200+"
+
+# ──────────────────────────────────────────────
+# Phase 4: Validate "Build my own" card
+# ──────────────────────────────────────────────
+
+- assertVisible:
+    id: "inline-hint-create-custom"
+
+# Left accent stripe
+- assertVisible:
+    id: "inline-hint-accent-stripe"
+
+# Emoji
+- assertVisible:
+    text: "✏️"
+
+# Label
+- assertVisible:
+    text: "Build my own"
+
+# Disclosure arrow
+- assertVisible:
+    text: "→"
+
+# ──────────────────────────────────────────────
+# Phase 5: Validate actions column container
+# ──────────────────────────────────────────────
+
+- assertVisible:
+    id: "inline-hint-actions"
+
+# ──────────────────────────────────────────────
+# Phase 6: Capture screenshot for visual comparison
+# ──────────────────────────────────────────────
+
+# Dismiss keyboard if open (tap outside input)
+- tapOn:
+    text: "or explore"
+
+- waitForAnimationToEnd
+
+- takeScreenshot: inline-hint-h4-light-mode
+
+# ──────────────────────────────────────────────
+# Phase 7: Interaction validation — Browse templates tap
+# ──────────────────────────────────────────────
+
+- tapOn:
+    id: "inline-hint-browse-templates"
+
+# Should navigate to templates screen
+- extendedWaitUntil:
+    visible: "Templates"
+    timeout: 5000
+
+- takeScreenshot: inline-hint-h4-templates-navigation
+
+# Go back to empty state
+- back
+
+- extendedWaitUntil:
+    visible: "What habit do you"
+    timeout: 5000
+
+- waitForAnimationToEnd
+
+# ──────────────────────────────────────────────
+# Phase 8: Interaction validation — Build my own tap
+# ──────────────────────────────────────────────
+
+- tapOn:
+    id: "inline-hint-create-custom"
+
+# Should navigate to create habit screen
+- extendedWaitUntil:
+    visible: "Create"
+    timeout: 5000
+
+- takeScreenshot: inline-hint-h4-create-navigation
+
+# Go back to verify empty state is still intact
+- back
+
+- extendedWaitUntil:
+    visible: "What habit do you"
+    timeout: 5000
+
+- waitForAnimationToEnd
+
+# Final screenshot after round-trip navigation
+- takeScreenshot: inline-hint-h4-final-state

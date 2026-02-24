@@ -4,7 +4,8 @@
 
 import { StyleSheet } from 'react-native';
 
-import { shadows } from '../../../theme/spacing';
+import { shadows } from '../../../theme/spacing'
+import { fontFamilies } from '../../../theme/typography';;
 import type { SemanticColors } from '../../../theme/darkColors';
 
 export const footerStyles = StyleSheet.create({
@@ -13,6 +14,7 @@ export const footerStyles = StyleSheet.create({
     paddingVertical: 12,
   },
   backButtonText: {
+    fontFamily: fontFamilies.primary.text,
     fontSize: 15,
     fontWeight: '600',
   },

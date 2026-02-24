@@ -6,6 +6,7 @@
 import { StyleSheet, Text, View } from 'react-native';
 
 import { useThemeColors } from '../../theme/ThemeContext';
+import { fontFamilies } from '@/theme/typography';
 
 export function SuggestionsCard() {
   const { colors } = useThemeColors();
@@ -23,11 +24,13 @@ export function SuggestionsCard() {
     },
     item: {
       color: colors.text.secondary,
+      fontFamily: fontFamilies.primary.text,
       fontSize: 13,
       lineHeight: 20,
     },
     title: {
       color: colors.text.primary,
+      fontFamily: fontFamilies.primary.text,
       fontSize: 13,
       fontWeight: '600',
       marginBottom: 8,

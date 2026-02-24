@@ -5,7 +5,7 @@
 import { StyleSheet } from 'react-native';
 
 import { borderRadius } from '../../../theme/spacing';
-import { typography } from '@/theme/typography';
+import { typography, fontFamilies} from '@/theme/typography';
 
 export const tipsStyles = StyleSheet.create({
   tipIconContainer: {
@@ -22,6 +22,7 @@ export const tipsStyles = StyleSheet.create({
     marginBottom: 12,
   },
   tipNumber: {
+    fontFamily: fontFamilies.monospace,
     fontSize: 13,
     fontWeight: '700',
   },
@@ -47,6 +48,7 @@ export const tipsStyles = StyleSheet.create({
   },
   tipsLabel: {
     color: '#854d0e',
+    fontFamily: fontFamilies.primary.text,
     fontSize: typography.caption.fontSize,
     fontWeight: '700',
     letterSpacing: 0.8,
@@ -55,6 +57,7 @@ export const tipsStyles = StyleSheet.create({
   tipText: {
     color: '#713f12',
     flex: 1,
+    fontFamily: fontFamilies.primary.text,
     fontSize: 15,
     lineHeight: 22,
   },

@@ -4,26 +4,26 @@
  * Centralized color and style definitions for the CalendarTimeline component.
  * Supports light mode, dark mode, and high-contrast mode for accessibility.
  *
- * NOTE: There's also a theme.ts file with similar color definitions.
- * Consider consolidating these in a future refactor to eliminate duplication.
- * Both provide the same functionality for now.
+ * All colors reference the design-system tokens in @/theme/colors/core.ts
+ * to maintain a single source of truth.
  */
 
 import type {
   CalendarColors,
   CompletionStatus,
 } from './CalendarTimeline.types';
+import { colors } from '../../theme/colors';
 import { shadows } from '../../theme/spacing';
 
 export const DEFAULT_COLORS: CalendarColors = {
-  currentDayBackground: '#1c1917', // stone-900 for strong today indicator
-  currentDayText: '#ffffff',
-  dayBackground: '#ffffff',
+  currentDayBackground: colors.gray[900],
+  currentDayText: colors.text.inverse,
+  dayBackground: colors.gray[50],
   dayBorder: 'transparent',
-  dayText: '#57534e', // stone-600 - slightly softer for past dates
-  icon: '#78716c', // stone-500 - softer icons
-  primaryText: '#1c1917', // stone-900
-  secondaryText: '#a8a29e', // stone-400 - warmer
+  dayText: colors.gray[600],
+  icon: colors.gray[500],
+  primaryText: colors.gray[900],
+  secondaryText: colors.gray[400],
 };
 
 export const HIGH_CONTRAST_COLORS: CalendarColors = {
@@ -31,9 +31,9 @@ export const HIGH_CONTRAST_COLORS: CalendarColors = {
   currentDayText: '#000000',
   dayBackground: '#000000',
   dayBorder: '#facc15',
-  dayText: '#ffffff',
+  dayText: colors.text.inverse,
   icon: '#facc15',
-  primaryText: '#ffffff',
+  primaryText: colors.text.inverse,
   secondaryText: '#facc15',
 };
 
@@ -44,13 +44,13 @@ export const getColors = (
   if (highContrastMode) return HIGH_CONTRAST_COLORS;
   if (isDark) {
     return {
-      currentDayBackground: '#F9FAFB',
-      currentDayText: '#111827',
-      dayBackground: '#1F2937',
-      dayBorder: '#374151',
+      currentDayBackground: colors.dark.background,
+      currentDayText: colors.gray[900],
+      dayBackground: colors.dark.surface,
+      dayBorder: colors.dark.card,
       dayText: '#E5E7EB',
       icon: '#D1D5DB',
-      primaryText: '#F9FAFB',
+      primaryText: colors.dark.background,
       secondaryText: '#9CA3AF',
     };
   }
@@ -59,10 +59,10 @@ export const getColors = (
 
 /** Color values for completion status dots */
 export const COMPLETION_DOT_COLORS: Record<CompletionStatus, string> = {
-  complete: '#10b981', // emerald-500
-  future: '#f5f5f4', // stone-100
-  none: '#e7e5e4', // stone-200
-  partial: '#f59e0b', // amber-500
+  complete: colors.primary[500],
+  future: colors.gray[50],
+  none: colors.gray[200],
+  partial: colors.streak[300],
 };
 
 /** Size values for completion status dots */
@@ -75,26 +75,28 @@ export const COMPLETION_DOT_SIZES: Record<CompletionStatus, number> = {
 
 /** Today highlight colors */
 export const TODAY_HIGHLIGHT = {
-  background: '#fffbeb', // amber-50
-  border: '#f59e0b', // amber-500
-  text: '#b45309', // amber-700
+  background: colors.warningLight,
+  border: colors.streak[300],
+  text: colors.streak[700],
 };
 
 /** Future date color */
-export const FUTURE_DATE_TEXT_COLOR = '#d6d3d1'; // stone-300
+export const FUTURE_DATE_TEXT_COLOR = colors.gray[300];
 
-/** Container shadow styling */
+/** Container shadow styling
+ * Intentionally overrides shadowColor (gray[500] for neutral container chrome)
+ * and shadowRadius (8 for a softer spread) from the subtle token.
+ */
 export const CONTAINER_SHADOW = {
   ...shadows.subtle,
-  shadowColor: '#78716c',
-  shadowOpacity: 0.04,
+  shadowColor: colors.gray[500],
   shadowRadius: 8,
 };
 
 /** Today cell shadow styling */
 export const TODAY_SHADOW = {
   elevation: 2,
-  shadowColor: '#f59e0b',
+  shadowColor: colors.streak[300],
   shadowOffset: { height: 2, width: 0 },
   shadowOpacity: 0.2,
   shadowRadius: 4,
@@ -103,7 +105,7 @@ export const TODAY_SHADOW = {
 /** Glow effect for complete status dots */
 export const COMPLETE_DOT_GLOW = {
   elevation: 2,
-  shadowColor: '#10b981',
+  shadowColor: colors.primary[500],
   shadowOffset: { height: 0, width: 0 },
   shadowOpacity: 0.5,
   shadowRadius: 4,
@@ -111,11 +113,11 @@ export const COMPLETE_DOT_GLOW = {
 
 /** Complete day cell styling (100% habits done) */
 export const COMPLETE_DAY_CELL = {
-  background: '#10b981', // emerald-500
-  text: '#ffffff',
+  background: colors.primary[500],
+  text: colors.text.inverse,
   glow: {
     elevation: 3,
-    shadowColor: '#10b981',
+    shadowColor: colors.primary[500],
     shadowOffset: { height: 2, width: 0 },
     shadowOpacity: 0.35,
     shadowRadius: 8,

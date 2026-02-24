@@ -6,7 +6,7 @@
  */
 
 import { useEffect, useRef } from 'react';
-import { Platform, TextInput } from 'react-native';
+import { Platform, ScrollView, TextInput } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import Animated from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -78,52 +78,59 @@ export function HabitsEmptyStateMinimal({
       locations={[0, 0.25, 0.5, 0.75, 1]}
       style={{ flex: 1, minHeight: '100%', width: '100%' }}
     >
-      <Animated.View
-        style={[
-          {
-            alignItems: 'center',
-            flex: 1,
-            justifyContent: 'center',
-            minHeight: '100%',
-            paddingHorizontal: 24,
-            width: '100%',
-          },
-          animations.containerAnimatedStyle,
-        ]}
+      <ScrollView
+        bounces={false}
+        contentContainerStyle={{ flexGrow: 1 }}
+        keyboardShouldPersistTaps='handled'
+        showsVerticalScrollIndicator={false}
+        style={{ flex: 1 }}
       >
-        <HeroSection
-          headlineAnimatedStyle={animations.headlineAnimatedStyle}
-          heroAnimatedStyle={animations.heroAnimatedStyle}
-          isLoading={isLoading}
-        />
+        <Animated.View
+          style={[
+            {
+              alignItems: 'center',
+              flex: 1,
+              justifyContent: 'center',
+              paddingHorizontal: 24,
+              width: '100%',
+            },
+            animations.containerAnimatedStyle,
+          ]}
+        >
+          <HeroSection
+            headlineAnimatedStyle={animations.headlineAnimatedStyle}
+            heroAnimatedStyle={animations.heroAnimatedStyle}
+            isLoading={isLoading}
+          />
 
-        <InputSection
-          ref={inputRef}
-          inputValue={flow.inputValue}
-          onChangeText={flow.handleInputChange}
-          onClear={flow.handleClearInput}
-          onSubmitEditing={flow.handleSubmitEditing}
-        />
+          <InputSection
+            ref={inputRef}
+            inputValue={flow.inputValue}
+            onChangeText={flow.handleInputChange}
+            onClear={flow.handleClearInput}
+            onSubmitEditing={flow.handleSubmitEditing}
+          />
 
-        <ChipsSection
-          chipsAnimatedStyle={animations.chipsAnimatedStyle}
-          isKeyboardVisible={isKeyboardVisible}
-          selectedIndex={flow.selectedChipIndex}
-          onSelect={flow.handleChipSelect}
-        />
+          <ChipsSection
+            chipsAnimatedStyle={animations.chipsAnimatedStyle}
+            isKeyboardVisible={isKeyboardVisible}
+            selectedIndex={flow.selectedChipIndex}
+            onSelect={flow.handleChipSelect}
+          />
 
-        <ActionSection
-          errorMessage={flow.errorMessage}
-          inputValue={flow.inputValue}
-          isCreating={flow.isCreating}
-          isKeyboardVisible={isKeyboardVisible}
-          secondaryLinksAnimatedStyle={animations.secondaryLinksAnimatedStyle}
-          onBrowseTemplates={openTemplatesScreen}
-          onCreateCustom={openCreateHabitScreen}
-          onCreateHabit={flow.handleCreateHabit}
-          onDismissError={flow.handleDismissError}
-        />
-      </Animated.View>
+          <ActionSection
+            errorMessage={flow.errorMessage}
+            inputValue={flow.inputValue}
+            isCreating={flow.isCreating}
+            isKeyboardVisible={isKeyboardVisible}
+            secondaryLinksAnimatedStyle={animations.secondaryLinksAnimatedStyle}
+            onBrowseTemplates={openTemplatesScreen}
+            onCreateCustom={openCreateHabitScreen}
+            onCreateHabit={flow.handleCreateHabit}
+            onDismissError={flow.handleDismissError}
+          />
+        </Animated.View>
+      </ScrollView>
     </LinearGradient>
   );
 }

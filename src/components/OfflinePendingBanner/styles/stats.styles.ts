@@ -1,10 +1,11 @@
 import { StyleSheet } from 'react-native';
 import { borderRadius } from '../../../theme/spacing';
-import { typography } from '@/theme/typography';
+import { typography, fontFamilies} from '@/theme/typography';
 
 export const statsStyles = StyleSheet.create({
   ageText: {
     color: '#71717A',
+    fontFamily: fontFamilies.primary.text,
     fontSize: typography.caption.fontSize,
     marginTop: 10,
   },
@@ -21,6 +22,7 @@ export const statsStyles = StyleSheet.create({
   },
   statsHeader: {
     color: '#52525B',
+    fontFamily: fontFamilies.monospace,
     fontSize: typography.caption.fontSize,
     fontWeight: '600',
     letterSpacing: 0.5,
@@ -36,6 +38,7 @@ export const statsStyles = StyleSheet.create({
   },
   statsText: {
     color: '#3F3F46',
+    fontFamily: fontFamilies.monospace,
     fontSize: typography.bodySmall.fontSize,
   },
   warningContainer: {
@@ -49,6 +52,7 @@ export const statsStyles = StyleSheet.create({
   },
   warningText: {
     color: '#92400E',
+    fontFamily: fontFamilies.primary.text,
     fontSize: 13,
     marginLeft: 6,
   },

@@ -3,6 +3,7 @@
  */
 
 import { StyleSheet } from 'react-native';
+import { fontFamilies } from '@/theme/typography';
 
 export const badgeStyles = StyleSheet.create({
   popularBadge: {
@@ -29,6 +30,7 @@ export const badgeStyles = StyleSheet.create({
   },
   readingTimePillText: {
     color: '#6B7280',
+    fontFamily: fontFamilies.primary.text,
     fontSize: 13,
     fontWeight: '600',
   },
@@ -37,6 +39,7 @@ export const badgeStyles = StyleSheet.create({
   },
   templateName: {
     color: '#111827',
+    fontFamily: fontFamilies.primary.text,
     fontSize: 28,
     fontWeight: '800',
     letterSpacing: -0.5,

@@ -3,6 +3,7 @@ import { View, Text, Pressable } from 'react-native';
 import Animated, { FadeIn, FadeInUp } from 'react-native-reanimated';
 import { Info, Zap } from 'lucide-react-native';
 import { useThemeColors } from '../../theme/ThemeContext';
+import { fontFamilies } from '@/theme/typography';
 
 const SECTION_FADE_DURATION = 400;
 const SECTION_SLIDE_DURATION = 400;
@@ -41,7 +42,7 @@ export function EmptyStrengthState({
       testID='habit-strength-history-empty'
     >
       <View style={{ alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between' }}>
-        <Text style={{ color: colors.text.primary, fontSize: 17, fontWeight: '600' }}>
+        <Text style={{ color: colors.text.primary, fontFamily: fontFamilies.primary.text, fontSize: 17, fontWeight: '600' }}>
           Strength History
         </Text>
         <Pressable
@@ -82,6 +83,7 @@ export function EmptyStrengthState({
         <Text
           style={{
             color: colors.text.primary,
+            fontFamily: fontFamilies.primary.text,
             fontSize: 17,
             fontWeight: '600',
             marginBottom: 4,
@@ -90,7 +92,7 @@ export function EmptyStrengthState({
         >
           Ready to Build Strength
         </Text>
-        <Text style={{ color: colors.text.secondary, fontSize: 13, textAlign: 'center' }}>
+        <Text style={{ color: colors.text.secondary, fontFamily: fontFamilies.primary.text, fontSize: 13, textAlign: 'center' }}>
           {message}
         </Text>
       </View>

@@ -9,6 +9,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { SkeletonLoader } from './SkeletonLoader';
 import { HabitCardSkeleton } from './HabitCardSkeleton';
 import { useSkeletonTheme } from './useSkeletonTheme';
+import { fontFamilies } from '@/theme/typography';
 
 function ChainIcon({ isDark }: { isDark: boolean }) {
   return (
@@ -60,6 +61,7 @@ export function BrandedLoadingSkeleton() {
 
 const styles = StyleSheet.create({
   appName: {
+    fontFamily: fontFamilies.primary.text,
     fontSize: 22,
     fontWeight: '700',
     letterSpacing: -0.35,

@@ -22,6 +22,7 @@
 
 import { useThemeColors } from '../../theme/ThemeContext';
 import { colors } from '../../theme/colors';
+import { fontFamilies } from '../../theme/typography';
 import * as Haptics from 'expo-haptics';
 import { ImpactFeedbackStyle } from 'expo-haptics';
 import { useCallback, useRef, useState } from 'react';
@@ -346,6 +347,7 @@ const styles = StyleSheet.create({
   },
   ctaText: {
     color: '#FFFFFF',
+    fontFamily: fontFamilies.primary.text,
     fontSize: 17,
     fontWeight: '600',
   },
@@ -362,6 +364,7 @@ const styles = StyleSheet.create({
   },
   nextText: {
     color: '#FFFFFF',
+    fontFamily: fontFamilies.primary.text,
     fontSize: 17,
     fontWeight: '600',
   },
@@ -384,11 +387,13 @@ const styles = StyleSheet.create({
   },
   skipText: {
     color: '#6B7280',
+    fontFamily: fontFamilies.primary.text,
     fontSize: 17,
     fontWeight: '500',
   },
   subtitle: {
     color: '#6B7280',
+    fontFamily: fontFamilies.primary.text,
     fontSize: 17,
     lineHeight: 24,
     paddingHorizontal: 16,
@@ -396,6 +401,7 @@ const styles = StyleSheet.create({
   },
   title: {
     color: colors.primary[700],
+    fontFamily: fontFamilies.primary.display,
     fontSize: 34,
     fontWeight: '700',
     letterSpacing: -0.5,

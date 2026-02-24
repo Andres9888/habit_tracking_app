@@ -8,6 +8,7 @@ import { View } from 'react-native';
 import { AlertTriangle } from 'lucide-react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { useThemeColors } from '../../../../theme/ThemeContext';
+import { fontFamilies } from '@/theme/typography';
 
 const anim = (delay: number) =>
   FadeInUp.duration(280).delay(delay).springify().damping(18);
@@ -41,6 +42,7 @@ export function EmptyVizState() {
         entering={anim(60)}
         style={{
           color: colors.text.primary,
+          fontFamily: fontFamilies.primary.text,
           fontSize: 14,
           fontWeight: '500',
           marginBottom: 4,
@@ -53,6 +55,7 @@ export function EmptyVizState() {
         entering={anim(120)}
         style={{
           color: colors.text.tertiary,
+          fontFamily: fontFamilies.primary.text,
           fontSize: 12,
           textAlign: 'center',
         }}

@@ -21,7 +21,8 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import Animated, { FadeInDown, FadeOut } from 'react-native-reanimated';
 
 import { api } from '../../../convex/_generated/api';
-import { colors } from '../../theme/colors';
+import { colors } from '../../theme/colors'
+import { fontFamilies } from '../../theme/typography';;
 import { SkeletonLoader, HabitCardSkeleton } from '../SkeletonLoader';
 import { useConvexAuthReady } from '../../providers';
 import { useOnboardingStatus } from '../../screens/onboarding/useOnboardingStatus';
@@ -103,6 +104,7 @@ function BrandedLoadingScreen() {
 const loadingStyles = StyleSheet.create({
   appName: {
     color: colors.primary[700],
+    fontFamily: fontFamilies.primary.text,
     fontSize: 22,
     fontWeight: '700',
     letterSpacing: 0.5,
@@ -133,6 +135,7 @@ const loadingStyles = StyleSheet.create({
   },
   errorDescription: {
     color: colors.text.secondary,
+    fontFamily: fontFamilies.primary.text,
     fontSize: 13,
     lineHeight: 20,
     marginBottom: 20,
@@ -140,6 +143,7 @@ const loadingStyles = StyleSheet.create({
   },
   errorTitle: {
     color: colors.text.primary,
+    fontFamily: fontFamilies.primary.text,
     fontSize: 17,
     fontWeight: '600',
     marginBottom: 8,
@@ -165,6 +169,7 @@ const loadingStyles = StyleSheet.create({
   },
   retryButtonText: {
     color: colors.text.inverse,
+    fontFamily: fontFamilies.primary.text,
     fontSize: 17,
     fontWeight: '600',
   },

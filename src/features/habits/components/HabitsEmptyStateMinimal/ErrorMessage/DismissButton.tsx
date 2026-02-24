@@ -5,6 +5,7 @@
  */
 
 import { Pressable, Text } from 'react-native';
+import { fontFamilies } from '@/theme/typography';
 
 interface DismissButtonProps {
   onPress: () => void;
@@ -30,6 +31,7 @@ export function DismissButton({
       <Text
         style={{
           color: dismissColor,
+          fontFamily: fontFamilies.primary.text,
           fontSize: 17,
           fontWeight: '500',
           lineHeight: 22,

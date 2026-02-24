@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { fontFamilies } from '@/theme/typography';
 
 export const scrollStyles = StyleSheet.create({
   scrollFadeBottom: {
@@ -31,6 +32,7 @@ export const scrollStyles = StyleSheet.create({
     shadowRadius: 4,
   },
   scrollHintText: {
+    fontFamily: fontFamilies.primary.text,
     fontSize: 13,
     fontWeight: '600',
     marginLeft: 8,

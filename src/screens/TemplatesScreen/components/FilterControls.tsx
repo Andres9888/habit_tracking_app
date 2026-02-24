@@ -2,7 +2,8 @@
  * Sort dropdown filter control component
  */
 
-import { Pressable, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
+import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import { Check, ChevronDown, SlidersHorizontal } from 'lucide-react-native';
 import { useThemeColors } from '../../../theme/ThemeContext';
@@ -34,7 +35,7 @@ export function FilterControls({
 
   return (
     <View style={styles.sortButtonWrapper}>
-      <Pressable
+      <AnimatedPressable
         accessibilityLabel='Open sort options'
         accessibilityRole='button'
         style={[
@@ -60,7 +61,7 @@ export function FilterControls({
             transform: [{ rotate: showSortOptions ? '180deg' : '0deg' }],
           }}
         />
-      </Pressable>
+      </AnimatedPressable>
       {showSortOptions && (
         <Animated.View
           entering={FadeIn.duration(150)}
@@ -72,7 +73,7 @@ export function FilterControls({
           {SORT_OPTIONS.map((opt) => {
             const selected = sortOption === opt.value;
             return (
-              <Pressable
+              <AnimatedPressable
                 key={opt.value}
                 accessible
                 accessibilityLabel={`Sort by ${opt.label}`}
@@ -95,7 +96,7 @@ export function FilterControls({
                 {selected && (
                   <Check color='#10B981' size={16} strokeWidth={2.5} />
                 )}
-              </Pressable>
+              </AnimatedPressable>
             );
           })}
         </Animated.View>

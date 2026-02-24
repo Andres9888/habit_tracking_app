@@ -7,7 +7,7 @@
 import { StyleSheet } from 'react-native';
 
 import { shadows, borderRadius } from '../../../../theme/spacing';
-import { typography } from '@/theme/typography';
+import { typography, fontFamilies} from '@/theme/typography';
 
 export const elementStyles = StyleSheet.create({
   badgeContainer: {
@@ -26,6 +26,7 @@ export const elementStyles = StyleSheet.create({
     gap: 2,
   },
   celebrationSubtext: {
+    fontFamily: fontFamilies.primary.text,
     fontSize: typography.bodySmall.fontSize,
     fontWeight: '500',
   },
@@ -49,10 +50,12 @@ export const elementStyles = StyleSheet.create({
     paddingTop: 4,
   },
   dismissText: {
+    fontFamily: fontFamilies.primary.text,
     fontSize: typography.caption.fontSize,
     fontWeight: '500',
   },
   goalLabel: {
+    fontFamily: fontFamilies.primary.text,
     fontSize: 13,
     fontWeight: '500',
   },
@@ -62,6 +65,7 @@ export const elementStyles = StyleSheet.create({
     gap: 4,
   },
   goalValue: {
+    fontFamily: fontFamilies.monospace,
     fontSize: typography.body.fontSize,
     fontWeight: '700',
   },
@@ -74,11 +78,13 @@ export const elementStyles = StyleSheet.create({
     width: 48,
   },
   message: {
+    fontFamily: fontFamilies.primary.text,
     fontSize: typography.body.fontSize,
     fontWeight: '600',
     marginBottom: 4,
   },
   nextMilestone: {
+    fontFamily: fontFamilies.primary.text,
     fontSize: typography.caption.fontSize,
     fontWeight: '400',
     opacity: 0.85,

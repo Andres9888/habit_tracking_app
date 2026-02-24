@@ -3,6 +3,7 @@
  */
 
 import { StyleSheet } from 'react-native';
+import { fontFamilies } from '@/theme/typography';
 
 export const styles = StyleSheet.create({
   container: {
@@ -38,6 +39,7 @@ export const styles = StyleSheet.create({
     fontSize: 13,
   },
   streakText: {
+    fontFamily: fontFamilies.primary.text,
     fontSize: 13,
     fontWeight: '700',
   },

@@ -4,11 +4,13 @@
  */
 
 import { StyleSheet } from 'react-native';
+import { fontFamilies } from '@/theme/typography';
 
 export const tabStyles = StyleSheet.create({
   container: { gap: 12, padding: 8 },
   emptyText: {
     color: 'rgba(255,255,255,0.4)',
+    fontFamily: fontFamilies.monospace,
     fontSize: 11,
     textAlign: 'center',
   },
@@ -23,7 +25,7 @@ export const tabStyles = StyleSheet.create({
     height: 40,
     padding: 4,
   },
-  historyLabel: { color: 'rgba(255,255,255,0.5)', fontSize: 10 },
+  historyLabel: { color: 'rgba(255,255,255,0.5)', fontFamily: fontFamilies.monospace, fontSize: 10 },
   mainMetric: {
     alignItems: 'center',
     flexDirection: 'row',
@@ -35,7 +37,7 @@ export const tabStyles = StyleSheet.create({
     maxHeight: 80,
     padding: 4,
   },
-  statLabel: { color: 'rgba(255,255,255,0.7)', fontSize: 12 },
+  statLabel: { color: 'rgba(255,255,255,0.7)', fontFamily: fontFamilies.monospace, fontSize: 12 },
   statRow: { flexDirection: 'row', justifyContent: 'space-between' },
   stats: {
     backgroundColor: 'rgba(255,255,255,0.05)',

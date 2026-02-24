@@ -2,6 +2,7 @@
 import { Text, View } from 'react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { useThemeColors } from '../../../theme/ThemeContext';
+import { fontFamilies } from '@/theme/typography';
 
 const anim = (delay: number) =>
   FadeInUp.duration(280).delay(delay).springify().damping(18);
@@ -39,6 +40,7 @@ export function EmptyState() {
         entering={anim(60)}
         style={{
           color: colors.text.primary,
+          fontFamily: fontFamilies.primary.text,
           fontSize: 22,
           fontWeight: '700',
           letterSpacing: -0.5,
@@ -52,6 +54,7 @@ export function EmptyState() {
         entering={anim(120)}
         style={{
           color: colors.text.secondary,
+          fontFamily: fontFamilies.primary.text,
           fontSize: 15,
           marginBottom: 4,
           textAlign: 'center',
@@ -63,6 +66,7 @@ export function EmptyState() {
         entering={anim(180)}
         style={{
           color: colors.text.secondary,
+          fontFamily: fontFamilies.primary.text,
           fontSize: 14,
           marginBottom: 24,
           maxWidth: 280,
@@ -93,6 +97,7 @@ export function EmptyState() {
           <Text
             style={{
               color: isDark ? '#6EE7B7' : '#065F46',
+              fontFamily: fontFamilies.primary.text,
               fontSize: 14,
               fontWeight: '500',
               marginBottom: 4,
@@ -103,6 +108,7 @@ export function EmptyState() {
           <Text
             style={{
               color: isDark ? '#A7F3D0' : '#047857',
+              fontFamily: fontFamilies.primary.text,
               fontSize: 12,
               lineHeight: 18,
             }}

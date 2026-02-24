@@ -16,7 +16,7 @@ export const InputSection = forwardRef(function InputSection(
   ref: ForwardedRef<TextInput>
 ) {
   return (
-    <View style={{ marginBottom: 24, maxWidth: 343, width: '100%' }}>
+    <View style={{ marginBottom: 16, maxWidth: 343, width: '100%' }}>
       <AnimatedEntrance delay={ENTRANCE_DELAYS.input}>
         <HabitInput
           ref={ref}

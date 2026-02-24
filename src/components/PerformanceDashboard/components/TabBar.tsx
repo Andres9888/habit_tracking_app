@@ -6,6 +6,7 @@
 import React, { memo } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import type { DashboardTab } from '../types';
+import { fontFamilies } from '@/theme/typography';
 
 interface TabBarProps {
   activeTab: DashboardTab;
@@ -68,6 +69,7 @@ const styles = StyleSheet.create({
   },
   label: {
     color: 'rgba(255,255,255,0.6)',
+    fontFamily: fontFamilies.primary.text,
     fontSize: 9,
     fontWeight: '500',
   },

@@ -24,8 +24,9 @@ export function Modal({
   backdropOpacity = 0.5,
   style,
   respectReduceMotion = true,
+  skipAnimation = false,
 }: ModalProps) {
-  const reduceMotion = useReduceMotion(respectReduceMotion);
+  const reduceMotion = skipAnimation || useReduceMotion(respectReduceMotion);
   const animationValues = useModalAnimations({
     backdropOpacity,
     reduceMotion,

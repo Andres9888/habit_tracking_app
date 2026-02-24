@@ -10,6 +10,7 @@ import { StatRow } from './StatRow';
 import { HistoryChart } from './HistoryChart';
 import { tabStyles, valueStyles } from './tabStyles';
 import type { FPSData } from '../types';
+import { fontFamilies } from '@/theme/typography';
 
 interface FPSTabProps {
   data: FPSData;
@@ -62,5 +63,6 @@ function getFPSBarColor(fps: number): string {
 
 const styles = StyleSheet.create({
   fpsDisplay: { alignItems: 'baseline', flexDirection: 'row', gap: 4 },
+  fontFamily: fontFamilies.primary.text,
   fpsUnit: { color: 'rgba(255,255,255,0.6)', fontSize: 14, fontWeight: '500' },
 });

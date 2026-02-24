@@ -2,7 +2,8 @@
  * Research-only filter button component
  */
 
-import { Pressable, Text } from 'react-native';
+import { Text } from 'react-native';
+import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import { Filter } from 'lucide-react-native';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { styles } from '../../templates/templatesScreenStyles';
@@ -22,7 +23,7 @@ export function ResearchFilterButton({
   const defaultColor = colors.text.primary;
 
   return (
-    <Pressable
+    <AnimatedPressable
       accessibilityLabel='Toggle research-only filter'
       accessibilityRole='button'
       style={[styles.controlButton, researchOnly && styles.controlButtonActive]}
@@ -37,6 +38,6 @@ export function ResearchFilterButton({
       >
         {label}
       </Text>
-    </Pressable>
+    </AnimatedPressable>
   );
 }

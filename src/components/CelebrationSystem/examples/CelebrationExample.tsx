@@ -9,6 +9,7 @@ import React from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 
 import { ConfettiSystem, useCelebration, determineBurstType, type CompletionContext } from './index';
+import { fontFamilies } from '@/theme/typography';
 
 /**
  * Example component showing all celebration burst types
@@ -144,6 +145,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: '#FFFFFF',
+    fontFamily: fontFamilies.primary.text,
     fontSize: 16,
     fontWeight: '600',
   },
@@ -169,6 +171,7 @@ const styles = StyleSheet.create({
   },
   completeButtonText: {
     color: '#FFFFFF',
+    fontFamily: fontFamilies.primary.text,
     fontSize: 16,
     fontWeight: '600',
   },
@@ -178,11 +181,13 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   habitName: {
+    fontFamily: fontFamilies.primary.text,
     fontSize: 20,
     fontWeight: '700',
     marginBottom: 12,
   },
   stat: {
+    fontFamily: fontFamilies.monospace,
     fontSize: 14,
     marginBottom: 4,
   },
@@ -190,6 +195,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   title: {
+    fontFamily: fontFamilies.primary.display,
     fontSize: 24,
     fontWeight: '700',
     marginBottom: 24,

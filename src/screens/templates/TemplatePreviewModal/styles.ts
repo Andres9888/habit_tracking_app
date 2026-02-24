@@ -4,6 +4,8 @@
  */
 
 import { StyleSheet } from 'react-native';
+import { shadows } from '@/theme/spacing';
+import { fontFamilies } from '@/theme/typography';
 
 export const styles = StyleSheet.create({
   closeButton: {
@@ -42,6 +44,7 @@ export const styles = StyleSheet.create({
     zIndex: 10,
   },
   headerTitle: {
+    fontFamily: fontFamilies.primary.display,
     fontSize: 22,
     fontWeight: '700',
     letterSpacing: -0.5,
@@ -58,20 +61,18 @@ export const styles = StyleSheet.create({
     fontSize: 40,
   },
   importButton: {
-    elevation: 4,
-    shadowColor: '#1c1917',
-    shadowOffset: { height: 4, width: 0 },
-    shadowOpacity: 0.15,
-    shadowRadius: 12,
+    ...shadows.modal,
   },
   input: {
     borderRadius: 12,
     borderWidth: 1,
+    fontFamily: fontFamilies.primary.text,
     fontSize: 17,
     paddingHorizontal: 16,
     paddingVertical: 14,
   },
   label: {
+    fontFamily: fontFamilies.primary.text,
     fontSize: 13,
     fontWeight: '600',
     marginBottom: 8,

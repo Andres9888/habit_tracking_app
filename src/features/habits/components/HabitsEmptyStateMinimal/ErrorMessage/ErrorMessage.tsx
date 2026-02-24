@@ -14,6 +14,7 @@
 import Animated from 'react-native-reanimated';
 
 import { AccessibleText } from '../../../../../components/ui/AccessibleText';
+import { fontFamilies } from '@/theme/typography';
 import type { ErrorMessageProps } from '../types';
 import { useEmptyStateColors } from '../useEmptyStateColors';
 import { ErrorIcon } from './ErrorIcon';
@@ -57,6 +58,7 @@ export function ErrorMessage({
         style={{
           color: colors.errorText,
           flex: 1,
+          fontFamily: fontFamilies.primary.text,
           fontSize: 13,
           fontWeight: '500',
           marginHorizontal: 12,

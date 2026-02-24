@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { typography } from '@/theme/typography';
+import { typography, fontFamilies} from '@/theme/typography';
 import type { SemanticColors } from '../../theme/darkColors';
 
 export const styles = StyleSheet.create({
@@ -19,6 +19,7 @@ export const styles = StyleSheet.create({
     marginBottom: 6,
   },
   habitName: {
+    fontFamily: fontFamilies.primary.text,
     fontSize: typography.body.fontSize,
     fontWeight: '500',
     marginBottom: 2,
@@ -30,16 +31,20 @@ export const styles = StyleSheet.create({
     alignSelf: 'flex-start',
   },
   interventionText: {
+    fontFamily: fontFamilies.primary.text,
     fontSize: typography.caption.fontSize,
     fontWeight: '500',
   },
   prediction: {
+    fontFamily: fontFamilies.primary.text,
     fontSize: typography.bodySmall.fontSize,
   },
   subtitle: {
+    fontFamily: fontFamilies.primary.text,
     fontSize: typography.bodySmall.fontSize,
   },
   title: {
+    fontFamily: fontFamilies.primary.text,
     fontSize: 18,
     fontWeight: '600',
     marginBottom: 4,
@@ -49,6 +54,7 @@ export const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   viewAllText: {
+    fontFamily: fontFamilies.primary.text,
     fontSize: typography.bodySmall.fontSize,
     fontWeight: '500',
   },

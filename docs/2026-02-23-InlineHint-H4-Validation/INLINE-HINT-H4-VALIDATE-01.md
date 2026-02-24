@@ -65,6 +65,23 @@ These 6 locations form the full-width chain. If ANY one breaks, the CTAs shrink:
   >
   > **Next steps:** Retry after upgrading to a newer Maestro version with iOS 26 support, or try on an iOS 18 simulator. Also investigate why `inline-hint-browse-templates` is missing from the accessibility tree.
 
-## Phase 4: Visual Width Inspection
+## Phase 4: Generate Mock Reference Screenshot
 
-- [ ] **Inspect the Maestro screenshot for CTA width.** Open the screenshot at `.maestro/screenshots/inline-hint-h4-light-mode.png` (or wherever Maestro saved it). Visually confirm that both CTA buttons ("Browse templates" gradient button and "Build my own" card) span the full width of the screen minus padding — they should match the phone-frame width shown in the HTML mock. If they appear narrow/centered instead of full-width, this means the static validation passed but runtime behavior differs — go back to Phase 2 and check for new `Animated.View` wrappers or style overrides that weren't in the original 6 checkpoints.
+- [ ] **Capture a reference screenshot from the HTML mock.** Open `.superdesign/design_iterations/inline_hint_h4_mock_1.html` in a headless browser and capture a screenshot of the light-mode phone frame. Run: `cd /Users/andres/Code/habit_tracking_app && npx playwright screenshot --viewport-size="800x900" .superdesign/design_iterations/inline_hint_h4_mock_1.html .maestro/screenshots/inline-hint-h4-mock-reference.png` (install playwright if needed: `npx playwright install chromium`). If playwright is unavailable, use the macOS `screencapture` approach: open the mock with `open .superdesign/design_iterations/inline_hint_h4_mock_1.html`, wait 2 seconds, then `screencapture -l $(osascript -e 'tell app "Safari" to id of window 1') .maestro/screenshots/inline-hint-h4-mock-reference.png`. The reference screenshot should show both phone frames (light + dark) with full-width CTAs.
+
+## Phase 5: Visual Comparison — Mock vs App
+
+- [ ] **Compare the app screenshot against the mock reference.** Read BOTH images: (1) the mock reference at `.maestro/screenshots/inline-hint-h4-mock-reference.png` and (2) the app screenshot at `.maestro/screenshots/inline-hint-h4-light-mode.png`. Compare them on these 5 criteria and report a pass/fail table:
+
+  | Criterion | What to check | Pass condition |
+  |-----------|--------------|----------------|
+  | **CTA full width** | Both "Browse templates" and "Build my own" span edge-to-edge (minus screen padding) | Button width matches mock proportionally (>90% of content area width) |
+  | **Gradient button visible** | Green gradient "Browse templates" button is fully visible, not clipped | Button is entirely on screen with gradient, emoji, label, and badge all visible |
+  | **Build-my-own card** | Card with accent stripe is fully visible below the gradient button | Card shows stripe, emoji, label, and arrow — not cut off |
+  | **Divider** | "or explore" text centered between two lines | Lines extend full width, text is centered |
+  | **Vertical spacing** | Gap between gradient button and card matches mock (~8px) | Spacing is visually consistent, not collapsed or stretched |
+
+  If any criterion fails, describe the mismatch and go back to Phase 2 to investigate the root cause. Common failures:
+  - **CTAs not full width** → A new `Animated.View` wrapper was added without `alignSelf: 'stretch'` — add it to the width contract and fix
+  - **Content clipped** → The empty state layout exceeds viewport height — check if `HabitsListContent` has `flexGrow: 1` or needs `ScrollView`
+  - **Gradient button missing** → The `templatesAnimatedStyle` is collapsing to zero height — add explicit `minHeight: 52` or check the Reanimated animated style

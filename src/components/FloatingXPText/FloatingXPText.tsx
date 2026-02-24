@@ -22,6 +22,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { useReduceMotion } from '../../hooks/useReduceMotion';
 import { useThemeColors } from '../../theme/ThemeContext';
+import { fontFamilies } from '@/theme/typography';
 
 export interface FloatingXPTextProps {
   /** XP value to display (e.g., 10, 50, 100) */
@@ -126,6 +127,7 @@ export function FloatingXPText({
 const styles = StyleSheet.create({
   coinText: {
     color: '#F59E0B',
+    fontFamily: fontFamilies.primary.text,
     fontSize: 17,
     fontWeight: '600', // Amber 500
     textShadowColor: '#F59E0B',
@@ -139,6 +141,7 @@ const styles = StyleSheet.create({
   },
   xpText: {
     color: '#047857',
+    fontFamily: fontFamilies.primary.text,
     fontSize: 17,
     fontWeight: '600', // Green 700 (WCAG AA compliant text)
     textShadowColor: '#10B981',

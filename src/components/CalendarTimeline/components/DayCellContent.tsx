@@ -64,7 +64,7 @@ export const DayCellContent: React.FC<DayCellContentProps> = ({
       </Text>
 
       <View
-        className='h-9 w-9 items-center justify-center rounded-xl'
+        className='h-10 w-10 items-center justify-center rounded-xl'
         style={{
           ...cellStyles.container,
           ...(pressed && !reduceMotion && { transform: [{ scale: 0.95 }] }),

@@ -10,6 +10,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { SkeletonLoader, HabitCardSkeleton } from '../SkeletonLoader';
 import { LoadingTimeoutCard } from './LoadingTimeoutCard';
+import { fontFamilies } from '@/theme/typography';
 
 const LOADING_TIMEOUT_MS = 10_000;
 
@@ -64,6 +65,7 @@ export function BrandedLoadingScreen() {
 
 const styles = StyleSheet.create({
   appName: {
+    fontFamily: fontFamilies.primary.text,
     fontSize: 22,
     fontWeight: '700',
     letterSpacing: 0.5,

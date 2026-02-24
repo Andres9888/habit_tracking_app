@@ -11,7 +11,7 @@ import {
   DAY_LABEL_WIDTH,
   MONTH_LABEL,
 } from './constants';
-import { typography } from '../../theme/typography';
+import { typography, fontFamilies} from '../../theme/typography';
 
 export const styles = StyleSheet.create({
   cell: {
@@ -36,6 +36,7 @@ export const styles = StyleSheet.create({
   },
   dayLabelText: {
     color: COLORS.TEXT_SECONDARY,
+    fontFamily: fontFamilies.primary.text,
     fontSize: 10,
     fontWeight: '500',
     textAlign: 'right',
@@ -57,11 +58,13 @@ export const styles = StyleSheet.create({
   },
   headerTitle: {
     color: COLORS.TEXT_PRIMARY,
+    fontFamily: fontFamilies.primary.text,
     fontSize: typography.bodySmall.fontSize,
     fontWeight: '600',
   },
   monthLabel: {
     color: COLORS.TEXT_SECONDARY,
+    fontFamily: fontFamilies.primary.text,
     fontSize: 10,
     position: 'absolute',
   },

@@ -4,7 +4,7 @@
 
 import { StyleSheet } from 'react-native';
 import { borderRadius } from '../../theme/spacing';
-import { typography } from '../../theme/typography';
+import { typography, fontFamilies} from '../../theme/typography';
 
 export const styles = StyleSheet.create({
   // Compact variant (list view)

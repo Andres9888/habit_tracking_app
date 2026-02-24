@@ -9,7 +9,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import { useAppTheme } from '../../../theme';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { borderRadius, spacing } from '../../../theme/spacing';
-import { typography } from '../../../theme/typography';
+import { typography, fontFamilies} from '../../../theme/typography';
 
 interface ScienceBoxProps {
   scientificReference: string;
@@ -55,6 +55,7 @@ export const styles = StyleSheet.create({
     marginBottom: spacing.sm,
   },
   scienceHeaderText: {
+    fontFamily: fontFamilies.primary.text,
     fontSize: 13,
     fontWeight: '600',
   },

@@ -132,10 +132,10 @@ Append to `{{AUTORUN_FOLDER}}/SECURITY_LOG_{{AGENT_NAME}}_{{DATE}}.md`:
 - **Before:** [Brief description or code reference]
 - **After:** [Brief description of the fix]
 - **Verification:**
-  - [x] Code review passed
-  - [x] Functionality tested
-  - [x] Vulnerability no longer exploitable
-  - [x] Automated scan clean
+  - [ ] Code review passed
+  - [ ] Functionality tested
+  - [ ] Vulnerability no longer exploitable
+  - [ ] Automated scan clean
 
 ---
 ```

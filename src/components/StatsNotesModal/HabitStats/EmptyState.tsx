@@ -7,6 +7,7 @@ import { View } from 'react-native';
 import { BarChart2 } from 'lucide-react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { useThemeColors } from '../../../theme/ThemeContext';
+import { fontFamilies } from '@/theme/typography';
 
 const anim = (delay: number) =>
   FadeInUp.duration(280).delay(delay).springify().damping(18);
@@ -38,6 +39,7 @@ export function EmptyState() {
         entering={anim(60)}
         style={{
           color: colors.text.primary,
+          fontFamily: fontFamilies.primary.text,
           fontSize: 22,
           fontWeight: '700',
           letterSpacing: -0.5,
@@ -51,6 +53,7 @@ export function EmptyState() {
         entering={anim(120)}
         style={{
           color: colors.text.secondary,
+          fontFamily: fontFamilies.primary.text,
           fontSize: 17,
           lineHeight: 22,
           maxWidth: 280,

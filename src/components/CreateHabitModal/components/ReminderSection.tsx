@@ -2,6 +2,7 @@ import { Switch, Text, View } from 'react-native';
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import useHapticFeedback from '../../../hooks/useHapticFeedback';
 import { formatReminderTime } from '../../../utils/notifications';
+import { fontFamilies } from '@/theme/typography';
 
 interface ReminderSectionProps {
   remindersEnabled: boolean;

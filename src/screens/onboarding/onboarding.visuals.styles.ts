@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { colors } from '../../theme/colors';
+import { fontFamilies } from '../../theme/typography';
 
 export const visualStyles = StyleSheet.create({
   chainContainer: {
@@ -33,6 +34,7 @@ export const visualStyles = StyleSheet.create({
   },
   strengthLabel: {
     color: '#57534e',
+    fontFamily: fontFamilies.primary.text,
     fontSize: 13,
     fontWeight: '500',
   },
@@ -47,6 +49,7 @@ export const visualStyles = StyleSheet.create({
   },
   subtitle: {
     color: '#6B7280',
+    fontFamily: fontFamilies.primary.text,
     fontSize: 17,
     lineHeight: 24,
     paddingHorizontal: 16,
@@ -77,6 +80,7 @@ export const visualStyles = StyleSheet.create({
   },
   title: {
     color: colors.primary[700],
+    fontFamily: fontFamilies.primary.display,
     fontSize: 34,
     fontWeight: '700',
     letterSpacing: -0.5,

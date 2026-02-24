@@ -9,6 +9,7 @@ import Animated, { FadeInUp } from 'react-native-reanimated';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 
 import type { VizType } from './types';
+import { fontFamilies } from '@/theme/typography';
 
 interface EmptyVizStateProps {
   type: VizType;
@@ -35,6 +36,7 @@ export function EmptyVizState({ type, compact }: EmptyVizStateProps) {
         <Text
           style={{
             color: accentColor,
+            fontFamily: fontFamilies.primary.text,
             fontSize: 14,
             fontStyle: 'italic',
             textAlign: 'center',
@@ -72,6 +74,7 @@ export function EmptyVizState({ type, compact }: EmptyVizStateProps) {
         entering={anim(60)}
         style={{
           color: colors.text.primary,
+          fontFamily: fontFamilies.primary.text,
           fontSize: 14,
           fontWeight: '500',
           marginBottom: 4,
@@ -84,6 +87,7 @@ export function EmptyVizState({ type, compact }: EmptyVizStateProps) {
         entering={anim(120)}
         style={{
           color: colors.text.tertiary,
+          fontFamily: fontFamilies.primary.text,
           fontSize: 12,
           textAlign: 'center',
         }}

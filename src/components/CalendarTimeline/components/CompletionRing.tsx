@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { Animated, Text, View } from 'react-native';
 import Svg, { Circle } from 'react-native-svg';
+import { fontFamilies } from '@/theme/typography';
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
@@ -10,8 +11,8 @@ interface CompletionRingProps {
   reduceMotion?: boolean;
 }
 
-const RING_SIZE = 44;
-const STROKE_WIDTH = 3.5;
+const RING_SIZE = 36;
+const STROKE_WIDTH = 3;
 const RADIUS = (RING_SIZE - STROKE_WIDTH) / 2;
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
 
@@ -89,7 +90,8 @@ export const CompletionRing: React.FC<CompletionRingProps> = ({
       <Text
         style={{
           color: isComplete ? RING_COLORS.completeText : RING_COLORS.text,
-          fontSize: 11,
+          fontFamily: fontFamilies.primary.text,
+          fontSize: 10,
           fontWeight: '800',
           position: 'absolute',
         }}

@@ -9,26 +9,17 @@ import {
   addDays,
   isSameMonth,
   isToday,
+  isFuture,
 } from 'date-fns';
+
+import { useThemeColors } from '../../../theme/ThemeContext';
+import { DAY_LABELS, getDotColor, getGridColors } from './MiniCalendarGrid.helpers';
+import { fontFamilies } from '@/theme/typography';
 
 interface MiniCalendarGridProps {
   month: Date;
   completionByDay: Record<string, { completed: number; total: number }>;
   onSelectDate: (date: Date) => void;
-}
-
-const DAY_LABELS = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'];
-
-function getDotColor(
-  date: Date,
-  completionByDay: Record<string, { completed: number; total: number }>
-) {
-  const key = format(date, 'yyyy-MM-dd');
-  const day = completionByDay[key];
-  if (!day || day.total === 0) return;
-  if (day.completed === day.total) return '#10b981';
-  if (day.completed > 0) return '#f59e0b';
-  return;
 }
 
 /** Month grid with completion dots under each date */
@@ -37,6 +28,7 @@ export const MiniCalendarGrid: React.FC<MiniCalendarGridProps> = ({
   completionByDay,
   onSelectDate,
 }) => {
+  const { isDark } = useThemeColors();
   const weeks = useMemo(() => {
     const start = startOfWeek(startOfMonth(month), { weekStartsOn: 1 });
     const end = endOfWeek(endOfMonth(month), { weekStartsOn: 1 });
@@ -53,19 +45,15 @@ export const MiniCalendarGrid: React.FC<MiniCalendarGridProps> = ({
     return rows;
   }, [month]);
 
+  const c = getGridColors(isDark);
+
   return (
     <View>
       <View style={{ flexDirection: 'row', marginBottom: 4 }}>
         {DAY_LABELS.map((d) => (
           <Text
             key={d}
-            style={{
-              flex: 1,
-              textAlign: 'center',
-              fontSize: 10,
-              color: '#a8a29e',
-              fontWeight: '600',
-            }}
+            style={{ flex: 1, textAlign: 'center', fontFamily: fontFamilies.primary.text, fontSize: 10, color: c.label, fontWeight: '600' }}
           >
             {d}
           </Text>
@@ -76,40 +64,27 @@ export const MiniCalendarGrid: React.FC<MiniCalendarGridProps> = ({
           {week.map((date) => {
             const inMonth = isSameMonth(date, month);
             const today = isToday(date);
-            const dot = inMonth ? getDotColor(date, completionByDay) : null;
+            const future = isFuture(date);
+            const dot = inMonth && !future ? getDotColor(date, completionByDay) : null;
             return (
               <Pressable
                 key={date.toISOString()}
-                style={{
-                  flex: 1,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
+                disabled={future}
+                style={{ flex: 1, alignItems: 'center', justifyContent: 'center', opacity: future ? 0.35 : 1 }}
                 onPress={() => onSelectDate(date)}
               >
                 <Text
                   style={{
+                    fontFamily: fontFamilies.primary.text,
                     fontSize: 12,
                     fontWeight: today ? '800' : '500',
-                    color: inMonth
-                      ? today
-                        ? '#1c1917'
-                        : '#57534e'
-                      : '#d6d3d1',
+                    color: inMonth ? (today ? c.today : c.text) : c.muted,
                   }}
                 >
                   {format(date, 'd')}
                 </Text>
                 {dot && (
-                  <View
-                    style={{
-                      width: 4,
-                      height: 4,
-                      borderRadius: 2,
-                      backgroundColor: dot,
-                      marginTop: 1,
-                    }}
-                  />
+                  <View style={{ width: 4, height: 4, borderRadius: 2, backgroundColor: dot, marginTop: 1 }} />
                 )}
               </Pressable>
             );

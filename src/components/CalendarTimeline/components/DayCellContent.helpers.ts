@@ -30,12 +30,13 @@ export function getDayCellStyles({
   colors,
 }: GetDayCellStylesParams): DayCellComputedStyles {
   // Complete day: emerald background + white text + green glow
+  // If it's also today, keep the amber border as an identity ring
   if (isComplete) {
     return {
       container: {
         backgroundColor: COMPLETE_DAY_CELL.background,
-        borderColor: 'transparent',
-        borderWidth: 0,
+        borderColor: isCurrentDay ? TODAY_HIGHLIGHT.border : 'transparent',
+        borderWidth: isCurrentDay ? 2 : 0,
         ...COMPLETE_DAY_CELL.glow,
       },
       text: COMPLETE_DAY_CELL.text,

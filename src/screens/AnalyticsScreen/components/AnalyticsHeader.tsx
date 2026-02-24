@@ -8,6 +8,7 @@ import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { spacing } from '../../../theme/spacing';
+import { fontFamilies } from '../../../theme/typography';
 
 export const AnalyticsHeader: React.FC = () => {
   const insets = useSafeAreaInsets();
@@ -46,12 +47,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.lg,
   },
   headerSubtitle: {
+    fontFamily: fontFamilies.primary.text,
     fontSize: 17,
     letterSpacing: -0.41,
     lineHeight: 22,
     marginTop: spacing.xs,
   },
   headerTitle: {
+    fontFamily: fontFamilies.primary.display,
     fontSize: 22,
     fontWeight: '700',
     letterSpacing: 0.35,

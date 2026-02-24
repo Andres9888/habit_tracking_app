@@ -6,7 +6,7 @@
 import { StyleSheet } from 'react-native';
 import { colors } from '@/theme/colors';
 import { borderRadius } from '../../../theme/spacing';
-import { typography } from '../../../theme/typography';
+import { typography, fontFamilies} from '../../../theme/typography';
 
 export const shareCardContentStyles = StyleSheet.create({
   cardContainer: {
@@ -26,6 +26,7 @@ export const shareCardContentStyles = StyleSheet.create({
   },
   habitName: {
     color: colors.text.inverse,
+    fontFamily: fontFamilies.primary.display,
     fontSize: 36,
     fontWeight: '700',
     marginBottom: 24,
@@ -41,6 +42,7 @@ export const shareCardContentStyles = StyleSheet.create({
   },
   milestoneLabel: {
     color: colors.text.inverse,
+    fontFamily: fontFamilies.primary.text,
     fontSize: 28,
     fontWeight: '600',
     textShadowColor: 'rgba(0, 0, 0, 0.3)',
@@ -55,6 +57,7 @@ export const shareCardContentStyles = StyleSheet.create({
   },
   personalMessage: {
     color: colors.text.inverse,
+    fontFamily: fontFamilies.primary.text,
     fontSize: typography.heading2.fontSize,
     fontStyle: 'italic',
     marginTop: 32,
@@ -81,6 +84,7 @@ export const shareCardContentStyles = StyleSheet.create({
   },
   strengthPercentage: {
     color: colors.text.inverse,
+    fontFamily: fontFamilies.primary.display,
     fontSize: 48,
     fontWeight: '800',
     textShadowColor: 'rgba(0, 0, 0, 0.3)',

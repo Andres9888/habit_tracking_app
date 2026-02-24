@@ -15,8 +15,6 @@ export interface CalendarTimelineProps {
   onNextWeek?: () => void;
   /** Whether forward navigation is allowed */
   canNavigateForward?: boolean;
-  /** Whether to show the gradient separator line */
-  showSeparator?: boolean;
   /** Enables the high contrast theme */
   highContrastMode?: boolean;
   /** Currently selected date (reserved for future interactive states) */
@@ -76,4 +74,17 @@ export interface CalendarColors {
   icon: string;
   primaryText: string;
   secondaryText: string;
+}
+
+export interface WeekNavigationHeaderProps {
+  dateRangeText: string;
+  onPreviousWeek?: () => void;
+  onNextWeek?: () => void;
+  canNavigateForward: boolean;
+  colors: CalendarColors;
+  onJumpToToday?: () => void;
+  onDateRangePress?: () => void;
+  completedToday?: number;
+  totalHabits?: number;
+  reduceMotion?: boolean;
 }

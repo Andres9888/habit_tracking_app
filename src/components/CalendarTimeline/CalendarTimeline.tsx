@@ -2,12 +2,14 @@ import React, { memo, useState, useCallback } from 'react';
 import { View } from 'react-native';
 import { format } from 'date-fns';
 import { GestureDetector } from 'react-native-gesture-handler';
+import Animated from 'react-native-reanimated';
 
 import {
   useCalendarTimelineLogic,
+  useCardStyle,
   useCompletionStatus,
+  useWeekTransition,
 } from './CalendarTimeline.hooks';
-import { CONTAINER_SHADOW, getColors } from './CalendarTimeline.styles';
 import type { CalendarTimelineProps } from './CalendarTimeline.types';
 import { useTimelineSwipe } from './useTimelineSwipe';
 import { useThemeColors } from '../../theme/ThemeContext';
@@ -37,43 +39,24 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
 }) => {
   const { isToday, isFuture } = useCalendarTimelineLogic();
   const { isDark, colors: themeColors } = useThemeColors();
-  const colors = getColors(highContrastMode, isDark);
+  const { colors, augmentedColors, cardStyle } = useCardStyle(highContrastMode, isDark, themeColors);
   const getCompletionStatus = useCompletionStatus(completionByDay, isFuture);
   const [calendarOpen, setCalendarOpen] = useState(false);
   const openCalendar = useCallback(() => setCalendarOpen(true), []);
   const closeCalendar = useCallback(() => setCalendarOpen(false), []);
-  const timelinePanGesture = useTimelineSwipe({
-    canNavigateForward,
-    onNextWeek,
-    onPreviousWeek,
-  });
+  const timelinePanGesture = useTimelineSwipe({ canNavigateForward, onNextWeek, onPreviousWeek });
+  const weekTransitionStyle = useWeekTransition(dates, reduceMotion);
 
-  if (dates.length === 0) return null;
   const firstDate = dates[0];
   const lastDate = dates.at(-1);
   if (!firstDate || !lastDate) return null;
   const dateRangeText = `${format(firstDate, 'MMM d')} - ${format(lastDate, 'MMM d')}`;
   const hasCompletionData = Object.keys(completionByDay).length > 0;
-  const augmentedColors = {
-    ...colors,
-    borderWidth: highContrastMode ? 2 : 0,
-    highContrastBorder: highContrastMode ? colors.dayBorder : undefined,
-  };
-  const hc = highContrastMode;
-  const cardStyle = {
-    backgroundColor: hc ? 'transparent' : themeColors.card,
-    borderColor: hc ? 'transparent' : themeColors.cardBorder,
-    borderWidth: hc ? 0 : 1,
-    ...CONTAINER_SHADOW,
-  };
 
   return (
     <View className='mb-4 rounded-2xl px-3 pb-3 pt-2' style={cardStyle}>
       {trialDaysRemaining != null && trialDaysRemaining > 0 && onUpgrade && (
-        <InlineTrialBar
-          daysRemaining={trialDaysRemaining}
-          onUpgrade={onUpgrade}
-        />
+        <InlineTrialBar daysRemaining={trialDaysRemaining} onUpgrade={onUpgrade} />
       )}
       <WeekNavigationHeader
         canNavigateForward={canNavigateForward}
@@ -88,7 +71,7 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
         onPreviousWeek={onPreviousWeek}
       />
       <GestureDetector gesture={timelinePanGesture}>
-        <View className='flex-row items-start justify-between pl-1'>
+        <Animated.View className='flex-row items-start justify-between pl-1' style={weekTransitionStyle}>
           {dates.map((date, index) => (
             <DayCell
               key={`timeline-day-${index}`}
@@ -105,7 +88,7 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
               onDayPress={onDayPress}
             />
           ))}
-        </View>
+        </Animated.View>
       </GestureDetector>
       <MiniCalendarPopup
         completionByDay={completionByDay}

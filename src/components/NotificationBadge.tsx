@@ -12,7 +12,7 @@ import Animated, {
 import { colors } from '../theme/colors';
 import { useThemeColors } from '../theme/ThemeContext';
 import { borderRadius } from '../theme/spacing';
-import { typography } from '@/theme/typography';
+import { typography, fontFamilies} from '@/theme/typography';
 
 interface NotificationBadgeProps {
   count?: number;
@@ -79,6 +79,7 @@ export function NotificationBadge({
         <Text
           style={{
             color: colors.text.inverse,
+            fontFamily: fontFamilies.primary.text,
             fontSize: typography.tabBar.fontSize,
             fontWeight: '700',
             lineHeight: 14,

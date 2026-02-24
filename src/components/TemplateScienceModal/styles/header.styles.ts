@@ -4,6 +4,7 @@
 
 import { StyleSheet } from 'react-native';
 import type { SemanticColors } from '../../../theme/darkColors';
+import { fontFamilies } from '@/theme/typography';
 
 export const headerStyles = StyleSheet.create({
   headerSpacer: {
@@ -34,6 +35,7 @@ export function themedHeaderStyles(colors: SemanticColors) {
     },
     headerTitle: {
       color: colors.text.primary,
+      fontFamily: fontFamilies.primary.text,
       fontSize: 17,
       fontWeight: '700',
       letterSpacing: -0.3,
