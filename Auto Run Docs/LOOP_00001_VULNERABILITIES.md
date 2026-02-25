@@ -35,6 +35,12 @@ related:
 
 ---
 
+## Hardcoded Secrets [SEARCHED]
+
+- **Findings:** No hardcoded secrets, private keys, API tokens, or credential literals were identified in scanned source/configuration files for this category.
+
+---
+
 ## Access Control Issues [SEARCHED]
 
 ## VULN-001: Unauthenticated Global Deletion of Archived Habits
