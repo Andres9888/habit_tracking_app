@@ -49,11 +49,7 @@ export function CtaButton({
       disabled={isDisabled}
       style={[
         animatedStyle,
-        getCtaButtonStyle(
-          !!isDisabled,
-          colors.ctaBackground,
-          colors.ctaBackground
-        ),
+        getCtaButtonStyle(!!isDisabled, colors.ctaBackground, colors.ctaShadow),
       ]}
       onPress={handlePress}
       onPressIn={handlePressIn}

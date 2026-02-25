@@ -44,7 +44,7 @@ const coreStyles = StyleSheet.create({
   },
   completedText: { opacity: 0.55, textDecorationLine: 'line-through' as const },
   container: {
-    marginVertical: spacing.xs,
+    marginVertical: 6,
     minHeight: 76,
     position: 'relative',
   },

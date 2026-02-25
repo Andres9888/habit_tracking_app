@@ -5,7 +5,7 @@
 
 import React from 'react';
 import { View } from 'react-native';
-import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
+import Animated from 'react-native-reanimated';
 
 import {
   CATEGORY_COLORS,
@@ -13,6 +13,7 @@ import {
 } from '../../screens/templates/constants';
 import { useReduceMotion } from '../../hooks/useReduceMotion';
 import type { CollapsibleCategorySectionProps } from './types';
+import { LAYOUT_SPRING, contentEntering, contentExiting } from './animations';
 import { styles } from './styles';
 import { useHeaderAnimations } from './useHeaderAnimations';
 import { SectionHeader } from './SectionHeader';
@@ -46,7 +47,10 @@ export function CollapsibleCategorySection({
   } = useHeaderAnimations({ isExpanded, onToggle, reducedMotion });
 
   return (
-    <AnimatedView style={styles.container}>
+    <AnimatedView
+      layout={reducedMotion ? undefined : LAYOUT_SPRING}
+      style={styles.container}
+    >
       <SectionHeader
         chevronAnimatedStyle={chevronAnimatedStyle}
         colors={colors}
@@ -64,8 +68,8 @@ export function CollapsibleCategorySection({
 
       {isExpanded && (
         <Animated.View
-          entering={FadeIn.duration(150)}
-          exiting={FadeOut.duration(100)}
+          entering={contentEntering(reducedMotion)}
+          exiting={contentExiting(reducedMotion)}
           style={styles.content}
         >
           <TemplatesList

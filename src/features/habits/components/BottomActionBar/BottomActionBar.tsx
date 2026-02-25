@@ -1,17 +1,24 @@
 /**
- * BottomActionBar — Symmetric three-zone layout with frosted glass.
- * Left: Settings pill · Center: Raised squircle Add · Right: Templates pill.
+ * BottomActionBar — Three-zone layout with progress ring FAB.
+ * Left: Ghost Settings pill · Center: Progress ring + FAB · Right: Gold Explore pill.
  */
 
 import { memo } from 'react';
-import { View, Pressable } from 'react-native';
+import { View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { BlurView } from 'expo-blur';
-import { BookOpen, Settings, Plus } from 'lucide-react-native';
+import { Compass, Settings } from 'lucide-react-native';
+import { colors as palette } from '../../../../theme/colors';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import { useBarAnimations } from './useBarAnimations';
+import { useCelebrationState } from './useCelebrationState';
+import {
+  useCelebrationAnimations,
+  useProgressAnimation,
+} from './useCelebrationAnimations';
 import { PillButton } from './PillButton';
+import { ProgressRingFAB } from './ProgressRingFAB';
 import { styles } from './BottomActionBar.styles';
 import type { BottomActionBarProps } from './types';
 
@@ -19,13 +26,27 @@ const ENTERING = FadeInUp.duration(320).springify().damping(18);
 const BLUR_INTENSITY = 40;
 const BORDER_LIGHT = 'rgba(221,216,210,0.45)';
 const BORDER_DARK = 'rgba(55,65,81,0.3)';
-const FAB_BORDER_LIGHT = 'rgba(245,241,237,0.9)';
-const FAB_BORDER_DARK = 'rgba(17,24,39,0.9)';
 
 function BottomActionBarComponent(props: BottomActionBarProps) {
   const insets = useSafeAreaInsets();
   const { colors, isDark } = useThemeColors();
   const anim = useBarAnimations();
+
+  const { isAllDone, justCompleted } = useCelebrationState(
+    props.completedToday,
+    props.totalHabits,
+    props.reduceMotion
+  );
+  const celebrationAnim = useCelebrationAnimations(
+    isAllDone,
+    justCompleted,
+    props.reduceMotion
+  );
+  const progress = useProgressAnimation(
+    props.completedToday,
+    props.totalHabits,
+    props.reduceMotion
+  );
 
   return (
     <Animated.View entering={ENTERING}>
@@ -43,47 +64,58 @@ function BottomActionBarComponent(props: BottomActionBarProps) {
             <Animated.View style={anim.settingsStyle}>
               <PillButton
                 accessibilityLabel='Open settings'
-                icon={<Settings color={colors.text.primary} size={15} strokeWidth={2.25} />}
+                icon={
+                  <Settings
+                    color={colors.text.tertiary}
+                    size={15}
+                    strokeWidth={2.25}
+                  />
+                }
                 label='Settings'
-                labelColor={colors.text.primary}
+                labelColor={colors.text.tertiary}
+                variant='ghost'
                 onPress={props.onOpenSettings}
                 onPressIn={anim.onSettingsPressIn}
                 onPressOut={anim.onSettingsPressOut}
+                pressOverlayStyle={anim.pillPressProgress}
               />
             </Animated.View>
           </View>
 
           <View style={styles.centerZone}>
             <Animated.View style={anim.addStyle}>
-              <Pressable
-                accessibilityLabel='Add new habit'
-                accessibilityRole='button'
-                style={[
-                  styles.addButton,
-                  {
-                    backgroundColor: colors.primary[600],
-                    borderColor: isDark ? FAB_BORDER_DARK : FAB_BORDER_LIGHT,
-                  },
-                ]}
+              <ProgressRingFAB
+                celebrationAnim={celebrationAnim}
+                completedToday={props.completedToday}
+                isAllDone={isAllDone}
+                justCompleted={justCompleted}
+                progress={progress}
+                totalHabits={props.totalHabits}
                 onPress={props.onAddHabit}
                 onPressIn={anim.onAddPressIn}
                 onPressOut={anim.onAddPressOut}
-              >
-                <Plus color='#ffffff' size={24} strokeWidth={2.5} />
-              </Pressable>
+              />
             </Animated.View>
           </View>
 
           <View style={styles.rightZone}>
             <Animated.View style={anim.templatesStyle}>
               <PillButton
-                accessibilityLabel='Browse habit templates'
-                icon={<BookOpen color={colors.text.secondary} size={14} strokeWidth={2.25} />}
-                label='Templates'
-                labelColor={colors.text.secondary}
+                accessibilityLabel='Explore habit templates'
+                icon={
+                  <Compass
+                    color={isDark ? palette.streak[300] : palette.streak[700]}
+                    size={14}
+                    strokeWidth={2.25}
+                  />
+                }
+                label='Explore ›'
+                labelColor={isDark ? palette.streak[300] : palette.streak[700]}
+                variant='gold'
                 onPress={props.onOpenTemplates}
                 onPressIn={anim.onTemplatesPressIn}
                 onPressOut={anim.onTemplatesPressOut}
+                pressOverlayStyle={anim.pillPressProgress}
               />
             </Animated.View>
           </View>

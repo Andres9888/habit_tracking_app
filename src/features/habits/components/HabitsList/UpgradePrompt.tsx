@@ -11,7 +11,7 @@
  */
 
 import { Pressable, Text, View } from 'react-native';
-import Animated, { FadeInDown, SlideInDown } from 'react-native-reanimated';
+import Animated, { FadeInDown } from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
 import {
   OPACITY,
@@ -49,7 +49,7 @@ export function UpgradePrompt({
       />
       <Animated.View
         className='w-full rounded-t-3xl px-6 py-8'
-        entering={SlideInDown.duration(ANIMATION_DURATION.medium).damping(
+        entering={FadeInDown.duration(ANIMATION_DURATION.medium).damping(
           ANIMATION_VALUES.springDamping
         )}
       >

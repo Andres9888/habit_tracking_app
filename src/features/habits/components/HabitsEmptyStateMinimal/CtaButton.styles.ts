@@ -3,7 +3,7 @@
  */
 
 import type { ViewStyle, TextStyle } from 'react-native';
-import { typography } from '@/theme/typography';
+import { fontFamilies } from '@/theme/typography';
 import { BORDER_RADIUS, TOUCH_TARGETS } from './constants';
 
 export function getCtaButtonStyle(
@@ -24,15 +24,18 @@ export function getCtaButtonStyle(
     // Shadow for depth
     shadowColor,
     shadowOffset: { height: 4, width: 0 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
+    shadowOpacity: isDisabled ? 0 : 0.3,
+    shadowRadius: 12,
     width: '100%',
   };
 }
 
 export function getCtaTextStyle(color: string): TextStyle {
   return {
-    ...typography.button,
     color,
+    fontFamily: fontFamilies.primary.text,
+    fontSize: 16,
+    fontWeight: '700',
+    letterSpacing: -0.2,
   };
 }

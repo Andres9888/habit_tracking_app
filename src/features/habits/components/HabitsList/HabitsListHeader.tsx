@@ -31,7 +31,7 @@ function HabitsListHeaderComponent(
   const { shouldShowBanner, daysRemaining } = useTrialCountdown();
 
   return (
-    <View className='gap-4 pb-4 pt-14'>
+    <View className='gap-2 pb-2 pt-12'>
       <View className='absolute left-0 right-0 top-4 z-10 flex-row justify-center'>
         <OfflineIndicator
           testID='habits-offline-indicator'

@@ -39,18 +39,21 @@ function TemplatesScreenContent() {
         researchOnly={state.researchOnly}
         searchQuery={state.searchQuery}
         selectedCategory={state.selectedCategory}
+        setShowCelebration={state.setShowCelebration}
         setResearchOnly={state.setResearchOnly}
         setSearchQuery={state.setSearchQuery}
         setShowCustomizeModal={state.setShowCustomizeModal}
         setShowFullsizePreview={state.setShowFullsizePreview}
         setShowSortOptions={state.setShowSortOptions}
         setShowToast={state.setShowToast}
+        showCelebration={state.showCelebration}
         showCustomizeModal={state.showCustomizeModal}
         showFullsizePreview={state.showFullsizePreview}
         showSortOptions={state.showSortOptions}
         showToast={state.showToast}
         sortOption={state.sortOption}
         toastMessage={state.toastMessage}
+        toastTemplateData={state.toastTemplateData}
       />
     );
   }
@@ -70,12 +73,14 @@ function TemplatesScreenContent() {
       scienceCountsByCategory={props.scienceCountsByCategory}
       scrollViewRef={state.scrollViewRef}
       searchQuery={state.searchQuery}
+      setShowCelebration={state.setShowCelebration}
       setResearchOnly={state.setResearchOnly}
       setSearchQuery={state.setSearchQuery}
       setShowCustomizeModal={state.setShowCustomizeModal}
       setShowFullsizePreview={state.setShowFullsizePreview}
       setShowSortOptions={state.setShowSortOptions}
       setShowToast={state.setShowToast}
+      showCelebration={state.showCelebration}
       showCustomizeModal={state.showCustomizeModal}
       showFullsizePreview={state.showFullsizePreview}
       showSortOptions={state.showSortOptions}
@@ -84,6 +89,7 @@ function TemplatesScreenContent() {
       tabIndicator={props.tabIndicator}
       templatesByCategory={props.templatesByCategory}
       toastMessage={state.toastMessage}
+      toastTemplateData={state.toastTemplateData}
       totalCount={data.allTemplates?.length || 0}
       onCloseSortOptions={() => state.setShowSortOptions(false)}
       onTabPress={props.handleTabPress}
@@ -93,7 +99,7 @@ function TemplatesScreenContent() {
 
 export default function TemplatesScreen() {
   return (
-    <ScreenErrorBoundary screenName="Templates">
+    <ScreenErrorBoundary screenName='Templates'>
       <TemplatesScreenContent />
     </ScreenErrorBoundary>
   );

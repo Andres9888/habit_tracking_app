@@ -5,16 +5,12 @@
 
 import React, { useCallback } from 'react';
 import { FlatList } from 'react-native';
-import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
+import Animated from 'react-native-reanimated';
 
 import type { Doc } from '../../../convex/_generated/dataModel';
 import MiniTemplateCard from '../MiniTemplateCard';
+import { CARD_EXITING, cardEntering } from './animations';
 import { styles } from './styles';
-
-/** Stagger delay between each card animation in ms */
-const CARD_STAGGER_DELAY = 50;
-/** Maximum stagger delay to prevent long wait times for large categories */
-const MAX_STAGGER_DELAY = 400;
 
 const FREQUENCY_LABELS: Record<string, string> = {
   custom: 'Custom',
@@ -43,18 +39,10 @@ export function TemplatesList({
     ({ item: template, index }: { item: Doc<'templates'>; index: number }) => {
       if (!template || !template._id) return null;
 
-      const staggerDelay = Math.min(
-        index * CARD_STAGGER_DELAY,
-        MAX_STAGGER_DELAY
-      );
-
-      const enteringAnimation = FadeIn.delay(staggerDelay).duration(200);
-      const exitingAnimation = FadeOut.duration(100);
-
       return (
         <Animated.View
-          entering={enteringAnimation}
-          exiting={exitingAnimation}
+          entering={cardEntering(index, reducedMotion)}
+          exiting={CARD_EXITING}
         >
           <MiniTemplateCard
             description={template.description || ''}
@@ -76,13 +64,16 @@ export function TemplatesList({
         </Animated.View>
       );
     },
-    [importedTemplateIds, importingTemplateId, onImport, onTemplatePress]
+    [
+      importedTemplateIds,
+      importingTemplateId,
+      onImport,
+      onTemplatePress,
+      reducedMotion,
+    ]
   );
 
-  const keyExtractor = useCallback(
-    (item: Doc<'templates'>) => item._id,
-    []
-  );
+  const keyExtractor = useCallback((item: Doc<'templates'>) => item._id, []);
 
   return (
     <FlatList

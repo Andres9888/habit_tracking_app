@@ -5,6 +5,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { FlatList, ScrollView } from 'react-native';
 import type { Doc, Id } from '../../../convex/_generated/dataModel';
+import type { TemplateToastData } from '../../components/TemplateAddedToast';
 import type { Category, SortOption } from '../templates/constants';
 import type { BrowseTab, ViewMode } from './TemplatesScreen.types';
 
@@ -36,14 +37,21 @@ export function useTemplatesScreenState({
     new Set()
   );
   const [showToast, setShowToast] = useState(false);
+  const [showCelebration, setShowCelebration] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
+  const [toastTemplateData, setToastTemplateData] =
+    useState<TemplateToastData | null>(null);
   const [importingTemplateId, setImportingTemplateId] =
     useState<Id<'templates'> | null>(null);
   const [showSortOptions, setShowSortOptions] = useState(false);
   const [isSeeding, setIsSeeding] = useState(false);
 
   useEffect(() => {
-    if (Array.isArray(categories) && categories.length > 0 && !hasInitializedExpanded) {
+    if (
+      Array.isArray(categories) &&
+      categories.length > 0 &&
+      !hasInitializedExpanded
+    ) {
       const nonAll = categories.filter((c) => c?.id !== 'all');
       const init = new Set<string>();
       for (const [i, c] of nonAll.entries()) {
@@ -58,7 +66,9 @@ export function useTemplatesScreenState({
   const isSearching = safeSearchQuery.trim().length > 0;
   const effectiveViewMode = isSearching ? 'search' : viewMode;
   const hasActiveFilters =
-    selectedCategory !== 'all' || Boolean(safeSearchQuery.trim()) || researchOnly;
+    selectedCategory !== 'all' ||
+    Boolean(safeSearchQuery.trim()) ||
+    researchOnly;
 
   return {
     browseTab,
@@ -76,6 +86,7 @@ export function useTemplatesScreenState({
     searchQuery,
     selectedCategory,
     setBrowseTab,
+    setShowCelebration,
     setExpandedCategories,
     setImportedTemplateIds,
     setImportingTemplateId,
@@ -90,13 +101,16 @@ export function useTemplatesScreenState({
     setShowToast,
     setSortOption,
     setToastMessage,
+    setToastTemplateData,
     setViewMode,
+    showCelebration,
     showCustomizeModal,
     showFullsizePreview,
     showSortOptions,
     showToast,
     sortOption,
     toastMessage,
+    toastTemplateData,
     viewMode,
   };
 }

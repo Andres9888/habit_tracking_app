@@ -1,0 +1,2411 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ChainDay Homepage — 8.5 → 9.5 Roadmap</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800&family=Literata:opsz,wght@7..72,400;7..72,500;7..72,600;7..72,700;7..72,800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: 'DM Sans', sans-serif !important;
+        background: #1a1816;
+        min-height: 100vh;
+        overflow-x: hidden;
+      }
+      h1,
+      h2,
+      h3,
+      h4,
+      h5 {
+        font-family: 'Literata', serif !important;
+      }
+
+      :root {
+        --canvas: #f5f1ed;
+        --shelf: #f0ede8;
+        --card-bg: #edeae5;
+        --surface: #edeae5;
+        --border: #ddd8d2;
+        --border-subtle: #e5e2de;
+        --text-primary: #2d2a26;
+        --text-secondary: #6b6560;
+        --text-tertiary: #6e6660;
+        --text-muted: #c4bfb7;
+        --emerald-100: #d1fae5;
+        --emerald-400: #34d399;
+        --emerald-500: #10b981;
+        --emerald-600: #059669;
+        --emerald-700: #047857;
+        --streak-100: #fef3cd;
+        --streak-300: #e8b94d;
+        --streak-500: #8b6208;
+        --gray-200: #ddd8d2;
+        --gray-300: #c4bfb7;
+        --gray-400: #6e6660;
+        --gray-500: #6b6560;
+        --gray-600: #524d47;
+        --gray-800: #2d2a26;
+        --ring-track: #e5e2de;
+        --premium-500: #8563c7;
+        --premium-600: #6d3ac7;
+      }
+
+      /* ── Header ── */
+      .page-header {
+        background: linear-gradient(
+          135deg,
+          #1a1816 0%,
+          #2d2a26 50%,
+          #3d3833 100%
+        );
+        border-bottom: 1px solid rgba(232, 185, 77, 0.15);
+        padding: 40px 32px 36px;
+        text-align: center;
+      }
+      .page-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(232, 185, 77, 0.08);
+        border: 1px solid rgba(232, 185, 77, 0.2);
+        border-radius: 20px;
+        padding: 5px 14px;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        color: var(--streak-300);
+        margin-bottom: 16px;
+      }
+      .page-title {
+        font-size: 28px;
+        font-weight: 700;
+        color: #faf8f5;
+        letter-spacing: -0.5px;
+        margin-bottom: 6px;
+      }
+      .page-subtitle {
+        font-size: 14px;
+        color: var(--text-muted);
+        max-width: 650px;
+        margin: 0 auto;
+        line-height: 1.5;
+      }
+
+      /* ── Phones ── */
+      .phones-row {
+        display: flex;
+        justify-content: center;
+        gap: 40px;
+        flex-wrap: wrap;
+        padding: 48px 24px 32px;
+        max-width: 1000px;
+        margin: 0 auto;
+      }
+      .phone-col {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+      }
+      .phone-label {
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        padding: 6px 16px;
+        border-radius: 8px;
+      }
+      .phone-label.current {
+        color: var(--text-muted);
+        background: rgba(221, 216, 210, 0.08);
+        border: 1px solid rgba(221, 216, 210, 0.1);
+      }
+      .phone-label.target {
+        color: var(--emerald-500);
+        background: rgba(16, 185, 129, 0.08);
+        border: 1px solid rgba(16, 185, 129, 0.15);
+      }
+      .phone-frame {
+        width: 375px;
+        background: var(--canvas);
+        border-radius: 40px;
+        overflow: hidden;
+        position: relative;
+        box-shadow:
+          0 0 0 1px rgba(221, 216, 210, 0.2),
+          0 20px 60px rgba(0, 0, 0, 0.35),
+          0 8px 16px rgba(0, 0, 0, 0.15);
+      }
+      .phone-notch {
+        width: 120px;
+        height: 32px;
+        background: #1a1816;
+        border-radius: 0 0 18px 18px;
+        margin: 0 auto;
+      }
+      .status-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 6px 22px 4px;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--text-primary);
+      }
+
+      /* ── Shelf ── */
+      .shelf {
+        background: var(--shelf);
+        border-bottom-left-radius: 16px;
+        border-bottom-right-radius: 16px;
+        padding: 14px 16px 10px;
+      }
+      .shelf-header {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin-bottom: 10px;
+      }
+
+      /* ── Ring ── */
+      .ring {
+        width: 64px;
+        height: 64px;
+        position: relative;
+        flex-shrink: 0;
+      }
+      .ring svg {
+        transform: rotate(-90deg);
+      }
+      .ring-text {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        font-weight: 800;
+        color: var(--text-primary);
+        letter-spacing: -0.3px;
+      }
+      .ring-glow {
+        filter: drop-shadow(0 0 8px rgba(16, 185, 129, 0.5));
+        animation: pulseGlow 2s ease-in-out infinite;
+      }
+
+      /* ── Greeting ── */
+      .greeting {
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--text-primary);
+        letter-spacing: -0.3px;
+      }
+      .greeting-dash {
+        color: var(--text-tertiary);
+      }
+      .greeting-progress {
+        color: var(--emerald-600);
+      }
+      .date-row {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        margin-top: 3px;
+      }
+      .date-text {
+        font-size: 12px;
+        font-weight: 500;
+        color: var(--text-tertiary);
+      }
+      .nav-arrow {
+        width: 18px;
+        height: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        opacity: 0.7;
+      }
+      .nav-arrow:hover {
+        opacity: 1;
+      }
+      .nav-arrow.disabled {
+        opacity: 0.25;
+      }
+      .nav-arrow svg {
+        width: 12px;
+        height: 12px;
+        stroke: var(--gray-400);
+        stroke-width: 2.5;
+        fill: none;
+      }
+
+      /* ── StripNav ── */
+      .strip-nav {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .strip-full {
+        display: flex;
+        flex: 1;
+        position: relative;
+      }
+      .nav-btn {
+        width: 26px;
+        height: 26px;
+        border-radius: 13px;
+        background: var(--card-bg);
+        border: 1px solid var(--gray-200);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+      .nav-btn.disabled {
+        opacity: 0.3;
+      }
+      .nav-btn svg {
+        width: 14px;
+        height: 14px;
+        stroke: var(--gray-500);
+        stroke-width: 2.5;
+        fill: none;
+      }
+
+      /* Edge indicators (passive, non-interactive) */
+      .edge-indicator {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        opacity: 0.3;
+        pointer-events: none;
+        z-index: 2;
+      }
+      .edge-indicator svg {
+        width: 10px;
+        height: 10px;
+        stroke: var(--gray-300);
+        stroke-width: 2.5;
+        fill: none;
+      }
+      .edge-indicator.left {
+        left: -1px;
+      }
+      .edge-indicator.right {
+        right: -1px;
+      }
+
+      /* ── Day Strip ── */
+      .day-strip {
+        display: flex;
+        flex: 1;
+      }
+      .day-cell {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2px;
+        position: relative;
+      }
+      .day-wd {
+        font-size: 10px;
+        line-height: 14px;
+        color: var(--text-muted);
+        font-weight: 400;
+        text-align: center;
+      }
+      .day-wd.today-wd {
+        font-weight: 700;
+        color: var(--text-secondary);
+      }
+      .day-num-wrap {
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+      }
+      .day-num {
+        font-size: 13px;
+        font-weight: 600;
+        text-align: center;
+      }
+      .day-num-wrap.default {
+        background: var(--card-bg);
+      }
+      .day-num-wrap.default .day-num {
+        color: var(--gray-600);
+      }
+      .day-num-wrap.today-cell {
+        background: var(--gray-800);
+        box-shadow: 0 2px 4px rgba(45, 42, 38, 0.15);
+      }
+      .day-num-wrap.today-cell .day-num {
+        color: #fff;
+        font-weight: 700;
+      }
+      .day-num-wrap.complete-cell {
+        background: var(--emerald-500);
+        box-shadow: 0 2px 8px rgba(16, 185, 129, 0.35);
+      }
+      .day-num-wrap.complete-cell .day-num {
+        color: #fff;
+        font-weight: 700;
+      }
+      .day-num-wrap.future-cell {
+        background: var(--card-bg);
+      }
+      .day-num-wrap.future-cell .day-num {
+        color: var(--gray-300);
+      }
+      .comp-dot {
+        border-radius: 50%;
+        margin-top: 4px;
+      }
+      .dot-none {
+        width: 5px;
+        height: 5px;
+        background: var(--gray-200);
+      }
+      .dot-partial {
+        width: 6px;
+        height: 6px;
+        background: var(--streak-300);
+      }
+      .dot-complete {
+        width: 8px;
+        height: 8px;
+        background: var(--emerald-500);
+        box-shadow: 0 0 4px rgba(16, 185, 129, 0.5);
+      }
+      .check-badge {
+        position: absolute;
+        top: -3px;
+        right: -3px;
+        width: 16px;
+        height: 16px;
+        background: var(--emerald-600);
+        border-radius: 50%;
+        border: 2px solid var(--shelf);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .check-badge svg {
+        width: 8px;
+        height: 8px;
+        stroke: white;
+        stroke-width: 3;
+        fill: none;
+      }
+
+      /* Today amber anchor */
+      .today-anchor {
+        width: 4px;
+        height: 4px;
+        border-radius: 50%;
+        background: var(--streak-300);
+        margin-top: 2px;
+      }
+
+      /* ── Premium preview (blurred sparkline) ── */
+      .premium-preview {
+        margin-top: 10px;
+        padding: 8px 12px;
+        background: rgba(237, 234, 229, 0.5);
+        border-radius: 10px;
+        border: 1px dashed rgba(221, 216, 210, 0.6);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        position: relative;
+        overflow: hidden;
+      }
+      .premium-blur {
+        filter: blur(3px);
+        opacity: 0.5;
+        flex: 1;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .sparkline {
+        height: 20px;
+        flex: 1;
+      }
+      .sparkline-bar {
+        display: inline-block;
+        width: 4px;
+        border-radius: 2px;
+        margin-right: 2px;
+        vertical-align: bottom;
+      }
+      .premium-lock {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 10px;
+        font-weight: 600;
+        color: var(--premium-500);
+        background: rgba(245, 241, 237, 0.9);
+        padding: 3px 8px;
+        border-radius: 6px;
+        border: 1px solid rgba(133, 99, 199, 0.2);
+      }
+
+      /* ── Celebration overlay ── */
+      .celebration-hook {
+        margin-top: 8px;
+        padding: 10px 14px;
+        border-radius: 12px;
+        background: linear-gradient(
+          135deg,
+          rgba(16, 185, 129, 0.08),
+          rgba(52, 211, 153, 0.04)
+        );
+        border: 1px solid rgba(16, 185, 129, 0.15);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        animation: fadeInUp 0.5s ease-out;
+      }
+      .celebration-text {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--emerald-700);
+        flex: 1;
+      }
+      .celebration-cta {
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--premium-500);
+        background: rgba(133, 99, 199, 0.08);
+        border: 1px solid rgba(133, 99, 199, 0.2);
+        padding: 4px 10px;
+        border-radius: 6px;
+        white-space: nowrap;
+      }
+
+      /* ── Habit Cards ── */
+      .habits-area {
+        padding: 12px 0 24px;
+      }
+      .habit-card {
+        background: #ffffff;
+        border: 1px solid var(--border-subtle);
+        border-radius: 16px;
+        min-height: 76px;
+        padding: 16px;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+        position: relative;
+        overflow: hidden;
+      }
+      .habit-emoji {
+        font-size: 26px;
+        flex-shrink: 0;
+      }
+      .habit-name {
+        font-size: 16px;
+        font-weight: 600;
+        color: var(--text-secondary);
+        letter-spacing: -0.41px;
+        line-height: 22px;
+      }
+      .habit-meta {
+        font-size: 12px;
+        color: var(--text-tertiary);
+        margin-top: 2px;
+      }
+      .habit-check {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        border: 2px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        margin-left: auto;
+      }
+      .habit-check.done {
+        background: var(--emerald-500);
+        border-color: var(--emerald-500);
+      }
+      .habit-accent {
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 4px;
+        border-radius: 0 2px 2px 0;
+      }
+      .habit-card.completed .habit-name {
+        opacity: 0.55;
+        text-decoration: line-through;
+      }
+
+      /* ── Bottom Bar ── */
+      .bottom-bar {
+        display: flex;
+        align-items: center;
+        padding: 10px 22px 24px;
+        border-top: 1px solid rgba(221, 216, 210, 0.45);
+        background: rgba(245, 241, 237, 0.85);
+        backdrop-filter: blur(20px);
+        position: relative;
+      }
+      .bottom-zone {
+        flex: 1;
+      }
+      .bottom-pill {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(255, 255, 255, 0.55);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 8px 14px;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text-primary);
+      }
+      .bottom-pill svg {
+        width: 15px;
+        height: 15px;
+        stroke: currentColor;
+        stroke-width: 2.25;
+        fill: none;
+      }
+      .fab {
+        width: 52px;
+        height: 52px;
+        border-radius: 16px;
+        background: var(--emerald-600);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: -20px;
+        border: 3px solid rgba(245, 241, 237, 0.9);
+        box-shadow:
+          0 4px 12px rgba(5, 150, 105, 0.3),
+          0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .fab svg {
+        width: 24px;
+        height: 24px;
+        stroke: white;
+        stroke-width: 2.5;
+        fill: none;
+      }
+
+      /* ── Callout System ── */
+      .callout-section {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 0 32px 48px;
+      }
+      .callout-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 16px;
+      }
+      .callout-card {
+        background: #232120;
+        border: 1px solid rgba(221, 216, 210, 0.08);
+        border-radius: 14px;
+        padding: 20px;
+      }
+      .callout-card:hover {
+        border-color: rgba(221, 216, 210, 0.15);
+      }
+      .callout-num {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        font-weight: 700;
+        margin-bottom: 10px;
+      }
+      .callout-num.nav {
+        background: rgba(16, 185, 129, 0.15);
+        color: var(--emerald-500);
+      }
+      .callout-num.prem {
+        background: rgba(133, 99, 199, 0.15);
+        color: var(--premium-500);
+      }
+      .callout-num.vis {
+        background: rgba(232, 185, 77, 0.15);
+        color: var(--streak-300);
+      }
+      .callout-num.con {
+        background: rgba(107, 101, 96, 0.15);
+        color: var(--gray-500);
+      }
+      .callout-title {
+        font-size: 14px;
+        font-weight: 700;
+        color: #faf8f5;
+        margin-bottom: 6px;
+        letter-spacing: -0.2px;
+      }
+      .callout-body {
+        font-size: 12px;
+        line-height: 1.6;
+        color: var(--text-muted);
+      }
+      .callout-body strong {
+        color: #faf8f5;
+        font-weight: 600;
+      }
+      .callout-file {
+        display: inline-block;
+        margin-top: 8px;
+        font-size: 10px;
+        font-weight: 600;
+        color: var(--gray-500);
+        background: rgba(107, 101, 96, 0.1);
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-family: 'DM Sans', monospace;
+      }
+
+      /* ── Score banner ── */
+      .score-banner {
+        display: flex;
+        justify-content: center;
+        gap: 40px;
+        padding: 32px;
+        margin-bottom: 32px;
+      }
+      .score-box {
+        text-align: center;
+      }
+      .score-num {
+        font-size: 48px;
+        font-weight: 800;
+        line-height: 1;
+      }
+      .score-label {
+        font-size: 12px;
+        font-weight: 600;
+        margin-top: 4px;
+        letter-spacing: 0.3px;
+      }
+      .score-arrow {
+        color: var(--streak-300);
+        font-size: 32px;
+        align-self: center;
+      }
+
+      /* ── Annotations on phones ── */
+      .ann {
+        position: absolute;
+        z-index: 50;
+        pointer-events: none;
+      }
+      .ann-dot {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 10px;
+        font-weight: 700;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+      }
+      .ann-dot.green {
+        background: var(--emerald-500);
+        color: white;
+      }
+      .ann-dot.purple {
+        background: var(--premium-500);
+        color: white;
+      }
+      .ann-dot.amber {
+        background: var(--streak-300);
+        color: var(--gray-800);
+      }
+      .ann-dot.gray {
+        background: var(--gray-500);
+        color: white;
+      }
+
+      /* ── Ripple Effects Section ── */
+      .ripple-section {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 0 32px 48px;
+      }
+      .ripple-header {
+        font-size: 20px;
+        font-weight: 700;
+        color: #faf8f5;
+        margin-bottom: 16px;
+        letter-spacing: -0.3px;
+      }
+      .ripple-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+      }
+      .ripple-table th {
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        color: var(--text-tertiary);
+        text-align: left;
+        padding: 8px 12px;
+        border-bottom: 1px solid rgba(221, 216, 210, 0.1);
+      }
+      .ripple-table td {
+        font-size: 12px;
+        color: var(--text-muted);
+        padding: 10px 12px;
+        border-bottom: 1px solid rgba(221, 216, 210, 0.05);
+        vertical-align: top;
+      }
+      .ripple-table td:first-child {
+        color: #faf8f5;
+        font-weight: 500;
+        font-size: 13px;
+      }
+      .impact-badge {
+        font-size: 10px;
+        font-weight: 600;
+        padding: 2px 8px;
+        border-radius: 4px;
+        display: inline-block;
+      }
+      .impact-badge.core {
+        background: rgba(16, 185, 129, 0.1);
+        color: var(--emerald-500);
+        border: 1px solid rgba(16, 185, 129, 0.2);
+      }
+      .impact-badge.minor {
+        background: rgba(232, 185, 77, 0.1);
+        color: var(--streak-300);
+        border: 1px solid rgba(232, 185, 77, 0.2);
+      }
+      .impact-badge.none {
+        background: rgba(107, 101, 96, 0.1);
+        color: var(--gray-500);
+        border: 1px solid rgba(107, 101, 96, 0.2);
+      }
+
+      /* Animations */
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(16px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes ringAnim85 {
+        from {
+          stroke-dashoffset: 186.92;
+        }
+        to {
+          stroke-dashoffset: 74.77;
+        }
+      }
+      @keyframes ringAnimFull {
+        from {
+          stroke-dashoffset: 186.92;
+        }
+        to {
+          stroke-dashoffset: 0;
+        }
+      }
+      @keyframes pulseGlow {
+        0%,
+        100% {
+          filter: drop-shadow(0 0 0 rgba(16, 185, 129, 0));
+        }
+        50% {
+          filter: drop-shadow(0 0 12px rgba(16, 185, 129, 0.4));
+        }
+      }
+      @keyframes shimmer {
+        0% {
+          background-position: -200% 0;
+        }
+        100% {
+          background-position: 200% 0;
+        }
+      }
+      .shimmer-border {
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(16, 185, 129, 0.3),
+          transparent
+        );
+        background-size: 200% 100%;
+        animation: shimmer 2s ease-in-out infinite;
+      }
+
+      @media (max-width: 860px) {
+        .phones-row {
+          gap: 32px;
+        }
+        .phone-frame {
+          width: 340px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ═════════════════════════════════════════ -->
+    <!-- PAGE HEADER                                -->
+    <!-- ═════════════════════════════════════════ -->
+    <header class="page-header">
+      <div class="page-badge">&#9733; UX Roadmap</div>
+      <h1 class="page-title">8.5 → 9.5 — Full Homepage</h1>
+      <p class="page-subtitle">
+        Side-by-side comparison showing 5 targeted improvements across
+        Navigation, Premium Zone, Visual Hierarchy, and Consistency. Includes
+        ripple-effect analysis for other app components.
+      </p>
+    </header>
+
+    <!-- Score Banner -->
+    <div class="score-banner">
+      <div class="score-box">
+        <div class="score-num" style="color: var(--streak-300)">8.5</div>
+        <div class="score-label" style="color: var(--text-muted)">CURRENT</div>
+      </div>
+      <div class="score-arrow">→</div>
+      <div class="score-box">
+        <div class="score-num" style="color: var(--emerald-500)">9.5</div>
+        <div class="score-label" style="color: var(--emerald-500)">TARGET</div>
+      </div>
+    </div>
+
+    <!-- ═════════════════════════════════════════ -->
+    <!-- PHONE MOCKUPS — SIDE BY SIDE               -->
+    <!-- ═════════════════════════════════════════ -->
+    <div class="phones-row">
+      <!-- ──────── CURRENT (8.5) ──────── -->
+      <div class="phone-col">
+        <div class="phone-label current">Current — 8.5</div>
+        <div class="phone-frame" style="position: relative">
+          <div class="phone-notch"></div>
+          <div class="status-bar">
+            <span>4:32 PM</span>
+            <div style="display: flex; gap: 4px; align-items: center">
+              <svg width="16" height="12" viewBox="0 0 16 12" fill="none">
+                <rect
+                  x="0"
+                  y="8"
+                  width="3"
+                  height="4"
+                  rx="0.5"
+                  fill="#2D2A26"
+                />
+                <rect
+                  x="4"
+                  y="5"
+                  width="3"
+                  height="7"
+                  rx="0.5"
+                  fill="#2D2A26"
+                />
+                <rect
+                  x="8"
+                  y="2"
+                  width="3"
+                  height="10"
+                  rx="0.5"
+                  fill="#2D2A26"
+                />
+                <rect
+                  x="12"
+                  y="0"
+                  width="3"
+                  height="12"
+                  rx="0.5"
+                  fill="#2D2A26"
+                  opacity="0.3"
+                />
+              </svg>
+              <svg width="24" height="12" viewBox="0 0 24 12">
+                <rect
+                  x="0.5"
+                  y="0.5"
+                  width="21"
+                  height="11"
+                  rx="2"
+                  stroke="#2D2A26"
+                  fill="none"
+                  stroke-opacity="0.35"
+                />
+                <rect x="2" y="2" width="15" height="8" rx="1" fill="#10B981" />
+                <rect
+                  x="22"
+                  y="4"
+                  width="2"
+                  height="4"
+                  rx="1"
+                  fill="#2D2A26"
+                  opacity="0.3"
+                />
+              </svg>
+            </div>
+          </div>
+
+          <!-- Shelf -->
+          <div class="shelf">
+            <div class="shelf-header">
+              <div class="ring">
+                <svg width="64" height="64" viewBox="0 0 64 64">
+                  <circle
+                    cx="32"
+                    cy="32"
+                    r="29.75"
+                    fill="transparent"
+                    stroke="#E5E2DE"
+                    stroke-width="4.5"
+                  />
+                  <circle
+                    cx="32"
+                    cy="32"
+                    r="29.75"
+                    fill="transparent"
+                    stroke="#10B981"
+                    stroke-width="4.5"
+                    stroke-dasharray="186.92"
+                    stroke-dashoffset="74.77"
+                    stroke-linecap="round"
+                  />
+                </svg>
+                <div class="ring-text">3/5</div>
+              </div>
+              <div style="flex: 1">
+                <div class="greeting">
+                  Good afternoon<span class="greeting-dash"> — </span
+                  ><span class="greeting-progress">3 of 5 done</span>
+                </div>
+                <div class="date-row">
+                  <span class="date-text">Tue, February 25</span>
+                </div>
+              </div>
+            </div>
+            <!-- OLD: Fat arrow buttons -->
+            <div class="strip-nav">
+              <div class="nav-btn">
+                <svg viewBox="0 0 24 24">
+                  <polyline points="15 18 9 12 15 6" />
+                </svg>
+              </div>
+              <div class="day-strip">
+                <div class="day-cell">
+                  <span class="day-wd">Mon</span>
+                  <div class="day-num-wrap complete-cell">
+                    <div class="check-badge">
+                      <svg viewBox="0 0 24 24">
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
+                    </div>
+                    <span class="day-num">17</span>
+                  </div>
+                  <div class="comp-dot dot-complete"></div>
+                </div>
+                <div class="day-cell">
+                  <span class="day-wd">Tue</span>
+                  <div class="day-num-wrap complete-cell">
+                    <div class="check-badge">
+                      <svg viewBox="0 0 24 24">
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
+                    </div>
+                    <span class="day-num">18</span>
+                  </div>
+                  <div class="comp-dot dot-complete"></div>
+                </div>
+                <div class="day-cell">
+                  <span class="day-wd">Wed</span>
+                  <div class="day-num-wrap complete-cell">
+                    <div class="check-badge">
+                      <svg viewBox="0 0 24 24">
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
+                    </div>
+                    <span class="day-num">19</span>
+                  </div>
+                  <div class="comp-dot dot-complete"></div>
+                </div>
+                <div class="day-cell">
+                  <span class="day-wd">Thu</span>
+                  <div class="day-num-wrap default">
+                    <span class="day-num">20</span>
+                  </div>
+                  <div class="comp-dot dot-partial"></div>
+                </div>
+                <div class="day-cell">
+                  <span class="day-wd">Fri</span>
+                  <div class="day-num-wrap default">
+                    <span class="day-num">21</span>
+                  </div>
+                  <div class="comp-dot dot-none"></div>
+                </div>
+                <div class="day-cell">
+                  <span class="day-wd today-wd">Today</span>
+                  <div class="day-num-wrap today-cell">
+                    <span class="day-num">22</span>
+                  </div>
+                  <div class="comp-dot dot-partial"></div>
+                </div>
+                <div class="day-cell">
+                  <span class="day-wd" style="color: var(--gray-300)">Sun</span>
+                  <div class="day-num-wrap future-cell">
+                    <span class="day-num">23</span>
+                  </div>
+                </div>
+              </div>
+              <div class="nav-btn disabled">
+                <svg viewBox="0 0 24 24">
+                  <polyline points="9 18 15 12 9 6" />
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Habit Cards -->
+          <div class="habits-area" style="padding: 12px 24px 20px">
+            <div class="habit-card completed">
+              <div
+                class="habit-accent"
+                style="background: var(--emerald-500)"
+              ></div>
+              <span class="habit-emoji">&#x1F4D6;</span>
+              <div style="flex: 1">
+                <div class="habit-name">Read 20 pages</div>
+                <div class="habit-meta">3-day streak</div>
+              </div>
+              <div class="habit-check done">
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="white"
+                  stroke-width="3"
+                  stroke-linecap="round"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+              </div>
+            </div>
+            <div class="habit-card completed">
+              <div
+                class="habit-accent"
+                style="background: var(--emerald-500)"
+              ></div>
+              <span class="habit-emoji">&#x1F9D8;</span>
+              <div style="flex: 1">
+                <div class="habit-name">Meditate 10 min</div>
+                <div class="habit-meta">6-day streak</div>
+              </div>
+              <div class="habit-check done">
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="white"
+                  stroke-width="3"
+                  stroke-linecap="round"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+              </div>
+            </div>
+            <div class="habit-card completed">
+              <div
+                class="habit-accent"
+                style="background: var(--emerald-500)"
+              ></div>
+              <span class="habit-emoji">&#x1F3CB;</span>
+              <div style="flex: 1">
+                <div class="habit-name">Exercise 30 min</div>
+                <div class="habit-meta">3-day streak</div>
+              </div>
+              <div class="habit-check done">
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="white"
+                  stroke-width="3"
+                  stroke-linecap="round"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+              </div>
+            </div>
+            <div class="habit-card">
+              <div
+                class="habit-accent"
+                style="background: var(--streak-300)"
+              ></div>
+              <span class="habit-emoji">&#x1F4DD;</span>
+              <div style="flex: 1">
+                <div class="habit-name">Journal entry</div>
+                <div class="habit-meta">1-day streak</div>
+              </div>
+              <div class="habit-check"></div>
+            </div>
+            <div class="habit-card">
+              <div
+                class="habit-accent"
+                style="background: var(--streak-300)"
+              ></div>
+              <span class="habit-emoji">&#x1F4A7;</span>
+              <div style="flex: 1">
+                <div class="habit-name">Drink 8 glasses water</div>
+                <div class="habit-meta">0-day streak</div>
+              </div>
+              <div class="habit-check"></div>
+            </div>
+          </div>
+
+          <!-- Bottom Bar -->
+          <div class="bottom-bar">
+            <div class="bottom-zone">
+              <div class="bottom-pill">
+                <svg viewBox="0 0 24 24">
+                  <path
+                    d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"
+                  />
+                  <circle cx="12" cy="12" r="3" />
+                </svg>
+                Settings
+              </div>
+            </div>
+            <div
+              style="
+                flex: 1;
+                display: flex;
+                justify-content: center;
+                overflow: visible;
+              "
+            >
+              <div class="fab">
+                <svg viewBox="0 0 24 24">
+                  <line x1="12" y1="5" x2="12" y2="19" />
+                  <line x1="5" y1="12" x2="19" y2="12" />
+                </svg>
+              </div>
+            </div>
+            <div
+              class="bottom-zone"
+              style="display: flex; justify-content: flex-end"
+            >
+              <div class="bottom-pill" style="color: var(--text-secondary)">
+                <svg viewBox="0 0 24 24">
+                  <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+                  <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+                </svg>
+                Templates
+              </div>
+            </div>
+          </div>
+
+          <!-- Annotations -->
+          <div class="ann" style="top: 190px; left: 8px">
+            <div class="ann-dot amber" title="Fat arrows steal 64px">!</div>
+          </div>
+          <div class="ann" style="top: 270px; right: 8px">
+            <div class="ann-dot amber" title="No premium zone">!</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ──────── TARGET (9.5) ──────── -->
+      <div class="phone-col">
+        <div class="phone-label target">Target — 9.5</div>
+        <div class="phone-frame" style="position: relative">
+          <div class="phone-notch"></div>
+          <div class="status-bar">
+            <span>4:32 PM</span>
+            <div style="display: flex; gap: 4px; align-items: center">
+              <svg width="16" height="12" viewBox="0 0 16 12" fill="none">
+                <rect
+                  x="0"
+                  y="8"
+                  width="3"
+                  height="4"
+                  rx="0.5"
+                  fill="#2D2A26"
+                />
+                <rect
+                  x="4"
+                  y="5"
+                  width="3"
+                  height="7"
+                  rx="0.5"
+                  fill="#2D2A26"
+                />
+                <rect
+                  x="8"
+                  y="2"
+                  width="3"
+                  height="10"
+                  rx="0.5"
+                  fill="#2D2A26"
+                />
+                <rect
+                  x="12"
+                  y="0"
+                  width="3"
+                  height="12"
+                  rx="0.5"
+                  fill="#2D2A26"
+                  opacity="0.3"
+                />
+              </svg>
+              <svg width="24" height="12" viewBox="0 0 24 12">
+                <rect
+                  x="0.5"
+                  y="0.5"
+                  width="21"
+                  height="11"
+                  rx="2"
+                  stroke="#2D2A26"
+                  fill="none"
+                  stroke-opacity="0.35"
+                />
+                <rect x="2" y="2" width="15" height="8" rx="1" fill="#10B981" />
+                <rect
+                  x="22"
+                  y="4"
+                  width="2"
+                  height="4"
+                  rx="1"
+                  fill="#2D2A26"
+                  opacity="0.3"
+                />
+              </svg>
+            </div>
+          </div>
+
+          <!-- Shelf (9.5 version) -->
+          <div class="shelf">
+            <div class="shelf-header">
+              <div class="ring">
+                <svg width="64" height="64" viewBox="0 0 64 64">
+                  <circle
+                    cx="32"
+                    cy="32"
+                    r="29.75"
+                    fill="transparent"
+                    stroke="#EDEAE5"
+                    stroke-width="4.5"
+                  />
+                  <circle
+                    cx="32"
+                    cy="32"
+                    r="29.75"
+                    fill="transparent"
+                    stroke="#10B981"
+                    stroke-width="4.5"
+                    stroke-dasharray="186.92"
+                    stroke-dashoffset="74.77"
+                    stroke-linecap="round"
+                  />
+                </svg>
+                <div class="ring-text">3/5</div>
+              </div>
+              <div style="flex: 1">
+                <div class="greeting">
+                  Good afternoon<span class="greeting-dash"> — </span
+                  ><span class="greeting-progress">3 of 5 done</span>
+                </div>
+                <!-- NEW: [<] date [>] compact nav row -->
+                <div class="date-row">
+                  <div class="nav-arrow">
+                    <svg viewBox="0 0 24 24">
+                      <polyline points="15 18 9 12 15 6" />
+                    </svg>
+                  </div>
+                  <span class="date-text">Tue, February 25</span>
+                  <div class="nav-arrow disabled">
+                    <svg viewBox="0 0 24 24">
+                      <polyline points="9 18 15 12 9 6" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- NEW: Full-width day strip with edge indicators -->
+            <div class="strip-full">
+              <div class="day-strip">
+                <div class="day-cell">
+                  <span class="day-wd">Mon</span>
+                  <div class="day-num-wrap complete-cell">
+                    <div class="check-badge">
+                      <svg viewBox="0 0 24 24">
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
+                    </div>
+                    <span class="day-num">17</span>
+                  </div>
+                  <div class="comp-dot dot-complete"></div>
+                </div>
+                <div class="day-cell">
+                  <span class="day-wd">Tue</span>
+                  <div class="day-num-wrap complete-cell">
+                    <div class="check-badge">
+                      <svg viewBox="0 0 24 24">
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
+                    </div>
+                    <span class="day-num">18</span>
+                  </div>
+                  <div class="comp-dot dot-complete"></div>
+                </div>
+                <div class="day-cell">
+                  <span class="day-wd">Wed</span>
+                  <div class="day-num-wrap complete-cell">
+                    <div class="check-badge">
+                      <svg viewBox="0 0 24 24">
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
+                    </div>
+                    <span class="day-num">19</span>
+                  </div>
+                  <div class="comp-dot dot-complete"></div>
+                </div>
+                <div class="day-cell">
+                  <span class="day-wd">Thu</span>
+                  <div class="day-num-wrap default">
+                    <span class="day-num">20</span>
+                  </div>
+                  <div class="comp-dot dot-partial"></div>
+                </div>
+                <div class="day-cell">
+                  <span class="day-wd">Fri</span>
+                  <div class="day-num-wrap default">
+                    <span class="day-num">21</span>
+                  </div>
+                  <div class="comp-dot dot-none"></div>
+                </div>
+                <div class="day-cell">
+                  <span class="day-wd today-wd">Today</span>
+                  <div class="day-num-wrap today-cell">
+                    <span class="day-num">22</span>
+                  </div>
+                  <div class="comp-dot dot-partial"></div>
+                  <!-- NEW: Amber anchor dot -->
+                  <div class="today-anchor"></div>
+                </div>
+                <div class="day-cell">
+                  <span class="day-wd" style="color: var(--gray-300)">Sun</span>
+                  <div class="day-num-wrap future-cell">
+                    <span class="day-num">23</span>
+                  </div>
+                </div>
+              </div>
+              <!-- Passive edge indicators -->
+              <div class="edge-indicator left">
+                <svg viewBox="0 0 24 24">
+                  <polyline points="15 18 9 12 15 6" />
+                </svg>
+              </div>
+              <div class="edge-indicator right" style="opacity: 0.15">
+                <svg viewBox="0 0 24 24">
+                  <polyline points="9 18 15 12 9 6" />
+                </svg>
+              </div>
+            </div>
+
+            <!-- NEW: Premium sparkline preview (blurred) -->
+            <div class="premium-preview">
+              <div class="premium-blur">
+                <span
+                  style="
+                    font-size: 10px;
+                    color: var(--text-tertiary);
+                    white-space: nowrap;
+                  "
+                  >Weekly trend</span
+                >
+                <div class="sparkline">
+                  <span
+                    class="sparkline-bar"
+                    style="height: 8px; background: var(--emerald-400)"
+                  ></span>
+                  <span
+                    class="sparkline-bar"
+                    style="height: 14px; background: var(--emerald-500)"
+                  ></span>
+                  <span
+                    class="sparkline-bar"
+                    style="height: 10px; background: var(--emerald-400)"
+                  ></span>
+                  <span
+                    class="sparkline-bar"
+                    style="height: 18px; background: var(--emerald-500)"
+                  ></span>
+                  <span
+                    class="sparkline-bar"
+                    style="height: 20px; background: var(--emerald-600)"
+                  ></span>
+                  <span
+                    class="sparkline-bar"
+                    style="height: 12px; background: var(--emerald-400)"
+                  ></span>
+                  <span
+                    class="sparkline-bar"
+                    style="height: 6px; background: var(--gray-300)"
+                  ></span>
+                </div>
+              </div>
+              <div class="premium-lock">
+                <svg
+                  width="10"
+                  height="10"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                >
+                  <rect x="3" y="11" width="18" height="11" rx="2" />
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                </svg>
+                Pro
+              </div>
+            </div>
+          </div>
+
+          <!-- Habit Cards (same padding alignment) -->
+          <div class="habits-area" style="padding: 12px 24px 20px">
+            <div class="habit-card completed">
+              <div
+                class="habit-accent"
+                style="background: var(--emerald-500)"
+              ></div>
+              <span class="habit-emoji">&#x1F4D6;</span>
+              <div style="flex: 1">
+                <div class="habit-name">Read 20 pages</div>
+                <div class="habit-meta">3-day streak</div>
+              </div>
+              <div class="habit-check done">
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="white"
+                  stroke-width="3"
+                  stroke-linecap="round"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+              </div>
+            </div>
+            <div class="habit-card completed">
+              <div
+                class="habit-accent"
+                style="background: var(--emerald-500)"
+              ></div>
+              <span class="habit-emoji">&#x1F9D8;</span>
+              <div style="flex: 1">
+                <div class="habit-name">Meditate 10 min</div>
+                <div class="habit-meta">6-day streak</div>
+              </div>
+              <div class="habit-check done">
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="white"
+                  stroke-width="3"
+                  stroke-linecap="round"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+              </div>
+            </div>
+            <div class="habit-card completed">
+              <div
+                class="habit-accent"
+                style="background: var(--emerald-500)"
+              ></div>
+              <span class="habit-emoji">&#x1F3CB;</span>
+              <div style="flex: 1">
+                <div class="habit-name">Exercise 30 min</div>
+                <div class="habit-meta">3-day streak</div>
+              </div>
+              <div class="habit-check done">
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="white"
+                  stroke-width="3"
+                  stroke-linecap="round"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+              </div>
+            </div>
+            <div class="habit-card">
+              <div
+                class="habit-accent"
+                style="background: var(--streak-300)"
+              ></div>
+              <span class="habit-emoji">&#x1F4DD;</span>
+              <div style="flex: 1">
+                <div class="habit-name">Journal entry</div>
+                <div class="habit-meta">1-day streak</div>
+              </div>
+              <div class="habit-check"></div>
+            </div>
+            <div class="habit-card">
+              <div
+                class="habit-accent"
+                style="background: var(--streak-300)"
+              ></div>
+              <span class="habit-emoji">&#x1F4A7;</span>
+              <div style="flex: 1">
+                <div class="habit-name">Drink 8 glasses water</div>
+                <div class="habit-meta">0-day streak</div>
+              </div>
+              <div class="habit-check"></div>
+            </div>
+          </div>
+
+          <!-- Bottom Bar (identical — no changes needed) -->
+          <div class="bottom-bar">
+            <div class="bottom-zone">
+              <div class="bottom-pill">
+                <svg viewBox="0 0 24 24">
+                  <path
+                    d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"
+                  />
+                  <circle cx="12" cy="12" r="3" />
+                </svg>
+                Settings
+              </div>
+            </div>
+            <div
+              style="
+                flex: 1;
+                display: flex;
+                justify-content: center;
+                overflow: visible;
+              "
+            >
+              <div class="fab">
+                <svg viewBox="0 0 24 24">
+                  <line x1="12" y1="5" x2="12" y2="19" />
+                  <line x1="5" y1="12" x2="19" y2="12" />
+                </svg>
+              </div>
+            </div>
+            <div
+              class="bottom-zone"
+              style="display: flex; justify-content: flex-end"
+            >
+              <div class="bottom-pill" style="color: var(--text-secondary)">
+                <svg viewBox="0 0 24 24">
+                  <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+                  <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+                </svg>
+                Templates
+              </div>
+            </div>
+          </div>
+
+          <!-- Annotations -->
+          <div class="ann" style="top: 100px; right: 8px">
+            <div class="ann-dot green" title="Compact header arrows">1</div>
+          </div>
+          <div class="ann" style="top: 172px; left: 8px">
+            <div class="ann-dot green" title="Full-width day strip">2</div>
+          </div>
+          <div class="ann" style="top: 205px; right: 8px">
+            <div class="ann-dot amber" title="Today amber anchor">3</div>
+          </div>
+          <div class="ann" style="top: 258px; right: 8px">
+            <div class="ann-dot purple" title="Premium sparkline preview">
+              4
+            </div>
+          </div>
+          <div class="ann" style="top: 172px; right: 8px">
+            <div class="ann-dot gray" title="Ring track on-system token">5</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═════════════════════════════════════════ -->
+    <!-- SECOND ROW: Celebration State (5/5 done)  -->
+    <!-- ═════════════════════════════════════════ -->
+    <div style="text-align: center; padding: 16px 0 8px">
+      <div class="page-badge" style="margin-bottom: 0">
+        Celebration State — 5/5 Complete
+      </div>
+    </div>
+    <div class="phones-row" style="padding-top: 16px">
+      <div class="phone-col">
+        <div class="phone-label current">Current — No conversion hook</div>
+        <div class="phone-frame">
+          <div class="phone-notch"></div>
+          <div class="status-bar">
+            <span>4:35 PM</span><span style="font-size: 11px">🔋</span>
+          </div>
+          <div class="shelf">
+            <div class="shelf-header">
+              <div class="ring">
+                <svg width="64" height="64" viewBox="0 0 64 64">
+                  <circle
+                    cx="32"
+                    cy="32"
+                    r="29.75"
+                    fill="transparent"
+                    stroke="#E5E2DE"
+                    stroke-width="4.5"
+                  />
+                  <circle
+                    cx="32"
+                    cy="32"
+                    r="29.75"
+                    fill="transparent"
+                    stroke="#10B981"
+                    stroke-width="4.5"
+                    stroke-dasharray="186.92"
+                    stroke-dashoffset="0"
+                    stroke-linecap="round"
+                  />
+                </svg>
+                <div
+                  class="ring-text"
+                  style="color: var(--emerald-600); font-size: 13px"
+                >
+                  5/5
+                </div>
+              </div>
+              <div style="flex: 1">
+                <div class="greeting">
+                  Good afternoon<span class="greeting-dash"> — </span
+                  ><span
+                    class="greeting-progress"
+                    style="color: var(--emerald-600)"
+                    >All done!</span
+                  >
+                </div>
+                <div class="date-row">
+                  <span class="date-text">Tue, February 25</span>
+                </div>
+              </div>
+            </div>
+            <div class="strip-nav">
+              <div class="nav-btn">
+                <svg viewBox="0 0 24 24">
+                  <polyline points="15 18 9 12 15 6" />
+                </svg>
+              </div>
+              <div class="day-strip">
+                <div class="day-cell">
+                  <span class="day-wd">Mon</span>
+                  <div class="day-num-wrap complete-cell">
+                    <div class="check-badge">
+                      <svg viewBox="0 0 24 24">
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
+                    </div>
+                    <span class="day-num">17</span>
+                  </div>
+                  <div class="comp-dot dot-complete"></div>
+                </div>
+                <div class="day-cell">
+                  <span class="day-wd">Tue</span>
+                  <div class="day-num-wrap complete-cell">
+                    <div class="check-badge">
+                      <svg viewBox="0 0 24 24">
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
+                    </div>
+                    <span class="day-num">18</span>
+                  </div>
+                  <div class="comp-dot dot-complete"></div>
+                </div>
+                <div class="day-cell">
+                  <span class="day-wd">Wed</span>
+                  <div class="day-num-wrap complete-cell">
+                    <div class="check-badge">
+                      <svg viewBox="0 0 24 24">
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
+                    </div>
+                    <span class="day-num">19</span>
+                  </div>
+                  <div class="comp-dot dot-complete"></div>
+                </div>
+                <div class="day-cell">
+                  <span class="day-wd">Thu</span>
+                  <div class="day-num-wrap complete-cell">
+                    <div class="check-badge">
+                      <svg viewBox="0 0 24 24">
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
+                    </div>
+                    <span class="day-num">20</span>
+                  </div>
+                  <div class="comp-dot dot-complete"></div>
+                </div>
+                <div class="day-cell">
+                  <span class="day-wd">Fri</span>
+                  <div class="day-num-wrap complete-cell">
+                    <div class="check-badge">
+                      <svg viewBox="0 0 24 24">
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
+                    </div>
+                    <span class="day-num">21</span>
+                  </div>
+                  <div class="comp-dot dot-complete"></div>
+                </div>
+                <div class="day-cell">
+                  <span class="day-wd today-wd">Today</span>
+                  <div
+                    class="day-num-wrap complete-cell"
+                    style="background: var(--emerald-600)"
+                  >
+                    <div class="check-badge" style="border-color: var(--shelf)">
+                      <svg viewBox="0 0 24 24">
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
+                    </div>
+                    <span class="day-num">22</span>
+                  </div>
+                  <div class="comp-dot dot-complete"></div>
+                </div>
+                <div class="day-cell">
+                  <span class="day-wd" style="color: var(--gray-300)">Sun</span>
+                  <div class="day-num-wrap future-cell">
+                    <span class="day-num">23</span>
+                  </div>
+                </div>
+              </div>
+              <div class="nav-btn disabled">
+                <svg viewBox="0 0 24 24">
+                  <polyline points="9 18 15 12 9 6" />
+                </svg>
+              </div>
+            </div>
+            <!-- Nothing happens after completion ↑ — missed conversion -->
+          </div>
+          <div class="habits-area" style="padding: 12px 24px 20px">
+            <div class="habit-card completed" style="opacity: 0.7">
+              <div
+                class="habit-accent"
+                style="background: var(--emerald-500)"
+              ></div>
+              <span class="habit-emoji">&#x1F4D6;</span>
+              <div style="flex: 1">
+                <div class="habit-name">Read 20 pages</div>
+              </div>
+              <div class="habit-check done">
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="white"
+                  stroke-width="3"
+                  stroke-linecap="round"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+              </div>
+            </div>
+            <div class="habit-card completed" style="opacity: 0.7">
+              <div
+                class="habit-accent"
+                style="background: var(--emerald-500)"
+              ></div>
+              <span class="habit-emoji">&#x1F9D8;</span>
+              <div style="flex: 1">
+                <div class="habit-name">Meditate 10 min</div>
+              </div>
+              <div class="habit-check done">
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="white"
+                  stroke-width="3"
+                  stroke-linecap="round"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="phone-col">
+        <div class="phone-label target">Target — Celebration → Conversion</div>
+        <div class="phone-frame">
+          <div class="phone-notch"></div>
+          <div class="status-bar">
+            <span>4:35 PM</span><span style="font-size: 11px">🔋</span>
+          </div>
+          <div class="shelf">
+            <div class="shelf-header">
+              <div class="ring-glow ring">
+                <svg width="64" height="64" viewBox="0 0 64 64">
+                  <circle
+                    cx="32"
+                    cy="32"
+                    r="29.75"
+                    fill="transparent"
+                    stroke="#EDEAE5"
+                    stroke-width="4.5"
+                  />
+                  <circle
+                    cx="32"
+                    cy="32"
+                    r="29.75"
+                    fill="transparent"
+                    stroke="#10B981"
+                    stroke-width="4.5"
+                    stroke-dasharray="186.92"
+                    stroke-dashoffset="0"
+                    stroke-linecap="round"
+                  />
+                </svg>
+                <div
+                  class="ring-text"
+                  style="color: var(--emerald-600); font-size: 13px"
+                >
+                  5/5
+                </div>
+              </div>
+              <div style="flex: 1">
+                <div class="greeting">
+                  Good afternoon<span class="greeting-dash"> — </span
+                  ><span
+                    class="greeting-progress"
+                    style="color: var(--emerald-600)"
+                    >All done!</span
+                  >
+                </div>
+                <div class="date-row">
+                  <div class="nav-arrow">
+                    <svg viewBox="0 0 24 24">
+                      <polyline points="15 18 9 12 15 6" />
+                    </svg>
+                  </div>
+                  <span class="date-text">Tue, February 25</span>
+                  <div class="nav-arrow disabled">
+                    <svg viewBox="0 0 24 24">
+                      <polyline points="9 18 15 12 9 6" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="strip-full">
+              <div class="day-strip">
+                <div class="day-cell">
+                  <span class="day-wd">Mon</span>
+                  <div class="day-num-wrap complete-cell">
+                    <div class="check-badge">
+                      <svg viewBox="0 0 24 24">
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
+                    </div>
+                    <span class="day-num">17</span>
+                  </div>
+                  <div class="comp-dot dot-complete"></div>
+                </div>
+                <div class="day-cell">
+                  <span class="day-wd">Tue</span>
+                  <div class="day-num-wrap complete-cell">
+                    <div class="check-badge">
+                      <svg viewBox="0 0 24 24">
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
+                    </div>
+                    <span class="day-num">18</span>
+                  </div>
+                  <div class="comp-dot dot-complete"></div>
+                </div>
+                <div class="day-cell">
+                  <span class="day-wd">Wed</span>
+                  <div class="day-num-wrap complete-cell">
+                    <div class="check-badge">
+                      <svg viewBox="0 0 24 24">
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
+                    </div>
+                    <span class="day-num">19</span>
+                  </div>
+                  <div class="comp-dot dot-complete"></div>
+                </div>
+                <div class="day-cell">
+                  <span class="day-wd">Thu</span>
+                  <div class="day-num-wrap complete-cell">
+                    <div class="check-badge">
+                      <svg viewBox="0 0 24 24">
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
+                    </div>
+                    <span class="day-num">20</span>
+                  </div>
+                  <div class="comp-dot dot-complete"></div>
+                </div>
+                <div class="day-cell">
+                  <span class="day-wd">Fri</span>
+                  <div class="day-num-wrap complete-cell">
+                    <div class="check-badge">
+                      <svg viewBox="0 0 24 24">
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
+                    </div>
+                    <span class="day-num">21</span>
+                  </div>
+                  <div class="comp-dot dot-complete"></div>
+                </div>
+                <div class="day-cell">
+                  <span class="day-wd today-wd">Today</span>
+                  <div
+                    class="day-num-wrap complete-cell"
+                    style="background: var(--emerald-600)"
+                  >
+                    <div class="check-badge" style="border-color: var(--shelf)">
+                      <svg viewBox="0 0 24 24">
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
+                    </div>
+                    <span class="day-num">22</span>
+                  </div>
+                  <div class="comp-dot dot-complete"></div>
+                  <div class="today-anchor"></div>
+                </div>
+                <div class="day-cell">
+                  <span class="day-wd" style="color: var(--gray-300)">Sun</span>
+                  <div class="day-num-wrap future-cell">
+                    <span class="day-num">23</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- NEW: Celebration → conversion hook -->
+            <div class="celebration-hook" style="margin-top: 10px">
+              <span style="font-size: 18px">&#x1F389;</span>
+              <div class="celebration-text">
+                Perfect day! 6-day streak building.
+              </div>
+              <div class="celebration-cta">See Insights →</div>
+            </div>
+          </div>
+
+          <div class="habits-area" style="padding: 12px 24px 20px">
+            <div class="habit-card completed" style="opacity: 0.7">
+              <div
+                class="habit-accent"
+                style="background: var(--emerald-500)"
+              ></div>
+              <span class="habit-emoji">&#x1F4D6;</span>
+              <div style="flex: 1">
+                <div class="habit-name">Read 20 pages</div>
+              </div>
+              <div class="habit-check done">
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="white"
+                  stroke-width="3"
+                  stroke-linecap="round"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+              </div>
+            </div>
+            <div class="habit-card completed" style="opacity: 0.7">
+              <div
+                class="habit-accent"
+                style="background: var(--emerald-500)"
+              ></div>
+              <span class="habit-emoji">&#x1F9D8;</span>
+              <div style="flex: 1">
+                <div class="habit-name">Meditate 10 min</div>
+              </div>
+              <div class="habit-check done">
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="white"
+                  stroke-width="3"
+                  stroke-linecap="round"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Annotations -->
+          <div class="ann" style="top: 92px; left: 8px">
+            <div class="ann-dot green" title="Ring glow + delayed pulse">A</div>
+          </div>
+          <div class="ann" style="top: 268px; right: 8px">
+            <div class="ann-dot purple" title="Celebration → premium CTA">
+              B
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═════════════════════════════════════════ -->
+    <!-- CALLOUT CARDS                              -->
+    <!-- ═════════════════════════════════════════ -->
+    <div class="callout-section" style="padding-top: 48px">
+      <h2
+        style="
+          font-size: 20px;
+          font-weight: 700;
+          color: #faf8f5;
+          margin-bottom: 20px;
+          letter-spacing: -0.3px;
+        "
+      >
+        5 Changes to 9.5
+      </h2>
+      <div class="callout-grid">
+        <div class="callout-card">
+          <div class="callout-num nav">1</div>
+          <div class="callout-title">Full-Width Day Strip + Header Arrows</div>
+          <div class="callout-body">
+            Remove 26px button arrows from StripNav. Day cells expand to match
+            habit card width. <strong>Compact 12px chevrons</strong> move to the
+            date row: <strong>[&lt;] Tue, Feb 25 [&gt;]</strong>. Passive 10px
+            edge indicators hint at swipe. <br /><strong
+              >Navigation: 8 → 9.5</strong
+            >
+          </div>
+          <div class="callout-file">
+            StripNav.tsx · WeekNavRow.tsx (new) · ProgressGreeting.tsx
+          </div>
+        </div>
+
+        <div class="callout-card">
+          <div class="callout-num prem">2</div>
+          <div class="callout-title">Celebration → Conversion Hook</div>
+          <div class="callout-body">
+            When ring hits 5/5:
+            <strong>200ms delay → 1.35x pulse → glow shadow</strong>. A
+            celebration banner slides in with streak count + "See Insights →"
+            CTA routing to premium. Fires once per day. <br /><strong
+              >Premium Zone: 7 → 8.5</strong
+            >
+          </div>
+          <div class="callout-file">
+            CompletionRing.helpers.ts · CalendarTimeline.tsx (new hook)
+          </div>
+        </div>
+
+        <div class="callout-card">
+          <div class="callout-num prem">3</div>
+          <div class="callout-title">Blurred Premium Sparkline</div>
+          <div class="callout-body">
+            Below day strip on free tier: a
+            <strong>blurred sparkline</strong> with "Weekly trend" label and a
+            <strong>"Pro" lock badge</strong>. Shows what premium users see,
+            creating aspiration pull. Vanishes for subscribers. <br /><strong
+              >Premium Zone: 8.5 → 9</strong
+            >
+          </div>
+          <div class="callout-file">
+            CalendarTimeline.tsx · New PremiumPreview component
+          </div>
+        </div>
+
+        <div class="callout-card">
+          <div class="callout-num vis">4</div>
+          <div class="callout-title">Today Amber Anchor</div>
+          <div class="callout-body">
+            Add a <strong>4px amber dot</strong> (streak.300) below the "Today"
+            label to visually anchor the user's eye to the current day cell.
+            Gestalt proximity principle — connects label to cell below.
+            <br /><strong>Visual Hierarchy: 9 → 9.5</strong>
+          </div>
+          <div class="callout-file">DayCellContent.tsx</div>
+        </div>
+
+        <div class="callout-card">
+          <div class="callout-num con">5</div>
+          <div class="callout-title">Ring Track Token Alignment</div>
+          <div class="callout-body">
+            Change ring track from <strong>#E5E2DE</strong> (custom) to
+            <strong>#EDEAE5</strong> (<code>colors.light.card</code>). 100%
+            design system compliance. Also reference
+            <code>borderRadius.large</code> for shelf radius instead of magic
+            <code>16</code>. <br /><strong>Consistency: 9 → 9.5</strong>
+          </div>
+          <div class="callout-file">
+            CompletionRing.helpers.ts · CalendarTimeline.styles.ts
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═════════════════════════════════════════ -->
+    <!-- RIPPLE EFFECTS — OTHER APP COMPONENTS      -->
+    <!-- ═════════════════════════════════════════ -->
+    <div class="ripple-section">
+      <h2 class="ripple-header">Ripple Effects — Other App Components</h2>
+      <div
+        style="
+          background: #232120;
+          border: 1px solid rgba(221, 216, 210, 0.08);
+          border-radius: 14px;
+          padding: 20px;
+          overflow-x: auto;
+        "
+      >
+        <table class="ripple-table">
+          <thead>
+            <tr>
+              <th style="width: 25%">Component</th>
+              <th style="width: 40%">Change Needed</th>
+              <th style="width: 20%">File</th>
+              <th style="width: 15%">Impact</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>CalendarTimeline.tsx</td>
+              <td>
+                Move nav callbacks from StripNav → WeekNavigationHeader. Add
+                celebration hook state + premium preview.
+              </td>
+              <td>
+                <span class="callout-file" style="margin: 0"
+                  >CalendarTimeline.tsx</span
+                >
+              </td>
+              <td><span class="impact-badge core">Core</span></td>
+            </tr>
+            <tr>
+              <td>CalendarTimeline.types.ts</td>
+              <td>
+                Add <code>onPreviousWeek</code> / <code>onNextWeek</code> to
+                <code>WeekNavigationHeaderProps</code>. Add
+                <code>onPremiumPress</code> callback.
+              </td>
+              <td>
+                <span class="callout-file" style="margin: 0"
+                  >CalendarTimeline.types.ts</span
+                >
+              </td>
+              <td><span class="impact-badge core">Core</span></td>
+            </tr>
+            <tr>
+              <td>StripNav.tsx</td>
+              <td>
+                Replace button layout with
+                <code>position: relative</code> wrapper + passive edge
+                indicators. Remove nav callbacks.
+              </td>
+              <td>
+                <span class="callout-file" style="margin: 0">StripNav.tsx</span>
+              </td>
+              <td><span class="impact-badge core">Core</span></td>
+            </tr>
+            <tr>
+              <td>WeekNavRow.tsx</td>
+              <td>
+                <strong>New file.</strong> Compact
+                <code>[&lt;] date [&gt;]</code> interactive arrows extracted
+                from ProgressGreeting.
+              </td>
+              <td>
+                <span class="callout-file" style="margin: 0"
+                  >WeekNavRow.tsx</span
+                >
+              </td>
+              <td><span class="impact-badge core">Core</span></td>
+            </tr>
+            <tr>
+              <td>ProgressGreeting.tsx</td>
+              <td>
+                Replace inline date row with <code>&lt;WeekNavRow&gt;</code>.
+                Add <code>canNavigateForward</code>, nav callback props.
+              </td>
+              <td>
+                <span class="callout-file" style="margin: 0"
+                  >ProgressGreeting.tsx</span
+                >
+              </td>
+              <td><span class="impact-badge core">Core</span></td>
+            </tr>
+            <tr>
+              <td>WeekNavigationHeader.tsx</td>
+              <td>
+                Pass through <code>onPreviousWeek</code>,
+                <code>onNextWeek</code> to ProgressGreeting.
+              </td>
+              <td>
+                <span class="callout-file" style="margin: 0"
+                  >WeekNavigationHeader.tsx</span
+                >
+              </td>
+              <td><span class="impact-badge minor">Minor</span></td>
+            </tr>
+            <tr>
+              <td>CompletionRing.helpers.ts</td>
+              <td>
+                Change <code>RING_COLORS.track</code> from
+                <code>#E5E2DE</code> → <code>#EDEAE5</code>. Add 200ms
+                celebration delay.
+              </td>
+              <td>
+                <span class="callout-file" style="margin: 0"
+                  >CompletionRing.helpers.ts</span
+                >
+              </td>
+              <td><span class="impact-badge minor">Minor</span></td>
+            </tr>
+            <tr>
+              <td>CalendarTimeline.styles.ts</td>
+              <td>
+                Import <code>borderRadius</code> from theme. Replace magic
+                <code>16</code> with <code>borderRadius.large</code>.
+              </td>
+              <td>
+                <span class="callout-file" style="margin: 0"
+                  >CalendarTimeline.styles.ts</span
+                >
+              </td>
+              <td><span class="impact-badge minor">Minor</span></td>
+            </tr>
+            <tr>
+              <td>DayCellContent.tsx</td>
+              <td>
+                Add amber anchor dot (4px, <code>streak.300</code>) below
+                "Today" weekday label.
+              </td>
+              <td>
+                <span class="callout-file" style="margin: 0"
+                  >DayCellContent.tsx</span
+                >
+              </td>
+              <td><span class="impact-badge minor">Minor</span></td>
+            </tr>
+            <tr>
+              <td>components/index.ts</td>
+              <td>Add barrel export for <code>WeekNavRow</code>.</td>
+              <td>
+                <span class="callout-file" style="margin: 0">index.ts</span>
+              </td>
+              <td><span class="impact-badge minor">Minor</span></td>
+            </tr>
+            <tr>
+              <td>HabitsListHeader.tsx</td>
+              <td>
+                Pass <code>onPremiumPress</code> through to CalendarTimeline
+                (for "See Insights" CTA).
+              </td>
+              <td>
+                <span class="callout-file" style="margin: 0"
+                  >HabitsListHeader.tsx</span
+                >
+              </td>
+              <td><span class="impact-badge minor">Minor</span></td>
+            </tr>
+            <tr>
+              <td>BottomActionBar</td>
+              <td>No changes needed. Already consistent with design system.</td>
+              <td><span class="callout-file" style="margin: 0">—</span></td>
+              <td><span class="impact-badge none">None</span></td>
+            </tr>
+            <tr>
+              <td>HabitCard</td>
+              <td>No changes needed. Card styles are the alignment target.</td>
+              <td><span class="callout-file" style="margin: 0">—</span></td>
+              <td><span class="impact-badge none">None</span></td>
+            </tr>
+            <tr>
+              <td>TemplatesScreen</td>
+              <td>No changes needed. Separate navigation flow.</td>
+              <td><span class="callout-file" style="margin: 0">—</span></td>
+              <td><span class="impact-badge none">None</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div
+        style="
+          margin-top: 16px;
+          font-size: 13px;
+          color: var(--text-muted);
+          line-height: 1.6;
+        "
+      >
+        <strong style="color: #faf8f5">Summary:</strong>
+        <strong style="color: var(--emerald-500)">5 core files</strong>
+        (significant changes),
+        <strong style="color: var(--streak-300)">6 minor files</strong>
+        (pass-through props, token swaps),
+        <strong style="color: var(--gray-500)">3 files unchanged</strong>
+        (BottomActionBar, HabitCard, TemplatesScreen). <br />1 new file created
+        (<code>WeekNavRow.tsx</code>). 1 new component added to CalendarTimeline
+        (celebration hook + premium preview). <br />All changes are
+        <strong>contained to the CalendarTimeline module</strong> + one prop
+        pass-through in HabitsListHeader.
+      </div>
+    </div>
+
+    <div style="height: 48px"></div>
+  </body>
+</html>

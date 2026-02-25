@@ -35,9 +35,7 @@ function getCategoriesFromTemplates(templates: Doc<'templates'>[] | undefined) {
   }
 
   const uniqueCategories = [
-    ...new Set(
-      templates.map((template) => template.category).filter((category) => category)
-    ),
+    ...new Set(templates.map((template) => template.category).filter(Boolean)),
   ].sort();
 
   const normalized = uniqueCategories.map((category) => {
@@ -45,7 +43,8 @@ function getCategoriesFromTemplates(templates: Doc<'templates'>[] | undefined) {
       icon: '📌',
       label:
         typeof category === 'string'
-          ? category.charAt(0).toUpperCase() + category.slice(1).replaceAll('_', ' ')
+          ? category.charAt(0).toUpperCase() +
+            category.slice(1).replaceAll('_', ' ')
           : 'Template',
     };
 
@@ -60,7 +59,11 @@ function getCategoriesFromTemplates(templates: Doc<'templates'>[] | undefined) {
 
 export function useTemplatesData() {
   const allTemplates = useQuery(api.templates.list, {});
+  const userHabits = useQuery(api.habits.list);
+  const settings = useQuery(api.settings.get);
   const isLoading = allTemplates === undefined;
+  const userHabitCount = userHabits?.length ?? 0;
+  const isPremiumUser = settings?.hasPremium ?? false;
   const categories = useMemo(
     () => getCategoriesFromTemplates(allTemplates),
     [allTemplates]
@@ -74,7 +77,9 @@ export function useTemplatesData() {
     categories,
     importTemplate,
     isLoading,
+    isPremiumUser,
     seedTemplates,
+    userHabitCount,
   };
 }
 

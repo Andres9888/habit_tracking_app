@@ -3,10 +3,10 @@
 ## Context
 
 - **Playbook:** Security
-- **Agent:** {{AGENT_NAME}}
-- **Project:** {{AGENT_PATH}}
-- **Auto Run Folder:** {{AUTORUN_FOLDER}}
-- **Loop:** {{LOOP_NUMBER}}
+- **Agent:** code-audit
+- **Project:** /Users/andres/Code/habit_tracking_app.worktrees/code-audit
+- **Auto Run Folder:** /Users/andres/Code/habit_tracking_app/docs/development
+- **Loop:** 00001
 
 ## Objective
 
@@ -17,11 +17,11 @@ Map the security-relevant attack surface of the codebase and run initial vulnera
 1. **Identify security-sensitive areas** - Auth, crypto, data handling, external inputs
 2. **Run automated security scans** - Dependency audit, secret scanning, static analysis
 3. **Map the attack surface** - Entry points, data flows, trust boundaries
-4. **Output findings** to `{{AUTORUN_FOLDER}}/LOOP_{{LOOP_NUMBER}}_ATTACK_SURFACE.md`
+4. **Output findings** to `/Users/andres/Code/habit_tracking_app/docs/development/LOOP_00001_ATTACK_SURFACE.md`
 
 ## Analysis Checklist
 
-- [ ] **Map attack surface (if needed)**: First check if `{{AUTORUN_FOLDER}}/LOOP_{{LOOP_NUMBER}}_ATTACK_SURFACE.md` already exists with at least one investigation tactic defined. If it does, skip the mapping and mark this task complete—the attack surface map is already in place. If it doesn't exist, identify authentication code, API endpoints, file operations, database queries, and external service integrations. Run dependency vulnerability scans if available. Run secret scanners if available. Output attack surface map to `{{AUTORUN_FOLDER}}/LOOP_{{LOOP_NUMBER}}_ATTACK_SURFACE.md`.
+- [ ] **Map attack surface (if needed)**: First check if `/Users/andres/Code/habit_tracking_app/docs/development/LOOP_00001_ATTACK_SURFACE.md` already exists with at least one investigation tactic defined. If it does, skip the mapping and mark this task complete—the attack surface map is already in place. If it doesn't exist, identify authentication code, API endpoints, file operations, database queries, and external service integrations. Run dependency vulnerability scans if available. Run secret scanners if available. Output attack surface map to `/Users/andres/Code/habit_tracking_app/docs/development/LOOP_00001_ATTACK_SURFACE.md`.
 
 ## What to Identify
 
@@ -77,10 +77,10 @@ Look for security tools already configured in the project:
 
 ## Output Format
 
-Create/update `{{AUTORUN_FOLDER}}/LOOP_{{LOOP_NUMBER}}_ATTACK_SURFACE.md` with:
+Create/update `/Users/andres/Code/habit_tracking_app/docs/development/LOOP_00001_ATTACK_SURFACE.md` with:
 
 ```markdown
-# Attack Surface Map - Loop {{LOOP_NUMBER}}
+# Attack Surface Map - Loop 00001
 
 ## Scan Results Summary
 

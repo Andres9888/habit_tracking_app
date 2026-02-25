@@ -3,6 +3,7 @@
  */
 
 import type { Doc, Id } from '../../../../convex/_generated/dataModel';
+import type { TemplateToastData } from '../../../components/TemplateAddedToast';
 import type { Category, SortOption } from '../../templates/constants';
 import type {
   CategoryDoc,
@@ -40,12 +41,15 @@ export interface CategorySearchViewProps {
   setSearchQuery: React.Dispatch<React.SetStateAction<string>>;
   setShowCustomizeModal: React.Dispatch<React.SetStateAction<boolean>>;
   setShowFullsizePreview: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowCelebration: React.Dispatch<React.SetStateAction<boolean>>;
   setShowSortOptions: React.Dispatch<React.SetStateAction<boolean>>;
   setShowToast: React.Dispatch<React.SetStateAction<boolean>>;
+  showCelebration: boolean;
   showCustomizeModal: boolean;
   showFullsizePreview: boolean;
   showSortOptions: boolean;
   showToast: boolean;
   sortOption: SortOption;
   toastMessage: string;
+  toastTemplateData: TemplateToastData | null;
 }

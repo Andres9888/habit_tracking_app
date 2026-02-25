@@ -4,6 +4,7 @@
 
 import type { FlatList } from 'react-native';
 import type { Doc, Id } from '../../../convex/_generated/dataModel';
+import type { TemplateToastData } from '../../components/TemplateAddedToast';
 import type { Category, SortOption } from '../templates/constants';
 import type { TemplateCustomizations, ViewMode } from './TemplatesScreen.types';
 
@@ -13,6 +14,8 @@ export interface UseTemplateHandlersOptions {
     templateId: Id<'templates'>;
     customizations?: TemplateCustomizations;
   }) => Promise<{ success: boolean }>;
+  isPremiumUser: boolean;
+  previewTemplate: Doc<'templates'> | null;
   seedTemplates: (args: Record<string, never>) => Promise<unknown>;
   setExpandedCategories: React.Dispatch<React.SetStateAction<Set<string>>>;
   setImportedTemplateIds: React.Dispatch<React.SetStateAction<Set<string>>>;
@@ -26,11 +29,16 @@ export interface UseTemplateHandlersOptions {
   setResearchOnly: React.Dispatch<React.SetStateAction<boolean>>;
   setSearchQuery: React.Dispatch<React.SetStateAction<string>>;
   setSelectedCategory: React.Dispatch<React.SetStateAction<Category>>;
+  setShowCelebration: React.Dispatch<React.SetStateAction<boolean>>;
   setShowCustomizeModal: React.Dispatch<React.SetStateAction<boolean>>;
   setShowFullsizePreview: React.Dispatch<React.SetStateAction<boolean>>;
   setShowSortOptions: React.Dispatch<React.SetStateAction<boolean>>;
   setShowToast: React.Dispatch<React.SetStateAction<boolean>>;
+  userHabitCount: number;
   setSortOption: React.Dispatch<React.SetStateAction<SortOption>>;
   setToastMessage: React.Dispatch<React.SetStateAction<string>>;
+  setToastTemplateData: React.Dispatch<
+    React.SetStateAction<TemplateToastData | null>
+  >;
   setViewMode: React.Dispatch<React.SetStateAction<ViewMode>>;
 }

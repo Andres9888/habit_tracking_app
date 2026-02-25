@@ -54,6 +54,9 @@ function HabitsAppContent() {
   const bottomBar = useBottomBarProps({
     handleCreateHabitRequest: handlers.handleCreateHabitRequest,
     modals,
+    habits: list.habits,
+    getHabitStatus: list.getHabitStatus,
+    reduceMotion: list.reduceMotionPreference,
   });
 
   const showSkeleton = list.isHabitsLoading && list.habits.length === 0;

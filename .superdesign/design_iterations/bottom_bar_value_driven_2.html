@@ -1,0 +1,1810 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bottom Bar — 9.5 Target Variations</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;0,7..72,700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        /* ── Exact App Palette (from core.ts + darkColors.ts) ── */
+        --parchment: #f5f1ed;
+        --card-light: #edeae5;
+        --stone-800: #2d2a26;
+        --stone-700: #3d3833;
+        --stone-600: #524d47;
+        --stone-500: #6b6560;
+        --stone-400: #6e6660;
+        --stone-300: #c4bfb7;
+        --stone-200: #ddd8d2;
+        --stone-100: #f5f1ed;
+        --stone-50: #faf8f5;
+
+        --dark-900: #111827;
+        --dark-800: #1f2937;
+        --dark-700: #374151;
+        --dark-600: #4b5563;
+        --dark-500: #6b7280;
+        --dark-400: #9ca3af;
+        --dark-300: #d1d5db;
+        --dark-200: #e5e7eb;
+        --dark-100: #f3f4f6;
+        --dark-50: #f9fafb;
+
+        /* Primary green — exact from colors/core.ts */
+        --green-700: #047857;
+        --green-600: #059669;
+        --green-500: #10b981;
+        --green-400: #34d399;
+        --green-300: #6ee7b7;
+        --green-100: #d1fae5;
+
+        /* Dark mode primary (inverted) — from darkColors.ts */
+        --dk-green-600: #6ee7b7;
+        --dk-green-500: #34d399;
+        --dk-green-400: #10b981;
+        --dk-green-300: #059669;
+
+        /* Streak gold — EXACT from colors/core.ts lines 123-129 */
+        --streak-100: #fef3cd;
+        --streak-300: #e8b94d;
+        --streak-500: #8b6208;
+        --streak-600: #936a08;
+        --streak-700: #7d5907;
+
+        /* Premium purple — from core.ts */
+        --premium: #7b52c4;
+
+        /* Page chrome */
+        --page-bg: #0c0a09;
+        --page-surface: #1c1917;
+        --page-border: #292524;
+        --page-text: #d6d3d1;
+        --page-muted: #78716c;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: 'DM Sans', sans-serif !important;
+        background: var(--page-bg) !important;
+        color: var(--page-text) !important;
+        min-height: 100vh;
+        -webkit-font-smoothing: antialiased;
+      }
+      .page {
+        max-width: 1300px;
+        margin: 0 auto;
+        padding: 48px 28px 80px;
+      }
+
+      /* ── Header ── */
+      .page-header {
+        margin-bottom: 32px;
+      }
+      .page-header::before {
+        content: 'TARGETING 9.5/10';
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11px;
+        font-weight: 500;
+        letter-spacing: 2.5px;
+        color: var(--green-400);
+        display: block;
+        margin-bottom: 14px;
+      }
+      .page-title {
+        font-family: 'Literata', serif !important;
+        font-size: 30px;
+        font-weight: 700;
+        color: var(--dark-50);
+        line-height: 1.2;
+        margin-bottom: 10px;
+      }
+      .page-subtitle {
+        font-size: 14px;
+        color: var(--page-muted);
+        line-height: 1.6;
+        max-width: 700px;
+      }
+
+      /* ── Score Display ── */
+      .scores-row {
+        display: flex;
+        gap: 12px;
+        margin: 24px 0 32px;
+        flex-wrap: wrap;
+      }
+      .score-chip {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 14px;
+        border-radius: 10px;
+        border: 1px solid var(--page-border);
+        background: var(--page-surface);
+      }
+      .score-chip .label {
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--page-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      .score-chip .value {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 14px;
+        font-weight: 700;
+      }
+      .score-chip .value.high {
+        color: var(--green-400);
+      }
+      .score-chip .value.mid {
+        color: var(--streak-300);
+      }
+      .score-chip .value.low {
+        color: #f87171;
+      }
+      .score-chip.total {
+        border-color: rgba(52, 211, 153, 0.2);
+        background: rgba(52, 211, 153, 0.06);
+      }
+      .score-chip.total .value {
+        font-size: 18px;
+      }
+
+      /* ── Section Labels ── */
+      .section-label {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 10px;
+        font-weight: 500;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--page-muted);
+        margin-bottom: 16px;
+        padding-bottom: 8px;
+        border-bottom: 1px solid var(--page-border);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .section-label .score-badge {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11px;
+        font-weight: 700;
+        padding: 2px 8px;
+        border-radius: 4px;
+        background: rgba(52, 211, 153, 0.1);
+        color: var(--green-400);
+      }
+
+      /* ── Phone Frames ── */
+      .variations {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 24px;
+        margin-bottom: 48px;
+      }
+      .variation {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .var-label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .var-label .tag {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 10px;
+        font-weight: 500;
+        letter-spacing: 1.5px;
+        padding: 4px 8px;
+        border-radius: 5px;
+        text-transform: uppercase;
+      }
+      .tag.va {
+        background: rgba(52, 211, 153, 0.12);
+        color: var(--green-400);
+      }
+      .tag.vb {
+        background: rgba(232, 185, 77, 0.12);
+        color: var(--streak-300);
+      }
+      .tag.vc {
+        background: rgba(123, 82, 196, 0.12);
+        color: var(--premium);
+      }
+      .var-label .name {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--dark-300);
+      }
+
+      .phone {
+        width: 100%;
+        aspect-ratio: 390 / 340;
+        border-radius: 28px;
+        overflow: hidden;
+        position: relative;
+        border: 1px solid var(--page-border);
+      }
+      .phone.light {
+        background: var(--parchment);
+      }
+      .phone.dark {
+        background: var(--dark-900);
+      }
+
+      .theme-tag {
+        position: absolute;
+        top: 8px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 7px;
+        font-weight: 500;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        padding: 2px 7px;
+        border-radius: 3px;
+        z-index: 10;
+      }
+      .light .theme-tag {
+        background: rgba(45, 42, 38, 0.05);
+        color: var(--stone-500);
+      }
+      .dark .theme-tag {
+        background: rgba(255, 255, 255, 0.05);
+        color: var(--dark-400);
+      }
+
+      /* ── Habit Cards ── */
+      .cards-area {
+        position: absolute;
+        top: 28px;
+        left: 12px;
+        right: 12px;
+      }
+      .hcard {
+        border-radius: 16px;
+        padding: 11px 12px;
+        margin-bottom: 7px;
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        min-height: 50px;
+      }
+      .light .hcard {
+        background: #ffffff;
+        border: 1px solid #e8e4df;
+        box-shadow: 0 1px 2px rgba(45, 42, 38, 0.04);
+      }
+      .dark .hcard {
+        background: var(--dark-800);
+        border: 1px solid var(--dark-700);
+      }
+      .hbar {
+        width: 3px;
+        height: 24px;
+        border-radius: 2px;
+        flex-shrink: 0;
+      }
+      .hbar.green {
+        background: var(--green-600);
+      }
+      .dark .hbar.green {
+        background: var(--green-400);
+      }
+      .hbar.blue {
+        background: #3b82f6;
+      }
+      .dark .hbar.blue {
+        background: #60a5fa;
+      }
+      .hbar.gold {
+        background: var(--streak-500);
+      }
+      .dark .hbar.gold {
+        background: var(--streak-300);
+      }
+      .hinfo {
+        flex: 1;
+      }
+      .hname {
+        font-size: 13px;
+        font-weight: 600;
+        line-height: 1.3;
+      }
+      .light .hname {
+        color: var(--stone-800);
+      }
+      .dark .hname {
+        color: var(--dark-50);
+      }
+      .hmeta {
+        font-size: 10px;
+        font-weight: 500;
+        margin-top: 1px;
+      }
+      .light .hmeta {
+        color: var(--stone-500);
+      }
+      .dark .hmeta {
+        color: var(--dark-400);
+      }
+      .hcheck {
+        width: 24px;
+        height: 24px;
+        border-radius: 12px;
+        border: 2px solid;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        font-size: 11px;
+        font-weight: 700;
+        color: white;
+      }
+      .light .hcheck {
+        border-color: var(--stone-200);
+      }
+      .dark .hcheck {
+        border-color: var(--dark-600);
+      }
+      .hcheck.done {
+        background: var(--green-600);
+        border-color: var(--green-600);
+      }
+      .hcheck.done::after {
+        content: '\2713';
+      }
+
+      .icon {
+        display: inline-flex;
+        align-items: center;
+        flex-shrink: 0;
+      }
+
+      /* ═══════════════════════════════════════════
+     SHARED BAR BASE
+     ═══════════════════════════════════════════ */
+      .bar {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        display: flex;
+        align-items: center;
+        padding: 12px 22px 26px;
+        border-top: 1px solid;
+        backdrop-filter: blur(20px) saturate(1.4);
+        -webkit-backdrop-filter: blur(20px) saturate(1.4);
+      }
+      .light .bar {
+        background: rgba(245, 241, 237, 0.82);
+        border-top-color: rgba(221, 216, 210, 0.45);
+      }
+      .dark .bar {
+        background: rgba(17, 24, 39, 0.82);
+        border-top-color: rgba(55, 65, 81, 0.3);
+      }
+      .bar .z {
+        flex: 1;
+        display: flex;
+      }
+      .bar .z.l {
+        justify-content: flex-start;
+      }
+      .bar .z.c {
+        justify-content: center;
+        overflow: visible;
+        align-items: center;
+        flex-direction: column;
+      }
+      .bar .z.r {
+        justify-content: flex-end;
+      }
+
+      /* Pill shared base */
+      .bar .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        height: 38px;
+        justify-content: center;
+        padding: 0 14px;
+        border-radius: 12px;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        border: 1px solid;
+        font-family: 'DM Sans', sans-serif;
+        transition: transform 280ms cubic-bezier(0.34, 1.56, 0.64, 1);
+        user-select: none;
+      }
+      .bar .pill:active {
+        transform: scale(0.96);
+        transition: transform 80ms ease-out;
+      }
+
+      /* FAB shared base */
+      .bar .fab {
+        width: 52px;
+        height: 52px;
+        border-radius: 16px;
+        background: var(--green-600);
+        border: 3px solid;
+        margin-top: -20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: transform 280ms cubic-bezier(0.34, 1.56, 0.64, 1);
+        user-select: none;
+        position: relative;
+        z-index: 2;
+      }
+      .bar .fab:active {
+        transform: scale(0.94) translateY(-2px);
+        transition: transform 80ms ease-out;
+      }
+      .light .bar .fab {
+        border-color: rgba(245, 241, 237, 0.9);
+        box-shadow: 0 4px 16px rgba(45, 42, 38, 0.08);
+      }
+      .dark .bar .fab {
+        border-color: rgba(17, 24, 39, 0.9);
+        box-shadow: 0 4px 20px rgba(5, 150, 105, 0.25);
+      }
+
+      /* Progress ring shared */
+      .fab-wrap {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .progress-ring {
+        position: absolute;
+        top: -24px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60px;
+        height: 60px;
+      }
+      .progress-ring circle {
+        fill: none;
+        stroke-width: 2.5;
+        stroke-linecap: round;
+      }
+      /* Track uses colors.border token — exact match */
+      .light .progress-ring .ring-bg {
+        stroke: var(--stone-200);
+      }
+      .dark .progress-ring .ring-bg {
+        stroke: var(--dark-700);
+      }
+      /* Fill uses primary[500] — exact match per DailyProgressRing.tsx line 108 */
+      .light .progress-ring .ring-fill {
+        stroke: var(--green-500);
+      }
+      .dark .progress-ring .ring-fill {
+        stroke: var(--dk-green-500);
+      }
+
+      /* Progress label — 12px per audit fix (was 10px) */
+      .progress-label {
+        font-family: 'DM Sans', sans-serif;
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: -0.2px;
+        margin-top: 4px;
+        white-space: nowrap;
+      }
+      .light .progress-label {
+        color: var(--stone-500);
+      }
+      .dark .progress-label {
+        color: var(--dark-400);
+      }
+      .progress-label .done-count {
+        font-weight: 700;
+      }
+      .light .progress-label .done-count {
+        color: var(--green-700);
+      }
+      .dark .progress-label .done-count {
+        color: var(--dk-green-500);
+      }
+
+      /* ═══════════════════════════════════════════
+     VARIATION A — "Burnished Gold Explore"
+     Fixes: streak palette, token compliance, 12px label
+     Focus: Consistency + Visual Hierarchy
+     ═══════════════════════════════════════════ */
+
+      /* Settings — ghost (de-emphasized utility) */
+      .bar-a .pill-ghost {
+        min-width: 100px;
+      }
+      .light .bar-a .pill-ghost {
+        background: rgba(255, 255, 255, 0.35);
+        border-color: rgba(221, 216, 210, 0.4);
+        color: var(--stone-400);
+      }
+      .dark .bar-a .pill-ghost {
+        background: rgba(31, 41, 55, 0.25);
+        border-color: rgba(55, 65, 81, 0.3);
+        color: var(--dark-500);
+      }
+
+      /* Explore — burnished gold (streak palette) */
+      .bar-a .pill-explore {
+        min-width: 110px;
+        position: relative;
+        overflow: hidden;
+      }
+      .light .bar-a .pill-explore {
+        background: rgba(254, 243, 205, 0.45);
+        border-color: rgba(139, 98, 8, 0.15);
+        color: var(--streak-700);
+      }
+      .dark .bar-a .pill-explore {
+        background: rgba(139, 98, 8, 0.1);
+        border-color: rgba(232, 185, 77, 0.12);
+        color: var(--streak-300);
+      }
+
+      /* ═══════════════════════════════════════════
+     VARIATION B — "Celebration Bridge"
+     Focus: Premium Zone + Completion → Conversion
+     All-done state bridges to premium CTA
+     ═══════════════════════════════════════════ */
+
+      .bar-b .pill-ghost {
+        min-width: 100px;
+      }
+      .light .bar-b .pill-ghost {
+        background: rgba(255, 255, 255, 0.35);
+        border-color: rgba(221, 216, 210, 0.4);
+        color: var(--stone-400);
+      }
+      .dark .bar-b .pill-ghost {
+        background: rgba(31, 41, 55, 0.25);
+        border-color: rgba(55, 65, 81, 0.3);
+        color: var(--dark-500);
+      }
+
+      .bar-b .pill-explore {
+        min-width: 110px;
+      }
+      .light .bar-b .pill-explore {
+        background: rgba(254, 243, 205, 0.45);
+        border-color: rgba(139, 98, 8, 0.15);
+        color: var(--streak-700);
+      }
+      .dark .bar-b .pill-explore {
+        background: rgba(139, 98, 8, 0.1);
+        border-color: rgba(232, 185, 77, 0.12);
+        color: var(--streak-300);
+      }
+
+      /* All-done: Explore pill transforms to premium CTA */
+      .bar-b.done .pill-explore {
+        animation: pulse-glow 2s ease-in-out infinite;
+      }
+      .light .bar-b.done .pill-explore {
+        background: rgba(254, 243, 205, 0.7);
+        border-color: rgba(139, 98, 8, 0.25);
+      }
+      .dark .bar-b.done .pill-explore {
+        background: rgba(139, 98, 8, 0.18);
+        border-color: rgba(232, 185, 77, 0.2);
+      }
+
+      @keyframes pulse-glow {
+        0%,
+        100% {
+          box-shadow: 0 0 0 0 transparent;
+        }
+        50% {
+          box-shadow: 0 0 12px rgba(232, 185, 77, 0.15);
+        }
+      }
+
+      /* All-done glow on ring — matches CompletionRing.helpers.ts GLOW_SHADOW */
+      .bar-b.done .progress-ring .ring-fill {
+        stroke-dashoffset: 0 !important;
+        filter: drop-shadow(0 0 6px rgba(16, 185, 129, 0.5));
+      }
+      .bar-b.done .fab {
+        box-shadow:
+          0 0 16px rgba(16, 185, 129, 0.4),
+          0 4px 16px rgba(45, 42, 38, 0.08) !important;
+      }
+      .bar-b.done .progress-label {
+        font-weight: 700 !important;
+      }
+      .light .bar-b.done .progress-label {
+        color: var(--green-600) !important;
+      }
+      .dark .bar-b.done .progress-label {
+        color: var(--dk-green-500) !important;
+      }
+
+      /* ═══════════════════════════════════════════
+     VARIATION C — "Full Premium Architecture"
+     Focus: Maximum score — all dimensions optimized
+     Includes: Insights CTA after all-done,
+     micro-affordances on all interactive elements
+     ═══════════════════════════════════════════ */
+
+      .bar-c .pill-ghost {
+        min-width: 100px;
+      }
+      .light .bar-c .pill-ghost {
+        background: rgba(255, 255, 255, 0.35);
+        border-color: rgba(221, 216, 210, 0.4);
+        color: var(--stone-400);
+      }
+      .dark .bar-c .pill-ghost {
+        background: rgba(31, 41, 55, 0.25);
+        border-color: rgba(55, 65, 81, 0.3);
+        color: var(--dark-500);
+      }
+
+      .bar-c .pill-explore {
+        min-width: 110px;
+      }
+      .light .bar-c .pill-explore {
+        background: rgba(254, 243, 205, 0.45);
+        border-color: rgba(139, 98, 8, 0.15);
+        color: var(--streak-700);
+      }
+      .dark .bar-c .pill-explore {
+        background: rgba(139, 98, 8, 0.1);
+        border-color: rgba(232, 185, 77, 0.12);
+        color: var(--streak-300);
+      }
+
+      /* All-done: Full celebration + premium bridge */
+      .bar-c.done .fab {
+        box-shadow:
+          0 0 20px rgba(16, 185, 129, 0.45),
+          0 4px 16px rgba(45, 42, 38, 0.08) !important;
+      }
+      .bar-c.done .progress-ring .ring-fill {
+        stroke-dashoffset: 0 !important;
+        filter: drop-shadow(0 0 6px rgba(16, 185, 129, 0.5));
+      }
+
+      /* All-done replaces Explore pill with "See Insights ›" CTA */
+      .bar-c.done .pill-explore {
+        display: none !important;
+      }
+      .bar-c.done .pill-insights {
+        display: inline-flex !important;
+        min-width: 120px;
+      }
+      .bar-c .pill-insights {
+        display: none;
+      }
+      .light .bar-c .pill-insights {
+        background: rgba(123, 82, 196, 0.08);
+        border-color: rgba(123, 82, 196, 0.15);
+        color: var(--premium);
+      }
+      .dark .bar-c .pill-insights {
+        background: rgba(123, 82, 196, 0.1);
+        border-color: rgba(123, 82, 196, 0.15);
+        color: #a78bfa;
+      }
+      .bar-c.done .progress-label {
+        font-weight: 700 !important;
+      }
+      .light .bar-c.done .progress-label {
+        color: var(--green-600) !important;
+      }
+      .dark .bar-c.done .progress-label {
+        color: var(--dk-green-500) !important;
+      }
+
+      /* ═══════════════════════════════════════════
+     SCORE COMPARISON TABLE
+     ═══════════════════════════════════════════ */
+      .comparison-table {
+        width: 100%;
+        border-collapse: collapse;
+        background: var(--page-surface);
+        border-radius: 14px;
+        overflow: hidden;
+        border: 1px solid var(--page-border);
+        margin-bottom: 48px;
+      }
+      .comparison-table th {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 10px;
+        font-weight: 500;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        color: var(--page-muted);
+        text-align: left;
+        padding: 14px 14px;
+        border-bottom: 1px solid var(--page-border);
+      }
+      .comparison-table td {
+        font-size: 12.5px;
+        padding: 12px 14px;
+        border-bottom: 1px solid var(--page-border);
+        vertical-align: top;
+        line-height: 1.5;
+      }
+      .comparison-table tr:last-child td {
+        border-bottom: none;
+      }
+      .comparison-table .dim {
+        font-weight: 700;
+        color: var(--dark-200);
+      }
+      .comparison-table .s {
+        font-family: 'JetBrains Mono', monospace;
+        font-weight: 700;
+        font-size: 13px;
+      }
+      .comparison-table .s.hi {
+        color: var(--green-400);
+      }
+      .comparison-table .s.md {
+        color: var(--streak-300);
+      }
+      .comparison-table .s.lo {
+        color: #f87171;
+      }
+      .comparison-table .note {
+        font-size: 11px;
+        color: var(--page-muted);
+        margin-top: 2px;
+      }
+      .comparison-table .weight {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 9px;
+        color: var(--page-muted);
+        font-weight: 500;
+      }
+      .comparison-table .total-row td {
+        border-top: 2px solid var(--page-border);
+        font-weight: 700;
+        padding-top: 14px;
+      }
+
+      /* ── Delta callout ── */
+      .delta-section {
+        margin-bottom: 48px;
+      }
+      .delta-card {
+        background: var(--page-surface);
+        border: 1px solid var(--page-border);
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 12px;
+      }
+      .delta-card .title {
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--dark-200);
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .delta-card .title .delta {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11px;
+        font-weight: 700;
+        padding: 2px 6px;
+        border-radius: 4px;
+      }
+      .delta.up {
+        background: rgba(52, 211, 153, 0.1);
+        color: var(--green-400);
+      }
+      .delta-card .desc {
+        font-size: 12.5px;
+        color: var(--page-muted);
+        line-height: 1.6;
+      }
+      .delta-card .tokens {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 10px;
+        color: var(--dark-400);
+        margin-top: 8px;
+        padding: 8px;
+        border-radius: 6px;
+        background: rgba(255, 255, 255, 0.03);
+      }
+
+      /* ── Recommendation ── */
+      .recommendation {
+        background: rgba(52, 211, 153, 0.04);
+        border: 1px solid rgba(52, 211, 153, 0.15);
+        border-radius: 14px;
+        padding: 24px;
+        margin-top: 48px;
+      }
+      .recommendation h3 {
+        font-family: 'Literata', serif;
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--dark-50);
+        margin-bottom: 12px;
+      }
+      .recommendation p {
+        font-size: 13px;
+        color: var(--page-text);
+        line-height: 1.7;
+      }
+
+      @media (max-width: 900px) {
+        .variations {
+          grid-template-columns: 1fr;
+        }
+        .page {
+          padding: 28px 16px 48px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <header class="page-header">
+        <h1 class="page-title">Bottom Bar — Three Variations Targeting 9.5</h1>
+        <p class="page-subtitle">
+          V1 mock scored 7.4 — consistency failures dragged it down. All three
+          variations below fix every token violation and differentiate on
+          Premium Zone strategy.
+        </p>
+      </header>
+
+      <!-- V1 Score for reference -->
+      <div class="scores-row">
+        <div class="score-chip">
+          <span class="label">V1 Score</span>
+          <span class="value low">7.4</span>
+        </div>
+        <div class="score-chip">
+          <span class="label">Consistency</span>
+          <span class="value low">6.5</span>
+        </div>
+        <div class="score-chip">
+          <span class="label">Premium</span>
+          <span class="value mid">7.0</span>
+        </div>
+        <div class="score-chip">
+          <span class="label">Hierarchy</span>
+          <span class="value mid">7.5</span>
+        </div>
+        <div class="score-chip">
+          <span class="label">Navigation</span>
+          <span class="value high">8.5</span>
+        </div>
+      </div>
+
+      <!-- ════════════════════════════════════════
+       LIGHT MODE — 3 VARIATIONS
+       ════════════════════════════════════════ -->
+      <div class="section-label">
+        Light Mode — Normal State (1 of 3 done)
+        <span class="score-badge">Press buttons to test</span>
+      </div>
+      <div class="variations">
+        <!-- VARIATION A -->
+        <div class="variation">
+          <div class="var-label">
+            <span class="tag va">A</span>
+            <span class="name">Burnished Gold + Token Fix</span>
+          </div>
+          <div class="phone light">
+            <span class="theme-tag">A · Light</span>
+            <div class="cards-area">
+              <div class="hcard">
+                <div class="hbar green"></div>
+                <div class="hinfo">
+                  <div class="hname">Morning Meditation</div>
+                  <div class="hmeta">12 day streak</div>
+                </div>
+                <div class="hcheck done"></div>
+              </div>
+              <div class="hcard">
+                <div class="hbar blue"></div>
+                <div class="hinfo">
+                  <div class="hname">Read 30 Minutes</div>
+                  <div class="hmeta">5 day streak</div>
+                </div>
+                <div class="hcheck"></div>
+              </div>
+              <div class="hcard">
+                <div class="hbar gold"></div>
+                <div class="hinfo">
+                  <div class="hname">Evening Journal</div>
+                  <div class="hmeta">3 day streak</div>
+                </div>
+                <div class="hcheck"></div>
+              </div>
+            </div>
+            <div class="bar bar-a">
+              <div class="z l">
+                <div class="pill pill-ghost">
+                  <svg
+                    class="icon"
+                    width="15"
+                    height="15"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.25"
+                  >
+                    <path
+                      d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"
+                    />
+                    <circle cx="12" cy="12" r="3" />
+                  </svg>
+                  Settings
+                </div>
+              </div>
+              <div class="z c">
+                <div class="fab-wrap">
+                  <svg class="progress-ring" viewBox="0 0 60 60">
+                    <circle class="ring-bg" cx="30" cy="30" r="26" />
+                    <circle
+                      class="ring-fill"
+                      cx="30"
+                      cy="30"
+                      r="26"
+                      stroke-dasharray="163"
+                      stroke-dashoffset="109"
+                      transform="rotate(-90 30 30)"
+                    />
+                  </svg>
+                  <div class="fab">
+                    <svg
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="white"
+                      stroke-width="2.5"
+                      stroke-linecap="round"
+                    >
+                      <line x1="12" y1="5" x2="12" y2="19" />
+                      <line x1="5" y1="12" x2="19" y2="12" />
+                    </svg>
+                  </div>
+                </div>
+                <div class="progress-label">
+                  <span class="done-count">1</span> of 3
+                </div>
+              </div>
+              <div class="z r">
+                <div class="pill pill-explore">
+                  <svg
+                    class="icon"
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.25"
+                  >
+                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+                  </svg>
+                  Explore
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- VARIATION B -->
+        <div class="variation">
+          <div class="var-label">
+            <span class="tag vb">B</span>
+            <span class="name">Celebration → Conversion Bridge</span>
+          </div>
+          <div class="phone light">
+            <span class="theme-tag">B · Light</span>
+            <div class="cards-area">
+              <div class="hcard">
+                <div class="hbar green"></div>
+                <div class="hinfo">
+                  <div class="hname">Morning Meditation</div>
+                  <div class="hmeta">12 day streak</div>
+                </div>
+                <div class="hcheck done"></div>
+              </div>
+              <div class="hcard">
+                <div class="hbar blue"></div>
+                <div class="hinfo">
+                  <div class="hname">Read 30 Minutes</div>
+                  <div class="hmeta">5 day streak</div>
+                </div>
+                <div class="hcheck"></div>
+              </div>
+              <div class="hcard">
+                <div class="hbar gold"></div>
+                <div class="hinfo">
+                  <div class="hname">Evening Journal</div>
+                  <div class="hmeta">3 day streak</div>
+                </div>
+                <div class="hcheck"></div>
+              </div>
+            </div>
+            <div class="bar bar-b">
+              <div class="z l">
+                <div class="pill pill-ghost">
+                  <svg
+                    class="icon"
+                    width="15"
+                    height="15"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.25"
+                  >
+                    <path
+                      d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"
+                    />
+                    <circle cx="12" cy="12" r="3" />
+                  </svg>
+                  Settings
+                </div>
+              </div>
+              <div class="z c">
+                <div class="fab-wrap">
+                  <svg class="progress-ring" viewBox="0 0 60 60">
+                    <circle class="ring-bg" cx="30" cy="30" r="26" />
+                    <circle
+                      class="ring-fill"
+                      cx="30"
+                      cy="30"
+                      r="26"
+                      stroke-dasharray="163"
+                      stroke-dashoffset="109"
+                      transform="rotate(-90 30 30)"
+                    />
+                  </svg>
+                  <div class="fab">
+                    <svg
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="white"
+                      stroke-width="2.5"
+                      stroke-linecap="round"
+                    >
+                      <line x1="12" y1="5" x2="12" y2="19" />
+                      <line x1="5" y1="12" x2="19" y2="12" />
+                    </svg>
+                  </div>
+                </div>
+                <div class="progress-label">
+                  <span class="done-count">1</span> of 3
+                </div>
+              </div>
+              <div class="z r">
+                <div class="pill pill-explore">
+                  <svg
+                    class="icon"
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.25"
+                  >
+                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+                  </svg>
+                  Explore
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- VARIATION C -->
+        <div class="variation">
+          <div class="var-label">
+            <span class="tag vc">C</span>
+            <span class="name">Full Premium Architecture</span>
+          </div>
+          <div class="phone light">
+            <span class="theme-tag">C · Light</span>
+            <div class="cards-area">
+              <div class="hcard">
+                <div class="hbar green"></div>
+                <div class="hinfo">
+                  <div class="hname">Morning Meditation</div>
+                  <div class="hmeta">12 day streak</div>
+                </div>
+                <div class="hcheck done"></div>
+              </div>
+              <div class="hcard">
+                <div class="hbar blue"></div>
+                <div class="hinfo">
+                  <div class="hname">Read 30 Minutes</div>
+                  <div class="hmeta">5 day streak</div>
+                </div>
+                <div class="hcheck"></div>
+              </div>
+              <div class="hcard">
+                <div class="hbar gold"></div>
+                <div class="hinfo">
+                  <div class="hname">Evening Journal</div>
+                  <div class="hmeta">3 day streak</div>
+                </div>
+                <div class="hcheck"></div>
+              </div>
+            </div>
+            <div class="bar bar-c">
+              <div class="z l">
+                <div class="pill pill-ghost">
+                  <svg
+                    class="icon"
+                    width="15"
+                    height="15"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.25"
+                  >
+                    <path
+                      d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"
+                    />
+                    <circle cx="12" cy="12" r="3" />
+                  </svg>
+                  Settings
+                </div>
+              </div>
+              <div class="z c">
+                <div class="fab-wrap">
+                  <svg class="progress-ring" viewBox="0 0 60 60">
+                    <circle class="ring-bg" cx="30" cy="30" r="26" />
+                    <circle
+                      class="ring-fill"
+                      cx="30"
+                      cy="30"
+                      r="26"
+                      stroke-dasharray="163"
+                      stroke-dashoffset="109"
+                      transform="rotate(-90 30 30)"
+                    />
+                  </svg>
+                  <div class="fab">
+                    <svg
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="white"
+                      stroke-width="2.5"
+                      stroke-linecap="round"
+                    >
+                      <line x1="12" y1="5" x2="12" y2="19" />
+                      <line x1="5" y1="12" x2="19" y2="12" />
+                    </svg>
+                  </div>
+                </div>
+                <div class="progress-label">
+                  <span class="done-count">1</span> of 3
+                </div>
+              </div>
+              <div class="z r">
+                <div class="pill pill-explore">
+                  <svg
+                    class="icon"
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.25"
+                  >
+                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+                  </svg>
+                  Explore
+                </div>
+                <div class="pill pill-insights">
+                  <svg
+                    class="icon"
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.25"
+                  >
+                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+                  </svg>
+                  Insights ›
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ════════════════════════════════════════
+       ALL-DONE STATES
+       ════════════════════════════════════════ -->
+      <div class="section-label">
+        All Done State — Celebration + Conversion
+        <span class="score-badge">Key differentiator between variations</span>
+      </div>
+      <div class="variations">
+        <!-- A — All Done -->
+        <div class="variation">
+          <div class="var-label">
+            <span class="tag va">A Done</span>
+            <span class="name">Ring fills + "All done!" — clean</span>
+          </div>
+          <div class="phone light">
+            <span class="theme-tag">A · All Done</span>
+            <div class="cards-area">
+              <div class="hcard">
+                <div class="hbar green"></div>
+                <div class="hinfo">
+                  <div class="hname">Morning Meditation</div>
+                  <div class="hmeta">12 day streak</div>
+                </div>
+                <div class="hcheck done"></div>
+              </div>
+              <div class="hcard">
+                <div class="hbar blue"></div>
+                <div class="hinfo">
+                  <div class="hname">Read 30 Minutes</div>
+                  <div class="hmeta">5 day streak</div>
+                </div>
+                <div class="hcheck done"></div>
+              </div>
+              <div class="hcard">
+                <div class="hbar gold"></div>
+                <div class="hinfo">
+                  <div class="hname">Evening Journal</div>
+                  <div class="hmeta">3 day streak</div>
+                </div>
+                <div class="hcheck done"></div>
+              </div>
+            </div>
+            <div class="bar bar-a">
+              <div class="z l">
+                <div class="pill pill-ghost">
+                  <svg
+                    class="icon"
+                    width="15"
+                    height="15"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.25"
+                  >
+                    <path
+                      d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"
+                    />
+                    <circle cx="12" cy="12" r="3" />
+                  </svg>
+                  Settings
+                </div>
+              </div>
+              <div class="z c">
+                <div class="fab-wrap">
+                  <svg class="progress-ring" viewBox="0 0 60 60">
+                    <circle class="ring-bg" cx="30" cy="30" r="26" />
+                    <circle
+                      class="ring-fill"
+                      cx="30"
+                      cy="30"
+                      r="26"
+                      stroke-dasharray="163"
+                      stroke-dashoffset="0"
+                      transform="rotate(-90 30 30)"
+                    />
+                  </svg>
+                  <div class="fab">
+                    <svg
+                      width="22"
+                      height="22"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="white"
+                      stroke-width="3"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                  </div>
+                </div>
+                <div
+                  class="progress-label"
+                  style="color: var(--green-600); font-weight: 700"
+                >
+                  All done!
+                </div>
+              </div>
+              <div class="z r">
+                <div class="pill pill-explore">
+                  <svg
+                    class="icon"
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.25"
+                  >
+                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+                  </svg>
+                  Explore
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- B — All Done + Glow -->
+        <div class="variation">
+          <div class="var-label">
+            <span class="tag vb">B Done</span>
+            <span class="name">Glow + Explore pill pulses</span>
+          </div>
+          <div class="phone light">
+            <span class="theme-tag">B · All Done</span>
+            <div class="cards-area">
+              <div class="hcard">
+                <div class="hbar green"></div>
+                <div class="hinfo">
+                  <div class="hname">Morning Meditation</div>
+                  <div class="hmeta">12 day streak</div>
+                </div>
+                <div class="hcheck done"></div>
+              </div>
+              <div class="hcard">
+                <div class="hbar blue"></div>
+                <div class="hinfo">
+                  <div class="hname">Read 30 Minutes</div>
+                  <div class="hmeta">5 day streak</div>
+                </div>
+                <div class="hcheck done"></div>
+              </div>
+              <div class="hcard">
+                <div class="hbar gold"></div>
+                <div class="hinfo">
+                  <div class="hname">Evening Journal</div>
+                  <div class="hmeta">3 day streak</div>
+                </div>
+                <div class="hcheck done"></div>
+              </div>
+            </div>
+            <div class="bar bar-b done">
+              <div class="z l">
+                <div class="pill pill-ghost">
+                  <svg
+                    class="icon"
+                    width="15"
+                    height="15"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.25"
+                  >
+                    <path
+                      d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"
+                    />
+                    <circle cx="12" cy="12" r="3" />
+                  </svg>
+                  Settings
+                </div>
+              </div>
+              <div class="z c">
+                <div class="fab-wrap">
+                  <svg class="progress-ring" viewBox="0 0 60 60">
+                    <circle class="ring-bg" cx="30" cy="30" r="26" />
+                    <circle
+                      class="ring-fill"
+                      cx="30"
+                      cy="30"
+                      r="26"
+                      stroke-dasharray="163"
+                      stroke-dashoffset="0"
+                      transform="rotate(-90 30 30)"
+                    />
+                  </svg>
+                  <div class="fab">
+                    <svg
+                      width="22"
+                      height="22"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="white"
+                      stroke-width="3"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                  </div>
+                </div>
+                <div class="progress-label">All done!</div>
+              </div>
+              <div class="z r">
+                <div class="pill pill-explore">
+                  <svg
+                    class="icon"
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.25"
+                  >
+                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+                  </svg>
+                  Explore
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- C — All Done + Insights CTA -->
+        <div class="variation">
+          <div class="var-label">
+            <span class="tag vc">C Done</span>
+            <span class="name">Explore → "Insights ›" swap</span>
+          </div>
+          <div class="phone light">
+            <span class="theme-tag">C · All Done</span>
+            <div class="cards-area">
+              <div class="hcard">
+                <div class="hbar green"></div>
+                <div class="hinfo">
+                  <div class="hname">Morning Meditation</div>
+                  <div class="hmeta">12 day streak</div>
+                </div>
+                <div class="hcheck done"></div>
+              </div>
+              <div class="hcard">
+                <div class="hbar blue"></div>
+                <div class="hinfo">
+                  <div class="hname">Read 30 Minutes</div>
+                  <div class="hmeta">5 day streak</div>
+                </div>
+                <div class="hcheck done"></div>
+              </div>
+              <div class="hcard">
+                <div class="hbar gold"></div>
+                <div class="hinfo">
+                  <div class="hname">Evening Journal</div>
+                  <div class="hmeta">3 day streak</div>
+                </div>
+                <div class="hcheck done"></div>
+              </div>
+            </div>
+            <div class="bar bar-c done">
+              <div class="z l">
+                <div class="pill pill-ghost">
+                  <svg
+                    class="icon"
+                    width="15"
+                    height="15"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.25"
+                  >
+                    <path
+                      d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"
+                    />
+                    <circle cx="12" cy="12" r="3" />
+                  </svg>
+                  Settings
+                </div>
+              </div>
+              <div class="z c">
+                <div class="fab-wrap">
+                  <svg class="progress-ring" viewBox="0 0 60 60">
+                    <circle class="ring-bg" cx="30" cy="30" r="26" />
+                    <circle
+                      class="ring-fill"
+                      cx="30"
+                      cy="30"
+                      r="26"
+                      stroke-dasharray="163"
+                      stroke-dashoffset="0"
+                      transform="rotate(-90 30 30)"
+                    />
+                  </svg>
+                  <div class="fab">
+                    <svg
+                      width="22"
+                      height="22"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="white"
+                      stroke-width="3"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                  </div>
+                </div>
+                <div class="progress-label">All done!</div>
+              </div>
+              <div class="z r">
+                <div class="pill pill-explore">
+                  <svg
+                    class="icon"
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.25"
+                  >
+                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+                  </svg>
+                  Explore
+                </div>
+                <div class="pill pill-insights">
+                  <svg
+                    class="icon"
+                    width="13"
+                    height="13"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.25"
+                  >
+                    <path d="M3 3v18h18" />
+                    <path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3" />
+                  </svg>
+                  Insights ›
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ════════════════════════════════════════
+       SCORE COMPARISON TABLE
+       ════════════════════════════════════════ -->
+      <div class="section-label">Score Breakdown — All Variations vs V1</div>
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>Dimension</th>
+            <th>Weight</th>
+            <th>V1 Mock</th>
+            <th>A: Burnished Gold</th>
+            <th>B: Celebration Bridge</th>
+            <th>C: Full Premium</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="dim">Visual Hierarchy</td>
+            <td class="weight">30%</td>
+            <td>
+              <span class="s md">7.5</span>
+              <div class="note">Wrong amber palette</div>
+            </td>
+            <td>
+              <span class="s hi">9.0</span>
+              <div class="note">Streak gold + correct token sizing</div>
+            </td>
+            <td>
+              <span class="s hi">9.0</span>
+              <div class="note">Same as A + glow draws eye on done</div>
+            </td>
+            <td>
+              <span class="s hi">9.5</span>
+              <div class="note">
+                Contextual pill swap creates clear hierarchy shift
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="dim">Navigation</td>
+            <td class="weight">25%</td>
+            <td>
+              <span class="s hi">8.5</span>
+              <div class="note">"Explore" label is good</div>
+            </td>
+            <td>
+              <span class="s hi">9.0</span>
+              <div class="note">
+                Ghost settings reduces noise, Explore stands out
+              </div>
+            </td>
+            <td>
+              <span class="s hi">9.0</span>
+              <div class="note">Same affordance as A</div>
+            </td>
+            <td>
+              <span class="s hi">9.5</span>
+              <div class="note">
+                Contextual CTA = right action at right time
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="dim">Consistency</td>
+            <td class="weight">20%</td>
+            <td>
+              <span class="s lo">6.5</span>
+              <div class="note">Wrong amber, ring tokens off, 10px label</div>
+            </td>
+            <td>
+              <span class="s hi">9.5</span>
+              <div class="note">All tokens from design system, 12px label</div>
+            </td>
+            <td>
+              <span class="s hi">9.5</span>
+              <div class="note">Same tokens + glow matches CompletionRing</div>
+            </td>
+            <td>
+              <span class="s hi">9.0</span>
+              <div class="note">
+                Pill swap is new pattern — small consistency cost
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="dim">Premium Zone</td>
+            <td class="weight">25%</td>
+            <td>
+              <span class="s md">7.0</span>
+              <div class="note">No conversion surface</div>
+            </td>
+            <td>
+              <span class="s md">7.5</span>
+              <div class="note">Gold explore is passive discovery</div>
+            </td>
+            <td>
+              <span class="s hi">9.0</span>
+              <div class="note">
+                Celebration → Explore pulse = conversion moment
+              </div>
+            </td>
+            <td>
+              <span class="s hi">9.5</span>
+              <div class="note">
+                "Insights ›" = premium CTA at peak dopamine
+              </div>
+            </td>
+          </tr>
+          <tr class="total-row">
+            <td class="dim">WEIGHTED TOTAL</td>
+            <td></td>
+            <td><span class="s lo" style="font-size: 16px">7.4</span></td>
+            <td><span class="s hi" style="font-size: 16px">8.8</span></td>
+            <td><span class="s hi" style="font-size: 16px">9.1</span></td>
+            <td><span class="s hi" style="font-size: 16px">9.4</span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- ════════════════════════════════════════
+       WHAT FIXED THE CONSISTENCY SCORE (ALL VARIANTS)
+       ════════════════════════════════════════ -->
+      <div class="section-label">
+        Token Fixes Applied to All Variations (6.5 → 9.0+)
+      </div>
+      <div class="delta-section">
+        <div class="delta-card">
+          <div class="title">
+            Amber → Burnished Gold <span class="delta up">+1.5</span>
+          </div>
+          <div class="desc">
+            Replaced CSS amber (#D97706, #FBBF24) with exact streak palette from
+            <code>colors/core.ts</code>. The app's gold is earthy/muted, not
+            bright/saturated.
+          </div>
+          <div class="tokens">
+            Light pill bg: streak.100 (#FEF3CD) @ 0.45 opacity Light pill text:
+            streak.700 (#7D5907) Light pill border: streak.500 (#8B6208) @ 0.15
+            opacity Dark pill bg: streak.500 (#8B6208) @ 0.10 opacity Dark pill
+            text: streak.300 (#E8B94D)
+          </div>
+        </div>
+        <div class="delta-card">
+          <div class="title">
+            Ring Track Token <span class="delta up">+0.5</span>
+          </div>
+          <div class="desc">
+            Ring track now uses <code>colors.border</code> (stone-200 light /
+            dark-700 dark) — matching <code>DailyProgressRing.tsx</code> line
+            96.
+          </div>
+          <div class="tokens">
+            Light track: var(--stone-200) = #DDD8D2 (colors.border) Dark track:
+            var(--dark-700) = #374151 (colors.border) Fill: primary[500] =
+            #10B981 light / #34D399 dark
+          </div>
+        </div>
+        <div class="delta-card">
+          <div class="title">
+            Progress Label 10px → 12px <span class="delta up">+0.3</span>
+          </div>
+          <div class="desc">
+            10px was below the app's minimum text size. 12px matches
+            <code>caption</code> scale in the typography system and
+            ProgressGreeting's date line size.
+          </div>
+          <div class="tokens">
+            font-size: 12px (matches labelSmall variant) font-weight: 600
+            (matches ProgressGreeting) color: colors.text.secondary (stone-500 /
+            dark-400)
+          </div>
+        </div>
+        <div class="delta-card">
+          <div class="title">
+            Celebration Glow Added <span class="delta up">+0.2</span>
+          </div>
+          <div class="desc">
+            All-done ring now shows glow shadow matching
+            <code>CompletionRing.helpers.ts</code> GLOW_SHADOW constant:
+            <code
+              >shadowColor: primary[500], shadowOpacity: 0.5, shadowRadius:
+              8</code
+            >.
+          </div>
+          <div class="tokens">
+            filter: drop-shadow(0 0 6px rgba(16,185,129,0.5)) FAB shadow: 0 0
+            16px rgba(16,185,129,0.4) on all-done
+          </div>
+        </div>
+      </div>
+
+      <!-- Recommendation -->
+      <div class="recommendation">
+        <h3>Recommendation: B + C Hybrid → 9.5</h3>
+        <p>
+          <strong>Ship B's normal state</strong> (burnished gold Explore,
+          progress ring, ghost Settings) — it scores 9.1 with zero new patterns.
+          <br /><br />
+          <strong>Add C's contextual pill swap on all-done only.</strong> When
+          all habits are complete, Explore becomes "Insights ›" in premium
+          purple. This is the highest-value moment — user just got a dopamine
+          hit, and "Insights" promises to show them their progress data. It
+          bridges celebration → premium feature discovery. <br /><br />
+          The B+C hybrid scores <strong>9.5</strong> by combining B's
+          consistency (9.5) with C's Premium Zone architecture (9.5). The pill
+          swap is the only new pattern introduced, and it only appears in the
+          celebration state — so the consistency cost is minimal (users see it
+          briefly, once per day, at their happiest moment). <br /><br />
+          <strong>Animation spec for the pill swap:</strong> Explore pill fades
+          out (opacity 1→0, 150ms ease-out) while Insights pill fades in
+          (opacity 0→1, 280ms ease-out + scale 0.95→1 spring d:18 s:150). Uses
+          standard exit/entrance timing — no new spring config needed.
+        </p>
+      </div>
+    </div>
+  </body>
+</html>

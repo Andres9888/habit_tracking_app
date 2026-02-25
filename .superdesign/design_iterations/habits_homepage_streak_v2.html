@@ -1,0 +1,510 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Habits Homepage — Streak-Focused v2</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800&family=Literata:opsz,wght@7..72,400;7..72,600;7..72,700;7..72,800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        -webkit-font-smoothing: antialiased;
+      }
+      body {
+        background: #1a1a2e;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        font-family: 'DM Sans', sans-serif;
+      }
+
+      .phone-frame {
+        width: 393px;
+        height: 852px;
+        background: #f5f1ed;
+        border-radius: 44px;
+        overflow: hidden;
+        position: relative;
+        box-shadow: 0 25px 80px rgba(0, 0, 0, 0.4);
+      }
+      .status-bar {
+        height: 54px;
+        padding: 14px 28px 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 15px;
+        font-weight: 600;
+        color: #2d2a26;
+      }
+      .status-icons {
+        display: flex;
+        gap: 6px;
+        align-items: center;
+        font-size: 13px;
+      }
+
+      .screen {
+        padding: 0 20px;
+        height: calc(100% - 54px);
+        overflow-y: auto;
+      }
+      .screen::-webkit-scrollbar {
+        display: none;
+      }
+
+      /* Hero Streak Section */
+      .streak-hero {
+        text-align: center;
+        padding: 12px 0 20px;
+        position: relative;
+      }
+      .streak-number {
+        font-family: 'Literata', serif;
+        font-size: 64px;
+        font-weight: 800;
+        color: #2d2a26;
+        line-height: 1;
+        letter-spacing: -3px;
+      }
+      .streak-fire {
+        font-size: 32px;
+        position: relative;
+        top: -4px;
+      }
+      .streak-label {
+        font-size: 14px;
+        font-weight: 600;
+        color: #d97706;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        margin-top: 2px;
+      }
+      .streak-sub {
+        font-size: 13px;
+        color: #8c8580;
+        margin-top: 6px;
+      }
+      .streak-sub strong {
+        color: #059669;
+        font-weight: 700;
+      }
+
+      /* Chain visualization */
+      .chain-row {
+        display: flex;
+        justify-content: center;
+        gap: 0;
+        padding: 16px 0 8px;
+        align-items: center;
+      }
+      .chain-link {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        font-weight: 700;
+        position: relative;
+      }
+      .chain-link.done {
+        background: #10b981;
+        color: #fff;
+      }
+      .chain-link.today {
+        background: #2d2a26;
+        color: #f5f1ed;
+        box-shadow: 0 0 0 3px rgba(45, 42, 38, 0.15);
+      }
+      .chain-link.upcoming {
+        background: #ede9e4;
+        color: #c4bfba;
+      }
+
+      .chain-connector {
+        width: 12px;
+        height: 3px;
+        border-radius: 2px;
+      }
+      .chain-connector.active {
+        background: linear-gradient(90deg, #10b981, #34d399);
+      }
+      .chain-connector.inactive {
+        background: #ddd8d2;
+      }
+      .chain-connector.pending {
+        background: repeating-linear-gradient(
+          90deg,
+          #ddd8d2 0,
+          #ddd8d2 3px,
+          transparent 3px,
+          transparent 6px
+        );
+      }
+
+      .day-labels {
+        display: flex;
+        justify-content: center;
+        gap: 0;
+        padding: 4px 0;
+      }
+      .day-labels span {
+        width: 36px;
+        text-align: center;
+        font-size: 10px;
+        font-weight: 600;
+        color: #a8a29e;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      .day-labels span.today-label {
+        color: #2d2a26;
+        font-weight: 700;
+      }
+      .chain-spacer {
+        width: 12px;
+      }
+
+      /* Divider */
+      .section-divider {
+        height: 1px;
+        background: #ede9e4;
+        margin: 12px 0;
+      }
+
+      /* Habit list */
+      .habit-card {
+        background: #ffffff;
+        border-radius: 16px;
+        padding: 14px 16px;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        border: 1px solid #ede9e4;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 1px 3px rgba(45, 42, 38, 0.04);
+      }
+      .habit-card.completed {
+        background: #fafdf9;
+        border-color: #d1fae5;
+        opacity: 0.75;
+      }
+      .habit-card.completed .habit-name {
+        text-decoration: line-through;
+        color: #a8a29e;
+      }
+
+      .accent-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+      .accent-dot.green {
+        background: #10b981;
+      }
+      .accent-dot.amber {
+        background: #f59e0b;
+      }
+      .accent-dot.rose {
+        background: #f43f5e;
+      }
+      .accent-dot.violet {
+        background: #8b5cf6;
+      }
+
+      .habit-emoji {
+        font-size: 24px;
+        flex-shrink: 0;
+      }
+      .habit-info {
+        flex: 1;
+        min-width: 0;
+      }
+      .habit-name {
+        font-size: 15px;
+        font-weight: 600;
+        color: #2d2a26;
+        letter-spacing: -0.2px;
+      }
+      .habit-streak-inline {
+        display: inline-flex;
+        align-items: center;
+        gap: 3px;
+        font-size: 12px;
+        font-weight: 600;
+        color: #d97706;
+        margin-left: 6px;
+      }
+      .habit-meta {
+        font-size: 12px;
+        color: #a8a29e;
+        font-weight: 500;
+        margin-top: 1px;
+      }
+
+      .habit-check {
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        border: 2.5px solid #d4cfc9;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+      .habit-check.done {
+        background: #10b981;
+        border-color: #10b981;
+      }
+      .habit-check.done::after {
+        content: '✓';
+        color: #fff;
+        font-size: 13px;
+        font-weight: 700;
+      }
+
+      /* Motivational banner */
+      .motivation-card {
+        background: linear-gradient(135deg, #fef3c7, #fffbeb);
+        border-radius: 14px;
+        padding: 14px 16px;
+        margin: 12px 0;
+        border: 1px solid #fde68a;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .motivation-icon {
+        font-size: 28px;
+      }
+      .motivation-text {
+        font-size: 13px;
+        color: #92400e;
+        font-weight: 500;
+        line-height: 1.4;
+      }
+      .motivation-text strong {
+        font-weight: 700;
+        color: #78350f;
+      }
+
+      /* Bottom Bar */
+      .bottom-bar {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 10px 24px 34px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: rgba(245, 241, 237, 0.88);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-top: 1px solid rgba(221, 216, 210, 0.5);
+      }
+      .bar-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255, 255, 255, 0.6);
+        border: 1px solid rgba(221, 216, 210, 0.5);
+      }
+      .bar-icon svg {
+        width: 20px;
+        height: 20px;
+        stroke: #57534e;
+        fill: none;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      .add-btn {
+        width: 52px;
+        height: 52px;
+        border-radius: 16px;
+        background: linear-gradient(135deg, #10b981, #059669);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 20px rgba(16, 185, 129, 0.4);
+        margin-top: -18px;
+        border: 3px solid rgba(245, 241, 237, 0.9);
+      }
+      .add-btn svg {
+        width: 24px;
+        height: 24px;
+        stroke: #fff;
+        fill: none;
+        stroke-width: 2.5;
+        stroke-linecap: round;
+      }
+
+      .design-label {
+        position: fixed;
+        top: 16px;
+        left: 16px;
+        background: rgba(0, 0, 0, 0.7);
+        color: #fff;
+        padding: 6px 12px;
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: 600;
+        z-index: 999;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="design-label">v2 — Streak-Focused</div>
+    <div class="phone-frame">
+      <div class="status-bar">
+        <span>9:41</span>
+        <div class="status-icons">
+          <span>●●●●</span><span>WiFi</span><span>🔋</span>
+        </div>
+      </div>
+      <div class="screen">
+        <div class="streak-hero">
+          <div>
+            <span class="streak-fire">🔥</span>
+            <span class="streak-number">12</span>
+          </div>
+          <div class="streak-label">Day Streak</div>
+          <div class="streak-sub">
+            Your longest was <strong>21 days</strong> — keep going!
+          </div>
+        </div>
+
+        <div class="chain-row">
+          <div class="chain-link done" style="font-size: 11px">M</div>
+          <div class="chain-connector active"></div>
+          <div class="chain-link done" style="font-size: 11px">T</div>
+          <div class="chain-connector active"></div>
+          <div class="chain-link done" style="font-size: 11px">W</div>
+          <div class="chain-connector active"></div>
+          <div class="chain-link done" style="font-size: 11px">T</div>
+          <div class="chain-connector active"></div>
+          <div class="chain-link done" style="font-size: 11px">F</div>
+          <div class="chain-connector active"></div>
+          <div class="chain-link done" style="font-size: 11px">S</div>
+          <div class="chain-connector active"></div>
+          <div class="chain-link today">Tu</div>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <div class="habit-card completed">
+          <div class="accent-dot green"></div>
+          <span class="habit-emoji">🏃</span>
+          <div class="habit-info">
+            <div class="habit-name">
+              Morning Run
+              <span class="habit-streak-inline">🔥 12</span>
+            </div>
+            <div class="habit-meta">Done at 6:42 AM</div>
+          </div>
+          <div class="habit-check done"></div>
+        </div>
+
+        <div class="habit-card completed">
+          <div class="accent-dot green"></div>
+          <span class="habit-emoji">🧘</span>
+          <div class="habit-info">
+            <div class="habit-name">
+              Meditate
+              <span class="habit-streak-inline">🔥 8</span>
+            </div>
+            <div class="habit-meta">Done at 7:15 AM</div>
+          </div>
+          <div class="habit-check done"></div>
+        </div>
+
+        <div class="habit-card completed">
+          <div class="accent-dot green"></div>
+          <span class="habit-emoji">💧</span>
+          <div class="habit-info">
+            <div class="habit-name">Drink 2L Water</div>
+            <div class="habit-meta">Done at 2:30 PM</div>
+          </div>
+          <div class="habit-check done"></div>
+        </div>
+
+        <div class="habit-card completed">
+          <div class="accent-dot green"></div>
+          <span class="habit-emoji">📖</span>
+          <div class="habit-info">
+            <div class="habit-name">Read 20 Pages</div>
+            <div class="habit-meta">Done at 9:00 PM</div>
+          </div>
+          <div class="habit-check done"></div>
+        </div>
+
+        <div class="motivation-card">
+          <div class="motivation-icon">⚡</div>
+          <div class="motivation-text">
+            <strong>2 habits left</strong> to complete your perfect day and
+            extend your streak to 13!
+          </div>
+        </div>
+
+        <div class="habit-card">
+          <div class="accent-dot amber"></div>
+          <span class="habit-emoji">✍️</span>
+          <div class="habit-info">
+            <div class="habit-name">Journal</div>
+            <div class="habit-meta">Evening · 10 min</div>
+          </div>
+          <div class="habit-check"></div>
+        </div>
+
+        <div class="habit-card">
+          <div class="accent-dot rose"></div>
+          <span class="habit-emoji">🎸</span>
+          <div class="habit-info">
+            <div class="habit-name">Practice Guitar</div>
+            <div class="habit-meta">Anytime · 15 min</div>
+          </div>
+          <div class="habit-check"></div>
+        </div>
+
+        <div style="height: 120px"></div>
+      </div>
+
+      <div class="bottom-bar">
+        <div class="bar-icon">
+          <svg>
+            <path
+              d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"
+            />
+            <circle cx="12" cy="12" r="3" />
+          </svg>
+        </div>
+        <div class="add-btn">
+          <svg><path d="M12 5v14M5 12h14" /></svg>
+        </div>
+        <div class="bar-icon">
+          <svg>
+            <path
+              d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"
+            />
+          </svg>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

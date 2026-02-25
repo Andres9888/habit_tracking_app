@@ -1,0 +1,554 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Habits — Progress Ring Header</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800&family=Literata:opsz,wght@7..72,400;7..72,600;7..72,700;7..72,800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        -webkit-font-smoothing: antialiased;
+      }
+      body {
+        background: #1a1a2e;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        font-family: 'DM Sans', sans-serif;
+      }
+
+      .phone-frame {
+        width: 393px;
+        height: 852px;
+        background: #f5f1ed;
+        border-radius: 44px;
+        overflow: hidden;
+        position: relative;
+        box-shadow: 0 25px 80px rgba(0, 0, 0, 0.4);
+      }
+      .status-bar {
+        height: 54px;
+        padding: 14px 28px 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 15px;
+        font-weight: 600;
+        color: #2d2a26;
+      }
+      .status-icons {
+        display: flex;
+        gap: 6px;
+        align-items: center;
+        font-size: 13px;
+      }
+
+      .screen {
+        padding: 0;
+        height: calc(100% - 54px);
+        overflow-y: auto;
+      }
+      .screen::-webkit-scrollbar {
+        display: none;
+      }
+
+      /* Progress Ring Header */
+      .ring-header {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        padding: 8px 24px 16px;
+      }
+      .ring-container {
+        width: 88px;
+        height: 88px;
+        position: relative;
+        flex-shrink: 0;
+      }
+      .ring-svg {
+        width: 100%;
+        height: 100%;
+        transform: rotate(-90deg);
+      }
+      .ring-bg {
+        fill: none;
+        stroke: #ede9e4;
+        stroke-width: 6;
+      }
+      .ring-progress {
+        fill: none;
+        stroke: url(#greenGrad);
+        stroke-width: 6;
+        stroke-linecap: round;
+        stroke-dasharray: 251.3;
+        stroke-dashoffset: 62.8; /* 75% complete: 251.3 * 0.25 */
+        transition: stroke-dashoffset 1s ease;
+      }
+      .ring-center {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+      }
+      .ring-percent {
+        font-size: 22px;
+        font-weight: 800;
+        color: #2d2a26;
+        letter-spacing: -1px;
+        line-height: 1;
+      }
+      .ring-fraction {
+        font-size: 11px;
+        color: #8c8580;
+        font-weight: 600;
+      }
+
+      .ring-info {
+        flex: 1;
+      }
+      .ring-greeting {
+        font-family: 'Literata', serif;
+        font-size: 24px;
+        font-weight: 800;
+        color: #2d2a26;
+        letter-spacing: -0.5px;
+        line-height: 1.15;
+      }
+      .ring-date {
+        font-size: 13px;
+        color: #8c8580;
+        font-weight: 500;
+        margin-top: 2px;
+      }
+      .ring-streak {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        margin-top: 6px;
+        background: #fef3c7;
+        border: 1px solid #fde68a;
+        border-radius: 8px;
+        padding: 3px 8px;
+        font-size: 12px;
+        font-weight: 700;
+        color: #d97706;
+      }
+
+      /* Compact Timeline */
+      .compact-timeline {
+        display: flex;
+        justify-content: space-between;
+        padding: 0 24px 14px;
+        align-items: center;
+      }
+      .ct-day {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+        flex: 1;
+      }
+      .ct-label {
+        font-size: 10px;
+        font-weight: 600;
+        color: #a8a29e;
+        text-transform: uppercase;
+      }
+      .ct-dot {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        font-weight: 700;
+      }
+      .ct-dot.complete {
+        background: #d1fae5;
+        color: #059669;
+      }
+      .ct-dot.complete::after {
+        content: '✓';
+      }
+      .ct-dot.today {
+        background: #2d2a26;
+        color: #f5f1ed;
+      }
+      .ct-dot.future {
+        background: #ede9e4;
+        color: #c4bfba;
+      }
+      .ct-dot.partial {
+        background: #fef3c7;
+        color: #d97706;
+      }
+
+      /* Habit list */
+      .habits-list {
+        padding: 0 20px;
+      }
+
+      .section-label {
+        font-size: 12px;
+        font-weight: 700;
+        color: #a8a29e;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        padding: 12px 4px 8px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .section-remaining {
+        color: #10b981;
+      }
+
+      .habit-row {
+        background: #ffffff;
+        border-radius: 14px;
+        padding: 13px 14px;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        border: 1px solid #ede9e4;
+        box-shadow: 0 1px 3px rgba(45, 42, 38, 0.03);
+        transition: all 0.15s ease;
+      }
+      .habit-row:active {
+        transform: scale(0.98);
+      }
+      .habit-row.done {
+        background: #fafdf9;
+        border-color: #d1fae5;
+      }
+
+      .h-emoji {
+        font-size: 22px;
+      }
+      .h-info {
+        flex: 1;
+      }
+      .h-name {
+        font-size: 15px;
+        font-weight: 600;
+        color: #2d2a26;
+      }
+      .h-name.struck {
+        color: #a8a29e;
+        text-decoration: line-through;
+      }
+      .h-meta {
+        font-size: 12px;
+        color: #8c8580;
+        margin-top: 1px;
+      }
+      .h-right {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .h-streak {
+        font-size: 11px;
+        font-weight: 700;
+        color: #d97706;
+      }
+
+      .h-check {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        border: 2.5px solid #d4cfc9;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .h-check.done {
+        background: #10b981;
+        border-color: #10b981;
+      }
+      .h-check.done::after {
+        content: '✓';
+        color: #fff;
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      /* Motivational nudge */
+      .nudge-card {
+        margin: 8px 0;
+        padding: 12px 14px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #eff6ff, #dbeafe);
+        border: 1px solid #bfdbfe;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .nudge-icon {
+        font-size: 20px;
+      }
+      .nudge-text {
+        font-size: 13px;
+        color: #1e40af;
+        font-weight: 500;
+        line-height: 1.3;
+      }
+      .nudge-text strong {
+        font-weight: 700;
+      }
+
+      /* Bottom Bar */
+      .bottom-bar {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 8px 20px 34px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: rgba(245, 241, 237, 0.88);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-top: 1px solid rgba(221, 216, 210, 0.5);
+      }
+      .b-btn {
+        width: 42px;
+        height: 42px;
+        border-radius: 11px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255, 255, 255, 0.6);
+        border: 1px solid rgba(221, 216, 210, 0.5);
+      }
+      .b-btn svg {
+        width: 18px;
+        height: 18px;
+        stroke: #57534e;
+        fill: none;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      .b-add {
+        width: 48px;
+        height: 48px;
+        border-radius: 14px;
+        background: linear-gradient(135deg, #10b981, #059669);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 16px rgba(16, 185, 129, 0.35);
+        margin-top: -14px;
+        border: 3px solid rgba(245, 241, 237, 0.9);
+      }
+      .b-add svg {
+        width: 22px;
+        height: 22px;
+        stroke: #fff;
+        fill: none;
+        stroke-width: 2.5;
+        stroke-linecap: round;
+      }
+
+      .design-label {
+        position: fixed;
+        top: 16px;
+        left: 16px;
+        background: rgba(0, 0, 0, 0.7);
+        color: #fff;
+        padding: 6px 12px;
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: 600;
+        z-index: 999;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="design-label">v7 — Progress Ring Dashboard</div>
+    <div class="phone-frame">
+      <div class="status-bar">
+        <span>9:41</span>
+        <div class="status-icons">
+          <span>●●●●</span><span>WiFi</span><span>🔋</span>
+        </div>
+      </div>
+      <div class="screen">
+        <div class="ring-header">
+          <div class="ring-container">
+            <svg class="ring-svg" viewBox="0 0 88 88">
+              <defs>
+                <linearGradient
+                  id="greenGrad"
+                  x1="0%"
+                  y1="0%"
+                  x2="100%"
+                  y2="100%"
+                >
+                  <stop offset="0%" style="stop-color: #10b981" />
+                  <stop offset="100%" style="stop-color: #059669" />
+                </linearGradient>
+              </defs>
+              <circle class="ring-bg" cx="44" cy="44" r="40" />
+              <circle class="ring-progress" cx="44" cy="44" r="40" />
+            </svg>
+            <div class="ring-center">
+              <div class="ring-percent">67%</div>
+              <div class="ring-fraction">4/6</div>
+            </div>
+          </div>
+          <div class="ring-info">
+            <div class="ring-greeting">Tuesday</div>
+            <div class="ring-date">February 25, 2026</div>
+            <div class="ring-streak">🔥 12 day streak</div>
+          </div>
+        </div>
+
+        <div class="compact-timeline">
+          <div class="ct-day">
+            <span class="ct-label">M</span>
+            <div class="ct-dot complete"></div>
+          </div>
+          <div class="ct-day">
+            <span class="ct-label">T</span>
+            <div class="ct-dot complete"></div>
+          </div>
+          <div class="ct-day">
+            <span class="ct-label">W</span>
+            <div class="ct-dot complete"></div>
+          </div>
+          <div class="ct-day">
+            <span class="ct-label">T</span>
+            <div class="ct-dot complete"></div>
+          </div>
+          <div class="ct-day">
+            <span class="ct-label">F</span>
+            <div class="ct-dot complete"></div>
+          </div>
+          <div class="ct-day">
+            <span class="ct-label">S</span>
+            <div class="ct-dot partial">½</div>
+          </div>
+          <div class="ct-day">
+            <span class="ct-label" style="color: #2d2a26; font-weight: 700"
+              >Tu</span
+            >
+            <div class="ct-dot today">25</div>
+          </div>
+        </div>
+
+        <div class="habits-list">
+          <div class="section-label">
+            Done
+            <span>4 of 6</span>
+          </div>
+
+          <div class="habit-row done">
+            <span class="h-emoji">🏃</span>
+            <div class="h-info">
+              <div class="h-name struck">Morning Run</div>
+              <div class="h-meta">6:42 AM</div>
+            </div>
+            <div class="h-right">
+              <span class="h-streak">🔥 12</span>
+              <div class="h-check done"></div>
+            </div>
+          </div>
+          <div class="habit-row done">
+            <span class="h-emoji">🧘</span>
+            <div class="h-info">
+              <div class="h-name struck">Meditate</div>
+              <div class="h-meta">7:15 AM</div>
+            </div>
+            <div class="h-right">
+              <span class="h-streak">🔥 8</span>
+              <div class="h-check done"></div>
+            </div>
+          </div>
+          <div class="habit-row done">
+            <span class="h-emoji">💧</span>
+            <div class="h-info">
+              <div class="h-name struck">Drink 2L Water</div>
+              <div class="h-meta">2:30 PM</div>
+            </div>
+            <div class="h-right"><div class="h-check done"></div></div>
+          </div>
+          <div class="habit-row done">
+            <span class="h-emoji">📖</span>
+            <div class="h-info">
+              <div class="h-name struck">Read 20 Pages</div>
+              <div class="h-meta">3:45 PM</div>
+            </div>
+            <div class="h-right"><div class="h-check done"></div></div>
+          </div>
+
+          <div class="section-label">
+            Remaining
+            <span class="section-remaining">2 to go!</span>
+          </div>
+
+          <div class="nudge-card">
+            <span class="nudge-icon">⚡</span>
+            <div class="nudge-text">
+              <strong>2 more</strong> for a perfect day and your
+              <strong>13th streak day!</strong>
+            </div>
+          </div>
+
+          <div class="habit-row">
+            <span class="h-emoji">✍️</span>
+            <div class="h-info">
+              <div class="h-name">Journal</div>
+              <div class="h-meta">Evening · 10 min</div>
+            </div>
+            <div class="h-right"><div class="h-check"></div></div>
+          </div>
+          <div class="habit-row">
+            <span class="h-emoji">🎸</span>
+            <div class="h-info">
+              <div class="h-name">Practice Guitar</div>
+              <div class="h-meta">Anytime · 15 min</div>
+            </div>
+            <div class="h-right"><div class="h-check"></div></div>
+          </div>
+
+          <div style="height: 100px"></div>
+        </div>
+      </div>
+
+      <div class="bottom-bar">
+        <div class="b-btn">
+          <svg>
+            <path
+              d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"
+            />
+            <circle cx="12" cy="12" r="3" />
+          </svg>
+        </div>
+        <div class="b-add">
+          <svg><path d="M12 5v14M5 12h14" /></svg>
+        </div>
+        <div class="b-btn">
+          <svg>
+            <path
+              d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"
+            />
+          </svg>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

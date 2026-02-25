@@ -1,7 +1,17 @@
-import React, { useEffect, useRef } from 'react';
-import { Animated, Text, View } from 'react-native';
+import React, { useEffect, useMemo, useRef } from 'react';
+import { Animated, Text } from 'react-native';
 import Svg, { Circle } from 'react-native-svg';
 import { fontFamilies } from '@/theme/typography';
+import {
+  CIRCUMFERENCE,
+  GLOW_SHADOW,
+  RADIUS,
+  RING_COLORS,
+  RING_SIZE,
+  STROKE_WIDTH,
+  getRingGeometry,
+  useCelebrationPulse,
+} from './CompletionRing.helpers';
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
@@ -9,36 +19,35 @@ interface CompletionRingProps {
   completed: number;
   total: number;
   reduceMotion?: boolean;
+  /** Override default ring size (64px) */
+  size?: number;
 }
 
-const RING_SIZE = 36;
-const STROKE_WIDTH = 3;
-const RADIUS = (RING_SIZE - STROKE_WIDTH) / 2;
-const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
-
-const RING_COLORS = {
-  track: '#f5f5f4', // stone-100
-  progress: '#10b981', // emerald-500
-  text: '#44403c', // stone-700
-  completeText: '#059669', // emerald-600
-};
-
-/** Circular progress ring showing daily completion ratio */
+/** Circular progress ring with celebration pulse on 100% completion */
 export const CompletionRing: React.FC<CompletionRingProps> = ({
   completed,
   total,
   reduceMotion = false,
+  size,
 }) => {
   const animatedProgress = useRef(new Animated.Value(0)).current;
   const ratio = total > 0 ? completed / total : 0;
   const isComplete = completed === total && total > 0;
+  const scaleAnim = useCelebrationPulse(isComplete, reduceMotion);
+
+  // Use custom geometry when size is provided, otherwise use default constants
+  const geom = useMemo(() => (size ? getRingGeometry(size) : null), [size]);
+  const s = size ?? RING_SIZE;
+  const r = geom?.radius ?? RADIUS;
+  const sw = geom?.strokeWidth ?? STROKE_WIDTH;
+  const c = geom?.circumference ?? CIRCUMFERENCE;
+  const fs = geom?.fontSize ?? 14;
 
   useEffect(() => {
     if (reduceMotion) {
       animatedProgress.setValue(ratio);
       return;
     }
-
     Animated.timing(animatedProgress, {
       duration: 600,
       toValue: ratio,
@@ -48,56 +57,54 @@ export const CompletionRing: React.FC<CompletionRingProps> = ({
 
   const strokeDashoffset = animatedProgress.interpolate({
     inputRange: [0, 1],
-    outputRange: [CIRCUMFERENCE, 0],
+    outputRange: [c, 0],
   });
 
   if (total === 0) return null;
 
   return (
-    <View
+    <Animated.View
       style={{
-        width: RING_SIZE,
-        height: RING_SIZE,
+        width: s,
+        height: s,
         alignItems: 'center',
         justifyContent: 'center',
+        transform: [{ scale: scaleAnim }],
+        ...(isComplete ? GLOW_SHADOW : {}),
       }}
     >
-      <Svg
-        height={RING_SIZE}
-        width={RING_SIZE}
-        style={{ transform: [{ rotate: '-90deg' }] }}
-      >
+      <Svg height={s} width={s} style={{ transform: [{ rotate: '-90deg' }] }}>
         <Circle
-          cx={RING_SIZE / 2}
-          cy={RING_SIZE / 2}
+          cx={s / 2}
+          cy={s / 2}
           fill='transparent'
-          r={RADIUS}
+          r={r}
           stroke={RING_COLORS.track}
-          strokeWidth={STROKE_WIDTH}
+          strokeWidth={sw}
         />
         <AnimatedCircle
-          cx={RING_SIZE / 2}
-          cy={RING_SIZE / 2}
+          cx={s / 2}
+          cy={s / 2}
           fill='transparent'
-          r={RADIUS}
+          r={r}
           stroke={RING_COLORS.progress}
-          strokeDasharray={CIRCUMFERENCE}
+          strokeDasharray={c}
           strokeDashoffset={strokeDashoffset}
           strokeLinecap='round'
-          strokeWidth={STROKE_WIDTH}
+          strokeWidth={sw}
         />
       </Svg>
       <Text
         style={{
           color: isComplete ? RING_COLORS.completeText : RING_COLORS.text,
           fontFamily: fontFamilies.primary.text,
-          fontSize: 10,
+          fontSize: fs,
           fontWeight: '800',
           position: 'absolute',
         }}
       >
         {completed}/{total}
       </Text>
-    </View>
+    </Animated.View>
   );
 };

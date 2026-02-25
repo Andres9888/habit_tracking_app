@@ -6,7 +6,7 @@ import {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import { CONTAINER_SHADOW, getColors } from './CalendarTimeline.styles';
+import { getColors } from './CalendarTimeline.styles';
 import type {
   CompletionStatus,
   DayCompletionStatus,
@@ -34,12 +34,8 @@ export const useCalendarTimelineLogic = () => {
   return { isFuture, isToday };
 };
 
-/** Derives card style, themed colors, and augmented colors for the timeline card */
-export function useCardStyle(
-  highContrastMode: boolean,
-  isDark: boolean,
-  themeColors: { card: string; cardBorder: string }
-) {
+/** Derives themed colors and augmented colors for the timeline (borderless) */
+export function useTimelineColors(highContrastMode: boolean, isDark: boolean) {
   const colors = getColors(highContrastMode, isDark);
   return useMemo(() => {
     const hc = highContrastMode;
@@ -48,14 +44,8 @@ export function useCardStyle(
       borderWidth: hc ? 2 : 0,
       highContrastBorder: hc ? colors.dayBorder : undefined,
     };
-    const cardStyle = {
-      backgroundColor: hc ? 'transparent' : themeColors.card,
-      borderColor: hc ? 'transparent' : themeColors.cardBorder,
-      borderWidth: hc ? 0 : 1,
-      ...CONTAINER_SHADOW,
-    };
-    return { augmentedColors, cardStyle, colors };
-  }, [colors, highContrastMode, themeColors.card, themeColors.cardBorder]);
+    return { augmentedColors, colors };
+  }, [colors, highContrastMode]);
 }
 
 const SLIDE_OFFSET = 24;
@@ -69,7 +59,11 @@ export function useWeekTransition(dates: Date[], reduceMotion: boolean) {
 
   useEffect(() => {
     const firstIso = dates[0]?.toISOString() ?? '';
-    if (prevFirstIso.current && prevFirstIso.current !== firstIso && !reduceMotion) {
+    if (
+      prevFirstIso.current &&
+      prevFirstIso.current !== firstIso &&
+      !reduceMotion
+    ) {
       const forward = firstIso > prevFirstIso.current;
       translateX.value = forward ? SLIDE_OFFSET : -SLIDE_OFFSET;
       opacity.value = 0.3;

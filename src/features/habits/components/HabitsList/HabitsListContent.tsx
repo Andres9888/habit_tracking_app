@@ -33,8 +33,14 @@ export function HabitsListContent({
   renderItem,
   handleSuccessTransitionComplete,
 }: HabitsListContentProps) {
-  const { list, modals, onUpgradeIntent } = props;
-  const { upgradePromptVisible, onUpgradeDismiss, onUpgradeConfirm } = props;
+  const {
+    list,
+    modals,
+    onUpgradeIntent,
+    upgradePromptVisible,
+    onUpgradeDismiss,
+    onUpgradeConfirm,
+  } = props;
 
   const isEmpty = list.habits.length === 0;
   const contentContainerStyle = useMemo(
@@ -44,7 +50,11 @@ export function HabitsListContent({
       paddingHorizontal: isEmpty ? 0 : list.contentPadding.paddingHorizontal,
       paddingTop: 0,
     }),
-    [isEmpty, list.contentPadding.paddingBottom, list.contentPadding.paddingHorizontal]
+    [
+      isEmpty,
+      list.contentPadding.paddingBottom,
+      list.contentPadding.paddingHorizontal,
+    ]
   );
 
   const listEmptyComponent = useMemo(
@@ -102,15 +112,17 @@ export function HabitsListContent({
         onDragEnd={list.handleDragEnd}
       />
       <HabitsListModals
-        handlers={handlers}
-        list={list}
-        state={state}
+        daySheetDate={state.daySheetDate}
+        getHabitStatus={list.getHabitStatus}
+        habits={list.habits}
+        reduceMotion={list.reduceMotionPreference}
+        toggleHabit={list.toggleHabit}
         upgradePromptVisible={upgradePromptVisible}
+        onCloseDaySheet={state.closeDaySheet}
         onUpgradeConfirm={onUpgradeConfirm}
         onUpgradeDismiss={onUpgradeDismiss}
       />
     </View>
   );
 }
-
 export { type HabitsListContentProps } from './HabitsList.types';

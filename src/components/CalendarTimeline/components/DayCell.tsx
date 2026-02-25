@@ -9,6 +9,7 @@ import {
   getAccessibilityHint,
   getStatusText,
 } from './DayCell.helpers';
+import { ConnectorArms } from './ConnectorArms';
 import { DayCellContent } from './DayCellContent';
 
 /** Renders a single day cell in the timeline */
@@ -24,13 +25,18 @@ export const DayCell: React.FC<DayCellProps> = ({
   onDayPress,
   isDayPressEnabled,
   disableFutureDayPress,
+  connectLeft,
+  connectRight,
+  streakConnectorColor,
 }) => {
   const weekday = format(date, 'EEE');
   const dayNumber = format(date, 'd');
   const baseLabel = `${weekday}, ${format(date, 'MMM')} ${dayNumber}`;
 
   const isDayDisabled = Boolean(isUpcoming && disableFutureDayPress);
-  const canPressDay = Boolean(isDayPressEnabled && onDayPress && !isDayDisabled);
+  const canPressDay = Boolean(
+    isDayPressEnabled && onDayPress && !isDayDisabled
+  );
 
   const statusText = getStatusText(completionStatus);
   const accessibilityLabel = buildAccessibilityLabel(
@@ -51,6 +57,15 @@ export const DayCell: React.FC<DayCellProps> = ({
     weekday,
   };
 
+  const arms =
+    (connectLeft || connectRight) && streakConnectorColor ? (
+      <ConnectorArms
+        connectLeft={Boolean(connectLeft)}
+        connectRight={Boolean(connectRight)}
+        streakConnectorColor={streakConnectorColor}
+      />
+    ) : null;
+
   if (onDayPress) {
     return (
       <Pressable
@@ -65,7 +80,10 @@ export const DayCell: React.FC<DayCellProps> = ({
         onPress={() => onDayPress(date)}
       >
         {({ pressed }) => (
-          <DayCellContent {...contentProps} pressed={pressed} />
+          <>
+            {arms}
+            <DayCellContent {...contentProps} pressed={pressed} />
+          </>
         )}
       </Pressable>
     );
@@ -78,6 +96,7 @@ export const DayCell: React.FC<DayCellProps> = ({
       accessibilityRole='text'
       className='flex-1 items-center gap-0.5'
     >
+      {arms}
       <DayCellContent {...contentProps} />
     </View>
   );

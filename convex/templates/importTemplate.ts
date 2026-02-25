@@ -10,6 +10,7 @@ import {
   requireValid,
   MAX_HABIT_NAME_LENGTH,
 } from '../lib/inputValidation';
+import { hasPremiumAccess } from '../subscriptions/premiumCheck';
 
 /**
  * Mutation: Import a template to create a new habit
@@ -32,6 +33,7 @@ export const importTemplate = mutation({
       throw new Error('Unauthenticated: Must be logged in to import templates');
     }
     const userId = identity.subject;
+    const isPremiumUser = await hasPremiumAccess(ctx, userId);
 
     const template = await ctx.db.get(args.templateId);
     if (!template) {
@@ -47,22 +49,35 @@ export const importTemplate = mutation({
         throw new Error('Custom habit name cannot be empty');
       }
       if (validatedName.length > MAX_HABIT_NAME_LENGTH) {
-        throw new Error(`Custom habit name cannot exceed ${MAX_HABIT_NAME_LENGTH} characters`);
+        throw new Error(
+          `Custom habit name cannot exceed ${MAX_HABIT_NAME_LENGTH} characters`
+        );
       }
     }
 
     // SEC-003: Input validation - iconColor customization
     let validatedIconColor = template.iconColor;
     if (args.customizations?.iconColor !== undefined) {
-      const iconColorResult = validateColor(args.customizations.iconColor, 'Icon color');
-      validatedIconColor = requireValid(iconColorResult, args.customizations.iconColor) ?? template.iconColor;
+      const iconColorResult = validateColor(
+        args.customizations.iconColor,
+        'Icon color'
+      );
+      validatedIconColor =
+        requireValid(iconColorResult, args.customizations.iconColor) ??
+        template.iconColor;
     }
 
     // SEC-003: Input validation - reminderTime customization
     let validatedReminderTime = args.customizations?.reminderTime;
     if (validatedReminderTime !== undefined) {
-      const reminderTimeResult = validateTimeFormat(validatedReminderTime, 'Reminder time');
-      validatedReminderTime = requireValid(reminderTimeResult, validatedReminderTime);
+      const reminderTimeResult = validateTimeFormat(
+        validatedReminderTime,
+        'Reminder time'
+      );
+      validatedReminderTime = requireValid(
+        reminderTimeResult,
+        validatedReminderTime
+      );
     }
 
     // Get max order to place new habit at the end (filtered by current user)
@@ -70,6 +85,13 @@ export const importTemplate = mutation({
       .query('habits')
       .withIndex('by_userId', (q) => q.eq('userId', userId))
       .collect();
+
+    if (!isPremiumUser && userHabits.length >= 3) {
+      throw new Error(
+        'Free tier is limited to 3 habits. Upgrade to premium for unlimited habits.'
+      );
+    }
+
     let maxOrder = 0;
     for (const h of userHabits) {
       const order = h.order ?? 0;

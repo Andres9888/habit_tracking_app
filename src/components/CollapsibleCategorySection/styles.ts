@@ -5,7 +5,7 @@
 import { StyleSheet } from 'react-native';
 
 import { borderRadius } from '../../theme/spacing';
-import { typography, fontFamilies} from '../../theme/typography';
+import { typography, fontFamilies } from '../../theme/typography';
 
 import { useThemeColors } from '../../theme/ThemeContext';
 
@@ -19,6 +19,7 @@ const baseStyles = StyleSheet.create({
   },
   container: {
     marginBottom: 8,
+    overflow: 'hidden',
   },
   content: {
     marginTop: 8,

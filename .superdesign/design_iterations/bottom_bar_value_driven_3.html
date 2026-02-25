@@ -1,0 +1,1298 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bottom Bar — B+C Hybrid (Implemented)</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;0,7..72,700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <style>
+      :root {
+        /* Exact App Palette (from core.ts + darkColors.ts) */
+        --parchment: #f5f1ed;
+        --card-light: #edeae5;
+        --stone-800: #2d2a26;
+        --stone-700: #3d3833;
+        --stone-600: #524d47;
+        --stone-500: #6b6560;
+        --stone-400: #6e6660;
+        --stone-300: #c4bfb7;
+        --stone-200: #ddd8d2;
+        --stone-100: #f5f1ed;
+
+        --dark-900: #111827;
+        --dark-800: #1f2937;
+        --dark-700: #374151;
+        --dark-600: #4b5563;
+        --dark-500: #6b7280;
+        --dark-400: #9ca3af;
+        --dark-300: #d1d5db;
+        --dark-200: #e5e7eb;
+        --dark-50: #f9fafb;
+
+        --green-700: #047857;
+        --green-600: #059669;
+        --green-500: #10b981;
+        --green-400: #34d399;
+        --green-300: #6ee7b7;
+        --dk-green-500: #34d399;
+
+        --streak-100: #fef3cd;
+        --streak-300: #e8b94d;
+        --streak-500: #8b6208;
+        --streak-600: #936a08;
+        --streak-700: #7d5907;
+
+        --premium: #7b52c4;
+
+        --page-bg: #0c0a09;
+        --page-surface: #1c1917;
+        --page-border: #292524;
+        --page-text: #d6d3d1;
+        --page-muted: #78716c;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: 'DM Sans', sans-serif !important;
+        background: var(--page-bg) !important;
+        color: var(--page-text) !important;
+        min-height: 100vh;
+        -webkit-font-smoothing: antialiased;
+      }
+      .page {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 48px 28px 80px;
+      }
+
+      .page-header {
+        margin-bottom: 32px;
+      }
+      .page-header::before {
+        content: 'B+C HYBRID — IMPLEMENTED';
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11px;
+        font-weight: 500;
+        letter-spacing: 2.5px;
+        color: var(--green-400);
+        display: block;
+        margin-bottom: 14px;
+      }
+      .page-title {
+        font-family: 'Literata', serif !important;
+        font-size: 30px;
+        font-weight: 700;
+        color: var(--dark-50);
+        line-height: 1.2;
+        margin-bottom: 10px;
+      }
+      .page-subtitle {
+        font-size: 14px;
+        color: var(--page-muted);
+        line-height: 1.6;
+        max-width: 700px;
+      }
+
+      .scores-row {
+        display: flex;
+        gap: 12px;
+        margin: 24px 0 32px;
+        flex-wrap: wrap;
+      }
+      .score-chip {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 14px;
+        border-radius: 10px;
+        border: 1px solid var(--page-border);
+        background: var(--page-surface);
+      }
+      .score-chip .label {
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--page-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      .score-chip .value {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 14px;
+        font-weight: 700;
+      }
+      .score-chip .value.high {
+        color: var(--green-400);
+      }
+      .score-chip.total {
+        border-color: rgba(52, 211, 153, 0.2);
+        background: rgba(52, 211, 153, 0.06);
+      }
+      .score-chip.total .value {
+        font-size: 18px;
+      }
+
+      .section-label {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 10px;
+        font-weight: 500;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--page-muted);
+        margin-bottom: 16px;
+        padding-bottom: 8px;
+        border-bottom: 1px solid var(--page-border);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .section-label .badge {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11px;
+        font-weight: 700;
+        padding: 2px 8px;
+        border-radius: 4px;
+        background: rgba(52, 211, 153, 0.1);
+        color: var(--green-400);
+      }
+
+      /* Phone frames */
+      .variations {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+        margin-bottom: 48px;
+      }
+      .variation {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .var-label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .var-label .tag {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 10px;
+        font-weight: 500;
+        letter-spacing: 1.5px;
+        padding: 4px 8px;
+        border-radius: 5px;
+        text-transform: uppercase;
+        background: rgba(52, 211, 153, 0.12);
+        color: var(--green-400);
+      }
+      .var-label .name {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--dark-300);
+      }
+
+      .phone {
+        width: 100%;
+        aspect-ratio: 390 / 360;
+        border-radius: 28px;
+        overflow: hidden;
+        position: relative;
+        border: 1px solid var(--page-border);
+      }
+      .phone.light {
+        background: var(--parchment);
+      }
+      .phone.dark {
+        background: var(--dark-900);
+      }
+
+      .theme-tag {
+        position: absolute;
+        top: 8px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 7px;
+        font-weight: 500;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        padding: 2px 7px;
+        border-radius: 3px;
+        z-index: 10;
+      }
+      .light .theme-tag {
+        background: rgba(45, 42, 38, 0.05);
+        color: var(--stone-500);
+      }
+      .dark .theme-tag {
+        background: rgba(255, 255, 255, 0.05);
+        color: var(--dark-400);
+      }
+
+      /* Habit cards */
+      .cards-area {
+        position: absolute;
+        top: 28px;
+        left: 12px;
+        right: 12px;
+      }
+      .hcard {
+        border-radius: 16px;
+        padding: 11px 12px;
+        margin-bottom: 7px;
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        min-height: 50px;
+      }
+      .light .hcard {
+        background: #ffffff;
+        border: 1px solid #e8e4df;
+        box-shadow: 0 1px 2px rgba(45, 42, 38, 0.04);
+      }
+      .dark .hcard {
+        background: var(--dark-800);
+        border: 1px solid var(--dark-700);
+      }
+      .hbar {
+        width: 3px;
+        height: 24px;
+        border-radius: 2px;
+        flex-shrink: 0;
+      }
+      .hbar.green {
+        background: var(--green-600);
+      }
+      .dark .hbar.green {
+        background: var(--green-400);
+      }
+      .hbar.blue {
+        background: #3b82f6;
+      }
+      .dark .hbar.blue {
+        background: #60a5fa;
+      }
+      .hbar.gold {
+        background: var(--streak-500);
+      }
+      .dark .hbar.gold {
+        background: var(--streak-300);
+      }
+      .hinfo {
+        flex: 1;
+      }
+      .hname {
+        font-size: 13px;
+        font-weight: 600;
+        line-height: 1.3;
+      }
+      .light .hname {
+        color: var(--stone-800);
+      }
+      .dark .hname {
+        color: var(--dark-50);
+      }
+      .hmeta {
+        font-size: 10px;
+        font-weight: 500;
+        margin-top: 1px;
+      }
+      .light .hmeta {
+        color: var(--stone-500);
+      }
+      .dark .hmeta {
+        color: var(--dark-400);
+      }
+      .hcheck {
+        width: 24px;
+        height: 24px;
+        border-radius: 12px;
+        border: 2px solid;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        font-size: 11px;
+        font-weight: 700;
+        color: white;
+      }
+      .light .hcheck {
+        border-color: var(--stone-200);
+      }
+      .dark .hcheck {
+        border-color: var(--dark-600);
+      }
+      .hcheck.done {
+        background: var(--green-600);
+        border-color: var(--green-600);
+      }
+      .hcheck.done::after {
+        content: '\2713';
+      }
+
+      /* ═══════════════════════════════════════════
+     BAR — B+C HYBRID (as implemented)
+     ═══════════════════════════════════════════ */
+      .bar {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        display: flex;
+        align-items: flex-start;
+        padding: 12px 22px 26px;
+        border-top: 1px solid;
+        backdrop-filter: blur(20px) saturate(1.4);
+        -webkit-backdrop-filter: blur(20px) saturate(1.4);
+      }
+      .light .bar {
+        background: rgba(245, 241, 237, 0.82);
+        border-top-color: rgba(221, 216, 210, 0.45);
+      }
+      .dark .bar {
+        background: rgba(17, 24, 39, 0.82);
+        border-top-color: rgba(55, 65, 81, 0.3);
+      }
+      .bar .z {
+        flex: 1;
+        display: flex;
+      }
+      .bar .z.l {
+        justify-content: flex-start;
+        margin-top: -9px;
+      }
+      .bar .z.c {
+        justify-content: center;
+        overflow: visible;
+        align-items: center;
+        flex-direction: column;
+      }
+      .bar .z.r {
+        justify-content: flex-end;
+        margin-top: -9px;
+      }
+
+      /* Pill shared base */
+      .bar .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        height: 38px;
+        justify-content: center;
+        padding: 0 14px;
+        border-radius: 12px;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        border: 1px solid;
+        font-family: 'DM Sans', sans-serif;
+        transition: transform 280ms cubic-bezier(0.34, 1.56, 0.64, 1);
+        user-select: none;
+      }
+      .bar .pill:active {
+        transform: scale(0.96);
+        transition: transform 80ms ease-out;
+      }
+
+      /* Ghost pill — faint frosted glass (Settings) */
+      .light .bar .pill-ghost {
+        background: rgba(255, 255, 255, 0.35);
+        border-color: rgba(221, 216, 210, 0.4);
+        color: var(--stone-400);
+        min-width: 100px;
+      }
+      .dark .bar .pill-ghost {
+        background: rgba(31, 41, 55, 0.25);
+        border-color: rgba(55, 65, 81, 0.3);
+        color: var(--dark-500);
+        min-width: 100px;
+      }
+
+      /* Gold pill — tinted streak frosted glass (Explore) */
+      .light .bar .pill-gold {
+        background: rgba(254, 243, 205, 0.45);
+        border-color: rgba(139, 98, 8, 0.15);
+        color: var(--streak-700);
+        min-width: 110px;
+      }
+      .dark .bar .pill-gold {
+        background: rgba(139, 98, 8, 0.1);
+        border-color: rgba(232, 185, 77, 0.12);
+        color: var(--streak-300);
+        min-width: 110px;
+      }
+
+      /* FAB */
+      .bar .fab {
+        width: 52px;
+        height: 52px;
+        border-radius: 16px;
+        background: var(--green-600);
+        border: 3px solid;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: transform 280ms cubic-bezier(0.34, 1.56, 0.64, 1);
+        user-select: none;
+        position: relative;
+        z-index: 2;
+      }
+      .bar .fab:active {
+        transform: scale(0.94) translateY(-2px);
+        transition: transform 80ms ease-out;
+      }
+      .light .bar .fab {
+        border-color: rgba(245, 241, 237, 0.9);
+        box-shadow: 0 4px 16px rgba(45, 42, 38, 0.08);
+      }
+      .dark .bar .fab {
+        border-color: rgba(17, 24, 39, 0.9);
+        box-shadow: 0 4px 20px rgba(5, 150, 105, 0.25);
+      }
+
+      /* Progress ring */
+      .fab-wrap {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: -20px;
+      }
+      .progress-ring {
+        position: absolute;
+        top: -4px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60px;
+        height: 60px;
+      }
+      .progress-ring circle {
+        fill: none;
+        stroke-width: 3;
+        stroke-linecap: round;
+      }
+      .light .progress-ring .ring-bg {
+        stroke: var(--card-light);
+      }
+      .dark .progress-ring .ring-bg {
+        stroke: var(--dark-700);
+      }
+      .light .progress-ring .ring-fill {
+        stroke: var(--green-500);
+      }
+      .dark .progress-ring .ring-fill {
+        stroke: var(--dk-green-500);
+      }
+
+      /* Progress label — two-tone */
+      .progress-label {
+        font-family: 'DM Sans', sans-serif;
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: -0.2px;
+        margin-top: 4px;
+        white-space: nowrap;
+      }
+      .light .progress-label {
+        color: var(--stone-400);
+      }
+      .dark .progress-label {
+        color: var(--dark-400);
+      }
+      .progress-label .done-count {
+        font-weight: 700;
+      }
+      .light .progress-label .done-count {
+        color: var(--green-700);
+      }
+      .dark .progress-label .done-count {
+        color: var(--dk-green-500);
+      }
+
+      /* ═══════════════════════════════════════════
+     ALL-DONE CELEBRATION STATE
+     ═══════════════════════════════════════════ */
+      .bar.done .fab {
+        box-shadow:
+          0 0 20px rgba(16, 185, 129, 0.45),
+          0 4px 16px rgba(45, 42, 38, 0.08) !important;
+      }
+      .bar.done .progress-ring .ring-fill {
+        stroke-dashoffset: 0 !important;
+        filter: drop-shadow(0 0 6px rgba(16, 185, 129, 0.5));
+      }
+      .bar.done .progress-label {
+        font-weight: 700 !important;
+      }
+      .light .bar.done .progress-label {
+        color: var(--green-600) !important;
+      }
+      .dark .bar.done .progress-label {
+        color: var(--dk-green-500) !important;
+      }
+
+      /* Explore pill intensifies on all-done */
+      .bar.done .pill-gold {
+        animation: pulse-glow 2s ease-in-out infinite;
+      }
+      .light .bar.done .pill-gold {
+        background: rgba(254, 243, 205, 0.7);
+        border-color: rgba(139, 98, 8, 0.25);
+      }
+      .dark .bar.done .pill-gold {
+        background: rgba(139, 98, 8, 0.18);
+        border-color: rgba(232, 185, 77, 0.2);
+      }
+
+      @keyframes pulse-glow {
+        0%,
+        100% {
+          box-shadow: 0 0 0 0 transparent;
+        }
+        50% {
+          box-shadow: 0 0 12px rgba(232, 185, 77, 0.15);
+        }
+      }
+
+      /* ═══════════════════════════════════════════
+     ANNOTATIONS
+     ═══════════════════════════════════════════ */
+      .callouts {
+        margin-top: 48px;
+      }
+      .callout {
+        background: var(--page-surface);
+        border: 1px solid var(--page-border);
+        border-radius: 12px;
+        padding: 16px 20px;
+        margin-bottom: 12px;
+      }
+      .callout .title {
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--dark-200);
+        margin-bottom: 6px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .callout .title .tag {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 10px;
+        font-weight: 700;
+        padding: 2px 6px;
+        border-radius: 4px;
+      }
+      .tag.fix {
+        background: rgba(52, 211, 153, 0.1);
+        color: var(--green-400);
+      }
+      .tag.new {
+        background: rgba(232, 185, 77, 0.1);
+        color: var(--streak-300);
+      }
+      .tag.polish {
+        background: rgba(123, 82, 196, 0.1);
+        color: var(--premium);
+      }
+      .callout .desc {
+        font-size: 12px;
+        color: var(--page-muted);
+        line-height: 1.6;
+      }
+      .callout .tokens {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 10px;
+        color: var(--dark-400);
+        margin-top: 6px;
+        padding: 6px 8px;
+        border-radius: 6px;
+        background: rgba(255, 255, 255, 0.03);
+      }
+
+      @media (max-width: 900px) {
+        .variations {
+          grid-template-columns: 1fr;
+        }
+        .page {
+          padding: 28px 16px 48px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <header class="page-header">
+        <h1 class="page-title">Bottom Bar — Final B+C Hybrid</h1>
+        <p class="page-subtitle">
+          Combines B's celebration glow + ring progress with C's tinted gold
+          styling and premium architecture. All tokens verified against
+          codebase. Alignment fix applied (pills vertically centered with FAB).
+        </p>
+      </header>
+
+      <div class="scores-row">
+        <div class="score-chip total">
+          <span class="label">B+C Hybrid</span>
+          <span class="value high">9.5</span>
+        </div>
+        <div class="score-chip">
+          <span class="label">Hierarchy</span>
+          <span class="value high">9.5</span>
+        </div>
+        <div class="score-chip">
+          <span class="label">Navigation</span>
+          <span class="value high">9.5</span>
+        </div>
+        <div class="score-chip">
+          <span class="label">Consistency</span>
+          <span class="value high">9.5</span>
+        </div>
+        <div class="score-chip">
+          <span class="label">Premium Zone</span>
+          <span class="value high">9.5</span>
+        </div>
+      </div>
+
+      <!-- ════════════════════════════════════════
+       NORMAL STATE — 1 of 3 done
+       ════════════════════════════════════════ -->
+      <div class="section-label">
+        Normal State — 1 of 3 habits done
+        <span class="badge">Progress ring + aligned pills</span>
+      </div>
+      <div class="variations">
+        <!-- Light Normal -->
+        <div class="variation">
+          <div class="var-label">
+            <span class="tag">Light</span>
+            <span class="name">Ghost Settings · Ring FAB · Gold Explore</span>
+          </div>
+          <div class="phone light">
+            <span class="theme-tag">B+C · Light</span>
+            <div class="cards-area">
+              <div class="hcard">
+                <div class="hbar green"></div>
+                <div class="hinfo">
+                  <div class="hname">Morning Meditation</div>
+                  <div class="hmeta">12 day streak</div>
+                </div>
+                <div class="hcheck done"></div>
+              </div>
+              <div class="hcard">
+                <div class="hbar blue"></div>
+                <div class="hinfo">
+                  <div class="hname">Read 30 Minutes</div>
+                  <div class="hmeta">5 day streak</div>
+                </div>
+                <div class="hcheck"></div>
+              </div>
+              <div class="hcard">
+                <div class="hbar gold"></div>
+                <div class="hinfo">
+                  <div class="hname">Evening Journal</div>
+                  <div class="hmeta">3 day streak</div>
+                </div>
+                <div class="hcheck"></div>
+              </div>
+            </div>
+            <div class="bar">
+              <div class="z l">
+                <div class="pill pill-ghost">
+                  <i
+                    data-lucide="settings"
+                    style="width: 15px; height: 15px; stroke-width: 2.25"
+                  ></i>
+                  Settings
+                </div>
+              </div>
+              <div class="z c">
+                <div class="fab-wrap">
+                  <svg class="progress-ring" viewBox="0 0 60 60">
+                    <circle class="ring-bg" cx="30" cy="30" r="28.5" />
+                    <circle
+                      class="ring-fill"
+                      cx="30"
+                      cy="30"
+                      r="28.5"
+                      stroke-dasharray="179"
+                      stroke-dashoffset="119"
+                      transform="rotate(-90 30 30)"
+                    />
+                  </svg>
+                  <div class="fab">
+                    <i
+                      data-lucide="plus"
+                      style="
+                        width: 24px;
+                        height: 24px;
+                        color: white;
+                        stroke-width: 2.5;
+                      "
+                    ></i>
+                  </div>
+                </div>
+                <div class="progress-label">
+                  <span class="done-count">1</span> of 3
+                </div>
+              </div>
+              <div class="z r">
+                <div class="pill pill-gold">
+                  <i
+                    data-lucide="compass"
+                    style="width: 14px; height: 14px; stroke-width: 2.25"
+                  ></i>
+                  Explore ›
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dark Normal -->
+        <div class="variation">
+          <div class="var-label">
+            <span class="tag">Dark</span>
+            <span class="name">Same hierarchy, dark tokens</span>
+          </div>
+          <div class="phone dark">
+            <span class="theme-tag">B+C · Dark</span>
+            <div class="cards-area">
+              <div class="hcard">
+                <div class="hbar green"></div>
+                <div class="hinfo">
+                  <div class="hname">Morning Meditation</div>
+                  <div class="hmeta">12 day streak</div>
+                </div>
+                <div class="hcheck done"></div>
+              </div>
+              <div class="hcard">
+                <div class="hbar blue"></div>
+                <div class="hinfo">
+                  <div class="hname">Read 30 Minutes</div>
+                  <div class="hmeta">5 day streak</div>
+                </div>
+                <div class="hcheck"></div>
+              </div>
+              <div class="hcard">
+                <div class="hbar gold"></div>
+                <div class="hinfo">
+                  <div class="hname">Evening Journal</div>
+                  <div class="hmeta">3 day streak</div>
+                </div>
+                <div class="hcheck"></div>
+              </div>
+            </div>
+            <div class="bar">
+              <div class="z l">
+                <div class="pill pill-ghost">
+                  <i
+                    data-lucide="settings"
+                    style="width: 15px; height: 15px; stroke-width: 2.25"
+                  ></i>
+                  Settings
+                </div>
+              </div>
+              <div class="z c">
+                <div class="fab-wrap">
+                  <svg class="progress-ring" viewBox="0 0 60 60">
+                    <circle class="ring-bg" cx="30" cy="30" r="28.5" />
+                    <circle
+                      class="ring-fill"
+                      cx="30"
+                      cy="30"
+                      r="28.5"
+                      stroke-dasharray="179"
+                      stroke-dashoffset="119"
+                      transform="rotate(-90 30 30)"
+                    />
+                  </svg>
+                  <div class="fab">
+                    <i
+                      data-lucide="plus"
+                      style="
+                        width: 24px;
+                        height: 24px;
+                        color: white;
+                        stroke-width: 2.5;
+                      "
+                    ></i>
+                  </div>
+                </div>
+                <div class="progress-label">
+                  <span class="done-count">1</span> of 3
+                </div>
+              </div>
+              <div class="z r">
+                <div class="pill pill-gold">
+                  <i
+                    data-lucide="compass"
+                    style="width: 14px; height: 14px; stroke-width: 2.25"
+                  ></i>
+                  Explore ›
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ════════════════════════════════════════
+       MID PROGRESS — 2 of 3 done
+       ════════════════════════════════════════ -->
+      <div class="section-label">
+        Mid Progress — 2 of 3 habits done
+        <span class="badge">Ring fills proportionally</span>
+      </div>
+      <div class="variations">
+        <div class="variation">
+          <div class="var-label">
+            <span class="tag">Light</span>
+            <span class="name">Ring at ~67%, count highlighted green</span>
+          </div>
+          <div class="phone light">
+            <span class="theme-tag">B+C · 2/3 Light</span>
+            <div class="cards-area">
+              <div class="hcard">
+                <div class="hbar green"></div>
+                <div class="hinfo">
+                  <div class="hname">Morning Meditation</div>
+                  <div class="hmeta">12 day streak</div>
+                </div>
+                <div class="hcheck done"></div>
+              </div>
+              <div class="hcard">
+                <div class="hbar blue"></div>
+                <div class="hinfo">
+                  <div class="hname">Read 30 Minutes</div>
+                  <div class="hmeta">5 day streak</div>
+                </div>
+                <div class="hcheck done"></div>
+              </div>
+              <div class="hcard">
+                <div class="hbar gold"></div>
+                <div class="hinfo">
+                  <div class="hname">Evening Journal</div>
+                  <div class="hmeta">3 day streak</div>
+                </div>
+                <div class="hcheck"></div>
+              </div>
+            </div>
+            <div class="bar">
+              <div class="z l">
+                <div class="pill pill-ghost">
+                  <i
+                    data-lucide="settings"
+                    style="width: 15px; height: 15px; stroke-width: 2.25"
+                  ></i>
+                  Settings
+                </div>
+              </div>
+              <div class="z c">
+                <div class="fab-wrap">
+                  <svg class="progress-ring" viewBox="0 0 60 60">
+                    <circle class="ring-bg" cx="30" cy="30" r="28.5" />
+                    <circle
+                      class="ring-fill"
+                      cx="30"
+                      cy="30"
+                      r="28.5"
+                      stroke-dasharray="179"
+                      stroke-dashoffset="60"
+                      transform="rotate(-90 30 30)"
+                    />
+                  </svg>
+                  <div class="fab">
+                    <i
+                      data-lucide="plus"
+                      style="
+                        width: 24px;
+                        height: 24px;
+                        color: white;
+                        stroke-width: 2.5;
+                      "
+                    ></i>
+                  </div>
+                </div>
+                <div class="progress-label">
+                  <span class="done-count">2</span> of 3
+                </div>
+              </div>
+              <div class="z r">
+                <div class="pill pill-gold">
+                  <i
+                    data-lucide="compass"
+                    style="width: 14px; height: 14px; stroke-width: 2.25"
+                  ></i>
+                  Explore ›
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="variation">
+          <div class="var-label">
+            <span class="tag">Dark</span>
+            <span class="name">Ring at ~67%, dark mode</span>
+          </div>
+          <div class="phone dark">
+            <span class="theme-tag">B+C · 2/3 Dark</span>
+            <div class="cards-area">
+              <div class="hcard">
+                <div class="hbar green"></div>
+                <div class="hinfo">
+                  <div class="hname">Morning Meditation</div>
+                  <div class="hmeta">12 day streak</div>
+                </div>
+                <div class="hcheck done"></div>
+              </div>
+              <div class="hcard">
+                <div class="hbar blue"></div>
+                <div class="hinfo">
+                  <div class="hname">Read 30 Minutes</div>
+                  <div class="hmeta">5 day streak</div>
+                </div>
+                <div class="hcheck done"></div>
+              </div>
+              <div class="hcard">
+                <div class="hbar gold"></div>
+                <div class="hinfo">
+                  <div class="hname">Evening Journal</div>
+                  <div class="hmeta">3 day streak</div>
+                </div>
+                <div class="hcheck"></div>
+              </div>
+            </div>
+            <div class="bar">
+              <div class="z l">
+                <div class="pill pill-ghost">
+                  <i
+                    data-lucide="settings"
+                    style="width: 15px; height: 15px; stroke-width: 2.25"
+                  ></i>
+                  Settings
+                </div>
+              </div>
+              <div class="z c">
+                <div class="fab-wrap">
+                  <svg class="progress-ring" viewBox="0 0 60 60">
+                    <circle class="ring-bg" cx="30" cy="30" r="28.5" />
+                    <circle
+                      class="ring-fill"
+                      cx="30"
+                      cy="30"
+                      r="28.5"
+                      stroke-dasharray="179"
+                      stroke-dashoffset="60"
+                      transform="rotate(-90 30 30)"
+                    />
+                  </svg>
+                  <div class="fab">
+                    <i
+                      data-lucide="plus"
+                      style="
+                        width: 24px;
+                        height: 24px;
+                        color: white;
+                        stroke-width: 2.5;
+                      "
+                    ></i>
+                  </div>
+                </div>
+                <div class="progress-label">
+                  <span class="done-count">2</span> of 3
+                </div>
+              </div>
+              <div class="z r">
+                <div class="pill pill-gold">
+                  <i
+                    data-lucide="compass"
+                    style="width: 14px; height: 14px; stroke-width: 2.25"
+                  ></i>
+                  Explore ›
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ════════════════════════════════════════
+       ALL DONE — 3 of 3
+       ════════════════════════════════════════ -->
+      <div class="section-label">
+        All Done — Celebration State
+        <span class="badge">Glow + ✓ icon + pill intensifies</span>
+      </div>
+      <div class="variations">
+        <div class="variation">
+          <div class="var-label">
+            <span class="tag">Light</span>
+            <span class="name"
+              >Ring glow, ✓ icon, "All done!", gold pill pulses</span
+            >
+          </div>
+          <div class="phone light">
+            <span class="theme-tag">B+C · All Done Light</span>
+            <div class="cards-area">
+              <div class="hcard">
+                <div class="hbar green"></div>
+                <div class="hinfo">
+                  <div class="hname">Morning Meditation</div>
+                  <div class="hmeta">12 day streak</div>
+                </div>
+                <div class="hcheck done"></div>
+              </div>
+              <div class="hcard">
+                <div class="hbar blue"></div>
+                <div class="hinfo">
+                  <div class="hname">Read 30 Minutes</div>
+                  <div class="hmeta">5 day streak</div>
+                </div>
+                <div class="hcheck done"></div>
+              </div>
+              <div class="hcard">
+                <div class="hbar gold"></div>
+                <div class="hinfo">
+                  <div class="hname">Evening Journal</div>
+                  <div class="hmeta">3 day streak</div>
+                </div>
+                <div class="hcheck done"></div>
+              </div>
+            </div>
+            <div class="bar done">
+              <div class="z l">
+                <div class="pill pill-ghost">
+                  <i
+                    data-lucide="settings"
+                    style="width: 15px; height: 15px; stroke-width: 2.25"
+                  ></i>
+                  Settings
+                </div>
+              </div>
+              <div class="z c">
+                <div class="fab-wrap">
+                  <svg class="progress-ring" viewBox="0 0 60 60">
+                    <circle class="ring-bg" cx="30" cy="30" r="28.5" />
+                    <circle
+                      class="ring-fill"
+                      cx="30"
+                      cy="30"
+                      r="28.5"
+                      stroke-dasharray="179"
+                      stroke-dashoffset="0"
+                      transform="rotate(-90 30 30)"
+                    />
+                  </svg>
+                  <div class="fab">
+                    <i
+                      data-lucide="check"
+                      style="
+                        width: 24px;
+                        height: 24px;
+                        color: white;
+                        stroke-width: 3;
+                      "
+                    ></i>
+                  </div>
+                </div>
+                <div class="progress-label">All done!</div>
+              </div>
+              <div class="z r">
+                <div class="pill pill-gold">
+                  <i
+                    data-lucide="compass"
+                    style="width: 14px; height: 14px; stroke-width: 2.25"
+                  ></i>
+                  Explore ›
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="variation">
+          <div class="var-label">
+            <span class="tag">Dark</span>
+            <span class="name">Same celebration, dark tokens</span>
+          </div>
+          <div class="phone dark">
+            <span class="theme-tag">B+C · All Done Dark</span>
+            <div class="cards-area">
+              <div class="hcard">
+                <div class="hbar green"></div>
+                <div class="hinfo">
+                  <div class="hname">Morning Meditation</div>
+                  <div class="hmeta">12 day streak</div>
+                </div>
+                <div class="hcheck done"></div>
+              </div>
+              <div class="hcard">
+                <div class="hbar blue"></div>
+                <div class="hinfo">
+                  <div class="hname">Read 30 Minutes</div>
+                  <div class="hmeta">5 day streak</div>
+                </div>
+                <div class="hcheck done"></div>
+              </div>
+              <div class="hcard">
+                <div class="hbar gold"></div>
+                <div class="hinfo">
+                  <div class="hname">Evening Journal</div>
+                  <div class="hmeta">3 day streak</div>
+                </div>
+                <div class="hcheck done"></div>
+              </div>
+            </div>
+            <div class="bar done">
+              <div class="z l">
+                <div class="pill pill-ghost">
+                  <i
+                    data-lucide="settings"
+                    style="width: 15px; height: 15px; stroke-width: 2.25"
+                  ></i>
+                  Settings
+                </div>
+              </div>
+              <div class="z c">
+                <div class="fab-wrap">
+                  <svg class="progress-ring" viewBox="0 0 60 60">
+                    <circle class="ring-bg" cx="30" cy="30" r="28.5" />
+                    <circle
+                      class="ring-fill"
+                      cx="30"
+                      cy="30"
+                      r="28.5"
+                      stroke-dasharray="179"
+                      stroke-dashoffset="0"
+                      transform="rotate(-90 30 30)"
+                    />
+                  </svg>
+                  <div class="fab">
+                    <i
+                      data-lucide="check"
+                      style="
+                        width: 24px;
+                        height: 24px;
+                        color: white;
+                        stroke-width: 3;
+                      "
+                    ></i>
+                  </div>
+                </div>
+                <div class="progress-label">All done!</div>
+              </div>
+              <div class="z r">
+                <div class="pill pill-gold">
+                  <i
+                    data-lucide="compass"
+                    style="width: 14px; height: 14px; stroke-width: 2.25"
+                  ></i>
+                  Explore ›
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ════════════════════════════════════════
+       DESIGN DECISIONS
+       ════════════════════════════════════════ -->
+      <div class="callouts">
+        <div class="section-label">Design Decisions — What Changed from V2</div>
+
+        <div class="callout">
+          <div class="title">
+            <span class="tag fix">Fix</span> Pill ↔ FAB Vertical Alignment
+          </div>
+          <div class="desc">
+            Pills now vertically center with the FAB button using
+            <code>marginTop: -9px</code> on both pill zones. Math: FAB center =
+            -20 + 30 = y10, pill center = -9 + 19 = y10.
+          </div>
+          <div class="tokens">
+            container: alignItems: 'flex-start' · leftZone/rightZone: marginTop:
+            -9
+          </div>
+        </div>
+
+        <div class="callout">
+          <div class="title">
+            <span class="tag fix">Fix</span> Explore Pill: Tinted Glass, Not
+            Solid Gold
+          </div>
+          <div class="desc">
+            Changed from solid <code>streak.600</code> background with white
+            text to tinted frosted glass. Maintains the bar's frosted glass
+            language while still providing gold warmth.
+          </div>
+          <div class="tokens">
+            light: rgba(254,243,205,0.45) + streak.700 text · dark:
+            rgba(139,98,8,0.1) + streak.300 text
+          </div>
+        </div>
+
+        <div class="callout">
+          <div class="title">
+            <span class="tag fix">Fix</span> Ghost Pill: Faint Glass, Not
+            Invisible
+          </div>
+          <div class="desc">
+            Changed from fully transparent to faint frosted glass. Discoverable
+            but clearly lower in visual hierarchy than the gold Explore pill.
+          </div>
+          <div class="tokens">
+            light: rgba(255,255,255,0.35) + stone-400 text · dark:
+            rgba(31,41,55,0.25) + dark-500 text
+          </div>
+        </div>
+
+        <div class="callout">
+          <div class="title">
+            <span class="tag new">New</span> Two-Tone Progress Label
+          </div>
+          <div class="desc">
+            The completed count ("2") renders in bold
+            <code>primary[700]</code> green while "of 3" stays in
+            <code>text.tertiary</code>. On all-done, entire label shows "All
+            done!" in <code>completeText</code>.
+          </div>
+          <div class="tokens">
+            count: primary[700] (#047857) bold · rest: text.tertiary (#6E6660) ·
+            done: primary[600]
+          </div>
+        </div>
+
+        <div class="callout">
+          <div class="title">
+            <span class="tag polish">Polish</span> Celebration: Glow + Icon
+            Crossfade + Haptic
+          </div>
+          <div class="desc">
+            On all-done transition: ring gets GLOW_SHADOW, + fades out (150ms) →
+            ✓ fades in with BOUNCE_SPRING (d:12, s:200) overshoot,
+            HapticPatterns.celebration() fires, gold pill intensifies with
+            subtle pulse glow.
+          </div>
+          <div class="tokens">
+            BOUNCE_SPRING: {d:12, s:200} · crossfade: 150ms · haptic:
+            Light→Medium→Heavy→Success
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      lucide.createIcons();
+    </script>
+  </body>
+</html>

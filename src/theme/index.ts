@@ -492,7 +492,11 @@ export type AppTheme = typeof extendedTheme;
  * ```
  */
 import { useTheme } from 'react-native-paper';
-export const useAppTheme = () => useTheme<AppTheme>();
+export const useAppTheme = (): AppTheme => {
+  const currentTheme = useTheme<Partial<AppTheme>>();
+  const hasCustomTheme = Boolean(currentTheme.custom);
+  return hasCustomTheme ? (currentTheme as AppTheme) : (theme as AppTheme);
+};
 
 /**
  * Default Export

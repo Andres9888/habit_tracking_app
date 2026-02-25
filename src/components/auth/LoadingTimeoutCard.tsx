@@ -3,10 +3,7 @@
  * Error card shown when auth loading exceeds timeout.
  */
 
-import { Pressable, StyleSheet, Text, View } from 'react-native';
-
-import { colors } from '../../theme/colors'
-import { fontFamilies } from '../../theme/typography';;
+import { Pressable, Text, View } from 'react-native';
 
 interface LoadingTimeoutCardProps {
   onRetry: () => void;
@@ -14,65 +11,24 @@ interface LoadingTimeoutCardProps {
 
 export function LoadingTimeoutCard({ onRetry }: LoadingTimeoutCardProps) {
   return (
-    <View style={styles.card}>
-      <Text style={styles.title}>Taking longer than expected</Text>
-      <Text style={styles.description}>
+    <View className='mx-6 mt-2 items-center rounded-2xl border border-[#DDD8D2] bg-[#EDEAE5] p-6 shadow-md'>
+      <Text className="mb-2 text-center font-['DMSans'] text-[17px] font-semibold text-[#2D2A26]">
+        Taking longer than expected
+      </Text>
+      <Text className="mb-5 text-center font-['DMSans'] text-[13px] leading-5 text-[#6B6560]">
         We&apos;re having trouble connecting. Check your internet connection and
         try again.
       </Text>
       <Pressable
         accessibilityLabel='Try Again'
         accessibilityRole='button'
-        style={styles.button}
+        className='rounded-xl bg-emerald-600 px-8 py-3'
         onPress={onRetry}
       >
-        <Text style={styles.buttonText}>Try Again</Text>
+        <Text className="font-['DMSans'] text-[17px] font-semibold text-white">
+          Try Again
+        </Text>
       </Pressable>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  button: {
-    backgroundColor: colors.primary[600],
-    borderRadius: 12,
-    paddingHorizontal: 32,
-    paddingVertical: 12,
-  },
-  buttonText: {
-    color: colors.text.inverse,
-    fontFamily: fontFamilies.primary.text,
-    fontSize: 17,
-    fontWeight: '600',
-  },
-  card: {
-    alignItems: 'center',
-    backgroundColor: colors.light.card,
-    borderColor: colors.border,
-    borderRadius: 16,
-    borderWidth: 1,
-    marginHorizontal: 24,
-    marginTop: 8,
-    padding: 24,
-    shadowColor: '#000',
-    shadowOffset: { height: 4, width: 0 },
-    shadowOpacity: 0.08,
-    shadowRadius: 16,
-  },
-  description: {
-    color: colors.text.secondary,
-    fontFamily: fontFamilies.primary.text,
-    fontSize: 13,
-    lineHeight: 20,
-    marginBottom: 20,
-    textAlign: 'center',
-  },
-  title: {
-    color: colors.text.primary,
-    fontFamily: fontFamilies.primary.text,
-    fontSize: 17,
-    fontWeight: '600',
-    marginBottom: 8,
-    textAlign: 'center',
-  },
-});

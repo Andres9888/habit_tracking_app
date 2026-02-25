@@ -47,7 +47,8 @@ export function useEmptyStateColors() {
     chipShadow: isDark ? colors.gray[900] : '#1c1917',
 
     // Button colors
-    ctaBackground: isDark ? colors.primary[300] : '#047857', // emerald-700
+    ctaBackground: isDark ? colors.primary[500] : '#047857',
+    ctaShadow: isDark ? colors.primary[700] : '#047857',
     ctaText: '#ffffff',
     ctaDisabled: isDark ? colors.gray[300] : '#A8A29E',
 

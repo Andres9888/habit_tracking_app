@@ -1,54 +1,43 @@
 /**
  * HabitsListModals — overlay layer for the HabitsList screen.
  *
- * Manages two modal surfaces:
+ * Manages modal surfaces:
  * 1. **UpgradePrompt** — full-screen CTA shown when the user hits the free-tier limit.
- * 2. **DayHabitsBottomSheet** — shows habit completion status for a tapped calendar day.
- *
- * Note: SortBottomSheet was moved to HabitsModals (accessible from Settings).
+ * 2. **DayHabitsBottomSheet** — iOS-style sheet for toggling habits on a tapped day.
  */
 
 import { DayHabitsBottomSheet } from '../../../../components/DayHabitsBottomSheet';
+import type { Habit, HabitStatus } from '../../types';
 import { UpgradePrompt } from './UpgradePrompt';
-import type { HabitsListProps } from './HabitsList.types';
 
 export interface HabitsListModalsProps {
-  list: HabitsListProps['list'];
-  state: ReturnType<typeof import('./useHabitsListState').useHabitsListState>;
-  handlers: ReturnType<
-    typeof import('./useHabitsListHandlers').useHabitsListHandlers
-  >;
   upgradePromptVisible: boolean;
   onUpgradeDismiss: () => void;
   onUpgradeConfirm: () => void;
+  daySheetDate: Date | null;
+  onCloseDaySheet: () => void;
+  habits: Habit[];
+  getHabitStatus: (habitId: string, dateString: string) => HabitStatus;
+  toggleHabit: (args: { habitId: string; date: string }) => Promise<unknown>;
+  reduceMotion: boolean;
 }
 
 export function HabitsListModals(props: HabitsListModalsProps) {
-  const {
-    list,
-    state,
-    handlers,
-    upgradePromptVisible,
-    onUpgradeDismiss,
-    onUpgradeConfirm,
-  } = props;
-  const { reduceMotionPreference, getHabitStatus, habits, toggleHabit } = list;
-
   return (
     <>
       <UpgradePrompt
-        visible={upgradePromptVisible}
-        onClose={onUpgradeDismiss}
-        onUpgradePress={onUpgradeConfirm}
+        visible={props.upgradePromptVisible}
+        onClose={props.onUpgradeDismiss}
+        onUpgradePress={props.onUpgradeConfirm}
       />
       <DayHabitsBottomSheet
-        date={state.selectedDay}
-        getHabitStatus={getHabitStatus}
-        habits={habits}
-        reduceMotion={reduceMotionPreference}
-        toggleHabit={toggleHabit}
-        visible={state.isDaySheetOpen}
-        onClose={state.handleCloseDaySheet}
+        date={props.daySheetDate}
+        getHabitStatus={props.getHabitStatus}
+        habits={props.habits}
+        reduceMotion={props.reduceMotion}
+        toggleHabit={props.toggleHabit}
+        visible={props.daySheetDate !== null}
+        onClose={props.onCloseDaySheet}
       />
     </>
   );

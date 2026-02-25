@@ -21,11 +21,11 @@ export function getContainerStyle({
     alignItems: 'center',
     backgroundColor,
     borderRadius: BORDER_RADIUS.input,
-    borderWidth: 2,
+    borderWidth: 1.5,
     elevation: isFocused ? 2 : 0,
     flexDirection: 'row',
     height: TOUCH_TARGETS.inputHeight,
-    paddingHorizontal: 20,
+    paddingHorizontal: 16,
     shadowColor,
     shadowOffset: { height: 0, width: 0 },
     shadowRadius: 8,
@@ -38,7 +38,7 @@ export function getInputTextStyle(color: string): TextStyle {
     color,
     flex: 1,
     fontFamily: fontFamilies.primary.text,
-    fontSize: 17,
+    fontSize: 15,
     fontWeight: '500',
   };
 }
@@ -59,8 +59,8 @@ export const characterCounterStyle = (color: string): TextStyle => ({
 export const placeholderOverlayStyle: TextStyle = {
   color: COLORS.stone400,
   fontFamily: fontFamilies.primary.text,
-  fontSize: 17,
-  fontWeight: '500',
-  left: 20,
+  fontSize: 15,
+  fontWeight: '400',
+  left: 16,
   position: 'absolute',
 };

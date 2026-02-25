@@ -4,13 +4,13 @@
 
 import { View } from 'react-native';
 import Animated from 'react-native-reanimated';
-import Toast from '../../../components/Toast';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { styles } from '../../templates/templatesScreenStyles';
 import { BrowseHeader, SearchBar, TabBar, TemplateModals } from '../components';
 import { BrowseAllTab } from './BrowseAllTab';
 import { BrowseCategoriesTab } from './BrowseCategoriesTab';
 import type { BrowseViewProps } from './BrowseView.types';
+import { FeedbackOverlays } from './FeedbackOverlays';
 
 export function BrowseView(p: BrowseViewProps) {
   const { colors } = useThemeColors();
@@ -79,14 +79,13 @@ export function BrowseView(p: BrowseViewProps) {
         onDirectImport={h.handleDirectImport}
         onImport={h.handleTemplateImport}
       />
-      <Toast
-        duration={3000}
-        message={p.toastMessage ?? ''}
-        variant={
-          (p.toastMessage ?? '').includes('Failed') ? 'error' : 'success'
-        }
-        visible={p.showToast}
-        onDismiss={() => p.setShowToast(false)}
+      <FeedbackOverlays
+        showCelebration={p.showCelebration}
+        showToast={p.showToast}
+        toastMessage={p.toastMessage}
+        toastTemplateData={p.toastTemplateData}
+        onDismissCelebration={() => p.setShowCelebration(false)}
+        onDismissToast={() => p.setShowToast(false)}
       />
     </View>
   );

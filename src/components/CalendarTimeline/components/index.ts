@@ -1,8 +1,11 @@
 export { CheckBadge } from './CheckBadge';
 export { CompletionDot } from './CompletionDot';
-export { CompletionRing } from './CompletionRing';
 export { DayCell } from './DayCell';
 export { DayCellContent } from './DayCellContent';
+export { DayStrip } from './DayStrip';
 export { InlineTrialBar } from './InlineTrialBar';
 export { MiniCalendarPopup } from './MiniCalendarPopup';
+export { ProgressGreeting } from './ProgressGreeting';
+export { StripNav } from './StripNav';
+export { WeekNavRow } from './WeekNavRow';
 export { WeekNavigationHeader } from './WeekNavigationHeader';

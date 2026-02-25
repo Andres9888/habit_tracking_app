@@ -1,0 +1,1292 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Homepage Balance — Current vs Balanced vs Compact</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&family=Literata:opsz,wght@7..72,400;7..72,600;7..72,700;7..72,800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        -webkit-font-smoothing: antialiased;
+      }
+      body {
+        background: #111827;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-height: 100vh;
+        font-family: 'DM Sans', sans-serif;
+        padding: 30px 12px 60px;
+        gap: 24px;
+      }
+      h1 {
+        color: #f5f1ed !important;
+        font-family: 'Literata', serif !important;
+        font-size: 22px !important;
+        font-weight: 800 !important;
+        letter-spacing: -0.4px;
+        text-align: center;
+      }
+      .subtitle {
+        color: #9ca3af;
+        font-size: 12px;
+        text-align: center;
+        max-width: 600px;
+        line-height: 1.5;
+      }
+      .comparison {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      .col-label {
+        color: #9ca3af;
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        margin-bottom: 8px;
+        text-align: center;
+      }
+
+      .phone {
+        width: 375px;
+        height: 812px;
+        background: #f5f1ed;
+        border-radius: 40px;
+        overflow: hidden;
+        position: relative;
+        box-shadow:
+          0 0 0 2px #2d2a26,
+          0 20px 60px rgba(0, 0, 0, 0.5);
+      }
+      .status-bar {
+        height: 50px;
+        padding: 14px 28px 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 14px;
+        font-weight: 600;
+        color: #2d2a26;
+      }
+      .sb-icons {
+        display: flex;
+        gap: 4px;
+        align-items: center;
+      }
+      .sb-bar {
+        width: 22px;
+        height: 11px;
+        border-radius: 3px;
+        border: 1.5px solid #2d2a26;
+        position: relative;
+      }
+      .sb-bar::after {
+        content: '';
+        position: absolute;
+        right: -3px;
+        top: 3px;
+        width: 2px;
+        height: 5px;
+        background: #2d2a26;
+        border-radius: 0 1px 1px 0;
+      }
+      .sb-bar-fill {
+        position: absolute;
+        left: 1px;
+        top: 1px;
+        bottom: 1px;
+        right: 30%;
+        background: #2d2a26;
+        border-radius: 1px;
+      }
+
+      .scroll {
+        height: calc(100% - 50px - 64px);
+        overflow-y: auto;
+      }
+      .scroll::-webkit-scrollbar {
+        display: none;
+      }
+
+      /* Progress Header */
+      .ph {
+        display: flex;
+        align-items: center;
+      }
+      .ring-w {
+        position: relative;
+        flex-shrink: 0;
+      }
+      .ring-w svg {
+        transform: rotate(-90deg);
+      }
+      .ring-tk {
+        fill: none;
+        stroke: #e5e2de;
+        stroke-linecap: round;
+      }
+      .ring-fl {
+        fill: none;
+        stroke: #10b981;
+        stroke-linecap: round;
+        filter: drop-shadow(0 0 3px rgba(16, 185, 129, 0.2));
+      }
+      .ring-ct {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-weight: 800;
+        color: #2d2a26;
+        font-family: 'DM Sans';
+      }
+      .hi {
+        flex: 1;
+      }
+      .hd {
+        font-family: 'Literata', serif;
+        font-weight: 800;
+        color: #2d2a26;
+        letter-spacing: -0.5px;
+        line-height: 1.15;
+      }
+      .hdt {
+        font-size: 13px;
+        font-weight: 500;
+        color: #6e6660;
+        margin-top: 1px;
+      }
+      .cn {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        margin-top: 5px;
+      }
+      .cnb {
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid #ddd8d2;
+        color: #6e6660;
+        font-size: 10px;
+        background: transparent;
+      }
+      .cnb.dis {
+        opacity: 0.3;
+      }
+      .cdr {
+        font-size: 12px;
+        font-weight: 600;
+        color: #6e6660;
+      }
+      .sn {
+        font-size: 9px;
+        font-weight: 700;
+        color: #d97706;
+        margin-left: 3px;
+      }
+
+      /* Day Strip */
+      .ds {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 2px;
+        position: relative;
+      }
+      .tc {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 3px;
+        flex: 1;
+        position: relative;
+      }
+      .tl {
+        font-size: 10px;
+        font-weight: 400;
+        color: #c4bfb7;
+        line-height: 14px;
+      }
+      .tl.act {
+        color: #2d2a26;
+        font-weight: 700;
+      }
+      .ci {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        position: relative;
+      }
+      .ci.def {
+        background: #edeae5;
+        color: #524d47;
+      }
+      .ci.tod {
+        background: #2d2a26;
+        color: #f5f1ed;
+        font-weight: 700;
+        box-shadow: 0 2px 6px rgba(45, 42, 38, 0.15);
+      }
+      .ci.don {
+        background: #10b981;
+        color: #fff;
+        font-weight: 700;
+        box-shadow: 0 2px 6px rgba(16, 185, 129, 0.25);
+      }
+      .ci.par {
+        background: #fef3cd;
+        color: #8b6208;
+        border: 1.5px solid #e8b94d;
+      }
+      .ci.fut {
+        background: #edeae5;
+        color: #c4bfb7;
+      }
+      .chk {
+        position: absolute;
+        top: 1px;
+        right: 1px;
+        border-radius: 50%;
+        background: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #10b981;
+        font-weight: 900;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+      }
+      .dt {
+        border-radius: 50%;
+        margin-top: 3px;
+      }
+      .dt.n {
+        width: 5px;
+        height: 5px;
+        background: #ddd8d2;
+      }
+      .dt.p {
+        width: 6px;
+        height: 6px;
+        background: #e8b94d;
+      }
+      .sb {
+        position: absolute;
+        height: 3px;
+        z-index: 0;
+        background: rgba(16, 185, 129, 0.25);
+      }
+      .sb.l {
+        left: 0;
+        width: 50%;
+      }
+      .sb.r {
+        left: 50%;
+        width: 50%;
+      }
+
+      /* Divider */
+      .divider {
+        margin: 4px 16px;
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          #ddd8d2 20%,
+          #ddd8d2 80%,
+          transparent
+        );
+        opacity: 0.4;
+      }
+
+      /* Habit Card */
+      .hc {
+        margin: 5px 16px;
+        min-height: 72px;
+        background: #ffffff;
+        border: 1px solid #e5e2de;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        overflow: hidden;
+        position: relative;
+        box-shadow: 0 2px 8px rgba(45, 42, 38, 0.06);
+      }
+      .ha {
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 4px;
+        border-radius: 16px 0 0 16px;
+      }
+      .sf {
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        opacity: 0.04;
+        border-radius: 16px 0 0 16px;
+      }
+      .hcc {
+        flex: 1;
+        padding: 14px 16px;
+      }
+      .ht {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .hic {
+        font-size: 24px;
+        line-height: 1;
+      }
+      .hn {
+        font-size: 15px;
+        font-weight: 600;
+        color: #2d2a26;
+        letter-spacing: -0.4px;
+        flex: 1;
+      }
+      .hm {
+        font-size: 12px;
+        color: #6b6560;
+        margin-top: 2px;
+      }
+      .hst {
+        font-weight: 600;
+        color: #7d5907;
+      }
+      .hca {
+        padding: 14px;
+      }
+      .hck {
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .hck.d {
+        background: #10b981;
+        color: #fff;
+        font-size: 13px;
+        font-weight: 700;
+      }
+      .hck.p {
+        border: 2px solid #ddd8d2;
+      }
+      .hc.comp .hn {
+        opacity: 0.55;
+        text-decoration: line-through;
+      }
+      .hc.comp .hm {
+        opacity: 0.55;
+      }
+
+      /* Bottom Bar */
+      .bb {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 64px;
+        backdrop-filter: blur(40px);
+        -webkit-backdrop-filter: blur(40px);
+        background: rgba(245, 241, 237, 0.75);
+        border-top: 1px solid rgba(221, 216, 210, 0.45);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 20px 4px;
+      }
+      .pb {
+        height: 36px;
+        min-width: 92px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        padding: 0 12px;
+        background: rgba(237, 234, 229, 0.8);
+        border: 1px solid rgba(221, 216, 210, 0.6);
+        font-size: 12px;
+        font-weight: 600;
+        color: #2d2a26;
+      }
+      .fab {
+        width: 48px;
+        height: 48px;
+        border-radius: 14px;
+        margin-top: -18px;
+        background: #059669;
+        border: 3px solid rgba(245, 241, 237, 0.9);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 14px rgba(45, 42, 38, 0.08);
+        color: #fff;
+        font-size: 22px;
+      }
+
+      /* Legend */
+      .legend {
+        max-width: 900px;
+        margin-top: 10px;
+        padding: 16px 20px;
+        border-radius: 10px;
+        background: rgba(245, 241, 237, 0.06);
+        border: 1px solid rgba(245, 241, 237, 0.08);
+      }
+      .legend h2 {
+        color: #f5f1ed !important;
+        font-size: 14px !important;
+        font-weight: 700 !important;
+        margin-bottom: 10px;
+      }
+      .legend-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+      .legend-item-title {
+        font-size: 11px;
+        font-weight: 700;
+        margin-bottom: 3px;
+      }
+      .legend-item-text {
+        color: #9ca3af;
+        font-size: 11px;
+        line-height: 1.5;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Homepage Balance Analysis</h1>
+    <p class="subtitle">
+      Three variants of the full homepage with the redesigned CalendarTimeline.
+      Evaluating padding alignment, visual rhythm, ring size, and habit card
+      integration.
+    </p>
+
+    <div class="comparison">
+      <!-- ===== COL 1: CURRENT IMPLEMENTATION ===== -->
+      <div>
+        <div class="col-label">Current Implementation (px-5)</div>
+        <div class="phone">
+          <div class="status-bar">
+            <span>9:41</span>
+            <div class="sb-icons">
+              <div class="sb-bar"><div class="sb-bar-fill"></div></div>
+            </div>
+          </div>
+          <div class="scroll">
+            <div style="height: 48px"></div>
+            <div class="ph" style="gap: 14px; padding: 8px 20px 12px">
+              <div class="ring-w" style="width: 64px; height: 64px">
+                <svg viewBox="0 0 64 64" width="64" height="64">
+                  <circle
+                    class="ring-tk"
+                    cx="32"
+                    cy="32"
+                    r="27.5"
+                    stroke-width="4.5"
+                  />
+                  <circle
+                    class="ring-fl"
+                    cx="32"
+                    cy="32"
+                    r="27.5"
+                    stroke-width="4.5"
+                    stroke-dasharray="172.8"
+                    stroke-dashoffset="57.6"
+                  />
+                </svg>
+                <div class="ring-ct" style="font-size: 14px">4/6</div>
+              </div>
+              <div class="hi">
+                <div class="hd" style="font-size: 22px">Tuesday</div>
+                <div class="hdt">February 25, 2026</div>
+                <div class="cn">
+                  <div class="cnb">‹</div>
+                  <span class="cdr">Feb 19 – 25</span>
+                  <div class="cnb dis">›</div>
+                  <span class="sn">2 to go</span>
+                </div>
+              </div>
+            </div>
+            <div class="ds" style="padding: 0 20px 8px">
+              <div class="tc">
+                <span class="tl">Wed</span>
+                <div
+                  class="ci don"
+                  style="
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 12px;
+                    font-size: 13px;
+                  "
+                >
+                  19
+                  <div
+                    class="chk"
+                    style="width: 14px; height: 14px; font-size: 8px"
+                  >
+                    ✓
+                  </div>
+                </div>
+              </div>
+              <div class="tc">
+                <div class="sb l" style="top: 34px"></div>
+                <div class="sb r" style="top: 34px"></div>
+                <span class="tl">Thu</span>
+                <div
+                  class="ci don"
+                  style="
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 12px;
+                    font-size: 13px;
+                  "
+                >
+                  20
+                  <div
+                    class="chk"
+                    style="width: 14px; height: 14px; font-size: 8px"
+                  >
+                    ✓
+                  </div>
+                </div>
+              </div>
+              <div class="tc">
+                <div class="sb l" style="top: 34px"></div>
+                <span class="tl">Fri</span>
+                <div
+                  class="ci don"
+                  style="
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 12px;
+                    font-size: 13px;
+                  "
+                >
+                  21
+                  <div
+                    class="chk"
+                    style="width: 14px; height: 14px; font-size: 8px"
+                  >
+                    ✓
+                  </div>
+                </div>
+              </div>
+              <div class="tc">
+                <span class="tl">Sat</span>
+                <div
+                  class="ci def"
+                  style="
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 12px;
+                    font-size: 13px;
+                  "
+                >
+                  22
+                </div>
+                <div class="dt n"></div>
+              </div>
+              <div class="tc">
+                <span class="tl">Sun</span>
+                <div
+                  class="ci par"
+                  style="
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 12px;
+                    font-size: 13px;
+                  "
+                >
+                  23
+                </div>
+                <div class="dt p"></div>
+              </div>
+              <div class="tc">
+                <span class="tl">Mon</span>
+                <div
+                  class="ci don"
+                  style="
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 12px;
+                    font-size: 13px;
+                  "
+                >
+                  24
+                  <div
+                    class="chk"
+                    style="width: 14px; height: 14px; font-size: 8px"
+                  >
+                    ✓
+                  </div>
+                </div>
+              </div>
+              <div class="tc">
+                <span class="tl act">Tue</span>
+                <div
+                  class="ci tod"
+                  style="
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 12px;
+                    font-size: 13px;
+                  "
+                >
+                  25
+                </div>
+                <div class="dt n"></div>
+              </div>
+            </div>
+
+            <div class="hc comp">
+              <div class="ha" style="background: #10b981"></div>
+              <div class="sf" style="width: 85%; background: #10b981"></div>
+              <div class="hcc">
+                <div class="ht">
+                  <span class="hic">🧘</span><span class="hn">Meditate</span>
+                </div>
+                <div class="hm">10 min · <span class="hst">🔥 12d</span></div>
+              </div>
+              <div class="hca"><div class="hck d">✓</div></div>
+            </div>
+            <div class="hc comp">
+              <div class="ha" style="background: #10b981"></div>
+              <div class="sf" style="width: 72%; background: #10b981"></div>
+              <div class="hcc">
+                <div class="ht">
+                  <span class="hic">💪</span><span class="hn">Exercise</span>
+                </div>
+                <div class="hm">30 min · <span class="hst">🔥 8d</span></div>
+              </div>
+              <div class="hca"><div class="hck d">✓</div></div>
+            </div>
+            <div class="hc comp">
+              <div class="ha" style="background: #10b981"></div>
+              <div class="sf" style="width: 60%; background: #10b981"></div>
+              <div class="hcc">
+                <div class="ht">
+                  <span class="hic">💧</span><span class="hn">Drink Water</span>
+                </div>
+                <div class="hm">8 glasses · <span class="hst">🔥 5d</span></div>
+              </div>
+              <div class="hca"><div class="hck d">✓</div></div>
+            </div>
+            <div class="hc comp">
+              <div class="ha" style="background: #10b981"></div>
+              <div class="sf" style="width: 45%; background: #10b981"></div>
+              <div class="hcc">
+                <div class="ht">
+                  <span class="hic">📓</span><span class="hn">Journal</span>
+                </div>
+                <div class="hm">5 min · <span class="hst">🔥 3d</span></div>
+              </div>
+              <div class="hca"><div class="hck d">✓</div></div>
+            </div>
+            <div class="hc">
+              <div class="ha" style="background: #e8b94d"></div>
+              <div class="sf" style="width: 30%; background: #e8b94d"></div>
+              <div class="hcc">
+                <div class="ht">
+                  <span class="hic">📖</span><span class="hn">Read</span>
+                </div>
+                <div class="hm">20 pages · Evening</div>
+              </div>
+              <div class="hca"><div class="hck p"></div></div>
+            </div>
+            <div class="hc">
+              <div class="ha" style="background: #c4bfb7"></div>
+              <div class="hcc">
+                <div class="ht">
+                  <span class="hic">🎸</span
+                  ><span class="hn">Practice Guitar</span>
+                </div>
+                <div class="hm">15 min · Evening</div>
+              </div>
+              <div class="hca"><div class="hck p"></div></div>
+            </div>
+          </div>
+          <div class="bb">
+            <div class="pb">⚙ Settings</div>
+            <div class="fab">+</div>
+            <div class="pb">📋 Browse</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== COL 2: BALANCED (16px aligned + divider) ===== -->
+      <div>
+        <div class="col-label">Balanced — Aligned + Divider</div>
+        <div class="phone">
+          <div class="status-bar">
+            <span>9:41</span>
+            <div class="sb-icons">
+              <div class="sb-bar"><div class="sb-bar-fill"></div></div>
+            </div>
+          </div>
+          <div class="scroll">
+            <div style="height: 48px"></div>
+            <div class="ph" style="gap: 14px; padding: 8px 16px 10px">
+              <div class="ring-w" style="width: 64px; height: 64px">
+                <svg viewBox="0 0 64 64" width="64" height="64">
+                  <circle
+                    class="ring-tk"
+                    cx="32"
+                    cy="32"
+                    r="27.5"
+                    stroke-width="4.5"
+                  />
+                  <circle
+                    class="ring-fl"
+                    cx="32"
+                    cy="32"
+                    r="27.5"
+                    stroke-width="4.5"
+                    stroke-dasharray="172.8"
+                    stroke-dashoffset="57.6"
+                  />
+                </svg>
+                <div class="ring-ct" style="font-size: 14px">4/6</div>
+              </div>
+              <div class="hi">
+                <div class="hd" style="font-size: 22px">Tuesday</div>
+                <div class="hdt">February 25, 2026</div>
+                <div class="cn">
+                  <div class="cnb">‹</div>
+                  <span class="cdr">Feb 19 – 25</span>
+                  <div class="cnb dis">›</div>
+                  <span class="sn">2 to go</span>
+                </div>
+              </div>
+            </div>
+            <div class="ds" style="padding: 0 16px 6px">
+              <div class="tc">
+                <span class="tl">Wed</span>
+                <div
+                  class="ci don"
+                  style="
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 12px;
+                    font-size: 13px;
+                  "
+                >
+                  19
+                  <div
+                    class="chk"
+                    style="width: 14px; height: 14px; font-size: 8px"
+                  >
+                    ✓
+                  </div>
+                </div>
+              </div>
+              <div class="tc">
+                <div class="sb l" style="top: 34px"></div>
+                <div class="sb r" style="top: 34px"></div>
+                <span class="tl">Thu</span>
+                <div
+                  class="ci don"
+                  style="
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 12px;
+                    font-size: 13px;
+                  "
+                >
+                  20
+                  <div
+                    class="chk"
+                    style="width: 14px; height: 14px; font-size: 8px"
+                  >
+                    ✓
+                  </div>
+                </div>
+              </div>
+              <div class="tc">
+                <div class="sb l" style="top: 34px"></div>
+                <span class="tl">Fri</span>
+                <div
+                  class="ci don"
+                  style="
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 12px;
+                    font-size: 13px;
+                  "
+                >
+                  21
+                  <div
+                    class="chk"
+                    style="width: 14px; height: 14px; font-size: 8px"
+                  >
+                    ✓
+                  </div>
+                </div>
+              </div>
+              <div class="tc">
+                <span class="tl">Sat</span>
+                <div
+                  class="ci def"
+                  style="
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 12px;
+                    font-size: 13px;
+                  "
+                >
+                  22
+                </div>
+                <div class="dt n"></div>
+              </div>
+              <div class="tc">
+                <span class="tl">Sun</span>
+                <div
+                  class="ci par"
+                  style="
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 12px;
+                    font-size: 13px;
+                  "
+                >
+                  23
+                </div>
+                <div class="dt p"></div>
+              </div>
+              <div class="tc">
+                <span class="tl">Mon</span>
+                <div
+                  class="ci don"
+                  style="
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 12px;
+                    font-size: 13px;
+                  "
+                >
+                  24
+                  <div
+                    class="chk"
+                    style="width: 14px; height: 14px; font-size: 8px"
+                  >
+                    ✓
+                  </div>
+                </div>
+              </div>
+              <div class="tc">
+                <span class="tl act">Tue</span>
+                <div
+                  class="ci tod"
+                  style="
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 12px;
+                    font-size: 13px;
+                  "
+                >
+                  25
+                </div>
+                <div class="dt n"></div>
+              </div>
+            </div>
+            <div class="divider"></div>
+
+            <div class="hc comp">
+              <div class="ha" style="background: #10b981"></div>
+              <div class="sf" style="width: 85%; background: #10b981"></div>
+              <div class="hcc">
+                <div class="ht">
+                  <span class="hic">🧘</span><span class="hn">Meditate</span>
+                </div>
+                <div class="hm">10 min · <span class="hst">🔥 12d</span></div>
+              </div>
+              <div class="hca"><div class="hck d">✓</div></div>
+            </div>
+            <div class="hc comp">
+              <div class="ha" style="background: #10b981"></div>
+              <div class="sf" style="width: 72%; background: #10b981"></div>
+              <div class="hcc">
+                <div class="ht">
+                  <span class="hic">💪</span><span class="hn">Exercise</span>
+                </div>
+                <div class="hm">30 min · <span class="hst">🔥 8d</span></div>
+              </div>
+              <div class="hca"><div class="hck d">✓</div></div>
+            </div>
+            <div class="hc comp">
+              <div class="ha" style="background: #10b981"></div>
+              <div class="sf" style="width: 60%; background: #10b981"></div>
+              <div class="hcc">
+                <div class="ht">
+                  <span class="hic">💧</span><span class="hn">Drink Water</span>
+                </div>
+                <div class="hm">8 glasses · <span class="hst">🔥 5d</span></div>
+              </div>
+              <div class="hca"><div class="hck d">✓</div></div>
+            </div>
+            <div class="hc comp">
+              <div class="ha" style="background: #10b981"></div>
+              <div class="sf" style="width: 45%; background: #10b981"></div>
+              <div class="hcc">
+                <div class="ht">
+                  <span class="hic">📓</span><span class="hn">Journal</span>
+                </div>
+                <div class="hm">5 min · <span class="hst">🔥 3d</span></div>
+              </div>
+              <div class="hca"><div class="hck d">✓</div></div>
+            </div>
+            <div class="hc">
+              <div class="ha" style="background: #e8b94d"></div>
+              <div class="sf" style="width: 30%; background: #e8b94d"></div>
+              <div class="hcc">
+                <div class="ht">
+                  <span class="hic">📖</span><span class="hn">Read</span>
+                </div>
+                <div class="hm">20 pages · Evening</div>
+              </div>
+              <div class="hca"><div class="hck p"></div></div>
+            </div>
+            <div class="hc">
+              <div class="ha" style="background: #c4bfb7"></div>
+              <div class="hcc">
+                <div class="ht">
+                  <span class="hic">🎸</span
+                  ><span class="hn">Practice Guitar</span>
+                </div>
+                <div class="hm">15 min · Evening</div>
+              </div>
+              <div class="hca"><div class="hck p"></div></div>
+            </div>
+          </div>
+          <div class="bb">
+            <div class="pb">⚙ Settings</div>
+            <div class="fab">+</div>
+            <div class="pb">📋 Browse</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== COL 3: COMPACT (52px ring, 36px circles) ===== -->
+      <div>
+        <div class="col-label">Compact — 52px Ring + 36px Cells</div>
+        <div class="phone">
+          <div class="status-bar">
+            <span>9:41</span>
+            <div class="sb-icons">
+              <div class="sb-bar"><div class="sb-bar-fill"></div></div>
+            </div>
+          </div>
+          <div class="scroll">
+            <div style="height: 48px"></div>
+            <div class="ph" style="gap: 12px; padding: 6px 16px 8px">
+              <div class="ring-w" style="width: 52px; height: 52px">
+                <svg viewBox="0 0 52 52" width="52" height="52">
+                  <circle
+                    class="ring-tk"
+                    cx="26"
+                    cy="26"
+                    r="22"
+                    stroke-width="4"
+                  />
+                  <circle
+                    class="ring-fl"
+                    cx="26"
+                    cy="26"
+                    r="22"
+                    stroke-width="4"
+                    stroke-dasharray="138.2"
+                    stroke-dashoffset="46.1"
+                  />
+                </svg>
+                <div class="ring-ct" style="font-size: 12px">4/6</div>
+              </div>
+              <div class="hi">
+                <div class="hd" style="font-size: 20px">Tuesday</div>
+                <div class="hdt">February 25, 2026</div>
+                <div class="cn">
+                  <div class="cnb">‹</div>
+                  <span class="cdr">Feb 19 – 25</span>
+                  <div class="cnb dis">›</div>
+                  <span class="sn">2 to go</span>
+                </div>
+              </div>
+            </div>
+            <div class="ds" style="padding: 0 16px 6px">
+              <div class="tc">
+                <span class="tl">Wed</span>
+                <div
+                  class="ci don"
+                  style="
+                    width: 36px;
+                    height: 36px;
+                    border-radius: 10px;
+                    font-size: 12px;
+                  "
+                >
+                  19
+                  <div
+                    class="chk"
+                    style="width: 12px; height: 12px; font-size: 7px"
+                  >
+                    ✓
+                  </div>
+                </div>
+              </div>
+              <div class="tc">
+                <div class="sb l" style="top: 31px"></div>
+                <div class="sb r" style="top: 31px"></div>
+                <span class="tl">Thu</span>
+                <div
+                  class="ci don"
+                  style="
+                    width: 36px;
+                    height: 36px;
+                    border-radius: 10px;
+                    font-size: 12px;
+                  "
+                >
+                  20
+                  <div
+                    class="chk"
+                    style="width: 12px; height: 12px; font-size: 7px"
+                  >
+                    ✓
+                  </div>
+                </div>
+              </div>
+              <div class="tc">
+                <div class="sb l" style="top: 31px"></div>
+                <span class="tl">Fri</span>
+                <div
+                  class="ci don"
+                  style="
+                    width: 36px;
+                    height: 36px;
+                    border-radius: 10px;
+                    font-size: 12px;
+                  "
+                >
+                  21
+                  <div
+                    class="chk"
+                    style="width: 12px; height: 12px; font-size: 7px"
+                  >
+                    ✓
+                  </div>
+                </div>
+              </div>
+              <div class="tc">
+                <span class="tl">Sat</span>
+                <div
+                  class="ci def"
+                  style="
+                    width: 36px;
+                    height: 36px;
+                    border-radius: 10px;
+                    font-size: 12px;
+                  "
+                >
+                  22
+                </div>
+                <div class="dt n"></div>
+              </div>
+              <div class="tc">
+                <span class="tl">Sun</span>
+                <div
+                  class="ci par"
+                  style="
+                    width: 36px;
+                    height: 36px;
+                    border-radius: 10px;
+                    font-size: 12px;
+                  "
+                >
+                  23
+                </div>
+                <div class="dt p"></div>
+              </div>
+              <div class="tc">
+                <span class="tl">Mon</span>
+                <div
+                  class="ci don"
+                  style="
+                    width: 36px;
+                    height: 36px;
+                    border-radius: 10px;
+                    font-size: 12px;
+                  "
+                >
+                  24
+                  <div
+                    class="chk"
+                    style="width: 12px; height: 12px; font-size: 7px"
+                  >
+                    ✓
+                  </div>
+                </div>
+              </div>
+              <div class="tc">
+                <span class="tl act">Tue</span>
+                <div
+                  class="ci tod"
+                  style="
+                    width: 36px;
+                    height: 36px;
+                    border-radius: 10px;
+                    font-size: 12px;
+                  "
+                >
+                  25
+                </div>
+                <div class="dt n"></div>
+              </div>
+            </div>
+            <div class="divider"></div>
+
+            <div class="hc comp">
+              <div class="ha" style="background: #10b981"></div>
+              <div class="sf" style="width: 85%; background: #10b981"></div>
+              <div class="hcc">
+                <div class="ht">
+                  <span class="hic">🧘</span><span class="hn">Meditate</span>
+                </div>
+                <div class="hm">10 min · <span class="hst">🔥 12d</span></div>
+              </div>
+              <div class="hca"><div class="hck d">✓</div></div>
+            </div>
+            <div class="hc comp">
+              <div class="ha" style="background: #10b981"></div>
+              <div class="sf" style="width: 72%; background: #10b981"></div>
+              <div class="hcc">
+                <div class="ht">
+                  <span class="hic">💪</span><span class="hn">Exercise</span>
+                </div>
+                <div class="hm">30 min · <span class="hst">🔥 8d</span></div>
+              </div>
+              <div class="hca"><div class="hck d">✓</div></div>
+            </div>
+            <div class="hc comp">
+              <div class="ha" style="background: #10b981"></div>
+              <div class="sf" style="width: 60%; background: #10b981"></div>
+              <div class="hcc">
+                <div class="ht">
+                  <span class="hic">💧</span><span class="hn">Drink Water</span>
+                </div>
+                <div class="hm">8 glasses · <span class="hst">🔥 5d</span></div>
+              </div>
+              <div class="hca"><div class="hck d">✓</div></div>
+            </div>
+            <div class="hc comp">
+              <div class="ha" style="background: #10b981"></div>
+              <div class="sf" style="width: 45%; background: #10b981"></div>
+              <div class="hcc">
+                <div class="ht">
+                  <span class="hic">📓</span><span class="hn">Journal</span>
+                </div>
+                <div class="hm">5 min · <span class="hst">🔥 3d</span></div>
+              </div>
+              <div class="hca"><div class="hck d">✓</div></div>
+            </div>
+            <div class="hc">
+              <div class="ha" style="background: #e8b94d"></div>
+              <div class="sf" style="width: 30%; background: #e8b94d"></div>
+              <div class="hcc">
+                <div class="ht">
+                  <span class="hic">📖</span><span class="hn">Read</span>
+                </div>
+                <div class="hm">20 pages · Evening</div>
+              </div>
+              <div class="hca"><div class="hck p"></div></div>
+            </div>
+            <div class="hc">
+              <div class="ha" style="background: #c4bfb7"></div>
+              <div class="hcc">
+                <div class="ht">
+                  <span class="hic">🎸</span
+                  ><span class="hn">Practice Guitar</span>
+                </div>
+                <div class="hm">15 min · Evening</div>
+              </div>
+              <div class="hca"><div class="hck p"></div></div>
+            </div>
+          </div>
+          <div class="bb">
+            <div class="pb">⚙ Settings</div>
+            <div class="fab">+</div>
+            <div class="pb">📋 Browse</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Balance Issues -->
+    <div class="legend">
+      <h2>Balance Issues + Recommendations</h2>
+      <div class="legend-grid">
+        <div>
+          <div class="legend-item-title" style="color: #f97316">
+            1. Padding Misalignment (20px vs 16px)
+          </div>
+          <div class="legend-item-text">
+            Timeline uses px-5 (20px), cards use 16px margin. The left column
+            shows the 4px offset — day strip edges don't align with card edges.
+            Fix: change CalendarTimeline from px-5 to px-4 (16px).
+          </div>
+        </div>
+        <div>
+          <div class="legend-item-title" style="color: #f97316">
+            2. No Visual Transition
+          </div>
+          <div class="legend-item-text">
+            Without the card wrapper, the timeline and habit cards blur
+            together. A subtle gradient divider (middle/right columns) provides
+            a clean rhythm break between "context" (timeline) and "action"
+            (habits).
+          </div>
+        </div>
+        <div>
+          <div class="legend-item-title" style="color: #10b981">
+            3. Ring Size Trade-off
+          </div>
+          <div class="legend-item-text">
+            64px ring (middle) is prominent and motivating but pushes the first
+            card ~20px lower. 52px ring (right) saves ~16px vertical space while
+            remaining clearly readable. Recommended: 64px for max engagement.
+          </div>
+        </div>
+        <div>
+          <div class="legend-item-title" style="color: #10b981">
+            4. Card Surface Contrast
+          </div>
+          <div class="legend-item-text">
+            White cards (#FFFFFF) on warm canvas (#F5F1ED) create proper depth
+            hierarchy. The borderless timeline correctly defers to cards as the
+            primary interactive surface. No change needed.
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,2943 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ChainDay — Homepage Header Exploration (10 Variants)</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,500;0,7..72,600;0,7..72,700;0,7..72,800;1,7..72,400&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --bg-page: #0c0b0f;
+        --canvas: #f5f1ed;
+        --card-surface: #ffffff;
+        --card-border: #e5e2de;
+        --shelf-tint: #f0ede8;
+        --emerald: #10b981;
+        --emerald-600: #059669;
+        --emerald-400: #34d399;
+        --amber: #d97706;
+        --amber-light: #fef3c7;
+        --amber-dark: #92400e;
+        --amber-warm: #fef8ee;
+        --streak-500: #8b6208;
+        --text-primary: #2d2a26;
+        --text-secondary: #6b6560;
+        --text-tertiary: #6e6660;
+        --gray-400: #9ca3af;
+        --gray-300: #d1d5db;
+        --ring-track: #e5e2de;
+        --dark-shelf: #2d2a26;
+        --dark-shelf-cell: #3d3833;
+        --dark-shelf-track: #524d47;
+      }
+
+      body {
+        background: var(--bg-page) !important;
+        color: #e8e4df !important;
+        font-family: 'DM Sans', sans-serif !important;
+        min-height: 100vh;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6,
+      p {
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+
+      .page-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 48px 24px 96px;
+      }
+
+      .page-eyebrow {
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--emerald);
+        text-align: center;
+        margin-bottom: 12px !important;
+      }
+
+      .page-title {
+        font-family: 'Literata', Georgia, serif;
+        font-size: 36px;
+        font-weight: 400;
+        line-height: 1.15;
+        color: #f0ece6;
+        letter-spacing: -0.02em;
+        text-align: center;
+        margin-bottom: 8px !important;
+      }
+
+      .page-title em {
+        font-style: italic;
+        color: var(--amber);
+      }
+
+      .page-subtitle {
+        font-size: 15px;
+        color: #7a756e;
+        max-width: 620px;
+        margin: 0 auto !important;
+        line-height: 1.65;
+        text-align: center;
+        margin-bottom: 48px !important;
+      }
+
+      /* Grid */
+      .variants-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 40px 32px;
+        max-width: 960px;
+        margin: 0 auto;
+      }
+
+      @media (max-width: 840px) {
+        .variants-grid {
+          grid-template-columns: 1fr;
+          max-width: 440px;
+        }
+      }
+
+      /* Variant wrapper */
+      .variant-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .variant-description {
+        font-size: 12px;
+        color: #7a756e;
+        line-height: 1.5;
+        text-align: center;
+        max-width: 340px;
+        margin-top: 12px !important;
+      }
+
+      /* Phone frame */
+      .phone-frame {
+        width: 375px;
+        min-height: 520px;
+        background: var(--canvas);
+        border-radius: 44px;
+        overflow: hidden;
+        position: relative;
+        box-shadow:
+          0 0 0 2px #2a2730,
+          0 20px 60px rgba(0, 0, 0, 0.4);
+      }
+
+      /* Dynamic Island */
+      .dynamic-island {
+        position: absolute;
+        top: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 126px;
+        height: 36px;
+        background: #000;
+        border-radius: 20px;
+        z-index: 10;
+      }
+
+      /* Status bar */
+      .status-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 14px 28px 0;
+        height: 54px;
+        position: relative;
+        z-index: 5;
+      }
+
+      .status-bar .time {
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--text-primary);
+        letter-spacing: -0.01em;
+      }
+
+      .status-bar .icons {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+
+      .status-bar .icons svg {
+        width: 16px;
+        height: 16px;
+      }
+
+      .status-bar-dark .time {
+        color: #ffffff;
+      }
+      .status-bar-dark .icons svg {
+        color: #ffffff;
+      }
+
+      /* Variant label chip */
+      .variant-label {
+        position: absolute;
+        top: 54px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 20;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        color: #fff;
+        background: rgba(16, 185, 129, 0.85);
+        padding: 3px 10px;
+        border-radius: 6px;
+        white-space: nowrap;
+        backdrop-filter: blur(4px);
+      }
+
+      /* Phone content area */
+      .phone-content {
+        padding-top: 0;
+      }
+
+      /* SVG Ring helper */
+      .progress-ring {
+        transform: rotate(-90deg);
+      }
+
+      /* Habit cards */
+      .habit-card {
+        background: var(--card-surface);
+        border: 1px solid var(--card-border);
+        border-radius: 16px;
+        padding: 14px 16px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin: 0 16px;
+      }
+
+      .habit-card + .habit-card {
+        margin-top: 8px;
+      }
+
+      .habit-emoji {
+        font-size: 24px;
+        line-height: 1;
+        flex-shrink: 0;
+      }
+
+      .habit-info {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .habit-name {
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--text-primary);
+        line-height: 1.2;
+      }
+
+      .habit-streak {
+        font-size: 12px;
+        font-weight: 500;
+        color: var(--text-tertiary);
+        margin-top: 2px !important;
+      }
+
+      .habit-streak .streak-fire {
+        color: var(--amber);
+      }
+
+      .habit-check {
+        flex-shrink: 0;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .habit-check.completed {
+        background: var(--emerald);
+      }
+
+      .habit-check.pending {
+        border: 2px solid var(--card-border);
+        background: transparent;
+      }
+
+      /* Day strip shared */
+      .day-strip {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 16px;
+        gap: 4px;
+      }
+
+      .day-cell {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+      }
+
+      .day-label {
+        font-size: 10px;
+        font-weight: 500;
+        color: var(--text-tertiary);
+        text-transform: uppercase;
+        letter-spacing: 0.02em;
+      }
+
+      .day-circle {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text-secondary);
+        background: #edeae6;
+      }
+
+      .day-circle.completed {
+        background: var(--emerald);
+        color: #fff;
+      }
+
+      .day-circle.today {
+        background: var(--amber-light);
+        color: var(--amber-dark);
+        box-shadow: 0 0 0 2px var(--amber);
+      }
+
+      /* Dark day cells */
+      .day-strip-dark .day-circle {
+        background: var(--dark-shelf-cell);
+        color: #a8a29e;
+      }
+
+      .day-strip-dark .day-circle.completed {
+        background: var(--emerald);
+        color: #fff;
+      }
+
+      .day-strip-dark .day-circle.today {
+        background: #fef3cd;
+        color: var(--amber-dark);
+        box-shadow: 0 0 0 2px var(--amber);
+      }
+
+      .day-strip-dark .day-label {
+        color: #a8a29e;
+      }
+
+      /* Chevrons */
+      .nav-chevrons {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .nav-chevrons svg {
+        width: 14px;
+        height: 14px;
+        color: var(--gray-400);
+        cursor: pointer;
+      }
+
+      /* Comparison legend at bottom */
+      .legend-section {
+        max-width: 960px;
+        margin: 56px auto 0;
+        padding: 24px;
+        background: rgba(255, 255, 255, 0.04);
+        border-radius: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+      }
+
+      .legend-title {
+        font-size: 14px;
+        font-weight: 600;
+        color: #c4bfb8;
+        margin-bottom: 16px !important;
+      }
+
+      .legend-bar-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 8px !important;
+      }
+
+      .legend-bar-label {
+        font-size: 11px;
+        font-weight: 500;
+        color: #7a756e;
+        width: 160px;
+        flex-shrink: 0;
+        text-align: right;
+      }
+
+      .legend-bar-track {
+        flex: 1;
+        height: 14px;
+        background: rgba(255, 255, 255, 0.04);
+        border-radius: 4px;
+        overflow: hidden;
+        position: relative;
+      }
+
+      .legend-bar-fill {
+        height: 100%;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        padding-right: 6px;
+        font-size: 9px;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.8);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page-container">
+      <!-- Header -->
+      <p class="page-eyebrow">ChainDay Design System</p>
+      <h1 class="page-title">
+        Homepage Header Exploration &mdash; <em>10 Variants</em>
+      </h1>
+      <p class="page-subtitle">
+        Same data state: Tuesday afternoon, 3/5 habits complete, 12-day streak
+      </p>
+
+      <!-- Grid of 10 phone variants -->
+      <div class="variants-grid">
+        <!-- ============================================================ -->
+        <!-- VARIANT 1 — B+D Hybrid (Current) -->
+        <!-- ============================================================ -->
+        <div class="variant-wrapper">
+          <div class="phone-frame">
+            <div class="dynamic-island"></div>
+            <div class="status-bar">
+              <span class="time">2:34</span>
+              <span class="icons">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path d="M5 12.55a11 11 0 0 1 14.08 0" />
+                  <path d="M1.42 9a16 16 0 0 1 21.16 0" />
+                  <path d="M8.53 16.11a6 6 0 0 1 6.95 0" />
+                  <line x1="12" y1="20" x2="12.01" y2="20" />
+                </svg>
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <rect x="1" y="6" width="18" height="12" rx="2" />
+                  <line x1="23" y1="13" x2="23" y2="11" />
+                </svg>
+              </span>
+            </div>
+            <div class="variant-label">V1 &mdash; B+D Hybrid (Current)</div>
+            <div class="phone-content">
+              <!-- Tinted shelf -->
+              <div
+                style="
+                  background: #f0ede8;
+                  border-bottom-left-radius: 16px;
+                  border-bottom-right-radius: 16px;
+                  padding: 16px 16px 12px;
+                "
+              >
+                <div style="display: flex; align-items: center; gap: 14px">
+                  <!-- Ring 64px -->
+                  <svg
+                    width="64"
+                    height="64"
+                    viewBox="0 0 64 64"
+                    class="progress-ring"
+                    style="flex-shrink: 0"
+                  >
+                    <circle
+                      cx="32"
+                      cy="32"
+                      r="27"
+                      fill="none"
+                      stroke="#E5E2DE"
+                      stroke-width="4.5"
+                    />
+                    <circle
+                      cx="32"
+                      cy="32"
+                      r="27"
+                      fill="none"
+                      stroke="#10B981"
+                      stroke-width="4.5"
+                      stroke-linecap="round"
+                      stroke-dasharray="169.65"
+                      stroke-dashoffset="67.86"
+                    />
+                    <text
+                      x="32"
+                      y="34"
+                      text-anchor="middle"
+                      dominant-baseline="middle"
+                      fill="#2D2A26"
+                      font-family="DM Sans"
+                      font-size="15"
+                      font-weight="700"
+                      style="
+                        transform: rotate(90deg);
+                        transform-origin: 32px 32px;
+                      "
+                    >
+                      3/5
+                    </text>
+                  </svg>
+                  <!-- Text column -->
+                  <div style="flex: 1; min-width: 0">
+                    <div
+                      style="
+                        font-size: 15px;
+                        font-weight: 600;
+                        line-height: 1.3;
+                      "
+                    >
+                      <span style="color: #2d2a26">Good afternoon</span
+                      ><span style="color: #6e6660"> &mdash; </span
+                      ><span style="color: #059669">3 of 5 done</span>
+                    </div>
+                    <div
+                      style="
+                        display: flex;
+                        align-items: center;
+                        gap: 6px;
+                        margin-top: 4px;
+                      "
+                    >
+                      <span
+                        style="
+                          font-size: 12px;
+                          font-weight: 500;
+                          color: #6e6660;
+                        "
+                        >Tue, February 25</span
+                      >
+                      <span class="nav-chevrons">
+                        <svg
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2.5"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        >
+                          <polyline points="15 18 9 12 15 6" />
+                        </svg>
+                        <svg
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2.5"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        >
+                          <polyline points="9 18 15 12 9 6" />
+                        </svg>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <!-- Day strip inside shelf -->
+                <div class="day-strip" style="margin-top: 12px">
+                  <div class="day-cell">
+                    <span class="day-label">M</span>
+                    <div class="day-circle completed">
+                      <svg
+                        width="14"
+                        height="14"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="#fff"
+                        stroke-width="3"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
+                    </div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-label">T</span>
+                    <div class="day-circle today">25</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-label">W</span>
+                    <div class="day-circle">26</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-label">T</span>
+                    <div class="day-circle">27</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-label">F</span>
+                    <div class="day-circle">28</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-label">S</span>
+                    <div class="day-circle">1</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-label">S</span>
+                    <div class="day-circle">2</div>
+                  </div>
+                </div>
+              </div>
+              <!-- Gap then habit cards -->
+              <div style="margin-top: 16px">
+                <div class="habit-card">
+                  <span class="habit-emoji">&#x1F9D8;</span>
+                  <div class="habit-info">
+                    <div class="habit-name">Morning meditation</div>
+                    <div class="habit-streak">
+                      <span class="streak-fire">&#128293;</span> 12-day streak
+                    </div>
+                  </div>
+                  <div class="habit-check completed">
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="#fff"
+                      stroke-width="3"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                  </div>
+                </div>
+                <div class="habit-card">
+                  <span class="habit-emoji">&#x1F4DA;</span>
+                  <div class="habit-info">
+                    <div class="habit-name">Read 20 pages</div>
+                    <div class="habit-streak">
+                      <span class="streak-fire">&#128293;</span> 5-day streak
+                    </div>
+                  </div>
+                  <div class="habit-check pending"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <p class="variant-description">
+            Current implementation. Ring + greeting side-by-side on a warm
+            tinted shelf. Compact, balanced hierarchy.
+          </p>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- VARIANT 2 — Centered Stack -->
+        <!-- ============================================================ -->
+        <div class="variant-wrapper">
+          <div class="phone-frame">
+            <div class="dynamic-island"></div>
+            <div class="status-bar">
+              <span class="time">2:34</span>
+              <span class="icons">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path d="M5 12.55a11 11 0 0 1 14.08 0" />
+                  <path d="M1.42 9a16 16 0 0 1 21.16 0" />
+                  <path d="M8.53 16.11a6 6 0 0 1 6.95 0" />
+                  <line x1="12" y1="20" x2="12.01" y2="20" />
+                </svg>
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <rect x="1" y="6" width="18" height="12" rx="2" />
+                  <line x1="23" y1="13" x2="23" y2="11" />
+                </svg>
+              </span>
+            </div>
+            <div class="variant-label">V2 &mdash; Centered Stack</div>
+            <div class="phone-content">
+              <div
+                style="
+                  background: #f0ede8;
+                  border-bottom-left-radius: 16px;
+                  border-bottom-right-radius: 16px;
+                  padding: 16px 16px 12px;
+                  text-align: center;
+                "
+              >
+                <!-- Ring centered -->
+                <svg
+                  width="64"
+                  height="64"
+                  viewBox="0 0 64 64"
+                  class="progress-ring"
+                  style="display: inline-block"
+                >
+                  <circle
+                    cx="32"
+                    cy="32"
+                    r="27"
+                    fill="none"
+                    stroke="#E5E2DE"
+                    stroke-width="4.5"
+                  />
+                  <circle
+                    cx="32"
+                    cy="32"
+                    r="27"
+                    fill="none"
+                    stroke="#10B981"
+                    stroke-width="4.5"
+                    stroke-linecap="round"
+                    stroke-dasharray="169.65"
+                    stroke-dashoffset="67.86"
+                  />
+                  <text
+                    x="32"
+                    y="34"
+                    text-anchor="middle"
+                    dominant-baseline="middle"
+                    fill="#2D2A26"
+                    font-family="DM Sans"
+                    font-size="15"
+                    font-weight="700"
+                    style="
+                      transform: rotate(90deg);
+                      transform-origin: 32px 32px;
+                    "
+                  >
+                    3/5
+                  </text>
+                </svg>
+                <!-- Text stack -->
+                <div
+                  style="
+                    margin-top: 8px;
+                    font-size: 16px;
+                    font-weight: 600;
+                    color: #2d2a26;
+                  "
+                >
+                  Good afternoon
+                </div>
+                <div
+                  style="
+                    margin-top: 2px;
+                    font-size: 13px;
+                    font-weight: 600;
+                    color: #059669;
+                  "
+                >
+                  3 of 5 done
+                </div>
+                <!-- Day strip -->
+                <div class="day-strip" style="margin-top: 10px">
+                  <div class="day-cell">
+                    <span class="day-label">M</span>
+                    <div class="day-circle completed">
+                      <svg
+                        width="14"
+                        height="14"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="#fff"
+                        stroke-width="3"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
+                    </div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-label">T</span>
+                    <div class="day-circle today">25</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-label">W</span>
+                    <div class="day-circle">26</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-label">T</span>
+                    <div class="day-circle">27</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-label">F</span>
+                    <div class="day-circle">28</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-label">S</span>
+                    <div class="day-circle">1</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-label">S</span>
+                    <div class="day-circle">2</div>
+                  </div>
+                </div>
+                <!-- Date nav -->
+                <div
+                  style="
+                    margin-top: 6px;
+                    font-size: 11px;
+                    color: #6e6660;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 6px;
+                  "
+                >
+                  <span>Tue, Feb 25</span>
+                  <span style="color: #6e6660">&middot;</span>
+                  <span class="nav-chevrons">
+                    <svg
+                      width="12"
+                      height="12"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="#9CA3AF"
+                      stroke-width="2.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <polyline points="15 18 9 12 15 6" />
+                    </svg>
+                    <svg
+                      width="12"
+                      height="12"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="#9CA3AF"
+                      stroke-width="2.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <polyline points="9 18 15 12 9 6" />
+                    </svg>
+                  </span>
+                </div>
+              </div>
+              <div style="margin-top: 16px">
+                <div class="habit-card">
+                  <span class="habit-emoji">&#x1F9D8;</span>
+                  <div class="habit-info">
+                    <div class="habit-name">Morning meditation</div>
+                    <div class="habit-streak">
+                      <span class="streak-fire">&#128293;</span> 12-day streak
+                    </div>
+                  </div>
+                  <div class="habit-check completed">
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="#fff"
+                      stroke-width="3"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                  </div>
+                </div>
+                <div class="habit-card">
+                  <span class="habit-emoji">&#x1F4DA;</span>
+                  <div class="habit-info">
+                    <div class="habit-name">Read 20 pages</div>
+                    <div class="habit-streak">
+                      <span class="streak-fire">&#128293;</span> 5-day streak
+                    </div>
+                  </div>
+                  <div class="habit-check pending"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <p class="variant-description">
+            Vertical hierarchy. Ring as visual anchor. Clean symmetry, editorial
+            calm.
+          </p>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- VARIANT 3 — Minimal Single Line -->
+        <!-- ============================================================ -->
+        <div class="variant-wrapper">
+          <div class="phone-frame">
+            <div class="dynamic-island"></div>
+            <div class="status-bar">
+              <span class="time">2:34</span>
+              <span class="icons">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path d="M5 12.55a11 11 0 0 1 14.08 0" />
+                  <path d="M1.42 9a16 16 0 0 1 21.16 0" />
+                  <path d="M8.53 16.11a6 6 0 0 1 6.95 0" />
+                  <line x1="12" y1="20" x2="12.01" y2="20" />
+                </svg>
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <rect x="1" y="6" width="18" height="12" rx="2" />
+                  <line x1="23" y1="13" x2="23" y2="11" />
+                </svg>
+              </span>
+            </div>
+            <div class="variant-label">V3 &mdash; Minimal Single Line</div>
+            <div class="phone-content">
+              <!-- No shelf, flat on canvas -->
+              <div
+                style="
+                  padding: 8px 16px 0;
+                  display: flex;
+                  align-items: center;
+                  gap: 10px;
+                "
+              >
+                <!-- Small ring 40px -->
+                <svg
+                  width="40"
+                  height="40"
+                  viewBox="0 0 40 40"
+                  class="progress-ring"
+                  style="flex-shrink: 0"
+                >
+                  <circle
+                    cx="20"
+                    cy="20"
+                    r="16"
+                    fill="none"
+                    stroke="#E5E2DE"
+                    stroke-width="3"
+                  />
+                  <circle
+                    cx="20"
+                    cy="20"
+                    r="16"
+                    fill="none"
+                    stroke="#10B981"
+                    stroke-width="3"
+                    stroke-linecap="round"
+                    stroke-dasharray="100.53"
+                    stroke-dashoffset="40.21"
+                  />
+                  <text
+                    x="20"
+                    y="22"
+                    text-anchor="middle"
+                    dominant-baseline="middle"
+                    fill="#2D2A26"
+                    font-family="DM Sans"
+                    font-size="10"
+                    font-weight="700"
+                    style="
+                      transform: rotate(90deg);
+                      transform-origin: 20px 20px;
+                    "
+                  >
+                    3/5
+                  </text>
+                </svg>
+                <!-- Date + count -->
+                <div
+                  style="
+                    flex: 1;
+                    font-size: 14px;
+                    font-weight: 600;
+                    color: #2d2a26;
+                  "
+                >
+                  Tue, Feb 25 &middot; <span style="color: #059669">3/5</span>
+                  <span style="color: #10b981">&#10003;</span>
+                </div>
+                <!-- Nav chevrons -->
+                <span class="nav-chevrons">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#9CA3AF"
+                    stroke-width="2.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <polyline points="15 18 9 12 15 6" />
+                  </svg>
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#9CA3AF"
+                    stroke-width="2.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <polyline points="9 18 15 12 9 6" />
+                  </svg>
+                </span>
+              </div>
+              <!-- Day strip -->
+              <div class="day-strip" style="margin-top: 4px">
+                <div class="day-cell">
+                  <span class="day-label">M</span>
+                  <div class="day-circle completed">
+                    <svg
+                      width="14"
+                      height="14"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="#fff"
+                      stroke-width="3"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                  </div>
+                </div>
+                <div class="day-cell">
+                  <span class="day-label">T</span>
+                  <div class="day-circle today">25</div>
+                </div>
+                <div class="day-cell">
+                  <span class="day-label">W</span>
+                  <div class="day-circle">26</div>
+                </div>
+                <div class="day-cell">
+                  <span class="day-label">T</span>
+                  <div class="day-circle">27</div>
+                </div>
+                <div class="day-cell">
+                  <span class="day-label">F</span>
+                  <div class="day-circle">28</div>
+                </div>
+                <div class="day-cell">
+                  <span class="day-label">S</span>
+                  <div class="day-circle">1</div>
+                </div>
+                <div class="day-cell">
+                  <span class="day-label">S</span>
+                  <div class="day-circle">2</div>
+                </div>
+              </div>
+              <div style="margin-top: 12px">
+                <div class="habit-card">
+                  <span class="habit-emoji">&#x1F9D8;</span>
+                  <div class="habit-info">
+                    <div class="habit-name">Morning meditation</div>
+                    <div class="habit-streak">
+                      <span class="streak-fire">&#128293;</span> 12-day streak
+                    </div>
+                  </div>
+                  <div class="habit-check completed">
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="#fff"
+                      stroke-width="3"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                  </div>
+                </div>
+                <div class="habit-card">
+                  <span class="habit-emoji">&#x1F4DA;</span>
+                  <div class="habit-info">
+                    <div class="habit-name">Read 20 pages</div>
+                    <div class="habit-streak">
+                      <span class="streak-fire">&#128293;</span> 5-day streak
+                    </div>
+                  </div>
+                  <div class="habit-check pending"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <p class="variant-description">
+            Maximum card visibility. Everything in one row. For power users with
+            10+ habits.
+          </p>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- VARIANT 4 — Editorial -->
+        <!-- ============================================================ -->
+        <div class="variant-wrapper">
+          <div class="phone-frame">
+            <div class="dynamic-island"></div>
+            <div class="status-bar">
+              <span class="time">2:34</span>
+              <span class="icons">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path d="M5 12.55a11 11 0 0 1 14.08 0" />
+                  <path d="M1.42 9a16 16 0 0 1 21.16 0" />
+                  <path d="M8.53 16.11a6 6 0 0 1 6.95 0" />
+                  <line x1="12" y1="20" x2="12.01" y2="20" />
+                </svg>
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <rect x="1" y="6" width="18" height="12" rx="2" />
+                  <line x1="23" y1="13" x2="23" y2="11" />
+                </svg>
+              </span>
+            </div>
+            <div class="variant-label">V4 &mdash; Editorial</div>
+            <div class="phone-content">
+              <div
+                style="
+                  background: #f0ede8;
+                  border-bottom-left-radius: 16px;
+                  border-bottom-right-radius: 16px;
+                  padding: 14px 16px 12px;
+                "
+              >
+                <!-- Big serif greeting -->
+                <div
+                  style="
+                    font-family: 'Literata', Georgia, serif;
+                    font-size: 28px;
+                    font-weight: 700;
+                    color: #2d2a26;
+                    line-height: 1.1;
+                  "
+                >
+                  Good afternoon
+                </div>
+                <div
+                  style="
+                    font-size: 12px;
+                    font-weight: 400;
+                    color: #6e6660;
+                    margin-top: 4px;
+                  "
+                >
+                  Tuesday, February 25
+                </div>
+                <!-- Ring row -->
+                <div
+                  style="
+                    display: flex;
+                    align-items: center;
+                    gap: 12px;
+                    margin-top: 12px;
+                  "
+                >
+                  <svg
+                    width="52"
+                    height="52"
+                    viewBox="0 0 52 52"
+                    class="progress-ring"
+                    style="flex-shrink: 0"
+                  >
+                    <circle
+                      cx="26"
+                      cy="26"
+                      r="22"
+                      fill="none"
+                      stroke="#E5E2DE"
+                      stroke-width="4.5"
+                    />
+                    <circle
+                      cx="26"
+                      cy="26"
+                      r="22"
+                      fill="none"
+                      stroke="#10B981"
+                      stroke-width="4.5"
+                      stroke-linecap="round"
+                      stroke-dasharray="138.23"
+                      stroke-dashoffset="55.29"
+                    />
+                    <text
+                      x="26"
+                      y="28"
+                      text-anchor="middle"
+                      dominant-baseline="middle"
+                      fill="#2D2A26"
+                      font-family="DM Sans"
+                      font-size="13"
+                      font-weight="700"
+                      style="
+                        transform: rotate(90deg);
+                        transform-origin: 26px 26px;
+                      "
+                    >
+                      3/5
+                    </text>
+                  </svg>
+                  <span
+                    style="
+                      font-size: 14px;
+                      font-weight: 500;
+                      color: #6b6560;
+                      flex: 1;
+                    "
+                    >3 of 5 habits complete</span
+                  >
+                  <span class="nav-chevrons">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="#9CA3AF"
+                      stroke-width="2.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <polyline points="15 18 9 12 15 6" />
+                    </svg>
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="#9CA3AF"
+                      stroke-width="2.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <polyline points="9 18 15 12 9 6" />
+                    </svg>
+                  </span>
+                </div>
+                <!-- Day strip -->
+                <div class="day-strip" style="margin-top: 8px">
+                  <div class="day-cell">
+                    <span class="day-label">M</span>
+                    <div class="day-circle completed">
+                      <svg
+                        width="14"
+                        height="14"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="#fff"
+                        stroke-width="3"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
+                    </div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-label">T</span>
+                    <div class="day-circle today">25</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-label">W</span>
+                    <div class="day-circle">26</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-label">T</span>
+                    <div class="day-circle">27</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-label">F</span>
+                    <div class="day-circle">28</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-label">S</span>
+                    <div class="day-circle">1</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-label">S</span>
+                    <div class="day-circle">2</div>
+                  </div>
+                </div>
+              </div>
+              <div style="margin-top: 16px">
+                <div class="habit-card">
+                  <span class="habit-emoji">&#x1F9D8;</span>
+                  <div class="habit-info">
+                    <div class="habit-name">Morning meditation</div>
+                    <div class="habit-streak">
+                      <span class="streak-fire">&#128293;</span> 12-day streak
+                    </div>
+                  </div>
+                  <div class="habit-check completed">
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="#fff"
+                      stroke-width="3"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                  </div>
+                </div>
+                <div class="habit-card">
+                  <span class="habit-emoji">&#x1F4DA;</span>
+                  <div class="habit-info">
+                    <div class="habit-name">Read 20 pages</div>
+                    <div class="habit-streak">
+                      <span class="streak-fire">&#128293;</span> 5-day streak
+                    </div>
+                  </div>
+                  <div class="habit-check pending"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <p class="variant-description">
+            Magazine-inspired. Large serif greeting creates emotional warmth.
+            Ring is secondary.
+          </p>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- VARIANT 5 — Dark Shelf -->
+        <!-- ============================================================ -->
+        <div class="variant-wrapper">
+          <div class="phone-frame">
+            <div class="dynamic-island"></div>
+            <div
+              class="status-bar status-bar-dark"
+              style="position: relative; z-index: 5"
+            >
+              <span class="time" style="color: #fff">2:34</span>
+              <span class="icons">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#fff"
+                  stroke-width="2"
+                >
+                  <path d="M5 12.55a11 11 0 0 1 14.08 0" />
+                  <path d="M1.42 9a16 16 0 0 1 21.16 0" />
+                  <path d="M8.53 16.11a6 6 0 0 1 6.95 0" />
+                  <line x1="12" y1="20" x2="12.01" y2="20" />
+                </svg>
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#fff"
+                  stroke-width="2"
+                >
+                  <rect x="1" y="6" width="18" height="12" rx="2" />
+                  <line x1="23" y1="13" x2="23" y2="11" />
+                </svg>
+              </span>
+            </div>
+            <div
+              class="variant-label"
+              style="
+                background: rgba(255, 255, 255, 0.15);
+                backdrop-filter: blur(8px);
+              "
+            >
+              V5 &mdash; Dark Shelf
+            </div>
+            <div class="phone-content">
+              <!-- Dark shelf -->
+              <div
+                style="
+                  background: #2d2a26;
+                  border-bottom-left-radius: 16px;
+                  border-bottom-right-radius: 16px;
+                  padding: 16px 16px 12px;
+                  margin-top: -54px;
+                  padding-top: 70px;
+                "
+              >
+                <div style="display: flex; align-items: center; gap: 14px">
+                  <!-- Ring with dark track -->
+                  <svg
+                    width="64"
+                    height="64"
+                    viewBox="0 0 64 64"
+                    class="progress-ring"
+                    style="flex-shrink: 0"
+                  >
+                    <circle
+                      cx="32"
+                      cy="32"
+                      r="27"
+                      fill="none"
+                      stroke="#524D47"
+                      stroke-width="4.5"
+                    />
+                    <circle
+                      cx="32"
+                      cy="32"
+                      r="27"
+                      fill="none"
+                      stroke="#10B981"
+                      stroke-width="4.5"
+                      stroke-linecap="round"
+                      stroke-dasharray="169.65"
+                      stroke-dashoffset="67.86"
+                    />
+                    <text
+                      x="32"
+                      y="34"
+                      text-anchor="middle"
+                      dominant-baseline="middle"
+                      fill="#FFFFFF"
+                      font-family="DM Sans"
+                      font-size="15"
+                      font-weight="700"
+                      style="
+                        transform: rotate(90deg);
+                        transform-origin: 32px 32px;
+                      "
+                    >
+                      3/5
+                    </text>
+                  </svg>
+                  <div style="flex: 1; min-width: 0">
+                    <div
+                      style="
+                        font-size: 15px;
+                        font-weight: 600;
+                        line-height: 1.3;
+                      "
+                    >
+                      <span style="color: #ffffff">Good afternoon</span
+                      ><span style="color: #a8a29e"> &mdash; </span
+                      ><span style="color: #34d399">3 of 5 done</span>
+                    </div>
+                    <div
+                      style="
+                        display: flex;
+                        align-items: center;
+                        gap: 6px;
+                        margin-top: 4px;
+                      "
+                    >
+                      <span
+                        style="
+                          font-size: 12px;
+                          font-weight: 500;
+                          color: #a8a29e;
+                        "
+                        >Tue, February 25</span
+                      >
+                      <span class="nav-chevrons">
+                        <svg
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="#A8A29E"
+                          stroke-width="2.5"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        >
+                          <polyline points="15 18 9 12 15 6" />
+                        </svg>
+                        <svg
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="#A8A29E"
+                          stroke-width="2.5"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        >
+                          <polyline points="9 18 15 12 9 6" />
+                        </svg>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <!-- Dark day strip -->
+                <div class="day-strip day-strip-dark" style="margin-top: 12px">
+                  <div class="day-cell">
+                    <span class="day-label">M</span>
+                    <div class="day-circle completed">
+                      <svg
+                        width="14"
+                        height="14"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="#fff"
+                        stroke-width="3"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
+                    </div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-label">T</span>
+                    <div class="day-circle today">25</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-label">W</span>
+                    <div class="day-circle">26</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-label">T</span>
+                    <div class="day-circle">27</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-label">F</span>
+                    <div class="day-circle">28</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-label">S</span>
+                    <div class="day-circle">1</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-label">S</span>
+                    <div class="day-circle">2</div>
+                  </div>
+                </div>
+              </div>
+              <!-- Cards on warm canvas -->
+              <div style="margin-top: 16px">
+                <div class="habit-card">
+                  <span class="habit-emoji">&#x1F9D8;</span>
+                  <div class="habit-info">
+                    <div class="habit-name">Morning meditation</div>
+                    <div class="habit-streak">
+                      <span class="streak-fire">&#128293;</span> 12-day streak
+                    </div>
+                  </div>
+                  <div class="habit-check completed">
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="#fff"
+                      stroke-width="3"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                  </div>
+                </div>
+                <div class="habit-card">
+                  <span class="habit-emoji">&#x1F4DA;</span>
+                  <div class="habit-info">
+                    <div class="habit-name">Read 20 pages</div>
+                    <div class="habit-streak">
+                      <span class="streak-fire">&#128293;</span> 5-day streak
+                    </div>
+                  </div>
+                  <div class="habit-check pending"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <p class="variant-description">
+            High-contrast header creates dramatic zone separation. Premium,
+            app-store-hero aesthetic.
+          </p>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- VARIANT 6 — Card Enclosed -->
+        <!-- ============================================================ -->
+        <div class="variant-wrapper">
+          <div class="phone-frame">
+            <div class="dynamic-island"></div>
+            <div class="status-bar">
+              <span class="time">2:34</span>
+              <span class="icons">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path d="M5 12.55a11 11 0 0 1 14.08 0" />
+                  <path d="M1.42 9a16 16 0 0 1 21.16 0" />
+                  <path d="M8.53 16.11a6 6 0 0 1 6.95 0" />
+                  <line x1="12" y1="20" x2="12.01" y2="20" />
+                </svg>
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <rect x="1" y="6" width="18" height="12" rx="2" />
+                  <line x1="23" y1="13" x2="23" y2="11" />
+                </svg>
+              </span>
+            </div>
+            <div class="variant-label">V6 &mdash; Card Enclosed</div>
+            <div class="phone-content">
+              <!-- Card surface -->
+              <div
+                style="
+                  background: #ffffff;
+                  border: 1px solid #e5e2de;
+                  border-radius: 16px;
+                  margin: 4px 16px 0;
+                  padding: 16px;
+                  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+                "
+              >
+                <div style="display: flex; align-items: center; gap: 14px">
+                  <svg
+                    width="64"
+                    height="64"
+                    viewBox="0 0 64 64"
+                    class="progress-ring"
+                    style="flex-shrink: 0"
+                  >
+                    <circle
+                      cx="32"
+                      cy="32"
+                      r="27"
+                      fill="none"
+                      stroke="#E5E2DE"
+                      stroke-width="4.5"
+                    />
+                    <circle
+                      cx="32"
+                      cy="32"
+                      r="27"
+                      fill="none"
+                      stroke="#10B981"
+                      stroke-width="4.5"
+                      stroke-linecap="round"
+                      stroke-dasharray="169.65"
+                      stroke-dashoffset="67.86"
+                    />
+                    <text
+                      x="32"
+                      y="34"
+                      text-anchor="middle"
+                      dominant-baseline="middle"
+                      fill="#2D2A26"
+                      font-family="DM Sans"
+                      font-size="15"
+                      font-weight="700"
+                      style="
+                        transform: rotate(90deg);
+                        transform-origin: 32px 32px;
+                      "
+                    >
+                      3/5
+                    </text>
+                  </svg>
+                  <div style="flex: 1; min-width: 0">
+                    <div
+                      style="
+                        font-size: 15px;
+                        font-weight: 600;
+                        line-height: 1.3;
+                      "
+                    >
+                      <span style="color: #2d2a26">Good afternoon</span
+                      ><span style="color: #6e6660"> &mdash; </span
+                      ><span style="color: #059669">3 of 5 done</span>
+                    </div>
+                    <div
+                      style="
+                        display: flex;
+                        align-items: center;
+                        gap: 6px;
+                        margin-top: 4px;
+                      "
+                    >
+                      <span
+                        style="
+                          font-size: 12px;
+                          font-weight: 500;
+                          color: #6e6660;
+                        "
+                        >Tue, February 25</span
+                      >
+                      <span class="nav-chevrons">
+                        <svg
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="#9CA3AF"
+                          stroke-width="2.5"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        >
+                          <polyline points="15 18 9 12 15 6" />
+                        </svg>
+                        <svg
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="#9CA3AF"
+                          stroke-width="2.5"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        >
+                          <polyline points="9 18 15 12 9 6" />
+                        </svg>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div class="day-strip" style="margin-top: 12px; padding: 0">
+                  <div class="day-cell">
+                    <span class="day-label">M</span>
+                    <div class="day-circle completed">
+                      <svg
+                        width="14"
+                        height="14"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="#fff"
+                        stroke-width="3"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
+                    </div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-label">T</span>
+                    <div class="day-circle today">25</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-label">W</span>
+                    <div class="day-circle">26</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-label">T</span>
+                    <div class="day-circle">27</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-label">F</span>
+                    <div class="day-circle">28</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-label">S</span>
+                    <div class="day-circle">1</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-label">S</span>
+                    <div class="day-circle">2</div>
+                  </div>
+                </div>
+              </div>
+              <div style="margin-top: 12px">
+                <div class="habit-card">
+                  <span class="habit-emoji">&#x1F9D8;</span>
+                  <div class="habit-info">
+                    <div class="habit-name">Morning meditation</div>
+                    <div class="habit-streak">
+                      <span class="streak-fire">&#128293;</span> 12-day streak
+                    </div>
+                  </div>
+                  <div class="habit-check completed">
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="#fff"
+                      stroke-width="3"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                  </div>
+                </div>
+                <div class="habit-card">
+                  <span class="habit-emoji">&#x1F4DA;</span>
+                  <div class="habit-info">
+                    <div class="habit-name">Read 20 pages</div>
+                    <div class="habit-streak">
+                      <span class="streak-fire">&#128293;</span> 5-day streak
+                    </div>
+                  </div>
+                  <div class="habit-check pending"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <p class="variant-description">
+            Timeline contained in its own card surface. Clear boundaries.
+            Familiar iOS pattern.
+          </p>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- VARIANT 7 — Floating Ring -->
+        <!-- ============================================================ -->
+        <div class="variant-wrapper">
+          <div class="phone-frame">
+            <div class="dynamic-island"></div>
+            <div class="status-bar">
+              <span class="time">2:34</span>
+              <span class="icons">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path d="M5 12.55a11 11 0 0 1 14.08 0" />
+                  <path d="M1.42 9a16 16 0 0 1 21.16 0" />
+                  <path d="M8.53 16.11a6 6 0 0 1 6.95 0" />
+                  <line x1="12" y1="20" x2="12.01" y2="20" />
+                </svg>
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <rect x="1" y="6" width="18" height="12" rx="2" />
+                  <line x1="23" y1="13" x2="23" y2="11" />
+                </svg>
+              </span>
+            </div>
+            <div class="variant-label">V7 &mdash; Floating Ring</div>
+            <div class="phone-content" style="position: relative">
+              <!-- Short shelf (text only, no day strip) -->
+              <div
+                style="
+                  background: #f0ede8;
+                  border-bottom-left-radius: 16px;
+                  border-bottom-right-radius: 16px;
+                  padding: 14px 16px 28px;
+                "
+              >
+                <div
+                  style="font-size: 15px; font-weight: 600; line-height: 1.3"
+                >
+                  <span style="color: #2d2a26">Good afternoon</span
+                  ><span style="color: #6e6660"> &mdash; </span
+                  ><span style="color: #059669">3 of 5 done</span>
+                </div>
+                <div
+                  style="
+                    display: flex;
+                    align-items: center;
+                    gap: 6px;
+                    margin-top: 4px;
+                  "
+                >
+                  <span
+                    style="font-size: 12px; font-weight: 500; color: #6e6660"
+                    >Tue, February 25</span
+                  >
+                  <span class="nav-chevrons">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="#9CA3AF"
+                      stroke-width="2.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <polyline points="15 18 9 12 15 6" />
+                    </svg>
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="#9CA3AF"
+                      stroke-width="2.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <polyline points="9 18 15 12 9 6" />
+                    </svg>
+                  </span>
+                </div>
+              </div>
+              <!-- Floating ring overlapping shelf bottom -->
+              <div
+                style="
+                  display: flex;
+                  justify-content: center;
+                  margin-top: -20px;
+                  position: relative;
+                  z-index: 2;
+                "
+              >
+                <div
+                  style="
+                    background: #ffffff;
+                    border-radius: 50%;
+                    padding: 4px;
+                    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+                  "
+                >
+                  <svg
+                    width="72"
+                    height="72"
+                    viewBox="0 0 72 72"
+                    class="progress-ring"
+                  >
+                    <circle
+                      cx="36"
+                      cy="36"
+                      r="30"
+                      fill="none"
+                      stroke="#E5E2DE"
+                      stroke-width="4.5"
+                    />
+                    <circle
+                      cx="36"
+                      cy="36"
+                      r="30"
+                      fill="none"
+                      stroke="#10B981"
+                      stroke-width="4.5"
+                      stroke-linecap="round"
+                      stroke-dasharray="188.50"
+                      stroke-dashoffset="75.40"
+                    />
+                    <text
+                      x="36"
+                      y="38"
+                      text-anchor="middle"
+                      dominant-baseline="middle"
+                      fill="#2D2A26"
+                      font-family="DM Sans"
+                      font-size="16"
+                      font-weight="700"
+                      style="
+                        transform: rotate(90deg);
+                        transform-origin: 36px 36px;
+                      "
+                    >
+                      3/5
+                    </text>
+                  </svg>
+                </div>
+              </div>
+              <!-- Day strip on canvas -->
+              <div class="day-strip" style="margin-top: 8px">
+                <div class="day-cell">
+                  <span class="day-label">M</span>
+                  <div class="day-circle completed">
+                    <svg
+                      width="14"
+                      height="14"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="#fff"
+                      stroke-width="3"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                  </div>
+                </div>
+                <div class="day-cell">
+                  <span class="day-label">T</span>
+                  <div class="day-circle today">25</div>
+                </div>
+                <div class="day-cell">
+                  <span class="day-label">W</span>
+                  <div class="day-circle">26</div>
+                </div>
+                <div class="day-cell">
+                  <span class="day-label">T</span>
+                  <div class="day-circle">27</div>
+                </div>
+                <div class="day-cell">
+                  <span class="day-label">F</span>
+                  <div class="day-circle">28</div>
+                </div>
+                <div class="day-cell">
+                  <span class="day-label">S</span>
+                  <div class="day-circle">1</div>
+                </div>
+                <div class="day-cell">
+                  <span class="day-label">S</span>
+                  <div class="day-circle">2</div>
+                </div>
+              </div>
+              <div style="margin-top: 12px">
+                <div class="habit-card">
+                  <span class="habit-emoji">&#x1F9D8;</span>
+                  <div class="habit-info">
+                    <div class="habit-name">Morning meditation</div>
+                    <div class="habit-streak">
+                      <span class="streak-fire">&#128293;</span> 12-day streak
+                    </div>
+                  </div>
+                  <div class="habit-check completed">
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="#fff"
+                      stroke-width="3"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                  </div>
+                </div>
+                <div class="habit-card">
+                  <span class="habit-emoji">&#x1F4DA;</span>
+                  <div class="habit-info">
+                    <div class="habit-name">Read 20 pages</div>
+                    <div class="habit-streak">
+                      <span class="streak-fire">&#128293;</span> 5-day streak
+                    </div>
+                  </div>
+                  <div class="habit-check pending"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <p class="variant-description">
+            Ring bridges the shelf and card zones. Creates depth hierarchy and
+            visual focal point.
+          </p>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- VARIANT 8 — Streak Hero -->
+        <!-- ============================================================ -->
+        <div class="variant-wrapper">
+          <div class="phone-frame">
+            <div class="dynamic-island"></div>
+            <div class="status-bar">
+              <span class="time">2:34</span>
+              <span class="icons">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path d="M5 12.55a11 11 0 0 1 14.08 0" />
+                  <path d="M1.42 9a16 16 0 0 1 21.16 0" />
+                  <path d="M8.53 16.11a6 6 0 0 1 6.95 0" />
+                  <line x1="12" y1="20" x2="12.01" y2="20" />
+                </svg>
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <rect x="1" y="6" width="18" height="12" rx="2" />
+                  <line x1="23" y1="13" x2="23" y2="11" />
+                </svg>
+              </span>
+            </div>
+            <div
+              class="variant-label"
+              style="background: rgba(139, 98, 8, 0.85)"
+            >
+              V8 &mdash; Streak Hero
+            </div>
+            <div class="phone-content">
+              <!-- Warm amber tinted shelf -->
+              <div
+                style="
+                  background: #fef8ee;
+                  border-bottom-left-radius: 16px;
+                  border-bottom-right-radius: 16px;
+                  padding: 14px 16px 12px;
+                "
+              >
+                <!-- Hero streak -->
+                <div style="font-size: 20px; font-weight: 700; color: #8b6208">
+                  &#128293; 12-day streak
+                </div>
+                <!-- Progress row with ring -->
+                <div
+                  style="
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    margin-top: 6px;
+                  "
+                >
+                  <span
+                    style="
+                      font-size: 13px;
+                      font-weight: 500;
+                      color: #6b6560;
+                      flex: 1;
+                    "
+                    >3 of 5 done today</span
+                  >
+                  <svg
+                    width="48"
+                    height="48"
+                    viewBox="0 0 48 48"
+                    class="progress-ring"
+                    style="flex-shrink: 0"
+                  >
+                    <circle
+                      cx="24"
+                      cy="24"
+                      r="20"
+                      fill="none"
+                      stroke="#E5E2DE"
+                      stroke-width="4"
+                    />
+                    <circle
+                      cx="24"
+                      cy="24"
+                      r="20"
+                      fill="none"
+                      stroke="#10B981"
+                      stroke-width="4"
+                      stroke-linecap="round"
+                      stroke-dasharray="125.66"
+                      stroke-dashoffset="50.27"
+                    />
+                    <text
+                      x="24"
+                      y="26"
+                      text-anchor="middle"
+                      dominant-baseline="middle"
+                      fill="#2D2A26"
+                      font-family="DM Sans"
+                      font-size="12"
+                      font-weight="700"
+                      style="
+                        transform: rotate(90deg);
+                        transform-origin: 24px 24px;
+                      "
+                    >
+                      3/5
+                    </text>
+                  </svg>
+                </div>
+                <!-- Day strip -->
+                <div class="day-strip" style="margin-top: 10px">
+                  <div class="day-cell">
+                    <span class="day-label">M</span>
+                    <div class="day-circle completed">
+                      <svg
+                        width="14"
+                        height="14"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="#fff"
+                        stroke-width="3"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
+                    </div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-label">T</span>
+                    <div class="day-circle today">25</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-label">W</span>
+                    <div class="day-circle">26</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-label">T</span>
+                    <div class="day-circle">27</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-label">F</span>
+                    <div class="day-circle">28</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-label">S</span>
+                    <div class="day-circle">1</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-label">S</span>
+                    <div class="day-circle">2</div>
+                  </div>
+                </div>
+                <!-- Week nav centered -->
+                <div
+                  style="
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 8px;
+                    margin-top: 6px;
+                  "
+                >
+                  <svg
+                    width="12"
+                    height="12"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#9CA3AF"
+                    stroke-width="2.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <polyline points="15 18 9 12 15 6" />
+                  </svg>
+                  <span style="font-size: 11px; color: #6e6660"
+                    >Feb 24 &ndash; Mar 2</span
+                  >
+                  <svg
+                    width="12"
+                    height="12"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#9CA3AF"
+                    stroke-width="2.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <polyline points="9 18 15 12 9 6" />
+                  </svg>
+                </div>
+              </div>
+              <div style="margin-top: 16px">
+                <div class="habit-card">
+                  <span class="habit-emoji">&#x1F9D8;</span>
+                  <div class="habit-info">
+                    <div class="habit-name">Morning meditation</div>
+                    <div class="habit-streak">
+                      <span class="streak-fire">&#128293;</span> 12-day streak
+                    </div>
+                  </div>
+                  <div class="habit-check completed">
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="#fff"
+                      stroke-width="3"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                  </div>
+                </div>
+                <div class="habit-card">
+                  <span class="habit-emoji">&#x1F4DA;</span>
+                  <div class="habit-info">
+                    <div class="habit-name">Read 20 pages</div>
+                    <div class="habit-streak">
+                      <span class="streak-fire">&#128293;</span> 5-day streak
+                    </div>
+                  </div>
+                  <div class="habit-check pending"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <p class="variant-description">
+            Streak count as the primary motivator. Targets users driven by
+            consistency over daily completion.
+          </p>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- VARIANT 9 — Progress Bar -->
+        <!-- ============================================================ -->
+        <div class="variant-wrapper">
+          <div class="phone-frame">
+            <div class="dynamic-island"></div>
+            <div class="status-bar">
+              <span class="time">2:34</span>
+              <span class="icons">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path d="M5 12.55a11 11 0 0 1 14.08 0" />
+                  <path d="M1.42 9a16 16 0 0 1 21.16 0" />
+                  <path d="M8.53 16.11a6 6 0 0 1 6.95 0" />
+                  <line x1="12" y1="20" x2="12.01" y2="20" />
+                </svg>
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <rect x="1" y="6" width="18" height="12" rx="2" />
+                  <line x1="23" y1="13" x2="23" y2="11" />
+                </svg>
+              </span>
+            </div>
+            <div class="variant-label">V9 &mdash; Progress Bar</div>
+            <div class="phone-content">
+              <div
+                style="
+                  background: #f0ede8;
+                  border-bottom-left-radius: 16px;
+                  border-bottom-right-radius: 16px;
+                  padding: 12px 16px 12px;
+                "
+              >
+                <!-- Greeting -->
+                <div style="font-size: 16px; font-weight: 600; color: #2d2a26">
+                  Good afternoon
+                </div>
+                <!-- Progress bar -->
+                <div
+                  style="
+                    margin-top: 6px;
+                    width: 100%;
+                    height: 6px;
+                    background: #e5e2de;
+                    border-radius: 3px;
+                    overflow: hidden;
+                  "
+                >
+                  <div
+                    style="
+                      width: 60%;
+                      height: 100%;
+                      background: #10b981;
+                      border-radius: 3px;
+                    "
+                  ></div>
+                </div>
+                <!-- Labels row -->
+                <div
+                  style="
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    margin-top: 4px;
+                  "
+                >
+                  <span
+                    style="font-size: 12px; font-weight: 600; color: #059669"
+                    >3 of 5 done</span
+                  >
+                  <span
+                    style="
+                      font-size: 12px;
+                      color: #6e6660;
+                      display: flex;
+                      align-items: center;
+                      gap: 4px;
+                    "
+                  >
+                    <svg
+                      width="12"
+                      height="12"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="#9CA3AF"
+                      stroke-width="2.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <polyline points="15 18 9 12 15 6" />
+                    </svg>
+                    Tue, Feb 25
+                    <svg
+                      width="12"
+                      height="12"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="#9CA3AF"
+                      stroke-width="2.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <polyline points="9 18 15 12 9 6" />
+                    </svg>
+                  </span>
+                </div>
+                <!-- Day strip -->
+                <div class="day-strip" style="margin-top: 8px">
+                  <div class="day-cell">
+                    <span class="day-label">M</span>
+                    <div class="day-circle completed">
+                      <svg
+                        width="14"
+                        height="14"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="#fff"
+                        stroke-width="3"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
+                    </div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-label">T</span>
+                    <div class="day-circle today">25</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-label">W</span>
+                    <div class="day-circle">26</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-label">T</span>
+                    <div class="day-circle">27</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-label">F</span>
+                    <div class="day-circle">28</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-label">S</span>
+                    <div class="day-circle">1</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-label">S</span>
+                    <div class="day-circle">2</div>
+                  </div>
+                </div>
+              </div>
+              <div style="margin-top: 16px">
+                <div class="habit-card">
+                  <span class="habit-emoji">&#x1F9D8;</span>
+                  <div class="habit-info">
+                    <div class="habit-name">Morning meditation</div>
+                    <div class="habit-streak">
+                      <span class="streak-fire">&#128293;</span> 12-day streak
+                    </div>
+                  </div>
+                  <div class="habit-check completed">
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="#fff"
+                      stroke-width="3"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                  </div>
+                </div>
+                <div class="habit-card">
+                  <span class="habit-emoji">&#x1F4DA;</span>
+                  <div class="habit-info">
+                    <div class="habit-name">Read 20 pages</div>
+                    <div class="habit-streak">
+                      <span class="streak-fire">&#128293;</span> 5-day streak
+                    </div>
+                  </div>
+                  <div class="habit-check pending"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <p class="variant-description">
+            Linear progress replaces circular. Space-efficient. Modern SaaS
+            aesthetic.
+          </p>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- VARIANT 10 — Gradient Blend -->
+        <!-- ============================================================ -->
+        <div class="variant-wrapper">
+          <div class="phone-frame">
+            <div class="dynamic-island"></div>
+            <div class="status-bar">
+              <span class="time">2:34</span>
+              <span class="icons">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path d="M5 12.55a11 11 0 0 1 14.08 0" />
+                  <path d="M1.42 9a16 16 0 0 1 21.16 0" />
+                  <path d="M8.53 16.11a6 6 0 0 1 6.95 0" />
+                  <line x1="12" y1="20" x2="12.01" y2="20" />
+                </svg>
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <rect x="1" y="6" width="18" height="12" rx="2" />
+                  <line x1="23" y1="13" x2="23" y2="11" />
+                </svg>
+              </span>
+            </div>
+            <div class="variant-label">V10 &mdash; Gradient Blend</div>
+            <div class="phone-content">
+              <!-- Gradient overlay (no hard edge) -->
+              <div
+                style="
+                  background: linear-gradient(
+                    to bottom,
+                    #efebe5 0%,
+                    #efebe5 30%,
+                    rgba(239, 235, 229, 0) 100%
+                  );
+                  padding: 14px 16px 16px;
+                "
+              >
+                <div style="display: flex; align-items: center; gap: 14px">
+                  <svg
+                    width="64"
+                    height="64"
+                    viewBox="0 0 64 64"
+                    class="progress-ring"
+                    style="flex-shrink: 0"
+                  >
+                    <circle
+                      cx="32"
+                      cy="32"
+                      r="27"
+                      fill="none"
+                      stroke="#E5E2DE"
+                      stroke-width="4.5"
+                    />
+                    <circle
+                      cx="32"
+                      cy="32"
+                      r="27"
+                      fill="none"
+                      stroke="#10B981"
+                      stroke-width="4.5"
+                      stroke-linecap="round"
+                      stroke-dasharray="169.65"
+                      stroke-dashoffset="67.86"
+                    />
+                    <text
+                      x="32"
+                      y="34"
+                      text-anchor="middle"
+                      dominant-baseline="middle"
+                      fill="#2D2A26"
+                      font-family="DM Sans"
+                      font-size="15"
+                      font-weight="700"
+                      style="
+                        transform: rotate(90deg);
+                        transform-origin: 32px 32px;
+                      "
+                    >
+                      3/5
+                    </text>
+                  </svg>
+                  <div style="flex: 1; min-width: 0">
+                    <div
+                      style="
+                        font-size: 15px;
+                        font-weight: 600;
+                        line-height: 1.3;
+                      "
+                    >
+                      <span style="color: #2d2a26">Good afternoon</span
+                      ><span style="color: #6e6660"> &mdash; </span
+                      ><span style="color: #059669">3 of 5 done</span>
+                    </div>
+                    <div
+                      style="
+                        display: flex;
+                        align-items: center;
+                        gap: 6px;
+                        margin-top: 4px;
+                      "
+                    >
+                      <span
+                        style="
+                          font-size: 12px;
+                          font-weight: 500;
+                          color: #6e6660;
+                        "
+                        >Tue, February 25</span
+                      >
+                      <span class="nav-chevrons">
+                        <svg
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="#9CA3AF"
+                          stroke-width="2.5"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        >
+                          <polyline points="15 18 9 12 15 6" />
+                        </svg>
+                        <svg
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="#9CA3AF"
+                          stroke-width="2.5"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        >
+                          <polyline points="9 18 15 12 9 6" />
+                        </svg>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <!-- Day strip in the fade zone -->
+                <div class="day-strip" style="margin-top: 12px">
+                  <div class="day-cell">
+                    <span class="day-label">M</span>
+                    <div class="day-circle completed">
+                      <svg
+                        width="14"
+                        height="14"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="#fff"
+                        stroke-width="3"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
+                    </div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-label">T</span>
+                    <div class="day-circle today">25</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-label">W</span>
+                    <div class="day-circle">26</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-label">T</span>
+                    <div class="day-circle">27</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-label">F</span>
+                    <div class="day-circle">28</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-label">S</span>
+                    <div class="day-circle">1</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-label">S</span>
+                    <div class="day-circle">2</div>
+                  </div>
+                </div>
+              </div>
+              <div style="margin-top: 12px">
+                <div class="habit-card">
+                  <span class="habit-emoji">&#x1F9D8;</span>
+                  <div class="habit-info">
+                    <div class="habit-name">Morning meditation</div>
+                    <div class="habit-streak">
+                      <span class="streak-fire">&#128293;</span> 12-day streak
+                    </div>
+                  </div>
+                  <div class="habit-check completed">
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="#fff"
+                      stroke-width="3"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                  </div>
+                </div>
+                <div class="habit-card">
+                  <span class="habit-emoji">&#x1F4DA;</span>
+                  <div class="habit-info">
+                    <div class="habit-name">Read 20 pages</div>
+                    <div class="habit-streak">
+                      <span class="streak-fire">&#128293;</span> 5-day streak
+                    </div>
+                  </div>
+                  <div class="habit-check pending"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <p class="variant-description">
+            No hard edges. Gradient dissolves the shelf into the canvas.
+            Organic, calming feel.
+          </p>
+        </div>
+      </div>
+      <!-- end variants-grid -->
+
+      <!-- ============================================================ -->
+      <!-- Comparison Legend: Vertical Space Consumed -->
+      <!-- ============================================================ -->
+      <div class="legend-section">
+        <h3 class="legend-title">
+          Header Height Comparison (approximate px from top of content to first
+          habit card)
+        </h3>
+
+        <div class="legend-bar-row">
+          <span class="legend-bar-label">V3 Minimal Single Line</span>
+          <div class="legend-bar-track">
+            <div
+              class="legend-bar-fill"
+              style="
+                width: 38%;
+                background: linear-gradient(90deg, #10b981, #059669);
+              "
+            >
+              ~108px
+            </div>
+          </div>
+        </div>
+        <div class="legend-bar-row">
+          <span class="legend-bar-label">V9 Progress Bar</span>
+          <div class="legend-bar-track">
+            <div
+              class="legend-bar-fill"
+              style="
+                width: 50%;
+                background: linear-gradient(90deg, #10b981, #059669);
+              "
+            >
+              ~142px
+            </div>
+          </div>
+        </div>
+        <div class="legend-bar-row">
+          <span class="legend-bar-label">V1 B+D Hybrid (Current)</span>
+          <div class="legend-bar-track">
+            <div
+              class="legend-bar-fill"
+              style="
+                width: 56%;
+                background: linear-gradient(90deg, #10b981, #059669);
+              "
+            >
+              ~158px
+            </div>
+          </div>
+        </div>
+        <div class="legend-bar-row">
+          <span class="legend-bar-label">V10 Gradient Blend</span>
+          <div class="legend-bar-track">
+            <div
+              class="legend-bar-fill"
+              style="
+                width: 56%;
+                background: linear-gradient(90deg, #10b981, #059669);
+              "
+            >
+              ~160px
+            </div>
+          </div>
+        </div>
+        <div class="legend-bar-row">
+          <span class="legend-bar-label">V6 Card Enclosed</span>
+          <div class="legend-bar-track">
+            <div
+              class="legend-bar-fill"
+              style="
+                width: 58%;
+                background: linear-gradient(90deg, #d97706, #92400e);
+              "
+            >
+              ~164px
+            </div>
+          </div>
+        </div>
+        <div class="legend-bar-row">
+          <span class="legend-bar-label">V5 Dark Shelf</span>
+          <div class="legend-bar-track">
+            <div
+              class="legend-bar-fill"
+              style="
+                width: 58%;
+                background: linear-gradient(90deg, #d97706, #92400e);
+              "
+            >
+              ~164px
+            </div>
+          </div>
+        </div>
+        <div class="legend-bar-row">
+          <span class="legend-bar-label">V8 Streak Hero</span>
+          <div class="legend-bar-track">
+            <div
+              class="legend-bar-fill"
+              style="
+                width: 62%;
+                background: linear-gradient(90deg, #d97706, #92400e);
+              "
+            >
+              ~176px
+            </div>
+          </div>
+        </div>
+        <div class="legend-bar-row">
+          <span class="legend-bar-label">V4 Editorial</span>
+          <div class="legend-bar-track">
+            <div
+              class="legend-bar-fill"
+              style="
+                width: 66%;
+                background: linear-gradient(90deg, #d97706, #92400e);
+              "
+            >
+              ~188px
+            </div>
+          </div>
+        </div>
+        <div class="legend-bar-row">
+          <span class="legend-bar-label">V7 Floating Ring</span>
+          <div class="legend-bar-track">
+            <div
+              class="legend-bar-fill"
+              style="
+                width: 72%;
+                background: linear-gradient(90deg, #ef4444, #b91c1c);
+              "
+            >
+              ~204px
+            </div>
+          </div>
+        </div>
+        <div class="legend-bar-row">
+          <span class="legend-bar-label">V2 Centered Stack</span>
+          <div class="legend-bar-track">
+            <div
+              class="legend-bar-fill"
+              style="
+                width: 78%;
+                background: linear-gradient(90deg, #ef4444, #b91c1c);
+              "
+            >
+              ~220px
+            </div>
+          </div>
+        </div>
+
+        <div
+          style="
+            margin-top: 16px;
+            display: flex;
+            gap: 24px;
+            align-items: center;
+            flex-wrap: wrap;
+          "
+        >
+          <div style="display: flex; align-items: center; gap: 6px">
+            <div
+              style="
+                width: 12px;
+                height: 12px;
+                border-radius: 2px;
+                background: #10b981;
+              "
+            ></div>
+            <span style="font-size: 11px; color: #7a756e"
+              >Compact (&lt;165px)</span
+            >
+          </div>
+          <div style="display: flex; align-items: center; gap: 6px">
+            <div
+              style="
+                width: 12px;
+                height: 12px;
+                border-radius: 2px;
+                background: #d97706;
+              "
+            ></div>
+            <span style="font-size: 11px; color: #7a756e"
+              >Medium (165-195px)</span
+            >
+          </div>
+          <div style="display: flex; align-items: center; gap: 6px">
+            <div
+              style="
+                width: 12px;
+                height: 12px;
+                border-radius: 2px;
+                background: #ef4444;
+              "
+            ></div>
+            <span style="font-size: 11px; color: #7a756e"
+              >Tall (&gt;195px)</span
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- end page-container -->
+
+    <script>
+      // Initialize Lucide icons if any were used via data-lucide attributes
+      if (typeof lucide !== 'undefined') {
+        lucide.createIcons();
+      }
+    </script>
+  </body>
+</html>

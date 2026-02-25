@@ -7,11 +7,10 @@ import Animated, {
 
 import { useHapticFeedback } from '../../../../../hooks/useHapticFeedback';
 import { fontFamilies } from '@/theme/typography';
-import { BORDER_RADIUS, TOUCH_TARGETS } from '../constants';
+import { BORDER_RADIUS } from '../constants';
 import type { SuggestionChip } from '../types';
 import { useEmptyStateColors } from '../useEmptyStateColors';
 import { useChipAnimations } from './useChipAnimations';
-import { SHADOW_OPACITY } from '../../../../../constants';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -85,22 +84,30 @@ export function Chip({ chip, isSelected, onPress, staggerDelay }: ChipProps) {
           borderWidth: 1,
           elevation: 1,
           flexDirection: 'row',
-          gap: 4,
-          minHeight: TOUCH_TARGETS.chipHeight,
-          paddingHorizontal: 10,
-          paddingVertical: 8,
+          gap: 6,
+          height: 40,
+          paddingHorizontal: 14,
           shadowColor: colors.chipShadow,
-          shadowOffset: { height: 4, width: 0 },
-          shadowOpacity: SHADOW_OPACITY.minimal,
-          shadowRadius: 16,
+          shadowOffset: { height: 1, width: 0 },
+          shadowOpacity: 0.04,
+          shadowRadius: 2,
         },
       ]}
       onPress={handlePress}
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}
     >
-      <Text style={{ fontSize: 17 }}>{chip.emoji}</Text>
-      <Animated.Text style={[textStyle, { fontFamily: fontFamilies.primary.text, fontSize: 13, fontWeight: '600' }]}>
+      <Text style={{ fontSize: 15 }}>{chip.emoji}</Text>
+      <Animated.Text
+        style={[
+          textStyle,
+          {
+            fontFamily: fontFamilies.primary.text,
+            fontSize: 13,
+            fontWeight: '600',
+          },
+        ]}
+      >
         {chip.label}
       </Animated.Text>
     </AnimatedPressable>

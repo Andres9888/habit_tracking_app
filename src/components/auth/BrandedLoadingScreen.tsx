@@ -5,14 +5,25 @@
  */
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 
 import { useThemeColors } from '../../theme/ThemeContext';
-import { SkeletonLoader, HabitCardSkeleton } from '../SkeletonLoader';
+import { HabitCardSkeleton, SkeletonLoader } from '../SkeletonLoader';
 import { LoadingTimeoutCard } from './LoadingTimeoutCard';
-import { fontFamilies } from '@/theme/typography';
 
 const LOADING_TIMEOUT_MS = 10_000;
+
+function ChainIcon({ isDark }: { isDark: boolean }) {
+  return (
+    <View
+      className={`mb-4 h-16 w-16 items-center justify-center rounded-3xl ${
+        isDark ? 'bg-emerald-900' : 'bg-emerald-50'
+      }`}
+    >
+      <Text className='text-[28px]'>🔗</Text>
+    </View>
+  );
+}
 
 export function BrandedLoadingScreen() {
   const [timedOut, setTimedOut] = useState(false);
@@ -32,66 +43,32 @@ export function BrandedLoadingScreen() {
   }, []);
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.background }]}>
-      <View style={styles.content}>
-        <View
-          style={[
-            styles.iconContainer,
-            { backgroundColor: isDark ? '#064E3B' : '#ecfdf5' },
-          ]}
+    <View
+      className='flex-1 items-center justify-center'
+      style={{ backgroundColor: colors.background }}
+    >
+      <View className='items-center'>
+        <ChainIcon isDark={isDark} />
+        <Text
+          className="mb-8 font-['DMSans'] text-[22px] font-bold tracking-wide"
+          style={{ color: colors.text.primary }}
         >
-          <Text style={styles.iconText}>🔗</Text>
-        </View>
-        <Text style={[styles.appName, { color: colors.text.primary }]}>
           Chain Day
         </Text>
         {timedOut ? (
           <LoadingTimeoutCard onRetry={handleRetry} />
         ) : (
-          <View style={styles.shimmerBar}>
+          <View className='mt-3'>
             <SkeletonLoader borderRadius={4} height={4} width={120} />
           </View>
         )}
       </View>
 
       {/* Ghost habit cards */}
-      <View style={styles.cardsPreview}>
+      <View className='flex-1 px-4 pt-6'>
         <HabitCardSkeleton />
         <HabitCardSkeleton />
       </View>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  appName: {
-    fontFamily: fontFamilies.primary.text,
-    fontSize: 22,
-    fontWeight: '700',
-    letterSpacing: 0.5,
-    marginBottom: 32,
-  },
-  container: {
-    alignItems: 'center',
-    flex: 1,
-    justifyContent: 'center',
-  },
-  content: { alignItems: 'center' },
-  iconContainer: {
-    alignItems: 'center',
-    borderRadius: 24,
-    height: 64,
-    justifyContent: 'center',
-    marginBottom: 16,
-    width: 64,
-  },
-  iconText: { fontSize: 28 },
-  cardsPreview: {
-    flex: 1,
-    paddingHorizontal: 16,
-    paddingTop: 24,
-  },
-  shimmerBar: {
-    marginTop: 12,
-  },
-});

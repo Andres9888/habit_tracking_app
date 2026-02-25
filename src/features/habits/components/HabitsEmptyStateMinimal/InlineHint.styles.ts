@@ -5,7 +5,7 @@ import { fontFamilies } from '../../../../theme/typography';
 const templatesButtonBaseStyle = {
   borderRadius: borderRadius.medium,
   elevation: 4,
-  height: 52,
+  height: 56,
   overflow: 'hidden',
   shadowColor: colors.primary[700],
   shadowOffset: { height: 4, width: 0 },
@@ -13,10 +13,25 @@ const templatesButtonBaseStyle = {
   width: '100%',
 } as const;
 
-export const containerStyle = { alignItems: 'center', marginTop: spacing.base, width: '100%' } as const;
-export const dividerStyle = { alignItems: 'center', flexDirection: 'row', gap: 10, marginBottom: 10, width: '100%' } as const;
+export const containerStyle = {
+  alignItems: 'center',
+  marginTop: spacing.base,
+  width: '100%',
+} as const;
+export const dividerStyle = {
+  alignItems: 'center',
+  flexDirection: 'row',
+  gap: 10,
+  marginBottom: 12,
+  width: '100%',
+} as const;
 export const dividerLineStyle = { flex: 1, height: 0.5 } as const;
-export const dividerTextBaseStyle = { fontFamily: fontFamilies.primary.text, fontSize: 13, lineHeight: 18, textAlign: 'center' } as const;
+export const dividerTextBaseStyle = {
+  fontFamily: fontFamilies.primary.text,
+  fontSize: 13,
+  lineHeight: 18,
+  textAlign: 'center',
+} as const;
 export const actionsColumnStyle = { gap: spacing.sm, width: '100%' } as const;
 
 export const buildMyOwnLabelStyle = {
@@ -69,28 +84,38 @@ export const accentStripeStyle = {
   width: 3.5,
 } as const;
 
+/** Card shell — container styles only (no layout) */
+const buildMyOwnShellBase = {
+  borderRadius: borderRadius.medium,
+  borderWidth: 1,
+  elevation: 1,
+  height: 48,
+  overflow: 'hidden',
+  shadowColor: colors.gray[900],
+  shadowOffset: { height: 1, width: 0 },
+  shadowOpacity: 0.06,
+  shadowRadius: 3,
+  width: '100%',
+} as const;
+
+/** Inner row — handles flexDirection: 'row' layout */
+export const buildMyOwnRowStyle = {
+  alignItems: 'center',
+  flex: 1,
+  flexDirection: 'row',
+  gap: 10,
+  paddingLeft: spacing.base,
+  paddingRight: 14,
+} as const;
+
 export function getBuildMyOwnCardStyle(
   pressed: boolean,
   btnColors: { bg: string; bgPressed: string; borderColor: string }
 ) {
   return {
-    alignItems: 'center',
+    ...buildMyOwnShellBase,
     backgroundColor: pressed ? btnColors.bgPressed : btnColors.bg,
     borderColor: btnColors.borderColor,
-    borderRadius: borderRadius.medium,
-    borderWidth: 1,
-    elevation: 1,
-    flexDirection: 'row',
-    gap: 10,
-    height: 44,
-    overflow: 'hidden',
-    paddingLeft: spacing.base,
-    paddingRight: 14,
-    shadowColor: colors.gray[900],
-    shadowOffset: { height: 1, width: 0 },
-    shadowOpacity: 0.06,
-    shadowRadius: 3,
-    width: '100%',
   };
 }
 

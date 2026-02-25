@@ -1,0 +1,1331 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BottomActionBar — Interaction Improvements</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;0,7..72,700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --parchment: #f5f1ed;
+        --stone-800: #2d2a26;
+        --stone-600: #57534e;
+        --stone-500: #6b6560;
+        --stone-200: #ddd8d2;
+        --card-light: #ffffff;
+        --dark-900: #111827;
+        --dark-800: #1f2937;
+        --dark-700: #374151;
+        --dark-400: #9ca3af;
+        --dark-300: #d1d5db;
+        --dark-200: #e5e7eb;
+        --dark-50: #f9fafb;
+        --green-600: #059669;
+        --green-500: #10b981;
+        --green-400: #34d399;
+        --page-bg: #0c0a09;
+        --page-surface: #1c1917;
+        --page-border: #292524;
+        --page-text: #d6d3d1;
+        --page-muted: #78716c;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: 'DM Sans', sans-serif;
+        background: var(--page-bg);
+        color: var(--page-text);
+        min-height: 100vh;
+      }
+      .page {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 56px 32px 80px;
+      }
+
+      /* -- Header -- */
+      .page-header {
+        margin-bottom: 48px;
+      }
+      .page-header::before {
+        content: 'INTERACTION POLISH';
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11px;
+        font-weight: 500;
+        letter-spacing: 2.5px;
+        color: var(--green-400);
+        display: block;
+        margin-bottom: 14px;
+      }
+      .page-title {
+        font-family: 'Literata', serif;
+        font-size: 34px;
+        font-weight: 700;
+        color: var(--dark-50);
+        line-height: 1.2;
+        margin-bottom: 10px;
+      }
+      .page-subtitle {
+        font-size: 16px;
+        color: var(--page-muted);
+        line-height: 1.6;
+        max-width: 680px;
+      }
+
+      .instruction {
+        font-size: 13px;
+        color: var(--green-400);
+        font-weight: 600;
+        margin-bottom: 32px;
+        padding: 12px 16px;
+        border: 1px solid rgba(52, 211, 153, 0.15);
+        border-radius: 10px;
+        background: rgba(52, 211, 153, 0.04);
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .instruction .arrow {
+        font-size: 16px;
+      }
+
+      /* -- Section -- */
+      .section-label {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 10px;
+        font-weight: 500;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--page-muted);
+        margin-bottom: 20px;
+        padding-bottom: 8px;
+        border-bottom: 1px solid var(--page-border);
+      }
+
+      /* -- Comparison Grid -- */
+      .comparison {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 28px;
+        margin-bottom: 48px;
+      }
+      .version-col {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+      .version-label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .version-label .tag {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 10px;
+        font-weight: 500;
+        letter-spacing: 1.5px;
+        padding: 4px 8px;
+        border-radius: 5px;
+        text-transform: uppercase;
+      }
+      .tag.old {
+        background: rgba(120, 113, 108, 0.12);
+        color: var(--page-muted);
+      }
+      .tag.new {
+        background: rgba(52, 211, 153, 0.12);
+        color: var(--green-400);
+      }
+      .version-label .name {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--dark-300);
+      }
+
+      /* -- Phone Frame -- */
+      .phone {
+        width: 100%;
+        aspect-ratio: 390 / 280;
+        border-radius: 26px;
+        overflow: hidden;
+        position: relative;
+        border: 1px solid var(--page-border);
+      }
+      .phone.light {
+        background: var(--parchment);
+      }
+      .phone.dark {
+        background: var(--dark-900);
+      }
+
+      .theme-tag {
+        position: absolute;
+        top: 8px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 8px;
+        font-weight: 500;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        padding: 2px 8px;
+        border-radius: 3px;
+        z-index: 10;
+      }
+      .light .theme-tag {
+        background: rgba(45, 42, 38, 0.05);
+        color: var(--stone-500);
+      }
+      .dark .theme-tag {
+        background: rgba(255, 255, 255, 0.05);
+        color: var(--dark-400);
+      }
+
+      /* -- Habit Cards -- */
+      .cards-area {
+        position: absolute;
+        top: 28px;
+        left: 12px;
+        right: 12px;
+      }
+      .hcard {
+        border-radius: 14px;
+        padding: 11px 12px;
+        margin-bottom: 7px;
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        min-height: 50px;
+      }
+      .light .hcard {
+        background: var(--card-light);
+        border: 1px solid #e5e2de;
+        box-shadow: 0 1px 2px rgba(45, 42, 38, 0.05);
+      }
+      .dark .hcard {
+        background: var(--dark-800);
+        border: 1px solid var(--dark-700);
+      }
+      .hbar {
+        width: 3px;
+        height: 26px;
+        border-radius: 2px;
+        flex-shrink: 0;
+      }
+      .hbar.green {
+        background: var(--green-600);
+      }
+      .dark .hbar.green {
+        background: var(--green-400);
+      }
+      .hbar.blue {
+        background: #3b82f6;
+      }
+      .dark .hbar.blue {
+        background: #60a5fa;
+      }
+      .hinfo {
+        flex: 1;
+      }
+      .hname {
+        font-size: 13px;
+        font-weight: 600;
+        line-height: 1.3;
+      }
+      .light .hname {
+        color: var(--stone-800);
+      }
+      .dark .hname {
+        color: var(--dark-50);
+      }
+      .hmeta {
+        font-size: 10px;
+        font-weight: 500;
+        margin-top: 1px;
+      }
+      .light .hmeta {
+        color: var(--stone-500);
+      }
+      .dark .hmeta {
+        color: var(--dark-400);
+      }
+      .hcheck {
+        width: 24px;
+        height: 24px;
+        border-radius: 12px;
+        border: 2px solid;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        font-size: 11px;
+        font-weight: 700;
+        color: white;
+      }
+      .light .hcheck {
+        border-color: var(--stone-200);
+      }
+      .dark .hcheck {
+        border-color: #4b5563;
+      }
+      .hcheck.done {
+        background: var(--green-600);
+        border-color: var(--green-600);
+      }
+      .hcheck.done::after {
+        content: '\2713';
+      }
+
+      /* =============================================
+     CURRENT BAR — old press behavior
+     ============================================= */
+      .bar-old {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        display: flex;
+        align-items: center;
+        padding: 12px 20px 24px;
+        border-top: 1px solid;
+        backdrop-filter: blur(20px) saturate(1.4);
+        -webkit-backdrop-filter: blur(20px) saturate(1.4);
+      }
+      .light .bar-old {
+        background: rgba(245, 241, 237, 0.82);
+        border-top-color: rgba(221, 216, 210, 0.45);
+      }
+      .dark .bar-old {
+        background: rgba(17, 24, 39, 0.82);
+        border-top-color: rgba(55, 65, 81, 0.3);
+      }
+      .bar-old .z {
+        flex: 1;
+        display: flex;
+      }
+      .bar-old .z.l {
+        justify-content: flex-start;
+      }
+      .bar-old .z.c {
+        justify-content: center;
+        overflow: visible;
+        align-items: center;
+      }
+      .bar-old .z.r {
+        justify-content: flex-end;
+      }
+
+      /* Old pills — harsh 0.9 scale, linear 50ms timing */
+      .bar-old .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        height: 38px;
+        min-width: 112px;
+        justify-content: center;
+        padding: 0 14px;
+        border-radius: 12px;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        border: 1px solid;
+        font-family: 'DM Sans', sans-serif;
+        /* LINEAR timing — no spring feel, abrupt */
+        transition: transform 50ms linear;
+        user-select: none;
+        -webkit-user-select: none;
+      }
+      .bar-old .pill:active {
+        transform: scale(0.9); /* Too aggressive! */
+      }
+      .light .bar-old .pill {
+        background: rgba(255, 255, 255, 0.55);
+        border-color: var(--stone-200);
+        color: var(--stone-800);
+      }
+      .dark .bar-old .pill {
+        background: rgba(31, 41, 55, 0.4);
+        border-color: var(--dark-700);
+        color: var(--dark-300);
+      }
+      .bar-old .pill.tpl .dark-label {
+        display: none;
+      }
+      .light .bar-old .pill.tpl {
+        color: var(--stone-600);
+      }
+      .dark .bar-old .pill.tpl {
+        color: var(--dark-300);
+      }
+
+      /* Old FAB — harsh 0.92 scale, no lift, no shadow shift */
+      .bar-old .fab {
+        width: 52px;
+        height: 52px;
+        border-radius: 16px;
+        background: var(--green-600);
+        border: 3px solid;
+        margin-top: -20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: transform 50ms linear;
+        user-select: none;
+        -webkit-user-select: none;
+      }
+      .bar-old .fab:active {
+        transform: scale(0.92);
+      }
+      .light .bar-old .fab {
+        border-color: rgba(245, 241, 237, 0.9);
+        box-shadow: 0 4px 16px rgba(45, 42, 38, 0.08);
+      }
+      .dark .bar-old .fab {
+        border-color: rgba(17, 24, 39, 0.9);
+        box-shadow: 0 4px 20px rgba(5, 150, 105, 0.3);
+      }
+
+      /* =============================================
+     IMPROVED BAR — spring-tuned interactions
+     ============================================= */
+      .bar-new {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        display: flex;
+        align-items: center;
+        padding: 12px 20px 24px;
+        border-top: 1px solid;
+        backdrop-filter: blur(20px) saturate(1.4);
+        -webkit-backdrop-filter: blur(20px) saturate(1.4);
+      }
+      .light .bar-new {
+        background: rgba(245, 241, 237, 0.82);
+        border-top-color: rgba(221, 216, 210, 0.45);
+      }
+      .dark .bar-new {
+        background: rgba(17, 24, 39, 0.82);
+        border-top-color: rgba(55, 65, 81, 0.3);
+      }
+      .bar-new .z {
+        flex: 1;
+        display: flex;
+      }
+      .bar-new .z.l {
+        justify-content: flex-start;
+      }
+      .bar-new .z.c {
+        justify-content: center;
+        overflow: visible;
+        align-items: center;
+      }
+      .bar-new .z.r {
+        justify-content: flex-end;
+      }
+
+      /* New pills — 0.96 scale, spring transition, background shift */
+      .bar-new .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        height: 38px;
+        min-width: 112px;
+        justify-content: center;
+        padding: 0 14px;
+        border-radius: 12px;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        border: 1px solid;
+        font-family: 'DM Sans', sans-serif;
+        /* SPRING feel — cubic-bezier(0.34, 1.56, 0.64, 1) mimics overshoot */
+        transition:
+          transform 280ms cubic-bezier(0.34, 1.56, 0.64, 1),
+          background-color 120ms ease-out,
+          box-shadow 120ms ease-out;
+        user-select: none;
+        -webkit-user-select: none;
+      }
+      .bar-new .pill:active {
+        transform: scale(0.96);
+        transition:
+          transform 80ms ease-out,
+          background-color 80ms ease-out,
+          box-shadow 80ms ease-out;
+      }
+      .light .bar-new .pill {
+        background: rgba(255, 255, 255, 0.55);
+        border-color: var(--stone-200);
+        color: var(--stone-800);
+        box-shadow: 0 1px 2px rgba(45, 42, 38, 0.04);
+      }
+      .light .bar-new .pill:active {
+        background: rgba(255, 255, 255, 0.8); /* Glass press-in */
+        box-shadow: 0 0 0 rgba(45, 42, 38, 0);
+      }
+      .dark .bar-new .pill {
+        background: rgba(31, 41, 55, 0.4);
+        border-color: var(--dark-700);
+        color: var(--dark-300);
+      }
+      .dark .bar-new .pill:active {
+        background: rgba(31, 41, 55, 0.65); /* Glass press-in */
+      }
+      .bar-new .pill.tpl .dark-label {
+        display: none;
+      }
+      .light .bar-new .pill.tpl {
+        color: var(--stone-600);
+      }
+      .dark .bar-new .pill.tpl {
+        color: var(--dark-300);
+      }
+
+      /* New FAB — 0.94 scale, lift + shadow shift, spring release */
+      .bar-new .fab {
+        width: 52px;
+        height: 52px;
+        border-radius: 16px;
+        background: var(--green-600);
+        border: 3px solid;
+        margin-top: -20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition:
+          transform 280ms cubic-bezier(0.34, 1.56, 0.64, 1),
+          box-shadow 200ms ease-out;
+        user-select: none;
+        -webkit-user-select: none;
+      }
+      .bar-new .fab:active {
+        transition:
+          transform 80ms ease-out,
+          box-shadow 80ms ease-out;
+      }
+      .light .bar-new .fab {
+        border-color: rgba(245, 241, 237, 0.9);
+        box-shadow: 0 4px 16px rgba(45, 42, 38, 0.08);
+      }
+      .light .bar-new .fab:active {
+        transform: scale(0.94) translateY(-2px);
+        box-shadow: 0 8px 24px rgba(45, 42, 38, 0.14);
+      }
+      .dark .bar-new .fab {
+        border-color: rgba(17, 24, 39, 0.9);
+        box-shadow: 0 4px 16px rgba(45, 42, 38, 0.08);
+      }
+      .dark .bar-new .fab:active {
+        transform: scale(0.94) translateY(-2px);
+        box-shadow: 0 8px 24px rgba(45, 42, 38, 0.14);
+      }
+
+      /* Haptic flash indicator */
+      .bar-new .pill::after,
+      .bar-new .fab::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        background: transparent;
+        pointer-events: none;
+        transition: background 150ms ease-out;
+      }
+      .bar-new .pill {
+        position: relative;
+        overflow: hidden;
+      }
+      .bar-new .fab {
+        position: relative;
+        overflow: hidden;
+      }
+
+      /* Haptic tag that appears on press */
+      .haptic-indicator {
+        position: absolute;
+        bottom: -18px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 8px;
+        font-weight: 500;
+        letter-spacing: 1px;
+        color: var(--page-muted);
+        white-space: nowrap;
+        opacity: 0;
+        transition: opacity 200ms ease-out;
+        pointer-events: none;
+      }
+      .bar-new .pill:active ~ .haptic-indicator,
+      .bar-new .fab:active ~ .haptic-indicator {
+        opacity: 1;
+      }
+
+      .icon {
+        display: inline-flex;
+        align-items: center;
+        flex-shrink: 0;
+      }
+
+      /* ── Changes Table ── */
+      .changes-section {
+        margin-top: 16px;
+        margin-bottom: 48px;
+      }
+      .changes-table {
+        width: 100%;
+        border-collapse: collapse;
+        background: var(--page-surface);
+        border-radius: 14px;
+        overflow: hidden;
+        border: 1px solid var(--page-border);
+      }
+      .changes-table th {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 10px;
+        font-weight: 500;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        color: var(--page-muted);
+        text-align: left;
+        padding: 14px 16px;
+        border-bottom: 1px solid var(--page-border);
+      }
+      .changes-table td {
+        font-size: 12.5px;
+        padding: 12px 16px;
+        border-bottom: 1px solid var(--page-border);
+        vertical-align: top;
+        line-height: 1.5;
+      }
+      .changes-table tr:last-child td {
+        border-bottom: none;
+      }
+      .changes-table .prop {
+        color: var(--dark-200);
+        font-weight: 600;
+        white-space: nowrap;
+      }
+      .changes-table .old-val {
+        color: var(--page-muted);
+      }
+      .changes-table .old-val code {
+        text-decoration: line-through;
+        opacity: 0.6;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11px;
+      }
+      .changes-table .new-val {
+        color: var(--dark-300);
+      }
+      .changes-table .new-val code {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11px;
+        color: var(--green-400);
+      }
+      .changes-table .why {
+        color: var(--page-muted);
+        font-size: 11.5px;
+      }
+      .tag-cell {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 9px;
+        font-weight: 500;
+        padding: 2px 6px;
+        border-radius: 4px;
+        display: inline-block;
+      }
+      .tag-cell.feel {
+        background: rgba(96, 165, 250, 0.12);
+        color: #60a5fa;
+      }
+      .tag-cell.sense {
+        background: rgba(251, 191, 36, 0.12);
+        color: #fbbf24;
+      }
+      .tag-cell.depth {
+        background: rgba(168, 85, 247, 0.12);
+        color: #a855f7;
+      }
+
+      /* ── Scale Diagram ── */
+      .scale-section {
+        margin-top: 48px;
+      }
+      .scale-diagram {
+        background: var(--page-surface);
+        border: 1px solid var(--page-border);
+        border-radius: 14px;
+        padding: 28px;
+      }
+      .scale-diagram h3 {
+        font-family: 'Literata', serif;
+        font-size: 16px;
+        font-weight: 600;
+        color: var(--dark-50);
+        margin-bottom: 20px;
+      }
+      .scale-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 10px;
+      }
+      .scale-label {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--dark-300);
+        width: 120px;
+        flex-shrink: 0;
+      }
+      .scale-bar-wrap {
+        flex: 1;
+        height: 24px;
+        position: relative;
+        background: rgba(255, 255, 255, 0.03);
+        border-radius: 4px;
+        overflow: hidden;
+      }
+      .scale-bar {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        border-radius: 4px;
+      }
+      .scale-value {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11px;
+        font-weight: 500;
+        width: 40px;
+        text-align: right;
+        flex-shrink: 0;
+      }
+
+      @media (max-width: 700px) {
+        .comparison {
+          grid-template-columns: 1fr;
+        }
+        .page {
+          padding: 32px 16px 48px;
+        }
+        .page-title {
+          font-size: 26px;
+        }
+        .changes-table {
+          font-size: 11px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <header class="page-header">
+        <h1 class="page-title">BottomActionBar — Interaction Polish</h1>
+        <p class="page-subtitle">
+          Five targeted improvements to align the bar's press feedback with the
+          app's established interaction patterns. Every other component uses
+          springs, haptics, and consistent scale values — the bar should too.
+        </p>
+      </header>
+
+      <div class="instruction">
+        <span class="arrow">👆</span>
+        Press and hold buttons in each bar to feel the difference
+      </div>
+
+      <!-- Light Mode -->
+      <div class="section-label">Light Mode — Press & Hold to Compare</div>
+      <div class="comparison">
+        <div class="version-col">
+          <div class="version-label">
+            <span class="tag old">Current</span>
+            <span class="name"
+              >Jarring 0.9 scale, linear timing, no haptics</span
+            >
+          </div>
+          <div class="phone light">
+            <span class="theme-tag">Light</span>
+            <div class="cards-area">
+              <div class="hcard">
+                <div class="hbar green"></div>
+                <div class="hinfo">
+                  <div class="hname">Morning Meditation</div>
+                  <div class="hmeta">🔥 12 day streak</div>
+                </div>
+                <div class="hcheck done"></div>
+              </div>
+              <div class="hcard">
+                <div class="hbar blue"></div>
+                <div class="hinfo">
+                  <div class="hname">Read 30 Minutes</div>
+                  <div class="hmeta">🔥 5 day streak</div>
+                </div>
+                <div class="hcheck"></div>
+              </div>
+              <div class="hcard">
+                <div class="hbar green"></div>
+                <div class="hinfo">
+                  <div class="hname">Evening Journal</div>
+                  <div class="hmeta">🔥 3 day streak</div>
+                </div>
+                <div class="hcheck"></div>
+              </div>
+            </div>
+            <div class="bar-old">
+              <div class="z l">
+                <div class="pill">
+                  <svg
+                    class="icon"
+                    width="15"
+                    height="15"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.25"
+                  >
+                    <path
+                      d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"
+                    />
+                    <circle cx="12" cy="12" r="3" />
+                  </svg>
+                  Settings
+                </div>
+              </div>
+              <div class="z c">
+                <div class="fab">
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="white"
+                    stroke-width="2.5"
+                    stroke-linecap="round"
+                  >
+                    <line x1="12" y1="5" x2="12" y2="19" />
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                  </svg>
+                </div>
+              </div>
+              <div class="z r">
+                <div class="pill tpl">
+                  <svg
+                    class="icon"
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.25"
+                  >
+                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+                  </svg>
+                  Templates
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="version-col">
+          <div class="version-label">
+            <span class="tag new">Improved</span>
+            <span class="name"
+              >Spring 0.96, haptics, glass press, FAB lift</span
+            >
+          </div>
+          <div class="phone light">
+            <span class="theme-tag">Light</span>
+            <div class="cards-area">
+              <div class="hcard">
+                <div class="hbar green"></div>
+                <div class="hinfo">
+                  <div class="hname">Morning Meditation</div>
+                  <div class="hmeta">🔥 12 day streak</div>
+                </div>
+                <div class="hcheck done"></div>
+              </div>
+              <div class="hcard">
+                <div class="hbar blue"></div>
+                <div class="hinfo">
+                  <div class="hname">Read 30 Minutes</div>
+                  <div class="hmeta">🔥 5 day streak</div>
+                </div>
+                <div class="hcheck"></div>
+              </div>
+              <div class="hcard">
+                <div class="hbar green"></div>
+                <div class="hinfo">
+                  <div class="hname">Evening Journal</div>
+                  <div class="hmeta">🔥 3 day streak</div>
+                </div>
+                <div class="hcheck"></div>
+              </div>
+            </div>
+            <div class="bar-new">
+              <div class="z l">
+                <div class="pill">
+                  <svg
+                    class="icon"
+                    width="15"
+                    height="15"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.25"
+                  >
+                    <path
+                      d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"
+                    />
+                    <circle cx="12" cy="12" r="3" />
+                  </svg>
+                  Settings
+                </div>
+              </div>
+              <div class="z c">
+                <div class="fab">
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="white"
+                    stroke-width="2.5"
+                    stroke-linecap="round"
+                  >
+                    <line x1="12" y1="5" x2="12" y2="19" />
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                  </svg>
+                </div>
+              </div>
+              <div class="z r">
+                <div class="pill tpl">
+                  <svg
+                    class="icon"
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.25"
+                  >
+                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+                  </svg>
+                  Templates
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dark Mode -->
+      <div class="section-label">Dark Mode — Press & Hold to Compare</div>
+      <div class="comparison">
+        <div class="version-col">
+          <div class="version-label">
+            <span class="tag old">Current</span>
+            <span class="name">v9.2</span>
+          </div>
+          <div class="phone dark">
+            <span class="theme-tag">Dark</span>
+            <div class="cards-area">
+              <div class="hcard">
+                <div class="hbar green"></div>
+                <div class="hinfo">
+                  <div class="hname">Morning Meditation</div>
+                  <div class="hmeta">🔥 12 day streak</div>
+                </div>
+                <div class="hcheck done"></div>
+              </div>
+              <div class="hcard">
+                <div class="hbar blue"></div>
+                <div class="hinfo">
+                  <div class="hname">Read 30 Minutes</div>
+                  <div class="hmeta">🔥 5 day streak</div>
+                </div>
+                <div class="hcheck"></div>
+              </div>
+              <div class="hcard">
+                <div class="hbar green"></div>
+                <div class="hinfo">
+                  <div class="hname">Evening Journal</div>
+                  <div class="hmeta">🔥 3 day streak</div>
+                </div>
+                <div class="hcheck"></div>
+              </div>
+            </div>
+            <div class="bar-old">
+              <div class="z l">
+                <div class="pill">
+                  <svg
+                    class="icon"
+                    width="15"
+                    height="15"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.25"
+                  >
+                    <path
+                      d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"
+                    />
+                    <circle cx="12" cy="12" r="3" />
+                  </svg>
+                  Settings
+                </div>
+              </div>
+              <div class="z c">
+                <div class="fab">
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="white"
+                    stroke-width="2.5"
+                    stroke-linecap="round"
+                  >
+                    <line x1="12" y1="5" x2="12" y2="19" />
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                  </svg>
+                </div>
+              </div>
+              <div class="z r">
+                <div class="pill tpl">
+                  <svg
+                    class="icon"
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.25"
+                  >
+                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+                  </svg>
+                  Templates
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="version-col">
+          <div class="version-label">
+            <span class="tag new">Improved</span>
+            <span class="name">v9.3 — Interaction Polish</span>
+          </div>
+          <div class="phone dark">
+            <span class="theme-tag">Dark</span>
+            <div class="cards-area">
+              <div class="hcard">
+                <div class="hbar green"></div>
+                <div class="hinfo">
+                  <div class="hname">Morning Meditation</div>
+                  <div class="hmeta">🔥 12 day streak</div>
+                </div>
+                <div class="hcheck done"></div>
+              </div>
+              <div class="hcard">
+                <div class="hbar blue"></div>
+                <div class="hinfo">
+                  <div class="hname">Read 30 Minutes</div>
+                  <div class="hmeta">🔥 5 day streak</div>
+                </div>
+                <div class="hcheck"></div>
+              </div>
+              <div class="hcard">
+                <div class="hbar green"></div>
+                <div class="hinfo">
+                  <div class="hname">Evening Journal</div>
+                  <div class="hmeta">🔥 3 day streak</div>
+                </div>
+                <div class="hcheck"></div>
+              </div>
+            </div>
+            <div class="bar-new">
+              <div class="z l">
+                <div class="pill">
+                  <svg
+                    class="icon"
+                    width="15"
+                    height="15"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.25"
+                  >
+                    <path
+                      d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"
+                    />
+                    <circle cx="12" cy="12" r="3" />
+                  </svg>
+                  Settings
+                </div>
+              </div>
+              <div class="z c">
+                <div class="fab">
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="white"
+                    stroke-width="2.5"
+                    stroke-linecap="round"
+                  >
+                    <line x1="12" y1="5" x2="12" y2="19" />
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                  </svg>
+                </div>
+              </div>
+              <div class="z r">
+                <div class="pill tpl">
+                  <svg
+                    class="icon"
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.25"
+                  >
+                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+                  </svg>
+                  Templates
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Changes Table -->
+      <div class="changes-section">
+        <table class="changes-table">
+          <thead>
+            <tr>
+              <th style="width: 15%">Property</th>
+              <th style="width: 18%">Before</th>
+              <th style="width: 18%">After</th>
+              <th style="width: 37%">Why</th>
+              <th style="width: 12%">Type</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="prop">Pill press scale</td>
+              <td class="old-val"><code>0.90</code></td>
+              <td class="new-val"><code>0.96</code></td>
+              <td class="why">
+                Most aggressive scale in the entire app — cards use 0.97, chips
+                0.95. Secondary utility buttons shouldn't outscale the primary
+                card interaction.
+              </td>
+              <td><span class="tag-cell feel">Feel</span></td>
+            </tr>
+            <tr>
+              <td class="prop">FAB press scale</td>
+              <td class="old-val"><code>0.92</code></td>
+              <td class="new-val"><code>0.94</code></td>
+              <td class="why">
+                Match the standalone FloatingActionButton component (0.94). The
+                Add button is the same action — it should feel the same.
+              </td>
+              <td><span class="tag-cell feel">Feel</span></td>
+            </tr>
+            <tr>
+              <td class="prop">Press-in easing</td>
+              <td class="old-val"><code>withTiming(50ms)</code> linear</td>
+              <td class="new-val"><code>withSpring(snappy)</code></td>
+              <td class="why">
+                Every other press in the app uses springs. The 50ms linear
+                timing creates a mechanical snap vs the organic spring feel
+                established elsewhere.
+              </td>
+              <td><span class="tag-cell feel">Feel</span></td>
+            </tr>
+            <tr>
+              <td class="prop">Release easing</td>
+              <td class="old-val">Spring (entrance)</td>
+              <td class="new-val">Spring (snappy) — same config</td>
+              <td class="why">
+                Already correct. <code>entrance</code> and
+                <code>snappy</code> are identical configs (d:18, s:150). No
+                change needed.
+              </td>
+              <td><span class="tag-cell feel">Feel</span></td>
+            </tr>
+            <tr>
+              <td class="prop">Haptic feedback</td>
+              <td class="old-val"><code>none</code></td>
+              <td class="new-val">
+                Pills: <code>tap</code> (light)<br />FAB:
+                <code>toggle</code> (medium)
+              </td>
+              <td class="why">
+                Every other pressable in the app fires haptics. HabitCard, CTA,
+                chips, standalone FAB — all have haptic feedback. The bar has
+                zero.
+              </td>
+              <td><span class="tag-cell sense">Haptic</span></td>
+            </tr>
+            <tr>
+              <td class="prop">Pill bg on press</td>
+              <td class="old-val"><code>no change</code></td>
+              <td class="new-val">
+                Light: <code>0.55 → 0.80</code><br />Dark:
+                <code>0.40 → 0.65</code>
+              </td>
+              <td class="why">
+                Frosted glass should "press into" when touched — opacity
+                increases slightly, simulating depth. Matches material-glass
+                interaction metaphor.
+              </td>
+              <td><span class="tag-cell depth">Depth</span></td>
+            </tr>
+            <tr>
+              <td class="prop">FAB lift on press</td>
+              <td class="old-val"><code>none</code></td>
+              <td class="new-val">
+                <code>translateY: -2px</code> + shadow increase
+              </td>
+              <td class="why">
+                HabitCard lifts -1.5px and darkens shadow on press. The FAB
+                should "lift toward your finger" with the same physical metaphor
+                — scale down + lift up + shadow deepen.
+              </td>
+              <td><span class="tag-cell depth">Depth</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Scale Hierarchy Diagram -->
+      <div class="scale-section">
+        <div class="scale-diagram">
+          <h3>App-Wide Press Scale Hierarchy</h3>
+          <div class="scale-row">
+            <div class="scale-label">CTA Button</div>
+            <div class="scale-bar-wrap">
+              <div
+                class="scale-bar"
+                style="
+                  width: 20%;
+                  background: rgba(52, 211, 153, 0.15);
+                  border-right: 2px solid var(--green-400);
+                "
+              ></div>
+            </div>
+            <div class="scale-value" style="color: var(--green-400)">0.98</div>
+          </div>
+          <div class="scale-row">
+            <div class="scale-label">Habit Card</div>
+            <div class="scale-bar-wrap">
+              <div
+                class="scale-bar"
+                style="
+                  width: 30%;
+                  background: rgba(52, 211, 153, 0.15);
+                  border-right: 2px solid var(--green-400);
+                "
+              ></div>
+            </div>
+            <div class="scale-value" style="color: var(--green-400)">0.97</div>
+          </div>
+          <div class="scale-row">
+            <div
+              class="scale-label"
+              style="color: var(--green-400); font-weight: 700"
+            >
+              Bar Pills (new)
+            </div>
+            <div class="scale-bar-wrap">
+              <div
+                class="scale-bar"
+                style="
+                  width: 40%;
+                  background: rgba(52, 211, 153, 0.12);
+                  border-right: 2px solid var(--green-400);
+                "
+              ></div>
+            </div>
+            <div class="scale-value" style="color: var(--green-400)">0.96</div>
+          </div>
+          <div class="scale-row">
+            <div class="scale-label">Chips</div>
+            <div class="scale-bar-wrap">
+              <div
+                class="scale-bar"
+                style="
+                  width: 50%;
+                  background: rgba(52, 211, 153, 0.1);
+                  border-right: 2px solid var(--green-400);
+                "
+              ></div>
+            </div>
+            <div class="scale-value" style="color: var(--green-400)">0.95</div>
+          </div>
+          <div class="scale-row">
+            <div
+              class="scale-label"
+              style="color: var(--green-400); font-weight: 700"
+            >
+              Bar FAB (new)
+            </div>
+            <div class="scale-bar-wrap">
+              <div
+                class="scale-bar"
+                style="
+                  width: 60%;
+                  background: rgba(52, 211, 153, 0.08);
+                  border-right: 2px solid var(--green-400);
+                "
+              ></div>
+            </div>
+            <div class="scale-value" style="color: var(--green-400)">0.94</div>
+          </div>
+          <div class="scale-row">
+            <div
+              class="scale-label"
+              style="
+                color: #f87171;
+                text-decoration: line-through;
+                opacity: 0.6;
+              "
+            >
+              Bar Pills (old)
+            </div>
+            <div class="scale-bar-wrap">
+              <div
+                class="scale-bar"
+                style="
+                  width: 100%;
+                  background: rgba(248, 113, 113, 0.08);
+                  border-right: 2px solid #f87171;
+                "
+              ></div>
+            </div>
+            <div class="scale-value" style="color: #f87171">0.90</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

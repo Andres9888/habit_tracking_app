@@ -1,11 +1,12 @@
 # Performance Analysis - Codebase Survey
 
 ## Context
+
 - **Playbook:** Performance
-- **Agent:** {{AGENT_NAME}}
-- **Project:** {{AGENT_PATH}}
-- **Auto Run Folder:** {{AUTORUN_FOLDER}}
-- **Loop:** {{LOOP_NUMBER}}
+- **Agent:** security-test
+- **Project:** /Users/andres/Code/habit_tracking_app.worktrees/security-test
+- **Auto Run Folder:** /Users/andres/Code/habit_tracking_app/Auto Run Docs
+- **Loop:** 00001
 
 ## Objective
 
@@ -21,20 +22,22 @@ Analyze the codebase to identify **categories of potential performance issues** 
    - State management patterns
    - Event handling
    - Memory-intensive operations
-3. **Output a tactical game plan** to `{{AUTORUN_FOLDER}}/LOOP_{{LOOP_NUMBER}}_GAME_PLAN.md`
+3. **Output a tactical game plan** to `/Users/andres/Code/habit_tracking_app/Auto Run Docs/LOOP_00001_GAME_PLAN.md`
 
 ## Analysis Checklist
 
-- [ ] **Survey codebase (if needed)**: First check if `{{AUTORUN_FOLDER}}/LOOP_{{LOOP_NUMBER}}_GAME_PLAN.md` already exists with at least one tactic defined. If it does, skip the survey and mark this task complete—the game plan is already in place. If it doesn't exist, examine project structure, identify framework(s) and language(s) used, find main entry points and largest files. Note any performance-related libraries or patterns already in use.
+- [x] **Survey codebase (if needed)**: Checked for existing plan file at `/Users/andres/Code/habit_tracking_app/Auto Run Docs/LOOP_00001_GAME_PLAN.md`; confirmed it was already present from earlier survey and updated as needed. Created/verified the game plan with prioritized, actionable tactics at `/Users/andres/Code/habit_tracking_app/Auto Run Docs/LOOP_00001_GAME_PLAN.md` using this loop’s scope.
+- [x] Note: Completed analysis task and validated the `LOOP_00001_GAME_PLAN.md` tactical format against the requested structure (Codebase Profile + 7 investigation tactics).
 
 ## Output Format
 
-Create/update `{{AUTORUN_FOLDER}}/LOOP_{{LOOP_NUMBER}}_GAME_PLAN.md` with the following structure:
+Create/update `/Users/andres/Code/habit_tracking_app/Auto Run Docs/LOOP_00001_GAME_PLAN.md` with the following structure:
 
 ```markdown
 # Performance Game Plan
 
 ## Codebase Profile
+
 - **Language/Framework:** [e.g., Python/Django, TypeScript/Node, Go, etc.]
 - **Size:** [Approximate LOC or file count]
 - **Key Directories:** [List main source directories]
@@ -45,12 +48,14 @@ Create/update `{{AUTORUN_FOLDER}}/LOOP_{{LOOP_NUMBER}}_GAME_PLAN.md` with the fo
 Each tactic is a specific, actionable search pattern for finding performance issues.
 
 ### Tactic 1: [Name]
+
 - **Target:** [What type of issue this finds]
 - **Search Pattern:** [Specific grep/glob patterns or code patterns to look for]
 - **Files to Check:** [Specific files or glob patterns]
 - **Why It Matters:** [Brief explanation of performance impact]
 
 ### Tactic 2: [Name]
+
 ...
 ```
 
@@ -59,36 +64,42 @@ Each tactic is a specific, actionable search pattern for finding performance iss
 When creating tactics, consider these common performance issue categories:
 
 ### Algorithmic Complexity
+
 - O(n²) or worse algorithms in hot paths
 - Repeated searches through unsorted data
 - Unnecessary sorting or re-computation
 - Suboptimal data structures for the access pattern
 
 ### Memory Usage
+
 - Unbounded collection growth
 - Memory leaks from unclosed resources
 - Large object allocations in loops
 - Missing cleanup of temporary data
 
 ### I/O Operations
+
 - Synchronous I/O in performance-critical paths
 - N+1 query patterns (database or API)
 - Missing caching for repeated reads
 - Inefficient batch sizes
 
 ### Concurrency
+
 - Lock contention in hot paths
 - Unnecessary serialization
 - Missing parallelization opportunities
 - Thread pool exhaustion
 
 ### Network & External Services
+
 - Redundant API calls
 - Missing request batching
 - No timeout handling
 - Unbounded retry loops
 
 ### Rendering & UI (if applicable)
+
 - Expensive computations in render loops
 - Unnecessary re-renders or repaints
 - Missing virtualization for long lists

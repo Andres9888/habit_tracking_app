@@ -63,6 +63,12 @@ export interface DayCellProps {
   onDayPress?: (date: Date) => void;
   isDayPressEnabled: boolean;
   disableFutureDayPress: boolean;
+  /** Whether to render a streak connector arm extending to the left */
+  connectLeft?: boolean;
+  /** Whether to render a streak connector arm extending to the right */
+  connectRight?: boolean;
+  /** Color for the streak connector arms */
+  streakConnectorColor?: string;
 }
 
 export interface CalendarColors {
@@ -78,13 +84,13 @@ export interface CalendarColors {
 
 export interface WeekNavigationHeaderProps {
   dateRangeText: string;
-  onPreviousWeek?: () => void;
-  onNextWeek?: () => void;
+  /** Current date for day-name / full-date header display */
+  currentDate: Date;
   canNavigateForward: boolean;
-  colors: CalendarColors;
   onJumpToToday?: () => void;
   onDateRangePress?: () => void;
+  onPreviousWeek?: () => void;
+  onNextWeek?: () => void;
   completedToday?: number;
   totalHabits?: number;
-  reduceMotion?: boolean;
 }

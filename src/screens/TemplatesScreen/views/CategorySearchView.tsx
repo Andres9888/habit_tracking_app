@@ -3,7 +3,6 @@
  */
 
 import { Pressable, View } from 'react-native';
-import Toast from '../../../components/Toast';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { styles } from '../../templates/templatesScreenStyles';
 import {
@@ -14,6 +13,7 @@ import {
   TemplateModals,
 } from '../components';
 import type { CategorySearchViewProps } from './CategorySearchView.types';
+import { FeedbackOverlays } from './FeedbackOverlays';
 import { TemplatesList } from './TemplatesList';
 
 export function CategorySearchView(p: CategorySearchViewProps) {
@@ -75,14 +75,13 @@ export function CategorySearchView(p: CategorySearchViewProps) {
         onDirectImport={h.handleDirectImport}
         onImport={h.handleTemplateImport}
       />
-      <Toast
-        duration={3000}
-        message={p.toastMessage ?? ''}
-        variant={
-          (p.toastMessage ?? '').includes('Failed') ? 'error' : 'success'
-        }
-        visible={p.showToast}
-        onDismiss={() => p.setShowToast(false)}
+      <FeedbackOverlays
+        showCelebration={p.showCelebration}
+        showToast={p.showToast}
+        toastMessage={p.toastMessage}
+        toastTemplateData={p.toastTemplateData}
+        onDismissCelebration={() => p.setShowCelebration(false)}
+        onDismissToast={() => p.setShowToast(false)}
       />
       {p.showSortOptions && (
         <Pressable

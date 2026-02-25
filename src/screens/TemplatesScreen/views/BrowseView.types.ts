@@ -5,6 +5,7 @@
 import type { AnimatedStyle } from 'react-native-reanimated';
 import type { LayoutChangeEvent, ScrollView } from 'react-native';
 import type { Doc, Id } from '../../../../convex/_generated/dataModel';
+import type { TemplateToastData } from '../../../components/TemplateAddedToast';
 import type { SortOption } from '../../templates/constants';
 import type {
   BrowseTab,
@@ -51,7 +52,9 @@ export interface BrowseViewProps {
   setShowCustomizeModal: React.Dispatch<React.SetStateAction<boolean>>;
   setShowFullsizePreview: React.Dispatch<React.SetStateAction<boolean>>;
   setShowSortOptions: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowCelebration: React.Dispatch<React.SetStateAction<boolean>>;
   setShowToast: React.Dispatch<React.SetStateAction<boolean>>;
+  showCelebration: boolean;
   showCustomizeModal: boolean;
   showFullsizePreview: boolean;
   showSortOptions: boolean;
@@ -63,5 +66,6 @@ export interface BrowseViewProps {
   };
   templatesByCategory: Map<string, Doc<'templates'>[]>;
   toastMessage: string;
+  toastTemplateData: TemplateToastData | null;
   totalCount: number;
 }

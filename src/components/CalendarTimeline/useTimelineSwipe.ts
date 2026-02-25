@@ -21,16 +21,16 @@ export function useTimelineSwipe({
       const isSwipeLeft =
         translationX <= -HORIZONTAL_SWIPE_THRESHOLD ||
         velocityX <= -SWIPE_VELOCITY_THRESHOLD;
-      if (isSwipeLeft) {
-        onPreviousWeek?.();
+      if (isSwipeLeft && canNavigateForward) {
+        onNextWeek?.();
         return;
       }
 
       const isSwipeRight =
         translationX >= HORIZONTAL_SWIPE_THRESHOLD ||
         velocityX >= SWIPE_VELOCITY_THRESHOLD;
-      if (isSwipeRight && canNavigateForward) {
-        onNextWeek?.();
+      if (isSwipeRight) {
+        onPreviousWeek?.();
       }
     },
     [canNavigateForward, onNextWeek, onPreviousWeek]

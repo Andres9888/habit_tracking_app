@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "ChainDay",
-    "slug": "chainday",
+    "name": "Daily Habits (981f52)",
+    "slug": "daily-habits-981f52",
     "scheme": "habit-tracker",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -12,15 +12,12 @@
       "resizeMode": "contain",
       "backgroundColor": "#059669"
     },
-    "assetBundlePatterns": [
-      "assets/*",
-      "assets/sounds/*"
-    ],
+    "assetBundlePatterns": ["assets/*", "assets/sounds/*"],
     "jsEngine": "hermes",
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.chainday.app",
-      "buildNumber": "7",
+      "buildNumber": "13",
       "usesAppleSignIn": true,
       "infoPlist": {
         "NSUserNotificationsUsageDescription": "ChainDay sends reminders you choose (habit check-ins, streak alerts, and scheduled motivation messages) to help you stay consistent."
@@ -48,7 +45,7 @@
     },
     "extra": {
       "eas": {
-        "projectId": "f5f9ab03-e5dc-4cb3-84d4-5ef71fc110e5"
+        "projectId": "32c36f06-6185-42ca-aee8-5a939ad68d75"
       }
     },
     "plugins": [
@@ -78,6 +75,7 @@
       "@sentry/react-native",
       "./plugins/withPrivacyManifest.cjs",
       "@react-native-community/datetimepicker"
-    ]
+    ],
+    "owner": "andres9888"
   }
 }

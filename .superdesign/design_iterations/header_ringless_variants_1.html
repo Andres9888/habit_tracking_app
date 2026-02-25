@@ -1,0 +1,2139 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Header Redesign — 8 Strategic Variants</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700;1,9..144,400&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'DM Sans', sans-serif !important;
+        background: #080808 !important;
+        color: #e0ddd8 !important;
+        min-height: 100vh;
+        padding: 48px 24px 100px;
+        overflow-x: hidden;
+      }
+      h1,
+      h2,
+      h3,
+      h4,
+      p,
+      span,
+      div {
+        font-family: 'DM Sans', sans-serif !important;
+      }
+
+      /* ── Hero ── */
+      .hero {
+        text-align: center;
+        margin-bottom: 56px;
+      }
+      .hero-eyebrow {
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 2.5px;
+        text-transform: uppercase;
+        color: #10b981;
+        margin-bottom: 12px;
+      }
+      .hero-title {
+        font-family: 'Fraunces', serif !important;
+        font-size: 38px;
+        font-weight: 700;
+        color: #f5f1ed;
+        letter-spacing: -1px;
+        line-height: 1.15;
+        margin-bottom: 10px;
+      }
+      .hero-sub {
+        font-size: 15px;
+        color: #78716c;
+        max-width: 620px;
+        margin: 0 auto;
+        line-height: 1.55;
+      }
+
+      /* ── Grid ── */
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(4, 280px);
+        gap: 28px;
+        justify-content: center;
+        margin-bottom: 48px;
+      }
+      @media (max-width: 1260px) {
+        .grid {
+          grid-template-columns: repeat(2, 280px);
+        }
+      }
+      @media (max-width: 640px) {
+        .grid {
+          grid-template-columns: 280px;
+        }
+      }
+
+      .variant-wrap {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      /* ── Phone ── */
+      .phone {
+        width: 280px;
+        height: 530px;
+        background: #f5f1ed;
+        border-radius: 32px;
+        overflow: hidden;
+        position: relative;
+        box-shadow:
+          0 0 0 1px rgba(255, 255, 255, 0.04),
+          0 24px 64px rgba(0, 0, 0, 0.55),
+          0 2px 8px rgba(0, 0, 0, 0.2);
+        flex-shrink: 0;
+      }
+      .phone-inner {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        padding-top: 36px;
+      }
+
+      /* ── Shelf ── */
+      .shelf {
+        background: #f0ede8;
+        padding: 10px 14px 10px;
+        border-bottom-left-radius: 16px;
+        border-bottom-right-radius: 16px;
+        margin-bottom: 4px;
+        flex-shrink: 0;
+      }
+
+      /* Greeting */
+      .g-row {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 6px;
+      }
+      .g-text {
+        font-size: 13.5px;
+        font-weight: 600;
+        color: #2d2a26;
+        line-height: 1.3;
+        letter-spacing: -0.15px;
+      }
+      .g-em {
+        color: #10b981;
+      }
+      .g-dim {
+        color: #9ca3af;
+      }
+
+      /* Nav row */
+      .nav {
+        display: flex;
+        align-items: center;
+        gap: 3px;
+        margin-top: 2px;
+      }
+      .nav-arr {
+        color: #9ca3af;
+        font-size: 9px;
+      }
+      .nav-arr.off {
+        opacity: 0.3;
+      }
+      .nav-date {
+        font-size: 11px;
+        font-weight: 500;
+        color: #78716c;
+      }
+
+      /* ── Day strip ── */
+      .strip {
+        display: flex;
+        justify-content: space-between;
+        padding: 6px 2px 4px;
+        position: relative;
+      }
+      .dcell {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1px;
+        flex: 1;
+      }
+      .dlbl {
+        font-size: 9px;
+        font-weight: 500;
+        color: #9ca3af;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+      }
+      .dcirc {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        font-weight: 600;
+        color: #6b7280;
+        background: #edeae5;
+      }
+      .dcirc.cmp {
+        background: #10b981;
+        color: #fff;
+        box-shadow: 0 0 6px rgba(16, 185, 129, 0.3);
+      }
+      .dcirc.today {
+        background: #fef9c3;
+        border: 1.5px solid #d4a017;
+        color: #92400e;
+      }
+      .dcirc.fut {
+        color: #d1d5db;
+      }
+      .dcirc.part {
+        background: #fef9c3;
+        border: 1.5px solid #d4a017;
+        color: #92400e;
+      }
+      .ddot {
+        width: 4px;
+        height: 4px;
+        border-radius: 50%;
+        background: #d1d5db;
+        margin-top: 1px;
+      }
+      .ddot.dn {
+        background: #10b981;
+        width: 6px;
+        height: 6px;
+        box-shadow: 0 0 3px rgba(16, 185, 129, 0.35);
+      }
+      .ddot.pa {
+        background: #d4a017;
+        width: 5px;
+        height: 5px;
+      }
+      .ddot.td {
+        background: #d4a017;
+        width: 3px;
+        height: 3px;
+      }
+
+      /* ── Habit cards ── */
+      .harea {
+        flex: 1;
+        padding: 4px 14px 80px;
+        overflow: hidden;
+      }
+      .hcard {
+        background: #fff;
+        border: 1px solid #e5e2de;
+        border-radius: 14px;
+        padding: 10px 12px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 6px;
+        box-shadow: 0 1px 4px rgba(45, 42, 38, 0.05);
+      }
+      .hico {
+        font-size: 18px;
+        flex-shrink: 0;
+      }
+      .hinfo {
+        flex: 1;
+        min-width: 0;
+      }
+      .hname {
+        font-size: 13px;
+        font-weight: 600;
+        color: #2d2a26;
+        letter-spacing: -0.2px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .hmeta {
+        font-size: 10px;
+        color: #78716c;
+        margin-top: 1px;
+      }
+      .htog {
+        width: 34px;
+        height: 34px;
+        border-radius: 10px;
+        flex-shrink: 0;
+        border: 2px solid #e5e2de;
+        background: #fafaf8;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .htog.dn {
+        background: #10b981;
+        border-color: #10b981;
+      }
+      .htog.dn::after {
+        content: '✓';
+        font-size: 15px;
+        font-weight: 700;
+        color: #fff;
+      }
+
+      /* ── Bottom bar ── */
+      .bbar {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: rgba(245, 241, 237, 0.88);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border-top: 1px solid rgba(221, 216, 210, 0.4);
+        padding: 10px 16px 22px;
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+      }
+      .bpill {
+        height: 30px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        padding: 0 10px;
+        font-size: 11px;
+        font-weight: 600;
+        border: 1px solid;
+        margin-top: -4px;
+      }
+      .bpill.gh {
+        background: rgba(255, 255, 255, 0.35);
+        border-color: rgba(221, 216, 210, 0.4);
+        color: #78716c;
+      }
+      .bpill.gd {
+        background: rgba(254, 243, 205, 0.45);
+        border-color: rgba(139, 98, 8, 0.15);
+        color: #92400e;
+      }
+      .fab-wrap {
+        position: relative;
+        margin-top: -18px;
+      }
+      .fab-svg {
+        width: 48px;
+        height: 48px;
+      }
+      .fab-btn {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 36px;
+        height: 36px;
+        background: #10b981;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-size: 20px;
+        font-weight: 300;
+        box-shadow: 0 3px 10px rgba(16, 185, 129, 0.3);
+      }
+
+      /* ── Variant-specific elements ── */
+      .streak-badge {
+        display: flex;
+        align-items: center;
+        gap: 3px;
+        padding: 4px 8px;
+        background: rgba(254, 243, 205, 0.7);
+        border: 1px solid rgba(212, 160, 23, 0.25);
+        border-radius: 8px;
+        font-size: 11px;
+        font-weight: 700;
+        color: #92400e;
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+      .streak-badge .fire {
+        font-size: 12px;
+      }
+      .streak-protect {
+        font-size: 9px;
+        font-weight: 600;
+        color: #b45309;
+        margin-top: 2px;
+        opacity: 0.75;
+        text-align: right;
+      }
+
+      .nudge-chip {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 10px;
+        margin-top: 6px;
+        background: rgba(255, 255, 255, 0.7);
+        border: 1px solid #e5e2de;
+        border-radius: 10px;
+        cursor: pointer;
+      }
+      .nudge-emoji {
+        font-size: 14px;
+      }
+      .nudge-text {
+        font-size: 11px;
+        color: #2d2a26;
+        font-weight: 500;
+      }
+      .nudge-time {
+        font-size: 9px;
+        color: #9ca3af;
+      }
+      .nudge-arr {
+        font-size: 10px;
+        color: #d1d5db;
+        margin-left: auto;
+      }
+
+      .spark-wrap {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        flex-shrink: 0;
+      }
+      .spark-trend {
+        font-size: 10px;
+        font-weight: 700;
+        padding: 2px 5px;
+        border-radius: 4px;
+      }
+      .spark-trend.up {
+        color: #10b981;
+        background: rgba(16, 185, 129, 0.1);
+      }
+
+      .strength-bar {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-top: 6px;
+      }
+      .str-track {
+        flex: 1;
+        height: 4px;
+        background: #edeae5;
+        border-radius: 2px;
+        overflow: hidden;
+        position: relative;
+      }
+      .str-fill {
+        height: 100%;
+        border-radius: 2px;
+        background: linear-gradient(90deg, #10b981, #34d399);
+      }
+      .str-segments {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        display: flex;
+        gap: 2px;
+      }
+      .str-seg {
+        flex: 1;
+        border-right: 2px solid #f0ede8;
+      }
+      .str-seg:last-child {
+        border-right: none;
+      }
+      .str-label {
+        font-size: 9px;
+        font-weight: 600;
+        color: #10b981;
+        white-space: nowrap;
+      }
+
+      .insight-line {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        margin-top: 5px;
+        padding: 4px 0;
+      }
+      .insight-icon {
+        font-size: 11px;
+      }
+      .insight-text {
+        font-size: 10.5px;
+        color: #57534e;
+        font-weight: 500;
+        font-style: italic;
+        line-height: 1.3;
+      }
+      .insight-lock {
+        font-size: 8px;
+        color: #b45309;
+        background: rgba(254, 243, 205, 0.6);
+        padding: 2px 5px;
+        border-radius: 4px;
+        font-weight: 600;
+        white-space: nowrap;
+        margin-left: auto;
+        flex-shrink: 0;
+      }
+
+      .focus-badge {
+        font-size: 8px;
+        font-weight: 700;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        color: #10b981;
+        background: rgba(16, 185, 129, 0.08);
+        padding: 2px 6px;
+        border-radius: 4px;
+        flex-shrink: 0;
+      }
+      .focus-chip {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 7px 10px;
+        margin-top: 5px;
+        background: rgba(16, 185, 129, 0.06);
+        border: 1px solid rgba(16, 185, 129, 0.15);
+        border-radius: 10px;
+      }
+      .focus-reason {
+        font-size: 9px;
+        color: #57534e;
+        margin-top: 1px;
+      }
+
+      .milestone-row {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-top: 5px;
+      }
+      .ms-icon {
+        font-size: 14px;
+      }
+      .ms-info {
+        flex: 1;
+      }
+      .ms-text {
+        font-size: 10px;
+        font-weight: 600;
+        color: #2d2a26;
+      }
+      .ms-track {
+        height: 3px;
+        background: #edeae5;
+        border-radius: 2px;
+        overflow: hidden;
+        margin-top: 3px;
+      }
+      .ms-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #d4a017, #fbbf24);
+        border-radius: 2px;
+      }
+      .ms-count {
+        font-size: 9px;
+        color: #78716c;
+        white-space: nowrap;
+      }
+
+      /* ── Labels ── */
+      .vlabel {
+        margin-top: 14px;
+        text-align: center;
+      }
+      .vlabel-num {
+        font-size: 10px;
+        font-weight: 600;
+        color: #57534e;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        margin-bottom: 3px;
+      }
+      .vlabel-name {
+        font-size: 15px;
+        font-weight: 700;
+        color: #f5f1ed;
+        letter-spacing: -0.3px;
+        margin-bottom: 4px;
+      }
+      .vlabel-desc {
+        font-size: 11px;
+        color: #78716c;
+        line-height: 1.4;
+        max-width: 260px;
+      }
+
+      .tags {
+        display: flex;
+        gap: 4px;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-top: 8px;
+      }
+      .tag {
+        font-size: 9px;
+        font-weight: 600;
+        padding: 3px 7px;
+        border-radius: 4px;
+        letter-spacing: 0.2px;
+      }
+      .tag.rev {
+        background: rgba(212, 160, 23, 0.12);
+        color: #d4a017;
+      }
+      .tag.val {
+        background: rgba(16, 185, 129, 0.1);
+        color: #10b981;
+      }
+      .tag.pain {
+        background: rgba(244, 63, 94, 0.1);
+        color: #f43f5e;
+      }
+      .tag.eff {
+        background: rgba(255, 255, 255, 0.06);
+        color: #78716c;
+      }
+      .tag.rec {
+        background: rgba(16, 185, 129, 0.15);
+        color: #10b981;
+        border: 1px solid rgba(16, 185, 129, 0.25);
+      }
+
+      /* ── Section dividers ── */
+      .row-label {
+        text-align: center;
+        margin-bottom: 24px;
+      }
+      .row-label-text {
+        font-size: 11px;
+        font-weight: 600;
+        color: #57534e;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        padding: 0 16px;
+        position: relative;
+      }
+      .row-label-text::before,
+      .row-label-text::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        width: 60px;
+        height: 1px;
+        background: rgba(255, 255, 255, 0.06);
+      }
+      .row-label-text::before {
+        right: 100%;
+      }
+      .row-label-text::after {
+        left: 100%;
+      }
+
+      /* ── Strategy Matrix ── */
+      .matrix-section {
+        max-width: 1180px;
+        margin: 24px auto 0;
+        padding: 32px 0;
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+      }
+      .matrix-title {
+        font-family: 'Fraunces', serif !important;
+        font-size: 24px;
+        font-weight: 700;
+        color: #f5f1ed;
+        text-align: center;
+        margin-bottom: 24px;
+        letter-spacing: -0.5px;
+      }
+      .matrix {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 11px;
+        overflow-x: auto;
+      }
+      .matrix th {
+        font-size: 10px;
+        font-weight: 600;
+        color: #78716c;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        padding: 8px 10px;
+        text-align: left;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        white-space: nowrap;
+      }
+      .matrix td {
+        padding: 8px 10px;
+        color: #a8a29e;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        white-space: nowrap;
+      }
+      .matrix td:first-child {
+        color: #f5f1ed;
+        font-weight: 600;
+      }
+      .matrix .stars {
+        color: #d4a017;
+        letter-spacing: 1px;
+      }
+      .matrix .dots {
+        letter-spacing: 1px;
+      }
+      .matrix .hi {
+        color: #10b981;
+        font-weight: 600;
+      }
+      .matrix .md {
+        color: #d4a017;
+      }
+      .matrix .lo {
+        color: #78716c;
+      }
+      .matrix .top-pick td {
+        background: rgba(16, 185, 129, 0.04);
+      }
+
+      /* ── Recommendation ── */
+      .rec-section {
+        max-width: 800px;
+        margin: 40px auto 0;
+        padding: 28px;
+        background: rgba(16, 185, 129, 0.04);
+        border: 1px solid rgba(16, 185, 129, 0.12);
+        border-radius: 16px;
+      }
+      .rec-title {
+        font-family: 'Fraunces', serif !important;
+        font-size: 20px;
+        font-weight: 700;
+        color: #10b981;
+        margin-bottom: 12px;
+      }
+      .rec-body {
+        font-size: 13px;
+        color: #a8a29e;
+        line-height: 1.65;
+      }
+      .rec-body strong {
+        color: #f5f1ed;
+        font-weight: 600;
+      }
+      .rec-body em {
+        color: #10b981;
+        font-style: normal;
+        font-weight: 600;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ═══ HERO ═══ -->
+    <div class="hero">
+      <div class="hero-eyebrow">Strategic Design Exploration</div>
+      <div class="hero-title">
+        8 Header Variants for<br />Monetization × Value
+      </div>
+      <div class="hero-sub">
+        The CompletionRing moves to the BottomActionBar FAB. The freed header
+        space becomes a monetization surface that must also deliver genuine user
+        value and solve real pain points.
+      </div>
+    </div>
+
+    <!-- ═══ ROW 1: Foundation ═══ -->
+    <div class="row-label">
+      <span class="row-label-text">Tier 1 — Highest impact</span>
+    </div>
+
+    <div class="grid">
+      <!-- ── V1: Clean Greeting (Control) ── -->
+      <div class="variant-wrap">
+        <div class="phone">
+          <div class="phone-inner">
+            <div class="shelf">
+              <div class="g-row">
+                <div style="flex: 1">
+                  <div class="g-text">
+                    Good afternoon<span class="g-dim"> — </span
+                    ><span class="g-em">3 of 5 done</span>
+                  </div>
+                  <div class="nav">
+                    <span class="nav-arr">◂</span>
+                    <span class="nav-date">Tue, February 25</span>
+                    <span class="nav-arr off">▸</span>
+                  </div>
+                </div>
+              </div>
+              <div class="strip">
+                <div class="dcell">
+                  <span class="dlbl">M</span>
+                  <div class="dcirc cmp">17</div>
+                  <div class="ddot dn"></div>
+                </div>
+                <div class="dcell">
+                  <span class="dlbl">T</span>
+                  <div class="dcirc cmp">18</div>
+                  <div class="ddot dn"></div>
+                </div>
+                <div class="dcell">
+                  <span class="dlbl">W</span>
+                  <div class="dcirc cmp">19</div>
+                  <div class="ddot dn"></div>
+                </div>
+                <div class="dcell">
+                  <span class="dlbl">T</span>
+                  <div class="dcirc part">20</div>
+                  <div class="ddot pa"></div>
+                </div>
+                <div class="dcell">
+                  <span class="dlbl">F</span>
+                  <div class="dcirc today">25</div>
+                  <div class="ddot td"></div>
+                </div>
+                <div class="dcell">
+                  <span class="dlbl">S</span>
+                  <div class="dcirc fut">26</div>
+                  <div class="ddot"></div>
+                </div>
+                <div class="dcell">
+                  <span class="dlbl">S</span>
+                  <div class="dcirc fut">27</div>
+                  <div class="ddot"></div>
+                </div>
+              </div>
+            </div>
+            <div class="harea">
+              <div class="hcard">
+                <span class="hico">🧘</span>
+                <div class="hinfo">
+                  <div class="hname">Morning meditation</div>
+                  <div class="hmeta">🔥 12 day streak</div>
+                </div>
+                <div class="htog dn"></div>
+              </div>
+              <div class="hcard">
+                <span class="hico">📖</span>
+                <div class="hinfo">
+                  <div class="hname">Read 20 pages</div>
+                  <div class="hmeta">🔥 8 day streak</div>
+                </div>
+                <div class="htog dn"></div>
+              </div>
+              <div class="hcard">
+                <span class="hico">💧</span>
+                <div class="hinfo">
+                  <div class="hname">Drink 2L water</div>
+                  <div class="hmeta">🔥 5 day streak</div>
+                </div>
+                <div class="htog dn"></div>
+              </div>
+              <div class="hcard">
+                <span class="hico">🏃</span>
+                <div class="hinfo">
+                  <div class="hname">30 min exercise</div>
+                  <div class="hmeta">Building strength</div>
+                </div>
+                <div class="htog"></div>
+              </div>
+              <div class="hcard">
+                <span class="hico">📝</span>
+                <div class="hinfo">
+                  <div class="hname">Journal entry</div>
+                  <div class="hmeta">Building strength</div>
+                </div>
+                <div class="htog"></div>
+              </div>
+            </div>
+            <div class="bbar">
+              <div class="bpill gh">⚙ Settings</div>
+              <div class="fab-wrap">
+                <svg class="fab-svg" viewBox="0 0 48 48">
+                  <circle
+                    cx="24"
+                    cy="24"
+                    r="20"
+                    fill="none"
+                    stroke="#EDEAE5"
+                    stroke-width="2.5"
+                  />
+                  <circle
+                    cx="24"
+                    cy="24"
+                    r="20"
+                    fill="none"
+                    stroke="#10B981"
+                    stroke-width="2.5"
+                    stroke-dasharray="125.7"
+                    stroke-dashoffset="50.3"
+                    stroke-linecap="round"
+                    transform="rotate(-90 24 24)"
+                  />
+                </svg>
+                <div class="fab-btn">+</div>
+              </div>
+              <div class="bpill gd">✦ Explore ›</div>
+            </div>
+          </div>
+        </div>
+        <div class="vlabel">
+          <div class="vlabel-num">V1 · Control</div>
+          <div class="vlabel-name">Clean Greeting</div>
+          <div class="vlabel-desc">
+            Pure subtraction. Text-only progress. Maximum breathing room.
+          </div>
+          <div class="tags">
+            <span class="tag eff">Low effort</span>
+            <span class="tag val">Retention via UX</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── V2: Streak Shield ── -->
+      <div class="variant-wrap">
+        <div class="phone">
+          <div class="phone-inner">
+            <div class="shelf">
+              <div class="g-row">
+                <div style="flex: 1">
+                  <div class="g-text">
+                    Good afternoon<span class="g-dim"> — </span
+                    ><span class="g-em">3 of 5 done</span>
+                  </div>
+                  <div class="nav">
+                    <span class="nav-arr">◂</span>
+                    <span class="nav-date">Tue, February 25</span>
+                    <span class="nav-arr off">▸</span>
+                  </div>
+                </div>
+                <div style="flex-shrink: 0; text-align: right">
+                  <div class="streak-badge">
+                    <span class="fire">🔥</span> 12 days
+                  </div>
+                  <div class="streak-protect">Protect streak ›</div>
+                </div>
+              </div>
+              <div class="strip">
+                <div class="dcell">
+                  <span class="dlbl">M</span>
+                  <div class="dcirc cmp">17</div>
+                  <div class="ddot dn"></div>
+                </div>
+                <div class="dcell">
+                  <span class="dlbl">T</span>
+                  <div class="dcirc cmp">18</div>
+                  <div class="ddot dn"></div>
+                </div>
+                <div class="dcell">
+                  <span class="dlbl">W</span>
+                  <div class="dcirc cmp">19</div>
+                  <div class="ddot dn"></div>
+                </div>
+                <div class="dcell">
+                  <span class="dlbl">T</span>
+                  <div class="dcirc part">20</div>
+                  <div class="ddot pa"></div>
+                </div>
+                <div class="dcell">
+                  <span class="dlbl">F</span>
+                  <div class="dcirc today">25</div>
+                  <div class="ddot td"></div>
+                </div>
+                <div class="dcell">
+                  <span class="dlbl">S</span>
+                  <div class="dcirc fut">26</div>
+                  <div class="ddot"></div>
+                </div>
+                <div class="dcell">
+                  <span class="dlbl">S</span>
+                  <div class="dcirc fut">27</div>
+                  <div class="ddot"></div>
+                </div>
+              </div>
+            </div>
+            <div class="harea">
+              <div class="hcard">
+                <span class="hico">🧘</span>
+                <div class="hinfo">
+                  <div class="hname">Morning meditation</div>
+                  <div class="hmeta">🔥 12 day streak</div>
+                </div>
+                <div class="htog dn"></div>
+              </div>
+              <div class="hcard">
+                <span class="hico">📖</span>
+                <div class="hinfo">
+                  <div class="hname">Read 20 pages</div>
+                  <div class="hmeta">🔥 8 day streak</div>
+                </div>
+                <div class="htog dn"></div>
+              </div>
+              <div class="hcard">
+                <span class="hico">💧</span>
+                <div class="hinfo">
+                  <div class="hname">Drink 2L water</div>
+                  <div class="hmeta">🔥 5 day streak</div>
+                </div>
+                <div class="htog dn"></div>
+              </div>
+              <div class="hcard">
+                <span class="hico">🏃</span>
+                <div class="hinfo">
+                  <div class="hname">30 min exercise</div>
+                  <div class="hmeta">Building strength</div>
+                </div>
+                <div class="htog"></div>
+              </div>
+              <div class="hcard">
+                <span class="hico">📝</span>
+                <div class="hinfo">
+                  <div class="hname">Journal entry</div>
+                  <div class="hmeta">Building strength</div>
+                </div>
+                <div class="htog"></div>
+              </div>
+            </div>
+            <div class="bbar">
+              <div class="bpill gh">⚙ Settings</div>
+              <div class="fab-wrap">
+                <svg class="fab-svg" viewBox="0 0 48 48">
+                  <circle
+                    cx="24"
+                    cy="24"
+                    r="20"
+                    fill="none"
+                    stroke="#EDEAE5"
+                    stroke-width="2.5"
+                  />
+                  <circle
+                    cx="24"
+                    cy="24"
+                    r="20"
+                    fill="none"
+                    stroke="#10B981"
+                    stroke-width="2.5"
+                    stroke-dasharray="125.7"
+                    stroke-dashoffset="50.3"
+                    stroke-linecap="round"
+                    transform="rotate(-90 24 24)"
+                  />
+                </svg>
+                <div class="fab-btn">+</div>
+              </div>
+              <div class="bpill gd">✦ Explore ›</div>
+            </div>
+          </div>
+        </div>
+        <div class="vlabel">
+          <div class="vlabel-num">V2 · Proven</div>
+          <div class="vlabel-name">Streak Shield</div>
+          <div class="vlabel-desc">
+            Streak badge with "Protect ›" upsell. Duolingo's #1 monetization
+            lever.
+          </div>
+          <div class="tags">
+            <span class="tag rec">★ Top pick</span>
+            <span class="tag rev">$$ Direct revenue</span>
+            <span class="tag pain">Streak anxiety</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── V3: Micro Insight ── -->
+      <div class="variant-wrap">
+        <div class="phone">
+          <div class="phone-inner">
+            <div class="shelf">
+              <div class="g-row">
+                <div style="flex: 1">
+                  <div class="g-text">
+                    Good afternoon<span class="g-dim"> — </span
+                    ><span class="g-em">3 of 5 done</span>
+                  </div>
+                  <div class="nav">
+                    <span class="nav-arr">◂</span>
+                    <span class="nav-date">Tue, February 25</span>
+                    <span class="nav-arr off">▸</span>
+                  </div>
+                  <div class="insight-line">
+                    <span class="insight-icon">💡</span>
+                    <span class="insight-text"
+                      >You complete 89% more habits before noon</span
+                    >
+                    <span class="insight-lock">PRO ›</span>
+                  </div>
+                </div>
+              </div>
+              <div class="strip">
+                <div class="dcell">
+                  <span class="dlbl">M</span>
+                  <div class="dcirc cmp">17</div>
+                  <div class="ddot dn"></div>
+                </div>
+                <div class="dcell">
+                  <span class="dlbl">T</span>
+                  <div class="dcirc cmp">18</div>
+                  <div class="ddot dn"></div>
+                </div>
+                <div class="dcell">
+                  <span class="dlbl">W</span>
+                  <div class="dcirc cmp">19</div>
+                  <div class="ddot dn"></div>
+                </div>
+                <div class="dcell">
+                  <span class="dlbl">T</span>
+                  <div class="dcirc part">20</div>
+                  <div class="ddot pa"></div>
+                </div>
+                <div class="dcell">
+                  <span class="dlbl">F</span>
+                  <div class="dcirc today">25</div>
+                  <div class="ddot td"></div>
+                </div>
+                <div class="dcell">
+                  <span class="dlbl">S</span>
+                  <div class="dcirc fut">26</div>
+                  <div class="ddot"></div>
+                </div>
+                <div class="dcell">
+                  <span class="dlbl">S</span>
+                  <div class="dcirc fut">27</div>
+                  <div class="ddot"></div>
+                </div>
+              </div>
+            </div>
+            <div class="harea">
+              <div class="hcard">
+                <span class="hico">🧘</span>
+                <div class="hinfo">
+                  <div class="hname">Morning meditation</div>
+                  <div class="hmeta">🔥 12 day streak</div>
+                </div>
+                <div class="htog dn"></div>
+              </div>
+              <div class="hcard">
+                <span class="hico">📖</span>
+                <div class="hinfo">
+                  <div class="hname">Read 20 pages</div>
+                  <div class="hmeta">🔥 8 day streak</div>
+                </div>
+                <div class="htog dn"></div>
+              </div>
+              <div class="hcard">
+                <span class="hico">💧</span>
+                <div class="hinfo">
+                  <div class="hname">Drink 2L water</div>
+                  <div class="hmeta">🔥 5 day streak</div>
+                </div>
+                <div class="htog dn"></div>
+              </div>
+              <div class="hcard">
+                <span class="hico">🏃</span>
+                <div class="hinfo">
+                  <div class="hname">30 min exercise</div>
+                  <div class="hmeta">Building strength</div>
+                </div>
+                <div class="htog"></div>
+              </div>
+              <div class="hcard">
+                <span class="hico">📝</span>
+                <div class="hinfo">
+                  <div class="hname">Journal entry</div>
+                  <div class="hmeta">Building strength</div>
+                </div>
+                <div class="htog"></div>
+              </div>
+            </div>
+            <div class="bbar">
+              <div class="bpill gh">⚙ Settings</div>
+              <div class="fab-wrap">
+                <svg class="fab-svg" viewBox="0 0 48 48">
+                  <circle
+                    cx="24"
+                    cy="24"
+                    r="20"
+                    fill="none"
+                    stroke="#EDEAE5"
+                    stroke-width="2.5"
+                  />
+                  <circle
+                    cx="24"
+                    cy="24"
+                    r="20"
+                    fill="none"
+                    stroke="#10B981"
+                    stroke-width="2.5"
+                    stroke-dasharray="125.7"
+                    stroke-dashoffset="50.3"
+                    stroke-linecap="round"
+                    transform="rotate(-90 24 24)"
+                  />
+                </svg>
+                <div class="fab-btn">+</div>
+              </div>
+              <div class="bpill gd">✦ Explore ›</div>
+            </div>
+          </div>
+        </div>
+        <div class="vlabel">
+          <div class="vlabel-num">V3 · AI-powered</div>
+          <div class="vlabel-name">Micro Insight</div>
+          <div class="vlabel-desc">
+            Rotating personal insight with PRO badge. Teases deeper analytics.
+          </div>
+          <div class="tags">
+            <span class="tag rec">★ Top pick</span>
+            <span class="tag rev">$$ Premium upsell</span>
+            <span class="tag val">Self-knowledge</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── V4: Trend Spark ── -->
+      <div class="variant-wrap">
+        <div class="phone">
+          <div class="phone-inner">
+            <div class="shelf">
+              <div class="g-row">
+                <div style="flex: 1">
+                  <div class="g-text">
+                    Good afternoon<span class="g-dim"> — </span
+                    ><span class="g-em">3 of 5 done</span>
+                  </div>
+                  <div class="nav">
+                    <span class="nav-arr">◂</span>
+                    <span class="nav-date">Tue, February 25</span>
+                    <span class="nav-arr off">▸</span>
+                  </div>
+                </div>
+                <div class="spark-wrap">
+                  <svg width="56" height="28" viewBox="0 0 56 28" fill="none">
+                    <polyline
+                      points="2,22 10,18 18,20 26,12 34,14 42,8 50,4"
+                      stroke="#10B981"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      fill="none"
+                    />
+                    <polyline
+                      points="2,22 10,18 18,20 26,12 34,14 42,8 50,4 50,28 2,28"
+                      fill="url(#sparkGrad)"
+                      opacity="0.15"
+                    />
+                    <defs>
+                      <linearGradient
+                        id="sparkGrad"
+                        x1="0"
+                        y1="0"
+                        x2="0"
+                        y2="1"
+                      >
+                        <stop offset="0%" stop-color="#10B981" />
+                        <stop
+                          offset="100%"
+                          stop-color="#10B981"
+                          stop-opacity="0"
+                        />
+                      </linearGradient>
+                    </defs>
+                    <circle cx="50" cy="4" r="2.5" fill="#10B981" />
+                  </svg>
+                  <div class="spark-trend up">↑ 15%</div>
+                </div>
+              </div>
+              <div class="strip">
+                <div class="dcell">
+                  <span class="dlbl">M</span>
+                  <div class="dcirc cmp">17</div>
+                  <div class="ddot dn"></div>
+                </div>
+                <div class="dcell">
+                  <span class="dlbl">T</span>
+                  <div class="dcirc cmp">18</div>
+                  <div class="ddot dn"></div>
+                </div>
+                <div class="dcell">
+                  <span class="dlbl">W</span>
+                  <div class="dcirc cmp">19</div>
+                  <div class="ddot dn"></div>
+                </div>
+                <div class="dcell">
+                  <span class="dlbl">T</span>
+                  <div class="dcirc part">20</div>
+                  <div class="ddot pa"></div>
+                </div>
+                <div class="dcell">
+                  <span class="dlbl">F</span>
+                  <div class="dcirc today">25</div>
+                  <div class="ddot td"></div>
+                </div>
+                <div class="dcell">
+                  <span class="dlbl">S</span>
+                  <div class="dcirc fut">26</div>
+                  <div class="ddot"></div>
+                </div>
+                <div class="dcell">
+                  <span class="dlbl">S</span>
+                  <div class="dcirc fut">27</div>
+                  <div class="ddot"></div>
+                </div>
+              </div>
+            </div>
+            <div class="harea">
+              <div class="hcard">
+                <span class="hico">🧘</span>
+                <div class="hinfo">
+                  <div class="hname">Morning meditation</div>
+                  <div class="hmeta">🔥 12 day streak</div>
+                </div>
+                <div class="htog dn"></div>
+              </div>
+              <div class="hcard">
+                <span class="hico">📖</span>
+                <div class="hinfo">
+                  <div class="hname">Read 20 pages</div>
+                  <div class="hmeta">🔥 8 day streak</div>
+                </div>
+                <div class="htog dn"></div>
+              </div>
+              <div class="hcard">
+                <span class="hico">💧</span>
+                <div class="hinfo">
+                  <div class="hname">Drink 2L water</div>
+                  <div class="hmeta">🔥 5 day streak</div>
+                </div>
+                <div class="htog dn"></div>
+              </div>
+              <div class="hcard">
+                <span class="hico">🏃</span>
+                <div class="hinfo">
+                  <div class="hname">30 min exercise</div>
+                  <div class="hmeta">Building strength</div>
+                </div>
+                <div class="htog"></div>
+              </div>
+              <div class="hcard">
+                <span class="hico">📝</span>
+                <div class="hinfo">
+                  <div class="hname">Journal entry</div>
+                  <div class="hmeta">Building strength</div>
+                </div>
+                <div class="htog"></div>
+              </div>
+            </div>
+            <div class="bbar">
+              <div class="bpill gh">⚙ Settings</div>
+              <div class="fab-wrap">
+                <svg class="fab-svg" viewBox="0 0 48 48">
+                  <circle
+                    cx="24"
+                    cy="24"
+                    r="20"
+                    fill="none"
+                    stroke="#EDEAE5"
+                    stroke-width="2.5"
+                  />
+                  <circle
+                    cx="24"
+                    cy="24"
+                    r="20"
+                    fill="none"
+                    stroke="#10B981"
+                    stroke-width="2.5"
+                    stroke-dasharray="125.7"
+                    stroke-dashoffset="50.3"
+                    stroke-linecap="round"
+                    transform="rotate(-90 24 24)"
+                  />
+                </svg>
+                <div class="fab-btn">+</div>
+              </div>
+              <div class="bpill gd">✦ Explore ›</div>
+            </div>
+          </div>
+        </div>
+        <div class="vlabel">
+          <div class="vlabel-num">V4 · Data-driven</div>
+          <div class="vlabel-name">Trend Spark</div>
+          <div class="vlabel-desc">
+            7-day sparkline with trend badge. Shows trajectory at a glance.
+          </div>
+          <div class="tags">
+            <span class="tag rec">★ Top pick</span>
+            <span class="tag rev">$ Analytics upsell</span>
+            <span class="tag pain">Am I improving?</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ ROW 2 ═══ -->
+    <div class="row-label">
+      <span class="row-label-text">Tier 2 — Strong contenders</span>
+    </div>
+
+    <div class="grid">
+      <!-- ── V5: Habit Strength ── -->
+      <div class="variant-wrap">
+        <div class="phone">
+          <div class="phone-inner">
+            <div class="shelf">
+              <div class="g-row">
+                <div style="flex: 1">
+                  <div class="g-text">
+                    Good afternoon<span class="g-dim"> — </span
+                    ><span class="g-em">3 of 5 done</span>
+                  </div>
+                  <div class="nav">
+                    <span class="nav-arr">◂</span>
+                    <span class="nav-date">Tue, February 25</span>
+                    <span class="nav-arr off">▸</span>
+                  </div>
+                  <div class="strength-bar">
+                    <div class="str-track" style="position: relative">
+                      <div class="str-fill" style="width: 62%"></div>
+                      <div class="str-segments">
+                        <div class="str-seg"></div>
+                        <div class="str-seg"></div>
+                        <div class="str-seg"></div>
+                        <div class="str-seg"></div>
+                      </div>
+                    </div>
+                    <div class="str-label">Growing 🌱</div>
+                  </div>
+                </div>
+              </div>
+              <div class="strip">
+                <div class="dcell">
+                  <span class="dlbl">M</span>
+                  <div class="dcirc cmp">17</div>
+                  <div class="ddot dn"></div>
+                </div>
+                <div class="dcell">
+                  <span class="dlbl">T</span>
+                  <div class="dcirc cmp">18</div>
+                  <div class="ddot dn"></div>
+                </div>
+                <div class="dcell">
+                  <span class="dlbl">W</span>
+                  <div class="dcirc cmp">19</div>
+                  <div class="ddot dn"></div>
+                </div>
+                <div class="dcell">
+                  <span class="dlbl">T</span>
+                  <div class="dcirc part">20</div>
+                  <div class="ddot pa"></div>
+                </div>
+                <div class="dcell">
+                  <span class="dlbl">F</span>
+                  <div class="dcirc today">25</div>
+                  <div class="ddot td"></div>
+                </div>
+                <div class="dcell">
+                  <span class="dlbl">S</span>
+                  <div class="dcirc fut">26</div>
+                  <div class="ddot"></div>
+                </div>
+                <div class="dcell">
+                  <span class="dlbl">S</span>
+                  <div class="dcirc fut">27</div>
+                  <div class="ddot"></div>
+                </div>
+              </div>
+            </div>
+            <div class="harea">
+              <div class="hcard">
+                <span class="hico">🧘</span>
+                <div class="hinfo">
+                  <div class="hname">Morning meditation</div>
+                  <div class="hmeta">🔥 12 day streak</div>
+                </div>
+                <div class="htog dn"></div>
+              </div>
+              <div class="hcard">
+                <span class="hico">📖</span>
+                <div class="hinfo">
+                  <div class="hname">Read 20 pages</div>
+                  <div class="hmeta">🔥 8 day streak</div>
+                </div>
+                <div class="htog dn"></div>
+              </div>
+              <div class="hcard">
+                <span class="hico">💧</span>
+                <div class="hinfo">
+                  <div class="hname">Drink 2L water</div>
+                  <div class="hmeta">🔥 5 day streak</div>
+                </div>
+                <div class="htog dn"></div>
+              </div>
+              <div class="hcard">
+                <span class="hico">🏃</span>
+                <div class="hinfo">
+                  <div class="hname">30 min exercise</div>
+                  <div class="hmeta">Building strength</div>
+                </div>
+                <div class="htog"></div>
+              </div>
+              <div class="hcard">
+                <span class="hico">📝</span>
+                <div class="hinfo">
+                  <div class="hname">Journal entry</div>
+                  <div class="hmeta">Building strength</div>
+                </div>
+                <div class="htog"></div>
+              </div>
+            </div>
+            <div class="bbar">
+              <div class="bpill gh">⚙ Settings</div>
+              <div class="fab-wrap">
+                <svg class="fab-svg" viewBox="0 0 48 48">
+                  <circle
+                    cx="24"
+                    cy="24"
+                    r="20"
+                    fill="none"
+                    stroke="#EDEAE5"
+                    stroke-width="2.5"
+                  />
+                  <circle
+                    cx="24"
+                    cy="24"
+                    r="20"
+                    fill="none"
+                    stroke="#10B981"
+                    stroke-width="2.5"
+                    stroke-dasharray="125.7"
+                    stroke-dashoffset="50.3"
+                    stroke-linecap="round"
+                    transform="rotate(-90 24 24)"
+                  />
+                </svg>
+                <div class="fab-btn">+</div>
+              </div>
+              <div class="bpill gd">✦ Explore ›</div>
+            </div>
+          </div>
+        </div>
+        <div class="vlabel">
+          <div class="vlabel-num">V5 · Gamification</div>
+          <div class="vlabel-name">Habit Strength</div>
+          <div class="vlabel-desc">
+            Segmented bar with level label. Shows habits becoming automatic.
+          </div>
+          <div class="tags">
+            <span class="tag rev">$ Per-habit unlock</span>
+            <span class="tag pain">Are habits sticking?</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── V6: Smart Nudge ── -->
+      <div class="variant-wrap">
+        <div class="phone">
+          <div class="phone-inner">
+            <div class="shelf">
+              <div class="g-row">
+                <div style="flex: 1">
+                  <div class="g-text">
+                    Good afternoon<span class="g-dim"> — </span
+                    ><span class="g-em">3 of 5 done</span>
+                  </div>
+                  <div class="nav">
+                    <span class="nav-arr">◂</span>
+                    <span class="nav-date">Tue, February 25</span>
+                    <span class="nav-arr off">▸</span>
+                  </div>
+                  <div class="nudge-chip">
+                    <span class="nudge-emoji">🏃</span>
+                    <div>
+                      <div class="nudge-text">30 min exercise</div>
+                      <div class="nudge-time">Usually done by 2pm</div>
+                    </div>
+                    <span class="nudge-arr">›</span>
+                  </div>
+                </div>
+              </div>
+              <div class="strip">
+                <div class="dcell">
+                  <span class="dlbl">M</span>
+                  <div class="dcirc cmp">17</div>
+                  <div class="ddot dn"></div>
+                </div>
+                <div class="dcell">
+                  <span class="dlbl">T</span>
+                  <div class="dcirc cmp">18</div>
+                  <div class="ddot dn"></div>
+                </div>
+                <div class="dcell">
+                  <span class="dlbl">W</span>
+                  <div class="dcirc cmp">19</div>
+                  <div class="ddot dn"></div>
+                </div>
+                <div class="dcell">
+                  <span class="dlbl">T</span>
+                  <div class="dcirc part">20</div>
+                  <div class="ddot pa"></div>
+                </div>
+                <div class="dcell">
+                  <span class="dlbl">F</span>
+                  <div class="dcirc today">25</div>
+                  <div class="ddot td"></div>
+                </div>
+                <div class="dcell">
+                  <span class="dlbl">S</span>
+                  <div class="dcirc fut">26</div>
+                  <div class="ddot"></div>
+                </div>
+                <div class="dcell">
+                  <span class="dlbl">S</span>
+                  <div class="dcirc fut">27</div>
+                  <div class="ddot"></div>
+                </div>
+              </div>
+            </div>
+            <div class="harea">
+              <div class="hcard">
+                <span class="hico">🧘</span>
+                <div class="hinfo">
+                  <div class="hname">Morning meditation</div>
+                  <div class="hmeta">🔥 12 day streak</div>
+                </div>
+                <div class="htog dn"></div>
+              </div>
+              <div class="hcard">
+                <span class="hico">📖</span>
+                <div class="hinfo">
+                  <div class="hname">Read 20 pages</div>
+                  <div class="hmeta">🔥 8 day streak</div>
+                </div>
+                <div class="htog dn"></div>
+              </div>
+              <div class="hcard">
+                <span class="hico">💧</span>
+                <div class="hinfo">
+                  <div class="hname">Drink 2L water</div>
+                  <div class="hmeta">🔥 5 day streak</div>
+                </div>
+                <div class="htog dn"></div>
+              </div>
+              <div class="hcard">
+                <span class="hico">🏃</span>
+                <div class="hinfo">
+                  <div class="hname">30 min exercise</div>
+                  <div class="hmeta">Building strength</div>
+                </div>
+                <div class="htog"></div>
+              </div>
+              <div class="hcard">
+                <span class="hico">📝</span>
+                <div class="hinfo">
+                  <div class="hname">Journal entry</div>
+                  <div class="hmeta">Building strength</div>
+                </div>
+                <div class="htog"></div>
+              </div>
+            </div>
+            <div class="bbar">
+              <div class="bpill gh">⚙ Settings</div>
+              <div class="fab-wrap">
+                <svg class="fab-svg" viewBox="0 0 48 48">
+                  <circle
+                    cx="24"
+                    cy="24"
+                    r="20"
+                    fill="none"
+                    stroke="#EDEAE5"
+                    stroke-width="2.5"
+                  />
+                  <circle
+                    cx="24"
+                    cy="24"
+                    r="20"
+                    fill="none"
+                    stroke="#10B981"
+                    stroke-width="2.5"
+                    stroke-dasharray="125.7"
+                    stroke-dashoffset="50.3"
+                    stroke-linecap="round"
+                    transform="rotate(-90 24 24)"
+                  />
+                </svg>
+                <div class="fab-btn">+</div>
+              </div>
+              <div class="bpill gd">✦ Explore ›</div>
+            </div>
+          </div>
+        </div>
+        <div class="vlabel">
+          <div class="vlabel-num">V6 · Smart</div>
+          <div class="vlabel-name">Next Up Nudge</div>
+          <div class="vlabel-desc">
+            Shows next uncompleted habit with timing context. Tappable shortcut.
+          </div>
+          <div class="tags">
+            <span class="tag rev">$ Smart scheduling</span>
+            <span class="tag pain">Decision fatigue</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── V7: Focus Mode ── -->
+      <div class="variant-wrap">
+        <div class="phone">
+          <div class="phone-inner">
+            <div class="shelf">
+              <div class="g-row">
+                <div style="flex: 1">
+                  <div class="g-text">
+                    Good afternoon<span class="g-dim"> — </span
+                    ><span class="g-em">3 of 5 done</span>
+                  </div>
+                  <div class="nav">
+                    <span class="nav-arr">◂</span>
+                    <span class="nav-date">Tue, February 25</span>
+                    <span class="nav-arr off">▸</span>
+                  </div>
+                  <div class="focus-chip">
+                    <span class="nudge-emoji">🏃</span>
+                    <div>
+                      <div
+                        class="nudge-text"
+                        style="color: #10b981; font-weight: 600"
+                      >
+                        Priority: Exercise
+                      </div>
+                      <div class="focus-reason">
+                        Builds on yesterday's momentum
+                      </div>
+                    </div>
+                    <div class="focus-badge">FOCUS</div>
+                  </div>
+                </div>
+              </div>
+              <div class="strip">
+                <div class="dcell">
+                  <span class="dlbl">M</span>
+                  <div class="dcirc cmp">17</div>
+                  <div class="ddot dn"></div>
+                </div>
+                <div class="dcell">
+                  <span class="dlbl">T</span>
+                  <div class="dcirc cmp">18</div>
+                  <div class="ddot dn"></div>
+                </div>
+                <div class="dcell">
+                  <span class="dlbl">W</span>
+                  <div class="dcirc cmp">19</div>
+                  <div class="ddot dn"></div>
+                </div>
+                <div class="dcell">
+                  <span class="dlbl">T</span>
+                  <div class="dcirc part">20</div>
+                  <div class="ddot pa"></div>
+                </div>
+                <div class="dcell">
+                  <span class="dlbl">F</span>
+                  <div class="dcirc today">25</div>
+                  <div class="ddot td"></div>
+                </div>
+                <div class="dcell">
+                  <span class="dlbl">S</span>
+                  <div class="dcirc fut">26</div>
+                  <div class="ddot"></div>
+                </div>
+                <div class="dcell">
+                  <span class="dlbl">S</span>
+                  <div class="dcirc fut">27</div>
+                  <div class="ddot"></div>
+                </div>
+              </div>
+            </div>
+            <div class="harea">
+              <div class="hcard">
+                <span class="hico">🧘</span>
+                <div class="hinfo">
+                  <div class="hname">Morning meditation</div>
+                  <div class="hmeta">🔥 12 day streak</div>
+                </div>
+                <div class="htog dn"></div>
+              </div>
+              <div class="hcard">
+                <span class="hico">📖</span>
+                <div class="hinfo">
+                  <div class="hname">Read 20 pages</div>
+                  <div class="hmeta">🔥 8 day streak</div>
+                </div>
+                <div class="htog dn"></div>
+              </div>
+              <div class="hcard">
+                <span class="hico">💧</span>
+                <div class="hinfo">
+                  <div class="hname">Drink 2L water</div>
+                  <div class="hmeta">🔥 5 day streak</div>
+                </div>
+                <div class="htog dn"></div>
+              </div>
+              <div class="hcard">
+                <span class="hico">🏃</span>
+                <div class="hinfo">
+                  <div class="hname">30 min exercise</div>
+                  <div class="hmeta">Building strength</div>
+                </div>
+                <div class="htog"></div>
+              </div>
+              <div class="hcard">
+                <span class="hico">📝</span>
+                <div class="hinfo">
+                  <div class="hname">Journal entry</div>
+                  <div class="hmeta">Building strength</div>
+                </div>
+                <div class="htog"></div>
+              </div>
+            </div>
+            <div class="bbar">
+              <div class="bpill gh">⚙ Settings</div>
+              <div class="fab-wrap">
+                <svg class="fab-svg" viewBox="0 0 48 48">
+                  <circle
+                    cx="24"
+                    cy="24"
+                    r="20"
+                    fill="none"
+                    stroke="#EDEAE5"
+                    stroke-width="2.5"
+                  />
+                  <circle
+                    cx="24"
+                    cy="24"
+                    r="20"
+                    fill="none"
+                    stroke="#10B981"
+                    stroke-width="2.5"
+                    stroke-dasharray="125.7"
+                    stroke-dashoffset="50.3"
+                    stroke-linecap="round"
+                    transform="rotate(-90 24 24)"
+                  />
+                </svg>
+                <div class="fab-btn">+</div>
+              </div>
+              <div class="bpill gd">✦ Explore ›</div>
+            </div>
+          </div>
+        </div>
+        <div class="vlabel">
+          <div class="vlabel-num">V7 · Coaching</div>
+          <div class="vlabel-name">Focus Mode</div>
+          <div class="vlabel-desc">
+            AI-prioritized next habit. Tells you what matters most right now.
+          </div>
+          <div class="tags">
+            <span class="tag rev">$$ AI coaching tier</span>
+            <span class="tag pain">Overwhelm</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── V8: Milestone Chase ── -->
+      <div class="variant-wrap">
+        <div class="phone">
+          <div class="phone-inner">
+            <div class="shelf">
+              <div class="g-row">
+                <div style="flex: 1">
+                  <div class="g-text">
+                    Good afternoon<span class="g-dim"> — </span
+                    ><span class="g-em">3 of 5 done</span>
+                  </div>
+                  <div class="nav">
+                    <span class="nav-arr">◂</span>
+                    <span class="nav-date">Tue, February 25</span>
+                    <span class="nav-arr off">▸</span>
+                  </div>
+                  <div class="milestone-row">
+                    <div class="ms-icon">🥈</div>
+                    <div class="ms-info">
+                      <div class="ms-text">2 more days → 2-week streak</div>
+                      <div class="ms-track">
+                        <div class="ms-fill" style="width: 85%"></div>
+                      </div>
+                    </div>
+                    <div class="ms-count">12/14</div>
+                  </div>
+                </div>
+              </div>
+              <div class="strip">
+                <div class="dcell">
+                  <span class="dlbl">M</span>
+                  <div class="dcirc cmp">17</div>
+                  <div class="ddot dn"></div>
+                </div>
+                <div class="dcell">
+                  <span class="dlbl">T</span>
+                  <div class="dcirc cmp">18</div>
+                  <div class="ddot dn"></div>
+                </div>
+                <div class="dcell">
+                  <span class="dlbl">W</span>
+                  <div class="dcirc cmp">19</div>
+                  <div class="ddot dn"></div>
+                </div>
+                <div class="dcell">
+                  <span class="dlbl">T</span>
+                  <div class="dcirc part">20</div>
+                  <div class="ddot pa"></div>
+                </div>
+                <div class="dcell">
+                  <span class="dlbl">F</span>
+                  <div class="dcirc today">25</div>
+                  <div class="ddot td"></div>
+                </div>
+                <div class="dcell">
+                  <span class="dlbl">S</span>
+                  <div class="dcirc fut">26</div>
+                  <div class="ddot"></div>
+                </div>
+                <div class="dcell">
+                  <span class="dlbl">S</span>
+                  <div class="dcirc fut">27</div>
+                  <div class="ddot"></div>
+                </div>
+              </div>
+            </div>
+            <div class="harea">
+              <div class="hcard">
+                <span class="hico">🧘</span>
+                <div class="hinfo">
+                  <div class="hname">Morning meditation</div>
+                  <div class="hmeta">🔥 12 day streak</div>
+                </div>
+                <div class="htog dn"></div>
+              </div>
+              <div class="hcard">
+                <span class="hico">📖</span>
+                <div class="hinfo">
+                  <div class="hname">Read 20 pages</div>
+                  <div class="hmeta">🔥 8 day streak</div>
+                </div>
+                <div class="htog dn"></div>
+              </div>
+              <div class="hcard">
+                <span class="hico">💧</span>
+                <div class="hinfo">
+                  <div class="hname">Drink 2L water</div>
+                  <div class="hmeta">🔥 5 day streak</div>
+                </div>
+                <div class="htog dn"></div>
+              </div>
+              <div class="hcard">
+                <span class="hico">🏃</span>
+                <div class="hinfo">
+                  <div class="hname">30 min exercise</div>
+                  <div class="hmeta">Building strength</div>
+                </div>
+                <div class="htog"></div>
+              </div>
+              <div class="hcard">
+                <span class="hico">📝</span>
+                <div class="hinfo">
+                  <div class="hname">Journal entry</div>
+                  <div class="hmeta">Building strength</div>
+                </div>
+                <div class="htog"></div>
+              </div>
+            </div>
+            <div class="bbar">
+              <div class="bpill gh">⚙ Settings</div>
+              <div class="fab-wrap">
+                <svg class="fab-svg" viewBox="0 0 48 48">
+                  <circle
+                    cx="24"
+                    cy="24"
+                    r="20"
+                    fill="none"
+                    stroke="#EDEAE5"
+                    stroke-width="2.5"
+                  />
+                  <circle
+                    cx="24"
+                    cy="24"
+                    r="20"
+                    fill="none"
+                    stroke="#10B981"
+                    stroke-width="2.5"
+                    stroke-dasharray="125.7"
+                    stroke-dashoffset="50.3"
+                    stroke-linecap="round"
+                    transform="rotate(-90 24 24)"
+                  />
+                </svg>
+                <div class="fab-btn">+</div>
+              </div>
+              <div class="bpill gd">✦ Explore ›</div>
+            </div>
+          </div>
+        </div>
+        <div class="vlabel">
+          <div class="vlabel-num">V8 · Achievement</div>
+          <div class="vlabel-name">Milestone Chase</div>
+          <div class="vlabel-desc">
+            Progress bar toward next achievement. Creates "just 2 more days"
+            urgency.
+          </div>
+          <div class="tags">
+            <span class="tag rev">$ Achievement system</span>
+            <span class="tag pain">Motivation drop-off</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ STRATEGY MATRIX ═══ -->
+    <div class="matrix-section">
+      <div class="matrix-title">Strategic Comparison Matrix</div>
+      <div style="overflow-x: auto">
+        <table class="matrix">
+          <thead>
+            <tr>
+              <th>Variant</th>
+              <th>Revenue potential</th>
+              <th>User value</th>
+              <th>Pain point</th>
+              <th>Effort</th>
+              <th>Monetization mechanism</th>
+              <th>Risk</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>V1 Clean Greeting</td>
+              <td><span class="stars">★</span><span class="lo">☆☆☆☆</span></td>
+              <td><span class="stars">★★★</span><span class="lo">☆☆</span></td>
+              <td class="lo">None specific</td>
+              <td class="hi">Trivial</td>
+              <td>Indirect (retention)</td>
+              <td class="hi">Zero</td>
+            </tr>
+            <tr class="top-pick">
+              <td>V2 Streak Shield ★</td>
+              <td><span class="stars">★★★★★</span></td>
+              <td><span class="stars">★★★★</span><span class="lo">☆</span></td>
+              <td>Streak anxiety</td>
+              <td class="md">Medium</td>
+              <td>Streak protection ($)</td>
+              <td class="md">Feels exploitative if overdone</td>
+            </tr>
+            <tr class="top-pick">
+              <td>V3 Micro Insight ★</td>
+              <td><span class="stars">★★★★</span><span class="lo">☆</span></td>
+              <td><span class="stars">★★★★★</span></td>
+              <td>Self-awareness gap</td>
+              <td class="md">Medium-High</td>
+              <td>PRO insights tier ($)</td>
+              <td class="hi">Low — pure value-add</td>
+            </tr>
+            <tr class="top-pick">
+              <td>V4 Trend Spark ★</td>
+              <td><span class="stars">★★★</span><span class="lo">☆☆</span></td>
+              <td><span class="stars">★★★★</span><span class="lo">☆</span></td>
+              <td>Am I improving?</td>
+              <td class="md">Medium</td>
+              <td>Analytics deep-dive ($)</td>
+              <td class="hi">Low</td>
+            </tr>
+            <tr>
+              <td>V5 Habit Strength</td>
+              <td><span class="stars">★★★</span><span class="lo">☆☆</span></td>
+              <td><span class="stars">★★★</span><span class="lo">☆☆</span></td>
+              <td>Are habits sticking?</td>
+              <td class="md">Medium</td>
+              <td>Per-habit analytics ($)</td>
+              <td class="md">Concept may confuse users</td>
+            </tr>
+            <tr>
+              <td>V6 Smart Nudge</td>
+              <td><span class="stars">★★★</span><span class="lo">☆☆</span></td>
+              <td><span class="stars">★★★★</span><span class="lo">☆</span></td>
+              <td>Decision fatigue</td>
+              <td class="md">Medium</td>
+              <td>Smart scheduling ($)</td>
+              <td class="md">May feel prescriptive</td>
+            </tr>
+            <tr>
+              <td>V7 Focus Mode</td>
+              <td><span class="stars">★★★★</span><span class="lo">☆</span></td>
+              <td><span class="stars">★★★</span><span class="lo">☆☆</span></td>
+              <td>Overwhelm</td>
+              <td class="lo">High</td>
+              <td>AI coaching tier ($$)</td>
+              <td class="md">Feels bossy</td>
+            </tr>
+            <tr>
+              <td>V8 Milestone Chase</td>
+              <td><span class="stars">★★★</span><span class="lo">☆☆</span></td>
+              <td><span class="stars">★★★★</span><span class="lo">☆</span></td>
+              <td>Motivation drop-off</td>
+              <td class="md">Medium</td>
+              <td>Achievement system ($)</td>
+              <td class="hi">Low</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ═══ RECOMMENDATION ═══ -->
+    <div class="rec-section">
+      <div class="rec-title">Recommended: Composable Header Strategy</div>
+      <div class="rec-body">
+        Rather than picking one variant permanently,
+        <strong>build a composable slot system</strong> where the header's right
+        zone and subtitle zone can be swapped based on context and user tier:
+        <br /><br />
+        <strong>Free users:</strong> Start with <em>V1 Clean Greeting</em> for
+        the first week (onboarding simplicity). After 7 days, introduce
+        <em>V2 Streak Shield</em> — they now have a streak worth protecting.
+        Rotate <em>V3 Micro Insight</em> occasionally (1 free insight per day,
+        PRO badge for more). <br /><br />
+        <strong>Premium users:</strong> Show <em>V4 Trend Spark</em> by default
+        (they're paying for analytics). Swap to <em>V8 Milestone Chase</em> when
+        close to an achievement (2 days away). <em>V3 Micro Insight</em> rotates
+        with unlimited insights. <br /><br />
+        This turns the header into a <strong>dynamic surface</strong> that
+        evolves with the user's journey and creates natural upgrade moments. The
+        composable approach lets you A/B test any combination without rebuilding
+        the layout.
+      </div>
+    </div>
+  </body>
+</html>

@@ -8,10 +8,16 @@
  * @see docs/offline-habit-sync.md T011
  */
 
-import { useCallback, useMemo, useState } from 'react';
+import { addDays, format, parse } from 'date-fns';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useMutation, useQuery } from 'convex/react';
 import { api } from '../../../../convex/_generated/api';
-import type { Habit, HabitSettings, HabitSortMode } from '../types';
+import type {
+  Habit,
+  HabitStatus,
+  HabitSettings,
+  HabitSortMode,
+} from '../types';
 import { useHabitsWeekDates } from './useHabitsWeekDates';
 import { useHabitsTracking } from './useHabitsTracking';
 import { useHabitsSorting } from './useHabitsSorting';
@@ -26,6 +32,73 @@ import { validateHabitsArray } from '../../../utils/validation';
 import type { HabitsListState } from './types';
 
 import { FREE_HABIT_LIMIT } from '@/constants';
+
+type HabitStrengthPrediction = {
+  baselineStrength: number;
+  strength: number;
+  updatedAt: number;
+};
+
+const STRENGTH_GROWTH_RATE = 0.03;
+const STRENGTH_BASE_DECAY = 0.02;
+const STRENGTH_SHIELD_EFFECTIVENESS = 0.7;
+const STRENGTH_PREDICTION_TTL_MS = 6000;
+const STRENGTH_PREDICTION_TOLERANCE = 0.0005;
+const STRENGTH_TOGGLE_WINDOW_DAYS = 7;
+const HABIT_DATE_FORMAT = 'yyyy-MM-dd';
+
+function clampStrength(value: number): number {
+  return Math.min(1, Math.max(0, value));
+}
+
+function estimateHabitStrengthAfterToggle(
+  currentStrength: number,
+  willMarkCompleted: boolean,
+  completionsLast7Days: number
+): number {
+  const sanitizedStrength = clampStrength(currentStrength);
+  const clampCompletions = Math.max(
+    0,
+    Math.min(STRENGTH_TOGGLE_WINDOW_DAYS, completionsLast7Days)
+  );
+
+  if (willMarkCompleted) {
+    const gapToMax = 1 - sanitizedStrength;
+    return clampStrength(sanitizedStrength + gapToMax * STRENGTH_GROWTH_RATE);
+  }
+
+  const streakShield = clampCompletions / STRENGTH_TOGGLE_WINDOW_DAYS;
+  const protectedDecay =
+    STRENGTH_BASE_DECAY * (1 - streakShield * STRENGTH_SHIELD_EFFECTIVENESS);
+  return clampStrength(sanitizedStrength * (1 - protectedDecay));
+}
+
+function countRecentCompletions(
+  getHabitStatus: (habitId: Habit['_id'], dateString: string) => HabitStatus,
+  habitId: Habit['_id'],
+  dateString: string
+): number {
+  const date = parse(dateString, HABIT_DATE_FORMAT, new Date());
+  if (Number.isNaN(date.getTime())) {
+    return 0;
+  }
+
+  let completions = 0;
+  for (
+    let dayOffset = 1;
+    dayOffset <= STRENGTH_TOGGLE_WINDOW_DAYS;
+    dayOffset++
+  ) {
+    const previousDate = addDays(date, -dayOffset);
+    const previousDateString = format(previousDate, HABIT_DATE_FORMAT);
+
+    if (getHabitStatus(habitId, previousDateString) === 'done') {
+      completions += 1;
+    }
+  }
+
+  return completions;
+}
 
 export function useHabitsListState(): HabitsListState {
   const [showHabitStrengthPercentage] = useState(true);
@@ -71,10 +144,94 @@ export function useHabitsListState(): HabitsListState {
     extendedDateStrings,
     today
   );
+  const [predictedStrengths, setPredictedStrengths] = useState<
+    Map<Habit['_id'], HabitStrengthPrediction>
+  >(new Map());
+  const cleanupTimersRef = useRef(
+    new Map<Habit['_id'], ReturnType<typeof setTimeout>>()
+  );
+
+  const habitsById = useMemo(
+    () => new Map(habitsFromQuery.map((habit) => [habit._id, habit] as const)),
+    [habitsFromQuery]
+  );
+
+  useEffect(() => {
+    const timers = cleanupTimersRef.current;
+
+    return () => {
+      for (const timer of timers.values()) {
+        clearTimeout(timer);
+      }
+
+      timers.clear();
+    };
+  }, []);
+
+  const habitsServerStrengthById = useMemo(
+    () =>
+      new Map(
+        habitsFromQuery.map(
+          (habit) => [habit._id, habit.strength ?? 0] as const
+        )
+      ),
+    [habitsFromQuery]
+  );
+
+  useEffect(() => {
+    if (predictedStrengths.size === 0) return;
+
+    setPredictedStrengths((previousPredictions) => {
+      if (previousPredictions.size === 0) return previousPredictions;
+
+      const nextPredictions = new Map(previousPredictions);
+      let hasChanges = false;
+
+      for (const [habitId, prediction] of previousPredictions) {
+        const serverStrength = habitsServerStrengthById.get(habitId);
+
+        if (serverStrength === undefined) {
+          nextPredictions.delete(habitId);
+          hasChanges = true;
+          continue;
+        }
+
+        const matchesServer =
+          Math.abs(serverStrength - prediction.strength) <=
+          STRENGTH_PREDICTION_TOLERANCE;
+        const serverChangedFromBaseline =
+          Math.abs(serverStrength - prediction.baselineStrength) >
+          STRENGTH_PREDICTION_TOLERANCE;
+
+        if (matchesServer || serverChangedFromBaseline) {
+          nextPredictions.delete(habitId);
+          hasChanges = true;
+        }
+      }
+
+      return hasChanges ? nextPredictions : previousPredictions;
+    });
+  }, [habitsServerStrengthById, predictedStrengths]);
+
+  const habitsWithPredictedStrength = useMemo(() => {
+    if (predictedStrengths.size === 0) {
+      return habitsFromQuery;
+    }
+
+    return habitsFromQuery.map((habit) => {
+      const prediction = predictedStrengths.get(habit._id);
+      if (!prediction) return habit;
+
+      return {
+        ...habit,
+        strength: prediction.strength,
+      };
+    });
+  }, [habitsFromQuery, predictedStrengths]);
 
   const habits = useHabitsSorting({
     getStreak,
-    habitsFromQuery,
+    habitsFromQuery: habitsWithPredictedStrength,
     habitSortMode,
   });
 
@@ -114,6 +271,58 @@ export function useHabitsListState(): HabitsListState {
     async (args: { habitId: Habit['_id']; date: string }) => {
       // Check if this will mark as completed (not already completed)
       const currentlyCompleted = isCompleted(args.habitId, args.date);
+      const habit = habitsById.get(args.habitId);
+
+      if (habit) {
+        const currentStrength =
+          predictedStrengths.get(args.habitId)?.strength ?? habit.strength ?? 0;
+        const completionsLast7Days = countRecentCompletions(
+          getHabitStatus,
+          args.habitId,
+          args.date
+        );
+        const nextStrength = estimateHabitStrengthAfterToggle(
+          currentStrength,
+          !currentlyCompleted,
+          completionsLast7Days
+        );
+        const updatedAt = Date.now();
+        const prediction: HabitStrengthPrediction = {
+          baselineStrength: currentStrength,
+          strength: nextStrength,
+          updatedAt,
+        };
+
+        setPredictedStrengths((previousPredictions) => {
+          const nextPredictions = new Map(previousPredictions);
+          nextPredictions.set(args.habitId, prediction);
+          return nextPredictions;
+        });
+
+        const timers = cleanupTimersRef.current;
+        const existingTimer = timers.get(args.habitId);
+        if (existingTimer) clearTimeout(existingTimer);
+
+        timers.set(
+          args.habitId,
+          setTimeout(() => {
+            timers.delete(args.habitId);
+            setPredictedStrengths((previousPredictions) => {
+              const currentPrediction = previousPredictions.get(args.habitId);
+              if (
+                !currentPrediction ||
+                currentPrediction.updatedAt !== updatedAt
+              ) {
+                return previousPredictions;
+              }
+
+              const nextPredictions = new Map(previousPredictions);
+              nextPredictions.delete(args.habitId);
+              return nextPredictions;
+            });
+          }, STRENGTH_PREDICTION_TTL_MS)
+        );
+      }
 
       // Call the original toggle function
       const result = await baseToggleHabit(args);
@@ -125,7 +334,14 @@ export function useHabitsListState(): HabitsListState {
 
       return result;
     },
-    [baseToggleHabit, isCompleted, playCompletionSound]
+    [
+      baseToggleHabit,
+      getHabitStatus,
+      habitsById,
+      isCompleted,
+      playCompletionSound,
+      predictedStrengths,
+    ]
   );
 
   // Stable content padding reference to avoid object re-creation every render

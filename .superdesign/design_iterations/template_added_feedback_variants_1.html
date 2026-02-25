@@ -1,0 +1,1358 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Template Added — Feedback Variants</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <style>
+      * {
+        box-sizing: border-box !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+      body {
+        font-family: 'DM Sans', sans-serif !important;
+        background: #0f0f14 !important;
+        color: #e8e6e3 !important;
+        overflow-x: hidden !important;
+      }
+      h1,
+      h2,
+      h3,
+      h4,
+      p,
+      span {
+        font-family: 'DM Sans', sans-serif !important;
+      }
+
+      /* ─── Phone Frame ─── */
+      .phone-frame {
+        width: 320px !important;
+        height: 580px !important;
+        background: #1a1a24 !important;
+        border-radius: 32px !important;
+        border: 3px solid #2a2a3a !important;
+        overflow: hidden !important;
+        position: relative !important;
+        flex-shrink: 0 !important;
+      }
+      .phone-screen {
+        width: 100% !important;
+        height: 100% !important;
+        position: relative !important;
+        overflow: hidden !important;
+      }
+
+      /* ─── Mock Template Preview (Background) ─── */
+      .mock-preview {
+        position: absolute !important;
+        inset: 0 !important;
+        background: #fafaf9 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        padding: 48px 20px 20px !important;
+      }
+      .mock-preview-header {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        margin-bottom: 20px !important;
+      }
+      .mock-icon-large {
+        width: 56px !important;
+        height: 56px !important;
+        border-radius: 16px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        font-size: 28px !important;
+      }
+      .mock-title {
+        font-size: 22px !important;
+        font-weight: 700 !important;
+        color: #1a1a2e !important;
+      }
+      .mock-desc {
+        font-size: 14px !important;
+        color: #6b6b80 !important;
+        line-height: 1.5 !important;
+        margin-top: 8px !important;
+      }
+      .mock-section {
+        background: #f0f0ec !important;
+        border-radius: 12px !important;
+        padding: 14px !important;
+        margin-top: 16px !important;
+      }
+      .mock-section-title {
+        font-size: 12px !important;
+        font-weight: 700 !important;
+        color: #8b8b9e !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.5px !important;
+      }
+      .mock-section-text {
+        font-size: 13px !important;
+        color: #4a4a5e !important;
+        margin-top: 6px !important;
+        line-height: 1.4 !important;
+      }
+
+      /* ─── Variant Labels ─── */
+      .variant-card {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        gap: 16px !important;
+      }
+      .variant-label {
+        font-size: 13px !important;
+        font-weight: 700 !important;
+        color: #a0a0b8 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 1px !important;
+        text-align: center !important;
+      }
+      .variant-subtitle {
+        font-size: 12px !important;
+        color: #606078 !important;
+        text-align: center !important;
+        max-width: 280px !important;
+        line-height: 1.4 !important;
+        margin-top: -8px !important;
+      }
+
+      /* ─── Grid Layout ─── */
+      .variants-grid {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        justify-content: center !important;
+        gap: 40px !important;
+        padding: 40px 24px 80px !important;
+      }
+
+      /* ─── Page Header ─── */
+      .page-header {
+        text-align: center !important;
+        padding: 48px 24px 8px !important;
+      }
+      .page-header h1 {
+        font-size: 28px !important;
+        font-weight: 700 !important;
+        color: #e8e6e3 !important;
+      }
+      .page-header p {
+        font-size: 15px !important;
+        color: #808098 !important;
+        margin-top: 8px !important;
+      }
+
+      /* ════════════════════════════════════════════
+       VARIANT A: Bottom Sheet Celebration
+       ════════════════════════════════════════════ */
+      .sheet-overlay {
+        position: absolute !important;
+        inset: 0 !important;
+        background: rgba(0, 0, 0, 0.45) !important;
+        backdrop-filter: blur(4px) !important;
+        z-index: 10 !important;
+      }
+      .bottom-sheet {
+        position: absolute !important;
+        bottom: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        background: #fafaf9 !important;
+        border-radius: 24px 24px 0 0 !important;
+        padding: 28px 24px 36px !important;
+        z-index: 20 !important;
+        text-align: center !important;
+        animation: sheetSlideUp 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+      }
+      @keyframes sheetSlideUp {
+        from {
+          transform: translateY(100%);
+        }
+        to {
+          transform: translateY(0);
+        }
+      }
+      .sheet-check {
+        width: 64px !important;
+        height: 64px !important;
+        border-radius: 50% !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        margin: 0 auto 16px !important;
+        animation: checkPop 0.5s 0.2s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+      }
+      @keyframes checkPop {
+        from {
+          transform: scale(0);
+        }
+        to {
+          transform: scale(1);
+        }
+      }
+      .sheet-title {
+        font-size: 20px !important;
+        font-weight: 700 !important;
+        color: #1a1a2e !important;
+      }
+      .sheet-subtitle {
+        font-size: 14px !important;
+        color: #6b6b80 !important;
+        margin-top: 6px !important;
+      }
+      .sheet-actions {
+        display: flex !important;
+        gap: 10px !important;
+        margin-top: 20px !important;
+      }
+      .sheet-btn-primary {
+        flex: 1 !important;
+        padding: 14px !important;
+        border-radius: 14px !important;
+        font-weight: 700 !important;
+        font-size: 15px !important;
+        color: #fff !important;
+        border: none !important;
+        cursor: pointer !important;
+      }
+      .sheet-btn-secondary {
+        flex: 1 !important;
+        padding: 14px !important;
+        border-radius: 14px !important;
+        font-weight: 600 !important;
+        font-size: 15px !important;
+        color: #6b6b80 !important;
+        background: #f0f0ec !important;
+        border: none !important;
+        cursor: pointer !important;
+      }
+
+      /* ════════════════════════════════════════════
+       VARIANT B: Morphing Button
+       ════════════════════════════════════════════ */
+      .morph-footer {
+        position: absolute !important;
+        bottom: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        padding: 16px 20px 28px !important;
+        background: linear-gradient(
+          transparent,
+          #fafaf9 30%,
+          #fafaf9
+        ) !important;
+        z-index: 10 !important;
+      }
+      .morph-btn-success {
+        width: 100% !important;
+        padding: 16px !important;
+        border-radius: 16px !important;
+        font-weight: 700 !important;
+        font-size: 16px !important;
+        color: #fff !important;
+        border: none !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 10px !important;
+        animation: morphPulse 1.5s ease-in-out infinite;
+      }
+      @keyframes morphPulse {
+        0%,
+        100% {
+          box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4);
+        }
+        50% {
+          box-shadow: 0 0 0 10px rgba(34, 197, 94, 0);
+        }
+      }
+      .morph-check-icon {
+        width: 24px !important;
+        height: 24px !important;
+        animation: morphCheckRotate 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+      }
+      @keyframes morphCheckRotate {
+        from {
+          transform: scale(0) rotate(-45deg);
+        }
+        to {
+          transform: scale(1) rotate(0);
+        }
+      }
+      .morph-subtext {
+        text-align: center !important;
+        font-size: 13px !important;
+        color: #8b8b9e !important;
+        margin-top: 10px !important;
+      }
+
+      /* ════════════════════════════════════════════
+       VARIANT C: Floating Celebration Pill
+       ════════════════════════════════════════════ */
+      .float-pill {
+        position: absolute !important;
+        bottom: 90px !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        background: #1a1a2e !important;
+        border-radius: 50px !important;
+        padding: 10px 20px !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 10px !important;
+        z-index: 20 !important;
+        box-shadow:
+          0 8px 32px rgba(0, 0, 0, 0.3),
+          0 0 0 1px rgba(255, 255, 255, 0.08) !important;
+        animation: pillBounceIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+        white-space: nowrap !important;
+      }
+      @keyframes pillBounceIn {
+        from {
+          transform: translateX(-50%) translateY(20px) scale(0.8);
+          opacity: 0;
+        }
+        to {
+          transform: translateX(-50%) translateY(0) scale(1);
+          opacity: 1;
+        }
+      }
+      .pill-icon {
+        width: 32px !important;
+        height: 32px !important;
+        border-radius: 8px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        font-size: 16px !important;
+      }
+      .pill-text {
+        font-size: 14px !important;
+        font-weight: 600 !important;
+        color: #fff !important;
+      }
+      .pill-action {
+        font-size: 12px !important;
+        font-weight: 700 !important;
+        color: #a78bfa !important;
+        background: rgba(167, 139, 250, 0.15) !important;
+        border-radius: 20px !important;
+        padding: 4px 12px !important;
+        cursor: pointer !important;
+      }
+      .pill-confetti {
+        position: absolute !important;
+        font-size: 16px !important;
+        animation: confettiFall 1.2s ease-out forwards;
+      }
+      @keyframes confettiFall {
+        0% {
+          opacity: 1;
+          transform: translateY(0) rotate(0deg);
+        }
+        100% {
+          opacity: 0;
+          transform: translateY(-60px) rotate(180deg);
+        }
+      }
+
+      /* ════════════════════════════════════════════
+       VARIANT D: Full-Screen Moment
+       ════════════════════════════════════════════ */
+      .fullscreen-overlay {
+        position: absolute !important;
+        inset: 0 !important;
+        background: linear-gradient(
+          135deg,
+          #1a1a2e 0%,
+          #0f172a 100%
+        ) !important;
+        z-index: 30 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 40px 24px !important;
+        animation: fadeInOverlay 0.4s ease-out;
+      }
+      @keyframes fadeInOverlay {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+      .fs-icon-ring {
+        width: 96px !important;
+        height: 96px !important;
+        border-radius: 50% !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        position: relative !important;
+        animation: ringPulse 2s ease-in-out infinite;
+      }
+      @keyframes ringPulse {
+        0%,
+        100% {
+          box-shadow: 0 0 0 0 rgba(var(--ring-color), 0.4);
+        }
+        50% {
+          box-shadow: 0 0 0 20px rgba(var(--ring-color), 0);
+        }
+      }
+      .fs-icon {
+        font-size: 48px !important;
+        animation: iconBounce 0.8s 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+      }
+      @keyframes iconBounce {
+        from {
+          transform: scale(0);
+        }
+        to {
+          transform: scale(1);
+        }
+      }
+      .fs-title {
+        font-size: 24px !important;
+        font-weight: 700 !important;
+        color: #fff !important;
+        margin-top: 24px !important;
+        text-align: center !important;
+        animation: fadeUp 0.5s 0.4s ease-out both;
+      }
+      .fs-subtitle {
+        font-size: 15px !important;
+        color: #808098 !important;
+        margin-top: 8px !important;
+        text-align: center !important;
+        animation: fadeUp 0.5s 0.5s ease-out both;
+      }
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(12px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .fs-btn {
+        margin-top: 32px !important;
+        padding: 14px 48px !important;
+        border-radius: 50px !important;
+        font-weight: 700 !important;
+        font-size: 16px !important;
+        color: #fff !important;
+        border: none !important;
+        cursor: pointer !important;
+        animation: fadeUp 0.5s 0.7s ease-out both;
+      }
+      .fs-dismiss {
+        font-size: 13px !important;
+        color: #606078 !important;
+        margin-top: 16px !important;
+        cursor: pointer !important;
+        animation: fadeUp 0.5s 0.8s ease-out both;
+      }
+      .fs-particles {
+        position: absolute !important;
+        inset: 0 !important;
+        pointer-events: none !important;
+        overflow: hidden !important;
+      }
+      .fs-particle {
+        position: absolute !important;
+        width: 6px !important;
+        height: 6px !important;
+        border-radius: 50% !important;
+        animation: particleFloat 3s ease-out infinite;
+      }
+      @keyframes particleFloat {
+        0% {
+          opacity: 0.7;
+          transform: translateY(0) scale(1);
+        }
+        100% {
+          opacity: 0;
+          transform: translateY(-200px) scale(0);
+        }
+      }
+
+      /* ════════════════════════════════════════════
+       VARIANT E: Inline Success Banner
+       ════════════════════════════════════════════ */
+      .inline-banner {
+        position: absolute !important;
+        top: 44px !important;
+        left: 12px !important;
+        right: 12px !important;
+        border-radius: 16px !important;
+        padding: 14px 16px !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 12px !important;
+        z-index: 20 !important;
+        animation: bannerDrop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+        border: 1px solid rgba(255, 255, 255, 0.08) !important;
+      }
+      @keyframes bannerDrop {
+        from {
+          transform: translateY(-120%);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+      .banner-icon {
+        width: 40px !important;
+        height: 40px !important;
+        border-radius: 12px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        font-size: 20px !important;
+        flex-shrink: 0 !important;
+      }
+      .banner-content {
+        flex: 1 !important;
+      }
+      .banner-title {
+        font-size: 14px !important;
+        font-weight: 700 !important;
+        color: #fff !important;
+      }
+      .banner-subtitle {
+        font-size: 12px !important;
+        color: rgba(255, 255, 255, 0.6) !important;
+        margin-top: 2px !important;
+      }
+      .banner-close {
+        width: 28px !important;
+        height: 28px !important;
+        border-radius: 50% !important;
+        background: rgba(255, 255, 255, 0.1) !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        cursor: pointer !important;
+        color: rgba(255, 255, 255, 0.5) !important;
+        font-size: 14px !important;
+        flex-shrink: 0 !important;
+      }
+
+      /* ════════════════════════════════════════════
+       VARIANT F: Slide-up Card with Next Action
+       ════════════════════════════════════════════ */
+      .slideup-card {
+        position: absolute !important;
+        bottom: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        background: #1a1a2e !important;
+        border-radius: 20px 20px 0 0 !important;
+        padding: 24px 20px 32px !important;
+        z-index: 20 !important;
+        animation: cardSlideUp 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+      }
+      @keyframes cardSlideUp {
+        from {
+          transform: translateY(100%);
+        }
+        to {
+          transform: translateY(0);
+        }
+      }
+      .slideup-top {
+        display: flex !important;
+        align-items: center !important;
+        gap: 14px !important;
+      }
+      .slideup-icon {
+        width: 48px !important;
+        height: 48px !important;
+        border-radius: 14px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        font-size: 24px !important;
+        position: relative !important;
+      }
+      .slideup-badge {
+        position: absolute !important;
+        bottom: -3px !important;
+        right: -3px !important;
+        width: 20px !important;
+        height: 20px !important;
+        border-radius: 50% !important;
+        background: #22c55e !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        font-size: 11px !important;
+        color: #fff !important;
+        font-weight: 800 !important;
+        border: 2px solid #1a1a2e !important;
+      }
+      .slideup-title {
+        font-size: 17px !important;
+        font-weight: 700 !important;
+        color: #fff !important;
+      }
+      .slideup-subtitle {
+        font-size: 13px !important;
+        color: #808098 !important;
+        margin-top: 2px !important;
+      }
+      .slideup-divider {
+        height: 1px !important;
+        background: rgba(255, 255, 255, 0.06) !important;
+        margin: 18px 0 !important;
+      }
+      .slideup-next-label {
+        font-size: 11px !important;
+        font-weight: 700 !important;
+        color: #606078 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 1px !important;
+        margin-bottom: 10px !important;
+      }
+      .slideup-actions {
+        display: flex !important;
+        gap: 10px !important;
+      }
+      .slideup-action {
+        flex: 1 !important;
+        padding: 12px 14px !important;
+        border-radius: 12px !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+        cursor: pointer !important;
+        font-size: 13px !important;
+        font-weight: 600 !important;
+      }
+      .slideup-action-primary {
+        background: rgba(167, 139, 250, 0.12) !important;
+        color: #a78bfa !important;
+      }
+      .slideup-action-secondary {
+        background: rgba(255, 255, 255, 0.04) !important;
+        color: #808098 !important;
+      }
+      .slideup-action-icon {
+        font-size: 16px !important;
+      }
+      .slideup-swipe-hint {
+        text-align: center !important;
+        margin-top: 14px !important;
+      }
+      .slideup-handle {
+        width: 36px !important;
+        height: 4px !important;
+        background: rgba(255, 255, 255, 0.15) !important;
+        border-radius: 2px !important;
+        margin: 0 auto !important;
+        display: block !important;
+      }
+
+      /* ─── Recommendation Badge ─── */
+      .rec-badge {
+        display: inline-block !important;
+        background: linear-gradient(135deg, #a78bfa, #6d28d9) !important;
+        color: #fff !important;
+        font-size: 10px !important;
+        font-weight: 700 !important;
+        padding: 3px 10px !important;
+        border-radius: 20px !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.5px !important;
+        margin-bottom: 4px !important;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page-header">
+      <h1 style="font-size: 28px; font-weight: 700">
+        Template Added — Feedback Variants
+      </h1>
+      <p style="margin-top: 12px !important">
+        6 patterns for "Morning Run" habit (color: #a78bfa). Click to replay
+        animations.
+      </p>
+    </div>
+
+    <div class="variants-grid">
+      <!-- ════════ VARIANT A: Bottom Sheet Celebration ════════ -->
+      <div class="variant-card">
+        <div>
+          <div class="variant-label">A · Bottom Sheet</div>
+          <div class="variant-subtitle">
+            Modal sheet with check animation + dual CTA
+          </div>
+        </div>
+        <div class="phone-frame" onclick="replayVariantA()">
+          <div class="phone-screen">
+            <div class="mock-preview" style="filter: blur(1px); opacity: 0.5">
+              <div class="mock-preview-header">
+                <div
+                  class="mock-icon-large"
+                  style="background: rgba(167, 139, 250, 0.15)"
+                >
+                  🏃
+                </div>
+              </div>
+              <div class="mock-title" style="font-size: 22px; font-weight: 700">
+                Morning Run
+              </div>
+            </div>
+            <div class="sheet-overlay" id="sheetOverlayA"></div>
+            <div class="bottom-sheet" id="sheetA">
+              <div
+                class="sheet-check"
+                style="background: linear-gradient(135deg, #a78bfa, #6d28d9)"
+              >
+                <svg
+                  width="32"
+                  height="32"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#fff"
+                  stroke-width="3"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              </div>
+              <div class="sheet-title">Morning Run Added!</div>
+              <div class="sheet-subtitle" style="margin-top: 6px">
+                Start building your streak tomorrow morning
+              </div>
+              <div class="sheet-actions" style="margin-top: 20px">
+                <button
+                  class="sheet-btn-primary"
+                  style="background: linear-gradient(135deg, #a78bfa, #6d28d9)"
+                >
+                  View My Habits
+                </button>
+                <button class="sheet-btn-secondary">Browse More</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ════════ VARIANT B: Morphing Button ════════ -->
+      <div class="variant-card">
+        <div>
+          <div class="variant-label">B · Morphing Button</div>
+          <div class="variant-subtitle">
+            Import button transforms into success state in-place
+          </div>
+        </div>
+        <div class="phone-frame" onclick="replayVariantB()">
+          <div class="phone-screen">
+            <div class="mock-preview">
+              <div class="mock-preview-header">
+                <div
+                  class="mock-icon-large"
+                  style="background: rgba(167, 139, 250, 0.15)"
+                >
+                  🏃
+                </div>
+              </div>
+              <div class="mock-title" style="font-size: 22px; font-weight: 700">
+                Morning Run
+              </div>
+              <div class="mock-desc">
+                Start your day with a 20-30 minute jog. Boosts serotonin and
+                sets a positive tone.
+              </div>
+              <div class="mock-section">
+                <div class="mock-section-title">Science</div>
+                <div class="mock-section-text">
+                  Huberman Lab: morning cardio elevates BDNF...
+                </div>
+              </div>
+              <div class="mock-section">
+                <div class="mock-section-title">Tips</div>
+                <div class="mock-section-text">
+                  Lay out running clothes the night before...
+                </div>
+              </div>
+            </div>
+            <div class="morph-footer" id="morphFooterB">
+              <div
+                class="morph-btn-success"
+                id="morphBtnB"
+                style="background: #22c55e"
+              >
+                <div class="morph-check-icon">
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#fff"
+                    stroke-width="3"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                  </svg>
+                </div>
+                <span style="font-size: 16px; font-weight: 700; color: #fff"
+                  >Added to Your Habits!</span
+                >
+              </div>
+              <div class="morph-subtext">Tap anywhere to continue browsing</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ════════ VARIANT C: Floating Celebration Pill ════════ -->
+      <div class="variant-card">
+        <div>
+          <span class="rec-badge">Recommended</span>
+          <div class="variant-label">C · Floating Pill</div>
+          <div class="variant-subtitle">
+            Compact, non-blocking pill with icon + action badge
+          </div>
+        </div>
+        <div class="phone-frame" onclick="replayVariantC()">
+          <div class="phone-screen">
+            <div class="mock-preview">
+              <div class="mock-preview-header">
+                <div
+                  class="mock-icon-large"
+                  style="background: rgba(167, 139, 250, 0.15)"
+                >
+                  🏃
+                </div>
+              </div>
+              <div class="mock-title" style="font-size: 22px; font-weight: 700">
+                Morning Run
+              </div>
+              <div class="mock-desc">
+                Start your day with a 20-30 minute jog. Boosts serotonin and
+                sets a positive tone.
+              </div>
+              <div class="mock-section">
+                <div class="mock-section-title">Science</div>
+                <div class="mock-section-text">
+                  Huberman Lab: morning cardio elevates BDNF...
+                </div>
+              </div>
+              <div class="mock-section">
+                <div class="mock-section-title">Tips</div>
+                <div class="mock-section-text">
+                  Lay out running clothes the night before...
+                </div>
+              </div>
+            </div>
+            <!-- Confetti particles -->
+            <div
+              class="pill-confetti"
+              id="confettiC1"
+              style="left: 40%; top: 65%; color: #a78bfa; animation-delay: 0s"
+            >
+              ✨
+            </div>
+            <div
+              class="pill-confetti"
+              id="confettiC2"
+              style="left: 55%; top: 68%; color: #f59e0b; animation-delay: 0.1s"
+            >
+              🎉
+            </div>
+            <div
+              class="pill-confetti"
+              id="confettiC3"
+              style="left: 48%; top: 63%; color: #22c55e; animation-delay: 0.2s"
+            >
+              ⭐
+            </div>
+            <div class="float-pill" id="pillC">
+              <div
+                class="pill-icon"
+                style="background: rgba(167, 139, 250, 0.2)"
+              >
+                🏃
+              </div>
+              <span class="pill-text">Morning Run added!</span>
+              <span class="pill-action">View →</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ════════ VARIANT D: Full-Screen Moment ════════ -->
+      <div class="variant-card">
+        <div>
+          <div class="variant-label">D · Full-Screen Moment</div>
+          <div class="variant-subtitle">
+            Immersive celebration — maximum impact, brief pause
+          </div>
+        </div>
+        <div class="phone-frame" onclick="replayVariantD()">
+          <div class="phone-screen">
+            <div class="mock-preview" style="opacity: 0">
+              <div class="mock-title">Morning Run</div>
+            </div>
+            <div
+              class="fullscreen-overlay"
+              id="fsOverlayD"
+              style="--ring-color: 167, 139, 250"
+            >
+              <div class="fs-particles">
+                <div
+                  class="fs-particle"
+                  style="
+                    background: #a78bfa;
+                    left: 20%;
+                    top: 30%;
+                    animation-delay: 0s;
+                  "
+                ></div>
+                <div
+                  class="fs-particle"
+                  style="
+                    background: #f59e0b;
+                    left: 70%;
+                    top: 50%;
+                    animation-delay: 0.5s;
+                  "
+                ></div>
+                <div
+                  class="fs-particle"
+                  style="
+                    background: #22c55e;
+                    left: 40%;
+                    top: 70%;
+                    animation-delay: 1s;
+                  "
+                ></div>
+                <div
+                  class="fs-particle"
+                  style="
+                    background: #ec4899;
+                    left: 80%;
+                    top: 25%;
+                    animation-delay: 1.5s;
+                  "
+                ></div>
+                <div
+                  class="fs-particle"
+                  style="
+                    background: #3b82f6;
+                    left: 15%;
+                    top: 60%;
+                    animation-delay: 2s;
+                  "
+                ></div>
+              </div>
+              <div
+                class="fs-icon-ring"
+                style="
+                  background: rgba(167, 139, 250, 0.15);
+                  --ring-color: 167, 139, 250;
+                "
+              >
+                <span class="fs-icon">🏃</span>
+              </div>
+              <div class="fs-title">Morning Run Added!</div>
+              <div class="fs-subtitle">Your new daily habit is ready to go</div>
+              <button
+                class="fs-btn"
+                style="background: linear-gradient(135deg, #a78bfa, #6d28d9)"
+              >
+                Go to My Habits
+              </button>
+              <div class="fs-dismiss">Continue browsing</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ════════ VARIANT E: Inline Banner (Top) ════════ -->
+      <div class="variant-card">
+        <div>
+          <div class="variant-label">E · Top Banner</div>
+          <div class="variant-subtitle">
+            Drops from top, non-blocking, auto-dismiss in 4s
+          </div>
+        </div>
+        <div class="phone-frame" onclick="replayVariantE()">
+          <div class="phone-screen">
+            <div class="mock-preview">
+              <div class="mock-preview-header">
+                <div
+                  class="mock-icon-large"
+                  style="background: rgba(167, 139, 250, 0.15)"
+                >
+                  🏃
+                </div>
+              </div>
+              <div class="mock-title" style="font-size: 22px; font-weight: 700">
+                Morning Run
+              </div>
+              <div class="mock-desc">
+                Start your day with a 20-30 minute jog. Boosts serotonin and
+                sets a positive tone.
+              </div>
+              <div class="mock-section">
+                <div class="mock-section-title">Science</div>
+                <div class="mock-section-text">
+                  Huberman Lab: morning cardio elevates BDNF...
+                </div>
+              </div>
+              <div class="mock-section">
+                <div class="mock-section-title">Tips</div>
+                <div class="mock-section-text">
+                  Lay out running clothes the night before...
+                </div>
+              </div>
+            </div>
+            <div
+              class="inline-banner"
+              id="bannerE"
+              style="
+                background: linear-gradient(135deg, #1a1a2e 0%, #2d1b69 100%);
+              "
+            >
+              <div
+                class="banner-icon"
+                style="background: rgba(167, 139, 250, 0.2)"
+              >
+                🏃
+              </div>
+              <div class="banner-content">
+                <div class="banner-title">Morning Run added!</div>
+                <div class="banner-subtitle">Tap to view your habits</div>
+              </div>
+              <div class="banner-close">✕</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ════════ VARIANT F: Slide-up Card ════════ -->
+      <div class="variant-card">
+        <div>
+          <div class="variant-label">F · Slide-up Card</div>
+          <div class="variant-subtitle">
+            Rich card with next actions — what to do after adding
+          </div>
+        </div>
+        <div class="phone-frame" onclick="replayVariantF()">
+          <div class="phone-screen">
+            <div class="mock-preview" style="filter: blur(1px); opacity: 0.6">
+              <div class="mock-preview-header">
+                <div
+                  class="mock-icon-large"
+                  style="background: rgba(167, 139, 250, 0.15)"
+                >
+                  🏃
+                </div>
+              </div>
+              <div class="mock-title" style="font-size: 22px; font-weight: 700">
+                Morning Run
+              </div>
+            </div>
+            <div class="slideup-card" id="slideupF">
+              <div class="slideup-swipe-hint">
+                <span class="slideup-handle"></span>
+              </div>
+              <div class="slideup-top" style="margin-top: 8px">
+                <div
+                  class="slideup-icon"
+                  style="background: rgba(167, 139, 250, 0.15)"
+                >
+                  🏃
+                  <div class="slideup-badge">✓</div>
+                </div>
+                <div>
+                  <div class="slideup-title">Morning Run Added!</div>
+                  <div class="slideup-subtitle">
+                    Your habit is ready to track
+                  </div>
+                </div>
+              </div>
+              <div class="slideup-divider"></div>
+              <div class="slideup-next-label">What's Next</div>
+              <div class="slideup-actions">
+                <div class="slideup-action slideup-action-primary">
+                  <span class="slideup-action-icon">📋</span>
+                  <span>View Habits</span>
+                </div>
+                <div class="slideup-action slideup-action-secondary">
+                  <span class="slideup-action-icon">➕</span>
+                  <span>Add Another</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── Comparison Table ─── -->
+    <div
+      style="
+        max-width: 900px;
+        margin: 0 auto !important;
+        padding: 0 24px 80px !important;
+      "
+    >
+      <table
+        style="
+          width: 100%;
+          border-collapse: collapse !important;
+          font-size: 13px !important;
+        "
+      >
+        <thead>
+          <tr style="border-bottom: 1px solid #2a2a3a !important">
+            <th
+              style="
+                padding: 12px 8px !important;
+                text-align: left !important;
+                color: #808098 !important;
+                font-weight: 600 !important;
+              "
+            >
+              Variant
+            </th>
+            <th
+              style="
+                padding: 12px 8px !important;
+                text-align: left !important;
+                color: #808098 !important;
+                font-weight: 600 !important;
+              "
+            >
+              Blocking?
+            </th>
+            <th
+              style="
+                padding: 12px 8px !important;
+                text-align: left !important;
+                color: #808098 !important;
+                font-weight: 600 !important;
+              "
+            >
+              Impact
+            </th>
+            <th
+              style="
+                padding: 12px 8px !important;
+                text-align: left !important;
+                color: #808098 !important;
+                font-weight: 600 !important;
+              "
+            >
+              Best For
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom: 1px solid #1f1f2e !important">
+            <td
+              style="padding: 10px 8px !important; font-weight: 600 !important"
+            >
+              A · Bottom Sheet
+            </td>
+            <td style="padding: 10px 8px !important; color: #f59e0b !important">
+              Semi-blocking
+            </td>
+            <td style="padding: 10px 8px !important">★★★★☆</td>
+            <td style="padding: 10px 8px !important; color: #808098 !important">
+              Clear next-step guidance
+            </td>
+          </tr>
+          <tr style="border-bottom: 1px solid #1f1f2e !important">
+            <td
+              style="padding: 10px 8px !important; font-weight: 600 !important"
+            >
+              B · Morphing Button
+            </td>
+            <td style="padding: 10px 8px !important; color: #22c55e !important">
+              Non-blocking
+            </td>
+            <td style="padding: 10px 8px !important">★★★☆☆</td>
+            <td style="padding: 10px 8px !important; color: #808098 !important">
+              Minimal interruption
+            </td>
+          </tr>
+          <tr
+            style="
+              border-bottom: 1px solid #1f1f2e !important;
+              background: rgba(167, 139, 250, 0.05) !important;
+            "
+          >
+            <td
+              style="padding: 10px 8px !important; font-weight: 600 !important"
+            >
+              C · Floating Pill ⭐
+            </td>
+            <td style="padding: 10px 8px !important; color: #22c55e !important">
+              Non-blocking
+            </td>
+            <td style="padding: 10px 8px !important">★★★★☆</td>
+            <td style="padding: 10px 8px !important; color: #808098 !important">
+              Balance of delight + flow
+            </td>
+          </tr>
+          <tr style="border-bottom: 1px solid #1f1f2e !important">
+            <td
+              style="padding: 10px 8px !important; font-weight: 600 !important"
+            >
+              D · Full-Screen
+            </td>
+            <td style="padding: 10px 8px !important; color: #ef4444 !important">
+              Fully blocking
+            </td>
+            <td style="padding: 10px 8px !important">★★★★★</td>
+            <td style="padding: 10px 8px !important; color: #808098 !important">
+              First-ever habit added (onboarding)
+            </td>
+          </tr>
+          <tr style="border-bottom: 1px solid #1f1f2e !important">
+            <td
+              style="padding: 10px 8px !important; font-weight: 600 !important"
+            >
+              E · Top Banner
+            </td>
+            <td style="padding: 10px 8px !important; color: #22c55e !important">
+              Non-blocking
+            </td>
+            <td style="padding: 10px 8px !important">★★☆☆☆</td>
+            <td style="padding: 10px 8px !important; color: #808098 !important">
+              Utility-first, fast browsing
+            </td>
+          </tr>
+          <tr>
+            <td
+              style="padding: 10px 8px !important; font-weight: 600 !important"
+            >
+              F · Slide-up Card
+            </td>
+            <td style="padding: 10px 8px !important; color: #f59e0b !important">
+              Semi-blocking
+            </td>
+            <td style="padding: 10px 8px !important">★★★★☆</td>
+            <td style="padding: 10px 8px !important; color: #808098 !important">
+              Guiding to next action
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <script>
+      lucide.createIcons();
+
+      function replayAnimation(el, animName, dur) {
+        el.style.animation = 'none';
+        el.offsetHeight; // reflow
+        el.style.animation = animName + ' ' + dur;
+      }
+
+      function replayVariantA() {
+        const sheet = document.getElementById('sheetA');
+        replayAnimation(
+          sheet,
+          'sheetSlideUp 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards',
+          ''
+        );
+        const check = sheet.querySelector('.sheet-check');
+        replayAnimation(
+          check,
+          'checkPop 0.5s 0.2s cubic-bezier(0.34, 1.56, 0.64, 1) both',
+          ''
+        );
+      }
+
+      function replayVariantB() {
+        const btn = document.getElementById('morphBtnB');
+        btn.style.animation = 'none';
+        btn.offsetHeight;
+        btn.style.animation = 'morphPulse 1.5s ease-in-out infinite';
+        const icon = btn.querySelector('.morph-check-icon');
+        replayAnimation(
+          icon,
+          'morphCheckRotate 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both',
+          ''
+        );
+      }
+
+      function replayVariantC() {
+        const pill = document.getElementById('pillC');
+        replayAnimation(
+          pill,
+          'pillBounceIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both',
+          ''
+        );
+        ['confettiC1', 'confettiC2', 'confettiC3'].forEach((id) => {
+          const el = document.getElementById(id);
+          el.style.animation = 'none';
+          el.offsetHeight;
+          el.style.animation = 'confettiFall 1.2s ease-out forwards';
+        });
+      }
+
+      function replayVariantD() {
+        const overlay = document.getElementById('fsOverlayD');
+        overlay.style.animation = 'none';
+        overlay.offsetHeight;
+        overlay.style.animation = 'fadeInOverlay 0.4s ease-out';
+        overlay
+          .querySelectorAll(
+            '.fs-icon, .fs-title, .fs-subtitle, .fs-btn, .fs-dismiss'
+          )
+          .forEach((el) => {
+            const current =
+              el.style.animation || getComputedStyle(el).animation;
+            el.style.animation = 'none';
+            el.offsetHeight;
+            el.style.animation = '';
+          });
+      }
+
+      function replayVariantE() {
+        const banner = document.getElementById('bannerE');
+        replayAnimation(
+          banner,
+          'bannerDrop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both',
+          ''
+        );
+      }
+
+      function replayVariantF() {
+        const card = document.getElementById('slideupF');
+        replayAnimation(
+          card,
+          'cardSlideUp 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both',
+          ''
+        );
+      }
+    </script>
+  </body>
+</html>

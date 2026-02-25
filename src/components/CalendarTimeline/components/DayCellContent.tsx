@@ -1,12 +1,6 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 
-import {
-  COMPLETE_DAY_CELL,
-  FUTURE_DATE_TEXT_COLOR,
-  TODAY_HIGHLIGHT,
-  TODAY_SHADOW,
-} from '../CalendarTimeline.styles';
 import type {
   CalendarColors,
   CompletionStatus,
@@ -83,16 +77,16 @@ export const DayCellContent: React.FC<DayCellContentProps> = ({
         </Text>
       </View>
 
-      {hasCompletionData && !isComplete && (
-        <View className='mt-1 h-2 items-center justify-center'>
+      {/* Fixed-height spacer for completion indicator — prevents layout shift on week change */}
+      <View className='mt-1 h-2 items-center justify-center'>
+        {hasCompletionData && !isComplete && (
           <CompletionDot
             isToday={isCurrentDay}
             reduceMotion={reduceMotion}
             status={completionStatus}
           />
-        </View>
-      )}
-      {isComplete && <View className='mt-1 h-2' />}
+        )}
+      </View>
     </>
   );
 };

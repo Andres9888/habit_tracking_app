@@ -37,7 +37,10 @@ export function useTemplatesScreenProps() {
   const handlers = useTemplateHandlers({
     flatListRef: state.flatListRef,
     importTemplate: data.importTemplate,
+    previewTemplate: state.previewTemplate,
+    isPremiumUser: data.isPremiumUser,
     seedTemplates: data.seedTemplates,
+    setShowCelebration: state.setShowCelebration,
     setExpandedCategories: state.setExpandedCategories,
     setImportedTemplateIds: state.setImportedTemplateIds,
     setImportingTemplateId: state.setImportingTemplateId,
@@ -52,7 +55,9 @@ export function useTemplatesScreenProps() {
     setShowToast: state.setShowToast,
     setSortOption: state.setSortOption,
     setToastMessage: state.setToastMessage,
+    setToastTemplateData: state.setToastTemplateData,
     setViewMode: state.setViewMode,
+    userHabitCount: data.userHabitCount,
   });
 
   const getCategoryLabel = (categoryId: string) =>
