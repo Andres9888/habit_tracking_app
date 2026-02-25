@@ -8,13 +8,15 @@ tags:
   - access-control
   - loop-00001
 related:
-  - "[[Attack Surface Map - Loop 00001]]"
-  - "[[Security Analysis - Attack Surface Mapping]]"
+  - '[[Attack Surface Map - Loop 00001]]'
+  - '[[Security Analysis - Attack Surface Mapping]]'
 ---
+
 # Security Vulnerabilities - Loop 00001
 
 ## Summary
-- **Search Executed This Run:** Access Control Issues [SEARCHED]
+
+- **Search Executed This Run:** Hardcoded Secrets [SEARCHED]
 - **Total Findings:** 5
 - **Critical:** 1
 - **High:** 4
@@ -22,8 +24,9 @@ related:
 - **Low/Info:** 0
 
 ## Category Search Status
+
 - Injection Flaws [UNSEARCHED]
-- Hardcoded Secrets [UNSEARCHED]
+- Hardcoded Secrets [SEARCHED]
 - Authentication Issues [UNSEARCHED]
 - XSS [UNSEARCHED]
 - Insecure Cryptography [UNSEARCHED]
@@ -32,9 +35,16 @@ related:
 
 ---
 
+## Hardcoded Secrets [SEARCHED]
+
+- **Findings:** No hardcoded secrets, private keys, API tokens, or credential literals were identified in scanned source/configuration files for this category.
+
+---
+
 ## Access Control Issues [SEARCHED]
 
 ## VULN-001: Unauthenticated Global Deletion of Archived Habits
+
 - **Type:** Access Control Issues
 - **File:** `convex/habits/archive.ts`
 - **Line:** 69
@@ -46,6 +56,7 @@ related:
 ---
 
 ## VULN-002: Notes API Enables Cross-User Data Read and Tampering (IDOR Chain)
+
 - **Type:** Access Control Issues
 - **File:** `convex/notesQueries.ts`
 - **Line:** 9
@@ -57,6 +68,7 @@ related:
 ---
 
 ## VULN-003: Letters Queries and Mutations Permit Cross-User Disclosure/Modification
+
 - **Type:** Access Control Issues
 - **File:** `convex/lettersQueries.ts`
 - **Line:** 43
@@ -68,6 +80,7 @@ related:
 ---
 
 ## VULN-004: Habit State Mutations Lack Function-Level Authorization
+
 - **Type:** Access Control Issues
 - **File:** `convex/habits/pause.ts`
 - **Line:** 9
@@ -79,6 +92,7 @@ related:
 ---
 
 ## VULN-005: Vision Board Endpoints Expose and Modify Other Users' Images
+
 - **Type:** Access Control Issues
 - **File:** `convex/visionBoardImagesQueries.ts`
 - **Line:** 63
@@ -91,15 +105,15 @@ related:
 
 ## Findings by Category
 
-| Category | Count | Critical | High |
-|----------|-------|----------|------|
-| Injection | 0 | 0 | 0 |
-| Secrets | 0 | 0 | 0 |
-| Auth | 0 | 0 | 0 |
-| XSS | 0 | 0 | 0 |
-| Crypto | 0 | 0 | 0 |
-| Access Control | 5 | 1 | 4 |
-| Dependencies | 0 | 0 | 0 |
+| Category       | Count | Critical | High |
+| -------------- | ----- | -------- | ---- |
+| Injection      | 0     | 0        | 0    |
+| Secrets        | 0     | 0        | 0    |
+| Auth           | 0     | 0        | 0    |
+| XSS            | 0     | 0        | 0    |
+| Crypto         | 0     | 0        | 0    |
+| Access Control | 5     | 1        | 4    |
+| Dependencies   | 0     | 0        | 0    |
 
 ## Dependency Vulnerabilities
 
