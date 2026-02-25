@@ -1,6 +1,7 @@
 # Security Issue Discovery - Find Vulnerabilities
 
 ## Context
+
 - **Playbook:** Security
 - **Agent:** security
 - **Project:** /Users/andres/Code/habit_tracking_app.worktrees/security
@@ -21,33 +22,38 @@ Using the attack surface map, systematically search for specific security vulner
 ## Discovery Checklist
 
 - [x] **Execute one vulnerability search (or mark exhausted)**: Read `/Users/andres/Code/habit_tracking_app/Auto Run Docs/LOOP_00001_ATTACK_SURFACE.md` and `/Users/andres/Code/habit_tracking_app/Auto Run Docs/LOOP_00001_VULNERABILITIES.md` (if it exists) to see which vulnerability categories have been searched. If ALL categories below are already marked `[SEARCHED]`, append `## ALL_TACTICS_EXHAUSTED` to the vulnerabilities file and mark this task complete. Otherwise, pick ONE unsearched category from: Injection Flaws, Hardcoded Secrets, Authentication Issues, XSS, Insecure Cryptography, Access Control Issues, or Dependency Vulnerabilities. Search the codebase for that category, append findings to `/Users/andres/Code/habit_tracking_app/Auto Run Docs/LOOP_00001_VULNERABILITIES.md`, and mark the category as `[SEARCHED]` in the vulnerabilities file.
-  - Completed 2026-02-22: Access Control Issues category searched and documented (5 findings) in `/Users/andres/Code/habit_tracking_app/Auto Run Docs/LOOP_00001_VULNERABILITIES.md`.
+- Completed on 2026-02-25: Hardcoded Secrets category searched and documented in `/Users/andres/Code/habit_tracking_app/Auto Run Docs/LOOP_00001_VULNERABILITIES.md` (no hardcoded secrets or private keys found; only placeholders/environment variable references).
 
 ## Vulnerability Search Patterns
 
 ### Injection Flaws
 
 #### SQL Injection
+
 Look for string concatenation or template literals in database queries instead of parameterized queries with placeholders.
 
 #### Command Injection
+
 Look for user input passed to shell commands via string interpolation. Safe patterns use array arguments without shell interpretation.
 
 #### Path Traversal
+
 Look for unvalidated file paths where user input is used directly. Safe patterns resolve and validate that paths stay within allowed directories.
 
 ### Hardcoded Secrets
 
 Search for patterns like:
+
 - Variables named API_KEY, SECRET, PASSWORD with string literal values
 - AWS access keys matching pattern: AKIA followed by 16 alphanumeric chars
-- GitHub tokens matching pattern: ghp_ followed by 36 alphanumeric chars
+- GitHub tokens matching pattern: ghp\_ followed by 36 alphanumeric chars
 - Private key headers in source code
 - Long base64-like strings assigned to variables
 
 ### Authentication Issues
 
 Look for:
+
 - Plain text password comparison instead of hash comparison
 - Weak hashing algorithms (MD5, SHA1) for passwords
 - Cookies missing secure or httpOnly flags
@@ -57,6 +63,7 @@ Look for:
 ### Cross-Site Scripting (XSS)
 
 Look for:
+
 - Setting innerHTML directly from user input
 - React's dangerous HTML prop with unsanitized content
 - DOM methods that write raw HTML from user data
@@ -66,6 +73,7 @@ Look for:
 ### Insecure Cryptography
 
 Look for:
+
 - Weak hash algorithms: MD5, SHA1 for security purposes
 - Weak ciphers: DES, RC4
 - ECB mode encryption
@@ -75,6 +83,7 @@ Look for:
 ### Access Control Issues
 
 Look for:
+
 - API endpoints without authentication middleware
 - Direct object references without ownership validation (IDOR)
 - Mass assignment vulnerabilities (user-controlled role fields)
@@ -88,6 +97,7 @@ Create/update `/Users/andres/Code/habit_tracking_app/Auto Run Docs/LOOP_00001_VU
 # Security Vulnerabilities - Loop 00001
 
 ## Summary
+
 - **Total Findings:** [count]
 - **Critical:** [count]
 - **High:** [count]
@@ -97,6 +107,7 @@ Create/update `/Users/andres/Code/habit_tracking_app/Auto Run Docs/LOOP_00001_VU
 ---
 
 ## VULN-001: [Vulnerability Name]
+
 - **Type:** [SQL Injection | XSS | Hardcoded Secret | etc.]
 - **File:** `[path/to/file]`
 - **Line:** [XX]
@@ -108,6 +119,7 @@ Create/update `/Users/andres/Code/habit_tracking_app/Auto Run Docs/LOOP_00001_VU
 ---
 
 ## VULN-002: [Vulnerability Name]
+
 - **Type:** [Type]
 - **File:** `[path/to/file]`
 - **Line:** [XX]
@@ -120,23 +132,23 @@ Create/update `/Users/andres/Code/habit_tracking_app/Auto Run Docs/LOOP_00001_VU
 
 ## Findings by Category
 
-| Category | Count | Critical | High |
-|----------|-------|----------|------|
-| Injection | X | X | X |
-| Secrets | X | X | X |
-| Auth | X | X | X |
-| XSS | X | X | X |
-| Crypto | X | X | X |
-| Access Control | X | X | X |
-| Dependencies | X | X | X |
+| Category       | Count | Critical | High |
+| -------------- | ----- | -------- | ---- |
+| Injection      | X     | X        | X    |
+| Secrets        | X     | X        | X    |
+| Auth           | X     | X        | X    |
+| XSS            | X     | X        | X    |
+| Crypto         | X     | X        | X    |
+| Access Control | X     | X        | X    |
+| Dependencies   | X     | X        | X    |
 
 ## Dependency Vulnerabilities
 
 From automated dependency scans:
 
-| Package | Version | Vulnerability | Severity | Fix Version |
-|---------|---------|---------------|----------|-------------|
-| [pkg] | [ver] | [CVE-XXXX-XXXX] | [sev] | [fix ver] |
+| Package | Version | Vulnerability   | Severity | Fix Version |
+| ------- | ------- | --------------- | -------- | ----------- |
+| [pkg]   | [ver]   | [CVE-XXXX-XXXX] | [sev]    | [fix ver]   |
 
 ## Potential False Positives
 
@@ -160,11 +172,13 @@ Findings that may not be actual vulnerabilities:
 This task is complete when ONE of the following is true:
 
 **Option A - Executed a search:**
+
 1. You've searched exactly ONE vulnerability category from the list
 2. You've appended all findings to `/Users/andres/Code/habit_tracking_app/Auto Run Docs/LOOP_00001_VULNERABILITIES.md`
 3. You've marked the category as `[SEARCHED]` in the vulnerabilities file
 
 **Option B - All tactics exhausted:**
+
 1. All vulnerability categories are already marked as `[SEARCHED]`
 2. You've appended `## ALL_TACTICS_EXHAUSTED` to `/Users/andres/Code/habit_tracking_app/Auto Run Docs/LOOP_00001_VULNERABILITIES.md`
 
