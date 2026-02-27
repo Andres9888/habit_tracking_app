@@ -167,9 +167,9 @@ export function validateWebhookTimestamp(
 
   if (timestamp < minDate || timestamp > maxDate) {
     console.error(
-      `[RevenueCat] Suspicious ${fieldName}: ${timestamp} (${new Date(timestamp).toISOString()})`
+      `[RevenueCat] Suspicious ${fieldName}: ${timestamp} (${new Date(timestamp).toISOString()}) — rejecting out-of-range timestamp`
     );
-    // Still return it, but log the warning
+    return undefined;
   }
 
   return timestamp;

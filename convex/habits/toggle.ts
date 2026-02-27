@@ -37,9 +37,12 @@ export const toggleHabit = mutation({
           completed: true, date: args.date, habitId: args.habitId, userId: identity.subject,
         }));
 
-    // Schedule streak/strength recalculation with small delay to batch multiple toggles
-    // This prevents race conditions if user rapidly toggles the same habit
-    // The delay (500ms) allows multiple quick toggles to be batched into one recalculation
+    // Schedule streak/strength recalculation after a short delay.
+    // Convex serializes all mutations so there are no race conditions — the final
+    // recalculation will always see the correct DB state. The 500ms delay keeps
+    // the toggle response instant (recalc is async) while ensuring the UI shows
+    // updated strength shortly after interaction. Each toggle schedules its own
+    // recalculation; rapid toggles will trigger multiple sequential recalculations.
     await ctx.scheduler.runAfter(
       500,
       internal.habits.toggle.recalculateStreakAndStrength,

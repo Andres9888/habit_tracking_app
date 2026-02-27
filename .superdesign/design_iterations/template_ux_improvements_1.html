@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Template UX Improvements — 5 Proposals</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    * { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important; -webkit-font-smoothing: antialiased; }
+    body { background: linear-gradient(160deg, #0f0f1a 0%, #1a1a2e 40%, #16213e 100%); min-height: 100vh; padding: 40px 20px 80px; margin: 0 !important; }
+
+    /* Phone */
+    .phone { width: 375px; height: 812px; background: #FAFAF9; border-radius: 48px; overflow: hidden; position: relative; box-shadow: 0 50px 100px rgba(0,0,0,0.5), 0 0 0 3px #333; flex-shrink: 0; }
+    .phone.short { height: 700px; }
+    .notch { position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 126px; height: 34px; background: #000; border-radius: 0 0 24px 24px; z-index: 100; }
+    .home-bar { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); width: 134px; height: 5px; background: #1c1917; border-radius: 3px; z-index: 100; }
+
+    /* Section titles */
+    .section-title { color: #fff; font-size: 32px; font-weight: 800; letter-spacing: -1px; text-align: center; margin-bottom: 8px; }
+    .section-sub { color: rgba(255,255,255,0.5); font-size: 16px; text-align: center; margin-bottom: 40px; font-weight: 500; }
+    .change-num { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 50%; background: #22c55e; color: #fff; font-size: 14px; font-weight: 800; margin-right: 10px; }
+
+    /* Labels */
+    .label-before { background: #ef4444; color: #fff; padding: 6px 16px; border-radius: 20px; font-size: 13px; font-weight: 700; display: inline-block; margin-bottom: 14px; }
+    .label-after { background: #22c55e; color: #fff; padding: 6px 16px; border-radius: 20px; font-size: 13px; font-weight: 700; display: inline-block; margin-bottom: 14px; }
+    .label-fix { background: #f59e0b; color: #fff; padding: 6px 16px; border-radius: 20px; font-size: 13px; font-weight: 700; display: inline-block; margin-bottom: 14px; }
+
+    /* Callouts */
+    .callout { position: absolute; background: rgba(239, 68, 68, 0.95); color: white; padding: 6px 12px; border-radius: 8px; font-size: 11px; font-weight: 700; white-space: nowrap; z-index: 50; pointer-events: none; }
+    .callout.green { background: rgba(34, 197, 94, 0.95); }
+    .callout.amber { background: rgba(245, 158, 11, 0.95); }
+
+    /* Arrow between phones */
+    .arrow-sep { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; padding: 0 16px; }
+    .arrow-sep span { color: rgba(255,255,255,0.4); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+
+    /* Pair layout */
+    .pair { display: flex; gap: 20px; justify-content: center; align-items: center; flex-wrap: wrap; }
+
+    /* Section divider */
+    .divider { width: 100%; max-width: 900px; height: 1px; background: rgba(255,255,255,0.08); margin: 60px auto; }
+
+    /* Inline customize expand animation */
+    .customize-panel { overflow: hidden; max-height: 0; opacity: 0; transition: max-height 0.4s ease, opacity 0.3s ease; }
+    .customize-panel.open { max-height: 500px; opacity: 1; }
+
+    /* Interactive hint */
+    .click-hint { position: absolute; z-index: 60; animation: pulse-hint 2s ease-in-out infinite; }
+    @keyframes pulse-hint {
+      0%, 100% { transform: scale(1); opacity: 0.8; }
+      50% { transform: scale(1.1); opacity: 1; }
+    }
+
+    /* Footer gradient */
+    .footer-grad { background: linear-gradient(to top, #FAFAF9 70%, rgba(250,250,249,0)); padding: 20px 24px 40px; position: absolute; bottom: 0; left: 0; right: 0; }
+
+    /* Glow ring */
+    .icon-glow { position: absolute; inset: -8px; border-radius: 36px; opacity: 0.2; filter: blur(20px); }
+  </style>
+</head>
+<body>
+
+  <!-- ============================================ -->
+  <!-- HEADER -->
+  <!-- ============================================ -->
+  <div style="text-align: center; margin-bottom: 60px;">
+    <div style="font-size: 14px; font-weight: 700; color: #22c55e; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 12px;">UX IMPROVEMENT PLAN</div>
+    <h1 style="color: #fff; font-size: 44px; font-weight: 800; letter-spacing: -1.5px; margin: 0 0 12px;">Template Import Flow</h1>
+    <p style="color: rgba(255,255,255,0.4); font-size: 18px; max-width: 600px; margin: 0 auto;">5 targeted improvements to reduce friction and make the browse → import journey delightful</p>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- CHANGE 1: Inline Customize (Modal Collapse) -->
+  <!-- ============================================ -->
+  <div style="max-width: 1200px; margin: 0 auto 20px;">
+    <div class="section-title"><span class="change-num">1</span>Inline Customize Panel</div>
+    <div class="section-sub">Collapse 3 modals → 2. "Customize First →" expands in-place instead of opening a third modal.</div>
+  </div>
+
+  <div class="pair">
+    <!-- BEFORE: 3 modal stack -->
+    <div style="text-align: center;">
+      <div class="label-before">CURRENT: 3 Modals Deep</div>
+      <div class="phone" style="height: 812px;">
+        <div class="notch"></div>
+
+        <!-- Dimmed background (TemplatesScreen) -->
+        <div style="padding: 60px 20px 20px; opacity: 0.15;">
+          <div style="font-size: 26px; font-weight: 800; color: #1c1917;">Import Habits</div>
+        </div>
+
+        <!-- Semi-transparent overlay (FullsizePreview behind) -->
+        <div style="position: absolute; inset: 0; background: rgba(0,0,0,0.3); z-index: 5;"></div>
+
+        <!-- TemplatePreviewModal (3rd modal!) -->
+        <div style="position: absolute; inset: 0; z-index: 10; background: #FAFAF9; padding-top: 54px;">
+          <!-- Header -->
+          <div style="display: flex; justify-content: flex-end; padding: 16px 20px 8px;">
+            <div style="width: 36px; height: 36px; background: #f3f4f6; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+              <i data-lucide="x" style="width: 18px; height: 18px; color: #6b7280;"></i>
+            </div>
+          </div>
+
+          <!-- Template preview -->
+          <div style="text-align: center; padding: 8px 24px 20px;">
+            <div style="width: 72px; height: 72px; background: rgba(34, 197, 94, 0.12); border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; font-size: 36px;">🏃</div>
+            <div style="font-size: 14px; color: #6b7280; line-height: 1.5;">High-intensity circuit training backed by science.</div>
+          </div>
+
+          <!-- Name Input -->
+          <div style="padding: 0 24px 16px;">
+            <div style="font-size: 13px; font-weight: 600; color: #6b7280; margin-bottom: 8px;">Habit Name</div>
+            <div style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 12px; padding: 14px 16px;">
+              <span style="font-size: 16px; color: #1c1917;">7-Minute Workout</span>
+            </div>
+          </div>
+
+          <!-- Color Picker -->
+          <div style="padding: 0 24px 16px;">
+            <div style="font-size: 13px; font-weight: 600; color: #6b7280; margin-bottom: 10px;">Icon Color</div>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+              <div style="width: 36px; height: 36px; border-radius: 50%; background: #FF6B6B;"></div>
+              <div style="width: 36px; height: 36px; border-radius: 50%; background: #4ECDC4;"></div>
+              <div style="width: 36px; height: 36px; border-radius: 50%; background: #45B7D1;"></div>
+              <div style="width: 36px; height: 36px; border-radius: 50%; background: #96CEB4;"></div>
+              <div style="width: 36px; height: 36px; border-radius: 50%; background: #FFEAA7;"></div>
+              <div style="width: 36px; height: 36px; border-radius: 50%; background: #DFE6E9;"></div>
+              <div style="width: 36px; height: 36px; border-radius: 50%; background: #A29BFE;"></div>
+              <div style="width: 36px; height: 36px; border-radius: 50%; background: #FD79A8;"></div>
+            </div>
+          </div>
+
+          <!-- Reminder Time -->
+          <div style="padding: 0 24px 16px;">
+            <div style="font-size: 13px; font-weight: 600; color: #6b7280; margin-bottom: 8px;">Reminder Time</div>
+            <div style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 12px; padding: 14px 16px; display: flex; align-items: center; gap: 12px;">
+              <i data-lucide="clock" style="width: 18px; height: 18px; color: #9ca3af;"></i>
+              <span style="font-size: 16px; font-weight: 600; color: #1c1917;">7:30 AM</span>
+            </div>
+          </div>
+
+          <!-- Template Info -->
+          <div style="padding: 0 24px 24px; display: flex; gap: 12px;">
+            <div style="flex: 1; background: #f3f4f6; border-radius: 12px; padding: 12px; text-align: center;">
+              <div style="font-size: 11px; font-weight: 700; color: #9ca3af; text-transform: uppercase;">Category</div>
+              <div style="font-size: 15px; font-weight: 700; color: #1c1917; margin-top: 4px;">Health</div>
+            </div>
+            <div style="flex: 1; background: #f3f4f6; border-radius: 12px; padding: 12px; text-align: center;">
+              <div style="font-size: 11px; font-weight: 700; color: #9ca3af; text-transform: uppercase;">Frequency</div>
+              <div style="font-size: 15px; font-weight: 700; color: #1c1917; margin-top: 4px;">Daily</div>
+            </div>
+          </div>
+
+          <!-- Import button -->
+          <div style="padding: 0 24px;">
+            <div style="background: #22c55e; border-radius: 16px; height: 56px; display: flex; align-items: center; justify-content: center;">
+              <span style="color: #fff; font-size: 17px; font-weight: 700;">Import Habit</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Callouts -->
+        <div class="callout" style="top: 100px; right: 20px; z-index: 20;">3rd modal stacked!</div>
+        <div class="callout" style="top: 140px; right: 20px; z-index: 20;">Lost preview context</div>
+        <div class="callout" style="top: 180px; right: 20px; z-index: 20;">Disorienting on mobile</div>
+
+        <div class="home-bar"></div>
+      </div>
+    </div>
+
+    <div class="arrow-sep">
+      <span>becomes</span>
+      <div style="width: 50px; height: 50px; background: rgba(34, 197, 94, 0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+        <i data-lucide="arrow-right" style="width: 24px; height: 24px; color: #22c55e;"></i>
+      </div>
+    </div>
+
+    <!-- AFTER: Inline customize in footer -->
+    <div style="text-align: center;">
+      <div class="label-after">PROPOSED: Inline in Preview</div>
+      <div class="phone" style="height: 812px;">
+        <div class="notch"></div>
+
+        <!-- FullsizePreview with inline customize -->
+        <div style="position: absolute; inset: 0; background: #FAFAF9; z-index: 5;">
+          <!-- Close button -->
+          <div style="position: absolute; top: 54px; right: 16px; z-index: 10; width: 40px; height: 40px; background: #292524; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+            <i data-lucide="x" style="width: 20px; height: 20px; color: #a8a29e;"></i>
+          </div>
+
+          <!-- Hero gradient -->
+          <div style="background: linear-gradient(to bottom, rgba(34, 197, 94, 0.08), rgba(34, 197, 94, 0.03), #FAFAF9); padding: 70px 24px 20px; text-align: center;">
+            <!-- Icon with glow -->
+            <div style="position: relative; width: 88px; height: 88px; margin: 0 auto 16px;">
+              <div class="icon-glow" style="background: #22c55e;"></div>
+              <div style="width: 88px; height: 88px; background: rgba(34, 197, 94, 0.15); border-radius: 24px; display: flex; align-items: center; justify-content: center; position: relative;">
+                <span style="font-size: 44px;">🏃</span>
+              </div>
+            </div>
+            <div style="font-size: 26px; font-weight: 800; color: #1c1917; letter-spacing: -0.5px;">7-Minute Workout</div>
+            <!-- Pills -->
+            <div style="display: flex; gap: 8px; justify-content: center; margin-top: 14px;">
+              <div style="background: rgba(34, 197, 94, 0.08); border: 1px solid rgba(34, 197, 94, 0.15); padding: 8px 14px; border-radius: 10px; font-size: 13px; font-weight: 600; color: #374151; display: flex; align-items: center; gap: 6px;">
+                <i data-lucide="clock" style="width: 13px; height: 13px; color: #22c55e;"></i> Daily
+              </div>
+              <div style="background: rgba(34, 197, 94, 0.08); border: 1px solid rgba(34, 197, 94, 0.15); padding: 8px 14px; border-radius: 10px; font-size: 13px; font-weight: 600; color: #374151; display: flex; align-items: center; gap: 6px;">
+                <i data-lucide="sparkles" style="width: 13px; height: 13px; color: #22c55e;"></i> Health
+              </div>
+              <div style="background: rgba(34, 197, 94, 0.08); border: 1px solid rgba(34, 197, 94, 0.15); padding: 8px 14px; border-radius: 10px; font-size: 13px; font-weight: 600; color: #374151;">⏱️ 2-5 min/day</div>
+            </div>
+          </div>
+
+          <!-- Scrollable content preview (abbreviated) -->
+          <div style="padding: 0 24px 180px; overflow: hidden;">
+            <p style="font-size: 15px; color: #6b7280; line-height: 1.6; text-align: center; margin-bottom: 16px;">
+              Complete 12 exercises in 7 minutes, targeting all major muscle groups...
+            </p>
+            <div style="background: #f0fdf4; border: 2px solid #bbf7d0; border-radius: 16px; padding: 16px;">
+              <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
+                <span style="font-size: 16px;">🔬</span>
+                <span style="font-size: 11px; font-weight: 800; color: #166534; text-transform: uppercase; letter-spacing: 0.8px;">Science Behind This</span>
+              </div>
+              <p style="font-size: 13px; font-style: italic; color: #166534; line-height: 1.5; margin: 0;">"High-intensity circuit training can provide similar cardiovascular benefits..."</p>
+            </div>
+          </div>
+
+          <!-- INLINE CUSTOMIZE FOOTER (expanded state) -->
+          <div style="position: absolute; bottom: 0; left: 0; right: 0; z-index: 20;">
+            <div style="background: linear-gradient(to top, #FAFAF9 85%, rgba(250,250,249,0)); padding: 16px 24px 40px;">
+
+              <!-- Customize panel (expanded) -->
+              <div style="background: #fff; border: 1px solid #e7e5e4; border-radius: 20px; padding: 16px; margin-bottom: 12px; box-shadow: 0 -4px 20px rgba(0,0,0,0.06);">
+                <!-- Name -->
+                <div style="margin-bottom: 14px;">
+                  <div style="font-size: 12px; font-weight: 600; color: #78716c; margin-bottom: 6px;">Habit Name</div>
+                  <div style="background: #f5f5f4; border: 1.5px solid #e7e5e4; border-radius: 10px; padding: 12px 14px;">
+                    <span style="font-size: 15px; color: #1c1917;">7-Minute Workout</span>
+                  </div>
+                </div>
+                <!-- Color swatches -->
+                <div style="margin-bottom: 14px;">
+                  <div style="font-size: 12px; font-weight: 600; color: #78716c; margin-bottom: 8px;">Color</div>
+                  <div style="display: flex; gap: 8px;">
+                    <div style="position: relative; text-align: center;">
+                      <div style="width: 32px; height: 32px; border-radius: 50%; background: #22c55e; border: 2.5px solid #1c1917;"></div>
+                      <div style="font-size: 9px; color: #78716c; margin-top: 3px;">Original</div>
+                    </div>
+                    <div style="width: 32px; height: 32px; border-radius: 50%; background: #FF6B6B;"></div>
+                    <div style="width: 32px; height: 32px; border-radius: 50%; background: #4ECDC4;"></div>
+                    <div style="width: 32px; height: 32px; border-radius: 50%; background: #45B7D1;"></div>
+                    <div style="width: 32px; height: 32px; border-radius: 50%; background: #96CEB4;"></div>
+                    <div style="width: 32px; height: 32px; border-radius: 50%; background: #A29BFE;"></div>
+                    <div style="width: 32px; height: 32px; border-radius: 50%; background: #FD79A8;"></div>
+                  </div>
+                </div>
+                <!-- Reminder -->
+                <div style="display: flex; align-items: center; justify-content: space-between;">
+                  <div style="display: flex; align-items: center; gap: 8px;">
+                    <i data-lucide="bell" style="width: 16px; height: 16px; color: #78716c;"></i>
+                    <span style="font-size: 13px; font-weight: 600; color: #78716c;">Reminder</span>
+                  </div>
+                  <div style="background: #f5f5f4; border: 1px solid #e7e5e4; border-radius: 8px; padding: 8px 12px; font-size: 13px; font-weight: 600; color: #1c1917;">7:30 AM</div>
+                </div>
+              </div>
+
+              <!-- Import button -->
+              <div style="background: #22c55e; border-radius: 16px; height: 54px; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 20px rgba(34, 197, 94, 0.35);">
+                <span style="color: #fff; font-size: 17px; font-weight: 700;">Import with Customizations</span>
+              </div>
+              <!-- Cancel link -->
+              <div style="text-align: center; margin-top: 10px;">
+                <span style="font-size: 14px; font-weight: 600; color: #a8a29e;">← Back to Preview</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Callouts -->
+        <div class="callout green" style="bottom: 320px; left: 16px; z-index: 30;">Same modal — no context switch!</div>
+        <div class="callout green" style="bottom: 270px; left: 16px; z-index: 30;">Preview still visible above</div>
+        <div class="callout green" style="bottom: 220px; left: 16px; z-index: 30;">Slides up with spring anim</div>
+
+        <div class="home-bar"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ============================================ -->
+  <!-- CHANGE 2: Preview Button in View All -->
+  <!-- ============================================ -->
+  <div style="max-width: 1200px; margin: 0 auto 20px;">
+    <div class="section-title"><span class="change-num">2</span>Preview Button in "View All"</div>
+    <div class="section-sub">One-line fix — the button already exists but isn't shown. Adds the eye icon "Preview" CTA to every card.</div>
+  </div>
+
+  <div class="pair">
+    <!-- BEFORE -->
+    <div style="text-align: center;">
+      <div class="label-before">CURRENT: No Preview</div>
+      <div class="phone short">
+        <div class="notch"></div>
+        <div style="padding-top: 60px;">
+          <!-- Tab bar showing View All active -->
+          <div style="display: flex; gap: 8px; padding: 0 20px 12px;">
+            <div style="flex: 1; padding: 12px; text-align: center;">
+              <span style="font-size: 14px; font-weight: 600; color: #9ca3af;">Categories</span>
+            </div>
+            <div style="flex: 1; background: #1c1917; border-radius: 12px; padding: 12px; text-align: center;">
+              <span style="font-size: 14px; font-weight: 700; color: #fff;">View All</span>
+              <span style="font-size: 12px; color: rgba(255,255,255,0.6); margin-left: 4px;">47</span>
+            </div>
+          </div>
+
+          <!-- Template Card -->
+          <div style="margin: 8px 16px; background: #fff; border-radius: 18px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.06);">
+            <div style="display: flex;">
+              <div style="width: 4px; background: #22c55e; border-radius: 18px 0 0 18px;"></div>
+              <div style="flex: 1; padding: 16px;">
+                <!-- Header -->
+                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 10px;">
+                  <div style="width: 48px; height: 48px; background: rgba(34, 197, 94, 0.12); border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 24px;">🏃</div>
+                  <div style="flex: 1;">
+                    <div style="font-size: 17px; font-weight: 700; color: #1c1917;">7-Minute Workout</div>
+                    <div style="display: flex; gap: 6px; margin-top: 4px;">
+                      <span style="font-size: 11px; color: #6b7280; background: #f5f5f4; padding: 2px 8px; border-radius: 6px;">⏱️ Daily</span>
+                      <span style="font-size: 11px; color: #6b7280; background: #f5f5f4; padding: 2px 8px; border-radius: 6px;">🔗 Research</span>
+                    </div>
+                  </div>
+                </div>
+                <!-- Description -->
+                <div style="font-size: 13px; color: #6b7280; line-height: 1.5; margin-bottom: 12px;">
+                  Complete 12 exercises in 7 minutes. Science-backed HIIT for maximum efficiency.
+                </div>
+                <!-- Action: Only import button -->
+                <div style="display: flex; gap: 10px;">
+                  <div style="flex: 1; background: #22c55e; border-radius: 12px; height: 44px; display: flex; align-items: center; justify-content: center;">
+                    <span style="color: #fff; font-size: 14px; font-weight: 700;">Import Habit</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2nd card abbreviated -->
+          <div style="margin: 8px 16px; background: #fff; border-radius: 18px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.06);">
+            <div style="display: flex;">
+              <div style="width: 4px; background: #8B5CF6; border-radius: 18px 0 0 18px;"></div>
+              <div style="flex: 1; padding: 16px;">
+                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 10px;">
+                  <div style="width: 48px; height: 48px; background: rgba(139, 92, 246, 0.12); border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 24px;">🧘</div>
+                  <div style="flex: 1;">
+                    <div style="font-size: 17px; font-weight: 700; color: #1c1917;">Morning Meditation</div>
+                    <div style="display: flex; gap: 6px; margin-top: 4px;">
+                      <span style="font-size: 11px; color: #6b7280; background: #f5f5f4; padding: 2px 8px; border-radius: 6px;">⏱️ Daily</span>
+                    </div>
+                  </div>
+                </div>
+                <div style="font-size: 13px; color: #6b7280; line-height: 1.5; margin-bottom: 12px;">Start your day with 10 minutes of guided mindfulness...</div>
+                <div style="display: flex; gap: 10px;">
+                  <div style="flex: 1; background: #8B5CF6; border-radius: 12px; height: 44px; display: flex; align-items: center; justify-content: center;">
+                    <span style="color: #fff; font-size: 14px; font-weight: 700;">Import Habit</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="callout" style="bottom: 210px; right: 16px;">No way to preview details!</div>
+        <div class="callout" style="bottom: 170px; right: 16px;">Must tap card body (hidden)</div>
+        <div class="home-bar"></div>
+      </div>
+    </div>
+
+    <div class="arrow-sep">
+      <span>becomes</span>
+      <div style="width: 50px; height: 50px; background: rgba(34, 197, 94, 0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+        <i data-lucide="arrow-right" style="width: 24px; height: 24px; color: #22c55e;"></i>
+      </div>
+    </div>
+
+    <!-- AFTER -->
+    <div style="text-align: center;">
+      <div class="label-after">PROPOSED: Preview + Import</div>
+      <div class="phone short">
+        <div class="notch"></div>
+        <div style="padding-top: 60px;">
+          <div style="display: flex; gap: 8px; padding: 0 20px 12px;">
+            <div style="flex: 1; padding: 12px; text-align: center;">
+              <span style="font-size: 14px; font-weight: 600; color: #9ca3af;">Categories</span>
+            </div>
+            <div style="flex: 1; background: #1c1917; border-radius: 12px; padding: 12px; text-align: center;">
+              <span style="font-size: 14px; font-weight: 700; color: #fff;">View All</span>
+              <span style="font-size: 12px; color: rgba(255,255,255,0.6); margin-left: 4px;">47</span>
+            </div>
+          </div>
+
+          <!-- Template Card WITH preview button -->
+          <div style="margin: 8px 16px; background: #fff; border-radius: 18px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.06);">
+            <div style="display: flex;">
+              <div style="width: 4px; background: #22c55e; border-radius: 18px 0 0 18px;"></div>
+              <div style="flex: 1; padding: 16px;">
+                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 10px;">
+                  <div style="width: 48px; height: 48px; background: rgba(34, 197, 94, 0.12); border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 24px;">🏃</div>
+                  <div style="flex: 1;">
+                    <div style="font-size: 17px; font-weight: 700; color: #1c1917;">7-Minute Workout</div>
+                    <div style="display: flex; gap: 6px; margin-top: 4px;">
+                      <span style="font-size: 11px; color: #6b7280; background: #f5f5f4; padding: 2px 8px; border-radius: 6px;">⏱️ Daily</span>
+                      <span style="font-size: 11px; color: #6b7280; background: #f5f5f4; padding: 2px 8px; border-radius: 6px;">🔗 Research</span>
+                    </div>
+                  </div>
+                </div>
+                <div style="font-size: 13px; color: #6b7280; line-height: 1.5; margin-bottom: 12px;">
+                  Complete 12 exercises in 7 minutes. Science-backed HIIT for maximum efficiency.
+                </div>
+                <!-- TWO buttons: Preview + Import -->
+                <div style="display: flex; gap: 10px;">
+                  <div style="background: #f5f5f4; border-radius: 12px; height: 44px; display: flex; align-items: center; justify-content: center; padding: 0 16px; gap: 6px;">
+                    <i data-lucide="eye" style="width: 16px; height: 16px; color: #57534e;"></i>
+                    <span style="color: #57534e; font-size: 14px; font-weight: 600;">Preview</span>
+                  </div>
+                  <div style="flex: 1; background: #22c55e; border-radius: 12px; height: 44px; display: flex; align-items: center; justify-content: center;">
+                    <span style="color: #fff; font-size: 14px; font-weight: 700;">Import Habit</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2nd card -->
+          <div style="margin: 8px 16px; background: #fff; border-radius: 18px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.06);">
+            <div style="display: flex;">
+              <div style="width: 4px; background: #8B5CF6; border-radius: 18px 0 0 18px;"></div>
+              <div style="flex: 1; padding: 16px;">
+                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 10px;">
+                  <div style="width: 48px; height: 48px; background: rgba(139, 92, 246, 0.12); border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 24px;">🧘</div>
+                  <div style="flex: 1;">
+                    <div style="font-size: 17px; font-weight: 700; color: #1c1917;">Morning Meditation</div>
+                    <div style="display: flex; gap: 6px; margin-top: 4px;">
+                      <span style="font-size: 11px; color: #6b7280; background: #f5f5f4; padding: 2px 8px; border-radius: 6px;">⏱️ Daily</span>
+                    </div>
+                  </div>
+                </div>
+                <div style="font-size: 13px; color: #6b7280; line-height: 1.5; margin-bottom: 12px;">Start your day with 10 minutes of guided mindfulness...</div>
+                <div style="display: flex; gap: 10px;">
+                  <div style="background: #f5f5f4; border-radius: 12px; height: 44px; display: flex; align-items: center; justify-content: center; padding: 0 16px; gap: 6px;">
+                    <i data-lucide="eye" style="width: 16px; height: 16px; color: #57534e;"></i>
+                    <span style="color: #57534e; font-size: 14px; font-weight: 600;">Preview</span>
+                  </div>
+                  <div style="flex: 1; background: #8B5CF6; border-radius: 12px; height: 44px; display: flex; align-items: center; justify-content: center;">
+                    <span style="color: #fff; font-size: 14px; font-weight: 700;">Import Habit</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="callout green" style="bottom: 210px; left: 16px;">Preview button visible!</div>
+        <div class="callout green" style="bottom: 170px; left: 16px;">One-line code change</div>
+        <div class="home-bar"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ============================================ -->
+  <!-- CHANGE 3: Fix Time Estimate -->
+  <!-- ============================================ -->
+  <div style="max-width: 1200px; margin: 0 auto 20px;">
+    <div class="section-title"><span class="change-num">3</span>Dynamic Time Estimates</div>
+    <div class="section-sub">Replace the hardcoded "5-10 min" with frequency-aware labels derived from template data.</div>
+  </div>
+
+  <div style="display: flex; justify-content: center; gap: 40px; flex-wrap: wrap;">
+    <!-- Before pills -->
+    <div style="text-align: center;">
+      <div class="label-before">CURRENT: Same for all</div>
+      <div style="background: rgba(255,255,255,0.05); border-radius: 20px; padding: 30px 40px;">
+        <div style="margin-bottom: 20px;">
+          <div style="font-size: 13px; color: rgba(255,255,255,0.4); margin-bottom: 8px;">Daily Template</div>
+          <div style="display: flex; gap: 8px; justify-content: center;">
+            <div style="background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.2); padding: 10px 16px; border-radius: 12px; font-size: 14px; font-weight: 600; color: #d1d5db;">⏱️ Daily</div>
+            <div style="background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.2); padding: 10px 16px; border-radius: 12px; font-size: 14px; font-weight: 600; color: #d1d5db;">💪 Health</div>
+            <div style="background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); padding: 10px 16px; border-radius: 12px; font-size: 14px; font-weight: 600; color: #fca5a5;">⏱️ 5-10 min</div>
+          </div>
+        </div>
+        <div style="margin-bottom: 20px;">
+          <div style="font-size: 13px; color: rgba(255,255,255,0.4); margin-bottom: 8px;">Weekly Template</div>
+          <div style="display: flex; gap: 8px; justify-content: center;">
+            <div style="background: rgba(139, 92, 246, 0.1); border: 1px solid rgba(139, 92, 246, 0.2); padding: 10px 16px; border-radius: 12px; font-size: 14px; font-weight: 600; color: #d1d5db;">⏱️ Weekly</div>
+            <div style="background: rgba(139, 92, 246, 0.1); border: 1px solid rgba(139, 92, 246, 0.2); padding: 10px 16px; border-radius: 12px; font-size: 14px; font-weight: 600; color: #d1d5db;">🧘 Mind</div>
+            <div style="background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); padding: 10px 16px; border-radius: 12px; font-size: 14px; font-weight: 600; color: #fca5a5;">⏱️ 5-10 min</div>
+          </div>
+        </div>
+        <div>
+          <div style="font-size: 13px; color: rgba(255,255,255,0.4); margin-bottom: 8px;">Custom Template</div>
+          <div style="display: flex; gap: 8px; justify-content: center;">
+            <div style="background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.2); padding: 10px 16px; border-radius: 12px; font-size: 14px; font-weight: 600; color: #d1d5db;">⏱️ Custom</div>
+            <div style="background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.2); padding: 10px 16px; border-radius: 12px; font-size: 14px; font-weight: 600; color: #d1d5db;">🎨 Creative</div>
+            <div style="background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); padding: 10px 16px; border-radius: 12px; font-size: 14px; font-weight: 600; color: #fca5a5;">⏱️ 5-10 min</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="arrow-sep">
+      <span>becomes</span>
+      <div style="width: 50px; height: 50px; background: rgba(34, 197, 94, 0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+        <i data-lucide="arrow-right" style="width: 24px; height: 24px; color: #22c55e;"></i>
+      </div>
+    </div>
+
+    <!-- After pills -->
+    <div style="text-align: center;">
+      <div class="label-after">PROPOSED: Frequency-aware</div>
+      <div style="background: rgba(255,255,255,0.05); border-radius: 20px; padding: 30px 40px;">
+        <div style="margin-bottom: 20px;">
+          <div style="font-size: 13px; color: rgba(255,255,255,0.4); margin-bottom: 8px;">Daily Template</div>
+          <div style="display: flex; gap: 8px; justify-content: center;">
+            <div style="background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.2); padding: 10px 16px; border-radius: 12px; font-size: 14px; font-weight: 600; color: #d1d5db;">⏱️ Daily</div>
+            <div style="background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.2); padding: 10px 16px; border-radius: 12px; font-size: 14px; font-weight: 600; color: #d1d5db;">💪 Health</div>
+            <div style="background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.2); padding: 10px 16px; border-radius: 12px; font-size: 14px; font-weight: 600; color: #86efac;">⏱️ 2-5 min/day</div>
+          </div>
+        </div>
+        <div style="margin-bottom: 20px;">
+          <div style="font-size: 13px; color: rgba(255,255,255,0.4); margin-bottom: 8px;">Weekly Template</div>
+          <div style="display: flex; gap: 8px; justify-content: center;">
+            <div style="background: rgba(139, 92, 246, 0.1); border: 1px solid rgba(139, 92, 246, 0.2); padding: 10px 16px; border-radius: 12px; font-size: 14px; font-weight: 600; color: #d1d5db;">⏱️ Weekly</div>
+            <div style="background: rgba(139, 92, 246, 0.1); border: 1px solid rgba(139, 92, 246, 0.2); padding: 10px 16px; border-radius: 12px; font-size: 14px; font-weight: 600; color: #d1d5db;">🧘 Mind</div>
+            <div style="background: rgba(139, 92, 246, 0.1); border: 1px solid rgba(139, 92, 246, 0.2); padding: 10px 16px; border-radius: 12px; font-size: 14px; font-weight: 600; color: #c4b5fd;">⏱️ 15-30 min/wk</div>
+          </div>
+        </div>
+        <div>
+          <div style="font-size: 13px; color: rgba(255,255,255,0.4); margin-bottom: 8px;">Custom Template</div>
+          <div style="display: flex; gap: 8px; justify-content: center;">
+            <div style="background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.2); padding: 10px 16px; border-radius: 12px; font-size: 14px; font-weight: 600; color: #d1d5db;">⏱️ Custom</div>
+            <div style="background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.2); padding: 10px 16px; border-radius: 12px; font-size: 14px; font-weight: 600; color: #d1d5db;">🎨 Creative</div>
+            <div style="background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.2); padding: 10px 16px; border-radius: 12px; font-size: 14px; font-weight: 600; color: #fcd34d;">⏱️ Flexible</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ============================================ -->
+  <!-- CHANGE 4: Fix Paywall -->
+  <!-- ============================================ -->
+  <div style="max-width: 1200px; margin: 0 auto 20px;">
+    <div class="section-title"><span class="change-num">4</span>Fix Broken Paywall Button</div>
+    <div class="section-sub">The "Unlock Unlimited" button in the free-tier limit alert has no onPress handler — it's a dead button.</div>
+  </div>
+
+  <div class="pair">
+    <!-- BEFORE -->
+    <div style="text-align: center;">
+      <div class="label-before">CURRENT: Dead Button</div>
+      <div style="background: rgba(255,255,255,0.05); border-radius: 24px; padding: 40px; max-width: 340px;">
+        <!-- iOS Alert mockup -->
+        <div style="background: rgba(255,255,255,0.95); border-radius: 14px; padding: 20px; text-align: center; backdrop-filter: blur(20px);">
+          <div style="font-size: 17px; font-weight: 700; color: #1c1917; margin-bottom: 8px;">🎉 Great progress!</div>
+          <div style="font-size: 14px; color: #6b7280; line-height: 1.5; margin-bottom: 20px;">You've built 3 solid habits! Ready to track more? Upgrade to premium for unlimited habits and advanced insights.</div>
+          <div style="border-top: 1px solid #e5e7eb;">
+            <div style="display: flex;">
+              <div style="flex: 1; padding: 14px; border-right: 1px solid #e5e7eb;">
+                <span style="font-size: 16px; font-weight: 600; color: #3b82f6;">Keep 3 Free</span>
+              </div>
+              <div style="flex: 1; padding: 14px; position: relative;">
+                <span style="font-size: 16px; font-weight: 700; color: #3b82f6;">Unlock Unlimited</span>
+                <div style="position: absolute; top: -6px; right: -6px; background: #ef4444; color: white; font-size: 9px; font-weight: 800; padding: 3px 8px; border-radius: 10px; transform: rotate(12deg);">NO onPress!</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="text-align: center; margin-top: 16px;">
+          <span style="color: #ef4444; font-size: 13px; font-weight: 700;">Button does nothing — broken conversion funnel</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="arrow-sep">
+      <span>fix</span>
+      <div style="width: 50px; height: 50px; background: rgba(34, 197, 94, 0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+        <i data-lucide="arrow-right" style="width: 24px; height: 24px; color: #22c55e;"></i>
+      </div>
+    </div>
+
+    <!-- AFTER -->
+    <div style="text-align: center;">
+      <div class="label-after">PROPOSED: Opens Paywall</div>
+      <div style="background: rgba(255,255,255,0.05); border-radius: 24px; padding: 40px; max-width: 340px;">
+        <div style="background: rgba(255,255,255,0.95); border-radius: 14px; padding: 20px; text-align: center; backdrop-filter: blur(20px);">
+          <div style="font-size: 17px; font-weight: 700; color: #1c1917; margin-bottom: 8px;">🎉 Great progress!</div>
+          <div style="font-size: 14px; color: #6b7280; line-height: 1.5; margin-bottom: 20px;">You've built 3 solid habits! Ready to track more? Upgrade to premium for unlimited habits and advanced insights.</div>
+          <div style="border-top: 1px solid #e5e7eb;">
+            <div style="display: flex;">
+              <div style="flex: 1; padding: 14px; border-right: 1px solid #e5e7eb;">
+                <span style="font-size: 16px; font-weight: 600; color: #3b82f6;">Keep 3 Free</span>
+              </div>
+              <div style="flex: 1; padding: 14px; position: relative;">
+                <span style="font-size: 16px; font-weight: 700; color: #3b82f6;">Unlock Unlimited</span>
+                <div style="position: absolute; top: -6px; right: -6px; background: #22c55e; color: white; font-size: 9px; font-weight: 800; padding: 3px 8px; border-radius: 10px; transform: rotate(12deg);">→ Paywall</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Arrow to paywall -->
+        <div style="text-align: center; margin: 16px 0;">
+          <i data-lucide="arrow-down" style="width: 24px; height: 24px; color: #22c55e;"></i>
+        </div>
+        <!-- RevenueCat paywall hint -->
+        <div style="background: linear-gradient(135deg, #1a0f30, #2d1b69); border-radius: 18px; padding: 24px; text-align: center;">
+          <div style="font-size: 20px; margin-bottom: 8px;">👑</div>
+          <div style="font-size: 16px; font-weight: 800; color: #fff; margin-bottom: 4px;">Premium</div>
+          <div style="font-size: 12px; color: rgba(255,255,255,0.6); margin-bottom: 16px;">Unlimited habits, advanced insights, and more</div>
+          <div style="background: linear-gradient(135deg, #8B5CF6, #a78bfa); border-radius: 12px; padding: 12px;">
+            <span style="color: #fff; font-size: 14px; font-weight: 700;">RevenueCat Paywall opens</span>
+          </div>
+        </div>
+        <div style="text-align: center; margin-top: 12px;">
+          <span style="color: #22c55e; font-size: 13px; font-weight: 700;">Wire onOpenPaywall → setPaywallVisible(true)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ============================================ -->
+  <!-- CHANGE 5: Original Color in Picker -->
+  <!-- ============================================ -->
+  <div style="max-width: 1200px; margin: 0 auto 20px;">
+    <div class="section-title"><span class="change-num">5</span>Original Color in Picker</div>
+    <div class="section-sub">Prepend the template's own iconColor to the swatch list when it's not already in the 8 fixed colors.</div>
+  </div>
+
+  <div style="display: flex; justify-content: center; gap: 60px; flex-wrap: wrap;">
+    <!-- Before -->
+    <div style="text-align: center;">
+      <div class="label-before">CURRENT</div>
+      <div style="background: rgba(255,255,255,0.05); border-radius: 20px; padding: 30px;">
+        <div style="font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.4); margin-bottom: 6px;">Template color: <span style="color: #F97316;">●</span> #F97316 (Orange)</div>
+        <div style="font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.4); margin-bottom: 16px;">Not in swatches — can't keep it!</div>
+        <div style="font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.3); margin-bottom: 10px;">Icon Color</div>
+        <div style="display: flex; gap: 10px;">
+          <div style="width: 36px; height: 36px; border-radius: 50%; background: #FF6B6B;"></div>
+          <div style="width: 36px; height: 36px; border-radius: 50%; background: #4ECDC4;"></div>
+          <div style="width: 36px; height: 36px; border-radius: 50%; background: #45B7D1;"></div>
+          <div style="width: 36px; height: 36px; border-radius: 50%; background: #96CEB4;"></div>
+          <div style="width: 36px; height: 36px; border-radius: 50%; background: #FFEAA7;"></div>
+          <div style="width: 36px; height: 36px; border-radius: 50%; background: #DFE6E9;"></div>
+          <div style="width: 36px; height: 36px; border-radius: 50%; background: #A29BFE;"></div>
+          <div style="width: 36px; height: 36px; border-radius: 50%; background: #FD79A8;"></div>
+        </div>
+        <div style="margin-top: 12px; font-size: 11px; color: #ef4444; font-weight: 700;">❌ Original #F97316 not available</div>
+      </div>
+    </div>
+
+    <!-- After -->
+    <div style="text-align: center;">
+      <div class="label-after">PROPOSED</div>
+      <div style="background: rgba(255,255,255,0.05); border-radius: 20px; padding: 30px;">
+        <div style="font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.4); margin-bottom: 6px;">Template color: <span style="color: #F97316;">●</span> #F97316 (Orange)</div>
+        <div style="font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.4); margin-bottom: 16px;">Auto-prepended as first swatch</div>
+        <div style="font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.3); margin-bottom: 10px;">Icon Color</div>
+        <div style="display: flex; gap: 10px;">
+          <div style="position: relative;">
+            <div style="width: 36px; height: 36px; border-radius: 50%; background: #F97316; border: 3px solid #fff; box-shadow: 0 0 0 2px #F97316;"></div>
+            <div style="font-size: 8px; color: #F97316; font-weight: 700; text-align: center; margin-top: 4px;">ORIGINAL</div>
+          </div>
+          <div style="width: 36px; height: 36px; border-radius: 50%; background: #FF6B6B;"></div>
+          <div style="width: 36px; height: 36px; border-radius: 50%; background: #4ECDC4;"></div>
+          <div style="width: 36px; height: 36px; border-radius: 50%; background: #45B7D1;"></div>
+          <div style="width: 36px; height: 36px; border-radius: 50%; background: #96CEB4;"></div>
+          <div style="width: 36px; height: 36px; border-radius: 50%; background: #FFEAA7;"></div>
+          <div style="width: 36px; height: 36px; border-radius: 50%; background: #A29BFE;"></div>
+          <div style="width: 36px; height: 36px; border-radius: 50%; background: #FD79A8;"></div>
+        </div>
+        <div style="margin-top: 12px; font-size: 11px; color: #22c55e; font-weight: 700;">✓ Original always available & pre-selected</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ============================================ -->
+  <!-- SUMMARY -->
+  <!-- ============================================ -->
+  <div style="max-width: 800px; margin: 0 auto;">
+    <div style="text-align: center; margin-bottom: 30px;">
+      <div style="font-size: 28px; font-weight: 800; color: #fff; letter-spacing: -0.5px;">Implementation Priority</div>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px;">
+      <div style="background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.2); border-radius: 16px; padding: 20px;">
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+          <div style="width: 28px; height: 28px; background: #22c55e; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 800; color: #fff;">1</div>
+          <span style="font-size: 14px; font-weight: 700; color: #86efac;">Inline Customize</span>
+        </div>
+        <div style="font-size: 12px; color: rgba(255,255,255,0.5); line-height: 1.5;">Highest impact. Eliminates the 3rd modal entirely. ~6-8 files.</div>
+        <div style="margin-top: 10px; font-size: 11px; font-weight: 700; color: #f59e0b;">EFFORT: HIGH</div>
+      </div>
+      <div style="background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.2); border-radius: 16px; padding: 20px;">
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+          <div style="width: 28px; height: 28px; background: #22c55e; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 800; color: #fff;">2</div>
+          <span style="font-size: 14px; font-weight: 700; color: #86efac;">Preview in View All</span>
+        </div>
+        <div style="font-size: 12px; color: rgba(255,255,255,0.5); line-height: 1.5;">One-line fix. Button already exists but isn't shown.</div>
+        <div style="margin-top: 10px; font-size: 11px; font-weight: 700; color: #22c55e;">EFFORT: TRIVIAL</div>
+      </div>
+      <div style="background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.2); border-radius: 16px; padding: 20px;">
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+          <div style="width: 28px; height: 28px; background: #22c55e; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 800; color: #fff;">3</div>
+          <span style="font-size: 14px; font-weight: 700; color: #86efac;">Time Estimates</span>
+        </div>
+        <div style="font-size: 12px; color: rgba(255,255,255,0.5); line-height: 1.5;">Replace hardcoded "5-10 min" with frequency-based labels.</div>
+        <div style="margin-top: 10px; font-size: 11px; font-weight: 700; color: #22c55e;">EFFORT: LOW</div>
+      </div>
+      <div style="background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.2); border-radius: 16px; padding: 20px;">
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+          <div style="width: 28px; height: 28px; background: #22c55e; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 800; color: #fff;">4</div>
+          <span style="font-size: 14px; font-weight: 700; color: #86efac;">Fix Paywall</span>
+        </div>
+        <div style="font-size: 12px; color: rgba(255,255,255,0.5); line-height: 1.5;">Wire "Unlock" to open RevenueCat paywall. Fix broken funnel.</div>
+        <div style="margin-top: 10px; font-size: 11px; font-weight: 700; color: #f59e0b;">EFFORT: MEDIUM</div>
+      </div>
+      <div style="background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.2); border-radius: 16px; padding: 20px;">
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+          <div style="width: 28px; height: 28px; background: #22c55e; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 800; color: #fff;">5</div>
+          <span style="font-size: 14px; font-weight: 700; color: #86efac;">Original Color</span>
+        </div>
+        <div style="font-size: 12px; color: rgba(255,255,255,0.5); line-height: 1.5;">Prepend template's own color to swatch list in picker.</div>
+        <div style="margin-top: 10px; font-size: 11px; font-weight: 700; color: #22c55e;">EFFORT: LOW</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>

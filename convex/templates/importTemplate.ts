@@ -86,7 +86,9 @@ export const importTemplate = mutation({
       .withIndex('by_userId', (q) => q.eq('userId', userId))
       .collect();
 
-    if (!isPremiumUser && userHabits.length >= 3) {
+    // SEC-005: Only count active (non-archived, non-removed) habits toward the free tier limit
+    const activeHabits = userHabits.filter((h) => !h.archived && !h.isRemoved);
+    if (!isPremiumUser && activeHabits.length >= 3) {
       throw new Error(
         'Free tier is limited to 3 habits. Upgrade to premium for unlimited habits.'
       );
