@@ -6,7 +6,7 @@
 
 import { Alert, View, Text, Pressable } from 'react-native';
 import { Trash2, Archive } from 'lucide-react-native';
-import * as Haptics from 'expo-haptics';
+import { triggerHaptic } from '@/utils/haptics';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -22,7 +22,7 @@ interface DangerZoneProps {
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 export function DangerZone({ onArchive, onDelete }: DangerZoneProps) {
-  const { isDark } = useThemeColors();
+  const { colors, isDark } = useThemeColors();
   const archiveScale = useSharedValue(1);
   const deleteScale = useSharedValue(1);
 
@@ -35,7 +35,7 @@ export function DangerZone({ onArchive, onDelete }: DangerZoneProps) {
   }));
 
   const handleArchive = () => {
-    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    triggerHaptic('toggle');
     Alert.alert(
       'Archive Habit',
       'This habit will be hidden from your daily list. You can restore it anytime from Settings.',
@@ -47,7 +47,7 @@ export function DangerZone({ onArchive, onDelete }: DangerZoneProps) {
   };
 
   const handleDelete = () => {
-    void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
+    triggerHaptic('warning');
     Alert.alert(
       'Delete Habit',
       'This will permanently delete this habit and all its history. This cannot be undone.',
@@ -58,11 +58,10 @@ export function DangerZone({ onArchive, onDelete }: DangerZoneProps) {
     );
   };
 
-  // Dark mode: use slightly lighter tinted backgrounds
-  const archiveBg = isDark ? '#422006' : '#FFFBEB';
-  const archiveBorder = isDark ? '#92400E' : '#FDE68A';
-  const deleteBg = isDark ? '#450A0A' : '#FEF2F2';
-  const deleteBorder = isDark ? '#991B1B' : '#FECACA';
+  const archiveBg = isDark ? 'rgba(146,64,14,0.15)' : '#FFFBEB';
+  const archiveBorder = isDark ? 'rgba(146,64,14,0.3)' : '#FDE68A';
+  const deleteBg = isDark ? 'rgba(153,27,27,0.15)' : '#FEF2F2';
+  const deleteBorder = isDark ? 'rgba(153,27,27,0.3)' : '#FECACA';
 
   const springConfig = { damping: 18, stiffness: 150 };
 
@@ -77,7 +76,7 @@ export function DangerZone({ onArchive, onDelete }: DangerZoneProps) {
         onPressIn={() => { archiveScale.value = withSpring(0.97, springConfig); }}
         onPressOut={() => { archiveScale.value = withSpring(1, springConfig); }}
       >
-        <Archive color='#d97706' size={18} strokeWidth={2} />
+        <Archive color={isDark ? '#FBBF24' : '#d97706'} size={18} strokeWidth={2} />
         <Text
           className='font-semibold'
           style={{ fontSize: 17, letterSpacing: -0.41, color: isDark ? '#FBBF24' : '#B45309' }}
@@ -95,7 +94,7 @@ export function DangerZone({ onArchive, onDelete }: DangerZoneProps) {
         onPressIn={() => { deleteScale.value = withSpring(0.97, springConfig); }}
         onPressOut={() => { deleteScale.value = withSpring(1, springConfig); }}
       >
-        <Trash2 color='#dc2626' size={18} strokeWidth={2} />
+        <Trash2 color={isDark ? '#F87171' : '#dc2626'} size={18} strokeWidth={2} />
         <Text
           className='font-semibold'
           style={{ fontSize: 17, letterSpacing: -0.41, color: isDark ? '#F87171' : '#DC2626' }}

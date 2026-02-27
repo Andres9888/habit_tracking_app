@@ -74,6 +74,7 @@ export function useToastStyles() {
       borderRadius: borderRadius.medium,
       flexDirection: 'row',
       gap: 6,
+      minHeight: 44,
       paddingHorizontal: 14,
       paddingVertical: 10,
     },

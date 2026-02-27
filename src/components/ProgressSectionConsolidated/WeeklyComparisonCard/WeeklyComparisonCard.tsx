@@ -19,13 +19,13 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 import { Info } from 'lucide-react-native';
-import * as Haptics from 'expo-haptics';
 import { useThemeColors } from '../../../theme/ThemeContext';
 
 import type { WeeklyComparisonCardProps } from './types';
 import { getTrendStyle, getMessage } from './helpers';
 import { TrendBadge } from './TrendBadge';
 import { ComparisonStats } from './ComparisonStats';
+import { triggerHaptic } from '@/utils/haptics';
 
 export const WeeklyComparisonCard = React.memo(function WeeklyComparisonCard({
   trend,
@@ -43,7 +43,7 @@ export const WeeklyComparisonCard = React.memo(function WeeklyComparisonCard({
   const absoluteChange = Math.abs(rateChange);
 
   const handleInfoPress = () => {
-    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    triggerHaptic('tap');
     onInfoPress?.();
   };
 

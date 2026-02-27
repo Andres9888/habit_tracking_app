@@ -12,10 +12,10 @@ import {
   withDelay,
   SharedValue,
 } from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
 
 import type { FocusState } from '../../TodaysFocusCardTypes';
 import { CONFETTI_DURATION } from '../TodaysFocusCard.constants';
+import { triggerHaptic } from '@/utils/haptics';
 
 export interface UseCelebrationEffectsResult {
   showConfetti: boolean;
@@ -36,7 +36,7 @@ export function useCelebrationEffects(
 
   useEffect(() => {
     if (focusState === 'celebrating' && !reduceMotion) {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+      triggerHaptic('heavy');
       setShowConfetti(true);
       const timer = setTimeout(() => setShowConfetti(false), CONFETTI_DURATION);
 
@@ -51,7 +51,7 @@ export function useCelebrationEffects(
 
       return () => clearTimeout(timer);
     } else if (focusState === 'celebrating' && reduceMotion) {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+      triggerHaptic('toggle');
       badgeScale.value = 1;
       shareButtonOpacity.value = 1;
     }
@@ -59,14 +59,14 @@ export function useCelebrationEffects(
 
   const handleCelebrationAcknowledge = useCallback(() => {
     if (focusState === 'celebrating' && onMilestoneCelebrated) {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+      triggerHaptic('tap');
       onMilestoneCelebrated(currentStreak);
     }
   }, [focusState, currentStreak, onMilestoneCelebrated]);
 
   const handleSharePress = useCallback(() => {
     if (onShare) {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+      triggerHaptic('toggle');
       onShare();
     }
   }, [onShare]);

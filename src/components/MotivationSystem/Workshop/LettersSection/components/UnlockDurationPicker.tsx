@@ -7,8 +7,8 @@ import React from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { Clock, Check } from 'lucide-react-native';
 import { clsx } from 'clsx';
-import * as Haptics from 'expo-haptics';
 import { UNLOCK_DURATION_OPTIONS } from '../LettersSection.constants';
+import { triggerHaptic } from '@/utils/haptics';
 
 interface UnlockDurationPickerProps {
   selectedDays: number;
@@ -36,7 +36,7 @@ export function UnlockDurationPicker({
                 : 'border-stone-200 bg-white'
             )}
             onPress={() => {
-              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+              triggerHaptic('tap');
               onSelectDays(option.value);
             }}
           >

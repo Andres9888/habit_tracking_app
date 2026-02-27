@@ -4,10 +4,9 @@
 
 import { useCallback, useRef, useState } from 'react';
 import { FlatList, type ViewToken } from 'react-native';
-import * as Haptics from 'expo-haptics';
-import { ImpactFeedbackStyle } from 'expo-haptics';
 import { safeSetBoolean } from '@/utils/storage';
 import { ONBOARDING_KEY, PAGES } from './onboarding.data';
+import { triggerHaptic } from '@/utils/haptics';
 
 export function useOnboardingHandlers(onComplete: () => void) {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -17,7 +16,7 @@ export function useOnboardingHandlers(onComplete: () => void) {
   const handleComplete = useCallback(async () => {
     if (isLoading) return;
     setIsLoading(true);
-    void Haptics.impactAsync(ImpactFeedbackStyle.Medium);
+    triggerHaptic('toggle');
     try {
       await safeSetBoolean(ONBOARDING_KEY, true);
       onComplete();
@@ -29,12 +28,12 @@ export function useOnboardingHandlers(onComplete: () => void) {
   }, [onComplete, isLoading]);
 
   const handleSkip = useCallback(() => {
-    void Haptics.impactAsync(ImpactFeedbackStyle.Light);
+    triggerHaptic('tap');
     void handleComplete();
   }, [handleComplete]);
 
   const handleNext = useCallback(() => {
-    void Haptics.impactAsync(ImpactFeedbackStyle.Light);
+    triggerHaptic('tap');
     if (currentIndex < PAGES.length - 1) {
       flatListRef.current?.scrollToIndex({
         animated: true,

@@ -6,9 +6,9 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 import { clsx } from 'clsx';
-import * as Haptics from 'expo-haptics';
 
 import { SPRING_BUTTON } from '../RescueMode.constants';
+import { triggerHaptic } from '@/utils/haptics';
 
 interface SecondaryActionProps {
   label: string;
@@ -37,7 +37,7 @@ export function SecondaryAction({
   }, [scale]);
 
   const handlePress = useCallback(() => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    triggerHaptic('tap');
     onPress();
   }, [onPress]);
 

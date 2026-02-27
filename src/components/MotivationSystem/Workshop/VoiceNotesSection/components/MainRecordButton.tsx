@@ -6,8 +6,8 @@ import { View, Pressable } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withSpring, withTiming, withRepeat, cancelAnimation } from 'react-native-reanimated';
 import { Mic, Pause, Play } from 'lucide-react-native';
 import { clsx } from 'clsx';
-import * as Haptics from 'expo-haptics';
 import { SPRING_BUTTON } from '../../../../animations';
+import { triggerHaptic } from '@/utils/haptics';
 
 interface MainRecordButtonProps {
   isRecording: boolean;
@@ -36,7 +36,7 @@ export function MainRecordButton({ isRecording, isPaused, onStartRecording, onPa
   const handlePressOut = useCallback(() => { recordButtonScale.value = withSpring(1, SPRING_BUTTON); }, [recordButtonScale]);
 
   const handleRecordPress = useCallback(() => {
-    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    triggerHaptic('toggle');
     if (isRecording) {
       if (isPaused) {
         onResumeRecording();

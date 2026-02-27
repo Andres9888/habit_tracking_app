@@ -10,7 +10,6 @@ import {
   runOnJS,
   Easing,
 } from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
 import { ANIMATION_TIMING } from './constants';
 import type { AnimationValues } from './types';
 

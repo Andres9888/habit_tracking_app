@@ -5,11 +5,11 @@
 
 import { Text, View, Pressable } from 'react-native';
 import { Check, ArrowLeft } from 'lucide-react-native';
-import * as Haptics from 'expo-haptics';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { SORT_PICKER_OPTIONS } from './SortPicker.constants';
 import type { HabitSortMode } from '../../features/habits/types';
+import { triggerHaptic } from '@/utils/haptics';
 
 interface SortPickerProps {
   currentMode: HabitSortMode;
@@ -22,7 +22,7 @@ export function SortPicker({ currentMode, onBack, onSelect }: SortPickerProps) {
   const { isDark, colors } = useThemeColors();
 
   const handleSelect = (mode: HabitSortMode) => {
-    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    triggerHaptic('tap');
     onSelect(mode);
   };
 

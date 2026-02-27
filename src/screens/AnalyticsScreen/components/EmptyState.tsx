@@ -26,19 +26,19 @@ export const EmptyState: React.FC = () => {
         entering={entry(0)}
         style={{
           alignItems: 'center',
-          backgroundColor: isDark ? '#2E1065' : '#F5F3FF',
+          backgroundColor: colors.primary[100],
           borderRadius: 24,
           height: 96,
           justifyContent: 'center',
           marginBottom: 24,
-          shadowColor: '#8b5cf6',
+          shadowColor: colors.primary[500],
           shadowOffset: { height: 4, width: 0 },
           shadowOpacity: 0.08,
           shadowRadius: 16,
           width: 96,
         }}
       >
-        <BarChart3 color={isDark ? '#C4B5FD' : '#8b5cf6'} size={48} strokeWidth={1.5} />
+        <BarChart3 color={colors.accent} size={48} strokeWidth={1.5} />
       </Animated.View>
 
       {/* Title */}
@@ -112,7 +112,7 @@ function StepItem({ number, text, colors }: { number: string; text: string; colo
         style={{
           alignItems: 'center',
           backgroundColor: colors.gray[100],
-          borderRadius: 14,
+          borderRadius: 16,
           height: 28,
           justifyContent: 'center',
           width: 28,

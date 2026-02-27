@@ -8,7 +8,6 @@
  */
 
 import React, { useCallback, useState } from 'react';
-import * as Haptics from 'expo-haptics';
 import { CompletionCheckmark } from '../../../animations';
 import { SectionCard } from './SectionCard';
 import { AnimatedSection } from './AnimatedSection';
@@ -17,6 +16,7 @@ import { WOOPSectionHeader } from './WOOPSectionHeader';
 import { WOOPSectionContent } from './WOOPSectionContent';
 import { hasWOOPData, isWOOPComplete } from './woopUtils';
 import type { WOOPSectionProps } from './WOOPSection.types';
+import { triggerHaptic } from '@/utils/haptics';
 
 export function WOOPSection({
   woop,
@@ -30,7 +30,7 @@ export function WOOPSection({
   const isComplete = isWOOPComplete(woop);
 
   const handleHelpPress = useCallback(() => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    triggerHaptic('tap');
     setShowExplainer(true);
   }, []);
 

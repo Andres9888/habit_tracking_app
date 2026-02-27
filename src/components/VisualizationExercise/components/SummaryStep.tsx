@@ -8,9 +8,9 @@ import { View, Text, Pressable, ScrollView } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { Target, Save } from 'lucide-react-native';
-import * as Haptics from 'expo-haptics';
 import type { SummaryStepProps } from '../types';
 import { VisualizationCards } from './VisualizationCards';
+import { triggerHaptic } from '@/utils/haptics';
 
 export function SummaryStep({
   habitName,
@@ -56,7 +56,7 @@ export function SummaryStep({
           accessibilityRole='button'
           className='flex-1 items-center rounded-xl border border-stone-200 bg-white py-3.5 active:bg-stone-50'
           onPress={() => {
-            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+            triggerHaptic('tap');
             onBack();
           }}
         >
@@ -67,7 +67,7 @@ export function SummaryStep({
           accessibilityRole='button'
           className='flex-1 flex-row items-center justify-center gap-2 rounded-xl py-3.5 active:opacity-90'
           onPress={() => {
-            Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+            triggerHaptic('success');
             onSave();
           }}
         >

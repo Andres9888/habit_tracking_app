@@ -13,13 +13,13 @@ import {
   ChevronDown,
   ChevronUp,
 } from 'lucide-react-native';
-import * as Haptics from 'expo-haptics';
 import type { VisualizationGuideProps } from './VisualizationGuide.types';
 import { VISUALIZATION_TECHNIQUES } from './visualizationTechniques';
 import { GuideHeader } from './GuideHeader';
 import { KeyInsightBox } from './KeyInsightBox';
 import { VisualizationCard } from './VisualizationCard';
 import { QuickTip } from './QuickTip';
+import { triggerHaptic } from '@/utils/haptics';
 
 export function VisualizationGuide({ habitName }: VisualizationGuideProps) {
   const [showAllTechniques, setShowAllTechniques] = useState(false);
@@ -28,7 +28,7 @@ export function VisualizationGuide({ habitName }: VisualizationGuideProps) {
     : VISUALIZATION_TECHNIQUES.slice(0, 2);
 
   const handleShowMore = () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    triggerHaptic('tap');
     setShowAllTechniques(!showAllTechniques);
   };
 

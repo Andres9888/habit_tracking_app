@@ -9,7 +9,7 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
+import { triggerHaptic } from '@/utils/haptics';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { fontFamilies } from '@/theme/typography';
 
@@ -35,7 +35,7 @@ export function NotesEmptyState({ onAddNote }: NotesEmptyStateProps) {
   };
 
   const handlePress = () => {
-    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    triggerHaptic('tap');
     onAddNote();
   };
 
@@ -99,7 +99,7 @@ export function NotesEmptyState({ onAddNote }: NotesEmptyStateProps) {
           style={{
             alignItems: 'center',
             backgroundColor: isDark ? '#D97706' : '#F59E0B',
-            borderRadius: 20,
+            borderRadius: 24,
             flexDirection: 'row',
             gap: 6,
             marginTop: 12,

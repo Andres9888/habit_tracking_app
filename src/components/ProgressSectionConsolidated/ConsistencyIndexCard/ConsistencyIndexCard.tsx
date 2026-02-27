@@ -11,13 +11,13 @@ import React, { useMemo } from 'react';
 import { View, Text, Pressable } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { Activity, Info } from 'lucide-react-native';
-import * as Haptics from 'expo-haptics';
 
 import type { ConsistencyIndexCardProps } from './types';
 import { getScoreColor, getFeedbackMessage } from './helpers';
 import { ProgressRing } from './ProgressRing';
 import { BreakdownSection } from './BreakdownSection';
 import { ChangeIndicator } from './ChangeIndicator';
+import { triggerHaptic } from '@/utils/haptics';
 
 export function ConsistencyIndexCard({
   consistencyIndex,
@@ -35,7 +35,7 @@ export function ConsistencyIndexCard({
   const feedbackMessage = getFeedbackMessage(overall);
 
   const handleInfoPress = () => {
-    Haptics.selectionAsync();
+    triggerHaptic('selection');
     onInfoPress?.();
   };
 

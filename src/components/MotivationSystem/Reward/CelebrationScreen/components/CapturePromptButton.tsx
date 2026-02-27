@@ -10,10 +10,10 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 import { Sparkles } from 'lucide-react-native';
-import * as Haptics from 'expo-haptics';
 
 import { SPRING_BUTTON } from '../constants';
 import type { CapturePromptButtonProps } from '../types';
+import { triggerHaptic } from '@/utils/haptics';
 
 export function CapturePromptButton({
   icon,
@@ -33,7 +33,7 @@ export function CapturePromptButton({
   }, [scale]);
 
   const handlePress = useCallback(() => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    triggerHaptic('tap');
     onPress();
   }, [onPress]);
 

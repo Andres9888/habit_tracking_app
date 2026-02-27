@@ -9,9 +9,9 @@ import { iconShadow, streakShadow } from './DetailHeader.constants';
 import { HeaderButton } from './HeaderButton';
 
 export function DetailHeader({ habit, onClose, onEdit }: DetailHeaderProps) {
-  const { colors, isDark } = useThemeColors();
-  const iconColor = isDark ? colors.text.secondary : '#57534e';
-  const textPrimary = isDark ? colors.text.primary : '#1c1917';
+  const { colors } = useThemeColors();
+  const iconColor = colors.text.secondary;
+  const textPrimary = colors.text.primary;
   const habitName = habit.icon
     ? (habit.name ?? '').replace(/^\p{Emoji}\s*/u, '')
     : (habit.name ?? 'Habit');
@@ -53,7 +53,7 @@ export function DetailHeader({ habit, onClose, onEdit }: DetailHeaderProps) {
               accessibilityLabel={`${habit.icon} emoji`}
               style={{ 
                 fontSize: 40,
-                color: isDark ? '#ffffff' : '#000000',
+                color: colors.text.primary,
               }}
             >
               {habit.icon}
@@ -86,8 +86,8 @@ export function DetailHeader({ habit, onClose, onEdit }: DetailHeaderProps) {
             style={[
               streakShadow,
               {
-                backgroundColor: isDark ? '#064e3b' : '#ecfdf5',
-                shadowColor: isDark ? '#34d399' : '#059669',
+                backgroundColor: colors.primary[100],
+                shadowColor: colors.primary[500],
               },
             ]}
           >
@@ -100,7 +100,7 @@ export function DetailHeader({ habit, onClose, onEdit }: DetailHeaderProps) {
             <Text
               accessibilityLabel={`${habit.currentStreak} day${habit.currentStreak === 1 ? '' : 's'} streak`}
               className='text-[17px] font-semibold'
-              style={{ color: isDark ? '#6ee7b7' : '#047857' }}
+              style={{ color: colors.primary[700] }}
             >
               {habit.currentStreak} day streak
             </Text>

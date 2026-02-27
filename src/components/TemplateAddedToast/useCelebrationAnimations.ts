@@ -13,10 +13,10 @@ import {
   withTiming,
   Easing,
 } from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
 import ConfettiCannon from 'react-native-confetti-cannon';
 
 import { SPRING_BOUNCY, SPRING_EXIT, SPRING_ICON } from './constants';
+import { triggerHaptic } from '@/utils/haptics';
 
 interface Params {
   visible: boolean;
@@ -60,7 +60,7 @@ export function useCelebrationAnimations({ visible, reducedMotion }: Params) {
       glowOpacity.value = 0.15;
       return;
     }
-    void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+    triggerHaptic('success');
     if (confettiRef.current) confettiRef.current.start();
 
     overlayOpacity.value = withTiming(1, {

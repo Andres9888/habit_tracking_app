@@ -5,7 +5,6 @@
 
 import React, { useCallback } from 'react';
 import { View, Modal, ScrollView } from 'react-native';
-import * as Haptics from 'expo-haptics';
 import { ScheduleHeader } from './ScheduleHeader';
 import {
   AffirmationPreview,
@@ -20,6 +19,7 @@ import { ScheduleFooter } from './ScheduleFooter';
 import { useScheduleForm } from './useScheduleForm';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import type { AffirmationScheduleModalProps } from './types';
+import { triggerHaptic } from '@/utils/haptics';
 
 export function AffirmationScheduleModal({
   visible,
@@ -35,7 +35,7 @@ export function AffirmationScheduleModal({
 
   const handleSave = useCallback(() => {
     if (isSaving) return;
-    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    triggerHaptic('toggle');
     void onSave(form.getScheduleData()).then(() => onClose()).catch((error) => {
       if (__DEV__) console.error('Failed to save affirmation schedule:', error);
     });
@@ -43,7 +43,7 @@ export function AffirmationScheduleModal({
 
   const handleCancelSchedule = useCallback(() => {
     if (isSaving) return;
-    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    triggerHaptic('toggle');
     void onCancel().then(() => onClose()).catch((error) => {
       if (__DEV__) console.error('Failed to cancel affirmation schedule:', error);
     });

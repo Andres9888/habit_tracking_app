@@ -4,8 +4,8 @@
 
 import { useCallback } from 'react';
 import { Linking } from 'react-native';
-import * as Haptics from 'expo-haptics';
 import type { Doc, Id } from '../../../../convex/_generated/dataModel';
+import { triggerHaptic } from '@/utils/haptics';
 
 interface UseHandlersProps {
   template: Doc<'templates'> | null;
@@ -28,7 +28,7 @@ export const useHandlers = ({
 }: UseHandlersProps) => {
   const handleClose = useCallback(() => {
     if (!reducedMotion) {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+      triggerHaptic('tap');
     }
     onClose();
   }, [onClose, reducedMotion]);
@@ -36,7 +36,7 @@ export const useHandlers = ({
   const handleImport = useCallback(() => {
     if (!template || isImporting || isImported) return;
     if (!reducedMotion) {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+      triggerHaptic('toggle');
     }
     onImport(template._id);
   }, [template, isImporting, isImported, onImport, reducedMotion]);
@@ -44,7 +44,7 @@ export const useHandlers = ({
   const handleCustomize = useCallback(() => {
     if (!template) return;
     if (!reducedMotion) {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+      triggerHaptic('tap');
     }
     onCustomize(template);
   }, [template, onCustomize, reducedMotion]);
@@ -52,7 +52,7 @@ export const useHandlers = ({
   const handleResearchPress = useCallback(async () => {
     if (!template?.scientificLink) return;
     if (!reducedMotion) {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+      triggerHaptic('tap');
     }
     const canOpen = await Linking.canOpenURL(template.scientificLink);
     if (canOpen) {

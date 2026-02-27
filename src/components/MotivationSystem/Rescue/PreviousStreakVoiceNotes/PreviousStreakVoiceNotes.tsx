@@ -10,10 +10,10 @@
 
 import React, { useCallback, useEffect, useState } from 'react';
 import { View, Text } from 'react-native';
-import * as Haptics from 'expo-haptics';
 import { SectionHeader } from './SectionHeader';
 import { StreakVoiceNoteCard } from './StreakVoiceNoteCard';
 import type { PreviousStreakVoiceNotesProps } from './types';
+import { triggerHaptic } from '@/utils/haptics';
 
 export function PreviousStreakVoiceNotes({
   voiceNotes,
@@ -37,7 +37,7 @@ export function PreviousStreakVoiceNotes({
         setExpandedId(null);
       } else {
         setExpandedId(id);
-        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+        triggerHaptic('tap');
       }
     },
     [expandedId]

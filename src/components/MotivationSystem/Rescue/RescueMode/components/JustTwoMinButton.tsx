@@ -9,9 +9,9 @@ import Animated, {
 } from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Zap } from 'lucide-react-native';
-import * as Haptics from 'expo-haptics';
 
 import { SPRING_BUTTON } from '../RescueMode.constants';
+import { triggerHaptic } from '@/utils/haptics';
 
 interface JustTwoMinButtonProps {
   onPress: () => void;
@@ -63,7 +63,7 @@ export function JustTwoMinButton({
   }, [scale]);
 
   const handlePress = useCallback(() => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    triggerHaptic('toggle');
     onPress();
   }, [onPress]);
 

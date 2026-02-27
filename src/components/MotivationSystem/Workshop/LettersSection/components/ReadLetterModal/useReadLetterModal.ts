@@ -5,11 +5,11 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { withSpring, withTiming, withSequence } from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
 import { SPRING_BOUNCY, SPRING_GENTLE } from '../../../../../animations';
 import { ONE_HOUR_MS, ONE_DAY_MS } from '../../LettersSection.constants';
 import type { LetterData } from '../../LettersSection.types';
 import { useReadLetterAnimations } from './useReadLetterAnimations';
+import { triggerHaptic } from '@/utils/haptics';
 
 interface UseReadLetterModalParams {
   visible: boolean;
@@ -75,7 +75,7 @@ export function useReadLetterModal({
           withSpring(1.2, SPRING_BOUNCY),
           withSpring(1, { damping: 18, stiffness: 150 })
         );
-        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+        triggerHaptic('success');
       }, 300));
     }
 

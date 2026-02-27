@@ -8,6 +8,7 @@ import { Text, View, ViewStyle } from 'react-native';
 import { clsx } from 'clsx';
 
 import { useHapticFeedback } from '../hooks/useHapticFeedback';
+import { useThemeColors } from '../theme/ThemeContext';
 import { AnimatedPressable } from 'ui';
 
 type CheckboxSize = 'sm' | 'md' | 'lg';
@@ -51,6 +52,7 @@ export const Checkbox = React.forwardRef<View, CheckboxProps>(function Checkbox(
   ref
 ) {
   const { triggerLightImpact } = useHapticFeedback();
+  const { colors } = useThemeColors();
   const isIndeterminate = indeterminate && !checked;
   const isActive = checked || isIndeterminate;
 
@@ -73,11 +75,12 @@ export const Checkbox = React.forwardRef<View, CheckboxProps>(function Checkbox(
     >
       <View
         className={clsx(
-          'items-center justify-center rounded border border-stone-200 bg-white shadow-sm',
+          'items-center justify-center rounded border shadow-sm',
           sizeClasses[size].box,
           isActive && variantClasses[variant],
           disabled && 'opacity-50'
         )}
+        style={!isActive ? { backgroundColor: colors.card, borderColor: colors.border } : undefined}
       >
         {isActive && (
           <Text

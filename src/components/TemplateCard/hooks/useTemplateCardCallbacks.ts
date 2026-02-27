@@ -6,7 +6,7 @@
 
 import { useCallback } from 'react';
 import type { GestureResponderEvent } from 'react-native';
-import * as Haptics from 'expo-haptics';
+import { triggerHaptic } from '@/utils/haptics';
 
 interface UseTemplateCardCallbacksProps {
   isLocked: boolean;
@@ -23,7 +23,7 @@ export function useTemplateCardCallbacks({
 }: UseTemplateCardCallbacksProps) {
   const handleCardPress = useCallback(() => {
     if (onPreview) {
-      void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+      triggerHaptic('tap');
       onPreview();
     }
   }, [onPreview]);
@@ -31,7 +31,7 @@ export function useTemplateCardCallbacks({
   const handleImportPress = useCallback(
     (e: GestureResponderEvent) => {
       e.stopPropagation();
-      void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+      triggerHaptic('toggle');
       if (isLocked && onUpgrade) {
         onUpgrade();
         return;

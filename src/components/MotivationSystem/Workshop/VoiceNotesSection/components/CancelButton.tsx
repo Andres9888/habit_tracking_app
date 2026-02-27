@@ -3,7 +3,7 @@
  */
 import React, { useCallback } from 'react';
 import { Text, Pressable, Alert } from 'react-native';
-import * as Haptics from 'expo-haptics';
+import { triggerHaptic } from '@/utils/haptics';
 
 interface CancelButtonProps {
   onCancelRecording: () => void;
@@ -11,7 +11,7 @@ interface CancelButtonProps {
 
 export function CancelButton({ onCancelRecording }: CancelButtonProps) {
   const handleCancelPress = useCallback(() => {
-    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    triggerHaptic('tap');
     Alert.alert(
       'Cancel Recording',
       'Are you sure you want to discard this recording?',

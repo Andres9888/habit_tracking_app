@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { Pressable, Text } from 'react-native';
-import * as Haptics from 'expo-haptics';
 import { fontFamilies } from '@/theme/typography';
+import { triggerHaptic } from '@/utils/haptics';
 
 type CalendarView = 'month' | 'year';
 
@@ -22,7 +22,7 @@ export function TabButton({
 
   const handlePress = useCallback(() => {
     if (view !== activeView) {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+      triggerHaptic('tap');
       onPress(view);
     }
   }, [view, activeView, onPress]);

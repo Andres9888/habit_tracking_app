@@ -6,11 +6,11 @@
 import { View, Text, Pressable } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import { AlertTriangle } from 'lucide-react-native';
-import * as Haptics from 'expo-haptics';
 import { Modal } from '../Modal';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { VARIANT_STYLES } from './constants';
 import type { UnsavedChangesAlertProps } from './types';
+import { triggerHaptic } from '@/utils/haptics';
 
 export function UnsavedChangesAlert({
   visible,
@@ -28,12 +28,12 @@ export function UnsavedChangesAlert({
   const styles = VARIANT_STYLES[variant];
 
   const handleDiscard = () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+    triggerHaptic('heavy');
     onDiscard();
   };
 
   const handleKeepEditing = () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    triggerHaptic('tap');
     onKeepEditing();
   };
 

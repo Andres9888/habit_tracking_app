@@ -8,7 +8,6 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { View, Text, Pressable, AccessibilityInfo } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Info } from 'lucide-react-native';
-import * as Haptics from 'expo-haptics';
 
 import type { YourProgressCardProps } from '../types';
 import {
@@ -21,6 +20,7 @@ import { LevelInfo } from './LevelInfo';
 import { ProgressBar } from './ProgressBar';
 import { ActionableTip } from './ActionableTip';
 import { useProgressAnimations } from './useProgressAnimations';
+import { triggerHaptic } from '@/utils/haptics';
 
 export function YourProgressCard({
   strength,
@@ -48,7 +48,7 @@ export function YourProgressCard({
   );
 
   const handleInfoPress = () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    triggerHaptic('tap');
     onInfoPress?.();
   };
 

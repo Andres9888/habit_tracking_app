@@ -35,10 +35,10 @@ import {
   useAnimatedStyle,
   withSpring,
 } from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
 import { Platform } from 'react-native';
 import { Springs } from '../constants/motion';
 import { CARD_PRESS_SCALE } from '../utils/animations/cardPressAnimation';
+import { triggerHaptic } from '@/utils/haptics';
 
 export interface PressAnimationConfig {
   /**
@@ -90,10 +90,10 @@ export interface UsePressAnimationReturn {
 }
 
 const HAPTIC_MAP = {
-  heavy: () => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy),
-  light: () => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light),
-  medium: () => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium),
-  selection: () => Haptics.selectionAsync(),
+  heavy: () => triggerHaptic('heavy'),
+  light: () => triggerHaptic('tap'),
+  medium: () => triggerHaptic('toggle'),
+  selection: () => triggerHaptic('selection'),
 };
 
 const isHapticsSupported = Platform.OS === 'ios' || Platform.OS === 'android';

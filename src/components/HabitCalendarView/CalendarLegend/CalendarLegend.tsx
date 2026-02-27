@@ -67,7 +67,7 @@ export function CalendarLegend() {
             style={{
               width: 10,
               height: 10,
-              borderRadius: 5,
+              borderRadius: 9999,
               backgroundColor: indicatorColor,
             }}
           />

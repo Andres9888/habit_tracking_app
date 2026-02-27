@@ -6,9 +6,9 @@
 import React from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { ArrowRight } from 'lucide-react-native';
-import * as Haptics from 'expo-haptics';
 import { shadows } from '../../../theme/spacing'
 import { fontFamilies } from '../../../theme/typography';;
+import { triggerHaptic } from '@/utils/haptics';
 
 interface ActionButtonsProps {
   iconColor: string;
@@ -24,12 +24,12 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
   onImport,
 }) => {
   const handlePreview = () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    triggerHaptic('tap');
     onPreview();
   };
 
   const handleImport = () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    triggerHaptic('toggle');
     onImport();
   };
 

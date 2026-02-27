@@ -6,8 +6,8 @@
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { MessageSquareQuote } from 'lucide-react-native';
-import * as Haptics from 'expo-haptics';
 import { EXAMPLE_AFFIRMATIONS } from '../../AffirmationsSection.constants';
+import { triggerHaptic } from '@/utils/haptics';
 
 interface ExamplesSectionProps {
   onSelectExample: (example: string) => void;
@@ -28,7 +28,7 @@ export function ExamplesSection({ onSelectExample }: ExamplesSectionProps) {
             className='flex-row items-start gap-2 rounded-lg bg-stone-50 px-3 py-2'
             style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
             onPress={() => {
-              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+              triggerHaptic('tap');
               onSelectExample(example);
             }}
           >

@@ -15,8 +15,8 @@ import {
   ChevronRight,
   Brain,
 } from 'lucide-react-native';
-import * as Haptics from 'expo-haptics';
 import type { IntroStepProps } from '../types';
+import { triggerHaptic } from '@/utils/haptics';
 
 export function IntroStep({ habitName, onNext }: IntroStepProps) {
   return (
@@ -98,7 +98,7 @@ export function IntroStep({ habitName, onNext }: IntroStepProps) {
         accessibilityRole='button'
         className='mt-auto flex-row items-center justify-center gap-2 rounded-2xl py-4 active:opacity-90'
         onPress={() => {
-          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+          triggerHaptic('toggle');
           onNext();
         }}
       >

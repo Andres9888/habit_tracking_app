@@ -7,8 +7,8 @@ import React from 'react';
 import { View, Pressable } from 'react-native';
 import { Bell, BellOff, Edit2, Trash2 } from 'lucide-react-native';
 import { clsx } from 'clsx';
-import * as Haptics from 'expo-haptics';
 import { formatTimeForDisplay } from '../AffirmationsSection.utils';
+import { triggerHaptic } from '@/utils/haptics';
 
 interface AffirmationItemActionsProps {
   isPremium: boolean;
@@ -44,7 +44,7 @@ export function AffirmationItemActions({
           )}
           style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
           onPress={() => {
-            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+            triggerHaptic('tap');
             onSchedule();
           }}
         >
@@ -61,7 +61,7 @@ export function AffirmationItemActions({
         className='h-8 w-8 items-center justify-center rounded-full bg-white'
         style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
         onPress={() => {
-          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+          triggerHaptic('tap');
           onEdit();
         }}
       >
@@ -73,7 +73,7 @@ export function AffirmationItemActions({
         className='h-8 w-8 items-center justify-center rounded-full bg-white'
         style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
         onPress={() => {
-          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+          triggerHaptic('tap');
           onDelete();
         }}
       >
