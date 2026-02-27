@@ -8,7 +8,55 @@ import { useOptimisticStore } from '../../../lib/optimistic';
 import { validateDateString } from '../../../utils/validation';
 import type { HabitStatus } from '../types';
 
+type PlannedStatus = Exclude<HabitStatus, 'done'>;
+
+type DateStatusInfo = {
+  isValid: boolean;
+  status: PlannedStatus;
+};
+
+function computeDateStatusInfo(dateString: string, today: Date): DateStatusInfo {
+  const validation = validateDateString(dateString);
+  if (!validation.isValid) {
+    if (__DEV__) {
+      console.warn(`Invalid date string: ${dateString}`, validation.error);
+    }
+    return { isValid: false, status: 'planned' };
+  }
+
+  const parts = dateString.split('-').map(Number);
+  const year = parts[0] ?? 0;
+  const month = parts[1] ?? 1;
+  const day = parts[2] ?? 1;
+  if (Number.isNaN(year) || Number.isNaN(month) || Number.isNaN(day)) {
+    if (__DEV__) {
+      console.warn(`Non-numeric date parts: ${dateString}`);
+    }
+    return { isValid: false, status: 'planned' };
+  }
+
+  const parsedDate = new Date(year, month - 1, day);
+  parsedDate.setHours(0, 0, 0, 0);
+  if (Number.isNaN(parsedDate.getTime())) {
+    if (__DEV__) {
+      console.warn(`Invalid date created from: ${dateString}`);
+    }
+    return { isValid: false, status: 'planned' };
+  }
+
+  return {
+    isValid: true,
+    status: parsedDate < today ? 'missed' : 'planned',
+  };
+}
+
 export function useHabitsTracking(extendedDateStrings: string[], today: Date) {
+  const stableToday = useMemo(() => {
+    const normalizedToday = new Date(today);
+    normalizedToday.setHours(0, 0, 0, 0);
+    return normalizedToday;
+  }, [today.getDate(), today.getFullYear(), today.getMonth()]);
+
   // Use startDate/endDate range instead of sending all 365 date strings
   // This reduces the Convex query argument payload from ~4KB to ~50 bytes
   // Sort to handle arrays in either chronological or reverse order
@@ -56,14 +104,31 @@ export function useHabitsTracking(extendedDateStrings: string[], today: Date) {
     return map;
   }, [tracking, optimisticStore.pendingToggles]);
 
+  const streakByHabit = useMemo(() => {
+    const map = new Map<string, number>();
+    for (const [habitId, completedDates] of completedDatesByHabit) {
+      map.set(habitId, computeCurrentStreakFromDates(completedDates, stableToday));
+    }
+    return map;
+  }, [completedDatesByHabit, stableToday]);
+
   const getStreak = useCallback(
-    (habitId: string) => {
-      const completedDates = completedDatesByHabit.get(habitId);
-      if (!completedDates) return 0;
-      return computeCurrentStreakFromDates(completedDates, today);
-    },
-    [completedDatesByHabit, today]
+    (habitId: string) => streakByHabit.get(habitId) ?? 0,
+    [streakByHabit]
   );
+
+  const dateStatusCache = useMemo(() => {
+    const cache = new Map<string, DateStatusInfo>();
+    for (const dateString of extendedDateStrings) {
+      const normalizedDateString = dateString.trim();
+      if (!normalizedDateString || cache.has(normalizedDateString)) continue;
+      cache.set(
+        normalizedDateString,
+        computeDateStatusInfo(normalizedDateString, stableToday)
+      );
+    }
+    return cache;
+  }, [extendedDateStrings, stableToday]);
 
   const getHabitStatus = useCallback(
     (habitId: string, dateString: string): HabitStatus => {
@@ -72,15 +137,14 @@ export function useHabitsTracking(extendedDateStrings: string[], today: Date) {
         return 'planned';
       }
 
-      // Validate date string format
-      const validation = validateDateString(normalizedDateString);
-      if (!validation.isValid) {
-        if (__DEV__)
-          console.warn(
-            `Invalid date string: ${normalizedDateString}`,
-            validation.error
-          );
-        return 'planned'; // Safe fallback
+      let dateStatusInfo = dateStatusCache.get(normalizedDateString);
+      if (!dateStatusInfo) {
+        dateStatusInfo = computeDateStatusInfo(normalizedDateString, stableToday);
+        dateStatusCache.set(normalizedDateString, dateStatusInfo);
+      }
+
+      if (!dateStatusInfo.isValid) {
+        return 'planned';
       }
 
       // Use the pre-built map (includes optimistic merges) for O(1) lookup
@@ -89,31 +153,9 @@ export function useHabitsTracking(extendedDateStrings: string[], today: Date) {
         return 'done';
       }
 
-      const parts = normalizedDateString.split('-').map(Number);
-      const year = parts[0] ?? 0;
-      const month = parts[1] ?? 1;
-      const day = parts[2] ?? 1;
-      if (Number.isNaN(year) || Number.isNaN(month) || Number.isNaN(day)) {
-        if (__DEV__)
-          console.warn(`Non-numeric date parts: ${normalizedDateString}`);
-        return 'planned';
-      }
-      const date = new Date(year, month - 1, day);
-      date.setHours(0, 0, 0, 0);
-
-      // Guard against invalid Date objects
-      if (Number.isNaN(date.getTime())) {
-        if (__DEV__)
-          console.warn(`Invalid date created from: ${normalizedDateString}`);
-        return 'planned';
-      }
-
-      if (date < today) {
-        return 'missed';
-      }
-      return 'planned';
+      return dateStatusInfo.status;
     },
-    [today, completedDatesByHabit]
+    [stableToday, completedDatesByHabit, dateStatusCache]
   );
 
   /**
