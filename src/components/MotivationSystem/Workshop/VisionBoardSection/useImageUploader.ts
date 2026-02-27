@@ -5,12 +5,12 @@
 
 import { useState, useCallback } from 'react';
 import { Alert } from 'react-native';
-import * as Haptics from 'expo-haptics';
 import { useImagePicker } from '../../../../hooks/useImagePicker';
 import { useImageUpload } from '../../../../hooks/useImageUpload';
 import type { Id } from '../../../../../convex/_generated/dataModel';
 import { MAX_IMAGES } from './types';
 import { ERROR_MESSAGES } from '../../../../constants/errorMessages';
+import { triggerHaptic } from '@/utils/haptics';
 
 interface UseImageUploaderProps {
   isPremium: boolean;
@@ -65,7 +65,7 @@ export function useImageUploader({
         if (!result) throw new Error('Failed to upload image');
 
         await onAddImage(result.storageId);
-        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+        triggerHaptic('success');
       } catch (error) {
         if (__DEV__) console.error('Failed to add image:', error);
         Alert.alert(

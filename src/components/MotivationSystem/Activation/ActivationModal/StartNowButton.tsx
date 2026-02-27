@@ -8,8 +8,8 @@ import Animated, {
   runOnJS,
 } from 'react-native-reanimated';
 import { Play } from 'lucide-react-native';
-import * as Haptics from 'expo-haptics';
 import { SPRING_BUTTON } from './constants';
+import { triggerHaptic } from '@/utils/haptics';
 
 interface StartNowButtonProps {
   onPress: () => void;
@@ -61,7 +61,7 @@ export function StartNowButton({
   }, [scale]);
 
   const handlePress = useCallback(() => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    triggerHaptic('toggle');
     onPress();
   }, [onPress]);
 

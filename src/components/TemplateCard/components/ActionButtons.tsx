@@ -8,12 +8,12 @@ import React from 'react';
 import { View, Text, StyleSheet, type GestureResponderEvent } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { Check, Eye } from 'lucide-react-native';
-import * as Haptics from 'expo-haptics';
 import Button from '../../Button/Button';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { borderRadius, spacing } from '../../../theme/spacing';
 import { typography, fontFamilies} from '../../../theme/typography';
 import type { ActionButtonsProps } from './ActionButtons.types';
+import { triggerHaptic } from '@/utils/haptics';
 
 export function ActionButtons({
   checkmarkStyle,
@@ -49,7 +49,7 @@ export function ActionButtons({
           variant='primary'
           onPress={(e: GestureResponderEvent) => {
             e.stopPropagation();
-            void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+            triggerHaptic('tap');
             onPreview();
           }}
         >

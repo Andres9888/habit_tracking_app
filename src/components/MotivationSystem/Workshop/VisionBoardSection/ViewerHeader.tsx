@@ -12,7 +12,7 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 import { X, Edit3, Trash2 } from 'lucide-react-native';
-import * as Haptics from 'expo-haptics';
+import { triggerHaptic } from '@/utils/haptics';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -57,7 +57,7 @@ export function ViewerHeader({
           className='h-10 w-10 items-center justify-center rounded-full bg-white/10'
           style={editAnim.animatedStyle}
           onPress={() => {
-            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+            triggerHaptic('tap');
             onToggleEdit();
           }}
           onPressIn={editAnim.handlePressIn}
@@ -72,7 +72,7 @@ export function ViewerHeader({
           disabled={isDeleting}
           style={deleteAnim.animatedStyle}
           onPress={() => {
-            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+            triggerHaptic('tap');
             onDelete();
           }}
           onPressIn={deleteAnim.handlePressIn}
@@ -91,7 +91,7 @@ export function ViewerHeader({
         className='h-10 w-10 items-center justify-center rounded-full bg-white/10'
         style={closeAnim.animatedStyle}
         onPress={() => {
-          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+          triggerHaptic('tap');
           onClose();
         }}
         onPressIn={closeAnim.handlePressIn}

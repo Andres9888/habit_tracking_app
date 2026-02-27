@@ -10,9 +10,9 @@ import Animated, {
   interpolate,
 } from 'react-native-reanimated';
 import { clsx } from 'clsx';
-import * as Haptics from 'expo-haptics';
 import { SPRING_BUTTON } from '../../../../animations';
 import { shadows } from '../../../../../theme/spacing';
+import { triggerHaptic } from '@/utils/haptics';
 
 interface SectionCardProps {
   children: React.ReactNode;
@@ -59,7 +59,7 @@ export function SectionCard({
   }, [scale, shadowOpacity, elevation]);
 
   const handlePress = useCallback(() => {
-    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    triggerHaptic('tap');
     onPress?.();
   }, [onPress]);
 

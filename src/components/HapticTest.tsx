@@ -8,8 +8,8 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, ScrollView, Platform } from 'react-native';
 import { Button, Text, Surface } from 'react-native-paper';
-import * as Haptics from 'expo-haptics';
 import { useAppTheme } from '../theme';
+import { triggerHaptic } from '@/utils/haptics';
 
 export function HapticTest() {
   const theme = useAppTheme();
@@ -77,7 +77,7 @@ export function HapticTest() {
           style={styles.button}
           onPress={() =>
             testHaptic('Light Impact', () =>
-              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
+              triggerHaptic('tap')
             )
           }
         >
@@ -89,7 +89,7 @@ export function HapticTest() {
           style={styles.button}
           onPress={() =>
             testHaptic('Medium Impact', () =>
-              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
+              triggerHaptic('toggle')
             )
           }
         >
@@ -101,7 +101,7 @@ export function HapticTest() {
           style={styles.button}
           onPress={() =>
             testHaptic('Heavy Impact', () =>
-              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy)
+              triggerHaptic('heavy')
             )
           }
         >
@@ -116,7 +116,7 @@ export function HapticTest() {
           mode='contained'
           style={styles.button}
           onPress={() =>
-            testHaptic('Selection', () => Haptics.selectionAsync())
+            testHaptic('Selection', () => triggerHaptic('selection'))
           }
         >
           Test Selection
@@ -159,7 +159,7 @@ export function HapticTest() {
           style={styles.button}
           onPress={() =>
             testHaptic('Error Notification', () =>
-              Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error)
+              triggerHaptic('error')
             )
           }
         >
@@ -177,7 +177,7 @@ export function HapticTest() {
             if (__DEV__) console.log('🔥 Starting rapid fire test...');
             for (let i = 0; i < 5; i++) {
               await testHaptic(`Rapid ${i + 1}`, () =>
-                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
+                triggerHaptic('tap')
               );
               await new Promise((resolve) => setTimeout(resolve, 200));
             }

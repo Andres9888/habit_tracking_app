@@ -6,12 +6,12 @@
 import React, { useCallback, useState } from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { clsx } from 'clsx';
-import * as Haptics from 'expo-haptics';
 import {
   PlaybackSpeed,
   PLAYBACK_SPEEDS,
 } from '../../../../hooks/useAudioPlayback';
 import type { SpeedControlProps } from './types';
+import { triggerHaptic } from '@/utils/haptics';
 
 export function SpeedControl({
   currentSpeed,
@@ -21,7 +21,7 @@ export function SpeedControl({
 
   const handleSpeedPress = useCallback(
     (speed: PlaybackSpeed) => {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+      triggerHaptic('tap');
       onSpeedChange(speed);
       setIsOpen(false);
     },
@@ -29,7 +29,7 @@ export function SpeedControl({
   );
 
   const toggleOpen = useCallback(() => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    triggerHaptic('tap');
     setIsOpen((prev) => !prev);
   }, []);
 

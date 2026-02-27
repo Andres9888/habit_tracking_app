@@ -5,11 +5,11 @@
 
 import React, { useRef, useEffect } from 'react';
 import { Text, Pressable, Animated } from 'react-native';
-import * as Haptics from 'expo-haptics';
 import type { Swipeable } from 'react-native-gesture-handler';
 import { styles } from './styles';
 import type { SwipeColors } from './types';
 import { useReduceMotion } from '../../hooks/useReduceMotion';
+import { triggerHaptic } from '@/utils/haptics';
 
 interface SwipeActionsProps {
   dragX: Animated.AnimatedInterpolation<number>;
@@ -48,7 +48,7 @@ export function SwipeActions({
       // Trigger medium impact at 50%
       if (progress >= 0.5 && !threshold50Triggered.current) {
         threshold50Triggered.current = true;
-        void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+        triggerHaptic('toggle');
       } else if (progress < 0.5) {
         threshold50Triggered.current = false;
       }
@@ -56,7 +56,7 @@ export function SwipeActions({
       // Trigger heavy impact at 80%
       if (progress >= 0.8 && !threshold80Triggered.current) {
         threshold80Triggered.current = true;
-        void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+        triggerHaptic('heavy');
       } else if (progress < 0.8) {
         threshold80Triggered.current = false;
       }
@@ -96,7 +96,7 @@ export function SwipeActions({
         accessibilityRole='button'
         style={[styles.swipeActionInner, { backgroundColor: swipeColors.bg }]}
         onPress={() => {
-          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+          triggerHaptic('heavy');
           swipeableRef.current?.close();
           onSwipeAction?.();
         }}

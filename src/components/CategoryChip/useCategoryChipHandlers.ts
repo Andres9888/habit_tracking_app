@@ -3,8 +3,8 @@
  */
 
 import { withSpring, type SharedValue } from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
 import { springs } from '@/theme/animations';
+import { triggerHaptic } from '@/utils/haptics';
 import {
   CARD_PRESS_SCALE,
   CARD_REST_SCALE,
@@ -23,7 +23,7 @@ export function useCategoryChipHandlers(
   };
 
   const handlePress = () => {
-    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    triggerHaptic('tap');
     onPress();
   };
 

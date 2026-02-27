@@ -6,7 +6,7 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
+import { triggerHaptic } from '@/utils/haptics';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { fontFamilies } from '../../../theme/typography';
 import { buttonShadow } from './DetailHeader.constants';
@@ -36,11 +36,11 @@ export function HeaderButton({
   }));
 
   const handlePress = () => {
-    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    triggerHaptic('tap');
     onPress();
   };
 
-  const iconColor = isDark ? colors.text.secondary : '#57534e';
+  const iconColor = colors.text.secondary;
 
   if (text) {
     return (
@@ -97,11 +97,11 @@ export function HeaderButton({
 const s = StyleSheet.create({
   textButton: {
     alignItems: 'center',
-    borderRadius: 20,
+    borderRadius: 24,
     borderWidth: 1,
     flexDirection: 'row',
     gap: 6,
-    height: 36,
+    height: 44,
     paddingHorizontal: 14,
   },
   textLabel: {

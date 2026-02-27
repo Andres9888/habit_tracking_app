@@ -6,7 +6,6 @@ import Animated, {
   withSpring,
   useDerivedValue,
 } from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
 
 import { useThemeColors } from '../../theme/ThemeContext';
 import type { TabType, HabitDetailTabsProps } from './HabitDetailTabs.types';
@@ -17,6 +16,7 @@ import {
   TAB_GAP,
 } from './HabitDetailTabs.constants';
 import { TabButton } from './components/TabButton';
+import { triggerHaptic } from '@/utils/haptics';
 
 export function HabitDetailTabs({
   activeTab,
@@ -60,7 +60,7 @@ export function HabitDetailTabs({
   const handleTabPress = useCallback(
     (tab: TabType) => {
       if (tab !== activeTab) {
-        void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+        triggerHaptic('tap');
         onTabChange(tab);
       }
     },

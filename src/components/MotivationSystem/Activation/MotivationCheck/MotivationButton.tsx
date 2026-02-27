@@ -14,10 +14,10 @@ import Animated, {
   withSequence,
 } from 'react-native-reanimated';
 import { clsx } from 'clsx';
-import * as Haptics from 'expo-haptics';
 
 import { SPRING_BUTTON, SPRING_BOUNCY, ACCENT_CLASSES } from './constants';
 import type { MotivationButtonProps } from './types';
+import { triggerHaptic } from '@/utils/haptics';
 
 export function MotivationButton({
   emoji,
@@ -52,7 +52,7 @@ export function MotivationButton({
   }, [scale]);
 
   const handlePress = useCallback(() => {
-    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    triggerHaptic('tap');
     onPress();
   }, [onPress]);
 

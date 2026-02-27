@@ -14,7 +14,7 @@ interface StatsNotesModalProps {
 
 const cardShadow = {
   elevation: 5,
-  shadowColor: '#1c1917',
+  shadowColor: '#2D2A26',
   shadowOffset: { height: 4, width: 0 },
   shadowOpacity: 0.08,
   shadowRadius: 16,

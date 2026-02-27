@@ -8,7 +8,6 @@
 
 import React, { useCallback, useState } from 'react';
 import { View, Text } from 'react-native';
-import * as Haptics from 'expo-haptics';
 import { CompletionCheckmark } from '../../../animations';
 import { SectionCard } from './components/SectionCard';
 import { AnimatedSection } from './components/AnimatedSection';
@@ -17,6 +16,7 @@ import { DualVizHeader } from './components/DualVizHeader';
 import { DualVizExplainerModal } from './components/DualVizExplainerModal';
 import { hasVizData, isVizComplete } from './DualVizSetup.utils';
 import type { DualVizSetupProps } from './DualVizSetup.types';
+import { triggerHaptic } from '@/utils/haptics';
 
 export function DualVizSetup({
   visualization,
@@ -31,7 +31,7 @@ export function DualVizSetup({
   const isComplete = isVizComplete(visualization);
 
   const handleHelpPress = useCallback(() => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    triggerHaptic('tap');
     setShowExplainer(true);
   }, []);
 

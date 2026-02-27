@@ -122,7 +122,7 @@ function SignInScreenContent(_props: SignInScreenProps = {}) {
     <View style={styles.container}>
       {/* Subtle gradient background */}
       <LinearGradient
-        colors={['#fafaf9', '#f5f5f4', '#fafaf9']}
+        colors={[themeColors.background, themeColors.gray[100], themeColors.background]}
         locations={[0, 0.5, 1]}
         style={StyleSheet.absoluteFill}
       />
@@ -143,7 +143,7 @@ function SignInScreenContent(_props: SignInScreenProps = {}) {
           <View style={styles.brandSection}>
             <Animated.View style={[styles.logoContainer, logoStyle]}>
               <LinearGradient
-                colors={['#22c55e', '#16a34a']}
+                colors={[themeColors.primary[500], themeColors.primary[700]]}
                 style={styles.logoGradient}
               >
                 <Text style={styles.logoEmoji}>🔗</Text>
@@ -324,7 +324,7 @@ function useScreenStyles() {
       elevation: 8,
       height: 80,
       justifyContent: 'center',
-      shadowColor: '#22c55e',
+      shadowColor: themeColors.primary[500],
       shadowOffset: { height: 8, width: 0 },
       shadowOpacity: 0.3,
       shadowRadius: 16,

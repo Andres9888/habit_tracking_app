@@ -4,7 +4,7 @@
 import React, { useCallback } from 'react';
 import { Pressable } from 'react-native';
 import { Square } from 'lucide-react-native';
-import * as Haptics from 'expo-haptics';
+import { triggerHaptic } from '@/utils/haptics';
 
 interface StopButtonProps {
   onStopRecording: () => void;
@@ -12,7 +12,7 @@ interface StopButtonProps {
 
 export function StopButton({ onStopRecording }: StopButtonProps) {
   const handleStopPress = useCallback(() => {
-    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+    triggerHaptic('heavy');
     onStopRecording();
   }, [onStopRecording]);
 

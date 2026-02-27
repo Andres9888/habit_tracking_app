@@ -23,8 +23,7 @@
 import { useThemeColors } from '../../theme/ThemeContext';
 import { colors } from '../../theme/colors';
 import { fontFamilies } from '../../theme/typography';
-import * as Haptics from 'expo-haptics';
-import { ImpactFeedbackStyle } from 'expo-haptics';
+import { triggerHaptic } from '@/utils/haptics';
 import { useCallback, useRef, useState } from 'react';
 import {
   ActivityIndicator,
@@ -139,7 +138,7 @@ function OnboardingScreenContent({ onComplete }: OnboardingScreenProps) {
   const handleComplete = useCallback(async () => {
     if (isLoading) return;
     setIsLoading(true);
-    void Haptics.impactAsync(ImpactFeedbackStyle.Medium);
+    triggerHaptic('toggle');
     try {
       // Mark onboarding as complete in AsyncStorage
       await safeSetBoolean(ONBOARDING_KEY, true);
@@ -163,7 +162,7 @@ function OnboardingScreenContent({ onComplete }: OnboardingScreenProps) {
    * Skip button handler — triggers light haptic and completes onboarding immediately.
    */
   const handleSkip = useCallback(() => {
-    void Haptics.impactAsync(ImpactFeedbackStyle.Light);
+    triggerHaptic('tap');
     void handleComplete();
   }, [handleComplete]);
 
@@ -171,7 +170,7 @@ function OnboardingScreenContent({ onComplete }: OnboardingScreenProps) {
    * Advances the FlatList to the next page (no-op on the last page).
    */
   const handleNext = useCallback(() => {
-    void Haptics.impactAsync(ImpactFeedbackStyle.Light);
+    triggerHaptic('tap');
     if (currentIndex < PAGES.length - 1) {
       flatListRef.current?.scrollToIndex({
         animated: true,
@@ -328,7 +327,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 32,
   },
   container: {
-    backgroundColor: '#FAF8F5',
     flex: 1,
   },
   ctaButton: {
@@ -337,7 +335,7 @@ const styles = StyleSheet.create({
     elevation: 4,
     paddingHorizontal: 32,
     paddingVertical: 16,
-    shadowColor: '#000',
+    shadowColor: '#2D2A26',
     shadowOffset: { height: 4, width: 0 },
     shadowOpacity: 0.08,
     shadowRadius: 16,
@@ -346,7 +344,7 @@ const styles = StyleSheet.create({
     opacity: 0.7,
   },
   ctaText: {
-    color: '#FFFFFF',
+    color: '#FAFAF9',
     fontFamily: fontFamilies.primary.text,
     fontSize: 17,
     fontWeight: '600',
@@ -357,13 +355,13 @@ const styles = StyleSheet.create({
     elevation: 4,
     paddingHorizontal: 48,
     paddingVertical: 16,
-    shadowColor: '#000',
+    shadowColor: '#2D2A26',
     shadowOffset: { height: 4, width: 0 },
     shadowOpacity: 0.08,
     shadowRadius: 16,
   },
   nextText: {
-    color: '#FFFFFF',
+    color: '#FAFAF9',
     fontFamily: fontFamilies.primary.text,
     fontSize: 17,
     fontWeight: '600',
@@ -386,13 +384,13 @@ const styles = StyleSheet.create({
     zIndex: 10,
   },
   skipText: {
-    color: '#6B7280',
+    color: '#6B6560',
     fontFamily: fontFamilies.primary.text,
     fontSize: 17,
     fontWeight: '500',
   },
   subtitle: {
-    color: '#6B7280',
+    color: '#6B6560',
     fontFamily: fontFamilies.primary.text,
     fontSize: 17,
     lineHeight: 24,

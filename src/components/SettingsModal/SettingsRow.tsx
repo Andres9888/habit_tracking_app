@@ -3,11 +3,11 @@
 import { ReactNode } from 'react';
 import { Switch, Text, View } from 'react-native';
 import { ChevronRight } from 'lucide-react-native';
-import * as Haptics from 'expo-haptics';
 import { AnimatedPressable } from '../ui/AnimatedPressable';
 import { getSettingsRowColors } from './SettingsRow.colors';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { useFocusRing } from '../../utils/accessibility';
+import { triggerHaptic } from '@/utils/haptics';
 
 interface SettingsRowProps {
   icon: ReactNode;
@@ -39,12 +39,12 @@ export function SettingsRow({
   const { focusStyle, focusHandlers } = useFocusRing({ compact: true });
 
   const handleToggle = (v: boolean) => {
-    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    triggerHaptic('tap');
     onToggle?.(v);
   };
 
   const handleNavPress = () => {
-    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    triggerHaptic('tap');
     onPress?.();
   };
 

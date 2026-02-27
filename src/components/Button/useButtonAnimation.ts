@@ -1,11 +1,10 @@
-import { Platform } from 'react-native';
 import {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
 import { springs } from '@/theme/animations';
+import { triggerHaptic } from '@/utils/haptics';
 
 /**
  * Custom hook for button press animation
@@ -20,9 +19,7 @@ export function useButtonAnimation() {
 
   const handlePressIn = () => {
     scale.value = withSpring(0.96, springs.button);
-    if (Platform.OS === 'ios' || Platform.OS === 'android') {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
-    }
+    triggerHaptic('tap');
   };
 
   const handlePressOut = () => {

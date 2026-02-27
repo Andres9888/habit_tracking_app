@@ -5,7 +5,7 @@
 
 import { useCallback, Dispatch, SetStateAction } from 'react';
 import { Platform } from 'react-native';
-import * as Haptics from 'expo-haptics';
+import { triggerHaptic } from '@/utils/haptics';
 
 export function useScheduleHandlers(
   setDaysOfWeek: Dispatch<SetStateAction<number[]>>,
@@ -40,7 +40,7 @@ export function useScheduleHandlers(
 
   const handleToggleEnabled = useCallback(
     (value: boolean) => {
-      void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+      triggerHaptic('tap');
       setIsEnabled(value);
     },
     [setIsEnabled]

@@ -5,8 +5,8 @@
 
 import { useCallback } from 'react';
 import { AccessibilityInfo } from 'react-native';
-import * as Haptics from 'expo-haptics';
 import type { Id } from '../../../convex/_generated/dataModel';
+import { triggerHaptic } from '@/utils/haptics';
 
 interface UseSwipeActionsProps {
   habit: { _id: Id<'habits'>; name: string } | null;
@@ -26,7 +26,7 @@ export const useSwipeActions = ({
   setPendingDelete,
 }: UseSwipeActionsProps) => {
   const handleSwipeDelete = useCallback(() => {
-    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+    triggerHaptic('heavy');
     setPendingDelete(true);
     setTimeout(() => {
       AccessibilityInfo.announceForAccessibility(
@@ -36,7 +36,7 @@ export const useSwipeActions = ({
   }, [setPendingDelete, habit?.name]);
 
   const handleSwipeArchive = useCallback(() => {
-    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+    triggerHaptic('heavy');
     setPendingArchive(true);
     setTimeout(() => {
       AccessibilityInfo.announceForAccessibility(

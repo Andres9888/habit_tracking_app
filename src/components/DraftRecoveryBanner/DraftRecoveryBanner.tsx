@@ -2,9 +2,9 @@ import React from 'react';
 import { View, Text, Pressable } from 'react-native';
 import Animated, { FadeInDown, FadeOut } from 'react-native-reanimated';
 import { RefreshCw, X } from 'lucide-react-native';
-import * as Haptics from 'expo-haptics';
 import { VARIANT_STYLES } from './constants';
 import type { DraftRecoveryBannerProps } from './types';
+import { triggerHaptic } from '@/utils/haptics';
 
 export function DraftRecoveryBanner({
   visible,
@@ -18,12 +18,12 @@ export function DraftRecoveryBanner({
   const styles = VARIANT_STYLES[variant];
 
   const handleDiscard = () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    triggerHaptic('tap');
     onDiscard();
   };
 
   const handleDismiss = () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    triggerHaptic('tap');
     onDismiss();
   };
 

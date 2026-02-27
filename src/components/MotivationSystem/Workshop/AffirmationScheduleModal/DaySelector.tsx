@@ -6,9 +6,9 @@
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { clsx } from 'clsx';
-import * as Haptics from 'expo-haptics';
 import { DAY_NAMES } from './constants';
 import type { DaySelectorProps } from './types';
+import { triggerHaptic } from '@/utils/haptics';
 
 export function DaySelector({ selectedDays, onToggleDay }: DaySelectorProps) {
   return (
@@ -27,7 +27,7 @@ export function DaySelector({ selectedDays, onToggleDay }: DaySelectorProps) {
               isSelected ? 'bg-amber-500' : 'bg-stone-100'
             )}
             onPress={() => {
-              void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+              triggerHaptic('tap');
               onToggleDay(index);
             }}
           >

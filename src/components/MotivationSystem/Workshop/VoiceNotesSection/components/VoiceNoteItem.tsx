@@ -8,11 +8,11 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
 import { SPRING_BUTTON } from '../../../../animations';
 import { VoiceNotePlaybackUI } from '../../VoiceNotePlaybackUI';
 import { VoiceNoteItemHeader } from './VoiceNoteItemHeader';
 import type { VoiceNoteSummary } from '../VoiceNotesSection.types';
+import { triggerHaptic } from '@/utils/haptics';
 
 interface VoiceNoteItemProps {
   note: VoiceNoteSummary;
@@ -34,7 +34,7 @@ export function VoiceNoteItem({
 
   const handleToggleExpand = useCallback(() => {
     if (!note.audioUrl) return;
-    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    triggerHaptic('tap');
     const willExpand = !isExpanded;
     setIsExpanded(willExpand);
     if (reduceMotion) {

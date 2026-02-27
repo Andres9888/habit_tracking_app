@@ -12,11 +12,11 @@ import React, { useRef } from 'react';
 import { Animated } from 'react-native';
 import { Swipeable } from 'react-native-gesture-handler';
 import { Trash2 } from 'lucide-react-native';
-import * as Haptics from 'expo-haptics';
 import { getSwipeColors } from './styles';
 import { SwipeActions } from './SwipeActions';
 import { ButtonContent } from './ButtonContent';
 import type { SwipeableActionButtonProps } from './types';
+import { triggerHaptic } from '@/utils/haptics';
 
 export function SwipeableActionButton({
   icon: Icon,
@@ -57,7 +57,7 @@ export function SwipeableActionButton({
   );
 
   const handleSwipeableOpen = () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+    triggerHaptic('heavy');
     swipeableRef.current?.close();
     onSwipeAction?.();
   };

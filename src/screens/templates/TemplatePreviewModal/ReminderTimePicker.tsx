@@ -7,12 +7,12 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import * as Haptics from 'expo-haptics';
 import { Clock } from 'lucide-react-native';
 import { useAppTheme } from '../../../theme';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { styles as baseStyles } from './styles';
 import type { ReminderTimePickerProps } from './types';
+import { triggerHaptic } from '@/utils/haptics';
 
 const localStyles = StyleSheet.create({
   timePickerButton: {
@@ -41,7 +41,7 @@ export function ReminderTimePicker({
   const { colors } = useThemeColors();
 
   const handlePress = () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    triggerHaptic('tap');
     onTogglePicker(true);
   };
 

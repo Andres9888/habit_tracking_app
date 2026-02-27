@@ -18,12 +18,12 @@ import Animated, {
   withSpring,
   runOnJS,
 } from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
 
 import { useThemeColors } from '../../theme/ThemeContext';
 import type { QuickActionsSheetProps } from './types';
 import { SheetHeader } from './SheetHeader';
 import { ActionsList } from './ActionsList';
+import { triggerHaptic } from '@/utils/haptics';
 
 const DISMISS_THRESHOLD = 100;
 const VELOCITY_THRESHOLD = 500;
@@ -48,12 +48,12 @@ export const QuickActionsSheet = ({
   React.useEffect(() => {
     if (visible) {
       translateY.value = 0;
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+      triggerHaptic('tap');
     }
   }, [visible, translateY]);
 
   const handleDismiss = useCallback(() => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    triggerHaptic('tap');
     onClose();
   }, [onClose]);
 

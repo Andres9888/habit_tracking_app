@@ -12,7 +12,6 @@ import {
   withTiming,
   Easing,
 } from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
 import { useReduceMotion } from '../../hooks/useReduceMotion';
 import { useToggleHabitWithTimezone } from '../../hooks/useToggleHabitWithTimezone';
 import { useQuickCompleteAnimations } from './useQuickCompleteAnimations';

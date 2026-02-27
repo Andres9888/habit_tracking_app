@@ -8,9 +8,9 @@
  */
 
 import { Animated, Easing } from 'react-native';
-import * as Haptics from 'expo-haptics';
 import type { Id } from '../../../convex/_generated/dataModel';
 import type { Habit } from './types';
+import { triggerHaptic } from '@/utils/haptics';
 
 interface PressHandlersParams {
   cardScale: Animated.Value;
@@ -57,7 +57,7 @@ export function usePressHandlers({
   };
 
   const handleSwipeableOpen = () => {
-    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+    triggerHaptic('success');
 
     Animated.sequence([
       Animated.timing(archiveFlash, {

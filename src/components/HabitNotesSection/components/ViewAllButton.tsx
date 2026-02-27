@@ -1,9 +1,9 @@
 import React from 'react';
 import { Text } from 'react-native';
 import { ChevronRight } from 'lucide-react-native';
-import * as Haptics from 'expo-haptics';
 import { AnimatedPressable } from '../../ui/AnimatedPressable';
 import { useThemeColors } from '../../../theme/ThemeContext';
+import { triggerHaptic } from '@/utils/haptics';
 
 interface ViewAllButtonProps {
   noteCount: number;
@@ -12,7 +12,7 @@ interface ViewAllButtonProps {
 
 export function ViewAllButton({ noteCount, onPress }: ViewAllButtonProps) {
   const handlePress = () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    triggerHaptic('tap');
     onPress();
   };
 

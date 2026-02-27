@@ -5,8 +5,8 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
 import { SPRING_BUTTON } from './constants';
+import { triggerHaptic } from '@/utils/haptics';
 
 interface QuickActionProps {
   label: string;
@@ -29,7 +29,7 @@ export function QuickAction({ label, icon, onPress }: QuickActionProps) {
   }, [scale]);
 
   const handlePress = useCallback(() => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    triggerHaptic('tap');
     onPress();
   }, [onPress]);
 

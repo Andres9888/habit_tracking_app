@@ -6,8 +6,8 @@
 import React, { useCallback } from 'react';
 import { View, Text, Pressable } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
 import type { LucideIcon } from 'lucide-react-native';
+import { triggerHaptic } from '@/utils/haptics';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -49,7 +49,7 @@ export function ImageSourceOption({
       className='flex-row items-center gap-3 rounded-xl border border-stone-200 p-4'
       style={animatedStyle}
       onPress={() => {
-        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+        triggerHaptic('tap');
         onPress();
         onClose();
       }}

@@ -10,9 +10,9 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 import { clsx } from 'clsx';
-import * as Haptics from 'expo-haptics';
 import { SPRING_BUTTON } from '../../../animations';
 import type { ActionButtonProps } from './types';
+import { triggerHaptic } from '@/utils/haptics';
 
 export function ActionButton({
   label,
@@ -37,7 +37,7 @@ export function ActionButton({
   }, [scale]);
 
   const handlePress = useCallback(() => {
-    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    triggerHaptic('tap');
     onPress();
   }, [onPress]);
 

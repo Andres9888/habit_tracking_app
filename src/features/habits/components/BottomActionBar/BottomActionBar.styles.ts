@@ -6,10 +6,10 @@ import { fontFamilies } from '../../../../theme/typography';
  * Pill vertical offset: aligns pill vertical center with the FAB center.
  * The ProgressRingFAB has marginTop: -20 and is 60px tall, so its center
  * sits at -20 + 30 = 10px from the container's content top.
- * The pill is 38px tall, so it needs to start at 10 - 19 = -9px.
- * The container has paddingTop: 12, so net pill offset = -9px from content top.
+ * The pill is 44px tall, so it needs to start at 10 - 22 = -12px.
+ * The container has paddingTop: 12, so net pill offset = -12px from content top.
  */
-const PILL_OFFSET_TOP = -9;
+const PILL_OFFSET_TOP = -12;
 
 export const styles = StyleSheet.create({
   centerZone: {
@@ -33,7 +33,7 @@ export const styles = StyleSheet.create({
     borderWidth: 1,
     flexDirection: 'row',
     gap: 6,
-    height: 38,
+    height: 44,
     justifyContent: 'center',
     minWidth: 112,
     paddingHorizontal: 14,

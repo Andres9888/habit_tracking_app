@@ -7,15 +7,15 @@ import { View, Text, Pressable } from 'react-native';
 import Animated, { FadeInDown, FadeIn } from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Brain, ChevronDown, ChevronUp } from 'lucide-react-native';
-import * as Haptics from 'expo-haptics';
 import { TechniqueApproach } from './TechniqueApproach';
 import type { VisualizationCardProps } from './VisualizationGuide.types';
+import { triggerHaptic } from '@/utils/haptics';
 
 export function VisualizationCard({ technique }: VisualizationCardProps) {
   const [expanded, setExpanded] = useState(false);
 
   const handleToggle = () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    triggerHaptic('tap');
     setExpanded(!expanded);
   };
 

@@ -11,8 +11,8 @@ import {
   withTiming,
   Easing,
 } from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
 import ConfettiCannon from 'react-native-confetti-cannon';
+import { triggerHaptic } from '@/utils/haptics';
 
 interface UseSuccessAnimationsProps {
   isImported: boolean;
@@ -32,7 +32,7 @@ export const useSuccessAnimations = ({
   const successIconBounce = useSharedValue(0);
 
   const triggerSuccessHaptic = useCallback(() => {
-    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+    triggerHaptic('success');
   }, []);
 
   const triggerConfetti = useCallback(() => {

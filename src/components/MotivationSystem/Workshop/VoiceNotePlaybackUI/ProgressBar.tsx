@@ -15,8 +15,8 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
 import type { ProgressBarProps } from './types';
+import { triggerHaptic } from '@/utils/haptics';
 
 export function ProgressBar({
   progress,
@@ -56,7 +56,7 @@ export function ProgressBar({
       const { locationX } = event.nativeEvent;
       const newProgress = Math.max(0, Math.min(1, locationX / barWidth));
 
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+      triggerHaptic('tap');
       animatedProgress.value = newProgress;
       onSeek(newProgress);
     },

@@ -8,7 +8,7 @@
  */
 
 import { X } from 'lucide-react-native';
-import * as Haptics from 'expo-haptics';
+import { triggerHaptic } from '@/utils/haptics';
 import { AnimatedPressable } from './AnimatedPressable';
 import { useThemeColors } from '../../theme/ThemeContext';
 
@@ -33,7 +33,7 @@ export function ModalCloseButton({
 
   const handlePress = () => {
     if (haptic) {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+      triggerHaptic('tap');
     }
     onClose();
   };
@@ -47,7 +47,7 @@ export function ModalCloseButton({
         width: 44,
         alignItems: 'center',
         justifyContent: 'center',
-        borderRadius: 22,
+        borderRadius: 9999,
         backgroundColor: colors.surface,
       }}
       onPress={handlePress}

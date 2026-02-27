@@ -12,10 +12,10 @@ import Animated, {
   runOnJS,
 } from 'react-native-reanimated';
 import { Check } from 'lucide-react-native';
-import * as Haptics from 'expo-haptics';
 
 import { SPRING_BUTTON } from '../constants';
 import type { DoneButtonProps } from '../types';
+import { triggerHaptic } from '@/utils/haptics';
 
 export function DoneButton({ onPress, reduceMotion = false }: DoneButtonProps) {
   const scale = useSharedValue(1);
@@ -56,7 +56,7 @@ export function DoneButton({ onPress, reduceMotion = false }: DoneButtonProps) {
   }, [scale]);
 
   const handlePress = useCallback(() => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    triggerHaptic('toggle');
     onPress();
   }, [onPress]);
 

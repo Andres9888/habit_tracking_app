@@ -1,7 +1,6 @@
 /** EditHeader - Dark mode aware */
 import { View, Pressable, Text, Keyboard, ActivityIndicator } from 'react-native';
 import { X } from 'lucide-react-native';
-import * as Haptics from 'expo-haptics';
 import Animated, {
   FadeInDown,
   useAnimatedStyle,
@@ -9,6 +8,7 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 import { useThemeColors } from '../../theme';
+import { triggerHaptic } from '@/utils/haptics';
 
 interface EditHeaderProps {
   paddingTop: number;
@@ -34,13 +34,13 @@ export function EditHeader({
   }));
 
   const handleCancel = () => {
-    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    triggerHaptic('tap');
     Keyboard.dismiss();
     onCancel();
   };
 
   const handleSave = () => {
-    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    triggerHaptic('toggle');
     onSave();
   };
 

@@ -16,7 +16,7 @@
 import React, { useCallback, useEffect } from 'react';
 import { Pressable, Text, View } from 'react-native';
 
-import * as Haptics from 'expo-haptics';
+import { triggerHaptic } from '@/utils/haptics';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -54,7 +54,7 @@ export const TimeRangeToggle = React.memo(function TimeRangeToggle({
   const handlePress = useCallback(
     (newValue: TimeRange) => {
       if (newValue !== value) {
-        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+        triggerHaptic('tap');
         onChange(newValue);
       }
     },
@@ -103,6 +103,7 @@ export const TimeRangeToggle = React.memo(function TimeRangeToggle({
             accessibilityRole="tab"
             accessibilityState={{ selected: isSelected }}
             className="items-center justify-center"
+            hitSlop={{ top: 8, bottom: 8 }}
             style={{ height: 28, width: segmentWidth }}
             onPress={() => handlePress(option.value)}
           >

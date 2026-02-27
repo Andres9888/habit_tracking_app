@@ -1,8 +1,8 @@
 import { useMutation, useQuery } from 'convex/react';
 import { Alert } from 'react-native';
-import * as Haptics from 'expo-haptics';
 import { api } from '../../../convex/_generated/api';
 import type { Id } from '../../../convex/_generated/dataModel';
+import { triggerHaptic } from '@/utils/haptics';
 
 export const useArchivedHabitsModalLogic = () => {
   const archivedHabitsData = useQuery(api.habits.listArchived);
@@ -18,15 +18,15 @@ export const useArchivedHabitsModalLogic = () => {
     habitId: Id<'habits'>,
     habitName: string
   ): Promise<boolean> => {
-    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    triggerHaptic('tap');
 
     try {
       await unarchiveHabit({ habitId });
-      void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      triggerHaptic('success');
       return true;
     } catch (error) {
       if (__DEV__) console.error('Failed to restore habit:', error);
-      void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+      triggerHaptic('error');
       Alert.alert(
         'Error',
         `Failed to restore "${habitName}". Please try again.`
@@ -36,7 +36,7 @@ export const useArchivedHabitsModalLogic = () => {
   };
 
   const handlePermanentDelete = (habitId: Id<'habits'>, habitName: string) => {
-    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+    triggerHaptic('heavy');
 
     Alert.alert(
       `Permanently Delete "${habitName}"?`,
@@ -55,7 +55,7 @@ export const useArchivedHabitsModalLogic = () => {
               );
             } catch (error) {
               if (__DEV__) console.error('Failed to delete habit:', error);
-              void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+              triggerHaptic('error');
               Alert.alert(
                 'Error',
                 `Failed to delete "${habitName}". Please try again.`
@@ -71,7 +71,7 @@ export const useArchivedHabitsModalLogic = () => {
   };
 
   const handleDeleteAll = () => {
-    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+    triggerHaptic('heavy');
 
     Alert.alert(
       'Delete All Archived Habits?',
@@ -82,10 +82,10 @@ export const useArchivedHabitsModalLogic = () => {
           onPress: async () => {
             try {
               await deleteAllArchivedMutation();
-              void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+              triggerHaptic('success');
             } catch (error) {
               if (__DEV__) console.error('Failed to delete all archived:', error);
-              void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+              triggerHaptic('error');
               Alert.alert('Error', 'Failed to delete archived habits. Please try again.');
             }
           },
