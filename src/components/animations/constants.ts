@@ -12,40 +12,34 @@
  */
 
 import type { WithSpringConfig } from 'react-native-reanimated';
+import { durations, springs } from '@/theme/animations';
 
 /**
  * Button press spring - Snappy, responsive feel for interactive elements
  * Good for: Buttons, cards, touchable items
  */
-export const SPRING_BUTTON: WithSpringConfig = {
-  damping: 15,
-  stiffness: 300,
-};
+export const SPRING_BUTTON: WithSpringConfig =
+  springs.standard as WithSpringConfig;
 
 /**
  * Gentle spring - Softer, more organic motion for content transitions
  * Good for: Content reveals, section animations, slide-ins
  */
-export const SPRING_GENTLE: WithSpringConfig = {
-  damping: 28,
-  mass: 1.2,
-  stiffness: 180,
-};
+export const SPRING_GENTLE: WithSpringConfig =
+  springs.gentle as WithSpringConfig;
 
 /**
  * Bouncy spring - Pronounced bounce effect for celebratory/attention moments
  * Good for: Success states, badges, completion indicators
  */
-export const SPRING_BOUNCY: WithSpringConfig = {
-  damping: 8,
-  stiffness: 300,
-};
+export const SPRING_BOUNCY: WithSpringConfig =
+  springs.bouncy as WithSpringConfig;
 
 /**
  * Stagger delay between sequential animations (milliseconds)
  * Used to create cascading entrance effects for lists/grids
  */
-export const STAGGER_DELAY = 80;
+export const STAGGER_DELAY = durations.stagger;
 
 /**
  * Base delay before checkmark animations start (milliseconds)
@@ -58,7 +52,5 @@ export const BASE_CHECKMARK_DELAY = 600;
  * Damping 18, stiffness 150 per design system spec.
  * Good for: micro-interactions, count-ups, progress fills.
  */
-export const SPRING_PREMIUM: WithSpringConfig = {
-  damping: 18,
-  stiffness: 150,
-};
+export const SPRING_PREMIUM: WithSpringConfig =
+  springs.standard as WithSpringConfig;
