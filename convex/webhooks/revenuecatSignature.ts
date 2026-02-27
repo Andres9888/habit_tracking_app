@@ -13,9 +13,10 @@
 // Note: Environment variables are accessed differently in Convex HTTP actions
 const REVENUECAT_WEBHOOK_SECRET = process.env.REVENUECAT_WEBHOOK_SECRET ?? '';
 
-// Allow bypassing signature verification in development
-// This should NEVER be true in production
-const isDevelopment = process.env.NODE_ENV === 'development';
+// Allow bypassing signature verification in development.
+// Set SKIP_WEBHOOK_VERIFICATION=true in your Convex dev environment variables.
+// NODE_ENV is not reliable in Convex's runtime — use an explicit env var instead.
+const isDevelopment = process.env.SKIP_WEBHOOK_VERIFICATION === 'true';
 
 /**
  * Verifies that a webhook request came from RevenueCat

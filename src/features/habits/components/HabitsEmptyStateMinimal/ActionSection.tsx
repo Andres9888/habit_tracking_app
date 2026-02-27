@@ -49,7 +49,6 @@ export function ActionSection({
       <View
         style={{
           display: isKeyboardVisible ? 'none' : 'flex',
-          maxWidth: 343,
           width: '100%',
         }}
       >

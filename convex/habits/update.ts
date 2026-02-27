@@ -30,7 +30,10 @@ export const update = mutation({
     // SEC-003: Input validation
     const validated = validateHabitUpdateFields(updates);
 
-    // Merge validated string fields with non-string fields (daysOfWeek, etc.)
+    // Merge strategy: non-string fields (booleans, arrays, numbers) in updateHabitArgs
+    // are type-checked by Convex's `v` validators but bypass validateHabitUpdateFields
+    // (which only sanitizes strings). If you add a new string field to updateHabitArgs,
+    // add a corresponding validator to validateHabitUpdateFields so it gets sanitized.
     const cleanedUpdates = {
       ...Object.fromEntries(
         Object.entries(updates).filter(
