@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { View, Pressable } from 'react-native';
 import { format } from 'date-fns';
 
 import type { DayCellProps } from '../CalendarTimeline.types';
+
+import { useHaptics } from '@/utils/haptics';
 
 import {
   buildAccessibilityLabel,
@@ -13,7 +15,7 @@ import { ConnectorArms } from './ConnectorArms';
 import { DayCellContent } from './DayCellContent';
 
 /** Renders a single day cell in the timeline */
-export const DayCell: React.FC<DayCellProps> = ({
+const DayCellComponent: React.FC<DayCellProps> = ({
   date,
   index,
   isCurrentDay,
@@ -45,6 +47,12 @@ export const DayCell: React.FC<DayCellProps> = ({
     statusText
   );
   const accessibilityHint = getAccessibilityHint(canPressDay, isDayDisabled);
+  const { trigger } = useHaptics({ preference: reduceMotion });
+
+  const handlePress = () => {
+    trigger('tap');
+    onDayPress(date);
+  };
 
   const contentProps = {
     colors,
@@ -69,7 +77,6 @@ export const DayCell: React.FC<DayCellProps> = ({
   if (onDayPress) {
     return (
       <Pressable
-        key={`timeline-day-${index}`}
         accessibilityHint={accessibilityHint}
         accessibilityLabel={accessibilityLabel}
         accessibilityRole='button'
@@ -77,7 +84,7 @@ export const DayCell: React.FC<DayCellProps> = ({
         className='flex-1 items-center gap-0.5'
         disabled={isDayDisabled}
         style={{ opacity: isDayDisabled ? 0.5 : 1 }}
-        onPress={() => onDayPress(date)}
+        onPress={handlePress}
       >
         {({ pressed }) => (
           <>
@@ -91,7 +98,6 @@ export const DayCell: React.FC<DayCellProps> = ({
 
   return (
     <View
-      key={`timeline-day-${index}`}
       accessibilityLabel={accessibilityLabel}
       accessibilityRole='text'
       className='flex-1 items-center gap-0.5'
@@ -101,3 +107,5 @@ export const DayCell: React.FC<DayCellProps> = ({
     </View>
   );
 };
+
+export const DayCell = memo(DayCellComponent);
