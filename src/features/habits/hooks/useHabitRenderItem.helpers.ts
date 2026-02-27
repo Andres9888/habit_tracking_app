@@ -1,4 +1,4 @@
-import type { Habit } from '../types';
+import type { Habit, HabitStatus } from '../types';
 import { getNextWeekConnection } from './getNextWeekConnection';
 import { getPreviousWeekConnection } from './getPreviousWeekConnection';
 import type { UseHabitRenderItemArgs } from './useHabitRenderItem.types';
@@ -20,8 +20,10 @@ export function getHabitRenderData(
   const entranceDelay = index * (entranceStaggerDelay ?? 0);
   const hasBeenSeen = seenHabitIds?.has(item._id) ?? false;
   const triggerEntrance = Boolean(shouldTriggerEntrance) && !hasBeenSeen;
-  const weekStatus = weekDateStrings.map((dateString) =>
-    getHabitStatus(item._id, dateString)
+  const weekStatus = getWeekStatusForHabit(
+    item._id,
+    weekDateStrings,
+    getHabitStatus
   );
   const streak = getStreak(item._id);
   const isConnectedToPreviousWeek = getPreviousWeekConnection(
@@ -68,4 +70,40 @@ export function getRenderItemDependencies(args: UseHabitRenderItemArgs) {
     args.toggleHabit,
     args.weekDateStrings,
   ];
+}
+
+const weekStatusCache = new WeakMap<
+  UseHabitRenderItemArgs['getHabitStatus'],
+  Map<string, HabitStatus[]>
+>();
+
+function buildWeekStatusCacheKey(
+  habitId: string,
+  weekDateStrings: string[]
+) {
+  return `${habitId}|${weekDateStrings.join(',')}`;
+}
+
+function getWeekStatusForHabit(
+  habitId: string,
+  weekDateStrings: string[],
+  getHabitStatus: UseHabitRenderItemArgs['getHabitStatus']
+): HabitStatus[] {
+  let getterCache = weekStatusCache.get(getHabitStatus);
+  if (!getterCache) {
+    getterCache = new Map();
+    weekStatusCache.set(getHabitStatus, getterCache);
+  }
+
+  const cacheKey = buildWeekStatusCacheKey(habitId, weekDateStrings);
+  const cached = getterCache.get(cacheKey);
+  if (cached) {
+    return cached;
+  }
+
+  const computed = weekDateStrings.map((dateString) =>
+    getHabitStatus(habitId, dateString)
+  );
+  getterCache.set(cacheKey, computed);
+  return computed;
 }
