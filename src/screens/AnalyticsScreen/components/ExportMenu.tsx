@@ -3,7 +3,7 @@
  */
 import React from 'react';
 import { View, Text, Pressable, Modal } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { Code, FileText } from 'lucide-react-native';
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import { colors } from '../../../theme/colors';
 import type { ExportFormat } from '../AnalyticsScreen.types';
@@ -43,11 +43,7 @@ export const ExportMenu: React.FC<ExportMenuProps> = ({
             style={styles.exportMenuItem}
             onPress={() => onExport('csv')}
           >
-            <Ionicons
-              color={colors.primary[500]}
-              name='document-text-outline'
-              size={24}
-            />
+            <FileText color={colors.primary[500]} size={24} />
             <View style={styles.exportMenuItemContent}>
               <Text style={styles.exportMenuItemTitle}>CSV</Text>
               <Text style={styles.exportMenuItemDescription}>
@@ -62,11 +58,7 @@ export const ExportMenu: React.FC<ExportMenuProps> = ({
             style={styles.exportMenuItem}
             onPress={() => onExport('json')}
           >
-            <Ionicons
-              color={colors.primary[500]}
-              name='code-outline'
-              size={24}
-            />
+            <Code color={colors.primary[500]} size={24} />
             <View style={styles.exportMenuItemContent}>
               <Text style={styles.exportMenuItemTitle}>JSON</Text>
               <Text style={styles.exportMenuItemDescription}>

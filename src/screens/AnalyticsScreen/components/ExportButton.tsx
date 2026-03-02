@@ -3,7 +3,7 @@
  */
 import React from 'react';
 import { Text, StyleSheet } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { Download } from 'lucide-react-native';
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import { colors } from '../../../theme/colors';
 import { typography } from '../../../theme/typography';
@@ -23,7 +23,7 @@ export const ExportButton: React.FC<ExportButtonProps> = ({ onPress }) => {
       style={styles.exportButton}
       onPress={onPress}
     >
-      <Ionicons color={colors.surface} name='download-outline' size={20} />
+      <Download color={colors.surface} size={20} />
       <Text style={styles.exportButtonText}>Export Data</Text>
     </AnimatedPressable>
   );
