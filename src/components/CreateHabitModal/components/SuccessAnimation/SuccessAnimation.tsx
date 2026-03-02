@@ -2,9 +2,11 @@
  * SuccessAnimation Component
  *
  * Full-screen modal celebrating habit creation with confetti effect
+ * Uses react-native-reanimated (migrated from legacy Animated)
  */
 
-import { Animated, Modal, View } from 'react-native';
+import { Modal, View } from 'react-native';
+import Reanimated, { useAnimatedStyle } from 'react-native-reanimated';
 
 import useHapticFeedback from '../../../../hooks/useHapticFeedback';
 import { ConfettiParticle } from './ConfettiParticle';
@@ -30,6 +32,10 @@ export const SuccessAnimation = ({
 
   const handleComplete = () => runExitAnimation(onComplete);
 
+  const backdropStyle = useAnimatedStyle(() => ({
+    opacity: animatedValues.backdropOpacity.value,
+  }));
+
   if (!visible) return null;
 
   const confettiParticles: ConfettiParticleData[] = Array.from(
@@ -44,10 +50,9 @@ export const SuccessAnimation = ({
 
   return (
     <Modal transparent animationType='none' visible={visible} onRequestClose={handleComplete}>
-      accessibilityViewIsModal
-      <Animated.View
+      <Reanimated.View
         className='flex-1 items-center justify-center bg-black/50'
-        style={{ opacity: animatedValues.backdropOpacity }}
+        style={backdropStyle}
       >
         <View className='absolute inset-x-0 top-0 h-full overflow-hidden'>
           {confettiParticles.map((p) => (
@@ -67,7 +72,7 @@ export const SuccessAnimation = ({
           selectedEmoji={selectedEmoji}
           onComplete={handleComplete}
         />
-      </Animated.View>
+      </Reanimated.View>
     </Modal>
   );
 };

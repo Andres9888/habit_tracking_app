@@ -1,15 +1,16 @@
 /**
  * useSuccessAnimations Hook
  *
- * Manages the animation values and sequences for the success modal
+ * Manages the animation shared values and sequences for the success modal
+ * Uses react-native-reanimated (migrated from legacy Animated)
  */
 
-import { useEffect, useRef, useCallback } from 'react';
-import { Animated } from 'react-native';
+import { useEffect, useCallback } from 'react';
+import { useSharedValue, runOnJS } from 'react-native-reanimated';
 
 import {
-  createEntranceSequence,
-  createExitSequence,
+  runEntranceSequence,
+  runExitSequence,
 } from './animationSequences';
 
 interface UseSuccessAnimationsProps {
@@ -21,13 +22,13 @@ export function useSuccessAnimations({
   visible,
   onHapticFeedback,
 }: UseSuccessAnimationsProps) {
-  const backdropOpacity = useRef(new Animated.Value(0)).current;
-  const cardScale = useRef(new Animated.Value(0.5)).current;
-  const cardOpacity = useRef(new Animated.Value(0)).current;
-  const iconScale = useRef(new Animated.Value(0)).current;
-  const textOpacity = useRef(new Animated.Value(0)).current;
-  const buttonOpacity = useRef(new Animated.Value(0)).current;
-  const buttonTranslateY = useRef(new Animated.Value(20)).current;
+  const backdropOpacity = useSharedValue(0);
+  const cardScale = useSharedValue(0.5);
+  const cardOpacity = useSharedValue(0);
+  const iconScale = useSharedValue(0);
+  const textOpacity = useSharedValue(0);
+  const buttonOpacity = useSharedValue(0);
+  const buttonTranslateY = useSharedValue(20);
 
   const animatedValues = {
     backdropOpacity,
@@ -42,14 +43,18 @@ export function useSuccessAnimations({
   useEffect(() => {
     if (visible) {
       onHapticFeedback();
-      createEntranceSequence(animatedValues).start();
+      runEntranceSequence(animatedValues);
     }
   }, [visible, onHapticFeedback]);
 
   const runExitAnimation = useCallback(
     (onComplete: () => void) => {
-      createExitSequence({ backdropOpacity, cardOpacity, cardScale }).start(
-        onComplete
+      runExitSequence(
+        { backdropOpacity, cardOpacity, cardScale },
+        () => {
+          'worklet';
+          runOnJS(onComplete)();
+        }
       );
     },
     [backdropOpacity, cardOpacity, cardScale]
