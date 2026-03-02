@@ -7,8 +7,6 @@
  * - analytics: Full-screen blur overlay for analytics features (was PremiumAnalyticsPaywall)
  */
 
-import type { ComponentProps } from 'react';
-import type { Ionicons } from '@expo/vector-icons';
 import type { LucideIcon } from 'lucide-react-native';
 
 export type PaywallVariant = 'motivation' | 'benefits' | 'analytics';
@@ -52,11 +50,9 @@ export interface MotivationFeatureItem {
   scienceFact?: string;
 }
 
-/** Feature item for analytics variant (Ionicons) */
-export type IconName = ComponentProps<typeof Ionicons>['name'];
-
+/** Feature item for analytics variant */
 export interface AnalyticsFeatureItem {
-  icon: IconName;
+  icon: LucideIcon;
   title: string;
   description: string;
 }

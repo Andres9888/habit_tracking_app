@@ -5,7 +5,7 @@
 import React from 'react';
 import { View } from 'react-native';
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
-import { Ionicons } from '@expo/vector-icons';
+import { X } from 'lucide-react-native';
 
 interface BlurOverlayHeaderProps {
   disabled: boolean;
@@ -23,7 +23,7 @@ export function BlurOverlayHeader({ disabled, onPress }: BlurOverlayHeaderProps)
         disabled={disabled}
         onPress={onPress}
       >
-        <Ionicons color='#000000' name='close' size={24} />
+        <X color='#000000' size={24} />
       </AnimatedPressable>
     </View>
   );

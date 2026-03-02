@@ -5,7 +5,7 @@
 
 import React, { memo, useCallback } from 'react';
 import { View, Text } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { AlertTriangle, Flame, Trophy } from 'lucide-react-native';
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import HabitStrengthIndicator from '../HabitStrengthIndicator/HabitStrengthIndicator';
 import { colors } from '../../theme/colors';
@@ -51,7 +51,7 @@ export const HabitRankingItem = memo(function HabitRankingItem({
             </Text>
             {item.isAtRisk && (
               <View style={styles.riskBadge}>
-                <Ionicons color={colors.error} name='warning' size={12} />
+                <AlertTriangle color={colors.error} size={12} />
                 <Text style={styles.riskText}>At Risk</Text>
               </View>
             )}
@@ -59,11 +59,11 @@ export const HabitRankingItem = memo(function HabitRankingItem({
 
           <View style={styles.habitStats}>
             <View style={styles.statItem}>
-              <Ionicons color={colors.text.tertiary} name='flame' size={14} />
+              <Flame color={colors.text.tertiary} size={14} />
               <Text style={styles.statText}>{item.currentStreak} days</Text>
             </View>
             <View style={styles.statItem}>
-              <Ionicons color={colors.text.tertiary} name='trophy' size={14} />
+              <Trophy color={colors.text.tertiary} size={14} />
               <Text style={styles.statText}>Best: {item.longestStreak}</Text>
             </View>
           </View>

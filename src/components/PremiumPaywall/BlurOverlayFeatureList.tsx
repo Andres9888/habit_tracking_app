@@ -4,7 +4,7 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { CheckCircle2 } from 'lucide-react-native';
 import { colors } from '../../theme/colors';
 import { MOTIVATION_FEATURES } from './motivationFeatures';
 import { ANALYTICS_FEATURES } from './analyticsFeatures';
@@ -22,9 +22,8 @@ export function AnalyticsFeatureList() {
           className='mb-3 flex-row items-start rounded-xl bg-white/10 p-4'
         >
           <View className='mr-4 h-10 w-10 items-center justify-center rounded-xl bg-white/10'>
-            <Ionicons
+            <feature.icon
               color={colors.premium?.[600] ?? '#8b5cf6'}
-              name={feature.icon}
               size={24}
             />
           </View>
@@ -34,9 +33,8 @@ export function AnalyticsFeatureList() {
             </Text>
             <Text className='text-sm text-white/60'>{feature.description}</Text>
           </View>
-          <Ionicons
+          <CheckCircle2
             color={colors.success ?? '#10b981'}
-            name='checkmark-circle'
             size={20}
           />
         </View>
@@ -69,7 +67,7 @@ export function MotivationFeatureList({
             </Text>
             <Text className='text-xs text-white/60'>{feature.subtitle}</Text>
           </View>
-          <Ionicons color='#10b981' name='checkmark-circle' size={20} />
+          <CheckCircle2 color='#10b981' size={20} />
         </View>
       ))}
     </View>

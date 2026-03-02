@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text } from 'react-native';
-import { Feather } from '@expo/vector-icons';
+import { Link2 } from 'lucide-react-native';
 import { useStreakChainLogic } from './StreakChain.hooks';
 import type { StreakChainProps } from './StreakChain.types';
 
@@ -61,9 +61,8 @@ export default function StreakChain({
                   width: circleSize,
                 }}
               >
-                <Feather
+                <Link2
                   color={isDone ? '#FFFFFF' : '#64748B'}
-                  name='link-2'
                   size={iconSize}
                 />
               </View>
