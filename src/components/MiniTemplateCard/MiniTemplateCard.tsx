@@ -27,6 +27,7 @@ export function MiniTemplateCard(props: MiniTemplateCardProps) {
     hasResearch,
     icon = '📝',
     iconColor: iconColorProp,
+    index,
     isImported,
     isImporting,
     name = 'Untitled',
@@ -80,6 +81,7 @@ export function MiniTemplateCard(props: MiniTemplateCardProps) {
       icon={icon}
       iconColor={iconColor}
       importButtonStyle={importButtonStyle}
+      index={index}
       isImported={isImported}
       isImporting={isImporting}
       name={name}

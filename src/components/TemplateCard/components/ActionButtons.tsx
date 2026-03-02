@@ -5,19 +5,19 @@
  */
 
 import React from 'react';
-import { View, Text, StyleSheet, type GestureResponderEvent } from 'react-native';
+import { View, Text, type GestureResponderEvent } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { Check, Eye } from 'lucide-react-native';
 import Button from '../../Button/Button';
 import { useThemeColors } from '../../../theme/ThemeContext';
-import { borderRadius, spacing } from '../../../theme/spacing';
-import { typography, fontFamilies} from '../../../theme/typography';
 import type { ActionButtonsProps } from './ActionButtons.types';
+import { styles } from './ActionButtons.styles';
 import { triggerHaptic } from '@/utils/haptics';
 
 export function ActionButtons({
   checkmarkStyle,
   iconColor,
+  index,
   isImported,
   isImporting,
   isLocked,
@@ -26,11 +26,15 @@ export function ActionButtons({
   onPreview,
   showPreviewCTA,
 }: ActionButtonsProps) {
+  const testPrefix = index != null ? `templates-category-card-${index}` : undefined;
   const { colors: themeColors } = useThemeColors();
 
   if (isImported) {
     return (
-      <Animated.View style={[styles.successButton, checkmarkStyle]}>
+      <Animated.View
+        testID={testPrefix ? `${testPrefix}-added` : undefined}
+        style={[styles.successButton, checkmarkStyle]}
+      >
         <Check color='#fff' size={18} strokeWidth={3} />
         <Text style={styles.successButtonText}>Added to Habits</Text>
       </Animated.View>
@@ -44,7 +48,8 @@ export function ActionButtons({
           accessibilityLabel={`Preview ${name} habit`}
           icon={<Eye color={themeColors.text.secondary} size={18} />}
           size='medium'
-          style={[styles.previewButton, { backgroundColor: themeColors.surface }]}
+          style={[styles.cardButton, { backgroundColor: themeColors.surface }]}
+          testID={testPrefix ? `${testPrefix}-preview` : undefined}
           textStyle={{ color: themeColors.text.secondary }}
           variant='primary'
           onPress={(e: GestureResponderEvent) => {
@@ -61,10 +66,8 @@ export function ActionButtons({
         disabled={isLocked}
         loading={isImporting}
         size='medium'
-        style={[
-          styles.importButton,
-          { backgroundColor: isLocked ? '#6B7280' : iconColor },
-        ]}
+        testID={testPrefix ? `${testPrefix}-add` : undefined}
+        style={[styles.cardButton, { backgroundColor: isLocked ? '#6B7280' : iconColor }]}
         variant='primary'
         onPress={onImportPress}
       >
@@ -73,35 +76,3 @@ export function ActionButtons({
     </View>
   );
 }
-
-export const styles = StyleSheet.create({
-  buttonRow: { flexDirection: 'row', gap: spacing.sm },
-  importButton: {
-    borderRadius: borderRadius.medium,
-    flex: 1,
-    paddingVertical: spacing.md,
-  },
-  previewButton: {
-    borderRadius: borderRadius.medium,
-    flex: 1,
-    paddingVertical: spacing.md,
-  },
-  previewButtonText: {},
-  successButton: {
-    alignItems: 'center',
-    backgroundColor: '#22c55e',
-    borderRadius: borderRadius.medium,
-    flexDirection: 'row',
-    gap: spacing.sm,
-    justifyContent: 'center',
-    paddingHorizontal: spacing.base,
-    paddingVertical: spacing.md,
-    width: '100%',
-  },
-  successButtonText: {
-    color: '#fff',
-    fontFamily: fontFamilies.primary.text,
-    fontSize: typography.body.fontSize,
-    fontWeight: '700',
-  },
-});

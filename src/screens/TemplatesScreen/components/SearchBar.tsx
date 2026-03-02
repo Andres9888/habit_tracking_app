@@ -26,6 +26,7 @@ export function SearchBar({
 
   return (
     <View
+      testID="templates-search-bar"
       style={[
         styles.searchBar,
         isDark && { backgroundColor: colors.card, borderColor: colors.border },
@@ -43,6 +44,7 @@ export function SearchBar({
       />
       {value ? (
         <AnimatedPressable
+          testID="templates-search-clear"
           accessibilityLabel='Clear search'
           accessibilityRole='button'
           onPress={onClear}

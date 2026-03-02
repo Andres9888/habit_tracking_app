@@ -10,6 +10,7 @@ export interface TemplateCardContentProps {
   checkmarkStyle: AnimatedStyle<ViewStyle>;
   description: string;
   frequency?: string;
+  index?: number;
   icon: string;
   iconColor: string;
   isImported: boolean;

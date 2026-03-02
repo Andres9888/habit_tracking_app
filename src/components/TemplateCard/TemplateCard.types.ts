@@ -29,6 +29,9 @@ export interface TemplateCardProps {
   /** Template icon/emoji */
   icon: string;
 
+  /** Index for testID generation */
+  index?: number;
+
   /** Template icon background color */
   iconColor: string;
 
@@ -83,6 +86,7 @@ export type TemplateCardRenderProps = Pick<
   | 'enableScrollReveal'
   | 'frequency'
   | 'icon'
+  | 'index'
   | 'isImported'
   | 'isImporting'
   | 'isPremium'
