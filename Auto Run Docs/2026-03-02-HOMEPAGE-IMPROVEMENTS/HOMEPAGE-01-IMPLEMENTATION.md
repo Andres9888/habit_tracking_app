@@ -36,12 +36,13 @@ All changes are confined to the CalendarTimeline shelf area and ProgressText com
   - Must export a pure function (no hooks) for testability, plus a thin hook wrapper
   - **Completed**: 73-line file with `getStreakGreeting` pure function + `useStreakGreeting` hook wrapper. 17 unit tests passing in `tests/useStreakGreeting.test.ts`. Note: "Fresh start" for broken streaks requires previous-streak state which is not available in this context — streak === 0 falls back to time-of-day greeting (same UX, simpler implementation).
 
-- [ ] Modify `src/components/CalendarTimeline/components/ProgressGreeting.tsx`:
+- [x] Modify `src/components/CalendarTimeline/components/ProgressGreeting.tsx`:
   - Import and use `useStreakGreeting` instead of `getGreeting()`
   - Render streak badge inline next to greeting text when present
   - Streak badge styling: pill with `{ background: isDark ? 'rgba(232,185,77,0.15)' : '#FEF3CD', color: isDark ? '#E8B94D' : '#7D5907' }`
   - Greeting text color: streak > 0 → `colors.streak[isDark ? 300 : 700]`, else → `colors.text.primary`
   - File must remain ≤100 lines
+  - **Completed**: 98-line file using `useStreakGreeting` hook + inline streak badge pill. Static palette imported as `palette` for streak colors (theme-aware `colors` doesn't include `streak`). 7 new rendering tests in `ProgressGreeting.test.tsx` verify badge visibility at each streak tier, perfect day priority, and default prop behavior. `currentStreak` prop defaults to 0 for backward compatibility.
 
 - [ ] Thread `currentStreak` data through to CalendarTimeline:
   - Source: identify where streak data is computed (likely in habit list hooks)
