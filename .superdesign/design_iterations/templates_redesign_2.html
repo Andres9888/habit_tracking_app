@@ -628,7 +628,7 @@ function openPv(catId,index){
   var t=TPL[catId][index];var isAdded=addedSet.has(catId+'-'+index);var isLocked=!!t.premium;
   var content=document.getElementById('pvContent');content.textContent='';
   var hero=document.createElement('div');hero.className='pv-hero';
-  var hic=document.createElement('div');hic.className='pv-hero-ic';hic.style.background=t.color+'14';hic.textContent=t.icon;
+  var hic=document.createElement('div');hic.className='pv-hero-ic';hic.style.background=t.color+'20';hic.textContent=t.icon;
   var glow=document.createElement('div');glow.className='pv-hero-glow';glow.style.background=t.color;hic.appendChild(glow);hero.appendChild(hic);
   var hnm=document.createElement('div');hnm.className='pv-hero-nm';hnm.textContent=t.name;hero.appendChild(hnm);
   var pills=document.createElement('div');pills.className='pv-pills';
