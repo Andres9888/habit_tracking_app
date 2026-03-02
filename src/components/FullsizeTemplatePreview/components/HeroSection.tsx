@@ -46,6 +46,7 @@ export function HeroSection({
             ]}
           />
           <View
+            testID="templates-preview-icon"
             style={[
               heroStyles.iconContainer,
               { backgroundColor: `${iconColor}20` },
@@ -56,6 +57,7 @@ export function HeroSection({
         </Animated.View>
 
         <Text
+          testID="templates-preview-name"
           style={[
             heroStyles.templateName,
             { fontFamily: theme.custom.fontFamilies.primary.text },
@@ -64,7 +66,7 @@ export function HeroSection({
           {template?.name ?? 'Template'}
         </Text>
 
-        <View style={heroStyles.pillsRow}>
+        <View testID="templates-preview-pills" style={heroStyles.pillsRow}>
           <MetadataPill
             icon={<Clock color={iconColor} size={14} strokeWidth={2} />}
             iconColor={iconColor}

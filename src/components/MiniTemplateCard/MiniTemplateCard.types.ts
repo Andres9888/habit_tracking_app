@@ -11,6 +11,8 @@ export interface MiniTemplateCardProps {
   name: string;
   /** Template description */
   description?: string;
+  /** Index for testID generation */
+  index?: number;
   /** Short description or frequency */
   subtitle?: string;
   /** Has scientific backing */

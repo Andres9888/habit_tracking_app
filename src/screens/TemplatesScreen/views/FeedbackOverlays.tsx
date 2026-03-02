@@ -1,6 +1,6 @@
 /**
  * Shared feedback overlays: celebration, toast, and error toast.
- * Used by both BrowseView and CategorySearchView.
+ * Shared feedback overlays for TemplatesScreen views.
  */
 
 import {
@@ -36,7 +36,7 @@ export function FeedbackOverlays(p: FeedbackOverlaysProps) {
         />
       ) : (
         <Toast
-          duration={3000}
+          duration={5000}
           message={p.toastMessage ?? ''}
           variant='error'
           visible={p.showToast}

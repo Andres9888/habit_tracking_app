@@ -20,6 +20,7 @@ export function TemplateCardRender({
   handlePressOut,
   icon,
   iconColor,
+  index,
   isImported,
   isImporting,
   isLocked,
@@ -60,6 +61,7 @@ export function TemplateCardRender({
           description={description}
           frequency={frequency}
           icon={icon}
+          index={index}
           iconColor={iconColor}
           isImported={isImported ?? false}
           isImporting={isImporting ?? false}

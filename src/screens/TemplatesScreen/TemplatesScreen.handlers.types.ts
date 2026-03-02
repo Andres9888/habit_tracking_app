@@ -15,6 +15,7 @@ export interface UseTemplateHandlersOptions {
     customizations?: TemplateCustomizations;
   }) => Promise<{ success: boolean }>;
   isPremiumUser: boolean;
+  onShowPaywall?: () => void;
   previewTemplate: Doc<'templates'> | null;
   seedTemplates: (args: Record<string, never>) => Promise<unknown>;
   setExpandedCategories: React.Dispatch<React.SetStateAction<Set<string>>>;

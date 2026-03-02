@@ -22,7 +22,7 @@ export function CategorySearchView(p: CategorySearchViewProps) {
   const toggle = () => p.setResearchOnly((v) => !v);
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.background }]}>
+    <View testID="templates-search-results" style={[styles.container, { backgroundColor: colors.background }]}>
       <CategoryHeader
         categories={p.categories}
         filteredCount={templates.length}

@@ -44,6 +44,7 @@ export function useTemplatesScreenState({
   const [importingTemplateId, setImportingTemplateId] =
     useState<Id<'templates'> | null>(null);
   const [showSortOptions, setShowSortOptions] = useState(false);
+  const [showPaywall, setShowPaywall] = useState(false);
   const [isSeeding, setIsSeeding] = useState(false);
 
   useEffect(() => {
@@ -97,6 +98,7 @@ export function useTemplatesScreenState({
     setSelectedCategory,
     setShowCustomizeModal,
     setShowFullsizePreview,
+    setShowPaywall,
     setShowSortOptions,
     setShowToast,
     setSortOption,
@@ -106,6 +108,7 @@ export function useTemplatesScreenState({
     showCelebration,
     showCustomizeModal,
     showFullsizePreview,
+    showPaywall,
     showSortOptions,
     showToast,
     sortOption,

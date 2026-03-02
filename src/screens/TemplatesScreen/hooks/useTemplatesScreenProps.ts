@@ -16,6 +16,9 @@ import {
   useTemplatesByCategory,
   useTemplatesData,
 } from '../useTemplatesData';
+import { useMainBrowseData } from './useMainBrowseData';
+import { usePackConfirm } from './usePackConfirm';
+import { useViewNavigation } from './useViewNavigation';
 
 export function useTemplatesScreenProps() {
   const reducedMotion = useReduceMotion();
@@ -39,6 +42,7 @@ export function useTemplatesScreenProps() {
     importTemplate: data.importTemplate,
     previewTemplate: state.previewTemplate,
     isPremiumUser: data.isPremiumUser,
+    onShowPaywall: () => state.setShowPaywall(true),
     seedTemplates: data.seedTemplates,
     setShowCelebration: state.setShowCelebration,
     setExpandedCategories: state.setExpandedCategories,
@@ -60,6 +64,14 @@ export function useTemplatesScreenProps() {
     userHabitCount: data.userHabitCount,
   });
 
+  const viewNav = useViewNavigation();
+  const packConfirm = usePackConfirm(data.isPremiumUser, () => state.setShowPaywall(true));
+  const mainBrowseData = useMainBrowseData({
+    allTemplates: data.allTemplates,
+    isPremiumUser: data.isPremiumUser,
+    userHabitCount: data.userHabitCount,
+  });
+
   const getCategoryLabel = (categoryId: string) =>
     data.categories?.find((c) => c.id === categoryId)?.label || categoryId;
 
@@ -75,9 +87,12 @@ export function useTemplatesScreenProps() {
     getCategoryLabel,
     handlers,
     handleTabPress,
+    mainBrowseData,
+    packConfirm,
     scienceCountsByCategory,
     state,
     tabIndicator,
     templatesByCategory,
+    viewNav,
   };
 }

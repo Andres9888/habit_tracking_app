@@ -22,6 +22,7 @@ export function MiniCardContainer({
   description,
   icon,
   iconColor,
+  index,
   hasResearch,
   isImporting,
   isImported,
@@ -37,11 +38,12 @@ export function MiniCardContainer({
   onImport,
 }: MiniCardContainerProps) {
   const { colors } = useThemeColors();
-
+  const testIdSuffix = index != null ? `-${index}` : '';
   return (
     <View>
       <AnimatedPressable
         accessible
+        testID={index != null ? `templates-popular-card${testIdSuffix}` : undefined}
         accessibilityLabel={`${name} template`}
         accessibilityRole='button'
         style={[

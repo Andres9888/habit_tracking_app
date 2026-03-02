@@ -44,6 +44,7 @@ export function TemplateAddedToast({
         <View collapsable={false}>
           <Animated.View
             accessible
+            testID='templates-toast'
             accessibilityLabel={label}
             accessibilityLiveRegion='polite'
             accessibilityRole='alert'
@@ -69,7 +70,7 @@ export function TemplateAddedToast({
               >
                 <Text style={styles.iconText}>{templateData.icon}</Text>
               </Animated.View>
-              <Text numberOfLines={1} style={styles.nameText}>
+              <Text testID='templates-toast-name' numberOfLines={1} style={styles.nameText}>
                 {templateData.name} added!
               </Text>
             </View>
