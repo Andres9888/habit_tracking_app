@@ -14,7 +14,7 @@
  */
 
 import type { Animated } from 'react-native';
-import type { AnimatedStyle } from 'react-native-reanimated';
+import type { AnimatedStyle, SharedValue } from 'react-native-reanimated';
 import type { Id } from '../../../convex/_generated/dataModel';
 import type { CardColors, Habit, HabitStatus } from './types';
 
@@ -54,8 +54,8 @@ export interface DraggableHabitCardProps {
   handlePressOut: () => void;
   handleSwipeableOpen: () => void;
   highContrastMode: boolean;
-  highlightGlow: Animated.Value;
-  iconPulse: Animated.Value;
+  highlightGlow: SharedValue<number>;
+  iconPulse: SharedValue<number>;
   isDark: boolean;
   isConnectedToNextWeek: boolean;
   isConnectedToPreviousWeek: boolean;

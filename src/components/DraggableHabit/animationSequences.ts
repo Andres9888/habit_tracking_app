@@ -1,16 +1,15 @@
 /**
- * @module animationSequences — Barrel export for RN Animated-based sequences.
+ * @module animationSequences — Barrel export for animation sequences.
  *
  * Animation files in this directory use two different animation systems:
  *
- * - **RN Animated** (highlightAnimations, recordAnimations) — imperative
- *   `Animated.Value` sequences for card-level effects (glow, badge, scale).
- *   Re-exported here for convenient import.
+ * - **Reanimated** (highlightAnimations, animationHelpers) — worklet-based
+ *   shared-value animations for glow/pulse effects and strength emoji.
  *
- * - **Reanimated** (animationHelpers) — worklet-based shared-value animations
- *   for the strength emoji. Imported directly by useStrengthAnimation.
+ * - **RN Animated** (recordAnimations) — imperative `Animated.Value` sequences
+ *   for card-level badge effects (pending migration).
  */
 
-export { runHighlightAnimation, runIconPulseLoop } from './highlightAnimations';
+export { runHighlightGlow, runIconPulseLoop } from './highlightAnimations';
 
 export { runNewRecordAnimation, hideNewRecordBadge } from './recordAnimations';

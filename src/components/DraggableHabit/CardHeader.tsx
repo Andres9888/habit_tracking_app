@@ -7,8 +7,10 @@
  */
 
 import React from 'react';
-import { Animated, View, Text } from 'react-native';
+import { View, Text } from 'react-native';
 import { ChevronRight } from 'lucide-react-native';
+import ReAnimated, { useAnimatedStyle } from 'react-native-reanimated';
+import type { SharedValue } from 'react-native-reanimated';
 import { PhaseTag } from '../PhaseTag';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { getIconBackground } from './colorUtils';
@@ -26,7 +28,7 @@ interface CardHeaderProps {
   emoji: string;
   habit: Habit;
   highContrastMode: boolean;
-  iconPulse: Animated.Value;
+  iconPulse: SharedValue<number>;
   isPaused: boolean;
   name: string;
   showHabitStrengthPercentage: boolean;
@@ -46,6 +48,9 @@ export function CardHeader({
   showHabitStrengthPercentage,
   streak,
 }: CardHeaderProps) {
+  const iconPulseStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: iconPulse.value }],
+  }));
   const { colors: themeColors } = useThemeColors();
   const iconBg = getIconBackground(
     accentColor,
@@ -58,14 +63,14 @@ export function CardHeader({
   return (
     <View className='relative mb-3 flex-row items-center justify-between px-3'>
       <View className='flex-1 items-center'>
-        <Animated.View style={{ transform: [{ scale: iconPulse }] }}>
+        <ReAnimated.View style={iconPulseStyle}>
           <View
             className='h-9 w-9 items-center justify-center rounded-xl'
             style={getIconContainerStyle(iconBg, accentColor, highContrastMode)}
           >
             <Text className='text-[22px] leading-[26px]'>{emoji}</Text>
           </View>
-        </Animated.View>
+        </ReAnimated.View>
       </View>
       <View className='flex-1' />
       <View className='flex-1' />

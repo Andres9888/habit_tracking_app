@@ -24,7 +24,7 @@
 import React, { memo, useMemo } from 'react';
 import { Animated, Pressable, StyleSheet } from 'react-native';
 import { Swipeable } from 'react-native-gesture-handler';
-import ReAnimated from 'react-native-reanimated';
+import ReAnimated, { useAnimatedStyle } from 'react-native-reanimated';
 import { ArchiveAction } from './ArchiveAction';
 import { CardContent } from './CardContent';
 import { StrengthFillBackground } from '../HabitCard/components/StrengthFillBackground';
@@ -49,6 +49,10 @@ function DraggableHabitCardComponent(props: DraggableHabitCardProps) {
     isWeekComplete: props.isWeekComplete,
     translateY: props.translateY,
   });
+
+  const glowStyle = useAnimatedStyle(() => ({
+    opacity: props.highlightGlow.value,
+  }));
 
   // PERF: Memoize pressable style to prevent recreating function on every render
   const pressableStyle = useMemo(
@@ -106,15 +110,17 @@ function DraggableHabitCardComponent(props: DraggableHabitCardProps) {
                 ...StyleSheet.absoluteFillObject,
               }}
             />
-            <Animated.View
+            <ReAnimated.View
               pointerEvents='none'
-              style={{
-                borderColor: props.accentColor ?? '#a855f7',
-                borderRadius: borderRadius.xl,
-                borderWidth: 2,
-                opacity: props.highlightGlow,
-                ...StyleSheet.absoluteFillObject,
-              }}
+              style={[
+                {
+                  borderColor: props.accentColor ?? '#a855f7',
+                  borderRadius: borderRadius.xl,
+                  borderWidth: 2,
+                  ...StyleSheet.absoluteFillObject,
+                },
+                glowStyle,
+              ]}
             />
             <CardContent
               {...props}
