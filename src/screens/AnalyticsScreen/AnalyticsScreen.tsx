@@ -11,10 +11,10 @@ import { useThemeColors } from '../../theme/ThemeContext';
 import { PremiumPaywall } from '../../components/PremiumPaywall';
 import { AnalyticsScreenSkeleton } from '../../components/SkeletonLoader';
 import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
+import { ScreenHeader } from '../../components/ScreenHeader';
 import { useAnalyticsScreen } from './AnalyticsScreen.hooks';
 import { styles } from './AnalyticsScreen.styles';
 import {
-  AnalyticsHeader,
   EmptyState,
   OverviewStats,
   ChartSections,
@@ -82,7 +82,11 @@ function AnalyticsScreenContent() {
       style={[styles.container, { backgroundColor: themeColors.background }]}
     >
       <Animated.View entering={FadeInDown.delay(280).springify().damping(18)}>
-        <AnalyticsHeader />
+        <ScreenHeader
+          leftAction={null}
+          subtitle='Track your habit journey'
+          title='Analytics'
+        />
       </Animated.View>
 
       {hasNoHabits ? (

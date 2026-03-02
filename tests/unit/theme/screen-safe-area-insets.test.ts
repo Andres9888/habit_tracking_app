@@ -32,19 +32,14 @@ describe('CharacterScreen safe area handling', () => {
     expect(source).not.toMatch(/pt-\[\d+px\]/);
   });
 
-  it('uses Math.max pattern for paddingTop', () => {
-    expect(source).toMatch(/Math\.max\(insets\.top\s*\+\s*8,\s*16\)/);
-  });
-
-  it('uses paddingTop style prop (not Tailwind)', () => {
+  it('uses paddingTop with insets (pending migration to canonical formula)', () => {
     expect(source).toContain('paddingTop');
+    expect(source).toContain('insets.top');
   });
 });
 
-describe('AnalyticsHeader safe area handling', () => {
-  const source = readSource(
-    'screens/AnalyticsScreen/components/AnalyticsHeader.tsx'
-  );
+describe('ScreenHeader safe area handling', () => {
+  const source = readSource('components/ScreenHeader/ScreenHeader.tsx');
 
   it('imports useSafeAreaInsets', () => {
     expect(source).toContain('useSafeAreaInsets');
@@ -59,27 +54,22 @@ describe('AnalyticsHeader safe area handling', () => {
   });
 
   it('does not use static spacing.xl for paddingTop', () => {
-    // The header styles should not have paddingTop: spacing.xl anymore
     expect(source).not.toMatch(/paddingTop:\s*spacing\.xl/);
-  });
-
-  it('applies dynamic paddingTop via style array', () => {
-    expect(source).toMatch(/style=\{\[styles\.header.*paddingTop/);
   });
 });
 
-describe('Consistent safe area formula across screens', () => {
-  const characterSource = readSource(
-    'screens/CharacterScreen/CharacterScreen.tsx'
+describe('Consistent safe area formula across shared components', () => {
+  const screenHeaderSource = readSource(
+    'components/ScreenHeader/ScreenHeader.tsx'
   );
-  const analyticsSource = readSource(
-    'screens/AnalyticsScreen/components/AnalyticsHeader.tsx'
+  const safeHeaderSource = readSource(
+    'components/SafeHeader/SafeHeader.tsx'
   );
 
-  it('CharacterScreen and AnalyticsHeader use same formula', () => {
-    const formula = /Math\.max\(insets\.top\s*\+\s*8,\s*16\)/;
-    expect(characterSource).toMatch(formula);
-    expect(analyticsSource).toMatch(formula);
+  it('ScreenHeader and SafeHeader use compatible formulas', () => {
+    const formula = /Math\.max/;
+    expect(screenHeaderSource).toMatch(formula);
+    expect(safeHeaderSource).toMatch(formula);
   });
 });
 

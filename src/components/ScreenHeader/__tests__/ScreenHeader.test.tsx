@@ -74,4 +74,28 @@ describe('ScreenHeader', () => {
     // Setting to null or false would hide it
     expect(queryByLabelText('Go back')).toBeTruthy();
   });
+
+  it('renders subtitle text', () => {
+    const { getByText } = render(
+      <ScreenHeader
+        leftAction={null}
+        subtitle="Track your habit journey"
+        title="Analytics"
+      />
+    );
+    expect(getByText('Track your habit journey')).toBeTruthy();
+  });
+
+  it('renders left-aligned title without navigation actions', () => {
+    const { getByText, queryByLabelText } = render(
+      <ScreenHeader leftAction={null} title="Analytics" />
+    );
+    expect(getByText('Analytics')).toBeTruthy();
+    expect(queryByLabelText('Go back')).toBeNull();
+  });
+
+  it('does not render subtitle when not provided', () => {
+    const { queryByText } = render(<ScreenHeader title="Settings" />);
+    expect(queryByText('Track your habit journey')).toBeNull();
+  });
 });
