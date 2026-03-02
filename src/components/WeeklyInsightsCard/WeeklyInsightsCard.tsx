@@ -5,7 +5,12 @@
 
 import React, { useState } from 'react';
 import { View, Text, ScrollView } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import {
+  Archive,
+  ArrowUpCircle,
+  ArrowDownCircle,
+  AlertTriangle,
+} from 'lucide-react-native';
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import { colors } from '../../theme/colors';
 import type { WeeklyInsightsCardProps } from './WeeklyInsightsCard.types';
@@ -44,9 +49,9 @@ export default function WeeklyInsightsCard({
       />
 
       <HabitListSection
+        Icon={ArrowUpCircle}
         habits={insights.gainedStrength}
         iconColor={colors.success}
-        iconName='arrow-up-circle'
         isExpanded={expandedSection === 'gained'}
         title='Habits Gained Strength'
         type='gained'
@@ -55,11 +60,11 @@ export default function WeeklyInsightsCard({
       />
 
       <HabitListSection
+        Icon={ArrowDownCircle}
         badgeBgColor={colors.errorLight}
         badgeTextColor={colors.error}
         habits={insights.lostStrength}
         iconColor={colors.error}
-        iconName='arrow-down-circle'
         isExpanded={expandedSection === 'lost'}
         title='Habits Lost Strength'
         type='lost'
@@ -68,11 +73,11 @@ export default function WeeklyInsightsCard({
       />
 
       <HabitListSection
+        Icon={AlertTriangle}
         badgeBgColor={colors.warningLight}
         badgeTextColor={colors.warning}
         habits={insights.atRisk}
         iconColor={colors.warning}
-        iconName='warning'
         isExpanded={expandedSection === 'risk'}
         title='Habits at Risk'
         type='risk'
@@ -88,7 +93,7 @@ export default function WeeklyInsightsCard({
         style={styles.archiveButton}
         onPress={onArchivePress}
       >
-        <Ionicons color={colors.text.secondary} name='archive' size={20} />
+        <Archive color={colors.text.secondary} size={20} />
         <Text style={styles.archiveButtonText}>View Past Reports</Text>
       </AnimatedPressable>
 

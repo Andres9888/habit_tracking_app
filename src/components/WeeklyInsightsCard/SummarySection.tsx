@@ -5,7 +5,13 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import {
+  Calendar,
+  ChevronUp,
+  ChevronDown,
+  TrendingUp,
+  TrendingDown,
+} from 'lucide-react-native';
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import { colors } from '../../theme/colors';
 import type { WeeklyInsights } from './WeeklyInsightsCard.types';
@@ -25,7 +31,7 @@ export function SummarySection({
 }: SummarySectionProps) {
   const isPositive = insights.weekOverWeekChange >= 0;
   const changeColor = isPositive ? colors.success : colors.error;
-  const changeIcon = isPositive ? 'trending-up' : 'trending-down';
+  const ChangeIcon = isPositive ? TrendingUp : TrendingDown;
 
   return (
     <AnimatedPressable
@@ -37,14 +43,14 @@ export function SummarySection({
     >
       <View style={styles.sectionHeader}>
         <View style={styles.sectionHeaderLeft}>
-          <Ionicons color={colors.primary[500]} name='calendar' size={20} />
+          <Calendar color={colors.primary[500]} size={20} />
           <Text style={styles.sectionTitle}>This Week's Summary</Text>
         </View>
-        <Ionicons
-          color={colors.text.tertiary}
-          name={isExpanded ? 'chevron-up' : 'chevron-down'}
-          size={20}
-        />
+        {isExpanded ? (
+          <ChevronUp color={colors.text.tertiary} size={20} />
+        ) : (
+          <ChevronDown color={colors.text.tertiary} size={20} />
+        )}
       </View>
 
       {isExpanded && (
@@ -53,7 +59,7 @@ export function SummarySection({
             <View style={summaryStyles.summaryRow}>
               <Text style={summaryStyles.summaryLabel}>Overall Change</Text>
               <View style={summaryStyles.summaryValueContainer}>
-                <Ionicons color={changeColor} name={changeIcon} size={16} />
+                <ChangeIcon color={changeColor} size={16} />
                 <Text
                   style={[summaryStyles.summaryValue, { color: changeColor }]}
                 >

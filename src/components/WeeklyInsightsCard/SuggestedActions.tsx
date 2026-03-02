@@ -5,7 +5,7 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { Bell, Lightbulb } from 'lucide-react-native';
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import { colors } from '../../theme/colors';
 import { suggestedActionsStyles as styles } from './SuggestedActions.styles';
@@ -19,7 +19,7 @@ export function SuggestedActions() {
         accessibilityRole='button'
         style={styles.actionButton}
       >
-        <Ionicons color={colors.primary[500]} name='notifications' size={16} />
+        <Bell color={colors.primary[500]} size={16} />
         <Text style={styles.actionButtonText}>
           Set reminders for at-risk habits
         </Text>
@@ -29,7 +29,7 @@ export function SuggestedActions() {
         accessibilityRole='button'
         style={styles.actionButton}
       >
-        <Ionicons color={colors.primary[500]} name='bulb' size={16} />
+        <Lightbulb color={colors.primary[500]} size={16} />
         <Text style={styles.actionButtonText}>Review habit difficulty</Text>
       </AnimatedPressable>
     </View>

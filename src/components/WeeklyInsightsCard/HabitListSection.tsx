@@ -3,24 +3,21 @@
  * Collapsible section for habit lists (gained, lost, at-risk)
  */
 
-import type { ComponentProps } from 'react';
 import React from 'react';
 import { View, Text } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import type { LucideIcon } from 'lucide-react-native';
+import { ChevronUp, ChevronDown } from 'lucide-react-native';
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import { colors } from '../../theme/colors';
 import type { HabitChange, HabitChangeType } from './WeeklyInsightsCard.types';
 import { styles } from './WeeklyInsightsCard.styles';
 import { HabitItem } from './HabitItem';
 
-/** Valid Ionicons icon name */
-type IconName = ComponentProps<typeof Ionicons>['name'];
-
 interface HabitListSectionProps {
   habits: HabitChange[];
   title: string;
   type: HabitChangeType;
-  iconName: IconName;
+  Icon: LucideIcon;
   iconColor: string;
   badgeBgColor?: string;
   badgeTextColor?: string;
@@ -34,7 +31,7 @@ export function HabitListSection({
   habits,
   title,
   type,
-  iconName,
+  Icon,
   iconColor,
   badgeBgColor = '#D1FAE5',
   badgeTextColor = colors.success,
@@ -55,7 +52,7 @@ export function HabitListSection({
     >
       <View style={styles.sectionHeader}>
         <View style={styles.sectionHeaderLeft}>
-          <Ionicons color={iconColor} name={iconName} size={20} />
+          <Icon color={iconColor} size={20} />
           <Text style={styles.sectionTitle}>{title}</Text>
           <View style={[styles.badge, { backgroundColor: badgeBgColor }]}>
             <Text style={[styles.badgeText, { color: badgeTextColor }]}>
@@ -63,11 +60,11 @@ export function HabitListSection({
             </Text>
           </View>
         </View>
-        <Ionicons
-          color={colors.text.tertiary}
-          name={isExpanded ? 'chevron-up' : 'chevron-down'}
-          size={20}
-        />
+        {isExpanded ? (
+          <ChevronUp color={colors.text.tertiary} size={20} />
+        ) : (
+          <ChevronDown color={colors.text.tertiary} size={20} />
+        )}
       </View>
 
       {isExpanded && (
