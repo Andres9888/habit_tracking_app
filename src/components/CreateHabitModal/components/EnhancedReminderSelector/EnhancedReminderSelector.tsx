@@ -20,6 +20,7 @@ import { NextReminderBadge } from '../NextReminderBadge';
 import { DEFAULT_PRESETS } from './constants';
 import { useReminderSelector } from './useReminderSelector';
 import { ToggleRow } from './ToggleRow';
+import { PermissionBanner } from './PermissionBanner';
 import { PresetButton } from './PresetButton';
 import { CustomTimeButton } from './CustomTimeButton';
 import type { EnhancedReminderSelectorProps } from './types';
@@ -56,11 +57,13 @@ export function EnhancedReminderSelector(
     handleCustomTimePress,
     handleCustomTimeConfirm,
     handleToggle,
+    permissionDenied,
   } = useReminderSelector({ onTimeChange, onToggle, presets, reminderTime });
 
   return (
     <View className='mb-6' testID='enhanced-reminder-selector'>
-      <ToggleRow enabled={enabled} onToggle={handleToggle} />
+      <ToggleRow enabled={enabled} onToggle={(v) => void handleToggle(v)} />
+      <PermissionBanner visible={enabled && permissionDenied} />
 
       {enabled && (
         <View className='mt-4'>

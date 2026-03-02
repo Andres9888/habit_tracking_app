@@ -3,7 +3,8 @@
  */
 
 import { useCallback, useMemo, useState } from 'react';
-import { AccessibilityInfo, Keyboard } from 'react-native';
+import { AccessibilityInfo, Keyboard, Platform } from 'react-native';
+import * as Notifications from 'expo-notifications';
 import useHapticFeedback from '../../../../hooks/useHapticFeedback';
 import { formatReminderTime } from '../../../../utils/notifications';
 import type { ReminderPreset } from './types';
@@ -22,6 +23,7 @@ export function useReminderSelector({
   onToggle,
 }: UseReminderSelectorParams) {
   const [showTimePicker, setShowTimePicker] = useState(false);
+  const [permissionDenied, setPermissionDenied] = useState(false);
   const { triggerSelection } = useHapticFeedback();
 
   const selectedPreset = useMemo(() => {
@@ -73,10 +75,18 @@ export function useReminderSelector({
   );
 
   const handleToggle = useCallback(
-    (value: boolean) => {
+    async (value: boolean) => {
       Keyboard.dismiss();
       triggerSelection();
       onToggle(value);
+
+      if (value && Platform.OS !== 'web') {
+        const { status } = await Notifications.getPermissionsAsync();
+        setPermissionDenied(status !== 'granted');
+      } else {
+        setPermissionDenied(false);
+      }
+
       AccessibilityInfo.announceForAccessibility(
         value ? 'Reminders enabled' : 'Reminders disabled'
       );
@@ -91,6 +101,7 @@ export function useReminderSelector({
     handlePresetSelect,
     handleToggle,
     isCustomTime,
+    permissionDenied,
     selectedPreset,
     setShowTimePicker,
     showTimePicker,
