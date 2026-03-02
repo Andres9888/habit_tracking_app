@@ -12,6 +12,7 @@ import {
   withTiming,
   Easing,
 } from 'react-native-reanimated';
+import { springs } from '@/theme/animations';
 import { useReduceMotion } from '../../hooks/useReduceMotion';
 import { useToggleHabitWithTimezone } from '../../hooks/useToggleHabitWithTimezone';
 import { useQuickCompleteAnimations } from './useQuickCompleteAnimations';
@@ -88,7 +89,7 @@ export function useQuickCompleteButton({
     } else {
       checkScale.value = withSequence(
         withSpring(1.3, { damping: 6, stiffness: 200 }),
-        withSpring(1, { damping: 10, stiffness: 180 })
+        withSpring(1, springs.bouncy)
       );
       checkRotation.value = withTiming(0, {
         duration: 300,

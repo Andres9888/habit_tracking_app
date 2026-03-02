@@ -67,7 +67,7 @@ export function useStrengthRingAnimation({
         150,
         withSequence(
           withSpring(1.4, { damping: 6, stiffness: 120 }),
-          withSpring(1, { damping: 10, stiffness: 180 })
+          withSpring(1, springs.bouncy)
         )
       );
     } else {
