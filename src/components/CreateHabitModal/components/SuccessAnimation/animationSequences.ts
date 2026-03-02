@@ -57,7 +57,7 @@ export function runEntranceSequence(values: AnimatedValues) {
   const step3Delay = step2Delay + 300;
   iconScale.value = withDelay(
     step3Delay,
-    withSpring(1, { damping: 8, stiffness: 300, mass: 1 })
+    withSpring(1, springs.pop)
   );
 
   // Step 4: Text fades in (after icon — estimate spring ~250ms)

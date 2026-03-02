@@ -6,11 +6,12 @@ import {
   runOnJS,
 } from 'react-native-reanimated';
 import { Dimensions } from 'react-native';
+import { springs } from '@/theme/animations';
 
 const DISMISS_THRESHOLD = 100;
 const VELOCITY_THRESHOLD = 500;
 const SCREEN_HEIGHT = Dimensions.get('window').height;
-const SPRING_CONFIG = { damping: 20, stiffness: 150 };
+const SPRING_CONFIG = springs.standard;
 
 export function usePanGesture(onDismiss: () => void) {
   const translateY = useSharedValue(0);

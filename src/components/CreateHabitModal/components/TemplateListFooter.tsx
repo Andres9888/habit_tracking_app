@@ -82,7 +82,7 @@ export const TemplateListFooter = ({ onClose }: TemplateListFooterProps) => {
 
   const handlePressOut = () => {
     if (!reduceMotion) {
-      scale.value = withSpring(1, { damping: 15, stiffness: 300 });
+      scale.value = withSpring(1, springs.responsive);
     }
   };
 

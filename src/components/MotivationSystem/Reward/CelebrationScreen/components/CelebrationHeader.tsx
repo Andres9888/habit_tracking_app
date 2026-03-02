@@ -14,6 +14,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { PartyPopper, Crown } from 'lucide-react-native';
 
+import { springs } from '@/theme/animations';
 import { SPRING_BOUNCY } from '../constants';
 import { ConfettiBurst } from './animations';
 import type { CelebrationHeaderProps } from '../types';
@@ -37,7 +38,7 @@ export function CelebrationHeader({
     iconScale.value = withSequence(
       withTiming(0, { duration: 0 }),
       withDelay(100, withSpring(1.2, SPRING_BOUNCY)),
-      withSpring(1, { damping: 12, stiffness: 200 })
+      withSpring(1, springs.celebration)
     );
 
     // Subtle wiggle

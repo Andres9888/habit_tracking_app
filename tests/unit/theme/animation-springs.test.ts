@@ -8,17 +8,21 @@ import { springs } from '@/theme/animations';
 import { Springs } from '@/constants/motion';
 
 describe('Canonical spring presets in @/theme/animations', () => {
-  it('has exactly 11 spring presets', () => {
+  it('has exactly 15 spring presets', () => {
     const keys = Object.keys(springs).sort();
     expect(keys).toEqual([
       'bottomSheet',
       'bouncy',
       'button',
+      'celebration',
       'exit',
       'gentle',
       'gesture',
       'micro',
+      'pop',
       'pulse',
+      'responsive',
+      'settle',
       'sheet',
       'snappy',
       'standard',
@@ -51,6 +55,22 @@ describe('Canonical spring presets in @/theme/animations', () => {
 
   it('micro: damping 18, stiffness 150', () => {
     expect(springs.micro).toEqual({ damping: 18, stiffness: 150 });
+  });
+
+  it('celebration: damping 12, stiffness 200', () => {
+    expect(springs.celebration).toEqual({ damping: 12, stiffness: 200 });
+  });
+
+  it('pop: damping 8, stiffness 300', () => {
+    expect(springs.pop).toEqual({ damping: 8, stiffness: 300 });
+  });
+
+  it('responsive: damping 15, stiffness 300', () => {
+    expect(springs.responsive).toEqual({ damping: 15, stiffness: 300 });
+  });
+
+  it('settle: damping 28, mass 1, stiffness 180', () => {
+    expect(springs.settle).toEqual({ damping: 28, mass: 1, stiffness: 180 });
   });
 });
 

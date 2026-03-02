@@ -76,7 +76,7 @@ export function useQuickCompleteButton({
     );
     buttonScale.value = withSequence(
       withTiming(0.96, { duration: 80 }),
-      withSpring(1, { damping: 12, stiffness: 200 })
+      withSpring(1, springs.celebration)
     );
 
     const wasCompleted = localCompleted;

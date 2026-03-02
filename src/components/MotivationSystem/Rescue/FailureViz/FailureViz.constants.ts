@@ -3,6 +3,8 @@
  * Animation configurations for failure visualization
  */
 
+import { springs } from '@/theme/animations';
+
 // Animation spring configs
-export const SPRING_BOUNCY = { damping: 8, stiffness: 300 };
-export const SPRING_GENTLE = { damping: 28, mass: 1, stiffness: 180 };
+export const SPRING_BOUNCY = springs.pop;
+export const SPRING_GENTLE = springs.settle;

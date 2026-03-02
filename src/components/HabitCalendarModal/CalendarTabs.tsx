@@ -11,6 +11,7 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
+import { springs } from '@/theme/animations';
 import { TabButton } from './TabButton';
 
 type CalendarView = 'month' | 'year';
@@ -20,7 +21,7 @@ interface CalendarTabsProps {
   onViewChange: (view: CalendarView) => void;
 }
 
-const SPRING_CONFIG = { damping: 18, mass: 1, stiffness: 180 };
+const SPRING_CONFIG = springs.standard;
 const PADDING = 4;
 
 export function CalendarTabs({ activeView, onViewChange }: CalendarTabsProps) {

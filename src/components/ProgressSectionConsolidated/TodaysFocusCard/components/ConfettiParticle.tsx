@@ -17,6 +17,7 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import { styles } from '../TodaysFocusCard.styles';
+import { springs } from '@/theme/animations';
 
 export interface ConfettiParticleProps {
   angle: number;
@@ -55,16 +56,16 @@ export const ConfettiParticle = React.memo(function ConfettiParticle({
       // Animate outward with spring physics
       translateX.value = withDelay(
         delay,
-        withSpring(targetX, { damping: 12, mass: 1, stiffness: 200 })
+        withSpring(targetX, springs.celebration)
       );
       translateY.value = withDelay(
         delay,
-        withSpring(targetY, { damping: 12, mass: 1, stiffness: 200 })
+        withSpring(targetY, springs.celebration)
       );
       scale.value = withDelay(
         delay,
         withSequence(
-          withSpring(1.3, { damping: 8, stiffness: 300 }),
+          withSpring(1.3, springs.pop),
           withTiming(0, { duration: 400, easing: Easing.out(Easing.ease) })
         )
       );

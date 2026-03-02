@@ -2,8 +2,10 @@
  * Constants for PreviousStreakVoiceNotes component
  */
 
+import { springs } from '@/theme/animations';
+
 // Animation spring configs
-export const SPRING_BUTTON = { damping: 15, stiffness: 300 };
+export const SPRING_BUTTON = springs.responsive;
 
 /**
  * Format days ago text for display

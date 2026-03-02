@@ -11,8 +11,9 @@ import {
   withDelay,
 } from 'react-native-reanimated';
 import type { EmptyStateVariant } from './types';
+import { springs } from '@/theme/animations';
 
-const SPRING_CONFIG = { damping: 15, stiffness: 150 };
+const SPRING_CONFIG = springs.standard;
 
 export function useEmptyStateAnimations(variant: EmptyStateVariant) {
   const iconOpacity = useSharedValue(0);

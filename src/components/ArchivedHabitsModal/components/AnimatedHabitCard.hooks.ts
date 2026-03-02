@@ -5,6 +5,7 @@ import {
   withTiming,
   Easing,
 } from 'react-native-reanimated';
+import { springs } from '@/theme/animations';
 import { useCardAnimatedStyles } from './useCardAnimatedStyles';
 import { EXIT_ANIMATION_DURATION } from '../utils';
 import type { Id } from '../../../../convex/_generated/dataModel';
@@ -46,8 +47,8 @@ export const useAnimatedHabitCard = ({
       setShowSuccess(true);
 
       successScale.value = withSequence(
-        withSpring(1.2, { damping: 10, stiffness: 200 }),
-        withSpring(1, { damping: 15, stiffness: 150 })
+        withSpring(1.2, springs.celebration),
+        withSpring(1, springs.standard)
       );
 
       setTimeout(() => {

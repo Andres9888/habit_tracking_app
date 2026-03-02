@@ -13,6 +13,7 @@ import {
 } from 'react-native-reanimated';
 import ConfettiCannon from 'react-native-confetti-cannon';
 import { triggerHaptic } from '@/utils/haptics';
+import { springs } from '@/theme/animations';
 
 interface UseSuccessAnimationsProps {
   isImported: boolean;
@@ -62,11 +63,11 @@ export const useSuccessAnimations = ({
         );
         checkmarkScale.value = withDelay(
           100,
-          withSpring(1, { damping: 6, mass: 1, stiffness: 180 })
+          withSpring(1, springs.bouncy)
         );
         checkmarkRotation.value = withDelay(
           100,
-          withSpring(0, { damping: 10, stiffness: 150 })
+          withSpring(0, springs.standard)
         );
         successButtonGlow.value = withDelay(
           200,
@@ -80,8 +81,8 @@ export const useSuccessAnimations = ({
         successIconBounce.value = withDelay(
           300,
           withSequence(
-            withSpring(-3, { damping: 8, stiffness: 300 }),
-            withSpring(0, { damping: 12, stiffness: 200 })
+            withSpring(-3, springs.pop),
+            withSpring(0, springs.celebration)
           )
         );
       }

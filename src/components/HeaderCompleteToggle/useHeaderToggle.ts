@@ -11,6 +11,7 @@ import {
   withSpring,
 } from 'react-native-reanimated';
 import type { Id } from '../../../convex/_generated/dataModel';
+import { springs } from '@/theme/animations';
 import { useToggleHabitWithTimezone } from '../../hooks/useToggleHabitWithTimezone';
 import { useReduceMotion } from '../../hooks/useReduceMotion';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
@@ -68,7 +69,7 @@ export function useHeaderToggle({
     // Button animation
     buttonScale.value = withSequence(
       withTiming(0.95, { duration: 60 }),
-      withSpring(1, { damping: 12, stiffness: 200 })
+      withSpring(1, springs.celebration)
     );
 
     // Optimistic update

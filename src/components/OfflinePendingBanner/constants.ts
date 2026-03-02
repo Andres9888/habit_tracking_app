@@ -1,4 +1,5 @@
 import type { OfflineSubmissionType } from '../../hooks/useOfflineQueue';
+import { springs } from '@/theme/animations';
 
 // Submission type display names
 export const TYPE_LABELS: Record<OfflineSubmissionType, string> = {
@@ -11,7 +12,4 @@ export const TYPE_LABELS: Record<OfflineSubmissionType, string> = {
 };
 
 // Animation constants
-export const SPRING_CONFIG = {
-  damping: 15,
-  stiffness: 150,
-};
+export const SPRING_CONFIG = springs.standard;

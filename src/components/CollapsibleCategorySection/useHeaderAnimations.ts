@@ -64,12 +64,12 @@ export function useHeaderAnimations({
     // Trigger icon bounce when expanding (not collapsing)
     if (!isExpanded && !reducedMotion) {
       iconBounce.value = withSequence(
-        withSpring(-4, { damping: 8, stiffness: 300 }),
-        withSpring(0, { damping: 12, stiffness: 200 })
+        withSpring(-4, springs.pop),
+        withSpring(0, springs.celebration)
       );
       iconScale.value = withSequence(
-        withSpring(1.15, { damping: 8, stiffness: 300 }),
-        withSpring(1, { damping: 10, stiffness: 200 })
+        withSpring(1.15, springs.pop),
+        withSpring(1, springs.celebration)
       );
     }
 

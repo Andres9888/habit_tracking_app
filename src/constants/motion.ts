@@ -68,6 +68,14 @@ export const Springs: typeof springs = {
   pulse: makeReadOnlySpringConfig(springs.pulse as WithSpringConfig),
   sheet: makeReadOnlySpringConfig(springs.sheet as WithSpringConfig),
   snappy: makeReadOnlySpringConfig(springs.snappy as WithSpringConfig),
+  celebration: makeReadOnlySpringConfig(
+    springs.celebration as WithSpringConfig,
+  ),
+  pop: makeReadOnlySpringConfig(springs.pop as WithSpringConfig),
+  responsive: makeReadOnlySpringConfig(
+    springs.responsive as WithSpringConfig,
+  ),
+  settle: makeReadOnlySpringConfig(springs.settle as WithSpringConfig),
 };
 Object.freeze(Springs);
 

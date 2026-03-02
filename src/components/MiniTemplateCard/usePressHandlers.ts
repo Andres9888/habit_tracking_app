@@ -4,6 +4,7 @@
 
 import { SharedValue, withSpring, withTiming } from 'react-native-reanimated';
 import { triggerHaptic } from '@/utils/haptics';
+import { springs } from '@/theme/animations';
 import {
   CARD_PRESS_SPRING_CONFIG,
   CARD_PRESS_SCALE,
@@ -32,7 +33,7 @@ export function createPressHandlers(
       pressScale.value = withSpring(CARD_PRESS_SCALE, CARD_PRESS_SPRING_CONFIG);
       shadowElevation.value = withTiming(8, { duration: 100 });
       pressRotation.value = withSpring(-0.5, { damping: 20, stiffness: 400 });
-      chevronTranslate.value = withSpring(2, { damping: 15, stiffness: 300 });
+      chevronTranslate.value = withSpring(2, springs.responsive);
     }
   };
 
@@ -40,8 +41,8 @@ export function createPressHandlers(
     pressScale.value = withSpring(CARD_REST_SCALE, CARD_PRESS_SPRING_CONFIG);
     if (!reducedMotion) {
       shadowElevation.value = withTiming(3, { duration: 150 });
-      pressRotation.value = withSpring(0, { damping: 15, stiffness: 300 });
-      chevronTranslate.value = withSpring(0, { damping: 15, stiffness: 300 });
+      pressRotation.value = withSpring(0, springs.responsive);
+      chevronTranslate.value = withSpring(0, springs.responsive);
     }
   };
 

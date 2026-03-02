@@ -1,3 +1,4 @@
+import { springs } from '@/theme/animations';
 import type { EmojiOption } from './QuickReflection.types';
 
 export const EMOJI_OPTIONS: EmojiOption[] = [
@@ -7,7 +8,4 @@ export const EMOJI_OPTIONS: EmojiOption[] = [
   { emoji: '🔥', label: 'On Fire', type: 'fire' },
 ];
 
-export const SPRING_BOUNCY = {
-  damping: 8,
-  stiffness: 300,
-};
+export const SPRING_BOUNCY = springs.pop;

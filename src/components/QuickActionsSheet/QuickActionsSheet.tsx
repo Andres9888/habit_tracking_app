@@ -23,6 +23,7 @@ import { useThemeColors } from '../../theme/ThemeContext';
 import type { QuickActionsSheetProps } from './types';
 import { SheetHeader } from './SheetHeader';
 import { ActionsList } from './ActionsList';
+import { springs } from '@/theme/animations';
 import { triggerHaptic } from '@/utils/haptics';
 
 const DISMISS_THRESHOLD = 100;
@@ -69,13 +70,10 @@ export const QuickActionsSheet = ({
         event.translationY > DISMISS_THRESHOLD ||
         velocityY > VELOCITY_THRESHOLD
       ) {
-        translateY.value = withSpring(SCREEN_HEIGHT, {
-          damping: 20,
-          stiffness: 150,
-        });
+        translateY.value = withSpring(SCREEN_HEIGHT, springs.standard);
         runOnJS(handleDismiss)();
       } else {
-        translateY.value = withSpring(0, { damping: 20, stiffness: 150 });
+        translateY.value = withSpring(0, springs.standard);
       }
     });
 

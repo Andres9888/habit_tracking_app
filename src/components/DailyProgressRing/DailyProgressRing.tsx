@@ -56,7 +56,7 @@ function DailyProgressRingComponent({
     // Subtle scale pulse when progress changes (premium micro-interaction)
     if (target > 0) {
       ringScale.value = withSequence(
-        withSpring(1.04, { damping: 12, stiffness: 200 }),
+        withSpring(1.04, springs.celebration),
         withSpring(1, springs.standard)
       );
     }

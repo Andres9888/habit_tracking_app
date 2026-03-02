@@ -15,6 +15,7 @@ import {
 } from 'react-native-reanimated';
 import ConfettiCannon from 'react-native-confetti-cannon';
 
+import { springs } from '@/theme/animations';
 import { SPRING_BOUNCY, SPRING_EXIT, SPRING_ICON } from './constants';
 import { triggerHaptic } from '@/utils/haptics';
 
@@ -73,7 +74,7 @@ export function useCelebrationAnimations({ visible, reducedMotion }: Params) {
     );
     badgeScale.value = withDelay(
       700,
-      withSpring(1, { damping: 6, stiffness: 200 })
+      withSpring(1, springs.celebration)
     );
     glowOpacity.value = withDelay(
       200,

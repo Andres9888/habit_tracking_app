@@ -30,7 +30,7 @@ export function useSpotlightAnimations(animationDelay: number) {
     );
     cardScale.value = withDelay(
       animationDelay,
-      withSpring(1, { damping: 15, stiffness: 100 })
+      withSpring(1, springs.gentle)
     );
 
     shimmerPosition.value = withDelay(

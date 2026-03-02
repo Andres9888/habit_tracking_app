@@ -52,7 +52,7 @@ export function animateLevelUp(
     150,
     withSequence(
       // Grow with overshoot (blossoming)
-      withSpring(1.4, { damping: 6, stiffness: 120 }),
+      withSpring(1.4, springs.bouncy),
       // Settle to final size (rooted)
       withSpring(1, springs.bouncy)
     )

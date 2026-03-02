@@ -101,6 +101,18 @@ export const springs = {
 
   /** Quick response with slight bounce (same as standard) */
   snappy: { damping: 18, stiffness: 150 },
+
+  /** Celebration bounce — completion badges, progress pops */
+  celebration: { damping: 12, stiffness: 200 },
+
+  /** Explosive pop — confetti scale, fast expansion */
+  pop: { damping: 8, stiffness: 300 },
+
+  /** Responsive button — snappy interactive feedback */
+  responsive: { damping: 15, stiffness: 300 },
+
+  /** Heavy settling — high damping for stable modal/sheet transitions */
+  settle: { damping: 28, mass: 1, stiffness: 180 },
 } as const;
 
 export type Duration = keyof typeof durations;

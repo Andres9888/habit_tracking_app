@@ -20,6 +20,6 @@ export const FALLBACK_COLOR = '#22c55e';
 export const ICON_BADGE_SIZE = 40;
 
 /** Spring configs for animations */
-export const SPRING_BOUNCY = { damping: 12, stiffness: 120 };
-export const SPRING_ICON = { damping: 8, mass: 0.8, stiffness: 180 };
+export const SPRING_BOUNCY = springs.bouncy;
+export const SPRING_ICON = springs.bouncy;
 export const SPRING_EXIT = springs.standard;

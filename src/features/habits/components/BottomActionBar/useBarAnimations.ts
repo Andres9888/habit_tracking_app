@@ -17,6 +17,7 @@ import {
 } from 'react-native-reanimated';
 import { SPRING_CONFIGS } from '../../../../utils/animations/helpers';
 import { HapticPatterns } from '../../../../utils/haptics';
+import { springs } from '@/theme/animations';
 
 export type { CelebrationAnimStyles } from './useCelebrationAnimations';
 
@@ -24,7 +25,7 @@ const ICON_SCALE = 0.96;
 const FAB_SCALE = 0.94;
 const FAB_LIFT = -2;
 const SPRING = SPRING_CONFIGS.snappy;
-const BOUNCE = { damping: 8, stiffness: 300 };
+const BOUNCE = springs.pop;
 
 const fireTapHaptic = () => HapticPatterns.tap();
 const fireToggleHaptic = () => HapticPatterns.toggle();

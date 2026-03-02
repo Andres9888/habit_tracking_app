@@ -11,12 +11,13 @@ import {
   withTiming,
   type SharedValue,
 } from 'react-native-reanimated';
+import { springs } from '@/theme/animations';
 import { CARD_PRESS_SCALE } from '../../../../utils/animations/cardPressAnimation';
 import { Springs } from '../../../../constants/motion';
 
 const SLIDE_UP_DISTANCE = -2;
 const SLIDE_TIMING_MS = 100;
-const SLIDE_BOUNCE_SPRING = { damping: 8, stiffness: 100 };
+const SLIDE_BOUNCE_SPRING = springs.bouncy;
 
 export function useButtonAnimations(reduceMotion: boolean) {
   const scale = useSharedValue(1);

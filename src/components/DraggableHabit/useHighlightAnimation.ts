@@ -8,6 +8,7 @@
 import { useEffect } from 'react';
 import type { SharedValue } from 'react-native-reanimated';
 import { withSequence, withSpring } from 'react-native-reanimated';
+import { springs } from '@/theme/animations';
 import { runHighlightGlow } from './highlightAnimations';
 
 export function useHighlightAnimation(
@@ -27,7 +28,7 @@ export function useHighlightAnimation(
       // Glow and card bounce start concurrently
       runHighlightGlow(highlightGlow);
       cardScale.value = withSequence(
-        withSpring(1.04, { damping: 12, stiffness: 200 }),
+        withSpring(1.04, springs.celebration),
         withSpring(1, { damping: 15, stiffness: 250 })
       );
     }, 200);

@@ -16,12 +16,12 @@ import {
 } from 'react-native-reanimated';
 import { springs } from '@/theme/animations';
 
-const BOUNCE_SPRING = { damping: 12, stiffness: 200 };
+const BOUNCE_SPRING = springs.celebration;
 const COMPLETION_SPRING = springs.standard;
 const CROSSFADE_MS = 150;
 const REVERT_DELAY_MS = 3500;
 const REVERT_MS = 800;
-const REVERT_SPRING = { damping: 14, stiffness: 120 };
+const REVERT_SPRING = springs.standard;
 
 export interface CelebrationAnimStyles {
   plusStyle: { opacity: number; transform: { scale: number }[] };

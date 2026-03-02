@@ -14,9 +14,10 @@ import Animated, {
   Easing,
 } from 'react-native-reanimated';
 import { styles } from './styles';
+import { springs } from '@/theme/animations';
 
-const SPRING_CONFIG = { damping: 12, mass: 1, stiffness: 200 };
-const SCALE_SPRING = { damping: 8, stiffness: 300 };
+const SPRING_CONFIG = springs.celebration;
+const SCALE_SPRING = springs.pop;
 
 interface ConfettiParticleProps {
   angle: number;

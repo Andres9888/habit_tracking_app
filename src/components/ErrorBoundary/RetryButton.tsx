@@ -14,10 +14,11 @@ import Animated, {
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { fontFamilies } from '@/theme/typography';
+import { springs } from '@/theme/animations';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
-const SPRING_CONFIG = { damping: 15, stiffness: 150 };
+const SPRING_CONFIG = springs.standard;
 
 interface RetryButtonProps {
   onRetry: () => void;

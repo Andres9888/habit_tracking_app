@@ -19,7 +19,7 @@ import { springs } from '@/theme/animations';
 
 /** Design-system spring: damping 18, stiffness 150 */
 const STREAK_SPRING = springs.standard;
-const BOUNCE_SPRING = { damping: 12, stiffness: 200 };
+const BOUNCE_SPRING = springs.celebration;
 
 interface StreakBadgeProps {
   currentStreak: number;

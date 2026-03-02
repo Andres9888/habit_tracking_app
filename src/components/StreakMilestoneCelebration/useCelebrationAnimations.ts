@@ -8,9 +8,10 @@ import {
   withSequence,
   Easing,
 } from 'react-native-reanimated';
+import { springs } from '@/theme/animations';
 import { ANIMATION_TIMING } from './constants';
 
-const SPRING_CONFIG = { damping: 18, mass: 1, stiffness: 180 };
+const SPRING_CONFIG = springs.standard;
 
 export function useCelebrationAnimations(
   visible: boolean,

@@ -16,6 +16,7 @@ import {
 } from 'react-native-reanimated';
 
 import { DISMISS_THRESHOLD, DEFAULT_DURATION } from './types';
+import { springs } from '@/theme/animations';
 
 interface UseArchiveUndoToastParams {
   visible: boolean;
@@ -44,7 +45,7 @@ export function useArchiveUndoToast({
 
   // Handle dismiss
   const handleDismiss = useCallback(() => {
-    translateY.value = withSpring(100, { damping: 15, stiffness: 150 });
+    translateY.value = withSpring(100, springs.standard);
     opacity.value = withTiming(0, { duration: 200 });
     progressWidth.value = 100;
 
@@ -63,7 +64,7 @@ export function useArchiveUndoToast({
   useEffect(() => {
     if (visible) {
       progressWidth.value = 100;
-      translateY.value = withSpring(0, { damping: 15, stiffness: 150 });
+      translateY.value = withSpring(0, springs.standard);
       opacity.value = withTiming(1, { duration: 200 });
       progressWidth.value = withTiming(0, {
         duration: duration,
@@ -73,7 +74,7 @@ export function useArchiveUndoToast({
       const timer = setTimeout(() => handleDismiss(), duration);
       return () => clearTimeout(timer);
     } else {
-      translateY.value = withSpring(100, { damping: 15, stiffness: 150 });
+      translateY.value = withSpring(100, springs.standard);
       opacity.value = withTiming(0, { duration: 200 });
     }
   }, [visible, duration, handleDismiss, translateY, opacity, progressWidth]);
@@ -91,7 +92,7 @@ export function useArchiveUndoToast({
       if (event.translationY > DISMISS_THRESHOLD || velocityY > 500) {
         runOnJS(handleDismiss)();
       } else {
-        translateY.value = withSpring(0, { damping: 15, stiffness: 150 });
+        translateY.value = withSpring(0, springs.standard);
         opacity.value = withTiming(1, { duration: 150 });
       }
     });

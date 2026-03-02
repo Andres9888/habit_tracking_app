@@ -4,6 +4,7 @@ import {
   withTiming,
   type SharedValue,
 } from 'react-native-reanimated';
+import { springs } from '@/theme/animations';
 
 interface UseTemplateListItemHandlersProps {
   templateScale: SharedValue<number>;
@@ -27,7 +28,7 @@ export function useTemplateListItemHandlers({
 
   const handleTemplatePressOut = useCallback(() => {
     if (!reduceMotion) {
-      templateScale.value = withSpring(1, { damping: 15, stiffness: 300 });
+      templateScale.value = withSpring(1, springs.responsive);
     }
   }, [reduceMotion, templateScale]);
 
@@ -40,7 +41,7 @@ export function useTemplateListItemHandlers({
 
   const handleSciencePressOut = useCallback(() => {
     if (!reduceMotion) {
-      scienceScale.value = withSpring(1, { damping: 15, stiffness: 300 });
+      scienceScale.value = withSpring(1, springs.responsive);
     }
   }, [reduceMotion, scienceScale]);
 

@@ -68,7 +68,7 @@ export function useCategoryFilterAnimations(index: number) {
 
   const handlePressOut = () => {
     if (!reduceMotion)
-      scale.value = withSpring(1, { damping: 15, stiffness: 300 });
+      scale.value = withSpring(1, springs.responsive);
   };
 
   return {
