@@ -633,7 +633,7 @@ function openPv(catId,index){
   var hnm=document.createElement('div');hnm.className='pv-hero-nm';hnm.textContent=t.name;hero.appendChild(hnm);
   var pills=document.createElement('div');pills.className='pv-pills';
   ['\u23F0 '+t.freq,'\u23F3 5-10 min'].forEach(function(txt){var p=document.createElement('span');p.className='pv-pill';p.textContent=txt;pills.appendChild(p)});
-  if(t.sci){var sp=document.createElement('span');sp.className='pv-pill';sp.style.color='#34D399';sp.style.background='rgba(52,211,153,.06)';sp.textContent='\uD83D\uDD2C Research';pills.appendChild(sp)}
+  if(t.sci){var sp=document.createElement('span');sp.className='pv-pill';sp.style.color='#059669';sp.style.background='rgba(16,185,129,.06)';sp.style.borderColor='#6EE7B7';sp.textContent='\uD83D\uDD2C Research';pills.appendChild(sp)}
   if(isLocked){var lp=document.createElement('span');lp.className='pv-pill';lp.style.color='#C4B5FD';lp.style.background='rgba(139,92,246,.06)';lp.textContent='\u2728 Premium';pills.appendChild(lp)}
   hero.appendChild(pills);content.appendChild(hero);
   var asec=document.createElement('div');asec.className='pv-sec';
@@ -657,7 +657,7 @@ function openPv(catId,index){
   var foot=document.getElementById('pvFoot');foot.textContent='';
   var cb=document.createElement('button');cb.className='btn-cust';cb.textContent=isLocked?'Details':'Customize';cb.addEventListener('click',closePv);foot.appendChild(cb);
   var qa=document.createElement('button');qa.className='btn-qa'+(isAdded?' done':'');qa.id='pvAdd';
-  if(isLocked){qa.style.background='linear-gradient(135deg,#8B5CF6,#6366F1)';qa.style.color='#fff';qa.textContent='\uD83D\uDD13 Unlock Premium'}
+  if(isLocked){qa.style.background='linear-gradient(135deg,#7B52C4,#6366F1)';qa.style.color='#fff';qa.textContent='\uD83D\uDD13 Unlock Premium'}
   else if(isAdded){qa.style.background='rgba(52,211,153,.12)';qa.style.color='#34D399';qa.textContent='\u2713 Added'}
   else{qa.style.background=t.color;qa.style.color='#fff';qa.textContent='+ Quick Add'}
   qa.addEventListener('click',(function(cid,idx,locked,tpl){return function(){
