@@ -6,7 +6,7 @@
 
 import React from 'react';
 import Animated from 'react-native-reanimated';
-import { Ionicons } from '@expo/vector-icons';
+import { Share2 } from 'lucide-react-native';
 
 import { AnimatedPressable } from '../../../ui/AnimatedPressable';
 import type { FocusState } from '../../TodaysFocusCardTypes';
@@ -41,7 +41,7 @@ export function ShareButton({
         style={({ pressed }) => [styles.shareButton, { opacity: pressed ? 0.7 : 1 }]}
         onPress={onPress}
       >
-        <Ionicons color={iconColor} name='share-outline' size={20} />
+        <Share2 color={iconColor} size={20} />
       </AnimatedPressable>
     </Animated.View>
   );

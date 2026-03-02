@@ -7,11 +7,7 @@
  * @see docs/specs/habit-details-screen/progress-tab-improvements-spec.md
  */
 
-import type { ComponentProps } from 'react';
-import type { Ionicons } from '@expo/vector-icons';
-
-/** Valid Ionicons icon name */
-export type IconName = ComponentProps<typeof Ionicons>['name'];
+import type { LucideIcon } from 'lucide-react-native';
 
 /**
  * Focus states for the Today's Focus Card
@@ -42,8 +38,8 @@ export type FocusState =
 export interface FocusStateConfig {
   /** Gradient colors [start, end] */
   gradientColors: [string, string];
-  /** Ionicons icon name */
-  icon: IconName;
+  /** Lucide icon component */
+  icon: LucideIcon;
   /** Icon color */
   iconColor: string;
   /** Primary text color */

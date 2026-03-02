@@ -7,8 +7,6 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import Animated from 'react-native-reanimated';
-import { Ionicons } from '@expo/vector-icons';
-
 import type {
   FocusState,
   MilestoneCelebrationConfig,
@@ -46,7 +44,7 @@ export function FocusIcon({
       importantForAccessibility='no-hide-descendants'
       style={styles.iconContainer}
     >
-      <Ionicons color={config.iconColor} name={config.icon} size={28} />
+      <config.icon color={config.iconColor} size={28} />
     </View>
   );
 }

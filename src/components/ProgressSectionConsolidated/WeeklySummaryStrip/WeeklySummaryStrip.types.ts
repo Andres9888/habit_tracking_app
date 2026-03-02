@@ -4,11 +4,7 @@
  * Type definitions for the Weekly Summary Strip component.
  */
 
-import type { ComponentProps } from 'react';
-import type { Ionicons } from '@expo/vector-icons';
-
-/** Valid Ionicons icon name */
-export type IconName = ComponentProps<typeof Ionicons>['name'];
+import type { LucideIcon } from 'lucide-react-native';
 
 /**
  * Data for a single day in the week
@@ -57,7 +53,7 @@ export interface DayStateConfig {
   borderColor: string;
   borderStyle: 'solid' | 'dashed';
   borderWidth: number;
-  icon: IconName | null;
+  icon: LucideIcon | null;
   iconColor: string;
   hasPulse: boolean;
   hasRing: boolean;

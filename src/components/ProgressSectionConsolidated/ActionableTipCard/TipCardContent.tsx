@@ -6,7 +6,7 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { ChevronRight } from 'lucide-react-native';
 
 import { COLORS } from './constants';
 
@@ -60,9 +60,8 @@ export function TipCardContent({
           accessibilityElementsHidden
           importantForAccessibility='no-hide-descendants'
         >
-          <Ionicons
+          <ChevronRight
             color={COLORS.chevron}
-            name='chevron-forward'
             size={20}
             style={{ flexShrink: 0 }}
           />

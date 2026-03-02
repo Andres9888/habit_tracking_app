@@ -4,11 +4,13 @@
  * Helper functions for determining visual states and trends.
  */
 
+import { ArrowDown, ArrowUp, Minus } from 'lucide-react-native';
+import type { LucideIcon } from 'lucide-react-native';
+
 import type {
   WeekDayData,
   DayVisualState,
   TrendDirection,
-  IconName,
 } from '../WeeklySummaryStripTypes';
 
 /**
@@ -47,18 +49,18 @@ export function getTrendDirection(
 }
 
 /**
- * Get trend icon name
+ * Get trend icon component
  */
-export function getTrendIcon(direction: TrendDirection): IconName {
+export function getTrendIcon(direction: TrendDirection): LucideIcon {
   switch (direction) {
     case 'up': {
-      return 'arrow-up';
+      return ArrowUp;
     }
     case 'down': {
-      return 'arrow-down';
+      return ArrowDown;
     }
     case 'same': {
-      return 'remove';
+      return Minus;
     }
   }
 }

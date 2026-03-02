@@ -7,7 +7,7 @@ import { View, Text, Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
 import type { AnimatedStyle } from 'react-native-reanimated';
 import type { ViewStyle } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { ChevronDown } from 'lucide-react-native';
 
 interface AccordionHeaderProps {
   isExpanded: boolean;
@@ -41,7 +41,7 @@ export function AccordionHeader({
         )}
       </View>
       <Animated.View style={chevronStyle}>
-        <Ionicons color='#78716c' name='chevron-down' size={18} />
+        <ChevronDown color='#78716c' size={18} />
       </Animated.View>
     </Pressable>
   );

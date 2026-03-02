@@ -7,8 +7,6 @@
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
-import { Ionicons } from '@expo/vector-icons';
-
 import type { WeekDayData, DayVisualState } from '../WeeklySummaryStripTypes';
 import {
   DAY_ABBREVIATIONS,
@@ -73,7 +71,7 @@ export const DayCell = React.memo(function DayCell({
         ]}
       >
         {config.icon ? (
-          <Ionicons color={config.iconColor} name={config.icon} size={16} />
+          <config.icon color={config.iconColor} size={16} />
         ) : null}
         {config.text ? (
           <Text style={[styles.todayText, { color: config.textColor }]}>

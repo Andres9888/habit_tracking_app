@@ -7,8 +7,6 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 
-import { Ionicons } from '@expo/vector-icons';
-
 import type { TrendDirection, WeekDayData } from '../WeeklySummaryStripTypes';
 import { DayCell } from './DayCell';
 import { SparkleEffect } from './SparkleEffect';
@@ -40,6 +38,8 @@ export const CardContent = React.memo(function CardContent({
   trend,
   weekData,
 }: CardContentProps) {
+  const TrendIcon = getTrendIcon(trend);
+
   return (
     <View style={styles.content}>
       {/* Header */}
@@ -65,9 +65,8 @@ export const CardContent = React.memo(function CardContent({
           <Text style={styles.comparisonText}>
             {currentWeekCompleted}/7 vs {lastWeekCompleted}/7
           </Text>
-          <Ionicons
+          <TrendIcon
             color={getTrendColor(trend)}
-            name={getTrendIcon(trend)}
             size={14}
             style={styles.trendIcon}
           />

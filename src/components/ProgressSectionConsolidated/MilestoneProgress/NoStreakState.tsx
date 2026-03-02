@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import Animated from 'react-native-reanimated';
-import { Ionicons } from '@expo/vector-icons';
+import { CircleArrowRight } from 'lucide-react-native';
 import { styles } from './MilestoneProgress.styles';
 import { MILESTONES } from '../MilestoneProgressTypes';
 import type { AnimatedStyle } from 'react-native-reanimated';
@@ -24,9 +24,8 @@ export const NoStreakState = React.memo(function NoStreakState({
       testID='milestone-progress'
     >
       <View style={styles.noStreakContainer}>
-        <Ionicons
+        <CircleArrowRight
           color='#6B7280'
-          name='arrow-forward-circle-outline'
           size={24}
           style={styles.noStreakIcon}
         />

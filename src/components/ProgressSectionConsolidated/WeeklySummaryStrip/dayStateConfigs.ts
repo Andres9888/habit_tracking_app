@@ -3,6 +3,8 @@
  * Visual configurations for each day cell state
  */
 
+import { Check, X } from 'lucide-react-native';
+
 import type {
   DayVisualState,
   DayStateConfig,
@@ -19,7 +21,7 @@ export const DAY_STATE_CONFIGS: Record<DayVisualState, DayStateConfig> = {
     borderWidth: 0,
     hasPulse: false,
     hasRing: false,
-    icon: 'checkmark',
+    icon: Check,
     iconColor: '#ffffff',
     ringColor: 'transparent',
     text: null,
@@ -45,7 +47,7 @@ export const DAY_STATE_CONFIGS: Record<DayVisualState, DayStateConfig> = {
     borderWidth: 0,
     hasPulse: false,
     hasRing: false,
-    icon: 'close',
+    icon: X,
     iconColor: '#a8a29e', // stone-400
     ringColor: 'transparent',
     text: null,
@@ -58,7 +60,7 @@ export const DAY_STATE_CONFIGS: Record<DayVisualState, DayStateConfig> = {
     borderWidth: 0,
     hasPulse: false,
     hasRing: true,
-    icon: 'checkmark',
+    icon: Check,
     iconColor: '#ffffff',
     ringColor: '#6ee7b7', // emerald-300
     text: null,
