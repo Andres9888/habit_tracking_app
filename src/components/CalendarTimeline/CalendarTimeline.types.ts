@@ -37,6 +37,8 @@ export interface CalendarTimelineProps {
   totalHabits?: number;
   /** Callback to jump back to today's week (shown when viewing past weeks) */
   onJumpToToday?: () => void;
+  /** Best current streak across all habits (for greeting display) */
+  currentStreak?: number;
   /** Trial bar: days remaining (renders inline gradient bar when > 0) */
   trialDaysRemaining?: number | null;
   /** Trial bar: upgrade callback */
@@ -89,8 +91,8 @@ export interface WeekNavigationHeaderProps {
   canNavigateForward: boolean;
   onJumpToToday?: () => void;
   onDateRangePress?: () => void;
-  onPreviousWeek?: () => void;
-  onNextWeek?: () => void;
   completedToday?: number;
   totalHabits?: number;
+  /** Best current streak across all habits (for greeting display) */
+  currentStreak?: number;
 }

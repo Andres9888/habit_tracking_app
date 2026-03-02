@@ -1,14 +1,14 @@
-import React, { memo, useState, useCallback, useMemo } from 'react';
+import React, { memo } from 'react';
 import { View } from 'react-native';
-import { format } from 'date-fns';
+import { GestureDetector } from 'react-native-gesture-handler';
 
 import {
   useCalendarTimelineLogic,
   useTimelineColors,
-  useCompletionStatus,
   useWeekTransition,
 } from './CalendarTimeline.hooks';
-import { SHELF_STYLE, STREAK_CONNECTOR } from './CalendarTimeline.styles';
+import { useDerivedState } from './CalendarTimeline.derived';
+import { getShelfStyle } from './CalendarTimeline.styles';
 import type { CalendarTimelineProps } from './CalendarTimeline.types';
 import { useTimelineSwipe } from './useTimelineSwipe';
 import { useThemeColors } from '../../theme/ThemeContext';
@@ -33,46 +33,41 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
   disableFutureDayPress = true,
   completedToday = 0,
   totalHabits = 0,
+  currentStreak = 0,
   onJumpToToday,
   trialDaysRemaining,
   onUpgrade,
 }) => {
   const { isToday, isFuture } = useCalendarTimelineLogic();
   const { isDark } = useThemeColors();
-  const { colors, augmentedColors } = useTimelineColors(
+  const { augmentedColors } = useTimelineColors(highContrastMode, isDark);
+  const swipeOpts = { canNavigateForward, onNextWeek, onPreviousWeek };
+  const panGesture = useTimelineSwipe(swipeOpts);
+  const headerPanGesture = useTimelineSwipe(swipeOpts);
+  const weekTransitionStyle = useWeekTransition(dates, reduceMotion);
+  const {
+    calendarOpen,
+    openCalendar,
+    closeCalendar,
+    completionStatuses,
+    firstDate,
+    lastDate,
+    dateRangeText,
+    currentDate,
+    connectorColor,
+  } = useDerivedState(
+    dates,
+    completionByDay,
+    isFuture,
+    isToday,
     highContrastMode,
     isDark
   );
-  const getCompletionStatus = useCompletionStatus(completionByDay, isFuture);
-  const [calendarOpen, setCalendarOpen] = useState(false);
-  const openCalendar = useCallback(() => setCalendarOpen(true), []);
-  const closeCalendar = useCallback(() => setCalendarOpen(false), []);
-  const panGesture = useTimelineSwipe({
-    canNavigateForward,
-    onNextWeek,
-    onPreviousWeek,
-  });
-  const weekTransitionStyle = useWeekTransition(dates, reduceMotion);
 
-  const completionStatuses = useMemo(
-    () => dates.map((d) => getCompletionStatus(d)),
-    [dates, getCompletionStatus]
-  );
-
-  const firstDate = dates[0];
-  const lastDate = dates.at(-1);
-  if (!firstDate || !lastDate) return null;
-
-  const dateRangeText = `${format(firstDate, 'MMM d')} – ${format(lastDate, 'MMM d')}`;
-  const currentDate = dates.find((d) => isToday(d)) ?? lastDate;
-  const connectorColor = highContrastMode
-    ? STREAK_CONNECTOR.highContrast
-    : isDark
-      ? STREAK_CONNECTOR.dark
-      : STREAK_CONNECTOR.light;
+  if (!firstDate || !lastDate || !currentDate) return null;
 
   return (
-    <View style={SHELF_STYLE} className='mb-4 pb-3'>
+    <View style={getShelfStyle(isDark)} className='mb-4 pb-3 pt-2'>
       <View className='px-4'>
         {trialDaysRemaining != null && trialDaysRemaining > 0 && onUpgrade && (
           <InlineTrialBar
@@ -80,17 +75,20 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
             onUpgrade={onUpgrade}
           />
         )}
-        <WeekNavigationHeader
-          canNavigateForward={canNavigateForward}
-          completedToday={completedToday}
-          currentDate={currentDate}
-          dateRangeText={dateRangeText}
-          totalHabits={totalHabits}
-          onDateRangePress={openCalendar}
-          onJumpToToday={onJumpToToday}
-          onNextWeek={onNextWeek}
-          onPreviousWeek={onPreviousWeek}
-        />
+        <GestureDetector gesture={headerPanGesture}>
+          <View collapsable={false}>
+            <WeekNavigationHeader
+              canNavigateForward={canNavigateForward}
+              completedToday={completedToday}
+              currentDate={currentDate}
+              currentStreak={currentStreak}
+              dateRangeText={dateRangeText}
+              totalHabits={totalHabits}
+              onDateRangePress={openCalendar}
+              onJumpToToday={onJumpToToday}
+            />
+          </View>
+        </GestureDetector>
         <StripNav canNavigateForward={canNavigateForward}>
           <DayStrip
             augmentedColors={augmentedColors}

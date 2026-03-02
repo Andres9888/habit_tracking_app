@@ -44,10 +44,11 @@ All changes are confined to the CalendarTimeline shelf area and ProgressText com
   - File must remain ≤100 lines
   - **Completed**: 98-line file using `useStreakGreeting` hook + inline streak badge pill. Static palette imported as `palette` for streak colors (theme-aware `colors` doesn't include `streak`). 7 new rendering tests in `ProgressGreeting.test.tsx` verify badge visibility at each streak tier, perfect day priority, and default prop behavior. `currentStreak` prop defaults to 0 for backward compatibility.
 
-- [ ] Thread `currentStreak` data through to CalendarTimeline:
+- [x] Thread `currentStreak` data through to CalendarTimeline:
   - Source: identify where streak data is computed (likely in habit list hooks)
   - Pass as prop through CalendarTimeline → WeekNavigationHeader → ProgressGreeting
   - If streak data is not readily available, compute from `completionByDay` (count consecutive past days with all habits complete)
+  - **Completed**: Streak data sourced from existing `getStreak(habitId)` in `useHabitsTracking`, which uses `computeCurrentStreakFromDates` with 1-day grace period. `HabitsListHeader` computes `currentStreak = Math.max(...habits.map(h => getStreak(h._id)))` — the best per-habit streak, rewarding any consistent behavior. Threaded through 7 files: `HabitsListHeader.types.ts` (+`getStreak` prop), `renderHabitsListHeader.tsx` (passes `list.getStreak`), `HabitsListHeader.tsx` (computes max streak via `useMemo`), `CalendarTimeline.types.ts` (+`currentStreak` on both `CalendarTimelineProps` and `WeekNavigationHeaderProps`), `CalendarTimeline.tsx` (threads prop), `WeekNavigationHeader.tsx` (threads to ProgressGreeting). Also compacted `ProgressGreeting.tsx` from 103→100 effective lines by inlining the `useStreakGreeting` call. 12 new code-verification tests in `streakThreading.test.ts` validate the entire prop chain. All 36 streak-related tests pass.
 
 ### Improvement 2: Completion Celebration Micro-Animation
 

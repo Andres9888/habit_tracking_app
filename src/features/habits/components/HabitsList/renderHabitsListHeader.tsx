@@ -37,6 +37,7 @@ export function renderHabitsListHeader({
       calendarTranslateY={state.calendarTranslateY}
       canNavigateForward={canNavigateForward}
       getHabitStatus={list.getHabitStatus}
+      getStreak={list.getStreak}
       habits={list.habits}
       headerOpacity={state.headerOpacity}
       headerTranslateY={state.headerTranslateY}

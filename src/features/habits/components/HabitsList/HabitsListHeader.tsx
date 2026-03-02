@@ -10,7 +10,7 @@
  * Action buttons have moved to the BottomActionBar.
  */
 
-import React, { memo } from 'react';
+import React, { memo, useMemo } from 'react';
 import { Animated, View } from 'react-native';
 import { CalendarTimeline } from '../../../../components/CalendarTimeline';
 import { OfflineIndicator } from '../../../../components/SyncStatus';
@@ -29,6 +29,11 @@ function HabitsListHeaderComponent(
   });
 
   const { shouldShowBanner, daysRemaining } = useTrialCountdown();
+
+  const currentStreak = useMemo(() => {
+    if (props.habits.length === 0) return 0;
+    return Math.max(...props.habits.map((h) => props.getStreak(h._id)));
+  }, [props.habits, props.getStreak]);
 
   return (
     <View className='gap-2 pb-2 pt-12'>
@@ -50,6 +55,7 @@ function HabitsListHeaderComponent(
             canNavigateForward={props.canNavigateForward}
             completedToday={computed.completedToday}
             completionByDay={computed.completionByDay}
+            currentStreak={currentStreak}
             dates={props.weekDates}
             reduceMotion={props.reduceMotionPreference}
             totalHabits={computed.totalHabits}
