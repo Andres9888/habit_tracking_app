@@ -4,7 +4,8 @@
  */
 
 import { memo } from 'react';
-import { Animated, Pressable, Text } from 'react-native';
+import { Pressable, Text } from 'react-native';
+import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 import { REMINDER_OPTIONS } from './constants';
 import { useButtonAnimations } from './useButtonAnimations';
 import type { ReminderOptionButtonProps } from './types';
@@ -16,8 +17,12 @@ function ReminderOptionButtonComponent({
   reduceMotion,
 }: ReminderOptionButtonProps) {
   const optionInfo = REMINDER_OPTIONS[option];
-  const { scaleAnim, slideAnim, handlePressIn, handlePressOut } =
+  const { scale, slide, handlePressIn, handlePressOut } =
     useButtonAnimations(reduceMotion);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }, { translateY: slide.value }],
+  }));
 
   const accessibilityLabel = optionInfo.time
     ? `${optionInfo.label} at ${optionInfo.time}`
@@ -46,8 +51,8 @@ function ReminderOptionButtonComponent({
             shadowOffset: { height: isSelected ? 2 : 0, width: 0 },
             shadowOpacity: isSelected ? 0.1 : 0,
             shadowRadius: isSelected ? 3 : 0,
-            transform: [{ scale: scaleAnim }, { translateY: slideAnim }],
           },
+          animatedStyle,
         ]}
       >
         <Text className='mb-0.5 text-lg'>{optionInfo.emoji}</Text>
