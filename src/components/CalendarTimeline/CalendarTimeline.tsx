@@ -10,6 +10,7 @@ import {
   InlineTrialBar,
   MicroProgressBar,
   MiniCalendarPopup,
+  ShelfBleed,
   StripNav,
   WeekNavigationHeader,
 } from './components';
@@ -92,6 +93,7 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
           onSelectDate={onDayPress ?? tl.closeCalendar}
         />
       </View>
+      <ShelfBleed />
     </View>
   );
 };

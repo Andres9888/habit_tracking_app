@@ -81,27 +81,30 @@ All changes are confined to the CalendarTimeline shelf area and ProgressText com
 
 ### Improvement 4: Today Breathing Glow
 
-- [ ] Modify `src/components/CalendarTimeline/components/DayCellContent.tsx`:
+- [x] Modify `src/components/CalendarTimeline/components/DayCellContent.tsx`:
   - For the today cell (when `isCurrentDay && !isComplete`), add animated shadow
   - Use `useAnimatedStyle` with `withRepeat(withSequence(...))` to cycle shadowOpacity between 0.15 and 0.4
   - Duration: 2500ms per cycle, `Easing.inOut(Easing.ease)`
   - Shadow color: amber (`#E8B94D` light, `#B8860B` dark)
   - Respect `reduceMotion` — no animation if enabled
   - File must remain ≤100 lines (currently 95 lines — tight, may need to extract animation to a hook)
+  - **Completed**: DayCellContent.tsx at 99 lines (well within limit). Changed day cell container from `View` to `Animated.View` with style array syntax for clean animated style merging. `useTodayGlow` hook imported from extracted hooks file. Glow style overlays on top of existing `cellStyles.container` — when active, the amber breathing shadow replaces the static gray `TODAY_SHADOW` since iOS only supports one shadow per view.
 
-- [ ] If DayCellContent.tsx exceeds 100 lines, extract the breathing animation into `src/components/CalendarTimeline/hooks/useTodayGlow.ts`:
+- [x] If DayCellContent.tsx exceeds 100 lines, extract the breathing animation into `src/components/CalendarTimeline/hooks/useTodayGlow.ts`:
   - Accept `isCurrentDay: boolean`, `isComplete: boolean`, `reduceMotion: boolean`, `isDark: boolean`
   - Return `animatedShadowStyle` to spread on the day cell View
+  - **Completed**: 70-line hook using `withRepeat(withSequence(withTiming(0.4), withTiming(0.15)), -1)` pattern matching `StripNav.useBreathe()`. Uses `useSharedValue` + `useEffect` + `useAnimatedStyle` — the canonical Reanimated continuous animation pattern. Amber shadow colors: `#E8B94D` (light) / `#B8860B` (dark). Returns `{}` when inactive (not today, complete, or reduceMotion) to let static `TODAY_SHADOW` remain. 6 tests in `useTodayGlow.test.tsx` covering active glow, dark mode color, and all three skip conditions. All passing.
 
 ### Improvement 5: Shelf Gradient Bleed
 
-- [ ] Modify shelf rendering in `src/components/CalendarTimeline/CalendarTimeline.tsx` or `CalendarTimeline.styles.ts`:
+- [x] Modify shelf rendering in `src/components/CalendarTimeline/CalendarTimeline.tsx` or `CalendarTimeline.styles.ts`:
   - Add a 12px tall `View` with `LinearGradient` (from expo-linear-gradient) as last child of shelf container
   - Positioned absolutely at `bottom: -12, left: 0, right: 0`
   - Gradient: `[shelfBackgroundColor, 'transparent']` top to bottom
   - Alternative (no dependency): Use a simple `View` with opacity gradient via multiple stacked views
   - `pointerEvents='none'` so it doesn't intercept touches
   - File must remain ≤100 lines
+  - **Completed**: Created `ShelfBleed.tsx` (36-line self-contained component) using `LinearGradient` from `expo-linear-gradient`. Uses `useThemeColors()` internally to resolve `isDark`, then reads shelf background color from existing `getShelfStyle()` — no color duplication. Added `overflow: 'visible' as const` to `getShelfStyle` in `CalendarTimeline.styles.ts` so the gradient extends 12px below the shelf boundary on both iOS and Android. `CalendarTimeline.tsx` compacted component import to 3 lines (from 8) to accommodate `<ShelfBleed />` at 97 total lines. 5 tests in `ShelfBleed.test.tsx` covering gradient rendering, light/dark color resolution, absolute positioning, and pointerEvents. All passing.
 
 ## Design References
 

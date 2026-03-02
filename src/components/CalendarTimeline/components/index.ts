@@ -7,6 +7,7 @@ export { InlineTrialBar } from './InlineTrialBar';
 export { MicroProgressBar } from './MicroProgressBar';
 export { MiniCalendarPopup } from './MiniCalendarPopup';
 export { ProgressGreeting } from './ProgressGreeting';
+export { ShelfBleed } from './ShelfBleed';
 export { StripNav } from './StripNav';
 export { WeekNavRow } from './WeekNavRow';
 export { WeekNavigationHeader } from './WeekNavigationHeader';
