@@ -30,6 +30,6 @@ const s = StyleSheet.create({
   addBtn: { backgroundColor: colors.primary[600], borderRadius: borderRadius.medium, flex: 1, paddingVertical: spacing.md },
   addText: { ...typography.bodySmall, color: '#fff', fontWeight: '700', textAlign: 'center' },
   buttons: { flexDirection: 'row', gap: spacing.sm, marginTop: spacing.lg, paddingBottom: spacing.sm },
-  cancelBtn: { backgroundColor: colors.surfaceMuted, borderRadius: borderRadius.medium, flex: 1, paddingVertical: spacing.md },
+  cancelBtn: { backgroundColor: colors.light.surfaceMuted, borderRadius: borderRadius.medium, flex: 1, paddingVertical: spacing.md },
   cancelText: { ...typography.bodySmall, color: colors.text.secondary, fontWeight: '600', textAlign: 'center' },
 });
