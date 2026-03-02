@@ -2,6 +2,8 @@
  * Types for VisionBoardPreview gesture handling
  */
 
+import { springs } from '@/theme/animations';
+
 export interface UseVisionBoardGesturesParams {
   reduceMotion: boolean;
   hasNext: boolean;
@@ -11,4 +13,4 @@ export interface UseVisionBoardGesturesParams {
   handleClose: () => void;
 }
 
-export const SPRING_CONFIG = { damping: 20, stiffness: 200 };
+export const SPRING_CONFIG = springs.sheet;

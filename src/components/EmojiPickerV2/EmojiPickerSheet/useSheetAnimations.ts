@@ -11,13 +11,14 @@ import {
   withTiming,
   runOnJS,
 } from 'react-native-reanimated';
+import { springs } from '@/theme/animations';
 import {
   SHEET_HEIGHT_COLLAPSED,
   SHEET_HEIGHT_EXPANDED,
 } from './EmojiPickerSheet.styles';
 import { useSheetStyles } from './useSheetStyles';
 
-const SPRING_CONFIG = { damping: 20, stiffness: 200 };
+const SPRING_CONFIG = springs.sheet;
 const DISMISS_THRESHOLD = 0.25;
 const DISMISS_VELOCITY = 500;
 
