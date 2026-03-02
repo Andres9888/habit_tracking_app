@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
  * SyncStatusProvider - Provides sync status context to the React tree
  */
@@ -11,26 +12,55 @@ import React, {
 } from 'react';
 import { useSyncOrchestrator } from '../../lib/offline/sync/useSyncOrchestrator';
 import { SyncStatusContext } from './context';
+import type { SyncOrchestratorState } from '../../lib/offline/sync/types';
 import type { SyncOrchestratorResult } from '../../lib/offline/sync/types';
 import type { SyncStatusContextValue, SyncStatusProviderProps } from './types';
-import {
-  buildSyncStatus,
-  type SyncStartCallback,
-  type SyncCompleteCallback,
-  type SyncErrorCallback,
-} from './helpers';
+import type { SyncStatusIndicator } from './types';
+
+type SyncStartCallback = () => void;
+type SyncCompleteCallback = (result: SyncOrchestratorResult) => void;
+type SyncErrorCallback = (error: Error) => void;
+
+function deriveIndicator(
+  isSyncing: boolean,
+  lastResult?: SyncOrchestratorResult,
+  lastError?: Error
+): SyncStatusIndicator {
+  if (isSyncing) return 'syncing';
+  if (lastError) return 'error';
+  if (lastResult && lastResult.succeeded > 0) return 'success';
+  return 'idle';
+}
+
+function buildSyncStatus(
+  state: SyncOrchestratorState,
+  pendingCount: number,
+  lastError?: Error
+) {
+  const hasPendingOperations = pendingCount > 0;
+  return {
+    hasPendingOperations,
+    indicator: deriveIndicator(state.isSyncing, state.lastResult, lastError),
+    isActive: state.isActive,
+    isSyncing: state.isSyncing,
+    lastError,
+    lastResult: state.lastResult,
+    lastSuccessfulSyncAt: state.lastSuccessfulSyncAt,
+    pendingCount,
+  };
+}
 
 /**
  * Provider component that manages sync orchestration state and provides
  * sync status, callbacks, and manual trigger capabilities to the app.
- * 
+ *
  * Integrates with the sync orchestrator to monitor pending operations,
  * track sync progress, and notify subscribers of sync events.
- * 
+ *
  * @param children - React children to render
  * @param autoStart - Whether to automatically start syncing on mount (default: true)
  * @param onStatusChange - Optional callback invoked when sync status changes
- * 
+ *
  * @example
  * ```tsx
  * <SyncStatusProvider autoStart={true} onStatusChange={handleSyncChange}>
@@ -58,12 +88,7 @@ export function SyncStatusProvider({
     for (const cb of syncErrorCallbacksRef.current) cb(error);
   }, []);
 
-  const {
-    state,
-    pendingOperationCount,
-    triggerSync,
-    subscribe,
-  } =
+  const { state, pendingOperationCount, triggerSync, subscribe } =
     useSyncOrchestrator({
       autoStart,
       onSyncComplete: handleSyncComplete,

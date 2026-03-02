@@ -2,6 +2,7 @@
  * SyncStatusContext Helpers
  */
 
+import type { RefObject } from 'react';
 import type { SyncOrchestratorResult } from '../../lib/offline/sync/types';
 import type { SyncStatus, SyncStatusIndicator } from './types';
 import type { SyncOrchestratorState } from '../../lib/offline/sync/types';
@@ -52,7 +53,7 @@ export type SyncErrorCallback = (error: Error) => void;
  * Creates a callback registration function that returns an unsubscribe function
  */
 export function createCallbackRegistrar<T extends (...args: unknown[]) => void>(
-  callbacksRef: React.RefObject<Set<T>>
+  callbacksRef: RefObject<Set<T>>
 ): (cb: T) => () => void {
   return (cb: T) => {
     callbacksRef.current?.add(cb);

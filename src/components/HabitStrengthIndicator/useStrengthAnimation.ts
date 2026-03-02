@@ -7,13 +7,13 @@
 
 import { useEffect, useRef } from 'react';
 import { AccessibilityInfo } from 'react-native';
-import {
-  useAnimatedStyle,
-  useSharedValue,
-  withSpring,
-} from 'react-native-reanimated';
 import type { StrengthLevel, StrengthLevelConfig } from './types';
-import { animateLevelUp, animatePulse } from './animations';
+
+function clampStrength(value: number): number {
+  if (value < 0) return 0;
+  if (value > 100) return 100;
+  return value;
+}
 
 interface UseStrengthAnimationOptions {
   strength: number;
@@ -29,29 +29,17 @@ export function useStrengthAnimation({
   habitName,
 }: UseStrengthAnimationOptions) {
   const previousLevelRef = useRef<StrengthLevel>(level);
+  const previousStrengthRef = useRef<number>(strength);
 
-  const progressWidth = useSharedValue(0);
-  const emojiScale = useSharedValue(1);
-  const emojiOpacity = useSharedValue(1);
-  const emojiRotation = useSharedValue(0);
+  const levelChanged = previousLevelRef.current !== level;
+  const strengthChanged = previousStrengthRef.current !== strength;
+  const normalizedStrength = clampStrength(strength);
 
-  // Animate progress bar and emoji when strength/level changes
-  // Note: Shared values from Reanimated are stable and intentionally omitted from deps
   useEffect(() => {
-    progressWidth.value = withSpring(strength, { damping: 15, stiffness: 150 });
-
-    const levelChanged = previousLevelRef.current !== level;
     previousLevelRef.current = level;
+    previousStrengthRef.current = strength;
+  }, [level, strength]);
 
-    if (levelChanged) {
-      animateLevelUp(emojiOpacity, emojiScale, emojiRotation);
-    } else {
-      animatePulse(emojiScale);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [strength, level]);
-
-  // Accessibility announcement
   useEffect(() => {
     const message = habitName
       ? `${habitName}, ${Math.round(strength)}% strength, ${config.label} level`
@@ -60,17 +48,15 @@ export function useStrengthAnimation({
     AccessibilityInfo?.announceForAccessibility?.(message);
   }, [strength, level, habitName, config.label]);
 
-  const progressBarStyle = useAnimatedStyle(() => ({
-    width: `${progressWidth.value}%`,
-  }));
+  const progressBarStyle = {
+    width: `${normalizedStrength}%`,
+  };
 
-  const emojiStyle = useAnimatedStyle(() => ({
-    opacity: emojiOpacity.value,
-    transform: [
-      { scale: emojiScale.value },
-      { rotate: `${Math.round(emojiRotation.value)}deg` },
-    ],
-  }));
+  const emojiScale = levelChanged ? 1.12 : strengthChanged ? 1.05 : 1;
+  const emojiStyle = {
+    opacity: 1,
+    transform: [{ scale: emojiScale }],
+  };
 
   return { emojiStyle, progressBarStyle };
 }

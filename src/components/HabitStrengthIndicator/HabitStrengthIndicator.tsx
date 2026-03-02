@@ -17,7 +17,6 @@ import { STRENGTH_LEVEL_CONFIG } from './constants';
 import { getStrengthLevel, getStrengthColor } from './utils';
 import { useStrengthAnimation } from './useStrengthAnimation';
 import { CompactIndicator } from './CompactIndicator';
-import { FullIndicator } from './FullIndicator';
 import { GraphIndicator } from './GraphIndicator';
 
 function HabitStrengthIndicatorComponent({
@@ -41,7 +40,10 @@ function HabitStrengthIndicatorComponent({
     strength,
   });
 
-  const strengthColorFn = useMemo(() => () => getStrengthColor(level, theme), [level, theme]);
+  const strengthColorFn = useMemo(
+    () => () => getStrengthColor(level, theme),
+    [level, theme]
+  );
 
   const variantProps = {
     config,
@@ -59,7 +61,7 @@ function HabitStrengthIndicatorComponent({
   }
 
   if (variant === 'full') {
-    return <FullIndicator {...variantProps} />;
+    return <CompactIndicator {...variantProps} />;
   }
 
   if (variant === 'graph') {

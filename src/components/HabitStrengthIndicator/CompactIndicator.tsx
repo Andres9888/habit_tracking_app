@@ -5,7 +5,6 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
-import Animated from 'react-native-reanimated';
 import { useAppTheme } from '../../theme';
 import { styles } from './styles';
 import type { IndicatorVariantProps } from './types';
@@ -27,9 +26,7 @@ export function CompactIndicator({
       accessibilityRole='progressbar'
       style={styles.compactContainer}
     >
-      <Animated.Text style={[styles.compactEmoji, emojiStyle]}>
-        {config.emoji}
-      </Animated.Text>
+      <Text style={[styles.compactEmoji, emojiStyle]}>{config.emoji}</Text>
 
       <View
         style={[
@@ -37,7 +34,7 @@ export function CompactIndicator({
           { backgroundColor: theme.custom.colors.gray[200] },
         ]}
       >
-        <Animated.View
+        <View
           style={[
             styles.compactBar,
             progressBarStyle,

@@ -5,7 +5,6 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
-import Animated from 'react-native-reanimated';
 import { useAppTheme } from '../../theme';
 import { styles } from './styles';
 import type { IndicatorVariantProps } from './types';
@@ -31,9 +30,7 @@ export function FullIndicator({
       {showLabel && (
         <View style={styles.fullHeader}>
           <View style={styles.fullLabelContainer}>
-            <Animated.Text style={[styles.fullEmoji, emojiStyle]}>
-              {config.emoji}
-            </Animated.Text>
+            <Text style={[styles.fullEmoji, emojiStyle]}>{config.emoji}</Text>
             <Text
               style={[
                 theme.custom.typography.heading3,
@@ -66,7 +63,7 @@ export function FullIndicator({
           { backgroundColor: theme.custom.colors.gray[200] },
         ]}
       >
-        <Animated.View
+        <View
           style={[
             styles.fullBar,
             progressBarStyle,
