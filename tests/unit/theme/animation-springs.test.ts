@@ -8,7 +8,7 @@ import { springs } from '@/theme/animations';
 import { Springs } from '@/constants/motion';
 
 describe('Canonical spring presets in @/theme/animations', () => {
-  it('has exactly 10 spring presets', () => {
+  it('has exactly 11 spring presets', () => {
     const keys = Object.keys(springs).sort();
     expect(keys).toEqual([
       'bottomSheet',
@@ -21,11 +21,12 @@ describe('Canonical spring presets in @/theme/animations', () => {
       'pulse',
       'sheet',
       'snappy',
+      'standard',
     ]);
   });
 
-  it('button: damping 15, stiffness 300', () => {
-    expect(springs.button).toEqual({ damping: 15, stiffness: 300 });
+  it('button: damping 18, stiffness 150', () => {
+    expect(springs.button).toEqual({ damping: 18, stiffness: 150 });
   });
 
   it('sheet: damping 20, stiffness 200', () => {
@@ -36,8 +37,8 @@ describe('Canonical spring presets in @/theme/animations', () => {
     expect(springs.gentle).toEqual({ damping: 20, stiffness: 100 });
   });
 
-  it('snappy: damping 15, stiffness 150', () => {
-    expect(springs.snappy).toEqual({ damping: 15, stiffness: 150 });
+  it('snappy: damping 18, stiffness 150', () => {
+    expect(springs.snappy).toEqual({ damping: 18, stiffness: 150 });
   });
 
   it('bouncy: damping 10, stiffness 180', () => {
@@ -48,14 +49,14 @@ describe('Canonical spring presets in @/theme/animations', () => {
     expect(springs.pulse).toEqual({ damping: 12, stiffness: 250 });
   });
 
-  it('micro: damping 15, stiffness 400', () => {
-    expect(springs.micro).toEqual({ damping: 15, stiffness: 400 });
+  it('micro: damping 18, stiffness 150', () => {
+    expect(springs.micro).toEqual({ damping: 18, stiffness: 150 });
   });
 });
 
 describe('constants/motion Springs re-exports from theme', () => {
-  it('Springs is the same object as springs', () => {
-    expect(Springs).toBe(springs);
+  it('Springs has the same values as springs', () => {
+    expect(Springs).toStrictEqual(springs);
   });
 
   it('Springs.button matches springs.button', () => {

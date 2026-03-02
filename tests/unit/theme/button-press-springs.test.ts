@@ -52,11 +52,11 @@ describe('useCategoryChipHandlers uses springs.button', () => {
   });
 
   it('uses springs.button for press-in', () => {
-    expect(source).toContain('withSpring(0.95, springs.button)');
+    expect(source).toContain('withSpring(CARD_PRESS_SCALE, springs.button)');
   });
 
   it('uses springs.button for press-out', () => {
-    expect(source).toContain('withSpring(1, springs.button)');
+    expect(source).toContain('withSpring(CARD_REST_SCALE, springs.button)');
   });
 
   it('does not have hardcoded spring configs', () => {

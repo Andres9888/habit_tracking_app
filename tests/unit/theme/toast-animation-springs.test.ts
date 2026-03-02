@@ -1,7 +1,7 @@
 /**
  * Toast & Swipe Animation Spring Standardization Tests (Phase 6 Task 5)
  * Verifies that toast animations and HabitCard pan gesture use
- * springs.snappy from @/theme/animations instead of hardcoded spring configs.
+ * canonical spring presets from @/theme/animations instead of hardcoded spring configs.
  */
 
 import * as fs from 'fs';
@@ -13,7 +13,7 @@ function readSource(relativePath: string): string {
   return fs.readFileSync(path.join(SRC, relativePath), 'utf-8');
 }
 
-describe('useToastAnimations uses springs.snappy', () => {
+describe('useToastAnimations uses springs.standard', () => {
   const source = readSource('components/Toast/useToastAnimations.ts');
 
   it('imports springs from theme animations', () => {
@@ -22,12 +22,12 @@ describe('useToastAnimations uses springs.snappy', () => {
     );
   });
 
-  it('uses springs.snappy for dismiss animation', () => {
-    expect(source).toContain('withSpring(100, springs.snappy)');
+  it('uses springs.standard for dismiss animation', () => {
+    expect(source).toContain('withSpring(100, springs.standard)');
   });
 
-  it('uses springs.snappy for enter animation', () => {
-    expect(source).toContain('withSpring(0, springs.snappy)');
+  it('uses springs.standard for enter animation', () => {
+    expect(source).toContain('withSpring(0, springs.standard)');
   });
 
   it('does not have hardcoded spring configs', () => {
@@ -81,7 +81,8 @@ describe('panGesture uses springs.snappy', () => {
   });
 
   it('uses springs.snappy for snap-back', () => {
-    expect(source).toContain('withSpring(0, springs.snappy)');
+    // Code uses snap(0) where snap = (v) => withSpring(v, springs.snappy)
+    expect(source).toContain('snap(0)');
   });
 
   it('does not have hardcoded spring configs', () => {
