@@ -101,17 +101,24 @@ jest.mock('../../../constants/motion', () => ({
   },
 }));
 
-// Mock Ionicons
-jest.mock('@expo/vector-icons', () => {
+// Mock lucide-react-native icons
+jest.mock('lucide-react-native', () => {
   const React = require('react');
   const { View } = require('react-native');
 
+  const createIcon =
+    (name: string) => (props: Record<string, unknown>) =>
+      React.createElement(View, { testID: `lucide-${name}`, ...props });
+
   return {
-    Ionicons: (props: { name: string; color: string; size: number }) =>
-      React.createElement(View, {
-        testID: `ionicons-${props.name}`,
-        ...props,
-      }),
+    Crosshair: createIcon('Crosshair'),
+    TrendingUp: createIcon('TrendingUp'),
+    Trophy: createIcon('Trophy'),
+    Sparkles: createIcon('Sparkles'),
+    Heart: createIcon('Heart'),
+    RefreshCw: createIcon('RefreshCw'),
+    CheckCircle2: createIcon('CheckCircle2'),
+    Share2: createIcon('Share2'),
   };
 });
 
@@ -213,7 +220,7 @@ describe('TodaysFocusCard', () => {
       );
       // Icon is inside an accessibility-hidden container
       expect(
-        UNSAFE_getByProps({ testID: 'ionicons-locate-outline' })
+        UNSAFE_getByProps({ testID: 'lucide-Crosshair' })
       ).toBeTruthy();
     });
   });
@@ -229,7 +236,7 @@ describe('TodaysFocusCard', () => {
         <TodaysFocusCard {...thrivingProps} />
       );
       expect(
-        UNSAFE_getByProps({ testID: 'ionicons-locate-outline' })
+        UNSAFE_getByProps({ testID: 'lucide-Crosshair' })
       ).toBeTruthy();
     });
 
@@ -252,7 +259,7 @@ describe('TodaysFocusCard', () => {
         <TodaysFocusCard {...buildingProps} />
       );
       expect(
-        UNSAFE_getByProps({ testID: 'ionicons-trending-up-outline' })
+        UNSAFE_getByProps({ testID: 'lucide-TrendingUp' })
       ).toBeTruthy();
     });
   });
@@ -268,7 +275,7 @@ describe('TodaysFocusCard', () => {
         <TodaysFocusCard {...startingProps} />
       );
       expect(
-        UNSAFE_getByProps({ testID: 'ionicons-sparkles-outline' })
+        UNSAFE_getByProps({ testID: 'lucide-Sparkles' })
       ).toBeTruthy();
     });
   });
@@ -286,7 +293,7 @@ describe('TodaysFocusCard', () => {
         <TodaysFocusCard {...strugglingProps} />
       );
       expect(
-        UNSAFE_getByProps({ testID: 'ionicons-heart-outline' })
+        UNSAFE_getByProps({ testID: 'lucide-Heart' })
       ).toBeTruthy();
     });
   });
@@ -306,7 +313,7 @@ describe('TodaysFocusCard', () => {
         <TodaysFocusCard {...recoveringProps} />
       );
       expect(
-        UNSAFE_getByProps({ testID: 'ionicons-refresh-outline' })
+        UNSAFE_getByProps({ testID: 'lucide-RefreshCw' })
       ).toBeTruthy();
     });
   });
@@ -324,7 +331,7 @@ describe('TodaysFocusCard', () => {
         <TodaysFocusCard {...completedProps} />
       );
       expect(
-        UNSAFE_getByProps({ testID: 'ionicons-checkmark-circle-outline' })
+        UNSAFE_getByProps({ testID: 'lucide-CheckCircle2' })
       ).toBeTruthy();
     });
 
@@ -506,7 +513,7 @@ describe('TodaysFocusCard', () => {
       const { UNSAFE_getByProps } = render(<TodaysFocusCard {...props} />);
       // Should show completed icon, not celebration badge
       expect(
-        UNSAFE_getByProps({ testID: 'ionicons-checkmark-circle-outline' })
+        UNSAFE_getByProps({ testID: 'lucide-CheckCircle2' })
       ).toBeTruthy();
     });
 
@@ -521,7 +528,7 @@ describe('TodaysFocusCard', () => {
       };
       const { UNSAFE_getByProps } = render(<TodaysFocusCard {...props} />);
       expect(
-        UNSAFE_getByProps({ testID: 'ionicons-sparkles-outline' })
+        UNSAFE_getByProps({ testID: 'lucide-Sparkles' })
       ).toBeTruthy();
     });
 
@@ -537,7 +544,7 @@ describe('TodaysFocusCard', () => {
       const { UNSAFE_getByProps } = render(<TodaysFocusCard {...props} />);
       // Recovering should take priority
       expect(
-        UNSAFE_getByProps({ testID: 'ionicons-refresh-outline' })
+        UNSAFE_getByProps({ testID: 'lucide-RefreshCw' })
       ).toBeTruthy();
     });
   });
@@ -646,7 +653,7 @@ describe('TodaysFocusCard', () => {
       // Should show badge, not checkmark icon
       expect(getByText('⭐')).toBeTruthy();
       expect(
-        UNSAFE_queryByProps({ testID: 'ionicons-checkmark-circle-outline' })
+        UNSAFE_queryByProps({ testID: 'lucide-CheckCircle2' })
       ).toBeNull();
     });
 

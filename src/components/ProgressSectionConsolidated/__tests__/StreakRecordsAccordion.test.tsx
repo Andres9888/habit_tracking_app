@@ -77,17 +77,18 @@ jest.mock('react-native-reanimated', () => {
   };
 });
 
-// Mock Ionicons
-jest.mock('@expo/vector-icons', () => {
+// Mock lucide-react-native icons
+jest.mock('lucide-react-native', () => {
   const React = require('react');
   const { View } = require('react-native');
 
+  const createIcon =
+    (name: string) => (props: Record<string, unknown>) =>
+      React.createElement(View, { testID: `lucide-${name}`, ...props });
+
   return {
-    Ionicons: (props: { name: string }) =>
-      React.createElement(View, {
-        testID: `ionicons-${props.name}`,
-        ...props,
-      }),
+    ChevronDown: createIcon('ChevronDown'),
+    Flame: createIcon('Flame'),
   };
 });
 
@@ -158,7 +159,7 @@ describe('StreakRecordsAccordion', () => {
       const { getByTestId } = render(
         <StreakRecordsAccordion {...defaultProps} />
       );
-      expect(getByTestId('ionicons-chevron-down')).toBeTruthy();
+      expect(getByTestId('lucide-ChevronDown')).toBeTruthy();
     });
   });
 

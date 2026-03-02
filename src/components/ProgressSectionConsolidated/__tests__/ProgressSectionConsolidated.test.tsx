@@ -117,16 +117,6 @@ jest.mock('lucide-react-native', () => {
   };
 });
 
-// Mock @expo/vector-icons
-jest.mock('@expo/vector-icons', () => {
-  const React = require('react');
-  const { View } = require('react-native');
-
-  return {
-    Ionicons: (props: { name?: string; size?: number }) =>
-      React.createElement(View, { testID: `ionicon-${props.name}`, ...props }),
-  };
-});
 
 // Mock hooks
 jest.mock('../../../hooks/useHapticFeedback', () => ({

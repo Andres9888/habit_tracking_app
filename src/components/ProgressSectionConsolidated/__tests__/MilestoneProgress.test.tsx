@@ -60,14 +60,17 @@ jest.mock('react-native-reanimated', () => {
   };
 });
 
-// Mock Ionicons
-jest.mock('@expo/vector-icons', () => {
+// Mock lucide-react-native icons
+jest.mock('lucide-react-native', () => {
   const React = require('react');
   const { View } = require('react-native');
 
+  const createIcon =
+    (name: string) => (props: Record<string, unknown>) =>
+      React.createElement(View, { testID: `lucide-${name}`, ...props });
+
   return {
-    Ionicons: (props: Record<string, unknown>) =>
-      React.createElement(View, { testID: `ionicon-${props.name}`, ...props }),
+    CircleArrowRight: createIcon('CircleArrowRight'),
   };
 });
 

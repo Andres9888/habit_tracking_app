@@ -104,17 +104,21 @@ jest.mock('../../../constants/motion', () => ({
   },
 }));
 
-// Mock Ionicons
-jest.mock('@expo/vector-icons', () => {
+// Mock lucide-react-native icons
+jest.mock('lucide-react-native', () => {
   const React = require('react');
   const { View } = require('react-native');
 
+  const createIcon =
+    (name: string) => (props: Record<string, unknown>) =>
+      React.createElement(View, { testID: `lucide-${name}`, ...props });
+
   return {
-    Ionicons: (props: { name: string; color: string; size: number }) =>
-      React.createElement(View, {
-        testID: `ionicons-${props.name}`,
-        ...props,
-      }),
+    Check: createIcon('Check'),
+    X: createIcon('X'),
+    ArrowUp: createIcon('ArrowUp'),
+    ArrowDown: createIcon('ArrowDown'),
+    Minus: createIcon('Minus'),
   };
 });
 
@@ -194,7 +198,7 @@ describe('WeeklySummaryStrip', () => {
       );
 
       // Should have at least one checkmark icon
-      const checkmarks = getAllByTestId('ionicons-checkmark');
+      const checkmarks = getAllByTestId('lucide-Check');
       expect(checkmarks.length).toBeGreaterThanOrEqual(1);
     });
 
@@ -210,7 +214,7 @@ describe('WeeklySummaryStrip', () => {
       );
 
       // Should have close icons for missed days
-      const closeIcons = getAllByTestId('ionicons-close');
+      const closeIcons = getAllByTestId('lucide-X');
       expect(closeIcons.length).toBeGreaterThan(0);
     });
 
@@ -239,7 +243,7 @@ describe('WeeklySummaryStrip', () => {
 
       // All days completed: 6 days show 'complete' + 1 day shows 'todayComplete'
       // Both states use the checkmark icon
-      const checkmarks = getAllByTestId('ionicons-checkmark');
+      const checkmarks = getAllByTestId('lucide-Check');
       // The exact count may vary based on how future days are determined
       // (relative to the mocked Date.now), but we should have at least 6
       expect(checkmarks.length).toBeGreaterThanOrEqual(6);
@@ -335,7 +339,7 @@ describe('WeeklySummaryStrip', () => {
       };
 
       const { getByTestId } = render(<WeeklySummaryStrip {...props} />);
-      expect(getByTestId('ionicons-arrow-up')).toBeTruthy();
+      expect(getByTestId('lucide-ArrowUp')).toBeTruthy();
     });
 
     it('shows down arrow when current week is worse', () => {
@@ -349,7 +353,7 @@ describe('WeeklySummaryStrip', () => {
       };
 
       const { getByTestId } = render(<WeeklySummaryStrip {...props} />);
-      expect(getByTestId('ionicons-arrow-down')).toBeTruthy();
+      expect(getByTestId('lucide-ArrowDown')).toBeTruthy();
     });
 
     it('shows neutral icon when weeks are equal', () => {
@@ -363,7 +367,7 @@ describe('WeeklySummaryStrip', () => {
       };
 
       const { getByTestId } = render(<WeeklySummaryStrip {...props} />);
-      expect(getByTestId('ionicons-remove')).toBeTruthy();
+      expect(getByTestId('lucide-Minus')).toBeTruthy();
     });
   });
 
@@ -454,7 +458,7 @@ describe('WeeklySummaryStrip', () => {
       );
 
       // Press the last checkmark (today)
-      const checkmarks = getAllByTestId('ionicons-checkmark');
+      const checkmarks = getAllByTestId('lucide-Check');
       fireEvent.press(checkmarks[checkmarks.length - 1]);
 
       // Should not be called because today is already completed
@@ -597,7 +601,7 @@ describe('WeeklySummaryStrip', () => {
       // Should have close icons for missed days
       // The exact count may vary based on how dates compare to the mocked Date.now
       // But we should have multiple close icons for missed days
-      const closeIcons = getAllByTestId('ionicons-close');
+      const closeIcons = getAllByTestId('lucide-X');
       expect(closeIcons.length).toBeGreaterThanOrEqual(4); // At least 4 missed days
     });
   });
