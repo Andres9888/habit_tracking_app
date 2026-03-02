@@ -1,9 +1,8 @@
-// Ensure native modules initialize before the app renders
+// Expo expects gesture/animation runtimes to initialize before app registration.
 import 'react-native-gesture-handler';
 import 'react-native-reanimated';
 import { registerRootComponent } from 'expo';
 
-// Use the newer App version from src/
-import App from './src/App';
+import AppRoot from './src/App';
 
-registerRootComponent(App);
+registerRootComponent(AppRoot);
