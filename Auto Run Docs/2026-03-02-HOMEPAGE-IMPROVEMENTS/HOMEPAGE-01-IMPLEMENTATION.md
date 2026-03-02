@@ -52,12 +52,13 @@ All changes are confined to the CalendarTimeline shelf area and ProgressText com
 
 ### Improvement 2: Completion Celebration Micro-Animation
 
-- [ ] Modify `src/components/CalendarTimeline/components/ProgressText.tsx`:
+- [x] Modify `src/components/CalendarTimeline/components/ProgressText.tsx`:
   - Add `Animated` import from `react-native-reanimated`
   - When transitioning to "All done!" state, wrap text in `Animated.View` with entering animation
   - Animation: `ZoomIn.duration(300).springify().damping(12)` or equivalent scale bounce
   - Respect `reduceMotion` — skip animation if enabled
   - File must remain ≤100 lines (currently 38 lines, plenty of room)
+  - **Completed**: 50-line file using `Animated.Text` with `ZoomIn.duration(300).springify().damping(12)` entering animation. Uses `useReduceMotion` hook directly (avoids prop threading since ProgressText is a leaf component). Early return pattern with `Animated.Text` for "All done!" vs regular `Text` for counting — React unmounts/mounts on transition, naturally triggering the animation. 6 tests in `ProgressText.test.tsx` covering null render, count display, "All done!" render, overflow case, animated node, and reduceMotion skip. All 42 streak+progress tests pass.
 
 ### Improvement 3: Week Progress Micro-Bar
 
