@@ -1,38 +1,27 @@
 /**
  * App Root Component
  *
- * Main application entry point that sets up the provider hierarchy:
- * - Sentry: Error tracking and monitoring
- * - Clerk: Authentication
- * - Convex: Real-time database
- * - RevenueCat: Subscription management
- * - React Native Paper: UI theming
- *
- * Performance optimizations:
- * - Sentry init deferred with requestIdleCallback
- * - Non-critical providers lazy loaded after first paint
- * - Provider chain optimized to minimize blocking
+ * Main application entry point that sets up the provider hierarchy.
+ * See CoreProviders for the critical-path providers (Clerk, Convex, Sentry)
+ * and LazyProviders for deferred non-critical providers.
  */
 
 import '../global.css';
 
 import { ClerkProvider } from '@clerk/clerk-expo';
 import type { PropsWithChildren } from 'react';
-import { useState, useEffect } from 'react';
 import { PaperProvider } from 'react-native-paper';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { AuthGate } from './components/auth/AuthGate';
-import { StreakMilestoneProvider } from './components/StreakMilestoneCelebration';
 import { tokenCache } from './lib/appConfig';
 import { initSentry, SentryErrorBoundary } from './lib/sentry';
 import { ConvexClerkProvider, SentryUserSync } from './providers';
+import { LazyProviders } from './providers/LazyProviders';
 import { ThemeColorProvider } from './theme/ThemeContext';
 import theme from './theme';
 
 // Initialize Sentry after first frame to avoid blocking app launch.
-// requestIdleCallback (or setTimeout fallback) defers this work until
-// the main thread is idle, keeping the first paint fast.
 if (typeof requestIdleCallback === 'function') {
   requestIdleCallback(() => initSentry());
 } else {
@@ -46,55 +35,6 @@ if (!clerkKey) {
   );
 }
 
-/**
- * Lazy-loaded providers that don't block critical rendering path.
- * These are loaded after the initial paint to improve startup time.
- */
-function LazyProviders({ children }: PropsWithChildren) {
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    // Load non-critical providers after a short delay
-    // This ensures the critical path renders first
-    const timer = setTimeout(() => setMounted(true), 100);
-    return () => clearTimeout(timer);
-  }, []);
-
-  if (!mounted) {
-    return <>{children}</>;
-  }
-
-  // Note: These could be converted to async import() but would require Suspense
-  // For now, ESLint rule is disabled for this specific pattern
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const {
-    PurchasesProvider,
-  } = require('./components/providers/PurchasesProvider');
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const { NetworkStatusProvider } = require('./contexts/NetworkStatusContext');
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const { SyncStatusProvider } = require('./contexts/SyncStatusContext');
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const { OfflineProvider } = require('./providers/OfflineProvider');
-
-  return (
-    <NetworkStatusProvider>
-      <OfflineProvider>
-        <SyncStatusProvider>
-          <PurchasesProvider>
-            <StreakMilestoneProvider>{children}</StreakMilestoneProvider>
-          </PurchasesProvider>
-        </SyncStatusProvider>
-      </OfflineProvider>
-    </NetworkStatusProvider>
-  );
-}
-
-/**
- * Core providers needed for authentication and data access.
- * These are loaded immediately as they're required for the app to function.
- */
 function CoreProviders({ children }: PropsWithChildren) {
   return (
     <SentryErrorBoundary>
