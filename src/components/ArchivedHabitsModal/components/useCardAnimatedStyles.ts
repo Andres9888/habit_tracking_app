@@ -9,6 +9,7 @@ import {
   cancelAnimation,
   type SharedValue,
 } from 'react-native-reanimated';
+import { springs } from '@/theme/animations';
 import { CARD_ANIMATION_DURATION, CARD_ANIMATION_STAGGER } from '../utils';
 
 interface UseCardAnimatedStylesParams {
@@ -52,7 +53,7 @@ export const useCardAnimatedStyles = ({
     );
     cardTranslateY.value = withDelay(
       delay,
-      withSpring(0, { damping: 18, stiffness: 120 })
+      withSpring(0, springs.standard)
     );
 
     return () => {

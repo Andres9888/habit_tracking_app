@@ -1,4 +1,5 @@
 import { Dimensions } from 'react-native';
+import { springs } from '@/theme/animations';
 
 export const SCREEN_HEIGHT = Dimensions.get('window').height;
 
@@ -6,11 +7,7 @@ export const SCREEN_HEIGHT = Dimensions.get('window').height;
  * Spring configuration for bottom sheet animations
  * Matching SortBottomSheet's organic spring feel
  */
-export const SHEET_SPRING_CONFIG = {
-  damping: 18,
-  mass: 1,
-  stiffness: 120,
-};
+export const SHEET_SPRING_CONFIG = springs.standard;
 
 /** Distance threshold for dismissing sheet via drag */
 export const DISMISS_THRESHOLD = 100;

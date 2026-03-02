@@ -7,6 +7,7 @@ import Animated, {
   withTiming,
   FadeInDown,
 } from 'react-native-reanimated';
+import { springs } from '@/theme/animations';
 import { useHapticFeedback } from '../../../../hooks/useHapticFeedback';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import type { HabitSortMode } from '../../types';
@@ -72,10 +73,7 @@ export function SortChip({
 
   const handlePressOut = () => {
     if (!reduceMotion) {
-      buttonScale.value = withSpring(1, {
-        damping: 18,
-        stiffness: 200,
-      });
+      buttonScale.value = withSpring(1, springs.sheet);
     }
   };
 

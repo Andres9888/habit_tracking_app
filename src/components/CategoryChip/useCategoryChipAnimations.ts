@@ -48,10 +48,7 @@ export function useCategoryChipAnimations({
 
   // Selection animation
   useEffect(() => {
-    selectionProgress.value = withSpring(isSelected ? 1 : 0, {
-      damping: 15,
-      stiffness: 150,
-    });
+    selectionProgress.value = withSpring(isSelected ? 1 : 0, springs.standard);
   }, [isSelected, selectionProgress]);
 
   const animatedStyles = useAnimatedStyles({

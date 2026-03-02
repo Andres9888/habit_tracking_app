@@ -19,6 +19,7 @@ import {
   EMOJI_SCALE_DELAY,
   CIRCUMFERENCE,
 } from './constants';
+import { springs } from '@/theme/animations';
 
 interface UseHeroAnimationsParams {
   clampedStrength: number;
@@ -56,7 +57,7 @@ export function useHeroAnimations({
     });
     emojiScale.value = withDelay(
       EMOJI_SCALE_DELAY,
-      withSpring(1, { damping: 8, stiffness: 150 })
+      withSpring(1, springs.bouncy)
     );
     progressBarWidth.value = withDelay(
       200,

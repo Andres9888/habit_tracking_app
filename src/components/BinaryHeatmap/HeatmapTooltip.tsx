@@ -12,6 +12,7 @@ import Animated, {
   withTiming,
   withSpring,
 } from 'react-native-reanimated';
+import { springs } from '@/theme/animations';
 
 import type { HeatmapTooltipProps } from './types';
 import { formatTooltipText } from './utils';
@@ -37,7 +38,7 @@ export const HeatmapTooltip = memo(function HeatmapTooltip({
       opacity.value = withTiming(1, { duration: animationDuration });
       scale.value = reduceMotion
         ? withTiming(1, { duration: 0 })
-        : withSpring(1, { damping: 20, stiffness: 300 });
+        : withSpring(1, springs.bottomSheet);
     } else {
       opacity.value = withTiming(0, { duration: animationDuration });
       scale.value = withTiming(0.9, { duration: animationDuration });

@@ -12,6 +12,7 @@ import {
   withSpring,
   withTiming,
 } from 'react-native-reanimated';
+import { springs } from '@/theme/animations';
 
 export function useScienceBadgePulse(
   scienceBadgePulse: SharedValue<number>,
@@ -74,7 +75,7 @@ export function useSuccessAnimation(
 ) {
   useEffect(() => {
     if (isImported) {
-      checkmarkScale.value = withSpring(1, { damping: 8, stiffness: 150 });
+      checkmarkScale.value = withSpring(1, springs.bouncy);
       successGlow.value = withSequence(
         withTiming(0.6, { duration: 200 }),
         withTiming(0, { duration: 800 })

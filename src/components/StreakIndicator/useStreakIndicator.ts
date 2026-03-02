@@ -10,6 +10,7 @@ import {
   withSequence,
 } from 'react-native-reanimated';
 import { useAppTheme } from '../../theme';
+import { springs } from '@/theme/animations';
 import type { Milestone } from './StreakIndicator.types';
 import { MILESTONES, MILESTONE_BADGES } from './StreakIndicator.constants';
 
@@ -46,8 +47,8 @@ export function useStreakIndicator({
     if (currentMilestone && onMilestoneRef.current) {
       onMilestoneRef.current(currentMilestone);
       scale.value = withSequence(
-        withSpring(1.2, { damping: 8 }),
-        withSpring(1, { damping: 10 })
+        withSpring(1.2, springs.pop),
+        withSpring(1, springs.bouncy)
       );
     }
   }, [currentMilestone, scale]);

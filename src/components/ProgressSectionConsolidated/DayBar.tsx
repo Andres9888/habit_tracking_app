@@ -21,6 +21,7 @@ import {
   getBarColor,
   getDayLabelClass,
 } from './DayBar.constants';
+import { springs } from '@/theme/animations';
 
 export interface DayBarProps {
   dayIndex: number;
@@ -74,10 +75,7 @@ export const DayBar = React.memo(function DayBar({
 
     scaleY.value = withDelay(
       delay,
-      withSpring(1, {
-        damping: 12,
-        stiffness: 100,
-      })
+      withSpring(1, springs.celebration)
     );
   }, [index, reduceMotion, scaleY, opacity]);
 

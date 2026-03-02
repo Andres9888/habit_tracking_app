@@ -22,6 +22,7 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
+import { springs } from '@/theme/animations';
 
 import { useReduceMotion } from '../../hooks/useReduceMotion';
 import { TIME_RANGE_OPTIONS } from './constants';
@@ -45,10 +46,7 @@ export const TimeRangeToggle = React.memo(function TimeRangeToggle({
   // Update indicator position when value changes
   useEffect(() => {
     const newIndex = Math.max(0, TIME_RANGE_OPTIONS.findIndex((opt) => opt.value === value));
-    indicatorPosition.value = reduceMotion ? newIndex : withSpring(newIndex, {
-        damping: 15,
-        stiffness: 200,
-      });
+    indicatorPosition.value = reduceMotion ? newIndex : withSpring(newIndex, springs.sheet);
   }, [value, reduceMotion, indicatorPosition]);
 
   const handlePress = useCallback(

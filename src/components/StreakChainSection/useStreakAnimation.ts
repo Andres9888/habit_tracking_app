@@ -11,6 +11,7 @@ import {
   withSequence,
   withSpring,
 } from 'react-native-reanimated';
+import { springs } from '@/theme/animations';
 
 interface UseStreakAnimationOptions {
   currentStreak: number;
@@ -28,11 +29,11 @@ export function useStreakAnimation({
   useEffect(() => {
     if (currentStreak > 0) {
       numberScale.value = withSequence(
-        withSpring(1.08, { damping: 6 }),
-        withSpring(1, { damping: 10 })
+        withSpring(1.08, springs.bouncy),
+        withSpring(1, springs.bouncy)
       );
     }
-    barWidth.value = withDelay(150, withSpring(progress, { damping: 15 }));
+    barWidth.value = withDelay(150, withSpring(progress, springs.standard));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentStreak, progress]);
 

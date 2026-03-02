@@ -4,6 +4,7 @@
  */
 
 import { withSpring, withTiming } from 'react-native-reanimated';
+import { springs } from '@/theme/animations';
 import type { ModalVariant } from './Modal.types';
 import {
   FULLSCREEN_ORGANIC_SPRING,
@@ -54,7 +55,7 @@ export function runEnterAnimation(
       alertOpacity.value = useReduced ? 1 : withTiming(1, fadeIn(200));
       scale.value = useReduced
         ? 1
-        : withSpring(1, { damping: 20, stiffness: 300 });
+        : withSpring(1, springs.bottomSheet);
       break;
     }
   }

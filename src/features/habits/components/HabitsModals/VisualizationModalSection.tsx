@@ -75,10 +75,7 @@ export function VisualizationModalSection({
             style={[{ backgroundColor: colors.gray[100] }, closeAnimatedStyle]}
             onPress={handleClose}
             onPressIn={() => {
-              closeScale.value = withSpring(0.9, {
-                damping: 15,
-                stiffness: 200,
-              });
+              closeScale.value = withSpring(0.9, springs.sheet);
             }}
             onPressOut={() => {
               closeScale.value = withSpring(1, springs.button);

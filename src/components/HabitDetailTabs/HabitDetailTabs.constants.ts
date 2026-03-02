@@ -2,6 +2,7 @@
  * HabitDetailTabs Constants
  */
 
+import { springs } from '@/theme/animations';
 import type { TabConfig } from './HabitDetailTabs.types';
 
 export const TABS: TabConfig[] = [
@@ -11,11 +12,7 @@ export const TABS: TabConfig[] = [
 ];
 
 /** Spring config for smooth pill animation */
-export const PILL_SPRING_CONFIG = {
-  damping: 18,
-  mass: 1,
-  stiffness: 180,
-};
+export const PILL_SPRING_CONFIG = springs.standard;
 
 /** Padding inside the container */
 export const CONTAINER_PADDING = 4;

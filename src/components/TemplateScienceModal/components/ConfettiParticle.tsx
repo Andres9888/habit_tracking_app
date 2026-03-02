@@ -14,6 +14,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import type { ConfettiParticleProps } from '../TemplateScienceModal.types';
 import { borderRadius } from '../../../theme/spacing';
+import { springs } from '@/theme/animations';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -29,7 +30,7 @@ export const ConfettiParticle = ({
   const scale = useSharedValue(0);
 
   useEffect(() => {
-    scale.value = withDelay(delay, withSpring(1, { damping: 8 }));
+    scale.value = withDelay(delay, withSpring(1, springs.pop));
     translateY.value = withDelay(
       delay,
       withTiming(Math.round(SCREEN_HEIGHT * 0.4), {

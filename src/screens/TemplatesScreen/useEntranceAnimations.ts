@@ -10,8 +10,9 @@ import {
   withSpring,
   withTiming,
 } from 'react-native-reanimated';
+import { springs } from '@/theme/animations';
 
-const ENTRANCE_SPRING = { damping: 24, stiffness: 400 };
+const ENTRANCE_SPRING = springs.exit;
 const FADE_CONFIG = { duration: 150, easing: Easing.out(Easing.cubic) };
 const CONTENT_FADE = { duration: 180, easing: Easing.out(Easing.cubic) };
 

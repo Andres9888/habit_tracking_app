@@ -29,7 +29,7 @@ export function useHighlightAnimation(
       runHighlightGlow(highlightGlow);
       cardScale.value = withSequence(
         withSpring(1.04, springs.celebration),
-        withSpring(1, { damping: 15, stiffness: 250 })
+        withSpring(1, springs.pulse)
       );
     }, 200);
     return () => clearTimeout(timeout);

@@ -10,6 +10,7 @@ import {
   runOnJS,
   Easing,
 } from 'react-native-reanimated';
+import { springs } from '@/theme/animations';
 import type { EntranceAnimationValues } from '../types';
 import { TIMING, ACCENT_TARGET_WIDTH } from '../constants';
 
@@ -24,10 +25,7 @@ export function runWidthExpansion(
     duration: TIMING.fadeUp,
     easing: Easing.out(Easing.cubic),
   });
-  values.cardTranslateY.value = withSpring(0, {
-    damping: 20,
-    stiffness: 200,
-  });
+  values.cardTranslateY.value = withSpring(0, springs.sheet);
 
   values.accentScaleY.value = 1;
   values.accentOpacity.value = 1;

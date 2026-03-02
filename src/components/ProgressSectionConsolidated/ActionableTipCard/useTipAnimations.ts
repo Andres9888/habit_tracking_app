@@ -13,6 +13,7 @@ import {
 
 import { useReduceMotion } from '../../../hooks/useReduceMotion';
 import { Springs } from '../../../constants/motion';
+import { springs } from '@/theme/animations';
 import { ENTRANCE_DURATION } from './constants';
 import {
   CARD_PRESS_SCALE,
@@ -37,10 +38,7 @@ export function useTipAnimations() {
       easing: Easing.out(Easing.cubic),
     });
 
-    translateY.value = withSpring(0, {
-      damping: 18,
-      stiffness: 120,
-    });
+    translateY.value = withSpring(0, springs.standard);
   }, [reduceMotion, opacity, translateY]);
 
   const handlePressIn = useCallback(() => {

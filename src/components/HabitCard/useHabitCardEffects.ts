@@ -5,6 +5,7 @@
 import { useEffect } from 'react';
 import type { SharedValue } from 'react-native-reanimated';
 import { withSpring } from 'react-native-reanimated';
+import { springs } from '@/theme/animations';
 
 interface UseHabitCardEffectsOptions {
   strength: number;
@@ -24,10 +25,7 @@ export function useHabitCardEffects(options: UseHabitCardEffectsOptions) {
   } = options;
 
   useEffect(() => {
-    strengthFillWidth.value = withSpring(strength, {
-      damping: 15,
-      stiffness: 100,
-    });
+    strengthFillWidth.value = withSpring(strength, springs.standard);
   }, [strength, strengthFillWidth]);
 
   useEffect(() => {

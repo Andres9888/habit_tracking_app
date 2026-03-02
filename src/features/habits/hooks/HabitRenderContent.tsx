@@ -7,6 +7,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import { ScaleDecorator } from 'react-native-draggable-flatlist';
+import { springs } from '@/theme/animations';
 import DraggableHabit from '../../../components/DraggableHabit';
 import type { Habit, HabitStatus } from '../types';
 import type { UseHabitRenderItemArgs } from './useHabitRenderItem.types';
@@ -89,7 +90,7 @@ function HabitRenderContentComponent({
     opacity: withTiming(isActive ? 0.92 : 1, { duration: 150 }),
     transform: [
       {
-        scale: withSpring(isActive ? 1.03 : 1, { damping: 18, stiffness: 200 }),
+        scale: withSpring(isActive ? 1.03 : 1, springs.sheet),
       },
     ],
     ...(isActive

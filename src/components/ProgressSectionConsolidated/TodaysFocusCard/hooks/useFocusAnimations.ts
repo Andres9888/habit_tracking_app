@@ -18,7 +18,7 @@ import {
   SharedValue,
 } from 'react-native-reanimated';
 
-import { Springs } from '../../../../constants/motion';
+import { springs } from '@/theme/animations';
 import {
   ENTRANCE_DURATION,
   SHIMMER_DURATION,
@@ -53,11 +53,7 @@ export function useFocusAnimations(
       return;
     }
 
-    scale.value = withSpring(1, {
-      ...Springs.gentle,
-      damping: 20,
-      stiffness: 200,
-    });
+    scale.value = withSpring(1, springs.sheet);
     opacity.value = withTiming(1, {
       duration: ENTRANCE_DURATION,
       easing: Easing.out(Easing.cubic),

@@ -14,6 +14,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import type { DayBarProps } from '../InsightsSection.types';
 import { DAY_LABELS_SHORT } from '../InsightsSection.constants';
+import { springs } from '@/theme/animations';
 
 /**
  * Get background color class based on day statistics
@@ -49,7 +50,7 @@ export function DayBar({
     opacity.value = withDelay(index * 50, withTiming(1, { duration: 200 }));
     height.value = withDelay(
       index * 50 + 100,
-      withSpring(finalHeight, { damping: 12 })
+      withSpring(finalHeight, springs.celebration)
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps -- shared values are stable refs
   }, [index, finalHeight]);

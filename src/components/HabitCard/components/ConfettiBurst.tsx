@@ -9,6 +9,7 @@ import Animated, {
   runOnJS,
 } from 'react-native-reanimated';
 import { colors } from '../../../theme/colors';
+import { springs } from '@/theme/animations';
 import { styles } from './ConfettiBurst.styles';
 
 const CONFETTI_COLORS = [
@@ -39,10 +40,10 @@ function Particle({ color, endX, endY, onComplete }: ParticleProps) {
   const opacity = useSharedValue(1);
 
   React.useEffect(() => {
-    translateX.value = withSpring(endX, { damping: 15 });
-    translateY.value = withSpring(endY, { damping: 15 });
+    translateX.value = withSpring(endX, springs.standard);
+    translateY.value = withSpring(endY, springs.standard);
     scale.value = withSequence(
-      withSpring(1.5, { damping: 10 }),
+      withSpring(1.5, springs.bouncy),
       withTiming(0, { duration: 300 })
     );
     opacity.value = withTiming(0, { duration: 400 }, () => {

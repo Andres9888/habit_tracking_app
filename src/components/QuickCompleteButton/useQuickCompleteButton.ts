@@ -88,7 +88,7 @@ export function useQuickCompleteButton({
       onUncomplete?.();
     } else {
       checkScale.value = withSequence(
-        withSpring(1.3, { damping: 6, stiffness: 200 }),
+        withSpring(1.3, springs.celebration),
         withSpring(1, springs.bouncy)
       );
       checkRotation.value = withTiming(0, {

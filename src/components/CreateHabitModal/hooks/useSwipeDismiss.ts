@@ -5,6 +5,7 @@ import {
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
+import { springs } from '@/theme/animations';
 
 // Swipe dismissal constants
 const SWIPE_DISMISS_THRESHOLD = 100; // pixels
@@ -42,10 +43,7 @@ export function useSwipeDismiss({ onClose }: UseSwipeDismissProps) {
         runOnJS(onClose)();
         translateY.value = 0;
       } else {
-        translateY.value = withSpring(0, {
-          damping: 20,
-          stiffness: 300,
-        });
+        translateY.value = withSpring(0, springs.sheet);
       }
     });
 

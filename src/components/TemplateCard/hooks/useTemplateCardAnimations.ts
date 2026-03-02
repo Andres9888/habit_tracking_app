@@ -15,6 +15,7 @@ import {
   withSequence,
   Easing,
 } from 'react-native-reanimated';
+import { springs } from '@/theme/animations';
 
 interface UseTemplateCardAnimationsProps {
   animationIndex: number;
@@ -45,7 +46,7 @@ export function useTemplateCardAnimations({
     );
     cardTranslateY.value = withDelay(
       delay,
-      withSpring(0, { damping: 18, stiffness: 120 })
+      withSpring(0, springs.standard)
     );
 
     return () => {
@@ -57,7 +58,7 @@ export function useTemplateCardAnimations({
   // Success glow animation
   useEffect(() => {
     if (isImported) {
-      checkmarkScale.value = withSpring(1, { damping: 8, stiffness: 150 });
+      checkmarkScale.value = withSpring(1, springs.bouncy);
       if (!reducedMotion) {
         successGlow.value = withSequence(
           withTiming(0.6, { duration: 200 }),

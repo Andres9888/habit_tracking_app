@@ -32,7 +32,7 @@ export function createPressHandlers(
     } else {
       pressScale.value = withSpring(CARD_PRESS_SCALE, CARD_PRESS_SPRING_CONFIG);
       shadowElevation.value = withTiming(8, { duration: 100 });
-      pressRotation.value = withSpring(-0.5, { damping: 20, stiffness: 400 });
+      pressRotation.value = withSpring(-0.5, springs.gesture);
       chevronTranslate.value = withSpring(2, springs.responsive);
     }
   };

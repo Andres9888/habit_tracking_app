@@ -12,6 +12,7 @@ import ErrorBoundary from '../../../../components/ErrorBoundary';
 import { useHaptics } from '../../../../utils/haptics/useHaptics';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import TemplatesScreen from '../../../../screens/TemplatesScreen';
+import { springs } from '@/theme/animations';
 import type { TemplatesModalSectionProps } from './HabitsModals.types';
 import { springs } from '@/theme/animations';
 
@@ -60,10 +61,7 @@ export function TemplatesModalSection({
           style={[{ backgroundColor: colors.card }, closeAnimatedStyle]}
           onPress={handleClose}
           onPressIn={() => {
-            closeScale.value = withSpring(0.9, {
-              damping: 15,
-              stiffness: 200,
-            });
+            closeScale.value = withSpring(0.9, springs.sheet);
           }}
           onPressOut={() => {
             closeScale.value = withSpring(1, springs.button);

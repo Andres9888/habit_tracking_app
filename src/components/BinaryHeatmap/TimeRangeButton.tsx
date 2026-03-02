@@ -7,6 +7,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import type { TimeRange } from './types';
 import { styles } from './TimeRangeToggle.styles';
+import { springs } from '@/theme/animations';
 import {
   getTimeRangeLabel,
   getTimeRangeAccessibilityLabel,
@@ -35,11 +36,11 @@ export const TimeRangeButton = memo(function TimeRangeButton({
   });
 
   const handlePressIn = useCallback(() => {
-    if (!reduceMotion) scale.value = withSpring(0.95, { damping: 18 });
+    if (!reduceMotion) scale.value = withSpring(0.95, springs.standard);
   }, [reduceMotion, scale]);
 
   const handlePressOut = useCallback(() => {
-    if (!reduceMotion) scale.value = withSpring(1, { damping: 18 });
+    if (!reduceMotion) scale.value = withSpring(1, springs.standard);
   }, [reduceMotion, scale]);
 
   const handlePress = useCallback(() => {

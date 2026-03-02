@@ -8,6 +8,7 @@ import {
 } from 'lucide-react-native';
 import { Dimensions } from 'react-native';
 
+import { springs } from '@/theme/animations';
 import type { SortOptionConfig } from './types';
 
 export const { height: SCREEN_HEIGHT } = Dimensions.get('window');
@@ -16,11 +17,7 @@ export const { height: SCREEN_HEIGHT } = Dimensions.get('window');
  * Spring configuration for bottom sheet animations
  * Using softer, more organic spring matching app's FadeInDown.springify().damping(18) pattern
  */
-export const SHEET_SPRING_CONFIG = {
-  damping: 18,
-  mass: 1,
-  stiffness: 150,
-};
+export const SHEET_SPRING_CONFIG = springs.standard;
 
 export const SORT_OPTIONS: SortOptionConfig[] = [
   {
