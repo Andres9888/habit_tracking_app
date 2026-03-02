@@ -10,6 +10,7 @@ import {
   withSequence,
 } from 'react-native-reanimated';
 import { triggerHaptic } from '@/utils/haptics';
+import { springs } from '@/theme/animations';
 
 interface UseHeaderAnimationsParams {
   isExpanded: boolean;
@@ -50,11 +51,11 @@ export function useHeaderAnimations({
   });
 
   const handleHeaderPressIn = () => {
-    headerScale.value = withSpring(0.98, { damping: 18, stiffness: 150 });
+    headerScale.value = withSpring(0.98, springs.button);
   };
 
   const handleHeaderPressOut = () => {
-    headerScale.value = withSpring(1, { damping: 18, stiffness: 150 });
+    headerScale.value = withSpring(1, springs.button);
   };
 
   const handleHeaderPress = () => {

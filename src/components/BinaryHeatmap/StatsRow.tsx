@@ -14,6 +14,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { Settings } from 'lucide-react-native';
 
+import { springs } from '@/theme/animations';
 import type { StatsRowProps } from './types';
 import { COLORS } from './constants';
 import { useThemedStatsStyles } from './StatsRow.styles';
@@ -21,7 +22,7 @@ import { StreakBadge } from './StreakBadge';
 
 const PRESS_SCALE = 0.95;
 const SETTINGS_ICON_SIZE = 18;
-const SPRING_CONFIG = { damping: 18, stiffness: 150 };
+const SPRING_CONFIG = springs.standard;
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 export const StatsRow = memo(function StatsRow({

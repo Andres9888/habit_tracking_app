@@ -11,6 +11,7 @@ import Animated, {
   withSpring,
   withTiming,
 } from 'react-native-reanimated';
+import { springs } from '@/theme/animations';
 
 export interface StatCardProps {
   bgColor: string;
@@ -40,7 +41,7 @@ export function StatCard({
     opacity.value = withDelay(delay, withTiming(1, { duration: 200 }));
     scale.value = withDelay(
       delay,
-      withSpring(1, { damping: 18, stiffness: 150 })
+      withSpring(1, springs.standard)
     );
   }, [delay, opacity, scale]);
 

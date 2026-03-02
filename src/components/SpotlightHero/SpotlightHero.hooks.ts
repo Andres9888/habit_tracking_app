@@ -15,6 +15,7 @@ import {
   Easing,
   interpolate,
 } from 'react-native-reanimated';
+import { springs } from '@/theme/animations';
 
 export function useSpotlightAnimations(animationDelay: number) {
   const cardScale = useSharedValue(0.95);
@@ -64,11 +65,11 @@ export function useSpotlightAnimations(animationDelay: number) {
   }));
 
   const handlePressIn = () => {
-    pressScale.value = withSpring(0.98, { damping: 18, stiffness: 150 });
+    pressScale.value = withSpring(0.98, springs.button);
   };
 
   const handlePressOut = () => {
-    pressScale.value = withSpring(1, { damping: 18, stiffness: 150 });
+    pressScale.value = withSpring(1, springs.button);
   };
 
   return {

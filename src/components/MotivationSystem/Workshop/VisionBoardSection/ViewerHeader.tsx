@@ -13,16 +13,17 @@ import Animated, {
 } from 'react-native-reanimated';
 import { X, Edit3, Trash2 } from 'lucide-react-native';
 import { triggerHaptic } from '@/utils/haptics';
+import { springs } from '@/theme/animations';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 function usePressAnimation() {
   const scale = useSharedValue(1);
   const handlePressIn = useCallback(() => {
-    scale.value = withSpring(0.9, { damping: 18, stiffness: 150 });
+    scale.value = withSpring(0.9, springs.button);
   }, [scale]);
   const handlePressOut = useCallback(() => {
-    scale.value = withSpring(1, { damping: 18, stiffness: 150 });
+    scale.value = withSpring(1, springs.button);
   }, [scale]);
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: scale.value }],

@@ -7,6 +7,7 @@
 
 import { memo, useEffect } from 'react';
 import { View, Text, Platform } from 'react-native';
+import { springs } from '@/theme/animations';
 import { useThemeColors } from '../../theme/ThemeContext';
 import Animated, {
   useSharedValue,
@@ -50,13 +51,13 @@ function DailyProgressRingComponent({
   useEffect(() => {
     const target = total > 0 ? completed / total : 0;
     // Spring-physics fill with design system values
-    progress.value = withSpring(target, { damping: 18, stiffness: 150 });
+    progress.value = withSpring(target, springs.standard);
 
     // Subtle scale pulse when progress changes (premium micro-interaction)
     if (target > 0) {
       ringScale.value = withSequence(
         withSpring(1.04, { damping: 12, stiffness: 200 }),
-        withSpring(1, { damping: 18, stiffness: 150 })
+        withSpring(1, springs.standard)
       );
     }
   }, [completed, total, progress, ringScale]);

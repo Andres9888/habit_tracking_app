@@ -5,6 +5,7 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
+import { springs } from '@/theme/animations';
 
 interface SubmitButtonProps {
   label: string;
@@ -35,13 +36,13 @@ export function SubmitButton({
 
   const handlePressIn = () => {
     if (!reduceMotion) {
-      scale.value = withSpring(0.97, { damping: 18, stiffness: 150 });
+      scale.value = withSpring(0.97, springs.button);
     }
   };
 
   const handlePressOut = () => {
     if (!reduceMotion) {
-      scale.value = withSpring(1, { damping: 18, stiffness: 150 });
+      scale.value = withSpring(1, springs.button);
     }
   };
 

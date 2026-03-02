@@ -11,6 +11,7 @@ import {
   Easing,
 } from 'react-native-reanimated';
 
+import { springs } from '@/theme/animations';
 import { CATEGORY_COLORS } from './CategoryChip.constants';
 import { useAnimatedStyles } from './useAnimatedStyles';
 
@@ -41,7 +42,7 @@ export function useCategoryChipAnimations({
     );
     chipTranslateX.value = withDelay(
       delay,
-      withSpring(0, { damping: 18, stiffness: 150 })
+      withSpring(0, springs.standard)
     );
   }, [animationIndex, chipOpacity, chipTranslateX]);
 

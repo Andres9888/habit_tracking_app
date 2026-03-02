@@ -10,6 +10,7 @@ import Animated, {
   Easing,
   cancelAnimation,
 } from 'react-native-reanimated';
+import { springs } from '@/theme/animations';
 import { useHapticFeedback } from '../../../hooks/useHapticFeedback';
 import { useReduceMotion } from '../../../hooks/useReduceMotion';
 
@@ -54,7 +55,7 @@ export const TemplateListFooter = ({ onClose }: TemplateListFooterProps) => {
     );
     entranceTranslateY.value = withDelay(
       ENTRANCE_DELAY,
-      withSpring(0, { damping: 18, stiffness: 150 })
+      withSpring(0, springs.standard)
     );
 
     return () => {

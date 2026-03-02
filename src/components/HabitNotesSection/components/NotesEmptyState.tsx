@@ -12,6 +12,7 @@ import Animated, {
 import { triggerHaptic } from '@/utils/haptics';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { fontFamilies } from '@/theme/typography';
+import { springs } from '@/theme/animations';
 
 interface NotesEmptyStateProps {
   onAddNote: () => void;
@@ -27,11 +28,11 @@ export function NotesEmptyState({ onAddNote }: NotesEmptyStateProps) {
   }));
 
   const handlePressIn = () => {
-    scale.value = withSpring(0.97, { damping: 18, stiffness: 150 });
+    scale.value = withSpring(0.97, springs.button);
   };
 
   const handlePressOut = () => {
-    scale.value = withSpring(1, { damping: 18, stiffness: 150 });
+    scale.value = withSpring(1, springs.button);
   };
 
   const handlePress = () => {

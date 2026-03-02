@@ -9,6 +9,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { useThemeColors } from '../../theme';
 import { triggerHaptic } from '@/utils/haptics';
+import { springs } from '@/theme/animations';
 
 interface EditHeaderProps {
   paddingTop: number;
@@ -74,10 +75,10 @@ export function EditHeader({
         ]}
         onPress={handleSave}
         onPressIn={() => {
-          scale.value = withSpring(0.95, { damping: 18, stiffness: 150 });
+          scale.value = withSpring(0.95, springs.button);
         }}
         onPressOut={() => {
-          scale.value = withSpring(1, { damping: 18, stiffness: 150 });
+          scale.value = withSpring(1, springs.button);
         }}
       >
         {isSaving && <ActivityIndicator color='#ffffff' size='small' />}

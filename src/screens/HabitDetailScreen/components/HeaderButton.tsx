@@ -10,6 +10,7 @@ import { triggerHaptic } from '@/utils/haptics';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { fontFamilies } from '../../../theme/typography';
 import { buttonShadow } from './DetailHeader.constants';
+import { springs } from '@/theme/animations';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -20,8 +21,6 @@ interface HeaderButtonProps {
   /** Optional visible text label next to the icon */
   text?: string;
 }
-
-const SPRING = { damping: 18, stiffness: 150 };
 
 export function HeaderButton({
   onPress,
@@ -59,10 +58,10 @@ export function HeaderButton({
         ]}
         onPress={handlePress}
         onPressIn={() => {
-          scale.value = withSpring(0.92, SPRING);
+          scale.value = withSpring(0.92, springs.button);
         }}
         onPressOut={() => {
-          scale.value = withSpring(1, SPRING);
+          scale.value = withSpring(1, springs.button);
         }}
       >
         <View style={{ opacity: 0.7 }}>
@@ -83,10 +82,10 @@ export function HeaderButton({
       style={[buttonShadow, animStyle, { backgroundColor: colors.card }]}
       onPress={handlePress}
       onPressIn={() => {
-        scale.value = withSpring(0.92, SPRING);
+        scale.value = withSpring(0.92, springs.button);
       }}
       onPressOut={() => {
-        scale.value = withSpring(1, SPRING);
+        scale.value = withSpring(1, springs.button);
       }}
     >
       {icon}

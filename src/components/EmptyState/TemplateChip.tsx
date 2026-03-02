@@ -11,6 +11,7 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 
+import { springs } from '@/theme/animations';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 import { useThemeColors } from '../../theme/ThemeContext';
 import type { QuickStartTemplate } from './types';
@@ -18,7 +19,7 @@ import { styles } from './styles';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
-const SPRING_CONFIG = { damping: 18, stiffness: 150 };
+const SPRING_CONFIG = springs.standard;
 
 interface TemplateChipProps {
   template: QuickStartTemplate;

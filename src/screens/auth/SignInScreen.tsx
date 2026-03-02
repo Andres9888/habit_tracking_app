@@ -20,6 +20,7 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import Animated from 'react-native-reanimated';
+import { springs } from '@/theme/animations';
 import {
   AuthDivider,
   AuthError,
@@ -84,7 +85,7 @@ function SignInScreenContent(_props: SignInScreenProps = {}) {
     // Logo entrance
     logoScale.value = withDelay(
       50,
-      withSpring(1, { damping: 18, stiffness: 150 })
+      withSpring(1, springs.standard)
     );
     logoOpacity.value = withDelay(50, withTiming(1, { duration: 280 }));
 
@@ -92,14 +93,14 @@ function SignInScreenContent(_props: SignInScreenProps = {}) {
     headerOpacity.value = withDelay(110, withTiming(1, { duration: 280 }));
     headerTranslateY.value = withDelay(
       110,
-      withSpring(0, { damping: 18, stiffness: 150 })
+      withSpring(0, springs.standard)
     );
 
     // Content entrance (60ms stagger)
     contentOpacity.value = withDelay(170, withTiming(1, { duration: 280 }));
     contentTranslateY.value = withDelay(
       170,
-      withSpring(0, { damping: 18, stiffness: 150 })
+      withSpring(0, springs.standard)
     );
   }, []);
 

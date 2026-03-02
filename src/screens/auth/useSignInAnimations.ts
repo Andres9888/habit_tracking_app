@@ -14,8 +14,7 @@ import {
   withSpring,
   withTiming,
 } from 'react-native-reanimated';
-
-const SPRING_CONFIG = { damping: 18, stiffness: 150 };
+import { springs } from '@/theme/animations';
 const STAGGER = 60;
 
 export function useSignInAnimations() {
@@ -28,16 +27,16 @@ export function useSignInAnimations() {
 
   useEffect(() => {
     // Logo entrance
-    logoScale.value = withSpring(1, SPRING_CONFIG);
+    logoScale.value = withSpring(1, springs.standard);
     logoOpacity.value = withTiming(1, { duration: 280 });
 
     // Header entrance (60ms stagger)
     headerOpacity.value = withDelay(STAGGER, withTiming(1, { duration: 280 }));
-    headerTranslateY.value = withDelay(STAGGER, withSpring(0, SPRING_CONFIG));
+    headerTranslateY.value = withDelay(STAGGER, withSpring(0, springs.standard));
 
     // Content entrance (120ms stagger)
     contentOpacity.value = withDelay(STAGGER * 2, withTiming(1, { duration: 280 }));
-    contentTranslateY.value = withDelay(STAGGER * 2, withSpring(0, SPRING_CONFIG));
+    contentTranslateY.value = withDelay(STAGGER * 2, withSpring(0, springs.standard));
   }, [
     contentOpacity,
     contentTranslateY,

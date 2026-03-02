@@ -9,6 +9,7 @@ import {
   withSpring,
 } from 'react-native-reanimated';
 import type { LayoutChangeEvent } from 'react-native';
+import { springs } from '@/theme/animations';
 
 interface UseTabIndicatorOptions {
   reducedMotion: boolean;
@@ -42,7 +43,7 @@ export function useTabIndicator({ reducedMotion }: UseTabIndicatorOptions) {
     (position: 0 | 1) => {
       tabIndicatorPosition.value = reducedMotion
         ? position
-        : withSpring(position, { damping: 18, stiffness: 150 });
+        : withSpring(position, springs.standard);
     },
     [reducedMotion, tabIndicatorPosition]
   );

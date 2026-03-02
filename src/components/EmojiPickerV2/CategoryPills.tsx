@@ -5,6 +5,7 @@ import Animated, {
   withSpring,
   useSharedValue,
 } from 'react-native-reanimated';
+import { springs } from '@/theme/animations';
 import { HABIT_CATEGORIES } from '../../constants/habitEmojis';
 import { styles } from './CategoryPills.styles';
 
@@ -31,11 +32,11 @@ export const CategoryPill = memo(
     }));
 
     const handlePressIn = useCallback(() => {
-      scale.value = withSpring(0.95, { damping: 18, stiffness: 150 });
+      scale.value = withSpring(0.95, springs.button);
     }, [scale]);
 
     const handlePressOut = useCallback(() => {
-      scale.value = withSpring(1, { damping: 18, stiffness: 150 });
+      scale.value = withSpring(1, springs.button);
     }, [scale]);
 
     return (

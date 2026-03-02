@@ -5,6 +5,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { withSpring, withTiming, withSequence } from 'react-native-reanimated';
+import { springs } from '@/theme/animations';
 import { SPRING_BOUNCY, SPRING_GENTLE } from '../../../../../animations';
 import { ONE_HOUR_MS, ONE_DAY_MS } from '../../LettersSection.constants';
 import type { LetterData } from '../../LettersSection.types';
@@ -73,7 +74,7 @@ export function useReadLetterModal({
       timersRef.current.push(setTimeout(() => {
         anim.sparkleScale.value = withSequence(
           withSpring(1.2, SPRING_BOUNCY),
-          withSpring(1, { damping: 18, stiffness: 150 })
+          withSpring(1, springs.standard)
         );
         triggerHaptic('success');
       }, 300));

@@ -12,12 +12,13 @@ import Animated, {
   cancelAnimation,
 } from 'react-native-reanimated';
 import type { ConnectorLineProps } from './types';
+import { springs } from '@/theme/animations';
 
 export function ConnectorLine({ active, index }: ConnectorLineProps) {
   const scaleX = useSharedValue(0);
 
   useEffect(() => {
-    scaleX.value = withDelay(index * 35 + 15, withSpring(1, { damping: 18, stiffness: 150 }));
+    scaleX.value = withDelay(index * 35 + 15, withSpring(1, springs.standard));
 
     return () => {
       cancelAnimation(scaleX);

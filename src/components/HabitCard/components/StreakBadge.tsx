@@ -15,9 +15,10 @@ import { useAppTheme } from '../../../theme';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { colors, milestoneColors } from '../../../theme/colors';
 import { streakStyles } from '../HabitCard.streakStyles';
+import { springs } from '@/theme/animations';
 
 /** Design-system spring: damping 18, stiffness 150 */
-const STREAK_SPRING = { damping: 18, stiffness: 150 };
+const STREAK_SPRING = springs.standard;
 const BOUNCE_SPRING = { damping: 12, stiffness: 200 };
 
 interface StreakBadgeProps {

@@ -13,8 +13,9 @@ import {
   useDerivedValue,
   withSpring,
 } from 'react-native-reanimated';
+import { springs } from '@/theme/animations';
 
-const COUNTER_SPRING = { damping: 18, stiffness: 150 };
+const COUNTER_SPRING = springs.standard;
 
 /**
  * Returns an animated shared value that springs toward `target`.

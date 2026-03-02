@@ -9,6 +9,7 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
+import { springs } from '@/theme/animations';
 import { useCountAnimation } from './useCountAnimation';
 import type { StatCardProps } from './types';
 import { triggerHaptic } from '@/utils/haptics';
@@ -40,11 +41,11 @@ export function StatCard({
   }));
 
   const handlePressIn = () => {
-    scale.value = withSpring(0.95, { damping: 18, stiffness: 150 });
+    scale.value = withSpring(0.95, springs.button);
   };
 
   const handlePressOut = () => {
-    scale.value = withSpring(1, { damping: 18, stiffness: 150 });
+    scale.value = withSpring(1, springs.button);
   };
 
   const handlePress = () => {

@@ -17,6 +17,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import type { ContextualMessageProps, MessageType } from './types';
 import { getContextualMessage } from './messageUtils';
+import { springs } from '@/theme/animations';
 
 export function ContextualMessage({
   currentStreak,
@@ -41,7 +42,7 @@ export function ContextualMessage({
     );
     translateY.value = withDelay(
       delay,
-      withSpring(0, { damping: 18, stiffness: 150 })
+      withSpring(0, springs.standard)
     );
 
     return () => {

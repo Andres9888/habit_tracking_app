@@ -17,6 +17,7 @@ import {
   type WithTimingConfig,
   Easing,
 } from 'react-native-reanimated';
+import { springs } from '@/theme/animations';
 
 /**
  * Common spring configurations for consistent feel
@@ -33,11 +34,7 @@ export const SPRING_CONFIGS = {
   /** Gentle entrance animation — smooth reveals, minimal bounce
    * This is the design system standard for all animations
    */
-  entrance: {
-    damping: 18,
-    mass: 1,
-    stiffness: 150,
-  } as WithSpringConfig,
+  entrance: springs.standard as WithSpringConfig,
 
   /** Smooth gentle spring — subtle, no overshoot */
   smooth: {
@@ -47,11 +44,7 @@ export const SPRING_CONFIGS = {
   } as WithSpringConfig,
 
   /** Snappy interaction feedback — button presses (design system standard) */
-  snappy: {
-    damping: 18,
-    mass: 1,
-    stiffness: 150,
-  } as WithSpringConfig,
+  snappy: springs.standard as WithSpringConfig,
 } as const;
 
 /**

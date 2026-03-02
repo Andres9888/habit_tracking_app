@@ -9,6 +9,7 @@ import {
   type SharedValue,
 } from 'react-native-reanimated';
 import type { PressHandlers } from '../TemplateScienceModal.types';
+import { springs } from '@/theme/animations';
 
 export const useButtonAnimations = () => {
   const closeButtonScale = useSharedValue(1);
@@ -20,10 +21,10 @@ export const useButtonAnimations = () => {
   const createPressHandlers = useCallback(
     (scaleValue: SharedValue<number>, scale = 0.95): PressHandlers => ({
       onPressIn: () => {
-        scaleValue.value = withSpring(scale, { damping: 18, stiffness: 150 });
+        scaleValue.value = withSpring(scale, springs.button);
       },
       onPressOut: () => {
-        scaleValue.value = withSpring(1, { damping: 18, stiffness: 150 });
+        scaleValue.value = withSpring(1, springs.button);
       },
     }),
     []

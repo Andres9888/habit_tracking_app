@@ -13,6 +13,7 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 
+import { springs } from '@/theme/animations';
 import type { TimeRange, TimeRangeToggleProps } from './types';
 import { useReduceMotion } from '../../hooks/useReduceMotion';
 import { useThemedToggleStyles } from './TimeRangeToggle.styles';
@@ -49,12 +50,12 @@ const TimeRangeButton = memo(function TimeRangeButton({
 
   const handlePressIn = useCallback(() => {
     if (!reduceMotion)
-      scale.value = withSpring(0.95, { damping: 18, stiffness: 150 });
+      scale.value = withSpring(0.95, springs.button);
   }, [reduceMotion, scale]);
 
   const handlePressOut = useCallback(() => {
     if (!reduceMotion)
-      scale.value = withSpring(1, { damping: 18, stiffness: 150 });
+      scale.value = withSpring(1, springs.button);
   }, [reduceMotion, scale]);
 
   const handlePress = useCallback(() => {

@@ -18,6 +18,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { Check, Zap } from 'lucide-react-native';
 import type { DayCircleProps } from './types';
+import { springs } from '@/theme/animations';
 
 export function DayCircle({
   completed,
@@ -34,7 +35,7 @@ export function DayCircle({
     const delay = index * 35;
     scale.value = withDelay(
       delay,
-      withSpring(1, { damping: 18, stiffness: 150 })
+      withSpring(1, springs.standard)
     );
     opacity.value = withDelay(delay, withTiming(1, { duration: 120 }));
 

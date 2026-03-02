@@ -6,6 +6,7 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 import { useThemeColors } from '../../../../theme/ThemeContext';
+import { springs } from '@/theme/animations';
 
 interface PasswordResetButtonsProps {
   email: string;
@@ -50,10 +51,10 @@ export function PasswordResetButtons({
         ]}
         onPress={onSubmit}
         onPressIn={() => {
-          scale.value = withSpring(0.97, { damping: 18, stiffness: 150 });
+          scale.value = withSpring(0.97, springs.button);
         }}
         onPressOut={() => {
-          scale.value = withSpring(1, { damping: 18, stiffness: 150 });
+          scale.value = withSpring(1, springs.button);
         }}
       >
         {isLoading ? (

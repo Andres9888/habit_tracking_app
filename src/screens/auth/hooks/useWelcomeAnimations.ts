@@ -10,8 +10,7 @@ import {
   withDelay,
   withSpring,
 } from 'react-native-reanimated';
-
-const SPRING_CONFIG = { damping: 18, stiffness: 150 };
+import { springs } from '@/theme/animations';
 const STAGGER = 60;
 
 export function useWelcomeAnimations() {
@@ -26,17 +25,17 @@ export function useWelcomeAnimations() {
 
   useEffect(() => {
     // Stagger: 0, 60, 120, 180ms
-    iconOpacity.value = withSpring(1, SPRING_CONFIG);
-    iconScale.value = withSpring(1, SPRING_CONFIG);
+    iconOpacity.value = withSpring(1, springs.standard);
+    iconScale.value = withSpring(1, springs.standard);
 
-    titleOpacity.value = withDelay(STAGGER, withSpring(1, SPRING_CONFIG));
-    titleTranslateY.value = withDelay(STAGGER, withSpring(0, SPRING_CONFIG));
+    titleOpacity.value = withDelay(STAGGER, withSpring(1, springs.standard));
+    titleTranslateY.value = withDelay(STAGGER, withSpring(0, springs.standard));
 
-    subtitleOpacity.value = withDelay(STAGGER * 2, withSpring(1, SPRING_CONFIG));
-    subtitleTranslateY.value = withDelay(STAGGER * 2, withSpring(0, SPRING_CONFIG));
+    subtitleOpacity.value = withDelay(STAGGER * 2, withSpring(1, springs.standard));
+    subtitleTranslateY.value = withDelay(STAGGER * 2, withSpring(0, springs.standard));
 
-    buttonsOpacity.value = withDelay(STAGGER * 3, withSpring(1, SPRING_CONFIG));
-    buttonsTranslateY.value = withDelay(STAGGER * 3, withSpring(0, SPRING_CONFIG));
+    buttonsOpacity.value = withDelay(STAGGER * 3, withSpring(1, springs.standard));
+    buttonsTranslateY.value = withDelay(STAGGER * 3, withSpring(0, springs.standard));
   }, [
     buttonsOpacity,
     buttonsTranslateY,

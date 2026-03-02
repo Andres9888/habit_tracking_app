@@ -14,9 +14,10 @@ import {
   withTiming,
   type SharedValue,
 } from 'react-native-reanimated';
+import { springs } from '@/theme/animations';
 
 const BOUNCE_SPRING = { damping: 12, stiffness: 200 };
-const COMPLETION_SPRING = { damping: 18, stiffness: 150 };
+const COMPLETION_SPRING = springs.standard;
 const CROSSFADE_MS = 150;
 const REVERT_DELAY_MS = 3500;
 const REVERT_MS = 800;

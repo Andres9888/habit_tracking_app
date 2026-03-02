@@ -7,6 +7,7 @@ import React, { useCallback } from 'react';
 import { View, Text, Pressable } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 import { ImagePlus } from 'lucide-react-native';
+import { springs } from '@/theme/animations';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -18,11 +19,11 @@ export function AddFirstImageButton({ onPress }: AddFirstImageButtonProps) {
   const scale = useSharedValue(1);
 
   const handlePressIn = useCallback(() => {
-    scale.value = withSpring(0.95, { damping: 18, stiffness: 150 });
+    scale.value = withSpring(0.95, springs.button);
   }, [scale]);
 
   const handlePressOut = useCallback(() => {
-    scale.value = withSpring(1, { damping: 18, stiffness: 150 });
+    scale.value = withSpring(1, springs.button);
   }, [scale]);
 
   const animatedStyle = useAnimatedStyle(() => ({

@@ -13,6 +13,7 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 import { useThemeColors } from '../../theme';
+import { springs } from '@/theme/animations';
 
 interface DangerZoneProps {
   onArchive: () => void;
@@ -63,8 +64,6 @@ export function DangerZone({ onArchive, onDelete }: DangerZoneProps) {
   const deleteBg = isDark ? 'rgba(153,27,27,0.15)' : '#FEF2F2';
   const deleteBorder = isDark ? 'rgba(153,27,27,0.3)' : '#FECACA';
 
-  const springConfig = { damping: 18, stiffness: 150 };
-
   return (
     <View className='flex-col gap-3'>
       <AnimatedPressable
@@ -73,8 +72,8 @@ export function DangerZone({ onArchive, onDelete }: DangerZoneProps) {
         className='flex-row items-center justify-center gap-2 rounded-xl py-4'
         style={[archiveStyle, { backgroundColor: archiveBg, borderWidth: 1, borderColor: archiveBorder }]}
         onPress={handleArchive}
-        onPressIn={() => { archiveScale.value = withSpring(0.97, springConfig); }}
-        onPressOut={() => { archiveScale.value = withSpring(1, springConfig); }}
+        onPressIn={() => { archiveScale.value = withSpring(0.97, springs.button); }}
+        onPressOut={() => { archiveScale.value = withSpring(1, springs.button); }}
       >
         <Archive color={isDark ? '#FBBF24' : '#d97706'} size={18} strokeWidth={2} />
         <Text
@@ -91,8 +90,8 @@ export function DangerZone({ onArchive, onDelete }: DangerZoneProps) {
         className='flex-row items-center justify-center gap-2 rounded-xl py-4'
         style={[deleteStyle, { backgroundColor: deleteBg, borderWidth: 1, borderColor: deleteBorder }]}
         onPress={handleDelete}
-        onPressIn={() => { deleteScale.value = withSpring(0.97, springConfig); }}
-        onPressOut={() => { deleteScale.value = withSpring(1, springConfig); }}
+        onPressIn={() => { deleteScale.value = withSpring(0.97, springs.button); }}
+        onPressOut={() => { deleteScale.value = withSpring(1, springs.button); }}
       >
         <Trash2 color={isDark ? '#F87171' : '#dc2626'} size={18} strokeWidth={2} />
         <Text

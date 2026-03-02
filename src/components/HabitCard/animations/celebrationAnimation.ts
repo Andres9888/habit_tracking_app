@@ -7,9 +7,10 @@
  */
 
 import { withSpring, withSequence, withTiming, runOnJS, type SharedValue } from 'react-native-reanimated';
+import { springs } from '@/theme/animations';
 
 /** Design-system spring: damping 18, stiffness 150 */
-const COMPLETION_SPRING = { damping: 18, stiffness: 150 };
+const COMPLETION_SPRING = springs.standard;
 /** Slightly bouncier for the overshoot pop */
 const BOUNCE_SPRING = { damping: 12, stiffness: 200 };
 

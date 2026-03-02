@@ -17,6 +17,7 @@ import { useThemeColors } from '../../../theme/ThemeContext';
 
 import type { TabButtonProps } from '../HabitDetailTabs.types';
 import { fontFamilies } from '@/theme/typography';
+import { springs } from '@/theme/animations';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -30,11 +31,11 @@ export function TabButton({ isActive, label, onPress }: TabButtonProps) {
   }));
 
   const handlePressIn = useCallback(() => {
-    scale.value = withSpring(0.96, { damping: 18, stiffness: 150 });
+    scale.value = withSpring(0.96, springs.button);
   }, [scale]);
 
   const handlePressOut = useCallback(() => {
-    scale.value = withSpring(1, { damping: 18, stiffness: 150 });
+    scale.value = withSpring(1, springs.button);
   }, [scale]);
 
   // Theme-aware text colors

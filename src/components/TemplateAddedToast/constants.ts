@@ -2,6 +2,8 @@
  * TemplateAddedToast Constants
  */
 
+import { springs } from '@/theme/animations';
+
 /** Threshold for swipe to dismiss (pixels) */
 export const DISMISS_THRESHOLD = 50;
 
@@ -20,4 +22,4 @@ export const ICON_BADGE_SIZE = 40;
 /** Spring configs for animations */
 export const SPRING_BOUNCY = { damping: 12, stiffness: 120 };
 export const SPRING_ICON = { damping: 8, mass: 0.8, stiffness: 180 };
-export const SPRING_EXIT = { damping: 18, stiffness: 150 };
+export const SPRING_EXIT = springs.standard;

@@ -12,6 +12,7 @@ import {
   withSequence,
   runOnJS,
 } from 'react-native-reanimated';
+import { springs } from '@/theme/animations';
 import { DISMISS_THRESHOLD } from './constants';
 
 interface UseCompletionToastAnimationsParams {
@@ -39,7 +40,7 @@ export function useCompletionToastAnimations(
   }, []);
 
   const handleDismiss = useCallback(() => {
-    translateY.value = withSpring(100, { damping: 18, stiffness: 150 });
+    translateY.value = withSpring(100, springs.standard);
     opacity.value = withTiming(0, { duration: 280 });
     scale.value = withTiming(0.9, { duration: 280 });
     if (onDismissRef.current) {
@@ -50,18 +51,18 @@ export function useCompletionToastAnimations(
 
   useEffect(() => {
     if (visible) {
-      translateY.value = withSpring(0, { damping: 18, stiffness: 150 });
+      translateY.value = withSpring(0, springs.standard);
       opacity.value = withTiming(1, { duration: 280 });
       scale.value = withSequence(
-        withSpring(1.02, { damping: 18, stiffness: 150 }),
-        withSpring(1, { damping: 18, stiffness: 150 })
+        withSpring(1.02, springs.standard),
+        withSpring(1, springs.standard)
       );
       if (duration > 0 && onDismissRef.current) {
         const timer = setTimeout(handleDismiss, duration);
         return () => clearTimeout(timer);
       }
     } else {
-      translateY.value = withSpring(100, { damping: 18, stiffness: 150 });
+      translateY.value = withSpring(100, springs.standard);
       opacity.value = withTiming(0, { duration: 280 });
       scale.value = withTiming(0.9, { duration: 280 });
     }
@@ -78,7 +79,7 @@ export function useCompletionToastAnimations(
       if (e.translationY > DISMISS_THRESHOLD || e.velocityY > 500) {
         runOnJS(handleDismiss)();
       } else {
-        translateY.value = withSpring(0, { damping: 18, stiffness: 150 });
+        translateY.value = withSpring(0, springs.standard);
         opacity.value = withTiming(1, { duration: 280 });
       }
     });

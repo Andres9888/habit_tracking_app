@@ -15,6 +15,7 @@ import {
   withDelay,
   Easing as ReanimatedEasing,
 } from 'react-native-reanimated';
+import { springs } from '@/theme/animations';
 
 /**
  * Dramatic level-up celebration: fade+shrink → shake left/right → spring back enlarged.
@@ -70,6 +71,6 @@ export function runSubtlePulse(scale: { value: number }) {
       duration: 100,
       easing: ReanimatedEasing.out(ReanimatedEasing.ease),
     }),
-    withSpring(1, { damping: 18, stiffness: 150 })
+    withSpring(1, springs.standard)
   );
 }

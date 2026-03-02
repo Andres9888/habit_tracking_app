@@ -13,6 +13,7 @@ import { useHaptics } from '../../../../utils/haptics/useHaptics';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import TemplatesScreen from '../../../../screens/TemplatesScreen';
 import type { TemplatesModalSectionProps } from './HabitsModals.types';
+import { springs } from '@/theme/animations';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -65,7 +66,7 @@ export function TemplatesModalSection({
             });
           }}
           onPressOut={() => {
-            closeScale.value = withSpring(1, { damping: 18, stiffness: 150 });
+            closeScale.value = withSpring(1, springs.button);
           }}
         >
           <X color={colors.text.secondary} size={24} />

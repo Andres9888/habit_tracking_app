@@ -8,6 +8,7 @@ import {
   Easing,
   cancelAnimation,
 } from 'react-native-reanimated';
+import { springs } from '@/theme/animations';
 
 const ENTRANCE_STAGGER_DELAY = 100;
 const ENTRANCE_DURATION = 350;
@@ -41,7 +42,7 @@ export function useTemplateListItemAnimations(
     );
     entranceTranslateY.value = withDelay(
       delay,
-      withSpring(0, { damping: 18, stiffness: 150 })
+      withSpring(0, springs.standard)
     );
 
     return () => {

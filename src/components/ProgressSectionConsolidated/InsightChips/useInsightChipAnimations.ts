@@ -17,6 +17,7 @@ import {
   cancelAnimation,
 } from 'react-native-reanimated';
 
+import { springs } from '@/theme/animations';
 import { Springs } from '../../../constants/motion';
 import {
   CHIP_STAGGER_DELAY,
@@ -59,7 +60,7 @@ export function useInsightChipAnimations({
     );
     translateX.value = withDelay(
       delay,
-      withSpring(0, { damping: 18, stiffness: 150 })
+      withSpring(0, springs.standard)
     );
   }, [index, reduceMotion, opacity, translateX]);
 
