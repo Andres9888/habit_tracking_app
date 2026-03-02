@@ -3,13 +3,16 @@
 import React from 'react';
 import { View, Modal, KeyboardAvoidingView, Platform } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { Edit3 } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
+import { ScreenHeader } from '../../components/ScreenHeader';
 import {
-  DetailHeader,
+  DetailHero,
   DetailLoadingState,
   HabitDetailContent,
   HabitDetailModals,
+  HeaderButton,
 } from './components';
 import {
   DETAIL_BG_GRADIENT_LIGHT,
@@ -81,13 +84,22 @@ function HabitDetailScreenContent({
                 <LinearGradient
                   colors={bgGradient as unknown as string[]}
                   locations={[0, 0.5, 1]}
-                  style={{ flex: 1, paddingTop: Math.max(insets.top + 4, 12) }}
+                  style={{ flex: 1 }}
                 >
-                  <DetailHeader
-                    habit={habit}
-                    onClose={onClose}
-                    onEdit={notesHandlers.handleEdit}
+                  <ScreenHeader
+                    leftAction='close'
+                    rightAction={
+                      <HeaderButton
+                        icon={<Edit3 size={15} strokeWidth={2.5} />}
+                        label='Edit habit'
+                        text='Edit Habit'
+                        onPress={notesHandlers.handleEdit}
+                      />
+                    }
+                    variant='transparent'
+                    onBack={onClose}
                   />
+                  <DetailHero habit={habit} />
                   <HabitDetailContent
                     completedDates={screenState.completedDates}
                     daysTracking={screenState.daysTracking}

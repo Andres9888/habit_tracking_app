@@ -40,12 +40,6 @@ export interface HeroSectionProps {
   reduceMotion?: boolean;
 }
 
-export interface DetailHeaderProps {
-  habit: Habit;
-  onClose: () => void;
-  onEdit: () => void;
-}
-
 export interface NotesListModalProps {
   habitId: Id<'habits'>;
   insets: { top: number; bottom: number };

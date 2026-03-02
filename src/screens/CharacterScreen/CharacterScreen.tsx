@@ -1,13 +1,12 @@
 import { format, startOfDay, subDays } from 'date-fns';
 import { View, ScrollView } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useMemo } from 'react';
 import { useHabitData } from '../../features/habits/hooks/useHabitData';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
+import { ScreenHeader } from '../../components/ScreenHeader';
 import {
-  ScreenHeader,
   CharacterCard,
   AttributesSection,
   StatsSection,
@@ -193,16 +192,13 @@ function CharacterScreenContent({ onBack }: CharacterScreenProps) {
       ),
     [habits, tracking]
   );
-  const insets = useSafeAreaInsets();
   const { colors } = useThemeColors();
 
   return (
     <View className='flex-1' style={{ backgroundColor: colors.background }}>
       <ScrollView className='flex-1'>
-        <View className='w-full px-6' style={{ paddingTop: insets.top + 12 }}>
-          <Animated.View entering={FadeInDown.delay(280).springify().damping(18)}>
-            <ScreenHeader onBack={onBack} />
-          </Animated.View>
+        <ScreenHeader title="Character" onBack={onBack} />
+        <View className='w-full px-6'>
           <Animated.View entering={FadeInDown.delay(340).springify().damping(18)}>
             <CharacterCard data={characterData} />
           </Animated.View>

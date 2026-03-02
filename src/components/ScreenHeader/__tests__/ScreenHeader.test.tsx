@@ -98,4 +98,29 @@ describe('ScreenHeader', () => {
     const { queryByText } = render(<ScreenHeader title="Settings" />);
     expect(queryByText('Track your habit journey')).toBeNull();
   });
+
+  it('renders close icon with transparent variant and rightAction', () => {
+    const onBack = jest.fn();
+    const { getByLabelText, getByText } = render(
+      <ScreenHeader
+        leftAction="close"
+        rightAction={<Text>Edit Habit</Text>}
+        variant="transparent"
+        onBack={onBack}
+      />
+    );
+    expect(getByLabelText('Close')).toBeTruthy();
+    expect(getByText('Edit Habit')).toBeTruthy();
+    fireEvent.press(getByLabelText('Close'));
+    expect(onBack).toHaveBeenCalledTimes(1);
+  });
+
+  it('renders with back action and title for navigation screens', () => {
+    const onBack = jest.fn();
+    const { getByText, getByLabelText } = render(
+      <ScreenHeader onBack={onBack} title="Character" />
+    );
+    expect(getByText('Character')).toBeTruthy();
+    expect(getByLabelText('Go back')).toBeTruthy();
+  });
 });

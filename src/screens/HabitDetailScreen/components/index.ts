@@ -3,8 +3,9 @@
  * Barrel export for sub-components
  */
 
-export { DetailHeader } from './DetailHeader';
+export { DetailHero } from './DetailHero';
 export { DetailLoadingState } from './DetailLoadingState';
+export { HeaderButton } from './HeaderButton';
 export { HeroSection } from './HeroSection';
 export { NotesEditorModal } from './NotesEditorModal';
 export { NotesListModal } from './NotesListModal';
