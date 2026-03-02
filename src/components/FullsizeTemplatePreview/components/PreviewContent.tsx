@@ -28,6 +28,7 @@ export function PreviewContent({
 }: PreviewContentProps) {
   return (
     <Animated.View
+      testID="templates-preview-modal"
       style={[layoutStyles.container, animatedStyles.contentStyle]}
     >
       <SuccessGlowOverlay animatedStyle={animatedStyles.successGlowStyle} />

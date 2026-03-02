@@ -8,6 +8,7 @@ import type { AnimatedStyle } from 'react-native-reanimated';
 export interface ActionButtonsProps {
   checkmarkStyle: AnimatedStyle<ViewStyle>;
   iconColor: string;
+  index?: number;
   isImported: boolean;
   isImporting: boolean;
   isLocked: boolean;

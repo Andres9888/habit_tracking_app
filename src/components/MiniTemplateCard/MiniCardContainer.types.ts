@@ -9,6 +9,7 @@ export interface MiniCardContainerProps {
   subtitle?: string;
   description?: string;
   icon: string;
+  index?: number;
   iconColor: string;
   hasResearch?: boolean;
   isImporting?: boolean;

@@ -3,7 +3,6 @@
  */
 
 import { useCallback, useEffect, useRef } from 'react';
-import { Alert } from 'react-native';
 import type { Doc, Id } from '../../../../convex/_generated/dataModel';
 import type { TemplateCustomizations } from '../TemplatesScreen.types';
 import type { UseTemplateImportHandlersOptions } from './useTemplateImportHandlers.types';
@@ -48,21 +47,13 @@ export function useTemplateImportHandlers(o: UseTemplateImportHandlersOptions) {
     o.setToastMessage('Failed to import template. Please try again.');
   }, [o.setShowToast, o.setToastMessage, o.setToastTemplateData]);
 
-  const showLimitReachedAlert = useCallback(() => {
-    Alert.alert(
-      '🎉 Great progress!',
-      `You've built ${FREE_HABIT_LIMIT} solid habits! Ready to track more? Upgrade to premium for unlimited habits and advanced insights.`,
-      [{ style: 'cancel', text: 'Keep 3 Free' }, { text: 'Unlock Unlimited' }]
-    );
-  }, []);
-
   const guardTemplateImport = useCallback(() => {
     if (!o.isPremiumUser && o.userHabitCount >= FREE_HABIT_LIMIT) {
-      showLimitReachedAlert();
+      o.onShowPaywall?.();
       return true;
     }
     return false;
-  }, [o.isPremiumUser, o.userHabitCount, showLimitReachedAlert]);
+  }, [o.isPremiumUser, o.userHabitCount, o.onShowPaywall]);
 
   const handleTemplatePreview = useCallback(
     (t: Doc<'templates'>) => {

@@ -47,7 +47,7 @@ export function FooterSection({
           ]}
         >
           {isImported ? (
-            <View style={footerStyles.successButtonWrapper}>
+            <View testID="templates-preview-added" style={footerStyles.successButtonWrapper}>
               <Animated.View
                 pointerEvents='none'
                 style={[footerStyles.successButtonGlow, successButtonGlowStyle]}
@@ -65,9 +65,10 @@ export function FooterSection({
             <AnimatedPressable
               accessible
               accessibilityHint='Add this habit template to your list'
-              accessibilityLabel={`Import ${templateName} habit`}
+              accessibilityLabel={`Quick add ${templateName} habit`}
               accessibilityRole='button'
               disabled={isImporting}
+              testID="templates-preview-quick-add"
               style={[
                 footerStyles.importButton,
                 { backgroundColor: iconColor },
@@ -78,7 +79,7 @@ export function FooterSection({
               {...createPressHandlers(importButtonScale)}
             >
               <Text style={footerStyles.importButtonText}>
-                {isImporting ? 'Importing...' : 'Import This Habit'}
+                {isImporting ? 'Adding...' : 'Quick Add'}
               </Text>
             </AnimatedPressable>
           )}
@@ -90,6 +91,7 @@ export function FooterSection({
               accessibilityLabel='Customize habit before importing'
               accessibilityRole='button'
               disabled={isImporting}
+              testID="templates-preview-customize"
               style={[footerStyles.customizeLink, customizeButtonStyle]}
               onPress={onCustomize}
               {...createPressHandlers(customizeButtonScale, 0.98)}

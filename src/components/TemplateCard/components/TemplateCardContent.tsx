@@ -21,6 +21,7 @@ export function TemplateCardContent({
   description,
   frequency,
   icon,
+  index,
   iconColor,
   isImported,
   isImporting,
@@ -71,6 +72,7 @@ export function TemplateCardContent({
         <ActionButtons
           checkmarkStyle={checkmarkStyle}
           iconColor={iconColor}
+          index={index}
           isImported={isImported}
           isImporting={isImporting}
           isLocked={isLocked}
