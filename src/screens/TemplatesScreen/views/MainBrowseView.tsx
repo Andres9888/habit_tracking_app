@@ -1,16 +1,17 @@
 /**
  * MainBrowseView - Curated main screen replacing the old tab-based BrowseView
  *
- * Layout: BrowseHeader → SearchBar → UsageBanner → FeaturedCollection
+ * Layout: ScreenHeader → SearchBar → UsageBanner → FeaturedCollection
  * → PopularSection → PremiumPacksSection → CategoryGrid
  */
 
 import { ScrollView, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
+import { ScreenHeader } from '../../../components/ScreenHeader';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { durations } from '../../../theme/animations';
 import { styles } from '../../templates/templatesScreenStyles';
-import { BrowseHeader, SearchBar } from '../components';
+import { SearchBar } from '../components';
 import { FeaturedCollection } from '../components/FeaturedCollection';
 import { PopularSection } from '../components/PopularSection';
 import { UsageBanner } from '../components/UsageBanner';
@@ -24,7 +25,11 @@ export function MainBrowseView(p: MainBrowseViewProps) {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
-      <BrowseHeader animatedStyle={p.headerAnimatedStyle} />
+      <ScreenHeader
+        leftAction={null}
+        subtitle="Science-backed templates to build great habits"
+        title="Import Habits"
+      />
       <Animated.View style={[styles.searchSection, p.searchAnimatedStyle]}>
         <SearchBar
           value={p.searchQuery}

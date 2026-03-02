@@ -10,7 +10,6 @@ import type { Doc } from '../../../../convex/_generated/dataModel';
 export interface MainBrowseViewProps {
   categoryGrid: ReactNode;
   feedbackOverlays: ReactNode;
-  headerAnimatedStyle: AnimatedStyle<ViewStyle>;
   importedTemplateIds: Set<string>;
   importingTemplateId: string | null;
   isPremiumUser: boolean;

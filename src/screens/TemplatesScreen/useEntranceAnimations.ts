@@ -22,8 +22,6 @@ interface UseEntranceAnimationsOptions {
 export function useEntranceAnimations({
   reducedMotion,
 }: UseEntranceAnimationsOptions) {
-  const headerTranslateY = useSharedValue(-20);
-  const headerOpacity = useSharedValue(0);
   const searchOpacity = useSharedValue(0);
   const searchTranslateY = useSharedValue(15);
   const tabBarOpacity = useSharedValue(0);
@@ -33,8 +31,6 @@ export function useEntranceAnimations({
 
   useEffect(() => {
     if (reducedMotion) {
-      headerTranslateY.value = 0;
-      headerOpacity.value = 1;
       searchTranslateY.value = 0;
       searchOpacity.value = 1;
       tabBarTranslateY.value = 0;
@@ -43,10 +39,6 @@ export function useEntranceAnimations({
       contentOpacity.value = 1;
       return;
     }
-
-    // All elements animate in parallel with the same timing
-    headerTranslateY.value = withSpring(0, ENTRANCE_SPRING);
-    headerOpacity.value = withTiming(1, FADE_CONFIG);
 
     searchTranslateY.value = withSpring(0, ENTRANCE_SPRING);
     searchOpacity.value = withTiming(1, FADE_CONFIG);
@@ -57,14 +49,6 @@ export function useEntranceAnimations({
     contentTranslateY.value = withSpring(0, ENTRANCE_SPRING);
     contentOpacity.value = withTiming(1, CONTENT_FADE);
   }, [reducedMotion]);
-
-  const headerAnimatedStyle = useAnimatedStyle(() => {
-    'worklet';
-    return {
-      opacity: headerOpacity.value ?? 1,
-      transform: [{ translateY: headerTranslateY.value ?? 0 }],
-    };
-  });
 
   const searchAnimatedStyle = useAnimatedStyle(() => {
     'worklet';
@@ -92,7 +76,6 @@ export function useEntranceAnimations({
 
   return {
     contentAnimatedStyle,
-    headerAnimatedStyle,
     searchAnimatedStyle,
     tabBarAnimatedStyle,
   };

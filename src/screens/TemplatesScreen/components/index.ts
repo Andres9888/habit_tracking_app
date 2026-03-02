@@ -2,7 +2,6 @@
  * Sub-components barrel export
  */
 
-export { BrowseHeader } from './BrowseHeader';
 export { CategoryHeader } from './CategoryHeader';
 export { FilterControls } from './FilterControls';
 export { ResearchFilterButton } from './ResearchFilterButton';

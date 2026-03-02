@@ -59,7 +59,6 @@ function TemplatesScreenContent() {
           onDismissToast={() => state.setShowToast(false)}
         />
       }
-      headerAnimatedStyle={props.animations.headerAnimatedStyle}
       importedTemplateIds={state.importedTemplateIds}
       importingTemplateId={state.importingTemplateId}
       isPremiumUser={data.isPremiumUser}
