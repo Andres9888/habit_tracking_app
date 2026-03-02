@@ -6,7 +6,10 @@ import { useEffect } from 'react';
 import { DEFAULT_COLOR } from '../constants';
 import type { HabitDoc } from '../types';
 import { parseReminderTime } from '../utils';
-import { getPhaseFromPreferredTime, type HubermanPhase } from '../../../constants/hubermanPhases';
+import {
+  getPhaseFromPreferredTime,
+  type HubermanPhase,
+} from '../../../constants/hubermanPhases';
 import { getReminderOptionFromTime } from './reminderUtils';
 import type { ReminderOption } from '../components/ReminderSelector';
 
@@ -18,6 +21,7 @@ interface FormSetters {
   setReminderTime: (time: Date) => void;
   setReminderSound: (sound: string) => void;
   setFrequency: (freq: string) => void;
+  setSelectedDays: (days: number[]) => void;
   setDayPhase: (phase: HubermanPhase | null) => void;
   setReminderOptionState: (option: ReminderOption) => void;
 }
@@ -39,6 +43,7 @@ export const useHabitFormInit = ({
     setDayPhase,
     setFrequency,
     setHabitName,
+    setSelectedDays,
     setReminderOptionState,
     setRemindersEnabled,
     setReminderSound,
@@ -59,6 +64,7 @@ export const useHabitFormInit = ({
     setReminderTime(parseReminderTime(habitToEdit.reminderTime));
     setReminderSound(habitToEdit.reminderSound ?? DEFAULT_SOUND);
     setFrequency(habitToEdit.frequency ?? '');
+    setSelectedDays(habitToEdit.daysOfWeek ?? [0, 1, 2, 3, 4, 5, 6]);
     setDayPhase(getPhaseFromPreferredTime(habitToEdit.preferredTime));
     setReminderOptionState(
       getReminderOptionFromTime(

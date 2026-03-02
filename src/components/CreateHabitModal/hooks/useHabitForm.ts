@@ -70,6 +70,7 @@ export const useHabitForm = ({ habitToEdit }: UseHabitFormOptions) => {
       setReminderSound: state.setReminderSound,
       setReminderTime: state.setReminderTime,
       setSelectedColor: state.setSelectedColor,
+      setSelectedDays: state.setSelectedDays,
       setSelectedEmoji: state.setSelectedEmoji,
     },
   });
@@ -84,6 +85,7 @@ export const useHabitForm = ({ habitToEdit }: UseHabitFormOptions) => {
     setReminderSound: state.setReminderSound,
     setReminderTime: state.setReminderTime,
     setSelectedColor: state.setSelectedColor,
+    setSelectedDays: state.setSelectedDays,
     setSelectedEmoji: state.setSelectedEmoji,
     setShowTimePicker: state.setShowTimePicker,
   });
@@ -115,9 +117,11 @@ export const useHabitForm = ({ habitToEdit }: UseHabitFormOptions) => {
     reminderTime: state.reminderTime,
     resetForm,
     selectedColor: state.selectedColor,
+    selectedDays: state.selectedDays,
     selectedEmoji: state.selectedEmoji,
     setDayPhase: state.setDayPhase,
     setFrequency: state.setFrequency,
+    setSelectedDays: state.setSelectedDays,
     setHabitName: setHabitNameWithValidation,
     setReminderOption,
     setRemindersEnabled: state.setRemindersEnabled,

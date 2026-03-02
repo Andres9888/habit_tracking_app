@@ -17,7 +17,6 @@ import { CreateHabitScrollContent } from './components/CreateHabitScrollContent'
 import { ModalHeader } from './components/ModalHeader';
 import { useCenteredFormCallbacks } from './hooks/useCenteredFormCallbacks';
 import { useCreateHabitModal } from './hooks/useCreateHabitModal';
-import { useKeyboardState } from './hooks/useKeyboardState';
 import { useSwipeDismiss } from './hooks/useSwipeDismiss';
 import type { CreateHabitModalProps } from './types';
 
@@ -27,7 +26,6 @@ export default function CreateHabitModalCentered(props: CreateHabitModalProps) {
   const scrollViewRef = useRef<ScrollViewType>(null);
   const [showNameError, setShowNameError] = useState(false);
   const { colors } = useThemeColors();
-  const { isKeyboardVisible } = useKeyboardState();
   const { animatedStyle, panGesture } = useSwipeDismiss({ onClose });
 
   const callbacks = useCenteredFormCallbacks({
@@ -60,27 +58,24 @@ export default function CreateHabitModalCentered(props: CreateHabitModalProps) {
       >
         <View className='flex-1 bg-black/50'>
           <GestureDetector gesture={panGesture}>
-            <View collapsable={false} style={{ flex: 1 }}>
-              <Animated.View
-                className='flex-1 overflow-hidden rounded-t-3xl shadow-2xl'
-                style={[animatedStyle, { backgroundColor: colors.surface }]}
-              >
-                <ModalHeader
-                  habitName={form.habitName}
-                  isEditMode={isEditMode}
-                  isKeyboardVisible={isKeyboardVisible}
-                  onClose={onClose}
-                  onSave={callbacks.handleSave}
-                  onValidationError={callbacks.handleValidationError}
-                />
-                <CreateHabitScrollContent
-                  callbacks={callbacks}
-                  form={form}
-                  scrollViewRef={scrollViewRef}
-                  showNameError={showNameError}
-                />
-              </Animated.View>
-            </View>
+            <Animated.View
+              className='flex-1 overflow-hidden rounded-t-3xl shadow-2xl'
+              style={[animatedStyle, { backgroundColor: colors.surface }]}
+            >
+              <ModalHeader
+                habitName={form.habitName}
+                isEditMode={isEditMode}
+                onClose={onClose}
+                onSave={callbacks.handleSave}
+                onValidationError={callbacks.handleValidationError}
+              />
+              <CreateHabitScrollContent
+                callbacks={callbacks}
+                form={form}
+                scrollViewRef={scrollViewRef}
+                showNameError={showNameError}
+              />
+            </Animated.View>
           </GestureDetector>
         </View>
       </KeyboardAvoidingView>

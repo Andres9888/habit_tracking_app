@@ -12,6 +12,8 @@ export const createHabitArgs = {
   cueAfterBehavior: v.optional(v.string()),
   cueLocation: v.optional(v.string()),
   cueTime: v.optional(v.string()),
+  daysOfWeek: v.optional(v.array(v.number())),
+  frequency: v.optional(v.string()),
   icon: v.optional(v.string()),
   color: v.optional(v.string()),
   iconColor: v.optional(v.string()),

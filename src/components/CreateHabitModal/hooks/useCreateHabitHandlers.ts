@@ -15,11 +15,13 @@ import type { Id } from '../../../../convex/_generated/dataModel';
 
 interface HabitData {
   dayPhase: string | null;
+  frequency: string;
   fullHabitName: string;
   hasReminders: boolean;
   reminderSound?: string | null;
   reminderTime: Date;
   selectedColor: string;
+  selectedDays: number[];
   selectedEmoji: string | null;
 }
 
@@ -38,9 +40,11 @@ export function useCreateHabitHandlers() {
     habitToEdit,
     hasReminders,
     fullHabitName,
+    frequency,
     reminderTime,
     selectedEmoji,
     selectedColor,
+    selectedDays,
     dayPhase,
     reminderSound,
   }: EditHabitData): Promise<void> {
@@ -73,11 +77,15 @@ export function useCreateHabitHandlers() {
         icon: selectedEmoji ?? undefined,
         color: selectedColor,
         iconColor: selectedColor,
+        frequency: frequency || undefined,
+        daysOfWeek: selectedDays.length < 7 ? selectedDays : undefined,
         name: sanitizedName,
         notes: habitToEdit.notes ?? '',
         preferredTime: dayPhase ?? undefined,
         remindersEnabled: finalHasReminders,
-        reminderSound: finalHasReminders ? (reminderSound ?? undefined) : undefined,
+        reminderSound: finalHasReminders
+          ? (reminderSound ?? undefined)
+          : undefined,
         reminderTime: finalHasReminders
           ? formatReminderTime(reminderTime)
           : undefined,
@@ -90,10 +98,12 @@ export function useCreateHabitHandlers() {
 
   async function handleCreate({
     hasReminders,
+    frequency,
     fullHabitName,
     reminderTime,
     selectedEmoji,
     selectedColor,
+    selectedDays,
     dayPhase,
     reminderSound,
   }: HabitData): Promise<void> {
@@ -108,12 +118,16 @@ export function useCreateHabitHandlers() {
       const habitId = await createHabit({
         icon: selectedEmoji ?? undefined,
         iconColor: selectedColor,
+        frequency: frequency || undefined,
+        daysOfWeek: selectedDays.length < 7 ? selectedDays : undefined,
         name: sanitizedName,
         notes: '',
         preferredTime: dayPhase ?? undefined,
         remindersEnabled: hasReminders,
         reminderSound: hasReminders ? (reminderSound ?? undefined) : undefined,
-        reminderTime: hasReminders ? formatReminderTime(reminderTime) : undefined,
+        reminderTime: hasReminders
+          ? formatReminderTime(reminderTime)
+          : undefined,
       });
 
       // Mark first habit creation for deferred notification permission request
