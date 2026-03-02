@@ -4,6 +4,7 @@ export { DayCell } from './DayCell';
 export { DayCellContent } from './DayCellContent';
 export { DayStrip } from './DayStrip';
 export { InlineTrialBar } from './InlineTrialBar';
+export { MicroProgressBar } from './MicroProgressBar';
 export { MiniCalendarPopup } from './MiniCalendarPopup';
 export { ProgressGreeting } from './ProgressGreeting';
 export { StripNav } from './StripNav';

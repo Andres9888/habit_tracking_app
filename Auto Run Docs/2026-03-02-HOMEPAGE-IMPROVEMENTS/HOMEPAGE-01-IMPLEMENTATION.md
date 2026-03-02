@@ -62,7 +62,7 @@ All changes are confined to the CalendarTimeline shelf area and ProgressText com
 
 ### Improvement 3: Week Progress Micro-Bar
 
-- [ ] Create `src/components/CalendarTimeline/components/MicroProgressBar.tsx`:
+- [x] Create `src/components/CalendarTimeline/components/MicroProgressBar.tsx`:
   - Props: `completed: number`, `total: number`
   - Renders a 3px tall bar with rounded corners
   - Track color: `isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)'`
@@ -71,11 +71,13 @@ All changes are confined to the CalendarTimeline shelf area and ProgressText com
   - When `completed >= total`, fill uses brighter gradient
   - File must be ≤100 lines
   - Respect `reduceMotion` — use instant width change if enabled
+  - **Completed**: 70-line file with `useAnimatedStyle` percentage-based width animation (600ms `withTiming`), following the exact pattern from existing `ProgressBar.tsx`. Uses `useReduceMotion` hook directly. Fill switches to `primary[400]` (brighter) when all completed. 6 tests in `MicroProgressBar.test.tsx` covering null render, bar presence, accessibility labels, overflow, and reduceMotion. All passing.
 
-- [ ] Modify `src/components/CalendarTimeline/CalendarTimeline.tsx`:
+- [x] Modify `src/components/CalendarTimeline/CalendarTimeline.tsx`:
   - Import `MicroProgressBar`
   - Add below `StripNav` (after line ~83): `<MicroProgressBar completed={completedToday} total={totalHabits} />`
   - File must remain ≤100 lines (currently 95 lines — may need to extract a const or compact an import)
+  - **Completed**: Extracted hook setup logic into `useCalendarTimelineSetup` in `CalendarTimeline.derived.ts` (87 effective lines, plenty of room) to reduce main component from 115 → 94 effective lines. MicroProgressBar rendered after StripNav, before MiniCalendarPopup. All 48 streak+progress tests pass. CalendarTimeline.test.tsx has 8 pre-existing failures in Day Press Handling unrelated to this change.
 
 ### Improvement 4: Today Breathing Glow
 

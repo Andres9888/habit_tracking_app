@@ -2,19 +2,13 @@ import React, { memo } from 'react';
 import { View } from 'react-native';
 import { GestureDetector } from 'react-native-gesture-handler';
 
-import {
-  useCalendarTimelineLogic,
-  useTimelineColors,
-  useWeekTransition,
-} from './CalendarTimeline.hooks';
-import { useDerivedState } from './CalendarTimeline.derived';
+import { useCalendarTimelineSetup } from './CalendarTimeline.derived';
 import { getShelfStyle } from './CalendarTimeline.styles';
 import type { CalendarTimelineProps } from './CalendarTimeline.types';
-import { useTimelineSwipe } from './useTimelineSwipe';
-import { useThemeColors } from '../../theme/ThemeContext';
 import {
   DayStrip,
   InlineTrialBar,
+  MicroProgressBar,
   MiniCalendarPopup,
   StripNav,
   WeekNavigationHeader,
@@ -38,36 +32,20 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
   trialDaysRemaining,
   onUpgrade,
 }) => {
-  const { isToday, isFuture } = useCalendarTimelineLogic();
-  const { isDark } = useThemeColors();
-  const { augmentedColors } = useTimelineColors(highContrastMode, isDark);
-  const swipeOpts = { canNavigateForward, onNextWeek, onPreviousWeek };
-  const panGesture = useTimelineSwipe(swipeOpts);
-  const headerPanGesture = useTimelineSwipe(swipeOpts);
-  const weekTransitionStyle = useWeekTransition(dates, reduceMotion);
-  const {
-    calendarOpen,
-    openCalendar,
-    closeCalendar,
-    completionStatuses,
-    firstDate,
-    lastDate,
-    dateRangeText,
-    currentDate,
-    connectorColor,
-  } = useDerivedState(
+  const tl = useCalendarTimelineSetup(
     dates,
     completionByDay,
-    isFuture,
-    isToday,
     highContrastMode,
-    isDark
+    reduceMotion,
+    canNavigateForward,
+    onPreviousWeek,
+    onNextWeek
   );
 
-  if (!firstDate || !lastDate || !currentDate) return null;
+  if (!tl.firstDate || !tl.lastDate || !tl.currentDate) return null;
 
   return (
-    <View style={getShelfStyle(isDark)} className='mb-4 pb-3 pt-2'>
+    <View style={getShelfStyle(tl.isDark)} className='mb-4 pb-3 pt-2'>
       <View className='px-4'>
         {trialDaysRemaining != null && trialDaysRemaining > 0 && onUpgrade && (
           <InlineTrialBar
@@ -75,42 +53,43 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
             onUpgrade={onUpgrade}
           />
         )}
-        <GestureDetector gesture={headerPanGesture}>
+        <GestureDetector gesture={tl.headerPanGesture}>
           <View collapsable={false}>
             <WeekNavigationHeader
               canNavigateForward={canNavigateForward}
               completedToday={completedToday}
-              currentDate={currentDate}
+              currentDate={tl.currentDate}
               currentStreak={currentStreak}
-              dateRangeText={dateRangeText}
+              dateRangeText={tl.dateRangeText}
               totalHabits={totalHabits}
-              onDateRangePress={openCalendar}
+              onDateRangePress={tl.openCalendar}
               onJumpToToday={onJumpToToday}
             />
           </View>
         </GestureDetector>
         <StripNav canNavigateForward={canNavigateForward}>
           <DayStrip
-            augmentedColors={augmentedColors}
-            completionStatuses={completionStatuses}
-            connectorColor={connectorColor}
+            augmentedColors={tl.augmentedColors}
+            completionStatuses={tl.completionStatuses}
+            connectorColor={tl.connectorColor}
             dates={dates}
             disableFutureDayPress={disableFutureDayPress}
             hasCompletionData={Object.keys(completionByDay).length > 0}
             isDayPressEnabled={isDayPressEnabled ?? !!onDayPress}
-            isFuture={isFuture}
-            isToday={isToday}
+            isFuture={tl.isFuture}
+            isToday={tl.isToday}
             onDayPress={onDayPress}
-            panGesture={panGesture}
+            panGesture={tl.panGesture}
             reduceMotion={reduceMotion}
-            weekTransitionStyle={weekTransitionStyle}
+            weekTransitionStyle={tl.weekTransitionStyle}
           />
         </StripNav>
+        <MicroProgressBar completed={completedToday} total={totalHabits} />
         <MiniCalendarPopup
           completionByDay={completionByDay}
-          visible={calendarOpen}
-          onClose={closeCalendar}
-          onSelectDate={onDayPress ?? closeCalendar}
+          visible={tl.calendarOpen}
+          onClose={tl.closeCalendar}
+          onSelectDate={onDayPress ?? tl.closeCalendar}
         />
       </View>
     </View>
