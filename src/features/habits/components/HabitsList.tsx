@@ -18,6 +18,7 @@ import {
   type DayCompletionStatus,
 } from '../../../components/CalendarTimeline';
 import { DayHabitsBottomSheet } from '../../../components/DayHabitsBottomSheet';
+import { getTodayString } from '../../../utils/dateUtils';
 
 const PREMIUM_BENEFITS = [
   {
@@ -686,7 +687,7 @@ export function HabitsList({
 
   const renderHeader = useCallback(() => {
     // Calculate today's completion stats
-    const todayString = new Date().toISOString().split('T')[0];
+    const todayString = getTodayString();
     const completedToday = habits.filter(
       (habit) => getHabitStatus(habit._id, todayString) === 'done'
     ).length;

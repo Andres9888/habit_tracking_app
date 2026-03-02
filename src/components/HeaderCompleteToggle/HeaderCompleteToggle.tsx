@@ -25,6 +25,7 @@ import { useMutation } from 'convex/react';
 import { api } from '../../../convex/_generated/api';
 import type { Id } from '../../../convex/_generated/dataModel';
 import { useReduceMotion } from '../../hooks/useReduceMotion';
+import { getTodayString } from '../../utils/dateUtils';
 
 export interface HeaderCompleteToggleProps {
   completedToday: boolean;
@@ -159,7 +160,7 @@ export function HeaderCompleteToggle({
   const buttonScale = useSharedValue(1);
 
   const toggleCompletionMutation = useMutation(api.habits.toggleHabit);
-  const today = new Date().toISOString().split('T')[0];
+  const today = getTodayString();
 
   // Sync local state with prop - always trust the source of truth
   React.useEffect(() => {

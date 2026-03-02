@@ -7,6 +7,7 @@ import { useHabitMutations } from './useHabitMutations';
 import { useHabitMilestones } from './useHabitMilestones';
 import { useHabitsTracking } from './useHabitsTracking';
 import type { HabitsModalsState } from './types';
+import { formatDateString } from '../../../utils/dateUtils';
 
 interface UseHabitsModalsStateProps {
   habits: Habit[];
@@ -46,7 +47,7 @@ export function useHabitsModalsState({ habits, showHabitStrengthPercentage }: Us
   const extendedDateStrings = Array.from({ length: 365 }, (_, i) => {
     const date = new Date();
     date.setDate(date.getDate() - i);
-    return date.toISOString().split('T')[0];
+    return formatDateString(date);
   });
   const today = new Date();
   today.setHours(0, 0, 0, 0);

@@ -248,51 +248,53 @@ export function OfflineQueueProcessor({
     let processedCount = 0;
     let failedCount = 0;
 
-    // Process each item
-    for (let i = 0; i < items.length; i++) {
-      const item = items[i];
+    try {
+      // Process each item
+      for (let i = 0; i < items.length; i++) {
+        const item = items[i];
 
-      // Check if still online before each item
-      if (!isOnline) {
-        break;
+        // Check if still online before each item
+        if (!isOnline) {
+          break;
+        }
+
+        updateState({
+          currentItem: item,
+          progress: i / items.length,
+        });
+
+        try {
+          const success = await processItem(item);
+
+          if (success) {
+            await dequeue(item.id);
+            processedCount++;
+            onItemProcessed?.(item);
+          } else {
+            await markFailed(item.id, 'Processing not supported');
+            failedCount++;
+          }
+        } catch (error) {
+          const errorMessage =
+            error instanceof Error ? error.message : 'Unknown error';
+          await markFailed(item.id, errorMessage);
+          failedCount++;
+          onItemFailed?.(item, error as Error);
+        }
       }
-
+    } finally {
+      // Complete processing
       updateState({
-        currentItem: item,
-        progress: i / items.length,
+        isProcessing: false,
+        currentItem: null,
+        processedCount,
+        failedCount,
+        progress: 1,
       });
 
-      try {
-        const success = await processItem(item);
-
-        if (success) {
-          await dequeue(item.id);
-          processedCount++;
-          onItemProcessed?.(item);
-        } else {
-          await markFailed(item.id, 'Processing not supported');
-          failedCount++;
-        }
-      } catch (error) {
-        const errorMessage =
-          error instanceof Error ? error.message : 'Unknown error';
-        await markFailed(item.id, errorMessage);
-        failedCount++;
-        onItemFailed?.(item, error as Error);
-      }
+      isProcessingRef.current = false;
+      onProcessingComplete?.(processedCount, failedCount);
     }
-
-    // Complete processing
-    updateState({
-      isProcessing: false,
-      currentItem: null,
-      processedCount,
-      failedCount,
-      progress: 1,
-    });
-
-    isProcessingRef.current = false;
-    onProcessingComplete?.(processedCount, failedCount);
   }, [
     isOnline,
     minProcessingIntervalMs,

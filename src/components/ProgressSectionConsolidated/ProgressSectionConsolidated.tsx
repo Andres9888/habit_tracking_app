@@ -38,6 +38,7 @@ import { MilestoneProgress } from './MilestoneProgress';
 import { WeeklyPatternChart } from './WeeklyPatternChart';
 import { ActionableTipCard } from './ActionableTipCard';
 import { StreakRecordsAccordion } from './StreakRecordsAccordion';
+import { formatDateString } from '../../utils/dateUtils';
 
 /**
  * ProgressSectionConsolidated Component
@@ -117,7 +118,7 @@ export function ProgressSectionConsolidated({
     const current = new Date(thisMonthStart);
     while (current <= today) {
       total++;
-      if (completedDates.has(current.toISOString().split('T')[0])) {
+      if (completedDates.has(formatDateString(current))) {
         completed++;
       }
       current.setDate(current.getDate() + 1);

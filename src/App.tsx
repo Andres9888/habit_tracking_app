@@ -7,6 +7,7 @@ import { PaperProvider } from 'react-native-paper';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { AuthGate } from './components/auth/AuthGate';
+import { NetworkStatusProvider } from './contexts/NetworkStatusContext';
 import { convexClient } from './lib/appConfig';
 import theme from './theme';
 
@@ -50,11 +51,13 @@ function Providers({ children }: PropsWithChildren) {
   return (
     <SafeAreaProvider>
       <PaperProvider theme={theme}>
-        <ClerkProvider publishableKey={CLERK_PUBLISHABLE_KEY}>
-          <ConvexClerkProvider>
-            {children}
-          </ConvexClerkProvider>
-        </ClerkProvider>
+        <NetworkStatusProvider>
+          <ClerkProvider publishableKey={CLERK_PUBLISHABLE_KEY}>
+            <ConvexClerkProvider>
+              {children}
+            </ConvexClerkProvider>
+          </ClerkProvider>
+        </NetworkStatusProvider>
       </PaperProvider>
     </SafeAreaProvider>
   );

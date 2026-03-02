@@ -55,9 +55,9 @@ export function useHabitStrength(
   completedDates: Set<string>,
   habitCreatedAt: number
 ): UseHabitStrengthReturn {
+  const completedDatesFingerprint = Array.from(completedDates).sort().join(',');
+
   // Memoize the entire calculation based on inputs
-  // Key insight: We use completedDates.size as a proxy for content changes
-  // This works because the Set is typically recreated when entries change
   const result = useMemo(() => {
     const createdAtDate = new Date(habitCreatedAt);
     const today = startOfDay(new Date());
@@ -113,7 +113,7 @@ export function useHabitStrength(
       metrics,
       isCalculating: false,
     };
-  }, [completedDates, habitCreatedAt]);
+  }, [completedDatesFingerprint, habitCreatedAt]);
 
   return result;
 }

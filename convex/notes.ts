@@ -1,10 +1,21 @@
 import { v } from 'convex/values';
 import { mutation, query } from './_generated/server';
+import { Id } from './_generated/dataModel';
+import {
+  requireAuthenticatedUser,
+  requireOwnedDocumentById,
+} from './security';
 
 export const list = query({
   args: {},
   handler: async (ctx) => {
-    return await ctx.db.query('notes').order('desc').collect();
+    const userId = await requireAuthenticatedUser(ctx);
+
+    return await ctx.db
+      .query('notes')
+      .filter((q) => q.eq(q.field('userId'), userId))
+      .order('desc')
+      .collect();
   },
   returns: v.array(
     v.object({
@@ -26,7 +37,13 @@ export const search = query({
     searchText: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    let notes = await ctx.db.query('notes').order('desc').collect();
+    const userId = await requireAuthenticatedUser(ctx);
+
+    let notes = await ctx.db
+      .query('notes')
+      .filter((q) => q.eq(q.field('userId'), userId))
+      .order('desc')
+      .collect();
 
     if (args.habitId) {
       notes = notes.filter((note) => note.habitId === args.habitId);
@@ -60,7 +77,21 @@ export const get = query({
     noteId: v.id('notes'),
   },
   handler: async (ctx, args) => {
-    return await ctx.db.get(args.noteId);
+    const userId = await requireAuthenticatedUser(ctx);
+    const note = await ctx.db.get(args.noteId);
+
+    if (!note) {
+      return null;
+    }
+
+    await requireOwnedDocumentById(
+      async (id) => await ctx.db.get(id as Id<'notes'>),
+      args.noteId,
+      userId,
+      'note'
+    );
+
+    return note;
   },
   returns: v.union(
     v.null(),
@@ -84,6 +115,8 @@ export const create = mutation({
     habitId: v.optional(v.id('habits')),
   },
   handler: async (ctx, args) => {
+    const userId = await requireAuthenticatedUser(ctx);
+
     // Validate body length (max 1000 chars as per AC4)
     if (args.body.length > 1000) {
       throw new Error('Note body cannot exceed 1000 characters');
@@ -101,6 +134,7 @@ export const create = mutation({
       createdAt: now,
       date: args.date,
       habitId: args.habitId,
+      userId,
       updatedAt: now,
     });
   },
@@ -113,15 +147,18 @@ export const update = mutation({
     noteId: v.id('notes'),
   },
   handler: async (ctx, args) => {
+    const userId = await requireAuthenticatedUser(ctx);
     // Validate body length (max 1000 chars as per AC4)
     if (args.body.length > 1000) {
       throw new Error('Note body cannot exceed 1000 characters');
     }
 
-    const note = await ctx.db.get(args.noteId);
-    if (!note) {
-      throw new Error('Note not found');
-    }
+    const note = await requireOwnedDocumentById(
+      async (id) => await ctx.db.get(id as Id<'notes'>),
+      args.noteId,
+      userId,
+      'note'
+    );
 
     await ctx.db.patch(args.noteId, {
       body: args.body,
@@ -138,10 +175,13 @@ export const remove = mutation({
     noteId: v.id('notes'),
   },
   handler: async (ctx, args) => {
-    const note = await ctx.db.get(args.noteId);
-    if (!note) {
-      throw new Error('Note not found');
-    }
+    const userId = await requireAuthenticatedUser(ctx);
+    await requireOwnedDocumentById(
+      async (id) => await ctx.db.get(id as Id<'notes'>),
+      args.noteId,
+      userId,
+      'note'
+    );
 
     await ctx.db.delete(args.noteId);
     return null;

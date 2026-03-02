@@ -94,7 +94,7 @@ function calculateDayOfWeekStats(
 
   while (current <= today) {
     const dayOfWeek = current.getDay();
-    const dateStr = current.toISOString().split('T')[0];
+    const dateStr = formatDateString(current);
 
     dayStats[dayOfWeek].total++;
     if (completedDates.has(dateStr)) {
@@ -232,7 +232,7 @@ function calculateTrendComparison(tracking: HabitTrackingEntry[]): {
   const current = new Date(thisMonthStart);
   while (current <= today) {
     thisMonthTotal++;
-    if (completedDates.has(current.toISOString().split('T')[0])) {
+    if (completedDates.has(formatDateString(current))) {
       thisMonthCompleted++;
     }
     current.setDate(current.getDate() + 1);
@@ -242,7 +242,7 @@ function calculateTrendComparison(tracking: HabitTrackingEntry[]): {
   const lastCurrent = new Date(lastMonthStart);
   while (lastCurrent <= lastMonthEnd) {
     lastMonthTotal++;
-    if (completedDates.has(lastCurrent.toISOString().split('T')[0])) {
+    if (completedDates.has(formatDateString(lastCurrent))) {
       lastMonthCompleted++;
     }
     lastCurrent.setDate(lastCurrent.getDate() + 1);

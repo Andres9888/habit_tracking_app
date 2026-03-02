@@ -1,11 +1,20 @@
 import { v } from 'convex/values';
 import { mutation, query } from './_generated/server';
+import { Id } from './_generated/dataModel';
+import {
+  requireAuthenticatedUser,
+  requireOwnedDocumentById,
+  requireOwnedHabit,
+} from './security';
 
 export const listByHabit = query({
   args: {
     habitId: v.id('habits'),
   },
   handler: async (ctx, args) => {
+    const userId = await requireAuthenticatedUser(ctx);
+    await requireOwnedHabit(ctx, args.habitId, userId);
+
     return await ctx.db
       .query('visionBoardItems')
       .withIndex('by_habit', (q) => q.eq('habitId', args.habitId))
@@ -33,6 +42,9 @@ export const create = mutation({
     title: v.string(),
   },
   handler: async (ctx, args) => {
+    const userId = await requireAuthenticatedUser(ctx);
+    await requireOwnedHabit(ctx, args.habitId, userId);
+
     const title = args.title.trim();
     const body = args.body?.trim();
 
@@ -54,6 +66,7 @@ export const create = mutation({
       body: body ? body : undefined,
       createdAt: now,
       habitId: args.habitId,
+      userId,
       title,
       updatedAt: now,
     });
@@ -68,10 +81,13 @@ export const update = mutation({
     title: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    const existing = await ctx.db.get(args.id);
-    if (!existing) {
-      throw new Error('Vision board item not found');
-    }
+    const userId = await requireAuthenticatedUser(ctx);
+    const existing = await requireOwnedDocumentById(
+      async (id) => await ctx.db.get(id as Id<'visionBoardItems'>),
+      args.id,
+      userId,
+      'vision board item'
+    );
 
     const title = args.title?.trim();
     const body = args.body?.trim();
@@ -104,17 +120,19 @@ export const remove = mutation({
     id: v.id('visionBoardItems'),
   },
   handler: async (ctx, args) => {
-    const existing = await ctx.db.get(args.id);
-    if (!existing) {
-      throw new Error('Vision board item not found');
-    }
+    const userId = await requireAuthenticatedUser(ctx);
+    const existing = await requireOwnedDocumentById(
+      async (id) => await ctx.db.get(id as Id<'visionBoardItems'>),
+      args.id,
+      userId,
+      'vision board item'
+    );
 
     await ctx.db.delete(args.id);
     return null;
   },
   returns: v.null(),
 });
-
 
 
 

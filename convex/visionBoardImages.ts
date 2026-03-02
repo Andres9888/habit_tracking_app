@@ -18,6 +18,13 @@
 
 import { v } from 'convex/values';
 import { mutation, query } from './_generated/server';
+import { Id } from './_generated/dataModel';
+import {
+  assertUserIdFilter,
+  requireAuthenticatedUser,
+  requireOwnedDocumentById,
+  requireOwnedHabit,
+} from './security';
 
 // Vision board image object validator for return types (with resolved URL)
 const visionBoardImageObjectValidator = v.object({
@@ -62,6 +69,9 @@ export const listByHabit = query({
     habitId: v.id('habits'),
   },
   handler: async (ctx, args) => {
+    const userId = await requireAuthenticatedUser(ctx);
+    await requireOwnedHabit(ctx, args.habitId, userId);
+
     const images = await ctx.db
       .query('visionBoardImages')
       .withIndex('by_habit', (q) => q.eq('habitId', args.habitId))
@@ -94,7 +104,13 @@ export const get = query({
     imageId: v.id('visionBoardImages'),
   },
   handler: async (ctx, args) => {
-    const image = await ctx.db.get(args.imageId);
+    const userId = await requireAuthenticatedUser(ctx);
+    const image = await requireOwnedDocumentById(
+      async (id) => await ctx.db.get(id as Id<'visionBoardImages'>),
+      args.imageId,
+      userId,
+      'vision board image'
+    );
     if (!image) return null;
 
     const url = await ctx.storage.getUrl(image.storageId);
@@ -114,6 +130,9 @@ export const countByHabit = query({
     habitId: v.id('habits'),
   },
   handler: async (ctx, args) => {
+    const userId = await requireAuthenticatedUser(ctx);
+    await requireOwnedHabit(ctx, args.habitId, userId);
+
     const images = await ctx.db
       .query('visionBoardImages')
       .withIndex('by_habit', (q) => q.eq('habitId', args.habitId))
@@ -135,13 +154,10 @@ export const create = mutation({
     storageId: v.id('_storage'),
   },
   handler: async (ctx, args) => {
-    // Validate that habit exists
-    const habit = await ctx.db.get(args.habitId);
-    if (!habit) {
-      throw new Error('Habit not found');
-    }
+    const userId = await requireAuthenticatedUser(ctx);
+    await requireOwnedHabit(ctx, args.habitId, userId);
 
-    // Validate that storage file exists
+    // Validate that habit exists
     const fileMetadata = await ctx.db.system.get(args.storageId);
     if (!fileMetadata) {
       throw new Error('Storage file not found');
@@ -190,6 +206,7 @@ export const create = mutation({
       caption: args.caption?.trim(),
       createdAt: now,
       habitId: args.habitId,
+      userId,
       order,
       storageId: args.storageId,
     });
@@ -206,10 +223,13 @@ export const updateCaption = mutation({
     imageId: v.id('visionBoardImages'),
   },
   handler: async (ctx, args) => {
-    const image = await ctx.db.get(args.imageId);
-    if (!image) {
-      throw new Error('Image not found');
-    }
+    const userId = await requireAuthenticatedUser(ctx);
+    await requireOwnedDocumentById(
+      async (id) => await ctx.db.get(id as Id<'visionBoardImages'>),
+      args.imageId,
+      userId,
+      'vision board image'
+    );
 
     // Validate caption length
     if (args.caption && args.caption.length > MAX_CAPTION_LENGTH) {
@@ -236,6 +256,9 @@ export const reorder = mutation({
     orderedImageIds: v.array(v.id('visionBoardImages')),
   },
   handler: async (ctx, args) => {
+    const userId = await requireAuthenticatedUser(ctx);
+    await requireOwnedHabit(ctx, args.habitId, userId);
+
     // Validate all images exist and belong to this habit
     const existingImages = await ctx.db
       .query('visionBoardImages')
@@ -273,10 +296,13 @@ export const remove = mutation({
     imageId: v.id('visionBoardImages'),
   },
   handler: async (ctx, args) => {
-    const image = await ctx.db.get(args.imageId);
-    if (!image) {
-      throw new Error('Image not found');
-    }
+    const userId = await requireAuthenticatedUser(ctx);
+    const image = await requireOwnedDocumentById(
+      async (id) => await ctx.db.get(id as Id<'visionBoardImages'>),
+      args.imageId,
+      userId,
+      'vision board image'
+    );
 
     // Delete the file from storage
     try {
@@ -320,9 +346,12 @@ export const listByUser = query({
     userId: v.string(),
   },
   handler: async (ctx, args) => {
+    const currentUserId = await requireAuthenticatedUser(ctx);
+    const targetUserId = assertUserIdFilter(args.userId, currentUserId);
+
     const query = ctx.db
       .query('visionBoardImages')
-      .withIndex('by_user', (q) => q.eq('userId', args.userId))
+      .withIndex('by_user', (q) => q.eq('userId', targetUserId))
       .order('desc');
 
     const images = args.limit
@@ -353,9 +382,11 @@ export const listRecent = query({
     limit: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
+    const userId = await requireAuthenticatedUser(ctx);
     const limit = args.limit ?? 10;
     const images = await ctx.db
       .query('visionBoardImages')
+      .filter((q) => q.eq(q.field('userId'), userId))
       .order('desc')
       .take(limit);
 

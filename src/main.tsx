@@ -1,4 +1,3 @@
-import { ConvexProvider, ConvexReactClient } from 'convex/react';
 import React, { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App';
@@ -44,18 +43,10 @@ class ErrorBoundary extends React.Component<
   }
 }
 
-const convexUrl = import.meta.env.VITE_CONVEX_URL as string | undefined;
-if (!convexUrl) {
-  throw new Error('VITE_CONVEX_URL is required but was not provided');
-}
-const convex = new ConvexReactClient(convexUrl);
-
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <ConvexProvider client={convex}>
-      <ErrorBoundary>
-        <App />
-      </ErrorBoundary>
-    </ConvexProvider>
+    <ErrorBoundary>
+      <App />
+    </ErrorBoundary>
   </StrictMode>
 );

@@ -40,6 +40,7 @@ import { QuickCompleteButton } from '../components/QuickCompleteButton/QuickComp
 import { HeaderCompleteToggle } from '../components/HeaderCompleteToggle';
 import { format, parseISO } from 'date-fns';
 import { getNextReminderRelativeTime } from '../utils/notifications';
+import { formatDateString, getTodayString } from '../utils/dateUtils';
 import {
   X,
   Edit3,
@@ -793,7 +794,7 @@ function ProgressTabContent({
   reduceMotion?: boolean;
 }) {
   // Get today's date for reflection queries
-  const today = new Date().toISOString().split('T')[0];
+  const today = getTodayString();
 
   // Mutation for toggling habit completion on any date (heatmap cell tap)
   const toggleHabitMutation = useMutation(api.habits.toggleHabit);
@@ -1529,7 +1530,7 @@ export default function HabitDetailScreen({
   const affirmations =
     useQuery(api.affirmations.listByHabit, visible && habitId ? { habitId } : 'skip') ?? [];
 
-  const today = useMemo(() => new Date().toISOString().split('T')[0], []);
+  const today = useMemo(() => getTodayString(), []);
 
   const completedDates = useMemo(() => {
     if (!habitId) {
@@ -1558,7 +1559,7 @@ export default function HabitDetailScreen({
     return Array.from({ length: 7 }, (_, index) => {
       const date = new Date();
       date.setDate(date.getDate() - (6 - index));
-      const dateKey = date.toISOString().split('T')[0];
+      const dateKey = formatDateString(date);
       if (dateKey === today) {
         return isCompletedToday;
       }
@@ -1570,7 +1571,7 @@ export default function HabitDetailScreen({
     return Array.from({ length: 30 }, (_, index) => {
       const date = new Date();
       date.setDate(date.getDate() - (29 - index));
-      const dateKey = date.toISOString().split('T')[0];
+      const dateKey = formatDateString(date);
       return {
         completed: dateKey === today ? isCompletedToday : completedDates.has(dateKey),
         date: dateKey,
@@ -1599,7 +1600,7 @@ export default function HabitDetailScreen({
     return Array.from({ length: 7 }, (_, index) => {
       const date = new Date(monday);
       date.setDate(monday.getDate() + index);
-      const dateKey = date.toISOString().split('T')[0];
+      const dateKey = formatDateString(date);
       const isTodayDate = dateKey === today;
 
       return {
@@ -1627,7 +1628,7 @@ export default function HabitDetailScreen({
     for (let i = 0; i < 7; i++) {
       const date = new Date(lastMonday);
       date.setDate(lastMonday.getDate() + i);
-      const dateKey = date.toISOString().split('T')[0];
+      const dateKey = formatDateString(date);
       if (completedDates.has(dateKey)) {
         count++;
       }

@@ -456,7 +456,12 @@ export function useOfflineQueue({
 
   // Dequeue an item (after successful processing)
   const dequeue = useCallback(
-    async (id: string): Promise<void> => {
+    async (
+      id: string,
+      options?: {
+        emitItemProcessed?: boolean;
+      }
+    ): Promise<void> => {
       const ids = await loadQueueIndex();
       const newIds = ids.filter((i) => i !== id);
 
@@ -471,7 +476,7 @@ export function useOfflineQueue({
       if (isMountedRef.current) {
         setQueueCount(newIds.length);
 
-        if (item && onItemProcessed) {
+        if (item && onItemProcessed && options?.emitItemProcessed !== false) {
           onItemProcessed(item);
         }
 
@@ -495,7 +500,7 @@ export function useOfflineQueue({
       // Check if we've exceeded max retries
       if (newRetryCount >= maxRetries) {
         // Remove from queue and notify
-        await dequeue(id);
+        await dequeue(id, { emitItemProcessed: false });
         if (onItemFailed) {
           onItemFailed(item, new Error(error));
         }

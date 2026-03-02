@@ -16,6 +16,12 @@ import { v } from 'convex/values';
 import { action, mutation, query } from './_generated/server';
 import { api } from './_generated/api';
 import OpenAI from 'openai';
+import { Id } from './_generated/dataModel';
+import {
+  requireAuthenticatedUser,
+  requireOwnedDocumentById,
+  requireOwnedHabit,
+} from './security';
 
 const MAX_AFFIRMATIONS_PER_HABIT = 10;
 const MAX_TEXT_LENGTH = 200;
@@ -28,6 +34,9 @@ export const listByHabit = query({
     habitId: v.id('habits'),
   },
   handler: async (ctx, args) => {
+    const userId = await requireAuthenticatedUser(ctx);
+    await requireOwnedHabit(ctx, args.habitId, userId);
+
     const affirmations = await ctx.db
       .query('affirmations')
       .withIndex('by_habit', (q) => q.eq('habitId', args.habitId))
@@ -73,6 +82,8 @@ export const create = mutation({
   },
   handler: async (ctx, args) => {
     const text = args.text.trim();
+    const userId = await requireAuthenticatedUser(ctx);
+    await requireOwnedHabit(ctx, args.habitId, userId);
 
     // Validation
     if (!text) {
@@ -106,6 +117,7 @@ export const create = mutation({
     return await ctx.db.insert('affirmations', {
       createdAt: now,
       habitId: args.habitId,
+      userId,
       text,
       type: args.type,
       updatedAt: now,
@@ -130,10 +142,13 @@ export const update = mutation({
     ),
   },
   handler: async (ctx, args) => {
-    const affirmation = await ctx.db.get(args.id);
-    if (!affirmation) {
-      throw new Error('Affirmation not found');
-    }
+    const userId = await requireAuthenticatedUser(ctx);
+    const affirmation = await requireOwnedDocumentById(
+      async (id) => await ctx.db.get(id as Id<'affirmations'>),
+      args.id,
+      userId,
+      'affirmation'
+    );
 
     const updates: {
       text?: string;
@@ -174,10 +189,13 @@ export const remove = mutation({
     id: v.id('affirmations'),
   },
   handler: async (ctx, args) => {
-    const affirmation = await ctx.db.get(args.id);
-    if (!affirmation) {
-      throw new Error('Affirmation not found');
-    }
+    const userId = await requireAuthenticatedUser(ctx);
+    await requireOwnedDocumentById(
+      async (id) => await ctx.db.get(id as Id<'affirmations'>),
+      args.id,
+      userId,
+      'affirmation'
+    );
 
     await ctx.db.delete(args.id);
     return null;
@@ -221,10 +239,13 @@ export const scheduleDelivery = mutation({
     scheduledTime: v.string(), // Required for weekly
   },
   handler: async (ctx, args) => {
-    const affirmation = await ctx.db.get(args.id);
-    if (!affirmation) {
-      throw new Error('Affirmation not found');
-    }
+    const userId = await requireAuthenticatedUser(ctx);
+    const affirmation = await requireOwnedDocumentById(
+      async (id) => await ctx.db.get(id as Id<'affirmations'>),
+      args.id,
+      userId,
+      'affirmation'
+    );
 
     // Validate time format
     if (!isValidTimeFormat(args.scheduledTime)) {
@@ -273,10 +294,13 @@ export const updateNotificationId = mutation({
     notificationId: v.string(),
   },
   handler: async (ctx, args) => {
-    const affirmation = await ctx.db.get(args.id);
-    if (!affirmation) {
-      throw new Error('Affirmation not found');
-    }
+    const userId = await requireAuthenticatedUser(ctx);
+    const affirmation = await requireOwnedDocumentById(
+      async (id) => await ctx.db.get(id as Id<'affirmations'>),
+      args.id,
+      userId,
+      'affirmation'
+    );
 
     await ctx.db.patch(args.id, {
       notificationId: args.notificationId,
@@ -299,10 +323,13 @@ export const toggleSchedule = mutation({
     id: v.id('affirmations'),
   },
   handler: async (ctx, args) => {
-    const affirmation = await ctx.db.get(args.id);
-    if (!affirmation) {
-      throw new Error('Affirmation not found');
-    }
+    const userId = await requireAuthenticatedUser(ctx);
+    const affirmation = await requireOwnedDocumentById(
+      async (id) => await ctx.db.get(id as Id<'affirmations'>),
+      args.id,
+      userId,
+      'affirmation'
+    );
 
     // Can only enable if schedule is configured
     if (args.enabled && !affirmation.scheduledTime) {
@@ -333,10 +360,13 @@ export const cancelSchedule = mutation({
     id: v.id('affirmations'),
   },
   handler: async (ctx, args) => {
-    const affirmation = await ctx.db.get(args.id);
-    if (!affirmation) {
-      throw new Error('Affirmation not found');
-    }
+    const userId = await requireAuthenticatedUser(ctx);
+    const affirmation = await requireOwnedDocumentById(
+      async (id) => await ctx.db.get(id as Id<'affirmations'>),
+      args.id,
+      userId,
+      'affirmation'
+    );
 
     await ctx.db.patch(args.id, {
       daysOfWeek: undefined,
@@ -364,10 +394,13 @@ export const recordDelivery = mutation({
     id: v.id('affirmations'),
   },
   handler: async (ctx, args) => {
-    const affirmation = await ctx.db.get(args.id);
-    if (!affirmation) {
-      throw new Error('Affirmation not found');
-    }
+    const userId = await requireAuthenticatedUser(ctx);
+    const affirmation = await requireOwnedDocumentById(
+      async (id) => await ctx.db.get(id as Id<'affirmations'>),
+      args.id,
+      userId,
+      'affirmation'
+    );
 
     await ctx.db.patch(args.id, {
       lastDeliveredAt: Date.now(),
@@ -390,10 +423,179 @@ export const listScheduled = query({
     habitId: v.optional(v.id('habits')),
   },
   handler: async (ctx, args) => {
+    const userId = await requireAuthenticatedUser(ctx);
+
     // Get scheduled affirmations for specific habit or all scheduled
     const affirmations = args.habitId
       ? await ctx.db
           .query('affirmations')
+          .withIndex('by_habit', (q) => q.eq('habitId', args.habitId!))
+          .filter((q) => q.eq(q.field('userId'), userId))
+          .filter((q) => q.eq(q.field('isScheduleEnabled'), true))
+          .collect()
+      : await ctx.db
+          .query('affirmations')
+          .withIndex('by_schedule', (q) => q.eq('isScheduleEnabled', true))
+          .filter((q) => q.eq(q.field('userId'), userId))
+          .collect();
+
+    return affirmations;
+  },
+  returns: v.array(
+    v.object({
+      _creationTime: v.number(),
+      _id: v.id('affirmations'),
+      createdAt: v.number(),
+      daysOfWeek: v.optional(v.array(v.number())),
+      frequency: v.optional(v.union(v.literal('daily'), v.literal('weekly'))),
+      habitId: v.id('habits'),
+      isScheduleEnabled: v.optional(v.boolean()),
+      lastDeliveredAt: v.optional(v.number()),
+      notificationId: v.optional(v.string()),
+      scheduledTime: v.optional(v.string()),
+      text: v.string(),
+      type: v.optional(
+        v.union(
+          v.literal('identity'),
+          v.literal('motivational'),
+          v.literal('instructional')
+        )
+      ),
+      updatedAt: v.number(),
+      userId: v.optional(v.string()),
+    })
+  ),
+});
+
+/**
+ * Get a single affirmation with full schedule details
+ */
+export const get = query({
+  args: {
+    id: v.id('affirmations'),
+  },
+  handler: async (ctx, args) => {
+    const userId = await requireAuthenticatedUser(ctx);
+    return await requireOwnedDocumentById(
+      async (id) => await ctx.db.get(id as Id<'affirmations'>),
+      args.id,
+      userId,
+      'affirmation'
+    );
+  },
+  returns: v.union(
+    v.null(),
+    v.object({
+      _creationTime: v.number(),
+      _id: v.id('affirmations'),
+      createdAt: v.number(),
+      daysOfWeek: v.optional(v.array(v.number())),
+      frequency: v.optional(v.union(v.literal('daily'), v.literal('weekly'))),
+      habitId: v.id('habits'),
+      isScheduleEnabled: v.optional(v.boolean()),
+      lastDeliveredAt: v.optional(v.number()),
+      notificationId: v.optional(v.string()),
+      scheduledTime: v.optional(v.string()),
+      text: v.string(),
+      type: v.optional(
+        v.union(
+          v.literal('identity'),
+          v.literal('motivational'),
+          v.literal('instructional')
+        )
+      ),
+      updatedAt: v.number(),
+      userId: v.optional(v.string()),
+    })
+  ),
+});
+
+// ============================================================================
+// AI-GENERATED AFFIRMATIONS (Premium Feature)
+// ============================================================================
+
+/**
+ * Type definitions for habit context used in AI generation
+ */
+interface HabitContext {
+  name: string;
+  why?: string;
+  identity?: string;
+  notes?: string;
+  vizSuccessBody?: string;
+  vizSuccessMind?: string;
+  vizSuccessEmotion?: string;
+}
+
+/**
+ * Type for generated affirmation before saving
+ */
+interface GeneratedAffirmation {
+  text: string;
+  type: 'identity' | 'motivational' | 'instructional';
+}
+
+function buildAffirmationPrompt(
+  habitContext: HabitContext,
+  existingAffirmations: string[],
+  count: number
+): string {
+  const contextParts: string[] = [`Habit: ${habitContext.name}`];
+
+  if (habitContext.why) {
+    contextParts.push(`Why (user's motivation): "${habitContext.why}"`);
+  }
+  if (habitContext.identity) {
+    contextParts.push(`Identity (who they're becoming): "${habitContext.identity}"`);
+  }
+  if (habitContext.notes) {
+    contextParts.push(`Notes: "${habitContext.notes}"`);
+  }
+  if (habitContext.vizSuccessBody) {
+    contextParts.push(`Success visualization (Body): "${habitContext.vizSuccessBody}"`);
+  }
+  if (habitContext.vizSuccessMind) {
+    contextParts.push(`Success visualization (Mind): "${habitContext.vizSuccessMind}"`);
+  }
+  if (habitContext.vizSuccessEmotion) {
+    contextParts.push(`Success visualization (Emotion): "${habitContext.vizSuccessEmotion}"`);
+  }
+
+  const existingPart =
+    existingAffirmations.length > 0
+      ? `\\n\\nExisting affirmations (avoid similar ones):\\n${existingAffirmations.map((a) => `- "${a}"`).join('\\n')}`
+      : '';
+
+  return `You are an expert in positive psychology, self-affirmation theory (Steele, 1988), and habit formation science.
+
+Generate exactly ${count} personalized affirmations for a user building this habit:
+
+${contextParts.join('\\n')}${existingPart}
+
+REQUIREMENTS:
+1. Each affirmation MUST be under 200 characters
+2. Create a mix of three types:
+   - identity: "I am..." statements about who they're becoming (most powerful)
+   - motivational: Encouraging statements about capability and progress
+   - instructional: Guiding statements about approach and mindset
+
+3. Make them:
+   - Personal and specific to THIS habit (not generic)
+   - Present tense (not future)
+   - Positive framing (not negative)
+   - Emotionally resonant based on their "why" and visualization
+   - Actionable and believable
+
+4. If user provided identity/why statements, incorporate their language
+
+RESPOND WITH EXACTLY THIS JSON FORMAT (no other text):
+{
+  \"affirmations\": [
+    {\"text\": \"...\", \"type\": \"identity\"},
+    {\"text\": \"...\", \"type\": \"motivational\"},
+    {\"text\": \"...\", \"type\": \"instructional\"}
+  ]
+}`;
           .withIndex('by_habit', (q) => q.eq('habitId', args.habitId!))
           .filter((q) => q.eq(q.field('isScheduleEnabled'), true))
           .collect()

@@ -15,6 +15,13 @@
 
 import { v } from 'convex/values';
 import { mutation, query } from './_generated/server';
+import { Id } from './_generated/dataModel';
+import {
+  assertUserIdFilter,
+  requireAuthenticatedUser,
+  requireOwnedDocumentById,
+  requireOwnedHabit,
+} from './security';
 
 // Letter object validator for return types
 const letterObjectValidator = v.object({
@@ -53,6 +60,9 @@ export const listByHabit = query({
     limit: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
+    const userId = await requireAuthenticatedUser(ctx);
+    await requireOwnedHabit(ctx, args.habitId, userId);
+
     const query = ctx.db
       .query('letters')
       .withIndex('by_habit', (q) => q.eq('habitId', args.habitId))
@@ -76,6 +86,9 @@ export const getUnreadUnlocked = query({
     habitId: v.id('habits'),
   },
   handler: async (ctx, args) => {
+    const userId = await requireAuthenticatedUser(ctx);
+    await requireOwnedHabit(ctx, args.habitId, userId);
+
     const now = Date.now();
 
     const letters = await ctx.db
@@ -99,6 +112,7 @@ export const getUpcomingUnlocks = query({
     userId: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
+    const currentUserId = await requireAuthenticatedUser(ctx);
     const now = Date.now();
     const in24Hours = now + 24 * 60 * 60 * 1000;
 
@@ -106,17 +120,22 @@ export const getUpcomingUnlocks = query({
 
     if (args.habitId) {
       const habitId = args.habitId;
+      await requireOwnedHabit(ctx, habitId, currentUserId);
       letters = await ctx.db
         .query('letters')
         .withIndex('by_habit', (q) => q.eq('habitId', habitId))
         .collect();
     } else if (args.userId) {
+      const targetUserId = assertUserIdFilter(args.userId, currentUserId);
       letters = await ctx.db
         .query('letters')
-        .withIndex('by_user', (q) => q.eq('userId', args.userId))
+        .withIndex('by_user', (q) => q.eq('userId', targetUserId))
         .collect();
     } else {
-      letters = await ctx.db.query('letters').collect();
+      letters = await ctx.db
+        .query('letters')
+        .filter((q) => q.eq(q.field('userId'), currentUserId))
+        .collect();
     }
 
     // Filter for letters that unlock within the next 24 hours
@@ -136,7 +155,13 @@ export const get = query({
     letterId: v.id('letters'),
   },
   handler: async (ctx, args) => {
-    return await ctx.db.get(args.letterId);
+    const userId = await requireAuthenticatedUser(ctx);
+    return await requireOwnedDocumentById(
+      async (id) => await ctx.db.get(id as Id<'letters'>),
+      args.letterId,
+      userId,
+      'letter'
+    );
   },
   returns: v.union(v.null(), letterObjectValidator),
 });
@@ -149,6 +174,9 @@ export const countByHabit = query({
     habitId: v.id('habits'),
   },
   handler: async (ctx, args) => {
+    const userId = await requireAuthenticatedUser(ctx);
+    await requireOwnedHabit(ctx, args.habitId, userId);
+
     const letters = await ctx.db
       .query('letters')
       .withIndex('by_habit', (q) => q.eq('habitId', args.habitId))
@@ -167,6 +195,9 @@ export const getStats = query({
     habitId: v.id('habits'),
   },
   handler: async (ctx, args) => {
+    const userId = await requireAuthenticatedUser(ctx);
+    await requireOwnedHabit(ctx, args.habitId, userId);
+
     const now = Date.now();
     const letters = await ctx.db
       .query('letters')
@@ -207,11 +238,8 @@ export const create = mutation({
     unlockDays: v.number(), // Number of days until unlock
   },
   handler: async (ctx, args) => {
-    // Validate that habit exists
-    const habit = await ctx.db.get(args.habitId);
-    if (!habit) {
-      throw new Error('Habit not found');
-    }
+    const userId = await requireAuthenticatedUser(ctx);
+    await requireOwnedHabit(ctx, args.habitId, userId);
 
     // Validate content
     if (!args.content || args.content.trim() === '') {
@@ -245,6 +273,7 @@ export const create = mutation({
       habitId: args.habitId,
       isRead: false,
       title: args.title?.trim(),
+      userId,
       unlockAt,
     });
   },
@@ -260,10 +289,13 @@ export const markAsRead = mutation({
     letterId: v.id('letters'),
   },
   handler: async (ctx, args) => {
-    const letter = await ctx.db.get(args.letterId);
-    if (!letter) {
-      throw new Error('Letter not found');
-    }
+    const userId = await requireAuthenticatedUser(ctx);
+    const letter = await requireOwnedDocumentById(
+      async (id) => await ctx.db.get(id as Id<'letters'>),
+      args.letterId,
+      userId,
+      'letter'
+    );
 
     const now = Date.now();
 
@@ -298,10 +330,13 @@ export const update = mutation({
     title: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    const letter = await ctx.db.get(args.letterId);
-    if (!letter) {
-      throw new Error('Letter not found');
-    }
+    const userId = await requireAuthenticatedUser(ctx);
+    const letter = await requireOwnedDocumentById(
+      async (id) => await ctx.db.get(id as Id<'letters'>),
+      args.letterId,
+      userId,
+      'letter'
+    );
 
     const now = Date.now();
 
@@ -356,10 +391,13 @@ export const remove = mutation({
     letterId: v.id('letters'),
   },
   handler: async (ctx, args) => {
-    const letter = await ctx.db.get(args.letterId);
-    if (!letter) {
-      throw new Error('Letter not found');
-    }
+    const userId = await requireAuthenticatedUser(ctx);
+    const letter = await requireOwnedDocumentById(
+      async (id) => await ctx.db.get(id as Id<'letters'>),
+      args.letterId,
+      userId,
+      'letter'
+    );
 
     const now = Date.now();
 
@@ -383,6 +421,9 @@ export const getMostRecentUnlocked = query({
     habitId: v.id('habits'),
   },
   handler: async (ctx, args) => {
+    const userId = await requireAuthenticatedUser(ctx);
+    await requireOwnedHabit(ctx, args.habitId, userId);
+
     const now = Date.now();
 
     const letters = await ctx.db
@@ -415,9 +456,12 @@ export const listByUser = query({
     userId: v.string(),
   },
   handler: async (ctx, args) => {
+    const currentUserId = await requireAuthenticatedUser(ctx);
+    const targetUserId = assertUserIdFilter(args.userId, currentUserId);
+
     const query = ctx.db
       .query('letters')
-      .withIndex('by_user', (q) => q.eq('userId', args.userId))
+      .withIndex('by_user', (q) => q.eq('userId', targetUserId))
       .order('desc');
 
     if (args.limit) {

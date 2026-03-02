@@ -44,6 +44,7 @@ import { getStrengthLevel } from '../HabitStrengthIndicator/HabitStrengthIndicat
 import { StrengthProgressBar } from '../StrengthProgressBar/StrengthProgressBar';
 import FloatingXPText from '../FloatingXPText/FloatingXPText';
 import * as Haptics from 'expo-haptics';
+import { getTodayString } from '../../utils/dateUtils';
 import {
   useHabitCardEntrance,
   type HabitCardEntranceVariant,
@@ -177,7 +178,7 @@ export function HabitCard({
   const [isToggling, setIsToggling] = React.useState(false);
 
   // Get today's date in YYYY-MM-DD format
-  const today = new Date().toISOString().split('T')[0];
+  const today = getTodayString();
 
   // Query current completion status for conditional haptic feedback
   // Returns true if completed, false if not completed, undefined while loading

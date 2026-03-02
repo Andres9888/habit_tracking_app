@@ -26,6 +26,7 @@ import { ActivationModal } from '../../../components/MotivationSystem/Activation
 import type { ActivationHabitData } from '../../../components/MotivationSystem/Activation/ActivationModal';
 import type { ShareCardData } from '../types';
 import type { HabitsModalsState } from '../hooks/useHabitsApp';
+import { getTodayString } from '../../../utils/dateUtils';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -125,7 +126,7 @@ export function HabitsModals({ state }: HabitsModalsProps) {
   } = state;
 
   // Today's date for toggle completion
-  const today = new Date().toISOString().split('T')[0];
+  const today = getTodayString();
 
   const ShareCardGenerator: ComponentType<{
     data: ShareCardData;

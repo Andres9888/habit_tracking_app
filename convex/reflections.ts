@@ -12,6 +12,12 @@
 
 import { v } from 'convex/values';
 import { mutation, query } from './_generated/server';
+import { Id } from './_generated/dataModel';
+import {
+  requireAuthenticatedUser,
+  requireOwnedDocumentById,
+  requireOwnedHabit,
+} from './security';
 
 // Emoji type validator - matches schema definition
 const emojiValidator = v.union(
@@ -43,6 +49,9 @@ export const getByHabitAndDate = query({
     date: v.string(),
   },
   handler: async (ctx, args) => {
+    const userId = await requireAuthenticatedUser(ctx);
+    await requireOwnedHabit(ctx, args.habitId, userId);
+
     return await ctx.db
       .query('reflections')
       .withIndex('by_habit_and_date', (q) =>
@@ -62,6 +71,9 @@ export const listByHabit = query({
     limit: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
+    const userId = await requireAuthenticatedUser(ctx);
+    await requireOwnedHabit(ctx, args.habitId, userId);
+
     let query = ctx.db
       .query('reflections')
       .withIndex('by_habit', (q) => q.eq('habitId', args.habitId))
@@ -88,6 +100,9 @@ export const upsert = mutation({
     note: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
+    const userId = await requireAuthenticatedUser(ctx);
+    await requireOwnedHabit(ctx, args.habitId, userId);
+
     // Validate date format as YYYY-MM-DD
     const isValidDate = /^\d{4}-\d{2}-\d{2}$/.test(args.date);
     if (!isValidDate) {
@@ -133,6 +148,7 @@ export const upsert = mutation({
       note: args.note,
       createdAt: now,
       updatedAt: now,
+      userId,
     });
   },
   returns: v.id('reflections'),
@@ -146,10 +162,13 @@ export const remove = mutation({
     reflectionId: v.id('reflections'),
   },
   handler: async (ctx, args) => {
-    const reflection = await ctx.db.get(args.reflectionId);
-    if (!reflection) {
-      throw new Error('Reflection not found');
-    }
+    const userId = await requireAuthenticatedUser(ctx);
+    await requireOwnedDocumentById(
+      async (id) => await ctx.db.get(id as Id<'reflections'>),
+      args.reflectionId,
+      userId,
+      'reflection'
+    );
 
     await ctx.db.delete(args.reflectionId);
     return null;
@@ -165,8 +184,15 @@ export const listRecent = query({
     limit: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
+    const userId = await requireAuthenticatedUser(ctx);
     const limit = args.limit ?? 10;
-    return await ctx.db.query('reflections').order('desc').take(limit);
+
+    return await ctx.db
+      .query('reflections')
+      .filter((q) => q.eq(q.field('userId'), userId))
+      .order('desc')
+      .take(limit);
   },
+
   returns: v.array(reflectionObjectValidator),
 });

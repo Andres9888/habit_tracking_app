@@ -27,6 +27,7 @@ import { useMutation } from 'convex/react';
 import { api } from '../../../convex/_generated/api';
 import type { Id } from '../../../convex/_generated/dataModel';
 import { useReduceMotion } from '../../hooks/useReduceMotion';
+import { getTodayString } from '../../utils/dateUtils';
 
 export interface QuickCompleteButtonProps {
   completedToday: boolean;
@@ -172,7 +173,7 @@ export function QuickCompleteButton({
   const checkRotation = useSharedValue(completedToday ? 0 : -90);
 
   const toggleCompletionMutation = useMutation(api.habits.toggleHabit);
-  const today = new Date().toISOString().split('T')[0];
+  const today = getTodayString();
 
   React.useEffect(() => {
     setLocalCompleted(completedToday);
@@ -331,7 +332,6 @@ const styles = StyleSheet.create({
 });
 
 export default QuickCompleteButton;
-
 
 
 

@@ -1,9 +1,18 @@
 import { ConvexReactClient } from 'convex/react';
 import * as SecureStore from 'expo-secure-store';
 
-const convexUrl = process.env.EXPO_PUBLIC_CONVEX_URL;
+const expoConvexUrl = process.env.EXPO_PUBLIC_CONVEX_URL;
+const viteConvexUrl = (() => {
+  if (typeof import.meta === 'undefined') return undefined;
+  return (import.meta as { env?: { VITE_CONVEX_URL?: string } }).env
+    ?.VITE_CONVEX_URL;
+})();
+
+const convexUrl = expoConvexUrl || viteConvexUrl;
 if (!convexUrl) {
-  throw new Error('EXPO_PUBLIC_CONVEX_URL is required but was not provided');
+  throw new Error(
+    'Convex URL is required but was not provided. Set EXPO_PUBLIC_CONVEX_URL or VITE_CONVEX_URL.'
+  );
 }
 
 export const convexClient = new ConvexReactClient(convexUrl);

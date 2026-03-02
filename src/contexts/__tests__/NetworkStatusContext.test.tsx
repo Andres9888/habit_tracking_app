@@ -160,15 +160,13 @@ describe('NetworkStatusContext', () => {
   });
 
   describe('useNetworkStatus', () => {
-    it('returns default context when used outside provider', () => {
-      // When used outside provider, the hook returns default context values
-      // This allows components to work in test environments without a provider
+    it('throws when used outside provider', () => {
       const { result } = renderHook(() => useNetworkStatus());
 
-      // Default assumes online (optimistic)
-      expect(result.current.isOnline).toBe(true);
-      expect(result.current.isChecking).toBe(true);
-      expect(typeof result.current.refresh).toBe('function');
+      expect(result.error).toBeInstanceOf(Error);
+      expect(result.error).toMatchObject({
+        message: 'useNetworkStatus must be used within a NetworkStatusProvider',
+      });
     });
 
     it('returns current network status', async () => {

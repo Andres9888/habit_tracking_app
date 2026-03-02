@@ -85,14 +85,16 @@ const defaultRefresh = async (): Promise<void> => {};
 const defaultCallback = (): (() => void) => () => {};
 
 // Create context with default value
-const NetworkStatusContext = createContext<NetworkStatusContextValue>({
+const defaultNetworkStatusContext: NetworkStatusContextValue = {
   isChecking: true,
   isOnline: true,
   onOffline: defaultCallback,
   onOnline: defaultCallback,
   refresh: defaultRefresh,
   status: defaultNetworkStatus,
-});
+};
+
+const NetworkStatusContext = createContext(defaultNetworkStatusContext);
 
 /**
  * Convert NetInfo state to our NetworkStatus format
@@ -278,7 +280,7 @@ export function NetworkStatusProvider({
 export function useNetworkStatus(): NetworkStatusContextValue {
   const context = useContext(NetworkStatusContext);
 
-  if (!context) {
+  if (context === defaultNetworkStatusContext) {
     throw new Error(
       'useNetworkStatus must be used within a NetworkStatusProvider'
     );

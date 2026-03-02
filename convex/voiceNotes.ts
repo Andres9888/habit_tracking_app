@@ -17,6 +17,13 @@
 
 import { v } from 'convex/values';
 import { mutation, query } from './_generated/server';
+import { Id } from './_generated/dataModel';
+import {
+  assertUserIdFilter,
+  requireAuthenticatedUser,
+  requireOwnedDocumentById,
+  requireOwnedHabit,
+} from './security';
 
 // Voice note object validator for return types
 const voiceNoteObjectValidator = v.object({
@@ -41,6 +48,9 @@ export const listByHabit = query({
     limit: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
+    const userId = await requireAuthenticatedUser(ctx);
+    await requireOwnedHabit(ctx, args.habitId, userId);
+
     const query = ctx.db
       .query('voiceNotes')
       .withIndex('by_habit', (q) => q.eq('habitId', args.habitId))
@@ -63,6 +73,9 @@ export const getDay1Note = query({
     habitId: v.id('habits'),
   },
   handler: async (ctx, args) => {
+    const userId = await requireAuthenticatedUser(ctx);
+    await requireOwnedHabit(ctx, args.habitId, userId);
+
     const notes = await ctx.db
       .query('voiceNotes')
       .withIndex('by_habit', (q) => q.eq('habitId', args.habitId))
@@ -98,7 +111,13 @@ export const get = query({
     voiceNoteId: v.id('voiceNotes'),
   },
   handler: async (ctx, args) => {
-    return await ctx.db.get(args.voiceNoteId);
+    const userId = await requireAuthenticatedUser(ctx);
+    return await requireOwnedDocumentById(
+      async (id) => await ctx.db.get(id as Id<'voiceNotes'>),
+      args.voiceNoteId,
+      userId,
+      'voice note'
+    );
   },
   returns: v.union(v.null(), voiceNoteObjectValidator),
 });
@@ -111,6 +130,9 @@ export const countByHabit = query({
     habitId: v.id('habits'),
   },
   handler: async (ctx, args) => {
+    const userId = await requireAuthenticatedUser(ctx);
+    await requireOwnedHabit(ctx, args.habitId, userId);
+
     const notes = await ctx.db
       .query('voiceNotes')
       .withIndex('by_habit', (q) => q.eq('habitId', args.habitId))
@@ -133,11 +155,8 @@ export const create = mutation({
     label: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    // Validate that habit exists
-    const habit = await ctx.db.get(args.habitId);
-    if (!habit) {
-      throw new Error('Habit not found');
-    }
+    const userId = await requireAuthenticatedUser(ctx);
+    await requireOwnedHabit(ctx, args.habitId, userId);
 
     // Validate duration (max 5 minutes = 300 seconds)
     if (args.duration <= 0) {
@@ -179,6 +198,7 @@ export const create = mutation({
       duration: args.duration,
       habitId: args.habitId,
       isDay1: args.isDay1 ?? false,
+      userId,
       label: args.label,
     });
   },
@@ -195,10 +215,13 @@ export const update = mutation({
     voiceNoteId: v.id('voiceNotes'),
   },
   handler: async (ctx, args) => {
-    const voiceNote = await ctx.db.get(args.voiceNoteId);
-    if (!voiceNote) {
-      throw new Error('Voice note not found');
-    }
+    const userId = await requireAuthenticatedUser(ctx);
+    const voiceNote = await requireOwnedDocumentById(
+      async (id) => await ctx.db.get(id as Id<'voiceNotes'>),
+      args.voiceNoteId,
+      userId,
+      'voice note'
+    );
 
     // Validate label length
     if (args.label && args.label.length > 100) {
@@ -240,10 +263,13 @@ export const remove = mutation({
     voiceNoteId: v.id('voiceNotes'),
   },
   handler: async (ctx, args) => {
-    const voiceNote = await ctx.db.get(args.voiceNoteId);
-    if (!voiceNote) {
-      throw new Error('Voice note not found');
-    }
+    const userId = await requireAuthenticatedUser(ctx);
+    const voiceNote = await requireOwnedDocumentById(
+      async (id) => await ctx.db.get(id as Id<'voiceNotes'>),
+      args.voiceNoteId,
+      userId,
+      'voice note'
+    );
 
     // Note: The audio file in storage should be deleted separately
     // via a scheduled job or file storage cleanup
@@ -263,17 +289,23 @@ export const listRecent = query({
     userId: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
+    const currentUserId = await requireAuthenticatedUser(ctx);
     const limit = args.limit ?? 10;
 
     if (args.userId) {
+      const targetUserId = assertUserIdFilter(args.userId, currentUserId);
       return await ctx.db
         .query('voiceNotes')
-        .withIndex('by_user', (q) => q.eq('userId', args.userId))
+        .withIndex('by_user', (q) => q.eq('userId', targetUserId))
         .order('desc')
         .take(limit);
     }
 
-    return await ctx.db.query('voiceNotes').order('desc').take(limit);
+    return await ctx.db
+      .query('voiceNotes')
+      .filter((q) => q.eq(q.field('userId'), currentUserId))
+      .order('desc')
+      .take(limit);
   },
   returns: v.array(voiceNoteObjectValidator),
 });
@@ -304,6 +336,9 @@ export const getFromBestStreak = query({
     limit: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
+    const userId = await requireAuthenticatedUser(ctx);
+    await requireOwnedHabit(ctx, args.habitId, userId);
+
     const limit = args.limit ?? 3;
 
     // Get habit to check best streak

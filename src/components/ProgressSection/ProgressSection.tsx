@@ -40,6 +40,7 @@ import {
   calculateCurrentStreak,
   generateActionableTip,
 } from './utils';
+import { formatDateString } from '../../utils/dateUtils';
 
 export function ProgressSection({
   tracking,
@@ -103,7 +104,7 @@ export function ProgressSection({
     const current = new Date(thisMonthStart);
     while (current <= today) {
       totalDays++;
-      if (completedDates.has(current.toISOString().split('T')[0])) {
+      if (completedDates.has(formatDateString(current))) {
         completedDays++;
       }
       current.setDate(current.getDate() + 1);
