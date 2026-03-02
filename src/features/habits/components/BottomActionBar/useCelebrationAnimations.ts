@@ -18,9 +18,12 @@ import {
 const BOUNCE_SPRING = { damping: 12, stiffness: 200 };
 const COMPLETION_SPRING = { damping: 18, stiffness: 150 };
 const CROSSFADE_MS = 150;
+const REVERT_DELAY_MS = 3500;
+const REVERT_MS = 800;
+const REVERT_SPRING = { damping: 14, stiffness: 120 };
 
 export interface CelebrationAnimStyles {
-  plusStyle: { opacity: number };
+  plusStyle: { opacity: number; transform: { scale: number }[] };
   checkStyle: { opacity: number; transform: { scale: number }[] };
 }
 
@@ -30,6 +33,7 @@ export function useCelebrationAnimations(
   reduceMotion: boolean
 ) {
   const plusOpacity = useSharedValue(1);
+  const plusScale = useSharedValue(1);
   const checkOpacity = useSharedValue(0);
   const checkScale = useSharedValue(0);
 
@@ -37,29 +41,45 @@ export function useCelebrationAnimations(
     if (isAllDone) {
       if (reduceMotion) {
         plusOpacity.value = 0;
+        plusScale.value = 0;
         checkOpacity.value = 1;
         checkScale.value = 1;
       } else {
         plusOpacity.value = withTiming(0, { duration: CROSSFADE_MS });
+        plusScale.value = withTiming(0, { duration: CROSSFADE_MS });
         checkOpacity.value = withTiming(1, { duration: CROSSFADE_MS });
         checkScale.value = withSequence(
           withSpring(1.2, BOUNCE_SPRING),
           withSpring(1, COMPLETION_SPRING)
         );
       }
+
+      const revertTimer = setTimeout(() => {
+        if (reduceMotion) {
+          plusOpacity.value = 1;
+          plusScale.value = 1;
+          checkOpacity.value = 0;
+          checkScale.value = 0;
+        } else {
+          plusOpacity.value = withTiming(1, { duration: REVERT_MS });
+          plusScale.value = withSpring(1, REVERT_SPRING);
+          checkOpacity.value = withTiming(0, { duration: REVERT_MS });
+          checkScale.value = withTiming(0, { duration: REVERT_MS });
+        }
+      }, REVERT_DELAY_MS);
+
+      return () => clearTimeout(revertTimer);
     } else {
-      plusOpacity.value = reduceMotion
-        ? 1
-        : withTiming(1, { duration: CROSSFADE_MS });
-      checkOpacity.value = reduceMotion
-        ? 0
-        : withTiming(0, { duration: CROSSFADE_MS });
+      plusOpacity.value = reduceMotion ? 1 : withTiming(1, { duration: CROSSFADE_MS });
+      plusScale.value = reduceMotion ? 1 : withSpring(1, REVERT_SPRING);
+      checkOpacity.value = reduceMotion ? 0 : withTiming(0, { duration: CROSSFADE_MS });
       checkScale.value = 0;
     }
-  }, [isAllDone, reduceMotion, plusOpacity, checkOpacity, checkScale]);
+  }, [isAllDone, reduceMotion, plusOpacity, plusScale, checkOpacity, checkScale]);
 
   const plusStyle = useAnimatedStyle(() => ({
     opacity: plusOpacity.value,
+    transform: [{ scale: plusScale.value }],
   }));
 
   const checkStyle = useAnimatedStyle(() => ({

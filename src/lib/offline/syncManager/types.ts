@@ -17,6 +17,8 @@ export interface OfflineSyncManagerConfig {
   circuitBreaker?: Partial<CircuitBreakerConfig>;
   /** Whether to auto-sync on initialization */
   autoSync?: boolean;
+  /** Optional provider for queue pending count used in sync status */
+  getPendingCount?: () => number;
 }
 
 export interface SyncItem<T = unknown> {

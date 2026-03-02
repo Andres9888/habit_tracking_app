@@ -12,6 +12,7 @@ import type {
   SyncStatusIndicator,
 } from './types';
 import type { SyncOrchestratorResult } from '../../lib/offline/sync/types';
+import { defaultContextValue } from './defaults';
 
 /**
  * Main hook for accessing full sync status context
@@ -19,7 +20,7 @@ import type { SyncOrchestratorResult } from '../../lib/offline/sync/types';
  */
 export function useSyncStatus(): SyncStatusContextValue {
   const context = useContext(SyncStatusContext);
-  if (!context.status.isActive && context.triggerSync === undefined) {
+  if (context === defaultContextValue) {
     throw new Error('UseSyncStatus must be used within SyncStatusProvider');
   }
   return context;

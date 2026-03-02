@@ -10,8 +10,8 @@ export const layoutStyles = StyleSheet.create({
   },
   header: {
     paddingBottom: 12,
-    paddingHorizontal: 20,
-    paddingTop: 56,
+    paddingHorizontal: 16,
+    paddingTop: 16,
   },
   listContent: {
     paddingBottom: 24,
@@ -26,7 +26,6 @@ export const layoutStyles = StyleSheet.create({
     justifyContent: 'center',
   },
   sectionDivider: {
-    backgroundColor: '#e5e7eb',
     height: 1,
     marginVertical: 20,
   },

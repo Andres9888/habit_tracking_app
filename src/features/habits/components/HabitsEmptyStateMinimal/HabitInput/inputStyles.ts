@@ -4,7 +4,7 @@
 
 import { ViewStyle, TextStyle } from 'react-native';
 import { fontFamilies } from '@/theme/typography';
-import { BORDER_RADIUS, COLORS, TOUCH_TARGETS } from '../constants';
+import { BORDER_RADIUS, TOUCH_TARGETS } from '../constants';
 
 interface ContainerStyleParams {
   isFocused: boolean;
@@ -56,11 +56,11 @@ export const characterCounterStyle = (color: string): TextStyle => ({
   marginLeft: 8,
 });
 
-export const placeholderOverlayStyle: TextStyle = {
-  color: COLORS.stone400,
+export const placeholderOverlayStyle = (color: string): TextStyle => ({
+  color,
   fontFamily: fontFamilies.primary.text,
   fontSize: 15,
   fontWeight: '400',
   left: 16,
   position: 'absolute',
-};
+});

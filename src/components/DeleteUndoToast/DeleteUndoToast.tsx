@@ -46,16 +46,18 @@ export function DeleteUndoToast({
       style={[styles.container, { bottom: insets.bottom + 16 }]}
     >
       <GestureDetector gesture={panGesture}>
-        <Animated.View
-          accessible
-          accessibilityLabel={`${itemName} will be deleted. Tap undo to cancel.`}
-          accessibilityLiveRegion='polite'
-          accessibilityRole='alert'
-          style={[styles.toast, containerStyle]}
-        >
-          <ToastContent itemName={itemName} onUndo={onUndo ?? (() => {})} />
-          <ProgressBar progressStyle={progressStyle} />
-        </Animated.View>
+        <View collapsable={false}>
+          <Animated.View
+            accessible
+            accessibilityLabel={`${itemName} will be deleted. Tap undo to cancel.`}
+            accessibilityLiveRegion='polite'
+            accessibilityRole='alert'
+            style={[styles.toast, containerStyle]}
+          >
+            <ToastContent itemName={itemName} onUndo={onUndo ?? (() => {})} />
+            <ProgressBar progressStyle={progressStyle} />
+          </Animated.View>
+        </View>
       </GestureDetector>
     </View>
   );

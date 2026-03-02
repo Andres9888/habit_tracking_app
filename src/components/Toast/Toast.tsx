@@ -44,45 +44,47 @@ export function Toast({
       style={[styles.container, { bottom: insets.bottom + 16 }]}
     >
       <GestureDetector gesture={panGesture}>
-        <Animated.View
-          accessible
-          accessibilityLabel={`${variant} message: ${message}`}
-          accessibilityLiveRegion='polite'
-          accessibilityRole='alert'
-          style={[
-            styles.toast,
-            {
-              backgroundColor: config.backgroundColor,
-              borderRadius: theme.custom.borderRadius.medium,
-              ...theme.custom.shadows.card,
-            },
-            animatedStyle,
-            style,
-          ]}
-        >
-          <View style={styles.iconContainer}>
-            <Text style={styles.icon}>{config.icon}</Text>
-          </View>
-
-          <Text
-            numberOfLines={2}
+        <View collapsable={false}>
+          <Animated.View
+            accessible
+            accessibilityLabel={`${variant} message: ${message}`}
+            accessibilityLiveRegion='polite'
+            accessibilityRole='alert'
             style={[
-              theme.custom.typography.body,
-              styles.message,
-              { color: config.textColor },
+              styles.toast,
+              {
+                backgroundColor: config.backgroundColor,
+                borderRadius: theme.custom.borderRadius.medium,
+                ...theme.custom.shadows.card,
+              },
+              animatedStyle,
+              style,
             ]}
           >
-            {message}
-          </Text>
+            <View style={styles.iconContainer}>
+              <Text style={styles.icon}>{config.icon}</Text>
+            </View>
 
-          <ToastActions
-            actionLabel={actionLabel}
-            textColor={config.textColor}
-            variant={variant}
-            onAction={onAction}
-            onDismiss={handleDismiss}
-          />
-        </Animated.View>
+            <Text
+              numberOfLines={2}
+              style={[
+                theme.custom.typography.body,
+                styles.message,
+                { color: config.textColor },
+              ]}
+            >
+              {message}
+            </Text>
+
+            <ToastActions
+              actionLabel={actionLabel}
+              textColor={config.textColor}
+              variant={variant}
+              onAction={onAction}
+              onDismiss={handleDismiss}
+            />
+          </Animated.View>
+        </View>
       </GestureDetector>
     </View>
   );

@@ -14,6 +14,7 @@ import { HabitsPageSkeleton } from '../../components/SkeletonLoader';
 import { HabitsList } from './components/HabitsList';
 import { BottomActionBar } from './components/BottomActionBar';
 import { HabitsAppOverlays } from './components/HabitsAppOverlays';
+import { PerfectDayConfetti } from './components/PerfectDayConfetti';
 import { SyncStatusOverlays } from './components/SyncStatusOverlays';
 import { useHabitsApp } from './hooks/useHabitsApp';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
@@ -27,7 +28,9 @@ const styles = StyleSheet.create({ flex1: { flex: 1 } });
 
 // eslint-disable-next-line max-lines-per-function
 function HabitsAppContent() {
-  useEffect(() => schedulePostLaunchAppPreload(), []);
+  useEffect(() => {
+    return schedulePostLaunchAppPreload();
+  }, []);
   useTemplatesWarmup();
 
   const [overlaysMounted, setOverlaysMounted] = useState(false);
@@ -86,6 +89,11 @@ function HabitsAppContent() {
           </Animated.View>
         )}
         {list.habits.length > 0 && <BottomActionBar {...bottomBar} />}
+        <PerfectDayConfetti
+          completedToday={bottomBar.completedToday}
+          reduceMotion={list.reduceMotionPreference}
+          totalHabits={bottomBar.totalHabits}
+        />
         {overlaysMounted && (
           <HabitsAppOverlays
             list={list}

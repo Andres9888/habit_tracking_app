@@ -8,6 +8,7 @@ import { Pressable, Text, View } from 'react-native';
 import Animated, { type AnimatedStyle } from 'react-native-reanimated';
 import { ChevronDown } from 'lucide-react-native';
 
+import { useThemeColors } from '../../theme/ThemeContext';
 import type { CategoryColors } from './types';
 import { styles } from './styles';
 import { CountBadge } from './CountBadge';
@@ -41,6 +42,7 @@ export function SectionHeader({
   onPressIn,
   onPressOut,
 }: SectionHeaderProps) {
+  const { colors: themeColors } = useThemeColors();
   const habitsText = templateCount === 1 ? 'habit' : 'habits';
   const accessibilityLabel = `${label} category, ${templateCount} ${habitsText}${
     scienceCount > 0 ? `, ${scienceCount} science-backed` : ''
@@ -60,7 +62,7 @@ export function SectionHeader({
         style={[
           styles.header,
           {
-            backgroundColor: isExpanded ? colors.bg : '#fff',
+            backgroundColor: isExpanded ? colors.bg : themeColors.card,
             borderLeftColor: isExpanded ? colors.bgSelected : 'transparent',
           },
           headerAnimatedStyle,
@@ -80,7 +82,7 @@ export function SectionHeader({
           <Text
             style={[
               styles.label,
-              { color: isExpanded ? colors.bgSelected : '#374151' },
+              { color: isExpanded ? colors.bgSelected : themeColors.text.primary },
             ]}
           >
             {label}
@@ -93,7 +95,7 @@ export function SectionHeader({
 
         <Animated.View style={[styles.chevronContainer, chevronAnimatedStyle]}>
           <ChevronDown
-            color={isExpanded ? colors.bgSelected : '#6B7280'}
+            color={isExpanded ? colors.bgSelected : themeColors.text.tertiary}
             size={20}
             strokeWidth={2.5}
           />

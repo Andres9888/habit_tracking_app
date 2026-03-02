@@ -11,6 +11,7 @@ import type {
   QueueProcessorDeps,
   ProcessSingleOptions,
 } from './types';
+import type { ErrorCategory } from '../../types';
 
 /** Convert an offline operation to a sync item */
 export function operationToSyncItem(
@@ -63,7 +64,7 @@ export async function executeSync(
 function handleSyncFailure(
   result: {
     item: { retryContext: { exhausted: boolean } };
-    error?: { message?: string; category?: string };
+    error?: { message?: string; category?: ErrorCategory };
   },
   operation: OfflineOperation,
   deps: QueueProcessorDeps,
@@ -74,9 +75,9 @@ function handleSyncFailure(
   const { callbacks } = options;
   const exhausted = result.item.retryContext.exhausted;
   const errorMsg = result.error?.message ?? 'Sync failed';
+  queueManager.markFailed(operation.id, errorMsg, result.error?.category);
 
   if (exhausted) {
-    queueManager.markFailed(operation.id, errorMsg, result.error?.category);
     callbacks?.onFailure?.(operation, errorMsg);
   } else {
     queueManager.markPending(operation.id);
@@ -102,6 +103,7 @@ function handleSyncError(
   const { callbacks } = options;
   const errorMsg = error instanceof Error ? error.message : String(error);
 
+  queueManager.markFailed(operation.id, errorMsg, 'unknown');
   queueManager.markPending(operation.id);
   callbacks?.onFailure?.(operation, errorMsg);
 

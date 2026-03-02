@@ -46,8 +46,11 @@ export default function TemplatePreviewModal({
 
   return (
     <Modal
+      inline
       accessibilityViewIsModal
       disableBackdropClose={isImporting}
+      disableGestureClose
+      skipAnimation
       variant='fullScreen'
       visible={visible}
       onClose={handleClose}

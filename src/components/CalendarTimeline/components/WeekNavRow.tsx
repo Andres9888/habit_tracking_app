@@ -1,89 +1,91 @@
 import React from 'react';
-import { View, Text } from 'react-native';
-import { ChevronLeft, ChevronRight } from 'lucide-react-native';
+import { View, Text, StyleSheet } from 'react-native';
+import { BlurView } from 'expo-blur';
+import { CalendarDays, ChevronDown } from 'lucide-react-native';
 
 import { AnimatedPressable } from '../../ui/AnimatedPressable';
-import { colors } from '../../../theme/colors';
+import { colors as palette } from '../../../theme/colors';
+import { useThemeColors } from '../../../theme/ThemeContext';
+import { fontFamilies } from '../../../theme/typography';
+import { shadows } from '../../../theme/spacing';
 
 interface WeekNavRowProps {
   dateLabel: string;
   isViewingPast: boolean;
-  canNavigateForward: boolean;
-  onPreviousWeek?: () => void;
-  onNextWeek?: () => void;
   onJumpToToday?: () => void;
   onDateRangePress?: () => void;
 }
 
-const ARROW_SIZE = 12;
-const ARROW_HIT = { top: 8, bottom: 8, left: 6, right: 6 };
-const PRESS_CONFIG = { pressScale: 0.85 } as const;
-const DATE_PRESS_CONFIG = { pressScale: 0.97 } as const;
+const PRESS = { chip: { pressScale: 0.97 }, today: { pressScale: 0.95 } } as const;
 
-/** Compact [<] date [>] navigation row with optional "Today" link */
+/** Glass chip date row — frosted pill opens mini calendar, "Today →" for past */
 export const WeekNavRow: React.FC<WeekNavRowProps> = ({
   dateLabel,
   isViewingPast,
-  canNavigateForward,
-  onPreviousWeek,
-  onNextWeek,
   onJumpToToday,
   onDateRangePress,
-}) => (
-  <View className='flex-row items-center' style={{ gap: 4, marginTop: 3 }}>
-    <AnimatedPressable
-      accessibilityLabel='Previous week'
-      accessibilityRole='button'
-      animationConfig={PRESS_CONFIG}
-      hitSlop={ARROW_HIT}
-      onPress={onPreviousWeek}
-    >
-      <ChevronLeft color={colors.gray[400]} size={ARROW_SIZE} strokeWidth={2} />
-    </AnimatedPressable>
+}) => {
+  const { colors, isDark } = useThemeColors();
 
-    <AnimatedPressable
-      accessibilityHint={
-        isViewingPast ? 'Tap to return to today' : 'Tap to open calendar'
-      }
-      accessibilityLabel={dateLabel}
-      animationConfig={DATE_PRESS_CONFIG}
-      onPress={isViewingPast ? onJumpToToday : onDateRangePress}
-    >
-      <Text
-        style={{ fontSize: 12, fontWeight: '500', color: colors.text.tertiary }}
-      >
-        {dateLabel}
-      </Text>
-    </AnimatedPressable>
-
-    <AnimatedPressable
-      accessibilityLabel='Next week'
-      accessibilityRole='button'
-      accessibilityState={{ disabled: !canNavigateForward }}
-      animationConfig={PRESS_CONFIG}
-      disabled={!canNavigateForward}
-      hitSlop={ARROW_HIT}
-      style={{ opacity: canNavigateForward ? 1 : 0.3 }}
-      onPress={onNextWeek}
-    >
-      <ChevronRight
-        color={canNavigateForward ? colors.gray[400] : colors.gray[300]}
-        size={ARROW_SIZE}
-        strokeWidth={2}
-      />
-    </AnimatedPressable>
-
-    {isViewingPast && (
+  return (
+    <View style={s.row}>
       <AnimatedPressable
-        animationConfig={DATE_PRESS_CONFIG}
-        onPress={onJumpToToday}
+        accessibilityHint='Tap to open calendar'
+        accessibilityLabel={dateLabel}
+        accessibilityRole='button'
+        animationConfig={PRESS.chip}
+        onPress={onDateRangePress}
       >
-        <Text
-          style={{ fontSize: 12, fontWeight: '600', color: colors.streak[500] }}
-        >
-          Today →
-        </Text>
+        <View style={[
+          s.chip,
+          { borderColor: isDark ? GLASS.borderDark : GLASS.borderLight,
+            backgroundColor: isDark ? GLASS.bgDark : GLASS.bgLight },
+          shadows.subtle,
+        ]}>
+          <BlurView
+            intensity={isDark ? 30 : 40}
+            tint={isDark ? 'dark' : 'light'}
+            style={StyleSheet.absoluteFill}
+          />
+          <View style={s.chipContent}>
+            <CalendarDays color={colors.text.tertiary} size={13} strokeWidth={2} />
+            <Text style={[s.dateText, { color: colors.text.secondary }]}>{dateLabel}</Text>
+            <ChevronDown color={colors.gray[300]} size={11} strokeWidth={2} />
+          </View>
+        </View>
       </AnimatedPressable>
-    )}
-  </View>
-);
+
+      {isViewingPast && onJumpToToday && (
+        <AnimatedPressable animationConfig={PRESS.today} style={s.todayWrap} onPress={onJumpToToday}>
+          <Text style={[s.todayLink, { color: isDark ? palette.streak[300] : palette.streak[500] }]}>
+            Today →
+          </Text>
+        </AnimatedPressable>
+      )}
+    </View>
+  );
+};
+
+const GLASS = {
+  borderLight: 'rgba(255,255,255,0.6)', borderDark: 'rgba(55,65,81,0.35)',
+  bgLight: 'rgba(255,255,255,0.5)', bgDark: 'rgba(31,41,55,0.6)',
+};
+
+const s = StyleSheet.create({
+  chip: {
+    borderRadius: 16,
+    borderWidth: 1,
+    overflow: 'hidden',
+  },
+  chipContent: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 6,
+    paddingHorizontal: 12,
+    paddingVertical: 5,
+  },
+  dateText: { fontFamily: fontFamilies.primary.text, fontSize: 12, fontWeight: '500' as const },
+  row: { alignItems: 'center' as const, flexDirection: 'row' as const, justifyContent: 'center' as const, marginTop: 6 },
+  todayLink: { fontFamily: fontFamilies.primary.text, fontSize: 12, fontWeight: '600' as const },
+  todayWrap: { position: 'absolute' as const, right: 0 },
+});

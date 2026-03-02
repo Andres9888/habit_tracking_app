@@ -27,15 +27,20 @@ const isHapticsSupported = Platform.OS === 'ios' || Platform.OS === 'android';
  * triggerHaptic('celebration');
  * ```
  */
-export function triggerHaptic(pattern: HapticPatternName): void {
-  if (!isHapticsSupported) return;
+export function triggerHaptic(pattern: HapticPatternName): Promise<void> {
+  if (!isHapticsSupported) return Promise.resolve();
 
   const fn = HapticPatterns[pattern];
-  if (fn) {
-    fn().catch(() => {
+  if (!fn) return Promise.resolve();
+  const result = fn();
+
+  if (result && typeof (result as Promise<unknown>).catch === 'function') {
+    return result.catch(() => {
       // Haptics are non-critical — swallow errors silently
     });
   }
+
+  return Promise.resolve();
 }
 
 /**

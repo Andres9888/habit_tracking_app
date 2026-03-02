@@ -1,8 +1,8 @@
 import type { ViewStyle } from 'react-native';
 import {
-  COMPLETE_DAY_CELL,
-  FUTURE_DATE_TEXT_COLOR,
-  TODAY_HIGHLIGHT,
+  getCompleteDayCell,
+  getFutureDateTextColor,
+  getTodayHighlight,
   TODAY_SHADOW,
 } from '../CalendarTimeline.styles';
 import type { CalendarColors } from '../CalendarTimeline.types';
@@ -11,6 +11,7 @@ interface GetDayCellStylesParams {
   isCurrentDay: boolean;
   isComplete: boolean;
   isUpcoming: boolean;
+  isDark: boolean;
   colors: CalendarColors & {
     borderWidth?: number;
     highContrastBorder?: string;
@@ -27,36 +28,36 @@ export function getDayCellStyles({
   isCurrentDay,
   isComplete,
   isUpcoming,
+  isDark,
   colors,
 }: GetDayCellStylesParams): DayCellComputedStyles {
-  // Complete day: emerald background + white text + green glow
-  // If it's also today, keep the amber border as an identity ring
+  const today = getTodayHighlight(isDark);
+  const complete = getCompleteDayCell(isDark);
+
   if (isComplete) {
     return {
       container: {
-        backgroundColor: COMPLETE_DAY_CELL.background,
-        borderColor: isCurrentDay ? TODAY_HIGHLIGHT.border : 'transparent',
+        backgroundColor: complete.background,
+        borderColor: isCurrentDay ? today.border : 'transparent',
         borderWidth: isCurrentDay ? 2 : 0,
-        ...COMPLETE_DAY_CELL.glow,
+        ...complete.glow,
       },
-      text: COMPLETE_DAY_CELL.text,
+      text: complete.text,
     };
   }
 
-  // Today (not complete): amber highlight
   if (isCurrentDay) {
     return {
       container: {
-        backgroundColor: TODAY_HIGHLIGHT.background,
-        borderColor: TODAY_HIGHLIGHT.border,
+        backgroundColor: today.background,
+        borderColor: today.border,
         borderWidth: 2,
         ...TODAY_SHADOW,
       },
-      text: TODAY_HIGHLIGHT.text,
+      text: today.text,
     };
   }
 
-  // Future date
   if (isUpcoming) {
     return {
       container: {
@@ -64,11 +65,10 @@ export function getDayCellStyles({
         borderColor: colors.highContrastBorder ?? 'transparent',
         borderWidth: colors.borderWidth ?? 0,
       },
-      text: FUTURE_DATE_TEXT_COLOR,
+      text: getFutureDateTextColor(isDark),
     };
   }
 
-  // Default past date
   return {
     container: {
       backgroundColor: colors.dayBackground,

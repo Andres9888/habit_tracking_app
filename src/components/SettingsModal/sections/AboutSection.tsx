@@ -12,14 +12,14 @@ interface Props {
 }
 
 export function AboutSection({ highContrast, version, buildNumber }: Props) {
-  const { colors: themeColors } = useThemeColors();
+  const { colors: themeColors, settings } = useThemeColors();
 
   return (
     <SettingsSection highContrastMode={highContrast} title='About'>
       <SettingsRow
         highContrastMode={highContrast}
-        icon={<Info color='#6366f1' size={16} />}
-        iconBackgroundColor='#e0e7ff'
+        icon={<Info color={settings.info.icon} size={16} />}
+        iconBackgroundColor={settings.info.bg}
         label='Version'
         showBorder={false}
         type='info'

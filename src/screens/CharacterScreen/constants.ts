@@ -1,32 +1,3 @@
-import type { CharacterData } from './types';
-
-// Mock data - TODO: Connect to actual habit data
-export const MOCK_CHARACTER_DATA: CharacterData = {
-  attributes: {
-    energy: 41,
-    strength: 34,
-    vitality: 27,
-    wisdom: 20,
-  },
-  level: 1,
-  recentAchievements: [
-    {
-      description: 'Complete all habits for 7 days',
-      icon: '🏆',
-      id: '1',
-      title: 'Week Warrior',
-    },
-  ],
-  stats: {
-    activeHabits: 3,
-    dayStreak: 7,
-    totalPower: 69,
-  },
-  title: 'Habit Hero',
-  xp: 69,
-  xpToNextLevel: 100,
-};
-
 export const ATTRIBUTE_CONFIGS = {
   energy: {
     bgGradient: ['#fef9c2', '#fff7ed'] as const,

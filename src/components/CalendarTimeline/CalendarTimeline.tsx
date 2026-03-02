@@ -8,9 +8,7 @@ import type { CalendarTimelineProps } from './CalendarTimeline.types';
 import {
   DayStrip,
   InlineTrialBar,
-  MicroProgressBar,
   MiniCalendarPopup,
-  ShelfBleed,
   StripNav,
   WeekNavigationHeader,
 } from './components';
@@ -46,7 +44,7 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
   if (!tl.firstDate || !tl.lastDate || !tl.currentDate) return null;
 
   return (
-    <View style={getShelfStyle(tl.isDark)} className='mb-4 pb-3 pt-2'>
+    <View style={getShelfStyle(tl.isDark)} className='mb-4 pb-4 pt-2'>
       <View className='px-4'>
         {trialDaysRemaining != null && trialDaysRemaining > 0 && onUpgrade && (
           <InlineTrialBar
@@ -85,7 +83,6 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
             weekTransitionStyle={tl.weekTransitionStyle}
           />
         </StripNav>
-        <MicroProgressBar completed={completedToday} total={totalHabits} />
         <MiniCalendarPopup
           completionByDay={completionByDay}
           visible={tl.calendarOpen}
@@ -93,7 +90,6 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
           onSelectDate={onDayPress ?? tl.closeCalendar}
         />
       </View>
-      <ShelfBleed />
     </View>
   );
 };

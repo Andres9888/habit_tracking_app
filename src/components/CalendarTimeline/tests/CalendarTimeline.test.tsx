@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react-native';
+import { render, fireEvent, screen } from '@testing-library/react-native';
 import { CalendarTimeline } from '../CalendarTimeline';
 import { addDays, format, subDays } from 'date-fns';
 import { Gesture } from 'react-native-gesture-handler';
@@ -122,11 +122,32 @@ describe('CalendarTimeline', () => {
       expect(onPreviousWeek).toHaveBeenCalledTimes(1);
     });
 
+    it('calls onPreviousWeek on a fast left swipe (velocity)', () => {
+      const onPreviousWeek = jest.fn();
+      const { onEnd } = setupSwipe({ onPreviousWeek });
+
+      onEnd({ translationX: 0, velocityX: -600 });
+
+      expect(onPreviousWeek).toHaveBeenCalledTimes(1);
+    });
+
     it('calls onNextWeek when swiped right and forward navigation is enabled', () => {
       const onNextWeek = jest.fn();
       const { onEnd } = setupSwipe({ canNavigateForward: true, onNextWeek });
 
       onEnd({ translationX: 80, velocityX: 0 });
+
+      expect(onNextWeek).toHaveBeenCalledTimes(1);
+    });
+
+    it('calls onNextWeek on a fast right swipe (velocity)', () => {
+      const onNextWeek = jest.fn();
+      const { onEnd } = setupSwipe({
+        canNavigateForward: true,
+        onNextWeek,
+      });
+
+      onEnd({ translationX: 0, velocityX: 600 });
 
       expect(onNextWeek).toHaveBeenCalledTimes(1);
     });
@@ -153,6 +174,57 @@ describe('CalendarTimeline', () => {
 
       expect(onNextWeek).not.toHaveBeenCalled();
       expect(onPreviousWeek).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('Arrow Navigation', () => {
+    const dates = Array.from({ length: 5 }, (_, i) => addDays(today, i));
+
+    it('calls onPreviousWeek when pressing the left arrow', () => {
+      const onPreviousWeek = jest.fn();
+      render(<CalendarTimeline dates={dates} onPreviousWeek={onPreviousWeek} />);
+
+      const previousButton = screen.getByRole('button', {
+        name: 'Previous week',
+      });
+
+      fireEvent.press(previousButton);
+
+      expect(onPreviousWeek).toHaveBeenCalledTimes(1);
+    });
+
+    it('calls onNextWeek when pressing the right arrow and forward navigation is enabled', () => {
+      const onNextWeek = jest.fn();
+      render(
+        <CalendarTimeline
+          canNavigateForward={true}
+          dates={dates}
+          onNextWeek={onNextWeek}
+        />
+      );
+
+      const nextButton = screen.getByRole('button', { name: 'Next week' });
+
+      fireEvent.press(nextButton);
+
+      expect(onNextWeek).toHaveBeenCalledTimes(1);
+    });
+
+    it('does not call onNextWeek when right arrow is pressed and forward navigation is disabled', () => {
+      const onNextWeek = jest.fn();
+      render(
+        <CalendarTimeline
+          canNavigateForward={false}
+          dates={dates}
+          onNextWeek={onNextWeek}
+        />
+      );
+
+      const nextButton = screen.getByRole('button', { name: 'Next week' });
+
+      fireEvent.press(nextButton);
+
+      expect(onNextWeek).not.toHaveBeenCalled();
     });
   });
 

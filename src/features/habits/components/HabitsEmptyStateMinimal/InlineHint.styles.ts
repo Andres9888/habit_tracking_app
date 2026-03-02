@@ -61,12 +61,12 @@ export const templatesLabelStyle = {
   letterSpacing: -0.2,
 } as const;
 
-export const badgeContainerStyle = {
-  backgroundColor: 'rgba(255,255,255,0.22)',
+export const badgeContainerStyle = (backgroundColor: string) => ({
   borderRadius: borderRadius.small,
   paddingHorizontal: 9,
   paddingVertical: 3,
-} as const;
+  backgroundColor,
+} as const);
 
 export const badgeTextStyle = {
   fontFamily: fontFamilies.primary.text,

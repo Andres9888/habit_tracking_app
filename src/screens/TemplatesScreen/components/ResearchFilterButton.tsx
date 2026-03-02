@@ -22,18 +22,30 @@ export function ResearchFilterButton({
   const { colors } = useThemeColors();
   const defaultColor = colors.text.primary;
 
+  const activeColor = colors.primary[600];
+
   return (
     <AnimatedPressable
       accessibilityLabel='Toggle research-only filter'
       accessibilityRole='button'
-      style={[styles.controlButton, researchOnly && styles.controlButtonActive]}
+      style={[
+        styles.controlButton,
+        { borderColor: colors.border },
+        researchOnly && {
+          backgroundColor: activeColor,
+          borderColor: activeColor,
+        },
+      ]}
       onPress={onToggle}
     >
-      <Filter color={researchOnly ? '#fff' : defaultColor} size={16} />
+      <Filter
+        color={researchOnly ? colors.text.inverse : defaultColor}
+        size={16}
+      />
       <Text
         style={[
           styles.controlButtonText,
-          { color: researchOnly ? '#fff' : defaultColor },
+          { color: researchOnly ? colors.text.inverse : defaultColor },
         ]}
       >
         {label}

@@ -1,28 +1,24 @@
 /**
  * MonthlyCalendarGrid Styles
  *
- * Compact styles for above-fold layout.
+ * Theme-neutral layout styles. Colors are applied inline via useThemeColors.
  */
 
 import { StyleSheet } from 'react-native';
 
-import { shadows } from '../../../theme/spacing';
-import { typography, fontFamilies} from '@/theme/typography';
-import { COLORS } from './colors';
+import { shadows, borderRadius as br } from '../../../theme/spacing';
+import { typography, fontFamilies } from '@/theme/typography';
 
 export const styles = StyleSheet.create({
   container: {
     ...shadows.card,
-    backgroundColor: COLORS.CARD_BG,
-    borderRadius: 16,
-    marginTop: 12,
+    borderRadius: br.large,
+    borderWidth: 1,
     padding: 16,
-    shadowColor: '#1c1917',
-    shadowOpacity: 0.05,
   },
   dayCell: {
     alignItems: 'center',
-    borderRadius: 8,
+    borderRadius: 10,
     height: 36,
     justifyContent: 'center',
     width: 36,
@@ -35,7 +31,7 @@ export const styles = StyleSheet.create({
   dayWrapper: {
     alignItems: 'center',
     flex: 1,
-    height: 38,
+    height: 40,
     justifyContent: 'center',
   },
   dot: {
@@ -48,61 +44,59 @@ export const styles = StyleSheet.create({
   headerCell: {
     alignItems: 'center',
     flex: 1,
+    paddingBottom: 8,
   },
   headerText: {
-    color: COLORS.TEXT_SECONDARY,
     fontFamily: fontFamilies.primary.text,
-    fontSize: typography.tabBar.fontSize,
-    fontWeight: '500',
-  },
-  monthButton: {
-    alignItems: 'center',
-    borderColor: COLORS.BORDER,
-    borderRadius: 16,
-    borderWidth: 1,
-    flexDirection: 'row',
-    gap: 6,
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-  },
-  monthText: {
-    color: COLORS.TEXT_PRIMARY,
-    fontFamily: fontFamilies.primary.text,
-    fontSize: 13,
+    fontSize: 11,
     fontWeight: '600',
+    letterSpacing: 0.3,
+    textTransform: 'uppercase',
   },
   navButton: {
     alignItems: 'center',
-    borderColor: COLORS.BORDER,
-    borderRadius: 16,
+    borderRadius: 10,
     borderWidth: 1,
-    height: 44,
+    height: 34,
     justifyContent: 'center',
-    width: 44,
+    width: 34,
   },
   navButtons: {
     flexDirection: 'row',
-    gap: 8,
+    gap: 6,
   },
   navigation: {
     alignItems: 'center',
-    borderTopColor: COLORS.BORDER,
     borderTopWidth: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 12,
-    paddingTop: 12,
+    marginTop: 10,
+    paddingTop: 10,
+  },
+  monthButton: {
+    alignItems: 'center',
+    borderRadius: 10,
+    borderWidth: 1,
+    flexDirection: 'row',
+    gap: 6,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+  },
+  monthText: {
+    fontFamily: fontFamilies.primary.text,
+    fontSize: 13,
+    fontWeight: '700',
   },
   row: {
     flexDirection: 'row',
     marginBottom: 1,
   },
   streakCircle: {
-    borderRadius: 6,
-    bottom: 2,
-    height: 12,
+    borderRadius: 5,
+    bottom: 3,
+    height: 6,
     position: 'absolute',
-    width: 12,
+    width: 6,
   },
   todayText: {
     fontWeight: '700',

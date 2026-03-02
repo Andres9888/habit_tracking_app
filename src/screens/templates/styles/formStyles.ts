@@ -3,7 +3,6 @@ import { fontFamilies } from '@/theme/typography';
 
 export const formStyles = StyleSheet.create({
   charCount: {
-    color: '#a8a29e',
     fontFamily: fontFamilies.primary.text,
     fontSize: 13,
     marginTop: 4,
@@ -20,11 +19,9 @@ export const formStyles = StyleSheet.create({
     width: 44,
   },
   colorSwatchActive: {
-    borderColor: '#111827',
     borderWidth: 3,
   },
   inputLabel: {
-    color: '#475467',
     fontFamily: fontFamilies.primary.text,
     fontSize: 13,
     fontWeight: '600',
@@ -35,8 +32,6 @@ export const formStyles = StyleSheet.create({
     position: 'relative',
   },
   nameInput: {
-    backgroundColor: '#fff',
-    borderColor: '#e7e5e4',
     borderRadius: 12,
     borderWidth: 1,
     fontFamily: fontFamilies.primary.text,
@@ -45,16 +40,12 @@ export const formStyles = StyleSheet.create({
     paddingVertical: 12,
   },
   reminderChip: {
-    borderColor: '#e7e5e4',
     borderRadius: 999,
     borderWidth: 1,
     paddingHorizontal: 12,
     paddingVertical: 6,
   },
-  reminderChipActive: {
-    backgroundColor: '#111827',
-    borderColor: '#111827',
-  },
+  reminderChipActive: {},
   reminderChipText: {
     fontFamily: fontFamilies.primary.text,
     fontSize: 13,

@@ -1,6 +1,6 @@
-/** HabitDetailContent - Dark mode + a11y optimized */
+/** HabitDetailContent - Dark mode + a11y optimized, with quick stats */
 import React from 'react';
-import { ScrollView, Text, View } from 'react-native';
+import { ScrollView } from 'react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { MonthlyCalendarGrid } from '../../../components/BinaryHeatmap';
 import ErrorBoundary from '../../../components/ErrorBoundary';
@@ -8,50 +8,27 @@ import { HabitStrengthSection } from '../../../components/HabitStrengthSection';
 import { useThemeColors } from '../../../theme';
 import { shadows } from '../../../theme/spacing';
 import type { Habit } from '../../../features/habits/types';
+import { QuickStatsRow } from './QuickStatsRow';
+import { SectionLabel } from './SectionLabel';
 
 interface HabitDetailContentProps {
-  habit: Habit;
   completedDates: Set<string>;
+  daysTracking: number;
+  habit: Habit;
   notesByDate?: Record<string, string>;
+  totalCompletions: number;
   onDayPress: (dateString: string, isCompleted: boolean) => void;
 }
 
 const anim = (delay: number) =>
   FadeInUp.duration(280).delay(delay).springify().damping(18);
 
-/** Section label component for consistent styling */
-function SectionLabel({
-  text,
-  delay,
-  borderColor,
-  textColor,
-}: {
-  text: string;
-  delay: number;
-  borderColor: string;
-  textColor: string;
-}) {
-  return (
-    <Animated.View
-      className='mb-3 mt-6 flex-row items-center justify-center gap-2'
-      entering={anim(delay)}
-    >
-      <View className='h-px flex-1' style={{ backgroundColor: borderColor }} />
-      <Text
-        className='text-[13px] font-semibold tracking-wider'
-        style={{ color: textColor }}
-      >
-        {text}
-      </Text>
-      <View className='h-px flex-1' style={{ backgroundColor: borderColor }} />
-    </Animated.View>
-  );
-}
-
 export function HabitDetailContent({
-  habit,
   completedDates,
+  daysTracking,
+  habit,
   notesByDate,
+  totalCompletions,
   onDayPress,
 }: HabitDetailContentProps) {
   const { colors, isDark } = useThemeColors();
@@ -66,17 +43,20 @@ export function HabitDetailContent({
       contentContainerClassName='pb-8 px-4'
       showsVerticalScrollIndicator={false}
     >
-      {/* STRENGTH section */}
+      <QuickStatsRow
+        bestStreak={habit.bestStreak ?? 0}
+        currentStreak={habit.currentStreak ?? 0}
+        daysTracking={daysTracking}
+        totalCompletions={totalCompletions}
+      />
+
       {habit.createdAt && (
         <>
           <SectionLabel borderColor={borderColor} delay={240} text='STRENGTH' textColor={labelColor} />
           <Animated.View
             className='rounded-2xl'
             entering={anim(300)}
-            style={{
-              backgroundColor: cardBg,
-              ...shadows.card,
-            }}
+            style={{ backgroundColor: cardBg, ...shadows.card }}
           >
             <ErrorBoundary>
               <HabitStrengthSection
@@ -91,27 +71,17 @@ export function HabitDetailContent({
         </>
       )}
 
-      {/* HISTORY section */}
       <SectionLabel borderColor={borderColor} delay={360} text='HISTORY' textColor={labelColor} />
-      <Animated.View
-        className='rounded-2xl p-4'
-        entering={anim(420)}
-        style={{
-          backgroundColor: cardBg,
-          ...shadows.card,
-        }}
-      >
-        <ErrorBoundary>
-          <MonthlyCalendarGrid
-            completedDates={completedDates}
-            habitColor={habit.color ?? habit.iconColor ?? colors.primary[700]}
-            habitCreatedAt={habit.createdAt}
-            habitId={habit._id}
-            notesByDate={notesByDate}
-            onDayPress={onDayPress}
-          />
-        </ErrorBoundary>
-      </Animated.View>
+      <ErrorBoundary>
+        <MonthlyCalendarGrid
+          completedDates={completedDates}
+          habitColor={habit.color ?? habit.iconColor ?? colors.primary[700]}
+          habitCreatedAt={habit.createdAt}
+          habitId={habit._id}
+          notesByDate={notesByDate}
+          onDayPress={onDayPress}
+        />
+      </ErrorBoundary>
     </ScrollView>
   );
 }

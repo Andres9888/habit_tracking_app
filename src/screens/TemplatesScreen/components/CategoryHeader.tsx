@@ -7,8 +7,8 @@ import { ArrowLeft } from 'lucide-react-native';
 import { useAppTheme } from '../../../theme';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import {
-  CATEGORY_COLORS,
-  DEFAULT_CATEGORY_COLORS,
+  getCategoryColors,
+  getDefaultCategoryColors,
 } from '../../templates/constants';
 import { styles } from '../../templates/templatesScreenStyles';
 import type { Category } from '../../templates/constants';
@@ -32,9 +32,10 @@ export function CategoryHeader({
   viewMode,
 }: CategoryHeaderProps) {
   const theme = useAppTheme();
-  const { colors: themeColors } = useThemeColors();
+  const { colors: themeColors, isDark } = useThemeColors();
   const catColors =
-    CATEGORY_COLORS[selectedCategory] || DEFAULT_CATEGORY_COLORS;
+    getCategoryColors(isDark)[selectedCategory] ||
+    getDefaultCategoryColors(isDark);
   const categoryIcon =
     categories?.find((c) => c.id === selectedCategory)?.icon || '📌';
 

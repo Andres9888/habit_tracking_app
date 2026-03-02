@@ -5,11 +5,14 @@
 
 import React, { useState, useCallback } from 'react';
 import { Alert, Linking, Platform, Share } from 'react-native';
+import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useClerk, useUser } from '@clerk/clerk-expo';
 import { AccountInfo, AppActions, LegalLinks } from './sections';
 import { PremiumStatus } from './sections/PremiumStatus';
 import { FeedbackModal } from '../FeedbackModal';
 import { ERROR_MESSAGES, EXTERNAL_URLS } from '../../constants';
+
+const stagger = (delay: number) => FadeInDown.delay(delay).springify().damping(18);
 
 interface AccountSectionProps {
   isHighContrastActive: boolean;
@@ -115,31 +118,39 @@ export function AccountSection({ isHighContrastActive, isPremium = false, onPrem
 
   return (
     <>
-      <AccountInfo
-        email={userEmail}
-        highContrast={isHighContrastActive}
-        isDeletingAccount={isDeletingAccount}
-        isLoading={isSigningOut}
-        onDeleteAccount={handleDeleteAccount}
-        onSignOut={handleSignOut}
-      />
-      <PremiumStatus
-        highContrast={isHighContrastActive}
-        isPremium={isPremium}
-        onUpgrade={onPremiumUpsell}
-      />
-      <AppActions
-        highContrast={isHighContrastActive}
-        onRate={handleRateApp}
-        onShare={handleShare}
-        onFeedback={handleFeedback}
-        onWhatsNew={handleWhatsNew}
-      />
-      <LegalLinks
-        highContrast={isHighContrastActive}
-        onPrivacy={openUrl(EXTERNAL_URLS.PRIVACY)}
-        onTerms={openUrl(EXTERNAL_URLS.TERMS)}
-      />
+      <Animated.View entering={stagger(0)}>
+        <AccountInfo
+          email={userEmail}
+          highContrast={isHighContrastActive}
+          isDeletingAccount={isDeletingAccount}
+          isLoading={isSigningOut}
+          onDeleteAccount={handleDeleteAccount}
+          onSignOut={handleSignOut}
+        />
+      </Animated.View>
+      <Animated.View entering={stagger(60)}>
+        <PremiumStatus
+          highContrast={isHighContrastActive}
+          isPremium={isPremium}
+          onUpgrade={onPremiumUpsell}
+        />
+      </Animated.View>
+      <Animated.View entering={stagger(120)}>
+        <AppActions
+          highContrast={isHighContrastActive}
+          onRate={handleRateApp}
+          onShare={handleShare}
+          onFeedback={handleFeedback}
+          onWhatsNew={handleWhatsNew}
+        />
+      </Animated.View>
+      <Animated.View entering={stagger(180)}>
+        <LegalLinks
+          highContrast={isHighContrastActive}
+          onPrivacy={openUrl(EXTERNAL_URLS.PRIVACY)}
+          onTerms={openUrl(EXTERNAL_URLS.TERMS)}
+        />
+      </Animated.View>
       <FeedbackModal
         visible={showFeedbackModal}
         onClose={() => setShowFeedbackModal(false)}

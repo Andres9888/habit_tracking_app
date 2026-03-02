@@ -5,27 +5,44 @@
 
 import { Pressable, Text, View } from 'react-native';
 
+import { useThemeColors } from '../../theme/ThemeContext';
+
 interface LoadingTimeoutCardProps {
   onRetry: () => void;
 }
 
 export function LoadingTimeoutCard({ onRetry }: LoadingTimeoutCardProps) {
+  const { colors } = useThemeColors();
+
   return (
-    <View className='mx-6 mt-2 items-center rounded-2xl border border-[#DDD8D2] bg-[#EDEAE5] p-6 shadow-md'>
-      <Text className="mb-2 text-center font-['DMSans'] text-[17px] font-semibold text-[#2D2A26]">
+    <View
+      className='mx-6 mt-2 items-center rounded-2xl border p-6 shadow-md'
+      style={{ backgroundColor: colors.card, borderColor: colors.border }}
+    >
+      <Text
+        className="mb-2 text-center font-['DMSans'] text-[17px] font-semibold"
+        style={{ color: colors.text.primary }}
+      >
         Taking longer than expected
       </Text>
-      <Text className="mb-5 text-center font-['DMSans'] text-[13px] leading-5 text-[#6B6560]">
+      <Text
+        className="mb-5 text-center font-['DMSans'] text-[13px] leading-5"
+        style={{ color: colors.text.secondary }}
+      >
         We&apos;re having trouble connecting. Check your internet connection and
         try again.
       </Text>
       <Pressable
         accessibilityLabel='Try Again'
         accessibilityRole='button'
-        className='rounded-xl bg-emerald-600 px-8 py-3'
+        className='rounded-xl px-8 py-3'
+        style={{ backgroundColor: colors.primary[600] }}
         onPress={onRetry}
       >
-        <Text className="font-['DMSans'] text-[17px] font-semibold text-white">
+        <Text
+          className="font-['DMSans'] text-[17px] font-semibold"
+          style={{ color: colors.text.inverse }}
+        >
           Try Again
         </Text>
       </Pressable>

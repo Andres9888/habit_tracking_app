@@ -111,6 +111,13 @@ export function NetworkStatusProvider({
     [isChecking, isOnline, onOfflineCallback, onOnlineCallback, refresh, status]
   );
 
+  if (!NetworkStatusContext?.Provider) {
+    if (__DEV__) {
+      console.error('[NetworkStatusProvider] Missing NetworkStatusContext.Provider');
+    }
+    return <>{children}</>;
+  }
+
   return (
     <NetworkStatusContext.Provider value={value}>
       {children}

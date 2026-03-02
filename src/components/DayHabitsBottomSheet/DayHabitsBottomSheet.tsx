@@ -82,37 +82,39 @@ export function DayHabitsBottomSheet({
         </Pressable>
 
         <GestureDetector gesture={panGesture}>
-          <Animated.View
-            className='rounded-t-3xl'
-            style={[
-              getSheetContainerStyle(insets.bottom),
-              { backgroundColor: colors.surface },
-              sheetStyle,
-            ]}
-          >
-            <DragHandle />
+          <View collapsable={false}>
+            <Animated.View
+              className='rounded-t-3xl'
+              style={[
+                getSheetContainerStyle(insets.bottom),
+                { backgroundColor: colors.surface },
+                sheetStyle,
+              ]}
+            >
+              <DragHandle />
 
-            <SheetHeader
-              completedCount={completedCount}
-              displayDate={dateInfo.displayDate}
-              isToday={dateInfo.isToday}
-              totalCount={habits.length}
-              onDonePress={handleDonePress}
-            />
-
-            {habits.length === 0 || !hasValidDate ? (
-              <EmptyState />
-            ) : (
-              <HabitList
-                dateString={dateInfo.dateString}
-                getHabitStatus={getHabitStatus}
-                habits={habits}
-                reduceMotion={reduceMotion}
-                togglingHabitId={togglingHabitId}
-                onToggleHabit={handleToggleHabit}
+              <SheetHeader
+                completedCount={completedCount}
+                displayDate={dateInfo.displayDate}
+                isToday={dateInfo.isToday}
+                totalCount={habits.length}
+                onDonePress={handleDonePress}
               />
-            )}
-          </Animated.View>
+
+              {habits.length === 0 || !hasValidDate ? (
+                <EmptyState />
+              ) : (
+                <HabitList
+                  dateString={dateInfo.dateString}
+                  getHabitStatus={getHabitStatus}
+                  habits={habits}
+                  reduceMotion={reduceMotion}
+                  togglingHabitId={togglingHabitId}
+                  onToggleHabit={handleToggleHabit}
+                />
+              )}
+            </Animated.View>
+          </View>
         </GestureDetector>
       </View>
     </Modal>

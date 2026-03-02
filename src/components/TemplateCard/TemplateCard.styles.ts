@@ -20,9 +20,8 @@ export const styles = StyleSheet.create({
   },
   card: {
     ...shadows.card,
-    backgroundColor: '#fff',
     borderRadius: borderRadius.large,
-    marginHorizontal: spacing.lg,
+    marginHorizontal: spacing.base,
     marginVertical: spacing.sm,
     overflow: 'hidden',
     shadowOpacity: 0.08,

@@ -17,20 +17,20 @@ interface ScienceBoxProps {
 
 export function ScienceBox({ scientificReference }: ScienceBoxProps) {
   const theme = useAppTheme();
-  const { colors, isDark } = useThemeColors();
+  const { colors } = useThemeColors();
 
   return (
-    <View style={[styles.scienceBox, isDark && {
+    <View style={[styles.scienceBox, {
       backgroundColor: colors.primary[100],
       borderColor: colors.primary[300],
     }]}>
       <View style={styles.scienceHeader}>
         <Text style={styles.scienceIcon}>🔬</Text>
-        <Text style={[styles.scienceHeaderText, { color: isDark ? colors.primary[400] : '#166534' }]}>Science Behind This Habit</Text>
+        <Text style={[styles.scienceHeaderText, { color: colors.primary[700] }]}>Science Behind This Habit</Text>
       </View>
       <Text
         numberOfLines={2}
-        style={[theme.custom.typography.caption, styles.scienceText, { color: isDark ? colors.primary[500] : '#166534' }]}
+        style={[theme.custom.typography.caption, styles.scienceText, { color: colors.primary[700] }]}
       >
         {scientificReference}
       </Text>
@@ -40,8 +40,6 @@ export function ScienceBox({ scientificReference }: ScienceBoxProps) {
 
 export const styles = StyleSheet.create({
   scienceBox: {
-    backgroundColor: '#f0fdf4',
-    borderColor: '#bbf7d0',
     borderRadius: borderRadius.medium,
     borderWidth: 2,
     gap: spacing.sm,

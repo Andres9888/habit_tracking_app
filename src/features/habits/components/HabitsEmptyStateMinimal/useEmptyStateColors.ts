@@ -5,9 +5,14 @@
  */
 
 import { useThemeColors } from '../../../../theme/ThemeContext';
+import { colors as appColors } from '../../../../theme/colors';
 
 export function useEmptyStateColors() {
   const { colors, isDark } = useThemeColors();
+  const warningColor = appColors.warning;
+  const errorColor = appColors.error;
+  const badgeDarkTextColor = colors.text.primary;
+  const badgeLightTextColor = colors.text.inverse;
 
   return {
     // Background colors
@@ -20,72 +25,77 @@ export function useEmptyStateColors() {
     textTertiary: colors.text.tertiary, // Lower contrast
 
     // Hero icon colors
-    heroIconBackground: isDark ? colors.primary[100] : '#D1FAE5', // emerald-100
-    heroIconOverlay: isDark ? colors.primary[300] : '#F0FDF4', // green-50
+    heroIconBackground: colors.primary[100], // emerald-100
+    heroIconOverlay: isDark ? colors.primary[300] : appColors.primary[100], // green-50
     heroIconShadow: colors.primary[500],
 
     // Input colors
-    inputBackground: isDark ? colors.card : '#ffffff',
-    inputBorder: isDark ? colors.border : '#E7E5E4', // stone-200
-    inputBorderFocused: isDark ? colors.primary[400] : '#3B82F6', // blue-500
-    inputPlaceholder: isDark ? colors.gray[500] : '#A8A29E', // stone-400
+    inputBackground: colors.surface,
+    inputBorder: colors.border,
+    inputBorderFocused: isDark ? colors.primary[400] : appColors.secondary[500], // blue-500
+    inputPlaceholder: isDark ? colors.gray[500] : colors.text.tertiary, // stone-400 equivalent
     inputText: colors.text.primary,
     inputCaret: colors.primary[400],
 
     // Character counter colors
     counterNormal: colors.text.tertiary,
-    counterWarning: '#F59E0B', // amber-500 (WCAG AA on both backgrounds)
-    counterError: isDark ? '#F87171' : '#EF4444', // red-400 / red-500
+    counterWarning: warningColor,
+    counterError: isDark ? toRgba(errorColor, 0.8) : errorColor, // red-400 / red-500
 
     // Chip colors
-    chipBackground: isDark ? colors.card : '#ffffff',
-    chipBackgroundSelected: isDark ? colors.primary[300] : '#047857', // emerald-700
-    chipBorder: isDark ? colors.border : '#E7E5E4', // stone-200
-    chipBorderSelected: isDark ? colors.primary[300] : '#047857',
-    chipText: isDark ? colors.text.primary : '#44403C', // stone-700
-    chipTextSelected: '#ffffff',
-    chipShadow: isDark ? colors.gray[900] : '#1c1917',
+    chipBackground: colors.card,
+    chipBackgroundSelected: isDark ? colors.primary[300] : colors.primary[700], // emerald-700
+    chipBorder: colors.border,
+    chipBorderSelected: isDark ? colors.primary[300] : colors.primary[700],
+    chipText: colors.text.primary,
+    chipTextSelected: colors.text.inverse,
+    chipShadow: isDark ? colors.gray[900] : colors.text.primary,
 
     // Button colors
-    ctaBackground: isDark ? colors.primary[500] : '#047857',
-    ctaShadow: isDark ? colors.primary[700] : '#047857',
-    ctaText: '#ffffff',
-    ctaDisabled: isDark ? colors.gray[300] : '#A8A29E',
+    ctaBackground: isDark ? colors.primary[500] : colors.primary[700],
+    ctaShadow: colors.primary[700],
+    ctaText: colors.text.inverse,
+    ctaDisabled: isDark ? colors.gray[300] : colors.text.tertiary,
+    ctaShimmer:
+      isDark ? toRgba(badgeDarkTextColor, 0.22) : toRgba(badgeLightTextColor, 0.3),
 
     // Secondary link colors
     linkBackground: isDark
-      ? `rgba(${hexToRgb(colors.primary[300])}, 0.15)`
-      : 'rgba(209, 250, 229, 0.5)',
-    linkBackgroundPressed: isDark ? colors.primary[100] : '#D1FAE5',
+      ? toRgba(colors.primary[300], 0.15)
+      : toRgba(appColors.primary[100], 0.5),
+    linkBackgroundPressed: colors.primary[100],
     linkBorder: isDark
-      ? `rgba(${hexToRgb(colors.primary[400])}, 0.3)`
-      : 'rgba(167, 243, 208, 0.8)',
-    linkText: isDark ? colors.primary[500] : '#047857', // emerald-700
+      ? toRgba(colors.primary[400], 0.3)
+      : toRgba(colors.primary[300], 0.8),
+    linkText: isDark ? colors.primary[500] : colors.primary[700], // emerald-700
 
     // Error colors
-    errorBackground: isDark ? 'rgba(254, 202, 202, 0.1)' : '#FEF2F2', // red-50
-    errorBorder: isDark ? 'rgba(254, 202, 202, 0.3)' : '#FECACA', // red-200
-    errorText: isDark ? '#FCA5A5' : '#DC2626', // red-300 / red-600
-    errorIcon: isDark ? '#F87171' : '#EF4444', // red-400 / red-500
+    errorBackground: isDark ? toRgba(errorColor, 0.1) : appColors.errorLight,
+    errorBorder: isDark ? toRgba(errorColor, 0.3) : toRgba(appColors.error, 0.3),
+    errorText: isDark ? toRgba(errorColor, 0.8) : errorColor,
+    errorIcon: isDark ? toRgba(errorColor, 0.95) : errorColor,
 
     // Gradient colors for templates button
     gradientColors: isDark
       ? ([
-          'rgba(4,120,87,0.85)',
-          'rgba(5,150,105,0.85)',
-          'rgba(16,185,129,0.85)',
+          toRgba(colors.primary[700], 0.85),
+          toRgba(colors.primary[600], 0.85),
+          toRgba(colors.primary[500], 0.85),
         ] as const)
-      : (['#047857', '#059669', '#10B981'] as const),
+      : ([colors.primary[700], colors.primary[600], colors.primary[500]] as const),
 
     // Accent stripe color (emerald-400 in dark for visibility, emerald-300 in light)
-    accentStripeColor: isDark ? '#34D399' : '#6EE7B7',
+    accentStripeColor: isDark ? colors.primary[400] : colors.primary[300],
 
     // Build my own card background (elevated surface in dark, white in light)
-    buildMyOwnCardBg: isDark ? '#1F2937' : '#FFFFFF',
-    buildMyOwnCardBgPressed: isDark ? '#283548' : '#F5F5F4',
+    buildMyOwnCardBg: isDark ? colors.surface : appColors.surface,
+    buildMyOwnCardBgPressed: isDark ? colors.border : appColors.surface,
 
     // Success colors
-    successBackground: isDark ? colors.primary[100] : '#D1FAE5', // emerald-100
+    successBackground: colors.primary[100], // emerald-100
+    badgeBackground: isDark
+      ? toRgba(badgeDarkTextColor, 0.22)
+      : toRgba(badgeLightTextColor, 0.22),
 
     // Utility
     isDark,
@@ -100,4 +110,8 @@ function hexToRgb(hex: string): string {
   return result
     ? `${Number.parseInt(result[1], 16)}, ${Number.parseInt(result[2], 16)}, ${Number.parseInt(result[3], 16)}`
     : '0, 0, 0';
+}
+
+function toRgba(hex: string, alpha: number): string {
+  return `rgba(${hexToRgb(hex)}, ${alpha})`;
 }

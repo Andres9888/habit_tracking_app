@@ -14,26 +14,30 @@
 import type { WithSpringConfig } from 'react-native-reanimated';
 import { durations, springs } from '@/theme/animations';
 
+const makeReadOnlySpringConfig = <T extends Record<string, unknown>>(
+  spring: T,
+): T => Object.freeze(spring);
+
 /**
  * Button press spring - Snappy, responsive feel for interactive elements
  * Good for: Buttons, cards, touchable items
  */
 export const SPRING_BUTTON: WithSpringConfig =
-  springs.standard as WithSpringConfig;
+  makeReadOnlySpringConfig(springs.standard as WithSpringConfig);
 
 /**
  * Gentle spring - Softer, more organic motion for content transitions
  * Good for: Content reveals, section animations, slide-ins
  */
 export const SPRING_GENTLE: WithSpringConfig =
-  springs.gentle as WithSpringConfig;
+  makeReadOnlySpringConfig(springs.gentle as WithSpringConfig);
 
 /**
  * Bouncy spring - Pronounced bounce effect for celebratory/attention moments
  * Good for: Success states, badges, completion indicators
  */
 export const SPRING_BOUNCY: WithSpringConfig =
-  springs.bouncy as WithSpringConfig;
+  makeReadOnlySpringConfig(springs.bouncy as WithSpringConfig);
 
 /**
  * Stagger delay between sequential animations (milliseconds)
@@ -53,4 +57,4 @@ export const BASE_CHECKMARK_DELAY = 600;
  * Good for: micro-interactions, count-ups, progress fills.
  */
 export const SPRING_PREMIUM: WithSpringConfig =
-  springs.standard as WithSpringConfig;
+  makeReadOnlySpringConfig(springs.standard as WithSpringConfig);

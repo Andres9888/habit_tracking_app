@@ -96,6 +96,14 @@ export function HabitsListContent({
     ]
   );
 
+  if (isEmpty) {
+    return (
+      <View style={{ flex: 1 }}>
+        {listEmptyComponent}
+      </View>
+    );
+  }
+
   return (
     <View className='flex-1 bg-transparent'>
       <DraggableFlatList<Habit>
@@ -103,9 +111,8 @@ export function HabitsListContent({
         contentContainerStyle={contentContainerStyle}
         data={list.habits}
         keyExtractor={handlers.keyExtractor}
-        ListEmptyComponent={listEmptyComponent}
-        ListFooterComponent={isEmpty ? undefined : listFooterComponent}
-        ListHeaderComponent={isEmpty ? undefined : listHeaderComponent}
+        ListFooterComponent={listFooterComponent}
+        ListHeaderComponent={listHeaderComponent}
         renderItem={renderHabitItem}
         showsVerticalScrollIndicator={false}
         onDragBegin={handlers.handleDragBegin}

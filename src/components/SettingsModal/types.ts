@@ -41,6 +41,7 @@ export interface SettingsModalProps {
   onToggleStreakReminders?: (value: boolean) => void | Promise<void>;
   onChangeStreakReminderTime?: (time: string) => void | Promise<void>;
   onPremiumUpsell?: () => void;
+  onExportHabitsData?: () => void | Promise<void>;
   isLoading?: boolean;
   archivedHabitsCount?: number;
   settingsDocument?: SettingsModalSettingsDocument;
@@ -74,6 +75,7 @@ export interface SettingsContentProps {
   archivedHabitsCount?: number;
   onOpenArchivedHabits: () => void;
   onOpenSortPicker: () => void;
+  onExportHabitsData?: () => void | Promise<void>;
   showGradientFill: boolean;
   // Streak reminders
   streakRemindersEnabled: boolean;

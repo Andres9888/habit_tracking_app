@@ -61,29 +61,31 @@ export const EmojiPickerSheet = memo(
           </Pressable>
 
           <GestureDetector gesture={animations.gesture}>
-            <Animated.View
-              accessibilityViewIsModal
-              style={[styles.sheet, animations.sheetAnimatedStyle]}
-            >
-              <SheetContent
-                currentCategoryName={state.currentCategoryName}
-                displayedEmojis={state.displayedEmojis}
-                habitName={habitName}
-                handleCategorySelect={state.handleCategorySelect}
-                handleClearSearch={state.handleClearSearch}
-                isSearchFocused={state.isSearchFocused}
-                searchBarAnimatedStyle={animations.searchBarAnimatedStyle}
-                searchFocusAnim={animations.searchFocusAnim}
-                searchQuery={state.searchQuery}
-                selectedCategory={state.selectedCategory}
-                selectedEmoji={displayedSelectedEmoji}
-                setIsSearchFocused={handlers.handleSearchFocus}
-                setSearchQuery={state.setSearchQuery}
-                suggestedEmojis={state.suggestedEmojis}
-                onEmojiSelect={handlers.handleEmojiSelect}
-                onNoIcon={handlers.handleNoIcon}
-              />
-            </Animated.View>
+            <View collapsable={false}>
+              <Animated.View
+                accessibilityViewIsModal
+                style={[styles.sheet, animations.sheetAnimatedStyle]}
+              >
+                <SheetContent
+                  currentCategoryName={state.currentCategoryName}
+                  displayedEmojis={state.displayedEmojis}
+                  habitName={habitName}
+                  handleCategorySelect={state.handleCategorySelect}
+                  handleClearSearch={state.handleClearSearch}
+                  isSearchFocused={state.isSearchFocused}
+                  searchBarAnimatedStyle={animations.searchBarAnimatedStyle}
+                  searchFocusAnim={animations.searchFocusAnim}
+                  searchQuery={state.searchQuery}
+                  selectedCategory={state.selectedCategory}
+                  selectedEmoji={displayedSelectedEmoji}
+                  setIsSearchFocused={handlers.handleSearchFocus}
+                  setSearchQuery={state.setSearchQuery}
+                  suggestedEmojis={state.suggestedEmojis}
+                  onEmojiSelect={handlers.handleEmojiSelect}
+                  onNoIcon={handlers.handleNoIcon}
+                />
+              </Animated.View>
+            </View>
           </GestureDetector>
         </View>
       </Modal>

@@ -1,12 +1,13 @@
 import { StyleSheet } from 'react-native';
 import { colors } from '../../theme/colors';
-import { fontFamilies } from '../../theme/typography';
+import { fontFamilies, fontWeights } from '../../theme/typography';
+import { spacing } from '../../theme/spacing';
 
 export const styles = StyleSheet.create({
   bottomContainer: {
     alignItems: 'center',
     gap: 24,
-    paddingBottom: 60,
+    paddingBottom: spacing['3xl'],
     paddingHorizontal: 32,
   },
   container: {
@@ -31,7 +32,7 @@ export const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontFamily: fontFamilies.primary.text,
     fontSize: 17,
-    fontWeight: '600',
+    fontWeight: fontWeights.semibold,
   },
   dot: {
     borderRadius: 4,
@@ -57,7 +58,7 @@ export const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontFamily: fontFamilies.primary.text,
     fontSize: 17,
-    fontWeight: '600',
+    fontWeight: fontWeights.semibold,
   },
   page: {
     alignItems: 'center',

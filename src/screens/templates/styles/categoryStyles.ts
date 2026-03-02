@@ -5,7 +5,7 @@ import { fontFamilies } from '@/theme/typography';
 export const categoryStyles = StyleSheet.create({
   categoriesContainer: {
     gap: 8,
-    paddingHorizontal: 20,
+    paddingHorizontal: 16,
     paddingRight: 50,
     paddingVertical: 12,
   },

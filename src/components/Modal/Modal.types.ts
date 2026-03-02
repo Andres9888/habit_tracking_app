@@ -15,6 +15,9 @@ export interface ModalProps {
   /** On close callback */
   onClose: () => void;
 
+  /** Render without a nested native modal container (useful inside another modal) */
+  inline?: boolean;
+
   /** Modal variant */
   variant?: ModalVariant;
 

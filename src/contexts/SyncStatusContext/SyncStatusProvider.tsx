@@ -58,7 +58,12 @@ export function SyncStatusProvider({
     for (const cb of syncErrorCallbacksRef.current) cb(error);
   }, []);
 
-  const { state, hasPendingOperations, triggerSync, subscribe } =
+  const {
+    state,
+    pendingOperationCount,
+    triggerSync,
+    subscribe,
+  } =
     useSyncOrchestrator({
       autoStart,
       onSyncComplete: handleSyncComplete,
@@ -66,8 +71,8 @@ export function SyncStatusProvider({
     });
 
   const status = useMemo(
-    () => buildSyncStatus(state, hasPendingOperations, lastError),
-    [state, hasPendingOperations, lastError]
+    () => buildSyncStatus(state, pendingOperationCount, lastError),
+    [state, lastError, pendingOperationCount]
   );
 
   useEffect(() => {
@@ -111,6 +116,13 @@ export function SyncStatusProvider({
     }),
     [status, wrappedTriggerSync, onSyncStart, onSyncComplete, onSyncError]
   );
+
+  if (!SyncStatusContext?.Provider) {
+    if (__DEV__) {
+      console.error('[SyncStatusProvider] Missing SyncStatusContext.Provider');
+    }
+    return <>{children}</>;
+  }
 
   return (
     <SyncStatusContext.Provider value={value}>

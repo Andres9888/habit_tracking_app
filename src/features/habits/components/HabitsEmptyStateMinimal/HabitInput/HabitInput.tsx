@@ -61,7 +61,7 @@ export const HabitInput = forwardRef<TextInput, HabitInputProps>(
           <Animated.Text
             accessibilityElementsHidden
             importantForAccessibility='no'
-            style={[placeholderOverlayStyle, placeholder.animatedStyle]}
+            style={[placeholderOverlayStyle(colors.inputPlaceholder), placeholder.animatedStyle]}
           >
             {placeholder.displayText}
           </Animated.Text>
@@ -93,7 +93,10 @@ export const HabitInput = forwardRef<TextInput, HabitInputProps>(
             style={({ pressed }) => clearButtonPressedStyle(pressed)}
             onPress={onClear}
           >
-            <ClearIcon />
+            <ClearIcon
+              backgroundColor={colors.textTertiary}
+              glyphColor={colors.textSecondary}
+            />
           </Pressable>
         )}
         {showCounter && (

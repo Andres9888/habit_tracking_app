@@ -113,9 +113,14 @@ export function usePressAnimation(
 
   const triggerHaptic = useCallback(() => {
     if (enableHaptics && isHapticsSupported) {
-      HAPTIC_MAP[hapticStyle]().catch(() => {
-        // Silently fail - haptics are non-critical
-      });
+      const hapticFn = HAPTIC_MAP[hapticStyle];
+      const promise = hapticFn?.();
+
+      if (promise && typeof (promise as Promise<unknown>).catch === 'function') {
+        promise.catch(() => {
+          // Silently fail - haptics are non-critical
+        });
+      }
     }
   }, [enableHaptics, hapticStyle]);
 

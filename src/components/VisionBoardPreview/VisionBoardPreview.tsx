@@ -73,27 +73,29 @@ export function VisionBoardPreview({
     >
       <View className='flex-1 bg-black/90'>
         <GestureDetector gesture={panGesture}>
-          <Animated.View className='flex-1' style={animatedContainerStyle}>
-            <PreviewHeader
-              currentIndex={currentIndex}
-              itemCount={items.length}
-              topPadding={insets.top + 16}
-              onClose={handleClose}
-              onEdit={handleEdit}
-            />
+          <View collapsable={false}>
+            <Animated.View className='flex-1' style={animatedContainerStyle}>
+              <PreviewHeader
+                currentIndex={currentIndex}
+                itemCount={items.length}
+                topPadding={insets.top + 16}
+                onClose={handleClose}
+                onEdit={handleEdit}
+              />
 
-            <PreviewContent item={currentItem} />
+              <PreviewContent item={currentItem} />
 
-            <NavigationControls
-              bottomPadding={insets.bottom + 16}
-              currentIndex={currentIndex}
-              hasNext={hasNext}
-              hasPrev={hasPrev}
-              itemCount={items.length}
-              onNext={goToNext}
-              onPrev={goToPrev}
-            />
-          </Animated.View>
+              <NavigationControls
+                bottomPadding={insets.bottom + 16}
+                currentIndex={currentIndex}
+                hasNext={hasNext}
+                hasPrev={hasPrev}
+                itemCount={items.length}
+                onNext={goToNext}
+                onPrev={goToPrev}
+              />
+            </Animated.View>
+          </View>
         </GestureDetector>
       </View>
     </RNModal>

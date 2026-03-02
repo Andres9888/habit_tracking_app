@@ -10,7 +10,7 @@
 
 import { StyleSheet, TextStyle } from 'react-native';
 import { spacing, borderRadius, shadows } from '@/theme/spacing';
-import { fontFamilies, typography } from '@/theme/typography';
+import { fontFamilies, fontWeights, typography } from '@/theme/typography';
 import { REDESIGN_COLORS } from './HabitCard.colors';
 import { statusStyles } from './HabitCard.statusStyles';
 
@@ -23,7 +23,7 @@ const coreStyles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'flex-start',
-    marginTop: 2,
+    marginTop: spacing.xs,
   },
   card: {
     backgroundColor: REDESIGN_COLORS.cardSurface,
@@ -44,7 +44,7 @@ const coreStyles = StyleSheet.create({
   },
   completedText: { opacity: 0.55, textDecorationLine: 'line-through' as const },
   container: {
-    marginVertical: 6,
+    marginVertical: spacing.sm,
     minHeight: 76,
     position: 'relative',
   },
@@ -68,7 +68,7 @@ const coreStyles = StyleSheet.create({
     ...typography.body,
     color: REDESIGN_COLORS.secondaryText,
     fontFamily: fontFamilies.primary.text,
-    fontWeight: '600',
+    fontWeight: fontWeights.semibold,
     letterSpacing: -0.41,
     lineHeight: 22,
   } as TextStyle,
@@ -78,7 +78,7 @@ const coreStyles = StyleSheet.create({
     ...typography.bodySmall,
     color: REDESIGN_COLORS.streakText,
     fontFamily: fontFamilies.primary.text,
-    fontWeight: '600',
+    fontWeight: fontWeights.semibold,
   } as TextStyle,
   strengthFill: { bottom: 0, left: 0, position: 'absolute', top: 0 },
   topRow: {

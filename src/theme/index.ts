@@ -492,10 +492,92 @@ export type AppTheme = typeof extendedTheme;
  * ```
  */
 import { useTheme } from 'react-native-paper';
+
+const isObject = (value: unknown): value is Record<string, unknown> =>
+  typeof value === 'object' && value !== null;
+
+const normalizeTokenOverrides = <T>(value: unknown): T | undefined => {
+  if (!isObject(value)) {
+    return undefined;
+  }
+
+  return value as T;
+};
+
+const mergeThemeCustomTokens = (
+  override?: Partial<AppTheme['custom']>
+): AppTheme['custom'] => ({
+  ...extendedTheme.custom,
+  ...normalizeTokenOverrides<Partial<AppTheme['custom']>>(override),
+  animations: {
+    ...extendedTheme.custom.animations,
+    ...normalizeTokenOverrides<AppTheme['custom']['animations']>(
+      override?.animations
+    ),
+  },
+  borderRadius: {
+    ...extendedTheme.custom.borderRadius,
+    ...normalizeTokenOverrides<AppTheme['custom']['borderRadius']>(
+      override?.borderRadius
+    ),
+  },
+  colors: {
+    ...extendedTheme.custom.colors,
+    ...normalizeTokenOverrides<AppTheme['custom']['colors']>(override?.colors),
+  },
+  componentSpacing: {
+    ...extendedTheme.custom.componentSpacing,
+    ...normalizeTokenOverrides<AppTheme['custom']['componentSpacing']>(
+      override?.componentSpacing
+    ),
+  },
+  fontFamilies: {
+    ...extendedTheme.custom.fontFamilies,
+    ...normalizeTokenOverrides<AppTheme['custom']['fontFamilies']>(
+      override?.fontFamilies
+    ),
+  },
+  fontWeights: {
+    ...extendedTheme.custom.fontWeights,
+    ...normalizeTokenOverrides<AppTheme['custom']['fontWeights']>(
+      override?.fontWeights
+    ),
+  },
+  iconSizes: {
+    ...extendedTheme.custom.iconSizes,
+    ...normalizeTokenOverrides<AppTheme['custom']['iconSizes']>(override?.iconSizes),
+  },
+  shadows: {
+    ...extendedTheme.custom.shadows,
+    ...normalizeTokenOverrides<AppTheme['custom']['shadows']>(override?.shadows),
+  },
+  spacing: {
+    ...extendedTheme.custom.spacing,
+    ...normalizeTokenOverrides<AppTheme['custom']['spacing']>(override?.spacing),
+  },
+  typography: {
+    ...extendedTheme.custom.typography,
+    ...normalizeTokenOverrides<AppTheme['custom']['typography']>(override?.typography),
+  },
+});
+
 export const useAppTheme = (): AppTheme => {
-  const currentTheme = useTheme<Partial<AppTheme>>();
-  const hasCustomTheme = Boolean(currentTheme.custom);
-  return hasCustomTheme ? (currentTheme as AppTheme) : (theme as AppTheme);
+  try {
+    const currentTheme = useTheme<Partial<AppTheme>>();
+    const hasCustomTheme = isObject(currentTheme?.custom);
+
+    if (!hasCustomTheme) {
+      return extendedTheme;
+    }
+
+    return {
+      ...extendedTheme,
+      ...currentTheme,
+      custom: mergeThemeCustomTokens(currentTheme.custom),
+    };
+  } catch {
+    return extendedTheme;
+  }
 };
 
 /**

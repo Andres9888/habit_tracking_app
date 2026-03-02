@@ -41,51 +41,53 @@ export function TemplateAddedToast({
       style={[styles.container, { bottom: insets.bottom + 16 }]}
     >
       <GestureDetector gesture={panGesture}>
-        <Animated.View
-          accessible
-          accessibilityLabel={label}
-          accessibilityLiveRegion='polite'
-          accessibilityRole='alert'
-          style={[
-            styles.toast,
-            {
-              backgroundColor: '#1a1a2e',
-              borderLeftColor: color,
-              borderLeftWidth: 4,
-              ...theme.custom.shadows.card,
-            },
-            toastStyle,
-            style,
-          ]}
-        >
-          <View style={styles.content}>
-            <Animated.View
-              style={[
-                styles.iconBadge,
-                { backgroundColor: `${color}25` },
-                iconStyle,
-              ]}
-            >
-              <Text style={styles.iconText}>{templateData.icon}</Text>
-            </Animated.View>
-            <Text numberOfLines={1} style={styles.nameText}>
-              {templateData.name} added!
-            </Text>
-          </View>
-          {onViewHabits ? (
-            <Pressable
-              accessibilityLabel='View your habits'
-              accessibilityRole='button'
-              style={styles.actionPill}
-              onPress={() => {
-                handleDismiss();
-                onViewHabits();
-              }}
-            >
-              <Text style={styles.actionText}>View →</Text>
-            </Pressable>
-          ) : null}
-        </Animated.View>
+        <View collapsable={false}>
+          <Animated.View
+            accessible
+            accessibilityLabel={label}
+            accessibilityLiveRegion='polite'
+            accessibilityRole='alert'
+            style={[
+              styles.toast,
+              {
+                backgroundColor: '#1a1a2e',
+                borderLeftColor: color,
+                borderLeftWidth: 4,
+                ...theme.custom.shadows.card,
+              },
+              toastStyle,
+              style,
+            ]}
+          >
+            <View style={styles.content}>
+              <Animated.View
+                style={[
+                  styles.iconBadge,
+                  { backgroundColor: `${color}25` },
+                  iconStyle,
+                ]}
+              >
+                <Text style={styles.iconText}>{templateData.icon}</Text>
+              </Animated.View>
+              <Text numberOfLines={1} style={styles.nameText}>
+                {templateData.name} added!
+              </Text>
+            </View>
+            {onViewHabits ? (
+              <Pressable
+                accessibilityLabel='View your habits'
+                accessibilityRole='button'
+                style={styles.actionPill}
+                onPress={() => {
+                  handleDismiss();
+                  onViewHabits();
+                }}
+              >
+                <Text style={styles.actionText}>View →</Text>
+              </Pressable>
+            ) : null}
+          </Animated.View>
+        </View>
       </GestureDetector>
     </View>
   );

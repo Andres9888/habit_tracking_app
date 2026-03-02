@@ -44,41 +44,43 @@ export function ArchiveUndoToast({
       style={[styles.container, { bottom: insets.bottom + 16 }]}
     >
       <GestureDetector gesture={panGesture}>
-        <Animated.View
-          accessible
-          accessibilityLabel={`${habitName} archived. Tap undo to restore.`}
-          accessibilityLiveRegion='polite'
-          accessibilityRole='alert'
-          style={[styles.toast, containerStyle]}
-        >
-          <View style={styles.content}>
-            <View style={styles.iconContainer}>
-              <Archive color={amberIconColor} size={18} strokeWidth={2} />
+        <View collapsable={false}>
+          <Animated.View
+            accessible
+            accessibilityLabel={`${habitName} archived. Tap undo to restore.`}
+            accessibilityLiveRegion='polite'
+            accessibilityRole='alert'
+            style={[styles.toast, containerStyle]}
+          >
+            <View style={styles.content}>
+              <View style={styles.iconContainer}>
+                <Archive color={amberIconColor} size={18} strokeWidth={2} />
+              </View>
+
+              <Text numberOfLines={1} style={styles.message}>
+                <Text style={styles.habitName}>"{habitName}"</Text>
+                <Text style={styles.messageText}> archived</Text>
+              </Text>
+
+              <Pressable
+                accessibilityLabel='Undo archive'
+                accessibilityRole='button'
+                style={({ pressed }) => [
+                  styles.undoButton,
+                  pressed && styles.undoButtonPressed,
+                ]}
+                onPress={handleUndo}
+              >
+                <Undo2 color={amberIconColor} size={14} strokeWidth={2.5} />
+                <Text style={styles.undoText}>UNDO</Text>
+              </Pressable>
             </View>
 
-            <Text numberOfLines={1} style={styles.message}>
-              <Text style={styles.habitName}>"{habitName}"</Text>
-              <Text style={styles.messageText}> archived</Text>
-            </Text>
-
-            <Pressable
-              accessibilityLabel='Undo archive'
-              accessibilityRole='button'
-              style={({ pressed }) => [
-                styles.undoButton,
-                pressed && styles.undoButtonPressed,
-              ]}
-              onPress={handleUndo}
-            >
-              <Undo2 color={amberIconColor} size={14} strokeWidth={2.5} />
-              <Text style={styles.undoText}>UNDO</Text>
-            </Pressable>
-          </View>
-
-          <View style={styles.progressContainer}>
-            <Animated.View style={[styles.progressBar, progressStyle]} />
-          </View>
-        </Animated.View>
+            <View style={styles.progressContainer}>
+              <Animated.View style={[styles.progressBar, progressStyle]} />
+            </View>
+          </Animated.View>
+        </View>
       </GestureDetector>
     </View>
   );

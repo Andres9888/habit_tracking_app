@@ -1,13 +1,20 @@
 /* eslint-disable max-lines */
-/** SettingsRow - OPTIMIZED: AnimatedPressable, scale animation, haptics */
+/** SettingsRow - AnimatedPressable, scale animation, haptics, toggle pulse */
 import { ReactNode } from 'react';
-import { Switch, Text, View } from 'react-native';
+import { StyleSheet, Switch, Text, View } from 'react-native';
+import Animated, {
+  ZoomIn,
+  useSharedValue,
+  useAnimatedStyle,
+  withSequence,
+  withTiming,
+} from 'react-native-reanimated';
 import { ChevronRight } from 'lucide-react-native';
+import * as Haptics from 'expo-haptics';
 import { AnimatedPressable } from '../ui/AnimatedPressable';
 import { getSettingsRowColors } from './SettingsRow.colors';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { useFocusRing } from '../../utils/accessibility';
-import { triggerHaptic } from '@/utils/haptics';
 
 interface SettingsRowProps {
   icon: ReactNode;
@@ -20,6 +27,8 @@ interface SettingsRowProps {
   onToggle?: (value: boolean) => void;
   showBorder?: boolean;
   highContrastMode?: boolean;
+  /** Override haptic: toggle→Medium, selection→Selection, navigation→Light */
+  hapticStyle?: 'light' | 'medium' | 'heavy' | 'selection';
 }
 
 export function SettingsRow({
@@ -33,18 +42,40 @@ export function SettingsRow({
   onToggle,
   showBorder = true,
   highContrastMode = false,
+  hapticStyle,
 }: SettingsRowProps) {
-  const { isDark } = useThemeColors();
+  const { colors: themeColors, isDark } = useThemeColors();
   const colors = getSettingsRowColors(highContrastMode, isDark);
   const { focusStyle, focusHandlers } = useFocusRing({ compact: true });
+  const pulseOpacity = useSharedValue(0);
+  const pulseColor = isDark ? 'rgba(52,211,153,0.08)' : 'rgba(5,150,105,0.06)';
+  const pulseStyle = useAnimatedStyle(() => ({
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: pulseColor,
+    opacity: pulseOpacity.value,
+  }));
 
   const handleToggle = (v: boolean) => {
-    triggerHaptic('tap');
+    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    pulseOpacity.value = withSequence(
+      withTiming(1, { duration: 150 }),
+      withTiming(0, { duration: 250 }),
+    );
     onToggle?.(v);
   };
 
   const handleNavPress = () => {
-    triggerHaptic('tap');
+    const style = hapticStyle ?? 'light';
+    if (style === 'selection') {
+      void Haptics.selectionAsync();
+    } else {
+      const map = {
+        light: Haptics.ImpactFeedbackStyle.Light,
+        medium: Haptics.ImpactFeedbackStyle.Medium,
+        heavy: Haptics.ImpactFeedbackStyle.Heavy,
+      } as const;
+      void Haptics.impactAsync(map[style]);
+    }
     onPress?.();
   };
 
@@ -54,8 +85,10 @@ export function SettingsRow({
       style={{
         backgroundColor: colors.background,
         borderColor: showBorder ? colors.border : undefined,
+        overflow: 'hidden',
       }}
     >
+      {type === 'toggle' && <Animated.View style={pulseStyle} />}
       <View
         className='mr-4 h-10 w-10 items-center justify-center rounded-xl'
         style={{
@@ -115,17 +148,18 @@ export function SettingsRow({
       {type === 'navigation' && (
         <View className='flex-row items-center gap-2'>
           {badge != null && badge > 0 && (
-            <View
+            <Animated.View
               className='min-w-[22px] items-center justify-center rounded-full px-1.5 py-0.5'
-              style={{ backgroundColor: isDark ? '#374151' : '#e7e5e4' }}
+              entering={ZoomIn.springify().damping(18)}
+              style={{ backgroundColor: themeColors.gray[200] }}
             >
               <Text
                 className='text-[12px] font-bold'
-                style={{ color: isDark ? '#9CA3AF' : '#57534e' }}
+                style={{ color: themeColors.text.secondary }}
               >
                 {badge}
               </Text>
-            </View>
+            </Animated.View>
           )}
           <ChevronRight color={colors.chevron} size={16} strokeWidth={2} />
         </View>

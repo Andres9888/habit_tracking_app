@@ -92,7 +92,6 @@ export const getShelfStyle = (isDark: boolean) => ({
   backgroundColor: isDark ? darkColors.card : colors.light.gradientMid,
   borderBottomLeftRadius: borderRadius.large,
   borderBottomRightRadius: borderRadius.large,
-  overflow: 'visible' as const,
 });
 
 /** Theme-aware complete day cell styling */

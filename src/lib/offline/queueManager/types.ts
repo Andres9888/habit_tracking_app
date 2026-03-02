@@ -62,7 +62,11 @@ export interface OfflineQueueManagerAPI {
   /** Mark an operation as completed */
   markCompleted(operationId: string): boolean;
   /** Mark an operation as failed */
-  markFailed(operationId: string, error: string, category?: string): boolean;
+  markFailed(
+    operationId: string,
+    error: string,
+    category?: ErrorCategory
+  ): boolean;
   /** Reset an operation to pending for retry */
   markPending(operationId: string): boolean;
 

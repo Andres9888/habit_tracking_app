@@ -27,9 +27,12 @@ export function PurchasesProvider({ children }: PurchasesProviderProps) {
   // Initialize RevenueCat after idle callback to avoid blocking startup
   useEffect(() => {
     const initPurchases = () => {
-      initializePurchases().catch((error) => {
-        if (__DEV__) console.warn('[PurchasesProvider] Failed to initialize:', error);
-      });
+      const result = initializePurchases();
+      if (result && typeof (result as Promise<unknown>).catch === 'function') {
+        result.catch((error) => {
+          if (__DEV__) console.warn('[PurchasesProvider] Failed to initialize:', error);
+        });
+      }
     };
 
     if (typeof requestIdleCallback === 'function') {
@@ -45,13 +48,19 @@ export function PurchasesProvider({ children }: PurchasesProviderProps) {
   // Identify user when they sign in
   useEffect(() => {
     if (isSignedIn && user?.id) {
-      identifyUser(user.id).catch((error) => {
-        if (__DEV__) console.warn('[PurchasesProvider] Failed to identify user:', error);
-      });
+      const result = identifyUser(user.id);
+      if (result && typeof (result as Promise<unknown>).catch === 'function') {
+        result.catch((error) => {
+          if (__DEV__) console.warn('[PurchasesProvider] Failed to identify user:', error);
+        });
+      }
     } else if (!isSignedIn) {
-      logoutPurchases().catch((error) => {
-        if (__DEV__) console.warn('[PurchasesProvider] Failed to logout:', error);
-      });
+      const result = logoutPurchases();
+      if (result && typeof (result as Promise<unknown>).catch === 'function') {
+        result.catch((error) => {
+          if (__DEV__) console.warn('[PurchasesProvider] Failed to logout:', error);
+        });
+      }
     }
   }, [isSignedIn, user?.id]);
 

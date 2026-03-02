@@ -6,9 +6,7 @@ export const customizeStyles = StyleSheet.create({
     marginTop: 4,
   },
   customizeSubtitle: {
-    backgroundColor: '#f3f4f6',
     borderRadius: 8,
-    color: '#78716c',
     fontFamily: fontFamilies.primary.text,
     fontSize: 13,
     fontWeight: '500',
@@ -17,7 +15,6 @@ export const customizeStyles = StyleSheet.create({
     paddingVertical: 3,
   },
   customizeTitle: {
-    color: '#1c1917',
     fontFamily: fontFamilies.primary.text,
     fontSize: 17,
     fontWeight: '700',

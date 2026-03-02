@@ -47,7 +47,10 @@ export function useHaptics({
       if (!active) return;
       const fn = HapticPatterns[pattern];
       if (fn) {
-        fn().catch(() => {});
+        const result = fn();
+        if (result && typeof (result as Promise<unknown>).catch === 'function') {
+          result.catch(() => {});
+        }
       }
     },
     [active]

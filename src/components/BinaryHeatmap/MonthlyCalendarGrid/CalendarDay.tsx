@@ -2,33 +2,40 @@
  * CalendarDay Component
  *
  * Individual day cell for the monthly calendar.
- * Shows filled green circles for completed days and empty circles for missed days.
+ * Uses the habit's own color for completion indicators.
+ * Accepts theme colors from parent to avoid 42x useThemeColors calls.
  */
 
 import React, { memo } from 'react';
 import { View, Text, Pressable } from 'react-native';
 import type { DayData } from './types';
-import { COLORS } from './colors';
 import { styles } from './styles';
+
+interface CalendarDayColors {
+  muted: string;
+  primary: string;
+  tertiary: string;
+}
 
 interface CalendarDayProps {
   day: DayData;
   habitColor: string;
+  textColors: CalendarDayColors;
   onPress: (dateString: string, isCompleted: boolean) => void;
 }
 
-function getTextColor(day: DayData): string {
-  if (!day?.isCurrentMonth) return COLORS.TEXT_MUTED;
-  if (day?.isFuture) return COLORS.TEXT_TERTIARY;
-  return COLORS.TEXT_PRIMARY;
+function getTextColor(day: DayData, c: CalendarDayColors): string {
+  if (!day?.isCurrentMonth) return c.muted;
+  if (day?.isFuture) return c.tertiary;
+  return c.primary;
 }
 
 export const CalendarDay = memo(function CalendarDay({
   day,
   habitColor,
+  textColors,
   onPress,
 }: CalendarDayProps) {
-  // Guard against undefined day properties
   const showCompleted = Boolean(
     day?.isCompleted && day?.isCurrentMonth && !day?.isFuture
   );
@@ -37,39 +44,24 @@ export const CalendarDay = memo(function CalendarDay({
   );
   const isToday = Boolean(day?.isToday);
 
-  // Determine circle style based on completion status
-  const getCircleStyle = () => {
-    if (showCompleted) {
-      // Filled green circle for completed days
-      return {
-        backgroundColor: COLORS.GREEN_COMPLETED,
-      };
-    }
-    if (showMissed) {
-      // Empty circle with green border for missed days
-      return {
-        backgroundColor: 'transparent',
-        borderWidth: 2,
-        borderColor: COLORS.GREEN_COMPLETED,
-      };
-    }
-    return {};
-  };
+  const dotStyle = showCompleted
+    ? { backgroundColor: habitColor }
+    : showMissed
+      ? { backgroundColor: 'transparent', borderWidth: 1.5, borderColor: habitColor }
+      : undefined;
 
-  const getAccessibilityHint = () => {
-    if (day?.isFuture || day?.isBeforeCreation) {
-      return 'Not available';
-    }
-    if (showCompleted) {
-      return 'Press to mark as incomplete';
-    }
-    return 'Press to mark as complete';
-  };
+  const cellBg = showCompleted ? `${habitColor}18` : undefined;
 
   return (
     <Pressable
       accessibilityLabel={`Day ${day?.dayNumber ?? ''}${showCompleted ? ', completed' : showMissed ? ', missed' : ''}${isToday ? ', today' : ''}`}
-      accessibilityHint={getAccessibilityHint()}
+      accessibilityHint={
+        day?.isFuture || day?.isBeforeCreation
+          ? 'Not available'
+          : showCompleted
+            ? 'Press to mark as incomplete'
+            : 'Press to mark as complete'
+      }
       accessibilityRole='button'
       accessibilityState={{
         disabled: Boolean(day?.isFuture || day?.isBeforeCreation),
@@ -82,21 +74,26 @@ export const CalendarDay = memo(function CalendarDay({
       <View
         style={[
           styles.dayCell,
-          showCompleted && { backgroundColor: `${COLORS.GREEN_COMPLETED}26` },
-          isToday && { borderColor: habitColor, borderWidth: 2 },
+          cellBg ? { backgroundColor: cellBg } : undefined,
+          isToday && {
+            backgroundColor: habitColor,
+            borderColor: habitColor,
+            borderWidth: 2,
+          },
         ]}
       >
         <Text
           style={[
             styles.dayText,
-            { color: getTextColor(day) },
+            { color: isToday ? '#FFFFFF' : getTextColor(day, textColors) },
             isToday && styles.todayText,
+            showCompleted && !isToday && { fontWeight: '600' },
           ]}
         >
           {day?.dayNumber ?? ''}
         </Text>
-        {(showCompleted || showMissed) && (
-          <View style={[styles.streakCircle, getCircleStyle()]} />
+        {dotStyle && !isToday && (
+          <View style={[styles.streakCircle, dotStyle]} />
         )}
       </View>
     </Pressable>

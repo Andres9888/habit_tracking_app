@@ -3,7 +3,7 @@
  */
 
 import { useContext, useEffect } from 'react';
-import { NetworkStatusContext } from './NetworkStatusProvider';
+import { NetworkStatusContext } from './context';
 import type { NetworkStatusContextValue } from './types';
 
 /**

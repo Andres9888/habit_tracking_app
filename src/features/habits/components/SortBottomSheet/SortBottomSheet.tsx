@@ -50,64 +50,66 @@ export function SortBottomSheet({
         </Pressable>
 
         <GestureDetector gesture={panGesture}>
-          <Animated.View
-            className='rounded-t-3xl'
-            style={[
-              {
-                backgroundColor: themeColors.card,
-                elevation: 20,
-                maxHeight: SCREEN_HEIGHT * SCREEN.maxHeightPercent,
-                paddingBottom: insets.bottom + 16,
-                shadowColor: isDark ? '#000000' : '#1c1917',
-                shadowOffset: { height: 4, width: 0 },
-                shadowOpacity: SHADOW_OPACITY.minimal,
-                shadowRadius: 16,
-              },
-              sheetStyle,
-            ]}
-          >
-            <View className='items-center py-3'>
-              <View
-                className='h-1 w-10 rounded-full'
-                style={{ backgroundColor: themeColors.gray[300] }}
-              />
-            </View>
-
-            <View className='flex-row items-center justify-between px-5 pb-4'>
-              <Text
-                className='text-[17px] font-bold'
-                style={{ color: themeColors.text.primary }}
-              >
-                Sort Habits
-              </Text>
-              <Pressable
-                accessibilityHint='Close sort options'
-                accessibilityLabel='Close'
-                accessibilityRole='button'
-                className='h-11 w-11 items-center justify-center rounded-full'
-                style={{ backgroundColor: isDark ? themeColors.gray[800] : themeColors.gray[100] }}
-                onPress={handleDismiss}
-              >
-                <X color={themeColors.text.secondary} size={24} />
-              </Pressable>
-            </View>
-
-            <QuickPickChips sortMode={sortMode} onSelect={handleSelectSort} />
-
-            <ScrollView className='px-4' showsVerticalScrollIndicator={false}>
-              {SORT_OPTIONS.map((option) => (
-                <SortOptionRow
-                  key={option.value}
-                  description={option.description}
-                  Icon={option.Icon}
-                  iconBgColors={option.iconBgColors}
-                  selected={sortMode === option.value}
-                  title={option.label}
-                  onPress={() => handleSelectSort(option.value)}
+          <View collapsable={false}>
+            <Animated.View
+              className='rounded-t-3xl'
+              style={[
+                {
+                  backgroundColor: themeColors.card,
+                  elevation: 20,
+                  maxHeight: SCREEN_HEIGHT * SCREEN.maxHeightPercent,
+                  paddingBottom: insets.bottom + 16,
+                  shadowColor: isDark ? '#000000' : '#1c1917',
+                  shadowOffset: { height: 4, width: 0 },
+                  shadowOpacity: SHADOW_OPACITY.minimal,
+                  shadowRadius: 16,
+                },
+                sheetStyle,
+              ]}
+            >
+              <View className='items-center py-3'>
+                <View
+                  className='h-1 w-10 rounded-full'
+                  style={{ backgroundColor: themeColors.gray[300] }}
                 />
-              ))}
-            </ScrollView>
-          </Animated.View>
+              </View>
+
+              <View className='flex-row items-center justify-between px-5 pb-4'>
+                <Text
+                  className='text-[17px] font-bold'
+                  style={{ color: themeColors.text.primary }}
+                >
+                  Sort Habits
+                </Text>
+                <Pressable
+                  accessibilityHint='Close sort options'
+                  accessibilityLabel='Close'
+                  accessibilityRole='button'
+                  className='h-11 w-11 items-center justify-center rounded-full'
+                  style={{ backgroundColor: isDark ? themeColors.gray[800] : themeColors.gray[100] }}
+                  onPress={handleDismiss}
+                >
+                  <X color={themeColors.text.secondary} size={24} />
+                </Pressable>
+              </View>
+
+              <QuickPickChips sortMode={sortMode} onSelect={handleSelectSort} />
+
+              <ScrollView className='px-4' showsVerticalScrollIndicator={false}>
+                {SORT_OPTIONS.map((option) => (
+                  <SortOptionRow
+                    key={option.value}
+                    description={option.description}
+                    Icon={option.Icon}
+                    iconBgColors={option.iconBgColors}
+                    selected={sortMode === option.value}
+                    title={option.label}
+                    onPress={() => handleSelectSort(option.value)}
+                  />
+                ))}
+              </ScrollView>
+            </Animated.View>
+          </View>
         </GestureDetector>
       </View>
     </Modal>

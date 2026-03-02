@@ -28,6 +28,9 @@ export function CtaButton({
   const isDisabled = disabled || isLoading;
   const colors = useEmptyStateColors();
   const { trigger } = useHaptics();
+  const shimmerColor =
+    colors.ctaShimmer ??
+    `rgba(255, 255, 255, ${CTA_SHIMMER.gradientOpacity})`;
 
   const { animatedStyle, handlePressIn, handlePressOut, shimmerAnimatedStyle } =
     useCtaButtonAnimations({ disabled: !!disabled, isLoading: !!isLoading });
@@ -58,7 +61,7 @@ export function CtaButton({
       <AnimatedLinearGradient
         colors={[
           'transparent',
-          `rgba(255, 255, 255, ${CTA_SHIMMER.gradientOpacity})`,
+          shimmerColor,
           'transparent',
         ]}
         end={{ x: 1, y: 0.5 }}

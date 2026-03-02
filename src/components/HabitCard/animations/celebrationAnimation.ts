@@ -21,9 +21,9 @@ interface CelebrationOptions {
   rippleOpacity: SharedValue<number>;
   reduceMotion: boolean;
   setShowFloatingXP: (show: boolean) => void;
+  scheduleFloatingXPHide: () => void;
   setXPPosition: (position: { x: number; y: number }) => void;
   setShowConfetti: (show: boolean) => void;
-  timeoutRef: React.MutableRefObject<ReturnType<typeof setTimeout> | null>;
 }
 
 export function createCelebrationTrigger(options: CelebrationOptions) {
@@ -33,11 +33,11 @@ export function createCelebrationTrigger(options: CelebrationOptions) {
     rippleScale,
     rippleOpacity,
     reduceMotion,
-    setShowFloatingXP,
-    setXPPosition,
-    setShowConfetti,
-    timeoutRef,
-  } = options;
+  setShowFloatingXP,
+  scheduleFloatingXPHide,
+  setXPPosition,
+  setShowConfetti,
+} = options;
 
   return () => {
     'worklet';
@@ -73,9 +73,8 @@ export function createCelebrationTrigger(options: CelebrationOptions) {
     runOnJS(setShowFloatingXP)(true);
     runOnJS(() => {
       setXPPosition({ x: 150, y: 20 });
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
-      timeoutRef.current = setTimeout(() => setShowFloatingXP(false), 1000);
     })();
+    runOnJS(scheduleFloatingXPHide)();
   };
 }
 

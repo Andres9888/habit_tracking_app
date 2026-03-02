@@ -4,6 +4,7 @@
  */
 
 import { useEffect, useRef } from 'react';
+import { springs } from '@/theme/animations';
 import {
   useAnimatedStyle,
   useSharedValue,
@@ -42,12 +43,8 @@ export function useHeroAnimations(
     badgeScale.value = 0;
     badgeOpacity.value = 0;
 
-    iconScale.value = withSpring(1, { damping: 8, mass: 1, stiffness: 150 });
-    iconTranslateY.value = withSpring(0, {
-      damping: 8,
-      mass: 1,
-      stiffness: 150,
-    });
+    iconScale.value = withSpring(1, springs.standard);
+    iconTranslateY.value = withSpring(0, springs.standard);
 
     if (showStreakBadge) {
       badgeTimeoutRef.current = setTimeout(() => {
@@ -55,11 +52,7 @@ export function useHeroAnimations(
           duration: 200,
           easing: Easing.out(Easing.ease),
         });
-        badgeScale.value = withSpring(1, {
-          damping: 10,
-          mass: 1,
-          stiffness: 200,
-        });
+        badgeScale.value = withSpring(1, springs.standard);
       }, 400);
     }
 

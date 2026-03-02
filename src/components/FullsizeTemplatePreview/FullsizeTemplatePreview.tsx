@@ -64,8 +64,11 @@ function FullsizeTemplatePreviewComponent({
 
   return (
     <Modal
+      inline
       accessibilityViewIsModal
       disableBackdropClose={isImporting}
+      disableGestureClose
+      skipAnimation
       variant='fullScreen'
       visible={visible}
       onClose={handlers.handleClose}

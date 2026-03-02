@@ -7,6 +7,7 @@ import { Pressable, Text, View } from 'react-native';
 
 import Animated from 'react-native-reanimated';
 
+import { useThemeColors } from '../../theme/ThemeContext';
 import { CardHeader } from './CardHeader';
 import { ImportButton } from './ImportButton';
 import { styles } from './MiniTemplateCard.styles';
@@ -35,6 +36,8 @@ export function MiniCardContainer({
   onPressOut,
   onImport,
 }: MiniCardContainerProps) {
+  const { colors } = useThemeColors();
+
   return (
     <View>
       <AnimatedPressable
@@ -71,19 +74,19 @@ export function MiniCardContainer({
           iconColor={iconColor}
           scienceBadgeStyle={scienceBadgeStyle}
         />
-        <Text numberOfLines={1} style={styles.name}>
+        <Text numberOfLines={1} style={[styles.name, { color: colors.text.primary }]}>
           {name}
         </Text>
         {subtitle ? (
-          <Text numberOfLines={1} style={styles.subtitle}>
+          <Text numberOfLines={1} style={[styles.subtitle, { color: colors.text.tertiary }]}>
             {subtitle}
           </Text>
         ) : null}
-        {description && (
-          <Text numberOfLines={2} style={styles.description}>
+        {description ? (
+          <Text numberOfLines={2} style={[styles.description, { color: colors.text.secondary }]}>
             {description}
           </Text>
-        )}
+        ) : null}
       </AnimatedPressable>
       {onImport && (
         <ImportButton

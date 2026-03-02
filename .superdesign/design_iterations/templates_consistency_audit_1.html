@@ -1,0 +1,1178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Templates Screen - Consistency Audit & Redesign</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Literata:wght@400;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'DM Sans', sans-serif !important;
+      background: #1a1816 !important;
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+
+    /* Warm Minimal Color Tokens */
+    :root {
+      /* Light Mode */
+      --bg: #F5F1ED;
+      --surface: #EDEAE5;
+      --card: #EDEAE5;
+      --border: #DDD8D2;
+      --text-primary: #2D2A26;
+      --text-secondary: #6B6560;
+      --text-tertiary: #6E6660;
+      --text-inverse: #FFFFFF;
+      --primary-100: #D1FAE5;
+      --primary-300: #6EE7B7;
+      --primary-400: #34D399;
+      --primary-500: #10B981;
+      --primary-600: #059669;
+      --primary-700: #047857;
+      --gray-50: #FAF8F5;
+      --gray-100: #F5F1ED;
+      --gray-200: #DDD8D2;
+      --gray-300: #C4BFB7;
+      --gray-400: #6E6660;
+      --gray-500: #6B6560;
+      --gray-700: #3D3833;
+      --gray-800: #2D2A26;
+    }
+
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .phone-frame {
+      background: #2D2A26;
+      border-radius: 40px;
+      padding: 12px;
+      box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+      position: relative;
+    }
+
+    .phone-screen {
+      border-radius: 32px;
+      overflow: hidden;
+      height: 780px;
+      position: relative;
+    }
+
+    .label-badge {
+      position: absolute;
+      top: -14px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 4px 16px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      white-space: nowrap;
+      z-index: 10;
+    }
+
+    .label-before { background: #B53030; color: white; }
+    .label-after { background: #059669; color: white; }
+
+    /* ─── BEFORE (Current) ─── */
+    .before-screen {
+      background: #FFFFFF;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    .before-header {
+      padding: 56px 20px 12px 20px;
+    }
+
+    .before-title {
+      font-family: 'Literata', serif;
+      font-size: 28px;
+      font-weight: 800;
+      color: #1c1917;
+      letter-spacing: -0.5px;
+      line-height: 34px;
+    }
+
+    .before-subtitle {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 17px;
+      color: #6B7280;
+      margin-top: 4px;
+      letter-spacing: -0.41px;
+    }
+
+    .before-search {
+      margin: 0 20px;
+      background: #FFFFFF;
+      border: 1.5px solid #e7e5e4;
+      border-radius: 12px;
+      padding: 11px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .before-search input {
+      border: none;
+      outline: none;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 17px;
+      color: #1c1917;
+      flex: 1;
+      background: transparent;
+    }
+
+    .before-search input::placeholder { color: #6E6660; }
+
+    .before-tabbar {
+      margin: 14px 20px 12px;
+      background: #F3F4F6;
+      border-radius: 12px;
+      padding: 5px;
+      display: flex;
+      position: relative;
+    }
+
+    .before-tab {
+      flex: 1;
+      text-align: center;
+      padding: 12px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #6B7280;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      border-radius: 12px;
+    }
+
+    .before-tab.active {
+      color: #047857;
+    }
+
+    .before-tab .count {
+      font-weight: 700;
+      font-size: 13px;
+    }
+
+    .before-tab.active .count { color: #34D399; }
+
+    .before-tab-indicator {
+      position: absolute;
+      left: 5px;
+      top: 5px;
+      bottom: 5px;
+      width: calc(50% - 5px);
+      background: #FFFFFF;
+      border-radius: 12px;
+      box-shadow: 0 3px 8px rgba(52, 211, 153, 0.15);
+    }
+
+    .before-section {
+      padding: 0;
+    }
+
+    .before-section-header {
+      display: flex;
+      align-items: center;
+      padding: 14px 20px;
+      background: #FFFFFF;
+      border-left: 3px solid transparent;
+    }
+
+    .before-section-header.expanded {
+      background: #E0F2FE;
+      border-left-color: #0284C7;
+    }
+
+    .before-section-icon-badge {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      margin-right: 14px;
+    }
+
+    .before-section-label {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: #374151;
+      flex: 1;
+    }
+
+    .before-section-header.expanded .before-section-label {
+      color: #0284C7;
+    }
+
+    .before-section-count {
+      font-size: 13px;
+      color: #9CA3AF;
+      margin-right: 8px;
+    }
+
+    .before-chevron {
+      color: #6B7280;
+    }
+
+    .before-section-header.expanded .before-chevron {
+      color: #0284C7;
+    }
+
+    .before-minicard-row {
+      display: flex;
+      gap: 12px;
+      padding: 12px 20px;
+      overflow-x: auto;
+    }
+
+    .before-minicard {
+      min-width: 200px;
+      background: #FFFFFF;
+      border-radius: 16px;
+      padding: 14px 14px 14px 18px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .before-minicard-accent {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      border-radius: 16px 0 0 16px;
+    }
+
+    .before-minicard-icon {
+      font-size: 20px;
+      margin-bottom: 6px;
+    }
+
+    .before-minicard-name {
+      font-weight: 700;
+      font-size: 15px;
+      color: #1c1917;
+      margin-bottom: 2px;
+    }
+
+    .before-minicard-desc {
+      font-size: 13px;
+      color: #78716c;
+      line-height: 18px;
+    }
+
+    /* Issue callout markers */
+    .issue-marker {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      background: #B53030;
+      border-radius: 50%;
+      border: 2px solid white;
+      z-index: 20;
+    }
+
+    .issue-line {
+      position: absolute;
+      border-left: 2px dashed #B53030;
+      z-index: 19;
+      opacity: 0.5;
+    }
+
+    /* ─── AFTER (Improved) ─── */
+    .after-screen {
+      background: var(--bg);
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    .after-header {
+      padding: 16px 16px 12px 16px;
+    }
+
+    .after-title {
+      font-family: 'Literata', serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.35px;
+      line-height: 28px;
+    }
+
+    .after-subtitle {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-top: 2px;
+      letter-spacing: -0.2px;
+    }
+
+    .after-search {
+      margin: 0 16px;
+      background: var(--card);
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      padding: 11px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      height: 44px;
+    }
+
+    .after-search input {
+      border: none;
+      outline: none;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 17px;
+      color: var(--text-primary);
+      flex: 1;
+      background: transparent;
+    }
+
+    .after-search input::placeholder { color: var(--text-tertiary); }
+
+    .after-tabbar {
+      margin: 12px 16px;
+      background: var(--surface);
+      border-radius: 12px;
+      padding: 5px;
+      display: flex;
+      position: relative;
+    }
+
+    .after-tab {
+      flex: 1;
+      text-align: center;
+      padding: 12px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      border-radius: 12px;
+    }
+
+    .after-tab.active {
+      color: var(--primary-700);
+    }
+
+    .after-tab .count {
+      font-weight: 700;
+      font-size: 13px;
+    }
+
+    .after-tab.active .count { color: var(--primary-400); }
+
+    .after-tab-indicator {
+      position: absolute;
+      left: 5px;
+      top: 5px;
+      bottom: 5px;
+      width: calc(50% - 5px);
+      background: var(--card);
+      border-radius: 12px;
+      box-shadow: 0 3px 8px rgba(52, 211, 153, 0.12);
+    }
+
+    .after-section-header {
+      display: flex;
+      align-items: center;
+      padding: 14px 16px;
+      background: var(--card);
+      border-left: 3px solid transparent;
+      margin: 0 0 1px 0;
+    }
+
+    .after-section-header.expanded {
+      background: #E0F7ED;
+      border-left-color: var(--primary-600);
+    }
+
+    .after-section-icon-badge {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      margin-right: 12px;
+    }
+
+    .after-section-label {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-primary);
+      flex: 1;
+    }
+
+    .after-section-header.expanded .after-section-label {
+      color: var(--primary-700);
+    }
+
+    .after-section-meta {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .after-section-count {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-tertiary);
+      background: var(--surface);
+      padding: 2px 8px;
+      border-radius: 999px;
+    }
+
+    .after-section-header.expanded .after-section-count {
+      background: rgba(5, 150, 105, 0.12);
+      color: var(--primary-700);
+    }
+
+    .after-chevron {
+      color: var(--text-tertiary);
+    }
+
+    .after-section-header.expanded .after-chevron {
+      color: var(--primary-600);
+    }
+
+    .after-minicard-row {
+      display: flex;
+      gap: 12px;
+      padding: 12px 16px;
+      overflow-x: auto;
+    }
+
+    .after-minicard {
+      min-width: 180px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 14px 14px 14px 16px;
+      box-shadow: 0 1px 3px rgba(45, 42, 38, 0.06);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .after-minicard-accent {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      border-radius: 16px 0 0 16px;
+    }
+
+    .after-minicard-icon {
+      font-size: 20px;
+      margin-bottom: 6px;
+    }
+
+    .after-minicard-name {
+      font-weight: 700;
+      font-size: 15px;
+      color: var(--text-primary);
+      margin-bottom: 2px;
+    }
+
+    .after-minicard-desc {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 18px;
+    }
+
+    .after-minicard-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      margin-top: 8px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--primary-700);
+      background: var(--primary-100);
+      padding: 2px 8px;
+      border-radius: 999px;
+    }
+
+    /* Close button */
+    .close-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      top: 12px;
+      right: 16px;
+      z-index: 30;
+    }
+
+    .before-close { background: #FFFFFF; box-shadow: 0 2px 8px rgba(0,0,0,0.12); }
+    .after-close { background: var(--card); box-shadow: 0 2px 8px rgba(45, 42, 38, 0.08); border: 1px solid var(--border); }
+
+    /* Callout annotations */
+    .annotation-section {
+      max-width: 900px;
+      margin: 48px auto 0;
+      padding: 0 8px;
+    }
+
+    .annotation-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .annotation-card {
+      background: #2D2A26;
+      border: 1px solid #3D3833;
+      border-radius: 16px;
+      padding: 20px;
+    }
+
+    .annotation-card h3 {
+      font-family: 'DM Sans', sans-serif;
+      color: #FAF8F5;
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .annotation-card p {
+      font-family: 'DM Sans', sans-serif;
+      color: #C4BFB7;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .sev-high { color: #B53030; }
+    .sev-medium { color: #9A5504; }
+    .sev-low { color: #3872B8; }
+
+    .annotation-card code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      background: #1A1816;
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: #6EE7B7;
+    }
+
+    .fix-arrow {
+      color: var(--primary-400);
+      font-size: 11px;
+      margin: 0 4px;
+    }
+
+    .page-title {
+      font-family: 'Literata', serif;
+      color: #FAF8F5;
+      font-size: 28px;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 8px;
+      letter-spacing: -0.5px;
+    }
+
+    .page-subtitle {
+      font-family: 'DM Sans', sans-serif;
+      color: #C4BFB7;
+      font-size: 15px;
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .section-title {
+      font-family: 'DM Sans', sans-serif;
+      color: #FAF8F5;
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    .color-swatch-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+
+    .color-swatch {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .color-swatch .swatch {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      border: 2px solid #3D3833;
+    }
+
+    .color-swatch .label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      color: #6B6560;
+    }
+
+    .divider {
+      height: 1px;
+      background: #3D3833;
+      margin: 32px auto;
+      max-width: 900px;
+    }
+
+    .full-width-card {
+      background: #2D2A26;
+      border: 1px solid #3D3833;
+      border-radius: 16px;
+      padding: 24px;
+      max-width: 900px;
+      margin: 0 auto 24px;
+    }
+
+    .token-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    .token-table th {
+      text-align: left;
+      color: #C4BFB7;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 8px 12px;
+      border-bottom: 1px solid #3D3833;
+    }
+
+    .token-table td {
+      padding: 8px 12px;
+      font-size: 13px;
+      color: #FAF8F5;
+      border-bottom: 1px solid rgba(61, 56, 51, 0.5);
+    }
+
+    .token-table td code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      background: #1A1816;
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    .token-table .old-val { color: #B53030; }
+    .token-table .new-val { color: #6EE7B7; }
+
+    .summary-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      max-width: 900px;
+      margin: 0 auto 32px;
+    }
+
+    .stat-card {
+      background: #2D2A26;
+      border: 1px solid #3D3833;
+      border-radius: 12px;
+      padding: 16px;
+      text-align: center;
+    }
+
+    .stat-card .num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 28px;
+      font-weight: 700;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .stat-card .desc {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px;
+      color: #6B6560;
+    }
+  </style>
+</head>
+<body>
+  <h1 class="page-title">Templates Screen — Consistency Audit</h1>
+  <p class="page-subtitle">Warm Minimal token alignment · Dark mode readiness · Spacing standardization</p>
+
+  <!-- Summary Stats -->
+  <div class="summary-stats">
+    <div class="stat-card">
+      <div class="num" style="color: #B53030;">25+</div>
+      <div class="desc">Hardcoded hex values</div>
+    </div>
+    <div class="stat-card">
+      <div class="num" style="color: #9A5504;">6</div>
+      <div class="desc">Files with wrong padding</div>
+    </div>
+    <div class="stat-card">
+      <div class="num" style="color: #3872B8;">14</div>
+      <div class="desc">Category colors need dark mode</div>
+    </div>
+    <div class="stat-card">
+      <div class="num" style="color: #059669;">0</div>
+      <div class="desc">Animation changes needed</div>
+    </div>
+  </div>
+
+  <!-- Side-by-side comparison -->
+  <div class="comparison-grid">
+    <!-- BEFORE -->
+    <div class="phone-frame" style="position: relative;">
+      <div class="label-badge label-before">Current</div>
+      <div class="phone-screen before-screen">
+        <div class="close-btn before-close">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#57534e" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </div>
+
+        <div class="before-header">
+          <div class="before-title">Import Habits</div>
+          <div class="before-subtitle">Science-backed templates to build great habits</div>
+        </div>
+
+        <div class="before-search">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6E6660" stroke-width="2.25" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" placeholder="Search for habits..." readonly>
+        </div>
+
+        <div class="before-tabbar">
+          <div class="before-tab-indicator"></div>
+          <div class="before-tab active">
+            Categories <span class="count">12</span>
+          </div>
+          <div class="before-tab">
+            View All <span class="count">87</span>
+          </div>
+        </div>
+
+        <!-- Category: Breathing (expanded) -->
+        <div class="before-section">
+          <div class="before-section-header expanded">
+            <div class="before-section-icon-badge" style="background: rgba(2, 132, 199, 0.12);">🌬️</div>
+            <div class="before-section-label" style="color: #0284C7;">Breathing</div>
+            <div class="before-section-count">7</div>
+            <span class="before-chevron">▲</span>
+          </div>
+          <div class="before-minicard-row">
+            <div class="before-minicard">
+              <div class="before-minicard-accent" style="background: #0284C7;"></div>
+              <div class="before-minicard-icon">🫁</div>
+              <div class="before-minicard-name">Box Breathing</div>
+              <div class="before-minicard-desc">4-4-4-4 breathing pattern for calm</div>
+            </div>
+            <div class="before-minicard">
+              <div class="before-minicard-accent" style="background: #0284C7;"></div>
+              <div class="before-minicard-icon">🧘</div>
+              <div class="before-minicard-name">Wim Hof Method</div>
+              <div class="before-minicard-desc">Power breathing for energy & focus</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Category: Mindfulness (collapsed) -->
+        <div class="before-section">
+          <div class="before-section-header">
+            <div class="before-section-icon-badge" style="background: rgba(139, 92, 246, 0.12);">🧘</div>
+            <div class="before-section-label">Mindfulness</div>
+            <div class="before-section-count">9</div>
+            <span class="before-chevron">▼</span>
+          </div>
+        </div>
+
+        <!-- Category: Sleep (collapsed) -->
+        <div class="before-section">
+          <div class="before-section-header">
+            <div class="before-section-icon-badge" style="background: rgba(30, 64, 175, 0.12);">😴</div>
+            <div class="before-section-label">Sleep</div>
+            <div class="before-section-count">5</div>
+            <span class="before-chevron">▼</span>
+          </div>
+        </div>
+
+        <!-- Category: Health (collapsed) -->
+        <div class="before-section">
+          <div class="before-section-header">
+            <div class="before-section-icon-badge" style="background: rgba(16, 185, 129, 0.12);">💪</div>
+            <div class="before-section-label">Health & Fitness</div>
+            <div class="before-section-count">12</div>
+            <span class="before-chevron">▼</span>
+          </div>
+        </div>
+
+        <!-- Annotations on the Before -->
+        <div style="position: absolute; top: 50px; right: 6px; display: flex; flex-direction: column; gap: 4px;">
+          <div style="background: #B53030; color: white; font-size: 9px; padding: 2px 6px; border-radius: 4px; font-weight: 700;">← #fff bg</div>
+        </div>
+        <div style="position: absolute; top: 72px; left: 22px; display: flex; flex-direction: column; gap: 4px;">
+          <div style="background: #9A5504; color: white; font-size: 9px; padding: 2px 6px; border-radius: 4px; font-weight: 700;">28px/800 ≠ H1</div>
+        </div>
+        <div style="position: absolute; top: 130px; right: 6px;">
+          <div style="background: #B53030; color: white; font-size: 9px; padding: 2px 6px; border-radius: 4px; font-weight: 700;">← #e7e5e4</div>
+        </div>
+        <div style="position: absolute; top: 170px; left: 22px;">
+          <div style="background: #9A5504; color: white; font-size: 9px; padding: 2px 6px; border-radius: 4px; font-weight: 700;">px: 20 ≠ 16</div>
+        </div>
+        <div style="position: absolute; top: 260px; right: 6px;">
+          <div style="background: #B53030; color: white; font-size: 9px; padding: 2px 6px; border-radius: 4px; font-weight: 700;">← #374151 cool</div>
+        </div>
+        <div style="position: absolute; top: 460px; right: 6px;">
+          <div style="background: #B53030; color: white; font-size: 9px; padding: 2px 6px; border-radius: 4px; font-weight: 700;">← #1c1917</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AFTER -->
+    <div class="phone-frame" style="position: relative;">
+      <div class="label-badge label-after">Improved</div>
+      <div class="phone-screen after-screen">
+        <div class="close-btn after-close">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--text-secondary)" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </div>
+
+        <div class="after-header">
+          <div class="after-title">Import Habits</div>
+          <div class="after-subtitle">Science-backed templates to build great habits</div>
+        </div>
+
+        <div class="after-search">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" stroke-width="2.25" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" placeholder="Search for habits..." readonly>
+        </div>
+
+        <div class="after-tabbar">
+          <div class="after-tab-indicator"></div>
+          <div class="after-tab active">
+            Categories <span class="count">12</span>
+          </div>
+          <div class="after-tab">
+            View All <span class="count">87</span>
+          </div>
+        </div>
+
+        <!-- Category: Breathing (expanded) - using primary green -->
+        <div>
+          <div class="after-section-header expanded">
+            <div class="after-section-icon-badge" style="background: rgba(5, 150, 105, 0.10);">🌬️</div>
+            <div class="after-section-label" style="color: var(--primary-700);">Breathing</div>
+            <div class="after-section-meta">
+              <span class="after-section-count">7</span>
+              <span class="after-chevron" style="color: var(--primary-600);">▲</span>
+            </div>
+          </div>
+          <div class="after-minicard-row">
+            <div class="after-minicard">
+              <div class="after-minicard-accent" style="background: var(--primary-600);"></div>
+              <div class="after-minicard-icon">🫁</div>
+              <div class="after-minicard-name">Box Breathing</div>
+              <div class="after-minicard-desc">4-4-4-4 breathing pattern for calm</div>
+              <div class="after-minicard-badge">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                Research-backed
+              </div>
+            </div>
+            <div class="after-minicard">
+              <div class="after-minicard-accent" style="background: var(--primary-600);"></div>
+              <div class="after-minicard-icon">🧘</div>
+              <div class="after-minicard-name">Wim Hof Method</div>
+              <div class="after-minicard-desc">Power breathing for energy & focus</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Category: Mindfulness (collapsed) -->
+        <div>
+          <div class="after-section-header">
+            <div class="after-section-icon-badge" style="background: rgba(5, 150, 105, 0.06);">🧘</div>
+            <div class="after-section-label">Mindfulness</div>
+            <div class="after-section-meta">
+              <span class="after-section-count">9</span>
+              <span class="after-chevron">▼</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Category: Sleep (collapsed) -->
+        <div>
+          <div class="after-section-header">
+            <div class="after-section-icon-badge" style="background: rgba(5, 150, 105, 0.06);">😴</div>
+            <div class="after-section-label">Sleep</div>
+            <div class="after-section-meta">
+              <span class="after-section-count">5</span>
+              <span class="after-chevron">▼</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Category: Health (collapsed) -->
+        <div>
+          <div class="after-section-header">
+            <div class="after-section-label" style="padding-left: 16px;">
+              <div style="display: flex; align-items: center;">
+                <div class="after-section-icon-badge" style="background: rgba(5, 150, 105, 0.06); margin-right: 12px;">💪</div>
+                <span>Health & Fitness</span>
+              </div>
+            </div>
+            <div class="after-section-meta">
+              <span class="after-section-count">12</span>
+              <span class="after-chevron">▼</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Positive annotations -->
+        <div style="position: absolute; top: 12px; right: 6px; display: flex; flex-direction: column; gap: 4px;">
+          <div style="background: #059669; color: white; font-size: 9px; padding: 2px 6px; border-radius: 4px; font-weight: 700;">✓ colors.card</div>
+        </div>
+        <div style="position: absolute; top: 38px; left: 6px;">
+          <div style="background: #059669; color: white; font-size: 9px; padding: 2px 6px; border-radius: 4px; font-weight: 700;">✓ 22px/700 = H1</div>
+        </div>
+        <div style="position: absolute; top: 100px; right: 6px;">
+          <div style="background: #059669; color: white; font-size: 9px; padding: 2px 6px; border-radius: 4px; font-weight: 700;">✓ colors.border</div>
+        </div>
+        <div style="position: absolute; top: 138px; left: 6px;">
+          <div style="background: #059669; color: white; font-size: 9px; padding: 2px 6px; border-radius: 4px; font-weight: 700;">✓ px: 16 = base</div>
+        </div>
+        <div style="position: absolute; top: 218px; right: 6px;">
+          <div style="background: #059669; color: white; font-size: 9px; padding: 2px 6px; border-radius: 4px; font-weight: 700;">✓ text.primary warm</div>
+        </div>
+        <div style="position: absolute; bottom: 285px; left: 6px;">
+          <div style="background: #059669; color: white; font-size: 9px; padding: 2px 6px; border-radius: 4px; font-weight: 700;">✓ #F5F1ED bg</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Detailed Annotations -->
+  <div class="annotation-section">
+    <h2 class="section-title">Issue Details & Fixes</h2>
+    <div class="annotation-grid">
+      <div class="annotation-card">
+        <h3><span class="sev-high">●</span> Background Color Drift</h3>
+        <p>
+          Templates screen uses <code class="old-val">#FFFFFF</code> as base background while the app uses <code class="new-val">#F5F1ED</code> (warm parchment). This creates a noticeable "cold" feel when entering the templates modal.<br><br>
+          <strong>Fix:</strong> <code>backgroundColor: colors.background</code> in <code>layoutStyles.ts</code> and pass via <code>useThemeColors()</code>
+        </p>
+      </div>
+      <div class="annotation-card">
+        <h3><span class="sev-high">●</span> Card Surface Mismatch</h3>
+        <p>
+          <code class="old-val">#fff</code> used in TemplateCard, MiniTemplateCard, and SectionHeader. App standard is <code class="new-val">colors.card (#EDEAE5)</code>.<br><br>
+          Files affected: <code>TemplateCard.styles.ts</code>, <code>cardStyles.ts</code>, <code>SectionHeader.tsx</code>
+        </p>
+      </div>
+      <div class="annotation-card">
+        <h3><span class="sev-high">●</span> Dark Mode Breaking</h3>
+        <p>
+          All search, control, and category components hardcode light colors. In dark mode, text would be invisible and backgrounds would flash white.<br><br>
+          <strong>25+ hex values</strong> need migration to theme tokens for dark mode support.
+        </p>
+      </div>
+      <div class="annotation-card">
+        <h3><span class="sev-medium">●</span> Cool Gray vs Warm Stone</h3>
+        <p>
+          Templates uses Tailwind cool grays: <code class="old-val">#374151</code>, <code class="old-val">#6B7280</code>, <code class="old-val">#9CA3AF</code><br>
+          App uses warm stone: <code class="new-val">#3D3833</code>, <code class="new-val">#6B6560</code>, <code class="new-val">#C4BFB7</code><br><br>
+          Subtle but creates visual temperature inconsistency.
+        </p>
+      </div>
+      <div class="annotation-card">
+        <h3><span class="sev-medium">●</span> H1 Typography Scale</h3>
+        <p>
+          Header: <code class="old-val">28px / 800 weight</code><br>
+          App H1: <code class="new-val">22px / 700 weight</code><br><br>
+          The oversized header creates visual weight that doesn't match the habits screen's compact, balanced feel. The 800 weight doesn't exist in the type scale.
+        </p>
+      </div>
+      <div class="annotation-card">
+        <h3><span class="sev-medium">●</span> Horizontal Padding</h3>
+        <p>
+          Templates: <code class="old-val">20px</code> everywhere<br>
+          App standard: <code class="new-val">16px (spacing.base)</code><br><br>
+          Affects: header, search, tabbar, categories, filter controls, mini cards — 6 style files.
+        </p>
+      </div>
+      <div class="annotation-card">
+        <h3><span class="sev-medium">●</span> Active State Color</h3>
+        <p>
+          Control buttons use <code class="old-val">#111827</code> (near black) for active state. App uses <code class="new-val">primary[600] #059669</code> (forest green) for active/selected states.<br><br>
+          This misses the opportunity to reinforce brand color as the active indicator.
+        </p>
+      </div>
+      <div class="annotation-card">
+        <h3><span class="sev-low">●</span> Category Color System</h3>
+        <p>
+          14 categories each have 4 hardcoded light-mode hex values (bg, bgSelected, border, text). Consider using <code class="new-val">primary[600]</code> as the universal expanded state color, with category emoji providing sufficient differentiation.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Token Migration Table -->
+  <div class="full-width-card">
+    <h2 class="section-title" style="margin-bottom: 16px;">Complete Token Migration Map</h2>
+    <table class="token-table">
+      <thead>
+        <tr>
+          <th>File</th>
+          <th>Current</th>
+          <th></th>
+          <th>Replace With</th>
+          <th>Impact</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>searchStyles.ts</code></td>
+          <td><code class="old-val">#fff</code></td>
+          <td>→</td>
+          <td><code class="new-val">colors.card</code></td>
+          <td>Dark mode fix</td>
+        </tr>
+        <tr>
+          <td><code>searchStyles.ts</code></td>
+          <td><code class="old-val">#e7e5e4</code></td>
+          <td>→</td>
+          <td><code class="new-val">colors.border</code></td>
+          <td>Warm tone + dark</td>
+        </tr>
+        <tr>
+          <td><code>browseStyles.ts</code></td>
+          <td><code class="old-val">#374151</code></td>
+          <td>→</td>
+          <td><code class="new-val">colors.text.primary</code></td>
+          <td>Warm tone</td>
+        </tr>
+        <tr>
+          <td><code>controlStyles.ts</code></td>
+          <td><code class="old-val">#e7e5e4, #111827, #1c1917</code></td>
+          <td>→</td>
+          <td><code class="new-val">border, primary[600], text.primary</code></td>
+          <td>Dark mode + brand</td>
+        </tr>
+        <tr>
+          <td><code>layoutStyles.ts</code></td>
+          <td><code class="old-val">#e5e7eb</code></td>
+          <td>→</td>
+          <td><code class="new-val">colors.border</code></td>
+          <td>Warm tone</td>
+        </tr>
+        <tr>
+          <td><code>TemplateCard.styles</code></td>
+          <td><code class="old-val">#fff</code></td>
+          <td>→</td>
+          <td><code class="new-val">colors.card</code> (dynamic)</td>
+          <td>Dark mode fix</td>
+        </tr>
+        <tr>
+          <td><code>cardStyles.ts</code></td>
+          <td><code class="old-val">#1c1917, #78716c, #6B7280</code></td>
+          <td>→</td>
+          <td><code class="new-val">text.primary, text.secondary, text.tertiary</code></td>
+          <td>Warm + dark mode</td>
+        </tr>
+        <tr>
+          <td><code>SectionHeader.tsx</code></td>
+          <td><code class="old-val">#fff, #374151, #6B7280</code></td>
+          <td>→</td>
+          <td><code class="new-val">colors.card, text.primary, text.tertiary</code></td>
+          <td>All modes</td>
+        </tr>
+        <tr>
+          <td><code>TemplatesModal</code></td>
+          <td><code class="old-val">#57534e</code></td>
+          <td>→</td>
+          <td><code class="new-val">colors.text.secondary</code></td>
+          <td>Consistency</td>
+        </tr>
+        <tr>
+          <td><code>BrowseHeader.tsx</code></td>
+          <td><code class="old-val">28px / 800</code></td>
+          <td>→</td>
+          <td><code class="new-val">22px / 700</code></td>
+          <td>Type scale</td>
+        </tr>
+        <tr>
+          <td><code>6 style files</code></td>
+          <td><code class="old-val">px: 20</code></td>
+          <td>→</td>
+          <td><code class="new-val">spacing.base (16)</code></td>
+          <td>Grid alignment</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Color comparison -->
+  <div class="full-width-card">
+    <h2 class="section-title" style="margin-bottom: 16px;">Color Temperature Comparison</h2>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+      <div>
+        <p style="font-size: 12px; font-weight: 700; color: #B53030; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;">Current (Cool Tailwind Grays)</p>
+        <div class="color-swatch-row">
+          <div class="color-swatch"><div class="swatch" style="background: #FFFFFF;"></div><div class="label">#FFF</div></div>
+          <div class="color-swatch"><div class="swatch" style="background: #F3F4F6;"></div><div class="label">#F3F4F6</div></div>
+          <div class="color-swatch"><div class="swatch" style="background: #e7e5e4;"></div><div class="label">#e7e5e4</div></div>
+          <div class="color-swatch"><div class="swatch" style="background: #9CA3AF;"></div><div class="label">#9CA3AF</div></div>
+          <div class="color-swatch"><div class="swatch" style="background: #6B7280;"></div><div class="label">#6B7280</div></div>
+          <div class="color-swatch"><div class="swatch" style="background: #374151;"></div><div class="label">#374151</div></div>
+          <div class="color-swatch"><div class="swatch" style="background: #1c1917;"></div><div class="label">#1c1917</div></div>
+        </div>
+      </div>
+      <div>
+        <p style="font-size: 12px; font-weight: 700; color: #059669; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;">Target (Warm Stone Palette)</p>
+        <div class="color-swatch-row">
+          <div class="color-swatch"><div class="swatch" style="background: #F5F1ED;"></div><div class="label">#F5F1ED</div></div>
+          <div class="color-swatch"><div class="swatch" style="background: #FAF8F5;"></div><div class="label">#FAF8F5</div></div>
+          <div class="color-swatch"><div class="swatch" style="background: #DDD8D2;"></div><div class="label">#DDD8D2</div></div>
+          <div class="color-swatch"><div class="swatch" style="background: #C4BFB7;"></div><div class="label">#C4BFB7</div></div>
+          <div class="color-swatch"><div class="swatch" style="background: #6B6560;"></div><div class="label">#6B6560</div></div>
+          <div class="color-swatch"><div class="swatch" style="background: #3D3833;"></div><div class="label">#3D3833</div></div>
+          <div class="color-swatch"><div class="swatch" style="background: #2D2A26;"></div><div class="label">#2D2A26</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>

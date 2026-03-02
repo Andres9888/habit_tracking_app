@@ -17,4 +17,11 @@ export {
   ICON_COLOR_OPTIONS,
 } from './sortConfig';
 
-export { CATEGORY_COLORS, DEFAULT_CATEGORY_COLORS } from './categoryColors';
+export {
+  CATEGORY_COLORS,
+  CATEGORY_COLORS_DARK,
+  DEFAULT_CATEGORY_COLORS,
+  DEFAULT_CATEGORY_COLORS_DARK,
+  getCategoryColors,
+  getDefaultCategoryColors,
+} from './categoryColors';

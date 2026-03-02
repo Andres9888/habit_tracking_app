@@ -25,9 +25,13 @@ const noop = () => {
 const isHapticsSupported = Platform.OS === 'ios' || Platform.OS === 'android';
 
 const safeCall = (fn: () => Promise<void>) => {
-  fn().catch(() => {
-    // Silently fail - haptics are non-critical UX enhancements
-  });
+  const result = fn();
+
+  if (result && typeof (result as Promise<unknown>).catch === 'function') {
+    result.catch(() => {
+      // Silently fail - haptics are non-critical UX enhancements
+    });
+  }
 };
 
 /**

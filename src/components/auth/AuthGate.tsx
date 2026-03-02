@@ -43,9 +43,12 @@ export function AuthGate() {
 
   useEffect(() => {
     if (isSignedIn && isConvexReady) {
-      getOrCreateUserRef.current().catch((error_: unknown) => {
-        if (__DEV__) console.error('Failed to sync user:', error_);
-      });
+      const result = getOrCreateUserRef.current();
+      if (result && typeof (result as Promise<unknown>).catch === 'function') {
+        result.catch((error_: unknown) => {
+          if (__DEV__) console.error('Failed to sync user:', error_);
+        });
+      }
     }
   }, [isSignedIn, isConvexReady]);
 

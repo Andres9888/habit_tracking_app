@@ -24,6 +24,7 @@ export class OfflineSyncManager {
   private retryStrategy: RetryStrategy;
   private listeners = new Set<SyncEventListener>();
   private isSyncing = false;
+  private getPendingCount?: () => number;
   private stats = { failedCount: 0, syncedCount: 0 };
   private lastSyncAt?: number;
 
@@ -34,6 +35,7 @@ export class OfflineSyncManager {
     );
     this.circuitBreaker = circuitBreaker;
     this.retryStrategy = retryStrategy;
+    this.getPendingCount = config.getPendingCount;
   }
 
   getStatus(): SyncStatus {
@@ -42,7 +44,7 @@ export class OfflineSyncManager {
       failedCount: this.stats.failedCount,
       isSyncing: this.isSyncing,
       lastSyncAt: this.lastSyncAt,
-      pendingCount: 0,
+      pendingCount: this.getPendingCount?.() ?? 0,
       progress: 0,
       syncedCount: this.stats.syncedCount,
     };

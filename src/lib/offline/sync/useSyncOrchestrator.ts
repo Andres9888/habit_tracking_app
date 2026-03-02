@@ -29,6 +29,7 @@ export function useSyncOrchestrator(
     orchestrator.getState()
   );
   const [hasPendingOperations, setHasPendingOperations] = useState(false);
+  const [pendingOperationCount, setPendingOperationCount] = useState(0);
 
   useEffect(() => {
     orchestrator.setExecutor(async (payload) => {
@@ -59,6 +60,7 @@ export function useSyncOrchestrator(
     const checkPending = () => {
       const stats = queueManager.getStats();
       setHasPendingOperations(stats.pendingCount > 0);
+      setPendingOperationCount(stats.pendingCount);
     };
     checkPending();
     const unsubscribe = queueManager.subscribe(checkPending);
@@ -83,6 +85,7 @@ export function useSyncOrchestrator(
   return useMemo(
     () => ({
       hasPendingOperations,
+      pendingOperationCount,
       isOnline,
       start,
       state,
@@ -90,7 +93,16 @@ export function useSyncOrchestrator(
       subscribe,
       triggerSync,
     }),
-    [hasPendingOperations, isOnline, start, state, stop, subscribe, triggerSync]
+    [
+      hasPendingOperations,
+      isOnline,
+      pendingOperationCount,
+      start,
+      state,
+      stop,
+      subscribe,
+      triggerSync,
+    ]
   );
 }
 

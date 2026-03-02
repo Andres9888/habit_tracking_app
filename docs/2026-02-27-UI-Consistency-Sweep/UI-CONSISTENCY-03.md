@@ -1,0 +1,29 @@
+# Phase 03: Dark Mode Gap Fixes
+
+**Priority:** P1
+**Scope:** Fix components that have no dark mode support or bypass the theme system
+**Context:** The dark mode infrastructure (`useThemeColors()` hook, `darkColors.ts`/`lightColors.ts` with `SemanticColors` interface) is excellent. But ~15% of components either use hardcoded light-mode colors or duplicate theme values locally instead of importing them.
+
+## Rules
+
+- Use `useThemeColors()` hook to get theme-aware colors in components
+- For style files that can't use hooks, accept colors as parameters or use the static `darkColors`/`lightColors` imports
+- NativeWind/Tailwind class-based components should use theme colors via style prop overrides, not hardcoded hex values in className
+- When a component has `isDark ? themeColor : '#hardcoded'`, replace the hardcoded side with the corresponding lightColors value
+- Settings colors should import from `darkColors.ts`/`lightColors.ts`, NOT re-declare them
+
+---
+
+- [ ] **Fix LoadingTimeoutCard dark mode.** `src/components/auth/LoadingTimeoutCard.tsx` is fully hardcoded with NativeWind classes using light-mode hex colors (`#DDD8D2`, `#EDEAE5`, `#2D2A26`, `#6B6560`). Convert this component to use `useThemeColors()`: (1) Import `useThemeColors` from `src/theme/ThemeContext`, (2) Replace the hardcoded className colors with style prop that uses theme colors: `backgroundColor: colors.card`, `borderColor: colors.border`, text colors from `colors.text.primary` and `colors.text.secondary`, button background from `colors.primary[600]`, (3) Keep the Pressable's `rounded-xl px-8 py-3` layout classes but move color to style prop. The component should render correctly in both light and dark mode.
+
+- [ ] **Fix skeleton loader dark mode.** `src/screens/templates/styles/skeletonStyles.ts` uses hardcoded colors: `#DDD8D2` for skeleton lines and `#EDEAE5` for skeleton card backgrounds. These need to be theme-aware. Change the style factory functions to accept theme colors as parameters (or create a `useSkeletonColors()` hook that returns `{ lineColor: colors.border, cardColor: colors.card }` from `useThemeColors()`). Also fix `borderRadius: 16` to use `borderRadius.card` from spacing tokens. Update the consuming component to pass theme colors.
+
+- [ ] **Add dark mode to category colors.** `src/screens/templates/categoryColors.ts` defines 13 category color sets with only light-mode values. Add dark-mode variants by: (1) Change the type to include `light` and `dark` sub-objects: `{ light: { bg, bgSelected, border, text }, dark: { bg, bgSelected, border, text } }`, (2) For each category, create darker variants suitable for dark backgrounds (lower brightness for bg, higher brightness for text/selected), (3) Update all consumers to pick the right variant based on `isDark` from `useThemeColors()`. Consumers to check: search for imports of `categoryColors` or `CATEGORY_COLORS` and update them to use `isDark ? category.dark : category.light`.
+
+- [ ] **Consolidate settings colors with theme.** `src/components/SettingsModal/colors.ts` declares `DARK_COLORS` that duplicates values from `darkColors.ts` (e.g., `#F9FAFB`, `#111827`, `#1F2937`, `#374151`, `#9CA3AF`). Refactor to import from the theme: (1) Import `darkColors` and `lightColors` from `src/theme/darkColors.ts`, (2) Replace `DARK_COLORS` object to derive values from `darkColors` instead of re-declaring, (3) Replace `DEFAULT_COLORS` to derive from `lightColors`, (4) Keep `HIGH_CONTRAST_COLORS` as-is for now (will be centralized in Phase 06). Verify settings modal still renders correctly in both modes.
+
+- [ ] **Fix useEmptyStateColors incomplete migration.** In `src/features/habits/components/HabitsEmptyStateMinimal/useEmptyStateColors.ts`, replace hardcoded light-mode fallbacks with proper theme tokens. The pattern `isDark ? colors.X : '#hardcoded'` should become just `colors.X` since lightColors already defines these values. Specific fixes: (1) `heroIconBackground`: change `isDark ? colors.primary[100] : '#D1FAE5'` to `colors.primary[100]`, (2) `inputBackground`: change `isDark ? colors.card : '#ffffff'` to `colors.card`, (3) `inputBorder`: change `isDark ? colors.border : '#E7E5E4'` to `colors.border`, (4) `inputBorderFocused`: change `isDark ? colors.primary[400] : '#3B82F6'` to `colors.primary[400]`, (5) `inputPlaceholder`: change `isDark ? colors.gray[500] : '#A8A29E'` to `colors.gray[500]`, (6) `chipBackground`: change to `colors.card`, (7) `chipBorder`: change to `colors.border`, (8) `chipText`: change to `colors.text.primary`. Keep intentional dark/light divergences (like `chipTextSelected: '#ffffff'` which is always white) and keep `isDark` boolean export. Verify the empty state renders correctly in both modes.
+
+- [ ] **Fix onboarding screen hardcoded colors.** In `src/screens/onboarding/OnboardingScreen.styles.ts`, replace: (1) Container `backgroundColor: '#FAF8F5'` with `colors.background` (pass as parameter or use hook), (2) Secondary text `#6B7280` with `colors.text.secondary`, (3) `paddingBottom: 60` with `spacing['3xl']` (64). Also fix `src/screens/onboarding/OnboardingScreen.tsx` inline styles at lines 340 and 360 to use theme colors instead of `#000` shadows (already covered in Phase 01 shadow task, but verify colors are theme-aware too).
+
+- [ ] **Fix template preview YouTube colors.** In `src/screens/templates/styles/previewStyles.ts`: the YouTube-specific colors (`#DC2626` red background, `#FEF2F2` light red, `#FECACA` red border) are brand colors that should remain red in both modes, but need dark-mode appropriate variants. Create dark variants: `youtubeIconWrapper: isDark ? '#7f1d1d' : '#DC2626'`, `youtubeLink bg: isDark ? '#451a1a' : '#FEF2F2'`, `youtubeLink border: isDark ? '#7f1d1d' : '#FECACA'`. Also fix `previewScienceBox borderColor: '#A7F3D0'` to use `colors.primary[300]`.

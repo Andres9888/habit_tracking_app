@@ -21,14 +21,14 @@ export function SearchBar({
   placeholder = 'Search for habits...',
   value,
 }: SearchBarProps) {
-  const { colors, isDark } = useThemeColors();
+  const { colors } = useThemeColors();
   const placeholderColor = colors.text.tertiary;
 
   return (
     <View
       style={[
         styles.searchBar,
-        isDark && { backgroundColor: colors.card, borderColor: colors.border },
+        { backgroundColor: colors.card, borderColor: colors.border },
       ]}
     >
       <Search color={placeholderColor} size={18} strokeWidth={2.25} />

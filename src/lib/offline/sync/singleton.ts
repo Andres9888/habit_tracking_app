@@ -22,9 +22,13 @@ export function getSyncOrchestrator(
   config?: SyncOrchestratorConfig
 ): SyncOrchestrator {
   if (!instance) {
+    const queueManager = getOfflineQueueManager();
+    const syncManager = getOfflineSyncManager({
+      getPendingCount: () => queueManager.getStats().pendingCount,
+    });
     instance = new SyncOrchestrator(
-      getOfflineQueueManager(),
-      getOfflineSyncManager(),
+      queueManager,
+      syncManager,
       config
     );
   }

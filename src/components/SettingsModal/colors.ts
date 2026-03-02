@@ -1,21 +1,24 @@
+import { darkColors } from '@/theme/darkColors';
 import { colors } from '@/theme/colors';
 
 import type { SettingsColors } from './types';
 
+const highContrastAccent = colors.warning;
+
 export const HIGH_CONTRAST_COLORS: SettingsColors = {
-  accent: '#facc15',
-  background: '#000000',
-  card: '#111111',
-  cardBorder: '#2f2f2f',
-  headerText: '#ffffff',
-  icon: '#facc15',
-  mutedText: '#facc15',
-  versionText: '#facc15',
+  accent: highContrastAccent,
+  background: darkColors.background,
+  card: darkColors.card,
+  cardBorder: darkColors.border,
+  headerText: darkColors.text.primary,
+  icon: highContrastAccent,
+  mutedText: highContrastAccent,
+  versionText: highContrastAccent,
 };
 
 export const DEFAULT_COLORS: SettingsColors = {
   accent: colors.text.primary,
-  background: colors.gray[50],
+  background: colors.light.background,
   card: colors.light.card,
   cardBorder: colors.gray[100],
   headerText: colors.text.primary,
@@ -25,14 +28,14 @@ export const DEFAULT_COLORS: SettingsColors = {
 };
 
 export const DARK_COLORS: SettingsColors = {
-  accent: '#F9FAFB',
-  background: '#111827',
-  card: '#1F2937',
-  cardBorder: '#374151',
-  headerText: '#F9FAFB',
-  icon: '#F9FAFB',
-  mutedText: '#9CA3AF',
-  versionText: '#9CA3AF',
+  accent: darkColors.text.primary,
+  background: darkColors.background,
+  card: darkColors.card,
+  cardBorder: darkColors.cardBorder,
+  headerText: darkColors.text.primary,
+  icon: darkColors.text.primary,
+  mutedText: darkColors.text.secondary,
+  versionText: darkColors.text.secondary,
 };
 
 export function getSettingsColors(

@@ -34,6 +34,7 @@ function SettingsModalContent({
   onToggleStreakReminders = () => {},
   onChangeStreakReminderTime = () => {},
   onPremiumUpsell,
+  onExportHabitsData = () => {},
   archivedHabitsCount = 0,
   settingsDocument,
 }: SettingsModalProps) {
@@ -117,6 +118,7 @@ function SettingsModalContent({
               onChangeShowGradientFill={setShowGradientFill}
               onChangeStreakReminderTime={onChangeStreakReminderTime}
               onOpenArchivedHabits={() => setView('archived')}
+              onExportHabitsData={onExportHabitsData}
               onOpenSortPicker={handleOpenSortSheet}
               onPremiumUpsell={onPremiumUpsell}
               onToggleStreakReminders={onToggleStreakReminders}

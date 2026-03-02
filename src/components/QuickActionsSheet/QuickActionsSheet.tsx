@@ -5,7 +5,7 @@
  */
 
 import React, { useCallback } from 'react';
-import { Pressable, Modal, Dimensions } from 'react-native';
+import { Pressable, Modal, Dimensions, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
@@ -116,30 +116,32 @@ export const QuickActionsSheet = ({
       </Animated.View>
 
       <GestureDetector gesture={panGesture}>
-        <Animated.View
-          className='absolute bottom-0 left-0 right-0 rounded-t-3xl shadow-xl'
-          entering={SlideInDown.springify().damping(18).stiffness(150)}
-          exiting={SlideOutDown.springify().damping(20).stiffness(200)}
-          style={[{ paddingBottom: insets.bottom + 16, backgroundColor: colors.surface }, sheetAnimatedStyle]}
-        >
-          <SheetHeader
-            habitIcon={habit.icon}
-            habitName={habit.name}
-            onClose={onClose}
-          />
-          <ActionsList
-            completed={habit.completed ?? false}
-            onComplete={() => handleAction(onComplete)}
-            onDelete={() => handleAction(onDelete)}
-            onEdit={() => handleAction(onEdit)}
-            onMentalBoost={() => handleAction(onMentalBoost)}
-            onPause={() => handleAction(onPause)}
-            onViewCalendar={() => handleAction(onViewCalendar)}
-            onViewDetails={
-              onViewDetails ? () => handleAction(onViewDetails) : undefined
-            }
-          />
-        </Animated.View>
+        <View collapsable={false}>
+          <Animated.View
+            className='absolute bottom-0 left-0 right-0 rounded-t-3xl shadow-xl'
+            entering={SlideInDown.springify().damping(18).stiffness(150)}
+            exiting={SlideOutDown.springify().damping(20).stiffness(200)}
+            style={[{ paddingBottom: insets.bottom + 16, backgroundColor: colors.surface }, sheetAnimatedStyle]}
+          >
+            <SheetHeader
+              habitIcon={habit.icon}
+              habitName={habit.name}
+              onClose={onClose}
+            />
+            <ActionsList
+              completed={habit.completed ?? false}
+              onComplete={() => handleAction(onComplete)}
+              onDelete={() => handleAction(onDelete)}
+              onEdit={() => handleAction(onEdit)}
+              onMentalBoost={() => handleAction(onMentalBoost)}
+              onPause={() => handleAction(onPause)}
+              onViewCalendar={() => handleAction(onViewCalendar)}
+              onViewDetails={
+                onViewDetails ? () => handleAction(onViewDetails) : undefined
+              }
+            />
+          </Animated.View>
+        </View>
       </GestureDetector>
     </Modal>
   );

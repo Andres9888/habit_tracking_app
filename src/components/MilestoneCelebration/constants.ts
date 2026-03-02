@@ -5,6 +5,7 @@
 import { Dimensions } from 'react-native';
 import { colors } from '../../theme/colors';
 import { milestoneColors } from '../../theme/milestone-colors';
+import { springs } from '@/theme/animations';
 
 export const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } =
   Dimensions.get('window');
@@ -23,10 +24,10 @@ export const CONFETTI_COLORS = [
 
 /** Animation timing constants */
 export const ANIMATION_TIMING = {
-  BADGE_BOUNCE_DAMPING: 10,
-  BADGE_BOUNCE_STIFFNESS: 100,
-  BADGE_SETTLE_DAMPING: 15,
-  BADGE_SETTLE_STIFFNESS: 150,
+  BADGE_BOUNCE_DAMPING: springs.bouncy.damping,
+  BADGE_BOUNCE_STIFFNESS: springs.bouncy.stiffness,
+  BADGE_SETTLE_DAMPING: springs.standard.damping,
+  BADGE_SETTLE_STIFFNESS: springs.standard.stiffness,
   CONFETTI_DELAY: 200,
   CONTINUE_BUTTON_DELAY: 1000,
   GLOW_DURATION: 400,

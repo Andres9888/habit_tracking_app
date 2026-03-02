@@ -1,38 +1,50 @@
 import { StyleSheet } from 'react-native';
-import { borderRadius, shadows } from '../../../../theme/spacing';
-import { fontFamilies } from '../../../../theme/typography';
+import { shadows } from '../../../../theme/spacing';
 
-export const RING_SIZE = 60;
-export const STROKE_WIDTH = 3;
+export const RING_SIZE = 64;
+export const STROKE_WIDTH = 4;
 export const RADIUS = (RING_SIZE - STROKE_WIDTH) / 2;
 export const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
+export const FAB_SIZE = 48;
+
+export const FAB_BORDER_LIGHT = 'rgba(245,241,237,0.9)';
+export const FAB_BORDER_DARK = 'rgba(17,24,39,0.9)';
+
+export const GLOW_SHADOW_BASE = {
+  shadowOffset: { width: 0, height: 0 },
+  shadowOpacity: 0.5,
+  shadowRadius: 8,
+  elevation: 6,
+};
+
+export const DARK_FAB_SHADOW = {
+  shadowColor: '#059669',
+  shadowOffset: { width: 0, height: 4 },
+  shadowOpacity: 0.25,
+  shadowRadius: 20,
+};
 
 export const fabRingStyles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    marginTop: -20,
-    overflow: 'visible',
+    marginTop: -18,
   },
   fabButton: {
     alignItems: 'center',
-    borderRadius: borderRadius.large,
-    borderWidth: 3,
-    height: 52,
+    borderRadius: FAB_SIZE / 2,
+    borderWidth: 2,
+    height: FAB_SIZE,
     justifyContent: 'center',
-    width: 52,
+    width: FAB_SIZE,
     ...shadows.floatingActionButton,
+  },
+  iconAbsolute: {
+    position: 'absolute' as const,
   },
   iconContainer: {
     height: 24,
     justifyContent: 'center',
     width: 24,
-  },
-  progressLabel: {
-    fontFamily: fontFamilies.primary.text,
-    fontSize: 12,
-    fontWeight: '600',
-    marginTop: 2,
-    textAlign: 'center' as const,
   },
   ringOverlay: {
     ...StyleSheet.absoluteFillObject,

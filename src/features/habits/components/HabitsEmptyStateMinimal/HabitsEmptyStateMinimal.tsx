@@ -6,7 +6,7 @@
  */
 
 import { useEffect, useRef } from 'react';
-import { Platform, ScrollView, TextInput } from 'react-native';
+import { Platform, ScrollView, TextInput, useWindowDimensions } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import Animated from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -31,6 +31,7 @@ export function HabitsEmptyStateMinimal({
   onSuccessTransitionComplete,
 }: HabitsEmptyStateMinimalProps) {
   const inputRef = useRef<TextInput>(null);
+  const { height: windowHeight } = useWindowDimensions();
   const { isKeyboardVisible } = useKeyboardVisible();
   const { isDark } = useThemeColors();
   const insets = useSafeAreaInsets();
@@ -76,7 +77,7 @@ export function HabitsEmptyStateMinimal({
           : ['#FAFAF9', '#F0FDF4', '#ECFDF5', '#F0FDF4', '#FAFAF9']
       }
       locations={[0, 0.25, 0.5, 0.75, 1]}
-      style={{ flex: 1, minHeight: '100%', width: '100%' }}
+      style={{ flex: 1, minHeight: windowHeight, width: '100%' }}
     >
       <ScrollView
         bounces={false}

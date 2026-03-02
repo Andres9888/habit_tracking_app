@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { Modal as RNModal, View } from 'react-native';
+import { Modal as RNModal, StyleSheet, View } from 'react-native';
 import type { ModalProps } from './Modal.types';
 import { styles } from './Modal.styles';
 import { useReduceMotion } from './useReduceMotion';
@@ -22,6 +22,7 @@ export function Modal({
   disableBackdropClose = false,
   disableGestureClose = false,
   backdropOpacity = 0.5,
+  inline = false,
   style,
   respectReduceMotion = true,
   skipAnimation = false,
@@ -43,6 +44,61 @@ export function Modal({
     translateY: animationValues.translateY,
     variant,
   });
+  const inlineAnimatedStyles = inline
+    ? {
+        backdropStyle: { opacity: backdropOpacity },
+        bottomSheetStyle: { transform: [{ translateY: 0 }] },
+        centerAlertStyle: {
+          opacity: 1,
+          transform: [{ scale: 1 }],
+        },
+        fullScreenStyle: {
+          opacity: 1,
+          transform: [{ translateY: 0 }, { scale: 1 }],
+        },
+      }
+    : animatedStyles;
+  const resolvedAnimatedStyles = inline ? inlineAnimatedStyles : animatedStyles;
+
+  const modalBody = (
+    <>
+      <ModalBackdrop
+        backdropStyle={resolvedAnimatedStyles.backdropStyle}
+        disableBackdropClose={disableBackdropClose || inline}
+        onClose={onClose}
+      />
+      <ModalContent
+        animatedStyles={resolvedAnimatedStyles}
+        customStyle={style}
+        panGestureBottomSheet={panGestureBottomSheet}
+        panGestureFullScreen={panGestureFullScreen}
+        variant={variant}
+      >
+        {children}
+      </ModalContent>
+    </>
+  );
+
+  if (!visible) return null;
+
+  if (inline) {
+    return (
+      <View
+        pointerEvents='box-none'
+        style={[StyleSheet.absoluteFill, { elevation: 9999, zIndex: 9999 }]}
+      >
+        <View
+          style={[
+            styles.container,
+            variant === 'fullScreen' && styles.containerFullScreen,
+            variant === 'centerAlert' && styles.containerCenterAlert,
+          ]}
+        >
+          {modalBody}
+        </View>
+      </View>
+    );
+  }
 
   return (
     <RNModal
@@ -60,20 +116,7 @@ export function Modal({
           variant === 'centerAlert' && styles.containerCenterAlert,
         ]}
       >
-        <ModalBackdrop
-          backdropStyle={animatedStyles.backdropStyle}
-          disableBackdropClose={disableBackdropClose}
-          onClose={onClose}
-        />
-        <ModalContent
-          animatedStyles={animatedStyles}
-          customStyle={style}
-          panGestureBottomSheet={panGestureBottomSheet}
-          panGestureFullScreen={panGestureFullScreen}
-          variant={variant}
-        >
-          {children}
-        </ModalContent>
+        {modalBody}
       </View>
     </RNModal>
   );

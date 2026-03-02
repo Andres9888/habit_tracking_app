@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, ActivityIndicator, type TextStyle } from 'react-native';
-import { useAppTheme } from '../../theme';
+import baseTheme, { useAppTheme } from '../../theme';
 import { styles } from './styles';
 import type { ButtonVariant, VariantStyles } from './types';
 
@@ -27,14 +27,29 @@ export function ButtonContent({
   textStyle,
 }: ButtonContentProps) {
   const theme = useAppTheme();
+  const safeTheme = baseTheme.custom;
+  const mergedColors = {
+    ...safeTheme.colors,
+    ...theme?.custom?.colors,
+  };
+  const mergedSpacing = {
+    ...safeTheme.spacing,
+    ...theme?.custom?.spacing,
+  };
+  const fallbackPrimary = baseTheme.custom.colors.primary?.[500] ?? '#10B981';
+  const fallbackInverseText = baseTheme.custom.colors.text?.inverse ?? '#ffffff';
+  const mergedTypography = {
+    ...safeTheme.typography,
+    ...theme?.custom?.typography,
+  };
 
   if (loading) {
     return (
       <ActivityIndicator
         color={
           variant === 'primary'
-            ? theme.custom.colors.text.inverse
-            : theme.custom.colors.primary[500]
+            ? mergedColors.text?.inverse ?? fallbackInverseText
+            : mergedColors.primary?.[500] ?? fallbackPrimary
         }
         size='small'
       />
@@ -48,14 +63,14 @@ export function ButtonContent({
   return (
     <View style={styles.content}>
       {icon && iconPosition === 'left' && (
-        <View style={{ marginRight: theme.custom.spacing.sm }}>{icon}</View>
+        <View style={{ marginRight: mergedSpacing.sm ?? 8 }}>{icon}</View>
       )}
 
       {typeof children === 'string' ? (
         <Text
           maxFontSizeMultiplier={2}
           style={[
-            theme.custom.typography.button,
+            mergedTypography.button ?? baseTheme.custom.typography.button,
             variantStyles.text,
             textStyle,
           ]}
@@ -67,7 +82,7 @@ export function ButtonContent({
       )}
 
       {icon && iconPosition === 'right' && (
-        <View style={{ marginLeft: theme.custom.spacing.sm }}>{icon}</View>
+        <View style={{ marginLeft: mergedSpacing.sm ?? 8 }}>{icon}</View>
       )}
     </View>
   );

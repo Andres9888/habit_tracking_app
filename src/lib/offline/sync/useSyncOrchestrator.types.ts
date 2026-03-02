@@ -28,6 +28,8 @@ export interface UseSyncOrchestratorReturn {
   isOnline: boolean;
   /** Whether there are pending operations to sync */
   hasPendingOperations: boolean;
+  /** Number of pending operations */
+  pendingOperationCount: number;
   /** Manually trigger a sync */
   triggerSync: (
     onProgress?: SyncProgressCallback

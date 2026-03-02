@@ -113,3 +113,31 @@ describe('useToastButtonAnimation uses springs.button', () => {
     expect(source).not.toContain('SPRING_CONFIG');
   });
 });
+
+describe('EmojiChip uses canonical premium spring for press-out', () => {
+  const source = readSource(
+    'components/CreateHabitModal/components/EmojiPicker/EmojiChip.tsx'
+  );
+
+  it('imports springs from @/theme/animations', () => {
+    expect(source).toMatch(
+      /import\s+\{[^}]*springs[^}]*\}\s+from\s+['"]@\/theme\/animations['"]/
+    );
+  });
+
+  it('uses springs.standard in handlePressOut spring settle', () => {
+    expect(source).toContain('withSpring(1, springs.standard)');
+  });
+
+  it('preserves 1 → 1.08 → 1 press timing pattern', () => {
+    expect(source).toContain('withSequence');
+    expect(source).toContain('withTiming(1.08, { duration: 100 })');
+    expect(source).toContain('withSpring(1, springs.standard)');
+  });
+
+  it('does not have hardcoded spring payload objects', () => {
+    expect(source).not.toMatch(
+      /\{\s*damping:\s*\d+,\s*stiffness:\s*\d+\s*\}/
+    );
+  });
+});

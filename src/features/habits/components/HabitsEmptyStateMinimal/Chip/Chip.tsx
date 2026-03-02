@@ -6,7 +6,7 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import { useHapticFeedback } from '../../../../../hooks/useHapticFeedback';
-import { fontFamilies } from '@/theme/typography';
+import { fontFamilies, fontWeights } from '@/theme/typography';
 import { BORDER_RADIUS } from '../constants';
 import type { SuggestionChip } from '../types';
 import { useEmptyStateColors } from '../useEmptyStateColors';
@@ -104,7 +104,7 @@ export function Chip({ chip, isSelected, onPress, staggerDelay }: ChipProps) {
           {
             fontFamily: fontFamilies.primary.text,
             fontSize: 13,
-            fontWeight: '600',
+            fontWeight: fontWeights.semibold,
           },
         ]}
       >

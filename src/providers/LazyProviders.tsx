@@ -2,14 +2,41 @@
  * LazyProviders
  *
  * Non-critical providers loaded after the initial paint to improve startup time.
- * Uses require() to defer module evaluation until the component mounts.
+ * Currently imports providers eagerly so all module contracts are explicit.
  */
 
 import type { PropsWithChildren } from 'react';
 import { useState, useEffect } from 'react';
+import { NetworkStatusProvider } from '../contexts/NetworkStatusContext/NetworkStatusProvider';
+import { OfflineProvider } from '../providers/OfflineProvider/OfflineProvider';
+import { PurchasesProvider } from '../components/providers/PurchasesProvider';
+import { SyncStatusProvider } from '../contexts/SyncStatusContext/SyncStatusProvider';
 import { StreakMilestoneProvider } from '../components/StreakMilestoneCelebration';
 
 export function LazyProviders({ children }: PropsWithChildren) {
+  if (
+    typeof NetworkStatusProvider !== 'function' ||
+    typeof OfflineProvider !== 'function' ||
+    typeof SyncStatusProvider !== 'function' ||
+    typeof PurchasesProvider !== 'function' ||
+    typeof StreakMilestoneProvider !== 'function'
+  ) {
+    if (__DEV__) {
+      console.error(
+        '[LazyProviders] One or more providers failed to load.',
+        {
+          NetworkStatusProvider: typeof NetworkStatusProvider,
+          OfflineProvider: typeof OfflineProvider,
+          SyncStatusProvider: typeof SyncStatusProvider,
+          PurchasesProvider: typeof PurchasesProvider,
+          StreakMilestoneProvider: typeof StreakMilestoneProvider,
+        }
+      );
+    }
+
+    return <>{children}</>;
+  }
+
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -20,15 +47,6 @@ export function LazyProviders({ children }: PropsWithChildren) {
   if (!mounted) {
     return <>{children}</>;
   }
-
-  /* eslint-disable @typescript-eslint/no-require-imports */
-  const {
-    PurchasesProvider,
-  } = require('../components/providers/PurchasesProvider');
-  const { NetworkStatusProvider } = require('../contexts/NetworkStatusContext');
-  const { SyncStatusProvider } = require('../contexts/SyncStatusContext');
-  const { OfflineProvider } = require('../providers/OfflineProvider');
-  /* eslint-enable @typescript-eslint/no-require-imports */
 
   return (
     <NetworkStatusProvider>

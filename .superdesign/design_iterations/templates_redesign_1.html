@@ -1,0 +1,1178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Templates Page Redesign</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    /* ═══ RESET & BASE ═══ */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    html { font-size: 16px !important; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+      background: #0F1117 !important;
+      color: #F0F0F5 !important;
+      overflow-x: hidden !important;
+      -webkit-font-smoothing: antialiased;
+    }
+    h1, h2, h3, h4, h5, h6, p, span, a, button { font-family: 'Inter', -apple-system, sans-serif !important; }
+    button { border: none; background: none; cursor: pointer; font-family: inherit; }
+    input { font-family: inherit; }
+
+    /* ═══ PHONE FRAME ═══ */
+    .phone-frame {
+      width: 393px;
+      height: 852px;
+      margin: 30px auto;
+      background: #0F1117;
+      border-radius: 44px;
+      border: 3px solid #2A2D3A;
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 25px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.05) inset;
+    }
+    .phone-notch {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 126px;
+      height: 34px;
+      background: #0F1117;
+      border-radius: 0 0 20px 20px;
+      z-index: 100;
+    }
+    .status-bar {
+      height: 54px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      padding: 0 28px 6px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #F0F0F5;
+    }
+    .status-bar-right { display: flex; gap: 6px; align-items: center; font-size: 12px; }
+
+    /* ═══ SCREEN CONTAINER ═══ */
+    .screen {
+      height: calc(100% - 54px);
+      overflow-y: auto;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+    }
+    .screen::-webkit-scrollbar { display: none; }
+
+    /* ═══ HEADER ═══ */
+    .header {
+      padding: 8px 20px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      animation: fadeSlideDown 300ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+    .header-left { display: flex; align-items: center; gap: 10px; }
+    .header-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: rgba(16, 185, 129, 0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+    .header-title {
+      font-size: 22px !important;
+      font-weight: 700 !important;
+      letter-spacing: -0.3px;
+    }
+    .close-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #9CA3AF;
+      transition: all 150ms ease;
+    }
+    .close-btn:active { transform: scale(0.9); background: rgba(255,255,255,0.12); }
+
+    /* ═══ SEARCH BAR ═══ */
+    .search-container {
+      padding: 12px 20px 4px;
+      animation: fadeSlideDown 350ms cubic-bezier(0.16, 1, 0.3, 1) 50ms both;
+    }
+    .search-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 14px;
+      background: #1C1F2E;
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 14px;
+      transition: all 200ms ease;
+    }
+    .search-bar:focus-within {
+      border-color: rgba(16, 185, 129, 0.3);
+      background: #1E2233;
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.08);
+    }
+    .search-bar input {
+      flex: 1;
+      background: none;
+      border: none;
+      color: #F0F0F5;
+      font-size: 15px;
+      outline: none;
+    }
+    .search-bar input::placeholder { color: #6B7280; }
+    .search-icon { color: #6B7280; flex-shrink: 0; }
+
+    /* ═══ SECTION HEADERS ═══ */
+    .section-header {
+      padding: 20px 20px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .section-title {
+      font-size: 17px !important;
+      font-weight: 700 !important;
+      color: #F0F0F5;
+      letter-spacing: -0.2px;
+    }
+    .section-action {
+      font-size: 13px;
+      color: #34D399;
+      font-weight: 600;
+      padding: 4px 0;
+    }
+    .section-action:active { opacity: 0.7; }
+
+    /* ═══ POPULAR CAROUSEL ═══ */
+    .popular-section {
+      animation: fadeSlideUp 400ms cubic-bezier(0.16, 1, 0.3, 1) 100ms both;
+    }
+    .popular-scroll {
+      display: flex;
+      gap: 12px;
+      padding: 0 20px 4px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+    }
+    .popular-scroll::-webkit-scrollbar { display: none; }
+    .popular-card {
+      flex-shrink: 0;
+      width: 155px;
+      padding: 16px 14px 14px;
+      background: #1C1F2E;
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 16px;
+      scroll-snap-align: start;
+      position: relative;
+      overflow: hidden;
+      transition: transform 150ms ease, box-shadow 150ms ease;
+    }
+    .popular-card:active { transform: scale(0.97); }
+    .popular-card-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      margin-bottom: 10px;
+    }
+    .popular-card-name {
+      font-size: 14px !important;
+      font-weight: 600 !important;
+      color: #F0F0F5;
+      margin-bottom: 3px;
+      line-height: 1.3;
+    }
+    .popular-card-meta {
+      font-size: 11px;
+      color: #6B7280;
+      margin-bottom: 10px;
+    }
+    .popular-card-add {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      width: 100%;
+      padding: 7px 0;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 600;
+      transition: all 150ms ease;
+    }
+    .popular-card-add:active { transform: scale(0.95); }
+    .popular-card-add.added { pointer-events: none; }
+
+    /* ═══ RESEARCH BADGE ═══ */
+    .research-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      font-size: 10px;
+      font-weight: 600;
+      color: #34D399;
+      background: rgba(16, 185, 129, 0.1);
+      padding: 2px 7px;
+      border-radius: 6px;
+      margin-bottom: 8px;
+    }
+
+    /* ═══ CATEGORY GRID ═══ */
+    .category-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      padding: 0 20px 20px;
+    }
+    .category-card {
+      padding: 16px 14px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.06);
+      position: relative;
+      overflow: hidden;
+      transition: transform 150ms ease, box-shadow 200ms ease;
+    }
+    .category-card:active { transform: scale(0.97); }
+    .category-card-icon { font-size: 28px; margin-bottom: 10px; display: block; }
+    .category-card-name { font-size: 14px !important; font-weight: 600 !important; color: #F0F0F5; margin-bottom: 3px; }
+    .category-card-count { font-size: 12px; color: #9CA3AF; }
+    .category-card-arrow { position: absolute; top: 14px; right: 12px; color: #6B7280; opacity: 0.5; }
+
+    /* ═══ CATEGORY DETAIL VIEW ═══ */
+    .detail-view {
+      position: absolute;
+      top: 54px;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: #0F1117;
+      z-index: 50;
+      transform: translateX(100%);
+      transition: transform 350ms cubic-bezier(0.16, 1, 0.3, 1);
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .detail-view.open { transform: translateX(0); }
+    .detail-view::-webkit-scrollbar { display: none; }
+    .detail-header {
+      padding: 8px 20px 0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      position: sticky;
+      top: 0;
+      background: #0F1117;
+      z-index: 10;
+      padding-bottom: 12px;
+    }
+    .back-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #F0F0F5;
+      transition: all 150ms ease;
+      flex-shrink: 0;
+    }
+    .back-btn:active { transform: scale(0.9); }
+    .detail-header-info { flex: 1; }
+    .detail-header-title {
+      font-size: 18px !important;
+      font-weight: 700 !important;
+      color: #F0F0F5;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .detail-header-sub { font-size: 12px; color: #9CA3AF; margin-top: 1px; }
+    .sort-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #9CA3AF;
+    }
+
+    /* ═══ TEMPLATE LIST CARDS ═══ */
+    .template-list { padding: 8px 20px 30px; display: flex; flex-direction: column; gap: 10px; }
+    .template-card {
+      background: #1C1F2E;
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 16px;
+      padding: 16px;
+      position: relative;
+      overflow: hidden;
+      transition: transform 150ms ease;
+    }
+    .template-card:active { transform: scale(0.98); }
+    .template-card-top { display: flex; gap: 12px; margin-bottom: 10px; }
+    .template-card-emoji {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+    .template-card-info { flex: 1; min-width: 0; }
+    .template-card-name { font-size: 15px !important; font-weight: 600 !important; color: #F0F0F5; margin-bottom: 2px; }
+    .template-card-desc {
+      font-size: 13px;
+      color: #9CA3AF;
+      line-height: 1.4;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .template-card-bottom { display: flex; align-items: center; justify-content: space-between; margin-top: 4px; }
+    .template-card-tags { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+    .tag {
+      font-size: 11px;
+      font-weight: 500;
+      padding: 3px 8px;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.06);
+      color: #9CA3AF;
+    }
+    .tag.science { background: rgba(16, 185, 129, 0.1); color: #34D399; }
+    .template-card-actions { display: flex; gap: 8px; align-items: center; }
+    .preview-btn {
+      padding: 7px 12px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #9CA3AF;
+      background: rgba(255,255,255,0.06);
+      transition: all 150ms ease;
+    }
+    .preview-btn:active { transform: scale(0.95); background: rgba(255,255,255,0.1); }
+    .add-btn {
+      padding: 7px 14px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 150ms ease;
+    }
+    .add-btn:active { transform: scale(0.93); }
+    .add-btn.added { pointer-events: none; }
+
+    /* ═══ PREVIEW MODAL ═══ */
+    .preview-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 80;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 300ms ease;
+    }
+    .preview-overlay.open { pointer-events: all; opacity: 1; }
+    .preview-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(4px);
+    }
+    .preview-sheet {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 88%;
+      background: #161822;
+      border-radius: 24px 24px 0 0;
+      transform: translateY(100%);
+      transition: transform 400ms cubic-bezier(0.34, 1.56, 0.64, 1);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .preview-overlay.open .preview-sheet { transform: translateY(0); }
+    .preview-handle {
+      width: 36px;
+      height: 4px;
+      background: rgba(255,255,255,0.15);
+      border-radius: 2px;
+      margin: 10px auto 0;
+      flex-shrink: 0;
+    }
+    .preview-close {
+      position: absolute;
+      top: 12px;
+      right: 16px;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #9CA3AF;
+      z-index: 5;
+    }
+    .preview-close:active { transform: scale(0.9); }
+    .preview-scroll { flex: 1; overflow-y: auto; padding: 20px 20px 0; }
+    .preview-scroll::-webkit-scrollbar { display: none; }
+    .preview-hero { text-align: center; padding: 10px 0 24px; }
+    .preview-hero-icon {
+      width: 80px;
+      height: 80px;
+      border-radius: 24px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+      margin-bottom: 16px;
+      position: relative;
+    }
+    .preview-hero-name {
+      font-size: 24px !important;
+      font-weight: 700 !important;
+      color: #F0F0F5;
+      margin-bottom: 8px;
+      letter-spacing: -0.3px;
+    }
+    .preview-hero-pills { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; }
+    .preview-pill {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px 10px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 500;
+      background: rgba(255,255,255,0.06);
+      color: #9CA3AF;
+    }
+    .preview-section { margin-bottom: 20px; }
+    .preview-section-title {
+      font-size: 13px !important;
+      font-weight: 700 !important;
+      color: #6B7280;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+    .preview-section-text { font-size: 15px; color: #D1D5DB; line-height: 1.6; }
+    .science-card {
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px solid rgba(16, 185, 129, 0.15);
+      border-radius: 14px;
+      padding: 14px 16px;
+    }
+    .science-card-header {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #34D399;
+    }
+    .science-card-text { font-size: 13px; color: #9CA3AF; line-height: 1.5; font-style: italic; }
+    .science-card-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #34D399;
+      text-decoration: none;
+    }
+    .tips-list { display: flex; flex-direction: column; gap: 8px; }
+    .tip-item { display: flex; gap: 10px; align-items: flex-start; font-size: 14px; color: #D1D5DB; line-height: 1.5; }
+    .tip-bullet {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #34D399;
+      margin-top: 7px;
+      flex-shrink: 0;
+    }
+    .preview-footer {
+      padding: 12px 20px 28px;
+      display: flex;
+      gap: 10px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      flex-shrink: 0;
+    }
+    .btn-customize {
+      flex: 1;
+      padding: 14px;
+      border-radius: 14px;
+      font-size: 15px;
+      font-weight: 600;
+      color: #F0F0F5;
+      background: rgba(255,255,255,0.08);
+      text-align: center;
+      transition: all 150ms ease;
+    }
+    .btn-customize:active { transform: scale(0.97); background: rgba(255,255,255,0.12); }
+    .btn-quick-add {
+      flex: 1.2;
+      padding: 14px;
+      border-radius: 14px;
+      font-size: 15px;
+      font-weight: 600;
+      color: #fff;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 150ms ease;
+    }
+    .btn-quick-add:active { transform: scale(0.97); }
+    .btn-quick-add.added { pointer-events: none; }
+
+    /* ═══ SUCCESS TOAST ═══ */
+    .success-toast {
+      position: absolute;
+      bottom: 40px;
+      left: 20px;
+      right: 20px;
+      background: #1C2D22;
+      border: 1px solid rgba(16, 185, 129, 0.2);
+      border-radius: 14px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      z-index: 90;
+      transform: translateY(120%);
+      transition: transform 400ms cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+    }
+    .success-toast.show { transform: translateY(0); }
+    .toast-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: rgba(16, 185, 129, 0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+    .toast-text { flex: 1; }
+    .toast-title { font-size: 14px !important; font-weight: 600 !important; color: #34D399; }
+    .toast-sub { font-size: 12px; color: #9CA3AF; margin-top: 1px; }
+    .toast-check { color: #34D399; }
+
+    /* ═══ CONFETTI ═══ */
+    .confetti-container { position: absolute; inset: 0; pointer-events: none; z-index: 95; overflow: hidden; }
+    .confetti-piece { position: absolute; width: 8px; height: 8px; border-radius: 2px; opacity: 0; }
+    .confetti-piece.burst {
+      animation: confettiBurst 800ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    /* ═══ ANIMATIONS ═══ */
+    @keyframes fadeSlideDown {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes confettiBurst {
+      0% { opacity: 1; transform: translate(0, 0) rotate(0deg) scale(1); }
+      100% { opacity: 0; transform: translate(var(--tx), var(--ty)) rotate(var(--tr)) scale(0.5); }
+    }
+    @keyframes staggerIn {
+      from { opacity: 0; transform: translateY(15px) scale(0.95); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+  </style>
+</head>
+<body>
+  <div class="phone-frame">
+    <div class="phone-notch"></div>
+    <div class="status-bar">
+      <span>9:41</span>
+      <div class="status-bar-right">
+        <i data-lucide="signal" style="width:14px;height:14px"></i>
+        <i data-lucide="wifi" style="width:14px;height:14px"></i>
+        <i data-lucide="battery-full" style="width:18px;height:14px"></i>
+      </div>
+    </div>
+
+    <div class="screen" id="mainScreen">
+      <!-- Header -->
+      <div class="header">
+        <div class="header-left">
+          <div class="header-icon">🌿</div>
+          <h1 class="header-title">Templates</h1>
+        </div>
+        <button class="close-btn">
+          <i data-lucide="x" style="width:20px;height:20px"></i>
+        </button>
+      </div>
+
+      <!-- Search -->
+      <div class="search-container">
+        <div class="search-bar">
+          <i data-lucide="search" style="width:18px;height:18px" class="search-icon"></i>
+          <input type="text" placeholder="Search habits..." id="searchInput">
+        </div>
+      </div>
+
+      <!-- Popular Section -->
+      <div class="popular-section">
+        <div class="section-header">
+          <span class="section-title">Popular</span>
+          <button class="section-action">See all</button>
+        </div>
+        <div class="popular-scroll" id="popularScroll"></div>
+      </div>
+
+      <!-- Browse by Category -->
+      <div class="section-header" style="animation: fadeSlideUp 400ms cubic-bezier(0.16,1,0.3,1) 200ms both">
+        <span class="section-title">Browse by Category</span>
+      </div>
+      <div class="category-grid" id="categoryGrid"></div>
+    </div>
+
+    <!-- Category Detail View -->
+    <div class="detail-view" id="detailView">
+      <div class="detail-header" id="detailHeader">
+        <button class="back-btn" onclick="closeCategory()">
+          <i data-lucide="arrow-left" style="width:20px;height:20px"></i>
+        </button>
+        <div class="detail-header-info">
+          <div class="detail-header-title">
+            <span id="detailIcon"></span>
+            <span id="detailName"></span>
+          </div>
+          <div class="detail-header-sub" id="detailSub"></div>
+        </div>
+        <button class="sort-btn">
+          <i data-lucide="arrow-up-down" style="width:16px;height:16px"></i>
+        </button>
+      </div>
+      <div class="template-list" id="templateList"></div>
+    </div>
+
+    <!-- Preview Modal -->
+    <div class="preview-overlay" id="previewOverlay">
+      <div class="preview-backdrop" onclick="closePreview()"></div>
+      <div class="preview-sheet">
+        <div class="preview-handle"></div>
+        <button class="preview-close" onclick="closePreview()">
+          <i data-lucide="x" style="width:16px;height:16px"></i>
+        </button>
+        <div class="preview-scroll" id="previewContent"></div>
+        <div class="preview-footer" id="previewFooter"></div>
+      </div>
+    </div>
+
+    <!-- Success Toast -->
+    <div class="success-toast" id="successToast">
+      <div class="toast-icon" id="toastIcon"></div>
+      <div class="toast-text">
+        <div class="toast-title" id="toastTitle"></div>
+        <div class="toast-sub">Added to your habits</div>
+      </div>
+      <i data-lucide="check-circle-2" class="toast-check" style="width:22px;height:22px"></i>
+    </div>
+
+    <!-- Confetti Container -->
+    <div class="confetti-container" id="confettiContainer"></div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+
+    // ═══ DATA ═══
+    const POPULAR = [
+      { icon: '🌅', name: 'Morning Routine', meta: 'Daily · Productivity', color: '#F59E0B', science: true },
+      { icon: '💪', name: 'Exercise Daily', meta: 'Daily · Health', color: '#10B981', science: true },
+      { icon: '📖', name: 'Read 30 Min', meta: 'Daily · Learning', color: '#8B5CF6', science: false },
+      { icon: '🧘', name: 'Meditate', meta: 'Daily · Mindfulness', color: '#6366F1', science: true },
+      { icon: '💤', name: 'Sleep by 10pm', meta: 'Daily · Sleep', color: '#3B82F6', science: false },
+    ];
+
+    const CATEGORIES = [
+      { id: 'mental_health', icon: '🧠', name: 'Mental Health', color: '#6366F1', count: 12 },
+      { id: 'sleep', icon: '💤', name: 'Sleep', color: '#3B82F6', count: 8 },
+      { id: 'health_fitness', icon: '🏃', name: 'Health & Fitness', color: '#10B981', count: 15 },
+      { id: 'mindfulness', icon: '🧘', name: 'Mindfulness', color: '#8B5CF6', count: 10 },
+      { id: 'huberman', icon: '🔬', name: 'Andrew Huberman', color: '#34D399', count: 8 },
+      { id: 'learning', icon: '📚', name: 'Learning', color: '#A78BFA', count: 6 },
+      { id: 'productivity', icon: '⚡', name: 'Productivity', color: '#3B82F6', count: 11 },
+      { id: 'morning', icon: '☀️', name: 'Morning Routine', color: '#F59E0B', count: 7 },
+      { id: 'breathing', icon: '🌬️', name: 'Breathing', color: '#06B6D4', count: 5 },
+      { id: 'creativity', icon: '🎨', name: 'Creativity', color: '#EC4899', count: 4 },
+      { id: 'financial', icon: '💰', name: 'Financial', color: '#10B981', count: 5 },
+      { id: 'social', icon: '👥', name: 'Social', color: '#F43F5E', count: 4 },
+    ];
+
+    const TEMPLATES = {
+      mental_health: [
+        { icon: '😊', name: 'Gratitude Journal', desc: 'Write 3 things you\'re grateful for each morning. Shifts focus toward positive experiences.', color: '#6366F1', freq: 'Daily', science: true, scienceText: '"Gratitude journaling improves well-being by up to 25%" — Emmons & McCullough, 2003', tips: ['Do it before checking your phone', 'Be specific — "warm coffee" beats "food"', 'Include one person each day'] },
+        { icon: '📓', name: 'Mood Tracking', desc: 'Log your emotional state 3x daily to spot patterns and triggers.', color: '#6366F1', freq: 'Daily', science: true, scienceText: '"Self-monitoring of mood is key to evidence-based CBT" — Beck Institute', tips: ['Rate on a 1-10 scale', 'Note what happened before'] },
+        { icon: '🌿', name: 'Nature Walk', desc: 'Spend 20 minutes walking outdoors in nature to reduce stress.', color: '#6366F1', freq: 'Daily', science: true, scienceText: '"20 minutes in nature significantly reduces cortisol" — Hunter et al., 2019', tips: ['Leave your phone in your pocket', 'Focus on senses'] },
+        { icon: '✍️', name: 'Expressive Writing', desc: 'Write freely about thoughts and feelings for 15 minutes.', color: '#6366F1', freq: '3x/week', science: false, tips: ['Don\'t edit as you go', 'You can destroy it after'] },
+        { icon: '🎵', name: 'Music Therapy', desc: 'Listen to calming music for 15 minutes to regulate emotions.', color: '#6366F1', freq: 'Daily', science: false, tips: ['Create a dedicated playlist', 'Try classical or ambient'] },
+      ],
+      sleep: [
+        { icon: '💤', name: 'Sleep by 10pm', desc: 'Get in bed by 10pm to optimize circadian rhythm and recovery.', color: '#3B82F6', freq: 'Daily', science: true, scienceText: '"Sleep before midnight improves quality and hormone regulation" — Walker, 2017', tips: ['Set a 9:30pm wind-down alarm', 'Dim all lights 1 hour before'] },
+        { icon: '📵', name: 'No Screens Before Bed', desc: 'Put away all screens 60 minutes before bedtime.', color: '#3B82F6', freq: 'Daily', science: true, scienceText: '"Blue light suppresses melatonin by up to 50%" — Harvard Health', tips: ['Switch to a physical book', 'Use Night Shift if needed'] },
+        { icon: '🌡️', name: 'Cool Room Temp', desc: 'Set bedroom to 65-68°F (18-20°C) before sleep.', color: '#3B82F6', freq: 'Daily', science: false, tips: ['Use a fan for white noise', 'Try socks if feet get cold'] },
+      ],
+      health_fitness: [
+        { icon: '💪', name: 'Exercise 30 Min', desc: 'Get at least 30 minutes of moderate physical activity daily.', color: '#10B981', freq: 'Daily', science: true, scienceText: '"150 min/week reduces all-cause mortality by 31%" — WHO Guidelines', tips: ['Morning exercise boosts mood all day', 'Walking counts!'] },
+        { icon: '💧', name: 'Drink 8 Glasses', desc: 'Stay hydrated with at least 8 glasses of water daily.', color: '#10B981', freq: 'Daily', science: false, tips: ['Keep a bottle at your desk', 'Drink upon waking'] },
+        { icon: '🥗', name: 'Eat Vegetables', desc: 'Include 3 servings of vegetables in your daily meals.', color: '#10B981', freq: 'Daily', science: true, scienceText: '"Higher vegetable intake reduces cardiovascular risk 20%" — Aune et al., 2017', tips: ['Prep veggies on Sunday', 'Add spinach to smoothies'] },
+      ],
+      mindfulness: [
+        { icon: '🧘', name: '5-Min Meditation', desc: 'Short guided meditation to reduce anxiety and improve focus.', color: '#8B5CF6', freq: 'Daily', science: true, scienceText: '"5 min daily changes brain structure after 8 weeks" — Lazar et al., 2005', tips: ['Same time each day', 'Use a timer, not an app'] },
+        { icon: '🌸', name: 'Body Scan', desc: 'Progressive relaxation from head to toe to release tension.', color: '#8B5CF6', freq: 'Daily', science: false, tips: ['Do it lying down before sleep', 'Spend 10-15s on each area'] },
+      ],
+    };
+
+    const addedTemplates = new Set();
+    const addedPopular = new Set();
+    let currentPreview = null;
+
+    // ═══ RENDER POPULAR ═══
+    function renderPopular() {
+      const container = document.getElementById('popularScroll');
+      POPULAR.forEach((p, i) => {
+        const card = document.createElement('div');
+        card.className = 'popular-card';
+        card.style.animation = `staggerIn 400ms cubic-bezier(0.16,1,0.3,1) ${150 + i * 60}ms both`;
+        card.dataset.index = i;
+
+        const topBar = document.createElement('div');
+        topBar.style.cssText = `position:absolute;top:0;left:0;right:0;height:3px;background:${p.color};border-radius:16px 16px 0 0`;
+        card.appendChild(topBar);
+
+        const iconDiv = document.createElement('div');
+        iconDiv.className = 'popular-card-icon';
+        iconDiv.style.background = p.color + '18';
+        iconDiv.textContent = p.icon;
+        card.appendChild(iconDiv);
+
+        if (p.science) {
+          const badge = document.createElement('div');
+          badge.className = 'research-badge';
+          badge.textContent = 'Research';
+          card.appendChild(badge);
+        }
+
+        const nameDiv = document.createElement('div');
+        nameDiv.className = 'popular-card-name';
+        nameDiv.textContent = p.name;
+        card.appendChild(nameDiv);
+
+        const metaDiv = document.createElement('div');
+        metaDiv.className = 'popular-card-meta';
+        metaDiv.textContent = p.meta;
+        card.appendChild(metaDiv);
+
+        const addBtn = document.createElement('button');
+        addBtn.className = 'popular-card-add';
+        addBtn.style.background = p.color + '18';
+        addBtn.style.color = p.color;
+        addBtn.textContent = '+ Add';
+        addBtn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          if (addedPopular.has(i)) return;
+          addedPopular.add(i);
+          addBtn.classList.add('added');
+          addBtn.style.background = 'rgba(16,185,129,0.15)';
+          addBtn.style.color = '#34D399';
+          addBtn.textContent = '\u2713 Added';
+          showToast(p.icon, p.name);
+          burstConfetti(p.color);
+        });
+        card.appendChild(addBtn);
+        container.appendChild(card);
+      });
+    }
+
+    // ═══ RENDER CATEGORIES ═══
+    function renderCategories() {
+      const grid = document.getElementById('categoryGrid');
+      CATEGORIES.forEach((cat, i) => {
+        const card = document.createElement('div');
+        card.className = 'category-card';
+        card.style.background = cat.color + '12';
+        card.style.animation = `staggerIn 400ms cubic-bezier(0.16,1,0.3,1) ${260 + i * 60}ms both`;
+        card.addEventListener('click', function() { openCategory(cat.id, cat.icon, cat.name, cat.color); });
+
+        const iconSpan = document.createElement('span');
+        iconSpan.className = 'category-card-icon';
+        iconSpan.textContent = cat.icon;
+        card.appendChild(iconSpan);
+
+        const nameDiv = document.createElement('div');
+        nameDiv.className = 'category-card-name';
+        nameDiv.textContent = cat.name;
+        card.appendChild(nameDiv);
+
+        const countDiv = document.createElement('div');
+        countDiv.className = 'category-card-count';
+        countDiv.textContent = cat.count + ' templates';
+        card.appendChild(countDiv);
+
+        grid.appendChild(card);
+      });
+    }
+
+    // ═══ CATEGORY DETAIL ═══
+    function openCategory(catId, icon, name, color) {
+      const templates = TEMPLATES[catId] || [];
+      const scienceCount = templates.filter(function(t) { return t.science; }).length;
+
+      document.getElementById('detailIcon').textContent = icon;
+      document.getElementById('detailName').textContent = name;
+      document.getElementById('detailSub').textContent = templates.length + ' templates \u00B7 ' + scienceCount + ' research-backed';
+
+      const list = document.getElementById('templateList');
+      list.textContent = '';
+
+      templates.forEach(function(t, i) {
+        const key = catId + '-' + i;
+        const isAdded = addedTemplates.has(key);
+
+        const card = document.createElement('div');
+        card.className = 'template-card';
+        card.style.animation = 'staggerIn 350ms cubic-bezier(0.16,1,0.3,1) ' + (i * 60 + 100) + 'ms both';
+        card.addEventListener('click', function() { openPreview(catId, i); });
+
+        // Top section
+        const top = document.createElement('div');
+        top.className = 'template-card-top';
+
+        const emoji = document.createElement('div');
+        emoji.className = 'template-card-emoji';
+        emoji.style.background = t.color + '15';
+        emoji.textContent = t.icon;
+        top.appendChild(emoji);
+
+        const info = document.createElement('div');
+        info.className = 'template-card-info';
+        const nameEl = document.createElement('div');
+        nameEl.className = 'template-card-name';
+        nameEl.textContent = t.name;
+        info.appendChild(nameEl);
+        const descEl = document.createElement('div');
+        descEl.className = 'template-card-desc';
+        descEl.textContent = t.desc;
+        info.appendChild(descEl);
+        top.appendChild(info);
+        card.appendChild(top);
+
+        // Bottom section
+        const bottom = document.createElement('div');
+        bottom.className = 'template-card-bottom';
+
+        const tags = document.createElement('div');
+        tags.className = 'template-card-tags';
+        if (t.science) {
+          const sciTag = document.createElement('span');
+          sciTag.className = 'tag science';
+          sciTag.textContent = '\uD83D\uDD2C Science';
+          tags.appendChild(sciTag);
+        }
+        const freqTag = document.createElement('span');
+        freqTag.className = 'tag';
+        freqTag.textContent = t.freq;
+        tags.appendChild(freqTag);
+        bottom.appendChild(tags);
+
+        const actions = document.createElement('div');
+        actions.className = 'template-card-actions';
+
+        const prevBtn = document.createElement('button');
+        prevBtn.className = 'preview-btn';
+        prevBtn.textContent = 'Preview';
+        prevBtn.addEventListener('click', function(e) { e.stopPropagation(); openPreview(catId, i); });
+        actions.appendChild(prevBtn);
+
+        const addBtn = document.createElement('button');
+        addBtn.className = 'add-btn' + (isAdded ? ' added' : '');
+        addBtn.id = 'addbtn-' + key;
+        addBtn.style.background = isAdded ? 'rgba(16,185,129,0.15)' : t.color + '18';
+        addBtn.style.color = isAdded ? '#34D399' : t.color;
+        addBtn.textContent = isAdded ? '\u2713 Added' : '+ Add';
+        addBtn.addEventListener('click', function(e) { e.stopPropagation(); addTemplate(catId, i); });
+        actions.appendChild(addBtn);
+
+        bottom.appendChild(actions);
+        card.appendChild(bottom);
+        list.appendChild(card);
+      });
+
+      document.getElementById('detailView').classList.add('open');
+    }
+
+    function closeCategory() {
+      document.getElementById('detailView').classList.remove('open');
+    }
+
+    // ═══ PREVIEW MODAL ═══
+    function openPreview(catId, index) {
+      var t = TEMPLATES[catId][index];
+      currentPreview = { catId: catId, index: index, template: t };
+      var isAdded = addedTemplates.has(catId + '-' + index);
+
+      var content = document.getElementById('previewContent');
+      content.textContent = '';
+
+      // Hero
+      var hero = document.createElement('div');
+      hero.className = 'preview-hero';
+
+      var heroIcon = document.createElement('div');
+      heroIcon.className = 'preview-hero-icon';
+      heroIcon.style.background = t.color + '18';
+      heroIcon.textContent = t.icon;
+      var glow = document.createElement('div');
+      glow.style.cssText = 'position:absolute;inset:-6px;border-radius:28px;background:' + t.color + ';opacity:0.15;filter:blur(16px)';
+      heroIcon.appendChild(glow);
+      hero.appendChild(heroIcon);
+
+      var heroName = document.createElement('div');
+      heroName.className = 'preview-hero-name';
+      heroName.textContent = t.name;
+      hero.appendChild(heroName);
+
+      var pills = document.createElement('div');
+      pills.className = 'preview-hero-pills';
+      var pill1 = document.createElement('span');
+      pill1.className = 'preview-pill';
+      pill1.textContent = '\u23F0 ' + t.freq;
+      pills.appendChild(pill1);
+      var pill2 = document.createElement('span');
+      pill2.className = 'preview-pill';
+      pill2.textContent = '\u23F3 5-10 min';
+      pills.appendChild(pill2);
+      if (t.science) {
+        var pill3 = document.createElement('span');
+        pill3.className = 'preview-pill';
+        pill3.style.color = '#34D399';
+        pill3.style.background = 'rgba(16,185,129,0.1)';
+        pill3.textContent = '\uD83D\uDD2C Research';
+        pills.appendChild(pill3);
+      }
+      hero.appendChild(pills);
+      content.appendChild(hero);
+
+      // About section
+      var aboutSection = document.createElement('div');
+      aboutSection.className = 'preview-section';
+      var aboutTitle = document.createElement('div');
+      aboutTitle.className = 'preview-section-title';
+      aboutTitle.textContent = 'About';
+      aboutSection.appendChild(aboutTitle);
+      var aboutText = document.createElement('div');
+      aboutText.className = 'preview-section-text';
+      aboutText.textContent = t.desc;
+      aboutSection.appendChild(aboutText);
+      content.appendChild(aboutSection);
+
+      // Science section
+      if (t.science && t.scienceText) {
+        var sciSection = document.createElement('div');
+        sciSection.className = 'preview-section';
+        var sciTitle = document.createElement('div');
+        sciTitle.className = 'preview-section-title';
+        sciTitle.textContent = 'Research';
+        sciSection.appendChild(sciTitle);
+
+        var sciCard = document.createElement('div');
+        sciCard.className = 'science-card';
+        var sciHeader = document.createElement('div');
+        sciHeader.className = 'science-card-header';
+        sciHeader.textContent = '\uD83D\uDD2C Science-Backed';
+        sciCard.appendChild(sciHeader);
+        var sciText = document.createElement('div');
+        sciText.className = 'science-card-text';
+        sciText.textContent = t.scienceText;
+        sciCard.appendChild(sciText);
+        var sciLink = document.createElement('a');
+        sciLink.className = 'science-card-link';
+        sciLink.href = '#';
+        sciLink.textContent = '\u2192 View Study';
+        sciCard.appendChild(sciLink);
+        sciSection.appendChild(sciCard);
+        content.appendChild(sciSection);
+      }
+
+      // Tips section
+      if (t.tips && t.tips.length > 0) {
+        var tipsSection = document.createElement('div');
+        tipsSection.className = 'preview-section';
+        var tipsTitle = document.createElement('div');
+        tipsTitle.className = 'preview-section-title';
+        tipsTitle.textContent = 'Tips';
+        tipsSection.appendChild(tipsTitle);
+
+        var tipsList = document.createElement('div');
+        tipsList.className = 'tips-list';
+        t.tips.forEach(function(tip) {
+          var tipItem = document.createElement('div');
+          tipItem.className = 'tip-item';
+          var bullet = document.createElement('div');
+          bullet.className = 'tip-bullet';
+          tipItem.appendChild(bullet);
+          var tipText = document.createElement('span');
+          tipText.textContent = tip;
+          tipItem.appendChild(tipText);
+          tipsList.appendChild(tipItem);
+        });
+        tipsSection.appendChild(tipsList);
+        content.appendChild(tipsSection);
+      }
+
+      // Footer buttons
+      var footer = document.getElementById('previewFooter');
+      footer.textContent = '';
+
+      var custBtn = document.createElement('button');
+      custBtn.className = 'btn-customize';
+      custBtn.textContent = 'Customize';
+      custBtn.addEventListener('click', function() { closePreview(); });
+      footer.appendChild(custBtn);
+
+      var quickBtn = document.createElement('button');
+      quickBtn.className = 'btn-quick-add' + (isAdded ? ' added' : '');
+      quickBtn.id = 'previewAddBtn';
+      quickBtn.style.background = isAdded ? 'rgba(16,185,129,0.2)' : t.color;
+      if (isAdded) quickBtn.style.color = '#34D399';
+      quickBtn.textContent = isAdded ? '\u2713 Added' : '+ Quick Add';
+      quickBtn.addEventListener('click', addFromPreview);
+      footer.appendChild(quickBtn);
+
+      document.getElementById('previewOverlay').classList.add('open');
+    }
+
+    function closePreview() {
+      document.getElementById('previewOverlay').classList.remove('open');
+      currentPreview = null;
+    }
+
+    // ═══ ADD TEMPLATE ═══
+    function addTemplate(catId, index) {
+      var key = catId + '-' + index;
+      if (addedTemplates.has(key)) return;
+      addedTemplates.add(key);
+
+      var t = TEMPLATES[catId][index];
+      var btn = document.getElementById('addbtn-' + key);
+      if (btn) {
+        btn.style.background = 'rgba(16,185,129,0.15)';
+        btn.style.color = '#34D399';
+        btn.textContent = '\u2713 Added';
+        btn.classList.add('added');
+      }
+      showToast(t.icon, t.name);
+      burstConfetti(t.color);
+    }
+
+    function addFromPreview() {
+      if (!currentPreview) return;
+      var catId = currentPreview.catId;
+      var index = currentPreview.index;
+      var t = currentPreview.template;
+      var key = catId + '-' + index;
+      if (addedTemplates.has(key)) return;
+      addedTemplates.add(key);
+
+      var btn = document.getElementById('previewAddBtn');
+      if (btn) {
+        btn.style.background = 'rgba(16,185,129,0.2)';
+        btn.style.color = '#34D399';
+        btn.textContent = '\u2713 Added';
+        btn.classList.add('added');
+      }
+
+      var listBtn = document.getElementById('addbtn-' + key);
+      if (listBtn) {
+        listBtn.style.background = 'rgba(16,185,129,0.15)';
+        listBtn.style.color = '#34D399';
+        listBtn.textContent = '\u2713 Added';
+        listBtn.classList.add('added');
+      }
+
+      showToast(t.icon, t.name);
+      burstConfetti(t.color);
+      setTimeout(closePreview, 800);
+    }
+
+    // ═══ TOAST ═══
+    function showToast(icon, name) {
+      document.getElementById('toastIcon').textContent = icon;
+      document.getElementById('toastTitle').textContent = name;
+      var toast = document.getElementById('successToast');
+      toast.classList.add('show');
+      setTimeout(function() { toast.classList.remove('show'); }, 2500);
+    }
+
+    // ═══ CONFETTI ═══
+    function burstConfetti(color) {
+      var container = document.getElementById('confettiContainer');
+      var colors = [color, '#F59E0B', '#8B5CF6', '#EC4899', '#34D399', '#3B82F6'];
+      for (var i = 0; i < 24; i++) {
+        var piece = document.createElement('div');
+        piece.className = 'confetti-piece';
+        var tx = (Math.random() - 0.5) * 300;
+        var ty = -(Math.random() * 400 + 100);
+        var tr = (Math.random() - 0.5) * 720;
+        piece.style.left = '50%';
+        piece.style.top = '60%';
+        piece.style.background = colors[i % colors.length];
+        piece.style.setProperty('--tx', tx + 'px');
+        piece.style.setProperty('--ty', ty + 'px');
+        piece.style.setProperty('--tr', tr + 'deg');
+        piece.style.animationDelay = (Math.random() * 100) + 'ms';
+        piece.style.width = (6 + Math.random() * 6) + 'px';
+        piece.style.height = (6 + Math.random() * 6) + 'px';
+        piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+        piece.classList.add('burst');
+        container.appendChild(piece);
+        (function(el) {
+          setTimeout(function() { el.remove(); }, 1000);
+        })(piece);
+      }
+    }
+
+    // ═══ INIT ═══
+    renderPopular();
+    renderCategories();
+  </script>
+</body>
+</html>

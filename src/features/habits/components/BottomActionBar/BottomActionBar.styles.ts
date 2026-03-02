@@ -1,47 +1,73 @@
 import { StyleSheet } from 'react-native';
-import { borderRadius } from '../../../../theme/spacing';
-import { fontFamilies } from '../../../../theme/typography';
+import { FadeInUp } from 'react-native-reanimated';
 
-/**
- * Pill vertical offset: aligns pill vertical center with the FAB center.
- * The ProgressRingFAB has marginTop: -20 and is 60px tall, so its center
- * sits at -20 + 30 = 10px from the container's content top.
- * The pill is 44px tall, so it needs to start at 10 - 22 = -12px.
- * The container has paddingTop: 12, so net pill offset = -12px from content top.
- */
-const PILL_OFFSET_TOP = -12;
+export const ENTERING = FadeInUp.duration(320).springify().damping(18);
+export const BLUR_INTENSITY = 50;
+export const CAPSULE_RADIUS = 32;
+export const BORDER_LIGHT = 'rgba(255,255,255,0.5)';
+export const BORDER_DARK = 'rgba(55,65,81,0.35)';
+
+export const CAPSULE_SHADOW = {
+  shadowColor: '#000',
+  shadowOffset: { width: 0, height: 8 },
+  shadowOpacity: 0.08,
+  shadowRadius: 32,
+  elevation: 8,
+};
+
+export const NOTIF_SIZE = 8;
 
 export const styles = StyleSheet.create({
+  capsuleBorder: {
+    ...StyleSheet.absoluteFillObject,
+    borderRadius: CAPSULE_RADIUS,
+    borderWidth: 1,
+  },
   centerZone: {
     alignItems: 'center',
     flex: 1,
     justifyContent: 'center',
     overflow: 'visible',
   },
-  container: {
-    alignItems: 'flex-start',
-    borderTopWidth: 1,
-    flexDirection: 'row',
-    overflow: 'visible',
-    paddingHorizontal: 22,
-    paddingTop: 12,
-  },
-  leftZone: { alignItems: 'flex-start', flex: 1, marginTop: PILL_OFFSET_TOP },
-  pill: {
+  contentRow: {
     alignItems: 'center',
-    borderRadius: borderRadius.button,
-    borderWidth: 1,
     flexDirection: 'row',
-    gap: 6,
+    justifyContent: 'space-between',
+    paddingHorizontal: 24,
+    paddingVertical: 8,
+  },
+  glassBg: {
+    ...StyleSheet.absoluteFillObject,
+    borderRadius: CAPSULE_RADIUS,
+    overflow: 'hidden',
+  },
+  iconButton: {
+    alignItems: 'center',
+    borderRadius: 22,
     height: 44,
     justifyContent: 'center',
-    minWidth: 112,
-    paddingHorizontal: 14,
+    width: 44,
   },
-  pillLabel: {
-    fontFamily: fontFamilies.primary.text,
-    fontSize: 13,
-    fontWeight: '600',
+  iconTouchArea: {
+    alignItems: 'center',
+    borderRadius: 32,
+    height: 64,
+    justifyContent: 'center',
+    width: 64,
   },
-  rightZone: { alignItems: 'flex-end', flex: 1, marginTop: PILL_OFFSET_TOP },
+  leftZone: { alignItems: 'center' },
+  notifDot: {
+    backgroundColor: '#D97706',
+    borderRadius: NOTIF_SIZE / 2,
+    height: NOTIF_SIZE,
+    position: 'absolute',
+    right: 8,
+    top: 8,
+    width: NOTIF_SIZE,
+  },
+  rightZone: { alignItems: 'center' },
+  wrapper: {
+    marginHorizontal: 20,
+    overflow: 'visible',
+  },
 });

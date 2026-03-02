@@ -1,6 +1,6 @@
 /**
  * Header for browse view mode
- * OPTIMIZED: FadeInDown stagger, type scale 28/17
+ * OPTIMIZED: FadeInDown stagger, type scale 22/14 (matches app H1)
  */
 
 import { View } from 'react-native';
@@ -27,10 +27,10 @@ export function BrowseHeader({ animatedStyle }: BrowseHeaderProps) {
           style={{
             color: colors.text.primary,
             fontFamily: fontFamilies.primary.display,
-            fontSize: 28,
-            fontWeight: '800',
-            letterSpacing: -0.5,
-            lineHeight: 34,
+            fontSize: 22,
+            fontWeight: '700',
+            letterSpacing: -0.35,
+            lineHeight: 28,
           }}
         >
           Import Habits
@@ -40,10 +40,10 @@ export function BrowseHeader({ animatedStyle }: BrowseHeaderProps) {
           style={{
             color: colors.text.secondary,
             fontFamily: fontFamilies.primary.text,
-            fontSize: 17,
-            letterSpacing: -0.41,
-            lineHeight: 22,
-            marginTop: 4,
+            fontSize: 14,
+            letterSpacing: -0.2,
+            lineHeight: 20,
+            marginTop: 2,
           }}
         >
           Science-backed templates to build great habits

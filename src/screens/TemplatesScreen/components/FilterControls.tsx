@@ -4,15 +4,11 @@
 
 import { Text, View } from 'react-native';
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
-import Animated, { FadeIn } from 'react-native-reanimated';
-import { Check, ChevronDown, SlidersHorizontal } from 'lucide-react-native';
+import { ChevronDown, SlidersHorizontal } from 'lucide-react-native';
 import { useThemeColors } from '../../../theme/ThemeContext';
-import {
-  SORT_LABELS,
-  SORT_OPTIONS,
-  type SortOption,
-} from '../../templates/constants';
+import { SORT_LABELS, type SortOption } from '../../templates/constants';
 import { styles } from '../../templates/templatesScreenStyles';
+import { SortDropdown } from './SortDropdown';
 
 interface FilterControlsProps {
   onResearchToggle: () => void;
@@ -29,9 +25,10 @@ export function FilterControls({
   showSortOptions,
   sortOption,
 }: FilterControlsProps) {
-  const { colors, isDark } = useThemeColors();
+  const { colors } = useThemeColors();
   const defaultIconColor = colors.text.primary;
-  const iconColor = showSortOptions ? '#fff' : defaultIconColor;
+  const activeColor = colors.primary[600];
+  const iconColor = showSortOptions ? colors.text.inverse : defaultIconColor;
 
   return (
     <View style={styles.sortButtonWrapper}>
@@ -40,7 +37,11 @@ export function FilterControls({
         accessibilityRole='button'
         style={[
           styles.controlButton,
-          showSortOptions && styles.controlButtonActive,
+          { borderColor: colors.border },
+          showSortOptions && {
+            backgroundColor: activeColor,
+            borderColor: activeColor,
+          },
         ]}
         onPress={onToggleSortOptions}
       >
@@ -49,7 +50,7 @@ export function FilterControls({
           style={[
             styles.controlButtonText,
             { color: defaultIconColor },
-            showSortOptions && { color: '#fff' },
+            showSortOptions && { color: colors.text.inverse },
           ]}
         >
           {SORT_LABELS[sortOption]}
@@ -63,43 +64,11 @@ export function FilterControls({
         />
       </AnimatedPressable>
       {showSortOptions && (
-        <Animated.View
-          entering={FadeIn.duration(150)}
-          style={[
-            styles.sortDropdown,
-            isDark && { backgroundColor: colors.card, borderColor: colors.border },
-          ]}
-        >
-          {SORT_OPTIONS.map((opt) => {
-            const selected = sortOption === opt.value;
-            return (
-              <AnimatedPressable
-                key={opt.value}
-                accessible
-                accessibilityLabel={`Sort by ${opt.label}`}
-                accessibilityRole='button'
-                accessibilityState={{ selected }}
-                style={[
-                  styles.sortDropdownOption,
-                  selected && styles.sortDropdownOptionSelected,
-                ]}
-                onPress={() => onSelectSort(opt.value)}
-              >
-                <Text
-                  style={[
-                    styles.sortDropdownOptionText,
-                    selected && styles.sortDropdownOptionTextSelected,
-                  ]}
-                >
-                  {opt.label}
-                </Text>
-                {selected && (
-                  <Check color='#10B981' size={16} strokeWidth={2.5} />
-                )}
-              </AnimatedPressable>
-            );
-          })}
-        </Animated.View>
+        <SortDropdown
+          colors={colors}
+          sortOption={sortOption}
+          onSelectSort={onSelectSort}
+        />
       )}
     </View>
   );

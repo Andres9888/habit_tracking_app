@@ -22,7 +22,7 @@ export const tabStyles = StyleSheet.create({
     borderRadius: 12,
     flexDirection: 'row',
     marginBottom: 12,
-    marginHorizontal: 20,
+    marginHorizontal: 16,
     marginTop: 14,
     padding: 5,
     position: 'relative',

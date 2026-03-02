@@ -55,61 +55,63 @@ function HabitCardComponent(props: HabitCardProps) {
         onEdit={onEdit}
       />
       <GestureDetector gesture={habit.composedGesture}>
-        <Animated.View
-          accessible
-          accessibilityHint='Tap to toggle completion. Swipe left to reveal edit and delete actions.'
-          accessibilityLabel={`${name} habit, ${Math.round(strength)}% strength${habit.completed ? ', completed' : ''}`}
-          accessibilityRole='button'
-          accessibilityState={{ checked: habit.completed, disabled }}
-          testID='home-habit-toggle'
-          style={[
-            styles.card,
-            {
-              backgroundColor: habit.backgroundColor,
-              borderColor: themeColors.cardBorder,
-              borderRadius: habit.borderRadius,
-            },
-            disabled && styles.disabled,
-            habit.entrance.cardStyle,
-            habit.animations.cardAnimatedStyle,
-            focusStyle,
-          ]}
-          {...focusHandlers}
-        >
-          <StrengthFillBackground
-            isDark={habit.isDark}
-            strengthColor={habit.strengthColor}
-            strengthFillStyle={habit.strengthFillStyle}
-          />
-          <SuccessShimmer active={habit.showConfetti} />
+        <View collapsable={false}>
           <Animated.View
+            accessible
+            accessibilityHint='Tap to toggle completion. Swipe left to reveal edit and delete actions.'
+            accessibilityLabel={`${name} habit, ${Math.round(strength)}% strength${habit.completed ? ', completed' : ''}`}
+            accessibilityRole='button'
+            accessibilityState={{ checked: habit.completed, disabled }}
+            testID='home-habit-toggle'
             style={[
-              styles.accentBar,
+              styles.card,
               {
-                backgroundColor: habit.accentColor,
+                backgroundColor: habit.backgroundColor,
+                borderColor: themeColors.cardBorder,
                 borderRadius: habit.borderRadius,
               },
-              habit.entrance.accentStyle,
+              disabled && styles.disabled,
+              habit.entrance.cardStyle,
+              habit.animations.cardAnimatedStyle,
+              focusStyle,
             ]}
-          />
-          <HabitCardContent
-            atRisk={atRisk}
-            bestStreak={habit.bestStreak}
-            chainRotate={habit.animations.chainRotate}
-            chainScale={habit.animations.chainScale}
-            checkmarkAnimatedStyle={habit.animations.checkmarkAnimatedStyle}
-            completed={habit.completed}
-            completionIcon={completionIcon}
-            currentStreak={habit.currentStreak}
-            entranceContentStyle={habit.entrance.contentStyle as AnimatedStyle}
-            hasPendingOfflineOps={habit.hasPendingOfflineOps}
-            icon={icon}
-            name={name}
-            rippleAnimatedStyle={habit.animations.rippleAnimatedStyle}
-            strength={strength}
-            theme={habit.theme}
-          />
-        </Animated.View>
+            {...focusHandlers}
+          >
+            <StrengthFillBackground
+              isDark={habit.isDark}
+              strengthColor={habit.strengthColor}
+              strengthFillStyle={habit.strengthFillStyle}
+            />
+            <SuccessShimmer active={habit.showConfetti} />
+            <Animated.View
+              style={[
+                styles.accentBar,
+                {
+                  backgroundColor: habit.accentColor,
+                  borderRadius: habit.borderRadius,
+                },
+                habit.entrance.accentStyle,
+              ]}
+            />
+            <HabitCardContent
+              atRisk={atRisk}
+              bestStreak={habit.bestStreak}
+              chainRotate={habit.animations.chainRotate}
+              chainScale={habit.animations.chainScale}
+              checkmarkAnimatedStyle={habit.animations.checkmarkAnimatedStyle}
+              completed={habit.completed}
+              completionIcon={completionIcon}
+              currentStreak={habit.currentStreak}
+              entranceContentStyle={habit.entrance.contentStyle as AnimatedStyle}
+              hasPendingOfflineOps={habit.hasPendingOfflineOps}
+              icon={icon}
+              name={name}
+              rippleAnimatedStyle={habit.animations.rippleAnimatedStyle}
+              strength={strength}
+              theme={habit.theme}
+            />
+          </Animated.View>
+        </View>
       </GestureDetector>
       {habit.showFloatingXP && (
         <FloatingXPText

@@ -60,37 +60,39 @@ export function CompletionToast(props: CompletionToastProps) {
       style={[styles.container, { bottom: insets.bottom + 16 }]}
     >
       <GestureDetector gesture={panGesture}>
-        <Animated.View
-          accessible
-          accessibilityLabel={`${habitName} completed. ${streakMessage}`}
-          accessibilityLiveRegion='polite'
-          accessibilityRole='alert'
-          style={[
-            styles.toast,
-            {
-              backgroundColor: COLORS.successGreen,
-              ...theme.custom.shadows.card,
-            },
-            animatedStyle,
-            style,
-          ]}
-        >
-          <View style={styles.content}>
-            <Text style={styles.habitIcon}>{icon}</Text>
-            <Text
-              numberOfLines={1}
-              style={[
-                theme.custom.typography.body,
-                styles.message,
-                styles.primaryText,
-                { color: COLORS.white },
-              ]}
-            >
-              {habitName} done!
-            </Text>
-          </View>
-          <StreakBadge streak={streak} onPress={handleBadgePress} />
-        </Animated.View>
+        <View collapsable={false}>
+          <Animated.View
+            accessible
+            accessibilityLabel={`${habitName} completed. ${streakMessage}`}
+            accessibilityLiveRegion='polite'
+            accessibilityRole='alert'
+            style={[
+              styles.toast,
+              {
+                backgroundColor: COLORS.successGreen,
+                ...theme.custom.shadows.card,
+              },
+              animatedStyle,
+              style,
+            ]}
+          >
+            <View style={styles.content}>
+              <Text style={styles.habitIcon}>{icon}</Text>
+              <Text
+                numberOfLines={1}
+                style={[
+                  theme.custom.typography.body,
+                  styles.message,
+                  styles.primaryText,
+                  { color: COLORS.white },
+                ]}
+              >
+                {habitName} done!
+              </Text>
+            </View>
+            <StreakBadge streak={streak} onPress={handleBadgePress} />
+          </Animated.View>
+        </View>
       </GestureDetector>
     </View>
   );

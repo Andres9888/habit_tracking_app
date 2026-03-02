@@ -34,31 +34,33 @@ export function BottomSheetContent({
 
   return (
     <GestureDetector gesture={gesture}>
-      <Animated.View
-        style={[
-          styles.bottomSheet,
-          {
-            backgroundColor: themeColors.surface,
-            borderTopLeftRadius: theme.custom.borderRadius.large,
-            borderTopRightRadius: theme.custom.borderRadius.large,
-            paddingBottom: insets.bottom,
-            ...theme.custom.shadows.modal,
-          },
-          animatedStyle,
-          customStyle,
-        ]}
-      >
-        {/* Pull indicator */}
-        <View style={styles.pullIndicatorContainer}>
-          <View
-            style={[
-              styles.pullIndicator,
-              { backgroundColor: theme.custom.colors.gray[300] },
-            ]}
-          />
-        </View>
-        {children}
-      </Animated.View>
+      <View collapsable={false}>
+        <Animated.View
+          style={[
+            styles.bottomSheet,
+            {
+              backgroundColor: themeColors.surface,
+              borderTopLeftRadius: theme.custom.borderRadius.large,
+              borderTopRightRadius: theme.custom.borderRadius.large,
+              paddingBottom: insets.bottom,
+              ...theme.custom.shadows.modal,
+            },
+            animatedStyle,
+            customStyle,
+          ]}
+        >
+          {/* Pull indicator */}
+          <View style={styles.pullIndicatorContainer}>
+            <View
+              style={[
+                styles.pullIndicator,
+                { backgroundColor: theme.custom.colors.gray[300] },
+              ]}
+            />
+          </View>
+          {children}
+        </Animated.View>
+      </View>
     </GestureDetector>
   );
 }

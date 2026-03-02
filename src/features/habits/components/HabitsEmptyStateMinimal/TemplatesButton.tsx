@@ -12,7 +12,11 @@ import {
 
 interface TemplatesButtonProps {
   animatedStyle: ReturnType<typeof Animated.useAnimatedStyle>;
-  colors: { ctaText: string; gradientColors: readonly [string, string] };
+  colors: {
+    badgeBackground: string;
+    ctaText: string;
+    gradientColors: readonly [string, string, string];
+  };
   onPress: () => void;
   onPressIn: () => void;
   onPressOut: () => void;
@@ -51,7 +55,12 @@ export function TemplatesButton({
             <Text style={[templatesLabelStyle, { color: colors.ctaText }]}>
               browse templates
             </Text>
-            <View style={badgeContainerStyle} testID='inline-hint-badge'>
+            <View
+              style={badgeContainerStyle(
+                colors.badgeBackground ?? 'rgba(255,255,255,0.22)'
+              )}
+              testID='inline-hint-badge'
+            >
               <Text style={[badgeTextStyle, { color: colors.ctaText }]}>
                 200+
               </Text>

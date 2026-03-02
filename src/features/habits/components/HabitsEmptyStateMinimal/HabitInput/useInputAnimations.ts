@@ -11,8 +11,9 @@ import {
 } from 'react-native-reanimated';
 
 import { useHapticFeedback } from '../../../../../hooks/useHapticFeedback';
+import { useThemeColors } from '../../../../../theme/ThemeContext';
+import { colors as appColors } from '../../../../../theme/colors';
 import { TIMING_CONFIGS } from '../animations';
-import { COLORS } from '../constants';
 
 interface UseInputAnimationsParams {
   onFocus?: () => void;
@@ -24,6 +25,7 @@ export function useInputAnimations({
   onBlur,
 }: UseInputAnimationsParams) {
   const [isFocused, setIsFocused] = useState(false);
+  const { colors, isDark } = useThemeColors();
   const focusProgress = useSharedValue(0);
   const { triggerLightImpact } = useHapticFeedback();
 
@@ -44,7 +46,7 @@ export function useInputAnimations({
     borderColor: interpolateColor(
       focusProgress.value,
       [0, 1],
-      [COLORS.stone200, COLORS.blue500]
+      [colors.border, isDark ? colors.primary[400] : appColors.secondary[500]]
     ),
     shadowOpacity: focusProgress.value * 0.15,
   }));

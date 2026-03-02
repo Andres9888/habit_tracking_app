@@ -6,9 +6,11 @@
 import { useState } from 'react';
 import { Bell, Clock, Crown } from 'lucide-react-native';
 import { Platform, Text, View } from 'react-native';
+import Animated, { FadeInDown, FadeOutUp } from 'react-native-reanimated';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { SettingsRow } from './SettingsRow';
 import { SettingsSection } from './SettingsSection';
+import { useThemeColors } from '@/theme/ThemeContext';
 import { fontFamilies } from '@/theme/typography';
 import {
   timeStringToDate,
@@ -36,6 +38,7 @@ export function StreakRemindersSection({
   onPremiumUpsell,
 }: StreakRemindersSectionProps) {
   const [showTimePicker, setShowTimePicker] = useState(false);
+  const { colors: themeColors, settings } = useThemeColors();
 
   const handleTimeChange = (_event: unknown, selectedDate?: Date) => {
     if (Platform.OS === 'android') setShowTimePicker(false);
@@ -46,19 +49,23 @@ export function StreakRemindersSection({
     <SettingsSection highContrastMode={highContrastMode} title='Notifications'>
       <SettingsRow
         highContrastMode={highContrastMode}
-        icon={<Bell color='#ea580c' size={16} />}
-        iconBackgroundColor='#fed7aa'
+        icon={<Bell color={settings.bell.icon} size={16} />}
+        iconBackgroundColor={settings.bell.bg}
         label='Streak Reminders'
         type='toggle'
         value={enabled}
         onToggle={(v) => void onToggle(v)}
       />
       {enabled && (
-        <>
+        <Animated.View
+          entering={FadeInDown.duration(200).springify().damping(18)}
+          exiting={FadeOutUp.duration(150)}
+        >
           <SettingsRow
+            hapticStyle='selection'
             highContrastMode={highContrastMode}
-            icon={<Clock color='#0284c7' size={16} />}
-            iconBackgroundColor='#bae6fd'
+            icon={<Clock color={settings.clock.icon} size={16} />}
+            iconBackgroundColor={settings.clock.bg}
             label='Reminder Time'
             type='selection'
             value={formatDisplayTime(reminderTime)}
@@ -77,30 +84,35 @@ export function StreakRemindersSection({
           {!isPremium && (
             <SettingsRow
               highContrastMode={highContrastMode}
-              icon={<Crown color='#ca8a04' size={16} />}
-              iconBackgroundColor='#fef9c3'
+              icon={<Crown color={settings.premiumTime.icon} size={16} />}
+              iconBackgroundColor={settings.premiumTime.bg}
               label='Custom times per habit'
               showBorder={false}
               type='navigation'
               onPress={onPremiumUpsell}
             />
           )}
-        </>
+        </Animated.View>
       )}
       {!enabled && (
-        <View style={{ paddingBottom: 12, paddingHorizontal: 16 }}>
-          <Text
-            style={{
-              color: '#78716c',
-              fontSize: 13,
-              fontFamily: fontFamilies.primary.text,
-              lineHeight: 18,
-            }}
-          >
-            Get a reminder if you haven't completed a habit with an active
-            streak by your chosen time.
-          </Text>
-        </View>
+        <Animated.View
+          entering={FadeInDown.duration(200).springify().damping(18)}
+          exiting={FadeOutUp.duration(150)}
+        >
+          <View style={{ paddingBottom: 12, paddingHorizontal: 16 }}>
+            <Text
+              style={{
+                color: themeColors.text.secondary,
+                fontSize: 13,
+                fontFamily: fontFamilies.primary.text,
+                lineHeight: 18,
+              }}
+            >
+              Get a reminder if you haven't completed a habit with an active
+              streak by your chosen time.
+            </Text>
+          </View>
+        </Animated.View>
       )}
     </SettingsSection>
   );

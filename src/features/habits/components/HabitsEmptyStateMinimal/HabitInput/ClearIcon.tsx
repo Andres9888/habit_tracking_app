@@ -6,14 +6,17 @@
 
 import { View } from 'react-native';
 
-import { COLORS } from '../constants';
+interface ClearIconProps {
+  backgroundColor: string;
+  glyphColor: string;
+}
 
-export function ClearIcon() {
+export function ClearIcon({ backgroundColor, glyphColor }: ClearIconProps) {
   return (
     <View
       style={{
         alignItems: 'center',
-        backgroundColor: COLORS.stone200,
+        backgroundColor,
         borderRadius: 12,
         height: 20,
         justifyContent: 'center',
@@ -22,7 +25,7 @@ export function ClearIcon() {
     >
       <View
         style={{
-          backgroundColor: COLORS.stone400,
+          backgroundColor: glyphColor,
           height: 2,
           position: 'absolute',
           transform: [{ rotate: '45deg' }],
@@ -31,7 +34,7 @@ export function ClearIcon() {
       />
       <View
         style={{
-          backgroundColor: COLORS.stone400,
+          backgroundColor: glyphColor,
           height: 2,
           position: 'absolute',
           transform: [{ rotate: '-45deg' }],

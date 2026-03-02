@@ -30,7 +30,6 @@ export const cardStyles: Record<string, ViewStyle | TextStyle> = {
     width: 200,
   },
   description: {
-    color: '#78716c',
     fontFamily: fontFamilies.primary.text,
     fontSize: 13,
     lineHeight: 18,
@@ -45,7 +44,6 @@ export const cardStyles: Record<string, ViewStyle | TextStyle> = {
     top: 0,
   },
   name: {
-    color: '#1c1917',
     fontFamily: fontFamilies.primary.text,
     fontSize: typography.body.fontSize,
     fontWeight: '700',
@@ -53,7 +51,6 @@ export const cardStyles: Record<string, ViewStyle | TextStyle> = {
     marginBottom: 2,
   },
   subtitle: {
-    color: '#6B7280',
     fontFamily: fontFamilies.primary.text,
     fontSize: 12,
     fontWeight: '500',

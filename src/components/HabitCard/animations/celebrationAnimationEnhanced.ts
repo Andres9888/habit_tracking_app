@@ -22,9 +22,9 @@ interface EnhancedCelebrationOptions {
   rippleOpacity: SharedValue<number>;
   reduceMotion: boolean;
   setShowFloatingXP: (show: boolean) => void;
+  scheduleFloatingXPHide: () => void;
   setXPPosition: (position: { x: number; y: number }) => void;
   setShowConfetti: (show: boolean) => void;
-  timeoutRef: React.MutableRefObject<ReturnType<typeof setTimeout> | null>;
 
   /** New: Burst type for celebration */
   burstType?: BurstType;
@@ -44,9 +44,9 @@ export function createEnhancedCelebrationTrigger(options: EnhancedCelebrationOpt
     rippleOpacity,
     reduceMotion,
     setShowFloatingXP,
+    scheduleFloatingXPHide,
     setXPPosition,
     setShowConfetti,
-    timeoutRef,
     burstType = 'default',
     triggerEnhancedCelebration,
   } = options;
@@ -85,9 +85,8 @@ export function createEnhancedCelebrationTrigger(options: EnhancedCelebrationOpt
     runOnJS(setShowFloatingXP)(true);
     runOnJS(() => {
       setXPPosition({ x: 150, y: 20 });
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
-      timeoutRef.current = setTimeout(() => setShowFloatingXP(false), 1000);
     })();
+    runOnJS(scheduleFloatingXPHide)();
 
     // Trigger enhanced celebration if provided
     if (triggerEnhancedCelebration && !reduceMotion) {

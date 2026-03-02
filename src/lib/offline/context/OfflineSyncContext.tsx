@@ -15,6 +15,8 @@ import {
   getOfflineSyncManager,
   type OfflineSyncManagerConfig,
 } from '../syncManager';
+import { getOfflineQueueManager } from '../queueManager';
+import type { OfflineQueueManagerAPI } from '../queueManager';
 import type { SyncEvent, SyncStatus } from '../types';
 
 export interface OfflineSyncContextValue {
@@ -38,24 +40,52 @@ export function OfflineSyncProvider({
   children,
   config,
 }: OfflineSyncProviderProps) {
+  const queueManagerRef = useRef<OfflineQueueManagerAPI | null>(null);
   const managerRef = useRef<OfflineSyncManager | null>(null);
-  if (!managerRef.current) {
-    managerRef.current = getOfflineSyncManager(config);
-  }
-  const manager = managerRef.current;
 
-  const [status, setStatus] = useState<SyncStatus>(manager.getStatus());
+  if (!queueManagerRef.current) {
+    queueManagerRef.current = getOfflineQueueManager();
+  }
+
+  if (!managerRef.current) {
+    managerRef.current = getOfflineSyncManager({
+      ...config,
+      getPendingCount: () =>
+        queueManagerRef.current?.getStats().pendingCount ?? 0,
+    });
+  }
+
+  const manager = managerRef.current;
+  const queueManager = queueManagerRef.current;
+
+  if (!manager || !queueManager) {
+    throw new Error('OfflineSyncProvider failed to initialize managers');
+  }
+
+  const getStatusSnapshot = useCallback(
+    () => ({
+      ...manager.getStatus(),
+      pendingCount: queueManager.getStats().pendingCount,
+    }),
+    [manager, queueManager]
+  );
+
+  const [status, setStatus] = useState<SyncStatus>(getStatusSnapshot);
 
   useEffect(() => {
-    const unsubscribe = manager.subscribe(() => setStatus(manager.getStatus()));
-    return unsubscribe;
-  }, [manager]);
-
+    const refresh = () => setStatus(getStatusSnapshot());
+    const unsubscribeSyncEvents = manager.subscribe(refresh);
+    const unsubscribeQueueState = queueManager.subscribeToState(refresh);
+    return () => {
+      unsubscribeSyncEvents();
+      unsubscribeQueueState();
+    };
+  }, [getStatusSnapshot, manager, queueManager]);
   const canSync = manager.canSync();
   const resetCircuit = useCallback(() => {
     manager.resetCircuit();
-    setStatus(manager.getStatus());
-  }, [manager]);
+    setStatus(getStatusSnapshot());
+  }, [manager, getStatusSnapshot]);
   const subscribe = useCallback(
     (listener: (event: SyncEvent) => void) => manager.subscribe(listener),
     [manager]

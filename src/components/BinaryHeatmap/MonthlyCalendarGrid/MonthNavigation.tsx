@@ -2,13 +2,14 @@
  * MonthNavigation Component
  *
  * Month display and navigation controls for the calendar.
+ * Theme-aware — uses semantic color tokens.
  */
 
 import React, { memo } from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { ChevronLeft, ChevronRight, Calendar } from 'lucide-react-native';
 import { format, isValid } from 'date-fns';
-import { COLORS } from './colors';
+import { useThemeColors } from '@/theme';
 import { styles } from './styles';
 
 /** Safely format a date, returning fallback on error */
@@ -34,16 +35,19 @@ export const MonthNavigation = memo(function MonthNavigation({
   onPreviousMonth,
   onNextMonth,
 }: MonthNavigationProps) {
+  const { colors } = useThemeColors();
+  const iconColor = colors.text.secondary;
+
   return (
-    <View style={styles.navigation}>
+    <View style={[styles.navigation, { borderTopColor: colors.border }]}>
       <Pressable
         accessible
         accessibilityLabel={`Current month: ${safeFormat(currentMonth, 'MMMM yyyy', 'Month')}`}
         accessibilityRole='header'
-        style={styles.monthButton}
+        style={[styles.monthButton, { borderColor: colors.border }]}
       >
-        <Calendar color={COLORS.TEXT_SECONDARY} size={16} />
-        <Text style={styles.monthText}>
+        <Calendar color={iconColor} size={14} />
+        <Text style={[styles.monthText, { color: colors.text.primary }]}>
           {safeFormat(currentMonth, 'MMM yyyy', 'Month')}
         </Text>
       </Pressable>
@@ -51,20 +55,20 @@ export const MonthNavigation = memo(function MonthNavigation({
         <Pressable
           accessibilityLabel='Previous month'
           accessibilityRole='button'
-          style={styles.navButton}
+          style={[styles.navButton, { borderColor: colors.border }]}
           hitSlop={{ bottom: 10, left: 10, right: 10, top: 10 }}
           onPress={onPreviousMonth}
         >
-          <ChevronLeft color={COLORS.TEXT_SECONDARY} size={20} />
+          <ChevronLeft color={iconColor} size={18} />
         </Pressable>
         <Pressable
           accessibilityLabel='Next month'
           accessibilityRole='button'
-          style={styles.navButton}
+          style={[styles.navButton, { borderColor: colors.border }]}
           hitSlop={{ bottom: 10, left: 10, right: 10, top: 10 }}
           onPress={onNextMonth}
         >
-          <ChevronRight color={COLORS.TEXT_SECONDARY} size={20} />
+          <ChevronRight color={iconColor} size={18} />
         </Pressable>
       </View>
     </View>

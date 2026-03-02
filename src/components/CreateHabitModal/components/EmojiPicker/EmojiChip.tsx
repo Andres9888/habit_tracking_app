@@ -15,6 +15,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import type { EmojiChipProps } from './types';
+import { springs } from '@/theme/animations';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -44,7 +45,7 @@ function EmojiChipComponent({
     // Total duration: ~200ms for snappy feel
     scale.value = withSequence(
       withTiming(1.08, { duration: 100 }),
-      withSpring(1, { damping: 3, stiffness: 300 })
+      withSpring(1, springs.standard)
     );
   }, [scale, reduceMotion]);
 
