@@ -4,7 +4,7 @@
  */
 
 import { useEffect } from 'react';
-import { Animated } from 'react-native';
+import type { SharedValue } from 'react-native-reanimated';
 import {
   runNewRecordAnimation,
   hideNewRecordBadge,
@@ -14,9 +14,9 @@ export function useNewRecordAnimation(
   isNewPersonalRecord: boolean,
   reduceMotionPreference: boolean,
   triggerSuccess: () => void,
-  newRecordScale: Animated.Value,
-  newRecordOpacity: Animated.Value,
-  cardScale: Animated.Value,
+  newRecordScale: SharedValue<number>,
+  newRecordOpacity: SharedValue<number>,
+  cardScale: SharedValue<number>,
   setShowNewRecord: (show: boolean) => void
 ) {
   useEffect(() => {

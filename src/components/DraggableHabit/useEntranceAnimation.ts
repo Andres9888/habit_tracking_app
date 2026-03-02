@@ -4,26 +4,16 @@
  */
 
 import { useEffect } from 'react';
-import { Animated, Easing } from 'react-native';
+import type { SharedValue } from 'react-native-reanimated';
+import { Easing, withTiming } from 'react-native-reanimated';
 
 export function useEntranceAnimation(
-  fade: Animated.Value,
-  translateY: Animated.Value
+  fade: SharedValue<number>,
+  translateY: SharedValue<number>
 ) {
   useEffect(() => {
-    Animated.parallel([
-      Animated.timing(fade, {
-        duration: 320,
-        easing: Easing.out(Easing.cubic),
-        toValue: 1,
-        useNativeDriver: true,
-      }),
-      Animated.timing(translateY, {
-        duration: 320,
-        easing: Easing.out(Easing.cubic),
-        toValue: 0,
-        useNativeDriver: true,
-      }),
-    ]).start();
+    const config = { duration: 320, easing: Easing.out(Easing.cubic) };
+    fade.value = withTiming(1, config);
+    translateY.value = withTiming(0, config);
   }, [fade, translateY]);
 }

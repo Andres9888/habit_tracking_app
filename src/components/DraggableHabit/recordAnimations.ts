@@ -1,7 +1,7 @@
 /**
  * @module recordAnimations
  *
- * RN Animated sequences for new personal record celebrations.
+ * Reanimated sequences for new personal record celebrations.
  *
  * - {@link runNewRecordAnimation} — shows the "New Personal Record! 🎉" badge
  *   with a spring scale-in + card bounce.
@@ -10,62 +10,51 @@
  * Triggered by {@link useNewRecordAnimation} when `streak > bestStreak`.
  */
 
-import { Animated } from 'react-native';
+import type { SharedValue } from 'react-native-reanimated';
+import {
+  runOnJS,
+  withSequence,
+  withSpring,
+  withTiming,
+} from 'react-native-reanimated';
+import { durations, springs } from '@/theme/animations';
 
 /**
  * Spring the record badge into view (scale 0→1, opacity 0→1)
  * while giving the card a subtle bounce (scale 1→1.03→1).
  */
 export function runNewRecordAnimation(
-  newRecordScale: Animated.Value,
-  newRecordOpacity: Animated.Value,
-  cardScale: Animated.Value
+  newRecordScale: SharedValue<number>,
+  newRecordOpacity: SharedValue<number>,
+  cardScale: SharedValue<number>
 ) {
-  Animated.parallel([
-    Animated.spring(newRecordScale, {
-      friction: 5,
-      tension: 200,
-      toValue: 1,
-      useNativeDriver: true,
-    }),
-    Animated.timing(newRecordOpacity, {
-      duration: 200,
-      toValue: 1,
-      useNativeDriver: true,
-    }),
-    Animated.sequence([
-      Animated.spring(cardScale, {
-        friction: 8,
-        tension: 200,
-        toValue: 1.03,
-        useNativeDriver: true,
-      }),
-      Animated.spring(cardScale, {
-        friction: 10,
-        tension: 200,
-        toValue: 1,
-        useNativeDriver: true,
-      }),
-    ]),
-  ]).start();
+  // Badge springs in with a celebratory bounce
+  newRecordScale.value = withSpring(1, springs.bouncy);
+
+  // Quick opacity fade-in
+  newRecordOpacity.value = withTiming(1, { duration: durations.standard });
+
+  // Card does a subtle bounce: 1 → 1.03 → 1
+  cardScale.value = withSequence(
+    withSpring(1.03, springs.standard),
+    withSpring(1, springs.standard)
+  );
 }
 
 /** Fade and shrink the record badge, then call setShowNewRecord(false) to unmount it. */
 export function hideNewRecordBadge(
-  newRecordScale: Animated.Value,
-  newRecordOpacity: Animated.Value,
+  newRecordScale: SharedValue<number>,
+  newRecordOpacity: SharedValue<number>,
   setShowNewRecord: (show: boolean) => void
 ) {
-  Animated.parallel([
-    Animated.timing(newRecordScale, {
-      duration: 200,
-      toValue: 0,
-      useNativeDriver: true,
-    }),
-    Animated.timing(newRecordOpacity, {
-      duration: 200,
-      toValue: 0,
-      useNativeDriver: true,
-    }),
-  ]).start(() => setShowNewRecord(false));
+  newRecordScale.value = withTiming(0, { duration: durations.standard });
+  newRecordOpacity.value = withTiming(
+    0,
+    { duration: durations.standard },
+    (finished) => {
+      if (finished) {
+        runOnJS(setShowNewRecord)(false);
+      }
+    }
+  );
 }

@@ -1,29 +1,24 @@
 /**
  * @module cardStyles
  *
- * Builds the outer card Animated style object (background, border, shadow, transforms).
+ * Builds the outer card static style object (background, border, shadow).
  * Week-complete cards get a green tint and stronger shadow.
+ *
+ * Animated properties (fade, translateY, cardScale) are handled via
+ * useAnimatedStyle in DraggableHabitCard.
  */
 
-import type { Animated } from 'react-native';
-
-interface CardStyleParams {
+interface StaticCardStyleParams {
   isWeekComplete: boolean;
   highContrastMode: boolean;
   colors: { cardBackground: string; border: string };
-  fade: Animated.Value;
-  translateY: Animated.Value;
-  cardScale: Animated.Value;
 }
 
-export function buildCardStyle({
+export function buildStaticCardStyle({
   isWeekComplete,
   highContrastMode,
   colors,
-  fade,
-  translateY,
-  cardScale,
-}: CardStyleParams) {
+}: StaticCardStyleParams) {
   return {
     backgroundColor:
       isWeekComplete && !highContrastMode
@@ -33,11 +28,9 @@ export function buildCardStyle({
       isWeekComplete && !highContrastMode ? '#86efac' : colors.border,
     borderWidth: highContrastMode ? 2 : 1,
     elevation: 3,
-    opacity: fade,
     shadowColor: isWeekComplete ? '#10b981' : '#78716c',
     shadowOffset: { height: 4, width: 0 },
     shadowOpacity: isWeekComplete ? 0.12 : 0.06,
     shadowRadius: 12,
-    transform: [{ translateY }, { scale: cardScale }],
   };
 }

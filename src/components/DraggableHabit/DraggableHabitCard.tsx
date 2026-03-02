@@ -3,14 +3,14 @@
  *
  * Pure rendering layer for a single habit card.
  *
- * Receives fully-resolved props (animated values, colors, handlers) from
+ * Receives fully-resolved props (shared values, colors, handlers) from
  * the parent {@link DraggableHabit} orchestrator and renders the visual
  * structure:
  *
  * ```
  * Swipeable (optional — only when onArchive is provided)
  *   └─ Pressable
- *       └─ Animated.View (card shell: fade, translateY, scale)
+ *       └─ ReAnimated.View (card shell: fade, translateY, scale)
  *           ├─ Accent left border strip (entrance animation)
  *           ├─ StrengthFillBackground (watercolor gradient)
  *           ├─ Archive flash overlay
@@ -22,14 +22,14 @@
  */
 
 import React, { memo, useMemo } from 'react';
-import { Animated, Pressable, StyleSheet } from 'react-native';
+import { Pressable, StyleSheet } from 'react-native';
 import { Swipeable } from 'react-native-gesture-handler';
 import ReAnimated, { useAnimatedStyle } from 'react-native-reanimated';
 import { ArchiveAction } from './ArchiveAction';
 import { CardContent } from './CardContent';
 import { StrengthFillBackground } from '../HabitCard/components/StrengthFillBackground';
 import { getEffectiveAccentColor, getBorderAccentColor } from './colorUtils';
-import { buildCardStyle } from './cardStyles';
+import { buildStaticCardStyle } from './cardStyles';
 import type { DraggableHabitCardProps } from './DraggableHabitCard.types';
 import { borderRadius } from '../../theme/spacing';
 
@@ -41,14 +41,23 @@ function DraggableHabitCardComponent(props: DraggableHabitCardProps) {
     props.highContrastMode,
     props.accentColor
   );
-  const cardStyle = buildCardStyle({
-    cardScale: props.cardScale,
+  const staticCardStyle = buildStaticCardStyle({
     colors: props.colors,
-    fade: props.fade,
     highContrastMode: props.highContrastMode,
     isWeekComplete: props.isWeekComplete,
-    translateY: props.translateY,
   });
+
+  const cardAnimatedStyle = useAnimatedStyle(() => ({
+    opacity: props.fade.value,
+    transform: [
+      { translateY: props.translateY.value },
+      { scale: props.cardScale.value },
+    ],
+  }));
+
+  const archiveFlashStyle = useAnimatedStyle(() => ({
+    opacity: props.archiveFlash.value,
+  }));
 
   const glowStyle = useAnimatedStyle(() => ({
     opacity: props.highlightGlow.value,
@@ -66,7 +75,7 @@ function DraggableHabitCardComponent(props: DraggableHabitCardProps) {
   const habitCard = (
     <ReAnimated.View style={props.entranceCardStyle}>
       <Pressable
-        accessibilityHint={`Tap to view details${props.onArchive ? ', swipe left to archive' : ''}${props.onLongPress ? ', long press to reorder' : ''}`}
+        accessibilityHint={`Tap to view details${props.onArchive ? ', swipe left to archive' : ''}`}
         accessibilityLabel={`${props.habit.name}, ${props.streak} day streak`}
         accessibilityRole='button'
         style={pressableStyle}
@@ -75,9 +84,9 @@ function DraggableHabitCardComponent(props: DraggableHabitCardProps) {
         onPressIn={props.handlePressIn}
         onPressOut={props.handlePressOut}
       >
-        <Animated.View
+        <ReAnimated.View
           className='flex-row overflow-hidden rounded-3xl'
-          style={cardStyle}
+          style={[staticCardStyle, cardAnimatedStyle]}
         >
           <ReAnimated.View
             style={[
@@ -101,14 +110,16 @@ function DraggableHabitCardComponent(props: DraggableHabitCardProps) {
                 strengthFillStyle={props.strengthFillStyle}
               />
             )}
-            <Animated.View
+            <ReAnimated.View
               pointerEvents='none'
-              style={{
-                backgroundColor: 'rgba(245, 158, 11, 0.18)',
-                borderRadius: borderRadius.xl,
-                opacity: props.archiveFlash,
-                ...StyleSheet.absoluteFillObject,
-              }}
+              style={[
+                {
+                  backgroundColor: 'rgba(245, 158, 11, 0.18)',
+                  borderRadius: borderRadius.xl,
+                  ...StyleSheet.absoluteFillObject,
+                },
+                archiveFlashStyle,
+              ]}
             />
             <ReAnimated.View
               pointerEvents='none'
@@ -127,7 +138,7 @@ function DraggableHabitCardComponent(props: DraggableHabitCardProps) {
               effectiveAccentColor={effectiveAccentColor}
             />
           </ReAnimated.View>
-        </Animated.View>
+        </ReAnimated.View>
       </Pressable>
     </ReAnimated.View>
   );

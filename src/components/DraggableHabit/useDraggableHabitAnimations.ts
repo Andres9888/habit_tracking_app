@@ -1,17 +1,16 @@
 /**
  * useDraggableHabitAnimations — Main orchestrator for card-level animated values.
  *
- * Creates animated refs and delegates to sub-hooks:
- * - {@link useEntranceAnimation} — fade + slide on mount (legacy Animated)
- * - {@link useHighlightAnimation} — glow border for just-created cards (reanimated glow + legacy cardScale)
+ * Creates shared values and delegates to sub-hooks:
+ * - {@link useEntranceAnimation} — fade + slide on mount (reanimated)
+ * - {@link useHighlightAnimation} — glow border for just-created cards (reanimated)
  * - {@link useIconPulse} — breathing icon for perfect weeks (reanimated)
- * - {@link useNewRecordAnimation} — badge + haptics for new streak records (legacy Animated)
+ * - {@link useNewRecordAnimation} — badge + haptics for new streak records (reanimated)
  *
- * Returns the animated values and `showNewRecord` state for the card renderer.
+ * Returns the shared values and `showNewRecord` state for the card renderer.
  */
 
-import { useRef, useState } from 'react';
-import { Animated } from 'react-native';
+import { useState } from 'react';
 import { useSharedValue } from 'react-native-reanimated';
 import { useEntranceAnimation } from './useEntranceAnimation';
 import { useHighlightAnimation } from './useHighlightAnimation';
@@ -33,17 +32,14 @@ export function useDraggableHabitAnimations({
   isNewPersonalRecord,
   triggerSuccess,
 }: AnimationParams) {
-  const fade = useRef(new Animated.Value(0)).current;
-  const translateY = useRef(new Animated.Value(12)).current;
-  const archiveFlash = useRef(new Animated.Value(0)).current;
-  const cardScale = useRef(new Animated.Value(1)).current;
-  const newRecordScale = useRef(new Animated.Value(0)).current;
-
-  // Reanimated shared values (migrated from legacy Animated)
+  const fade = useSharedValue(0);
+  const translateY = useSharedValue(12);
+  const archiveFlash = useSharedValue(0);
+  const cardScale = useSharedValue(1);
+  const newRecordScale = useSharedValue(0);
+  const newRecordOpacity = useSharedValue(0);
   const iconPulse = useSharedValue(1);
   const highlightGlow = useSharedValue(0);
-
-  const newRecordOpacity = useRef(new Animated.Value(0)).current;
   const [showNewRecord, setShowNewRecord] = useState(false);
 
   useEntranceAnimation(fade, translateY);

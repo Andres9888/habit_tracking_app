@@ -13,7 +13,6 @@
  *   → DraggableHabitCardProps (this file)   — fully resolved, internal
  */
 
-import type { Animated } from 'react-native';
 import type { AnimatedStyle, SharedValue } from 'react-native-reanimated';
 import type { Id } from '../../../convex/_generated/dataModel';
 import type { CardColors, Habit, HabitStatus } from './types';
@@ -29,16 +28,16 @@ export type ProgressAnimatedStyle = AnimatedStyle;
  *
  * Includes:
  * - Derived state (colors, emoji, name, streaks, strength)
- * - Animated values from useDraggableHabitAnimations
+ * - SharedValues from useDraggableHabitAnimations (all reanimated)
  * - Press/swipe handlers from usePressHandlers
  * - Entrance animation styles from useHabitCardEntrance
  * - Strength fill/progress styles from Reanimated hooks
  */
 export interface DraggableHabitCardProps {
   accentColor: string;
-  archiveFlash: Animated.Value;
+  archiveFlash: SharedValue<number>;
   bestStreak: number;
-  cardScale: Animated.Value;
+  cardScale: SharedValue<number>;
   celebrationsEnabled: boolean;
   colors: CardColors;
   completionIcon: 'chain' | 'checkbox';
@@ -47,7 +46,7 @@ export interface DraggableHabitCardProps {
   entranceAccentStyle: object;
   entranceCardStyle: object;
   entranceContentStyle: object;
-  fade: Animated.Value;
+  fade: SharedValue<number>;
   habit: Habit;
   handleLongPress: () => void;
   handlePressIn: () => void;
@@ -62,8 +61,8 @@ export interface DraggableHabitCardProps {
   isPaused: boolean;
   isWeekComplete: boolean;
   name: string;
-  newRecordOpacity: Animated.Value;
-  newRecordScale: Animated.Value;
+  newRecordOpacity: SharedValue<number>;
+  newRecordScale: SharedValue<number>;
   onArchive?: (habitId: Id<'habits'>) => void;
   onPause?: (habitId: Id<'habits'>) => void;
   onPress?: (habit: Habit) => void;
@@ -80,7 +79,7 @@ export interface DraggableHabitCardProps {
   strengthPercent: number;
   progressAnimatedStyle: ProgressAnimatedStyle;
   toggleHabit: (args: { habitId: Id<'habits'>; date: string }) => void;
-  translateY: Animated.Value;
+  translateY: SharedValue<number>;
   weekDateStrings: string[];
   weekStatus: HabitStatus[];
 }
