@@ -2,11 +2,8 @@
  * NetworkStatusContext - Barrel export
  */
 
-export {
-  NetworkStatusProvider,
-  NetworkStatusContext,
-  default,
-} from './NetworkStatusProvider';
+export { NetworkStatusProvider, default } from './NetworkStatusProvider';
+export { NetworkStatusContext } from './context';
 export { useNetworkStatus, useIsOnline, useOnlineCallback } from './hooks';
 export { useNetworkSync } from './useNetworkSync';
 export type {

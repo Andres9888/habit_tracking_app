@@ -3,7 +3,13 @@
  * Provides network connectivity status throughout the app
  */
 
-import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useRef,
+  useMemo,
+} from 'react';
 import * as Network from 'expo-network';
 import type {
   NetworkStatus,
@@ -15,24 +21,6 @@ import type { NetworkState } from './utils';
 import { defaultNetworkStatus } from './defaults';
 import { NetworkStatusContext } from './context';
 
-/**
- * Provider component that monitors network connectivity status and notifies
- * subscribers when network state changes.
- * 
- * Automatically checks network status on mount and provides callbacks for
- * online/offline events throughout the app.
- * 
- * @param children - React children to render
- * @param onStatusChange - Optional callback invoked when network status changes
- * @param refreshOnFocus - Whether to refresh network status when app comes to foreground (default: true)
- * 
- * @example
- * ```tsx
- * <NetworkStatusProvider onStatusChange={(status) => console.log(status)}>
- *   <App />
- * </NetworkStatusProvider>
- * ```
- */
 export function NetworkStatusProvider({
   children,
   onStatusChange,
@@ -79,7 +67,8 @@ export function NetworkStatusProvider({
     void Network.getNetworkStateAsync()
       .then(handleStatusUpdate)
       .catch((error) => {
-        if (__DEV__) console.warn('Error getting initial network state:', error);
+        if (__DEV__)
+          console.warn('Error getting initial network state:', error);
         setIsChecking(false);
       });
     const subscription = Network.addNetworkStateListener(handleStatusUpdate);
@@ -130,5 +119,3 @@ export function NetworkStatusProvider({
 }
 
 export default NetworkStatusProvider;
-
-export { NetworkStatusContext } from './context';
