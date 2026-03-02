@@ -7,8 +7,6 @@ export interface ModalHeaderProps {
   habitName: string;
   onClose: () => void;
   onSave: () => void;
-  isKeyboardVisible?: boolean;
-  onDismissKeyboard?: () => void;
   /** Called when user taps Save with empty habit name */
   onValidationError?: () => void;
 }

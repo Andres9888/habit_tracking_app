@@ -48,6 +48,8 @@ export const create = mutation({
       cueLocation: validated.cueLocation,
       cueTime: validated.cueTime,
       currentStreak: 0,
+      daysOfWeek: args.daysOfWeek,
+      frequency: args.frequency,
       icon: validated.icon,
       color: validated.color,
       iconColor: validated.iconColor ?? validated.color,
