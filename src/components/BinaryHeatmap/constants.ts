@@ -10,6 +10,8 @@
  * - Animation stagger: 5ms per cell = ~1.8s total animation time for 1y view
  */
 
+import { colors } from '@/theme/colors';
+
 /**
  * Cell dimensions (in pixels)
  */
@@ -167,8 +169,8 @@ export const TOOLTIP = {
  * Used for keyboard navigation on web
  */
 export const FOCUS = {
-  /** Focus ring color (uses a high-contrast blue) */
-  RING_COLOR: '#2563eb', // blue-600
+  /** Focus ring color — mapped to secondary-600 from theme */
+  RING_COLOR: colors.secondary[600],
 
   /** Focus ring offset from element */
   RING_OFFSET: 2,
