@@ -18,6 +18,7 @@ import {
   CHIP_CATEGORIES,
   QuickFilterChips,
 } from '../components/QuickFilterChips';
+import { getTemporalGreeting } from '../utils/getTemporalGreeting';
 import type { MainBrowseViewProps } from './MainBrowseView.types';
 
 const stagger = (index: number) =>
@@ -30,7 +31,7 @@ export function MainBrowseView(p: MainBrowseViewProps) {
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       <ScreenHeader
         leftAction={null}
-        subtitle='Science-backed templates to build great habits'
+        subtitle={getTemporalGreeting()}
         title='Import Habits'
       />
       <Animated.View style={[styles.searchSection, p.searchAnimatedStyle]}>
