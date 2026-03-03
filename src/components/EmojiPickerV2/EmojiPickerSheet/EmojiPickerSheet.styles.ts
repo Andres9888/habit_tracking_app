@@ -86,7 +86,6 @@ export function createEmojiSheetStyles(themeColors: SemanticColors) {
       backgroundColor: themeColors.surface,
       borderTopLeftRadius: borderRadius.xl,
       borderTopRightRadius: borderRadius.xl,
-      elevation: 20,
       height: SHEET_HEIGHT,
     },
   });

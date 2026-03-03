@@ -247,8 +247,14 @@ describe('EmojiPickerV2 Token Migration - Phase 3', () => {
       expect(sheetStyles.sheet.borderTopRightRadius).toBe(20);
     });
 
-    it('sheet should spread shadows.modal as base', () => {
+    it('sheet should use canonical shadows.modal without overrides', () => {
       expect(sheetStyles.sheet.shadowColor).toBe(shadows.modal.shadowColor);
+      expect(sheetStyles.sheet.shadowOffset).toEqual(
+        shadows.modal.shadowOffset
+      );
+      expect(sheetStyles.sheet.shadowOpacity).toBe(shadows.modal.shadowOpacity);
+      expect(sheetStyles.sheet.shadowRadius).toBe(shadows.modal.shadowRadius);
+      expect(sheetStyles.sheet.elevation).toBe(shadows.modal.elevation);
     });
   });
 
