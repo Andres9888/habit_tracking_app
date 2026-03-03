@@ -18,7 +18,7 @@ interface SearchBarProps {
 export function SearchBar({
   onChangeText,
   onClear,
-  placeholder = 'Search for habits...',
+  placeholder = 'What do you want to improve?',
   value,
 }: SearchBarProps) {
   const { colors } = useThemeColors();
