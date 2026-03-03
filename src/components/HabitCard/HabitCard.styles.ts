@@ -13,7 +13,7 @@ import { REDESIGN_COLORS } from './HabitCard.colors';
 import { statusStyles } from './HabitCard.statusStyles';
 
 export { actionStyles } from './HabitCard.actionStyles';
-export { REDESIGN_COLORS } from './HabitCard.colors';
+export { REDESIGN_COLORS, getRedesignColors } from './HabitCard.colors';
 
 const coreStyles = StyleSheet.create({
   accentBar: { bottom: 0, left: 0, position: 'absolute', top: 0 },
