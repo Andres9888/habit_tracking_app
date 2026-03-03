@@ -35,7 +35,7 @@ export const styles = StyleSheet.create({
     width: '100%',
   },
   pullIndicator: {
-    borderRadius: 2,
+    borderRadius: 2, // Sub-token: 2px for micro pull-indicator element
     height: 4,
     width: 40,
   },

@@ -8,17 +8,18 @@
 import { StyleSheet } from 'react-native';
 
 import { CELL_SIZE, CELL_GAP, DAY_LABEL_WIDTH, MONTH_LABEL } from './constants';
+import { borderRadius } from '../../theme/spacing';
 import { typography } from '../../theme/typography';
 
 export const styles = StyleSheet.create({
   cell: {
-    borderRadius: 2,
+    borderRadius: 2, // Sub-token: 2px for micro heatmap cell element
     height: CELL_SIZE,
     marginRight: CELL_GAP,
     width: CELL_SIZE,
   },
   container: {
-    borderRadius: 12,
+    borderRadius: borderRadius.medium,
     padding: 16,
   },
   dayLabelCell: {

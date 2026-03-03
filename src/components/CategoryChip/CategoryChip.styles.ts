@@ -32,7 +32,7 @@ export const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   countBadge: {
-    borderRadius: 999,
+    borderRadius: borderRadius.full,
     paddingHorizontal: 8,
     paddingVertical: 2,
   },

@@ -1,8 +1,10 @@
 import { StyleSheet } from 'react-native';
 
+import { borderRadius } from '../../theme/spacing';
+
 export const styles = StyleSheet.create({
   bulletPoint: {
-    borderRadius: 3,
+    borderRadius: borderRadius.full,
     height: 6,
     marginTop: 6,
     width: 6,
