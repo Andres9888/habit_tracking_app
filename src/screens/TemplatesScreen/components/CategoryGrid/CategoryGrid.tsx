@@ -13,7 +13,6 @@ interface CategoryItem {
   categoryId: string;
   count: number;
   icon: string;
-  isPremium: boolean;
   label: string;
   textColor: string;
 }
@@ -41,7 +40,6 @@ export function CategoryGrid({ categories, onSelectCategory }: CategoryGridProps
               count={cat.count}
               icon={cat.icon}
               index={rowIdx * 2 + colIdx}
-              isPremium={cat.isPremium}
               label={cat.label}
               textColor={cat.textColor}
               onPress={() => onSelectCategory(cat.categoryId)}
