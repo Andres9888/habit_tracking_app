@@ -4,7 +4,6 @@
 
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Lock } from 'lucide-react-native';
 import { borderRadius, spacing } from '../../../../theme/spacing';
 import { typography } from '../../../../theme/typography';
 import type { PremiumPack } from '../../data/premiumPacks';
@@ -25,7 +24,6 @@ export function PremiumPackCard({ index, onPress, pack }: PremiumPackCardProps) 
               <Text key={i} style={s.emoji}>{e}</Text>
             ))}
           </View>
-          <Lock color="rgba(255,255,255,0.7)" size={16} />
         </View>
         <Text style={s.name} numberOfLines={1}>{pack.name}</Text>
         <Text style={s.desc} numberOfLines={2}>{pack.description}</Text>
@@ -45,5 +43,5 @@ const s = StyleSheet.create({
   emoji: { fontSize: 20 },
   emojiGroup: { flexDirection: 'row', gap: 4 },
   name: { ...typography.bodySmall, color: '#fff', fontWeight: '700', marginTop: spacing.md },
-  topRow: { alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between' },
+  topRow: { alignItems: 'center', flexDirection: 'row' },
 });
