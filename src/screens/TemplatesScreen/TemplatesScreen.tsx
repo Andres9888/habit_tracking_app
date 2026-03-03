@@ -4,13 +4,11 @@
  */
 
 import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
-import { PackConfirmSheet } from '../../components/PackConfirmSheet';
-import { PaywallSheet } from '../../components/PaywallSheet';
 import type { Doc } from '../../../convex/_generated/dataModel';
 import { CategoryGrid } from './components/CategoryGrid';
 import { PremiumPacksSection } from './components/PremiumPacksSection';
 import { TemplatesEmptyState } from './components/TemplatesEmptyState';
-import { TemplateModals } from './components';
+import { TemplatesScreenModals } from './components';
 import { useTemplatesScreenProps } from './hooks/useTemplatesScreenProps';
 import { FeedbackOverlays } from './views/FeedbackOverlays';
 import { MainBrowseView } from './views/MainBrowseView';
@@ -30,11 +28,10 @@ function TemplatesScreenContent() {
     );
   }
 
-  if (
+  const isSearching =
     state.effectiveViewMode === 'category' ||
-    state.effectiveViewMode === 'search'
-  )
-    return renderCategorySearch(props);
+    state.effectiveViewMode === 'search';
+  if (isSearching) return renderCategorySearch(props);
 
   const handleImport = (t: Doc<'templates'>) =>
     handlers.handleDirectImport(t._id);
@@ -70,30 +67,24 @@ function TemplatesScreenContent() {
       importedTemplateIds={state.importedTemplateIds}
       importingTemplateId={state.importingTemplateId}
       modals={
-        <>
-          <TemplateModals
-            importedTemplateIds={state.importedTemplateIds}
-            importingTemplateId={state.importingTemplateId}
-            previewTemplate={state.previewTemplate}
-            showCustomizeModal={state.showCustomizeModal}
-            showFullsizePreview={state.showFullsizePreview}
-            onCloseCustomize={() => state.setShowCustomizeModal(false)}
-            onCloseFullsize={() => state.setShowFullsizePreview(false)}
-            onCustomize={handlers.handleCustomizeFromPreview}
-            onDirectImport={handlers.handleDirectImport}
-            onImport={handlers.handleTemplateImport}
-          />
-          <PaywallSheet
-            visible={state.showPaywall}
-            onClose={() => state.setShowPaywall(false)}
-          />
-          <PackConfirmSheet
-            pack={packConfirm.selectedPack}
-            visible={!!packConfirm.selectedPack}
-            onCancel={packConfirm.handleCancel}
-            onConfirm={packConfirm.handleConfirm}
-          />
-        </>
+        <TemplatesScreenModals
+          importedTemplateIds={state.importedTemplateIds}
+          importingTemplateId={state.importingTemplateId}
+          previewTemplate={state.previewTemplate}
+          showCustomizeModal={state.showCustomizeModal}
+          showFullsizePreview={state.showFullsizePreview}
+          showPaywall={state.showPaywall}
+          onCloseCustomize={() => state.setShowCustomizeModal(false)}
+          onCloseFullsize={() => state.setShowFullsizePreview(false)}
+          onClosePaywall={() => state.setShowPaywall(false)}
+          onCustomize={handlers.handleCustomizeFromPreview}
+          onDirectImport={handlers.handleDirectImport}
+          onImport={handlers.handleTemplateImport}
+          packConfirmPack={packConfirm.selectedPack}
+          packConfirmVisible={!!packConfirm.selectedPack}
+          onPackCancel={packConfirm.handleCancel}
+          onPackConfirm={packConfirm.handleConfirm}
+        />
       }
       onFeaturedPress={() => viewNav.openCategory('morning_routine')}
       onImport={handleImport}
