@@ -1,13 +1,8 @@
 import { useMemo } from 'react';
 
-interface StreakBadge {
-  emoji: string;
-  text: string;
-}
-
 export interface StreakGreetingResult {
   greeting: string;
-  badge?: StreakBadge;
+  variant?: 'risk' | 'success' | 'almostDone';
 }
 
 interface StreakGreetingInput {
@@ -16,12 +11,6 @@ interface StreakGreetingInput {
   totalHabits: number;
   /** Current hour (0-23), defaults to new Date().getHours() */
   hour?: number;
-}
-
-function getTimeOfDayGreeting(hour: number): string {
-  if (hour < 12) return 'Good morning';
-  if (hour < 17) return 'Good afternoon';
-  return 'Good evening';
 }
 
 /** Pure function — no React hooks, fully testable */
@@ -38,26 +27,34 @@ export function getStreakGreeting({
     return { greeting: 'Perfect day' };
   }
 
-  if (currentStreak === 0) {
-    return { greeting: getTimeOfDayGreeting(h) };
+  // Almost done — 1 habit left
+  if (totalHabits > 0 && totalHabits - completedToday === 1) {
+    return { greeting: 'Just 1 left!', variant: 'almostDone' };
   }
 
-  if (currentStreak === 1) {
-    return { greeting: 'Great start!' };
-  }
-
-  if (currentStreak >= 7) {
+  // Streak at risk — evening (8pm+), has streak, no progress today
+  if (h >= 20 && currentStreak > 0 && completedToday === 0) {
     return {
-      greeting: `${currentStreak}-day streak`,
-      badge: { emoji: '⚡', text: 'On fire!' },
+      greeting: `${currentStreak}-day streak at risk`,
+      variant: 'risk',
     };
   }
 
+  // No behavioral value for 0 or 1-day streaks — signal header collapse
+  if (currentStreak === 0) {
+    return { greeting: '' };
+  }
+
+  if (currentStreak === 1) {
+    return { greeting: '' };
+  }
+
+  if (currentStreak >= 7) {
+    return { greeting: `${currentStreak}-day streak` };
+  }
+
   // currentStreak >= 2 && < 7
-  return {
-    greeting: `${currentStreak}-day streak`,
-    badge: { emoji: '🔥', text: 'Keep it going!' },
-  };
+  return { greeting: `${currentStreak}-day streak` };
 }
 
 /** Thin hook wrapper — memoizes the pure function result */

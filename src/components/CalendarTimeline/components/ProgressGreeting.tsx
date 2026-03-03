@@ -33,13 +33,6 @@ const ROW_STYLE = {
   alignItems: 'baseline' as const,
 };
 
-const BADGE_STYLE = {
-  paddingHorizontal: 6,
-  paddingVertical: 2,
-  borderRadius: 8,
-  marginLeft: 6,
-};
-
 const GREETING_ROW = {
   flexDirection: 'row' as const,
   alignItems: 'center' as const,
@@ -57,7 +50,7 @@ export const ProgressGreeting: React.FC<ProgressGreetingProps> = ({
   onDateRangePress,
 }) => {
   const { colors, isDark } = useThemeColors();
-  const { greeting, badge } = useStreakGreeting(
+  const { greeting } = useStreakGreeting(
     currentStreak,
     completedToday,
     totalHabits
@@ -75,29 +68,10 @@ export const ProgressGreeting: React.FC<ProgressGreetingProps> = ({
     <View>
       <View style={ROW_STYLE}>
         <View style={GREETING_ROW}>
-          <Text style={[GREETING_BASE, { color: greetingColor }]}>
-            {greeting}
-          </Text>
-          {badge && (
-            <View
-              style={[
-                BADGE_STYLE,
-                {
-                  backgroundColor: isDark
-                    ? 'rgba(232,185,77,0.15)'
-                    : palette.streak[100],
-                },
-              ]}
-            >
-              <Text
-                style={{
-                  fontSize: 11,
-                  color: isDark ? palette.streak[300] : palette.streak[700],
-                }}
-              >
-                {badge.emoji} {badge.text}
-              </Text>
-            </View>
+          {greeting !== '' && (
+            <Text style={[GREETING_BASE, { color: greetingColor }]}>
+              {greeting}
+            </Text>
           )}
         </View>
         <ProgressText completed={completedToday} total={totalHabits} />
