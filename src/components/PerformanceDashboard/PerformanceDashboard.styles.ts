@@ -4,7 +4,7 @@
 
 import { StyleSheet } from 'react-native';
 
-import { borderRadius, spacing } from '@/theme/spacing';
+import { borderRadius, shadows, spacing } from '@/theme/spacing';
 
 export const dashboardStyles = StyleSheet.create({
   container: { position: 'absolute', zIndex: 9999 },
@@ -15,10 +15,7 @@ export const dashboardStyles = StyleSheet.create({
     borderRadius: borderRadius.medium,
     borderWidth: 1,
     padding: spacing.md,
-    shadowColor: '#000',
-    shadowOffset: { height: 4, width: 0 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
+    ...shadows.modal,
   },
   miniMetrics: {
     flexDirection: 'row',

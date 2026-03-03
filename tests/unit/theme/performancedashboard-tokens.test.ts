@@ -4,7 +4,7 @@
  */
 
 import { colors } from '../../../src/theme/colors';
-import { borderRadius, spacing } from '../../../src/theme/spacing';
+import { borderRadius, shadows, spacing } from '../../../src/theme/spacing';
 import { dashboardStyles } from '../../../src/components/PerformanceDashboard/PerformanceDashboard.styles';
 import { rendersStyles } from '../../../src/components/PerformanceDashboard/components/RendersTab.styles';
 import { networkStyles } from '../../../src/components/PerformanceDashboard/components/NetworkTab.styles';
@@ -26,6 +26,22 @@ describe('PerformanceDashboard - Theme Token Migration', () => {
     it('uses spacing tokens for miniMetrics', () => {
       expect(dashboardStyles.miniMetrics.gap).toBe(spacing.sm);
       expect(dashboardStyles.miniMetrics.paddingTop).toBe(spacing.xs);
+    });
+
+    it('uses shadows.modal canonical preset for dashboard panel', () => {
+      expect(dashboardStyles.dashboard.shadowColor).toBe(
+        shadows.modal.shadowColor
+      );
+      expect(dashboardStyles.dashboard.shadowOffset).toEqual(
+        shadows.modal.shadowOffset
+      );
+      expect(dashboardStyles.dashboard.shadowOpacity).toBe(
+        shadows.modal.shadowOpacity
+      );
+      expect(dashboardStyles.dashboard.shadowRadius).toBe(
+        shadows.modal.shadowRadius
+      );
+      expect(dashboardStyles.dashboard.elevation).toBe(shadows.modal.elevation);
     });
   });
 
