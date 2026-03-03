@@ -5,18 +5,18 @@
 import { StyleSheet } from 'react-native';
 import { colors } from '../../../theme/colors';
 import { typography } from '../../../theme/typography';
-import { spacing } from '../../../theme/spacing';
+import { borderRadius, spacing } from '../../../theme/spacing';
 
 export const auxiliaryStyles = StyleSheet.create({
   container: {
     backgroundColor: colors.surface,
-    borderRadius: 12,
+    borderRadius: borderRadius.medium,
     padding: spacing.md,
   },
   emptyContainer: {
     alignItems: 'center',
     backgroundColor: colors.surface,
-    borderRadius: 12,
+    borderRadius: borderRadius.medium,
     height: 200,
     justifyContent: 'center',
     padding: spacing.xl,
@@ -41,7 +41,7 @@ export const auxiliaryStyles = StyleSheet.create({
     paddingTop: spacing.md,
   },
   legendCell: {
-    borderRadius: 2,
+    borderRadius: 2, // Sub-token: 2px for micro elements
     height: 12,
     marginHorizontal: 2,
     width: 12,

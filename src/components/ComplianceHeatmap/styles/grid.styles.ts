@@ -10,7 +10,7 @@ import { CELL_SIZE } from '../ComplianceHeatmap.constants';
 export const gridStyles = StyleSheet.create({
   cell: {
     alignItems: 'center',
-    borderRadius: 2,
+    borderRadius: 2, // Sub-token: 2px for micro elements
     height: CELL_SIZE,
     justifyContent: 'center',
     marginBottom: spacing.xs,
