@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
  * HabitsListContent — the actual list body rendered by {@link HabitsList}.
  *
@@ -97,11 +98,7 @@ export function HabitsListContent({
   );
 
   if (isEmpty) {
-    return (
-      <View style={{ flex: 1 }}>
-        {listEmptyComponent}
-      </View>
-    );
+    return <View style={{ flex: 1 }}>{listEmptyComponent}</View>;
   }
 
   return (
@@ -116,7 +113,10 @@ export function HabitsListContent({
         renderItem={renderHabitItem}
         showsVerticalScrollIndicator={false}
         onDragBegin={handlers.handleDragBegin}
-        onDragEnd={list.handleDragEnd}
+        onDragEnd={(params) => {
+          void list.handleDragEnd(params);
+        }}
+        stickyHeaderIndices={[0]}
       />
       <HabitsListModals
         daySheetDate={state.daySheetDate}

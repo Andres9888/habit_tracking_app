@@ -1,15 +1,20 @@
+/* eslint-disable max-lines */
+
 import { Modal, View, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { StatsCard } from './StatsCard';
 import { ActivityLog } from './ActivityLog';
+import { CalendarHeader } from '../HabitCalendarView/CalendarHeader';
 import { CalendarTabs } from './CalendarTabs';
 import { ModalHeader } from './ModalHeader';
 import { StatusRibbon } from './StatusRibbon';
 import HeatmapCalendar from './HeatmapCalendar';
 import HabitCalendarView from '../HabitCalendarView';
 import HabitEditScreen from '../../screens/HabitEditScreen';
+import { useHabitCalendarViewLogic } from '../HabitCalendarView/HabitCalendarView.hooks';
 import { useHabitCalendarModal } from './useHabitCalendarModal';
+import type { Id } from '../../../convex/_generated/dataModel';
 import type { HabitCalendarModalProps } from './types';
 
 export default function HabitCalendarModal({
@@ -20,6 +25,7 @@ export default function HabitCalendarModal({
   tracking,
   toggleHabit,
   onOpenMotivationTab,
+  stickyCalendarHeader = false,
 }: HabitCalendarModalProps) {
   const { colors } = useThemeColors();
   const state = useHabitCalendarModal({
@@ -29,16 +35,56 @@ export default function HabitCalendarModal({
     toggleHabit,
     tracking,
   });
+  const isStickyCalendarHeader = stickyCalendarHeader;
+  const showStickyHeader =
+    isStickyCalendarHeader && state.calendarView === 'month';
+  const calendarViewState = useHabitCalendarViewLogic({
+    habitId: habit?._id ?? tracking[0]?.habitId ?? ('' as Id<'habits'>),
+    tracking,
+  });
 
   if (!state.isValid || !habit) return null;
 
   return (
-    <Modal animationType='slide' visible={visible} onRequestClose={onClose}>
+    <Modal
       accessibilityViewIsModal
-      <SafeAreaView className='flex-1' style={{ backgroundColor: colors.background }}>
-        <ModalHeader name={state.name} onClose={onClose} onEdit={state.handleEditPress} />
+      animationType='slide'
+      visible={visible}
+      onRequestClose={onClose}
+    >
+      <SafeAreaView
+        className='flex-1'
+        style={{ backgroundColor: colors.background }}
+      >
+        <ModalHeader
+          name={state.name}
+          onClose={onClose}
+          onEdit={state.handleEditPress}
+        />
 
-        <ScrollView className='px-4' showsVerticalScrollIndicator={false}>
+        <ScrollView
+          className='px-4'
+          showsVerticalScrollIndicator={false}
+          stickyHeaderIndices={showStickyHeader ? [0] : []}
+        >
+          {showStickyHeader && (
+            <View
+              className='pb-3 pt-2'
+              style={{
+                backgroundColor: colors.background,
+                borderBottomColor: colors.border,
+                borderBottomWidth: 1,
+              }}
+            >
+              <CalendarHeader
+                currentMonth={calendarViewState.currentMonth}
+                onNext={calendarViewState.handleNextMonth}
+                onPrevious={calendarViewState.handlePreviousMonth}
+                onToday={calendarViewState.handleToday}
+              />
+            </View>
+          )}
+
           <StatusRibbon
             bestStreak={state.bestStreak}
             emoji={state.emoji}
@@ -65,13 +111,26 @@ export default function HabitCalendarModal({
           </View>
 
           <View className='mt-8'>
-            <CalendarTabs activeView={state.calendarView} onViewChange={state.setCalendarView} />
-            {state.calendarView === 'month' ? (
-              <HabitCalendarView habitId={habit._id} toggleHabit={toggleHabit} tracking={tracking} />
-            ) : (
-              <HeatmapCalendar habitId={habit._id} monthsToShow={6} tracking={tracking} />
-            )}
+            <CalendarTabs
+              activeView={state.calendarView}
+              onViewChange={state.setCalendarView}
+            />
           </View>
+          {state.calendarView === 'month' ? (
+            <HabitCalendarView
+              calendarViewState={calendarViewState}
+              habitId={habit._id}
+              showHeader={!isStickyCalendarHeader}
+              toggleHabit={toggleHabit}
+              tracking={tracking}
+            />
+          ) : (
+            <HeatmapCalendar
+              habitId={habit._id}
+              monthsToShow={6}
+              tracking={tracking}
+            />
+          )}
 
           <View className='mt-8 pb-6'>
             <ActivityLog tracking={state.habitTrackingEntries} />
@@ -83,9 +142,15 @@ export default function HabitCalendarModal({
         habitId={habit._id}
         visible={state.showEditScreen}
         onClose={state.handleCloseEdit}
-        onOpenAffirmationsEditor={onOpenMotivationTab ? state.handleOpenAdvancedFeatures : undefined}
-        onOpenCueEditor={onOpenMotivationTab ? state.handleOpenAdvancedFeatures : undefined}
-        onOpenVisionBoard={onOpenMotivationTab ? state.handleOpenAdvancedFeatures : undefined}
+        onOpenAffirmationsEditor={
+          onOpenMotivationTab ? state.handleOpenAdvancedFeatures : undefined
+        }
+        onOpenCueEditor={
+          onOpenMotivationTab ? state.handleOpenAdvancedFeatures : undefined
+        }
+        onOpenVisionBoard={
+          onOpenMotivationTab ? state.handleOpenAdvancedFeatures : undefined
+        }
       />
     </Modal>
   );
