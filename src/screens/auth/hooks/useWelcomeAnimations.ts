@@ -20,22 +20,45 @@ export function useWelcomeAnimations() {
   const titleTranslateY = useSharedValue(15);
   const subtitleOpacity = useSharedValue(0);
   const subtitleTranslateY = useSharedValue(15);
+  const valuePropsOpacity = useSharedValue(0);
+  const valuePropsTranslateY = useSharedValue(15);
   const buttonsOpacity = useSharedValue(0);
   const buttonsTranslateY = useSharedValue(15);
 
   useEffect(() => {
-    // Stagger: 0, 60, 120, 180ms
+    // Stagger: 0, 60, 120, 180, 240ms
     iconOpacity.value = withSpring(1, springs.standard);
     iconScale.value = withSpring(1, springs.standard);
 
     titleOpacity.value = withDelay(STAGGER, withSpring(1, springs.standard));
     titleTranslateY.value = withDelay(STAGGER, withSpring(0, springs.standard));
 
-    subtitleOpacity.value = withDelay(STAGGER * 2, withSpring(1, springs.standard));
-    subtitleTranslateY.value = withDelay(STAGGER * 2, withSpring(0, springs.standard));
+    subtitleOpacity.value = withDelay(
+      STAGGER * 2,
+      withSpring(1, springs.standard)
+    );
+    subtitleTranslateY.value = withDelay(
+      STAGGER * 2,
+      withSpring(0, springs.standard)
+    );
 
-    buttonsOpacity.value = withDelay(STAGGER * 3, withSpring(1, springs.standard));
-    buttonsTranslateY.value = withDelay(STAGGER * 3, withSpring(0, springs.standard));
+    valuePropsOpacity.value = withDelay(
+      STAGGER * 3,
+      withSpring(1, springs.standard)
+    );
+    valuePropsTranslateY.value = withDelay(
+      STAGGER * 3,
+      withSpring(0, springs.standard)
+    );
+
+    buttonsOpacity.value = withDelay(
+      STAGGER * 4,
+      withSpring(1, springs.standard)
+    );
+    buttonsTranslateY.value = withDelay(
+      STAGGER * 4,
+      withSpring(0, springs.standard)
+    );
   }, [
     buttonsOpacity,
     buttonsTranslateY,
@@ -45,6 +68,8 @@ export function useWelcomeAnimations() {
     subtitleTranslateY,
     titleOpacity,
     titleTranslateY,
+    valuePropsOpacity,
+    valuePropsTranslateY,
   ]);
 
   const iconStyle = useAnimatedStyle(() => ({
@@ -62,10 +87,21 @@ export function useWelcomeAnimations() {
     transform: [{ translateY: subtitleTranslateY.value }],
   }));
 
+  const valuePropsStyle = useAnimatedStyle(() => ({
+    opacity: valuePropsOpacity.value,
+    transform: [{ translateY: valuePropsTranslateY.value }],
+  }));
+
   const buttonsStyle = useAnimatedStyle(() => ({
     opacity: buttonsOpacity.value,
     transform: [{ translateY: buttonsTranslateY.value }],
   }));
 
-  return { buttonsStyle, iconStyle, subtitleStyle, titleStyle };
+  return {
+    buttonsStyle,
+    iconStyle,
+    subtitleStyle,
+    titleStyle,
+    valuePropsStyle,
+  };
 }

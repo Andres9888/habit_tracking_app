@@ -1,135 +1,92 @@
-/* eslint-disable max-lines */
 /**
- * WelcomeScreen - Auth landing page
- * Clean design consistent with app style
- *
- * Performance optimizations:
- * - Lazy loads SignInScreen and SignUpScreen when needed
- * - Reduces initial bundle size for welcome screen
+ * WelcomeScreen - OAuth-only auth landing page
  */
 
-import React, { useState, lazy, Suspense } from 'react';
-import { Text, View, ActivityIndicator } from 'react-native';
+import React from 'react';
+import { View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated from 'react-native-reanimated';
-import { Link } from 'lucide-react-native';
-import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
+import { LinearGradient } from 'expo-linear-gradient';
 import {
-  AuthDivider,
+  AnimatedLogo,
   AuthError,
-  BackButton,
+  SocialProofBadge,
   SocialSignInButton,
+  ValueProps,
 } from './components';
+import { LegalFooter } from './components/LegalFooter';
 import { useOAuthSignIn } from './hooks/useOAuthSignIn';
 import { useWelcomeAnimations } from './hooks/useWelcomeAnimations';
-import { styles } from './WelcomeScreen.styles';
+import { useWelcomeStyles } from './WelcomeScreen.styles';
 import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
-import { colors } from '../../theme/colors';
-
-// Lazy load auth screens - only bundle when user wants to sign in/up
-const SignInScreen = lazy(() => import('./SignInScreen'));
-const SignUpScreen = lazy(() => import('./SignUpScreen'));
-
-type AuthMode = 'welcome' | 'signin' | 'signup';
 
 function WelcomeScreenContent() {
-  const [mode, setMode] = useState<AuthMode>('welcome');
   const insets = useSafeAreaInsets();
+  const styles = useWelcomeStyles();
   const { signInWithGoogle, signInWithApple, isLoading, error, clearError } =
     useOAuthSignIn();
-  const { iconStyle, titleStyle, subtitleStyle, buttonsStyle } =
-    useWelcomeAnimations();
-
-  if (mode === 'signin') {
-    return (
-      <View style={styles.container}>
-        <Suspense fallback={<View style={styles.loadingContainer}><ActivityIndicator size="large" color={colors.primary[600]} /></View>}>
-          <SignInScreen />
-        </Suspense>
-        <View style={[styles.backButton, { top: insets.top + 8 }]}>
-          <BackButton onPress={() => setMode('welcome')} />
-        </View>
-      </View>
-    );
-  }
-
-  if (mode === 'signup') {
-    return (
-      <View style={styles.container}>
-        <Suspense fallback={<View style={styles.loadingContainer}><ActivityIndicator size="large" color={colors.primary[600]} /></View>}>
-          <SignUpScreen />
-        </Suspense>
-        <View style={[styles.backButton, { top: insets.top + 8 }]}>
-          <BackButton onPress={() => setMode('welcome')} />
-        </View>
-      </View>
-    );
-  }
+  const {
+    iconStyle,
+    titleStyle,
+    subtitleStyle,
+    valuePropsStyle,
+    buttonsStyle,
+  } = useWelcomeAnimations();
 
   return (
     <View style={styles.container}>
-      <View style={[styles.content, { paddingTop: insets.top + 24 }]}>
-        <View style={styles.heroSection}>
-          <Animated.View style={[styles.iconContainer, iconStyle]}>
-            <Link color='#1c1917' size={40} strokeWidth={2} />
-          </Animated.View>
-          <Animated.Text style={[styles.title, titleStyle]}>
-            Chain Day
-          </Animated.Text>
-          <Animated.Text style={[styles.subtitle, subtitleStyle]}>
-            Build habits that stick
-          </Animated.Text>
-        </View>
+      <LinearGradient
+        colors={styles.gradientColors}
+        locations={[0, 0.4, 1]}
+        style={{ flex: 1 }}
+      >
+        <View style={[styles.content, { paddingTop: insets.top + 24 }]}>
+          <View style={styles.heroSection}>
+            <Animated.View style={iconStyle}>
+              <AnimatedLogo size={80} />
+            </Animated.View>
+            <Animated.Text style={[styles.title, titleStyle]}>
+              Chain Day
+            </Animated.Text>
+            <Animated.Text style={[styles.subtitle, subtitleStyle]}>
+              Build habits that last
+            </Animated.Text>
+            <Animated.View style={valuePropsStyle}>
+              <SocialProofBadge delay={0} />
+            </Animated.View>
+            <Animated.View style={[styles.valuePropsWrap, valuePropsStyle]}>
+              <ValueProps />
+            </Animated.View>
+          </View>
 
-        <Animated.View style={[styles.actionSection, buttonsStyle]}>
-          {error && <AuthError message={error} onDismiss={clearError} />}
-          <SocialSignInButton
-            disabled={!!isLoading}
-            isLoading={isLoading === 'oauth_apple'}
-            provider='apple'
-            onPress={signInWithApple}
-          />
-          <SocialSignInButton
-            disabled={!!isLoading}
-            isLoading={isLoading === 'oauth_google'}
-            provider='google'
-            onPress={signInWithGoogle}
-          />
-          <AuthDivider />
-          <AnimatedPressable
-            accessibilityHint='Create a new Chain Day account'
-            accessibilityLabel='Create free account with Chain Day'
-            accessibilityRole='button'
-            accessibilityState={{ disabled: !!isLoading }}
-            disableAnimation={!!isLoading}
-            disabled={!!isLoading}
-            style={[styles.primaryButton, isLoading && styles.buttonDisabled]}
-            onPress={() => setMode('signup')}
-          >
-            <Text style={styles.primaryButtonText}>Create Free Account</Text>
-          </AnimatedPressable>
-          <AnimatedPressable
-            accessibilityHint='Navigate to sign in screen'
-            accessibilityLabel='Sign in to existing account'
-            accessibilityRole='link'
-            accessibilityState={{ disabled: !!isLoading }}
-            disableAnimation={!!isLoading}
-            disabled={!!isLoading}
-            style={styles.textLink}
-            onPress={() => setMode('signin')}
-          >
-            <Text style={styles.textLinkLabel}>Already have an account?</Text>
-            <Text style={styles.textLinkAction}> Sign in</Text>
-          </AnimatedPressable>
-        </Animated.View>
-      </View>
+          <Animated.View style={[styles.actionSection, buttonsStyle]}>
+            {error && <AuthError message={error} onDismiss={clearError} />}
+            <SocialSignInButton
+              disabled={!!isLoading}
+              isLoading={isLoading === 'oauth_apple'}
+              provider='apple'
+              onPress={signInWithApple}
+            />
+            <SocialSignInButton
+              disabled={!!isLoading}
+              isLoading={isLoading === 'oauth_google'}
+              provider='google'
+              onPress={signInWithGoogle}
+            />
+          </Animated.View>
+
+          <View style={styles.footer}>
+            <LegalFooter />
+          </View>
+        </View>
+      </LinearGradient>
     </View>
   );
 }
 
 export default function WelcomeScreen() {
   return (
-    <ScreenErrorBoundary screenName="Welcome">
+    <ScreenErrorBoundary screenName='Welcome'>
       <WelcomeScreenContent />
     </ScreenErrorBoundary>
   );

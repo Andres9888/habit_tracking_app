@@ -8,7 +8,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { colors } from '@/theme/colors';
 import { styles as analyticsStyles } from '@/screens/AnalyticsScreen/AnalyticsScreen.styles';
-import { styles as signInStyles } from '@/screens/auth/SignInScreen.styles';
+// SignInScreen.styles removed in OAuth-only migration
 
 const SRC = path.resolve(__dirname, '../../../src');
 
@@ -80,21 +80,7 @@ describe('CharacterScreen uses theme background', () => {
   });
 });
 
-describe('SignUpScreen uses theme background', () => {
-  const source = readSource('screens/auth/SignUpScreen.tsx');
-
-  it('imports colors from theme', () => {
-    expect(source).toMatch(/import.*colors.*from.*theme\/colors/);
-  });
-
-  it('does not use bg-[#faf9f7] Tailwind class', () => {
-    expect(source).not.toContain('bg-[#faf9f7]');
-  });
-
-  it('uses colors.light.background style prop', () => {
-    expect(source).toContain('colors.light.background');
-  });
-});
+// SignUpScreen removed in OAuth-only migration
 
 describe('HabitDetailScreen uses theme gradient tokens', () => {
   const source = readSource('screens/HabitDetailScreen/HabitDetailScreen.tsx');
@@ -117,42 +103,7 @@ describe('HabitDetailScreen uses theme gradient tokens', () => {
   });
 });
 
-describe('SignInScreen uses theme gradient tokens', () => {
-  const source = readSource('screens/auth/SignInScreen.tsx');
-
-  it('imports colors from theme', () => {
-    expect(source).toMatch(/import.*colors.*from.*theme\/colors/);
-  });
-
-  it('does not hardcode gradient hex values', () => {
-    expect(source).not.toMatch(/#faf9f7/i);
-    expect(source).not.toMatch(/#f5f3f0/i);
-  });
-
-  it('uses colors.light.background in gradient', () => {
-    expect(source).toContain('colors.light.background');
-  });
-
-  it('uses colors.light.gradientMid in gradient', () => {
-    expect(source).toContain('colors.light.gradientMid');
-  });
-});
-
-describe('SignInScreen.styles uses theme background', () => {
-  it('gradientBg uses colors.light.background', () => {
-    expect(signInStyles.gradientBg.backgroundColor).toBe(
-      colors.light.background
-    );
-  });
-
-  it('does not hardcode #faf9f7 in styles source', () => {
-    const stylesSource = readSource('screens/auth/SignInScreen.styles.ts');
-    // The backgroundColor property should reference the token, not a literal
-    expect(stylesSource).not.toMatch(
-      /gradientBg.*backgroundColor.*['"]#faf9f7['"]/s
-    );
-  });
-});
+// SignInScreen and SignInScreen.styles removed in OAuth-only migration
 
 describe('AnalyticsScreen.styles already uses theme token', () => {
   it('container backgroundColor matches colors.background', () => {
