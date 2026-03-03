@@ -1,5 +1,5 @@
 /**
- * PopularSection - "Popular" header + horizontal carousel of MiniTemplateCards
+ * PopularSection - "Trending Now" header + horizontal carousel of MiniTemplateCards
  */
 
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
@@ -27,12 +27,12 @@ export function PopularSection({
   templates,
 }: PopularSectionProps) {
   return (
-    <View testID="templates-popular-section" style={s.container}>
+    <View testID="templates-trending-section" style={s.container}>
       <View style={s.header}>
-        <Text style={s.title}>Popular</Text>
+        <Text style={s.title}>🔥 Trending Now</Text>
         <Pressable
-          testID="templates-popular-see-all"
-          accessibilityLabel="See all popular templates"
+          testID="templates-trending-see-all"
+          accessibilityLabel="See all trending templates"
           accessibilityRole="button"
           hitSlop={8}
           onPress={onSeeAll}
