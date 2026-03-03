@@ -3,28 +3,30 @@
  */
 
 import type { BinaryDay } from './types';
-import { COLORS } from './constants';
+import { getHeatmapColors } from './constants';
 
 /**
  * Determines the background color for a heatmap cell
  */
 export function getCellBackgroundColor(
   day: BinaryDay | null,
-  habitColor: string
+  habitColor: string,
+  isDark = false
 ): string {
+  const hColors = getHeatmapColors(isDark);
   if (day === null) {
     return 'transparent';
   }
   if (day.isBeforeCreation) {
-    return COLORS.CELL_BEFORE_CREATION;
+    return hColors.CELL_BEFORE_CREATION;
   }
   if (day.isFuture) {
-    return COLORS.CELL_FUTURE;
+    return hColors.CELL_FUTURE;
   }
   if (day.completed) {
     return habitColor;
   }
-  return COLORS.CELL_EMPTY;
+  return hColors.CELL_EMPTY;
 }
 
 /**

@@ -135,23 +135,11 @@ export const theme: MD3Theme = {
   colors: {
     ...MD3LightTheme.colors,
 
-    // Background & Surface
-    background: colors.light.background,
-
-    // Error
-    error: colors.error,
-
-    errorContainer: '#FFEBEE',
-
-    inverseOnSurface: colors.gray[50],
-
-    inversePrimary: colors.primary[400],
-
     // Backdrop
     backdrop: 'rgba(0, 0, 0, 0.6)',
 
-    // Inverse
-    inverseSurface: colors.gray[900],
+    // Background & Surface
+    background: colors.light.background,
 
     // Elevation
     elevation: {
@@ -162,6 +150,18 @@ export const theme: MD3Theme = {
       level4: colors.gray[100],
       level5: colors.gray[100],
     },
+
+    // Error
+    error: colors.error,
+
+    errorContainer: '#FFEBEE',
+
+    inverseOnSurface: colors.gray[50],
+
+    inversePrimary: colors.primary[400],
+
+    // Inverse
+    inverseSurface: colors.gray[900],
 
     onBackground: colors.gray[900],
 
@@ -279,3 +279,6 @@ export { typography } from './typography';
 export { spacing, borderRadius, shadows, componentSpacing } from './spacing';
 export { durations, easings, springs } from './animations';
 export { iconSizes } from './iconSizes';
+export { ThemeColorProvider, useThemeColors } from './ThemeContext';
+export { darkColors, lightColors } from './darkColors';
+export type { SemanticColors } from './darkColors';

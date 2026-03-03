@@ -122,6 +122,9 @@ export interface BinaryHeatmapGridProps {
   /** Habit color for completed cells */
   habitColor: string;
 
+  /** Whether dark mode is active */
+  isDark?: boolean;
+
   /** Callback when a cell is pressed */
   onCellPress?: (date: string, completed: boolean) => void;
 }
@@ -139,6 +142,9 @@ export interface BinaryCellProps {
   /** Habit color for completed state */
   habitColor: string;
 
+  /** Whether dark mode is active */
+  isDark?: boolean;
+
   /** Callback when cell is pressed */
   onPress?: (date: string, completed: boolean) => void;
 }
@@ -149,6 +155,9 @@ export interface BinaryCellProps {
 export interface TimeRangeToggleProps {
   /** Currently selected time range */
   value: TimeRange;
+
+  /** Whether dark mode is active */
+  isDark?: boolean;
 
   /** Callback when time range changes */
   onChange: (range: TimeRange) => void;
@@ -163,6 +172,9 @@ export interface HeatmapLegendProps {
 
   /** Completion rate as percentage (0-100) */
   completionRate: number;
+
+  /** Whether dark mode is active */
+  isDark?: boolean;
 }
 
 /**
@@ -194,6 +206,9 @@ export interface StatsRowProps {
 
   /** Habit's accent color (hex) for theming streak badge */
   habitColor: string;
+
+  /** Whether dark mode is active */
+  isDark?: boolean;
 
   /** Callback when settings button is pressed */
   onSettingsPress?: () => void;

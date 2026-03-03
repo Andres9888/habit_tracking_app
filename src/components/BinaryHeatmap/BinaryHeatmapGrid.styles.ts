@@ -1,16 +1,12 @@
 /**
  * Styles for BinaryHeatmapGrid Component
+ *
+ * Text color for day labels is applied inline via getHeatmapColors(isDark).
  */
 
 import { StyleSheet } from 'react-native';
 
-import {
-  CELL_SIZE,
-  CELL_GAP,
-  DAY_LABEL_WIDTH,
-  COLORS,
-  MONTH_LABEL,
-} from './constants';
+import { CELL_SIZE, CELL_GAP, DAY_LABEL_WIDTH, MONTH_LABEL } from './constants';
 
 export const styles = StyleSheet.create({
   cellWrapper: {
@@ -29,7 +25,6 @@ export const styles = StyleSheet.create({
     width: DAY_LABEL_WIDTH,
   },
   dayLabelText: {
-    color: COLORS.TEXT_SECONDARY,
     fontSize: 10,
     fontWeight: '500',
     paddingRight: 4,

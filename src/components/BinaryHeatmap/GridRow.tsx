@@ -16,12 +16,14 @@ export interface GridRowProps {
   dayIndex: number;
   row: (BinaryDay | null)[];
   habitColor: string;
+  isDark?: boolean;
 }
 
 export const GridRow = memo(function GridRow({
   dayIndex,
   row,
   habitColor,
+  isDark = false,
 }: GridRowProps) {
   return (
     <View accessibilityRole='none' style={styles.gridRow}>
@@ -31,7 +33,7 @@ export const GridRow = memo(function GridRow({
           style={[
             styles.cellWrapper,
             {
-              backgroundColor: getCellBackgroundColor(day, habitColor),
+              backgroundColor: getCellBackgroundColor(day, habitColor, isDark),
               borderRadius: 2,
               height: CELL_SIZE,
               opacity: day?.isFuture ? 0.4 : 1,

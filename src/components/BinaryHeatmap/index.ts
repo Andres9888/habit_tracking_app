@@ -42,6 +42,8 @@ export {
   ANIMATION,
   TIME_RANGE_CONFIG,
   COLORS,
+  DEFAULT_COLORS,
+  getHeatmapColors,
   DAY_LABELS,
   DAY_NAMES_FULL,
   GRID,
@@ -49,6 +51,7 @@ export {
   TOOLTIP,
   MONTH_LABEL,
 } from './constants';
+export type { HeatmapColors } from './constants';
 
 // Utility exports
 export {

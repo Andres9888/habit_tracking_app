@@ -9,7 +9,7 @@ import React, { memo, useMemo } from 'react';
 import { View, Text, ScrollView } from 'react-native';
 
 import type { BinaryMonthLabel, BinaryDay } from './types';
-import { CELL_SIZE, CELL_GAP, GRID } from './constants';
+import { CELL_SIZE, CELL_GAP, GRID, getHeatmapColors } from './constants';
 import { styles } from './BinaryHeatmapNew.styles';
 import { getCellBackgroundColor, transformWeeksToRows } from './cellHelpers';
 
@@ -19,13 +19,16 @@ export interface InlineHeatmapGridProps {
   weeks: (BinaryDay | null)[][];
   monthLabels: BinaryMonthLabel[];
   habitColor: string;
+  isDark?: boolean;
 }
 
 export const InlineHeatmapGrid = memo(function InlineHeatmapGrid({
   weeks,
   monthLabels,
   habitColor,
+  isDark = false,
 }: InlineHeatmapGridProps) {
+  const hColors = getHeatmapColors(isDark);
   const rows = useMemo(() => transformWeeksToRows(weeks, GRID.ROWS), [weeks]);
   const gridContentWidth = weeks.length * (CELL_SIZE + CELL_GAP);
 
@@ -35,7 +38,11 @@ export const InlineHeatmapGrid = memo(function InlineHeatmapGrid({
         <View style={styles.monthLabelSpacer} />
         {DAY_LABELS.map((label, index) => (
           <View key={`label-${index}`} style={styles.dayLabelCell}>
-            <Text style={styles.dayLabelText}>{label}</Text>
+            <Text
+              style={[styles.dayLabelText, { color: hColors.TEXT_SECONDARY }]}
+            >
+              {label}
+            </Text>
           </View>
         ))}
       </View>
@@ -51,6 +58,7 @@ export const InlineHeatmapGrid = memo(function InlineHeatmapGrid({
                 key={`month-${i}`}
                 style={[
                   styles.monthLabel,
+                  { color: hColors.TEXT_SECONDARY },
                   { left: ml.weekIndex * (CELL_SIZE + CELL_GAP) },
                 ]}
               >
@@ -66,7 +74,11 @@ export const InlineHeatmapGrid = memo(function InlineHeatmapGrid({
                   style={[
                     styles.cell,
                     {
-                      backgroundColor: getCellBackgroundColor(day, habitColor),
+                      backgroundColor: getCellBackgroundColor(
+                        day,
+                        habitColor,
+                        isDark
+                      ),
                       borderColor: day?.isToday ? habitColor : 'transparent',
                       borderWidth: day?.isToday ? 2 : 0,
                       opacity: day?.isFuture ? 0.4 : 1,

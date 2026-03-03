@@ -8,11 +8,13 @@
 import React, { memo, useState, useMemo, useCallback, useRef } from 'react';
 import { View, Text } from 'react-native';
 
+import { useThemeColors } from '@/theme/ThemeContext';
 import type { BinaryHeatmapProps, TimeRange, BinaryDay } from './types';
 import { HeatmapLegend } from './HeatmapLegend';
 import { HeatmapTooltip } from './HeatmapTooltip';
 import { InlineHeatmapGrid } from './InlineHeatmapGrid';
 import { generateBinaryGrid } from './utils';
+import { getHeatmapColors } from './constants';
 import { styles } from './BinaryHeatmapNew.styles';
 import { createDayLookupMap } from './cellHelpers';
 
@@ -26,6 +28,8 @@ export const BinaryHeatmap = memo(function BinaryHeatmap({
   currentStreak: _currentStreak,
   onDayPress,
 }: BinaryHeatmapProps) {
+  const { isDark } = useThemeColors();
+  const hColors = getHeatmapColors(isDark);
   const [tooltipDay, setTooltipDay] = useState<BinaryDay | null>(null);
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
   const [tooltipVisible, setTooltipVisible] = useState(false);
@@ -61,13 +65,18 @@ export const BinaryHeatmap = memo(function BinaryHeatmap({
   }, []);
 
   return (
-    <View style={styles.container}>
+    <View
+      style={[styles.container, { backgroundColor: hColors.CARD_BACKGROUND }]}
+    >
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>Activity</Text>
+        <Text style={[styles.headerTitle, { color: hColors.TEXT_PRIMARY }]}>
+          Activity
+        </Text>
       </View>
       <View style={styles.gridWrapper}>
         <InlineHeatmapGrid
           habitColor={habitColor}
+          isDark={isDark}
           monthLabels={gridData.monthLabels}
           weeks={gridData.weeks}
         />
@@ -75,6 +84,7 @@ export const BinaryHeatmap = memo(function BinaryHeatmap({
       <HeatmapLegend
         completionRate={gridData.stats.completionRate}
         habitColor={habitColor}
+        isDark={isDark}
       />
       {tooltipDay && (
         <HeatmapTooltip

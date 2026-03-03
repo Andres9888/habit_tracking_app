@@ -3,7 +3,7 @@
  */
 
 import type { BinaryCellState, BinaryCellProps } from './types';
-import { COLORS } from './constants';
+import { getHeatmapColors } from './constants';
 
 /**
  * Determines the background color for a cell based on its state.
@@ -11,8 +11,10 @@ import { COLORS } from './constants';
 export function getBackgroundColor(
   cellState: BinaryCellState,
   day: NonNullable<BinaryCellProps['day']>,
-  habitColor: string
+  habitColor: string,
+  isDark = false
 ): string {
+  const hColors = getHeatmapColors(isDark);
   switch (cellState) {
     case 'done': {
       return habitColor;
@@ -21,16 +23,16 @@ export function getBackgroundColor(
       return day.completed ? habitColor : 'transparent';
     }
     case 'missed': {
-      return COLORS.CELL_EMPTY;
+      return hColors.CELL_EMPTY;
     }
     case 'future': {
-      return COLORS.CELL_FUTURE;
+      return hColors.CELL_FUTURE;
     }
     case 'beforeCreation': {
-      return COLORS.CELL_BEFORE_CREATION;
+      return hColors.CELL_BEFORE_CREATION;
     }
     default: {
-      return COLORS.CELL_EMPTY;
+      return hColors.CELL_EMPTY;
     }
   }
 }

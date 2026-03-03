@@ -14,28 +14,21 @@ import { View, Text, StyleSheet } from 'react-native';
 
 import { typography } from '@/theme/typography';
 import type { HeatmapLegendProps } from './types';
-import { LEGEND_INDICATOR_SIZE, COLORS, CELL_BORDER_RADIUS } from './constants';
+import {
+  LEGEND_INDICATOR_SIZE,
+  CELL_BORDER_RADIUS,
+  getHeatmapColors,
+} from './constants';
 
-/**
- * Format completion rate as a rounded percentage string
- */
-const formatCompletionRate = (rate: number): string => {
-  return `${Math.round(rate)}%`;
-};
+const formatCompletionRate = (rate: number): string => `${Math.round(rate)}%`;
 
-/**
- * HeatmapLegend - Displays the binary legend for the heatmap
- *
- * This component shows two indicators:
- * - Missed: gray square indicating days the habit was not completed
- * - Done: colored square (using habit color) indicating completed days
- *
- * Also displays the overall completion percentage for the visible period.
- */
 export const HeatmapLegend = memo(function HeatmapLegend({
   habitColor,
   completionRate,
+  isDark = false,
 }: HeatmapLegendProps) {
+  const hColors = getHeatmapColors(isDark);
+
   return (
     <View
       accessible
@@ -43,9 +36,7 @@ export const HeatmapLegend = memo(function HeatmapLegend({
       accessibilityRole='text'
       style={styles.container}
     >
-      {/* Left side: Legend indicators */}
       <View style={styles.indicators}>
-        {/* Missed indicator */}
         <View
           accessible
           accessibilityLabel='Missed: gray'
@@ -55,13 +46,15 @@ export const HeatmapLegend = memo(function HeatmapLegend({
           <View
             style={[
               styles.indicatorSquare,
-              { backgroundColor: COLORS.CELL_EMPTY },
+              { backgroundColor: hColors.CELL_EMPTY },
             ]}
           />
-          <Text style={styles.indicatorLabel}>Missed</Text>
+          <Text
+            style={[styles.indicatorLabel, { color: hColors.TEXT_SECONDARY }]}
+          >
+            Missed
+          </Text>
         </View>
-
-        {/* Done indicator */}
         <View
           accessible
           accessibilityLabel='Done: colored'
@@ -71,11 +64,13 @@ export const HeatmapLegend = memo(function HeatmapLegend({
           <View
             style={[styles.indicatorSquare, { backgroundColor: habitColor }]}
           />
-          <Text style={styles.indicatorLabel}>Done</Text>
+          <Text
+            style={[styles.indicatorLabel, { color: hColors.TEXT_SECONDARY }]}
+          >
+            Done
+          </Text>
         </View>
       </View>
-
-      {/* Right side: Completion percentage */}
       <Text
         accessible
         accessibilityLabel={`${formatCompletionRate(completionRate)} completion`}
@@ -106,7 +101,6 @@ const styles = StyleSheet.create({
     marginRight: 12,
   },
   indicatorLabel: {
-    color: COLORS.TEXT_SECONDARY,
     fontSize: typography.tabBar.fontSize,
     marginLeft: 4,
   },

@@ -15,7 +15,7 @@ import Animated, {
 import { Settings } from 'lucide-react-native';
 
 import type { StatsRowProps } from './types';
-import { COLORS } from './constants';
+import { getHeatmapColors } from './constants';
 import { styles } from './StatsRow.styles';
 import { StreakBadge } from './StreakBadge';
 
@@ -28,8 +28,10 @@ export const StatsRow = memo(function StatsRow({
   frequency,
   currentStreak,
   habitColor,
+  isDark = false,
   onSettingsPress,
 }: StatsRowProps) {
+  const hColors = getHeatmapColors(isDark);
   const shouldReduceMotion = useReducedMotion();
   const settingsScale = useSharedValue(1);
 
@@ -64,9 +66,14 @@ export const StatsRow = memo(function StatsRow({
           accessible
           accessibilityLabel={`Frequency: ${frequency}`}
           accessibilityRole='text'
-          style={styles.frequencyBadge}
+          style={[
+            styles.frequencyBadge,
+            { backgroundColor: hColors.CELL_FUTURE },
+          ]}
         >
-          <Text style={styles.frequencyText}>{frequency}</Text>
+          <Text style={[styles.frequencyText, { color: hColors.TEXT_PRIMARY }]}>
+            {frequency}
+          </Text>
         </View>
         {currentStreak > 0 && (
           <StreakBadge currentStreak={currentStreak} habitColor={habitColor} />
@@ -81,6 +88,7 @@ export const StatsRow = memo(function StatsRow({
           hitSlop={{ bottom: 8, left: 8, right: 8, top: 8 }}
           style={({ focused }: { focused: boolean }) => [
             styles.settingsButton,
+            { backgroundColor: hColors.CELL_FUTURE },
             settingsAnimatedStyle,
             Platform.OS === 'web' && focused && styles.webFocus,
           ]}
@@ -90,7 +98,7 @@ export const StatsRow = memo(function StatsRow({
           onPressOut={handleSettingsPressOut}
         >
           <Settings
-            color={COLORS.TEXT_SECONDARY}
+            color={hColors.TEXT_SECONDARY}
             size={SETTINGS_ICON_SIZE}
             strokeWidth={2}
             testID='settings-icon'

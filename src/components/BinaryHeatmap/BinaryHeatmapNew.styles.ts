@@ -1,16 +1,13 @@
 /**
  * Styles for BinaryHeatmapNew Component
+ *
+ * Color-dependent styles (container bg, text colors) are applied inline
+ * via getHeatmapColors(isDark) so they adapt to dark mode.
  */
 
 import { StyleSheet } from 'react-native';
 
-import {
-  COLORS,
-  CELL_SIZE,
-  CELL_GAP,
-  DAY_LABEL_WIDTH,
-  MONTH_LABEL,
-} from './constants';
+import { CELL_SIZE, CELL_GAP, DAY_LABEL_WIDTH, MONTH_LABEL } from './constants';
 import { typography } from '../../theme/typography';
 
 export const styles = StyleSheet.create({
@@ -21,7 +18,6 @@ export const styles = StyleSheet.create({
     width: CELL_SIZE,
   },
   container: {
-    backgroundColor: COLORS.CARD_BACKGROUND,
     borderRadius: 12,
     padding: 16,
   },
@@ -35,7 +31,6 @@ export const styles = StyleSheet.create({
     width: DAY_LABEL_WIDTH,
   },
   dayLabelText: {
-    color: COLORS.TEXT_SECONDARY,
     fontSize: 10,
     fontWeight: '500',
     textAlign: 'right',
@@ -56,12 +51,10 @@ export const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   headerTitle: {
-    color: COLORS.TEXT_PRIMARY,
     fontSize: typography.bodySmall.fontSize,
     fontWeight: '600',
   },
   monthLabel: {
-    color: COLORS.TEXT_SECONDARY,
     fontSize: 10,
     position: 'absolute',
   },

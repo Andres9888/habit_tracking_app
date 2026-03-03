@@ -1,10 +1,12 @@
 /**
  * Styles for MonthLabelsRow Component
+ *
+ * Text color is applied inline via getHeatmapColors(isDark).
  */
 
 import { StyleSheet } from 'react-native';
 
-import { CELL_GAP, COLORS, MONTH_LABEL } from './constants';
+import { CELL_GAP, MONTH_LABEL } from './constants';
 
 export const styles = StyleSheet.create({
   container: {
@@ -20,7 +22,6 @@ export const styles = StyleSheet.create({
     top: 0,
   },
   labelText: {
-    color: COLORS.TEXT_SECONDARY,
     fontSize: MONTH_LABEL.FONT_SIZE,
     fontWeight: '500',
   },

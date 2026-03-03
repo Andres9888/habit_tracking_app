@@ -8,19 +8,27 @@ import React, { memo } from 'react';
 import { View, Text } from 'react-native';
 
 import type { BinaryMonthLabel } from './types';
-import { CELL_SIZE, CELL_GAP, MONTH_LABEL } from './constants';
+import {
+  CELL_SIZE,
+  CELL_GAP,
+  MONTH_LABEL,
+  getHeatmapColors,
+} from './constants';
 import { styles } from './MonthLabelsRow.styles';
 import { getFullMonthName } from './MonthLabelsRow.helpers';
 
 export interface MonthLabelsRowProps {
   monthLabels: BinaryMonthLabel[];
   gridWidth: number;
+  isDark?: boolean;
 }
 
 export const MonthLabelsRow = memo(function MonthLabelsRow({
   monthLabels,
   gridWidth,
+  isDark = false,
 }: MonthLabelsRowProps) {
+  const hColors = getHeatmapColors(isDark);
   const cellUnit = CELL_SIZE + CELL_GAP;
 
   if (monthLabels.length === 0) {
@@ -62,7 +70,7 @@ export const MonthLabelsRow = memo(function MonthLabelsRow({
               accessible
               accessibilityLabel={`${getFullMonthName(monthLabel.label)} column`}
               accessibilityRole='text'
-              style={styles.labelText}
+              style={[styles.labelText, { color: hColors.TEXT_SECONDARY }]}
             >
               {monthLabel.label}
             </Text>

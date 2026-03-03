@@ -1,5 +1,8 @@
 /**
  * Styles for StatsRow Component
+ *
+ * Color-dependent styles (text color, badge bg) are applied inline
+ * via getHeatmapColors(isDark) in StatsRow.tsx.
  */
 
 import {
@@ -9,7 +12,7 @@ import {
   type TextStyle,
 } from 'react-native';
 
-import { COLORS, FOCUS } from './constants';
+import { FOCUS } from './constants';
 import { typography } from '@/theme/typography';
 
 const STATS_CONFIG = {
@@ -33,19 +36,16 @@ export const styles = StyleSheet.create({
     paddingVertical: 4,
   } as ViewStyle,
   frequencyBadge: {
-    backgroundColor: '#f5f5f4',
     borderRadius: STATS_CONFIG.BADGE_BORDER_RADIUS,
     paddingHorizontal: STATS_CONFIG.BADGE_PADDING_X,
     paddingVertical: STATS_CONFIG.BADGE_PADDING_Y,
   } as ViewStyle,
   frequencyText: {
-    color: COLORS.TEXT_PRIMARY,
     fontSize: typography.caption.fontSize,
     fontWeight: '600',
   } as TextStyle,
   settingsButton: {
     alignItems: 'center',
-    backgroundColor: '#f5f5f4',
     borderRadius: STATS_CONFIG.SETTINGS_BUTTON_SIZE / 2,
     height: STATS_CONFIG.SETTINGS_BUTTON_SIZE,
     justifyContent: 'center',

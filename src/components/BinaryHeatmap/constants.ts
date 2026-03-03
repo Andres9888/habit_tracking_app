@@ -80,39 +80,14 @@ export const TIME_RANGE_CONFIG = {
 } as const;
 
 /**
- * Default colors (using design system tokens)
+ * Theme-aware colors — re-exported from heatmapColors.ts
+ *
+ * Use `getHeatmapColors(isDark)` in components with theme access.
+ * `COLORS` / `DEFAULT_COLORS` remain for backward compatibility (light mode).
  */
-export const COLORS = {
-  /** Card background */
-  CARD_BACKGROUND: '#ffffff',
-
-  // stone-100
-  /** Before creation cell background */
-  CELL_BEFORE_CREATION: '#fafaf9',
-
-  /** Empty/missed cell background */
-  CELL_EMPTY: '#e7e5e4',
-
-  // stone-200
-  /** Future cell background */
-  CELL_FUTURE: '#f5f5f4',
-
-  /** Text colors */
-  TEXT_PRIMARY: '#1f2937',
-
-  // gray-800
-  TEXT_SECONDARY: '#78716c',
-
-  // stone-500
-  TEXT_TERTIARY: '#9ca3af',
-  // stone-50
-  /** Today cell ring color (will use habit color at runtime) */
-  TODAY_RING_WIDTH: 2, // gray-400
-
-  /** Tooltip */
-  TOOLTIP_BACKGROUND: '#1c1917', // stone-900
-  TOOLTIP_TEXT: '#ffffff',
-} as const;
+export { getHeatmapColors, DEFAULT_COLORS } from './heatmapColors';
+export type { HeatmapColors } from './heatmapColors';
+export { DEFAULT_COLORS as COLORS } from './heatmapColors';
 
 /**
  * Day of week labels (Sunday = 0)

@@ -13,7 +13,13 @@ import type { BinaryHeatmapGridProps } from './types';
 import { GridRow } from './GridRow';
 import { MonthLabelsRow } from './MonthLabelsRow';
 import { transformWeeksToRows } from './cellHelpers';
-import { CELL_SIZE, CELL_GAP, DAY_LABELS, GRID } from './constants';
+import {
+  CELL_SIZE,
+  CELL_GAP,
+  DAY_LABELS,
+  GRID,
+  getHeatmapColors,
+} from './constants';
 import { styles } from './BinaryHeatmapGrid.styles';
 
 const DAY_FULL_NAMES = [
@@ -29,7 +35,9 @@ const DAY_FULL_NAMES = [
 export const BinaryHeatmapGrid = memo(function BinaryHeatmapGrid({
   gridData,
   habitColor,
+  isDark = false,
 }: BinaryHeatmapGridProps) {
+  const hColors = getHeatmapColors(isDark);
   const { weeks, monthLabels } = gridData;
 
   const rows = useMemo(() => transformWeeksToRows(weeks, GRID.ROWS), [weeks]);
@@ -38,7 +46,6 @@ export const BinaryHeatmapGrid = memo(function BinaryHeatmapGrid({
 
   return (
     <View style={styles.container}>
-      {/* Day labels column */}
       <View style={styles.dayLabelsColumn}>
         <View style={styles.monthLabelSpacer} />
         {DAY_LABELS.map((label, index) => (
@@ -47,7 +54,7 @@ export const BinaryHeatmapGrid = memo(function BinaryHeatmapGrid({
               accessible
               accessibilityLabel={`${DAY_FULL_NAMES[index]} row`}
               accessibilityRole='text'
-              style={styles.dayLabelText}
+              style={[styles.dayLabelText, { color: hColors.TEXT_SECONDARY }]}
             >
               {label}
             </Text>
@@ -55,7 +62,6 @@ export const BinaryHeatmapGrid = memo(function BinaryHeatmapGrid({
         ))}
       </View>
 
-      {/* Scrollable grid area */}
       <ScrollView
         horizontal
         accessibilityLabel='Habit completion heatmap grid'
@@ -69,6 +75,7 @@ export const BinaryHeatmapGrid = memo(function BinaryHeatmapGrid({
         <View style={styles.gridContentContainer}>
           <MonthLabelsRow
             gridWidth={gridContentWidth}
+            isDark={isDark}
             monthLabels={monthLabels}
           />
           <View style={styles.gridContainer}>
@@ -77,6 +84,7 @@ export const BinaryHeatmapGrid = memo(function BinaryHeatmapGrid({
                 key={`row-${dayIndex}`}
                 dayIndex={dayIndex}
                 habitColor={habitColor}
+                isDark={isDark}
                 row={row}
               />
             ))}

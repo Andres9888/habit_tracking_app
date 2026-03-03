@@ -13,7 +13,7 @@ import Animated, { FadeIn } from 'react-native-reanimated';
 import type { BinaryCellProps } from './types';
 import { getCellState, getBinaryCellAccessibilityLabel } from './utils';
 import { getBackgroundColor } from './BinaryCell.helpers';
-import { ANIMATION, COLORS } from './constants';
+import { ANIMATION, getHeatmapColors } from './constants';
 import { styles } from './BinaryCell.styles';
 import { useReduceMotion } from '../../hooks/useReduceMotion';
 
@@ -21,7 +21,9 @@ export const BinaryCell = memo(function BinaryCell({
   day,
   index,
   habitColor,
+  isDark = false,
 }: BinaryCellProps) {
+  const hColors = getHeatmapColors(isDark);
   const reduceMotion = useReduceMotion();
   const staggerDelay = reduceMotion ? 0 : index * ANIMATION.CELL_STAGGER_DELAY;
   const accessibilityLabel = getBinaryCellAccessibilityLabel(day);
@@ -43,7 +45,7 @@ export const BinaryCell = memo(function BinaryCell({
   }
 
   const cellState = getCellState(day);
-  const bgColor = getBackgroundColor(cellState, day, habitColor);
+  const bgColor = getBackgroundColor(cellState, day, habitColor, isDark);
   const isInteractive = !day.isFuture && !day.isBeforeCreation;
 
   // Non-interactive cells (future, beforeCreation)
@@ -78,9 +80,9 @@ export const BinaryCell = memo(function BinaryCell({
         styles.cellInner,
         { backgroundColor: bgColor },
         cellState === 'today' && {
-          backgroundColor: day.completed ? bgColor : COLORS.CARD_BACKGROUND,
+          backgroundColor: day.completed ? bgColor : hColors.CARD_BACKGROUND,
           borderColor: habitColor,
-          borderWidth: COLORS.TODAY_RING_WIDTH,
+          borderWidth: hColors.TODAY_RING_WIDTH,
         },
       ]}
     />
