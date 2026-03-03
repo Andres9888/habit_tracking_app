@@ -30,14 +30,22 @@ function TemplatesScreenContent() {
     );
   }
 
-  if (state.effectiveViewMode === 'category' || state.effectiveViewMode === 'search')
+  if (
+    state.effectiveViewMode === 'category' ||
+    state.effectiveViewMode === 'search'
+  )
     return renderCategorySearch(props);
 
-  const handleImport = (t: Doc<'templates'>) => handlers.handleDirectImport(t._id);
+  const handleImport = (t: Doc<'templates'>) =>
+    handlers.handleDirectImport(t._id);
   const subView = renderSubView({
-    activeView: viewNav.activeView, allTemplates: data.allTemplates,
-    importedTemplateIds: state.importedTemplateIds, importingTemplateId: state.importingTemplateId,
-    onBack: viewNav.goBack, onImport: handleImport, onPreview: handlers.handleTemplatePreview,
+    activeView: viewNav.activeView,
+    allTemplates: data.allTemplates,
+    importedTemplateIds: state.importedTemplateIds,
+    importingTemplateId: state.importingTemplateId,
+    onBack: viewNav.goBack,
+    onImport: handleImport,
+    onPreview: handlers.handleTemplatePreview,
   });
   if (subView) return subView;
 
@@ -61,7 +69,6 @@ function TemplatesScreenContent() {
       }
       importedTemplateIds={state.importedTemplateIds}
       importingTemplateId={state.importingTemplateId}
-      isPremiumUser={data.isPremiumUser}
       modals={
         <>
           <TemplateModals
@@ -76,10 +83,15 @@ function TemplatesScreenContent() {
             onDirectImport={handlers.handleDirectImport}
             onImport={handlers.handleTemplateImport}
           />
-          <PaywallSheet visible={state.showPaywall} onClose={() => state.setShowPaywall(false)} />
+          <PaywallSheet
+            visible={state.showPaywall}
+            onClose={() => state.setShowPaywall(false)}
+          />
           <PackConfirmSheet
-            pack={packConfirm.selectedPack} visible={!!packConfirm.selectedPack}
-            onCancel={packConfirm.handleCancel} onConfirm={packConfirm.handleConfirm}
+            pack={packConfirm.selectedPack}
+            visible={!!packConfirm.selectedPack}
+            onCancel={packConfirm.handleCancel}
+            onConfirm={packConfirm.handleConfirm}
           />
         </>
       }
@@ -91,11 +103,13 @@ function TemplatesScreenContent() {
       onSeeAll={viewNav.openSeeAll}
       popularTemplates={mainBrowseData.popularTemplates}
       premiumPacksSection={
-        <PremiumPacksSection packs={mainBrowseData.premiumPacks} onPackPress={packConfirm.handlePackPress} />
+        <PremiumPacksSection
+          packs={mainBrowseData.premiumPacks}
+          onPackPress={packConfirm.handlePackPress}
+        />
       }
       searchAnimatedStyle={props.animations.searchAnimatedStyle}
       searchQuery={state.searchQuery}
-      userHabitCount={data.userHabitCount}
     />
   );
 }

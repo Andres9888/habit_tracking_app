@@ -12,7 +12,6 @@ export interface MainBrowseViewProps {
   feedbackOverlays: ReactNode;
   importedTemplateIds: Set<string>;
   importingTemplateId: string | null;
-  isPremiumUser: boolean;
   modals: ReactNode;
   onFeaturedPress: () => void;
   onImport: (template: Doc<'templates'>) => void;
@@ -20,10 +19,8 @@ export interface MainBrowseViewProps {
   onSearchChange: (text: string) => void;
   onSearchClear: () => void;
   onSeeAll: () => void;
-  onShowPaywall?: () => void;
   popularTemplates: Doc<'templates'>[];
   premiumPacksSection: ReactNode;
   searchAnimatedStyle: AnimatedStyle<ViewStyle>;
   searchQuery: string;
-  userHabitCount: number;
 }

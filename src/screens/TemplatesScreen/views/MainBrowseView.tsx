@@ -1,7 +1,7 @@
 /**
  * MainBrowseView - Curated main screen replacing the old tab-based BrowseView
  *
- * Layout: ScreenHeader → SearchBar → UsageBanner → FeaturedCollection
+ * Layout: ScreenHeader → SearchBar → FeaturedCollection
  * → PopularSection → PremiumPacksSection → CategoryGrid
  */
 
@@ -14,7 +14,6 @@ import { styles } from '../../templates/templatesScreenStyles';
 import { SearchBar } from '../components';
 import { FeaturedCollection } from '../components/FeaturedCollection';
 import { PopularSection } from '../components/PopularSection';
-import { UsageBanner } from '../components/UsageBanner';
 import type { MainBrowseViewProps } from './MainBrowseView.types';
 
 const stagger = (index: number) =>
@@ -27,8 +26,8 @@ export function MainBrowseView(p: MainBrowseViewProps) {
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       <ScreenHeader
         leftAction={null}
-        subtitle="Science-backed templates to build great habits"
-        title="Import Habits"
+        subtitle='Science-backed templates to build great habits'
+        title='Import Habits'
       />
       <Animated.View style={[styles.searchSection, p.searchAnimatedStyle]}>
         <SearchBar
@@ -42,16 +41,9 @@ export function MainBrowseView(p: MainBrowseViewProps) {
         contentContainerStyle={{ paddingBottom: 100 }}
       >
         <Animated.View entering={stagger(0)}>
-          <UsageBanner
-            isPremiumUser={p.isPremiumUser}
-            userHabitCount={p.userHabitCount}
-            onShowPaywall={p.onShowPaywall}
-          />
-        </Animated.View>
-        <Animated.View entering={stagger(1)}>
           <FeaturedCollection onPress={p.onFeaturedPress} />
         </Animated.View>
-        <Animated.View entering={stagger(2)}>
+        <Animated.View entering={stagger(1)}>
           <PopularSection
             importedTemplateIds={p.importedTemplateIds}
             importingTemplateId={p.importingTemplateId}
@@ -62,9 +54,7 @@ export function MainBrowseView(p: MainBrowseViewProps) {
           />
         </Animated.View>
         {p.premiumPacksSection}
-        <Animated.View entering={stagger(4)}>
-          {p.categoryGrid}
-        </Animated.View>
+        <Animated.View entering={stagger(3)}>{p.categoryGrid}</Animated.View>
       </ScrollView>
       {p.modals}
       {p.feedbackOverlays}
