@@ -4,32 +4,32 @@
 import { StyleSheet } from 'react-native';
 import { colors } from '../../../theme/colors';
 import { typography } from '../../../theme/typography';
-import { spacing } from '../../../theme/spacing';
+import { borderRadius, spacing } from '../../../theme/spacing';
 
 export const styles = StyleSheet.create({
   skeletonSubtitle: {
     backgroundColor: colors.border,
-    borderRadius: 4,
+    borderRadius: borderRadius.xs,
     height: 10,
     width: 60,
   },
   skeletonTitle: {
     backgroundColor: colors.border,
-    borderRadius: 4,
+    borderRadius: borderRadius.xs,
     height: 12,
     marginBottom: spacing.xs,
     width: 80,
   },
   skeletonValue: {
     backgroundColor: colors.border,
-    borderRadius: 4,
+    borderRadius: borderRadius.xs,
     height: 28,
     marginBottom: spacing.xs,
     width: 100,
   },
   statCard: {
     backgroundColor: colors.surface,
-    borderRadius: 16,
+    borderRadius: borderRadius.large,
     elevation: 3,
     flex: 1,
     margin: spacing.sm,
