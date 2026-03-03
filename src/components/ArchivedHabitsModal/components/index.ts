@@ -1,5 +1,6 @@
 export { AnimatedHabitCard } from './AnimatedHabitCard';
 export { ActionButtons } from './ActionButtons';
+export { DangerZoneFooter } from './DangerZoneFooter';
 export { EmptyState } from './EmptyState';
 export { HabitCardHeader } from './HabitCardHeader';
 export { HabitStatsBadges } from './HabitStatsBadges';
