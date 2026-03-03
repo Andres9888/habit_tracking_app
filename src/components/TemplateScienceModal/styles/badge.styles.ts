@@ -3,13 +3,19 @@
  */
 
 import { StyleSheet } from 'react-native';
+import { colors } from '@/theme/colors';
+import { borderRadius } from '@/theme/spacing';
+
+/** "Popular" badge colors (orange palette, not part of core tokens) */
+const POPULAR_BADGE_BG = '#FFF7ED'; // orange-50
+const POPULAR_BADGE_BORDER = '#FFEDD5'; // orange-100
 
 export const badgeStyles = StyleSheet.create({
   popularBadge: {
     alignItems: 'center',
-    backgroundColor: '#FFF7ED',
-    borderColor: '#FFEDD5',
-    borderRadius: 12,
+    backgroundColor: POPULAR_BADGE_BG,
+    borderColor: POPULAR_BADGE_BORDER,
+    borderRadius: borderRadius.medium,
     borderWidth: 1,
     bottom: -4,
     height: 28,
@@ -20,15 +26,15 @@ export const badgeStyles = StyleSheet.create({
   },
   readingTimePill: {
     alignItems: 'center',
-    backgroundColor: '#F3F4F6',
-    borderRadius: 20,
+    backgroundColor: colors.gray[200],
+    borderRadius: borderRadius.xl,
     flexDirection: 'row',
     gap: 6,
     paddingHorizontal: 14,
     paddingVertical: 8,
   },
   readingTimePillText: {
-    color: '#6B7280',
+    color: colors.gray[500],
     fontSize: 13,
     fontWeight: '600',
   },
@@ -36,7 +42,7 @@ export const badgeStyles = StyleSheet.create({
     alignItems: 'center',
   },
   templateName: {
-    color: '#111827',
+    color: colors.gray[900],
     fontSize: 28,
     fontWeight: '800',
     letterSpacing: -0.5,

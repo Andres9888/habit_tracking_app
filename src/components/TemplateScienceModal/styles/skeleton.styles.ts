@@ -3,12 +3,14 @@
  */
 
 import { StyleSheet } from 'react-native';
+import { colors } from '@/theme/colors';
+import { borderRadius } from '@/theme/spacing';
 
 export const skeletonStyles = StyleSheet.create({
   skeletonCard: {
-    backgroundColor: '#FFFFFF',
-    borderColor: '#e7e5e4',
-    borderRadius: 20,
+    backgroundColor: colors.light.card,
+    borderColor: colors.border,
+    borderRadius: borderRadius.xl,
     borderWidth: 1,
     marginBottom: 16,
     marginHorizontal: 20,
@@ -21,8 +23,8 @@ export const skeletonStyles = StyleSheet.create({
     marginBottom: 16,
   },
   skeletonFooter: {
-    backgroundColor: '#FAFAF9',
-    borderTopColor: '#e7e5e4',
+    backgroundColor: colors.light.surfaceMuted,
+    borderTopColor: colors.border,
     borderTopWidth: 1,
     paddingBottom: 34,
     paddingHorizontal: 20,

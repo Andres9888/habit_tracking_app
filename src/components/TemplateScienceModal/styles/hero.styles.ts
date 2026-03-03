@@ -3,8 +3,8 @@
  */
 
 import { StyleSheet } from 'react-native';
-
-import { borderRadius } from '../../../theme/spacing';
+import { colors } from '@/theme/colors';
+import { borderRadius } from '@/theme/spacing';
 
 export const heroStyles = StyleSheet.create({
   categoryBadge: {
@@ -22,7 +22,7 @@ export const heroStyles = StyleSheet.create({
   },
   frequencyPill: {
     alignItems: 'center',
-    backgroundColor: '#F3F4F6',
+    backgroundColor: colors.gray[200],
     borderRadius: borderRadius.xl,
     flexDirection: 'row',
     gap: 6,
@@ -30,7 +30,7 @@ export const heroStyles = StyleSheet.create({
     paddingVertical: 8,
   },
   frequencyPillText: {
-    color: '#6B7280',
+    color: colors.gray[500],
     fontSize: 13,
     fontWeight: '600',
   },
