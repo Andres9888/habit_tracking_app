@@ -5,6 +5,7 @@
  */
 
 import { colors } from '@/theme/colors';
+import { lightColors } from '@/theme/darkColors';
 import { spacing, borderRadius, shadows } from '@/theme/spacing';
 import { styles as categoryPillStyles } from '@/components/EmojiPickerV2/CategoryPills.styles';
 import { styles as gridStyles } from '@/components/EmojiPickerV2/EmojiGrid/styles';
@@ -93,14 +94,12 @@ describe('EmojiPickerV2 Token Migration - Phase 3', () => {
       expect(gridStyles.categoryHeaderText.color).toBe(colors.gray[500]);
     });
 
-    it('container backgroundColor should use colors.light.surface', () => {
-      expect(gridStyles.container.backgroundColor).toBe(colors.light.surface);
+    it('container backgroundColor should use lightColors.surface (theme-aware)', () => {
+      expect(gridStyles.container.backgroundColor).toBe(lightColors.surface);
     });
 
-    it('emojiCell backgroundColor should use colors.light.surfaceMuted', () => {
-      expect(gridStyles.emojiCell.backgroundColor).toBe(
-        colors.light.surfaceMuted
-      );
+    it('emojiCell backgroundColor should use lightColors.gray[50] (theme-aware)', () => {
+      expect(gridStyles.emojiCell.backgroundColor).toBe(lightColors.gray[50]);
     });
 
     it('emojiCell borderRadius should use borderRadius.medium (12)', () => {
