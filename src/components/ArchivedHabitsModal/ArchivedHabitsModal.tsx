@@ -5,6 +5,7 @@ import { useArchivedHabitsModalLogic } from './ArchivedHabitsModal.hooks';
 import { useReduceMotion } from '../../hooks/useReduceMotion';
 import {
   AnimatedHabitCard,
+  DangerZoneFooter,
   EmptyState,
   ModalHeader,
   StatsSummaryBar,
@@ -48,10 +49,7 @@ export default function ArchivedHabitsModal({
     <>
       <ModalHeader insets={insets} onBack={onBack} onClose={onClose} />
 
-      <StatsSummaryBar
-        habitCount={isLoading ? 0 : archivedHabits.length}
-        onDeleteAll={handleDeleteAll}
-      />
+      <StatsSummaryBar habitCount={isLoading ? 0 : archivedHabits.length} />
 
       {isLoading ? (
         <LoadingState />
@@ -63,6 +61,14 @@ export default function ArchivedHabitsModal({
           initialNumToRender={10}
           keyExtractor={keyExtractor}
           ListEmptyComponent={EmptyState}
+          ListFooterComponent={
+            archivedHabits.length > 1 ? (
+              <DangerZoneFooter
+                habitCount={archivedHabits.length}
+                onDeleteAll={handleDeleteAll}
+              />
+            ) : undefined
+          }
           maxToRenderPerBatch={10}
           removeClippedSubviews
           renderItem={renderItem}

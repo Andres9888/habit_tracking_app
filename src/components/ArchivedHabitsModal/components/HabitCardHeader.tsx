@@ -7,12 +7,13 @@ interface HabitCardHeaderProps {
   icon?: string;
   iconColor?: string;
   archiveDate: number;
+  accentColor: string;
 }
 
 export function HabitCardHeader({
   name,
   icon,
-  iconColor,
+  accentColor,
   archiveDate,
 }: HabitCardHeaderProps) {
   const { colors, isDark } = useThemeColors();
@@ -23,7 +24,7 @@ export function HabitCardHeader({
         <View className='relative'>
           <View
             className='absolute bottom-0 left-0 top-0 w-1 rounded-full'
-            style={{ backgroundColor: iconColor || '#6366F1' }}
+            style={{ backgroundColor: accentColor }}
           />
           <Text className='pl-3 text-2xl'>{icon || '📝'}</Text>
         </View>
