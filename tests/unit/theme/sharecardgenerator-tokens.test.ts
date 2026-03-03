@@ -14,6 +14,7 @@
  */
 
 import { colors } from '@/theme/colors';
+import { borderRadius } from '@/theme/spacing';
 import { containerStyles } from '@/components/ShareCardGenerator/styles/container.styles';
 import { controlsStyles } from '@/components/ShareCardGenerator/styles/controls.styles';
 import { shareCardContentStyles } from '@/components/ShareCardGenerator/styles/shareCardContent.styles';
@@ -108,6 +109,36 @@ describe('ShareCardGenerator Color Token Migration - Phase 5 Task 2', () => {
     it('scienceBadgeText color should be colors.text.inverse', () => {
       expect(shareCardFooterStyles.scienceBadgeText.color).toBe(
         colors.text.inverse
+      );
+    });
+  });
+
+  describe('Phase 3: borderRadius tokens replace raw values', () => {
+    it('container previewContainer uses borderRadius.medium', () => {
+      expect(containerStyles.previewContainer.borderRadius).toBe(
+        borderRadius.medium
+      );
+    });
+
+    it('controls gradientButton uses borderRadius.medium', () => {
+      expect(controlsStyles.gradientButton.borderRadius).toBe(
+        borderRadius.medium
+      );
+    });
+
+    it('controls messageInput uses borderRadius.small', () => {
+      expect(controlsStyles.messageInput.borderRadius).toBe(borderRadius.small);
+    });
+
+    it('controls platformButton uses borderRadius.small', () => {
+      expect(controlsStyles.platformButton.borderRadius).toBe(
+        borderRadius.small
+      );
+    });
+
+    it('footer scienceBadge uses borderRadius.xl', () => {
+      expect(shareCardFooterStyles.scienceBadge.borderRadius).toBe(
+        borderRadius.xl
       );
     });
   });

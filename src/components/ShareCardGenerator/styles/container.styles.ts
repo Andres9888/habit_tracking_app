@@ -4,6 +4,7 @@
 
 import { StyleSheet } from 'react-native';
 import { colors } from '@/theme/colors';
+import { borderRadius } from '../../../theme/spacing';
 import { typography } from '../../../theme/typography';
 
 export const containerStyles = StyleSheet.create({
@@ -12,6 +13,7 @@ export const containerStyles = StyleSheet.create({
     fontWeight: '600',
   },
   container: {
+    // TODO: colors.light.card is not theme-aware — revisit for dark-mode support
     backgroundColor: colors.light.card,
     flex: 1,
   },
@@ -31,7 +33,7 @@ export const containerStyles = StyleSheet.create({
   },
   previewContainer: {
     backgroundColor: colors.gray[100],
-    borderRadius: 12,
+    borderRadius: borderRadius.medium,
     overflow: 'hidden',
   },
   previewSection: {

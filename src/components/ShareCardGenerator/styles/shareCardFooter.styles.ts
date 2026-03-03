@@ -5,6 +5,7 @@
 // Intentional: static color for share card rendering — white text on gradient backgrounds
 import { StyleSheet } from 'react-native';
 import { colors } from '@/theme/colors';
+import { borderRadius } from '../../../theme/spacing';
 import { typography } from '../../../theme/typography';
 
 export const shareCardFooterStyles = StyleSheet.create({
@@ -27,7 +28,7 @@ export const shareCardFooterStyles = StyleSheet.create({
   scienceBadge: {
     backgroundColor: 'rgba(255, 255, 255, 0.2)',
     borderColor: 'rgba(255, 255, 255, 0.3)',
-    borderRadius: 20,
+    borderRadius: borderRadius.xl,
     borderWidth: 1,
     paddingHorizontal: 20,
     paddingVertical: 10,

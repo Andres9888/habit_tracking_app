@@ -4,6 +4,7 @@
 
 import { StyleSheet } from 'react-native';
 import { colors } from '@/theme/colors';
+import { borderRadius } from '../../../theme/spacing';
 import { typography } from '@/theme/typography';
 
 export const controlsStyles = StyleSheet.create({
@@ -14,7 +15,7 @@ export const controlsStyles = StyleSheet.create({
   },
   gradientButton: {
     borderColor: 'transparent',
-    borderRadius: 12,
+    borderRadius: borderRadius.medium,
     borderWidth: 2,
     height: 56,
     overflow: 'hidden',
@@ -31,7 +32,7 @@ export const controlsStyles = StyleSheet.create({
     borderColor: colors.primary[500],
   },
   messageInput: {
-    borderRadius: 8,
+    borderRadius: borderRadius.small,
     borderWidth: 1,
     fontSize: 15,
     minHeight: 80,
@@ -49,7 +50,7 @@ export const controlsStyles = StyleSheet.create({
   platformButton: {
     backgroundColor: colors.gray[100],
     borderColor: colors.border,
-    borderRadius: 8,
+    borderRadius: borderRadius.small,
     borderWidth: 1,
     paddingHorizontal: 16,
     paddingVertical: 8,
