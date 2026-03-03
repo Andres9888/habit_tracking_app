@@ -4,13 +4,11 @@
  */
 
 import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
-import { PackConfirmSheet } from '../../components/PackConfirmSheet';
-import { PaywallSheet } from '../../components/PaywallSheet';
 import type { Doc } from '../../../convex/_generated/dataModel';
 import { CategoryGrid } from './components/CategoryGrid';
 import { PremiumPacksSection } from './components/PremiumPacksSection';
 import { TemplatesEmptyState } from './components/TemplatesEmptyState';
-import { TemplateModals } from './components';
+import { TemplatesScreenModals } from './components';
 import { useTemplatesScreenProps } from './hooks/useTemplatesScreenProps';
 import { FeedbackOverlays } from './views/FeedbackOverlays';
 import { MainBrowseView } from './views/MainBrowseView';
@@ -19,7 +17,16 @@ import { renderSubView } from './views/renderSubView';
 
 function TemplatesScreenContent() {
   const props = useTemplatesScreenProps();
-  const { data, state, handlers, viewNav, mainBrowseData, packConfirm } = props;
+  const {
+    activeChipCategory,
+    data,
+    handleChipSelect,
+    handlers,
+    mainBrowseData,
+    packConfirm,
+    state,
+    viewNav,
+  } = props;
 
   if (!data.isLoading && !data.allTemplates?.length) {
     return (
@@ -30,19 +37,23 @@ function TemplatesScreenContent() {
     );
   }
 
-  if (state.effectiveViewMode === 'category' || state.effectiveViewMode === 'search')
-    return renderCategorySearch(props);
-
-  const handleImport = (t: Doc<'templates'>) => handlers.handleDirectImport(t._id);
+  if (state.effectiveViewMode !== 'browse') return renderCategorySearch(props);
+  const handleImport = (t: Doc<'templates'>) =>
+    handlers.handleDirectImport(t._id);
   const subView = renderSubView({
-    activeView: viewNav.activeView, allTemplates: data.allTemplates,
-    importedTemplateIds: state.importedTemplateIds, importingTemplateId: state.importingTemplateId,
-    onBack: viewNav.goBack, onImport: handleImport, onPreview: handlers.handleTemplatePreview,
+    activeView: viewNav.activeView,
+    allTemplates: data.allTemplates,
+    importedTemplateIds: state.importedTemplateIds,
+    importingTemplateId: state.importingTemplateId,
+    onBack: viewNav.goBack,
+    onImport: handleImport,
+    onPreview: handlers.handleTemplatePreview,
   });
   if (subView) return subView;
 
   return (
     <MainBrowseView
+      activeChipCategory={activeChipCategory}
       categoryGrid={
         <CategoryGrid
           categories={mainBrowseData.categoryList}
@@ -61,28 +72,27 @@ function TemplatesScreenContent() {
       }
       importedTemplateIds={state.importedTemplateIds}
       importingTemplateId={state.importingTemplateId}
-      isPremiumUser={data.isPremiumUser}
       modals={
-        <>
-          <TemplateModals
-            importedTemplateIds={state.importedTemplateIds}
-            importingTemplateId={state.importingTemplateId}
-            previewTemplate={state.previewTemplate}
-            showCustomizeModal={state.showCustomizeModal}
-            showFullsizePreview={state.showFullsizePreview}
-            onCloseCustomize={() => state.setShowCustomizeModal(false)}
-            onCloseFullsize={() => state.setShowFullsizePreview(false)}
-            onCustomize={handlers.handleCustomizeFromPreview}
-            onDirectImport={handlers.handleDirectImport}
-            onImport={handlers.handleTemplateImport}
-          />
-          <PaywallSheet visible={state.showPaywall} onClose={() => state.setShowPaywall(false)} />
-          <PackConfirmSheet
-            pack={packConfirm.selectedPack} visible={!!packConfirm.selectedPack}
-            onCancel={packConfirm.handleCancel} onConfirm={packConfirm.handleConfirm}
-          />
-        </>
+        <TemplatesScreenModals
+          importedTemplateIds={state.importedTemplateIds}
+          importingTemplateId={state.importingTemplateId}
+          previewTemplate={state.previewTemplate}
+          showCustomizeModal={state.showCustomizeModal}
+          showFullsizePreview={state.showFullsizePreview}
+          showPaywall={state.showPaywall}
+          onCloseCustomize={() => state.setShowCustomizeModal(false)}
+          onCloseFullsize={() => state.setShowFullsizePreview(false)}
+          onClosePaywall={() => state.setShowPaywall(false)}
+          onCustomize={handlers.handleCustomizeFromPreview}
+          onDirectImport={handlers.handleDirectImport}
+          onImport={handlers.handleTemplateImport}
+          packConfirmPack={packConfirm.selectedPack}
+          packConfirmVisible={!!packConfirm.selectedPack}
+          onPackCancel={packConfirm.handleCancel}
+          onPackConfirm={packConfirm.handleConfirm}
+        />
       }
+      onChipCategorySelect={handleChipSelect}
       onFeaturedPress={() => viewNav.openCategory('morning_routine')}
       onImport={handleImport}
       onPreview={handlers.handleTemplatePreview}
@@ -91,11 +101,13 @@ function TemplatesScreenContent() {
       onSeeAll={viewNav.openSeeAll}
       popularTemplates={mainBrowseData.popularTemplates}
       premiumPacksSection={
-        <PremiumPacksSection packs={mainBrowseData.premiumPacks} onPackPress={packConfirm.handlePackPress} />
+        <PremiumPacksSection
+          packs={mainBrowseData.premiumPacks}
+          onPackPress={packConfirm.handlePackPress}
+        />
       }
       searchAnimatedStyle={props.animations.searchAnimatedStyle}
       searchQuery={state.searchQuery}
-      userHabitCount={data.userHabitCount}
     />
   );
 }

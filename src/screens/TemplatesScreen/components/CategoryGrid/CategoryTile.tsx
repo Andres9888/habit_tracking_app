@@ -12,9 +12,9 @@ interface CategoryTileProps {
   count: number;
   icon: string;
   index: number;
-  isPremium: boolean;
   label: string;
   onPress: () => void;
+  previewEmojis: string[];
   textColor: string;
 }
 
@@ -23,29 +23,33 @@ export function CategoryTile({
   count,
   icon,
   index,
-  isPremium,
   label,
   onPress,
+  previewEmojis,
   textColor,
 }: CategoryTileProps) {
   return (
     <Pressable
       testID={`templates-category-tile-${index}`}
       accessibilityLabel={`${label} category, ${count} templates`}
-      accessibilityRole="button"
+      accessibilityRole='button'
       style={[s.tile, { backgroundColor: bgColor }]}
       onPress={onPress}
     >
       <View style={s.row}>
         <Text style={s.icon}>{icon}</Text>
-        {isPremium && (
-          <View style={s.proBadge}>
-            <Text style={s.proText}>PRO</Text>
-          </View>
-        )}
       </View>
       <Text style={[s.label, { color: textColor }]}>{label}</Text>
       <Text style={s.count}>{count} templates</Text>
+      {previewEmojis.length > 0 && (
+        <View style={s.previewRow}>
+          {previewEmojis.map((emoji, i) => (
+            <Text key={i} style={s.previewEmoji}>
+              {emoji}
+            </Text>
+          ))}
+        </View>
+      )}
     </Pressable>
   );
 }
@@ -54,23 +58,22 @@ const s = StyleSheet.create({
   count: { ...typography.caption, color: colors.text.tertiary, marginTop: 2 },
   icon: { fontSize: 28 },
   label: { ...typography.bodySmall, fontWeight: '600', marginTop: spacing.sm },
-  proBadge: {
-    backgroundColor: colors.premium[600],
-    borderRadius: borderRadius.xs,
-    paddingHorizontal: 4,
-    paddingVertical: 1,
+  previewEmoji: { fontSize: 14, opacity: 0.6 },
+  previewRow: {
+    flexDirection: 'row',
+    gap: 4,
+    marginTop: 'auto',
+    paddingTop: 8,
   },
-  proText: {
-    color: '#FFFFFF',
-    fontSize: 9,
-    fontWeight: '700',
-    letterSpacing: 0.5,
+  row: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
-  row: { alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between' },
   tile: {
     borderRadius: borderRadius.medium,
     flex: 1,
-    minHeight: 100,
+    minHeight: 120,
     padding: spacing.md,
   },
 });

@@ -8,22 +8,21 @@ import type { AnimatedStyle } from 'react-native-reanimated';
 import type { Doc } from '../../../../convex/_generated/dataModel';
 
 export interface MainBrowseViewProps {
+  activeChipCategory: string | null;
   categoryGrid: ReactNode;
   feedbackOverlays: ReactNode;
   importedTemplateIds: Set<string>;
   importingTemplateId: string | null;
-  isPremiumUser: boolean;
   modals: ReactNode;
+  onChipCategorySelect: (categoryId: string | null) => void;
   onFeaturedPress: () => void;
   onImport: (template: Doc<'templates'>) => void;
   onPreview: (template: Doc<'templates'>) => void;
   onSearchChange: (text: string) => void;
   onSearchClear: () => void;
   onSeeAll: () => void;
-  onShowPaywall?: () => void;
   popularTemplates: Doc<'templates'>[];
   premiumPacksSection: ReactNode;
   searchAnimatedStyle: AnimatedStyle<ViewStyle>;
   searchQuery: string;
-  userHabitCount: number;
 }

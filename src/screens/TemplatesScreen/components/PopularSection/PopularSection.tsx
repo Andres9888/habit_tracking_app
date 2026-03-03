@@ -1,13 +1,13 @@
 /**
- * PopularSection - "Popular" header + horizontal carousel of MiniTemplateCards
+ * PopularSection - "Trending Now" header + horizontal carousel of TrendingCards
  */
 
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 import type { Doc } from '../../../../../convex/_generated/dataModel';
-import { MiniTemplateCard } from '../../../../components/MiniTemplateCard';
 import { colors } from '../../../../theme/colors';
 import { spacing } from '../../../../theme/spacing';
 import { typography } from '../../../../theme/typography';
+import { TrendingCard } from '../TrendingCard';
 
 interface PopularSectionProps {
   importedTemplateIds: Set<string>;
@@ -27,13 +27,13 @@ export function PopularSection({
   templates,
 }: PopularSectionProps) {
   return (
-    <View testID="templates-popular-section" style={s.container}>
+    <View testID='templates-trending-section' style={s.container}>
       <View style={s.header}>
-        <Text style={s.title}>Popular</Text>
+        <Text style={s.title}>🔥 Trending Now</Text>
         <Pressable
-          testID="templates-popular-see-all"
-          accessibilityLabel="See all popular templates"
-          accessibilityRole="button"
+          testID='templates-trending-see-all'
+          accessibilityLabel='See all trending templates'
+          accessibilityRole='button'
           hitSlop={8}
           onPress={onSeeAll}
         >
@@ -41,22 +41,22 @@ export function PopularSection({
         </Pressable>
       </View>
       <FlatList
-        testID="templates-popular-scroll"
+        testID='templates-popular-scroll'
         horizontal
         data={templates}
         contentContainerStyle={s.list}
         keyExtractor={(item) => item._id}
         showsHorizontalScrollIndicator={false}
-        renderItem={({ item, index }) => (
-          <MiniTemplateCard
-            description={item.description}
+        renderItem={({ item }) => (
+          <TrendingCard
+            frequency={item.frequency}
             hasResearch={!!item.scientificReference}
             icon={item.icon}
             iconColor={item.iconColor}
             isImported={importedTemplateIds.has(item._id)}
             isImporting={importingTemplateId === item._id}
             name={item.name}
-            subtitle={item.frequency}
+            popularityScore={item.popularityScore ?? 0}
             onImport={() => onImport(item)}
             onPress={() => onPreview(item)}
           />
