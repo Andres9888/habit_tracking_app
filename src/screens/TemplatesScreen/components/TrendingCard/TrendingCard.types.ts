@@ -15,6 +15,8 @@ export interface TrendingCardProps {
   isImported: boolean;
   /** Whether an import is currently in progress */
   isImporting: boolean;
+  /** Whether this is a newly added template (shows NEW badge) */
+  isNew?: boolean;
   /** Template name */
   name: string;
   /** Direct import handler (1-tap add) */
@@ -23,6 +25,8 @@ export interface TrendingCardProps {
   onPress: () => void;
   /** Number of users who added this template */
   popularityScore: number;
+  /** 1-based rank position in the trending list */
+  rank?: number;
 }
 
 export interface AddButtonProps {

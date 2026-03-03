@@ -2,6 +2,7 @@
  * TrendingCard — tall narrow card for trending/popular template carousel.
  *
  * Two press targets: card body → preview, add button → direct import.
+ * Science-enhanced: Von Restorff isolation, Bandwagon momentum, Anchoring stick rates.
  */
 
 import { Pressable, Text, View } from 'react-native';
@@ -9,6 +10,8 @@ import { TrendingUp } from 'lucide-react-native';
 import { colors } from '../../../../theme/colors';
 import { AddButton } from './AddButton';
 import { formatPopularity } from './formatPopularity';
+import { badgeStyles as bs } from './TrendingBadges.styles';
+import { MomentumBadge, NewBadge, RankBadge, StickRateBadge } from './TrendingBadges';
 import { s } from './TrendingCard.styles';
 import type { TrendingCardProps } from './TrendingCard.types';
 
@@ -19,13 +22,24 @@ export function TrendingCard({
   iconColor,
   isImported,
   isImporting,
+  isNew,
   name,
   onImport,
   onPress,
   popularityScore,
+  rank,
 }: TrendingCardProps) {
+  const isFeatured = rank === 1;
+
   return (
-    <Pressable accessibilityRole='button' style={s.card} onPress={onPress}>
+    <Pressable
+      accessibilityRole='button'
+      style={[s.card, isFeatured && bs.featuredCard]}
+      onPress={onPress}
+    >
+      {rank !== undefined && <RankBadge rank={rank} />}
+      {isNew && <NewBadge />}
+
       <View style={[s.iconBox, { backgroundColor: `${iconColor}25` }]}>
         <Text style={s.iconEmoji}>{icon}</Text>
       </View>
@@ -41,13 +55,16 @@ export function TrendingCard({
             <Text style={s.scienceText}>🔬 Science</Text>
           </View>
         )}
+        <MomentumBadge score={popularityScore} />
       </View>
+
+      {hasResearch && <StickRateBadge score={popularityScore} />}
 
       <View style={s.bottomRow}>
         <View style={s.popularityWrap}>
           <TrendingUp color={colors.primary[600]} size={12} />
           <Text style={s.popularityText}>
-            {formatPopularity(popularityScore)}
+            {formatPopularity(popularityScore)} this mo
           </Text>
         </View>
         <AddButton

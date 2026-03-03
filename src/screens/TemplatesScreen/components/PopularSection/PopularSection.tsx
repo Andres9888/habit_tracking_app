@@ -47,7 +47,7 @@ export function PopularSection({
         contentContainerStyle={s.list}
         keyExtractor={(item) => item._id}
         showsHorizontalScrollIndicator={false}
-        renderItem={({ item }) => (
+        renderItem={({ item, index }) => (
           <TrendingCard
             frequency={item.frequency}
             hasResearch={!!item.scientificReference}
@@ -55,8 +55,10 @@ export function PopularSection({
             iconColor={item.iconColor}
             isImported={importedTemplateIds.has(item._id)}
             isImporting={importingTemplateId === item._id}
+            isNew={index === 0}
             name={item.name}
             popularityScore={item.popularityScore ?? 0}
+            rank={index + 1}
             onImport={() => onImport(item)}
             onPress={() => onPreview(item)}
           />

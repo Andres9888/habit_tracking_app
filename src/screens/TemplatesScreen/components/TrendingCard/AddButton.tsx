@@ -40,7 +40,7 @@ export function AddButton({
 
   const label = isImported ? `${name} added` : `Add ${name}`;
   const iconColor = isImported ? colors.primary[600] : '#FFFFFF';
-  const iconSize = 16;
+  const iconSize = 20;
 
   return (
     <AnimatedPressable

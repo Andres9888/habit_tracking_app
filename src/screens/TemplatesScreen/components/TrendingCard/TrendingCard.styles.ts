@@ -9,7 +9,7 @@ import { borderRadius, shadows } from '../../../../theme/spacing';
 
 export const CARD_WIDTH = 165;
 const ICON_BOX = 48;
-const ADD_BUTTON_SIZE = 32;
+const ADD_BUTTON_SIZE = 44;
 
 export const s = StyleSheet.create({
   card: {
