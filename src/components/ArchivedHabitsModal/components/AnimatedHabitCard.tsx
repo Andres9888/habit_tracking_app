@@ -58,6 +58,7 @@ export function AnimatedHabitCard({
 
         <View className='relative p-4'>
           <HabitCardHeader
+            accentColor={gradientColor}
             archiveDate={archiveDate}
             icon={habit.icon}
             iconColor={habit.iconColor}
