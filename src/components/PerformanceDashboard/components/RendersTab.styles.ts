@@ -4,9 +4,12 @@
 
 import { StyleSheet } from 'react-native';
 
+import { colors } from '@/theme/colors';
+import { spacing } from '@/theme/spacing';
+
 export const rendersStyles = StyleSheet.create({
   compDuration: {
-    color: '#22c55e',
+    color: colors.success,
     fontFamily: 'monospace',
     fontSize: 10,
     width: 45,
@@ -21,12 +24,12 @@ export const rendersStyles = StyleSheet.create({
   compRow: {
     alignItems: 'center',
     flexDirection: 'row',
-    gap: 8,
+    gap: spacing.sm,
     paddingVertical: 3,
   },
-  compStats: { flexDirection: 'row', gap: 8 },
-  list: { gap: 4 },
+  compStats: { flexDirection: 'row', gap: spacing.sm },
+  list: { gap: spacing.xs },
   scrollView: { maxHeight: 70 },
-  slowDuration: { color: '#f59e0b' },
-  slowLabel: { color: '#f59e0b', fontWeight: '600' },
+  slowDuration: { color: colors.warning[500] },
+  slowLabel: { color: colors.warning[500], fontWeight: '600' },
 });
