@@ -11,8 +11,8 @@ export const layoutStyles = StyleSheet.create({
     paddingVertical: 12,
   },
   container: {
-    backgroundColor: '#F4F4F5',
-    borderRadius: 12,
+    backgroundColor: colors.light.gradientMid,
+    borderRadius: borderRadius.medium,
     marginHorizontal: 16,
     marginVertical: 8,
     overflow: 'hidden',
@@ -25,6 +25,7 @@ export const layoutStyles = StyleSheet.create({
   },
   iconContainer: {
     alignItems: 'center',
+    // TODO: needs theme-awareness — colors.light.card is light-mode only
     backgroundColor: colors.light.card,
     borderRadius: borderRadius.full,
     height: 36,
