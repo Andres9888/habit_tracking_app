@@ -12,49 +12,44 @@ const baseProps = {
 };
 
 describe('ProgressGreeting', () => {
-  describe('streak badge rendering', () => {
-    it('shows fire badge when streak is 2-6', () => {
+  describe('greeting rendering', () => {
+    it('shows streak greeting for streak 2-6', () => {
       const { getByText } = render(
         <ProgressGreeting {...baseProps} currentStreak={3} />
       );
       expect(getByText('3-day streak')).toBeTruthy();
-      expect(getByText(/🔥.*Keep it going!/)).toBeTruthy();
     });
 
-    it('shows lightning badge when streak >= 7', () => {
+    it('shows streak greeting for streak >= 7', () => {
       const { getByText } = render(
         <ProgressGreeting {...baseProps} currentStreak={14} />
       );
       expect(getByText('14-day streak')).toBeTruthy();
-      expect(getByText(/⚡.*On fire!/)).toBeTruthy();
     });
 
-    it('shows no badge when streak is 0', () => {
+    it('shows no greeting when streak is 0 (collapsed)', () => {
       const { queryByText } = render(
         <ProgressGreeting {...baseProps} currentStreak={0} />
       );
-      expect(queryByText(/🔥/)).toBeNull();
-      expect(queryByText(/⚡/)).toBeNull();
+      expect(queryByText(/streak/i)).toBeNull();
     });
 
-    it('shows no badge when streak is 1', () => {
-      const { getByText, queryByText } = render(
+    it('shows no greeting when streak is 1 (collapsed)', () => {
+      const { queryByText } = render(
         <ProgressGreeting {...baseProps} currentStreak={1} />
       );
-      expect(getByText('Great start!')).toBeTruthy();
-      expect(queryByText(/🔥/)).toBeNull();
+      expect(queryByText(/streak/i)).toBeNull();
     });
 
-    it('defaults to time-of-day greeting when currentStreak prop is omitted', () => {
+    it('defaults to collapsed when currentStreak prop is omitted', () => {
       const { queryByText } = render(<ProgressGreeting {...baseProps} />);
-      expect(queryByText(/🔥/)).toBeNull();
-      expect(queryByText(/⚡/)).toBeNull();
+      expect(queryByText(/streak/i)).toBeNull();
     });
   });
 
   describe('perfect day priority', () => {
     it('shows "Perfect day" when all habits completed, even with streak', () => {
-      const { getByText, queryByText } = render(
+      const { getByText } = render(
         <ProgressGreeting
           {...baseProps}
           completedToday={5}
@@ -63,7 +58,6 @@ describe('ProgressGreeting', () => {
         />
       );
       expect(getByText('Perfect day')).toBeTruthy();
-      expect(queryByText(/⚡/)).toBeNull();
     });
   });
 
