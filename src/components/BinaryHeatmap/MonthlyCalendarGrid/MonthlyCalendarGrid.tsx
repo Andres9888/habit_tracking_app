@@ -7,7 +7,9 @@
 import React, { memo, useState, useCallback } from 'react';
 import { View, Text } from 'react-native';
 import { addMonths, subMonths } from 'date-fns';
+import { useThemeColors } from '@/theme/ThemeContext';
 import type { MonthlyCalendarGridProps } from './types';
+import { getMonthlyGridColors } from './colors';
 import { styles } from './styles';
 import { useCalendarDays } from './useCalendarDays';
 import { CalendarDay } from './CalendarDay';
@@ -22,6 +24,8 @@ export const MonthlyCalendarGrid = memo(function MonthlyCalendarGrid({
   habitCreatedAt,
   onDayPress,
 }: MonthlyCalendarGridProps) {
+  const { isDark } = useThemeColors();
+  const gridColors = getMonthlyGridColors(isDark);
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const { weeks } = useCalendarDays({
     completedDates,
@@ -45,32 +49,43 @@ export const MonthlyCalendarGrid = memo(function MonthlyCalendarGrid({
   );
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: gridColors.CARD_BG }]}>
       <View style={styles.row}>
         {DAY_HEADERS.map((day) => (
           <View key={day} style={styles.headerCell}>
-            <Text style={styles.headerText}>{day}</Text>
+            <Text
+              style={[styles.headerText, { color: gridColors.TEXT_SECONDARY }]}
+            >
+              {day}
+            </Text>
           </View>
         ))}
       </View>
 
       {(weeks ?? []).map((week, weekIndex) => (
         <View key={`week-${weekIndex}`} style={styles.row}>
-          {(week ?? []).map((day, dayIndex) => day && day.dateString ? (
-            <CalendarDay
-              key={day.dateString}
-              day={day}
-              habitColor={habitColor}
-              onPress={handleDayPress}
-            />
-          ) : (
-            <View key={`empty-${weekIndex}-${dayIndex}`} style={styles.dayWrapper} />
-          ))}
+          {(week ?? []).map((day, dayIndex) =>
+            day && day.dateString ? (
+              <CalendarDay
+                key={day.dateString}
+                day={day}
+                habitColor={habitColor}
+                isDark={isDark}
+                onPress={handleDayPress}
+              />
+            ) : (
+              <View
+                key={`empty-${weekIndex}-${dayIndex}`}
+                style={styles.dayWrapper}
+              />
+            )
+          )}
         </View>
       ))}
 
       <MonthNavigation
         currentMonth={currentMonth}
+        isDark={isDark}
         onNextMonth={goToNextMonth}
         onPreviousMonth={goToPreviousMonth}
       />

@@ -1,17 +1,55 @@
 /**
  * MonthlyCalendarGrid Colors
  *
- * Stone color palette and color utilities.
+ * Theme-aware color palette for the monthly calendar grid.
+ * Replaces the old static COLORS with dynamic light/dark support.
  */
 
-export const COLORS = {
-  BORDER: '#e7e5e4',
-  CARD_BG: '#ffffff',
-  TEXT_MUTED: '#d6d3d1',
-  TEXT_PRIMARY: '#1c1917',
-  TEXT_SECONDARY: '#78716c',
-  TEXT_TERTIARY: '#a8a29e',
+import { lightColors, darkColors } from '@/theme';
+
+export interface MonthlyGridColors {
+  BORDER: string;
+  CARD_BG: string;
+  GREEN_COMPLETED: string;
+  GREEN_COMPLETED_LIGHT: string;
+  GREEN_EMPTY: string;
+  TEXT_MUTED: string;
+  TEXT_PRIMARY: string;
+  TEXT_SECONDARY: string;
+  TEXT_TERTIARY: string;
+}
+
+const LIGHT: MonthlyGridColors = {
+  BORDER: lightColors.border,
+  CARD_BG: lightColors.card,
+  GREEN_COMPLETED: lightColors.primary[700],
+  GREEN_COMPLETED_LIGHT: lightColors.primary[600],
+  GREEN_EMPTY: lightColors.primary[100],
+  TEXT_MUTED: lightColors.gray[300],
+  TEXT_PRIMARY: lightColors.text.primary,
+  TEXT_SECONDARY: lightColors.text.secondary,
+  TEXT_TERTIARY: lightColors.text.tertiary,
 };
+
+const DARK: MonthlyGridColors = {
+  BORDER: darkColors.border,
+  CARD_BG: darkColors.card,
+  GREEN_COMPLETED: darkColors.primary[500],
+  GREEN_COMPLETED_LIGHT: darkColors.primary[400],
+  GREEN_EMPTY: darkColors.primary[100],
+  TEXT_MUTED: darkColors.gray[300],
+  TEXT_PRIMARY: darkColors.text.primary,
+  TEXT_SECONDARY: darkColors.text.secondary,
+  TEXT_TERTIARY: darkColors.text.tertiary,
+};
+
+/** Returns the monthly grid color palette for the given mode. */
+export function getMonthlyGridColors(isDark: boolean): MonthlyGridColors {
+  return isDark ? DARK : LIGHT;
+}
+
+/** Backward-compat alias — light mode defaults */
+export const DEFAULT_COLORS: MonthlyGridColors = LIGHT;
 
 /**
  * Converts hex color to rgba with alpha

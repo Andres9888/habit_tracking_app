@@ -7,28 +7,33 @@
 import React, { memo } from 'react';
 import { View, Text, Pressable } from 'react-native';
 import type { DayData } from './types';
-import { COLORS, hexToRgba } from './colors';
+import { getMonthlyGridColors, hexToRgba } from './colors';
+import type { MonthlyGridColors } from './colors';
 import { styles } from './styles';
 
 interface CalendarDayProps {
   day: DayData;
   habitColor: string;
+  isDark?: boolean;
   onPress: (dateString: string, isCompleted: boolean) => void;
 }
 
-function getTextColor(day: DayData): string {
-  if (!day?.isCurrentMonth) return COLORS.TEXT_MUTED;
-  if (day?.isFuture) return COLORS.TEXT_TERTIARY;
-  return COLORS.TEXT_PRIMARY;
+function getTextColor(day: DayData, colors: MonthlyGridColors): string {
+  if (!day?.isCurrentMonth) return colors.TEXT_MUTED;
+  if (day?.isFuture) return colors.TEXT_TERTIARY;
+  return colors.TEXT_PRIMARY;
 }
 
 export const CalendarDay = memo(function CalendarDay({
   day,
   habitColor,
+  isDark = false,
   onPress,
 }: CalendarDayProps) {
-  // Guard against undefined day properties
-  const showCompleted = Boolean(day?.isCompleted && day?.isCurrentMonth && !day?.isFuture);
+  const gridColors = getMonthlyGridColors(isDark);
+  const showCompleted = Boolean(
+    day?.isCompleted && day?.isCurrentMonth && !day?.isFuture
+  );
   const isToday = Boolean(day?.isToday);
 
   return (
@@ -47,7 +52,7 @@ export const CalendarDay = memo(function CalendarDay({
         <Text
           style={[
             styles.dayText,
-            { color: getTextColor(day) },
+            { color: getTextColor(day, gridColors) },
             isToday && styles.todayText,
           ]}
         >

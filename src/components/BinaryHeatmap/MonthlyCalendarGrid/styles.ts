@@ -1,24 +1,20 @@
 /**
  * MonthlyCalendarGrid Styles
  *
- * Compact styles for above-fold layout.
+ * Layout-only styles. Colors applied inline via theme system.
  */
 
 import { StyleSheet } from 'react-native';
 
 import { shadows } from '../../../theme/spacing';
 import { typography } from '@/theme/typography';
-import { COLORS } from './colors';
 
 export const styles = StyleSheet.create({
   container: {
     ...shadows.card,
-    backgroundColor: COLORS.CARD_BG,
     borderRadius: 16,
     marginTop: 12,
     padding: 16,
-    shadowColor: '#1c1917',
-    shadowOpacity: 0.05,
   },
   dayCell: {
     alignItems: 'center',
@@ -49,13 +45,11 @@ export const styles = StyleSheet.create({
     flex: 1,
   },
   headerText: {
-    color: COLORS.TEXT_SECONDARY,
     fontSize: typography.tabBar.fontSize,
     fontWeight: '500',
   },
   monthButton: {
     alignItems: 'center',
-    borderColor: COLORS.BORDER,
     borderRadius: 16,
     borderWidth: 1,
     flexDirection: 'row',
@@ -64,13 +58,11 @@ export const styles = StyleSheet.create({
     paddingVertical: 6,
   },
   monthText: {
-    color: COLORS.TEXT_PRIMARY,
     fontSize: 13,
     fontWeight: '600',
   },
   navButton: {
     alignItems: 'center',
-    borderColor: COLORS.BORDER,
     borderRadius: 16,
     borderWidth: 1,
     height: 36,
@@ -83,7 +75,6 @@ export const styles = StyleSheet.create({
   },
   navigation: {
     alignItems: 'center',
-    borderTopColor: COLORS.BORDER,
     borderTopWidth: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
