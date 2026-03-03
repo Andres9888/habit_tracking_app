@@ -1,7 +1,7 @@
 /**
  * MainBrowseView - Curated main screen replacing the old tab-based BrowseView
  *
- * Layout: ScreenHeader → SearchBar → FeaturedCollection
+ * Layout: ScreenHeader → SearchBar → QuickFilterChips → FeaturedCollection
  * → PopularSection → PremiumPacksSection → CategoryGrid
  */
 
@@ -14,6 +14,10 @@ import { styles } from '../../templates/templatesScreenStyles';
 import { SearchBar } from '../components';
 import { FeaturedCollection } from '../components/FeaturedCollection';
 import { PopularSection } from '../components/PopularSection';
+import {
+  CHIP_CATEGORIES,
+  QuickFilterChips,
+} from '../components/QuickFilterChips';
 import type { MainBrowseViewProps } from './MainBrowseView.types';
 
 const stagger = (index: number) =>
@@ -36,14 +40,21 @@ export function MainBrowseView(p: MainBrowseViewProps) {
           onClear={p.onSearchClear}
         />
       </Animated.View>
+      <Animated.View entering={stagger(0)} style={{ marginTop: 8 }}>
+        <QuickFilterChips
+          activeCategory={p.activeChipCategory}
+          categories={CHIP_CATEGORIES}
+          onSelectCategory={p.onChipCategorySelect}
+        />
+      </Animated.View>
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 100 }}
       >
-        <Animated.View entering={stagger(0)}>
+        <Animated.View entering={stagger(1)}>
           <FeaturedCollection onPress={p.onFeaturedPress} />
         </Animated.View>
-        <Animated.View entering={stagger(1)}>
+        <Animated.View entering={stagger(2)}>
           <PopularSection
             importedTemplateIds={p.importedTemplateIds}
             importingTemplateId={p.importingTemplateId}
@@ -54,7 +65,7 @@ export function MainBrowseView(p: MainBrowseViewProps) {
           />
         </Animated.View>
         {p.premiumPacksSection}
-        <Animated.View entering={stagger(3)}>{p.categoryGrid}</Animated.View>
+        <Animated.View entering={stagger(4)}>{p.categoryGrid}</Animated.View>
       </ScrollView>
       {p.modals}
       {p.feedbackOverlays}

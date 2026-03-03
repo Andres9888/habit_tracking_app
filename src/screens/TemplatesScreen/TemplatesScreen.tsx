@@ -17,7 +17,16 @@ import { renderSubView } from './views/renderSubView';
 
 function TemplatesScreenContent() {
   const props = useTemplatesScreenProps();
-  const { data, state, handlers, viewNav, mainBrowseData, packConfirm } = props;
+  const {
+    activeChipCategory,
+    data,
+    handleChipSelect,
+    handlers,
+    mainBrowseData,
+    packConfirm,
+    state,
+    viewNav,
+  } = props;
 
   if (!data.isLoading && !data.allTemplates?.length) {
     return (
@@ -28,11 +37,7 @@ function TemplatesScreenContent() {
     );
   }
 
-  const isSearching =
-    state.effectiveViewMode === 'category' ||
-    state.effectiveViewMode === 'search';
-  if (isSearching) return renderCategorySearch(props);
-
+  if (state.effectiveViewMode !== 'browse') return renderCategorySearch(props);
   const handleImport = (t: Doc<'templates'>) =>
     handlers.handleDirectImport(t._id);
   const subView = renderSubView({
@@ -48,6 +53,7 @@ function TemplatesScreenContent() {
 
   return (
     <MainBrowseView
+      activeChipCategory={activeChipCategory}
       categoryGrid={
         <CategoryGrid
           categories={mainBrowseData.categoryList}
@@ -86,6 +92,7 @@ function TemplatesScreenContent() {
           onPackConfirm={packConfirm.handleConfirm}
         />
       }
+      onChipCategorySelect={handleChipSelect}
       onFeaturedPress={() => viewNav.openCategory('morning_routine')}
       onImport={handleImport}
       onPreview={handlers.handleTemplatePreview}
