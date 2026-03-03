@@ -1,7 +1,7 @@
 /**
- * StreakIndicator Token Migration Tests (Phase 2)
- * Verifies that StreakIndicator.constants uses theme milestone tokens
- * instead of hardcoded hex values.
+ * StreakIndicator Token Migration Tests (Phase 2 + Phase 3)
+ * Verifies that StreakIndicator uses theme milestone tokens and borderRadius tokens
+ * instead of hardcoded values.
  */
 
 import { colors, milestoneColors } from '@/theme/colors';
@@ -9,6 +9,8 @@ import {
   COLORS,
   MILESTONE_BADGES,
 } from '@/components/StreakIndicator/StreakIndicator.constants';
+import { styles } from '@/components/StreakIndicator/StreakIndicator.styles';
+import { borderRadius } from '@/theme/spacing';
 
 describe('StreakIndicator Token Migration - Phase 2', () => {
   describe('MILESTONE_BADGES use milestoneColors tokens', () => {
@@ -59,6 +61,35 @@ describe('StreakIndicator Token Migration - Phase 2', () => {
     it('zeroStreakText uses colors.gray[500]', () => {
       expect(COLORS.zeroStreakText).toBe(colors.gray[500]);
       expect(COLORS.zeroStreakText).toBe('#78716c');
+    });
+  });
+
+  describe('Styles use borderRadius tokens (Phase 3)', () => {
+    it('bestStreakContainer uses borderRadius.small', () => {
+      expect(styles.bestStreakContainer.borderRadius).toBe(borderRadius.small);
+      expect(styles.bestStreakContainer.borderRadius).toBe(8);
+    });
+
+    it('milestoneBadge uses borderRadius.medium', () => {
+      expect(styles.milestoneBadge.borderRadius).toBe(borderRadius.medium);
+      expect(styles.milestoneBadge.borderRadius).toBe(12);
+    });
+
+    it('no hardcoded borderRadius values remain', () => {
+      const allStyles = Object.values(styles);
+      for (const style of allStyles) {
+        if (style && typeof style === 'object' && 'borderRadius' in style) {
+          const value = (style as Record<string, unknown>).borderRadius;
+          expect([
+            borderRadius.xs,
+            borderRadius.small,
+            borderRadius.medium,
+            borderRadius.large,
+            borderRadius.xl,
+            borderRadius.full,
+          ]).toContain(value);
+        }
+      }
     });
   });
 });

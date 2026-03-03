@@ -3,11 +3,12 @@
  */
 
 import { StyleSheet } from 'react-native';
+import { borderRadius } from '@/theme/spacing';
 import { typography } from '@/theme/typography';
 
 export const styles = StyleSheet.create({
   bestStreakContainer: {
-    borderRadius: 8,
+    borderRadius: borderRadius.small,
     marginBottom: 12,
     paddingHorizontal: 12,
     paddingVertical: 8,
@@ -52,7 +53,7 @@ export const styles = StyleSheet.create({
   },
   milestoneBadge: {
     alignItems: 'center',
-    borderRadius: 12,
+    borderRadius: borderRadius.medium,
     flexDirection: 'row',
     gap: 4,
     paddingHorizontal: 10,
