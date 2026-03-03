@@ -4,14 +4,17 @@
 
 import { StyleSheet } from 'react-native';
 
+import { colors } from '@/theme/colors';
+import { borderRadius } from '../../../theme/spacing';
+
 export const layoutStyles = StyleSheet.create({
   bottomSpacer: {
     height: 140,
   },
   closeButton: {
     alignItems: 'center',
-    backgroundColor: '#F3F4F6',
-    borderRadius: 20,
+    backgroundColor: colors.gray[200],
+    borderRadius: borderRadius.xl,
     height: 40,
     justifyContent: 'center',
     width: 40,
@@ -25,7 +28,7 @@ export const layoutStyles = StyleSheet.create({
     zIndex: 1000,
   },
   container: {
-    backgroundColor: '#FAFAF9',
+    backgroundColor: colors.light.surfaceMuted,
     flex: 1,
   },
   contentContainer: {
@@ -38,8 +41,8 @@ export const layoutStyles = StyleSheet.create({
     zIndex: 10,
   },
   successGlowOverlay: {
+    borderRadius: borderRadius.medium,
     bottom: 0,
-    borderRadius: 12,
     left: 0,
     position: 'absolute',
     right: 0,

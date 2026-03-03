@@ -4,6 +4,7 @@
 
 import { StyleSheet } from 'react-native';
 
+import { colors } from '@/theme/colors';
 import { shadows, borderRadius } from '../../../theme/spacing';
 
 export const footerStyles = StyleSheet.create({
@@ -12,7 +13,7 @@ export const footerStyles = StyleSheet.create({
     paddingVertical: 12,
   },
   customizeLinkText: {
-    color: '#6B7280',
+    color: colors.gray[500],
     fontSize: 15,
     fontWeight: '600',
   },
@@ -39,38 +40,38 @@ export const footerStyles = StyleSheet.create({
     shadowOpacity: 0.15,
   },
   importButtonText: {
-    color: '#FFFFFF',
+    color: colors.text.inverse,
     fontSize: 18,
     fontWeight: '700',
   },
   successButton: {
     ...shadows.modal,
     alignItems: 'center',
-    backgroundColor: '#22c55e',
+    backgroundColor: colors.primary[400],
     borderRadius: borderRadius.large,
     flexDirection: 'row',
     gap: 10,
     height: 56,
     justifyContent: 'center',
-    shadowColor: '#15803d',
+    shadowColor: colors.primary[700],
     shadowOpacity: 0.3,
   },
   successButtonGlow: {
-    backgroundColor: '#22c55e',
+    backgroundColor: colors.primary[400],
     borderRadius: borderRadius.xl,
     bottom: -8,
     elevation: 8,
     left: -8,
     position: 'absolute',
     right: -8,
-    shadowColor: '#22c55e',
+    shadowColor: colors.primary[400],
     shadowOffset: { height: 0, width: 0 },
     shadowOpacity: 0.6,
     shadowRadius: 20,
     top: -8,
   },
   successButtonText: {
-    color: '#FFFFFF',
+    color: colors.text.inverse,
     fontSize: 18,
     fontWeight: '700',
   },

@@ -4,15 +4,19 @@
 
 import { StyleSheet } from 'react-native';
 
+import { colors } from '@/theme/colors';
 import { borderRadius } from '../../../theme/spacing';
 import { typography } from '@/theme/typography';
+
+/** Blue-200 border for research link button */
+const LINK_BORDER = '#BFDBFE';
 
 export const scienceStyles = StyleSheet.create({
   researchLinkButton: {
     alignItems: 'center',
     alignSelf: 'flex-start',
-    backgroundColor: '#EFF6FF',
-    borderColor: '#BFDBFE',
+    backgroundColor: colors.secondary[100],
+    borderColor: LINK_BORDER,
     borderRadius: borderRadius.medium,
     borderWidth: 1,
     flexDirection: 'row',
@@ -22,13 +26,13 @@ export const scienceStyles = StyleSheet.create({
     paddingVertical: 12,
   },
   researchLinkText: {
-    color: '#2563EB',
+    color: colors.secondary[600],
     fontSize: typography.bodySmall.fontSize,
     fontWeight: '600',
   },
   scienceBox: {
-    backgroundColor: '#f0fdf4',
-    borderColor: '#bbf7d0',
+    backgroundColor: colors.primary[100],
+    borderColor: colors.primary[300],
     borderRadius: borderRadius.large,
     borderWidth: 2,
     marginHorizontal: 20,
@@ -36,7 +40,7 @@ export const scienceStyles = StyleSheet.create({
     padding: 20,
   },
   scienceDivider: {
-    backgroundColor: '#bbf7d0',
+    backgroundColor: colors.primary[300],
     height: 1,
     marginBottom: 12,
   },
@@ -50,14 +54,14 @@ export const scienceStyles = StyleSheet.create({
     fontSize: typography.heading2.fontSize,
   },
   scienceLabel: {
-    color: '#166534',
+    color: colors.primary[700],
     fontSize: typography.caption.fontSize,
     fontWeight: '700',
     letterSpacing: 0.8,
     textTransform: 'uppercase',
   },
   scienceQuote: {
-    color: '#166534',
+    color: colors.primary[700],
     fontSize: 15,
     fontStyle: 'italic',
     lineHeight: 24,
