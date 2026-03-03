@@ -64,7 +64,9 @@ export function MainBrowseView(p: MainBrowseViewProps) {
             onSeeAll={p.onSeeAll}
           />
         </Animated.View>
-        {p.premiumPacksSection}
+        <Animated.View entering={stagger(3)}>
+          {p.premiumPacksSection}
+        </Animated.View>
         <Animated.View entering={stagger(4)}>{p.categoryGrid}</Animated.View>
       </ScrollView>
       {p.modals}

@@ -14,6 +14,7 @@ interface CategoryTileProps {
   index: number;
   label: string;
   onPress: () => void;
+  previewEmojis: string[];
   textColor: string;
 }
 
@@ -24,13 +25,14 @@ export function CategoryTile({
   index,
   label,
   onPress,
+  previewEmojis,
   textColor,
 }: CategoryTileProps) {
   return (
     <Pressable
       testID={`templates-category-tile-${index}`}
       accessibilityLabel={`${label} category, ${count} templates`}
-      accessibilityRole="button"
+      accessibilityRole='button'
       style={[s.tile, { backgroundColor: bgColor }]}
       onPress={onPress}
     >
@@ -39,6 +41,15 @@ export function CategoryTile({
       </View>
       <Text style={[s.label, { color: textColor }]}>{label}</Text>
       <Text style={s.count}>{count} templates</Text>
+      {previewEmojis.length > 0 && (
+        <View style={s.previewRow}>
+          {previewEmojis.map((emoji, i) => (
+            <Text key={i} style={s.previewEmoji}>
+              {emoji}
+            </Text>
+          ))}
+        </View>
+      )}
     </Pressable>
   );
 }
@@ -47,11 +58,22 @@ const s = StyleSheet.create({
   count: { ...typography.caption, color: colors.text.tertiary, marginTop: 2 },
   icon: { fontSize: 28 },
   label: { ...typography.bodySmall, fontWeight: '600', marginTop: spacing.sm },
-  row: { alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between' },
+  previewEmoji: { fontSize: 14, opacity: 0.6 },
+  previewRow: {
+    flexDirection: 'row',
+    gap: 4,
+    marginTop: 'auto',
+    paddingTop: 8,
+  },
+  row: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
   tile: {
     borderRadius: borderRadius.medium,
     flex: 1,
-    minHeight: 100,
+    minHeight: 120,
     padding: spacing.md,
   },
 });

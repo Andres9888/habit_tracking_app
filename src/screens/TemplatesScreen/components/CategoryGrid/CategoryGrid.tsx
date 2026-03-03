@@ -14,6 +14,7 @@ interface CategoryItem {
   count: number;
   icon: string;
   label: string;
+  previewEmojis: string[];
   textColor: string;
 }
 
@@ -22,15 +23,18 @@ interface CategoryGridProps {
   onSelectCategory: (categoryId: string) => void;
 }
 
-export function CategoryGrid({ categories, onSelectCategory }: CategoryGridProps) {
+export function CategoryGrid({
+  categories,
+  onSelectCategory,
+}: CategoryGridProps) {
   const rows: CategoryItem[][] = [];
   for (let i = 0; i < categories.length; i += 2) {
     rows.push(categories.slice(i, i + 2));
   }
 
   return (
-    <View testID="templates-category-grid" style={s.container}>
-      <Text style={s.title}>Browse by Category</Text>
+    <View testID='templates-category-grid' style={s.container}>
+      <Text style={s.title}>🗂️ Browse by Category</Text>
       {rows.map((row, rowIdx) => (
         <View key={rowIdx} style={s.row}>
           {row.map((cat, colIdx) => (
@@ -41,6 +45,7 @@ export function CategoryGrid({ categories, onSelectCategory }: CategoryGridProps
               icon={cat.icon}
               index={rowIdx * 2 + colIdx}
               label={cat.label}
+              previewEmojis={cat.previewEmojis}
               textColor={cat.textColor}
               onPress={() => onSelectCategory(cat.categoryId)}
             />
@@ -53,7 +58,15 @@ export function CategoryGrid({ categories, onSelectCategory }: CategoryGridProps
 }
 
 const s = StyleSheet.create({
-  container: { gap: spacing.sm, marginTop: spacing.lg, paddingHorizontal: spacing.base },
+  container: {
+    gap: spacing.sm,
+    marginTop: spacing.lg,
+    paddingHorizontal: spacing.base,
+  },
   row: { flexDirection: 'row', gap: spacing.sm },
-  title: { ...typography.heading3, color: colors.text.primary, marginBottom: spacing.xs },
+  title: {
+    ...typography.heading3,
+    color: colors.text.primary,
+    marginBottom: spacing.xs,
+  },
 });
