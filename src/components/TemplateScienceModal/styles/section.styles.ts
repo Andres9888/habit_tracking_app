@@ -4,7 +4,7 @@
 
 import { StyleSheet } from 'react-native';
 
-import { shadows } from '../../../theme/spacing';
+import { borderRadius, shadows } from '../../../theme/spacing';
 import { typography } from '../../../theme/typography';
 
 export const sectionStyles = StyleSheet.create({
@@ -17,7 +17,7 @@ export const sectionStyles = StyleSheet.create({
     ...shadows.card,
     backgroundColor: '#FFFFFF',
     borderColor: '#e7e5e4',
-    borderRadius: 20,
+    borderRadius: borderRadius.xl,
     borderWidth: 1,
     marginBottom: 16,
     marginHorizontal: 20,
@@ -32,7 +32,7 @@ export const sectionStyles = StyleSheet.create({
   },
   sectionIconBadge: {
     alignItems: 'center',
-    borderRadius: 12,
+    borderRadius: borderRadius.medium,
     height: 36,
     justifyContent: 'center',
     width: 36,

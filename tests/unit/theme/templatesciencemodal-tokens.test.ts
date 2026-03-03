@@ -10,6 +10,8 @@ import { youtubeStyles } from '../../../src/components/TemplateScienceModal/styl
 import { badgeStyles } from '../../../src/components/TemplateScienceModal/styles/badge.styles';
 import { heroStyles } from '../../../src/components/TemplateScienceModal/styles/hero.styles';
 import { skeletonStyles } from '../../../src/components/TemplateScienceModal/styles/skeleton.styles';
+import { sectionStyles } from '../../../src/components/TemplateScienceModal/styles/section.styles';
+import { headerStyles } from '../../../src/components/TemplateScienceModal/styles/header.styles';
 
 describe('TemplateScienceModal - Theme Token Migration', () => {
   describe('science.styles', () => {
@@ -119,6 +121,40 @@ describe('TemplateScienceModal - Theme Token Migration', () => {
 
     it('uses colors.border for skeletonFooter border', () => {
       expect(skeletonStyles.skeletonFooter.borderTopColor).toBe(colors.border);
+    });
+  });
+
+  describe('section.styles - Phase 3 borderRadius tokens', () => {
+    it('uses borderRadius.xl for sectionCard', () => {
+      expect(sectionStyles.sectionCard.borderRadius).toBe(borderRadius.xl);
+    });
+
+    it('sectionCard borderRadius resolves to 20', () => {
+      expect(sectionStyles.sectionCard.borderRadius).toBe(20);
+    });
+
+    it('uses borderRadius.medium for sectionIconBadge', () => {
+      expect(sectionStyles.sectionIconBadge.borderRadius).toBe(
+        borderRadius.medium
+      );
+    });
+
+    it('sectionIconBadge borderRadius resolves to 12', () => {
+      expect(sectionStyles.sectionIconBadge.borderRadius).toBe(12);
+    });
+  });
+
+  describe('header.styles - Phase 3 borderRadius tokens', () => {
+    it('uses borderRadius.full for closeButton', () => {
+      expect(headerStyles.closeButton.borderRadius).toBe(borderRadius.full);
+    });
+
+    it('uses borderRadius.full for shareButton', () => {
+      expect(headerStyles.shareButton.borderRadius).toBe(borderRadius.full);
+    });
+
+    it('closeButton borderRadius resolves to 9999', () => {
+      expect(headerStyles.closeButton.borderRadius).toBe(9999);
     });
   });
 });

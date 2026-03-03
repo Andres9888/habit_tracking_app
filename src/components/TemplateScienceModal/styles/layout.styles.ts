@@ -35,7 +35,7 @@ export const layoutStyles = StyleSheet.create({
   },
   dismissPill: {
     backgroundColor: '#9CA3AF',
-    borderRadius: 3,
+    borderRadius: 3, // Sub-token: 3px for micro dismiss indicator
     height: 5,
     marginBottom: 8,
     width: 40,

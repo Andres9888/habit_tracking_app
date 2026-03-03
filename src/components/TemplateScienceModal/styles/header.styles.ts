@@ -4,12 +4,13 @@
 
 import { StyleSheet } from 'react-native';
 import { colors } from '../../../theme/colors';
+import { borderRadius } from '../../../theme/spacing';
 
 export const headerStyles = StyleSheet.create({
   closeButton: {
     alignItems: 'center',
     backgroundColor: colors.gray[100],
-    borderRadius: 22,
+    borderRadius: borderRadius.full,
     height: 44,
     justifyContent: 'center',
     width: 44,
@@ -38,7 +39,7 @@ export const headerStyles = StyleSheet.create({
   shareButton: {
     alignItems: 'center',
     backgroundColor: colors.gray[100],
-    borderRadius: 22,
+    borderRadius: borderRadius.full,
     height: 44,
     justifyContent: 'center',
     width: 44,
