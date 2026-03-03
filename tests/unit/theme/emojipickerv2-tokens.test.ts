@@ -197,10 +197,8 @@ describe('EmojiPickerV2 Token Migration - Phase 3', () => {
       expect(sheetStyles.noIconText.color).toBe(colors.gray[500]);
     });
 
-    it('searchBar backgroundColor should use colors.light.surfaceMuted', () => {
-      expect(sheetStyles.searchBar.backgroundColor).toBe(
-        colors.light.surfaceMuted
-      );
+    it('searchBar backgroundColor should use lightColors.gray[50] (theme-aware)', () => {
+      expect(sheetStyles.searchBar.backgroundColor).toBe(lightColors.gray[50]);
     });
 
     it('searchBar borderColor should use colors.border', () => {
@@ -235,8 +233,8 @@ describe('EmojiPickerV2 Token Migration - Phase 3', () => {
       expect(sheetStyles.searchInput.marginLeft).toBe(8);
     });
 
-    it('sheet backgroundColor should use colors.light.surface', () => {
-      expect(sheetStyles.sheet.backgroundColor).toBe(colors.light.surface);
+    it('sheet backgroundColor should use lightColors.surface (theme-aware)', () => {
+      expect(sheetStyles.sheet.backgroundColor).toBe(lightColors.surface);
     });
 
     it('sheet borderTopLeftRadius should use borderRadius.xl (20)', () => {

@@ -3,13 +3,14 @@
  * Main orchestrator for the emoji picker bottom sheet
  */
 
-import React, { memo, useCallback } from 'react';
+import React, { memo, useCallback, useMemo } from 'react';
 import { Modal, View, Pressable } from 'react-native';
 import { GestureDetector } from 'react-native-gesture-handler';
 import Animated from 'react-native-reanimated';
+import { useThemeColors } from '../../../theme';
 import { addRecentEmoji } from '../../../utils/recentEmojis';
 import type { EmojiPickerSheetProps } from './EmojiPickerSheet.types';
-import { styles } from './EmojiPickerSheet.styles';
+import { styles, createEmojiSheetStyles } from './EmojiPickerSheet.styles';
 import { useEmojiPickerState } from './useEmojiPickerState';
 import { useSheetAnimations } from './useSheetAnimations';
 import { SheetContent } from './SheetContent';
@@ -22,6 +23,11 @@ export const EmojiPickerSheet = memo(
     onSelect,
     onClose,
   }: EmojiPickerSheetProps) => {
+    const { colors: themeColors } = useThemeColors();
+    const themed = useMemo(
+      () => createEmojiSheetStyles(themeColors),
+      [themeColors]
+    );
     const state = useEmojiPickerState(visible, habitName);
     const animations = useSheetAnimations(visible, onClose);
 
@@ -62,7 +68,7 @@ export const EmojiPickerSheet = memo(
           <GestureDetector gesture={animations.gesture}>
             <Animated.View
               accessibilityViewIsModal
-              style={[styles.sheet, animations.sheetAnimatedStyle]}
+              style={[themed.sheet, animations.sheetAnimatedStyle]}
             >
               <SheetContent
                 currentCategoryName={state.currentCategoryName}

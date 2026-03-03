@@ -12,6 +12,7 @@ import Animated, {
   type AnimatedStyle,
   type SharedValue,
 } from 'react-native-reanimated';
+import { useThemeColors } from '../../../theme';
 import { colors } from '../../../theme/colors';
 import { styles } from './EmojiPickerSheet.styles';
 
@@ -34,6 +35,8 @@ export function SearchBar({
   searchFocusAnim,
   animatedStyle,
 }: SearchBarProps) {
+  const { colors: themeColors } = useThemeColors();
+
   const handleFocus = useCallback(() => {
     setIsSearchFocused(true);
     searchFocusAnim.value = withTiming(1, { duration: 200 });
@@ -46,7 +49,13 @@ export function SearchBar({
 
   return (
     <View style={styles.searchContainer}>
-      <Animated.View style={[styles.searchBar, animatedStyle]}>
+      <Animated.View
+        style={[
+          styles.searchBar,
+          { backgroundColor: themeColors.gray[50] },
+          animatedStyle,
+        ]}
+      >
         <Search
           color={isSearchFocused ? colors.secondary[500] : colors.gray[400]}
           size={20}
@@ -57,7 +66,7 @@ export function SearchBar({
           placeholder='Search or type habit name...'
           placeholderTextColor={colors.gray[400]}
           returnKeyType='search'
-          style={styles.searchInput}
+          style={[styles.searchInput, { color: themeColors.gray[900] }]}
           value={value}
           onBlur={handleBlur}
           onChangeText={onChange}
