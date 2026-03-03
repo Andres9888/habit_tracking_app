@@ -10,9 +10,13 @@ import Animated from 'react-native-reanimated';
 import { Check, Eye } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
 import Button from '../../Button/Button';
+import { colors } from '../../../theme/colors';
 import { borderRadius, spacing } from '../../../theme/spacing';
 import { typography } from '../../../theme/typography';
 import type { ActionButtonsProps } from './ActionButtons.types';
+
+/** stone-100 — no exact token in the theme palette */
+const PREVIEW_BUTTON_BG = '#f5f5f4';
 
 export function ActionButtons({
   checkmarkStyle,
@@ -28,7 +32,7 @@ export function ActionButtons({
   if (isImported) {
     return (
       <Animated.View style={[styles.successButton, checkmarkStyle]}>
-        <Check color='#fff' size={18} strokeWidth={3} />
+        <Check color={colors.text.inverse} size={18} strokeWidth={3} />
         <Text style={styles.successButtonText}>Added to Habits</Text>
       </Animated.View>
     );
@@ -39,7 +43,7 @@ export function ActionButtons({
       {showPreviewCTA && onPreview && (
         <Button
           accessibilityLabel={`Preview ${name} habit`}
-          icon={<Eye color='#57534e' size={18} />}
+          icon={<Eye color={colors.text.secondary} size={18} />}
           size='medium'
           style={styles.previewButton}
           textStyle={styles.previewButtonText}
@@ -60,7 +64,7 @@ export function ActionButtons({
         size='medium'
         style={[
           styles.importButton,
-          { backgroundColor: isLocked ? '#9ca3af' : iconColor },
+          { backgroundColor: isLocked ? colors.gray[400] : iconColor },
         ]}
         variant='primary'
         onPress={onImportPress}
@@ -79,15 +83,15 @@ export const styles = StyleSheet.create({
     paddingVertical: spacing.md,
   },
   previewButton: {
-    backgroundColor: '#f5f5f4',
+    backgroundColor: PREVIEW_BUTTON_BG,
     borderRadius: borderRadius.medium,
     flex: 1,
     paddingVertical: spacing.md,
   },
-  previewButtonText: { color: '#57534e' },
+  previewButtonText: { color: colors.text.secondary },
   successButton: {
     alignItems: 'center',
-    backgroundColor: '#22c55e',
+    backgroundColor: colors.success,
     borderRadius: borderRadius.medium,
     flexDirection: 'row',
     gap: spacing.sm,
@@ -97,7 +101,7 @@ export const styles = StyleSheet.create({
     width: '100%',
   },
   successButtonText: {
-    color: '#fff',
+    color: colors.text.inverse,
     fontSize: typography.body.fontSize,
     fontWeight: '700',
   },
