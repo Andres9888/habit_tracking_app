@@ -46,12 +46,26 @@ export const COMPLETION_DOT_SIZES: Record<CompletionStatus, number> = {
   partial: 6,
 };
 
-/** Today highlight colors */
-export const TODAY_HIGHLIGHT = {
+/** Today highlight colors (light mode) */
+const LIGHT_TODAY_HIGHLIGHT = {
   background: '#fffbeb', // amber-50
   border: '#f59e0b', // amber-500
   text: '#b45309', // amber-700
-};
+} as const;
+
+/** Today highlight colors (dark mode) */
+const DARK_TODAY_HIGHLIGHT = {
+  background: '#3D2F0A',
+  border: '#B8860B',
+  text: '#E8B94D',
+} as const;
+
+/** Get today highlight colors for current theme */
+export const getTodayHighlight = (isDark: boolean) =>
+  isDark ? DARK_TODAY_HIGHLIGHT : LIGHT_TODAY_HIGHLIGHT;
+
+/** @deprecated Use getTodayHighlight(isDark) instead */
+export const TODAY_HIGHLIGHT = LIGHT_TODAY_HIGHLIGHT;
 
 /** Future date color */
 export const FUTURE_DATE_TEXT_COLOR = '#d6d3d1'; // stone-300
