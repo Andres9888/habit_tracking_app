@@ -1,22 +1,26 @@
 import { StyleSheet } from 'react-native';
-import { borderRadius } from '../../../../theme/spacing';
+import { colors } from '@/theme/colors';
+import { borderRadius, spacing } from '../../../../theme/spacing';
 import { typography } from '@/theme/typography';
+
+/** Amber-400 border — no exact token in colors.warning scale */
+const AMBER_BORDER = '#fbbf24';
 
 export const progressStyles = StyleSheet.create({
   badgeIcon: {
     fontSize: 18,
-    marginLeft: 4,
+    marginLeft: spacing.xs,
   },
   container: {
-    backgroundColor: '#ffffff',
-    borderColor: '#e5e7eb', // gray-200
+    backgroundColor: colors.text.inverse,
+    borderColor: colors.gray[200],
     borderRadius: borderRadius.medium,
     borderWidth: 1,
-    marginTop: 12,
-    padding: 12,
+    marginTop: spacing.md,
+    padding: spacing.md,
   },
   daysAway: {
-    color: '#6b7280', // gray-500
+    color: colors.gray[500],
     fontSize: 13,
     fontWeight: '500',
   },
@@ -24,31 +28,31 @@ export const progressStyles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 4,
+    marginBottom: spacing.xs,
   },
   headerLeft: {
     alignItems: 'center',
     flexDirection: 'row',
   },
   headerTitle: {
-    color: '#1f2937', // gray-800
+    color: colors.text.primary,
     fontSize: 15,
     fontWeight: '600',
   },
   milestoneName: {
-    color: '#78716c', // gray-500 (WCAG AA compliant)
+    color: colors.gray[500],
     fontSize: typography.caption.fontSize,
-    marginBottom: 12,
+    marginBottom: spacing.md,
   },
   progressBadge: {
     alignItems: 'center',
-    backgroundColor: '#fef3c7', // amber-100
-    borderColor: '#fbbf24', // amber-400
+    backgroundColor: colors.warning[100],
+    borderColor: AMBER_BORDER,
     borderRadius: borderRadius.medium,
     borderWidth: 1,
     height: 24,
     justifyContent: 'center',
-    marginLeft: 8,
+    marginLeft: spacing.sm,
     width: 24,
   },
   progressBadgeText: {
@@ -59,15 +63,15 @@ export const progressStyles = StyleSheet.create({
     flexDirection: 'row',
   },
   progressBarFill: {
-    backgroundColor: '#f59e0b', // amber-500
+    backgroundColor: colors.warning[500],
     borderRadius: borderRadius.xs,
     height: '100%',
   },
   progressBarTrack: {
-    backgroundColor: '#e5e7eb', // gray-200
+    backgroundColor: colors.gray[200],
     borderRadius: borderRadius.xs,
     flex: 1,
-    height: 8,
+    height: spacing.sm,
     overflow: 'hidden',
   },
   progressLabel: {
@@ -76,7 +80,7 @@ export const progressStyles = StyleSheet.create({
     marginTop: 6,
   },
   progressLabelText: {
-    color: '#78716c', // gray-500 (WCAG AA compliant)
+    color: colors.gray[500],
     fontSize: typography.tabBar.fontSize,
   },
 });

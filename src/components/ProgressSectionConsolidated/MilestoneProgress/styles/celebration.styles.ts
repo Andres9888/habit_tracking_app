@@ -1,35 +1,42 @@
 import { StyleSheet } from 'react-native';
+import { milestoneColors } from '@/theme/colors';
+import { spacing } from '../../../../theme/spacing';
 import { typography } from '@/theme/typography';
+
+/** Amber-50 celebration background — lighter than warning[100] */
+const CELEBRATION_BG = '#fefce8';
+/** Amber-400 border — no exact token in colors.warning scale */
+const AMBER_BORDER = '#fbbf24';
 
 export const celebrationStyles = StyleSheet.create({
   celebrationContainer: {
     alignItems: 'center',
-    backgroundColor: '#fefce8', // amber-50
-    borderColor: '#fbbf24', // amber-400
+    backgroundColor: CELEBRATION_BG,
+    borderColor: AMBER_BORDER,
     borderWidth: 1,
   },
   celebrationContent: {
     alignItems: 'center',
-    padding: 8,
+    padding: spacing.sm,
   },
   celebrationEmoji: {
     fontSize: 32,
-    marginBottom: 4,
+    marginBottom: spacing.xs,
   },
   celebrationSubtext: {
-    color: '#92400e', // amber-800
+    color: milestoneColors.amber800,
     fontSize: 13,
     fontWeight: '500',
   },
   celebrationTitle: {
-    color: '#78350f', // amber-900
+    color: milestoneColors.amberDark,
     fontSize: typography.body.fontSize,
     fontWeight: '700',
     marginBottom: 2,
   },
   nextMilestoneText: {
-    color: '#92400e', // amber-800
+    color: milestoneColors.amber800,
     fontSize: typography.caption.fontSize,
-    marginTop: 8,
+    marginTop: spacing.sm,
   },
 });

@@ -1,17 +1,19 @@
 import { StyleSheet } from 'react-native';
+import { colors } from '@/theme/colors';
+import { spacing } from '../../../../theme/spacing';
 import { typography } from '@/theme/typography';
 
 export const noStreakStyles = StyleSheet.create({
   noStreakContainer: {
     alignItems: 'center',
     flexDirection: 'row',
-    paddingVertical: 4,
+    paddingVertical: spacing.xs,
   },
   noStreakIcon: {
-    marginRight: 12,
+    marginRight: spacing.md,
   },
   noStreakSubtext: {
-    color: '#6b7280', // gray-500
+    color: colors.gray[500],
     fontSize: typography.caption.fontSize,
     marginTop: 2,
   },
@@ -19,7 +21,7 @@ export const noStreakStyles = StyleSheet.create({
     flex: 1,
   },
   noStreakTitle: {
-    color: '#374151', // gray-700
+    color: colors.gray[700],
     fontSize: typography.bodySmall.fontSize,
     fontWeight: '600',
   },
