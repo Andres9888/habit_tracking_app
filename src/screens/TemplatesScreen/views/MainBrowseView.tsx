@@ -2,7 +2,7 @@
  * MainBrowseView - Curated main screen replacing the old tab-based BrowseView
  *
  * Layout: ScreenHeader → SearchBar → FeaturedCollection
- * → PopularSection → PremiumPacksSection → CategoryGrid
+ * → PopularSection → CategoryGrid → PremiumPacksSection
  */
 
 import { ScrollView, View } from 'react-native';
@@ -53,10 +53,10 @@ export function MainBrowseView(p: MainBrowseViewProps) {
             onSeeAll={p.onSeeAll}
           />
         </Animated.View>
-        <Animated.View entering={stagger(2)}>
+        <Animated.View entering={stagger(2)}>{p.categoryGrid}</Animated.View>
+        <Animated.View entering={stagger(3)}>
           {p.premiumPacksSection}
         </Animated.View>
-        <Animated.View entering={stagger(3)}>{p.categoryGrid}</Animated.View>
       </ScrollView>
       {p.modals}
       {p.feedbackOverlays}
