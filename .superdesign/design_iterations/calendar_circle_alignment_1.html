@@ -1,0 +1,1005 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Calendar Circle Alignment — Before / After</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: 'DM Sans', sans-serif;
+        background: #1a1816;
+        display: flex;
+        justify-content: center;
+        gap: 40px;
+        padding: 40px 20px;
+        min-height: 100vh;
+      }
+
+      .phone-frame {
+        width: 390px;
+        height: 844px;
+        border-radius: 48px;
+        overflow: hidden;
+        position: relative;
+        flex-shrink: 0;
+        box-shadow: 0 25px 80px rgba(0, 0, 0, 0.5);
+      }
+
+      .label {
+        text-align: center;
+        color: #c4bfb7;
+        font-size: 14px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        margin-bottom: 12px;
+        text-transform: uppercase;
+      }
+
+      .column {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      /* ── Shared phone internals ── */
+      .screen {
+        width: 100%;
+        height: 100%;
+        position: relative;
+      }
+
+      /* Before uses mismatched bg */
+      .screen.before {
+        background: #f5f1ed;
+      }
+      .screen.after {
+        background: #f5f1ed;
+      }
+
+      /* Status bar (notch area) */
+      .status-bar {
+        height: 54px;
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        padding: 0 28px 6px;
+        font-size: 15px;
+        font-weight: 600;
+        color: #2d2a26;
+      }
+      .status-bar .time {
+        font-weight: 700;
+      }
+      .status-bar .icons {
+        display: flex;
+        gap: 4px;
+        align-items: center;
+      }
+      .status-bar .icons span {
+        font-size: 13px;
+      }
+
+      /* BEFORE: notch area transparent (shows #F5F1ED) */
+      .before .status-bar {
+        background: transparent;
+      }
+      /* AFTER: notch area matches shelf (#FAF8F5) */
+      .after .status-bar {
+        background: #faf8f5;
+      }
+
+      /* Shelf (CalendarTimeline container) */
+      .shelf {
+        background: #faf8f5;
+        padding: 8px 0 16px;
+        border-bottom-left-radius: 16px;
+        border-bottom-right-radius: 16px;
+        margin: 0 24px;
+      }
+      /* AFTER: shelf extends full width under status bar seamlessly */
+      .after .shelf {
+        margin: 0 24px;
+      }
+
+      /* BEFORE: visible color break between status bar area and shelf */
+      .before .shelf-wrapper {
+        background: transparent; /* Shows #F5F1ED behind */
+      }
+      /* AFTER: wrapper matches shelf bg */
+      .after .shelf-wrapper {
+        background: #faf8f5;
+        margin: 0 0;
+        padding: 0 0;
+        border-bottom-left-radius: 16px;
+        border-bottom-right-radius: 16px;
+      }
+
+      /* Streak header */
+      .streak-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        padding: 0 16px;
+        margin-bottom: 2px;
+      }
+      .streak-title {
+        font-size: 20px;
+        font-weight: 800;
+        color: #2d2a26;
+      }
+      .streak-count {
+        font-size: 13px;
+        color: #6b6560;
+        font-weight: 500;
+      }
+      .keep-going {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 12px;
+        font-weight: 600;
+        color: #059669;
+        background: #d1fae5;
+        padding: 4px 10px;
+        border-radius: 12px;
+      }
+
+      /* Date row */
+      .date-row {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        padding: 0 16px;
+        margin-bottom: 12px;
+      }
+      .date-icon {
+        font-size: 12px;
+        color: #6b6560;
+      }
+      .date-text {
+        font-size: 13px;
+        color: #6b6560;
+        font-weight: 500;
+      }
+
+      /* ── Calendar strip ── */
+      .calendar-strip {
+        display: flex;
+        justify-content: space-between;
+        padding: 0 16px;
+      }
+      .day-cell {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2px;
+      }
+      .day-label {
+        font-size: 10px;
+        color: #c4bfb7;
+        font-weight: 400;
+      }
+      .day-label.today {
+        color: #7d5907;
+        font-weight: 700;
+      }
+
+      .day-ring {
+        width: 44px;
+        height: 44px;
+        border-radius: 22px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+      }
+      .day-ring.complete {
+        background: #059669;
+        box-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
+      }
+      .day-ring.complete .checkmark {
+        color: white;
+        font-size: 18px;
+        font-weight: bold;
+      }
+      .day-ring.today-incomplete {
+        border: 3px solid #e8b94d;
+      }
+      .day-ring.today-incomplete .day-num {
+        color: #7d5907;
+        font-size: 14px;
+        font-weight: 700;
+      }
+      .day-ring.future {
+        border: 3px solid #edeae5;
+        opacity: 0.4;
+      }
+      .day-ring.future .day-num {
+        color: #6e6660;
+        font-size: 14px;
+        font-weight: 700;
+      }
+
+      /* ── Streak connector between calendar circles ── */
+      .calendar-strip {
+        position: relative;
+      }
+      .streak-connector {
+        position: absolute;
+        top: calc(14px + 2px + 22px - 1.5px);
+        height: 3.5px;
+        background: rgba(16, 185, 129, 0.35);
+        border-radius: 2px;
+      }
+
+      /* ── Habit card ── */
+      .habits-list {
+        padding: 16px 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .habit-card {
+        background: white;
+        border-radius: 24px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: row;
+        border: 1px solid #ddd8d2;
+      }
+      .accent-bar {
+        width: 4px;
+        align-self: stretch;
+        border-top-left-radius: 24px;
+        border-bottom-left-radius: 24px;
+      }
+      .accent-purple {
+        background: #8563c7;
+      }
+      .accent-green {
+        background: #059669;
+      }
+
+      .card-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+      .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 16px 12px 8px;
+      }
+      .habit-name {
+        font-size: 16px;
+        font-weight: 700;
+        color: #2d2a26;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .habit-emoji {
+        font-size: 20px;
+      }
+      .habit-chevron {
+        color: #c4bfb7;
+        font-size: 14px;
+      }
+
+      .progress-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 0 12px 8px;
+      }
+      .strength-emoji {
+        font-size: 12px;
+      }
+      .progress-track {
+        flex: 1;
+        height: 6px;
+        background: #edeae5;
+        border-radius: 3px;
+        overflow: hidden;
+      }
+      .progress-fill {
+        height: 100%;
+        border-radius: 3px;
+      }
+      .progress-pct {
+        font-size: 11px;
+        font-weight: 600;
+        color: #059669;
+      }
+
+      /* ── Chain visualizer ── */
+      .chain-area {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 12px 20px; /* BEFORE: px-3 = 12px both sides */
+        position: relative;
+      }
+      .chain-area.aligned {
+        padding-left: 12px;
+        padding-right: 16px; /* AFTER: pl-3 pr-4 */
+      }
+      .chain-cell {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+      }
+      .chain-toggle {
+        width: 44px;
+        height: 44px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        z-index: 1;
+      }
+      .chain-toggle.complete-purple {
+        background: #8563c7;
+        box-shadow: 0 0 5px rgba(133, 99, 199, 0.3);
+      }
+      .chain-toggle.complete-green {
+        background: #059669;
+        box-shadow: 0 0 5px rgba(5, 150, 105, 0.3);
+      }
+      .chain-toggle.incomplete {
+        background: #f5f5f5;
+        border: 2px solid #78716c;
+      }
+      .chain-icon {
+        font-size: 16px;
+        color: white;
+      }
+      .chain-icon.dim {
+        color: #78716c;
+      }
+
+      /* Chain connector lines */
+      .chain-connector {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin-left: 20px;
+        right: -16px;
+        height: 3px;
+        margin-top: -1.5px;
+        border-radius: 2px;
+        z-index: 0;
+      }
+
+      /* ── Alignment guides (visual debug) ── */
+      .alignment-guide {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 1px;
+        background: rgba(239, 68, 68, 0.3);
+        z-index: 100;
+        pointer-events: none;
+      }
+      .after .alignment-guide {
+        background: rgba(16, 185, 129, 0.4);
+      }
+
+      /* Color break indicator */
+      .color-break-indicator {
+        position: absolute;
+        right: 8px;
+        font-size: 10px;
+        font-weight: 600;
+        padding: 2px 6px;
+        border-radius: 4px;
+        z-index: 50;
+        pointer-events: none;
+      }
+      .color-break-indicator.bad {
+        background: #fee2e2;
+        color: #b53030;
+        top: 50px;
+      }
+      .color-break-indicator.good {
+        background: #d1fae5;
+        color: #047857;
+        top: 50px;
+      }
+
+      /* Misalignment callout */
+      .misalign-callout {
+        position: absolute;
+        font-size: 9px;
+        font-weight: 700;
+        padding: 2px 5px;
+        border-radius: 3px;
+        z-index: 50;
+        pointer-events: none;
+        white-space: nowrap;
+      }
+      .misalign-callout.bad {
+        background: #fee2e2;
+        color: #b53030;
+      }
+      .misalign-callout.good {
+        background: #d1fae5;
+        color: #047857;
+      }
+
+      /* Bottom bar */
+      .bottom-bar {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 80px;
+        background: #faf8f5;
+        border-top: 1px solid #ddd8d2;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 40px;
+        padding-bottom: 16px;
+        border-radius: 24px 24px 0 0;
+      }
+      .bar-icon {
+        font-size: 22px;
+        color: #c4bfb7;
+      }
+      .bar-icon.active {
+        color: #059669;
+      }
+      .fab {
+        width: 52px;
+        height: 52px;
+        background: #059669;
+        border-radius: 26px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 16px rgba(5, 150, 105, 0.35);
+        margin-top: -20px;
+      }
+      .fab span {
+        color: white;
+        font-size: 28px;
+        font-weight: 300;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ═══════════ BEFORE ═══════════ -->
+    <div class="column">
+      <div class="label">Before</div>
+      <div class="phone-frame">
+        <div class="screen before">
+          <!-- Color break between status bar and shelf -->
+          <div class="color-break-indicator bad">Color break ↓</div>
+
+          <div class="shelf-wrapper">
+            <div class="status-bar">
+              <span class="time">5:10</span>
+              <div class="icons">
+                <span>•••</span>
+                <span>📶</span>
+                <span>🔋</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="shelf">
+            <div class="streak-header">
+              <div>
+                <div class="streak-title">5-day streak</div>
+              </div>
+              <div
+                style="
+                  display: flex;
+                  flex-direction: column;
+                  align-items: flex-end;
+                  gap: 4px;
+                "
+              >
+                <span class="streak-count">0 of 2</span>
+                <div class="keep-going">🔥 Keep it going!</div>
+              </div>
+            </div>
+            <div class="date-row">
+              <span class="date-icon">📅</span>
+              <span class="date-text">Wed, March 4 ▾</span>
+            </div>
+            <div class="calendar-strip" id="cal-before">
+              <div class="day-cell">
+                <span class="day-label">Sat</span>
+                <div class="day-ring complete">
+                  <span class="checkmark">✓</span>
+                </div>
+              </div>
+              <div class="day-cell">
+                <span class="day-label">Sun</span>
+                <div class="day-ring complete">
+                  <span class="checkmark">✓</span>
+                </div>
+              </div>
+              <div class="day-cell">
+                <span class="day-label">Mon</span>
+                <div class="day-ring complete">
+                  <span class="checkmark">✓</span>
+                </div>
+              </div>
+              <div class="day-cell">
+                <span class="day-label">Tue</span>
+                <div class="day-ring complete">
+                  <span class="checkmark">✓</span>
+                </div>
+              </div>
+              <div class="day-cell">
+                <span class="day-label today">Wed</span>
+                <div class="day-ring today-incomplete">
+                  <span class="day-num">4</span>
+                </div>
+              </div>
+              <div class="day-cell">
+                <span class="day-label">Thu</span>
+                <div class="day-ring future">
+                  <span class="day-num">5</span>
+                </div>
+              </div>
+              <div class="day-cell">
+                <span class="day-label">Fri</span>
+                <div class="day-ring future">
+                  <span class="day-num">6</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="habits-list">
+            <!-- Habit 1: Walk -->
+            <div class="habit-card" style="position: relative">
+              <div class="misalign-callout bad" style="top: -8px; right: 16px">
+                ← 4px gap →
+              </div>
+              <div class="accent-bar accent-purple"></div>
+              <div class="card-content">
+                <div class="card-header">
+                  <div class="habit-name">
+                    <span class="habit-emoji">🚶</span> Walk 10 minutes
+                  </div>
+                  <span class="habit-chevron">›</span>
+                </div>
+                <div class="progress-row">
+                  <span class="strength-emoji">🌱</span>
+                  <div class="progress-track">
+                    <div
+                      class="progress-fill"
+                      style="width: 14%; background: #059669"
+                    ></div>
+                  </div>
+                  <span class="progress-pct">14%</span>
+                </div>
+                <div class="chain-area">
+                  <div class="chain-cell">
+                    <div class="chain-toggle complete-purple">
+                      <span class="chain-icon">🔗</span>
+                    </div>
+                    <div
+                      class="chain-connector"
+                      style="background: rgba(133, 99, 199, 0.4)"
+                    ></div>
+                  </div>
+                  <div class="chain-cell">
+                    <div class="chain-toggle complete-purple">
+                      <span class="chain-icon">🔗</span>
+                    </div>
+                    <div
+                      class="chain-connector"
+                      style="background: rgba(133, 99, 199, 0.4)"
+                    ></div>
+                  </div>
+                  <div class="chain-cell">
+                    <div class="chain-toggle complete-purple">
+                      <span class="chain-icon">🔗</span>
+                    </div>
+                    <div
+                      class="chain-connector"
+                      style="background: rgba(133, 99, 199, 0.4)"
+                    ></div>
+                  </div>
+                  <div class="chain-cell">
+                    <div class="chain-toggle complete-purple">
+                      <span class="chain-icon">🔗</span>
+                    </div>
+                    <div
+                      class="chain-connector"
+                      style="background: rgba(133, 99, 199, 0.4)"
+                    ></div>
+                  </div>
+                  <div class="chain-cell">
+                    <div class="chain-toggle complete-purple">
+                      <span class="chain-icon">🔗</span>
+                    </div>
+                    <div
+                      class="chain-connector"
+                      style="background: rgba(133, 99, 199, 0.4)"
+                    ></div>
+                  </div>
+                  <div class="chain-cell">
+                    <div class="chain-toggle incomplete">
+                      <span class="chain-icon dim">🔗</span>
+                    </div>
+                  </div>
+                  <div class="chain-cell">
+                    <div class="chain-toggle incomplete">
+                      <span class="chain-icon dim">🔗</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Habit 2: Kk -->
+            <div class="habit-card">
+              <div class="accent-bar accent-green"></div>
+              <div class="card-content">
+                <div class="card-header">
+                  <div class="habit-name">
+                    <span class="habit-emoji">🌙</span> Kk
+                  </div>
+                  <span class="habit-chevron">›</span>
+                </div>
+                <div class="progress-row">
+                  <span class="strength-emoji">🌱</span>
+                  <div class="progress-track">
+                    <div
+                      class="progress-fill"
+                      style="width: 14%; background: #059669"
+                    ></div>
+                  </div>
+                  <span class="progress-pct">14%</span>
+                </div>
+                <div class="chain-area">
+                  <div class="chain-cell">
+                    <div class="chain-toggle complete-green">
+                      <span class="chain-icon">🔗</span>
+                    </div>
+                    <div
+                      class="chain-connector"
+                      style="background: rgba(5, 150, 105, 0.4)"
+                    ></div>
+                  </div>
+                  <div class="chain-cell">
+                    <div class="chain-toggle complete-green">
+                      <span class="chain-icon">🔗</span>
+                    </div>
+                    <div
+                      class="chain-connector"
+                      style="background: rgba(5, 150, 105, 0.4)"
+                    ></div>
+                  </div>
+                  <div class="chain-cell">
+                    <div class="chain-toggle complete-green">
+                      <span class="chain-icon">🔗</span>
+                    </div>
+                    <div
+                      class="chain-connector"
+                      style="background: rgba(5, 150, 105, 0.4)"
+                    ></div>
+                  </div>
+                  <div class="chain-cell">
+                    <div class="chain-toggle complete-green">
+                      <span class="chain-icon">🔗</span>
+                    </div>
+                    <div
+                      class="chain-connector"
+                      style="background: rgba(5, 150, 105, 0.4)"
+                    ></div>
+                  </div>
+                  <div class="chain-cell">
+                    <div class="chain-toggle complete-green">
+                      <span class="chain-icon">🔗</span>
+                    </div>
+                    <div
+                      class="chain-connector"
+                      style="background: rgba(5, 150, 105, 0.4)"
+                    ></div>
+                  </div>
+                  <div class="chain-cell">
+                    <div class="chain-toggle incomplete">
+                      <span class="chain-icon dim">🔗</span>
+                    </div>
+                  </div>
+                  <div class="chain-cell">
+                    <div class="chain-toggle incomplete">
+                      <span class="chain-icon dim">🔗</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="bottom-bar">
+            <span class="bar-icon">⚙️</span>
+            <div class="fab"><span>+</span></div>
+            <span class="bar-icon">✨</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════ AFTER ═══════════ -->
+    <div class="column">
+      <div class="label">After</div>
+      <div class="phone-frame">
+        <div class="screen after">
+          <div class="color-break-indicator good">Seamless ✓</div>
+
+          <div class="shelf-wrapper">
+            <div class="status-bar">
+              <span class="time">5:10</span>
+              <div class="icons">
+                <span>•••</span>
+                <span>📶</span>
+                <span>🔋</span>
+              </div>
+            </div>
+
+            <div class="shelf">
+              <div class="streak-header">
+                <div>
+                  <div class="streak-title">5-day streak</div>
+                </div>
+                <div
+                  style="
+                    display: flex;
+                    flex-direction: column;
+                    align-items: flex-end;
+                    gap: 4px;
+                  "
+                >
+                  <span class="streak-count">0 of 2</span>
+                  <div class="keep-going">🔥 Keep it going!</div>
+                </div>
+              </div>
+              <div class="date-row">
+                <span class="date-icon">📅</span>
+                <span class="date-text">Wed, March 4 ▾</span>
+              </div>
+              <div class="calendar-strip" id="cal-after">
+                <div class="day-cell">
+                  <span class="day-label">Sat</span>
+                  <div class="day-ring complete">
+                    <span class="checkmark">✓</span>
+                  </div>
+                </div>
+                <div class="day-cell">
+                  <span class="day-label">Sun</span>
+                  <div class="day-ring complete">
+                    <span class="checkmark">✓</span>
+                  </div>
+                </div>
+                <div class="day-cell">
+                  <span class="day-label">Mon</span>
+                  <div class="day-ring complete">
+                    <span class="checkmark">✓</span>
+                  </div>
+                </div>
+                <div class="day-cell">
+                  <span class="day-label">Tue</span>
+                  <div class="day-ring complete">
+                    <span class="checkmark">✓</span>
+                  </div>
+                </div>
+                <div class="day-cell">
+                  <span class="day-label today">Wed</span>
+                  <div class="day-ring today-incomplete">
+                    <span class="day-num">4</span>
+                  </div>
+                </div>
+                <div class="day-cell">
+                  <span class="day-label">Thu</span>
+                  <div class="day-ring future">
+                    <span class="day-num">5</span>
+                  </div>
+                </div>
+                <div class="day-cell">
+                  <span class="day-label">Fri</span>
+                  <div class="day-ring future">
+                    <span class="day-num">6</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="habits-list">
+            <!-- Habit 1: Walk — ALIGNED -->
+            <div class="habit-card" style="position: relative">
+              <div class="misalign-callout good" style="top: -8px; right: 16px">
+                Aligned ✓
+              </div>
+              <div class="accent-bar accent-purple"></div>
+              <div class="card-content">
+                <div class="card-header">
+                  <div class="habit-name">
+                    <span class="habit-emoji">🚶</span> Walk 10 minutes
+                  </div>
+                  <span class="habit-chevron">›</span>
+                </div>
+                <div class="progress-row">
+                  <span class="strength-emoji">🌱</span>
+                  <div class="progress-track">
+                    <div
+                      class="progress-fill"
+                      style="width: 14%; background: #059669"
+                    ></div>
+                  </div>
+                  <span class="progress-pct">14%</span>
+                </div>
+                <div class="chain-area aligned">
+                  <div class="chain-cell">
+                    <div class="chain-toggle complete-purple">
+                      <span class="chain-icon">🔗</span>
+                    </div>
+                    <div
+                      class="chain-connector"
+                      style="background: rgba(133, 99, 199, 0.4)"
+                    ></div>
+                  </div>
+                  <div class="chain-cell">
+                    <div class="chain-toggle complete-purple">
+                      <span class="chain-icon">🔗</span>
+                    </div>
+                    <div
+                      class="chain-connector"
+                      style="background: rgba(133, 99, 199, 0.4)"
+                    ></div>
+                  </div>
+                  <div class="chain-cell">
+                    <div class="chain-toggle complete-purple">
+                      <span class="chain-icon">🔗</span>
+                    </div>
+                    <div
+                      class="chain-connector"
+                      style="background: rgba(133, 99, 199, 0.4)"
+                    ></div>
+                  </div>
+                  <div class="chain-cell">
+                    <div class="chain-toggle complete-purple">
+                      <span class="chain-icon">🔗</span>
+                    </div>
+                    <div
+                      class="chain-connector"
+                      style="background: rgba(133, 99, 199, 0.4)"
+                    ></div>
+                  </div>
+                  <div class="chain-cell">
+                    <div class="chain-toggle complete-purple">
+                      <span class="chain-icon">🔗</span>
+                    </div>
+                    <div
+                      class="chain-connector"
+                      style="background: rgba(133, 99, 199, 0.4)"
+                    ></div>
+                  </div>
+                  <div class="chain-cell">
+                    <div class="chain-toggle incomplete">
+                      <span class="chain-icon dim">🔗</span>
+                    </div>
+                  </div>
+                  <div class="chain-cell">
+                    <div class="chain-toggle incomplete">
+                      <span class="chain-icon dim">🔗</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Habit 2: Kk — ALIGNED -->
+            <div class="habit-card">
+              <div class="accent-bar accent-green"></div>
+              <div class="card-content">
+                <div class="card-header">
+                  <div class="habit-name">
+                    <span class="habit-emoji">🌙</span> Kk
+                  </div>
+                  <span class="habit-chevron">›</span>
+                </div>
+                <div class="progress-row">
+                  <span class="strength-emoji">🌱</span>
+                  <div class="progress-track">
+                    <div
+                      class="progress-fill"
+                      style="width: 14%; background: #059669"
+                    ></div>
+                  </div>
+                  <span class="progress-pct">14%</span>
+                </div>
+                <div class="chain-area aligned">
+                  <div class="chain-cell">
+                    <div class="chain-toggle complete-green">
+                      <span class="chain-icon">🔗</span>
+                    </div>
+                    <div
+                      class="chain-connector"
+                      style="background: rgba(5, 150, 105, 0.4)"
+                    ></div>
+                  </div>
+                  <div class="chain-cell">
+                    <div class="chain-toggle complete-green">
+                      <span class="chain-icon">🔗</span>
+                    </div>
+                    <div
+                      class="chain-connector"
+                      style="background: rgba(5, 150, 105, 0.4)"
+                    ></div>
+                  </div>
+                  <div class="chain-cell">
+                    <div class="chain-toggle complete-green">
+                      <span class="chain-icon">🔗</span>
+                    </div>
+                    <div
+                      class="chain-connector"
+                      style="background: rgba(5, 150, 105, 0.4)"
+                    ></div>
+                  </div>
+                  <div class="chain-cell">
+                    <div class="chain-toggle complete-green">
+                      <span class="chain-icon">🔗</span>
+                    </div>
+                    <div
+                      class="chain-connector"
+                      style="background: rgba(5, 150, 105, 0.4)"
+                    ></div>
+                  </div>
+                  <div class="chain-cell">
+                    <div class="chain-toggle complete-green">
+                      <span class="chain-icon">🔗</span>
+                    </div>
+                    <div
+                      class="chain-connector"
+                      style="background: rgba(5, 150, 105, 0.4)"
+                    ></div>
+                  </div>
+                  <div class="chain-cell">
+                    <div class="chain-toggle incomplete">
+                      <span class="chain-icon dim">🔗</span>
+                    </div>
+                  </div>
+                  <div class="chain-cell">
+                    <div class="chain-toggle incomplete">
+                      <span class="chain-icon dim">🔗</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="bottom-bar">
+            <span class="bar-icon">⚙️</span>
+            <div class="fab"><span>+</span></div>
+            <span class="bar-icon">✨</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
