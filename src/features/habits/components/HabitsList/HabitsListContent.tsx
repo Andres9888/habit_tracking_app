@@ -108,7 +108,7 @@ export function HabitsListContent({
     <StickyHeaderContext.Provider value={contextValue}>
       <View className='flex-1 bg-transparent'>
         <DraggableFlatList<Habit>
-          activationDistance={handlers.isReorderingEnabled ? 12 : 9999}
+          activationDistance={props.isSelectionMode ? 9999 : (handlers.isReorderingEnabled ? 12 : 9999)}
           contentContainerStyle={contentContainerStyle}
           data={list.habits}
           keyExtractor={handlers.keyExtractor}
