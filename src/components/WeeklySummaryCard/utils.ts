@@ -1,4 +1,5 @@
 import type { ColorScheme, MotivationalMessage } from './types';
+import { colors } from '@/theme/colors';
 
 /**
  * Get motivational message based on completion rate
@@ -21,10 +22,22 @@ export function getMotivationalMessage(
  */
 export function getColorScheme(completionRate: number): ColorScheme {
   if (completionRate >= 90)
-    return { accent: '#10b981', bg: '#dcfce7', text: '#047857' };
+    return {
+      accent: colors.primary[500],
+      bg: colors.strength.buildingLight,
+      text: colors.primary[700],
+    };
   if (completionRate >= 75)
-    return { accent: '#3b82f6', bg: '#dbeafe', text: '#1d4ed8' };
+    return {
+      accent: colors.secondary[500],
+      bg: colors.secondary[100],
+      text: '#1d4ed8',
+    };
   if (completionRate >= 50)
-    return { accent: '#f59e0b', bg: '#fef3c7', text: '#b45309' };
-  return { accent: '#78716c', bg: '#f5f5f4', text: '#57534e' };
+    return { accent: '#f59e0b', bg: colors.warningLight, text: '#b45309' };
+  return {
+    accent: colors.gray[400],
+    bg: colors.gray[50],
+    text: colors.gray[600],
+  };
 }

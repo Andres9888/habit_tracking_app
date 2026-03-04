@@ -23,11 +23,23 @@ export const durations = {
   /** Draw attention, complex sequences */
   emphasis: 400,
 
+  /** Floating, drifting motion loops */
+  drift: 2000,
+
+  /** Screen/card entry */
+  enter: 280,
+
   /** Button presses, toggles — immediate feedback */
   instant: 100,
 
+  /** Spinner rotations, repeating pulse loops */
+  loop: 1000,
+
   /** Medium emphasis, page transitions */
   moderate: 300,
+
+  /** Breathing animations, glow pulses */
+  breathing: 1500,
 
   /** Progress bar fills, ring animations */
   progress: 800,
@@ -40,9 +52,6 @@ export const durations = {
 
   /** Standard transitions */
   standard: 200,
-
-  /** Screen/card entry */
-  enter: 280,
 
   /** Stagger delay per item (max 5 items) */
   stagger: 60,
@@ -64,7 +73,7 @@ export const easings = {
 /**
  * Spring Presets
  * All motion encodes hierarchy, state, or spatial relation.
- * 
+ *
  * Design System Standard: damping 18, stiffness 150
  * This provides a consistent, snappy feel across all micro-interactions.
  */
@@ -78,7 +87,7 @@ export const springs = {
   /** Bouncy — celebrations only */
   bouncy: { damping: 10, stiffness: 180 },
 
-  /** Button press/release — snappy feedback (updated to match standard) */
+  /** Button press/release — alias of standard for semantic clarity */
   button: { damping: 18, stiffness: 150 },
 
   /** Fast dismissal — minimal bounce */
@@ -90,7 +99,7 @@ export const springs = {
   /** Direct manipulation snap-back */
   gesture: { damping: 20, mass: 1, stiffness: 450 },
 
-  /** Subtle micro-interactions (updated to match standard) */
+  /** Subtle micro-interactions — alias of standard for semantic clarity */
   micro: { damping: 18, stiffness: 150 },
 
   /** Attention pulse / glow */
@@ -99,7 +108,7 @@ export const springs = {
   /** Modal/sheet presentations */
   sheet: { damping: 20, stiffness: 200 },
 
-  /** Quick response with slight bounce (same as standard) */
+  /** Quick response — alias of standard for semantic clarity */
   snappy: { damping: 18, stiffness: 150 },
 
   /** Celebration bounce — completion badges, progress pops */

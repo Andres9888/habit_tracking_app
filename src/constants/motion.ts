@@ -10,16 +10,16 @@
 
 import { Easing } from 'react-native';
 import type { WithSpringConfig } from 'react-native-reanimated';
-import { springs } from '@/theme/animations';
+import { durations, springs } from '@/theme/animations';
 
 export const Motion = {
   duration: {
-    base: 150,
+    base: durations.quick,
     emphasized: 220,
-    enter: 280,
+    enter: durations.enter,
     exit: 220,
-    fast: 100,
-    reveal: 180,
+    fast: durations.instant,
+    reveal: durations.reveal,
   },
   easing: {
     inCubic: Easing.in(Easing.cubic),
@@ -35,19 +35,19 @@ export const Motion = {
  * or constants motion module without duplicating values.
  */
 const makeReadOnlySpringConfig = <T extends Record<string, unknown>>(
-  spring: T,
+  spring: T
 ): T => Object.freeze(spring);
 
 export const SPRING_STANDARD: WithSpringConfig = makeReadOnlySpringConfig(
-  springs.standard as WithSpringConfig,
+  springs.standard as WithSpringConfig
 );
 export const SPRING_PREMIUM: WithSpringConfig = SPRING_STANDARD;
 export const SPRING_BUTTON: WithSpringConfig = SPRING_STANDARD;
 export const SPRING_GENTLE: WithSpringConfig = makeReadOnlySpringConfig(
-  springs.gentle as WithSpringConfig,
+  springs.gentle as WithSpringConfig
 );
 export const SPRING_BOUNCY: WithSpringConfig = makeReadOnlySpringConfig(
-  springs.bouncy as WithSpringConfig,
+  springs.bouncy as WithSpringConfig
 );
 
 /**
@@ -57,7 +57,7 @@ export const SPRING_BOUNCY: WithSpringConfig = makeReadOnlySpringConfig(
 export const Springs: typeof springs = {
   standard: SPRING_STANDARD,
   bottomSheet: makeReadOnlySpringConfig(
-    springs.bottomSheet as WithSpringConfig,
+    springs.bottomSheet as WithSpringConfig
   ),
   bouncy: SPRING_BOUNCY,
   button: SPRING_BUTTON,
@@ -69,12 +69,10 @@ export const Springs: typeof springs = {
   sheet: makeReadOnlySpringConfig(springs.sheet as WithSpringConfig),
   snappy: makeReadOnlySpringConfig(springs.snappy as WithSpringConfig),
   celebration: makeReadOnlySpringConfig(
-    springs.celebration as WithSpringConfig,
+    springs.celebration as WithSpringConfig
   ),
   pop: makeReadOnlySpringConfig(springs.pop as WithSpringConfig),
-  responsive: makeReadOnlySpringConfig(
-    springs.responsive as WithSpringConfig,
-  ),
+  responsive: makeReadOnlySpringConfig(springs.responsive as WithSpringConfig),
   settle: makeReadOnlySpringConfig(springs.settle as WithSpringConfig),
 };
 Object.freeze(Springs);

@@ -9,6 +9,7 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
+import { springs } from '@/theme/animations';
 import { Check, Plus } from 'lucide-react-native';
 import { colors } from '../../../../theme/colors';
 import { addButtonStyles as abs } from './TrendingCard.styles';
@@ -26,9 +27,9 @@ export function AddButton({
 
   useEffect(() => {
     if (isImported) {
-      scale.value = withSpring(1.2, { damping: 12, stiffness: 300 });
+      scale.value = withSpring(1.2, springs.responsive);
       const timeout = setTimeout(() => {
-        scale.value = withSpring(1, { damping: 12, stiffness: 300 });
+        scale.value = withSpring(1, springs.responsive);
       }, 100);
       return () => clearTimeout(timeout);
     }

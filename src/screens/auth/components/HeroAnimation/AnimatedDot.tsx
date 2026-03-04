@@ -1,5 +1,9 @@
-import Animated, { useAnimatedStyle, SharedValue } from 'react-native-reanimated';
+import Animated, {
+  useAnimatedStyle,
+  SharedValue,
+} from 'react-native-reanimated';
 import { StyleSheet } from 'react-native';
+import { colors } from '@/theme/colors';
 
 interface AnimatedDotProps {
   index: number;
@@ -10,7 +14,7 @@ export function AnimatedDot({ index, progress }: AnimatedDotProps) {
   const dotStyle = useAnimatedStyle(() => {
     const isActive = progress.value >= index && progress.value < index + 1;
     return {
-      backgroundColor: isActive ? '#22c55e' : '#e7e5e4',
+      backgroundColor: isActive ? colors.primary[500] : colors.gray[200],
       transform: [{ scale: isActive ? 1.2 : 1 }],
     };
   });

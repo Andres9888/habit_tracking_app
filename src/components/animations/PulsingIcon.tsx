@@ -18,6 +18,7 @@ import Animated, {
   withTiming,
   runOnJS,
 } from 'react-native-reanimated';
+import { durations } from '@/theme/animations';
 
 export interface PulsingIconProps {
   /** Content to apply the pulsing animation to */
@@ -41,27 +42,43 @@ export function PulsingIcon({
     }
 
     const pulseOpacity = () => {
-      opacity.value = withTiming(0.5, { duration: 1000 }, (finished) => {
-        if (finished) {
-          opacity.value = withTiming(1, { duration: 1000 }, (finished2) => {
-            if (finished2) {
-              runOnJS(pulseOpacity)();
-            }
-          });
+      opacity.value = withTiming(
+        0.5,
+        { duration: durations.loop },
+        (finished) => {
+          if (finished) {
+            opacity.value = withTiming(
+              1,
+              { duration: durations.loop },
+              (finished2) => {
+                if (finished2) {
+                  runOnJS(pulseOpacity)();
+                }
+              }
+            );
+          }
         }
-      });
+      );
     };
 
     const pulseScale = () => {
-      scale.value = withTiming(1.05, { duration: 1000 }, (finished) => {
-        if (finished) {
-          scale.value = withTiming(1, { duration: 1000 }, (finished2) => {
-            if (finished2) {
-              runOnJS(pulseScale)();
-            }
-          });
+      scale.value = withTiming(
+        1.05,
+        { duration: durations.loop },
+        (finished) => {
+          if (finished) {
+            scale.value = withTiming(
+              1,
+              { duration: durations.loop },
+              (finished2) => {
+                if (finished2) {
+                  runOnJS(pulseScale)();
+                }
+              }
+            );
+          }
         }
-      });
+      );
     };
 
     pulseOpacity();

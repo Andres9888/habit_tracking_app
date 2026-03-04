@@ -25,23 +25,13 @@ import { springs } from '@/theme/animations';
  */
 export const SPRING_CONFIGS = {
   /** Bouncy playful animation — celebrations only */
-  bouncy: {
-    damping: 10,
-    mass: 1,
-    stiffness: 180,
-  } as WithSpringConfig,
+  bouncy: springs.bouncy as WithSpringConfig,
 
-  /** Gentle entrance animation — smooth reveals, minimal bounce
-   * This is the design system standard for all animations
-   */
+  /** Gentle entrance animation — design system standard */
   entrance: springs.standard as WithSpringConfig,
 
   /** Smooth gentle spring — subtle, no overshoot */
-  smooth: {
-    damping: 20,
-    mass: 1,
-    stiffness: 100,
-  } as WithSpringConfig,
+  smooth: springs.gentle as WithSpringConfig,
 
   /** Snappy interaction feedback — button presses (design system standard) */
   snappy: springs.standard as WithSpringConfig,

@@ -7,6 +7,7 @@ import Animated, {
   withTiming,
   cancelAnimation,
 } from 'react-native-reanimated';
+import { durations } from '@/theme/animations';
 
 interface LoadingSpinnerProps {
   color: string;
@@ -17,7 +18,7 @@ export function LoadingSpinner({ color }: LoadingSpinnerProps) {
 
   useEffect(() => {
     rotation.value = withRepeat(
-      withTiming(360, { duration: 1000, easing: Easing.linear }),
+      withTiming(360, { duration: durations.loop, easing: Easing.linear }),
       -1,
       false
     );
