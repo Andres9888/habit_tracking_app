@@ -16,7 +16,10 @@ interface WeekNavRowProps {
   onDateRangePress?: () => void;
 }
 
-const PRESS = { chip: { pressScale: 0.97 }, today: { pressScale: 0.95 } } as const;
+const PRESS = {
+  chip: { pressScale: 0.97 },
+  today: { pressScale: 0.95 },
+} as const;
 
 /** Glass chip date row — frosted pill opens mini calendar, "Today →" for past */
 export const WeekNavRow: React.FC<WeekNavRowProps> = ({
@@ -36,28 +39,47 @@ export const WeekNavRow: React.FC<WeekNavRowProps> = ({
         animationConfig={PRESS.chip}
         onPress={onDateRangePress}
       >
-        <View style={[
-          s.chip,
-          { borderColor: isDark ? GLASS.borderDark : GLASS.borderLight,
-            backgroundColor: isDark ? GLASS.bgDark : GLASS.bgLight },
-          shadows.subtle,
-        ]}>
+        <View
+          style={[
+            s.chip,
+            {
+              borderColor: isDark ? GLASS.borderDark : GLASS.borderLight,
+              backgroundColor: isDark ? GLASS.bgDark : GLASS.bgLight,
+            },
+            shadows.subtle,
+          ]}
+        >
           <BlurView
-            intensity={isDark ? 30 : 40}
+            intensity={isDark ? 40 : 50}
             tint={isDark ? 'dark' : 'light'}
             style={StyleSheet.absoluteFill}
           />
           <View style={s.chipContent}>
-            <CalendarDays color={colors.text.tertiary} size={13} strokeWidth={2} />
-            <Text style={[s.dateText, { color: colors.text.secondary }]}>{dateLabel}</Text>
+            <CalendarDays
+              color={colors.text.tertiary}
+              size={13}
+              strokeWidth={2}
+            />
+            <Text style={[s.dateText, { color: colors.text.secondary }]}>
+              {dateLabel}
+            </Text>
             <ChevronDown color={colors.gray[300]} size={11} strokeWidth={2} />
           </View>
         </View>
       </AnimatedPressable>
 
       {isViewingPast && onJumpToToday && (
-        <AnimatedPressable animationConfig={PRESS.today} style={s.todayWrap} onPress={onJumpToToday}>
-          <Text style={[s.todayLink, { color: isDark ? palette.streak[300] : palette.streak[500] }]}>
+        <AnimatedPressable
+          animationConfig={PRESS.today}
+          style={s.todayWrap}
+          onPress={onJumpToToday}
+        >
+          <Text
+            style={[
+              s.todayLink,
+              { color: isDark ? palette.streak[300] : palette.streak[500] },
+            ]}
+          >
             Today →
           </Text>
         </AnimatedPressable>
@@ -67,8 +89,10 @@ export const WeekNavRow: React.FC<WeekNavRowProps> = ({
 };
 
 const GLASS = {
-  borderLight: 'rgba(255,255,255,0.6)', borderDark: 'rgba(55,65,81,0.35)',
-  bgLight: 'rgba(255,255,255,0.5)', bgDark: 'rgba(31,41,55,0.6)',
+  borderLight: 'rgba(45,42,38,0.12)',
+  borderDark: 'rgba(255,255,255,0.10)',
+  bgLight: 'rgba(255,255,255,0.65)',
+  bgDark: 'rgba(31,41,55,0.7)',
 };
 
 const s = StyleSheet.create({
@@ -84,8 +108,21 @@ const s = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 5,
   },
-  dateText: { fontFamily: fontFamilies.primary.text, fontSize: 12, fontWeight: '500' as const },
-  row: { alignItems: 'center' as const, flexDirection: 'row' as const, justifyContent: 'center' as const, marginTop: 6 },
-  todayLink: { fontFamily: fontFamilies.primary.text, fontSize: 12, fontWeight: '600' as const },
+  dateText: {
+    fontFamily: fontFamilies.primary.text,
+    fontSize: 12,
+    fontWeight: '500' as const,
+  },
+  row: {
+    alignItems: 'center' as const,
+    flexDirection: 'row' as const,
+    justifyContent: 'center' as const,
+    marginTop: 6,
+  },
+  todayLink: {
+    fontFamily: fontFamilies.primary.text,
+    fontSize: 12,
+    fontWeight: '600' as const,
+  },
   todayWrap: { position: 'absolute' as const, right: 0 },
 });

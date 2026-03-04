@@ -46,8 +46,17 @@ export function ProgressText({ completed, total }: ProgressTextProps) {
 
   return (
     <Text style={[PROGRESS_BASE, { color: mutedColor }]}>
-      <Text style={{ color: countColor, fontWeight: '700' }}>{completed}</Text>
-      {` of ${total}`}
+      <Text
+        style={{
+          color: countColor,
+          fontWeight: '700',
+          fontFamily: fontFamilies.monospace,
+        }}
+      >
+        {completed}
+      </Text>
+      {' of '}
+      <Text style={{ fontFamily: fontFamilies.monospace }}>{total}</Text>
     </Text>
   );
 }

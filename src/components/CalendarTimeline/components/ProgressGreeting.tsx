@@ -37,6 +37,7 @@ const COLLAPSED_ROW = {
   flexDirection: 'row' as const,
   justifyContent: 'space-between' as const,
   alignItems: 'center' as const,
+  gap: 8,
 };
 
 /** Greeting row: streak-aware greeting left + "3 of 5" right · date chip below */
@@ -51,7 +52,11 @@ export const ProgressGreeting: React.FC<ProgressGreetingProps> = ({
   onDateRangePress,
 }) => {
   const { colors, isDark } = useThemeColors();
-  const { greeting } = useStreakGreeting(currentStreak, completedToday, totalHabits);
+  const { greeting } = useStreakGreeting(
+    currentStreak,
+    completedToday,
+    totalHabits
+  );
   const dateText = format(currentDate, 'EEE, MMMM d');
   const isAllDone = completedToday >= totalHabits && totalHabits > 0;
   const isCollapsed = greeting === '';
@@ -83,10 +88,12 @@ export const ProgressGreeting: React.FC<ProgressGreetingProps> = ({
   return (
     <View>
       <View style={TWO_ROW}>
-        <Text style={[GREETING_BASE, { color: greetingColor }]}>{greeting}</Text>
+        <Text style={[GREETING_BASE, { color: greetingColor }]}>
+          {greeting}
+        </Text>
         <ProgressText completed={completedToday} total={totalHabits} />
       </View>
-      {weekNav}
+      <View style={{ marginTop: 4 }}>{weekNav}</View>
     </View>
   );
 };

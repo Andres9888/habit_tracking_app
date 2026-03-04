@@ -47,9 +47,15 @@ export const DayCellContent: React.FC<DayCellContentProps> = ({
     isComplete,
     isCurrentDay,
     isDark,
+    isPartial: completionStatus === 'partial',
     isUpcoming,
   });
-  const glowStyle = useTodayGlow({ isCurrentDay, isComplete, reduceMotion, isDark });
+  const glowStyle = useTodayGlow({
+    isCurrentDay,
+    isComplete,
+    reduceMotion,
+    isDark,
+  });
 
   return (
     <>
