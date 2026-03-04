@@ -20,11 +20,13 @@ interface CategoryItem {
 
 interface CategoryGridProps {
   categories: CategoryItem[];
+  hotCategoryKey?: string;
   onSelectCategory: (categoryId: string) => void;
 }
 
 export function CategoryGrid({
   categories,
+  hotCategoryKey,
   onSelectCategory,
 }: CategoryGridProps) {
   const rows: CategoryItem[][] = [];
@@ -44,6 +46,7 @@ export function CategoryGrid({
               count={cat.count}
               icon={cat.icon}
               index={rowIdx * 2 + colIdx}
+              isHot={cat.categoryId === hotCategoryKey}
               label={cat.label}
               previewEmojis={cat.previewEmojis}
               textColor={cat.textColor}

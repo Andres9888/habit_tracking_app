@@ -58,6 +58,7 @@ function TemplatesScreenContent() {
       categoryGrid={
         <CategoryGrid
           categories={mainBrowseData.categoryList}
+          hotCategoryKey={mainBrowseData.hotCategoryKey}
           onSelectCategory={viewNav.openCategory}
         />
       }

@@ -12,6 +12,7 @@ interface CategoryTileProps {
   count: number;
   icon: string;
   index: number;
+  isHot?: boolean;
   label: string;
   onPress: () => void;
   previewEmojis: string[];
@@ -23,6 +24,7 @@ export function CategoryTile({
   count,
   icon,
   index,
+  isHot,
   label,
   onPress,
   previewEmojis,
@@ -38,6 +40,7 @@ export function CategoryTile({
     >
       <View style={s.row}>
         <Text style={s.icon}>{icon}</Text>
+        {isHot && <Text style={s.hotBadge}>🔥 Hot</Text>}
       </View>
       <Text style={[s.label, { color: textColor }]}>{label}</Text>
       <Text style={s.count}>{count} templates</Text>
@@ -56,6 +59,16 @@ export function CategoryTile({
 
 const s = StyleSheet.create({
   count: { ...typography.caption, color: colors.text.tertiary, marginTop: 2 },
+  hotBadge: {
+    backgroundColor: '#fef3c7',
+    borderRadius: 6,
+    color: '#b45309',
+    fontSize: 9,
+    fontWeight: '800',
+    overflow: 'hidden',
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+  },
   icon: { fontSize: 28 },
   label: { ...typography.bodySmall, fontWeight: '600', marginTop: spacing.sm },
   previewEmoji: { fontSize: 14, opacity: 0.6 },

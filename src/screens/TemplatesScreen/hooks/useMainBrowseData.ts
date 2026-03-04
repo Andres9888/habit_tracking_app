@@ -63,9 +63,18 @@ export function useMainBrowseData({
     });
   }, [allTemplates]);
 
+  const hotCategoryKey = useMemo(() => {
+    if (categoryList.length === 0) return '';
+    return categoryList.reduce(
+      (best, cat) => (cat.count > best.count ? cat : best),
+      categoryList[0],
+    ).categoryId;
+  }, [categoryList]);
+
   return {
     categoryList,
     forYouRecommendations,
+    hotCategoryKey,
     isPremiumUser,
     popularTemplates,
     premiumPacks: PREMIUM_PACKS,

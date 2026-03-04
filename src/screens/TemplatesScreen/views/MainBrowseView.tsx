@@ -1,8 +1,8 @@
 /**
- * MainBrowseView - Curated main screen replacing the old tab-based BrowseView
+ * MainBrowseView - Fogg's B=MAP section ordering
  *
- * Layout: ScreenHeader → SearchBar → QuickFilterChips → FeaturedCollection
- * → ForYouSection → PopularSection → PremiumPacksSection → CategoryGrid
+ * Ability-tier first (chips, trending), then Motivation-tier (For You, Hero),
+ * then Browse-tier (packs, categories), then Peak-End footer.
  */
 
 import { useMemo } from 'react';
@@ -15,6 +15,7 @@ import { styles } from '../../templates/templatesScreenStyles';
 import { SearchBar } from '../components';
 import { FeaturedCollection } from '../components/FeaturedCollection';
 import { ForYouSection } from '../components/ForYouSection';
+import { MotivationalFooter } from '../components/MotivationalFooter';
 import { PopularSection } from '../components/PopularSection';
 import {
   CHIP_CATEGORIES,
@@ -61,7 +62,14 @@ export function MainBrowseView(p: MainBrowseViewProps) {
         contentContainerStyle={{ paddingBottom: 100 }}
       >
         <Animated.View entering={stagger(1)}>
-          <FeaturedCollection onPress={p.onFeaturedPress} />
+          <PopularSection
+            importedTemplateIds={p.importedTemplateIds}
+            importingTemplateId={p.importingTemplateId}
+            templates={p.popularTemplates}
+            onImport={p.onImport}
+            onPreview={p.onPreview}
+            onSeeAll={p.onSeeAll}
+          />
         </Animated.View>
         {hasForYou && (
           <Animated.View entering={stagger(2)}>
@@ -75,20 +83,16 @@ export function MainBrowseView(p: MainBrowseViewProps) {
           </Animated.View>
         )}
         <Animated.View entering={stagger(hasForYou ? 3 : 2)}>
-          <PopularSection
-            importedTemplateIds={p.importedTemplateIds}
-            importingTemplateId={p.importingTemplateId}
-            templates={p.popularTemplates}
-            onImport={p.onImport}
-            onPreview={p.onPreview}
-            onSeeAll={p.onSeeAll}
-          />
+          <FeaturedCollection onPress={p.onFeaturedPress} />
         </Animated.View>
         <Animated.View entering={stagger(hasForYou ? 4 : 3)}>
           {p.premiumPacksSection}
         </Animated.View>
         <Animated.View entering={stagger(hasForYou ? 5 : 4)}>
           {p.categoryGrid}
+        </Animated.View>
+        <Animated.View entering={stagger(hasForYou ? 6 : 5)}>
+          <MotivationalFooter />
         </Animated.View>
       </ScrollView>
       {p.modals}
