@@ -24,6 +24,8 @@ import {
   renderHabitRow,
 } from './HabitsListRenders';
 import { HabitsListModals } from './HabitsListModals';
+import { StickyHeaderContext } from '../../../../components/CalendarTimeline/StickyHeaderContext';
+import { useStickyHeader } from './useStickyHeader';
 import type { Habit } from '../../types';
 import type { HabitsListContentProps } from './HabitsList.types';
 
@@ -43,6 +45,7 @@ export function HabitsListContent({
     onUpgradeConfirm,
   } = props;
 
+  const { scrollHandler, contextValue } = useStickyHeader();
   const isEmpty = list.habits.length === 0;
   const contentContainerStyle = useMemo(
     () => ({
@@ -102,34 +105,38 @@ export function HabitsListContent({
   }
 
   return (
-    <View className='flex-1 bg-transparent'>
-      <DraggableFlatList<Habit>
-        activationDistance={handlers.isReorderingEnabled ? 12 : 9999}
-        contentContainerStyle={contentContainerStyle}
-        data={list.habits}
-        keyExtractor={handlers.keyExtractor}
-        ListFooterComponent={listFooterComponent}
-        ListHeaderComponent={listHeaderComponent}
-        renderItem={renderHabitItem}
-        showsVerticalScrollIndicator={false}
-        onDragBegin={handlers.handleDragBegin}
-        onDragEnd={(params) => {
-          void list.handleDragEnd(params);
-        }}
-        stickyHeaderIndices={[0]}
-      />
-      <HabitsListModals
-        daySheetDate={state.daySheetDate}
-        getHabitStatus={list.getHabitStatus}
-        habits={list.habits}
-        reduceMotion={list.reduceMotionPreference}
-        toggleHabit={list.toggleHabit}
-        upgradePromptVisible={upgradePromptVisible}
-        onCloseDaySheet={state.closeDaySheet}
-        onUpgradeConfirm={onUpgradeConfirm}
-        onUpgradeDismiss={onUpgradeDismiss}
-      />
-    </View>
+    <StickyHeaderContext.Provider value={contextValue}>
+      <View className='flex-1 bg-transparent'>
+        <DraggableFlatList<Habit>
+          activationDistance={handlers.isReorderingEnabled ? 12 : 9999}
+          contentContainerStyle={contentContainerStyle}
+          data={list.habits}
+          keyExtractor={handlers.keyExtractor}
+          ListFooterComponent={listFooterComponent}
+          ListHeaderComponent={listHeaderComponent}
+          renderItem={renderHabitItem}
+          scrollEventThrottle={16}
+          showsVerticalScrollIndicator={false}
+          onDragBegin={handlers.handleDragBegin}
+          onDragEnd={(params) => {
+            void list.handleDragEnd(params);
+          }}
+          onScroll={scrollHandler}
+          stickyHeaderIndices={[0]}
+        />
+        <HabitsListModals
+          daySheetDate={state.daySheetDate}
+          getHabitStatus={list.getHabitStatus}
+          habits={list.habits}
+          reduceMotion={list.reduceMotionPreference}
+          toggleHabit={list.toggleHabit}
+          upgradePromptVisible={upgradePromptVisible}
+          onCloseDaySheet={state.closeDaySheet}
+          onUpgradeConfirm={onUpgradeConfirm}
+          onUpgradeDismiss={onUpgradeDismiss}
+        />
+      </View>
+    </StickyHeaderContext.Provider>
   );
 }
 export { type HabitsListContentProps } from './HabitsList.types';

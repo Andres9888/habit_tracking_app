@@ -12,15 +12,43 @@
 
 import React, { memo, useMemo } from 'react';
 import { Animated, View } from 'react-native';
+import ReAnimated, {
+  interpolate,
+  interpolateColor,
+  useAnimatedStyle,
+} from 'react-native-reanimated';
 import { CalendarTimeline } from '../../../../components/CalendarTimeline';
+import { getShelfBackgroundColor } from '../../../../components/CalendarTimeline/CalendarTimeline.styles';
 import { OfflineIndicator } from '../../../../components/SyncStatus';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import { useTrialCountdown } from '../../../../components/TrialCountdownBanner';
+import { useStickyProgress } from '../../../../components/CalendarTimeline/StickyHeaderContext';
 import type { HabitsListHeaderProps } from './HabitsListHeader.types';
 import { useHabitsListHeaderComputed } from './useHabitsListHeaderComputed';
+
+/** Content padding applied by DraggableFlatList's contentContainerStyle */
+const CONTENT_H_PADDING = 24;
 
 function HabitsListHeaderComponent(
   props: HabitsListHeaderProps
 ): React.ReactElement {
+  const { isDark } = useThemeColors();
+  const stickyProgress = useStickyProgress();
+  const shelfBg = getShelfBackgroundColor(isDark);
+
+  const stickyWrapperStyle = useAnimatedStyle(() => ({
+    backgroundColor: interpolateColor(
+      stickyProgress.value,
+      [0, 1],
+      ['transparent', shelfBg]
+    ),
+    marginHorizontal: interpolate(
+      stickyProgress.value,
+      [0, 1],
+      [0, -CONTENT_H_PADDING]
+    ),
+  }));
+
   const computed = useHabitsListHeaderComputed({
     getHabitStatus: props.getHabitStatus,
     habits: props.habits,
@@ -36,7 +64,7 @@ function HabitsListHeaderComponent(
   }, [props.habits, props.getStreak]);
 
   return (
-    <View className='gap-2 pb-2 pt-12'>
+    <ReAnimated.View className='gap-2 pb-2 pt-12' style={stickyWrapperStyle}>
       <View className='absolute left-0 right-0 top-4 z-10 flex-row justify-center'>
         <OfflineIndicator
           testID='habits-offline-indicator'
@@ -68,7 +96,7 @@ function HabitsListHeaderComponent(
           />
         </Animated.View>
       )}
-    </View>
+    </ReAnimated.View>
   );
 }
 

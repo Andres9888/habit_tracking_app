@@ -32,20 +32,16 @@ export function getStreakGreeting({
     return { greeting: 'Just 1 left!', variant: 'almostDone' };
   }
 
-  // Streak at risk — evening (8pm+), has streak, no progress today
-  if (h >= 20 && currentStreak > 0 && completedToday === 0) {
+  // Streak at risk — evening (7pm+), has streak, no progress today
+  if (h >= 19 && currentStreak > 0 && completedToday === 0) {
     return {
       greeting: `${currentStreak}-day streak at risk`,
       variant: 'risk',
     };
   }
 
-  // No behavioral value for 0 or 1-day streaks — signal header collapse
-  if (currentStreak === 0) {
-    return { greeting: '' };
-  }
-
-  if (currentStreak === 1) {
+  // No behavioral value for streaks below 3 — signal header collapse
+  if (currentStreak <= 2) {
     return { greeting: '' };
   }
 

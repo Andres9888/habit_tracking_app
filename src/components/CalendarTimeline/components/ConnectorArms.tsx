@@ -13,31 +13,39 @@ interface ConnectorArmsProps {
   connectLeft: boolean;
   connectRight: boolean;
   streakConnectorColor: string;
+  /** Ghost arm on left — chain "waiting" cue (Zeigarnik effect) */
+  ghostLeft?: boolean;
+  /** Ghost arm on right — reaching toward today */
+  ghostRight?: boolean;
 }
 
 export const ConnectorArms: React.FC<ConnectorArmsProps> = ({
   connectLeft,
   connectRight,
   streakConnectorColor,
+  ghostLeft = false,
+  ghostRight = false,
 }) => (
   <>
-    {connectLeft && (
+    {(connectLeft || ghostLeft) && (
       <View
         style={{
           ...armBase,
           left: 0,
           width: '50%',
           backgroundColor: streakConnectorColor,
+          opacity: ghostLeft && !connectLeft ? 0.5 : 1,
         }}
       />
     )}
-    {connectRight && (
+    {(connectRight || ghostRight) && (
       <View
         style={{
           ...armBase,
           left: '50%',
           width: '50%',
           backgroundColor: streakConnectorColor,
+          opacity: ghostRight && !connectRight ? 0.5 : 1,
         }}
       />
     )}

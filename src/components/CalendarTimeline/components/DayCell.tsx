@@ -30,6 +30,8 @@ const DayCellComponent: React.FC<DayCellProps> = ({
   connectLeft,
   connectRight,
   streakConnectorColor,
+  ghostLeft,
+  ghostRight,
 }) => {
   const weekday = format(date, 'EEE');
   const dayNumber = format(date, 'd');
@@ -54,7 +56,7 @@ const DayCellComponent: React.FC<DayCellProps> = ({
     onDayPress(date);
   };
 
-  const contentProps = {
+  const cp = {
     colors,
     completionStatus,
     dayNumber,
@@ -65,46 +67,50 @@ const DayCellComponent: React.FC<DayCellProps> = ({
     weekday,
   };
 
-  const arms =
-    (connectLeft || connectRight) && streakConnectorColor ? (
-      <ConnectorArms
-        connectLeft={Boolean(connectLeft)}
-        connectRight={Boolean(connectRight)}
-        streakConnectorColor={streakConnectorColor}
-      />
-    ) : null;
+  const showArms =
+    (connectLeft || connectRight || ghostLeft || ghostRight) &&
+    streakConnectorColor;
+  const arms = showArms ? (
+    <ConnectorArms
+      connectLeft={Boolean(connectLeft)}
+      connectRight={Boolean(connectRight)}
+      ghostLeft={Boolean(ghostLeft)}
+      ghostRight={Boolean(ghostRight)}
+      streakConnectorColor={streakConnectorColor}
+    />
+  ) : null;
 
-  if (onDayPress) {
+  if (!onDayPress) {
     return (
-      <Pressable
-        accessibilityHint={accessibilityHint}
+      <View
         accessibilityLabel={accessibilityLabel}
-        accessibilityRole='button'
-        accessibilityState={{ disabled: isDayDisabled }}
+        accessibilityRole='text'
         className='flex-1 items-center gap-0.5'
-        disabled={isDayDisabled}
-        style={{ opacity: isDayDisabled ? 0.5 : 1 }}
-        onPress={handlePress}
       >
-        {({ pressed }) => (
-          <>
-            {arms}
-            <DayCellContent {...contentProps} pressed={pressed} />
-          </>
-        )}
-      </Pressable>
+        {arms}
+        <DayCellContent {...cp} />
+      </View>
     );
   }
 
   return (
-    <View
+    <Pressable
+      accessibilityHint={accessibilityHint}
       accessibilityLabel={accessibilityLabel}
-      accessibilityRole='text'
+      accessibilityRole='button'
+      accessibilityState={{ disabled: isDayDisabled }}
       className='flex-1 items-center gap-0.5'
+      disabled={isDayDisabled}
+      style={{ opacity: isDayDisabled ? 0.5 : 1 }}
+      onPress={handlePress}
     >
-      {arms}
-      <DayCellContent {...contentProps} />
-    </View>
+      {({ pressed }) => (
+        <>
+          {arms}
+          <DayCellContent {...cp} pressed={pressed} />
+        </>
+      )}
+    </Pressable>
   );
 };
 

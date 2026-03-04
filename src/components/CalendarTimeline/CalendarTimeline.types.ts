@@ -71,6 +71,10 @@ export interface DayCellProps {
   connectRight?: boolean;
   /** Color for the streak connector arms */
   streakConnectorColor?: string;
+  /** Ghost connector on left — chain "waiting" (Zeigarnik effect) */
+  ghostLeft?: boolean;
+  /** Ghost connector on right — reaching toward today */
+  ghostRight?: boolean;
 }
 
 export interface CalendarColors {

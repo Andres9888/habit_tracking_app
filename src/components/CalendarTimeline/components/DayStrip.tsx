@@ -34,7 +34,7 @@ interface DayStripProps {
 
 const AnimatedView = (() => {
   const fallback = createAnimatedComponent(View);
-  return typeof fallback === 'function' ? fallback : Animated.View ?? View;
+  return typeof fallback === 'function' ? fallback : (Animated.View ?? View);
 })();
 
 /** Renders the 7-day strip with streak connectors and swipe gesture */
@@ -67,6 +67,14 @@ export const DayStrip: React.FC<DayStripProps> = ({
           const nextComplete =
             index < dates.length - 1 &&
             completionStatuses[index + 1] === 'complete';
+          const isTodayCell = isToday(date);
+          const nextIsToday =
+            index < dates.length - 1 && isToday(dates[index + 1]);
+          const nextIncomplete =
+            nextIsToday && completionStatuses[index + 1] !== 'complete';
+          const ghostLeft =
+            isTodayCell && !isComplete && status !== 'future' && prevComplete;
+          const ghostRight = isComplete && nextIncomplete;
           return (
             <DayCell
               key={`timeline-day-${index}`}
@@ -76,9 +84,11 @@ export const DayStrip: React.FC<DayStripProps> = ({
               connectRight={isComplete && nextComplete}
               date={date}
               disableFutureDayPress={disableFutureDayPress}
+              ghostLeft={ghostLeft}
+              ghostRight={ghostRight}
               hasCompletionData={hasCompletionData}
               index={index}
-              isCurrentDay={isToday(date)}
+              isCurrentDay={isTodayCell}
               isDayPressEnabled={isDayPressEnabled}
               isUpcoming={isFuture(date)}
               reduceMotion={reduceMotion}
