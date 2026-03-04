@@ -2,7 +2,7 @@
  * MainBrowseView - Curated main screen replacing the old tab-based BrowseView
  *
  * Layout: ScreenHeader → SearchBar → QuickFilterChips → FeaturedCollection
- * → PopularSection → PremiumPacksSection → CategoryGrid
+ * → PopularSection → CategoryGrid → PremiumPacksSection
  */
 
 import { ScrollView, View } from 'react-native';
@@ -40,7 +40,7 @@ export function MainBrowseView(p: MainBrowseViewProps) {
           onClear={p.onSearchClear}
         />
       </Animated.View>
-      <Animated.View entering={stagger(0)} style={{ marginTop: 8 }}>
+      <Animated.View entering={stagger(0)} style={{ marginTop: 16 }}>
         <QuickFilterChips
           activeCategory={p.activeChipCategory}
           categories={CHIP_CATEGORIES}
@@ -64,10 +64,10 @@ export function MainBrowseView(p: MainBrowseViewProps) {
             onSeeAll={p.onSeeAll}
           />
         </Animated.View>
-        <Animated.View entering={stagger(3)}>
+        <Animated.View entering={stagger(3)}>{p.categoryGrid}</Animated.View>
+        <Animated.View entering={stagger(4)}>
           {p.premiumPacksSection}
         </Animated.View>
-        <Animated.View entering={stagger(4)}>{p.categoryGrid}</Animated.View>
       </ScrollView>
       {p.modals}
       {p.feedbackOverlays}
