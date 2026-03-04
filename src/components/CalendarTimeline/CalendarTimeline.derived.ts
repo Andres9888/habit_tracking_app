@@ -30,6 +30,15 @@ export function useDerivedState(
     [dates, getStatus]
   );
 
+  const completionCounts = useMemo(
+    () =>
+      dates.map((d) => {
+        const key = format(d, 'yyyy-MM-dd');
+        return completionByDay[key] ?? { completed: 0, total: 0 };
+      }),
+    [dates, completionByDay]
+  );
+
   const firstDate = dates[0];
   const lastDate = dates.at(-1);
   const dateRangeText =
@@ -46,6 +55,7 @@ export function useDerivedState(
   return {
     calendarOpen,
     closeCalendar,
+    completionCounts,
     completionStatuses,
     connectorColor,
     currentDate,

@@ -83,6 +83,7 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
         <StripNav canNavigateForward={canNavigateForward}>
           <DayStrip
             augmentedColors={tl.augmentedColors}
+            completionCounts={tl.completionCounts}
             completionStatuses={tl.completionStatuses}
             connectorColor={tl.connectorColor}
             dates={dates}
