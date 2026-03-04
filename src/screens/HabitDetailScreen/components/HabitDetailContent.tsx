@@ -45,17 +45,28 @@ export function HabitDetailContent({
     >
       <QuickStatsRow
         bestStreak={habit.bestStreak ?? 0}
-        currentStreak={habit.currentStreak ?? 0}
         daysTracking={daysTracking}
         totalCompletions={totalCompletions}
       />
 
+      <SectionLabel borderColor={borderColor} delay={240} text='HISTORY' textColor={labelColor} />
+      <ErrorBoundary>
+        <MonthlyCalendarGrid
+          completedDates={completedDates}
+          habitColor={habit.color ?? habit.iconColor ?? colors.primary[700]}
+          habitCreatedAt={habit.createdAt}
+          habitId={habit._id}
+          notesByDate={notesByDate}
+          onDayPress={onDayPress}
+        />
+      </ErrorBoundary>
+
       {habit.createdAt && (
         <>
-          <SectionLabel borderColor={borderColor} delay={240} text='STRENGTH' textColor={labelColor} />
+          <SectionLabel borderColor={borderColor} delay={360} text='STRENGTH' textColor={labelColor} />
           <Animated.View
             className='rounded-2xl'
-            entering={anim(300)}
+            entering={anim(420)}
             style={{ backgroundColor: cardBg, ...shadows.card }}
           >
             <ErrorBoundary>
@@ -70,18 +81,6 @@ export function HabitDetailContent({
           </Animated.View>
         </>
       )}
-
-      <SectionLabel borderColor={borderColor} delay={360} text='HISTORY' textColor={labelColor} />
-      <ErrorBoundary>
-        <MonthlyCalendarGrid
-          completedDates={completedDates}
-          habitColor={habit.color ?? habit.iconColor ?? colors.primary[700]}
-          habitCreatedAt={habit.createdAt}
-          habitId={habit._id}
-          notesByDate={notesByDate}
-          onDayPress={onDayPress}
-        />
-      </ErrorBoundary>
     </ScrollView>
   );
 }
