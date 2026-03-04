@@ -61,6 +61,8 @@ export const get = query({
         DEFAULT_SETTINGS.showMotivationalMessages,
       showNotesStats:
         settings?.showNotesStats ?? DEFAULT_SETTINGS.showNotesStats,
+      stickyCalendarHeader:
+        settings?.stickyCalendarHeader ?? DEFAULT_SETTINGS.stickyCalendarHeader,
       showStreaks: settings?.showStreaks ?? DEFAULT_SETTINGS.showStreaks,
       showWeekCompletionBar:
         settings?.showWeekCompletionBar ??
@@ -102,15 +104,24 @@ export const update = mutation({
       .withIndex('by_userId', (q) => q.eq('userId', identity.subject))
       .first();
 
-    const normalizedArgs = {
-      ...args,
-      darkMode: normalizeDarkMode(args.darkMode),
-      userId: identity.subject,
-    };
+    const normalizedArgs =
+      args.darkMode !== undefined
+        ? {
+            ...args,
+            darkMode: normalizeDarkMode(args.darkMode),
+          }
+        : args;
 
-    await (existing
-      ? ctx.db.patch(existing._id, normalizedArgs)
-      : ctx.db.insert('userSettings', normalizedArgs));
+    if (!existing) {
+      await ctx.db.insert('userSettings', {
+        ...DEFAULT_SETTINGS,
+        ...normalizedArgs,
+        userId: identity.subject,
+      });
+      return null;
+    }
+
+    await ctx.db.patch(existing._id, normalizedArgs);
     return null;
   },
   returns: v.null(),

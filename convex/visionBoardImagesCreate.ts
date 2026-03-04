@@ -14,7 +14,7 @@ import {
   validateShortText,
   requireValid,
 } from './lib/inputValidation';
-import { canAddVisionBoardImage, FREE_TIER_LIMITS } from './subscriptions/premiumCheck';
+import { canAddVisionBoardImage } from './subscriptions/premiumCheck';
 
 /**
  * Create a new vision board image from storage ID
@@ -39,7 +39,7 @@ export const create = mutation({
     }
 
     // SEC-001: Ownership verification
-    if (habit.userId !== identity.subject) {
+    if (!habit || habit.userId !== identity.subject) {
       throw new Error('Not authorized to add images to this habit');
     }
 
@@ -57,6 +57,20 @@ export const create = mutation({
     const fileMetadata = await ctx.db.system.get(args.storageId);
     if (!fileMetadata) {
       throw new Error('Storage file not found');
+    }
+
+    // SECURITY: Prevent attaching storage blobs that are already linked
+    // to a different user's vision board.
+    const existingImage = await ctx.db
+      .query('visionBoardImages')
+      .withIndex('by_storageId', (q) => q.eq('storageId', args.storageId))
+      .first();
+    if (existingImage) {
+      const existingHabit = await ctx.db.get(existingImage.habitId);
+      const existingOwnerId = existingImage.userId ?? existingHabit?.userId;
+      if (!existingOwnerId || existingOwnerId !== identity.subject) {
+        throw new Error('Not authorized to attach this file');
+      }
     }
 
     // SEC-003: Input validation - caption

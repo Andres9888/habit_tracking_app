@@ -9,8 +9,7 @@ import Animated, {
   useReducedMotion,
 } from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Check } from 'lucide-react-native';
-import { colors } from '../../../theme/colors';
+import { Link } from 'lucide-react-native';
 
 /**
  * Props for the AnimatedLogo component
@@ -108,7 +107,7 @@ export function AnimatedLogo({ size = 80 }: AnimatedLogoProps) {
             width: size,
           }}
         >
-          <Check color='white' size={iconSize} strokeWidth={3} />
+          <Link color='white' size={iconSize} strokeWidth={2} />
         </LinearGradient>
       </Animated.View>
     </View>

@@ -29,7 +29,7 @@ export const predict7Days = query({
     const habit = await ctx.db.get(args.habitId);
     if (!habit) return null;
 
-    if (habit.userId !== identity.subject) return null;
+    if (!habit || habit.userId !== identity.subject) return null;
 
     const strength = habit.strength ?? 0;
     const accessibility = habit.accessibility ?? 1;

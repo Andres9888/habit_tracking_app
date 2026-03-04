@@ -37,6 +37,7 @@ export const settingsReturnValidator = v.object({
   showMotivationalMessages: v.boolean(),
   showNotesStats: v.boolean(),
   showStreaks: v.boolean(),
+  stickyCalendarHeader: v.boolean(),
   showWeekCompletionBar: v.boolean(),
   streakRemindersEnabled: v.boolean(),
   streakReminderTime: v.string(),
@@ -45,17 +46,19 @@ export const settingsReturnValidator = v.object({
 
 export const updateArgsValidator = {
   appIcon: v.optional(v.string()),
-  catTheme: v.boolean(),
+  catTheme: v.optional(v.boolean()),
   celebrationsEnabled: v.optional(v.boolean()),
   completionSoundEnabled: v.optional(v.boolean()),
   completionSoundType: v.optional(
     v.union(v.literal('chime'), v.literal('pop'), v.literal('success'))
   ),
-  darkMode: v.union(
-    v.literal('system'),
-    v.literal('light'),
-    v.literal('dark'),
-    v.boolean()
+  darkMode: v.optional(
+    v.union(
+      v.literal('system'),
+      v.literal('light'),
+      v.literal('dark'),
+      v.boolean()
+    )
   ),
   dayShape: v.optional(v.union(v.literal('circle'), v.literal('square'))),
   habitCompletionIcon: v.optional(
@@ -76,14 +79,15 @@ export const updateArgsValidator = {
   hasPremium: v.optional(v.boolean()),
   highContrastMode: v.optional(v.boolean()),
   reduceMotion: v.optional(v.boolean()),
-  showCalendarView: v.boolean(),
+  showCalendarView: v.optional(v.boolean()),
   showCharacterScreen: v.optional(v.boolean()),
-  showConsistency: v.boolean(),
-  showEmojis: v.boolean(),
+  showConsistency: v.optional(v.boolean()),
+  showEmojis: v.optional(v.boolean()),
   showGradientFill: v.optional(v.boolean()),
-  showMotivationalMessages: v.boolean(),
+  showMotivationalMessages: v.optional(v.boolean()),
   showNotesStats: v.optional(v.boolean()),
-  showStreaks: v.boolean(),
+  showStreaks: v.optional(v.boolean()),
+  stickyCalendarHeader: v.optional(v.boolean()),
   showWeekCompletionBar: v.optional(v.boolean()),
   streakRemindersEnabled: v.optional(v.boolean()),
   streakReminderTime: v.optional(v.string()),

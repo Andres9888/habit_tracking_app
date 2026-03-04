@@ -12,6 +12,7 @@ export {
 export {
   createDateFromTimeString,
   formatReminderTime,
+  formatReminderTime24,
   getDefaultReminderTime,
 } from './timeUtils';
 

@@ -78,10 +78,6 @@ jest.mock('../../../components/HabitsAtRiskWidget', () => ({
   default: () => null,
 }));
 
-jest.mock('../components/HabitsHeader', () => ({
-  HabitsHeader: () => null,
-}));
-
 jest.mock('../components/HabitsList', () => ({
   HabitsList: () => null,
 }));

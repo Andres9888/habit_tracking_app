@@ -6,6 +6,7 @@ import { useCallback, useState, useRef, useEffect } from 'react';
 import { Linking, Share } from 'react-native';
 import type { Doc } from '../../../../convex/_generated/dataModel';
 import { triggerHaptic } from '@/utils/haptics';
+import { isSafeExternalUrl } from '@/utils/safeExternalUrl';
 
 interface UseModalHandlersProps {
   onClose: () => void;
@@ -35,7 +36,7 @@ export const useModalHandlers = ({
 
   const handleLinkPress = useCallback(async () => {
     triggerHaptic('tap');
-    if (template?.scientificLink) {
+    if (template?.scientificLink && isSafeExternalUrl(template.scientificLink)) {
       const canOpen = await Linking.canOpenURL(template.scientificLink);
       if (canOpen) {
         await Linking.openURL(template.scientificLink);
@@ -45,7 +46,7 @@ export const useModalHandlers = ({
 
   const handleYoutubePress = useCallback(async () => {
     triggerHaptic('tap');
-    if (template?.youtubeLink) {
+    if (template?.youtubeLink && isSafeExternalUrl(template.youtubeLink)) {
       const canOpen = await Linking.canOpenURL(template.youtubeLink);
       if (canOpen) {
         await Linking.openURL(template.youtubeLink);

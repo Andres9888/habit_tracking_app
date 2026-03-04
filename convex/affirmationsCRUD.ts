@@ -42,7 +42,7 @@ export const create = mutation({
     if (!habit) throw new Error('Habit not found');
 
     // SEC-001: Ownership verification - verify user owns the habit
-    if (habit.userId !== identity.subject) {
+    if (!habit || habit.userId !== identity.subject) {
       throw new Error('Not authorized to add affirmations to this habit');
     }
 
@@ -94,7 +94,7 @@ export const update = mutation({
       throw new Error('Not authorized to update this affirmation');
     }
     const habit = await ctx.db.get(affirmation.habitId);
-    if (habit && habit.userId !== identity.subject) {
+    if (!habit || habit.userId !== identity.subject) {
       throw new Error('Not authorized to update this affirmation');
     }
 
@@ -141,7 +141,7 @@ export const remove = mutation({
       throw new Error('Not authorized to delete this affirmation');
     }
     const habit = await ctx.db.get(affirmation.habitId);
-    if (habit && habit.userId !== identity.subject) {
+    if (!habit || habit.userId !== identity.subject) {
       throw new Error('Not authorized to delete this affirmation');
     }
 

@@ -34,7 +34,7 @@ export const updateCaption = mutation({
 
     // SEC-001: Ownership verification via parent habit
     const habit = await ctx.db.get(image.habitId);
-    if (habit && habit.userId !== identity.subject) {
+    if (!habit || habit.userId !== identity.subject) {
       throw new Error('Not authorized to update this image');
     }
 
@@ -72,7 +72,7 @@ export const reorder = mutation({
     if (!habit) {
       throw new Error('Habit not found');
     }
-    if (habit.userId !== identity.subject) {
+    if (!habit || habit.userId !== identity.subject) {
       throw new Error('Not authorized to reorder images for this habit');
     }
 

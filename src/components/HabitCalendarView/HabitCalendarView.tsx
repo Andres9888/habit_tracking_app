@@ -2,6 +2,7 @@ import { format } from 'date-fns';
 import { View } from 'react-native';
 import type { Id } from '../../../convex/_generated/dataModel';
 import { useHabitCalendarViewLogic } from './HabitCalendarView.hooks';
+import type { HabitCalendarViewState } from './HabitCalendarView.hooks';
 import { CalendarHeader } from './CalendarHeader';
 import { DayNamesRow } from './DayNamesRow';
 import { CalendarDay } from './CalendarDay';
@@ -11,13 +12,18 @@ interface HabitCalendarViewProps {
   habitId: Id<'habits'>;
   tracking: Array<{ habitId: Id<'habits'>; date: string; completed: boolean }>;
   toggleHabit: (args: { habitId: Id<'habits'>; date: string }) => void;
+  showHeader?: boolean;
+  calendarViewState?: HabitCalendarViewState;
 }
 
 export default function HabitCalendarView({
   habitId,
   tracking,
   toggleHabit,
+  showHeader = true,
+  calendarViewState,
 }: HabitCalendarViewProps) {
+  const internalCalendarViewState = useHabitCalendarViewLogic({ habitId, tracking });
   const {
     currentMonth,
     daysInMonth,
@@ -26,16 +32,18 @@ export default function HabitCalendarView({
     handlePreviousMonth,
     handleNextMonth,
     handleToday,
-  } = useHabitCalendarViewLogic({ habitId, tracking });
+  } = calendarViewState ?? internalCalendarViewState;
 
   return (
     <View className='gap-4'>
-      <CalendarHeader
-        currentMonth={currentMonth}
-        onNext={handleNextMonth}
-        onPrevious={handlePreviousMonth}
-        onToday={handleToday}
-      />
+      {showHeader && (
+        <CalendarHeader
+          currentMonth={currentMonth}
+          onNext={handleNextMonth}
+          onPrevious={handlePreviousMonth}
+          onToday={handleToday}
+        />
+      )}
 
       <DayNamesRow />
 

@@ -36,7 +36,7 @@ export function Button({
   ...pressableProps
 }: ButtonProps) {
   const theme = useAppTheme();
-  const safeTheme = baseTheme.custom;
+  const safeTheme = baseTheme?.custom ?? {};
   const mergedBorderRadius = {
     ...safeTheme.borderRadius,
     ...theme?.custom?.borderRadius,

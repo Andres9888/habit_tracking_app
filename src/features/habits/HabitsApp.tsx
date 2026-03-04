@@ -121,6 +121,7 @@ function HabitsAppContent() {
           reduceMotion={list.reduceMotionPreference}
           totalHabits={bottomBar.totalHabits}
         />
+
         {overlaysMounted && (
           <HabitsAppOverlays
             batchArchiveUndoCount={selectionActions.batchArchiveUndoCount}

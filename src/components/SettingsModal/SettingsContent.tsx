@@ -4,6 +4,7 @@ import {
   ArrowUpDown,
   BookOpen,
   Check,
+  Calendar,
   Circle,
   Droplets,
   Share2,
@@ -108,6 +109,20 @@ export function SettingsContent(p: SettingsContentProps) {
                 type='toggle'
                 value={p.showGradientFill}
                 onToggle={(v) => void p.onChangeShowGradientFill(v)}
+              />
+              <SettingsRow
+                highContrastMode={hc}
+                icon={
+                  <Calendar
+                    color={settingsIcons.calendarHeader.icon}
+                    size={16}
+                  />
+                }
+                iconBackgroundColor={settingsIcons.calendarHeader.bg}
+                label='Sticky calendar header'
+                type='toggle'
+                value={p.stickyCalendarHeader}
+                onToggle={(v) => void p.onChangeStickyCalendarHeader(v)}
               />
               <SettingsRow
                 highContrastMode={hc}

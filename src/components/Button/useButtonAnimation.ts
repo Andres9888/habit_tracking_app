@@ -4,11 +4,12 @@ import {
   withSpring,
 } from 'react-native-reanimated';
 import { springs } from '@/theme/animations';
+import { CARD_PRESS_SCALE } from '@/utils/animations/cardPressAnimation';
 import { triggerHaptic } from '@/utils/haptics';
 
 /**
  * Custom hook for button press animation
- * Scale down to 0.96 on press (matches AnimatedPressable) + light haptic
+ * Scale down to 0.97 on press (matches design system CARD_PRESS_SCALE) + light haptic
  */
 export function useButtonAnimation() {
   const scale = useSharedValue(1);
@@ -18,7 +19,7 @@ export function useButtonAnimation() {
   }));
 
   const handlePressIn = () => {
-    scale.value = withSpring(0.96, springs.button);
+    scale.value = withSpring(CARD_PRESS_SCALE, springs.button);
     triggerHaptic('tap');
   };
 

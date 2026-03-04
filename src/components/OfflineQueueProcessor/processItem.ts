@@ -6,6 +6,56 @@ import type {
   ReflectionPayload,
 } from '../../hooks/useOfflineQueue';
 
+function normalizeReminderTime(value: unknown): string | undefined {
+  if (typeof value !== 'string') {
+    return undefined;
+  }
+
+  const trimmed = value.trim();
+  if (!trimmed) {
+    return undefined;
+  }
+
+  const amPmMatch = /^(\d{1,2}):([0-5]\d)\s*([AaPp][Mm])$/.exec(trimmed);
+  if (amPmMatch) {
+    const hour = Number.parseInt(amPmMatch[1], 10);
+    const minute = amPmMatch[2];
+    const period = amPmMatch[3].toUpperCase();
+
+    let normalizedHour = hour;
+    if (period === 'PM' && hour < 12) {
+      normalizedHour += 12;
+    } else if (period === 'AM' && hour === 12) {
+      normalizedHour = 0;
+    }
+
+    return `${normalizedHour.toString().padStart(2, '0')}:${minute}`;
+  }
+
+  const legacyMatch = /^(\d{1,2}):([0-5]\d)$/.exec(trimmed);
+  if (!legacyMatch) {
+    return undefined;
+  }
+
+  const hour = Number.parseInt(legacyMatch[1], 10);
+  const minute = Number.parseInt(legacyMatch[2], 10);
+
+  if (
+    Number.isNaN(hour) ||
+    Number.isNaN(minute) ||
+    hour < 0 ||
+    hour > 23 ||
+    minute < 0 ||
+    minute > 59
+  ) {
+    return undefined;
+  }
+
+  return `${hour.toString().padStart(2, '0')}:${minute
+    .toString()
+    .padStart(2, '0')}`;
+}
+
 export interface Mutations {
   upsertReflection: (args: {
     habitId: never;
@@ -69,9 +119,20 @@ export async function processItem(
 
       case 'habitUpdate': {
         const payload = item.payload as HabitUpdatePayload;
+        const updates = { ...payload.updates } as Record<string, unknown>;
+        if (Object.prototype.hasOwnProperty.call(updates, 'reminderTime')) {
+          const normalizedReminderTime = normalizeReminderTime(
+            updates.reminderTime as unknown
+          );
+          if (normalizedReminderTime) {
+            updates.reminderTime = normalizedReminderTime;
+          } else {
+            delete updates.reminderTime;
+          }
+        }
         await mutations.updateHabit({
           habitId: payload.habitId as never,
-          ...payload.updates,
+          ...updates,
         });
         return true;
       }

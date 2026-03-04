@@ -6,7 +6,7 @@ import type { Id } from '../../../convex/_generated/dataModel';
 import {
   cancelHabitReminder,
   ensureNotificationPermissions,
-  formatReminderTime,
+  formatReminderTime24,
   scheduleHabitReminder,
 } from '../../utils/notifications';
 import { showSaveError } from '../../utils/errorAlerts';
@@ -42,7 +42,7 @@ export function useHabitSaveHandler({
     const fullName = selectedEmoji
       ? `${selectedEmoji} ${trimmedName}`
       : trimmedName;
-    const reminderTimeString = formatReminderTime(reminderTime);
+    const reminderTimeString = formatReminderTime24(reminderTime);
 
     let enableReminders = remindersEnabled;
 

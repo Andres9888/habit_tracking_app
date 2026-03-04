@@ -6,6 +6,8 @@ import { colors as palette } from '../../../theme/colors';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { fontFamilies } from '../../../theme/typography';
 import { useStreakGreeting } from '../hooks/useStreakGreeting';
+import type { StreakGreetingResult } from '../hooks/useStreakGreeting';
+import { ProgressDots } from './ProgressDots';
 import { ProgressText } from './ProgressText';
 import { WeekNavRow } from './WeekNavRow';
 
@@ -20,27 +22,32 @@ interface ProgressGreetingProps {
   onDateRangePress?: () => void;
 }
 
-const GREETING_BASE = {
+const HERO_STYLE = {
   fontFamily: fontFamilies.primary.text,
-  fontSize: 16,
-  fontWeight: '600' as const,
-  letterSpacing: -0.3,
+  fontSize: 20,
+  fontWeight: '800' as const,
+  letterSpacing: -0.5,
 };
 
-const TWO_ROW = {
+const ROW = {
   flexDirection: 'row' as const,
   justifyContent: 'space-between' as const,
-  alignItems: 'baseline' as const,
+  alignItems: 'flex-start' as const,
 };
 
-const COLLAPSED_ROW = {
-  flexDirection: 'row' as const,
-  justifyContent: 'space-between' as const,
-  alignItems: 'center' as const,
-  gap: 8,
-};
+const RIGHT_COL = { alignItems: 'flex-end' as const, paddingTop: 2 };
 
-/** Greeting row: streak-aware greeting left + "3 of 5" right · date chip below */
+function getGreetingColor(
+  { variant, badge }: StreakGreetingResult,
+  isDark: boolean,
+  colors: ReturnType<typeof useThemeColors>['colors']
+): string {
+  if (variant === 'risk') return palette.error;
+  if (variant === 'success' || variant === 'almostDone') return colors.primary[600];
+  return badge ? palette.streak[isDark ? 300 : 700] : colors.text.primary;
+}
+
+/** Hero greeting (left) + progress counter & dots (right) · date row below */
 export const ProgressGreeting: React.FC<ProgressGreetingProps> = ({
   completedToday,
   totalHabits,
@@ -52,48 +59,32 @@ export const ProgressGreeting: React.FC<ProgressGreetingProps> = ({
   onDateRangePress,
 }) => {
   const { colors, isDark } = useThemeColors();
-  const { greeting } = useStreakGreeting(
-    currentStreak,
-    completedToday,
-    totalHabits
-  );
+  const result = useStreakGreeting(currentStreak, completedToday, totalHabits);
   const dateText = format(currentDate, 'EEE, MMMM d');
-  const isAllDone = completedToday >= totalHabits && totalHabits > 0;
-  const isCollapsed = greeting === '';
-
-  const greetingColor = isAllDone
-    ? colors.primary[600]
-    : currentStreak > 0
-      ? palette.streak[isDark ? 300 : 700]
-      : colors.text.primary;
-
-  const weekNav = (
-    <WeekNavRow
-      dateLabel={isViewingPast ? dateRangeText : dateText}
-      isViewingPast={isViewingPast}
-      onDateRangePress={onDateRangePress}
-      onJumpToToday={onJumpToToday}
-    />
-  );
-
-  if (isCollapsed) {
-    return (
-      <View style={COLLAPSED_ROW}>
-        <ProgressText completed={completedToday} total={totalHabits} />
-        {weekNav}
-      </View>
-    );
-  }
+  const heroColor = getGreetingColor(result, isDark, colors);
 
   return (
     <View>
-      <View style={TWO_ROW}>
-        <Text style={[GREETING_BASE, { color: greetingColor }]}>
-          {greeting}
-        </Text>
-        <ProgressText completed={completedToday} total={totalHabits} />
+      <View style={ROW}>
+        <Text style={[HERO_STYLE, { color: heroColor }]}>{result.greeting}</Text>
+        <View style={RIGHT_COL}>
+          <ProgressText completed={completedToday} total={totalHabits} />
+          <ProgressDots
+            completed={completedToday}
+            total={totalHabits}
+            variant={result.variant}
+          />
+        </View>
       </View>
-      <View style={{ marginTop: 4 }}>{weekNav}</View>
+
+      <WeekNavRow
+        badge={result.badge}
+        dateLabel={isViewingPast ? dateRangeText : dateText}
+        isViewingPast={isViewingPast}
+        variant={result.variant}
+        onDateRangePress={onDateRangePress}
+        onJumpToToday={onJumpToToday}
+      />
     </View>
   );
 };

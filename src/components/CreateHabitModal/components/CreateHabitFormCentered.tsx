@@ -4,7 +4,6 @@ import { useThemeColors } from '../../../theme/ThemeContext';
 import { NameInputSection } from './NameInputSection';
 import { EmojiPicker } from './EmojiPicker';
 import { ColorPickerSection } from './ColorPickerSection';
-import { FrequencySelector } from './FrequencySelector';
 import { EnhancedReminderSelector } from './EnhancedReminderSelector';
 import type { CreateHabitFormCenteredProps } from './CreateHabitFormCentered.types';
 
@@ -20,10 +19,6 @@ const CreateHabitFormCenteredComponent = ({
   colors,
   selectedColor,
   onColorSelect,
-  frequency,
-  selectedDays,
-  onFrequencyChange,
-  onDaysChange,
   reminderEnabled,
   reminderTime,
   onReminderToggle,
@@ -66,13 +61,6 @@ const CreateHabitFormCenteredComponent = ({
           colors={colors}
           selectedColor={selectedColor}
           onSelectColor={onColorSelect}
-        />
-
-        <FrequencySelector
-          frequency={frequency}
-          selectedDays={selectedDays}
-          onDaysChange={onDaysChange}
-          onFrequencyChange={onFrequencyChange}
         />
 
         <EnhancedReminderSelector

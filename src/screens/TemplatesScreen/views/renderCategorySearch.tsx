@@ -3,14 +3,12 @@
  */
 
 import { CategorySearchView } from '.';
+import type { useTemplatesScreenProps } from '../hooks/useTemplatesScreenProps';
 
-interface RenderParams {
-  data: { categories: any };
-  filteredTemplates: any;
-  getCategoryLabel: any;
-  handlers: any;
-  state: any;
-}
+type RenderParams = Pick<
+  ReturnType<typeof useTemplatesScreenProps>,
+  'data' | 'filteredTemplates' | 'getCategoryLabel' | 'handlers' | 'state'
+>;
 
 export function renderCategorySearch({ data, filteredTemplates, getCategoryLabel, handlers, state }: RenderParams) {
   return (

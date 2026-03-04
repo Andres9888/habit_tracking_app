@@ -1,1 +1,0 @@
-export { AuthDivider } from './AuthDivider';

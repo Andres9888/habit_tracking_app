@@ -55,7 +55,7 @@ export const get = query({
 
     // Ownership check via parent habit
     const habit = await ctx.db.get(affirmation.habitId);
-    if (habit && habit.userId !== identity.subject) return null;
+    if (!habit || habit.userId !== identity.subject) return null;
 
     return affirmation;
   },

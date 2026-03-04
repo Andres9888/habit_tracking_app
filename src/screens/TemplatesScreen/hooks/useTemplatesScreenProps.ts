@@ -82,20 +82,11 @@ export function useTemplatesScreenProps() {
     tabIndicator.setTabPosition(tab === 'categories' ? 0 : 1);
   };
 
-  const activeChipCategory =
-    viewNav.activeView.type === 'category'
-      ? viewNav.activeView.categoryId
-      : null;
-  const handleChipSelect = (id: string | null) =>
-    id ? viewNav.openCategory(id) : viewNav.goBack();
-
   return {
-    activeChipCategory,
     animations,
     data,
     filteredTemplates,
     getCategoryLabel,
-    handleChipSelect,
     handlers,
     handleTabPress,
     mainBrowseData,

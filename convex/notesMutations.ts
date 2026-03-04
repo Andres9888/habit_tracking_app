@@ -30,7 +30,7 @@ export const create = mutation({
       if (!habit) {
         throw new Error('Habit not found');
       }
-      if (habit.userId !== identity.subject) {
+      if (!habit || habit.userId !== identity.subject) {
         throw new Error('Not authorized to add notes to this habit');
       }
     }
@@ -91,7 +91,7 @@ export const update = mutation({
     }
     if (note.habitId) {
       const habit = await ctx.db.get(note.habitId);
-      if (habit && habit.userId !== identity.subject) {
+      if (!habit || habit.userId !== identity.subject) {
         throw new Error('Not authorized to update this note');
       }
     }
@@ -128,7 +128,7 @@ export const remove = mutation({
     }
     if (note.habitId) {
       const habit = await ctx.db.get(note.habitId);
-      if (habit && habit.userId !== identity.subject) {
+      if (!habit || habit.userId !== identity.subject) {
         throw new Error('Not authorized to delete this note');
       }
     }

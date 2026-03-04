@@ -40,10 +40,8 @@ export function CategorySearchView(p: CategorySearchViewProps) {
         />
         <View style={styles.controlRow}>
           <FilterControls
-            researchOnly={p.researchOnly}
             showSortOptions={p.showSortOptions}
             sortOption={p.sortOption}
-            onResearchToggle={toggle}
             onSelectSort={h.handleSelectSortOption}
             onToggleSortOptions={() => p.setShowSortOptions((v) => !v)}
           />

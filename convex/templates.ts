@@ -1,5 +1,5 @@
 import { internal } from './_generated/api';
-import { mutation } from './_generated/server';
+import { internalMutation, mutation } from './_generated/server';
 
 /**
  * Template Library Functions - Barrel Export
@@ -89,10 +89,9 @@ export const seedTemplates = mutation({
   },
 });
 
-export const seedAdditionalTemplates = mutation({
+export const seedAdditionalTemplates = internalMutation({
   args: {},
   handler: async (ctx) => {
-    await requireAuthenticatedUser(ctx, 'seed additional templates');
     await ctx.scheduler.runAfter(
       0,
       internal.templatesDataSeed.seedAdditionalTemplates,
@@ -102,10 +101,9 @@ export const seedAdditionalTemplates = mutation({
   },
 });
 
-export const seedNewScienceTemplates = mutation({
+export const seedNewScienceTemplates = internalMutation({
   args: {},
   handler: async (ctx) => {
-    await requireAuthenticatedUser(ctx, 'seed new science templates');
     await ctx.scheduler.runAfter(
       0,
       internal.templatesDataSeed.seedNewScienceTemplates,
@@ -115,10 +113,9 @@ export const seedNewScienceTemplates = mutation({
   },
 });
 
-export const seedScienceTemplates = mutation({
+export const seedScienceTemplates = internalMutation({
   args: {},
   handler: async (ctx) => {
-    await requireAuthenticatedUser(ctx, 'seed science templates');
     await ctx.scheduler.runAfter(
       0,
       internal.templatesDataSeed.seedScienceTemplates,
@@ -128,10 +125,9 @@ export const seedScienceTemplates = mutation({
   },
 });
 
-export const seedUniqueTemplates = mutation({
+export const seedUniqueTemplates = internalMutation({
   args: {},
   handler: async (ctx) => {
-    await requireAuthenticatedUser(ctx, 'seed unique templates');
     await ctx.scheduler.runAfter(
       0,
       internal.templatesDataSeed.seedUniqueTemplates,

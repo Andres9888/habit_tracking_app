@@ -95,3 +95,5 @@ export const useHabitCalendarViewLogic = ({
     handleToday,
   };
 };
+
+export type HabitCalendarViewState = ReturnType<typeof useHabitCalendarViewLogic>;

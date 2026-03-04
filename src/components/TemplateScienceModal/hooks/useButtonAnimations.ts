@@ -8,6 +8,8 @@ import {
   withSpring,
   type SharedValue,
 } from 'react-native-reanimated';
+import { springs } from '@/theme/animations';
+import { CARD_PRESS_SCALE } from '@/utils/animations/cardPressAnimation';
 import type { PressHandlers } from '../TemplateScienceModal.types';
 import { springs } from '@/theme/animations';
 
@@ -19,7 +21,7 @@ export const useButtonAnimations = () => {
   const backButtonScale = useSharedValue(1);
 
   const createPressHandlers = useCallback(
-    (scaleValue: SharedValue<number>, scale = 0.95): PressHandlers => ({
+    (scaleValue: SharedValue<number>, scale = CARD_PRESS_SCALE): PressHandlers => ({
       onPressIn: () => {
         scaleValue.value = withSpring(scale, springs.button);
       },

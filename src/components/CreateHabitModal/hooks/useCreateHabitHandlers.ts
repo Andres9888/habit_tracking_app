@@ -7,7 +7,7 @@
  */
 import { useMutation } from 'convex/react';
 import { api } from '../../../../convex/_generated/api';
-import { formatReminderTime } from '../../../utils/notifications';
+import { formatReminderTime24 } from '../../../utils/notifications';
 import { markFirstHabitCreated } from '../../../hooks/useStreakReminders/useStreakReminderSettings';
 import { cancelReminder, scheduleReminder } from './useHabitReminders';
 import { validateHabitName } from '../../../utils/validation';
@@ -87,7 +87,7 @@ export function useCreateHabitHandlers() {
           ? (reminderSound ?? undefined)
           : undefined,
         reminderTime: finalHasReminders
-          ? formatReminderTime(reminderTime)
+          ? formatReminderTime24(reminderTime)
           : undefined,
       });
     } catch (error) {
@@ -126,7 +126,7 @@ export function useCreateHabitHandlers() {
         remindersEnabled: hasReminders,
         reminderSound: hasReminders ? (reminderSound ?? undefined) : undefined,
         reminderTime: hasReminders
-          ? formatReminderTime(reminderTime)
+          ? formatReminderTime24(reminderTime)
           : undefined,
       });
 
