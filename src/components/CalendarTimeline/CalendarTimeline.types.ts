@@ -59,6 +59,10 @@ export interface DayCellProps {
   isCurrentDay: boolean;
   isUpcoming: boolean;
   completionStatus: CompletionStatus;
+  /** Number of habits completed on this day */
+  completed: number;
+  /** Total number of habits for this day */
+  total: number;
   hasCompletionData: boolean;
   colors: CalendarColors;
   reduceMotion: boolean;

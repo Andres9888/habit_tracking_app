@@ -2,6 +2,7 @@ export { CheckBadge } from './CheckBadge';
 export { CompletionDot } from './CompletionDot';
 export { DayCell } from './DayCell';
 export { DayCellContent } from './DayCellContent';
+export { DayCellRing } from './DayCellRing';
 export { DayStrip } from './DayStrip';
 export { InlineTrialBar } from './InlineTrialBar';
 export { MicroProgressBar } from './MicroProgressBar';
