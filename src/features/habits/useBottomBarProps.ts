@@ -16,6 +16,7 @@ interface UseBottomBarPropsOptions {
   habits: Array<{ _id: string }>;
   getHabitStatus: (habitId: string, dateString: string) => HabitStatus;
   reduceMotion: boolean;
+  onLongPressSettings?: () => void;
 }
 
 export function useBottomBarProps({
@@ -24,6 +25,7 @@ export function useBottomBarProps({
   habits,
   getHabitStatus,
   reduceMotion,
+  onLongPressSettings,
 }: UseBottomBarPropsOptions) {
   const onAddHabitPress = useCallback((): void => {
     void handleCreateHabitRequest();
@@ -45,5 +47,6 @@ export function useBottomBarProps({
     onAddHabit: onAddHabitPress,
     onOpenSettings: modals.openSettings,
     onOpenTemplates: modals.openTemplatesScreen,
+    onLongPressSettings,
   };
 }

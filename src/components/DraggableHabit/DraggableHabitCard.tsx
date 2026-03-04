@@ -27,6 +27,7 @@ import { Swipeable } from 'react-native-gesture-handler';
 import ReAnimated, { useAnimatedStyle } from 'react-native-reanimated';
 import { ArchiveAction } from './ArchiveAction';
 import { CardContent } from './CardContent';
+import { SelectionOverlay } from './SelectionOverlay';
 import { StrengthFillBackground } from '../HabitCard/components/StrengthFillBackground';
 import { getEffectiveAccentColor, getBorderAccentColor } from './colorUtils';
 import { buildStaticCardStyle } from './cardStyles';
@@ -72,17 +73,25 @@ function DraggableHabitCardComponent(props: DraggableHabitCardProps) {
     []
   );
 
+  const handlePress = useMemo(() => {
+    if (props.showSelectionOverlay) return () => props.onToggleSelection?.();
+    return () => props.onPress?.(props.habit);
+  }, [props.showSelectionOverlay, props.onToggleSelection, props.onPress, props.habit]);
+
   const habitCard = (
-    <ReAnimated.View style={props.entranceCardStyle}>
+    <ReAnimated.View style={[props.entranceCardStyle, { flexDirection: 'row', alignItems: 'center' }]}>
+      {props.showSelectionOverlay && (
+        <SelectionOverlay isSelected={!!props.isSelected} onToggle={() => props.onToggleSelection?.()} />
+      )}
       <Pressable
-        accessibilityHint={`Tap to view details${props.onArchive ? ', swipe left to archive' : ''}`}
+        accessibilityHint={props.showSelectionOverlay ? 'Tap to toggle selection' : `Tap to view details${props.onArchive ? ', swipe left to archive' : ''}`}
         accessibilityLabel={`${props.habit.name}, ${props.streak} day streak`}
         accessibilityRole='button'
-        style={pressableStyle}
-        onLongPress={props.handleLongPress}
-        onPress={() => props.onPress?.(props.habit)}
-        onPressIn={props.handlePressIn}
-        onPressOut={props.handlePressOut}
+        style={[pressableStyle, { flex: 1 }]}
+        onLongPress={props.showSelectionOverlay ? undefined : props.handleLongPress}
+        onPress={handlePress}
+        onPressIn={props.showSelectionOverlay ? undefined : props.handlePressIn}
+        onPressOut={props.showSelectionOverlay ? undefined : props.handlePressOut}
       >
         <ReAnimated.View
           className='flex-row overflow-hidden rounded-3xl'
@@ -143,7 +152,7 @@ function DraggableHabitCardComponent(props: DraggableHabitCardProps) {
     </ReAnimated.View>
   );
 
-  if (!props.onArchive) return habitCard;
+  if (!props.onArchive || props.showSelectionOverlay) return habitCard;
 
   return (
     <Swipeable

@@ -38,6 +38,9 @@ type HabitRenderContentProps = {
   | 'notifyWeekCompletion'
   | 'onHabitEntranceComplete'
   | 'reduceMotionPreference'
+  | 'isSelectionMode'
+  | 'selectedIds'
+  | 'onToggleSelection'
   | 'showConnectors'
   | 'toggleHabit'
   | 'weekDateStrings'
@@ -63,6 +66,9 @@ function HabitRenderContentComponent({
   handleResume,
   highlightHabitId,
   isReorderingEnabled,
+  isSelectionMode,
+  selectedIds,
+  onToggleSelection,
   notifyWeekCompletion,
   onHabitEntranceComplete,
   reduceMotionPreference,
@@ -83,7 +89,8 @@ function HabitRenderContentComponent({
     [notifyWeekCompletion, item]
   );
 
-  const handleLongPress = isReorderingEnabled ? drag : undefined;
+  const handleLongPress = isSelectionMode ? undefined : (isReorderingEnabled ? drag : undefined);
+  const handleToggle = useCallback(() => onToggleSelection?.(item._id), [onToggleSelection, item._id]);
 
   // Animated style for the active drag state
   const activeStyle = useAnimatedStyle(() => ({
@@ -134,11 +141,14 @@ function HabitRenderContentComponent({
           triggerEntrance={triggerEntrance}
           weekDateStrings={weekDateStrings}
           weekStatus={weekStatus}
-          onArchive={handleArchive}
+          isSelected={isSelectionMode ? selectedIds?.has(item._id) : undefined}
+          showSelectionOverlay={isSelectionMode}
+          onArchive={isSelectionMode ? undefined : handleArchive}
           onEntranceComplete={handleEntranceComplete}
           onLongPress={handleLongPress}
           onPause={handlePause}
-          onPress={handleHabitPress}
+          onPress={isSelectionMode ? undefined : handleHabitPress}
+          onToggleSelection={isSelectionMode ? handleToggle : undefined}
           onResume={handleResume}
           onWeekComplete={handleWeekComplete}
         />

@@ -21,6 +21,9 @@ export function useHabitRenderItem(args: UseHabitRenderItemArgs) {
     notifyWeekCompletion,
     onHabitEntranceComplete,
     reduceMotionPreference,
+    isSelectionMode,
+    selectedIds,
+    onToggleSelection,
     showConnectors = true,
     showHabitStrengthPercentage,
     toggleHabit,
@@ -47,6 +50,9 @@ export function useHabitRenderItem(args: UseHabitRenderItemArgs) {
           isConnectedToNextWeek={renderData.isConnectedToNextWeek}
           isConnectedToPreviousWeek={renderData.isConnectedToPreviousWeek}
           isReorderingEnabled={isReorderingEnabled}
+          isSelectionMode={isSelectionMode}
+          selectedIds={selectedIds}
+          onToggleSelection={onToggleSelection}
           item={item}
           notifyWeekCompletion={notifyWeekCompletion}
           reduceMotionPreference={reduceMotionPreference}

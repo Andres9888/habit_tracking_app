@@ -58,14 +58,17 @@ function DraggableHabit(props: DraggableHabitProps) {
     isConnectedToPreviousWeek = false,
     isJustCreated = false,
     isPaused = false,
+    isSelected,
     onArchive,
     onEntranceComplete,
     onLongPress,
     onPause,
     onPress,
     onResume,
+    onToggleSelection,
     onWeekComplete,
     previousStreak,
+    showSelectionOverlay,
     reduceMotionPreference,
     showConnectors = true,
     showHabitStrengthPercentage = false,
@@ -145,6 +148,9 @@ function DraggableHabit(props: DraggableHabitProps) {
       highContrastMode={highContrastMode}
       isConnectedToNextWeek={isConnectedToNextWeek}
       isConnectedToPreviousWeek={isConnectedToPreviousWeek}
+      isSelected={isSelected}
+      onToggleSelection={onToggleSelection}
+      showSelectionOverlay={showSelectionOverlay}
       isDark={isDark}
       isPaused={isPaused}
       progressAnimatedStyle={progressAnimatedStyle}

@@ -8,6 +8,7 @@ export interface BottomActionBarProps {
   onAddHabit: () => void;
   onOpenSettings: () => void;
   onOpenTemplates: () => void;
+  onLongPressSettings?: () => void;
 }
 
 export interface ProgressRingFABProps {

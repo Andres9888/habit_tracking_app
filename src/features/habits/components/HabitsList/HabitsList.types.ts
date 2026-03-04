@@ -24,6 +24,14 @@ export interface HabitsListProps {
   onJumpToToday: () => void;
   onNextWeek: () => void;
   onPreviousWeek: () => void;
+  /** Selection mode props */
+  isSelectionMode?: boolean;
+  selectedIds?: Set<Id<'habits'>>;
+  selectedCount?: number;
+  isAllSelected?: boolean;
+  onToggleSelection?: (id: Id<'habits'>) => void;
+  onSelectAll?: () => void;
+  onDeselectAll?: () => void;
 }
 
 export interface HabitsListContentProps {

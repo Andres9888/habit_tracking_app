@@ -7,7 +7,9 @@
  * Action buttons have moved to BottomActionBar.
  */
 
+import { View } from 'react-native';
 import { HabitsListHeader } from './HabitsListHeader';
+import { SelectAllRow } from '../SelectAllRow';
 import type { HabitsListProps } from './HabitsList.types';
 
 interface RenderHabitsListHeaderOptions {
@@ -31,25 +33,40 @@ export function renderHabitsListHeader({
     onPreviousWeek,
     onUpgradeIntent,
   } = props;
+  const handleToggleSelectAll = () => {
+    if (props.isAllSelected) props.onDeselectAll?.();
+    else props.onSelectAll?.();
+  };
+
   return (
-    <HabitsListHeader
-      calendarOpacity={state.calendarOpacity}
-      calendarTranslateY={state.calendarTranslateY}
-      canNavigateForward={canNavigateForward}
-      getHabitStatus={list.getHabitStatus}
-      getStreak={list.getStreak}
-      habits={list.habits}
-      headerOpacity={state.headerOpacity}
-      headerTranslateY={state.headerTranslateY}
-      justCreatedHabitId={state.justCreatedHabitId}
-      reduceMotionPreference={list.reduceMotionPreference}
-      weekDates={weekDates}
-      weekDateStrings={list.weekDateStrings}
-      onDayPress={state.handleDayPress}
-      onJumpToToday={onJumpToToday}
-      onNextWeek={onNextWeek}
-      onPreviousWeek={onPreviousWeek}
-      onUpgradePress={onUpgradeIntent}
-    />
+    <View>
+      <HabitsListHeader
+        calendarOpacity={state.calendarOpacity}
+        calendarTranslateY={state.calendarTranslateY}
+        canNavigateForward={canNavigateForward}
+        getHabitStatus={list.getHabitStatus}
+        getStreak={list.getStreak}
+        habits={list.habits}
+        headerOpacity={state.headerOpacity}
+        headerTranslateY={state.headerTranslateY}
+        justCreatedHabitId={state.justCreatedHabitId}
+        reduceMotionPreference={list.reduceMotionPreference}
+        weekDates={weekDates}
+        weekDateStrings={list.weekDateStrings}
+        onDayPress={state.handleDayPress}
+        onJumpToToday={onJumpToToday}
+        onNextWeek={onNextWeek}
+        onPreviousWeek={onPreviousWeek}
+        onUpgradePress={onUpgradeIntent}
+      />
+      {props.isSelectionMode && (
+        <SelectAllRow
+          isAllSelected={props.isAllSelected ?? false}
+          selectedCount={props.selectedCount ?? 0}
+          totalCount={list.habits.length}
+          onToggleSelectAll={handleToggleSelectAll}
+        />
+      )}
+    </View>
   );
 }

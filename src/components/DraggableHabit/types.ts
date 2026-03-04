@@ -84,6 +84,12 @@ export interface DraggableHabitProps {
   triggerEntrance?: boolean;
   weekDateStrings: string[];
   weekStatus: HabitStatus[];
+  /** Selection mode: whether this card is currently selected. */
+  isSelected?: boolean;
+  /** Selection mode: show the selection checkbox overlay. */
+  showSelectionOverlay?: boolean;
+  /** Selection mode: called when the checkbox is toggled. */
+  onToggleSelection?: () => void;
 }
 
 /**
