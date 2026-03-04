@@ -85,7 +85,7 @@ export const DayCellRing: React.FC<DayCellRingProps> = ({
         <Circle
           cx={HALF}
           cy={HALF}
-          fill='transparent'
+          fill={rc.todayBg ?? 'transparent'}
           r={RADIUS}
           stroke={rc.track}
           strokeWidth={STROKE_WIDTH}

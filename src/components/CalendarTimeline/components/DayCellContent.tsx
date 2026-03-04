@@ -1,11 +1,13 @@
 import React from 'react';
-import { Text, View } from 'react-native';
+import { Text } from 'react-native';
+import Animated from 'react-native-reanimated';
 
 import type {
   CalendarColors,
   CompletionStatus,
 } from '../CalendarTimeline.types';
 import { useThemeColors } from '../../../theme/ThemeContext';
+import { useTodayGlow } from '../hooks/useTodayGlow';
 
 import { DayCellRing } from './DayCellRing';
 
@@ -40,6 +42,12 @@ export const DayCellContent: React.FC<DayCellContentProps> = ({
   pressed = false,
 }) => {
   const { isDark } = useThemeColors();
+  const todayGlowStyle = useTodayGlow({
+    isCurrentDay,
+    isComplete: completionStatus === 'complete',
+    reduceMotion,
+    isDark,
+  });
 
   return (
     <>
@@ -53,8 +61,9 @@ export const DayCellContent: React.FC<DayCellContentProps> = ({
         {weekday}
       </Text>
 
-      <View
+      <Animated.View
         style={[
+          todayGlowStyle,
           pressed && !reduceMotion && { transform: [{ scale: 0.95 }] },
           pressed && { opacity: reduceMotion ? 0.85 : 0.7 },
         ]}
@@ -69,7 +78,7 @@ export const DayCellContent: React.FC<DayCellContentProps> = ({
           reduceMotion={reduceMotion}
           total={total}
         />
-      </View>
+      </Animated.View>
     </>
   );
 };

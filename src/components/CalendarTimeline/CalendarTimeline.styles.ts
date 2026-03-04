@@ -11,7 +11,7 @@ import type {
 } from './CalendarTimeline.types';
 import { colors } from '../../theme/colors';
 import { darkColors } from '../../theme/darkColors';
-import { borderRadius } from '../../theme/spacing';
+
 import { getCalendarTimelineColors } from './theme';
 
 export const DEFAULT_COLORS: CalendarColors = getCalendarTimelineColors(
@@ -95,11 +95,9 @@ export const STREAK_CONNECTOR = {
 export const getShelfBackgroundColor = (isDark: boolean) =>
   isDark ? darkColors.card : colors.light.surfaceMuted;
 
-/** Theme-aware shelf background */
+/** Theme-aware shelf background — full-width bar, no rounded corners */
 export const getShelfStyle = (isDark: boolean) => ({
   backgroundColor: getShelfBackgroundColor(isDark),
-  borderBottomLeftRadius: borderRadius.large,
-  borderBottomRightRadius: borderRadius.large,
 });
 
 /** Theme-aware complete day cell styling */

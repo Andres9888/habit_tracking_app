@@ -9,8 +9,8 @@ export const STROKE_WIDTH = 3;
 export const RADIUS = (RING_SIZE - STROKE_WIDTH) / 2;
 export const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
 
-const TRACK_LIGHT = palette.light.card;
-const TRACK_DARK = 'rgba(255,255,255,0.08)';
+const TRACK_LIGHT = palette.gray[200];
+const TRACK_DARK = 'rgba(255,255,255,0.15)';
 const PROGRESS_EMERALD_LIGHT = palette.primary[500];
 const PROGRESS_EMERALD_DARK = palette.primary[400];
 const FILL_COMPLETE_LIGHT = palette.primary[600];
@@ -22,6 +22,7 @@ export interface RingColors {
   track: string;
   progress: string;
   fill: string;
+  todayBg: string | undefined;
   text: string;
   checkIcon: string;
 }
@@ -33,6 +34,12 @@ export function getRingColors(
 ): RingColors {
   const isAmber = isToday && status !== 'complete' && status !== 'future';
 
+  const todayBg = isAmber
+    ? isDark
+      ? 'rgba(232,185,77,0.08)'
+      : 'rgba(232,185,77,0.10)'
+    : undefined;
+
   return {
     track: isDark ? TRACK_DARK : TRACK_LIGHT,
     progress: isAmber
@@ -43,6 +50,7 @@ export function getRingColors(
         ? PROGRESS_EMERALD_DARK
         : PROGRESS_EMERALD_LIGHT,
     fill: isDark ? FILL_COMPLETE_DARK : FILL_COMPLETE_LIGHT,
+    todayBg,
     text:
       status === 'complete'
         ? '#ffffff'
