@@ -4,6 +4,7 @@
  */
 import { v } from 'convex/values';
 import { query } from '../_generated/server';
+import { calculateStreakFromHistory } from '../streakUtils/historyCalculation';
 
 export const getStats = query({
   args: { habitId: v.id('habits') },
@@ -23,42 +24,37 @@ export const getStats = query({
       .withIndex('by_habit_and_date', (q) => q.eq('habitId', args.habitId))
       .collect();
 
-    const sortedDates = tracking
-      .filter((t) => t.completed)
-      .map((t) => new Date(t.date).getTime())
-      .sort((a, b) => b - a);
+    // Use the canonical streak utility (timezone-safe, grace-period-aware)
+    const todayDate = new Date().toISOString().slice(0, 10);
+    const { currentStreak } = calculateStreakFromHistory(
+      tracking,
+      todayDate,
+      { pausedAt: habit.pausedAt, resumedAt: habit.resumedAt }
+    );
 
-    let streak = 0;
-    const now = new Date();
-    now.setHours(0, 0, 0, 0);
-
-    for (const [i, sortedDate] of sortedDates.entries()) {
-      const expectedDate = new Date(now);
-      expectedDate.setDate(now.getDate() - i);
-      expectedDate.setHours(0, 0, 0, 0);
-      const expectedTime = expectedDate.getTime();
-
-      if (sortedDate === expectedTime) {
-        streak++;
-      } else {
-        break;
-      }
-    }
-
+    // Compute expected completions in the last 30 days based on frequency
     const thirtyDaysAgo = new Date();
-    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-    thirtyDaysAgo.setHours(0, 0, 0, 0);
-    const recentTracking = tracking.filter((t) => {
-      const date = new Date(t.date);
+    thirtyDaysAgo.setUTCDate(thirtyDaysAgo.getUTCDate() - 30);
+    thirtyDaysAgo.setUTCHours(0, 0, 0, 0);
+
+    const recentCompleted = tracking.filter((t) => {
+      const date = new Date(t.date + 'T00:00:00Z');
       return date >= thirtyDaysAgo && t.completed;
     });
 
+    // Expected days: weekly habits use daysOfWeek count × ~4.3 weeks; daily = 30
+    const activeDaysPerWeek =
+      habit.frequency === 'weekly' && habit.daysOfWeek?.length
+        ? habit.daysOfWeek.length
+        : 7;
+    const expectedCompletions = Math.round((activeDaysPerWeek / 7) * 30);
+
     const consistency = Math.max(
       0,
-      Math.min(100, Math.round((recentTracking.length / 30) * 100))
+      Math.min(100, Math.round((recentCompleted.length / expectedCompletions) * 100))
     );
 
-    return { consistency, streak };
+    return { consistency, streak: currentStreak };
   },
   returns: v.object({ consistency: v.number(), streak: v.number() }),
 });

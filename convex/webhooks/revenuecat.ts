@@ -45,6 +45,8 @@ export const revenuecatWebhook = httpAction(async (ctx, request) => {
     const eventType = event?.type;
     // app_user_id is nested inside the event object, NOT at the payload root
     const appUserId: string | undefined = event?.app_user_id;
+    // event.id is RevenueCat's unique identifier per event — used for deduplication
+    const eventId: string | undefined = event?.id;
 
     if (!eventType || !appUserId) {
       console.error('[RevenueCat] Missing event type or app_user_id');
@@ -67,6 +69,7 @@ export const revenuecatWebhook = httpAction(async (ctx, request) => {
     if (GRANT_EVENTS.has(eventType)) {
       await ctx.runMutation(internal.subscriptions.grantPremium, {
         clerkId: appUserId,
+        eventId,
         eventType,
         expiresAt: validatedExpiresAt,
         isTrialing: event.period_type === 'TRIAL',
@@ -77,11 +80,13 @@ export const revenuecatWebhook = httpAction(async (ctx, request) => {
     } else if (REVOKE_EVENTS.has(eventType)) {
       await ctx.runMutation(internal.subscriptions.revokePremium, {
         clerkId: appUserId,
+        eventId,
         eventType,
       });
     } else if (BILLING_EVENTS.has(eventType)) {
       await ctx.runMutation(internal.subscriptions.setBillingIssue, {
         clerkId: appUserId,
+        eventId,
       });
     } else {
       // Unhandled event type — no action needed

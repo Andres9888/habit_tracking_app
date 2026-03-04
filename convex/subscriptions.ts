@@ -45,6 +45,7 @@ export const getCurrentUserSubscription = query({
 export const grantPremium = internalMutation({
   args: {
     clerkId: v.string(),
+    eventId: v.optional(v.string()),
     eventType: v.string(),
     expiresAt: v.optional(v.number()),
     isTrialing: v.optional(v.boolean()),
@@ -60,6 +61,12 @@ export const grantPremium = internalMutation({
       .query('subscriptions')
       .withIndex('by_clerk_id', (q) => q.eq('clerkId', args.clerkId))
       .first();
+
+    // Idempotency: skip if we already processed this exact event
+    if (existing && args.eventId && existing.lastWebhookEventId === args.eventId) {
+      return;
+    }
+
     // eslint-disable-next-line unicorn/prefer-ternary
     if (existing) {
       await ctx.db.patch(existing._id, {
@@ -67,6 +74,7 @@ export const grantPremium = internalMutation({
         hasBillingIssue: false,
         lastWebhookAt: now,
         lastWebhookEvent: args.eventType,
+        lastWebhookEventId: args.eventId,
         planType,
         productId: args.productId,
         status,
@@ -80,6 +88,7 @@ export const grantPremium = internalMutation({
         expiresAt: args.expiresAt,
         lastWebhookAt: now,
         lastWebhookEvent: args.eventType,
+        lastWebhookEventId: args.eventId,
         planType,
         productId: args.productId,
         revenueCatId: args.revenueCatId,
@@ -108,18 +117,24 @@ export const grantPremium = internalMutation({
  *   - Vision board: limited to 4 per habit
  */
 export const revokePremium = internalMutation({
-  args: { clerkId: v.string(), eventType: v.string() },
-  handler: async (ctx, { clerkId, eventType }) => {
+  args: { clerkId: v.string(), eventId: v.optional(v.string()), eventType: v.string() },
+  handler: async (ctx, { clerkId, eventId, eventType }) => {
     const now = Date.now();
     const existing = await ctx.db
       .query('subscriptions')
       .withIndex('by_clerk_id', (q) => q.eq('clerkId', clerkId))
       .first();
+
+    if (existing && eventId && existing.lastWebhookEventId === eventId) {
+      return;
+    }
+
     if (existing) {
       await ctx.db.patch(existing._id, {
         cancelledAt: eventType === 'CANCELLATION' ? now : existing.cancelledAt,
         lastWebhookAt: now,
         lastWebhookEvent: eventType,
+        lastWebhookEventId: eventId,
         status: eventType === 'CANCELLATION' ? 'cancelled' : 'expired',
         updatedAt: now,
       });
@@ -135,18 +150,24 @@ export const revokePremium = internalMutation({
 
 /** Set billing issue flag (BILLING_ISSUE) — user keeps access during grace period */
 export const setBillingIssue = internalMutation({
-  args: { clerkId: v.string() },
-  handler: async (ctx, { clerkId }) => {
+  args: { clerkId: v.string(), eventId: v.optional(v.string()) },
+  handler: async (ctx, { clerkId, eventId }) => {
     const now = Date.now();
     const existing = await ctx.db
       .query('subscriptions')
       .withIndex('by_clerk_id', (q) => q.eq('clerkId', clerkId))
       .first();
+
+    if (existing && eventId && existing.lastWebhookEventId === eventId) {
+      return;
+    }
+
     if (existing) {
       await ctx.db.patch(existing._id, {
         hasBillingIssue: true,
         lastWebhookAt: now,
         lastWebhookEvent: 'BILLING_ISSUE',
+        lastWebhookEventId: eventId,
         status: 'past_due',
         updatedAt: now,
       });

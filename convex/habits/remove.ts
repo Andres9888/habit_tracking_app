@@ -4,6 +4,7 @@
  */
 import { v } from 'convex/values';
 import { mutation } from '../_generated/server';
+import { removedHabitDataValidator } from './types';
 import { findMaxOrder } from './utils';
 
 export const remove = mutation({
@@ -41,12 +42,41 @@ export const remove = mutation({
       await ctx.db.delete(entry._id);
     }
 
-    // Return the deleted data for potential undo
+    // Return the deleted data for potential undo — preserve all user-configured fields
     return {
       habit: {
+        color: habit.color,
         createdAt: habit.createdAt,
+        cueAfterBehavior: habit.cueAfterBehavior,
+        cueLocation: habit.cueLocation,
+        cueTime: habit.cueTime,
+        daysOfWeek: habit.daysOfWeek,
+        frequency: habit.frequency,
+        goalDuration: habit.goalDuration,
+        goalUnit: habit.goalUnit,
+        icon: habit.icon,
+        iconColor: habit.iconColor,
+        identity: habit.identity,
         name: habit.name,
         notes: habit.notes,
+        preferredTime: habit.preferredTime,
+        remindersEnabled: habit.remindersEnabled,
+        reminderSound: habit.reminderSound,
+        reminderTime: habit.reminderTime,
+        strength: habit.strength,
+        strengthLevel: habit.strengthLevel,
+        tags: habit.tags,
+        vizFailureBody: habit.vizFailureBody,
+        vizFailureEmotion: habit.vizFailureEmotion,
+        vizFailureMind: habit.vizFailureMind,
+        vizSuccessBody: habit.vizSuccessBody,
+        vizSuccessEmotion: habit.vizSuccessEmotion,
+        vizSuccessMind: habit.vizSuccessMind,
+        why: habit.why,
+        woopObstacle: habit.woopObstacle,
+        woopOutcome: habit.woopOutcome,
+        woopPlan: habit.woopPlan,
+        woopWish: habit.woopWish,
       },
       tracking: trackingEntries.map((entry) => ({
         completed: entry.completed,
@@ -55,11 +85,7 @@ export const remove = mutation({
     };
   },
   returns: v.object({
-    habit: v.object({
-      createdAt: v.number(),
-      name: v.string(),
-      notes: v.optional(v.string()),
-    }),
+    habit: removedHabitDataValidator,
     tracking: v.array(
       v.object({
         completed: v.boolean(),
@@ -71,11 +97,7 @@ export const remove = mutation({
 
 export const restore = mutation({
   args: {
-    habitData: v.object({
-      createdAt: v.number(),
-      name: v.string(),
-      notes: v.optional(v.string()),
-    }),
+    habitData: removedHabitDataValidator,
     trackingData: v.array(
       v.object({
         completed: v.boolean(),
@@ -90,20 +112,18 @@ export const restore = mutation({
       throw new Error('Unauthenticated: Must be logged in to restore habits');
     }
 
-    // Issue 7: Scope to authenticated user using index instead of reading ALL habits
     const userHabits = await ctx.db
       .query('habits')
       .withIndex('by_userId', (q) => q.eq('userId', identity.subject))
       .collect();
     const maxOrder = findMaxOrder(userHabits);
 
-    // Recreate the habit with proper order and initialize strength
+    // Restore habit preserving all user-configured fields.
+    // Strength is preserved from deletion so the user doesn't lose their progress.
     // SEC-004: Associate restored habit with authenticated user
     const habitId = await ctx.db.insert('habits', {
       ...args.habitData,
       order: maxOrder + 1,
-      strength: 0,
-      strengthLevel: 'starting',
       strengthUpdatedAt: Date.now(),
       userId: identity.subject,
     });
