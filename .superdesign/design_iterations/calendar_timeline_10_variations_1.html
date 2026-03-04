@@ -1,0 +1,4709 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Calendar Timeline — 10 Variations for Habit Monitoring</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --bg: #1a1816;
+        --surface: #232120;
+        --card: #2a2725;
+        --card-hover: #333030;
+        --border: #3a3735;
+        --text-primary: #f5f1ed;
+        --text-secondary: #a8a29e;
+        --text-tertiary: #6e6660;
+        --emerald-50: #ecfdf5;
+        --emerald-100: #d1fae5;
+        --emerald-200: #a7f3d0;
+        --emerald-300: #6ee7b7;
+        --emerald-400: #34d399;
+        --emerald-500: #10b981;
+        --emerald-600: #059669;
+        --emerald-700: #047857;
+        --emerald-800: #065f46;
+        --emerald-900: #064e3b;
+        --gold-100: #fef3cd;
+        --gold-200: #fde68a;
+        --gold-300: #e8b94d;
+        --gold-400: #d4a234;
+        --gold-500: #b8860b;
+        --gold-600: #8b6208;
+        --red-400: #f87171;
+        --red-500: #ef4444;
+        --red-600: #dc2626;
+        --orange-400: #fb923c;
+        --orange-500: #f97316;
+        --blue-400: #60a5fa;
+        --blue-500: #3b82f6;
+        --purple-400: #a78bfa;
+        --purple-500: #8b5cf6;
+      }
+
+      body {
+        font-family:
+          'Inter',
+          -apple-system,
+          BlinkMacSystemFont,
+          sans-serif !important;
+        background: var(--bg) !important;
+        color: var(--text-primary) !important;
+        padding: 24px !important;
+        min-height: 100vh;
+      }
+
+      h1 {
+        font-family: 'DM Sans', sans-serif !important;
+        font-weight: 800 !important;
+      }
+      h2 {
+        font-family: 'DM Sans', sans-serif !important;
+        font-weight: 700 !important;
+      }
+      h3 {
+        font-family: 'DM Sans', sans-serif !important;
+        font-weight: 600 !important;
+      }
+
+      .variation-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: 28px;
+        margin-bottom: 32px;
+        transition: border-color 0.2s;
+      }
+      .variation-card:hover {
+        border-color: var(--emerald-600);
+      }
+
+      .variation-number {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        border-radius: 10px;
+        background: var(--emerald-600);
+        color: white;
+        font-weight: 700;
+        font-size: 14px;
+        font-family: 'JetBrains Mono', monospace;
+        margin-right: 12px;
+        flex-shrink: 0;
+      }
+
+      .tag {
+        display: inline-block;
+        padding: 3px 10px;
+        border-radius: 6px;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.3px;
+        text-transform: uppercase;
+      }
+      .tag-science {
+        background: rgba(139, 92, 246, 0.15);
+        color: var(--purple-400);
+      }
+      .tag-motivation {
+        background: rgba(249, 115, 22, 0.15);
+        color: var(--orange-400);
+      }
+      .tag-clarity {
+        background: rgba(59, 130, 246, 0.15);
+        color: var(--blue-400);
+      }
+      .tag-gamification {
+        background: rgba(234, 179, 8, 0.15);
+        color: var(--gold-300);
+      }
+      .tag-density {
+        background: rgba(16, 185, 129, 0.15);
+        color: var(--emerald-400);
+      }
+
+      .phone-frame {
+        width: 320px;
+        min-height: 200px;
+        background: var(--card);
+        border-radius: 16px;
+        border: 1px solid var(--border);
+        overflow: hidden;
+        flex-shrink: 0;
+      }
+
+      .why-box {
+        background: rgba(16, 185, 129, 0.06);
+        border: 1px solid rgba(16, 185, 129, 0.15);
+        border-radius: 12px;
+        padding: 16px;
+        margin-top: 16px;
+      }
+
+      .mono {
+        font-family: 'JetBrains Mono', monospace !important;
+      }
+
+      @keyframes pulse-soft {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.6;
+        }
+      }
+      .pulse-today {
+        animation: pulse-soft 2s ease-in-out infinite;
+      }
+
+      @keyframes flame-flicker {
+        0%,
+        100% {
+          transform: scaleY(1);
+        }
+        50% {
+          transform: scaleY(1.08);
+        }
+      }
+      .flame-animate {
+        animation: flame-flicker 1.5s ease-in-out infinite;
+      }
+
+      @keyframes grow-in {
+        from {
+          transform: scale(0);
+          opacity: 0;
+        }
+        to {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+
+      .scroll-x {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+      .scroll-x::-webkit-scrollbar {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Header -->
+    <div style="max-width: 900px; margin: 0 auto 40px">
+      <h1 style="font-size: 32px; letter-spacing: -0.5px; margin-bottom: 8px">
+        Calendar Timeline — 10 Variations
+      </h1>
+      <p
+        style="
+          color: var(--text-secondary);
+          font-size: 15px;
+          line-height: 1.6;
+          max-width: 640px;
+        "
+      >
+        Each variation is designed for a specific monitoring strength. Tags
+        indicate the primary UX benefit. All designs use the existing app theme
+        tokens.
+      </p>
+    </div>
+
+    <div style="max-width: 900px; margin: 0 auto">
+      <!-- ━━━ VARIATION 1: Intensity Heatmap Strip ━━━ -->
+      <div class="variation-card">
+        <div style="display: flex; align-items: center; margin-bottom: 6px">
+          <span class="variation-number">1</span>
+          <h2 style="font-size: 20px; letter-spacing: -0.3px">
+            Intensity Heatmap Strip
+          </h2>
+        </div>
+        <div style="display: flex; gap: 8px; margin-bottom: 16px">
+          <span class="tag tag-clarity">Clarity</span>
+          <span class="tag tag-density">Info Density</span>
+        </div>
+        <p
+          style="
+            color: var(--text-secondary);
+            font-size: 13px;
+            margin-bottom: 20px;
+          "
+        >
+          Each day shows completion intensity through color saturation — from
+          faint green (1 habit) to deep emerald (all habits). Like GitHub
+          contributions but for your daily habits.
+        </p>
+
+        <div
+          style="
+            display: flex;
+            gap: 24px;
+            align-items: flex-start;
+            flex-wrap: wrap;
+          "
+        >
+          <div class="phone-frame" style="padding: 20px">
+            <!-- Header -->
+            <div
+              style="
+                display: flex;
+                justify-content: space-between;
+                align-items: baseline;
+                margin-bottom: 4px;
+              "
+            >
+              <span
+                style="
+                  font-size: 15px;
+                  font-weight: 600;
+                  color: var(--gold-300);
+                "
+                >5-day streak</span
+              >
+              <span
+                class="mono"
+                style="font-size: 13px; color: var(--text-secondary)"
+                ><span style="color: var(--emerald-400); font-weight: 700"
+                  >4</span
+                >
+                of <span style="font-weight: 600">5</span></span
+              >
+            </div>
+            <div
+              style="
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 16px;
+              "
+            >
+              <span style="font-size: 12px; color: var(--text-tertiary)"
+                >Wed, March 4</span
+              >
+            </div>
+            <!-- Heatmap strip -->
+            <div
+              style="display: flex; gap: 6px; justify-content: space-between"
+            >
+              <!-- Each day: intensity = completion ratio -->
+              <div style="flex: 1; text-align: center">
+                <div
+                  style="
+                    font-size: 10px;
+                    color: var(--text-tertiary);
+                    margin-bottom: 4px;
+                    font-weight: 500;
+                  "
+                >
+                  Mon
+                </div>
+                <div
+                  style="
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 10px;
+                    background: var(--emerald-600);
+                    margin: 0 auto 4px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    box-shadow: 0 0 12px rgba(5, 150, 105, 0.4);
+                  "
+                >
+                  <span style="font-size: 14px; font-weight: 700; color: white"
+                    >24</span
+                  >
+                </div>
+                <div
+                  style="
+                    font-size: 9px;
+                    color: var(--emerald-400);
+                    font-weight: 600;
+                  "
+                  class="mono"
+                >
+                  5/5
+                </div>
+              </div>
+              <div style="flex: 1; text-align: center">
+                <div
+                  style="
+                    font-size: 10px;
+                    color: var(--text-tertiary);
+                    margin-bottom: 4px;
+                    font-weight: 500;
+                  "
+                >
+                  Tue
+                </div>
+                <div
+                  style="
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 10px;
+                    background: var(--emerald-600);
+                    margin: 0 auto 4px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    box-shadow: 0 0 12px rgba(5, 150, 105, 0.4);
+                  "
+                >
+                  <span style="font-size: 14px; font-weight: 700; color: white"
+                    >25</span
+                  >
+                </div>
+                <div
+                  style="
+                    font-size: 9px;
+                    color: var(--emerald-400);
+                    font-weight: 600;
+                  "
+                  class="mono"
+                >
+                  5/5
+                </div>
+              </div>
+              <div style="flex: 1; text-align: center">
+                <div
+                  style="
+                    font-size: 10px;
+                    color: var(--text-tertiary);
+                    margin-bottom: 4px;
+                    font-weight: 500;
+                  "
+                >
+                  Wed
+                </div>
+                <div
+                  style="
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 10px;
+                    background: var(--emerald-700);
+                    margin: 0 auto 4px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    border: 2px solid var(--gold-300);
+                    box-shadow: 0 0 8px rgba(232, 185, 77, 0.25);
+                  "
+                >
+                  <span
+                    style="
+                      font-size: 14px;
+                      font-weight: 700;
+                      color: var(--gold-200);
+                    "
+                    >26</span
+                  >
+                </div>
+                <div
+                  style="
+                    font-size: 9px;
+                    color: var(--gold-300);
+                    font-weight: 600;
+                  "
+                  class="mono"
+                >
+                  4/5
+                </div>
+              </div>
+              <div style="flex: 1; text-align: center">
+                <div
+                  style="
+                    font-size: 10px;
+                    color: var(--text-tertiary);
+                    margin-bottom: 4px;
+                    font-weight: 500;
+                  "
+                >
+                  Thu
+                </div>
+                <div
+                  style="
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 10px;
+                    background: rgba(16, 185, 129, 0.15);
+                    margin: 0 auto 4px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                  "
+                >
+                  <span
+                    style="
+                      font-size: 14px;
+                      font-weight: 600;
+                      color: var(--emerald-300);
+                    "
+                    >27</span
+                  >
+                </div>
+                <div
+                  style="
+                    font-size: 9px;
+                    color: var(--emerald-400);
+                    font-weight: 600;
+                    opacity: 0.5;
+                  "
+                  class="mono"
+                >
+                  2/5
+                </div>
+              </div>
+              <div style="flex: 1; text-align: center">
+                <div
+                  style="
+                    font-size: 10px;
+                    color: var(--text-tertiary);
+                    margin-bottom: 4px;
+                    font-weight: 500;
+                  "
+                >
+                  Fri
+                </div>
+                <div
+                  style="
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 10px;
+                    background: rgba(16, 185, 129, 0.06);
+                    margin: 0 auto 4px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    border: 1px solid var(--border);
+                  "
+                >
+                  <span
+                    style="
+                      font-size: 14px;
+                      font-weight: 500;
+                      color: var(--text-tertiary);
+                    "
+                    >28</span
+                  >
+                </div>
+                <div
+                  style="
+                    font-size: 9px;
+                    color: var(--text-tertiary);
+                    font-weight: 500;
+                  "
+                  class="mono"
+                >
+                  0/5
+                </div>
+              </div>
+              <div style="flex: 1; text-align: center; opacity: 0.35">
+                <div
+                  style="
+                    font-size: 10px;
+                    color: var(--text-tertiary);
+                    margin-bottom: 4px;
+                    font-weight: 500;
+                  "
+                >
+                  Sat
+                </div>
+                <div
+                  style="
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 10px;
+                    background: transparent;
+                    margin: 0 auto 4px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    border: 1px dashed var(--border);
+                  "
+                >
+                  <span
+                    style="
+                      font-size: 14px;
+                      font-weight: 500;
+                      color: var(--text-tertiary);
+                    "
+                    >1</span
+                  >
+                </div>
+              </div>
+              <div style="flex: 1; text-align: center; opacity: 0.35">
+                <div
+                  style="
+                    font-size: 10px;
+                    color: var(--text-tertiary);
+                    margin-bottom: 4px;
+                    font-weight: 500;
+                  "
+                >
+                  Sun
+                </div>
+                <div
+                  style="
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 10px;
+                    background: transparent;
+                    margin: 0 auto 4px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    border: 1px dashed var(--border);
+                  "
+                >
+                  <span
+                    style="
+                      font-size: 14px;
+                      font-weight: 500;
+                      color: var(--text-tertiary);
+                    "
+                    >2</span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div style="flex: 1; min-width: 240px">
+            <div class="why-box">
+              <h3
+                style="
+                  font-size: 13px;
+                  margin-bottom: 8px;
+                  color: var(--emerald-400);
+                "
+              >
+                Why this works
+              </h3>
+              <ul
+                style="
+                  font-size: 12px;
+                  color: var(--text-secondary);
+                  line-height: 1.7;
+                  padding-left: 16px;
+                "
+              >
+                <li>
+                  <strong>Granular feedback</strong> — "3 of 5" vs binary
+                  done/not-done shows partial progress matters
+                </li>
+                <li>
+                  <strong>Color intensity = effort</strong> — darker green =
+                  more habits completed. Instant visual scan
+                </li>
+                <li>
+                  <strong>Avoids all-or-nothing thinking</strong> — partial days
+                  still show color, reducing shame
+                </li>
+                <li>
+                  <strong>GitHub effect</strong> — users naturally want to "fill
+                  in" lighter squares
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ━━━ VARIATION 2: Ring Progress Cells ━━━ -->
+      <div class="variation-card">
+        <div style="display: flex; align-items: center; margin-bottom: 6px">
+          <span class="variation-number">2</span>
+          <h2 style="font-size: 20px; letter-spacing: -0.3px">
+            Ring Progress Cells
+          </h2>
+        </div>
+        <div style="display: flex; gap: 8px; margin-bottom: 16px">
+          <span class="tag tag-motivation">Motivation</span>
+          <span class="tag tag-clarity">Clarity</span>
+        </div>
+        <p
+          style="
+            color: var(--text-secondary);
+            font-size: 13px;
+            margin-bottom: 20px;
+          "
+        >
+          Each day is a circular progress ring (like Apple Watch). The ring
+          fills based on completion percentage. Complete days show a solid
+          filled circle with a checkmark.
+        </p>
+
+        <div
+          style="
+            display: flex;
+            gap: 24px;
+            align-items: flex-start;
+            flex-wrap: wrap;
+          "
+        >
+          <div class="phone-frame" style="padding: 20px">
+            <div
+              style="
+                display: flex;
+                justify-content: space-between;
+                align-items: baseline;
+                margin-bottom: 4px;
+              "
+            >
+              <span
+                style="
+                  font-size: 15px;
+                  font-weight: 600;
+                  color: var(--gold-300);
+                "
+                >Perfect day!</span
+              >
+              <span
+                class="mono"
+                style="
+                  font-size: 13px;
+                  color: var(--emerald-400);
+                  font-weight: 700;
+                "
+                >5 of 5</span
+              >
+            </div>
+            <div style="margin-bottom: 16px">
+              <span style="font-size: 12px; color: var(--text-tertiary)"
+                >Wed, March 4</span
+              >
+            </div>
+            <div
+              style="display: flex; gap: 4px; justify-content: space-between"
+            >
+              <!-- Ring for each day -->
+              <div style="flex: 1; text-align: center">
+                <div
+                  style="
+                    font-size: 10px;
+                    color: var(--text-tertiary);
+                    margin-bottom: 6px;
+                    font-weight: 500;
+                  "
+                >
+                  Mon
+                </div>
+                <div
+                  style="
+                    position: relative;
+                    width: 40px;
+                    height: 40px;
+                    margin: 0 auto;
+                  "
+                >
+                  <svg width="40" height="40" viewBox="0 0 40 40">
+                    <circle cx="20" cy="20" r="16" fill="var(--emerald-600)" />
+                    <path
+                      d="M14 20 L18 24 L26 16"
+                      stroke="white"
+                      stroke-width="2.5"
+                      fill="none"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </div>
+                <div
+                  style="
+                    font-size: 11px;
+                    font-weight: 700;
+                    color: var(--text-primary);
+                    margin-top: 4px;
+                  "
+                >
+                  24
+                </div>
+              </div>
+              <div style="flex: 1; text-align: center">
+                <div
+                  style="
+                    font-size: 10px;
+                    color: var(--text-tertiary);
+                    margin-bottom: 6px;
+                    font-weight: 500;
+                  "
+                >
+                  Tue
+                </div>
+                <div
+                  style="
+                    position: relative;
+                    width: 40px;
+                    height: 40px;
+                    margin: 0 auto;
+                  "
+                >
+                  <svg width="40" height="40" viewBox="0 0 40 40">
+                    <circle cx="20" cy="20" r="16" fill="var(--emerald-600)" />
+                    <path
+                      d="M14 20 L18 24 L26 16"
+                      stroke="white"
+                      stroke-width="2.5"
+                      fill="none"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </div>
+                <div
+                  style="
+                    font-size: 11px;
+                    font-weight: 700;
+                    color: var(--text-primary);
+                    margin-top: 4px;
+                  "
+                >
+                  25
+                </div>
+              </div>
+              <div style="flex: 1; text-align: center">
+                <div
+                  style="
+                    font-size: 10px;
+                    color: var(--text-tertiary);
+                    margin-bottom: 6px;
+                    font-weight: 500;
+                  "
+                >
+                  Wed
+                </div>
+                <div
+                  style="
+                    position: relative;
+                    width: 40px;
+                    height: 40px;
+                    margin: 0 auto;
+                  "
+                >
+                  <svg width="40" height="40" viewBox="0 0 40 40">
+                    <circle
+                      cx="20"
+                      cy="20"
+                      r="16"
+                      fill="none"
+                      stroke="var(--border)"
+                      stroke-width="3"
+                    />
+                    <circle
+                      cx="20"
+                      cy="20"
+                      r="16"
+                      fill="none"
+                      stroke="var(--emerald-400)"
+                      stroke-width="3"
+                      stroke-dasharray="100.53"
+                      stroke-dashoffset="20.1"
+                      transform="rotate(-90 20 20)"
+                      stroke-linecap="round"
+                    />
+                  </svg>
+                  <div
+                    style="
+                      position: absolute;
+                      inset: 0;
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+                    "
+                  >
+                    <span
+                      class="mono"
+                      style="
+                        font-size: 10px;
+                        font-weight: 700;
+                        color: var(--emerald-400);
+                      "
+                      >80%</span
+                    >
+                  </div>
+                </div>
+                <div
+                  style="
+                    font-size: 11px;
+                    font-weight: 700;
+                    color: var(--gold-300);
+                    margin-top: 4px;
+                  "
+                >
+                  26
+                </div>
+              </div>
+              <div style="flex: 1; text-align: center">
+                <div
+                  style="
+                    font-size: 10px;
+                    color: var(--text-tertiary);
+                    margin-bottom: 6px;
+                    font-weight: 500;
+                  "
+                >
+                  Thu
+                </div>
+                <div
+                  style="
+                    position: relative;
+                    width: 40px;
+                    height: 40px;
+                    margin: 0 auto;
+                  "
+                >
+                  <svg width="40" height="40" viewBox="0 0 40 40">
+                    <circle
+                      cx="20"
+                      cy="20"
+                      r="16"
+                      fill="none"
+                      stroke="var(--border)"
+                      stroke-width="3"
+                    />
+                    <circle
+                      cx="20"
+                      cy="20"
+                      r="16"
+                      fill="none"
+                      stroke="var(--emerald-300)"
+                      stroke-width="3"
+                      stroke-dasharray="100.53"
+                      stroke-dashoffset="60.3"
+                      transform="rotate(-90 20 20)"
+                      stroke-linecap="round"
+                    />
+                  </svg>
+                  <div
+                    style="
+                      position: absolute;
+                      inset: 0;
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+                    "
+                  >
+                    <span
+                      class="mono"
+                      style="
+                        font-size: 10px;
+                        font-weight: 600;
+                        color: var(--emerald-300);
+                      "
+                      >40%</span
+                    >
+                  </div>
+                </div>
+                <div
+                  style="
+                    font-size: 11px;
+                    font-weight: 600;
+                    color: var(--text-secondary);
+                    margin-top: 4px;
+                  "
+                >
+                  27
+                </div>
+              </div>
+              <div style="flex: 1; text-align: center">
+                <div
+                  style="
+                    font-size: 10px;
+                    color: var(--text-tertiary);
+                    margin-bottom: 6px;
+                    font-weight: 500;
+                  "
+                >
+                  Fri
+                </div>
+                <div
+                  style="
+                    position: relative;
+                    width: 40px;
+                    height: 40px;
+                    margin: 0 auto;
+                  "
+                >
+                  <svg width="40" height="40" viewBox="0 0 40 40">
+                    <circle
+                      cx="20"
+                      cy="20"
+                      r="16"
+                      fill="none"
+                      stroke="var(--border)"
+                      stroke-width="3"
+                    />
+                  </svg>
+                  <div
+                    style="
+                      position: absolute;
+                      inset: 0;
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+                    "
+                  >
+                    <span
+                      class="mono"
+                      style="
+                        font-size: 10px;
+                        font-weight: 500;
+                        color: var(--text-tertiary);
+                      "
+                      >0%</span
+                    >
+                  </div>
+                </div>
+                <div
+                  style="
+                    font-size: 11px;
+                    font-weight: 500;
+                    color: var(--text-tertiary);
+                    margin-top: 4px;
+                  "
+                >
+                  28
+                </div>
+              </div>
+              <div style="flex: 1; text-align: center; opacity: 0.35">
+                <div
+                  style="
+                    font-size: 10px;
+                    color: var(--text-tertiary);
+                    margin-bottom: 6px;
+                    font-weight: 500;
+                  "
+                >
+                  Sat
+                </div>
+                <div
+                  style="
+                    width: 40px;
+                    height: 40px;
+                    margin: 0 auto;
+                    border-radius: 50%;
+                    border: 2px dashed var(--border);
+                  "
+                ></div>
+                <div
+                  style="
+                    font-size: 11px;
+                    font-weight: 500;
+                    color: var(--text-tertiary);
+                    margin-top: 4px;
+                  "
+                >
+                  1
+                </div>
+              </div>
+              <div style="flex: 1; text-align: center; opacity: 0.35">
+                <div
+                  style="
+                    font-size: 10px;
+                    color: var(--text-tertiary);
+                    margin-bottom: 6px;
+                    font-weight: 500;
+                  "
+                >
+                  Sun
+                </div>
+                <div
+                  style="
+                    width: 40px;
+                    height: 40px;
+                    margin: 0 auto;
+                    border-radius: 50%;
+                    border: 2px dashed var(--border);
+                  "
+                ></div>
+                <div
+                  style="
+                    font-size: 11px;
+                    font-weight: 500;
+                    color: var(--text-tertiary);
+                    margin-top: 4px;
+                  "
+                >
+                  2
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div style="flex: 1; min-width: 240px">
+            <div class="why-box">
+              <h3
+                style="
+                  font-size: 13px;
+                  margin-bottom: 8px;
+                  color: var(--emerald-400);
+                "
+              >
+                Why this works
+              </h3>
+              <ul
+                style="
+                  font-size: 12px;
+                  color: var(--text-secondary);
+                  line-height: 1.7;
+                  padding-left: 16px;
+                "
+              >
+                <li>
+                  <strong>Apple Watch familiarity</strong> — users already
+                  understand ring = progress to close
+                </li>
+                <li>
+                  <strong>"Close the ring" psychology</strong> — incomplete
+                  rings create tension that motivates completion
+                </li>
+                <li>
+                  <strong>Percentage gives precision</strong> — 80% feels close,
+                  20% still feels like a start
+                </li>
+                <li>
+                  <strong>Satisfying completion</strong> — ring → filled circle
+                  with checkmark is rewarding
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ━━━ VARIATION 3: Habit Breakdown Grid ━━━ -->
+      <div class="variation-card">
+        <div style="display: flex; align-items: center; margin-bottom: 6px">
+          <span class="variation-number">3</span>
+          <h2 style="font-size: 20px; letter-spacing: -0.3px">
+            Habit Breakdown Grid
+          </h2>
+        </div>
+        <div style="display: flex; gap: 8px; margin-bottom: 16px">
+          <span class="tag tag-density">Info Density</span>
+          <span class="tag tag-science">Behavioral Science</span>
+        </div>
+        <p
+          style="
+            color: var(--text-secondary);
+            font-size: 13px;
+            margin-bottom: 20px;
+          "
+        >
+          Each day cell contains tiny dots for each individual habit — green for
+          done, gray for missed. Shows exactly which habits get consistently
+          done vs. which ones slip.
+        </p>
+
+        <div
+          style="
+            display: flex;
+            gap: 24px;
+            align-items: flex-start;
+            flex-wrap: wrap;
+          "
+        >
+          <div class="phone-frame" style="padding: 20px">
+            <div
+              style="
+                display: flex;
+                justify-content: space-between;
+                align-items: baseline;
+                margin-bottom: 16px;
+              "
+            >
+              <span
+                style="
+                  font-size: 15px;
+                  font-weight: 600;
+                  color: var(--text-primary);
+                "
+                >This Week</span
+              >
+              <span style="font-size: 12px; color: var(--text-tertiary)"
+                >Mar 24 – 30</span
+              >
+            </div>
+            <div
+              style="display: flex; gap: 4px; justify-content: space-between"
+            >
+              <!-- Each day with habit dots -->
+              <div style="flex: 1; text-align: center">
+                <div
+                  style="
+                    font-size: 10px;
+                    color: var(--text-tertiary);
+                    margin-bottom: 4px;
+                    font-weight: 500;
+                  "
+                >
+                  M
+                </div>
+                <div
+                  style="
+                    font-size: 13px;
+                    font-weight: 700;
+                    color: var(--text-primary);
+                    margin-bottom: 6px;
+                  "
+                >
+                  24
+                </div>
+                <div
+                  style="
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 3px;
+                    justify-content: center;
+                    padding: 4px;
+                  "
+                >
+                  <div
+                    style="
+                      width: 6px;
+                      height: 6px;
+                      border-radius: 2px;
+                      background: var(--emerald-500);
+                    "
+                  ></div>
+                  <div
+                    style="
+                      width: 6px;
+                      height: 6px;
+                      border-radius: 2px;
+                      background: var(--emerald-500);
+                    "
+                  ></div>
+                  <div
+                    style="
+                      width: 6px;
+                      height: 6px;
+                      border-radius: 2px;
+                      background: var(--emerald-500);
+                    "
+                  ></div>
+                  <div
+                    style="
+                      width: 6px;
+                      height: 6px;
+                      border-radius: 2px;
+                      background: var(--emerald-500);
+                    "
+                  ></div>
+                  <div
+                    style="
+                      width: 6px;
+                      height: 6px;
+                      border-radius: 2px;
+                      background: var(--emerald-500);
+                    "
+                  ></div>
+                </div>
+              </div>
+              <div style="flex: 1; text-align: center">
+                <div
+                  style="
+                    font-size: 10px;
+                    color: var(--text-tertiary);
+                    margin-bottom: 4px;
+                    font-weight: 500;
+                  "
+                >
+                  T
+                </div>
+                <div
+                  style="
+                    font-size: 13px;
+                    font-weight: 700;
+                    color: var(--text-primary);
+                    margin-bottom: 6px;
+                  "
+                >
+                  25
+                </div>
+                <div
+                  style="
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 3px;
+                    justify-content: center;
+                    padding: 4px;
+                  "
+                >
+                  <div
+                    style="
+                      width: 6px;
+                      height: 6px;
+                      border-radius: 2px;
+                      background: var(--emerald-500);
+                    "
+                  ></div>
+                  <div
+                    style="
+                      width: 6px;
+                      height: 6px;
+                      border-radius: 2px;
+                      background: var(--emerald-500);
+                    "
+                  ></div>
+                  <div
+                    style="
+                      width: 6px;
+                      height: 6px;
+                      border-radius: 2px;
+                      background: var(--emerald-500);
+                    "
+                  ></div>
+                  <div
+                    style="
+                      width: 6px;
+                      height: 6px;
+                      border-radius: 2px;
+                      background: var(--emerald-500);
+                    "
+                  ></div>
+                  <div
+                    style="
+                      width: 6px;
+                      height: 6px;
+                      border-radius: 2px;
+                      background: var(--emerald-500);
+                    "
+                  ></div>
+                </div>
+              </div>
+              <div style="flex: 1; text-align: center">
+                <div
+                  style="
+                    font-size: 10px;
+                    color: var(--gold-300);
+                    margin-bottom: 4px;
+                    font-weight: 600;
+                  "
+                >
+                  W
+                </div>
+                <div
+                  style="
+                    font-size: 13px;
+                    font-weight: 700;
+                    color: var(--gold-300);
+                    margin-bottom: 6px;
+                  "
+                >
+                  26
+                </div>
+                <div
+                  style="
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 3px;
+                    justify-content: center;
+                    padding: 4px;
+                  "
+                >
+                  <div
+                    style="
+                      width: 6px;
+                      height: 6px;
+                      border-radius: 2px;
+                      background: var(--emerald-500);
+                    "
+                  ></div>
+                  <div
+                    style="
+                      width: 6px;
+                      height: 6px;
+                      border-radius: 2px;
+                      background: var(--emerald-500);
+                    "
+                  ></div>
+                  <div
+                    style="
+                      width: 6px;
+                      height: 6px;
+                      border-radius: 2px;
+                      background: var(--emerald-500);
+                    "
+                  ></div>
+                  <div
+                    style="
+                      width: 6px;
+                      height: 6px;
+                      border-radius: 2px;
+                      background: var(--emerald-500);
+                    "
+                  ></div>
+                  <div
+                    style="
+                      width: 6px;
+                      height: 6px;
+                      border-radius: 2px;
+                      background: var(--border);
+                    "
+                  ></div>
+                </div>
+              </div>
+              <div style="flex: 1; text-align: center">
+                <div
+                  style="
+                    font-size: 10px;
+                    color: var(--text-tertiary);
+                    margin-bottom: 4px;
+                    font-weight: 500;
+                  "
+                >
+                  T
+                </div>
+                <div
+                  style="
+                    font-size: 13px;
+                    font-weight: 600;
+                    color: var(--text-secondary);
+                    margin-bottom: 6px;
+                  "
+                >
+                  27
+                </div>
+                <div
+                  style="
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 3px;
+                    justify-content: center;
+                    padding: 4px;
+                  "
+                >
+                  <div
+                    style="
+                      width: 6px;
+                      height: 6px;
+                      border-radius: 2px;
+                      background: var(--emerald-500);
+                    "
+                  ></div>
+                  <div
+                    style="
+                      width: 6px;
+                      height: 6px;
+                      border-radius: 2px;
+                      background: var(--border);
+                    "
+                  ></div>
+                  <div
+                    style="
+                      width: 6px;
+                      height: 6px;
+                      border-radius: 2px;
+                      background: var(--emerald-500);
+                    "
+                  ></div>
+                  <div
+                    style="
+                      width: 6px;
+                      height: 6px;
+                      border-radius: 2px;
+                      background: var(--border);
+                    "
+                  ></div>
+                  <div
+                    style="
+                      width: 6px;
+                      height: 6px;
+                      border-radius: 2px;
+                      background: var(--border);
+                    "
+                  ></div>
+                </div>
+              </div>
+              <div style="flex: 1; text-align: center">
+                <div
+                  style="
+                    font-size: 10px;
+                    color: var(--text-tertiary);
+                    margin-bottom: 4px;
+                    font-weight: 500;
+                  "
+                >
+                  F
+                </div>
+                <div
+                  style="
+                    font-size: 13px;
+                    font-weight: 500;
+                    color: var(--text-tertiary);
+                    margin-bottom: 6px;
+                  "
+                >
+                  28
+                </div>
+                <div
+                  style="
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 3px;
+                    justify-content: center;
+                    padding: 4px;
+                  "
+                >
+                  <div
+                    style="
+                      width: 6px;
+                      height: 6px;
+                      border-radius: 2px;
+                      background: var(--border);
+                    "
+                  ></div>
+                  <div
+                    style="
+                      width: 6px;
+                      height: 6px;
+                      border-radius: 2px;
+                      background: var(--border);
+                    "
+                  ></div>
+                  <div
+                    style="
+                      width: 6px;
+                      height: 6px;
+                      border-radius: 2px;
+                      background: var(--border);
+                    "
+                  ></div>
+                  <div
+                    style="
+                      width: 6px;
+                      height: 6px;
+                      border-radius: 2px;
+                      background: var(--border);
+                    "
+                  ></div>
+                  <div
+                    style="
+                      width: 6px;
+                      height: 6px;
+                      border-radius: 2px;
+                      background: var(--border);
+                    "
+                  ></div>
+                </div>
+              </div>
+              <div style="flex: 1; text-align: center; opacity: 0.35">
+                <div
+                  style="
+                    font-size: 10px;
+                    color: var(--text-tertiary);
+                    margin-bottom: 4px;
+                  "
+                >
+                  S
+                </div>
+                <div
+                  style="
+                    font-size: 13px;
+                    font-weight: 500;
+                    color: var(--text-tertiary);
+                    margin-bottom: 6px;
+                  "
+                >
+                  1
+                </div>
+              </div>
+              <div style="flex: 1; text-align: center; opacity: 0.35">
+                <div
+                  style="
+                    font-size: 10px;
+                    color: var(--text-tertiary);
+                    margin-bottom: 4px;
+                  "
+                >
+                  S
+                </div>
+                <div
+                  style="
+                    font-size: 13px;
+                    font-weight: 500;
+                    color: var(--text-tertiary);
+                    margin-bottom: 6px;
+                  "
+                >
+                  2
+                </div>
+              </div>
+            </div>
+            <!-- Legend -->
+            <div
+              style="
+                display: flex;
+                gap: 12px;
+                margin-top: 12px;
+                justify-content: center;
+              "
+            >
+              <div style="display: flex; align-items: center; gap: 4px">
+                <div
+                  style="
+                    width: 6px;
+                    height: 6px;
+                    border-radius: 2px;
+                    background: var(--emerald-500);
+                  "
+                ></div>
+                <span style="font-size: 9px; color: var(--text-tertiary)"
+                  >Done</span
+                >
+              </div>
+              <div style="display: flex; align-items: center; gap: 4px">
+                <div
+                  style="
+                    width: 6px;
+                    height: 6px;
+                    border-radius: 2px;
+                    background: var(--border);
+                  "
+                ></div>
+                <span style="font-size: 9px; color: var(--text-tertiary)"
+                  >Missed</span
+                >
+              </div>
+            </div>
+          </div>
+
+          <div style="flex: 1; min-width: 240px">
+            <div class="why-box">
+              <h3
+                style="
+                  font-size: 13px;
+                  margin-bottom: 8px;
+                  color: var(--emerald-400);
+                "
+              >
+                Why this works
+              </h3>
+              <ul
+                style="
+                  font-size: 12px;
+                  color: var(--text-secondary);
+                  line-height: 1.7;
+                  padding-left: 16px;
+                "
+              >
+                <li>
+                  <strong>Pattern revelation</strong> — instantly see which
+                  habit keeps getting skipped (e.g., always the 5th dot)
+                </li>
+                <li>
+                  <strong>Accountability without judgment</strong> — dots are
+                  neutral, not red X marks
+                </li>
+                <li>
+                  <strong>Scales with habit count</strong> — 3 habits = 3 dots,
+                  8 habits = 8 dots, always fits
+                </li>
+                <li>
+                  <strong>Identifies "weak link"</strong> — if one dot is always
+                  gray, user knows what to focus on
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ━━━ VARIATION 4: Momentum Wave ━━━ -->
+      <div class="variation-card">
+        <div style="display: flex; align-items: center; margin-bottom: 6px">
+          <span class="variation-number">4</span>
+          <h2 style="font-size: 20px; letter-spacing: -0.3px">Momentum Wave</h2>
+        </div>
+        <div style="display: flex; gap: 8px; margin-bottom: 16px">
+          <span class="tag tag-motivation">Motivation</span>
+          <span class="tag tag-science">Behavioral Science</span>
+        </div>
+        <p
+          style="
+            color: var(--text-secondary);
+            font-size: 13px;
+            margin-bottom: 20px;
+          "
+        >
+          A continuous area chart showing completion percentage across 14 days.
+          The wave shape makes trends immediately visible — rising = building
+          momentum, dipping = losing it.
+        </p>
+
+        <div
+          style="
+            display: flex;
+            gap: 24px;
+            align-items: flex-start;
+            flex-wrap: wrap;
+          "
+        >
+          <div class="phone-frame" style="padding: 20px">
+            <div
+              style="
+                display: flex;
+                justify-content: space-between;
+                align-items: baseline;
+                margin-bottom: 4px;
+              "
+            >
+              <span
+                style="
+                  font-size: 15px;
+                  font-weight: 600;
+                  color: var(--emerald-400);
+                "
+                >Momentum rising</span
+              >
+              <span
+                class="mono"
+                style="font-size: 12px; color: var(--text-tertiary)"
+                >14 days</span
+              >
+            </div>
+            <div style="margin-bottom: 12px">
+              <span style="font-size: 12px; color: var(--text-tertiary)"
+                >Feb 19 – Mar 4</span
+              >
+            </div>
+            <!-- Wave chart -->
+            <div style="position: relative; height: 80px; margin-bottom: 8px">
+              <svg
+                width="100%"
+                height="80"
+                viewBox="0 0 280 80"
+                preserveAspectRatio="none"
+              >
+                <defs>
+                  <linearGradient id="waveGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop
+                      offset="0%"
+                      stop-color="var(--emerald-500)"
+                      stop-opacity="0.5"
+                    />
+                    <stop
+                      offset="100%"
+                      stop-color="var(--emerald-500)"
+                      stop-opacity="0.03"
+                    />
+                  </linearGradient>
+                </defs>
+                <!-- Area fill -->
+                <path
+                  d="M0,64 L20,56 L40,48 L60,40 L80,52 L100,44 L120,32 L140,24 L160,16 L180,20 L200,12 L220,8 L240,4 L260,8 L280,12 L280,80 L0,80 Z"
+                  fill="url(#waveGrad)"
+                />
+                <!-- Line -->
+                <path
+                  d="M0,64 L20,56 L40,48 L60,40 L80,52 L100,44 L120,32 L140,24 L160,16 L180,20 L200,12 L220,8 L240,4 L260,8 L280,12"
+                  fill="none"
+                  stroke="var(--emerald-400)"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+                <!-- Today dot -->
+                <circle
+                  cx="240"
+                  cy="4"
+                  r="5"
+                  fill="var(--emerald-400)"
+                  stroke="var(--card)"
+                  stroke-width="2"
+                />
+              </svg>
+              <!-- Percentage labels -->
+              <div
+                style="
+                  position: absolute;
+                  right: 0;
+                  top: -2px;
+                  font-size: 11px;
+                  font-weight: 700;
+                  color: var(--emerald-400);
+                "
+                class="mono"
+              >
+                96%
+              </div>
+              <div
+                style="
+                  position: absolute;
+                  left: 0;
+                  top: 56px;
+                  font-size: 10px;
+                  color: var(--text-tertiary);
+                "
+                class="mono"
+              >
+                20%
+              </div>
+            </div>
+            <!-- Day labels -->
+            <div style="display: flex; justify-content: space-between">
+              <span style="font-size: 9px; color: var(--text-tertiary)"
+                >Feb 19</span
+              >
+              <span style="font-size: 9px; color: var(--text-tertiary)"
+                >Feb 23</span
+              >
+              <span style="font-size: 9px; color: var(--text-tertiary)"
+                >Feb 27</span
+              >
+              <span
+                style="font-size: 9px; color: var(--gold-300); font-weight: 600"
+                >Today</span
+              >
+            </div>
+          </div>
+
+          <div style="flex: 1; min-width: 240px">
+            <div class="why-box">
+              <h3
+                style="
+                  font-size: 13px;
+                  margin-bottom: 8px;
+                  color: var(--emerald-400);
+                "
+              >
+                Why this works
+              </h3>
+              <ul
+                style="
+                  font-size: 12px;
+                  color: var(--text-secondary);
+                  line-height: 1.7;
+                  padding-left: 16px;
+                "
+              >
+                <li>
+                  <strong>Trend over snapshots</strong> — humans process slopes
+                  faster than discrete dots
+                </li>
+                <li>
+                  <strong>"Don't break the climb"</strong> — a rising line
+                  creates emotional investment in continuing
+                </li>
+                <li>
+                  <strong>14-day window</strong> — long enough to see trends,
+                  short enough to feel actionable
+                </li>
+                <li>
+                  <strong>Dips normalize</strong> — seeing recovery after a bad
+                  day reduces catastrophizing
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ━━━ VARIATION 5: Streak Flame Chain ━━━ -->
+      <div class="variation-card">
+        <div style="display: flex; align-items: center; margin-bottom: 6px">
+          <span class="variation-number">5</span>
+          <h2 style="font-size: 20px; letter-spacing: -0.3px">
+            Streak Flame Chain
+          </h2>
+        </div>
+        <div style="display: flex; gap: 8px; margin-bottom: 16px">
+          <span class="tag tag-gamification">Gamification</span>
+          <span class="tag tag-motivation">Motivation</span>
+        </div>
+        <p
+          style="
+            color: var(--text-secondary);
+            font-size: 13px;
+            margin-bottom: 20px;
+          "
+        >
+          Streak days show escalating flame icons that grow taller with streak
+          length. Day 1 = small ember, Day 7 = roaring flame. The chain
+          connecting them glows warmer. Breaking a streak shows an extinguished
+          ash mark.
+        </p>
+
+        <div
+          style="
+            display: flex;
+            gap: 24px;
+            align-items: flex-start;
+            flex-wrap: wrap;
+          "
+        >
+          <div class="phone-frame" style="padding: 20px">
+            <div
+              style="
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 16px;
+              "
+            >
+              <div>
+                <span
+                  style="
+                    font-size: 22px;
+                    font-weight: 800;
+                    color: var(--gold-300);
+                  "
+                  >🔥 7</span
+                >
+                <span
+                  style="
+                    font-size: 13px;
+                    color: var(--text-tertiary);
+                    margin-left: 4px;
+                  "
+                  >day streak</span
+                >
+              </div>
+              <span
+                class="mono"
+                style="
+                  font-size: 12px;
+                  color: var(--emerald-400);
+                  font-weight: 600;
+                "
+                >PERSONAL BEST</span
+              >
+            </div>
+            <!-- Flame chain -->
+            <div
+              style="
+                display: flex;
+                gap: 2px;
+                justify-content: space-between;
+                align-items: flex-end;
+                padding: 0 4px;
+              "
+            >
+              <div style="flex: 1; text-align: center">
+                <div style="font-size: 18px; margin-bottom: 2px">🔥</div>
+                <div
+                  style="
+                    height: 3px;
+                    background: linear-gradient(
+                      90deg,
+                      transparent,
+                      var(--gold-400)
+                    );
+                    border-radius: 2px;
+                    margin: 4px -2px;
+                  "
+                ></div>
+                <div
+                  style="
+                    font-size: 10px;
+                    color: var(--text-tertiary);
+                    margin-top: 4px;
+                  "
+                >
+                  Mon
+                </div>
+                <div
+                  style="
+                    font-size: 12px;
+                    font-weight: 600;
+                    color: var(--text-primary);
+                  "
+                >
+                  24
+                </div>
+              </div>
+              <div style="flex: 1; text-align: center">
+                <div style="font-size: 20px; margin-bottom: 2px">🔥</div>
+                <div
+                  style="
+                    height: 3px;
+                    background: var(--gold-400);
+                    border-radius: 2px;
+                    margin: 4px -2px;
+                  "
+                ></div>
+                <div
+                  style="
+                    font-size: 10px;
+                    color: var(--text-tertiary);
+                    margin-top: 4px;
+                  "
+                >
+                  Tue
+                </div>
+                <div
+                  style="
+                    font-size: 12px;
+                    font-weight: 600;
+                    color: var(--text-primary);
+                  "
+                >
+                  25
+                </div>
+              </div>
+              <div style="flex: 1; text-align: center">
+                <div style="font-size: 22px; margin-bottom: 2px">🔥</div>
+                <div
+                  style="
+                    height: 3px;
+                    background: var(--gold-300);
+                    border-radius: 2px;
+                    margin: 4px -2px;
+                    box-shadow: 0 0 6px var(--gold-400);
+                  "
+                ></div>
+                <div
+                  style="
+                    font-size: 10px;
+                    color: var(--text-tertiary);
+                    margin-top: 4px;
+                  "
+                >
+                  Wed
+                </div>
+                <div
+                  style="
+                    font-size: 12px;
+                    font-weight: 600;
+                    color: var(--text-primary);
+                  "
+                >
+                  26
+                </div>
+              </div>
+              <div style="flex: 1; text-align: center">
+                <div
+                  style="font-size: 24px; margin-bottom: 2px"
+                  class="flame-animate"
+                >
+                  🔥
+                </div>
+                <div
+                  style="
+                    height: 3px;
+                    background: var(--gold-300);
+                    border-radius: 2px;
+                    margin: 4px -2px;
+                    box-shadow: 0 0 8px var(--gold-400);
+                  "
+                ></div>
+                <div
+                  style="
+                    font-size: 10px;
+                    color: var(--text-tertiary);
+                    margin-top: 4px;
+                  "
+                >
+                  Thu
+                </div>
+                <div
+                  style="
+                    font-size: 12px;
+                    font-weight: 600;
+                    color: var(--text-primary);
+                  "
+                >
+                  27
+                </div>
+              </div>
+              <div style="flex: 1; text-align: center">
+                <div
+                  style="font-size: 26px; margin-bottom: 2px"
+                  class="flame-animate"
+                >
+                  🔥
+                </div>
+                <div
+                  style="
+                    height: 3px;
+                    background: var(--gold-200);
+                    border-radius: 2px;
+                    margin: 4px -2px;
+                    box-shadow: 0 0 10px var(--gold-300);
+                  "
+                ></div>
+                <div
+                  style="
+                    font-size: 10px;
+                    color: var(--text-tertiary);
+                    margin-top: 4px;
+                  "
+                >
+                  Fri
+                </div>
+                <div
+                  style="
+                    font-size: 12px;
+                    font-weight: 600;
+                    color: var(--text-primary);
+                  "
+                >
+                  28
+                </div>
+              </div>
+              <div style="flex: 1; text-align: center">
+                <div
+                  style="font-size: 28px; margin-bottom: 2px"
+                  class="flame-animate"
+                >
+                  🔥
+                </div>
+                <div
+                  style="
+                    height: 3px;
+                    background: var(--gold-200);
+                    border-radius: 2px;
+                    margin: 4px -2px;
+                    box-shadow: 0 0 12px var(--gold-300);
+                  "
+                ></div>
+                <div
+                  style="
+                    font-size: 10px;
+                    color: var(--text-tertiary);
+                    margin-top: 4px;
+                  "
+                >
+                  Sat
+                </div>
+                <div
+                  style="
+                    font-size: 12px;
+                    font-weight: 600;
+                    color: var(--text-primary);
+                  "
+                >
+                  1
+                </div>
+              </div>
+              <div style="flex: 1; text-align: center">
+                <div
+                  style="font-size: 30px; margin-bottom: 2px"
+                  class="flame-animate"
+                >
+                  🔥
+                </div>
+                <div
+                  style="
+                    font-size: 10px;
+                    color: var(--gold-300);
+                    margin-top: 4px;
+                    font-weight: 600;
+                  "
+                >
+                  Sun
+                </div>
+                <div
+                  style="
+                    font-size: 12px;
+                    font-weight: 700;
+                    color: var(--gold-300);
+                  "
+                >
+                  2
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div style="flex: 1; min-width: 240px">
+            <div class="why-box">
+              <h3
+                style="
+                  font-size: 13px;
+                  margin-bottom: 8px;
+                  color: var(--emerald-400);
+                "
+              >
+                Why this works
+              </h3>
+              <ul
+                style="
+                  font-size: 12px;
+                  color: var(--text-secondary);
+                  line-height: 1.7;
+                  padding-left: 16px;
+                "
+              >
+                <li>
+                  <strong>Loss aversion</strong> — growing flame creates "I
+                  can't let this die" feeling
+                </li>
+                <li>
+                  <strong>Visual escalation</strong> — getting bigger each day =
+                  tangible progress growth
+                </li>
+                <li>
+                  <strong>Milestone unlocks</strong> — Day 7, 14, 30 could show
+                  special flame colors
+                </li>
+                <li>
+                  <strong>Duolingo effect</strong> — proven that streak visuals
+                  dramatically increase retention
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ━━━ VARIATION 6: Week Comparison Bar ━━━ -->
+      <div class="variation-card">
+        <div style="display: flex; align-items: center; margin-bottom: 6px">
+          <span class="variation-number">6</span>
+          <h2 style="font-size: 20px; letter-spacing: -0.3px">
+            Week-over-Week Comparison
+          </h2>
+        </div>
+        <div style="display: flex; gap: 8px; margin-bottom: 16px">
+          <span class="tag tag-science">Behavioral Science</span>
+          <span class="tag tag-clarity">Clarity</span>
+        </div>
+        <p
+          style="
+            color: var(--text-secondary);
+            font-size: 13px;
+            margin-bottom: 20px;
+          "
+        >
+          Shows this week's completion alongside last week's as stacked
+          mini-bars per day. Green bar = this week, ghost bar = last week.
+          Instant visual comparison of whether you're improving.
+        </p>
+
+        <div
+          style="
+            display: flex;
+            gap: 24px;
+            align-items: flex-start;
+            flex-wrap: wrap;
+          "
+        >
+          <div class="phone-frame" style="padding: 20px">
+            <div
+              style="
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 4px;
+              "
+            >
+              <span
+                style="
+                  font-size: 15px;
+                  font-weight: 600;
+                  color: var(--emerald-400);
+                "
+                >+18% vs last week</span
+              >
+              <span
+                class="mono"
+                style="font-size: 11px; color: var(--text-tertiary)"
+                >This week: 82%</span
+              >
+            </div>
+            <div style="margin-bottom: 16px">
+              <div
+                style="
+                  height: 4px;
+                  background: var(--border);
+                  border-radius: 2px;
+                  overflow: hidden;
+                "
+              >
+                <div
+                  style="
+                    height: 100%;
+                    width: 82%;
+                    background: var(--emerald-500);
+                    border-radius: 2px;
+                  "
+                ></div>
+              </div>
+            </div>
+            <!-- Comparison bars -->
+            <div
+              style="
+                display: flex;
+                gap: 8px;
+                justify-content: space-between;
+                align-items: flex-end;
+                height: 100px;
+                padding: 0 8px;
+              "
+            >
+              <!-- Each day: two bars -->
+              <div
+                style="
+                  flex: 1;
+                  display: flex;
+                  flex-direction: column;
+                  align-items: center;
+                  gap: 0;
+                "
+              >
+                <div
+                  style="
+                    width: 100%;
+                    display: flex;
+                    gap: 3px;
+                    justify-content: center;
+                    align-items: flex-end;
+                    height: 70px;
+                  "
+                >
+                  <div
+                    style="
+                      width: 10px;
+                      height: 70px;
+                      background: rgba(16, 185, 129, 0.15);
+                      border-radius: 3px;
+                      position: relative;
+                    "
+                  >
+                    <div
+                      style="
+                        position: absolute;
+                        bottom: 0;
+                        width: 100%;
+                        height: 45px;
+                        background: rgba(16, 185, 129, 0.25);
+                        border-radius: 3px;
+                      "
+                    ></div>
+                  </div>
+                  <div
+                    style="
+                      width: 10px;
+                      height: 70px;
+                      background: var(--emerald-500);
+                      border-radius: 3px;
+                      box-shadow: 0 0 6px rgba(16, 185, 129, 0.3);
+                    "
+                  ></div>
+                </div>
+                <div
+                  style="
+                    font-size: 10px;
+                    color: var(--text-tertiary);
+                    margin-top: 6px;
+                    font-weight: 500;
+                  "
+                >
+                  Mon
+                </div>
+              </div>
+              <div
+                style="
+                  flex: 1;
+                  display: flex;
+                  flex-direction: column;
+                  align-items: center;
+                "
+              >
+                <div
+                  style="
+                    width: 100%;
+                    display: flex;
+                    gap: 3px;
+                    justify-content: center;
+                    align-items: flex-end;
+                    height: 70px;
+                  "
+                >
+                  <div
+                    style="
+                      width: 10px;
+                      height: 70px;
+                      background: rgba(16, 185, 129, 0.15);
+                      border-radius: 3px;
+                      position: relative;
+                    "
+                  >
+                    <div
+                      style="
+                        position: absolute;
+                        bottom: 0;
+                        width: 100%;
+                        height: 56px;
+                        background: rgba(16, 185, 129, 0.25);
+                        border-radius: 3px;
+                      "
+                    ></div>
+                  </div>
+                  <div
+                    style="
+                      width: 10px;
+                      height: 70px;
+                      background: var(--emerald-500);
+                      border-radius: 3px;
+                      box-shadow: 0 0 6px rgba(16, 185, 129, 0.3);
+                    "
+                  ></div>
+                </div>
+                <div
+                  style="
+                    font-size: 10px;
+                    color: var(--text-tertiary);
+                    margin-top: 6px;
+                    font-weight: 500;
+                  "
+                >
+                  Tue
+                </div>
+              </div>
+              <div
+                style="
+                  flex: 1;
+                  display: flex;
+                  flex-direction: column;
+                  align-items: center;
+                "
+              >
+                <div
+                  style="
+                    width: 100%;
+                    display: flex;
+                    gap: 3px;
+                    justify-content: center;
+                    align-items: flex-end;
+                    height: 70px;
+                  "
+                >
+                  <div
+                    style="
+                      width: 10px;
+                      height: 70px;
+                      background: rgba(16, 185, 129, 0.15);
+                      border-radius: 3px;
+                      position: relative;
+                    "
+                  >
+                    <div
+                      style="
+                        position: absolute;
+                        bottom: 0;
+                        width: 100%;
+                        height: 35px;
+                        background: rgba(16, 185, 129, 0.25);
+                        border-radius: 3px;
+                      "
+                    ></div>
+                  </div>
+                  <div
+                    style="
+                      width: 10px;
+                      height: 56px;
+                      background: var(--emerald-500);
+                      border-radius: 3px;
+                      border: 2px solid var(--gold-300);
+                    "
+                  ></div>
+                </div>
+                <div
+                  style="
+                    font-size: 10px;
+                    color: var(--gold-300);
+                    margin-top: 6px;
+                    font-weight: 600;
+                  "
+                >
+                  Wed
+                </div>
+              </div>
+              <div
+                style="
+                  flex: 1;
+                  display: flex;
+                  flex-direction: column;
+                  align-items: center;
+                "
+              >
+                <div
+                  style="
+                    width: 100%;
+                    display: flex;
+                    gap: 3px;
+                    justify-content: center;
+                    align-items: flex-end;
+                    height: 70px;
+                  "
+                >
+                  <div
+                    style="
+                      width: 10px;
+                      height: 70px;
+                      background: rgba(16, 185, 129, 0.15);
+                      border-radius: 3px;
+                      position: relative;
+                    "
+                  >
+                    <div
+                      style="
+                        position: absolute;
+                        bottom: 0;
+                        width: 100%;
+                        height: 28px;
+                        background: rgba(16, 185, 129, 0.25);
+                        border-radius: 3px;
+                      "
+                    ></div>
+                  </div>
+                  <div
+                    style="
+                      width: 10px;
+                      height: 28px;
+                      background: rgba(16, 185, 129, 0.3);
+                      border-radius: 3px;
+                      border: 1px solid var(--border);
+                    "
+                  ></div>
+                </div>
+                <div
+                  style="
+                    font-size: 10px;
+                    color: var(--text-tertiary);
+                    margin-top: 6px;
+                    font-weight: 500;
+                  "
+                >
+                  Thu
+                </div>
+              </div>
+              <div
+                style="
+                  flex: 1;
+                  display: flex;
+                  flex-direction: column;
+                  align-items: center;
+                "
+              >
+                <div
+                  style="
+                    width: 100%;
+                    display: flex;
+                    gap: 3px;
+                    justify-content: center;
+                    align-items: flex-end;
+                    height: 70px;
+                  "
+                >
+                  <div
+                    style="
+                      width: 10px;
+                      height: 70px;
+                      background: rgba(16, 185, 129, 0.15);
+                      border-radius: 3px;
+                      position: relative;
+                    "
+                  >
+                    <div
+                      style="
+                        position: absolute;
+                        bottom: 0;
+                        width: 100%;
+                        height: 14px;
+                        background: rgba(16, 185, 129, 0.25);
+                        border-radius: 3px;
+                      "
+                    ></div>
+                  </div>
+                </div>
+                <div
+                  style="
+                    font-size: 10px;
+                    color: var(--text-tertiary);
+                    margin-top: 6px;
+                    font-weight: 500;
+                  "
+                >
+                  Fri
+                </div>
+              </div>
+              <div
+                style="
+                  flex: 1;
+                  display: flex;
+                  flex-direction: column;
+                  align-items: center;
+                  opacity: 0.35;
+                "
+              >
+                <div style="height: 70px"></div>
+                <div
+                  style="
+                    font-size: 10px;
+                    color: var(--text-tertiary);
+                    margin-top: 6px;
+                  "
+                >
+                  Sat
+                </div>
+              </div>
+              <div
+                style="
+                  flex: 1;
+                  display: flex;
+                  flex-direction: column;
+                  align-items: center;
+                  opacity: 0.35;
+                "
+              >
+                <div style="height: 70px"></div>
+                <div
+                  style="
+                    font-size: 10px;
+                    color: var(--text-tertiary);
+                    margin-top: 6px;
+                  "
+                >
+                  Sun
+                </div>
+              </div>
+            </div>
+            <!-- Legend -->
+            <div
+              style="
+                display: flex;
+                gap: 16px;
+                margin-top: 12px;
+                justify-content: center;
+              "
+            >
+              <div style="display: flex; align-items: center; gap: 4px">
+                <div
+                  style="
+                    width: 8px;
+                    height: 8px;
+                    border-radius: 2px;
+                    background: var(--emerald-500);
+                  "
+                ></div>
+                <span style="font-size: 10px; color: var(--text-tertiary)"
+                  >This week</span
+                >
+              </div>
+              <div style="display: flex; align-items: center; gap: 4px">
+                <div
+                  style="
+                    width: 8px;
+                    height: 8px;
+                    border-radius: 2px;
+                    background: rgba(16, 185, 129, 0.25);
+                  "
+                ></div>
+                <span style="font-size: 10px; color: var(--text-tertiary)"
+                  >Last week</span
+                >
+              </div>
+            </div>
+          </div>
+
+          <div style="flex: 1; min-width: 240px">
+            <div class="why-box">
+              <h3
+                style="
+                  font-size: 13px;
+                  margin-bottom: 8px;
+                  color: var(--emerald-400);
+                "
+              >
+                Why this works
+              </h3>
+              <ul
+                style="
+                  font-size: 12px;
+                  color: var(--text-secondary);
+                  line-height: 1.7;
+                  padding-left: 16px;
+                "
+              >
+                <li>
+                  <strong>Self-competition</strong> — comparing against
+                  yourself, not others, is healthier motivation
+                </li>
+                <li>
+                  <strong>Improvement visibility</strong> — "+18%" creates a
+                  dopamine hit from measurable progress
+                </li>
+                <li>
+                  <strong>Day-level insight</strong> — "I always drop off on
+                  Thursdays" becomes obvious
+                </li>
+                <li>
+                  <strong>Prevents complacency</strong> — even on good weeks,
+                  shows where last week was better
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ━━━ VARIATION 7: Scrollable 14-Day Timeline ━━━ -->
+      <div class="variation-card">
+        <div style="display: flex; align-items: center; margin-bottom: 6px">
+          <span class="variation-number">7</span>
+          <h2 style="font-size: 20px; letter-spacing: -0.3px">
+            Scrollable 14-Day Timeline
+          </h2>
+        </div>
+        <div style="display: flex; gap: 8px; margin-bottom: 16px">
+          <span class="tag tag-clarity">Clarity</span>
+          <span class="tag tag-science">Behavioral Science</span>
+        </div>
+        <p
+          style="
+            color: var(--text-secondary);
+            font-size: 13px;
+            margin-bottom: 20px;
+          "
+        >
+          Instead of a locked 7-day view with swipe navigation, show a
+          continuous scrollable timeline spanning 14+ days. Today is pinned near
+          the right edge. Scroll left to see history. Natural, fluid navigation.
+        </p>
+
+        <div
+          style="
+            display: flex;
+            gap: 24px;
+            align-items: flex-start;
+            flex-wrap: wrap;
+          "
+        >
+          <div class="phone-frame" style="padding: 20px 0 20px 0">
+            <div
+              style="
+                padding: 0 20px;
+                display: flex;
+                justify-content: space-between;
+                align-items: baseline;
+                margin-bottom: 12px;
+              "
+            >
+              <span
+                style="
+                  font-size: 15px;
+                  font-weight: 600;
+                  color: var(--text-primary);
+                "
+                >Timeline</span
+              >
+              <span style="font-size: 12px; color: var(--text-tertiary)"
+                >← scroll to see more</span
+              >
+            </div>
+            <!-- Scrollable strip -->
+            <div class="scroll-x" style="padding: 0 12px">
+              <div
+                style="
+                  display: flex;
+                  gap: 8px;
+                  width: max-content;
+                  padding-right: 20px;
+                "
+              >
+                <!-- 14 days worth -->
+                <div style="width: 38px; text-align: center; opacity: 0.5">
+                  <div
+                    style="
+                      font-size: 9px;
+                      color: var(--text-tertiary);
+                      margin-bottom: 3px;
+                    "
+                  >
+                    Feb
+                  </div>
+                  <div
+                    style="
+                      width: 36px;
+                      height: 36px;
+                      border-radius: 10px;
+                      background: rgba(16, 185, 129, 0.08);
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+                      border: 1px solid var(--border);
+                    "
+                  >
+                    <span style="font-size: 12px; color: var(--text-tertiary)"
+                      >19</span
+                    >
+                  </div>
+                </div>
+                <div style="width: 38px; text-align: center; opacity: 0.55">
+                  <div
+                    style="
+                      font-size: 9px;
+                      color: var(--text-tertiary);
+                      margin-bottom: 3px;
+                    "
+                  ></div>
+                  <div
+                    style="
+                      width: 36px;
+                      height: 36px;
+                      border-radius: 10px;
+                      background: rgba(16, 185, 129, 0.2);
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+                    "
+                  >
+                    <span style="font-size: 12px; color: var(--emerald-300)"
+                      >20</span
+                    >
+                  </div>
+                </div>
+                <div style="width: 38px; text-align: center; opacity: 0.6">
+                  <div
+                    style="
+                      font-size: 9px;
+                      color: var(--text-tertiary);
+                      margin-bottom: 3px;
+                    "
+                  ></div>
+                  <div
+                    style="
+                      width: 36px;
+                      height: 36px;
+                      border-radius: 10px;
+                      background: var(--emerald-700);
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+                    "
+                  >
+                    <span
+                      style="font-size: 12px; color: white; font-weight: 600"
+                      >21</span
+                    >
+                  </div>
+                </div>
+                <div style="width: 38px; text-align: center; opacity: 0.65">
+                  <div
+                    style="
+                      font-size: 9px;
+                      color: var(--text-tertiary);
+                      margin-bottom: 3px;
+                    "
+                  ></div>
+                  <div
+                    style="
+                      width: 36px;
+                      height: 36px;
+                      border-radius: 10px;
+                      background: var(--emerald-600);
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+                      box-shadow: 0 0 8px rgba(5, 150, 105, 0.3);
+                    "
+                  >
+                    <span
+                      style="font-size: 12px; color: white; font-weight: 700"
+                      >22</span
+                    >
+                  </div>
+                </div>
+                <div style="width: 38px; text-align: center; opacity: 0.7">
+                  <div
+                    style="
+                      font-size: 9px;
+                      color: var(--text-tertiary);
+                      margin-bottom: 3px;
+                    "
+                  ></div>
+                  <div
+                    style="
+                      width: 36px;
+                      height: 36px;
+                      border-radius: 10px;
+                      background: var(--emerald-600);
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+                      box-shadow: 0 0 8px rgba(5, 150, 105, 0.3);
+                    "
+                  >
+                    <span
+                      style="font-size: 12px; color: white; font-weight: 700"
+                      >23</span
+                    >
+                  </div>
+                </div>
+                <!-- Divider -->
+                <div
+                  style="
+                    width: 1px;
+                    background: var(--border);
+                    margin: 4px 4px;
+                    opacity: 0.5;
+                  "
+                ></div>
+                <div style="width: 38px; text-align: center; opacity: 0.75">
+                  <div
+                    style="
+                      font-size: 9px;
+                      color: var(--text-tertiary);
+                      margin-bottom: 3px;
+                    "
+                  >
+                    Mar
+                  </div>
+                  <div
+                    style="
+                      width: 36px;
+                      height: 36px;
+                      border-radius: 10px;
+                      background: rgba(16, 185, 129, 0.12);
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+                      border: 1px solid var(--border);
+                    "
+                  >
+                    <span style="font-size: 12px; color: var(--text-tertiary)"
+                      >24</span
+                    >
+                  </div>
+                </div>
+                <div style="width: 38px; text-align: center; opacity: 0.8">
+                  <div
+                    style="
+                      font-size: 9px;
+                      color: var(--text-tertiary);
+                      margin-bottom: 3px;
+                    "
+                  ></div>
+                  <div
+                    style="
+                      width: 36px;
+                      height: 36px;
+                      border-radius: 10px;
+                      background: var(--emerald-600);
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+                      box-shadow: 0 0 8px rgba(5, 150, 105, 0.3);
+                    "
+                  >
+                    <span
+                      style="font-size: 12px; color: white; font-weight: 700"
+                      >25</span
+                    >
+                  </div>
+                </div>
+                <div style="width: 38px; text-align: center; opacity: 0.85">
+                  <div
+                    style="
+                      font-size: 9px;
+                      color: var(--text-tertiary);
+                      margin-bottom: 3px;
+                    "
+                  ></div>
+                  <div
+                    style="
+                      width: 36px;
+                      height: 36px;
+                      border-radius: 10px;
+                      background: var(--emerald-600);
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+                      box-shadow: 0 0 10px rgba(5, 150, 105, 0.35);
+                    "
+                  >
+                    <span
+                      style="font-size: 12px; color: white; font-weight: 700"
+                      >26</span
+                    >
+                  </div>
+                </div>
+                <div style="width: 38px; text-align: center; opacity: 0.9">
+                  <div
+                    style="
+                      font-size: 9px;
+                      color: var(--text-tertiary);
+                      margin-bottom: 3px;
+                    "
+                  ></div>
+                  <div
+                    style="
+                      width: 36px;
+                      height: 36px;
+                      border-radius: 10px;
+                      background: var(--emerald-600);
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+                      box-shadow: 0 0 10px rgba(5, 150, 105, 0.4);
+                    "
+                  >
+                    <span
+                      style="font-size: 12px; color: white; font-weight: 700"
+                      >27</span
+                    >
+                  </div>
+                </div>
+                <div style="width: 38px; text-align: center">
+                  <div
+                    style="
+                      font-size: 9px;
+                      color: var(--text-tertiary);
+                      margin-bottom: 3px;
+                    "
+                  ></div>
+                  <div
+                    style="
+                      width: 36px;
+                      height: 36px;
+                      border-radius: 10px;
+                      background: var(--emerald-600);
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+                      box-shadow: 0 0 12px rgba(5, 150, 105, 0.4);
+                    "
+                  >
+                    <span
+                      style="font-size: 12px; color: white; font-weight: 700"
+                      >28</span
+                    >
+                  </div>
+                </div>
+                <div style="width: 38px; text-align: center">
+                  <div
+                    style="
+                      font-size: 9px;
+                      color: var(--text-tertiary);
+                      margin-bottom: 3px;
+                    "
+                  ></div>
+                  <div
+                    style="
+                      width: 36px;
+                      height: 36px;
+                      border-radius: 10px;
+                      background: var(--emerald-600);
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+                      border: 2px solid var(--gold-300);
+                      box-shadow: 0 0 8px rgba(232, 185, 77, 0.25);
+                    "
+                  >
+                    <span
+                      style="
+                        font-size: 12px;
+                        font-weight: 800;
+                        color: var(--gold-200);
+                      "
+                      >1</span
+                    >
+                  </div>
+                  <div
+                    style="
+                      font-size: 8px;
+                      color: var(--gold-300);
+                      margin-top: 2px;
+                      font-weight: 700;
+                    "
+                  >
+                    TODAY
+                  </div>
+                </div>
+                <div style="width: 38px; text-align: center; opacity: 0.35">
+                  <div
+                    style="
+                      font-size: 9px;
+                      color: var(--text-tertiary);
+                      margin-bottom: 3px;
+                    "
+                  ></div>
+                  <div
+                    style="
+                      width: 36px;
+                      height: 36px;
+                      border-radius: 10px;
+                      border: 1px dashed var(--border);
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+                    "
+                  >
+                    <span style="font-size: 12px; color: var(--text-tertiary)"
+                      >2</span
+                    >
+                  </div>
+                </div>
+                <div style="width: 38px; text-align: center; opacity: 0.25">
+                  <div
+                    style="
+                      font-size: 9px;
+                      color: var(--text-tertiary);
+                      margin-bottom: 3px;
+                    "
+                  ></div>
+                  <div
+                    style="
+                      width: 36px;
+                      height: 36px;
+                      border-radius: 10px;
+                      border: 1px dashed var(--border);
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+                    "
+                  >
+                    <span style="font-size: 12px; color: var(--text-tertiary)"
+                      >3</span
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div style="flex: 1; min-width: 240px">
+            <div class="why-box">
+              <h3
+                style="
+                  font-size: 13px;
+                  margin-bottom: 8px;
+                  color: var(--emerald-400);
+                "
+              >
+                Why this works
+              </h3>
+              <ul
+                style="
+                  font-size: 12px;
+                  color: var(--text-secondary);
+                  line-height: 1.7;
+                  padding-left: 16px;
+                "
+              >
+                <li>
+                  <strong>Context without navigation</strong> — no need to
+                  "swipe to last week", just scroll
+                </li>
+                <li>
+                  <strong>Continuity</strong> — seeing 14 days reinforces that
+                  habits are ongoing, not weekly resets
+                </li>
+                <li>
+                  <strong>Recency gradient</strong> — older days naturally fade,
+                  keeping focus on recent performance
+                </li>
+                <li>
+                  <strong>Reduces mode-switching</strong> — one interaction
+                  model (scroll) vs swipe + tap + navigate
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ━━━ VARIATION 8: Time-of-Day Rhythm ━━━ -->
+      <div class="variation-card">
+        <div style="display: flex; align-items: center; margin-bottom: 6px">
+          <span class="variation-number">8</span>
+          <h2 style="font-size: 20px; letter-spacing: -0.3px">
+            Time-of-Day Rhythm Map
+          </h2>
+        </div>
+        <div style="display: flex; gap: 8px; margin-bottom: 16px">
+          <span class="tag tag-science">Behavioral Science</span>
+          <span class="tag tag-density">Info Density</span>
+        </div>
+        <p
+          style="
+            color: var(--text-secondary);
+            font-size: 13px;
+            margin-bottom: 20px;
+          "
+        >
+          Each day cell shows when habits were completed using a sunrise→sunset
+          color band. Morning completions glow warm (amber), afternoon = green,
+          evening = blue. Reveals your natural rhythm.
+        </p>
+
+        <div
+          style="
+            display: flex;
+            gap: 24px;
+            align-items: flex-start;
+            flex-wrap: wrap;
+          "
+        >
+          <div class="phone-frame" style="padding: 20px">
+            <div
+              style="
+                display: flex;
+                justify-content: space-between;
+                align-items: baseline;
+                margin-bottom: 4px;
+              "
+            >
+              <span
+                style="
+                  font-size: 15px;
+                  font-weight: 600;
+                  color: var(--text-primary);
+                "
+                >Your rhythm</span
+              >
+              <span
+                style="
+                  font-size: 11px;
+                  color: var(--gold-300);
+                  font-weight: 600;
+                "
+                >Morning person 🌅</span
+              >
+            </div>
+            <div style="margin-bottom: 16px">
+              <span style="font-size: 12px; color: var(--text-tertiary)"
+                >Most habits done before 9am</span
+              >
+            </div>
+            <!-- Time rhythm cells -->
+            <div
+              style="display: flex; gap: 6px; justify-content: space-between"
+            >
+              <div style="flex: 1; text-align: center">
+                <div
+                  style="
+                    font-size: 10px;
+                    color: var(--text-tertiary);
+                    margin-bottom: 4px;
+                  "
+                >
+                  Mon
+                </div>
+                <div
+                  style="
+                    width: 40px;
+                    height: 48px;
+                    border-radius: 10px;
+                    margin: 0 auto;
+                    overflow: hidden;
+                    display: flex;
+                    flex-direction: column;
+                  "
+                >
+                  <div
+                    style="flex: 3; background: var(--gold-400)"
+                    title="Morning: 3 habits"
+                  ></div>
+                  <div
+                    style="flex: 1; background: var(--emerald-500)"
+                    title="Afternoon: 1 habit"
+                  ></div>
+                  <div
+                    style="flex: 1; background: var(--blue-500)"
+                    title="Evening: 1 habit"
+                  ></div>
+                </div>
+                <div
+                  style="
+                    font-size: 11px;
+                    font-weight: 600;
+                    color: var(--text-primary);
+                    margin-top: 4px;
+                  "
+                >
+                  24
+                </div>
+              </div>
+              <div style="flex: 1; text-align: center">
+                <div
+                  style="
+                    font-size: 10px;
+                    color: var(--text-tertiary);
+                    margin-bottom: 4px;
+                  "
+                >
+                  Tue
+                </div>
+                <div
+                  style="
+                    width: 40px;
+                    height: 48px;
+                    border-radius: 10px;
+                    margin: 0 auto;
+                    overflow: hidden;
+                    display: flex;
+                    flex-direction: column;
+                  "
+                >
+                  <div style="flex: 4; background: var(--gold-400)"></div>
+                  <div style="flex: 0; background: var(--emerald-500)"></div>
+                  <div style="flex: 1; background: var(--blue-500)"></div>
+                </div>
+                <div
+                  style="
+                    font-size: 11px;
+                    font-weight: 600;
+                    color: var(--text-primary);
+                    margin-top: 4px;
+                  "
+                >
+                  25
+                </div>
+              </div>
+              <div style="flex: 1; text-align: center">
+                <div
+                  style="
+                    font-size: 10px;
+                    color: var(--gold-300);
+                    margin-bottom: 4px;
+                    font-weight: 600;
+                  "
+                >
+                  Wed
+                </div>
+                <div
+                  style="
+                    width: 40px;
+                    height: 48px;
+                    border-radius: 10px;
+                    margin: 0 auto;
+                    overflow: hidden;
+                    display: flex;
+                    flex-direction: column;
+                    border: 2px solid var(--gold-300);
+                  "
+                >
+                  <div style="flex: 2; background: var(--gold-400)"></div>
+                  <div style="flex: 2; background: var(--emerald-500)"></div>
+                  <div style="flex: 0"></div>
+                </div>
+                <div
+                  style="
+                    font-size: 11px;
+                    font-weight: 700;
+                    color: var(--gold-300);
+                    margin-top: 4px;
+                  "
+                >
+                  26
+                </div>
+              </div>
+              <div style="flex: 1; text-align: center">
+                <div
+                  style="
+                    font-size: 10px;
+                    color: var(--text-tertiary);
+                    margin-bottom: 4px;
+                  "
+                >
+                  Thu
+                </div>
+                <div
+                  style="
+                    width: 40px;
+                    height: 48px;
+                    border-radius: 10px;
+                    margin: 0 auto;
+                    overflow: hidden;
+                    display: flex;
+                    flex-direction: column;
+                  "
+                >
+                  <div style="flex: 1; background: var(--gold-400)"></div>
+                  <div style="flex: 0"></div>
+                  <div style="flex: 1; background: var(--blue-500)"></div>
+                </div>
+                <div
+                  style="
+                    font-size: 11px;
+                    font-weight: 600;
+                    color: var(--text-secondary);
+                    margin-top: 4px;
+                  "
+                >
+                  27
+                </div>
+              </div>
+              <div style="flex: 1; text-align: center">
+                <div
+                  style="
+                    font-size: 10px;
+                    color: var(--text-tertiary);
+                    margin-bottom: 4px;
+                  "
+                >
+                  Fri
+                </div>
+                <div
+                  style="
+                    width: 40px;
+                    height: 48px;
+                    border-radius: 10px;
+                    margin: 0 auto;
+                    border: 1px solid var(--border);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                  "
+                >
+                  <span style="font-size: 9px; color: var(--text-tertiary)"
+                    >—</span
+                  >
+                </div>
+                <div
+                  style="
+                    font-size: 11px;
+                    font-weight: 500;
+                    color: var(--text-tertiary);
+                    margin-top: 4px;
+                  "
+                >
+                  28
+                </div>
+              </div>
+              <div style="flex: 1; text-align: center; opacity: 0.35">
+                <div
+                  style="
+                    font-size: 10px;
+                    color: var(--text-tertiary);
+                    margin-bottom: 4px;
+                  "
+                >
+                  Sat
+                </div>
+                <div
+                  style="
+                    width: 40px;
+                    height: 48px;
+                    border-radius: 10px;
+                    margin: 0 auto;
+                    border: 1px dashed var(--border);
+                  "
+                ></div>
+                <div
+                  style="
+                    font-size: 11px;
+                    color: var(--text-tertiary);
+                    margin-top: 4px;
+                  "
+                >
+                  1
+                </div>
+              </div>
+              <div style="flex: 1; text-align: center; opacity: 0.35">
+                <div
+                  style="
+                    font-size: 10px;
+                    color: var(--text-tertiary);
+                    margin-bottom: 4px;
+                  "
+                >
+                  Sun
+                </div>
+                <div
+                  style="
+                    width: 40px;
+                    height: 48px;
+                    border-radius: 10px;
+                    margin: 0 auto;
+                    border: 1px dashed var(--border);
+                  "
+                ></div>
+                <div
+                  style="
+                    font-size: 11px;
+                    color: var(--text-tertiary);
+                    margin-top: 4px;
+                  "
+                >
+                  2
+                </div>
+              </div>
+            </div>
+            <!-- Legend -->
+            <div
+              style="
+                display: flex;
+                gap: 12px;
+                margin-top: 12px;
+                justify-content: center;
+              "
+            >
+              <div style="display: flex; align-items: center; gap: 4px">
+                <div
+                  style="
+                    width: 8px;
+                    height: 8px;
+                    border-radius: 2px;
+                    background: var(--gold-400);
+                  "
+                ></div>
+                <span style="font-size: 9px; color: var(--text-tertiary)"
+                  >AM</span
+                >
+              </div>
+              <div style="display: flex; align-items: center; gap: 4px">
+                <div
+                  style="
+                    width: 8px;
+                    height: 8px;
+                    border-radius: 2px;
+                    background: var(--emerald-500);
+                  "
+                ></div>
+                <span style="font-size: 9px; color: var(--text-tertiary)"
+                  >Afternoon</span
+                >
+              </div>
+              <div style="display: flex; align-items: center; gap: 4px">
+                <div
+                  style="
+                    width: 8px;
+                    height: 8px;
+                    border-radius: 2px;
+                    background: var(--blue-500);
+                  "
+                ></div>
+                <span style="font-size: 9px; color: var(--text-tertiary)"
+                  >Evening</span
+                >
+              </div>
+            </div>
+          </div>
+
+          <div style="flex: 1; min-width: 240px">
+            <div class="why-box">
+              <h3
+                style="
+                  font-size: 13px;
+                  margin-bottom: 8px;
+                  color: var(--emerald-400);
+                "
+              >
+                Why this works
+              </h3>
+              <ul
+                style="
+                  font-size: 12px;
+                  color: var(--text-secondary);
+                  line-height: 1.7;
+                  padding-left: 16px;
+                "
+              >
+                <li>
+                  <strong>Circadian awareness</strong> — reveals natural habit
+                  completion patterns users don't consciously notice
+                </li>
+                <li>
+                  <strong>Scheduling insight</strong> — "I'm a morning person"
+                  becomes data-backed, actionable
+                </li>
+                <li>
+                  <strong>Stacking optimization</strong> — shows which time
+                  blocks are most productive for habits
+                </li>
+                <li>
+                  <strong>"Morning person" label</strong> — identity
+                  reinforcement drives behavior (James Clear's identity-based
+                  habits)
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ━━━ VARIATION 9: Minimal Score Card ━━━ -->
+      <div class="variation-card">
+        <div style="display: flex; align-items: center; margin-bottom: 6px">
+          <span class="variation-number">9</span>
+          <h2 style="font-size: 20px; letter-spacing: -0.3px">
+            Minimal Score Card
+          </h2>
+        </div>
+        <div style="display: flex; gap: 8px; margin-bottom: 16px">
+          <span class="tag tag-clarity">Clarity</span>
+          <span class="tag tag-motivation">Motivation</span>
+        </div>
+        <p
+          style="
+            color: var(--text-secondary);
+            font-size: 13px;
+            margin-bottom: 20px;
+          "
+        >
+          Strips the calendar to essentials: one big weekly score number + a
+          single-row day indicator. Less visual noise, more focus on the metric
+          that matters. Designed for users who find dense calendars
+          overwhelming.
+        </p>
+
+        <div
+          style="
+            display: flex;
+            gap: 24px;
+            align-items: flex-start;
+            flex-wrap: wrap;
+          "
+        >
+          <div class="phone-frame" style="padding: 24px">
+            <!-- Big score -->
+            <div style="text-align: center; margin-bottom: 20px">
+              <div
+                style="
+                  font-size: 48px;
+                  font-weight: 900;
+                  color: var(--emerald-400);
+                  letter-spacing: -2px;
+                  line-height: 1;
+                "
+                class="mono"
+              >
+                86<span
+                  style="
+                    font-size: 24px;
+                    color: var(--text-tertiary);
+                    font-weight: 500;
+                  "
+                  >%</span
+                >
+              </div>
+              <div
+                style="
+                  font-size: 12px;
+                  color: var(--text-tertiary);
+                  margin-top: 4px;
+                "
+              >
+                Weekly completion
+              </div>
+              <div
+                style="
+                  font-size: 11px;
+                  color: var(--emerald-400);
+                  margin-top: 2px;
+                  font-weight: 600;
+                "
+              >
+                ↑ 12% from last week
+              </div>
+            </div>
+            <!-- Minimal day dots -->
+            <div style="display: flex; justify-content: center; gap: 10px">
+              <div style="text-align: center">
+                <div
+                  style="
+                    width: 28px;
+                    height: 28px;
+                    border-radius: 8px;
+                    background: var(--emerald-600);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                  "
+                >
+                  <svg width="14" height="14" viewBox="0 0 14 14">
+                    <path
+                      d="M3 7 L6 10 L11 4"
+                      stroke="white"
+                      stroke-width="2"
+                      fill="none"
+                      stroke-linecap="round"
+                    />
+                  </svg>
+                </div>
+                <div
+                  style="
+                    font-size: 9px;
+                    color: var(--text-tertiary);
+                    margin-top: 3px;
+                  "
+                >
+                  M
+                </div>
+              </div>
+              <div style="text-align: center">
+                <div
+                  style="
+                    width: 28px;
+                    height: 28px;
+                    border-radius: 8px;
+                    background: var(--emerald-600);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                  "
+                >
+                  <svg width="14" height="14" viewBox="0 0 14 14">
+                    <path
+                      d="M3 7 L6 10 L11 4"
+                      stroke="white"
+                      stroke-width="2"
+                      fill="none"
+                      stroke-linecap="round"
+                    />
+                  </svg>
+                </div>
+                <div
+                  style="
+                    font-size: 9px;
+                    color: var(--text-tertiary);
+                    margin-top: 3px;
+                  "
+                >
+                  T
+                </div>
+              </div>
+              <div style="text-align: center">
+                <div
+                  style="
+                    width: 28px;
+                    height: 28px;
+                    border-radius: 8px;
+                    background: var(--emerald-600);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                  "
+                >
+                  <svg width="14" height="14" viewBox="0 0 14 14">
+                    <path
+                      d="M3 7 L6 10 L11 4"
+                      stroke="white"
+                      stroke-width="2"
+                      fill="none"
+                      stroke-linecap="round"
+                    />
+                  </svg>
+                </div>
+                <div
+                  style="
+                    font-size: 9px;
+                    color: var(--text-tertiary);
+                    margin-top: 3px;
+                  "
+                >
+                  W
+                </div>
+              </div>
+              <div style="text-align: center">
+                <div
+                  style="
+                    width: 28px;
+                    height: 28px;
+                    border-radius: 8px;
+                    border: 2px solid var(--gold-300);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                  "
+                >
+                  <span
+                    class="mono"
+                    style="
+                      font-size: 10px;
+                      color: var(--gold-300);
+                      font-weight: 700;
+                    "
+                    >4/5</span
+                  >
+                </div>
+                <div
+                  style="
+                    font-size: 9px;
+                    color: var(--gold-300);
+                    margin-top: 3px;
+                    font-weight: 600;
+                  "
+                >
+                  T
+                </div>
+              </div>
+              <div style="text-align: center">
+                <div
+                  style="
+                    width: 28px;
+                    height: 28px;
+                    border-radius: 8px;
+                    border: 1px solid var(--border);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                  "
+                >
+                  <span style="font-size: 10px; color: var(--text-tertiary)"
+                    >—</span
+                  >
+                </div>
+                <div
+                  style="
+                    font-size: 9px;
+                    color: var(--text-tertiary);
+                    margin-top: 3px;
+                  "
+                >
+                  F
+                </div>
+              </div>
+              <div style="text-align: center; opacity: 0.35">
+                <div
+                  style="
+                    width: 28px;
+                    height: 28px;
+                    border-radius: 8px;
+                    border: 1px dashed var(--border);
+                  "
+                ></div>
+                <div
+                  style="
+                    font-size: 9px;
+                    color: var(--text-tertiary);
+                    margin-top: 3px;
+                  "
+                >
+                  S
+                </div>
+              </div>
+              <div style="text-align: center; opacity: 0.35">
+                <div
+                  style="
+                    width: 28px;
+                    height: 28px;
+                    border-radius: 8px;
+                    border: 1px dashed var(--border);
+                  "
+                ></div>
+                <div
+                  style="
+                    font-size: 9px;
+                    color: var(--text-tertiary);
+                    margin-top: 3px;
+                  "
+                >
+                  S
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div style="flex: 1; min-width: 240px">
+            <div class="why-box">
+              <h3
+                style="
+                  font-size: 13px;
+                  margin-bottom: 8px;
+                  color: var(--emerald-400);
+                "
+              >
+                Why this works
+              </h3>
+              <ul
+                style="
+                  font-size: 12px;
+                  color: var(--text-secondary);
+                  line-height: 1.7;
+                  padding-left: 16px;
+                "
+              >
+                <li>
+                  <strong>Reduces decision fatigue</strong> — one number to
+                  process vs. 7 cells with multiple states
+                </li>
+                <li>
+                  <strong>Scoreboard psychology</strong> — people instinctively
+                  want to raise their "score"
+                </li>
+                <li>
+                  <strong>Week-over-week delta</strong> — "+12%" is instantly
+                  motivating, no calculation needed
+                </li>
+                <li>
+                  <strong>Accessibility-first</strong> — works great for users
+                  who find visual complexity overwhelming
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ━━━ VARIATION 10: Layered Depth Timeline ━━━ -->
+      <div class="variation-card">
+        <div style="display: flex; align-items: center; margin-bottom: 6px">
+          <span class="variation-number">10</span>
+          <h2 style="font-size: 20px; letter-spacing: -0.3px">
+            Layered Depth — Multi-Level Calendar
+          </h2>
+        </div>
+        <div style="display: flex; gap: 8px; margin-bottom: 16px">
+          <span class="tag tag-density">Info Density</span>
+          <span class="tag tag-clarity">Clarity</span>
+          <span class="tag tag-science">Behavioral Science</span>
+        </div>
+        <p
+          style="
+            color: var(--text-secondary);
+            font-size: 13px;
+            margin-bottom: 20px;
+          "
+        >
+          Three levels that collapse/expand: Level 1 (default) = compact 7-day
+          strip (current design). Level 2 (tap expand) = week summary with bars.
+          Level 3 (expand more) = full month heatmap. Progressive disclosure —
+          shows more detail only when users want it.
+        </p>
+
+        <div
+          style="
+            display: flex;
+            gap: 24px;
+            align-items: flex-start;
+            flex-wrap: wrap;
+          "
+        >
+          <div class="phone-frame" style="padding: 0">
+            <!-- Level 1: Compact strip -->
+            <div
+              style="padding: 16px 20px; border-bottom: 1px solid var(--border)"
+            >
+              <div
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  align-items: center;
+                  margin-bottom: 8px;
+                "
+              >
+                <span
+                  style="
+                    font-size: 11px;
+                    color: var(--text-tertiary);
+                    font-weight: 600;
+                    text-transform: uppercase;
+                    letter-spacing: 0.5px;
+                  "
+                  >Level 1 · Week Strip</span
+                >
+                <span style="font-size: 10px; color: var(--emerald-400)"
+                  >tap to expand ↓</span
+                >
+              </div>
+              <div
+                style="display: flex; gap: 4px; justify-content: space-between"
+              >
+                <div
+                  style="
+                    width: 32px;
+                    height: 32px;
+                    border-radius: 8px;
+                    background: var(--emerald-600);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                  "
+                >
+                  <span style="font-size: 11px; color: white; font-weight: 700"
+                    >M</span
+                  >
+                </div>
+                <div
+                  style="
+                    width: 32px;
+                    height: 32px;
+                    border-radius: 8px;
+                    background: var(--emerald-600);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                  "
+                >
+                  <span style="font-size: 11px; color: white; font-weight: 700"
+                    >T</span
+                  >
+                </div>
+                <div
+                  style="
+                    width: 32px;
+                    height: 32px;
+                    border-radius: 8px;
+                    background: var(--emerald-600);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    border: 2px solid var(--gold-300);
+                  "
+                >
+                  <span
+                    style="
+                      font-size: 11px;
+                      color: var(--gold-200);
+                      font-weight: 700;
+                    "
+                    >W</span
+                  >
+                </div>
+                <div
+                  style="
+                    width: 32px;
+                    height: 32px;
+                    border-radius: 8px;
+                    background: rgba(16, 185, 129, 0.15);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    border: 1px solid var(--border);
+                  "
+                >
+                  <span
+                    style="
+                      font-size: 11px;
+                      color: var(--text-secondary);
+                      font-weight: 600;
+                    "
+                    >T</span
+                  >
+                </div>
+                <div
+                  style="
+                    width: 32px;
+                    height: 32px;
+                    border-radius: 8px;
+                    border: 1px solid var(--border);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                  "
+                >
+                  <span style="font-size: 11px; color: var(--text-tertiary)"
+                    >F</span
+                  >
+                </div>
+                <div
+                  style="
+                    width: 32px;
+                    height: 32px;
+                    border-radius: 8px;
+                    border: 1px dashed var(--border);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    opacity: 0.4;
+                  "
+                >
+                  <span style="font-size: 11px; color: var(--text-tertiary)"
+                    >S</span
+                  >
+                </div>
+                <div
+                  style="
+                    width: 32px;
+                    height: 32px;
+                    border-radius: 8px;
+                    border: 1px dashed var(--border);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    opacity: 0.4;
+                  "
+                >
+                  <span style="font-size: 11px; color: var(--text-tertiary)"
+                    >S</span
+                  >
+                </div>
+              </div>
+            </div>
+            <!-- Level 2: Week summary -->
+            <div
+              style="
+                padding: 16px 20px;
+                border-bottom: 1px solid var(--border);
+                background: rgba(16, 185, 129, 0.03);
+              "
+            >
+              <div
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  align-items: center;
+                  margin-bottom: 8px;
+                "
+              >
+                <span
+                  style="
+                    font-size: 11px;
+                    color: var(--text-tertiary);
+                    font-weight: 600;
+                    text-transform: uppercase;
+                    letter-spacing: 0.5px;
+                  "
+                  >Level 2 · Week Summary</span
+                >
+              </div>
+              <div style="display: flex; gap: 12px; align-items: center">
+                <div
+                  class="mono"
+                  style="
+                    font-size: 28px;
+                    font-weight: 800;
+                    color: var(--emerald-400);
+                  "
+                >
+                  82%
+                </div>
+                <div style="flex: 1">
+                  <div
+                    style="
+                      display: flex;
+                      justify-content: space-between;
+                      font-size: 10px;
+                      color: var(--text-tertiary);
+                      margin-bottom: 4px;
+                    "
+                  >
+                    <span>This week</span>
+                    <span style="color: var(--emerald-400)">+14% vs last</span>
+                  </div>
+                  <div
+                    style="
+                      height: 6px;
+                      background: var(--border);
+                      border-radius: 3px;
+                      overflow: hidden;
+                    "
+                  >
+                    <div
+                      style="
+                        height: 100%;
+                        width: 82%;
+                        background: linear-gradient(
+                          90deg,
+                          var(--emerald-600),
+                          var(--emerald-400)
+                        );
+                        border-radius: 3px;
+                      "
+                    ></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Level 3: Month heatmap -->
+            <div
+              style="padding: 16px 20px; background: rgba(16, 185, 129, 0.02)"
+            >
+              <div
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  align-items: center;
+                  margin-bottom: 8px;
+                "
+              >
+                <span
+                  style="
+                    font-size: 11px;
+                    color: var(--text-tertiary);
+                    font-weight: 600;
+                    text-transform: uppercase;
+                    letter-spacing: 0.5px;
+                  "
+                  >Level 3 · Month Heatmap</span
+                >
+              </div>
+              <div style="display: flex; gap: 3px; flex-wrap: wrap">
+                <!-- 28 mini cells for February -->
+                <div
+                  style="
+                    width: 14px;
+                    height: 14px;
+                    border-radius: 3px;
+                    background: var(--emerald-600);
+                  "
+                ></div>
+                <div
+                  style="
+                    width: 14px;
+                    height: 14px;
+                    border-radius: 3px;
+                    background: var(--emerald-700);
+                  "
+                ></div>
+                <div
+                  style="
+                    width: 14px;
+                    height: 14px;
+                    border-radius: 3px;
+                    background: rgba(16, 185, 129, 0.15);
+                  "
+                ></div>
+                <div
+                  style="
+                    width: 14px;
+                    height: 14px;
+                    border-radius: 3px;
+                    background: var(--emerald-600);
+                  "
+                ></div>
+                <div
+                  style="
+                    width: 14px;
+                    height: 14px;
+                    border-radius: 3px;
+                    background: var(--emerald-500);
+                  "
+                ></div>
+                <div
+                  style="
+                    width: 14px;
+                    height: 14px;
+                    border-radius: 3px;
+                    background: var(--emerald-600);
+                  "
+                ></div>
+                <div
+                  style="
+                    width: 14px;
+                    height: 14px;
+                    border-radius: 3px;
+                    background: var(--emerald-600);
+                  "
+                ></div>
+                <div
+                  style="
+                    width: 14px;
+                    height: 14px;
+                    border-radius: 3px;
+                    background: rgba(16, 185, 129, 0.2);
+                  "
+                ></div>
+                <div
+                  style="
+                    width: 14px;
+                    height: 14px;
+                    border-radius: 3px;
+                    background: var(--emerald-500);
+                  "
+                ></div>
+                <div
+                  style="
+                    width: 14px;
+                    height: 14px;
+                    border-radius: 3px;
+                    background: rgba(16, 185, 129, 0.08);
+                    border: 1px solid var(--border);
+                  "
+                ></div>
+                <div
+                  style="
+                    width: 14px;
+                    height: 14px;
+                    border-radius: 3px;
+                    background: var(--emerald-600);
+                  "
+                ></div>
+                <div
+                  style="
+                    width: 14px;
+                    height: 14px;
+                    border-radius: 3px;
+                    background: var(--emerald-600);
+                  "
+                ></div>
+                <div
+                  style="
+                    width: 14px;
+                    height: 14px;
+                    border-radius: 3px;
+                    background: var(--emerald-700);
+                  "
+                ></div>
+                <div
+                  style="
+                    width: 14px;
+                    height: 14px;
+                    border-radius: 3px;
+                    background: var(--emerald-600);
+                  "
+                ></div>
+                <div
+                  style="
+                    width: 14px;
+                    height: 14px;
+                    border-radius: 3px;
+                    background: rgba(16, 185, 129, 0.3);
+                  "
+                ></div>
+                <div
+                  style="
+                    width: 14px;
+                    height: 14px;
+                    border-radius: 3px;
+                    background: var(--emerald-600);
+                  "
+                ></div>
+                <div
+                  style="
+                    width: 14px;
+                    height: 14px;
+                    border-radius: 3px;
+                    background: var(--emerald-500);
+                  "
+                ></div>
+                <div
+                  style="
+                    width: 14px;
+                    height: 14px;
+                    border-radius: 3px;
+                    background: var(--emerald-600);
+                  "
+                ></div>
+                <div
+                  style="
+                    width: 14px;
+                    height: 14px;
+                    border-radius: 3px;
+                    background: var(--emerald-600);
+                  "
+                ></div>
+                <div
+                  style="
+                    width: 14px;
+                    height: 14px;
+                    border-radius: 3px;
+                    background: rgba(16, 185, 129, 0.15);
+                  "
+                ></div>
+                <div
+                  style="
+                    width: 14px;
+                    height: 14px;
+                    border-radius: 3px;
+                    background: var(--emerald-600);
+                  "
+                ></div>
+                <div
+                  style="
+                    width: 14px;
+                    height: 14px;
+                    border-radius: 3px;
+                    background: var(--emerald-700);
+                  "
+                ></div>
+                <div
+                  style="
+                    width: 14px;
+                    height: 14px;
+                    border-radius: 3px;
+                    background: var(--emerald-600);
+                  "
+                ></div>
+                <div
+                  style="
+                    width: 14px;
+                    height: 14px;
+                    border-radius: 3px;
+                    background: var(--emerald-600);
+                  "
+                ></div>
+                <div
+                  style="
+                    width: 14px;
+                    height: 14px;
+                    border-radius: 3px;
+                    background: var(--emerald-500);
+                  "
+                ></div>
+                <div
+                  style="
+                    width: 14px;
+                    height: 14px;
+                    border-radius: 3px;
+                    background: rgba(16, 185, 129, 0.08);
+                    border: 1px solid var(--border);
+                  "
+                ></div>
+                <div
+                  style="
+                    width: 14px;
+                    height: 14px;
+                    border-radius: 3px;
+                    background: var(--emerald-600);
+                  "
+                ></div>
+                <div
+                  style="
+                    width: 14px;
+                    height: 14px;
+                    border-radius: 3px;
+                    background: var(--emerald-600);
+                    border: 2px solid var(--gold-300);
+                  "
+                ></div>
+              </div>
+              <!-- Legend -->
+              <div
+                style="
+                  display: flex;
+                  gap: 4px;
+                  margin-top: 8px;
+                  align-items: center;
+                "
+              >
+                <span style="font-size: 9px; color: var(--text-tertiary)"
+                  >Less</span
+                >
+                <div
+                  style="
+                    width: 10px;
+                    height: 10px;
+                    border-radius: 2px;
+                    background: rgba(16, 185, 129, 0.08);
+                    border: 1px solid var(--border);
+                  "
+                ></div>
+                <div
+                  style="
+                    width: 10px;
+                    height: 10px;
+                    border-radius: 2px;
+                    background: rgba(16, 185, 129, 0.2);
+                  "
+                ></div>
+                <div
+                  style="
+                    width: 10px;
+                    height: 10px;
+                    border-radius: 2px;
+                    background: var(--emerald-500);
+                  "
+                ></div>
+                <div
+                  style="
+                    width: 10px;
+                    height: 10px;
+                    border-radius: 2px;
+                    background: var(--emerald-600);
+                  "
+                ></div>
+                <div
+                  style="
+                    width: 10px;
+                    height: 10px;
+                    border-radius: 2px;
+                    background: var(--emerald-700);
+                  "
+                ></div>
+                <span style="font-size: 9px; color: var(--text-tertiary)"
+                  >More</span
+                >
+              </div>
+            </div>
+          </div>
+
+          <div style="flex: 1; min-width: 240px">
+            <div class="why-box">
+              <h3
+                style="
+                  font-size: 13px;
+                  margin-bottom: 8px;
+                  color: var(--emerald-400);
+                "
+              >
+                Why this works
+              </h3>
+              <ul
+                style="
+                  font-size: 12px;
+                  color: var(--text-secondary);
+                  line-height: 1.7;
+                  padding-left: 16px;
+                "
+              >
+                <li>
+                  <strong>Progressive disclosure</strong> — beginners see simple
+                  strip, power users drill into heatmap
+                </li>
+                <li>
+                  <strong>Serves all user types</strong> — glancers get Level 1,
+                  analysts get Level 3
+                </li>
+                <li>
+                  <strong>No context-switching</strong> — all views in one
+                  place, no separate "analytics" tab
+                </li>
+                <li>
+                  <strong>Adapts to mastery</strong> — as users grow, they
+                  naturally want deeper data — it's already there
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div
+      style="
+        max-width: 900px;
+        margin: 40px auto;
+        padding: 24px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+      "
+    >
+      <h3
+        style="font-size: 16px; margin-bottom: 12px; color: var(--text-primary)"
+      >
+        Recommendation Matrix
+      </h3>
+      <table style="width: 100%; font-size: 12px; border-collapse: collapse">
+        <tr style="border-bottom: 1px solid var(--border)">
+          <th
+            style="
+              text-align: left;
+              padding: 8px;
+              color: var(--text-tertiary);
+              font-weight: 600;
+            "
+          >
+            #
+          </th>
+          <th
+            style="
+              text-align: left;
+              padding: 8px;
+              color: var(--text-tertiary);
+              font-weight: 600;
+            "
+          >
+            Variation
+          </th>
+          <th
+            style="
+              text-align: center;
+              padding: 8px;
+              color: var(--text-tertiary);
+              font-weight: 600;
+            "
+          >
+            Impact
+          </th>
+          <th
+            style="
+              text-align: center;
+              padding: 8px;
+              color: var(--text-tertiary);
+              font-weight: 600;
+            "
+          >
+            Effort
+          </th>
+          <th
+            style="
+              text-align: center;
+              padding: 8px;
+              color: var(--text-tertiary);
+              font-weight: 600;
+            "
+          >
+            Works With Current
+          </th>
+        </tr>
+        <tr style="border-bottom: 1px solid var(--border)">
+          <td style="padding: 8px; color: var(--emerald-400); font-weight: 700">
+            1
+          </td>
+          <td style="padding: 8px">Intensity Heatmap Strip</td>
+          <td style="text-align: center; padding: 8px">⭐⭐⭐⭐</td>
+          <td
+            style="text-align: center; padding: 8px; color: var(--emerald-400)"
+          >
+            Low
+          </td>
+          <td
+            style="text-align: center; padding: 8px; color: var(--emerald-400)"
+          >
+            Direct upgrade
+          </td>
+        </tr>
+        <tr style="border-bottom: 1px solid var(--border)">
+          <td style="padding: 8px; color: var(--emerald-400); font-weight: 700">
+            2
+          </td>
+          <td style="padding: 8px">Ring Progress Cells</td>
+          <td style="text-align: center; padding: 8px">⭐⭐⭐⭐</td>
+          <td style="text-align: center; padding: 8px; color: var(--gold-300)">
+            Medium
+          </td>
+          <td style="text-align: center; padding: 8px; color: var(--gold-300)">
+            Replaces day cells
+          </td>
+        </tr>
+        <tr style="border-bottom: 1px solid var(--border)">
+          <td style="padding: 8px; color: var(--emerald-400); font-weight: 700">
+            3
+          </td>
+          <td style="padding: 8px">Habit Breakdown Grid</td>
+          <td style="text-align: center; padding: 8px">⭐⭐⭐⭐⭐</td>
+          <td style="text-align: center; padding: 8px; color: var(--gold-300)">
+            Medium
+          </td>
+          <td
+            style="text-align: center; padding: 8px; color: var(--emerald-400)"
+          >
+            Additive
+          </td>
+        </tr>
+        <tr style="border-bottom: 1px solid var(--border)">
+          <td style="padding: 8px; color: var(--emerald-400); font-weight: 700">
+            4
+          </td>
+          <td style="padding: 8px">Momentum Wave</td>
+          <td style="text-align: center; padding: 8px">⭐⭐⭐⭐</td>
+          <td style="text-align: center; padding: 8px; color: var(--gold-300)">
+            Medium
+          </td>
+          <td style="text-align: center; padding: 8px; color: var(--gold-300)">
+            Additional section
+          </td>
+        </tr>
+        <tr style="border-bottom: 1px solid var(--border)">
+          <td style="padding: 8px; color: var(--emerald-400); font-weight: 700">
+            5
+          </td>
+          <td style="padding: 8px">Streak Flame Chain</td>
+          <td style="text-align: center; padding: 8px">⭐⭐⭐</td>
+          <td
+            style="text-align: center; padding: 8px; color: var(--emerald-400)"
+          >
+            Low
+          </td>
+          <td style="text-align: center; padding: 8px; color: var(--gold-300)">
+            Replaces connectors
+          </td>
+        </tr>
+        <tr style="border-bottom: 1px solid var(--border)">
+          <td style="padding: 8px; color: var(--emerald-400); font-weight: 700">
+            6
+          </td>
+          <td style="padding: 8px">Week-over-Week</td>
+          <td style="text-align: center; padding: 8px">⭐⭐⭐⭐⭐</td>
+          <td style="text-align: center; padding: 8px; color: var(--gold-300)">
+            Medium
+          </td>
+          <td style="text-align: center; padding: 8px; color: var(--gold-300)">
+            Replaces strip
+          </td>
+        </tr>
+        <tr style="border-bottom: 1px solid var(--border)">
+          <td style="padding: 8px; color: var(--emerald-400); font-weight: 700">
+            7
+          </td>
+          <td style="padding: 8px">Scrollable 14-Day</td>
+          <td style="text-align: center; padding: 8px">⭐⭐⭐⭐</td>
+          <td style="text-align: center; padding: 8px; color: var(--red-400)">
+            High
+          </td>
+          <td style="text-align: center; padding: 8px; color: var(--red-400)">
+            Structural change
+          </td>
+        </tr>
+        <tr style="border-bottom: 1px solid var(--border)">
+          <td style="padding: 8px; color: var(--emerald-400); font-weight: 700">
+            8
+          </td>
+          <td style="padding: 8px">Time-of-Day Rhythm</td>
+          <td style="text-align: center; padding: 8px">⭐⭐⭐</td>
+          <td style="text-align: center; padding: 8px; color: var(--gold-300)">
+            Medium
+          </td>
+          <td style="text-align: center; padding: 8px; color: var(--gold-300)">
+            Replaces day cells
+          </td>
+        </tr>
+        <tr style="border-bottom: 1px solid var(--border)">
+          <td style="padding: 8px; color: var(--emerald-400); font-weight: 700">
+            9
+          </td>
+          <td style="padding: 8px">Minimal Score Card</td>
+          <td style="text-align: center; padding: 8px">⭐⭐⭐</td>
+          <td
+            style="text-align: center; padding: 8px; color: var(--emerald-400)"
+          >
+            Low
+          </td>
+          <td style="text-align: center; padding: 8px; color: var(--red-400)">
+            Full replacement
+          </td>
+        </tr>
+        <tr>
+          <td style="padding: 8px; color: var(--emerald-400); font-weight: 700">
+            10
+          </td>
+          <td style="padding: 8px">Layered Depth</td>
+          <td style="text-align: center; padding: 8px">⭐⭐⭐⭐⭐</td>
+          <td style="text-align: center; padding: 8px; color: var(--red-400)">
+            High
+          </td>
+          <td
+            style="text-align: center; padding: 8px; color: var(--emerald-400)"
+          >
+            Extends current
+          </td>
+        </tr>
+      </table>
+      <div
+        style="
+          margin-top: 16px;
+          padding-top: 16px;
+          border-top: 1px solid var(--border);
+        "
+      >
+        <p
+          style="
+            font-size: 12px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+          "
+        >
+          <strong style="color: var(--emerald-400)">Best quick wins:</strong> #1
+          (Heatmap Strip) + #5 (Flame Chain) — low effort, direct upgrades to
+          existing component.<br />
+          <strong style="color: var(--gold-300)">Best ROI:</strong> #3 (Habit
+          Breakdown) + #6 (Week Comparison) — medium effort but highest
+          behavioral impact.<br />
+          <strong style="color: var(--purple-400)">Best long-term:</strong> #10
+          (Layered Depth) — serves beginners and power users, future-proof
+          architecture.
+        </p>
+      </div>
+    </div>
+
+    <script>
+      lucide.createIcons();
+    </script>
+  </body>
+</html>
