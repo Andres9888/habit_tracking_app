@@ -6,9 +6,11 @@ import type { ReactNode } from 'react';
 import type { ViewStyle } from 'react-native';
 import type { AnimatedStyle } from 'react-native-reanimated';
 import type { Doc } from '../../../../convex/_generated/dataModel';
+import type { ForYouRecommendation } from '../components/ForYouSection/ForYouSection.types';
 
 export interface MainBrowseViewProps {
   activeChipCategory: string | null;
+  forYouRecommendations: ForYouRecommendation[];
   categoryGrid: ReactNode;
   feedbackOverlays: ReactNode;
   importedTemplateIds: Set<string>;

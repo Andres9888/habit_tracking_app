@@ -10,6 +10,7 @@ import type { Doc } from '../../../../convex/_generated/dataModel';
 import { PREMIUM_PACKS } from '../data/premiumPacks';
 import type { CategoryMeta } from '../data/categoryMeta';
 import { CATEGORY_META } from '../data/categoryMeta';
+import { useForYouRecommendations } from './useForYouRecommendations';
 
 const POPULAR_LIMIT = 10;
 const PREVIEW_EMOJI_LIMIT = 4;
@@ -18,13 +19,17 @@ interface UseMainBrowseDataOptions {
   allTemplates: Doc<'templates'>[] | undefined;
   isPremiumUser: boolean;
   userHabitCount: number;
+  userHabitNames: string[];
 }
 
 export function useMainBrowseData({
   allTemplates,
   isPremiumUser,
   userHabitCount,
+  userHabitNames,
 }: UseMainBrowseDataOptions) {
+  const forYouRecommendations = useForYouRecommendations(allTemplates, userHabitNames);
+
   const popularTemplates = useMemo(() => {
     if (!allTemplates) return [];
     return [...allTemplates]
@@ -60,6 +65,7 @@ export function useMainBrowseData({
 
   return {
     categoryList,
+    forYouRecommendations,
     isPremiumUser,
     popularTemplates,
     premiumPacks: PREMIUM_PACKS,

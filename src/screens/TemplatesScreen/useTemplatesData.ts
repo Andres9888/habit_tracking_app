@@ -63,6 +63,10 @@ export function useTemplatesData() {
   const settings = useQuery(api.settings.get);
   const isLoading = allTemplates === undefined;
   const userHabitCount = userHabits?.length ?? 0;
+  const userHabitNames = useMemo(
+    () => (userHabits ?? []).map((h) => h.name),
+    [userHabits]
+  );
   const isPremiumUser = settings?.hasPremium ?? false;
   const categories = useMemo(
     () => getCategoriesFromTemplates(allTemplates),
@@ -80,6 +84,7 @@ export function useTemplatesData() {
     isPremiumUser,
     seedTemplates,
     userHabitCount,
+    userHabitNames,
   };
 }
 

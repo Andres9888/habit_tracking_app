@@ -54,6 +54,7 @@ function TemplatesScreenContent() {
   return (
     <MainBrowseView
       activeChipCategory={activeChipCategory}
+      forYouRecommendations={mainBrowseData.forYouRecommendations}
       categoryGrid={
         <CategoryGrid
           categories={mainBrowseData.categoryList}

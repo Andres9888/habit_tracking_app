@@ -72,6 +72,7 @@ export function useTemplatesScreenProps() {
     allTemplates: data.allTemplates,
     isPremiumUser: data.isPremiumUser,
     userHabitCount: data.userHabitCount,
+    userHabitNames: data.userHabitNames,
   });
 
   const getCategoryLabel = (categoryId: string) =>

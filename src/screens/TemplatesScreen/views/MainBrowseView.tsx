@@ -2,9 +2,10 @@
  * MainBrowseView - Curated main screen replacing the old tab-based BrowseView
  *
  * Layout: ScreenHeader → SearchBar → QuickFilterChips → FeaturedCollection
- * → PopularSection → PremiumPacksSection → CategoryGrid
+ * → ForYouSection → PopularSection → PremiumPacksSection → CategoryGrid
  */
 
+import { useMemo } from 'react';
 import { ScrollView, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { ScreenHeader } from '../../../components/ScreenHeader';
@@ -13,6 +14,7 @@ import { durations } from '../../../theme/animations';
 import { styles } from '../../templates/templatesScreenStyles';
 import { SearchBar } from '../components';
 import { FeaturedCollection } from '../components/FeaturedCollection';
+import { ForYouSection } from '../components/ForYouSection';
 import { PopularSection } from '../components/PopularSection';
 import {
   CHIP_CATEGORIES,
@@ -21,11 +23,17 @@ import {
 import { getTemporalGreeting } from '../utils/getTemporalGreeting';
 import type { MainBrowseViewProps } from './MainBrowseView.types';
 
+const EMPTY_SET = new Set<string>();
 const stagger = (index: number) =>
   FadeInDown.delay(index * durations.stagger).duration(durations.enter);
 
 export function MainBrowseView(p: MainBrowseViewProps) {
   const { colors } = useThemeColors();
+  const importingIds = useMemo(
+    () => (p.importingTemplateId ? new Set([p.importingTemplateId]) : EMPTY_SET),
+    [p.importingTemplateId],
+  );
+  const hasForYou = p.forYouRecommendations.length > 0;
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
@@ -55,7 +63,18 @@ export function MainBrowseView(p: MainBrowseViewProps) {
         <Animated.View entering={stagger(1)}>
           <FeaturedCollection onPress={p.onFeaturedPress} />
         </Animated.View>
-        <Animated.View entering={stagger(2)}>
+        {hasForYou && (
+          <Animated.View entering={stagger(2)}>
+            <ForYouSection
+              importedIds={p.importedTemplateIds}
+              importingIds={importingIds}
+              recommendations={p.forYouRecommendations}
+              onImport={p.onImport}
+              onPreview={p.onPreview}
+            />
+          </Animated.View>
+        )}
+        <Animated.View entering={stagger(hasForYou ? 3 : 2)}>
           <PopularSection
             importedTemplateIds={p.importedTemplateIds}
             importingTemplateId={p.importingTemplateId}
@@ -65,10 +84,12 @@ export function MainBrowseView(p: MainBrowseViewProps) {
             onSeeAll={p.onSeeAll}
           />
         </Animated.View>
-        <Animated.View entering={stagger(3)}>
+        <Animated.View entering={stagger(hasForYou ? 4 : 3)}>
           {p.premiumPacksSection}
         </Animated.View>
-        <Animated.View entering={stagger(4)}>{p.categoryGrid}</Animated.View>
+        <Animated.View entering={stagger(hasForYou ? 5 : 4)}>
+          {p.categoryGrid}
+        </Animated.View>
       </ScrollView>
       {p.modals}
       {p.feedbackOverlays}
