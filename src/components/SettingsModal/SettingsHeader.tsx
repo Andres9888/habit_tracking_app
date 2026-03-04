@@ -17,7 +17,7 @@ export function SettingsHeader({
 }: SettingsHeaderProps) {
   return (
     <Animated.View
-      className='px-5 pb-4'
+      className='px-4 pb-4'
       entering={FadeInDown.duration(280).springify().damping(18)}
       style={{ backgroundColor: colors.background, paddingTop }}
     >

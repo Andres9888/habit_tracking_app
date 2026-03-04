@@ -151,7 +151,7 @@ export function SettingsRow({
             <Animated.View
               className='min-w-[22px] items-center justify-center rounded-full px-1.5 py-0.5'
               entering={ZoomIn.springify().damping(18)}
-              style={{ backgroundColor: themeColors.gray[200] }}
+              style={{ backgroundColor: themeColors.surface }}
             >
               <Text
                 className='text-[12px] font-bold'

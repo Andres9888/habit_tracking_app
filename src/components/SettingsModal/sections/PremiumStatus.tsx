@@ -166,7 +166,7 @@ export function PremiumStatus({ highContrast, isPremium, onUpgrade }: Props) {
 
           <View className='flex-row items-center'>
             <View
-              className='mr-3.5 h-11 w-11 items-center justify-center rounded-[14px]'
+              className='mr-4 h-10 w-10 items-center justify-center rounded-xl'
               style={{ backgroundColor: 'rgba(255,255,255,0.15)' }}
             >
               <Zap color='#ffffff' size={20} />

@@ -15,17 +15,19 @@ export function AboutSection({ highContrast, version, buildNumber }: Props) {
   const { colors: themeColors, settings } = useThemeColors();
 
   return (
-    <SettingsSection highContrastMode={highContrast} title='About'>
-      <SettingsRow
-        highContrastMode={highContrast}
-        icon={<Info color={settings.info.icon} size={16} />}
-        iconBackgroundColor={settings.info.bg}
-        label='Version'
-        showBorder={false}
-        type='info'
-        value={`${version} (${buildNumber})`}
-      />
-      <View className='px-4 pb-3 pt-1'>
+    <View>
+      <SettingsSection highContrastMode={highContrast} title='About'>
+        <SettingsRow
+          highContrastMode={highContrast}
+          icon={<Info color={settings.info.icon} size={16} />}
+          iconBackgroundColor={settings.info.bg}
+          label='Version'
+          showBorder={false}
+          type='info'
+          value={`${version} (${buildNumber})`}
+        />
+      </SettingsSection>
+      <View className='px-4 pb-3 pt-3'>
         <Text
           className='text-center text-[13px]'
           style={{ color: themeColors.text.secondary }}
@@ -33,6 +35,6 @@ export function AboutSection({ highContrast, version, buildNumber }: Props) {
           Made with ❤️ for better habits
         </Text>
       </View>
-    </SettingsSection>
+    </View>
   );
 }
