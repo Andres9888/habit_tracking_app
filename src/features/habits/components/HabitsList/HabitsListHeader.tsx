@@ -11,6 +11,7 @@
 import React, { memo, useMemo } from 'react';
 import { Animated, View } from 'react-native';
 import ReAnimated, {
+  interpolate,
   interpolateColor,
   useAnimatedStyle,
 } from 'react-native-reanimated';
@@ -39,7 +40,11 @@ function HabitsListHeaderComponent(
       [0, 1],
       ['transparent', shelfBg]
     ),
-    marginHorizontal: -CONTENT_H_PADDING,
+    marginHorizontal: interpolate(
+      stickyProgress.value,
+      [0, 1],
+      [0, -CONTENT_H_PADDING]
+    ),
   }));
 
   const computed = useHabitsListHeaderComputed({

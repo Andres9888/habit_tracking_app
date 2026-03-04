@@ -60,7 +60,7 @@ export function CardContent(props: CardContentProps) {
           />
         )}
       </View>
-      <View className='px-3 pb-5'>
+      <View className='pb-5 pl-3 pr-4'>
         <HabitChainVisualizer
           accentColor={props.accentColor}
           celebrationsEnabled={props.celebrationsEnabled}
