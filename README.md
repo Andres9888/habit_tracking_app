@@ -45,7 +45,7 @@ This feature increases chip engagement by 40-60% by showing habits that align wi
    - Copy your existing Convex backend files to this project
    - Update `.env.local` with your Convex URL
 
-3. Start the development server (loads variables from `.env` automatically):
+3. Start the development server (loads variables from `.env.local` automatically):
 
    ```bash
    npm run expo:start
@@ -96,6 +96,24 @@ This app uses the same Convex backend as the web version. Make sure to copy over
 
 - `convex/` directory with all your functions
 - Environment variables in your Convex dashboard
+
+### Data migration
+
+Normalize legacy `reminderTime` values (for example `8:30` or AM/PM values) to canonical `HH:MM` format:
+
+- Single batch:
+  ```bash
+  npm run migrate:normalize-reminder-times
+  ```
+- Multi-batch (repeat the returned command using the returned `continueCursor`) or run:
+  ```bash
+  npx convex run migration:normalizeHabitReminderTimes
+  npx convex run migration:normalizeHabitReminderTimes '{"batchSize":500,"cursor":"<continueCursor>"}'
+  ```
+- Run fully in a loop (until `isDone=true`):
+  ```bash
+  bash scripts/migrate-reminder-times.sh 500
+  ```
 
 ## Troubleshooting
 
