@@ -6,8 +6,8 @@ import {
   Check,
   Calendar,
   Circle,
+  Download,
   Droplets,
-  Share2,
   Volume2,
 } from 'lucide-react-native';
 import { StyleSheet, View } from 'react-native';
@@ -176,12 +176,12 @@ export function SettingsContent(p: SettingsContentProps) {
                 hapticStyle='selection'
                 highContrastMode={hc}
                 icon={
-                  <Share2
-                    color={settingsIcons.share.icon}
+                  <Download
+                    color={settingsIcons.export.icon}
                     size={16}
                   />
                 }
-                iconBackgroundColor={settingsIcons.share.bg}
+                iconBackgroundColor={settingsIcons.export.bg}
                 label='Export habits & stats'
                 type='navigation'
                 onPress={() => {

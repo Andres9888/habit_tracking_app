@@ -31,7 +31,7 @@ export function SortPicker({ currentMode, onBack, onSelect }: SortPickerProps) {
       <View
         className='flex-row items-center gap-3 border-b px-4 pb-3'
         style={{
-          borderColor: isDark ? '#374151' : '#e7e5e4',
+          borderColor: colors.border,
           paddingTop: insets.top + 8,
         }}
       >
@@ -81,7 +81,7 @@ export function SortPicker({ currentMode, onBack, onSelect }: SortPickerProps) {
               </Text>
             </View>
             {currentMode === option.value && (
-              <Check color='#22c55e' size={20} strokeWidth={2.5} />
+              <Check color={colors.primary[500]} size={20} strokeWidth={2.5} />
             )}
           </Pressable>
         ))}

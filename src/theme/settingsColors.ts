@@ -30,6 +30,7 @@ export const darkSettingsColors: SettingsColors = {
   calendarHeader: { icon: '#22d3ee', bg: '#0f4b55' },
   // Data
   sort: { icon: '#818cf8', bg: '#1e1b4b' },
+  export: { icon: '#2dd4bf', bg: '#134e4a' },
   archive: { icon: '#a8a29e', bg: '#292524' },
   // Notifications
   bell: { icon: '#fb923c', bg: '#431407' },
@@ -64,6 +65,7 @@ export const lightSettingsColors: SettingsColors = {
   calendarHeader: { icon: '#0ea5e9', bg: '#dbeafe' },
   // Data
   sort: { icon: '#6366f1', bg: '#e0e7ff' },
+  export: { icon: '#0d9488', bg: '#ccfbf1' },
   archive: { icon: '#78716c', bg: '#e7e5e4' },
   // Notifications
   bell: { icon: '#ea580c', bg: '#fed7aa' },
@@ -98,6 +100,7 @@ export interface SettingsColors {
   calendarHeader: IconColor;
   // Data
   sort: IconColor;
+  export: IconColor;
   archive: IconColor;
   // Notifications
   bell: IconColor;
