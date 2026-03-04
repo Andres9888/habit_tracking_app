@@ -1,5 +1,5 @@
 /**
- * QuickStatsRow - Streak, best ever, completion rate, total completions
+ * QuickStatsRow - Best ever, completion rate, total completions
  *
  * Surfaces data already computed in useHabitDetailScreenState
  * that was previously never rendered to users.
@@ -14,7 +14,6 @@ import { fontFamilies } from '../../../theme/typography';
 
 interface QuickStatsRowProps {
   bestStreak: number;
-  currentStreak: number;
   daysTracking: number;
   totalCompletions: number;
 }
@@ -60,7 +59,6 @@ function StatChip({
 
 export const QuickStatsRow = memo(function QuickStatsRow({
   bestStreak,
-  currentStreak,
   daysTracking,
   totalCompletions,
 }: QuickStatsRowProps) {
@@ -71,10 +69,9 @@ export const QuickStatsRow = memo(function QuickStatsRow({
 
   return (
     <View style={styles.row}>
-      <StatChip delay={120} label="Streak" prefix="🔥 " value={currentStreak} />
-      <StatChip delay={160} label="Best" prefix="⭐ " value={bestStreak} />
-      <StatChip delay={200} label="Rate" value={rate} />
-      <StatChip delay={240} label="Total" value={totalCompletions} />
+      <StatChip delay={120} label="Best" prefix="⭐ " value={bestStreak} />
+      <StatChip delay={160} label="Rate" value={rate} />
+      <StatChip delay={200} label="Total" value={totalCompletions} />
     </View>
   );
 });
