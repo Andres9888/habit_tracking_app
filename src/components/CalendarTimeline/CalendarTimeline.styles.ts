@@ -87,9 +87,13 @@ export const STREAK_CONNECTOR = {
   highContrast: 'rgba(250, 204, 21, 0.35)',
 };
 
+/** Shelf background color (shared with HabitsListHeader sticky fill) */
+export const getShelfBackgroundColor = (isDark: boolean) =>
+  isDark ? darkColors.card : colors.light.gradientMid;
+
 /** Theme-aware shelf background */
 export const getShelfStyle = (isDark: boolean) => ({
-  backgroundColor: isDark ? darkColors.card : colors.light.gradientMid,
+  backgroundColor: getShelfBackgroundColor(isDark),
   borderBottomLeftRadius: borderRadius.large,
   borderBottomRightRadius: borderRadius.large,
 });

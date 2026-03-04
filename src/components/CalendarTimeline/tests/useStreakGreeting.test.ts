@@ -62,23 +62,23 @@ describe('getStreakGreeting', () => {
   });
 
   describe('streak at risk', () => {
-    it('shows streak count in risk message after 8pm', () => {
-      const result = getStreakGreeting({
-        ...base,
-        currentStreak: 5,
-        completedToday: 0,
-        hour: 20,
-      });
-      expect(result.greeting).toBe('5-day streak at risk');
-      expect(result.variant).toBe('risk');
-    });
-
-    it('does not trigger before 8pm', () => {
+    it('shows streak count in risk message after 7pm', () => {
       const result = getStreakGreeting({
         ...base,
         currentStreak: 5,
         completedToday: 0,
         hour: 19,
+      });
+      expect(result.greeting).toBe('5-day streak at risk');
+      expect(result.variant).toBe('risk');
+    });
+
+    it('does not trigger before 7pm', () => {
+      const result = getStreakGreeting({
+        ...base,
+        currentStreak: 5,
+        completedToday: 0,
+        hour: 18,
       });
       expect(result.greeting).not.toContain('at risk');
     });
@@ -122,29 +122,26 @@ describe('getStreakGreeting', () => {
     });
   });
 
-  describe('streak === 1 (collapsed header)', () => {
-    it('returns empty string', () => {
+  describe('streak <= 2 (collapsed header)', () => {
+    it.each([1, 2])('returns empty string for streak=%i', (streak) => {
       const result = getStreakGreeting({
         ...base,
-        currentStreak: 1,
+        currentStreak: streak,
         hour: 10,
       });
       expect(result.greeting).toBe('');
     });
   });
 
-  describe('streak 2-6', () => {
-    it.each([2, 3, 4, 5, 6])(
-      'returns "%i-day streak" for streak=%i',
-      (streak) => {
-        const result = getStreakGreeting({
-          ...base,
-          currentStreak: streak,
-          hour: 10,
-        });
-        expect(result.greeting).toBe(`${streak}-day streak`);
-      }
-    );
+  describe('streak 3-6', () => {
+    it.each([3, 4, 5, 6])('returns "%i-day streak" for streak=%i', (streak) => {
+      const result = getStreakGreeting({
+        ...base,
+        currentStreak: streak,
+        hour: 10,
+      });
+      expect(result.greeting).toBe(`${streak}-day streak`);
+    });
   });
 
   describe('streak >= 7', () => {
