@@ -1,1 +1,0 @@
-export { ForgotPasswordLink } from './ForgotPasswordLink';

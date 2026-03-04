@@ -1,33 +1,31 @@
 /**
- * Business logic for PaywallSheet
+ * Business logic for PaywallSheet — wires to RevenueCat via usePremium
  */
 
 import { useCallback, useState } from 'react';
-import { Alert } from 'react-native';
+import { usePremium } from '../../hooks/usePremium';
 
 export function usePaywallSheet(
   onClose: () => void,
   onPurchaseSuccess?: () => void
 ) {
+  const { monthlyPackage, purchasePackage, priceString } = usePremium();
   const [isPurchasing, setIsPurchasing] = useState(false);
 
   const handlePurchase = useCallback(async () => {
+    if (!monthlyPackage || isPurchasing) return;
+    setIsPurchasing(true);
     try {
-      setIsPurchasing(true);
-      // RevenueCat purchase integration:
-      // const packages = await Purchases.getOfferings();
-      // const pkg = packages.current?.availablePackages[0];
-      // if (pkg) await Purchases.purchasePackage(pkg);
-      onPurchaseSuccess?.();
-      onClose();
-    } catch (error: any) {
-      if (!error?.userCancelled) {
-        Alert.alert('Purchase Failed', 'Please try again later.');
+      const success = await purchasePackage(monthlyPackage);
+      if (success) {
+        onPurchaseSuccess?.();
+        onClose();
       }
     } finally {
       setIsPurchasing(false);
     }
-  }, [onClose, onPurchaseSuccess]);
+  }, [monthlyPackage, isPurchasing, purchasePackage, onClose, onPurchaseSuccess]);
 
-  return { handlePurchase, isPurchasing };
+  const isDisabled = isPurchasing || !monthlyPackage;
+  return { handlePurchase, isDisabled, isPurchasing, priceString };
 }

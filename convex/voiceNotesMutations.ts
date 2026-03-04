@@ -36,7 +36,7 @@ export const create = mutation({
     if (!habit) throw new Error('Habit not found');
 
     // SEC-001: Ownership verification
-    if (habit.userId !== identity.subject) {
+    if (!habit || habit.userId !== identity.subject) {
       throw new Error('Not authorized to add voice notes to this habit');
     }
 

@@ -186,6 +186,10 @@ export function SettingsModalSection({
         onChangeShowNotesStats={(value) =>
           onSettingsChange({ showNotesStats: value })
         }
+        onChangeStickyCalendarHeader={(value) =>
+          onSettingsChange({ stickyCalendarHeader: value })
+        }
+        stickyCalendarHeader={settings?.stickyCalendarHeader ?? false}
         onChangeStreakReminderTime={streakReminders.setReminderTime}
         onClose={closeSettings}
         onExportHabitsData={handleExportHabitsData}

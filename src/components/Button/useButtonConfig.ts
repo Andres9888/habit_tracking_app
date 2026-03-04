@@ -1,4 +1,5 @@
-import baseTheme, { useAppTheme, fontFamilies } from '../../theme';
+import baseTheme, { useAppTheme } from '../../theme';
+import { fontFamilies } from '../../theme/typography';
 import type {
   ButtonSize,
   ButtonVariant,
@@ -17,54 +18,74 @@ export function useButtonConfig(
   variantStyles: VariantStyles;
 } {
   const theme = useAppTheme();
-  const fallbackTheme = baseTheme.custom;
+
+  const fallbackTheme = baseTheme?.custom ?? {};
+  const fallbackColors = fallbackTheme?.colors ?? {};
+  const fallbackSpacing = fallbackTheme?.spacing ?? {};
+  const fallbackComponentSpacing = fallbackTheme?.componentSpacing ?? {};
+  const fallbackFontFamilyText = fontFamilies?.primary?.text ?? 'System';
+
   const mergedTheme = {
     colors: {
-      ...fallbackTheme.colors,
+      ...fallbackColors,
       ...theme?.custom?.colors,
     },
     componentSpacing: {
-      ...fallbackTheme.componentSpacing,
+      ...fallbackComponentSpacing,
       ...theme?.custom?.componentSpacing,
     },
     spacing: {
-      ...fallbackTheme.spacing,
+      ...fallbackSpacing,
       ...theme?.custom?.spacing,
     },
   };
 
   const sizeConfigs: Record<ButtonSize, SizeConfig> = {
     large: {
-      fontFamily: fontFamilies.primary.text,
+      fontFamily: fontFamilies?.primary?.text ?? fallbackFontFamilyText,
       fontSize: 17,
       height: 56,
       iconSize: 24,
-      paddingHorizontal: mergedTheme.spacing.xl,
+      paddingHorizontal: mergedTheme.spacing?.xl ?? 24,
     },
     medium: {
-      fontFamily: fontFamilies.primary.text,
+      fontFamily: fontFamilies?.primary?.text ?? fallbackFontFamilyText,
       fontSize: 17,
-      height: mergedTheme.componentSpacing.button.height,
+      height: mergedTheme.componentSpacing?.button?.height ?? 44,
       iconSize: 20,
-      paddingHorizontal: mergedTheme.spacing.lg,
+      paddingHorizontal: mergedTheme.spacing?.lg ?? 16,
     },
     small: {
-      fontFamily: fontFamilies.primary.text,
+      fontFamily: fontFamilies?.primary?.text ?? fallbackFontFamilyText,
       fontSize: 15,
       height: 44,
       iconSize: 16,
-      paddingHorizontal: mergedTheme.spacing.base,
+      paddingHorizontal: mergedTheme.spacing?.base ?? 12,
     },
   };
 
   const config = sizeConfigs[size] ?? sizeConfigs.medium;
 
   const getVariantStyles = (): VariantStyles => {
-    const primary = mergedTheme.colors?.primary?.[500] ?? baseTheme.custom.colors.primary[500];
-    const primaryText = mergedTheme.colors?.primary?.[700] ?? baseTheme.custom.colors.primary[700];
-    const inverseText = mergedTheme.colors?.text?.inverse ?? baseTheme.custom.colors.text.inverse;
-    const gray100 = mergedTheme.colors?.gray?.[100] ?? baseTheme.custom.colors.gray[100];
-    const gray700 = mergedTheme.colors?.gray?.[700] ?? baseTheme.custom.colors.gray[700];
+    const primary =
+      mergedTheme.colors?.primary?.[500] ??
+      fallbackColors?.primary?.[500] ??
+      '#10B981';
+    const primaryText =
+      mergedTheme.colors?.primary?.[700] ??
+      fallbackColors?.primary?.[700] ??
+      '#047857';
+    const inverseText =
+      mergedTheme.colors?.text?.inverse ??
+      '#ffffff';
+    const gray100 =
+      mergedTheme.colors?.gray?.[100] ??
+      fallbackColors?.gray?.[100] ??
+      '#FAF8F5';
+    const gray700 =
+      mergedTheme.colors?.gray?.[700] ??
+      fallbackColors?.gray?.[700] ??
+      '#3D3833';
 
     switch (variant) {
       case 'primary': {

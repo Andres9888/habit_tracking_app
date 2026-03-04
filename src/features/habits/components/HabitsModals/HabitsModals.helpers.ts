@@ -32,6 +32,7 @@ export function getCalendarAndDetailProps(state: HabitsModalsProps['state']) {
     openHabitDetail: state.openHabitDetail,
     openPauseModal: state.openPauseModal,
     selectedHabit: state.selectedHabit,
+    stickyCalendarHeader: state.settings?.stickyCalendarHeader ?? false,
     showEditScreen: state.showEditScreen,
     showHabitCalendar: state.showHabitCalendar,
     showHabitDetail: state.showHabitDetail,

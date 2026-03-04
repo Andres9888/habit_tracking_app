@@ -27,7 +27,7 @@ export function UsageBanner({
         <Text style={s.label}>
           {used} of {limit} free habits used
         </Text>
-        <View testID="templates-usage-dots" style={s.dots}>
+        <View testID="templates-usage-dots" accessibilityLabel={`${used} of ${limit} habits used`} accessibilityRole="progressbar" style={s.dots}>
           {dots.map((filled, i) => (
             <View
               key={i}
@@ -73,7 +73,7 @@ const s = StyleSheet.create({
   },
   ctaText: {
     ...typography.caption,
-    color: '#FFFFFF',
+    color: colors.text.inverse,
     fontWeight: '700',
   },
   dot: {

@@ -436,7 +436,9 @@ const applicationTables = {
     importedAt: v.number(),
     templateId: v.id('templates'),
     userId: v.optional(v.string()), // Reference to created habit
-  }).index('by_template', ['templateId']),
+  })
+    .index('by_template', ['templateId'])
+    .index('by_habit', ['habitId']),
 
   tracking: defineTable({
     completed: v.boolean(),
@@ -519,6 +521,8 @@ const applicationTables = {
 
     showNotesStats: v.optional(v.boolean()),
 
+    stickyCalendarHeader: v.optional(v.boolean()),
+
     showStreaks: v.boolean(),
 
     showWeekCompletionBar: v.optional(v.boolean()),
@@ -568,6 +572,8 @@ const applicationTables = {
   })
     .index('by_habit', ['habitId'])
     .index('by_user', ['userId'])
+    .index('by_storageId', ['storageId'])
+    .index('by_user_and_storage', ['userId', 'storageId'])
     .index('by_habit_and_order', ['habitId', 'order']),
 
   // Legacy text-based vision board items (kept for backwards compatibility)

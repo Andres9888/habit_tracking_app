@@ -1,5 +1,6 @@
 import { useCallback } from 'react';
 import type { Id } from '../../../../convex/_generated/dataModel';
+import { updateSettingsWithFallback } from '../../../lib/settings/updateSettingsWithFallback';
 
 // Generic mutation function type for better type safety
 type MutationFn<Args, Result = void> = (args: Args) => Promise<Result>;
@@ -32,7 +33,10 @@ export function useWrappedMutations(
   const wrappedUpdateSettings = useCallback(
     async (s: Parameters<typeof updateSettings>[0]) => {
       try {
-        await updateSettings(s);
+        await updateSettingsWithFallback(
+          updateSettings,
+          s as Record<string, unknown>
+        );
       } catch (error) {
         if (__DEV__) console.error('Failed to update settings:', error);
         throw new Error(

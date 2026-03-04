@@ -9,6 +9,8 @@ import { useMutation, useQuery } from 'convex/react';
 import { api } from '../../../convex/_generated/api';
 import { ensureNotificationPermissions } from '../../utils/notifications/permissions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { DEFAULT_SETTINGS } from '../../../convex/settings/types';
+import { updateSettingsWithFallback } from '../../lib/settings/updateSettingsWithFallback';
 
 const FIRST_HABIT_CREATED_KEY = '@chain_day:first_habit_created_at';
 const PERMISSION_REQUESTED_KEY = '@chain_day:notif_permission_requested';
@@ -81,13 +83,10 @@ export function useStreakReminderSettings() {
             }
           }
         }
-
-        if (settings) {
-          await updateSettings({
-            ...settings,
-            streakRemindersEnabled: value,
-          });
-        }
+        await updateSettingsWithFallback(updateSettings, {
+          ...(settings ?? DEFAULT_SETTINGS),
+          streakRemindersEnabled: value,
+        });
       } catch (error) {
         if (__DEV__) console.error('Failed to update streak reminder setting:', error);
         setEnabledLocal(!value); // Revert on failure
@@ -101,12 +100,10 @@ export function useStreakReminderSettings() {
       const previousTime = reminderTime;
       setReminderTimeLocal(time);
       try {
-        if (settings) {
-          await updateSettings({
-            ...settings,
-            streakReminderTime: time,
-          });
-        }
+        await updateSettingsWithFallback(updateSettings, {
+          ...(settings ?? DEFAULT_SETTINGS),
+          streakReminderTime: time,
+        });
       } catch (error) {
         if (__DEV__) console.error('Failed to update reminder time:', error);
         setReminderTimeLocal(previousTime); // Revert on failure

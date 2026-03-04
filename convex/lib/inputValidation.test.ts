@@ -193,9 +193,24 @@ describe('validateTimeFormat', () => {
     expect(validateTimeFormat('23:59')).toEqual({ isValid: true, sanitized: '23:59' });
   });
 
+  it('should accept AM/PM times and normalize to HH:MM', () => {
+    expect(validateTimeFormat('8:30 AM')).toEqual({
+      isValid: true,
+      sanitized: '08:30',
+    });
+    expect(validateTimeFormat('12:00 AM')).toEqual({
+      isValid: true,
+      sanitized: '00:00',
+    });
+    expect(validateTimeFormat('1:45 PM')).toEqual({
+      isValid: true,
+      sanitized: '13:45',
+    });
+  });
+
   it('should reject invalid times', () => {
     expect(validateTimeFormat('24:00')).toEqual({ isValid: false, error: expect.stringContaining('HH:MM') });
-    expect(validateTimeFormat('8:30')).toEqual({ isValid: false, error: expect.stringContaining('HH:MM') });
+    expect(validateTimeFormat('8:30')).toEqual({ isValid: true, sanitized: '08:30' });
     expect(validateTimeFormat('08:60')).toEqual({ isValid: false, error: expect.stringContaining('HH:MM') });
     expect(validateTimeFormat('morning')).toEqual({ isValid: false, error: expect.stringContaining('HH:MM') });
   });

@@ -32,15 +32,25 @@ export const remove = mutation({
       throw new Error('Not authorized to delete this image');
     }
 
-    // Delete the file from storage
-    try {
-      await ctx.storage.delete(image.storageId);
-    } catch (error) {
-      // File may already be deleted, continue with record deletion
-      console.error('Failed to delete storage file:', error);
-    }
+    const imagesForStorage = await ctx.db
+      .query('visionBoardImages')
+      .withIndex('by_storageId', (q) => q.eq('storageId', image.storageId))
+      .collect();
+    const isSharedStorage = imagesForStorage.some(
+      (existingImage) => existingImage._id !== image._id
+    );
 
     await ctx.db.delete(args.imageId);
+
+    // Delete storage blob only when no other image references it.
+    if (!isSharedStorage) {
+      try {
+        await ctx.storage.delete(image.storageId);
+      } catch (error) {
+        // File may already be deleted, continue with record deletion
+        console.error('Failed to delete storage file:', error);
+      }
+    }
 
     // Reorder remaining images to fill the gap
     const remainingImages = await ctx.db

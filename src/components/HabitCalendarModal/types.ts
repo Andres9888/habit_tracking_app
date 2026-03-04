@@ -28,6 +28,7 @@ export interface HabitCalendarModalProps {
   streak: number;
   tracking: TrackingEntry[];
   toggleHabit: (args: { habitId: Id<'habits'>; date: string }) => void;
+  stickyCalendarHeader?: boolean;
   /** Optional callback to navigate to HabitDetail's Motivation tab for advanced features */
   onOpenMotivationTab?: () => void;
 }

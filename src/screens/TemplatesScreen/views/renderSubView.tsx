@@ -2,6 +2,7 @@
  * Renders sub-views (category drill, see-all) based on view navigation state
  */
 
+import type { ReactElement } from 'react';
 import type { Doc } from '../../../../convex/_generated/dataModel';
 import type { TemplateViewState } from '../hooks/useViewNavigation';
 import { CategoryDrillView } from './CategoryDrillView';
@@ -17,7 +18,7 @@ interface SubViewProps {
   onPreview: (template: Doc<'templates'>) => void;
 }
 
-export function renderSubView(props: SubViewProps): JSX.Element | null {
+export function renderSubView(props: SubViewProps): ReactElement | null {
   const { activeView, allTemplates = [], importedTemplateIds,
     importingTemplateId, onBack, onImport, onPreview } = props;
   const shared = { importedTemplateIds, importingTemplateId, onBack, onImport, onPreview };

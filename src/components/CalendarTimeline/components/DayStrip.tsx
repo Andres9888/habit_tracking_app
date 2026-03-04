@@ -6,11 +6,13 @@ import Animated, { createAnimatedComponent } from 'react-native-reanimated';
 import type {
   CalendarColors,
   CompletionStatus,
+  DayCompletionStatus,
 } from '../CalendarTimeline.types';
 import { DayCell } from './DayCell';
 
 interface DayStripProps {
   dates: Date[];
+  completionCounts: DayCompletionStatus[];
   completionStatuses: CompletionStatus[];
   augmentedColors: CalendarColors & {
     borderWidth?: number;
@@ -40,6 +42,7 @@ const AnimatedView = (() => {
 /** Renders the 7-day strip with streak connectors and swipe gesture */
 export const DayStrip: React.FC<DayStripProps> = ({
   dates,
+  completionCounts,
   completionStatuses,
   augmentedColors,
   hasCompletionData,
@@ -79,6 +82,7 @@ export const DayStrip: React.FC<DayStripProps> = ({
             <DayCell
               key={`timeline-day-${index}`}
               colors={augmentedColors}
+              completed={completionCounts[index]?.completed ?? 0}
               completionStatus={status}
               connectLeft={isComplete && prevComplete}
               connectRight={isComplete && nextComplete}
@@ -93,6 +97,7 @@ export const DayStrip: React.FC<DayStripProps> = ({
               isUpcoming={isFuture(date)}
               reduceMotion={reduceMotion}
               streakConnectorColor={connectorColor}
+              total={completionCounts[index]?.total ?? 0}
               onDayPress={onDayPress}
             />
           );

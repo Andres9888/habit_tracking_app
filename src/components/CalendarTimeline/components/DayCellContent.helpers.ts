@@ -6,10 +6,13 @@ import {
   TODAY_SHADOW,
 } from '../CalendarTimeline.styles';
 import type { CalendarColors } from '../CalendarTimeline.types';
+import { colors as palette } from '../../../theme/colors';
+import { darkColors } from '../../../theme/darkColors';
 
 interface GetDayCellStylesParams {
   isCurrentDay: boolean;
   isComplete: boolean;
+  isPartial: boolean;
   isUpcoming: boolean;
   isDark: boolean;
   colors: CalendarColors & {
@@ -27,6 +30,7 @@ interface DayCellComputedStyles {
 export function getDayCellStyles({
   isCurrentDay,
   isComplete,
+  isPartial,
   isUpcoming,
   isDark,
   colors,
@@ -64,16 +68,29 @@ export function getDayCellStyles({
         backgroundColor: colors.dayBackground,
         borderColor: colors.highContrastBorder ?? 'transparent',
         borderWidth: colors.borderWidth ?? 0,
+        opacity: 0.4,
       },
       text: getFutureDateTextColor(isDark),
     };
   }
 
+  if (isPartial) {
+    return {
+      container: {
+        backgroundColor: colors.dayBackground,
+        borderColor: palette.streak[300],
+        borderWidth: 1.5,
+      },
+      text: colors.dayText,
+    };
+  }
+
+  const emptyBorder = isDark ? darkColors.border : palette.border;
   return {
     container: {
       backgroundColor: colors.dayBackground,
-      borderColor: colors.highContrastBorder ?? 'transparent',
-      borderWidth: colors.borderWidth ?? 0,
+      borderColor: colors.highContrastBorder ?? emptyBorder,
+      borderWidth: colors.borderWidth ?? 1,
     },
     text: colors.dayText,
   };

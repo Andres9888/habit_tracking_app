@@ -31,6 +31,13 @@ export const generateAffirmations = action({
     habitId: v.id('habits'), // 1-5, default 3
   },
   handler: async (ctx, args): Promise<GeneratedAffirmation[]> => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error(
+        'Unauthenticated: Must be logged in to generate affirmations'
+      );
+    }
+
     const count = Math.min(Math.max(args.count ?? 3, 1), 5);
 
     const habit = await ctx.runQuery(api.habits.get, { habitId: args.habitId });
@@ -105,6 +112,13 @@ export const generateAndSaveAffirmations = action({
     habitId: v.id('habits'),
   },
   handler: async (ctx, args): Promise<string[]> => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error(
+        'Unauthenticated: Must be logged in to generate affirmations'
+      );
+    }
+
     const generated = await ctx.runAction(
       api.affirmations.generateAffirmations,
       { count: args.count, habitId: args.habitId }

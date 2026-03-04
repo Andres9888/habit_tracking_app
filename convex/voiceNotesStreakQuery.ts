@@ -29,7 +29,7 @@ export const getFromBestStreak = query({
     const habit = await ctx.db.get(args.habitId);
     if (!habit) return [];
 
-    if (habit.userId !== identity.subject) return [];
+    if (!habit || habit.userId !== identity.subject) return [];
 
     const bestStreak = habit.bestStreak ?? 0;
     if (bestStreak < 3) return [];

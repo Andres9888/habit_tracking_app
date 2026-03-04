@@ -2,6 +2,11 @@ import { useMutation } from 'convex/react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { api } from '../../../convex/_generated/api';
 import type { SettingsModalSettingsDocument } from './types';
+import { DEFAULT_SETTINGS } from '../../../convex/settings/types';
+import {
+  sanitizeSettingsPayload,
+} from '../../lib/settings/sanitizeSettingsPayload';
+import { updateSettingsWithFallback } from '../../lib/settings/updateSettingsWithFallback';
 
 interface UseSettingsModalLogicProps {
   visible: boolean;
@@ -62,7 +67,15 @@ export const useSettingsModalLogic = ({
 
   const update = useCallback(
     async (patch: Record<string, unknown>) => {
-      if (settings) await updateSettings({ ...settings, ...patch });
+      const baseSettings =
+        settings == null
+          ? (DEFAULT_SETTINGS as Record<string, unknown>)
+          : (settings as Record<string, unknown>);
+
+      await updateSettingsWithFallback(
+        updateSettings,
+        sanitizeSettingsPayload({ ...baseSettings, ...patch })
+      );
     },
     [settings, updateSettings]
   );

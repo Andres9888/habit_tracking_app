@@ -5,15 +5,12 @@
 import { useCallback, useEffect, useRef } from 'react';
 import type { Doc, Id } from '../../../../convex/_generated/dataModel';
 import type { TemplateCustomizations } from '../TemplatesScreen.types';
+import { useImportFeedback } from './useImportFeedback';
 import type { UseTemplateImportHandlersOptions } from './useTemplateImportHandlers.types';
-import { FREE_HABIT_LIMIT } from '../../../constants';
 
 export function useTemplateImportHandlers(o: UseTemplateImportHandlersOptions) {
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const previewRef = useRef(o.previewTemplate);
-  previewRef.current = o.previewTemplate;
-  const habitCountRef = useRef(o.userHabitCount);
-  habitCountRef.current = o.userHabitCount;
+  const { guardImport, showError, showSuccess } = useImportFeedback(o);
 
   useEffect(
     () => () => {
@@ -21,39 +18,6 @@ export function useTemplateImportHandlers(o: UseTemplateImportHandlersOptions) {
     },
     []
   );
-
-  const showSuccess = useCallback(() => {
-    const t = previewRef.current;
-    const data = t
-      ? { color: t.iconColor ?? '#22c55e', icon: t.icon ?? '✓', name: t.name }
-      : null;
-    o.setToastTemplateData(data);
-    if (habitCountRef.current === 0) {
-      o.setShowCelebration(true);
-    } else {
-      o.setShowToast(true);
-    }
-    o.setToastMessage('Imported habit successfully');
-  }, [
-    o.setShowCelebration,
-    o.setShowToast,
-    o.setToastMessage,
-    o.setToastTemplateData,
-  ]);
-
-  const showError = useCallback(() => {
-    o.setToastTemplateData(null);
-    o.setShowToast(true);
-    o.setToastMessage('Failed to import template. Please try again.');
-  }, [o.setShowToast, o.setToastMessage, o.setToastTemplateData]);
-
-  const guardTemplateImport = useCallback(() => {
-    if (!o.isPremiumUser && o.userHabitCount >= FREE_HABIT_LIMIT) {
-      o.onShowPaywall?.();
-      return true;
-    }
-    return false;
-  }, [o.isPremiumUser, o.userHabitCount, o.onShowPaywall]);
 
   const handleTemplatePreview = useCallback(
     (t: Doc<'templates'>) => {
@@ -74,7 +38,7 @@ export function useTemplateImportHandlers(o: UseTemplateImportHandlersOptions) {
 
   const handleDirectImport = useCallback(
     async (id: Id<'templates'>) => {
-      if (guardTemplateImport()) return;
+      if (guardImport()) return;
       try {
         o.setImportingTemplateId(id);
         const res = await o.importTemplate({ templateId: id });
@@ -98,7 +62,7 @@ export function useTemplateImportHandlers(o: UseTemplateImportHandlersOptions) {
       o.setImportedTemplateIds,
       o.setImportingTemplateId,
       o.setShowFullsizePreview,
-      guardTemplateImport,
+      guardImport,
       showSuccess,
       showError,
     ]
@@ -106,7 +70,7 @@ export function useTemplateImportHandlers(o: UseTemplateImportHandlersOptions) {
 
   const handleTemplateImport = useCallback(
     async (id: Id<'templates'>, c?: TemplateCustomizations) => {
-      if (guardTemplateImport()) return;
+      if (guardImport()) return;
       try {
         o.setImportingTemplateId(id);
         const args = { ...(c ? { customizations: c } : {}), templateId: id };
@@ -127,7 +91,7 @@ export function useTemplateImportHandlers(o: UseTemplateImportHandlersOptions) {
       o.setImportedTemplateIds,
       o.setImportingTemplateId,
       o.setShowCustomizeModal,
-      guardTemplateImport,
+      guardImport,
       showSuccess,
       showError,
     ]

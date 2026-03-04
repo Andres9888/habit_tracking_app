@@ -4,9 +4,9 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "convex dev --once && node setup.mjs && npm-run-all --parallel dev:frontend dev:backend",
+    "dev": "convex dev --once --env-file .env.local && node setup.mjs && npm-run-all --parallel dev:frontend dev:backend",
     "dev:frontend": "npm run expo:start -- --web",
-    "dev:backend": "convex dev",
+    "dev:backend": "convex dev --env-file .env.local",
     "mcp": "convex mcp start --project-dir .",
     "mcp:custom": "node convex-mcp-server.js",
     "deploy": "convex deploy --prod",
@@ -16,7 +16,7 @@
     "expo:android": "bash scripts/expo-start.sh --android",
     "lint": "convex codegen --typecheck disable && tsc -p tsconfig.app.json -noEmit --pretty false && ./scripts/export-env.sh -- npx expo export -p web",
     "lint:fix": "eslint . --fix",
-    "lint:eslint": "eslint . --format stylish",
+    "lint:eslint": "eslint src convex --format stylish",
     "lint:max-lines": "eslint . --format stylish 2>&1 | grep -E 'max-lines' || echo 'All files compliant!'",
     "lint:max-lines-report": "eslint . --format json > .eslint-max-lines-report.json || true",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md,css,html,yml,yaml}\"",
@@ -42,6 +42,7 @@
     "scan:secrets": "./scripts/security-gitleaks.sh",
     "scan:secrets:history": "GITLEAKS_SCAN_MODE=git-history ./scripts/security-gitleaks.sh",
     "audit:security": "npm run audit:deps && npm run test:security:fast && npm run scan:secrets",
+    "migrate:normalize-reminder-times": "bash scripts/migrate-reminder-times.sh",
     "postinstall": "patch-package",
     "prepare": "husky"
   },

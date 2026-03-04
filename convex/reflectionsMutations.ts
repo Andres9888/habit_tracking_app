@@ -50,7 +50,7 @@ export const upsert = mutation({
     }
 
     // SEC-001: Ownership verification - verify user owns the habit
-    if (habit.userId !== identity.subject) {
+    if (!habit || habit.userId !== identity.subject) {
       throw new Error('Not authorized to add reflections to this habit');
     }
 
@@ -108,7 +108,7 @@ export const remove = mutation({
       throw new Error('Not authorized to delete this reflection');
     }
     const habit = await ctx.db.get(reflection.habitId);
-    if (habit && habit.userId !== identity.subject) {
+    if (!habit || habit.userId !== identity.subject) {
       throw new Error('Not authorized to delete this reflection');
     }
 

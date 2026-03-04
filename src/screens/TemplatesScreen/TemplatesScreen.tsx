@@ -18,9 +18,7 @@ import { renderSubView } from './views/renderSubView';
 function TemplatesScreenContent() {
   const props = useTemplatesScreenProps();
   const {
-    activeChipCategory,
     data,
-    handleChipSelect,
     handlers,
     mainBrowseData,
     packConfirm,
@@ -53,7 +51,6 @@ function TemplatesScreenContent() {
 
   return (
     <MainBrowseView
-      activeChipCategory={activeChipCategory}
       categoryGrid={
         <CategoryGrid
           categories={mainBrowseData.categoryList}
@@ -92,7 +89,6 @@ function TemplatesScreenContent() {
           onPackConfirm={packConfirm.handleConfirm}
         />
       }
-      onChipCategorySelect={handleChipSelect}
       onFeaturedPress={() => viewNav.openCategory('morning_routine')}
       onImport={handleImport}
       onPreview={handlers.handleTemplatePreview}

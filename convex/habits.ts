@@ -26,6 +26,8 @@
 export { create } from './habits/create';
 export { update, updateNotes } from './habits/update';
 export { archive, deleteAllArchived, unarchive } from './habits/archive';
+export { batchArchive, batchUnarchive } from './habits/batchArchive';
+export { batchRemove } from './habits/batchRemove';
 export { pause, resume } from './habits/pause';
 export { remove, restore } from './habits/remove';
 export { reorderHabits } from './habits/reorder';

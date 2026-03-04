@@ -44,4 +44,10 @@ export interface UseHabitRenderItemArgs {
   seenHabitIds?: Set<string>;
   /** Callback to mark a habit as "seen" after its entrance animation. */
   onHabitEntranceComplete?: (habitId: Id<'habits'>) => void;
+  /** Selection mode: whether selection mode is active. */
+  isSelectionMode?: boolean;
+  /** Selection mode: set of currently selected habit IDs. */
+  selectedIds?: Set<Id<'habits'>>;
+  /** Selection mode: callback to toggle selection of a habit. */
+  onToggleSelection?: (id: Id<'habits'>) => void;
 }

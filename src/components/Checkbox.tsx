@@ -9,7 +9,7 @@ import { clsx } from 'clsx';
 
 import { useHapticFeedback } from '../hooks/useHapticFeedback';
 import { useThemeColors } from '../theme/ThemeContext';
-import { AnimatedPressable } from 'ui';
+import { AnimatedPressable } from './ui';
 
 type CheckboxSize = 'sm' | 'md' | 'lg';
 type CheckboxVariant = 'primary' | 'success' | 'neutral' | 'danger';

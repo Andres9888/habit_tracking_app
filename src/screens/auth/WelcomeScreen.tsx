@@ -10,7 +10,6 @@ import { LinearGradient } from 'expo-linear-gradient';
 import {
   AnimatedLogo,
   AuthError,
-  SocialProofBadge,
   SocialSignInButton,
   ValueProps,
 } from './components';
@@ -51,9 +50,6 @@ function WelcomeScreenContent() {
             <Animated.Text style={[styles.subtitle, subtitleStyle]}>
               Build habits that last
             </Animated.Text>
-            <Animated.View style={valuePropsStyle}>
-              <SocialProofBadge delay={0} />
-            </Animated.View>
             <Animated.View style={[styles.valuePropsWrap, valuePropsStyle]}>
               <ValueProps />
             </Animated.View>

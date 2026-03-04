@@ -40,7 +40,11 @@ export const CalendarSummary = memo(function CalendarSummary({
         <View
           style={[
             summaryStyles.dot,
-            { backgroundColor: 'transparent', borderWidth: 1.5, borderColor: habitColor },
+            {
+              backgroundColor: 'transparent',
+              borderWidth: 1.5,
+              borderColor: habitColor,
+            },
           ]}
         />
         <Text style={[summaryStyles.text, { color: textColor }]}>
@@ -72,6 +76,8 @@ const summaryStyles = StyleSheet.create({
     fontFamily: fontFamilies.primary.text,
     fontSize: 12,
     fontWeight: '700',
+    minWidth: 32,
+    textAlign: 'right',
   },
   row: {
     alignItems: 'center',

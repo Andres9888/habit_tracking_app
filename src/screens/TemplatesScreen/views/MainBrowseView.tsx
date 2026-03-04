@@ -1,7 +1,7 @@
 /**
  * MainBrowseView - Curated main screen replacing the old tab-based BrowseView
  *
- * Layout: ScreenHeader → SearchBar → QuickFilterChips → FeaturedCollection
+ * Layout: ScreenHeader → SearchBar → FeaturedCollection
  * → PopularSection → CategoryGrid → PremiumPacksSection
  */
 
@@ -14,10 +14,6 @@ import { styles } from '../../templates/templatesScreenStyles';
 import { SearchBar } from '../components';
 import { FeaturedCollection } from '../components/FeaturedCollection';
 import { PopularSection } from '../components/PopularSection';
-import {
-  CHIP_CATEGORIES,
-  QuickFilterChips,
-} from '../components/QuickFilterChips';
 import type { MainBrowseViewProps } from './MainBrowseView.types';
 
 const stagger = (index: number) =>
@@ -40,21 +36,14 @@ export function MainBrowseView(p: MainBrowseViewProps) {
           onClear={p.onSearchClear}
         />
       </Animated.View>
-      <Animated.View entering={stagger(0)} style={{ marginTop: 16 }}>
-        <QuickFilterChips
-          activeCategory={p.activeChipCategory}
-          categories={CHIP_CATEGORIES}
-          onSelectCategory={p.onChipCategorySelect}
-        />
-      </Animated.View>
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 100 }}
       >
-        <Animated.View entering={stagger(1)}>
+        <Animated.View entering={stagger(0)}>
           <FeaturedCollection onPress={p.onFeaturedPress} />
         </Animated.View>
-        <Animated.View entering={stagger(2)}>
+        <Animated.View entering={stagger(1)}>
           <PopularSection
             importedTemplateIds={p.importedTemplateIds}
             importingTemplateId={p.importingTemplateId}
@@ -64,8 +53,8 @@ export function MainBrowseView(p: MainBrowseViewProps) {
             onSeeAll={p.onSeeAll}
           />
         </Animated.View>
-        <Animated.View entering={stagger(3)}>{p.categoryGrid}</Animated.View>
-        <Animated.View entering={stagger(4)}>
+        <Animated.View entering={stagger(2)}>{p.categoryGrid}</Animated.View>
+        <Animated.View entering={stagger(3)}>
           {p.premiumPacksSection}
         </Animated.View>
       </ScrollView>

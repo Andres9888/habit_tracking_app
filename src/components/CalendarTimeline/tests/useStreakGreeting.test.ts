@@ -12,6 +12,8 @@ describe('getStreakGreeting', () => {
         currentStreak: 3,
       });
       expect(result.greeting).toBe('Perfect day');
+      expect(result.badge).toBeUndefined();
+      expect(result.variant).toBe('success');
     });
 
     it('returns "Perfect day" even with high streak', () => {
@@ -31,12 +33,12 @@ describe('getStreakGreeting', () => {
         totalHabits: 0,
         hour: 9,
       });
-      expect(result.greeting).toBe('');
+      expect(result.greeting).toBe('Good morning');
     });
   });
 
-  describe('almost done', () => {
-    it('returns "Just 1 left!" with almostDone variant', () => {
+  describe('almost done (1 remaining)', () => {
+    it('returns "Just 1 left!" when 1 habit remains of many', () => {
       const result = getStreakGreeting({
         ...base,
         completedToday: 4,
@@ -45,108 +47,128 @@ describe('getStreakGreeting', () => {
         hour: 10,
       });
       expect(result.greeting).toBe('Just 1 left!');
+      expect(result.badge).toEqual({ emoji: '✨', text: 'Almost perfect!' });
       expect(result.variant).toBe('almostDone');
     });
 
-    it('takes priority over streak display', () => {
+    it('returns "Just 1 left!" when totalHabits is 1 and 0 completed', () => {
+      const result = getStreakGreeting({
+        ...base,
+        completedToday: 0,
+        totalHabits: 1,
+        currentStreak: 0,
+        hour: 10,
+      });
+      expect(result.greeting).toBe('Just 1 left!');
+    });
+
+    it('has higher priority than streak at risk', () => {
       const result = getStreakGreeting({
         ...base,
         completedToday: 4,
         totalHabits: 5,
-        currentStreak: 10,
-        hour: 10,
+        currentStreak: 5,
+        hour: 21,
       });
       expect(result.greeting).toBe('Just 1 left!');
-      expect(result.variant).toBe('almostDone');
     });
   });
 
-  describe('streak at risk', () => {
-    it('shows streak count in risk message after 7pm', () => {
+  describe('streak at risk (evening + 0 done + has streak)', () => {
+    it('returns "Streak at risk" at 8pm with streak and 0 completed', () => {
       const result = getStreakGreeting({
         ...base,
-        currentStreak: 5,
         completedToday: 0,
-        hour: 19,
+        totalHabits: 5,
+        currentStreak: 5,
+        hour: 20,
       });
-      expect(result.greeting).toBe('5-day streak at risk');
+      expect(result.greeting).toBe('Streak at risk');
+      expect(result.badge).toEqual({ emoji: '⚠️', text: '5 days at stake' });
       expect(result.variant).toBe('risk');
     });
 
-    it('does not trigger before 7pm', () => {
+    it('does not trigger before 8pm', () => {
       const result = getStreakGreeting({
         ...base,
-        currentStreak: 5,
         completedToday: 0,
-        hour: 18,
+        totalHabits: 5,
+        currentStreak: 5,
+        hour: 19,
       });
-      expect(result.greeting).not.toContain('at risk');
+      expect(result.greeting).not.toBe('Streak at risk');
     });
 
     it('does not trigger when streak is 0', () => {
       const result = getStreakGreeting({
         ...base,
-        currentStreak: 0,
         completedToday: 0,
+        totalHabits: 5,
+        currentStreak: 0,
         hour: 21,
       });
-      expect(result.greeting).not.toContain('at risk');
+      expect(result.greeting).not.toBe('Streak at risk');
     });
 
-    it('does not trigger when some habits completed', () => {
+    it('does not trigger when some habits are completed', () => {
       const result = getStreakGreeting({
         ...base,
+        completedToday: 1,
+        totalHabits: 5,
         currentStreak: 5,
-        completedToday: 2,
         hour: 21,
       });
-      expect(result.greeting).not.toContain('at risk');
+      expect(result.greeting).not.toBe('Streak at risk');
     });
   });
 
-  describe('streak === 0 (collapsed header)', () => {
-    it('returns empty string for morning', () => {
-      expect(getStreakGreeting({ ...base, hour: 0 }).greeting).toBe('');
-      expect(getStreakGreeting({ ...base, hour: 9 }).greeting).toBe('');
-      expect(getStreakGreeting({ ...base, hour: 11 }).greeting).toBe('');
+  describe('streak === 0 (time-of-day fallback)', () => {
+    it('returns "Good morning" before noon', () => {
+      expect(getStreakGreeting({ ...base, hour: 0 }).greeting).toBe(
+        'Good morning'
+      );
+      expect(getStreakGreeting({ ...base, hour: 9 }).greeting).toBe(
+        'Good morning'
+      );
+      expect(getStreakGreeting({ ...base, hour: 11 }).greeting).toBe(
+        'Good morning'
+      );
     });
 
-    it('returns empty string for afternoon', () => {
-      expect(getStreakGreeting({ ...base, hour: 12 }).greeting).toBe('');
-      expect(getStreakGreeting({ ...base, hour: 16 }).greeting).toBe('');
+    it('returns "Good afternoon" from noon to 5pm', () => {
+      expect(getStreakGreeting({ ...base, hour: 12 }).greeting).toBe(
+        'Good afternoon'
+      );
+      expect(getStreakGreeting({ ...base, hour: 16 }).greeting).toBe(
+        'Good afternoon'
+      );
     });
 
-    it('returns empty string for evening', () => {
-      expect(getStreakGreeting({ ...base, hour: 17 }).greeting).toBe('');
-      expect(getStreakGreeting({ ...base, hour: 19 }).greeting).toBe('');
+    it('returns "Good evening" after 5pm', () => {
+      expect(getStreakGreeting({ ...base, hour: 17 }).greeting).toBe(
+        'Good evening'
+      );
+      expect(getStreakGreeting({ ...base, hour: 23 }).greeting).toBe(
+        'Good evening'
+      );
     });
-  });
 
-  describe('streak <= 2 (collapsed header)', () => {
-    it.each([1, 2])('returns empty string for streak=%i', (streak) => {
-      const result = getStreakGreeting({
-        ...base,
-        currentStreak: streak,
-        hour: 10,
-      });
-      expect(result.greeting).toBe('');
-    });
-  });
-
-  describe('streak 3-6', () => {
-    it.each([3, 4, 5, 6])('returns "%i-day streak" for streak=%i', (streak) => {
-      const result = getStreakGreeting({
-        ...base,
-        currentStreak: streak,
-        hour: 10,
-      });
-      expect(result.greeting).toBe(`${streak}-day streak`);
+    it('has no badge', () => {
+      expect(getStreakGreeting({ ...base, hour: 10 }).badge).toBeUndefined();
     });
   });
 
-  describe('streak >= 7', () => {
-    it.each([7, 14, 30, 100])(
-      'returns "%i-day streak" for streak=%i',
+  describe('streak === 1', () => {
+    it('returns "Great start!" with no badge', () => {
+      const result = getStreakGreeting({ ...base, currentStreak: 1, hour: 10 });
+      expect(result.greeting).toBe('Great start!');
+      expect(result.badge).toBeUndefined();
+    });
+  });
+
+  describe('streak 2-6 (fire badge)', () => {
+    it.each([2, 3, 4, 5, 6])(
+      'returns "%i-day streak" with fire badge for streak=%i',
       (streak) => {
         const result = getStreakGreeting({
           ...base,
@@ -154,6 +176,22 @@ describe('getStreakGreeting', () => {
           hour: 10,
         });
         expect(result.greeting).toBe(`${streak}-day streak`);
+        expect(result.badge).toEqual({ emoji: '🔥', text: 'Keep it going!' });
+      }
+    );
+  });
+
+  describe('streak >= 7 (lightning badge)', () => {
+    it.each([7, 14, 30, 100])(
+      'returns "%i-day streak" with lightning badge for streak=%i',
+      (streak) => {
+        const result = getStreakGreeting({
+          ...base,
+          currentStreak: streak,
+          hour: 10,
+        });
+        expect(result.greeting).toBe(`${streak}-day streak`);
+        expect(result.badge).toEqual({ emoji: '⚡', text: 'On fire!' });
       }
     );
   });

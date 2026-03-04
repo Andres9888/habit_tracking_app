@@ -1,0 +1,1124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CalendarTimeline UX Audit — Current vs Improved</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', -apple-system, sans-serif;
+    background: #1a1816;
+    color: #F5F1ED;
+    padding: 32px 24px;
+    min-height: 100vh;
+  }
+
+  h1 {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    margin-bottom: 8px;
+    color: #F5F1ED;
+  }
+
+  .subtitle {
+    color: #6B6560;
+    font-size: 14px;
+    margin-bottom: 40px;
+  }
+
+  .comparison {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    max-width: 900px;
+    margin: 0 auto 48px;
+  }
+
+  @media (max-width: 768px) {
+    .comparison { grid-template-columns: 1fr; }
+  }
+
+  .panel {
+    border-radius: 0;
+    overflow: hidden;
+  }
+
+  .panel-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    padding: 10px 16px;
+    text-align: center;
+  }
+
+  .panel-label.current {
+    background: #3D3833;
+    color: #C4BFB7;
+  }
+
+  .panel-label.improved {
+    background: #059669;
+    color: white;
+  }
+
+  /* ===== PHONE FRAME ===== */
+  .phone-frame {
+    width: 100%;
+    max-width: 390px;
+    margin: 0 auto;
+    background: #F5F1ED;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+  }
+
+  .phone-frame.dark {
+    background: #111827;
+  }
+
+  /* ===== STATUS BAR ===== */
+  .status-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 24px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .status-bar.light { color: #2D2A26; }
+  .status-bar.dark { color: #E5E7EB; }
+
+  /* ===== SHELF (Calendar Timeline) ===== */
+  .shelf {
+    padding: 8px 16px 16px;
+  }
+
+  .shelf.current-light {
+    background: #FAF8F5;
+    border-bottom-left-radius: 16px;
+    border-bottom-right-radius: 16px;
+    margin: 0 16px 16px;
+  }
+
+  .shelf.improved-light {
+    background: #FAF8F5;
+    /* Full width — no margin, no border radius */
+  }
+
+  .shelf.current-dark {
+    background: #1F2937;
+    border-bottom-left-radius: 16px;
+    border-bottom-right-radius: 16px;
+    margin: 0 16px 16px;
+  }
+
+  .shelf.improved-dark {
+    background: #1F2937;
+  }
+
+  /* ===== HEADER ROW ===== */
+  .header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 4px;
+  }
+
+  .greeting {
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+  }
+
+  .greeting.light { color: #2D2A26; }
+  .greeting.dark { color: #E5E7EB; }
+  .greeting.streak { color: #7D5907; }
+  .greeting.streak-dark { color: #E8B94D; }
+
+  .progress-col {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    padding-top: 2px;
+  }
+
+  .progress-text {
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: -0.2px;
+  }
+
+  .progress-text .count {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+  }
+
+  .progress-text.light { color: #6E6660; }
+  .progress-text.light .count { color: #047857; }
+  .progress-text.dark { color: #9CA3AF; }
+  .progress-text.dark .count { color: #34D399; }
+
+  .progress-dots {
+    display: flex;
+    gap: 6px;
+    margin-top: 4px;
+  }
+
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 99px;
+  }
+
+  .dot.active-light { background: #7D5907; }
+  .dot.inactive-light { background: #DDD8D2; }
+  .dot.active-dark { background: #E8B94D; }
+  .dot.inactive-dark { background: #374151; }
+
+  /* ===== DATE ROW ===== */
+  .date-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 2px;
+    margin-bottom: 10px;
+  }
+
+  .date-label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .date-label.light { color: #6B6560; }
+  .date-label.dark { color: #9CA3AF; }
+
+  .date-icon {
+    width: 14px;
+    height: 14px;
+    opacity: 0.5;
+  }
+
+  .streak-pill {
+    font-size: 12px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 99px;
+  }
+
+  .streak-pill.light {
+    background: #FEF3CD;
+    color: #7D5907;
+  }
+
+  .streak-pill.dark {
+    background: rgba(232,185,77,0.15);
+    color: #E8B94D;
+  }
+
+  /* ===== DAY STRIP ===== */
+  .day-strip {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    position: relative;
+    padding: 0 4px;
+  }
+
+  .day-cell {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    flex: 1;
+    position: relative;
+  }
+
+  .weekday {
+    font-size: 10px;
+    line-height: 14px;
+    text-align: center;
+  }
+
+  .weekday.light { color: #C4BFB7; }
+  .weekday.dark { color: #6B7280; }
+  .weekday.today { font-weight: 700; }
+
+  /* ===== RING CELL ===== */
+  .ring-cell {
+    width: 44px;
+    height: 44px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ring-svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  .day-number {
+    font-size: 14px;
+    font-weight: 700;
+    text-align: center;
+    z-index: 1;
+  }
+
+  /* Complete cell — solid green circle */
+  .ring-cell.complete {
+    border-radius: 50%;
+  }
+
+  .ring-cell.complete-light {
+    background: #059669;
+    box-shadow: 0 0 10px rgba(5,150,105,0.4);
+  }
+
+  .ring-cell.complete-dark {
+    background: #10B981;
+    box-shadow: 0 0 14px rgba(16,185,129,0.55);
+  }
+
+  .ring-cell.complete .day-number { color: white; display: none; }
+  .ring-cell.complete .check-icon { display: flex; }
+
+  .check-icon {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+  }
+
+  /* Today cell */
+  .ring-cell.today-light {
+    /* Current: just amber arc, no background */
+  }
+
+  .ring-cell.today-improved-light {
+    background: rgba(232,185,77,0.08);
+    border-radius: 50%;
+    box-shadow: 0 0 8px rgba(232,185,77,0.25);
+  }
+
+  .ring-cell.today-improved-dark {
+    background: rgba(232,185,77,0.06);
+    border-radius: 50%;
+    box-shadow: 0 0 8px rgba(184,134,11,0.3);
+  }
+
+  .day-number.today-light { color: #7D5907; }
+  .day-number.today-dark { color: #E8B94D; }
+
+  /* Future cell */
+  .ring-cell.future { opacity: 0.4; }
+
+  /* Regular cell (past, not complete) */
+  .day-number.regular-light { color: #3D3833; }
+  .day-number.regular-dark { color: #E5E7EB; }
+
+  /* ===== CONNECTOR ARMS ===== */
+  .connector {
+    position: absolute;
+    height: 3.5px;
+    top: calc(14px + 2px + 22px - 1.5px);
+    z-index: 0;
+  }
+
+  .connector.left {
+    left: 0;
+    width: 50%;
+  }
+
+  .connector.right {
+    left: 50%;
+    width: 50%;
+  }
+
+  .connector.solid-light { background: rgba(16,185,129,0.35); }
+  .connector.solid-dark { background: rgba(52,211,153,0.30); }
+  .connector.ghost { opacity: 0.5; }
+
+  /* ===== COMPLETION DOT (below cell) ===== */
+  .completion-dot-spacer {
+    height: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2px;
+  }
+
+  .completion-dot {
+    border-radius: 99px;
+  }
+
+  .completion-dot.partial-light { width: 7px; height: 7px; background: #8B6208; }
+  .completion-dot.none-light { width: 5px; height: 5px; background: #DDD8D2; }
+  .completion-dot.partial-dark { width: 7px; height: 7px; background: #E8B94D; }
+  .completion-dot.none-dark { width: 5px; height: 5px; background: #374151; }
+
+  /* ===== HABIT ROWS (peeking behind) ===== */
+  .habit-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    margin: 0 16px;
+    border-radius: 12px;
+    margin-bottom: 8px;
+  }
+
+  .habit-row.light { background: #EDEAE5; }
+  .habit-row.dark { background: #1F2937; }
+
+  .habit-check {
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+    border: 2px solid;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .habit-check.light { border-color: #DDD8D2; }
+  .habit-check.dark { border-color: #374151; }
+  .habit-check.done-light { border-color: #059669; background: #D1FAE5; }
+  .habit-check.done-dark { border-color: #10B981; background: rgba(16,185,129,0.15); }
+
+  .habit-name {
+    font-size: 15px;
+    font-weight: 500;
+  }
+
+  .habit-name.light { color: #2D2A26; }
+  .habit-name.dark { color: #E5E7EB; }
+
+  /* ===== SECTION HEADERS ===== */
+  .section-header {
+    font-size: 18px;
+    font-weight: 700;
+    margin: 48px 0 24px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #3D3833;
+  }
+
+  .issue-tag {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-right: 6px;
+  }
+
+  .issue-tag.problem { background: rgba(181,48,48,0.2); color: #F87171; }
+  .issue-tag.fix { background: rgba(16,185,129,0.15); color: #34D399; }
+
+  .annotation {
+    font-size: 12px;
+    color: #6B6560;
+    margin-top: 8px;
+    line-height: 1.5;
+  }
+
+  .callout {
+    background: rgba(232,185,77,0.08);
+    border-left: 3px solid #E8B94D;
+    padding: 12px 16px;
+    margin: 16px 0;
+    font-size: 13px;
+    color: #C4BFB7;
+    line-height: 1.6;
+  }
+
+  .priority-table {
+    width: 100%;
+    max-width: 900px;
+    margin: 24px auto;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+
+  .priority-table th {
+    text-align: left;
+    padding: 8px 12px;
+    border-bottom: 2px solid #3D3833;
+    color: #C4BFB7;
+    font-weight: 600;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .priority-table td {
+    padding: 8px 12px;
+    border-bottom: 1px solid #2D2A26;
+    color: #E5E7EB;
+  }
+
+  .priority-table tr:hover td {
+    background: rgba(255,255,255,0.02);
+  }
+
+  .impact-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 700;
+  }
+
+  .impact-badge.high { background: rgba(16,185,129,0.15); color: #34D399; }
+  .impact-badge.med { background: rgba(232,185,77,0.12); color: #E8B94D; }
+  .impact-badge.low { background: rgba(107,101,96,0.2); color: #C4BFB7; }
+
+  /* SVG ring helpers */
+  .ring-track { fill: none; }
+  .ring-progress { fill: none; stroke-linecap: round; }
+
+  /* Progress bar (improved version) */
+  .progress-bar-container {
+    width: 100px;
+    height: 6px;
+    border-radius: 3px;
+    overflow: hidden;
+    margin-top: 6px;
+  }
+
+  .progress-bar-track-light { background: #DDD8D2; }
+  .progress-bar-track-dark { background: #374151; }
+
+  .progress-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.3s ease;
+  }
+
+  .progress-bar-fill-light { background: #7D5907; }
+  .progress-bar-fill-dark { background: #E8B94D; }
+
+  /* Weekly bar */
+  .weekly-bar-container {
+    margin-top: 4px;
+    padding: 0 4px;
+  }
+
+  .weekly-bar-track {
+    height: 3px;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .weekly-bar-track-light { background: #DDD8D2; }
+  .weekly-bar-track-dark { background: rgba(255,255,255,0.06); }
+
+  .weekly-bar-fill {
+    height: 100%;
+    border-radius: 2px;
+  }
+
+  .weekly-bar-label {
+    font-size: 10px;
+    font-weight: 600;
+    text-align: right;
+    margin-top: 2px;
+  }
+
+  .weekly-bar-label-light { color: #C4BFB7; }
+  .weekly-bar-label-dark { color: #6B7280; }
+</style>
+</head>
+<body>
+
+<h1>CalendarTimeline UX Audit</h1>
+<p class="subtitle">Current state vs recommended improvements &mdash; Light Mode</p>
+
+<!-- ===== SECTION 1: FULL WIDTH + RING IMPROVEMENTS ===== -->
+<div class="section-header">
+  <span class="issue-tag problem">Current</span>
+  <span class="issue-tag fix">Improved</span>
+  Full-Width Bar + Ring Warmth (Light Mode)
+</div>
+
+<div class="comparison">
+  <!-- CURRENT: Light Mode -->
+  <div class="panel">
+    <div class="panel-label current">Current &mdash; Floating Card</div>
+    <div class="phone-frame">
+      <div class="status-bar light">
+        <span>9:41</span>
+        <span>100%</span>
+      </div>
+
+      <!-- Shelf with rounded corners and margin -->
+      <div class="shelf current-light">
+        <div class="header-row">
+          <div class="greeting streak">3-day streak</div>
+          <div class="progress-col">
+            <div class="progress-text light"><span class="count">3</span> of 7</div>
+            <div class="progress-dots">
+              <div class="dot active-light"></div>
+              <div class="dot active-light"></div>
+              <div class="dot active-light"></div>
+              <div class="dot inactive-light"></div>
+              <div class="dot inactive-light"></div>
+              <div class="dot inactive-light"></div>
+              <div class="dot inactive-light"></div>
+            </div>
+          </div>
+        </div>
+        <div class="date-row">
+          <div class="date-label light">
+            <svg class="date-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            Wed, March 4 <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#C4BFB7" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </div>
+          <div class="streak-pill light">🔥 Keep it going!</div>
+        </div>
+
+        <!-- Day Strip -->
+        <div class="day-strip">
+          <!-- Sun - complete -->
+          <div class="day-cell">
+            <div class="weekday light">Sun</div>
+            <div class="ring-cell complete complete-light">
+              <div class="check-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+              </div>
+              <div class="day-number" style="display:none">1</div>
+            </div>
+          </div>
+
+          <!-- Mon - complete -->
+          <div class="day-cell">
+            <div class="connector left solid-light"></div>
+            <div class="connector right solid-light"></div>
+            <div class="weekday light">Mon</div>
+            <div class="ring-cell complete complete-light">
+              <div class="check-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tue - partial (3/7) -->
+          <div class="day-cell">
+            <div class="weekday light">Tue</div>
+            <div class="ring-cell">
+              <svg class="ring-svg" width="44" height="44" viewBox="0 0 44 44">
+                <circle cx="22" cy="22" r="20.5" class="ring-track" stroke="#EDEAE5" stroke-width="3"/>
+                <circle cx="22" cy="22" r="20.5" class="ring-progress" stroke="#10B981" stroke-width="3" stroke-dasharray="128.8" stroke-dashoffset="73.6" transform="rotate(-90 22 22)"/>
+              </svg>
+              <div class="day-number regular-light">3</div>
+            </div>
+          </div>
+
+          <!-- Wed - TODAY (3/7) -->
+          <div class="day-cell">
+            <div class="weekday light today">Wed</div>
+            <div class="ring-cell today-light">
+              <svg class="ring-svg" width="44" height="44" viewBox="0 0 44 44">
+                <circle cx="22" cy="22" r="20.5" class="ring-track" stroke="#EDEAE5" stroke-width="3"/>
+                <circle cx="22" cy="22" r="20.5" class="ring-progress" stroke="#E8B94D" stroke-width="3" stroke-dasharray="128.8" stroke-dashoffset="73.6" transform="rotate(-90 22 22)"/>
+              </svg>
+              <div class="day-number today-light">4</div>
+            </div>
+          </div>
+
+          <!-- Thu - future -->
+          <div class="day-cell">
+            <div class="weekday light">Thu</div>
+            <div class="ring-cell future">
+              <svg class="ring-svg" width="44" height="44" viewBox="0 0 44 44">
+                <circle cx="22" cy="22" r="20.5" class="ring-track" stroke="#EDEAE5" stroke-width="3"/>
+              </svg>
+              <div class="day-number" style="color:#C4BFB7">5</div>
+            </div>
+          </div>
+
+          <!-- Fri - future -->
+          <div class="day-cell">
+            <div class="weekday light">Fri</div>
+            <div class="ring-cell future">
+              <svg class="ring-svg" width="44" height="44" viewBox="0 0 44 44">
+                <circle cx="22" cy="22" r="20.5" class="ring-track" stroke="#EDEAE5" stroke-width="3"/>
+              </svg>
+              <div class="day-number" style="color:#C4BFB7">6</div>
+            </div>
+          </div>
+
+          <!-- Sat - future -->
+          <div class="day-cell">
+            <div class="weekday light">Sat</div>
+            <div class="ring-cell future">
+              <svg class="ring-svg" width="44" height="44" viewBox="0 0 44 44">
+                <circle cx="22" cy="22" r="20.5" class="ring-track" stroke="#EDEAE5" stroke-width="3"/>
+              </svg>
+              <div class="day-number" style="color:#C4BFB7">7</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Habit rows peeking -->
+      <div class="habit-row light">
+        <div class="habit-check done-light">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>
+        </div>
+        <div class="habit-name light">Meditation</div>
+      </div>
+      <div class="habit-row light">
+        <div class="habit-check light"></div>
+        <div class="habit-name light">Exercise</div>
+      </div>
+      <div class="habit-row light">
+        <div class="habit-check done-light">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>
+        </div>
+        <div class="habit-name light">Read 30 min</div>
+      </div>
+    </div>
+    <p class="annotation">
+      Floating card with 16px margin, rounded corners. Ring tracks nearly invisible on light bg (#EDEAE5 on #FAF8F5). Today has no glow. Habits peek around edges when scrolled.
+    </p>
+  </div>
+
+  <!-- IMPROVED: Light Mode -->
+  <div class="panel">
+    <div class="panel-label improved">Improved &mdash; Full-Width Bar</div>
+    <div class="phone-frame">
+      <div class="status-bar light">
+        <span>9:41</span>
+        <span>100%</span>
+      </div>
+
+      <!-- Shelf: full width, no radius, no margin -->
+      <div class="shelf improved-light">
+        <div class="header-row">
+          <div class="greeting streak">3-day streak</div>
+          <div class="progress-col">
+            <div class="progress-text light"><span class="count">3</span> of 7</div>
+            <!-- Progress bar instead of dots -->
+            <div class="progress-bar-container progress-bar-track-light">
+              <div class="progress-bar-fill progress-bar-fill-light" style="width: 42.8%"></div>
+            </div>
+          </div>
+        </div>
+        <div class="date-row">
+          <div class="date-label light">
+            <svg class="date-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            Wed, March 4 <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#C4BFB7" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </div>
+          <div class="streak-pill light">🔥 Keep it going!</div>
+        </div>
+
+        <!-- Day Strip -->
+        <div class="day-strip">
+          <!-- Sun - complete -->
+          <div class="day-cell">
+            <div class="weekday light">Sun</div>
+            <div class="ring-cell complete complete-light">
+              <div class="check-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Mon - complete -->
+          <div class="day-cell">
+            <div class="connector left solid-light"></div>
+            <div class="connector right solid-light"></div>
+            <div class="weekday light">Mon</div>
+            <div class="ring-cell complete complete-light">
+              <div class="check-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tue - partial (3/7) — visible ring track -->
+          <div class="day-cell">
+            <div class="weekday light">Tue</div>
+            <div class="ring-cell">
+              <svg class="ring-svg" width="44" height="44" viewBox="0 0 44 44">
+                <!-- FIX: Darker track color — #DDD8D2 instead of #EDEAE5 -->
+                <circle cx="22" cy="22" r="20.5" class="ring-track" stroke="#DDD8D2" stroke-width="3"/>
+                <circle cx="22" cy="22" r="20.5" class="ring-progress" stroke="#10B981" stroke-width="3" stroke-dasharray="128.8" stroke-dashoffset="73.6" transform="rotate(-90 22 22)"/>
+              </svg>
+              <div class="day-number regular-light">3</div>
+            </div>
+          </div>
+
+          <!-- Wed - TODAY with glow + background fill -->
+          <div class="day-cell">
+            <!-- Ghost connector from completed streak -->
+            <div class="connector left solid-light ghost"></div>
+            <div class="weekday light today">Wed</div>
+            <div class="ring-cell today-improved-light">
+              <svg class="ring-svg" width="44" height="44" viewBox="0 0 44 44">
+                <!-- Today track uses amber instead of gray -->
+                <circle cx="22" cy="22" r="20.5" class="ring-track" stroke="rgba(232,185,77,0.25)" stroke-width="3"/>
+                <circle cx="22" cy="22" r="20.5" class="ring-progress" stroke="#E8B94D" stroke-width="3" stroke-dasharray="128.8" stroke-dashoffset="73.6" transform="rotate(-90 22 22)"/>
+              </svg>
+              <div class="day-number today-light">4</div>
+            </div>
+          </div>
+
+          <!-- Thu - future -->
+          <div class="day-cell">
+            <div class="weekday light">Thu</div>
+            <div class="ring-cell future">
+              <svg class="ring-svg" width="44" height="44" viewBox="0 0 44 44">
+                <circle cx="22" cy="22" r="20.5" class="ring-track" stroke="#DDD8D2" stroke-width="3"/>
+              </svg>
+              <div class="day-number" style="color:#C4BFB7">5</div>
+            </div>
+          </div>
+
+          <!-- Fri - future -->
+          <div class="day-cell">
+            <div class="weekday light">Fri</div>
+            <div class="ring-cell future">
+              <svg class="ring-svg" width="44" height="44" viewBox="0 0 44 44">
+                <circle cx="22" cy="22" r="20.5" class="ring-track" stroke="#DDD8D2" stroke-width="3"/>
+              </svg>
+              <div class="day-number" style="color:#C4BFB7">6</div>
+            </div>
+          </div>
+
+          <!-- Sat - future -->
+          <div class="day-cell">
+            <div class="weekday light">Sat</div>
+            <div class="ring-cell future">
+              <svg class="ring-svg" width="44" height="44" viewBox="0 0 44 44">
+                <circle cx="22" cy="22" r="20.5" class="ring-track" stroke="#DDD8D2" stroke-width="3"/>
+              </svg>
+              <div class="day-number" style="color:#C4BFB7">7</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Weekly completion bar -->
+        <div class="weekly-bar-container">
+          <div class="weekly-bar-track weekly-bar-track-light">
+            <div class="weekly-bar-fill" style="width:42.8%; background:#10B981; opacity: 0.5;"></div>
+          </div>
+          <div class="weekly-bar-label weekly-bar-label-light">3 of 7 days</div>
+        </div>
+      </div>
+
+      <!-- Habit rows — no peeking around edges -->
+      <div class="habit-row light" style="margin-top: 8px;">
+        <div class="habit-check done-light">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>
+        </div>
+        <div class="habit-name light">Meditation</div>
+      </div>
+      <div class="habit-row light">
+        <div class="habit-check light"></div>
+        <div class="habit-name light">Exercise</div>
+      </div>
+      <div class="habit-row light">
+        <div class="habit-check done-light">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>
+        </div>
+        <div class="habit-name light">Read 30 min</div>
+      </div>
+    </div>
+    <p class="annotation">
+      Full-width bar, edge-to-edge. Ring tracks visible (#DDD8D2). Today has amber background fill + glow shadow. Progress bar replaces dots (scales to any habit count). Weekly completion bar below strip.
+    </p>
+  </div>
+</div>
+
+<!-- ===== SECTION 2: DARK MODE ===== -->
+<div class="section-header">Dark Mode Comparison</div>
+
+<div class="comparison">
+  <!-- CURRENT: Dark -->
+  <div class="panel">
+    <div class="panel-label current">Current &mdash; Dark Mode</div>
+    <div class="phone-frame dark">
+      <div class="status-bar dark">
+        <span>9:41</span>
+        <span>100%</span>
+      </div>
+      <div class="shelf current-dark">
+        <div class="header-row">
+          <div class="greeting streak-dark">3-day streak</div>
+          <div class="progress-col">
+            <div class="progress-text dark"><span class="count">3</span> of 7</div>
+            <div class="progress-dots">
+              <div class="dot active-dark"></div>
+              <div class="dot active-dark"></div>
+              <div class="dot active-dark"></div>
+              <div class="dot inactive-dark"></div>
+              <div class="dot inactive-dark"></div>
+              <div class="dot inactive-dark"></div>
+              <div class="dot inactive-dark"></div>
+            </div>
+          </div>
+        </div>
+        <div class="date-row">
+          <div class="date-label dark">
+            <svg class="date-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            Wed, March 4 <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </div>
+          <div class="streak-pill dark">🔥 Keep it going!</div>
+        </div>
+        <div class="day-strip">
+          <div class="day-cell">
+            <div class="weekday dark">Sun</div>
+            <div class="ring-cell complete complete-dark">
+              <div class="check-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg></div>
+            </div>
+          </div>
+          <div class="day-cell">
+            <div class="connector left solid-dark"></div>
+            <div class="connector right solid-dark"></div>
+            <div class="weekday dark">Mon</div>
+            <div class="ring-cell complete complete-dark">
+              <div class="check-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg></div>
+            </div>
+          </div>
+          <div class="day-cell">
+            <div class="weekday dark">Tue</div>
+            <div class="ring-cell">
+              <svg class="ring-svg" width="44" height="44" viewBox="0 0 44 44">
+                <circle cx="22" cy="22" r="20.5" class="ring-track" stroke="rgba(255,255,255,0.08)" stroke-width="3"/>
+                <circle cx="22" cy="22" r="20.5" class="ring-progress" stroke="#34D399" stroke-width="3" stroke-dasharray="128.8" stroke-dashoffset="73.6" transform="rotate(-90 22 22)"/>
+              </svg>
+              <div class="day-number regular-dark">3</div>
+            </div>
+          </div>
+          <div class="day-cell">
+            <div class="weekday dark today">Wed</div>
+            <div class="ring-cell">
+              <svg class="ring-svg" width="44" height="44" viewBox="0 0 44 44">
+                <circle cx="22" cy="22" r="20.5" class="ring-track" stroke="rgba(255,255,255,0.08)" stroke-width="3"/>
+                <circle cx="22" cy="22" r="20.5" class="ring-progress" stroke="#E8B94D" stroke-width="3" stroke-dasharray="128.8" stroke-dashoffset="73.6" transform="rotate(-90 22 22)"/>
+              </svg>
+              <div class="day-number today-dark">4</div>
+            </div>
+          </div>
+          <div class="day-cell">
+            <div class="weekday dark">Thu</div>
+            <div class="ring-cell future">
+              <svg class="ring-svg" width="44" height="44" viewBox="0 0 44 44"><circle cx="22" cy="22" r="20.5" class="ring-track" stroke="rgba(255,255,255,0.08)" stroke-width="3"/></svg>
+              <div class="day-number" style="color:#6B7280">5</div>
+            </div>
+          </div>
+          <div class="day-cell">
+            <div class="weekday dark">Fri</div>
+            <div class="ring-cell future">
+              <svg class="ring-svg" width="44" height="44" viewBox="0 0 44 44"><circle cx="22" cy="22" r="20.5" class="ring-track" stroke="rgba(255,255,255,0.08)" stroke-width="3"/></svg>
+              <div class="day-number" style="color:#6B7280">6</div>
+            </div>
+          </div>
+          <div class="day-cell">
+            <div class="weekday dark">Sat</div>
+            <div class="ring-cell future">
+              <svg class="ring-svg" width="44" height="44" viewBox="0 0 44 44"><circle cx="22" cy="22" r="20.5" class="ring-track" stroke="rgba(255,255,255,0.08)" stroke-width="3"/></svg>
+              <div class="day-number" style="color:#6B7280">7</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="habit-row dark"><div class="habit-check done-dark"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></div><div class="habit-name dark">Meditation</div></div>
+      <div class="habit-row dark"><div class="habit-check dark"></div><div class="habit-name dark">Exercise</div></div>
+    </div>
+  </div>
+
+  <!-- IMPROVED: Dark -->
+  <div class="panel">
+    <div class="panel-label improved">Improved &mdash; Dark Mode</div>
+    <div class="phone-frame dark">
+      <div class="status-bar dark">
+        <span>9:41</span>
+        <span>100%</span>
+      </div>
+      <div class="shelf improved-dark">
+        <div class="header-row">
+          <div class="greeting streak-dark">3-day streak</div>
+          <div class="progress-col">
+            <div class="progress-text dark"><span class="count">3</span> of 7</div>
+            <div class="progress-bar-container progress-bar-track-dark">
+              <div class="progress-bar-fill progress-bar-fill-dark" style="width: 42.8%"></div>
+            </div>
+          </div>
+        </div>
+        <div class="date-row">
+          <div class="date-label dark">
+            <svg class="date-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            Wed, March 4 <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </div>
+          <div class="streak-pill dark">🔥 Keep it going!</div>
+        </div>
+        <div class="day-strip">
+          <div class="day-cell">
+            <div class="weekday dark">Sun</div>
+            <div class="ring-cell complete complete-dark">
+              <div class="check-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg></div>
+            </div>
+          </div>
+          <div class="day-cell">
+            <div class="connector left solid-dark"></div>
+            <div class="connector right solid-dark"></div>
+            <div class="weekday dark">Mon</div>
+            <div class="ring-cell complete complete-dark">
+              <div class="check-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg></div>
+            </div>
+          </div>
+          <div class="day-cell">
+            <div class="weekday dark">Tue</div>
+            <div class="ring-cell">
+              <svg class="ring-svg" width="44" height="44" viewBox="0 0 44 44">
+                <circle cx="22" cy="22" r="20.5" class="ring-track" stroke="rgba(255,255,255,0.15)" stroke-width="3"/>
+                <circle cx="22" cy="22" r="20.5" class="ring-progress" stroke="#34D399" stroke-width="3" stroke-dasharray="128.8" stroke-dashoffset="73.6" transform="rotate(-90 22 22)"/>
+              </svg>
+              <div class="day-number regular-dark">3</div>
+            </div>
+          </div>
+          <div class="day-cell">
+            <div class="connector left solid-dark ghost"></div>
+            <div class="weekday dark today">Wed</div>
+            <div class="ring-cell today-improved-dark">
+              <svg class="ring-svg" width="44" height="44" viewBox="0 0 44 44">
+                <circle cx="22" cy="22" r="20.5" class="ring-track" stroke="rgba(232,185,77,0.2)" stroke-width="3"/>
+                <circle cx="22" cy="22" r="20.5" class="ring-progress" stroke="#E8B94D" stroke-width="3" stroke-dasharray="128.8" stroke-dashoffset="73.6" transform="rotate(-90 22 22)"/>
+              </svg>
+              <div class="day-number today-dark">4</div>
+            </div>
+          </div>
+          <div class="day-cell">
+            <div class="weekday dark">Thu</div>
+            <div class="ring-cell future">
+              <svg class="ring-svg" width="44" height="44" viewBox="0 0 44 44"><circle cx="22" cy="22" r="20.5" class="ring-track" stroke="rgba(255,255,255,0.15)" stroke-width="3"/></svg>
+              <div class="day-number" style="color:#6B7280">5</div>
+            </div>
+          </div>
+          <div class="day-cell">
+            <div class="weekday dark">Fri</div>
+            <div class="ring-cell future">
+              <svg class="ring-svg" width="44" height="44" viewBox="0 0 44 44"><circle cx="22" cy="22" r="20.5" class="ring-track" stroke="rgba(255,255,255,0.15)" stroke-width="3"/></svg>
+              <div class="day-number" style="color:#6B7280">6</div>
+            </div>
+          </div>
+          <div class="day-cell">
+            <div class="weekday dark">Sat</div>
+            <div class="ring-cell future">
+              <svg class="ring-svg" width="44" height="44" viewBox="0 0 44 44"><circle cx="22" cy="22" r="20.5" class="ring-track" stroke="rgba(255,255,255,0.15)" stroke-width="3"/></svg>
+              <div class="day-number" style="color:#6B7280">7</div>
+            </div>
+          </div>
+        </div>
+        <div class="weekly-bar-container">
+          <div class="weekly-bar-track weekly-bar-track-dark">
+            <div class="weekly-bar-fill" style="width:42.8%; background:#34D399; opacity: 0.4;"></div>
+          </div>
+          <div class="weekly-bar-label weekly-bar-label-dark">3 of 7 days</div>
+        </div>
+      </div>
+      <div class="habit-row dark" style="margin-top: 8px;"><div class="habit-check done-dark"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></div><div class="habit-name dark">Meditation</div></div>
+      <div class="habit-row dark"><div class="habit-check dark"></div><div class="habit-name dark">Exercise</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PRIORITY TABLE ===== -->
+<div class="section-header">Improvement Priority</div>
+
+<table class="priority-table">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Change</th>
+      <th>Impact</th>
+      <th>Effort</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>Full-width bar (remove margin + radius)</td>
+      <td><span class="impact-badge high">HIGH</span></td>
+      <td>1h</td>
+      <td style="color:#34D399">Done</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>Darken ring track (#DDD8D2 light / rgba 0.15 dark)</td>
+      <td><span class="impact-badge high">HIGH</span></td>
+      <td>15min</td>
+      <td style="color:#6B7280">Pending</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>Today cell: amber fill + glow shadow (restore useTodayGlow)</td>
+      <td><span class="impact-badge high">HIGH</span></td>
+      <td>1h</td>
+      <td style="color:#6B7280">Pending</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>Progress dots &rarr; progress bar (scalable)</td>
+      <td><span class="impact-badge med">MED</span></td>
+      <td>2h</td>
+      <td style="color:#6B7280">Pending</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>Weekly completion bar below strip</td>
+      <td><span class="impact-badge med">MED</span></td>
+      <td>2h</td>
+      <td style="color:#6B7280">Pending</td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td>Day cell state differentiation (missed vs future)</td>
+      <td><span class="impact-badge med">MED</span></td>
+      <td>3h</td>
+      <td style="color:#6B7280">Pending</td>
+    </tr>
+    <tr>
+      <td>7</td>
+      <td>Streak connector gradients + ghost arm pulse</td>
+      <td><span class="impact-badge low">LOW</span></td>
+      <td>3h</td>
+      <td style="color:#6B7280">Pending</td>
+    </tr>
+    <tr>
+      <td>8</td>
+      <td>Mini calendar &rarr; bottom sheet</td>
+      <td><span class="impact-badge low">LOW</span></td>
+      <td>5h</td>
+      <td style="color:#6B7280">Pending</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="callout">
+  <strong>Key visual differences in the improved version:</strong><br>
+  &bull; Full-width bar spans edge-to-edge (no floating card margins)<br>
+  &bull; Ring tracks are actually visible (#DDD8D2 vs nearly-invisible #EDEAE5)<br>
+  &bull; Today's cell has amber background fill + glow shadow<br>
+  &bull; Progress bar replaces dots (works for any number of habits)<br>
+  &bull; Weekly completion micro-bar gives "how was my week" at a glance<br>
+  &bull; Dark mode tracks use rgba(255,255,255,0.15) instead of 0.08
+</div>
+
+</body>
+</html>

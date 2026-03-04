@@ -63,7 +63,16 @@ export const get = query({
 
     const note = await ctx.db.get(args.noteId);
     if (!note) return null;
-    if (note.userId && note.userId !== identity.subject) return null;
+
+    if (note.userId) {
+      if (note.userId !== identity.subject) return null;
+      return note;
+    }
+
+    if (!note.habitId) return null;
+    const habit = await ctx.db.get(note.habitId);
+    if (!habit || habit.userId !== identity.subject) return null;
+
     return note;
   },
   returns: nullableNoteValidator,

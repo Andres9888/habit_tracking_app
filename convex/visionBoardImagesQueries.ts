@@ -33,7 +33,7 @@ export const listByHabit = query({
     if (!habit) {
       throw new Error('Habit not found');
     }
-    if (habit.userId !== identity.subject) {
+    if (!habit || habit.userId !== identity.subject) {
       throw new Error('Not authorized to view images for this habit');
     }
 
@@ -92,7 +92,7 @@ export const countByHabit = query({
     if (!habit) {
       throw new Error('Habit not found');
     }
-    if (habit.userId !== identity.subject) {
+    if (!habit || habit.userId !== identity.subject) {
       throw new Error('Not authorized to view images for this habit');
     }
 

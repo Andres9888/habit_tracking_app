@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { api } from '../../../convex/_generated/api';
 import { DEFAULT_SETTINGS } from './SettingsDialog.config';
 import type { Settings } from './SettingsDialog.types';
+import { updateSettingsWithFallback } from '../../lib/settings/updateSettingsWithFallback';
 
 export function useSettingsDialog(isOpen: boolean) {
   const settings = useQuery(api.settings.get) ?? DEFAULT_SETTINGS;
@@ -21,19 +22,19 @@ export function useSettingsDialog(isOpen: boolean) {
     document.documentElement.classList.toggle('dark', localSettings.darkMode === 'dark');
   }, [localSettings.darkMode]);
 
-  const toggleSetting = (key: keyof Settings) => {
+  const toggleSetting = async (key: keyof Settings) => {
     if (key === 'darkMode') {
       const nextDarkMode: Settings['darkMode'] =
         localSettings.darkMode === 'dark' ? 'light' : 'dark';
       const newSettings: Settings = { ...localSettings, darkMode: nextDarkMode };
       setLocalSettings(newSettings);
-      updateSettings(newSettings);
+      await updateSettingsWithFallback(updateSettings, newSettings);
       return;
     }
 
     const newSettings = { ...localSettings, [key]: !localSettings[key] };
     setLocalSettings(newSettings);
-    updateSettings(newSettings);
+    await updateSettingsWithFallback(updateSettings, newSettings);
   };
 
   return { localSettings, toggleSetting };

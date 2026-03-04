@@ -104,8 +104,14 @@ export const get = query({
     const letter = await ctx.db.get(args.letterId);
     if (!letter) return null;
 
-    // Ownership check
-    if (letter.userId && letter.userId !== identity.subject) return null;
+    // Ownership check (supports legacy rows without userId)
+    if (letter.userId) {
+      if (letter.userId !== identity.subject) return null;
+      return letter;
+    }
+
+    const habit = await ctx.db.get(letter.habitId);
+    if (!habit || habit.userId !== identity.subject) return null;
 
     return letter;
   },

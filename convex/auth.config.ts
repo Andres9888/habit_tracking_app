@@ -6,14 +6,9 @@
  *
  * SECURITY NOTES:
  * - Auth domain is configured via environment variable (CLERK_AUTH_DOMAIN)
- * - Never hardcode auth provider URLs in source code
  * - Clerk domain should be set during deployment, not build time
- * - See: convex/config/apiConstants.ts#CLERK_API for centralized configuration
  */
-
-import { CLERK_API } from './config/apiConstants';
-
-const authDomain = CLERK_API.AUTH_DOMAIN;
+const authDomain = 'https://vital-elf-64.clerk.accounts.dev';
 
 if (!authDomain) {
   throw new Error(

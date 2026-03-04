@@ -10,13 +10,7 @@
  */
 
 // The shared secret should be set in the Convex environment variables
-// Note: Environment variables are accessed differently in Convex HTTP actions
 const REVENUECAT_WEBHOOK_SECRET = process.env.REVENUECAT_WEBHOOK_SECRET ?? '';
-
-// Allow bypassing signature verification in development.
-// Set SKIP_WEBHOOK_VERIFICATION=true in your Convex dev environment variables.
-// NODE_ENV is not reliable in Convex's runtime — use an explicit env var instead.
-const isDevelopment = process.env.SKIP_WEBHOOK_VERIFICATION === 'true';
 
 /**
  * Verifies that a webhook request came from RevenueCat
@@ -29,17 +23,11 @@ export async function verifyRevenueCatSignature(
   body: string,
   signature: string
 ): Promise<boolean> {
-  // If no secret is configured, we must reject in production
-  // SECURITY: Only allow bypass in explicit development mode
+  // SECURITY: Reject all webhooks when secret is missing.
+  // This prevents accidental signature-bypass configuration from reaching production.
   if (!REVENUECAT_WEBHOOK_SECRET) {
-    if (isDevelopment) {
-      console.warn(
-        '[RevenueCat] DEV MODE: No webhook secret configured, skipping verification'
-      );
-      return true;
-    }
     console.error(
-      '[RevenueCat] CRITICAL: No webhook secret configured in production - rejecting webhook'
+      '[RevenueCat] CRITICAL: No webhook secret configured - rejecting webhook'
     );
     return false;
   }

@@ -45,6 +45,7 @@ import type * as character_getCharacterStats from "../character/getCharacterStat
 import type * as character_index from "../character/index.js";
 import type * as character_types from "../character/types.js";
 import type * as character from "../character.js";
+import type * as config_apiConstants from "../config/apiConstants.js";
 import type * as debugHabitStrength from "../debugHabitStrength.js";
 import type * as diagnose from "../diagnose.js";
 import type * as habitStrength_allHabitsStats from "../habitStrength/allHabitsStats.js";
@@ -63,6 +64,8 @@ import type * as habitStrength_updateParams from "../habitStrength/updateParams.
 import type * as habitStrength_updateStrength from "../habitStrength/updateStrength.js";
 import type * as habitStrength from "../habitStrength.js";
 import type * as habits_archive from "../habits/archive.js";
+import type * as habits_batchArchive from "../habits/batchArchive.js";
+import type * as habits_batchRemove from "../habits/batchRemove.js";
 import type * as habits_create from "../habits/create.js";
 import type * as habits_get from "../habits/get.js";
 import type * as habits_getTracking from "../habits/getTracking.js";
@@ -202,6 +205,7 @@ declare const fullApi: ApiFromModules<{
   "character/index": typeof character_index;
   "character/types": typeof character_types;
   character: typeof character;
+  "config/apiConstants": typeof config_apiConstants;
   debugHabitStrength: typeof debugHabitStrength;
   diagnose: typeof diagnose;
   "habitStrength/allHabitsStats": typeof habitStrength_allHabitsStats;
@@ -220,6 +224,8 @@ declare const fullApi: ApiFromModules<{
   "habitStrength/updateStrength": typeof habitStrength_updateStrength;
   habitStrength: typeof habitStrength;
   "habits/archive": typeof habits_archive;
+  "habits/batchArchive": typeof habits_batchArchive;
+  "habits/batchRemove": typeof habits_batchRemove;
   "habits/create": typeof habits_create;
   "habits/get": typeof habits_get;
   "habits/getTracking": typeof habits_getTracking;

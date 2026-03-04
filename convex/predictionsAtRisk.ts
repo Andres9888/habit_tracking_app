@@ -70,7 +70,7 @@ export const getHabitPrediction = query({
       return null;
     }
 
-    if (habit.userId !== identity.subject) return null;
+    if (!habit || habit.userId !== identity.subject) return null;
 
     const strength = habit.strength ?? 0;
     const accessibility = habit.accessibility ?? 1;

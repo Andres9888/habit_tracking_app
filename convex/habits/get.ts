@@ -16,7 +16,7 @@ export const get = query({
 
     const habit = await ctx.db.get(args.habitId);
     if (!habit) return null;
-    if (habit.userId !== identity.subject) return null;
+    if (!habit || habit.userId !== identity.subject) return null;
 
     const tracking = await ctx.db
       .query('tracking')

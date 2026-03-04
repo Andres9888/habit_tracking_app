@@ -27,21 +27,28 @@ export function ButtonContent({
   textStyle,
 }: ButtonContentProps) {
   const theme = useAppTheme();
-  const safeTheme = baseTheme.custom;
+  const safeTheme = baseTheme?.custom ?? {};
   const mergedColors = {
-    ...safeTheme.colors,
+    ...safeTheme?.colors,
     ...theme?.custom?.colors,
   };
   const mergedSpacing = {
-    ...safeTheme.spacing,
+    ...safeTheme?.spacing,
     ...theme?.custom?.spacing,
   };
-  const fallbackPrimary = baseTheme.custom.colors.primary?.[500] ?? '#10B981';
-  const fallbackInverseText = baseTheme.custom.colors.text?.inverse ?? '#ffffff';
   const mergedTypography = {
-    ...safeTheme.typography,
+    ...safeTheme?.typography,
     ...theme?.custom?.typography,
   };
+  const fallbackPrimary = mergedColors?.primary?.[500] ?? '#10B981';
+  const fallbackInverseText = mergedColors?.text?.inverse ?? '#ffffff';
+  const fallbackButtonTextStyle =
+    (mergedTypography as { button?: TextStyle })?.button ??
+    {
+      fontSize: 17,
+      fontWeight: '600',
+      color: mergedColors?.text?.primary ?? '#2D2A26',
+    };
 
   if (loading) {
     return (
@@ -69,8 +76,8 @@ export function ButtonContent({
       {typeof children === 'string' ? (
         <Text
           maxFontSizeMultiplier={2}
-          style={[
-            mergedTypography.button ?? baseTheme.custom.typography.button,
+            style={[
+            fallbackButtonTextStyle,
             variantStyles.text,
             textStyle,
           ]}

@@ -14,13 +14,14 @@ import {
 import { ConnectorArms } from './ConnectorArms';
 import { DayCellContent } from './DayCellContent';
 
-/** Renders a single day cell in the timeline */
 const DayCellComponent: React.FC<DayCellProps> = ({
   date,
   index,
   isCurrentDay,
   isUpcoming,
+  completed,
   completionStatus,
+  total,
   hasCompletionData,
   colors,
   reduceMotion,
@@ -36,12 +37,10 @@ const DayCellComponent: React.FC<DayCellProps> = ({
   const weekday = format(date, 'EEE');
   const dayNumber = format(date, 'd');
   const baseLabel = `${weekday}, ${format(date, 'MMM')} ${dayNumber}`;
-
   const isDayDisabled = Boolean(isUpcoming && disableFutureDayPress);
   const canPressDay = Boolean(
     isDayPressEnabled && onDayPress && !isDayDisabled
   );
-
   const statusText = getStatusText(completionStatus);
   const accessibilityLabel = buildAccessibilityLabel(
     isCurrentDay,
@@ -50,7 +49,6 @@ const DayCellComponent: React.FC<DayCellProps> = ({
   );
   const accessibilityHint = getAccessibilityHint(canPressDay, isDayDisabled);
   const { trigger } = useHaptics({ preference: reduceMotion });
-
   const handlePress = () => {
     trigger('tap');
     onDayPress(date);
@@ -58,12 +56,14 @@ const DayCellComponent: React.FC<DayCellProps> = ({
 
   const cp = {
     colors,
+    completed,
     completionStatus,
     dayNumber,
     hasCompletionData,
     isCurrentDay,
     isUpcoming,
     reduceMotion,
+    total,
     weekday,
   };
 

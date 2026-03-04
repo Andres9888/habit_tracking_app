@@ -15,13 +15,10 @@ interface CheckBadgeProps {
   reduceMotion: boolean;
 }
 
-const BADGE_SIZE = 16;
+const BADGE_SIZE = 18;
 
-/**
- * Bouncy entrance spring for the check badge pop-in.
- * Replaces legacy { friction: 5, tension: 200 } with design-system preset.
- */
-const ENTRANCE_SPRING = springs.bouncy;
+/** Snappy pop-in for the check badge — celebration spring for punchy feel */
+const ENTRANCE_SPRING = springs.celebration;
 
 /** Themed circle with checkmark at bottom-right of a completed day cell */
 export const CheckBadge: React.FC<CheckBadgeProps> = ({ reduceMotion }) => {
@@ -44,12 +41,16 @@ export const CheckBadge: React.FC<CheckBadgeProps> = ({ reduceMotion }) => {
     <Animated.View
       style={[
         styles.badge,
-        { backgroundColor: colors.card },
+        {
+          backgroundColor: colors.primary[100],
+          borderWidth: 1.5,
+          borderColor: colors.card,
+        },
         shadows.subtle,
         animatedStyle,
       ]}
     >
-      <Check color={colors.primary[500]} size={9} strokeWidth={2.5} />
+      <Check color={colors.primary[500]} size={10} strokeWidth={2.5} />
     </Animated.View>
   );
 };
@@ -58,11 +59,11 @@ const styles = StyleSheet.create({
   badge: {
     alignItems: 'center',
     borderRadius: BADGE_SIZE / 2,
-    bottom: -2,
+    bottom: -3,
     height: BADGE_SIZE,
     justifyContent: 'center',
     position: 'absolute',
-    right: -2,
+    right: -3,
     width: BADGE_SIZE,
     zIndex: 1,
   },

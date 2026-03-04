@@ -13,7 +13,9 @@ import { useThemeColors } from '../../theme/ThemeContext';
 import { HabitsPageSkeleton } from '../../components/SkeletonLoader';
 import { HabitsList } from './components/HabitsList';
 import { BottomActionBar } from './components/BottomActionBar';
+import { SelectionActionBar } from './components/SelectionActionBar';
 import { HabitsAppOverlays } from './components/HabitsAppOverlays';
+import { useSelectionMode, useSelectionActions } from './hooks/useSelectionMode';
 import { PerfectDayConfetti } from './components/PerfectDayConfetti';
 import { SyncStatusOverlays } from './components/SyncStatusOverlays';
 import { useHabitsApp } from './hooks/useHabitsApp';
@@ -46,6 +48,13 @@ function HabitsAppContent() {
     preference: list.reduceMotionPreference,
   });
 
+  const selection = useSelectionMode(list.habits);
+  const selectionActions = useSelectionActions({
+    selectedIds: selection.selectedIds,
+    habits: list.habits,
+    exitSelectionMode: selection.exitSelectionMode,
+  });
+
   const handlers = useHabitsAppHandlers({
     hasReachedHabitLimit: list.hasReachedHabitLimit,
     isPremiumUser: list.isPremiumUser,
@@ -60,6 +69,7 @@ function HabitsAppContent() {
     habits: list.habits,
     getHabitStatus: list.getHabitStatus,
     reduceMotion: list.reduceMotionPreference,
+    onLongPressSettings: selection.enterSelectionMode,
   });
 
   const showSkeleton = list.isHabitsLoading && list.habits.length === 0;
@@ -74,8 +84,15 @@ function HabitsAppContent() {
           <Animated.View entering={ENTERING} style={styles.flex1}>
             <HabitsList
               canNavigateForward={list.canNavigateForward}
+              isAllSelected={selection.isAllSelected}
+              isSelectionMode={selection.isSelectionMode}
               list={list}
               modals={modals}
+              onDeselectAll={selection.deselectAll}
+              onSelectAll={selection.selectAll}
+              onToggleSelection={selection.toggleSelection}
+              selectedCount={selection.selectedCount}
+              selectedIds={selection.selectedIds}
               upgradePromptVisible={handlers.upgradePromptVisible}
               weekDates={list.weekDates}
               onCreateHabitRequest={handlers.handleCreateHabitRequest}
@@ -88,17 +105,36 @@ function HabitsAppContent() {
             />
           </Animated.View>
         )}
-        {list.habits.length > 0 && <BottomActionBar {...bottomBar} />}
+        {list.habits.length > 0 &&
+          (selection.isSelectionMode ? (
+            <SelectionActionBar
+              selectedCount={selection.selectedCount}
+              onArchive={selectionActions.handleBatchArchive}
+              onCancel={selection.exitSelectionMode}
+              onDelete={selectionActions.showDeleteConfirmation}
+            />
+          ) : (
+            <BottomActionBar {...bottomBar} />
+          ))}
         <PerfectDayConfetti
           completedToday={bottomBar.completedToday}
           reduceMotion={list.reduceMotionPreference}
           totalHabits={bottomBar.totalHabits}
         />
+
         {overlaysMounted && (
           <HabitsAppOverlays
+            batchArchiveUndoCount={selectionActions.batchArchiveUndoCount}
+            batchArchiveUndoVisible={selectionActions.batchArchiveUndoVisible}
+            confirmDeleteCount={selectionActions.deleteCount}
+            confirmDeleteVisible={selectionActions.confirmDeleteVisible}
             list={list}
             modals={modals}
             paywallVisible={handlers.paywallVisible}
+            onBatchArchiveDismiss={selectionActions.dismissBatchArchiveUndo}
+            onBatchArchiveUndo={selectionActions.handleBatchArchiveUndo}
+            onConfirmDeleteCancel={selectionActions.hideDeleteConfirmation}
+            onConfirmDeleteConfirm={selectionActions.confirmBatchDelete}
             onPaywallClose={handlers.handlePaywallClose}
             onPaywallSuccess={handlers.handlePaywallSuccess}
           />

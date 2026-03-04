@@ -50,6 +50,41 @@ export const getUrl = query({
       throw new Error('Unauthenticated: Must be logged in to access files');
     }
 
+    // SECURITY: Only return URLs for files owned by the authenticated user.
+    // Storage IDs are persisted in visionBoardImages.
+    const directOwnershipMatch = await ctx.db
+      .query('visionBoardImages')
+      .withIndex('by_user_and_storage', (q) =>
+        q.eq('userId', identity.subject).eq('storageId', args.storageId)
+      )
+      .first();
+
+    if (directOwnershipMatch) {
+      return await ctx.storage.getUrl(args.storageId);
+    }
+
+    // Backward compatibility for older rows where userId may be missing.
+    const imageByStorageId = await ctx.db
+      .query('visionBoardImages')
+      .withIndex('by_storageId', (q) => q.eq('storageId', args.storageId))
+      .first();
+
+    if (!imageByStorageId) {
+      return null;
+    }
+
+    if (
+      imageByStorageId.userId &&
+      imageByStorageId.userId !== identity.subject
+    ) {
+      return null;
+    }
+
+    const habit = await ctx.db.get(imageByStorageId.habitId);
+    if (!habit || habit.userId !== identity.subject) {
+      return null;
+    }
+
     return await ctx.storage.getUrl(args.storageId);
   },
   returns: v.union(v.string(), v.null()),

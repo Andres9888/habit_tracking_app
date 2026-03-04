@@ -30,9 +30,11 @@ function SettingsModalContent({
   streakRemindersEnabled = false,
   streakReminderTime = '20:00',
   isPremium = false,
+  stickyCalendarHeader = false,
   isLoading = false,
   onToggleStreakReminders = () => {},
   onChangeStreakReminderTime = () => {},
+  onChangeStickyCalendarHeader = () => {},
   onPremiumUpsell,
   onExportHabitsData = () => {},
   archivedHabitsCount = 0,
@@ -115,11 +117,13 @@ function SettingsModalContent({
               onChangeCompletionSoundEnabled={onChangeCompletionSoundEnabled}
               onChangeDayShape={onChangeDayShape}
               onChangeHabitCompletionIcon={onChangeHabitCompletionIcon}
+              onChangeStickyCalendarHeader={onChangeStickyCalendarHeader}
               onChangeShowGradientFill={setShowGradientFill}
               onChangeStreakReminderTime={onChangeStreakReminderTime}
               onOpenArchivedHabits={() => setView('archived')}
               onExportHabitsData={onExportHabitsData}
               onOpenSortPicker={handleOpenSortSheet}
+              stickyCalendarHeader={stickyCalendarHeader}
               onPremiumUpsell={onPremiumUpsell}
               onToggleStreakReminders={onToggleStreakReminders}
             />

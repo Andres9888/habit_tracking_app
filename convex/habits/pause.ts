@@ -74,7 +74,7 @@ export const pause = mutation({
     }
 
     // SEC-001: Ownership verification
-    if (habit.userId !== identity.subject) {
+    if (!habit || habit.userId !== identity.subject) {
       throw new Error('Not authorized to pause this habit');
     }
 
@@ -115,7 +115,7 @@ export const resume = mutation({
     }
 
     // SEC-001: Ownership verification
-    if (habit.userId !== identity.subject) {
+    if (!habit || habit.userId !== identity.subject) {
       throw new Error('Not authorized to resume this habit');
     }
 

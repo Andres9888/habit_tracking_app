@@ -2,11 +2,12 @@
  * State management for TemplatesScreen
  */
 
-import { useEffect, useRef, useState } from 'react';
-import { FlatList, ScrollView } from 'react-native';
+import { useRef, useState } from 'react';
+import { FlatList } from 'react-native';
 import type { Doc, Id } from '../../../convex/_generated/dataModel';
 import type { TemplateToastData } from '../../components/TemplateAddedToast';
 import type { Category, SortOption } from '../templates/constants';
+import { useExpandedCategories } from './hooks/useExpandedCategories';
 import type { BrowseTab, ViewMode } from './TemplatesScreen.types';
 
 interface UseTemplatesScreenStateOptions {
@@ -17,15 +18,12 @@ export function useTemplatesScreenState({
   categories,
 }: UseTemplatesScreenStateOptions) {
   const flatListRef = useRef<FlatList<Doc<'templates'>>>(null);
-  const scrollViewRef = useRef<ScrollView>(null);
 
   const [viewMode, setViewMode] = useState<ViewMode>('browse');
   const [browseTab, setBrowseTab] = useState<BrowseTab>('categories');
   const [selectedCategory, setSelectedCategory] = useState<Category>('all');
-  const [expandedCategories, setExpandedCategories] = useState<Set<string>>(
-    new Set()
-  );
-  const [hasInitializedExpanded, setHasInitializedExpanded] = useState(false);
+  const { expandedCategories, setExpandedCategories } =
+    useExpandedCategories(categories);
   const [searchQuery, setSearchQuery] = useState('');
   const [sortOption, setSortOption] = useState<SortOption>('popular');
   const [researchOnly, setResearchOnly] = useState(false);
@@ -47,22 +45,6 @@ export function useTemplatesScreenState({
   const [showPaywall, setShowPaywall] = useState(false);
   const [isSeeding, setIsSeeding] = useState(false);
 
-  useEffect(() => {
-    if (
-      Array.isArray(categories) &&
-      categories.length > 0 &&
-      !hasInitializedExpanded
-    ) {
-      const nonAll = categories.filter((c) => c?.id !== 'all');
-      const init = new Set<string>();
-      for (const [i, c] of nonAll.entries()) {
-        if (c?.id && (i + 1) % 3 === 0) init.add(c.id);
-      }
-      setExpandedCategories(init);
-      setHasInitializedExpanded(true);
-    }
-  }, [categories, hasInitializedExpanded]);
-
   const safeSearchQuery = searchQuery ?? '';
   const isSearching = safeSearchQuery.trim().length > 0;
   const effectiveViewMode = isSearching ? 'search' : viewMode;
@@ -83,7 +65,6 @@ export function useTemplatesScreenState({
     isSeeding,
     previewTemplate,
     researchOnly,
-    scrollViewRef,
     searchQuery,
     selectedCategory,
     setBrowseTab,

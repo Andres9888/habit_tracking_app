@@ -3,9 +3,7 @@
  *
  * Contains (top-to-bottom):
  * 1. **OfflineIndicator** — shown when the device loses connectivity.
- * 2. **HabitsHeader** — minimal date-only title.
- * 3. **CalendarTimeline** — week-view dots with day completion heat.
- * 4. **TrialCountdownBanner** — shown during an active free-trial period.
+ * 2. **CalendarTimeline** — unified header with greeting, progress, and week strip.
  *
  * Action buttons have moved to the BottomActionBar.
  */

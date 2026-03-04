@@ -43,6 +43,7 @@ export const DEFAULT_SETTINGS = {
   showMotivationalMessages: true,
   showNotesStats: true,
   showStreaks: true,
+  stickyCalendarHeader: false,
   showWeekCompletionBar: false,
   streakRemindersEnabled: false,
   streakReminderTime: '20:00',

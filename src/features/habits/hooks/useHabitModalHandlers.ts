@@ -5,8 +5,10 @@ import type {
   HabitModalSetters,
   HabitModalDeps,
 } from './useHabitModalHandlers.types';
+import { DEFAULT_SETTINGS } from '../../../../convex/settings/types';
 import { showGenericError, showSaveError } from '../../../utils/errorAlerts';
 import { ERROR_MESSAGES } from '../../../constants/errorMessages';
+import { updateSettingsWithFallback } from '../../../lib/settings/updateSettingsWithFallback';
 
 export function useHabitModalHandlers(
   setters: HabitModalSetters,
@@ -75,9 +77,16 @@ export function useHabitModalHandlers(
 
   const onSettingsChange = useCallback(
     async (updates: Partial<HabitSettingsUpdate>) => {
-      if (!deps.settings) return;
       try {
-        await deps.updateSettings({ ...deps.settings, ...updates });
+        const baseSettings = (deps.settings ??
+          DEFAULT_SETTINGS) as Record<string, unknown>;
+        await updateSettingsWithFallback(
+          deps.updateSettings as (args: Record<string, unknown>) => Promise<unknown>,
+          {
+            ...baseSettings,
+            ...updates,
+          }
+        );
       } catch (error) {
         if (__DEV__) console.error('Failed to update settings:', error);
         showSaveError();

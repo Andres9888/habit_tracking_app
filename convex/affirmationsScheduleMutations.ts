@@ -33,7 +33,7 @@ export const scheduleDelivery = mutation({
 
     // Ownership verification via parent habit
     const habit = await ctx.db.get(affirmation.habitId);
-    if (habit && habit.userId !== identity.subject) {
+    if (!habit || habit.userId !== identity.subject) {
       throw new Error('Not authorized to schedule this affirmation');
     }
 
@@ -77,7 +77,7 @@ export const updateNotificationId = mutation({
     if (!affirmation) throw new Error('Affirmation not found');
 
     const habit = await ctx.db.get(affirmation.habitId);
-    if (habit && habit.userId !== identity.subject) {
+    if (!habit || habit.userId !== identity.subject) {
       throw new Error('Not authorized to update this affirmation');
     }
     await ctx.db.patch(args.id, {
@@ -104,7 +104,7 @@ export const toggleSchedule = mutation({
     if (!affirmation) throw new Error('Affirmation not found');
 
     const habit = await ctx.db.get(affirmation.habitId);
-    if (habit && habit.userId !== identity.subject) {
+    if (!habit || habit.userId !== identity.subject) {
       throw new Error('Not authorized to toggle this affirmation schedule');
     }
 
@@ -139,7 +139,7 @@ export const cancelSchedule = mutation({
     if (!affirmation) throw new Error('Affirmation not found');
 
     const habit = await ctx.db.get(affirmation.habitId);
-    if (habit && habit.userId !== identity.subject) {
+    if (!habit || habit.userId !== identity.subject) {
       throw new Error('Not authorized to cancel this affirmation schedule');
     }
     await ctx.db.patch(args.id, {
@@ -171,7 +171,7 @@ export const recordDelivery = mutation({
     if (!affirmation) throw new Error('Affirmation not found');
 
     const habit = await ctx.db.get(affirmation.habitId);
-    if (habit && habit.userId !== identity.subject) {
+    if (!habit || habit.userId !== identity.subject) {
       throw new Error('Not authorized to record delivery for this affirmation');
     }
     await ctx.db.patch(args.id, {

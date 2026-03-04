@@ -46,6 +46,7 @@ export interface CalendarAndDetailModalsProps {
   showHabitCalendar: boolean;
   showHabitDetail: boolean;
   showEditScreen: boolean;
+  stickyCalendarHeader: boolean;
   getStreak: HabitsModalsState['getStreak'];
   toggleHabit: HabitsModalsState['toggleHabit'];
   closeHabitCalendar: () => void;

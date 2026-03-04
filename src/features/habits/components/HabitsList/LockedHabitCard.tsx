@@ -112,12 +112,6 @@ export function LockedHabitCard({
           <Text className='text-[24px]'>✨</Text>
           <View className='gap-1'>
             <Text
-              className='text-center text-[17px] font-semibold'
-              style={{ color: themeColors.text.primary }}
-            >
-              Ready to unlock more?
-            </Text>
-            <Text
               className='text-center text-[13px] font-normal leading-[18px]'
               style={{ color: themeColors.text.secondary }}
             >

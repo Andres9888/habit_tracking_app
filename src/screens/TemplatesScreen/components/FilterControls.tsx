@@ -11,10 +11,8 @@ import { styles } from '../../templates/templatesScreenStyles';
 import { SortDropdown } from './SortDropdown';
 
 interface FilterControlsProps {
-  onResearchToggle: () => void;
   onSelectSort: (option: SortOption) => void;
   onToggleSortOptions: () => void;
-  researchOnly: boolean;
   showSortOptions: boolean;
   sortOption: SortOption;
 }

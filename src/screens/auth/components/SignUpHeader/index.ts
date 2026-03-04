@@ -1,1 +1,0 @@
-export { SignUpHeader } from './SignUpHeader';

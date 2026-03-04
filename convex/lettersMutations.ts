@@ -36,7 +36,7 @@ export const create = mutation({
     if (!habit) throw new Error('Habit not found');
 
     // SEC-001: Ownership verification - verify user owns the habit
-    if (habit.userId !== identity.subject) {
+    if (!habit || habit.userId !== identity.subject) {
       throw new Error('Not authorized to add letters to this habit');
     }
 
@@ -91,7 +91,7 @@ export const markAsRead = mutation({
       throw new Error('Not authorized to access this letter');
     }
     const habit = await ctx.db.get(letter.habitId);
-    if (habit && habit.userId !== identity.subject) {
+    if (!habit || habit.userId !== identity.subject) {
       throw new Error('Not authorized to access this letter');
     }
 
@@ -129,7 +129,7 @@ export const update = mutation({
       throw new Error('Not authorized to update this letter');
     }
     const habit = await ctx.db.get(letter.habitId);
-    if (habit && habit.userId !== identity.subject) {
+    if (!habit || habit.userId !== identity.subject) {
       throw new Error('Not authorized to update this letter');
     }
 
@@ -182,7 +182,7 @@ export const remove = mutation({
       throw new Error('Not authorized to delete this letter');
     }
     const habit = await ctx.db.get(letter.habitId);
-    if (habit && habit.userId !== identity.subject) {
+    if (!habit || habit.userId !== identity.subject) {
       throw new Error('Not authorized to delete this letter');
     }
 

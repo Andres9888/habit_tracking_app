@@ -14,7 +14,6 @@ import { useThemeColors } from '../../../../theme/ThemeContext';
 import TemplatesScreen from '../../../../screens/TemplatesScreen';
 import { springs } from '@/theme/animations';
 import type { TemplatesModalSectionProps } from './HabitsModals.types';
-import { springs } from '@/theme/animations';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 

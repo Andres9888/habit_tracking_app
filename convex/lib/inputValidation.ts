@@ -226,15 +226,14 @@ export function validateUrl(
 
 /** Allowed domains for audio/image storage */
 export const ALLOWED_STORAGE_DOMAINS = [
-  'convex.cloud',           // Convex storage
-  'convex.site',            // Convex HTTP endpoints
-  'supabase.co',            // Alternative storage
-  'cloudflare-ipfs.com',    // IPFS gateway
-  'firebasestorage.googleapis.com', // Firebase
+  'convex.cloud', // Convex storage
+  'convex.site', // Convex HTTP endpoints
 ];
 
 /**
- * Validate time format (HH:MM).
+ * Validate and normalize time format:
+ * - HH:MM (00:00 to 23:59)
+ * - hh:MM AM/PM (stored as HH:MM)
  */
 export function validateTimeFormat(
   time: string | undefined,
@@ -246,8 +245,42 @@ export function validateTimeFormat(
 
   const trimmed = time.trim();
 
+  // AM/PM values like "8:30 AM" are accepted and normalized.
+  const amPmMatch = trimmed.match(/^([1-9]|1[0-2]):([0-5]\d)\s*([AaPp][Mm])$/);
+  if (amPmMatch) {
+    const hour = Number.parseInt(amPmMatch[1], 10);
+    const minute = amPmMatch[2];
+    const period = amPmMatch[3].toUpperCase();
+
+    if (Number.isNaN(hour)) {
+      return { isValid: false, error: `${fieldName} must be in HH:MM format` };
+    }
+
+    let normalizedHour = hour;
+    if (period === 'PM' && hour < 12) {
+      normalizedHour += 12;
+    } else if (period === 'AM' && hour === 12) {
+      normalizedHour = 0;
+    }
+
+    const normalized = `${normalizedHour.toString().padStart(2, '0')}:${minute}`;
+    return { isValid: true, sanitized: normalized };
+  }
+
+  // Accept 24-hour values without leading zero like "8:30" and normalize to "08:30".
+  const short24hMatch = trimmed.match(/^([0-9]|1\d|2[0-3]):([0-5]\d)$/);
+  if (short24hMatch) {
+    const hour = Number.parseInt(short24hMatch[1], 10);
+    const minute = short24hMatch[2];
+    if (Number.isNaN(hour)) {
+      return { isValid: false, error: `${fieldName} must be in HH:MM format` };
+    }
+    const normalized = `${hour.toString().padStart(2, '0')}:${minute}`;
+    return { isValid: true, sanitized: normalized };
+  }
+
   if (trimmed.length > MAX_TIME_LENGTH) {
-    return { isValid: false, error: `${fieldName} format is invalid` };
+    return { isValid: false, error: `${fieldName} must be in HH:MM format` };
   }
 
   // Match HH:MM format (00:00 to 23:59)
