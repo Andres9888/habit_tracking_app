@@ -81,15 +81,14 @@ export async function verifyRevenueCatSignature(
 }
 
 /**
- * Timing-safe string comparison to prevent timing attacks
+ * Timing-safe string comparison to prevent timing attacks.
+ * Avoids early exit on length mismatch so comparison time is constant.
+ * HMAC-SHA256 hex is always 64 chars, so length differs only for malformed input.
  */
 function timingSafeEqual(a: string, b: string): boolean {
-  if (a.length !== b.length) {
-    return false;
-  }
-
-  let result = 0;
-  for (let i = 0; i < a.length; i++) {
+  const len = Math.max(a.length, b.length);
+  let result = a.length ^ b.length; // Non-zero if lengths differ
+  for (let i = 0; i < len; i++) {
     result |= (a.codePointAt(i) || 0) ^ (b.codePointAt(i) || 0);
   }
   return result === 0;

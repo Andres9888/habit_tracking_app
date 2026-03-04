@@ -351,6 +351,10 @@ const applicationTables = {
 
     lastWebhookEvent: v.optional(v.string()),
 
+    // Idempotency: tracks the last processed RevenueCat event ID to prevent
+    // double-processing when RevenueCat retries on 5xx responses
+    lastWebhookEventId: v.optional(v.string()),
+
     // e.g., "premium_monthly_699"
     planType: v.optional(planType),
 
