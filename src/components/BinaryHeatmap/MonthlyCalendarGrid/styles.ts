@@ -79,6 +79,7 @@ export const styles = StyleSheet.create({
     borderWidth: 1,
     flexDirection: 'row',
     gap: 6,
+    minWidth: 110,
     paddingHorizontal: 10,
     paddingVertical: 5,
   },
