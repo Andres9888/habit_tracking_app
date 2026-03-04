@@ -4,12 +4,22 @@
  * Animations for confetti, particle burst, progress ring, and exit transitions.
  */
 
+import { durations } from '@/theme/animations';
+import { colors } from '@/theme/colors';
+
 /**
  * Confetti animation config for success state
  */
 export const CONFETTI_CONFIG = {
-  colors: ['#10B981', '#34D399', '#6EE7B7', '#A7F3D0', '#FCD34D', '#F59E0B'],
-  duration: 1500,
+  colors: [
+    colors.primary[500],
+    colors.primary[400],
+    colors.primary[300],
+    colors.primary[100],
+    '#FCD34D',
+    '#F59E0B',
+  ],
+  duration: durations.breathing,
   particleCount: 20,
 } as const;
 
@@ -30,10 +40,16 @@ export const PROGRESS_RING = {
  * 8 circular particles in radial pattern that burst outward
  */
 export const PARTICLE_BURST = {
-  colors: ['#10B981', '#FBBF24', '#8B5CF6', '#EC4899', '#3B82F6'],
+  colors: [
+    colors.primary[500],
+    '#FBBF24',
+    '#8B5CF6',
+    '#EC4899',
+    colors.secondary[500],
+  ],
   count: 8,
   distance: 60,
-  duration: 800,
+  duration: durations.progress,
   staggerDelay: 25,
 } as const;
 
@@ -42,7 +58,7 @@ export const PARTICLE_BURST = {
  * Draws attention to the "Tap anywhere to continue" text
  */
 export const TAP_HINT_PULSE = {
-  duration: 2000,
+  duration: durations.drift,
   maxOpacity: 1,
   maxScale: 1.02,
   minOpacity: 0.6,
@@ -57,7 +73,7 @@ export const EXIT_TRANSITION = {
   // Content fade out (faster than icon)
   content: {
     delay: 0,
-    duration: 280,
+    duration: durations.enter,
   },
 
   // Total duration of exit animation
@@ -66,7 +82,7 @@ export const EXIT_TRANSITION = {
   // Icon morph animation
   icon: {
     // Shrink
-    duration: 400,
+    duration: durations.emphasis,
 
     // Move upward
     scale: 0.4,
@@ -74,5 +90,5 @@ export const EXIT_TRANSITION = {
   },
 
   // Delay before triggering list transition
-  onCompleteDelay: 280,
+  onCompleteDelay: durations.enter,
 } as const;

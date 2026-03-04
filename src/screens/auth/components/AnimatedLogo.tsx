@@ -10,6 +10,8 @@ import Animated, {
 } from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Link } from 'lucide-react-native';
+import { durations } from '@/theme/animations';
+import { colors } from '@/theme/colors';
 
 /**
  * Props for the AnimatedLogo component
@@ -47,7 +49,7 @@ export function AnimatedLogo({ size = 80 }: AnimatedLogoProps) {
     // Start the breathing animation (3s duration, infinite loop)
     scale.value = withRepeat(
       withTiming(1.05, {
-        duration: 1500,
+        duration: durations.breathing,
         easing: Easing.inOut(Easing.ease),
       }),
       -1, // Infinite repeats
@@ -57,7 +59,7 @@ export function AnimatedLogo({ size = 80 }: AnimatedLogoProps) {
     // Start the floating animation (slightly offset from breathing)
     translateY.value = withRepeat(
       withTiming(-6, {
-        duration: 2000,
+        duration: durations.drift,
         easing: Easing.inOut(Easing.ease),
       }),
       -1, // Infinite repeats
@@ -87,7 +89,7 @@ export function AnimatedLogo({ size = 80 }: AnimatedLogoProps) {
             borderRadius: 16,
             elevation: 4,
             height: size,
-            shadowColor: '#1c1917',
+            shadowColor: colors.gray[900],
             shadowOffset: { height: 4, width: 0 },
             shadowOpacity: 0.08,
             shadowRadius: 16,
@@ -96,7 +98,11 @@ export function AnimatedLogo({ size = 80 }: AnimatedLogoProps) {
         ]}
       >
         <LinearGradient
-          colors={['#059669', '#10b981', '#34d399']}
+          colors={[
+            colors.primary[600],
+            colors.primary[500],
+            colors.primary[400],
+          ]}
           end={{ x: 1, y: 1 }}
           start={{ x: 0, y: 0 }}
           style={{

@@ -12,13 +12,17 @@ import {
   Easing,
   interpolate,
 } from 'react-native-reanimated';
+import { durations } from '@/theme/animations';
 
 export function useGlowPulse() {
   const glowPulse = useSharedValue(0);
 
   React.useEffect(() => {
     glowPulse.value = withRepeat(
-      withTiming(1, { duration: 1500, easing: Easing.inOut(Easing.ease) }),
+      withTiming(1, {
+        duration: durations.breathing,
+        easing: Easing.inOut(Easing.ease),
+      }),
       -1,
       true
     );

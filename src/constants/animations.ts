@@ -20,7 +20,7 @@ export const ANIMATION_DURATIONS = {
   ENTRANCE: durations.standard,
   STANDARD: durations.enter,
   SLOW: durations.emphasis,
-  VERY_SLOW: 2000,
+  VERY_SLOW: durations.drift,
 } as const;
 
 /** Stagger delays for sequential animations (in milliseconds) */
@@ -58,7 +58,8 @@ export const ANIMATION_SEQUENCES = {
   ANALYTICS_HEADER: ANIMATION_DURATIONS.STANDARD,
   ANALYTICS_OVERVIEW: ANIMATION_DURATIONS.STANDARD + STAGGER_DELAYS.STANDARD,
   ANALYTICS_CHARTS: ANIMATION_DURATIONS.STANDARD + STAGGER_DELAYS.STANDARD * 2,
-  ANALYTICS_INSIGHTS: ANIMATION_DURATIONS.STANDARD + STAGGER_DELAYS.STANDARD * 3,
+  ANALYTICS_INSIGHTS:
+    ANIMATION_DURATIONS.STANDARD + STAGGER_DELAYS.STANDARD * 3,
   ANALYTICS_EXPORT: ANIMATION_DURATIONS.STANDARD + STAGGER_DELAYS.STANDARD * 4,
 } as const;
 
@@ -88,29 +89,4 @@ export const INTERPOLATION_RANGES = {
   FOUR_PHASE: [0, 0.5, 1, 1.5, 2] as const,
   // For entrance→peak→exit animations
   ENTRANCE_PEAK_EXIT: [0, 0.5, 1, 1.5, 2] as const,
-} as const;
-
-/**
- * @deprecated Use ANIMATION_DURATIONS and STAGGER_DELAYS instead
- * Kept for backward compatibility during migration
- */
-export const MAGIC_NUMBERS = {
-  // Delays from auth screens
-  DELAY_50: 50,
-  DELAY_110: 110,
-  DELAY_170: 170,
-  DELAY_200: 200,
-  DELAY_220: 220,
-  DELAY_240: 240,
-  DELAY_280: 280,
-
-  // Durations
-  DURATION_200: ANIMATION_DURATIONS.ENTRANCE,
-  DURATION_280: ANIMATION_DURATIONS.STANDARD,
-  DURATION_2000: ANIMATION_DURATIONS.VERY_SLOW,
-
-  // Opacity/Scale
-  OPACITY_0_5: 0.5,
-  OPACITY_0_8: 0.8,
-  SCALE_1_2: 1.2,
 } as const;

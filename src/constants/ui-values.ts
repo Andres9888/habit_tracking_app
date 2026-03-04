@@ -3,7 +3,11 @@
  *
  * Centralized magic numbers and values for styling and animations.
  * This includes opacity values, scale factors, shadow opacities, and other UI-related constants.
+ *
+ * Animation durations reference @/theme/animations as the canonical source.
  */
+
+import { durations } from '@/theme/animations';
 
 // ============================================================================
 // OPACITY VALUES (Used in style, shadow, and animation contexts)
@@ -112,29 +116,29 @@ export const ANIMATION_DURATION = {
   /** Extra short, for quick feedback */
   extraShort: 80,
 
-  /** Short duration for quick transitions */
-  short: 100,
+  /** Short duration for quick transitions — maps to durations.instant */
+  short: durations.instant,
 
-  /** Brief duration for alerts and messages */
-  brief: 150,
+  /** Brief duration for alerts and messages — maps to durations.quick */
+  brief: durations.quick,
 
-  /** Default duration for most animations */
-  default: 200,
+  /** Default duration for most animations — maps to durations.standard */
+  default: durations.standard,
 
   /** Standard duration for UI transitions */
   standard: 250,
 
-  /** Medium duration for screen transitions */
-  medium: 280,
+  /** Medium duration for screen transitions — maps to durations.enter */
+  medium: durations.enter,
 
-  /** Slightly longer for emphasized animations */
-  emphasized: 300,
+  /** Slightly longer for emphasized animations — maps to durations.moderate */
+  emphasized: durations.moderate,
 
   /** Long duration for complex animations */
   long: 320,
 
-  /** Extra long for prominent animations */
-  extraLong: 400,
+  /** Extra long for prominent animations — maps to durations.emphasis */
+  extraLong: durations.emphasis,
 
   /** Very long for slow animations */
   veryLong: 420,
@@ -142,14 +146,14 @@ export const ANIMATION_DURATION = {
   /** Extended duration for multi-step animations */
   extended: 500,
 
-  /** Long duration for background animations */
-  background: 600,
+  /** Long duration for background animations — maps to durations.complex */
+  background: durations.complex,
 
   /** Very extended duration */
   veryExtended: 720,
 
-  /** Sustained animation duration */
-  sustained: 800,
+  /** Sustained animation duration — maps to durations.progress */
+  sustained: durations.progress,
 
   /** Extended sustained duration */
   extendedSustained: 960,
@@ -157,14 +161,14 @@ export const ANIMATION_DURATION = {
   /** Very long duration for slow effect animations */
   slowEffect: 1200,
 
-  /** Long delay for initial animations */
-  longDelay: 1500,
+  /** Long delay for initial animations — maps to durations.breathing */
+  longDelay: durations.breathing,
 
   /** Extra long delay for celebration animations */
   celebrationDelay: 1800,
 
-  /** Very long duration for hero animations */
-  heroAnimation: 3000,
+  /** Very long duration for hero animations — maps to durations.celebration */
+  heroAnimation: durations.celebration,
 } as const;
 
 // ============================================================================

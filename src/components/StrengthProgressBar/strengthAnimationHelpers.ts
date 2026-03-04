@@ -6,7 +6,7 @@ import {
   Easing,
   type SharedValue,
 } from 'react-native-reanimated';
-import { springs } from '@/theme/animations';
+import { durations, springs } from '@/theme/animations';
 
 export function animateProgressWidth(
   progressWidth: SharedValue<number>,
@@ -26,24 +26,20 @@ export function animateProgressWidth(
     progressWidth.value = withDelay(
       200,
       withTiming(clampedStrength, {
-        duration: 800,
+        duration: durations.progress,
         easing: Easing.out(Easing.cubic),
       })
     );
   } else if (isEmptyingTransition) {
     progressWidth.value = withTiming(clampedStrength, {
-      duration: 400,
+      duration: durations.emphasis,
       easing: Easing.out(Easing.cubic),
     });
   } else if (isIncreasing) {
-    progressWidth.value = withSpring(clampedStrength, {
-      damping: 12,
-      mass: 0.8,
-      stiffness: 80,
-    });
+    progressWidth.value = withSpring(clampedStrength, springs.gentle);
   } else {
     progressWidth.value = withTiming(clampedStrength, {
-      duration: 300,
+      duration: durations.moderate,
       easing: Easing.out(Easing.quad),
     });
   }
@@ -57,11 +53,11 @@ export function animateEmoji(
 ) {
   if (levelChanged) {
     emojiOpacity.value = withTiming(0.3, {
-      duration: 150,
+      duration: durations.quick,
       easing: Easing.out(Easing.ease),
     });
     emojiScale.value = withTiming(0.6, {
-      duration: 150,
+      duration: durations.quick,
       easing: Easing.out(Easing.ease),
     });
     emojiRotation.value = withSequence(
@@ -71,7 +67,10 @@ export function animateEmoji(
     );
     emojiOpacity.value = withDelay(
       150,
-      withTiming(1, { duration: 200, easing: Easing.out(Easing.ease) })
+      withTiming(1, {
+        duration: durations.standard,
+        easing: Easing.out(Easing.ease),
+      })
     );
     emojiScale.value = withDelay(
       150,
@@ -82,7 +81,10 @@ export function animateEmoji(
     );
   } else {
     emojiScale.value = withSequence(
-      withTiming(1.08, { duration: 100, easing: Easing.out(Easing.ease) }),
+      withTiming(1.08, {
+        duration: durations.instant,
+        easing: Easing.out(Easing.ease),
+      }),
       withSpring(1, springs.standard)
     );
   }

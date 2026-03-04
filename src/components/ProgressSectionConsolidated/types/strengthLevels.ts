@@ -5,11 +5,12 @@
  */
 
 import type { LevelThreshold } from './data.types';
+import { colors } from '@/theme/colors';
 
 export const STRENGTH_LEVELS: LevelThreshold[] = [
   {
-    bgColor: '#ecfccb',
-    color: '#4D7A0A',
+    bgColor: colors.strength.startingLight,
+    color: colors.strength.starting,
     description: 'Just getting started',
     emoji: '🌱',
     label: 'Starting Out',
@@ -17,8 +18,8 @@ export const STRENGTH_LEVELS: LevelThreshold[] = [
     min: 0,
   },
   {
-    bgColor: '#dcfce7',
-    color: '#16a34a',
+    bgColor: colors.strength.buildingLight,
+    color: colors.strength.building,
     description: 'Building momentum',
     emoji: '🌿',
     label: 'Building',
@@ -26,8 +27,8 @@ export const STRENGTH_LEVELS: LevelThreshold[] = [
     min: 20,
   },
   {
-    bgColor: '#d1fae5',
-    color: '#059669',
+    bgColor: colors.primary[100],
+    color: colors.primary[600],
     description: 'Habit is taking root',
     emoji: '🌳',
     label: 'Growing',
@@ -35,8 +36,8 @@ export const STRENGTH_LEVELS: LevelThreshold[] = [
     min: 40,
   },
   {
-    bgColor: '#cffafe',
-    color: '#0891b2',
+    bgColor: colors.strength.strongLight,
+    color: colors.strength.strong,
     description: 'Solid consistency',
     emoji: '💪',
     label: 'Strong',

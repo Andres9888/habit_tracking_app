@@ -1,4 +1,5 @@
 import { Animated, Easing } from 'react-native';
+import { durations } from '@/theme/animations';
 
 export function createCelebrationAnimations(
   celebrationScale: Animated.Value,
@@ -7,13 +8,13 @@ export function createCelebrationAnimations(
   const celebrationAnim = Animated.loop(
     Animated.sequence([
       Animated.timing(celebrationScale, {
-        duration: 1500,
+        duration: durations.breathing,
         easing: Easing.inOut(Easing.ease),
         toValue: 1.02,
         useNativeDriver: true,
       }),
       Animated.timing(celebrationScale, {
-        duration: 1500,
+        duration: durations.breathing,
         easing: Easing.inOut(Easing.ease),
         toValue: 1,
         useNativeDriver: true,
@@ -23,7 +24,7 @@ export function createCelebrationAnimations(
 
   const rotationAnim = Animated.loop(
     Animated.timing(starRotation, {
-      duration: 3000,
+      duration: durations.celebration,
       easing: Easing.linear,
       toValue: 1,
       useNativeDriver: true,

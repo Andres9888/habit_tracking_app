@@ -16,6 +16,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { AnimatedDot } from './AnimatedDot';
 import { styles } from './HeroAnimation.styles';
+import { durations } from '@/theme/animations';
 
 const STAGES = [
   { emoji: '🌱', label: 'Start' },
@@ -30,15 +31,24 @@ export function HeroAnimation() {
   const startAnimations = useCallback(() => {
     progress.value = withRepeat(
       withSequence(
-        withTiming(1, { duration: 2000, easing: Easing.inOut(Easing.ease) }),
-        withTiming(2, { duration: 2000, easing: Easing.inOut(Easing.ease) }),
-        withDelay(1000, withTiming(0, { duration: 1000 }))
+        withTiming(1, {
+          duration: durations.drift,
+          easing: Easing.inOut(Easing.ease),
+        }),
+        withTiming(2, {
+          duration: durations.drift,
+          easing: Easing.inOut(Easing.ease),
+        }),
+        withDelay(durations.loop, withTiming(0, { duration: durations.loop }))
       ),
       -1,
       false
     );
     scale.value = withRepeat(
-      withSequence(withTiming(1.05, { duration: 2000 }), withTiming(1, { duration: 2000 })),
+      withSequence(
+        withTiming(1.05, { duration: durations.drift }),
+        withTiming(1, { duration: durations.drift })
+      ),
       -1,
       true
     );
@@ -50,25 +60,47 @@ export function HeroAnimation() {
 
   const stage0Style = useAnimatedStyle(() => ({
     opacity: interpolate(progress.value, [0, 0.5, 1], [1, 0, 0]),
-    transform: [{ scale: interpolate(progress.value, [0, 0.5], [1, 0.8]) * scale.value }],
+    transform: [
+      { scale: interpolate(progress.value, [0, 0.5], [1, 0.8]) * scale.value },
+    ],
   }));
 
   const stage1Style = useAnimatedStyle(() => ({
     opacity: interpolate(progress.value, [0.5, 1, 1.5, 2], [0, 1, 1, 0]),
-    transform: [{ scale: interpolate(progress.value, [0.5, 1, 1.5, 2], [0.8, 1, 1, 0.8]) * scale.value }],
+    transform: [
+      {
+        scale:
+          interpolate(progress.value, [0.5, 1, 1.5, 2], [0.8, 1, 1, 0.8]) *
+          scale.value,
+      },
+    ],
   }));
 
   const stage2Style = useAnimatedStyle(() => ({
     opacity: interpolate(progress.value, [1.5, 2], [0, 1]),
-    transform: [{ scale: interpolate(progress.value, [1.5, 2], [0.8, 1]) * scale.value }],
+    transform: [
+      { scale: interpolate(progress.value, [1.5, 2], [0.8, 1]) * scale.value },
+    ],
   }));
 
   return (
     <View style={styles.container}>
       <View style={styles.emojiContainer}>
-        <Animated.Text style={[styles.emoji, styles.absoluteEmoji, stage0Style]}>{STAGES[0].emoji}</Animated.Text>
-        <Animated.Text style={[styles.emoji, styles.absoluteEmoji, stage1Style]}>{STAGES[1].emoji}</Animated.Text>
-        <Animated.Text style={[styles.emoji, styles.absoluteEmoji, stage2Style]}>{STAGES[2].emoji}</Animated.Text>
+        <Animated.Text
+          style={[styles.emoji, styles.absoluteEmoji, stage0Style]}
+        >
+          {STAGES[0].emoji}
+        </Animated.Text>
+        <Animated.Text
+          style={[styles.emoji, styles.absoluteEmoji, stage1Style]}
+        >
+          {STAGES[1].emoji}
+        </Animated.Text>
+        <Animated.Text
+          style={[styles.emoji, styles.absoluteEmoji, stage2Style]}
+        >
+          {STAGES[2].emoji}
+        </Animated.Text>
       </View>
       <View style={styles.dotsContainer}>
         {STAGES.map((_, index) => (

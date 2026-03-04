@@ -14,7 +14,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import type { ConfettiParticleProps } from '../TemplateScienceModal.types';
 import { borderRadius } from '../../../theme/spacing';
-import { springs } from '@/theme/animations';
+import { durations, springs } from '@/theme/animations';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -34,19 +34,21 @@ export const ConfettiParticle = ({
     translateY.value = withDelay(
       delay,
       withTiming(Math.round(SCREEN_HEIGHT * 0.4), {
-        duration: 2000,
+        duration: durations.drift,
         easing: Easing.out(Easing.quad),
       })
     );
     translateX.value = withDelay(
       delay,
       withTiming(Math.round(startX + (Math.random() - 0.5) * 200), {
-        duration: 2000,
+        duration: durations.drift,
       })
     );
     rotate.value = withDelay(
       delay,
-      withTiming(Math.round(Math.random() * 720 - 360), { duration: 2000 })
+      withTiming(Math.round(Math.random() * 720 - 360), {
+        duration: durations.drift,
+      })
     );
     opacity.value = withDelay(delay + 1500, withTiming(0, { duration: 500 }));
   }, [delay, opacity, rotate, scale, startX, translateX, translateY]);
