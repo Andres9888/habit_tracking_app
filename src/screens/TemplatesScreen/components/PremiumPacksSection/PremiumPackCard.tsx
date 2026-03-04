@@ -4,8 +4,8 @@
 
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { fontFamilies } from '../../../../theme/typography';
 import type { PremiumPack } from '../../data/premiumPacks';
+import { PackPreviewChips } from './PackPreviewChips';
 
 interface PremiumPackCardProps {
   onPress: () => void;
@@ -40,7 +40,7 @@ export function PremiumPackCard({ onPress, pack }: PremiumPackCardProps) {
           <Text style={s.desc} numberOfLines={2}>
             {pack.description}
           </Text>
-          <Text style={s.habitCount}>{pack.habits.length} habits</Text>
+          <PackPreviewChips habits={pack.habits} />
         </View>
         <View style={s.cta}>
           <Text style={s.ctaText}>Import Pack</Text>
@@ -71,12 +71,6 @@ const s = StyleSheet.create({
     marginHorizontal: 16,
     paddingHorizontal: 24,
     paddingVertical: 16,
-  },
-  habitCount: {
-    color: 'rgba(255,255,255,0.5)',
-    fontFamily: fontFamilies.monospace,
-    fontSize: 11,
-    marginTop: 4,
   },
   name: { color: '#fff', fontSize: 16, fontWeight: '700', marginTop: 8 },
 });

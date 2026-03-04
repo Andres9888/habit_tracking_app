@@ -7,6 +7,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { HERO_GRADIENT_COLORS, s } from './FeaturedCollection.styles';
 import { HeroChips } from './HeroChips';
 import { HeroFooter } from './HeroFooter';
+import { HeroOutcome } from './HeroOutcome';
 
 interface FeaturedCollectionProps {
   onPress: () => void;
@@ -36,6 +37,7 @@ export function FeaturedCollection({ onPress }: FeaturedCollectionProps) {
         <Text style={s.description}>
           Start your day with science-backed habits for energy and focus
         </Text>
+        <HeroOutcome />
         <HeroChips />
         <HeroFooter />
       </LinearGradient>
