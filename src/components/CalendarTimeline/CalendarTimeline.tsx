@@ -1,10 +1,15 @@
 import React, { memo } from 'react';
 import { View } from 'react-native';
 import { GestureDetector } from 'react-native-gesture-handler';
+import Animated, {
+  interpolate,
+  useAnimatedStyle,
+} from 'react-native-reanimated';
 
 import { useCalendarTimelineSetup } from './CalendarTimeline.derived';
 import { getShelfStyle } from './CalendarTimeline.styles';
 import type { CalendarTimelineProps } from './CalendarTimeline.types';
+import { useStickyProgress } from './StickyHeaderContext';
 import {
   DayStrip,
   InlineTrialBar,
@@ -41,10 +46,19 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
     onNextWeek
   );
 
+  const stickyProgress = useStickyProgress();
+  const shelfRadiusStyle = useAnimatedStyle(() => ({
+    borderBottomLeftRadius: interpolate(stickyProgress.value, [0, 1], [16, 0]),
+    borderBottomRightRadius: interpolate(stickyProgress.value, [0, 1], [16, 0]),
+  }));
+
   if (!tl.firstDate || !tl.lastDate || !tl.currentDate) return null;
 
   return (
-    <View style={getShelfStyle(tl.isDark)} className='mb-4 pb-4 pt-2'>
+    <Animated.View
+      style={[getShelfStyle(tl.isDark), shelfRadiusStyle]}
+      className='mb-4 pb-4 pt-2'
+    >
       <View className='px-4'>
         {trialDaysRemaining != null && trialDaysRemaining > 0 && onUpgrade && (
           <InlineTrialBar
@@ -90,7 +104,7 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
           onSelectDate={onDayPress ?? tl.closeCalendar}
         />
       </View>
-    </View>
+    </Animated.View>
   );
 };
 
