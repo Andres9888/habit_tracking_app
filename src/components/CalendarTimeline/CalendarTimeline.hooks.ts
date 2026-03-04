@@ -48,7 +48,7 @@ export function useTimelineColors(highContrastMode: boolean, isDark: boolean) {
   }, [colors, highContrastMode]);
 }
 
-const SLIDE_OFFSET = 24;
+const SLIDE_OFFSET = 16;
 const TRANSITION_EASING = { duration: 300, easing: Easing.out(Easing.cubic) };
 
 /** Animates day cells entrance when the displayed week changes */
@@ -66,9 +66,12 @@ export function useWeekTransition(dates: Date[], reduceMotion: boolean) {
     ) {
       const forward = firstIso > prevFirstIso.current;
       translateX.value = forward ? SLIDE_OFFSET : -SLIDE_OFFSET;
-      opacity.value = 0.3;
+      opacity.value = 0;
       translateX.value = withTiming(0, TRANSITION_EASING);
-      opacity.value = withTiming(1, { duration: 200 });
+      opacity.value = withTiming(1, {
+        duration: 280,
+        easing: Easing.out(Easing.cubic),
+      });
     }
     prevFirstIso.current = firstIso;
   }, [dates, reduceMotion, translateX, opacity]);
