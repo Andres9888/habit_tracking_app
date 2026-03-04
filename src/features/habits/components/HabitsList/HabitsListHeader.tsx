@@ -12,7 +12,6 @@ import React, { memo, useMemo } from 'react';
 import { Animated, View } from 'react-native';
 import ReAnimated, {
   interpolate,
-  interpolateColor,
   useAnimatedStyle,
 } from 'react-native-reanimated';
 import { CalendarTimeline } from '../../../../components/CalendarTimeline';
@@ -35,11 +34,7 @@ function HabitsListHeaderComponent(
   const shelfBg = getShelfBackgroundColor(isDark);
 
   const stickyWrapperStyle = useAnimatedStyle(() => ({
-    backgroundColor: interpolateColor(
-      stickyProgress.value,
-      [0, 1],
-      ['transparent', shelfBg]
-    ),
+    backgroundColor: shelfBg,
     marginHorizontal: interpolate(
       stickyProgress.value,
       [0, 1],
