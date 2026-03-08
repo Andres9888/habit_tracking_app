@@ -4,7 +4,6 @@ import React from 'react';
 import { View, Modal, KeyboardAvoidingView, Platform } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Edit3 } from 'lucide-react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 import { ScreenHeader } from '../../components/ScreenHeader';
 import {
@@ -22,7 +21,6 @@ import {
 import { useThemeColors } from '../../theme';
 import { useHabitDetailScreenState } from './useHabitDetailScreenState';
 import { useCalendarHandlers } from './useCalendarHandlers';
-import { useNotesHandlers } from './useNotesHandlers';
 import type { HabitDetailScreenProps } from './HabitDetailScreen.types';
 
 // eslint-disable-next-line max-lines-per-function
@@ -35,7 +33,6 @@ function HabitDetailScreenContent({
   tracking = [],
   visible,
 }: HabitDetailScreenProps) {
-  const insets = useSafeAreaInsets();
   const { isDark } = useThemeColors();
   const bgGradient = isDark
     ? DETAIL_BG_GRADIENT_DARK
@@ -57,13 +54,9 @@ function HabitDetailScreenContent({
     setPendingArchive: screenState.setPendingArchive,
     setPendingDelete: screenState.setPendingDelete,
   });
-  const notesHandlers = useNotesHandlers({
-    habit,
-    onEdit,
-    setEditingNoteId: screenState.setEditingNoteId,
-    setIsNotesEditorOpen: screenState.setIsNotesEditorOpen,
-    setIsNotesListOpen: screenState.setIsNotesListOpen,
-  });
+  const handleEdit = () => {
+    if (habit) onEdit?.(habit);
+  };
 
   return (
     <Modal
@@ -93,7 +86,7 @@ function HabitDetailScreenContent({
                         icon={<Edit3 size={15} strokeWidth={2.5} />}
                         label='Edit habit'
                         text='Edit Habit'
-                        onPress={notesHandlers.handleEdit}
+                        onPress={handleEdit}
                       />
                     }
                     variant='transparent'
@@ -104,7 +97,6 @@ function HabitDetailScreenContent({
                     completedDates={screenState.completedDates}
                     daysTracking={screenState.daysTracking}
                     habit={habit}
-                    notesByDate={screenState.notesByDate}
                     totalCompletions={screenState.totalCompletions}
                     onDayPress={calendarHandlers.handleCalendarDayPress}
                   />
@@ -115,12 +107,7 @@ function HabitDetailScreenContent({
           <HabitDetailModals
             habitId={habit._id}
             habitName={habit.name}
-            {...buildModalsProps(
-              screenState,
-              calendarHandlers,
-              notesHandlers,
-              insets
-            )}
+            {...buildModalsProps(screenState, calendarHandlers)}
           />
         </>
       ) : (

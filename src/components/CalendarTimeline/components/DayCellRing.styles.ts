@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { StyleSheet } from 'react-native';
 
 import { colors as palette } from '../../../theme/colors';
@@ -5,7 +6,7 @@ import { darkColors } from '../../../theme/darkColors';
 import type { CompletionStatus } from '../CalendarTimeline.types';
 
 export const RING_SIZE = 44;
-export const STROKE_WIDTH = 3;
+export const STROKE_WIDTH = 4;
 export const RADIUS = (RING_SIZE - STROKE_WIDTH) / 2;
 export const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
 
@@ -23,6 +24,7 @@ export interface RingColors {
   progress: string;
   fill: string;
   todayBg: string | undefined;
+  todayBorder: string | undefined;
   text: string;
   checkIcon: string;
 }
@@ -39,35 +41,41 @@ export function getRingColors(
       ? 'rgba(232,185,77,0.08)'
       : 'rgba(232,185,77,0.10)'
     : undefined;
+  const todayBorder = isAmber
+    ? isDark
+      ? 'rgba(232,185,77,0.30)'
+      : 'rgba(232,185,77,0.35)'
+    : undefined;
+
+  const progress = isAmber
+    ? isDark
+      ? AMBER_DARK
+      : AMBER_LIGHT
+    : isDark
+      ? PROGRESS_EMERALD_DARK
+      : PROGRESS_EMERALD_LIGHT;
+
+  let text: string = isDark ? darkColors.text.primary : palette.gray[800];
+  if (status === 'complete') text = '#ffffff';
+  else if (isToday) text = isDark ? palette.streak[300] : palette.streak[700];
+  else if (status === 'future')
+    text = isDark ? darkColors.text.tertiary : palette.gray[400];
 
   return {
     track: isDark ? TRACK_DARK : TRACK_LIGHT,
-    progress: isAmber
-      ? isDark
-        ? AMBER_DARK
-        : AMBER_LIGHT
-      : isDark
-        ? PROGRESS_EMERALD_DARK
-        : PROGRESS_EMERALD_LIGHT,
+    progress,
     fill: isDark ? FILL_COMPLETE_DARK : FILL_COMPLETE_LIGHT,
     todayBg,
-    text:
-      status === 'complete'
-        ? '#ffffff'
-        : isToday
-          ? isDark
-            ? palette.streak[300]
-            : palette.streak[700]
-          : status === 'future'
-            ? isDark
-              ? darkColors.text.tertiary
-              : palette.gray[400]
-            : isDark
-              ? darkColors.text.primary
-              : palette.gray[800],
+    todayBorder,
+    text,
     checkIcon: '#ffffff',
   };
 }
+
+export const MONTH_PREFIX_COLORS = {
+  light: palette.primary[600],
+  dark: palette.primary[400],
+};
 
 export const COMPLETE_GLOW = {
   shadowColor: palette.primary[500],
@@ -94,8 +102,33 @@ export const ringStyles = StyleSheet.create({
     fontWeight: '700',
     textAlign: 'center',
   },
+  dayTextWithPrefix: {
+    fontSize: 12,
+    fontWeight: '700',
+    textAlign: 'center',
+  },
+  dayTextTodayWithPrefix: {
+    fontSize: 13,
+    fontWeight: '800',
+    textAlign: 'center',
+  },
+  dayTextToday: {
+    fontSize: 15,
+    fontWeight: '800',
+    textAlign: 'center',
+  },
   future: {
-    opacity: 0.4,
+    opacity: 0.3,
+  },
+  missed: {
+    opacity: 0.55,
+  },
+  monthPrefixText: {
+    fontSize: 7,
+    fontWeight: '800',
+    letterSpacing: 0.5,
+    marginBottom: -1,
+    textAlign: 'center',
   },
   solidFill: {
     alignItems: 'center',

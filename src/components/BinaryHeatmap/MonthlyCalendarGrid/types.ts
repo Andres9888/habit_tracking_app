@@ -22,7 +22,5 @@ export interface MonthlyCalendarGridProps {
   completedDates: Set<string>;
   habitColor: string;
   habitCreatedAt?: number;
-  /** Map of date strings to note bodies for showing notes on day tap */
-  notesByDate?: Record<string, string>;
   onDayPress?: (date: string, completed: boolean) => void;
 }

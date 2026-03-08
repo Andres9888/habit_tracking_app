@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import { View } from 'react-native';
 import { GestureDetector } from 'react-native-gesture-handler';
-
+import { format } from 'date-fns';
 import { useCalendarTimelineSetup } from './CalendarTimeline.derived';
 import { getShelfStyle } from './CalendarTimeline.styles';
 import type { CalendarTimelineProps } from './CalendarTimeline.types';
@@ -10,7 +10,7 @@ import {
   InlineTrialBar,
   MiniCalendarPopup,
   StripNav,
-  WeekNavigationHeader,
+  WeekNavRow,
 } from './components';
 
 const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
@@ -24,12 +24,10 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
   onDayPress,
   isDayPressEnabled,
   disableFutureDayPress = true,
-  completedToday = 0,
-  totalHabits = 0,
-  currentStreak = 0,
   onJumpToToday,
   trialDaysRemaining,
   onUpgrade,
+  completionIcon,
 }) => {
   const tl = useCalendarTimelineSetup(
     dates,
@@ -41,37 +39,51 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
     onNextWeek
   );
 
+  const isViewingPast = canNavigateForward && !!onJumpToToday;
   if (!tl.firstDate || !tl.lastDate || !tl.currentDate) return null;
 
+  const monthFormat = isViewingPast ? 'MMM' : 'MMMM';
+  const monthName = format(
+    isViewingPast ? tl.firstDate : tl.currentDate,
+    monthFormat
+  );
+  let dateSuffix: string;
+  if (isViewingPast && tl.lastDate) {
+    const sameMonth = tl.firstDate.getMonth() === tl.lastDate.getMonth();
+    dateSuffix = sameMonth
+      ? `${format(tl.firstDate, 'd')} – ${format(tl.lastDate, 'd')}`
+      : `${format(tl.firstDate, 'd')} – ${format(tl.lastDate, 'MMM d')}`;
+  } else {
+    dateSuffix = format(tl.currentDate, 'd');
+  }
+
   return (
-    <View
-      style={getShelfStyle(tl.isDark)}
-      className='pb-4 pt-2'
-    >
+    <View style={getShelfStyle(tl.isDark)} className='pb-4 pt-2'>
       <View>
-        <View className='px-4'>
-          {trialDaysRemaining != null && trialDaysRemaining > 0 && onUpgrade && (
+        {trialDaysRemaining != null && trialDaysRemaining > 0 && onUpgrade && (
+          <View className='px-6'>
             <InlineTrialBar
               daysRemaining={trialDaysRemaining}
               onUpgrade={onUpgrade}
             />
-          )}
-          <GestureDetector gesture={tl.headerPanGesture}>
-            <View collapsable={false}>
-              <WeekNavigationHeader
-                canNavigateForward={canNavigateForward}
-                completedToday={completedToday}
-                currentDate={tl.currentDate}
-                currentStreak={currentStreak}
-                dateRangeText={tl.dateRangeText}
-                totalHabits={totalHabits}
-                onDateRangePress={tl.openCalendar}
-                onJumpToToday={onJumpToToday}
-              />
-            </View>
-          </GestureDetector>
-        </View>
-        <View className='pl-10 pr-9'>
+          </View>
+        )}
+        <GestureDetector gesture={tl.headerPanGesture}>
+          <View
+            className='mb-3'
+            collapsable={false}
+            style={{ paddingHorizontal: 40 }}
+          >
+            <WeekNavRow
+              dateSuffix={dateSuffix}
+              isViewingPast={isViewingPast}
+              monthName={monthName}
+              onDateRangePress={tl.openCalendar}
+              onJumpToToday={onJumpToToday}
+            />
+          </View>
+        </GestureDetector>
+        <View style={{ paddingHorizontal: 40 }}>
           <StripNav canNavigateForward={canNavigateForward}>
             <DayStrip
               augmentedColors={tl.augmentedColors}
@@ -86,6 +98,7 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
               isToday={tl.isToday}
               onDayPress={onDayPress}
               panGesture={tl.panGesture}
+              completionIcon={completionIcon}
               reduceMotion={reduceMotion}
               weekTransitionStyle={tl.weekTransitionStyle}
             />

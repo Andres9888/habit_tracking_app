@@ -115,7 +115,10 @@ jest.mock('@clerk/clerk-expo', () => ({
 
 // Mock expo-secure-store
 jest.mock('expo-secure-store', () => ({
+  AFTER_FIRST_UNLOCK_THIS_DEVICE_ONLY: 'AFTER_FIRST_UNLOCK_THIS_DEVICE_ONLY',
+  deleteItemAsync: jest.fn(),
   getItemAsync: jest.fn(),
+  isAvailableAsync: jest.fn(async () => true),
   setItemAsync: jest.fn(),
 }));
 
@@ -285,10 +288,21 @@ jest.mock('react-native-reanimated', () => {
       // Create a chainable animation mock that supports any method chain
       const createChainableAnimation = () => {
         const chain = {};
-        const methods = ['delay', 'duration', 'springify', 'damping', 'stiffness', 'mass',
-          'withInitialValues', 'withCallback', 'easing', 'randomDelay', 'reduceMotion',
-          'build'];
-        methods.forEach(m => {
+        const methods = [
+          'delay',
+          'duration',
+          'springify',
+          'damping',
+          'stiffness',
+          'mass',
+          'withInitialValues',
+          'withCallback',
+          'easing',
+          'randomDelay',
+          'reduceMotion',
+          'build',
+        ];
+        methods.forEach((m) => {
           chain[m] = jest.fn(() => createChainableAnimation());
         });
         return chain;
@@ -321,8 +335,18 @@ jest.mock('react-native-reanimated', () => {
     ...(() => {
       const createChainableLayout = () => {
         const chain = {};
-        ['springify', 'damping', 'stiffness', 'mass', 'duration', 'delay', 'easing',
-         'withInitialValues', 'withCallback', 'reduceMotion'].forEach(m => {
+        [
+          'springify',
+          'damping',
+          'stiffness',
+          'mass',
+          'duration',
+          'delay',
+          'easing',
+          'withInitialValues',
+          'withCallback',
+          'reduceMotion',
+        ].forEach((m) => {
           chain[m] = jest.fn(() => createChainableLayout());
         });
         return chain;

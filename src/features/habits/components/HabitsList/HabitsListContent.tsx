@@ -2,8 +2,8 @@
 /**
  * HabitsListContent — the actual list body rendered by {@link HabitsList}.
  *
- * Wraps `react-native-draggable-flatlist` and wires up the four FlatList
- * render slots (header, footer, empty, item) plus the modal layer.
+ * Wraps `react-native-draggable-flatlist` and wires up the FlatList
+ * render slots (header, empty, item) plus the modal layer.
  *
  * Each render slot is produced by a dedicated factory function (see
  * `HabitsListRenders`) and memoised here to avoid unnecessary re-renders.
@@ -19,7 +19,6 @@ import DraggableFlatList, {
 } from 'react-native-draggable-flatlist';
 import {
   renderHabitsListHeader,
-  renderHabitsListFooter,
   renderHabitsListEmpty,
   renderHabitRow,
 } from './HabitsListRenders';
@@ -39,7 +38,6 @@ export function HabitsListContent({
   const {
     list,
     modals,
-    onUpgradeIntent,
     upgradePromptVisible,
     onUpgradeDismiss,
     onUpgradeConfirm,
@@ -72,11 +70,6 @@ export function HabitsListContent({
     [handlers, list, modals, handleSuccessTransitionComplete]
   );
 
-  const listFooterComponent = useMemo(
-    () => renderHabitsListFooter({ list, onUpgradeIntent }),
-    [list, onUpgradeIntent]
-  );
-
   const listHeaderComponent = useMemo(
     () => renderHabitsListHeader({ handlers, props, state }),
     [handlers, props, state]
@@ -107,23 +100,29 @@ export function HabitsListContent({
   return (
     <StickyHeaderContext.Provider value={contextValue}>
       <View className='flex-1 bg-transparent'>
-        <DraggableFlatList<Habit>
-          activationDistance={props.isSelectionMode ? 9999 : (handlers.isReorderingEnabled ? 12 : 9999)}
-          contentContainerStyle={contentContainerStyle}
-          data={list.habits}
-          keyExtractor={handlers.keyExtractor}
-          ListFooterComponent={listFooterComponent}
-          ListHeaderComponent={listHeaderComponent}
-          renderItem={renderHabitItem}
-          scrollEventThrottle={16}
-          showsVerticalScrollIndicator={false}
-          onDragBegin={handlers.handleDragBegin}
-          onDragEnd={(params) => {
-            void list.handleDragEnd(params);
-          }}
-          onScroll={scrollHandler}
-          stickyHeaderIndices={[0]}
-        />
+        {listHeaderComponent}
+        <View style={{ flex: 1, overflow: 'hidden' }}>
+          <DraggableFlatList<Habit>
+            activationDistance={
+              props.isSelectionMode
+                ? 9999
+                : handlers.isReorderingEnabled
+                  ? 12
+                  : 9999
+            }
+            contentContainerStyle={contentContainerStyle}
+            data={list.habits}
+            keyExtractor={handlers.keyExtractor}
+            renderItem={renderHabitItem}
+            scrollEventThrottle={16}
+            showsVerticalScrollIndicator={false}
+            onDragBegin={handlers.handleDragBegin}
+            onDragEnd={(params) => {
+              void list.handleDragEnd(params);
+            }}
+            onScroll={scrollHandler}
+          />
+        </View>
         <HabitsListModals
           daySheetDate={state.daySheetDate}
           getHabitStatus={list.getHabitStatus}

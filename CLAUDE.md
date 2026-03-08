@@ -474,11 +474,8 @@ npm run lint:max-lines-report # Generate JSON report
 
 ### Critical Files Requiring Decomposition
 
-These 6 files are 1000+ lines and high priority:
+These 3 files are 1000+ lines and high priority:
 
-1. `TemplateScienceModal.tsx` (1,375 lines)
-2. `LettersSection.tsx` (1,320 lines)
-3. `AffirmationsSection.tsx` (1,133 lines)
-4. `HabitsEmptyState.tsx` (1,094 lines)
-5. `FullsizeTemplatePreview.tsx` (1,047 lines)
-6. `TodaysFocusCard.tsx` (991 lines)
+1. `HabitsEmptyState.tsx` (1,094 lines)
+2. `FullsizeTemplatePreview.tsx` (1,047 lines)
+3. `TodaysFocusCard.tsx` (991 lines)

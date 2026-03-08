@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
  * Habit Removal and Restoration
  * Delete habits with undo support
@@ -33,39 +34,10 @@ export const remove = mutation({
       .query('tracking')
       .withIndex('by_habit_and_date', (q) => q.eq('habitId', args.habitId))
       .collect();
-    const notes = await ctx.db
-      .query('notes')
-      .withIndex('by_habit', (q) => q.eq('habitId', args.habitId))
-      .collect();
-    const reflections = await ctx.db
-      .query('reflections')
-      .withIndex('by_habit', (q) => q.eq('habitId', args.habitId))
-      .collect();
-    const letters = await ctx.db
-      .query('letters')
-      .withIndex('by_habit', (q) => q.eq('habitId', args.habitId))
-      .collect();
-    const affirmations = await ctx.db
-      .query('affirmations')
-      .withIndex('by_habit', (q) => q.eq('habitId', args.habitId))
-      .collect();
-    const voiceNotes = await ctx.db
-      .query('voiceNotes')
-      .withIndex('by_habit', (q) => q.eq('habitId', args.habitId))
-      .collect();
-    const visionBoardItems = await ctx.db
-      .query('visionBoardItems')
-      .withIndex('by_habit', (q) => q.eq('habitId', args.habitId))
-      .collect();
-    const visionBoardImages = await ctx.db
-      .query('visionBoardImages')
-      .withIndex('by_habit', (q) => q.eq('habitId', args.habitId))
-      .collect();
     const templateUsageEntries = await ctx.db
       .query('templateUsage')
       .withIndex('by_habit', (q) => q.eq('habitId', args.habitId))
       .collect();
-    const storageIds = [...new Set(visionBoardImages.map((image) => image.storageId))];
 
     // Delete the habit permanently
     await ctx.db.delete(args.habitId);
@@ -74,45 +46,8 @@ export const remove = mutation({
     for (const entry of trackingEntries) {
       await ctx.db.delete(entry._id);
     }
-    for (const note of notes) {
-      await ctx.db.delete(note._id);
-    }
-    for (const reflection of reflections) {
-      await ctx.db.delete(reflection._id);
-    }
-    for (const letter of letters) {
-      await ctx.db.delete(letter._id);
-    }
-    for (const affirmation of affirmations) {
-      await ctx.db.delete(affirmation._id);
-    }
-    for (const voiceNote of voiceNotes) {
-      await ctx.db.delete(voiceNote._id);
-    }
-    for (const item of visionBoardItems) {
-      await ctx.db.delete(item._id);
-    }
-    for (const image of visionBoardImages) {
-      await ctx.db.delete(image._id);
-    }
     for (const usageEntry of templateUsageEntries) {
       await ctx.db.delete(usageEntry._id);
-    }
-
-    // Delete unreferenced storage blobs for removed vision board images.
-    for (const storageId of storageIds) {
-      const remainingReferences = await ctx.db
-        .query('visionBoardImages')
-        .withIndex('by_storageId', (q) => q.eq('storageId', storageId))
-        .collect();
-      if (remainingReferences.length > 0) {
-        continue;
-      }
-      try {
-        await ctx.storage.delete(storageId);
-      } catch (error) {
-        console.error('Failed to delete storage file during habit removal:', error);
-      }
     }
 
     // Return the deleted data for potential undo — preserve all user-configured fields

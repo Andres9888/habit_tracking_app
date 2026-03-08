@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /* eslint-disable max-lines-per-function */
 /**
  * Settings Convex queries and mutations
@@ -59,8 +60,6 @@ export const get = query({
       showMotivationalMessages:
         settings?.showMotivationalMessages ??
         DEFAULT_SETTINGS.showMotivationalMessages,
-      showNotesStats:
-        settings?.showNotesStats ?? DEFAULT_SETTINGS.showNotesStats,
       stickyCalendarHeader:
         settings?.stickyCalendarHeader ?? DEFAULT_SETTINGS.stickyCalendarHeader,
       showStreaks: settings?.showStreaks ?? DEFAULT_SETTINGS.showStreaks,
@@ -105,12 +104,12 @@ export const update = mutation({
       .first();
 
     const normalizedArgs =
-      args.darkMode !== undefined
-        ? {
+      args.darkMode === undefined
+        ? args
+        : {
             ...args,
             darkMode: normalizeDarkMode(args.darkMode),
-          }
-        : args;
+          };
 
     if (!existing) {
       await ctx.db.insert('userSettings', {

@@ -1,0 +1,330 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Month Visibility #7 — Watermark Behind Strip</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Literata:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: 'DM Sans', sans-serif;
+        background: #f5f1ed;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 40px 20px;
+        min-height: 100vh;
+        color: #2d2a26;
+      }
+      .label {
+        font-family: 'Literata', serif;
+        font-size: 22px;
+        font-weight: 700;
+        color: #3d3833;
+        margin-bottom: 8px;
+        text-align: center;
+      }
+      .sublabel {
+        font-size: 14px;
+        color: #6b6560;
+        margin-bottom: 32px;
+        text-align: center;
+        max-width: 400px;
+        line-height: 1.5;
+      }
+      .phone-frame {
+        width: 390px;
+        background: #faf8f5;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+        margin-bottom: 32px;
+      }
+      .shelf {
+        padding: 12px 24px 16px;
+      }
+
+      /* === MOCK 7: Watermark Behind Strip === */
+      .strip-wrapper {
+        position: relative;
+        padding: 0 16px;
+      }
+      .month-watermark {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-family: 'Literata', serif;
+        font-size: 72px;
+        font-weight: 700;
+        color: rgba(5, 150, 105, 0.04);
+        letter-spacing: 6px;
+        text-transform: uppercase;
+        white-space: nowrap;
+        pointer-events: none;
+        user-select: none;
+        z-index: 0;
+      }
+
+      .date-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 12px;
+      }
+      .date-left {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        cursor: pointer;
+      }
+      .date-text {
+        font-size: 14px;
+        font-weight: 500;
+        color: #6b6560;
+      }
+      .chevron {
+        color: #c4bfb7;
+        font-size: 10px;
+      }
+      .streak-pill {
+        background: #fef3cd;
+        color: #7d5907;
+        font-size: 12px;
+        font-weight: 700;
+        padding: 3px 10px;
+        border-radius: 99px;
+      }
+      .day-strip {
+        display: flex;
+        justify-content: space-between;
+        position: relative;
+        z-index: 1;
+      }
+      .day-cell {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2px;
+        flex: 1;
+      }
+      .day-label {
+        font-size: 10px;
+        font-weight: 500;
+        color: #6b6560;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+      }
+      .day-label.today {
+        font-weight: 700;
+        color: #7d5907;
+      }
+      .day-ring {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        font-weight: 700;
+      }
+      .day-ring.complete {
+        background: #059669;
+        color: white;
+        box-shadow: 0 0 10px rgba(5, 150, 105, 0.4);
+      }
+      .day-ring.none {
+        border: 4px solid #ddd8d2;
+        color: #2d2a26;
+      }
+      .day-ring.today-ring {
+        background: rgba(232, 185, 77, 0.1);
+        color: #7d5907;
+        border: 4px solid #ddd8d2;
+        border-top-color: #e8b94d;
+        outline: 1px solid rgba(232, 185, 77, 0.35);
+      }
+      .day-ring.future {
+        border: 4px dashed #ddd8d2;
+        color: #c4bfb7;
+        opacity: 0.3;
+      }
+
+      .habits-section {
+        padding: 12px 16px;
+      }
+      .habit-card {
+        background: #edeae5;
+        border: 1px solid #ddd8d2;
+        border-radius: 12px;
+        padding: 16px;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .habit-emoji {
+        font-size: 24px;
+      }
+      .habit-info {
+        flex: 1;
+      }
+      .habit-name {
+        font-weight: 600;
+        font-size: 15px;
+      }
+      .habit-meta {
+        font-size: 12px;
+        color: #6b6560;
+        margin-top: 2px;
+      }
+      .habit-check {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        border: 2px solid #ddd8d2;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .habit-check.done {
+        background: #059669;
+        border-color: #059669;
+        color: white;
+      }
+
+      .reasoning {
+        max-width: 390px;
+        background: #edeae5;
+        border-radius: 12px;
+        padding: 20px;
+        margin-top: 8px;
+      }
+      .reasoning h3 {
+        font-family: 'Literata', serif;
+        font-size: 16px;
+        font-weight: 700;
+        margin-bottom: 8px;
+        color: #3d3833;
+      }
+      .reasoning ul {
+        padding-left: 20px;
+      }
+      .reasoning li {
+        font-size: 13px;
+        color: #524d47;
+        line-height: 1.6;
+        margin-bottom: 4px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="label">Mock 7: Month Watermark</div>
+    <div class="sublabel">
+      A large, ultra-faint month name sits behind the day strip — subconsciously
+      registers "MARCH" without adding any UI elements or vertical space.
+    </div>
+
+    <div class="phone-frame">
+      <div class="shelf">
+        <div class="date-row">
+          <div class="date-left">
+            <span style="color: #6e6660; font-size: 12px">&#128197;</span>
+            <span class="date-text">Thu, March 5</span>
+            <span class="chevron">&#9662;</span>
+          </div>
+          <div class="streak-pill">&#128293; 5 day streak</div>
+        </div>
+        <div class="strip-wrapper">
+          <div class="month-watermark">MAR</div>
+          <div class="day-strip">
+            <div class="day-cell">
+              <span class="day-label">Mon</span>
+              <div class="day-ring complete">1</div>
+            </div>
+            <div class="day-cell">
+              <span class="day-label">Tue</span>
+              <div class="day-ring complete">2</div>
+            </div>
+            <div class="day-cell">
+              <span class="day-label">Wed</span>
+              <div class="day-ring complete">3</div>
+            </div>
+            <div class="day-cell">
+              <span class="day-label">Thu</span>
+              <div class="day-ring complete">4</div>
+            </div>
+            <div class="day-cell">
+              <span class="day-label today">Today</span>
+              <div class="day-ring today-ring">5</div>
+            </div>
+            <div class="day-cell">
+              <span class="day-label">Sat</span>
+              <div class="day-ring future">6</div>
+            </div>
+            <div class="day-cell">
+              <span class="day-label">Sun</span>
+              <div class="day-ring future">7</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="habits-section">
+        <div class="habit-card">
+          <span class="habit-emoji">&#129526;</span>
+          <div class="habit-info">
+            <div class="habit-name">Morning Meditation</div>
+            <div class="habit-meta">72% strength</div>
+          </div>
+          <div class="habit-check done">&#10003;</div>
+        </div>
+        <div class="habit-card">
+          <span class="habit-emoji">&#128218;</span>
+          <div class="habit-info">
+            <div class="habit-name">Read 30 minutes</div>
+            <div class="habit-meta">45% strength</div>
+          </div>
+          <div class="habit-check"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="reasoning">
+      <h3>Why this is better</h3>
+      <ul>
+        <li>
+          <strong>Zero additional space:</strong> No new rows, pills, or headers
+          — the watermark lives in existing space behind the day strip.
+        </li>
+        <li>
+          <strong>Subconscious registration:</strong> At 4% opacity, the text is
+          felt more than read. Your brain processes it peripherally while
+          focusing on the rings.
+        </li>
+        <li>
+          <strong>Dramatic on month change:</strong> When swiping from Feb to
+          Mar, the watermark crossfades — a visually elegant transition that's
+          hard to miss.
+        </li>
+        <li>
+          <strong>Editorial design feel:</strong> Large-scale watermark text is
+          a technique from magazine layouts — adds sophistication to the warm
+          minimal aesthetic.
+        </li>
+        <li>
+          <strong>Simplest implementation:</strong> Just one absolute-positioned
+          Text component with low opacity. No new state, no new logic.
+        </li>
+      </ul>
+    </div>
+  </body>
+</html>

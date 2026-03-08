@@ -6,6 +6,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { QUEUE_INDEX_KEY } from './constants';
 import { getItemKey } from './utils';
 import { isValidQueuedSubmission } from './validation';
+import {
+  getSensitiveItem,
+  removeSensitiveItem,
+  setSensitiveItem,
+} from '../../utils/storage';
 import type { QueuedSubmission } from './types';
 
 /** Load the queue index from storage */
@@ -44,7 +49,7 @@ export async function loadQueueItem(
 ): Promise<QueuedSubmission | null> {
   try {
     const key = getItemKey(id);
-    const raw = await AsyncStorage.getItem(key);
+    const raw = await getSensitiveItem(key);
     if (!raw) return null;
 
     const parsed = JSON.parse(raw) as unknown;
@@ -64,7 +69,7 @@ export async function loadQueueItem(
 export async function saveQueueItem(item: QueuedSubmission): Promise<void> {
   try {
     const key = getItemKey(item.id);
-    await AsyncStorage.setItem(key, JSON.stringify(item));
+    await setSensitiveItem(key, JSON.stringify(item));
   } catch (error) {
     if (__DEV__) console.warn(`Failed to save queue item ${item.id}:`, error);
     throw error;
@@ -75,7 +80,7 @@ export async function saveQueueItem(item: QueuedSubmission): Promise<void> {
 export async function removeQueueItem(id: string): Promise<void> {
   try {
     const key = getItemKey(id);
-    await AsyncStorage.removeItem(key);
+    await removeSensitiveItem(key);
   } catch (error) {
     if (__DEV__) console.warn(`Failed to remove queue item ${id}:`, error);
   }
@@ -84,13 +89,14 @@ export async function removeQueueItem(id: string): Promise<void> {
 /** Load all items from the queue */
 export async function loadAllQueueItems(): Promise<QueuedSubmission[]> {
   const ids = await loadQueueIndex();
-  const items: QueuedSubmission[] = [];
+  const loadedItems = await Promise.all(ids.map((id) => loadQueueItem(id)));
+  const items = loadedItems.filter(
+    (item): item is QueuedSubmission => item !== null
+  );
 
-  for (const id of ids) {
-    const item = await loadQueueItem(id);
-    if (item) {
-      items.push(item);
-    }
+  if (items.length !== ids.length) {
+    const validIds = items.map((item) => item.id);
+    await saveQueueIndex(validIds);
   }
 
   return items.sort((a, b) => a.queuedAt - b.queuedAt);

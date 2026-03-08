@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { useMutation, useQuery } from 'convex/react';
 import { Alert } from 'react-native';
 import { api } from '../../../convex/_generated/api';
@@ -50,9 +51,7 @@ export const useArchivedHabitsModalLogic = () => {
           onPress: async () => {
             try {
               await removeHabit({ habitId });
-              void Haptics.notificationAsync(
-                Haptics.NotificationFeedbackType.Success
-              );
+              triggerHaptic('success');
             } catch (error) {
               if (__DEV__) console.error('Failed to delete habit:', error);
               triggerHaptic('error');
@@ -84,9 +83,13 @@ export const useArchivedHabitsModalLogic = () => {
               await deleteAllArchivedMutation();
               triggerHaptic('success');
             } catch (error) {
-              if (__DEV__) console.error('Failed to delete all archived:', error);
+              if (__DEV__)
+                console.error('Failed to delete all archived:', error);
               triggerHaptic('error');
-              Alert.alert('Error', 'Failed to delete archived habits. Please try again.');
+              Alert.alert(
+                'Error',
+                'Failed to delete archived habits. Please try again.'
+              );
             }
           },
           style: 'destructive',

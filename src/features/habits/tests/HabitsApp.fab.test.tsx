@@ -19,13 +19,19 @@ jest.mock('convex/react', () => ({
 // Mock CreateHabitModal component
 jest.mock('../../../components/CreateHabitModal', () => ({
   __esModule: true,
-  default: ({ visible, onClose }: { visible: boolean; onClose: () => void }) => {
+  default: ({
+    visible,
+    onClose,
+  }: {
+    visible: boolean;
+    onClose: () => void;
+  }) => {
     const { View, Text, Pressable } = require('react-native');
     if (!visible) return null;
     return (
-      <View testID="create-habit-modal">
+      <View testID='create-habit-modal'>
         <Text>Create Habit Modal</Text>
-        <Pressable testID="modal-close-button" onPress={onClose}>
+        <Pressable testID='modal-close-button' onPress={onClose}>
           <Text>Close</Text>
         </Pressable>
       </View>
@@ -73,11 +79,6 @@ jest.mock('../../../components/CalendarTimeline', () => ({
   CalendarTimeline: () => null,
 }));
 
-jest.mock('../../../components/HabitsAtRiskWidget', () => ({
-  __esModule: true,
-  default: () => null,
-}));
-
 jest.mock('../components/HabitsList', () => ({
   HabitsList: () => null,
 }));
@@ -89,7 +90,8 @@ jest.mock('../components/WebToaster', () => ({
 
 // Mock GestureHandlerRootView
 jest.mock('react-native-gesture-handler', () => ({
-  GestureHandlerRootView: ({ children }: { children: React.ReactNode }) => children,
+  GestureHandlerRootView: ({ children }: { children: React.ReactNode }) =>
+    children,
 }));
 
 describe('HabitsApp - FloatingActionButton Integration', () => {

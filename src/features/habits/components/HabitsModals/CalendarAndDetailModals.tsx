@@ -74,7 +74,6 @@ export function CalendarAndDetailModals(props: CalendarAndDetailModalsProps) {
           habitId={habitToEdit?._id ?? null}
           visible={showEditScreen}
           onClose={closeEditScreen}
-          onOpenAffirmationsEditor={openMotivationFromEdit}
           onOpenCueEditor={openMotivationFromEdit}
           onOpenVisionBoard={openMotivationFromEdit}
         />

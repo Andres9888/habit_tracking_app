@@ -1,7 +1,10 @@
 /**
- * HabitCard Color Constants
- * Implements theme color palette
- * Maps semantic card colors to canonical theme tokens
+ * HabitCard Color Constants (Light Mode Defaults)
+ *
+ * These map to `colors.light.*` values and are used in the static StyleSheet
+ * (HabitCard.styles.ts). Dark mode colors are applied dynamically by
+ * sub-components (HabitCardContent, StreakBadge, StatusIndicator, etc.)
+ * via `useThemeColors()` at render time, overriding these defaults.
  */
 
 import { colors } from '../../theme/colors';

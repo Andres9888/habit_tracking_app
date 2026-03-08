@@ -17,6 +17,7 @@ export interface HabitsListHeaderProps {
   canNavigateForward: boolean;
   justCreatedHabitId: string | null;
   reduceMotionPreference: boolean;
+  completionIcon?: 'chain' | 'checkbox';
   headerOpacity: Animated.Value;
   headerTranslateY: Animated.Value;
   calendarOpacity: Animated.Value;

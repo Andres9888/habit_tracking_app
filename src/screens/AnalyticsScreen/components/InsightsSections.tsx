@@ -6,6 +6,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import { colors } from '../../../theme/colors';
 import { typography } from '../../../theme/typography';
 import { spacing } from '../../../theme/spacing';
+import { useThemeColors } from '../../../theme/ThemeContext';
 import WeeklyInsightsCard from '../../../components/WeeklyInsightsCard';
 import HabitRankingsList from '../../../components/HabitRankingsList';
 import type { WeeklyInsights } from '../AnalyticsScreen.types';
@@ -27,7 +28,9 @@ export const InsightsSections: React.FC<InsightsSectionsProps> = ({
   return (
     <>
       <View style={styles.section}>
-        <Text style={[styles.sectionTitle, { color: colors.text.primary }]}>Weekly Insights</Text>
+        <Text style={[styles.sectionTitle, { color: colors.text.primary }]}>
+          Weekly Insights
+        </Text>
         <WeeklyInsightsCard
           insights={weeklyInsights ?? null}
           onArchivePress={() => {

@@ -10,23 +10,14 @@ import type {
 
 export const FEATURE_META: Record<MotivationPremiumFeature, FeatureMeta> = {
   advancedViz: {
-    description: 'Full Huberman protocol — visualize Body, Mind, and Emotion together.',
+    description:
+      'Full Huberman protocol — visualize Body, Mind, and Emotion together.',
     scienceBasis: 'Fear visualization moves you 2x better when unmotivated',
     title: 'Advanced Visualization',
   },
-  affirmations: {
-    description: 'Build the mindset that sticks — unlimited daily affirmations.',
-    freeLimit: '2 affirmations',
-    scienceBasis: 'Repetition builds neural pathways',
-    title: 'Unlimited Affirmations',
-  },
-  letters: {
-    description: 'Write messages to your future self that unlock at the perfect moment.',
-    scienceBasis: 'Temporal self-continuity increases self-control',
-    title: 'Letters to Self',
-  },
   rescueMode: {
-    description: 'Smart alerts when your streak is at risk — never lose progress again.',
+    description:
+      'Smart alerts when your streak is at risk — never lose progress again.',
     scienceBasis: 'Streak protection is #1 retention driver (Duolingo)',
     title: 'Rescue Mode',
   },
@@ -36,7 +27,8 @@ export const FEATURE_META: Record<MotivationPremiumFeature, FeatureMeta> = {
     title: 'Vision Board',
   },
   voiceNotes: {
-    description: 'Capture your voice when motivation peaks — replay it when you need it most.',
+    description:
+      'Capture your voice when motivation peaks — replay it when you need it most.',
     freeLimit: '1 recording',
     scienceBasis: 'Voice has 40% higher emotional recall than text',
     title: 'Voice Notes',

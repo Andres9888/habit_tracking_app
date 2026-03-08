@@ -89,9 +89,6 @@
     "tailwind-merge": "^3.1.0",
     "victory-native": "^41.20.1"
   },
-  "overrides": {
-    "convex": "1.21.1-alpha.1"
-  },
   "devDependencies": {
     "@eslint/js": "^9.21.0",
     "@expo/cli": "^54.0.23",
@@ -128,8 +125,9 @@
   },
   "overrides": {
     "convex": "1.21.1-alpha.1",
-    "minimatch": "^10.2.2",
-    "tar": "^7.5.9"
+    "minimatch": "^10.2.4",
+    "rollup": "^4.59.0",
+    "tar": "^7.5.10"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [

@@ -3,13 +3,7 @@
  */
 
 /** Submission types supported by the offline queue */
-export type OfflineSubmissionType =
-  | 'reflection'
-  | 'letter'
-  | 'voiceNote'
-  | 'visionBoardImage'
-  | 'affirmation'
-  | 'habitUpdate';
+export type OfflineSubmissionType = 'habitUpdate';
 
 /** Base structure for all queued submissions */
 export interface QueuedSubmission<T = unknown> {
@@ -22,46 +16,6 @@ export interface QueuedSubmission<T = unknown> {
   lastRetryAt?: number;
   habitId?: string;
   description?: string;
-}
-
-/** Reflection submission payload */
-export interface ReflectionPayload {
-  habitId: string;
-  date: string;
-  emoji: 'frustrated' | 'neutral' | 'happy' | 'fire';
-  note?: string;
-}
-
-/** Letter submission payload */
-export interface LetterPayload {
-  habitId: string;
-  content: string;
-  unlockDays: number;
-  title?: string;
-}
-
-/** Voice note submission payload */
-export interface VoiceNotePayload {
-  habitId: string;
-  audioUrl: string;
-  duration: number;
-  label?: string;
-  isDay1?: boolean;
-}
-
-/** Vision board image submission payload */
-export interface VisionBoardImagePayload {
-  habitId: string;
-  storageId: string;
-  caption?: string;
-  order?: number;
-}
-
-/** Affirmation submission payload */
-export interface AffirmationPayload {
-  habitId: string;
-  text: string;
-  type?: 'identity' | 'motivational' | 'instructional';
 }
 
 /** Habit update submission payload */

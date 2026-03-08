@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
  * HabitsApp - Main habits screen
  * Orchestrates the habits list, modals, overlays, and bottom action bar.
@@ -15,8 +16,10 @@ import { HabitsList } from './components/HabitsList';
 import { BottomActionBar } from './components/BottomActionBar';
 import { SelectionActionBar } from './components/SelectionActionBar';
 import { HabitsAppOverlays } from './components/HabitsAppOverlays';
-import { useSelectionMode, useSelectionActions } from './hooks/useSelectionMode';
-import { PerfectDayConfetti } from './components/PerfectDayConfetti';
+import {
+  useSelectionMode,
+  useSelectionActions,
+} from './hooks/useSelectionMode';
 import { SyncStatusOverlays } from './components/SyncStatusOverlays';
 import { useHabitsApp } from './hooks/useHabitsApp';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
@@ -116,11 +119,6 @@ function HabitsAppContent() {
           ) : (
             <BottomActionBar {...bottomBar} />
           ))}
-        <PerfectDayConfetti
-          completedToday={bottomBar.completedToday}
-          reduceMotion={list.reduceMotionPreference}
-          totalHabits={bottomBar.totalHabits}
-        />
 
         {overlaysMounted && (
           <HabitsAppOverlays

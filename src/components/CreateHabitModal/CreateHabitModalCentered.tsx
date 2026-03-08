@@ -1,12 +1,19 @@
 /**
  * CreateHabitModalCentered - Full-screen modal for habit creation
  *
- * Matches HabitEditScreen presentation: transparent modal with dark overlay,
- * rounded top container, KeyboardAvoidingView, and swipe-to-dismiss.
+ * Spring-based sheet transition with animated backdrop.
+ * Enter: spring slide-up + fade. Exit: spring slide-down + fade, then unmount.
  */
 
 import { useEffect, useRef, useState } from 'react';
-import { KeyboardAvoidingView, Modal, Platform, View } from 'react-native';
+import {
+  KeyboardAvoidingView,
+  Modal,
+  Platform,
+  Pressable,
+  StyleSheet,
+  View,
+} from 'react-native';
 import type { ScrollView as ScrollViewType } from 'react-native';
 
 import { GestureDetector } from 'react-native-gesture-handler';
@@ -26,7 +33,9 @@ export default function CreateHabitModalCentered(props: CreateHabitModalProps) {
   const scrollViewRef = useRef<ScrollViewType>(null);
   const [showNameError, setShowNameError] = useState(false);
   const { colors } = useThemeColors();
-  const { animatedStyle, panGesture } = useSwipeDismiss({ onClose });
+  const { animateOut, backdropStyle, panGesture, sheetStyle } = useSwipeDismiss(
+    { visible, onClose }
+  );
 
   const callbacks = useCenteredFormCallbacks({
     form,
@@ -48,24 +57,27 @@ export default function CreateHabitModalCentered(props: CreateHabitModalProps) {
     <Modal
       accessibilityViewIsModal
       transparent
-      animationType='slide'
+      animationType='none'
       visible={visible}
-      onRequestClose={onClose}
+      onRequestClose={animateOut}
     >
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         className='flex-1'
       >
-        <View className='flex-1 bg-black/50'>
+        <View className='flex-1'>
+          <Pressable style={StyleSheet.absoluteFill} onPress={animateOut}>
+            <Animated.View className='flex-1 bg-black' style={backdropStyle} />
+          </Pressable>
           <GestureDetector gesture={panGesture}>
             <Animated.View
               className='flex-1 overflow-hidden rounded-t-3xl shadow-2xl'
-              style={[animatedStyle, { backgroundColor: colors.surface }]}
+              style={[sheetStyle, { backgroundColor: colors.surface }]}
             >
               <ModalHeader
                 habitName={form.habitName}
                 isEditMode={isEditMode}
-                onClose={onClose}
+                onClose={animateOut}
                 onSave={callbacks.handleSave}
                 onValidationError={callbacks.handleValidationError}
               />

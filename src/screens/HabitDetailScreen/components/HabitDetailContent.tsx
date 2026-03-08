@@ -15,7 +15,6 @@ interface HabitDetailContentProps {
   completedDates: Set<string>;
   daysTracking: number;
   habit: Habit;
-  notesByDate?: Record<string, string>;
   totalCompletions: number;
   onDayPress: (dateString: string, isCompleted: boolean) => void;
 }
@@ -27,7 +26,6 @@ export function HabitDetailContent({
   completedDates,
   daysTracking,
   habit,
-  notesByDate,
   totalCompletions,
   onDayPress,
 }: HabitDetailContentProps) {
@@ -49,21 +47,30 @@ export function HabitDetailContent({
         totalCompletions={totalCompletions}
       />
 
-      <SectionLabel borderColor={borderColor} delay={240} text='HISTORY' textColor={labelColor} />
+      <SectionLabel
+        borderColor={borderColor}
+        delay={240}
+        text='HISTORY'
+        textColor={labelColor}
+      />
       <ErrorBoundary>
         <MonthlyCalendarGrid
           completedDates={completedDates}
           habitColor={habit.color ?? habit.iconColor ?? colors.primary[700]}
           habitCreatedAt={habit.createdAt}
           habitId={habit._id}
-          notesByDate={notesByDate}
           onDayPress={onDayPress}
         />
       </ErrorBoundary>
 
       {habit.createdAt && (
         <>
-          <SectionLabel borderColor={borderColor} delay={360} text='STRENGTH' textColor={labelColor} />
+          <SectionLabel
+            borderColor={borderColor}
+            delay={360}
+            text='STRENGTH'
+            textColor={labelColor}
+          />
           <Animated.View
             className='rounded-2xl'
             entering={anim(420)}

@@ -158,7 +158,8 @@ jest.mock('react-native-reanimated', () => {
     useSharedValue: (initial: unknown) => ({ value: initial }),
     useAnimatedStyle: () => ({}),
     withSpring: (value: unknown) => value,
-    withTiming: (value: unknown, _config?: unknown, _callback?: unknown) => value,
+    withTiming: (value: unknown, _config?: unknown, _callback?: unknown) =>
+      value,
     withDelay: (_delay: unknown, value: unknown) => value,
     withSequence: (...values: unknown[]) => values[values.length - 1],
     withRepeat: (animation: unknown) => animation,
@@ -292,14 +293,11 @@ jest.mock('expo-av', () => ({
 
 const FREE_TIER_LIMITS = {
   voiceNotes: 1,
-  affirmations: 2,
 };
 
 const ALL_PREMIUM_FEATURES: MotivationPremiumFeature[] = [
   'voiceNotes',
-  'letters',
   'visionBoard',
-  'affirmations',
   'rescueMode',
   'advancedViz',
 ];
@@ -703,7 +701,6 @@ describe('AC7: Free/Premium features are correctly gated', () => {
   describe('3. Premium UI Patterns', () => {
     describe('PRO Badge Display', () => {
       const premiumOnlyFeatures: MotivationPremiumFeature[] = [
-        'letters',
         'visionBoard',
         'rescueMode',
         'advancedViz',

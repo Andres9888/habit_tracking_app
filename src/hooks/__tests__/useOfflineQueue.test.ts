@@ -29,9 +29,7 @@ import {
   loadAllQueueItems,
   calculateQueueStats,
   type QueuedSubmission,
-  type OfflineSubmissionType,
-  type ReflectionPayload,
-  type LetterPayload,
+  type HabitUpdatePayload,
 } from '../useOfflineQueue';
 
 jest.mock('@react-native-async-storage/async-storage');
@@ -191,8 +189,8 @@ describe('useOfflineQueue', () => {
     it('returns parsed item', async () => {
       const item: QueuedSubmission = {
         id: 'test-id',
-        type: 'reflection',
-        payload: { habitId: 'habit-1', date: '2024-01-01', emoji: 'happy' },
+        type: 'habitUpdate',
+        payload: { habitId: 'habit-1', updates: { name: 'Test' } },
         queuedAt: 1703849283947,
         retryCount: 0,
       };
@@ -244,8 +242,8 @@ describe('useOfflineQueue', () => {
     it('saves item to AsyncStorage', async () => {
       const item: QueuedSubmission = {
         id: 'test-id',
-        type: 'reflection',
-        payload: { habitId: 'habit-1', date: '2024-01-01', emoji: 'happy' },
+        type: 'habitUpdate',
+        payload: { habitId: 'habit-1', updates: { name: 'Test' } },
         queuedAt: 1703849283947,
         retryCount: 0,
       };
@@ -291,21 +289,21 @@ describe('useOfflineQueue', () => {
       const items: QueuedSubmission[] = [
         {
           id: 'id2',
-          type: 'letter',
+          type: 'habitUpdate',
           payload: {},
           queuedAt: 2000,
           retryCount: 0,
         },
         {
           id: 'id1',
-          type: 'reflection',
+          type: 'habitUpdate',
           payload: {},
           queuedAt: 1000,
           retryCount: 0,
         },
         {
           id: 'id3',
-          type: 'affirmation',
+          type: 'habitUpdate',
           payload: {},
           queuedAt: 3000,
           retryCount: 0,
@@ -332,7 +330,7 @@ describe('useOfflineQueue', () => {
         .mockResolvedValueOnce(
           JSON.stringify({
             id: 'id1',
-            type: 'reflection',
+            type: 'habitUpdate',
             payload: {},
             queuedAt: 1000,
             retryCount: 0,
@@ -356,11 +354,6 @@ describe('useOfflineQueue', () => {
         pendingItems: 0,
         failedItems: 0,
         byType: {
-          reflection: 0,
-          letter: 0,
-          voiceNote: 0,
-          visionBoardImage: 0,
-          affirmation: 0,
           habitUpdate: 0,
         },
         oldestItemAt: undefined,
@@ -371,28 +364,28 @@ describe('useOfflineQueue', () => {
       const items: QueuedSubmission[] = [
         {
           id: 'id1',
-          type: 'reflection',
+          type: 'habitUpdate',
           payload: {},
           queuedAt: 1000,
           retryCount: 0, // pending
         },
         {
           id: 'id2',
-          type: 'reflection',
+          type: 'habitUpdate',
           payload: {},
           queuedAt: 2000,
           retryCount: 1, // failed
         },
         {
           id: 'id3',
-          type: 'letter',
+          type: 'habitUpdate',
           payload: {},
           queuedAt: 3000,
           retryCount: 0, // pending
         },
         {
           id: 'id4',
-          type: 'affirmation',
+          type: 'habitUpdate',
           payload: {},
           queuedAt: 4000,
           retryCount: 2, // failed
@@ -404,10 +397,7 @@ describe('useOfflineQueue', () => {
       expect(stats.totalItems).toBe(4);
       expect(stats.pendingItems).toBe(2);
       expect(stats.failedItems).toBe(2);
-      expect(stats.byType.reflection).toBe(2);
-      expect(stats.byType.letter).toBe(1);
-      expect(stats.byType.affirmation).toBe(1);
-      expect(stats.byType.voiceNote).toBe(0);
+      expect(stats.byType.habitUpdate).toBe(4);
       expect(stats.oldestItemAt).toBe(1000);
     });
   });
@@ -431,14 +421,14 @@ describe('useOfflineQueue', () => {
       const items: QueuedSubmission[] = [
         {
           id: 'id1',
-          type: 'reflection',
+          type: 'habitUpdate',
           payload: {},
           queuedAt: 1000,
           retryCount: 0,
         },
         {
           id: 'id2',
-          type: 'letter',
+          type: 'habitUpdate',
           payload: {},
           queuedAt: 2000,
           retryCount: 0,
@@ -470,18 +460,16 @@ describe('useOfflineQueue', () => {
           expect(result.current.isLoading).toBe(false);
         });
 
-        const payload: ReflectionPayload = {
+        const payload: HabitUpdatePayload = {
           habitId: 'habit-1',
-          date: '2024-01-01',
-          emoji: 'happy',
-          note: 'Great day!',
+          updates: { name: 'Updated habit' },
         };
 
         let id: string;
         await act(async () => {
-          id = await result.current.enqueue('reflection', payload, {
+          id = await result.current.enqueue('habitUpdate', payload, {
             habitId: 'habit-1',
-            description: 'Reflection for today',
+            description: 'Habit update',
           });
         });
 
@@ -507,10 +495,9 @@ describe('useOfflineQueue', () => {
         });
 
         await expect(
-          result.current.enqueue('reflection', {
+          result.current.enqueue('habitUpdate', {
             habitId: 'h1',
-            date: 'd1',
-            emoji: 'happy',
+            updates: {},
           })
         ).rejects.toThrow('Queue is full');
       });
@@ -528,10 +515,9 @@ describe('useOfflineQueue', () => {
         });
 
         await act(async () => {
-          await result.current.enqueue('reflection', {
+          await result.current.enqueue('habitUpdate', {
             habitId: 'h1',
-            date: 'd1',
-            emoji: 'happy',
+            updates: {},
           });
         });
 
@@ -543,7 +529,7 @@ describe('useOfflineQueue', () => {
       it('removes item from queue', async () => {
         const item: QueuedSubmission = {
           id: 'id1',
-          type: 'reflection',
+          type: 'habitUpdate',
           payload: {},
           queuedAt: 1000,
           retryCount: 0,
@@ -574,7 +560,7 @@ describe('useOfflineQueue', () => {
         const onItemProcessed = jest.fn();
         const item: QueuedSubmission = {
           id: 'id1',
-          type: 'reflection',
+          type: 'habitUpdate',
           payload: {},
           queuedAt: 1000,
           retryCount: 0,
@@ -606,7 +592,7 @@ describe('useOfflineQueue', () => {
       it('increments retry count', async () => {
         const item: QueuedSubmission = {
           id: 'id1',
-          type: 'reflection',
+          type: 'habitUpdate',
           payload: {},
           queuedAt: 1000,
           retryCount: 0,
@@ -638,7 +624,7 @@ describe('useOfflineQueue', () => {
         const onItemFailed = jest.fn();
         const item: QueuedSubmission = {
           id: 'id1',
-          type: 'reflection',
+          type: 'habitUpdate',
           payload: {},
           queuedAt: 1000,
           retryCount: 4, // At 4, next failure will be 5th attempt
@@ -673,14 +659,14 @@ describe('useOfflineQueue', () => {
         const items: QueuedSubmission[] = [
           {
             id: 'id1',
-            type: 'reflection',
+            type: 'habitUpdate',
             payload: {},
             queuedAt: now - 10000,
             retryCount: 0, // Never retried - ready
           },
           {
             id: 'id2',
-            type: 'letter',
+            type: 'habitUpdate',
             payload: {},
             queuedAt: now - 10000,
             retryCount: 1,
@@ -688,7 +674,7 @@ describe('useOfflineQueue', () => {
           },
           {
             id: 'id3',
-            type: 'affirmation',
+            type: 'habitUpdate',
             payload: {},
             queuedAt: now - 10000,
             retryCount: 1,
@@ -731,14 +717,14 @@ describe('useOfflineQueue', () => {
         const items: QueuedSubmission[] = [
           {
             id: 'id1',
-            type: 'reflection',
+            type: 'habitUpdate',
             payload: {},
             queuedAt: 1000,
             retryCount: 0,
           },
           {
             id: 'id2',
-            type: 'letter',
+            type: 'habitUpdate',
             payload: {},
             queuedAt: 2000,
             retryCount: 0,
@@ -781,14 +767,14 @@ describe('useOfflineQueue', () => {
         const items: QueuedSubmission[] = [
           {
             id: 'id1',
-            type: 'reflection',
+            type: 'habitUpdate',
             payload: {},
             queuedAt: now - 8 * 24 * 60 * 60 * 1000, // 8 days old - stale
             retryCount: 0,
           },
           {
             id: 'id2',
-            type: 'letter',
+            type: 'habitUpdate',
             payload: {},
             queuedAt: now - 1000, // Just now - not stale
             retryCount: 0,
@@ -829,21 +815,21 @@ describe('useOfflineQueue', () => {
         const items: QueuedSubmission[] = [
           {
             id: 'id1',
-            type: 'reflection',
+            type: 'habitUpdate',
             payload: {},
             queuedAt: 1000,
             retryCount: 0,
           },
           {
             id: 'id2',
-            type: 'reflection',
+            type: 'habitUpdate',
             payload: {},
             queuedAt: 2000,
             retryCount: 1,
           },
           {
             id: 'id3',
-            type: 'letter',
+            type: 'habitUpdate',
             payload: {},
             queuedAt: 3000,
             retryCount: 0,
@@ -875,65 +861,8 @@ describe('useOfflineQueue', () => {
         expect(stats!.totalItems).toBe(3);
         expect(stats!.pendingItems).toBe(2);
         expect(stats!.failedItems).toBe(1);
-        expect(stats!.byType.reflection).toBe(2);
-        expect(stats!.byType.letter).toBe(1);
+        expect(stats!.byType.habitUpdate).toBe(3);
       });
-    });
-  });
-
-  describe('Payload Types', () => {
-    it('supports ReflectionPayload', async () => {
-      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(JSON.stringify([]));
-
-      const { result } = renderHook(() => useOfflineQueue());
-
-      await waitFor(() => {
-        expect(result.current.isLoading).toBe(false);
-      });
-
-      const payload: ReflectionPayload = {
-        habitId: 'habit-123',
-        date: '2024-01-15',
-        emoji: 'fire',
-        note: 'Crushed it today!',
-      };
-
-      await act(async () => {
-        await result.current.enqueue('reflection', payload);
-      });
-
-      expect(AsyncStorage.setItem).toHaveBeenCalledWith(
-        expect.stringContaining('offline-queue:'),
-        expect.stringContaining('"emoji":"fire"')
-      );
-    });
-
-    it('supports LetterPayload', async () => {
-      (AsyncStorage.getItem as jest.Mock).mockResolvedValue(JSON.stringify([]));
-
-      const { result } = renderHook(() => useOfflineQueue());
-
-      await waitFor(() => {
-        expect(result.current.isLoading).toBe(false);
-      });
-
-      const payload: LetterPayload = {
-        habitId: 'habit-456',
-        content: 'Dear future me...',
-        unlockDays: 30,
-        title: 'A note of encouragement',
-      };
-
-      await act(async () => {
-        await result.current.enqueue('letter', payload, {
-          description: 'Letter to future self',
-        });
-      });
-
-      expect(AsyncStorage.setItem).toHaveBeenCalledWith(
-        expect.stringContaining('offline-queue:'),
-        expect.stringContaining('"unlockDays":30')
-      );
     });
   });
 });

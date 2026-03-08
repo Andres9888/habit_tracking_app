@@ -38,10 +38,10 @@ describe('usePremiumUpsell', () => {
       const { result } = renderHook(() => usePremiumUpsell());
 
       act(() => {
-        result.current.triggerPaywall('letters');
+        result.current.triggerPaywall('visionBoard');
       });
 
-      expect(result.current.triggeredFeature).toBe('letters');
+      expect(result.current.triggeredFeature).toBe('visionBoard');
 
       act(() => {
         result.current.triggerPaywall('visionBoard');
@@ -111,7 +111,7 @@ describe('usePremiumUpsell', () => {
       const { result } = renderHook(() => usePremiumUpsell());
 
       act(() => {
-        result.current.triggerBenefits('affirmations');
+        result.current.triggerBenefits('rescueMode');
       });
 
       expect(result.current.showBenefits).toBe(true);
@@ -187,7 +187,7 @@ describe('usePremiumUpsell', () => {
 
       act(() => {
         result.current.triggerPaywall('voiceNotes');
-        result.current.triggerPaywall('letters');
+        result.current.triggerPaywall('rescueMode');
         result.current.triggerPaywall('visionBoard');
       });
 

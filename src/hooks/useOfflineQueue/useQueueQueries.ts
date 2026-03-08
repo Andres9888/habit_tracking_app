@@ -54,7 +54,7 @@ export function useQueueQueries({
 
   const clearQueue = useCallback(async (): Promise<void> => {
     const ids = await loadQueueIndex();
-    for (const id of ids) await removeQueueItem(id);
+    await Promise.all(ids.map((id) => removeQueueItem(id)));
     await saveQueueIndex([]);
     if (isMountedRef.current) {
       setQueueCount(0);

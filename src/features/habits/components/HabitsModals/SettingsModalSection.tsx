@@ -166,7 +166,6 @@ export function SettingsModalSection({
         settingsDocument={settings as SettingsModalSettingsDocument | undefined}
         showCharacterScreen={settings?.showCharacterScreen ?? true}
         showHabitStrengthPercentage={showHabitStrengthPercentage}
-        showNotesStats={settings?.showNotesStats ?? true}
         streakRemindersEnabled={streakReminders.enabled}
         streakReminderTime={streakReminders.reminderTime}
         visible={showSettings}
@@ -182,9 +181,6 @@ export function SettingsModalSection({
         }
         onChangeShowHabitStrengthPercentage={(value) =>
           setShowHabitStrengthPercentage(value)
-        }
-        onChangeShowNotesStats={(value) =>
-          onSettingsChange({ showNotesStats: value })
         }
         onChangeStickyCalendarHeader={(value) =>
           onSettingsChange({ stickyCalendarHeader: value })

@@ -11,6 +11,7 @@
 import { useAuth } from '@clerk/clerk-expo';
 import { useMutation } from 'convex/react';
 import { useEffect, useRef } from 'react';
+import { ActivityIndicator, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import Animated, { FadeInDown, FadeOut } from 'react-native-reanimated';
 
@@ -19,8 +20,8 @@ import HabitsApp from '../../features/habits/HabitsApp';
 import { useConvexAuthReady } from '../../providers';
 import { OnboardingScreen } from '../../screens/onboarding/OnboardingScreen';
 import { useOnboardingStatus } from '../../screens/onboarding/useOnboardingStatus';
+import { useThemeColors } from '../../theme/ThemeContext';
 import WelcomeScreen from '../../screens/auth/WelcomeScreen';
-import { BrandedLoadingScreen } from './BrandedLoadingScreen';
 
 const ENTER = FadeInDown.duration(280).springify().damping(18);
 const EXIT = FadeOut.duration(300);
@@ -33,6 +34,7 @@ function getScreenKey(isSignedIn: boolean, onboardingComplete: boolean) {
 export function AuthGate() {
   const { isLoaded, isSignedIn } = useAuth();
   const isConvexReady = useConvexAuthReady();
+  const { colors } = useThemeColors();
   const getOrCreateUser = useMutation(api.users.getOrCreateUser);
   const { complete: onboardingComplete, markComplete } = useOnboardingStatus(
     isSignedIn ?? false
@@ -53,7 +55,18 @@ export function AuthGate() {
   }, [isSignedIn, isConvexReady]);
 
   if (!isLoaded || (isSignedIn && onboardingComplete === null)) {
-    return <BrandedLoadingScreen />;
+    return (
+      <View
+        style={{
+          alignItems: 'center',
+          backgroundColor: colors.background,
+          flex: 1,
+          justifyContent: 'center',
+        }}
+      >
+        <ActivityIndicator color={colors.accent} size='large' />
+      </View>
+    );
   }
 
   const screenKey = getScreenKey(

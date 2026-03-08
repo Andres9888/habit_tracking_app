@@ -10,6 +10,7 @@
  */
 
 import { useCallback } from 'react';
+import * as Haptics from 'expo-haptics';
 import { Alert, AccessibilityInfo } from 'react-native';
 import type { Id } from '../../../convex/_generated/dataModel';
 import { useToggleHabitWithTimezone } from '../../hooks/useToggleHabitWithTimezone';

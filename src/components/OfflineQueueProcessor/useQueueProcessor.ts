@@ -29,9 +29,6 @@ export function useQueueProcessor(
   const { getRetryableItems, dequeue, markFailed, hasQueuedItems } =
     useOfflineQueue();
 
-  const upsertReflection = useMutation(api.reflections.upsert);
-  const createLetter = useMutation(api.letters.create);
-  const createAffirmation = useMutation(api.affirmations.create);
   const updateHabit = useMutation(api.habits.update);
 
   const [processingState, setProcessingState] = useState<ProcessingState>(
@@ -44,12 +41,9 @@ export function useQueueProcessor(
   const mutations = useMemo(
     () =>
       ({
-        createAffirmation,
-        createLetter,
         updateHabit,
-        upsertReflection,
       }) as Mutations,
-    [createAffirmation, createLetter, updateHabit, upsertReflection]
+    [updateHabit]
   );
 
   const updateState = useCallback(

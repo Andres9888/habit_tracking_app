@@ -80,7 +80,6 @@ export interface HabitSettings {
   showConsistency: boolean;
   showEmojis: boolean;
   showMotivationalMessages: boolean;
-  showNotesStats: boolean;
   showStreaks: boolean;
   stickyCalendarHeader: boolean;
   showWeekCompletionBar: boolean;

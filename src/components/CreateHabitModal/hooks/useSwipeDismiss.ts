@@ -1,55 +1,94 @@
+/**
+ * useSwipeDismiss — spring-based sheet transition with swipe-to-dismiss.
+ *
+ * Enter: spring slide-up (bottomSheet spring) + backdrop fade-in
+ * Exit: spring slide-down (exit spring) + backdrop fade-out, then onClose
+ * Swipe: gesture tracking with proportional backdrop fade, haptic on threshold
+ */
+
+import { useCallback, useEffect, useRef } from 'react';
 import { Gesture } from 'react-native-gesture-handler';
 import {
   runOnJS,
   useAnimatedStyle,
   useSharedValue,
+  withSequence,
   withSpring,
+  withTiming,
 } from 'react-native-reanimated';
 import { springs } from '@/theme/animations';
+import { HapticPatterns } from '@/utils/haptics/patterns';
+import {
+  DISMISS_THRESHOLD,
+  SCREEN_HEIGHT,
+  VELOCITY_THRESHOLD,
+} from '@/components/Modal/Modal.constants';
 
-// Swipe dismissal constants
-const SWIPE_DISMISS_THRESHOLD = 100; // pixels
-const SWIPE_VELOCITY_THRESHOLD = 500; // pixels per second
+const BACKDROP_TARGET = 0.5;
 
 interface UseSwipeDismissProps {
+  visible: boolean;
   onClose: () => void;
 }
 
-/**
- * Hook that manages swipe-to-dismiss gesture for modal components.
- * Returns the pan gesture and animated style for the modal container.
- */
-export function useSwipeDismiss({ onClose }: UseSwipeDismissProps) {
-  const translateY = useSharedValue(0);
-  const context = useSharedValue({ startY: 0 });
+export function useSwipeDismiss({ visible, onClose }: UseSwipeDismissProps) {
+  const translateY = useSharedValue(SCREEN_HEIGHT);
+  const backdropOpacity = useSharedValue(0);
+  const isClosing = useRef(false);
+  const onCloseRef = useRef(onClose);
+  onCloseRef.current = onClose;
+
+  useEffect(() => {
+    if (visible) {
+      isClosing.current = false;
+      translateY.value = withSequence(
+        withTiming(SCREEN_HEIGHT, { duration: 0 }),
+        withSpring(0, springs.bottomSheet)
+      );
+      backdropOpacity.value = withTiming(BACKDROP_TARGET, { duration: 300 });
+    }
+  }, [visible]);
+
+  const animateOut = useCallback(() => {
+    if (isClosing.current) return;
+    isClosing.current = true;
+    backdropOpacity.value = withTiming(0, { duration: 200 });
+    translateY.value = withSpring(SCREEN_HEIGHT, springs.exit, () => {
+      runOnJS(onCloseRef.current)();
+    });
+  }, []);
 
   const panGesture = Gesture.Pan()
-    .onStart(() => {
-      context.value = { startY: translateY.value };
-    })
     .onUpdate((event) => {
-      // Only allow downward swipes
-      const newTranslateY = context.value.startY + event.translationY;
-      if (newTranslateY >= 0) {
-        translateY.value = newTranslateY;
+      'worklet';
+      if (event.translationY > 0) {
+        translateY.value = event.translationY;
+        const progress = 1 - event.translationY / SCREEN_HEIGHT;
+        backdropOpacity.value = Math.max(0, progress * BACKDROP_TARGET);
       }
     })
     .onEnd((event) => {
+      'worklet';
       const shouldDismiss =
-        translateY.value > SWIPE_DISMISS_THRESHOLD ||
-        event.velocityY > SWIPE_VELOCITY_THRESHOLD;
+        translateY.value > DISMISS_THRESHOLD ||
+        event.velocityY > VELOCITY_THRESHOLD;
 
       if (shouldDismiss) {
-        runOnJS(onClose)();
-        translateY.value = 0;
+        runOnJS(HapticPatterns.tap)();
+        runOnJS(animateOut)();
       } else {
-        translateY.value = withSpring(0, springs.sheet);
+        translateY.value = withSpring(0, springs.gesture);
+        backdropOpacity.value = withTiming(BACKDROP_TARGET, { duration: 200 });
       }
     });
 
-  const animatedStyle = useAnimatedStyle(() => ({
+  const sheetStyle = useAnimatedStyle(() => ({
     transform: [{ translateY: translateY.value }],
   }));
 
-  return { animatedStyle, panGesture };
+  const backdropStyle = useAnimatedStyle(() => ({
+    opacity: backdropOpacity.value,
+  }));
+
+  return { animateOut, backdropStyle, panGesture, sheetStyle };
 }

@@ -1,11 +1,10 @@
+/* eslint-disable max-lines */
 import React, { memo } from 'react';
 import { View, Pressable } from 'react-native';
 import { format } from 'date-fns';
 
 import type { DayCellProps } from '../CalendarTimeline.types';
-
 import { useHaptics } from '@/utils/haptics';
-
 import {
   buildAccessibilityLabel,
   getAccessibilityHint,
@@ -33,9 +32,12 @@ const DayCellComponent: React.FC<DayCellProps> = ({
   streakConnectorColor,
   ghostLeft,
   ghostRight,
+  completionIcon,
 }) => {
   const weekday = format(date, 'EEE');
   const dayNumber = format(date, 'd');
+  const monthPrefix =
+    date.getDate() === 1 ? format(date, 'MMM').toUpperCase() : undefined;
   const baseLabel = `${weekday}, ${format(date, 'MMM')} ${dayNumber}`;
   const isDayDisabled = Boolean(isUpcoming && disableFutureDayPress);
   const canPressDay = Boolean(
@@ -51,17 +53,20 @@ const DayCellComponent: React.FC<DayCellProps> = ({
   const { trigger } = useHaptics({ preference: reduceMotion });
   const handlePress = () => {
     trigger('tap');
-    onDayPress(date);
+    onDayPress?.(date);
   };
 
   const cp = {
     colors,
     completed,
+    completionIcon,
     completionStatus,
     dayNumber,
     hasCompletionData,
+    index,
     isCurrentDay,
     isUpcoming,
+    monthPrefix,
     reduceMotion,
     total,
     weekday,

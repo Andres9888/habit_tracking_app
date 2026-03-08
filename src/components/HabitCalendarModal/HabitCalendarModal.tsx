@@ -142,9 +142,6 @@ export default function HabitCalendarModal({
         habitId={habit._id}
         visible={state.showEditScreen}
         onClose={state.handleCloseEdit}
-        onOpenAffirmationsEditor={
-          onOpenMotivationTab ? state.handleOpenAdvancedFeatures : undefined
-        }
         onOpenCueEditor={
           onOpenMotivationTab ? state.handleOpenAdvancedFeatures : undefined
         }

@@ -84,8 +84,8 @@ export const getCompleteDotGlow = (isDark: boolean) => ({
 
 /** Streak connector bar between consecutive completed days */
 export const STREAK_CONNECTOR = {
-  height: 3.5,
-  topOffset: 14 + 2 + 22 - 1.5,
+  height: 4,
+  topOffset: 14 + 2 + 22 - 2,
   light: 'rgba(16, 185, 129, 0.35)',
   dark: 'rgba(52, 211, 153, 0.30)',
   highContrast: 'rgba(250, 204, 21, 0.35)',

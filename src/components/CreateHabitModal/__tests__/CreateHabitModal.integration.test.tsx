@@ -80,7 +80,8 @@ jest.mock('react-native-reanimated', () => {
     },
     default: {
       View,
-      createAnimatedComponent: (Component: React.ComponentType<unknown>) => Component,
+      createAnimatedComponent: (Component: React.ComponentType<unknown>) =>
+        Component,
       addWhitelistedNativeProps: jest.fn(),
     },
     addWhitelistedNativeProps: jest.fn(),
@@ -116,11 +117,6 @@ jest.mock('reanimated-color-picker', () => {
 jest.mock('../ColorPickerSheet', () => ({
   ColorPickerSheet: jest.fn(() => null),
 }));
-
-// Mock TemplateScienceModal
-jest.mock('../../TemplateScienceModal', () => {
-  return jest.fn(() => null);
-});
 
 // Mock SafeAreaProvider
 jest.mock('react-native-safe-area-context', () => ({

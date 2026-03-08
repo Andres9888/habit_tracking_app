@@ -43,6 +43,8 @@ export interface CalendarTimelineProps {
   trialDaysRemaining?: number | null;
   /** Trial bar: upgrade callback */
   onUpgrade?: () => void;
+  /** Completion icon style — 'chain' shows link icon, 'checkbox' shows checkmark */
+  completionIcon?: 'chain' | 'checkbox';
 }
 
 export type CompletionStatus = 'complete' | 'partial' | 'none' | 'future';
@@ -79,6 +81,8 @@ export interface DayCellProps {
   ghostLeft?: boolean;
   /** Ghost connector on right — reaching toward today */
   ghostRight?: boolean;
+  /** Completion icon style for the ring */
+  completionIcon?: 'chain' | 'checkbox';
 }
 
 export interface CalendarColors {

@@ -4,8 +4,6 @@ import { getLocalDateString } from '@/utils/getLocalDateString';
  */
 
 import { useMemo, useState } from 'react';
-import { useQuery } from 'convex/react';
-import { api } from '../../../convex/_generated/api';
 import type { Id } from '../../../convex/_generated/dataModel';
 import type { HabitTrackingEntry } from '../../features/habits/types';
 
@@ -24,21 +22,12 @@ export const useHabitDetailScreenState = ({
   tracking,
   visible,
 }: UseHabitDetailScreenStateProps) => {
-  // Notes modal states
-  const [isNotesEditorOpen, setIsNotesEditorOpen] = useState(false);
-  const [isNotesListOpen, setIsNotesListOpen] = useState(false);
-  const [editingNoteId, setEditingNoteId] = useState<Id<'notes'> | null>(null);
-
   // Delete/Archive undo toast states (T3.5: Swipe-to-delete)
   const [pendingDelete, setPendingDelete] = useState(false);
   const [pendingArchive, setPendingArchive] = useState(false);
 
   // Calendar toggling state
   const [isTogglingCalendar, setIsTogglingCalendar] = useState(false);
-
-  // Fetch habit notes
-  const habitNotes =
-    useQuery(api.notes.search, visible && habitId ? { habitId } : 'skip') ?? [];
 
   // Today's date
   const today = useMemo(() => getLocalDateString(), []);
@@ -83,38 +72,13 @@ export const useHabitDetailScreenState = ({
     [habitStrength]
   );
 
-  // Get the note being edited
-  const editingNote = editingNoteId
-    ? habitNotes.find((n) => n._id === editingNoteId)
-    : null;
-
-  // Create notesByDate map for quick lookup by date
-  const notesByDate = useMemo(() => {
-    const map: Record<string, string> = {};
-    for (const note of habitNotes) {
-      if (note.date) {
-        map[note.date] = note.body;
-      }
-    }
-    return map;
-  }, [habitNotes]);
-
   return {
     completedDates,
     daysTracking,
-    editingNote,
-    editingNoteId,
-    habitNotes,
     isCompletedToday,
-    isNotesEditorOpen,
-    isNotesListOpen,
     isTogglingCalendar,
-    notesByDate,
     pendingArchive,
     pendingDelete,
-    setEditingNoteId,
-    setIsNotesEditorOpen,
-    setIsNotesListOpen,
     setIsTogglingCalendar,
     setPendingArchive,
     setPendingDelete,

@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
  * Input Validation Utilities (SEC-003)
  *
@@ -13,10 +14,10 @@ import { VALIDATION_ERRORS } from './inputValidation.constants';
 /** Max length for habit names */
 export const MAX_HABIT_NAME_LENGTH = 100;
 
-/** Max length for notes/reflections/letter content */
+/** Max length for long text content */
 export const MAX_LONG_TEXT_LENGTH = 5000;
 
-/** Max length for shorter text (captions, affirmations) */
+/** Max length for shorter text (captions) */
 export const MAX_SHORT_TEXT_LENGTH = 500;
 
 /** Max length for URLs */
@@ -86,9 +87,7 @@ export interface ValidationResult {
  * Validate and sanitize a habit name.
  * Allows: alphanumeric, spaces, common punctuation, and emoji.
  */
-export function validateHabitName(
-  name: string | undefined
-): ValidationResult {
+export function validateHabitName(name: string | undefined): ValidationResult {
   if (name === undefined) {
     return { isValid: true };
   }
@@ -114,7 +113,7 @@ export function validateHabitName(
 }
 
 /**
- * Validate and sanitize long text content (notes, reflections, letters).
+ * Validate and sanitize long text content.
  * Allows most characters but blocks dangerous patterns.
  */
 export function validateLongText(
@@ -143,7 +142,7 @@ export function validateLongText(
 }
 
 /**
- * Validate and sanitize short text (labels, captions, affirmations).
+ * Validate and sanitize short text (labels, captions).
  */
 export function validateShortText(
   text: string | undefined,
@@ -167,11 +166,7 @@ export function validateUrl(
     fieldName?: string;
   } = {}
 ): ValidationResult {
-  const {
-    requireHttps = true,
-    allowedDomains,
-    fieldName = 'URL',
-  } = options;
+  const { requireHttps = true, allowedDomains, fieldName = 'URL' } = options;
 
   if (url === undefined) {
     return { isValid: true };
@@ -317,10 +312,33 @@ export function validateColor(
 
   // Named colors (common ones)
   const namedColors = [
-    'red', 'orange', 'yellow', 'green', 'blue', 'purple', 'pink',
-    'brown', 'black', 'white', 'gray', 'grey', 'cyan', 'magenta',
-    'lime', 'indigo', 'violet', 'teal', 'coral', 'salmon', 'gold',
-    'silver', 'navy', 'maroon', 'olive', 'aqua', 'fuchsia',
+    'red',
+    'orange',
+    'yellow',
+    'green',
+    'blue',
+    'purple',
+    'pink',
+    'brown',
+    'black',
+    'white',
+    'gray',
+    'grey',
+    'cyan',
+    'magenta',
+    'lime',
+    'indigo',
+    'violet',
+    'teal',
+    'coral',
+    'salmon',
+    'gold',
+    'silver',
+    'navy',
+    'maroon',
+    'olive',
+    'aqua',
+    'fuchsia',
   ];
   if (namedColors.includes(trimmed)) {
     return { isValid: true, sanitized: trimmed };
@@ -328,8 +346,16 @@ export function validateColor(
 
   // App-specific color identifiers
   const appColors = [
-    'primary', 'secondary', 'accent', 'success', 'warning', 'error',
-    'default', 'muted', 'foreground', 'background',
+    'primary',
+    'secondary',
+    'accent',
+    'success',
+    'warning',
+    'error',
+    'default',
+    'muted',
+    'foreground',
+    'background',
   ];
   if (appColors.includes(trimmed)) {
     return { isValid: true, sanitized: trimmed };
@@ -388,7 +414,10 @@ export function validateIdentifier(
 
   // Allow alphanumeric, hyphens, underscores, colons (for namespaced IDs)
   if (!/^[\w\-:]+$/.test(trimmed)) {
-    return { isValid: false, error: `${fieldName} contains invalid characters` };
+    return {
+      isValid: false,
+      error: `${fieldName} contains invalid characters`,
+    };
   }
 
   return { isValid: true, sanitized: trimmed };

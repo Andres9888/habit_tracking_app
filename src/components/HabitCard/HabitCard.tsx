@@ -23,7 +23,6 @@ import {
   SwipeActions,
   StrengthFillBackground,
   HabitCardContent,
-  ConfettiBurst,
 } from './components';
 
 export type { HabitCardProps } from './HabitCard.types';
@@ -102,7 +101,9 @@ function HabitCardComponent(props: HabitCardProps) {
               completed={habit.completed}
               completionIcon={completionIcon}
               currentStreak={habit.currentStreak}
-              entranceContentStyle={habit.entrance.contentStyle as AnimatedStyle}
+              entranceContentStyle={
+                habit.entrance.contentStyle as AnimatedStyle
+              }
               hasPendingOfflineOps={habit.hasPendingOfflineOps}
               icon={icon}
               name={name}
@@ -120,10 +121,6 @@ function HabitCardComponent(props: HabitCardProps) {
           onComplete={() => habit.setShowFloatingXP(false)}
         />
       )}
-      <ConfettiBurst
-        active={habit.showConfetti}
-        onComplete={() => habit.setShowConfetti(false)}
-      />
       <CompletionToast
         habitName={name}
         icon={icon}

@@ -39,11 +39,12 @@ export function renderHabitsListHeader({
   };
 
   return (
-    <View>
+    <View style={{ elevation: 20, zIndex: 20 }}>
       <HabitsListHeader
         calendarOpacity={state.calendarOpacity}
         calendarTranslateY={state.calendarTranslateY}
         canNavigateForward={canNavigateForward}
+        completionIcon={list.habitCompletionIcon}
         getHabitStatus={list.getHabitStatus}
         getStreak={list.getStreak}
         habits={list.habits}

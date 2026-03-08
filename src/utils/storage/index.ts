@@ -19,3 +19,9 @@ export {
   safeGetNumber,
   safeSetNumber,
 } from './safeStorage';
+
+export {
+  getSensitiveItem,
+  setSensitiveItem,
+  removeSensitiveItem,
+} from './sensitiveStorage';

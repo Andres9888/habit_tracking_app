@@ -6,7 +6,7 @@
  */
 
 import React, { memo, useState, useCallback, useMemo } from 'react';
-import { View, Text, Alert } from 'react-native';
+import { View, Text } from 'react-native';
 import { addMonths, subMonths } from 'date-fns';
 import { useThemeColors } from '@/theme';
 import type { MonthlyCalendarGridProps } from './types';
@@ -23,7 +23,6 @@ export const MonthlyCalendarGrid = memo(function MonthlyCalendarGrid({
   completedDates,
   habitColor,
   habitCreatedAt,
-  notesByDate = {},
   onDayPress,
 }: MonthlyCalendarGridProps) {
   const { colors, isDark } = useThemeColors();
@@ -56,47 +55,60 @@ export const MonthlyCalendarGrid = memo(function MonthlyCalendarGrid({
     return { completed: c, missed: m };
   }, [days]);
 
-  const goToPreviousMonth = useCallback(() => setCurrentMonth((p) => subMonths(p, 1)), []);
-  const goToNextMonth = useCallback(() => setCurrentMonth((p) => addMonths(p, 1)), []);
+  const goToPreviousMonth = useCallback(
+    () => setCurrentMonth((p) => subMonths(p, 1)),
+    []
+  );
+  const goToNextMonth = useCallback(
+    () => setCurrentMonth((p) => addMonths(p, 1)),
+    []
+  );
 
   const handleDayPress = useCallback(
     (dateString: string, isCompleted: boolean) => {
-      const note = notesByDate[dateString];
-      if (note) {
-        Alert.alert(`Notes for ${dateString}`, note, [
-          { text: 'Got It', style: 'default' },
-          { text: 'Edit Note', onPress: () => onDayPress?.(dateString, isCompleted) },
-        ], { cancelable: true });
-      } else {
-        onDayPress?.(dateString, isCompleted);
-      }
+      onDayPress?.(dateString, isCompleted);
     },
-    [notesByDate, onDayPress]
+    [onDayPress]
   );
 
   return (
-    <View style={[styles.container, { backgroundColor: isDark ? colors.card : '#FFFFFF', borderColor: colors.border }]}>
+    <View
+      style={[
+        styles.container,
+        {
+          backgroundColor: isDark ? colors.card : '#FFFFFF',
+          borderColor: colors.border,
+        },
+      ]}
+    >
       <View style={styles.row}>
         {DAY_HEADERS.map((day) => (
           <View key={day} style={styles.headerCell}>
-            <Text style={[styles.headerText, { color: colors.text.tertiary }]}>{day}</Text>
+            <Text style={[styles.headerText, { color: colors.text.tertiary }]}>
+              {day}
+            </Text>
           </View>
         ))}
       </View>
 
       {(weeks ?? []).map((week, weekIndex) => (
         <View key={`week-${weekIndex}`} style={styles.row}>
-          {(week ?? []).map((day, dayIndex) => day?.dateString ? (
-            <CalendarDay
-              key={day.dateString}
-              day={day}
-              habitColor={habitColor}
-              textColors={textColors}
-              onPress={handleDayPress}
-            />
-          ) : (
-            <View key={`empty-${weekIndex}-${dayIndex}`} style={styles.dayWrapper} />
-          ))}
+          {(week ?? []).map((day, dayIndex) =>
+            day?.dateString ? (
+              <CalendarDay
+                key={day.dateString}
+                day={day}
+                habitColor={habitColor}
+                textColors={textColors}
+                onPress={handleDayPress}
+              />
+            ) : (
+              <View
+                key={`empty-${weekIndex}-${dayIndex}`}
+                style={styles.dayWrapper}
+              />
+            )
+          )}
         </View>
       ))}
 

@@ -26,8 +26,6 @@ export interface SettingsModalProps {
   onChangeShowHabitStrengthPercentage?: (
     value: boolean
   ) => void | Promise<void>;
-  showNotesStats?: boolean;
-  onChangeShowNotesStats?: (value: boolean) => void | Promise<void>;
   isHighContrastActive?: boolean;
   isCompact?: boolean;
   onOpenHapticTest?: () => void;

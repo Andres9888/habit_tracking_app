@@ -5,7 +5,6 @@ export interface HabitEditScreenProps {
   habitId: Id<'habits'> | null;
   onClose: () => void;
   onOpenCueEditor?: () => void;
-  onOpenAffirmationsEditor?: () => void;
   onOpenVisionBoard?: () => void;
 }
 

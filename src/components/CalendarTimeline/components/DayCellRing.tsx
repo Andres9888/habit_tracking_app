@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import React, { useEffect } from 'react';
 import { View, Text } from 'react-native';
 import Animated, {
@@ -8,13 +9,14 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import Svg, { Circle } from 'react-native-svg';
-import { Check } from 'lucide-react-native';
+import { Check, Link2 } from 'lucide-react-native';
 
 import { springs, durations } from '../../../theme/animations';
 import type { CompletionStatus } from '../CalendarTimeline.types';
 import {
   CIRCUMFERENCE,
   COMPLETE_GLOW,
+  MONTH_PREFIX_COLORS,
   RADIUS,
   RING_SIZE,
   STROKE_WIDTH,
@@ -30,8 +32,11 @@ interface DayCellRingProps {
   completed: number;
   total: number;
   completionStatus: CompletionStatus;
+  hasCompletionData: boolean;
   isCurrentDay: boolean;
   isUpcoming: boolean;
+  completionIcon?: 'chain' | 'checkbox';
+  monthPrefix?: string;
   reduceMotion: boolean;
   isDark: boolean;
 }
@@ -41,8 +46,11 @@ export const DayCellRing: React.FC<DayCellRingProps> = ({
   completed,
   total,
   completionStatus,
+  completionIcon,
+  hasCompletionData,
   isCurrentDay,
   isUpcoming,
+  monthPrefix,
   reduceMotion,
   isDark,
 }) => {
@@ -58,7 +66,7 @@ export const DayCellRing: React.FC<DayCellRingProps> = ({
       arcProgress.value = progress;
       return;
     }
-    if (isComplete) fillScale.value = withSpring(1, springs.celebration);
+    if (isComplete) fillScale.value = withSpring(1, springs.gentle);
     arcProgress.value = withTiming(progress, { duration: durations.progress });
   }, [isComplete, progress, reduceMotion, fillScale, arcProgress]);
 
@@ -73,21 +81,54 @@ export const DayCellRing: React.FC<DayCellRingProps> = ({
     return (
       <Animated.View style={[styles.container, COMPLETE_GLOW, fillStyle]}>
         <View style={[styles.solidFill, { backgroundColor: rc.fill }]}>
-          <Check color={rc.checkIcon} size={18} strokeWidth={2.5} />
+          {completionIcon === 'chain' ? (
+            <Link2 color={rc.checkIcon} size={18} strokeWidth={2.5} />
+          ) : (
+            <Check color={rc.checkIcon} size={18} strokeWidth={2.5} />
+          )}
         </View>
       </Animated.View>
     );
   }
 
+  const isMissed =
+    !isUpcoming &&
+    completionStatus === 'none' &&
+    !isCurrentDay &&
+    hasCompletionData;
+  const opacityStyle = isUpcoming
+    ? styles.future
+    : isMissed
+      ? styles.missed
+      : undefined;
+  const textStyle = monthPrefix
+    ? isCurrentDay
+      ? styles.dayTextTodayWithPrefix
+      : styles.dayTextWithPrefix
+    : isCurrentDay
+      ? styles.dayTextToday
+      : styles.dayText;
+
   return (
-    <View style={[styles.container, isUpcoming && styles.future]}>
+    <View style={[styles.container, opacityStyle]}>
       <Svg height={RING_SIZE} width={RING_SIZE} style={styles.svg}>
+        {rc.todayBorder && (
+          <Circle
+            cx={HALF}
+            cy={HALF}
+            fill='transparent'
+            r={RADIUS + STROKE_WIDTH / 2}
+            stroke={rc.todayBorder}
+            strokeWidth={1}
+          />
+        )}
         <Circle
           cx={HALF}
           cy={HALF}
           fill={rc.todayBg ?? 'transparent'}
           r={RADIUS}
           stroke={rc.track}
+          strokeDasharray={isUpcoming ? '4 4' : undefined}
           strokeWidth={STROKE_WIDTH}
         />
         {progress > 0 && (
@@ -105,7 +146,17 @@ export const DayCellRing: React.FC<DayCellRingProps> = ({
         )}
       </Svg>
       <View style={styles.centerLabel}>
-        <Text style={[styles.dayText, { color: rc.text }]}>{dayNumber}</Text>
+        {monthPrefix && (
+          <Text
+            style={[
+              styles.monthPrefixText,
+              { color: MONTH_PREFIX_COLORS[isDark ? 'dark' : 'light'] },
+            ]}
+          >
+            {monthPrefix}
+          </Text>
+        )}
+        <Text style={[textStyle, { color: rc.text }]}>{dayNumber}</Text>
       </View>
     </View>
   );

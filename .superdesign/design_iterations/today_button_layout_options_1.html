@@ -1,0 +1,1293 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Today Chip — Layout Options (Clip Prevention)</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Literata:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: 'DM Sans', sans-serif;
+        background: #2d2a26;
+        color: #f5f1ed;
+        padding: 40px 20px 80px;
+        min-height: 100vh;
+      }
+      .page-header {
+        max-width: 1100px;
+        margin: 0 auto 12px;
+        text-align: center;
+      }
+      .page-title {
+        font-family: 'Literata', serif;
+        font-size: 26px;
+        font-weight: 700;
+        color: #faf8f5;
+        margin-bottom: 6px;
+      }
+      .page-subtitle {
+        font-size: 14px;
+        color: #9ca3af;
+        max-width: 580px;
+        margin: 0 auto;
+        line-height: 1.6;
+      }
+
+      .problem-box {
+        max-width: 700px;
+        margin: 20px auto 36px;
+        padding: 16px 20px;
+        background: rgba(239, 68, 68, 0.08);
+        border: 1px solid rgba(239, 68, 68, 0.25);
+        border-radius: 10px;
+      }
+      .problem-title {
+        font-size: 13px;
+        font-weight: 700;
+        color: #f87171;
+        margin-bottom: 6px;
+        letter-spacing: 0.5px;
+      }
+      .problem-text {
+        font-size: 13px;
+        color: #d1d5db;
+        line-height: 1.6;
+      }
+      .problem-text code {
+        background: rgba(255, 255, 255, 0.08);
+        padding: 1px 5px;
+        border-radius: 3px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11px;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+        max-width: 1060px;
+        margin: 0 auto;
+      }
+      @media (max-width: 860px) {
+        .grid {
+          grid-template-columns: 1fr;
+          max-width: 480px;
+        }
+      }
+
+      .card {
+        background: #3d3833;
+        border-radius: 14px;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+      }
+      .card.pick {
+        border-color: rgba(5, 150, 105, 0.4);
+      }
+      .card.current {
+        border-color: rgba(239, 68, 68, 0.3);
+      }
+
+      .card-header {
+        padding: 14px 18px 0;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .badge {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 10px;
+        font-weight: 500;
+        padding: 2px 8px;
+        border-radius: 4px;
+        letter-spacing: 0.3px;
+      }
+      .badge.cur {
+        background: rgba(239, 68, 68, 0.15);
+        color: #f87171;
+      }
+      .badge.num {
+        background: rgba(255, 255, 255, 0.06);
+        color: #6b6560;
+      }
+      .badge.rec {
+        background: rgba(5, 150, 105, 0.15);
+        color: #34d399;
+      }
+      .card-title {
+        font-size: 14px;
+        font-weight: 700;
+        color: #f5f1ed;
+      }
+      .card-desc {
+        padding: 4px 18px 0;
+        font-size: 12px;
+        color: #6b6560;
+        line-height: 1.5;
+      }
+
+      /* Phone frames */
+      .phone-row {
+        display: flex;
+        gap: 12px;
+        padding: 12px;
+      }
+      .phone-wrapper {
+        flex: 1;
+        text-align: center;
+      }
+      .phone-label {
+        font-size: 10px;
+        font-weight: 600;
+        color: #6b6560;
+        margin-bottom: 6px;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+      }
+      .phone {
+        background: #1a1917;
+        border-radius: 10px;
+        overflow: hidden;
+      }
+      .phone.light {
+        background: #faf8f5;
+      }
+      .shelf {
+        padding: 14px 14px 16px;
+      }
+      .phone.se .shelf {
+        padding: 10px 8px 12px;
+      }
+
+      /* Width indicators */
+      .width-tag {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 9px;
+        color: #6b6560;
+        margin-top: 4px;
+      }
+
+      /* Header row layouts */
+      .header-row {
+        display: flex;
+        align-items: center;
+        margin-bottom: 12px;
+      }
+      .side-l {
+        flex: 1;
+      }
+      .side-r {
+        flex: 1;
+        display: flex;
+        justify-content: flex-end;
+      }
+
+      /* Layout A: no left spacer */
+      .header-row-a {
+        display: flex;
+        align-items: center;
+        margin-bottom: 12px;
+        justify-content: space-between;
+      }
+
+      /* Layout B: stacked */
+      .header-stacked {
+        margin-bottom: 12px;
+      }
+      .header-stacked .top-row {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 6px;
+      }
+      .header-stacked .bottom-row {
+        display: flex;
+        justify-content: center;
+      }
+
+      /* Date pill (green) */
+      .date-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        background: rgba(5, 150, 105, 0.08);
+        border: 1px solid rgba(5, 150, 105, 0.2);
+        padding: 4px 10px;
+        border-radius: 20px;
+        cursor: pointer;
+        white-space: nowrap;
+      }
+      .date-pill .cal-icon {
+        width: 14px;
+        height: 14px;
+        color: #34d399;
+        flex-shrink: 0;
+      }
+      .date-pill .month {
+        font-size: 14px;
+        font-weight: 700;
+        color: #34d399;
+      }
+      .date-pill .day {
+        font-size: 13px;
+        font-weight: 500;
+        color: #9ca3af;
+      }
+      .date-pill .chev {
+        font-size: 9px;
+        color: #6b7280;
+      }
+      .light .date-pill {
+        background: rgba(5, 150, 105, 0.06);
+        border-color: rgba(5, 150, 105, 0.15);
+      }
+      .light .date-pill .month {
+        color: #047857;
+      }
+      .light .date-pill .day {
+        color: #6b6560;
+      }
+      .light .date-pill .cal-icon {
+        color: #059669;
+      }
+
+      /* Today chip (solid gold) */
+      .today-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        background: #e8b94d;
+        color: #3d2e00;
+        padding: 4px 10px;
+        border-radius: 20px;
+        cursor: pointer;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.3px;
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+      .today-chip svg {
+        width: 11px;
+        height: 11px;
+        color: #3d2e00;
+        flex-shrink: 0;
+      }
+
+      /* Day strip */
+      .day-strip {
+        display: flex;
+        justify-content: space-between;
+        gap: 2px;
+      }
+      .day-cell {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 3px;
+        flex: 1;
+      }
+      .day-lbl {
+        font-size: 8px;
+        font-weight: 500;
+        color: #6b7280;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+      }
+      .ring {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        font-weight: 700;
+      }
+      .ring.complete {
+        background: #059669;
+        color: white;
+        box-shadow: 0 0 6px rgba(5, 150, 105, 0.3);
+      }
+      .ring.none {
+        border: 2.5px solid rgba(255, 255, 255, 0.15);
+        color: #d1d5db;
+      }
+      .ring.missed {
+        border: 2.5px solid rgba(255, 255, 255, 0.15);
+        color: #d1d5db;
+        opacity: 0.4;
+      }
+      .light .ring.none {
+        border-color: #ddd8d2;
+        color: #2d2a26;
+      }
+      .light .ring.missed {
+        border-color: #ddd8d2;
+        color: #2d2a26;
+        opacity: 0.55;
+      }
+
+      /* Clip indicator */
+      .clip-zone {
+        position: relative;
+        overflow: hidden;
+      }
+      .clip-warning {
+        position: absolute;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        width: 24px;
+        background: linear-gradient(90deg, transparent, rgba(239, 68, 68, 0.3));
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        padding-right: 3px;
+      }
+      .clip-warning::after {
+        content: '✂';
+        font-size: 10px;
+        color: #f87171;
+      }
+
+      /* Reasoning */
+      .reasoning {
+        padding: 0 18px 14px;
+      }
+      .reason-text {
+        font-size: 12px;
+        color: #9ca3af;
+        line-height: 1.55;
+      }
+      .pro {
+        color: #34d399;
+      }
+      .con {
+        color: #f87171;
+      }
+
+      /* Full width card */
+      .card.full {
+        grid-column: 1 / -1;
+      }
+
+      /* Comparison label */
+      .vs-row {
+        display: flex;
+        gap: 12px;
+        align-items: stretch;
+        padding: 12px;
+      }
+      .vs-panel {
+        flex: 1;
+        background: #2d2a26;
+        border-radius: 8px;
+        padding: 10px;
+      }
+      .vs-label {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 10px;
+        color: #6b6560;
+        margin-bottom: 8px;
+        text-align: center;
+        letter-spacing: 0.5px;
+      }
+
+      /* SVG icons */
+      .svg-cal {
+        display: inline-block;
+        vertical-align: middle;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page-header">
+      <div class="page-title">Today Chip — Layout Options</div>
+      <div class="page-subtitle">
+        Solving the clipping risk on narrow screens with long month names. No
+        overlays.
+      </div>
+    </div>
+
+    <div class="problem-box">
+      <div class="problem-title">THE PROBLEM</div>
+      <div class="problem-text">
+        Current layout:
+        <code>[flex:1 spacer] [date pill centered] [Today chip flex:1]</code
+        ><br />
+        On iPhone SE (375px) with <code>paddingHorizontal: 40</code> → 295px
+        usable.<br />
+        Worst case <strong>"September 29 – Oct 4"</strong> = ~221px pill → only
+        <strong>37px</strong> per side column.<br />
+        Today chip needs <strong>~71px</strong>. It <strong>clips</strong>.
+      </div>
+    </div>
+
+    <div class="grid">
+      <!-- CURRENT: Clipping demo -->
+      <div class="card current">
+        <div class="card-header">
+          <span class="badge cur">CURRENT</span>
+          <span class="card-title">Clipping Risk on SE</span>
+        </div>
+        <div class="card-desc">
+          The centered layout leaves only 37px per side — chip gets cut off on
+          small screens with long months.
+        </div>
+        <div class="phone-row">
+          <div class="phone-wrapper">
+            <div class="phone-label">iPhone SE — September cross-month</div>
+            <div class="phone se" style="max-width: 295px; margin: 0 auto">
+              <div class="shelf">
+                <div class="header-row">
+                  <div class="side-l"></div>
+                  <div class="date-pill">
+                    <svg
+                      class="cal-icon svg-cal"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                      <line x1="16" y1="2" x2="16" y2="6" />
+                      <line x1="8" y1="2" x2="8" y2="6" />
+                      <line x1="3" y1="10" x2="21" y2="10" />
+                    </svg>
+                    <span class="month">September</span>
+                    <span class="day">29 – Oct 4</span>
+                    <span class="chev">&#9662;</span>
+                  </div>
+                  <div class="side-r clip-zone">
+                    <div class="today-chip">
+                      Today
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <line x1="5" y1="12" x2="19" y2="12" />
+                        <polyline points="12 5 19 12 12 19" />
+                      </svg>
+                    </div>
+                    <div class="clip-warning"></div>
+                  </div>
+                </div>
+                <div class="day-strip">
+                  <div class="day-cell">
+                    <span class="day-lbl">Mon</span>
+                    <div class="complete ring">&#10003;</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-lbl">Tue</span>
+                    <div class="complete ring">&#10003;</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-lbl">Wed</span>
+                    <div class="missed ring">1</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-lbl">Thu</span>
+                    <div class="complete ring">&#10003;</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-lbl">Fri</span>
+                    <div class="missed ring">3</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-lbl">Sat</span>
+                    <div class="complete ring">&#10003;</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-lbl">Sun</span>
+                    <div class="none ring">4</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="width-tag">295px usable — chip clips ✂</div>
+          </div>
+        </div>
+        <div class="reasoning">
+          <div class="reason-text">
+            <span class="con">Problem:</span> flex:1 side columns share space
+            equally. When the date pill is wide, neither side gets enough room
+            for the chip.
+          </div>
+        </div>
+      </div>
+
+      <!-- CURRENT: Fine on larger phones -->
+      <div class="card">
+        <div class="card-header">
+          <span class="badge num">OK</span>
+          <span class="card-title">Current — Works on Standard+</span>
+        </div>
+        <div class="card-desc">
+          On iPhone 15 Pro (393px) and up, even the worst case fits fine with
+          the centered layout.
+        </div>
+        <div class="phone-row">
+          <div class="phone-wrapper">
+            <div class="phone-label">iPhone 15 Pro — September cross-month</div>
+            <div class="phone" style="max-width: 313px; margin: 0 auto">
+              <div class="shelf">
+                <div class="header-row">
+                  <div class="side-l"></div>
+                  <div class="date-pill">
+                    <svg
+                      class="cal-icon svg-cal"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                      <line x1="16" y1="2" x2="16" y2="6" />
+                      <line x1="8" y1="2" x2="8" y2="6" />
+                      <line x1="3" y1="10" x2="21" y2="10" />
+                    </svg>
+                    <span class="month">September</span>
+                    <span class="day">29 – Oct 4</span>
+                    <span class="chev">&#9662;</span>
+                  </div>
+                  <div class="side-r">
+                    <div class="today-chip">
+                      Today
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <line x1="5" y1="12" x2="19" y2="12" />
+                        <polyline points="12 5 19 12 12 19" />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+                <div class="day-strip">
+                  <div class="day-cell">
+                    <span class="day-lbl">Mon</span>
+                    <div class="complete ring">&#10003;</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-lbl">Tue</span>
+                    <div class="complete ring">&#10003;</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-lbl">Wed</span>
+                    <div class="missed ring">1</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-lbl">Thu</span>
+                    <div class="complete ring">&#10003;</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-lbl">Fri</span>
+                    <div class="missed ring">3</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-lbl">Sat</span>
+                    <div class="complete ring">&#10003;</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-lbl">Sun</span>
+                    <div class="none ring">4</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="width-tag">313px usable — fits ✓</div>
+          </div>
+        </div>
+        <div class="reasoning">
+          <div class="reason-text">
+            The clip only happens on SE-class widths (375px or less). Standard
+            and larger phones have enough side-column space.
+          </div>
+        </div>
+      </div>
+
+      <!-- OPTION A: Drop left spacer ⭐ -->
+      <div class="card pick">
+        <div class="card-header">
+          <span class="badge rec">⭐ RECOMMENDED</span>
+          <span class="card-title">A — Drop Left Spacer</span>
+        </div>
+        <div class="card-desc">
+          Remove the empty left flex:1 spacer when Today is visible. Date pill
+          shifts left, chip gets full remaining width. No new row, no extra
+          vertical space.
+        </div>
+        <div class="phone-row">
+          <div class="phone-wrapper">
+            <div class="phone-label">iPhone SE — worst case</div>
+            <div class="phone se" style="max-width: 295px; margin: 0 auto">
+              <div class="shelf">
+                <div class="header-row-a">
+                  <div class="date-pill">
+                    <svg
+                      class="cal-icon svg-cal"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                      <line x1="16" y1="2" x2="16" y2="6" />
+                      <line x1="8" y1="2" x2="8" y2="6" />
+                      <line x1="3" y1="10" x2="21" y2="10" />
+                    </svg>
+                    <span class="month">September</span>
+                    <span class="day">29 – Oct 4</span>
+                    <span class="chev">&#9662;</span>
+                  </div>
+                  <div class="today-chip">
+                    Today
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <line x1="5" y1="12" x2="19" y2="12" />
+                      <polyline points="12 5 19 12 12 19" />
+                    </svg>
+                  </div>
+                </div>
+                <div class="day-strip">
+                  <div class="day-cell">
+                    <span class="day-lbl">Mon</span>
+                    <div class="complete ring">&#10003;</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-lbl">Tue</span>
+                    <div class="complete ring">&#10003;</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-lbl">Wed</span>
+                    <div class="missed ring">1</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-lbl">Thu</span>
+                    <div class="complete ring">&#10003;</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-lbl">Fri</span>
+                    <div class="missed ring">3</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-lbl">Sat</span>
+                    <div class="complete ring">&#10003;</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-lbl">Sun</span>
+                    <div class="none ring">4</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="width-tag">295px — fits perfectly ✓</div>
+          </div>
+          <div class="phone-wrapper">
+            <div class="phone-label">iPhone SE — short month</div>
+            <div class="phone se" style="max-width: 295px; margin: 0 auto">
+              <div class="shelf">
+                <div class="header-row-a">
+                  <div class="date-pill">
+                    <svg
+                      class="cal-icon svg-cal"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                      <line x1="16" y1="2" x2="16" y2="6" />
+                      <line x1="8" y1="2" x2="8" y2="6" />
+                      <line x1="3" y1="10" x2="21" y2="10" />
+                    </svg>
+                    <span class="month">May</span>
+                    <span class="day">5 – 11</span>
+                    <span class="chev">&#9662;</span>
+                  </div>
+                  <div class="today-chip">
+                    Today
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <line x1="5" y1="12" x2="19" y2="12" />
+                      <polyline points="12 5 19 12 12 19" />
+                    </svg>
+                  </div>
+                </div>
+                <div class="day-strip">
+                  <div class="day-cell">
+                    <span class="day-lbl">Mon</span>
+                    <div class="complete ring">&#10003;</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-lbl">Tue</span>
+                    <div class="complete ring">&#10003;</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-lbl">Wed</span>
+                    <div class="complete ring">&#10003;</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-lbl">Thu</span>
+                    <div class="missed ring">8</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-lbl">Fri</span>
+                    <div class="missed ring">9</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-lbl">Sat</span>
+                    <div class="complete ring">&#10003;</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-lbl">Sun</span>
+                    <div class="none ring">11</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="width-tag">295px — plenty of room ✓</div>
+          </div>
+        </div>
+
+        <!-- Also show current week (no chip, centered) -->
+        <div class="vs-row">
+          <div class="vs-panel">
+            <div class="vs-label">CURRENT WEEK (no chip → centered)</div>
+            <div class="phone se" style="max-width: 295px; margin: 0 auto">
+              <div class="shelf">
+                <div class="header-row">
+                  <div class="side-l"></div>
+                  <div class="date-pill">
+                    <svg
+                      class="cal-icon svg-cal"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                      <line x1="16" y1="2" x2="16" y2="6" />
+                      <line x1="8" y1="2" x2="8" y2="6" />
+                      <line x1="3" y1="10" x2="21" y2="10" />
+                    </svg>
+                    <span class="month">March</span>
+                    <span class="day">8</span>
+                    <span class="chev">&#9662;</span>
+                  </div>
+                  <div class="side-r"></div>
+                </div>
+                <div class="day-strip">
+                  <div class="day-cell">
+                    <span class="day-lbl">Mon</span>
+                    <div class="complete ring">&#10003;</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-lbl">Tue</span>
+                    <div class="complete ring">&#10003;</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-lbl">Wed</span>
+                    <div class="complete ring">&#10003;</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-lbl">Thu</span>
+                    <div class="complete ring">&#10003;</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-lbl">Fri</span>
+                    <div class="complete ring">&#10003;</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-lbl">Sat</span>
+                    <div class="none ring">8</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-lbl">Sun</span>
+                    <div class="none ring">9</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="vs-panel">
+            <div class="vs-label">PAST WEEK (chip → left-aligned)</div>
+            <div class="phone se" style="max-width: 295px; margin: 0 auto">
+              <div class="shelf">
+                <div class="header-row-a">
+                  <div class="date-pill">
+                    <svg
+                      class="cal-icon svg-cal"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                      <line x1="16" y1="2" x2="16" y2="6" />
+                      <line x1="8" y1="2" x2="8" y2="6" />
+                      <line x1="3" y1="10" x2="21" y2="10" />
+                    </svg>
+                    <span class="month">March</span>
+                    <span class="day">3 – 7</span>
+                    <span class="chev">&#9662;</span>
+                  </div>
+                  <div class="today-chip">
+                    Today
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <line x1="5" y1="12" x2="19" y2="12" />
+                      <polyline points="12 5 19 12 12 19" />
+                    </svg>
+                  </div>
+                </div>
+                <div class="day-strip">
+                  <div class="day-cell">
+                    <span class="day-lbl">Mon</span>
+                    <div class="complete ring">&#10003;</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-lbl">Tue</span>
+                    <div class="complete ring">&#10003;</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-lbl">Wed</span>
+                    <div class="missed ring">5</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-lbl">Thu</span>
+                    <div class="complete ring">&#10003;</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-lbl">Fri</span>
+                    <div class="missed ring">7</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-lbl">Sat</span>
+                    <div class="complete ring">&#10003;</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-lbl">Sun</span>
+                    <div class="none ring">9</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="reasoning">
+          <div class="reason-text">
+            <span class="pro">Pro:</span> Zero clip risk. No extra vertical
+            space. The left-shift signals "you're browsing history" — a subtle
+            wayfinding cue. When you swipe back to today, the pill re-centers.
+            No overlay.<br />
+            <span class="con">Con:</span> Date pill shifts ~30px left when
+            entering past-week mode. Minimal — the swipe gesture already
+            triggers a visual transition.
+          </div>
+        </div>
+      </div>
+
+      <!-- OPTION B: Chip below -->
+      <div class="card">
+        <div class="card-header">
+          <span class="badge num">B</span>
+          <span class="card-title">B — Chip Below Date Pill</span>
+        </div>
+        <div class="card-desc">
+          Today chip sits on its own row, centered below the date pill. Date
+          pill stays perfectly centered always. Adds ~28px vertical space.
+        </div>
+        <div class="phone-row">
+          <div class="phone-wrapper">
+            <div class="phone-label">iPhone SE — worst case</div>
+            <div class="phone se" style="max-width: 295px; margin: 0 auto">
+              <div class="shelf">
+                <div class="header-stacked">
+                  <div class="top-row">
+                    <div class="date-pill">
+                      <svg
+                        class="cal-icon svg-cal"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <rect
+                          x="3"
+                          y="4"
+                          width="18"
+                          height="18"
+                          rx="2"
+                          ry="2"
+                        />
+                        <line x1="16" y1="2" x2="16" y2="6" />
+                        <line x1="8" y1="2" x2="8" y2="6" />
+                        <line x1="3" y1="10" x2="21" y2="10" />
+                      </svg>
+                      <span class="month">September</span>
+                      <span class="day">29 – Oct 4</span>
+                      <span class="chev">&#9662;</span>
+                    </div>
+                  </div>
+                  <div class="bottom-row">
+                    <div class="today-chip">
+                      Today
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <line x1="5" y1="12" x2="19" y2="12" />
+                        <polyline points="12 5 19 12 12 19" />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+                <div class="day-strip">
+                  <div class="day-cell">
+                    <span class="day-lbl">Mon</span>
+                    <div class="complete ring">&#10003;</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-lbl">Tue</span>
+                    <div class="complete ring">&#10003;</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-lbl">Wed</span>
+                    <div class="missed ring">1</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-lbl">Thu</span>
+                    <div class="complete ring">&#10003;</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-lbl">Fri</span>
+                    <div class="missed ring">3</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-lbl">Sat</span>
+                    <div class="complete ring">&#10003;</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-lbl">Sun</span>
+                    <div class="none ring">4</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="width-tag">Zero clip risk — unlimited width ✓</div>
+          </div>
+          <div class="phone-wrapper">
+            <div class="phone-label">Standard phone — short month</div>
+            <div class="phone" style="max-width: 313px; margin: 0 auto">
+              <div class="shelf">
+                <div class="header-stacked">
+                  <div class="top-row">
+                    <div class="date-pill">
+                      <svg
+                        class="cal-icon svg-cal"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <rect
+                          x="3"
+                          y="4"
+                          width="18"
+                          height="18"
+                          rx="2"
+                          ry="2"
+                        />
+                        <line x1="16" y1="2" x2="16" y2="6" />
+                        <line x1="8" y1="2" x2="8" y2="6" />
+                        <line x1="3" y1="10" x2="21" y2="10" />
+                      </svg>
+                      <span class="month">May</span>
+                      <span class="day">5 – 11</span>
+                      <span class="chev">&#9662;</span>
+                    </div>
+                  </div>
+                  <div class="bottom-row">
+                    <div class="today-chip">
+                      Today
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <line x1="5" y1="12" x2="19" y2="12" />
+                        <polyline points="12 5 19 12 12 19" />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+                <div class="day-strip">
+                  <div class="day-cell">
+                    <span class="day-lbl">Mon</span>
+                    <div class="complete ring">&#10003;</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-lbl">Tue</span>
+                    <div class="complete ring">&#10003;</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-lbl">Wed</span>
+                    <div class="complete ring">&#10003;</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-lbl">Thu</span>
+                    <div class="missed ring">8</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-lbl">Fri</span>
+                    <div class="missed ring">9</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-lbl">Sat</span>
+                    <div class="complete ring">&#10003;</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-lbl">Sun</span>
+                    <div class="none ring">11</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="width-tag">Zero clip risk ✓</div>
+          </div>
+        </div>
+        <div class="reasoning">
+          <div class="reason-text">
+            <span class="pro">Pro:</span> Date pill always centered. Zero clip
+            risk on any screen. Clear visual hierarchy — date on top, action
+            below.<br />
+            <span class="con">Con:</span> Adds ~28px vertical space when viewing
+            past weeks (layout shift). The chip feels disconnected from the
+            header row. Takes vertical real estate from the habit list.
+          </div>
+        </div>
+      </div>
+
+      <!-- OPTION C: Abbreviate month -->
+      <div class="card">
+        <div class="card-header">
+          <span class="badge num">C</span>
+          <span class="card-title">C — Abbreviate Month</span>
+        </div>
+        <div class="card-desc">
+          Shorten the month name to 3 chars when the Today chip is visible.
+          "September" → "Sep". Keeps centered layout.
+        </div>
+        <div class="phone-row">
+          <div class="phone-wrapper">
+            <div class="phone-label">iPhone SE — abbreviated</div>
+            <div class="phone se" style="max-width: 295px; margin: 0 auto">
+              <div class="shelf">
+                <div class="header-row">
+                  <div class="side-l"></div>
+                  <div class="date-pill">
+                    <svg
+                      class="cal-icon svg-cal"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                      <line x1="16" y1="2" x2="16" y2="6" />
+                      <line x1="8" y1="2" x2="8" y2="6" />
+                      <line x1="3" y1="10" x2="21" y2="10" />
+                    </svg>
+                    <span class="month">Sep</span>
+                    <span class="day">29 – Oct 4</span>
+                    <span class="chev">&#9662;</span>
+                  </div>
+                  <div class="side-r">
+                    <div class="today-chip">
+                      Today
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <line x1="5" y1="12" x2="19" y2="12" />
+                        <polyline points="12 5 19 12 12 19" />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+                <div class="day-strip">
+                  <div class="day-cell">
+                    <span class="day-lbl">Mon</span>
+                    <div class="complete ring">&#10003;</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-lbl">Tue</span>
+                    <div class="complete ring">&#10003;</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-lbl">Wed</span>
+                    <div class="missed ring">1</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-lbl">Thu</span>
+                    <div class="complete ring">&#10003;</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-lbl">Fri</span>
+                    <div class="missed ring">3</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-lbl">Sat</span>
+                    <div class="complete ring">&#10003;</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-lbl">Sun</span>
+                    <div class="none ring">4</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="width-tag">~170px pill → 62px per side → fits ✓</div>
+          </div>
+          <div class="phone-wrapper">
+            <div class="phone-label">Current week — full name</div>
+            <div class="phone se" style="max-width: 295px; margin: 0 auto">
+              <div class="shelf">
+                <div class="header-row">
+                  <div class="side-l"></div>
+                  <div class="date-pill">
+                    <svg
+                      class="cal-icon svg-cal"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                      <line x1="16" y1="2" x2="16" y2="6" />
+                      <line x1="8" y1="2" x2="8" y2="6" />
+                      <line x1="3" y1="10" x2="21" y2="10" />
+                    </svg>
+                    <span class="month">September</span>
+                    <span class="day">30</span>
+                    <span class="chev">&#9662;</span>
+                  </div>
+                  <div class="side-r"></div>
+                </div>
+                <div class="day-strip">
+                  <div class="day-cell">
+                    <span class="day-lbl">Mon</span>
+                    <div class="complete ring">&#10003;</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-lbl">Tue</span>
+                    <div class="complete ring">&#10003;</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-lbl">Wed</span>
+                    <div class="complete ring">&#10003;</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-lbl">Thu</span>
+                    <div class="none ring">3</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-lbl">Fri</span>
+                    <div class="none ring">4</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-lbl">Sat</span>
+                    <div class="none ring">5</div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-lbl">Sun</span>
+                    <div class="none ring">6</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="width-tag">Full month name — centered ✓</div>
+          </div>
+        </div>
+        <div class="reasoning">
+          <div class="reason-text">
+            <span class="pro">Pro:</span> Keeps the centered layout. Both
+            elements fit on all screens. Abbreviations are universally
+            understood.<br />
+            <span class="con">Con:</span> Month name changes when you swipe to
+            past — "September" snaps to "Sep" which feels jarring. Inconsistent
+            text length between states. The abbreviation feels like a downgrade.
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

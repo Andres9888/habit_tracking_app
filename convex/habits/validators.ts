@@ -40,6 +40,8 @@ export const fullHabitValidator = v.object({
   order: v.optional(v.number()),
   paused: v.optional(v.boolean()),
   pausedAt: v.optional(v.number()),
+  pendingStrengthRecalcId: v.optional(v.id('_scheduled_functions')),
+  pendingStrengthRecalcRequestedAt: v.optional(v.number()),
   predictedCompletionProb: v.optional(v.number()),
   preferredTime: v.optional(v.string()),
   remindersEnabled: v.optional(v.boolean()),

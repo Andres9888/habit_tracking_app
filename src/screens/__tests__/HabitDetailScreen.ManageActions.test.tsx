@@ -41,18 +41,11 @@ jest.mock('convex/react', () => ({
 jest.mock('../../../convex/_generated/api', () => ({
   api: {
     habits: { update: 'habits.update' },
-    notes: { search: 'notes.search' },
     visionBoard: {
       create: 'visionBoard.create',
       remove: 'visionBoard.remove',
       update: 'visionBoard.update',
       listByHabit: 'visionBoard.listByHabit',
-    },
-    affirmations: {
-      create: 'affirmations.create',
-      update: 'affirmations.update',
-      remove: 'affirmations.remove',
-      listByHabit: 'affirmations.listByHabit',
     },
   },
 }));
@@ -170,8 +163,8 @@ describe('HabitDetailScreen - Manage Actions (Story 1.9.4)', () => {
           { onPress: jest.fn(), style: 'destructive', text: 'Pause' },
         ];
 
-        expect(buttons.find(b => b.text === 'Cancel')).toBeDefined();
-        expect(buttons.find(b => b.text === 'Pause')).toBeDefined();
+        expect(buttons.find((b) => b.text === 'Cancel')).toBeDefined();
+        expect(buttons.find((b) => b.text === 'Pause')).toBeDefined();
       });
     });
 
@@ -199,8 +192,8 @@ describe('HabitDetailScreen - Manage Actions (Story 1.9.4)', () => {
           { onPress: jest.fn(), style: 'destructive', text: 'Archive' },
         ];
 
-        expect(buttons.find(b => b.text === 'Cancel')).toBeDefined();
-        expect(buttons.find(b => b.text === 'Archive')).toBeDefined();
+        expect(buttons.find((b) => b.text === 'Cancel')).toBeDefined();
+        expect(buttons.find((b) => b.text === 'Archive')).toBeDefined();
       });
     });
 
@@ -228,15 +221,16 @@ describe('HabitDetailScreen - Manage Actions (Story 1.9.4)', () => {
           { onPress: jest.fn(), style: 'destructive', text: 'Delete' },
         ];
 
-        expect(buttons.find(b => b.text === 'Cancel')).toBeDefined();
-        expect(buttons.find(b => b.text === 'Delete')).toBeDefined();
+        expect(buttons.find((b) => b.text === 'Cancel')).toBeDefined();
+        expect(buttons.find((b) => b.text === 'Delete')).toBeDefined();
       });
     });
   });
 
   describe('AC3: Clear copy about consequences', () => {
     it('Pause message explains hiding from daily list and recovery option', () => {
-      const pauseMessage = 'This habit will be hidden from your daily list. You can unpause it anytime from Settings.';
+      const pauseMessage =
+        'This habit will be hidden from your daily list. You can unpause it anytime from Settings.';
 
       expect(pauseMessage).toContain('hidden');
       expect(pauseMessage).toContain('daily list');
@@ -244,14 +238,16 @@ describe('HabitDetailScreen - Manage Actions (Story 1.9.4)', () => {
     });
 
     it('Archive message explains data preservation', () => {
-      const archiveMessage = 'Archived habits are moved to your archive but keep their history.';
+      const archiveMessage =
+        'Archived habits are moved to your archive but keep their history.';
 
       expect(archiveMessage).toContain('archive');
       expect(archiveMessage).toContain('keep their history');
     });
 
     it('Delete message explains permanent data loss', () => {
-      const deleteMessage = 'This will permanently delete this habit and all its history. This cannot be undone.';
+      const deleteMessage =
+        'This will permanently delete this habit and all its history. This cannot be undone.';
 
       expect(deleteMessage).toContain('permanently');
       expect(deleteMessage).toContain('all its history');
@@ -318,7 +314,9 @@ describe('HabitDetailScreen - Manage Actions (Story 1.9.4)', () => {
           ? `${label}. ${subtitle}${isDestructive ? '. This is a destructive action.' : ''}`
           : `${label}${isDestructive ? '. This is a destructive action.' : ''}`;
 
-        expect(accessibleLabel).toBe('Pause Habit. Take a break without losing progress');
+        expect(accessibleLabel).toBe(
+          'Pause Habit. Take a break without losing progress'
+        );
       });
 
       it('should indicate destructive actions for screen readers', () => {

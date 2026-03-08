@@ -12,9 +12,9 @@ import React, { memo, useMemo } from 'react';
 import { Animated, View } from 'react-native';
 import ReAnimated, {
   interpolate,
-  interpolateColor,
   useAnimatedStyle,
 } from 'react-native-reanimated';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { CalendarTimeline } from '../../../../components/CalendarTimeline';
 import { getShelfBackgroundColor } from '../../../../components/CalendarTimeline/CalendarTimeline.styles';
 import { OfflineIndicator } from '../../../../components/SyncStatus';
@@ -26,20 +26,18 @@ import { useHabitsListHeaderComputed } from './useHabitsListHeaderComputed';
 
 /** Content padding applied by DraggableFlatList's contentContainerStyle */
 const CONTENT_H_PADDING = 24;
+const STICKY_HEADER_LAYER = { elevation: 20, zIndex: 20 } as const;
 
 function HabitsListHeaderComponent(
   props: HabitsListHeaderProps
 ): React.ReactElement {
   const { isDark } = useThemeColors();
+  const insets = useSafeAreaInsets();
   const stickyProgress = useStickyProgress();
   const shelfBg = getShelfBackgroundColor(isDark);
 
   const stickyWrapperStyle = useAnimatedStyle(() => ({
-    backgroundColor: interpolateColor(
-      stickyProgress.value,
-      [0, 1],
-      ['transparent', shelfBg]
-    ),
+    backgroundColor: stickyProgress.value > 0 ? shelfBg : 'transparent',
     marginHorizontal: interpolate(
       stickyProgress.value,
       [0, 1],
@@ -62,7 +60,14 @@ function HabitsListHeaderComponent(
   }, [props.habits, props.getStreak]);
 
   return (
-    <ReAnimated.View className='gap-2 pb-2 pt-12' style={stickyWrapperStyle}>
+    <ReAnimated.View
+      className='gap-2 pb-2'
+      style={[
+        STICKY_HEADER_LAYER,
+        { paddingTop: insets.top },
+        stickyWrapperStyle,
+      ]}
+    >
       <View className='absolute left-0 right-0 top-4 z-10 flex-row justify-center'>
         <OfflineIndicator
           testID='habits-offline-indicator'
@@ -80,6 +85,7 @@ function HabitsListHeaderComponent(
             disableFutureDayPress
             canNavigateForward={props.canNavigateForward}
             completedToday={computed.completedToday}
+            completionIcon={props.completionIcon}
             completionByDay={computed.completionByDay}
             currentStreak={currentStreak}
             dates={props.weekDates}

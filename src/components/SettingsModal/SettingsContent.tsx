@@ -42,7 +42,9 @@ export function SettingsContent(p: SettingsContentProps) {
   const bottomPadding = Math.max((p.bottomInset ?? 0) + 16, 24);
   const scrollY = useSharedValue(0);
   const scrollHandler = useAnimatedScrollHandler({
-    onScroll: (e) => { scrollY.value = e.contentOffset.y; },
+    onScroll: (e) => {
+      scrollY.value = e.contentOffset.y;
+    },
   });
   const borderStyle = useAnimatedStyle(() => ({
     opacity: scrollY.value > 4 ? 1 : 0,
@@ -72,11 +74,9 @@ export function SettingsContent(p: SettingsContentProps) {
             <SettingsSection highContrastMode={hc} title='Preferences'>
               <SettingsRow
                 highContrastMode={hc}
-                icon={
-                  <Check color={settingsIcons.checkbox.icon} size={16} />
-                }
+                icon={<Check color={settingsIcons.checkbox.icon} size={16} />}
                 iconBackgroundColor={settingsIcons.checkbox.bg}
-                label='Checkbox style for completed habits'
+                label='Use checkmark (off = chain link)'
                 type='toggle'
                 value={p.habitCompletionIcon === 'checkbox'}
                 onToggle={(v) =>
@@ -85,9 +85,7 @@ export function SettingsContent(p: SettingsContentProps) {
               />
               <SettingsRow
                 highContrastMode={hc}
-                icon={
-                  <Circle color={settingsIcons.circle.icon} size={16} />
-                }
+                icon={<Circle color={settingsIcons.circle.icon} size={16} />}
                 iconBackgroundColor={settingsIcons.circle.bg}
                 label='Circular day markers'
                 type='toggle'
@@ -99,10 +97,7 @@ export function SettingsContent(p: SettingsContentProps) {
               <SettingsRow
                 highContrastMode={hc}
                 icon={
-                  <Droplets
-                    color={settingsIcons.gradient.icon}
-                    size={16}
-                  />
+                  <Droplets color={settingsIcons.gradient.icon} size={16} />
                 }
                 iconBackgroundColor={settingsIcons.gradient.bg}
                 label='Gradient fill for habit strength'
@@ -126,9 +121,7 @@ export function SettingsContent(p: SettingsContentProps) {
               />
               <SettingsRow
                 highContrastMode={hc}
-                icon={
-                  <Volume2 color={settingsIcons.sound.icon} size={16} />
-                }
+                icon={<Volume2 color={settingsIcons.sound.icon} size={16} />}
                 iconBackgroundColor={settingsIcons.sound.bg}
                 label='Play sound on habit completion'
                 showBorder={false}
@@ -158,12 +151,7 @@ export function SettingsContent(p: SettingsContentProps) {
               <SettingsRow
                 hapticStyle='selection'
                 highContrastMode={hc}
-                icon={
-                  <ArrowUpDown
-                    color={settingsIcons.sort.icon}
-                    size={16}
-                  />
-                }
+                icon={<ArrowUpDown color={settingsIcons.sort.icon} size={16} />}
                 iconBackgroundColor={settingsIcons.sort.bg}
                 label='Sort Order'
                 type='selection'
@@ -175,12 +163,7 @@ export function SettingsContent(p: SettingsContentProps) {
               <SettingsRow
                 hapticStyle='selection'
                 highContrastMode={hc}
-                icon={
-                  <Download
-                    color={settingsIcons.export.icon}
-                    size={16}
-                  />
-                }
+                icon={<Download color={settingsIcons.export.icon} size={16} />}
                 iconBackgroundColor={settingsIcons.export.bg}
                 label='Export habits & stats'
                 type='navigation'
@@ -191,12 +174,7 @@ export function SettingsContent(p: SettingsContentProps) {
               <SettingsRow
                 badge={p.archivedHabitsCount}
                 highContrastMode={hc}
-                icon={
-                  <BookOpen
-                    color={settingsIcons.archive.icon}
-                    size={16}
-                  />
-                }
+                icon={<BookOpen color={settingsIcons.archive.icon} size={16} />}
                 iconBackgroundColor={settingsIcons.archive.bg}
                 label='Archived Habits'
                 showBorder={false}

@@ -113,52 +113,52 @@ describe('CalendarTimeline', () => {
       jest.restoreAllMocks();
     });
 
-    it('calls onPreviousWeek when swiped left', () => {
-      const onPreviousWeek = jest.fn();
-      const { onEnd } = setupSwipe({ onPreviousWeek });
-
-      onEnd({ translationX: -80, velocityX: 0 });
-
-      expect(onPreviousWeek).toHaveBeenCalledTimes(1);
-    });
-
-    it('calls onPreviousWeek on a fast left swipe (velocity)', () => {
-      const onPreviousWeek = jest.fn();
-      const { onEnd } = setupSwipe({ onPreviousWeek });
-
-      onEnd({ translationX: 0, velocityX: -600 });
-
-      expect(onPreviousWeek).toHaveBeenCalledTimes(1);
-    });
-
-    it('calls onNextWeek when swiped right and forward navigation is enabled', () => {
+    it('calls onNextWeek when swiped left and forward navigation is enabled', () => {
       const onNextWeek = jest.fn();
       const { onEnd } = setupSwipe({ canNavigateForward: true, onNextWeek });
 
-      onEnd({ translationX: 80, velocityX: 0 });
+      onEnd({ translationX: -80, velocityX: 0 });
 
       expect(onNextWeek).toHaveBeenCalledTimes(1);
     });
 
-    it('calls onNextWeek on a fast right swipe (velocity)', () => {
+    it('calls onNextWeek on a fast left swipe (velocity)', () => {
       const onNextWeek = jest.fn();
       const { onEnd } = setupSwipe({
         canNavigateForward: true,
         onNextWeek,
       });
 
-      onEnd({ translationX: 0, velocityX: 600 });
+      onEnd({ translationX: 0, velocityX: -600 });
 
       expect(onNextWeek).toHaveBeenCalledTimes(1);
     });
 
-    it('does not call onNextWeek when swiped right and forward navigation is disabled', () => {
+    it('does not call onNextWeek when swiped left and forward navigation is disabled', () => {
       const onNextWeek = jest.fn();
       const { onEnd } = setupSwipe({ canNavigateForward: false, onNextWeek });
 
-      onEnd({ translationX: 80, velocityX: 0 });
+      onEnd({ translationX: -80, velocityX: 0 });
 
       expect(onNextWeek).not.toHaveBeenCalled();
+    });
+
+    it('calls onPreviousWeek when swiped right', () => {
+      const onPreviousWeek = jest.fn();
+      const { onEnd } = setupSwipe({ onPreviousWeek });
+
+      onEnd({ translationX: 80, velocityX: 0 });
+
+      expect(onPreviousWeek).toHaveBeenCalledTimes(1);
+    });
+
+    it('calls onPreviousWeek on a fast right swipe (velocity)', () => {
+      const onPreviousWeek = jest.fn();
+      const { onEnd } = setupSwipe({ onPreviousWeek });
+
+      onEnd({ translationX: 0, velocityX: 600 });
+
+      expect(onPreviousWeek).toHaveBeenCalledTimes(1);
     });
 
     it('ignores horizontal movement below swipe threshold', () => {
@@ -182,7 +182,9 @@ describe('CalendarTimeline', () => {
 
     it('calls onPreviousWeek when pressing the left arrow', () => {
       const onPreviousWeek = jest.fn();
-      render(<CalendarTimeline dates={dates} onPreviousWeek={onPreviousWeek} />);
+      render(
+        <CalendarTimeline dates={dates} onPreviousWeek={onPreviousWeek} />
+      );
 
       const previousButton = screen.getByRole('button', {
         name: 'Previous week',

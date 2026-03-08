@@ -2,6 +2,7 @@
  * Animation sequence functions for MilestoneCelebration
  */
 
+import * as Haptics from 'expo-haptics';
 import {
   withSpring,
   withSequence,

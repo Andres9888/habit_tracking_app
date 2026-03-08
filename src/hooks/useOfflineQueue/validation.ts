@@ -4,14 +4,7 @@
 
 import type { OfflineSubmissionType, QueuedSubmission } from './types';
 
-const SUBMISSION_TYPES = new Set<OfflineSubmissionType>([
-  'reflection',
-  'letter',
-  'voiceNote',
-  'visionBoardImage',
-  'affirmation',
-  'habitUpdate',
-]);
+const SUBMISSION_TYPES = new Set<OfflineSubmissionType>(['habitUpdate']);
 
 function isObject(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null;

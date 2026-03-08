@@ -41,7 +41,6 @@ export const DEFAULT_SETTINGS = {
   showEmojis: true,
   showGradientFill: true,
   showMotivationalMessages: true,
-  showNotesStats: true,
   showStreaks: true,
   stickyCalendarHeader: false,
   showWeekCompletionBar: false,

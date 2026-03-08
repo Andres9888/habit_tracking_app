@@ -2,13 +2,14 @@
  * Motivation feature data for motivation/benefits variants
  */
 
-import { Mic, Mail, Image, Sparkles, Shield, Eye } from 'lucide-react-native';
+import { Mic, Image, Shield, Eye } from 'lucide-react-native';
 import type { MotivationFeatureItem } from './PremiumPaywall.types';
 
 export const MOTIVATION_FEATURES: readonly MotivationFeatureItem[] = [
   {
     accentColor: '#14b8a6',
-    description: 'Capture your voice when motivation peaks — replay it when you need it most.',
+    description:
+      'Capture your voice when motivation peaks — replay it when you need it most.',
     freeLimit: '1 recording',
     icon: Mic,
     id: 'voiceNotes',
@@ -16,17 +17,6 @@ export const MOTIVATION_FEATURES: readonly MotivationFeatureItem[] = [
     scienceFact: 'Voice has 40% higher emotional recall than text',
     subtitle: '40% higher emotional recall',
     title: 'Unlimited Voice Notes',
-  },
-  {
-    accentColor: '#8b5cf6',
-    description: 'Write messages to your future self that unlock at the perfect moment.',
-    freeLimit: 'Not available',
-    icon: Mail,
-    id: 'letters',
-    premiumValue: 'Unlimited letters',
-    scienceFact: 'Connecting with future self increases self-control',
-    subtitle: 'Time-locked motivation',
-    title: 'Letters to Self',
   },
   {
     accentColor: '#d946ef',
@@ -40,19 +30,9 @@ export const MOTIVATION_FEATURES: readonly MotivationFeatureItem[] = [
     title: 'Vision Board',
   },
   {
-    accentColor: '#f59e0b',
-    description: 'Build the mindset that sticks — unlimited daily affirmations.',
-    freeLimit: '2 affirmations',
-    icon: Sparkles,
-    id: 'affirmations',
-    premiumValue: 'Unlimited affirmations',
-    scienceFact: 'Repetition builds neural pathways',
-    subtitle: 'Build neural pathways',
-    title: 'Unlimited Affirmations',
-  },
-  {
     accentColor: '#ef4444',
-    description: 'Smart alerts when your streak is at risk — never lose progress again.',
+    description:
+      'Smart alerts when your streak is at risk — never lose progress again.',
     freeLimit: 'Not available',
     icon: Shield,
     id: 'rescueMode',
@@ -63,7 +43,8 @@ export const MOTIVATION_FEATURES: readonly MotivationFeatureItem[] = [
   },
   {
     accentColor: '#10b981',
-    description: 'Full Huberman protocol — visualize Body, Mind, and Emotion together.',
+    description:
+      'Full Huberman protocol — visualize Body, Mind, and Emotion together.',
     freeLimit: 'Basic visualization',
     icon: Eye,
     id: 'advancedViz',

@@ -25,9 +25,13 @@ import { PremiumPaywall as PremiumBenefitsModal } from '../../../PremiumPaywall'
 
 // Mock expo-linear-gradient
 jest.mock('expo-linear-gradient', () => ({
-  LinearGradient: ({ children, ...props }: { children?: React.ReactNode; [key: string]: unknown }) => (
-    <mock-linear-gradient {...props}>{children}</mock-linear-gradient>
-  ),
+  LinearGradient: ({
+    children,
+    ...props
+  }: {
+    children?: React.ReactNode;
+    [key: string]: unknown;
+  }) => <mock-linear-gradient {...props}>{children}</mock-linear-gradient>,
 }));
 
 // Mock react-native-reanimated
@@ -76,14 +80,20 @@ describe('PremiumBenefitsModal', () => {
 
   describe('Modal visibility', () => {
     it('renders when visible is true', () => {
-      const { getByText } = render(<PremiumBenefitsModal variant="benefits" {...defaultProps} />);
+      const { getByText } = render(
+        <PremiumBenefitsModal variant='benefits' {...defaultProps} />
+      );
 
       expect(getByText('Premium Features')).toBeTruthy();
     });
 
     it('uses testID when provided', () => {
       const { getByTestId } = render(
-        <PremiumBenefitsModal variant="benefits" {...defaultProps} testID='benefits-modal' />
+        <PremiumBenefitsModal
+          variant='benefits'
+          {...defaultProps}
+          testID='benefits-modal'
+        />
       );
 
       expect(getByTestId('benefits-modal')).toBeTruthy();
@@ -92,19 +102,25 @@ describe('PremiumBenefitsModal', () => {
 
   describe('Header section', () => {
     it('displays Premium Features title with crown icon', () => {
-      const { getByText } = render(<PremiumBenefitsModal variant="benefits" {...defaultProps} />);
+      const { getByText } = render(
+        <PremiumBenefitsModal variant='benefits' {...defaultProps} />
+      );
 
       expect(getByText('Premium Features')).toBeTruthy();
     });
 
     it('displays hero headline', () => {
-      const { getByText } = render(<PremiumBenefitsModal variant="benefits" {...defaultProps} />);
+      const { getByText } = render(
+        <PremiumBenefitsModal variant='benefits' {...defaultProps} />
+      );
 
       expect(getByText('Unlock Your Full Motivation Toolkit')).toBeTruthy();
     });
 
     it('displays hero subtext with retention statistic', () => {
-      const { getByText } = render(<PremiumBenefitsModal variant="benefits" {...defaultProps} />);
+      const { getByText } = render(
+        <PremiumBenefitsModal variant='benefits' {...defaultProps} />
+      );
 
       expect(
         getByText(
@@ -116,7 +132,9 @@ describe('PremiumBenefitsModal', () => {
 
   describe('Premium features list', () => {
     it('displays all 6 premium features', () => {
-      const { getByText } = render(<PremiumBenefitsModal variant="benefits" {...defaultProps} />);
+      const { getByText } = render(
+        <PremiumBenefitsModal variant='benefits' {...defaultProps} />
+      );
 
       // Voice Notes
       expect(getByText('Unlimited Voice Notes')).toBeTruthy();
@@ -133,7 +151,9 @@ describe('PremiumBenefitsModal', () => {
     });
 
     it('displays feature descriptions', () => {
-      const { getByText } = render(<PremiumBenefitsModal variant="benefits" {...defaultProps} />);
+      const { getByText } = render(
+        <PremiumBenefitsModal variant='benefits' {...defaultProps} />
+      );
 
       expect(
         getByText('Record audio motivation from your most inspired moments')
@@ -147,7 +167,9 @@ describe('PremiumBenefitsModal', () => {
     });
 
     it('displays science facts for all features', () => {
-      const { getByText } = render(<PremiumBenefitsModal variant="benefits" {...defaultProps} />);
+      const { getByText } = render(
+        <PremiumBenefitsModal variant='benefits' {...defaultProps} />
+      );
 
       // Voice Notes science fact
       expect(
@@ -174,18 +196,15 @@ describe('PremiumBenefitsModal', () => {
     });
 
     it('displays free vs premium comparison for each feature', () => {
-      const { getByText } = render(<PremiumBenefitsModal variant="benefits" {...defaultProps} />);
+      const { getByText } = render(
+        <PremiumBenefitsModal variant='benefits' {...defaultProps} />
+      );
 
       // Voice Notes
       expect(getByText('1 recording')).toBeTruthy();
       expect(getByText('Unlimited recordings')).toBeTruthy();
 
-      // Affirmations
-      expect(getByText('2 affirmations')).toBeTruthy();
-      expect(getByText('Unlimited affirmations')).toBeTruthy();
-
       // Features not available in free tier
-      expect(getByText('Unlimited letters')).toBeTruthy();
       expect(getByText('4 images per habit')).toBeTruthy();
       expect(getByText('Smart streak protection')).toBeTruthy();
       expect(getByText('Complete protocol')).toBeTruthy();
@@ -195,7 +214,8 @@ describe('PremiumBenefitsModal', () => {
   describe('Feature highlighting', () => {
     it('highlights the triggered feature with badge', () => {
       const { getByText } = render(
-        <PremiumBenefitsModal variant="benefits"
+        <PremiumBenefitsModal
+          variant='benefits'
           {...defaultProps}
           triggeredByFeature='voiceNotes'
         />
@@ -206,16 +226,20 @@ describe('PremiumBenefitsModal', () => {
 
     it('sorts features to show highlighted feature first', () => {
       const { getAllByText } = render(
-        <PremiumBenefitsModal variant="benefits" {...defaultProps} triggeredByFeature='letters' />
+        <PremiumBenefitsModal
+          variant='benefits'
+          {...defaultProps}
+          triggeredByFeature='visionBoard'
+        />
       );
 
-      // Letters to Self should be visible with the highlight badge
-      expect(getAllByText('Letters to Self').length).toBeGreaterThan(0);
+      // Vision Board should be visible with the highlight badge
+      expect(getAllByText('Vision Board').length).toBeGreaterThan(0);
     });
 
     it('does not show highlight badge when no feature triggered', () => {
       const { queryByText } = render(
-        <PremiumBenefitsModal variant="benefits" {...defaultProps} />
+        <PremiumBenefitsModal variant='benefits' {...defaultProps} />
       );
 
       expect(queryByText('You tried to use this feature')).toBeNull();
@@ -224,14 +248,18 @@ describe('PremiumBenefitsModal', () => {
 
   describe('Pricing section', () => {
     it('displays monthly price', () => {
-      const { getByText } = render(<PremiumBenefitsModal variant="benefits" {...defaultProps} />);
+      const { getByText } = render(
+        <PremiumBenefitsModal variant='benefits' {...defaultProps} />
+      );
 
       expect(getByText('$6.99')).toBeTruthy();
       expect(getByText('/month')).toBeTruthy();
     });
 
     it('displays trial and auto-renewal info', () => {
-      const { getByText } = render(<PremiumBenefitsModal variant="benefits" {...defaultProps} />);
+      const { getByText } = render(
+        <PremiumBenefitsModal variant='benefits' {...defaultProps} />
+      );
 
       expect(
         getByText(
@@ -243,7 +271,9 @@ describe('PremiumBenefitsModal', () => {
 
   describe('Social proof', () => {
     it('displays star rating', () => {
-      const { getByText } = render(<PremiumBenefitsModal variant="benefits" {...defaultProps} />);
+      const { getByText } = render(
+        <PremiumBenefitsModal variant='benefits' {...defaultProps} />
+      );
 
       // Social proof text
       expect(
@@ -254,7 +284,9 @@ describe('PremiumBenefitsModal', () => {
 
   describe('CTA button', () => {
     it('displays Start 7-Day Free Trial button', () => {
-      const { getByText } = render(<PremiumBenefitsModal variant="benefits" {...defaultProps} />);
+      const { getByText } = render(
+        <PremiumBenefitsModal variant='benefits' {...defaultProps} />
+      );
 
       expect(getByText('Start 7-Day Free Trial')).toBeTruthy();
     });
@@ -262,7 +294,11 @@ describe('PremiumBenefitsModal', () => {
     it('calls onStartTrial when CTA is pressed', () => {
       const onStartTrial = jest.fn();
       const { getByText } = render(
-        <PremiumBenefitsModal variant="benefits" {...defaultProps} onStartTrial={onStartTrial} />
+        <PremiumBenefitsModal
+          variant='benefits'
+          {...defaultProps}
+          onStartTrial={onStartTrial}
+        />
       );
 
       fireEvent.press(getByText('Start 7-Day Free Trial'));
@@ -271,7 +307,7 @@ describe('PremiumBenefitsModal', () => {
 
     it('has correct accessibility attributes', () => {
       const { getByLabelText, getByA11yHint } = render(
-        <PremiumBenefitsModal variant="benefits" {...defaultProps} />
+        <PremiumBenefitsModal variant='benefits' {...defaultProps} />
       );
 
       expect(getByLabelText('Start 7-Day Free Trial')).toBeTruthy();
@@ -282,7 +318,7 @@ describe('PremiumBenefitsModal', () => {
   describe('Close button', () => {
     it('displays close button', () => {
       const { getByLabelText } = render(
-        <PremiumBenefitsModal variant="benefits" {...defaultProps} />
+        <PremiumBenefitsModal variant='benefits' {...defaultProps} />
       );
 
       expect(getByLabelText('Close')).toBeTruthy();
@@ -291,7 +327,11 @@ describe('PremiumBenefitsModal', () => {
     it('calls onClose when close button is pressed', () => {
       const onClose = jest.fn();
       const { getByLabelText } = render(
-        <PremiumBenefitsModal variant="benefits" {...defaultProps} onClose={onClose} />
+        <PremiumBenefitsModal
+          variant='benefits'
+          {...defaultProps}
+          onClose={onClose}
+        />
       );
 
       fireEvent.press(getByLabelText('Close'));
@@ -301,13 +341,17 @@ describe('PremiumBenefitsModal', () => {
 
   describe('Restore purchases', () => {
     it('displays restore purchases link', () => {
-      const { getByText } = render(<PremiumBenefitsModal variant="benefits" {...defaultProps} />);
+      const { getByText } = render(
+        <PremiumBenefitsModal variant='benefits' {...defaultProps} />
+      );
 
       expect(getByText('Already premium? Restore purchases')).toBeTruthy();
     });
 
     it('restore purchases link is pressable', () => {
-      const { getByText } = render(<PremiumBenefitsModal variant="benefits" {...defaultProps} />);
+      const { getByText } = render(
+        <PremiumBenefitsModal variant='benefits' {...defaultProps} />
+      );
 
       // Should not throw when pressed
       fireEvent.press(getByText('Already premium? Restore purchases'));
@@ -317,7 +361,11 @@ describe('PremiumBenefitsModal', () => {
   describe('Accessibility', () => {
     it('respects reduceMotion prop for modal animation', () => {
       const { getByText } = render(
-        <PremiumBenefitsModal variant="benefits" {...defaultProps} reduceMotion />
+        <PremiumBenefitsModal
+          variant='benefits'
+          {...defaultProps}
+          reduceMotion
+        />
       );
 
       // Modal should still render with fade animation instead of slide
@@ -326,7 +374,11 @@ describe('PremiumBenefitsModal', () => {
 
     it('respects reduceMotion prop for feature row animations', () => {
       const { getByText } = render(
-        <PremiumBenefitsModal variant="benefits" {...defaultProps} reduceMotion />
+        <PremiumBenefitsModal
+          variant='benefits'
+          {...defaultProps}
+          reduceMotion
+        />
       );
 
       // Features should render immediately without stagger delay
@@ -335,13 +387,17 @@ describe('PremiumBenefitsModal', () => {
     });
 
     it('close button has correct accessibility role', () => {
-      const { getByRole } = render(<PremiumBenefitsModal variant="benefits" {...defaultProps} />);
+      const { getByRole } = render(
+        <PremiumBenefitsModal variant='benefits' {...defaultProps} />
+      );
 
       expect(getByRole('button', { name: 'Close' })).toBeTruthy();
     });
 
     it('CTA button has correct accessibility role', () => {
-      const { getByRole } = render(<PremiumBenefitsModal variant="benefits" {...defaultProps} />);
+      const { getByRole } = render(
+        <PremiumBenefitsModal variant='benefits' {...defaultProps} />
+      );
 
       expect(
         getByRole('button', { name: 'Start 7-Day Free Trial' })
@@ -352,9 +408,7 @@ describe('PremiumBenefitsModal', () => {
   describe('Feature trigger scenarios', () => {
     const features = [
       'voiceNotes',
-      'letters',
       'visionBoard',
-      'affirmations',
       'rescueMode',
       'advancedViz',
     ] as const;
@@ -362,7 +416,8 @@ describe('PremiumBenefitsModal', () => {
     features.forEach((feature) => {
       it(`correctly highlights ${feature} when triggered`, () => {
         const { getByText } = render(
-          <PremiumBenefitsModal variant="benefits"
+          <PremiumBenefitsModal
+            variant='benefits'
             {...defaultProps}
             triggeredByFeature={feature}
           />
@@ -376,7 +431,11 @@ describe('PremiumBenefitsModal', () => {
   describe('Modal behavior', () => {
     it('uses pageSheet presentation style', () => {
       const { getByTestId } = render(
-        <PremiumBenefitsModal variant="benefits" {...defaultProps} testID='modal' />
+        <PremiumBenefitsModal
+          variant='benefits'
+          {...defaultProps}
+          testID='modal'
+        />
       );
 
       // Modal renders (pageSheet is native presentation)
@@ -386,7 +445,8 @@ describe('PremiumBenefitsModal', () => {
     it('calls onClose when modal is dismissed via onRequestClose', () => {
       const onClose = jest.fn();
       const { getByTestId } = render(
-        <PremiumBenefitsModal variant="benefits"
+        <PremiumBenefitsModal
+          variant='benefits'
           {...defaultProps}
           onClose={onClose}
           testID='modal'
@@ -403,7 +463,11 @@ describe('PremiumBenefitsModal', () => {
   describe('Button press animations', () => {
     it('handles press in/out events on CTA', () => {
       const { getByLabelText } = render(
-        <PremiumBenefitsModal variant="benefits" {...defaultProps} reduceMotion={false} />
+        <PremiumBenefitsModal
+          variant='benefits'
+          {...defaultProps}
+          reduceMotion={false}
+        />
       );
 
       const ctaButton = getByLabelText('Start 7-Day Free Trial');

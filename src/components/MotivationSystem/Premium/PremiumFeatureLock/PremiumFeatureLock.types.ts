@@ -5,9 +5,7 @@
 /** Premium feature tiers for the Motivation System */
 export type MotivationPremiumFeature =
   | 'voiceNotes'
-  | 'letters'
   | 'visionBoard'
-  | 'affirmations'
   | 'rescueMode'
   | 'advancedViz';
 

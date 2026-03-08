@@ -8,19 +8,7 @@
  * premium status across all mutations.
  */
 
-import type { Id } from '../_generated/dataModel';
 import type { QueryCtx } from '../_generated/server';
-
-/**
- * Free tier limits for premium features
- * Users can use these features up to the limit without premium
- */
-export const FREE_TIER_LIMITS = {
-  /** Voice notes: 1 free recording per habit */
-  VOICE_NOTES_PER_HABIT: 1,
-  /** Vision board: 4 images per habit */
-  VISION_BOARD_IMAGES_PER_HABIT: 4,
-} as const;
 
 /**
  * Check if a user has premium access
@@ -60,78 +48,6 @@ export async function requirePremium(
       `Premium required: ${featureName} is only available for premium users. Upgrade to unlock unlimited access.`
     );
   }
-}
-
-/**
- * Check if user can add more voice notes to a habit
- *
- * Free tier: 1 voice note per habit
- * Premium: unlimited
- *
- * @param ctx - Convex query context
- * @param userId - The user's ID
- * @param habitId - The habit ID
- * @returns true if user can add more voice notes
- */
-export async function canAddVoiceNote(
-  ctx: QueryCtx,
-  userId: string,
-  habitId: Id<'habits'>
-): Promise<{ allowed: boolean; reason?: string }> {
-  const hasPremium = await hasPremiumAccess(ctx, userId);
-  if (hasPremium) {
-    return { allowed: true };
-  }
-
-  const existingNotes = await ctx.db
-    .query('voiceNotes')
-    .withIndex('by_habit', (q) => q.eq('habitId', habitId))
-    .collect();
-
-  if (existingNotes.length >= FREE_TIER_LIMITS.VOICE_NOTES_PER_HABIT) {
-    return {
-      allowed: false,
-      reason: `Free tier limited to ${FREE_TIER_LIMITS.VOICE_NOTES_PER_HABIT} voice note per habit. Upgrade to premium for unlimited recordings.`,
-    };
-  }
-
-  return { allowed: true };
-}
-
-/**
- * Check if user can add more vision board images to a habit
- *
- * Free tier: 4 images per habit
- * Premium: unlimited
- *
- * @param ctx - Convex query context
- * @param userId - The user's ID
- * @param habitId - The habit ID
- * @returns true if user can add more images
- */
-export async function canAddVisionBoardImage(
-  ctx: QueryCtx,
-  userId: string,
-  habitId: Id<'habits'>
-): Promise<{ allowed: boolean; reason?: string }> {
-  const hasPremium = await hasPremiumAccess(ctx, userId);
-  if (hasPremium) {
-    return { allowed: true };
-  }
-
-  const existingImages = await ctx.db
-    .query('visionBoardImages')
-    .withIndex('by_habit', (q) => q.eq('habitId', habitId))
-    .collect();
-
-  if (existingImages.length >= FREE_TIER_LIMITS.VISION_BOARD_IMAGES_PER_HABIT) {
-    return {
-      allowed: false,
-      reason: `Free tier limited to ${FREE_TIER_LIMITS.VISION_BOARD_IMAGES_PER_HABIT} vision board images per habit. Upgrade to premium for unlimited images.`,
-    };
-  }
-
-  return { allowed: true };
 }
 
 /**

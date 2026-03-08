@@ -41,10 +41,7 @@ export {
 // HABIT MANAGEMENT
 // ============================================================================
 
-export {
-  useHabitStrength,
-  default as HabitStrength,
-} from './useHabitStrength';
+export { useHabitStrength, default as HabitStrength } from './useHabitStrength';
 
 export {
   useToggleHabitWithTimezone,
@@ -71,11 +68,6 @@ export {
   useNotificationResponse,
   default as NotificationResponse,
 } from './useNotificationResponse';
-
-export {
-  useLetterNotification,
-  default as LetterNotification,
-} from './useLetterNotification';
 
 export {
   useStreakReminders,
@@ -126,10 +118,7 @@ export {
 // PREMIUM FEATURES
 // ============================================================================
 
-export {
-  usePremium,
-  type UsePremiumReturn,
-} from './usePremium';
+export { usePremium, type UsePremiumReturn } from './usePremium';
 
 // ============================================================================
 // RESCUE & RECOVERY

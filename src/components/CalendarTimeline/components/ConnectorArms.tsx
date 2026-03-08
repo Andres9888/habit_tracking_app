@@ -10,6 +10,7 @@ const armBase: ViewStyle = {
   position: 'absolute',
   top: STREAK_CONNECTOR.topOffset,
   height: STREAK_CONNECTOR.height,
+  borderRadius: 2,
 };
 
 interface ConnectorArmsProps {

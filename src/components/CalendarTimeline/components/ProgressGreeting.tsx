@@ -43,7 +43,8 @@ function getGreetingColor(
   colors: ReturnType<typeof useThemeColors>['colors']
 ): string {
   if (variant === 'risk') return palette.error;
-  if (variant === 'success' || variant === 'almostDone') return colors.primary[600];
+  if (variant === 'success' || variant === 'almostDone')
+    return colors.primary[600];
   return badge ? palette.streak[isDark ? 300 : 700] : colors.text.primary;
 }
 
@@ -60,13 +61,16 @@ export const ProgressGreeting: React.FC<ProgressGreetingProps> = ({
 }) => {
   const { colors, isDark } = useThemeColors();
   const result = useStreakGreeting(currentStreak, completedToday, totalHabits);
-  const dateText = format(currentDate, 'EEE, MMMM d');
   const heroColor = getGreetingColor(result, isDark, colors);
+  const monthName = format(currentDate, 'MMMM');
+  const dateSuffix = isViewingPast ? dateRangeText : format(currentDate, 'd');
 
   return (
     <View>
       <View style={ROW}>
-        <Text style={[HERO_STYLE, { color: heroColor }]}>{result.greeting}</Text>
+        <Text style={[HERO_STYLE, { color: heroColor }]}>
+          {result.greeting}
+        </Text>
         <View style={RIGHT_COL}>
           <ProgressText completed={completedToday} total={totalHabits} />
           <ProgressDots
@@ -78,10 +82,9 @@ export const ProgressGreeting: React.FC<ProgressGreetingProps> = ({
       </View>
 
       <WeekNavRow
-        badge={result.badge}
-        dateLabel={isViewingPast ? dateRangeText : dateText}
+        dateSuffix={dateSuffix}
         isViewingPast={isViewingPast}
-        variant={result.variant}
+        monthName={monthName}
         onDateRangePress={onDateRangePress}
         onJumpToToday={onJumpToToday}
       />

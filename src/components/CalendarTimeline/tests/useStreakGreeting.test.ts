@@ -47,7 +47,7 @@ describe('getStreakGreeting', () => {
         hour: 10,
       });
       expect(result.greeting).toBe('Just 1 left!');
-      expect(result.badge).toEqual({ emoji: '✨', text: 'Almost perfect!' });
+      expect(result.badge).toBeUndefined();
       expect(result.variant).toBe('almostDone');
     });
 

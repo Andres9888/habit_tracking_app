@@ -12,9 +12,13 @@ import {
 
 // Mock expo-linear-gradient
 jest.mock('expo-linear-gradient', () => ({
-  LinearGradient: ({ children, ...props }: { children?: React.ReactNode; [key: string]: unknown }) => (
-    <mock-linear-gradient {...props}>{children}</mock-linear-gradient>
-  ),
+  LinearGradient: ({
+    children,
+    ...props
+  }: {
+    children?: React.ReactNode;
+    [key: string]: unknown;
+  }) => <mock-linear-gradient {...props}>{children}</mock-linear-gradient>,
 }));
 
 // Mock react-native-reanimated
@@ -80,7 +84,7 @@ describe('PremiumFeatureLock', () => {
     it('has correct accessibility labels', () => {
       const { getByLabelText } = render(
         <PremiumFeatureLock
-          feature='letters'
+          feature='visionBoard'
           onUpgrade={mockOnUpgrade}
           variant='inline'
         />
@@ -136,7 +140,7 @@ describe('PremiumFeatureLock', () => {
     it('triggers onUpgrade when CTA is pressed', () => {
       const { getByRole } = render(
         <PremiumFeatureLock
-          feature='letters'
+          feature='visionBoard'
           onUpgrade={mockOnUpgrade}
           variant='overlay'
         />
@@ -151,25 +155,13 @@ describe('PremiumFeatureLock', () => {
     it('renders header with feature title', () => {
       const { getByText } = render(
         <PremiumFeatureLock
-          feature='letters'
+          feature='visionBoard'
           onUpgrade={mockOnUpgrade}
           variant='card'
         />
       );
 
-      expect(getByText('Letters to Self')).toBeTruthy();
-    });
-
-    it('shows free vs premium comparison', () => {
-      const { getByText } = render(
-        <PremiumFeatureLock
-          feature='affirmations'
-          onUpgrade={mockOnUpgrade}
-          variant='card'
-        />
-      );
-
-      expect(getByText('Unlimited Affirmations')).toBeTruthy();
+      expect(getByText('Vision Board')).toBeTruthy();
     });
 
     it('shows science fact by default in card variant', () => {
@@ -190,9 +182,7 @@ describe('PremiumFeatureLock', () => {
   describe('Feature metadata', () => {
     const features: MotivationPremiumFeature[] = [
       'voiceNotes',
-      'letters',
       'visionBoard',
-      'affirmations',
       'rescueMode',
       'advancedViz',
     ];

@@ -6,10 +6,6 @@
 export type DraftContentType =
   | 'why'
   | 'identity'
-  | 'letter-title'
-  | 'letter-content'
-  | 'reflection-note'
-  | 'affirmation'
   | 'woop-wish'
   | 'woop-outcome'
   | 'woop-obstacle'

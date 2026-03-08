@@ -4,7 +4,7 @@
  * Features:
  * - AsyncStorage-based queue persistence
  * - Automatic retry when network restored
- * - Support for all motivation system submission types
+ * - Support for habit update submissions
  * - Exponential backoff for failed retries
  * - Queue size limits and stale item cleanup
  */
@@ -16,11 +16,6 @@ export { useOfflineQueue, default } from './useOfflineQueue';
 export type {
   OfflineSubmissionType,
   QueuedSubmission,
-  ReflectionPayload,
-  LetterPayload,
-  VoiceNotePayload,
-  VisionBoardImagePayload,
-  AffirmationPayload,
   HabitUpdatePayload,
   QueueStats,
   UseOfflineQueueOptions,

@@ -6,9 +6,6 @@
  * - habits: Core habit data with tracking entries
  * - users: User profiles and preferences
  * - templates: Pre-built habit templates
- * - affirmations: Positive self-talk cards
- * - letters: Future self letters
- * - visionBoardImages: Vision board images
  * - And various supporting tables for subscriptions, analytics, etc.
  *
  * Each table includes indexes for efficient querying.
@@ -31,64 +28,6 @@ const subscriptionStatus = v.union(
 const planType = v.union(v.literal('monthly'), v.literal('yearly'));
 
 const applicationTables = {
-  // Affirmations - Positive self-talk cards (Steele, 1988; Hatzigeorgiadis, 2011)
-  // Story T13: Affirmations with scheduled delivery (premium)
-  // Scientific Basis: Repetition builds neural pathways; timed delivery optimizes habit formation
-  affirmations: defineTable({
-    createdAt: v.number(),
-    // Days of week for weekly frequency (0=Sunday, 6=Saturday)
-    // Only used when frequency='weekly'
-    daysOfWeek: v.optional(v.array(v.number())),
-
-    // Delivery frequency: daily (every day) or weekly (specific days)
-    frequency: v.optional(
-      v.union(
-        v.literal('daily'), // Every day at scheduledTime
-        v.literal('weekly') // Only on selected daysOfWeek
-      )
-    ),
-
-    habitId: v.id('habits'),
-
-    // Toggle to enable/disable scheduled delivery without losing settings
-    isScheduleEnabled: v.optional(v.boolean()),
-
-    // Timestamp of last successful delivery (for tracking/analytics)
-    lastDeliveredAt: v.optional(v.number()),
-
-    // Expo notification identifier for cancellation
-    notificationId: v.optional(v.string()),
-
-    // === Scheduled Delivery Fields (Premium Feature) ===
-    // Enables daily push notifications at specific times
-    // Time of day for delivery in "HH:MM" 24-hour format (e.g., "08:30")
-    scheduledTime: v.optional(v.string()),
-
-    text: v.string(),
-
-    type: v.optional(
-      v.union(
-        v.literal('identity'), // "I am someone who..."
-        v.literal('motivational'), // "I can do hard things"
-        v.literal('instructional') // "Progress, not perfection"
-      )
-    ),
-
-    updatedAt: v.number(),
-
-    userId: v.optional(v.string()),
-  })
-    .index('by_habit', ['habitId'])
-    .index('by_user', ['userId'])
-    .index('by_schedule', ['isScheduleEnabled', 'scheduledTime']),
-
-  articles: defineTable({
-    category: v.string(),
-    content: v.string(),
-    createdAt: v.number(),
-    title: v.string(),
-  }).index('by_category', ['category']),
-
   habits: defineTable({
     // Memory Accessibility System (Tobias, 2009; Zhang et al., 2021)
     // Memory accessibility (0-1), starts at 1.0
@@ -179,6 +118,10 @@ const applicationTables = {
 
     pausedAt: v.optional(v.number()),
 
+    pendingStrengthRecalcId: v.optional(v.id('_scheduled_functions')),
+
+    pendingStrengthRecalcRequestedAt: v.optional(v.number()),
+
     // Behavior Prediction - Predicted probability of next completion
     predictedCompletionProb: v.optional(v.number()),
 
@@ -248,87 +191,6 @@ const applicationTables = {
     // Mental contrasting + implementation intentions = 2x goal achievement
     woopWish: v.optional(v.string()),
   }).index('by_userId', ['userId']),
-
-  // Letters to Self - Time-locked messages from past self to future self
-  // Scientific Basis:
-  // - Temporal self-continuity: Connecting with future self increases self-control
-  // - Delayed gratification psychology (Mischel's marshmallow studies)
-  // Business Model:
-  // - Creates anticipation, unique feature, emotional depth
-  // - Users pay for emotional experiences (Calm model)
-  // - Premium feature: unlocking creates anticipation and engagement
-  // Story T11: Letters to Self
-  letters: defineTable({
-    // Letter content - the message to your future self
-    content: v.string(),
-
-    // Timestamp when letter was written
-    createdAt: v.number(),
-
-    // Associated habit
-    habitId: v.id('habits'),
-
-    // Whether the letter has been read after unlocking
-    isRead: v.boolean(),
-
-    // Title for the letter (optional, for organization)
-    title: v.optional(v.string()),
-
-    // Timestamp when the letter becomes readable
-    unlockAt: v.number(),
-
-    // Last updated timestamp
-    updatedAt: v.optional(v.number()),
-
-    // User who wrote the letter
-    userId: v.optional(v.string()),
-  })
-    .index('by_habit', ['habitId'])
-    .index('by_user', ['userId'])
-    .index('by_unlock_date', ['unlockAt'])
-    .index('by_habit_and_unlock', ['habitId', 'unlockAt']),
-
-  notes: defineTable({
-    body: v.string(),
-    createdAt: v.number(),
-    date: v.string(),
-    habitId: v.optional(v.id('habits')),
-    updatedAt: v.number(),
-    userId: v.optional(v.string()),
-  })
-    .index('by_date', ['date'])
-    .index('by_habit', ['habitId'])
-    .index('by_user', ['userId'])
-    .index('by_user_and_date', ['userId', 'date']),
-
-  // Quick Reflection - Post-habit completion feedback (BJ Fogg's Tiny Habits)
-  // Celebration + journaling increases self-awareness and habit consistency
-  // Scientific Basis: Daylio (50M+ downloads) business model validates reflection patterns
-  reflections: defineTable({
-    // Optional text note
-    createdAt: v.number(),
-
-    date: v.string(),
-
-    // ISO date string (YYYY-MM-DD)
-    // Emoji sentiment: 😤 frustrated | 😐 neutral | 😊 happy | 🔥 fire
-    emoji: v.union(
-      v.literal('frustrated'),
-      v.literal('neutral'),
-      v.literal('happy'),
-      v.literal('fire')
-    ),
-
-    habitId: v.id('habits'),
-
-    note: v.optional(v.string()),
-    updatedAt: v.number(),
-    userId: v.optional(v.string()),
-  })
-    .index('by_habit', ['habitId'])
-    .index('by_habit_and_date', ['habitId', 'date'])
-    .index('by_user', ['userId'])
-    .index('by_user_and_date', ['userId', 'date']),
 
   // Subscriptions - RevenueCat webhook-driven subscription state
   // SEC-002: Server-side premium validation
@@ -519,6 +381,7 @@ const applicationTables = {
 
     showMotivationalMessages: v.boolean(),
 
+    // Retained for backwards compatibility with existing user data
     showNotesStats: v.optional(v.boolean()),
 
     stickyCalendarHeader: v.optional(v.boolean()),
@@ -536,83 +399,6 @@ const applicationTables = {
     useDyslexicFont: v.optional(v.boolean()),
     userId: v.optional(v.string()),
   }).index('by_userId', ['userId']),
-
-  // Vision Board Images - Photo grid of motivational images (Story T12)
-  // Scientific Basis:
-  // - Visual motivation reinforces goals through mental imagery
-  // - Personal images > stock images for emotional connection
-  // - Mirror neurons activate when viewing goal-related imagery
-  // Business Model:
-  // - Premium feature: storage costs, personalization, high perceived value
-  // - Users pay for customization (Notion model)
-  visionBoardImages: defineTable({
-    // Optional description of what the image represents
-    caption: v.optional(v.string()),
-
-    // Timestamp when image was added
-    createdAt: v.number(),
-
-    // Associated habit
-    habitId: v.id('habits'),
-
-    // Cached image URL for convenience (may expire)
-    imageUrl: v.optional(v.string()),
-
-    // Display order in grid (0-based, for drag-to-reorder)
-    order: v.number(),
-
-    // Convex file storage ID (use storage.getUrl to get URL)
-    storageId: v.id('_storage'),
-
-    // Last updated timestamp
-    updatedAt: v.optional(v.number()),
-
-    // User who added the image
-    userId: v.optional(v.string()),
-  })
-    .index('by_habit', ['habitId'])
-    .index('by_user', ['userId'])
-    .index('by_storageId', ['storageId'])
-    .index('by_user_and_storage', ['userId', 'storageId'])
-    .index('by_habit_and_order', ['habitId', 'order']),
-
-  // Legacy text-based vision board items (kept for backwards compatibility)
-  visionBoardItems: defineTable({
-    body: v.optional(v.string()),
-    createdAt: v.number(),
-    habitId: v.id('habits'),
-    title: v.string(),
-    updatedAt: v.number(),
-    userId: v.optional(v.string()),
-  }).index('by_habit', ['habitId']),
-
-  // Voice Notes - Audio recordings of motivation, progress, and emotional states
-  // Scientific Basis: Voice has 40% higher emotional recall than text (cognitive psychology)
-  // Hearing your own voice from Day 1 creates powerful emotional anchor
-  // Business Model: Reflectly ($2M ARR) built business on voice journaling - premium feature
-  voiceNotes: defineTable({
-    audioUrl: v.string(),
-
-    // Flag for Day 1 recording (featured in Rescue Mode)
-    createdAt: v.number(),
-
-    // Convex file storage URL
-    duration: v.number(),
-
-    habitId: v.id('habits'),
-
-    // User-provided description (e.g., "Day 1 motivation")
-    isDay1: v.optional(v.boolean()),
-
-    // Duration in seconds
-    label: v.optional(v.string()),
-
-    updatedAt: v.optional(v.number()),
-    userId: v.optional(v.string()),
-  })
-    .index('by_habit', ['habitId'])
-    .index('by_user', ['userId'])
-    .index('by_habit_and_date', ['habitId', 'createdAt']),
 };
 
 export default defineSchema({

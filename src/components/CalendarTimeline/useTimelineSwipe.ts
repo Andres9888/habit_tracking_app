@@ -18,21 +18,21 @@ export function useTimelineSwipe({
 }: UseTimelineSwipeProps) {
   const handleTimelineSwipe = useCallback(
     (translationX: number, velocityX: number) => {
-      const swipedToPast =
+      const swipedLeft =
         translationX <= -HORIZONTAL_SWIPE_THRESHOLD ||
         velocityX <= -SWIPE_VELOCITY_THRESHOLD;
-      if (swipedToPast) {
-        // Left swipe means move backward (to earlier days / past week).
-        onPreviousWeek?.();
+      if (swipedLeft && canNavigateForward) {
+        // Swiping left should reveal the newer week to the right.
+        onNextWeek?.();
         return;
       }
 
-      const swipedToFuture =
+      const swipedRight =
         translationX >= HORIZONTAL_SWIPE_THRESHOLD ||
         velocityX >= SWIPE_VELOCITY_THRESHOLD;
-      // Right swipe means move forward (to later days / future week).
-      if (swipedToFuture && canNavigateForward) {
-        onNextWeek?.();
+      if (swipedRight) {
+        // Swiping right should reveal the older week to the left.
+        onPreviousWeek?.();
       }
     },
     [canNavigateForward, onNextWeek, onPreviousWeek]

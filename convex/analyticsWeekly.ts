@@ -6,8 +6,6 @@
 
 import { v } from 'convex/values';
 import { query, internalMutation } from './_generated/server';
-import { Doc } from './_generated/dataModel';
-import { getStreaksForHabitsBatch } from './analytics/index';
 import {
   calculateHabitChanges,
   categorizeHabitChanges,
@@ -17,9 +15,8 @@ import {
 /**
  * Get weekly insights
  *
- * PERF: Previously had an N+1 query pattern — one tracking query per habit
- * AND one streak query per habit. Now uses a single user-level tracking
- * query + batch streak computation.
+ * PERF: Uses a single user-level tracking query and stored streak fields on the
+ * habit documents to avoid recomputing streaks from all historical tracking.
  */
 export const getWeeklyInsights = query({
   args: {},
@@ -50,22 +47,14 @@ export const getWeeklyInsights = query({
       )
       .collect();
 
-    // Batch streak computation — single pass over tracking data
-    const habitIds = activeHabits.map((h) => h._id);
-    const streaksMap = await getStreaksForHabitsBatch(ctx, habitIds);
-
     // Calculate changes for each habit (pure computation, no DB calls)
     const habitChanges = activeHabits.map((habit) => {
-      const streaks = streaksMap.get(habit._id) ?? {
-        currentStreak: 0,
-        longestStreak: 0,
-      };
       return calculateHabitChanges(
         habit,
         trackings,
         oneWeekAgo,
         twoWeeksAgo,
-        streaks.currentStreak
+        habit.currentStreak ?? 0
       );
     });
 

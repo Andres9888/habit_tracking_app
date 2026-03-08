@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 type UnknownRecord = Record<string, unknown>;
 
 const VALID_DARK_MODE: Set<string> = new Set(['system', 'light', 'dark']);
@@ -13,7 +14,11 @@ const VALID_SORT_MODE: Set<string> = new Set([
 ]);
 const VALID_DAY_SHAPE: Set<string> = new Set(['circle', 'square']);
 const VALID_ICON: Set<string> = new Set(['chain', 'checkbox']);
-const VALID_COMPLETION_SOUND: Set<string> = new Set(['chime', 'pop', 'success']);
+const VALID_COMPLETION_SOUND: Set<string> = new Set([
+  'chime',
+  'pop',
+  'success',
+]);
 
 function isValidBoolean(value: unknown): value is boolean {
   return typeof value === 'boolean';
@@ -83,10 +88,6 @@ export function sanitizeSettingsPayload(payload: unknown): UnknownRecord {
     output.showMotivationalMessages = source.showMotivationalMessages;
   }
 
-  if (isValidBoolean(source.showNotesStats)) {
-    output.showNotesStats = source.showNotesStats;
-  }
-
   if (isValidBoolean(source.showStreaks)) {
     output.showStreaks = source.showStreaks;
   }
@@ -107,7 +108,10 @@ export function sanitizeSettingsPayload(payload: unknown): UnknownRecord {
     output.useDyslexicFont = source.useDyslexicFont;
   }
 
-  if (isValidString(source.completionSoundType) && VALID_COMPLETION_SOUND.has(source.completionSoundType)) {
+  if (
+    isValidString(source.completionSoundType) &&
+    VALID_COMPLETION_SOUND.has(source.completionSoundType)
+  ) {
     output.completionSoundType = source.completionSoundType;
   }
 
@@ -121,7 +125,10 @@ export function sanitizeSettingsPayload(payload: unknown): UnknownRecord {
     output.darkMode = source.darkMode ? 'dark' : 'light';
   }
 
-  if (isValidString(source.habitSortMode) && VALID_SORT_MODE.has(source.habitSortMode)) {
+  if (
+    isValidString(source.habitSortMode) &&
+    VALID_SORT_MODE.has(source.habitSortMode)
+  ) {
     output.habitSortMode = source.habitSortMode;
   }
 
@@ -129,7 +136,10 @@ export function sanitizeSettingsPayload(payload: unknown): UnknownRecord {
     output.dayShape = source.dayShape;
   }
 
-  if (isValidString(source.habitCompletionIcon) && VALID_ICON.has(source.habitCompletionIcon)) {
+  if (
+    isValidString(source.habitCompletionIcon) &&
+    VALID_ICON.has(source.habitCompletionIcon)
+  ) {
     output.habitCompletionIcon = source.habitCompletionIcon;
   }
 

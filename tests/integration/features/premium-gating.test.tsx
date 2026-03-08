@@ -128,7 +128,8 @@ jest.mock('react-native-reanimated', () => {
     useSharedValue: (initial: unknown) => ({ value: initial }),
     useAnimatedStyle: () => ({}),
     withSpring: (value: unknown) => value,
-    withTiming: (value: unknown, _config?: unknown, _callback?: unknown) => value,
+    withTiming: (value: unknown, _config?: unknown, _callback?: unknown) =>
+      value,
     withDelay: (_delay: unknown, value: unknown) => value,
     withSequence: (...values: unknown[]) => values[values.length - 1],
     withRepeat: (animation: unknown) => animation,
@@ -259,9 +260,7 @@ jest.spyOn(Alert, 'alert');
 
 const ALL_PREMIUM_FEATURES: MotivationPremiumFeature[] = [
   'voiceNotes',
-  'letters',
   'visionBoard',
-  'affirmations',
   'rescueMode',
   'advancedViz',
 ];
@@ -279,20 +278,10 @@ const FEATURE_METADATA: Record<
     freeLimit: 1,
     description: 'Record audio motivation from your most inspired moments',
   },
-  letters: {
-    title: 'Letters to Self',
-    freeLimit: null,
-    description: 'Write time-locked messages to your future self',
-  },
   visionBoard: {
     title: 'Vision Board',
     freeLimit: null,
     description: 'Create a visual collection of your motivation',
-  },
-  affirmations: {
-    title: 'Unlimited Affirmations',
-    freeLimit: 2,
-    description: 'Add as many daily affirmations as you need',
   },
   rescueMode: {
     title: 'Rescue Mode',
@@ -397,15 +386,15 @@ describe('PremiumFeatureLock Integration', () => {
     it('overlay variant shows full feature info', () => {
       const { getByText, getByRole } = render(
         <PremiumFeatureLock
-          feature='letters'
+          feature='visionBoard'
           onUpgrade={mockOnUpgrade}
           variant='overlay'
         />
       );
 
-      expect(getByText('Letters to Self')).toBeTruthy();
+      expect(getByText('Vision Board')).toBeTruthy();
       expect(
-        getByText('Write time-locked messages to your future self')
+        getByText('Create a visual collection of your motivation')
       ).toBeTruthy();
       expect(getByRole('button', { name: /unlock/i })).toBeTruthy();
     });
@@ -459,22 +448,10 @@ describe('PremiumFeatureLock Integration', () => {
       expect(getByText('Free tier: 1 recording')).toBeTruthy();
     });
 
-    it('shows free tier limit for affirmations (2 affirmations)', () => {
-      const { getByText } = render(
-        <PremiumFeatureLock
-          feature='affirmations'
-          onUpgrade={mockOnUpgrade}
-          variant='overlay'
-        />
-      );
-
-      expect(getByText('Free tier: 2 affirmations')).toBeTruthy();
-    });
-
     it('does not show free tier for premium-only features', () => {
       const { queryByText } = render(
         <PremiumFeatureLock
-          feature='letters'
+          feature='visionBoard'
           onUpgrade={mockOnUpgrade}
           variant='overlay'
         />
@@ -692,7 +669,7 @@ describe('usePremiumUpsell Hook Integration', () => {
         <Button
           testID='trigger-benefits'
           title='Trigger Benefits'
-          onPress={() => upsellState.triggerBenefits('letters')}
+          onPress={() => upsellState.triggerBenefits('visionBoard')}
         />
         <Button
           testID='dismiss-paywall'
@@ -739,7 +716,7 @@ describe('usePremiumUpsell Hook Integration', () => {
     fireEvent.press(getByTestId('trigger-benefits'));
 
     expect(getByTestId('benefits-visible').props.children).toBe('benefits');
-    expect(getByTestId('triggered-feature').props.children).toBe('letters');
+    expect(getByTestId('triggered-feature').props.children).toBe('visionBoard');
   });
 
   it('transitions from benefits to paywall', async () => {
@@ -762,7 +739,7 @@ describe('usePremiumUpsell Hook Integration', () => {
 
     expect(getByTestId('paywall-visible').props.children).toBe('paywall');
     // Feature should be preserved
-    expect(getByTestId('triggered-feature').props.children).toBe('letters');
+    expect(getByTestId('triggered-feature').props.children).toBe('visionBoard');
   });
 
   it('clears triggered feature after dismissal delay', () => {

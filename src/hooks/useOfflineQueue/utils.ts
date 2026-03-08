@@ -32,12 +32,7 @@ export function calculateRetryDelay(
 /** Calculate queue statistics from items */
 export function calculateQueueStats(items: QueuedSubmission[]): QueueStats {
   const byType: Record<OfflineSubmissionType, number> = {
-    affirmation: 0,
     habitUpdate: 0,
-    letter: 0,
-    reflection: 0,
-    visionBoardImage: 0,
-    voiceNote: 0,
   };
 
   let pendingItems = 0;
@@ -71,12 +66,7 @@ export function calculateQueueStats(items: QueuedSubmission[]): QueueStats {
 export function createEmptyQueueStats(): QueueStats {
   return {
     byType: {
-      affirmation: 0,
       habitUpdate: 0,
-      letter: 0,
-      reflection: 0,
-      visionBoardImage: 0,
-      voiceNote: 0,
     },
     failedItems: 0,
     pendingItems: 0,

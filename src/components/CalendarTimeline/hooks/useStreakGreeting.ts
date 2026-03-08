@@ -44,7 +44,6 @@ export function getStreakGreeting({
   if (totalHabits > 0 && totalHabits - completedToday === 1) {
     return {
       greeting: 'Just 1 left!',
-      badge: { emoji: '✨', text: 'Almost perfect!' },
       variant: 'almostDone',
     };
   }

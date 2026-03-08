@@ -11,7 +11,6 @@ export { HabitsListModals } from './HabitsListModals';
 export { MonetizationHero } from './MonetizationHero';
 export { PremiumBenefitsRow } from './PremiumBenefitsRow';
 export { SocialProofCard } from './SocialProofCard';
-export { LockedHabitCard } from './LockedHabitCard';
 export { UpgradePrompt } from './UpgradePrompt';
 
 // Hooks

@@ -1,4 +1,5 @@
 import { renderHook, act } from '@testing-library/react-native';
+import { addDays } from 'date-fns';
 import { useHabitsWeekDates } from './useHabitsWeekDates';
 
 describe('useHabitsWeekDates', () => {
@@ -45,5 +46,28 @@ describe('useHabitsWeekDates', () => {
     });
 
     expect(result.current.weekDates.at(-1)?.getTime()).toBe(todayTime);
+  });
+
+  it('maps previous to backward dates and next to forward dates', () => {
+    const { result } = renderHook(() => useHabitsWeekDates());
+    const initialEnd = result.current.weekDates.at(-1);
+
+    expect(initialEnd).toBeTruthy();
+
+    act(() => {
+      result.current.handlePreviousWeek();
+    });
+
+    const previousEnd = result.current.weekDates.at(-1);
+    expect(previousEnd?.getTime()).toBe(
+      addDays(initialEnd as Date, -5).getTime()
+    );
+
+    act(() => {
+      result.current.handleNextWeek();
+    });
+
+    const nextEnd = result.current.weekDates.at(-1);
+    expect(nextEnd?.getTime()).toBe((initialEnd as Date).getTime());
   });
 });

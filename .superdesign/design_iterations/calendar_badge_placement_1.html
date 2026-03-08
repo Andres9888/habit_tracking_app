@@ -1,0 +1,2489 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Calendar + Badge Placement — Recommendation Mockup</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: 'DM Sans', sans-serif !important;
+        background: #0f0f1a;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        min-height: 100vh;
+        padding: 40px 20px;
+      }
+
+      .phone-frame {
+        width: 393px;
+        height: 852px;
+        border-radius: 44px;
+        overflow: hidden;
+        position: relative;
+        box-shadow:
+          0 0 0 3px #333,
+          0 25px 80px rgba(0, 0, 0, 0.5);
+      }
+
+      .app-light {
+        background: #f5f1ed;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+      }
+      .app-light::-webkit-scrollbar {
+        display: none;
+      }
+
+      .shelf-light {
+        background: #faf8f5;
+      }
+
+      .ring-svg {
+        transform: rotate(-90deg);
+      }
+
+      .connector-arm {
+        position: absolute;
+        top: 50%;
+        height: 3px;
+        transform: translateY(-50%);
+      }
+
+      .habit-card {
+        border-radius: 16px;
+        min-height: 76px;
+        overflow: hidden;
+        position: relative;
+        background: #ffffff;
+        border: 1px solid #e5e2de;
+        box-shadow: 0 2px 8px rgba(45, 42, 38, 0.06);
+      }
+
+      .strength-fill {
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+      }
+
+      .glass-capsule {
+        backdrop-filter: blur(40px);
+        -webkit-backdrop-filter: blur(40px);
+        border-radius: 32px;
+        overflow: hidden;
+        background: rgba(245, 241, 237, 0.75);
+        border: 1px solid rgba(221, 216, 210, 0.6);
+      }
+
+      /* Annotation callouts */
+      .callout {
+        position: absolute;
+        background: rgba(15, 15, 26, 0.95);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 12px;
+        padding: 14px 18px;
+        color: #e5e5e5;
+        font-size: 13px;
+        line-height: 1.5;
+        width: 260px;
+        pointer-events: none;
+        z-index: 100;
+      }
+      .callout-title {
+        font-weight: 700;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 6px;
+      }
+      .callout-green .callout-title {
+        color: #34d399;
+      }
+      .callout-amber .callout-title {
+        color: #fbbf24;
+      }
+      .callout-red .callout-title {
+        color: #f87171;
+      }
+      .callout-blue .callout-title {
+        color: #60a5fa;
+      }
+
+      .callout-arrow {
+        position: absolute;
+        width: 12px;
+        height: 12px;
+        background: rgba(15, 15, 26, 0.95);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        transform: rotate(45deg);
+      }
+
+      /* Highlight pulse */
+      @keyframes highlightPulse {
+        0%,
+        100% {
+          box-shadow: 0 0 0 0 rgba(52, 211, 153, 0);
+        }
+        50% {
+          box-shadow: 0 0 0 4px rgba(52, 211, 153, 0.15);
+        }
+      }
+      .highlight-area {
+        animation: highlightPulse 2s ease-in-out infinite;
+        border-radius: 12px;
+      }
+
+      /* Section labels */
+      .section-label {
+        position: absolute;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        color: #6b7280;
+        writing-mode: vertical-rl;
+        text-orientation: mixed;
+      }
+
+      .rec-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        padding: 3px 10px;
+        border-radius: 99px;
+      }
+      .rec-badge.recommended {
+        background: rgba(52, 211, 153, 0.15);
+        color: #34d399;
+      }
+      .rec-badge.alternative {
+        background: rgba(251, 191, 36, 0.15);
+        color: #fbbf24;
+      }
+      .rec-badge.rejected {
+        background: rgba(248, 113, 113, 0.12);
+        color: #f87171;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      style="
+        display: flex;
+        gap: 48px;
+        align-items: flex-start;
+        flex-wrap: wrap;
+        justify-content: center;
+      "
+    >
+      <!-- ============ OPTION A: CURRENT — RECOMMENDED ============ -->
+      <div style="position: relative">
+        <div style="text-align: center; margin-bottom: 16px">
+          <span class="rec-badge recommended">Recommended</span>
+          <div
+            style="
+              color: #9ca3af;
+              font-size: 12px;
+              font-weight: 600;
+              letter-spacing: 1px;
+              text-transform: uppercase;
+              margin-top: 8px;
+            "
+          >
+            Option A — Current (Badge in Nav Row)
+          </div>
+        </div>
+        <div class="phone-frame">
+          <div class="app-light">
+            <!-- Status bar -->
+            <div
+              style="
+                height: 54px;
+                display: flex;
+                align-items: flex-end;
+                justify-content: space-between;
+                padding: 0 24px 4px;
+              "
+            >
+              <span style="font-size: 15px; font-weight: 600; color: #2d2a26"
+                >9:41</span
+              >
+              <div style="display: flex; gap: 6px; align-items: center">
+                <i
+                  data-lucide="signal"
+                  style="width: 14px; height: 14px; color: #2d2a26"
+                ></i>
+                <i
+                  data-lucide="wifi"
+                  style="width: 14px; height: 14px; color: #2d2a26"
+                ></i>
+                <i
+                  data-lucide="battery-full"
+                  style="width: 14px; height: 14px; color: #2d2a26"
+                ></i>
+              </div>
+            </div>
+
+            <!-- Calendar Timeline Shelf -->
+            <div
+              class="shelf-light"
+              style="padding: 8px 0 16px; position: relative"
+            >
+              <!-- WeekNavRow -->
+              <div style="padding: 0 16px; margin-bottom: 12px">
+                <div
+                  class="highlight-area"
+                  style="
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    margin-top: 2px;
+                    padding: 4px 8px;
+                  "
+                >
+                  <div
+                    style="
+                      display: flex;
+                      align-items: center;
+                      gap: 5px;
+                      padding: 2px 0;
+                      cursor: pointer;
+                    "
+                  >
+                    <i
+                      data-lucide="calendar-days"
+                      style="width: 14px; height: 14px; color: #6e6660"
+                    ></i>
+                    <span
+                      style="font-size: 14px; font-weight: 500; color: #6b6560"
+                      >Thu, March 6</span
+                    >
+                    <i
+                      data-lucide="chevron-down"
+                      style="width: 11px; height: 11px; color: #c4bfb7"
+                    ></i>
+                  </div>
+                  <!-- Almost perfect badge -->
+                  <div
+                    style="
+                      background: rgba(5, 150, 105, 0.08);
+                      border-radius: 99px;
+                      padding: 3px 10px;
+                    "
+                  >
+                    <span
+                      style="font-size: 12px; font-weight: 700; color: #047857"
+                      >✨ Almost perfect!</span
+                    >
+                  </div>
+                </div>
+              </div>
+
+              <!-- DayStrip -->
+              <div style="padding: 0 40px">
+                <div style="display: flex; justify-content: space-between">
+                  <!-- Mon - complete -->
+                  <div
+                    style="
+                      display: flex;
+                      flex-direction: column;
+                      align-items: center;
+                      gap: 2px;
+                    "
+                  >
+                    <span
+                      style="
+                        font-size: 10px;
+                        line-height: 14px;
+                        color: #6b6560;
+                        font-weight: 500;
+                        letter-spacing: 0.5px;
+                      "
+                      >MON</span
+                    >
+                    <div
+                      style="
+                        width: 40px;
+                        height: 40px;
+                        position: relative;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                      "
+                    >
+                      <svg width="40" height="40" class="ring-svg">
+                        <circle
+                          cx="20"
+                          cy="20"
+                          r="16"
+                          fill="transparent"
+                          stroke="#DDD8D2"
+                          stroke-width="3"
+                        />
+                        <circle
+                          cx="20"
+                          cy="20"
+                          r="16"
+                          fill="transparent"
+                          stroke="#059669"
+                          stroke-width="3"
+                          stroke-dasharray="100.5"
+                          stroke-dashoffset="0"
+                          stroke-linecap="round"
+                        />
+                      </svg>
+                      <div
+                        style="
+                          position: absolute;
+                          inset: 0;
+                          display: flex;
+                          align-items: center;
+                          justify-content: center;
+                        "
+                      >
+                        <div
+                          style="
+                            width: 28px;
+                            height: 28px;
+                            border-radius: 50%;
+                            background: #059669;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            box-shadow: 0 2px 10px rgba(5, 150, 105, 0.4);
+                          "
+                        >
+                          <i
+                            data-lucide="check"
+                            style="
+                              width: 16px;
+                              height: 16px;
+                              color: white;
+                              stroke-width: 2.5;
+                            "
+                          ></i>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Tue - complete -->
+                  <div
+                    style="
+                      display: flex;
+                      flex-direction: column;
+                      align-items: center;
+                      gap: 2px;
+                      position: relative;
+                    "
+                  >
+                    <span
+                      style="
+                        font-size: 10px;
+                        line-height: 14px;
+                        color: #6b6560;
+                        font-weight: 500;
+                        letter-spacing: 0.5px;
+                      "
+                      >TUE</span
+                    >
+                    <div
+                      style="
+                        width: 40px;
+                        height: 40px;
+                        position: relative;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                      "
+                    >
+                      <svg width="40" height="40" class="ring-svg">
+                        <circle
+                          cx="20"
+                          cy="20"
+                          r="16"
+                          fill="transparent"
+                          stroke="#DDD8D2"
+                          stroke-width="3"
+                        />
+                        <circle
+                          cx="20"
+                          cy="20"
+                          r="16"
+                          fill="transparent"
+                          stroke="#059669"
+                          stroke-width="3"
+                          stroke-dasharray="100.5"
+                          stroke-dashoffset="0"
+                          stroke-linecap="round"
+                        />
+                      </svg>
+                      <div
+                        style="
+                          position: absolute;
+                          inset: 0;
+                          display: flex;
+                          align-items: center;
+                          justify-content: center;
+                        "
+                      >
+                        <div
+                          style="
+                            width: 28px;
+                            height: 28px;
+                            border-radius: 50%;
+                            background: #059669;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            box-shadow: 0 2px 10px rgba(5, 150, 105, 0.4);
+                          "
+                        >
+                          <i
+                            data-lucide="check"
+                            style="
+                              width: 16px;
+                              height: 16px;
+                              color: white;
+                              stroke-width: 2.5;
+                            "
+                          ></i>
+                        </div>
+                      </div>
+                      <div
+                        class="connector-arm"
+                        style="
+                          left: -8px;
+                          width: 8px;
+                          background: rgba(16, 185, 129, 0.35);
+                        "
+                      ></div>
+                      <div
+                        class="connector-arm"
+                        style="
+                          right: -8px;
+                          width: 8px;
+                          background: rgba(16, 185, 129, 0.35);
+                        "
+                      ></div>
+                    </div>
+                  </div>
+                  <!-- Wed - complete -->
+                  <div
+                    style="
+                      display: flex;
+                      flex-direction: column;
+                      align-items: center;
+                      gap: 2px;
+                      position: relative;
+                    "
+                  >
+                    <span
+                      style="
+                        font-size: 10px;
+                        line-height: 14px;
+                        color: #6b6560;
+                        font-weight: 500;
+                        letter-spacing: 0.5px;
+                      "
+                      >WED</span
+                    >
+                    <div
+                      style="
+                        width: 40px;
+                        height: 40px;
+                        position: relative;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                      "
+                    >
+                      <svg width="40" height="40" class="ring-svg">
+                        <circle
+                          cx="20"
+                          cy="20"
+                          r="16"
+                          fill="transparent"
+                          stroke="#DDD8D2"
+                          stroke-width="3"
+                        />
+                        <circle
+                          cx="20"
+                          cy="20"
+                          r="16"
+                          fill="transparent"
+                          stroke="#059669"
+                          stroke-width="3"
+                          stroke-dasharray="100.5"
+                          stroke-dashoffset="0"
+                          stroke-linecap="round"
+                        />
+                      </svg>
+                      <div
+                        style="
+                          position: absolute;
+                          inset: 0;
+                          display: flex;
+                          align-items: center;
+                          justify-content: center;
+                        "
+                      >
+                        <div
+                          style="
+                            width: 28px;
+                            height: 28px;
+                            border-radius: 50%;
+                            background: #059669;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            box-shadow: 0 2px 10px rgba(5, 150, 105, 0.4);
+                          "
+                        >
+                          <i
+                            data-lucide="check"
+                            style="
+                              width: 16px;
+                              height: 16px;
+                              color: white;
+                              stroke-width: 2.5;
+                            "
+                          ></i>
+                        </div>
+                      </div>
+                      <div
+                        class="connector-arm"
+                        style="
+                          left: -8px;
+                          width: 8px;
+                          background: rgba(16, 185, 129, 0.35);
+                        "
+                      ></div>
+                      <div
+                        class="connector-arm"
+                        style="
+                          right: -8px;
+                          width: 8px;
+                          background: rgba(16, 185, 129, 0.15);
+                          border-style: dashed;
+                        "
+                      ></div>
+                    </div>
+                  </div>
+                  <!-- Thu (Today) - partial (3/4) -->
+                  <div
+                    style="
+                      display: flex;
+                      flex-direction: column;
+                      align-items: center;
+                      gap: 2px;
+                      position: relative;
+                    "
+                  >
+                    <span
+                      style="
+                        font-size: 10px;
+                        line-height: 14px;
+                        color: #2d2a26;
+                        font-weight: 700;
+                        letter-spacing: 0.5px;
+                      "
+                      >TODAY</span
+                    >
+                    <div
+                      style="
+                        width: 40px;
+                        height: 40px;
+                        position: relative;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                      "
+                    >
+                      <svg width="40" height="40" class="ring-svg">
+                        <circle
+                          cx="20"
+                          cy="20"
+                          r="18.5"
+                          fill="transparent"
+                          stroke="#059669"
+                          stroke-width="1"
+                        />
+                        <circle
+                          cx="20"
+                          cy="20"
+                          r="16"
+                          fill="rgba(5,150,105,0.06)"
+                          stroke="#DDD8D2"
+                          stroke-width="3"
+                        />
+                        <circle
+                          cx="20"
+                          cy="20"
+                          r="16"
+                          fill="transparent"
+                          stroke="#059669"
+                          stroke-width="3"
+                          stroke-dasharray="100.5"
+                          stroke-dashoffset="25.1"
+                          stroke-linecap="round"
+                        />
+                      </svg>
+                      <div
+                        style="
+                          position: absolute;
+                          inset: 0;
+                          display: flex;
+                          align-items: center;
+                          justify-content: center;
+                        "
+                      >
+                        <span
+                          style="
+                            font-size: 14px;
+                            font-weight: 700;
+                            color: #2d2a26;
+                          "
+                          >6</span
+                        >
+                      </div>
+                      <div
+                        class="connector-arm"
+                        style="
+                          left: -8px;
+                          width: 8px;
+                          background: rgba(16, 185, 129, 0.15);
+                        "
+                      ></div>
+                    </div>
+                  </div>
+                  <!-- Fri -->
+                  <div
+                    style="
+                      display: flex;
+                      flex-direction: column;
+                      align-items: center;
+                      gap: 2px;
+                    "
+                  >
+                    <span
+                      style="
+                        font-size: 10px;
+                        line-height: 14px;
+                        color: #6b6560;
+                        font-weight: 500;
+                        letter-spacing: 0.5px;
+                      "
+                      >FRI</span
+                    >
+                    <div
+                      style="
+                        width: 40px;
+                        height: 40px;
+                        opacity: 0.5;
+                        position: relative;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                      "
+                    >
+                      <svg width="40" height="40" class="ring-svg">
+                        <circle
+                          cx="20"
+                          cy="20"
+                          r="16"
+                          fill="transparent"
+                          stroke="#DDD8D2"
+                          stroke-width="3"
+                          stroke-dasharray="4 4"
+                        />
+                      </svg>
+                      <div
+                        style="
+                          position: absolute;
+                          inset: 0;
+                          display: flex;
+                          align-items: center;
+                          justify-content: center;
+                        "
+                      >
+                        <span
+                          style="
+                            font-size: 13px;
+                            font-weight: 500;
+                            color: #6b6560;
+                          "
+                          >7</span
+                        >
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Sat -->
+                  <div
+                    style="
+                      display: flex;
+                      flex-direction: column;
+                      align-items: center;
+                      gap: 2px;
+                    "
+                  >
+                    <span
+                      style="
+                        font-size: 10px;
+                        line-height: 14px;
+                        color: #6b6560;
+                        font-weight: 500;
+                        letter-spacing: 0.5px;
+                      "
+                      >SAT</span
+                    >
+                    <div
+                      style="
+                        width: 40px;
+                        height: 40px;
+                        opacity: 0.5;
+                        position: relative;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                      "
+                    >
+                      <svg width="40" height="40" class="ring-svg">
+                        <circle
+                          cx="20"
+                          cy="20"
+                          r="16"
+                          fill="transparent"
+                          stroke="#DDD8D2"
+                          stroke-width="3"
+                          stroke-dasharray="4 4"
+                        />
+                      </svg>
+                      <div
+                        style="
+                          position: absolute;
+                          inset: 0;
+                          display: flex;
+                          align-items: center;
+                          justify-content: center;
+                        "
+                      >
+                        <span
+                          style="
+                            font-size: 13px;
+                            font-weight: 500;
+                            color: #6b6560;
+                          "
+                          >8</span
+                        >
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Sun -->
+                  <div
+                    style="
+                      display: flex;
+                      flex-direction: column;
+                      align-items: center;
+                      gap: 2px;
+                    "
+                  >
+                    <span
+                      style="
+                        font-size: 10px;
+                        line-height: 14px;
+                        color: #6b6560;
+                        font-weight: 500;
+                        letter-spacing: 0.5px;
+                      "
+                      >SUN</span
+                    >
+                    <div
+                      style="
+                        width: 40px;
+                        height: 40px;
+                        opacity: 0.5;
+                        position: relative;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                      "
+                    >
+                      <svg width="40" height="40" class="ring-svg">
+                        <circle
+                          cx="20"
+                          cy="20"
+                          r="16"
+                          fill="transparent"
+                          stroke="#DDD8D2"
+                          stroke-width="3"
+                          stroke-dasharray="4 4"
+                        />
+                      </svg>
+                      <div
+                        style="
+                          position: absolute;
+                          inset: 0;
+                          display: flex;
+                          align-items: center;
+                          justify-content: center;
+                        "
+                      >
+                        <span
+                          style="
+                            font-size: 13px;
+                            font-weight: 500;
+                            color: #6b6560;
+                          "
+                          >9</span
+                        >
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Habit Cards -->
+            <div style="flex: 1; padding: 8px 24px">
+              <!-- Habit 1: Meditate — completed -->
+              <div style="margin-bottom: 8px">
+                <div
+                  class="habit-card"
+                  style="display: flex; flex-direction: row"
+                >
+                  <div
+                    class="strength-fill"
+                    style="width: 75%; background: rgba(5, 150, 105, 0.04)"
+                  ></div>
+                  <div
+                    style="
+                      flex: 1;
+                      padding: 16px;
+                      position: relative;
+                      z-index: 1;
+                      opacity: 0.55;
+                    "
+                  >
+                    <div
+                      style="
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                      "
+                    >
+                      <div
+                        style="display: flex; align-items: center; gap: 12px"
+                      >
+                        <span style="font-size: 26px">🧘</span>
+                        <div>
+                          <div
+                            style="
+                              font-size: 16px;
+                              font-weight: 600;
+                              color: #2d2a26;
+                              letter-spacing: -0.41px;
+                              text-decoration: line-through;
+                            "
+                          >
+                            Meditate
+                          </div>
+                          <div
+                            style="
+                              font-size: 12px;
+                              color: #6b6560;
+                              margin-top: 2px;
+                            "
+                          >
+                            Strong · 75%
+                          </div>
+                        </div>
+                      </div>
+                      <i
+                        data-lucide="check-circle-2"
+                        style="width: 20px; height: 20px; color: #059669"
+                      ></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Habit 2: Exercise — completed -->
+              <div style="margin-bottom: 8px">
+                <div
+                  class="habit-card"
+                  style="display: flex; flex-direction: row"
+                >
+                  <div
+                    class="strength-fill"
+                    style="width: 60%; background: rgba(5, 150, 105, 0.04)"
+                  ></div>
+                  <div
+                    style="
+                      flex: 1;
+                      padding: 16px;
+                      position: relative;
+                      z-index: 1;
+                      opacity: 0.55;
+                    "
+                  >
+                    <div
+                      style="
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                      "
+                    >
+                      <div
+                        style="display: flex; align-items: center; gap: 12px"
+                      >
+                        <span style="font-size: 26px">💪</span>
+                        <div>
+                          <div
+                            style="
+                              font-size: 16px;
+                              font-weight: 600;
+                              color: #2d2a26;
+                              letter-spacing: -0.41px;
+                              text-decoration: line-through;
+                            "
+                          >
+                            Exercise
+                          </div>
+                          <div
+                            style="
+                              font-size: 12px;
+                              color: #6b6560;
+                              margin-top: 2px;
+                            "
+                          >
+                            Moderate · 60%
+                          </div>
+                        </div>
+                      </div>
+                      <i
+                        data-lucide="check-circle-2"
+                        style="width: 20px; height: 20px; color: #059669"
+                      ></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Habit 3: Read — completed -->
+              <div style="margin-bottom: 8px">
+                <div
+                  class="habit-card"
+                  style="display: flex; flex-direction: row"
+                >
+                  <div
+                    class="strength-fill"
+                    style="width: 90%; background: rgba(5, 150, 105, 0.06)"
+                  ></div>
+                  <div
+                    style="
+                      flex: 1;
+                      padding: 16px;
+                      position: relative;
+                      z-index: 1;
+                      opacity: 0.55;
+                    "
+                  >
+                    <div
+                      style="
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                      "
+                    >
+                      <div
+                        style="display: flex; align-items: center; gap: 12px"
+                      >
+                        <span style="font-size: 26px">📖</span>
+                        <div>
+                          <div
+                            style="
+                              font-size: 16px;
+                              font-weight: 600;
+                              color: #2d2a26;
+                              letter-spacing: -0.41px;
+                              text-decoration: line-through;
+                            "
+                          >
+                            Read 30 min
+                          </div>
+                          <div
+                            style="
+                              font-size: 12px;
+                              color: #6b6560;
+                              margin-top: 2px;
+                            "
+                          >
+                            Established · 90%
+                          </div>
+                        </div>
+                      </div>
+                      <i
+                        data-lucide="check-circle-2"
+                        style="width: 20px; height: 20px; color: #059669"
+                      ></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Habit 4: Journal — THE ONE LEFT -->
+              <div style="margin-bottom: 8px">
+                <div
+                  class="habit-card"
+                  style="
+                    display: flex;
+                    flex-direction: row;
+                    border: 1.5px solid rgba(5, 150, 105, 0.3);
+                  "
+                >
+                  <div
+                    class="strength-fill"
+                    style="width: 30%; background: rgba(5, 150, 105, 0.03)"
+                  ></div>
+                  <div
+                    style="
+                      flex: 1;
+                      padding: 16px;
+                      position: relative;
+                      z-index: 1;
+                    "
+                  >
+                    <div
+                      style="
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                      "
+                    >
+                      <div
+                        style="display: flex; align-items: center; gap: 12px"
+                      >
+                        <span style="font-size: 26px">📝</span>
+                        <div>
+                          <div
+                            style="
+                              font-size: 16px;
+                              font-weight: 600;
+                              color: #2d2a26;
+                              letter-spacing: -0.41px;
+                            "
+                          >
+                            Journal
+                          </div>
+                          <div
+                            style="
+                              font-size: 12px;
+                              color: #6b6560;
+                              margin-top: 2px;
+                            "
+                          >
+                            Developing · 30%
+                          </div>
+                        </div>
+                      </div>
+                      <div style="display: flex; align-items: center; gap: 4px">
+                        <span
+                          style="
+                            font-size: 14px;
+                            font-weight: 600;
+                            color: #8b6208;
+                          "
+                          >🔗 2</span
+                        >
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div style="height: 100px"></div>
+            </div>
+
+            <!-- Bottom Action Bar -->
+            <div
+              style="
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                display: flex;
+                justify-content: center;
+                padding-bottom: 28px;
+                pointer-events: none;
+              "
+            >
+              <div
+                class="glass-capsule"
+                style="
+                  display: flex;
+                  align-items: center;
+                  padding: 8px 20px;
+                  gap: 20px;
+                  pointer-events: auto;
+                  box-shadow: 0 4px 16px rgba(45, 42, 38, 0.08);
+                "
+              >
+                <div
+                  style="
+                    width: 44px;
+                    height: 44px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                  "
+                >
+                  <i
+                    data-lucide="settings"
+                    style="width: 24px; height: 24px; color: #6b6560"
+                  ></i>
+                </div>
+                <div
+                  style="
+                    width: 56px;
+                    height: 56px;
+                    border-radius: 50%;
+                    background: #059669;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    position: relative;
+                    box-shadow: 0 4px 16px rgba(5, 150, 105, 0.3);
+                  "
+                >
+                  <svg
+                    width="56"
+                    height="56"
+                    style="position: absolute; transform: rotate(-90deg)"
+                  >
+                    <circle
+                      cx="28"
+                      cy="28"
+                      r="24"
+                      fill="transparent"
+                      stroke="rgba(255,255,255,0.2)"
+                      stroke-width="3"
+                    />
+                    <circle
+                      cx="28"
+                      cy="28"
+                      r="24"
+                      fill="transparent"
+                      stroke="white"
+                      stroke-width="3"
+                      stroke-dasharray="150.8"
+                      stroke-dashoffset="37.7"
+                      stroke-linecap="round"
+                    />
+                  </svg>
+                  <i
+                    data-lucide="plus"
+                    style="
+                      width: 24px;
+                      height: 24px;
+                      color: white;
+                      stroke-width: 2.5;
+                    "
+                  ></i>
+                </div>
+                <div
+                  style="
+                    width: 44px;
+                    height: 44px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                  "
+                >
+                  <i
+                    data-lucide="sparkles"
+                    style="width: 24px; height: 24px; color: #8b6208"
+                  ></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ OPTION B: BELOW STRIP ============ -->
+      <div style="position: relative">
+        <div style="text-align: center; margin-bottom: 16px">
+          <span class="rec-badge alternative">Alternative</span>
+          <div
+            style="
+              color: #9ca3af;
+              font-size: 12px;
+              font-weight: 600;
+              letter-spacing: 1px;
+              text-transform: uppercase;
+              margin-top: 8px;
+            "
+          >
+            Option B — Badge Below Day Strip
+          </div>
+        </div>
+        <div class="phone-frame">
+          <div class="app-light">
+            <!-- Status bar -->
+            <div
+              style="
+                height: 54px;
+                display: flex;
+                align-items: flex-end;
+                justify-content: space-between;
+                padding: 0 24px 4px;
+              "
+            >
+              <span style="font-size: 15px; font-weight: 600; color: #2d2a26"
+                >9:41</span
+              >
+              <div style="display: flex; gap: 6px; align-items: center">
+                <i
+                  data-lucide="signal"
+                  style="width: 14px; height: 14px; color: #2d2a26"
+                ></i>
+                <i
+                  data-lucide="wifi"
+                  style="width: 14px; height: 14px; color: #2d2a26"
+                ></i>
+                <i
+                  data-lucide="battery-full"
+                  style="width: 14px; height: 14px; color: #2d2a26"
+                ></i>
+              </div>
+            </div>
+
+            <!-- Calendar Timeline Shelf — Option B -->
+            <div
+              class="shelf-light"
+              style="padding: 8px 0 16px; position: relative"
+            >
+              <!-- WeekNavRow — streak pill instead -->
+              <div style="padding: 0 16px; margin-bottom: 12px">
+                <div
+                  style="
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    margin-top: 2px;
+                    padding: 4px 8px;
+                  "
+                >
+                  <div
+                    style="
+                      display: flex;
+                      align-items: center;
+                      gap: 5px;
+                      padding: 2px 0;
+                      cursor: pointer;
+                    "
+                  >
+                    <i
+                      data-lucide="calendar-days"
+                      style="width: 14px; height: 14px; color: #6e6660"
+                    ></i>
+                    <span
+                      style="font-size: 14px; font-weight: 500; color: #6b6560"
+                      >Thu, March 6</span
+                    >
+                    <i
+                      data-lucide="chevron-down"
+                      style="width: 11px; height: 11px; color: #c4bfb7"
+                    ></i>
+                  </div>
+                  <div
+                    style="
+                      background: rgba(139, 98, 8, 0.08);
+                      border-radius: 99px;
+                      padding: 3px 10px;
+                    "
+                  >
+                    <span
+                      style="font-size: 12px; font-weight: 700; color: #8b6208"
+                      >🔥 3 day streak</span
+                    >
+                  </div>
+                </div>
+              </div>
+
+              <!-- DayStrip (same as Option A) -->
+              <div style="padding: 0 40px">
+                <div style="display: flex; justify-content: space-between">
+                  <!-- Mon -->
+                  <div
+                    style="
+                      display: flex;
+                      flex-direction: column;
+                      align-items: center;
+                      gap: 2px;
+                    "
+                  >
+                    <span
+                      style="
+                        font-size: 10px;
+                        line-height: 14px;
+                        color: #6b6560;
+                        font-weight: 500;
+                        letter-spacing: 0.5px;
+                      "
+                      >MON</span
+                    >
+                    <div
+                      style="
+                        width: 40px;
+                        height: 40px;
+                        position: relative;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                      "
+                    >
+                      <svg width="40" height="40" class="ring-svg">
+                        <circle
+                          cx="20"
+                          cy="20"
+                          r="16"
+                          fill="transparent"
+                          stroke="#DDD8D2"
+                          stroke-width="3"
+                        />
+                        <circle
+                          cx="20"
+                          cy="20"
+                          r="16"
+                          fill="transparent"
+                          stroke="#059669"
+                          stroke-width="3"
+                          stroke-dasharray="100.5"
+                          stroke-dashoffset="0"
+                          stroke-linecap="round"
+                        />
+                      </svg>
+                      <div
+                        style="
+                          position: absolute;
+                          inset: 0;
+                          display: flex;
+                          align-items: center;
+                          justify-content: center;
+                        "
+                      >
+                        <div
+                          style="
+                            width: 28px;
+                            height: 28px;
+                            border-radius: 50%;
+                            background: #059669;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            box-shadow: 0 2px 10px rgba(5, 150, 105, 0.4);
+                          "
+                        >
+                          <i
+                            data-lucide="check"
+                            style="
+                              width: 16px;
+                              height: 16px;
+                              color: white;
+                              stroke-width: 2.5;
+                            "
+                          ></i>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Tue -->
+                  <div
+                    style="
+                      display: flex;
+                      flex-direction: column;
+                      align-items: center;
+                      gap: 2px;
+                      position: relative;
+                    "
+                  >
+                    <span
+                      style="
+                        font-size: 10px;
+                        line-height: 14px;
+                        color: #6b6560;
+                        font-weight: 500;
+                        letter-spacing: 0.5px;
+                      "
+                      >TUE</span
+                    >
+                    <div
+                      style="
+                        width: 40px;
+                        height: 40px;
+                        position: relative;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                      "
+                    >
+                      <svg width="40" height="40" class="ring-svg">
+                        <circle
+                          cx="20"
+                          cy="20"
+                          r="16"
+                          fill="transparent"
+                          stroke="#DDD8D2"
+                          stroke-width="3"
+                        />
+                        <circle
+                          cx="20"
+                          cy="20"
+                          r="16"
+                          fill="transparent"
+                          stroke="#059669"
+                          stroke-width="3"
+                          stroke-dasharray="100.5"
+                          stroke-dashoffset="0"
+                          stroke-linecap="round"
+                        />
+                      </svg>
+                      <div
+                        style="
+                          position: absolute;
+                          inset: 0;
+                          display: flex;
+                          align-items: center;
+                          justify-content: center;
+                        "
+                      >
+                        <div
+                          style="
+                            width: 28px;
+                            height: 28px;
+                            border-radius: 50%;
+                            background: #059669;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            box-shadow: 0 2px 10px rgba(5, 150, 105, 0.4);
+                          "
+                        >
+                          <i
+                            data-lucide="check"
+                            style="
+                              width: 16px;
+                              height: 16px;
+                              color: white;
+                              stroke-width: 2.5;
+                            "
+                          ></i>
+                        </div>
+                      </div>
+                      <div
+                        class="connector-arm"
+                        style="
+                          left: -8px;
+                          width: 8px;
+                          background: rgba(16, 185, 129, 0.35);
+                        "
+                      ></div>
+                      <div
+                        class="connector-arm"
+                        style="
+                          right: -8px;
+                          width: 8px;
+                          background: rgba(16, 185, 129, 0.35);
+                        "
+                      ></div>
+                    </div>
+                  </div>
+                  <!-- Wed -->
+                  <div
+                    style="
+                      display: flex;
+                      flex-direction: column;
+                      align-items: center;
+                      gap: 2px;
+                      position: relative;
+                    "
+                  >
+                    <span
+                      style="
+                        font-size: 10px;
+                        line-height: 14px;
+                        color: #6b6560;
+                        font-weight: 500;
+                        letter-spacing: 0.5px;
+                      "
+                      >WED</span
+                    >
+                    <div
+                      style="
+                        width: 40px;
+                        height: 40px;
+                        position: relative;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                      "
+                    >
+                      <svg width="40" height="40" class="ring-svg">
+                        <circle
+                          cx="20"
+                          cy="20"
+                          r="16"
+                          fill="transparent"
+                          stroke="#DDD8D2"
+                          stroke-width="3"
+                        />
+                        <circle
+                          cx="20"
+                          cy="20"
+                          r="16"
+                          fill="transparent"
+                          stroke="#059669"
+                          stroke-width="3"
+                          stroke-dasharray="100.5"
+                          stroke-dashoffset="0"
+                          stroke-linecap="round"
+                        />
+                      </svg>
+                      <div
+                        style="
+                          position: absolute;
+                          inset: 0;
+                          display: flex;
+                          align-items: center;
+                          justify-content: center;
+                        "
+                      >
+                        <div
+                          style="
+                            width: 28px;
+                            height: 28px;
+                            border-radius: 50%;
+                            background: #059669;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            box-shadow: 0 2px 10px rgba(5, 150, 105, 0.4);
+                          "
+                        >
+                          <i
+                            data-lucide="check"
+                            style="
+                              width: 16px;
+                              height: 16px;
+                              color: white;
+                              stroke-width: 2.5;
+                            "
+                          ></i>
+                        </div>
+                      </div>
+                      <div
+                        class="connector-arm"
+                        style="
+                          left: -8px;
+                          width: 8px;
+                          background: rgba(16, 185, 129, 0.35);
+                        "
+                      ></div>
+                      <div
+                        class="connector-arm"
+                        style="
+                          right: -8px;
+                          width: 8px;
+                          background: rgba(16, 185, 129, 0.15);
+                        "
+                      ></div>
+                    </div>
+                  </div>
+                  <!-- Thu (Today) -->
+                  <div
+                    style="
+                      display: flex;
+                      flex-direction: column;
+                      align-items: center;
+                      gap: 2px;
+                      position: relative;
+                    "
+                  >
+                    <span
+                      style="
+                        font-size: 10px;
+                        line-height: 14px;
+                        color: #2d2a26;
+                        font-weight: 700;
+                        letter-spacing: 0.5px;
+                      "
+                      >TODAY</span
+                    >
+                    <div
+                      style="
+                        width: 40px;
+                        height: 40px;
+                        position: relative;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                      "
+                    >
+                      <svg width="40" height="40" class="ring-svg">
+                        <circle
+                          cx="20"
+                          cy="20"
+                          r="18.5"
+                          fill="transparent"
+                          stroke="#059669"
+                          stroke-width="1"
+                        />
+                        <circle
+                          cx="20"
+                          cy="20"
+                          r="16"
+                          fill="rgba(5,150,105,0.06)"
+                          stroke="#DDD8D2"
+                          stroke-width="3"
+                        />
+                        <circle
+                          cx="20"
+                          cy="20"
+                          r="16"
+                          fill="transparent"
+                          stroke="#059669"
+                          stroke-width="3"
+                          stroke-dasharray="100.5"
+                          stroke-dashoffset="25.1"
+                          stroke-linecap="round"
+                        />
+                      </svg>
+                      <div
+                        style="
+                          position: absolute;
+                          inset: 0;
+                          display: flex;
+                          align-items: center;
+                          justify-content: center;
+                        "
+                      >
+                        <span
+                          style="
+                            font-size: 14px;
+                            font-weight: 700;
+                            color: #2d2a26;
+                          "
+                          >6</span
+                        >
+                      </div>
+                      <div
+                        class="connector-arm"
+                        style="
+                          left: -8px;
+                          width: 8px;
+                          background: rgba(16, 185, 129, 0.15);
+                        "
+                      ></div>
+                    </div>
+                  </div>
+                  <!-- Fri -->
+                  <div
+                    style="
+                      display: flex;
+                      flex-direction: column;
+                      align-items: center;
+                      gap: 2px;
+                    "
+                  >
+                    <span
+                      style="
+                        font-size: 10px;
+                        line-height: 14px;
+                        color: #6b6560;
+                        font-weight: 500;
+                        letter-spacing: 0.5px;
+                      "
+                      >FRI</span
+                    >
+                    <div
+                      style="
+                        width: 40px;
+                        height: 40px;
+                        opacity: 0.5;
+                        position: relative;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                      "
+                    >
+                      <svg width="40" height="40" class="ring-svg">
+                        <circle
+                          cx="20"
+                          cy="20"
+                          r="16"
+                          fill="transparent"
+                          stroke="#DDD8D2"
+                          stroke-width="3"
+                          stroke-dasharray="4 4"
+                        />
+                      </svg>
+                      <div
+                        style="
+                          position: absolute;
+                          inset: 0;
+                          display: flex;
+                          align-items: center;
+                          justify-content: center;
+                        "
+                      >
+                        <span
+                          style="
+                            font-size: 13px;
+                            font-weight: 500;
+                            color: #6b6560;
+                          "
+                          >7</span
+                        >
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Sat -->
+                  <div
+                    style="
+                      display: flex;
+                      flex-direction: column;
+                      align-items: center;
+                      gap: 2px;
+                    "
+                  >
+                    <span
+                      style="
+                        font-size: 10px;
+                        line-height: 14px;
+                        color: #6b6560;
+                        font-weight: 500;
+                        letter-spacing: 0.5px;
+                      "
+                      >SAT</span
+                    >
+                    <div
+                      style="
+                        width: 40px;
+                        height: 40px;
+                        opacity: 0.5;
+                        position: relative;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                      "
+                    >
+                      <svg width="40" height="40" class="ring-svg">
+                        <circle
+                          cx="20"
+                          cy="20"
+                          r="16"
+                          fill="transparent"
+                          stroke="#DDD8D2"
+                          stroke-width="3"
+                          stroke-dasharray="4 4"
+                        />
+                      </svg>
+                      <div
+                        style="
+                          position: absolute;
+                          inset: 0;
+                          display: flex;
+                          align-items: center;
+                          justify-content: center;
+                        "
+                      >
+                        <span
+                          style="
+                            font-size: 13px;
+                            font-weight: 500;
+                            color: #6b6560;
+                          "
+                          >8</span
+                        >
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Sun -->
+                  <div
+                    style="
+                      display: flex;
+                      flex-direction: column;
+                      align-items: center;
+                      gap: 2px;
+                    "
+                  >
+                    <span
+                      style="
+                        font-size: 10px;
+                        line-height: 14px;
+                        color: #6b6560;
+                        font-weight: 500;
+                        letter-spacing: 0.5px;
+                      "
+                      >SUN</span
+                    >
+                    <div
+                      style="
+                        width: 40px;
+                        height: 40px;
+                        opacity: 0.5;
+                        position: relative;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                      "
+                    >
+                      <svg width="40" height="40" class="ring-svg">
+                        <circle
+                          cx="20"
+                          cy="20"
+                          r="16"
+                          fill="transparent"
+                          stroke="#DDD8D2"
+                          stroke-width="3"
+                          stroke-dasharray="4 4"
+                        />
+                      </svg>
+                      <div
+                        style="
+                          position: absolute;
+                          inset: 0;
+                          display: flex;
+                          align-items: center;
+                          justify-content: center;
+                        "
+                      >
+                        <span
+                          style="
+                            font-size: 13px;
+                            font-weight: 500;
+                            color: #6b6560;
+                          "
+                          >9</span
+                        >
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- BADGE BELOW STRIP — the alternative placement -->
+              <div
+                style="display: flex; justify-content: center; margin-top: 10px"
+              >
+                <div
+                  style="
+                    background: rgba(5, 150, 105, 0.08);
+                    border-radius: 99px;
+                    padding: 5px 14px;
+                    display: flex;
+                    align-items: center;
+                    gap: 4px;
+                  "
+                >
+                  <span
+                    style="font-size: 12px; font-weight: 700; color: #047857"
+                    >✨ Just 1 left — almost perfect!</span
+                  >
+                </div>
+              </div>
+            </div>
+
+            <!-- Habit Cards -->
+            <div style="flex: 1; padding: 8px 24px">
+              <!-- Habit 1: Meditate — completed -->
+              <div style="margin-bottom: 8px">
+                <div
+                  class="habit-card"
+                  style="display: flex; flex-direction: row"
+                >
+                  <div
+                    class="strength-fill"
+                    style="width: 75%; background: rgba(5, 150, 105, 0.04)"
+                  ></div>
+                  <div
+                    style="
+                      flex: 1;
+                      padding: 16px;
+                      position: relative;
+                      z-index: 1;
+                      opacity: 0.55;
+                    "
+                  >
+                    <div
+                      style="
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                      "
+                    >
+                      <div
+                        style="display: flex; align-items: center; gap: 12px"
+                      >
+                        <span style="font-size: 26px">🧘</span>
+                        <div>
+                          <div
+                            style="
+                              font-size: 16px;
+                              font-weight: 600;
+                              color: #2d2a26;
+                              letter-spacing: -0.41px;
+                              text-decoration: line-through;
+                            "
+                          >
+                            Meditate
+                          </div>
+                          <div
+                            style="
+                              font-size: 12px;
+                              color: #6b6560;
+                              margin-top: 2px;
+                            "
+                          >
+                            Strong · 75%
+                          </div>
+                        </div>
+                      </div>
+                      <i
+                        data-lucide="check-circle-2"
+                        style="width: 20px; height: 20px; color: #059669"
+                      ></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Habit 2: Exercise — completed -->
+              <div style="margin-bottom: 8px">
+                <div
+                  class="habit-card"
+                  style="display: flex; flex-direction: row"
+                >
+                  <div
+                    class="strength-fill"
+                    style="width: 60%; background: rgba(5, 150, 105, 0.04)"
+                  ></div>
+                  <div
+                    style="
+                      flex: 1;
+                      padding: 16px;
+                      position: relative;
+                      z-index: 1;
+                      opacity: 0.55;
+                    "
+                  >
+                    <div
+                      style="
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                      "
+                    >
+                      <div
+                        style="display: flex; align-items: center; gap: 12px"
+                      >
+                        <span style="font-size: 26px">💪</span>
+                        <div>
+                          <div
+                            style="
+                              font-size: 16px;
+                              font-weight: 600;
+                              color: #2d2a26;
+                              letter-spacing: -0.41px;
+                              text-decoration: line-through;
+                            "
+                          >
+                            Exercise
+                          </div>
+                          <div
+                            style="
+                              font-size: 12px;
+                              color: #6b6560;
+                              margin-top: 2px;
+                            "
+                          >
+                            Moderate · 60%
+                          </div>
+                        </div>
+                      </div>
+                      <i
+                        data-lucide="check-circle-2"
+                        style="width: 20px; height: 20px; color: #059669"
+                      ></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Habit 3: Read — completed -->
+              <div style="margin-bottom: 8px">
+                <div
+                  class="habit-card"
+                  style="display: flex; flex-direction: row"
+                >
+                  <div
+                    class="strength-fill"
+                    style="width: 90%; background: rgba(5, 150, 105, 0.06)"
+                  ></div>
+                  <div
+                    style="
+                      flex: 1;
+                      padding: 16px;
+                      position: relative;
+                      z-index: 1;
+                      opacity: 0.55;
+                    "
+                  >
+                    <div
+                      style="
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                      "
+                    >
+                      <div
+                        style="display: flex; align-items: center; gap: 12px"
+                      >
+                        <span style="font-size: 26px">📖</span>
+                        <div>
+                          <div
+                            style="
+                              font-size: 16px;
+                              font-weight: 600;
+                              color: #2d2a26;
+                              letter-spacing: -0.41px;
+                              text-decoration: line-through;
+                            "
+                          >
+                            Read 30 min
+                          </div>
+                          <div
+                            style="
+                              font-size: 12px;
+                              color: #6b6560;
+                              margin-top: 2px;
+                            "
+                          >
+                            Established · 90%
+                          </div>
+                        </div>
+                      </div>
+                      <i
+                        data-lucide="check-circle-2"
+                        style="width: 20px; height: 20px; color: #059669"
+                      ></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Habit 4: Journal — THE ONE LEFT -->
+              <div style="margin-bottom: 8px">
+                <div
+                  class="habit-card"
+                  style="
+                    display: flex;
+                    flex-direction: row;
+                    border: 1.5px solid rgba(5, 150, 105, 0.3);
+                  "
+                >
+                  <div
+                    class="strength-fill"
+                    style="width: 30%; background: rgba(5, 150, 105, 0.03)"
+                  ></div>
+                  <div
+                    style="
+                      flex: 1;
+                      padding: 16px;
+                      position: relative;
+                      z-index: 1;
+                    "
+                  >
+                    <div
+                      style="
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                      "
+                    >
+                      <div
+                        style="display: flex; align-items: center; gap: 12px"
+                      >
+                        <span style="font-size: 26px">📝</span>
+                        <div>
+                          <div
+                            style="
+                              font-size: 16px;
+                              font-weight: 600;
+                              color: #2d2a26;
+                              letter-spacing: -0.41px;
+                            "
+                          >
+                            Journal
+                          </div>
+                          <div
+                            style="
+                              font-size: 12px;
+                              color: #6b6560;
+                              margin-top: 2px;
+                            "
+                          >
+                            Developing · 30%
+                          </div>
+                        </div>
+                      </div>
+                      <div style="display: flex; align-items: center; gap: 4px">
+                        <span
+                          style="
+                            font-size: 14px;
+                            font-weight: 600;
+                            color: #8b6208;
+                          "
+                          >🔗 2</span
+                        >
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div style="height: 100px"></div>
+            </div>
+
+            <!-- Bottom Action Bar -->
+            <div
+              style="
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                display: flex;
+                justify-content: center;
+                padding-bottom: 28px;
+                pointer-events: none;
+              "
+            >
+              <div
+                class="glass-capsule"
+                style="
+                  display: flex;
+                  align-items: center;
+                  padding: 8px 20px;
+                  gap: 20px;
+                  pointer-events: auto;
+                  box-shadow: 0 4px 16px rgba(45, 42, 38, 0.08);
+                "
+              >
+                <div
+                  style="
+                    width: 44px;
+                    height: 44px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                  "
+                >
+                  <i
+                    data-lucide="settings"
+                    style="width: 24px; height: 24px; color: #6b6560"
+                  ></i>
+                </div>
+                <div
+                  style="
+                    width: 56px;
+                    height: 56px;
+                    border-radius: 50%;
+                    background: #059669;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    position: relative;
+                    box-shadow: 0 4px 16px rgba(5, 150, 105, 0.3);
+                  "
+                >
+                  <svg
+                    width="56"
+                    height="56"
+                    style="position: absolute; transform: rotate(-90deg)"
+                  >
+                    <circle
+                      cx="28"
+                      cy="28"
+                      r="24"
+                      fill="transparent"
+                      stroke="rgba(255,255,255,0.2)"
+                      stroke-width="3"
+                    />
+                    <circle
+                      cx="28"
+                      cy="28"
+                      r="24"
+                      fill="transparent"
+                      stroke="white"
+                      stroke-width="3"
+                      stroke-dasharray="150.8"
+                      stroke-dashoffset="37.7"
+                      stroke-linecap="round"
+                    />
+                  </svg>
+                  <i
+                    data-lucide="plus"
+                    style="
+                      width: 24px;
+                      height: 24px;
+                      color: white;
+                      stroke-width: 2.5;
+                    "
+                  ></i>
+                </div>
+                <div
+                  style="
+                    width: 44px;
+                    height: 44px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                  "
+                >
+                  <i
+                    data-lucide="sparkles"
+                    style="width: 24px; height: 24px; color: #8b6208"
+                  ></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ RATIONALE PANEL ============ -->
+      <div
+        style="
+          width: 340px;
+          margin-top: 40px;
+          color: #e5e5e5;
+          font-family: 'DM Sans', sans-serif;
+        "
+      >
+        <div
+          style="
+            font-size: 20px;
+            font-weight: 700;
+            color: #f9fafb;
+            margin-bottom: 24px;
+          "
+        >
+          Why Option A?
+        </div>
+
+        <!-- Reason 1 -->
+        <div
+          style="
+            background: rgba(52, 211, 153, 0.06);
+            border: 1px solid rgba(52, 211, 153, 0.15);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+          "
+        >
+          <div
+            style="
+              font-size: 11px;
+              font-weight: 700;
+              text-transform: uppercase;
+              letter-spacing: 1px;
+              color: #34d399;
+              margin-bottom: 6px;
+            "
+          >
+            1. Compact Header = More Habit Cards
+          </div>
+          <div style="font-size: 13px; line-height: 1.6; color: #d1d5db">
+            The shelf area is prime real estate. Every extra row pushes habit
+            cards down. Option B adds ~30px of vertical space — that's nearly
+            half a habit card lost below the fold. Users with 5+ habits feel
+            this.
+          </div>
+        </div>
+
+        <!-- Reason 2 -->
+        <div
+          style="
+            background: rgba(52, 211, 153, 0.06);
+            border: 1px solid rgba(52, 211, 153, 0.15);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+          "
+        >
+          <div
+            style="
+              font-size: 11px;
+              font-weight: 700;
+              text-transform: uppercase;
+              letter-spacing: 1px;
+              color: #34d399;
+              margin-bottom: 6px;
+            "
+          >
+            2. Nudge, Not a Shout
+          </div>
+          <div style="font-size: 13px; line-height: 1.6; color: #d1d5db">
+            The Zeigarnik effect works best as a subtle itch, not a billboard. A
+            small green pill next to the date creates "oh, I'm close" — putting
+            it front-and-center below the strip makes it feel like a progress
+            bar UX that nags.
+          </div>
+        </div>
+
+        <!-- Reason 3 -->
+        <div
+          style="
+            background: rgba(52, 211, 153, 0.06);
+            border: 1px solid rgba(52, 211, 153, 0.15);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+          "
+        >
+          <div
+            style="
+              font-size: 11px;
+              font-weight: 700;
+              text-transform: uppercase;
+              letter-spacing: 1px;
+              color: #34d399;
+              margin-bottom: 6px;
+            "
+          >
+            3. Shared Slot = Clean State Machine
+          </div>
+          <div style="font-size: 13px; line-height: 1.6; color: #d1d5db">
+            The right side of the WeekNavRow is a single slot that cycles
+            through states: streak pill, "Almost perfect!", "Streak at risk", or
+            "Today →". One slot, one piece of contextual info. No layout shift
+            between states.
+          </div>
+        </div>
+
+        <!-- Reason 4 -->
+        <div
+          style="
+            background: rgba(52, 211, 153, 0.06);
+            border: 1px solid rgba(52, 211, 153, 0.15);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+          "
+        >
+          <div
+            style="
+              font-size: 11px;
+              font-weight: 700;
+              text-transform: uppercase;
+              letter-spacing: 1px;
+              color: #34d399;
+              margin-bottom: 6px;
+            "
+          >
+            4. Information Hierarchy Preserved
+          </div>
+          <div style="font-size: 13px; line-height: 1.6; color: #d1d5db">
+            Day strip rings = primary (where you act). Badge = secondary
+            context. In Option B, the badge sits between the rings and habit
+            cards, breaking the visual flow from "see progress" → "take action."
+            Option A keeps it metadata-level.
+          </div>
+        </div>
+
+        <!-- Trade-off -->
+        <div
+          style="
+            background: rgba(251, 191, 36, 0.06);
+            border: 1px solid rgba(251, 191, 36, 0.15);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+          "
+        >
+          <div
+            style="
+              font-size: 11px;
+              font-weight: 700;
+              text-transform: uppercase;
+              letter-spacing: 1px;
+              color: #fbbf24;
+              margin-bottom: 6px;
+            "
+          >
+            Trade-off to Consider
+          </div>
+          <div style="font-size: 13px; line-height: 1.6; color: #d1d5db">
+            If the badge replaces the streak pill (which it does — they're
+            mutually exclusive), users lose streak visibility at the exact
+            moment they're closest to a perfect day. The streak context might
+            actually help motivate finishing. This is fine because "almost
+            perfect" is the stronger motivator in that moment.
+          </div>
+        </div>
+
+        <!-- When B would be better -->
+        <div
+          style="
+            background: rgba(248, 113, 113, 0.06);
+            border: 1px solid rgba(248, 113, 113, 0.15);
+            border-radius: 12px;
+            padding: 16px;
+          "
+        >
+          <div
+            style="
+              font-size: 11px;
+              font-weight: 700;
+              text-transform: uppercase;
+              letter-spacing: 1px;
+              color: #f87171;
+              margin-bottom: 6px;
+            "
+          >
+            When Option B Wins
+          </div>
+          <div style="font-size: 13px; line-height: 1.6; color: #d1d5db">
+            If user research shows people aren't noticing the badge in its
+            current spot and are missing the "one left" moment, then the
+            below-strip placement makes sense. But optimize for that after you
+            have signal — don't add vertical weight preemptively.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      lucide.createIcons();
+    </script>
+  </body>
+</html>

@@ -1,10 +1,11 @@
+/* eslint-disable max-lines */
 /** Subscription mutations for RevenueCat webhook handling */
 import { v } from 'convex/values';
 import { internalMutation, query } from './_generated/server';
 import { updateUserSettingsPremium } from './subscriptions/helpers';
 
 // Export premium checking utilities
-export { hasPremiumAccess, requirePremium, canAddVoiceNote, canAddVisionBoardImage, FREE_TIER_LIMITS } from './subscriptions/premiumCheck';
+export { hasPremiumAccess, requirePremium } from './subscriptions/premiumCheck';
 
 /** Get subscription by Clerk ID */
 export const getByClerkId = query({
@@ -63,7 +64,11 @@ export const grantPremium = internalMutation({
       .first();
 
     // Idempotency: skip if we already processed this exact event
-    if (existing && args.eventId && existing.lastWebhookEventId === args.eventId) {
+    if (
+      existing &&
+      args.eventId &&
+      existing.lastWebhookEventId === args.eventId
+    ) {
       return;
     }
 
@@ -117,7 +122,11 @@ export const grantPremium = internalMutation({
  *   - Vision board: limited to 4 per habit
  */
 export const revokePremium = internalMutation({
-  args: { clerkId: v.string(), eventId: v.optional(v.string()), eventType: v.string() },
+  args: {
+    clerkId: v.string(),
+    eventId: v.optional(v.string()),
+    eventType: v.string(),
+  },
   handler: async (ctx, { clerkId, eventId, eventType }) => {
     const now = Date.now();
     const existing = await ctx.db
