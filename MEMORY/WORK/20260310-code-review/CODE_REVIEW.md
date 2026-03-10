@@ -91,17 +91,64 @@ The update mutation normalizes `darkMode` but does not validate string fields li
 
 The character feature (convex/character/) was deleted, but `showCharacterScreen` remains in the schema, default settings, validators, and UI. This is dead code that will confuse future developers.
 
-### 12. StreakChain component still exists
+### 12. BUILD-BREAKING: `fontsize-standardization.test.ts` imports deleted module
+**File:** `tests/unit/theme/fontsize-standardization.test.ts:19`
+**Severity:** CRITICAL (build/test error)
+
+Imports `styles as habitsAtRiskStyles` from `@/components/HabitsAtRiskWidget/styles`, which was deleted. Lines 87, 132, 163 reference these styles. **This will cause test failures.**
+
+### 13. StreakChain component still exists (4 orphaned files)
 **Directory:** `src/components/StreakChain/`
 
-The StreakChain component files remain (4 files) but appear to have no external consumers. The component is exported but never imported outside its own directory.
+No external consumers — exported but never imported outside its own directory.
 
-### 13. VisionBoardSection still exists but backend deleted
+### 14. VisionBoardSection still exists but backend deleted (19 files)
 **Directory:** `src/components/MotivationSystem/Workshop/VisionBoardSection/`
 
-The VisionBoardSection component (20 files) still exists and is exported from `Workshop/index.ts`. The backend (`convex/visionBoard*.ts`, `convex/visionBoardImages*.ts`) was deleted. The component doesn't directly call Convex APIs (uses props), but the data pipeline is broken.
+Exported from `Workshop/index.ts`. Backend (`convex/visionBoard*.ts`) was deleted. Extensive stale references remain:
+- `src/screens/HabitEditScreen/types.ts:8` — `onOpenVisionBoard` prop
+- `src/features/habits/components/HabitsModals/CalendarAndDetailModals.tsx:78` — passes `onOpenVisionBoard`
+- `src/components/HabitCalendarModal/HabitCalendarModal.tsx:148` — `onOpenVisionBoard`
+- `src/lib/timing/config.ts:103` — `VISION_BOARD_CLOSE: 300`
+- `src/constants/errorMessages.ts:137,141` — vision board error messages
+- `src/components/PremiumPaywall/motivationFeatures.ts:26-30` — premium feature entry
+- `src/hooks/useImagePicker/useImagePickerHandlers.ts:50` — vision board text
+- `src/components/QuickActionsSheet/ActionsList.tsx:68` — subtitle mentions vision board
+- `convex/subscriptions.ts:43,122` — vision board comments
 
-### 14. `generateWeeklyInsights` is a no-op
+### 15. CelebrationSystem directory still exists (21 files)
+**Directory:** `src/components/CelebrationSystem/`
+
+Still imported by:
+- `src/components/HabitCard/animations/celebrationAnimationEnhanced.ts:10` — imports `BurstType` from `CelebrationSystem/confetti/types`
+- `src/screens/TemplatesScreen/views/FeedbackOverlays.tsx:7` — imports `CelebrationOverlay`
+- Multiple TemplatesScreen files reference `showCelebration` state
+
+**Note:** CelebrationSystem may be intentionally kept for the template-added celebration. Needs clarification.
+
+### 16. `predictionProbability` still in production code
+**Files:**
+- `src/components/ForceUpdateButton/types.ts:14` — `predictionProbability: number`
+- `convex/habitStrength/getStrengthInfo.ts:66,92` — returns `predictionProbability`
+- `convex/habitStrength/updateStrength.ts:92` — sets `predictionProbability`
+- `convex/habits/validators.ts:37` — `lastPredictionAt` field
+- `convex/schema.ts:106-107,125` — prediction schema fields
+
+### 17. Habit notes still rendered in UI
+**Files:**
+- `src/screens/HabitDetailScreen/components/HeroSection.tsx:79,84` — renders `habit.notes`
+- `src/components/HabitCalendarModal/StatsCard.tsx:6,17,46,48` — `habitNotes` prop
+- `src/components/HabitCalendarModal/HabitCalendarModal.tsx:93,108` — passes notes
+
+**Note:** The `HabitNotesSection` component was deleted, but `habit.notes` is still a schema field and still rendered in HeroSection and StatsCard. This may be intentional (simple notes display vs. the removed rich notes feature).
+
+### 18. Affirmations references in tests
+**Files:**
+- `src/hooks/__tests__/useDraftStorage.test.ts:63` — `'affirmation'` test data
+- `src/components/__tests__/OfflinePendingBanner.test.tsx:80,96` — `affirmation: 0` mock
+- Premium test files assert `'Unlimited Affirmations'` text
+
+### 19. `generateWeeklyInsights` is a no-op
 **File:** `convex/analyticsWeekly.ts:75-83`
 
 This internal mutation creates a local variable `_insightData` (explicitly unused) and returns `{ success: true }` without doing anything. Dead code.
@@ -164,13 +211,15 @@ Forward swipe is gated by `canNavigateForward`, but backward swipe has no equiva
 
 | Severity | Count |
 |----------|-------|
-| Critical | 2 |
+| Critical | 3 |
 | High Warning | 8 |
-| Stale Reference | 4 |
+| Stale Reference | 8 |
 | Moderate Warning | 6 |
 | Nit | 11 |
 
-**Top 3 actions recommended:**
-1. Fix deletion order in `convex/habits/remove.ts` (delete tracking first, then habit)
-2. Remove or define `DraftData` type export in `src/hooks/index.ts`
-3. Clean up `showCharacterScreen` references and dead `StreakChain`/`VisionBoardSection` components
+**Top 5 actions recommended:**
+1. **Fix build-breaking test** — remove or update `tests/unit/theme/fontsize-standardization.test.ts` (imports deleted `HabitsAtRiskWidget`)
+2. **Fix deletion order** in `convex/habits/remove.ts` (delete tracking first, then habit)
+3. **Remove or define `DraftData`** type export in `src/hooks/index.ts`
+4. **Clean up `showCharacterScreen`** references across schema, settings, and UI
+5. **Decide on VisionBoardSection/CelebrationSystem** — either fully remove or document why they're kept
