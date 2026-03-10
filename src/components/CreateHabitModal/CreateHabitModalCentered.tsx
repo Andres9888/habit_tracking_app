@@ -50,7 +50,6 @@ export default function CreateHabitModalCentered(props: CreateHabitModalProps) {
       form.resetForm();
       setShowNameError(false);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [visible, isEditMode]);
 
   return (
@@ -61,18 +60,22 @@ export default function CreateHabitModalCentered(props: CreateHabitModalProps) {
       visible={visible}
       onRequestClose={animateOut}
     >
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        className='flex-1'
-      >
-        <View className='flex-1'>
-          <Pressable style={StyleSheet.absoluteFill} onPress={animateOut}>
-            <Animated.View className='flex-1 bg-black' style={backdropStyle} />
-          </Pressable>
-          <GestureDetector gesture={panGesture}>
-            <Animated.View
-              className='flex-1 overflow-hidden rounded-t-3xl shadow-2xl'
-              style={[sheetStyle, { backgroundColor: colors.surface }]}
+      <View className='flex-1'>
+        <Pressable style={StyleSheet.absoluteFill} onPress={animateOut}>
+          <Animated.View className='flex-1 bg-black' style={backdropStyle} />
+        </Pressable>
+        <GestureDetector gesture={panGesture}>
+          <Animated.View
+            className='overflow-hidden rounded-t-3xl shadow-2xl'
+            style={[
+              styles.sheet,
+              sheetStyle,
+              { backgroundColor: colors.surface },
+            ]}
+          >
+            <KeyboardAvoidingView
+              behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+              className='flex-1'
             >
               <ModalHeader
                 habitName={form.habitName}
@@ -87,10 +90,14 @@ export default function CreateHabitModalCentered(props: CreateHabitModalProps) {
                 scrollViewRef={scrollViewRef}
                 showNameError={showNameError}
               />
-            </Animated.View>
-          </GestureDetector>
-        </View>
-      </KeyboardAvoidingView>
+            </KeyboardAvoidingView>
+          </Animated.View>
+        </GestureDetector>
+      </View>
     </Modal>
   );
 }
+
+const styles = StyleSheet.create({
+  sheet: StyleSheet.absoluteFillObject,
+});
