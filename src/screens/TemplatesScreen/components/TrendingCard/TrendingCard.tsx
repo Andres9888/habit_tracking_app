@@ -5,8 +5,6 @@
  */
 
 import { Pressable, Text, View } from 'react-native';
-import { TrendingUp } from 'lucide-react-native';
-import { colors } from '../../../../theme/colors';
 import { AddButton } from './AddButton';
 import { formatPopularity } from './formatPopularity';
 import { s } from './TrendingCard.styles';
@@ -44,12 +42,9 @@ export function TrendingCard({
       </View>
 
       <View style={s.bottomRow}>
-        <View style={s.popularityWrap}>
-          <TrendingUp color={colors.primary[600]} size={12} />
-          <Text style={s.popularityText}>
-            {formatPopularity(popularityScore)}
-          </Text>
-        </View>
+        <Text style={s.popularityText}>
+          {formatPopularity(popularityScore)}
+        </Text>
         <AddButton
           isImported={isImported}
           isImporting={isImporting}

@@ -6,8 +6,6 @@ import { StyleSheet } from 'react-native';
 import { borderRadius, shadows, spacing } from '../../../../theme/spacing';
 import { fontFamilies } from '../../../../theme/typography';
 
-export const HERO_GRADIENT_COLORS = ['#065F46', '#059669', '#34D399'] as const;
-
 export const s = StyleSheet.create({
   badge: {
     alignSelf: 'flex-start',

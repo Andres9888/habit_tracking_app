@@ -89,7 +89,7 @@ function TemplatesScreenContent() {
           onPackConfirm={packConfirm.handleConfirm}
         />
       }
-      onFeaturedPress={() => viewNav.openCategory('morning_routine')}
+      onFeaturedPress={(categoryId: string) => viewNav.openCategory(categoryId)}
       onImport={handleImport}
       onPreview={handlers.handleTemplatePreview}
       onSearchChange={state.setSearchQuery}

@@ -2,11 +2,14 @@
  * CategoryGrid - 2-column grid of category tiles
  */
 
-import { StyleSheet, Text, View } from 'react-native';
+import { useState } from 'react';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { colors } from '../../../../theme/colors';
 import { spacing } from '../../../../theme/spacing';
 import { typography } from '../../../../theme/typography';
 import { CategoryTile } from './CategoryTile';
+
+const INITIAL_VISIBLE = 6;
 
 interface CategoryItem {
   bgColor: string;
@@ -27,9 +30,12 @@ export function CategoryGrid({
   categories,
   onSelectCategory,
 }: CategoryGridProps) {
+  const [showAll, setShowAll] = useState(false);
+  const visible = showAll ? categories : categories.slice(0, INITIAL_VISIBLE);
+
   const rows: CategoryItem[][] = [];
-  for (let i = 0; i < categories.length; i += 2) {
-    rows.push(categories.slice(i, i + 2));
+  for (let i = 0; i < visible.length; i += 2) {
+    rows.push(visible.slice(i, i + 2));
   }
 
   return (
@@ -53,6 +59,18 @@ export function CategoryGrid({
           {row.length === 1 && <View style={{ flex: 1 }} />}
         </View>
       ))}
+      {categories.length > INITIAL_VISIBLE && !showAll && (
+        <Pressable
+          accessibilityLabel={`Show all ${categories.length} categories`}
+          accessibilityRole='button'
+          style={s.showAllButton}
+          onPress={() => setShowAll(true)}
+        >
+          <Text style={s.showAllText}>
+            Show all {categories.length} categories
+          </Text>
+        </Pressable>
+      )}
     </View>
   );
 }
@@ -64,6 +82,20 @@ const s = StyleSheet.create({
     paddingHorizontal: spacing.base,
   },
   row: { flexDirection: 'row', gap: spacing.sm },
+  showAllButton: {
+    alignItems: 'center',
+    backgroundColor: 'rgba(255,255,255,0.04)',
+    borderColor: 'rgba(255,255,255,0.08)',
+    borderRadius: 12,
+    borderWidth: 1,
+    marginTop: spacing.xs,
+    paddingVertical: spacing.md,
+  },
+  showAllText: {
+    color: colors.text.secondary,
+    fontSize: 13,
+    fontWeight: '500',
+  },
   title: {
     ...typography.heading3,
     color: colors.text.primary,
