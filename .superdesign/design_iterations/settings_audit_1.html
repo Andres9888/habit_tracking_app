@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings UX Audit — Proposed Changes</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', -apple-system, sans-serif; background: #111; color: #fff; }
+
+    .phone-frame {
+      width: 390px;
+      height: 844px;
+      background: #fafaf9;
+      border-radius: 44px;
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 0 0 3px #333, 0 20px 60px rgba(0,0,0,0.5);
+    }
+
+    .status-bar {
+      height: 54px;
+      background: #fafaf9;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 4px;
+    }
+
+    .settings-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 16px 16px;
+      background: #fafaf9;
+    }
+
+    .close-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: #f5f5f4;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.15s ease;
+    }
+    .close-btn:active { transform: scale(0.92); }
+
+    .spacer-44 { width: 44px; height: 44px; }
+
+    .header-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: #1c1917;
+      letter-spacing: -0.5px;
+    }
+
+    .scroll-area {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0 16px 32px;
+      height: calc(100% - 54px - 68px);
+    }
+
+    .section { margin-bottom: 20px; }
+
+    .section-title {
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+      color: #a8a29e;
+      padding: 0 4px;
+      margin-bottom: 8px;
+    }
+
+    .section-card {
+      background: #fff;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 4px 16px rgba(28, 25, 23, 0.08);
+    }
+
+    .row {
+      display: flex;
+      align-items: center;
+      padding: 16px;
+      border-bottom: 1px solid #f5f5f4;
+      gap: 16px;
+    }
+    .row:last-child, .row.no-border { border-bottom: none; }
+
+    .row-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .row-content { flex: 1; min-width: 0; }
+
+    .row-label {
+      font-size: 17px;
+      font-weight: 600;
+      color: #1c1917;
+      line-height: 1.3;
+    }
+
+    .row-subtitle {
+      font-size: 13px;
+      color: #a8a29e;
+      margin-top: 2px;
+      line-height: 1.3;
+    }
+
+    .row-value {
+      font-size: 17px;
+      font-weight: 500;
+      color: #a8a29e;
+    }
+
+    .toggle {
+      width: 51px;
+      height: 31px;
+      border-radius: 15.5px;
+      background: #e7e5e4;
+      position: relative;
+      cursor: pointer;
+      transition: background 0.2s;
+      flex-shrink: 0;
+    }
+    .toggle.on { background: #059669; }
+    .toggle::after {
+      content: '';
+      position: absolute;
+      width: 27px;
+      height: 27px;
+      background: #fff;
+      border-radius: 50%;
+      top: 2px;
+      left: 2px;
+      transition: transform 0.2s;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+    }
+    .toggle.on::after { transform: translateX(20px); }
+
+    .chevron { color: #d6d3d1; flex-shrink: 0; }
+
+    .badge {
+      background: #f5f5f4;
+      color: #a8a29e;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 999px;
+      min-width: 22px;
+      text-align: center;
+    }
+
+    /* Change indicators */
+    .change-tag {
+      position: absolute;
+      top: -8px;
+      right: -4px;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      z-index: 10;
+    }
+    .tag-moved { background: #dbeafe; color: #2563eb; }
+    .tag-new { background: #dcfce7; color: #16a34a; }
+    .tag-copy { background: #fef3c7; color: #d97706; }
+    .tag-icon { background: #f3e8ff; color: #9333ea; }
+
+    .highlight-row {
+      position: relative;
+    }
+    .highlight-row::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border: 2px solid;
+      border-radius: 0;
+      pointer-events: none;
+      z-index: 5;
+    }
+    .highlight-moved::before { border-color: #3b82f6; }
+    .highlight-copy::before { border-color: #f59e0b; }
+    .highlight-icon::before { border-color: #a855f7; }
+
+    /* Inline sort picker */
+    .sort-option {
+      display: flex;
+      align-items: center;
+      padding: 14px 16px;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: background 0.15s;
+      gap: 12px;
+    }
+    .sort-option:hover { background: rgba(0,0,0,0.03); }
+    .sort-option.selected { background: rgba(5, 150, 105, 0.04); }
+
+    .sort-check {
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Premium card */
+    .premium-card {
+      background: linear-gradient(135deg, #8b5cf6, #6366f1, #818cf8);
+      border-radius: 16px;
+      padding: 20px 16px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Tab switcher */
+    .tab-bar {
+      display: flex;
+      gap: 8px;
+      padding: 16px 0;
+      justify-content: center;
+      position: sticky;
+      top: 0;
+      background: #111;
+      z-index: 100;
+    }
+    .tab-btn {
+      padding: 10px 24px;
+      border-radius: 12px;
+      border: 1px solid #333;
+      background: transparent;
+      color: #999;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: 'Inter', sans-serif;
+    }
+    .tab-btn.active {
+      background: #fff;
+      color: #111;
+      border-color: #fff;
+    }
+    .tab-btn:hover:not(.active) {
+      border-color: #555;
+      color: #ccc;
+    }
+
+    .view { display: none; }
+    .view.active { display: flex; }
+
+    /* Annotation */
+    .annotation {
+      background: #1a1a2e;
+      border: 1px solid #333;
+      border-radius: 12px;
+      padding: 12px 16px;
+      margin-bottom: 16px;
+      font-size: 13px;
+      color: #a0a0b0;
+      line-height: 1.5;
+    }
+    .annotation strong { color: #e0e0f0; }
+
+    .legend {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+      padding: 0 8px;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: #999;
+    }
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 3px;
+    }
+  </style>
+</head>
+<body>
+  <div style="max-width: 1200px; margin: 0 auto; padding: 24px;">
+    <h1 style="font-size: 28px; font-weight: 700; margin-bottom: 4px; letter-spacing: -0.5px;">Settings UX Audit</h1>
+    <p style="color: #888; font-size: 15px; margin-bottom: 8px;">Proposed changes highlighted — tap tabs to compare views</p>
+
+    <div class="tab-bar">
+      <button class="tab-btn active" onclick="showView('proposed')">Proposed Settings</button>
+      <button class="tab-btn" onclick="showView('sort')">Inline Sort Picker</button>
+      <button class="tab-btn" onclick="showView('close')">Close Button Audit</button>
+    </div>
+
+    <!-- PROPOSED SETTINGS VIEW -->
+    <div id="view-proposed" class="view active" style="justify-content: center; gap: 32px; flex-wrap: wrap;">
+      <div>
+        <div class="legend">
+          <div class="legend-item"><div class="legend-dot" style="background: #3b82f6;"></div> Moved</div>
+          <div class="legend-item"><div class="legend-dot" style="background: #f59e0b;"></div> Copy updated</div>
+          <div class="legend-item"><div class="legend-dot" style="background: #a855f7;"></div> Icon changed</div>
+        </div>
+
+        <div style="display: flex; gap: 32px; flex-wrap: wrap; justify-content: center;">
+          <!-- Phone mockup -->
+          <div class="phone-frame">
+            <div class="status-bar">
+              <div style="font-size: 15px; font-weight: 600; color: #1c1917;">9:41</div>
+            </div>
+            <div class="settings-header">
+              <div class="spacer-44"></div>
+              <div class="header-title">Settings</div>
+              <button class="close-btn">
+                <i data-lucide="x" style="width:24px;height:24px;color:#78716c;stroke-width:2.5;"></i>
+              </button>
+            </div>
+            <div class="scroll-area">
+              <!-- PREFERENCES -->
+              <div class="section">
+                <div class="section-title">Preferences</div>
+                <div class="section-card">
+                  <!-- Completion icon - COPY CHANGE -->
+                  <div class="row highlight-row highlight-copy" style="position:relative;">
+                    <span class="change-tag tag-copy">Copy</span>
+                    <div class="row-icon" style="background: #dcfce7;">
+                      <i data-lucide="check" style="width:16px;height:16px;color:#16a34a;"></i>
+                    </div>
+                    <div class="row-content">
+                      <div class="row-label">Completion icon</div>
+                      <div class="row-subtitle">Choose between checkmark and chain link</div>
+                    </div>
+                    <div class="toggle on"></div>
+                  </div>
+
+                  <!-- Circular day markers -->
+                  <div class="row">
+                    <div class="row-icon" style="background: #e0e7ff;">
+                      <i data-lucide="circle" style="width:16px;height:16px;color:#6366f1;"></i>
+                    </div>
+                    <div class="row-content">
+                      <div class="row-label">Circular day markers</div>
+                    </div>
+                    <div class="toggle"></div>
+                  </div>
+
+                  <!-- Gradient streak fill - COPY CHANGE -->
+                  <div class="row highlight-row highlight-copy" style="position:relative;">
+                    <span class="change-tag tag-copy">Copy</span>
+                    <div class="row-icon" style="background: #cffafe;">
+                      <i data-lucide="droplets" style="width:16px;height:16px;color:#0891b2;"></i>
+                    </div>
+                    <div class="row-content">
+                      <div class="row-label">Gradient streak fill</div>
+                    </div>
+                    <div class="toggle on"></div>
+                  </div>
+
+                  <!-- Pin calendar header - COPY CHANGE -->
+                  <div class="row highlight-row highlight-copy" style="position:relative;">
+                    <span class="change-tag tag-copy">Copy</span>
+                    <div class="row-icon" style="background: #fee2e2;">
+                      <i data-lucide="calendar" style="width:16px;height:16px;color:#dc2626;"></i>
+                    </div>
+                    <div class="row-content">
+                      <div class="row-label">Pin calendar header</div>
+                    </div>
+                    <div class="toggle"></div>
+                  </div>
+
+                  <!-- Sound -->
+                  <div class="row">
+                    <div class="row-icon" style="background: #fef3c7;">
+                      <i data-lucide="volume-2" style="width:16px;height:16px;color:#d97706;"></i>
+                    </div>
+                    <div class="row-content">
+                      <div class="row-label">Play sound on habit completion</div>
+                    </div>
+                    <div class="toggle on"></div>
+                  </div>
+
+                  <!-- Sort Order - MOVED HERE -->
+                  <div class="row no-border highlight-row highlight-moved" style="position:relative;">
+                    <span class="change-tag tag-moved">Moved</span>
+                    <div class="row-icon" style="background: #ede9fe;">
+                      <i data-lucide="arrow-up-down" style="width:16px;height:16px;color:#7c3aed;"></i>
+                    </div>
+                    <div class="row-content">
+                      <div class="row-label">Sort Order</div>
+                    </div>
+                    <span class="row-value">Custom</span>
+                    <i data-lucide="chevron-right" style="width:16px;height:16px;color:#d6d3d1;stroke-width:2;"></i>
+                  </div>
+                </div>
+              </div>
+
+              <!-- NOTIFICATIONS -->
+              <div class="section">
+                <div class="section-title">Notifications</div>
+                <div class="section-card">
+                  <div class="row no-border">
+                    <div class="row-icon" style="background: #fce7f3;">
+                      <i data-lucide="bell" style="width:16px;height:16px;color:#db2777;"></i>
+                    </div>
+                    <div class="row-content">
+                      <div class="row-label">Streak Reminders</div>
+                    </div>
+                    <div class="toggle on"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- DATA (no more Sort Order here) -->
+              <div class="section">
+                <div class="section-title">Data</div>
+                <div class="section-card">
+                  <div class="row">
+                    <div class="row-icon" style="background: #dbeafe;">
+                      <i data-lucide="download" style="width:16px;height:16px;color:#2563eb;"></i>
+                    </div>
+                    <div class="row-content">
+                      <div class="row-label">Export habits & stats</div>
+                    </div>
+                    <i data-lucide="chevron-right" style="width:16px;height:16px;color:#d6d3d1;stroke-width:2;"></i>
+                  </div>
+                  <div class="row no-border">
+                    <div class="row-icon" style="background: #e0e7ff;">
+                      <i data-lucide="book-open" style="width:16px;height:16px;color:#4f46e5;"></i>
+                    </div>
+                    <div class="row-content">
+                      <div class="row-label">Archived Habits</div>
+                    </div>
+                    <span class="badge">2</span>
+                    <i data-lucide="chevron-right" style="width:16px;height:16px;color:#d6d3d1;stroke-width:2;"></i>
+                  </div>
+                </div>
+              </div>
+
+              <!-- ACCOUNT -->
+              <div class="section">
+                <div class="section-title">Account</div>
+                <div class="section-card">
+                  <div class="row">
+                    <div class="row-icon" style="background: #f5f5f4;">
+                      <i data-lucide="user" style="width:16px;height:16px;color:#78716c;"></i>
+                    </div>
+                    <div class="row-content">
+                      <div class="row-label" style="font-weight:500; color:#78716c; font-size:15px;">andres@example.com</div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="row-icon" style="background: #fee2e2;">
+                      <i data-lucide="log-out" style="width:16px;height:16px;color:#dc2626;"></i>
+                    </div>
+                    <div class="row-content">
+                      <div class="row-label">Sign Out</div>
+                    </div>
+                    <i data-lucide="chevron-right" style="width:16px;height:16px;color:#d6d3d1;stroke-width:2;"></i>
+                  </div>
+                  <div class="row no-border">
+                    <div class="row-icon" style="background: #fee2e2;">
+                      <i data-lucide="trash-2" style="width:16px;height:16px;color:#dc2626;"></i>
+                    </div>
+                    <div class="row-content">
+                      <div class="row-label">Delete Account</div>
+                    </div>
+                    <i data-lucide="chevron-right" style="width:16px;height:16px;color:#d6d3d1;stroke-width:2;"></i>
+                  </div>
+                </div>
+              </div>
+
+              <!-- PREMIUM -->
+              <div class="section">
+                <div class="section-title">Subscription</div>
+                <div class="premium-card">
+                  <div style="display:flex; align-items:center; gap:16px;">
+                    <div style="width:40px;height:40px;border-radius:12px;background:rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;">
+                      <i data-lucide="zap" style="width:20px;height:20px;color:#fff;"></i>
+                    </div>
+                    <div style="flex:1;">
+                      <div style="font-size:17px;font-weight:700;color:#fff;">Upgrade to Premium</div>
+                      <div style="font-size:13px;color:rgba(255,255,255,0.8);margin-top:2px;">Unlock sounds, reminders & more</div>
+                    </div>
+                    <div style="background:rgba(255,255,255,0.2);padding:6px 14px;border-radius:999px;">
+                      <span style="font-size:13px;font-weight:700;color:#fff;">PRO</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- APP -->
+              <div class="section">
+                <div class="section-title">App</div>
+                <div class="section-card">
+                  <div class="row">
+                    <div class="row-icon" style="background: #fef3c7;">
+                      <i data-lucide="star" style="width:16px;height:16px;color:#d97706;"></i>
+                    </div>
+                    <div class="row-content">
+                      <div class="row-label">Rate Chain Day</div>
+                    </div>
+                    <i data-lucide="chevron-right" style="width:16px;height:16px;color:#d6d3d1;stroke-width:2;"></i>
+                  </div>
+                  <div class="row">
+                    <div class="row-icon" style="background: #dbeafe;">
+                      <i data-lucide="share-2" style="width:16px;height:16px;color:#2563eb;"></i>
+                    </div>
+                    <div class="row-content">
+                      <div class="row-label">Share with Friends</div>
+                    </div>
+                    <i data-lucide="chevron-right" style="width:16px;height:16px;color:#d6d3d1;stroke-width:2;"></i>
+                  </div>
+                  <div class="row">
+                    <div class="row-icon" style="background: #dcfce7;">
+                      <i data-lucide="message-square" style="width:16px;height:16px;color:#16a34a;"></i>
+                    </div>
+                    <div class="row-content">
+                      <div class="row-label">Send Feedback</div>
+                    </div>
+                    <i data-lucide="chevron-right" style="width:16px;height:16px;color:#d6d3d1;stroke-width:2;"></i>
+                  </div>
+                  <div class="row no-border">
+                    <div class="row-icon" style="background: #ede9fe;">
+                      <i data-lucide="sparkles" style="width:16px;height:16px;color:#7c3aed;"></i>
+                    </div>
+                    <div class="row-content">
+                      <div class="row-label">What's New</div>
+                    </div>
+                    <i data-lucide="chevron-right" style="width:16px;height:16px;color:#d6d3d1;stroke-width:2;"></i>
+                  </div>
+                </div>
+              </div>
+
+              <!-- LEGAL - ICON CHANGES -->
+              <div class="section">
+                <div class="section-title">Legal</div>
+                <div class="section-card">
+                  <div class="row highlight-row highlight-icon" style="position:relative;">
+                    <span class="change-tag tag-icon">Icon</span>
+                    <div class="row-icon" style="background: #f5f5f4;">
+                      <i data-lucide="shield" style="width:16px;height:16px;color:#78716c;"></i>
+                    </div>
+                    <div class="row-content">
+                      <div class="row-label">Privacy Policy</div>
+                    </div>
+                    <i data-lucide="chevron-right" style="width:16px;height:16px;color:#d6d3d1;stroke-width:2;"></i>
+                  </div>
+                  <div class="row no-border highlight-row highlight-icon" style="position:relative;">
+                    <span class="change-tag tag-icon">Icon</span>
+                    <div class="row-icon" style="background: #f5f5f4;">
+                      <i data-lucide="file-text" style="width:16px;height:16px;color:#78716c;"></i>
+                    </div>
+                    <div class="row-content">
+                      <div class="row-label">Terms of Service</div>
+                    </div>
+                    <i data-lucide="chevron-right" style="width:16px;height:16px;color:#d6d3d1;stroke-width:2;"></i>
+                  </div>
+                </div>
+              </div>
+
+              <!-- ABOUT -->
+              <div class="section">
+                <div class="section-title">About</div>
+                <div class="section-card">
+                  <div class="row no-border">
+                    <div class="row-icon" style="background: #f5f5f4;">
+                      <i data-lucide="info" style="width:16px;height:16px;color:#78716c;"></i>
+                    </div>
+                    <div class="row-content">
+                      <div class="row-label">Version</div>
+                    </div>
+                    <span class="row-value">1.0.0 (1)</span>
+                  </div>
+                </div>
+                <div style="text-align:center; padding:12px 0; font-size:13px; color:#a8a29e;">
+                  Made with ❤️ for better habits
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- INLINE SORT PICKER VIEW -->
+    <div id="view-sort" class="view" style="justify-content: center; gap: 32px; flex-wrap: wrap;">
+      <div class="annotation" style="max-width: 420px;">
+        <strong>Change:</strong> Instead of closing Settings and opening a separate bottom sheet, the sort picker now lives <strong>inline within Settings</strong> — same pattern as Archived Habits. Tap "Sort Order" → slides to this view. Tap back arrow → returns to settings.
+      </div>
+
+      <div class="phone-frame">
+        <div class="status-bar">
+          <div style="font-size: 15px; font-weight: 600; color: #1c1917;">9:41</div>
+        </div>
+        <!-- Sort picker header with back + close -->
+        <div class="settings-header">
+          <button class="close-btn" style="background: transparent;" title="Back to settings">
+            <i data-lucide="arrow-left" style="width:22px;height:22px;color:#1c1917;stroke-width:2;"></i>
+          </button>
+          <div class="header-title">Sort Order</div>
+          <button class="close-btn" title="Close settings">
+            <i data-lucide="x" style="width:24px;height:24px;color:#78716c;stroke-width:2.5;"></i>
+          </button>
+        </div>
+        <div style="height:1px; background:#f5f5f4;"></div>
+        <div class="scroll-area" style="padding-top: 12px;">
+          <!-- Sort options -->
+          <div class="sort-option selected">
+            <div class="row-icon" style="background: linear-gradient(135deg, #78716c, #57534e);">
+              <i data-lucide="grip-vertical" style="width:18px;height:18px;color:#fff;"></i>
+            </div>
+            <div class="row-content">
+              <div class="row-label" style="font-size:16px;">Custom Order</div>
+              <div class="row-subtitle">Drag to reorder manually</div>
+            </div>
+            <div class="sort-check">
+              <i data-lucide="check" style="width:20px;height:20px;color:#059669;stroke-width:2.5;"></i>
+            </div>
+          </div>
+
+          <div class="sort-option">
+            <div class="row-icon" style="background: linear-gradient(135deg, #fbbf24, #f97316);">
+              <i data-lucide="sun" style="width:18px;height:18px;color:#fff;"></i>
+            </div>
+            <div class="row-content">
+              <div class="row-label" style="font-size:16px;">Day Phase</div>
+              <div class="row-subtitle">Push → Pivot → Pull</div>
+            </div>
+            <div class="sort-check"></div>
+          </div>
+
+          <div class="sort-option">
+            <div class="row-icon" style="background: linear-gradient(135deg, #78716c, #57534e);">
+              <i data-lucide="arrow-down-a-z" style="width:18px;height:18px;color:#fff;"></i>
+            </div>
+            <div class="row-content">
+              <div class="row-label" style="font-size:16px;">Name (A–Z)</div>
+              <div class="row-subtitle">Alphabetical order</div>
+            </div>
+            <div class="sort-check"></div>
+          </div>
+
+          <div class="sort-option">
+            <div class="row-icon" style="background: linear-gradient(135deg, #78716c, #57534e);">
+              <i data-lucide="arrow-up-a-z" style="width:18px;height:18px;color:#fff;"></i>
+            </div>
+            <div class="row-content">
+              <div class="row-label" style="font-size:16px;">Name (Z–A)</div>
+              <div class="row-subtitle">Reverse alphabetical</div>
+            </div>
+            <div class="sort-check"></div>
+          </div>
+
+          <div class="sort-option">
+            <div class="row-icon" style="background: linear-gradient(135deg, #34d399, #14b8a6);">
+              <i data-lucide="zap" style="width:18px;height:18px;color:#fff;"></i>
+            </div>
+            <div class="row-content">
+              <div class="row-label" style="font-size:16px;">Strength (Low → High)</div>
+              <div class="row-subtitle">Focus on habits needing attention</div>
+            </div>
+            <div class="sort-check"></div>
+          </div>
+
+          <div class="sort-option">
+            <div class="row-icon" style="background: linear-gradient(135deg, #34d399, #14b8a6);">
+              <i data-lucide="zap" style="width:18px;height:18px;color:#fff;"></i>
+            </div>
+            <div class="row-content">
+              <div class="row-label" style="font-size:16px;">Strength (High → Low)</div>
+              <div class="row-subtitle">See your strongest habits first</div>
+            </div>
+            <div class="sort-check"></div>
+          </div>
+
+          <div class="sort-option">
+            <div class="row-icon" style="background: linear-gradient(135deg, #ef4444, #f97316);">
+              <i data-lucide="flame" style="width:18px;height:18px;color:#fff;"></i>
+            </div>
+            <div class="row-content">
+              <div class="row-label" style="font-size:16px;">Streaks (Low → High)</div>
+              <div class="row-subtitle">Protect habits at risk</div>
+            </div>
+            <div class="sort-check"></div>
+          </div>
+
+          <div class="sort-option">
+            <div class="row-icon" style="background: linear-gradient(135deg, #ef4444, #f97316);">
+              <i data-lucide="flame" style="width:18px;height:18px;color:#fff;"></i>
+            </div>
+            <div class="row-content">
+              <div class="row-label" style="font-size:16px;">Streaks (High → Low)</div>
+              <div class="row-subtitle">Celebrate your best streaks</div>
+            </div>
+            <div class="sort-check"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CLOSE BUTTON AUDIT VIEW -->
+    <div id="view-close" class="view" style="flex-direction: column; align-items: center; gap: 24px;">
+      <div class="annotation" style="max-width: 700px;">
+        <strong>Issue:</strong> CreateHabitModal and EditScreen use a raw Pressable with <strong>transparent background</strong> and no spring animation for their X button. All other modals use <strong>ModalCloseButton</strong> with a filled circle background and spring press feedback.<br><br>
+        <strong>Fix:</strong> Replace raw Pressable in CreateHabit and Edit with ModalCloseButton. Keep LEFT positioning (iOS convention for form modals with Save on right).
+      </div>
+
+      <div style="display: flex; gap: 32px; flex-wrap: wrap; justify-content: center;">
+        <!-- Current: Inconsistent -->
+        <div>
+          <div style="text-align:center; margin-bottom:12px; font-size:13px; color:#ef4444; font-weight:600; text-transform:uppercase; letter-spacing:1px;">Current (inconsistent)</div>
+          <div style="width:340px; background:#fafaf9; border-radius:20px; overflow:hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
+            <!-- Settings header -->
+            <div style="padding:16px; border-bottom:1px solid #f5f5f4;">
+              <div style="font-size:11px; color:#a8a29e; margin-bottom:8px; font-weight:600;">SETTINGS MODAL</div>
+              <div style="display:flex; align-items:center; justify-content:space-between;">
+                <div style="width:44px;height:44px;"></div>
+                <span style="font-size:20px; font-weight:700; color:#1c1917;">Settings</span>
+                <div style="width:44px;height:44px;border-radius:50%;background:#f5f5f4;display:flex;align-items:center;justify-content:center;">
+                  <i data-lucide="x" style="width:24px;height:24px;color:#78716c;stroke-width:2.5;"></i>
+                </div>
+              </div>
+              <div style="font-size:11px; color:#16a34a; margin-top:4px;">✓ ModalCloseButton — filled, spring animation</div>
+            </div>
+            <!-- Create header -->
+            <div style="padding:16px; border-bottom:1px solid #f5f5f4;">
+              <div style="font-size:11px; color:#a8a29e; margin-bottom:8px; font-weight:600;">CREATE HABIT MODAL</div>
+              <div style="display:flex; align-items:center; justify-content:space-between;">
+                <div style="width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;">
+                  <i data-lucide="x" style="width:24px;height:24px;color:#78716c;stroke-width:2;"></i>
+                </div>
+                <div style="flex:1;"></div>
+                <div style="background:#059669;padding:8px 20px;border-radius:12px;">
+                  <span style="color:#fff;font-weight:600;font-size:15px;">Save</span>
+                </div>
+              </div>
+              <div style="font-size:11px; color:#ef4444; margin-top:4px;">✗ Raw Pressable — transparent bg, opacity press</div>
+            </div>
+            <!-- Edit header -->
+            <div style="padding:16px;">
+              <div style="font-size:11px; color:#a8a29e; margin-bottom:8px; font-weight:600;">EDIT SCREEN</div>
+              <div style="display:flex; align-items:center; justify-content:space-between;">
+                <div style="width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;">
+                  <i data-lucide="x" style="width:24px;height:24px;color:#44403c;stroke-width:2;"></i>
+                </div>
+                <div style="flex:1;"></div>
+                <div style="background:#059669;padding:8px 20px;border-radius:12px;">
+                  <span style="color:#fff;font-weight:600;font-size:15px;">Save</span>
+                </div>
+              </div>
+              <div style="font-size:11px; color:#ef4444; margin-top:4px;">✗ Raw Pressable — transparent bg, active:opacity-70</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Proposed: Consistent -->
+        <div>
+          <div style="text-align:center; margin-bottom:12px; font-size:13px; color:#16a34a; font-weight:600; text-transform:uppercase; letter-spacing:1px;">Proposed (unified)</div>
+          <div style="width:340px; background:#fafaf9; border-radius:20px; overflow:hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
+            <!-- Settings header -->
+            <div style="padding:16px; border-bottom:1px solid #f5f5f4;">
+              <div style="font-size:11px; color:#a8a29e; margin-bottom:8px; font-weight:600;">SETTINGS MODAL</div>
+              <div style="display:flex; align-items:center; justify-content:space-between;">
+                <div style="width:44px;height:44px;"></div>
+                <span style="font-size:20px; font-weight:700; color:#1c1917;">Settings</span>
+                <div style="width:44px;height:44px;border-radius:50%;background:#f5f5f4;display:flex;align-items:center;justify-content:center;">
+                  <i data-lucide="x" style="width:24px;height:24px;color:#78716c;stroke-width:2.5;"></i>
+                </div>
+              </div>
+              <div style="font-size:11px; color:#16a34a; margin-top:4px;">✓ ModalCloseButton — right side</div>
+            </div>
+            <!-- Create header -->
+            <div style="padding:16px; border-bottom:1px solid #f5f5f4;">
+              <div style="font-size:11px; color:#a8a29e; margin-bottom:8px; font-weight:600;">CREATE HABIT MODAL</div>
+              <div style="display:flex; align-items:center; justify-content:space-between;">
+                <div style="width:44px;height:44px;border-radius:50%;background:#f5f5f4;display:flex;align-items:center;justify-content:center;">
+                  <i data-lucide="x" style="width:24px;height:24px;color:#78716c;stroke-width:2.5;"></i>
+                </div>
+                <div style="flex:1;"></div>
+                <div style="background:#059669;padding:8px 20px;border-radius:12px;">
+                  <span style="color:#fff;font-weight:600;font-size:15px;">Save</span>
+                </div>
+              </div>
+              <div style="font-size:11px; color:#16a34a; margin-top:4px;">✓ ModalCloseButton — left side, same visual style</div>
+            </div>
+            <!-- Edit header -->
+            <div style="padding:16px;">
+              <div style="font-size:11px; color:#a8a29e; margin-bottom:8px; font-weight:600;">EDIT SCREEN</div>
+              <div style="display:flex; align-items:center; justify-content:space-between;">
+                <div style="width:44px;height:44px;border-radius:50%;background:#f5f5f4;display:flex;align-items:center;justify-content:center;">
+                  <i data-lucide="x" style="width:24px;height:24px;color:#78716c;stroke-width:2.5;"></i>
+                </div>
+                <div style="flex:1;"></div>
+                <div style="background:#059669;padding:8px 20px;border-radius:12px;">
+                  <span style="color:#fff;font-weight:600;font-size:15px;">Save</span>
+                </div>
+              </div>
+              <div style="font-size:11px; color:#16a34a; margin-top:4px;">✓ ModalCloseButton — left side, same visual style</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+
+    function showView(viewId) {
+      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById('view-' + viewId).classList.add('active');
+      event.target.classList.add('active');
+    }
+  </script>
+</body>
+</html>

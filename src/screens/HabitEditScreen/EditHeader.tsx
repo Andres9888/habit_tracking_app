@@ -1,6 +1,5 @@
 /** EditHeader - Dark mode aware */
 import { View, Pressable, Text, Keyboard, ActivityIndicator } from 'react-native';
-import { X } from 'lucide-react-native';
 import Animated, {
   FadeInDown,
   useAnimatedStyle,
@@ -10,6 +9,7 @@ import Animated, {
 import { useThemeColors } from '../../theme';
 import { triggerHaptic } from '@/utils/haptics';
 import { springs } from '@/theme/animations';
+import { ModalCloseButton } from '@/components/ui/ModalCloseButton';
 
 interface EditHeaderProps {
   paddingTop: number;
@@ -35,7 +35,6 @@ export function EditHeader({
   }));
 
   const handleCancel = () => {
-    triggerHaptic('tap');
     Keyboard.dismiss();
     onCancel();
   };
@@ -54,14 +53,7 @@ export function EditHeader({
       entering={FadeInDown.delay(0).springify().damping(18)}
       style={{ paddingTop }}
     >
-      <Pressable
-        accessibilityLabel='Cancel'
-        accessibilityRole='button'
-        className='h-11 w-11 items-center justify-center rounded-full active:opacity-70'
-        onPress={handleCancel}
-      >
-        <X color={isDark ? colors.text.secondary : '#44403c'} size={24} strokeWidth={2} />
-      </Pressable>
+      <ModalCloseButton label='Cancel' onClose={handleCancel} />
       <View className='flex-1' />
       <AnimatedPressable
         accessibilityLabel={isSaving ? 'Saving changes' : 'Save changes'}

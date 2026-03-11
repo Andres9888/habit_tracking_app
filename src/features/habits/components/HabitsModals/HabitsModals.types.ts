@@ -17,10 +17,6 @@ export interface SettingsModalSectionProps {
   showHabitStrengthPercentage: boolean;
   closeSettings: () => void;
   openHapticTest: () => void;
-  openSortSheet: () => void;
-  closeSortSheet: () => void;
-  showSortSheet: boolean;
-  reduceMotionPreference: boolean;
   setShowHabitStrengthPercentage: (value: boolean) => void;
   onSettingsChange: HabitsModalsState['onSettingsChange'];
 }

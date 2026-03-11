@@ -13,7 +13,9 @@ import { useSettingsModalLogic } from './SettingsModal.hooks';
 import { getSettingsColors } from './colors';
 import { SettingsHeader } from './SettingsHeader';
 import { SettingsContent } from './SettingsContent';
+import { SortPicker } from './SortPicker';
 import { useThemeColors } from '../../theme/ThemeContext';
+import type { HabitSortMode } from '../../features/habits/types';
 import type { SettingsModalProps } from './types';
 
 function SettingsModalContent({
@@ -25,7 +27,6 @@ function SettingsModalContent({
   onChangeDayShape = () => {},
   onChangeHabitCompletionIcon = () => {},
   onClose,
-  onOpenSortSheet,
   visible,
   streakRemindersEnabled = false,
   streakReminderTime = '20:00',
@@ -41,11 +42,10 @@ function SettingsModalContent({
   settingsDocument,
 }: SettingsModalProps) {
   const {
-    darkModePreference,
     habitSortMode,
-    setDarkModePreference,
     showGradientFill,
     setShowGradientFill,
+    setHabitSortMode,
     view,
     setView,
     handleClose,
@@ -58,10 +58,13 @@ function SettingsModalContent({
   const { isDark } = useThemeColors();
   const colors = getSettingsColors(isHighContrastActive, isDark);
 
-  const handleOpenSortSheet = useCallback(() => {
-    handleClose();
-    setTimeout(() => onOpenSortSheet?.(), 350);
-  }, [handleClose, onOpenSortSheet]);
+  const handleSortSelect = useCallback(
+    (mode: HabitSortMode) => {
+      void setHabitSortMode(mode);
+      setView('settings');
+    },
+    [setHabitSortMode, setView]
+  );
 
   if (!visible) return null;
 
@@ -76,6 +79,23 @@ function SettingsModalContent({
         <ArchivedHabitsModal
           onBack={() => setView('settings')}
           onClose={handleClose}
+        />
+      </Modal>
+    );
+  }
+
+  if (view === 'sort') {
+    return (
+      <Modal
+        accessibilityViewIsModal
+        animationType='slide'
+        visible={visible}
+        onRequestClose={() => setView('settings')}
+      >
+        <SortPicker
+          currentMode={habitSortMode as HabitSortMode}
+          onBack={() => setView('settings')}
+          onSelect={handleSortSelect}
         />
       </Modal>
     );
@@ -122,7 +142,7 @@ function SettingsModalContent({
               onChangeStreakReminderTime={onChangeStreakReminderTime}
               onOpenArchivedHabits={() => setView('archived')}
               onExportHabitsData={onExportHabitsData}
-              onOpenSortPicker={handleOpenSortSheet}
+              onOpenSortPicker={() => setView('sort')}
               stickyCalendarHeader={stickyCalendarHeader}
               onPremiumUpsell={onPremiumUpsell}
               onToggleStreakReminders={onToggleStreakReminders}

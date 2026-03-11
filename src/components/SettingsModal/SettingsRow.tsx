@@ -20,6 +20,7 @@ interface SettingsRowProps {
   icon: ReactNode;
   iconBackgroundColor: string;
   label: string;
+  subtitle?: string;
   type: 'toggle' | 'navigation' | 'selection' | 'info';
   value?: boolean | string;
   badge?: number;
@@ -35,6 +36,7 @@ export function SettingsRow({
   icon,
   iconBackgroundColor,
   label,
+  subtitle,
   type,
   value,
   badge,
@@ -99,14 +101,25 @@ export function SettingsRow({
       >
         {icon}
       </View>
-      <Text
-        className='flex-1 text-[17px] font-semibold'
-        numberOfLines={type === 'toggle' || type === 'navigation' ? 2 : 1}
-        ellipsizeMode='tail'
-        style={{ color: colors.label }}
-      >
-        {label}
-      </Text>
+      <View className='flex-1'>
+        <Text
+          className='text-[17px] font-semibold'
+          numberOfLines={type === 'toggle' || type === 'navigation' ? 2 : 1}
+          ellipsizeMode='tail'
+          style={{ color: colors.label }}
+        >
+          {label}
+        </Text>
+        {subtitle ? (
+          <Text
+            className='mt-0.5 text-[13px]'
+            numberOfLines={2}
+            style={{ color: themeColors.text.secondary }}
+          >
+            {subtitle}
+          </Text>
+        ) : null}
+      </View>
       {type === 'toggle' && (
         <Switch
           accessibilityLabel={label}

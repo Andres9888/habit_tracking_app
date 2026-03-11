@@ -117,12 +117,6 @@ export function buildModalsStateReturnValue(
 
     showSettings: visibility.isSettingsOpen,
 
-    showSortSheet: visibility.isSortSheetOpen,
-
-    openSortSheet: () => visibility.setIsSortSheetOpen(true),
-
-    closeSortSheet: () => visibility.setIsSortSheetOpen(false),
-
     openEditHabit: handlers.openEditHabit,
 
     openHabitCalendar: handlers.openHabitCalendar,

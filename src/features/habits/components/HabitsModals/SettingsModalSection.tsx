@@ -9,8 +9,6 @@ import { useStreakReminderSettings } from '../../../../hooks/useStreakReminders'
 import { usePremium } from '../../../../hooks/usePremium';
 import { getLocalDateString } from '../../../../utils/getLocalDateString';
 import { exportData, prepareExportData } from '../../../../utils/exportData';
-import { SortBottomSheet } from '../SortBottomSheet';
-import type { HabitSortMode } from '../../types';
 import type { SettingsModalSettingsDocument } from '../../../../components/SettingsModal/types';
 import type { SettingsModalSectionProps } from './HabitsModals.types';
 
@@ -70,21 +68,12 @@ export function SettingsModalSection({
   showHabitStrengthPercentage,
   closeSettings,
   openHapticTest,
-  openSortSheet,
-  closeSortSheet,
-  showSortSheet,
-  reduceMotionPreference,
   setShowHabitStrengthPercentage,
   onSettingsChange,
 }: SettingsModalSectionProps) {
   const streakReminders = useStreakReminderSettings();
   const { isPremium } = usePremium();
   const convex = useConvex();
-
-  const handleSelectSortMode = useCallback(
-    (mode: HabitSortMode) => void onSettingsChange({ habitSortMode: mode }),
-    [onSettingsChange]
-  );
 
   const runHabitsExport = useCallback(
     async (format: 'csv' | 'json') => {
@@ -190,15 +179,7 @@ export function SettingsModalSection({
         onClose={closeSettings}
         onExportHabitsData={handleExportHabitsData}
         onOpenHapticTest={openHapticTest}
-        onOpenSortSheet={openSortSheet}
         onToggleStreakReminders={streakReminders.setEnabled}
-      />
-      <SortBottomSheet
-        reduceMotion={reduceMotionPreference}
-        sortMode={settings?.habitSortMode ?? 'manual'}
-        visible={showSortSheet}
-        onClose={closeSortSheet}
-        onSelectSortMode={handleSelectSortMode}
       />
     </>
   );

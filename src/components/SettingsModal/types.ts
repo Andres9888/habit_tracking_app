@@ -29,7 +29,6 @@ export interface SettingsModalProps {
   isHighContrastActive?: boolean;
   isCompact?: boolean;
   onOpenHapticTest?: () => void;
-  onOpenSortSheet?: () => void;
   onClose: () => void;
   showCharacterScreen?: boolean;
   visible: boolean;
