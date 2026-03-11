@@ -5,7 +5,6 @@ export interface SettingsModalSettingsDocument {
   highContrastMode?: boolean;
   useDyslexicFont?: boolean;
   showGradientFill?: boolean;
-  stickyCalendarHeader?: boolean;
   habitSortMode?: string;
 }
 
@@ -35,9 +34,7 @@ export interface SettingsModalProps {
   // Streak reminders
   streakRemindersEnabled?: boolean;
   streakReminderTime?: string;
-  stickyCalendarHeader?: boolean;
   isPremium?: boolean;
-  onChangeStickyCalendarHeader?: (value: boolean) => void | Promise<void>;
   onToggleStreakReminders?: (value: boolean) => void | Promise<void>;
   onChangeStreakReminderTime?: (time: string) => void | Promise<void>;
   onPremiumUpsell?: () => void;
@@ -79,10 +76,8 @@ export interface SettingsContentProps {
   showGradientFill: boolean;
   // Streak reminders
   streakRemindersEnabled: boolean;
-  stickyCalendarHeader: boolean;
   streakReminderTime: string;
   isPremium: boolean;
-  onChangeStickyCalendarHeader: (value: boolean) => void | Promise<void>;
   onToggleStreakReminders: (value: boolean) => void | Promise<void>;
   onChangeStreakReminderTime: (time: string) => void | Promise<void>;
   onPremiumUpsell?: () => void;

@@ -171,10 +171,6 @@ export function SettingsModalSection({
         onChangeShowHabitStrengthPercentage={(value) =>
           setShowHabitStrengthPercentage(value)
         }
-        onChangeStickyCalendarHeader={(value) =>
-          onSettingsChange({ stickyCalendarHeader: value })
-        }
-        stickyCalendarHeader={settings?.stickyCalendarHeader ?? false}
         onChangeStreakReminderTime={streakReminders.setReminderTime}
         onClose={closeSettings}
         onExportHabitsData={handleExportHabitsData}

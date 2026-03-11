@@ -4,7 +4,6 @@ import {
   ArrowUpDown,
   BookOpen,
   Check,
-  Calendar,
   Circle,
   Download,
   Droplets,
@@ -106,21 +105,7 @@ export function SettingsContent(p: SettingsContentProps) {
                 value={p.showGradientFill}
                 onToggle={(v) => void p.onChangeShowGradientFill(v)}
               />
-              <SettingsRow
-                highContrastMode={hc}
-                icon={
-                  <Calendar
-                    color={settingsIcons.calendarHeader.icon}
-                    size={16}
-                  />
-                }
-                iconBackgroundColor={settingsIcons.calendarHeader.bg}
-                label='Pin calendar header'
-                type='toggle'
-                value={p.stickyCalendarHeader}
-                onToggle={(v) => void p.onChangeStickyCalendarHeader(v)}
-              />
-              <SettingsRow
+<SettingsRow
                 highContrastMode={hc}
                 icon={<Volume2 color={settingsIcons.sound.icon} size={16} />}
                 iconBackgroundColor={settingsIcons.sound.bg}

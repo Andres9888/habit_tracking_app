@@ -25,7 +25,6 @@ export default function HabitCalendarModal({
   tracking,
   toggleHabit,
   onOpenMotivationTab,
-  stickyCalendarHeader = false,
 }: HabitCalendarModalProps) {
   const { colors } = useThemeColors();
   const state = useHabitCalendarModal({
@@ -35,9 +34,7 @@ export default function HabitCalendarModal({
     toggleHabit,
     tracking,
   });
-  const isStickyCalendarHeader = stickyCalendarHeader;
-  const showStickyHeader =
-    isStickyCalendarHeader && state.calendarView === 'month';
+  const showStickyHeader = false;
   const calendarViewState = useHabitCalendarViewLogic({
     habitId: habit?._id ?? tracking[0]?.habitId ?? ('' as Id<'habits'>),
     tracking,
