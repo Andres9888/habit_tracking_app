@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import useHapticFeedback from '../../../../hooks/useHapticFeedback';
 import { useReduceMotion } from '../../../../hooks/useReduceMotion';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import STRINGS from '../../../../constants/strings';
 import { EmojiPickerSheet } from '../../../EmojiPickerV2';
 import { EmojiGrid } from './EmojiGrid';
@@ -27,6 +28,7 @@ function EmojiPickerComponent({
 }: EmojiPickerProps) {
   const { triggerSelection } = useHapticFeedback();
   const reduceMotion = useReduceMotion();
+  const { colors: themeColors } = useThemeColors();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const { suggestedEmojis, debouncedHabitName } = useSuggestedEmojis(
     habitName,
@@ -63,8 +65,8 @@ function EmojiPickerComponent({
         <Text
           accessibilityLabel={`Suggested emojis for ${debouncedHabitName || 'your habit'}`}
           accessibilityRole='text'
-          className='mb-3 text-[13px] font-semibold uppercase text-stone-500'
-          style={{ letterSpacing: 0.5 }}
+          className='mb-3 text-[13px] font-semibold uppercase'
+          style={{ letterSpacing: 0.5, color: themeColors.text.tertiary }}
         >
           {STRINGS.CREATE_HABIT.iconLabel}
         </Text>
@@ -81,13 +83,16 @@ function EmojiPickerComponent({
         accessibilityHint='Opens full emoji picker with hundreds of options'
         accessibilityLabel='Browse more emojis'
         accessibilityRole='button'
-        className='mt-2 flex-row items-center justify-center py-1'
+        className='mt-2 flex-row items-center justify-center'
+        style={{ minHeight: 44 }}
         onPress={handleMorePress}
       >
-        <Text className='text-sm font-medium text-emerald-600'>
-          Browse more emojis
+        <Text
+          className='text-sm font-medium'
+          style={{ color: themeColors.primary[600] }}
+        >
+          Browse more emojis →
         </Text>
-        <Text className='ml-1 text-emerald-600'>→</Text>
       </Pressable>
 
       {isModalVisible && (

@@ -5,6 +5,7 @@
 
 import { Text, View } from 'react-native';
 import { useReduceMotion } from '../../../../hooks/useReduceMotion';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import STRINGS from '../../../../constants/strings';
 import { ColorButton } from './ColorButton';
 import { CustomColorButton } from './CustomColorButton';
@@ -18,6 +19,7 @@ export const ColorPickerContent = ({
   hideLabel = false,
 }: ColorPickerSectionProps) => {
   const reduceMotion = useReduceMotion();
+  const { colors: themeColors } = useThemeColors();
   const row1 = colors.slice(0, 6);
   const row2 = colors.slice(6);
 
@@ -43,8 +45,8 @@ export const ColorPickerContent = ({
       {!hideLabel && (
         <Text
           accessibilityRole='text'
-          className='mb-3 text-[13px] font-semibold uppercase text-stone-500'
-          style={{ letterSpacing: 0.5 }}
+          className='mb-3 text-[13px] font-semibold uppercase'
+          style={{ letterSpacing: 0.5, color: themeColors.text.tertiary }}
         >
           {STRINGS.CREATE_HABIT.colorLabel}
         </Text>

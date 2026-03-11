@@ -22,7 +22,7 @@ export const SaveButton = ({
   onInvalidSave,
   shakeValue,
 }: SaveButtonProps) => {
-  const { isDark } = useThemeColors();
+  const { colors, isDark } = useThemeColors();
 
   return (
     <Animated.View
@@ -41,10 +41,10 @@ export const SaveButton = ({
         disableAnimation={!canSave}
         style={{
           backgroundColor: canSave
-            ? '#059669'
+            ? colors.primary[600]
             : isDark
-              ? '#57534e'
-              : '#a8a29e',
+              ? colors.gray[400]
+              : colors.gray[300],
         }}
         onPress={canSave ? onSave : onInvalidSave}
       >
