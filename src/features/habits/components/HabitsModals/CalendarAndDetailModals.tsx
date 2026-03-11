@@ -24,7 +24,6 @@ export function CalendarAndDetailModals(props: CalendarAndDetailModalsProps) {
     showHabitDetail,
     toggleHabit,
     tracking,
-    stickyCalendarHeader,
   } = props;
 
   const openMotivationTab = () => {
@@ -48,7 +47,6 @@ export function CalendarAndDetailModals(props: CalendarAndDetailModalsProps) {
           toggleHabit={toggleHabit}
           tracking={tracking}
           visible={showHabitCalendar}
-          stickyCalendarHeader={stickyCalendarHeader}
           onClose={closeHabitCalendar}
           onOpenMotivationTab={openMotivationTab}
         />
