@@ -76,7 +76,8 @@ export function SettingsContent(p: SettingsContentProps) {
                 highContrastMode={hc}
                 icon={<Check color={settingsIcons.checkbox.icon} size={16} />}
                 iconBackgroundColor={settingsIcons.checkbox.bg}
-                label='Use checkmark (off = chain link)'
+                label='Completion icon'
+                subtitle='Choose between checkmark and chain link'
                 type='toggle'
                 value={p.habitCompletionIcon === 'checkbox'}
                 onToggle={(v) =>
@@ -100,7 +101,7 @@ export function SettingsContent(p: SettingsContentProps) {
                   <Droplets color={settingsIcons.gradient.icon} size={16} />
                 }
                 iconBackgroundColor={settingsIcons.gradient.bg}
-                label='Gradient fill for habit strength'
+                label='Gradient streak fill'
                 type='toggle'
                 value={p.showGradientFill}
                 onToggle={(v) => void p.onChangeShowGradientFill(v)}
@@ -114,7 +115,7 @@ export function SettingsContent(p: SettingsContentProps) {
                   />
                 }
                 iconBackgroundColor={settingsIcons.calendarHeader.bg}
-                label='Sticky calendar header'
+                label='Pin calendar header'
                 type='toggle'
                 value={p.stickyCalendarHeader}
                 onToggle={(v) => void p.onChangeStickyCalendarHeader(v)}
@@ -124,10 +125,22 @@ export function SettingsContent(p: SettingsContentProps) {
                 icon={<Volume2 color={settingsIcons.sound.icon} size={16} />}
                 iconBackgroundColor={settingsIcons.sound.bg}
                 label='Play sound on habit completion'
-                showBorder={false}
                 type='toggle'
                 value={p.completionSoundEnabled}
                 onToggle={(v) => void p.onChangeCompletionSoundEnabled(v)}
+              />
+              <SettingsRow
+                hapticStyle='selection'
+                highContrastMode={hc}
+                icon={<ArrowUpDown color={settingsIcons.sort.icon} size={16} />}
+                iconBackgroundColor={settingsIcons.sort.bg}
+                label='Sort Order'
+                showBorder={false}
+                type='selection'
+                value={
+                  SORT_LABEL_MAP[p.habitSortMode as HabitSortMode] ?? 'Custom'
+                }
+                onPress={p.onOpenSortPicker}
               />
             </SettingsSection>
           </Animated.View>
@@ -148,18 +161,6 @@ export function SettingsContent(p: SettingsContentProps) {
           {/* Data Section - Habit management */}
           <Animated.View entering={anim(120)}>
             <SettingsSection highContrastMode={hc} title='Data'>
-              <SettingsRow
-                hapticStyle='selection'
-                highContrastMode={hc}
-                icon={<ArrowUpDown color={settingsIcons.sort.icon} size={16} />}
-                iconBackgroundColor={settingsIcons.sort.bg}
-                label='Sort Order'
-                type='selection'
-                value={
-                  SORT_LABEL_MAP[p.habitSortMode as HabitSortMode] ?? 'Custom'
-                }
-                onPress={p.onOpenSortPicker}
-              />
               <SettingsRow
                 hapticStyle='selection'
                 highContrastMode={hc}

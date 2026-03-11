@@ -1,5 +1,5 @@
 import React from 'react';
-import { ExternalLink } from 'lucide-react-native';
+import { FileText, Shield } from 'lucide-react-native';
 import { SettingsSection } from '../SettingsSection';
 import { SettingsRow } from '../SettingsRow';
 import { useThemeColors } from '../../../theme/ThemeContext';
@@ -17,7 +17,7 @@ export function LegalLinks({ highContrast, onPrivacy, onTerms }: Props) {
     <SettingsSection highContrastMode={highContrast} title='Legal'>
       <SettingsRow
         highContrastMode={highContrast}
-        icon={<ExternalLink color={settings.legal.icon} size={16} />}
+        icon={<Shield color={settings.legal.icon} size={16} />}
         iconBackgroundColor={settings.legal.bg}
         label='Privacy Policy'
         type='navigation'
@@ -25,7 +25,7 @@ export function LegalLinks({ highContrast, onPrivacy, onTerms }: Props) {
       />
       <SettingsRow
         highContrastMode={highContrast}
-        icon={<ExternalLink color={settings.legal.icon} size={16} />}
+        icon={<FileText color={settings.legal.icon} size={16} />}
         iconBackgroundColor={settings.legal.bg}
         label='Terms of Service'
         showBorder={false}
