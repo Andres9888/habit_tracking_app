@@ -1,4 +1,5 @@
-import { Animated, View } from 'react-native';
+import { View } from 'react-native';
+import Animated from 'react-native-reanimated';
 import { useSparkleBurstAnimation } from './useSparkleBurstAnimation';
 
 interface SparkleBurstProps {
@@ -18,7 +19,7 @@ export const SparkleBurst = ({
   reduceMotion = false,
   size = 40,
 }: SparkleBurstProps) => {
-  const { opacity, scale } = useSparkleBurstAnimation({
+  const { animatedStyle } = useSparkleBurstAnimation({
     color,
     isActive,
     onComplete,
@@ -35,13 +36,14 @@ export const SparkleBurst = ({
     <Animated.View
       className='absolute items-center justify-center'
       pointerEvents='none'
-      style={{
-        height: size,
-        opacity,
-        transform: [{ scale }],
-        width: size,
-        zIndex: 1000,
-      }}
+      style={[
+        {
+          height: size,
+          width: size,
+          zIndex: 1000,
+        },
+        animatedStyle,
+      ]}
     >
       {Array.from({ length: DOT_COUNT }).map((_, index) => {
         const angle = (index / DOT_COUNT) * Math.PI * 2;
@@ -49,7 +51,7 @@ export const SparkleBurst = ({
         const translateY = Math.round(Math.sin(angle) * (size / 2.2));
 
         return (
-          <Animated.View
+          <View
             key={index}
             className='absolute rounded-full'
             style={{
