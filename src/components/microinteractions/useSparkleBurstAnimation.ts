@@ -1,5 +1,11 @@
 import { useCallback, useEffect, useRef } from 'react';
-import { Animated, Easing } from 'react-native';
+import {
+  Easing,
+  runOnJS,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated';
 
 interface UseSparkleBurstAnimationProps {
   color: string;
@@ -14,10 +20,9 @@ export function useSparkleBurstAnimation({
   onComplete,
   reduceMotion,
 }: UseSparkleBurstAnimationProps) {
-  const opacity = useRef(new Animated.Value(0)).current;
-  const scale = useRef(new Animated.Value(0.6)).current;
-  
-  // Use ref for callback to prevent it from triggering useEffect re-runs
+  const opacity = useSharedValue(0);
+  const scale = useSharedValue(0.6);
+
   const onCompleteRef = useRef(onComplete);
   onCompleteRef.current = onComplete;
 
@@ -33,26 +38,29 @@ export function useSparkleBurstAnimation({
       return;
     }
 
-    opacity.setValue(0.9);
-    scale.setValue(0.6);
+    opacity.value = 0.9;
+    scale.value = 0.6;
 
-    Animated.parallel([
-      Animated.timing(opacity, {
-        duration: 400,
-        easing: Easing.out(Easing.ease),
-        toValue: 0,
-        useNativeDriver: true,
-      }),
-      Animated.timing(scale, {
-        duration: 400,
-        easing: Easing.out(Easing.cubic),
-        toValue: 1.6,
-        useNativeDriver: true,
-      }),
-    ]).start(() => {
-      triggerComplete();
+    opacity.value = withTiming(
+      0,
+      { duration: 400, easing: Easing.out(Easing.ease) },
+      (finished) => {
+        'worklet';
+        if (finished) {
+          runOnJS(triggerComplete)();
+        }
+      }
+    );
+    scale.value = withTiming(1.6, {
+      duration: 400,
+      easing: Easing.out(Easing.cubic),
     });
   }, [isActive, reduceMotion, opacity, scale, triggerComplete]);
 
-  return { opacity, scale };
+  const animatedStyle = useAnimatedStyle(() => ({
+    opacity: opacity.value,
+    transform: [{ scale: scale.value }],
+  }));
+
+  return { animatedStyle };
 }

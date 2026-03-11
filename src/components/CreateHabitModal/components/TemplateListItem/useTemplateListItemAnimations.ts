@@ -8,9 +8,9 @@ import {
   Easing,
   cancelAnimation,
 } from 'react-native-reanimated';
-import { springs } from '@/theme/animations';
+import { durations, springs } from '@/theme/animations';
 
-const ENTRANCE_STAGGER_DELAY = 100;
+const ENTRANCE_STAGGER_DELAY = durations.stagger;
 const ENTRANCE_DURATION = 350;
 const ENTRANCE_TRANSLATE_Y = 20;
 

@@ -42,7 +42,7 @@ export function useDraggableHabitAnimations({
   const highlightGlow = useSharedValue(0);
   const [showNewRecord, setShowNewRecord] = useState(false);
 
-  useEntranceAnimation(fade, translateY);
+  useEntranceAnimation(fade, translateY, reduceMotionPreference);
   useHighlightAnimation(
     isJustCreated,
     reduceMotionPreference,
