@@ -56,8 +56,7 @@ export const s = StyleSheet.create({
     marginTop: 'auto' as unknown as number,
     paddingTop: 12,
   },
-  popularityWrap: { alignItems: 'center', flexDirection: 'row', gap: 3 },
-  popularityText: { color: colors.text.tertiary, fontSize: 11 },
+  popularityText: { color: colors.primary[600], fontSize: 11, fontWeight: '500' },
 });
 
 export const addButtonStyles = StyleSheet.create({

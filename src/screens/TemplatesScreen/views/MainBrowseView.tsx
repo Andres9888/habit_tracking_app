@@ -38,7 +38,7 @@ export function MainBrowseView(p: MainBrowseViewProps) {
       </Animated.View>
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 100 }}
+        contentContainerStyle={{ paddingBottom: 100, paddingTop: 12 }}
       >
         <Animated.View entering={stagger(0)}>
           <FeaturedCollection onPress={p.onFeaturedPress} />

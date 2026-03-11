@@ -13,7 +13,7 @@ export interface MainBrowseViewProps {
   importedTemplateIds: Set<string>;
   importingTemplateId: string | null;
   modals: ReactNode;
-  onFeaturedPress: () => void;
+  onFeaturedPress: (categoryId: string) => void;
   onImport: (template: Doc<'templates'>) => void;
   onPreview: (template: Doc<'templates'>) => void;
   onSearchChange: (text: string) => void;

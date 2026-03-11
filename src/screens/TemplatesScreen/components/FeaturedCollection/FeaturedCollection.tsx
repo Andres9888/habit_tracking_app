@@ -4,25 +4,28 @@
 
 import { Pressable, Text, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { HERO_GRADIENT_COLORS, s } from './FeaturedCollection.styles';
+import { s } from './FeaturedCollection.styles';
 import { HeroChips } from './HeroChips';
 import { HeroFooter } from './HeroFooter';
+import { getTimeAwareFeatured } from './featuredCollections';
 
 interface FeaturedCollectionProps {
-  onPress: () => void;
+  onPress: (categoryId: string) => void;
 }
 
 export function FeaturedCollection({ onPress }: FeaturedCollectionProps) {
+  const featured = getTimeAwareFeatured();
+
   return (
     <Pressable
       testID='templates-featured-collection'
-      accessibilityLabel='Featured collection: Morning Mastery'
+      accessibilityLabel={`Featured collection: ${featured.title}`}
       accessibilityRole='button'
       style={s.pressable}
-      onPress={onPress}
+      onPress={() => onPress(featured.categoryId)}
     >
       <LinearGradient
-        colors={[...HERO_GRADIENT_COLORS]}
+        colors={[...featured.gradientColors]}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
         style={s.gradient}
@@ -30,13 +33,11 @@ export function FeaturedCollection({ onPress }: FeaturedCollectionProps) {
         <View style={s.circleOne} />
         <View style={s.circleTwo} />
         <View style={s.badge}>
-          <Text style={s.badgeText}>⭐ FEATURED</Text>
+          <Text style={s.badgeText}>{featured.badge}</Text>
         </View>
-        <Text style={s.title}>Morning Mastery</Text>
-        <Text style={s.description}>
-          Start your day with science-backed habits for energy and focus
-        </Text>
-        <HeroChips />
+        <Text style={s.title}>{featured.title}</Text>
+        <Text style={s.description}>{featured.description}</Text>
+        <HeroChips chips={featured.chips} />
         <HeroFooter />
       </LinearGradient>
     </Pressable>

@@ -5,12 +5,14 @@
 import { Text, View } from 'react-native';
 import { s } from './FeaturedCollection.styles';
 
-const CHIPS = ['🌅 Wake Early', '💧 Hydrate', '📝 Journal', '🧘 Meditate'];
+interface HeroChipsProps {
+  chips: string[];
+}
 
-export function HeroChips() {
+export function HeroChips({ chips }: HeroChipsProps) {
   return (
     <View style={s.chips}>
-      {CHIPS.map((chip) => (
+      {chips.map((chip) => (
         <View key={chip} style={s.chip}>
           <Text style={s.chipText}>{chip}</Text>
         </View>
