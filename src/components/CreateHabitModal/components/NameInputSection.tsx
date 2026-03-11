@@ -3,6 +3,8 @@
  */
 
 import { Keyboard, Text, TextInput, View } from 'react-native';
+import { colors as themeTokens } from '@/theme/colors';
+import { spacing } from '@/theme/spacing';
 
 interface NameInputSectionProps {
   habitName: string;
@@ -26,7 +28,7 @@ export function NameInputSection({
   isDark,
 }: NameInputSectionProps) {
   return (
-    <View className='items-center' style={{ marginBottom: 40, marginTop: 28 }}>
+    <View className='items-center' style={{ marginBottom: 40, marginTop: spacing.xl }}>
       <Text
         className='mb-6 text-center text-[28px] font-bold leading-tight'
         style={{ color: themeColors.text.primary }}
@@ -40,13 +42,13 @@ export function NameInputSection({
         className='w-full rounded-2xl border-2 px-5 py-4 text-center text-[22px] font-medium'
         maxLength={50}
         placeholder='e.g., Read 20 minutes daily'
-        placeholderTextColor={isDark ? themeColors.text.tertiary : '#A8A29E'}
+        placeholderTextColor={themeColors.text.tertiary}
         returnKeyType='done'
         style={{
           lineHeight: 28,
           color: themeColors.text.primary,
           backgroundColor: isDark ? themeColors.card : '#FFFFFF',
-          borderColor: showNameError ? '#f87171' : themeColors.border,
+          borderColor: showNameError ? themeTokens.error : themeColors.border,
         }}
         value={habitName}
         onChangeText={onHabitNameChange}
@@ -58,7 +60,7 @@ export function NameInputSection({
           accessibilityLiveRegion='polite'
           accessibilityRole='alert'
           className='mt-3 text-sm font-medium'
-          style={{ color: '#ef4444' }}
+          style={{ color: themeTokens.error }}
         >
           Give your habit a name (at least 2 characters)
         </Text>

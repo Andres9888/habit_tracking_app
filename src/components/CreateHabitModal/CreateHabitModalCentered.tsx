@@ -77,6 +77,14 @@ export default function CreateHabitModalCentered(props: CreateHabitModalProps) {
               behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
               className='flex-1'
             >
+              <View style={styles.dragHandleRow}>
+                <View
+                  style={[
+                    styles.dragHandle,
+                    { backgroundColor: colors.gray[300] },
+                  ]}
+                />
+              </View>
               <ModalHeader
                 habitName={form.habitName}
                 isEditMode={isEditMode}
@@ -99,5 +107,7 @@ export default function CreateHabitModalCentered(props: CreateHabitModalProps) {
 }
 
 const styles = StyleSheet.create({
+  dragHandle: { borderRadius: 4, height: 5, width: 36 },
+  dragHandleRow: { alignItems: 'center', paddingBottom: 4, paddingTop: 8 },
   sheet: StyleSheet.absoluteFillObject,
 });

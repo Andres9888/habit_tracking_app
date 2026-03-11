@@ -43,10 +43,10 @@ const CreateHabitFormCenteredComponent = ({
       {/* Optional fields section */}
       <View className='flex-1'>
         <Text
-          className='mb-8 text-center text-xs font-semibold'
-          style={{ letterSpacing: 1, color: themeColors.text.tertiary }}
+          className='mb-3 text-center text-[13px] font-semibold uppercase'
+          style={{ letterSpacing: 0.5, color: themeColors.text.tertiary }}
         >
-          CUSTOMIZE
+          Choose an icon
         </Text>
 
         <EmojiPicker
@@ -55,6 +55,13 @@ const CreateHabitFormCenteredComponent = ({
           selectedEmoji={selectedEmoji}
           onSelect={onEmojiSelect}
         />
+
+        <Text
+          className='mb-3 text-center text-[13px] font-semibold uppercase'
+          style={{ letterSpacing: 0.5, color: themeColors.text.tertiary }}
+        >
+          Pick a color
+        </Text>
 
         <ColorPickerSection
           hideLabel

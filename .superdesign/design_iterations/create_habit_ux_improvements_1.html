@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Habit — UX Improvements Plan</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    * { font-family: 'Inter', sans-serif !important; }
+    body { background: #0f172a; margin: 0; padding: 40px 0; }
+
+    .phone-frame {
+      width: 390px;
+      height: 844px;
+      background: #F5F1ED;
+      border-radius: 50px;
+      overflow: hidden;
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5), inset 0 0 0 12px #1a1a2e;
+      position: relative;
+    }
+
+    .dynamic-island {
+      width: 126px;
+      height: 36px;
+      background: #000;
+      border-radius: 20px;
+      position: absolute;
+      top: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 50;
+    }
+
+    .drag-handle {
+      width: 36px;
+      height: 5px;
+      background: #C4BFB7;
+      border-radius: 4px;
+    }
+
+    .color-dot {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .color-dot:hover { transform: scale(1.15); }
+    .color-dot.selected {
+      box-shadow: 0 0 0 3px #F5F1ED, 0 0 0 5px #10B981;
+    }
+
+    .emoji-btn {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      background: transparent;
+      border: 2px solid transparent;
+    }
+    .emoji-btn:hover { background: rgba(0,0,0,0.04); }
+    .emoji-btn.selected {
+      background: #D1FAE5;
+      border-color: #10B981;
+    }
+
+    .improvement-badge {
+      position: absolute;
+      background: #059669;
+      color: white;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 4px;
+      white-space: nowrap;
+      z-index: 60;
+      letter-spacing: 0.5px;
+      animation: pulse-badge 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse-badge {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+
+    .section-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: #6E6660;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    /* Success animation overlay */
+    .success-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50px;
+      z-index: 100;
+    }
+
+    .success-card {
+      background: white;
+      border-radius: 24px;
+      padding: 32px;
+      text-align: center;
+      width: 300px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      animation: pop-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    @keyframes pop-in {
+      0% { transform: scale(0.8); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .confetti-piece {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      border-radius: 2px;
+      animation: confetti-fall 2s ease-out forwards;
+    }
+
+    @keyframes confetti-fall {
+      0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(600px) rotate(720deg); opacity: 0; }
+    }
+
+    .tab { cursor: pointer; padding: 8px 20px; border-radius: 8px; font-size: 14px; font-weight: 600; transition: all 0.2s; }
+    .tab.active { background: #059669; color: white; }
+    .tab:not(.active) { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.6); }
+    .tab:not(.active):hover { background: rgba(255,255,255,0.15); }
+  </style>
+</head>
+<body>
+  <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+    <!-- Header -->
+    <div style="text-align: center; margin-bottom: 32px;">
+      <h1 style="color: white; font-size: 28px; font-weight: 700; margin-bottom: 8px;">Create Habit — Planned Improvements</h1>
+      <p style="color: rgba(255,255,255,0.5); font-size: 14px;">8 files, 3 categories: UI Consistency + UX Flow + Form Content</p>
+    </div>
+
+    <!-- Tab switcher -->
+    <div style="display: flex; justify-content: center; gap: 8px; margin-bottom: 32px;">
+      <div class="tab active" onclick="showView('improved')">Improved</div>
+      <div class="tab" onclick="showView('current')">Current (Before)</div>
+      <div class="tab" onclick="showView('success')">Success Animation</div>
+      <div class="tab" onclick="showView('error')">Error State</div>
+    </div>
+
+    <!-- Views container -->
+    <div style="display: flex; justify-content: center; gap: 40px;">
+
+      <!-- IMPROVED VIEW -->
+      <div id="view-improved" class="view-panel">
+        <div style="display: flex; gap: 40px; justify-content: center;">
+          <!-- Phone mockup -->
+          <div style="position: relative;">
+            <div class="phone-frame">
+              <div class="dynamic-island"></div>
+
+              <!-- Modal sheet (covers most of screen) -->
+              <div style="position: absolute; bottom: 0; left: 0; right: 0; top: 60px; background: #F5F1ED; border-radius: 24px 24px 0 0; box-shadow: 0 -8px 24px rgba(0,0,0,0.1); display: flex; flex-direction: column;">
+
+                <!-- B1: Drag handle -->
+                <div style="display: flex; justify-content: center; padding-top: 8px; padding-bottom: 4px; position: relative;">
+                  <div class="drag-handle"></div>
+                  <div class="improvement-badge" style="top: -6px; right: 20px;">B1 DRAG HANDLE</div>
+                </div>
+
+                <!-- B2: Header with title -->
+                <div style="display: flex; align-items: center; justify-content: space-between; padding: 2px 16px 8px; position: relative;">
+                  <div style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
+                    <i data-lucide="x" style="width: 24px; height: 24px; color: #6B6560;"></i>
+                  </div>
+                  <div style="position: absolute; left: 50%; transform: translateX(-50%);">
+                    <span style="font-size: 17px; font-weight: 600; color: #2D2A26;">New Habit</span>
+                  </div>
+                  <div style="background: #059669; border-radius: 9999px; padding: 8px 24px; position: relative;">
+                    <span style="color: white; font-size: 15px; font-weight: 600;">Create</span>
+                  </div>
+                  <div class="improvement-badge" style="top: -8px; left: 50%; transform: translateX(-50%);">B2 MODAL TITLE</div>
+                </div>
+
+                <!-- Scrollable form content -->
+                <div style="flex: 1; overflow-y: auto; padding: 0 24px;">
+                  <!-- Name section -->
+                  <div style="text-align: center; margin-top: 24px; margin-bottom: 32px;">
+                    <h2 style="font-size: 28px; font-weight: 700; color: #2D2A26; margin-bottom: 24px;">Name your new habit</h2>
+                    <div style="position: relative;">
+                      <input type="text" value="Meditate 10 minutes" readonly
+                        style="width: 100%; box-sizing: border-box; border: 2px solid #DDD8D2; border-radius: 16px; padding: 16px 20px; text-align: center; font-size: 22px; font-weight: 500; color: #2D2A26; background: white; outline: none;"
+                      />
+                    </div>
+                    <div style="display: flex; justify-content: space-between; padding: 0 4px; margin-top: 12px;">
+                      <span style="font-size: 12px; color: #6E6660;">Be specific — include when, how long, or where</span>
+                      <span style="font-size: 12px; color: #6E6660;">19/50</span>
+                    </div>
+                  </div>
+
+                  <!-- C1: Section label for emoji -->
+                  <div style="position: relative;">
+                    <div class="section-label">Choose an icon</div>
+                    <div class="improvement-badge" style="top: -6px; right: 0;">C1 SECTION LABELS</div>
+                  </div>
+
+                  <!-- Emoji picker (5-4 triangle) -->
+                  <div style="display: flex; flex-direction: column; align-items: center; gap: 4px; margin-bottom: 8px;">
+                    <div style="display: flex; gap: 4px;">
+                      <div class="emoji-btn">🏃</div>
+                      <div class="emoji-btn">📖</div>
+                      <div class="emoji-btn selected">🧘</div>
+                      <div class="emoji-btn">💪</div>
+                      <div class="emoji-btn">🎯</div>
+                    </div>
+                    <div style="display: flex; gap: 4px;">
+                      <div class="emoji-btn">🌅</div>
+                      <div class="emoji-btn">💧</div>
+                      <div class="emoji-btn">🍎</div>
+                      <div class="emoji-btn">✍️</div>
+                    </div>
+                  </div>
+
+                  <!-- A3: Browse more link with theme token color -->
+                  <div style="text-align: center; padding: 8px 0; margin-bottom: 16px; position: relative;">
+                    <span style="font-size: 14px; font-weight: 500; color: #059669;">Browse more emojis →</span>
+                    <div class="improvement-badge" style="top: -8px; right: 20px;">A3 THEME TOKEN</div>
+                  </div>
+
+                  <!-- C1: Section label for color -->
+                  <div class="section-label">Pick a color</div>
+
+                  <!-- Color picker -->
+                  <div style="display: flex; flex-direction: column; align-items: center; gap: 8px; margin-bottom: 24px; position: relative;">
+                    <div style="display: flex; gap: 4px;">
+                      <div class="color-dot" style="background: #EF4444;"></div>
+                      <div class="color-dot" style="background: #F97316;"></div>
+                      <div class="color-dot" style="background: #FBBF24;"></div>
+                      <div class="color-dot selected" style="background: #10B981;"></div>
+                      <div class="color-dot" style="background: #14B8A6;"></div>
+                      <div class="color-dot" style="background: #06B6D4;"></div>
+                    </div>
+                    <div style="display: flex; gap: 4px;">
+                      <div class="color-dot" style="background: #3B82F6;"></div>
+                      <div class="color-dot" style="background: #8B5CF6;"></div>
+                      <div class="color-dot" style="background: #EC4899;"></div>
+                      <div class="color-dot" style="background: #78716C;"></div>
+                    </div>
+                    <div class="improvement-badge" style="top: -8px; right: 0;">A4 THEME TOKEN</div>
+                  </div>
+
+                  <!-- Reminder toggle -->
+                  <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px 0; margin-bottom: 16px;">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                      <div style="width: 32px; height: 32px; background: #D1FAE5; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                        <i data-lucide="bell" style="width: 18px; height: 18px; color: #059669;"></i>
+                      </div>
+                      <span style="font-size: 16px; font-weight: 500; color: #2D2A26;">Daily Reminder</span>
+                    </div>
+                    <div style="width: 51px; height: 31px; background: #10B981; border-radius: 16px; position: relative;">
+                      <div style="width: 27px; height: 27px; background: white; border-radius: 50%; position: absolute; right: 2px; top: 2px; box-shadow: 0 1px 3px rgba(0,0,0,0.15);"></div>
+                    </div>
+                  </div>
+
+                  <!-- Preset buttons -->
+                  <div style="display: flex; gap: 12px; margin-bottom: 16px;">
+                    <div style="flex: 1; background: #ECFDF5; border: 2px solid #10B981; border-radius: 12px; padding: 12px; text-align: center;">
+                      <div style="font-size: 20px; margin-bottom: 4px;">🌅</div>
+                      <div style="font-size: 13px; font-weight: 600; color: #2D2A26;">Morning</div>
+                      <div style="font-size: 11px; color: #6E6660;">7:00 AM</div>
+                    </div>
+                    <div style="flex: 1; background: white; border: 2px solid #DDD8D2; border-radius: 12px; padding: 12px; text-align: center;">
+                      <div style="font-size: 20px; margin-bottom: 4px;">☀️</div>
+                      <div style="font-size: 13px; font-weight: 600; color: #2D2A26;">Midday</div>
+                      <div style="font-size: 11px; color: #6E6660;">12:00 PM</div>
+                    </div>
+                    <div style="flex: 1; background: white; border: 2px solid #DDD8D2; border-radius: 12px; padding: 12px; text-align: center;">
+                      <div style="font-size: 20px; margin-bottom: 4px;">🌙</div>
+                      <div style="font-size: 13px; font-weight: 600; color: #2D2A26;">Evening</div>
+                      <div style="font-size: 11px; color: #6E6660;">8:00 PM</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Legend -->
+            <div style="margin-top: 20px; display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;">
+              <div style="background: rgba(5,150,105,0.15); border: 1px solid rgba(5,150,105,0.3); border-radius: 6px; padding: 4px 10px; font-size: 11px; color: #34D399;">A = Token Fix</div>
+              <div style="background: rgba(5,150,105,0.15); border: 1px solid rgba(5,150,105,0.3); border-radius: 6px; padding: 4px 10px; font-size: 11px; color: #34D399;">B = UX Flow</div>
+              <div style="background: rgba(5,150,105,0.15); border: 1px solid rgba(5,150,105,0.3); border-radius: 6px; padding: 4px 10px; font-size: 11px; color: #34D399;">C = Content</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CURRENT VIEW (Before) -->
+      <div id="view-current" class="view-panel" style="display: none;">
+        <div style="display: flex; gap: 40px; justify-content: center;">
+          <div>
+            <div class="phone-frame">
+              <div class="dynamic-island"></div>
+              <div style="position: absolute; bottom: 0; left: 0; right: 0; top: 60px; background: #F5F1ED; border-radius: 24px 24px 0 0; box-shadow: 0 -8px 24px rgba(0,0,0,0.1); display: flex; flex-direction: column;">
+
+                <!-- No drag handle -->
+
+                <!-- Header WITHOUT title -->
+                <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px 16px 8px;">
+                  <div style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
+                    <i data-lucide="x" style="width: 24px; height: 24px; color: #6B6560;"></i>
+                  </div>
+                  <div style="flex: 1;"></div>
+                  <div style="background: #059669; border-radius: 9999px; padding: 8px 24px;">
+                    <span style="color: white; font-size: 15px; font-weight: 600;">Create</span>
+                  </div>
+                </div>
+
+                <div style="flex: 1; overflow-y: auto; padding: 0 24px;">
+                  <div style="text-align: center; margin-top: 28px; margin-bottom: 40px;">
+                    <h2 style="font-size: 28px; font-weight: 700; color: #2D2A26; margin-bottom: 24px;">Name your new habit</h2>
+                    <input type="text" value="Meditate 10 minutes" readonly
+                      style="width: 100%; box-sizing: border-box; border: 2px solid #DDD8D2; border-radius: 16px; padding: 16px 20px; text-align: center; font-size: 22px; font-weight: 500; color: #2D2A26; background: white; outline: none;"
+                    />
+                    <div style="display: flex; justify-content: space-between; padding: 0 4px; margin-top: 12px;">
+                      <span style="font-size: 12px; color: #6E6660;">Be specific — include when, how long, or where</span>
+                      <span style="font-size: 12px; color: #6E6660;">19/50</span>
+                    </div>
+                  </div>
+
+                  <!-- Current: vague "CUSTOMIZE" label -->
+                  <div style="text-align: center; margin-bottom: 32px;">
+                    <span style="font-size: 12px; font-weight: 600; color: #6E6660; letter-spacing: 1px;">CUSTOMIZE</span>
+                  </div>
+
+                  <!-- No section labels for emoji -->
+                  <div style="display: flex; flex-direction: column; align-items: center; gap: 4px; margin-bottom: 8px;">
+                    <div style="display: flex; gap: 4px;">
+                      <div class="emoji-btn">🏃</div>
+                      <div class="emoji-btn">📖</div>
+                      <div class="emoji-btn selected">🧘</div>
+                      <div class="emoji-btn">💪</div>
+                      <div class="emoji-btn">🎯</div>
+                    </div>
+                    <div style="display: flex; gap: 4px;">
+                      <div class="emoji-btn">🌅</div>
+                      <div class="emoji-btn">💧</div>
+                      <div class="emoji-btn">🍎</div>
+                      <div class="emoji-btn">✍️</div>
+                    </div>
+                  </div>
+
+                  <div style="text-align: center; padding: 8px 0; margin-bottom: 16px;">
+                    <span style="font-size: 14px; font-weight: 500; color: #059669;">Browse more emojis</span>
+                    <span style="margin-left: 4px; color: #059669;">→</span>
+                  </div>
+
+                  <!-- No section label for color -->
+                  <div style="display: flex; flex-direction: column; align-items: center; gap: 8px; margin-bottom: 24px;">
+                    <div style="display: flex; gap: 4px;">
+                      <div class="color-dot" style="background: #EF4444;"></div>
+                      <div class="color-dot" style="background: #F97316;"></div>
+                      <div class="color-dot" style="background: #FBBF24;"></div>
+                      <div class="color-dot selected" style="background: #10B981;"></div>
+                      <div class="color-dot" style="background: #14B8A6;"></div>
+                      <div class="color-dot" style="background: #06B6D4;"></div>
+                    </div>
+                    <div style="display: flex; gap: 4px;">
+                      <div class="color-dot" style="background: #3B82F6;"></div>
+                      <div class="color-dot" style="background: #8B5CF6;"></div>
+                      <div class="color-dot" style="background: #EC4899;"></div>
+                      <div class="color-dot" style="background: #78716C;"></div>
+                    </div>
+                  </div>
+
+                  <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px 0; margin-bottom: 16px;">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                      <div style="width: 32px; height: 32px; background: #D1FAE5; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                        <i data-lucide="bell" style="width: 18px; height: 18px; color: #059669;"></i>
+                      </div>
+                      <span style="font-size: 16px; font-weight: 500; color: #2D2A26;">Daily Reminder</span>
+                    </div>
+                    <div style="width: 51px; height: 31px; background: #10B981; border-radius: 16px; position: relative;">
+                      <div style="width: 27px; height: 27px; background: white; border-radius: 50%; position: absolute; right: 2px; top: 2px; box-shadow: 0 1px 3px rgba(0,0,0,0.15);"></div>
+                    </div>
+                  </div>
+
+                  <div style="display: flex; gap: 12px; margin-bottom: 16px;">
+                    <div style="flex: 1; background: #ECFDF5; border: 2px solid #10B981; border-radius: 12px; padding: 12px; text-align: center;">
+                      <div style="font-size: 20px; margin-bottom: 4px;">🌅</div>
+                      <div style="font-size: 13px; font-weight: 600; color: #2D2A26;">Morning</div>
+                      <div style="font-size: 11px; color: #6E6660;">7:00 AM</div>
+                    </div>
+                    <div style="flex: 1; background: white; border: 2px solid #DDD8D2; border-radius: 12px; padding: 12px; text-align: center;">
+                      <div style="font-size: 20px; margin-bottom: 4px;">☀️</div>
+                      <div style="font-size: 13px; font-weight: 600; color: #2D2A26;">Midday</div>
+                      <div style="font-size: 11px; color: #6E6660;">12:00 PM</div>
+                    </div>
+                    <div style="flex: 1; background: white; border: 2px solid #DDD8D2; border-radius: 12px; padding: 12px; text-align: center;">
+                      <div style="font-size: 20px; margin-bottom: 4px;">🌙</div>
+                      <div style="font-size: 13px; font-weight: 600; color: #2D2A26;">Evening</div>
+                      <div style="font-size: 11px; color: #6E6660;">8:00 PM</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Issues callouts -->
+            <div style="margin-top: 20px; max-width: 390px;">
+              <div style="background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.2); border-radius: 8px; padding: 12px; margin-bottom: 8px;">
+                <div style="font-size: 12px; font-weight: 600; color: #f87171; margin-bottom: 4px;">Missing</div>
+                <ul style="color: rgba(255,255,255,0.6); font-size: 12px; margin: 0; padding-left: 16px; line-height: 1.6;">
+                  <li>No drag handle (swipe affordance)</li>
+                  <li>No modal title</li>
+                  <li>No success animation after create</li>
+                  <li>Vague "CUSTOMIZE" label</li>
+                </ul>
+              </div>
+              <div style="background: rgba(251,191,36,0.1); border: 1px solid rgba(251,191,36,0.2); border-radius: 8px; padding: 12px;">
+                <div style="font-size: 12px; font-weight: 600; color: #FBBF24; margin-bottom: 4px;">Hardcoded Colors (not theme-aware)</div>
+                <ul style="color: rgba(255,255,255,0.6); font-size: 12px; margin: 0; padding-left: 16px; line-height: 1.6;">
+                  <li>SaveButton: #059669, #57534e, #a8a29e</li>
+                  <li>NameInput: #A8A29E, #f87171, #ef4444</li>
+                  <li>EmojiPicker: text-emerald-600, text-stone-500</li>
+                  <li>ColorPicker: text-stone-500</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SUCCESS ANIMATION VIEW -->
+      <div id="view-success" class="view-panel" style="display: none;">
+        <div style="display: flex; gap: 40px; justify-content: center;">
+          <div>
+            <div class="phone-frame" style="position: relative;">
+              <div class="dynamic-island"></div>
+
+              <!-- Background form (dimmed) -->
+              <div style="position: absolute; bottom: 0; left: 0; right: 0; top: 60px; background: #F5F1ED; border-radius: 24px 24px 0 0; opacity: 0.3;">
+              </div>
+
+              <!-- Success overlay -->
+              <div class="success-overlay">
+                <!-- Confetti particles -->
+                <div class="confetti-piece" style="left: 15%; top: 20%; background: #10B981; animation-delay: 0s;"></div>
+                <div class="confetti-piece" style="left: 25%; top: 15%; background: #FBBF24; animation-delay: 0.1s; width: 6px; height: 10px;"></div>
+                <div class="confetti-piece" style="left: 40%; top: 18%; background: #EF4444; animation-delay: 0.2s;"></div>
+                <div class="confetti-piece" style="left: 55%; top: 12%; background: #3B82F6; animation-delay: 0.15s; width: 10px; height: 6px;"></div>
+                <div class="confetti-piece" style="left: 70%; top: 20%; background: #8B5CF6; animation-delay: 0.25s;"></div>
+                <div class="confetti-piece" style="left: 80%; top: 16%; background: #EC4899; animation-delay: 0.05s;"></div>
+                <div class="confetti-piece" style="left: 35%; top: 22%; background: #F97316; animation-delay: 0.3s; width: 6px; height: 10px;"></div>
+                <div class="confetti-piece" style="left: 60%; top: 25%; background: #06B6D4; animation-delay: 0.18s;"></div>
+                <div class="confetti-piece" style="left: 10%; top: 28%; background: #10B981; animation-delay: 0.35s; width: 10px; height: 6px;"></div>
+                <div class="confetti-piece" style="left: 85%; top: 22%; background: #FBBF24; animation-delay: 0.12s;"></div>
+                <div class="confetti-piece" style="left: 48%; top: 10%; background: #EF4444; animation-delay: 0.28s;"></div>
+                <div class="confetti-piece" style="left: 20%; top: 30%; background: #8B5CF6; animation-delay: 0.08s; width: 6px; height: 10px;"></div>
+
+                <!-- Success card -->
+                <div class="success-card">
+                  <div style="width: 72px; height: 72px; background: #D1FAE5; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; border: 3px solid #10B981;">
+                    <span style="font-size: 36px;">🧘</span>
+                  </div>
+                  <h3 style="font-size: 22px; font-weight: 700; color: #2D2A26; margin-bottom: 8px;">Habit Created!</h3>
+                  <p style="font-size: 16px; color: #6B6560; margin-bottom: 4px;">Meditate 10 minutes</p>
+                  <p style="font-size: 13px; color: #6E6660; margin-bottom: 24px;">Your journey starts now</p>
+                  <div style="background: #059669; border-radius: 12px; padding: 14px; cursor: pointer;">
+                    <span style="color: white; font-size: 16px; font-weight: 600;">Let's Go!</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div style="margin-top: 20px; max-width: 390px; text-align: center;">
+              <div style="background: rgba(5,150,105,0.15); border: 1px solid rgba(5,150,105,0.3); border-radius: 8px; padding: 12px;">
+                <div style="font-size: 12px; font-weight: 600; color: #34D399; margin-bottom: 4px;">B3: SuccessAnimation (already built, just needs wiring)</div>
+                <p style="color: rgba(255,255,255,0.5); font-size: 12px; margin: 0; line-height: 1.5;">
+                  Component exists at <code style="background: rgba(255,255,255,0.1); padding: 2px 6px; border-radius: 4px; font-size: 11px;">SuccessAnimation/</code> with confetti, success card, haptic feedback. Currently never rendered. Highest-impact change.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ERROR STATE VIEW -->
+      <div id="view-error" class="view-panel" style="display: none;">
+        <div style="display: flex; gap: 60px; justify-content: center;">
+          <!-- Current error -->
+          <div>
+            <div style="color: rgba(255,255,255,0.4); font-size: 12px; font-weight: 600; text-align: center; margin-bottom: 12px; letter-spacing: 1px;">CURRENT (Tailwind red)</div>
+            <div style="background: #F5F1ED; border-radius: 16px; padding: 24px; width: 340px;">
+              <input type="text" value="" placeholder="e.g., Read 20 minutes daily" readonly
+                style="width: 100%; box-sizing: border-box; border: 2px solid #f87171; border-radius: 16px; padding: 16px 20px; text-align: center; font-size: 22px; font-weight: 500; color: #2D2A26; background: white; outline: none;"
+              />
+              <p style="text-align: center; margin-top: 12px; font-size: 14px; font-weight: 500; color: #ef4444;">
+                Give your habit a name (at least 2 characters)
+              </p>
+              <div style="margin-top: 16px; display: flex; gap: 8px; align-items: center; justify-content: center;">
+                <div style="width: 12px; height: 12px; border-radius: 50%; background: #f87171;"></div>
+                <span style="font-size: 11px; color: rgba(255,255,255,0.5);">Border: #f87171</span>
+                <div style="width: 12px; height: 12px; border-radius: 50%; background: #ef4444; margin-left: 8px;"></div>
+                <span style="font-size: 11px; color: rgba(255,255,255,0.5);">Text: #ef4444</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Improved error -->
+          <div>
+            <div style="color: #34D399; font-size: 12px; font-weight: 600; text-align: center; margin-bottom: 12px; letter-spacing: 1px;">IMPROVED (Design token)</div>
+            <div style="background: #F5F1ED; border-radius: 16px; padding: 24px; width: 340px;">
+              <input type="text" value="" placeholder="e.g., Read 20 minutes daily" readonly
+                style="width: 100%; box-sizing: border-box; border: 2px solid #B53030; border-radius: 16px; padding: 16px 20px; text-align: center; font-size: 22px; font-weight: 500; color: #2D2A26; background: white; outline: none;"
+              />
+              <p style="text-align: center; margin-top: 12px; font-size: 14px; font-weight: 500; color: #B53030;">
+                Give your habit a name (at least 2 characters)
+              </p>
+              <div style="margin-top: 16px; display: flex; gap: 8px; align-items: center; justify-content: center;">
+                <div style="width: 12px; height: 12px; border-radius: 50%; background: #B53030;"></div>
+                <span style="font-size: 11px; color: rgba(255,255,255,0.5);">colors.error: #B53030</span>
+              </div>
+              <div style="margin-top: 8px; text-align: center;">
+                <span style="font-size: 11px; color: #34D399;">WCAG AA 5.45:1 contrast on #F5F1ED</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top: 24px; text-align: center;">
+          <div style="background: rgba(251,191,36,0.1); border: 1px solid rgba(251,191,36,0.2); border-radius: 8px; padding: 12px; display: inline-block;">
+            <span style="color: #FBBF24; font-size: 12px; font-weight: 600;">A2: NameInputSection.tsx</span>
+            <span style="color: rgba(255,255,255,0.5); font-size: 12px; margin-left: 8px;">Tailwind red-400/500 → design system <code style="background: rgba(255,255,255,0.1); padding: 2px 6px; border-radius: 4px; font-size: 11px;">colors.error</code></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+
+    function showView(viewName) {
+      document.querySelectorAll('.view-panel').forEach(p => p.style.display = 'none');
+      document.getElementById('view-' + viewName).style.display = 'block';
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      event.target.classList.add('active');
+    }
+  </script>
+</body>
+</html>
