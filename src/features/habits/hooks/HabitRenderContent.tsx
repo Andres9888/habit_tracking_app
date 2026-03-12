@@ -28,6 +28,7 @@ type HabitRenderContentProps = {
 } & Pick<
   UseHabitRenderItemArgs,
   | 'celebrationsEnabled'
+  | 'compactView'
   | 'completionIcon'
   | 'dayShape'
   | 'entranceVariant'
@@ -57,6 +58,7 @@ function HabitRenderContentComponent({
   isConnectedToPreviousWeek,
   drag,
   celebrationsEnabled,
+  compactView,
   completionIcon,
   dayShape,
   entranceVariant,
@@ -121,10 +123,11 @@ function HabitRenderContentComponent({
 
   return (
     <ScaleDecorator activeScale={1}>
-      <Animated.View className='mb-5' style={activeStyle}>
+      <Animated.View className={compactView ? 'mb-2' : 'mb-5'} style={activeStyle}>
         <DraggableHabit
           celebrationsEnabled={celebrationsEnabled}
           completionIcon={completionIcon}
+          isCompactMode={compactView}
           dayShape={dayShape}
           entranceDelay={entranceDelay}
           entranceVariant={entranceVariant}

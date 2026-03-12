@@ -25,6 +25,7 @@ export const DEFAULT_SETTINGS = {
   appIcon: 'default' as const,
   catTheme: true,
   celebrationsEnabled: true,
+  compactView: false,
   completionSoundEnabled: false,
   completionSoundType: 'chime' as CompletionSoundType,
   darkMode: 'system' as DarkModePreference,

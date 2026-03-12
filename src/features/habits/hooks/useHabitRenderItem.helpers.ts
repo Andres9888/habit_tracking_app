@@ -50,6 +50,7 @@ export function getHabitRenderData(
 export function getRenderItemDependencies(args: UseHabitRenderItemArgs) {
   return [
     args.celebrationsEnabled,
+    args.compactView,
     args.completionIcon,
     args.dayShape,
     args.entranceStaggerDelay,

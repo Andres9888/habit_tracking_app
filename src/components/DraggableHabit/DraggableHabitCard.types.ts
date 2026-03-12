@@ -55,6 +55,7 @@ export interface DraggableHabitCardProps {
   highContrastMode: boolean;
   highlightGlow: SharedValue<number>;
   iconPulse: SharedValue<number>;
+  isCompactMode?: boolean;
   isDark: boolean;
   isConnectedToNextWeek: boolean;
   isConnectedToPreviousWeek: boolean;

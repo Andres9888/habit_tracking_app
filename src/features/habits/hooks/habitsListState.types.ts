@@ -21,6 +21,7 @@ export type ToggleMutationResult = { success: boolean; error?: string };
 
 export interface HabitsListState {
   celebrationsEnabled: boolean;
+  compactView: boolean;
   completionSoundEnabled: boolean;
   completionSoundType: CompletionSoundType;
   dayShape: HabitSettings['dayShape'];

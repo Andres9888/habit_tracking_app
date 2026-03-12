@@ -31,6 +31,7 @@ export const get = query({
       catTheme: settings?.catTheme ?? DEFAULT_SETTINGS.catTheme,
       celebrationsEnabled:
         settings?.celebrationsEnabled ?? DEFAULT_SETTINGS.celebrationsEnabled,
+      compactView: settings?.compactView ?? DEFAULT_SETTINGS.compactView,
       completionSoundEnabled:
         settings?.completionSoundEnabled ??
         DEFAULT_SETTINGS.completionSoundEnabled,

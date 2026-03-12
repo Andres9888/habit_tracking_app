@@ -123,6 +123,7 @@ export function useHabitsListState(): HabitsListState {
   const settingsQuery = useQuery(api.settings.get);
   const settings = (settingsQuery ?? undefined) as HabitSettings | undefined;
   const celebrationsEnabled = settings?.showMotivationalMessages ?? true;
+  const compactView = settings?.compactView ?? false;
   const completionSoundEnabled = settings?.completionSoundEnabled ?? false;
   const completionSoundType = settings?.completionSoundType ?? 'chime';
   const dayShape = settings?.dayShape ?? 'square';
@@ -353,6 +354,7 @@ export function useHabitsListState(): HabitsListState {
   return {
     canNavigateForward: weekDatesState.canNavigateForward,
     celebrationsEnabled,
+    compactView,
     completionSoundEnabled,
     completionSoundType,
     contentPadding,

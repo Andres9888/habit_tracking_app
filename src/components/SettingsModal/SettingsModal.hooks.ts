@@ -38,6 +38,7 @@ export const useSettingsModalLogic = ({
   const [reduceMotion, setReduceMotionState] = useState(false);
   const [highContrastMode, setHighContrastModeState] = useState(false);
   const [useDyslexicFont, setUseDyslexicFontState] = useState(false);
+  const [compactView, setCompactViewState] = useState(false);
   const [showGradientFill, setShowGradientFillState] = useState(true);
 
   const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -48,6 +49,7 @@ export const useSettingsModalLogic = ({
       setReduceMotionState(settings.reduceMotion);
       setHighContrastModeState(settings.highContrastMode);
       setUseDyslexicFontState(settings.useDyslexicFont);
+      setCompactViewState(settings.compactView ?? false);
       setShowGradientFillState(settings.showGradientFill ?? true);
     }
   }, [settings]);
@@ -96,6 +98,10 @@ export const useSettingsModalLogic = ({
     setUseDyslexicFontState(value);
     await update({ useDyslexicFont: value });
   };
+  const setCompactView = async (value: boolean) => {
+    setCompactViewState(value);
+    await update({ compactView: value });
+  };
   const setShowGradientFill = async (value: boolean) => {
     setShowGradientFillState(value);
     await update({ showGradientFill: value });
@@ -107,11 +113,13 @@ export const useSettingsModalLogic = ({
   };
 
   return {
+    compactView,
     darkModePreference,
     habitSortMode,
     handleClose,
     highContrastMode,
     reduceMotion,
+    setCompactView,
     setDarkModePreference,
     setHabitSortMode,
     setHighContrastMode,

@@ -11,6 +11,7 @@ import { HabitRenderContent } from './HabitRenderContent';
 export function useHabitRenderItem(args: UseHabitRenderItemArgs) {
   const {
     celebrationsEnabled,
+    compactView,
     completionIcon,
     dayShape = 'square',
     entranceVariant = 'widthExpansion',
@@ -38,6 +39,7 @@ export function useHabitRenderItem(args: UseHabitRenderItemArgs) {
       return (
         <HabitRenderContent
           celebrationsEnabled={celebrationsEnabled}
+          compactView={compactView}
           completionIcon={completionIcon}
           dayShape={dayShape}
           drag={drag}

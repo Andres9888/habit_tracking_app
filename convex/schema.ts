@@ -333,6 +333,7 @@ const applicationTables = {
     catTheme: v.boolean(),
 
     celebrationsEnabled: v.optional(v.boolean()),
+    compactView: v.optional(v.boolean()),
 
     // Completion sound settings (Premium feature)
     completionSoundEnabled: v.optional(v.boolean()),
