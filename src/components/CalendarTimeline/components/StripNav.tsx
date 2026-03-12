@@ -45,8 +45,7 @@ export const StripNav: React.FC<StripNavProps> = ({
         <ChevronLeft color={chevronColor} size={ICON_SIZE} strokeWidth={2.5} />
       </View>
 
-      {canNavigateForward && (
-        <View
+      {canNavigateForward ? <View
           accessibilityElementsHidden
           importantForAccessibility='no'
           pointerEvents='none'
@@ -57,8 +56,7 @@ export const StripNav: React.FC<StripNavProps> = ({
             size={ICON_SIZE}
             strokeWidth={2.5}
           />
-        </View>
-      )}
+        </View> : null}
     </View>
   );
 };

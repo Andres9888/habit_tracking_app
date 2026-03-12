@@ -64,6 +64,7 @@ export function HabitsList(props: HabitsListProps) {
     getHabitStatus: list.getHabitStatus,
     getStreak: list.getStreak,
     handleArchive: list.handleArchive,
+    handleDelete: list.handleDelete,
     handleHabitPress: list.handleHabitPress,
     isSelectionMode: props.isSelectionMode,
     selectedIds: props.selectedIds,

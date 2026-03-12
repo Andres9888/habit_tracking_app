@@ -24,15 +24,13 @@ export const EmojiPickerSearch = memo(
           value={searchQuery}
           onChangeText={onChangeText}
         />
-        {searchQuery.length > 0 && (
-          <AnimatedPressable
+        {searchQuery.length > 0 ? <AnimatedPressable
             accessibilityLabel='Clear search'
             accessibilityRole='button'
             onPress={onClear}
           >
             <X color='#78716c' size={18} />
-          </AnimatedPressable>
-        )}
+          </AnimatedPressable> : null}
       </View>
     </View>
   )

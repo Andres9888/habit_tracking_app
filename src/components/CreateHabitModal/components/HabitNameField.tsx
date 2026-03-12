@@ -63,27 +63,23 @@ const HabitNameFieldComponent = ({
       />
 
       {/* Validation error message */}
-      {error && (
-        <Text
+      {error ? <Text
           accessibilityLabel={`Error: ${error}`}
           accessibilityRole='alert'
           className='mt-1 text-center text-xs text-red-500'
         >
           {error}
-        </Text>
-      )}
+        </Text> : null}
 
       {/* V11: Character counter - only show when > 20 chars and no error */}
-      {showCounter && !error && (
-        <Text
+      {showCounter && !error ? <Text
           accessibilityLabel={`${charCount} of ${MAX_CHARS} characters used${isWarning ? ', approaching limit' : ''}${isError ? ', limit exceeded' : ''}`}
           accessibilityRole='text'
           className='mt-1 text-center text-xs'
           style={{ color: counterColor }}
         >
           {charCount}/{MAX_CHARS}
-        </Text>
-      )}
+        </Text> : null}
     </View>
   );
 };

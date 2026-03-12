@@ -9,7 +9,6 @@ import {
   withDelay,
   withSpring,
   withTiming,
-  type Animated,
 } from 'react-native-reanimated';
 import {
   SPRING_CONFIG,

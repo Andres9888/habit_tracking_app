@@ -1,9 +1,3 @@
-/**
- * SelectionActionBar — Floating glass capsule shown during selection mode.
- * Layout: [Cancel] "N selected" [Archive] [Delete]
- * Mirrors BottomActionBar's visual style.
- */
-
 import { memo } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -12,23 +6,13 @@ import { BlurView } from 'expo-blur';
 import { Archive, Trash2, X } from 'lucide-react-native';
 import { colors as palette } from '../../../../theme/colors';
 import { useThemeColors } from '../../../../theme/ThemeContext';
-import {
-  BLUR_INTENSITY,
-  BORDER_DARK,
-  BORDER_LIGHT,
-  CAPSULE_SHADOW,
-} from '../BottomActionBar/BottomActionBar.styles';
+import { BLUR_INTENSITY, BORDER_DARK, BORDER_LIGHT, CAPSULE_SHADOW } from '../BottomActionBar/BottomActionBar.styles';
 
 const ENTERING = FadeInUp.duration(280).springify().damping(18);
 const CAPSULE_RADIUS = 32;
 const HIT_SLOP = { bottom: 18, left: 18, right: 18, top: 18 };
 
-interface SelectionActionBarProps {
-  selectedCount: number;
-  onCancel: () => void;
-  onArchive: () => void;
-  onDelete: () => void;
-}
+interface SelectionActionBarProps { selectedCount: number; onCancel: () => void; onArchive: () => void; onDelete: () => void; }
 
 function SelectionActionBarComponent({
   selectedCount,
@@ -60,12 +44,7 @@ function SelectionActionBarComponent({
       <View style={[s.capsuleBorder, { borderColor }]} pointerEvents='none' />
 
       <View style={s.row}>
-        <Pressable
-          accessibilityLabel='Cancel selection'
-          hitSlop={HIT_SLOP}
-          style={s.btn}
-          onPress={onCancel}
-        >
+        <Pressable accessibilityLabel='Cancel selection' hitSlop={HIT_SLOP} style={s.btn} onPress={onCancel}>
           <X color={colors.text.secondary} size={20} strokeWidth={2} />
         </Pressable>
 
@@ -80,11 +59,7 @@ function SelectionActionBarComponent({
           style={[s.btn, disabled && s.disabled]}
           onPress={onArchive}
         >
-          <Archive
-            color={isDark ? palette.streak[300] : palette.streak[500]}
-            size={20}
-            strokeWidth={2}
-          />
+          <Archive color={isDark ? palette.streak[300] : palette.streak[500]} size={20} strokeWidth={2} />
         </Pressable>
 
         <Pressable
@@ -102,31 +77,12 @@ function SelectionActionBarComponent({
 }
 
 const s = StyleSheet.create({
-  btn: {
-    alignItems: 'center',
-    borderRadius: 22,
-    height: 44,
-    justifyContent: 'center',
-    width: 44,
-  },
-  capsuleBorder: {
-    ...StyleSheet.absoluteFillObject,
-    borderRadius: CAPSULE_RADIUS,
-    borderWidth: 1,
-  },
+  btn: { alignItems: 'center', borderRadius: 22, height: 44, justifyContent: 'center', width: 44 },
+  capsuleBorder: { ...StyleSheet.absoluteFillObject, borderRadius: CAPSULE_RADIUS, borderWidth: 1 },
   count: { fontSize: 13, fontWeight: '600', paddingHorizontal: 12 },
   disabled: { opacity: 0.35 },
-  glassBg: {
-    ...StyleSheet.absoluteFillObject,
-    borderRadius: CAPSULE_RADIUS,
-    overflow: 'hidden',
-  },
-  row: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-  },
+  glassBg: { ...StyleSheet.absoluteFillObject, borderRadius: CAPSULE_RADIUS, overflow: 'hidden' },
+  row: { alignItems: 'center', flexDirection: 'row', paddingHorizontal: 16, paddingVertical: 8 },
   wrapper: { marginHorizontal: 20, overflow: 'visible' },
 });
 

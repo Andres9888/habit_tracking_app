@@ -37,7 +37,7 @@ export function CtaButton({
 
   const handlePress = useCallback(() => {
     if (disabled || isLoading) return;
-    trigger('tap');
+    trigger('toggle');
     onPress();
   }, [disabled, isLoading, onPress, trigger]);
 

@@ -55,8 +55,7 @@ export function StreakRemindersSection({
         value={enabled}
         onToggle={(v) => void onToggle(v)}
       />
-      {enabled && (
-        <Animated.View
+      {enabled ? <Animated.View
           entering={FadeInDown.duration(200).springify().damping(18)}
           exiting={FadeOutUp.duration(150)}
         >
@@ -70,18 +69,15 @@ export function StreakRemindersSection({
             value={formatDisplayTime(reminderTime)}
             onPress={() => setShowTimePicker(!showTimePicker)}
           />
-          {showTimePicker && (
-            <View style={{ paddingBottom: 8, paddingHorizontal: 16 }}>
+          {showTimePicker ? <View style={{ paddingBottom: 8, paddingHorizontal: 16 }}>
               <DateTimePicker
                 display={Platform.OS === 'ios' ? 'spinner' : 'default'}
                 mode='time'
                 value={timeStringToDate(reminderTime)}
                 onChange={handleTimeChange}
               />
-            </View>
-          )}
-          {!isPremium && (
-            <SettingsRow
+            </View> : null}
+          {isPremium ? null : <SettingsRow
               highContrastMode={highContrastMode}
               icon={<Crown color={settings.premiumTime.icon} size={16} />}
               iconBackgroundColor={settings.premiumTime.bg}
@@ -89,12 +85,9 @@ export function StreakRemindersSection({
               showBorder={false}
               type='navigation'
               onPress={onPremiumUpsell}
-            />
-          )}
-        </Animated.View>
-      )}
-      {!enabled && (
-        <Animated.View
+            />}
+        </Animated.View> : null}
+      {enabled ? null : <Animated.View
           entering={FadeInDown.duration(200).springify().damping(18)}
           exiting={FadeOutUp.duration(150)}
         >
@@ -107,8 +100,7 @@ export function StreakRemindersSection({
               streak by your chosen time.
             </Text>
           </View>
-        </Animated.View>
-      )}
+        </Animated.View>}
     </SettingsSection>
   );
 }

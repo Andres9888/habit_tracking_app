@@ -78,13 +78,11 @@ export function ContextAwareViz({
         type={vizType}
       />
 
-      {!isSuccess && body && (
-        <View className='mt-3 rounded-lg bg-rose-100/50 px-3 py-2'>
+      {!isSuccess && body ? <View className='mt-3 rounded-lg bg-rose-100/50 px-3 py-2'>
           <Text className='text-center text-xs text-rose-600'>
             💡 Loss aversion: This feeling moves you 2x more effectively
           </Text>
-        </View>
-      )}
+        </View> : null}
     </View>
   );
 }

@@ -62,14 +62,12 @@ function ReminderOptionButtonComponent({
         >
           {optionInfo.label}
         </Text>
-        {optionInfo.time && (
-          <Text
+        {optionInfo.time ? <Text
             className='text-[10px]'
             style={{ color: isSelected ? '#047857' : '#a8a29e' }}
           >
             {optionInfo.time}
-          </Text>
-        )}
+          </Text> : null}
       </Animated.View>
     </Pressable>
   );

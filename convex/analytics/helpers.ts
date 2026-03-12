@@ -4,7 +4,7 @@
  * Utility functions for analytics calculations.
  */
 
-import { Doc, Id } from '../_generated/dataModel';
+import { Doc } from '../_generated/dataModel';
 
 /**
  * Calculate habit strength from habit data and completion rate

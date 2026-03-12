@@ -26,8 +26,7 @@ export function CardHeader({
           Week in Review
         </Text>
       </View>
-      {onViewDetails && (
-        <View className='flex-row items-center gap-1'>
+      {onViewDetails ? <View className='flex-row items-center gap-1'>
           <Text
             className='text-[13px] font-medium'
             style={{ color: colors.accent }}
@@ -35,8 +34,7 @@ export function CardHeader({
             Details
           </Text>
           <ChevronRight color={colors.accent} size={14} />
-        </View>
-      )}
+        </View> : null}
     </View>
   );
 }

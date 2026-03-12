@@ -6,9 +6,6 @@
 
 import { withTiming } from 'react-native-reanimated';
 import {
-  CARD_PRESS_SCALE,
-  CARD_PRESS_SPRING_CONFIG,
-  CARD_REST_SCALE,
   pressCard,
   releaseCard,
 } from '../../../utils/animations/cardPressAnimation';

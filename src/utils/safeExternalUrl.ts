@@ -6,7 +6,7 @@
  * - Keep behavior permissive for expected web links while avoiding obvious injection vectors
  */
 
-const BLOCKED_SCHEMES = ['javascript:', 'vbscript:', 'data:'];
+const BLOCKED_SCHEMES = new Set(['javascript:', 'vbscript:', 'data:']);
 
 export function isSafeExternalUrl(value: unknown): boolean {
   if (typeof value !== 'string') return false;
@@ -19,7 +19,7 @@ export function isSafeExternalUrl(value: unknown): boolean {
   try {
     const parsed = new URL(raw);
     const scheme = parsed.protocol.toLowerCase();
-    return !BLOCKED_SCHEMES.includes(scheme);
+    return !BLOCKED_SCHEMES.has(scheme);
   } catch {
     return false;
   }

@@ -42,9 +42,7 @@ export function ActionSection({
         </AnimatedEntrance>
       </View>
 
-      {errorMessage && (
-        <ErrorMessage message={errorMessage} onDismiss={onDismissError} />
-      )}
+      {errorMessage ? <ErrorMessage message={errorMessage} onDismiss={onDismissError} /> : null}
 
       <View
         style={{

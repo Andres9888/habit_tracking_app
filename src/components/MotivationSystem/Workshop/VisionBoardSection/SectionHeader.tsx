@@ -26,11 +26,9 @@ export function SectionHeader({
         <Text className='text-xs font-semibold text-fuchsia-600'>
           Vision Board
         </Text>
-        {!isPremium && (
-          <View className='rounded-full bg-amber-100 px-1.5 py-0.5'>
+        {isPremium ? null : <View className='rounded-full bg-amber-100 px-1.5 py-0.5'>
             <Text className='text-[9px] font-bold text-amber-700'>PRO</Text>
-          </View>
-        )}
+          </View>}
       </View>
       {hasImages ? (
         <Text className='text-xs font-medium text-fuchsia-600'>

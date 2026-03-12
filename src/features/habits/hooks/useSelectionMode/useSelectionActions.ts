@@ -1,37 +1,11 @@
 import { useCallback, useState } from 'react';
 import { useMutation } from 'convex/react';
 import { api } from '../../../../../convex/_generated/api';
-import type { Id } from '../../../../../convex/_generated/dataModel';
-import type { Habit } from '../../types';
 import { logInteraction } from '../../../../lib/analytics/interactions';
 import { optimisticStore } from '../../../../lib/optimistic';
 import { showGenericError } from '../../../../utils/errorAlerts';
 import { ERROR_MESSAGES } from '../../../../constants/errorMessages';
-
-interface BatchUndoState {
-  visible: boolean;
-  habitIds: Id<'habits'>[];
-  count: number;
-}
-
-interface UseSelectionActionsArgs {
-  selectedIds: Set<Id<'habits'>>;
-  habits: Habit[];
-  exitSelectionMode: () => void;
-}
-
-export interface UseSelectionActionsResult {
-  handleBatchArchive: () => Promise<void>;
-  handleBatchArchiveUndo: () => Promise<void>;
-  dismissBatchArchiveUndo: () => void;
-  batchArchiveUndoVisible: boolean;
-  batchArchiveUndoCount: number;
-  confirmDeleteVisible: boolean;
-  showDeleteConfirmation: () => void;
-  hideDeleteConfirmation: () => void;
-  confirmBatchDelete: () => Promise<void>;
-  deleteCount: number;
-}
+import type { BatchUndoState, UseSelectionActionsArgs, UseSelectionActionsResult } from './useSelectionActions.types';
 
 export function useSelectionActions({
   selectedIds,
@@ -42,16 +16,12 @@ export function useSelectionActions({
   const batchUnarchiveMutation = useMutation(api.habits.batchUnarchive);
   const batchRemoveMutation = useMutation(api.habits.batchRemove);
 
-  const [undoState, setUndoState] = useState<BatchUndoState>({
-    count: 0,
-    habitIds: [],
-    visible: false,
-  });
+  const [undoState, setUndoState] = useState<BatchUndoState>({ count: 0, habitIds: [], visible: false });
   const [confirmDeleteVisible, setConfirmDeleteVisible] = useState(false);
   const [deleteCount, setDeleteCount] = useState(0);
 
   const handleBatchArchive = useCallback(async () => {
-    const ids = Array.from(selectedIds);
+    const ids = [...selectedIds];
     const count = ids.length;
 
     // Optimistic updates for each habit
@@ -69,10 +39,10 @@ export function useSelectionActions({
 
     try {
       await batchArchiveMutation({ habitIds: ids });
-      opIds.forEach((id) => optimisticStore.confirm(id));
+      for (const id of opIds) optimisticStore.confirm(id);
       logInteraction('habits_batch_archived', { count });
     } catch (error) {
-      opIds.forEach((id) => optimisticStore.fail(id, error as Error));
+      for (const id of opIds) optimisticStore.fail(id, error as Error);
       setUndoState({ count: 0, habitIds: [], visible: false });
       showGenericError(ERROR_MESSAGES.DATA_OPS.ARCHIVE_HABIT_FAILED);
     }
@@ -91,30 +61,26 @@ export function useSelectionActions({
 
     try {
       await batchUnarchiveMutation({ habitIds });
-      opIds.forEach((id) => optimisticStore.confirm(id));
+      for (const id of opIds) optimisticStore.confirm(id);
       logInteraction('habits_batch_archive_undone', { count: habitIds.length });
     } catch (error) {
-      opIds.forEach((id) => optimisticStore.fail(id, error as Error));
+      for (const id of opIds) optimisticStore.fail(id, error as Error);
       showGenericError('Failed to undo archive. Please try again.');
     }
     setUndoState({ count: 0, habitIds: [], visible: false });
   }, [undoState, habits, batchUnarchiveMutation]);
 
-  const dismissBatchArchiveUndo = useCallback(() => {
-    setUndoState({ count: 0, habitIds: [], visible: false });
-  }, []);
+  const dismissBatchArchiveUndo = useCallback(() => setUndoState({ count: 0, habitIds: [], visible: false }), []);
 
   const showDeleteConfirmation = useCallback(() => {
     setDeleteCount(selectedIds.size);
     setConfirmDeleteVisible(true);
   }, [selectedIds.size]);
 
-  const hideDeleteConfirmation = useCallback(() => {
-    setConfirmDeleteVisible(false);
-  }, []);
+  const hideDeleteConfirmation = useCallback(() => setConfirmDeleteVisible(false), []);
 
   const confirmBatchDelete = useCallback(async () => {
-    const ids = Array.from(selectedIds);
+    const ids = [...selectedIds];
     setConfirmDeleteVisible(false);
     exitSelectionMode();
     try {

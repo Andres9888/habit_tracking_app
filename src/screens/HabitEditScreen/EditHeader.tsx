@@ -35,12 +35,13 @@ export function EditHeader({
   }));
 
   const handleCancel = () => {
+    void triggerHaptic('tap');
     Keyboard.dismiss();
     onCancel();
   };
 
   const handleSave = () => {
-    triggerHaptic('toggle');
+    void triggerHaptic('toggle');
     onSave();
   };
 
@@ -73,7 +74,7 @@ export function EditHeader({
           scale.value = withSpring(1, springs.button);
         }}
       >
-        {isSaving && <ActivityIndicator color='#ffffff' size='small' />}
+        {isSaving ? <ActivityIndicator color='#ffffff' size='small' /> : null}
         <Text
           className='font-semibold'
           style={{

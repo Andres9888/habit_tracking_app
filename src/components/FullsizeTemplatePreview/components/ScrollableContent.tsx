@@ -43,9 +43,7 @@ export function ScrollableContent({
       />
       <DescriptionSection description={template?.description ?? ''} />
       <ScienceBox template={template} onResearchPress={onResearchPress} />
-      {tips && Array.isArray(tips) && tips.length > 0 && (
-        <TipsBox iconColor={iconColor} tips={tips} />
-      )}
+      {tips && Array.isArray(tips) && tips.length > 0 ? <TipsBox iconColor={iconColor} tips={tips} /> : null}
       <View style={layoutStyles.bottomSpacer} />
     </ScrollView>
   );

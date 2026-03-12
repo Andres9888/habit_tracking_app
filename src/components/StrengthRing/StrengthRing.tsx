@@ -86,13 +86,11 @@ export function StrengthRing({
             trend={trend}
           />
         </View>
-        {showLevel && (
-          <LevelLabel
+        {showLevel ? <LevelLabel
             fontSize={fontSize}
             levelInfo={levelInfo}
             weeklyChange={weeklyChange}
-          />
-        )}
+          /> : null}
       </View>
     </View>
   );

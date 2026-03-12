@@ -23,7 +23,7 @@ interface DangerZoneProps {
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 export function DangerZone({ onArchive, onDelete }: DangerZoneProps) {
-  const { colors, isDark } = useThemeColors();
+  const { isDark } = useThemeColors();
   const archiveScale = useSharedValue(1);
   const deleteScale = useSharedValue(1);
 
@@ -36,7 +36,7 @@ export function DangerZone({ onArchive, onDelete }: DangerZoneProps) {
   }));
 
   const handleArchive = () => {
-    triggerHaptic('toggle');
+    void triggerHaptic('toggle');
     Alert.alert(
       'Archive Habit',
       'This habit will be hidden from your daily list. You can restore it anytime from Settings.',
@@ -48,7 +48,7 @@ export function DangerZone({ onArchive, onDelete }: DangerZoneProps) {
   };
 
   const handleDelete = () => {
-    triggerHaptic('warning');
+    void triggerHaptic('warning');
     Alert.alert(
       'Delete Habit',
       'This will permanently delete this habit and all its history. This cannot be undone.',

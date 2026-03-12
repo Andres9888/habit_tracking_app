@@ -4,6 +4,7 @@
 
 import { View, Text } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
+import { useThemeColors } from '../../theme/ThemeContext';
 import { visualStyles as vs } from './onboarding.visuals.styles';
 
 const TEMPLATE_ICONS = [
@@ -22,6 +23,8 @@ const TEMPLATE_ICONS = [
 ];
 
 export function TemplateGrid({ reduceMotion }: { reduceMotion: boolean }) {
+  const { colors } = useThemeColors();
+
   return (
     <View style={vs.templateGrid}>
       {TEMPLATE_ICONS.map((emoji, i) => (
@@ -34,7 +37,14 @@ export function TemplateGrid({ reduceMotion }: { reduceMotion: boolean }) {
                   .springify()
                   .damping(18)
           }
-          style={vs.templateItem}
+          style={[
+            vs.templateItem,
+            {
+              backgroundColor: colors.primary[100],
+              borderColor: colors.cardBorder,
+              borderWidth: 1,
+            },
+          ]}
         >
           <Text style={vs.templateEmoji}>{emoji}</Text>
         </Animated.View>

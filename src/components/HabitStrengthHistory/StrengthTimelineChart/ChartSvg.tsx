@@ -51,13 +51,11 @@ export function ChartSvg({
         chartColor={chartColor}
         linePath={linePath}
       />
-      {lastPoint && (
-        <CurrentPositionDot
+      {lastPoint ? <CurrentPositionDot
           chartColor={chartColor}
           lastPoint={lastPoint}
           pulsingRingProps={pulsingRingProps}
-        />
-      )}
+        /> : null}
     </Svg>
   );
 }

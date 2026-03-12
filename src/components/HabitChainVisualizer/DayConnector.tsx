@@ -47,8 +47,7 @@ export const DayConnector: React.FC<DayConnectorProps> = ({
         style,
       ]}
     >
-      {strengthConfig.shimmerSpeed > 0 && (
-        <Animated.View
+      {strengthConfig.shimmerSpeed > 0 ? <Animated.View
           style={{
             backgroundColor: 'rgba(255, 255, 255, 0.4)',
             borderRadius: strengthConfig.height,
@@ -64,8 +63,7 @@ export const DayConnector: React.FC<DayConnectorProps> = ({
             ],
             width: 20,
           }}
-        />
-      )}
+        /> : null}
     </Animated.View>
   );
 };

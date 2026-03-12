@@ -111,8 +111,14 @@ export interface BinaryHeatmapProps {
   /** Callback when a day cell is tapped */
   onDayPress?: (date: string, completed: boolean) => void;
 
-  /** Optional externally-controlled time range (legacy test compatibility) */
+  /** Time range to display (defaults to '6m') */
   timeRange?: TimeRange;
+
+  /** Optional header title (defaults to 'Activity') */
+  title?: string;
+
+  /** Whether to show the completion rate in the legend (defaults to true) */
+  showCompletionRate?: boolean;
 
   /** Optional callback for time range changes (legacy test compatibility) */
   onTimeRangeChange?: (range: TimeRange) => void;
@@ -169,6 +175,9 @@ export interface HeatmapLegendProps {
 
   /** Completion rate as percentage (0-100) */
   completionRate: number;
+
+  /** Whether to show the completion rate text (defaults to true) */
+  showCompletionRate?: boolean;
 }
 
 /**

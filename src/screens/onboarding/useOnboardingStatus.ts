@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { safeGetBoolean, safeSetBoolean } from '@/utils/storage';
 
-import { ONBOARDING_KEY } from './OnboardingScreen';
+import { ONBOARDING_KEY } from './onboarding.data';
 
 /**
  * Onboarding status hook.

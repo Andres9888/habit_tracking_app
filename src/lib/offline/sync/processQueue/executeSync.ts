@@ -4,7 +4,7 @@
  * Handles the actual sync execution for offline operations.
  */
 
-import type { OfflineOperation, ToggleCompletionPayload } from '../../queue';
+import type { OfflineOperation } from '../../queue';
 import type { SyncItem } from '../../syncManager';
 import type {
   ProcessOperationResult,
@@ -16,10 +16,10 @@ import type { ErrorCategory } from '../../types';
 /** Convert an offline operation to a sync item */
 export function operationToSyncItem(
   operation: OfflineOperation
-): SyncItem<ToggleCompletionPayload> {
+): SyncItem<OfflineOperation> {
   return {
     id: operation.id,
-    payload: operation.payload,
+    payload: operation,
     retryContext: { attemptCount: operation.retryCount, exhausted: false },
     type: operation.type,
   };

@@ -31,8 +31,7 @@ export const LevelLabel = React.memo(function LevelLabel({
       >
         {levelInfo.label}
       </Text>
-      {weeklyChange !== undefined && weeklyChange !== 0 && (
-        <Text
+      {weeklyChange !== undefined && weeklyChange !== 0 ? <Text
           style={[
             styles.changeText,
             {
@@ -43,8 +42,7 @@ export const LevelLabel = React.memo(function LevelLabel({
         >
           {weeklyChange > 0 ? '+' : ''}
           {weeklyChange}%
-        </Text>
-      )}
+        </Text> : null}
     </View>
   );
 });

@@ -37,18 +37,15 @@ export function MedalRow({
               {record.days}
             </Text>
             <Text className={`text-[9px] ${colors.subtext}`}>days</Text>
-            {isCurrentRecord && (
-              <View className='mt-1 rounded-full bg-orange-100 px-1.5 py-0.5'>
+            {isCurrentRecord ? <View className='mt-1 rounded-full bg-orange-100 px-1.5 py-0.5'>
                 <Text className='text-[8px] font-semibold text-orange-700'>
                   NOW 🔥
                 </Text>
-              </View>
-            )}
+              </View> : null}
           </Animated.View>
         );
       })}
-      {records.length < 3 &&
-        Array.from({ length: 3 - records.length }).map((_, i) => (
+      {records.length < 3 ? Array.from({ length: 3 - records.length }).map((_, i) => (
           <View
             key={`empty-${i}`}
             className='flex-1 items-center rounded-xl border border-stone-100 bg-stone-50/50 p-2.5'
@@ -59,7 +56,7 @@ export function MedalRow({
             <Text className='text-lg font-bold text-stone-300'>-</Text>
             <Text className='text-[9px] text-stone-300'>days</Text>
           </View>
-        ))}
+        )) : null}
     </View>
   );
 }

@@ -66,8 +66,7 @@ export function HabitItem({ habit, type, onPress }: HabitItemProps) {
 
       <View style={styles.habitItemRight}>
         <Icon color={iconColor} size={20} />
-        {type !== 'risk' && (
-          <Text
+        {type === 'risk' ? null : <Text
             style={[
               styles.changePercentage,
               { color: type === 'gained' ? colors.success : colors.error },
@@ -75,8 +74,7 @@ export function HabitItem({ habit, type, onPress }: HabitItemProps) {
           >
             {habit.percentageChange > 0 ? '+' : ''}
             {Math.round(habit.percentageChange)}%
-          </Text>
-        )}
+          </Text>}
       </View>
     </AnimatedPressable>
   );

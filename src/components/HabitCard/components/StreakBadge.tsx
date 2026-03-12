@@ -13,7 +13,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { useAppTheme } from '../../../theme';
 import { useThemeColors } from '../../../theme/ThemeContext';
-import { colors, milestoneColors } from '../../../theme/colors';
+import { milestoneColors } from '../../../theme/colors';
 import { streakStyles } from '../HabitCard.streakStyles';
 import { springs } from '@/theme/animations';
 
@@ -117,8 +117,7 @@ export const StreakBadge = memo(function StreakBadge({ currentStreak, bestStreak
       </AnimatedStreakText>
 
       {/* Best Streak Badge - Shows when approaching or at personal record */}
-      {bestStreak > 0 && currentStreak >= bestStreak - 2 && (
-        <View
+      {bestStreak > 0 && currentStreak >= bestStreak - 2 ? <View
           style={[
             streakStyles.bestStreakBadge,
             {
@@ -149,8 +148,7 @@ export const StreakBadge = memo(function StreakBadge({ currentStreak, bestStreak
               ? 'New Record!'
               : `Best: ${bestStreak}`}
           </Text>
-        </View>
-      )}
+        </View> : null}
     </View>
   );
 });

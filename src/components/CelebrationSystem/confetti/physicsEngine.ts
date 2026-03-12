@@ -4,7 +4,7 @@
  * Handles particle physics simulation with gravity, wind, and drag.
  */
 
-import type { ConfettiPhysics, ParticleState, ParticleUpdate } from './types';
+import type { ConfettiPhysics, ParticleState } from './types';
 
 /**
  * Initialize a particle state with random values within physics constraints
@@ -17,7 +17,7 @@ export function initializeParticle(
 ): ParticleState {
   // Use seed for deterministic randomness if provided
   const random = seed === undefined ? Math.random : () => {
-    const x = Math.sin(seed++) * 10000;
+    const x = Math.sin(seed++) * 10_000;
     return x - Math.floor(x);
   };
 
@@ -179,7 +179,7 @@ export class PhysicsSimulation {
     // Update physics for all particles
     const currentWind = simulateWind(this.physics.wind, currentTime);
 
-    this.particles.forEach((particle) => {
+    for (const particle of this.particles) {
       // Apply physics with dynamic wind
       const physicsWithWind = {
         ...this.physics,
@@ -198,7 +198,7 @@ export class PhysicsSimulation {
         this.duration,
         particle.creationTime
       );
-    });
+    }
 
     return this.particles;
   }

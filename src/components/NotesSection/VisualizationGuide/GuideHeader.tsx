@@ -46,15 +46,13 @@ export function GuideHeader({ habitName }: GuideHeaderProps) {
           How you visualize goals dramatically affects whether you achieve them.
         </Text>
       </View>
-      {habitName && (
-        <View className='mt-3 flex-row items-center gap-2'>
+      {habitName ? <View className='mt-3 flex-row items-center gap-2'>
           <Target className='text-violet-200' size={14} />
           <Text className='text-xs text-violet-200'>
             Apply these techniques to:{' '}
             <Text className='font-medium text-white'>{habitName}</Text>
           </Text>
-        </View>
-      )}
+        </View> : null}
     </Animated.View>
   );
 }

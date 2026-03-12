@@ -53,7 +53,7 @@ export const RingCenter = React.memo(function RingCenter({
           >
             {Math.round(strength)}%
           </Text>
-          {trend && <TrendArrow fontSize={fontSize} trend={trend} />}
+          {trend ? <TrendArrow fontSize={fontSize} trend={trend} /> : null}
         </View>
       ) : null}
     </View>

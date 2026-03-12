@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
  * FeedbackModal Component
  *
@@ -25,9 +26,11 @@ import {
 import { Modal } from '../Modal';
 import { Button } from '../Button/Button';
 import { Bug, Lightbulb, MessageSquare } from 'lucide-react-native';
-import { colors } from '../../theme/colors';
+import { colors as appColors } from '../../theme/colors';
+import { useThemeColors } from '../../theme/ThemeContext';
 import type { FeedbackModalProps, FeedbackType } from './FeedbackModal.types';
-import { styles } from './FeedbackModal.styles';
+import { getDescriptionPlaceholder } from './FeedbackModalHelpers';
+import { useFeedbackModalStyles } from './FeedbackModal.styles';
 import { MAX_SHORT_TEXT_LENGTH, MAX_LONG_TEXT_LENGTH } from '@/constants';
 
 const SUPPORT_EMAIL = 'support@chainday.app';
@@ -37,29 +40,49 @@ const FEEDBACK_TYPES = [
     type: 'bug' as const,
     label: '🐛 Report a Bug',
     icon: Bug,
-    color: '#ef4444',
-    bgColor: '#fee2e2',
+    color: appColors.error,
+    lightBgColor: appColors.errorLight,
     description: 'Something not working right?',
   },
   {
     type: 'feature' as const,
     label: '💡 Request a Feature',
     icon: Lightbulb,
-    color: '#f59e0b',
-    bgColor: '#fef3c7',
+    color: appColors.warning,
+    lightBgColor: appColors.warningLight,
     description: 'Have an idea to improve the app?',
   },
   {
     type: 'general' as const,
     label: '💬 General Feedback',
     icon: MessageSquare,
-    color: '#8b5cf6',
-    bgColor: '#ede9fe',
+    color: appColors.secondary[500],
+    lightBgColor: appColors.secondary[100],
     description: 'Share your thoughts',
   },
 ];
 
+function withAlpha(hex: string, alpha: number): string {
+  const normalized = hex.replace('#', '');
+  const fullHex =
+    normalized.length === 3
+      ? [...normalized].map((char) => char + char).join('')
+      : normalized;
+
+  if (fullHex.length !== 6) {
+    return `rgba(5, 150, 105, ${alpha})`;
+  }
+
+  const red = Number.parseInt(fullHex.slice(0, 2), 16);
+  const green = Number.parseInt(fullHex.slice(2, 4), 16);
+  const blue = Number.parseInt(fullHex.slice(4, 6), 16);
+
+  return `rgba(${red}, ${green}, ${blue}, ${alpha})`;
+}
+
 export function FeedbackModal({ visible, onClose }: FeedbackModalProps) {
+  const { colors, isDark } = useThemeColors();
+  const styles = useFeedbackModalStyles();
   const [selectedType, setSelectedType] = useState<FeedbackType | null>(null);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -130,6 +153,10 @@ export function FeedbackModal({ visible, onClose }: FeedbackModalProps) {
 
   const canSubmit =
     selectedType !== null && title.trim() !== '' && description.trim() !== '';
+  const feedbackTypes = FEEDBACK_TYPES.map((item) => ({
+    ...item,
+    bgColor: isDark ? withAlpha(item.color, 0.18) : item.lightBgColor,
+  }));
 
   return (
     <Modal variant='fullScreen' visible={visible} onClose={handleClose}>
@@ -141,14 +168,12 @@ export function FeedbackModal({ visible, onClose }: FeedbackModalProps) {
       >
         <View style={styles.header}>
           <Text style={styles.headerTitle}>Send Feedback</Text>
-          <Text style={styles.headerSubtitle}>
-            Help us improve Chain Day
-          </Text>
+          <Text style={styles.headerSubtitle}>Help us improve Chain Day</Text>
         </View>
 
         <View style={styles.section}>
           <Text style={styles.sectionLabel}>What type of feedback?</Text>
-          {FEEDBACK_TYPES.map((item) => {
+          {feedbackTypes.map((item) => {
             const Icon = item.icon;
             const isSelected = selectedType === item.type;
             return (
@@ -157,7 +182,7 @@ export function FeedbackModal({ visible, onClose }: FeedbackModalProps) {
                 style={[
                   styles.typeCard,
                   isSelected && styles.typeCardSelected,
-                  { borderColor: isSelected ? item.color : colors.gray[200] },
+                  { borderColor: isSelected ? item.color : colors.border },
                 ]}
                 onPress={() => setSelectedType(item.type)}
                 activeOpacity={0.7}
@@ -172,24 +197,22 @@ export function FeedbackModal({ visible, onClose }: FeedbackModalProps) {
                 </View>
                 <View style={styles.typeContent}>
                   <Text style={styles.typeLabel}>{item.label}</Text>
-                  <Text style={styles.typeDescription}>
-                    {item.description}
-                  </Text>
+                  <Text style={styles.typeDescription}>{item.description}</Text>
                 </View>
-                {isSelected && (
+                {isSelected ? (
                   <View
                     style={[
                       styles.selectedIndicator,
                       { backgroundColor: item.color },
                     ]}
                   />
-                )}
+                ) : null}
               </TouchableOpacity>
             );
           })}
         </View>
 
-        {selectedType && (
+        {selectedType ? (
           <>
             <View style={styles.section}>
               <Text style={styles.sectionLabel}>
@@ -198,7 +221,7 @@ export function FeedbackModal({ visible, onClose }: FeedbackModalProps) {
               <TextInput
                 style={styles.input}
                 placeholder='Brief summary of your feedback'
-                placeholderTextColor={colors.gray[400]}
+                placeholderTextColor={colors.text.tertiary}
                 value={title}
                 onChangeText={setTitle}
                 maxLength={MAX_SHORT_TEXT_LENGTH}
@@ -216,7 +239,7 @@ export function FeedbackModal({ visible, onClose }: FeedbackModalProps) {
               <TextInput
                 style={[styles.input, styles.textArea]}
                 placeholder={getDescriptionPlaceholder(selectedType)}
-                placeholderTextColor={colors.gray[400]}
+                placeholderTextColor={colors.text.tertiary}
                 value={description}
                 onChangeText={setDescription}
                 maxLength={MAX_LONG_TEXT_LENGTH}
@@ -236,14 +259,20 @@ export function FeedbackModal({ visible, onClose }: FeedbackModalProps) {
               <TextInput
                 style={styles.input}
                 placeholder='your.email@example.com'
-                placeholderTextColor={colors.gray[400]}
+                placeholderTextColor={colors.text.tertiary}
                 value={email}
                 onChangeText={setEmail}
                 keyboardType='email-address'
                 autoCapitalize='none'
                 autoCorrect={false}
                 returnKeyType='done'
-                onSubmitEditing={canSubmit ? handleSubmit : undefined}
+                onSubmitEditing={
+                  canSubmit
+                    ? () => {
+                        void handleSubmit();
+                      }
+                    : undefined
+                }
               />
             </View>
 
@@ -257,14 +286,16 @@ export function FeedbackModal({ visible, onClose }: FeedbackModalProps) {
               </Button>
               <Button
                 disabled={!canSubmit}
-                onPress={handleSubmit}
+                onPress={() => {
+                  void handleSubmit();
+                }}
                 style={styles.submitButton}
               >
                 Send Feedback
               </Button>
             </View>
           </>
-        )}
+        ) : null}
       </ScrollView>
     </Modal>
   );

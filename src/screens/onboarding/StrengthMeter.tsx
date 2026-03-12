@@ -41,7 +41,14 @@ export function StrengthMeter({ reduceMotion }: { reduceMotion: boolean }) {
               },
             ]}
           />
-          <Text style={[vs.strengthLabel, i === 4 && vs.strengthLabelActive]}>
+          <Text
+            style={[
+              vs.strengthLabel,
+              { color: colors.text.secondary },
+              i === 4 && { color: colors.primary[700] },
+              i === 4 && vs.strengthLabelActive,
+            ]}
+          >
             {stage}
           </Text>
         </Animated.View>

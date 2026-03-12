@@ -46,8 +46,7 @@ export function MedalCard({
       <Text className='text-[9px]' style={{ color: colors.subtext }}>
         days
       </Text>
-      {isCurrentRecord && (
-        <View
+      {isCurrentRecord ? <View
           className='mt-1 rounded-full px-1.5 py-0.5'
           style={{ backgroundColor: '#ffedd5' }}
         >
@@ -57,8 +56,7 @@ export function MedalCard({
           >
             NOW 🔥
           </Text>
-        </View>
-      )}
+        </View> : null}
       <Text
         className='mt-1 text-center text-[8px]'
         style={{ color: colors.subtext }}

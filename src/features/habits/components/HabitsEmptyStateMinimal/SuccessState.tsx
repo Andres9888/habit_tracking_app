@@ -7,7 +7,6 @@
  * - Habit name confirmation
  * - Auto-transition to habit list with shared element animation
  * - Tap anywhere to skip and transition immediately
- * - Haptic feedback on mount
  * - "Add another habit" button to reset (if staying on empty state)
  */
 
@@ -15,7 +14,6 @@ import { useEffect, useCallback } from 'react';
 import { AccessibilityInfo, Pressable } from 'react-native';
 import Animated, { useReducedMotion } from 'react-native-reanimated';
 
-import { useHapticFeedback } from '../../../../hooks/useHapticFeedback';
 import { Confetti } from './Confetti';
 import { SuccessContent } from './SuccessContent';
 import { SuccessIcon } from './SuccessIcon';
@@ -30,7 +28,6 @@ export function SuccessState({
   autoTransition = true,
 }: SuccessStateProps) {
   const shouldReduceMotion = useReducedMotion();
-  const { triggerSuccess } = useHapticFeedback();
 
   const displayEmoji = habitEmoji || '🌿';
 
@@ -54,17 +51,15 @@ export function SuccessState({
     triggerExitAnimation();
   }, [autoTransition, onTransitionComplete, triggerExitAnimation]);
 
-  // Haptic feedback on mount + accessibility announcement
+  // Accessibility announcement on mount (haptic fires in useHabitCreationFlow)
   useEffect(() => {
-    triggerSuccess();
-
     const message = `Success! ${habitName} has been added to your habits. Tap anywhere to continue.`;
     AccessibilityInfo?.announceForAccessibility?.(message);
-  }, [habitName, triggerSuccess]);
+  }, [habitName]);
 
   return (
     <Pressable
-      accessible={autoTransition && !!onTransitionComplete}
+      accessible={autoTransition ? !!onTransitionComplete : null}
       accessibilityHint={
         autoTransition && onTransitionComplete
           ? 'Double tap to skip celebration and continue immediately'

@@ -24,16 +24,14 @@ export function TemplatesListEmpty({
         headline='No habits match your filters'
         icon='🔍'
       />
-      {hasActiveFilters && (
-        <Button
+      {hasActiveFilters ? <Button
           size='medium'
           style={{ marginTop: 16 }}
           variant='secondary'
           onPress={onResetFilters}
         >
           Reset filters
-        </Button>
-      )}
+        </Button> : null}
     </View>
   );
 }

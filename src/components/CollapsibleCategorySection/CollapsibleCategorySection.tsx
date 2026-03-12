@@ -66,8 +66,7 @@ export function CollapsibleCategorySection({
         onPressOut={handleHeaderPressOut}
       />
 
-      {isExpanded && (
-        <Animated.View
+      {isExpanded ? <Animated.View
           entering={contentEntering(reducedMotion)}
           exiting={contentExiting(reducedMotion)}
           style={styles.content}
@@ -80,8 +79,7 @@ export function CollapsibleCategorySection({
             onImport={onImport}
             onTemplatePress={onTemplatePress}
           />
-        </Animated.View>
-      )}
+        </Animated.View> : null}
     </AnimatedView>
   );
 }

@@ -36,6 +36,7 @@ export function ValueProps() {
 
 const styles = StyleSheet.create({
   container: {
+    alignItems: 'center',
     borderRadius: 16,
     paddingVertical: 4,
     width: '100%',

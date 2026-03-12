@@ -11,7 +11,7 @@ import {
   DAY_LABEL_WIDTH,
   MONTH_LABEL,
 } from './constants';
-import { typography, fontFamilies} from '../../theme/typography';
+import { typography, fontFamilies } from '../../theme/typography';
 
 export const styles = StyleSheet.create({
   cell: {
@@ -26,11 +26,14 @@ export const styles = StyleSheet.create({
     padding: 16,
   },
   dayLabelCell: {
+    alignItems: 'center',
     height: CELL_SIZE,
     justifyContent: 'center',
     marginBottom: CELL_GAP,
+    width: DAY_LABEL_WIDTH,
   },
   dayLabelsColumn: {
+    alignItems: 'center',
     marginRight: CELL_GAP,
     width: DAY_LABEL_WIDTH,
   },
@@ -39,7 +42,9 @@ export const styles = StyleSheet.create({
     fontFamily: fontFamilies.primary.text,
     fontSize: 10,
     fontWeight: '500',
-    textAlign: 'right',
+    lineHeight: CELL_SIZE,
+    textAlign: 'center',
+    width: DAY_LABEL_WIDTH,
   },
   gridContainer: {
     flexDirection: 'row',

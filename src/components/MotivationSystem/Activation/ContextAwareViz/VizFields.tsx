@@ -30,30 +30,24 @@ export function VizFields({
 
   return (
     <View className={compact ? 'gap-1' : 'gap-2'}>
-      {body && (
-        <VizField
+      {body ? <VizField
           colorClass={colorClass}
           icon={<User className={iconColor} size={16} />}
           label='Body'
           value={body}
-        />
-      )}
-      {mind && (
-        <VizField
+        /> : null}
+      {mind ? <VizField
           colorClass={colorClass}
           icon={<Brain className={iconColor} size={16} />}
           label='Mind'
           value={mind}
-        />
-      )}
-      {emotion && (
-        <VizField
+        /> : null}
+      {emotion ? <VizField
           colorClass={colorClass}
           icon={<Heart className={iconColor} size={16} />}
           label='Emotion'
           value={emotion}
-        />
-      )}
+        /> : null}
     </View>
   );
 }

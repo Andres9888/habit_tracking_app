@@ -88,8 +88,7 @@ export const HeroNameInput = ({
         </View>
       </View>
 
-      {validation && (
-        <Animated.View
+      {validation ? <Animated.View
           className='mt-2'
           style={{
             opacity: validationOpacity,
@@ -99,8 +98,7 @@ export const HeroNameInput = ({
           <Text className={`text-sm font-medium ${getValidationColor()}`}>
             {validation.message}
           </Text>
-        </Animated.View>
-      )}
+        </Animated.View> : null}
     </View>
   );
 };

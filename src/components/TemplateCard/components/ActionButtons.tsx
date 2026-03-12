@@ -26,7 +26,7 @@ export function ActionButtons({
   onPreview,
   showPreviewCTA,
 }: ActionButtonsProps) {
-  const testPrefix = index != null ? `templates-category-card-${index}` : undefined;
+  const testPrefix = index == null ? undefined : `templates-category-card-${index}`;
   const { colors: themeColors } = useThemeColors();
 
   if (isImported) {
@@ -43,8 +43,7 @@ export function ActionButtons({
 
   return (
     <View style={styles.buttonRow}>
-      {showPreviewCTA && onPreview && (
-        <Button
+      {showPreviewCTA && onPreview ? <Button
           accessibilityLabel={`Preview ${name} habit`}
           icon={<Eye color={themeColors.text.secondary} size={18} />}
           size='medium'
@@ -59,8 +58,7 @@ export function ActionButtons({
           }}
         >
           Preview
-        </Button>
-      )}
+        </Button> : null}
       <Button
         accessibilityLabel={`Import ${name} habit`}
         disabled={isLocked}

@@ -8,7 +8,7 @@
  * @see docs/offline-habit-sync.md T011
  */
 
-import { useCallback, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { Id } from '../../../../convex/_generated/dataModel';
 import type { Habit } from '../types';
 import { useHabitMutations } from './useHabitMutations';
@@ -58,6 +58,8 @@ export function useHabitsModalsState({
     isOnline,
   } = useHabitMutations();
   const { milestone, clearMilestone } = useHabitMilestones(habits, false);
+  const [stickyCalendarHeaderOverride, setStickyCalendarHeaderOverride] =
+    useState<boolean>();
 
   const todayKey = getLocalDateString();
   const trackingDates = useMemo(() => generateDateStrings(365), [todayKey]);
@@ -104,11 +106,37 @@ export function useHabitsModalsState({
         s as Record<string, unknown>
       ) as Record<string, unknown>;
 
+      if (
+        Object.prototype.hasOwnProperty.call(updates, 'stickyCalendarHeader')
+      ) {
+        setStickyCalendarHeaderOverride(
+          Boolean(updates.stickyCalendarHeader as boolean)
+        );
+      }
+
       await updateSettingsWithFallback(updateSettings, updates);
     },
     [updateSettings]
   );
 
+  useEffect(() => {
+    if (
+      settings?.stickyCalendarHeader !== undefined &&
+      stickyCalendarHeaderOverride !== undefined &&
+      settings.stickyCalendarHeader === stickyCalendarHeaderOverride
+    ) {
+      setStickyCalendarHeaderOverride(undefined);
+    }
+  }, [settings?.stickyCalendarHeader, stickyCalendarHeaderOverride]);
+
+  const settingsWithOverrides = useMemo(() => {
+    if (settings === undefined) return settings;
+    if (stickyCalendarHeaderOverride === undefined) return settings;
+    return {
+      ...settings,
+      stickyCalendarHeader: stickyCalendarHeaderOverride,
+    };
+  }, [settings, stickyCalendarHeaderOverride]);
   const handlers = useHabitsModalsHandlers(
     buildModalsSettersArg(visibility, selection),
     {
@@ -117,7 +145,7 @@ export function useHabitsModalsState({
       habitToPause: selection.habitToPause,
       pauseHabit: wrappedPauseHabit,
       removeHabit: wrappedRemoveHabit,
-      settings,
+      settings: settingsWithOverrides,
       updateSettings: wrappedUpdateSettings,
     }
   );
@@ -154,7 +182,7 @@ export function useHabitsModalsState({
     milestone,
     onChangeCelebrationsEnabled,
     reduceMotionPreference,
-    settings: settingsWithOverrides,
+    settings,
     showHabitStrengthPercentage,
     tracking,
   });

@@ -8,12 +8,11 @@
  * structure:
  *
  * ```
- * Swipeable (optional — only when onArchive is provided)
+ * Swipeable (optional — only when onArchive or onDelete is provided)
  *   └─ Pressable
  *       └─ ReAnimated.View (card shell: fade, translateY, scale)
  *           ├─ Accent left border strip (entrance animation)
  *           ├─ StrengthFillBackground (watercolor gradient)
- *           ├─ Archive flash overlay
  *           ├─ Highlight glow border overlay
  *           └─ CardContent (header + progress bar + chain + week badge)
  * ```
@@ -21,11 +20,11 @@
  * Wrapped in `React.memo` to avoid FlatList re-render cascades.
  */
 
-import React, { memo, useMemo } from 'react';
+import React, { memo, useCallback, useMemo } from 'react';
 import { Pressable, StyleSheet } from 'react-native';
 import { Swipeable } from 'react-native-gesture-handler';
 import ReAnimated, { useAnimatedStyle } from 'react-native-reanimated';
-import { ArchiveAction } from './ArchiveAction';
+import { SwipeActions } from './SwipeActions';
 import { CardContent } from './CardContent';
 import { SelectionOverlay } from './SelectionOverlay';
 import { StrengthFillBackground } from '../HabitCard/components/StrengthFillBackground';
@@ -56,10 +55,6 @@ function DraggableHabitCardComponent(props: DraggableHabitCardProps) {
     ],
   }));
 
-  const archiveFlashStyle = useAnimatedStyle(() => ({
-    opacity: props.archiveFlash.value,
-  }));
-
   const glowStyle = useAnimatedStyle(() => ({
     opacity: props.highlightGlow.value,
   }));
@@ -78,13 +73,21 @@ function DraggableHabitCardComponent(props: DraggableHabitCardProps) {
     return () => props.onPress?.(props.habit);
   }, [props.showSelectionOverlay, props.onToggleSelection, props.onPress, props.habit]);
 
+  const handleArchivePress = useCallback(() => {
+    props.onArchive?.(props.habit._id);
+  }, [props.onArchive, props.habit._id]);
+
+  const handleDeletePress = useCallback(() => {
+    props.onDelete?.(props.habit._id);
+  }, [props.onDelete, props.habit._id]);
+
+  const hasSwipeActions = props.onArchive || props.onDelete;
+
   const habitCard = (
     <ReAnimated.View style={[props.entranceCardStyle, { flexDirection: 'row', alignItems: 'center' }]}>
-      {props.showSelectionOverlay && (
-        <SelectionOverlay isSelected={!!props.isSelected} onToggle={() => props.onToggleSelection?.()} />
-      )}
+      {props.showSelectionOverlay ? <SelectionOverlay isSelected={!!props.isSelected} onToggle={() => props.onToggleSelection?.()} /> : null}
       <Pressable
-        accessibilityHint={props.showSelectionOverlay ? 'Tap to toggle selection' : `Tap to view details${props.onArchive ? ', swipe left to archive' : ''}`}
+        accessibilityHint={props.showSelectionOverlay ? 'Tap to toggle selection' : `Tap to view details${hasSwipeActions ? ', swipe left for actions' : ''}`}
         accessibilityLabel={`${props.habit.name}, ${props.streak} day streak`}
         accessibilityRole='button'
         style={[pressableStyle, { flex: 1 }]}
@@ -112,24 +115,11 @@ function DraggableHabitCardComponent(props: DraggableHabitCardProps) {
             className='flex-1'
             style={props.entranceContentStyle}
           >
-            {props.showGradientFill && (
-              <StrengthFillBackground
+            {props.showGradientFill ? <StrengthFillBackground
                 isDark={props.isDark}
                 strengthColor={effectiveAccentColor}
                 strengthFillStyle={props.strengthFillStyle}
-              />
-            )}
-            <ReAnimated.View
-              pointerEvents='none'
-              style={[
-                {
-                  backgroundColor: 'rgba(245, 158, 11, 0.18)',
-                  borderRadius: borderRadius.xl,
-                  ...StyleSheet.absoluteFillObject,
-                },
-                archiveFlashStyle,
-              ]}
-            />
+              /> : null}
             <ReAnimated.View
               pointerEvents='none'
               style={[
@@ -152,15 +142,19 @@ function DraggableHabitCardComponent(props: DraggableHabitCardProps) {
     </ReAnimated.View>
   );
 
-  if (!props.onArchive || props.showSelectionOverlay) return habitCard;
+  if (!hasSwipeActions || props.showSelectionOverlay) return habitCard;
 
   return (
     <Swipeable
       friction={2}
       overshootRight={false}
-      renderRightActions={(_, dragX) => <ArchiveAction dragX={dragX} />}
-      rightThreshold={40}
-      onSwipeableOpen={props.handleSwipeableOpen}
+      renderRightActions={(_, dragX) => (
+        <SwipeActions
+          dragX={dragX}
+          onArchive={handleArchivePress}
+          onDelete={handleDeletePress}
+        />
+      )}
     >
       {habitCard}
     </Swipeable>

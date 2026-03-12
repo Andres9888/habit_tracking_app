@@ -60,13 +60,11 @@ export const EmojiGrid = memo(
 
     return (
       <View className='flex-1 bg-white'>
-        {!isSearching && (
-          <View className='px-4 pb-2 pt-3'>
+        {isSearching ? null : <View className='px-4 pb-2 pt-3'>
             <Text className='text-xs font-semibold uppercase tracking-wider text-stone-500'>
               {categoryName}
             </Text>
-          </View>
-        )}
+          </View>}
         <FlatList
           removeClippedSubviews
           showsVerticalScrollIndicator

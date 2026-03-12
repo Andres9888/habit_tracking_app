@@ -53,13 +53,11 @@ export function PausedHabitCard({
           Paused{' '}
           {new Date(habit.pausedAt || habit._creationTime).toLocaleDateString()}
         </Text>
-        {habit.strengthAtPause !== undefined && (
-          <Text
+        {habit.strengthAtPause === undefined ? null : <Text
             style={{ color: colors.text.secondary, fontFamily: fontFamilies.primary.text, fontSize: 13, lineHeight: 18 }}
           >
             Strength preserved: {Math.round(habit.strengthAtPause * 100)}%
-          </Text>
-        )}
+          </Text>}
       </View>
       <Pressable
         accessibilityLabel={`Resume ${habit.name}`}

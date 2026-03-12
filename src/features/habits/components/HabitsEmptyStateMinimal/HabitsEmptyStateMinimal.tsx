@@ -42,6 +42,9 @@ export function HabitsEmptyStateMinimal({
   });
 
   const flow = useHabitCreationFlow({ inputRef, onQuickCreateHabit });
+  const handleCreateHabit = () => {
+    void flow.handleCreateHabit();
+  };
 
   // Auto-focus input after entrance animations complete (iOS only — Android keyboards can be jarring)
   useEffect(() => {
@@ -127,7 +130,7 @@ export function HabitsEmptyStateMinimal({
             secondaryLinksAnimatedStyle={animations.secondaryLinksAnimatedStyle}
             onBrowseTemplates={openTemplatesScreen}
             onCreateCustom={openCreateHabitScreen}
-            onCreateHabit={flow.handleCreateHabit}
+            onCreateHabit={handleCreateHabit}
             onDismissError={flow.handleDismissError}
           />
         </Animated.View>

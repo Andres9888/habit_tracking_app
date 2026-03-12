@@ -4,7 +4,7 @@
  */
 
 import { v } from 'convex/values';
-import { internalMutation, mutation, query } from './_generated/server';
+import { internalMutation, query } from './_generated/server';
 import type { Id } from './_generated/dataModel';
 
 // Frequency constants

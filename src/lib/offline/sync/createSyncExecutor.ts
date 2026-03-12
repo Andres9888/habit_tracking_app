@@ -4,6 +4,7 @@
  * Creates a unified executor that handles all offline operation types.
  */
 
+import type { Id } from '../../../../convex/_generated/dataModel';
 import type { OfflineOperation } from '../queue';
 
 function normalizeReminderTime(value: unknown): string | undefined {
@@ -60,7 +61,10 @@ function normalizeReminderTime(value: unknown): string | undefined {
  * Convex mutation signatures
  */
 export interface ConvexMutations {
-  toggleHabit: (args: { habitId: string; date: string }) => Promise<void>;
+  toggleHabit: (args: {
+    habitId: Id<'habits'>;
+    date: string;
+  }) => Promise<unknown>;
   createHabit: (args: {
     name: string;
     icon?: string;
@@ -71,9 +75,9 @@ export interface ConvexMutations {
     remindersEnabled?: boolean;
     reminderTime?: string;
     reminderSound?: string;
-  }) => Promise<string>;
+  }) => Promise<unknown>;
   updateHabit: (args: {
-    habitId: string;
+    habitId: Id<'habits'>;
     name?: string;
     icon?: string;
     color?: string;
@@ -83,10 +87,10 @@ export interface ConvexMutations {
     remindersEnabled?: boolean;
     reminderTime?: string;
     reminderSound?: string;
-  }) => Promise<void>;
-  archiveHabit: (args: { habitId: string }) => Promise<void>;
-  pauseHabit: (args: { habitId: string }) => Promise<void>;
-  removeHabit: (args: { habitId: string }) => Promise<void>;
+  }) => Promise<unknown>;
+  archiveHabit: (args: { habitId: Id<'habits'> }) => Promise<unknown>;
+  pauseHabit: (args: { habitId: Id<'habits'> }) => Promise<unknown>;
+  removeHabit: (args: { habitId: Id<'habits'> }) => Promise<unknown>;
 }
 
 /**
@@ -98,7 +102,7 @@ export function createSyncExecutor(mutations: ConvexMutations) {
       case 'toggleCompletion': {
         const payload = operation.payload as Extract<
           OfflineOperation['payload'],
-          { habitId: string; date: string }
+          { habitId: Id<'habits'>; date: string }
         >;
         await mutations.toggleHabit({
           habitId: payload.habitId,
@@ -112,7 +116,9 @@ export function createSyncExecutor(mutations: ConvexMutations) {
           OfflineOperation['payload'],
           { name: string; tempId: string }
         >;
-        const normalizedReminderTime = normalizeReminderTime(payload.reminderTime);
+        const normalizedReminderTime = normalizeReminderTime(
+          payload.reminderTime
+        );
         // Server will create habit with server-assigned ID
         // State reconciliation will handle mapping tempId → serverId
         await mutations.createHabit({
@@ -132,13 +138,18 @@ export function createSyncExecutor(mutations: ConvexMutations) {
       case 'updateHabit': {
         const payload = operation.payload as Extract<
           OfflineOperation['payload'],
-          { habitId: string; updates: object }
+          { habitId: Id<'habits'>; updates: object }
         >;
         const { habitId, updates } = payload;
         const normalizedUpdates = { ...updates } as Record<string, unknown>;
-        if (Object.prototype.hasOwnProperty.call(normalizedUpdates, 'reminderTime')) {
+        if (
+          Object.prototype.hasOwnProperty.call(
+            normalizedUpdates,
+            'reminderTime'
+          )
+        ) {
           const normalizedReminderTime = normalizeReminderTime(
-            normalizedUpdates.reminderTime as unknown
+            normalizedUpdates.reminderTime
           );
           if (normalizedReminderTime) {
             normalizedUpdates.reminderTime = normalizedReminderTime;
@@ -156,7 +167,7 @@ export function createSyncExecutor(mutations: ConvexMutations) {
       case 'archiveHabit': {
         const payload = operation.payload as Extract<
           OfflineOperation['payload'],
-          { habitId: string }
+          { habitId: Id<'habits'> }
         >;
         await mutations.archiveHabit({ habitId: payload.habitId });
         break;
@@ -165,7 +176,7 @@ export function createSyncExecutor(mutations: ConvexMutations) {
       case 'pauseHabit': {
         const payload = operation.payload as Extract<
           OfflineOperation['payload'],
-          { habitId: string }
+          { habitId: Id<'habits'> }
         >;
         await mutations.pauseHabit({ habitId: payload.habitId });
         break;
@@ -174,7 +185,7 @@ export function createSyncExecutor(mutations: ConvexMutations) {
       case 'removeHabit': {
         const payload = operation.payload as Extract<
           OfflineOperation['payload'],
-          { habitId: string }
+          { habitId: Id<'habits'> }
         >;
         await mutations.removeHabit({ habitId: payload.habitId });
         break;

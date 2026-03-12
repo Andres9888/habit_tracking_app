@@ -20,11 +20,9 @@ export function PlaybackHeader({ label, isDay1 }: PlaybackHeaderProps) {
       >
         {label || 'Voice Note'}
       </Text>
-      {isDay1 && (
-        <View className='rounded-full bg-amber-100 px-2 py-0.5'>
+      {isDay1 ? <View className='rounded-full bg-amber-100 px-2 py-0.5'>
           <Text className='text-xs font-medium text-amber-700'>Day 1</Text>
-        </View>
-      )}
+        </View> : null}
     </View>
   );
 }

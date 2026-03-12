@@ -67,14 +67,12 @@ export default function StreakChain({
                 />
               </View>
 
-              {idx < statuses.length - 1 && (
-                <View
+              {idx < statuses.length - 1 ? <View
                   className='mx-1.5 h-0.5 w-[18px] rounded-sm'
                   style={{
                     backgroundColor: connectorActive ? '#93C5FD' : '#E5E7EB',
                   }}
-                />
-              )}
+                /> : null}
             </View>
           );
         })}

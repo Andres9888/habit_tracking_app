@@ -92,8 +92,7 @@ export function ThisMonthCard({
               index={index}
               isBest={bestDay?.dayIndex === day.dayIndex}
               isWorst={
-                worstDay?.dayIndex === day.dayIndex &&
-                day.rate < (bestDay?.rate || 100)
+                worstDay?.dayIndex === day.dayIndex ? day.rate < (bestDay?.rate || 100) : null
               }
               maxRate={maxRate}
               reduceMotion={reduceMotion}

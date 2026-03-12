@@ -16,10 +16,7 @@ import { useBarAnimations } from './useBarAnimations';
 import { useCelebrationState } from './useCelebrationState';
 import { useCelebrationAnimations, useProgressAnimation } from './useCelebrationAnimations';
 import { ProgressRingFAB } from './ProgressRingFAB';
-import {
-  BLUR_INTENSITY, BORDER_DARK, BORDER_LIGHT,
-  CAPSULE_SHADOW, ENTERING, styles,
-} from './BottomActionBar.styles';
+import { BLUR_INTENSITY, BORDER_DARK, BORDER_LIGHT, CAPSULE_SHADOW, ENTERING, styles } from './BottomActionBar.styles';
 import type { BottomActionBarProps } from './types';
 
 const iconButtonHitSlop = {

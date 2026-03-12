@@ -112,16 +112,14 @@ export const DayCellRing: React.FC<DayCellRingProps> = ({
   return (
     <View style={[styles.container, opacityStyle]}>
       <Svg height={RING_SIZE} width={RING_SIZE} style={styles.svg}>
-        {rc.todayBorder && (
-          <Circle
+        {rc.todayBorder ? <Circle
             cx={HALF}
             cy={HALF}
             fill='transparent'
             r={RADIUS + STROKE_WIDTH / 2}
             stroke={rc.todayBorder}
             strokeWidth={1}
-          />
-        )}
+          /> : null}
         <Circle
           cx={HALF}
           cy={HALF}
@@ -131,8 +129,7 @@ export const DayCellRing: React.FC<DayCellRingProps> = ({
           strokeDasharray={isUpcoming ? '4 4' : undefined}
           strokeWidth={STROKE_WIDTH}
         />
-        {progress > 0 && (
-          <AnimatedCircle
+        {progress > 0 ? <AnimatedCircle
             animatedProps={animatedArcProps}
             cx={HALF}
             cy={HALF}
@@ -142,20 +139,17 @@ export const DayCellRing: React.FC<DayCellRingProps> = ({
             strokeDasharray={CIRCUMFERENCE}
             strokeLinecap='round'
             strokeWidth={STROKE_WIDTH}
-          />
-        )}
+          /> : null}
       </Svg>
       <View style={styles.centerLabel}>
-        {monthPrefix && (
-          <Text
+        {monthPrefix ? <Text
             style={[
               styles.monthPrefixText,
               { color: MONTH_PREFIX_COLORS[isDark ? 'dark' : 'light'] },
             ]}
           >
             {monthPrefix}
-          </Text>
-        )}
+          </Text> : null}
         <Text style={[textStyle, { color: rc.text }]}>{dayNumber}</Text>
       </View>
     </View>

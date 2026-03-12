@@ -14,9 +14,6 @@ import React, { useMemo } from 'react';
 import { View, Text, Pressable } from 'react-native';
 import Animated, {
   FadeInDown,
-  useAnimatedStyle,
-  useSharedValue,
-  withSpring,
 } from 'react-native-reanimated';
 import { Info } from 'lucide-react-native';
 import { useThemeColors } from '../../../theme/ThemeContext';
@@ -66,8 +63,7 @@ export const WeeklyComparisonCard = React.memo(function WeeklyComparisonCard({
           >
             Weekly Comparison
           </Text>
-          {onInfoPress && (
-            <Pressable
+          {onInfoPress ? <Pressable
               accessibilityLabel='Learn more about weekly comparison'
               accessibilityRole='button'
               hitSlop={8}
@@ -79,8 +75,7 @@ export const WeeklyComparisonCard = React.memo(function WeeklyComparisonCard({
               >
                 <Info color={colors.text.tertiary} size={10} />
               </View>
-            </Pressable>
-          )}
+            </Pressable> : null}
         </View>
 
         <TrendBadge rateChange={rateChange} trendStyle={trendStyle} />

@@ -1,12 +1,12 @@
 /* eslint-disable max-lines */
 import React, { useCallback, memo } from 'react';
-import { View } from 'react-native';
 import Animated, {
   useAnimatedStyle,
   withSpring,
   withTiming,
 } from 'react-native-reanimated';
 import { ScaleDecorator } from 'react-native-draggable-flatlist';
+import type { Id } from '../../../../convex/_generated/dataModel';
 import { springs } from '@/theme/animations';
 import DraggableHabit from '../../../components/DraggableHabit';
 import type { Habit, HabitStatus } from '../types';
@@ -23,8 +23,8 @@ type HabitRenderContentProps = {
   isConnectedToPreviousWeek: boolean;
   drag?: () => void;
   showHabitStrengthPercentage: boolean;
-  handlePause?: (habitId: string) => void;
-  handleResume?: (habitId: string) => void;
+  handlePause?: (habitId: Id<'habits'>) => void;
+  handleResume?: (habitId: Id<'habits'>) => void;
 } & Pick<
   UseHabitRenderItemArgs,
   | 'celebrationsEnabled'
@@ -33,6 +33,7 @@ type HabitRenderContentProps = {
   | 'dayShape'
   | 'entranceVariant'
   | 'handleArchive'
+  | 'handleDelete'
   | 'handleHabitPress'
   | 'highlightHabitId'
   | 'isReorderingEnabled'
@@ -63,6 +64,7 @@ function HabitRenderContentComponent({
   dayShape,
   entranceVariant,
   handleArchive,
+  handleDelete,
   handleHabitPress,
   handlePause,
   handleResume,
@@ -91,8 +93,18 @@ function HabitRenderContentComponent({
     [notifyWeekCompletion, item]
   );
 
-  const handleLongPress = isSelectionMode ? undefined : (isReorderingEnabled ? drag : undefined);
-  const handleToggle = useCallback(() => onToggleSelection?.(item._id), [onToggleSelection, item._id]);
+  const handleLongPress = isSelectionMode
+    ? undefined
+    : isReorderingEnabled
+      ? drag
+      : undefined;
+  const handleToggle = useCallback(
+    () => onToggleSelection?.(item._id),
+    [onToggleSelection, item._id]
+  );
+  const handleToggleHabit = (args: Parameters<typeof toggleHabit>[0]) => {
+    void toggleHabit(args);
+  };
 
   // Animated style for the active drag state
   const activeStyle = useAnimatedStyle(() => ({
@@ -140,13 +152,14 @@ function HabitRenderContentComponent({
           showConnectors={showConnectors}
           showHabitStrengthPercentage={showHabitStrengthPercentage ?? false}
           streak={streak}
-          toggleHabit={toggleHabit}
+          toggleHabit={handleToggleHabit}
           triggerEntrance={triggerEntrance}
           weekDateStrings={weekDateStrings}
           weekStatus={weekStatus}
           isSelected={isSelectionMode ? selectedIds?.has(item._id) : undefined}
           showSelectionOverlay={isSelectionMode}
           onArchive={isSelectionMode ? undefined : handleArchive}
+          onDelete={isSelectionMode ? undefined : handleDelete}
           onEntranceComplete={handleEntranceComplete}
           onLongPress={handleLongPress}
           onPause={handlePause}

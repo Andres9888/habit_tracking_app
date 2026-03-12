@@ -50,11 +50,9 @@ export function SyncingIndicator({
         <RefreshCw color={ICON_COLOR} size={ICON_SIZE} strokeWidth={2.5} />
       </Animated.View>
       <Text style={styles.text}>Syncing</Text>
-      {pendingCount !== undefined && pendingCount > 0 && (
-        <View style={styles.countBadge} testID={`${testID}-count`}>
+      {pendingCount !== undefined && pendingCount > 0 ? <View style={styles.countBadge} testID={`${testID}-count`}>
           <Text style={styles.countText}>{pendingCount}</Text>
-        </View>
-      )}
+        </View> : null}
     </Animated.View>
   );
 }

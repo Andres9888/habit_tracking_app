@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { memo, useCallback, useState } from 'react';
 import { Animated, Pressable, Text, View } from 'react-native';
 
@@ -40,7 +41,14 @@ function HabitDayToggleRowComponent({
     } finally {
       setIsToggling(false);
     }
-  }, [isLoading, isToggling, isCompleted, onToggle, animatePressEffect, animateCheckbox]);
+  }, [
+    animateCheckbox,
+    animatePressEffect,
+    isCompleted,
+    isLoading,
+    isToggling,
+    onToggle,
+  ]);
 
   const accessibilityLabel = `${habit.name}, ${isCompleted ? 'completed' : 'not completed'}`;
 
@@ -56,7 +64,9 @@ function HabitDayToggleRowComponent({
         }}
         className='flex-row items-center gap-3 rounded-2xl bg-stone-50/80 px-4 py-3.5 active:bg-stone-100'
         disabled={isLoading || isToggling}
-        onPress={handlePress}
+        onPress={() => {
+          void handlePress();
+        }}
       >
         <View className='h-10 w-10 items-center justify-center rounded-xl bg-white shadow-sm'>
           <Text className='text-[20px]'>{habit.icon || '🎯'}</Text>
@@ -64,7 +74,8 @@ function HabitDayToggleRowComponent({
 
         <Text
           className='flex-1 text-[15px] font-medium text-stone-800'
-          numberOfLines={1}
+          ellipsizeMode='tail'
+          numberOfLines={2}
         >
           {habit.name}
         </Text>

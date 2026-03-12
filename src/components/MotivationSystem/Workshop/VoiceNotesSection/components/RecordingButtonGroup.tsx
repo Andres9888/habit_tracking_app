@@ -22,7 +22,7 @@ export function RecordingButtonGroup({
 }: RecordingButtonGroupProps) {
   return (
     <View className='flex-row items-center gap-6'>
-      {(isRecording || isPaused) && <CancelButton onCancelRecording={onCancelRecording} />}
+      {(isRecording || isPaused) ? <CancelButton onCancelRecording={onCancelRecording} /> : null}
       <MainRecordButton
         isPaused={isPaused}
         isRecording={isRecording}
@@ -30,7 +30,7 @@ export function RecordingButtonGroup({
         onResumeRecording={onResumeRecording}
         onStartRecording={onStartRecording}
       />
-      {(isRecording || isPaused) && <StopButton onStopRecording={onStopRecording} />}
+      {(isRecording || isPaused) ? <StopButton onStopRecording={onStopRecording} /> : null}
     </View>
   );
 }

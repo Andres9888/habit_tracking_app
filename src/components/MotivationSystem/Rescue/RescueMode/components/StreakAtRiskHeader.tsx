@@ -62,16 +62,14 @@ export function StreakAtRiskHeader({
       </View>
 
       {/* Time remaining */}
-      {hoursRemaining !== undefined && (
-        <View className='mt-2 flex-row items-center gap-1'>
+      {hoursRemaining === undefined ? null : <View className='mt-2 flex-row items-center gap-1'>
           <Timer className='text-rose-500' size={14} />
           <Text className='text-sm font-medium text-rose-600'>
             {hoursRemaining <= 1
               ? 'Less than 1 hour left'
               : `${hoursRemaining} hours remaining`}
           </Text>
-        </View>
-      )}
+        </View>}
     </View>
   );
 }

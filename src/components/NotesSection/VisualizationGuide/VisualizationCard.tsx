@@ -53,8 +53,7 @@ export function VisualizationCard({ technique }: VisualizationCardProps) {
           <ChevronDown className='text-stone-400' size={20} />
         )}
       </Pressable>
-      {expanded && (
-        <Animated.View
+      {expanded ? <Animated.View
           className='border-t border-stone-100 bg-stone-50/50 px-4 pb-4'
           entering={FadeIn.duration(200)}
         >
@@ -72,8 +71,7 @@ export function VisualizationCard({ technique }: VisualizationCardProps) {
             type='mistake'
             why={technique.bad.why}
           />
-        </Animated.View>
-      )}
+        </Animated.View> : null}
     </Animated.View>
   );
 }

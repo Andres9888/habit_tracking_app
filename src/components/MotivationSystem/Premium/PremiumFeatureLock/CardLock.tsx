@@ -76,14 +76,12 @@ export function CardLock({
           <Text className='mb-2 text-sm text-stone-600'>
             {meta.description}
           </Text>
-          {showScience && (
-            <View className='flex-row items-start gap-2 rounded-lg bg-amber-50 px-3 py-2'>
+          {showScience ? <View className='flex-row items-start gap-2 rounded-lg bg-amber-50 px-3 py-2'>
               <Sparkles className='mt-0.5 text-amber-500' size={14} />
               <Text className='flex-1 text-xs italic text-amber-700'>
                 {meta.scienceBasis}
               </Text>
-            </View>
-          )}
+            </View> : null}
         </View>
       </Animated.View>
     </Pressable>

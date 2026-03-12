@@ -60,14 +60,12 @@ export const StreakRecordsAccordion = React.memo(
             />
           </View>
         </Animated.View>
-        {!hasContentMeasured && (
-          <MeasurementContainer
+        {hasContentMeasured ? null : <MeasurementContainer
             currentStreak={currentStreak}
             records={top3Records}
             reduceMotion={reduceMotion}
             onLayout={handleContentLayout}
-          />
-        )}
+          />}
       </View>
     );
   }

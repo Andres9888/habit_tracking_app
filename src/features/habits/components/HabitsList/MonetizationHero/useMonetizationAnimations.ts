@@ -13,14 +13,7 @@
  */
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import {
-  useSharedValue,
-  useAnimatedStyle,
-  withTiming,
-  withRepeat,
-  withSequence,
-  Easing,
-} from 'react-native-reanimated';
+import { useSharedValue, useAnimatedStyle, withTiming, withRepeat, withSequence, Easing } from 'react-native-reanimated';
 
 interface UseMonetizationAnimationsOptions {
   freeHabitLimit: number;

@@ -15,7 +15,6 @@ import {
   useAnimatedScrollHandler,
   Easing,
 } from 'react-native-reanimated';
-import type { SharedValue } from 'react-native-reanimated';
 import type { StickyHeaderContextValue } from '../../../../components/CalendarTimeline/StickyHeaderContext';
 
 /** Matches pt-12 (48px) — the point where the shelf reaches screen top */

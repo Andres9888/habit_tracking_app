@@ -92,6 +92,12 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     marginBottom: 1,
   },
+  weeksContainer: {
+    // Fixed height for 6 rows (40px each + 1px margin) prevents layout shift
+    // when navigating between months with 5 vs 6 weeks
+    minHeight: 6 * 41,
+    overflow: 'hidden',
+  },
   streakCircle: {
     borderRadius: 5,
     bottom: 3,

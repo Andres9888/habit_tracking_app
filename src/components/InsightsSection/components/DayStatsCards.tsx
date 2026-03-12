@@ -18,8 +18,7 @@ export function DayStatsCards({ bestDay, worstDay }: DayStatsCardsProps) {
 
   return (
     <View className='flex-row gap-3'>
-      {bestDay && (
-        <View className='flex-1 rounded-xl border border-emerald-100 bg-emerald-50 p-3'>
+      {bestDay ? <View className='flex-1 rounded-xl border border-emerald-100 bg-emerald-50 p-3'>
           <View className='mb-1 flex-row items-center gap-1.5'>
             <Trophy className='text-emerald-500' size={14} />
             <Text className='text-xs font-medium text-emerald-600'>
@@ -32,10 +31,8 @@ export function DayStatsCards({ bestDay, worstDay }: DayStatsCardsProps) {
           <Text className='text-xs text-emerald-600'>
             {bestDay.rate}% success
           </Text>
-        </View>
-      )}
-      {showWorst && (
-        <View className='flex-1 rounded-xl border border-amber-100 bg-amber-50 p-3'>
+        </View> : null}
+      {showWorst ? <View className='flex-1 rounded-xl border border-amber-100 bg-amber-50 p-3'>
           <View className='mb-1 flex-row items-center gap-1.5'>
             <AlertTriangle className='text-amber-500' size={14} />
             <Text className='text-xs font-medium text-amber-600'>
@@ -48,8 +45,7 @@ export function DayStatsCards({ bestDay, worstDay }: DayStatsCardsProps) {
           <Text className='text-xs text-amber-600'>
             {worstDay.rate}% success
           </Text>
-        </View>
-      )}
+        </View> : null}
     </View>
   );
 }

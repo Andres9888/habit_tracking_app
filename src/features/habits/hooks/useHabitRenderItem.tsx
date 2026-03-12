@@ -16,6 +16,7 @@ export function useHabitRenderItem(args: UseHabitRenderItemArgs) {
     dayShape = 'square',
     entranceVariant = 'widthExpansion',
     handleArchive,
+    handleDelete,
     handleHabitPress,
     highlightHabitId,
     isReorderingEnabled,
@@ -46,6 +47,7 @@ export function useHabitRenderItem(args: UseHabitRenderItemArgs) {
           entranceDelay={renderData.entranceDelay}
           entranceVariant={entranceVariant}
           handleArchive={handleArchive}
+          handleDelete={handleDelete}
           handleHabitPress={handleHabitPress}
           highlightHabitId={highlightHabitId}
           isActive={Boolean(isActive)}

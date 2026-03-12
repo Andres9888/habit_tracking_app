@@ -42,11 +42,9 @@ export function TemplateListCard({
         onImport={() => onImport(item._id)}
         onPreview={() => onPreview(item)}
       />
-      {isImporting && (
-        <View style={loadingStyles.overlay}>
+      {isImporting ? <View style={loadingStyles.overlay}>
           <ActivityIndicator color={colors.primary[600]} size="small" />
-        </View>
-      )}
+        </View> : null}
     </View>
   );
 }

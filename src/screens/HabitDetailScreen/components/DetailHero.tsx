@@ -25,8 +25,7 @@ export function DetailHero({ habit }: DetailHeroProps) {
 
   return (
     <Animated.View className='items-center px-4 pb-6' entering={ENTERING}>
-      {habit.icon && (
-        <View
+      {habit.icon ? <View
           accessibilityLabel={`Habit icon: ${habit.icon}`}
           className='mb-4 h-20 w-20 items-center justify-center rounded-2xl'
           style={{
@@ -41,8 +40,7 @@ export function DetailHero({ habit }: DetailHeroProps) {
           >
             {habit.icon}
           </Text>
-        </View>
-      )}
+        </View> : null}
       <Text
         accessibilityLabel={`Habit: ${habitName}`}
         accessibilityRole='header'
@@ -56,8 +54,7 @@ export function DetailHero({ habit }: DetailHeroProps) {
       >
         {habitName}
       </Text>
-      {(habit.currentStreak ?? 0) > 0 && (
-        <Animated.View
+      {(habit.currentStreak ?? 0) > 0 ? <Animated.View
           accessibilityLabel={`Current streak: ${habit.currentStreak} days`}
           accessibilityLiveRegion='polite'
           accessibilityRole='status'
@@ -81,8 +78,7 @@ export function DetailHero({ habit }: DetailHeroProps) {
           >
             {habit.currentStreak} day streak
           </Text>
-        </Animated.View>
-      )}
+        </Animated.View> : null}
     </Animated.View>
   );
 }

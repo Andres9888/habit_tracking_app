@@ -19,7 +19,7 @@ export function useTemplateBadge({ totalHabits, hasViewedTemplates }: UseTemplat
   const [showBadge, setShowBadge] = useState(false);
 
   useEffect(() => {
-    checkBadgeVisibility();
+    void checkBadgeVisibility();
   }, [totalHabits, hasViewedTemplates]);
 
   const checkBadgeVisibility = async () => {

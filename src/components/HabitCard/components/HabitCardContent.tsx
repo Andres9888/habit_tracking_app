@@ -1,4 +1,4 @@
-/* eslint-disable max-lines */
+/* eslint-disable max-lines-per-function */
 /**
  * HabitCardContent Component
  * Inner content of the HabitCard including name, icon, streak, and progress
@@ -43,7 +43,8 @@ function HabitCardContentComponent({
         <View style={styles.habitInfo}>
           <Text style={styles.icon}>{icon}</Text>
           <Text
-            numberOfLines={1}
+            ellipsizeMode='tail'
+            numberOfLines={2}
             style={[
               theme.custom.typography.heading3,
               { color: themeColors.text.primary },

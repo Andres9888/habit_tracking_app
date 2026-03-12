@@ -35,6 +35,11 @@ export function TemplateModals({
   showCustomizeModal,
   showFullsizePreview,
 }: TemplateModalsProps) {
+  const handleDirectImport = (templateId: Id<'templates'>) => { void onDirectImport(templateId); };
+  const handleImport = (templateId: Id<'templates'>, customizations?: TemplateCustomizations) => {
+    void onImport(templateId, customizations);
+  };
+
   return (
     <>
       <FullsizeTemplatePreview
@@ -46,7 +51,7 @@ export function TemplateModals({
         visible={showFullsizePreview}
         onClose={onCloseFullsize}
         onCustomize={onCustomize}
-        onImport={onDirectImport}
+        onImport={handleDirectImport}
       />
 
       <TemplatePreviewModal
@@ -54,7 +59,7 @@ export function TemplateModals({
         template={previewTemplate}
         visible={showCustomizeModal}
         onClose={onCloseCustomize}
-        onImport={onImport}
+        onImport={handleImport}
       />
     </>
   );

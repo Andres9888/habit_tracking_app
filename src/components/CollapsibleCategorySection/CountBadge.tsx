@@ -22,14 +22,12 @@ export function CountBadge({ templateCount, scienceCount }: CountBadgeProps) {
       <Text style={styles.countTextHabits}>
         {templateCount} {habitsText}
       </Text>
-      {scienceCount > 0 && (
-        <>
+      {scienceCount > 0 ? <>
           <Text style={styles.countTextHabits}> · </Text>
           <Text style={styles.countTextScience}>
             {scienceCount} science-backed
           </Text>
-        </>
-      )}
+        </> : null}
     </Text>
   );
 }

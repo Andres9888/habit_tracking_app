@@ -4,4 +4,4 @@ export {
   logoutPurchases,
   isPurchasesAvailable,
 } from './init';
-export { Purchases } from './facade';
+export { Purchases } from './Purchases';

@@ -34,7 +34,8 @@ export default function HabitCalendarModal({
     toggleHabit,
     tracking,
   });
-  const showStickyHeader = false;
+  const isStickyCalendarHeader = false;
+  const showStickyHeader = Boolean(isStickyCalendarHeader);
   const calendarViewState = useHabitCalendarViewLogic({
     habitId: habit?._id ?? tracking[0]?.habitId ?? ('' as Id<'habits'>),
     tracking,
@@ -64,7 +65,7 @@ export default function HabitCalendarModal({
           showsVerticalScrollIndicator={false}
           stickyHeaderIndices={showStickyHeader ? [0] : []}
         >
-          {showStickyHeader && (
+          {showStickyHeader ? (
             <View
               className='pb-3 pt-2'
               style={{
@@ -80,7 +81,7 @@ export default function HabitCalendarModal({
                 onToday={calendarViewState.handleToday}
               />
             </View>
-          )}
+          ) : null}
 
           <StatusRibbon
             bestStreak={state.bestStreak}
@@ -117,7 +118,7 @@ export default function HabitCalendarModal({
             <HabitCalendarView
               calendarViewState={calendarViewState}
               habitId={habit._id}
-              showHeader={!isStickyCalendarHeader}
+              showHeader={!showStickyHeader}
               toggleHabit={toggleHabit}
               tracking={tracking}
             />

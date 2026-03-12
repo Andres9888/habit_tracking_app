@@ -28,28 +28,22 @@ export function HabitsModals({ state }: HabitsModalsProps) {
       <ErrorBoundary fallback={null}>
         <SettingsModalSection {...getSettingsProps(state)} />
       </ErrorBoundary>
-      {shouldRenderCreateHabit && (
-        <ErrorBoundary fallback={null}>
+      {shouldRenderCreateHabit ? <ErrorBoundary fallback={null}>
           <CreateHabitModalSection
             closeCreateHabit={state.closeCreateHabit}
             habitToEdit={state.habitToEdit}
             showCreateHabit={state.showCreateHabit}
           />
-        </ErrorBoundary>
-      )}
-      {__DEV__ && (
-        <ErrorBoundary fallback={null}>
+        </ErrorBoundary> : null}
+      {__DEV__ ? <ErrorBoundary fallback={null}>
           <HapticTestModalSection
             closeHapticTest={state.closeHapticTest}
             showHapticTest={state.showHapticTest}
           />
-        </ErrorBoundary>
-      )}
-      {shouldRenderCalendarAndDetail && (
-        <ErrorBoundary fallback={null}>
+        </ErrorBoundary> : null}
+      {shouldRenderCalendarAndDetail ? <ErrorBoundary fallback={null}>
           <CalendarAndDetailModals {...getCalendarAndDetailProps(state)} />
-        </ErrorBoundary>
-      )}
+        </ErrorBoundary> : null}
       <ShareAndPauseModals {...getShareAndPauseProps(state)} />
       <ErrorBoundary fallback={null}>
         <TemplatesModalSection
@@ -59,17 +53,14 @@ export function HabitsModals({ state }: HabitsModalsProps) {
         />
       </ErrorBoundary>
       <QuickActionsSection {...getQuickActionsProps(state)} />
-      {shouldRenderVisualization && (
-        <ErrorBoundary fallback={null}>
+      {shouldRenderVisualization ? <ErrorBoundary fallback={null}>
           <VisualizationModalSection
             closeVisualizationExercise={state.closeVisualizationExercise}
             selectedHabit={state.selectedHabit}
             showVisualizationExercise={state.showVisualizationExercise}
           />
-        </ErrorBoundary>
-      )}
-      {shouldRenderActivation && (
-        <ErrorBoundary fallback={null}>
+        </ErrorBoundary> : null}
+      {shouldRenderActivation ? <ErrorBoundary fallback={null}>
           <ActivationModalSection
             activationModalHabit={state.activationModalHabit}
             closeActivationModal={state.closeActivationModal}
@@ -77,8 +68,7 @@ export function HabitsModals({ state }: HabitsModalsProps) {
             showActivationModal={state.showActivationModal}
             toggleHabit={state.toggleHabit}
           />
-        </ErrorBoundary>
-      )}
+        </ErrorBoundary> : null}
     </>
   );
 }

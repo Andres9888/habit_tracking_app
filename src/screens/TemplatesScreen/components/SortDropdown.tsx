@@ -53,9 +53,7 @@ export function SortDropdown({ colors, onSelectSort, sortOption }: SortDropdownP
             >
               {opt.label}
             </Text>
-            {selected && (
-              <Check color={colors.primary[500]} size={16} strokeWidth={2.5} />
-            )}
+            {selected ? <Check color={colors.primary[500]} size={16} strokeWidth={2.5} /> : null}
           </AnimatedPressable>
         );
       })}

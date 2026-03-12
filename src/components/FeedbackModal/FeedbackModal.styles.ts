@@ -1,121 +1,121 @@
+/* eslint-disable max-lines */
 /**
  * FeedbackModal Styles
  */
 
 import { StyleSheet } from 'react-native';
-import { colors } from '../../theme/colors'
-import { fontFamilies } from '../../theme/typography';;
 
-const WHITE = '#FFFFFF';
+import { colors as appColors } from '../../theme/colors';
+import { useThemeColors } from '../../theme/ThemeContext';
+import { borderRadius, spacing } from '../../theme/spacing';
+import { fontFamilies, typography } from '../../theme/typography';
 
-export const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: WHITE,
-  },
-  contentContainer: {
-    padding: 20,
-    paddingBottom: 40,
-  },
-  header: {
-    marginBottom: 24,
-  },
-  headerTitle: {
-    fontFamily: fontFamilies.primary.display,
-    fontSize: 34,
-    fontWeight: '700',
-    color: colors.gray[900],
-    marginBottom: 4,
-  },
-  headerSubtitle: {
-    fontFamily: fontFamilies.primary.text,
-    fontSize: 17,
-    color: colors.gray[600],
-  },
-  section: {
-    marginBottom: 24,
-  },
-  sectionLabel: {
-    fontFamily: fontFamilies.primary.text,
-    fontSize: 17,
-    fontWeight: '600',
-    color: colors.gray[900],
-    marginBottom: 12,
-  },
-  required: {
-    color: colors.error,
-  },
-  typeCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 16,
-    borderWidth: 2,
-    borderColor: colors.gray[200],
-    borderRadius: 12,
-    marginBottom: 12,
-    backgroundColor: WHITE,
-  },
-  typeCardSelected: {
-    backgroundColor: colors.gray[50],
-  },
-  typeIconContainer: {
-    width: 40,
-    height: 40,
-    borderRadius: 8,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: 12,
-  },
-  typeContent: {
-    flex: 1,
-  },
-  typeLabel: {
-    fontFamily: fontFamilies.primary.text,
-    fontSize: 17,
-    fontWeight: '600',
-    color: colors.gray[900],
-    marginBottom: 2,
-  },
-  typeDescription: {
-    fontFamily: fontFamilies.primary.text,
-    fontSize: 13,
-    color: colors.gray[600],
-  },
-  selectedIndicator: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: colors.gray[300],
-    borderRadius: 12,
-    padding: 16,
-    fontFamily: fontFamilies.primary.text,
-    fontSize: 17,
-    color: colors.gray[900],
-    backgroundColor: WHITE,
-  },
-  textArea: {
-    minHeight: 120,
-    maxHeight: 200,
-  },
-  charCount: {
-    fontFamily: fontFamilies.monospace,
-    fontSize: 13,
-    color: colors.gray[500],
-    textAlign: 'right',
-    marginTop: 4,
-  },
-  footer: {
-    flexDirection: 'row',
-    gap: 12,
-    marginTop: 8,
-  },
-  cancelButton: {
-    flex: 1,
-  },
-  submitButton: {
-    flex: 2,
-  },
-});
+export function useFeedbackModalStyles() {
+  const { colors } = useThemeColors();
+
+  return StyleSheet.create({
+    cancelButton: {
+      flex: 1,
+    },
+    charCount: {
+      color: colors.text.secondary,
+      fontFamily: fontFamilies.monospace,
+      fontSize: typography.caption.fontSize,
+      marginTop: spacing.xs,
+      textAlign: 'right',
+    },
+    container: {
+      backgroundColor: colors.background,
+      flex: 1,
+    },
+    contentContainer: {
+      padding: spacing.lg,
+      paddingBottom: spacing['2xl'],
+    },
+    footer: {
+      flexDirection: 'row',
+      gap: spacing.md,
+      marginTop: spacing.sm,
+    },
+    header: {
+      marginBottom: spacing.lg,
+    },
+    headerSubtitle: {
+      color: colors.text.secondary,
+      ...typography.body,
+    },
+    headerTitle: {
+      color: colors.text.primary,
+      marginBottom: spacing.xs,
+      ...typography.displayLarge,
+    },
+    input: {
+      backgroundColor: colors.card,
+      borderColor: colors.border,
+      borderRadius: borderRadius.button,
+      borderWidth: 1,
+      color: colors.text.primary,
+      fontFamily: fontFamilies.primary.text,
+      fontSize: typography.body.fontSize,
+      padding: spacing.base,
+    },
+    required: {
+      color: appColors.error,
+    },
+    section: {
+      marginBottom: spacing.lg,
+    },
+    sectionLabel: {
+      color: colors.text.primary,
+      fontWeight: '600',
+      marginBottom: spacing.md,
+      ...typography.body,
+    },
+    selectedIndicator: {
+      borderRadius: borderRadius.xs,
+      height: spacing.sm,
+      width: spacing.sm,
+    },
+    submitButton: {
+      flex: 2,
+    },
+    textArea: {
+      maxHeight: 200,
+      minHeight: 120,
+    },
+    typeCard: {
+      alignItems: 'center',
+      backgroundColor: colors.card,
+      borderColor: colors.border,
+      borderRadius: borderRadius.button,
+      borderWidth: 1.5,
+      flexDirection: 'row',
+      marginBottom: spacing.md,
+      padding: spacing.base,
+    },
+    typeCardSelected: {
+      backgroundColor: colors.gray[50],
+    },
+    typeContent: {
+      flex: 1,
+    },
+    typeDescription: {
+      color: colors.text.secondary,
+      ...typography.caption,
+    },
+    typeIconContainer: {
+      alignItems: 'center',
+      borderRadius: borderRadius.chip,
+      height: 40,
+      justifyContent: 'center',
+      marginRight: spacing.md,
+      width: 40,
+    },
+    typeLabel: {
+      color: colors.text.primary,
+      fontWeight: '600',
+      marginBottom: 2,
+      ...typography.body,
+    },
+  });
+}

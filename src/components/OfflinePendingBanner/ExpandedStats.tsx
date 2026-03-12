@@ -42,22 +42,18 @@ export function ExpandedStats({
         </View>
 
         {/* Failed items warning */}
-        {stats.failedItems > 0 && (
-          <View style={styles.warningContainer}>
+        {stats.failedItems > 0 ? <View style={styles.warningContainer}>
             <AlertTriangle color='#F59E0B' size={14} />
             <Text style={styles.warningText}>
               {stats.failedItems} item{stats.failedItems === 1 ? '' : 's'}{' '}
               failed to sync
             </Text>
-          </View>
-        )}
+          </View> : null}
 
         {/* Oldest item */}
-        {stats.oldestItemAt && (
-          <Text style={styles.ageText}>
+        {stats.oldestItemAt ? <Text style={styles.ageText}>
             Oldest: {formatRelativeTime(stats.oldestItemAt)}
-          </Text>
-        )}
+          </Text> : null}
       </View>
     </Animated.View>
   );

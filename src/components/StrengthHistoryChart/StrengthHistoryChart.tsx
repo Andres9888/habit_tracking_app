@@ -63,7 +63,7 @@ export default function StrengthHistoryChart({
 
       <XAxisLabels dataLength={data.length} />
 
-      {showDualAxis && <ChartLegend />}
+      {showDualAxis ? <ChartLegend /> : null}
     </View>
   );
 }

@@ -20,7 +20,7 @@ export function useButtonAnimation() {
 
   const handlePressIn = () => {
     scale.value = withSpring(CARD_PRESS_SCALE, springs.button);
-    triggerHaptic('tap');
+    void triggerHaptic('tap');
   };
 
   const handlePressOut = () => {

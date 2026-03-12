@@ -28,8 +28,7 @@ export function CategoryBadge({
 
   return (
     <View style={styles.badgeRow}>
-      {category && (
-        <View
+      {category ? <View
           style={[styles.categoryBadge, { backgroundColor: `${iconColor}15` }]}
         >
           <Text
@@ -40,14 +39,11 @@ export function CategoryBadge({
           >
             {CATEGORY_LABELS[category] || category}
           </Text>
-        </View>
-      )}
+        </View> : null}
 
-      {isPremium && (
-        <View style={styles.inlinePremiumBadge}>
+      {isPremium ? <View style={styles.inlinePremiumBadge}>
           <Text style={styles.inlinePremiumText}>Premium</Text>
-        </View>
-      )}
+        </View> : null}
     </View>
   );
 }

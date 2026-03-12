@@ -1,5 +1,5 @@
 /* eslint-disable max-lines */
-import { useCallback, useMemo } from 'react';
+import { useCallback } from 'react';
 import type {
   LayoutChangeEvent,
   NativeScrollEvent,

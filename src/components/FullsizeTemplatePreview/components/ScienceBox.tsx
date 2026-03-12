@@ -62,8 +62,7 @@ export function ScienceBox({ template, onResearchPress }: ScienceBoxProps) {
         "{template?.scientificReference ?? ''}"
       </Text>
 
-      {template?.scientificLink && (
-        <AnimatedPressable
+      {template?.scientificLink ? <AnimatedPressable
           accessible
           accessibilityHint='Opens the research paper in your browser'
           accessibilityLabel='Read research paper'
@@ -75,8 +74,7 @@ export function ScienceBox({ template, onResearchPress }: ScienceBoxProps) {
         >
           <ExternalLink color='#3B82F6' size={16} strokeWidth={2} />
           <Text style={scienceStyles.researchLinkText}>Read Research</Text>
-        </AnimatedPressable>
-      )}
+        </AnimatedPressable> : null}
     </View>
   );
 }

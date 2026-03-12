@@ -12,7 +12,7 @@ interface UseHabitDetailScreenStateProps {
   habitId: Id<'habits'> | undefined;
   habitStrength: number;
   tracking: HabitTrackingEntry[];
-  visible: boolean;
+  visible?: boolean;
 }
 
 export const useHabitDetailScreenState = ({
@@ -20,7 +20,7 @@ export const useHabitDetailScreenState = ({
   habitId,
   habitStrength,
   tracking,
-  visible,
+  visible: _visible,
 }: UseHabitDetailScreenStateProps) => {
   // Delete/Archive undo toast states (T3.5: Swipe-to-delete)
   const [pendingDelete, setPendingDelete] = useState(false);

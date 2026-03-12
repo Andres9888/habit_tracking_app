@@ -83,15 +83,15 @@ export function CardHeader({
           <Text
             className={`shrink ${isCompactMode ? 'text-[15px] font-semibold leading-[20px]' : 'text-[17px] font-bold leading-[22px]'}`}
             ellipsizeMode='tail'
-            numberOfLines={1}
+            numberOfLines={2}
             style={{ color: colors.primaryText, letterSpacing: -0.3 }}
           >
             {name || habit.name}
           </Text>
-          {habit.preferredTime && (
+          {habit.preferredTime ? (
             <PhaseTag compact preferredTime={habit.preferredTime} />
-          )}
-          {isPaused && (
+          ) : null}
+          {isPaused ? (
             <View
               className='rounded-full px-2 py-0.5'
               style={{ backgroundColor: '#8b5cf6' }}
@@ -100,7 +100,7 @@ export function CardHeader({
                 Paused
               </Text>
             </View>
-          )}
+          ) : null}
           <View className='ml-auto'>
             <ChevronRight
               color={getChevronColor(highContrastMode)}
@@ -109,14 +109,14 @@ export function CardHeader({
             />
           </View>
         </View>
-        {showBestStreak && (
+        {showBestStreak ? (
           <Text
             className='mt-0.5 text-[13px] font-medium'
             style={{ color: themeColors.text.tertiary }}
           >
             Best: {bestStreak} days
           </Text>
-        )}
+        ) : null}
       </View>
     </View>
   );

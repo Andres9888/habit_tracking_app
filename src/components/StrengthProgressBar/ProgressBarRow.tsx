@@ -25,8 +25,7 @@ export function ProgressBarRow({
 }: ProgressBarRowProps) {
   return (
     <View style={[styles.topRow, { gap: config.gap }]}>
-      {showEmoji && (
-        <View
+      {showEmoji ? <View
           style={[
             styles.emojiContainer,
             {
@@ -44,8 +43,7 @@ export function ProgressBarRow({
           >
             {currentLevel.emoji}
           </Animated.Text>
-        </View>
-      )}
+        </View> : null}
 
       <GradientBar
         barHeight={config.barHeight}
@@ -54,27 +52,23 @@ export function ProgressBarRow({
         showDividers={showDividers}
       />
 
-      {showPercentage && (
-        <Text
+      {showPercentage ? <Text
           style={[
             styles.percentage,
             { color: currentLevel.color, fontSize: config.fontSize },
           ]}
         >
           {strengthLabel}
-        </Text>
-      )}
+        </Text> : null}
 
-      {showNextLevel && nextLevel && (
-        <View style={styles.nextLevelContainer}>
+      {showNextLevel && nextLevel ? <View style={styles.nextLevelContainer}>
           <Text style={[styles.arrow, { fontSize: config.fontSize }]}>→</Text>
           <Text
             style={[styles.nextEmoji, { fontSize: config.emojiSize * 0.85 }]}
           >
             {nextLevel.emoji}
           </Text>
-        </View>
-      )}
+        </View> : null}
     </View>
   );
 }

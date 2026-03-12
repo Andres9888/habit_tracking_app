@@ -37,14 +37,12 @@ export function ButtonContent({
         onPress();
       }}
     >
-      {isBoost && (
-        <LinearGradient
+      {isBoost ? <LinearGradient
           className='absolute inset-0 rounded-xl'
           colors={['#f5f3ff', '#e0e7ff']}
           end={{ x: 1, y: 0 }}
           start={{ x: 0, y: 0 }}
-        />
-      )}
+        /> : null}
       <IconContainer isBoost={isBoost} isDestructive={isDestructive}>
         <Icon
           className={clsx(
@@ -67,27 +65,23 @@ export function ButtonContent({
         >
           {label}
         </Text>
-        {subtitle && (
-          <Text
+        {subtitle ? <Text
             className={clsx(
               'text-xs',
               isBoost ? 'text-violet-600' : 'text-stone-500'
             )}
           >
             {subtitle}
-          </Text>
-        )}
+          </Text> : null}
       </View>
-      {showChevron && (
-        <ChevronRight
+      {showChevron ? <ChevronRight
           className={clsx(
             isDestructive && 'text-red-400',
             isBoost && 'text-violet-400',
             !isDestructive && !isBoost && 'text-stone-400'
           )}
           size={20}
-        />
-      )}
+        /> : null}
     </Pressable>
   );
 }

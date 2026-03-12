@@ -52,14 +52,12 @@ export const StatCard = memo(function StatCard({
           <View
             style={[styles.skeletonValue, { backgroundColor: colors.border }]}
           />
-          {subtitle && (
-            <View
+          {subtitle ? <View
               style={[
                 styles.skeletonSubtitle,
                 { backgroundColor: colors.border },
               ]}
-            />
-          )}
+            /> : null}
         </View>
       ) : (
         <>
@@ -69,24 +67,20 @@ export const StatCard = memo(function StatCard({
             {title}
           </Text>
           <View style={styles.statCardValueRow}>
-            {emoji && (
-              <Text accessibilityElementsHidden style={styles.statCardEmoji}>
+            {emoji ? <Text accessibilityElementsHidden style={styles.statCardEmoji}>
                 {emoji}
-              </Text>
-            )}
+              </Text> : null}
             <Text
               style={[styles.statCardValue, { color: colors.text.primary }]}
             >
               {value}
             </Text>
           </View>
-          {subtitle && (
-            <Text
+          {subtitle ? <Text
               style={[styles.statCardSubtitle, { color: colors.text.tertiary }]}
             >
               {subtitle}
-            </Text>
-          )}
+            </Text> : null}
         </>
       )}
     </View>

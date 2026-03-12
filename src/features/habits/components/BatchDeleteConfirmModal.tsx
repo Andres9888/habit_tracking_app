@@ -30,7 +30,7 @@ function BatchDeleteConfirmModalComponent({
             <AlertTriangle color="#ef4444" size={24} strokeWidth={2} />
           </View>
           <Text style={[s.title, { color: colors.text.primary }]}>
-            Delete {count} habit{count !== 1 ? 's' : ''}?
+            Delete {count} habit{count === 1 ? '' : 's'}?
           </Text>
           <Text style={[s.desc, { color: colors.text.secondary }]}>
             This will permanently remove the selected habits and all their tracking data. This

@@ -26,14 +26,10 @@ export function SheetHeader({
         <Text className='text-[17px] font-bold text-stone-900'>
           {displayDate}
         </Text>
-        {isToday && (
-          <Text className='text-[13px] font-medium text-amber-600'>Today</Text>
-        )}
-        {totalCount > 0 && (
-          <Text className='mt-0.5 text-[13px] font-normal text-stone-500'>
+        {isToday ? <Text className='text-[13px] font-medium text-amber-600'>Today</Text> : null}
+        {totalCount > 0 ? <Text className='mt-0.5 text-[13px] font-normal text-stone-500'>
             {completedCount} of {totalCount} completed
-          </Text>
-        )}
+          </Text> : null}
       </View>
       <Pressable
         accessibilityHint='Close habit list'

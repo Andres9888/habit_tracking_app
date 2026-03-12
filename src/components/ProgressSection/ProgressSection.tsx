@@ -49,26 +49,22 @@ export function ProgressSection({
         onInfoPress={onInfoPress}
       />
 
-      {hasEnoughData && (
-        <PersonalBestsCard
+      {hasEnoughData ? <PersonalBestsCard
           bestDay={bestDay}
           currentStreak={currentStreak}
           streakRecords={streakRecords}
           worstDay={worstDay}
           onWorstDayPress={onWorstDayPress}
-        />
-      )}
+        /> : null}
 
-      {hasEnoughData && (
-        <ThisMonthCard
+      {hasEnoughData ? <ThisMonthCard
           completedDays={thisMonthStats.completedDays}
           dayStats={dayStats}
           lastMonthRate={trend.lastMonth}
           thisMonthRate={trend.thisMonth}
           totalDays={thisMonthStats.totalDays}
           onSeeAllPress={onSeeAllPress}
-        />
-      )}
+        /> : null}
     </Animated.View>
   );
 }

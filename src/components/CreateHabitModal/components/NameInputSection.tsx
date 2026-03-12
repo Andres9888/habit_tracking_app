@@ -72,14 +72,12 @@ export function NameInputSection({
           >
             Be specific — include when, how long, or where
           </Text>
-          {habitName.length > 0 && (
-            <Text
+          {habitName.length > 0 ? <Text
               className='text-xs'
               style={{ color: themeColors.text.tertiary }}
             >
               {habitName.length}/50
-            </Text>
-          )}
+            </Text> : null}
         </View>
       )}
     </View>

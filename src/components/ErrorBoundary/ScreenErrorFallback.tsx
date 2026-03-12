@@ -120,23 +120,19 @@ export function ScreenErrorFallback({
         <Text style={styles.primaryButtonText}>Try Again</Text>
       </Pressable>
 
-      {onGoBack && (
-        <Pressable
+      {onGoBack ? <Pressable
           accessibilityLabel='Go back to previous screen'
           accessibilityRole='button'
           style={styles.secondaryButton}
           onPress={onGoBack}
         >
           <Text style={styles.secondaryButtonText}>Go Back</Text>
-        </Pressable>
-      )}
+        </Pressable> : null}
 
-      {__DEV__ && error && (
-        <View style={styles.errorDetails}>
+      {__DEV__ && error ? <View style={styles.errorDetails}>
           <Text style={styles.errorText}>{error.message}</Text>
           <Text style={styles.errorStack}>{error.stack?.slice(0, 200)}</Text>
-        </View>
-      )}
+        </View> : null}
     </View>
   );
 }

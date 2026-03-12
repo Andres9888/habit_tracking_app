@@ -7,13 +7,12 @@ import { useThemeColors } from '../../../theme/ThemeContext';
 import { ModalCloseButton } from '../../ui/ModalCloseButton';
 
 interface ModalHeaderProps {
-  habitCount?: number;
   insets: EdgeInsets;
   onBack: () => void;
   onClose: () => void;
 }
 
-export function ModalHeader({ habitCount, insets, onBack, onClose }: ModalHeaderProps) {
+export function ModalHeader({ insets, onBack, onClose }: ModalHeaderProps) {
   const { colors, isDark } = useThemeColors();
 
   return (
@@ -35,38 +34,28 @@ export function ModalHeader({ habitCount, insets, onBack, onClose }: ModalHeader
             shadows.subtle,
             {
               backgroundColor: pressed
-                ? isDark ? '#374151' : '#e7e5e4'
-                : isDark ? '#1f2937' : '#f5f5f4',
+                ? isDark
+                  ? '#374151'
+                  : '#e7e5e4'
+                : isDark
+                  ? '#1f2937'
+                  : '#f5f5f4',
             },
           ]}
           onPress={onBack}
         >
-          <ChevronLeft color={colors.text.secondary} size={24} strokeWidth={2} />
+          <ChevronLeft
+            color={colors.text.secondary}
+            size={24}
+            strokeWidth={2}
+          />
         </Pressable>
-        <View className='flex-1 flex-row items-center justify-center gap-2'>
-          <Text
-            className='text-center text-xl font-bold'
-            style={{ color: colors.text.primary }}
-          >
-            Archived Habits
-          </Text>
-          {(habitCount ?? 0) > 0 && (
-            <Text
-              style={{
-                backgroundColor: isDark ? '#374151' : '#f1f5f9',
-                borderRadius: 10,
-                color: isDark ? '#9ca3af' : '#94a3b8',
-                fontSize: 11,
-                fontWeight: '600',
-                overflow: 'hidden',
-                paddingHorizontal: 8,
-                paddingVertical: 2,
-              }}
-            >
-              {habitCount}
-            </Text>
-          )}
-        </View>
+        <Text
+          className='flex-1 text-center text-xl font-bold'
+          style={{ color: colors.text.primary }}
+        >
+          Archived Habits
+        </Text>
         <ModalCloseButton label='Close archived habits' onClose={onClose} />
       </View>
     </BlurView>

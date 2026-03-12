@@ -46,7 +46,9 @@ export function QuickActionsSection({
       [
         { style: 'cancel', text: 'Cancel' },
         {
-          onPress: () => onDeleteHabit(quickActionsHabit._id),
+          onPress: () => {
+            void onDeleteHabit(quickActionsHabit._id);
+          },
           style: 'destructive',
           text: 'Delete',
         },

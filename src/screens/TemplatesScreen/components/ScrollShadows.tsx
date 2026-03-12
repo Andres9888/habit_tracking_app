@@ -30,15 +30,12 @@ export function ScrollShadows({
 
   return (
     <>
-      {showTopShadow && (
-        <LinearGradient
+      {showTopShadow ? <LinearGradient
           colors={[bgOpaque, bgTransparent]}
           pointerEvents='none'
           style={styles.scrollFadeTop}
-        />
-      )}
-      {showBottomShadow && (
-        <LinearGradient
+        /> : null}
+      {showBottomShadow ? <LinearGradient
           colors={[bgTransparent, bgOpaque]}
           pointerEvents='none'
           style={styles.scrollFadeBottom}
@@ -63,8 +60,7 @@ export function ScrollShadows({
               Scroll for more
             </Text>
           </View>
-        </LinearGradient>
-      )}
+        </LinearGradient> : null}
     </>
   );
 }

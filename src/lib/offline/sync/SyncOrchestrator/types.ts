@@ -8,13 +8,13 @@ import type {
   SyncOrchestratorConfig,
   SyncOrchestratorState,
   SyncOrchestratorEventListener,
-  ToggleSyncExecutor,
+  SyncExecutor,
 } from '../types';
 
 export interface OrchestratorDeps {
   queueManager: OfflineQueueManagerAPI;
   syncManager: OfflineSyncManager;
-  executor: ToggleSyncExecutor | null;
+  executor: SyncExecutor | null;
   config: Required<SyncOrchestratorConfig>;
   state: SyncOrchestratorState;
   listeners: Set<SyncOrchestratorEventListener>;

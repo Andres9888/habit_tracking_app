@@ -28,8 +28,7 @@ export function TimeControls({
       </Text>
 
       <View className='flex-row items-center gap-2'>
-        {showMuteButton && isReady && (
-          <Pressable
+        {showMuteButton && isReady ? <Pressable
             accessibilityLabel={isMuted ? 'Unmute' : 'Mute'}
             accessibilityRole='button'
             className='rounded-lg bg-stone-100 p-1.5'
@@ -40,15 +39,12 @@ export function TimeControls({
             ) : (
               <Volume2 className='text-stone-500' size={14} />
             )}
-          </Pressable>
-        )}
+          </Pressable> : null}
 
-        {showSpeedControl && isReady && (
-          <SpeedControl
+        {showSpeedControl && isReady ? <SpeedControl
             currentSpeed={currentSpeed}
             onSpeedChange={onSpeedChange}
-          />
-        )}
+          /> : null}
       </View>
 
       <Text className='text-xs text-stone-500'>

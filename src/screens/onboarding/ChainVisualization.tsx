@@ -41,7 +41,16 @@ function ChainLink({
         },
       ]}
     >
-      <View style={styles.chainLinkInner} />
+      <View
+        style={[
+          styles.chainLinkInner,
+          {
+            backgroundColor: colors.surface,
+            borderColor: colors.cardBorder,
+            borderWidth: 1,
+          },
+        ]}
+      />
     </Animated.View>
   );
 }

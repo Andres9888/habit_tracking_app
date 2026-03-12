@@ -3,7 +3,7 @@
  */
 
 import React, { useCallback } from 'react';
-import { View, Text, Pressable, Platform } from 'react-native';
+import { View, Text, Pressable } from 'react-native';
 import Animated, { type AnimatedStyle } from 'react-native-reanimated';
 import { styles } from './styles';
 import { triggerHaptic } from '@/utils/haptics';
@@ -35,8 +35,7 @@ export function ActionButtons({
 
   return (
     <View style={styles.actionsContainer}>
-      {onShare && (
-        <AnimatedPressable
+      {onShare ? <AnimatedPressable
           accessible
           accessibilityLabel="Share your achievement"
           accessibilityRole="button"
@@ -44,8 +43,7 @@ export function ActionButtons({
           onPress={handleShare}
         >
           <Text style={styles.primaryButtonText}>Share Achievement 🎉</Text>
-        </AnimatedPressable>
-      )}
+        </AnimatedPressable> : null}
 
       <AnimatedPressable
         accessible

@@ -67,8 +67,7 @@ export function HabitListSection({
         )}
       </View>
 
-      {isExpanded && (
-        <View style={styles.sectionContent}>
+      {isExpanded ? <View style={styles.sectionContent}>
           {habits.map((habit) => (
             <HabitItem
               key={habit.habitId}
@@ -78,8 +77,7 @@ export function HabitListSection({
             />
           ))}
           {children}
-        </View>
-      )}
+        </View> : null}
     </AnimatedPressable>
   );
 }

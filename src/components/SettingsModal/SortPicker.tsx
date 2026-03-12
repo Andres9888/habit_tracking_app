@@ -80,9 +80,7 @@ export function SortPicker({ currentMode, onBack, onSelect }: SortPickerProps) {
                 {option.description}
               </Text>
             </View>
-            {currentMode === option.value && (
-              <Check color={colors.primary[500]} size={20} strokeWidth={2.5} />
-            )}
+            {currentMode === option.value ? <Check color={colors.primary[500]} size={20} strokeWidth={2.5} /> : null}
           </Pressable>
         ))}
       </View>

@@ -57,15 +57,13 @@ export const HabitInput = forwardRef<TextInput, HabitInputProps>(
           }),
         ]}
       >
-        {placeholder.isActive && (
-          <Animated.Text
+        {placeholder.isActive ? <Animated.Text
             accessibilityElementsHidden
             importantForAccessibility='no'
             style={[placeholderOverlayStyle(colors.inputPlaceholder), placeholder.animatedStyle]}
           >
             {placeholder.displayText}
-          </Animated.Text>
-        )}
+          </Animated.Text> : null}
         <TextInput
           ref={ref}
           accessibilityHint='Type a habit name and press return to create it'
@@ -84,8 +82,7 @@ export const HabitInput = forwardRef<TextInput, HabitInputProps>(
           onFocus={handleFocus}
           onSubmitEditing={onSubmitEditing}
         />
-        {showClearButton && (
-          <Pressable
+        {showClearButton ? <Pressable
             accessibilityHint='Clear the habit name input'
             accessibilityLabel='Clear input'
             accessibilityRole='button'
@@ -97,17 +94,14 @@ export const HabitInput = forwardRef<TextInput, HabitInputProps>(
               backgroundColor={colors.textTertiary}
               glyphColor={colors.textSecondary}
             />
-          </Pressable>
-        )}
-        {showCounter && (
-          <Text
+          </Pressable> : null}
+        {showCounter ? <Text
             accessibilityElementsHidden
             importantForAccessibility='no'
             style={characterCounterStyle(counterColor)}
           >
             {value.length}/{CHARACTER_LIMIT.max}
-          </Text>
-        )}
+          </Text> : null}
       </AnimatedView>
     );
   }

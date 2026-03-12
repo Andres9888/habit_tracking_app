@@ -74,8 +74,7 @@ export function ChainDayList(props: ChainDayListProps) {
             showConnector={
               props.showConnectors &&
               !isLastItem &&
-              completed &&
-              props.isCompleted(index + 1)
+              completed ? props.isCompleted(index + 1) : null
             }
             onBurstComplete={props.onBurstComplete}
             onPress={() =>

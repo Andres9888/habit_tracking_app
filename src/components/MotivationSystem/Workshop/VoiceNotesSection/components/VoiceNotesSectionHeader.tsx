@@ -28,12 +28,10 @@ export function VoiceNotesSectionHeader({
         </View>
       ) : (
         <View className='ml-auto flex-row items-center gap-1'>
-          {!hasVoiceNotes && !isRecording && (
-            <>
+          {!hasVoiceNotes && !isRecording ? <>
               <Plus className='text-teal-600' size={12} />
               <Text className='text-xs font-medium text-teal-600'>Record</Text>
-            </>
-          )}
+            </> : null}
         </View>
       )}
     </View>

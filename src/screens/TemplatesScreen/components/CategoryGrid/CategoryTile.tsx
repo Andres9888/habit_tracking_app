@@ -41,15 +41,13 @@ export function CategoryTile({
       </View>
       <Text style={[s.label, { color: textColor }]}>{label}</Text>
       <Text style={s.count}>{count} templates</Text>
-      {previewEmojis.length > 0 && (
-        <View style={s.previewRow}>
+      {previewEmojis.length > 0 ? <View style={s.previewRow}>
           {previewEmojis.map((emoji, i) => (
             <Text key={i} style={s.previewEmoji}>
               {emoji}
             </Text>
           ))}
-        </View>
-      )}
+        </View> : null}
     </Pressable>
   );
 }

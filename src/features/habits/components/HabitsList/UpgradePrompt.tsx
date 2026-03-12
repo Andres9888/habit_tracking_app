@@ -13,11 +13,7 @@
 import { Pressable, Text, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
-import {
-  OPACITY,
-  ANIMATION_DURATION,
-  ANIMATION_VALUES,
-} from '../../../../constants';
+import { OPACITY, ANIMATION_DURATION, ANIMATION_VALUES } from '../../../../constants';
 import { useThemeColors } from '../../../../theme';
 
 interface UpgradePromptProps {

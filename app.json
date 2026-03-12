@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Daily Habits (981f52)",
+    "name": "ChainDay",
     "slug": "daily-habits-981f52",
     "scheme": "habit-tracker",
     "version": "1.0.0",
@@ -17,7 +17,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.chainday.app",
-      "buildNumber": "13",
+      "buildNumber": "16",
       "usesAppleSignIn": true,
       "infoPlist": {
         "NSUserNotificationsUsageDescription": "ChainDay sends reminders you choose (habit check-ins, streak alerts, and scheduled motivation messages) to help you stay consistent."

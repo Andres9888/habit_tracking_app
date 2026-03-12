@@ -60,8 +60,7 @@ export const TodaysFocusCard = React.memo(function TodaysFocusCard(
         start={{ x: 0, y: 0 }}
         style={styles.gradient}
       >
-        {!reduceMotion && (
-          <Animated.View
+        {reduceMotion ? null : <Animated.View
             style={[styles.shimmerOverlay, animations.shimmerAnimatedStyle]}
           >
             <LinearGradient
@@ -70,8 +69,7 @@ export const TodaysFocusCard = React.memo(function TodaysFocusCard(
               start={{ x: 0, y: 0.5 }}
               style={styles.shimmerGradient}
             />
-          </Animated.View>
-        )}
+          </Animated.View>}
 
         <View style={styles.content}>
           <FocusIcon

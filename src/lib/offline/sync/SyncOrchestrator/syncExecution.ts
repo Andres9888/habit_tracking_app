@@ -11,7 +11,7 @@ import type {
   SyncOrchestratorResult,
   SyncOrchestratorState,
   SyncProgressCallback,
-  ToggleSyncExecutor,
+  SyncExecutor,
 } from '../types';
 import { operationsToSyncItems } from '../helpers';
 import {
@@ -25,7 +25,7 @@ interface ExecuteSyncParams {
   operations: OfflineOperation[];
   queueManager: OfflineQueueManagerAPI;
   syncManager: OfflineSyncManager;
-  executor: ToggleSyncExecutor;
+  executor: SyncExecutor;
   state: SyncOrchestratorState;
   onProgress?: SyncProgressCallback;
 }

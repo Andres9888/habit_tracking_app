@@ -56,7 +56,7 @@ export function CategoryGrid({
               onPress={() => onSelectCategory(cat.categoryId)}
             />
           ))}
-          {row.length === 1 && <View style={{ flex: 1 }} />}
+          {row.length === 1 ? <View style={{ flex: 1 }} /> : null}
         </View>
       ))}
       {categories.length > INITIAL_VISIBLE && !showAll && (

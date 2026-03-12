@@ -66,8 +66,7 @@ export function ForceUpdateButton({
         )}
       </Pressable>
 
-      {result && (
-        <View
+      {result ? <View
           className={`rounded-lg p-2 ${
             result.startsWith('✅') ? 'bg-green-100' : 'bg-red-100'
           }`}
@@ -79,8 +78,7 @@ export function ForceUpdateButton({
           >
             {result}
           </Text>
-        </View>
-      )}
+        </View> : null}
 
       <Text className='text-xs text-stone-500'>
         Current: {(currentStrength * 100).toFixed(1)}%

@@ -8,7 +8,10 @@ export const EXIT_ANIMATION_DURATION = 300;
 /**
  * Get strength level info based on percentage
  */
-export const getStrengthInfo = (strength: number, isDark = false): StrengthInfo => {
+export const getStrengthInfo = (
+  strength: number,
+  isDark = false
+): StrengthInfo => {
   if (strength >= 80) {
     return {
       bgColor: isDark ? 'bg-purple-900/40' : 'bg-purple-50',
@@ -58,16 +61,6 @@ export const getStrengthGradientColor = (strength: number): string => {
   if (strength >= 40) return '#14B8A6'; // teal-500
   if (strength >= 20) return '#EAB308'; // yellow-500
   return '#F43F5E'; // rose-500
-};
-
-/**
- * Format archive timestamp as "X days archived" text
- */
-export const getDaysArchived = (timestamp: number): string => {
-  const diffDays = Math.floor((Date.now() - timestamp) / (1000 * 60 * 60 * 24));
-  if (diffDays === 0) return 'Archived today';
-  if (diffDays === 1) return '1 day archived';
-  return `${diffDays} days archived`;
 };
 
 /**

@@ -61,16 +61,14 @@ function EmojiPickerComponent({
 
   return (
     <View className='mb-4'>
-      {!hideLabel && (
-        <Text
+      {hideLabel ? null : <Text
           accessibilityLabel={`Suggested emojis for ${debouncedHabitName || 'your habit'}`}
           accessibilityRole='text'
           className='mb-3 text-[13px] font-semibold uppercase'
           style={{ letterSpacing: 0.5, color: themeColors.text.tertiary }}
         >
           {STRINGS.CREATE_HABIT.iconLabel}
-        </Text>
-      )}
+        </Text>}
 
       <EmojiGrid
         reduceMotion={reduceMotion}
@@ -95,15 +93,13 @@ function EmojiPickerComponent({
         </Text>
       </Pressable>
 
-      {isModalVisible && (
-        <EmojiPickerSheet
+      {isModalVisible ? <EmojiPickerSheet
           habitName={habitName || ''}
           selectedEmoji={selectedEmoji}
           visible={isModalVisible}
           onClose={() => setIsModalVisible(false)}
           onSelect={handleSheetSelect}
-        />
-      )}
+        /> : null}
     </View>
   );
 }

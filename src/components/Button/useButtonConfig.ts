@@ -6,6 +6,7 @@ import type {
   SizeConfig,
   VariantStyles,
 } from './types';
+import { getButtonVariantStyles } from './buttonVariantStyles';
 
 /**
  * Custom hook for button size and variant configuration
@@ -65,79 +66,13 @@ export function useButtonConfig(
   };
 
   const config = sizeConfigs[size] ?? sizeConfigs.medium;
-
-  const getVariantStyles = (): VariantStyles => {
-    const primary =
-      mergedTheme.colors?.primary?.[500] ??
-      fallbackColors?.primary?.[500] ??
-      '#10B981';
-    const primaryText =
-      mergedTheme.colors?.primary?.[700] ??
-      fallbackColors?.primary?.[700] ??
-      '#047857';
-    const inverseText =
-      mergedTheme.colors?.text?.inverse ??
-      '#ffffff';
-    const gray100 =
-      mergedTheme.colors?.gray?.[100] ??
-      fallbackColors?.gray?.[100] ??
-      '#FAF8F5';
-    const gray700 =
-      mergedTheme.colors?.gray?.[700] ??
-      fallbackColors?.gray?.[700] ??
-      '#3D3833';
-
-    switch (variant) {
-      case 'primary': {
-        return {
-          container: {
-            backgroundColor: primary,
-            borderWidth: 0,
-          },
-          text: { color: inverseText },
-        };
-      }
-
-      case 'secondary': {
-        return {
-          container: {
-            backgroundColor: 'transparent',
-            borderColor: primary,
-            borderWidth: 1.5,
-          },
-          text: { color: primaryText },
-        };
-      }
-
-      case 'ghost': {
-        return {
-          container: {
-            backgroundColor: 'transparent',
-            borderWidth: 0,
-          },
-          text: { color: primaryText },
-        };
-      }
-
-      case 'icon': {
-        return {
-          container: {
-            backgroundColor: gray100,
-            borderRadius: config.height / 2,
-            borderWidth: 0,
-            height: config.height,
-            paddingHorizontal: 0,
-            width: config.height,
-          },
-          text: { color: gray700 },
-        };
-      }
-
-      default: {
-        return { container: {}, text: {} };
-      }
-    }
+  const variantColors = {
+    gray100: mergedTheme.colors?.gray?.[100] ?? fallbackColors?.gray?.[100] ?? '#FAF8F5',
+    gray700: mergedTheme.colors?.gray?.[700] ?? fallbackColors?.gray?.[700] ?? '#3D3833',
+    inverseText: mergedTheme.colors?.text?.inverse ?? '#ffffff',
+    primary: mergedTheme.colors?.primary?.[500] ?? fallbackColors?.primary?.[500] ?? '#10B981',
+    primaryText: mergedTheme.colors?.primary?.[700] ?? fallbackColors?.primary?.[700] ?? '#047857',
   };
 
-  return { config, variantStyles: getVariantStyles() };
+  return { config, variantStyles: getButtonVariantStyles(variant, config, variantColors) };
 }

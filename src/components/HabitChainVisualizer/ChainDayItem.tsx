@@ -77,12 +77,11 @@ const ChainDayItemComponent: React.FC<ChainDayItemProps> = ({
     />
     <SparkleBurst
       color={accentColor}
-      isActive={activeBurst === dateString && celebrationsEnabled}
+      isActive={activeBurst === dateString ? celebrationsEnabled : null}
       reduceMotion={shouldReduceMotion}
       onComplete={onBurstComplete}
     />
-    {showConnector && (
-      <View pointerEvents='none' style={styles.connectorContainer}>
+    {showConnector ? <View pointerEvents='none' style={styles.connectorContainer}>
         <DayConnector
           visible
           accentColor={accentColor}
@@ -90,8 +89,7 @@ const ChainDayItemComponent: React.FC<ChainDayItemProps> = ({
           currentStreak={currentStreak}
           style={styles.dayConnector}
         />
-      </View>
-    )}
+      </View> : null}
   </View>
 );
 

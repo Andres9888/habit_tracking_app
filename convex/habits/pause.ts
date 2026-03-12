@@ -3,8 +3,7 @@
  * Pause and resume habits with state preservation
  */
 import { v } from 'convex/values';
-import { internal } from '../_generated/api';
-import { internalMutation, mutation, query } from '../_generated/server';
+import { mutation, query } from '../_generated/server';
 import { calculateStreakFromHistory } from '../streakUtils';
 import { fullHabitValidator } from './types';
 import { getTodayForTimezone, maxDateKey } from './utils';

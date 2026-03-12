@@ -20,7 +20,7 @@ export function SentryUserSync({ children }: PropsWithChildren) {
       : null
   );
 
-  return <>{children}</>;
+  return children;
 }
 
 export default SentryUserSync;

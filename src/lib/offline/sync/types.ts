@@ -5,7 +5,7 @@
  * and automatic background synchronization.
  */
 
-import type { ToggleCompletionPayload } from '../queue';
+import type { OfflineOperation, ToggleCompletionPayload } from '../queue';
 
 /**
  * Result of a sync orchestration cycle
@@ -103,7 +103,7 @@ export type ToggleSyncExecutor = (
  * Generic executor function for syncing any operation type
  */
 export type SyncExecutor = (
-  operation: import('../queue').OfflineOperation
+  operation: OfflineOperation
 ) => Promise<void>;
 
 /**

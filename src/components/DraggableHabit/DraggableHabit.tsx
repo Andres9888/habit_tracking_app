@@ -61,6 +61,7 @@ function DraggableHabit(props: DraggableHabitProps) {
     isPaused = false,
     isSelected,
     onArchive,
+    onDelete,
     onEntranceComplete,
     onLongPress,
     onPause,
@@ -123,12 +124,10 @@ function DraggableHabit(props: DraggableHabitProps) {
     reduceMotionPreference
   );
 
-  // 7. Press / long-press / swipe handlers
+  // 7. Press / long-press handlers
   const pressHandlers = usePressHandlers({
-    archiveFlash: animations.archiveFlash,
     cardScale: animations.cardScale,
     habit,
-    onArchive,
     onLongPress,
     triggerSelection,
     triggerHeavyImpact,
@@ -167,6 +166,7 @@ function DraggableHabit(props: DraggableHabitProps) {
       weekDateStrings={weekDateStrings}
       weekStatus={weekStatus}
       onArchive={onArchive}
+      onDelete={onDelete}
       onPause={onPause}
       onPress={onPress}
       onResume={onResume}

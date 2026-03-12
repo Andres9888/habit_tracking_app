@@ -1,4 +1,5 @@
 import js from '@eslint/js';
+import { createRequire } from 'node:module';
 import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
@@ -8,34 +9,153 @@ import globals from 'globals';
 import tseslint from 'typescript-eslint';
 import prettierConfig from 'eslint-config-prettier';
 
+const require = createRequire(import.meta.url);
+const eslintComments = require('eslint-plugin-eslint-comments');
+const eslintReact = require('@eslint-react/eslint-plugin');
+const factoryPlugin = require('@factory/eslint-plugin');
+const factoryFrontend = require('@factory/eslint-plugin/configs/frontend');
+const jestPlugin = require('eslint-plugin-jest');
+const noBarrelFiles = require('eslint-plugin-no-barrel-files');
+const reactCompiler = require('eslint-plugin-react-compiler');
+const unusedImports = require('eslint-plugin-unused-imports');
+
+const filterUnsupportedRules = (rules = {}) =>
+  Object.fromEntries(
+    Object.entries(rules).filter(([ruleName]) => !ruleName.startsWith('import/'))
+  );
+
+const factoryRuleOverrides = {
+  '@factory/constants-file-organization': 'off',
+  '@factory/enum-file-organization': 'off',
+  '@factory/errors-file-organization': 'off',
+  '@factory/filename-match-export': 'warn',
+  '@factory/no-exported-function-expressions': 'warn',
+  '@factory/no-exported-string-union-types': 'off',
+  '@factory/no-plain-html-text-elements': 'off',
+  '@factory/structured-logging': 'off',
+  '@factory/no-use-effect-in-hooks': 'off',
+  '@factory/require-test-files': 'off',
+  '@factory/require-tsx-test-stories-files': 'off',
+  '@factory/test-file-location': 'off',
+  '@factory/test-utils-organization': 'off',
+  '@factory/types-file-organization': 'off',
+  '@eslint-react/no-array-index-key': 'off',
+  'class-methods-use-this': 'off',
+  'no-barrel-files/no-barrel-files': 'off',
+  'default-case': 'off',
+  'no-restricted-globals': 'off',
+  'no-restricted-syntax': 'off',
+  'no-param-reassign': 'off',
+  'prefer-promise-reject-errors': 'off',
+  'react/button-has-type': 'off',
+  'react/destructuring-assignment': 'off',
+  'react/forbid-component-props': 'off',
+  'react/forbid-dom-props': 'off',
+  'react/jsx-max-depth': 'off',
+  'react/jsx-filename-extension': 'off',
+  'react/jsx-no-script-url': 'off',
+  'react/no-danger': 'off',
+  'react/no-danger-with-children': 'off',
+  'react/no-unused-prop-types': 'off',
+  'no-void': 'off',
+  'react/prefer-stateless-function': 'off',
+  'react/prop-types': 'off',
+  'react-compiler/react-compiler': 'off',
+};
+const factoryFrontendRules = filterUnsupportedRules(factoryFrontend.rules);
+const factoryFrontendOverrides = (factoryFrontend.overrides ?? []).map(
+  ({ files, rules }) => ({
+    files,
+    rules: {
+      ...filterUnsupportedRules(rules),
+      ...factoryRuleOverrides,
+    },
+  })
+);
+const globalIgnores = [
+  'dist',
+  'eslint.config.js',
+  'convex/_generated',
+  'worktrees/**',
+  '.worktrees/**',
+  '**/worktrees/**',
+  '**/.worktrees/**',
+  'postcss.config.js',
+  'tailwind.config.js',
+  'App.tsx',
+  '__tests__/**',
+  '**/__tests__/**',
+  '**/*.test.ts',
+  '**/*.test.tsx',
+  '**/tests/**',
+  'docs/HabitHome-FigmaCode/**',
+  'e2e/**',
+  '.next/**',
+  '**/.next/**',
+  'website/**',
+  'vite.config.ts',
+];
+const sourceIgnores = [
+  ...globalIgnores,
+  '**/website/**',
+  'build/**/*',
+  'coverage/**/*',
+];
+
 export default tseslint.config(
   {
-    linterOptions: { reportUnusedDisableDirectives: 'off' },
-    ignores: [
-      'dist',
-      'eslint.config.js',
-      'convex/_generated',
-      'worktrees/**',
-      '.worktrees/**',
-      '**/worktrees/**',
-      '**/.worktrees/**',
-      'postcss.config.js',
-      'tailwind.config.js',
-      'App.tsx',
-      'index.ts',
-      '__tests__/**',
-      '**/__tests__/**',
-      '**/*.test.ts',
-      '**/*.test.tsx',
-      '**/tests/**',
-      'docs/HabitHome-FigmaCode/**',
-      'e2e/**',
-      '.next/**',
-      '**/.next/**',
-      'website/**',
-      'vite.config.ts',
-    ],
+    ignores: globalIgnores,
   },
+  {
+    linterOptions: { reportUnusedDisableDirectives: 'warn' },
+  },
+  {
+    files: ['**/*.{ts,tsx}'],
+    ignores: sourceIgnores,
+    languageOptions: {
+      ecmaVersion: 'latest',
+      globals: {
+        FileSystemDirectoryHandle: true,
+        FileSystemFileHandle: true,
+        FileSystemHandle: true,
+        FileSystemHandlePermissionDescriptor: true,
+        FileSystemPermissionMode: true,
+        FileSystemWritableFileStream: true,
+        NodeJS: true,
+        globalThis: 'readonly',
+      },
+      parser: tseslint.parser,
+      parserOptions: {
+        ecmaVersion: 'latest',
+        project: ['./tsconfig.app.json', './convex/tsconfig.json'],
+        sourceType: 'module',
+      },
+      sourceType: 'module',
+    },
+    plugins: {
+      '@eslint-react': eslintReact,
+      '@factory': factoryPlugin,
+      '@typescript-eslint': tseslint.plugin,
+      'eslint-comments': eslintComments,
+      jest: jestPlugin,
+      'no-barrel-files': noBarrelFiles,
+      react,
+      'react-compiler': reactCompiler,
+      'react-hooks': reactHooks,
+      'unused-imports': unusedImports,
+    },
+    settings: {
+      ...factoryFrontend.settings,
+      react: {
+        version: 'detect',
+      },
+    },
+    rules: {
+      ...factoryFrontendRules,
+      ...factoryRuleOverrides,
+    },
+  },
+  ...factoryFrontendOverrides,
   {
     extends: [
       js.configs.recommended,
@@ -44,21 +164,7 @@ export default tseslint.config(
       prettierConfig,
     ],
     files: ['**/*.{ts,tsx}'],
-    ignores: [
-      'src/main.tsx',
-      '**/__tests__/**',
-      '**/*.test.ts',
-      '**/*.test.tsx',
-      '**/tests/**',
-      'worktrees/**',
-      '.worktrees/**',
-      '**/worktrees/**',
-      '**/.worktrees/**',
-      'website/**',
-      '**/website/**',
-      '.next/**',
-      '**/.next/**',
-    ],
+    ignores: sourceIgnores,
     languageOptions: {
       ecmaVersion: 2020,
       globals: {
@@ -74,6 +180,7 @@ export default tseslint.config(
       'react-hooks': reactHooks,
       'react-refresh': reactRefresh,
       'sort-keys-fix': sortKeysFix,
+      'unused-imports': unusedImports,
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
@@ -117,7 +224,10 @@ export default tseslint.config(
         { max: 100, skipBlankLines: true, skipComments: true },
       ],
       // Function size limit - keep functions focused and testable
-      'max-lines-per-function': 'off',
+      'max-lines-per-function': [
+        'warn',
+        { max: 40, skipBlankLines: true, skipComments: true },
+      ],
 
       // Import organization (manual guidelines)
       // Recommended order:
@@ -129,12 +239,23 @@ export default tseslint.config(
       // 6. Type imports (keep separate)
 
       // Additional TypeScript safety
+      'complexity': ['warn', 10],
       '@typescript-eslint/no-floating-promises': 'warn',
       '@typescript-eslint/no-misused-promises': 'warn',
       '@typescript-eslint/no-unsafe-enum-comparison': 'off', // RevenueCat SDK has type mismatches
+      'unused-imports/no-unused-vars': [
+        'warn',
+        {
+          args: 'after-used',
+          argsIgnorePattern: '^_',
+          vars: 'all',
+          varsIgnorePattern: '^_',
+        },
+      ],
+      'unused-imports/no-unused-imports': 'warn',
 
       // React Native specific
-      'react/self-closing-comp': 'off',
+      'react/self-closing-comp': 'warn',
       'react/jsx-boolean-value': 'off',
 
       // Sort object keys alphabetically (auto-fixable)

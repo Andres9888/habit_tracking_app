@@ -96,8 +96,7 @@ export function DailyQuote({
 
       <View style={styles.footer}>
         <Text style={styles.author}>— {quote.author}</Text>
-        {showRefresh && onRefresh && (
-          <Pressable
+        {showRefresh && onRefresh ? <Pressable
             accessibilityLabel='Refresh quote'
             accessibilityRole='button'
             hitSlop={{ bottom: 10, left: 10, right: 10, top: 10 }}
@@ -105,8 +104,7 @@ export function DailyQuote({
             onPress={onRefresh}
           >
             <RefreshCw color={colors.gray[400]} size={14} />
-          </Pressable>
-        )}
+          </Pressable> : null}
       </View>
     </Animated.View>
   );

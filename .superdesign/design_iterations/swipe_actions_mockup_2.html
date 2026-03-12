@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Swipe Actions — Buttons Only (No Full Swipe)</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: #0a0a0a;
+      color: #e5e5e5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+    }
+
+    h1 {
+      font-size: 28px !important;
+      font-weight: 700 !important;
+      margin-bottom: 8px !important;
+      color: #fafafa !important;
+      text-align: center;
+    }
+
+    .subtitle {
+      font-size: 15px;
+      color: #737373;
+      margin-bottom: 40px;
+      text-align: center;
+      max-width: 500px;
+      line-height: 1.5;
+    }
+
+    .section-label {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: #525252;
+      margin-bottom: 16px;
+      width: 100%;
+      max-width: 420px;
+      text-align: left;
+    }
+
+    .phone-frame {
+      width: 390px;
+      background: #171717;
+      border-radius: 40px;
+      border: 3px solid #262626;
+      padding: 60px 0 40px;
+      margin-bottom: 48px;
+      overflow: hidden;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.5);
+    }
+
+    .status-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 28px;
+      margin-bottom: 20px;
+    }
+
+    .status-time { font-size: 15px; font-weight: 600; color: #fafafa; }
+    .status-icons { display: flex; gap: 6px; align-items: center; }
+
+    .header { padding: 0 24px; margin-bottom: 24px; }
+    .header h2 { font-size: 28px !important; font-weight: 700 !important; color: #fafafa !important; }
+
+    .habit-list { display: flex; flex-direction: column; gap: 10px; padding: 0 16px; }
+
+    .habit-card-wrapper { position: relative; border-radius: 20px; overflow: hidden; height: 76px; }
+
+    .swipe-actions { position: absolute; right: 0; top: 0; bottom: 0; display: flex; flex-direction: row; }
+
+    .action-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      height: 100%;
+      cursor: pointer;
+      border: none;
+      transition: filter 0.15s;
+    }
+    .action-btn:hover { filter: brightness(1.15); }
+    .action-btn span { font-size: 11px; font-weight: 600; letter-spacing: 0.2px; }
+    .action-delete { background: #dc2626; width: 80px; color: white; }
+    .action-archive { background: #d97706; width: 80px; color: white; border-top-right-radius: 20px; border-bottom-right-radius: 20px; }
+
+    .habit-card {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 16px;
+      background: #1e1e1e;
+      border-radius: 20px;
+      border: 1px solid #2a2a2a;
+      height: 76px;
+      transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      z-index: 2;
+      user-select: none;
+    }
+
+    .habit-card.swiped { transform: translateX(-160px); }
+
+    .accent-strip { width: 4px; align-self: stretch; border-radius: 2px; flex-shrink: 0; }
+    .habit-emoji { font-size: 28px; flex-shrink: 0; }
+    .habit-info { flex: 1; min-width: 0; }
+    .habit-name { font-size: 15px; font-weight: 600; color: #fafafa; margin-bottom: 3px; }
+    .habit-streak { font-size: 12px; color: #737373; }
+    .habit-streak strong { color: #a3a3a3; }
+    .habit-check { width: 28px; height: 28px; border-radius: 50%; border: 2px solid #404040; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+    .habit-check.done { background: #22c55e; border-color: #22c55e; }
+
+    /* ─── Comparison ─── */
+    .comparison { display: flex; gap: 32px; flex-wrap: wrap; justify-content: center; margin-bottom: 48px; }
+
+    .comparison-card { background: #171717; border: 1px solid #262626; border-radius: 20px; padding: 24px; width: 420px; }
+    .comparison-card h3 { font-size: 16px !important; font-weight: 600 !important; color: #fafafa !important; margin-bottom: 4px !important; }
+    .comparison-card .tag { display: inline-block; font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 6px; margin-bottom: 16px; }
+    .tag-before { background: rgba(239, 68, 68, 0.15); color: #f87171; }
+    .tag-after { background: rgba(34, 197, 94, 0.15); color: #4ade80; }
+
+    .mini-card-wrapper { position: relative; border-radius: 16px; overflow: hidden; height: 64px; margin-bottom: 8px; }
+    .mini-card { position: relative; display: flex; align-items: center; gap: 12px; padding: 12px 14px; background: #1e1e1e; border-radius: 16px; border: 1px solid #2a2a2a; height: 64px; z-index: 2; }
+    .mini-card.swiped { transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+    .mini-emoji { font-size: 22px; }
+    .mini-name { font-size: 14px; font-weight: 600; color: #fafafa; flex: 1; }
+    .mini-streak { font-size: 11px; color: #737373; }
+    .mini-actions { position: absolute; right: 0; top: 0; bottom: 0; display: flex; }
+    .mini-action { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; height: 100%; color: white; }
+    .mini-action span { font-size: 10px; font-weight: 600; }
+    .mini-action-delete { background: #dc2626; width: 70px; }
+    .mini-action-archive { background: #d97706; width: 70px; border-top-right-radius: 16px; border-bottom-right-radius: 16px; }
+    .mini-action-archive-only { background: #d97706; width: 100px; border-top-right-radius: 16px; border-bottom-right-radius: 16px; }
+
+    /* ─── Flow ─── */
+    .flow-section { width: 100%; max-width: 700px; margin-bottom: 48px; }
+    .flow-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .flow-card { background: #171717; border: 1px solid #262626; border-radius: 16px; padding: 20px; text-align: center; }
+    .flow-card .flow-icon { width: 48px; height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; }
+    .flow-card h4 { font-size: 14px !important; font-weight: 600 !important; color: #fafafa !important; margin-bottom: 6px !important; }
+    .flow-card p { font-size: 12px; color: #737373; line-height: 1.5; }
+    .flow-icon-tap-archive { background: rgba(217, 119, 6, 0.15); }
+    .flow-icon-tap-delete { background: rgba(220, 38, 38, 0.15); }
+
+    /* ─── Interactive Demo ─── */
+    .demo-section { width: 100%; max-width: 420px; margin-bottom: 48px; }
+    .demo-instruction { font-size: 13px; color: #525252; text-align: center; margin-bottom: 16px; }
+
+    .demo-card-wrapper { position: relative; border-radius: 20px; overflow: hidden; height: 76px; margin-bottom: 12px; }
+
+    .demo-card {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 16px;
+      background: #1e1e1e;
+      border-radius: 20px;
+      border: 1px solid #2a2a2a;
+      height: 76px;
+      z-index: 2;
+      cursor: grab;
+      user-select: none;
+      touch-action: pan-y;
+      transition: transform 0.05s linear;
+    }
+
+    .demo-card.snapping { transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+
+    .demo-actions { position: absolute; right: 0; top: 0; bottom: 0; display: flex; }
+
+    .demo-action {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      height: 100%;
+      color: white;
+      cursor: pointer;
+      border: none;
+      transition: filter 0.15s, transform 0.15s;
+    }
+    .demo-action:hover { filter: brightness(1.15); }
+    .demo-action:active { transform: scale(0.95); }
+    .demo-action span { font-size: 11px; font-weight: 600; letter-spacing: 0.2px; }
+    .demo-action-delete { background: #dc2626; width: 80px; }
+    .demo-action-archive { background: #d97706; width: 80px; border-top-right-radius: 20px; border-bottom-right-radius: 20px; }
+
+    /* Success feedback */
+    .success-feedback {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 14px;
+      border-radius: 14px;
+      margin-top: 12px;
+      animation: slideUp 0.3s ease-out;
+    }
+
+    .success-feedback.visible { display: flex; }
+
+    .success-archive {
+      background: rgba(217, 119, 6, 0.1);
+      border: 1px solid rgba(217, 119, 6, 0.2);
+    }
+
+    .success-delete {
+      background: rgba(220, 38, 38, 0.1);
+      border: 1px solid rgba(220, 38, 38, 0.2);
+    }
+
+    .success-text { font-size: 14px; font-weight: 500; }
+
+    /* Alert */
+    .alert-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(8px);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+    }
+    .alert-overlay.visible { display: flex; }
+    .alert-box { background: #2a2a2a; border-radius: 16px; width: 300px; text-align: center; overflow: hidden; animation: scaleIn 0.2s ease-out; }
+    .alert-content { padding: 20px 20px 16px; }
+    .alert-title { font-size: 17px; font-weight: 600; color: #fafafa; margin-bottom: 6px; }
+    .alert-message { font-size: 13px; color: #a3a3a3; line-height: 1.5; }
+    .alert-buttons { border-top: 1px solid #404040; display: flex; }
+    .alert-btn { flex: 1; padding: 14px; font-size: 17px; font-weight: 400; border: none; background: none; cursor: pointer; font-family: inherit; }
+    .alert-btn + .alert-btn { border-left: 1px solid #404040; }
+    .alert-btn-cancel { color: #60a5fa; font-weight: 600; }
+    .alert-btn-destructive { color: #f87171; }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes scaleIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .divider { width: 100%; max-width: 880px; height: 1px; background: #262626; margin: 16px 0 40px; }
+
+    .key-change {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: #737373;
+      margin-bottom: 8px;
+    }
+
+    .key-change .removed {
+      color: #f87171;
+      text-decoration: line-through;
+      font-weight: 500;
+    }
+
+    .key-change .added {
+      color: #4ade80;
+      font-weight: 500;
+    }
+
+    .changes-box {
+      background: #171717;
+      border: 1px solid #262626;
+      border-radius: 16px;
+      padding: 20px 24px;
+      margin-bottom: 48px;
+      width: 100%;
+      max-width: 500px;
+    }
+
+    .changes-box h3 {
+      font-size: 14px !important;
+      font-weight: 600 !important;
+      color: #fafafa !important;
+      margin-bottom: 16px !important;
+    }
+
+    @media (max-width: 900px) {
+      .flow-grid { grid-template-columns: 1fr; }
+      .comparison { flex-direction: column; align-items: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Swipe Actions — Buttons Only</h1>
+  <p class="subtitle">
+    Swipe left reveals Delete + Archive buttons. Tap to act.<br />
+    No full-swipe auto-trigger. No undo toast. Explicit and intentional.
+  </p>
+
+  <div class="divider"></div>
+
+  <!-- ─── Key Changes ─── -->
+  <p class="section-label" style="max-width:500px">What's changing</p>
+  <div class="changes-box">
+    <h3>Removed</h3>
+    <div class="key-change">
+      <span class="removed">Full swipe auto-archives</span> — card now stops at buttons
+    </div>
+    <div class="key-change">
+      <span class="removed">Undo toast</span> — button tap is the confirmation
+    </div>
+    <h3 style="margin-top:16px">Added</h3>
+    <div class="key-change">
+      <span class="added">Delete button</span> — red, with confirmation alert
+    </div>
+    <div class="key-change">
+      <span class="added">Archive button</span> — amber, archives immediately on tap
+    </div>
+  </div>
+
+  <!-- ─── Before / After ─── -->
+  <p class="section-label">Before vs After</p>
+  <div class="comparison">
+    <div class="comparison-card">
+      <h3>Before: Auto-Swipe + Undo</h3>
+      <span class="tag tag-before">Current</span>
+      <div class="mini-card-wrapper">
+        <div class="mini-actions">
+          <div class="mini-action mini-action-archive-only">
+            <i data-lucide="archive" style="width:18px;height:18px;color:white"></i>
+            <span>Archive</span>
+          </div>
+        </div>
+        <div class="mini-card swiped" style="transform: translateX(-100px)">
+          <span class="mini-emoji">🧘</span>
+          <span class="mini-name">Meditate</span>
+          <span class="mini-streak">12 days</span>
+        </div>
+      </div>
+      <p style="font-size:12px;color:#737373;line-height:1.5">
+        Full swipe auto-archives. Shows undo toast.<br/>
+        Only archive — no delete option. Not discoverable.
+      </p>
+    </div>
+
+    <div class="comparison-card">
+      <h3>After: Explicit Buttons</h3>
+      <span class="tag tag-after">Proposed</span>
+      <div class="mini-card-wrapper">
+        <div class="mini-actions">
+          <div class="mini-action mini-action-delete">
+            <i data-lucide="trash-2" style="width:18px;height:18px;color:white"></i>
+            <span>Delete</span>
+          </div>
+          <div class="mini-action mini-action-archive">
+            <i data-lucide="archive" style="width:18px;height:18px;color:white"></i>
+            <span>Archive</span>
+          </div>
+        </div>
+        <div class="mini-card swiped" style="transform: translateX(-140px)">
+          <span class="mini-emoji">🧘</span>
+          <span class="mini-name">Meditate</span>
+          <span class="mini-streak">12 days</span>
+        </div>
+      </div>
+      <p style="font-size:12px;color:#737373;line-height:1.5">
+        Swipe reveals buttons, card stops. User taps choice.<br/>
+        No accidental actions. Self-documenting.
+      </p>
+    </div>
+  </div>
+
+  <!-- ─── Interaction Flow ─── -->
+  <p class="section-label" style="max-width:700px">Two clear paths</p>
+  <div class="flow-section">
+    <div class="flow-grid">
+      <div class="flow-card">
+        <div class="flow-icon flow-icon-tap-archive">
+          <i data-lucide="archive" style="width:24px;height:24px;color:#d97706"></i>
+        </div>
+        <h4>Tap Archive</h4>
+        <p>Swipe left to reveal buttons. Tap <strong style="color:#fbbf24">Archive</strong> to hide the habit from your list. Can be restored from Settings anytime.</p>
+      </div>
+      <div class="flow-card">
+        <div class="flow-icon flow-icon-tap-delete">
+          <i data-lucide="trash-2" style="width:24px;height:24px;color:#f87171"></i>
+        </div>
+        <h4>Tap Delete</h4>
+        <p>Tap <strong style="color:#f87171">Delete</strong> to see a confirmation alert. "Delete Forever" permanently removes the habit and all tracking data.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── Interactive Demo ─── -->
+  <p class="section-label" style="max-width:420px">Try it — drag left</p>
+  <div class="demo-section">
+    <p class="demo-instruction">Drag the card left to reveal buttons, then tap one</p>
+
+    <div class="demo-card-wrapper" id="demoWrapper">
+      <div class="demo-actions">
+        <button class="demo-action demo-action-delete" id="btnDelete" onclick="showDeleteAlert()">
+          <i data-lucide="trash-2" style="width:20px;height:20px;color:white"></i>
+          <span>Delete</span>
+        </button>
+        <button class="demo-action demo-action-archive" id="btnArchive" onclick="doArchive()">
+          <i data-lucide="archive" style="width:20px;height:20px;color:white"></i>
+          <span>Archive</span>
+        </button>
+      </div>
+      <div class="demo-card" id="demoCard">
+        <div class="accent-strip" style="background:#22c55e"></div>
+        <span class="habit-emoji">🏃</span>
+        <div class="habit-info">
+          <div class="habit-name">Morning Run</div>
+          <div class="habit-streak"><strong>24 day</strong> streak</div>
+        </div>
+        <div class="habit-check done">
+          <i data-lucide="check" style="width:16px;height:16px;color:white"></i>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:8px;justify-content:center;margin-top:8px">
+      <button onclick="resetDemo()" style="font-size:12px;padding:6px 12px;border-radius:8px;border:1px solid #404040;background:#262626;color:#a3a3a3;cursor:pointer;font-family:inherit">Reset</button>
+      <button onclick="snapTo(-160)" style="font-size:12px;padding:6px 12px;border-radius:8px;border:1px solid #404040;background:#262626;color:#a3a3a3;cursor:pointer;font-family:inherit">Show Actions</button>
+    </div>
+
+    <div class="success-feedback success-archive" id="archiveFeedback">
+      <i data-lucide="archive" style="width:18px;height:18px;color:#fbbf24"></i>
+      <span class="success-text" style="color:#fbbf24">"Morning Run" archived</span>
+    </div>
+
+    <div class="success-feedback success-delete" id="deleteFeedback">
+      <i data-lucide="trash-2" style="width:18px;height:18px;color:#f87171"></i>
+      <span class="success-text" style="color:#f87171">"Morning Run" deleted permanently</span>
+    </div>
+  </div>
+
+  <!-- Delete Confirmation Alert -->
+  <div class="alert-overlay" id="deleteAlert">
+    <div class="alert-box">
+      <div class="alert-content">
+        <div class="alert-title">Delete Habit</div>
+        <div class="alert-message">This will permanently delete "Morning Run" and all its history. This cannot be undone.</div>
+      </div>
+      <div class="alert-buttons">
+        <button class="alert-btn alert-btn-cancel" onclick="dismissAlert()">Keep Habit</button>
+        <button class="alert-btn alert-btn-destructive" onclick="confirmDelete()">Delete Forever</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── Phone Preview ─── -->
+  <p class="section-label" style="max-width:420px">In-context preview</p>
+  <div class="phone-frame">
+    <div class="status-bar">
+      <span class="status-time">9:41</span>
+      <div class="status-icons">
+        <i data-lucide="signal" style="width:14px;height:14px;color:#fafafa"></i>
+        <i data-lucide="wifi" style="width:14px;height:14px;color:#fafafa"></i>
+        <i data-lucide="battery-full" style="width:14px;height:14px;color:#fafafa"></i>
+      </div>
+    </div>
+
+    <div class="header">
+      <h2>Today</h2>
+    </div>
+
+    <div class="habit-list">
+      <div class="habit-card-wrapper">
+        <div class="habit-card">
+          <div class="accent-strip" style="background:#8b5cf6"></div>
+          <span class="habit-emoji">📖</span>
+          <div class="habit-info">
+            <div class="habit-name">Read 30 mins</div>
+            <div class="habit-streak"><strong>7 day</strong> streak</div>
+          </div>
+          <div class="habit-check"></div>
+        </div>
+      </div>
+
+      <!-- Swiped card showing both actions -->
+      <div class="habit-card-wrapper">
+        <div class="swipe-actions">
+          <div class="action-btn action-delete">
+            <i data-lucide="trash-2" style="width:20px;height:20px;color:white"></i>
+            <span>Delete</span>
+          </div>
+          <div class="action-btn action-archive">
+            <i data-lucide="archive" style="width:20px;height:20px;color:white"></i>
+            <span>Archive</span>
+          </div>
+        </div>
+        <div class="habit-card swiped">
+          <div class="accent-strip" style="background:#22c55e"></div>
+          <span class="habit-emoji">🏃</span>
+          <div class="habit-info">
+            <div class="habit-name">Morning Run</div>
+            <div class="habit-streak"><strong>24 day</strong> streak</div>
+          </div>
+          <div class="habit-check done">
+            <i data-lucide="check" style="width:16px;height:16px;color:white"></i>
+          </div>
+        </div>
+      </div>
+
+      <div class="habit-card-wrapper">
+        <div class="habit-card">
+          <div class="accent-strip" style="background:#f59e0b"></div>
+          <span class="habit-emoji">🧘</span>
+          <div class="habit-info">
+            <div class="habit-name">Meditate</div>
+            <div class="habit-streak"><strong>12 day</strong> streak</div>
+          </div>
+          <div class="habit-check"></div>
+        </div>
+      </div>
+
+      <div class="habit-card-wrapper">
+        <div class="habit-card">
+          <div class="accent-strip" style="background:#3b82f6"></div>
+          <span class="habit-emoji">💧</span>
+          <div class="habit-info">
+            <div class="habit-name">Drink Water</div>
+            <div class="habit-streak"><strong>45 day</strong> streak</div>
+          </div>
+          <div class="habit-check done">
+            <i data-lucide="check" style="width:16px;height:16px;color:white"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+
+    const demoCard = document.getElementById('demoCard');
+    const MAX_SWIPE = -160; // Stop at button width, no further
+    let startX = 0;
+    let currentX = 0;
+    let isDragging = false;
+
+    demoCard.addEventListener('mousedown', (e) => {
+      isDragging = true;
+      startX = e.clientX - currentX;
+      demoCard.classList.remove('snapping');
+    });
+
+    document.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+      let newX = e.clientX - startX;
+      if (newX > 0) newX = 0;
+      if (newX < MAX_SWIPE) newX = MAX_SWIPE; // Capped — no over-swipe
+      currentX = newX;
+      demoCard.style.transform = `translateX(${newX}px)`;
+    });
+
+    document.addEventListener('mouseup', () => {
+      if (!isDragging) return;
+      isDragging = false;
+      demoCard.classList.add('snapping');
+
+      // Snap to open or closed — no full-swipe trigger
+      if (currentX < -80) {
+        snapTo(MAX_SWIPE);
+      } else {
+        snapTo(0);
+      }
+    });
+
+    demoCard.addEventListener('touchstart', (e) => {
+      isDragging = true;
+      startX = e.touches[0].clientX - currentX;
+      demoCard.classList.remove('snapping');
+    });
+
+    document.addEventListener('touchmove', (e) => {
+      if (!isDragging) return;
+      let newX = e.touches[0].clientX - startX;
+      if (newX > 0) newX = 0;
+      if (newX < MAX_SWIPE) newX = MAX_SWIPE;
+      currentX = newX;
+      demoCard.style.transform = `translateX(${newX}px)`;
+    });
+
+    document.addEventListener('touchend', () => {
+      if (!isDragging) return;
+      isDragging = false;
+      demoCard.classList.add('snapping');
+      if (currentX < -80) {
+        snapTo(MAX_SWIPE);
+      } else {
+        snapTo(0);
+      }
+    });
+
+    function snapTo(x) {
+      currentX = x;
+      demoCard.classList.add('snapping');
+      demoCard.style.transform = `translateX(${x}px)`;
+    }
+
+    function doArchive() {
+      // Card slides away
+      demoCard.classList.add('snapping');
+      demoCard.style.transform = 'translateX(-500px)';
+      currentX = -500;
+      setTimeout(() => {
+        document.getElementById('archiveFeedback').classList.add('visible');
+      }, 250);
+    }
+
+    function showDeleteAlert() {
+      document.getElementById('deleteAlert').classList.add('visible');
+    }
+
+    function dismissAlert() {
+      document.getElementById('deleteAlert').classList.remove('visible');
+    }
+
+    function confirmDelete() {
+      document.getElementById('deleteAlert').classList.remove('visible');
+      demoCard.classList.add('snapping');
+      demoCard.style.transform = 'translateX(-500px)';
+      currentX = -500;
+      setTimeout(() => {
+        document.getElementById('deleteFeedback').classList.add('visible');
+      }, 250);
+    }
+
+    function resetDemo() {
+      document.getElementById('archiveFeedback').classList.remove('visible');
+      document.getElementById('deleteFeedback').classList.remove('visible');
+      snapTo(0);
+    }
+  </script>
+
+</body>
+</html>

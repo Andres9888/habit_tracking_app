@@ -91,14 +91,12 @@ export function FrequencySelector({
         })}
       </View>
 
-      {activeFreq === 'custom' && (
-        <DayPicker
+      {activeFreq === 'custom' ? <DayPicker
           isDark={isDark}
           selectedDays={selectedDays}
           themeColors={themeColors}
           onDaysChange={onDaysChange}
-        />
-      )}
+        /> : null}
     </View>
   );
 }

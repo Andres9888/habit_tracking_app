@@ -74,8 +74,7 @@ function HabitsListHeaderComponent(
           visible={computed.isOffline}
         />
       </View>
-      {computed.shouldShowTimeline && (
-        <Animated.View
+      {computed.shouldShowTimeline ? <Animated.View
           style={{
             opacity: props.calendarOpacity,
             transform: [{ translateY: props.calendarTranslateY }],
@@ -98,8 +97,7 @@ function HabitsListHeaderComponent(
             onPreviousWeek={props.onPreviousWeek}
             onUpgrade={props.onUpgradePress}
           />
-        </Animated.View>
-      )}
+        </Animated.View> : null}
     </ReAnimated.View>
   );
 }

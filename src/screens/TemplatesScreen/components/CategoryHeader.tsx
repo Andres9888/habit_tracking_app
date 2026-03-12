@@ -41,8 +41,7 @@ export function CategoryHeader({
 
   return (
     <View style={styles.header}>
-      {viewMode === 'category' && (
-        <Pressable
+      {viewMode === 'category' ? <Pressable
           accessible
           accessibilityLabel='Go back to browse'
           accessibilityRole='button'
@@ -57,19 +56,16 @@ export function CategoryHeader({
           <Text style={[styles.backButtonText, { color: themeColors.text.secondary }]}>
             Back
           </Text>
-        </Pressable>
-      )}
+        </Pressable> : null}
       <View style={styles.categoryHeaderRow}>
-        {viewMode === 'category' && (
-          <View
+        {viewMode === 'category' ? <View
             style={[
               styles.categoryHeaderIcon,
               { backgroundColor: catColors.bg },
             ]}
           >
             <Text style={{ fontSize: 24 }}>{categoryIcon}</Text>
-          </View>
-        )}
+          </View> : null}
         <View>
           <Text
             style={[

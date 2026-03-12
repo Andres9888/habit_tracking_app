@@ -125,16 +125,14 @@ export function RetryableErrorView({
       >
         <Text style={styles.retryText}>Try Again</Text>
       </Pressable>
-      {onSecondaryAction && (
-        <Pressable
+      {onSecondaryAction ? <Pressable
           accessibilityLabel={secondaryLabel}
           accessibilityRole='button'
           style={styles.secondaryButton}
           onPress={onSecondaryAction}
         >
           <Text style={styles.secondaryText}>{secondaryLabel}</Text>
-        </Pressable>
-      )}
+        </Pressable> : null}
     </View>
   );
 }

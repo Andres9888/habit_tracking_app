@@ -47,7 +47,7 @@ export const CardContent = React.memo(function CardContent({
         <View style={styles.headerLeft}>
           <View style={styles.titleContainer}>
             <Text style={styles.headerTitle}>
-              This Week {isPerfectWeek && '🏆'}
+              This Week {isPerfectWeek ? '🏆' : null}
             </Text>
             {/* Sparkle animation for perfect week */}
             <SparkleEffect

@@ -38,8 +38,7 @@ export function MilestoneActions({
   return (
     <View style={styles.actions}>
       {/* Share Button */}
-      {onShare && (
-        <Animated.View style={[styles.shareButton, shareButtonStyle]}>
+      {onShare ? <Animated.View style={[styles.shareButton, shareButtonStyle]}>
           <Button
             accessible
             accessibilityHint='Opens share card preview'
@@ -50,8 +49,7 @@ export function MilestoneActions({
           >
             Share Your Achievement
           </Button>
-        </Animated.View>
-      )}
+        </Animated.View> : null}
 
       {/* Continue Button */}
       <Animated.View style={continueButtonStyle}>

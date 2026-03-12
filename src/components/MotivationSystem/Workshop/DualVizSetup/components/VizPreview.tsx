@@ -66,8 +66,7 @@ export function VizPreview({ type, body, mind, emotion }: VizPreviewProps) {
         </Text>
       </View>
       <View className='gap-1'>
-        {body && (
-          <Text
+        {body ? <Text
             className={clsx(
               'text-xs',
               isSuccess ? 'text-emerald-800' : 'text-rose-800'
@@ -75,10 +74,8 @@ export function VizPreview({ type, body, mind, emotion }: VizPreviewProps) {
             numberOfLines={1}
           >
             <Text className='font-medium'>Body:</Text> {body}
-          </Text>
-        )}
-        {mind && (
-          <Text
+          </Text> : null}
+        {mind ? <Text
             className={clsx(
               'text-xs',
               isSuccess ? 'text-emerald-800' : 'text-rose-800'
@@ -86,10 +83,8 @@ export function VizPreview({ type, body, mind, emotion }: VizPreviewProps) {
             numberOfLines={1}
           >
             <Text className='font-medium'>Mind:</Text> {mind}
-          </Text>
-        )}
-        {emotion && (
-          <Text
+          </Text> : null}
+        {emotion ? <Text
             className={clsx(
               'text-xs',
               isSuccess ? 'text-emerald-800' : 'text-rose-800'
@@ -97,8 +92,7 @@ export function VizPreview({ type, body, mind, emotion }: VizPreviewProps) {
             numberOfLines={1}
           >
             <Text className='font-medium'>Feel:</Text> {emotion}
-          </Text>
-        )}
+          </Text> : null}
       </View>
     </View>
   );

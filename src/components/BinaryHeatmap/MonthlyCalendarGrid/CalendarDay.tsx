@@ -64,10 +64,10 @@ export const CalendarDay = memo(function CalendarDay({
       }
       accessibilityRole='button'
       accessibilityState={{
-        disabled: Boolean(day?.isFuture || day?.isBeforeCreation),
+        disabled: Boolean(day?.isFuture || day?.isBeforeCreation || !day?.isCurrentMonth),
         selected: showCompleted,
       }}
-      disabled={Boolean(day?.isFuture || day?.isBeforeCreation)}
+      disabled={Boolean(day?.isFuture || day?.isBeforeCreation || !day?.isCurrentMonth)}
       style={styles.dayWrapper}
       onPress={() => onPress(day?.dateString ?? '', Boolean(day?.isCompleted))}
     >
@@ -92,9 +92,7 @@ export const CalendarDay = memo(function CalendarDay({
         >
           {day?.dayNumber ?? ''}
         </Text>
-        {dotStyle && !isToday && (
-          <View style={[styles.streakCircle, dotStyle]} />
-        )}
+        {dotStyle && !isToday ? <View style={[styles.streakCircle, dotStyle]} /> : null}
       </View>
     </Pressable>
   );

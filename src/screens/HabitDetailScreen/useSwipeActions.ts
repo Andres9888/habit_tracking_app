@@ -24,9 +24,9 @@ export const useSwipeActions = ({
   onDelete,
   setPendingArchive,
   setPendingDelete,
-}: UseSwipeActionsProps) => {
+  }: UseSwipeActionsProps) => {
   const handleSwipeDelete = useCallback(() => {
-    triggerHaptic('heavy');
+    void triggerHaptic('heavy');
     setPendingDelete(true);
     setTimeout(() => {
       AccessibilityInfo.announceForAccessibility(
@@ -36,7 +36,7 @@ export const useSwipeActions = ({
   }, [setPendingDelete, habit?.name]);
 
   const handleSwipeArchive = useCallback(() => {
-    triggerHaptic('heavy');
+    void triggerHaptic('heavy');
     setPendingArchive(true);
     setTimeout(() => {
       AccessibilityInfo.announceForAccessibility(

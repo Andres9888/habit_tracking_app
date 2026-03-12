@@ -82,6 +82,7 @@ export interface HabitSettings {
   showEmojis: boolean;
   showMotivationalMessages: boolean;
   showStreaks: boolean;
+  stickyCalendarHeader: boolean;
   showWeekCompletionBar: boolean;
   useDyslexicFont: boolean;
 }

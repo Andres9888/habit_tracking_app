@@ -17,27 +17,17 @@ import { renderSubView } from './views/renderSubView';
 
 function TemplatesScreenContent() {
   const props = useTemplatesScreenProps();
-  const {
-    data,
-    handlers,
-    mainBrowseData,
-    packConfirm,
-    state,
-    viewNav,
-  } = props;
+  const { data, handlers, mainBrowseData, packConfirm, state, viewNav } = props;
+  const handleImport = (template: Doc<'templates'>) => { void handlers.handleDirectImport(template._id); };
+  const handleSeedTemplates = () => { void handlers.handleSeedTemplates(); };
+  const handlePackConfirm = () => { void packConfirm.handleConfirm(); };
+  const handleSeeAll = () => { void viewNav.openSeeAll(); };
 
   if (!data.isLoading && !data.allTemplates?.length) {
-    return (
-      <TemplatesEmptyState
-        isSeeding={state.isSeeding}
-        onSeedTemplates={handlers.handleSeedTemplates}
-      />
-    );
+    return <TemplatesEmptyState isSeeding={state.isSeeding} onSeedTemplates={handleSeedTemplates} />;
   }
 
   if (state.effectiveViewMode !== 'browse') return renderCategorySearch(props);
-  const handleImport = (t: Doc<'templates'>) =>
-    handlers.handleDirectImport(t._id);
   const subView = renderSubView({
     activeView: viewNav.activeView,
     allTemplates: data.allTemplates,
@@ -86,7 +76,7 @@ function TemplatesScreenContent() {
           packConfirmPack={packConfirm.selectedPack}
           packConfirmVisible={!!packConfirm.selectedPack}
           onPackCancel={packConfirm.handleCancel}
-          onPackConfirm={packConfirm.handleConfirm}
+          onPackConfirm={handlePackConfirm}
         />
       }
       onFeaturedPress={(categoryId: string) => viewNav.openCategory(categoryId)}
@@ -94,7 +84,7 @@ function TemplatesScreenContent() {
       onPreview={handlers.handleTemplatePreview}
       onSearchChange={state.setSearchQuery}
       onSearchClear={() => state.setSearchQuery('')}
-      onSeeAll={viewNav.openSeeAll}
+      onSeeAll={handleSeeAll}
       popularTemplates={mainBrowseData.popularTemplates}
       premiumPacksSection={
         <PremiumPacksSection
@@ -109,9 +99,5 @@ function TemplatesScreenContent() {
 }
 
 export default function TemplatesScreen() {
-  return (
-    <ScreenErrorBoundary screenName='Templates'>
-      <TemplatesScreenContent />
-    </ScreenErrorBoundary>
-  );
+  return <ScreenErrorBoundary screenName='Templates'><TemplatesScreenContent /></ScreenErrorBoundary>;
 }

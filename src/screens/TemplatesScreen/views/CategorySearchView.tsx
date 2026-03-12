@@ -20,6 +20,7 @@ export function CategorySearchView(p: CategorySearchViewProps) {
   const { colors } = useThemeColors();
   const { handlers: h, filteredTemplates: templates } = p;
   const toggle = () => p.setResearchOnly((v) => !v);
+  const handleImport = (templateId: Parameters<typeof h.handleTemplateImport>[0]) => { void h.handleTemplateImport(templateId); };
 
   return (
     <View testID="templates-search-results" style={[styles.container, { backgroundColor: colors.background }]}>
@@ -57,7 +58,7 @@ export function CategorySearchView(p: CategorySearchViewProps) {
         hasActiveFilters={p.hasActiveFilters}
         importingTemplateId={p.importingTemplateId}
         selectedCategory={p.selectedCategory}
-        onImport={h.handleTemplateImport}
+        onImport={handleImport}
         onPreview={h.handleTemplatePreview}
         onResetFilters={h.handleResetFilters}
       />
@@ -81,14 +82,12 @@ export function CategorySearchView(p: CategorySearchViewProps) {
         onDismissCelebration={() => p.setShowCelebration(false)}
         onDismissToast={() => p.setShowToast(false)}
       />
-      {p.showSortOptions && (
-        <Pressable
+      {p.showSortOptions ? <Pressable
           accessibilityLabel='Close sort options'
           accessibilityRole='button'
           style={styles.dropdownBackdrop}
           onPress={() => p.setShowSortOptions(false)}
-        />
-      )}
+        /> : null}
     </View>
   );
 }

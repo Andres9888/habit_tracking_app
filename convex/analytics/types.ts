@@ -4,7 +4,7 @@
  * Type definitions for analytics queries and responses.
  */
 
-import { Doc, Id } from '../_generated/dataModel';
+import { Id } from '../_generated/dataModel';
 
 /**
  * Habit with calculated strength and streak information

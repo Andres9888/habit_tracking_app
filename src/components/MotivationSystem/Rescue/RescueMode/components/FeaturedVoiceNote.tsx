@@ -49,11 +49,9 @@ export function FeaturedVoiceNote({
           <Text className='text-lg font-bold text-teal-800'>
             Hear Your Day 1 Self
           </Text>
-          {daysAgo > 0 && (
-            <Text className='text-xs text-teal-600'>
+          {daysAgo > 0 ? <Text className='text-xs text-teal-600'>
               {daysAgo} day{daysAgo === 1 ? '' : 's'} ago
-            </Text>
-          )}
+            </Text> : null}
         </View>
         <View className='flex-row items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5'>
           <Sparkles className='text-amber-600' size={12} />

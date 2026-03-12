@@ -22,14 +22,12 @@ export function CelebrationExample() {
 
   return (
     <View style={styles.container}>
-      {activeBurst && (
-        <ConfettiSystem
+      {activeBurst ? <ConfettiSystem
           burstType={activeBurst}
           shouldReduceMotion={false}
           isDarkMode={false}
           {...config}
-        />
-      )}
+        /> : null}
 
       <Text style={styles.title}>Celebration System Demo</Text>
 
@@ -111,14 +109,12 @@ export function HabitCardExample() {
 
   return (
     <View style={styles.container}>
-      {activeBurst && (
-        <ConfettiSystem
+      {activeBurst ? <ConfettiSystem
           burstType={activeBurst}
           shouldReduceMotion={false}
           isDarkMode={false}
           {...config}
-        />
-      )}
+        /> : null}
 
       <View style={styles.card}>
         <Text style={styles.habitName}>{habit.name}</Text>

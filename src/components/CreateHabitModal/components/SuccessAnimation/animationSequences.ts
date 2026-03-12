@@ -8,7 +8,6 @@
 import type { SharedValue } from 'react-native-reanimated';
 import {
   withDelay,
-  withSequence,
   withSpring,
   withTiming,
 } from 'react-native-reanimated';

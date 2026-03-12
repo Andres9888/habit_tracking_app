@@ -6,13 +6,13 @@ import { OfflineSyncManager } from '../../syncManager';
 import type {
   SyncOrchestratorResult,
   SyncOrchestratorState,
-  ToggleSyncExecutor,
+  SyncExecutor,
 } from '../types';
 import { shouldSkipSync } from '../helpers';
 import { createSyncResult, createErrorResult } from '../resultHelpers';
 
 export interface CheckPreconditionsParams {
-  executor: ToggleSyncExecutor | null;
+  executor: SyncExecutor | null;
   state: SyncOrchestratorState;
   syncManager: OfflineSyncManager;
   minSyncIntervalMs: number;

@@ -84,8 +84,7 @@ export function FooterSection({
             </AnimatedPressable>
           )}
 
-          {!isImported && (
-            <AnimatedPressable
+          {isImported ? null : <AnimatedPressable
               accessible
               accessibilityHint='Customize habit details before adding'
               accessibilityLabel='Customize habit before importing'
@@ -99,8 +98,7 @@ export function FooterSection({
               <Text style={footerStyles.customizeLinkText}>
                 Customize First →
               </Text>
-            </AnimatedPressable>
-          )}
+            </AnimatedPressable>}
         </View>
       </LinearGradient>
     </View>

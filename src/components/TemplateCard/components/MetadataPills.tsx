@@ -40,37 +40,29 @@ export function MetadataPills({
 
   return (
     <View style={styles.metadataRow}>
-      {formattedFrequency && (
-        <View style={[styles.metadataPill, { backgroundColor: themeColors.surface, borderColor: `${iconColor}30` }]}>
+      {formattedFrequency ? <View style={[styles.metadataPill, { backgroundColor: themeColors.surface, borderColor: `${iconColor}30` }]}>
           <Text style={[theme.custom.typography.caption, { color: themeColors.text.secondary }]}>
             ⏱️ {formattedFrequency}
           </Text>
-        </View>
-      )}
+        </View> : null}
 
-      {scientificLink && (
-        <View style={[styles.metadataPill, { backgroundColor: themeColors.surface, borderColor: `${iconColor}30` }]}>
+      {scientificLink ? <View style={[styles.metadataPill, { backgroundColor: themeColors.surface, borderColor: `${iconColor}30` }]}>
           <Text style={[theme.custom.typography.caption, { color: themeColors.text.secondary }]}>
             🔗 Research
           </Text>
-        </View>
-      )}
+        </View> : null}
 
-      {youtubeLink && (
-        <View style={[styles.metadataPill, { backgroundColor: themeColors.surface, borderColor: '#FF000030' }]}>
+      {youtubeLink ? <View style={[styles.metadataPill, { backgroundColor: themeColors.surface, borderColor: '#FF000030' }]}>
           <Text style={[theme.custom.typography.caption, { color: themeColors.text.secondary }]}>
             ▶️ Video
           </Text>
-        </View>
-      )}
+        </View> : null}
 
-      {typeof popularityScore === 'number' && (
-        <View style={[styles.metadataPill, { backgroundColor: themeColors.surface, borderColor: `${iconColor}30` }]}>
+      {typeof popularityScore === 'number' ? <View style={[styles.metadataPill, { backgroundColor: themeColors.surface, borderColor: `${iconColor}30` }]}>
           <Text style={[theme.custom.typography.caption, { color: themeColors.text.secondary }]}>
             {popularityScore >= 90 ? 'Popular' : '⭐ Trusted'}
           </Text>
-        </View>
-      )}
+        </View> : null}
     </View>
   );
 }

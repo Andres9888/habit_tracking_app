@@ -38,12 +38,12 @@ export function MiniCardContainer({
   onImport,
 }: MiniCardContainerProps) {
   const { colors } = useThemeColors();
-  const testIdSuffix = index != null ? `-${index}` : '';
+  const testIdSuffix = index == null ? '' : `-${index}`;
   return (
     <View>
       <AnimatedPressable
         accessible
-        testID={index != null ? `templates-popular-card${testIdSuffix}` : undefined}
+        testID={index == null ? undefined : `templates-popular-card${testIdSuffix}`}
         accessibilityLabel={`${name} template`}
         accessibilityRole='button'
         style={[
@@ -90,8 +90,7 @@ export function MiniCardContainer({
           </Text>
         ) : null}
       </AnimatedPressable>
-      {onImport && (
-        <ImportButton
+      {onImport ? <ImportButton
           checkmarkStyle={checkmarkStyle}
           iconColor={iconColor}
           importButtonStyle={importButtonStyle}
@@ -99,8 +98,7 @@ export function MiniCardContainer({
           isImporting={isImporting}
           name={name}
           onImport={onImport}
-        />
-      )}
+        /> : null}
     </View>
   );
 }

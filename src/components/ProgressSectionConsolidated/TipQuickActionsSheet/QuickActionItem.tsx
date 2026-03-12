@@ -62,9 +62,7 @@ export const QuickActionItem = React.memo(function QuickActionItem({
         </View>
         <View style={styles.actionTextContainer}>
           <Text style={styles.actionLabel}>{action.label}</Text>
-          {action.subtitle && (
-            <Text style={styles.actionSubtitle}>{action.subtitle}</Text>
-          )}
+          {action.subtitle ? <Text style={styles.actionSubtitle}>{action.subtitle}</Text> : null}
         </View>
       </Pressable>
     </Animated.View>

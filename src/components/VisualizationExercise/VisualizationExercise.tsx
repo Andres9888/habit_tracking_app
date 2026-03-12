@@ -67,37 +67,29 @@ export function VisualizationExercise({
       <View className='flex-1 gap-6'>
         <StepIndicator currentStep={STEP_NUMBERS[step]} totalSteps={4} />
 
-        {step === 'intro' && (
-          <IntroStep habitName={habitName} onNext={() => setStep('positive')} />
-        )}
+        {step === 'intro' ? <IntroStep habitName={habitName} onNext={() => setStep('positive')} /> : null}
 
-        {step === 'positive' && (
-          <PositiveStep
+        {step === 'positive' ? <PositiveStep
             value={positiveVisualization}
             onBack={() => setStep('intro')}
             onNext={() => setStep('negative')}
             onValueChange={setPositiveVisualization}
-          />
-        )}
+          /> : null}
 
-        {step === 'negative' && (
-          <NegativeStep
+        {step === 'negative' ? <NegativeStep
             value={negativeVisualization}
             onBack={() => setStep('positive')}
             onNext={() => setStep('summary')}
             onValueChange={setNegativeVisualization}
-          />
-        )}
+          /> : null}
 
-        {step === 'summary' && (
-          <SummaryStep
+        {step === 'summary' ? <SummaryStep
             habitName={habitName}
             negativeVisualization={negativeVisualization}
             positiveVisualization={positiveVisualization}
             onBack={() => setStep('negative')}
             onSave={handleSave}
-          />
-        )}
+          /> : null}
       </View>
     </KeyboardAvoidingView>
   );

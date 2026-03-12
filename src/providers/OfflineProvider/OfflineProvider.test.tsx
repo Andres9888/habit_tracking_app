@@ -7,7 +7,7 @@
 import React from 'react';
 import { Text } from 'react-native';
 import { render, waitFor, act } from '@testing-library/react-native';
-import { OfflineProvider } from './OfflineProvider';
+import { OfflineProvider } from './Offline.provider';
 import { useOfflineContext } from './useOfflineContext';
 import {
   getOfflineQueueManager,

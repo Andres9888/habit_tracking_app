@@ -80,8 +80,7 @@ export function MilestoneCelebration({
       </Modal>
 
       {/* Confetti Animation - Only if Reduce Motion is disabled */}
-      {!reduceMotion && visible && (
-        <ConfettiCannon
+      {!reduceMotion && visible ? <ConfettiCannon
           ref={confettiRef}
           fadeOut
           autoStart={false}
@@ -90,8 +89,7 @@ export function MilestoneCelebration({
           explosionSpeed={350}
           fallSpeed={2500}
           origin={{ x: SCREEN_WIDTH / 2, y: 0 }}
-        />
-      )}
+        /> : null}
     </>
   );
 }

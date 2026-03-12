@@ -106,8 +106,7 @@ export function SortOptionRow({
         </Text>
       </View>
 
-      {selected && (
-        <View
+      {selected ? <View
           className='h-6 w-6 items-center justify-center rounded-full'
           style={{ backgroundColor: themeColors.primary[500] }}
         >
@@ -116,8 +115,7 @@ export function SortOptionRow({
             size={CHECK_ICON_SIZE}
             strokeWidth={CHECK_ICON_STROKE_WIDTH}
           />
-        </View>
-      )}
+        </View> : null}
     </AnimatedPressable>
   );
 }

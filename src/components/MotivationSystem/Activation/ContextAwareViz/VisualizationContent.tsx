@@ -46,7 +46,7 @@ export function VisualizationContent({
         type={type}
       />
 
-      {!compact && <FeelItPrompt type={type} />}
+      {compact ? null : <FeelItPrompt type={type} />}
     </Animated.View>
   );
 }

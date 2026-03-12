@@ -96,6 +96,10 @@ export function sanitizeSettingsPayload(payload: unknown): UnknownRecord {
     output.showStreaks = source.showStreaks;
   }
 
+  if (isValidBoolean(source.stickyCalendarHeader)) {
+    output.stickyCalendarHeader = source.stickyCalendarHeader;
+  }
+
   if (isValidBoolean(source.showWeekCompletionBar)) {
     output.showWeekCompletionBar = source.showWeekCompletionBar;
   }

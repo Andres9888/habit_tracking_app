@@ -49,12 +49,10 @@ export const HabitRankingItem = memo(function HabitRankingItem({
             <Text numberOfLines={1} style={styles.habitName}>
               {item.name}
             </Text>
-            {item.isAtRisk && (
-              <View style={styles.riskBadge}>
+            {item.isAtRisk ? <View style={styles.riskBadge}>
                 <AlertTriangle color={colors.error} size={12} />
                 <Text style={styles.riskText}>At Risk</Text>
-              </View>
-            )}
+              </View> : null}
           </View>
 
           <View style={styles.habitStats}>

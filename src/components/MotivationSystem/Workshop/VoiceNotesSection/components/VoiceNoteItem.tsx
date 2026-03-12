@@ -64,8 +64,7 @@ export function VoiceNoteItem({
         note={note}
         onPress={handleToggleExpand}
       />
-      {note.audioUrl && isExpanded && (
-        <Animated.View style={expandedStyle}>
+      {note.audioUrl && isExpanded ? <Animated.View style={expandedStyle}>
           <View className='border-t border-stone-100 p-3'>
             <VoiceNotePlaybackUI
               compact
@@ -79,8 +78,7 @@ export function VoiceNoteItem({
               onPlayStart={onPlayStart}
             />
           </View>
-        </Animated.View>
-      )}
+        </Animated.View> : null}
     </View>
   );
 }

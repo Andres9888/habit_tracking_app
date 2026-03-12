@@ -71,8 +71,7 @@ export function UnsavedChangesAlert({
           {message}
         </Text>
 
-        {truncatedPreview && (
-          <View
+        {truncatedPreview ? <View
             className={`mb-4 w-full rounded-lg border ${styles.previewBorder} ${styles.previewBg} p-3`}
           >
             <Text className='mb-1 text-xs font-medium' style={{ color: colors.text.tertiary }}>
@@ -85,8 +84,7 @@ export function UnsavedChangesAlert({
             >
               "{truncatedPreview}"
             </Text>
-          </View>
-        )}
+          </View> : null}
 
         <View className='mt-2 w-full gap-3'>
           <Pressable

@@ -66,7 +66,7 @@ export function BenefitsVariant({
               isHighlighted={feature.id === triggeredByFeature}
             />
           ))}
-          {config.showSocialProof && <SocialProofSection />}
+          {config.showSocialProof ? <SocialProofSection /> : null}
         </ScrollView>
         <BenefitsCTAFooter
           config={config}

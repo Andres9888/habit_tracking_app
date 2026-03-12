@@ -52,12 +52,10 @@ export function CategoryFilterItem({
         }}
         onPressOut={handlePressOut}
       >
-        {!selected && (
-          <View
+        {selected ? null : <View
             className='h-2 w-2 rounded-full'
             style={{ backgroundColor: colors.bgSelected }}
-          />
-        )}
+          />}
         <Text className='text-[15px]'>{category.icon}</Text>
         <Text
           className='text-[15px] font-semibold'

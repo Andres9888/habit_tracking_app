@@ -61,14 +61,12 @@ export const ActionItem = ({
       ]}
       onPress={handlePress}
     >
-      {highlighted && (
-        <LinearGradient
+      {highlighted ? <LinearGradient
           className='absolute inset-0 rounded-xl'
           colors={isDark ? ['#1e1b4b', '#312e81'] : ['#f5f3ff', '#e0e7ff']}
           end={{ x: 1, y: 0 }}
           start={{ x: 0, y: 0 }}
-        />
-      )}
+        /> : null}
       <ActionItemIcon
         destructive={destructive}
         highlighted={highlighted}
@@ -88,14 +86,11 @@ export const ActionItem = ({
           >
             {label}
           </Text>
-          {badge && (
-            <View className='rounded-full bg-violet-500 px-2 py-0.5'>
+          {badge ? <View className='rounded-full bg-violet-500 px-2 py-0.5'>
               <Text className='text-xs font-bold text-white'>{badge}</Text>
-            </View>
-          )}
+            </View> : null}
         </View>
-        {subtitle && (
-          <Text
+        {subtitle ? <Text
             className='mt-0.5 text-xs'
             style={{
               color: highlighted
@@ -106,11 +101,9 @@ export const ActionItem = ({
             }}
           >
             {subtitle}
-          </Text>
-        )}
+          </Text> : null}
       </View>
-      {showChevron && (
-        <ChevronRight
+      {showChevron ? <ChevronRight
           color={
             highlighted
               ? isDark ? '#a78bfa' : '#a78bfa'  // violet-400
@@ -119,8 +112,7 @@ export const ActionItem = ({
                 : colors.text.tertiary
           }
           size={20}
-        />
-      )}
+        /> : null}
     </Pressable>
   );
 };

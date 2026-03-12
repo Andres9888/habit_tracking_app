@@ -43,8 +43,7 @@ export function VisualizationGuide({ habitName }: VisualizationGuideProps) {
         {displayedTechniques.map((technique) => (
           <VisualizationCard key={technique.id} technique={technique} />
         ))}
-        {VISUALIZATION_TECHNIQUES.length > 2 && (
-          <Pressable
+        {VISUALIZATION_TECHNIQUES.length > 2 ? <Pressable
             accessibilityLabel={
               showAllTechniques
                 ? 'Show less techniques'
@@ -64,8 +63,7 @@ export function VisualizationGuide({ habitName }: VisualizationGuideProps) {
             ) : (
               <ChevronDown className='text-violet-600' size={16} />
             )}
-          </Pressable>
-        )}
+          </Pressable> : null}
       </View>
       <Animated.View
         className='gap-3'

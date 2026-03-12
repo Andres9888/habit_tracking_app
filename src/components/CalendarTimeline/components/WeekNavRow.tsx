@@ -104,8 +104,7 @@ export const WeekNavRow: React.FC<WeekNavRowProps> = ({
       </AnimatedPressable>
 
       <View style={s.sideColumnRight}>
-        {showToday && onJumpToToday && (
-          <Animated.View style={todayEntranceStyle}>
+        {showToday && onJumpToToday ? <Animated.View style={todayEntranceStyle}>
             <AnimatedPressable
               accessibilityHint='Jump back to the current week'
               accessibilityLabel='Today'
@@ -118,8 +117,7 @@ export const WeekNavRow: React.FC<WeekNavRowProps> = ({
                 <ArrowRight color={chipText} size={11} strokeWidth={2.5} />
               </View>
             </AnimatedPressable>
-          </Animated.View>
-        )}
+          </Animated.View> : null}
       </View>
     </View>
   );
