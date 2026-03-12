@@ -35,7 +35,6 @@ export type ProgressAnimatedStyle = AnimatedStyle;
  */
 export interface DraggableHabitCardProps {
   accentColor: string;
-  archiveFlash: SharedValue<number>;
   bestStreak: number;
   cardScale: SharedValue<number>;
   celebrationsEnabled: boolean;
@@ -51,7 +50,6 @@ export interface DraggableHabitCardProps {
   handleLongPress: () => void;
   handlePressIn: () => void;
   handlePressOut: () => void;
-  handleSwipeableOpen: () => void;
   highContrastMode: boolean;
   highlightGlow: SharedValue<number>;
   iconPulse: SharedValue<number>;
@@ -64,6 +62,7 @@ export interface DraggableHabitCardProps {
   newRecordOpacity: SharedValue<number>;
   newRecordScale: SharedValue<number>;
   onArchive?: (habitId: Id<'habits'>) => void;
+  onDelete?: (habitId: Id<'habits'>) => void;
   onPause?: (habitId: Id<'habits'>) => void;
   onPress?: (habit: Habit) => void;
   onResume?: (habitId: Id<'habits'>) => void;

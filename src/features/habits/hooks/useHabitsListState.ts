@@ -22,6 +22,7 @@ import { useHabitsWeekDates } from './useHabitsWeekDates';
 import { useHabitsTracking } from './useHabitsTracking';
 import { useHabitsSorting } from './useHabitsSorting';
 import { useHabitsArchive } from './useHabitsArchive';
+import { useHabitDelete } from './useHabitDelete';
 import { useRewardToast } from './useRewardToast';
 import { useOptimisticToggleMutation } from '../../../lib/optimistic';
 import { useOptimisticDragEnd } from './useOptimisticDragEnd';
@@ -236,6 +237,7 @@ export function useHabitsListState(): HabitsListState {
   });
 
   const archiveState = useHabitsArchive(habits);
+  const { handleDelete } = useHabitDelete(habits);
   const rewardState = useRewardToast(celebrationsEnabled, getStreak);
 
   const habitSlotsUsed = isPremiumUser
@@ -372,6 +374,7 @@ export function useHabitsListState(): HabitsListState {
     getHabitStatus,
     getStreak,
     habitSlotsUsed,
+    handleDelete,
     handleDragEnd,
     handleHabitPress,
     handleJumpToToday: weekDatesState.handleJumpToToday,

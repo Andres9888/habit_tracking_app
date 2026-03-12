@@ -1,40 +1,47 @@
 import React from 'react';
-import { Animated, View, Text } from 'react-native';
+import { Animated, Pressable, Text, View } from 'react-native';
 import { Archive } from 'lucide-react-native';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { borderRadius } from '../../theme/spacing';
-import { typography, fontFamilies} from '@/theme/typography';
+import { typography, fontFamilies } from '@/theme/typography';
+import { DeleteAction } from './DeleteAction';
 
-interface ArchiveActionProps {
+interface SwipeActionsProps {
   dragX: Animated.AnimatedInterpolation<number>;
+  onArchive: () => void;
+  onDelete: () => void;
 }
 
-export function ArchiveAction({ dragX }: ArchiveActionProps) {
+export function SwipeActions({ dragX, onArchive, onDelete }: SwipeActionsProps) {
   const { isDark } = useThemeColors();
   const trans = dragX.interpolate({
     extrapolate: 'clamp',
-    inputRange: [-100, 0],
-    outputRange: [0, 100],
+    inputRange: [-160, 0],
+    outputRange: [0, 160],
   });
 
-  const iconScale = dragX.interpolate({
+  const archiveIconScale = dragX.interpolate({
     extrapolate: 'clamp',
-    inputRange: [-100, -60, -30, 0],
+    inputRange: [-160, -100, -60, 0],
     outputRange: [1.1, 1, 0.85, 0.8],
   });
 
-  const iconOpacity = dragX.interpolate({
+  const archiveIconOpacity = dragX.interpolate({
     extrapolate: 'clamp',
-    inputRange: [-100, -40, 0],
+    inputRange: [-160, -80, 0],
     outputRange: [1, 0.85, 0.6],
   });
 
   return (
     <Animated.View
-      className='flex-row items-center justify-end'
+      className="flex-row items-center justify-end"
       style={{ transform: [{ translateX: trans }] }}
     >
-      <View
+      <DeleteAction dragX={dragX} onPress={onDelete} />
+      <Pressable
+        accessibilityLabel="Archive habit"
+        accessibilityRole="button"
+        onPress={onArchive}
         style={{
           alignItems: 'center',
           backgroundColor: isDark ? '#D97706' : '#f59e0b',
@@ -42,18 +49,18 @@ export function ArchiveAction({ dragX }: ArchiveActionProps) {
           borderTopRightRadius: borderRadius.xl,
           height: '100%',
           justifyContent: 'center',
-          width: 100,
+          width: 80,
         }}
       >
         <Animated.View
           style={{
             alignItems: 'center',
             justifyContent: 'center',
-            opacity: iconOpacity,
-            transform: [{ scale: iconScale }],
+            opacity: archiveIconOpacity,
+            transform: [{ scale: archiveIconScale }],
           }}
         >
-          <Archive color='white' size={22} strokeWidth={2} />
+          <Archive color="white" size={22} strokeWidth={2} />
           <Text
             style={{
               color: 'white',
@@ -67,7 +74,7 @@ export function ArchiveAction({ dragX }: ArchiveActionProps) {
             Archive
           </Text>
         </Animated.View>
-      </View>
+      </Pressable>
     </Animated.View>
   );
 }

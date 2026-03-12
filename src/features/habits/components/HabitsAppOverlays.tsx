@@ -9,7 +9,7 @@ import { BatchDeleteConfirmModal } from './BatchDeleteConfirmModal';
 import { HabitsModals } from './HabitsModals';
 import WebToaster from './WebToaster';
 import { TOAST_DURATION_MS } from '@/constants';
-import type { HabitsListState, HabitsModalsState } from '../hooks/types';
+import type { HabitsModalsState } from '../hooks/types';
 
 const RevenueCatPaywall = lazy(() =>
   import('../../../components/RevenueCatPaywall').then((m) => ({
@@ -18,7 +18,6 @@ const RevenueCatPaywall = lazy(() =>
 );
 
 interface HabitsAppOverlaysProps {
-  list: HabitsListState;
   modals: HabitsModalsState;
   paywallVisible: boolean;
   onPaywallClose: () => void;
@@ -36,7 +35,6 @@ interface HabitsAppOverlaysProps {
 }
 
 export function HabitsAppOverlays({
-  list,
   modals,
   paywallVisible,
   onPaywallClose,
@@ -54,16 +52,6 @@ export function HabitsAppOverlays({
     <>
       <WebToaster />
       <HabitsModals state={modals} />
-
-      <ArchiveUndoToast
-        duration={TOAST_DURATION_MS}
-        habitName={list.archiveUndoHabitName}
-        visible={list.archiveUndoVisible}
-        onDismiss={list.dismissArchiveUndo}
-        onUndo={(): void => {
-          void list.handleArchiveUndo();
-        }}
-      />
 
       <ArchiveUndoToast
         duration={TOAST_DURATION_MS}

@@ -126,7 +126,6 @@ function HabitsAppContent() {
             batchArchiveUndoVisible={selectionActions.batchArchiveUndoVisible}
             confirmDeleteCount={selectionActions.deleteCount}
             confirmDeleteVisible={selectionActions.confirmDeleteVisible}
-            list={list}
             modals={modals}
             paywallVisible={handlers.paywallVisible}
             onBatchArchiveDismiss={selectionActions.dismissBatchArchiveUndo}

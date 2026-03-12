@@ -70,6 +70,7 @@ export interface DraggableHabitProps {
   /** True on the render immediately after the user creates this habit. */
   isJustCreated?: boolean;
   onArchive?: (habitId: Id<'habits'>) => void;
+  onDelete?: (habitId: Id<'habits'>) => void;
   onEntranceComplete?: () => void;
   onLongPress?: ((habit?: Habit) => void) | (() => void);
   onPress?: (habit: Habit) => void;
