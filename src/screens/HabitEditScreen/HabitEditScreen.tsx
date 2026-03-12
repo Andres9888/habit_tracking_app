@@ -1,12 +1,19 @@
 /* eslint-disable max-lines */
 /** HabitEditScreen - Matches Create modal style (bottom sheet, stagger animations) */
-import { Keyboard, Modal, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import {
+  Keyboard,
+  Modal,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  View,
+} from 'react-native';
 import { KeyboardAvoidingView, Platform } from 'react-native';
 import { GestureDetector } from 'react-native-gesture-handler';
 import Animated, { FadeIn, FadeInUp } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 import { useSwipeDismiss } from '../../components/CreateHabitModal/hooks/useSwipeDismiss';
+import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { shadows } from '../../theme/spacing';
 import { EditHeader } from './EditHeader';
@@ -26,8 +33,9 @@ function HabitEditScreenContent({
 }: HabitEditScreenProps) {
   const insets = useSafeAreaInsets();
   const { colors: themeColors } = useThemeColors();
-  const { animateOut, backdropStyle, panGesture, sheetStyle } =
-    useSwipeDismiss({ visible, onClose });
+  const { animateOut, backdropStyle, panGesture, sheetStyle } = useSwipeDismiss(
+    { visible, onClose }
+  );
   const state = useHabitEditScreen({ habitId, onClose: animateOut });
   return (
     <Modal
@@ -55,71 +63,80 @@ function HabitEditScreenContent({
               behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
               className='flex-1'
             >
-            {state.isLoading ? (
-              <View style={{ paddingTop: Math.max(insets.top + 4, 12) }}>
-                <HabitEditSkeleton />
-              </View>
-            ) : (
-              <Animated.View entering={FadeIn.duration(300)} style={{ flex: 1 }}>
-            <EditHeader
-              canSave={state.habitName.trim().length >= 2}
-              isSaving={state.isSaving}
-              paddingTop={Math.max(insets.top + 4, 12)}
-              onCancel={() => {
-                state.triggerSelection();
-                animateOut();
-              }}
-              onSave={() => void state.handleSave()}
-            />
-            <ScrollView
-              className='flex-1'
-              contentContainerStyle={{ paddingBottom: insets.bottom + 32 }}
-              keyboardDismissMode='on-drag'
-              keyboardShouldPersistTaps='handled'
-              showsVerticalScrollIndicator={false}
-            >
-              <Pressable onPress={Keyboard.dismiss}>
-                <View className='pt-4'>
-                  <NameInputSection
-                    habitName={state.habitName}
-                    onChangeText={state.setHabitName}
-                  />
+              {state.isLoading ? (
+                <View style={{ paddingTop: Math.max(insets.top + 4, 12) }}>
+                  <HabitEditSkeleton />
                 </View>
-                <SectionLabel delay={220} text='CUSTOMIZE' />
+              ) : (
                 <Animated.View
-                  className='px-4'
-                  entering={FadeInUp.delay(280).springify().damping(18)}
+                  entering={FadeIn.duration(300)}
+                  style={{ flex: 1 }}
                 >
-                  <CustomizeSection
-                    habitName={state.habitName}
-                    remindersEnabled={state.remindersEnabled}
-                    reminderTime={state.reminderTime}
-                    selectedColor={state.selectedColor}
-                    selectedEmoji={state.selectedEmoji}
-                    onColorSelect={state.handleColorSelect}
-                    onEmojiSelect={state.handleEmojiSelect}
-                    onReminderTimeChange={state.handleReminderTimeChange}
-                    onReminderToggle={state.handleReminderToggle}
+                  <EditHeader
+                    canSave={state.habitName.trim().length >= 2}
+                    isSaving={state.isSaving}
+                    paddingTop={Math.max(insets.top + 4, 12)}
+                    onCancel={() => {
+                      state.triggerSelection();
+                      animateOut();
+                    }}
+                    onSave={() => void state.handleSave()}
                   />
+                  <ScrollView
+                    className='flex-1'
+                    contentContainerStyle={{
+                      paddingBottom: insets.bottom + 32,
+                    }}
+                    keyboardDismissMode='on-drag'
+                    keyboardShouldPersistTaps='handled'
+                    showsVerticalScrollIndicator={false}
+                  >
+                    <Pressable onPress={Keyboard.dismiss}>
+                      <View className='pt-4'>
+                        <NameInputSection
+                          habitName={state.habitName}
+                          onChangeText={state.setHabitName}
+                        />
+                      </View>
+                      <SectionLabel delay={220} text='CUSTOMIZE' />
+                      <Animated.View
+                        className='px-4'
+                        entering={FadeInUp.delay(280).springify().damping(18)}
+                      >
+                        <CustomizeSection
+                          habitName={state.habitName}
+                          remindersEnabled={state.remindersEnabled}
+                          reminderTime={state.reminderTime}
+                          selectedColor={state.selectedColor}
+                          selectedEmoji={state.selectedEmoji}
+                          onColorSelect={state.handleColorSelect}
+                          onEmojiSelect={state.handleEmojiSelect}
+                          onReminderTimeChange={state.handleReminderTimeChange}
+                          onReminderToggle={state.handleReminderToggle}
+                        />
+                      </Animated.View>
+                      <SectionLabel
+                        delay={340}
+                        text='DANGER ZONE'
+                        variant='danger'
+                      />
+                      <Animated.View
+                        className='mx-4 rounded-2xl p-4'
+                        entering={FadeInUp.delay(400).springify().damping(18)}
+                        style={{
+                          backgroundColor: themeColors.card,
+                          ...shadows.card,
+                        }}
+                      >
+                        <DangerZone
+                          onArchive={state.handleArchive}
+                          onDelete={state.handleDelete}
+                        />
+                      </Animated.View>
+                    </Pressable>
+                  </ScrollView>
                 </Animated.View>
-                <SectionLabel delay={340} text='DANGER ZONE' variant='danger' />
-                <Animated.View
-                  className='mx-4 rounded-2xl p-4'
-                  entering={FadeInUp.delay(400).springify().damping(18)}
-                  style={{
-                    backgroundColor: themeColors.card,
-                    ...shadows.card,
-                  }}
-                >
-                  <DangerZone
-                    onArchive={state.handleArchive}
-                    onDelete={state.handleDelete}
-                  />
-                </Animated.View>
-              </Pressable>
-            </ScrollView>
-            </Animated.View>
-            )}
+              )}
             </KeyboardAvoidingView>
           </Animated.View>
         </GestureDetector>
@@ -132,7 +149,7 @@ export default function HabitEditScreen(props: HabitEditScreenProps) {
   if (!props.visible || !props.habitId) return null;
 
   return (
-    <ScreenErrorBoundary screenName="Edit Habit" onGoBack={props.onClose}>
+    <ScreenErrorBoundary screenName='Edit Habit' onGoBack={props.onClose}>
       <HabitEditScreenContent {...props} />
     </ScreenErrorBoundary>
   );
