@@ -61,16 +61,6 @@ export const getStrengthGradientColor = (strength: number): string => {
 };
 
 /**
- * Format archive timestamp as "X days archived" text
- */
-export const getDaysArchived = (timestamp: number): string => {
-  const diffDays = Math.floor((Date.now() - timestamp) / (1000 * 60 * 60 * 24));
-  if (diffDays === 0) return 'Archived today';
-  if (diffDays === 1) return '1 day archived';
-  return `${diffDays} days archived`;
-};
-
-/**
  * Format timestamp as relative time string
  */
 export const getRelativeTime = (timestamp: number): string => {

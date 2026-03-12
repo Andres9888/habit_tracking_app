@@ -1,11 +1,16 @@
 import { useCallback } from 'react';
-import { FlatList, Text } from 'react-native';
+import { FlatList } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useArchivedHabitsModalLogic } from './ArchivedHabitsModal.hooks';
 import { useReduceMotion } from '../../hooks/useReduceMotion';
-import { AnimatedHabitCard, EmptyState, ModalHeader } from './components';
+import {
+  AnimatedHabitCard,
+  DangerZoneFooter,
+  EmptyState,
+  ModalHeader,
+  StatsSummaryBar,
+} from './components';
 import { LoadingState } from './components/LoadingState';
-import { useThemeColors } from '../../theme/ThemeContext';
 import type { ArchivedHabitsModalProps } from './types';
 
 export default function ArchivedHabitsModal({
@@ -14,15 +19,13 @@ export default function ArchivedHabitsModal({
 }: ArchivedHabitsModalProps) {
   const insets = useSafeAreaInsets();
   const reducedMotion = useReduceMotion();
-  const { isDark } = useThemeColors();
   const {
     archivedHabits,
     handleRestore,
     handlePermanentDelete,
+    handleDeleteAll,
     isLoading,
   } = useArchivedHabitsModalLogic();
-
-  const habitCount = isLoading ? 0 : archivedHabits.length;
 
   const renderItem = useCallback(
     ({ item, index }: { item: (typeof archivedHabits)[0]; index: number }) => (
@@ -42,40 +45,30 @@ export default function ArchivedHabitsModal({
     []
   );
 
-  const swipeHint = habitCount > 0 ? (
-    <Text
-      className="text-center"
-      style={{
-        color: isDark ? '#4b5563' : '#cbd5e1',
-        fontSize: 12,
-        paddingTop: 24,
-        paddingBottom: 16,
-      }}
-    >
-      ← Swipe left to delete
-    </Text>
-  ) : undefined;
-
   return (
     <>
-      <ModalHeader
-        habitCount={habitCount}
-        insets={insets}
-        onBack={onBack}
-        onClose={onClose}
-      />
+      <ModalHeader insets={insets} onBack={onBack} onClose={onClose} />
+
+      <StatsSummaryBar habitCount={isLoading ? 0 : archivedHabits.length} />
 
       {isLoading ? (
         <LoadingState />
       ) : (
         <FlatList
           className='flex-1'
-          contentContainerStyle={{ paddingBottom: insets.bottom + 16 }}
+          contentContainerStyle={{ gap: 12, paddingBottom: insets.bottom + 16 }}
           data={archivedHabits}
           initialNumToRender={10}
           keyExtractor={keyExtractor}
           ListEmptyComponent={EmptyState}
-          ListFooterComponent={swipeHint}
+          ListFooterComponent={
+            archivedHabits.length > 1 ? (
+              <DangerZoneFooter
+                habitCount={archivedHabits.length}
+                onDeleteAll={handleDeleteAll}
+              />
+            ) : undefined
+          }
           maxToRenderPerBatch={10}
           removeClippedSubviews
           renderItem={renderItem}
