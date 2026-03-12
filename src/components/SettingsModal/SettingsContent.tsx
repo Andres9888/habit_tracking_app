@@ -88,6 +88,7 @@ export function SettingsContent(p: SettingsContentProps) {
                 icon={<Circle color={settingsIcons.circle.icon} size={16} />}
                 iconBackgroundColor={settingsIcons.circle.bg}
                 label='Circular day markers'
+                subtitle='Use circles instead of squares on the calendar'
                 type='toggle'
                 value={p.dayShape === 'circle'}
                 onToggle={(v) =>
@@ -101,6 +102,7 @@ export function SettingsContent(p: SettingsContentProps) {
                 }
                 iconBackgroundColor={settingsIcons.gradient.bg}
                 label='Gradient streak fill'
+                subtitle='Add a color gradient to active streak cells'
                 type='toggle'
                 value={p.showGradientFill}
                 onToggle={(v) => void p.onChangeShowGradientFill(v)}
@@ -110,6 +112,7 @@ export function SettingsContent(p: SettingsContentProps) {
                 icon={<Volume2 color={settingsIcons.sound.icon} size={16} />}
                 iconBackgroundColor={settingsIcons.sound.bg}
                 label='Play sound on habit completion'
+                subtitle='Hear a sound effect when you check off a habit'
                 type='toggle'
                 value={p.completionSoundEnabled}
                 onToggle={(v) => void p.onChangeCompletionSoundEnabled(v)}
@@ -120,6 +123,7 @@ export function SettingsContent(p: SettingsContentProps) {
                 icon={<ArrowUpDown color={settingsIcons.sort.icon} size={16} />}
                 iconBackgroundColor={settingsIcons.sort.bg}
                 label='Sort Order'
+                subtitle='Choose how your habits are ordered'
                 showBorder={false}
                 type='selection'
                 value={
@@ -152,6 +156,7 @@ export function SettingsContent(p: SettingsContentProps) {
                 icon={<Download color={settingsIcons.export.icon} size={16} />}
                 iconBackgroundColor={settingsIcons.export.bg}
                 label='Export habits & stats'
+                subtitle='Download your data as a file'
                 type='navigation'
                 onPress={() => {
                   void p.onExportHabitsData?.();
@@ -163,6 +168,7 @@ export function SettingsContent(p: SettingsContentProps) {
                 icon={<BookOpen color={settingsIcons.archive.icon} size={16} />}
                 iconBackgroundColor={settingsIcons.archive.bg}
                 label='Archived Habits'
+                subtitle='View and restore hidden habits'
                 showBorder={false}
                 type='navigation'
                 onPress={p.onOpenArchivedHabits}
