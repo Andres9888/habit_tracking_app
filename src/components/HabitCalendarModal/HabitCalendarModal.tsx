@@ -34,7 +34,8 @@ export default function HabitCalendarModal({
     toggleHabit,
     tracking,
   });
-  const showStickyHeader = false;
+  const isStickyCalendarHeader = false;
+  const showStickyHeader = Boolean(isStickyCalendarHeader);
   const calendarViewState = useHabitCalendarViewLogic({
     habitId: habit?._id ?? tracking[0]?.habitId ?? ('' as Id<'habits'>),
     tracking,
@@ -64,7 +65,8 @@ export default function HabitCalendarModal({
           showsVerticalScrollIndicator={false}
           stickyHeaderIndices={showStickyHeader ? [0] : []}
         >
-          {showStickyHeader ? <View
+          {showStickyHeader ? (
+            <View
               className='pb-3 pt-2'
               style={{
                 backgroundColor: colors.background,
@@ -78,7 +80,8 @@ export default function HabitCalendarModal({
                 onPrevious={calendarViewState.handlePreviousMonth}
                 onToday={calendarViewState.handleToday}
               />
-            </View> : null}
+            </View>
+          ) : null}
 
           <StatusRibbon
             bestStreak={state.bestStreak}
