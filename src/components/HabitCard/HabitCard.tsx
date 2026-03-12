@@ -114,13 +114,11 @@ function HabitCardComponent(props: HabitCardProps) {
           </Animated.View>
         </View>
       </GestureDetector>
-      {habit.showFloatingXP && (
-        <FloatingXPText
+      {habit.showFloatingXP ? <FloatingXPText
           startPosition={habit.xpPosition}
           value={10}
           onComplete={() => habit.setShowFloatingXP(false)}
-        />
-      )}
+        /> : null}
       <CompletionToast
         habitName={name}
         icon={icon}
