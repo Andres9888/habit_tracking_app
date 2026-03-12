@@ -35,6 +35,7 @@ const formatCompletionRate = (rate: number): string => {
 export const HeatmapLegend = memo(function HeatmapLegend({
   habitColor,
   completionRate,
+  showCompletionRate = true,
 }: HeatmapLegendProps) {
   return (
     <View
@@ -75,15 +76,16 @@ export const HeatmapLegend = memo(function HeatmapLegend({
         </View>
       </View>
 
-      {/* Right side: Completion percentage */}
-      <Text
-        accessible
-        accessibilityLabel={`${formatCompletionRate(completionRate)} completion`}
-        accessibilityRole='text'
-        style={[styles.completionText, { color: habitColor }]}
-      >
-        {formatCompletionRate(completionRate)} compl
-      </Text>
+      {showCompletionRate && (
+        <Text
+          accessible
+          accessibilityLabel={`${formatCompletionRate(completionRate)} completion`}
+          accessibilityRole='text'
+          style={[styles.completionText, { color: habitColor }]}
+        >
+          {formatCompletionRate(completionRate)} compl
+        </Text>
+      )}
     </View>
   );
 });

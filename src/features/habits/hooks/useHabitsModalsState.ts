@@ -154,7 +154,7 @@ export function useHabitsModalsState({
     milestone,
     onChangeCelebrationsEnabled,
     reduceMotionPreference,
-    settings: settingsWithOverrides,
+    settings,
     showHabitStrengthPercentage,
     tracking,
   });

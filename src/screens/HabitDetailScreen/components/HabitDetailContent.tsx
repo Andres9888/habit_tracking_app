@@ -10,6 +10,7 @@ import { shadows } from '../../../theme/spacing';
 import type { Habit } from '../../../features/habits/types';
 import { QuickStatsRow } from './QuickStatsRow';
 import { SectionLabel } from './SectionLabel';
+import { YearHeatmapSection } from './YearHeatmapSection';
 
 interface HabitDetailContentProps {
   completedDates: Set<string>;
@@ -53,6 +54,15 @@ export function HabitDetailContent({
         text='HISTORY'
         textColor={labelColor}
       />
+      <ErrorBoundary>
+        <YearHeatmapSection
+          completedDates={completedDates}
+          habitColor={habit.color ?? habit.iconColor ?? colors.primary[700]}
+          habitCreatedAt={habit.createdAt}
+          habitId={habit._id}
+          onDayPress={onDayPress}
+        />
+      </ErrorBoundary>
       <ErrorBoundary>
         <MonthlyCalendarGrid
           completedDates={completedDates}

@@ -5,8 +5,9 @@
  * Used by BinaryHeatmapNew when Metro caching issues require inline rendering.
  */
 
-import React, { memo, useMemo } from 'react';
+import React, { memo, useMemo, useRef } from 'react';
 import { View, Text, ScrollView } from 'react-native';
+import type { ScrollView as ScrollViewType } from 'react-native';
 
 import type { BinaryMonthLabel, BinaryDay } from './types';
 import { CELL_SIZE, CELL_GAP, GRID } from './constants';
@@ -28,6 +29,7 @@ export const InlineHeatmapGrid = memo(function InlineHeatmapGrid({
 }: InlineHeatmapGridProps) {
   const rows = useMemo(() => transformWeeksToRows(weeks, GRID.ROWS), [weeks]);
   const gridContentWidth = weeks.length * (CELL_SIZE + CELL_GAP);
+  const scrollRef = useRef<ScrollViewType>(null);
 
   return (
     <View style={styles.gridContainer}>
@@ -40,9 +42,11 @@ export const InlineHeatmapGrid = memo(function InlineHeatmapGrid({
         ))}
       </View>
       <ScrollView
+        ref={scrollRef}
         horizontal
         contentContainerStyle={{ width: gridContentWidth }}
         showsHorizontalScrollIndicator={false}
+        onContentSizeChange={() => scrollRef.current?.scrollToEnd({ animated: false })}
       >
         <View>
           <View style={styles.monthLabelsRow}>
