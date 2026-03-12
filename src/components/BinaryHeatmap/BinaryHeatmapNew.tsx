@@ -8,7 +8,7 @@
 import React, { memo, useState, useMemo, useCallback, useRef } from 'react';
 import { View, Text } from 'react-native';
 
-import type { BinaryHeatmapProps, TimeRange, BinaryDay } from './types';
+import type { BinaryHeatmapProps, BinaryDay } from './types';
 import { HeatmapLegend } from './HeatmapLegend';
 import { HeatmapTooltip } from './HeatmapTooltip';
 import { InlineHeatmapGrid } from './InlineHeatmapGrid';
@@ -16,14 +16,15 @@ import { generateBinaryGrid } from './utils';
 import { styles } from './BinaryHeatmapNew.styles';
 import { createDayLookupMap } from './cellHelpers';
 
-const FIXED_TIME_RANGE: TimeRange = '6m';
-
 export const BinaryHeatmap = memo(function BinaryHeatmap({
   habitId: _habitId,
   completedDates,
   habitCreatedAt,
   habitColor,
   currentStreak: _currentStreak,
+  timeRange = '6m',
+  title = 'Activity',
+  showCompletionRate = true,
   onDayPress,
 }: BinaryHeatmapProps) {
   const [tooltipDay, setTooltipDay] = useState<BinaryDay | null>(null);
@@ -31,8 +32,8 @@ export const BinaryHeatmap = memo(function BinaryHeatmap({
   const [tooltipVisible, setTooltipVisible] = useState(false);
 
   const gridData = useMemo(
-    () => generateBinaryGrid(FIXED_TIME_RANGE, completedDates, habitCreatedAt),
-    [completedDates, habitCreatedAt]
+    () => generateBinaryGrid(timeRange, completedDates, habitCreatedAt),
+    [timeRange, completedDates, habitCreatedAt]
   );
 
   const dayLookupMap = useMemo(
@@ -63,7 +64,7 @@ export const BinaryHeatmap = memo(function BinaryHeatmap({
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>Activity</Text>
+        <Text style={styles.headerTitle}>{title}</Text>
       </View>
       <View style={styles.gridWrapper}>
         <InlineHeatmapGrid
@@ -76,13 +77,16 @@ export const BinaryHeatmap = memo(function BinaryHeatmap({
       <HeatmapLegend
         completionRate={gridData.stats.completionRate}
         habitColor={habitColor}
+        showCompletionRate={showCompletionRate}
       />
-      {tooltipDay ? <HeatmapTooltip
+      {tooltipDay ? (
+        <HeatmapTooltip
           day={tooltipDay}
           position={tooltipPosition}
           visible={tooltipVisible}
           onClose={handleTooltipClose}
-        /> : null}
+        />
+      ) : null}
     </View>
   );
 });

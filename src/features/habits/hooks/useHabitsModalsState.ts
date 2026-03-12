@@ -106,7 +106,9 @@ export function useHabitsModalsState({
         s as Record<string, unknown>
       ) as Record<string, unknown>;
 
-      if (Object.prototype.hasOwnProperty.call(updates, 'stickyCalendarHeader')) {
+      if (
+        Object.prototype.hasOwnProperty.call(updates, 'stickyCalendarHeader')
+      ) {
         setStickyCalendarHeaderOverride(
           Boolean(updates.stickyCalendarHeader as boolean)
         );
@@ -180,7 +182,7 @@ export function useHabitsModalsState({
     milestone,
     onChangeCelebrationsEnabled,
     reduceMotionPreference,
-    settings: settingsWithOverrides,
+    settings,
     showHabitStrengthPercentage,
     tracking,
   });
