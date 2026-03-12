@@ -8,6 +8,7 @@ import {
   Circle,
   Download,
   Droplets,
+  Rows3,
   Volume2,
 } from 'lucide-react-native';
 import { StyleSheet, View } from 'react-native';
@@ -83,6 +84,16 @@ export function SettingsContent(p: SettingsContentProps) {
                 onToggle={(v) =>
                   void p.onChangeHabitCompletionIcon(v ? 'checkbox' : 'chain')
                 }
+              />
+              <SettingsRow
+                highContrastMode={hc}
+                icon={<Rows3 color={settingsIcons.compact.icon} size={16} />}
+                iconBackgroundColor={settingsIcons.compact.bg}
+                label='Compact habit cards'
+                subtitle='Show smaller cards to fit more on screen'
+                type='toggle'
+                value={p.compactView}
+                onToggle={(v) => void p.onChangeCompactView(v)}
               />
               <SettingsRow
                 highContrastMode={hc}

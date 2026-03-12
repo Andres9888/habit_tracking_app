@@ -42,6 +42,8 @@ function SettingsModalContent({
   settingsDocument,
 }: SettingsModalProps) {
   const {
+    compactView,
+    setCompactView,
     habitSortMode,
     showGradientFill,
     setShowGradientFill,
@@ -139,6 +141,8 @@ function SettingsModalContent({
               archivedHabitsCount={archivedHabitsCount}
               bottomInset={insets.bottom}
               colors={colors}
+              compactView={compactView}
+              onChangeCompactView={setCompactView}
               completionSoundEnabled={completionSoundEnabled}
               dayShape={dayShape}
               habitCompletionIcon={habitCompletionIcon}

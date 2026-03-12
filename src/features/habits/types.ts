@@ -66,6 +66,7 @@ export interface RewardToastData {
 export interface HabitSettings {
   appIcon: string;
   catTheme: boolean;
+  compactView: boolean;
   completionSoundEnabled: boolean;
   completionSoundType: CompletionSoundType;
   darkMode: 'system' | 'light' | 'dark';

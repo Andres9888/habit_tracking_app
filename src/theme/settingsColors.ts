@@ -24,6 +24,7 @@ interface IconColor {
 export const darkSettingsColors: SettingsColors = {
   // Preferences
   checkbox: { icon: '#38bdf8', bg: '#1e3a5f' },
+  compact: { icon: '#f472b6', bg: '#4a1942' },
   circle: { icon: '#a78bfa', bg: '#2e1f5e' },
   gradient: { icon: '#34d399', bg: '#052e2a' },
   sound: { icon: '#fbbf24', bg: '#3d2e06' },
@@ -59,6 +60,7 @@ export const darkSettingsColors: SettingsColors = {
 export const lightSettingsColors: SettingsColors = {
   // Preferences
   checkbox: { icon: '#0284c7', bg: '#bae6fd' },
+  compact: { icon: '#ec4899', bg: '#fce7f3' },
   circle: { icon: '#8b5cf6', bg: '#ddd6fe' },
   gradient: { icon: '#059669', bg: '#d1fae5' },
   sound: { icon: '#f59e0b', bg: '#fef3c7' },
@@ -94,6 +96,7 @@ export const lightSettingsColors: SettingsColors = {
 export interface SettingsColors {
   // Preferences
   checkbox: IconColor;
+  compact: IconColor;
   circle: IconColor;
   gradient: IconColor;
   sound: IconColor;

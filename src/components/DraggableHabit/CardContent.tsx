@@ -25,9 +25,10 @@ interface CardContentProps extends DraggableHabitCardProps {
 
 export function CardContent(props: CardContentProps) {
   const { colors: themeColors } = useThemeColors();
+  const compact = props.isCompactMode;
   return (
     <>
-      <View className='pt-4'>
+      <View className={compact ? 'pt-3' : 'pt-4'}>
         <CardHeader
           accentColor={props.accentColor}
           bestStreak={props.bestStreak}
@@ -36,16 +37,24 @@ export function CardContent(props: CardContentProps) {
           habit={props.habit}
           highContrastMode={props.highContrastMode}
           iconPulse={props.iconPulse}
+          isCompactMode={compact}
           isPaused={props.isPaused}
           name={props.name}
           showHabitStrengthPercentage={props.showHabitStrengthPercentage}
           streak={props.streak}
         />
-        {props.showNewRecord ? <NewRecordBadge
+        {!compact && props.showNewRecord && (
+          <NewRecordBadge
             newRecordOpacity={props.newRecordOpacity}
             newRecordScale={props.newRecordScale}
-          /> : null}
-        {props.showHabitStrengthPercentage ? (
+          />
+        )}
+        {compact ? (
+          <View
+            className='mx-3 mb-2 h-[1px] rounded-full'
+            style={{ backgroundColor: themeColors.gray[200] }}
+          />
+        ) : props.showHabitStrengthPercentage ? (
           <StrengthProgressBar
             progressAnimatedStyle={props.progressAnimatedStyle}
             strengthEmojiAnimatedStyle={props.strengthEmojiAnimatedStyle}
@@ -58,7 +67,7 @@ export function CardContent(props: CardContentProps) {
           />
         )}
       </View>
-      <View className='pb-5 pl-3 pr-4'>
+      <View className={compact ? 'pb-3 pl-3 pr-4' : 'pb-5 pl-3 pr-4'}>
         <HabitChainVisualizer
           accentColor={props.accentColor}
           celebrationsEnabled={props.celebrationsEnabled}
@@ -78,7 +87,9 @@ export function CardContent(props: CardContentProps) {
             props.onWeekComplete?.({ completedDate, habit: props.habit })
           }
         />
-        {props.isWeekComplete ? <WeekCompleteIndicator accentColor={props.effectiveAccentColor} /> : null}
+        {!compact && props.isWeekComplete && (
+          <WeekCompleteIndicator accentColor={props.effectiveAccentColor} />
+        )}
       </View>
     </>
   );

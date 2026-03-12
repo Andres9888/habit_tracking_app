@@ -57,6 +57,7 @@ export function HabitsList(props: HabitsListProps) {
 
   const renderItem = useHabitRenderItem({
     celebrationsEnabled: list.celebrationsEnabled,
+    compactView: list.compactView,
     completionIcon: list.habitCompletionIcon,
     dayShape: list.dayShape,
     entranceStaggerDelay: ENTRANCE_STAGGER_DELAY,

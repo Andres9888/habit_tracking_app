@@ -8,6 +8,7 @@ import type { HabitCardEntranceVariant } from '../../../components/HabitCard/use
 
 export interface UseHabitRenderItemArgs {
   celebrationsEnabled: boolean;
+  compactView?: boolean;
   completionIcon: 'chain' | 'checkbox';
   dayShape?: 'circle' | 'square';
   getHabitStatus: (habitId: string, dateString: string) => HabitStatus;

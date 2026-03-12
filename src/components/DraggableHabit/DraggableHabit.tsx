@@ -54,6 +54,7 @@ function DraggableHabit(props: DraggableHabitProps) {
     entranceVariant = 'widthExpansion',
     habit,
     highContrastMode = false,
+    isCompactMode = false,
     isConnectedToNextWeek = false,
     isConnectedToPreviousWeek = false,
     isJustCreated = false,
@@ -145,6 +146,7 @@ function DraggableHabit(props: DraggableHabitProps) {
       entranceContentStyle={entrance.contentStyle}
       habit={habit}
       highContrastMode={highContrastMode}
+      isCompactMode={isCompactMode}
       isConnectedToNextWeek={isConnectedToNextWeek}
       isConnectedToPreviousWeek={isConnectedToPreviousWeek}
       isSelected={isSelected}

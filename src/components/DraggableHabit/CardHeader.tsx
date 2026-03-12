@@ -29,6 +29,7 @@ interface CardHeaderProps {
   habit: Habit;
   highContrastMode: boolean;
   iconPulse: SharedValue<number>;
+  isCompactMode?: boolean;
   isPaused: boolean;
   name: string;
   showHabitStrengthPercentage: boolean;
@@ -43,6 +44,7 @@ export function CardHeader({
   habit,
   highContrastMode,
   iconPulse,
+  isCompactMode,
   isPaused,
   name,
   showHabitStrengthPercentage,
@@ -58,17 +60,17 @@ export function CardHeader({
     colors.iconContainer
   );
   const showBestStreak =
-    bestStreak > 0 && bestStreak > streak && !showHabitStrengthPercentage;
+    !isCompactMode && bestStreak > 0 && bestStreak > streak && !showHabitStrengthPercentage;
 
   return (
-    <View className='relative mb-3 flex-row items-center justify-between px-3'>
+    <View className={`relative ${isCompactMode ? 'mb-2' : 'mb-3'} flex-row items-center justify-between px-3`}>
       <View className='flex-1 items-center'>
         <ReAnimated.View style={iconPulseStyle}>
           <View
-            className='h-9 w-9 items-center justify-center rounded-xl'
+            className={`${isCompactMode ? 'h-7 w-7' : 'h-9 w-9'} items-center justify-center rounded-xl`}
             style={getIconContainerStyle(iconBg, accentColor, highContrastMode)}
           >
-            <Text className='text-[22px] leading-[26px]'>{emoji}</Text>
+            <Text className={isCompactMode ? 'text-[18px] leading-[22px]' : 'text-[22px] leading-[26px]'}>{emoji}</Text>
           </View>
         </ReAnimated.View>
       </View>
@@ -79,7 +81,7 @@ export function CardHeader({
       <View style={TITLE_OVERLAY_STYLE}>
         <View className='flex-row items-center gap-2'>
           <Text
-            className='shrink text-[17px] font-bold leading-[22px]'
+            className={`shrink ${isCompactMode ? 'text-[15px] font-semibold leading-[20px]' : 'text-[17px] font-bold leading-[22px]'}`}
             ellipsizeMode='tail'
             numberOfLines={2}
             style={{ color: colors.primaryText, letterSpacing: -0.3 }}
@@ -102,7 +104,7 @@ export function CardHeader({
           <View className='ml-auto'>
             <ChevronRight
               color={getChevronColor(highContrastMode)}
-              size={18}
+              size={isCompactMode ? 16 : 18}
               strokeWidth={2}
             />
           </View>

@@ -1,5 +1,6 @@
 export interface SettingsModalSettingsDocument {
   [key: string]: unknown;
+  compactView?: boolean;
   darkMode?: unknown;
   reduceMotion?: boolean;
   highContrastMode?: boolean;
@@ -62,6 +63,8 @@ export interface SettingsContentProps {
   colors: SettingsColors;
   isHighContrastActive: boolean;
   bottomInset?: number;
+  compactView: boolean;
+  onChangeCompactView: (value: boolean) => void | Promise<void>;
   completionSoundEnabled: boolean;
   onChangeCompletionSoundEnabled: (value: boolean) => void | Promise<void>;
   habitCompletionIcon: 'chain' | 'checkbox';

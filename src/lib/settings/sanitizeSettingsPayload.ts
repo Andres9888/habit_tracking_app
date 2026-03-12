@@ -48,6 +48,10 @@ export function sanitizeSettingsPayload(payload: unknown): UnknownRecord {
     output.celebrationsEnabled = source.celebrationsEnabled;
   }
 
+  if (isValidBoolean(source.compactView)) {
+    output.compactView = source.compactView;
+  }
+
   if (isValidBoolean(source.completionSoundEnabled)) {
     output.completionSoundEnabled = source.completionSoundEnabled;
   }
