@@ -115,7 +115,7 @@ export default function HabitCalendarModal({
             <HabitCalendarView
               calendarViewState={calendarViewState}
               habitId={habit._id}
-              showHeader={!isStickyCalendarHeader}
+              showHeader={!showStickyHeader}
               toggleHabit={toggleHabit}
               tracking={tracking}
             />
