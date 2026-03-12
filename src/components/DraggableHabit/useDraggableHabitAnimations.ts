@@ -34,7 +34,6 @@ export function useDraggableHabitAnimations({
 }: AnimationParams) {
   const fade = useSharedValue(0);
   const translateY = useSharedValue(12);
-  const archiveFlash = useSharedValue(0);
   const cardScale = useSharedValue(1);
   const newRecordScale = useSharedValue(0);
   const newRecordOpacity = useSharedValue(0);
@@ -61,7 +60,6 @@ export function useDraggableHabitAnimations({
   );
 
   return {
-    archiveFlash,
     cardScale,
     fade,
     highlightGlow,

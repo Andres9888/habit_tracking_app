@@ -1,0 +1,48 @@
+import { useCallback } from 'react';
+import { Alert } from 'react-native';
+import { useMutation } from 'convex/react';
+import { api } from '../../../../convex/_generated/api';
+import type { Id } from '../../../../convex/_generated/dataModel';
+import type { Habit } from '../types';
+import { triggerHaptic } from '@/utils/haptics';
+import { logInteraction } from '../../../lib/analytics/interactions';
+
+export function useHabitDelete(habits: Habit[]) {
+  const removeHabit = useMutation(api.habits.remove);
+
+  const handleDelete = useCallback(
+    (habitId: Id<'habits'>) => {
+      const habit = habits.find((h) => h._id === habitId);
+      const habitName = habit?.name ?? 'Habit';
+
+      triggerHaptic('heavy');
+
+      Alert.alert(
+        'Delete Habit',
+        `This will permanently delete "${habitName}" and all its history. This cannot be undone.`,
+        [
+          { text: 'Keep Habit', style: 'cancel' },
+          {
+            text: 'Delete Forever',
+            style: 'destructive',
+            onPress: async () => {
+              try {
+                await removeHabit({ habitId });
+                triggerHaptic('success');
+                logInteraction('habit_deleted', { habitId, habitName });
+              } catch (error_) {
+                if (__DEV__) console.error('[useHabitDelete] Delete failed:', error_);
+                triggerHaptic('error');
+                Alert.alert('Error', `Failed to delete "${habitName}". Please try again.`);
+              }
+            },
+          },
+        ],
+        { cancelable: true }
+      );
+    },
+    [habits, removeHabit]
+  );
+
+  return { handleDelete };
+}

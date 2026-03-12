@@ -32,6 +32,7 @@ type HabitRenderContentProps = {
   | 'dayShape'
   | 'entranceVariant'
   | 'handleArchive'
+  | 'handleDelete'
   | 'handleHabitPress'
   | 'highlightHabitId'
   | 'isReorderingEnabled'
@@ -61,6 +62,7 @@ function HabitRenderContentComponent({
   dayShape,
   entranceVariant,
   handleArchive,
+  handleDelete,
   handleHabitPress,
   handlePause,
   handleResume,
@@ -144,6 +146,7 @@ function HabitRenderContentComponent({
           isSelected={isSelectionMode ? selectedIds?.has(item._id) : undefined}
           showSelectionOverlay={isSelectionMode}
           onArchive={isSelectionMode ? undefined : handleArchive}
+          onDelete={isSelectionMode ? undefined : handleDelete}
           onEntranceComplete={handleEntranceComplete}
           onLongPress={handleLongPress}
           onPause={handlePause}
