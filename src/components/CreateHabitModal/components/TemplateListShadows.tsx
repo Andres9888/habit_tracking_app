@@ -12,17 +12,14 @@ export const TemplateListShadows = ({
   showBottom,
 }: TemplateListShadowsProps) => (
   <>
-    {showTop && (
-      <LinearGradient
+    {showTop ? <LinearGradient
         accessibilityElementsHidden
         colors={['rgba(255,255,255,0.96)', 'rgba(255,255,255,0)']}
         importantForAccessibility='no-hide-descendants'
         pointerEvents='none'
         style={{ height: 32, left: 0, position: 'absolute', right: 0, top: 0 }}
-      />
-    )}
-    {showBottom && (
-      <LinearGradient
+      /> : null}
+    {showBottom ? <LinearGradient
         accessibilityElementsHidden
         colors={['rgba(255,255,255,0)', 'rgba(255,255,255,0.95)']}
         importantForAccessibility='no-hide-descendants'
@@ -44,7 +41,6 @@ export const TemplateListShadows = ({
             Scroll for more habits
           </Text>
         </View>
-      </LinearGradient>
-    )}
+      </LinearGradient> : null}
   </>
 );

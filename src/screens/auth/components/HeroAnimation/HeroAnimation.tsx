@@ -18,11 +18,7 @@ import { AnimatedDot } from './AnimatedDot';
 import { styles } from './HeroAnimation.styles';
 import { durations } from '@/theme/animations';
 
-const STAGES = [
-  { emoji: '🌱', label: 'Start' },
-  { emoji: '🌿', label: 'Grow' },
-  { emoji: '🌳', label: 'Thrive' },
-];
+const STAGES = [{ emoji: '🌱', label: 'Start' }, { emoji: '🌿', label: 'Grow' }, { emoji: '🌳', label: 'Thrive' }];
 
 export function HeroAnimation() {
   const progress = useSharedValue(0);

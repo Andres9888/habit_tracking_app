@@ -1,10 +1,12 @@
 /* eslint-disable max-lines */
 /** HabitEditScreen - Matches Create modal style (bottom sheet, stagger animations) */
-import { Keyboard, Modal, Pressable, ScrollView, View } from 'react-native';
+import { Keyboard, Modal, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { KeyboardAvoidingView, Platform } from 'react-native';
+import { GestureDetector } from 'react-native-gesture-handler';
 import Animated, { FadeIn, FadeInUp } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
+import { useSwipeDismiss } from '../../components/CreateHabitModal/hooks/useSwipeDismiss';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { shadows } from '../../theme/spacing';
 import { EditHeader } from './EditHeader';
@@ -23,25 +25,36 @@ function HabitEditScreenContent({
   onClose,
 }: HabitEditScreenProps) {
   const insets = useSafeAreaInsets();
-  const state = useHabitEditScreen({ habitId, onClose });
   const { colors: themeColors } = useThemeColors();
+  const { animateOut, backdropStyle, panGesture, sheetStyle } =
+    useSwipeDismiss({ visible, onClose });
+  const state = useHabitEditScreen({ habitId, onClose: animateOut });
   return (
     <Modal
       accessibilityViewIsModal
+      statusBarTranslucent
       transparent
-      animationType='slide'
+      animationType='none'
       visible={visible}
-      onRequestClose={onClose}
+      onRequestClose={animateOut}
     >
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        className='flex-1'
-      >
-        <View className='flex-1 bg-black/50'>
-          <View
-            className='flex-1 overflow-hidden rounded-t-3xl shadow-2xl'
-            style={{ backgroundColor: themeColors.background }}
+      <View className='flex-1'>
+        <Pressable style={StyleSheet.absoluteFill} onPress={animateOut}>
+          <Animated.View className='flex-1 bg-black' style={backdropStyle} />
+        </Pressable>
+        <GestureDetector gesture={panGesture}>
+          <Animated.View
+            className='overflow-hidden rounded-t-3xl shadow-2xl'
+            style={[
+              styles.sheet,
+              sheetStyle,
+              { backgroundColor: themeColors.background },
+            ]}
           >
+            <KeyboardAvoidingView
+              behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+              className='flex-1'
+            >
             {state.isLoading ? (
               <View style={{ paddingTop: Math.max(insets.top + 4, 12) }}>
                 <HabitEditSkeleton />
@@ -54,7 +67,7 @@ function HabitEditScreenContent({
               paddingTop={Math.max(insets.top + 4, 12)}
               onCancel={() => {
                 state.triggerSelection();
-                onClose();
+                animateOut();
               }}
               onSave={() => void state.handleSave()}
             />
@@ -107,9 +120,10 @@ function HabitEditScreenContent({
             </ScrollView>
             </Animated.View>
             )}
-          </View>
-        </View>
-      </KeyboardAvoidingView>
+            </KeyboardAvoidingView>
+          </Animated.View>
+        </GestureDetector>
+      </View>
     </Modal>
   );
 }
@@ -123,3 +137,7 @@ export default function HabitEditScreen(props: HabitEditScreenProps) {
     </ScreenErrorBoundary>
   );
 }
+
+const styles = StyleSheet.create({
+  sheet: StyleSheet.absoluteFillObject,
+});

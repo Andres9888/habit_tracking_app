@@ -1,64 +1,15 @@
-/**
- * App Root Component
- *
- * Main application entry point that sets up the provider hierarchy.
- * See CoreProviders for the critical-path providers (Clerk, Convex, Sentry)
- * and LazyProviders for deferred non-critical providers.
- */
-
 import '../global.css';
 
-import { ClerkProvider } from '@clerk/clerk-expo';
-import type { PropsWithChildren } from 'react';
-import { PaperProvider } from 'react-native-paper';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
-
+import { AppProviders } from './app/AppProviders';
+import { initializeAppMonitoring } from './app/initializeAppMonitoring';
 import { AuthGate } from './components/auth/AuthGate';
-import { tokenCache } from './lib/appConfig';
-import { initSentry, SentryErrorBoundary } from './lib/sentry';
-import { ConvexClerkProvider, SentryUserSync } from './providers';
-import { LazyProviders } from './providers/LazyProviders';
-import { ThemeColorProvider } from './theme/ThemeContext';
-import theme from './theme';
 
-// Initialize Sentry after first frame to avoid blocking app launch.
-if (typeof requestIdleCallback === 'function') {
-  requestIdleCallback(() => initSentry());
-} else {
-  setTimeout(() => initSentry(), 0);
-}
-
-const clerkKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
-if (!clerkKey) {
-  throw new Error(
-    'EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY is required. Add it to .env.local'
-  );
-}
-
-function CoreProviders({ children }: PropsWithChildren) {
-  return (
-    <SentryErrorBoundary>
-      <SafeAreaProvider>
-        <PaperProvider theme={theme}>
-          <ClerkProvider publishableKey={clerkKey} tokenCache={tokenCache}>
-            <SentryUserSync>
-              <ConvexClerkProvider>
-                <ThemeColorProvider>
-                  <LazyProviders>{children}</LazyProviders>
-                </ThemeColorProvider>
-              </ConvexClerkProvider>
-            </SentryUserSync>
-          </ClerkProvider>
-        </PaperProvider>
-      </SafeAreaProvider>
-    </SentryErrorBoundary>
-  );
-}
+initializeAppMonitoring();
 
 export default function App() {
   return (
-    <CoreProviders>
+    <AppProviders>
       <AuthGate />
-    </CoreProviders>
+    </AppProviders>
   );
 }

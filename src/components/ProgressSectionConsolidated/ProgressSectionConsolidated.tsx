@@ -83,12 +83,10 @@ export function ProgressSectionConsolidated({
         <MilestoneProgress currentStreak={currentStreak} />
 
         {/* Section 3: Weekly Pattern Chart */}
-        {hasEnoughData && (
-          <WeeklyPatternChart
+        {hasEnoughData ? <WeeklyPatternChart
             dayStats={dayStats}
             onSeeAllPress={onSeeAllPress}
-          />
-        )}
+          /> : null}
 
         {/* Section 4: Actionable Tip */}
         <ActionableTipCard
@@ -104,12 +102,10 @@ export function ProgressSectionConsolidated({
         />
 
         {/* Section 5: Streak Records Accordion */}
-        {hasEnoughData && (
-          <StreakRecordsAccordion
+        {hasEnoughData ? <StreakRecordsAccordion
             currentStreak={currentStreak}
             streakRecords={streakRecords}
-          />
-        )}
+          /> : null}
       </View>
     </Animated.View>
   );

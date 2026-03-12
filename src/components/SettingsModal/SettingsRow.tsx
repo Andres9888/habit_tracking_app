@@ -90,7 +90,7 @@ export function SettingsRow({
         overflow: 'hidden',
       }}
     >
-      {type === 'toggle' && <Animated.View style={pulseStyle} />}
+      {type === 'toggle' ? <Animated.View style={pulseStyle} /> : null}
       <View
         className='mr-4 h-10 w-10 items-center justify-center rounded-xl'
         style={{
@@ -120,7 +120,7 @@ export function SettingsRow({
           </Text>
         ) : null}
       </View>
-      {type === 'toggle' && (
+      {type === 'toggle' ? (
         <Switch
           accessibilityLabel={label}
           ios_backgroundColor={colors.switchTrackFalse}
@@ -132,9 +132,8 @@ export function SettingsRow({
           value={value as boolean}
           onValueChange={handleToggle}
         />
-      )}
-      {type === 'selection' && (
-        <View className='flex-row items-center gap-1'>
+      ) : null}
+      {type === 'selection' ? <View className='flex-row items-center gap-1'>
           <Text
             className='text-[17px] font-medium'
             style={{ color: colors.value }}
@@ -142,10 +141,8 @@ export function SettingsRow({
             {value as string}
           </Text>
           <ChevronRight color={colors.chevron} size={16} strokeWidth={2} />
-        </View>
-      )}
-      {type === 'info' && typeof value === 'string' && (
-        <Text
+        </View> : null}
+      {type === 'info' && typeof value === 'string' ? <Text
           className='ml-3 text-[15px] font-medium'
           numberOfLines={1}
           style={{
@@ -156,12 +153,9 @@ export function SettingsRow({
           }}
         >
           {value}
-        </Text>
-      )}
-      {type === 'navigation' && (
-        <View className='flex-row items-center gap-2'>
-          {badge != null && badge > 0 && (
-            <Animated.View
+        </Text> : null}
+      {type === 'navigation' ? <View className='flex-row items-center gap-2'>
+          {badge != null && badge > 0 ? <Animated.View
               className='min-w-[22px] items-center justify-center rounded-full px-1.5 py-0.5'
               entering={ZoomIn.springify().damping(18)}
               style={{ backgroundColor: themeColors.surface }}
@@ -172,11 +166,9 @@ export function SettingsRow({
               >
                 {badge}
               </Text>
-            </Animated.View>
-          )}
+            </Animated.View> : null}
           <ChevronRight color={colors.chevron} size={16} strokeWidth={2} />
-        </View>
-      )}
+        </View> : null}
     </View>
   );
 

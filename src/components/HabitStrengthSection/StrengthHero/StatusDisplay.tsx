@@ -50,8 +50,8 @@ export function StatusDisplay({
 
       {/* Delta badge */}
       <View className='flex-row items-center gap-1'>
-        {deltaIsPositive && <TrendingUp color={COLORS.positive} size={14} />}
-        {deltaIsNegative && <TrendingDown color={COLORS.negative} size={14} />}
+        {deltaIsPositive ? <TrendingUp color={COLORS.positive} size={14} /> : null}
+        {deltaIsNegative ? <TrendingDown color={COLORS.negative} size={14} /> : null}
         <Text
           className='text-sm'
           style={{

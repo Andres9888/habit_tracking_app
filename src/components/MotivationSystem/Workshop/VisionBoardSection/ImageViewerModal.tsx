@@ -54,16 +54,14 @@ export function ImageViewerModal({
           onToggleEdit={viewer.toggleEdit}
         />
         <View className='flex-1 items-center justify-center'>
-          {image.imageUrl && (
-            <Image
+          {image.imageUrl ? <Image
               accessibilityLabel='Full size vision board image'
               contentFit="contain"
               source={{ uri: image.imageUrl }}
               style={{ height: SCREEN_WIDTH, width: SCREEN_WIDTH }}
               cachePolicy="memory-disk"
               transition={200}
-            />
-          )}
+            /> : null}
         </View>
         <CaptionArea
           captionText={viewer.captionText}

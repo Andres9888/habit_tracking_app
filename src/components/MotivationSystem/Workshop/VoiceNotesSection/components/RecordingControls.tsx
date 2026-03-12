@@ -45,9 +45,9 @@ export function RecordingControls(props: RecordingControlsProps) {
 
   return (
     <View className='items-center gap-4'>
-      {(isRecording || isPaused) && <RecordingDurationDisplay formattedDuration={formattedDuration} isApproachingMaxDuration={isApproachingMaxDuration} isMaxDurationReached={isMaxDurationReached} secondsUntilMaxDuration={secondsUntilMaxDuration} />}
+      {(isRecording || isPaused) ? <RecordingDurationDisplay formattedDuration={formattedDuration} isApproachingMaxDuration={isApproachingMaxDuration} isMaxDurationReached={isMaxDurationReached} secondsUntilMaxDuration={secondsUntilMaxDuration} /> : null}
       <RecordingButtonGroup isPaused={isPaused} isRecording={isRecording} onCancelRecording={onCancelRecording} onPauseRecording={onPauseRecording} onResumeRecording={onResumeRecording} onStartRecording={onStartRecording} onStopRecording={onStopRecording} />
-      {!isRecording && !isPaused && <Text className='text-sm text-stone-500'>Tap to record a voice note</Text>}
+      {!isRecording && !isPaused ? <Text className='text-sm text-stone-500'>Tap to record a voice note</Text> : null}
     </View>
   );
 }

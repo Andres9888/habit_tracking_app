@@ -41,12 +41,10 @@ export function CardContent(props: CardContentProps) {
           showHabitStrengthPercentage={props.showHabitStrengthPercentage}
           streak={props.streak}
         />
-        {props.showNewRecord && (
-          <NewRecordBadge
+        {props.showNewRecord ? <NewRecordBadge
             newRecordOpacity={props.newRecordOpacity}
             newRecordScale={props.newRecordScale}
-          />
-        )}
+          /> : null}
         {props.showHabitStrengthPercentage ? (
           <StrengthProgressBar
             progressAnimatedStyle={props.progressAnimatedStyle}
@@ -80,9 +78,7 @@ export function CardContent(props: CardContentProps) {
             props.onWeekComplete?.({ completedDate, habit: props.habit })
           }
         />
-        {props.isWeekComplete && (
-          <WeekCompleteIndicator accentColor={props.effectiveAccentColor} />
-        )}
+        {props.isWeekComplete ? <WeekCompleteIndicator accentColor={props.effectiveAccentColor} /> : null}
       </View>
     </>
   );

@@ -53,7 +53,7 @@ export function FeatureLimitBadge({
         >
           {current}/{limit} Free
         </Text>
-        {isAtLimit && <ChevronRight className='text-amber-600' size={12} />}
+        {isAtLimit ? <ChevronRight className='text-amber-600' size={12} /> : null}
       </View>
     </Pressable>
   );

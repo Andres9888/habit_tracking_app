@@ -11,7 +11,7 @@ import type {
   SyncOrchestratorResult,
   SyncOrchestratorEventListener,
   SyncProgressCallback,
-  ToggleSyncExecutor,
+  SyncExecutor,
 } from '../types';
 import { DEFAULT_ORCHESTRATOR_CONFIG, getOperationsForSync } from '../helpers';
 import { createSyncResult, createErrorResult } from '../resultHelpers';
@@ -22,7 +22,7 @@ import { createEmitter } from './lifecycle';
 export class SyncOrchestrator {
   private queueManager: OfflineQueueManagerAPI;
   private syncManager: OfflineSyncManager;
-  private executor: ToggleSyncExecutor | null = null;
+  private executor: SyncExecutor | null = null;
   private config: Required<SyncOrchestratorConfig>;
   private state: SyncOrchestratorState;
   private listeners = new Set<SyncOrchestratorEventListener>();
@@ -42,7 +42,7 @@ export class SyncOrchestrator {
     this.emit = createEmitter(this.listeners);
   }
 
-  setExecutor(executor: ToggleSyncExecutor): void {
+  setExecutor(executor: SyncExecutor): void {
     this.executor = executor;
   }
 

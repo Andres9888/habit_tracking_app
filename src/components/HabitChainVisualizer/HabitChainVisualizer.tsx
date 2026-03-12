@@ -45,7 +45,7 @@ export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
         connectorColor={connectorColor}
         currentStreak={currentStreak}
         visible={
-          showConnectors && isConnectedToPreviousWeek && state.isCompleted(0)
+          showConnectors && isConnectedToPreviousWeek ? state.isCompleted(0) : null
         }
       />
       <ChainDayList
@@ -70,15 +70,13 @@ export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
       />
       {showConnectors &&
         isConnectedToNextWeek &&
-        state.isCompleted(weekDateStrings.length - 1) && (
-          <ChainConnector
+        state.isCompleted(weekDateStrings.length - 1) ? <ChainConnector
             visible
             accentColor={accentColor}
             connectorColor={connectorColor}
             currentStreak={currentStreak}
             position='end'
-          />
-        )}
+          /> : null}
     </View>
   );
 };

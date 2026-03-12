@@ -20,7 +20,6 @@ const getStreakBadgeText = (streak: number): string => {
 export function HeroSection({
   currentStreak,
   habit,
-  isCompletedToday,
   reduceMotion = false,
 }: HeroSectionProps) {
   const { colors, isDark } = useThemeColors();
@@ -36,8 +35,7 @@ export function HeroSection({
 
   return (
     <View className='items-center pb-4'>
-      {habit.icon && (
-        <Animated.View
+      {habit.icon ? <Animated.View
           className='mb-3 h-20 w-20 items-center justify-center rounded-2xl shadow-lg'
           style={[
             { backgroundColor: (habit.color ?? habit.iconColor) || '#fef3c7' },
@@ -45,8 +43,7 @@ export function HeroSection({
           ]}
         >
           <Text className='text-4xl'>{habit.icon}</Text>
-        </Animated.View>
-      )}
+        </Animated.View> : null}
 
       <Text
         className='text-xl font-bold'
@@ -55,8 +52,7 @@ export function HeroSection({
         {habit.name}
       </Text>
 
-      {showStreakBadge && (
-        <Animated.View
+      {showStreakBadge ? <Animated.View
           accessibilityLabel={`${currentStreak} day streak`}
           className='mt-2 rounded-full px-3 py-1'
           style={badgeAnimatedStyle}
@@ -73,8 +69,7 @@ export function HeroSection({
           >
             {getStreakBadgeText(currentStreak)}
           </Text>
-        </Animated.View>
-      )}
+        </Animated.View> : null}
 
       {habit.notes ? (
         <Text

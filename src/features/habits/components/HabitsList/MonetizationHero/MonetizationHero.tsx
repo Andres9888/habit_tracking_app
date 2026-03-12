@@ -1,43 +1,21 @@
-/**
- * MonetizationHero — dark-themed premium upgrade card with progress bar.
- *
- * Part of the **monetization flow**: displays the user's free-tier slot usage
- * as an animated progress bar, a pulsing "Start Free Trial" CTA, and a
- * shimmering "Keep 3 habits free" label.
- *
- * All animations are driven by {@link useMonetizationAnimations} and respect
- * the `reduceMotion` preference.
- *
- * Performance: Uses Reanimated for smooth UI-thread animations
- */
-
 import { Pressable, Text, View } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { useMonetizationAnimations } from './useMonetizationAnimations';
 import type { MonetizationHeroProps } from './MonetizationHero.types';
-import { SHADOW_OPACITY, OPACITY } from '../../../../../constants';
+import { SHADOW_OPACITY } from '../../../../../constants';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 export function MonetizationHero({
-  freeHabitLimit,
-  habitSlotsUsed,
-  hasReachedHabitLimit,
-  onUpgradePress,
-  reduceMotion = false,
+  freeHabitLimit, habitSlotsUsed, hasReachedHabitLimit, onUpgradePress, reduceMotion = false,
 }: MonetizationHeroProps) {
-  const {
-    progressStyle,
-    ctaPulseStyle,
-    shimmerStyle,
-    trackWidth,
-    handleTrackLayout,
-  } = useMonetizationAnimations({
-    freeHabitLimit,
-    habitSlotsUsed,
-    hasReachedHabitLimit,
-    reduceMotion,
-  });
+  const { progressStyle, ctaPulseStyle, shimmerStyle, trackWidth, handleTrackLayout } =
+    useMonetizationAnimations({
+      freeHabitLimit,
+      habitSlotsUsed,
+      hasReachedHabitLimit,
+      reduceMotion,
+    });
 
   return (
     <View
@@ -104,10 +82,7 @@ export function MonetizationHero({
             {habitSlotsUsed}/{freeHabitLimit}
           </Text>
         </View>
-        <View
-          className='bg-white/12 h-2 w-full overflow-hidden rounded-full'
-          onLayout={handleTrackLayout}
-        >
+        <View className='bg-white/12 h-2 w-full overflow-hidden rounded-full' onLayout={handleTrackLayout}>
           <Animated.View
             className='h-2 rounded-full bg-[#fbbf24]'
             style={[{ maxWidth: trackWidth }, progressStyle]}

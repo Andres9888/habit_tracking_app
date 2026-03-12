@@ -67,14 +67,12 @@ export function MicrophonePermissionDenied({
         {message}
       </Text>
 
-      {!compact && (
-        <View className='mb-4 flex-row items-start gap-2 rounded-lg bg-rose-100/50 p-3'>
+      {compact ? null : <View className='mb-4 flex-row items-start gap-2 rounded-lg bg-rose-100/50 p-3'>
           <AlertCircle className='mt-0.5 text-rose-500' size={16} />
           <Text className='flex-1 text-sm text-rose-600'>
             {MESSAGES.science}
           </Text>
-        </View>
-      )}
+        </View>}
 
       <PermissionActionButtons
         canAskAgain={canAskAgain}

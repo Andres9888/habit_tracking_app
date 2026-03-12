@@ -75,13 +75,11 @@ export function StreakRecordsSection({
                   {record.days}
                 </Text>
                 <Text className={`text-[9px] ${style.subtext}`}>days</Text>
-                {record.isCurrent && (
-                  <View className='mt-1 rounded-full bg-amber-100 px-1.5 py-0.5'>
+                {record.isCurrent ? <View className='mt-1 rounded-full bg-amber-100 px-1.5 py-0.5'>
                     <Text className='text-[8px] font-semibold text-amber-700'>
                       NOW
                     </Text>
-                  </View>
-                )}
+                  </View> : null}
               </View>
             );
           })}

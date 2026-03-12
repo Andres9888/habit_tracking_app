@@ -45,7 +45,7 @@ export function canOpenModal(
   const incomingPriority = MODAL_PRIORITIES[modalKey];
 
   // Check if any modal with higher or equal priority is already open
-  return !Array.from(activeModals).some((activeModal) => {
+  return ![...activeModals].some((activeModal) => {
     const activePriority =
       MODAL_PRIORITIES[activeModal as keyof typeof MODAL_PRIORITIES] ?? 0;
     return activePriority >= incomingPriority;

@@ -29,10 +29,10 @@ export function VoiceNoteItemHeader({ note, hasPlayback, isExpanded, iconStyle, 
       </View>
       <View className='flex-1'>
         <Text className='text-sm font-medium text-stone-700'>{note.label || `Recording ${formatDuration(note.duration)}`}</Text>
-        <Text className='text-xs text-stone-500'>{formatRelativeTime(note.createdAt)}{note.isDay1 && ' • Day 1'}</Text>
+        <Text className='text-xs text-stone-500'>{formatRelativeTime(note.createdAt)}{note.isDay1 ? ' • Day 1' : null}</Text>
       </View>
       <Text className='mr-2 text-xs text-stone-400'>{formatDuration(note.duration)}</Text>
-      {hasPlayback && <Animated.View style={iconStyle}><ChevronDown className='text-stone-400' size={16} /></Animated.View>}
+      {hasPlayback ? <Animated.View style={iconStyle}><ChevronDown className='text-stone-400' size={16} /></Animated.View> : null}
     </Pressable>
   );
 }

@@ -56,8 +56,7 @@ export function MotivationCheck({
             Motivation Check
           </Text>
         </View>
-        {showExplainer && onExplainerPress && (
-          <Pressable
+        {showExplainer && onExplainerPress ? <Pressable
             accessibilityHint='Learn what motivation check is and how it works'
             accessibilityLabel='Learn about motivation check'
             accessibilityRole='button'
@@ -65,8 +64,7 @@ export function MotivationCheck({
             onPress={onExplainerPress}
           >
             <HelpCircle className='text-violet-400' size={18} />
-          </Pressable>
-        )}
+          </Pressable> : null}
       </View>
 
       <Text className='mb-4 text-center text-base text-violet-700'>
@@ -87,14 +85,12 @@ export function MotivationCheck({
         ))}
       </View>
 
-      {selectedLevel && selectedLevel !== 'ready' && (
-        <View className='mt-4 rounded-xl bg-violet-100/50 p-3'>
+      {selectedLevel && selectedLevel !== 'ready' ? <View className='mt-4 rounded-xl bg-violet-100/50 p-3'>
           <Text className='text-center text-xs italic text-violet-600'>
             💡 Science tip: Visualizing consequences moves you 2x better when
             motivation is low
           </Text>
-        </View>
-      )}
+        </View> : null}
     </View>
   );
 }

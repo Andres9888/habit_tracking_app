@@ -36,9 +36,7 @@ export function AccordionHeader({
         <Text className='text-sm font-medium text-stone-700'>
           Streak Records
         </Text>
-        {!isExpanded && hasRecords && (
-          <Text className='text-xs text-stone-500'>{previewText}</Text>
-        )}
+        {!isExpanded && hasRecords ? <Text className='text-xs text-stone-500'>{previewText}</Text> : null}
       </View>
       <Animated.View style={chevronStyle}>
         <ChevronDown color='#78716c' size={18} />

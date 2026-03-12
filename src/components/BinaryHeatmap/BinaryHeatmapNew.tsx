@@ -69,6 +69,7 @@ export const BinaryHeatmap = memo(function BinaryHeatmap({
         <InlineHeatmapGrid
           habitColor={habitColor}
           monthLabels={gridData.monthLabels}
+          onCellPress={handleCellPress}
           weeks={gridData.weeks}
         />
       </View>
@@ -76,14 +77,12 @@ export const BinaryHeatmap = memo(function BinaryHeatmap({
         completionRate={gridData.stats.completionRate}
         habitColor={habitColor}
       />
-      {tooltipDay && (
-        <HeatmapTooltip
+      {tooltipDay ? <HeatmapTooltip
           day={tooltipDay}
           position={tooltipPosition}
           visible={tooltipVisible}
           onClose={handleTooltipClose}
-        />
-      )}
+        /> : null}
     </View>
   );
 });

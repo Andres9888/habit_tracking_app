@@ -12,7 +12,6 @@ import {
   withTiming,
   withRepeat,
   withSequence,
-  withDelay,
   Easing,
   interpolate,
   SharedValue,

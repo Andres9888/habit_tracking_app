@@ -50,7 +50,6 @@ const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
  */
 export function SortChip({
   sortMode,
-  habitCount,
   onPress,
   reduceMotion = false,
 }: SortChipProps) {

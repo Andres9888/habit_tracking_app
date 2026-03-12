@@ -39,7 +39,7 @@ export function useTemplatePreview({
   const handleImport = useCallback(() => {
     if (!template) return;
 
-    triggerHaptic('toggle');
+    void triggerHaptic('toggle');
 
     const customizations: TemplateCustomizations = {};
 
@@ -57,17 +57,17 @@ export function useTemplatePreview({
   }, [template, customName, customColor, reminderTime, showTimePicker, onImport]);
 
   const handleClose = useCallback(() => {
-    triggerHaptic('tap');
+    void triggerHaptic('tap');
     onClose();
   }, [onClose]);
 
   const handleColorSelect = useCallback((color: string) => {
-    triggerHaptic('tap');
+    void triggerHaptic('tap');
     setCustomColor(color);
   }, []);
 
   const handleTimeChange = useCallback((time: Date) => {
-    triggerHaptic('tap');
+    void triggerHaptic('tap');
     setReminderTime(time);
   }, []);
 

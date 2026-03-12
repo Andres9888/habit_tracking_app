@@ -29,21 +29,17 @@ export const ProgressBarBottomRow: React.FC<ProgressBarBottomRowProps> = ({
 
   return (
     <View style={[styles.bottomRow, { marginTop: config.gap / 2 }]}>
-      {showLabel && (
-        <Text
+      {showLabel ? <Text
           style={[
             styles.label,
             { color: currentLevel.color, fontSize: config.fontSize * 0.9 },
           ]}
         >
           {currentLevel.label}
-        </Text>
-      )}
-      {showNextLevel && nextLevel && (
-        <Text style={[styles.nextHint, { fontSize: config.fontSize * 0.85 }]}>
+        </Text> : null}
+      {showNextLevel && nextLevel ? <Text style={[styles.nextHint, { fontSize: config.fontSize * 0.85 }]}>
           {pointsToNext}% to {nextLevel.label}
-        </Text>
-      )}
+        </Text> : null}
     </View>
   );
 };

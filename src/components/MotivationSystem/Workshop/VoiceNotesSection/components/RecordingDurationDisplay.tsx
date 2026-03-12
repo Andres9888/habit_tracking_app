@@ -36,20 +36,16 @@ export function RecordingDurationDisplay({
         >
           {formattedDuration}
         </Text>
-        {isMaxDurationReached && (
-          <Text className='text-xs text-rose-500'>Max reached</Text>
-        )}
+        {isMaxDurationReached ? <Text className='text-xs text-rose-500'>Max reached</Text> : null}
       </View>
-      {isApproachingMaxDuration && !isMaxDurationReached && (
-        <View className='flex-row items-center gap-1.5 rounded-full bg-amber-100 px-3 py-1'>
+      {isApproachingMaxDuration && !isMaxDurationReached ? <View className='flex-row items-center gap-1.5 rounded-full bg-amber-100 px-3 py-1'>
           <AlertCircle className='text-amber-600' size={14} />
           <Text className='text-xs font-medium text-amber-700'>
             {secondsUntilMaxDuration !== null && secondsUntilMaxDuration > 0
               ? `${secondsUntilMaxDuration}s remaining`
               : 'Wrapping up...'}
           </Text>
-        </View>
-      )}
+        </View> : null}
     </View>
   );
 }

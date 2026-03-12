@@ -11,16 +11,15 @@
 import { useAuth } from '@clerk/clerk-expo';
 import { useMutation } from 'convex/react';
 import { useEffect, useRef } from 'react';
-import { ActivityIndicator, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import Animated, { FadeInDown, FadeOut } from 'react-native-reanimated';
 
 import { api } from '../../../convex/_generated/api';
 import HabitsApp from '../../features/habits/HabitsApp';
 import { useConvexAuthReady } from '../../providers';
+import { BrandedLoadingScreen } from './BrandedLoadingScreen';
 import { OnboardingScreen } from '../../screens/onboarding/OnboardingScreen';
 import { useOnboardingStatus } from '../../screens/onboarding/useOnboardingStatus';
-import { useThemeColors } from '../../theme/ThemeContext';
 import WelcomeScreen from '../../screens/auth/WelcomeScreen';
 
 const ENTER = FadeInDown.duration(280).springify().damping(18);
@@ -34,7 +33,6 @@ function getScreenKey(isSignedIn: boolean, onboardingComplete: boolean) {
 export function AuthGate() {
   const { isLoaded, isSignedIn } = useAuth();
   const isConvexReady = useConvexAuthReady();
-  const { colors } = useThemeColors();
   const getOrCreateUser = useMutation(api.users.getOrCreateUser);
   const { complete: onboardingComplete, markComplete } = useOnboardingStatus(
     isSignedIn ?? false
@@ -45,28 +43,14 @@ export function AuthGate() {
 
   useEffect(() => {
     if (isSignedIn && isConvexReady) {
-      const result = getOrCreateUserRef.current();
-      if (result && typeof (result as Promise<unknown>).catch === 'function') {
-        result.catch((error_: unknown) => {
-          if (__DEV__) console.error('Failed to sync user:', error_);
-        });
-      }
+      void getOrCreateUserRef.current().catch((error_: unknown) => {
+        if (__DEV__) console.error('Failed to sync user:', error_);
+      });
     }
   }, [isSignedIn, isConvexReady]);
 
   if (!isLoaded || (isSignedIn && onboardingComplete === null)) {
-    return (
-      <View
-        style={{
-          alignItems: 'center',
-          backgroundColor: colors.background,
-          flex: 1,
-          justifyContent: 'center',
-        }}
-      >
-        <ActivityIndicator color={colors.accent} size='large' />
-      </View>
-    );
+    return <BrandedLoadingScreen />;
   }
 
   const screenKey = getScreenKey(
@@ -76,31 +60,25 @@ export function AuthGate() {
 
   return (
     <GestureHandlerRootView className='flex-1'>
-      {screenKey === 'welcome' && (
-        <Animated.View
+      {screenKey === 'welcome' ? <Animated.View
           key='welcome'
           entering={ENTER}
           exiting={EXIT}
           style={{ flex: 1 }}
         >
           <WelcomeScreen />
-        </Animated.View>
-      )}
-      {screenKey === 'onboarding' && (
-        <Animated.View
+        </Animated.View> : null}
+      {screenKey === 'onboarding' ? <Animated.View
           key='onboarding'
           entering={ENTER}
           exiting={EXIT}
           style={{ flex: 1 }}
         >
           <OnboardingScreen onComplete={markComplete} />
-        </Animated.View>
-      )}
-      {screenKey === 'app' && (
-        <Animated.View key='app' entering={ENTER} style={{ flex: 1 }}>
+        </Animated.View> : null}
+      {screenKey === 'app' ? <Animated.View key='app' entering={ENTER} style={{ flex: 1 }}>
           <HabitsApp />
-        </Animated.View>
-      )}
+        </Animated.View> : null}
     </GestureHandlerRootView>
   );
 }

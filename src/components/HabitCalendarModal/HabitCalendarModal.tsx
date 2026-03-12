@@ -64,8 +64,7 @@ export default function HabitCalendarModal({
           showsVerticalScrollIndicator={false}
           stickyHeaderIndices={showStickyHeader ? [0] : []}
         >
-          {showStickyHeader && (
-            <View
+          {showStickyHeader ? <View
               className='pb-3 pt-2'
               style={{
                 backgroundColor: colors.background,
@@ -79,8 +78,7 @@ export default function HabitCalendarModal({
                 onPrevious={calendarViewState.handlePreviousMonth}
                 onToday={calendarViewState.handleToday}
               />
-            </View>
-          )}
+            </View> : null}
 
           <StatusRibbon
             bestStreak={state.bestStreak}

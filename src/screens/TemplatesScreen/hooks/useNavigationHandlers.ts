@@ -46,7 +46,7 @@ export function useNavigationHandlers(opts: UseNavigationHandlersOptions) {
   );
 
   const handleBackToBrowse = useCallback(() => {
-    triggerHaptic('tap');
+    void triggerHaptic('tap');
     setSelectedCategory('all');
     setViewMode('browse');
     flatListRef.current?.scrollToOffset({ animated: true, offset: 0 });

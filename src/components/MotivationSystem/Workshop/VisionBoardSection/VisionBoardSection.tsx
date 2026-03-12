@@ -61,30 +61,24 @@ export function VisionBoardSection({
             imageCount={imageCount}
             isPremium={isPremium}
           />
-          {!state.hasImages && (
-            <Text className='text-sm text-stone-500'>
+          {state.hasImages ? null : <Text className='text-sm text-stone-500'>
               Add photos that inspire your habit journey
-            </Text>
-          )}
+            </Text>}
           <CompletionCheckmark
             isVisible={state.hasImages}
             reduceMotion={reduceMotion}
             sectionIndex={sectionIndex}
             shouldAnimate={shouldAnimate}
           />
-          {isPremium && (
-            <ImageGrid
+          {isPremium ? <ImageGrid
               images={images}
               isUploading={state.isLoading}
               onAddImage={() => state.setIsAddModalOpen(true)}
               onViewImage={state.handleViewImage}
-            />
-          )}
-          {isPremium && !state.hasImages && !state.isLoading && (
-            <AddFirstImageButton
+            /> : null}
+          {isPremium && !state.hasImages && !state.isLoading ? <AddFirstImageButton
               onPress={() => state.setIsAddModalOpen(true)}
-            />
-          )}
+            /> : null}
         </SectionCard>
       </AnimatedSection>
 

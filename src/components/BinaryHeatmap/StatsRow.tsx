@@ -70,12 +70,9 @@ export const StatsRow = memo(function StatsRow({
         >
           <Text style={styles.frequencyText}>{frequency}</Text>
         </View>
-        {currentStreak > 0 && (
-          <StreakBadge currentStreak={currentStreak} habitColor={habitColor} />
-        )}
+        {currentStreak > 0 ? <StreakBadge currentStreak={currentStreak} habitColor={habitColor} /> : null}
       </View>
-      {onSettingsPress && (
-        <AnimatedPressable
+      {onSettingsPress ? <AnimatedPressable
           accessible
           accessibilityHint='Opens habit settings and options'
           accessibilityLabel='Habit settings'
@@ -97,8 +94,7 @@ export const StatsRow = memo(function StatsRow({
             strokeWidth={2}
             testID='settings-icon'
           />
-        </AnimatedPressable>
-      )}
+        </AnimatedPressable> : null}
     </View>
   );
 });

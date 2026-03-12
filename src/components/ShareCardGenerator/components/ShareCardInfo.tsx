@@ -40,9 +40,7 @@ export function ShareCardInfo({
         </View>
       </View>
 
-      {personalMessage && (
-        <Text style={styles.personalMessage}>{personalMessage}</Text>
-      )}
+      {personalMessage ? <Text style={styles.personalMessage}>{personalMessage}</Text> : null}
     </View>
   );
 }

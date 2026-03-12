@@ -7,7 +7,6 @@ import React, { useCallback } from 'react';
 import { View, TextInput, Pressable, type ViewStyle } from 'react-native';
 import { Search, X } from 'lucide-react-native';
 import Animated, {
-  useSharedValue,
   withTiming,
   type AnimatedStyle,
   type SharedValue,
@@ -63,16 +62,14 @@ export function SearchBar({
           onChangeText={onChange}
           onFocus={handleFocus}
         />
-        {value.length > 0 && (
-          <Pressable
+        {value.length > 0 ? <Pressable
             accessibilityLabel='Clear search'
             accessibilityRole='button'
             style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
             onPress={onClear}
           >
             <X color={colors.gray[400]} size={18} />
-          </Pressable>
-        )}
+          </Pressable> : null}
       </Animated.View>
     </View>
   );

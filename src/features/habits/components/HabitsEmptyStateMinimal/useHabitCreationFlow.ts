@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 import { Keyboard, TextInput } from 'react-native';
-import { useHapticFeedback } from '../../../../hooks/useHapticFeedback';
+import { useHaptics } from '../../../../utils/haptics';
 import { useChipSelection } from './useChipSelection';
 import { ERROR_MESSAGES } from '../../../../constants/errorMessages';
 
@@ -13,7 +13,7 @@ export function useHabitCreationFlow({
   onQuickCreateHabit,
   inputRef,
 }: UseHabitCreationFlowParams) {
-  const { triggerSuccess } = useHapticFeedback();
+  const { trigger } = useHaptics();
   const chipSelection = useChipSelection();
 
   const [isCreating, setIsCreating] = useState(false);
@@ -30,7 +30,7 @@ export function useHabitCreationFlow({
 
     try {
       await onQuickCreateHabit(chipSelection.inputValue.trim());
-      triggerSuccess();
+      trigger('celebration');
       setSuccessHabitName(chipSelection.inputValue.trim());
       setSuccessEmoji(chipSelection.selectedEmoji);
 
@@ -38,6 +38,7 @@ export function useHabitCreationFlow({
         chipSelection.trackChipConversion(chipSelection.selectedChipIndex);
       }
     } catch (error) {
+      trigger('error');
       setIsCreating(false);
       setErrorMessage(
         error instanceof Error
@@ -45,11 +46,11 @@ export function useHabitCreationFlow({
           : ERROR_MESSAGES.DATA_OPS.CREATE_HABIT_FAILED
       );
     }
-  }, [chipSelection, isCreating, onQuickCreateHabit, triggerSuccess]);
+  }, [chipSelection, isCreating, onQuickCreateHabit, trigger]);
 
   const handleSubmitEditing = useCallback(() => {
     if (chipSelection.inputValue.trim() && !isCreating) {
-      handleCreateHabit();
+      void handleCreateHabit();
     }
   }, [chipSelection.inputValue, isCreating, handleCreateHabit]);
 

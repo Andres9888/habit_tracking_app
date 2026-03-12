@@ -45,13 +45,11 @@ export function FocusTextContent({
           >
             {celebrationSubtext}
           </Text>
-          {nextMilestoneLabel && (
-            <Text
+          {nextMilestoneLabel ? <Text
               style={[styles.nextMilestone, { color: config.subTextColor }]}
             >
               {nextMilestoneLabel}
-            </Text>
-          )}
+            </Text> : null}
         </View>
       ) : (
         <View style={styles.goalRow}>

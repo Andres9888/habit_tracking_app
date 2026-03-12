@@ -16,11 +16,12 @@ export function useOnboardingHandlers(onComplete: () => void) {
   const handleComplete = useCallback(async () => {
     if (isLoading) return;
     setIsLoading(true);
-    triggerHaptic('toggle');
+    void triggerHaptic('toggle');
     try {
       await safeSetBoolean(ONBOARDING_KEY, true);
       onComplete();
-    } catch {
+    } catch (error) {
+      if (__DEV__) console.error('[OnboardingScreen] Failed to save completion state:', error);
       onComplete();
     } finally {
       setIsLoading(false);
@@ -28,12 +29,12 @@ export function useOnboardingHandlers(onComplete: () => void) {
   }, [onComplete, isLoading]);
 
   const handleSkip = useCallback(() => {
-    triggerHaptic('tap');
+    void triggerHaptic('tap');
     void handleComplete();
   }, [handleComplete]);
 
   const handleNext = useCallback(() => {
-    triggerHaptic('tap');
+    void triggerHaptic('tap');
     if (currentIndex < PAGES.length - 1) {
       flatListRef.current?.scrollToIndex({
         animated: true,

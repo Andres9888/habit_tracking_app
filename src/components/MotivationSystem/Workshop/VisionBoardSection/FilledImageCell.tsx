@@ -64,13 +64,11 @@ export function FilledImageCell({
             <ActivityIndicator color='#a8a29e' size='small' />
           </View>
         )}
-        {image.caption && (
-          <View className='absolute bottom-0 left-0 right-0 bg-black/50 px-2 py-1'>
+        {image.caption ? <View className='absolute bottom-0 left-0 right-0 bg-black/50 px-2 py-1'>
             <Text className='text-xs text-white' numberOfLines={2} maxFontSizeMultiplier={2}>
               {image.caption}
             </Text>
-          </View>
-        )}
+          </View> : null}
         <View className='absolute right-2 top-2 h-6 w-6 items-center justify-center rounded-full bg-black/30'>
           <ZoomIn className='text-white' size={12} />
         </View>

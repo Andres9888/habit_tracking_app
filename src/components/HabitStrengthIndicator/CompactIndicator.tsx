@@ -43,8 +43,7 @@ export function CompactIndicator({
         />
       </View>
 
-      {showPercentage && (
-        <Text
+      {showPercentage ? <Text
           style={[
             theme.custom.typography.bodySmall,
             styles.percentage,
@@ -52,8 +51,7 @@ export function CompactIndicator({
           ]}
         >
           {Math.round(strength)}%
-        </Text>
-      )}
+        </Text> : null}
     </View>
   );
 }

@@ -42,8 +42,7 @@ export function SuccessIcon({
       ]}
     >
       {/* Progress Ring - Behind the icon, shows countdown */}
-      {autoTransition && (
-        <Animated.View
+      {autoTransition ? <Animated.View
           style={[
             ringStyle,
             {
@@ -57,8 +56,7 @@ export function SuccessIcon({
             duration={PROGRESS_RING.duration}
             size={PROGRESS_RING.size}
           />
-        </Animated.View>
-      )}
+        </Animated.View> : null}
 
       {/* Particle Burst - Positioned behind icon */}
       <Animated.View

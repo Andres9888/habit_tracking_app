@@ -5,7 +5,7 @@
  * These colors are theme-aware and adapt to light/dark mode.
  *
  * Organized by settings section:
- * - Preferences: checkbox, circle, gradient, sound
+ * - Preferences: checkbox, circle, gradient, sound, calendarHeader
  * - Data: sort, archive
  * - Notifications: bell, clock, premiumTime
  * - Account: user, signOut, deleteAccount
@@ -27,6 +27,7 @@ export const darkSettingsColors: SettingsColors = {
   circle: { icon: '#a78bfa', bg: '#2e1f5e' },
   gradient: { icon: '#34d399', bg: '#052e2a' },
   sound: { icon: '#fbbf24', bg: '#3d2e06' },
+  calendarHeader: { icon: '#22d3ee', bg: '#0f4b55' },
   // Data
   sort: { icon: '#818cf8', bg: '#1e1b4b' },
   export: { icon: '#2dd4bf', bg: '#134e4a' },
@@ -61,6 +62,7 @@ export const lightSettingsColors: SettingsColors = {
   circle: { icon: '#8b5cf6', bg: '#ddd6fe' },
   gradient: { icon: '#059669', bg: '#d1fae5' },
   sound: { icon: '#f59e0b', bg: '#fef3c7' },
+  calendarHeader: { icon: '#0ea5e9', bg: '#dbeafe' },
   // Data
   sort: { icon: '#6366f1', bg: '#e0e7ff' },
   export: { icon: '#0d9488', bg: '#ccfbf1' },
@@ -95,6 +97,7 @@ export interface SettingsColors {
   circle: IconColor;
   gradient: IconColor;
   sound: IconColor;
+  calendarHeader: IconColor;
   // Data
   sort: IconColor;
   export: IconColor;

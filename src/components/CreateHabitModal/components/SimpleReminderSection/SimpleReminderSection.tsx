@@ -37,8 +37,7 @@ export const SimpleReminderSection = ({
         triggerSelection={triggerSelection}
         onToggle={onToggle}
       />
-      {remindersEnabled && (
-        <View className='mt-4'>
+      {remindersEnabled ? <View className='mt-4'>
           <View className='mb-3 flex-row gap-2'>
             {presets.map((preset) => (
               <QuickTimeButton
@@ -59,8 +58,7 @@ export const SimpleReminderSection = ({
             triggerSelection={triggerSelection}
             onPress={onTimePress}
           />
-        </View>
-      )}
+        </View> : null}
     </View>
   );
 };

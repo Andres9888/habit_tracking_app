@@ -60,29 +60,23 @@ export function PersonalBestsCard({
           </Text>
         </View>
 
-        {hasRecords && (
-          <MedalRow
+        {hasRecords ? <MedalRow
             currentStreak={currentStreak}
             pulseAnimatedStyle={pulseAnimatedStyle}
             records={top3Records}
-          />
-        )}
+          /> : null}
 
-        {showBestWorst && (
-          <BestWorstDayCards
+        {showBestWorst ? <BestWorstDayCards
             bestDay={bestDay}
             worstDay={worstDay}
             onWorstDayPress={onWorstDayPress}
-          />
-        )}
+          /> : null}
 
-        {!hasRecords && currentStreak === 0 && (
-          <View className='items-center py-4'>
+        {!hasRecords && currentStreak === 0 ? <View className='items-center py-4'>
             <Text className='text-sm text-stone-500'>
               Complete 2+ consecutive days to start tracking streaks
             </Text>
-          </View>
-        )}
+          </View> : null}
       </View>
     </View>
   );

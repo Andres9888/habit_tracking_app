@@ -75,14 +75,12 @@ function PresetButtonComponent({
             {preset.label}
           </Text>
         </View>
-        {preset.time && (
-          <Text
+        {preset.time ? <Text
             className='mt-0.5 text-xs'
             style={{ color: isSelected ? '#047857' : '#a8a29e' }}
           >
             {preset.time}
-          </Text>
-        )}
+          </Text> : null}
       </Animated.View>
     </Pressable>
   );

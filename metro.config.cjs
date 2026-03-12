@@ -1,10 +1,58 @@
 const { getDefaultConfig } = require('@expo/metro-config');
 const { withNativeWind } = require('nativewind/metro');
+const crypto = require('crypto');
 const fs = require('fs');
+const os = require('os');
 const path = require('path');
 
 // Base Expo config
 const baseConfig = getDefaultConfig(__dirname);
+
+function getDependencyFingerprint() {
+  const hash = crypto.createHash('sha1');
+  const fingerprintTargets = [
+    'package.json',
+    'package-lock.json',
+    'bun.lock',
+    'yarn.lock',
+    'pnpm-lock.yaml',
+    path.join('node_modules', '.package-lock.json'),
+    'node_modules',
+  ];
+
+  for (const relativePath of fingerprintTargets) {
+    const absolutePath = path.join(__dirname, relativePath);
+
+    if (!fs.existsSync(absolutePath)) {
+      continue;
+    }
+
+    const stats = fs.statSync(absolutePath);
+    hash.update(relativePath);
+    hash.update(':');
+    hash.update(String(stats.size));
+    hash.update(':');
+    hash.update(String(stats.mtimeMs));
+    hash.update(':');
+    hash.update(String(stats.ctimeMs));
+    hash.update('\n');
+  }
+
+  return hash.digest('hex').slice(0, 12);
+}
+
+const dependencyFingerprint = getDependencyFingerprint();
+const metroFileMapCacheDirectory = path.join(
+  os.tmpdir(),
+  `metro-file-map-${dependencyFingerprint}`
+);
+const metroTransformCacheDirectory = path.join(
+  os.tmpdir(),
+  `metro-cache-${dependencyFingerprint}`
+);
+
+fs.mkdirSync(metroFileMapCacheDirectory, { recursive: true });
+fs.mkdirSync(metroTransformCacheDirectory, { recursive: true });
 
 // Ensure NativeWind's react-native-css-interop cache file exists before Metro starts.
 // Metro's file map doesn't always pick up newly-created files inside node_modules during
@@ -91,9 +139,13 @@ config.server = {
 };
 
 // Optimize caching
+// Scope Metro caches to the current dependency/install state so stale file-map
+// entries do not point at removed nested package paths after hoists/dedupes.
+config.cacheVersion = `${config.cacheVersion ?? '1.0'}-${dependencyFingerprint}`;
+config.fileMapCacheDirectory = metroFileMapCacheDirectory;
 config.cacheStores = [
   new (require('metro-cache').FileStore)({
-    root: path.join(require('os').tmpdir(), 'metro-cache'),
+    root: metroTransformCacheDirectory,
   }),
 ];
 

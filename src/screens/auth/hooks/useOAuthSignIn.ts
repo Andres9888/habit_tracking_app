@@ -22,9 +22,9 @@ export function useOAuthSignIn() {
 
   // Warm up browser on Android for faster OAuth
   useEffect(() => {
-    WebBrowser.warmUpAsync();
+    void WebBrowser.warmUpAsync();
     return () => {
-      WebBrowser.coolDownAsync();
+      void WebBrowser.coolDownAsync();
     };
   }, []);
 

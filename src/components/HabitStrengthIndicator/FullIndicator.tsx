@@ -27,8 +27,7 @@ export function FullIndicator({
       accessibilityRole='progressbar'
       style={styles.fullContainer}
     >
-      {showLabel && (
-        <View style={styles.fullHeader}>
+      {showLabel ? <View style={styles.fullHeader}>
           <View style={styles.fullLabelContainer}>
             <Text style={[styles.fullEmoji, emojiStyle]}>{config.emoji}</Text>
             <Text
@@ -41,8 +40,7 @@ export function FullIndicator({
             </Text>
           </View>
 
-          {showPercentage && (
-            <Text
+          {showPercentage ? <Text
               style={[
                 theme.custom.typography.heading2,
                 {
@@ -52,10 +50,8 @@ export function FullIndicator({
               ]}
             >
               {Math.round(strength)}%
-            </Text>
-          )}
-        </View>
-      )}
+            </Text> : null}
+        </View> : null}
 
       <View
         style={[
@@ -72,16 +68,14 @@ export function FullIndicator({
         />
       </View>
 
-      {showLabel && (
-        <Text
+      {showLabel ? <Text
           style={[
             theme.custom.typography.caption,
             { color: theme.custom.colors.gray[500] },
           ]}
         >
           {config.description}
-        </Text>
-      )}
+        </Text> : null}
     </View>
   );
 }

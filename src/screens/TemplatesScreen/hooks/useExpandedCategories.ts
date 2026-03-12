@@ -28,7 +28,7 @@ export function useExpandedCategories(categories: CategoryLike[] | undefined) {
     setExpandedCategories((prev) => {
       const validIds = new Set(categoryIds);
       const next = new Set(
-        Array.from(prev).filter((categoryId) => validIds.has(categoryId))
+        [...prev].filter((categoryId) => validIds.has(categoryId))
       );
 
       for (const categoryId of categoryIds) {

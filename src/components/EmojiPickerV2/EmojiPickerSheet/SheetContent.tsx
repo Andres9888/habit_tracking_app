@@ -72,21 +72,17 @@ export function SheetContent({
         onClear={handleClearSearch}
       />
 
-      {!searchQuery && (
-        <SuggestionsSection
+      {searchQuery ? null : <SuggestionsSection
           habitName={habitName}
           selectedEmoji={selectedEmoji}
           suggestedEmojis={suggestedEmojis}
           onEmojiSelect={onEmojiSelect}
-        />
-      )}
+        />}
 
-      {!searchQuery && (
-        <CategoryPills
+      {searchQuery ? null : <CategoryPills
           selectedCategory={selectedCategory}
           onCategorySelect={handleCategorySelect}
-        />
-      )}
+        />}
 
       <EmojiGrid
         categoryName={searchQuery ? undefined : currentCategoryName}

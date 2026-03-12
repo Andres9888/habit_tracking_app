@@ -63,10 +63,9 @@ export function EnhancedReminderSelector(
   return (
     <View className='mb-6' testID='enhanced-reminder-selector'>
       <ToggleRow enabled={enabled} onToggle={(v) => void handleToggle(v)} />
-      <PermissionBanner visible={enabled && permissionDenied} />
+      <PermissionBanner visible={enabled ? permissionDenied : null} />
 
-      {enabled && (
-        <View className='mt-4'>
+      {enabled ? <View className='mt-4'>
           <View className='mb-4 flex-row gap-3' testID='preset-buttons'>
             {presets.map((preset) => (
               <PresetButton
@@ -85,16 +84,13 @@ export function EnhancedReminderSelector(
             onPress={handleCustomTimePress}
           />
 
-          {showNextReminder && (
-            <View className='items-center'>
+          {showNextReminder ? <View className='items-center'>
               <NextReminderBadge
                 enabled={enabled}
                 reminderTime={reminderTime}
               />
-            </View>
-          )}
-        </View>
-      )}
+            </View> : null}
+        </View> : null}
 
       <TimePickerModal
         initialTime={reminderTime}

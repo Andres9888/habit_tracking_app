@@ -1,9 +1,6 @@
 import { useCallback } from 'react';
 import { Pressable, Text } from 'react-native';
-import Animated, {
-  interpolateColor,
-  useAnimatedStyle,
-} from 'react-native-reanimated';
+import Animated, { interpolateColor, useAnimatedStyle } from 'react-native-reanimated';
 
 import { useHapticFeedback } from '../../../../../hooks/useHapticFeedback';
 import { fontFamilies, fontWeights } from '@/theme/typography';
@@ -14,28 +11,13 @@ import { useChipAnimations } from './useChipAnimations';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
-export interface ChipProps {
-  chip: SuggestionChip;
-  index: number;
-  isSelected: boolean;
-  onPress: () => void;
-  staggerDelay: number;
-}
+export interface ChipProps { chip: SuggestionChip; index: number; isSelected: boolean; onPress: () => void; staggerDelay: number; }
 
 export function Chip({ chip, isSelected, onPress, staggerDelay }: ChipProps) {
   const { triggerSelection } = useHapticFeedback();
   const colors = useEmptyStateColors();
-  const {
-    scale,
-    translateY,
-    shadowOpacity,
-    selectionProgress,
-    entranceOpacity,
-    entranceTranslateY,
-    handlePressIn,
-    handlePressOut,
-    animatePressScale,
-  } = useChipAnimations({ isSelected, staggerDelay });
+  const { scale, translateY, shadowOpacity, selectionProgress, entranceOpacity, entranceTranslateY, handlePressIn, handlePressOut, animatePressScale } =
+    useChipAnimations({ isSelected, staggerDelay });
 
   const animatedStyle = useAnimatedStyle(() => ({
     backgroundColor: interpolateColor(
@@ -50,18 +32,11 @@ export function Chip({ chip, isSelected, onPress, staggerDelay }: ChipProps) {
     ),
     opacity: entranceOpacity.value,
     shadowOpacity: shadowOpacity.value,
-    transform: [
-      { translateY: entranceTranslateY.value + translateY.value },
-      { scale: scale.value },
-    ],
+    transform: [{ translateY: entranceTranslateY.value + translateY.value }, { scale: scale.value }],
   }));
 
   const textStyle = useAnimatedStyle(() => ({
-    color: interpolateColor(
-      selectionProgress.value,
-      [0, 1],
-      [colors.chipText, colors.chipTextSelected]
-    ),
+    color: interpolateColor(selectionProgress.value, [0, 1], [colors.chipText, colors.chipTextSelected]),
   }));
 
   const handlePress = useCallback(() => {

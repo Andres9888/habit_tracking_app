@@ -38,9 +38,7 @@ export function HeatmapCell({ day, onPress }: HeatmapCellProps) {
       ]}
       onPress={handlePress}
     >
-      {day.completionRate > 0 && (
-        <Text style={styles.cellText}>{Math.round(day.completionRate)}</Text>
-      )}
+      {day.completionRate > 0 ? <Text style={styles.cellText}>{Math.round(day.completionRate)}</Text> : null}
     </TouchableOpacity>
   );
 }

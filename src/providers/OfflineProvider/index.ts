@@ -16,6 +16,6 @@
  * ```
  */
 
-export { OfflineContext, OfflineProvider } from './OfflineProvider';
+export { OfflineContext, OfflineProvider } from './Offline.provider';
 export { useOfflineContext } from './useOfflineContext';
 export type { OfflineContextValue, OfflineProviderProps } from './types';

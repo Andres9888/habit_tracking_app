@@ -29,9 +29,7 @@ export function BenefitsFeatureCard({ feature, isHighlighted }: BenefitsFeatureC
           <Text className='text-xs text-stone-500'>{feature.description}</Text>
         </View>
       </View>
-      {feature.scienceFact && (
-        <Text className='text-xs italic text-stone-400'>📊 {feature.scienceFact}</Text>
-      )}
+      {feature.scienceFact ? <Text className='text-xs italic text-stone-400'>📊 {feature.scienceFact}</Text> : null}
     </View>
   );
 }

@@ -36,14 +36,12 @@ export default function HabitCalendarView({
 
   return (
     <View className='gap-4'>
-      {showHeader && (
-        <CalendarHeader
+      {showHeader ? <CalendarHeader
           currentMonth={currentMonth}
           onNext={handleNextMonth}
           onPrevious={handlePreviousMonth}
           onToday={handleToday}
-        />
-      )}
+        /> : null}
 
       <DayNamesRow />
 

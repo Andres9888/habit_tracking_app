@@ -18,15 +18,13 @@ export function ShareAndPauseModals({
 }: ShareAndPauseModalsProps) {
   return (
     <>
-      {showShareCard && shareCardData && (
-        <Suspense fallback={null}>
+      {showShareCard && shareCardData ? <Suspense fallback={null}>
           <ShareCardGenerator
             data={shareCardData}
             visible={showShareCard}
             onClose={closeShareCard}
           />
-        </Suspense>
-      )}
+        </Suspense> : null}
 
       <PauseHabitModal
         habitName={habitToPause?.name ?? ''}

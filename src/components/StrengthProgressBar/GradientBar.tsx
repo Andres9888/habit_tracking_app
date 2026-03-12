@@ -67,13 +67,12 @@ export function GradientBar({
           ]}
         />
       </Animated.View>
-      {showDividers &&
-        DIVIDER_POSITIONS.map((pos) => (
+      {showDividers ? DIVIDER_POSITIONS.map((pos) => (
           <View
             key={pos}
             style={[styles.divider, { height: barHeight, left: `${pos}%` }]}
           />
-        ))}
+        )) : null}
     </View>
   );
 }

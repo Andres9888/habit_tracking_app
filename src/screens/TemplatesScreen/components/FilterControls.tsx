@@ -61,13 +61,11 @@ export function FilterControls({
           }}
         />
       </AnimatedPressable>
-      {showSortOptions && (
-        <SortDropdown
+      {showSortOptions ? <SortDropdown
           colors={colors}
           sortOption={sortOption}
           onSelectSort={onSelectSort}
-        />
-      )}
+        /> : null}
     </View>
   );
 }

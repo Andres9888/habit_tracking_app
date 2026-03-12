@@ -85,9 +85,7 @@ function DraggableHabitCardComponent(props: DraggableHabitCardProps) {
 
   const habitCard = (
     <ReAnimated.View style={[props.entranceCardStyle, { flexDirection: 'row', alignItems: 'center' }]}>
-      {props.showSelectionOverlay && (
-        <SelectionOverlay isSelected={!!props.isSelected} onToggle={() => props.onToggleSelection?.()} />
-      )}
+      {props.showSelectionOverlay ? <SelectionOverlay isSelected={!!props.isSelected} onToggle={() => props.onToggleSelection?.()} /> : null}
       <Pressable
         accessibilityHint={props.showSelectionOverlay ? 'Tap to toggle selection' : `Tap to view details${hasSwipeActions ? ', swipe left for actions' : ''}`}
         accessibilityLabel={`${props.habit.name}, ${props.streak} day streak`}
@@ -117,13 +115,11 @@ function DraggableHabitCardComponent(props: DraggableHabitCardProps) {
             className='flex-1'
             style={props.entranceContentStyle}
           >
-            {props.showGradientFill && (
-              <StrengthFillBackground
+            {props.showGradientFill ? <StrengthFillBackground
                 isDark={props.isDark}
                 strengthColor={effectiveAccentColor}
                 strengthFillStyle={props.strengthFillStyle}
-              />
-            )}
+              /> : null}
             <ReAnimated.View
               pointerEvents='none'
               style={[

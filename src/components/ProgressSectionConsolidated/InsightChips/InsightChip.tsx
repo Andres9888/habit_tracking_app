@@ -61,13 +61,11 @@ export const InsightChip = React.memo(function InsightChip({
           minWidth: 90,
         }}
       >
-        {chip.hasPulse && (
-          <Animated.View
+        {chip.hasPulse ? <Animated.View
             className='absolute -inset-0.5 rounded-xl'
             pointerEvents='none'
             style={[{ borderColor: '#fb923c', borderWidth: 2 }, pulseRingStyle]}
-          />
-        )}
+          /> : null}
 
         <View className='flex-row items-center gap-2'>
           <Text className='text-lg'>{chip.icon}</Text>

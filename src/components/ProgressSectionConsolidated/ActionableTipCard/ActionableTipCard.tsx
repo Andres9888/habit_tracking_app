@@ -88,8 +88,7 @@ export const ActionableTipCard = React.memo(function ActionableTipCard({
         />
       </AnimatedPressable>
 
-      {onQuickAction && (
-        <TipQuickActionsSheet
+      {onQuickAction ? <TipQuickActionsSheet
           currentStreak={currentStreak}
           focusDayName={focusDayName}
           tipText={tip}
@@ -97,8 +96,7 @@ export const ActionableTipCard = React.memo(function ActionableTipCard({
           visible={isSheetVisible}
           onActionPress={handleQuickAction}
           onClose={handleSheetClose}
-        />
-      )}
+        /> : null}
     </>
   );
 });

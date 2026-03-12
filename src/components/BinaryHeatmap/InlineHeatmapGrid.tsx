@@ -6,7 +6,7 @@
  */
 
 import React, { memo, useMemo } from 'react';
-import { View, Text, ScrollView } from 'react-native';
+import { Pressable, ScrollView, Text, View } from 'react-native';
 
 import type { BinaryMonthLabel, BinaryDay } from './types';
 import { CELL_SIZE, CELL_GAP, GRID } from './constants';
@@ -16,15 +16,17 @@ import { getCellBackgroundColor, transformWeeksToRows } from './cellHelpers';
 const DAY_LABELS = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 
 export interface InlineHeatmapGridProps {
-  weeks: (BinaryDay | null)[][];
-  monthLabels: BinaryMonthLabel[];
-  habitColor: string;
+    weeks: (BinaryDay | null)[][];
+    monthLabels: BinaryMonthLabel[];
+    habitColor: string;
+    onCellPress?: (date: string, completed: boolean) => void;
 }
 
 export const InlineHeatmapGrid = memo(function InlineHeatmapGrid({
   weeks,
   monthLabels,
   habitColor,
+  onCellPress,
 }: InlineHeatmapGridProps) {
   const rows = useMemo(() => transformWeeksToRows(weeks, GRID.ROWS), [weeks]);
   const gridContentWidth = weeks.length * (CELL_SIZE + CELL_GAP);
@@ -60,20 +62,31 @@ export const InlineHeatmapGrid = memo(function InlineHeatmapGrid({
           </View>
           {rows.map((row, dayIndex) => (
             <View key={`row-${dayIndex}`} style={styles.gridRow}>
-              {row.map((day, weekIndex) => (
-                <View
-                  key={day?.date ?? `empty-${dayIndex}-${weekIndex}`}
-                  style={[
-                    styles.cell,
-                    {
-                      backgroundColor: getCellBackgroundColor(day, habitColor),
-                      borderColor: day?.isToday ? habitColor : 'transparent',
-                      borderWidth: day?.isToday ? 2 : 0,
-                      opacity: day?.isFuture ? 0.4 : 1,
-                    },
-                  ]}
-                />
-              ))}
+              {row.map((day, weekIndex) => {
+                const cellStyle = [
+                  styles.cell,
+                  {
+                    backgroundColor: getCellBackgroundColor(day, habitColor),
+                    borderColor: day?.isToday ? habitColor : 'transparent',
+                    borderWidth: day?.isToday ? 2 : 0,
+                    opacity: day?.isFuture ? 0.4 : 1,
+                  },
+                ];
+                if (!day) {
+                  return <View key={`empty-${dayIndex}-${weekIndex}`} style={cellStyle} />;
+                }
+                if (!onCellPress || day.isFuture || day.isBeforeCreation) {
+                  return <View key={day.date} style={cellStyle} />;
+                }
+                return (
+                  <Pressable
+                    key={day.date}
+                    accessibilityRole='button'
+                    style={cellStyle}
+                    onPress={() => onCellPress(day.date, day.completed)}
+                  />
+                );
+              })}
             </View>
           ))}
         </View>

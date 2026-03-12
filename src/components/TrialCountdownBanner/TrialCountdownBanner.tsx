@@ -25,8 +25,7 @@ export function TrialCountdownBanner({
       >
         <Text style={localStyles.upgradeText}>Upgrade</Text>
       </Pressable>
-      {dismissible && onDismiss && (
-        <Pressable
+      {dismissible && onDismiss ? <Pressable
           accessibilityLabel='Dismiss trial banner'
           accessibilityRole='button'
           hitSlop={{ bottom: 8, left: 8, right: 8, top: 8 }}
@@ -34,8 +33,7 @@ export function TrialCountdownBanner({
           onPress={onDismiss}
         >
           <Text style={localStyles.dismissText}>✕</Text>
-        </Pressable>
-      )}
+        </Pressable> : null}
     </View>
   );
 }

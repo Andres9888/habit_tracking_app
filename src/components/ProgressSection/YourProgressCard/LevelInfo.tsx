@@ -35,12 +35,10 @@ export function LevelInfo({
 
       <Text className='mb-2 text-xs text-stone-500'>{level.description}</Text>
 
-      {nextLevel && (
-        <Text className='text-[10px] text-stone-400'>
+      {nextLevel ? <Text className='text-[10px] text-stone-400'>
           {Math.round(nextLevel.minThreshold - clampedStrength)}% to{' '}
           {nextLevel.emoji} {nextLevel.label}
-        </Text>
-      )}
+        </Text> : null}
     </View>
   );
 }

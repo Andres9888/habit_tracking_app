@@ -45,11 +45,9 @@ export const EmojiGrid = memo(
 
     return (
       <View style={styles.container}>
-        {showCategoryHeader && categoryName && (
-          <View style={styles.categoryHeader}>
+        {showCategoryHeader && categoryName ? <View style={styles.categoryHeader}>
             <Text style={styles.categoryHeaderText}>{categoryName}</Text>
-          </View>
-        )}
+          </View> : null}
 
         <FlatList
           ref={flatListRef}

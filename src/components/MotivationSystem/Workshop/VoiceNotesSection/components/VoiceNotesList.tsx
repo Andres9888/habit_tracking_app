@@ -36,16 +36,14 @@ export function VoiceNotesList({
         <Text className='text-sm font-medium text-stone-600'>
           Your Recordings ({voiceNotes.length})
         </Text>
-        {hasMore && (
-          <Pressable
+        {hasMore ? <Pressable
             accessibilityLabel={`View all ${voiceNotes.length} recordings`}
             accessibilityRole='button'
             hitSlop={{ bottom: 8, left: 8, right: 8, top: 8 }}
             onPress={onViewAllNotes}
           >
             <Text className='text-xs font-medium text-teal-600'>View All</Text>
-          </Pressable>
-        )}
+          </Pressable> : null}
       </View>
       <View className='gap-2'>
         {displayNotes.map((note) => (

@@ -55,7 +55,14 @@ export function useCalendarDays({
     const monthStart = startOfMonth(currentMonth);
     const monthEnd = endOfMonth(currentMonth);
     const calendarStart = startOfWeek(monthStart, { weekStartsOn: 1 });
-    const calendarEnd = endOfWeek(monthEnd, { weekStartsOn: 1 });
+    let calendarEnd = endOfWeek(monthEnd, { weekStartsOn: 1 });
+
+    // Always generate 6 weeks (42 days) so the grid height is constant
+    // and there's no blank row at the bottom for 5-week months
+    const naturalDays = Math.round((calendarEnd.getTime() - calendarStart.getTime()) / 86_400_000) + 1;
+    if (naturalDays < 42) {
+      calendarEnd = new Date(calendarStart.getTime() + 41 * 86_400_000);
+    }
 
     return eachDayOfInterval({ end: calendarEnd, start: calendarStart })
       .filter((date) => date && isValid(date))

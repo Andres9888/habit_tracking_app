@@ -37,6 +37,15 @@ export function CalendarAndDetailModals(props: CalendarAndDetailModalsProps) {
     closeEditScreen();
     if (habitToEdit) openHabitDetail(habitToEdit, 'motivation');
   };
+  const handleToggleHabit = (args: Parameters<typeof toggleHabit>[0]) => {
+    void toggleHabit(args);
+  };
+  const handleArchivePress = (habitId: Parameters<typeof handleArchive>[0]) => {
+    void handleArchive(habitId);
+  };
+  const handleDeleteHabit = (habitId: Parameters<typeof onDeleteHabit>[0]) => {
+    void onDeleteHabit(habitId);
+  };
 
   return (
     <>
@@ -44,7 +53,7 @@ export function CalendarAndDetailModals(props: CalendarAndDetailModalsProps) {
         <HabitCalendarModal
           habit={selectedHabit}
           streak={selectedHabit ? getStreak(selectedHabit._id) : 0}
-          toggleHabit={toggleHabit}
+          toggleHabit={handleToggleHabit}
           tracking={tracking}
           visible={showHabitCalendar}
           onClose={closeHabitCalendar}
@@ -56,9 +65,9 @@ export function CalendarAndDetailModals(props: CalendarAndDetailModalsProps) {
           habit={selectedHabit}
           tracking={tracking}
           visible={showHabitDetail}
-          onArchive={handleArchive}
+          onArchive={handleArchivePress}
           onClose={closeHabitDetail}
-          onDelete={onDeleteHabit}
+          onDelete={handleDeleteHabit}
           onEdit={(habit) => {
             closeHabitDetail();
             openEditHabit(habit);

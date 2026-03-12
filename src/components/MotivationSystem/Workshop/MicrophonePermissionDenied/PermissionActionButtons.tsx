@@ -47,16 +47,14 @@ export function PermissionActionButtons({
         </View>
       )}
 
-      {canAskAgain && !compact && (
-        <ActionButton
+      {canAskAgain && !compact ? <ActionButton
           accessibilityHint='Opens your device settings to enable microphone permission'
           accessibilityLabel='Open Settings'
           icon={Settings}
           label='Open Settings Instead'
           variant='secondary'
           onPress={onOpenSettings}
-        />
-      )}
+        /> : null}
     </View>
   );
 }

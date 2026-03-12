@@ -40,11 +40,9 @@ export function BlurOverlayActions({ config, handlers, onStartTrial, onRestore }
         </Pressable>
       </View>
       <View className='items-center'>
-        {handlers.priceLabel && (
-          <Text className='mb-2 text-xs text-white/70'>
+        {handlers.priceLabel ? <Text className='mb-2 text-xs text-white/70'>
             then {handlers.priceLabel} after trial • Cancel anytime
-          </Text>
-        )}
+          </Text> : null}
         <Pressable disabled={handlers.isProcessing} onPress={onRestore}>
           <Text className='text-xs text-white/60'>Restore Purchases</Text>
         </Pressable>

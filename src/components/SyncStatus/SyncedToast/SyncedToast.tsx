@@ -55,11 +55,9 @@ export function SyncedToast({
         <Check color={ICON_COLOR} size={ICON_SIZE} strokeWidth={2.5} />
       </Animated.View>
       <Text style={styles.text}>Synced</Text>
-      {showCount && (
-        <Text style={styles.countText} testID={`${testID}-count`}>
+      {showCount ? <Text style={styles.countText} testID={`${testID}-count`}>
           ({syncedCount})
-        </Text>
-      )}
+        </Text> : null}
     </Animated.View>
   );
 }

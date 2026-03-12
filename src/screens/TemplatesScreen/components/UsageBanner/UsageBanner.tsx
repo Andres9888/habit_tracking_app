@@ -36,8 +36,7 @@ export function UsageBanner({
           ))}
         </View>
       </View>
-      {showUnlockCta && (
-        <Pressable
+      {showUnlockCta ? <Pressable
           testID="templates-usage-unlock-cta"
           accessibilityLabel="Unlock all habits"
           accessibilityRole="button"
@@ -45,8 +44,7 @@ export function UsageBanner({
           onPress={onShowPaywall}
         >
           <Text style={s.ctaText}>Unlock All</Text>
-        </Pressable>
-      )}
+        </Pressable> : null}
     </View>
   );
 }

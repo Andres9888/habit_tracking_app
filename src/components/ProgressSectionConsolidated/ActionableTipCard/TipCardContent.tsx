@@ -44,19 +44,16 @@ export function TipCardContent({
         >
           {tip}
         </Text>
-        {subtitle && (
-          <Text
+        {subtitle ? <Text
             className='mt-0.5 text-xs'
             style={{ color: COLORS.textSecondary }}
           >
             {subtitle}
-          </Text>
-        )}
+          </Text> : null}
       </View>
 
       {/* Chevron (only when interactive) */}
-      {isInteractive && (
-        <View
+      {isInteractive ? <View
           accessibilityElementsHidden
           importantForAccessibility='no-hide-descendants'
         >
@@ -65,8 +62,7 @@ export function TipCardContent({
             size={20}
             style={{ flexShrink: 0 }}
           />
-        </View>
-      )}
+        </View> : null}
     </View>
   );
 }

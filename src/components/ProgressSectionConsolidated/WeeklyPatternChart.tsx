@@ -38,8 +38,7 @@ export const WeeklyPatternChart = React.memo(function WeeklyPatternChart({
         >
           Weekly Pattern
         </Text>
-        {onSeeAllPress && (
-          <Pressable
+        {onSeeAllPress ? <Pressable
             accessibilityLabel='See all weekly patterns'
             accessibilityRole='button'
             className='flex-row items-center gap-0.5 active:opacity-70'
@@ -49,8 +48,7 @@ export const WeeklyPatternChart = React.memo(function WeeklyPatternChart({
           >
             <Text className='text-xs font-medium text-violet-600'>Details</Text>
             <ChevronRight className='text-violet-400' size={14} />
-          </Pressable>
-        )}
+          </Pressable> : null}
       </View>
 
       <View

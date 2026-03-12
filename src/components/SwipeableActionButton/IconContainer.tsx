@@ -22,14 +22,12 @@ export function IconContainer({
         !isBoost && !isDestructive && 'bg-stone-100'
       )}
     >
-      {isBoost && (
-        <LinearGradient
+      {isBoost ? <LinearGradient
           className='absolute inset-0 rounded-xl'
           colors={['#7c3aed', '#4f46e5']}
           end={{ x: 1, y: 1 }}
           start={{ x: 0, y: 0 }}
-        />
-      )}
+        /> : null}
       {children}
     </View>
   );

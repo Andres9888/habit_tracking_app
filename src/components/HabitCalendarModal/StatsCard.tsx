@@ -29,13 +29,10 @@ export function StatsCard({
   return (
     <View className='rounded-2xl bg-white p-5'>
       {/* Habit Header */}
-      {showHeader && (
-        <View className='mb-6 flex-row items-start gap-3'>
-          {displayEmoji && (
-            <View className='h-14 w-14 items-center justify-center rounded-xl bg-blue-100'>
+      {showHeader ? <View className='mb-6 flex-row items-start gap-3'>
+          {displayEmoji ? <View className='h-14 w-14 items-center justify-center rounded-xl bg-blue-100'>
               <Text className='text-[30px]'>{displayEmoji}</Text>
-            </View>
-          )}
+            </View> : null}
           <View className='flex-1'>
             <Text className='text-2xl font-semibold text-stone-900'>
               {name}
@@ -49,8 +46,7 @@ export function StatsCard({
               </Text>
             ) : null}
           </View>
-        </View>
-      )}
+        </View> : null}
 
       {/* Stats Row */}
       <View className='flex-row items-center justify-between'>

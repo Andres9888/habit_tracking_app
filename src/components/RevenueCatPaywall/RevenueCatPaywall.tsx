@@ -1,118 +1,109 @@
-/**
- * RevenueCatPaywall
- *
- * Native RevenueCat paywall using react-native-purchases-ui.
- * Uses the Paywall JSX component for better Expo compatibility.
- *
- * Benefits over custom paywalls:
- * - Remotely configurable (no app update needed)
- * - Built-in A/B testing support
- * - Automatic price localization
- * - Handles all edge cases (loading, errors, restore)
- */
-
-import { Platform, Modal, View, Text, Pressable, Alert } from 'react-native';
-import RevenueCatUI from 'react-native-purchases-ui';
-import { useThemeColors } from '../../theme/ThemeContext';
+import React from 'react';
+import { View, ScrollView, Modal, Platform } from 'react-native';
+import { colors } from '../../theme/colors/core';
+import { spacing } from '../../theme/spacing';
+import { PaywallHeader } from './PaywallHeader';
+import { PaywallHero } from './PaywallHero';
+import { PaywallFeatureList } from './PaywallFeatureList';
+import { PaywallPlanSelector } from './PaywallPlanSelector';
+import { PaywallCTA } from './PaywallCTA';
+import { PaywallRestoreLink } from './PaywallRestoreLink';
+import { useRevenueCatPaywall } from './useRevenueCatPaywall';
 import type { RevenueCatPaywallProps } from './types';
+import { WebFallback } from './WebFallback';
 
-/**
- * Presents the RevenueCat native paywall
- *
- * On iOS/Android: Shows the full-screen paywall configured in RevenueCat dashboard
- * On Web: Shows a fallback message (RevenueCat doesn't support web)
- */
-export function RevenueCatPaywall({
+const NOOP = () => {};
+
+function getPlatformOS(): string | undefined {
+  const fallbackPlatform = (globalThis as { __reactNativePlatformOS?: string }).__reactNativePlatformOS;
+  return (Platform as { OS?: string } | undefined)?.OS ?? fallbackPlatform;
+}
+
+export function RevenueCatPaywall(
+  props: RevenueCatPaywallProps | undefined,
+) {
+  const { visible = false, onClose = NOOP } = props ?? {};
+  const platformOS = getPlatformOS();
+  const isWebPlatform =
+    platformOS
+      ? platformOS === 'web'
+      : 'window' in globalThis && 'document' in globalThis;
+  const isPlatformLoaded = !!platformOS;
+
+  if (__DEV__ && !isPlatformLoaded) {
+    console.warn('[RevenueCatPaywall] Platform.OS is undefined; using environment fallback.');
+  }
+
+  if (isWebPlatform) {
+    return <WebFallback visible={visible} onClose={onClose} />;
+  }
+
+  if (!visible) return null;
+
+  return (
+    <PaywallContent
+      visible={visible}
+      onClose={onClose}
+      onPurchaseSuccess={props?.onPurchaseSuccess}
+      onRestoreSuccess={props?.onRestoreSuccess}
+    />
+  );
+}
+
+function PaywallContent({
   visible,
   onClose,
   onPurchaseSuccess,
   onRestoreSuccess,
 }: RevenueCatPaywallProps) {
-  const { colors } = useThemeColors();
+  const paywall = useRevenueCatPaywall({
+    onClose,
+    onPurchaseSuccess: onPurchaseSuccess ?? NOOP,
+    onRestoreSuccess: onRestoreSuccess ?? NOOP,
+  });
 
-  // Web fallback - RevenueCat UI doesn't work on web
-  if (Platform.OS === 'web') {
-    if (!visible) return null;
+  const planLabel = paywall.selectedPlan === 'annual' ? 'Annual' : 'Monthly';
+  const ctaLabel = `Start Free Trial \u2014 ${planLabel}`;
 
-    return (
-      <Modal transparent animationType='fade' visible={visible} onRequestClose={onClose}>
-        accessibilityViewIsModal
-        <View className='flex-1 items-center justify-center bg-black/50'>
-          <View className='mx-6 rounded-2xl p-6' style={{ backgroundColor: colors.surface }}>
-            <Text className='mb-2 text-center text-lg font-semibold' style={{ color: colors.text.primary }}>
-              Premium Subscription
-            </Text>
-            <Text className='mb-4 text-center' style={{ color: colors.text.secondary }}>
-              In-app purchases are not available on web. Please use the mobile
-              app to subscribe.
-            </Text>
-            <Pressable
-              accessibilityLabel='Close'
-              accessibilityRole='button'
-              className='rounded-xl bg-amber-500 px-6 py-3'
-              style={({ pressed }) => ({ opacity: pressed ? 0.8 : 1 })}
-              onPress={onClose}
-            >
-              <Text className='text-center font-semibold text-white'>
-                Got it
-              </Text>
-            </Pressable>
-          </View>
-        </View>
-      </Modal>
-    );
-  }
-
-  // Don't render anything if not visible
-  if (!visible) return null;
-
-  // Use RevenueCat's Paywall JSX component (more reliable with Expo)
   return (
     <Modal
       accessibilityViewIsModal
-      animationType='slide'
-      presentationStyle='fullScreen'
+      animationType="slide"
+      presentationStyle="pageSheet"
+      transparent={false}
       visible={visible}
-      onRequestClose={onClose}
+      onRequestClose={paywall.handleClose}
     >
-      <RevenueCatUI.Paywall
-        options={{
-          displayCloseButton: true,
-        }}
-        style={{ flex: 1 }}
-        onDismiss={() => {
-          if (__DEV__) console.log('[RevenueCatPaywall] Dismissed');
-          onClose();
-        }}
-        onPurchaseCancelled={() => {
-          if (__DEV__) console.log('[RevenueCatPaywall] Purchase cancelled');
-        }}
-        onPurchaseCompleted={({ customerInfo }) => {
-          if (__DEV__)
-            console.log(
-              '[RevenueCatPaywall] Purchase completed:',
-              customerInfo
-            );
-          onPurchaseSuccess?.();
-          onClose();
-        }}
-        onPurchaseError={({ error }) => {
-          if (__DEV__)
-            console.error('[RevenueCatPaywall] Purchase error:', error);
-          Alert.alert('Purchase Failed', 'Your payment couldn\u2019t be processed. Please check your payment method and try again.');
-        }}
-        onRestoreCompleted={({ customerInfo }) => {
-          if (__DEV__)
-            console.log('[RevenueCatPaywall] Restore completed:', customerInfo);
-          onRestoreSuccess?.();
-          onClose();
-        }}
-        onRestoreError={({ error }) => {
-          if (__DEV__)
-            console.error('[RevenueCatPaywall] Restore error:', error);
-          Alert.alert('Restore Failed', 'We couldn\u2019t find your previous purchases. Please try again or contact support.');
-        }}
-      />
+      <View style={{ backgroundColor: colors.background, flex: 1 }}>
+        <PaywallHeader disabled={paywall.isProcessing} onClose={paywall.handleClose} />
+        <ScrollView
+          contentContainerStyle={{ paddingBottom: spacing['2xl'] }}
+          showsVerticalScrollIndicator={false}
+        >
+          <PaywallHero />
+          <PaywallFeatureList />
+          <PaywallPlanSelector
+            annualPackage={paywall.annualPackage}
+            monthlyPackage={paywall.monthlyPackage}
+            savingsPercent={paywall.savingsPercent}
+            selectedPlan={paywall.selectedPlan}
+            onSelectPlan={paywall.handleSelectPlan}
+          />
+          <PaywallCTA
+            buttonAnimatedStyle={paywall.buttonAnimatedStyle}
+            isDisabled={!paywall.selectedPackage}
+            isProcessing={paywall.isProcessing}
+            label={ctaLabel}
+            onPress={() => { void paywall.handlePurchase(); }}
+            onPressIn={paywall.handlePressIn}
+            onPressOut={paywall.handlePressOut}
+          />
+          <PaywallRestoreLink
+            disabled={paywall.isProcessing}
+            onRestore={() => { void paywall.handleRestore(); }}
+          />
+        </ScrollView>
+      </View>
     </Modal>
   );
 }

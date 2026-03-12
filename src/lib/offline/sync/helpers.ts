@@ -5,7 +5,7 @@
  * and managing sync state transitions.
  */
 
-import type { OfflineOperation, ToggleCompletionPayload } from '../queue';
+import type { OfflineOperation } from '../queue';
 import type { RetryContext } from '../types';
 import type { SyncItem } from '../syncManager';
 
@@ -30,10 +30,10 @@ function createRetryContextWithCount(attemptCount: number): RetryContext {
  */
 export function operationToSyncItem(
   operation: OfflineOperation
-): SyncItem<ToggleCompletionPayload> {
+): SyncItem<OfflineOperation> {
   return {
     id: operation.id,
-    payload: operation.payload,
+    payload: operation,
     retryContext: createRetryContextWithCount(operation.retryCount),
     type: operation.type,
   };
@@ -47,7 +47,7 @@ export function operationToSyncItem(
  */
 export function operationsToSyncItems(
   operations: OfflineOperation[]
-): SyncItem<ToggleCompletionPayload>[] {
+): SyncItem<OfflineOperation>[] {
   return operations.map((op) => operationToSyncItem(op));
 }
 

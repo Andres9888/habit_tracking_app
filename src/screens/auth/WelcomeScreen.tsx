@@ -2,7 +2,7 @@
  * WelcomeScreen - OAuth-only auth landing page
  */
 
-import React from 'react';
+import React, { useCallback } from 'react';
 import { View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated from 'react-native-reanimated';
@@ -24,6 +24,8 @@ function WelcomeScreenContent() {
   const styles = useWelcomeStyles();
   const { signInWithGoogle, signInWithApple, isLoading, error, clearError } =
     useOAuthSignIn();
+  const handleApplePress = useCallback(() => { void signInWithApple(); }, [signInWithApple]);
+  const handleGooglePress = useCallback(() => { void signInWithGoogle(); }, [signInWithGoogle]);
   const {
     iconStyle,
     titleStyle,
@@ -56,18 +58,18 @@ function WelcomeScreenContent() {
           </View>
 
           <Animated.View style={[styles.actionSection, buttonsStyle]}>
-            {error && <AuthError message={error} onDismiss={clearError} />}
+            {error ? <AuthError message={error} onDismiss={clearError} /> : null}
             <SocialSignInButton
               disabled={!!isLoading}
               isLoading={isLoading === 'oauth_apple'}
               provider='apple'
-              onPress={signInWithApple}
+              onPress={handleApplePress}
             />
             <SocialSignInButton
               disabled={!!isLoading}
               isLoading={isLoading === 'oauth_google'}
               provider='google'
-              onPress={signInWithGoogle}
+              onPress={handleGooglePress}
             />
           </Animated.View>
 

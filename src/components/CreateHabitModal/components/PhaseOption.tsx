@@ -46,14 +46,12 @@ export const PhaseOption = ({
           {phase.description}
         </Text>
       </View>
-      {isSelected && (
-        <View
+      {isSelected ? <View
           className='h-5 w-5 items-center justify-center rounded-full'
           style={{ backgroundColor: colors.secondary[500] }}
         >
           <Text className='text-xs text-white'>✓</Text>
-        </View>
-      )}
+        </View> : null}
     </AnimatedPressable>
   );
 };

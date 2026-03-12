@@ -60,15 +60,13 @@ export const ActionsList = ({
           onPress={onViewCalendar}
         />
 
-        {onViewDetails && (
-          <ActionItem
+        {onViewDetails ? <ActionItem
             showChevron
             icon={<FileText color={iconColor} size={20} strokeWidth={2} />}
             label='View Details'
             subtitle='Stats, why, vision board'
             onPress={onViewDetails}
-          />
-        )}
+          /> : null}
         <View
           className='my-2 h-px'
           style={{ backgroundColor: colors.border }}

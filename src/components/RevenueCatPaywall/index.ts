@@ -1,8 +1,8 @@
 /**
  * RevenueCatPaywall Component
  *
- * Premium subscription paywall powered by RevenueCat.
- * Displays pricing, features, and handles purchase flow.
+ * Custom premium subscription paywall matching app design system.
+ * Handles pricing, features, and purchase flow via RevenueCat SDK.
  */
 
 export { RevenueCatPaywall } from './RevenueCatPaywall';

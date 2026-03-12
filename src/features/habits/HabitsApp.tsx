@@ -76,6 +76,15 @@ function HabitsAppContent() {
   });
 
   const showSkeleton = list.isHabitsLoading && list.habits.length === 0;
+  const handleBatchArchivePress = () => {
+    void selectionActions.handleBatchArchive();
+  };
+  const handleBatchArchiveUndoPress = () => {
+    void selectionActions.handleBatchArchiveUndo();
+  };
+  const handleConfirmBatchDelete = () => {
+    void selectionActions.confirmBatchDelete();
+  };
 
   return (
     <GestureHandlerRootView style={styles.flex1}>
@@ -108,20 +117,18 @@ function HabitsAppContent() {
             />
           </Animated.View>
         )}
-        {list.habits.length > 0 &&
-          (selection.isSelectionMode ? (
+        {list.habits.length > 0 ? selection.isSelectionMode ? (
             <SelectionActionBar
               selectedCount={selection.selectedCount}
-              onArchive={selectionActions.handleBatchArchive}
+              onArchive={handleBatchArchivePress}
               onCancel={selection.exitSelectionMode}
               onDelete={selectionActions.showDeleteConfirmation}
             />
           ) : (
             <BottomActionBar {...bottomBar} />
-          ))}
+          ) : null}
 
-        {overlaysMounted && (
-          <HabitsAppOverlays
+        {overlaysMounted ? <HabitsAppOverlays
             batchArchiveUndoCount={selectionActions.batchArchiveUndoCount}
             batchArchiveUndoVisible={selectionActions.batchArchiveUndoVisible}
             confirmDeleteCount={selectionActions.deleteCount}
@@ -129,13 +136,12 @@ function HabitsAppContent() {
             modals={modals}
             paywallVisible={handlers.paywallVisible}
             onBatchArchiveDismiss={selectionActions.dismissBatchArchiveUndo}
-            onBatchArchiveUndo={selectionActions.handleBatchArchiveUndo}
+            onBatchArchiveUndo={handleBatchArchiveUndoPress}
             onConfirmDeleteCancel={selectionActions.hideDeleteConfirmation}
-            onConfirmDeleteConfirm={selectionActions.confirmBatchDelete}
+            onConfirmDeleteConfirm={handleConfirmBatchDelete}
             onPaywallClose={handlers.handlePaywallClose}
             onPaywallSuccess={handlers.handlePaywallSuccess}
-          />
-        )}
+          /> : null}
       </View>
     </GestureHandlerRootView>
   );

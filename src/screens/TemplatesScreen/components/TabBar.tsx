@@ -30,17 +30,8 @@ export function TabBar({
 }: TabBarProps) {
   const { colors, isDark } = useThemeColors();
 
-  const handleCategoriesPress = () => {
-    triggerHaptic('tap');
-    onTabPress('categories');
-  };
-
-  const handleAllPress = () => {
-    triggerHaptic('tap');
-    onTabPress('all');
-  };
-
-  // Theme-aware active colors
+  const handleCategoriesPress = () => { void triggerHaptic('tap'); onTabPress('categories'); };
+  const handleAllPress = () => { void triggerHaptic('tap'); onTabPress('all'); };
   const activeColor = colors.primary[400];
   const activeTextColor = colors.primary[700];
   const indicatorBgColor = isDark ? colors.gray[700] : colors.card;
@@ -51,15 +42,8 @@ export function TabBar({
       style={[styles.tabBar, { backgroundColor: colors.surface }, tabBarAnimatedStyle]}
       onLayout={onLayout}
     >
-      <Animated.View 
-        style={[
-          styles.tabIndicator, 
-          { 
-            backgroundColor: indicatorBgColor,
-            shadowColor: indicatorShadowColor,
-          }, 
-          tabIndicatorStyle
-        ]} 
+      <Animated.View
+        style={[styles.tabIndicator, { backgroundColor: indicatorBgColor, shadowColor: indicatorShadowColor }, tabIndicatorStyle]}
       />
       <Pressable
         accessible
@@ -73,7 +57,7 @@ export function TabBar({
           style={[
             styles.tabText,
             { color: colors.text.secondary },
-            activeTab === 'categories' && [styles.tabTextActive, { color: activeTextColor }],
+            activeTab === 'categories' && [styles.tabTextActive, { color: activeTextColor }]
           ]}
         >
           Categories
@@ -100,7 +84,7 @@ export function TabBar({
           style={[
             styles.tabText,
             { color: colors.text.secondary },
-            activeTab === 'all' && [styles.tabTextActive, { color: activeTextColor }],
+            activeTab === 'all' && [styles.tabTextActive, { color: activeTextColor }]
           ]}
         >
           View All

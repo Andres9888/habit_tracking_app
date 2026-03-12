@@ -19,7 +19,7 @@ export const SheetHeader = ({
   return (
     <View className='flex-row items-center justify-between border-b px-5 py-4' style={{ borderColor: colors.border }}>
       <View className='flex-row items-center gap-3'>
-        {habitIcon && <Text className='text-2xl'>{habitIcon}</Text>}
+        {habitIcon ? <Text className='text-2xl'>{habitIcon}</Text> : null}
         <View>
           <Text className='text-lg font-bold' style={{ color: colors.text.primary }}>
             Quick Actions

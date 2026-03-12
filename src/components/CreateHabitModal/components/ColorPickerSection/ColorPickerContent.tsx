@@ -42,22 +42,18 @@ export const ColorPickerContent = ({
 
   return (
     <View className='mb-6'>
-      {!hideLabel && (
-        <Text
+      {hideLabel ? null : <Text
           accessibilityRole='text'
           className='mb-3 text-[13px] font-semibold uppercase'
           style={{ letterSpacing: 0.5, color: themeColors.text.tertiary }}
         >
           {STRINGS.CREATE_HABIT.colorLabel}
-        </Text>
-      )}
+        </Text>}
       <View className='mb-2'>{renderRow(row1, 'color-picker-row-1')}</View>
       {renderRow(row2, 'color-picker-row-2')}
-      {onCustomPress && (
-        <View className='mt-3 items-center'>
+      {onCustomPress ? <View className='mt-3 items-center'>
           <CustomColorButton onPress={onCustomPress} />
-        </View>
-      )}
+        </View> : null}
     </View>
   );
 };

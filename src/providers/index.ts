@@ -3,7 +3,7 @@
  */
 
 export { SentryUserSync } from './SentryUserSync';
-export { ConvexClerkProvider, useConvexAuthReady } from './ConvexClerkProvider';
+export { ConvexClerkProvider, useConvexAuthReady } from './ConvexClerk.provider';
 export { LazyProviders } from './LazyProviders';
 export { OfflineProvider, OfflineContext } from './OfflineProvider';
 export { useOfflineContext } from './OfflineProvider';

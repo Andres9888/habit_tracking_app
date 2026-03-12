@@ -52,14 +52,13 @@ export function MedalCardsRow({
         );
       })}
 
-      {records.length < 3 &&
-        Array.from({ length: 3 - records.length }).map((_, i) => (
+      {records.length < 3 ? Array.from({ length: 3 - records.length }).map((_, i) => (
           <EmptyMedalSlot
             key={`${keyPrefix}-empty-${i}`}
             keyPrefix={`${keyPrefix}-empty`}
             medalIndex={records.length + i}
           />
-        ))}
+        )) : null}
     </View>
   );
 }

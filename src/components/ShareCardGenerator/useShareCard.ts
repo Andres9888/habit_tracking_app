@@ -9,7 +9,6 @@ import * as Sharing from 'expo-sharing';
 import type {
   SharePlatform,
   ShareCardData,
-  MilestoneLevel,
 } from './ShareCardGenerator.types';
 import {
   SHARE_FORMATS,

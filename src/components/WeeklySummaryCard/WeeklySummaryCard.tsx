@@ -79,13 +79,11 @@ export function WeeklySummaryCard({
             totalCompleted={stats.totalCompleted}
             totalPossible={stats.totalPossible}
           />
-          {bestDayLabel && stats.bestDayRate > 0 && (
-            <BestDayCard
+          {bestDayLabel && stats.bestDayRate > 0 ? <BestDayCard
               colors={colors}
               dayLabel={bestDayLabel}
               rate={stats.bestDayRate}
-            />
-          )}
+            /> : null}
           <StreakHighlight streak={currentStreak} />
         </View>
       </Pressable>

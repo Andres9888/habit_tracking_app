@@ -83,9 +83,7 @@ export const MiniCalendarGrid: React.FC<MiniCalendarGridProps> = ({
                 >
                   {format(date, 'd')}
                 </Text>
-                {dot && (
-                  <View style={{ width: 4, height: 4, borderRadius: 2, backgroundColor: dot, marginTop: 1 }} />
-                )}
+                {dot ? <View style={{ width: 4, height: 4, borderRadius: 2, backgroundColor: dot, marginTop: 1 }} /> : null}
               </Pressable>
             );
           })}

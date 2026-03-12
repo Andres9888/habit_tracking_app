@@ -64,14 +64,12 @@ export function ButtonContent({
   }
 
   if (variant === 'icon') {
-    return <>{icon || children}</>;
+    return icon || children;
   }
 
   return (
     <View style={styles.content}>
-      {icon && iconPosition === 'left' && (
-        <View style={{ marginRight: mergedSpacing.sm ?? 8 }}>{icon}</View>
-      )}
+      {icon && iconPosition === 'left' ? <View style={{ marginRight: mergedSpacing.sm ?? 8 }}>{icon}</View> : null}
 
       {typeof children === 'string' ? (
         <Text
@@ -88,9 +86,7 @@ export function ButtonContent({
         children
       )}
 
-      {icon && iconPosition === 'right' && (
-        <View style={{ marginLeft: mergedSpacing.sm ?? 8 }}>{icon}</View>
-      )}
+      {icon && iconPosition === 'right' ? <View style={{ marginLeft: mergedSpacing.sm ?? 8 }}>{icon}</View> : null}
     </View>
   );
 }

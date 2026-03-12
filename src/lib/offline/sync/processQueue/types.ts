@@ -8,7 +8,7 @@
 import type { OfflineOperation } from '../../queue';
 import type { OfflineQueueManagerAPI } from '../../queueManager';
 import type { OfflineSyncManager } from '../../syncManager';
-import type { ToggleSyncExecutor } from '../types';
+import type { SyncExecutor } from '../types';
 import type {
   CompletionStateChecker,
   ConflictEventListener,
@@ -101,8 +101,8 @@ export interface QueueProcessorDeps {
   queueManager: OfflineQueueManagerAPI;
   /** Sync manager for executing sync with circuit breaker */
   syncManager: OfflineSyncManager;
-  /** Executor function for syncing toggle operations */
-  executor: ToggleSyncExecutor;
+  /** Executor function for syncing offline operations */
+  executor: SyncExecutor;
   /** Optional server state checker for conflict detection (US4) */
   serverStateChecker?: CompletionStateChecker;
 }

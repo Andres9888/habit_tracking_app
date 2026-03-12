@@ -99,8 +99,8 @@ export function validateHabitFields(args: HabitArgs): ValidatedHabitFields {
   const iconColorResult = validateColor(args.iconColor, 'Icon color');
   const iconColor = requireValid(iconColorResult, args.iconColor);
 
-  // Optional: time fields
-  const preferredTimeResult = validateTimeFormat(args.preferredTime, 'Preferred time');
+  // Optional: preferredTime is a phase identifier (e.g. "phase1_push", "morning"), not a time string
+  const preferredTimeResult = validateShortText(args.preferredTime, MAX_SHORT_TEXT_LENGTH, 'Preferred time');
   const preferredTime = requireValid(preferredTimeResult, args.preferredTime);
 
   const reminderTimeResult = validateTimeFormat(args.reminderTime, 'Reminder time');
@@ -202,7 +202,7 @@ export function validateHabitUpdateFields(
   }
 
   if (args.preferredTime !== undefined) {
-    const preferredTimeResult = validateTimeFormat(args.preferredTime, 'Preferred time');
+    const preferredTimeResult = validateShortText(args.preferredTime, MAX_SHORT_TEXT_LENGTH, 'Preferred time');
     result.preferredTime = requireValid(preferredTimeResult, args.preferredTime);
   }
 

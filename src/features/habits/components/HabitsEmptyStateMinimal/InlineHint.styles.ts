@@ -18,30 +18,11 @@ export const containerStyle = {
   marginTop: spacing.base,
   width: '100%',
 } as const;
-export const dividerStyle = {
-  alignItems: 'center',
-  flexDirection: 'row',
-  gap: 10,
-  marginBottom: 12,
-  width: '100%',
-} as const;
+export const dividerStyle = { alignItems: 'center', flexDirection: 'row', gap: 10, marginBottom: 12, width: '100%' } as const;
 export const dividerLineStyle = { flex: 1, height: 0.5 } as const;
-export const dividerTextBaseStyle = {
-  fontFamily: fontFamilies.primary.text,
-  fontSize: 13,
-  lineHeight: 18,
-  textAlign: 'center',
-} as const;
+export const dividerTextBaseStyle = { fontFamily: fontFamilies.primary.text, fontSize: 13, lineHeight: 18, textAlign: 'center' } as const;
 export const actionsColumnStyle = { gap: spacing.sm, width: '100%' } as const;
-
-export const buildMyOwnLabelStyle = {
-  flex: 1,
-  fontFamily: fontFamilies.primary.text,
-  fontSize: 13,
-  fontWeight: '600',
-  letterSpacing: -0.1,
-} as const;
-
+export const buildMyOwnLabelStyle = { flex: 1, fontFamily: fontFamilies.primary.text, fontSize: 13, fontWeight: '600', letterSpacing: -0.1 } as const;
 export const templatesGradientStyle = {
   alignItems: 'center',
   borderRadius: borderRadius.medium,
@@ -52,28 +33,15 @@ export const templatesGradientStyle = {
   paddingHorizontal: 18,
   width: '100%',
 } as const;
-
-export const templatesLabelStyle = {
-  flex: 1,
-  fontFamily: fontFamilies.primary.text,
-  fontSize: 14,
-  fontWeight: '700',
-  letterSpacing: -0.2,
-} as const;
+export const templatesLabelStyle = { flex: 1, fontFamily: fontFamilies.primary.text, fontSize: 14, fontWeight: '700', letterSpacing: -0.2 } as const;
 
 export const badgeContainerStyle = (backgroundColor: string) => ({
   borderRadius: borderRadius.small,
+  backgroundColor,
   paddingHorizontal: 9,
   paddingVertical: 3,
-  backgroundColor,
 } as const);
-
-export const badgeTextStyle = {
-  fontFamily: fontFamilies.primary.text,
-  fontSize: 11,
-  fontWeight: '800',
-} as const;
-
+export const badgeTextStyle = { fontFamily: fontFamilies.primary.text, fontSize: 11, fontWeight: '800' } as const;
 export const accentStripeStyle = {
   backgroundColor: colors.primary[300],
   borderRadius: borderRadius.xs,
@@ -83,8 +51,6 @@ export const accentStripeStyle = {
   top: 0,
   width: 3.5,
 } as const;
-
-/** Card shell — container styles only (no layout) */
 const buildMyOwnShellBase = {
   borderRadius: borderRadius.medium,
   borderWidth: 1,
@@ -97,16 +63,7 @@ const buildMyOwnShellBase = {
   shadowRadius: 3,
   width: '100%',
 } as const;
-
-/** Inner row — handles flexDirection: 'row' layout */
-export const buildMyOwnRowStyle = {
-  alignItems: 'center',
-  flex: 1,
-  flexDirection: 'row',
-  gap: 10,
-  paddingLeft: spacing.base,
-  paddingRight: 14,
-} as const;
+export const buildMyOwnRowStyle = { alignItems: 'center', flex: 1, flexDirection: 'row', gap: 10, paddingLeft: spacing.base, paddingRight: 14 } as const;
 
 export function getBuildMyOwnCardStyle(
   pressed: boolean,
@@ -120,9 +77,5 @@ export function getBuildMyOwnCardStyle(
 }
 
 export function getTemplatesButtonStyle(pressed: boolean) {
-  return {
-    ...templatesButtonBaseStyle,
-    opacity: pressed ? 0.85 : 1,
-    shadowOpacity: pressed ? 0.15 : 0.3,
-  };
+  return { ...templatesButtonBaseStyle, opacity: pressed ? 0.85 : 1, shadowOpacity: pressed ? 0.15 : 0.3 };
 }

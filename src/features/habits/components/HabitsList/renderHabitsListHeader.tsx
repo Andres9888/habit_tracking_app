@@ -60,14 +60,12 @@ export function renderHabitsListHeader({
         onPreviousWeek={onPreviousWeek}
         onUpgradePress={onUpgradeIntent}
       />
-      {props.isSelectionMode && (
-        <SelectAllRow
+      {props.isSelectionMode ? <SelectAllRow
           isAllSelected={props.isAllSelected ?? false}
           selectedCount={props.selectedCount ?? 0}
           totalCount={list.habits.length}
           onToggleSelectAll={handleToggleSelectAll}
-        />
-      )}
+        /> : null}
     </View>
   );
 }

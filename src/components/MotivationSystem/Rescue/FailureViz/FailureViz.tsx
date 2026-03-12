@@ -52,12 +52,10 @@ export function FailureViz({
         reduceMotion={reduceMotion}
       />
 
-      {streakCount !== undefined && streakCount > 0 && (
-        <StreakLossPreview
+      {streakCount !== undefined && streakCount > 0 ? <StreakLossPreview
           reduceMotion={reduceMotion}
           streakCount={streakCount}
-        />
-      )}
+        /> : null}
 
       <View className='mt-3 rounded-lg bg-rose-100/50 px-3 py-2'>
         <Text className='text-center text-xs text-rose-600'>

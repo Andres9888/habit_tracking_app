@@ -62,7 +62,7 @@ export function StatCard({
       </View>
       <Text className={`text-3xl font-bold ${valueColor}`}>
         {value}
-        {suffix && <Text className='text-xl'>{suffix}</Text>}
+        {suffix ? <Text className='text-xl'>{suffix}</Text> : null}
       </Text>
       <Text className='mt-1 text-xs font-medium text-stone-500'>{label}</Text>
     </Animated.View>

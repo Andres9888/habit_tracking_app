@@ -72,16 +72,14 @@ export function BlurOverlayVariant({
             ) : (
               <MotivationFeatureList triggeredByFeature={triggeredByFeature} />
             )}
-            {config.showSocialProof && <SocialProofSection dark />}
-            {config.showPricingToggle && (
-              <View className='mb-4'>
+            {config.showSocialProof ? <SocialProofSection dark /> : null}
+            {config.showPricingToggle ? <View className='mb-4'>
                 <PricingToggle
                   annualPackage={handlers.annualPackage}
                   monthlyPackage={handlers.monthlyPackage}
                   onPackageChange={handlers.setSelectedPackage}
                 />
-              </View>
-            )}
+              </View> : null}
             <BlurOverlayActions
               config={config}
               handlers={handlers}

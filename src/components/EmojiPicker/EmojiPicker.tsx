@@ -54,29 +54,23 @@ export const EmojiPicker = memo(
 
             {!state.isSearching &&
               state.suggestedEmojis.length > 0 &&
-              habitName && (
-                <SuggestedEmojis
+              habitName ? <SuggestedEmojis
                   habitName={habitName}
                   selectedEmoji={selectedEmoji}
                   suggestedEmojis={state.suggestedEmojis}
                   onEmojiSelect={handlers.handleEmojiSelect}
-                />
-              )}
+                /> : null}
 
-            {!state.isSearching && state.recentEmojis.length > 0 && (
-              <RecentEmojis
+            {!state.isSearching && state.recentEmojis.length > 0 ? <RecentEmojis
                 recentEmojis={state.recentEmojis}
                 selectedEmoji={selectedEmoji}
                 onEmojiSelect={handlers.handleEmojiSelect}
-              />
-            )}
+              /> : null}
 
-            {!state.isSearching && (
-              <CategoryChips
+            {state.isSearching ? null : <CategoryChips
                 selectedCategory={state.selectedCategory}
                 onCategorySelect={handlers.handleCategorySelect}
-              />
-            )}
+              />}
 
             <EmojiGrid
               categoryName={state.currentCategoryName}

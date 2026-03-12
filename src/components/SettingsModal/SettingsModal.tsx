@@ -26,10 +26,12 @@ function SettingsModalContent({
   onChangeCompletionSoundEnabled = () => {},
   onChangeDayShape = () => {},
   onChangeHabitCompletionIcon = () => {},
+  onChangeStickyCalendarHeader = () => {},
   onClose,
   visible,
   streakRemindersEnabled = false,
   streakReminderTime = '20:00',
+  stickyCalendarHeader = false,
   isPremium = false,
   isLoading = false,
   onToggleStreakReminders = () => {},
@@ -71,13 +73,21 @@ function SettingsModalContent({
       <Modal
         accessibilityViewIsModal
         animationType='slide'
+        presentationStyle='overFullScreen'
+        statusBarTranslucent
+        transparent
         visible={visible}
         onRequestClose={handleClose}
       >
-        <ArchivedHabitsModal
-          onBack={() => setView('settings')}
-          onClose={handleClose}
-        />
+        <View
+          className='flex-1'
+          style={{ backgroundColor: colors.background }}
+        >
+          <ArchivedHabitsModal
+            onBack={() => setView('settings')}
+            onClose={handleClose}
+          />
+        </View>
       </Modal>
     );
   }
@@ -87,6 +97,9 @@ function SettingsModalContent({
       <Modal
         accessibilityViewIsModal
         animationType='slide'
+        presentationStyle='overFullScreen'
+        statusBarTranslucent
+        transparent
         visible={visible}
         onRequestClose={() => setView('settings')}
       >
@@ -103,6 +116,9 @@ function SettingsModalContent({
     <Modal
       accessibilityViewIsModal
       animationType='slide'
+      presentationStyle='overFullScreen'
+      statusBarTranslucent
+      transparent
       visible={visible}
       onRequestClose={handleClose}
     >
@@ -130,12 +146,14 @@ function SettingsModalContent({
               isHighContrastActive={isHighContrastActive}
               isPremium={isPremium}
               showGradientFill={showGradientFill}
+              stickyCalendarHeader={stickyCalendarHeader}
               streakRemindersEnabled={streakRemindersEnabled}
               streakReminderTime={streakReminderTime}
               onChangeCompletionSoundEnabled={onChangeCompletionSoundEnabled}
               onChangeDayShape={onChangeDayShape}
               onChangeHabitCompletionIcon={onChangeHabitCompletionIcon}
               onChangeShowGradientFill={setShowGradientFill}
+              onChangeStickyCalendarHeader={onChangeStickyCalendarHeader}
               onChangeStreakReminderTime={onChangeStreakReminderTime}
               onOpenArchivedHabits={() => setView('archived')}
               onExportHabitsData={onExportHabitsData}
@@ -157,6 +175,9 @@ export default function SettingsModal(props: SettingsModalProps) {
         <Modal
           accessibilityViewIsModal
           animationType='slide'
+          presentationStyle='overFullScreen'
+          statusBarTranslucent
+          transparent
           visible={props.visible}
           onRequestClose={props.onClose}
         >

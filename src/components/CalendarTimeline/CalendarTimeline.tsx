@@ -60,14 +60,12 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
   return (
     <View style={getShelfStyle(tl.isDark)} className='pb-4 pt-2'>
       <View>
-        {trialDaysRemaining != null && trialDaysRemaining > 0 && onUpgrade && (
-          <View className='px-6'>
+        {trialDaysRemaining != null && trialDaysRemaining > 0 && onUpgrade ? <View className='px-6'>
             <InlineTrialBar
               daysRemaining={trialDaysRemaining}
               onUpgrade={onUpgrade}
             />
-          </View>
-        )}
+          </View> : null}
         <GestureDetector gesture={tl.headerPanGesture}>
           <View
             className='mb-3'

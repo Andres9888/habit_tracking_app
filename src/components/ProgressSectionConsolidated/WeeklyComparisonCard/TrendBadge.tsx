@@ -9,7 +9,6 @@ import { View, Text } from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
-  withSpring,
 } from 'react-native-reanimated';
 
 import type { TrendStyle } from './types';

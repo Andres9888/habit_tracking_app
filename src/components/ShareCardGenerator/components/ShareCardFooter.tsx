@@ -26,9 +26,7 @@ export function ShareCardFooter({
 
       <View style={styles.appInfo}>
         <Text style={styles.appName}>Chain Day</Text>
-        {showUserName && userName && (
-          <Text style={styles.userName}>by {userName}</Text>
-        )}
+        {showUserName && userName ? <Text style={styles.userName}>by {userName}</Text> : null}
       </View>
     </View>
   );

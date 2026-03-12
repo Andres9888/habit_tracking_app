@@ -45,11 +45,9 @@ export const CelebrationState = React.memo(function CelebrationState({
         <Text style={styles.celebrationSubtext}>
           {hitMilestone?.name ?? 'Milestone achieved'}
         </Text>
-        {nextMilestone && (
-          <Text style={styles.nextMilestoneText}>
+        {nextMilestone ? <Text style={styles.nextMilestoneText}>
             Next: {nextMilestone.days} days {nextMilestone.badge}
-          </Text>
-        )}
+          </Text> : null}
       </Animated.View>
     </Animated.View>
   );

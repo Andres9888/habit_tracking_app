@@ -47,7 +47,7 @@ export const SuggestionChip = ({
           }).start();
         }}
       >
-        {emoji && <Text className='mr-2 text-base'>{emoji}</Text>}
+        {emoji ? <Text className='mr-2 text-base'>{emoji}</Text> : null}
         <Text className='text-sm font-medium text-[#1c1917]'>{name}</Text>
         <Text className='ml-1 text-xs'>✨</Text>
       </Pressable>

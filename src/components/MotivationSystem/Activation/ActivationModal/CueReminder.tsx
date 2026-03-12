@@ -28,24 +28,18 @@ export function CueReminder({
         <Text className='font-semibold text-sky-800'>Your Cue</Text>
       </View>
       <View className='gap-1'>
-        {time && (
-          <Text className='text-sm text-sky-700'>
+        {time ? <Text className='text-sm text-sky-700'>
             <Text className='font-medium'>When: </Text>
             {time}
-          </Text>
-        )}
-        {location && (
-          <Text className='text-sm text-sky-700'>
+          </Text> : null}
+        {location ? <Text className='text-sm text-sky-700'>
             <Text className='font-medium'>Where: </Text>
             {location}
-          </Text>
-        )}
-        {afterBehavior && (
-          <Text className='text-sm text-sky-700'>
+          </Text> : null}
+        {afterBehavior ? <Text className='text-sm text-sky-700'>
             <Text className='font-medium'>After: </Text>
             {afterBehavior}
-          </Text>
-        )}
+          </Text> : null}
       </View>
     </View>
   );

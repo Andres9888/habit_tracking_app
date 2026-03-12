@@ -33,9 +33,7 @@ export function DayCell({ date, isToday, hasCompletion, onToggle }: DayCellProps
           </View>
         )}
 
-        {hasCompletion && (
-          <View className='absolute -bottom-1 h-1 w-1 rounded-full bg-blue-500' />
-        )}
+        {hasCompletion ? <View className='absolute -bottom-1 h-1 w-1 rounded-full bg-blue-500' /> : null}
       </View>
     </Pressable>
   );

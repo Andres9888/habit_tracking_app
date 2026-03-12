@@ -13,7 +13,6 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import type {
-  TabType,
   TabContentProps,
   TabSectionProps,
   TabPaneProps,

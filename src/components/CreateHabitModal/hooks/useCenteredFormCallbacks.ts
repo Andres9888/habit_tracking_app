@@ -5,7 +5,6 @@
  */
 
 import { useCallback, type RefObject } from 'react';
-import { Platform } from 'react-native';
 import type { ScrollView as ScrollViewType } from 'react-native';
 import { triggerHaptic } from '@/utils/haptics';
 
@@ -60,11 +59,12 @@ export function useCenteredFormCallbacks({
 
   const handleValidationError = useCallback(() => {
     setShowNameError(true);
-    triggerHaptic('warning');
+    void triggerHaptic('warning');
   }, [setShowNameError]);
 
   const handleReminderToggle = useCallback(
     (enabled: boolean) => {
+      void triggerHaptic('toggle');
       form.setRemindersEnabled(enabled);
       // Auto-scroll to show reminder options when enabled
       if (enabled) {

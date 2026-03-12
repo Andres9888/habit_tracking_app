@@ -54,8 +54,8 @@ export function StrengthCard({
         {labelText}
       </Text>
 
-      {delta !== undefined && <DeltaBadge delta={delta} />}
-      {showPerfectBadge && <PerfectBadge />}
+      {delta === undefined ? null : <DeltaBadge delta={delta} />}
+      {showPerfectBadge ? <PerfectBadge /> : null}
     </Animated.View>
   );
 }

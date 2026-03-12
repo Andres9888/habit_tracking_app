@@ -80,8 +80,7 @@ export function EmptyState({
       </Animated.Text>
 
       {/* Quick Start Templates (noHabits variant only) */}
-      {variant === 'noHabits' && onQuickStart && (
-        <Animated.View style={[styles.quickStartSection, descriptionStyle]}>
+      {variant === 'noHabits' && onQuickStart ? <Animated.View style={[styles.quickStartSection, descriptionStyle]}>
           <View style={styles.templateRow}>
             {QUICK_START_TEMPLATES.map((template) => (
               <TemplateChip
@@ -91,12 +90,10 @@ export function EmptyState({
               />
             ))}
           </View>
-        </Animated.View>
-      )}
+        </Animated.View> : null}
 
       {/* CTA Button */}
-      {!hideCTA && onCTA && (
-        <Animated.View style={ctaStyle}>
+      {!hideCTA && onCTA ? <Animated.View style={ctaStyle}>
           <Button
             accessibilityHint={`Tap to ${displayCTALabel.toLowerCase()}`}
             accessibilityLabel={displayCTALabel}
@@ -106,8 +103,7 @@ export function EmptyState({
           >
             {displayCTALabel}
           </Button>
-        </Animated.View>
-      )}
+        </Animated.View> : null}
     </View>
   );
 }

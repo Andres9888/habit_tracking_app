@@ -65,9 +65,7 @@ export const StyleSection = ({
                 }}
                 onPress={() => handleColorSelect(color)}
               >
-                {selectedColor === color && (
-                  <Text className='text-xs font-bold text-white'>✓</Text>
-                )}
+                {selectedColor === color ? <Text className='text-xs font-bold text-white'>✓</Text> : null}
               </AnimatedColorButton>
             ))}
           </View>

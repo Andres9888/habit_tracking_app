@@ -14,12 +14,7 @@ import ComplianceHeatmap from '../../../components/ComplianceHeatmap';
 import type { HeatmapData } from '../../../components/ComplianceHeatmap/ComplianceHeatmap.types';
 import { ChartLoadingSkeleton } from './ChartLoadingSkeleton';
 
-interface ChartSectionsProps {
-  strengthDistribution: StrengthDistributionData | undefined;
-  trendData: TrendData[] | undefined;
-  complianceData: HeatmapData[] | undefined;
-  isLoading?: boolean;
-}
+interface ChartSectionsProps { strengthDistribution: StrengthDistributionData | undefined; trendData: TrendData[] | undefined; complianceData: HeatmapData[] | undefined; isLoading?: boolean; }
 
 export const ChartSections = memo(function ChartSections({
   strengthDistribution,
@@ -31,15 +26,7 @@ export const ChartSections = memo(function ChartSections({
     ? `Habit strength distribution: ${strengthDistribution.automatic.count} automatic, ${strengthDistribution.strong.count} strong, ${strengthDistribution.developing.count} developing, ${strengthDistribution.building.count} building, ${strengthDistribution.starting.count} starting habits`
     : 'Loading chart';
 
-  if (isLoading) {
-    return (
-      <>
-        <ChartLoadingSkeleton />
-        <ChartLoadingSkeleton />
-        <ChartLoadingSkeleton />
-      </>
-    );
-  }
+  if (isLoading) return <><ChartLoadingSkeleton /><ChartLoadingSkeleton /><ChartLoadingSkeleton /></>;
 
   return (
     <>
@@ -106,13 +93,6 @@ export const ChartSections = memo(function ChartSections({
 });
 
 const styles = StyleSheet.create({
-  section: {
-    marginBottom: spacing.xl,
-    paddingHorizontal: spacing.lg,
-  },
-  sectionTitle: {
-    ...typography.heading3,
-    color: colors.text.primary,
-    marginBottom: spacing.md,
-  },
+  section: { marginBottom: spacing.xl, paddingHorizontal: spacing.lg },
+  sectionTitle: { ...typography.heading3, color: colors.text.primary, marginBottom: spacing.md },
 });

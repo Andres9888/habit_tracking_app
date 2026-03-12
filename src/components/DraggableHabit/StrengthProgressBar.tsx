@@ -5,9 +5,6 @@
  * - Column 1: Animated tier emoji (🌱→🌿→🌳→💪→⚡)
  * - Columns 2–4: Progress bar with dividers at 20/40/60/80%
  * - Column 5: Animated counting percentage text
- *
- * All animations are driven by Reanimated styles passed in from
- * {@link useStrengthAnimation} and {@link useCountingPercent}.
  */
 
 import React from 'react';
@@ -35,17 +32,19 @@ export function StrengthProgressBar({
 
   return (
     <View className='relative mb-3 flex-row items-center justify-between px-3'>
-      {/* Column 1: Animated plant emoji */}
+      {/* Column 1: Animated plant emoji — h-9 w-9 matches CardHeader icon */}
       <View className='flex-1 items-center justify-center'>
-        <ReAnimated.Text
-          style={[
-            { fontFamily: fontFamilies.primary.text },
-            { fontSize: typography.heading2.fontSize, textAlign: 'center' },
-            strengthEmojiAnimatedStyle,
-          ]}
-        >
-          {getStrengthEmoji(strengthPercent)}
-        </ReAnimated.Text>
+        <View className='h-9 w-9 items-center justify-center'>
+          <ReAnimated.Text
+            style={[
+              { fontFamily: fontFamilies.primary.text },
+              { fontSize: typography.heading2.fontSize, textAlign: 'center' },
+              strengthEmojiAnimatedStyle,
+            ]}
+          >
+            {getStrengthEmoji(strengthPercent)}
+          </ReAnimated.Text>
+        </View>
       </View>
       {/* Grid spacers */}
       <View className='flex-1' />

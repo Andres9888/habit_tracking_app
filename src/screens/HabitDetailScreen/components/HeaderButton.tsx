@@ -18,7 +18,6 @@ interface HeaderButtonProps {
   onPress: () => void;
   icon: React.ReactNode;
   label: string;
-  /** Optional visible text label next to the icon */
   text?: string;
 }
 
@@ -30,12 +29,10 @@ export function HeaderButton({
 }: HeaderButtonProps) {
   const scale = useSharedValue(1);
   const { colors, isDark } = useThemeColors();
-  const animStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: scale.value }],
-  }));
+  const animStyle = useAnimatedStyle(() => ({ transform: [{ scale: scale.value }] }));
 
   const handlePress = () => {
-    triggerHaptic('tap');
+    void triggerHaptic('tap');
     onPress();
   };
 
@@ -94,15 +91,7 @@ export function HeaderButton({
 }
 
 const s = StyleSheet.create({
-  textButton: {
-    alignItems: 'center',
-    borderRadius: 24,
-    borderWidth: 1,
-    flexDirection: 'row',
-    gap: 6,
-    height: 44,
-    paddingHorizontal: 14,
-  },
+  textButton: { alignItems: 'center', borderRadius: 24, borderWidth: 1, flexDirection: 'row', gap: 6, height: 44, paddingHorizontal: 14 },
   textLabel: {
     fontFamily: fontFamilies.primary.text,
     fontSize: 14,

@@ -6,7 +6,7 @@
 
 import type { OfflineQueueManagerAPI } from '../queueManager';
 import type { SyncItem } from '../syncManager';
-import type { ToggleCompletionPayload } from '../queue';
+import type { OfflineOperation } from '../queue';
 import type { SyncOrchestratorResult } from './types';
 
 /**
@@ -41,9 +41,9 @@ export function createErrorResult(error: Error): SyncOrchestratorResult {
  */
 export function processBatchResults(
   queueManager: OfflineQueueManagerAPI,
-  successful: SyncItem<ToggleCompletionPayload>[],
-  failed: SyncItem<ToggleCompletionPayload>[],
-  skipped: SyncItem<ToggleCompletionPayload>[]
+  successful: SyncItem<OfflineOperation>[],
+  failed: SyncItem<OfflineOperation>[],
+  skipped: SyncItem<OfflineOperation>[]
 ): void {
   for (const item of successful) {
     queueManager.markCompleted(item.id);
@@ -61,12 +61,12 @@ export function processBatchResults(
 }
 
 /**
- * Create an item executor from a toggle executor
+ * Create an item executor from an offline operation executor
  */
 export function createItemExecutor(
-  executor: (payload: ToggleCompletionPayload) => Promise<void>
+  executor: (operation: OfflineOperation) => Promise<void>
 ) {
-  return async (item: SyncItem<ToggleCompletionPayload>): Promise<void> => {
+  return async (item: SyncItem<OfflineOperation>): Promise<void> => {
     await executor(item.payload);
   };
 }

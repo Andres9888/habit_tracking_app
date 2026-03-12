@@ -57,11 +57,9 @@ export function ConflictNotification({
         <GitMerge color={ICON_COLOR} size={ICON_SIZE} strokeWidth={2.5} />
       </Animated.View>
       <Text style={styles.text}>Conflict resolved</Text>
-      {showCount && (
-        <Text style={styles.countText} testID={`${testID}-count`}>
+      {showCount ? <Text style={styles.countText} testID={`${testID}-count`}>
           ({conflictCount})
-        </Text>
-      )}
+        </Text> : null}
     </Animated.View>
   );
 }

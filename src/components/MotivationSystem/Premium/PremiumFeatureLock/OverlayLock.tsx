@@ -69,14 +69,12 @@ export function OverlayLock({
         {meta.description}
       </Text>
 
-      {showScience && (
-        <View className='mb-4 flex-row items-start gap-2 rounded-lg bg-white/10 px-3 py-2'>
+      {showScience ? <View className='mb-4 flex-row items-start gap-2 rounded-lg bg-white/10 px-3 py-2'>
           <Sparkles className='mt-0.5 text-amber-300' size={14} />
           <Text className='flex-1 text-xs italic text-stone-200'>
             {meta.scienceBasis}
           </Text>
-        </View>
-      )}
+        </View> : null}
 
       <Pressable
         accessibilityHint='Opens premium subscription options'
@@ -99,11 +97,9 @@ export function OverlayLock({
         </LinearGradient>
       </Pressable>
 
-      {meta.freeLimit && (
-        <Text className='mt-2 text-center text-xs text-stone-300'>
+      {meta.freeLimit ? <Text className='mt-2 text-center text-xs text-stone-300'>
           Free tier: {meta.freeLimit}
-        </Text>
-      )}
+        </Text> : null}
     </View>
   );
 }

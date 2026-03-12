@@ -30,33 +30,27 @@ export function VizFieldsList({
 
   return (
     <View className='gap-1'>
-      {failureBody && (
-        <VizField
+      {failureBody ? <VizField
           icon={<User className='text-rose-500' size={16} />}
           index={0}
           label='Body'
           reduceMotion={reduceMotion}
           value={failureBody}
-        />
-      )}
-      {failureMind && (
-        <VizField
+        /> : null}
+      {failureMind ? <VizField
           icon={<Brain className='text-rose-500' size={16} />}
           index={1}
           label='Mind'
           reduceMotion={reduceMotion}
           value={failureMind}
-        />
-      )}
-      {failureEmotion && (
-        <VizField
+        /> : null}
+      {failureEmotion ? <VizField
           icon={<Heart className='text-rose-500' size={16} />}
           index={2}
           label='Emotion'
           reduceMotion={reduceMotion}
           value={failureEmotion}
-        />
-      )}
+        /> : null}
     </View>
   );
 }

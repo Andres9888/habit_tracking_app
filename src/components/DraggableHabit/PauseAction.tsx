@@ -1,5 +1,5 @@
 import React from 'react';
-import { Animated, View, Text, Pressable } from 'react-native';
+import { Animated, Text, Pressable } from 'react-native';
 import { Pause, Play } from 'lucide-react-native';
 import { borderRadius } from '../../theme/spacing';
 import { typography, fontFamilies} from '@/theme/typography';

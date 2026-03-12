@@ -31,14 +31,12 @@ export function CardHeader({
         >
           <Text style={styles.icon}>{icon}</Text>
         </View>
-        {hasResearch && (
-          <Animated.View
+        {hasResearch ? <Animated.View
             accessibilityLabel='Science-backed habit'
             style={[styles.scienceBadge, scienceBadgeStyle]}
           >
             <FlaskConical color='#fff' size={10} strokeWidth={2.5} />
-          </Animated.View>
-        )}
+          </Animated.View> : null}
       </View>
       <Animated.View
         accessibilityLabel='View details'

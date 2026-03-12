@@ -60,8 +60,7 @@ const QuickPicksRowComponent = ({
         >
           Quick picks
         </Text>
-        {onBrowseAll && (
-          <Pressable
+        {onBrowseAll ? <Pressable
             accessibilityLabel='Browse all templates'
             accessibilityRole='button'
             onPress={handleBrowseAll}
@@ -69,8 +68,7 @@ const QuickPicksRowComponent = ({
             <Text className='text-sm font-medium text-[#22C55E]'>
               Browse all →
             </Text>
-          </Pressable>
-        )}
+          </Pressable> : null}
       </View>
 
       {/* Template cards */}

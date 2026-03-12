@@ -57,8 +57,7 @@ export function SuccessContent({
       </Text>
 
       {/* Tap to continue hint - only show if auto-transitioning */}
-      {autoTransition && (
-        <Animated.Text
+      {autoTransition ? <Animated.Text
           style={[
             tapHintStyle,
             {
@@ -70,12 +69,10 @@ export function SuccessContent({
           ]}
         >
           Tap anywhere to continue
-        </Animated.Text>
-      )}
+        </Animated.Text> : null}
 
       {/* Add another button - only show if not auto-transitioning */}
-      {!autoTransition && (
-        <Pressable
+      {autoTransition ? null : <Pressable
           accessibilityHint='Creates another habit'
           accessibilityLabel={COPY.addAnother}
           accessibilityRole='button'
@@ -101,8 +98,7 @@ export function SuccessContent({
           >
             {COPY.addAnother}
           </Text>
-        </Pressable>
-      )}
+        </Pressable>}
     </Animated.View>
   );
 }

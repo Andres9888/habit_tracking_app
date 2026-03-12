@@ -5,7 +5,7 @@ import {
 } from '../circuitBreaker';
 import type { RetryStrategy, SyncEventType } from '../types';
 import { DEFAULT_RETRY_STRATEGY } from '../retryStrategy';
-import type { OfflineSyncManagerConfig, SyncEventListener } from './types';
+import type { OfflineSyncManagerConfig } from './types';
 
 export function createSyncCircuit(
   config: OfflineSyncManagerConfig,

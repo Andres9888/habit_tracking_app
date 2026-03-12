@@ -38,8 +38,7 @@ export function ActivationModalContent({
       </AnimatedContent>
 
       {/* Your Why */}
-      {hasWhy && (
-        <AnimatedContent
+      {hasWhy ? <AnimatedContent
           index={1}
           reduceMotion={reduceMotion}
           visible={visible}
@@ -47,12 +46,10 @@ export function ActivationModalContent({
           <View className='mt-4'>
             <WhySection why={habit.why!} />
           </View>
-        </AnimatedContent>
-      )}
+        </AnimatedContent> : null}
 
       {/* WOOP IF-THEN Reminder */}
-      {hasWOOP && (
-        <AnimatedContent
+      {hasWOOP ? <AnimatedContent
           index={hasWhy ? 2 : 1}
           reduceMotion={reduceMotion}
           visible={visible}
@@ -63,12 +60,10 @@ export function ActivationModalContent({
               plan={habit.woopPlan!}
             />
           </View>
-        </AnimatedContent>
-      )}
+        </AnimatedContent> : null}
 
       {/* Cue Reminder */}
-      {hasCue && (
-        <AnimatedContent
+      {hasCue ? <AnimatedContent
           index={(hasWhy ? 1 : 0) + (hasWOOP ? 1 : 0) + 1}
           reduceMotion={reduceMotion}
           visible={visible}
@@ -80,8 +75,7 @@ export function ActivationModalContent({
               time={habit.cueTime}
             />
           </View>
-        </AnimatedContent>
-      )}
+        </AnimatedContent> : null}
     </ScrollView>
   );
 }

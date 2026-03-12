@@ -46,8 +46,7 @@ export function SpeedControl({
         </Text>
       </Pressable>
 
-      {isOpen && (
-        <View className='absolute bottom-full right-0 mb-1 rounded-lg bg-white p-1 shadow-lg'>
+      {isOpen ? <View className='absolute bottom-full right-0 mb-1 rounded-lg bg-white p-1 shadow-lg'>
           {PLAYBACK_SPEEDS.map((speed) => (
             <Pressable
               key={speed}
@@ -69,8 +68,7 @@ export function SpeedControl({
               </Text>
             </Pressable>
           ))}
-        </View>
-      )}
+        </View> : null}
     </View>
   );
 }

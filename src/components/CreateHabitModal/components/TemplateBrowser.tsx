@@ -59,8 +59,7 @@ export const TemplateBrowser = ({ isEditMode, template, onViewScience }: Templat
         isOpen={isTemplateBrowserOpen}
         onPress={handleHeroPress}
       />
-      {isTemplateBrowserVisible && (
-        <Animated.View
+      {isTemplateBrowserVisible ? <Animated.View
           className='mb-6 overflow-hidden rounded-3xl bg-white shadow-lg shadow-black/10'
           pointerEvents={isTemplateBrowserOpen ? 'auto' : 'none'}
           style={{ elevation: 2, opacity: templateBrowserAnim, transform: [{ translateY: templateBrowserTranslate }] }}
@@ -82,8 +81,7 @@ export const TemplateBrowser = ({ isEditMode, template, onViewScience }: Templat
             onSelectTemplate={handleTemplateSelect}
             onViewScience={onViewScience}
           />
-        </Animated.View>
-      )}
+        </Animated.View> : null}
     </View>
   );
 };

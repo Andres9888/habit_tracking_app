@@ -61,8 +61,7 @@ export function HabitStatsBadges({
       )}
 
       {/* Total Completions Badge */}
-      {(habit.totalCompletions ?? 0) > 0 && (
-        <View
+      {(habit.totalCompletions ?? 0) > 0 ? <View
           className='flex-row items-center gap-1.5 rounded-lg px-2.5 py-1'
           style={{
             backgroundColor: isDark ? '#1e3a8a' : '#dbeafe',
@@ -80,8 +79,7 @@ export function HabitStatsBadges({
           >
             {habit.totalCompletions} total
           </Text>
-        </View>
-      )}
+        </View> : null}
     </View>
   );
 }

@@ -58,13 +58,9 @@ export function CueTriggerSection({
         {/* Content */}
         {hasCue ? (
           <View className='gap-1.5'>
-            {cue?.time && <CueField emoji='⏰' label='When' value={cue.time} />}
-            {cue?.location && (
-              <CueField emoji='📍' label='Where' value={cue.location} />
-            )}
-            {cue?.afterBehavior && (
-              <CueField emoji='⚡' label='After' value={cue.afterBehavior} />
-            )}
+            {cue?.time ? <CueField emoji='⏰' label='When' value={cue.time} /> : null}
+            {cue?.location ? <CueField emoji='📍' label='Where' value={cue.location} /> : null}
+            {cue?.afterBehavior ? <CueField emoji='⚡' label='After' value={cue.afterBehavior} /> : null}
           </View>
         ) : (
           <Text className='text-sm text-stone-500'>

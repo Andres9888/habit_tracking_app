@@ -53,8 +53,7 @@ export function SummarySection({
         )}
       </View>
 
-      {isExpanded && (
-        <View style={styles.sectionContent}>
+      {isExpanded ? <View style={styles.sectionContent}>
           <View style={summaryStyles.summaryCard}>
             <View style={summaryStyles.summaryRow}>
               <Text style={summaryStyles.summaryLabel}>Overall Change</Text>
@@ -77,8 +76,7 @@ export function SummarySection({
               </Text>
             </View>
           </View>
-        </View>
-      )}
+        </View> : null}
     </AnimatedPressable>
   );
 }

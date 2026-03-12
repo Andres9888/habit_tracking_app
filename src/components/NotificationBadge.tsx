@@ -75,8 +75,7 @@ export function NotificationBadge({
         },
       ]}
     >
-      {count > 0 && (
-        <Text
+      {count > 0 ? <Text
           style={{
             color: colors.text.inverse,
             fontFamily: fontFamilies.primary.text,
@@ -86,8 +85,7 @@ export function NotificationBadge({
           }}
         >
           {count > 9 ? '9+' : count}
-        </Text>
-      )}
+        </Text> : null}
     </Animated.View>
   );
 }

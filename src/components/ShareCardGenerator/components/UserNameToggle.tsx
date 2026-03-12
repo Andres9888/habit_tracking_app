@@ -34,16 +34,14 @@ export function UserNameToggle({
           >
             Show User Name
           </Text>
-          {userName && (
-            <Text
+          {userName ? <Text
               style={[
                 styles.toggleSubtext,
                 { color: theme.custom.colors.gray[500] },
               ]}
             >
               {userName}
-            </Text>
-          )}
+            </Text> : null}
         </View>
         <Switch
           thumbColor={colors.text.inverse}

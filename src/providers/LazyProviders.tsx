@@ -5,11 +5,12 @@
  */
 
 import type { PropsWithChildren } from 'react';
+
+import { PurchasesProvider } from '../components/providers/Purchases.provider';
 import { NetworkStatusProvider } from '../contexts/NetworkStatusContext/NetworkStatusProvider';
-import { OfflineProvider } from './OfflineProvider/OfflineProvider';
 import { SyncStatusProvider } from '../contexts/SyncStatusContext/SyncStatusProvider';
-import { PurchasesProvider } from '../components/providers/PurchasesProvider';
 import { StreakMilestoneProvider } from '../components/StreakMilestoneCelebration';
+import { OfflineProvider } from './OfflineProvider/Offline.provider';
 
 export function LazyProviders({ children }: PropsWithChildren) {
   return (

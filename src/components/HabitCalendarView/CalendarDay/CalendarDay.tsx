@@ -28,61 +28,69 @@ function getStatusStyles(
   if (isDark) {
     // Dark mode color scheme
     switch (status) {
-      case 'done':
+      case 'done': {
         return {
           container: 'border-emerald-600 bg-emerald-900',
           indicator: 'bg-emerald-400',
           text: 'text-emerald-200',
         };
-      case 'missed':
+      }
+      case 'missed': {
         return {
           container: 'border-rose-600 bg-rose-900',
           indicator: 'bg-rose-400',
           text: 'text-rose-200',
         };
-      case 'planned':
+      }
+      case 'planned': {
         return {
           container: 'border-emerald-600 bg-emerald-900',
           indicator: 'bg-emerald-400',
           text: 'text-emerald-200',
         };
+      }
       case 'upcoming':
-      default:
+      default: {
         return {
           container: 'border-gray-600 bg-gray-800',
           indicator: 'bg-gray-600 opacity-40',
           text: 'text-gray-400',
         };
+      }
     }
   }
 
   // Light mode color scheme (original)
   switch (status) {
-    case 'done':
+    case 'done': {
       return {
         container: 'border-transparent bg-emerald-100',
         indicator: 'bg-emerald-500',
         text: 'text-emerald-700',
       };
-    case 'missed':
+    }
+    case 'missed': {
       return {
         container: 'border-transparent bg-rose-50',
         indicator: 'bg-rose-400',
         text: 'text-rose-500',
       };
-    case 'planned':
+    }
+    case 'planned': {
       return {
         container: 'border-emerald-200 bg-emerald-50',
         indicator: 'bg-emerald-500',
         text: 'text-emerald-600',
       };
+    }
     case 'upcoming':
-    default:
+    default: {
       return {
         container: 'border-stone-200 bg-white',
         indicator: 'bg-stone-300 opacity-60',
         text: 'text-stone-400',
       };
+    }
   }
 }
 

@@ -66,14 +66,12 @@ export function ScreenHeader({
       {hasNavigation ? (
         <View style={styles.row}>
           <View style={styles.left}>{renderLeftAction()}</View>
-          {title && (
-            <Animated.Text
+          {title ? <Animated.Text
               numberOfLines={1}
               style={[styles.titleCenter, { color: colors.text.primary }]}
             >
               {title}
-            </Animated.Text>
-          )}
+            </Animated.Text> : null}
           <View style={styles.right}>{rightAction}</View>
         </View>
       ) : (
@@ -86,14 +84,12 @@ export function ScreenHeader({
           </Animated.Text>
         )
       )}
-      {subtitle && (
-        <Animated.Text
+      {subtitle ? <Animated.Text
           entering={SUBTITLE_ENTERING}
           style={[styles.subtitle, { color: colors.text.secondary }]}
         >
           {subtitle}
-        </Animated.Text>
-      )}
+        </Animated.Text> : null}
     </Animated.View>
   );
 }

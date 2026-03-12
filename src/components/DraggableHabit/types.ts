@@ -69,11 +69,14 @@ export interface DraggableHabitProps {
   isConnectedToPreviousWeek?: boolean;
   /** True on the render immediately after the user creates this habit. */
   isJustCreated?: boolean;
+  isPaused?: boolean;
   onArchive?: (habitId: Id<'habits'>) => void;
   onDelete?: (habitId: Id<'habits'>) => void;
   onEntranceComplete?: () => void;
   onLongPress?: ((habit?: Habit) => void) | (() => void);
+  onPause?: (habitId: Id<'habits'>) => void;
   onPress?: (habit: Habit) => void;
+  onResume?: (habitId: Id<'habits'>) => void;
   onWeekComplete?: (args: { habit: Habit; completedDate: string }) => void;
   /** Previous streak value — used to detect new personal records. */
   previousStreak?: number;

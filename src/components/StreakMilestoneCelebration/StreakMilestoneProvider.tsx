@@ -57,8 +57,7 @@ export function StreakMilestoneProvider({
       {children}
 
       {/* Celebration Modal */}
-      {celebrationData && (
-        <StreakMilestoneCelebration
+      {celebrationData ? <StreakMilestoneCelebration
           habitEmoji={celebrationData.habitEmoji}
           habitName={celebrationData.habitName}
           milestone={celebrationData.milestone}
@@ -66,17 +65,14 @@ export function StreakMilestoneProvider({
           visible={!!celebrationData}
           onClose={handleClose}
           onShare={handleShare}
-        />
-      )}
+        /> : null}
 
       {/* Share Card Generator */}
-      {shareData && (
-        <ShareCardGenerator
+      {shareData ? <ShareCardGenerator
           data={shareData}
           visible={showShareCard}
           onClose={handleShareClose}
-        />
-      )}
+        /> : null}
     </StreakMilestoneContext.Provider>
   );
 }

@@ -8,6 +8,8 @@
 
 import Constants, { ExecutionEnvironment } from 'expo-constants';
 
+import { scheduleWhenIdle } from '../../lib/timing/scheduleWhenIdle';
+
 let preloadPromise: Promise<void> | null = null;
 
 function shouldSkipPreload(): boolean {
@@ -39,26 +41,24 @@ export function schedulePostLaunchAppPreload(): () => void {
     return () => {};
   }
 
-  let timer: ReturnType<typeof setTimeout> | null = null;
-  let idleHandle: number | null = null;
   let cancelled = false;
 
-  const runPreload = (): void => {
-    if (cancelled) return;
-    void preloadPostLaunchAppParts();
-  };
+  const cancelScheduledPreload = scheduleWhenIdle(
+    () => {
+      if (cancelled) {
+        return;
+      }
 
-  if (typeof requestIdleCallback === 'function') {
-    idleHandle = requestIdleCallback(runPreload, { timeout: 1500 });
-  } else {
-    timer = setTimeout(runPreload, 120);
-  }
+      void preloadPostLaunchAppParts();
+    },
+    {
+      fallbackDelayMs: 120,
+      timeoutMs: 1500,
+    }
+  );
 
   return () => {
     cancelled = true;
-    if (timer) clearTimeout(timer);
-    if (idleHandle !== null && typeof cancelIdleCallback === 'function') {
-      cancelIdleCallback(idleHandle);
-    }
+    cancelScheduledPreload();
   };
 }

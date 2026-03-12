@@ -34,11 +34,9 @@ export function TrendingCard({
 
       <View style={s.metaRow}>
         <Text style={s.frequency}>{frequency}</Text>
-        {hasResearch && (
-          <View style={s.scienceBadge}>
+        {hasResearch ? <View style={s.scienceBadge}>
             <Text style={s.scienceText}>🔬 Science</Text>
-          </View>
-        )}
+          </View> : null}
       </View>
 
       <View style={s.bottomRow}>

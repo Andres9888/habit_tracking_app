@@ -41,7 +41,7 @@ export function ReminderTimePicker({
   const { colors } = useThemeColors();
 
   const handlePress = () => {
-    triggerHaptic('tap');
+    void triggerHaptic('tap');
     onTogglePicker(true);
   };
 
@@ -104,15 +104,13 @@ export function ReminderTimePicker({
         </Text>
       </AnimatedPressable>
 
-      {showTimePicker && (
-        <DateTimePicker
+      {showTimePicker ? <DateTimePicker
           display='spinner'
           is24Hour={false}
           mode='time'
           value={reminderTime}
           onChange={handleChange}
-        />
-      )}
+        /> : null}
     </View>
   );
 }

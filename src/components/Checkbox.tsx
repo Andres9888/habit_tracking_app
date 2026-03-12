@@ -80,15 +80,13 @@ export const Checkbox = React.forwardRef<View, CheckboxProps>(function Checkbox(
           isActive && variantClasses[variant],
           disabled && 'opacity-50'
         )}
-        style={!isActive ? { backgroundColor: colors.card, borderColor: colors.border } : undefined}
+        style={isActive ? undefined : { backgroundColor: colors.card, borderColor: colors.border }}
       >
-        {isActive && (
-          <Text
+        {isActive ? <Text
             className={clsx('font-bold text-white', sizeClasses[size].text)}
           >
             {isIndeterminate ? '−' : '✓'}
-          </Text>
-        )}
+          </Text> : null}
       </View>
     </AnimatedPressable>
   );

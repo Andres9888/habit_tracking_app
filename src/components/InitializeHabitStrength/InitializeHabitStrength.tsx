@@ -71,22 +71,18 @@ export function InitializeHabitStrength() {
         Found {habits.length} habit{habits.length === 1 ? '' : 's'}.
       </Text>
 
-      {!result && !error && (
-        <InitializeButton
+      {!result && !error ? <InitializeButton
           habitCount={habits.length}
           isInitializing={isInitializing}
           onPress={handleInitialize}
-        />
-      )}
+        /> : null}
 
-      {result && <ResultDisplay result={result} />}
+      {result ? <ResultDisplay result={result} /> : null}
 
-      {error && (
-        <View className='mt-3 rounded-lg bg-red-100 p-3'>
+      {error ? <View className='mt-3 rounded-lg bg-red-100 p-3'>
           <Text className='font-semibold text-red-900'>❌ Error</Text>
           <Text className='mt-1 text-sm text-red-800'>{error}</Text>
-        </View>
-      )}
+        </View> : null}
 
       <Text className='mt-3 text-xs text-stone-600'>
         💡 Tip: After initialization, habit strength updates automatically.

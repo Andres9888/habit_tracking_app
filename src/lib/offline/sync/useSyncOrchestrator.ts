@@ -5,9 +5,12 @@
  */
 
 import { useEffect, useMemo, useRef, useState, useCallback } from 'react';
+import { useMutation } from 'convex/react';
+import { api } from '../../../../convex/_generated/api';
 import { useNetworkStatus } from '../../../contexts/NetworkStatusContext/hooks';
 import { useToggleHabitWithTimezone } from '../../../hooks/useToggleHabitWithTimezone';
 import { getOfflineQueueManager } from '../queueManager';
+import { createSyncExecutor } from './createSyncExecutor';
 import { getSyncOrchestrator } from './singleton';
 import type { SyncOrchestratorState, SyncProgressCallback } from './types';
 import type {
@@ -21,9 +24,33 @@ export function useSyncOrchestrator(
   const { config, autoStart = true, onSyncComplete, onSyncError } = options;
   const { isOnline, onOnline } = useNetworkStatus();
   const toggleMutation = useToggleHabitWithTimezone();
+  const createHabit = useMutation(api.habits.create);
+  const updateHabit = useMutation(api.habits.update);
+  const archiveHabit = useMutation(api.habits.archive);
+  const pauseHabit = useMutation(api.habits.pause);
+  const removeHabit = useMutation(api.habits.remove);
 
   const orchestratorRef = useRef(getSyncOrchestrator(config));
   const orchestrator = orchestratorRef.current;
+  const executor = useMemo(
+    () =>
+      createSyncExecutor({
+        archiveHabit,
+        createHabit,
+        pauseHabit,
+        removeHabit,
+        toggleHabit: toggleMutation,
+        updateHabit,
+      }),
+    [
+      archiveHabit,
+      createHabit,
+      pauseHabit,
+      removeHabit,
+      toggleMutation,
+      updateHabit,
+    ]
+  );
 
   const [state, setState] = useState<SyncOrchestratorState>(
     orchestrator.getState()
@@ -32,10 +59,8 @@ export function useSyncOrchestrator(
   const [pendingOperationCount, setPendingOperationCount] = useState(0);
 
   useEffect(() => {
-    orchestrator.setExecutor(async (payload) => {
-      await toggleMutation({ date: payload.date, habitId: payload.habitId });
-    });
-  }, [orchestrator, toggleMutation]);
+    orchestrator.setExecutor(executor);
+  }, [executor, orchestrator]);
 
   useEffect(() => {
     const unsubscribe = orchestrator.subscribe((event) => {

@@ -5,10 +5,10 @@
  */
 
 import React, { useRef, useState } from 'react';
-import { StyleSheet, Text, View, Pressable, Linking } from 'react-native';
+import { Linking, Pressable, Text, View } from 'react-native';
 
 import { useThemeColors } from '../../../theme/ThemeContext';
-import { fontFamilies } from '../../../theme/typography';
+import { createErrorFallbackStyles } from './ErrorFallback.styles';
 
 interface ErrorFallbackProps {
   error: Error | null;
@@ -22,6 +22,7 @@ export function ErrorFallback({ error, onRetry }: ErrorFallbackProps) {
   const { colors } = useThemeColors();
   const retryCountRef = useRef(0);
   const [showContactSupport, setShowContactSupport] = useState(false);
+  const styles = createErrorFallbackStyles(colors);
 
   const handleRetry = () => {
     retryCountRef.current += 1;
@@ -41,82 +42,6 @@ export function ErrorFallback({ error, onRetry }: ErrorFallbackProps) {
     );
   };
 
-  const styles = StyleSheet.create({
-    button: {
-      backgroundColor: colors.text.primary,
-      borderRadius: 12,
-      paddingHorizontal: 24,
-      paddingVertical: 12,
-    },
-    buttonText: {
-      color: colors.text.inverse,
-      fontFamily: fontFamilies.primary.text,
-      fontSize: 14,
-      fontWeight: '600',
-    },
-    container: {
-      alignItems: 'center',
-      backgroundColor: colors.background,
-      flex: 1,
-      justifyContent: 'center',
-      padding: 24,
-    },
-    content: {
-      alignItems: 'center',
-      maxWidth: 320,
-    },
-    emoji: {
-      fontSize: 48,
-      marginBottom: 16,
-    },
-    errorDetail: {
-      backgroundColor: colors.card,
-      borderRadius: 8,
-      color: '#dc2626',
-      fontFamily: 'monospace',
-      fontSize: 12,
-      marginBottom: 24,
-      padding: 12,
-      textAlign: 'center',
-    },
-    message: {
-      color: colors.text.secondary,
-      fontFamily: fontFamilies.primary.text,
-      fontSize: 14,
-      lineHeight: 20,
-      marginBottom: 8,
-      textAlign: 'center',
-    },
-    safetyNote: {
-      color: colors.text.primary,
-      fontFamily: fontFamilies.primary.text,
-      fontSize: 14,
-      fontWeight: '600',
-      marginBottom: 16,
-      textAlign: 'center',
-    },
-    supportButton: {
-      marginTop: 12,
-      paddingHorizontal: 16,
-      paddingVertical: 8,
-    },
-    supportButtonText: {
-      color: colors.text.secondary,
-      fontFamily: fontFamilies.primary.text,
-      fontSize: 13,
-      fontWeight: '500',
-      textDecorationLine: 'underline',
-    },
-    title: {
-      color: colors.text.primary,
-      fontFamily: fontFamilies.primary.display,
-      fontSize: 22,
-      fontWeight: '600',
-      marginBottom: 8,
-      textAlign: 'center',
-    },
-  });
-
   return (
     <View accessibilityRole='alert' style={styles.container}>
       <View style={styles.content}>
@@ -128,9 +53,7 @@ export function ErrorFallback({ error, onRetry }: ErrorFallbackProps) {
         <Text style={styles.message}>
           We encountered an issue, but nothing was lost. Try refreshing the app.
         </Text>
-        {__DEV__ && error && (
-          <Text style={styles.errorDetail}>{error.message}</Text>
-        )}
+        {__DEV__ && error ? <Text style={styles.errorDetail}>{error.message}</Text> : null}
         <Pressable
           accessibilityLabel='Try again'
           accessibilityRole='button'
@@ -139,8 +62,7 @@ export function ErrorFallback({ error, onRetry }: ErrorFallbackProps) {
         >
           <Text style={styles.buttonText}>Try Again</Text>
         </Pressable>
-        {showContactSupport && (
-          <Pressable
+        {showContactSupport ? <Pressable
             accessibilityHint='Opens email to contact support team'
             accessibilityLabel='Contact support'
             accessibilityRole='button'
@@ -148,8 +70,7 @@ export function ErrorFallback({ error, onRetry }: ErrorFallbackProps) {
             onPress={handleContactSupport}
           >
             <Text style={styles.supportButtonText}>Contact Support</Text>
-          </Pressable>
-        )}
+          </Pressable> : null}
       </View>
     </View>
   );

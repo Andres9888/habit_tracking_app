@@ -10,7 +10,7 @@ import { Dimensions, View } from 'react-native';
 
 import { ConfettiParticle } from './ConfettiParticle';
 import { PhysicsSimulation } from './physicsEngine';
-import type { BurstType, ParticleState, ConfettiSystemProps } from './types';
+import type { ParticleState, ConfettiSystemProps } from './types';
 import { getBurstConfig } from './burstConfigs';
 import { useHaptics } from '../../../utils/haptics/useHaptics';
 import { useCompletionSound } from '../../../hooks/useCompletionSound';
@@ -88,13 +88,13 @@ export function ConfettiSystem({
     }
 
     // Emit particles with delays
-    particlesData.forEach((data, index) => {
+    for (const [index, data] of particlesData.entries()) {
       setTimeout(() => {
         if (simulationRef.current) {
           simulationRef.current.addParticle(originX, originY, data.seed);
         }
       }, index * emissionDelay);
-    });
+    }
 
     // Cleanup on unmount
     return () => {

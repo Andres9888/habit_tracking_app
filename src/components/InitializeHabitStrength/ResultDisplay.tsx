@@ -25,9 +25,7 @@ export function ResultDisplay({ result }: ResultDisplayProps) {
       <Text className='text-sm text-green-800'>
         • Successfully updated: {result.updated}
       </Text>
-      {result.failed > 0 && (
-        <Text className='text-sm text-red-600'>• Failed: {result.failed}</Text>
-      )}
+      {result.failed > 0 ? <Text className='text-sm text-red-600'>• Failed: {result.failed}</Text> : null}
       <Text className='mt-2 text-xs text-green-700'>
         You can now remove this component from your App.tsx
       </Text>

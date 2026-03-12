@@ -69,8 +69,7 @@ export function StreakVoiceNoteCard({
         />
       </Pressable>
 
-      {isExpanded && (
-        <View className='border-t border-amber-200 p-3'>
+      {isExpanded ? <View className='border-t border-amber-200 p-3'>
           <VoiceNotePlaybackUI
             audioUri={voiceNote.audioUrl}
             initialDuration={voiceNote.duration}
@@ -80,13 +79,10 @@ export function StreakVoiceNoteCard({
             onPlayFinish={onPlayFinish}
             onPlayStart={onPlayStart}
           />
-          {voiceNote.label && (
-            <Text className='mt-2 text-xs italic text-amber-600'>
+          {voiceNote.label ? <Text className='mt-2 text-xs italic text-amber-600'>
               "{voiceNote.label}"
-            </Text>
-          )}
-        </View>
-      )}
+            </Text> : null}
+        </View> : null}
     </Animated.View>
   );
 }

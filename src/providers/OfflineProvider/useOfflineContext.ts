@@ -5,7 +5,7 @@
  */
 
 import { useContext } from 'react';
-import { OfflineContext } from './OfflineProvider';
+import { OfflineContext } from './Offline.provider';
 import type { OfflineContextValue } from './types';
 
 /**

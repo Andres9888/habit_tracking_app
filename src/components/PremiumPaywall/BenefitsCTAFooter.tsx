@@ -56,11 +56,9 @@ export function BenefitsCTAFooter({
           </LinearGradient>
         </Animated.View>
       </Pressable>
-      {handlers.priceLabel && (
-        <Text className='mt-2 text-center text-xs text-stone-500'>
+      {handlers.priceLabel ? <Text className='mt-2 text-center text-xs text-stone-500'>
           then {handlers.priceLabel} after trial
-        </Text>
-      )}
+        </Text> : null}
       <Pressable className='mt-2 py-2' onPress={onRestore}>
         <Text className='text-center text-xs text-violet-600'>
           Already premium? Restore purchases

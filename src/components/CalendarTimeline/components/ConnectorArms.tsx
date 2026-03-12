@@ -31,8 +31,7 @@ export const ConnectorArms: React.FC<ConnectorArmsProps> = ({
   ghostRight = false,
 }) => (
   <>
-    {(connectLeft || ghostLeft) && (
-      <View
+    {(connectLeft || ghostLeft) ? <View
         style={{
           ...armBase,
           left: 0,
@@ -41,10 +40,8 @@ export const ConnectorArms: React.FC<ConnectorArmsProps> = ({
           backgroundColor: streakConnectorColor,
           opacity: ghostLeft && !connectLeft ? 0.5 : 1,
         }}
-      />
-    )}
-    {(connectRight || ghostRight) && (
-      <View
+      /> : null}
+    {(connectRight || ghostRight) ? <View
         style={{
           ...armBase,
           left: `50%`,
@@ -53,7 +50,6 @@ export const ConnectorArms: React.FC<ConnectorArmsProps> = ({
           backgroundColor: streakConnectorColor,
           opacity: ghostRight && !connectRight ? 0.5 : 1,
         }}
-      />
-    )}
+      /> : null}
   </>
 );

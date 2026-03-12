@@ -50,7 +50,7 @@ export function HabitDetailContent({
       <SectionLabel
         borderColor={borderColor}
         delay={240}
-        text='HISTORY'
+        text='CALENDAR'
         textColor={labelColor}
       />
       <ErrorBoundary>
@@ -63,8 +63,7 @@ export function HabitDetailContent({
         />
       </ErrorBoundary>
 
-      {habit.createdAt && (
-        <>
+      {habit.createdAt ? <>
           <SectionLabel
             borderColor={borderColor}
             delay={360}
@@ -86,8 +85,7 @@ export function HabitDetailContent({
               />
             </ErrorBoundary>
           </Animated.View>
-        </>
-      )}
+        </> : null}
     </ScrollView>
   );
 }

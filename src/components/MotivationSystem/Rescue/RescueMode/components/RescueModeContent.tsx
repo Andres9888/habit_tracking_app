@@ -36,33 +36,26 @@ export function RescueModeContent({
 
   return (
     <>
-      {hasStreak && (
-        <StreakSection
+      {hasStreak ? <StreakSection
           habit={habit}
           reduceMotion={reduceMotion}
           visible={visible}
-        />
-      )}
-      {hasWhy && (
-        <WhySection
+        /> : null}
+      {hasWhy ? <WhySection
           flags={flags}
           reduceMotion={reduceMotion}
           visible={visible}
           why={habit.why!}
-        />
-      )}
-      {hasVoiceNote && (
-        <VoiceNoteSection
+        /> : null}
+      {hasVoiceNote ? <VoiceNoteSection
           flags={flags}
           reduceMotion={reduceMotion}
           visible={visible}
           voiceNote={habit.day1VoiceNote!}
           onVoiceNotePlayFinish={onVoiceNotePlayFinish ?? (() => {})}
           onVoiceNotePlayStart={onVoiceNotePlayStart ?? (() => {})}
-        />
-      )}
-      {hasPreviousStreakNotes && (
-        <PreviousStreakSection
+        /> : null}
+      {hasPreviousStreakNotes ? <PreviousStreakSection
           bestStreak={habit.bestStreak!}
           flags={flags}
           reduceMotion={reduceMotion}
@@ -70,8 +63,7 @@ export function RescueModeContent({
           voiceNotes={habit.previousStreakVoiceNotes!}
           onVoiceNotePlayFinish={onVoiceNotePlayFinish ?? (() => {})}
           onVoiceNotePlayStart={onVoiceNotePlayStart ?? (() => {})}
-        />
-      )}
+        /> : null}
       <FailureVizSection
         habit={habit}
         hasPreviousStreakNotes={hasPreviousStreakNotes}

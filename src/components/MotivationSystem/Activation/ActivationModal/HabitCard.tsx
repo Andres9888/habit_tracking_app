@@ -50,8 +50,7 @@ export function HabitCard({ habit, reduceMotion }: HabitCardProps) {
         </Text>
         <View className='mt-1 flex-row items-center gap-3'>
           {/* Streak */}
-          {habit.currentStreak !== undefined && habit.currentStreak > 0 && (
-            <Animated.View
+          {habit.currentStreak !== undefined && habit.currentStreak > 0 ? <Animated.View
               className='flex-row items-center gap-1'
               style={streakAnimatedStyle}
             >
@@ -59,18 +58,15 @@ export function HabitCard({ habit, reduceMotion }: HabitCardProps) {
               <Text className='text-sm font-medium text-stone-600'>
                 {habit.currentStreak} day streak
               </Text>
-            </Animated.View>
-          )}
+            </Animated.View> : null}
           {/* Completions */}
           {habit.totalCompletions !== undefined &&
-            habit.totalCompletions > 0 && (
-              <View className='flex-row items-center gap-1'>
+            habit.totalCompletions > 0 ? <View className='flex-row items-center gap-1'>
                 <Target className='text-emerald-500' size={14} />
                 <Text className='text-sm text-stone-500'>
                   {habit.totalCompletions} total
                 </Text>
-              </View>
-            )}
+              </View> : null}
         </View>
       </View>
     </View>

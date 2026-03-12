@@ -27,7 +27,7 @@ export function useAnimatedPlaceholder({
 }: UseAnimatedPlaceholderParams) {
   const placeholders = getTimeBasedPlaceholders();
   const shouldReduceMotion = useReducedMotion();
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [, setCurrentIndex] = useState(0);
   const [displayText, setDisplayText] = useState(placeholders[0]);
   const opacity = useSharedValue(1);
   const timerRef = useRef<ReturnType<typeof setTimeout>>(undefined);

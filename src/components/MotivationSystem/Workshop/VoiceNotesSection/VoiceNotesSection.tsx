@@ -39,17 +39,12 @@ export function VoiceNotesSection(props: VoiceNotesSectionProps) {
         onPress={handleSectionPress}
       >
         <VoiceNotesSectionHeader hasVoiceNotes={hasVoiceNotes} isPremium={isPremium} isRecording={isRecording} />
-        {!isRecording && !isPaused && !hasVoiceNotes && (
-          <Text className='text-sm text-stone-500'>Record your motivation for powerful recall</Text>
-        )}
-        {(isRecording || isPaused) && (
-          <View className='mt-2'>
+        {!isRecording && !isPaused && !hasVoiceNotes ? <Text className='text-sm text-stone-500'>Record your motivation for powerful recall</Text> : null}
+        {(isRecording || isPaused) ? <View className='mt-2'>
             <WaveformVisualization isPaused={isPaused} isRecording={isRecording} meteringLevel={status.meteringLevel} reduceMotion={reduceMotion} />
-          </View>
-        )}
+          </View> : null}
         <CompletionCheckmark isVisible={hasVoiceNotes} reduceMotion={reduceMotion} sectionIndex={sectionIndex} shouldAnimate={shouldAnimate} />
-        {showRecordingUI && (
-          <View className='mt-4 border-t border-stone-100 pt-4'>
+        {showRecordingUI ? <View className='mt-4 border-t border-stone-100 pt-4'>
             <RecordingControls
               canAskAgain={status.canAskAgain} errorMessage={status.errorMessage} formattedDuration={formattedDuration}
               isApproachingMaxDuration={isApproachingMaxDuration} isMaxDurationReached={isMaxDurationReached} isPaused={isPaused}
@@ -57,12 +52,9 @@ export function VoiceNotesSection(props: VoiceNotesSectionProps) {
               onCancelRecording={cancelRecording} onOpenSettings={openSettings} onPauseRecording={pauseRecording}
               onResumeRecording={resumeRecording} onStartRecording={handleStartRecording} onStopRecording={handleStopRecording}
             />
-          </View>
-        )}
-        {showInitialButton && <RecordButton canRecord={canRecord} hasVoiceNotes={hasVoiceNotes} onStartRecording={handleStartRecording} />}
-        {!isRecording && !isPaused && (
-          <VoiceNotesList reduceMotion={reduceMotion} voiceNotes={voiceNotes} onPlayFinish={onPlayFinish} onPlayStart={onPlayStart} onViewAllNotes={onViewAllNotes} />
-        )}
+          </View> : null}
+        {showInitialButton ? <RecordButton canRecord={canRecord} hasVoiceNotes={hasVoiceNotes} onStartRecording={handleStartRecording} /> : null}
+        {!isRecording && !isPaused ? <VoiceNotesList reduceMotion={reduceMotion} voiceNotes={voiceNotes} onPlayFinish={onPlayFinish} onPlayStart={onPlayStart} onViewAllNotes={onViewAllNotes} /> : null}
       </SectionCard>
     </AnimatedSection>
   );
