@@ -53,6 +53,9 @@ export const durations = {
   /** Standard transitions */
   standard: 200,
 
+  /** Emphasized transitions, exit animations */
+  transition: 220,
+
   /** Stagger delay per item (max 5 items) */
   stagger: 60,
 

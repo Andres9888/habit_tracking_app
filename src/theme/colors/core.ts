@@ -81,6 +81,15 @@ export const colors = {
     900: '#1A1816', // Pure black alternative
   },
 
+  // Indigo Colors (Premium surfaces on dark backgrounds)
+  indigo: {
+    200: '#cbd5f5',
+    300: '#a5b4fc',
+    600: '#4f46e5',
+    700: '#6d28d9',
+    900: '#312e81',
+  },
+
   info: '#3872B8',
 
   // Background & Surfaces (layered planes)

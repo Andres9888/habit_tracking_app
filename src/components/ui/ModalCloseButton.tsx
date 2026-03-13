@@ -9,6 +9,7 @@
 
 import { X } from 'lucide-react-native';
 import { triggerHaptic } from '@/utils/haptics';
+import { borderRadius } from '@/theme/spacing';
 import { AnimatedPressable } from './AnimatedPressable';
 import { useThemeColors } from '../../theme/ThemeContext';
 
@@ -47,7 +48,7 @@ export function ModalCloseButton({
         width: 44,
         alignItems: 'center',
         justifyContent: 'center',
-        borderRadius: 9999,
+        borderRadius: borderRadius.full,
         backgroundColor: colors.surface,
       }}
       onPress={handlePress}

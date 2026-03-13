@@ -7,12 +7,6 @@ import { SHADOW_OPACITY } from '../../../../../constants';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
-// TODO: These premium/indigo colors are not yet in the design system
-const PREMIUM_INDIGO_LIGHT = '#a5b4fc'; // indigo-300
-const PREMIUM_INDIGO_MUTED = '#cbd5f5'; // indigo-200
-const PREMIUM_PURPLE_CTA = '#6d28d9'; // violet-700
-const PREMIUM_PURPLE_SHADOW = '#312e81'; // indigo-900
-
 export function MonetizationHero({
   freeHabitLimit, habitSlotsUsed, hasReachedHabitLimit, onUpgradePress, reduceMotion = false,
 }: MonetizationHeroProps) {
@@ -37,13 +31,13 @@ export function MonetizationHero({
       }}
     >
       <View className='gap-2'>
-        <Text style={{ color: PREMIUM_INDIGO_LIGHT }} className='text-[13px] font-medium uppercase tracking-[4px]'>
+        <Text style={{ color: colors.indigo[300] }} className='text-[13px] font-medium uppercase tracking-[4px]'>
           {'\u2728'} Try Premium Free
         </Text>
         <Text className='text-[22px] font-semibold leading-[28px] tracking-tight text-white'>
           Ready for unlimited habits?
         </Text>
-        <Text style={{ color: PREMIUM_INDIGO_MUTED }} className='text-[17px] font-normal leading-[22px]'>
+        <Text style={{ color: colors.indigo[200] }} className='text-[17px] font-normal leading-[22px]'>
           Try free for 7 days — track every area of your life, get smart
           reminders, and unlock AI-powered insights.
         </Text>
@@ -56,10 +50,10 @@ export function MonetizationHero({
           className='flex-1 items-center rounded-full px-5 py-3'
           style={({ pressed }: { pressed: boolean }) => [
             {
-              backgroundColor: PREMIUM_PURPLE_CTA,
+              backgroundColor: colors.indigo[700],
               elevation: 6,
               opacity: pressed ? 0.8 : 1,
-              shadowColor: PREMIUM_PURPLE_SHADOW,
+              shadowColor: colors.indigo[900],
               shadowOffset: { height: 8, width: 0 },
               shadowOpacity: 0.32,
               shadowRadius: 16,
@@ -74,7 +68,7 @@ export function MonetizationHero({
         </AnimatedPressable>
         <View className='border-white/22 flex-1 rounded-full border px-4 py-3'>
           <Animated.Text
-            style={{ color: PREMIUM_INDIGO_MUTED }}
+            style={{ color: colors.indigo[200] }}
             className='text-center text-[13px] font-semibold'
           >
             Keep 3 habits free
