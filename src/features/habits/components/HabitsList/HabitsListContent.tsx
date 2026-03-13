@@ -43,7 +43,8 @@ export function HabitsListContent({
     onUpgradeConfirm,
   } = props;
 
-  const { scrollHandler, contextValue } = useStickyHeader();
+  const stickyEnabled = props.modals.settings?.stickyCalendarHeader ?? false;
+  const { scrollHandler, contextValue } = useStickyHeader(stickyEnabled);
   const isEmpty = list.habits.length === 0;
   const contentContainerStyle = useMemo(
     () => ({
@@ -100,9 +101,12 @@ export function HabitsListContent({
   return (
     <StickyHeaderContext.Provider value={contextValue}>
       <View className='flex-1 bg-transparent'>
-        {listHeaderComponent}
+        {stickyEnabled ? listHeaderComponent : null}
         <View style={{ flex: 1, overflow: 'hidden' }}>
           <DraggableFlatList<Habit>
+            ListHeaderComponent={
+              stickyEnabled ? undefined : listHeaderComponent
+            }
             activationDistance={
               props.isSelectionMode
                 ? 9999
