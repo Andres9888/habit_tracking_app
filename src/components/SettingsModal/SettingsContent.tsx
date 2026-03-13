@@ -6,7 +6,6 @@ import {
   Check,
   Calendar,
   Circle,
-  Download,
   Droplets,
   Rows3,
   Volume2,
@@ -176,18 +175,6 @@ export function SettingsContent(p: SettingsContentProps) {
           {/* Data Section - Habit management */}
           <Animated.View entering={anim(120)}>
             <SettingsSection highContrastMode={hc} title='Data'>
-              <SettingsRow
-                hapticStyle='selection'
-                highContrastMode={hc}
-                icon={<Download color={settingsIcons.export.icon} size={16} />}
-                iconBackgroundColor={settingsIcons.export.bg}
-                label='Export habits & stats'
-                subtitle='Download your data as a file'
-                type='navigation'
-                onPress={() => {
-                  void p.onExportHabitsData?.();
-                }}
-              />
               <SettingsRow
                 badge={p.archivedHabitsCount}
                 highContrastMode={hc}
