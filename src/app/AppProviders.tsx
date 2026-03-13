@@ -6,6 +6,7 @@ import { PaperProvider } from 'react-native-paper';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Pressable, Text, View } from 'react-native';
 
+import { colors as palette } from '../theme/colors';
 import {
   clerkPublishableKey,
   hasClerkPublishableKey,
@@ -38,29 +39,29 @@ function AppStartupFallback() {
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: '#fff',
+        backgroundColor: palette.light.background,
         paddingHorizontal: 24,
       }}
     >
       <Text
         className='mb-3 text-2xl font-bold'
-        style={{ color: '#111827', marginBottom: 12 }}
+        style={{ color: palette.gray[900], marginBottom: 12 }}
       >
         Startup Error
       </Text>
       <Text
         className='mb-6 text-center text-base text-stone-600'
-        style={{ color: '#374151', textAlign: 'center', marginBottom: 24 }}
+        style={{ color: palette.gray[600], textAlign: 'center', marginBottom: 24 }}
       >
         The app did not finish loading. Tap retry to reload.
       </Text>
       <Pressable
         accessibilityLabel='Retry startup'
         className='mb-4 rounded-lg bg-black px-4 py-3'
-        style={{ backgroundColor: '#111827', paddingHorizontal: 16, paddingVertical: 12, borderRadius: 8 }}
+        style={{ backgroundColor: palette.gray[900], paddingHorizontal: 16, paddingVertical: 12, borderRadius: 8 }}
         onPress={handleCriticalRetry}
       >
-        <Text className='text-base font-semibold text-white' style={{ color: '#fff' }}>
+        <Text className='text-base font-semibold text-white' style={{ color: palette.text.inverse }}>
           Retry
         </Text>
       </Pressable>
@@ -107,19 +108,19 @@ function MissingConfigFallback() {
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: '#fff',
+        backgroundColor: palette.light.background,
         paddingHorizontal: 24,
       }}
     >
       <Text
         className='mb-3 text-2xl font-bold'
-        style={{ color: '#111827', marginBottom: 12 }}
+        style={{ color: palette.gray[900], marginBottom: 12 }}
       >
         Setup Required
       </Text>
       <Text
         className='mb-6 text-center text-base text-stone-600'
-        style={{ color: '#374151', textAlign: 'center', marginBottom: 24 }}
+        style={{ color: palette.gray[600], textAlign: 'center', marginBottom: 24 }}
       >
         App config is incomplete. Set the missing environment variables and restart
         Metro.
@@ -127,7 +128,7 @@ function MissingConfigFallback() {
       {missingKeys.map((key) => (
         <Text
           className='mb-2 rounded-lg bg-stone-100 px-3 py-2 text-sm font-medium'
-          style={{ marginBottom: 8, backgroundColor: '#f5f5f4', color: '#1f2937', padding: 8, borderRadius: 8 }}
+          style={{ marginBottom: 8, backgroundColor: palette.gray[50], color: palette.gray[700], padding: 8, borderRadius: 8 }}
           key={key}
         >
           {key}
@@ -136,10 +137,10 @@ function MissingConfigFallback() {
       <Pressable
         accessibilityLabel='Reload app after updating environment variables'
         className='mt-2 rounded-lg bg-black px-4 py-3'
-        style={{ backgroundColor: '#111827', marginTop: 16, paddingHorizontal: 16, paddingVertical: 12, borderRadius: 8 }}
+        style={{ backgroundColor: palette.gray[900], marginTop: 16, paddingHorizontal: 16, paddingVertical: 12, borderRadius: 8 }}
         onPress={reloadWebPage}
       >
-        <Text className='text-base font-semibold text-white' style={{ color: '#fff' }}>
+        <Text className='text-base font-semibold text-white' style={{ color: palette.text.inverse }}>
           Retry
         </Text>
       </Pressable>

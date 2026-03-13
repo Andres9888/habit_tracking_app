@@ -5,6 +5,7 @@
 import { memo } from 'react';
 import { Modal, Pressable, StyleSheet, Text, View } from 'react-native';
 import { AlertTriangle } from 'lucide-react-native';
+import { colors as palette } from '../../../theme/colors';
 import { useThemeColors } from '../../../theme/ThemeContext';
 
 interface BatchDeleteConfirmModalProps {
@@ -27,7 +28,7 @@ function BatchDeleteConfirmModalComponent({
       <View style={s.overlay}>
         <View style={[s.box, { backgroundColor: colors.card }]}>
           <View style={s.iconWrap}>
-            <AlertTriangle color="#ef4444" size={24} strokeWidth={2} />
+            <AlertTriangle color={palette.error} size={24} strokeWidth={2} />
           </View>
           <Text style={[s.title, { color: colors.text.primary }]}>
             Delete {count} habit{count === 1 ? '' : 's'}?
@@ -41,7 +42,7 @@ function BatchDeleteConfirmModalComponent({
               <Text style={[s.btnText, { color: colors.text.primary }]}>Cancel</Text>
             </Pressable>
             <Pressable style={[s.btn, s.deleteBtn]} onPress={onConfirm}>
-              <Text style={[s.btnText, { color: '#fff' }]}>Delete</Text>
+              <Text style={[s.btnText, { color: palette.text.inverse }]}>Delete</Text>
             </Pressable>
           </View>
         </View>
@@ -52,16 +53,16 @@ function BatchDeleteConfirmModalComponent({
 
 const s = StyleSheet.create({
   actions: { flexDirection: 'row', gap: 10 },
-  box: { borderRadius: 20, padding: 28, width: 320 },
+  box: { borderRadius: 24, padding: 28, width: 320 },
   btn: { alignItems: 'center', borderRadius: 12, flex: 1, paddingVertical: 12 },
   btnText: { fontSize: 14, fontWeight: '600' },
   cancelBtn: { backgroundColor: 'rgba(255,255,255,0.08)' },
-  deleteBtn: { backgroundColor: '#ef4444' },
+  deleteBtn: { backgroundColor: palette.error },
   desc: { fontSize: 13, lineHeight: 20, marginBottom: 24, textAlign: 'center' },
   iconWrap: {
     alignItems: 'center',
     alignSelf: 'center',
-    backgroundColor: 'rgba(239,68,68,0.12)',
+    backgroundColor: palette.errorLight,
     borderRadius: 24,
     height: 48,
     justifyContent: 'center',

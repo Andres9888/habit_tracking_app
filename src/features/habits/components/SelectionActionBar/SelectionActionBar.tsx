@@ -4,11 +4,12 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { BlurView } from 'expo-blur';
 import { Archive, Trash2, X } from 'lucide-react-native';
+import { durations, springs } from '../../../../theme/animations';
 import { colors as palette } from '../../../../theme/colors';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import { BLUR_INTENSITY, BORDER_DARK, BORDER_LIGHT, CAPSULE_SHADOW } from '../BottomActionBar/BottomActionBar.styles';
 
-const ENTERING = FadeInUp.duration(280).springify().damping(18);
+const ENTERING = FadeInUp.duration(durations.enter).springify().damping(springs.standard.damping);
 const CAPSULE_RADIUS = 32;
 const HIT_SLOP = { bottom: 18, left: 18, right: 18, top: 18 };
 
