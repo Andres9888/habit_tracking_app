@@ -33,7 +33,7 @@ export const create = mutation({
     // SEC-005: Free tier limit — only count active (non-archived, non-removed, non-paused) habits.
     // Paused habits are excluded so users can temporarily pause all 3 and still create new ones.
     const activeHabits = allHabits.filter(
-      (h) => !h.archived && !h.isRemoved && !h.paused
+      (h) => !h.archived && !h.paused
     );
     const isPremiumUser = await hasPremiumAccess(ctx, userId);
     if (!isPremiumUser && activeHabits.length >= FREE_HABIT_LIMIT) {
