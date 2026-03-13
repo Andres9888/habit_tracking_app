@@ -68,8 +68,6 @@ function SettingsModalContent({
     [setHabitSortMode, setView]
   );
 
-  if (!visible) return null;
-
   if (view === 'archived') {
     return (
       <Modal

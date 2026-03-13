@@ -1,5 +1,5 @@
 import { useMutation } from 'convex/react';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { api } from '../../../convex/_generated/api';
 import type { SettingsModalSettingsDocument } from './types';
 import { DEFAULT_SETTINGS } from '../../../convex/settings/types';
@@ -26,6 +26,7 @@ const normalizeDarkModePreference = (value: unknown): DarkModePreference => {
 export const useSettingsModalLogic = ({
   onClose,
   settingsDocument,
+  visible,
 }: UseSettingsModalLogicProps) => {
   const [view, setView] = useState<'settings' | 'archived' | 'paused' | 'sort'>(
     'settings'
@@ -41,8 +42,6 @@ export const useSettingsModalLogic = ({
   const [compactView, setCompactViewState] = useState(false);
   const [showGradientFill, setShowGradientFillState] = useState(true);
 
-  const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
   useEffect(() => {
     if (settings) {
       setDarkModeState(normalizeDarkModePreference(settings.darkMode));
@@ -54,18 +53,16 @@ export const useSettingsModalLogic = ({
     }
   }, [settings]);
 
-  // Cleanup timer on unmount
+  // Reset view to 'settings' whenever the modal opens
   useEffect(() => {
-    return () => {
-      if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
-    };
-  }, []);
+    if (visible) {
+      setView('settings');
+    }
+  }, [visible]);
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     onClose();
-    if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
-    closeTimerRef.current = setTimeout(() => setView('settings'), 300);
-  };
+  }, [onClose]);
 
   const update = useCallback(
     async (patch: Record<string, unknown>) => {
