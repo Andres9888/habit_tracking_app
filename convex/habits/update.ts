@@ -23,7 +23,7 @@ export const update = mutation({
     if (!habit) {
       throw new Error('Habit not found');
     }
-    if (!habit || habit.userId !== identity.subject) {
+    if (habit.userId !== identity.subject) {
       throw new Error('Not authorized to modify this habit');
     }
 
@@ -69,7 +69,7 @@ export const updateNotes = mutation({
     if (!habit) {
       throw new Error('Habit not found');
     }
-    if (!habit || habit.userId !== identity.subject) {
+    if (habit.userId !== identity.subject) {
       throw new Error('Not authorized to modify this habit');
     }
 

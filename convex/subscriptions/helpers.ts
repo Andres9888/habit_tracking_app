@@ -2,8 +2,9 @@
  * Subscription helper utilities
  */
 import type { MutationCtx } from '../_generated/server';
+import { DEFAULT_SETTINGS } from '../settings/types';
 
-/** Update userSettings.hasPremium — fast-path used by the UI */
+/** Update userSettings.hasPremium — creates settings if missing */
 export async function updateUserSettingsPremium(
   ctx: MutationCtx,
   clerkId: string,
@@ -16,7 +17,11 @@ export async function updateUserSettingsPremium(
 
   if (settings) {
     await ctx.db.patch(settings._id, { hasPremium });
-    // Premium status updated successfully
+  } else {
+    await ctx.db.insert('userSettings', {
+      ...DEFAULT_SETTINGS,
+      hasPremium,
+      userId: clerkId,
+    });
   }
-  // Note: silently skip if settings not found (may be expected on first-time login)
 }

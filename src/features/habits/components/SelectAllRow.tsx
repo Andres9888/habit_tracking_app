@@ -6,6 +6,8 @@ import { memo } from 'react';
 import { Pressable, StyleSheet, Text } from 'react-native';
 import Animated, { FadeInDown, FadeOutUp } from 'react-native-reanimated';
 import { Checkbox } from '../../../components/Checkbox';
+import { durations } from '../../../theme/animations';
+import { colors as palette } from '../../../theme/colors';
 import { useThemeColors } from '../../../theme/ThemeContext';
 
 interface SelectAllRowProps {
@@ -25,7 +27,7 @@ function SelectAllRowComponent({
   const isPartial = selectedCount > 0 && !isAllSelected;
 
   return (
-    <Animated.View entering={FadeInDown.duration(200)} exiting={FadeOutUp.duration(150)}>
+    <Animated.View entering={FadeInDown.duration(durations.enter)} exiting={FadeOutUp.duration(durations.quick)}>
       <Pressable
         accessibilityLabel={isAllSelected ? 'Deselect all habits' : 'Select all habits'}
         accessibilityRole="button"
@@ -46,12 +48,12 @@ function SelectAllRowComponent({
 }
 
 const s = StyleSheet.create({
-  count: { color: '#a855f7', fontSize: 12, fontWeight: '600' },
+  count: { color: palette.premium[500], fontSize: 13, fontWeight: '600' },
   label: { flex: 1, fontSize: 14, fontWeight: '500' },
   row: {
     alignItems: 'center',
     flexDirection: 'row',
-    gap: 10,
+    gap: 12,
     paddingHorizontal: 24,
     paddingVertical: 8,
   },
