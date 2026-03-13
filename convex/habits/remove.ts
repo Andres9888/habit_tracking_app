@@ -25,7 +25,7 @@ export const remove = mutation({
     }
 
     // SEC-004: Ownership verification
-    if (!habit || habit.userId !== identity.subject) {
+    if (habit.userId !== identity.subject) {
       throw new Error('Not authorized to delete this habit');
     }
 
