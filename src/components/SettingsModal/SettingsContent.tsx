@@ -69,9 +69,32 @@ export function SettingsContent(p: SettingsContentProps) {
         onScroll={scrollHandler}
       >
         <View className='gap-5'>
-          {/* Preferences Section - Visual settings */}
+          {/* Preferences Section - ordered by impact */}
           <Animated.View entering={anim(0)}>
             <SettingsSection highContrastMode={hc} title='Preferences'>
+              <SettingsRow
+                hapticStyle='selection'
+                highContrastMode={hc}
+                icon={<ArrowUpDown color={settingsIcons.sort.icon} size={16} />}
+                iconBackgroundColor={settingsIcons.sort.bg}
+                label='Sort Order'
+                subtitle='Choose how your habits are ordered'
+                type='selection'
+                value={
+                  SORT_LABEL_MAP[p.habitSortMode as HabitSortMode] ?? 'Custom'
+                }
+                onPress={p.onOpenSortPicker}
+              />
+              <SettingsRow
+                highContrastMode={hc}
+                icon={<Rows3 color={settingsIcons.compact.icon} size={16} />}
+                iconBackgroundColor={settingsIcons.compact.bg}
+                label='Compact habit cards'
+                subtitle='Show smaller cards to fit more on screen'
+                type='toggle'
+                value={p.compactView}
+                onToggle={(v) => void p.onChangeCompactView(v)}
+              />
               <SettingsRow
                 highContrastMode={hc}
                 icon={<Check color={settingsIcons.checkbox.icon} size={16} />}
@@ -86,13 +109,27 @@ export function SettingsContent(p: SettingsContentProps) {
               />
               <SettingsRow
                 highContrastMode={hc}
-                icon={<Rows3 color={settingsIcons.compact.icon} size={16} />}
-                iconBackgroundColor={settingsIcons.compact.bg}
-                label='Compact habit cards'
-                subtitle='Show smaller cards to fit more on screen'
+                icon={<Volume2 color={settingsIcons.sound.icon} size={16} />}
+                iconBackgroundColor={settingsIcons.sound.bg}
+                label='Play sound on habit completion'
+                subtitle='Hear a sound effect when you check off a habit'
                 type='toggle'
-                value={p.compactView}
-                onToggle={(v) => void p.onChangeCompactView(v)}
+                value={p.completionSoundEnabled}
+                onToggle={(v) => void p.onChangeCompletionSoundEnabled(v)}
+              />
+              <SettingsRow
+                highContrastMode={hc}
+                icon={
+                  <Calendar
+                    color={settingsIcons.calendarHeader.icon}
+                    size={16}
+                  />
+                }
+                iconBackgroundColor={settingsIcons.calendarHeader.bg}
+                label='Pin calendar header'
+                type='toggle'
+                value={p.stickyCalendarHeader}
+                onToggle={(v) => void p.onChangeStickyCalendarHeader(v)}
               />
               <SettingsRow
                 highContrastMode={hc}
@@ -119,42 +156,15 @@ export function SettingsContent(p: SettingsContentProps) {
                 onToggle={(v) => void p.onChangeShowGradientFill(v)}
               />
               <SettingsRow
+                badge={p.archivedHabitsCount}
                 highContrastMode={hc}
-                icon={
-                  <Calendar
-                    color={settingsIcons.calendarHeader.icon}
-                    size={16}
-                  />
-                }
-                iconBackgroundColor={settingsIcons.calendarHeader.bg}
-                label='Pin calendar header'
-                type='toggle'
-                value={p.stickyCalendarHeader}
-                onToggle={(v) => void p.onChangeStickyCalendarHeader(v)}
-              />
-              <SettingsRow
-                highContrastMode={hc}
-                icon={<Volume2 color={settingsIcons.sound.icon} size={16} />}
-                iconBackgroundColor={settingsIcons.sound.bg}
-                label='Play sound on habit completion'
-                subtitle='Hear a sound effect when you check off a habit'
-                type='toggle'
-                value={p.completionSoundEnabled}
-                onToggle={(v) => void p.onChangeCompletionSoundEnabled(v)}
-              />
-              <SettingsRow
-                hapticStyle='selection'
-                highContrastMode={hc}
-                icon={<ArrowUpDown color={settingsIcons.sort.icon} size={16} />}
-                iconBackgroundColor={settingsIcons.sort.bg}
-                label='Sort Order'
-                subtitle='Choose how your habits are ordered'
+                icon={<BookOpen color={settingsIcons.archive.icon} size={16} />}
+                iconBackgroundColor={settingsIcons.archive.bg}
+                label='Archived Habits'
+                subtitle='View and restore hidden habits'
                 showBorder={false}
-                type='selection'
-                value={
-                  SORT_LABEL_MAP[p.habitSortMode as HabitSortMode] ?? 'Custom'
-                }
-                onPress={p.onOpenSortPicker}
+                type='navigation'
+                onPress={p.onOpenArchivedHabits}
               />
             </SettingsSection>
           </Animated.View>
@@ -172,23 +182,6 @@ export function SettingsContent(p: SettingsContentProps) {
             />
           </Animated.View>
 
-          {/* Data Section - Habit management */}
-          <Animated.View entering={anim(120)}>
-            <SettingsSection highContrastMode={hc} title='Data'>
-              <SettingsRow
-                badge={p.archivedHabitsCount}
-                highContrastMode={hc}
-                icon={<BookOpen color={settingsIcons.archive.icon} size={16} />}
-                iconBackgroundColor={settingsIcons.archive.bg}
-                label='Archived Habits'
-                subtitle='View and restore hidden habits'
-                showBorder={false}
-                type='navigation'
-                onPress={p.onOpenArchivedHabits}
-              />
-            </SettingsSection>
-          </Animated.View>
-
           {/* Account Section — sub-sections stagger internally */}
           <AccountSection
             isHighContrastActive={hc}
@@ -197,7 +190,7 @@ export function SettingsContent(p: SettingsContentProps) {
           />
 
           {/* About Section - Version info */}
-          <Animated.View entering={anim(240)}>
+          <Animated.View entering={anim(180)}>
             <AboutSection buildNumber='1' highContrast={hc} version='1.0.0' />
           </Animated.View>
         </View>
