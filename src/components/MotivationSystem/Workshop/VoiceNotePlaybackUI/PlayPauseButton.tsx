@@ -47,7 +47,7 @@ export function PlayPauseButton({
 
   if (isLoading) {
     return (
-      <View className='h-10 w-10 items-center justify-center rounded-full bg-teal-100'>
+      <View className='h-11 w-11 items-center justify-center rounded-full bg-teal-100'>
         <ActivityIndicator color='#14b8a6' size='small' />
       </View>
     );
@@ -60,7 +60,7 @@ export function PlayPauseButton({
           isFinished ? 'Replay' : isPlaying ? 'Pause' : 'Play'
         }
         accessibilityRole='button'
-        className='h-10 w-10 items-center justify-center rounded-full bg-teal-500'
+        className='h-11 w-11 items-center justify-center rounded-full bg-teal-500'
         onPress={handlePress}
         onPressIn={handlePressIn}
         onPressOut={handlePressOut}

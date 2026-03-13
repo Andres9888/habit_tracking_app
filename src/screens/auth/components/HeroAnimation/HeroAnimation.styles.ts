@@ -19,7 +19,7 @@ export const styles = StyleSheet.create({
   emojiContainer: {
     alignItems: 'center',
     backgroundColor: '#f5f5f4',
-    borderRadius: 60,
+    borderRadius: 9999,
     height: 120,
     justifyContent: 'center',
     width: 120,

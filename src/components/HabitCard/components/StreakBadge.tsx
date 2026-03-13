@@ -17,6 +17,10 @@ import { milestoneColors } from '../../../theme/colors';
 import { streakStyles } from '../HabitCard.streakStyles';
 import { springs } from '@/theme/animations';
 
+// Dark-mode amber tints derived from milestone palette
+const DARK_AMBER_BG = `${milestoneColors.amber}26`; // amber at 15% opacity
+const DARK_AMBER_BORDER = `${milestoneColors.amberBorder}66`; // amberBorder at 40% opacity
+
 /** Design-system spring: damping 18, stiffness 150 */
 const STREAK_SPRING = springs.standard;
 const BOUNCE_SPRING = springs.celebration;
@@ -80,16 +84,16 @@ export const StreakBadge = memo(function StreakBadge({ currentStreak, bestStreak
 
   // In dark mode, use a translucent amber tint so the badge doesn't look washed out
   const streakBadgeBg = isDark
-    ? 'rgba(245, 158, 11, 0.15)'
+    ? DARK_AMBER_BG
     : milestoneColors.amberLight;
   const streakTextColor = isDark
     ? milestoneColors.amber
     : theme.custom.colors.warning[700];
   const bestBadgeActiveBg = isDark
-    ? 'rgba(245, 158, 11, 0.15)'
+    ? DARK_AMBER_BG
     : milestoneColors.amberLight;
   const bestBadgeActiveBorder = isDark
-    ? 'rgba(252, 211, 77, 0.4)'
+    ? DARK_AMBER_BORDER
     : milestoneColors.amberBorder;
   const bestBadgeActiveText = isDark
     ? milestoneColors.amber

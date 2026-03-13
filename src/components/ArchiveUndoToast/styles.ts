@@ -50,6 +50,7 @@ export function useToastStyles() {
     progressBar: {
       backgroundColor: isDark ? '#F59E0B' : '#d97706',
       height: '100%',
+      width: '100%',
     },
     progressContainer: {
       backgroundColor: isDark ? '#78350F' : '#fef3c7',

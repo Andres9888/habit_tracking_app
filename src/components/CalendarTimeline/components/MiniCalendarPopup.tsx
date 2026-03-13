@@ -34,11 +34,12 @@ export const MiniCalendarPopup: React.FC<MiniCalendarPopupProps> = ({
     [onSelectDate, onClose]
   );
 
-  const cardBg = isDark ? themeColors.card : '#fff';
-  const closeColor = isDark ? '#9CA3AF' : '#a8a29e';
+  const cardBg = isDark ? themeColors.card : themeColors.gray[50];
+  const closeColor = themeColors.text.secondary;
 
   return (
     <Modal animationType='fade' transparent visible={visible} onRequestClose={onClose}>
+      {/* Intentional rgba — standard backdrop overlay */}
       <Pressable
         style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.4)', justifyContent: 'center', alignItems: 'center' }}
         onPress={onClose}

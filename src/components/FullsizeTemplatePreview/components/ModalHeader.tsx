@@ -6,6 +6,7 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import Animated from 'react-native-reanimated';
+import { colors } from '@/theme/colors';
 import { layoutStyles } from '../styles';
 import { ModalCloseButton } from '../../ui/ModalCloseButton';
 
@@ -40,6 +41,6 @@ export function ModalHeader({
 }
 
 const s = StyleSheet.create({
-  handle: { backgroundColor: '#D1D5DB', borderRadius: 2, height: 4, width: 40 },
+  handle: { backgroundColor: colors.gray[300], borderRadius: 2, height: 4, width: 40 },
   handleRow: { alignItems: 'center', paddingTop: 8 },
 });
