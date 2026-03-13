@@ -105,7 +105,17 @@ export function HabitsListContent({
         <View style={{ flex: 1, overflow: 'hidden' }}>
           <DraggableFlatList<Habit>
             ListHeaderComponent={
-              stickyEnabled ? undefined : listHeaderComponent
+              stickyEnabled ? undefined : (
+                <View
+                  style={{
+                    marginHorizontal: -(
+                      list.contentPadding.paddingHorizontal ?? 0
+                    ),
+                  }}
+                >
+                  {listHeaderComponent}
+                </View>
+              )
             }
             activationDistance={
               props.isSelectionMode

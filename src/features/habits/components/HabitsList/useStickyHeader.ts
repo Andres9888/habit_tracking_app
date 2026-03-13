@@ -30,12 +30,7 @@ export function useStickyHeader(enabled = false) {
     },
   });
 
-  const stickyProgress = useDerivedValue((): number =>
-    withTiming(enabled && scrollY.value > STICKY_THRESHOLD ? 1 : 0, {
-      duration: ANIM_DURATION,
-      easing: Easing.out(Easing.cubic),
-    })
-  );
+  const stickyProgress = useDerivedValue((): number => 0);
 
   const contextValue = useMemo<StickyHeaderContextValue>(
     () => ({ stickyProgress }),
