@@ -146,7 +146,7 @@ export const achievementCardStyles = StyleSheet.create({
   badge: {
     alignItems: 'center',
     backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    borderRadius: 40,
+    borderRadius: 24,
     height: 80,
     justifyContent: 'center',
     marginBottom: spacing.base,

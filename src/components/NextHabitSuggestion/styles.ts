@@ -1,47 +1,45 @@
 import { StyleSheet } from 'react-native';
+import { colors } from '@/theme/colors';
+import { shadows, borderRadius, componentSpacing } from '@/theme/spacing';
 import { fontFamilies } from '@/theme/typography';
 
 export const styles = StyleSheet.create({
   badge: {
     alignItems: 'center',
-    backgroundColor: '#fef3c7',
-    borderRadius: 12,
+    backgroundColor: colors.warningLight,
+    borderRadius: borderRadius.medium,
     flexDirection: 'row',
     gap: 4,
     paddingHorizontal: 10,
     paddingVertical: 4,
   },
   badgeText: {
-    color: '#b45309',
+    color: colors.warning,
     fontFamily: fontFamilies.primary.text,
-    fontSize: 12,
+    fontSize: 13,
     fontWeight: '600',
   },
   container: {
-    backgroundColor: '#ffffff',
-    borderRadius: 16,
-    elevation: 3,
-    marginHorizontal: 16,
-    marginVertical: 8,
+    ...shadows.card,
+    backgroundColor: colors.text.inverse,
+    borderRadius: borderRadius.large,
+    marginHorizontal: componentSpacing.card.marginHorizontal,
+    marginVertical: componentSpacing.card.marginVertical,
     overflow: 'hidden',
-    shadowColor: '#000',
-    shadowOffset: { height: 2, width: 0 },
-    shadowOpacity: 0.08,
-    shadowRadius: 8,
   },
   content: {
-    padding: 16,
+    padding: componentSpacing.card.padding,
   },
   completedContainer: {
-    marginHorizontal: 16,
-    borderRadius: 16,
-    marginVertical: 8,
+    marginHorizontal: componentSpacing.card.marginHorizontal,
+    borderRadius: borderRadius.large,
+    marginVertical: componentSpacing.card.marginVertical,
     alignItems: 'center',
     padding: 20,
-    backgroundColor: '#ecfdf5',
+    backgroundColor: colors.primary[100],
   },
   glow: {
-    backgroundColor: '#f59e0b',
+    backgroundColor: colors.streak[300],
     height: 4,
     left: 0,
     position: 'absolute',
@@ -53,20 +51,20 @@ export const styles = StyleSheet.create({
     marginBottom: 8,
   },
   habitHint: {
-    color: '#a8a29e',
+    color: colors.text.secondary,
     fontFamily: fontFamilies.primary.text,
     fontSize: 13,
   },
   completedSubtitle: {
-    color: '#059669',
+    color: colors.primary[600],
     fontFamily: fontFamilies.primary.text,
-    fontSize: 14,
+    fontSize: 13,
   },
   habitIcon: {
     fontSize: 32,
   },
   completedTitle: {
-    color: '#065f46',
+    color: colors.primary[700],
     fontFamily: fontFamilies.primary.text,
     fontSize: 17,
     fontWeight: '600',
@@ -87,7 +85,7 @@ export const styles = StyleSheet.create({
     marginBottom: 12,
   },
   habitName: {
-    color: '#1c1917',
+    color: colors.gray[900],
     fontFamily: fontFamilies.primary.text,
     fontSize: 17,
     fontWeight: '600',
@@ -96,7 +94,7 @@ export const styles = StyleSheet.create({
   progress: {
     fontFamily: fontFamilies.primary.text,
     fontSize: 13,
-    color: '#a8a29e',
+    color: colors.text.secondary,
     fontWeight: '500',
   },
 });

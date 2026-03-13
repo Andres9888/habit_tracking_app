@@ -104,7 +104,8 @@ export function useArchiveUndoToast({
   }));
 
   const progressStyle = useAnimatedStyle(() => ({
-    width: `${progressWidth.value}%`,
+    transform: [{ scaleX: progressWidth.value / 100 }],
+    transformOrigin: 'left',
   }));
 
   return {

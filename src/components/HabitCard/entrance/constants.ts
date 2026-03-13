@@ -3,13 +3,14 @@
  * Timing and configuration constants for entrance animations
  */
 
-import { Springs } from '../../../constants/motion';
+import { springs } from '@/theme/animations';
 
 /**
  * Spring configuration for accent bar slide animation.
+ * Uses theme gentle spring with higher damping for a stable slide-in.
  */
 export const ACCENT_SPRING_CONFIG = {
-  ...Springs.gentle,
+  ...springs.gentle,
   damping: 24,
 };
 

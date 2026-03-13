@@ -8,6 +8,7 @@ import { View, Text, Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Check } from 'lucide-react-native';
+import { colors } from '@/theme/colors';
 import { footerStyles } from '../styles';
 import type { FooterSectionProps } from './FooterSection.types';
 
@@ -32,11 +33,12 @@ export function FooterSection({
 }: FooterSectionProps) {
   return (
     <View style={footerStyles.footerGradientWrapper}>
+      {/* Intentional rgba gradient — fades from transparent to gray[50] (#FAF8F5) */}
       <LinearGradient
         colors={[
-          'rgba(250, 250, 249, 0)',
-          'rgba(250, 250, 249, 1)',
-          'rgba(250, 250, 249, 1)',
+          'rgba(250, 248, 245, 0)',
+          'rgba(250, 248, 245, 1)',
+          'rgba(250, 248, 245, 1)',
         ]}
         style={footerStyles.footerGradient}
       >
@@ -56,7 +58,7 @@ export function FooterSection({
                 style={[footerStyles.successButton, checkmarkAnimatedStyle]}
               >
                 <Animated.View style={successIconBounceStyle}>
-                  <Check color='#fff' size={22} strokeWidth={3} />
+                  <Check color={colors.text.inverse} size={22} strokeWidth={3} />
                 </Animated.View>
                 <Text style={footerStyles.successButtonText}>Added!</Text>
               </Animated.View>

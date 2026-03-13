@@ -112,48 +112,49 @@ export const COPY = {
 } as const;
 
 /**
- * Design system color tokens aligned with app patterns
+ * Design system color tokens aligned with app patterns.
+ * References `colors` from `@/theme/colors` wherever a match exists.
  */
 export const COLORS = {
   // Character counter warning/error colors
-  amber500: '#F59E0B',
+  amber500: colors.warning,
 
   // Input focus color (per app pattern)
-  blue500: '#3B82F6',
+  blue500: colors.secondary[500],
 
-  emerald100: '#D1FAE5',
+  emerald100: colors.primary[100],
 
   // Primary action color (used for indicators/accents)
-  emerald500: '#10B981',
+  emerald500: colors.primary[500],
 
   // WCAG AA compliant primary action (5.21:1 contrast with white)
   emerald700: colors.primary[700],
 
   // Caret color
-  emeraldCaret: '#10B981',
+  emeraldCaret: colors.primary[500],
 
-  green50: '#F0FDF4',
+  green50: '#F0FDF4', // No exact match in design system
 
   // Character counter error color
-  red500: '#EF4444',
+  red500: '#EF4444', // Brighter red; design system `error` is #B53030
 
-  stone200: '#E7E5E4',
+  stone200: colors.gray[200],
 
-  stone300: '#D6D3D1',
+  stone300: colors.gray[300],
 
-  stone400: '#A8A29E',
+  stone400: colors.gray[400],
 
-  stone500: '#78716C',
+  stone500: colors.gray[500],
 
-  stone600: '#57534E',
+  stone600: colors.gray[600],
 
-  stone700: '#44403C',
+  stone700: colors.gray[700],
 
   // Text colors - Stone palette
-  stone800: '#1C1917',
+  stone800: colors.gray[900],
 
   // Success state
-  successBackground: '#D1FAE5',
+  successBackground: colors.primary[100],
 } as const;
 
 /**

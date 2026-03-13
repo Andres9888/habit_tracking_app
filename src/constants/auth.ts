@@ -5,43 +5,45 @@
  * border radius, and animation configurations.
  */
 
+import { colors } from '@/theme/colors';
+
 /**
  * Color palette for authentication screens
- * All colors follow the Tailwind slate palette for consistency
+ * References the design system color tokens for consistency.
  */
 export const AUTH_COLORS = {
   /** Primary background color */
-  background: '#ffffff',
+  background: colors.text.inverse,
 
-  /** Border color - stone-200 */
-  border: '#e7e5e4',
+  /** Border color */
+  border: colors.gray[200],
 
-  /** Error color - red-500/red-600 (WCAG AA compliant) */
-  error: '#dc2626',
+  /** Error color (WCAG AA compliant) */
+  error: colors.error,
 
-  /** Placeholder text color - stone-400 */
-  placeholder: '#a8a29e',
+  /** Placeholder text color */
+  placeholder: colors.gray[400],
 
-  /** Primary text color - stone-900 */
-  primary: '#1c1917',
+  /** Primary text color */
+  primary: colors.gray[900],
 
-  /** Secondary text color - stone-600 */
-  secondary: '#57534e',
+  /** Secondary text color */
+  secondary: colors.gray[500],
 
   /** Shadow color */
   shadow: '#000000',
 
-  /** Dark slate - stone-700 */
-  slateDark: '#44403c',
+  /** Dark slate */
+  slateDark: colors.gray[700],
 
-  /** Success color - green-500 */
-  success: '#10b981',
+  /** Success color */
+  success: colors.primary[500],
 
-  /** Primary text color - stone-900 */
-  text: '#1c1917',
+  /** Primary text color */
+  text: colors.gray[900],
 
-  /** Muted text color - stone-500 */
-  textMuted: '#57534e',
+  /** Muted text color */
+  textMuted: colors.gray[500],
 } as const;
 
 /**
