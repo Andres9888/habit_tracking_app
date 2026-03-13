@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { colors } from '../../../theme/colors';
 import { typography } from '../../../theme/typography';
 import { spacing, borderRadius } from '../../../theme/spacing';
@@ -21,12 +21,14 @@ export function Legend({ data, onSegmentPress }: LegendProps) {
       {STRENGTH_LEVELS.filter((level) => data[level].count > 0).map((level) => {
         const levelData = data[level];
         return (
-          <TouchableOpacity
+          <Pressable
             key={level}
             accessibilityLabel={`${LEVEL_LABELS[level]}: ${levelData.percentage.toFixed(0)}%, ${levelData.count} habits`}
             accessibilityRole='button'
-            activeOpacity={0.7}
-            style={styles.legendItem}
+            style={({ pressed }) => [
+              styles.legendItem,
+              { opacity: pressed ? 0.7 : 1 },
+            ]}
             onPress={() => onSegmentPress?.(level)}
           >
             <View style={styles.legendRow}>
@@ -42,7 +44,7 @@ export function Legend({ data, onSegmentPress }: LegendProps) {
             <Text style={styles.legendValue}>
               {levelData.percentage.toFixed(0)}%
             </Text>
-          </TouchableOpacity>
+          </Pressable>
         );
       })}
     </View>

@@ -1,10 +1,17 @@
 import { Pressable, Text, View } from 'react-native';
 import Animated from 'react-native-reanimated';
+import { colors } from '../../../../../theme/colors';
 import { useMonetizationAnimations } from './useMonetizationAnimations';
 import type { MonetizationHeroProps } from './MonetizationHero.types';
 import { SHADOW_OPACITY } from '../../../../../constants';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
+
+// TODO: These premium/indigo colors are not yet in the design system
+const PREMIUM_INDIGO_LIGHT = '#a5b4fc'; // indigo-300
+const PREMIUM_INDIGO_MUTED = '#cbd5f5'; // indigo-200
+const PREMIUM_PURPLE_CTA = '#6d28d9'; // violet-700
+const PREMIUM_PURPLE_SHADOW = '#312e81'; // indigo-900
 
 export function MonetizationHero({
   freeHabitLimit, habitSlotsUsed, hasReachedHabitLimit, onUpgradePress, reduceMotion = false,
@@ -21,22 +28,22 @@ export function MonetizationHero({
     <View
       className='overflow-hidden rounded-3xl p-6'
       style={{
-        backgroundColor: '#1c1917',
+        backgroundColor: colors.gray[900],
         elevation: 4,
-        shadowColor: '#1c1917',
+        shadowColor: colors.gray[900],
         shadowOffset: { height: 4, width: 0 },
         shadowOpacity: SHADOW_OPACITY.minimal,
         shadowRadius: 16,
       }}
     >
       <View className='gap-2'>
-        <Text className='text-[13px] font-medium uppercase tracking-[4px] text-[#a5b4fc]'>
-          ✨ Try Premium Free
+        <Text style={{ color: PREMIUM_INDIGO_LIGHT }} className='text-[13px] font-medium uppercase tracking-[4px]'>
+          {'\u2728'} Try Premium Free
         </Text>
         <Text className='text-[22px] font-semibold leading-[28px] tracking-tight text-white'>
           Ready for unlimited habits?
         </Text>
-        <Text className='text-[17px] font-normal leading-[22px] text-[#cbd5f5]'>
+        <Text style={{ color: PREMIUM_INDIGO_MUTED }} className='text-[17px] font-normal leading-[22px]'>
           Try free for 7 days — track every area of your life, get smart
           reminders, and unlock AI-powered insights.
         </Text>
@@ -46,12 +53,13 @@ export function MonetizationHero({
           accessibilityHint='Start your 7-day free trial'
           accessibilityLabel='Upgrade to premium for unlimited habits'
           accessibilityRole='button'
-          className='flex-1 items-center rounded-full bg-[#6d28d9] px-5 py-3'
+          className='flex-1 items-center rounded-full px-5 py-3'
           style={({ pressed }: { pressed: boolean }) => [
             {
+              backgroundColor: PREMIUM_PURPLE_CTA,
               elevation: 6,
               opacity: pressed ? 0.8 : 1,
-              shadowColor: '#312e81',
+              shadowColor: PREMIUM_PURPLE_SHADOW,
               shadowOffset: { height: 8, width: 0 },
               shadowOpacity: 0.32,
               shadowRadius: 16,
@@ -61,13 +69,13 @@ export function MonetizationHero({
           onPress={onUpgradePress}
         >
           <Text className='text-[17px] font-semibold leading-[22px] tracking-wide text-white'>
-            Start Free Trial →
+            Start Free Trial {'\u2192'}
           </Text>
         </AnimatedPressable>
         <View className='border-white/22 flex-1 rounded-full border px-4 py-3'>
           <Animated.Text
-            className='text-center text-[13px] font-semibold text-[#cbd5f5]'
-            style={shimmerStyle}
+            style={{ color: PREMIUM_INDIGO_MUTED }}
+            className='text-center text-[13px] font-semibold'
           >
             Keep 3 habits free
           </Animated.Text>
@@ -75,7 +83,7 @@ export function MonetizationHero({
       </View>
       <View className='gap-2 pt-2'>
         <View className='flex-row items-center justify-between'>
-          <Text className='text-[13px] font-medium uppercase tracking-[1px] text-[#a8a29e]'>
+          <Text style={{ color: colors.gray[400] }} className='text-[13px] font-medium uppercase tracking-[1px]'>
             Habit slots used
           </Text>
           <Text className='text-[13px] font-bold tabular-nums text-white'>
@@ -84,11 +92,11 @@ export function MonetizationHero({
         </View>
         <View className='bg-white/12 h-2 w-full overflow-hidden rounded-full' onLayout={handleTrackLayout}>
           <Animated.View
-            className='h-2 rounded-full bg-[#fbbf24]'
-            style={[{ maxWidth: trackWidth }, progressStyle]}
+            className='h-2 rounded-full'
+            style={[{ backgroundColor: colors.streak[300], maxWidth: trackWidth }, progressStyle]}
           />
         </View>
-        <Text className='text-[13px] font-medium text-[#fbbf24]'>
+        <Text style={{ color: colors.streak[300] }} className='text-[13px] font-medium'>
           {hasReachedHabitLimit
             ? "You're making great progress! Go unlimited to track every area of your life."
             : `${freeHabitLimit - habitSlotsUsed} free ${freeHabitLimit - habitSlotsUsed === 1 ? 'slot' : 'slots'} remaining. Premium unlocks unlimited habits.`}

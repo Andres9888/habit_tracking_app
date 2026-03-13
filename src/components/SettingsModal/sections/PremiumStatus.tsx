@@ -15,6 +15,7 @@ import { Crown, Zap, Settings } from 'lucide-react-native';
 import { SettingsSection } from '../SettingsSection';
 import { SettingsRow } from '../SettingsRow';
 import { AnimatedPressable } from '../../ui/AnimatedPressable';
+import { colors as palette } from '@/theme/colors';
 import { useThemeColors } from '../../../theme/ThemeContext';
 
 interface Props {
@@ -92,7 +93,7 @@ export function PremiumStatus({ highContrast, isPremium, onUpgrade }: Props) {
               </Text>
               <View
                 className='rounded-full px-2 py-0.5'
-                style={{ backgroundColor: isDark ? '#422006' : '#fef3c7' }}
+                style={{ backgroundColor: isDark ? '#422006' : palette.warningLight }}
               >
                 <Text
                   className='text-[10px] font-bold uppercase'
@@ -147,7 +148,7 @@ export function PremiumStatus({ highContrast, isPremium, onUpgrade }: Props) {
           end={{ x: 1, y: 1 }}
           start={{ x: 0, y: 0 }}
           style={{
-            shadowColor: '#6366f1',
+            shadowColor: palette.premium[500],
             shadowOffset: { height: 4, width: 0 },
             shadowOpacity: isDark ? 0.15 : 0.3,
             shadowRadius: 16,
@@ -156,6 +157,7 @@ export function PremiumStatus({ highContrast, isPremium, onUpgrade }: Props) {
         >
           {/* Shimmer sweep overlay */}
           <Animated.View style={[styles.shimmerOverlay, shimmerStyle]}>
+            {/* Intentional rgba for shimmer transparency effect */}
             <LinearGradient
               colors={['transparent', 'rgba(255,255,255,0.6)', 'transparent']}
               end={{ x: 1, y: 0 }}
@@ -169,12 +171,12 @@ export function PremiumStatus({ highContrast, isPremium, onUpgrade }: Props) {
               className='mr-4 h-10 w-10 items-center justify-center rounded-xl'
               style={{ backgroundColor: 'rgba(255,255,255,0.15)' }}
             >
-              <Zap color='#ffffff' size={20} />
+              <Zap color={palette.text.inverse} size={20} />
             </View>
             <View className='flex-1'>
               <Text
                 className='text-[17px] font-bold'
-                style={{ color: isDark ? '#E0E7FF' : '#ffffff' }}
+                style={{ color: isDark ? '#E0E7FF' : palette.text.inverse }}
               >
                 Upgrade to Premium
               </Text>
@@ -194,7 +196,7 @@ export function PremiumStatus({ highContrast, isPremium, onUpgrade }: Props) {
             >
               <Text
                 className='text-[13px] font-bold'
-                style={{ color: isDark ? '#C4B5FD' : '#ffffff' }}
+                style={{ color: isDark ? '#C4B5FD' : palette.text.inverse }}
               >
                 PRO
               </Text>
