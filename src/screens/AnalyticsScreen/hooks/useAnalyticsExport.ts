@@ -8,6 +8,7 @@ import { Alert } from 'react-native';
 import type { ExportFormat } from '../../../lib/dataExport';
 import { exportData, prepareExportData } from '../../../lib/dataExport';
 import { useIsPremiumUser } from '../../../hooks/useIsPremiumUser';
+import { useNativePaywall } from '../../../hooks/useNativePaywall';
 import type { OverviewStats } from './useAnalyticsData';
 
 interface UseAnalyticsExportProps {
@@ -16,25 +17,17 @@ interface UseAnalyticsExportProps {
 
 export function useAnalyticsExport({ overviewStats }: UseAnalyticsExportProps) {
   const [showExportMenu, setShowExportMenu] = useState(false);
-  const [showPaywall, setShowPaywall] = useState(false);
   const isPremiumUser = useIsPremiumUser();
+  const { presentPaywall } = useNativePaywall();
 
   const handleExportPress = useCallback(() => {
     if (!isPremiumUser) {
-      setShowPaywall(true);
+      void presentPaywall({ source: 'analytics_export' });
       return;
     }
     setShowExportMenu(true);
-  }, [isPremiumUser]);
+  }, [isPremiumUser, presentPaywall]);
 
-  /**
-   * Handle data export in the requested format (CSV or JSON)
-   * This function:
-   * 1. Closes the export menu modal
-   * 2. Prepares analytics data for export
-   * 3. Calls the export utility with format preference
-   * 4. Shows success/error alerts with appropriate messaging
-   */
   const handleExport = useCallback(
     async (format: ExportFormat) => {
       setShowExportMenu(false);
@@ -60,18 +53,11 @@ export function useAnalyticsExport({ overviewStats }: UseAnalyticsExportProps) {
     [overviewStats]
   );
 
-  const handleStartTrial = useCallback(() => {
-    setShowPaywall(false);
-  }, []);
-
   return {
-    showExportMenu,
-    setShowExportMenu,
-    showPaywall,
-    setShowPaywall,
-    isPremiumUser,
-    handleExportPress,
     handleExport,
-    handleStartTrial,
+    handleExportPress,
+    isPremiumUser,
+    setShowExportMenu,
+    showExportMenu,
   };
 }

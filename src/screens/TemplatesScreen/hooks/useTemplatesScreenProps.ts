@@ -2,6 +2,7 @@
  * Hook to prepare props for TemplatesScreen child views
  */
 
+import { useNativePaywall } from '../../../hooks/useNativePaywall';
 import { useReduceMotion } from '../../../hooks/useReduceMotion';
 import {
   useEntranceAnimations,
@@ -25,6 +26,7 @@ export function useTemplatesScreenProps() {
   const animations = useEntranceAnimations({ reducedMotion });
   const tabIndicator = useTabIndicator({ reducedMotion });
   const data = useTemplatesData();
+  const { presentPaywall } = useNativePaywall();
   const state = useTemplatesScreenState({ categories: data.categories });
 
   const templatesByCategory = useTemplatesByCategory(data.allTemplates);
@@ -42,7 +44,7 @@ export function useTemplatesScreenProps() {
     importTemplate: data.importTemplate,
     previewTemplate: state.previewTemplate,
     isPremiumUser: data.isPremiumUser,
-    onShowPaywall: () => state.setShowPaywall(true),
+    onShowPaywall: () => { void presentPaywall({ source: 'templates_import' }); },
     seedTemplates: data.seedTemplates,
     setShowCelebration: state.setShowCelebration,
     setExpandedCategories: state.setExpandedCategories,
@@ -65,9 +67,9 @@ export function useTemplatesScreenProps() {
   });
 
   const viewNav = useViewNavigation();
-  const packConfirm = usePackConfirm(data.isPremiumUser, () =>
-    state.setShowPaywall(true)
-  );
+  const packConfirm = usePackConfirm(data.isPremiumUser, () => {
+    void presentPaywall({ source: 'templates_premium_pack' });
+  });
   const mainBrowseData = useMainBrowseData({
     allTemplates: data.allTemplates,
     isPremiumUser: data.isPremiumUser,

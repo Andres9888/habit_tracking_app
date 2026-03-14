@@ -57,4 +57,38 @@ export const styles = StyleSheet.create({
     marginBottom: spacing.lg,
     paddingHorizontal: spacing.sm,
   },
+  lockedContainer: {
+    alignItems: 'center',
+    flex: 1,
+    justifyContent: 'center',
+    paddingHorizontal: spacing['2xl'],
+  },
+  lockedEmoji: {
+    fontSize: 64,
+    marginBottom: spacing.lg,
+  },
+  lockedTitle: {
+    ...typography.heading2,
+    marginBottom: spacing.sm,
+    textAlign: 'center' as const,
+  },
+  lockedDescription: {
+    ...typography.body,
+    marginBottom: spacing.xl,
+    textAlign: 'center' as const,
+  },
+  lockedCta: {
+    alignItems: 'center',
+    backgroundColor: colors.primary[600],
+    borderRadius: 14,
+    paddingHorizontal: spacing.xl,
+    paddingVertical: spacing.md,
+  },
+  lockedCtaPressed: {
+    opacity: 0.8,
+  },
+  lockedCtaText: {
+    ...typography.button,
+    color: '#FFFFFF',
+  },
 });

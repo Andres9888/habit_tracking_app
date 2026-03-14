@@ -66,10 +66,8 @@ function TemplatesScreenContent() {
           previewTemplate={state.previewTemplate}
           showCustomizeModal={state.showCustomizeModal}
           showFullsizePreview={state.showFullsizePreview}
-          showPaywall={state.showPaywall}
           onCloseCustomize={() => state.setShowCustomizeModal(false)}
           onCloseFullsize={() => state.setShowFullsizePreview(false)}
-          onClosePaywall={() => state.setShowPaywall(false)}
           onCustomize={handlers.handleCustomizeFromPreview}
           onDirectImport={handlers.handleDirectImport}
           onImport={handlers.handleTemplateImport}

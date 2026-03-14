@@ -56,7 +56,6 @@ export type ExportFormat = 'csv' | 'json';
 export interface UseAnalyticsScreenReturn {
   // State
   refreshing: boolean;
-  showPaywall: boolean;
   showExportMenu: boolean;
   isPremiumUser: boolean;
   isLoading: boolean;
@@ -73,7 +72,6 @@ export interface UseAnalyticsScreenReturn {
   handleHabitPress: (habitId: string) => void;
   handleExportPress: () => void;
   handleExport: (format: ExportFormat) => Promise<void>;
-  handleStartTrial: () => void;
-  setShowPaywall: (show: boolean) => void;
+  handlePresentPaywall: () => void;
   setShowExportMenu: (show: boolean) => void;
 }

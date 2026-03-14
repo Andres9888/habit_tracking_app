@@ -14,7 +14,6 @@ export const useAnalyticsScreen = (): UseAnalyticsScreenReturn => {
   const hasCheckedReview = useRef(false);
   const refreshTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Get analytics data
   const {
     overviewStats,
     strengthDistribution,
@@ -24,20 +23,16 @@ export const useAnalyticsScreen = (): UseAnalyticsScreenReturn => {
     isLoading,
   } = useAnalyticsQueries();
 
-  // Get analytics actions
   const {
     isPremiumUser,
-    showPaywall,
-    setShowPaywall,
     showExportMenu,
     setShowExportMenu,
     handleExportPress,
     handleExport,
-    handleStartTrial,
     handleHabitPress,
+    handlePresentPaywall,
   } = useAnalyticsActions({ overviewStats });
 
-  // Review request effect
   useEffect(() => {
     if (
       !hasCheckedReview.current &&
@@ -55,7 +50,6 @@ export const useAnalyticsScreen = (): UseAnalyticsScreenReturn => {
     }
   }, [isLoading, overviewStats, complianceData]);
 
-  // Cleanup refresh timer on unmount
   useEffect(() => {
     return () => {
       if (refreshTimerRef.current) clearTimeout(refreshTimerRef.current);
@@ -74,16 +68,14 @@ export const useAnalyticsScreen = (): UseAnalyticsScreenReturn => {
     handleExport,
     handleExportPress,
     handleHabitPress,
-    handleStartTrial,
+    handlePresentPaywall,
     isLoading,
     isPremiumUser,
     onRefresh,
     overviewStats,
     refreshing,
     setShowExportMenu,
-    setShowPaywall,
     showExportMenu,
-    showPaywall,
     strengthDistribution,
     trendData,
     weeklyInsights,

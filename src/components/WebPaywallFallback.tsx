@@ -1,18 +1,18 @@
 /**
- * WebFallback — shown on web where RevenueCat isn't available
+ * WebPaywallFallback — shown on web where RevenueCat isn't available
  */
 
 import React from 'react';
 import { Modal, View, Text, Pressable } from 'react-native';
-import { colors as coreColors } from '../../theme/colors/core';
-import { useThemeColors } from '../../theme/ThemeContext';
+import { colors as coreColors } from '../theme/colors/core';
+import { useThemeColors } from '../theme/ThemeContext';
 
-interface WebFallbackProps {
+interface WebPaywallFallbackProps {
   visible: boolean;
   onClose: () => void;
 }
 
-export function WebFallback({ visible, onClose }: WebFallbackProps) {
+export function WebPaywallFallback({ visible, onClose }: WebPaywallFallbackProps) {
   const { colors } = useThemeColors();
 
   if (!visible) return null;

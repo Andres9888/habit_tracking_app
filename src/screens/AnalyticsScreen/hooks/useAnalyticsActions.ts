@@ -6,6 +6,7 @@ import { useState, useCallback } from 'react';
 import { Alert } from 'react-native';
 import { exportData, prepareExportData } from '../../../utils/exportData';
 import { usePremium } from '../../../hooks/usePremium/usePremium';
+import { useNativePaywall } from '../../../hooks/useNativePaywall';
 import type { ExportFormat } from '../AnalyticsScreen.types';
 
 interface UseAnalyticsActionsProps {
@@ -16,16 +17,16 @@ export const useAnalyticsActions = ({
   overviewStats,
 }: UseAnalyticsActionsProps) => {
   const { isPremium: isPremiumUser } = usePremium();
-  const [showPaywall, setShowPaywall] = useState(!isPremiumUser);
+  const { presentPaywall } = useNativePaywall();
   const [showExportMenu, setShowExportMenu] = useState(false);
 
   const handleExportPress = useCallback(() => {
     if (!isPremiumUser) {
-      setShowPaywall(true);
+      void presentPaywall({ source: 'analytics_export' });
       return;
     }
     setShowExportMenu(true);
-  }, [isPremiumUser]);
+  }, [isPremiumUser, presentPaywall]);
 
   const handleExport = useCallback(
     async (format: ExportFormat) => {
@@ -52,23 +53,21 @@ export const useAnalyticsActions = ({
     [overviewStats]
   );
 
-  const handleStartTrial = useCallback(() => {
-    setShowPaywall(false);
-  }, []);
+  const handlePresentPaywall = useCallback(() => {
+    void presentPaywall({ source: 'analytics_screen' });
+  }, [presentPaywall]);
 
   const handleHabitPress = useCallback((_habitId: string) => {
     // TODO: navigate to habit detail
   }, []);
 
   return {
-    isPremiumUser,
-    showPaywall,
-    setShowPaywall,
-    showExportMenu,
-    setShowExportMenu,
-    handleExportPress,
     handleExport,
-    handleStartTrial,
+    handleExportPress,
     handleHabitPress,
+    handlePresentPaywall,
+    isPremiumUser,
+    setShowExportMenu,
+    showExportMenu,
   };
 };

@@ -25,7 +25,6 @@ export function preloadPostLaunchAppParts(): Promise<void> {
 
   preloadPromise = Promise.allSettled([
     import('../../components/CreateHabitModal'),
-    import('../../components/RevenueCatPaywall'),
     import('../../components/SettingsModal'),
     import('../../screens/TemplatesScreen'),
     import('./components/HabitsModals/CreateHabitModalSection'),

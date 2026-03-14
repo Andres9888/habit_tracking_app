@@ -1,27 +1,20 @@
 /**
  * HabitsAppOverlays - Bottom-of-tree overlay components
- * Groups modals, toasts, and paywall into a single render unit
+ * Groups modals, toasts, and web paywall fallback into a single render unit
  */
 
-import { lazy, Suspense } from 'react';
 import { ArchiveUndoToast } from '../../../components/ArchiveUndoToast';
+import { WebPaywallFallback } from '../../../components/WebPaywallFallback';
 import { BatchDeleteConfirmModal } from './BatchDeleteConfirmModal';
 import { HabitsModals } from './HabitsModals';
 import WebToaster from './WebToaster';
 import { TOAST_DURATION_MS } from '@/constants';
 import type { HabitsModalsState } from '../hooks/types';
 
-const RevenueCatPaywall = lazy(() =>
-  import('../../../components/RevenueCatPaywall').then((m) => ({
-    default: m.RevenueCatPaywall,
-  }))
-);
-
 interface HabitsAppOverlaysProps {
   modals: HabitsModalsState;
-  paywallVisible: boolean;
-  onPaywallClose: () => void;
-  onPaywallSuccess: () => void;
+  webFallbackVisible: boolean;
+  onDismissWebFallback: () => void;
   /** Batch archive undo */
   batchArchiveUndoVisible: boolean;
   batchArchiveUndoCount: number;
@@ -36,9 +29,8 @@ interface HabitsAppOverlaysProps {
 
 export function HabitsAppOverlays({
   modals,
-  paywallVisible,
-  onPaywallClose,
-  onPaywallSuccess,
+  webFallbackVisible,
+  onDismissWebFallback,
   batchArchiveUndoVisible,
   batchArchiveUndoCount,
   onBatchArchiveUndo,
@@ -72,14 +64,10 @@ export function HabitsAppOverlays({
         }}
       />
 
-      <Suspense fallback={null}>
-        <RevenueCatPaywall
-          visible={paywallVisible}
-          onClose={onPaywallClose}
-          onPurchaseSuccess={onPaywallSuccess}
-          onRestoreSuccess={onPaywallSuccess}
-        />
-      </Suspense>
+      <WebPaywallFallback
+        visible={webFallbackVisible}
+        onClose={onDismissWebFallback}
+      />
     </>
   );
 }

@@ -1,14 +1,13 @@
-/* eslint-disable max-lines */
 /**
  * AnalyticsScreen - Main analytics dashboard screen
- * Shows habit statistics, charts, and insights
+ * Shows habit statistics, charts, and insights.
+ * Non-premium users see a locked state with a paywall CTA.
  */
 import React, { useMemo } from 'react';
-import { ScrollView, RefreshControl } from 'react-native';
+import { Pressable, ScrollView, RefreshControl, Text, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { colors } from '../../theme/colors';
 import { useThemeColors } from '../../theme/ThemeContext';
-import { PremiumPaywall } from '../../components/PremiumPaywall';
 import { AnalyticsScreenSkeleton } from '../../components/SkeletonLoader';
 import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 import { ScreenHeader } from '../../components/ScreenHeader';
@@ -27,7 +26,6 @@ function AnalyticsScreenContent() {
   const { colors: themeColors } = useThemeColors();
   const {
     refreshing,
-    showPaywall,
     showExportMenu,
     isPremiumUser,
     isLoading,
@@ -40,27 +38,38 @@ function AnalyticsScreenContent() {
     handleHabitPress,
     handleExportPress,
     handleExport,
-    handleStartTrial,
-    setShowPaywall,
+    handlePresentPaywall,
     setShowExportMenu,
   } = useAnalyticsScreen();
 
-  // All React hooks must be called before any early returns
   const rankedHabits = useMemo(
     () => overviewStats?.rankedHabits || [],
     [overviewStats?.rankedHabits]
   );
   const hasNoHabits = overviewStats?.totalHabits === 0;
 
-  // Show paywall modal if not premium user
-  if (!isPremiumUser && showPaywall) {
+  if (!isPremiumUser) {
     return (
-      <PremiumPaywall
-        visible
-        variant='analytics'
-        onClose={() => setShowPaywall(false)}
-        onStartTrial={handleStartTrial}
-      />
+      <View style={[styles.container, { backgroundColor: themeColors.background }]}>
+        <ScreenHeader leftAction={null} subtitle='Premium feature' title='Analytics' />
+        <View style={styles.lockedContainer}>
+          <Text style={[styles.lockedEmoji]}>📊</Text>
+          <Text style={[styles.lockedTitle, { color: themeColors.text.primary }]}>
+            Unlock Analytics
+          </Text>
+          <Text style={[styles.lockedDescription, { color: themeColors.text.secondary }]}>
+            Get detailed insights into your habit performance with charts, trends, and weekly reports.
+          </Text>
+          <Pressable
+            accessibilityLabel="Upgrade to Premium"
+            accessibilityRole="button"
+            style={({ pressed }) => [styles.lockedCta, pressed && styles.lockedCtaPressed]}
+            onPress={handlePresentPaywall}
+          >
+            <Text style={styles.lockedCtaText}>Upgrade to Premium</Text>
+          </Pressable>
+        </View>
+      </View>
     );
   }
 
@@ -82,11 +91,7 @@ function AnalyticsScreenContent() {
       style={[styles.container, { backgroundColor: themeColors.background }]}
     >
       <Animated.View entering={FadeInDown.delay(280).springify().damping(18)}>
-        <ScreenHeader
-          leftAction={null}
-          subtitle='Track your habit journey'
-          title='Analytics'
-        />
+        <ScreenHeader leftAction={null} subtitle='Track your habit journey' title='Analytics' />
       </Animated.View>
 
       {hasNoHabits ? (
@@ -95,19 +100,10 @@ function AnalyticsScreenContent() {
         </Animated.View>
       ) : (
         <>
-          <Animated.View
-            entering={FadeInDown.delay(340).springify().damping(18)}
-          >
-            <OverviewStats
-              isLoading={isLoading}
-              stats={overviewStats}
-              onHabitPress={handleHabitPress}
-            />
+          <Animated.View entering={FadeInDown.delay(340).springify().damping(18)}>
+            <OverviewStats isLoading={isLoading} stats={overviewStats} onHabitPress={handleHabitPress} />
           </Animated.View>
-
-          <Animated.View
-            entering={FadeInDown.delay(400).springify().damping(18)}
-          >
+          <Animated.View entering={FadeInDown.delay(400).springify().damping(18)}>
             <ChartSections
               complianceData={complianceData}
               isLoading={isLoading}
@@ -115,20 +111,10 @@ function AnalyticsScreenContent() {
               trendData={trendData}
             />
           </Animated.View>
-
-          <Animated.View
-            entering={FadeInDown.delay(460).springify().damping(18)}
-          >
-            <InsightsSections
-              rankedHabits={rankedHabits}
-              weeklyInsights={weeklyInsights}
-              onHabitPress={handleHabitPress}
-            />
+          <Animated.View entering={FadeInDown.delay(460).springify().damping(18)}>
+            <InsightsSections rankedHabits={rankedHabits} weeklyInsights={weeklyInsights} onHabitPress={handleHabitPress} />
           </Animated.View>
-
-          <Animated.View
-            entering={FadeInDown.delay(520).springify().damping(18)}
-          >
+          <Animated.View entering={FadeInDown.delay(520).springify().damping(18)}>
             <ExportButton onPress={() => void handleExportPress()} />
           </Animated.View>
         </>

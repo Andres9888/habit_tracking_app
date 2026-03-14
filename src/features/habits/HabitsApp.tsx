@@ -134,13 +134,12 @@ function HabitsAppContent() {
             confirmDeleteCount={selectionActions.deleteCount}
             confirmDeleteVisible={selectionActions.confirmDeleteVisible}
             modals={modals}
-            paywallVisible={handlers.paywallVisible}
+            webFallbackVisible={handlers.webFallbackVisible}
             onBatchArchiveDismiss={selectionActions.dismissBatchArchiveUndo}
             onBatchArchiveUndo={handleBatchArchiveUndoPress}
             onConfirmDeleteCancel={selectionActions.hideDeleteConfirmation}
             onConfirmDeleteConfirm={handleConfirmBatchDelete}
-            onPaywallClose={handlers.handlePaywallClose}
-            onPaywallSuccess={handlers.handlePaywallSuccess}
+            onDismissWebFallback={handlers.dismissWebFallback}
           /> : null}
       </View>
     </GestureHandlerRootView>

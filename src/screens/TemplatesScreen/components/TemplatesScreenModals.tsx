@@ -1,11 +1,10 @@
 /**
  * Composition wrapper for all Templates screen modals
- * Renders TemplateModals, PaywallSheet, and PackConfirmSheet together
+ * Renders TemplateModals and PackConfirmSheet together
  */
 
 import type { Doc, Id } from '../../../../convex/_generated/dataModel';
 import { PackConfirmSheet } from '../../../components/PackConfirmSheet';
-import { PaywallSheet } from '../../../components/PaywallSheet';
 import type { PremiumPack } from '../data/premiumPacks';
 import type { TemplateCustomizations } from '../TemplatesScreen.types';
 import { TemplateModals } from './TemplateModals';
@@ -15,7 +14,6 @@ interface TemplatesScreenModalsProps {
   importingTemplateId: Id<'templates'> | null;
   onCloseCustomize: () => void;
   onCloseFullsize: () => void;
-  onClosePaywall: () => void;
   onCustomize: (template: Doc<'templates'>) => void;
   onDirectImport: (templateId: Id<'templates'>) => Promise<void>;
   onImport: (
@@ -29,7 +27,6 @@ interface TemplatesScreenModalsProps {
   previewTemplate: Doc<'templates'> | null;
   showCustomizeModal: boolean;
   showFullsizePreview: boolean;
-  showPaywall: boolean;
 }
 
 export function TemplatesScreenModals(p: TemplatesScreenModalsProps) {
@@ -47,7 +44,6 @@ export function TemplatesScreenModals(p: TemplatesScreenModalsProps) {
         onDirectImport={p.onDirectImport}
         onImport={p.onImport}
       />
-      <PaywallSheet visible={p.showPaywall} onClose={p.onClosePaywall} />
       <PackConfirmSheet
         pack={p.packConfirmPack}
         visible={p.packConfirmVisible}
