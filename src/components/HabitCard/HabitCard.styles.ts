@@ -51,7 +51,7 @@ const coreStyles = StyleSheet.create({
   content: { flex: 1, justifyContent: 'center', padding: spacing.base },
   disabled: { opacity: 0.5 },
   habitInfo: {
-    alignItems: 'center',
+    alignItems: 'flex-start',
     flex: 1,
     flexDirection: 'row',
     gap: spacing.md,
@@ -82,7 +82,7 @@ const coreStyles = StyleSheet.create({
   } as TextStyle,
   strengthFill: { bottom: 0, left: 0, position: 'absolute', top: 0 },
   topRow: {
-    alignItems: 'center',
+    alignItems: 'flex-start',
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
