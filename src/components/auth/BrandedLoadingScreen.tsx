@@ -8,7 +8,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { Text, View } from 'react-native';
 
 import { useThemeColors } from '../../theme/ThemeContext';
-import { HabitCardSkeleton, SkeletonLoader } from '../SkeletonLoader';
+import { SkeletonLoader } from '../SkeletonLoader';
 import { LoadingTimeoutCard } from './LoadingTimeoutCard';
 
 const LOADING_TIMEOUT_MS = 10_000;
@@ -62,12 +62,6 @@ export function BrandedLoadingScreen() {
             <SkeletonLoader borderRadius={4} height={4} width={120} />
           </View>
         )}
-      </View>
-
-      {/* Ghost habit cards */}
-      <View className='flex-1 px-4 pt-6'>
-        <HabitCardSkeleton />
-        <HabitCardSkeleton />
       </View>
     </View>
   );
