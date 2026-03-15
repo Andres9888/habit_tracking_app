@@ -9,6 +9,7 @@ import {
   Extrapolation,
   type SharedValue,
 } from 'react-native-reanimated';
+import { SCREEN_HEIGHT } from './Modal.constants';
 
 interface UseModalStylesParams {
   translateY: SharedValue<number>;
@@ -41,49 +42,24 @@ export function useModalStyles({
     };
   });
 
-  // Apple-like fullScreen animated style
+  // Full slide from bottom — matches native Modal animationType='slide'
   const fullScreenStyle = useAnimatedStyle(() => {
     'worklet';
-    // Scale: starts at 0.94, ends at 1.0
-    const scaleValue = interpolate(
-      fullScreenProgress.value ?? 0,
-      [0, 1],
-      [0.94, 1],
-      Extrapolation.CLAMP
-    );
-
-    // Opacity: starts at 0, ends at 1
-    const opacityValue = interpolate(
-      fullScreenProgress.value ?? 0,
-      [0, 0.5, 1],
-      [0, 0.8, 1],
-      Extrapolation.CLAMP
-    );
-
-    // TranslateY: starts at 80, ends at 0 (slides up)
+    // TranslateY: slides up from bottom of screen
     const translateYValue = interpolate(
       fullScreenProgress.value ?? 0,
       [0, 1],
-      [80, 0],
+      [SCREEN_HEIGHT, 0],
       Extrapolation.CLAMP
     );
 
-    // Add gesture translation
+    // Add gesture translation for drag-to-dismiss
     const gestureTranslateY = fullScreenGestureY.value ?? 0;
 
-    // Scale down slightly when dragging (interactive feedback)
-    const gestureScale = interpolate(
-      gestureTranslateY,
-      [0, 200],
-      [1, 0.96],
-      Extrapolation.CLAMP
-    );
-
     return {
-      opacity: opacityValue,
+      opacity: 1,
       transform: [
         { translateY: translateYValue + gestureTranslateY },
-        { scale: scaleValue * gestureScale },
       ],
     };
   });

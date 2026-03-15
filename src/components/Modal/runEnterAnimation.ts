@@ -39,12 +39,11 @@ export function runEnterAnimation(
       break;
     }
     case 'fullScreen': {
-      backdropOpacityValue.value = useReduced
-        ? targetOpacity
-        : withTiming(targetOpacity, fadeIn(400));
+      // Match native Modal animationType='slide' — no backdrop, timing-based
+      backdropOpacityValue.value = 0;
       fullScreenProgress.value = useReduced
         ? 1
-        : withSpring(1, FULLSCREEN_ORGANIC_SPRING);
+        : withTiming(1, fadeIn(350));
       fullScreenGestureY.value = 0;
       break;
     }
