@@ -17,7 +17,6 @@ import { getIconBackground } from './colorUtils';
 import type { CardColors, Habit } from './types';
 import {
   getIconContainerStyle,
-  TITLE_OVERLAY_STYLE,
   getChevronColor,
 } from './CardHeader.styles';
 
@@ -63,8 +62,8 @@ export function CardHeader({
     !isCompactMode && bestStreak > 0 && bestStreak > streak && !showHabitStrengthPercentage;
 
   return (
-    <View className={`relative ${isCompactMode ? 'mb-2' : 'mb-3'} flex-row items-center justify-between px-3`}>
-      <View className='flex-1 items-center'>
+    <View className={`${isCompactMode ? 'mb-2' : 'mb-3'} flex-row items-start px-3`}>
+      <View className='flex-1 items-center pt-0.5'>
         <ReAnimated.View style={iconPulseStyle}>
           <View
             className={`${isCompactMode ? 'h-7 w-7' : 'h-9 w-9'} items-center justify-center rounded-xl`}
@@ -74,11 +73,7 @@ export function CardHeader({
           </View>
         </ReAnimated.View>
       </View>
-      <View className='flex-1' />
-      <View className='flex-1' />
-      <View className='flex-1' />
-      <View className='flex-1' />
-      <View style={TITLE_OVERLAY_STYLE}>
+      <View style={{ flex: 4, paddingLeft: 8, paddingRight: 12 }}>
         <View className='flex-row items-center gap-2'>
           <Text
             className={`shrink ${isCompactMode ? 'text-[15px] font-semibold leading-[20px]' : 'text-[17px] font-bold leading-[22px]'}`}
