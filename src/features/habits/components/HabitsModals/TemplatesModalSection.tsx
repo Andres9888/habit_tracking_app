@@ -1,38 +1,24 @@
-import { Pressable, View } from 'react-native';
+import { Modal, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withSpring,
-} from 'react-native-reanimated';
-import { X } from 'lucide-react-native';
 
-import CustomModal from '../../../../components/Modal';
 import ErrorBoundary from '../../../../components/ErrorBoundary';
+import { ModalCloseButton } from '../../../../components/ui/ModalCloseButton';
 import { useHaptics } from '../../../../utils/haptics/useHaptics';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import TemplatesScreen from '../../../../screens/TemplatesScreen';
-import { springs } from '@/theme/animations';
 import type { TemplatesModalSectionProps } from './HabitsModals.types';
-
-const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 /**
  * Templates modal section - displays templates screen in full-screen modal
+ * Uses native Modal animationType='slide' to match Settings panel
  */
 export function TemplatesModalSection({
   showTemplatesScreen,
   closeTemplatesScreen,
-  reduceMotionPreference,
 }: TemplatesModalSectionProps) {
   const insets = useSafeAreaInsets();
   const { colors } = useThemeColors();
   const { trigger } = useHaptics();
-  const closeScale = useSharedValue(1);
-
-  const closeAnimatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: closeScale.value }],
-  }));
 
   const handleClose = () => {
     trigger('tap');
@@ -40,35 +26,23 @@ export function TemplatesModalSection({
   };
 
   return (
-    <CustomModal
-      variant='fullScreen'
+    <Modal
+      accessibilityViewIsModal
+      animationType='slide'
+      presentationStyle='overFullScreen'
+      statusBarTranslucent
+      transparent
       visible={showTemplatesScreen}
-      onClose={handleClose}
-      respectReduceMotion={!reduceMotionPreference}
+      onRequestClose={handleClose}
     >
-      <View className='flex-1' style={{ paddingTop: insets.top, backgroundColor: colors.background }}>
+      <View className='flex-1' style={{ backgroundColor: colors.background }}>
         <ErrorBoundary>
           <TemplatesScreen />
         </ErrorBoundary>
+        <View className='absolute right-4' style={{ top: insets.top + 8 }}>
+          <ModalCloseButton label='Close templates' onClose={handleClose} />
+        </View>
       </View>
-      <View className='absolute right-4' style={{ top: insets.top + 8 }}>
-        <AnimatedPressable
-          accessibilityHint='Close the templates screen'
-          accessibilityLabel='Close templates'
-          accessibilityRole='button'
-          className='h-10 w-10 items-center justify-center rounded-full shadow-md'
-          style={[{ backgroundColor: colors.card }, closeAnimatedStyle]}
-          onPress={handleClose}
-          onPressIn={() => {
-            closeScale.value = withSpring(0.9, springs.sheet);
-          }}
-          onPressOut={() => {
-            closeScale.value = withSpring(1, springs.button);
-          }}
-        >
-          <X color={colors.text.secondary} size={24} />
-        </AnimatedPressable>
-      </View>
-    </CustomModal>
+    </Modal>
   );
 }

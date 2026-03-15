@@ -38,14 +38,13 @@ export function useSwipeDismiss({ visible, onClose }: UseSwipeDismissProps) {
   const onCloseRef = useRef(onClose);
   onCloseRef.current = onClose;
 
+  // Native Modal animationType='slide' handles the enter animation.
+  // Just reset state so swipe-to-dismiss gesture works from position 0.
   useEffect(() => {
     if (visible) {
       isClosing.current = false;
-      translateY.value = withSequence(
-        withTiming(SCREEN_HEIGHT, { duration: 0 }),
-        withSpring(0, springs.bottomSheet)
-      );
-      backdropOpacity.value = withTiming(BACKDROP_TARGET, { duration: 300 });
+      translateY.value = 0;
+      backdropOpacity.value = BACKDROP_TARGET;
     }
   }, [visible]);
 

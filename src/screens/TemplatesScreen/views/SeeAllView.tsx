@@ -8,7 +8,7 @@ import type { Doc } from '../../../../convex/_generated/dataModel';
 import { ScreenHeader } from '../../../components/ScreenHeader';
 import { TemplateCard } from '../../../components/TemplateCard';
 import { colors } from '../../../theme/colors';
-import { durations } from '../../../theme/animations';
+import { durations, springs } from '../../../theme/animations';
 import { spacing } from '../../../theme/spacing';
 
 interface SeeAllViewProps {
@@ -36,7 +36,7 @@ export function SeeAllView({
         contentContainerStyle={{ paddingBottom: 100, paddingHorizontal: spacing.base }}
         keyExtractor={(item) => item._id}
         renderItem={({ item, index }) => (
-          <Animated.View entering={FadeInDown.delay(index * durations.stagger).duration(durations.enter)}>
+          <Animated.View entering={FadeInDown.delay(index * durations.stagger).duration(durations.enter).springify().damping(springs.standard.damping)}>
             <TemplateCard
               category={item.category}
               description={item.description}

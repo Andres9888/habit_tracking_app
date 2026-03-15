@@ -9,7 +9,7 @@ import { ScrollView, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { ScreenHeader } from '../../../components/ScreenHeader';
 import { useThemeColors } from '../../../theme/ThemeContext';
-import { durations } from '../../../theme/animations';
+import { durations, springs } from '../../../theme/animations';
 import { styles } from '../../templates/templatesScreenStyles';
 import { SearchBar } from '../components';
 import { FeaturedCollection } from '../components/FeaturedCollection';
@@ -17,7 +17,7 @@ import { PopularSection } from '../components/PopularSection';
 import type { MainBrowseViewProps } from './MainBrowseView.types';
 
 const stagger = (index: number) =>
-  FadeInDown.delay(index * durations.stagger).duration(durations.enter);
+  FadeInDown.delay(index * durations.stagger).duration(durations.enter).springify().damping(springs.standard.damping);
 
 export function MainBrowseView(p: MainBrowseViewProps) {
   const { colors } = useThemeColors();
