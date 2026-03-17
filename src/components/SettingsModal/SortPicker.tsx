@@ -58,6 +58,7 @@ export function SortPicker({ currentMode, onBack, onSelect }: SortPickerProps) {
             accessibilityState={{ selected: currentMode === option.value }}
             className='flex-row items-center rounded-xl px-4 py-3.5'
             style={({ pressed }) => ({
+              /* Intentional rgba — subtle press overlay on theme surface */
               backgroundColor: pressed
                 ? isDark
                   ? 'rgba(255,255,255,0.05)'

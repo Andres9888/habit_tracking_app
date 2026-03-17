@@ -21,7 +21,7 @@ import type { StickyHeaderContextValue } from '../../../../components/CalendarTi
 const STICKY_THRESHOLD = 48;
 const ANIM_DURATION = 180;
 
-export function useStickyHeader() {
+export function useStickyHeader(enabled = false) {
   const scrollY = useSharedValue(0);
 
   const scrollHandler = useAnimatedScrollHandler({
@@ -30,12 +30,7 @@ export function useStickyHeader() {
     },
   });
 
-  const stickyProgress = useDerivedValue((): number =>
-    withTiming(scrollY.value > STICKY_THRESHOLD ? 1 : 0, {
-      duration: ANIM_DURATION,
-      easing: Easing.out(Easing.cubic),
-    })
-  );
+  const stickyProgress = useDerivedValue((): number => 0);
 
   const contextValue = useMemo<StickyHeaderContextValue>(
     () => ({ stickyProgress }),

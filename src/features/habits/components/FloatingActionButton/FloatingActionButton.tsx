@@ -1,19 +1,21 @@
 import { Plus } from 'lucide-react-native';
 import { Animated, Pressable } from 'react-native';
+import { colors } from '../../../../theme/colors';
 import { useFocusRing } from '../../../../utils/accessibility';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import { useFABAnimations } from './useFABAnimations';
 import { useFABHandlers } from './useFABHandlers';
-import { useThemeColors } from '../../../../theme/ThemeContext';
 import type { FloatingActionButtonProps } from './types';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
+const RIPPLE_BG = `${colors.primary[600]}47`; // primary[600] at ~28% opacity
 
 export function FloatingActionButton({
   openCreateHabitScreen,
   celebrationsEnabled = true,
   reduceMotionPreference = false,
 }: FloatingActionButtonProps) {
-  const { colors } = useThemeColors();
+  const { colors: themeColors } = useThemeColors();
   const { bounce, pressScale, rippleOpacity, rippleScale } = useFABAnimations(
     celebrationsEnabled,
     reduceMotionPreference
@@ -47,21 +49,21 @@ export function FloatingActionButton({
       accessibilityLabel='Add habit'
       accessibilityRole='button'
       testID='home-create-habit-fab'
-      className='h-14 w-14 items-center justify-center rounded-full bg-[#059669] shadow-lg'
+      className='h-14 w-14 items-center justify-center rounded-full shadow-lg'
       {...focusHandlers}
-      style={[animatedStyle, focusStyle]}
+      style={[{ backgroundColor: colors.primary[600] }, animatedStyle, focusStyle]}
       onPress={handlePress}
     >
       <Animated.View
         className='absolute h-14 w-14 rounded-full'
         pointerEvents='none'
         style={{
-          backgroundColor: 'rgba(5,150,105,0.28)',
+          backgroundColor: RIPPLE_BG,
           opacity: rippleOpacity,
           transform: [{ scale: rippleScale }],
         }}
       />
-      <Plus color={colors.text.inverse} size={24} strokeWidth={2.5} />
+      <Plus color={themeColors.text.inverse} size={24} strokeWidth={2.5} />
     </AnimatedPressable>
   );
 }

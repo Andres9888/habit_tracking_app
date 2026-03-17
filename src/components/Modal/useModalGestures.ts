@@ -4,7 +4,7 @@
  */
 
 import { Gesture } from 'react-native-gesture-handler';
-import { withSpring, runOnJS, type SharedValue } from 'react-native-reanimated';
+import { Easing, withSpring, withTiming, runOnJS, type SharedValue } from 'react-native-reanimated';
 import { HapticPatterns } from '../../utils/haptics/patterns';
 import type { ModalVariant } from './Modal.types';
 import {
@@ -77,9 +77,9 @@ export function useModalGestures({
         event.translationY > DISMISS_THRESHOLD ||
         velocityY > VELOCITY_THRESHOLD
       ) {
-        // Dismiss
-        fullScreenProgress.value = withSpring(0, EXIT_SPRING_CONFIG);
-        fullScreenGestureY.value = withSpring(0, GESTURE_SPRING_CONFIG);
+        // Dismiss — timing-based to match native slide
+        fullScreenProgress.value = withTiming(0, { duration: 300, easing: Easing.in(Easing.cubic) });
+        fullScreenGestureY.value = withTiming(0, { duration: 300, easing: Easing.in(Easing.cubic) });
         runOnJS(HapticPatterns.tap)();
         runOnJS(onClose)();
       } else {

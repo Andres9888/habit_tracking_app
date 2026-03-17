@@ -11,6 +11,7 @@ export const RADIUS = (RING_SIZE - STROKE_WIDTH) / 2;
 export const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
 
 const TRACK_LIGHT = palette.gray[200];
+/* Intentional rgba — white overlay on dark surface for track visibility */
 const TRACK_DARK = 'rgba(255,255,255,0.15)';
 const PROGRESS_EMERALD_LIGHT = palette.primary[500];
 const PROGRESS_EMERALD_DARK = palette.primary[400];
@@ -36,6 +37,7 @@ export function getRingColors(
 ): RingColors {
   const isAmber = isToday && status !== 'complete' && status !== 'future';
 
+  /* Intentional rgba — derived from streak[300] (#E8B94D) with opacity */
   const todayBg = isAmber
     ? isDark
       ? 'rgba(232,185,77,0.08)'
@@ -56,7 +58,7 @@ export function getRingColors(
       : PROGRESS_EMERALD_LIGHT;
 
   let text: string = isDark ? darkColors.text.primary : palette.gray[800];
-  if (status === 'complete') text = '#ffffff';
+  if (status === 'complete') text = palette.text.inverse;
   else if (isToday) text = isDark ? palette.streak[300] : palette.streak[700];
   else if (status === 'future')
     text = isDark ? darkColors.text.tertiary : palette.gray[400];
@@ -68,7 +70,7 @@ export function getRingColors(
     todayBg,
     todayBorder,
     text,
-    checkIcon: '#ffffff',
+    checkIcon: palette.text.inverse,
   };
 }
 

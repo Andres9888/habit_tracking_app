@@ -4,17 +4,18 @@
  * Stone color palette and color utilities.
  */
 
+import { colors } from '@/theme/colors';
+
 export const COLORS = {
-  BORDER: '#e7e5e4',
+  BORDER: colors.gray[200],
   CARD_BG: '#ffffff',
-  TEXT_MUTED: '#d6d3d1',
-  TEXT_PRIMARY: '#1c1917',
-  TEXT_SECONDARY: '#78716c',
-  TEXT_TERTIARY: '#a8a29e',
-  // Green colors for streak calendar
-  GREEN_COMPLETED: '#047857', // primary green
-  GREEN_COMPLETED_LIGHT: '#059669', // button green
-  GREEN_EMPTY: '#d1fae5', // empty circle for missed days
+  TEXT_MUTED: colors.gray[300],
+  TEXT_PRIMARY: colors.gray[900],
+  TEXT_SECONDARY: colors.gray[500],
+  TEXT_TERTIARY: colors.gray[400],
+  GREEN_COMPLETED: colors.primary[700],
+  GREEN_COMPLETED_LIGHT: colors.primary[600],
+  GREEN_EMPTY: colors.primary[100],
 };
 
 /**

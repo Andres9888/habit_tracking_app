@@ -23,7 +23,7 @@ export const updateHabitStrength = mutation({
       throw new Error('Habit not found');
     }
     // SEC-001: Ownership verification
-    if (!habit || habit.userId !== identity.subject) {
+    if (habit.userId !== identity.subject) {
       throw new Error('Not authorized to update this habit');
     }
     if (!/^\d{4}-\d{2}-\d{2}$/.test(args.date)) {

@@ -4,6 +4,7 @@
 
 import { StyleSheet } from 'react-native';
 
+import { colors as themeColors } from '../../theme/colors';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { fontFamilies } from '../../theme/typography';
 
@@ -30,7 +31,7 @@ export const useStyles = () => {
     },
     emoji: { fontSize: 48, marginBottom: 16 },
     errorMessage: {
-      color: isDark ? '#FCA5A5' : '#dc2626',
+      color: isDark ? '#FCA5A5' : themeColors.error, // TODO: add dark-mode error text token (#FCA5A5)
       fontFamily: 'monospace',
       fontSize: 13,
       marginTop: 24,
@@ -47,7 +48,7 @@ export const useStyles = () => {
     link: { padding: 8 },
     linkText: { color: colors.primary[600], fontFamily: fontFamilies.primary.text, fontSize: 13, fontWeight: '500' },
     logoutButton: {
-      backgroundColor: isDark ? '#B91C1C' : '#dc2626',
+      backgroundColor: isDark ? '#B91C1C' : themeColors.error, // TODO: add dark-mode error bg token (#B91C1C)
       borderRadius: 12,
       paddingHorizontal: 24,
       paddingVertical: 12,

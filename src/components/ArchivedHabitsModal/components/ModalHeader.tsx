@@ -1,10 +1,14 @@
 import { Pressable, Text, View } from 'react-native';
+import Animated, { FadeInDown } from 'react-native-reanimated';
 import { BlurView } from 'expo-blur';
 import { ChevronLeft } from 'lucide-react-native';
 import type { EdgeInsets } from 'react-native-safe-area-context';
+import { durations, springs } from '../../../theme/animations';
 import { shadows } from '../../../theme/spacing';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { ModalCloseButton } from '../../ui/ModalCloseButton';
+
+const ENTERING = FadeInDown.duration(durations.enter).springify().damping(springs.standard.damping);
 
 interface ModalHeaderProps {
   insets: EdgeInsets;
@@ -16,6 +20,7 @@ export function ModalHeader({ insets, onBack, onClose }: ModalHeaderProps) {
   const { colors, isDark } = useThemeColors();
 
   return (
+    <Animated.View entering={ENTERING}>
     <BlurView
       intensity={20}
       style={{
@@ -59,5 +64,6 @@ export function ModalHeader({ insets, onBack, onClose }: ModalHeaderProps) {
         <ModalCloseButton label='Close archived habits' onClose={onClose} />
       </View>
     </BlurView>
+    </Animated.View>
   );
 }

@@ -56,7 +56,7 @@ export default function CreateHabitModalCentered(props: CreateHabitModalProps) {
     <Modal
       accessibilityViewIsModal
       transparent
-      animationType='none'
+      animationType='slide'
       visible={visible}
       onRequestClose={animateOut}
     >

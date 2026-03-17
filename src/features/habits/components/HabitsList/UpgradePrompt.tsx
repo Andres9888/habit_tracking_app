@@ -14,7 +14,7 @@ import { Pressable, Text, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
 import { OPACITY, ANIMATION_DURATION, ANIMATION_VALUES } from '../../../../constants';
-import { useThemeColors } from '../../../../theme';
+import { useThemeColors, colors as palette } from '../../../../theme';
 
 interface UpgradePromptProps {
   onClose: () => void;
@@ -34,7 +34,7 @@ export function UpgradePrompt({
   return (
     <Animated.View
       className='absolute inset-0 z-20 items-center justify-end bg-stone-900/50'
-      entering={FadeInDown.duration(280).springify().damping(18)}
+      entering={FadeInDown.duration(ANIMATION_DURATION.medium).springify().damping(ANIMATION_VALUES.springDamping)}
     >
       <Pressable
         accessibilityHint='Tap outside to dismiss'
@@ -84,7 +84,7 @@ export function UpgradePrompt({
           >
             <LinearGradient
               className='absolute inset-0 rounded-full'
-              colors={['#7c3aed', '#4f46e5']}
+              colors={[palette.premium[600], palette.indigo[600]]}
               end={{ x: 1, y: 0 }}
               start={{ x: 0, y: 0 }}
             />
