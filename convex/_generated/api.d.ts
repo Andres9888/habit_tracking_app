@@ -1,4 +1,4 @@
-/* eslint-disable max-lines */
+/* eslint-disable */
 /**
  * Generated `api` utility.
  *

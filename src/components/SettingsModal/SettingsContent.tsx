@@ -20,6 +20,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { SettingsRow } from './SettingsRow';
 import { SettingsSection } from './SettingsSection';
+import { SoundPicker } from './SoundPicker';
 import { StreakRemindersSection } from './StreakRemindersSection';
 import { AccountSection } from './AccountSection';
 import { AboutSection } from './sections';
@@ -139,10 +140,17 @@ export function SettingsContent(p: SettingsContentProps) {
                 iconBackgroundColor={settingsIcons.sound.bg}
                 label='Play sound on habit completion'
                 subtitle='Hear a sound effect when you check off a habit'
+                showBorder={!p.completionSoundEnabled}
                 type='toggle'
                 value={p.completionSoundEnabled}
                 onToggle={(v) => void p.onChangeCompletionSoundEnabled(v)}
               />
+              {p.completionSoundEnabled ? (
+                <SoundPicker
+                  selected={p.completionSoundType}
+                  onSelect={(v) => void p.onChangeCompletionSoundType(v)}
+                />
+              ) : null}
               <SettingsRow
                 hapticStyle='selection'
                 highContrastMode={hc}
