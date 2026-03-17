@@ -53,7 +53,7 @@ export function createTapGesture(options: TapGestureOptions) {
       if (completed) {
         runOnJS(HapticPatterns.tap)();
       } else {
-        runOnJS(HapticPatterns.toggle)();
+        runOnJS(HapticPatterns.success)();
       }
 
       // Standard card press animation with spring physics

@@ -148,6 +148,7 @@ export function SettingsModalSection({
         archivedHabitsCount={archivedHabitsCount}
         celebrationsEnabled={celebrationsEnabled}
         completionSoundEnabled={settings?.completionSoundEnabled ?? false}
+        completionSoundType={settings?.completionSoundType ?? 'chime'}
         dayShape={settings?.dayShape ?? 'square'}
         habitCompletionIcon={settings?.habitCompletionIcon ?? 'chain'}
         isHighContrastActive={settings?.highContrastMode ?? false}
@@ -161,6 +162,9 @@ export function SettingsModalSection({
         visible={showSettings}
         onChangeCompletionSoundEnabled={(value) =>
           onSettingsChange({ completionSoundEnabled: value })
+        }
+        onChangeCompletionSoundType={(value) =>
+          onSettingsChange({ completionSoundType: value })
         }
         onChangeDayShape={(value) => onSettingsChange({ dayShape: value })}
         onChangeHabitCompletionIcon={(value) =>

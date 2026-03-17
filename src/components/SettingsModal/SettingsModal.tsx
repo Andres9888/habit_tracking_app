@@ -20,10 +20,12 @@ import type { SettingsModalProps } from './types';
 
 function SettingsModalContent({
   completionSoundEnabled = false,
+  completionSoundType = 'chime',
   dayShape = 'square',
   habitCompletionIcon = 'chain',
   isHighContrastActive = false,
   onChangeCompletionSoundEnabled = () => {},
+  onChangeCompletionSoundType = () => {},
   onChangeDayShape = () => {},
   onChangeHabitCompletionIcon = () => {},
   onChangeStickyCalendarHeader = () => {},
@@ -142,6 +144,7 @@ function SettingsModalContent({
               compactView={compactView}
               onChangeCompactView={setCompactView}
               completionSoundEnabled={completionSoundEnabled}
+              completionSoundType={completionSoundType}
               dayShape={dayShape}
               habitCompletionIcon={habitCompletionIcon}
               habitSortMode={habitSortMode}
@@ -152,6 +155,7 @@ function SettingsModalContent({
               streakRemindersEnabled={streakRemindersEnabled}
               streakReminderTime={streakReminderTime}
               onChangeCompletionSoundEnabled={onChangeCompletionSoundEnabled}
+              onChangeCompletionSoundType={onChangeCompletionSoundType}
               onChangeDayShape={onChangeDayShape}
               onChangeHabitCompletionIcon={onChangeHabitCompletionIcon}
               onChangeShowGradientFill={setShowGradientFill}

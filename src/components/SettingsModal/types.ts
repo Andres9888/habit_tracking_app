@@ -1,3 +1,5 @@
+import type { CompletionSoundType } from '../../../convex/settings/types';
+
 export interface SettingsModalSettingsDocument {
   [key: string]: unknown;
   compactView?: boolean;
@@ -13,6 +15,7 @@ export interface SettingsModalSettingsDocument {
 export interface SettingsModalProps {
   celebrationsEnabled?: boolean;
   completionSoundEnabled?: boolean;
+  completionSoundType?: CompletionSoundType;
   dayShape?: 'circle' | 'square';
   habitCompletionIcon?: 'chain' | 'checkbox';
   onChangeDayShape?: (value: 'circle' | 'square') => void | Promise<void>;
@@ -22,6 +25,7 @@ export interface SettingsModalProps {
   ) => void | Promise<void>;
   onChangeCelebrationsEnabled?: (value: boolean) => void | Promise<void>;
   onChangeCompletionSoundEnabled?: (value: boolean) => void | Promise<void>;
+  onChangeCompletionSoundType?: (value: CompletionSoundType) => void | Promise<void>;
   onChangeCompact?: (value: boolean) => void | Promise<void>;
   showHabitStrengthPercentage?: boolean;
   onChangeShowHabitStrengthPercentage?: (
@@ -66,7 +70,9 @@ export interface SettingsContentProps {
   compactView: boolean;
   onChangeCompactView: (value: boolean) => void | Promise<void>;
   completionSoundEnabled: boolean;
+  completionSoundType: CompletionSoundType;
   onChangeCompletionSoundEnabled: (value: boolean) => void | Promise<void>;
+  onChangeCompletionSoundType: (value: CompletionSoundType) => void | Promise<void>;
   habitCompletionIcon: 'chain' | 'checkbox';
   habitSortMode: string;
   dayShape: 'circle' | 'square';

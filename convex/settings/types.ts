@@ -17,7 +17,7 @@ export const HABIT_SORT_MODE_OPTIONS = [
 ] as const;
 export type HabitSortMode = (typeof HABIT_SORT_MODE_OPTIONS)[number];
 
-// Completion sound options (Premium feature)
+// Completion sound options
 export const COMPLETION_SOUND_OPTIONS = ['chime', 'pop', 'success'] as const;
 export type CompletionSoundType = (typeof COMPLETION_SOUND_OPTIONS)[number];
 
