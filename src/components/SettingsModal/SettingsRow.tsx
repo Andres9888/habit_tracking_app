@@ -112,7 +112,7 @@ export function SettingsRow({
         </Text>
         {subtitle ? (
           <Text
-            className='mt-0.5 text-[13px]'
+            className='mt-1 text-[13px]'
             numberOfLines={2}
             style={{ color: themeColors.text.secondary }}
           >
