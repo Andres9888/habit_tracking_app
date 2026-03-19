@@ -6,6 +6,7 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
+import { useThemeColors } from '@/theme/ThemeContext';
 
 import type { TrendDirection, WeekDayData } from '../WeeklySummaryStripTypes';
 import { DayCell } from './DayCell';
@@ -38,6 +39,7 @@ export const CardContent = React.memo(function CardContent({
   trend,
   weekData,
 }: CardContentProps) {
+  const { colors } = useThemeColors();
   const TrendIcon = getTrendIcon(trend);
 
   return (
@@ -56,7 +58,7 @@ export const CardContent = React.memo(function CardContent({
             />
           </View>
           {isPerfectWeek ? (
-            <View style={styles.perfectBadge}>
+            <View style={[styles.perfectBadge, { backgroundColor: colors.status.success }]}>
               <Text style={styles.perfectBadgeText}>Perfect!</Text>
             </View>
           ) : null}
@@ -66,7 +68,7 @@ export const CardContent = React.memo(function CardContent({
             {currentWeekCompleted}/7 vs {lastWeekCompleted}/7
           </Text>
           <TrendIcon
-            color={getTrendColor(trend)}
+            color={getTrendColor(trend, colors.status.success)}
             size={14}
             style={styles.trendIcon}
           />

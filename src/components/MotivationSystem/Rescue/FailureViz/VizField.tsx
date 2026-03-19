@@ -14,6 +14,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import type { VizFieldProps } from './FailureViz.types';
 import { SPRING_GENTLE } from './FailureViz.constants';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 
 export function VizField({
   label,
@@ -22,6 +23,7 @@ export function VizField({
   index,
   reduceMotion,
 }: VizFieldProps) {
+  const { colors } = useThemeColors();
   const translateX = useSharedValue(reduceMotion ? 0 : -10);
   const opacity = useSharedValue(reduceMotion ? 1 : 0);
 
@@ -48,12 +50,12 @@ export function VizField({
       className='flex-row items-start gap-3 py-2'
       style={animatedStyle}
     >
-      <View className='mt-0.5 h-8 w-8 items-center justify-center rounded-lg bg-rose-100'>
+      <View className='mt-0.5 h-8 w-8 items-center justify-center rounded-lg' style={{ backgroundColor: colors.status.errorLight }}>
         {icon}
       </View>
       <View className='flex-1'>
-        <Text className='text-xs font-medium text-rose-600'>{label}</Text>
-        <Text className='text-sm leading-5 text-rose-800'>{value}</Text>
+        <Text className='text-xs font-medium' style={{ color: colors.status.error }}>{label}</Text>
+        <Text className='text-sm leading-5' style={{ color: colors.status.errorText }}>{value}</Text>
       </View>
     </Animated.View>
   );

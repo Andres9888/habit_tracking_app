@@ -4,6 +4,7 @@
  */
 
 import { ScrollView } from 'react-native';
+import { useThemeColors } from '@/theme/ThemeContext';
 import { CATEGORY_COLORS, DEFAULT_COLORS } from './CategoryFilters.constants';
 import { CategoryFilterItem } from './CategoryFilterItem';
 import type { CategoryFiltersProps } from './CategoryFilters.types';
@@ -13,12 +14,15 @@ export function CategoryFilters({
   onSelect,
   selectedCategory,
 }: CategoryFiltersProps) {
+  const { colors } = useThemeColors();
+
   return (
     <ScrollView
       horizontal
       accessibilityLabel='Category filters'
       accessibilityRole='list'
-      className='border-b border-stone-100'
+      className='border-b'
+      style={{ borderColor: colors.border }}
       contentContainerClassName='gap-3 px-4 py-4'
       showsHorizontalScrollIndicator={false}
     >

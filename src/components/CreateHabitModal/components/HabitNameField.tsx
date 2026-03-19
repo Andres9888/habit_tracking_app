@@ -1,6 +1,7 @@
 import { memo, useCallback, useState } from 'react';
 import { Text, TextInput, View } from 'react-native';
 import Animated from 'react-native-reanimated';
+import { useThemeColors } from '@/theme/ThemeContext';
 import STRINGS from '../../../constants/strings';
 import useHapticFeedback from '../../../hooks/useHapticFeedback';
 import {
@@ -21,6 +22,7 @@ const HabitNameFieldComponent = ({
   error,
   onBlur: onBlurProp,
 }: HabitNameFieldProps) => {
+  const { colors: themeColors } = useThemeColors();
   const charCount = value.length;
   const showCounter = charCount > SHOW_THRESHOLD;
   const isWarning = charCount > WARNING_THRESHOLD;
@@ -50,12 +52,12 @@ const HabitNameFieldComponent = ({
         accessibilityHint='Enter a name for your habit, up to 50 characters'
         accessibilityLabel='Habit name'
         autoFocus={autoFocus}
-        className='h-14 rounded-xl bg-white px-4 text-base text-stone-800'
+        className='h-14 rounded-xl bg-white px-4 text-base'
         maxLength={MAX_LENGTH}
         placeholder={STRINGS.CREATE_HABIT.namePlaceholder}
         placeholderTextColor='#a8a29e'
         returnKeyType='done'
-        style={animatedInputStyle}
+        style={[animatedInputStyle, { color: themeColors.text.primary }]}
         value={value}
         onBlur={handleBlur}
         onChangeText={onChange}
@@ -66,7 +68,8 @@ const HabitNameFieldComponent = ({
       {error ? <Text
           accessibilityLabel={`Error: ${error}`}
           accessibilityRole='alert'
-          className='mt-1 text-center text-xs text-red-500'
+          className='mt-1 text-center text-xs'
+          style={{ color: themeColors.status.error }}
         >
           {error}
         </Text> : null}

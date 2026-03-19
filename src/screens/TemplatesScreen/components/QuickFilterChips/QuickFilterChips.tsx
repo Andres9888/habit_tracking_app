@@ -86,8 +86,8 @@ const s = StyleSheet.create({
   chip: {
     borderRadius: 9999,
     borderWidth: 1,
-    paddingHorizontal: 14,
-    paddingVertical: 6,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
   },
   chipActive: {
     backgroundColor: colors.primary[600],

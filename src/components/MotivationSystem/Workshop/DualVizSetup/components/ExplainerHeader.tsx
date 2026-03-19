@@ -26,7 +26,7 @@ export function ExplainerHeader({ onClose }: ExplainerHeaderProps) {
             end={{ x: 1, y: 1 }}
             start={{ x: 0, y: 0 }}
           />
-          <Eye className='text-stone-700' size={20} />
+          <Eye color={colors.text.primary} size={20} />
         </View>
         <View>
           <Text className='text-lg font-bold' style={{ color: colors.text.primary }}>

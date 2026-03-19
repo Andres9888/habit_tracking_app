@@ -32,7 +32,7 @@ export const styles = StyleSheet.create({
     flex: 1,
   },
   footer: {
-    paddingHorizontal: 20,
+    paddingHorizontal: 24,
     paddingTop: 16,
   },
   header: {
@@ -58,7 +58,7 @@ export const styles = StyleSheet.create({
     width: 80,
   },
   iconText: {
-    fontSize: 40,
+    fontSize: 34,
   },
   importButton: {
     ...shadows.modal,
@@ -69,7 +69,7 @@ export const styles = StyleSheet.create({
     fontFamily: fontFamilies.primary.text,
     fontSize: 17,
     paddingHorizontal: 16,
-    paddingVertical: 14,
+    paddingVertical: 16,
   },
   label: {
     fontFamily: fontFamilies.primary.text,
@@ -84,7 +84,7 @@ export const styles = StyleSheet.create({
   scrollContent: {
     flexGrow: 1,
     paddingBottom: 24,
-    paddingHorizontal: 20,
+    paddingHorizontal: 24,
   },
   section: {
     marginBottom: 20,

@@ -6,6 +6,7 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import { Plus } from 'lucide-react-native';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import { MAX_IMAGES } from './types';
 
 interface SectionHeaderProps {
@@ -19,6 +20,8 @@ export function SectionHeader({
   imageCount,
   isPremium,
 }: SectionHeaderProps) {
+  const { colors } = useThemeColors();
+
   return (
     <View className='mb-2 flex-row items-center justify-between'>
       <View className='flex-row items-center gap-2'>
@@ -26,8 +29,8 @@ export function SectionHeader({
         <Text className='text-xs font-semibold text-fuchsia-600'>
           Vision Board
         </Text>
-        {isPremium ? null : <View className='rounded-full bg-amber-100 px-1.5 py-0.5'>
-            <Text className='text-[9px] font-bold text-amber-700'>PRO</Text>
+        {isPremium ? null : <View className='rounded-full px-1.5 py-0.5' style={{ backgroundColor: colors.status.warningLight }}>
+            <Text className='text-[9px] font-bold' style={{ color: colors.status.warningText }}>PRO</Text>
           </View>}
       </View>
       {hasImages ? (

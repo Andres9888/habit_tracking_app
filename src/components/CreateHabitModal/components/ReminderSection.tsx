@@ -1,5 +1,6 @@
 import { Switch, Text, View } from 'react-native';
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
+import { useThemeColors } from '@/theme/ThemeContext';
 import useHapticFeedback from '../../../hooks/useHapticFeedback';
 import { formatReminderTime } from '../../../utils/notifications';
 
@@ -22,6 +23,7 @@ export const ReminderSection = ({
   onTimePress,
 }: ReminderSectionProps) => {
   const { triggerSelection } = useHapticFeedback();
+  const { colors: themeColors } = useThemeColors();
 
   return (
     <View className='mb-6 rounded-2xl bg-white p-4'>
@@ -31,7 +33,7 @@ export const ReminderSection = ({
           className='mr-3 h-10 w-10 items-center justify-center rounded-full'
           style={{ backgroundColor: remindersEnabled ? '#DCFCE7' : '#F5F5F5' }}
         >
-          <Text style={{ fontSize: 18 }}>🔔</Text>
+          <Text style={{ fontSize: 17 }}>🔔</Text>
         </View>
 
         {/* Label and time - tappable when enabled */}
@@ -50,7 +52,7 @@ export const ReminderSection = ({
             }
           }}
         >
-          <Text className='text-base font-semibold text-stone-800'>Remind me</Text>
+          <Text className='text-base font-semibold' style={{ color: themeColors.text.primary }}>Remind me</Text>
           <Text
             className='text-sm'
             style={{ color: remindersEnabled ? '#22C55E' : '#a8a29e' }}

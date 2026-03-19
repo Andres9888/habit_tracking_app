@@ -31,7 +31,10 @@ export const WeeklyComparisonCard = React.memo(function WeeklyComparisonCard({
   const { thisWeekCompleted, thisWeekTotal, thisWeekRate, rateChange } = trend;
   const { colors } = useThemeColors();
 
-  const trendStyle = useMemo(() => getTrendStyle(rateChange), [rateChange]);
+  const trendStyle = useMemo(
+    () => getTrendStyle(rateChange, { bgNeutral: colors.gray[50], textNeutral: colors.text.secondary, successBg: colors.status.successLight, successText: colors.status.success }),
+    [rateChange, colors]
+  );
   const message = useMemo(
     () => getMessage(rateChange, thisWeekRate),
     [rateChange, thisWeekRate]

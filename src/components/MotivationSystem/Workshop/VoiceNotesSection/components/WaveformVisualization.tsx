@@ -14,6 +14,7 @@ import Animated, {
   withTiming,
   Easing,
 } from 'react-native-reanimated';
+import { useThemeColors } from '../../../../../theme/ThemeContext';
 
 interface WaveformVisualizationProps {
   meteringLevel: number;
@@ -29,6 +30,7 @@ interface WaveformBarProps {
   meteringLevel: number;
   isActive: boolean;
   reduceMotion: boolean;
+  barColor: string;
 }
 
 /**
@@ -40,6 +42,7 @@ function WaveformBar({
   meteringLevel,
   isActive,
   reduceMotion,
+  barColor,
 }: WaveformBarProps) {
   const height = useSharedValue(0.2);
 
@@ -67,8 +70,8 @@ function WaveformBar({
 
   return (
     <Animated.View
-      className='w-1 rounded-full bg-teal-500'
-      style={animatedStyle}
+      className='w-1 rounded-full'
+      style={[animatedStyle, { backgroundColor: barColor }]}
     />
   );
 }
@@ -84,6 +87,7 @@ export function WaveformVisualization({
     return Array.from({ length: BAR_COUNT }, (_, i) => i);
   }, []);
 
+  const { colors } = useThemeColors();
   const isActive = isRecording && !isPaused;
 
   return (
@@ -91,6 +95,7 @@ export function WaveformVisualization({
       {barIndices.map((index) => (
         <WaveformBar
           key={index}
+          barColor={colors.status.success}
           index={index}
           isActive={isActive}
           meteringLevel={meteringLevel}

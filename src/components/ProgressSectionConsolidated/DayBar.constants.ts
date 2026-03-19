@@ -13,25 +13,41 @@ export const BAR_WIDTH = 20;
 export const BAR_MAX_HEIGHT = 40;
 
 /**
- * Get bar color based on performance rate and best/worst status
+ * Get bar color based on performance rate and best/worst status.
+ * Accepts theme gray colors to support dark mode.
  */
 export function getBarColor(
   rate: number,
   isBest: boolean,
-  isWorst: boolean
+  isWorst: boolean,
+  grayColors?: { 200: string; 300: string; 400: string },
+  successColor?: string
 ): string {
-  if (isBest) return '#10b981'; // emerald-500
+  if (isBest) return successColor ?? '#10b981';
   if (isWorst) return '#fbbf24'; // amber-400
-  if (rate >= 70) return '#a8a29e'; // stone-400
-  if (rate >= 50) return '#d6d3d1'; // stone-300
-  return '#e7e5e4'; // stone-200
+  if (rate >= 70) return grayColors?.['400'] ?? '#a8a29e';
+  if (rate >= 50) return grayColors?.['300'] ?? '#d6d3d1';
+  return grayColors?.['200'] ?? '#e7e5e4';
 }
 
 /**
- * Get day label CSS class based on best/worst status
+ * Get day label hex color based on best/worst status.
+ * Returns a hex color string for use in inline styles.
  */
-export function getDayLabelClass(isBest: boolean, isWorst: boolean): string {
-  if (isBest) return 'text-emerald-600 font-bold';
-  if (isWorst) return 'text-amber-600 font-bold';
-  return 'text-stone-500';
+export function getDayLabelColor(
+  isBest: boolean,
+  isWorst: boolean,
+  secondaryColor?: string,
+  successTextColor?: string
+): string {
+  if (isBest) return successTextColor ?? '#059669';
+  if (isWorst) return '#d97706'; // amber-600
+  return secondaryColor ?? '#78716c';
+}
+
+/**
+ * Whether the day label should be bold
+ */
+export function isDayLabelBold(isBest: boolean, isWorst: boolean): boolean {
+  return isBest || isWorst;
 }

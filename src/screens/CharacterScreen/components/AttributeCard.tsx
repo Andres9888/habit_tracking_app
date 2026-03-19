@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
   },
   nameText: {
     fontSize: 16,
-    fontWeight: 'normal',
+    fontWeight: '400',
     letterSpacing: -0.3125,
     lineHeight: 24,
   },
@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
   },
   valueText: {
     fontSize: 16,
-    fontWeight: 'normal',
+    fontWeight: '400',
     letterSpacing: -0.3125,
     lineHeight: 24,
   },

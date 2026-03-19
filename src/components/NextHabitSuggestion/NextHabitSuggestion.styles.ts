@@ -8,10 +8,10 @@ export const styles = StyleSheet.create({
     borderRadius: 12,
     flexDirection: 'row',
     gap: 4,
-    paddingHorizontal: 10,
+    paddingHorizontal: 12,
     paddingVertical: 4,
   },
-  badgeText: { color: '#b45309', fontFamily: fontFamilies.primary.text, fontSize: 12, fontWeight: '600' },
+  badgeText: { color: '#b45309', fontFamily: fontFamilies.primary.text, fontSize: 13, fontWeight: '600' },
   completedContainer: {
     alignItems: 'center',
     backgroundColor: '#ecfdf5',

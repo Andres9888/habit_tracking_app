@@ -53,8 +53,8 @@ const styles = StyleSheet.create({
     shadowRadius: 16,
   },
   emoji: {
-    fontSize: 24,
-    lineHeight: 32,
+    fontSize: 22,
+    lineHeight: 28,
   },
   label: {
     fontSize: 13,

@@ -76,7 +76,7 @@ export const MiniCalendarGrid: React.FC<MiniCalendarGridProps> = ({
                 <Text
                   style={{
                     fontFamily: fontFamilies.primary.text,
-                    fontSize: 12,
+                    fontSize: 13,
                     fontWeight: today ? fontWeights.bold : fontWeights.medium,
                     color: inMonth ? (today ? c.today : c.text) : c.muted,
                   }}

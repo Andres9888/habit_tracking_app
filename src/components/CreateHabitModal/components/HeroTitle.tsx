@@ -5,6 +5,7 @@
 
 import { Text } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
+import { useThemeColors } from '@/theme/ThemeContext';
 import { fontFamilies } from '@/theme/typography';
 
 interface HeroTitleProps {
@@ -13,17 +14,21 @@ interface HeroTitleProps {
 
 export const HeroTitle = ({
   text = 'What habit do you want to build?',
-}: HeroTitleProps) => (
-  <Animated.View
-    className='mb-6 px-4'
-    entering={FadeInDown.duration(240).delay(100)}
-  >
-    <Text
-      accessibilityRole='header'
-      className='text-center font-bold text-stone-900'
-      style={{ fontFamily: fontFamilies.primary.text, fontSize: 34, letterSpacing: -34 * 0.02, lineHeight: 34 * 1.2 }}
+}: HeroTitleProps) => {
+  const { colors } = useThemeColors();
+
+  return (
+    <Animated.View
+      className='mb-6 px-4'
+      entering={FadeInDown.duration(240).delay(100)}
     >
-      {text}
-    </Text>
-  </Animated.View>
-);
+      <Text
+        accessibilityRole='header'
+        className='text-center font-bold'
+        style={{ color: colors.text.primary, fontFamily: fontFamilies.primary.text, fontSize: 34, letterSpacing: -34 * 0.02, lineHeight: 34 * 1.2 }}
+      >
+        {text}
+      </Text>
+    </Animated.View>
+  );
+};

@@ -2,6 +2,7 @@
  * Live preview of habit being created/edited
  */
 import { Text, View } from 'react-native';
+import { useThemeColors } from '@/theme/ThemeContext';
 import { SkeletonCard } from '../SkeletonLoader';
 import { usePreviewAnimations } from './usePreviewAnimations';
 import { getAccessibilityLabel } from './helpers';
@@ -15,6 +16,7 @@ export const HabitPreview = ({
   selectedColor,
   timeOfDay,
 }: HabitPreviewProps) => {
+  const { colors } = useThemeColors();
   const isEmpty = !habitName && !selectedEmoji;
   const animations = usePreviewAnimations(
     isEmpty,
@@ -39,7 +41,7 @@ export const HabitPreview = ({
         borderWidth: 2,
       }}
     >
-      <Text className='mb-2 text-xs font-semibold text-stone-500'>
+      <Text className='mb-2 text-xs font-semibold' style={{ color: colors.text.secondary }}>
         ✨ Live Preview
       </Text>
 

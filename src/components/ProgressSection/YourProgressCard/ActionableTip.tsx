@@ -1,21 +1,24 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import { ChevronRight } from 'lucide-react-native';
+import { useThemeColors } from '@/theme/ThemeContext';
 
 interface ActionableTipProps {
   tip: string;
 }
 
 export function ActionableTip({ tip }: ActionableTipProps) {
+  const { colors } = useThemeColors();
+
   return (
     <View
       accessibilityLabel={`Tip: ${tip}`}
       className='flex-row items-center gap-2 rounded-xl p-3'
-      style={{ backgroundColor: 'rgba(20, 184, 166, 0.1)' }}
+      style={{ backgroundColor: colors.status.successLight }}
     >
       <Text className='text-base'>💡</Text>
-      <Text className='flex-1 text-sm text-teal-700'>{tip}</Text>
-      <ChevronRight className='text-teal-400' size={16} />
+      <Text className='flex-1 text-sm' style={{ color: colors.status.successText }}>{tip}</Text>
+      <ChevronRight color={colors.status.success} size={16} />
     </View>
   );
 }

@@ -6,6 +6,7 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import { TrendingUp, TrendingDown, CheckCircle2 } from 'lucide-react-native';
+import { useThemeColors } from '@/theme/ThemeContext';
 
 interface SummaryRowProps {
   trendChange: number;
@@ -18,28 +19,24 @@ export function SummaryRow({
   completedDays,
   totalDays,
 }: SummaryRowProps) {
+  const { colors: themeColors } = useThemeColors();
   const isPositiveTrend = trendChange > 0;
   const isNegativeTrend = trendChange < 0;
 
   return (
-    <View className='flex-row items-center justify-between rounded-xl border border-violet-100 bg-white/60 px-3 py-2.5'>
+    <View className='flex-row items-center justify-between rounded-xl border bg-white/60 px-3 py-2.5' style={{ borderColor: themeColors.status.premiumLight }}>
       {/* Trend */}
       <View className='flex-row items-center gap-1.5'>
         {isPositiveTrend ? (
-          <TrendingUp className='text-emerald-500' size={16} />
+          <TrendingUp color={themeColors.status.success} size={16} />
         ) : isNegativeTrend ? (
-          <TrendingDown className='text-red-500' size={16} />
+          <TrendingDown color={themeColors.status.error} size={16} />
         ) : (
-          <TrendingUp className='text-stone-400' size={16} />
+          <TrendingUp color={themeColors.text.tertiary} size={16} />
         )}
         <Text
-          className={`text-xs font-semibold ${
-            isPositiveTrend
-              ? 'text-emerald-600'
-              : isNegativeTrend
-                ? 'text-red-600'
-                : 'text-stone-500'
-          }`}
+          className='text-xs font-semibold'
+          style={{ color: isPositiveTrend ? themeColors.status.successText : isNegativeTrend ? themeColors.status.errorText : themeColors.text.secondary }}
         >
           {isPositiveTrend ? '+' : ''}
           {trendChange}% vs last month
@@ -47,12 +44,12 @@ export function SummaryRow({
       </View>
 
       {/* Divider */}
-      <View className='h-4 w-px bg-stone-200' />
+      <View className='h-4 w-px' style={{ backgroundColor: themeColors.border }} />
 
       {/* Completed days */}
       <View className='flex-row items-center gap-1.5'>
-        <CheckCircle2 className='text-violet-500' size={16} />
-        <Text className='text-xs font-semibold text-stone-600'>
+        <CheckCircle2 color={themeColors.status.premium} size={16} />
+        <Text className='text-xs font-semibold' style={{ color: themeColors.text.primary }}>
           {completedDays}/{totalDays} days
         </Text>
       </View>

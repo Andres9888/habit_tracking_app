@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, Pressable } from 'react-native';
 import Animated, { FadeInDown, FadeOut } from 'react-native-reanimated';
 import { RefreshCw, X } from 'lucide-react-native';
+import { useThemeColors } from '../../theme/ThemeContext';
 import { VARIANT_STYLES } from './constants';
 import type { DraftRecoveryBannerProps } from './types';
 import { triggerHaptic } from '@/utils/haptics';
@@ -13,9 +14,37 @@ export function DraftRecoveryBanner({
   message = 'Unsaved draft recovered',
   variant = 'rose',
 }: DraftRecoveryBannerProps) {
+  const { colors: themeColors } = useThemeColors();
+
   if (!visible) return null;
 
   const styles = VARIANT_STYLES[variant];
+  const useTheme = styles.useTheme;
+  const themeStyle = useTheme === 'success' ? {
+    bg: { backgroundColor: themeColors.status.successLight },
+    border: { borderColor: themeColors.status.success },
+    buttonBg: { backgroundColor: themeColors.status.successLight },
+    buttonText: { color: themeColors.status.successText },
+    iconBg: { backgroundColor: themeColors.status.successLight },
+    iconColor: themeColors.status.success,
+    text: { color: themeColors.status.successText },
+  } : useTheme === 'error' ? {
+    bg: { backgroundColor: themeColors.status.errorLight },
+    border: { borderColor: themeColors.status.error },
+    buttonBg: { backgroundColor: themeColors.status.errorLight },
+    buttonText: { color: themeColors.status.errorText },
+    iconBg: { backgroundColor: themeColors.status.errorLight },
+    iconColor: themeColors.status.error,
+    text: { color: themeColors.status.errorText },
+  } : useTheme ? {
+    bg: { backgroundColor: themeColors.status.premiumLight },
+    border: { borderColor: themeColors.status.premiumLight },
+    buttonBg: { backgroundColor: themeColors.status.premiumLight },
+    buttonText: { color: themeColors.status.premiumText },
+    iconBg: { backgroundColor: themeColors.status.premiumLight },
+    iconColor: themeColors.status.premium,
+    text: { color: themeColors.status.premiumText },
+  } : null;
 
   const handleDiscard = () => {
     triggerHaptic('tap');
@@ -32,16 +61,17 @@ export function DraftRecoveryBanner({
       className={`mx-4 mb-3 rounded-xl border ${styles.border} ${styles.bg} p-3`}
       entering={FadeInDown.duration(280).springify().damping(18)}
       exiting={FadeOut.duration(150)}
+      style={themeStyle ? [themeStyle.bg, themeStyle.border] : undefined}
     >
       <View className='flex-row items-center gap-3'>
-        <View className={`rounded-lg ${styles.iconBg} p-2`}>
-          <RefreshCw color={styles.iconColor} size={16} />
+        <View className={`rounded-lg ${styles.iconBg} p-2`} style={themeStyle?.iconBg}>
+          <RefreshCw color={themeStyle?.iconColor ?? styles.iconColor} size={16} />
         </View>
         <View className='flex-1'>
-          <Text className={`text-sm font-medium ${styles.text}`}>
+          <Text className={`text-sm font-medium ${styles.text}`} style={themeStyle?.text}>
             {message}
           </Text>
-          <Text className={`text-xs ${styles.text} opacity-70`}>
+          <Text className={`text-xs ${styles.text} opacity-70`} style={themeStyle?.text}>
             Your previous edits were saved locally
           </Text>
         </View>
@@ -50,9 +80,10 @@ export function DraftRecoveryBanner({
             accessibilityLabel='Discard recovered draft'
             accessibilityRole='button'
             className={`rounded-lg ${styles.buttonBg} px-3 py-1.5`}
+            style={themeStyle?.buttonBg}
             onPress={handleDiscard}
           >
-            <Text className={`text-xs font-medium ${styles.buttonText}`}>
+            <Text className={`text-xs font-medium ${styles.buttonText}`} style={themeStyle?.buttonText}>
               Discard
             </Text>
           </Pressable>
@@ -63,7 +94,7 @@ export function DraftRecoveryBanner({
             hitSlop={{ bottom: 10, left: 10, right: 10, top: 10 }}
             onPress={handleDismiss}
           >
-            <X color={styles.iconColor} size={18} />
+            <X color={themeStyle?.iconColor ?? styles.iconColor} size={18} />
           </Pressable>
         </View>
       </View>

@@ -10,33 +10,42 @@ export interface WOOPStep {
   title: string;
 }
 
-export const WOOP_STEPS: WOOPStep[] = [
+/**
+ * WOOP steps with semantic theme keys for amber colors.
+ * `bg` and `color` use NativeWind classes for non-amber colors;
+ * amber steps use `themeKey: 'warning'` so the modal can resolve at render time.
+ */
+export const WOOP_STEPS: (WOOPStep & { themeKey?: string })[] = [
   {
-    bg: 'bg-amber-100',
-    color: 'text-amber-600',
+    bg: '',
+    color: '',
     desc: 'What do you want to achieve?',
     letter: 'W',
+    themeKey: 'warning',
     title: 'Wish',
   },
   {
-    bg: 'bg-amber-100',
-    color: 'text-amber-600',
+    bg: '',
+    color: '',
     desc: 'Best result of fulfilling your wish?',
     letter: 'O',
+    themeKey: 'warning',
     title: 'Outcome',
   },
   {
-    bg: 'bg-rose-100',
-    color: 'text-rose-500',
+    bg: '',
+    color: '',
     desc: 'Main inner obstacle preventing you?',
     letter: 'O',
+    themeKey: 'error',
     title: 'Obstacle',
   },
   {
-    bg: 'bg-emerald-100',
-    color: 'text-emerald-500',
+    bg: '',
+    color: '',
     desc: 'If [obstacle], then I will [action]',
     letter: 'P',
+    themeKey: 'success',
     title: 'Plan',
   },
 ];

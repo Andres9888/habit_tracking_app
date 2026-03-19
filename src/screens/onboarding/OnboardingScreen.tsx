@@ -23,6 +23,10 @@ import { PAGES, type PageData } from './onboarding.data';
 import { useOnboardingHandlers } from './useOnboardingHandlers';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
+const STEP_CTA_LABELS = [
+  'See the Science \u2192',
+  'Browse Templates \u2192',
+] as const;
 interface OnboardingScreenProps {
   onComplete: () => void;
 }
@@ -88,7 +92,7 @@ function OnboardingScreenContent({ onComplete }: OnboardingScreenProps) {
           onPress={handleSkip}
         >
           <Text style={[styles.skipText, { color: colors.text.secondary }]}>
-            Skip
+            I'll explore later
           </Text>
         </Pressable>
       </Animated.View>
@@ -152,7 +156,7 @@ function OnboardingScreenContent({ onComplete }: OnboardingScreenProps) {
             onPress={handleNext}
           >
             <Text style={[styles.actionText, { color: colors.text.inverse }]}>
-              Next
+              {STEP_CTA_LABELS[currentIndex] ?? 'Next'}
             </Text>
           </Pressable>
         )}

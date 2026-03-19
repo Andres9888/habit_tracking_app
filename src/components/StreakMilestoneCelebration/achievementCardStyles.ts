@@ -21,7 +21,7 @@ export const achievementCardStyles = StyleSheet.create({
     marginBottom: spacing.base,
     width: 80,
   },
-  badgeEmoji: { fontSize: 40 },
+  badgeEmoji: { fontSize: 34 },
   container: {
     borderRadius: borderRadius.large,
     overflow: 'hidden',

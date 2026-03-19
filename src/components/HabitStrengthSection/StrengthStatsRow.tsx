@@ -20,6 +20,7 @@
 
 import React from 'react';
 import { Text, View } from 'react-native';
+import { useThemeColors } from '@/theme/ThemeContext';
 
 import { COLORS } from './constants';
 import type { StrengthStatsRowProps } from './types';
@@ -44,10 +45,12 @@ function StatColumn({
   value: string;
   isPositive: boolean;
 }) {
+  const { colors: themeColors } = useThemeColors();
+
   return (
     <View className='flex-1 items-center'>
       {/* Smaller label text for compact layout */}
-      <Text className='text-[10px] text-stone-400'>{label}</Text>
+      <Text className='text-[10px]' style={{ color: themeColors.text.tertiary }}>{label}</Text>
       <Text
         className='text-sm font-semibold'
         style={{
@@ -77,6 +80,7 @@ export const StrengthStatsRow = React.memo(function StrengthStatsRow({
   lastMonth,
   lastWeek,
 }: StrengthStatsRowProps) {
+  const { colors: themeColors } = useThemeColors();
   // Guard against NaN/undefined values - default to 0
   const safeSinceStart =
     typeof sinceStart === 'number' && !Number.isNaN(sinceStart)
@@ -90,7 +94,8 @@ export const StrengthStatsRow = React.memo(function StrengthStatsRow({
   return (
     <View
       accessibilityLabel={`Statistics: ${safeSinceStart}% since start, ${formatDelta(safeLastMonth)} last month, ${formatDelta(safeLastWeek)} last week`}
-      className='flex-row items-center justify-between rounded-lg bg-stone-50 px-3 py-2'
+      className='flex-row items-center justify-between rounded-lg px-3 py-2'
+      style={{ backgroundColor: themeColors.background }}
     >
       <StatColumn
         isPositive={safeSinceStart > 0}

@@ -5,6 +5,7 @@
 
 import React, { useState } from 'react';
 import { View, Text, Pressable } from 'react-native';
+import { useThemeColors } from '@/theme/ThemeContext';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import {
   Eye,
@@ -22,6 +23,7 @@ import { QuickTip } from './QuickTip';
 import { triggerHaptic } from '@/utils/haptics';
 
 export function VisualizationGuide({ habitName }: VisualizationGuideProps) {
+  const { colors: themeColors } = useThemeColors();
   const [showAllTechniques, setShowAllTechniques] = useState(false);
   const displayedTechniques = showAllTechniques
     ? VISUALIZATION_TECHNIQUES
@@ -37,7 +39,7 @@ export function VisualizationGuide({ habitName }: VisualizationGuideProps) {
       <GuideHeader habitName={habitName} />
       <KeyInsightBox />
       <View className='gap-3'>
-        <Text className='text-sm font-semibold uppercase tracking-widest text-stone-500'>
+        <Text className='text-sm font-semibold uppercase tracking-widest' style={{ color: themeColors.text.secondary }}>
           Techniques to Apply
         </Text>
         {displayedTechniques.map((technique) => (
@@ -50,18 +52,19 @@ export function VisualizationGuide({ habitName }: VisualizationGuideProps) {
                 : 'Show more techniques'
             }
             accessibilityRole='button'
-            className='flex-row items-center justify-center gap-2 rounded-xl border border-dashed border-violet-200 bg-violet-50/50 py-3 active:bg-violet-100'
+            className='flex-row items-center justify-center gap-2 rounded-xl border border-dashed py-3 active:opacity-80'
+            style={{ borderColor: themeColors.status.premiumLight, backgroundColor: themeColors.status.premiumLight }}
             onPress={handleShowMore}
           >
-            <Text className='text-sm font-medium text-violet-700'>
+            <Text className='text-sm font-medium' style={{ color: themeColors.status.premiumText }}>
               {showAllTechniques
                 ? 'Show Less'
                 : `Show ${VISUALIZATION_TECHNIQUES.length - 2} More Techniques`}
             </Text>
             {showAllTechniques ? (
-              <ChevronUp className='text-violet-600' size={16} />
+              <ChevronUp color={themeColors.status.premiumText} size={16} />
             ) : (
-              <ChevronDown className='text-violet-600' size={16} />
+              <ChevronDown color={themeColors.status.premiumText} size={16} />
             )}
           </Pressable> : null}
       </View>
@@ -69,29 +72,29 @@ export function VisualizationGuide({ habitName }: VisualizationGuideProps) {
         className='gap-3'
         entering={FadeInDown.delay(200).springify().damping(18)}
       >
-        <Text className='text-sm font-semibold uppercase tracking-widest text-stone-500'>
+        <Text className='text-sm font-semibold uppercase tracking-widest' style={{ color: themeColors.text.secondary }}>
           Quick Practice
         </Text>
         <View className='gap-2'>
           <QuickTip
             description='Spend 30 seconds visualizing yourself doing the habit, not having done it'
-            icon={<Eye className='text-amber-600' size={16} />}
+            icon={<Eye color={themeColors.status.warning} size={16} />}
             title='Morning Visualization'
           />
           <QuickTip
             description='Identify your biggest obstacle and create an "if-then" plan'
-            icon={<Mountain className='text-amber-600' size={16} />}
+            icon={<Mountain color={themeColors.status.warning} size={16} />}
             title='Obstacle Planning'
           />
           <QuickTip
             description='See yourself taking the first small step of your habit'
-            icon={<ArrowRight className='text-amber-600' size={16} />}
+            icon={<ArrowRight color={themeColors.status.warning} size={16} />}
             title='Next Action Preview'
           />
         </View>
       </Animated.View>
-      <View className='items-center rounded-xl bg-stone-100/50 px-4 py-3'>
-        <Text className='text-center text-xs text-stone-500'>
+      <View className='items-center rounded-xl px-4 py-3' style={{ backgroundColor: themeColors.background }}>
+        <Text className='text-center text-xs' style={{ color: themeColors.text.secondary }}>
           Based on research by Gabriele Oettingen (Mental Contrasting), Peter
           Gollwitzer (Implementation Intentions), and discussed in the Huberman
           Lab Podcast.

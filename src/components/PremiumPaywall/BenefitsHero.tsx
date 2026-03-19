@@ -18,7 +18,7 @@ export function BenefitsHero({ config }: { config: VariantConfig }) {
       <Text className='mb-1 text-center text-xl font-bold text-white'>
         {config.heroTitle}
       </Text>
-      <Text className='text-center text-sm text-violet-100'>{config.heroSubtitle}</Text>
+      <Text className='text-center text-sm' style={{ color: 'rgba(255,255,255,0.8)' }}>{config.heroSubtitle}</Text>
     </LinearGradient>
   );
 }

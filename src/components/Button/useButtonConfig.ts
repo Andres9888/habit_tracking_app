@@ -58,7 +58,7 @@ export function useButtonConfig(
     },
     small: {
       fontFamily: fontFamilies?.primary?.text ?? fallbackFontFamilyText,
-      fontSize: 15,
+      fontSize: 14,
       height: 44,
       iconSize: 16,
       paddingHorizontal: mergedTheme.spacing?.base ?? 12,

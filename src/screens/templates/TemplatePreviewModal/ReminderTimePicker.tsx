@@ -22,7 +22,7 @@ const localStyles = StyleSheet.create({
     flexDirection: 'row',
     gap: 12,
     paddingHorizontal: 16,
-    paddingVertical: 14,
+    paddingVertical: 16,
   },
   timeText: {
     fontSize: 17,

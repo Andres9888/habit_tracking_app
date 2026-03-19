@@ -40,7 +40,7 @@ export const LEVELS: Record<string, LevelInfo> = {
 export const BACKGROUND_COLOR = colors.gray[200];
 
 export const SIZE_CONFIG: Record<string, SizeConfig> = {
-  large: { fontSize: 24, ringSize: 96, strokeWidth: 10 },
+  large: { fontSize: 22, ringSize: 96, strokeWidth: 10 },
   medium: { fontSize: 17, ringSize: 72, strokeWidth: 8 },
   small: { fontSize: 13, ringSize: 48, strokeWidth: 5 },
   tiny: { fontSize: 10, ringSize: 32, strokeWidth: 4 },

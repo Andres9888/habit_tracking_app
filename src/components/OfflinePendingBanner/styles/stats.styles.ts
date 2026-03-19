@@ -47,8 +47,8 @@ export const statsStyles = StyleSheet.create({
     borderRadius: borderRadius.small,
     flexDirection: 'row',
     marginTop: 10,
-    paddingHorizontal: 10,
-    paddingVertical: 6,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
   },
   warningText: {
     color: '#92400E',

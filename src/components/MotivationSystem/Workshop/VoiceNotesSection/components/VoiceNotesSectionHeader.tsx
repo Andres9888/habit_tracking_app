@@ -6,6 +6,7 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import { Plus } from 'lucide-react-native';
+import { useThemeColors } from '../../../../../theme/ThemeContext';
 
 interface VoiceNotesSectionHeaderProps {
   isPremium: boolean;
@@ -18,19 +19,21 @@ export function VoiceNotesSectionHeader({
   hasVoiceNotes,
   isRecording,
 }: VoiceNotesSectionHeaderProps) {
+  const { colors } = useThemeColors();
+
   return (
     <View className='mb-2 flex-row items-center gap-2'>
       <Text className='text-base'>🎙️</Text>
-      <Text className='text-xs font-semibold text-teal-600'>Voice Notes</Text>
+      <Text className='text-xs font-semibold' style={{ color: colors.status.success }}>Voice Notes</Text>
       {isPremium ? (
-        <View className='rounded-full bg-emerald-100 px-1.5 py-0.5'>
-          <Text className='text-[9px] font-bold text-emerald-700'>PREMIUM</Text>
+        <View className='rounded-full px-1.5 py-0.5' style={{ backgroundColor: colors.status.successLight }}>
+          <Text className='text-[9px] font-bold' style={{ color: colors.status.successText }}>PREMIUM</Text>
         </View>
       ) : (
         <View className='ml-auto flex-row items-center gap-1'>
           {!hasVoiceNotes && !isRecording ? <>
-              <Plus className='text-teal-600' size={12} />
-              <Text className='text-xs font-medium text-teal-600'>Record</Text>
+              <Plus color={colors.status.success} size={12} />
+              <Text className='text-xs font-medium' style={{ color: colors.status.success }}>Record</Text>
             </> : null}
         </View>
       )}

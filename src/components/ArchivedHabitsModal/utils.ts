@@ -22,18 +22,22 @@ export const getStrengthInfo = (
   }
   if (strength >= 60) {
     return {
-      bgColor: isDark ? 'bg-emerald-900/40' : 'bg-emerald-50',
+      bgColor: '',
+      bgStyle: isDark ? 'rgba(5,150,105,0.15)' : '#D1FAE5',
       emoji: '💪',
       label: 'Strong',
-      textColor: isDark ? 'text-emerald-300' : 'text-emerald-700',
+      textColor: '',
+      textStyle: isDark ? '#34D399' : '#047857',
     };
   }
   if (strength >= 40) {
     return {
-      bgColor: isDark ? 'bg-teal-900/40' : 'bg-teal-50',
+      bgColor: '',
+      bgStyle: isDark ? 'rgba(5,150,105,0.15)' : '#D1FAE5',
       emoji: '🌳',
       label: 'Developing',
-      textColor: isDark ? 'text-teal-300' : 'text-teal-700',
+      textColor: '',
+      textStyle: isDark ? '#6EE7B7' : '#047857',
     };
   }
   if (strength >= 20) {
@@ -45,10 +49,12 @@ export const getStrengthInfo = (
     };
   }
   return {
-    bgColor: isDark ? 'bg-rose-900/40' : 'bg-rose-50',
+    bgColor: '',
+    bgStyle: isDark ? 'rgba(239,68,68,0.15)' : '#FEE2E2',
     emoji: '🌱',
     label: 'Starting',
-    textColor: isDark ? 'text-rose-300' : 'text-rose-600',
+    textColor: '',
+    textStyle: isDark ? '#FCA5A5' : '#DC2626',
   };
 };
 

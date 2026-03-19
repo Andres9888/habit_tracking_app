@@ -69,7 +69,7 @@ export function EmptyInsightsState({ daysRemaining }: EmptyInsightsStateProps) {
             style={{
               color: colors.text.tertiary,
               fontFamily: fontFamilies.primary.text,
-              fontSize: 12,
+              fontSize: 13,
               marginTop: 4,
               textAlign: 'center',
             }}

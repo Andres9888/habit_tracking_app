@@ -15,6 +15,7 @@ export interface StatCardProps {
   accessibilityHint?: string;
   animationKey?: number;
   color: string;
+  colorStyle?: string;
   delay: number;
   emoji: string;
   label: string;

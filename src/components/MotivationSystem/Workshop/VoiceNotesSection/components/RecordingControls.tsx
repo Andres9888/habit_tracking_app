@@ -3,6 +3,7 @@
  */
 import React from 'react';
 import { View, Text } from 'react-native';
+import { useThemeColors } from '../../../../../theme/ThemeContext';
 import { RecordingState } from '../../../../../hooks/useAudioRecording';
 import { MicrophonePermissionDenied } from '../../MicrophonePermissionDenied';
 import { RecordingDurationDisplay } from './RecordingDurationDisplay';
@@ -29,12 +30,13 @@ interface RecordingControlsProps {
 }
 
 export function RecordingControls(props: RecordingControlsProps) {
+  const { colors } = useThemeColors();
   const { state, isRecording, isPaused, formattedDuration, isMaxDurationReached, isApproachingMaxDuration } = props;
   const { secondsUntilMaxDuration, canAskAgain, errorMessage, onStartRecording, onStopRecording } = props;
   const { onPauseRecording, onResumeRecording, onCancelRecording, onOpenSettings, reduceMotion } = props;
 
   if (state === 'preparing' || state === 'stopping') {
-    return <View className='items-center py-4'><Text className='text-sm text-stone-500'>{state === 'preparing' ? 'Preparing...' : 'Saving...'}</Text></View>;
+    return <View className='items-center py-4'><Text className='text-sm' style={{ color: colors.text.secondary }}>{state === 'preparing' ? 'Preparing...' : 'Saving...'}</Text></View>;
   }
   if (state === 'permission-denied') {
     return <MicrophonePermissionDenied compact canAskAgain={canAskAgain} errorMessage={errorMessage ?? undefined} reduceMotion={reduceMotion} onOpenSettings={onOpenSettings} onTryAgain={onStartRecording} />;
@@ -47,7 +49,7 @@ export function RecordingControls(props: RecordingControlsProps) {
     <View className='items-center gap-4'>
       {(isRecording || isPaused) ? <RecordingDurationDisplay formattedDuration={formattedDuration} isApproachingMaxDuration={isApproachingMaxDuration} isMaxDurationReached={isMaxDurationReached} secondsUntilMaxDuration={secondsUntilMaxDuration} /> : null}
       <RecordingButtonGroup isPaused={isPaused} isRecording={isRecording} onCancelRecording={onCancelRecording} onPauseRecording={onPauseRecording} onResumeRecording={onResumeRecording} onStartRecording={onStartRecording} onStopRecording={onStopRecording} />
-      {!isRecording && !isPaused ? <Text className='text-sm text-stone-500'>Tap to record a voice note</Text> : null}
+      {!isRecording && !isPaused ? <Text className='text-sm' style={{ color: colors.text.secondary }}>Tap to record a voice note</Text> : null}
     </View>
   );
 }

@@ -10,6 +10,7 @@ import Animated, {
 import { Play } from 'lucide-react-native';
 import { SPRING_BUTTON } from './constants';
 import { triggerHaptic } from '@/utils/haptics';
+import { useThemeColors } from '@/theme/ThemeContext';
 
 interface StartNowButtonProps {
   onPress: () => void;
@@ -23,6 +24,7 @@ export function StartNowButton({
   onPress,
   reduceMotion = false,
 }: StartNowButtonProps) {
+  const { colors } = useThemeColors();
   const scale = useSharedValue(1);
   const glowOpacity = useSharedValue(0.5);
 
@@ -77,13 +79,14 @@ export function StartNowButton({
     <Animated.View className='relative' style={buttonAnimatedStyle}>
       {/* Glow effect */}
       <Animated.View
-        className='absolute -inset-2 rounded-2xl bg-emerald-400/30 blur-xl'
-        style={glowAnimatedStyle}
+        className='absolute -inset-2 rounded-2xl blur-xl'
+        style={[glowAnimatedStyle, { backgroundColor: `${colors.status.success}4D` }]}
       />
       <Pressable
         accessibilityLabel='Start habit now'
         accessibilityRole='button'
-        className='flex-row items-center justify-center gap-2 rounded-xl bg-emerald-500 px-8 py-4'
+        className='flex-row items-center justify-center gap-2 rounded-xl px-8 py-4'
+        style={{ backgroundColor: colors.status.success }}
         onPress={handlePress}
         onPressIn={handlePressIn}
         onPressOut={handlePressOut}

@@ -1,17 +1,23 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react-native';
+import { useThemeColors } from '@/theme/ThemeContext';
 
 interface TrendIndicatorProps {
   weeklyChange: number;
 }
 
 export function TrendIndicator({ weeklyChange }: TrendIndicatorProps) {
+  const { colors: themeColors } = useThemeColors();
+
   if (weeklyChange > 0) {
     return (
-      <View className='flex-row items-center gap-1 rounded-full bg-emerald-100 px-2 py-0.5'>
-        <TrendingUp className='text-emerald-600' size={12} />
-        <Text className='text-xs font-semibold text-emerald-600'>
+      <View
+        className='flex-row items-center gap-1 rounded-full px-2 py-0.5'
+        style={{ backgroundColor: themeColors.status.successLight }}
+      >
+        <TrendingUp color={themeColors.status.success} size={12} />
+        <Text className='text-xs font-semibold' style={{ color: themeColors.status.success }}>
           +{weeklyChange}%
         </Text>
       </View>
@@ -20,9 +26,9 @@ export function TrendIndicator({ weeklyChange }: TrendIndicatorProps) {
 
   if (weeklyChange < 0) {
     return (
-      <View className='flex-row items-center gap-1 rounded-full bg-red-100 px-2 py-0.5'>
-        <TrendingDown className='text-red-600' size={12} />
-        <Text className='text-xs font-semibold text-red-600'>
+      <View className='flex-row items-center gap-1 rounded-full px-2 py-0.5' style={{ backgroundColor: themeColors.status.errorLight }}>
+        <TrendingDown color={themeColors.status.error} size={12} />
+        <Text className='text-xs font-semibold' style={{ color: themeColors.status.error }}>
           {weeklyChange}%
         </Text>
       </View>
@@ -30,9 +36,9 @@ export function TrendIndicator({ weeklyChange }: TrendIndicatorProps) {
   }
 
   return (
-    <View className='flex-row items-center gap-1 rounded-full bg-stone-100 px-2 py-0.5'>
-      <Minus className='text-stone-500' size={12} />
-      <Text className='text-xs font-semibold text-stone-500'>Stable</Text>
+    <View className='flex-row items-center gap-1 rounded-full px-2 py-0.5' style={{ backgroundColor: themeColors.background }}>
+      <Minus color={themeColors.text.secondary} size={12} />
+      <Text className='text-xs font-semibold' style={{ color: themeColors.text.secondary }}>Stable</Text>
     </View>
   );
 }

@@ -13,6 +13,7 @@ import Animated, {
 import { clsx } from 'clsx';
 import { shadows } from '../../../../theme/spacing';
 import { SPRING_BUTTON } from '../../../animations';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import { triggerHaptic } from '@/utils/haptics';
 
 interface SectionCardProps {
@@ -23,7 +24,7 @@ interface SectionCardProps {
   disabled?: boolean;
 }
 
-const cardClass = 'rounded-xl border border-stone-200 bg-white p-3';
+const cardClass = 'rounded-xl border p-3';
 const staticShadow = {
   ...shadows.card,
   shadowOpacity: 0.05,
@@ -36,6 +37,7 @@ export function SectionCard({
   accessibilityLabel,
   disabled,
 }: SectionCardProps) {
+  const { colors } = useThemeColors();
   const scale = useSharedValue(1);
   const shadowOpacity = useSharedValue(0.05);
   const elevation = useSharedValue(2);
@@ -79,6 +81,7 @@ export function SectionCard({
           accessibilityState={{ disabled }}
           className={clsx(cardClass, className)}
           disabled={disabled}
+          style={{ borderColor: colors.border, backgroundColor: colors.card }}
           onPress={handlePress}
           onPressIn={handlePressIn}
           onPressOut={handlePressOut}
@@ -90,7 +93,7 @@ export function SectionCard({
   }
 
   return (
-    <View className={clsx(cardClass, className)} style={staticShadow}>
+    <View className={clsx(cardClass, className)} style={{ ...staticShadow, borderColor: colors.border, backgroundColor: colors.card }}>
       {children}
     </View>
   );

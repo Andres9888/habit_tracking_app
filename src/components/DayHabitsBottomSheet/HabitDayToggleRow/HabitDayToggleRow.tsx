@@ -1,6 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { memo, useCallback, useState } from 'react';
 import { Animated, Pressable, Text, View } from 'react-native';
+import { useThemeColors } from '@/theme/ThemeContext';
 
 import { Checkbox } from './Checkbox';
 import type { HabitDayToggleRowProps } from './types';
@@ -22,6 +23,7 @@ function HabitDayToggleRowComponent({
   isLoading = false,
   reduceMotion = false,
 }: HabitDayToggleRowProps) {
+  const { colors: themeColors } = useThemeColors();
   const [isToggling, setIsToggling] = useState(false);
 
   const { scaleAnim, checkScaleAnim, animateCheckbox, animatePressEffect } =
@@ -62,7 +64,8 @@ function HabitDayToggleRowComponent({
           checked: isCompleted,
           disabled: isLoading || isToggling,
         }}
-        className='flex-row items-center gap-3 rounded-2xl bg-stone-50/80 px-4 py-3.5 active:bg-stone-100'
+        className='flex-row items-center gap-3 rounded-2xl px-4 py-3.5'
+        style={{ backgroundColor: themeColors.background }}
         disabled={isLoading || isToggling}
         onPress={() => {
           void handlePress();
@@ -73,7 +76,8 @@ function HabitDayToggleRowComponent({
         </View>
 
         <Text
-          className='flex-1 text-[15px] font-medium text-stone-800'
+          className='flex-1 text-[15px] font-medium'
+          style={{ color: themeColors.text.primary }}
           ellipsizeMode='tail'
           numberOfLines={2}
         >

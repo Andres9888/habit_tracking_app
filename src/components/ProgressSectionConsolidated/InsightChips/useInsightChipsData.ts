@@ -33,7 +33,7 @@ export function useInsightChipsData({
     // Best Day chip
     if (bestDay) {
       chips.push({
-        borderColor: 'emerald-200',
+        borderColor: 'success-200',
         icon: '🏆',
         id: 'bestDay',
         isInteractive: false,

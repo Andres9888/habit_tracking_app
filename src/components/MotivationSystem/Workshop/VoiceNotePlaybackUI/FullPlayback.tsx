@@ -5,6 +5,7 @@
 
 import React from 'react';
 import { View } from 'react-native';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import { PlayPauseButton } from './PlayPauseButton';
 import { ProgressBar } from './ProgressBar';
 import { PlaybackHeader } from './PlaybackHeader';
@@ -54,8 +55,10 @@ export function FullPlayback({
   onSpeedChange,
   onToggleMute,
 }: FullPlaybackProps) {
+  const { colors } = useThemeColors();
+
   return (
-    <View className='rounded-xl bg-stone-50 p-4'>
+    <View className='rounded-xl p-4' style={{ backgroundColor: colors.background }}>
       <PlaybackHeader isDay1={isDay1} label={label} />
 
       <View className='flex-row items-center gap-3'>

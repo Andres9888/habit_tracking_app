@@ -11,7 +11,7 @@ export const s = StyleSheet.create({
     alignSelf: 'flex-start',
     backgroundColor: 'rgba(255,255,255,0.2)',
     borderRadius: 9999,
-    paddingHorizontal: 10,
+    paddingHorizontal: 12,
     paddingVertical: 4,
   },
   badgeText: {
@@ -24,7 +24,7 @@ export const s = StyleSheet.create({
     backgroundColor: 'rgba(255,255,255,0.18)',
     borderRadius: 9999,
     paddingHorizontal: 12,
-    paddingVertical: 5,
+    paddingVertical: 4,
   },
   chipText: { color: '#FFFFFF', fontSize: 13 },
   chips: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginTop: 16 },

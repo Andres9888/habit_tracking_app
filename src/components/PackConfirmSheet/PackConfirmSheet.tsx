@@ -43,7 +43,7 @@ export function PackConfirmSheet({ onCancel, onConfirm, pack, visible }: PackCon
 const s = StyleSheet.create({
   check: { alignItems: 'center', backgroundColor: `${colors.primary[600]}15`, borderRadius: 12, height: 24, justifyContent: 'center', width: 24 },
   desc: { ...typography.bodySmall, color: colors.text.secondary, marginBottom: spacing.md },
-  emoji: { fontSize: 24 },
+  emoji: { fontSize: 22 },
   freq: { ...typography.caption, color: colors.text.tertiary },
   habitName: { ...typography.bodySmall, color: colors.text.primary, fontWeight: '600' },
   row: { alignItems: 'center', flexDirection: 'row', gap: spacing.md, paddingVertical: spacing.sm },

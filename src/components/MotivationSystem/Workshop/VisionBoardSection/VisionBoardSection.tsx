@@ -8,6 +8,7 @@
 
 import React from 'react';
 import { Text } from 'react-native';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import { CompletionCheckmark } from '../../../animations';
 import { AnimatedSection } from './AnimatedSection';
 import { SectionCard } from './SectionCard';
@@ -31,6 +32,7 @@ export function VisionBoardSection({
   reduceMotion = false,
   sectionIndex = 0,
 }: VisionBoardSectionProps) {
+  const { colors } = useThemeColors();
   const state = useVisionBoardState({
     imageCount,
     isPremium,
@@ -61,7 +63,7 @@ export function VisionBoardSection({
             imageCount={imageCount}
             isPremium={isPremium}
           />
-          {state.hasImages ? null : <Text className='text-sm text-stone-500'>
+          {state.hasImages ? null : <Text className='text-sm' style={{ color: colors.text.secondary }}>
               Add photos that inspire your habit journey
             </Text>}
           <CompletionCheckmark

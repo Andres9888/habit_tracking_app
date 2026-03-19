@@ -26,6 +26,13 @@ export function UnsavedChangesAlert({
 }: UnsavedChangesAlertProps) {
   const { colors } = useThemeColors();
   const styles = VARIANT_STYLES[variant];
+  const useErrorTheme = 'useErrorTheme' in styles && styles.useErrorTheme;
+
+  const resolvedIconBg = useErrorTheme ? colors.status.errorLight : styles.iconBg;
+  const resolvedIconColor = useErrorTheme ? colors.status.error : styles.iconColor;
+  const resolvedPreviewBg = useErrorTheme ? colors.status.errorLight : undefined;
+  const resolvedPreviewBorder = useErrorTheme ? colors.status.error : undefined;
+  const resolvedDiscardBg = useErrorTheme ? colors.status.error : undefined;
 
   const handleDiscard = () => {
     triggerHaptic('heavy');
@@ -52,10 +59,11 @@ export function UnsavedChangesAlert({
     >
       <View className='items-center'>
         <Animated.View
-          className={`mb-4 rounded-full ${styles.iconBg} p-3`}
+          className='mb-4 rounded-full p-3'
           entering={FadeIn.delay(100).duration(200)}
+          style={resolvedIconBg ? { backgroundColor: resolvedIconBg } : undefined}
         >
-          <AlertTriangle color={styles.iconColor} size={28} />
+          <AlertTriangle color={resolvedIconColor} size={28} />
         </Animated.View>
 
         <Text
@@ -72,7 +80,11 @@ export function UnsavedChangesAlert({
         </Text>
 
         {truncatedPreview ? <View
-            className={`mb-4 w-full rounded-lg border ${styles.previewBorder} ${styles.previewBg} p-3`}
+            className='mb-4 w-full rounded-lg border p-3'
+            style={{
+              borderColor: resolvedPreviewBorder ?? colors.border,
+              backgroundColor: resolvedPreviewBg ?? colors.background,
+            }}
           >
             <Text className='mb-1 text-xs font-medium' style={{ color: colors.text.tertiary }}>
               Your unsaved changes:
@@ -91,7 +103,8 @@ export function UnsavedChangesAlert({
             accessibilityHint='Discards your unsaved changes'
             accessibilityLabel={discardButtonLabel}
             accessibilityRole='button'
-            className={`w-full items-center rounded-xl ${styles.discardBg} py-3.5 active:opacity-80`}
+            className='w-full items-center rounded-xl py-3.5 active:opacity-80'
+            style={resolvedDiscardBg ? { backgroundColor: resolvedDiscardBg } : undefined}
             onPress={handleDiscard}
           >
             <Text className={`text-base font-semibold ${styles.discardText}`}>
@@ -103,10 +116,11 @@ export function UnsavedChangesAlert({
             accessibilityHint='Returns to editing without discarding changes'
             accessibilityLabel={keepEditingButtonLabel}
             accessibilityRole='button'
-            className='w-full items-center rounded-xl bg-stone-100 py-3.5 active:bg-stone-200'
+            className='w-full items-center rounded-xl py-3.5 active:opacity-80'
+            style={{ backgroundColor: colors.background }}
             onPress={handleKeepEditing}
           >
-            <Text className='text-base font-semibold text-stone-700'>
+            <Text className='text-base font-semibold' style={{ color: colors.text.primary }}>
               {keepEditingButtonLabel}
             </Text>
           </Pressable>

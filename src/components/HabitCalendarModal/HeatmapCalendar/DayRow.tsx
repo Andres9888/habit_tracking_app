@@ -2,6 +2,7 @@ import { View, Text } from 'react-native';
 import { format, startOfMonth, endOfMonth, eachDayOfInterval } from 'date-fns';
 import { HeatmapDot } from './HeatmapDot';
 import { getDaysByWeekDay, MAX_OCCURRENCES } from './utils';
+import { useThemeColors } from '../../../theme/ThemeContext';
 
 interface DayRowProps {
   dayOfWeek: number;
@@ -18,10 +19,12 @@ export function DayRow({
   completedDates,
   today,
 }: DayRowProps) {
+  const { colors } = useThemeColors();
+
   return (
     <View className='mb-2.5 flex-row'>
       <View className='w-12 justify-center'>
-        <Text className='text-xs text-stone-400'>{label}</Text>
+        <Text className='text-xs' style={{ color: colors.text.tertiary }}>{label}</Text>
       </View>
 
       {months.map((month, monthIndex) => {

@@ -17,7 +17,7 @@ export function PausedEmptyState() {
       entering={entry(60)}
       style={{ alignItems: 'center', gap: 12, paddingVertical: 48 }}
     >
-      <Text style={{ fontSize: 48 }}>⏸️</Text>
+      <Text style={{ fontSize: 34 }}>⏸️</Text>
       <Text
         style={{
           color: colors.text.primary,

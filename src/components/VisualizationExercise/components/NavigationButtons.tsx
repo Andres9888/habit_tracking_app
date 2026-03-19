@@ -7,61 +7,57 @@ import React from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { ChevronRight } from 'lucide-react-native';
 import { clsx } from 'clsx';
+import { useThemeColors } from '../../../theme/ThemeContext';
 import { triggerHaptic } from '@/utils/haptics';
 
 interface NavigationButtonsProps {
   onBack: () => void;
   onNext: () => void;
   canContinue: boolean;
-  activeColor: string;
-  activeHoverColor: string;
+  activeColorValue: string;
 }
 
 export function NavigationButtons({
   onBack,
   onNext,
   canContinue,
-  activeColor,
-  activeHoverColor,
+  activeColorValue,
 }: NavigationButtonsProps) {
+  const { colors } = useThemeColors();
+
   return (
     <View className='flex-row gap-3'>
       <Pressable
         accessibilityLabel='Go back'
         accessibilityRole='button'
-        className='flex-1 items-center rounded-xl border border-stone-200 bg-white py-3.5 active:bg-stone-50'
+        className='flex-1 items-center rounded-xl border py-3.5'
+        style={{ borderColor: colors.border, backgroundColor: colors.card }}
         onPress={() => {
           triggerHaptic('tap');
           onBack();
         }}
       >
-        <Text className='text-sm font-medium text-stone-600'>Back</Text>
+        <Text className='text-sm font-medium' style={{ color: colors.text.secondary }}>Back</Text>
       </Pressable>
       <Pressable
         accessibilityLabel='Continue'
         accessibilityRole='button'
-        className={clsx(
-          'flex-1 flex-row items-center justify-center gap-2 rounded-xl py-3.5',
-          canContinue
-            ? `${activeColor} active:${activeHoverColor}`
-            : 'bg-stone-200'
-        )}
+        className='flex-1 flex-row items-center justify-center gap-2 rounded-xl py-3.5'
         disabled={!canContinue}
+        style={{ backgroundColor: canContinue ? activeColorValue : colors.border }}
         onPress={() => {
           triggerHaptic('toggle');
           onNext();
         }}
       >
         <Text
-          className={clsx(
-            'text-sm font-semibold',
-            canContinue ? 'text-white' : 'text-stone-400'
-          )}
+          className='text-sm font-semibold'
+          style={{ color: canContinue ? '#ffffff' : colors.text.tertiary }}
         >
           Continue
         </Text>
         <ChevronRight
-          className={canContinue ? 'text-white' : 'text-stone-400'}
+          color={canContinue ? '#ffffff' : colors.text.tertiary}
           size={18}
         />
       </Pressable>

@@ -1,5 +1,6 @@
 import { memo } from 'react';
 import { ScrollView, Text, View } from 'react-native';
+import { useThemeColors } from '@/theme/ThemeContext';
 import { QuickAccessEmojiItem } from './QuickAccessEmojiItem';
 
 interface SuggestedEmojisProps {
@@ -15,9 +16,12 @@ export const SuggestedEmojis = memo(
     suggestedEmojis,
     selectedEmoji,
     onEmojiSelect,
-  }: SuggestedEmojisProps) => (
+  }: SuggestedEmojisProps) => {
+    const { colors } = useThemeColors();
+
+    return (
     <View className='px-4 pb-2'>
-      <Text className='mb-2 text-xs font-semibold uppercase tracking-wider text-stone-500'>
+      <Text className='mb-2 text-xs font-semibold uppercase tracking-wider' style={{ color: colors.text.secondary }}>
         Suggested for "{habitName}"
       </Text>
       <ScrollView
@@ -36,7 +40,8 @@ export const SuggestedEmojis = memo(
         ))}
       </ScrollView>
     </View>
-  )
+    );
+  }
 );
 
 SuggestedEmojis.displayName = 'SuggestedEmojis';

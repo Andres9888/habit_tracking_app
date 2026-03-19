@@ -5,6 +5,7 @@
 import { memo } from 'react';
 import { Pressable, Text } from 'react-native';
 import { Clock } from 'lucide-react-native';
+import { useThemeColors } from '@/theme/ThemeContext';
 
 interface CustomTimeButtonProps {
   isCustomTime: boolean;
@@ -17,6 +18,7 @@ function CustomTimeButtonComponent({
   customTimeLabel,
   onPress,
 }: CustomTimeButtonProps) {
+  const { colors } = useThemeColors();
   const accessibilityLabel = isCustomTime
     ? `Custom time set to ${customTimeLabel}. Double tap to change.`
     : 'Set a custom reminder time';
@@ -32,18 +34,18 @@ function CustomTimeButtonComponent({
     >
       {isCustomTime ? (
         <>
-          <Clock color='#059669' size={16} />
-          <Text className='ml-1.5 text-sm font-medium text-emerald-600'>
+          <Clock color={colors.status.success} size={16} />
+          <Text className='ml-1.5 text-sm font-medium' style={{ color: colors.status.success }}>
             {customTimeLabel}
           </Text>
-          <Text className='ml-1 text-sm text-emerald-600'>(tap to change)</Text>
+          <Text className='ml-1 text-sm' style={{ color: colors.status.success }}>(tap to change)</Text>
         </>
       ) : (
         <>
-          <Text className='text-sm font-medium text-emerald-600'>
+          <Text className='text-sm font-medium' style={{ color: colors.status.success }}>
             Pick a different time
           </Text>
-          <Text className='ml-1 text-emerald-600'>→</Text>
+          <Text className='ml-1' style={{ color: colors.status.success }}>→</Text>
         </>
       )}
     </Pressable>

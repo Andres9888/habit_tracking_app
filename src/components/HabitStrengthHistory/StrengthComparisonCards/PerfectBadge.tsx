@@ -5,17 +5,21 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import { Sparkles } from 'lucide-react-native';
+import { useThemeColors } from '@/theme/ThemeContext';
 
 export function PerfectBadge() {
+  const { colors } = useThemeColors();
+
   return (
     <View
       accessible
       accessibilityLabel='Perfect streak! You have completed every day since starting this habit'
-      className='mt-1.5 flex-row items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5'
+      className='mt-1.5 flex-row items-center gap-1 rounded-full px-2 py-0.5'
+      style={{ backgroundColor: colors.status.warningLight }}
       testID='perfect-badge'
     >
-      <Sparkles color='#d97706' size={10} />
-      <Text className='text-[10px] font-bold text-amber-700'>Perfect!</Text>
+      <Sparkles color={colors.status.warning} size={10} />
+      <Text className='text-[10px] font-bold' style={{ color: colors.status.warningText }}>Perfect!</Text>
     </View>
   );
 }

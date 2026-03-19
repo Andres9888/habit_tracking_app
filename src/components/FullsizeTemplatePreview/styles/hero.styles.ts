@@ -45,7 +45,7 @@ export const heroStyles = StyleSheet.create({
     width: 96,
   },
   iconText: {
-    fontSize: 48,
+    fontSize: 34,
   },
   iconWrapper: {
     marginBottom: 20,

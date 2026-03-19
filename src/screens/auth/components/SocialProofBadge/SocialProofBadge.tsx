@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
 
     paddingHorizontal: 16,
-    paddingVertical: 10,
+    paddingVertical: 12,
   },
   count: {
     fontWeight: '600',

@@ -51,7 +51,7 @@ export function TemplatesButton({
             start={{ x: 0, y: 0 }}
             style={templatesGradientStyle}
           >
-            <Text style={{ fontSize: 18 }}>📚</Text>
+            <Text style={{ fontSize: 17 }}>📚</Text>
             <Text style={[templatesLabelStyle, { color: colors.ctaText }]}>
               browse templates
             </Text>

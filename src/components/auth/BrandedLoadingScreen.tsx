@@ -13,12 +13,11 @@ import { LoadingTimeoutCard } from './LoadingTimeoutCard';
 
 const LOADING_TIMEOUT_MS = 10_000;
 
-function ChainIcon({ isDark }: { isDark: boolean }) {
+function ChainIcon({ statusColors }: { statusColors: { success: string; successLight: string; successText: string } }) {
   return (
     <View
-      className={`mb-4 h-16 w-16 items-center justify-center rounded-3xl ${
-        isDark ? 'bg-emerald-900' : 'bg-emerald-50'
-      }`}
+      className='mb-4 h-16 w-16 items-center justify-center rounded-3xl'
+      style={{ backgroundColor: statusColors.successLight }}
     >
       <Text className='text-[28px]'>🔗</Text>
     </View>
@@ -28,7 +27,7 @@ function ChainIcon({ isDark }: { isDark: boolean }) {
 export function BrandedLoadingScreen() {
   const [timedOut, setTimedOut] = useState(false);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const { colors, isDark } = useThemeColors();
+  const { colors } = useThemeColors();
 
   useEffect(() => {
     timerRef.current = setTimeout(() => setTimedOut(true), LOADING_TIMEOUT_MS);
@@ -48,7 +47,7 @@ export function BrandedLoadingScreen() {
       style={{ backgroundColor: colors.background }}
     >
       <View className='items-center'>
-        <ChainIcon isDark={isDark} />
+        <ChainIcon statusColors={colors.status} />
         <Text
           className="mb-8 font-['DMSans'] text-[22px] font-bold tracking-wide"
           style={{ color: colors.text.primary }}

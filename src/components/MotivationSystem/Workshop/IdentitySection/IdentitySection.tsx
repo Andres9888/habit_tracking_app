@@ -14,6 +14,7 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import { Plus, Pencil } from 'lucide-react-native';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import { CompletionCheckmark } from '../../../animations';
 import { SectionCard } from '../CueTriggerSection/SectionCard';
 import { AnimatedSection } from '../CueTriggerSection/AnimatedSection';
@@ -36,6 +37,7 @@ export function IdentitySection({
   reduceMotion = false,
   sectionIndex = 1,
 }: IdentitySectionProps) {
+  const { colors } = useThemeColors();
   const hasIdentity = !!identity;
 
   // Format identity with "I am a" prefix if not already present
@@ -55,23 +57,24 @@ export function IdentitySection({
         accessibilityLabel={
           hasIdentity ? 'Edit your identity' : 'Add your identity'
         }
-        className='border-l-4 border-l-indigo-400'
+        className='border-l-4'
+        style={{ borderLeftColor: colors.status.premium }}
         onPress={onPress}
       >
         {/* Header row: icon + title on left, action on right */}
         <View className='mb-1.5 flex-row items-center justify-between'>
           <View className='flex-row items-center gap-2'>
             <Text className='text-base'>🎭</Text>
-            <Text className='text-xs font-semibold text-indigo-600'>
+            <Text className='text-xs font-semibold' style={{ color: colors.status.premiumText }}>
               Identity Statement
             </Text>
           </View>
           {hasIdentity ? (
-            <Pencil className='text-stone-400' size={14} />
+            <Pencil color={colors.text.tertiary} size={14} />
           ) : (
             <View className='flex-row items-center gap-1'>
-              <Plus className='text-indigo-600' size={12} />
-              <Text className='text-xs font-medium text-indigo-600'>
+              <Plus color={colors.status.premiumText} size={12} />
+              <Text className='text-xs font-medium' style={{ color: colors.status.premiumText }}>
                 Set up
               </Text>
             </View>
@@ -81,15 +84,15 @@ export function IdentitySection({
         {/* Content */}
         {hasIdentity ? (
           <>
-            <Text className='text-sm font-semibold text-stone-900'>
+            <Text className='text-sm font-semibold' style={{ color: colors.text.primary }}>
               "{formattedIdentity}"
             </Text>
-            <Text className='mt-1 text-xs text-stone-500'>
+            <Text className='mt-1 text-xs' style={{ color: colors.text.secondary }}>
               Not "I run" — who you ARE
             </Text>
           </>
         ) : (
-          <Text className='text-sm text-stone-500'>
+          <Text className='text-sm' style={{ color: colors.text.secondary }}>
             Define who you're becoming
           </Text>
         )}

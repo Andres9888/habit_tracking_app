@@ -1,6 +1,7 @@
 import { useCallback, useRef } from 'react';
 import { Animated, Pressable, Text, View } from 'react-native';
 import { colors } from '@/theme/colors';
+import { useThemeColors } from '@/theme/ThemeContext';
 import { shadows } from '@/theme/spacing';
 import { Motion } from '../../../../constants/motion';
 import useHapticFeedback from '../../../../hooks/useHapticFeedback';
@@ -15,6 +16,7 @@ export const SuggestionChip = ({
 }: SuggestionChipProps) => {
   const scale = useRef(new Animated.Value(1)).current;
   const { triggerSelection } = useHapticFeedback();
+  const { colors: themeColors } = useThemeColors();
 
   const handlePressIn = useCallback(() => {
     Animated.timing(scale, {
@@ -44,11 +46,10 @@ export const SuggestionChip = ({
       <Pressable
         accessibilityLabel={`Use habit: ${name}`}
         accessibilityRole='button'
-        className={`flex-row items-center rounded-2xl px-4 py-3 ${
-          isHighlighted ? 'bg-blue-50' : 'bg-white'
-        }`}
+        className='flex-row items-center rounded-2xl px-4 py-3'
         style={{
           ...shadows.subtle,
+          backgroundColor: isHighlighted ? themeColors.status.infoLight : themeColors.card,
           borderColor: isHighlighted ? colors.secondary[500] : colors.border,
           borderWidth: isHighlighted ? 2 : 1,
         }}
@@ -62,7 +63,7 @@ export const SuggestionChip = ({
         >
           <Text className='text-xl'>{emoji}</Text>
         </View>
-        <Text className='text-sm font-semibold text-stone-700'>{name}</Text>
+        <Text className='text-sm font-semibold' style={{ color: themeColors.text.primary }}>{name}</Text>
       </Pressable>
     </Animated.View>
   );

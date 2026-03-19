@@ -10,6 +10,7 @@ import Animated, {
 import { LinearGradient } from 'expo-linear-gradient';
 import { Zap } from 'lucide-react-native';
 
+import { useThemeColors } from '../../../../../theme/ThemeContext';
 import { SPRING_BUTTON } from '../RescueMode.constants';
 import { triggerHaptic } from '@/utils/haptics';
 
@@ -25,6 +26,7 @@ export function JustTwoMinButton({
   onPress,
   reduceMotion = false,
 }: JustTwoMinButtonProps) {
+  const { colors } = useThemeColors();
   const scale = useSharedValue(1);
   const glowOpacity = useSharedValue(0.5);
 
@@ -79,7 +81,8 @@ export function JustTwoMinButton({
     <Animated.View className='relative' style={buttonAnimatedStyle}>
       {/* Glow effect - amber for urgency */}
       <Animated.View
-        className='absolute -inset-2 rounded-2xl bg-amber-400/40 blur-xl'
+        className='absolute -inset-2 rounded-2xl blur-xl'
+        style={{ backgroundColor: colors.status.warningLight }}
         style={glowAnimatedStyle}
       />
       <Pressable
@@ -102,7 +105,7 @@ export function JustTwoMinButton({
           <Text className='text-xl font-bold text-white'>
             Just Do 2 Minutes
           </Text>
-          <Text className='text-center text-sm text-amber-100'>
+          <Text className='text-center text-sm' style={{ color: 'rgba(255,255,255,0.8)' }}>
             That's all it takes to save your streak
           </Text>
         </View>

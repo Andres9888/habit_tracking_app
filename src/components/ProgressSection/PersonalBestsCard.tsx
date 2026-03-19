@@ -17,6 +17,7 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Trophy } from 'lucide-react-native';
+import { useThemeColors } from '@/theme/ThemeContext';
 
 import type { PersonalBestsCardProps } from './types';
 import { usePulseAnimation } from './PersonalBestsCard.hooks';
@@ -30,6 +31,7 @@ export function PersonalBestsCard({
   worstDay,
   onWorstDayPress,
 }: PersonalBestsCardProps) {
+  const { colors: themeColors } = useThemeColors();
   const pulseAnimatedStyle = usePulseAnimation(currentStreak);
 
   const top3Records = streakRecords.slice(0, 3);
@@ -40,7 +42,8 @@ export function PersonalBestsCard({
     <View
       accessible
       accessibilityLabel={`Personal bests${currentStreak > 0 ? `, current streak ${currentStreak} days` : ''}`}
-      className='overflow-hidden rounded-2xl shadow-sm shadow-stone-200/50'
+      className='overflow-hidden rounded-2xl shadow-sm'
+      style={{ shadowColor: themeColors.border }}
     >
       <LinearGradient
         className='absolute inset-0'
@@ -48,14 +51,14 @@ export function PersonalBestsCard({
         end={{ x: 1, y: 1 }}
         start={{ x: 0, y: 0 }}
       />
-      <View className='absolute inset-0 rounded-2xl border border-amber-500/20' />
+      <View className='absolute inset-0 rounded-2xl border' style={{ borderColor: themeColors.status.warningLight }} />
 
       <View className='p-4'>
         <View className='mb-3 flex-row items-center gap-2'>
-          <View className='h-8 w-8 items-center justify-center rounded-lg bg-amber-100'>
-            <Trophy className='text-amber-500' size={16} />
+          <View className='h-8 w-8 items-center justify-center rounded-lg' style={{ backgroundColor: themeColors.status.warningLight }}>
+            <Trophy color={themeColors.status.warning} size={16} />
           </View>
-          <Text className='text-base font-semibold text-stone-800'>
+          <Text className='text-base font-semibold' style={{ color: themeColors.text.primary }}>
             Personal Bests
           </Text>
         </View>
@@ -73,7 +76,7 @@ export function PersonalBestsCard({
           /> : null}
 
         {!hasRecords && currentStreak === 0 ? <View className='items-center py-4'>
-            <Text className='text-sm text-stone-500'>
+            <Text className='text-sm' style={{ color: themeColors.text.secondary }}>
               Complete 2+ consecutive days to start tracking streaks
             </Text>
           </View> : null}

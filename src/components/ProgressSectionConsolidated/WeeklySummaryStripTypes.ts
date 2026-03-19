@@ -17,4 +17,4 @@ export {
   DAY_NAMES,
 } from './WeeklySummaryStrip/WeeklySummaryStrip.constants';
 
-export { DAY_STATE_CONFIGS } from './WeeklySummaryStrip/dayStateConfigs';
+export { getDayStateConfigs } from './WeeklySummaryStrip/dayStateConfigs';

@@ -36,7 +36,7 @@ export function DetailHero({ habit }: DetailHeroProps) {
         >
           <Text
             accessibilityLabel={`${habit.icon} emoji`}
-            style={{ fontSize: 40, color: textPrimary }}
+            style={{ fontSize: 34, color: textPrimary }}
           >
             {habit.icon}
           </Text>

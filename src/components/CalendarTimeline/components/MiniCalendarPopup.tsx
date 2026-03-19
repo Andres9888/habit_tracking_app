@@ -54,7 +54,7 @@ export const MiniCalendarPopup: React.FC<MiniCalendarPopupProps> = ({
             style={{ alignSelf: 'center', marginTop: 8, paddingVertical: 4, paddingHorizontal: 12 }}
             onPress={onClose}
           >
-            <Text style={{ fontFamily: fontFamilies.primary.text, fontSize: 12, fontWeight: '600', color: closeColor }}>Close</Text>
+            <Text style={{ fontFamily: fontFamilies.primary.text, fontSize: 13, fontWeight: '600', color: closeColor }}>Close</Text>
           </Pressable>
         </Pressable>
       </Pressable>

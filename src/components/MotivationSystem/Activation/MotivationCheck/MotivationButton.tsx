@@ -16,6 +16,7 @@ import Animated, {
 import { clsx } from 'clsx';
 
 import { SPRING_BUTTON, SPRING_BOUNCY, ACCENT_CLASSES } from './constants';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import type { MotivationButtonProps } from './types';
 import { triggerHaptic } from '@/utils/haptics';
 
@@ -27,6 +28,7 @@ export function MotivationButton({
   reduceMotion = false,
   accentColor,
 }: MotivationButtonProps) {
+  const { colors } = useThemeColors();
   const scale = useSharedValue(1);
   const selectionScale = useSharedValue(isSelected ? 1 : 0);
 
@@ -87,21 +89,23 @@ export function MotivationButton({
             'absolute h-16 w-16 rounded-full',
             ACCENT_CLASSES[accentColor].ring
           )}
-          style={selectionAnimatedStyle}
+          style={[
+            selectionAnimatedStyle,
+            accentColor === 'amber' ? { backgroundColor: colors.status.warningLight, borderColor: colors.status.warning } : accentColor === 'emerald' ? { backgroundColor: colors.status.successLight, borderColor: colors.status.success } : accentColor === 'rose' ? { backgroundColor: colors.status.errorLight, borderColor: colors.status.error } : undefined,
+          ]}
         />
         <View
-          className={clsx(
-            'h-16 w-16 items-center justify-center rounded-full',
-            isSelected ? '' : 'bg-stone-100'
-          )}
+          className='h-16 w-16 items-center justify-center rounded-full'
+          style={isSelected ? undefined : { backgroundColor: colors.background }}
         >
           <Text className='text-4xl'>{emoji}</Text>
         </View>
         <Text
           className={clsx(
             'mt-2 text-xs',
-            isSelected ? ACCENT_CLASSES[accentColor].label : 'text-stone-500'
+            isSelected ? ACCENT_CLASSES[accentColor].label : ''
           )}
+          style={isSelected ? (accentColor === 'amber' ? { color: colors.status.warningText } : accentColor === 'emerald' ? { color: colors.status.successText } : accentColor === 'rose' ? { color: colors.status.errorText } : undefined) : { color: colors.text.secondary }}
         >
           {label}
         </Text>

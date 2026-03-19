@@ -5,9 +5,8 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
-import { clsx } from 'clsx';
-
 import { SPRING_BUTTON } from '../RescueMode.constants';
+import { useThemeColors } from '../../../../../theme/ThemeContext';
 import { triggerHaptic } from '@/utils/haptics';
 
 interface SecondaryActionProps {
@@ -26,6 +25,7 @@ export function SecondaryAction({
   onPress,
   variant = 'default',
 }: SecondaryActionProps) {
+  const { colors } = useThemeColors();
   const scale = useSharedValue(1);
 
   const handlePressIn = useCallback(() => {
@@ -50,20 +50,16 @@ export function SecondaryAction({
       <Pressable
         accessibilityLabel={label}
         accessibilityRole='button'
-        className={clsx(
-          'flex-row items-center justify-center gap-2 rounded-xl px-4 py-3',
-          variant === 'destructive' ? 'bg-stone-100' : 'bg-emerald-100'
-        )}
+        className='flex-row items-center justify-center gap-2 rounded-xl px-4 py-3'
+        style={{ backgroundColor: variant === 'destructive' ? colors.background : colors.status.successLight }}
         onPress={handlePress}
         onPressIn={handlePressIn}
         onPressOut={handlePressOut}
       >
         {icon}
         <Text
-          className={clsx(
-            'font-medium',
-            variant === 'destructive' ? 'text-stone-500' : 'text-emerald-700'
-          )}
+          className='font-medium'
+          style={{ color: variant === 'destructive' ? colors.text.secondary : colors.status.successText }}
         >
           {label}
         </Text>

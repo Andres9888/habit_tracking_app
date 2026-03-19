@@ -5,6 +5,7 @@
 import React from 'react';
 import { Text } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
+import { useThemeColors } from '@/theme/ThemeContext';
 
 import { getStrengthColors, getStrengthLabel } from '../strengthUtils';
 import { getLabelText } from './utils';
@@ -21,13 +22,14 @@ export function StrengthCard({
   animationDelay = 0,
   showPerfectBadge = false,
 }: StrengthCardProps) {
+  const { colors: themeColors } = useThemeColors();
   const colors = getStrengthColors(strength);
   const label = getStrengthLabel(strength);
   const labelText = getLabelText(label);
 
   const containerClass = isHighlighted
-    ? 'border-2 border-emerald-200 bg-white shadow-sm'
-    : 'bg-stone-50';
+    ? 'border-2 shadow-sm'
+    : '';
 
   return (
     <Animated.View
@@ -36,6 +38,7 @@ export function StrengthCard({
       accessibilityRole='none'
       className={`flex-1 items-center rounded-xl p-3 ${containerClass}`}
       entering={FadeIn.delay(animationDelay).duration(400)}
+      style={{ backgroundColor: isHighlighted ? themeColors.card : themeColors.background, borderColor: isHighlighted ? themeColors.status.success : undefined }}
     >
       <ProgressRing
         ringColor={colors.ring}
@@ -44,7 +47,7 @@ export function StrengthCard({
         timeLabel={timeLabel}
       />
 
-      <Text className='mb-0.5 text-xs font-medium uppercase tracking-wide text-stone-500'>
+      <Text className='mb-0.5 text-xs font-medium uppercase tracking-wide' style={{ color: themeColors.text.secondary }}>
         {timeLabel}
       </Text>
       <Text

@@ -1,6 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
 import { Clock, Zap } from 'lucide-react-native';
+import { useThemeColors } from '@/theme/ThemeContext';
 import { AnimatedContent } from './AnimatedContent';
 import { StartNowButton } from './StartNowButton';
 import { QuickAction } from './QuickAction';
@@ -28,6 +29,7 @@ export function ActivationModalActions({
   onSnooze,
   onJustTwoMin,
 }: ActivationModalActionsProps) {
+  const { colors: themeColors } = useThemeColors();
   const hasWhy = !!habit.why;
   const hasWOOP = !!habit.woopObstacle && !!habit.woopPlan;
   const hasCue =
@@ -39,8 +41,8 @@ export function ActivationModalActions({
 
   return (
     <View
-      className='border-t border-stone-200 bg-white px-4 pt-4'
-      style={{ paddingBottom }}
+      className='border-t px-4 pt-4'
+      style={{ borderColor: themeColors.border, backgroundColor: themeColors.card, paddingBottom }}
     >
       {/* Start Now - Primary CTA */}
       <AnimatedContent
@@ -59,12 +61,12 @@ export function ActivationModalActions({
       >
         <View className='mt-3 flex-row gap-3'>
           <QuickAction
-            icon={<Clock className='text-stone-500' size={16} />}
+            icon={<Clock color={themeColors.text.secondary} size={16} />}
             label='Snooze'
             onPress={onSnooze}
           />
           <QuickAction
-            icon={<Zap className='text-amber-500' size={16} />}
+            icon={<Zap color={themeColors.status.warning} size={16} />}
             label='Just 2 Min'
             onPress={onJustTwoMin}
           />

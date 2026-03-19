@@ -7,6 +7,7 @@
 
 import { Pressable, Text } from 'react-native';
 import Reanimated, { useAnimatedStyle } from 'react-native-reanimated';
+import { useThemeColors } from '@/theme/ThemeContext';
 
 import type { SharedValue } from 'react-native-reanimated';
 
@@ -35,6 +36,8 @@ export const SuccessCard = ({
   habitName,
   onComplete,
 }: SuccessCardProps) => {
+  const { colors: themeColors } = useThemeColors();
+
   const cardStyle = useAnimatedStyle(() => ({
     opacity: cardOpacity.value,
     transform: [{ scale: cardScale.value }],
@@ -77,11 +80,11 @@ export const SuccessCard = ({
 
       {/* Success Text */}
       <Reanimated.View className='items-center' style={textStyle}>
-        <Text className='mb-2 text-center text-2xl font-bold tracking-tight text-stone-800'>
+        <Text className='mb-2 text-center text-2xl font-bold tracking-tight' style={{ color: themeColors.text.primary }}>
           {habitName}
         </Text>
-        <Text className='text-center text-lg text-stone-500'>created! 🎉</Text>
-        <Text className='mt-4 text-center text-sm text-stone-400'>
+        <Text className='text-center text-lg' style={{ color: themeColors.text.secondary }}>created! 🎉</Text>
+        <Text className='mt-4 text-center text-sm' style={{ color: themeColors.text.tertiary }}>
           Your streak starts now
         </Text>
       </Reanimated.View>
@@ -91,7 +94,8 @@ export const SuccessCard = ({
         <Pressable
           accessibilityLabel='Start tracking habit'
           accessibilityRole='button'
-          className='items-center rounded-2xl bg-stone-900 py-4'
+          className='items-center rounded-2xl py-4'
+          style={{ backgroundColor: themeColors.text.primary }}
           onPress={onComplete}
         >
           <Text className='text-base font-semibold text-white'>

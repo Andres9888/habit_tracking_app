@@ -86,7 +86,7 @@ export const ActionItem = ({
           >
             {label}
           </Text>
-          {badge ? <View className='rounded-full bg-violet-500 px-2 py-0.5'>
+          {badge ? <View className='rounded-full px-2 py-0.5' style={{ backgroundColor: colors.status.premium }}>
               <Text className='text-xs font-bold text-white'>{badge}</Text>
             </View> : null}
         </View>

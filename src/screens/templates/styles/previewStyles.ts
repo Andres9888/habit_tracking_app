@@ -20,7 +20,7 @@ export const getPreviewStyles = (themeColors: PreviewThemeColors) =>
       alignItems: 'center',
     },
     previewIcon: {
-      fontSize: 48,
+      fontSize: 34,
     },
     previewIconContainer: {
       alignItems: 'center',

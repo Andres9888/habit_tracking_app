@@ -15,11 +15,13 @@ import Animated, {
 import { clsx } from 'clsx';
 import { SPRING_BUTTON } from '../../../animations';
 import { shadows } from '../../../../theme/spacing';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import { triggerHaptic } from '@/utils/haptics';
 
 interface SectionCardProps {
   children: React.ReactNode;
   className?: string;
+  style?: Record<string, unknown>;
   onPress?: () => void;
   accessibilityLabel?: string;
 }
@@ -27,9 +29,11 @@ interface SectionCardProps {
 export function SectionCard({
   children,
   className,
+  style: styleProp,
   onPress,
   accessibilityLabel,
 }: SectionCardProps) {
+  const { colors } = useThemeColors();
   const scale = useSharedValue(1);
   const shadowOpacity = useSharedValue(0.05);
   const elevation = useSharedValue(2);
@@ -71,9 +75,10 @@ export function SectionCard({
           accessibilityLabel={accessibilityLabel}
           accessibilityRole='button'
           className={clsx(
-            'rounded-xl border border-stone-200 bg-white p-3',
+            'rounded-xl border p-3',
             className
           )}
+          style={{ borderColor: colors.border, backgroundColor: colors.card, ...styleProp }}
           onPress={handlePress}
           onPressIn={handlePressIn}
           onPressOut={handlePressOut}
@@ -87,12 +92,15 @@ export function SectionCard({
   return (
     <View
       className={clsx(
-        'rounded-xl border border-stone-200 bg-white p-3',
+        'rounded-xl border p-3',
         className
       )}
       style={{
         ...shadows.card,
         shadowOpacity: 0.05,
+        borderColor: colors.border,
+        backgroundColor: colors.card,
+        ...styleProp,
       }}
     >
       {children}

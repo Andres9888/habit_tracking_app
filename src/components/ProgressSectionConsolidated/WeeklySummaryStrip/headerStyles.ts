@@ -36,7 +36,7 @@ export const headerStyles = StyleSheet.create({
     fontWeight: '600',
   },
   perfectBadge: {
-    backgroundColor: '#10b981', // emerald-500
+    backgroundColor: '#10b981', // status.success fallback, overridden by theme in CardContent
     borderRadius: borderRadius.medium,
     paddingHorizontal: 8,
     paddingVertical: 2,

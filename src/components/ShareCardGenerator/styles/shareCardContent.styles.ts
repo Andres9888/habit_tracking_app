@@ -85,7 +85,7 @@ export const shareCardContentStyles = StyleSheet.create({
   strengthPercentage: {
     color: colors.text.inverse,
     fontFamily: fontFamilies.primary.display,
-    fontSize: 48,
+    fontSize: 34,
     fontWeight: fontWeights.bold,
     textShadowColor: 'rgba(0, 0, 0, 0.3)',
     textShadowOffset: { height: 2, width: 0 },

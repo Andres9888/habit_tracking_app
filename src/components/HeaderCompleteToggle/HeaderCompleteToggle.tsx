@@ -12,6 +12,7 @@ import React from 'react';
 import { Pressable, Text, View } from 'react-native';
 import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 import { Check, Circle } from 'lucide-react-native';
+import { useThemeColors } from '@/theme/ThemeContext';
 import { MiniConfettiBurst } from './MiniConfettiBurst';
 import { useHeaderToggle } from './useHeaderToggle';
 import { styles } from './styles';
@@ -26,6 +27,7 @@ export function HeaderCompleteToggle({
   onComplete,
   onUncomplete,
 }: HeaderCompleteToggleProps) {
+  const { colors } = useThemeColors();
   const { isToggling, localCompleted, showConfetti, buttonScale, handlePress } =
     useHeaderToggle({
       completedToday,
@@ -58,13 +60,14 @@ export function HeaderCompleteToggle({
         }
         accessibilityRole='button'
         accessibilityState={{ checked: localCompleted }}
-        className={`flex-row items-center gap-1.5 rounded-full px-3 py-1.5 ${
-          localCompleted
-            ? 'bg-emerald-500 shadow-sm'
-            : 'border-2 border-emerald-400 bg-emerald-50'
-        } `}
+        className='flex-row items-center gap-1.5 rounded-full px-3 py-1.5'
         disabled={isToggling}
-        style={buttonAnimatedStyle}
+        style={[
+          buttonAnimatedStyle,
+          localCompleted
+            ? { backgroundColor: colors.status.success, shadowColor: '#000', shadowOpacity: 0.1, shadowRadius: 2, shadowOffset: { width: 0, height: 1 }, elevation: 2 }
+            : { borderWidth: 2, borderColor: colors.status.success, backgroundColor: colors.status.successLight },
+        ]}
         onPress={handlePress}
       >
         {localCompleted ? (
@@ -74,8 +77,8 @@ export function HeaderCompleteToggle({
           </>
         ) : (
           <>
-            <Circle className='text-emerald-500' size={14} strokeWidth={2} />
-            <Text className='text-xs font-semibold text-emerald-600'>
+            <Circle color={colors.status.success} size={14} strokeWidth={2} />
+            <Text className='text-xs font-semibold' style={{ color: colors.status.success }}>
               Mark Done
             </Text>
           </>

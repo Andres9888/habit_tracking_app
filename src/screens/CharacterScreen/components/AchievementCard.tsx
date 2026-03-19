@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
     lineHeight: 18,
   },
   icon: {
-    fontSize: 24,
+    fontSize: 22,
   },
   textCol: {
     flex: 1,

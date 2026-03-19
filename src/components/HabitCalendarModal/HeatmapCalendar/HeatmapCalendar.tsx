@@ -4,12 +4,14 @@ import { MonthLabels } from './MonthLabels';
 import { DayRow } from './DayRow';
 import { DISPLAY_DAYS } from './utils';
 import type { HeatmapCalendarProps } from './types';
+import { useThemeColors } from '../../../theme/ThemeContext';
 
 export default function HeatmapCalendar({
   habitId,
   tracking,
   monthsToShow = 6,
 }: HeatmapCalendarProps) {
+  const { colors } = useThemeColors();
   const today = new Date();
 
   const months = Array.from({ length: monthsToShow }, (_, i) =>
@@ -23,7 +25,7 @@ export default function HeatmapCalendar({
   );
 
   return (
-    <View className='rounded-xl bg-stone-50 px-4 py-3'>
+    <View className='rounded-xl px-4 py-3' style={{ backgroundColor: colors.background }}>
       <MonthLabels months={months} />
       {DISPLAY_DAYS.map(({ dayOfWeek, label }) => (
         <DayRow

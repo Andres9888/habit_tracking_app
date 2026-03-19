@@ -68,11 +68,11 @@ export function getTrendIcon(direction: TrendDirection): LucideIcon {
 /**
  * Get trend color
  */
-export function getTrendColor(direction: TrendDirection): string {
+export function getTrendColor(direction: TrendDirection, successColor?: string): string {
   switch (direction) {
     case 'up': {
-      return '#10b981';
-    } // emerald-500
+      return successColor ?? '#10b981';
+    }
     case 'down': {
       return '#ef4444';
     } // red-500
