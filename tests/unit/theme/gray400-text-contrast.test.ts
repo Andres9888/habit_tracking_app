@@ -3,7 +3,7 @@
  * Verifies that readable text uses gray-500 (#78716c, 4.6:1 contrast)
  * instead of gray-400 (#6B7280, 3.0:1 contrast) which fails WCAG AA.
  *
- * Gray-400 is acceptable for: placeholder text, disabled states, icon fills.
+ * Gray-400 is acceptable for: hint text, disabled states, icon fills.
  * Gray-400 is NOT acceptable for: labels, timestamps, descriptions, stat units.
  */
 

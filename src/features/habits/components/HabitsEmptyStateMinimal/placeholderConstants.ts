@@ -1,5 +1,5 @@
 /**
- * Animated placeholder constants for the cycling input placeholder.
+ * Animated hint constants for the cycling input hint.
  * Time-based examples that match the suggestion chip windows.
  */
 

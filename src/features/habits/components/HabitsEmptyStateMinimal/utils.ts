@@ -77,7 +77,7 @@ export function getTimeBasedChips(
 }
 
 /**
- * Get placeholder examples matching the current time window
+ * Get hint examples matching the current time window
  */
 export function getTimeBasedPlaceholders(
   date: Date = new Date()

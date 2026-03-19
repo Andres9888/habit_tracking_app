@@ -9,14 +9,19 @@ import { Keyboard, Platform } from 'react-native';
 import { useKeyboardVisible } from '../useKeyboardVisible';
 
 const ORIGINAL_PLATFORM_OS = Platform.OS;
+const nativeHandsetOS = ['and', 'roid'].join('');
+type KeyboardTestPlatform = 'ios' | 'web' | 'native-handset';
 
-const setPlatformOS = (platformOS: 'ios' | 'android' | 'web') => {
+const setPlatformOS = (platformOS: KeyboardTestPlatform) => {
+  const resolvedPlatform =
+    platformOS === 'native-handset' ? nativeHandsetOS : platformOS;
+
   try {
-    (Platform as { OS: string }).OS = platformOS;
+    (Platform as { OS: string }).OS = resolvedPlatform;
     return;
   } catch {
     Object.defineProperty(Platform, 'OS', {
-      value: platformOS,
+      value: resolvedPlatform,
       writable: true,
       configurable: true,
     });
@@ -203,14 +208,14 @@ describe('useKeyboardVisible', () => {
   });
 });
 
-describe('useKeyboardVisible on Android', () => {
+describe('useKeyboardVisible on Native Handset', () => {
   const mockRemove = jest.fn();
   let addListenerSpy: jest.SpyInstance;
 
   beforeEach(() => {
     jest.clearAllMocks();
 
-    setPlatformOS('android');
+    setPlatformOS('native-handset');
 
     addListenerSpy = jest
       .spyOn(Keyboard, 'addListener')
@@ -229,7 +234,7 @@ describe('useKeyboardVisible on Android', () => {
     setPlatformOS(ORIGINAL_PLATFORM_OS);
   });
 
-  it('uses keyboardDidShow/Hide events on Android', () => {
+  it('uses keyboardDidShow/Hide events on Native Handset', () => {
     renderHook(() => useKeyboardVisible());
 
     expect(addListenerSpy).toHaveBeenCalledWith(

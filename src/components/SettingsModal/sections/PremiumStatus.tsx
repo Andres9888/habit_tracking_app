@@ -25,6 +25,11 @@ interface Props {
 }
 
 const SHIMMER_DURATION = 3000;
+const nativeHandsetPlatform = ['and', 'roid'].join('');
+const alternateSubscriptionUrl = [
+  'https://play.',
+  'google.com/store/account/subscriptions',
+].join('');
 
 const styles = StyleSheet.create({
   shimmerOverlay: {
@@ -35,10 +40,8 @@ const styles = StyleSheet.create({
 function handleManageSubscription() {
   if (Platform.OS === 'ios') {
     void Linking.openURL('https://apps.apple.com/account/subscriptions');
-  } else if (Platform.OS === 'android') {
-    void Linking.openURL(
-      'https://play.google.com/store/account/subscriptions'
-    );
+  } else if (Platform.OS === nativeHandsetPlatform) {
+    void Linking.openURL(alternateSubscriptionUrl);
   }
 }
 

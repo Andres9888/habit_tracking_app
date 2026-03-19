@@ -13,6 +13,7 @@
 import React from 'react';
 import { render, fireEvent, waitFor, act } from '@testing-library/react-native';
 import { AccessibilityInfo } from 'react-native';
+import STRINGS from '../../../constants/strings';
 
 // Create trackable mock functions at module level (prefixed with "mock" for jest)
 const mockMutationFn = jest.fn(() => Promise.resolve('new-habit-id'));
@@ -254,8 +255,8 @@ describe('CreateHabitModal Integration - Template → Form Flow', () => {
         expect(meditateCard.props.accessibilityState?.selected).toBe(true);
       });
 
-      // Now manually change the name (placeholder from STRINGS.CREATE_HABIT.namePlaceholder)
-      const nameInput = getByPlaceholderText('e.g., Read 10 minutes');
+      // Now manually change the name (hint from STRINGS.CREATE_HABIT.namePrompt)
+      const nameInput = getByPlaceholderText(STRINGS.CREATE_HABIT.namePrompt);
       fireEvent.changeText(nameInput, 'Custom Habit');
 
       // Quick pick should no longer be selected
@@ -375,8 +376,8 @@ describe('CreateHabitModal Integration - Template → Form Flow', () => {
         <CreateHabitModal {...defaultProps} />
       );
 
-      // Placeholder is 'e.g., Read 10 minutes' from STRINGS.CREATE_HABIT.namePlaceholder
-      const nameInput = getByPlaceholderText('e.g., Read 10 minutes');
+      // Hint is sourced from STRINGS.CREATE_HABIT.namePrompt
+      const nameInput = getByPlaceholderText(STRINGS.CREATE_HABIT.namePrompt);
       fireEvent.changeText(nameInput, 'My Custom Habit');
 
       await waitFor(() => {
@@ -565,7 +566,7 @@ describe('CreateHabitModal Integration - Template → Form Flow', () => {
       );
 
       // 1. Fill in habit name
-      const nameInput = getByPlaceholderText('e.g., Read 10 minutes');
+      const nameInput = getByPlaceholderText(STRINGS.CREATE_HABIT.namePrompt);
       fireEvent.changeText(nameInput, 'Morning Meditation');
 
       // 2. Select a color (Teal - #14B8A6)
@@ -603,7 +604,7 @@ describe('CreateHabitModal Integration - Template → Form Flow', () => {
       );
 
       // Fill in habit name
-      const nameInput = getByPlaceholderText('e.g., Read 10 minutes');
+      const nameInput = getByPlaceholderText(STRINGS.CREATE_HABIT.namePrompt);
       fireEvent.changeText(nameInput, 'Daily Journal');
 
       // None reminder should be selected by default
@@ -662,7 +663,7 @@ describe('CreateHabitModal Integration - Template → Form Flow', () => {
       );
 
       // Fill in habit name
-      const nameInput = getByPlaceholderText('e.g., Read 10 minutes');
+      const nameInput = getByPlaceholderText(STRINGS.CREATE_HABIT.namePrompt);
       fireEvent.changeText(nameInput, 'Evening Reading');
 
       // Select Evening reminder
@@ -700,7 +701,7 @@ describe('CreateHabitModal Integration - Template → Form Flow', () => {
       );
 
       // Fill in habit name
-      const nameInput = getByPlaceholderText('e.g., Read 10 minutes');
+      const nameInput = getByPlaceholderText(STRINGS.CREATE_HABIT.namePrompt);
       fireEvent.changeText(nameInput, 'Midday Stretch');
 
       // Select Midday reminder

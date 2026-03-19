@@ -20,12 +20,12 @@ export function useAudioMode(): UseAudioModeReturn {
   const configureAudioMode = useCallback(async (): Promise<void> => {
     await Audio.setAudioModeAsync({
       allowsRecordingIOS: false,
-      // Android: Do not mix with other audio - pause when interrupted
+      // Native Handset: Do not mix with other audio - pause when interrupted
       interruptionModeAndroid: InterruptionModeAndroid.DoNotMix,
       // iOS: Do not mix with other audio - pause when interrupted
       interruptionModeIOS: InterruptionModeIOS.DoNotMix,
       playsInSilentModeIOS: true,
-      // Android-specific
+      // Native Handset-specific
       playThroughEarpieceAndroid: false,
       shouldDuckAndroid: false,
       // Don't duck, pause completely

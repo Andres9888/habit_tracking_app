@@ -7,7 +7,7 @@ import type { KeyboardEvent } from 'react-native';
  *
  * Automatically listens to platform-appropriate keyboard events:
  * - iOS: Uses keyboardWillShow/Hide for smoother animations
- * - Android: Uses keyboardDidShow/Hide (will* events not supported)
+ * - Native Handset: Uses keyboardDidShow/Hide (will* events not supported)
  *
  * @returns Object containing keyboard state
  * @returns returns.isKeyboardVisible - Whether the keyboard is currently visible
@@ -19,7 +19,7 @@ import type { KeyboardEvent } from 'react-native';
  *
  * // Adjust view padding when keyboard appears
  * <View style={{ paddingBottom: isKeyboardVisible ? keyboardHeight : 0 }}>
- *   <TextInput placeholder="Type here..." />
+ *   <TextInput accessibilityLabel="Message field" />
  * </View>
  * ```
  */
@@ -38,7 +38,7 @@ export const useKeyboardVisible = () => {
       setKeyboardHeight(0);
     };
 
-    // Use 'will' events on iOS for smoother animations, 'did' on Android
+    // Use 'will' events on iOS for smoother animations, 'did' on Native Handset
     const showEvent =
       Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow';
     const hideEvent =

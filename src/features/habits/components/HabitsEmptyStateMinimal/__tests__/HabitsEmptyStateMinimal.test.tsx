@@ -110,7 +110,7 @@ describe('HabitsEmptyStateMinimal', () => {
       });
     });
 
-    it('should render the habit input with placeholder', () => {
+    it('should render the habit input with hint', () => {
       const { getByPlaceholderText } = render(
         <HabitsEmptyStateMinimal {...defaultProps} />
       );

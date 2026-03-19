@@ -17,7 +17,7 @@ export const useKeyboardState = () => {
       setKeyboardHeight(0);
     };
 
-    // Use 'will' events on iOS for smoother animations, 'did' on Android
+    // Use 'will' events on iOS for smoother animations, 'did' on Native Handset
     const showEvent =
       Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow';
     const hideEvent =

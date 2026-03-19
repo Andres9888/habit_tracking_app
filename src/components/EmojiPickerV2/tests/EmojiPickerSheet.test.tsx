@@ -123,7 +123,7 @@ describe('EmojiPickerSheet - V2 Bottom Sheet', () => {
       expect(queryByLabelText('Search emojis')).toBeNull();
     });
 
-    it('should render search bar with correct placeholder', () => {
+    it('should render search bar with correct hint', () => {
       const { getByPlaceholderText } = render(
         <EmojiPickerSheet {...defaultProps} />
       );

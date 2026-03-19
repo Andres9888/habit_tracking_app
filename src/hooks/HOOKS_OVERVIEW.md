@@ -22,7 +22,7 @@ Comprehensive documentation of all custom React hooks in the Chain Day habit tra
 
 **Key Features**:
 - Spring-based scale animation
-- Configurable haptic feedback (iOS & Android)
+- Configurable haptic feedback (iOS & Native Handset)
 - Reduced motion support
 - Customizable press scale
 
@@ -45,7 +45,7 @@ const { animatedStyle, pressHandlers } = usePressAnimation({
 **Location**: `useReduceMotion.ts` (89 lines)
 
 **Key Features**:
-- Platform-specific implementation (iOS/Android)
+- Platform-specific implementation (iOS/Native Handset)
 - Optional override for testing
 - Safe fallback when AccessibilityInfo unavailable
 
@@ -396,7 +396,7 @@ const { animatedStyle, pressHandlers } = usePressAnimation({
 
 **Platform Differences**:
 - iOS: `keyboardWillShow/Hide` (smoother)
-- Android: `keyboardDidShow/Hide`
+- Native Handset: `keyboardDidShow/Hide`
 
 #### `useUnsavedChangesGuard`
 **Purpose**: Warns users about unsaved changes.

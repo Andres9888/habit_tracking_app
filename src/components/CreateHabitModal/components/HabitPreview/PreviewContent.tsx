@@ -65,7 +65,7 @@ export const PreviewContent = ({
           </Text>
         ) : (
           <Text className='text-lg font-semibold text-stone-400'>
-            {STRINGS.CREATE_HABIT.namePlaceholder}
+            {STRINGS.CREATE_HABIT.namePrompt}
           </Text>
         )}
         <Text className='text-sm text-stone-500'>

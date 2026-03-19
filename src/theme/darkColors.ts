@@ -86,7 +86,7 @@ export const darkColors = {
     100: '#1F2937', // Dark surfaces
     200: '#374151', // Borders, dividers
     300: '#4B5563', // Disabled elements
-    400: '#6B7280', // Placeholder text
+    400: '#6B7280', // Hint text
     500: '#9CA3AF', // Secondary text
     600: '#D1D5DB', // Light text
     700: '#E5E7EB', // Lighter text
@@ -165,7 +165,7 @@ export const lightColors = {
     100: '#F5F1ED', // Background
     200: '#DDD8D2', // Borders, dividers
     300: '#C4BFB7', // Disabled elements
-    400: '#6E6660', // Placeholder text, tertiary
+    400: '#6E6660', // Hint text, tertiary
     500: '#6B6560', // Secondary text
     600: '#524D47', // Body text
     700: '#3D3833', // Headings

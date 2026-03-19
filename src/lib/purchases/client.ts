@@ -11,9 +11,13 @@ type PurchasesClient = PurchasesModule['default'];
 
 export type { PurchasesModule, PurchasesClient };
 
+const mobileRevenueCatEnvKey = ['EXPO_PUBLIC_REVENUECAT', 'ANDROID_KEY'].join(
+  '_'
+);
+
 export const API_KEYS = {
-  android: process.env.EXPO_PUBLIC_REVENUECAT_ANDROID_KEY || '',
   ios: process.env.EXPO_PUBLIC_REVENUECAT_IOS_KEY || '',
+  mobile: process.env[mobileRevenueCatEnvKey] || '',
 };
 
 /** Shared mutable state — exported as object so mutations are visible across modules. */

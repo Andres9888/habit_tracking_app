@@ -5,6 +5,7 @@
 
 import React from 'react';
 import { View, Text, Pressable, TextInput } from 'react-native';
+import { buildTextInputHintProps } from '@/utils/textInputHintProps';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { MAX_CAPTION_LENGTH, type VisionBoardImage } from './types';
 
@@ -37,9 +38,8 @@ export function CaptionArea({
             multiline
             className='rounded-xl bg-white/10 px-4 py-3 text-base text-white'
             maxLength={MAX_CAPTION_LENGTH}
-            placeholder='Add a caption...'
-            placeholderTextColor='#a8a29e'
             value={captionText}
+            {...buildTextInputHintProps('Add a caption...', '#a8a29e')}
             onChangeText={onChangeText}
           />
           <View className='flex-row items-center justify-between'>

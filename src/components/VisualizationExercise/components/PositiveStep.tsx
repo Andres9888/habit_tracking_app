@@ -8,6 +8,7 @@ import { View, Text, TextInput } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { Sun, CheckCircle2 } from 'lucide-react-native';
+import { buildTextInputHintProps } from '@/utils/textInputHintProps';
 import { PromptList } from './PromptList';
 import { NavigationButtons } from './NavigationButtons';
 import type { VisualizationInputStepProps } from '../types';
@@ -62,10 +63,12 @@ export function PositiveStep({
         <TextInput
           multiline
           className='flex-1 rounded-2xl border border-stone-200 bg-white p-4 text-base text-stone-800'
-          placeholder='When I successfully maintain this habit, I see myself...'
-          placeholderTextColor='#a8a29e'
           style={{ minHeight: 150, textAlignVertical: 'top' }}
           value={value}
+          {...buildTextInputHintProps(
+            'When I successfully maintain this habit, I see myself...',
+            '#a8a29e'
+          )}
           onChangeText={onValueChange}
         />
       </View>

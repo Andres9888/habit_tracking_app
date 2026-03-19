@@ -447,7 +447,7 @@ describe('Premium State Management', () => {
         expect(entitlement.store).toBe('APP_STORE');
       });
 
-      it('detects Play Store purchase', () => {
+      it('detects alternate store purchase', () => {
         const entitlement = createMockEntitlement({
           store: 'PLAY_STORE',
         });
@@ -473,7 +473,7 @@ describe('Premium State Management', () => {
         expect(customerInfo.managementURL).toContain('apple.com');
       });
 
-      it('provides Play Store management URL when available', () => {
+      it('provides alternate store management URL when available', () => {
         const customerInfo = createMockCustomerInfo({
           managementURL: 'https://play.google.com/store/account/subscriptions',
         });

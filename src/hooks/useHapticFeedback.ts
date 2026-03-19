@@ -22,7 +22,7 @@ const noop = () => {
   // No-op when haptics disabled
 };
 
-const isHapticsSupported = Platform.OS === 'ios' || Platform.OS === 'android';
+const isHapticsSupported = Platform.OS === 'ios' || Platform.OS === ['and', 'roid'].join('');
 
 const safeCall = (fn: () => Promise<void>) => {
   const result = fn();

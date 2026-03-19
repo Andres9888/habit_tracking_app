@@ -886,12 +886,6 @@ describe('Performance Benchmarks', () => {
       const batch = manager.peekBatch(50);
       const peekTime = performance.now() - startPeek;
 
-      // Log benchmark results
-      console.log('FR-011 Benchmark Results (500 operations):');
-      console.log(`  Enqueue: ${enqueueTime.toFixed(2)}ms`);
-      console.log(`  Stats: ${statsTime.toFixed(2)}ms`);
-      console.log(`  PeekBatch(50): ${peekTime.toFixed(2)}ms`);
-
       expect(stats.totalCount).toBe(500);
       expect(batch).toHaveLength(50);
       expect(enqueueTime).toBeLessThan(200);
@@ -925,10 +919,6 @@ describe('Performance Benchmarks', () => {
       );
 
       const totalTime = performance.now() - startTime;
-
-      console.log('SC-001 Benchmark Results:');
-      console.log(`  Total feedback time: ${totalTime.toFixed(2)}ms`);
-      console.log(`  Current streak: ${streak.currentStreak}`);
 
       expect(totalTime).toBeLessThan(200);
     });

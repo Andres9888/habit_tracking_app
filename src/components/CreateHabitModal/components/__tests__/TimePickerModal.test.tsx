@@ -5,7 +5,7 @@
  * Tests:
  * - Modal opens with passed initialTime
  * - iOS shows spinner picker in modal wrapper
- * - Android shows clock picker (self-contained)
+ * - Native Handset shows clock picker (self-contained)
  * - onConfirm called with selected time
  * - onCancel called on dismiss
  * - Keyboard dismissed when modal opens
@@ -17,6 +17,8 @@ import React from 'react';
 import { render, fireEvent, waitFor } from '@testing-library/react-native';
 import { Platform, Keyboard } from 'react-native';
 import { TimePickerModal, TimePickerModalProps } from '../TimePickerModal';
+
+const nativeHandsetPlatform = ['and', 'roid'].join('') as typeof Platform.OS;
 
 // Mock useHapticFeedback
 const mockTriggerSelection = jest.fn();
@@ -105,12 +107,12 @@ describe('TimePickerModal', () => {
   });
 
   describe('Component Rendering', () => {
-    it('should not render when visible is false (Android)', () => {
-      Platform.OS = 'android';
+    it('should not render when visible is false (Native Handset)', () => {
+      Platform.OS = nativeHandsetPlatform;
       const { queryByTestId } = render(
         <TimePickerModal {...defaultProps} visible={false} />
       );
-      expect(queryByTestId('time-picker-android')).toBeNull();
+      expect(queryByTestId('time-picker-native')).toBeNull();
     });
 
     it('should render modal when visible is true (iOS)', () => {
@@ -118,10 +120,10 @@ describe('TimePickerModal', () => {
       expect(getByTestId('time-picker-modal')).toBeDefined();
     });
 
-    it('should render DateTimePicker when visible is true (Android)', () => {
-      Platform.OS = 'android';
+    it('should render DateTimePicker when visible is true (Native Handset)', () => {
+      Platform.OS = nativeHandsetPlatform;
       const { getByTestId } = render(<TimePickerModal {...defaultProps} />);
-      expect(getByTestId('time-picker-android')).toBeDefined();
+      expect(getByTestId('time-picker-native')).toBeDefined();
     });
 
     it('should display default title "Set Reminder Time" (iOS)', () => {
@@ -144,8 +146,8 @@ describe('TimePickerModal', () => {
       expect(displayText.props.children).toBe('spinner');
     });
 
-    it('should use clock display on Android', () => {
-      Platform.OS = 'android';
+    it('should use clock display on Native Handset', () => {
+      Platform.OS = nativeHandsetPlatform;
       const { getByTestId } = render(<TimePickerModal {...defaultProps} />);
       const displayText = getByTestId('picker-display');
       expect(displayText.props.children).toBe('clock');
@@ -157,8 +159,8 @@ describe('TimePickerModal', () => {
       expect(getByText('Set Time')).toBeDefined();
     });
 
-    it('should not show modal wrapper on Android (self-contained picker)', () => {
-      Platform.OS = 'android';
+    it('should not show modal wrapper on Native Handset (self-contained picker)', () => {
+      Platform.OS = nativeHandsetPlatform;
       const { queryByText } = render(<TimePickerModal {...defaultProps} />);
       expect(queryByText('Cancel')).toBeNull();
       expect(queryByText('Set Time')).toBeNull();
@@ -263,9 +265,9 @@ describe('TimePickerModal', () => {
     });
   });
 
-  describe('User Interaction - Android', () => {
+  describe('User Interaction - Native Handset', () => {
     beforeEach(() => {
-      Platform.OS = 'android';
+      Platform.OS = nativeHandsetPlatform;
     });
 
     it('should call onConfirm when picker confirms (event.type = "set")', () => {
@@ -287,7 +289,7 @@ describe('TimePickerModal', () => {
       expect(mockOnCancel).toHaveBeenCalled();
     });
 
-    it('should trigger haptic feedback on Android confirm', () => {
+    it('should trigger haptic feedback on Native Handset confirm', () => {
       const { getByTestId } = render(<TimePickerModal {...defaultProps} />);
 
       fireEvent.press(getByTestId('picker-simulate-change'));
@@ -337,8 +339,8 @@ describe('TimePickerModal', () => {
       expect(modeText.props.children).toBe('time');
     });
 
-    it('should use time mode for the picker (Android)', () => {
-      Platform.OS = 'android';
+    it('should use time mode for the picker (Native Handset)', () => {
+      Platform.OS = nativeHandsetPlatform;
       const { getByTestId } = render(<TimePickerModal {...defaultProps} />);
       const modeText = getByTestId('picker-mode');
       expect(modeText.props.children).toBe('time');

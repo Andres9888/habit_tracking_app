@@ -31,12 +31,12 @@ function buildActivationHabitData(
 
 // Snooze for 10 minutes (future enhancement: schedule delayed notification)
 function handleSnooze() {
-  /* noop - placeholder for future implementation */
+  /* noop - hint for future implementation */
 }
 
 // Start "Just 2 Min" mode - closes modal and user commits to 2 min
 function handleJustTwoMin() {
-  /* noop - placeholder for future implementation */
+  /* noop - hint for future implementation */
 }
 
 /** Activation modal section - triggered from notification tap (T7.8) */

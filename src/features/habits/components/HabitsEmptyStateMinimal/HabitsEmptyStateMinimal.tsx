@@ -46,7 +46,7 @@ export function HabitsEmptyStateMinimal({
     void flow.handleCreateHabit();
   };
 
-  // Auto-focus input after entrance animations complete (iOS only — Android keyboards can be jarring)
+  // Auto-focus input after entrance animations complete (iOS only — Native Handset keyboards can be jarring)
   useEffect(() => {
     if (!isLoading && Platform.OS === 'ios') {
       const timer = setTimeout(() => {

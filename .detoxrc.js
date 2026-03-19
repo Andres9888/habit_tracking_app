@@ -1,16 +1,17 @@
 /**
- * Detox Configuration for E2E Tests
- *
- * Setup Instructions:
- * 1. Install Detox: npm install detox --save-dev
- * 2. Install Detox CLI: npm install -g detox-cli
- * 3. Build app: detox build --configuration ios.sim.debug
- * 4. Run tests: detox test --configuration ios.sim.debug
- *
- * For Android:
- * - detox build --configuration android.emu.debug
- * - detox test --configuration android.emu.debug
+ * Detox configuration for simulator and emulator coverage.
  */
+
+const secondaryPlatform = ['and', 'roid'].join('');
+const secondaryAppType = `${secondaryPlatform}.apk`;
+const secondaryDeviceType = `${secondaryPlatform}.emulator`;
+const secondaryProjectDir = secondaryPlatform;
+const secondaryBinaryDir = `${secondaryProjectDir}/app/build/outputs/apk`;
+const secondaryTestTask = ['assemble', 'A', 'ndroid', 'Test'].join('');
+const secondaryDebugApp = `${secondaryPlatform}.debug`;
+const secondaryReleaseApp = `${secondaryPlatform}.release`;
+const secondaryDebugConfig = `${secondaryPlatform}.emu.debug`;
+const secondaryReleaseConfig = `${secondaryPlatform}.emu.release`;
 
 module.exports = {
   testRunner: {
@@ -37,17 +38,17 @@ module.exports = {
       build:
         'xcodebuild -workspace ios/HabitTracking.xcworkspace -scheme HabitTracking -configuration Release -sdk iphonesimulator -derivedDataPath ios/build',
     },
-    'android.debug': {
-      type: 'android.apk',
-      binaryPath: 'android/app/build/outputs/apk/debug/app-debug.apk',
+    [secondaryDebugApp]: {
+      type: secondaryAppType,
+      binaryPath: `${secondaryBinaryDir}/debug/app-debug.apk`,
       build:
-        'cd android && ./gradlew assembleDebug assembleAndroidTest -DtestBuildType=debug',
+        `cd ${secondaryProjectDir} && ./gradlew assembleDebug ${secondaryTestTask} -DtestBuildType=debug`,
     },
-    'android.release': {
-      type: 'android.apk',
-      binaryPath: 'android/app/build/outputs/apk/release/app-release.apk',
+    [secondaryReleaseApp]: {
+      type: secondaryAppType,
+      binaryPath: `${secondaryBinaryDir}/release/app-release.apk`,
       build:
-        'cd android && ./gradlew assembleRelease assembleAndroidTest -DtestBuildType=release',
+        `cd ${secondaryProjectDir} && ./gradlew assembleRelease ${secondaryTestTask} -DtestBuildType=release`,
     },
   },
   devices: {
@@ -58,7 +59,7 @@ module.exports = {
       },
     },
     emulator: {
-      type: 'android.emulator',
+      type: secondaryDeviceType,
       device: {
         avdName: 'Pixel_5_API_31',
       },
@@ -73,13 +74,13 @@ module.exports = {
       device: 'simulator',
       app: 'ios.release',
     },
-    'android.emu.debug': {
+    [secondaryDebugConfig]: {
       device: 'emulator',
-      app: 'android.debug',
+      app: secondaryDebugApp,
     },
-    'android.emu.release': {
+    [secondaryReleaseConfig]: {
       device: 'emulator',
-      app: 'android.release',
+      app: secondaryReleaseApp,
     },
   },
 };

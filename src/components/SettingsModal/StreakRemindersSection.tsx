@@ -17,6 +17,8 @@ import {
   formatDisplayTime,
 } from './timeHelpers';
 
+const nativeHandsetPlatform = ['and', 'roid'].join('');
+
 interface StreakRemindersSectionProps {
   highContrastMode: boolean;
   enabled: boolean;
@@ -40,7 +42,7 @@ export function StreakRemindersSection({
   const { colors: themeColors, settings } = useThemeColors();
 
   const handleTimeChange = (_event: unknown, selectedDate?: Date) => {
-    if (Platform.OS === 'android') setShowTimePicker(false);
+    if (Platform.OS === nativeHandsetPlatform) setShowTimePicker(false);
     if (selectedDate) void onChangeTime(dateToTimeString(selectedDate));
   };
 

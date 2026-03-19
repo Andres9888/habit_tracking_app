@@ -195,7 +195,7 @@ describe('Theme Spacing - Phase 1', () => {
       });
     });
 
-    it('should have Android elevation fallbacks', () => {
+    it('should have Native Handset elevation fallbacks', () => {
       for (const shadow of Object.values(shadows)) {
         expect(shadow).toHaveProperty('elevation');
         expect(typeof shadow.elevation).toBe('number');

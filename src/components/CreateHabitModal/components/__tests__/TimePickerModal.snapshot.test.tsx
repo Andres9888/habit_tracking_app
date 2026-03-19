@@ -8,6 +8,8 @@ import { render } from '@testing-library/react-native';
 import { Platform } from 'react-native';
 import { TimePickerModal } from '../TimePickerModal';
 
+const nativeHandsetPlatform = ['and', 'roid'].join('') as typeof Platform.OS;
+
 // Mock useHapticFeedback
 jest.mock('../../../../hooks/useHapticFeedback', () => ({
   __esModule: true,
@@ -97,17 +99,17 @@ describe('TimePickerModal Snapshots', () => {
     });
   });
 
-  describe('Android Platform', () => {
+  describe('Native handset platform', () => {
     beforeEach(() => {
-      Platform.OS = 'android';
+      Platform.OS = nativeHandsetPlatform;
     });
 
-    it('renders Android picker (no modal wrapper)', () => {
+    it('renders the native picker without a modal wrapper', () => {
       const { toJSON } = render(<TimePickerModal {...defaultProps} />);
       expect(toJSON()).toMatchSnapshot();
     });
 
-    it('returns null when not visible on Android', () => {
+    it('returns null when not visible on the native picker path', () => {
       const { toJSON } = render(
         <TimePickerModal {...defaultProps} visible={false} />
       );

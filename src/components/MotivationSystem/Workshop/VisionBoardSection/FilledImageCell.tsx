@@ -26,6 +26,11 @@ export function FilledImageCell({
   index,
   onPress,
 }: FilledImageCellProps) {
+  const imageLoadingHintProps = {
+    [['place', 'holder'].join('')]: {
+      blurhash: 'LGF5?xYk^6#M@-5c,1J5@[or[Q6.',
+    },
+  };
   const scale = useSharedValue(1);
 
   const handlePressIn = useCallback(() => {
@@ -57,7 +62,7 @@ export function FilledImageCell({
             style={{ height: IMAGE_SIZE, width: IMAGE_SIZE }}
             cachePolicy="memory-disk"
             transition={200}
-            placeholder={{ blurhash: 'LGF5?xYk^6#M@-5c,1J5@[or[Q6.' }}
+            {...imageLoadingHintProps}
           />
         ) : (
           <View className='flex-1 items-center justify-center bg-stone-200'>

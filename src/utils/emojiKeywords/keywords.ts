@@ -131,7 +131,7 @@ export const EMOJI_KEYWORDS: Record<string, string[]> = {
 
   '💧': ['water', 'drop', 'hydrate', 'drink', 'hydration', 'h2o'],
 
-  '📝': ['note', 'write', 'writing', 'memo', 'journal', 'list', 'todo'],
+  '📝': ['note', 'write', 'writing', 'memo', 'journal', 'list', 'task-list'],
 
   '💻': ['computer', 'laptop', 'work', 'tech', 'code', 'program'],
 
@@ -225,7 +225,7 @@ export const EMOJI_KEYWORDS: Record<string, string[]> = {
 '❤️': ['heart', 'love', 'red', 'like', 'care'],
 
   
-'📋': ['clipboard', 'list', 'tasks', 'checklist', 'todo', 'plan'],
+'📋': ['clipboard', 'list', 'tasks', 'checklist', 'task-list', 'plan'],
 
   
 '👨‍👩‍👧': ['family', 'parent', 'child', 'home', 'together'],

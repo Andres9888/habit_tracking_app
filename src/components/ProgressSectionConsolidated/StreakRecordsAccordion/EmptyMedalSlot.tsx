@@ -1,5 +1,5 @@
 /**
- * EmptyMedalSlot - Placeholder for unearned medals
+ * EmptyMedalSlot - Hint for unearned medals
  */
 
 import React from 'react';

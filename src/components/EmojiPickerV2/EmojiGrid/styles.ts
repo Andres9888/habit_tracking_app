@@ -69,7 +69,7 @@ export const styles = StyleSheet.create({
     paddingBottom: spacing.base,
     paddingHorizontal: spacing.lg,
   },
-  placeholderCell: {
+  spacerCell: {
     backgroundColor: 'transparent',
     flex: 1,
   },

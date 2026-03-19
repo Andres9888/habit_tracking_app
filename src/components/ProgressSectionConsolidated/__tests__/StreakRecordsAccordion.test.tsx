@@ -295,7 +295,7 @@ describe('StreakRecordsAccordion', () => {
   });
 
   describe('Empty Slots', () => {
-    it('renders placeholder for missing records (less than 3)', () => {
+    it('renders hint for missing records (less than 3)', () => {
       const oneRecord = [
         {
           days: 6,
@@ -313,12 +313,12 @@ describe('StreakRecordsAccordion', () => {
         />
       );
 
-      // Should have placeholder dashes for empty slots
+      // Should have hint dashes for empty slots
       // (may include measurement view duplicates)
       expect(getAllByText('-').length).toBeGreaterThanOrEqual(2);
     });
 
-    it('renders two placeholders when only 1 record exists', () => {
+    it('renders two hints when only 1 record exists', () => {
       const oneRecord = [
         {
           days: 6,
@@ -336,11 +336,11 @@ describe('StreakRecordsAccordion', () => {
         />
       );
 
-      // Should have at least 2 placeholder dashes
+      // Should have at least 2 hint dashes
       expect(getAllByText('-').length).toBeGreaterThanOrEqual(2);
     });
 
-    it('renders one placeholder when 2 records exist', () => {
+    it('renders one hint when 2 records exist', () => {
       const twoRecords = [
         {
           days: 6,
@@ -364,7 +364,7 @@ describe('StreakRecordsAccordion', () => {
         />
       );
 
-      // Should have at least 1 placeholder dash
+      // Should have at least 1 hint dash
       expect(getAllByText('-').length).toBeGreaterThanOrEqual(1);
     });
   });

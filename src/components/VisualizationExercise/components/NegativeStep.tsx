@@ -9,6 +9,7 @@ import { View, Text, TextInput } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { CloudRain, AlertTriangle, Lightbulb } from 'lucide-react-native';
+import { buildTextInputHintProps } from '@/utils/textInputHintProps';
 import { PromptList } from './PromptList';
 import { NavigationButtons } from './NavigationButtons';
 import type { VisualizationInputStepProps } from '../types';
@@ -71,10 +72,12 @@ export function NegativeStep({
         <TextInput
           multiline
           className='flex-1 rounded-2xl border border-stone-200 bg-white p-4 text-base text-stone-800'
-          placeholder='If I give up on this habit, I will experience...'
-          placeholderTextColor='#a8a29e'
           style={{ minHeight: 150, textAlignVertical: 'top' }}
           value={value}
+          {...buildTextInputHintProps(
+            'If I give up on this habit, I will experience...',
+            '#a8a29e'
+          )}
           onChangeText={onValueChange}
         />
       </View>

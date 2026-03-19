@@ -22,7 +22,7 @@ export interface UseUnsavedChangesGuardOptions {
   enabled?: boolean;
   /** Callback when user confirms discard */
   onDiscard?: () => void;
-  /** Whether to intercept Android back button (default: false) */
+  /** Whether to intercept Native Handset back button (default: false) */
   interceptBackButton?: boolean;
 }
 

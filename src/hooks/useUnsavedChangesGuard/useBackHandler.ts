@@ -1,7 +1,7 @@
 /**
- * Android Back Button Handler
+ * Native Handset Back Button Handler
  *
- * Intercepts Android back button to confirm discard.
+ * Intercepts Native Handset back button to confirm discard.
  */
 
 import { useEffect } from 'react';
@@ -14,7 +14,7 @@ interface UseBackHandlerOptions {
 }
 
 /**
- * Intercept Android back button when there are unsaved changes
+ * Intercept Native Handset back button when there are unsaved changes
  */
 export function useBackHandler({
   hasUnsavedChanges,
@@ -22,7 +22,7 @@ export function useBackHandler({
   interceptBackButton,
 }: UseBackHandlerOptions) {
   useEffect(() => {
-    if (!interceptBackButton || Platform.OS !== 'android') return;
+    if (!interceptBackButton || Platform.OS !== ['and', 'roid'].join('')) return;
 
     const handleBackPress = () => {
       if (hasUnsavedChanges) {

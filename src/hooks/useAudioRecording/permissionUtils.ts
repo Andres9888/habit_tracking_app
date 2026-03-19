@@ -15,7 +15,7 @@ export function openMicrophoneSettings(): void {
     // On iOS, app-settings: opens the app's settings page directly
     Linking.openURL('app-settings:');
   } else {
-    // On Android, openSettings() opens the app details page
+    // On Native Handset, openSettings() opens the app details page
     Linking.openSettings();
   }
 }

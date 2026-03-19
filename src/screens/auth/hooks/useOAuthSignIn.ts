@@ -3,7 +3,7 @@ import * as WebBrowser from 'expo-web-browser';
 import { useCallback, useEffect, useState } from 'react';
 import { mapOAuthError, MappedError } from '../utils';
 
-// Warm up browser for better UX on Android
+// Warm up browser for better UX on Native Handset
 WebBrowser.maybeCompleteAuthSession();
 
 export type OAuthStrategy = 'oauth_google' | 'oauth_apple';
@@ -20,7 +20,7 @@ export function useOAuthSignIn() {
   const [isLoading, setIsLoading] = useState<OAuthStrategy | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  // Warm up browser on Android for faster OAuth
+  // Warm up browser on Native Handset for faster OAuth
   useEffect(() => {
     void WebBrowser.warmUpAsync();
     return () => {

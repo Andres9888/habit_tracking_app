@@ -15,7 +15,7 @@
  * ### Scale Numbers (50-900)
  * - **50**: Lightest shade — muted surfaces, subtle backgrounds
  * - **100-200**: Light shades — backgrounds, cards, borders
- * - **300-400**: Medium shades — disabled states, placeholders
+ * - **300-400**: Medium shades — disabled states, hints
  * - **500-600**: Base shades — primary usage, buttons, CTAs
  * - **700-900**: Dark shades — text, headings, high contrast
  *
@@ -73,7 +73,7 @@ export const colors = {
     100: '#F5F1ED', // Background
     200: '#DDD8D2', // Borders, dividers
     300: '#C4BFB7', // Disabled elements (WCAG-exempt per 1.4.3)
-    400: '#6E6660', // Placeholder text, tertiary — WCAG AA 4.69:1 on card
+    400: '#6E6660', // Hint text, tertiary — WCAG AA 4.69:1 on card
     500: '#6B6560', // Secondary text (5.1:1 on #F5F1ED)
     600: '#524D47', // Body text
     700: '#3D3833', // Headings

@@ -31,7 +31,7 @@ export const useStyles = () => {
     },
     emoji: { fontSize: 48, marginBottom: 16 },
     errorMessage: {
-      color: isDark ? '#FCA5A5' : themeColors.error, // TODO: add dark-mode error text token (#FCA5A5)
+      color: isDark ? '#FCA5A5' : themeColors.error,
       fontFamily: 'monospace',
       fontSize: 13,
       marginTop: 24,
@@ -48,7 +48,7 @@ export const useStyles = () => {
     link: { padding: 8 },
     linkText: { color: colors.primary[600], fontFamily: fontFamilies.primary.text, fontSize: 13, fontWeight: '500' },
     logoutButton: {
-      backgroundColor: isDark ? '#B91C1C' : themeColors.error, // TODO: add dark-mode error bg token (#B91C1C)
+      backgroundColor: isDark ? '#B91C1C' : themeColors.error,
       borderRadius: 12,
       paddingHorizontal: 24,
       paddingVertical: 12,

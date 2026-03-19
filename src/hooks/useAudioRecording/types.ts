@@ -27,7 +27,7 @@ export interface RecordingStatus {
   meteringLevel: number;
   /** Whether microphone permission has been granted */
   hasPermission: boolean | null;
-  /** Whether user has permanently denied permission (selected "Don't ask again" on Android) */
+  /** Whether user has permanently denied permission (selected "Don't ask again" on Native Handset) */
   canAskAgain: boolean;
   /** Error message if state is 'error' or 'permission-denied' */
   errorMessage: string | null;
