@@ -34,14 +34,15 @@ export function SettingsSection({
 
   return (
     <View className='gap-2'>
-      <View className='flex-row items-center gap-2 px-1'>
+      <View className='flex-row items-center px-4'>
+        <View className='mr-4 w-10' />
         <Text
-          className='text-[13px] font-semibold uppercase tracking-[0.7px]'
+          className='text-[12px] font-medium uppercase tracking-[1.5px]'
           style={{ color: colors.title }}
         >
           {title}
         </Text>
-        {subtitle ? <Text className='rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-semibold uppercase text-amber-800 dark:bg-amber-900 dark:text-amber-200'>
+        {subtitle ? <Text className='ml-2 rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-semibold uppercase text-amber-800 dark:bg-amber-900 dark:text-amber-200'>
             {subtitle}
           </Text> : null}
       </View>

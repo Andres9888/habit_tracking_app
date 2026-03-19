@@ -41,14 +41,14 @@ export function AccountSection({
         </View>
         <View className='flex-1'>
           <Text
-            className='text-[16px] font-semibold'
+            className='text-[17px] font-semibold'
             style={{ color: themeColors.text.primary }}
           >
             {name}
           </Text>
           {email ? (
             <Text
-              className='mt-0.5 text-[13px]'
+              className='mt-1 text-[13px]'
               style={{ color: themeColors.text.secondary }}
             >
               {email}
@@ -75,7 +75,7 @@ export function AccountSection({
       >
         <View className='items-center py-3.5'>
           <Text
-            className='text-[15px] font-semibold'
+            className='text-[15px] font-medium'
             style={{ color: '#ef4444' }}
           >
             {isSigningOut ? 'Signing out...' : 'Sign Out'}

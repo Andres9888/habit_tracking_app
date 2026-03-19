@@ -35,13 +35,14 @@ export function SoundPicker({ selected, onSelect }: SoundPickerProps) {
       exiting={FadeOutUp.duration(150)}
     >
       <View
-        className="flex-row items-center gap-2 border-b px-4 py-2.5"
+        className="flex-row items-center border-b px-4 py-2.5"
         style={{
           borderColor: colors.border,
           backgroundColor: trayBg,
-          paddingLeft: 68,
         }}
       >
+        <View className="mr-4 w-10" />
+        <View className="flex-1 flex-row items-center gap-2">
         {OPTIONS.map(({ key, label, Icon }) => {
           const on = key === selected;
           return (
@@ -71,6 +72,7 @@ export function SoundPicker({ selected, onSelect }: SoundPickerProps) {
             </Pressable>
           );
         })}
+        </View>
       </View>
     </Animated.View>
   );

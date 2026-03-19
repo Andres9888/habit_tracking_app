@@ -24,7 +24,7 @@ export function DeleteAccountButton({
     >
       <View className='flex-row items-center justify-center py-3.5' style={{ gap: 6 }}>
         <Trash2 color={color} size={15} />
-        <Text className='text-[14px] font-medium' style={{ color }}>
+        <Text className='text-[15px] font-medium' style={{ color }}>
           {isDeletingAccount ? 'Deleting account...' : 'Delete Account'}
         </Text>
       </View>
