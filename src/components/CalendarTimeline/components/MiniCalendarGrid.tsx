@@ -14,7 +14,7 @@ import {
 
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { DAY_LABELS, getDotColor, getGridColors } from './MiniCalendarGrid.helpers';
-import { fontFamilies } from '@/theme/typography';
+import { fontFamilies, fontWeights } from '@/theme/typography';
 
 interface MiniCalendarGridProps {
   month: Date;
@@ -77,7 +77,7 @@ export const MiniCalendarGrid: React.FC<MiniCalendarGridProps> = ({
                   style={{
                     fontFamily: fontFamilies.primary.text,
                     fontSize: 12,
-                    fontWeight: today ? '800' : '500',
+                    fontWeight: today ? fontWeights.bold : fontWeights.medium,
                     color: inMonth ? (today ? c.today : c.text) : c.muted,
                   }}
                 >

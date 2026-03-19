@@ -1,5 +1,5 @@
 import Animated, { AnimatedStyle } from 'react-native-reanimated';
-import { fontFamilies } from '@/theme/typography';
+import { typography } from '@/theme/typography';
 import { AnimatedEntrance } from './AnimatedEntrance';
 import { ENTRANCE_DELAYS } from './animations';
 import { COPY } from './constants';
@@ -37,10 +37,8 @@ export function HeroSection({
           accessibilityRole='header'
           style={[
             {
+              ...typography.heading1,
               color: colors.textPrimary,
-              fontFamily: fontFamilies.primary.display,
-              fontSize: 28,
-              fontWeight: '800',
               letterSpacing: -0.5,
               lineHeight: 34,
               marginTop: 16,

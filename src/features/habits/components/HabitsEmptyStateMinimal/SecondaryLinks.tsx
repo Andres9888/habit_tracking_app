@@ -10,7 +10,7 @@
 import { Pressable, View } from 'react-native';
 
 import { AccessibleText } from '../../../../components/ui/AccessibleText';
-import { fontFamilies } from '@/theme/typography';
+import { typography } from '@/theme/typography';
 import { COLORS, COPY, TOUCH_TARGETS } from './constants';
 import type { SecondaryLinksProps } from './types';
 
@@ -48,10 +48,8 @@ export function SecondaryLinks({
         <AccessibleText
           scalingType='ui'
           style={{
+            ...typography.caption,
             color: COLORS.stone500,
-            fontFamily: fontFamilies.primary.text,
-            fontSize: 13,
-            fontWeight: '400',
           }}
         >
           {COPY.browseTemplates}
@@ -62,9 +60,8 @@ export function SecondaryLinks({
       <AccessibleText
         scalingType='ui'
         style={{
+          ...typography.caption,
           color: COLORS.stone500,
-          fontFamily: fontFamilies.primary.text,
-          fontSize: 13,
         }}
       >
         •
@@ -87,10 +84,8 @@ export function SecondaryLinks({
         <AccessibleText
           scalingType='ui'
           style={{
+            ...typography.caption,
             color: COLORS.stone500,
-            fontFamily: fontFamilies.primary.text,
-            fontSize: 13,
-            fontWeight: '400',
           }}
         >
           {COPY.createCustom}

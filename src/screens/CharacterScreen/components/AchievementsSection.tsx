@@ -1,6 +1,7 @@
-import { View } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useThemeColors } from '../../../theme/ThemeContext';
+import { spacing } from '../../../theme/spacing';
 import { AchievementCard } from './AchievementCard';
 import type { Achievement } from '../types';
 
@@ -17,16 +18,10 @@ export function AchievementsSection({
   const { colors } = useThemeColors();
 
   return (
-    <View className='mb-8 flex-col gap-3'>
+    <View style={styles.section}>
       <Animated.Text
-        className='px-1 font-semibold'
         entering={FadeInDown.delay(BASE_DELAY).springify().damping(18)}
-        style={{
-          fontSize: 17,
-          letterSpacing: -0.41,
-          lineHeight: 22,
-          color: colors.text.primary,
-        }}
+        style={[styles.sectionTitle, { color: colors.text.primary }]}
       >
         Recent Achievements
       </Animated.Text>
@@ -40,3 +35,18 @@ export function AchievementsSection({
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  section: {
+    flexDirection: 'column',
+    gap: spacing.md,
+    marginBottom: spacing.xl, // 32px ~ mb-8
+  },
+  sectionTitle: {
+    fontSize: 17,
+    fontWeight: '600',
+    letterSpacing: -0.41,
+    lineHeight: 22,
+    paddingHorizontal: spacing.xs,
+  },
+});

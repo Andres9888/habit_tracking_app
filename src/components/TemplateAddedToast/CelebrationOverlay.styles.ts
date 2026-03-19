@@ -3,7 +3,7 @@
  */
 
 import { Dimensions, StyleSheet } from 'react-native';
-import { fontFamilies } from '@/theme/typography';
+import { fontFamilies, fontWeights, typography } from '@/theme/typography';
 
 const { width: SCREEN_W } = Dimensions.get('window');
 
@@ -70,10 +70,8 @@ export const celebrationStyles = StyleSheet.create({
     width: SCREEN_W - 96,
   },
   primaryBtnText: {
+    ...typography.button,
     color: '#fff',
-    fontFamily: fontFamilies.primary.text,
-    fontSize: 16,
-    fontWeight: '700',
   },
   subtitle: {
     color: '#808098',
@@ -84,10 +82,9 @@ export const celebrationStyles = StyleSheet.create({
     textAlign: 'center',
   },
   title: {
+    ...typography.heading2,
     color: '#fff',
-    fontFamily: fontFamilies.primary.text,
-    fontSize: 24,
-    fontWeight: '800',
+    fontWeight: fontWeights.bold,
     marginTop: 28,
     textAlign: 'center',
   },

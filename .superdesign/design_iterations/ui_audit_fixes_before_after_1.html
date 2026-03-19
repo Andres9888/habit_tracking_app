@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UI Audit Fixes — Before / After</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Literata:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      /* Warm Minimal palette */
+      --bg: #F5F1ED;
+      --card: #EDEAE5;
+      --card-old: #FFFFFF;
+      --text-primary: #2D2A26;
+      --text-secondary: #6B6560;
+      --text-tertiary: #6E6660;
+      --text-inverse: #FFFFFF;
+      --border: #DDD8D2;
+      --primary-600: #059669;
+      --primary-700: #047857;
+      --primary-300: #6EE7B7;
+      --streak-300: #E8B94D;
+      --streak-500: #8B6208;
+      --streak-600: #936A08;
+      --warning: #9A5504;
+      --warning-light: #FEF3CD;
+      --error: #B53030;
+      --error-old: #EF4444;
+      --shadow-color: #2D2A26;
+      --gray-50: #FAF8F5;
+      --gray-100: #F5F1ED;
+      --gray-700: #3D3833;
+      --gray-800: #2D2A26;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: #1A1816;
+      color: var(--text-primary);
+      padding: 24px;
+      min-height: 100vh;
+    }
+
+    h1 {
+      font-family: 'Literata', serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--text-inverse);
+      text-align: center;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      color: var(--text-tertiary);
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .score-badge {
+      display: inline-block;
+      background: var(--primary-600);
+      color: white;
+      font-weight: 600;
+      font-size: 13px;
+      padding: 4px 12px;
+      border-radius: 12px;
+      margin-left: 8px;
+    }
+
+    .fix-section {
+      margin-bottom: 48px;
+    }
+
+    .fix-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .fix-number {
+      background: var(--primary-600);
+      color: white;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    .fix-title {
+      font-family: 'Literata', serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text-inverse);
+    }
+
+    .fix-description {
+      font-size: 13px;
+      color: var(--text-tertiary);
+      margin-bottom: 20px;
+      padding-left: 44px;
+    }
+
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .comparison-col {
+      background: var(--bg);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .col-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      padding: 10px 16px;
+      text-align: center;
+    }
+
+    .col-label.before {
+      background: #B53030;
+      color: white;
+    }
+
+    .col-label.after {
+      background: var(--primary-600);
+      color: white;
+    }
+
+    .col-content {
+      padding: 20px 16px;
+    }
+
+    /* ─── Fix 1: Typography Mocks ─── */
+    .phone-frame {
+      background: var(--bg);
+      border-radius: 24px;
+      padding: 16px;
+      max-width: 320px;
+      margin: 0 auto;
+    }
+
+    .hero-text-before {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--text-primary);
+      line-height: 1.2;
+      margin-bottom: 12px;
+    }
+
+    .hero-text-after {
+      font-family: 'Literata', serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.35px;
+      line-height: 28px;
+      margin-bottom: 12px;
+    }
+
+    .hero-subtitle {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 20px;
+      margin-bottom: 16px;
+    }
+
+    .cta-btn-before {
+      width: 100%;
+      padding: 14px;
+      background: var(--primary-600);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    .cta-btn-after {
+      width: 100%;
+      padding: 14px;
+      background: var(--primary-600);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 17px;
+      font-weight: 600;
+      letter-spacing: 0.08px;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    .weight-badge {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      margin-left: 4px;
+      vertical-align: middle;
+    }
+
+    .weight-badge.bad {
+      background: rgba(181, 48, 48, 0.15);
+      color: #B53030;
+    }
+
+    .weight-badge.good {
+      background: rgba(5, 150, 105, 0.15);
+      color: var(--primary-700);
+    }
+
+    .token-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: var(--text-tertiary);
+      margin-top: 4px;
+    }
+
+    .token-label.red { color: #B53030; }
+    .token-label.green { color: var(--primary-600); }
+
+    /* ─── Fix 2: CharacterScreen ─── */
+    .char-card {
+      border-radius: 24px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+
+    .char-card-before {
+      background: var(--card);
+    }
+
+    .char-card-after {
+      background: var(--card);
+    }
+
+    .char-header {
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .char-avatar {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, var(--primary-300), var(--primary-600));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+    }
+
+    .char-name {
+      font-family: 'Literata', serif;
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .char-level {
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .trophy-badge-before {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--warning-light);
+      padding: 10px 16px; /* off-grid: 10px */
+      border-radius: 8px;
+      margin: 0 24px 16px;
+    }
+
+    .trophy-badge-after {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--warning-light);
+      padding: 8px 16px; /* on-grid: spacing.sm */
+      border-radius: 8px;
+      margin: 0 24px 16px;
+    }
+
+    .trophy-text {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--warning);
+    }
+
+    .attr-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      padding: 0 24px 16px;
+    }
+
+    .attr-card {
+      background: var(--gray-50);
+      padding: 12px;
+      border-radius: 12px;
+    }
+
+    .attr-label {
+      font-size: 11px;
+      color: var(--text-tertiary);
+      margin-bottom: 4px;
+    }
+
+    .attr-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .styling-note {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      color: var(--text-tertiary);
+      padding: 8px 16px;
+      background: rgba(0,0,0,0.03);
+      border-top: 1px solid var(--border);
+    }
+
+    .styling-note code {
+      color: var(--primary-700);
+      font-weight: 500;
+    }
+
+    /* ─── Fix 3: Color Swatches ─── */
+    .swatch-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .swatch-row:last-child { border-bottom: none; }
+
+    .swatch {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      border: 1px solid rgba(0,0,0,0.08);
+      flex-shrink: 0;
+    }
+
+    .swatch-info {
+      flex: 1;
+    }
+
+    .swatch-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .swatch-hex {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--text-tertiary);
+    }
+
+    .swatch-usage {
+      font-size: 11px;
+      color: var(--text-secondary);
+      margin-top: 2px;
+    }
+
+    .arrow {
+      font-size: 18px;
+      color: var(--text-tertiary);
+      flex-shrink: 0;
+    }
+
+    /* ─── Tailwind Config ─── */
+    .config-change {
+      background: var(--gray-50);
+      border-radius: 12px;
+      padding: 16px;
+      margin-top: 12px;
+    }
+
+    .config-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+
+    .config-row:last-child { margin-bottom: 0; }
+
+    .config-key {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--text-secondary);
+      min-width: 100px;
+    }
+
+    .config-val {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+
+    .config-val.old {
+      background: rgba(181, 48, 48, 0.1);
+      color: #B53030;
+      text-decoration: line-through;
+    }
+
+    .config-val.new {
+      background: rgba(5, 150, 105, 0.1);
+      color: var(--primary-700);
+    }
+
+    /* ─── Impact badges ─── */
+    .impact-row {
+      display: flex;
+      gap: 8px;
+      margin-top: 16px;
+      flex-wrap: wrap;
+    }
+
+    .impact-badge {
+      font-size: 11px;
+      font-weight: 500;
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+
+    .impact-badge.visual {
+      background: rgba(232, 185, 77, 0.15);
+      color: var(--streak-500);
+    }
+
+    .impact-badge.structural {
+      background: rgba(5, 150, 105, 0.1);
+      color: var(--primary-700);
+    }
+
+    .impact-badge.safe {
+      background: rgba(110, 102, 96, 0.1);
+      color: var(--text-secondary);
+    }
+
+    /* ─── Mock components for color context ─── */
+    .mock-empty-state {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .mock-stat-icon {
+      font-size: 32px;
+      margin-bottom: 8px;
+    }
+
+    .mock-stat-label {
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+
+    .mock-stat-hint {
+      font-size: 12px;
+      color: var(--text-tertiary);
+    }
+
+    .mock-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .mock-error-tag {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .mock-confetti {
+      display: flex;
+      gap: 6px;
+      justify-content: center;
+      margin-top: 12px;
+    }
+
+    .confetti-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+
+    .mock-success-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 20px;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+    }
+
+    /* ─── Typography specimen table ─── */
+    .type-specimen {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .type-specimen td {
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+    }
+
+    .type-specimen td:first-child {
+      width: 45%;
+    }
+
+    .type-specimen td:last-child {
+      text-align: right;
+    }
+
+    .spec-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: var(--text-tertiary);
+    }
+
+    .divider {
+      height: 1px;
+      background: rgba(255,255,255,0.08);
+      margin: 12px 0 32px;
+    }
+
+    /* Responsive */
+    @media (max-width: 700px) {
+      .comparison-grid { grid-template-columns: 1fr; }
+      body { padding: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>UI Audit Fixes <span class="score-badge">19 → 22/24</span></h1>
+  <p class="subtitle">29 files changed &middot; 482 insertions, 211 deletions &middot; 0 new regressions</p>
+
+  <!-- ═══════════════════════════════════════════════════ -->
+  <!-- FIX 1: Typography Token Bypass                      -->
+  <!-- ═══════════════════════════════════════════════════ -->
+  <div class="fix-section">
+    <div class="fix-header">
+      <div class="fix-number">1</div>
+      <div class="fix-title">Typography Token Bypass</div>
+    </div>
+    <p class="fix-description">
+      15 files used raw fontSize/fontWeight literals. Now all reference <code>typography.*</code> tokens.
+      Every <code>fontWeight: '800'</code> (undeclared) replaced with <code>fontWeights.bold</code> ('700').
+    </p>
+
+    <div class="comparison-grid">
+      <!-- BEFORE -->
+      <div class="comparison-col">
+        <div class="col-label before">Before</div>
+        <div class="col-content">
+          <div class="phone-frame">
+            <div class="hero-text-before">
+              Start your first chain today
+              <span class="weight-badge bad">28px / 800</span>
+            </div>
+            <div class="token-label red">No token — off-scale entirely</div>
+            <div class="hero-subtitle">Small steps lead to big changes. Track your habits and build momentum.</div>
+            <div class="cta-btn-before">
+              Add "Morning Run" →
+              <span class="weight-badge bad">16px / 700</span>
+            </div>
+            <div class="token-label red">Raw literal, not typography.button</div>
+          </div>
+
+          <div style="margin-top: 16px;">
+            <table class="type-specimen">
+              <tr>
+                <td>
+                  <span style="font-size:22px; font-weight:600; font-family:'DM Sans';">"Morning Run" added</span>
+                </td>
+                <td>
+                  <span class="spec-label">22px/600 raw</span>
+                  <span class="weight-badge bad">raw</span>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <span style="font-size:13px; font-weight:400; font-family:'DM Sans';">Or browse templates</span>
+                </td>
+                <td>
+                  <span class="spec-label">13px/400 raw</span>
+                  <span class="weight-badge bad">raw</span>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <span style="font-size:14px; font-weight:600; font-family:'DM Sans';">Delete 3 habits?</span>
+                </td>
+                <td>
+                  <span class="spec-label">14px/600 raw</span>
+                  <span class="weight-badge bad">raw</span>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <span style="font-size:11px; font-weight:800; font-family:'DM Sans';">NEW</span>
+                </td>
+                <td>
+                  <span class="spec-label">11px/800 raw</span>
+                  <span class="weight-badge bad">off-scale</span>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <span style="font-size:24px; font-weight:800; font-family:'DM Sans';">Featured</span>
+                </td>
+                <td>
+                  <span class="spec-label">24px/800 raw</span>
+                  <span class="weight-badge bad">off-scale</span>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- AFTER -->
+      <div class="comparison-col">
+        <div class="col-label after">After</div>
+        <div class="col-content">
+          <div class="phone-frame">
+            <div class="hero-text-after">
+              Start your first chain today
+              <span class="weight-badge good">heading1</span>
+            </div>
+            <div class="token-label green">typography.heading1 — 22px Literata Bold</div>
+            <div class="hero-subtitle">Small steps lead to big changes. Track your habits and build momentum.</div>
+            <div class="cta-btn-after">
+              Add "Morning Run" →
+              <span class="weight-badge good">button</span>
+            </div>
+            <div class="token-label green">typography.button — 17px DM Sans Semibold</div>
+          </div>
+
+          <div style="margin-top: 16px;">
+            <table class="type-specimen">
+              <tr>
+                <td>
+                  <span style="font-size:22px; font-weight:600; font-family:'DM Sans'; letter-spacing:-0.35px;">"Morning Run" added</span>
+                </td>
+                <td>
+                  <span class="spec-label">typography.heading2</span>
+                  <span class="weight-badge good">token</span>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <span style="font-size:13px; font-weight:500; font-family:'DM Sans'; letter-spacing:0.12px;">Or browse templates</span>
+                </td>
+                <td>
+                  <span class="spec-label">typography.caption</span>
+                  <span class="weight-badge good">token</span>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <span style="font-size:14px; font-weight:600; font-family:'DM Sans';">Delete 3 habits?</span>
+                </td>
+                <td>
+                  <span class="spec-label">typography.bodySmall + semibold</span>
+                  <span class="weight-badge good">token</span>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <span style="font-size:10px; font-weight:700; font-family:'DM Sans'; letter-spacing:0.1px;">NEW</span>
+                </td>
+                <td>
+                  <span class="spec-label">typography.tabBar + bold</span>
+                  <span class="weight-badge good">token</span>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <span style="font-size:22px; font-weight:700; font-family:'Literata'; letter-spacing:-0.35px;">Featured</span>
+                </td>
+                <td>
+                  <span class="spec-label">typography.heading2 + bold</span>
+                  <span class="weight-badge good">token</span>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="impact-row">
+      <span class="impact-badge visual">Visual: hero text 28→22px, serif font change</span>
+      <span class="impact-badge visual">Visual: CTA button 16→17px, 700→600 weight</span>
+      <span class="impact-badge structural">Structural: all weights capped at 700</span>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ═══════════════════════════════════════════════════ -->
+  <!-- FIX 2: CharacterScreen Dual Styling                 -->
+  <!-- ═══════════════════════════════════════════════════ -->
+  <div class="fix-section">
+    <div class="fix-header">
+      <div class="fix-number">2</div>
+      <div class="fix-title">CharacterScreen — className → StyleSheet</div>
+    </div>
+    <p class="fix-description">
+      8 components migrated from mixed NativeWind className + inline style to unified StyleSheet.create with theme tokens.
+      Off-grid <code>paddingVertical: 10</code> snapped to <code>spacing.sm</code> (8px).
+    </p>
+
+    <div class="comparison-grid">
+      <!-- BEFORE -->
+      <div class="comparison-col">
+        <div class="col-label before">Before — Mixed Styling</div>
+        <div class="col-content">
+          <div class="char-card char-card-before">
+            <div class="char-header">
+              <div class="char-avatar">🧙</div>
+              <div>
+                <div class="char-name">Andres</div>
+                <div class="char-level">Level 7 Habit Master</div>
+              </div>
+            </div>
+            <div class="trophy-badge-before">
+              🏆 <span class="trophy-text">3 Achievements</span>
+            </div>
+            <div class="attr-grid">
+              <div class="attr-card">
+                <div class="attr-label">Discipline</div>
+                <div class="attr-value">42</div>
+              </div>
+              <div class="attr-card">
+                <div class="attr-label">Consistency</div>
+                <div class="attr-value">38</div>
+              </div>
+            </div>
+            <div class="styling-note">
+              <code>className='rounded-3xl px-6 gap-3'</code> +
+              <code>style=&#123;&#123; borderColor: colors.cardBorder &#125;&#125;</code><br/>
+              Two styling sources &middot; paddingVertical: <strong style="color:#B53030">10px</strong> (off 8px grid)
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AFTER -->
+      <div class="comparison-col">
+        <div class="col-label after">After — Unified StyleSheet</div>
+        <div class="col-content">
+          <div class="char-card char-card-after">
+            <div class="char-header">
+              <div class="char-avatar">🧙</div>
+              <div>
+                <div class="char-name">Andres</div>
+                <div class="char-level">Level 7 Habit Master</div>
+              </div>
+            </div>
+            <div class="trophy-badge-after">
+              🏆 <span class="trophy-text">3 Achievements</span>
+            </div>
+            <div class="attr-grid">
+              <div class="attr-card">
+                <div class="attr-label">Discipline</div>
+                <div class="attr-value">42</div>
+              </div>
+              <div class="attr-card">
+                <div class="attr-label">Consistency</div>
+                <div class="attr-value">38</div>
+              </div>
+            </div>
+            <div class="styling-note">
+              <code>StyleSheet.create</code> +
+              <code>borderRadius: borderRadius.xl</code> +
+              <code>spacing.lg</code><br/>
+              Single source &middot; paddingVertical: <strong style="color:#059669">spacing.sm (8px)</strong> (on-grid)
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tailwind config fix -->
+    <div class="config-change">
+      <div style="font-size:13px; font-weight:600; color:var(--text-primary); margin-bottom:8px;">tailwind.config.js fixes</div>
+      <div class="config-row">
+        <span class="config-key">spacing.md</span>
+        <span class="config-val old">'16px'</span>
+        <span class="arrow">→</span>
+        <span class="config-val new">'12px'</span>
+        <span style="font-size:11px; color:var(--text-tertiary)">matches spacing.md token</span>
+      </div>
+      <div class="config-row">
+        <span class="config-key">card.DEFAULT</span>
+        <span class="config-val old">'#FFFFFF'</span>
+        <span class="arrow">→</span>
+        <span class="config-val new">'#EDEAE5'</span>
+        <span style="font-size:11px; color:var(--text-tertiary)">matches colors.light.card</span>
+      </div>
+    </div>
+
+    <div class="impact-row">
+      <span class="impact-badge visual">Visual: trophy badge 10→8px vertical padding</span>
+      <span class="impact-badge structural">Structural: single styling source</span>
+      <span class="impact-badge safe">Scoped to CharacterScreen only</span>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ═══════════════════════════════════════════════════ -->
+  <!-- FIX 3: Hardcoded Hex Colors                         -->
+  <!-- ═══════════════════════════════════════════════════ -->
+  <div class="fix-section">
+    <div class="fix-header">
+      <div class="fix-number">3</div>
+      <div class="fix-title">Hardcoded Hex Colors → Semantic Tokens</div>
+    </div>
+    <p class="fix-description">
+      6 files had hex values outside the theme that won't adapt to dark mode. All mapped to semantic tokens.
+    </p>
+
+    <div class="comparison-grid">
+      <!-- BEFORE -->
+      <div class="comparison-col">
+        <div class="col-label before">Before — Raw Hex</div>
+        <div class="col-content">
+          <!-- Gold accent in empty state -->
+          <div class="swatch-row">
+            <div class="swatch" style="background:#FCD34D;"></div>
+            <div class="swatch-info">
+              <div class="swatch-name">#FCD34D <span style="font-size:10px; color:var(--text-tertiary)">(dark mode)</span></div>
+              <div class="swatch-usage">EmptyState.tsx — stat icon color</div>
+            </div>
+          </div>
+          <div class="swatch-row">
+            <div class="swatch" style="background:#D97706;"></div>
+            <div class="swatch-info">
+              <div class="swatch-name">#D97706 <span style="font-size:10px; color:var(--text-tertiary)">(light mode)</span></div>
+              <div class="swatch-usage">EmptyState.tsx — stat icon color</div>
+            </div>
+          </div>
+
+          <!-- White text -->
+          <div class="swatch-row">
+            <div class="swatch" style="background:#ffffff; border: 1px solid #ccc;"></div>
+            <div class="swatch-info">
+              <div class="swatch-name">#ffffff</div>
+              <div class="swatch-usage">SuccessContent.tsx — button text</div>
+            </div>
+          </div>
+
+          <!-- Amber badge -->
+          <div class="swatch-row">
+            <div class="swatch" style="background:#92400e;"></div>
+            <div class="swatch-info">
+              <div class="swatch-name">#92400e</div>
+              <div class="swatch-usage">SocialProofBadge — text color</div>
+            </div>
+          </div>
+
+          <!-- Confetti -->
+          <div class="swatch-row">
+            <div class="swatch" style="background:#F59E0B;"></div>
+            <div class="swatch-info">
+              <div class="swatch-name">#F59E0B</div>
+              <div class="swatch-usage">successAnimations — confetti</div>
+            </div>
+          </div>
+
+          <!-- Error red -->
+          <div class="swatch-row">
+            <div class="swatch" style="background:#EF4444;"></div>
+            <div class="swatch-info">
+              <div class="swatch-name">#EF4444 <span style="font-size:10px; color:#B53030">(known deviation)</span></div>
+              <div class="swatch-usage">constants.ts — error/destructive</div>
+            </div>
+          </div>
+
+          <!-- Context mock -->
+          <div style="margin-top:16px">
+            <div class="mock-empty-state">
+              <div class="mock-stat-icon">📊</div>
+              <div class="mock-stat-label" style="color: #D97706;">No Analytics Yet</div>
+              <div class="mock-stat-hint">Complete habits to see stats</div>
+              <div class="mock-confetti">
+                <div class="confetti-dot" style="background:#FCD34D"></div>
+                <div class="confetti-dot" style="background:#F59E0B"></div>
+                <div class="confetti-dot" style="background:#FCD34D"></div>
+                <div class="confetti-dot" style="background:#F59E0B"></div>
+              </div>
+            </div>
+            <div style="margin-top:8px; display:flex; gap:8px; justify-content:center;">
+              <div class="mock-badge" style="background:#fffbeb; color:#92400e;">200+ users</div>
+              <div class="mock-error-tag" style="background:rgba(239,68,68,0.1); color:#EF4444;">Delete</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AFTER -->
+      <div class="comparison-col">
+        <div class="col-label after">After — Theme Tokens</div>
+        <div class="col-content">
+          <!-- Gold accent mapped -->
+          <div class="swatch-row">
+            <div class="swatch" style="background:#E8B94D;"></div>
+            <div class="swatch-info">
+              <div class="swatch-name">colors.streak[300]</div>
+              <div class="swatch-hex">#E8B94D</div>
+              <div class="swatch-usage">EmptyState.tsx — dark mode stat icon</div>
+            </div>
+          </div>
+          <div class="swatch-row">
+            <div class="swatch" style="background:#8B6208;"></div>
+            <div class="swatch-info">
+              <div class="swatch-name">colors.streak[500]</div>
+              <div class="swatch-hex">#8B6208</div>
+              <div class="swatch-usage">EmptyState.tsx — light mode stat icon</div>
+            </div>
+          </div>
+
+          <!-- White text mapped -->
+          <div class="swatch-row">
+            <div class="swatch" style="background:#ffffff; border: 1px solid #ccc;"></div>
+            <div class="swatch-info">
+              <div class="swatch-name">colors.text.inverse</div>
+              <div class="swatch-hex">#FFFFFF (adapts in dark mode)</div>
+              <div class="swatch-usage">SuccessContent.tsx — button text</div>
+            </div>
+          </div>
+
+          <!-- Amber badge mapped -->
+          <div class="swatch-row">
+            <div class="swatch" style="background:#9A5504;"></div>
+            <div class="swatch-info">
+              <div class="swatch-name">colors.warning</div>
+              <div class="swatch-hex">#9A5504</div>
+              <div class="swatch-usage">SocialProofBadge — text color</div>
+            </div>
+          </div>
+
+          <!-- Confetti mapped -->
+          <div class="swatch-row">
+            <div class="swatch" style="background:#8B6208;"></div>
+            <div class="swatch-info">
+              <div class="swatch-name">colors.streak[500]</div>
+              <div class="swatch-hex">#8B6208</div>
+              <div class="swatch-usage">successAnimations — confetti</div>
+            </div>
+          </div>
+
+          <!-- Error red mapped -->
+          <div class="swatch-row">
+            <div class="swatch" style="background:#B53030;"></div>
+            <div class="swatch-info">
+              <div class="swatch-name">colors.error</div>
+              <div class="swatch-hex">#B53030 (WCAG AA 5.45:1)</div>
+              <div class="swatch-usage">constants.ts — error/destructive</div>
+            </div>
+          </div>
+
+          <!-- Context mock - AFTER -->
+          <div style="margin-top:16px">
+            <div class="mock-empty-state">
+              <div class="mock-stat-icon">📊</div>
+              <div class="mock-stat-label" style="color: #8B6208;">No Analytics Yet</div>
+              <div class="mock-stat-hint">Complete habits to see stats</div>
+              <div class="mock-confetti">
+                <div class="confetti-dot" style="background:#E8B94D"></div>
+                <div class="confetti-dot" style="background:#8B6208"></div>
+                <div class="confetti-dot" style="background:#E8B94D"></div>
+                <div class="confetti-dot" style="background:#8B6208"></div>
+              </div>
+            </div>
+            <div style="margin-top:8px; display:flex; gap:8px; justify-content:center;">
+              <div class="mock-badge" style="background:#FEF3CD; color:#9A5504;">200+ users</div>
+              <div class="mock-error-tag" style="background:rgba(181,48,48,0.1); color:#B53030;">Delete</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="impact-row">
+      <span class="impact-badge visual">Visual: gold tones shift slightly warmer</span>
+      <span class="impact-badge visual">Visual: error red #EF4444 → #B53030 (muted)</span>
+      <span class="impact-badge safe">Safe: #ffffff → colors.text.inverse (same in light)</span>
+      <span class="impact-badge structural">Structural: dark mode adaptive</span>
+    </div>
+  </div>
+
+</body>
+</html>

@@ -1,7 +1,8 @@
-import { View } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { Heart, Dumbbell, Brain, Zap } from 'lucide-react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useThemeColors } from '../../../theme/ThemeContext';
+import { spacing } from '../../../theme/spacing';
 import { AttributeCard } from './AttributeCard';
 import { ATTRIBUTE_CONFIGS } from '../constants';
 import type { CharacterAttributes } from '../types';
@@ -17,16 +18,10 @@ export function AttributesSection({ attributes }: AttributesSectionProps) {
   const { colors } = useThemeColors();
 
   return (
-    <View className='mb-6 flex-col gap-3'>
+    <View style={styles.section}>
       <Animated.Text
-        className='px-1 font-semibold'
         entering={FadeInDown.delay(BASE_DELAY).springify().damping(18)}
-        style={{
-          fontSize: 17,
-          letterSpacing: -0.41,
-          lineHeight: 22,
-          color: colors.text.primary,
-        }}
+        style={[styles.sectionTitle, { color: colors.text.primary }]}
       >
         Attributes
       </Animated.Text>
@@ -71,3 +66,18 @@ export function AttributesSection({ attributes }: AttributesSectionProps) {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  section: {
+    flexDirection: 'column',
+    gap: spacing.md,
+    marginBottom: spacing.lg,
+  },
+  sectionTitle: {
+    fontSize: 17,
+    fontWeight: '600',
+    letterSpacing: -0.41,
+    lineHeight: 22,
+    paddingHorizontal: spacing.xs,
+  },
+});

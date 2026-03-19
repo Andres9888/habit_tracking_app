@@ -4,7 +4,7 @@ import { format } from 'date-fns';
 
 import { colors as palette } from '../../../theme/colors';
 import { useThemeColors } from '../../../theme/ThemeContext';
-import { fontFamilies } from '../../../theme/typography';
+import { fontWeights, typography } from '../../../theme/typography';
 import { useStreakGreeting } from '../hooks/useStreakGreeting';
 import type { StreakGreetingResult } from '../hooks/useStreakGreeting';
 import { ProgressDots } from './ProgressDots';
@@ -23,9 +23,8 @@ interface ProgressGreetingProps {
 }
 
 const HERO_STYLE = {
-  fontFamily: fontFamilies.primary.text,
-  fontSize: 20,
-  fontWeight: '800' as const,
+  ...typography.heading3,
+  fontWeight: fontWeights.bold,
   letterSpacing: -0.5,
 };
 

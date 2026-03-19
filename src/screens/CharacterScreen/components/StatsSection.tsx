@@ -1,5 +1,6 @@
-import { View } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { StatCard } from './StatCard';
+import { spacing } from '../../../theme/spacing';
 import type { CharacterStats } from '../types';
 
 interface StatsSectionProps {
@@ -11,7 +12,7 @@ const BASE_DELAY = 480;
 
 export function StatsSection({ stats }: StatsSectionProps) {
   return (
-    <View className='mb-6 flex-row gap-3'>
+    <View style={styles.row}>
       <StatCard
         delay={BASE_DELAY}
         emoji='🔥'
@@ -33,3 +34,11 @@ export function StatsSection({ stats }: StatsSectionProps) {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  row: {
+    flexDirection: 'row',
+    gap: spacing.md,
+    marginBottom: spacing.lg,
+  },
+});

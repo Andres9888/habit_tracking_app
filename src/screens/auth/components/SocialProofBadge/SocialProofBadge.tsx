@@ -5,6 +5,7 @@
 import React, { useEffect } from 'react';
 import { Text, StyleSheet } from 'react-native';
 import { fontFamilies } from '@/theme/typography';
+import { colors } from '@/theme/colors';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -49,7 +50,7 @@ export function SocialProofBadge({
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    backgroundColor: '#fffbeb',
+    backgroundColor: colors.warningLight,
     borderRadius: 9999,
     flexDirection: 'row',
     // pill badge
@@ -57,7 +58,6 @@ const styles = StyleSheet.create({
 
     justifyContent: 'center',
 
-    // amber-50
     paddingHorizontal: 16,
     paddingVertical: 10,
   },
@@ -69,9 +69,9 @@ const styles = StyleSheet.create({
   },
   text: {
     // caption scale
-    color: '#92400e',
+    color: colors.warning,
     fontFamily: fontFamilies.primary.text,
-    fontSize: 13, // amber-800
+    fontSize: 13,
   },
 });
 

@@ -3,7 +3,7 @@
  */
 
 import type { ViewStyle, TextStyle } from 'react-native';
-import { fontFamilies } from '@/theme/typography';
+import { typography } from '@/theme/typography';
 import { BORDER_RADIUS, TOUCH_TARGETS } from './constants';
 
 export function getCtaButtonStyle(
@@ -32,10 +32,8 @@ export function getCtaButtonStyle(
 
 export function getCtaTextStyle(color: string): TextStyle {
   return {
+    ...typography.button,
     color,
-    fontFamily: fontFamilies.primary.text,
-    fontSize: 16,
-    fontWeight: '700',
     letterSpacing: -0.2,
   };
 }
