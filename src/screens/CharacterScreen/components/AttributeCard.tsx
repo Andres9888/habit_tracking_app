@@ -1,7 +1,8 @@
-import { View, Text } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useThemeColors } from '../../../theme/ThemeContext';
+import { spacing, borderRadius } from '../../../theme/spacing';
 import type { AttributeCardProps } from '../types';
 
 export function AttributeCard({
@@ -18,52 +19,50 @@ export function AttributeCard({
 
   return (
     <Animated.View
-      className='overflow-hidden rounded-3xl border'
       entering={FadeInDown.delay(delay).springify().damping(18)}
-      style={{
-        backgroundColor: colors.card,
-        borderColor: colors.cardBorder,
-        shadowColor: colors.text.primary,
-        shadowOffset: { height: 4, width: 0 },
-        shadowOpacity: 0.08,
-        shadowRadius: 16,
-      }}
+      style={[
+        styles.card,
+        {
+          backgroundColor: colors.card,
+          borderColor: colors.cardBorder,
+          shadowColor: colors.text.primary,
+        },
+      ]}
     >
-      <View className='relative h-[110px]'>
+      <View style={styles.barContainer}>
         <View
-          className='absolute left-0 top-0 h-full opacity-60'
-          style={{ width: `${percentage}%` }}
+          style={[styles.bgFillWrapper, { width: `${percentage}%` }]}
         >
           <LinearGradient
             colors={bgGradient}
             end={{ x: 1, y: 0 }}
             start={{ x: 0, y: 0 }}
-            style={{ height: '100%', width: '100%' }}
+            style={styles.bgFill}
           />
         </View>
 
-        <View className='flex-col gap-3 px-6 pt-6'>
-          <View className='flex-row items-center justify-between'>
-            <View className='flex-row items-center gap-3'>
-              <View className='h-10 w-10 items-center justify-center rounded-full shadow-md' style={{ backgroundColor: colors.card }}>
+        <View style={styles.contentCol}>
+          <View style={styles.labelRow}>
+            <View style={styles.iconNameRow}>
+              <View style={[styles.iconCircle, { backgroundColor: colors.card }]}>
                 {icon}
               </View>
-              <Text className='text-base font-normal leading-6 tracking-[-0.3125px]' style={{ color: colors.text.primary }}>
+              <Text style={[styles.nameText, { color: colors.text.primary }]}>
                 {name}
               </Text>
             </View>
-            <Text className='text-base font-normal leading-6 tracking-[-0.3125px]' style={{ color: colors.text.primary }}>
+            <Text style={[styles.valueText, { color: colors.text.primary }]}>
               {value}
             </Text>
           </View>
 
-          <View className='h-2 w-full overflow-hidden rounded-full' style={{ backgroundColor: colors.gray[200] }}>
+          <View style={[styles.progressTrack, { backgroundColor: colors.gray[200] }]}>
             <View style={{ width: `${percentage}%` }}>
               <LinearGradient
                 colors={gradientColors}
                 end={{ x: 1, y: 0 }}
                 start={{ x: 0, y: 0 }}
-                style={{ borderRadius: 9999, height: '100%', width: '100%' }}
+                style={styles.progressFill}
               />
             </View>
           </View>
@@ -72,3 +71,75 @@ export function AttributeCard({
     </Animated.View>
   );
 }
+
+const styles = StyleSheet.create({
+  barContainer: {
+    height: 110,
+    position: 'relative',
+  },
+  bgFill: {
+    height: '100%',
+    width: '100%',
+  },
+  bgFillWrapper: {
+    bottom: 0,
+    left: 0,
+    opacity: 0.6,
+    position: 'absolute',
+    top: 0,
+  },
+  card: {
+    borderRadius: borderRadius.xl,
+    borderWidth: 1,
+    overflow: 'hidden',
+    shadowOffset: { height: 4, width: 0 },
+    shadowOpacity: 0.08,
+    shadowRadius: 16,
+  },
+  contentCol: {
+    flexDirection: 'column',
+    gap: spacing.md,
+    paddingHorizontal: spacing.lg,
+    paddingTop: spacing.lg,
+  },
+  iconCircle: {
+    alignItems: 'center',
+    borderRadius: borderRadius.full,
+    height: 40,
+    justifyContent: 'center',
+    width: 40,
+  },
+  iconNameRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: spacing.md,
+  },
+  labelRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  nameText: {
+    fontSize: 16,
+    fontWeight: 'normal',
+    letterSpacing: -0.3125,
+    lineHeight: 24,
+  },
+  progressFill: {
+    borderRadius: borderRadius.full,
+    height: '100%',
+    width: '100%',
+  },
+  progressTrack: {
+    borderRadius: borderRadius.full,
+    height: 8,
+    overflow: 'hidden',
+    width: '100%',
+  },
+  valueText: {
+    fontSize: 16,
+    fontWeight: 'normal',
+    letterSpacing: -0.3125,
+    lineHeight: 24,
+  },
+});

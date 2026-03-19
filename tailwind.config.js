@@ -53,7 +53,7 @@ module.exports = {
           foreground: 'hsl(var(--popover-foreground))',
         },
         card: {
-          DEFAULT: '#FFFFFF',
+          DEFAULT: '#EDEAE5',
           foreground: '#1F2937',
         },
         // Home screen redesign palette (see src/theme/colors/semantic.ts warmPalette)
@@ -64,7 +64,7 @@ module.exports = {
       spacing: {
         xs: '4px',
         sm: '8px',
-        md: '16px',
+        md: '12px',
         lg: '24px',
         xl: '32px',
         '2xl': '48px',

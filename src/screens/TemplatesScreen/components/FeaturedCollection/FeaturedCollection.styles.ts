@@ -4,7 +4,7 @@
 
 import { StyleSheet } from 'react-native';
 import { borderRadius, shadows, spacing } from '../../../../theme/spacing';
-import { fontFamilies } from '../../../../theme/typography';
+import { fontWeights, typography } from '../../../../theme/typography';
 
 export const s = StyleSheet.create({
   badge: {
@@ -15,9 +15,9 @@ export const s = StyleSheet.create({
     paddingVertical: 4,
   },
   badgeText: {
+    ...typography.tabBar,
     color: '#FFFFFF',
-    fontSize: 11,
-    fontWeight: '700',
+    fontWeight: fontWeights.bold,
     letterSpacing: 0.5,
   },
   chip: {
@@ -55,7 +55,7 @@ export const s = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 8,
   },
-  ctaText: { color: '#FFFFFF', fontSize: 14, fontWeight: '700' },
+  ctaText: { ...typography.bodySmall, color: '#FFFFFF', fontWeight: fontWeights.bold },
   description: {
     color: 'rgba(255,255,255,0.85)',
     fontSize: 14,
@@ -77,10 +77,8 @@ export const s = StyleSheet.create({
     ...shadows.floatingActionButton,
   },
   title: {
+    ...typography.heading2,
     color: '#FFFFFF',
-    fontFamily: fontFamilies.primary.display,
-    fontSize: 24,
-    fontWeight: '800',
     letterSpacing: -0.5,
     marginTop: 12,
   },

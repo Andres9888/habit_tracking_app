@@ -9,6 +9,7 @@ import Animated from 'react-native-reanimated';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { fontFamilies } from '../../../theme/typography';
 import { useReducedMotionEntry } from '../../../components/EmptyState/useReducedMotionEntry';
+import { colors as themeColors } from '../../../theme/colors';
 
 export const EmptyState: React.FC = () => {
   const { colors, isDark } = useThemeColors();
@@ -89,8 +90,8 @@ export const EmptyState: React.FC = () => {
         }}
       >
         <View style={{ alignItems: 'center', flexDirection: 'row', gap: 8, marginBottom: 12 }}>
-          <Sparkles color={isDark ? '#FCD34D' : '#F59E0B'} size={16} />
-          <Text style={{ color: isDark ? '#FCD34D' : '#D97706', fontFamily: fontFamilies.primary.text, fontSize: 13, fontWeight: '600' }}>
+          <Sparkles color={isDark ? themeColors.streak[300] : themeColors.streak[500]} size={16} />
+          <Text style={{ color: isDark ? themeColors.streak[300] : themeColors.streak[500], fontFamily: fontFamilies.primary.text, fontSize: 13, fontWeight: '600' }}>
             GET STARTED
           </Text>
         </View>

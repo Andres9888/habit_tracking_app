@@ -7,7 +7,7 @@
 import { Pressable, Text, ViewStyle } from 'react-native';
 import Animated, { AnimatedStyle } from 'react-native-reanimated';
 
-import { fontFamilies } from '@/theme/typography';
+import { typography } from '@/theme/typography';
 import { BORDER_RADIUS, COLORS, COPY, TOUCH_TARGETS } from './constants';
 
 interface SuccessContentProps {
@@ -32,10 +32,8 @@ export function SuccessContent({
       {/* Headline */}
       <Text
         style={{
+          ...typography.heading2,
           color: COLORS.stone800,
-          fontFamily: fontFamilies.primary.text,
-          fontSize: 22,
-          fontWeight: '600',
           marginBottom: 8,
           textAlign: 'center',
         }}
@@ -46,9 +44,8 @@ export function SuccessContent({
       {/* Subtext */}
       <Text
         style={{
+          ...typography.caption,
           color: COLORS.stone500,
-          fontFamily: fontFamilies.primary.text,
-          fontSize: 13,
           marginBottom: 24,
           textAlign: 'center',
         }}
@@ -61,9 +58,8 @@ export function SuccessContent({
           style={[
             tapHintStyle,
             {
+              ...typography.caption,
               color: COLORS.stone500,
-              fontFamily: fontFamilies.primary.text,
-              fontSize: 13,
               textAlign: 'center',
             },
           ]}
@@ -90,10 +86,8 @@ export function SuccessContent({
         >
           <Text
             style={{
-              color: '#ffffff',
-              fontFamily: fontFamilies.primary.text,
-              fontSize: 17,
-              fontWeight: '600',
+              ...typography.button,
+              color: COLORS.textInverse,
             }}
           >
             {COPY.addAnother}

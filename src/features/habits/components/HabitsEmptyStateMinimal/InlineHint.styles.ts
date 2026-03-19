@@ -1,6 +1,6 @@
 import { colors } from '../../../../theme/colors';
 import { borderRadius, spacing } from '../../../../theme/spacing';
-import { fontFamilies } from '../../../../theme/typography';
+import { fontFamilies, fontWeights } from '../../../../theme/typography';
 
 const templatesButtonBaseStyle = {
   borderRadius: borderRadius.medium,
@@ -41,7 +41,7 @@ export const badgeContainerStyle = (backgroundColor: string) => ({
   paddingHorizontal: 9,
   paddingVertical: 3,
 } as const);
-export const badgeTextStyle = { fontFamily: fontFamilies.primary.text, fontSize: 11, fontWeight: '800' } as const;
+export const badgeTextStyle = { fontFamily: fontFamilies.primary.text, fontSize: 11, fontWeight: fontWeights.bold } as const;
 export const accentStripeStyle = {
   backgroundColor: colors.primary[300],
   borderRadius: borderRadius.xs,

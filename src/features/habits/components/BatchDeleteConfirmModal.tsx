@@ -7,6 +7,7 @@ import { Modal, Pressable, StyleSheet, Text, View } from 'react-native';
 import { AlertTriangle } from 'lucide-react-native';
 import { colors as palette } from '../../../theme/colors';
 import { useThemeColors } from '../../../theme/ThemeContext';
+import { fontWeights, typography } from '../../../theme/typography';
 
 interface BatchDeleteConfirmModalProps {
   visible: boolean;
@@ -55,10 +56,10 @@ const s = StyleSheet.create({
   actions: { flexDirection: 'row', gap: 10 },
   box: { borderRadius: 24, padding: 28, width: 320 },
   btn: { alignItems: 'center', borderRadius: 12, flex: 1, paddingVertical: 12 },
-  btnText: { fontSize: 14, fontWeight: '600' },
+  btnText: { ...typography.bodySmall, fontWeight: fontWeights.semibold },
   cancelBtn: { backgroundColor: 'rgba(255,255,255,0.08)' },
   deleteBtn: { backgroundColor: palette.error },
-  desc: { fontSize: 13, lineHeight: 20, marginBottom: 24, textAlign: 'center' },
+  desc: { ...typography.caption, lineHeight: 20, marginBottom: 24, textAlign: 'center' },
   iconWrap: {
     alignItems: 'center',
     alignSelf: 'center',
@@ -75,7 +76,7 @@ const s = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
   },
-  title: { fontSize: 17, fontWeight: '700', marginBottom: 8, textAlign: 'center' },
+  title: { ...typography.body, fontWeight: fontWeights.bold, marginBottom: 8, textAlign: 'center' },
 });
 
 export const BatchDeleteConfirmModal = memo(BatchDeleteConfirmModalComponent);

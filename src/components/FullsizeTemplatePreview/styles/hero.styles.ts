@@ -5,7 +5,7 @@
 import { StyleSheet } from 'react-native';
 
 import { borderRadius } from '../../../theme/spacing';
-import { typography, fontFamilies} from '../../../theme/typography';
+import { typography, fontFamilies, fontWeights } from '../../../theme/typography';
 
 export const heroStyles = StyleSheet.create({
   descriptionSection: {
@@ -63,7 +63,7 @@ export const heroStyles = StyleSheet.create({
   metadataPillText: {
     fontFamily: fontFamilies.monospace,
     fontSize: 13,
-    fontWeight: '600',
+    fontWeight: fontWeights.semibold,
   },
   pillsRow: {
     flexDirection: 'row',
@@ -73,10 +73,8 @@ export const heroStyles = StyleSheet.create({
     paddingHorizontal: 4,
   },
   templateName: {
+    ...typography.heading1,
     color: '#1c1917',
-    fontFamily: fontFamilies.primary.text,
-    fontSize: 28,
-    fontWeight: '800',
     letterSpacing: -0.5,
     marginBottom: 16,
     textAlign: 'center',
