@@ -61,7 +61,7 @@ export function InlineHint({
                   ]}
                   testID='inline-hint-accent-stripe'
                 />
-                <Text style={{ fontSize: 18 }}>✏️</Text>
+                <Text style={{ fontSize: 17 }}>✏️</Text>
                 <Text
                   style={[
                     buildMyOwnLabelStyle,

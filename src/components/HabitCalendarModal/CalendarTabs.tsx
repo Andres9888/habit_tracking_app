@@ -12,6 +12,7 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 import { springs } from '@/theme/animations';
+import { useThemeColors } from '../../theme/ThemeContext';
 import { TabButton } from './TabButton';
 
 type CalendarView = 'month' | 'year';
@@ -25,6 +26,7 @@ const SPRING_CONFIG = springs.standard;
 const PADDING = 4;
 
 export function CalendarTabs({ activeView, onViewChange }: CalendarTabsProps) {
+  const { colors } = useThemeColors();
   const containerWidth = useSharedValue(0);
   const indicatorX = useSharedValue(activeView === 'month' ? 0 : 1);
 
@@ -55,8 +57,8 @@ export function CalendarTabs({ activeView, onViewChange }: CalendarTabsProps) {
   return (
     <View
       accessibilityRole='tablist'
-      className='mb-4 rounded-lg bg-stone-100'
-      style={{ padding: PADDING }}
+      className='mb-4 rounded-lg'
+      style={{ backgroundColor: colors.background, padding: PADDING }}
       onLayout={handleLayout}
     >
       <Animated.View

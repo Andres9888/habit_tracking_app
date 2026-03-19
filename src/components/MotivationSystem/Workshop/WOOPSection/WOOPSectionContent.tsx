@@ -4,6 +4,7 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import { WOOPField } from './WOOPField';
 import type { WOOPData } from './WOOPSection.types';
 
@@ -13,9 +14,11 @@ interface WOOPSectionContentProps {
 }
 
 export function WOOPSectionContent({ woop, hasWoop }: WOOPSectionContentProps) {
+  const { colors } = useThemeColors();
+
   if (!hasWoop) {
     return (
-      <Text className='text-sm text-stone-500'>
+      <Text className='text-sm' style={{ color: colors.text.secondary }}>
         Wish-Outcome-Obstacle-Plan framework
       </Text>
     );
@@ -26,28 +29,32 @@ export function WOOPSectionContent({ woop, hasWoop }: WOOPSectionContentProps) {
       <WOOPField
         label='Wish'
         letter='W'
-        letterColorClass='text-amber-500'
+        letterColorClass=''
+        letterColorStyle={colors.status.warning}
         value={woop?.wish}
       />
       <WOOPField
         label='Outcome'
         letter='O'
-        letterColorClass='text-amber-500'
+        letterColorClass=''
+        letterColorStyle={colors.status.warning}
         value={woop?.outcome}
       />
       <WOOPField
         label='Obstacle'
         letter='O'
-        letterColorClass='text-rose-500'
+        letterColorClass=''
+        letterColorStyle={colors.status.error}
         value={woop?.obstacle}
       />
       <WOOPField
         isBold
         label='Plan'
         letter='P'
-        letterColorClass='text-emerald-500'
+        letterColorClass=''
+        letterColorStyle={colors.status.success}
         value={woop?.plan}
-        valueColorClass='text-stone-900'
+        valueColor={colors.text.primary}
       />
     </View>
   );

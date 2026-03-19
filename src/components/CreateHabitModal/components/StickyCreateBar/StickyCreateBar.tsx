@@ -80,7 +80,7 @@ function StickyCreateBarComponent({
           onPressOut={handlePressOut}
         />
         <View className='mt-3 items-center'>
-          <View className='h-1 w-32 rounded-full bg-stone-300/60' />
+          <View className='h-1 w-32 rounded-full' style={{ backgroundColor: themeColors.border }} />
         </View>
       </View>
     </View>

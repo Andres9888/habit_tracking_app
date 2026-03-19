@@ -55,8 +55,8 @@ const s = StyleSheet.create({
   cta: {
     backgroundColor: 'rgba(255,255,255,0.2)',
     borderRadius: 12,
-    paddingHorizontal: 18,
-    paddingVertical: 10,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
   },
   ctaText: { color: '#fff', fontSize: 13, fontWeight: '700' },
   desc: { color: 'rgba(255,255,255,0.75)', fontSize: 13, marginTop: 3 },
@@ -75,7 +75,7 @@ const s = StyleSheet.create({
   habitCount: {
     color: 'rgba(255,255,255,0.5)',
     fontFamily: fontFamilies.monospace,
-    fontSize: 11,
+    fontSize: 13,
     marginTop: 4,
   },
   name: { color: '#fff', fontSize: 16, fontWeight: '700', marginTop: 8 },

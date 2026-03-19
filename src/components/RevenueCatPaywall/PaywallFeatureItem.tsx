@@ -36,7 +36,7 @@ export function PaywallFeatureItem({ feature }: PaywallFeatureItemProps) {
           style={{
             color: colors.text.primary,
             fontFamily: fontFamilies.primary.text,
-            fontSize: 15,
+            fontSize: 14,
             fontWeight: fontWeights.semibold,
             lineHeight: 20,
           }}

@@ -14,7 +14,7 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 4,
     paddingHorizontal: 12,
-    paddingVertical: 6,
+    paddingVertical: 8,
   },
   actionText: {
     color: '#FFFFFF',
@@ -48,7 +48,7 @@ export const styles = StyleSheet.create({
   nameText: {
     color: '#FFFFFF',
     fontFamily: fontFamilies.primary.text,
-    fontSize: 15,
+    fontSize: 14,
     fontWeight: '700',
   },
   toast: {
@@ -59,7 +59,7 @@ export const styles = StyleSheet.create({
     justifyContent: 'space-between',
     maxWidth: 400,
     paddingHorizontal: 16,
-    paddingVertical: 14,
+    paddingVertical: 16,
     width: '100%',
   },
 });

@@ -5,10 +5,12 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react-native';
+import { useThemeColors } from '@/theme/ThemeContext';
 import { DELTA_BADGE_COLORS } from './constants';
 import type { DeltaBadgeProps } from './types';
 
 export function DeltaBadge({ delta }: DeltaBadgeProps) {
+  const { colors: themeColors } = useThemeColors();
   const isPositive = delta > 0;
   const isNegative = delta < 0;
 
@@ -20,33 +22,33 @@ export function DeltaBadge({ delta }: DeltaBadgeProps) {
       ? DELTA_BADGE_COLORS.negative
       : DELTA_BADGE_COLORS.neutral;
 
-  // Text colors using WCAG AA compliant shades (-700 variants)
   const textColor = isPositive
-    ? 'text-emerald-700'
+    ? themeColors.status.successText
     : isNegative
-      ? 'text-red-700'
-      : 'text-stone-500';
+      ? themeColors.status.errorText
+      : themeColors.text.secondary;
 
   const bgColor = isPositive
-    ? 'bg-emerald-50'
+    ? themeColors.status.successLight
     : isNegative
-      ? 'bg-red-50'
-      : 'bg-stone-100';
-
-  const accessibilityText = isPositive
-    ? `Up ${Math.abs(delta)}% vs last month`
-    : isNegative
-      ? `Down ${Math.abs(delta)}% vs last month`
-      : 'No change vs last month';
+      ? themeColors.status.errorLight
+      : themeColors.background;
 
   return (
     <View
       accessible
-      accessibilityLabel={accessibilityText}
-      className={`mt-1.5 flex-row items-center gap-0.5 rounded-full px-2 py-0.5 ${bgColor}`}
+      accessibilityLabel={
+        isPositive
+          ? `Up ${Math.abs(delta)}% vs last month`
+          : isNegative
+            ? `Down ${Math.abs(delta)}% vs last month`
+            : 'No change vs last month'
+      }
+      className='mt-1.5 flex-row items-center gap-0.5 rounded-full px-2 py-0.5'
+      style={{ backgroundColor: bgColor }}
     >
       <Icon color={iconColor} size={10} />
-      <Text className={`text-[10px] font-semibold ${textColor}`}>
+      <Text className='text-[10px] font-semibold' style={{ color: textColor }}>
         {isPositive ? '+' : ''}
         {delta.toFixed(1)}%
       </Text>

@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Target } from 'lucide-react-native';
+import { useThemeColors } from '@/theme/ThemeContext';
 
 interface WOOPReminderProps {
   obstacle: string;
@@ -12,6 +13,8 @@ interface WOOPReminderProps {
  * WOOPReminder - IF-THEN implementation intention
  */
 export function WOOPReminder({ obstacle, plan }: WOOPReminderProps) {
+  const { colors: themeColors } = useThemeColors();
+
   return (
     <View className='rounded-2xl p-4'>
       <LinearGradient
@@ -21,15 +24,15 @@ export function WOOPReminder({ obstacle, plan }: WOOPReminderProps) {
         start={{ x: 0, y: 0 }}
       />
       <View className='mb-2 flex-row items-center gap-2'>
-        <View className='h-8 w-8 items-center justify-center rounded-lg bg-amber-100'>
-          <Target className='text-amber-600' size={16} />
+        <View className='h-8 w-8 items-center justify-center rounded-lg' style={{ backgroundColor: themeColors.status.warningLight }}>
+          <Target color={themeColors.status.warning} size={16} />
         </View>
-        <Text className='font-semibold text-stone-800'>Your Plan</Text>
+        <Text className='font-semibold' style={{ color: themeColors.text.primary }}>Your Plan</Text>
       </View>
-      <Text className='text-sm leading-5 text-stone-700'>
-        <Text className='font-medium text-amber-700'>If </Text>
+      <Text className='text-sm leading-5' style={{ color: themeColors.text.primary }}>
+        <Text className='font-medium' style={{ color: themeColors.status.warningText }}>If </Text>
         {obstacle}
-        <Text className='font-medium text-emerald-700'> → then </Text>
+        <Text className='font-medium' style={{ color: themeColors.status.successText }}> → then </Text>
         {plan}
       </Text>
     </View>

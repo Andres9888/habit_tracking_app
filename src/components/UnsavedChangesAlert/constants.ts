@@ -1,19 +1,22 @@
 export const VARIANT_STYLES = {
   amber: {
-    discardBg: 'bg-amber-500',
+    discardBg: '',
     discardText: 'text-white',
-    iconBg: 'bg-amber-100',
+    iconBg: '',
     iconColor: '#d97706',
-    previewBg: 'bg-amber-50',
-    previewBorder: 'border-amber-200',
+    previewBg: '',
+    previewBorder: '',
+    useTheme: true,
   },
   rose: {
-    discardBg: 'bg-rose-500',
+    discardBg: '',
     discardText: 'text-white',
-    iconBg: 'bg-rose-100',
+    iconBg: '',
     iconColor: '#e11d48',
-    previewBg: 'bg-rose-50',
-    previewBorder: 'border-rose-200',
+    previewBg: '',
+    previewBorder: '',
+    useTheme: false,
+    useErrorTheme: true,
   },
 } as const;
 

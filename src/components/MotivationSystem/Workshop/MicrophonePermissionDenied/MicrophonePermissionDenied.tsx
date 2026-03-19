@@ -9,6 +9,7 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import { MicOff, AlertCircle } from 'lucide-react-native';
 import { clsx } from 'clsx';
+import { useThemeColors } from '@/theme/ThemeContext';
 import { PermissionActionButtons } from './PermissionActionButtons';
 import type { MicrophonePermissionDeniedProps } from './types';
 
@@ -28,6 +29,7 @@ export function MicrophonePermissionDenied({
   compact = false,
   errorMessage,
 }: MicrophonePermissionDeniedProps) {
+  const { colors } = useThemeColors();
   const message =
     errorMessage || (canAskAgain ? MESSAGES.canAskAgain : MESSAGES.permanent);
 
@@ -36,40 +38,44 @@ export function MicrophonePermissionDenied({
       accessibilityLabel='Microphone permission required'
       accessibilityRole='alert'
       className={clsx(
-        'items-center rounded-2xl bg-rose-50',
+        'items-center rounded-2xl',
         compact ? 'p-4' : 'p-6'
       )}
+      style={{ backgroundColor: colors.status.errorLight }}
     >
       <View
         className={clsx(
-          'items-center justify-center rounded-full bg-rose-100',
+          'items-center justify-center rounded-full',
           compact ? 'mb-3 h-12 w-12' : 'mb-4 h-16 w-16'
         )}
+        style={{ backgroundColor: colors.status.errorLight }}
       >
-        <MicOff className='text-rose-500' size={compact ? 24 : 32} />
+        <MicOff color={colors.status.error} size={compact ? 24 : 32} />
       </View>
 
       <Text
         className={clsx(
-          'mb-2 text-center font-semibold text-rose-700',
+          'mb-2 text-center font-semibold',
           compact ? 'text-base' : 'text-lg'
         )}
+        style={{ color: colors.status.errorText }}
       >
         Microphone Access Required
       </Text>
 
       <Text
         className={clsx(
-          'mb-4 text-center text-rose-600',
+          'mb-4 text-center',
           compact ? 'text-sm' : 'text-base'
         )}
+        style={{ color: colors.status.error }}
       >
         {message}
       </Text>
 
-      {compact ? null : <View className='mb-4 flex-row items-start gap-2 rounded-lg bg-rose-100/50 p-3'>
-          <AlertCircle className='mt-0.5 text-rose-500' size={16} />
-          <Text className='flex-1 text-sm text-rose-600'>
+      {compact ? null : <View className='mb-4 flex-row items-start gap-2 rounded-lg p-3' style={{ backgroundColor: colors.status.errorLight }}>
+          <AlertCircle className='mt-0.5' color={colors.status.error} size={16} />
+          <Text className='flex-1 text-sm' style={{ color: colors.status.error }}>
             {MESSAGES.science}
           </Text>
         </View>}

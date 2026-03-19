@@ -4,17 +4,18 @@
  * Individual day cell in the weekly summary strip.
  */
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import { View, Text, Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
 import type { WeekDayData, DayVisualState } from '../WeeklySummaryStripTypes';
 import {
   DAY_ABBREVIATIONS,
   DAY_NAMES,
-  DAY_STATE_CONFIGS,
+  getDayStateConfigs,
 } from '../WeeklySummaryStripTypes';
 import { styles } from './WeeklySummaryStripStyles';
 import { usePulseAnimation } from './usePulseAnimation';
+import { useThemeColors } from '@/theme/ThemeContext';
 
 interface DayCellProps {
   day: WeekDayData;
@@ -31,7 +32,12 @@ export const DayCell = React.memo(function DayCell({
   onPress,
   reduceMotion,
 }: DayCellProps) {
-  const config = DAY_STATE_CONFIGS[visualState];
+  const { colors } = useThemeColors();
+  const dayStateConfigs = useMemo(
+    () => getDayStateConfigs({ success: colors.status.success, successText: colors.status.successText }),
+    [colors.status.success, colors.status.successText]
+  );
+  const config = dayStateConfigs[visualState];
   const { pulseAnimatedStyle } = usePulseAnimation({
     reduceMotion,
     visualState,

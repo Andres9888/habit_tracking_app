@@ -8,6 +8,7 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import { CompletionCheckmark } from '../../../animations';
 import { useVoiceNotesSection } from './VoiceNotesSection.hooks';
 import {
@@ -21,6 +22,7 @@ export function VoiceNotesSection(props: VoiceNotesSectionProps) {
     voiceNotes, voiceNoteCount, isPremium, onViewAllNotes, onPlayStart, onPlayFinish,
     onSaveRecording, onPremiumRequired, shouldAnimate = false, reduceMotion = false, sectionIndex = 0,
   } = props;
+  const { colors } = useThemeColors();
   const hasVoiceNotes = voiceNoteCount > 0;
   const hook = useVoiceNotesSection({ isPremium, onPremiumRequired, onSaveRecording, voiceNoteCount });
   const { status, isRecording, isPaused, formattedDuration, isMaxDurationReached, isApproachingMaxDuration } = hook;
@@ -39,12 +41,12 @@ export function VoiceNotesSection(props: VoiceNotesSectionProps) {
         onPress={handleSectionPress}
       >
         <VoiceNotesSectionHeader hasVoiceNotes={hasVoiceNotes} isPremium={isPremium} isRecording={isRecording} />
-        {!isRecording && !isPaused && !hasVoiceNotes ? <Text className='text-sm text-stone-500'>Record your motivation for powerful recall</Text> : null}
+        {!isRecording && !isPaused && !hasVoiceNotes ? <Text className='text-sm' style={{ color: colors.text.secondary }}>Record your motivation for powerful recall</Text> : null}
         {(isRecording || isPaused) ? <View className='mt-2'>
             <WaveformVisualization isPaused={isPaused} isRecording={isRecording} meteringLevel={status.meteringLevel} reduceMotion={reduceMotion} />
           </View> : null}
         <CompletionCheckmark isVisible={hasVoiceNotes} reduceMotion={reduceMotion} sectionIndex={sectionIndex} shouldAnimate={shouldAnimate} />
-        {showRecordingUI ? <View className='mt-4 border-t border-stone-100 pt-4'>
+        {showRecordingUI ? <View className='mt-4 border-t pt-4' style={{ borderColor: colors.border }}>
             <RecordingControls
               canAskAgain={status.canAskAgain} errorMessage={status.errorMessage} formattedDuration={formattedDuration}
               isApproachingMaxDuration={isApproachingMaxDuration} isMaxDurationReached={isMaxDurationReached} isPaused={isPaused}

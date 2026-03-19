@@ -70,11 +70,11 @@ const summaryStyles = StyleSheet.create({
   item: {
     alignItems: 'center',
     flexDirection: 'row',
-    gap: 5,
+    gap: 4,
   },
   rateText: {
     fontFamily: fontFamilies.primary.text,
-    fontSize: 12,
+    fontSize: 13,
     fontWeight: '700',
     minWidth: 32,
     textAlign: 'right',
@@ -83,17 +83,17 @@ const summaryStyles = StyleSheet.create({
     alignItems: 'center',
     borderTopWidth: 1,
     flexDirection: 'row',
-    gap: 10,
+    gap: 8,
     justifyContent: 'center',
     marginTop: 10,
     paddingTop: 10,
   },
   separator: {
-    fontSize: 12,
+    fontSize: 13,
   },
   text: {
     fontFamily: fontFamilies.primary.text,
-    fontSize: 12,
+    fontSize: 13,
     fontWeight: '500',
   },
 });

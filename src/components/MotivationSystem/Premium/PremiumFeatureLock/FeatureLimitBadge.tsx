@@ -6,6 +6,7 @@
 import React, { useCallback } from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { ChevronRight } from 'lucide-react-native';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import { useHapticFeedback } from '../../../../hooks/useHapticFeedback';
 
 interface FeatureLimitBadgeProps {
@@ -24,6 +25,7 @@ export function FeatureLimitBadge({
   onUpgrade,
   testID,
 }: FeatureLimitBadgeProps) {
+  const { colors } = useThemeColors();
   const { triggerLightImpact } = useHapticFeedback({});
   const isAtLimit = !isPremium && current >= limit;
 
@@ -46,14 +48,16 @@ export function FeatureLimitBadge({
       onPress={handlePress}
     >
       <View
-        className={`flex-row items-center gap-1 rounded-full px-2 py-0.5 ${isAtLimit ? 'bg-amber-100' : 'bg-stone-100'}`}
+        className='flex-row items-center gap-1 rounded-full px-2 py-0.5'
+        style={{ backgroundColor: isAtLimit ? colors.status.warningLight : colors.background }}
       >
         <Text
-          className={`text-xs font-medium ${isAtLimit ? 'text-amber-700' : 'text-stone-600'}`}
+          className='text-xs font-medium'
+          style={{ color: isAtLimit ? colors.status.warningText : colors.text.secondary }}
         >
           {current}/{limit} Free
         </Text>
-        {isAtLimit ? <ChevronRight className='text-amber-600' size={12} /> : null}
+        {isAtLimit ? <ChevronRight color={colors.status.warning} size={12} /> : null}
       </View>
     </Pressable>
   );

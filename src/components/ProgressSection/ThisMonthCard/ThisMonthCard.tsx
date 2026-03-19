@@ -16,6 +16,7 @@ import { View, Text, Pressable, AccessibilityInfo } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import { BarChart3, ChevronRight } from 'lucide-react-native';
+import { useThemeColors } from '@/theme/ThemeContext';
 
 import type { ThisMonthCardProps } from '../types';
 import { useDayStats } from './useDayStats';
@@ -30,6 +31,7 @@ export function ThisMonthCard({
   totalDays,
   onSeeAllPress,
 }: ThisMonthCardProps) {
+  const { colors: themeColors } = useThemeColors();
   const [reduceMotion, setReduceMotion] = useState(false);
   const { bestDay, worstDay, maxRate } = useDayStats(dayStats);
   const trendChange = thisMonthRate - lastMonthRate;
@@ -47,7 +49,8 @@ export function ThisMonthCard({
     <View
       accessible
       accessibilityLabel={`This month: ${completedDays} of ${totalDays} days completed, ${thisMonthRate}% success rate`}
-      className='overflow-hidden rounded-2xl shadow-sm shadow-stone-200/50'
+      className='overflow-hidden rounded-2xl shadow-sm'
+      style={{ shadowColor: themeColors.border }}
     >
       {/* Gradient Background */}
       <LinearGradient
@@ -56,16 +59,16 @@ export function ThisMonthCard({
         end={{ x: 1, y: 1 }}
         start={{ x: 0, y: 0 }}
       />
-      <View className='absolute inset-0 rounded-2xl border border-violet-500/20' />
+      <View className='absolute inset-0 rounded-2xl border' style={{ borderColor: themeColors.status.premiumLight }} />
 
       <View className='p-4'>
         {/* Header with See All */}
         <View className='mb-3 flex-row items-center justify-between'>
           <View className='flex-row items-center gap-2'>
-            <View className='h-7 w-7 items-center justify-center rounded-lg bg-violet-100'>
-              <BarChart3 className='text-violet-500' size={14} />
+            <View className='h-7 w-7 items-center justify-center rounded-lg' style={{ backgroundColor: themeColors.status.premiumLight }}>
+              <BarChart3 color={themeColors.status.premium} size={14} />
             </View>
-            <Text className='text-sm font-semibold text-stone-600'>
+            <Text className='text-sm font-semibold' style={{ color: themeColors.text.primary }}>
               This Month
             </Text>
           </View>
@@ -75,8 +78,8 @@ export function ThisMonthCard({
             className='flex-row items-center gap-0.5 active:opacity-70'
             onPress={onSeeAllPress}
           >
-            <Text className='text-xs font-medium text-violet-600'>See All</Text>
-            <ChevronRight className='text-violet-400' size={14} />
+            <Text className='text-xs font-medium' style={{ color: themeColors.status.premiumText }}>See All</Text>
+            <ChevronRight color={themeColors.status.premium} size={14} />
           </Pressable>
         </View>
 

@@ -4,8 +4,8 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
-import { clsx } from 'clsx';
 
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import type { VizType } from './types';
 
 interface FeelItPromptProps {
@@ -13,20 +13,17 @@ interface FeelItPromptProps {
 }
 
 export function FeelItPrompt({ type }: FeelItPromptProps) {
+  const { colors } = useThemeColors();
   const isSuccess = type === 'success';
 
   return (
     <View
-      className={clsx(
-        'mt-4 rounded-xl p-3',
-        isSuccess ? 'bg-emerald-50' : 'bg-rose-50'
-      )}
+      className='mt-4 rounded-xl p-3'
+      style={{ backgroundColor: isSuccess ? colors.status.successLight : colors.status.errorLight }}
     >
       <Text
-        className={clsx(
-          'text-center text-xs font-medium italic',
-          isSuccess ? 'text-emerald-700' : 'text-rose-700'
-        )}
+        className='text-center text-xs font-medium italic'
+        style={{ color: isSuccess ? colors.status.successText : colors.status.errorText }}
       >
         {isSuccess
           ? '✨ Feel this success in your body now'

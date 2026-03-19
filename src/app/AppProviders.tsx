@@ -50,7 +50,7 @@ function AppStartupFallback() {
         Startup Error
       </Text>
       <Text
-        className='mb-6 text-center text-base text-stone-600'
+        className='mb-6 text-center text-base'
         style={{ color: palette.gray[600], textAlign: 'center', marginBottom: 24 }}
       >
         The app did not finish loading. Tap retry to reload.
@@ -119,7 +119,7 @@ function MissingConfigFallback() {
         Setup Required
       </Text>
       <Text
-        className='mb-6 text-center text-base text-stone-600'
+        className='mb-6 text-center text-base'
         style={{ color: palette.gray[600], textAlign: 'center', marginBottom: 24 }}
       >
         App config is incomplete. Set the missing environment variables and restart
@@ -127,7 +127,7 @@ function MissingConfigFallback() {
       </Text>
       {missingKeys.map((key) => (
         <Text
-          className='mb-2 rounded-lg bg-stone-100 px-3 py-2 text-sm font-medium'
+          className='mb-2 rounded-lg px-3 py-2 text-sm font-medium'
           style={{ marginBottom: 8, backgroundColor: palette.gray[50], color: palette.gray[700], padding: 8, borderRadius: 8 }}
           key={key}
         >

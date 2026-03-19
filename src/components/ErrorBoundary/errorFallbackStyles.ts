@@ -29,7 +29,7 @@ export const useStyles = () => {
       maxWidth: 300,
       textAlign: 'center',
     },
-    emoji: { fontSize: 48, marginBottom: 16 },
+    emoji: { fontSize: 34, marginBottom: 16 },
     errorMessage: {
       color: isDark ? '#FCA5A5' : themeColors.error, // TODO: add dark-mode error text token (#FCA5A5)
       fontFamily: 'monospace',

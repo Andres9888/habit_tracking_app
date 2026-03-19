@@ -32,7 +32,7 @@ export function PaywallRestoreLink({ onRestore, disabled }: PaywallRestoreLinkPr
         style={{
           color: colors.text.tertiary,
           fontFamily: fontFamilies.primary.text,
-          fontSize: 11,
+          fontSize: 10,
           lineHeight: 16,
           marginTop: spacing.sm,
           paddingHorizontal: spacing.xl,

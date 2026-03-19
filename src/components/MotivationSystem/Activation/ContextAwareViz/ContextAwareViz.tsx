@@ -19,6 +19,7 @@ import { useVizData } from './useVizData';
 import { useIconAnimation } from './useIconAnimation';
 import { VizHeader } from './VizHeader';
 import { VisualizationContent } from './VisualizationContent';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 
 export function ContextAwareViz({
   motivationLevel,
@@ -28,6 +29,7 @@ export function ContextAwareViz({
   compact = false,
   forceType,
 }: ContextAwareVizProps) {
+  const { colors } = useThemeColors();
   const { vizType, isSuccess, body, mind, emotion } = useVizData({
     forceType,
     motivationLevel,
@@ -39,11 +41,8 @@ export function ContextAwareViz({
   if (compact) {
     return (
       <View
-        className={clsx(
-          'rounded-2xl p-4',
-          isSuccess ? 'bg-emerald-50' : 'bg-rose-50',
-          className
-        )}
+        className={clsx('rounded-2xl p-4', className)}
+        style={{ backgroundColor: isSuccess ? colors.status.successLight : colors.status.errorLight }}
       >
         <VisualizationContent
           compact
@@ -59,13 +58,11 @@ export function ContextAwareViz({
 
   return (
     <View
-      className={clsx(
-        'rounded-2xl border-l-4 p-4',
-        isSuccess
-          ? 'border-l-emerald-400 bg-emerald-50/50'
-          : 'border-l-rose-400 bg-rose-50/50',
-        className
-      )}
+      className={clsx('rounded-2xl border-l-4 p-4', className)}
+      style={{
+        borderLeftColor: isSuccess ? colors.status.success : colors.status.error,
+        backgroundColor: isSuccess ? colors.status.successLight : colors.status.errorLight,
+      }}
     >
       <VizHeader iconAnimatedStyle={iconAnimatedStyle} vizType={vizType} />
 
@@ -78,8 +75,8 @@ export function ContextAwareViz({
         type={vizType}
       />
 
-      {!isSuccess && body ? <View className='mt-3 rounded-lg bg-rose-100/50 px-3 py-2'>
-          <Text className='text-center text-xs text-rose-600'>
+      {!isSuccess && body ? <View className='mt-3 rounded-lg px-3 py-2' style={{ backgroundColor: colors.status.errorLight }}>
+          <Text className='text-center text-xs' style={{ color: colors.status.error }}>
             💡 Loss aversion: This feeling moves you 2x more effectively
           </Text>
         </View> : null}

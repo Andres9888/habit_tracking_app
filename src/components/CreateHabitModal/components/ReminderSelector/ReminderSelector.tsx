@@ -12,6 +12,7 @@
 
 import { memo, useCallback } from 'react';
 import { AccessibilityInfo, Text, View } from 'react-native';
+import { useThemeColors } from '@/theme/ThemeContext';
 import useHapticFeedback from '../../../../hooks/useHapticFeedback';
 import { useReduceMotion } from '../../../../hooks/useReduceMotion';
 import STRINGS from '../../../../constants/strings';
@@ -25,6 +26,7 @@ function ReminderSelectorComponent({
 }: ReminderSelectorProps) {
   const { triggerSelection } = useHapticFeedback();
   const reduceMotion = useReduceMotion();
+  const { colors: themeColors } = useThemeColors();
 
   const handleSelectOption = useCallback(
     (option: ReminderOption) => {
@@ -48,7 +50,8 @@ function ReminderSelectorComponent({
     <View className='mb-6 rounded-2xl bg-white p-4' testID='reminder-selector'>
       <Text
         accessibilityRole='text'
-        className='mb-3 text-[13px] font-semibold uppercase text-stone-500'
+        className='mb-3 text-[13px] font-semibold uppercase'
+        style={{ color: themeColors.text.secondary }}
         style={{ letterSpacing: 0.5 }}
       >
         {STRINGS.CREATE_HABIT.remindersLabel}

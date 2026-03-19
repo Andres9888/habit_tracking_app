@@ -46,7 +46,7 @@ export function PaywallPlanCard({ type, pkg, isSelected, savingsPercent, onSelec
             style={{
               color: colors.text.inverse,
               fontFamily: fontFamilies.primary.text,
-              fontSize: 11,
+              fontSize: 10,
               fontWeight: fontWeights.bold,
             }}
           >

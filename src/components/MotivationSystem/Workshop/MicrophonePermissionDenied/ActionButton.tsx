@@ -11,6 +11,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { clsx } from 'clsx';
 import { SPRING_BUTTON } from '../../../animations';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import type { ActionButtonProps } from './types';
 import { triggerHaptic } from '@/utils/haptics';
 
@@ -22,6 +23,7 @@ export function ActionButton({
   accessibilityLabel,
   accessibilityHint,
 }: ActionButtonProps) {
+  const { colors } = useThemeColors();
   const scale = useSharedValue(1);
 
   const animatedStyle = useAnimatedStyle(() => ({
@@ -49,23 +51,22 @@ export function ActionButton({
         accessibilityHint={accessibilityHint}
         accessibilityLabel={accessibilityLabel}
         accessibilityRole='button'
-        className={clsx(
-          'flex-row items-center justify-center gap-2 rounded-xl px-4 py-3',
-          isPrimary ? 'bg-teal-500' : 'bg-stone-100'
-        )}
+        className='flex-row items-center justify-center gap-2 rounded-xl px-4 py-3'
+        style={{ backgroundColor: isPrimary ? colors.status.success : colors.background }}
         onPress={handlePress}
         onPressIn={handlePressIn}
         onPressOut={handlePressOut}
       >
         <Icon
-          className={isPrimary ? 'text-white' : 'text-stone-600'}
+          color={isPrimary ? '#ffffff' : colors.text.secondary}
           size={18}
         />
         <Text
           className={clsx(
             'font-semibold',
-            isPrimary ? 'text-white' : 'text-stone-700'
+            isPrimary ? 'text-white' : ''
           )}
+          style={isPrimary ? undefined : { color: colors.text.primary }}
         >
           {label}
         </Text>

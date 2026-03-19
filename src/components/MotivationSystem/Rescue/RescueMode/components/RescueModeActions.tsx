@@ -2,6 +2,7 @@ import React from 'react';
 import { View } from 'react-native';
 import { Play, Clock } from 'lucide-react-native';
 import type { EdgeInsets } from 'react-native-safe-area-context';
+import { useThemeColors } from '../../../../../theme/ThemeContext';
 
 import { AnimatedContent } from './AnimatedContent';
 import { JustTwoMinButton } from './JustTwoMinButton';
@@ -36,6 +37,7 @@ export function RescueModeActions({
   onStartFull,
   onSkipToday,
 }: RescueModeActionsProps) {
+  const { colors } = useThemeColors();
   const baseIndex =
     (hasStreak ? 1 : 0) +
     (hasWhy ? 1 : 0) +
@@ -45,7 +47,8 @@ export function RescueModeActions({
 
   return (
     <View
-      className='border-t border-rose-100 bg-white px-4 pt-4'
+      className='border-t px-4 pt-4'
+      style={{ borderTopColor: colors.status.errorLight, backgroundColor: colors.card }}
       style={{ paddingBottom: Math.max(insets.bottom, 16) }}
     >
       {/* Just 2 Min - Primary CTA */}
@@ -65,13 +68,13 @@ export function RescueModeActions({
       >
         <View className='mt-3 flex-row gap-3'>
           <SecondaryAction
-            icon={<Play className='text-emerald-600' size={16} />}
+            icon={<Play color={colors.status.success} size={16} />}
             label='Full Habit'
             variant='default'
             onPress={onStartFull}
           />
           <SecondaryAction
-            icon={<Clock className='text-stone-400' size={16} />}
+            icon={<Clock color={colors.text.tertiary} size={16} />}
             label='Skip Today'
             variant='destructive'
             onPress={onSkipToday}

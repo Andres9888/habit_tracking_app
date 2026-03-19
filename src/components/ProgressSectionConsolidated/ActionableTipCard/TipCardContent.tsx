@@ -7,6 +7,7 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import { ChevronRight } from 'lucide-react-native';
+import { useThemeColors } from '@/theme/ThemeContext';
 
 import { COLORS } from './constants';
 
@@ -21,9 +22,12 @@ export function TipCardContent({
   subtitle,
   isInteractive,
 }: TipCardContentProps) {
+  const { colors: themeColors } = useThemeColors();
+
   return (
     <View
-      className='flex-row items-center gap-3 rounded-xl border border-violet-100 p-3'
+      className='flex-row items-center gap-3 rounded-xl border p-3'
+      style={{ borderColor: themeColors.status.premiumLight }}
       style={{ backgroundColor: COLORS.cardBackground }}
     >
       {/* Icon Container */}

@@ -87,7 +87,7 @@ export function SuccessIcon({
           zIndex: 10,
         }}
       >
-        <Text style={{ fontSize: 48 }}>{emoji}</Text>
+        <Text style={{ fontSize: 34 }}>{emoji}</Text>
       </View>
     </Animated.View>
   );

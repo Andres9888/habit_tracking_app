@@ -7,6 +7,7 @@ import { View, Text, Pressable } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { ChevronRight } from 'lucide-react-native';
 import Animated from 'react-native-reanimated';
+import { useThemeColors } from '@/theme/ThemeContext';
 import type { VariantConfig } from './PremiumPaywall.types';
 import type { PremiumPaywallHandlers } from './usePremiumPaywall';
 
@@ -25,13 +26,15 @@ export function BenefitsCTAFooter({
   onStartTrial,
   onRestore,
 }: BenefitsCTAFooterProps) {
+  const { colors: themeColors } = useThemeColors();
+
   return (
-    <View className='absolute bottom-0 left-0 right-0 border-t border-stone-200 bg-white px-4 pb-8 pt-4'>
+    <View className='absolute bottom-0 left-0 right-0 border-t px-4 pb-8 pt-4' style={{ borderColor: themeColors.border, backgroundColor: themeColors.card }}>
       <View className='mb-3 items-center'>
-        <Text className='text-2xl font-bold text-stone-800'>
+        <Text className='text-2xl font-bold' style={{ color: themeColors.text.primary }}>
           {handlers.priceLabel ?? '$6.99/month'}
         </Text>
-        <Text className='text-sm text-stone-500'>7-day free trial • Cancel anytime</Text>
+        <Text className='text-sm' style={{ color: themeColors.text.secondary }}>7-day free trial • Cancel anytime</Text>
       </View>
       <Pressable
         accessibilityHint='Opens subscription options'
@@ -56,11 +59,11 @@ export function BenefitsCTAFooter({
           </LinearGradient>
         </Animated.View>
       </Pressable>
-      {handlers.priceLabel ? <Text className='mt-2 text-center text-xs text-stone-500'>
+      {handlers.priceLabel ? <Text className='mt-2 text-center text-xs' style={{ color: themeColors.text.secondary }}>
           then {handlers.priceLabel} after trial
         </Text> : null}
       <Pressable className='mt-2 py-2' onPress={onRestore}>
-        <Text className='text-center text-xs text-violet-600'>
+        <Text className='text-center text-xs' style={{ color: themeColors.status.premiumText }}>
           Already premium? Restore purchases
         </Text>
       </Pressable>

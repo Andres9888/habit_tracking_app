@@ -8,6 +8,7 @@ import { View, Text, Pressable, ScrollView } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { Target, Save } from 'lucide-react-native';
+import { useThemeColors } from '../../../theme/ThemeContext';
 import type { SummaryStepProps } from '../types';
 import { VisualizationCards } from './VisualizationCards';
 import { triggerHaptic } from '@/utils/haptics';
@@ -19,6 +20,8 @@ export function SummaryStep({
   onSave,
   positiveVisualization,
 }: SummaryStepProps) {
+  const { colors } = useThemeColors();
+
   return (
     <Animated.View className='flex-1 gap-5' entering={FadeInDown.springify().damping(18)}>
       {/* Header */}
@@ -32,12 +35,12 @@ export function SummaryStep({
           />
           <Target className='text-white' size={32} />
         </View>
-        <Text className='text-xl font-bold text-stone-900'>
+        <Text className='text-xl font-bold' style={{ color: colors.text.primary }}>
           Your Visualization
         </Text>
-        <Text className='px-4 text-center text-sm text-stone-500'>
+        <Text className='px-4 text-center text-sm' style={{ color: colors.text.secondary }}>
           Review your mental contrasting exercise for{' '}
-          <Text className='font-semibold text-violet-600'>{habitName}</Text>
+          <Text className='font-semibold' style={{ color: colors.status.premiumText }}>{habitName}</Text>
         </Text>
       </View>
 
@@ -54,13 +57,14 @@ export function SummaryStep({
         <Pressable
           accessibilityLabel='Go back to edit'
           accessibilityRole='button'
-          className='flex-1 items-center rounded-xl border border-stone-200 bg-white py-3.5 active:bg-stone-50'
+          className='flex-1 items-center rounded-xl border py-3.5'
+          style={{ borderColor: colors.border, backgroundColor: colors.card }}
           onPress={() => {
             triggerHaptic('tap');
             onBack();
           }}
         >
-          <Text className='text-sm font-medium text-stone-600'>Edit</Text>
+          <Text className='text-sm font-medium' style={{ color: colors.text.secondary }}>Edit</Text>
         </Pressable>
         <Pressable
           accessibilityLabel='Save visualization'

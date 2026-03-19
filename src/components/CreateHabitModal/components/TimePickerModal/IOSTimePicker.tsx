@@ -87,7 +87,8 @@ export function IOSTimePicker({
             <Pressable
               accessibilityLabel={`Set time to ${selectedTime.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}`}
               accessibilityRole='button'
-              className='h-12 flex-1 items-center justify-center rounded-xl bg-emerald-500 active:bg-emerald-600'
+              className='h-12 flex-1 items-center justify-center rounded-xl active:opacity-90'
+              style={{ backgroundColor: colors.status.success }}
               onPress={onConfirm}
             >
               <Text className='text-base font-semibold text-white'>

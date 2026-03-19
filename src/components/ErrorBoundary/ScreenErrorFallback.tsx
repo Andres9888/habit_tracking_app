@@ -63,7 +63,7 @@ export function ScreenErrorFallback({
       borderRadius: 12,
       marginTop: 24,
       paddingHorizontal: 32,
-      paddingVertical: 14,
+      paddingVertical: 16,
       shadowColor: colors.primary[500],
       shadowOffset: { height: 4, width: 0 },
       shadowOpacity: 0.2,
@@ -89,7 +89,7 @@ export function ScreenErrorFallback({
     subtitle: {
       color: colors.text.secondary,
       fontFamily: fontFamilies.primary.text,
-      fontSize: 15,
+      fontSize: 14,
       lineHeight: 22,
       marginTop: 8,
       textAlign: 'center',

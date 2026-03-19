@@ -12,6 +12,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { Play, Pause, RotateCcw } from 'lucide-react-native';
 import { SPRING_BUTTON } from '../../../animations';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import type { PlayPauseButtonProps } from './types';
 import { triggerHaptic } from '@/utils/haptics';
 
@@ -22,6 +23,7 @@ export function PlayPauseButton({
   onPress,
   reduceMotion = false,
 }: PlayPauseButtonProps) {
+  const { colors } = useThemeColors();
   const scale = useSharedValue(1);
 
   const buttonStyle = useAnimatedStyle(() => ({
@@ -47,8 +49,8 @@ export function PlayPauseButton({
 
   if (isLoading) {
     return (
-      <View className='h-11 w-11 items-center justify-center rounded-full bg-teal-100'>
-        <ActivityIndicator color='#14b8a6' size='small' />
+      <View className='h-11 w-11 items-center justify-center rounded-full' style={{ backgroundColor: colors.status.successLight }}>
+        <ActivityIndicator color={colors.status.success} size='small' />
       </View>
     );
   }
@@ -60,7 +62,8 @@ export function PlayPauseButton({
           isFinished ? 'Replay' : isPlaying ? 'Pause' : 'Play'
         }
         accessibilityRole='button'
-        className='h-11 w-11 items-center justify-center rounded-full bg-teal-500'
+        className='h-11 w-11 items-center justify-center rounded-full'
+        style={{ backgroundColor: colors.status.success }}
         onPress={handlePress}
         onPressIn={handlePressIn}
         onPressOut={handlePressOut}

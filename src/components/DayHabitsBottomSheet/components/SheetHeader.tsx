@@ -1,5 +1,6 @@
 import { Pressable, Text, View } from 'react-native';
 import { X } from 'lucide-react-native';
+import { useThemeColors } from '@/theme/ThemeContext';
 
 interface SheetHeaderProps {
   displayDate: string;
@@ -20,14 +21,16 @@ export function SheetHeader({
   totalCount,
   onDonePress,
 }: SheetHeaderProps) {
+  const { colors } = useThemeColors();
+
   return (
     <View className='flex-row items-center justify-between px-5 pb-4'>
       <View className='flex-1'>
-        <Text className='text-[17px] font-bold text-stone-900'>
+        <Text className='text-[17px] font-bold' style={{ color: colors.text.primary }}>
           {displayDate}
         </Text>
-        {isToday ? <Text className='text-[13px] font-medium text-amber-600'>Today</Text> : null}
-        {totalCount > 0 ? <Text className='mt-0.5 text-[13px] font-normal text-stone-500'>
+        {isToday ? <Text className='text-[13px] font-medium' style={{ color: colors.status.warning }}>Today</Text> : null}
+        {totalCount > 0 ? <Text className='mt-0.5 text-[13px] font-normal' style={{ color: colors.text.secondary }}>
             {completedCount} of {totalCount} completed
           </Text> : null}
       </View>
@@ -35,10 +38,11 @@ export function SheetHeader({
         accessibilityHint='Close habit list'
         accessibilityLabel='Close'
         accessibilityRole='button'
-        className='h-10 w-10 items-center justify-center rounded-full bg-stone-100 active:bg-stone-200'
+        className='h-10 w-10 items-center justify-center rounded-full'
+        style={{ backgroundColor: colors.background }}
         onPress={onDonePress}
       >
-        <X className='text-stone-600' size={24} />
+        <X color={colors.text.secondary} size={24} />
       </Pressable>
     </View>
   );

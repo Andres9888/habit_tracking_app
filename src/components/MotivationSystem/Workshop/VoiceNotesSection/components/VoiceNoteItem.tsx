@@ -9,6 +9,7 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 import { SPRING_BUTTON } from '../../../../animations';
+import { useThemeColors } from '../../../../../theme/ThemeContext';
 import { VoiceNotePlaybackUI } from '../../VoiceNotePlaybackUI';
 import { VoiceNoteItemHeader } from './VoiceNoteItemHeader';
 import type { VoiceNoteSummary } from '../VoiceNotesSection.types';
@@ -27,6 +28,7 @@ export function VoiceNoteItem({
   onPlayStart,
   onPlayFinish,
 }: VoiceNoteItemProps) {
+  const { colors } = useThemeColors();
   const [isExpanded, setIsExpanded] = useState(false);
   const expandedHeight = useSharedValue(0);
   const rotateIcon = useSharedValue(0);
@@ -56,7 +58,7 @@ export function VoiceNoteItem({
   }));
 
   return (
-    <View className='rounded-lg bg-stone-50'>
+    <View className='rounded-lg' style={{ backgroundColor: colors.background }}>
       <VoiceNoteItemHeader
         hasPlayback={hasPlayback}
         iconStyle={iconStyle}
@@ -65,7 +67,7 @@ export function VoiceNoteItem({
         onPress={handleToggleExpand}
       />
       {note.audioUrl && isExpanded ? <Animated.View style={expandedStyle}>
-          <View className='border-t border-stone-100 p-3'>
+          <View className='border-t p-3' style={{ borderColor: colors.border }}>
             <VoiceNotePlaybackUI
               compact
               audioUri={note.audioUrl}

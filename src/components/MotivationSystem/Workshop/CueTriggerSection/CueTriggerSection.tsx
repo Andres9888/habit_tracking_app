@@ -10,6 +10,7 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import { Plus, Pencil } from 'lucide-react-native';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import { CompletionCheckmark } from '../../../animations';
 import { SectionCard } from './SectionCard';
 import { AnimatedSection } from './AnimatedSection';
@@ -24,6 +25,7 @@ export function CueTriggerSection({
   reduceMotion = false,
   sectionIndex = 2,
 }: CueTriggerSectionProps) {
+  const { colors } = useThemeColors();
   const hasCue = hasCueData(cue);
 
   return (
@@ -46,7 +48,7 @@ export function CueTriggerSection({
             </Text>
           </View>
           {hasCue ? (
-            <Pencil className='text-stone-400' size={14} />
+            <Pencil color={colors.text.tertiary} size={14} />
           ) : (
             <View className='flex-row items-center gap-1'>
               <Plus className='text-sky-600' size={12} />
@@ -63,7 +65,7 @@ export function CueTriggerSection({
             {cue?.afterBehavior ? <CueField emoji='⚡' label='After' value={cue.afterBehavior} /> : null}
           </View>
         ) : (
-          <Text className='text-sm text-stone-500'>
+          <Text className='text-sm' style={{ color: colors.text.secondary }}>
             When, where, and after what
           </Text>
         )}

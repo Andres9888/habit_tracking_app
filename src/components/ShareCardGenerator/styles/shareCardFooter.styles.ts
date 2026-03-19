@@ -30,8 +30,8 @@ export const shareCardFooterStyles = StyleSheet.create({
     borderColor: 'rgba(255, 255, 255, 0.3)',
     borderRadius: 16,
     borderWidth: 1,
-    paddingHorizontal: 20,
-    paddingVertical: 10,
+    paddingHorizontal: 24,
+    paddingVertical: 12,
   },
   scienceBadgeText: {
     color: colors.text.inverse,

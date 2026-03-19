@@ -96,8 +96,8 @@ export const STAT_CARD_COLORS: Record<
   StatItemConfig['id'],
   { bg: string; bgHex: string }
 > = {
-  bestDay: { bg: 'bg-emerald-50', bgHex: '#ecfdf5' },
-  focusDay: { bg: 'bg-amber-50', bgHex: '#fffbeb' },
-  monthly: { bg: 'bg-violet-50', bgHex: '#f5f3ff' },
-  streak: { bg: 'bg-orange-50', bgHex: '#fff7ed' },
+  bestDay: { bg: '', bgHex: '#ecfdf5' },
+  focusDay: { bg: '', bgHex: '#fffbeb' },
+  monthly: { bg: '', bgHex: '#f5f3ff' },
+  streak: { bg: '', bgHex: '#fff7ed' },
 };

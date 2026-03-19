@@ -42,7 +42,7 @@ export function SettingsSection({
         >
           {title}
         </Text>
-        {subtitle ? <Text className='ml-2 rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-semibold uppercase text-amber-800 dark:bg-amber-900 dark:text-amber-200'>
+        {subtitle ? <Text className='ml-2 rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase' style={{ backgroundColor: themeColors.status.warningLight, color: themeColors.status.warningText }}>
             {subtitle}
           </Text> : null}
       </View>

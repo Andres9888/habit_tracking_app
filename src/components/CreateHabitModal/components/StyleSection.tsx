@@ -4,6 +4,7 @@
 
 import { useCallback } from 'react';
 import { Animated, Text, View, Keyboard } from 'react-native';
+import { useThemeColors } from '@/theme/ThemeContext';
 import { AnimatedColorButton } from './AnimatedColorButton';
 import { borderRadius } from '../../../theme/spacing';
 
@@ -20,6 +21,8 @@ export const StyleSection = ({
   selectedColor,
   disabled = false,
 }: StyleSectionProps) => {
+  const { colors: themeColors } = useThemeColors();
+
   const handleColorSelect = useCallback(
     (color: string) => {
       if (disabled) return;
@@ -40,7 +43,7 @@ export const StyleSection = ({
       pointerEvents={disabled ? 'none' : 'auto'}
       style={{ opacity: disabled ? 0.4 : 1 }}
     >
-      <Text className='mb-3 text-sm font-bold text-stone-800'>Color</Text>
+      <Text className='mb-3 text-sm font-bold' style={{ color: themeColors.text.primary }}>Color</Text>
       <View>
         {colorRows.map((row, rowIndex) => (
           <View

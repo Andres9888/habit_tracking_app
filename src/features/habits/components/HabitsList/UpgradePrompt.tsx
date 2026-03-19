@@ -33,7 +33,8 @@ export function UpgradePrompt({
 
   return (
     <Animated.View
-      className='absolute inset-0 z-20 items-center justify-end bg-stone-900/50'
+      className='absolute inset-0 z-20 items-center justify-end'
+      style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
       entering={FadeInDown.duration(ANIMATION_DURATION.medium).springify().damping(ANIMATION_VALUES.springDamping)}
     >
       <Pressable
@@ -60,15 +61,21 @@ export function UpgradePrompt({
           <View className='items-center pb-2'>
             <Text className='text-[32px]'>🚀</Text>
           </View>
-          <Text className='text-center text-[24px] font-bold tracking-tight text-stone-900'>
+          <Text
+            className='text-center text-[24px] font-bold tracking-tight'
+            style={{ color: colors.text.primary }}
+          >
             Ready to build more habits?
           </Text>
-          <Text className='text-center text-[15px] font-normal leading-[20px] text-stone-500'>
+          <Text
+            className='text-center text-[15px] font-normal leading-[20px]'
+            style={{ color: colors.text.secondary }}
+          >
             Track unlimited habits across all areas of your life. Premium
-            members build stronger routines and stay consistent 2× longer.
+            members build stronger routines and stay consistent 2x longer.
           </Text>
-          <View className='items-center rounded-2xl bg-violet-50 px-4 py-3'>
-            <Text className='text-center text-[13px] font-semibold text-violet-700'>
+          <View className='items-center rounded-2xl px-4 py-3' style={{ backgroundColor: colors.status.premiumLight }}>
+            <Text className='text-center text-[13px] font-semibold' style={{ color: colors.status.premiumText }}>
               $0 for 7 days · Cancel anytime
             </Text>
           </View>
@@ -96,13 +103,18 @@ export function UpgradePrompt({
             accessibilityHint='Dismiss this upgrade prompt'
             accessibilityLabel='Dismiss upgrade prompt'
             accessibilityRole='button'
-            className='items-center rounded-full border-2 border-stone-200 bg-white/80 px-5 py-3'
+            className='items-center rounded-full border-2 px-5 py-3'
             style={({ pressed }) => ({
+              borderColor: colors.border,
+              backgroundColor: `${colors.card}CC`,
               opacity: pressed ? OPACITY.high : OPACITY.full,
             })}
             onPress={onClose}
           >
-            <Text className='text-[15px] font-normal text-stone-600'>
+            <Text
+              className='text-[15px] font-normal'
+              style={{ color: colors.text.secondary }}
+            >
               Maybe later
             </Text>
           </Pressable>

@@ -16,7 +16,7 @@ export function CompletionRateDisplay({
     <>
       <View className='mb-4 flex-row items-end gap-2'>
         <Text
-          className='text-[48px] font-extrabold leading-[52px]'
+          className='text-[34px] font-bold leading-[52px]'
           style={{ color: colors.text }}
         >
           {completionRate}%

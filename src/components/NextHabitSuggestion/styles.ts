@@ -10,7 +10,7 @@ export const styles = StyleSheet.create({
     borderRadius: borderRadius.medium,
     flexDirection: 'row',
     gap: 4,
-    paddingHorizontal: 10,
+    paddingHorizontal: 12,
     paddingVertical: 4,
   },
   badgeText: {

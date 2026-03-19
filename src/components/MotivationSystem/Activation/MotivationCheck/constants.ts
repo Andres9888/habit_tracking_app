@@ -54,18 +54,24 @@ export function shouldShowFailureViz(
   return option?.showsFailure ?? false;
 }
 
-/** Dynamic accent classes for each color */
+/** Dynamic accent classes for each color (non-amber colors use NativeWind) */
 export const ACCENT_CLASSES = {
   amber: {
-    label: 'font-medium text-amber-700',
-    ring: 'bg-amber-100 border-2 border-amber-400',
+    label: 'font-medium',
+    ring: 'border-2',
   },
   emerald: {
-    label: 'font-medium text-emerald-700',
-    ring: 'bg-emerald-100 border-2 border-emerald-400',
+    label: 'font-medium',
+    ring: 'border-2',
   },
   rose: {
-    label: 'font-medium text-rose-700',
-    ring: 'bg-rose-100 border-2 border-rose-400',
+    label: 'font-medium',
+    ring: 'border-2',
   },
+};
+
+/** Style overrides for amber accent (uses theme tokens) */
+export const AMBER_STYLES = {
+  label: { fontWeight: '500' as const },
+  ring: { borderWidth: 2 },
 };

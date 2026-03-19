@@ -6,6 +6,7 @@ import React from 'react';
 import { View } from 'react-native';
 import { User, Brain, Heart } from 'lucide-react-native';
 
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import type { VizType, ColorClass } from './types';
 import { VizField } from './VizField';
 
@@ -24,27 +25,28 @@ export function VizFields({
   emotion,
   compact,
 }: VizFieldsProps) {
+  const { colors } = useThemeColors();
   const isSuccess = type === 'success';
   const colorClass: ColorClass = isSuccess ? 'success' : 'failure';
-  const iconColor = isSuccess ? 'text-emerald-500' : 'text-rose-500';
+  const iconColor = isSuccess ? colors.status.success : colors.status.error;
 
   return (
     <View className={compact ? 'gap-1' : 'gap-2'}>
       {body ? <VizField
           colorClass={colorClass}
-          icon={<User className={iconColor} size={16} />}
+          icon={<User color={iconColor} size={16} />}
           label='Body'
           value={body}
         /> : null}
       {mind ? <VizField
           colorClass={colorClass}
-          icon={<Brain className={iconColor} size={16} />}
+          icon={<Brain color={iconColor} size={16} />}
           label='Mind'
           value={mind}
         /> : null}
       {emotion ? <VizField
           colorClass={colorClass}
-          icon={<Heart className={iconColor} size={16} />}
+          icon={<Heart color={iconColor} size={16} />}
           label='Emotion'
           value={emotion}
         /> : null}

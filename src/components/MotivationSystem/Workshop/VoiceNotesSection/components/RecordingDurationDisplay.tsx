@@ -7,6 +7,7 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import { AlertCircle } from 'lucide-react-native';
 import { clsx } from 'clsx';
+import { useThemeColors } from '../../../../../theme/ThemeContext';
 
 interface RecordingDurationDisplayProps {
   formattedDuration: string;
@@ -21,26 +22,22 @@ export function RecordingDurationDisplay({
   isApproachingMaxDuration,
   secondsUntilMaxDuration,
 }: RecordingDurationDisplayProps) {
+  const { colors } = useThemeColors();
+
   return (
     <View className='items-center gap-1'>
       <View className='flex-row items-center gap-2'>
         <Text
-          className={clsx(
-            'text-2xl font-bold',
-            isMaxDurationReached
-              ? 'text-rose-500'
-              : isApproachingMaxDuration
-                ? 'text-amber-600'
-                : 'text-stone-800'
-          )}
+          className='text-2xl font-bold'
+          style={{ color: isMaxDurationReached ? colors.status.error : isApproachingMaxDuration ? colors.status.warning : colors.text.primary }}
         >
           {formattedDuration}
         </Text>
-        {isMaxDurationReached ? <Text className='text-xs text-rose-500'>Max reached</Text> : null}
+        {isMaxDurationReached ? <Text className='text-xs' style={{ color: colors.status.error }}>Max reached</Text> : null}
       </View>
-      {isApproachingMaxDuration && !isMaxDurationReached ? <View className='flex-row items-center gap-1.5 rounded-full bg-amber-100 px-3 py-1'>
-          <AlertCircle className='text-amber-600' size={14} />
-          <Text className='text-xs font-medium text-amber-700'>
+      {isApproachingMaxDuration && !isMaxDurationReached ? <View className='flex-row items-center gap-1.5 rounded-full px-3 py-1' style={{ backgroundColor: colors.status.warningLight }}>
+          <AlertCircle color={colors.status.warning} size={14} />
+          <Text className='text-xs font-medium' style={{ color: colors.status.warningText }}>
             {secondsUntilMaxDuration !== null && secondsUntilMaxDuration > 0
               ? `${secondsUntilMaxDuration}s remaining`
               : 'Wrapping up...'}

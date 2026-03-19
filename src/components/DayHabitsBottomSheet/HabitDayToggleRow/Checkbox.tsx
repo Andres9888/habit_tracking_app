@@ -1,6 +1,7 @@
 import { Animated, View, ActivityIndicator } from 'react-native';
 import { Check } from 'lucide-react-native';
 import { colors } from '../../../theme/colors';
+import { useThemeColors } from '@/theme/ThemeContext';
 
 interface CheckboxProps {
   isCompleted: boolean;
@@ -16,6 +17,8 @@ export function Checkbox({
   isLoading,
   checkScaleAnim,
 }: CheckboxProps) {
+  const { colors: themeColors } = useThemeColors();
+
   if (isLoading) {
     return (
       <View className='h-6 w-6 items-center justify-center'>
@@ -25,8 +28,8 @@ export function Checkbox({
   }
 
   const checkboxStyle = isCompleted
-    ? 'bg-emerald-500'
-    : 'border-2 border-stone-300 bg-white';
+    ? ''
+    : 'border-2 bg-white';
 
   const shadowStyle = isCompleted
     ? {
@@ -41,7 +44,7 @@ export function Checkbox({
   return (
     <View
       className={`h-6 w-6 items-center justify-center rounded-lg ${checkboxStyle}`}
-      style={shadowStyle}
+      style={[shadowStyle, isCompleted ? { backgroundColor: themeColors.status.success } : { borderColor: themeColors.border }]}
     >
       <Animated.View
         style={{

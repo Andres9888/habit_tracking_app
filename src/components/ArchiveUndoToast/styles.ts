@@ -79,7 +79,7 @@ export function useToastStyles() {
       gap: 6,
       minHeight: 44,
       paddingHorizontal: 14,
-      paddingVertical: 10,
+      paddingVertical: 12,
     },
     undoButtonPressed: {
       backgroundColor: isDark ? '#92400E' : '#fde68a',

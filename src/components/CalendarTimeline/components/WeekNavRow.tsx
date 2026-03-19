@@ -134,7 +134,7 @@ const CHIP_BASE = {
 const s = StyleSheet.create({
   chipText: {
     fontFamily: fontFamilies.primary.text,
-    fontSize: 11,
+    fontSize: 10,
     fontWeight: '700',
     letterSpacing: 0.3,
   },
@@ -145,7 +145,7 @@ const s = StyleSheet.create({
   },
   monthText: {
     fontFamily: fontFamilies.primary.text,
-    fontSize: 15,
+    fontSize: 14,
     fontWeight: fontWeights.bold,
   },
   pill: { ...CHIP_BASE, borderWidth: 1, gap: 5 },

@@ -4,6 +4,7 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
+import { useThemeColors } from '@/theme/ThemeContext';
 
 import { PADDING_LEFT, PADDING_RIGHT } from './constants';
 import type { XAxisLabel } from './types';
@@ -13,6 +14,8 @@ interface XAxisLabelsProps {
 }
 
 export function XAxisLabels({ labels }: XAxisLabelsProps) {
+  const { colors: themeColors } = useThemeColors();
+
   return (
     <View
       className='absolute bottom-1 left-0 right-0 flex-row justify-between px-3'
@@ -21,8 +24,9 @@ export function XAxisLabels({ labels }: XAxisLabelsProps) {
       {labels.map((label, index) => (
         <Text
           key={`${label.text}-${index}`}
-          className='text-[10px] text-stone-400'
+          className='text-[10px]'
           style={{
+            color: themeColors.text.tertiary,
             left: label.x,
             position: 'absolute',
             transform: [

@@ -5,6 +5,7 @@
 
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
+import { useThemeColors } from '../../../../../theme/ThemeContext';
 import { VoiceNoteItem } from './VoiceNoteItem';
 import type { VoiceNoteSummary } from '../VoiceNotesSection.types';
 
@@ -23,6 +24,8 @@ export function VoiceNotesList({
   onPlayFinish,
   reduceMotion = false,
 }: VoiceNotesListProps) {
+  const { colors } = useThemeColors();
+
   if (voiceNotes.length === 0) {
     return null;
   }
@@ -31,9 +34,9 @@ export function VoiceNotesList({
   const hasMore = voiceNotes.length > 3;
 
   return (
-    <View className='mt-4 border-t border-stone-100 pt-4'>
+    <View className='mt-4 border-t pt-4' style={{ borderColor: colors.border }}>
       <View className='mb-2 flex-row items-center justify-between'>
-        <Text className='text-sm font-medium text-stone-600'>
+        <Text className='text-sm font-medium' style={{ color: colors.text.secondary }}>
           Your Recordings ({voiceNotes.length})
         </Text>
         {hasMore ? <Pressable
@@ -42,7 +45,7 @@ export function VoiceNotesList({
             hitSlop={{ bottom: 8, left: 8, right: 8, top: 8 }}
             onPress={onViewAllNotes}
           >
-            <Text className='text-xs font-medium text-teal-600'>View All</Text>
+            <Text className='text-xs font-medium' style={{ color: colors.status.success }}>View All</Text>
           </Pressable> : null}
       </View>
       <View className='gap-2'>

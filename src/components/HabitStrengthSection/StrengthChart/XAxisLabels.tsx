@@ -6,6 +6,7 @@
 
 import React from 'react';
 import { Text, View } from 'react-native';
+import { useThemeColors } from '@/theme/ThemeContext';
 
 interface XAxisLabelsProps {
   /** Labels to display along the X-axis */
@@ -21,6 +22,7 @@ export const XAxisLabels = React.memo(function XAxisLabels({
   labels,
   height,
 }: XAxisLabelsProps) {
+  const { colors: themeColors } = useThemeColors();
   // Guard against null/undefined labels
   const safeLabels = labels ?? [];
 
@@ -30,7 +32,7 @@ export const XAxisLabels = React.memo(function XAxisLabels({
       style={{ height }}
     >
       {safeLabels.map((label, i) => (
-        <Text key={i} className='text-xs text-stone-400'>
+        <Text key={i} className='text-xs' style={{ color: themeColors.text.tertiary }}>
           {label ?? ''}
         </Text>
       ))}

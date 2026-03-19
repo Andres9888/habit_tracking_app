@@ -3,6 +3,7 @@ import { Pressable, Text, View } from 'react-native';
 import { Microscope } from 'lucide-react-native';
 import Animated from 'react-native-reanimated';
 import { colors } from '@/theme/colors';
+import { useThemeColors } from '@/theme/ThemeContext';
 import { useHapticFeedback } from '../../../../hooks/useHapticFeedback';
 import { useReduceMotion } from '../../../../hooks/useReduceMotion';
 import type { HabitTemplate } from '../../types';
@@ -26,6 +27,7 @@ const TemplateListItemComponent = ({
 }: TemplateListItemProps) => {
   const reduceMotion = useReduceMotion();
   const { triggerLightImpact, triggerSelection } = useHapticFeedback({});
+  const { colors: themeColors } = useThemeColors();
 
   const {
     templateScale,
@@ -49,7 +51,7 @@ const TemplateListItemComponent = ({
 
   return (
     <Animated.View style={entranceAnimatedStyle}>
-      <View className='flex-row items-center gap-3 border-b border-stone-100 p-4'>
+      <View className='flex-row items-center gap-3 border-b p-4' style={{ borderColor: themeColors.border }}>
         <AnimatedPressable
           accessibilityLabel={`Select ${template.name} template`}
           accessibilityRole='button'
@@ -70,14 +72,16 @@ const TemplateListItemComponent = ({
           </View>
           <View className='flex-1'>
             <Text
-              className='text-[15px] font-semibold text-stone-800'
+              className='text-[15px] font-semibold'
               numberOfLines={1}
+              style={{ color: themeColors.text.primary }}
             >
               {template.name}
             </Text>
             <Text
-              className='text-[13px] font-normal text-stone-500'
+              className='text-[13px] font-normal'
               numberOfLines={2}
+              style={{ color: themeColors.text.secondary }}
             >
               {template.description}
             </Text>
@@ -86,7 +90,8 @@ const TemplateListItemComponent = ({
         <AnimatedPressable
           accessibilityLabel={`View science for ${template.name}`}
           accessibilityRole='button'
-          className='h-11 w-11 items-center justify-center rounded-full bg-blue-50'
+          className='h-11 w-11 items-center justify-center rounded-full'
+          style={{ backgroundColor: themeColors.status.infoLight }}
           style={scienceAnimatedStyle}
           onPress={() => {
             triggerSelection();

@@ -106,7 +106,7 @@ export const ringStyles = StyleSheet.create({
     textAlign: 'center',
   },
   dayTextWithPrefix: {
-    fontSize: 12,
+    fontSize: 13,
     fontWeight: '700',
     textAlign: 'center',
   },
@@ -116,7 +116,7 @@ export const ringStyles = StyleSheet.create({
     textAlign: 'center',
   },
   dayTextToday: {
-    fontSize: 15,
+    fontSize: 14,
     fontWeight: fontWeights.bold,
     textAlign: 'center',
   },

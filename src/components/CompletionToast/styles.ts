@@ -19,7 +19,7 @@ export const styles = StyleSheet.create({
     gap: 12,
   },
   habitIcon: {
-    fontSize: 24,
+    fontSize: 22,
   },
   message: {
     flex: 1,
@@ -32,7 +32,7 @@ export const styles = StyleSheet.create({
     borderRadius: 16,
     flexDirection: 'row',
     gap: 4,
-    paddingHorizontal: 10,
+    paddingHorizontal: 12,
     paddingVertical: 4,
   },
   streakEmoji: {
@@ -51,7 +51,7 @@ export const styles = StyleSheet.create({
     justifyContent: 'space-between',
     maxWidth: 400,
     paddingHorizontal: 16,
-    paddingVertical: 14,
+    paddingVertical: 16,
     width: '100%',
   },
 });

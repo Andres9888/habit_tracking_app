@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import { Link2 } from 'lucide-react-native';
+import { useThemeColors } from '@/theme/ThemeContext';
 import { useStreakChainLogic } from './StreakChain.hooks';
 import type { StreakChainProps } from './StreakChain.types';
 
@@ -22,6 +23,7 @@ export default function StreakChain({
   statuses,
   size = 28,
 }: StreakChainProps) {
+  const { colors: themeColors } = useThemeColors();
   const { circleSize, iconSize, streakDays } = useStreakChainLogic(
     statuses,
     size
@@ -30,14 +32,15 @@ export default function StreakChain({
   return (
     <View className='pb-3 pt-1'>
       <View className='mb-2 flex-row items-center justify-between'>
-        <Text className='text-base font-bold tracking-tight text-stone-900'>
+        <Text className='text-base font-bold tracking-tight' style={{ color: themeColors.text.primary }}>
           {label}
         </Text>
         <View
           accessibilityLabel={`${streakDays} days`}
-          className='rounded-full bg-indigo-50 px-2.5 py-1'
+          className='rounded-full px-2.5 py-1'
+          style={{ backgroundColor: themeColors.status.premiumLight }}
         >
-          <Text className='text-xs font-semibold text-stone-900'>
+          <Text className='text-xs font-semibold' style={{ color: themeColors.text.primary }}>
             {streakDays} days
           </Text>
         </View>
@@ -54,7 +57,7 @@ export default function StreakChain({
               <View
                 className='items-center justify-center'
                 style={{
-                  backgroundColor: isDone ? '#3B82F6' : '#E5E7EB',
+                  backgroundColor: isDone ? themeColors.status.info : themeColors.gray[200],
                   borderRadius: circleSize / 2,
                   height: circleSize,
                   opacity: isFuture ? 0.5 : 1,
@@ -62,7 +65,7 @@ export default function StreakChain({
                 }}
               >
                 <Link2
-                  color={isDone ? '#FFFFFF' : '#64748B'}
+                  color={isDone ? '#FFFFFF' : themeColors.text.tertiary}
                   size={iconSize}
                 />
               </View>
@@ -70,7 +73,7 @@ export default function StreakChain({
               {idx < statuses.length - 1 ? <View
                   className='mx-1.5 h-0.5 w-[18px] rounded-sm'
                   style={{
-                    backgroundColor: connectorActive ? '#93C5FD' : '#E5E7EB',
+                    backgroundColor: connectorActive ? themeColors.status.infoLight : themeColors.gray[200],
                   }}
                 /> : null}
             </View>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { clsx } from 'clsx';
+import { useThemeColors } from '@/theme/ThemeContext';
 
 interface IconContainerProps {
   isDestructive: boolean;
@@ -14,13 +14,12 @@ export function IconContainer({
   isBoost,
   children,
 }: IconContainerProps) {
+  const { colors: themeColors } = useThemeColors();
+
   return (
     <View
-      className={clsx(
-        'h-10 w-10 items-center justify-center rounded-xl',
-        isDestructive && 'bg-red-100',
-        !isBoost && !isDestructive && 'bg-stone-100'
-      )}
+      className='h-10 w-10 items-center justify-center rounded-xl'
+      style={{ backgroundColor: isDestructive ? themeColors.status.errorLight : !isBoost ? themeColors.background : undefined }}
     >
       {isBoost ? <LinearGradient
           className='absolute inset-0 rounded-xl'

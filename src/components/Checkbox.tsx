@@ -32,10 +32,10 @@ const sizeClasses = {
 };
 
 const variantClasses = {
-  danger: 'bg-red-600 border-red-600',
-  neutral: 'bg-stone-700 border-stone-700',
-  primary: 'bg-stone-900 border-stone-900',
-  success: 'bg-green-600 border-green-600',
+  danger: '',
+  neutral: '',
+  primary: '',
+  success: '',
 };
 
 export const Checkbox = React.forwardRef<View, CheckboxProps>(function Checkbox(
@@ -80,7 +80,15 @@ export const Checkbox = React.forwardRef<View, CheckboxProps>(function Checkbox(
           isActive && variantClasses[variant],
           disabled && 'opacity-50'
         )}
-        style={isActive ? undefined : { backgroundColor: colors.card, borderColor: colors.border }}
+        style={isActive
+          ? (variant === 'neutral' || variant === 'primary')
+            ? { backgroundColor: colors.text.primary, borderColor: colors.text.primary }
+            : variant === 'success'
+              ? { backgroundColor: colors.status.success, borderColor: colors.status.success }
+              : variant === 'danger'
+                ? { backgroundColor: colors.status.error, borderColor: colors.status.error }
+                : undefined
+          : { backgroundColor: colors.card, borderColor: colors.border }}
       >
         {isActive ? <Text
             className={clsx('font-bold text-white', sizeClasses[size].text)}

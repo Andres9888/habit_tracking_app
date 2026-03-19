@@ -4,12 +4,15 @@
  */
 import React from 'react';
 import { View } from 'react-native';
+import { useThemeColors } from '@/theme/ThemeContext';
 import { SkeletonLoader } from './SkeletonLoader';
 import type { ReduceMotionProps } from './types';
 
 function TemplateItemSkeleton({ reduceMotion }: ReduceMotionProps) {
+  const { colors: themeColors } = useThemeColors();
+
   return (
-    <View className='flex-row items-center gap-4 border-b border-stone-100 px-4 py-3'>
+    <View className='flex-row items-center gap-4 border-b px-4 py-3' style={{ borderColor: themeColors.border }}>
       <SkeletonLoader
         borderRadius={16}
         height={48}

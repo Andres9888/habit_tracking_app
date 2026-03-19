@@ -33,7 +33,7 @@ export function DangerZoneFooter({ habitCount, onDeleteAll }: DangerZoneFooterPr
     >
       <Text
         style={{
-          fontSize: 11,
+          fontSize: 10,
           fontWeight: '600',
           letterSpacing: 0.5,
           textTransform: 'uppercase',
@@ -60,7 +60,7 @@ export function DangerZoneFooter({ habitCount, onDeleteAll }: DangerZoneFooterPr
 
       <Text
         style={{
-          fontSize: 12,
+          fontSize: 13,
           color: isDark ? '#9CA3AF' : '#78716C',
           marginTop: 4,
           textAlign: 'center',

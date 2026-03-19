@@ -75,8 +75,8 @@ export function useToastStyles() {
       flexDirection: 'row',
       gap: 6,
       minHeight: 44,
-      paddingHorizontal: 14,
-      paddingVertical: 10,
+      paddingHorizontal: 16,
+      paddingVertical: 12,
     },
     undoButtonPressed: {
       backgroundColor: isDark ? '#991B1B' : '#fecaca',
