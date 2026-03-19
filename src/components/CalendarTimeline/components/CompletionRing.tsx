@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef } from 'react';
 import { Animated, Text } from 'react-native';
 import Svg, { Circle } from 'react-native-svg';
-import { fontFamilies } from '@/theme/typography';
+import { fontFamilies, fontWeights } from '@/theme/typography';
 import {
   CIRCUMFERENCE,
   GLOW_SHADOW,
@@ -99,7 +99,7 @@ export const CompletionRing: React.FC<CompletionRingProps> = ({
           color: isComplete ? RING_COLORS.completeText : RING_COLORS.text,
           fontFamily: fontFamilies.primary.text,
           fontSize: fs,
-          fontWeight: '800',
+          fontWeight: fontWeights.bold,
           position: 'absolute',
         }}
       >

@@ -2,6 +2,7 @@
 import { StyleSheet } from 'react-native';
 
 import { colors as palette } from '../../../theme/colors';
+import { fontWeights } from '../../../theme/typography';
 import { darkColors } from '../../../theme/darkColors';
 import type { CompletionStatus } from '../CalendarTimeline.types';
 
@@ -111,12 +112,12 @@ export const ringStyles = StyleSheet.create({
   },
   dayTextTodayWithPrefix: {
     fontSize: 13,
-    fontWeight: '800',
+    fontWeight: fontWeights.bold,
     textAlign: 'center',
   },
   dayTextToday: {
     fontSize: 15,
-    fontWeight: '800',
+    fontWeight: fontWeights.bold,
     textAlign: 'center',
   },
   future: {
@@ -127,7 +128,7 @@ export const ringStyles = StyleSheet.create({
   },
   monthPrefixText: {
     fontSize: 7,
-    fontWeight: '800',
+    fontWeight: fontWeights.bold,
     letterSpacing: 0.5,
     marginBottom: -1,
     textAlign: 'center',
