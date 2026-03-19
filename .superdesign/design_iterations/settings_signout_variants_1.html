@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign Out / Delete — 10 Variants</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter', -apple-system, sans-serif !important; background: #0a0a0a; color: #e5e5e5; padding: 40px; }
+
+  h1 { font-size: 28px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 6px; }
+  .subtitle { font-size: 15px; color: #737373; margin-bottom: 36px; }
+  .grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 20px; }
+  @media (max-width: 1400px) { .grid { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 900px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+
+  .variant { background: #141414; border: 1px solid #262626; border-radius: 16px; overflow: hidden; transition: border-color 0.2s; }
+  .variant:hover { border-color: #404040; }
+  .variant-header { padding: 16px 16px 12px; border-bottom: 1px solid #1f1f1f; }
+  .variant-num { font-size: 11px; font-weight: 700; color: #059669; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+  .variant-name { font-size: 16px; font-weight: 700; color: #f5f5f5; }
+  .variant-desc { font-size: 12px; color: #737373; margin-top: 4px; line-height: 1.4; }
+
+  /* Mini phone */
+  .mini-phone { background: #fafaf9; padding: 12px; margin: 12px; border-radius: 12px; }
+
+  /* Shared settings UI primitives */
+  .s-section { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: #a8a29e; padding: 0 2px; margin-bottom: 4px; }
+  .s-card { background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.04); margin-bottom: 10px; }
+  .s-row { display: flex; align-items: center; padding: 8px 10px; border-bottom: 0.5px solid #f0ece8; gap: 8px; }
+  .s-row:last-child { border-bottom: none; }
+  .s-icon { width: 24px; height: 24px; border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .s-label { font-size: 11px; font-weight: 600; color: #1c1917; flex: 1; }
+  .s-chev { color: #d4d4d4; flex-shrink: 0; }
+  .s-ext { color: #d4d4d4; flex-shrink: 0; }
+
+  /* Profile mini */
+  .s-profile { display: flex; align-items: center; padding: 10px; gap: 8px; }
+  .s-avatar { width: 32px; height: 32px; border-radius: 16px; background: linear-gradient(135deg, #6366f1, #8b5cf6); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: white; flex-shrink: 0; }
+  .s-name { font-size: 12px; font-weight: 700; color: #1c1917; }
+  .s-email { font-size: 9px; color: #a8a29e; }
+  .s-pro { display: inline-flex; align-items: center; gap: 2px; background: linear-gradient(135deg, #fef3c7, #fde68a); padding: 1px 5px; border-radius: 4px; font-size: 8px; font-weight: 700; color: #92400e; margin-top: 2px; }
+
+  /* Specific styles */
+  .s-signout-text { font-size: 11px; font-weight: 600; color: #ef4444; }
+  .s-delete-tiny { font-size: 9px; color: #e7e5e4; text-align: center; padding: 8px 0 4px; }
+  .s-delete-muted { font-size: 10px; color: #d4d4d4; }
+  .s-signout-btn { display: block; text-align: center; padding: 9px; font-size: 11px; font-weight: 600; color: #ef4444; background: white; border-radius: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); margin-bottom: 10px; }
+  .s-signout-outline { display: block; text-align: center; padding: 8px; font-size: 11px; font-weight: 600; color: #ef4444; border: 1.5px solid #fecaca; border-radius: 10px; margin-bottom: 10px; }
+  .s-divider { width: 1px; height: 10px; background: #e7e5e4; }
+
+  /* Pros/cons */
+  .tag { display: inline-block; font-size: 9px; font-weight: 600; padding: 2px 6px; border-radius: 3px; margin-right: 3px; margin-top: 6px; }
+  .tag-pro { background: #1a2e1a; color: #4ade80; }
+  .tag-con { background: #2e1a1a; color: #f87171; }
+  .tag-money { background: #2e2a1a; color: #fbbf24; }
+</style>
+</head>
+<body>
+
+<h1>Sign Out & Delete Account — 10 Placement Variants</h1>
+<p class="subtitle">Everything above Support section stays the same. Only the bottom of settings varies. Pick the one that feels right.</p>
+
+<div class="grid">
+
+  <!-- VARIANT 1 -->
+  <div class="variant">
+    <div class="variant-header">
+      <div class="variant-num">Variant 1</div>
+      <div class="variant-name">Standalone Card</div>
+      <div class="variant-desc">Sign Out in its own card. Delete as tiny text below.</div>
+      <span class="tag tag-pro">Clear</span>
+      <span class="tag tag-con">Takes space</span>
+    </div>
+    <div class="mini-phone">
+      <div class="s-section">Support</div>
+      <div class="s-card">
+        <div class="s-row"><div class="s-icon" style="background:#fef3c7;"><i data-lucide="star" style="width:12px;height:12px;color:#f59e0b;"></i></div><div class="s-label">Rate Chain Day</div><div class="s-chev"><i data-lucide="chevron-right" style="width:12px;height:12px;"></i></div></div>
+        <div class="s-row"><div class="s-icon" style="background:#d1fae5;"><i data-lucide="share" style="width:12px;height:12px;color:#10b981;"></i></div><div class="s-label">Share with Friends</div><div class="s-chev"><i data-lucide="chevron-right" style="width:12px;height:12px;"></i></div></div>
+      </div>
+      <div class="s-section">About</div>
+      <div class="s-card">
+        <div class="s-row"><div class="s-icon" style="background:#e7e5e4;"><i data-lucide="shield" style="width:12px;height:12px;color:#78716c;"></i></div><div class="s-label">Privacy Policy</div><div class="s-ext"><i data-lucide="external-link" style="width:10px;height:10px;"></i></div></div>
+        <div class="s-row"><div class="s-icon" style="background:#e0e7ff;"><i data-lucide="info" style="width:12px;height:12px;color:#6366f1;"></i></div><div class="s-label">Version 1.0.0</div></div>
+      </div>
+      <div class="s-signout-btn">Sign Out</div>
+      <div class="s-delete-tiny">Delete Account</div>
+    </div>
+  </div>
+
+  <!-- VARIANT 2 -->
+  <div class="variant">
+    <div class="variant-header">
+      <div class="variant-num">Variant 2</div>
+      <div class="variant-name">Inside About</div>
+      <div class="variant-desc">Sign Out as last row in About. Delete tiny below.</div>
+      <span class="tag tag-pro">Compact</span>
+      <span class="tag tag-pro">Grouped</span>
+    </div>
+    <div class="mini-phone">
+      <div class="s-section">Support</div>
+      <div class="s-card">
+        <div class="s-row"><div class="s-icon" style="background:#fef3c7;"><i data-lucide="star" style="width:12px;height:12px;color:#f59e0b;"></i></div><div class="s-label">Rate Chain Day</div><div class="s-chev"><i data-lucide="chevron-right" style="width:12px;height:12px;"></i></div></div>
+        <div class="s-row"><div class="s-icon" style="background:#d1fae5;"><i data-lucide="share" style="width:12px;height:12px;color:#10b981;"></i></div><div class="s-label">Share with Friends</div><div class="s-chev"><i data-lucide="chevron-right" style="width:12px;height:12px;"></i></div></div>
+      </div>
+      <div class="s-section">About</div>
+      <div class="s-card">
+        <div class="s-row"><div class="s-icon" style="background:#e7e5e4;"><i data-lucide="shield" style="width:12px;height:12px;color:#78716c;"></i></div><div class="s-label">Privacy Policy</div><div class="s-ext"><i data-lucide="external-link" style="width:10px;height:10px;"></i></div></div>
+        <div class="s-row"><div class="s-icon" style="background:#e0e7ff;"><i data-lucide="info" style="width:12px;height:12px;color:#6366f1;"></i></div><div class="s-label">Version 1.0.0</div></div>
+        <div class="s-row" style="border-top: 0.5px solid #f0ece8;"><div class="s-icon" style="background:#fecaca;"><i data-lucide="log-out" style="width:12px;height:12px;color:#ef4444;"></i></div><div class="s-label" style="color:#ef4444;">Sign Out</div></div>
+      </div>
+      <div class="s-delete-tiny">Delete Account</div>
+    </div>
+  </div>
+
+  <!-- VARIANT 3 -->
+  <div class="variant">
+    <div class="variant-header">
+      <div class="variant-num">Variant 3</div>
+      <div class="variant-name">Account Section</div>
+      <div class="variant-desc">Dedicated "Account" section with both actions.</div>
+      <span class="tag tag-pro">Explicit</span>
+      <span class="tag tag-con">Prominent delete</span>
+    </div>
+    <div class="mini-phone">
+      <div class="s-section">Support</div>
+      <div class="s-card">
+        <div class="s-row"><div class="s-icon" style="background:#fef3c7;"><i data-lucide="star" style="width:12px;height:12px;color:#f59e0b;"></i></div><div class="s-label">Rate Chain Day</div><div class="s-chev"><i data-lucide="chevron-right" style="width:12px;height:12px;"></i></div></div>
+        <div class="s-row"><div class="s-icon" style="background:#d1fae5;"><i data-lucide="share" style="width:12px;height:12px;color:#10b981;"></i></div><div class="s-label">Share with Friends</div><div class="s-chev"><i data-lucide="chevron-right" style="width:12px;height:12px;"></i></div></div>
+      </div>
+      <div class="s-section">About</div>
+      <div class="s-card">
+        <div class="s-row"><div class="s-icon" style="background:#e0e7ff;"><i data-lucide="info" style="width:12px;height:12px;color:#6366f1;"></i></div><div class="s-label">Version 1.0.0</div></div>
+      </div>
+      <div class="s-section">Account</div>
+      <div class="s-card">
+        <div class="s-row"><div class="s-icon" style="background:#fecaca;"><i data-lucide="log-out" style="width:12px;height:12px;color:#ef4444;"></i></div><div class="s-label" style="color:#ef4444;">Sign Out</div></div>
+        <div class="s-row"><div class="s-icon" style="background:#f5f5f4;"><i data-lucide="trash-2" style="width:12px;height:12px;color:#d4d4d4;"></i></div><div class="s-label s-delete-muted">Delete Account</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VARIANT 4 -->
+  <div class="variant">
+    <div class="variant-header">
+      <div class="variant-num">Variant 4</div>
+      <div class="variant-name">Outline Button</div>
+      <div class="variant-desc">Sign Out as outline button. Delete tiny text.</div>
+      <span class="tag tag-pro">Tappable</span>
+      <span class="tag tag-pro">Distinct</span>
+    </div>
+    <div class="mini-phone">
+      <div class="s-section">Support</div>
+      <div class="s-card">
+        <div class="s-row"><div class="s-icon" style="background:#fef3c7;"><i data-lucide="star" style="width:12px;height:12px;color:#f59e0b;"></i></div><div class="s-label">Rate Chain Day</div><div class="s-chev"><i data-lucide="chevron-right" style="width:12px;height:12px;"></i></div></div>
+        <div class="s-row"><div class="s-icon" style="background:#d1fae5;"><i data-lucide="share" style="width:12px;height:12px;color:#10b981;"></i></div><div class="s-label">Share with Friends</div><div class="s-chev"><i data-lucide="chevron-right" style="width:12px;height:12px;"></i></div></div>
+      </div>
+      <div class="s-section">About</div>
+      <div class="s-card">
+        <div class="s-row"><div class="s-icon" style="background:#e7e5e4;"><i data-lucide="shield" style="width:12px;height:12px;color:#78716c;"></i></div><div class="s-label">Privacy Policy</div><div class="s-ext"><i data-lucide="external-link" style="width:10px;height:10px;"></i></div></div>
+        <div class="s-row"><div class="s-icon" style="background:#e0e7ff;"><i data-lucide="info" style="width:12px;height:12px;color:#6366f1;"></i></div><div class="s-label">Version 1.0.0</div></div>
+      </div>
+      <div class="s-signout-outline">Sign Out</div>
+      <div class="s-delete-tiny">Delete Account</div>
+    </div>
+  </div>
+
+  <!-- VARIANT 5 -->
+  <div class="variant">
+    <div class="variant-header">
+      <div class="variant-num">Variant 5</div>
+      <div class="variant-name">Both in Profile Sub-screen</div>
+      <div class="variant-desc">Profile card says "Account & Sign Out". Both live in sub-screen. Clean main page.</div>
+      <span class="tag tag-pro">Cleanest</span>
+      <span class="tag tag-money">Premium feel</span>
+      <span class="tag tag-con">Extra tap</span>
+    </div>
+    <div class="mini-phone">
+      <div class="s-section">Support</div>
+      <div class="s-card">
+        <div class="s-row"><div class="s-icon" style="background:#fef3c7;"><i data-lucide="star" style="width:12px;height:12px;color:#f59e0b;"></i></div><div class="s-label">Rate Chain Day</div><div class="s-chev"><i data-lucide="chevron-right" style="width:12px;height:12px;"></i></div></div>
+        <div class="s-row"><div class="s-icon" style="background:#d1fae5;"><i data-lucide="share" style="width:12px;height:12px;color:#10b981;"></i></div><div class="s-label">Share with Friends</div><div class="s-chev"><i data-lucide="chevron-right" style="width:12px;height:12px;"></i></div></div>
+      </div>
+      <div class="s-section">About</div>
+      <div class="s-card">
+        <div class="s-row"><div class="s-icon" style="background:#e7e5e4;"><i data-lucide="shield" style="width:12px;height:12px;color:#78716c;"></i></div><div class="s-label">Privacy Policy</div><div class="s-ext"><i data-lucide="external-link" style="width:10px;height:10px;"></i></div></div>
+        <div class="s-row"><div class="s-icon" style="background:#e0e7ff;"><i data-lucide="info" style="width:12px;height:12px;color:#6366f1;"></i></div><div class="s-label">Version 1.0.0</div></div>
+      </div>
+      <div style="text-align:center; padding: 12px 0 4px;">
+        <span style="font-size: 9px; color: #a8a29e;">Sign out & account management → tap profile card above</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- VARIANT 6 -->
+  <div class="variant">
+    <div class="variant-header">
+      <div class="variant-num">Variant 6</div>
+      <div class="variant-name">Profile Inline Link</div>
+      <div class="variant-desc">Small "Sign Out" text in profile card. Delete buried at very bottom.</div>
+      <span class="tag tag-pro">No extra cards</span>
+      <span class="tag tag-pro">Ergonomic</span>
+    </div>
+    <div class="mini-phone">
+      <div style="font-size:9px;color:#a8a29e;margin-bottom:4px;padding:0 2px;font-weight:600;">↑ PROFILE CARD (at top of settings):</div>
+      <div class="s-card" style="margin-bottom: 14px;">
+        <div class="s-profile">
+          <div class="s-avatar">A</div>
+          <div style="flex:1;">
+            <div class="s-name">Andres</div>
+            <div class="s-email">andres@example.com</div>
+            <div style="display:flex;align-items:center;gap:5px;margin-top:2px;">
+              <div class="s-pro"><i data-lucide="crown" style="width:8px;height:8px;"></i> PRO</div>
+              <div class="s-divider"></div>
+              <span class="s-signout-text" style="font-size:10px;">Sign Out</span>
+            </div>
+          </div>
+          <div class="s-chev"><i data-lucide="chevron-right" style="width:14px;height:14px;"></i></div>
+        </div>
+      </div>
+      <div style="font-size:9px;color:#a8a29e;margin-bottom:4px;padding:0 2px;font-weight:600;">↓ BOTTOM OF SETTINGS:</div>
+      <div class="s-section">About</div>
+      <div class="s-card">
+        <div class="s-row"><div class="s-icon" style="background:#e0e7ff;"><i data-lucide="info" style="width:12px;height:12px;color:#6366f1;"></i></div><div class="s-label">Version 1.0.0</div></div>
+      </div>
+      <div class="s-delete-tiny">Delete Account</div>
+    </div>
+  </div>
+
+  <!-- VARIANT 7 -->
+  <div class="variant">
+    <div class="variant-header">
+      <div class="variant-num">Variant 7</div>
+      <div class="variant-name">Footer Row</div>
+      <div class="variant-desc">Sign Out as a simple text row (no card). Delete even smaller below.</div>
+      <span class="tag tag-pro">Minimal</span>
+      <span class="tag tag-pro">iOS native feel</span>
+    </div>
+    <div class="mini-phone">
+      <div class="s-section">Support</div>
+      <div class="s-card">
+        <div class="s-row"><div class="s-icon" style="background:#fef3c7;"><i data-lucide="star" style="width:12px;height:12px;color:#f59e0b;"></i></div><div class="s-label">Rate Chain Day</div><div class="s-chev"><i data-lucide="chevron-right" style="width:12px;height:12px;"></i></div></div>
+        <div class="s-row"><div class="s-icon" style="background:#d1fae5;"><i data-lucide="share" style="width:12px;height:12px;color:#10b981;"></i></div><div class="s-label">Share with Friends</div><div class="s-chev"><i data-lucide="chevron-right" style="width:12px;height:12px;"></i></div></div>
+      </div>
+      <div class="s-section">About</div>
+      <div class="s-card">
+        <div class="s-row"><div class="s-icon" style="background:#e7e5e4;"><i data-lucide="shield" style="width:12px;height:12px;color:#78716c;"></i></div><div class="s-label">Privacy Policy</div><div class="s-ext"><i data-lucide="external-link" style="width:10px;height:10px;"></i></div></div>
+        <div class="s-row"><div class="s-icon" style="background:#e0e7ff;"><i data-lucide="info" style="width:12px;height:12px;color:#6366f1;"></i></div><div class="s-label">Version 1.0.0</div></div>
+      </div>
+      <div style="text-align: center; padding: 14px 0 4px;">
+        <span style="font-size: 13px; font-weight: 600; color: #ef4444;">Sign Out</span>
+      </div>
+      <div class="s-delete-tiny" style="font-size: 10px; color: #e7e5e4;">Delete Account</div>
+    </div>
+  </div>
+
+  <!-- VARIANT 8 -->
+  <div class="variant">
+    <div class="variant-header">
+      <div class="variant-num">Variant 8</div>
+      <div class="variant-name">Apple-Style Footer</div>
+      <div class="variant-desc">Sign Out as red card (like Apple Settings). Delete as row inside About.</div>
+      <span class="tag tag-pro">Familiar</span>
+      <span class="tag tag-pro">Users expect this</span>
+    </div>
+    <div class="mini-phone">
+      <div class="s-section">About</div>
+      <div class="s-card">
+        <div class="s-row"><div class="s-icon" style="background:#e7e5e4;"><i data-lucide="shield" style="width:12px;height:12px;color:#78716c;"></i></div><div class="s-label">Privacy Policy</div><div class="s-ext"><i data-lucide="external-link" style="width:10px;height:10px;"></i></div></div>
+        <div class="s-row"><div class="s-icon" style="background:#e0e7ff;"><i data-lucide="info" style="width:12px;height:12px;color:#6366f1;"></i></div><div class="s-label">Version 1.0.0</div></div>
+        <div class="s-row"><div class="s-icon" style="background:#f5f5f4;"><i data-lucide="trash-2" style="width:12px;height:12px;color:#d4d4d4;"></i></div><div class="s-label s-delete-muted" style="font-size:11px;">Delete Account</div></div>
+      </div>
+      <div class="s-card" style="margin-top: 2px;">
+        <div style="text-align:center;padding:10px;font-size:12px;font-weight:600;color:#ef4444;">Sign Out</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VARIANT 9 -->
+  <div class="variant">
+    <div class="variant-header">
+      <div class="variant-num">Variant 9</div>
+      <div class="variant-name">Danger Zone</div>
+      <div class="variant-desc">Red-tinted "Danger Zone" section with both. Explicit warning.</div>
+      <span class="tag tag-pro">Very clear</span>
+      <span class="tag tag-con">Dramatic</span>
+    </div>
+    <div class="mini-phone">
+      <div class="s-section">About</div>
+      <div class="s-card">
+        <div class="s-row"><div class="s-icon" style="background:#e7e5e4;"><i data-lucide="shield" style="width:12px;height:12px;color:#78716c;"></i></div><div class="s-label">Privacy Policy</div><div class="s-ext"><i data-lucide="external-link" style="width:10px;height:10px;"></i></div></div>
+        <div class="s-row"><div class="s-icon" style="background:#e0e7ff;"><i data-lucide="info" style="width:12px;height:12px;color:#6366f1;"></i></div><div class="s-label">Version 1.0.0</div></div>
+      </div>
+      <div class="s-section" style="color: #f87171;">Danger Zone</div>
+      <div class="s-card" style="border: 1px solid #fecaca;">
+        <div class="s-row"><div class="s-icon" style="background:#fecaca;"><i data-lucide="log-out" style="width:12px;height:12px;color:#ef4444;"></i></div><div class="s-label" style="color:#ef4444;">Sign Out</div></div>
+        <div class="s-row"><div class="s-icon" style="background:#fee2e2;"><i data-lucide="trash-2" style="width:12px;height:12px;color:#fca5a5;"></i></div><div class="s-label" style="color:#fca5a5;font-size:10px;">Delete Account</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VARIANT 10 -->
+  <div class="variant">
+    <div class="variant-header">
+      <div class="variant-num">Variant 10</div>
+      <div class="variant-name">Collapsed Drawer</div>
+      <div class="variant-desc">Single "Account Actions" row that expands to show Sign Out + Delete.</div>
+      <span class="tag tag-pro">Hidden by default</span>
+      <span class="tag tag-money">Very safe</span>
+    </div>
+    <div class="mini-phone">
+      <div class="s-section">About</div>
+      <div class="s-card">
+        <div class="s-row"><div class="s-icon" style="background:#e7e5e4;"><i data-lucide="shield" style="width:12px;height:12px;color:#78716c;"></i></div><div class="s-label">Privacy Policy</div><div class="s-ext"><i data-lucide="external-link" style="width:10px;height:10px;"></i></div></div>
+        <div class="s-row"><div class="s-icon" style="background:#e0e7ff;"><i data-lucide="info" style="width:12px;height:12px;color:#6366f1;"></i></div><div class="s-label">Version 1.0.0</div></div>
+      </div>
+      <div class="s-card">
+        <div class="s-row" style="border-bottom: none;">
+          <div class="s-icon" style="background:#f5f5f4;"><i data-lucide="chevron-down" style="width:12px;height:12px;color:#a8a29e;"></i></div>
+          <div class="s-label" style="color:#a8a29e;">Account Actions</div>
+        </div>
+      </div>
+      <div style="font-size:8px;color:#737373;text-align:center;padding:6px 10px;">↑ Tap to expand: reveals Sign Out + Delete Account</div>
+    </div>
+  </div>
+
+</div>
+
+<script>lucide.createIcons();</script>
+</body>
+</html>
