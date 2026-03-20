@@ -4,6 +4,7 @@ import Animated from 'react-native-reanimated';
 import { useThemeColors } from '@/theme/ThemeContext';
 import STRINGS from '../../../constants/strings';
 import useHapticFeedback from '../../../hooks/useHapticFeedback';
+import { buildTextInputHintProps } from '@/utils/textInputHintProps';
 import {
   MAX_LENGTH,
   MAX_CHARS,
@@ -54,11 +55,10 @@ const HabitNameFieldComponent = ({
         autoFocus={autoFocus}
         className='h-14 rounded-xl bg-white px-4 text-base'
         maxLength={MAX_LENGTH}
-        placeholder={STRINGS.CREATE_HABIT.namePlaceholder}
-        placeholderTextColor='#a8a29e'
         returnKeyType='done'
         style={[animatedInputStyle, { color: themeColors.text.primary }]}
         value={value}
+        {...buildTextInputHintProps(STRINGS.CREATE_HABIT.namePrompt, '#a8a29e')}
         onBlur={handleBlur}
         onChangeText={onChange}
         onFocus={handleFocus}

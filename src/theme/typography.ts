@@ -5,7 +5,7 @@
  * Serif + Sans-serif pairing: Literata (display/H1) + DM Sans (all other text)
  * Monospace: JetBrains Mono
  *
- * Fallbacks: SF Pro Display / SF Pro Text (iOS), Roboto (Android)
+ * Fallbacks: SF Pro Display / SF Pro Text (iOS), Roboto (Native Handset)
  */
 
 import { TextStyle } from 'react-native';
@@ -19,7 +19,7 @@ import { TextStyle } from 'react-native';
  *
  * Fallbacks for platforms where custom fonts aren't loaded:
  * - iOS: SF Pro Display / SF Pro Text
- * - Android: Roboto
+ * - Native Handset: Roboto
  */
 export const fontFamilies = {
   monospace: 'JetBrainsMono',

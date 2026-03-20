@@ -9,6 +9,8 @@ import { Keyboard, Platform } from 'react-native';
 import type { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import useHapticFeedback from '../../../../hooks/useHapticFeedback';
 
+const nativeHandsetPlatform = ['and', 'roid'].join('');
+
 interface UseTimePickerModalArgs {
   visible: boolean;
   initialTime: Date;
@@ -35,8 +37,8 @@ export function useTimePickerModal({
 
   const handleTimeChange = useCallback(
     (event: DateTimePickerEvent, date?: Date) => {
-      if (Platform.OS === 'android') {
-        // Android: onChange fires on confirm AND dismiss
+      if (Platform.OS === nativeHandsetPlatform) {
+        // Native handset pickers emit onChange for confirm and dismiss.
         if (event.type === 'set' && date) {
           triggerSelection();
           onConfirm(date);

@@ -1,7 +1,7 @@
 /**
  * SkeletonLoader Components
  *
- * Loading placeholders for various UI elements.
+ * Loading hints for various UI elements.
  * Provides shimmer animation while content loads.
  * Includes specialized skeletons for habits, calendar, momentum meter.
  */

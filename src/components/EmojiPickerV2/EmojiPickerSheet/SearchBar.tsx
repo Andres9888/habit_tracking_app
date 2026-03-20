@@ -11,6 +11,7 @@ import Animated, {
   type AnimatedStyle,
   type SharedValue,
 } from 'react-native-reanimated';
+import { buildTextInputHintProps } from '@/utils/textInputHintProps';
 import { colors } from '../../../theme/colors';
 import { styles } from './EmojiPickerSheet.styles';
 
@@ -53,11 +54,13 @@ export function SearchBar({
         <TextInput
           accessibilityHint='Type keywords to search for emojis'
           accessibilityLabel='Search emojis'
-          placeholder='Search or type habit name...'
-          placeholderTextColor={colors.gray[400]}
           returnKeyType='search'
           style={styles.searchInput}
           value={value}
+          {...buildTextInputHintProps(
+            'Search or type habit name...',
+            colors.gray[400]
+          )}
           onBlur={handleBlur}
           onChangeText={onChange}
           onFocus={handleFocus}

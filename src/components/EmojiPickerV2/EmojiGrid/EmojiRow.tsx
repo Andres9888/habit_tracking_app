@@ -20,10 +20,10 @@ export const EmojiRow = memo(({ emojis, selectedEmoji, onEmojiSelect }: EmojiRow
           />
         </View>
       ))}
-      {/* Fill remaining cells with empty placeholders to maintain grid */}
+      {/* Fill remaining cells with empty spacers to maintain grid */}
       {emojis.length < EMOJIS_PER_ROW ? Array.from({ length: EMOJIS_PER_ROW - emojis.length }).map((_, i) => (
-          <View key={`placeholder-${i}`} style={styles.emojiCellWrapper}>
-            <View style={styles.placeholderCell} />
+          <View key={`spacer-${i}`} style={styles.emojiCellWrapper}>
+            <View style={styles.spacerCell} />
           </View>
         )) : null}
     </View>

@@ -1115,7 +1115,7 @@ describe('Accessibility Best Practices Documentation', () => {
      * □ CTA buttons use high-contrast combinations
      * □ Disabled states communicate via accessibilityState
      * □ Selection states communicate via accessibilityState
-     * □ Test with VoiceOver (iOS) and TalkBack (Android)
+     * □ Test with VoiceOver (iOS) and TalkBack (Native Handset)
      */
 
     expect(true).toBe(true); // Checklist documentation

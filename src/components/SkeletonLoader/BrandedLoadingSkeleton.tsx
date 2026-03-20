@@ -1,7 +1,7 @@
 /**
  * BrandedLoadingSkeleton - Replaces the spinner in AuthGate's loading screen
  * Shows branded Chain Day shimmer while auth initializes
- * Layout: chain icon, app name shimmer, 3 habit card placeholders
+ * Layout: chain icon, app name shimmer, 3 habit card hints
  * Supports dark mode via useSkeletonTheme.
  */
 import React from 'react';

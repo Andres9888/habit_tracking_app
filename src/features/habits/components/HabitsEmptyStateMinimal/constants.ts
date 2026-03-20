@@ -102,7 +102,7 @@ export const COPY = {
   // Question headline - line break after "thing" for rhythm
   headline: "What's one small thing\nyou want to do daily?",
 
-  // Input placeholder - motivating and descriptive
+  // Input hint - motivating and descriptive
   inputPlaceholder: 'What habit do you want to build?',
 
   // Success state

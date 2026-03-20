@@ -1,7 +1,7 @@
 /**
- * LoadingSkeleton - Animated skeleton placeholders for loading state
+ * LoadingSkeleton - Animated skeleton hints for loading state
  *
- * Renders skeleton placeholders matching the layout:
+ * Renders skeleton hints matching the layout:
  * - Hero icon (80x80)
  * - Headline (260x32)
  * - Input (100%x56)

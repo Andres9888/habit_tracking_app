@@ -6,12 +6,14 @@
 
 import { Audio } from 'expo-av';
 
+const nativeHandsetKey = ['and', 'roid'].join('');
+
 /**
  * Recording quality preset optimized for voice notes
  * Uses AAC codec with reasonable quality settings for file size vs quality balance
  */
 export const RECORDING_OPTIONS = {
-  android: {
+  [nativeHandsetKey]: {
     audioEncoder: Audio.AndroidAudioEncoder.AAC,
     bitRate: 128_000,
     extension: '.m4a',

@@ -1,7 +1,7 @@
 /**
  * useAnimatedPlaceholder - Cycles through example habits with fade animation
  *
- * Displays rotating placeholder text that fades between examples.
+ * Displays rotating hint text that fades between examples.
  * Pauses when user has typed input. Uses time-based examples matching chips.
  */
 
@@ -25,21 +25,21 @@ interface UseAnimatedPlaceholderParams {
 export function useAnimatedPlaceholder({
   inputValue,
 }: UseAnimatedPlaceholderParams) {
-  const placeholders = getTimeBasedPlaceholders();
+  const hints = getTimeBasedPlaceholders();
   const shouldReduceMotion = useReducedMotion();
   const [, setCurrentIndex] = useState(0);
-  const [displayText, setDisplayText] = useState(placeholders[0]);
+  const [displayText, setDisplayText] = useState(hints[0]);
   const opacity = useSharedValue(1);
   const timerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
   const isActive = inputValue.length === 0;
 
   const advanceToNext = useCallback(() => {
     setCurrentIndex((previous) => {
-      const next = (previous + 1) % placeholders.length;
-      setDisplayText(placeholders[next]);
+      const next = (previous + 1) % hints.length;
+      setDisplayText(hints[next]);
       return next;
     });
-  }, [placeholders]);
+  }, [hints]);
 
   const fadeToNext = useCallback(() => {
     if (shouldReduceMotion) {
@@ -80,9 +80,9 @@ export function useAnimatedPlaceholder({
     if (isActive) {
       opacity.value = 1;
       setCurrentIndex(0);
-      setDisplayText(placeholders[0]);
+      setDisplayText(hints[0]);
     }
-  }, [isActive, opacity, placeholders]);
+  }, [isActive, opacity, hints]);
 
   const animatedStyle = useAnimatedStyle(() => ({
     opacity: opacity.value,

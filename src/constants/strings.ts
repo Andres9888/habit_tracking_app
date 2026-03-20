@@ -16,7 +16,7 @@ export const STRINGS = {
     motivationSuffix: ' — consistency is key 🔥',
     nameHelper: 'Tip: Be specific — include a time, trigger, or place.',
     nameLabel: 'Habit name',
-    namePlaceholder: 'e.g., Read for 10 minutes before bed',
+    namePrompt: 'Name your habit',
     // V9 additions
     orCreateYourOwn: 'or create your own',
 

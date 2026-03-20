@@ -34,7 +34,7 @@ export function CategorySearchView(p: CategorySearchViewProps) {
       />
       <View style={styles.searchSection}>
         <SearchBar
-          placeholder='Search habits or science keywords'
+          inputHint='Search habits or science keywords'
           value={p.searchQuery}
           onChangeText={p.setSearchQuery}
           onClear={() => p.setSearchQuery('')}

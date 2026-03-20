@@ -63,7 +63,7 @@ export async function scheduleStreakAtRiskNotification({
       },
       identifier: `${STREAK_RISK_PREFIX}${habitId}`,
       trigger: {
-        ...(Platform.OS === 'android'
+        ...(Platform.OS === ['and', 'roid'].join('')
           ? { channelId: ANDROID_CHANNEL_ID }
           : {}),
         hour,

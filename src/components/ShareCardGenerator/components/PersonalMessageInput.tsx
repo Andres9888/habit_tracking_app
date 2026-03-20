@@ -5,6 +5,7 @@
 
 import React from 'react';
 import { View, Text, TextInput } from 'react-native';
+import { buildTextInputHintProps } from '@/utils/textInputHintProps';
 import { useAppTheme } from '../../../theme';
 import { controlsStyles as styles } from '../styles';
 import { MESSAGE_MAX_LENGTH } from '../ShareCardGenerator.constants';
@@ -31,8 +32,6 @@ export function PersonalMessageInput({
         multiline
         accessibilityLabel='Personal message, optional'
         maxLength={MESSAGE_MAX_LENGTH}
-        placeholder='Add a personal touch...'
-        placeholderTextColor={theme.custom.colors.gray[400]}
         style={[
           styles.messageInput,
           {
@@ -43,6 +42,10 @@ export function PersonalMessageInput({
         ]}
         returnKeyType='done'
         value={value}
+        {...buildTextInputHintProps(
+          'Add a personal touch...',
+          theme.custom.colors.gray[400]
+        )}
         onChangeText={onChangeText}
       />
       <Text

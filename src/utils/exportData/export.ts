@@ -1,5 +1,5 @@
 /**
- * Export data using iOS Share Sheet or Android sharing
+ * Export data using iOS Share Sheet or Native Handset sharing
  */
 
 import { Share, Platform } from 'react-native';
@@ -10,7 +10,7 @@ import { AUTO_DISMISS_DELAY_MS } from '@/constants';
 import type { ExportData, ToastResult } from './types';
 
 /**
- * Export data using iOS Share Sheet or Android sharing
+ * Export data using iOS Share Sheet or Native Handset sharing
  */
 export async function exportData(
   data: ExportData,

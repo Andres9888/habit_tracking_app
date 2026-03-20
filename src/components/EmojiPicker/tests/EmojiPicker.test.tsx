@@ -177,7 +177,7 @@ describe('EmojiPicker - Story 2.8', () => {
   });
 
   describe('AC3: Improved Search', () => {
-    it('should have search placeholder with examples', () => {
+    it('should have search hint with examples', () => {
       const { getByPlaceholderText } = render(
         <EmojiPicker {...defaultProps} />
       );

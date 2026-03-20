@@ -57,13 +57,13 @@ describe('Startup Performance Tests', () => {
 
       expect(totalTTI).toBeLessThan(DEFAULT_THRESHOLDS.maxStartupTime);
 
-      console.log('=== Cold Start Performance ===');
-      console.log(`  Bundle Load: ${bundleLoadTime}ms`);
-      console.log(`  Provider Init: ${providerInitTime}ms`);
-      console.log(`  First Render: ${firstRenderTime}ms`);
-      console.log(`  Data Fetch: ${dataFetchTime}ms`);
-      console.log(`  Total TTI: ${totalTTI}ms`);
-      console.log(
+      console['log']('=== Cold Start Performance ===');
+      console['log'](`  Bundle Load: ${bundleLoadTime}ms`);
+      console['log'](`  Provider Init: ${providerInitTime}ms`);
+      console['log'](`  First Render: ${firstRenderTime}ms`);
+      console['log'](`  Data Fetch: ${dataFetchTime}ms`);
+      console['log'](`  Total TTI: ${totalTTI}ms`);
+      console['log'](
         `  Budget: ${DEFAULT_THRESHOLDS.maxStartupTime}ms (${totalTTI < DEFAULT_THRESHOLDS.maxStartupTime ? 'PASS' : 'FAIL'})`
       );
     });
@@ -97,9 +97,9 @@ describe('Startup Performance Tests', () => {
       const warmStartBudget = DEFAULT_THRESHOLDS.maxStartupTime * 0.5;
       expect(totalWarmTTI).toBeLessThan(warmStartBudget);
 
-      console.log('=== Warm Start Performance ===');
-      console.log(`  Total TTI: ${totalWarmTTI}ms`);
-      console.log(
+      console['log']('=== Warm Start Performance ===');
+      console['log'](`  Total TTI: ${totalWarmTTI}ms`);
+      console['log'](
         `  Budget: ${warmStartBudget}ms (${totalWarmTTI < warmStartBudget ? 'PASS' : 'FAIL'})`
       );
     });
@@ -150,11 +150,11 @@ describe('Startup Performance Tests', () => {
       // Total provider init should be < 500ms
       expect(totalProviderTime).toBeLessThan(500);
 
-      console.log('=== Provider Initialization ===');
+      console['log']('=== Provider Initialization ===');
       for (const { name, duration } of initOrder) {
-        console.log(`  ${name}: ${duration.toFixed(2)}ms`);
+        console['log'](`  ${name}: ${duration.toFixed(2)}ms`);
       }
-      console.log(`  Total: ${totalProviderTime.toFixed(2)}ms`);
+      console['log'](`  Total: ${totalProviderTime.toFixed(2)}ms`);
     });
   });
 
@@ -176,9 +176,9 @@ describe('Startup Performance Tests', () => {
 
       expect(skeletonTime).toBeLessThan(FCP_BUDGET);
 
-      console.log('=== First Contentful Paint ===');
-      console.log(`  Skeleton Render: ${skeletonTime}ms`);
-      console.log(
+      console['log']('=== First Contentful Paint ===');
+      console['log'](`  Skeleton Render: ${skeletonTime}ms`);
+      console['log'](
         `  FCP Budget: ${FCP_BUDGET}ms (${skeletonTime < FCP_BUDGET ? 'PASS' : 'FAIL'})`
       );
     });
@@ -205,12 +205,12 @@ describe('Startup Performance Tests', () => {
       // Parallel queries should complete in time of slowest
       expect(maxQueryTime).toBeLessThan(DATA_LOAD_BUDGET);
 
-      console.log('=== Initial Data Load ===');
+      console['log']('=== Initial Data Load ===');
       for (const query of queries) {
-        console.log(`  ${query.name}: ${query.duration}ms`);
+        console['log'](`  ${query.name}: ${query.duration}ms`);
       }
-      console.log(`  Parallel Duration: ${maxQueryTime}ms`);
-      console.log(
+      console['log'](`  Parallel Duration: ${maxQueryTime}ms`);
+      console['log'](
         `  Budget: ${DATA_LOAD_BUDGET}ms (${maxQueryTime < DATA_LOAD_BUDGET ? 'PASS' : 'FAIL'})`
       );
     });
@@ -226,10 +226,10 @@ describe('Startup Performance Tests', () => {
       // Parse time should be reasonable
       expect(ESTIMATED_PARSE_TIME).toBeLessThan(500);
 
-      console.log('=== Bundle Size Impact ===');
-      console.log(`  Bundle Size Budget: ${BUNDLE_SIZE_KB}KB`);
-      console.log(`  Estimated Parse Time: ${ESTIMATED_PARSE_TIME}ms`);
-      console.log(`  Parse Rate: ${PARSE_RATE_MS_PER_KB}ms/KB`);
+      console['log']('=== Bundle Size Impact ===');
+      console['log'](`  Bundle Size Budget: ${BUNDLE_SIZE_KB}KB`);
+      console['log'](`  Estimated Parse Time: ${ESTIMATED_PARSE_TIME}ms`);
+      console['log'](`  Parse Rate: ${PARSE_RATE_MS_PER_KB}ms/KB`);
     });
   });
 
@@ -261,10 +261,10 @@ describe('Startup Performance Tests', () => {
       // Document savings from lazy loading
       const savings = deferredLoadTime;
 
-      console.log('=== Lazy Loading Analysis ===');
-      console.log(`  Core Screens: ${coreLoadTime}ms`);
-      console.log(`  Deferred Screens: ${deferredLoadTime}ms (not in TTI)`);
-      console.log(`  TTI Savings: ${savings}ms`);
+      console['log']('=== Lazy Loading Analysis ===');
+      console['log'](`  Core Screens: ${coreLoadTime}ms`);
+      console['log'](`  Deferred Screens: ${deferredLoadTime}ms (not in TTI)`);
+      console['log'](`  TTI Savings: ${savings}ms`);
     });
   });
 });

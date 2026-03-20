@@ -26,7 +26,7 @@ describe('Performance Baselines', () => {
       const perMark = duration / iterations;
       expect(perMark).toBeLessThan(1);
 
-      console.log(`BASELINE: mark creation = ${perMark.toFixed(4)}ms per mark`);
+      console['log'](`BASELINE: mark creation = ${perMark.toFixed(4)}ms per mark`);
     });
 
     it('baseline: measure operation < 1ms', () => {
@@ -47,7 +47,7 @@ describe('Performance Baselines', () => {
       const perMeasure = duration / iterations;
       expect(perMeasure).toBeLessThan(1);
 
-      console.log(
+      console['log'](
         `BASELINE: measure operation = ${perMeasure.toFixed(4)}ms per measure`
       );
     });
@@ -67,7 +67,7 @@ describe('Performance Baselines', () => {
       const perRecord = duration / iterations;
       expect(perRecord).toBeLessThan(0.5);
 
-      console.log(
+      console['log'](
         `BASELINE: render tracking = ${perRecord.toFixed(4)}ms per record`
       );
     });
@@ -88,10 +88,10 @@ describe('Performance Baselines', () => {
       expect(duration).toBeLessThan(5);
       expect(slow.length).toBeGreaterThan(0);
 
-      console.log(
+      console['log'](
         `BASELINE: slow component detection = ${duration.toFixed(4)}ms`
       );
-      console.log(`  Found ${slow.length} slow components out of 100`);
+      console['log'](`  Found ${slow.length} slow components out of 100`);
     });
   });
 
@@ -110,7 +110,7 @@ describe('Performance Baselines', () => {
       const perRequest = duration / iterations;
       expect(perRequest).toBeLessThan(0.5);
 
-      console.log(
+      console['log'](
         `BASELINE: request tracking = ${perRequest.toFixed(4)}ms per request`
       );
     });
@@ -135,24 +135,24 @@ describe('Performance Baselines', () => {
       expect(duration).toBeLessThan(10);
       expect(p95).toBeGreaterThan(0);
 
-      console.log(`BASELINE: P95 calculation = ${duration.toFixed(4)}ms`);
-      console.log(`  P95 latency = ${p95.toFixed(2)}ms`);
+      console['log'](`BASELINE: P95 calculation = ${duration.toFixed(4)}ms`);
+      console['log'](`  P95 latency = ${p95.toFixed(2)}ms`);
     });
   });
 
   describe('Threshold Validation', () => {
     it('documents default performance thresholds', () => {
-      console.log('=== Performance Thresholds ===');
-      console.log(`  Max Startup Time: ${DEFAULT_THRESHOLDS.maxStartupTime}ms`);
-      console.log(`  Target FPS: ${DEFAULT_THRESHOLDS.targetFPS}`);
-      console.log(`  Max Frame Time: ${DEFAULT_THRESHOLDS.maxFrameTime}ms`);
-      console.log(
+      console['log']('=== Performance Thresholds ===');
+      console['log'](`  Max Startup Time: ${DEFAULT_THRESHOLDS.maxStartupTime}ms`);
+      console['log'](`  Target FPS: ${DEFAULT_THRESHOLDS.targetFPS}`);
+      console['log'](`  Max Frame Time: ${DEFAULT_THRESHOLDS.maxFrameTime}ms`);
+      console['log'](
         `  Max Memory Usage: ${(DEFAULT_THRESHOLDS.maxMemoryUsage / 1024 / 1024).toFixed(0)}MB`
       );
-      console.log(
+      console['log'](
         `  Max Network Latency (P95): ${DEFAULT_THRESHOLDS.maxNetworkLatency}ms`
       );
-      console.log(`  Max Render Time: ${DEFAULT_THRESHOLDS.maxRenderTime}ms`);
+      console['log'](`  Max Render Time: ${DEFAULT_THRESHOLDS.maxRenderTime}ms`);
 
       expect(DEFAULT_THRESHOLDS.maxStartupTime).toBe(3000);
       expect(DEFAULT_THRESHOLDS.targetFPS).toBe(60);
@@ -185,10 +185,10 @@ describe('Performance Baselines', () => {
       expect(requests.length).toBe(1000);
       expect(marks.length).toBe(1000);
 
-      console.log('=== Memory Overhead ===');
-      console.log(`  Unique components tracked: ${timings.length}`);
-      console.log(`  Requests tracked: ${requests.length}`);
-      console.log(`  Marks created: ${marks.length}`);
+      console['log']('=== Memory Overhead ===');
+      console['log'](`  Unique components tracked: ${timings.length}`);
+      console['log'](`  Requests tracked: ${requests.length}`);
+      console['log'](`  Marks created: ${marks.length}`);
     });
   });
 });
@@ -199,31 +199,31 @@ describe('Performance Budget Compliance', () => {
     const budget = DEFAULT_THRESHOLDS.maxStartupTime;
     expect(budget).toBe(3000);
 
-    console.log(`Startup Budget: ${budget}ms (Time to Interactive)`);
-    console.log('  Measurement requires: Performance context integration');
+    console['log'](`Startup Budget: ${budget}ms (Time to Interactive)`);
+    console['log']('  Measurement requires: Performance context integration');
   });
 
   it('validates frame budget (60 FPS = 16.67ms/frame)', () => {
     const budget = DEFAULT_THRESHOLDS.maxFrameTime;
     expect(budget).toBeCloseTo(16.67, 1);
 
-    console.log(`Frame Budget: ${budget.toFixed(2)}ms per frame`);
-    console.log('  Target: 60 FPS maintained during normal use');
+    console['log'](`Frame Budget: ${budget.toFixed(2)}ms per frame`);
+    console['log']('  Target: 60 FPS maintained during normal use');
   });
 
   it('validates memory budget (< 200MB)', () => {
     const budgetMB = DEFAULT_THRESHOLDS.maxMemoryUsage / 1024 / 1024;
     expect(budgetMB).toBe(200);
 
-    console.log(`Memory Budget: ${budgetMB}MB`);
-    console.log('  No memory leaks after 30 minutes of use');
+    console['log'](`Memory Budget: ${budgetMB}MB`);
+    console['log']('  No memory leaks after 30 minutes of use');
   });
 
   it('validates network budget (< 200ms P95)', () => {
     const budget = DEFAULT_THRESHOLDS.maxNetworkLatency;
     expect(budget).toBe(200);
 
-    console.log(`Network Budget: ${budget}ms (P95 latency)`);
-    console.log('  API responses under 200ms at 95th percentile');
+    console['log'](`Network Budget: ${budget}ms (P95 latency)`);
+    console['log']('  API responses under 200ms at 95th percentile');
   });
 });

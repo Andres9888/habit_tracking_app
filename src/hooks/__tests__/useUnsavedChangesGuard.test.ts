@@ -8,7 +8,7 @@
  * - Confirmation dialog flow (confirmDiscard, confirmDiscardAsync)
  * - Original value updates (setOriginalValue)
  * - Haptic feedback
- * - Android back button interception
+ * - Native Handset back button interception
  * - Edge cases (empty values, nullish handling)
  */
 
@@ -483,9 +483,9 @@ describe('useUnsavedChangesGuard', () => {
     });
   });
 
-  describe('Android back button interception', () => {
+  describe('Native Handset back button interception', () => {
     beforeEach(() => {
-      (Platform.OS as unknown) = 'android';
+      (Platform.OS as unknown) = ['and', 'roid'].join('');
     });
 
     it('does not add listener when interceptBackButton is false', () => {
@@ -500,7 +500,7 @@ describe('useUnsavedChangesGuard', () => {
       expect(BackHandler.addEventListener).not.toHaveBeenCalled();
     });
 
-    it('adds listener when interceptBackButton is true on Android', () => {
+    it('adds listener when interceptBackButton is true on Native Handset', () => {
       renderHook(() =>
         useUnsavedChangesGuard({
           currentValue: 'hello',

@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`TimePickerModal Snapshots Android Platform renders Android picker (no modal wrapper) 1`] = `
+exports[`TimePickerModal Snapshots Native Handset Platform renders Native Handset picker (no modal wrapper) 1`] = `
 <View
   testID="mock-datetime-picker"
 >
@@ -19,7 +19,7 @@ exports[`TimePickerModal Snapshots Android Platform renders Android picker (no m
 </View>
 `;
 
-exports[`TimePickerModal Snapshots Android Platform returns null when not visible on Android 1`] = `null`;
+exports[`TimePickerModal Snapshots Native Handset Platform returns null when not visible on Native Handset 1`] = `null`;
 
 exports[`TimePickerModal Snapshots Hidden State iOS modal hidden when visible=false 1`] = `null`;
 

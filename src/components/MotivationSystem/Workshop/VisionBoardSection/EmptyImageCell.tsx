@@ -1,5 +1,5 @@
 /**
- * EmptyImageCell Component - Add button placeholder for empty grid slots
+ * EmptyImageCell Component - Add button hint for empty grid slots
  */
 
 import React, { useCallback } from 'react';

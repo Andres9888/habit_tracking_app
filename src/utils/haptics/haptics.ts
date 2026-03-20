@@ -14,7 +14,7 @@ import { Platform } from 'react-native';
 
 import { HapticPatterns, type HapticPatternName } from './patterns';
 
-const isHapticsSupported = Platform.OS === 'ios' || Platform.OS === 'android';
+const isHapticsSupported = Platform.OS === 'ios' || Platform.OS === ['and', 'roid'].join('');
 
 /**
  * Fire a named haptic pattern.

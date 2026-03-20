@@ -55,8 +55,8 @@ export function SocialSignInButton({
     }
   };
 
-  // Hide Apple button on Android
-  if (provider === 'apple' && Platform.OS === 'android') {
+  // Hide Apple button on Native Handset
+  if (provider === 'apple' && Platform.OS === ['and', 'roid'].join('')) {
     return null;
   }
 

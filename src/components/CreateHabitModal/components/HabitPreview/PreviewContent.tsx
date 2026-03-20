@@ -70,7 +70,7 @@ export const PreviewContent = ({
           </Text>
         ) : (
           <Text className='text-lg font-semibold' style={{ color: themeColors.text.tertiary }}>
-            {STRINGS.CREATE_HABIT.namePlaceholder}
+            {STRINGS.CREATE_HABIT.namePrompt}
           </Text>
         )}
         <Text className='text-sm' style={{ color: themeColors.text.secondary }}>

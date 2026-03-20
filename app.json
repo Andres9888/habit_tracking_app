@@ -4,6 +4,7 @@
     "slug": "daily-habits-981f52",
     "scheme": "habit-tracker",
     "version": "1.0.0",
+    "description": "Chain Day makes consistency visible with chain-based habit tracking, streak progress, and offline-friendly routines.",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",

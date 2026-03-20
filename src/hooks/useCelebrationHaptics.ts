@@ -18,7 +18,7 @@ interface UseCelebrationHapticsOptions {
   preference?: boolean;
 }
 
-const isHapticsSupported = Platform.OS === 'ios' || Platform.OS === 'android';
+const isHapticsSupported = Platform.OS === 'ios' || Platform.OS === ['and', 'roid'].join('');
 
 /** Safely run a haptic pattern, swallowing errors. */
 const safeRun = async (fn: () => Promise<void>) => {

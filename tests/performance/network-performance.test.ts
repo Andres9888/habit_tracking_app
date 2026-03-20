@@ -48,11 +48,11 @@ describe('Network Performance Tests', () => {
 
       const avgLatency = networkMonitor.getAverageLatency();
 
-      console.log('=== API Latency Distribution ===');
-      console.log(`  Total Requests: ${latencies.length}`);
-      console.log(`  Average Latency: ${avgLatency.toFixed(0)}ms`);
-      console.log(`  P95 Latency: ${p95.toFixed(0)}ms`);
-      console.log(
+      console['log']('=== API Latency Distribution ===');
+      console['log'](`  Total Requests: ${latencies.length}`);
+      console['log'](`  Average Latency: ${avgLatency.toFixed(0)}ms`);
+      console['log'](`  P95 Latency: ${p95.toFixed(0)}ms`);
+      console['log'](
         `  Budget: ${P95_BUDGET}ms (${p95 < P95_BUDGET ? 'PASS' : 'FAIL'})`
       );
     });
@@ -85,13 +85,13 @@ describe('Network Performance Tests', () => {
         DEFAULT_THRESHOLDS.maxNetworkLatency
       );
 
-      console.log('=== Convex Query Performance ===');
+      console['log']('=== Convex Query Performance ===');
       for (const query of queryTypes) {
-        console.log(
+        console['log'](
           `  ${query.name}: ~${query.avgLatency}ms (${query.count} calls)`
         );
       }
-      console.log(`  Overall Average: ${stats.averageLatency.toFixed(0)}ms`);
+      console['log'](`  Overall Average: ${stats.averageLatency.toFixed(0)}ms`);
     });
   });
 
@@ -117,12 +117,12 @@ describe('Network Performance Tests', () => {
         expect(mutation.latency).toBeLessThan(MUTATION_BUDGET);
       }
 
-      console.log('=== Mutation Performance ===');
+      console['log']('=== Mutation Performance ===');
       for (const mutation of mutations) {
         const status = mutation.latency < MUTATION_BUDGET ? '✓' : '⚠️';
-        console.log(`  ${status} ${mutation.name}: ${mutation.latency}ms`);
+        console['log'](`  ${status} ${mutation.name}: ${mutation.latency}ms`);
       }
-      console.log(`  Budget: ${MUTATION_BUDGET}ms`);
+      console['log'](`  Budget: ${MUTATION_BUDGET}ms`);
     });
   });
 
@@ -142,12 +142,12 @@ describe('Network Performance Tests', () => {
       const errorRate = networkMonitor.getErrorRate();
       expect(errorRate).toBeLessThan(ERROR_RATE_THRESHOLD);
 
-      console.log('=== Error Rate Monitoring ===');
-      console.log(`  Total Requests: 1000`);
-      console.log(`  Successful: 995`);
-      console.log(`  Failed: 5`);
-      console.log(`  Error Rate: ${(errorRate * 100).toFixed(2)}%`);
-      console.log(
+      console['log']('=== Error Rate Monitoring ===');
+      console['log'](`  Total Requests: 1000`);
+      console['log'](`  Successful: 995`);
+      console['log'](`  Failed: 5`);
+      console['log'](`  Error Rate: ${(errorRate * 100).toFixed(2)}%`);
+      console['log'](
         `  Threshold: ${(ERROR_RATE_THRESHOLD * 100).toFixed(0)}% (${errorRate < ERROR_RATE_THRESHOLD ? 'PASS' : 'FAIL'})`
       );
     });
@@ -167,11 +167,11 @@ describe('Network Performance Tests', () => {
 
       expect(batchLatency).toBeLessThan(totalIndividual);
 
-      console.log('=== Request Batching Efficiency ===');
-      console.log(`  Individual Total: ${totalIndividual}ms (sequential)`);
-      console.log(`  Batched: ${batchLatency}ms (parallel)`);
-      console.log(`  Time Saved: ${timeSaved}ms`);
-      console.log(`  Efficiency Gain: ${efficiency.toFixed(0)}%`);
+      console['log']('=== Request Batching Efficiency ===');
+      console['log'](`  Individual Total: ${totalIndividual}ms (sequential)`);
+      console['log'](`  Batched: ${batchLatency}ms (parallel)`);
+      console['log'](`  Time Saved: ${timeSaved}ms`);
+      console['log'](`  Efficiency Gain: ${efficiency.toFixed(0)}%`);
     });
   });
 
@@ -201,9 +201,9 @@ describe('Network Performance Tests', () => {
         DEFAULT_THRESHOLDS.maxNetworkLatency * 1.5
       );
 
-      console.log('=== Payload Size Impact ===');
+      console['log']('=== Payload Size Impact ===');
       for (const test of payloadTests) {
-        console.log(`  ${test.sizeKB}KB: ${test.expectedLatency}ms`);
+        console['log'](`  ${test.sizeKB}KB: ${test.expectedLatency}ms`);
       }
     });
   });
@@ -229,9 +229,9 @@ describe('Network Performance Tests', () => {
       expect(slowest[0].url).toBe('/api/export');
       expect(slowest.length).toBe(3);
 
-      console.log('=== Slowest Requests ===');
+      console['log']('=== Slowest Requests ===');
       for (const req of slowest) {
-        console.log(`  ${req.url}: ${req.duration}ms`);
+        console['log'](`  ${req.url}: ${req.duration}ms`);
       }
     });
   });
@@ -255,11 +255,11 @@ describe('Network Performance Tests', () => {
       // Total with retries should be reasonable
       expect(totalTime).toBeLessThan(1000);
 
-      console.log('=== Retry Behavior Analysis ===');
-      console.log(`  Base Timeout: ${BASE_TIMEOUT}ms`);
-      console.log(`  Max Retries: ${MAX_RETRIES}`);
-      console.log(`  Retry Delays: ${retryDelays.slice(1).join(', ')}ms`);
-      console.log(`  Total Worst Case: ${totalTime}ms`);
+      console['log']('=== Retry Behavior Analysis ===');
+      console['log'](`  Base Timeout: ${BASE_TIMEOUT}ms`);
+      console['log'](`  Max Retries: ${MAX_RETRIES}`);
+      console['log'](`  Retry Delays: ${retryDelays.slice(1).join(', ')}ms`);
+      console['log'](`  Total Worst Case: ${totalTime}ms`);
     });
   });
 
@@ -282,12 +282,12 @@ describe('Network Performance Tests', () => {
         subscriptionUpdates.reduce((sum, s) => sum + s.latency, 0) /
         subscriptionUpdates.length;
 
-      console.log('=== Subscription Performance ===');
+      console['log']('=== Subscription Performance ===');
       for (const sub of subscriptionUpdates) {
-        console.log(`  ${sub.name}: ${sub.latency}ms`);
+        console['log'](`  ${sub.name}: ${sub.latency}ms`);
       }
-      console.log(`  Average: ${avgSubLatency.toFixed(0)}ms`);
-      console.log(`  Budget: ${SUBSCRIPTION_LATENCY_BUDGET}ms`);
+      console['log'](`  Average: ${avgSubLatency.toFixed(0)}ms`);
+      console['log'](`  Budget: ${SUBSCRIPTION_LATENCY_BUDGET}ms`);
     });
   });
 
@@ -313,11 +313,11 @@ describe('Network Performance Tests', () => {
 
       expect(avgPerItem).toBeLessThan(QUEUE_PROCESSING_BUDGET_PER_ITEM);
 
-      console.log('=== Offline Queue Processing ===');
-      console.log(`  Queued Items: ${queuedMutations.length}`);
-      console.log(`  Total Processing: ${totalProcessingTime.toFixed(0)}ms`);
-      console.log(`  Avg Per Item: ${avgPerItem.toFixed(0)}ms`);
-      console.log(`  Budget: ${QUEUE_PROCESSING_BUDGET_PER_ITEM}ms/item`);
+      console['log']('=== Offline Queue Processing ===');
+      console['log'](`  Queued Items: ${queuedMutations.length}`);
+      console['log'](`  Total Processing: ${totalProcessingTime.toFixed(0)}ms`);
+      console['log'](`  Avg Per Item: ${avgPerItem.toFixed(0)}ms`);
+      console['log'](`  Budget: ${QUEUE_PROCESSING_BUDGET_PER_ITEM}ms/item`);
     });
   });
 });

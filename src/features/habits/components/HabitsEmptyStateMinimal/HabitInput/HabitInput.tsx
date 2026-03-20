@@ -1,10 +1,11 @@
 /**
- * HabitInput - Text input with animated focus states and cycling placeholder
+ * HabitInput - Text input with animated focus states and cycling hint
  */
 
 import { forwardRef, useMemo } from 'react';
 import { Pressable, Text, TextInput, View } from 'react-native';
 import Animated from 'react-native-reanimated';
+import { buildTextInputHintProps } from '@/utils/textInputHintProps';
 import { CHARACTER_LIMIT, COPY } from '../constants';
 import type { HabitInputProps } from '../types';
 import { useEmptyStateColors } from '../useEmptyStateColors';
@@ -31,7 +32,7 @@ export const HabitInput = forwardRef<TextInput, HabitInputProps>(
     const { isFocused, containerStyle, handleFocus, handleBlur } =
       useInputAnimations({ onBlur, onFocus });
 
-    const placeholder = useAnimatedPlaceholder({ inputValue: value });
+    const rotatingPrompt = useAnimatedPlaceholder({ inputValue: value });
 
     const showClearButton = value.length > 0;
     const showCounter = isFocused || showClearButton;
@@ -57,12 +58,12 @@ export const HabitInput = forwardRef<TextInput, HabitInputProps>(
           }),
         ]}
       >
-        {placeholder.isActive ? <Animated.Text
+        {rotatingPrompt.isActive ? <Animated.Text
             accessibilityElementsHidden
             importantForAccessibility='no'
-            style={[placeholderOverlayStyle(colors.inputPlaceholder), placeholder.animatedStyle]}
+            style={[placeholderOverlayStyle(colors.inputPlaceholder), rotatingPrompt.animatedStyle]}
           >
-            {placeholder.displayText}
+            {rotatingPrompt.displayText}
           </Animated.Text> : null}
         <TextInput
           ref={ref}
@@ -71,12 +72,14 @@ export const HabitInput = forwardRef<TextInput, HabitInputProps>(
           autoCapitalize='sentences'
           autoCorrect={false}
           maxLength={CHARACTER_LIMIT.max}
-          placeholder={placeholder.isActive ? '' : COPY.inputPlaceholder}
-          placeholderTextColor={colors.inputPlaceholder}
           returnKeyType='done'
           selectionColor={colors.inputCaret}
           style={getInputTextStyle(colors.inputText)}
           value={value}
+          {...buildTextInputHintProps(
+            rotatingPrompt.isActive ? '' : COPY.inputPlaceholder,
+            colors.inputPlaceholder
+          )}
           onBlur={handleBlur}
           onChangeText={onChangeText}
           onFocus={handleFocus}

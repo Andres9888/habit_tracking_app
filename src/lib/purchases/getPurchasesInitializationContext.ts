@@ -8,7 +8,7 @@ interface PurchasesInitializationContext {
 }
 
 function getPurchasesApiKey(): string {
-  return Platform.OS === 'ios' ? API_KEYS.ios : API_KEYS.android;
+  return Platform.OS === 'ios' ? API_KEYS.ios : API_KEYS.mobile;
 }
 
 function logExpoGoSkip(): void {

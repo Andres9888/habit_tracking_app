@@ -22,7 +22,7 @@ function getValidationMessage(name: string): ValidationResult | null {
 
   if (trimmed.length >= 5) {
     return {
-      message: '💡 Add a number for specificity (e.g., "10 min")',
+      message: '💡 Add a number to make this habit easier to measure',
       type: 'tip',
     };
   }

@@ -8,6 +8,7 @@ import { useEffect, useRef } from 'react';
 import { Animated, Text, TextInput, View } from 'react-native';
 import { colors } from '@/theme/colors';
 import { useThemeColors } from '@/theme/ThemeContext';
+import { buildTextInputHintProps } from '@/utils/textInputHintProps';
 import useHapticFeedback from '../../../../hooks/useHapticFeedback';
 import type { HeroNameInputProps } from './types';
 import { MAX_LENGTH } from './types';
@@ -67,8 +68,6 @@ export const HeroNameInput = ({
           autoFocus={autoFocus}
           className='h-16 rounded-2xl bg-white px-5 pr-16 text-lg font-medium shadow-sm'
           maxLength={MAX_LENGTH}
-          placeholder='e.g., Read 10 minutes daily'
-          placeholderTextColor='#a8a29e'
           returnKeyType='done'
           style={{
             borderColor:
@@ -77,6 +76,7 @@ export const HeroNameInput = ({
             color: themeColors.text.primary,
           }}
           value={value}
+          {...buildTextInputHintProps('Name your habit', '#a8a29e')}
           onChangeText={onChange}
         />
 

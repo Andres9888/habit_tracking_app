@@ -14,6 +14,7 @@ import React from 'react';
 import { render, fireEvent, waitFor } from '@testing-library/react-native';
 import { AccessibilityInfo } from 'react-native';
 import { Gesture } from 'react-native-gesture-handler';
+import STRINGS from '../../../constants/strings';
 
 // Mock dependencies before imports
 jest.mock('convex/react', () => ({
@@ -178,7 +179,7 @@ describe('CreateHabitModal V11 Integration Tests', () => {
         <CreateHabitModal {...defaultProps} />
       );
 
-      const input = getByPlaceholderText('e.g., Read 10 minutes');
+      const input = getByPlaceholderText(STRINGS.CREATE_HABIT.namePrompt);
 
       // Type a habit name
       fireEvent.changeText(input, 'Morning Jog');
@@ -192,7 +193,7 @@ describe('CreateHabitModal V11 Integration Tests', () => {
     it('should show default preview text when habit name is empty', () => {
       const { getByText } = render(<CreateHabitModal {...defaultProps} />);
 
-      // Should show default placeholder
+      // Should show default hint
       expect(getByText('Your new habit')).toBeDefined();
     });
 
@@ -238,7 +239,7 @@ describe('CreateHabitModal V11 Integration Tests', () => {
       } = render(<CreateHabitModal {...defaultProps} />);
 
       // 1. Set name
-      const input = getByPlaceholderText('e.g., Read 10 minutes');
+      const input = getByPlaceholderText(STRINGS.CREATE_HABIT.namePrompt);
       fireEvent.changeText(input, 'Read Daily');
 
       // 2. Select emoji
@@ -262,7 +263,7 @@ describe('CreateHabitModal V11 Integration Tests', () => {
         <CreateHabitModal {...defaultProps} />
       );
 
-      const input = getByPlaceholderText('e.g., Read 10 minutes');
+      const input = getByPlaceholderText(STRINGS.CREATE_HABIT.namePrompt);
 
       // Type multiple characters quickly
       fireEvent.changeText(input, 'R');
@@ -295,7 +296,7 @@ describe('CreateHabitModal V11 Integration Tests', () => {
         <CreateHabitModal {...defaultProps} />
       );
 
-      const input = getByPlaceholderText('e.g., Read 10 minutes');
+      const input = getByPlaceholderText(STRINGS.CREATE_HABIT.namePrompt);
       fireEvent.changeText(input, 'R');
 
       await waitFor(() => {
@@ -313,7 +314,7 @@ describe('CreateHabitModal V11 Integration Tests', () => {
         <CreateHabitModal {...defaultProps} />
       );
 
-      const input = getByPlaceholderText('e.g., Read 10 minutes');
+      const input = getByPlaceholderText(STRINGS.CREATE_HABIT.namePrompt);
       fireEvent.changeText(input, 'Re');
 
       await waitFor(() => {
@@ -331,7 +332,7 @@ describe('CreateHabitModal V11 Integration Tests', () => {
         <CreateHabitModal {...defaultProps} />
       );
 
-      const input = getByPlaceholderText('e.g., Read 10 minutes');
+      const input = getByPlaceholderText(STRINGS.CREATE_HABIT.namePrompt);
       fireEvent.changeText(input, '   ');
 
       await waitFor(() => {
@@ -349,7 +350,7 @@ describe('CreateHabitModal V11 Integration Tests', () => {
         <CreateHabitModal {...defaultProps} />
       );
 
-      const input = getByPlaceholderText('e.g., Read 10 minutes');
+      const input = getByPlaceholderText(STRINGS.CREATE_HABIT.namePrompt);
 
       // First enable
       fireEvent.changeText(input, 'Read');
@@ -379,7 +380,7 @@ describe('CreateHabitModal V11 Integration Tests', () => {
         <CreateHabitModal {...defaultProps} />
       );
 
-      const input = getByPlaceholderText('e.g., Read 10 minutes');
+      const input = getByPlaceholderText(STRINGS.CREATE_HABIT.namePrompt);
       fireEvent.changeText(input, 'Read daily');
 
       // Should show book emoji in suggestions
@@ -394,7 +395,7 @@ describe('CreateHabitModal V11 Integration Tests', () => {
         <CreateHabitModal {...defaultProps} />
       );
 
-      const input = getByPlaceholderText('e.g., Read 10 minutes');
+      const input = getByPlaceholderText(STRINGS.CREATE_HABIT.namePrompt);
       fireEvent.changeText(input, 'Morning workout');
 
       // Should show muscle emoji in suggestions
@@ -409,7 +410,7 @@ describe('CreateHabitModal V11 Integration Tests', () => {
         <CreateHabitModal {...defaultProps} />
       );
 
-      const input = getByPlaceholderText('e.g., Read 10 minutes');
+      const input = getByPlaceholderText(STRINGS.CREATE_HABIT.namePrompt);
       fireEvent.changeText(input, 'Meditate 10 mins');
 
       // Should show meditation emoji in suggestions
@@ -424,7 +425,7 @@ describe('CreateHabitModal V11 Integration Tests', () => {
         <CreateHabitModal {...defaultProps} />
       );
 
-      const input = getByPlaceholderText('e.g., Read 10 minutes');
+      const input = getByPlaceholderText(STRINGS.CREATE_HABIT.namePrompt);
       fireEvent.changeText(input, 'Drink water');
 
       // Should show water emoji in suggestions
@@ -439,7 +440,7 @@ describe('CreateHabitModal V11 Integration Tests', () => {
         <CreateHabitModal {...defaultProps} />
       );
 
-      const input = getByPlaceholderText('e.g., Read 10 minutes');
+      const input = getByPlaceholderText(STRINGS.CREATE_HABIT.namePrompt);
       fireEvent.changeText(input, 'XYZABC');
 
       // Should show default emoji (target)
@@ -454,7 +455,7 @@ describe('CreateHabitModal V11 Integration Tests', () => {
         <CreateHabitModal {...defaultProps} />
       );
 
-      const input = getByPlaceholderText('e.g., Read 10 minutes');
+      const input = getByPlaceholderText(STRINGS.CREATE_HABIT.namePrompt);
 
       // Type quickly
       fireEvent.changeText(input, 'r');
@@ -476,7 +477,7 @@ describe('CreateHabitModal V11 Integration Tests', () => {
         <CreateHabitModal {...defaultProps} />
       );
 
-      const input = getByPlaceholderText('e.g., Read 10 minutes');
+      const input = getByPlaceholderText(STRINGS.CREATE_HABIT.namePrompt);
 
       // First type "read"
       fireEvent.changeText(input, 'Read');
@@ -503,7 +504,7 @@ describe('CreateHabitModal V11 Integration Tests', () => {
         <CreateHabitModal {...defaultProps} />
       );
 
-      const input = getByPlaceholderText('e.g., Read 10 minutes');
+      const input = getByPlaceholderText(STRINGS.CREATE_HABIT.namePrompt);
       fireEvent.changeText(input, 'READ DAILY');
 
       jest.advanceTimersByTime(300);
@@ -529,7 +530,7 @@ describe('CreateHabitModal V11 Integration Tests', () => {
         <CreateHabitModal {...defaultProps} />
       );
 
-      const input = getByPlaceholderText('e.g., Read 10 minutes');
+      const input = getByPlaceholderText(STRINGS.CREATE_HABIT.namePrompt);
       fireEvent.changeText(input, '12345678901234567890'); // Exactly 20
 
       await waitFor(() => {
@@ -542,7 +543,7 @@ describe('CreateHabitModal V11 Integration Tests', () => {
         <CreateHabitModal {...defaultProps} />
       );
 
-      const input = getByPlaceholderText('e.g., Read 10 minutes');
+      const input = getByPlaceholderText(STRINGS.CREATE_HABIT.namePrompt);
       fireEvent.changeText(input, '123456789012345678901'); // 21 characters
 
       await waitFor(() => {
@@ -555,7 +556,7 @@ describe('CreateHabitModal V11 Integration Tests', () => {
         <CreateHabitModal {...defaultProps} />
       );
 
-      const input = getByPlaceholderText('e.g., Read 10 minutes');
+      const input = getByPlaceholderText(STRINGS.CREATE_HABIT.namePrompt);
       fireEvent.changeText(input, '1234567890123456789012345678901'); // 31 characters
 
       await waitFor(() => {
@@ -570,7 +571,7 @@ describe('CreateHabitModal V11 Integration Tests', () => {
         <CreateHabitModal {...defaultProps} />
       );
 
-      const input = getByPlaceholderText('e.g., Read 10 minutes');
+      const input = getByPlaceholderText(STRINGS.CREATE_HABIT.namePrompt);
       fireEvent.changeText(input, '12345678901234567890123456789012345678901'); // 41 characters
 
       await waitFor(() => {
@@ -588,7 +589,7 @@ describe('CreateHabitModal V11 Integration Tests', () => {
       );
 
       // Verify all sections are rendered
-      expect(getByPlaceholderText('e.g., Read 10 minutes')).toBeDefined(); // Input
+      expect(getByPlaceholderText(STRINGS.CREATE_HABIT.namePrompt)).toBeDefined(); // Input
       expect(getByText('Icon')).toBeDefined(); // Emoji section
       expect(getByText('Color')).toBeDefined(); // Color section
       expect(getByText('Daily reminder')).toBeDefined(); // Reminder section
@@ -603,7 +604,7 @@ describe('CreateHabitModal V11 Integration Tests', () => {
       );
 
       // Fill in some data
-      const input = getByPlaceholderText('e.g., Read 10 minutes');
+      const input = getByPlaceholderText(STRINGS.CREATE_HABIT.namePrompt);
       fireEvent.changeText(input, 'Test Habit');
 
       await waitFor(() => {
@@ -631,7 +632,7 @@ describe('CreateHabitModal V11 Integration Tests', () => {
       );
 
       // Input field
-      expect(getByPlaceholderText('e.g., Read 10 minutes')).toBeDefined();
+      expect(getByPlaceholderText(STRINGS.CREATE_HABIT.namePrompt)).toBeDefined();
 
       // Create button
       const createButtons = getAllByLabelText('Create habit');
@@ -643,7 +644,7 @@ describe('CreateHabitModal V11 Integration Tests', () => {
         <CreateHabitModal {...defaultProps} />
       );
 
-      const input = getByPlaceholderText('e.g., Read 10 minutes');
+      const input = getByPlaceholderText(STRINGS.CREATE_HABIT.namePrompt);
       fireEvent.changeText(input, 'Morning Run');
 
       // Accessibility announcement should include preview info
@@ -659,7 +660,7 @@ describe('CreateHabitModal V11 Integration Tests', () => {
         <CreateHabitModal {...defaultProps} />
       );
 
-      const input = getByPlaceholderText('e.g., Read 10 minutes');
+      const input = getByPlaceholderText(STRINGS.CREATE_HABIT.namePrompt);
       const longName = 'A'.repeat(100);
       fireEvent.changeText(input, longName);
 
@@ -674,7 +675,7 @@ describe('CreateHabitModal V11 Integration Tests', () => {
         <CreateHabitModal {...defaultProps} />
       );
 
-      const input = getByPlaceholderText('e.g., Read 10 minutes');
+      const input = getByPlaceholderText(STRINGS.CREATE_HABIT.namePrompt);
       fireEvent.changeText(input, 'Test@#$%^&*()');
 
       await waitFor(() => {
@@ -687,7 +688,7 @@ describe('CreateHabitModal V11 Integration Tests', () => {
         <CreateHabitModal {...defaultProps} />
       );
 
-      const input = getByPlaceholderText('e.g., Read 10 minutes');
+      const input = getByPlaceholderText(STRINGS.CREATE_HABIT.namePrompt);
       fireEvent.changeText(input, 'Test 🎯 Habit');
 
       await waitFor(() => {

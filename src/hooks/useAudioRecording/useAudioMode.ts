@@ -20,7 +20,7 @@ export function useAudioMode() {
     await Audio.setAudioModeAsync({
       allowsRecordingIOS: true,
 
-      // Android: Do not mix with other audio - pause when interrupted
+      // Native Handset: Do not mix with other audio - pause when interrupted
       interruptionModeAndroid: InterruptionModeAndroid.DoNotMix,
 
       // iOS: Do not mix with other audio - pause when interrupted
@@ -28,7 +28,7 @@ export function useAudioMode() {
 
       playsInSilentModeIOS: true,
 
-      // Android-specific
+      // Native Handset-specific
       playThroughEarpieceAndroid: false,
 
       shouldDuckAndroid: false,

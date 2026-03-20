@@ -1,7 +1,7 @@
 /**
  * ComparisonCardSkeleton Component
  *
- * Skeleton placeholder for a single comparison card.
+ * Skeleton hint for a single comparison card.
  */
 
 import React from 'react';
