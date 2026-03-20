@@ -48,7 +48,7 @@ export const styles = StyleSheet.create({
   },
   headerText: {
     fontFamily: fontFamilies.primary.text,
-    fontSize: 11,
+    fontSize: 10,
     fontWeight: '600',
     letterSpacing: 0.3,
     textTransform: 'uppercase',
@@ -80,7 +80,7 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 6,
     minWidth: 110,
-    paddingHorizontal: 10,
+    paddingHorizontal: 12,
     paddingVertical: 5,
   },
   monthText: {

@@ -8,6 +8,7 @@ import { View } from 'react-native';
 import { Brain, Heart, User } from 'lucide-react-native';
 import { VizField } from './VizField';
 import { EmptyVizState } from './EmptyVizState';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 
 export interface VizFieldsListProps {
   failureBody?: string;
@@ -22,6 +23,7 @@ export function VizFieldsList({
   failureEmotion,
   reduceMotion,
 }: VizFieldsListProps) {
+  const { colors } = useThemeColors();
   const hasAnyField = failureBody || failureMind || failureEmotion;
 
   if (!hasAnyField) {
@@ -31,21 +33,21 @@ export function VizFieldsList({
   return (
     <View className='gap-1'>
       {failureBody ? <VizField
-          icon={<User className='text-rose-500' size={16} />}
+          icon={<User color={colors.status.error} size={16} />}
           index={0}
           label='Body'
           reduceMotion={reduceMotion}
           value={failureBody}
         /> : null}
       {failureMind ? <VizField
-          icon={<Brain className='text-rose-500' size={16} />}
+          icon={<Brain color={colors.status.error} size={16} />}
           index={1}
           label='Mind'
           reduceMotion={reduceMotion}
           value={failureMind}
         /> : null}
       {failureEmotion ? <VizField
-          icon={<Heart className='text-rose-500' size={16} />}
+          icon={<Heart color={colors.status.error} size={16} />}
           index={2}
           label='Emotion'
           reduceMotion={reduceMotion}

@@ -11,33 +11,34 @@ interface PromptListProps {
   title: string;
   prompts: string[];
   Icon: LucideIcon;
-  bgColor: string;
-  titleColor: string;
-  iconColor: string;
-  textColor: string;
+  bgColorValue: string;
+  titleColorValue: string;
+  iconColorValue: string;
+  textColorValue: string;
 }
 
 export function PromptList({
   title,
   prompts,
   Icon,
-  bgColor,
-  titleColor,
-  iconColor,
-  textColor,
+  bgColorValue,
+  titleColorValue,
+  iconColorValue,
+  textColorValue,
 }: PromptListProps) {
   return (
-    <View className={`rounded-xl ${bgColor} p-4`}>
+    <View className='rounded-xl p-4' style={{ backgroundColor: bgColorValue }}>
       <Text
-        className={`mb-2 text-xs font-semibold uppercase tracking-wider ${titleColor}`}
+        className='mb-2 text-xs font-semibold uppercase tracking-wider'
+        style={{ color: titleColorValue }}
       >
         {title}
       </Text>
       <View className='gap-2'>
         {prompts.map((prompt, index) => (
           <View key={index} className='flex-row items-center gap-2'>
-            <Icon className={iconColor} size={14} />
-            <Text className={`text-sm ${textColor}`}>{prompt}</Text>
+            <Icon color={iconColorValue} size={14} />
+            <Text className='text-sm' style={{ color: textColorValue }}>{prompt}</Text>
           </View>
         ))}
       </View>

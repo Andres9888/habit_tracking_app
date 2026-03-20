@@ -3,6 +3,7 @@
  */
 import React, { useCallback } from 'react';
 import { Text, Pressable, Alert } from 'react-native';
+import { useThemeColors } from '../../../../../theme/ThemeContext';
 import { triggerHaptic } from '@/utils/haptics';
 
 interface CancelButtonProps {
@@ -10,6 +11,7 @@ interface CancelButtonProps {
 }
 
 export function CancelButton({ onCancelRecording }: CancelButtonProps) {
+  const { colors } = useThemeColors();
   const handleCancelPress = useCallback(() => {
     triggerHaptic('tap');
     Alert.alert(
@@ -26,10 +28,11 @@ export function CancelButton({ onCancelRecording }: CancelButtonProps) {
     <Pressable
       accessibilityLabel='Cancel recording'
       accessibilityRole='button'
-      className='h-12 w-12 items-center justify-center rounded-full bg-stone-100'
+      className='h-12 w-12 items-center justify-center rounded-full'
+      style={{ backgroundColor: colors.background }}
       onPress={handleCancelPress}
     >
-      <Text className='text-xs font-medium text-stone-500'>Cancel</Text>
+      <Text className='text-xs font-medium' style={{ color: colors.text.secondary }}>Cancel</Text>
     </Pressable>
   );
 }

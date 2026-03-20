@@ -56,7 +56,7 @@ export function EmptyVizState() {
         style={{
           color: colors.text.tertiary,
           fontFamily: fontFamilies.primary.text,
-          fontSize: 12,
+          fontSize: 13,
           textAlign: 'center',
         }}
       >

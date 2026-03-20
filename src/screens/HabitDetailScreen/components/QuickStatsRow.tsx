@@ -82,8 +82,8 @@ const styles = StyleSheet.create({
     borderRadius: borderRadius.medium,
     borderWidth: 1,
     flex: 1,
-    paddingHorizontal: 6,
-    paddingVertical: 10,
+    paddingHorizontal: 8,
+    paddingVertical: 12,
     ...shadows.subtle,
   },
   label: {
@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
   },
   value: {
     fontFamily: fontFamilies.primary.text,
-    fontSize: 18,
+    fontSize: 17,
     fontWeight: '700',
     lineHeight: 22,
   },

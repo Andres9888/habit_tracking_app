@@ -1,6 +1,7 @@
 import { Animated, Text, View } from 'react-native';
 import { BookOpen, ChevronRight } from 'lucide-react-native';
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
+import { useThemeColors } from '@/theme/ThemeContext';
 import STRINGS from '../../../constants/strings';
 
 interface TemplateHeroProps {
@@ -16,6 +17,7 @@ export const TemplateHero = ({
   chevronRotation,
   onPress,
 }: TemplateHeroProps) => {
+  const { colors: themeColors } = useThemeColors();
   if (isEditMode) return null;
   const label = isOpen ? 'Hide template browser' : 'Start from template';
   const subtitle = isOpen
@@ -40,7 +42,7 @@ export const TemplateHero = ({
         <Text className='text-lg font-bold text-[#111827]'>
           {STRINGS.CREATE_HABIT.templateHeroTitle}
         </Text>
-        <Text className='mt-1 text-[13px] font-normal text-stone-500'>
+        <Text className='mt-1 text-[13px] font-normal' style={{ color: themeColors.text.secondary }}>
           {subtitle}
         </Text>
       </View>

@@ -38,7 +38,7 @@ const baseStyles = StyleSheet.create({
     gap: 12,
     marginHorizontal: 12,
     paddingHorizontal: 16,
-    paddingVertical: 14,
+    paddingVertical: 16,
   },
   icon: {
     fontSize: 22,

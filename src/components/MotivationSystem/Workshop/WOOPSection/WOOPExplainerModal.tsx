@@ -40,8 +40,8 @@ export function WOOPExplainerModal({
         >
           <View className='mb-4 flex-row items-start justify-between'>
             <View className='flex-row items-center gap-2'>
-              <View className='h-10 w-10 items-center justify-center rounded-xl bg-amber-100'>
-                <Target className='text-amber-600' size={20} />
+              <View className='h-10 w-10 items-center justify-center rounded-xl' style={{ backgroundColor: colors.status.warningLight }}>
+                <Target color={colors.status.warning} size={20} />
               </View>
               <View>
                 <Text className='text-lg font-bold' style={{ color: colors.text.primary }}>
@@ -74,9 +74,13 @@ export function WOOPExplainerModal({
             {WOOP_STEPS.map((step, i) => (
               <View key={i} className='flex-row gap-3'>
                 <View
-                  className={`h-8 w-8 items-center justify-center rounded-lg ${step.bg}`}
+                  className={`h-8 w-8 items-center justify-center rounded-lg ${step.themeKey ? '' : step.bg}`}
+                  style={step.themeKey === 'warning' ? { backgroundColor: colors.status.warningLight } : step.themeKey === 'success' ? { backgroundColor: colors.status.successLight } : step.themeKey === 'error' ? { backgroundColor: colors.status.errorLight } : undefined}
                 >
-                  <Text className={`font-bold ${step.color}`}>
+                  <Text
+                    className={`font-bold ${step.themeKey ? '' : step.color}`}
+                    style={step.themeKey === 'warning' ? { color: colors.status.warning } : step.themeKey === 'success' ? { color: colors.status.success } : step.themeKey === 'error' ? { color: colors.status.error } : undefined}
+                  >
                     {step.letter}
                   </Text>
                 </View>

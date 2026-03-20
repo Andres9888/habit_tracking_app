@@ -5,6 +5,7 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import { Flame, ChevronDown, ChevronUp, Mic } from 'lucide-react-native';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 
 interface CardHeaderProps {
   streakAtRecording: number;
@@ -19,14 +20,16 @@ export function CardHeader({
   daysAgoText,
   isExpanded,
 }: CardHeaderProps) {
+  const { colors } = useThemeColors();
+
   return (
     <>
       <View className='flex-1 flex-row items-center gap-3'>
         <View className='relative'>
-          <View className='h-10 w-10 items-center justify-center rounded-full bg-amber-100'>
-            <Mic className='text-amber-600' size={18} />
+          <View className='h-10 w-10 items-center justify-center rounded-full' style={{ backgroundColor: colors.status.warningLight }}>
+            <Mic color={colors.status.warning} size={18} />
           </View>
-          <View className='absolute -bottom-1 -right-1 flex-row items-center gap-0.5 rounded-full bg-orange-500 px-1.5 py-0.5'>
+          <View className='absolute -bottom-1 -right-1 flex-row items-center gap-0.5 rounded-full px-1.5 py-0.5' style={{ backgroundColor: colors.status.streak }}>
             <Flame className='text-white' size={10} />
             <Text className='text-[10px] font-bold text-white'>
               {streakAtRecording}
@@ -34,17 +37,17 @@ export function CardHeader({
           </View>
         </View>
         <View className='flex-1'>
-          <Text className='text-sm font-semibold text-amber-800'>
+          <Text className='text-sm font-semibold' style={{ color: colors.status.warningText }}>
             Day {streakAtRecording} of your {bestStreak}-day streak
           </Text>
-          <Text className='text-xs text-amber-600'>{daysAgoText}</Text>
+          <Text className='text-xs' style={{ color: colors.status.warning }}>{daysAgoText}</Text>
         </View>
       </View>
-      <View className='ml-2 h-8 w-8 items-center justify-center rounded-full bg-amber-100'>
+      <View className='ml-2 h-8 w-8 items-center justify-center rounded-full' style={{ backgroundColor: colors.status.warningLight }}>
         {isExpanded ? (
-          <ChevronUp className='text-amber-600' size={16} />
+          <ChevronUp color={colors.status.warning} size={16} />
         ) : (
-          <ChevronDown className='text-amber-600' size={16} />
+          <ChevronDown color={colors.status.warning} size={16} />
         )}
       </View>
     </>

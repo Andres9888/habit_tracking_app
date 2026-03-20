@@ -12,6 +12,7 @@ import React from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { HelpCircle, Sparkles } from 'lucide-react-native';
 import { clsx } from 'clsx';
+import { useThemeColors } from '@/theme/ThemeContext';
 
 import { MotivationButton } from './MotivationButton';
 import { MOTIVATION_OPTIONS, getAccentColor } from './constants';
@@ -44,15 +45,17 @@ export function MotivationCheck({
     );
   }
 
+  const { colors } = useThemeColors();
+
   return (
-    <View className={clsx('rounded-2xl bg-violet-50 p-4', className)}>
+    <View className={clsx('rounded-2xl p-4', className)} style={{ backgroundColor: colors.status.premiumLight }}>
       {/* Header */}
       <View className='mb-4 flex-row items-center justify-between'>
         <View className='flex-row items-center gap-2'>
-          <View className='h-8 w-8 items-center justify-center rounded-lg bg-violet-100'>
-            <Sparkles className='text-violet-600' size={16} />
+          <View className='h-8 w-8 items-center justify-center rounded-lg' style={{ backgroundColor: colors.status.premiumLight }}>
+            <Sparkles color={colors.status.premiumText} size={16} />
           </View>
-          <Text className='font-semibold text-violet-800'>
+          <Text className='font-semibold' style={{ color: colors.status.premiumText }}>
             Motivation Check
           </Text>
         </View>
@@ -63,11 +66,11 @@ export function MotivationCheck({
             className='h-8 w-8 items-center justify-center rounded-lg'
             onPress={onExplainerPress}
           >
-            <HelpCircle className='text-violet-400' size={18} />
+            <HelpCircle color={colors.status.premium} size={18} />
           </Pressable> : null}
       </View>
 
-      <Text className='mb-4 text-center text-base text-violet-700'>
+      <Text className='mb-4 text-center text-base' style={{ color: colors.status.premiumText }}>
         How motivated are you right now?
       </Text>
 
@@ -85,8 +88,8 @@ export function MotivationCheck({
         ))}
       </View>
 
-      {selectedLevel && selectedLevel !== 'ready' ? <View className='mt-4 rounded-xl bg-violet-100/50 p-3'>
-          <Text className='text-center text-xs italic text-violet-600'>
+      {selectedLevel && selectedLevel !== 'ready' ? <View className='mt-4 rounded-xl p-3' style={{ backgroundColor: colors.status.premiumLight }}>
+          <Text className='text-center text-xs italic' style={{ color: colors.status.premiumText }}>
             💡 Science tip: Visualizing consequences moves you 2x better when
             motivation is low
           </Text>

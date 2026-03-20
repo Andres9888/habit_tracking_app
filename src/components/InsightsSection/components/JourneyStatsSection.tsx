@@ -13,14 +13,17 @@ import {
   Calendar,
 } from 'lucide-react-native';
 import type { JourneyStatsSectionProps } from '../InsightsSection.types';
+import { useThemeColors } from '@/theme/ThemeContext';
 
 export function JourneyStatsSection({
   totalCompletions,
   successRate,
   daysTracking,
 }: JourneyStatsSectionProps) {
+  const { colors } = useThemeColors();
+
   return (
-    <View className='overflow-hidden rounded-2xl shadow-sm shadow-stone-200/50'>
+    <View className='overflow-hidden rounded-2xl shadow-sm' style={{ shadowColor: colors.border }}>
       <LinearGradient
         className='absolute inset-0'
         colors={['rgba(245, 243, 255, 0.3)', '#ffffff', 'rgba(239, 246, 255, 0.3)']}
@@ -29,42 +32,42 @@ export function JourneyStatsSection({
       />
       <View className='p-5'>
         <View className='mb-4 flex-row items-center justify-center gap-2'>
-          <View className='h-8 w-8 items-center justify-center rounded-lg bg-violet-100'>
-            <BarChart3 className='text-violet-500' size={16} />
+          <View className='h-8 w-8 items-center justify-center rounded-lg' style={{ backgroundColor: colors.status.premiumLight }}>
+            <BarChart3 color={colors.status.premium} size={16} />
           </View>
-          <Text className='text-lg font-bold text-stone-800'>Your Journey</Text>
+          <Text className='text-lg font-bold' style={{ color: colors.text.primary }}>Your Journey</Text>
         </View>
-        <Text className='mb-3 text-center text-[10px] font-bold uppercase tracking-widest text-violet-500'>
+        <Text className='mb-3 text-center text-[10px] font-bold uppercase tracking-widest' style={{ color: colors.status.premium }}>
           Overall Progress
         </Text>
 
         <View className='flex-row gap-3'>
-          <View className='flex-1 items-center rounded-xl border border-emerald-100 bg-white/60 p-3'>
-            <View className='mb-2 h-8 w-8 items-center justify-center rounded-full bg-emerald-100'>
-              <CheckCircle2 className='text-emerald-600' size={16} />
+          <View className='flex-1 items-center rounded-xl border bg-white/60 p-3' style={{ borderColor: colors.status.successLight }}>
+            <View className='mb-2 h-8 w-8 items-center justify-center rounded-full' style={{ backgroundColor: colors.status.successLight }}>
+              <CheckCircle2 color={colors.status.success} size={16} />
             </View>
-            <Text className='text-2xl font-bold text-emerald-700'>
+            <Text className='text-2xl font-bold' style={{ color: colors.status.successText }}>
               {totalCompletions}
             </Text>
-            <Text className='text-[10px] text-stone-500'>completed</Text>
+            <Text className='text-[10px]' style={{ color: colors.text.secondary }}>completed</Text>
           </View>
-          <View className='flex-1 items-center rounded-xl border border-blue-100 bg-white/60 p-3'>
-            <View className='mb-2 h-8 w-8 items-center justify-center rounded-full bg-blue-100'>
-              <Percent className='text-blue-600' size={16} />
+          <View className='flex-1 items-center rounded-xl border bg-white/60 p-3' style={{ borderColor: colors.status.infoLight }}>
+            <View className='mb-2 h-8 w-8 items-center justify-center rounded-full' style={{ backgroundColor: colors.status.infoLight }}>
+              <Percent color={colors.status.info} size={16} />
             </View>
-            <Text className='text-2xl font-bold text-blue-700'>
+            <Text className='text-2xl font-bold' style={{ color: colors.status.infoText }}>
               {Math.round(successRate)}%
             </Text>
-            <Text className='text-[10px] text-stone-500'>success rate</Text>
+            <Text className='text-[10px]' style={{ color: colors.text.secondary }}>success rate</Text>
           </View>
-          <View className='flex-1 items-center rounded-xl border border-violet-100 bg-white/60 p-3'>
-            <View className='mb-2 h-8 w-8 items-center justify-center rounded-full bg-violet-100'>
-              <Calendar className='text-violet-600' size={16} />
+          <View className='flex-1 items-center rounded-xl border bg-white/60 p-3' style={{ borderColor: colors.status.premiumLight }}>
+            <View className='mb-2 h-8 w-8 items-center justify-center rounded-full' style={{ backgroundColor: colors.status.premiumLight }}>
+              <Calendar color={colors.status.premium} size={16} />
             </View>
-            <Text className='text-2xl font-bold text-violet-700'>
+            <Text className='text-2xl font-bold' style={{ color: colors.status.premiumText }}>
               {daysTracking}
             </Text>
-            <Text className='text-[10px] text-stone-500'>days tracking</Text>
+            <Text className='text-[10px]' style={{ color: colors.text.secondary }}>days tracking</Text>
           </View>
         </View>
       </View>

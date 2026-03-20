@@ -4,6 +4,7 @@
 
 import React, { useState } from 'react';
 import { View, Text } from 'react-native';
+import { useThemeColors } from '@/theme/ThemeContext';
 import { useMutation, useQuery } from 'convex/react';
 import { api } from '../../../convex/_generated/api';
 import { InitializeHabitStrengthSkeleton } from '../SkeletonLoader';
@@ -18,6 +19,7 @@ type Result = {
 };
 
 export function InitializeHabitStrength() {
+  const { colors: themeColors } = useThemeColors();
   const [isInitializing, setIsInitializing] = useState(false);
   const [result, setResult] = useState<Result | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -63,11 +65,11 @@ export function InitializeHabitStrength() {
   }
 
   return (
-    <View className='m-4 rounded-lg border border-blue-300 bg-blue-50 p-4'>
-      <Text className='mb-2 text-lg font-bold text-blue-900'>
+    <View className='m-4 rounded-lg border p-4' style={{ borderColor: themeColors.status.info, backgroundColor: themeColors.status.infoLight }}>
+      <Text className='mb-2 text-lg font-bold' style={{ color: themeColors.status.infoText }}>
         🚀 Initialize Habit Strength
       </Text>
-      <Text className='mb-3 text-sm text-blue-800'>
+      <Text className='mb-3 text-sm' style={{ color: themeColors.status.infoText }}>
         Found {habits.length} habit{habits.length === 1 ? '' : 's'}.
       </Text>
 
@@ -79,12 +81,12 @@ export function InitializeHabitStrength() {
 
       {result ? <ResultDisplay result={result} /> : null}
 
-      {error ? <View className='mt-3 rounded-lg bg-red-100 p-3'>
-          <Text className='font-semibold text-red-900'>❌ Error</Text>
-          <Text className='mt-1 text-sm text-red-800'>{error}</Text>
+      {error ? <View className='mt-3 rounded-lg p-3' style={{ backgroundColor: themeColors.status.errorLight }}>
+          <Text className='font-semibold' style={{ color: themeColors.status.errorText }}>❌ Error</Text>
+          <Text className='mt-1 text-sm' style={{ color: themeColors.status.errorText }}>{error}</Text>
         </View> : null}
 
-      <Text className='mt-3 text-xs text-stone-600'>
+      <Text className='mt-3 text-xs' style={{ color: themeColors.text.primary }}>
         💡 Tip: After initialization, habit strength updates automatically.
       </Text>
     </View>

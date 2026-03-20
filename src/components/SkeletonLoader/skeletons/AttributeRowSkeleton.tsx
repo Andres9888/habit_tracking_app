@@ -1,13 +1,18 @@
 import React from 'react';
 import { View } from 'react-native';
+import { useThemeColors } from '@/theme/ThemeContext';
 import { SkeletonLoader } from '../SkeletonLoader';
 import type { ReduceMotionProps } from '../types';
 
 export function AttributeRowSkeleton({ reduceMotion }: ReduceMotionProps) {
+  const { colors: themeColors } = useThemeColors();
+
   return (
     <View
-      className='mb-3 overflow-hidden rounded-3xl border border-stone-100 bg-white'
+      className='mb-3 overflow-hidden rounded-3xl border'
       style={{
+        borderColor: themeColors.border,
+        backgroundColor: themeColors.card,
         shadowColor: '#2D2A26',
         shadowOffset: { height: 4, width: 0 },
         shadowOpacity: 0.08,

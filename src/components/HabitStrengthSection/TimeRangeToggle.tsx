@@ -16,6 +16,7 @@
 import React, { useCallback, useEffect } from 'react';
 import { Pressable, Text, View } from 'react-native';
 
+import { useThemeColors } from '@/theme/ThemeContext';
 import { triggerHaptic } from '@/utils/haptics';
 import Animated, {
   useAnimatedStyle,
@@ -37,6 +38,7 @@ export const TimeRangeToggle = React.memo(function TimeRangeToggle({
   value,
   onChange,
 }: TimeRangeToggleProps) {
+  const { colors: themeColors } = useThemeColors();
   const reduceMotion = useReduceMotion();
 
   // Calculate selected index for indicator position (default to 0 if not found)
@@ -74,7 +76,8 @@ export const TimeRangeToggle = React.memo(function TimeRangeToggle({
     <View
       accessibilityLabel="Time range selection"
       accessibilityRole="tablist"
-      className="flex-row rounded-full bg-stone-100 p-0.5"
+      className="flex-row rounded-full p-0.5"
+      style={{ backgroundColor: themeColors.background }}
     >
       {/* Animated indicator background */}
       <AnimatedView
@@ -106,9 +109,8 @@ export const TimeRangeToggle = React.memo(function TimeRangeToggle({
             onPress={() => handlePress(option.value)}
           >
             <Text
-              className={`text-xs font-semibold ${
-                isSelected ? 'text-stone-900' : 'text-stone-500'
-              }`}
+              className='text-xs font-semibold'
+              style={{ color: isSelected ? themeColors.text.primary : themeColors.text.secondary }}
             >
               {option.label}
             </Text>

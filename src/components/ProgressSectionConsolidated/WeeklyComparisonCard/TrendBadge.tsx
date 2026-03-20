@@ -29,10 +29,11 @@ export function TrendBadge({ trendStyle, rateChange }: TrendBadgeProps) {
   return (
     <Animated.View style={animatedStyle}>
       <View
-        className={`flex-row items-center gap-1 rounded-full px-2 py-1 ${trendStyle.bgColor}`}
+        className='flex-row items-center gap-1 rounded-full px-2 py-1'
+        style={{ backgroundColor: trendStyle.bgColor }}
       >
-        <TrendIcon className={trendStyle.textColor} size={12} />
-        <Text className={`text-xs font-semibold ${trendStyle.textColor}`}>
+        <TrendIcon color={trendStyle.textColor} size={12} />
+        <Text className='text-xs font-semibold' style={{ color: trendStyle.textColor }}>
           {rateChange > 0 ? '+' : ''}
           {rateChange}%
         </Text>

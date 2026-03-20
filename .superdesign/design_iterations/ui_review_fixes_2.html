@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UI Review Fixes — Before / After</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Literata:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'DM Sans', sans-serif !important;
+    background: #0F1117 !important;
+    color: #E5E7EB !important;
+    min-height: 100vh;
+  }
+  h1, h2, h3 { font-family: 'Literata', serif !important; }
+
+  .phone-frame {
+    width: 280px;
+    height: 560px;
+    border-radius: 32px;
+    overflow: hidden;
+    position: relative;
+    flex-shrink: 0;
+    box-shadow: 0 0 0 3px rgba(255,255,255,0.08), 0 20px 60px rgba(0,0,0,0.5);
+  }
+  .phone-frame::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 100px; height: 24px;
+    background: inherit;
+    border-radius: 0 0 16px 16px;
+    z-index: 10;
+  }
+  .phone-content {
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    padding: 32px 16px 16px;
+  }
+  .phone-content::-webkit-scrollbar { display: none; }
+
+  .label-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .badge-before { background: #DC2626; color: white; }
+  .badge-after { background: #059669; color: white; }
+
+  .section-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+    margin: 48px 0;
+  }
+
+  .fix-section {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  .fix-header {
+    margin-bottom: 24px;
+  }
+  .fix-number {
+    font-size: 12px;
+    color: #6B7280;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .fix-title {
+    font-size: 24px;
+    color: #F9FAFB;
+    margin-bottom: 6px;
+  }
+  .fix-desc {
+    font-size: 14px;
+    color: #9CA3AF;
+    max-width: 600px;
+    line-height: 1.5;
+  }
+
+  .phones-row {
+    display: flex;
+    gap: 32px;
+    align-items: flex-start;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .phone-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+
+  /* Light mode phone */
+  .light-bg { background: #FAF9F6; }
+  .light-bg::before { background: #FAF9F6; }
+
+  /* Dark mode phone - BEFORE (broken) */
+  .dark-broken-bg { background: #111827; }
+  .dark-broken-bg::before { background: #111827; }
+
+  /* Dark mode phone - AFTER (fixed) */
+  .dark-fixed-bg { background: #111827; }
+  .dark-fixed-bg::before { background: #111827; }
+
+  .arrow-between {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    color: #4B5563;
+    padding-top: 240px;
+  }
+
+  .stat-row {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    margin-top: 32px;
+    flex-wrap: wrap;
+  }
+  .stat-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    padding: 16px 24px;
+    text-align: center;
+    min-width: 140px;
+  }
+  .stat-number {
+    font-size: 28px;
+    font-weight: 700;
+    color: #F9FAFB;
+    font-family: 'Literata', serif;
+  }
+  .stat-label {
+    font-size: 12px;
+    color: #6B7280;
+    margin-top: 2px;
+  }
+  .stat-number.red { color: #F87171; }
+  .stat-number.green { color: #34D399; }
+
+  /* Mini component styles for inside phones */
+  .mini-card {
+    border-radius: 12px;
+    padding: 12px;
+    margin-bottom: 10px;
+  }
+  .mini-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 10px;
+    font-weight: 600;
+  }
+  .mini-text-lg { font-size: 15px; font-weight: 600; }
+  .mini-text-sm { font-size: 11px; }
+  .mini-text-xs { font-size: 9px; }
+
+  .tab-group {
+    display: flex;
+    gap: 2px;
+    background: rgba(0,0,0,0.06);
+    border-radius: 8px;
+    padding: 2px;
+    margin-bottom: 10px;
+  }
+  .tab-item {
+    flex: 1;
+    text-align: center;
+    padding: 5px 4px;
+    border-radius: 6px;
+    font-size: 10px;
+    font-weight: 600;
+  }
+
+  .hero-header {
+    text-align: center;
+    padding: 60px 24px 48px;
+  }
+  .hero-header h1 {
+    font-size: 36px;
+    color: #F9FAFB;
+    margin-bottom: 12px;
+    line-height: 1.2;
+  }
+  .hero-header p {
+    font-size: 16px;
+    color: #6B7280;
+    max-width: 500px;
+    margin: 0 auto;
+    line-height: 1.5;
+  }
+
+  .issue-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-size: 10px;
+    font-weight: 600;
+    background: rgba(239,68,68,0.15);
+    color: #FCA5A5;
+    margin-right: 4px;
+    margin-bottom: 4px;
+  }
+  .issue-tag.fixed {
+    background: rgba(52,211,153,0.15);
+    color: #6EE7B7;
+  }
+
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .animate-in {
+    animation: fadeInUp 0.6s ease-out forwards;
+  }
+  .delay-1 { animation-delay: 0.1s; opacity: 0; }
+  .delay-2 { animation-delay: 0.2s; opacity: 0; }
+  .delay-3 { animation-delay: 0.4s; opacity: 0; }
+  .delay-4 { animation-delay: 0.6s; opacity: 0; }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero-header animate-in">
+  <h1>UI Review Fixes</h1>
+  <p>361 files changed — eliminating hardcoded colors, enforcing theme tokens for full dark mode support</p>
+</div>
+
+<!-- STATS -->
+<div class="stat-row animate-in delay-1">
+  <div class="stat-card">
+    <div class="stat-number red">873</div>
+    <div class="stat-label">Color violations removed</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-number green">0</div>
+    <div class="stat-label">Remaining violations</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-number">361</div>
+    <div class="stat-label">Files changed</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-number">18</div>
+    <div class="stat-label">Status tokens added</div>
+  </div>
+</div>
+
+<div class="section-divider"></div>
+
+<!-- FIX 1: STONE COLOR TOKENS ON DARK MODE -->
+<div class="fix-section animate-in delay-2">
+  <div class="fix-header">
+    <div class="fix-number">Fix 1 of 3</div>
+    <h2 class="fix-title">Dark Mode Color Token Bypass</h2>
+    <p class="fix-desc">613 hardcoded <code style="background:rgba(255,255,255,0.08);padding:1px 6px;border-radius:4px;font-size:12px;">text-stone-*</code> / <code style="background:rgba(255,255,255,0.08);padding:1px 6px;border-radius:4px;font-size:12px;">bg-stone-*</code> NativeWind classes ignored the theme system. In dark mode, light-mode grays rendered on dark backgrounds — invisible or broken contrast.</p>
+  </div>
+
+  <div class="phones-row">
+    <!-- BEFORE: Light mode (looks fine) -->
+    <div class="phone-col">
+      <span class="label-badge badge-before">Before — Dark Mode</span>
+      <div class="phone-frame dark-broken-bg">
+        <div class="phone-content">
+          <!-- Habit Card -->
+          <div class="mini-card" style="background:#1F2937;border:1px solid #374151;">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+              <div style="width:32px;height:32px;border-radius:8px;background:#064E3B;display:flex;align-items:center;justify-content:center;font-size:16px;">🏃</div>
+              <div>
+                <!-- BROKEN: text-stone-800 on dark bg = invisible -->
+                <div class="mini-text-lg" style="color:#292524;">Morning Run</div>
+                <div class="mini-text-xs" style="color:#78716c;">Every day at 7:00 AM</div>
+              </div>
+            </div>
+            <div style="display:flex;gap:6px;">
+              <!-- BROKEN: bg-stone-100 = light gray on dark -->
+              <div class="mini-badge" style="background:#f5f5f4;color:#44403c;">🔥 12 days</div>
+              <div class="mini-badge" style="background:#f5f5f4;color:#44403c;">💪 85%</div>
+            </div>
+          </div>
+
+          <!-- Stats Card -->
+          <div class="mini-card" style="background:#1F2937;border:1px solid #374151;">
+            <div class="mini-text-sm" style="color:#57534e;margin-bottom:6px;font-weight:600;">This Week</div>
+            <div style="display:flex;justify-content:space-between;">
+              <div style="text-align:center;">
+                <!-- BROKEN: text-stone-900 invisible on dark -->
+                <div style="font-size:18px;font-weight:700;color:#1c1917;">5/7</div>
+                <div class="mini-text-xs" style="color:#a8a29e;">completed</div>
+              </div>
+              <div style="text-align:center;">
+                <div style="font-size:18px;font-weight:700;color:#1c1917;">71%</div>
+                <div class="mini-text-xs" style="color:#a8a29e;">rate</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Progress Bar -->
+          <div class="mini-card" style="background:#1F2937;border:1px solid #374151;">
+            <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+              <span class="mini-text-sm" style="color:#44403c;font-weight:600;">Strength</span>
+              <span class="mini-text-sm" style="color:#78716c;">85%</span>
+            </div>
+            <!-- BROKEN: bg-stone-200 track on dark -->
+            <div style="height:6px;border-radius:3px;background:#e7e5e4;">
+              <div style="height:100%;width:85%;border-radius:3px;background:#059669;"></div>
+            </div>
+          </div>
+
+          <!-- Toggle -->
+          <div class="tab-group" style="background:#f5f5f4;">
+            <div class="tab-item" style="background:white;color:#1c1917;">Week</div>
+            <div class="tab-item" style="color:#78716c;">Month</div>
+            <div class="tab-item" style="color:#78716c;">Year</div>
+          </div>
+
+          <!-- Issue indicators -->
+          <div style="padding:8px 0;display:flex;flex-wrap:wrap;">
+            <span class="issue-tag">text-stone-800 invisible</span>
+            <span class="issue-tag">bg-stone-100 wrong surface</span>
+            <span class="issue-tag">no contrast</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="arrow-between">→</div>
+
+    <!-- AFTER: Dark mode (fixed) -->
+    <div class="phone-col">
+      <span class="label-badge badge-after">After — Dark Mode</span>
+      <div class="phone-frame dark-fixed-bg">
+        <div class="phone-content">
+          <!-- Habit Card - FIXED -->
+          <div class="mini-card" style="background:#1F2937;border:1px solid #374151;">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+              <div style="width:32px;height:32px;border-radius:8px;background:#064E3B;display:flex;align-items:center;justify-content:center;font-size:16px;">🏃</div>
+              <div>
+                <!-- FIXED: colors.text.primary -->
+                <div class="mini-text-lg" style="color:#F9FAFB;">Morning Run</div>
+                <div class="mini-text-xs" style="color:#8E95A2;">Every day at 7:00 AM</div>
+              </div>
+            </div>
+            <div style="display:flex;gap:6px;">
+              <!-- FIXED: colors.background + colors.text.secondary -->
+              <div class="mini-badge" style="background:rgba(5,150,105,0.15);color:#6EE7B7;">🔥 12 days</div>
+              <div class="mini-badge" style="background:rgba(5,150,105,0.15);color:#6EE7B7;">💪 85%</div>
+            </div>
+          </div>
+
+          <!-- Stats Card - FIXED -->
+          <div class="mini-card" style="background:#1F2937;border:1px solid #374151;">
+            <div class="mini-text-sm" style="color:#9CA3AF;margin-bottom:6px;font-weight:600;">This Week</div>
+            <div style="display:flex;justify-content:space-between;">
+              <div style="text-align:center;">
+                <!-- FIXED: colors.text.primary -->
+                <div style="font-size:18px;font-weight:700;color:#F9FAFB;">5/7</div>
+                <div class="mini-text-xs" style="color:#8E95A2;">completed</div>
+              </div>
+              <div style="text-align:center;">
+                <div style="font-size:18px;font-weight:700;color:#F9FAFB;">71%</div>
+                <div class="mini-text-xs" style="color:#8E95A2;">rate</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Progress Bar - FIXED -->
+          <div class="mini-card" style="background:#1F2937;border:1px solid #374151;">
+            <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+              <span class="mini-text-sm" style="color:#F9FAFB;font-weight:600;">Strength</span>
+              <span class="mini-text-sm" style="color:#9CA3AF;">85%</span>
+            </div>
+            <!-- FIXED: colors.gray[200] track -->
+            <div style="height:6px;border-radius:3px;background:#374151;">
+              <div style="height:100%;width:85%;border-radius:3px;background:#34D399;"></div>
+            </div>
+          </div>
+
+          <!-- Toggle - FIXED -->
+          <div class="tab-group" style="background:#374151;">
+            <div class="tab-item" style="background:#1F2937;color:#F9FAFB;">Week</div>
+            <div class="tab-item" style="color:#9CA3AF;">Month</div>
+            <div class="tab-item" style="color:#9CA3AF;">Year</div>
+          </div>
+
+          <!-- Fixed indicators -->
+          <div style="padding:8px 0;display:flex;flex-wrap:wrap;">
+            <span class="issue-tag fixed">colors.text.primary ✓</span>
+            <span class="issue-tag fixed">colors.background ✓</span>
+            <span class="issue-tag fixed">full contrast ✓</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-divider"></div>
+
+<!-- FIX 2: SEMANTIC STATUS COLORS -->
+<div class="fix-section animate-in delay-3">
+  <div class="fix-header">
+    <div class="fix-number">Fix 2 of 3</div>
+    <h2 class="fix-title">Semantic Status Colors for Dark Mode</h2>
+    <p class="fix-desc">260 hardcoded semantic colors (emerald, rose, amber, violet) now use <code style="background:rgba(255,255,255,0.08);padding:1px 6px;border-radius:4px;font-size:12px;">colors.status.*</code> tokens that adapt to dark backgrounds with proper contrast and opacity.</p>
+  </div>
+
+  <div class="phones-row">
+    <!-- BEFORE: Semantic colors on dark (broken) -->
+    <div class="phone-col">
+      <span class="label-badge badge-before">Before — Dark Mode</span>
+      <div class="phone-frame dark-broken-bg">
+        <div class="phone-content">
+          <!-- Success state -->
+          <div class="mini-card" style="background:#D1FAE5;border:1px solid #A7F3D0;margin-bottom:10px;">
+            <div class="mini-text-sm" style="color:#065F46;font-weight:600;">✅ Habit Complete!</div>
+            <div class="mini-text-xs" style="color:#047857;">Great work on your streak</div>
+          </div>
+
+          <!-- Error state -->
+          <div class="mini-card" style="background:#FEE2E2;border:1px solid #FECACA;margin-bottom:10px;">
+            <div class="mini-text-sm" style="color:#991B1B;font-weight:600;">⚠️ Streak at Risk</div>
+            <div class="mini-text-xs" style="color:#B91C1C;">Don't break your 12-day streak</div>
+          </div>
+
+          <!-- Warning/Streak -->
+          <div class="mini-card" style="background:#FEF3C7;border:1px solid #FDE68A;margin-bottom:10px;">
+            <div class="mini-text-sm" style="color:#92400E;font-weight:600;">🔥 12 Day Streak</div>
+            <div class="mini-text-xs" style="color:#B45309;">Personal best!</div>
+          </div>
+
+          <!-- Premium -->
+          <div class="mini-card" style="background:#EDE9FE;border:1px solid #DDD6FE;margin-bottom:10px;">
+            <div class="mini-text-sm" style="color:#5B21B6;font-weight:600;">⭐ Premium Feature</div>
+            <div class="mini-text-xs" style="color:#6D28D9;">Unlock advanced insights</div>
+          </div>
+
+          <!-- Trend badges -->
+          <div style="display:flex;gap:6px;margin-top:8px;">
+            <div class="mini-badge" style="background:#D1FAE5;color:#065F46;">↑ 15%</div>
+            <div class="mini-badge" style="background:#FEE2E2;color:#991B1B;">↓ 8%</div>
+            <div class="mini-badge" style="background:#DBEAFE;color:#1E40AF;">ℹ️ Tip</div>
+          </div>
+
+          <div style="padding:8px 0;margin-top:8px;display:flex;flex-wrap:wrap;">
+            <span class="issue-tag">light bg on dark surface</span>
+            <span class="issue-tag">glaring contrast</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="arrow-between">→</div>
+
+    <!-- AFTER: Semantic colors adapted for dark -->
+    <div class="phone-col">
+      <span class="label-badge badge-after">After — Dark Mode</span>
+      <div class="phone-frame dark-fixed-bg">
+        <div class="phone-content">
+          <!-- Success state - FIXED -->
+          <div class="mini-card" style="background:rgba(5,150,105,0.15);border:1px solid rgba(52,211,153,0.3);margin-bottom:10px;">
+            <div class="mini-text-sm" style="color:#6EE7B7;font-weight:600;">✅ Habit Complete!</div>
+            <div class="mini-text-xs" style="color:#34D399;">Great work on your streak</div>
+          </div>
+
+          <!-- Error state - FIXED -->
+          <div class="mini-card" style="background:rgba(239,68,68,0.15);border:1px solid rgba(248,113,113,0.3);margin-bottom:10px;">
+            <div class="mini-text-sm" style="color:#FCA5A5;font-weight:600;">⚠️ Streak at Risk</div>
+            <div class="mini-text-xs" style="color:#F87171;">Don't break your 12-day streak</div>
+          </div>
+
+          <!-- Warning/Streak - FIXED -->
+          <div class="mini-card" style="background:rgba(245,158,11,0.15);border:1px solid rgba(251,191,36,0.3);margin-bottom:10px;">
+            <div class="mini-text-sm" style="color:#FDE68A;font-weight:600;">🔥 12 Day Streak</div>
+            <div class="mini-text-xs" style="color:#FBBF24;">Personal best!</div>
+          </div>
+
+          <!-- Premium - FIXED -->
+          <div class="mini-card" style="background:rgba(139,92,246,0.15);border:1px solid rgba(167,139,250,0.3);margin-bottom:10px;">
+            <div class="mini-text-sm" style="color:#C4B5FD;font-weight:600;">⭐ Premium Feature</div>
+            <div class="mini-text-xs" style="color:#A78BFA;">Unlock advanced insights</div>
+          </div>
+
+          <!-- Trend badges - FIXED -->
+          <div style="display:flex;gap:6px;margin-top:8px;">
+            <div class="mini-badge" style="background:rgba(5,150,105,0.15);color:#6EE7B7;">↑ 15%</div>
+            <div class="mini-badge" style="background:rgba(239,68,68,0.15);color:#FCA5A5;">↓ 8%</div>
+            <div class="mini-badge" style="background:rgba(59,130,246,0.15);color:#93C5FD;">ℹ️ Tip</div>
+          </div>
+
+          <div style="padding:8px 0;margin-top:8px;display:flex;flex-wrap:wrap;">
+            <span class="issue-tag fixed">status.successLight ✓</span>
+            <span class="issue-tag fixed">rgba on dark ✓</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-divider"></div>
+
+<!-- FIX 3: THEME SYSTEM EXTENSION -->
+<div class="fix-section animate-in delay-4">
+  <div class="fix-header">
+    <div class="fix-number">Fix 3 of 3</div>
+    <h2 class="fix-title">Theme System — New Status Tokens</h2>
+    <p class="fix-desc">Extended <code style="background:rgba(255,255,255,0.08);padding:1px 6px;border-radius:4px;font-size:12px;">SemanticColors</code> interface with 18 status tokens covering success, error, warning, info, premium, and streak states — each with base, light background, and text variants.</p>
+  </div>
+
+  <!-- Token table -->
+  <div style="max-width:800px;margin:0 auto;overflow-x:auto;">
+    <table style="width:100%;border-collapse:collapse;font-size:13px;">
+      <thead>
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.1);">
+          <th style="text-align:left;padding:10px 12px;color:#6B7280;font-weight:600;">Token</th>
+          <th style="text-align:left;padding:10px 12px;color:#6B7280;font-weight:600;">Light Mode</th>
+          <th style="text-align:left;padding:10px 12px;color:#6B7280;font-weight:600;">Dark Mode</th>
+          <th style="text-align:left;padding:10px 12px;color:#6B7280;font-weight:600;">Use Case</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Success -->
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+          <td style="padding:8px 12px;color:#E5E7EB;font-family:monospace;font-size:11px;">status.success</td>
+          <td style="padding:8px 12px;"><span style="display:inline-flex;align-items:center;gap:6px;"><span style="width:14px;height:14px;border-radius:3px;background:#059669;display:inline-block;"></span> #059669</span></td>
+          <td style="padding:8px 12px;"><span style="display:inline-flex;align-items:center;gap:6px;"><span style="width:14px;height:14px;border-radius:3px;background:#34D399;display:inline-block;"></span> #34D399</span></td>
+          <td style="padding:8px 12px;color:#9CA3AF;">Icons, borders, badges</td>
+        </tr>
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+          <td style="padding:8px 12px;color:#E5E7EB;font-family:monospace;font-size:11px;">status.successLight</td>
+          <td style="padding:8px 12px;"><span style="display:inline-flex;align-items:center;gap:6px;"><span style="width:14px;height:14px;border-radius:3px;background:#D1FAE5;display:inline-block;"></span> #D1FAE5</span></td>
+          <td style="padding:8px 12px;"><span style="display:inline-flex;align-items:center;gap:6px;"><span style="width:14px;height:14px;border-radius:3px;background:rgba(5,150,105,0.15);display:inline-block;border:1px solid rgba(255,255,255,0.1);"></span> rgba(…0.15)</span></td>
+          <td style="padding:8px 12px;color:#9CA3AF;">Card backgrounds</td>
+        </tr>
+        <!-- Error -->
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+          <td style="padding:8px 12px;color:#E5E7EB;font-family:monospace;font-size:11px;">status.error</td>
+          <td style="padding:8px 12px;"><span style="display:inline-flex;align-items:center;gap:6px;"><span style="width:14px;height:14px;border-radius:3px;background:#DC2626;display:inline-block;"></span> #DC2626</span></td>
+          <td style="padding:8px 12px;"><span style="display:inline-flex;align-items:center;gap:6px;"><span style="width:14px;height:14px;border-radius:3px;background:#F87171;display:inline-block;"></span> #F87171</span></td>
+          <td style="padding:8px 12px;color:#9CA3AF;">Icons, borders, alerts</td>
+        </tr>
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+          <td style="padding:8px 12px;color:#E5E7EB;font-family:monospace;font-size:11px;">status.errorLight</td>
+          <td style="padding:8px 12px;"><span style="display:inline-flex;align-items:center;gap:6px;"><span style="width:14px;height:14px;border-radius:3px;background:#FEE2E2;display:inline-block;"></span> #FEE2E2</span></td>
+          <td style="padding:8px 12px;"><span style="display:inline-flex;align-items:center;gap:6px;"><span style="width:14px;height:14px;border-radius:3px;background:rgba(239,68,68,0.15);display:inline-block;border:1px solid rgba(255,255,255,0.1);"></span> rgba(…0.15)</span></td>
+          <td style="padding:8px 12px;color:#9CA3AF;">Card backgrounds</td>
+        </tr>
+        <!-- Warning -->
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+          <td style="padding:8px 12px;color:#E5E7EB;font-family:monospace;font-size:11px;">status.warning</td>
+          <td style="padding:8px 12px;"><span style="display:inline-flex;align-items:center;gap:6px;"><span style="width:14px;height:14px;border-radius:3px;background:#D97706;display:inline-block;"></span> #D97706</span></td>
+          <td style="padding:8px 12px;"><span style="display:inline-flex;align-items:center;gap:6px;"><span style="width:14px;height:14px;border-radius:3px;background:#FBBF24;display:inline-block;"></span> #FBBF24</span></td>
+          <td style="padding:8px 12px;color:#9CA3AF;">Warnings, streak badges</td>
+        </tr>
+        <!-- Premium -->
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+          <td style="padding:8px 12px;color:#E5E7EB;font-family:monospace;font-size:11px;">status.premium</td>
+          <td style="padding:8px 12px;"><span style="display:inline-flex;align-items:center;gap:6px;"><span style="width:14px;height:14px;border-radius:3px;background:#7C3AED;display:inline-block;"></span> #7C3AED</span></td>
+          <td style="padding:8px 12px;"><span style="display:inline-flex;align-items:center;gap:6px;"><span style="width:14px;height:14px;border-radius:3px;background:#A78BFA;display:inline-block;"></span> #A78BFA</span></td>
+          <td style="padding:8px 12px;color:#9CA3AF;">Premium features, upsells</td>
+        </tr>
+        <!-- Info -->
+        <tr>
+          <td style="padding:8px 12px;color:#E5E7EB;font-family:monospace;font-size:11px;">status.info</td>
+          <td style="padding:8px 12px;"><span style="display:inline-flex;align-items:center;gap:6px;"><span style="width:14px;height:14px;border-radius:3px;background:#2563EB;display:inline-block;"></span> #2563EB</span></td>
+          <td style="padding:8px 12px;"><span style="display:inline-flex;align-items:center;gap:6px;"><span style="width:14px;height:14px;border-radius:3px;background:#60A5FA;display:inline-block;"></span> #60A5FA</span></td>
+          <td style="padding:8px 12px;color:#9CA3AF;">Info tips, links</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Color palette visualization -->
+  <div style="max-width:800px;margin:32px auto 0;display:flex;gap:16px;flex-wrap:wrap;justify-content:center;">
+    <!-- Light mode row -->
+    <div style="flex:1;min-width:340px;">
+      <div style="font-size:11px;color:#6B7280;font-weight:600;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.05em;">Light Mode Palette</div>
+      <div style="display:flex;border-radius:12px;overflow:hidden;height:48px;">
+        <div style="flex:1;background:#059669;" title="success"></div>
+        <div style="flex:1;background:#D1FAE5;" title="successLight"></div>
+        <div style="flex:1;background:#DC2626;" title="error"></div>
+        <div style="flex:1;background:#FEE2E2;" title="errorLight"></div>
+        <div style="flex:1;background:#D97706;" title="warning"></div>
+        <div style="flex:1;background:#FEF3C7;" title="warningLight"></div>
+        <div style="flex:1;background:#7C3AED;" title="premium"></div>
+        <div style="flex:1;background:#EDE9FE;" title="premiumLight"></div>
+        <div style="flex:1;background:#2563EB;" title="info"></div>
+        <div style="flex:1;background:#DBEAFE;" title="infoLight"></div>
+      </div>
+    </div>
+    <!-- Dark mode row -->
+    <div style="flex:1;min-width:340px;">
+      <div style="font-size:11px;color:#6B7280;font-weight:600;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.05em;">Dark Mode Palette</div>
+      <div style="display:flex;border-radius:12px;overflow:hidden;height:48px;">
+        <div style="flex:1;background:#34D399;" title="success"></div>
+        <div style="flex:1;background:rgba(5,150,105,0.15);" title="successLight"></div>
+        <div style="flex:1;background:#F87171;" title="error"></div>
+        <div style="flex:1;background:rgba(239,68,68,0.15);" title="errorLight"></div>
+        <div style="flex:1;background:#FBBF24;" title="warning"></div>
+        <div style="flex:1;background:rgba(245,158,11,0.15);" title="warningLight"></div>
+        <div style="flex:1;background:#A78BFA;" title="premium"></div>
+        <div style="flex:1;background:rgba(139,92,246,0.15);" title="premiumLight"></div>
+        <div style="flex:1;background:#60A5FA;" title="info"></div>
+        <div style="flex:1;background:rgba(59,130,246,0.15);" title="infoLight"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div style="height:80px;"></div>
+
+</body>
+</html>

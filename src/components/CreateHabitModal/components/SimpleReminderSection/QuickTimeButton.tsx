@@ -7,6 +7,7 @@
 
 import { useCallback, useRef } from 'react';
 import { Animated, Pressable, Text } from 'react-native';
+import { useThemeColors } from '@/theme/ThemeContext';
 
 import { Motion } from '../../../../constants/motion';
 import useHapticFeedback from '../../../../hooks/useHapticFeedback';
@@ -20,6 +21,7 @@ export const QuickTimeButton = ({
 }: QuickTimeButtonProps) => {
   const scale = useRef(new Animated.Value(1)).current;
   const { triggerSelection } = useHapticFeedback();
+  const { colors: themeColors } = useThemeColors();
 
   const handlePressIn = useCallback(() => {
     Animated.timing(scale, {
@@ -42,9 +44,8 @@ export const QuickTimeButton = ({
       <Pressable
         accessibilityLabel={`Set reminder to ${label} at ${time}`}
         accessibilityRole='button'
-        className={`items-center rounded-xl py-3 ${
-          isSelected ? 'bg-blue-500' : 'bg-stone-100'
-        }`}
+        className='items-center rounded-xl py-3'
+        style={{ backgroundColor: isSelected ? themeColors.status.info : themeColors.background }}
         onPress={() => {
           triggerSelection();
           onPress();
@@ -54,15 +55,15 @@ export const QuickTimeButton = ({
       >
         <Text
           className={`text-xs font-semibold ${
-            isSelected ? 'text-white' : 'text-stone-600'
+            isSelected ? 'text-white' : ''
           }`}
+          style={!isSelected ? { color: themeColors.text.secondary } : undefined}
         >
           {label}
         </Text>
         <Text
-          className={`mt-0.5 text-[10px] ${
-            isSelected ? 'text-blue-100' : 'text-stone-400'
-          }`}
+          className='mt-0.5 text-[10px]'
+          style={{ color: isSelected ? 'rgba(255,255,255,0.8)' : themeColors.text.tertiary }}
         >
           {time}
         </Text>

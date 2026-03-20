@@ -8,6 +8,7 @@
 
 import React, { useCallback, useState } from 'react';
 import { View, Text } from 'react-native';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import { CompletionCheckmark } from '../../../animations';
 import { SectionCard } from './components/SectionCard';
 import { AnimatedSection } from './components/AnimatedSection';
@@ -25,6 +26,7 @@ export function DualVizSetup({
   reduceMotion = false,
   sectionIndex = 4,
 }: DualVizSetupProps) {
+  const { colors } = useThemeColors();
   const [showExplainer, setShowExplainer] = useState(false);
 
   const hasViz = hasVizData(visualization);
@@ -67,7 +69,7 @@ export function DualVizSetup({
               />
             </View>
           ) : (
-            <Text className='text-sm text-stone-500'>
+            <Text className='text-sm' style={{ color: colors.text.secondary }}>
               Success + Failure feelings
             </Text>
           )}

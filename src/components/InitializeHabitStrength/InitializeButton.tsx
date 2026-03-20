@@ -4,6 +4,7 @@
 
 import React from 'react';
 import { View, Text, Pressable, ActivityIndicator } from 'react-native';
+import { useThemeColors } from '@/theme/ThemeContext';
 
 interface InitializeButtonProps {
   habitCount: number;
@@ -16,16 +17,16 @@ export function InitializeButton({
   isInitializing,
   onPress,
 }: InitializeButtonProps) {
+  const { colors } = useThemeColors();
+
   return (
     <Pressable
       accessibilityLabel='Initialize habit strength'
       accessibilityRole='button'
       accessibilityState={{ disabled: isInitializing }}
-      className={`rounded-lg px-4 py-3 ${
-        isInitializing ? 'bg-blue-300' : 'bg-blue-500'
-      }`}
+      className='rounded-lg px-4 py-3'
       disabled={isInitializing}
-      style={({ pressed }) => ({ opacity: pressed && !isInitializing ? 0.8 : 1 })}
+      style={({ pressed }) => ({ backgroundColor: colors.status.info, opacity: (pressed && !isInitializing ? 0.8 : 1) * (isInitializing ? 0.6 : 1) })}
       onPress={onPress}
     >
       {isInitializing ? (

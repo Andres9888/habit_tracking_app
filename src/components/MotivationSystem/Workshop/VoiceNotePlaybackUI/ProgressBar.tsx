@@ -15,6 +15,7 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import type { ProgressBarProps } from './types';
 import { triggerHaptic } from '@/utils/haptics';
 
@@ -24,6 +25,7 @@ export function ProgressBar({
   isDisabled = false,
   reduceMotion = false,
 }: ProgressBarProps) {
+  const { colors } = useThemeColors();
   const [barWidth, setBarWidth] = useState(0);
   const animatedProgress = useSharedValue(progress);
   const isDragging = useSharedValue(false);
@@ -83,18 +85,18 @@ export function ProgressBar({
       onTouchStart={handleTouchStart}
     >
       {/* Track background */}
-      <View className='h-1 w-full rounded-full bg-stone-200' />
+      <View className='h-1 w-full rounded-full' style={{ backgroundColor: colors.border }} />
 
       {/* Progress fill */}
       <Animated.View
-        className='absolute left-0 top-1/2 h-1 -translate-y-1/2 rounded-full bg-teal-500'
-        style={progressStyle}
+        className='absolute left-0 top-1/2 h-1 -translate-y-1/2 rounded-full'
+        style={[progressStyle, { backgroundColor: colors.status.success }]}
       />
 
       {/* Thumb indicator */}
       <Animated.View
-        className='absolute top-1/2 h-3 w-3 -translate-y-1/2 rounded-full bg-teal-600 shadow-sm'
-        style={thumbStyle}
+        className='absolute top-1/2 h-3 w-3 -translate-y-1/2 rounded-full shadow-sm'
+        style={[thumbStyle, { backgroundColor: colors.status.success }]}
       />
     </Pressable>
   );

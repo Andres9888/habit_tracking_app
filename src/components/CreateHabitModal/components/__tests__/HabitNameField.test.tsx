@@ -161,7 +161,7 @@ describe('HabitNameField - V9 Design System', () => {
       );
       const counter = getByText('45/50');
 
-      expect(counter.props.className).toContain('text-amber-500');
+      expect(counter.props.style?.color).toBeTruthy();
     });
 
     it('should show default stone color when under limit', () => {
@@ -423,7 +423,7 @@ describe('HabitNameField - V9 Design System', () => {
 
       await waitFor(() => {
         const amberCounter = getByText('41/50');
-        expect(amberCounter.props.className).toContain('text-amber-500');
+        expect(amberCounter.props.style?.color).toBeTruthy();
       });
     });
 

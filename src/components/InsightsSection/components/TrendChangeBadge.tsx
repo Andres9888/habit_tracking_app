@@ -6,41 +6,44 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import { TrendingUp, TrendingDown } from 'lucide-react-native';
+import { useThemeColors } from '@/theme/ThemeContext';
 
 interface TrendChangeBadgeProps {
   change: number;
 }
 
 export function TrendChangeBadge({ change }: TrendChangeBadgeProps) {
+  const { colors } = useThemeColors();
   const isPositive = change > 0;
   const isNegative = change < 0;
 
-  const bgClass = isPositive
-    ? 'bg-emerald-50'
-    : isNegative
-      ? 'bg-red-50'
-      : 'bg-stone-50';
-
   return (
     <View
-      className={`mt-3 flex-row items-center justify-center gap-1.5 rounded-xl py-2.5 ${bgClass}`}
+      className='mt-3 flex-row items-center justify-center gap-1.5 rounded-xl py-2.5'
+      style={{
+        backgroundColor: isPositive
+          ? colors.status.successLight
+          : isNegative
+            ? colors.status.errorLight
+            : colors.gray[50],
+      }}
     >
       {isPositive ? (
         <>
-          <TrendingUp className='text-emerald-500' size={16} />
-          <Text className='text-sm font-semibold text-emerald-600'>
+          <TrendingUp color={colors.status.success} size={16} />
+          <Text className='text-sm font-semibold' style={{ color: colors.status.success }}>
             +{change}% improvement
           </Text>
         </>
       ) : isNegative ? (
         <>
-          <TrendingDown className='text-red-500' size={16} />
-          <Text className='text-sm font-semibold text-red-600'>
+          <TrendingDown color={colors.status.error} size={16} />
+          <Text className='text-sm font-semibold' style={{ color: colors.status.error }}>
             {change}% from last month
           </Text>
         </>
       ) : (
-        <Text className='text-sm font-medium text-stone-500'>
+        <Text className='text-sm font-medium' style={{ color: colors.text.secondary }}>
           Same as last month
         </Text>
       )}

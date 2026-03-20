@@ -1,7 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { clsx } from 'clsx';
+import { useThemeColors } from '@/theme/ThemeContext';
 
 interface ActionItemIconProps {
   icon: React.ReactNode;
@@ -14,13 +14,12 @@ export function ActionItemIcon({
   highlighted,
   destructive,
 }: ActionItemIconProps) {
+  const { colors } = useThemeColors();
+
   return (
     <View
-      className={clsx(
-        'h-10 w-10 items-center justify-center rounded-xl',
-        destructive && 'bg-red-100',
-        !highlighted && !destructive && 'bg-stone-100'
-      )}
+      className='h-10 w-10 items-center justify-center rounded-xl'
+      style={destructive ? { backgroundColor: colors.status.errorLight } : !highlighted ? { backgroundColor: colors.background } : undefined}
     >
       {highlighted ? <LinearGradient
           className='absolute inset-0 rounded-xl'

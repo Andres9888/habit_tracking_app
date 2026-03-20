@@ -8,6 +8,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { View, Text, Pressable, AccessibilityInfo } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Info } from 'lucide-react-native';
+import { useThemeColors } from '@/theme/ThemeContext';
 
 import type { YourProgressCardProps } from '../types';
 import {
@@ -28,6 +29,7 @@ export function YourProgressCard({
   actionableTip,
   onInfoPress,
 }: YourProgressCardProps) {
+  const { colors: themeColors } = useThemeColors();
   const clampedStrength = Math.max(0, Math.min(100, strength));
   const level = getStrengthLevel(clampedStrength);
   const nextLevel = getNextLevel(clampedStrength);
@@ -63,7 +65,8 @@ export function YourProgressCard({
     <View
       accessibilityLabel={label}
       accessibilityRole='summary'
-      className='overflow-hidden rounded-2xl shadow-sm shadow-stone-200/50'
+      className='overflow-hidden rounded-2xl shadow-sm'
+      style={{ shadowColor: themeColors.border }}
     >
       <LinearGradient
         className='absolute inset-0'
@@ -71,21 +74,22 @@ export function YourProgressCard({
         end={{ x: 1, y: 1 }}
         start={{ x: 0, y: 0 }}
       />
-      <View className='absolute inset-0 rounded-2xl border border-teal-500/20' />
+      <View className='absolute inset-0 rounded-2xl border' style={{ borderColor: themeColors.status.successLight }} />
 
       <View className='p-4'>
         <View className='mb-3 flex-row items-center justify-between'>
-          <Text className='text-sm font-semibold text-stone-600'>
+          <Text className='text-sm font-semibold' style={{ color: themeColors.text.primary }}>
             Your Progress
           </Text>
           <Pressable
             accessibilityLabel='Learn about habit strength'
             accessibilityRole='button'
-            className='h-7 w-7 items-center justify-center rounded-full bg-stone-100 active:bg-stone-200'
+            className='h-7 w-7 items-center justify-center rounded-full active:opacity-80'
+            style={{ backgroundColor: themeColors.background }}
             hitSlop={{ bottom: 10, left: 10, right: 10, top: 10 }}
             onPress={handleInfoPress}
           >
-            <Info className='text-stone-500' size={16} />
+            <Info color={themeColors.text.secondary} size={16} />
           </Pressable>
         </View>
 

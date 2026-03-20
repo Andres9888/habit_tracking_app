@@ -27,7 +27,7 @@ export const TemplateListEmpty = () => {
         style={{
           color: colors.text.primary,
           fontFamily: fontFamilies.primary.text,
-          fontSize: 15,
+          fontSize: 14,
           fontWeight: '500',
           marginTop: 8,
         }}

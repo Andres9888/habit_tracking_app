@@ -10,6 +10,7 @@
 
 import React, { useCallback, useEffect, useState } from 'react';
 import { View, Text } from 'react-native';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import { SectionHeader } from './SectionHeader';
 import { StreakVoiceNoteCard } from './StreakVoiceNoteCard';
 import type { PreviousStreakVoiceNotesProps } from './types';
@@ -22,6 +23,7 @@ export function PreviousStreakVoiceNotes({
   onPlayFinish,
   reduceMotion = false,
 }: PreviousStreakVoiceNotesProps) {
+  const { colors } = useThemeColors();
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
   // Auto-expand the first note on mount (the one from highest streak day)
@@ -48,12 +50,12 @@ export function PreviousStreakVoiceNotes({
   }
 
   return (
-    <View className='rounded-2xl border-l-4 border-l-amber-400 bg-white p-4'>
+    <View className='rounded-2xl border-l-4 p-4' style={{ borderLeftColor: colors.status.warning, backgroundColor: colors.card }}>
       <SectionHeader bestStreak={bestStreak} />
 
       {/* Science callout */}
-      <View className='mb-3 rounded-lg bg-amber-50 p-2'>
-        <Text className='text-center text-xs italic text-amber-600'>
+      <View className='mb-3 rounded-lg p-2' style={{ backgroundColor: colors.status.warningLight }}>
+        <Text className='text-center text-xs italic' style={{ color: colors.status.warning }}>
           Hearing your voice from when you were most committed creates a
           powerful reconnection
         </Text>
@@ -76,7 +78,7 @@ export function PreviousStreakVoiceNotes({
       </View>
 
       {/* Encouragement */}
-      <Text className='mt-2 text-center text-sm font-medium text-amber-700'>
+      <Text className='mt-2 text-center text-sm font-medium' style={{ color: colors.status.warningText }}>
         This was you at your best. You can get there again.
       </Text>
     </View>

@@ -2,6 +2,7 @@ import React, { memo } from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { format } from 'date-fns';
 import { ChevronLeft, ChevronRight } from 'lucide-react-native';
+import { useThemeColors } from '@/theme/ThemeContext';
 import { useDateSelectorLogic } from './DateSelector.hooks';
 import { DayCell } from './DayCell';
 
@@ -18,6 +19,7 @@ const DateSelectorComponent: React.FC<DateSelectorProps> = ({
   onNextWeek,
   canNavigateForward = true,
 }) => {
+  const { colors: themeColors } = useThemeColors();
   const { isToday, isFuture } = useDateSelectorLogic();
 
   if (dates.length === 0) {
@@ -34,14 +36,15 @@ const DateSelectorComponent: React.FC<DateSelectorProps> = ({
         <Pressable
           accessibilityLabel='Previous week'
           accessibilityRole='button'
-          className='h-11 w-11 items-center justify-center rounded-full bg-[#f3f4f6] active:bg-stone-200'
+          className='h-11 w-11 items-center justify-center rounded-full active:opacity-80'
           hitSlop={{ bottom: 8, left: 8, right: 8, top: 8 }}
+          style={{ backgroundColor: themeColors.background }}
           onPress={onPreviousWeek}
         >
-          <ChevronLeft color='#1c1917' size={16} strokeWidth={2} />
+          <ChevronLeft color={themeColors.text.primary} size={16} strokeWidth={2} />
         </Pressable>
 
-        <Text className='text-[17px] leading-5 tracking-[-0.15px] text-stone-600'>
+        <Text className='text-[17px] leading-5 tracking-[-0.15px]' style={{ color: themeColors.text.primary }}>
           {dateRangeText}
         </Text>
 
@@ -49,7 +52,8 @@ const DateSelectorComponent: React.FC<DateSelectorProps> = ({
           accessibilityLabel='Next week'
           accessibilityRole='button'
           accessibilityState={{ disabled: !canNavigateForward }}
-          className={`h-11 w-11 items-center justify-center rounded-full bg-[#f3f4f6] active:bg-stone-200 ${canNavigateForward ? '' : 'opacity-40'}`}
+          className={`h-11 w-11 items-center justify-center rounded-full active:opacity-80 ${canNavigateForward ? '' : 'opacity-40'}`}
+          style={{ backgroundColor: themeColors.background }}
           disabled={!canNavigateForward}
           hitSlop={{ bottom: 8, left: 8, right: 8, top: 8 }}
           onPress={onNextWeek}

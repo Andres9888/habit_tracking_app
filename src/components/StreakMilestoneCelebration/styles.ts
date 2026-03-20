@@ -30,7 +30,7 @@ export const styles = StyleSheet.create({
   },
 
   emoji: {
-    fontSize: 48,
+    fontSize: 34,
   },
 
   // Emoji badge
@@ -51,7 +51,7 @@ export const styles = StyleSheet.create({
   },
 
   habitEmoji: {
-    fontSize: 24,
+    fontSize: 22,
     marginRight: spacing.sm,
   },
 
@@ -160,7 +160,7 @@ export const achievementCardStyles = StyleSheet.create({
   },
 
   badgeEmoji: {
-    fontSize: 40,
+    fontSize: 34,
   },
 
   container: {

@@ -2,6 +2,7 @@ import { memo, Animated, Text, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { AnimatedPressable } from '../ui/AnimatedPressable';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
+import { useThemeColors } from '@/theme/ThemeContext';
 import { useRewardToastAnimation } from './useRewardToastAnimation';
 import { useRewardToastContent } from './useRewardToastContent';
 
@@ -24,6 +25,7 @@ function RewardCelebrationToastComponent({
   streak,
   visible,
 }: RewardCelebrationToastProps) {
+  const { colors: themeColors } = useThemeColors();
   const { translateY, opacity } = useRewardToastAnimation(visible);
   const { title, premiumCTA } = useRewardToastContent(streak);
   const { triggerLightImpact } = useHapticFeedback({});
@@ -39,7 +41,7 @@ function RewardCelebrationToastComponent({
         <Text className='text-[17px] font-bold leading-[24px] text-[#1c1917]'>
           {title}
         </Text>
-        <Text className='mt-2 text-[17px] leading-[22px] text-stone-700'>
+        <Text className='mt-2 text-[17px] leading-[22px]' style={{ color: themeColors.text.primary }}>
           {message}
         </Text>
         <View className='mt-3 rounded-2xl p-3'>
@@ -63,7 +65,7 @@ function RewardCelebrationToastComponent({
               onSecondaryAction();
             }}
           >
-            <Text className='text-[17px] font-semibold leading-[22px] text-stone-600'>
+            <Text className='text-[17px] font-semibold leading-[22px]' style={{ color: themeColors.text.primary }}>
               Share
             </Text>
           </AnimatedPressable>
@@ -90,7 +92,7 @@ function RewardCelebrationToastComponent({
             onDismiss();
           }}
         >
-          <Text className='text-[13px] font-medium uppercase leading-[18px] tracking-wider text-stone-500'>
+          <Text className='text-[13px] font-medium uppercase leading-[18px] tracking-wider' style={{ color: themeColors.text.secondary }}>
             Not now
           </Text>
         </AnimatedPressable>

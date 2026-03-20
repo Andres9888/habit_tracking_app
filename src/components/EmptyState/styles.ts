@@ -38,9 +38,9 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 16,
     flexDirection: 'row',
-    gap: 6,
-    paddingHorizontal: 14,
-    paddingVertical: 10,
+    gap: 8,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
   },
   templateChipPressed: {
     transform: [{ scale: 0.98 }],

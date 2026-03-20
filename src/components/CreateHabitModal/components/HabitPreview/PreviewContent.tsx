@@ -2,6 +2,7 @@
  * Content view for populated HabitPreview
  */
 import { Animated, Text, View } from 'react-native';
+import { useThemeColors } from '@/theme/ThemeContext';
 import STRINGS from '../../../../constants/strings';
 import { getTimeOfDayLabel } from './helpers';
 import type { HubermanPhase } from '../../../../constants/hubermanPhases';
@@ -26,7 +27,10 @@ export const PreviewContent = ({
   contentOpacity,
   contentScale,
   pulseAnim,
-}: PreviewContentProps) => (
+}: PreviewContentProps) => {
+  const { colors: themeColors } = useThemeColors();
+
+  return (
   <Animated.View
     style={{ opacity: contentOpacity, transform: [{ scale: contentScale }] }}
   >
@@ -50,28 +54,30 @@ export const PreviewContent = ({
             </View>
           </View>
         ) : (
-          <View className='h-14 w-14 items-center justify-center rounded-2xl bg-stone-200'>
-            <Text className='text-xl text-stone-400'>?</Text>
+          <View className='h-14 w-14 items-center justify-center rounded-2xl' style={{ backgroundColor: themeColors.border }}>
+            <Text className='text-xl' style={{ color: themeColors.text.tertiary }}>?</Text>
           </View>
         )}
       </Animated.View>
       <View className='flex-1'>
         {habitName ? (
           <Text
-            className='text-lg font-semibold text-stone-800'
+            className='text-lg font-semibold'
             numberOfLines={1}
+            style={{ color: themeColors.text.primary }}
           >
             {habitName}
           </Text>
         ) : (
-          <Text className='text-lg font-semibold text-stone-400'>
+          <Text className='text-lg font-semibold' style={{ color: themeColors.text.tertiary }}>
             {STRINGS.CREATE_HABIT.namePrompt}
           </Text>
         )}
-        <Text className='text-sm text-stone-500'>
+        <Text className='text-sm' style={{ color: themeColors.text.secondary }}>
           {getTimeOfDayLabel(timeOfDay)}
         </Text>
       </View>
     </View>
   </Animated.View>
-);
+  );
+};

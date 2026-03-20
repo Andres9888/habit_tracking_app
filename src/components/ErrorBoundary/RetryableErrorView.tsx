@@ -68,7 +68,7 @@ export function RetryableErrorView({
       textAlign: 'center',
     },
     emoji: {
-      fontSize: compact ? 32 : 40,
+      fontSize: compact ? 32 : 34,
       marginBottom: 12,
     },
     retryButton: {
@@ -85,7 +85,7 @@ export function RetryableErrorView({
     retryText: {
       color: colors.text.inverse,
       fontFamily: fontFamilies.primary.text,
-      fontSize: 15,
+      fontSize: 14,
       fontWeight: '600',
     },
     secondaryButton: {
@@ -95,7 +95,7 @@ export function RetryableErrorView({
     secondaryText: {
       color: colors.text.secondary,
       fontFamily: fontFamilies.primary.text,
-      fontSize: 15,
+      fontSize: 14,
       fontWeight: '500',
     },
     title: {

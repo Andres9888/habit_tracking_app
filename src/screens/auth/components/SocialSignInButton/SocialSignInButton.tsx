@@ -6,6 +6,7 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 import { springs } from '@/theme/animations';
+import { useThemeColors } from '@/theme/ThemeContext';
 import { AppleLogo } from '../../../../components/auth/logos/AppleLogo';
 import { GoogleLogo } from '../../../../components/auth/logos/GoogleLogo';
 import { LoadingSpinner } from './LoadingSpinner';
@@ -16,17 +17,13 @@ const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 const PROVIDER_CONFIG = {
   apple: {
     bgColor: 'bg-black',
-    borderColor: 'border-black',
     label: 'Continue with Apple',
     spinnerColor: '#FFFFFF',
-    textColor: 'text-white',
   },
   google: {
     bgColor: 'bg-white',
-    borderColor: 'border-stone-200',
     label: 'Continue with Google',
     spinnerColor: '#44403c',
-    textColor: 'text-stone-800',
   },
 } as const;
 
@@ -38,6 +35,7 @@ export function SocialSignInButton({
   testID,
 }: SocialSignInButtonProps) {
   const config = PROVIDER_CONFIG[provider];
+  const { colors } = useThemeColors();
   const reduceMotion = useReducedMotion();
   const scale = useSharedValue(1);
 
@@ -71,11 +69,16 @@ export function SocialSignInButton({
       accessibilityRole='button'
       accessibilityState={{ busy: isLoading, disabled: isDisabled }}
       testID={testID || `auth-${provider}-button`}
-      className={`flex-row items-center justify-center rounded-2xl border py-4 ${config.borderColor} ${config.bgColor} ${
+      className={`flex-row items-center justify-center rounded-2xl border py-4 ${config.bgColor} ${
         isDisabled ? 'opacity-40' : ''
       }`}
       disabled={isDisabled}
-      style={animatedStyle}
+      style={[
+        animatedStyle,
+        provider === 'google'
+          ? { borderColor: colors.border }
+          : { borderColor: 'black' },
+      ]}
       onPress={onPress}
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}
@@ -92,7 +95,10 @@ export function SocialSignInButton({
           <AppleLogo color='#FFFFFF' size={20} />
         )}
       </View>
-      <Text className={`text-[15px] font-semibold ${config.textColor}`}>
+      <Text
+        className='text-[15px] font-semibold'
+        style={{ color: provider === 'google' ? colors.text.primary : '#FFFFFF' }}
+      >
         {isLoading ? 'Signing in...' : config.label}
       </Text>
     </AnimatedPressable>

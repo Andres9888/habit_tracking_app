@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { View, Text } from 'react-native';
+import { useThemeColors } from '@/theme/ThemeContext';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -20,6 +21,7 @@ interface HabitCardProps {
  * HabitCard - Displays habit info with streak at top of modal
  */
 export function HabitCard({ habit, reduceMotion }: HabitCardProps) {
+  const { colors: themeColors } = useThemeColors();
   const streakScale = useSharedValue(1);
 
   useEffect(() => {
@@ -37,15 +39,15 @@ export function HabitCard({ habit, reduceMotion }: HabitCardProps) {
   }));
 
   return (
-    <View className='flex-row items-center rounded-2xl bg-white p-4 shadow-sm shadow-stone-200/50'>
+    <View className='flex-row items-center rounded-2xl p-4 shadow-sm' style={{ backgroundColor: themeColors.card, shadowColor: themeColors.border }}>
       {/* Habit Icon */}
-      <View className='mr-4 h-14 w-14 items-center justify-center rounded-xl bg-amber-100'>
+      <View className='mr-4 h-14 w-14 items-center justify-center rounded-xl' style={{ backgroundColor: themeColors.status.warningLight }}>
         <Text className='text-2xl'>{habit.icon || '✨'}</Text>
       </View>
 
       {/* Habit Info */}
       <View className='flex-1'>
-        <Text className='text-lg font-semibold text-stone-800'>
+        <Text className='text-lg font-semibold' style={{ color: themeColors.text.primary }}>
           {habit.name}
         </Text>
         <View className='mt-1 flex-row items-center gap-3'>
@@ -54,16 +56,16 @@ export function HabitCard({ habit, reduceMotion }: HabitCardProps) {
               className='flex-row items-center gap-1'
               style={streakAnimatedStyle}
             >
-              <Flame className='text-orange-500' size={14} />
-              <Text className='text-sm font-medium text-stone-600'>
+              <Flame color={themeColors.status.streak} size={14} />
+              <Text className='text-sm font-medium' style={{ color: themeColors.text.primary }}>
                 {habit.currentStreak} day streak
               </Text>
             </Animated.View> : null}
           {/* Completions */}
           {habit.totalCompletions !== undefined &&
             habit.totalCompletions > 0 ? <View className='flex-row items-center gap-1'>
-                <Target className='text-emerald-500' size={14} />
-                <Text className='text-sm text-stone-500'>
+                <Target color={themeColors.status.success} size={14} />
+                <Text className='text-sm' style={{ color: themeColors.text.secondary }}>
                   {habit.totalCompletions} total
                 </Text>
               </View> : null}

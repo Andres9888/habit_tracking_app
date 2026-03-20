@@ -21,22 +21,24 @@ export function getBannerStyles(daysRemaining: number): BannerStyles {
   switch (urgencyLevel) {
     case 'high': {
       return {
-        bg: 'bg-rose-50',
-        border: 'border-rose-200',
-        buttonBg: 'bg-rose-600',
-        iconBg: 'bg-rose-100',
-        iconColor: '#E11D48',
-        text: 'text-rose-900',
+        bg: '',
+        border: '',
+        buttonBg: '',
+        iconBg: '',
+        iconColor: '#DC2626',
+        text: '',
+        useTheme: 'error' as const,
       };
     }
     case 'medium': {
       return {
-        bg: 'bg-amber-50',
-        border: 'border-amber-200',
-        buttonBg: 'bg-amber-600',
-        iconBg: 'bg-amber-100',
+        bg: '',
+        border: '',
+        buttonBg: '',
+        iconBg: '',
         iconColor: '#D97706',
-        text: 'text-amber-900',
+        text: '',
+        useTheme: 'warning' as const,
       };
     }
     default: {

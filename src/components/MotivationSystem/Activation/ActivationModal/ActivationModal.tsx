@@ -14,6 +14,7 @@
 import React, { useCallback } from 'react';
 import { View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useThemeColors } from '@/theme/ThemeContext';
 import { Modal } from '../../../Modal';
 import { ActivationModalHeader } from './ActivationModalHeader';
 import { ActivationModalContent } from './ActivationModalContent';
@@ -41,6 +42,7 @@ export function ActivationModal({
   onJustTwoMin,
   reduceMotion = false,
 }: ActivationModalProps) {
+  const { colors: themeColors } = useThemeColors();
   const insets = useSafeAreaInsets();
 
   const handleStartNow = useCallback(() => {
@@ -69,7 +71,7 @@ export function ActivationModal({
       visible={visible}
       onClose={onClose}
     >
-      <View accessibilityViewIsModal className='flex-1 bg-stone-50' style={{ paddingTop: insets.top }}>
+      <View accessibilityViewIsModal className='flex-1' style={{ paddingTop: insets.top, backgroundColor: themeColors.background }}>
         <ActivationModalHeader onClose={onClose} />
         <ActivationModalContent
           habit={habit}

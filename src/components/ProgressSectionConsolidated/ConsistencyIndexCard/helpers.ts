@@ -5,8 +5,8 @@
 /**
  * Get color based on consistency score
  */
-export function getScoreColor(score: number): string {
-  if (score >= 80) return '#10b981'; // emerald-500 - excellent
+export function getScoreColor(score: number, successColor?: string): string {
+  if (score >= 80) return successColor ?? '#10b981';
   if (score >= 60) return '#8b5cf6'; // violet-500 - good
   if (score >= 40) return '#f59e0b'; // amber-500 - moderate
   return '#ef4444'; // red-500 - needs work

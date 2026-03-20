@@ -57,7 +57,7 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   percentage: {
-    fontSize: 48,
+    fontSize: 34,
     lineHeight: 56,
   },
   percentageContainer: {

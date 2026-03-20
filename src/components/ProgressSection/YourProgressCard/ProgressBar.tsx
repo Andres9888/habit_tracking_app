@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import Animated from 'react-native-reanimated';
+import { useThemeColors } from '@/theme/ThemeContext';
 import { LEVEL_EMOJIS } from './constants';
 
 interface ProgressBarProps {
@@ -9,9 +10,11 @@ interface ProgressBarProps {
 }
 
 export function ProgressBar({ levelProgress, levelColor }: ProgressBarProps) {
+  const { colors: themeColors } = useThemeColors();
+
   return (
     <View className='mb-3'>
-      <View className='h-2 overflow-hidden rounded-full bg-stone-100'>
+      <View className='h-2 overflow-hidden rounded-full' style={{ backgroundColor: themeColors.background }}>
         <Animated.View
           className='h-full rounded-full'
           style={{ backgroundColor: levelColor, width: `${levelProgress}%` }}

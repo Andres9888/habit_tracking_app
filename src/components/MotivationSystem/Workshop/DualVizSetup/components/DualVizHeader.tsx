@@ -6,6 +6,7 @@
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { HelpCircle, Plus, Pencil } from 'lucide-react-native';
+import { useThemeColors } from '../../../../../theme/ThemeContext';
 
 interface DualVizHeaderProps {
   hasViz: boolean;
@@ -13,15 +14,17 @@ interface DualVizHeaderProps {
 }
 
 export function DualVizHeader({ hasViz, onHelpPress }: DualVizHeaderProps) {
+  const { colors } = useThemeColors();
+
   return (
     <View className='mb-2 flex-row items-center justify-between'>
       <View className='flex-row items-center gap-2'>
         <Text className='text-base'>👁️</Text>
         <View>
-          <Text className='text-xs font-semibold text-violet-600'>
+          <Text className='text-xs font-semibold' style={{ color: colors.status.premiumText }}>
             Visualization Setup
           </Text>
-          <Text className='text-[10px] text-stone-400'>Huberman Protocol</Text>
+          <Text className='text-[10px]' style={{ color: colors.text.tertiary }}>Huberman Protocol</Text>
         </View>
       </View>
       <View className='flex-row items-center gap-2'>
@@ -31,14 +34,14 @@ export function DualVizHeader({ hasViz, onHelpPress }: DualVizHeaderProps) {
           hitSlop={{ bottom: 12, left: 12, right: 12, top: 12 }}
           onPress={onHelpPress}
         >
-          <HelpCircle className='text-stone-400' size={16} />
+          <HelpCircle color={colors.text.tertiary} size={16} />
         </Pressable>
         {hasViz ? (
-          <Pencil className='text-stone-400' size={14} />
+          <Pencil color={colors.text.tertiary} size={14} />
         ) : (
           <View className='flex-row items-center gap-1'>
-            <Plus className='text-violet-600' size={12} />
-            <Text className='text-xs font-medium text-violet-600'>Set up</Text>
+            <Plus color={colors.status.premiumText} size={12} />
+            <Text className='text-xs font-medium' style={{ color: colors.status.premiumText }}>Set up</Text>
           </View>
         )}
       </View>

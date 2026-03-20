@@ -38,7 +38,7 @@ export function EmptyState() {
         Habit Strength
       </Text>
       <View style={{ alignItems: 'center', justifyContent: 'center', paddingVertical: 32 }}>
-        <Animated.Text entering={anim(0)} style={{ fontSize: 40, marginBottom: 8 }}>
+        <Animated.Text entering={anim(0)} style={{ fontSize: 34, marginBottom: 8 }}>
           🌱
         </Animated.Text>
         <Animated.Text
@@ -46,7 +46,7 @@ export function EmptyState() {
           style={{
             color: colors.text.secondary,
             fontFamily: fontFamilies.primary.text,
-            fontSize: 15,
+            fontSize: 14,
             textAlign: 'center',
           }}
         >

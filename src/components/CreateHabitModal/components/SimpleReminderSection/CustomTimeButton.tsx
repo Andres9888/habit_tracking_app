@@ -4,6 +4,7 @@
 
 import { Pressable, Text, View } from 'react-native';
 import { ChevronRight } from 'lucide-react-native';
+import { useThemeColors } from '@/theme/ThemeContext';
 import { formatReminderTime } from '../../../../utils/notifications';
 
 interface CustomTimeButtonProps {
@@ -17,18 +18,21 @@ export function CustomTimeButton({
   onPress,
   triggerSelection,
 }: CustomTimeButtonProps) {
+  const { colors } = useThemeColors();
+
   return (
     <Pressable
       accessibilityLabel='Choose custom reminder time'
-      className='flex-row items-center justify-between rounded-xl bg-stone-50 px-4 py-3'
+      className='flex-row items-center justify-between rounded-xl px-4 py-3'
+      style={{ backgroundColor: colors.background }}
       onPress={() => {
         triggerSelection();
         onPress();
       }}
     >
-      <Text className='text-sm font-medium text-stone-700'>Custom time</Text>
+      <Text className='text-sm font-medium' style={{ color: colors.text.primary }}>Custom time</Text>
       <View className='flex-row items-center'>
-        <Text className='mr-2 text-sm font-semibold text-blue-500'>
+        <Text className='mr-2 text-sm font-semibold' style={{ color: colors.status.info }}>
           {formatReminderTime(reminderTime)}
         </Text>
         <ChevronRight color='#a8a29e' size={16} />

@@ -28,7 +28,7 @@ export const controlsStyles = StyleSheet.create({
     borderRadius: 16,
     flexDirection: 'row',
     paddingHorizontal: 12,
-    paddingVertical: 6,
+    paddingVertical: 8,
   },
   syncButtonText: {
     color: colors.text.inverse,

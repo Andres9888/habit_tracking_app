@@ -6,6 +6,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { View, AccessibilityInfo } from 'react-native';
+import { useThemeColors } from '@/theme/ThemeContext';
 import { StatCard } from './StatCard';
 import type { QuickStatsStripProps } from './types';
 
@@ -18,6 +19,7 @@ export function QuickStatsStrip({
   onStatPress,
   successRate,
 }: QuickStatsStripProps) {
+  const { colors: themeColors } = useThemeColors();
   const [reduceMotion, setReduceMotion] = useState(false);
 
   useEffect(() => {
@@ -43,7 +45,8 @@ export function QuickStatsStrip({
       <StatCard
         accessibilityHint='Opens streak details'
         animationKey={animationKey}
-        color='text-orange-500'
+        color=''
+        colorStyle={themeColors.status.streak}
         delay={0}
         emoji='🔥'
         label='streak'
@@ -54,7 +57,8 @@ export function QuickStatsStrip({
       <StatCard
         accessibilityHint='Opens habit strength details'
         animationKey={animationKey}
-        color='text-violet-500'
+        color=''
+        colorStyle={themeColors.status.premium}
         delay={STAGGER_DELAY}
         emoji='💪'
         label='strength'
@@ -66,7 +70,8 @@ export function QuickStatsStrip({
       <StatCard
         accessibilityHint='Opens success rate details'
         animationKey={animationKey}
-        color='text-emerald-700'
+        color=''
+        colorStyle={themeColors.status.successText}
         delay={STAGGER_DELAY * 2}
         emoji='✓'
         label='success'

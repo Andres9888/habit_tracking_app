@@ -5,6 +5,7 @@ import React from 'react';
 import { View, Text, Pressable } from 'react-native';
 import Animated, { AnimatedStyle } from 'react-native-reanimated';
 import { Mic, ChevronDown } from 'lucide-react-native';
+import { useThemeColors } from '../../../../../theme/ThemeContext';
 import { formatDuration, formatRelativeTime } from '../VoiceNotesSection.utils';
 import type { VoiceNoteSummary } from '../VoiceNotesSection.types';
 import type { ViewStyle } from 'react-native';
@@ -18,21 +19,22 @@ interface VoiceNoteItemHeaderProps {
 }
 
 export function VoiceNoteItemHeader({ note, hasPlayback, isExpanded, iconStyle, onPress }: VoiceNoteItemHeaderProps) {
+  const { colors } = useThemeColors();
   const label = hasPlayback
     ? `${note.label || 'Recording'}, ${formatDuration(note.duration)}. ${isExpanded ? 'Collapse' : 'Expand'} to ${isExpanded ? 'hide' : 'play'}`
     : `${note.label || 'Recording'}, ${formatDuration(note.duration)}`;
 
   return (
     <Pressable accessibilityLabel={label} accessibilityRole={hasPlayback ? 'button' : 'text'} className='flex-row items-center gap-3 p-3' disabled={!hasPlayback} onPress={onPress}>
-      <View className='h-8 w-8 items-center justify-center rounded-full bg-teal-100'>
-        <Mic className='text-teal-600' size={14} />
+      <View className='h-8 w-8 items-center justify-center rounded-full' style={{ backgroundColor: colors.status.successLight }}>
+        <Mic color={colors.status.success} size={14} />
       </View>
       <View className='flex-1'>
-        <Text className='text-sm font-medium text-stone-700'>{note.label || `Recording ${formatDuration(note.duration)}`}</Text>
-        <Text className='text-xs text-stone-500'>{formatRelativeTime(note.createdAt)}{note.isDay1 ? ' • Day 1' : null}</Text>
+        <Text className='text-sm font-medium' style={{ color: colors.text.primary }}>{note.label || `Recording ${formatDuration(note.duration)}`}</Text>
+        <Text className='text-xs' style={{ color: colors.text.secondary }}>{formatRelativeTime(note.createdAt)}{note.isDay1 ? ' . Day 1' : null}</Text>
       </View>
-      <Text className='mr-2 text-xs text-stone-400'>{formatDuration(note.duration)}</Text>
-      {hasPlayback ? <Animated.View style={iconStyle}><ChevronDown className='text-stone-400' size={16} /></Animated.View> : null}
+      <Text className='mr-2 text-xs' style={{ color: colors.text.tertiary }}>{formatDuration(note.duration)}</Text>
+      {hasPlayback ? <Animated.View style={iconStyle}><ChevronDown color={colors.text.tertiary} size={16} /></Animated.View> : null}
     </Pressable>
   );
 }

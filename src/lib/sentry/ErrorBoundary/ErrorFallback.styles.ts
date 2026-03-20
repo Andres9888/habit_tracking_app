@@ -9,7 +9,7 @@ export function createErrorFallbackStyles(colors: SemanticColors) {
     buttonText: { color: colors.text.inverse, fontFamily: fontFamilies.primary.text, fontSize: 13, fontWeight: '600' },
     container: { alignItems: 'center', backgroundColor: colors.background, flex: 1, justifyContent: 'center', padding: 24 },
     content: { alignItems: 'center', maxWidth: 320 },
-    emoji: { fontSize: 48, marginBottom: 16 },
+    emoji: { fontSize: 34, marginBottom: 16 },
     errorDetail: {
       backgroundColor: colors.card,
       borderRadius: 8,

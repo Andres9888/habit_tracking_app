@@ -40,12 +40,12 @@ export const s = StyleSheet.create({
   frequency: {
     color: colors.text.tertiary,
     fontFamily: fontFamilies.monospace,
-    fontSize: 11,
+    fontSize: 13,
   },
   scienceBadge: {
     backgroundColor: '#FEF3C7',
     borderRadius: 9999,
-    paddingHorizontal: 6,
+    paddingHorizontal: 8,
     paddingVertical: 2,
   },
   scienceText: { color: '#92400E', fontSize: 10, fontWeight: '600' },
@@ -56,7 +56,7 @@ export const s = StyleSheet.create({
     marginTop: 'auto' as unknown as number,
     paddingTop: 12,
   },
-  popularityText: { color: colors.primary[600], fontSize: 11, fontWeight: '500' },
+  popularityText: { color: colors.primary[600], fontSize: 13, fontWeight: '500' },
 });
 
 export const addButtonStyles = StyleSheet.create({

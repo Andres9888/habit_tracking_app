@@ -1,6 +1,7 @@
 import { getLocalDateString } from '@/utils/getLocalDateString';
 import React, { useState } from 'react';
 import { Pressable, Text, View, ActivityIndicator } from 'react-native';
+import { useThemeColors } from '@/theme/ThemeContext';
 import { useMutation } from 'convex/react';
 import { api } from '../../../convex/_generated/api';
 import { assertUpdateStrengthResponse } from './types';
@@ -11,6 +12,7 @@ export function ForceUpdateButton({
   habitName: _habitName,
   currentStrength,
 }: ForceUpdateButtonProps) {
+  const { colors: themeColors } = useThemeColors();
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<string | null>(null);
   const updateStrength = useMutation(api.habitStrength.updateHabitStrength);
@@ -48,10 +50,9 @@ export function ForceUpdateButton({
         accessibilityLabel='Force update habit strength'
         accessibilityRole='button'
         accessibilityState={{ disabled: loading }}
-        className={`rounded-lg px-4 py-3 ${
-          loading ? 'bg-stone-400' : 'bg-green-600'
-        }`}
+        className='rounded-lg px-4 py-3'
         disabled={loading}
+        style={{ backgroundColor: loading ? themeColors.text.tertiary : themeColors.status.success }}
         onPress={handleClick}
       >
         {loading ? (
@@ -67,20 +68,18 @@ export function ForceUpdateButton({
       </Pressable>
 
       {result ? <View
-          className={`rounded-lg p-2 ${
-            result.startsWith('✅') ? 'bg-green-100' : 'bg-red-100'
-          }`}
+          className='rounded-lg p-2'
+          style={{ backgroundColor: result.startsWith('✅') ? themeColors.status.successLight : themeColors.status.errorLight }}
         >
           <Text
-            className={`text-xs ${
-              result.startsWith('✅') ? 'text-green-800' : 'text-red-800'
-            }`}
+            className='text-xs'
+            style={{ color: result.startsWith('✅') ? themeColors.status.successText : themeColors.status.errorText }}
           >
             {result}
           </Text>
         </View> : null}
 
-      <Text className='text-xs text-stone-500'>
+      <Text className='text-xs' style={{ color: themeColors.text.secondary }}>
         Current: {(currentStrength * 100).toFixed(1)}%
       </Text>
     </View>

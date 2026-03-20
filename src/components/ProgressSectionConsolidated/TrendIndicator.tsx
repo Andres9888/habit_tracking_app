@@ -9,6 +9,7 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react-native';
+import { useThemeColors } from '@/theme/ThemeContext';
 
 interface TrendIndicatorProps {
   weeklyChange: number;
@@ -21,15 +22,18 @@ interface TrendIndicatorProps {
 export const TrendIndicator = React.memo(function TrendIndicator({
   weeklyChange,
 }: TrendIndicatorProps) {
+  const { colors } = useThemeColors();
+
   if (weeklyChange > 0) {
     return (
       <View
         accessibilityLabel={`Up ${weeklyChange} percent this week`}
         accessibilityRole='text'
-        className='flex-row items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5'
+        className='flex-row items-center gap-1 rounded-full px-2 py-0.5'
+        style={{ backgroundColor: colors.status.successLight }}
       >
-        <TrendingUp className='text-emerald-600' size={12} />
-        <Text className='text-xs font-medium text-emerald-600'>
+        <TrendingUp color={colors.status.success} size={12} />
+        <Text className='text-xs font-medium' style={{ color: colors.status.success }}>
           +{weeklyChange}%
         </Text>
       </View>
@@ -41,10 +45,11 @@ export const TrendIndicator = React.memo(function TrendIndicator({
       <View
         accessibilityLabel={`Down ${Math.abs(weeklyChange)} percent this week`}
         accessibilityRole='text'
-        className='flex-row items-center gap-1 rounded-full bg-red-50 px-2 py-0.5'
+        className='flex-row items-center gap-1 rounded-full px-2 py-0.5'
+        style={{ backgroundColor: colors.status.errorLight }}
       >
-        <TrendingDown className='text-red-600' size={12} />
-        <Text className='text-xs font-medium text-red-600'>
+        <TrendingDown color={colors.status.error} size={12} />
+        <Text className='text-xs font-medium' style={{ color: colors.status.error }}>
           {weeklyChange}%
         </Text>
       </View>
@@ -55,10 +60,11 @@ export const TrendIndicator = React.memo(function TrendIndicator({
     <View
       accessibilityLabel='Stable this week'
       accessibilityRole='text'
-      className='flex-row items-center gap-1 rounded-full bg-stone-100 px-2 py-0.5'
+      className='flex-row items-center gap-1 rounded-full px-2 py-0.5'
+      style={{ backgroundColor: colors.gray[100] }}
     >
-      <Minus className='text-stone-500' size={12} />
-      <Text className='text-xs font-medium text-stone-500'>Stable</Text>
+      <Minus color={colors.text.secondary} size={12} />
+      <Text className='text-xs font-medium' style={{ color: colors.text.secondary }}>Stable</Text>
     </View>
   );
 });

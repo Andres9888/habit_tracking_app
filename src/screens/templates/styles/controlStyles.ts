@@ -9,7 +9,7 @@ export const controlStyles = StyleSheet.create({
     flexDirection: 'row',
     gap: 8,
     paddingHorizontal: 16,
-    paddingVertical: 10,
+    paddingVertical: 12,
   },
   controlButtonActive: {},
   controlButtonText: {

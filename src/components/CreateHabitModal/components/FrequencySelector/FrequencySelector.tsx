@@ -67,15 +67,13 @@ export function FrequencySelector({
               accessibilityRole='radio'
               accessibilityState={{ selected: active }}
               className={clsx(
-                'rounded-full px-4 py-2',
-                active && !isDark && 'bg-emerald-600',
-                active && isDark && 'bg-emerald-500'
+                'rounded-full px-4 py-2'
               )}
-              style={
-                active
-                  ? undefined
-                  : { backgroundColor: isDark ? themeColors.card : '#F5F5F4' }
-              }
+              style={{
+                backgroundColor: active
+                  ? themeColors.status.success
+                  : isDark ? themeColors.card : '#F5F5F4',
+              }}
               onPress={() => handleFrequencyPress(freq)}
             >
               <Text

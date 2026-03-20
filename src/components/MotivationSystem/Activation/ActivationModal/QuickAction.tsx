@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react';
 import { Pressable, Text } from 'react-native';
+import { useThemeColors } from '@/theme/ThemeContext';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -18,6 +19,7 @@ interface QuickActionProps {
  * QuickAction - Secondary action buttons (Snooze, Just 2 Min)
  */
 export function QuickAction({ label, icon, onPress }: QuickActionProps) {
+  const { colors: themeColors } = useThemeColors();
   const scale = useSharedValue(1);
 
   const handlePressIn = useCallback(() => {
@@ -42,13 +44,14 @@ export function QuickAction({ label, icon, onPress }: QuickActionProps) {
       <Pressable
         accessibilityLabel={label}
         accessibilityRole='button'
-        className='flex-row items-center justify-center gap-2 rounded-xl bg-stone-100 px-4 py-3'
+        className='flex-row items-center justify-center gap-2 rounded-xl px-4 py-3'
+        style={{ backgroundColor: themeColors.background }}
         onPress={handlePress}
         onPressIn={handlePressIn}
         onPressOut={handlePressOut}
       >
         {icon}
-        <Text className='font-medium text-stone-700'>{label}</Text>
+        <Text className='font-medium' style={{ color: themeColors.text.primary }}>{label}</Text>
       </Pressable>
     </Animated.View>
   );

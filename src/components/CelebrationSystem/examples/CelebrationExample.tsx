@@ -192,7 +192,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: fontFamilies.primary.display,
-    fontSize: 24,
+    fontSize: 22,
     fontWeight: '700',
     marginBottom: 24,
     textAlign: 'center',

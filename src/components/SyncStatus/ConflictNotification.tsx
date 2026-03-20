@@ -165,7 +165,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     paddingHorizontal: 16,
-    paddingVertical: 14,
+    paddingVertical: 16,
   },
   icon: {
     fontSize: 22,
@@ -184,7 +184,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: fontFamilies.primary.text,
-    fontSize: 15,
+    fontSize: 14,
     fontWeight: '600',
     marginBottom: 3,
   },

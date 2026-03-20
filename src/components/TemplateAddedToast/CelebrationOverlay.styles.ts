@@ -21,7 +21,7 @@ export const celebrationStyles = StyleSheet.create({
   actionSecondaryText: {
     color: '#808098',
     fontFamily: fontFamilies.primary.text,
-    fontSize: 15,
+    fontSize: 14,
     fontWeight: '600',
   },
   actions: {
@@ -76,7 +76,7 @@ export const celebrationStyles = StyleSheet.create({
   subtitle: {
     color: '#808098',
     fontFamily: fontFamilies.primary.text,
-    fontSize: 15,
+    fontSize: 14,
     lineHeight: 22,
     marginTop: 8,
     textAlign: 'center',

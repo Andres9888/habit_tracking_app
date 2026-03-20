@@ -61,7 +61,7 @@ export function Chip({ chip, isSelected, onPress, staggerDelay }: ChipProps) {
           flexDirection: 'row',
           gap: 6,
           height: 40,
-          paddingHorizontal: 14,
+          paddingHorizontal: 16,
           shadowColor: colors.chipShadow,
           shadowOffset: { height: 1, width: 0 },
           shadowOpacity: 0.04,
@@ -72,7 +72,7 @@ export function Chip({ chip, isSelected, onPress, staggerDelay }: ChipProps) {
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}
     >
-      <Text style={{ fontSize: 15 }}>{chip.emoji}</Text>
+      <Text style={{ fontSize: 14 }}>{chip.emoji}</Text>
       <Animated.Text
         style={[
           textStyle,

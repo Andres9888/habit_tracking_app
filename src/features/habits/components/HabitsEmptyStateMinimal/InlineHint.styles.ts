@@ -18,7 +18,7 @@ export const containerStyle = {
   marginTop: spacing.base,
   width: '100%',
 } as const;
-export const dividerStyle = { alignItems: 'center', flexDirection: 'row', gap: 10, marginBottom: 12, width: '100%' } as const;
+export const dividerStyle = { alignItems: 'center', flexDirection: 'row', gap: 8, marginBottom: 12, width: '100%' } as const;
 export const dividerLineStyle = { flex: 1, height: 0.5 } as const;
 export const dividerTextBaseStyle = { fontFamily: fontFamilies.primary.text, fontSize: 13, lineHeight: 18, textAlign: 'center' } as const;
 export const actionsColumnStyle = { gap: spacing.sm, width: '100%' } as const;
@@ -28,9 +28,9 @@ export const templatesGradientStyle = {
   borderRadius: borderRadius.medium,
   flex: 1,
   flexDirection: 'row',
-  gap: 10,
+  gap: 8,
   justifyContent: 'center',
-  paddingHorizontal: 18,
+  paddingHorizontal: 16,
   width: '100%',
 } as const;
 export const templatesLabelStyle = { flex: 1, fontFamily: fontFamilies.primary.text, fontSize: 14, fontWeight: '700', letterSpacing: -0.2 } as const;
@@ -38,10 +38,10 @@ export const templatesLabelStyle = { flex: 1, fontFamily: fontFamilies.primary.t
 export const badgeContainerStyle = (backgroundColor: string) => ({
   borderRadius: borderRadius.small,
   backgroundColor,
-  paddingHorizontal: 9,
+  paddingHorizontal: 8,
   paddingVertical: 3,
 } as const);
-export const badgeTextStyle = { fontFamily: fontFamilies.primary.text, fontSize: 11, fontWeight: fontWeights.bold } as const;
+export const badgeTextStyle = { fontFamily: fontFamilies.primary.text, fontSize: 13, fontWeight: fontWeights.bold } as const;
 export const accentStripeStyle = {
   backgroundColor: colors.primary[300],
   borderRadius: borderRadius.xs,
@@ -63,7 +63,7 @@ const buildMyOwnShellBase = {
   shadowRadius: 3,
   width: '100%',
 } as const;
-export const buildMyOwnRowStyle = { alignItems: 'center', flex: 1, flexDirection: 'row', gap: 10, paddingLeft: spacing.base, paddingRight: 14 } as const;
+export const buildMyOwnRowStyle = { alignItems: 'center', flex: 1, flexDirection: 'row', gap: 8, paddingLeft: spacing.base, paddingRight: 14 } as const;
 
 export function getBuildMyOwnCardStyle(
   pressed: boolean,

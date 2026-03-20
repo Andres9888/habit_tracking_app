@@ -5,6 +5,7 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import { Sun, CloudRain, Brain } from 'lucide-react-native';
+import { useThemeColors } from '../../../theme/ThemeContext';
 
 interface VisualizationCardsProps {
   positiveVisualization: string;
@@ -15,43 +16,48 @@ export function VisualizationCards({
   positiveVisualization,
   negativeVisualization,
 }: VisualizationCardsProps) {
+  const { colors } = useThemeColors();
+
   return (
     <View className='gap-4 pb-4'>
       {/* Positive */}
-      <View className='rounded-2xl border border-emerald-200 bg-emerald-50 p-4'>
+      <View
+        className='rounded-2xl border p-4'
+        style={{ borderColor: colors.status.success, backgroundColor: colors.status.successLight }}
+      >
         <View className='mb-3 flex-row items-center gap-2'>
-          <Sun className='text-emerald-600' size={18} />
-          <Text className='text-sm font-semibold text-emerald-800'>
+          <Sun color={colors.status.success} size={18} />
+          <Text className='text-sm font-semibold' style={{ color: colors.status.successText }}>
             Success Vision
           </Text>
         </View>
-        <Text className='text-sm leading-relaxed text-emerald-900'>
+        <Text className='text-sm leading-relaxed' style={{ color: colors.status.successText }}>
           "{positiveVisualization}"
         </Text>
       </View>
 
       {/* Negative */}
-      <View className='rounded-2xl border border-rose-200 bg-rose-50 p-4'>
+      <View className='rounded-2xl p-4' style={{ backgroundColor: colors.status.errorLight, borderWidth: 1, borderColor: colors.status.error }}>
         <View className='mb-3 flex-row items-center gap-2'>
-          <CloudRain className='text-rose-600' size={18} />
-          <Text className='text-sm font-semibold text-rose-800'>
+          <CloudRain color={colors.status.error} size={18} />
+          <Text className='text-sm font-semibold' style={{ color: colors.status.errorText }}>
             Failure Consequences
           </Text>
         </View>
-        <Text className='text-sm leading-relaxed text-rose-900'>
+        <Text className='text-sm leading-relaxed' style={{ color: colors.status.errorText }}>
           "{negativeVisualization}"
         </Text>
       </View>
 
       {/* Insight */}
-      <View className='rounded-2xl bg-violet-50 p-4'>
+      <View className='rounded-2xl p-4' style={{ backgroundColor: colors.status.premiumLight }}>
         <View className='flex-row items-start gap-2'>
-          <Brain className='mt-0.5 text-violet-500' size={16} />
+          <Brain className='mt-0.5' color={colors.status.premium} size={16} />
           <View className='flex-1'>
-            <Text className='text-sm font-semibold text-violet-800'>
+            <Text className='text-sm font-semibold' style={{ color: colors.status.premiumText }}>
               Mental Contrasting Complete
             </Text>
-            <Text className='mt-1 text-xs leading-relaxed text-violet-700'>
+            <Text className='mt-1 text-xs leading-relaxed' style={{ color: colors.status.premiumText }}>
               By holding both visions in mind, you've created a productive
               tension that drives action. Review these visualizations when
               motivation dips.

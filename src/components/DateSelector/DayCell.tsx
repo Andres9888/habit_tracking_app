@@ -4,6 +4,7 @@
 
 import { memo } from 'react';
 import { View, Text } from 'react-native';
+import { useThemeColors } from '@/theme/ThemeContext';
 
 interface DayCellProps {
   accessibilityLabel: string;
@@ -20,13 +21,15 @@ export const DayCell = memo(function DayCell({
   isUpcoming,
   weekday,
 }: DayCellProps) {
+  const { colors: themeColors } = useThemeColors();
+
   return (
     <View
       accessibilityLabel={accessibilityLabel}
       accessibilityRole='text'
       className='flex-1 items-center gap-2'
     >
-      <Text className='text-center text-[13px] font-medium uppercase leading-[18px] tracking-[0.34px] text-stone-500'>
+      <Text className='text-center text-[13px] font-medium uppercase leading-[18px] tracking-[0.34px]' style={{ color: themeColors.text.secondary }}>
         {weekday}
       </Text>
       <View

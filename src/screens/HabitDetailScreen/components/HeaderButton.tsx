@@ -91,7 +91,7 @@ export function HeaderButton({
 }
 
 const s = StyleSheet.create({
-  textButton: { alignItems: 'center', borderRadius: 24, borderWidth: 1, flexDirection: 'row', gap: 6, height: 44, paddingHorizontal: 14 },
+  textButton: { alignItems: 'center', borderRadius: 24, borderWidth: 1, flexDirection: 'row', gap: 8, height: 44, paddingHorizontal: 16 },
   textLabel: {
     fontFamily: fontFamilies.primary.text,
     fontSize: 14,

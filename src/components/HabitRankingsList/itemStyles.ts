@@ -49,7 +49,7 @@ export const itemStyles = StyleSheet.create({
     flexDirection: 'row',
   },
   rankBadge: {
-    fontSize: 24,
+    fontSize: 22,
   },
   rankContainer: {
     alignItems: 'center',

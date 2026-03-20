@@ -13,6 +13,7 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import { useHapticFeedback } from '../../../../hooks/useHapticFeedback';
 import type { MotivationPremiumFeature } from './PremiumFeatureLock.types';
 import { FEATURE_META } from './featureMetadata';
@@ -33,6 +34,7 @@ export function CardLock({
   reduceMotion = false,
   testID,
 }: CardLockProps) {
+  const { colors } = useThemeColors();
   const { triggerSelection } = useHapticFeedback({});
   const meta = FEATURE_META[feature];
   const scale = useSharedValue(1);
@@ -62,8 +64,8 @@ export function CardLock({
       onPressOut={handlePressOut}
     >
       <Animated.View
-        className='overflow-hidden rounded-2xl border-2 border-violet-200'
-        style={reduceMotion ? undefined : animatedStyle}
+        className='overflow-hidden rounded-2xl border-2'
+        style={[{ borderColor: colors.status.premiumLight }, reduceMotion ? undefined : animatedStyle]}
       >
         <LinearGradient
           className='absolute inset-0'
@@ -73,12 +75,12 @@ export function CardLock({
         />
         <CardLockHeader meta={meta} />
         <View className='px-4 py-3'>
-          <Text className='mb-2 text-sm text-stone-600'>
+          <Text className='mb-2 text-sm' style={{ color: colors.text.secondary }}>
             {meta.description}
           </Text>
-          {showScience ? <View className='flex-row items-start gap-2 rounded-lg bg-amber-50 px-3 py-2'>
-              <Sparkles className='mt-0.5 text-amber-500' size={14} />
-              <Text className='flex-1 text-xs italic text-amber-700'>
+          {showScience ? <View className='flex-row items-start gap-2 rounded-lg px-3 py-2' style={{ backgroundColor: colors.status.warningLight }}>
+              <Sparkles className='mt-0.5' color={colors.status.warning} size={14} />
+              <Text className='flex-1 text-xs italic' style={{ color: colors.status.warningText }}>
                 {meta.scienceBasis}
               </Text>
             </View> : null}

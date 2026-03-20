@@ -8,6 +8,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import { AlertTriangle, Flame, Timer } from 'lucide-react-native';
+import { useThemeColors } from '../../../../../theme/ThemeContext';
 
 interface StreakAtRiskHeaderProps {
   streak: number;
@@ -23,6 +24,7 @@ export function StreakAtRiskHeader({
   hoursRemaining,
   reduceMotion,
 }: StreakAtRiskHeaderProps) {
+  const { colors } = useThemeColors();
   const pulseScale = useSharedValue(1);
 
   useEffect(() => {
@@ -44,17 +46,17 @@ export function StreakAtRiskHeader({
   }));
 
   return (
-    <View className='items-center rounded-2xl bg-rose-50 p-4'>
+    <View className='items-center rounded-2xl p-4' style={{ backgroundColor: colors.status.errorLight }}>
       {/* Emergency icon */}
       <Animated.View
-        className='mb-3 h-16 w-16 items-center justify-center rounded-full bg-rose-100'
-        style={pulseStyle}
+        className='mb-3 h-16 w-16 items-center justify-center rounded-full'
+        style={[pulseStyle, { backgroundColor: colors.status.errorLight }]}
       >
-        <AlertTriangle className='text-rose-600' size={32} />
+        <AlertTriangle color={colors.status.error} size={32} />
       </Animated.View>
 
       {/* Streak at risk badge */}
-      <View className='mb-2 flex-row items-center gap-2 rounded-full bg-rose-500 px-4 py-2'>
+      <View className='mb-2 flex-row items-center gap-2 rounded-full px-4 py-2' style={{ backgroundColor: colors.status.error }}>
         <Flame className='text-white' size={18} />
         <Text className='text-base font-bold text-white'>
           {streak} Day Streak at Risk!
@@ -63,8 +65,8 @@ export function StreakAtRiskHeader({
 
       {/* Time remaining */}
       {hoursRemaining === undefined ? null : <View className='mt-2 flex-row items-center gap-1'>
-          <Timer className='text-rose-500' size={14} />
-          <Text className='text-sm font-medium text-rose-600'>
+          <Timer color={colors.status.error} size={14} />
+          <Text className='text-sm font-medium' style={{ color: colors.status.error }}>
             {hoursRemaining <= 1
               ? 'Less than 1 hour left'
               : `${hoursRemaining} hours remaining`}

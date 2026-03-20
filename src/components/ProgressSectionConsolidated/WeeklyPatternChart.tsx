@@ -46,8 +46,8 @@ export const WeeklyPatternChart = React.memo(function WeeklyPatternChart({
             style={{ justifyContent: 'center', minHeight: 44, minWidth: 44 }}
             onPress={onSeeAllPress}
           >
-            <Text className='text-xs font-medium text-violet-600'>Details</Text>
-            <ChevronRight className='text-violet-400' size={14} />
+            <Text className='text-xs font-medium' style={{ color: colors.status.premiumText }}>Details</Text>
+            <ChevronRight color={colors.status.premium} size={14} />
           </Pressable> : null}
       </View>
 

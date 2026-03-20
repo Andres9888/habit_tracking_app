@@ -4,6 +4,7 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
+import { useThemeColors } from '@/theme/ThemeContext';
 
 interface ResultDisplayProps {
   result: {
@@ -14,19 +15,21 @@ interface ResultDisplayProps {
 }
 
 export function ResultDisplay({ result }: ResultDisplayProps) {
+  const { colors } = useThemeColors();
+
   return (
-    <View className='mt-3 rounded-lg bg-green-100 p-3'>
-      <Text className='font-semibold text-green-900'>
+    <View className='mt-3 rounded-lg p-3' style={{ backgroundColor: colors.status.successLight }}>
+      <Text className='font-semibold' style={{ color: colors.status.successText }}>
         ✅ Initialization Complete!
       </Text>
-      <Text className='mt-1 text-sm text-green-800'>
+      <Text className='mt-1 text-sm' style={{ color: colors.status.successText }}>
         • Total habits: {result.total}
       </Text>
-      <Text className='text-sm text-green-800'>
+      <Text className='text-sm' style={{ color: colors.status.successText }}>
         • Successfully updated: {result.updated}
       </Text>
-      {result.failed > 0 ? <Text className='text-sm text-red-600'>• Failed: {result.failed}</Text> : null}
-      <Text className='mt-2 text-xs text-green-700'>
+      {result.failed > 0 ? <Text className='text-sm' style={{ color: colors.status.errorText }}>• Failed: {result.failed}</Text> : null}
+      <Text className='mt-2 text-xs' style={{ color: colors.status.successText }}>
         You can now remove this component from your App.tsx
       </Text>
     </View>

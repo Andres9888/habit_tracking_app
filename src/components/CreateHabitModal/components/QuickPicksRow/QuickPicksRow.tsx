@@ -6,6 +6,7 @@ import {
   Text,
   View,
 } from 'react-native';
+import { useThemeColors } from '@/theme/ThemeContext';
 import useHapticFeedback from '../../../../hooks/useHapticFeedback';
 import { HUBERMAN_PHASES } from '../../../../constants/hubermanPhases';
 import { QuickPickCard } from './QuickPickCard';
@@ -18,6 +19,7 @@ const QuickPicksRowComponent = ({
   onBrowseAll,
 }: QuickPicksRowProps) => {
   const { triggerSelection } = useHapticFeedback();
+  const { colors: themeColors } = useThemeColors();
 
   const handleSelectTemplate = useCallback(
     (template: QuickPickTemplate) => {
@@ -56,7 +58,8 @@ const QuickPicksRowComponent = ({
       <View className='mb-3 flex-row items-center justify-between px-1'>
         <Text
           accessibilityRole='header'
-          className='text-base font-semibold text-stone-800'
+          className='text-base font-semibold'
+          style={{ color: themeColors.text.primary }}
         >
           Quick picks
         </Text>

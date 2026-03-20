@@ -18,12 +18,14 @@ import { ProgressRing } from './ProgressRing';
 import { BreakdownSection } from './BreakdownSection';
 import { ChangeIndicator } from './ChangeIndicator';
 import { triggerHaptic } from '@/utils/haptics';
+import { useThemeColors } from '@/theme/ThemeContext';
 
 export function ConsistencyIndexCard({
   consistencyIndex,
   previousOverall,
   onInfoPress,
 }: ConsistencyIndexCardProps) {
+  const { colors } = useThemeColors();
   const { overall, day30, day60, day90 } = consistencyIndex;
 
   const change = useMemo(() => {
@@ -31,7 +33,7 @@ export function ConsistencyIndexCard({
     return overall - previousOverall;
   }, [overall, previousOverall]);
 
-  const scoreColor = getScoreColor(overall);
+  const scoreColor = getScoreColor(overall, colors.status.success);
   const feedbackMessage = getFeedbackMessage(overall);
 
   const handleInfoPress = () => {
@@ -43,16 +45,17 @@ export function ConsistencyIndexCard({
     <Animated.View
       accessibilityLabel={`Consistency Index: ${overall} percent overall`}
       accessibilityRole='summary'
-      className='rounded-2xl border border-stone-200 bg-white p-4 shadow-sm'
+      className='rounded-2xl border p-4 shadow-sm'
+      style={{ borderColor: colors.border, backgroundColor: colors.card }}
       entering={FadeInDown.delay(150).springify().damping(18)}
     >
       {/* Header */}
       <View className='mb-3 flex-row items-center justify-between'>
         <View className='flex-row items-center gap-2'>
-          <View className='h-8 w-8 items-center justify-center rounded-lg bg-violet-100'>
-            <Activity className='text-violet-600' size={16} />
+          <View className='h-8 w-8 items-center justify-center rounded-lg' style={{ backgroundColor: colors.status.premiumLight }}>
+            <Activity color={colors.status.premiumText} size={16} />
           </View>
-          <Text className='font-semibold text-stone-800'>
+          <Text className='font-semibold' style={{ color: colors.text.primary }}>
             Consistency Index
           </Text>
         </View>
@@ -64,7 +67,7 @@ export function ConsistencyIndexCard({
           className='rounded-full p-1'
           onPress={handleInfoPress}
         >
-          <Info className='text-stone-400' size={16} />
+          <Info color={colors.text.tertiary} size={16} />
         </Pressable>
       </View>
 
@@ -73,7 +76,7 @@ export function ConsistencyIndexCard({
         <View className='relative h-20 w-20 items-center justify-center'>
           <ProgressRing color={scoreColor} progress={overall} />
           <View className='absolute inset-0 items-center justify-center'>
-            <Text className='text-xl font-bold text-stone-800'>{overall}%</Text>
+            <Text className='text-xl font-bold' style={{ color: colors.text.primary }}>{overall}%</Text>
           </View>
         </View>
 
@@ -83,8 +86,8 @@ export function ConsistencyIndexCard({
       <ChangeIndicator change={change} />
 
       {/* Feedback Tip */}
-      <View className='mt-3 rounded-lg bg-stone-50 p-2'>
-        <Text className='text-xs text-stone-500'>💡 {feedbackMessage}</Text>
+      <View className='mt-3 rounded-lg p-2' style={{ backgroundColor: colors.gray[50] }}>
+        <Text className='text-xs' style={{ color: colors.text.secondary }}>💡 {feedbackMessage}</Text>
       </View>
     </Animated.View>
   );

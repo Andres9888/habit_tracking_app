@@ -4,6 +4,7 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
+import { useThemeColors } from '@/theme/ThemeContext';
 import type { MotivationFeatureItem } from './PremiumPaywall.types';
 
 interface BenefitsFeatureCardProps {
@@ -12,10 +13,12 @@ interface BenefitsFeatureCardProps {
 }
 
 export function BenefitsFeatureCard({ feature, isHighlighted }: BenefitsFeatureCardProps) {
+  const { colors: themeColors } = useThemeColors();
+
   return (
     <View
-      className='mb-3 rounded-xl border border-stone-200 bg-white p-4'
-      style={isHighlighted ? { borderColor: feature.accentColor, borderWidth: 2 } : undefined}
+      className='mb-3 rounded-xl border p-4'
+      style={isHighlighted ? { borderColor: feature.accentColor, borderWidth: 2, backgroundColor: themeColors.card } : { borderColor: themeColors.border, backgroundColor: themeColors.card }}
     >
       <View className='mb-2 flex-row items-center gap-3'>
         <View
@@ -25,11 +28,11 @@ export function BenefitsFeatureCard({ feature, isHighlighted }: BenefitsFeatureC
           <feature.icon color={feature.accentColor ?? '#8b5cf6'} size={20} />
         </View>
         <View className='flex-1'>
-          <Text className='text-base font-semibold text-stone-800'>{feature.title}</Text>
-          <Text className='text-xs text-stone-500'>{feature.description}</Text>
+          <Text className='text-base font-semibold' style={{ color: themeColors.text.primary }}>{feature.title}</Text>
+          <Text className='text-xs' style={{ color: themeColors.text.secondary }}>{feature.description}</Text>
         </View>
       </View>
-      {feature.scienceFact ? <Text className='text-xs italic text-stone-400'>📊 {feature.scienceFact}</Text> : null}
+      {feature.scienceFact ? <Text className='text-xs italic' style={{ color: themeColors.text.tertiary }}>📊 {feature.scienceFact}</Text> : null}
     </View>
   );
 }

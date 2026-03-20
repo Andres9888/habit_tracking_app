@@ -6,9 +6,12 @@
 import React from 'react';
 import { View } from 'react-native';
 import { clsx } from 'clsx';
+import { useThemeColors } from '../../../theme/ThemeContext';
 import type { StepIndicatorProps } from '../types';
 
 export function StepIndicator({ currentStep, totalSteps }: StepIndicatorProps) {
+  const { colors } = useThemeColors();
+
   return (
     <View className='flex-row items-center justify-center gap-2'>
       {Array.from({ length: totalSteps }).map((_, index) => (
@@ -16,8 +19,9 @@ export function StepIndicator({ currentStep, totalSteps }: StepIndicatorProps) {
           key={index}
           className={clsx(
             'h-2 rounded-full transition-all',
-            index < currentStep ? 'w-8 bg-violet-500' : 'w-2 bg-stone-200'
+            index < currentStep ? 'w-8' : 'w-2'
           )}
+          style={{ backgroundColor: index < currentStep ? colors.status.premium : colors.border }}
         />
       ))}
     </View>

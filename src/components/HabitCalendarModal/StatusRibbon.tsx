@@ -1,5 +1,6 @@
 import { View, Text } from 'react-native';
 import { AlertTriangle } from 'lucide-react-native';
+import { useThemeColors } from '../../theme/ThemeContext';
 import { StreakBadge } from './StreakBadge';
 import { ActionButtons } from './ActionButtons';
 
@@ -28,12 +29,15 @@ export function StatusRibbon({
   onMarkToday,
   onEdit,
 }: StatusRibbonProps) {
+  const { colors } = useThemeColors();
+
   return (
     <View className='mt-2'>
       <View
-        className='rounded-3xl bg-white p-5'
+        className='rounded-3xl p-5'
         style={{
-          shadowColor: '#1c1917',
+          backgroundColor: colors.card,
+          shadowColor: colors.text.primary,
           shadowOffset: { height: 4, width: 0 },
           shadowOpacity: 0.08,
           shadowRadius: 16,
@@ -41,7 +45,7 @@ export function StatusRibbon({
       >
         <View className='flex-row gap-4'>
           <View className='items-center'>
-            <View className='h-16 w-16 items-center justify-center rounded-2xl bg-blue-50'>
+            <View className='h-16 w-16 items-center justify-center rounded-2xl' style={{ backgroundColor: colors.status.infoLight }}>
               <Text className='text-4xl'>{emoji}</Text>
             </View>
           </View>
@@ -49,17 +53,18 @@ export function StatusRibbon({
           <View className='flex-1'>
             <View className='flex-row items-start justify-between'>
               <View className='flex-1 pr-4'>
-                <Text className='text-xl font-semibold text-stone-900'>
+                <Text className='text-xl font-semibold' style={{ color: colors.text.primary }}>
                   {name}
                 </Text>
                 {scheduleLabel ? (
-                  <Text className='mt-1 text-sm text-stone-500'>
+                  <Text className='mt-1 text-sm' style={{ color: colors.text.secondary }}>
                     {scheduleLabel}
                   </Text>
                 ) : null}
                 {notes ? (
                   <Text
-                    className='mt-2 text-sm text-stone-500'
+                    className='mt-2 text-sm'
+                    style={{ color: colors.text.secondary }}
                     numberOfLines={2}
                   >
                     {notes}
@@ -70,9 +75,9 @@ export function StatusRibbon({
             </View>
 
             {recentMissBadge ? (
-              <View className='mt-3 flex-row items-center gap-1.5 rounded-full bg-amber-50 px-3 py-1'>
-                <AlertTriangle color='#b45309' size={14} />
-                <Text className='text-xs font-medium text-amber-700'>
+              <View className='mt-3 flex-row items-center gap-1.5 rounded-full px-3 py-1' style={{ backgroundColor: colors.status.warningLight }}>
+                <AlertTriangle color={colors.status.warning} size={14} />
+                <Text className='text-xs font-medium' style={{ color: colors.status.warningText }}>
                   {recentMissBadge} · Tap to review
                 </Text>
               </View>

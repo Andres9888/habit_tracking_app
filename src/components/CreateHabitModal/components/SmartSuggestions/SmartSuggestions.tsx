@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Animated, ScrollView, Text, View } from 'react-native';
+import { useThemeColors } from '@/theme/ThemeContext';
 import { Motion } from '../../../../constants/motion';
 import { EmptyState } from './EmptyState';
 import { SuggestionChip } from './SuggestionChip';
@@ -7,6 +8,7 @@ import { SUGGESTIONS } from './suggestions.data';
 import type { SmartSuggestionsProps } from './types';
 
 export const SmartSuggestions = ({ onPick, query }: SmartSuggestionsProps) => {
+  const { colors: themeColors } = useThemeColors();
   const [isLoading, setIsLoading] = useState(false);
   const fadeAnim = useRef(new Animated.Value(1)).current;
 
@@ -58,7 +60,7 @@ export const SmartSuggestions = ({ onPick, query }: SmartSuggestionsProps) => {
 
   return (
     <View className='mb-6'>
-      <Text className='mb-3 text-sm font-semibold text-stone-500'>{label}</Text>
+      <Text className='mb-3 text-sm font-semibold' style={{ color: themeColors.text.secondary }}>{label}</Text>
       <Animated.View style={{ opacity: fadeAnim }}>
         <ScrollView
           horizontal

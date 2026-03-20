@@ -6,6 +6,7 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import Animated, { FadeIn, useReducedMotion } from 'react-native-reanimated';
+import { useThemeColors } from '@/theme/ThemeContext';
 
 const FADE_IN_DURATION = 400;
 
@@ -32,6 +33,7 @@ export function InsightCard({
   animationDelay = 0,
   accessibilityLabel,
 }: InsightCardProps) {
+  const { colors: themeColors } = useThemeColors();
   const shouldReduceMotion = useReducedMotion();
 
   return (
@@ -39,7 +41,8 @@ export function InsightCard({
       accessible
       accessibilityLabel={accessibilityLabel}
       accessibilityRole='text'
-      className='flex-1 flex-row items-center gap-2 rounded-lg bg-stone-50 px-3 py-2.5'
+      className='flex-1 flex-row items-center gap-2 rounded-lg px-3 py-2.5'
+      style={{ backgroundColor: themeColors.background }}
       entering={
         shouldReduceMotion
           ? undefined
@@ -55,7 +58,7 @@ export function InsightCard({
         >
           {value}
         </Text>
-        <Text className='text-xs text-stone-500' numberOfLines={1}>
+        <Text className='text-xs' numberOfLines={1} style={{ color: themeColors.text.secondary }}>
           {label}
         </Text>
       </View>

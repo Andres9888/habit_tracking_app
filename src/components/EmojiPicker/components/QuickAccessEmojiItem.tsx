@@ -60,7 +60,7 @@ export const QuickAccessEmojiItem = memo(
             },
           ]}
         >
-          <Text style={{ fontSize: 24 }}>{emoji}</Text>
+          <Text style={{ fontSize: 22 }}>{emoji}</Text>
         </Animated.View>
       </Pressable>
     );

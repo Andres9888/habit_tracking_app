@@ -5,6 +5,7 @@
 
 import React, { useEffect } from 'react';
 import { View, Text } from 'react-native';
+import { useThemeColors } from '@/theme/ThemeContext';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -24,12 +25,12 @@ interface DayBarProps {
   reduceMotion: boolean;
 }
 
-function getBgColor(isBest: boolean, isWorst: boolean, rate: number): string {
-  if (isBest) return 'bg-emerald-500';
-  if (isWorst && rate < 70) return 'bg-amber-500';
-  if (rate >= 70) return 'bg-emerald-500/70';
-  if (rate >= 50) return 'bg-blue-500/60';
-  return 'bg-amber-500/70';
+function getBgStyle(isBest: boolean, isWorst: boolean, rate: number, colors: ReturnType<typeof useThemeColors>['colors']): { backgroundColor: string; opacity?: number } {
+  if (isBest) return { backgroundColor: colors.status.success };
+  if (isWorst && rate < 70) return { backgroundColor: colors.status.warning };
+  if (rate >= 70) return { backgroundColor: colors.status.success, opacity: 0.7 };
+  if (rate >= 50) return { backgroundColor: colors.status.info, opacity: 0.6 };
+  return { backgroundColor: colors.status.warning, opacity: 0.7 };
 }
 
 export function DayBar({
@@ -40,6 +41,7 @@ export function DayBar({
   index,
   reduceMotion,
 }: DayBarProps) {
+  const { colors: themeColors } = useThemeColors();
   const height = useSharedValue(0);
   const opacity = useSharedValue(reduceMotion ? 1 : 0);
 
@@ -69,37 +71,39 @@ export function DayBar({
     opacity: opacity.value,
   }));
 
-  const bgColor = getBgColor(isBest, isWorst, dayStats.rate);
+  const bgStyle = getBgStyle(isBest, isWorst, dayStats.rate, themeColors);
   const label = DAY_LABELS_SHORT[dayStats.dayIndex];
   const a11yLabel = `${label}: ${dayStats.rate}% completion${isBest ? ', best day' : ''}${isWorst ? ', needs improvement' : ''}`;
+
+  const labelColor = isBest
+    ? themeColors.status.successText
+    : isWorst
+      ? themeColors.status.warningText
+      : themeColors.text.secondary;
+
+  const rateColor = isBest
+    ? themeColors.status.successText
+    : isWorst
+      ? themeColors.status.warningText
+      : themeColors.text.tertiary;
 
   return (
     <View accessibilityLabel={a11yLabel} className='flex-1 items-center'>
       <View className='h-16 w-full items-center justify-end px-0.5'>
         <Animated.View
-          className={`w-full rounded-t-md ${bgColor}`}
-          style={barStyle}
+          className='w-full rounded-t-md'
+          style={[barStyle, bgStyle]}
         />
       </View>
       <Text
-        className={`mt-1 text-xs font-medium ${
-          isBest
-            ? 'text-emerald-600'
-            : isWorst
-              ? 'text-amber-600'
-              : 'text-stone-500'
-        }`}
+        className='mt-1 text-xs font-medium'
+        style={{ color: labelColor }}
       >
         {label}
       </Text>
       <Text
-        className={`text-[9px] ${
-          isBest
-            ? 'font-bold text-emerald-700'
-            : isWorst
-              ? 'font-medium text-amber-700'
-              : 'text-stone-400'
-        }`}
+        className={`text-[9px] ${isBest ? 'font-bold' : isWorst ? 'font-medium' : ''}`}
+        style={{ color: rateColor }}
       >
         {dayStats.rate}%
       </Text>

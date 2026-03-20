@@ -15,11 +15,13 @@ import Animated, {
 import { Flame } from 'lucide-react-native';
 import type { StreakLossPreviewProps } from './FailureViz.types';
 import { SPRING_BOUNCY } from './FailureViz.constants';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 
 export function StreakLossPreview({
   streakCount,
   reduceMotion,
 }: StreakLossPreviewProps) {
+  const { colors } = useThemeColors();
   const scale = useSharedValue(1);
 
   useEffect(() => {
@@ -41,11 +43,11 @@ export function StreakLossPreview({
 
   return (
     <Animated.View
-      className='mt-3 flex-row items-center gap-2 rounded-xl bg-rose-500/10 p-3'
-      style={animatedStyle}
+      className='mt-3 flex-row items-center gap-2 rounded-xl p-3'
+      style={[animatedStyle, { backgroundColor: colors.status.errorLight }]}
     >
-      <Flame className='text-rose-500' size={18} />
-      <Text className='flex-1 text-sm font-medium text-rose-700'>
+      <Flame color={colors.status.error} size={18} />
+      <Text className='flex-1 text-sm font-medium' style={{ color: colors.status.errorText }}>
         {streakCount} days gone. Starting over from zero.
       </Text>
     </Animated.View>

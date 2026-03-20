@@ -62,7 +62,7 @@ export function CharacterCard({ data }: CharacterCardProps) {
               style={styles.trophyGradient}
             >
               <Trophy color='white' size={20} />
-              <Text style={styles.trophyText}>10</Text>
+              <Text style={styles.trophyText}>{data.recentAchievements.length}</Text>
             </LinearGradient>
           </View>
         </View>
@@ -105,8 +105,8 @@ const styles = StyleSheet.create({
     width: 80,
   },
   avatarEmoji: {
-    fontSize: 30,
-    lineHeight: 36,
+    fontSize: 34,
+    lineHeight: 41,
   },
   avatarGradient: {
     alignItems: 'center',
@@ -148,17 +148,17 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
   },
   levelText: {
-    fontSize: 16,
-    fontWeight: 'normal',
+    fontSize: 17,
+    fontWeight: '400',
     letterSpacing: -0.3125,
     lineHeight: 24,
   },
   sparkleEmoji: {
-    fontSize: 18,
+    fontSize: 17,
   },
   titleText: {
     fontSize: 14,
-    fontWeight: 'normal',
+    fontWeight: '400',
     letterSpacing: -0.15,
     lineHeight: 20,
   },
@@ -175,8 +175,8 @@ const styles = StyleSheet.create({
   },
   trophyText: {
     color: 'white',
-    fontSize: 16,
-    fontWeight: 'normal',
+    fontSize: 17,
+    fontWeight: '400',
     letterSpacing: -0.3125,
     lineHeight: 24,
   },
@@ -193,7 +193,7 @@ const styles = StyleSheet.create({
   },
   xpLabel: {
     fontSize: 14,
-    fontWeight: 'normal',
+    fontWeight: '400',
     letterSpacing: -0.15,
     lineHeight: 20,
   },
@@ -203,8 +203,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   xpRemaining: {
-    fontSize: 12,
-    fontWeight: 'normal',
+    fontSize: 13,
+    fontWeight: '400',
     lineHeight: 16,
     textAlign: 'center',
   },
@@ -214,7 +214,7 @@ const styles = StyleSheet.create({
   },
   xpValue: {
     fontSize: 14,
-    fontWeight: 'normal',
+    fontWeight: '400',
     letterSpacing: -0.15,
     lineHeight: 20,
   },

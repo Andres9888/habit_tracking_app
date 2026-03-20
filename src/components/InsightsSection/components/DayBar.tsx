@@ -15,21 +15,23 @@ import Animated, {
 import type { DayBarProps } from '../InsightsSection.types';
 import { DAY_LABELS_SHORT } from '../InsightsSection.constants';
 import { springs } from '@/theme/animations';
+import { useThemeColors } from '@/theme/ThemeContext';
 
 /**
- * Get background color class based on day statistics
+ * Get background hex color based on day statistics
  */
-function getBarColorClass(
+function getBarHexColor(
   isBest: boolean,
   isWorst: boolean,
-  rate: number
+  rate: number,
+  colors: { gray: { 200: string; 300: string } }
 ): string {
-  if (isBest) return 'bg-emerald-500';
-  if (isWorst && rate < 70) return 'bg-amber-400';
-  if (rate >= 80) return 'bg-emerald-400';
-  if (rate >= 60) return 'bg-blue-400';
-  if (rate >= 40) return 'bg-stone-300';
-  return 'bg-stone-200';
+  if (isBest) return '#10b981'; // emerald-500
+  if (isWorst && rate < 70) return '#fbbf24'; // amber-400
+  if (rate >= 80) return '#34d399'; // emerald-400
+  if (rate >= 60) return '#60a5fa'; // blue-400
+  if (rate >= 40) return colors.gray[300];
+  return colors.gray[200];
 }
 
 export function DayBar({
@@ -39,6 +41,7 @@ export function DayBar({
   maxRate,
   index,
 }: DayBarProps) {
+  const { colors } = useThemeColors();
   const height = useSharedValue(0);
   const opacity = useSharedValue(0);
 
@@ -60,35 +63,41 @@ export function DayBar({
     opacity: opacity.value,
   }));
 
-  const bgColor = getBarColorClass(isBest, isWorst, dayStats.rate);
+  const bgHex = getBarHexColor(isBest, isWorst, dayStats.rate, colors);
+  const labelColor = isBest
+    ? '#059669' // emerald-600
+    : isWorst
+      ? '#d97706' // amber-600
+      : colors.text.secondary;
+  const rateColor = isBest
+    ? '#047857' // emerald-700
+    : isWorst
+      ? '#b45309' // amber-700
+      : colors.text.tertiary;
 
   return (
     <View className='flex-1 items-center'>
       <View className='h-20 w-full items-center justify-end px-0.5'>
         <Animated.View
-          className={`w-full rounded-t-md ${bgColor}`}
-          style={barStyle}
+          className='w-full rounded-t-md'
+          style={[{ backgroundColor: bgHex }, barStyle]}
         />
       </View>
       <Text
-        className={`mt-1.5 text-xs font-medium ${
-          isBest
-            ? 'text-emerald-600'
-            : isWorst
-              ? 'text-amber-600'
-              : 'text-stone-500'
-        }`}
+        className={`mt-1.5 text-xs font-medium`}
+        style={{ color: labelColor }}
       >
         {DAY_LABELS_SHORT[dayStats.dayIndex]}
       </Text>
       <Text
         className={`text-[10px] ${
           isBest
-            ? 'font-bold text-emerald-700'
+            ? 'font-bold'
             : isWorst
-              ? 'font-medium text-amber-700'
-              : 'text-stone-400'
+              ? 'font-medium'
+              : ''
         }`}
+        style={{ color: rateColor }}
       >
         {dayStats.rate}%
       </Text>

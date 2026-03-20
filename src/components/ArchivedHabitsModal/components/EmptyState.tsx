@@ -11,15 +11,15 @@ const font = fontFamilies.primary.text;
 const s = StyleSheet.create({
   container: { alignItems: 'center', justifyContent: 'center', paddingHorizontal: 24, paddingVertical: 64 },
   illustration: { alignItems: 'center', borderRadius: 16, height: 112, justifyContent: 'center', marginBottom: 24, width: 128 },
-  emoji: { fontSize: 48 },
+  emoji: { fontSize: 34 },
   heading: { fontFamily: font, fontSize: 22, fontWeight: '700', letterSpacing: -0.5, marginBottom: 8, textAlign: 'center' as const },
-  desc1: { fontFamily: font, fontSize: 15, marginBottom: 4, textAlign: 'center' as const },
+  desc1: { fontFamily: font, fontSize: 14, marginBottom: 4, textAlign: 'center' as const },
   desc2: { fontFamily: font, fontSize: 14, marginBottom: 24, maxWidth: 280, textAlign: 'center' as const },
   tipCard: { borderRadius: 16, borderWidth: 1, flexDirection: 'row' as const, gap: 12, maxWidth: 320, padding: 16, width: '100%' as const },
-  tipEmoji: { fontSize: 24 },
+  tipEmoji: { fontSize: 22 },
   tipContent: { flex: 1 },
   tipTitle: { fontFamily: font, fontSize: 14, fontWeight: '500' as const, marginBottom: 4 },
-  tipDesc: { fontFamily: font, fontSize: 12, lineHeight: 18 },
+  tipDesc: { fontFamily: font, fontSize: 13, lineHeight: 18 },
 });
 
 export function EmptyState() {

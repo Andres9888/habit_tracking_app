@@ -1,5 +1,6 @@
 import { memo, useCallback, useRef } from 'react';
 import { Animated, Pressable, Text, View } from 'react-native';
+import { useThemeColors } from '@/theme/ThemeContext';
 import { HUBERMAN_PHASES } from '../../../../constants/hubermanPhases';
 import type { QuickPickCardProps } from './types';
 
@@ -10,6 +11,7 @@ const QuickPickCardComponent = ({
 }: QuickPickCardProps) => {
   const scaleAnim = useRef(new Animated.Value(1)).current;
   const phaseInfo = HUBERMAN_PHASES[template.timeOfDay];
+  const { colors: themeColors } = useThemeColors();
 
   const handlePressIn = useCallback(() => {
     Animated.spring(scaleAnim, {
@@ -59,12 +61,12 @@ const QuickPickCardComponent = ({
         </View>
 
         {/* Name */}
-        <Text className='mb-1 text-center text-sm font-semibold text-stone-800'>
+        <Text className='mb-1 text-center text-sm font-semibold' style={{ color: themeColors.text.primary }}>
           {template.name}
         </Text>
 
         {/* Timing subtitle */}
-        <Text className='text-center text-xs text-stone-500'>
+        <Text className='text-center text-xs' style={{ color: themeColors.text.secondary }}>
           {phaseInfo.icon} {phaseInfo.shortLabel}
         </Text>
       </Animated.View>

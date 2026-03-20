@@ -6,18 +6,33 @@
  */
 
 import { Text, View } from 'react-native';
+import { useThemeColors } from '@/theme/ThemeContext';
 import { SOCIAL_PROOF } from './constants';
 
 export function SocialProofCard() {
+  const { colors } = useThemeColors();
+
   return (
-    <View className='gap-3 rounded-3xl border border-stone-200 bg-stone-50/80 p-5'>
-      <Text className='text-[13px] font-medium uppercase tracking-[2px] text-stone-700'>
+    <View
+      className='gap-3 rounded-3xl border p-5'
+      style={{ borderColor: colors.border, backgroundColor: colors.background }}
+    >
+      <Text
+        className='text-[13px] font-medium uppercase tracking-[2px]'
+        style={{ color: colors.text.primary }}
+      >
         Proven momentum
       </Text>
-      <Text className='text-[17px] font-normal leading-[22px] text-stone-800'>
-        "{SOCIAL_PROOF.quote}"
+      <Text
+        className='text-[17px] font-normal leading-[22px]'
+        style={{ color: colors.text.primary }}
+      >
+        {`"${SOCIAL_PROOF.quote}"`}
       </Text>
-      <Text className='text-[13px] font-normal text-stone-500'>
+      <Text
+        className='text-[13px] font-normal'
+        style={{ color: colors.text.secondary }}
+      >
         {SOCIAL_PROOF.attribution}
       </Text>
     </View>
