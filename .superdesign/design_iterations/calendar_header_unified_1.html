@@ -1,0 +1,1293 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Calendar Header — Unified Redesign</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800&family=Literata:opsz,wght@7..72,400;7..72,600;7..72,700;7..72,800&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      body {
+        background: #111118;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        min-height: 100vh;
+        font-family: 'DM Sans', sans-serif;
+        padding: 40px 20px;
+        gap: 48px;
+        flex-wrap: wrap;
+      }
+
+      .variant-label {
+        position: absolute;
+        top: -32px;
+        left: 0;
+        right: 0;
+        text-align: center;
+        font-size: 13px;
+        font-weight: 700;
+        color: #9ca3af;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+      }
+
+      .phone {
+        width: 393px;
+        height: 852px;
+        background: #f5f1ed;
+        border-radius: 44px;
+        overflow: hidden;
+        position: relative;
+        box-shadow:
+          0 0 0 2px #2d2a26,
+          0 25px 80px rgba(0, 0, 0, 0.5);
+        flex-shrink: 0;
+      }
+
+      .status-bar {
+        height: 54px;
+        padding: 16px 32px 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 15px;
+        font-weight: 600;
+        color: #2d2a26;
+      }
+      .sb-icons {
+        display: flex;
+        gap: 5px;
+        align-items: center;
+      }
+      .sb-bar {
+        width: 24px;
+        height: 12px;
+        border-radius: 3px;
+        border: 1.5px solid #2d2a26;
+        position: relative;
+      }
+      .sb-bar::after {
+        content: '';
+        position: absolute;
+        right: -3px;
+        top: 3px;
+        width: 2px;
+        height: 5px;
+        background: #2d2a26;
+        border-radius: 0 1px 1px 0;
+      }
+      .sb-fill {
+        position: absolute;
+        left: 1px;
+        top: 1px;
+        bottom: 1px;
+        right: 30%;
+        background: #2d2a26;
+        border-radius: 1px;
+      }
+
+      .content {
+        height: calc(100% - 54px);
+        overflow-y: auto;
+        padding-bottom: 90px;
+      }
+      .content::-webkit-scrollbar {
+        display: none;
+      }
+
+      /* ============================================
+       UNIFIED CALENDAR HEADER
+       ============================================ */
+      .calendar-header {
+        padding: 4px 20px 0;
+      }
+
+      /* Row 1: Greeting + Progress */
+      .header-top-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 2px;
+      }
+
+      .greeting-text {
+        font-family: 'Literata', serif;
+        font-size: 24px;
+        font-weight: 800;
+        color: #2d2a26;
+        letter-spacing: -0.6px;
+        line-height: 1.2;
+      }
+      .greeting-text.streak-active {
+        color: #b45309;
+      }
+      .greeting-text.all-done {
+        color: #059669;
+      }
+
+      .progress-block {
+        text-align: right;
+        flex-shrink: 0;
+        padding-top: 4px;
+      }
+      .progress-count {
+        font-size: 15px;
+        font-weight: 700;
+        color: #a8a29e;
+        letter-spacing: -0.3px;
+      }
+      .progress-count .done-num {
+        color: #059669;
+        font-weight: 800;
+      }
+      .progress-count .done-num.zero {
+        color: #a8a29e;
+      }
+      .progress-dots {
+        display: flex;
+        gap: 3px;
+        justify-content: flex-end;
+        margin-top: 4px;
+      }
+      .p-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #e5e0db;
+        transition: all 0.3s ease;
+      }
+      .p-dot.filled {
+        background: #10b981;
+      }
+      .p-dot.filled.golden {
+        background: #e8b94d;
+      }
+
+      .all-done-text {
+        font-size: 15px;
+        font-weight: 800;
+        color: #059669;
+        letter-spacing: -0.3px;
+      }
+
+      /* Row 2: Date + Streak Badge */
+      .header-date-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 1px;
+      }
+
+      .date-tap {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        cursor: pointer;
+        padding: 2px 0;
+      }
+      .date-tap:hover .date-text {
+        color: #57534e;
+      }
+      .date-tap:active {
+        transform: scale(0.98);
+      }
+
+      .date-text {
+        font-size: 14px;
+        font-weight: 500;
+        color: #78716c;
+        transition: color 0.15s ease;
+      }
+      .date-icon {
+        color: #a8a29e;
+        flex-shrink: 0;
+      }
+
+      .streak-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        background: #fef3c7;
+        border: 1px solid rgba(232, 185, 77, 0.3);
+        padding: 2px 10px 2px 6px;
+        border-radius: 99px;
+        font-size: 12px;
+        font-weight: 700;
+        color: #92400e;
+      }
+      .streak-pill .fire {
+        font-size: 11px;
+      }
+
+      /* ============================================
+       DAY STRIP (unchanged from current)
+       ============================================ */
+      .shelf {
+        background: #ede9e4;
+        border-radius: 0 0 20px 20px;
+        margin: 10px 0 0;
+        padding: 12px 16px 16px;
+      }
+
+      .day-strip {
+        display: flex;
+        justify-content: space-between;
+        gap: 4px;
+      }
+      .day-col {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 5px;
+        flex: 1;
+      }
+      .day-label {
+        font-size: 10px;
+        font-weight: 600;
+        color: #a8a29e;
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+      }
+      .day-label.today-label {
+        color: #059669;
+        font-weight: 700;
+      }
+
+      .day-circle {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 13px;
+        font-weight: 700;
+        transition: all 0.2s ease;
+        position: relative;
+      }
+      .day-circle.empty {
+        background: #e5e0db;
+        color: #a8a29e;
+      }
+      .day-circle.complete {
+        background: rgba(16, 185, 129, 0.12);
+        color: #059669;
+      }
+      .day-circle.complete::after {
+        content: '✓';
+        position: absolute;
+        font-size: 15px;
+        font-weight: 700;
+        color: #10b981;
+      }
+      .day-circle.complete span {
+        visibility: hidden;
+      }
+      .day-circle.partial {
+        background: #fef3c7;
+        color: #d97706;
+        border: 2px solid #fbbf24;
+      }
+      .day-circle.today {
+        background: #2d2a26;
+        color: #f5f1ed;
+        box-shadow: 0 2px 10px rgba(45, 42, 38, 0.2);
+      }
+      .day-circle.today-complete {
+        background: #10b981;
+        color: #fff;
+        box-shadow: 0 2px 10px rgba(16, 185, 129, 0.35);
+      }
+      .day-circle.today-complete::after {
+        content: '✓';
+        position: absolute;
+        font-size: 15px;
+        font-weight: 700;
+        color: #fff;
+      }
+      .day-circle.today-complete span {
+        visibility: hidden;
+      }
+      .day-circle.future {
+        background: #f5f1ed;
+        color: #d4cfc9;
+        border: 1.5px dashed #d4cfc9;
+      }
+
+      /* Streak connector */
+      .day-strip-wrap {
+        position: relative;
+      }
+      .streak-line {
+        position: absolute;
+        height: 3px;
+        background: linear-gradient(90deg, #10b981, #34d399);
+        border-radius: 2px;
+        z-index: 0;
+      }
+
+      /* Swipe hint chevrons */
+      .strip-nav {
+        position: relative;
+      }
+      .swipe-hint {
+        position: absolute;
+        top: 28px;
+        z-index: 2;
+        animation: breathe 3s ease-in-out infinite;
+      }
+      .swipe-hint.left {
+        left: -8px;
+      }
+      .swipe-hint.right {
+        right: -8px;
+      }
+      @keyframes breathe {
+        0%,
+        100% {
+          opacity: 0.25;
+        }
+        50% {
+          opacity: 0.6;
+        }
+      }
+
+      /* ============================================
+       HABIT CARDS (simplified)
+       ============================================ */
+      .section-label {
+        font-size: 12px;
+        font-weight: 700;
+        color: #a8a29e;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        padding: 16px 20px 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .section-count {
+        font-size: 12px;
+        font-weight: 600;
+        color: #c4bfba;
+      }
+
+      .habits {
+        padding: 0 16px;
+      }
+      .habit-card {
+        background: #fff;
+        border-radius: 16px;
+        padding: 14px 16px;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        border: 1px solid #ede9e4;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 1px 3px rgba(45, 42, 38, 0.04);
+      }
+      .habit-card.completed {
+        background: #f8fdf9;
+        border-color: #d1fae5;
+      }
+      .habit-card.completed .h-name {
+        color: #6b7280;
+        text-decoration: line-through;
+        text-decoration-color: #d1d5db;
+      }
+
+      .accent-bar {
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 3.5px;
+        border-radius: 0 4px 4px 0;
+      }
+      .accent-bar.green {
+        background: linear-gradient(180deg, #34d399, #10b981);
+      }
+      .accent-bar.amber {
+        background: linear-gradient(180deg, #fcd34d, #f59e0b);
+      }
+      .accent-bar.purple {
+        background: linear-gradient(180deg, #c4b5fd, #8b5cf6);
+      }
+
+      .h-emoji {
+        font-size: 24px;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #faf9f7;
+        border-radius: 10px;
+        flex-shrink: 0;
+      }
+      .h-info {
+        flex: 1;
+        min-width: 0;
+      }
+      .h-name {
+        font-size: 15px;
+        font-weight: 600;
+        color: #2d2a26;
+        letter-spacing: -0.2px;
+      }
+      .h-meta {
+        font-size: 12px;
+        color: #8c8580;
+        font-weight: 500;
+        margin-top: 1px;
+      }
+      .h-meta .streak-badge {
+        color: #d97706;
+        font-weight: 600;
+      }
+
+      .h-check {
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        border: 2.5px solid #d4cfc9;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .h-check.done {
+        background: #10b981;
+        border-color: #10b981;
+        box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+      }
+      .h-check.done::after {
+        content: '✓';
+        color: #fff;
+        font-size: 13px;
+        font-weight: 700;
+      }
+
+      /* ============================================
+       BOTTOM BAR
+       ============================================ */
+      .bottom-bar {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: rgba(245, 241, 237, 0.85);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-top: 1px solid rgba(221, 216, 210, 0.5);
+        padding: 8px 24px 34px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .bar-btn {
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255, 255, 255, 0.55);
+        border: 1px solid rgba(221, 216, 210, 0.6);
+      }
+      .bar-btn svg {
+        width: 18px;
+        height: 18px;
+        stroke: #524d47;
+        fill: none;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      .add-btn {
+        width: 50px;
+        height: 50px;
+        border-radius: 14px;
+        background: #10b981;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: -16px;
+        border: 3px solid rgba(245, 241, 237, 0.9);
+        box-shadow: 0 4px 16px rgba(16, 185, 129, 0.3);
+      }
+      .add-btn svg {
+        width: 22px;
+        height: 22px;
+        stroke: #fff;
+        fill: none;
+        stroke-width: 2.5;
+        stroke-linecap: round;
+      }
+
+      /* ============================================
+       COMPARISON LABELS
+       ============================================ */
+      .col-wrap {
+        position: relative;
+      }
+
+      .design-label {
+        position: fixed;
+        top: 16px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(0, 0, 0, 0.75);
+        color: #fff;
+        padding: 8px 18px;
+        border-radius: 10px;
+        font-size: 13px;
+        font-weight: 600;
+        z-index: 999;
+        backdrop-filter: blur(8px);
+        display: flex;
+        gap: 6px;
+        align-items: center;
+      }
+      .design-label span {
+        color: #34d399;
+      }
+
+      /* ============================================
+       DARK MODE VARIANT
+       ============================================ */
+      .phone.dark {
+        background: #111827;
+      }
+      .phone.dark .status-bar {
+        color: #e5e7eb;
+      }
+      .phone.dark .sb-bar {
+        border-color: #e5e7eb;
+      }
+      .phone.dark .sb-bar::after {
+        background: #e5e7eb;
+      }
+      .phone.dark .sb-fill {
+        background: #e5e7eb;
+      }
+
+      .phone.dark .greeting-text {
+        color: #f3f4f6;
+      }
+      .phone.dark .greeting-text.streak-active {
+        color: #e8b94d;
+      }
+      .phone.dark .greeting-text.all-done {
+        color: #34d399;
+      }
+      .phone.dark .date-text {
+        color: #9ca3af;
+      }
+      .phone.dark .date-icon {
+        color: #6b7280;
+      }
+      .phone.dark .progress-count {
+        color: #6b7280;
+      }
+      .phone.dark .progress-count .done-num {
+        color: #34d399;
+      }
+      .phone.dark .p-dot {
+        background: #374151;
+      }
+      .phone.dark .p-dot.filled {
+        background: #10b981;
+      }
+      .phone.dark .all-done-text {
+        color: #34d399;
+      }
+      .phone.dark .streak-pill {
+        background: rgba(232, 185, 77, 0.12);
+        border-color: rgba(232, 185, 77, 0.2);
+        color: #e8b94d;
+      }
+
+      .phone.dark .shelf {
+        background: #1f2937;
+      }
+      .phone.dark .day-label {
+        color: #6b7280;
+      }
+      .phone.dark .day-label.today-label {
+        color: #34d399;
+      }
+      .phone.dark .day-circle.empty {
+        background: #374151;
+        color: #6b7280;
+      }
+      .phone.dark .day-circle.complete {
+        background: rgba(16, 185, 129, 0.15);
+      }
+      .phone.dark .day-circle.complete::after {
+        color: #34d399;
+      }
+      .phone.dark .day-circle.today {
+        background: #f3f4f6;
+        color: #111827;
+      }
+      .phone.dark .day-circle.future {
+        background: #1f2937;
+        color: #4b5563;
+        border-color: #374151;
+      }
+      .phone.dark .swipe-hint svg {
+        stroke: #6b7280 !important;
+      }
+
+      .phone.dark .section-label {
+        color: #6b7280;
+      }
+      .phone.dark .section-count {
+        color: #4b5563;
+      }
+      .phone.dark .habit-card {
+        background: #1f2937;
+        border-color: #374151;
+        box-shadow: none;
+      }
+      .phone.dark .habit-card.completed {
+        background: rgba(16, 185, 129, 0.06);
+        border-color: rgba(16, 185, 129, 0.15);
+      }
+      .phone.dark .h-emoji {
+        background: #111827;
+      }
+      .phone.dark .h-name {
+        color: #f3f4f6;
+      }
+      .phone.dark .habit-card.completed .h-name {
+        color: #6b7280;
+      }
+      .phone.dark .h-meta {
+        color: #6b7280;
+      }
+      .phone.dark .h-check {
+        border-color: #4b5563;
+      }
+      .phone.dark .accent-bar.green {
+        background: linear-gradient(180deg, #34d399, #059669);
+      }
+      .phone.dark .accent-bar.amber {
+        background: linear-gradient(180deg, #fbbf24, #d97706);
+      }
+
+      .phone.dark .bottom-bar {
+        background: rgba(17, 24, 39, 0.85);
+        border-top-color: rgba(55, 65, 81, 0.5);
+      }
+      .phone.dark .bar-btn {
+        background: rgba(31, 41, 55, 0.7);
+        border-color: rgba(55, 65, 81, 0.6);
+      }
+      .phone.dark .bar-btn svg {
+        stroke: #9ca3af;
+      }
+      .phone.dark .add-btn {
+        border-color: rgba(17, 24, 39, 0.9);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="design-label">
+      Calendar Header — <span>Unified Redesign</span>
+    </div>
+
+    <!-- ============================================
+       VARIANT 1: Morning / Mid-progress (Light)
+       ============================================ -->
+    <div class="col-wrap">
+      <div class="variant-label">Morning · 3 of 6</div>
+      <div class="phone">
+        <div class="status-bar">
+          <span>8:24 AM</span>
+          <div class="sb-icons">
+            <div class="sb-bar"><div class="sb-fill"></div></div>
+          </div>
+        </div>
+        <div class="content">
+          <div class="calendar-header">
+            <!-- Row 1: Greeting + Progress -->
+            <div class="header-top-row">
+              <div class="greeting-text">Good morning</div>
+              <div class="progress-block">
+                <div class="progress-count">
+                  <span class="done-num">3</span> of 6
+                </div>
+                <div class="progress-dots">
+                  <div class="p-dot filled"></div>
+                  <div class="p-dot filled"></div>
+                  <div class="p-dot filled"></div>
+                  <div class="p-dot"></div>
+                  <div class="p-dot"></div>
+                  <div class="p-dot"></div>
+                </div>
+              </div>
+            </div>
+            <!-- Row 2: Date + Streak -->
+            <div class="header-date-row">
+              <div class="date-tap">
+                <i
+                  data-lucide="calendar-days"
+                  class="date-icon"
+                  style="width: 14px; height: 14px; stroke-width: 2"
+                ></i>
+                <span class="date-text">Tuesday, March 2</span>
+                <i
+                  data-lucide="chevron-down"
+                  class="date-icon"
+                  style="width: 12px; height: 12px; stroke-width: 2"
+                ></i>
+              </div>
+              <div class="streak-pill"><span class="fire">🔥</span> 5 days</div>
+            </div>
+          </div>
+
+          <!-- Day Strip -->
+          <div class="shelf">
+            <div class="strip-nav">
+              <div class="swipe-hint left">
+                <i
+                  data-lucide="chevron-left"
+                  style="
+                    width: 14px;
+                    height: 14px;
+                    color: #a8a29e;
+                    stroke-width: 2.5;
+                  "
+                ></i>
+              </div>
+              <div class="day-strip-wrap">
+                <div class="day-strip">
+                  <div class="day-col">
+                    <span class="day-label">Mon</span>
+                    <div class="day-circle complete"><span>24</span></div>
+                  </div>
+                  <div class="day-col">
+                    <span class="day-label today-label">Today</span>
+                    <div class="day-circle today">2</div>
+                  </div>
+                  <div class="day-col">
+                    <span class="day-label">Wed</span>
+                    <div class="day-circle future">3</div>
+                  </div>
+                  <div class="day-col">
+                    <span class="day-label">Thu</span>
+                    <div class="day-circle future">4</div>
+                  </div>
+                  <div class="day-col">
+                    <span class="day-label">Fri</span>
+                    <div class="day-circle future">5</div>
+                  </div>
+                  <div class="day-col">
+                    <span class="day-label">Sat</span>
+                    <div class="day-circle future">6</div>
+                  </div>
+                  <div class="day-col">
+                    <span class="day-label">Sun</span>
+                    <div class="day-circle future">7</div>
+                  </div>
+                </div>
+              </div>
+              <div class="swipe-hint right" style="display: none">
+                <i
+                  data-lucide="chevron-right"
+                  style="
+                    width: 14px;
+                    height: 14px;
+                    color: #a8a29e;
+                    stroke-width: 2.5;
+                  "
+                ></i>
+              </div>
+            </div>
+          </div>
+
+          <!-- Habits -->
+          <div class="section-label">
+            Today's habits
+            <span class="section-count">3/6 complete</span>
+          </div>
+          <div class="habits">
+            <div class="habit-card completed">
+              <div class="accent-bar green"></div>
+              <div class="h-emoji">🏃</div>
+              <div class="h-info">
+                <div class="h-name">Morning Run</div>
+                <div class="h-meta">
+                  <span class="streak-badge">🔥 12 days</span>
+                </div>
+              </div>
+              <div class="h-check done"></div>
+            </div>
+            <div class="habit-card completed">
+              <div class="accent-bar green"></div>
+              <div class="h-emoji">🧘</div>
+              <div class="h-info">
+                <div class="h-name">Meditate</div>
+                <div class="h-meta">
+                  <span class="streak-badge">🔥 8 days</span>
+                </div>
+              </div>
+              <div class="h-check done"></div>
+            </div>
+            <div class="habit-card completed">
+              <div class="accent-bar green"></div>
+              <div class="h-emoji">💧</div>
+              <div class="h-info">
+                <div class="h-name">Drink 2L Water</div>
+                <div class="h-meta">62% strength</div>
+              </div>
+              <div class="h-check done"></div>
+            </div>
+            <div class="habit-card">
+              <div class="accent-bar amber"></div>
+              <div class="h-emoji">📖</div>
+              <div class="h-info">
+                <div class="h-name">Read 20 Pages</div>
+                <div class="h-meta">75% strength</div>
+              </div>
+              <div class="h-check"></div>
+            </div>
+            <div class="habit-card">
+              <div class="accent-bar amber"></div>
+              <div class="h-emoji">✍️</div>
+              <div class="h-info">
+                <div class="h-name">Journal</div>
+                <div class="h-meta">45% strength</div>
+              </div>
+              <div class="h-check"></div>
+            </div>
+            <div class="habit-card">
+              <div class="accent-bar purple"></div>
+              <div class="h-emoji">🎸</div>
+              <div class="h-info">
+                <div class="h-name">Practice Guitar</div>
+                <div class="h-meta">3x per week</div>
+              </div>
+              <div class="h-check"></div>
+            </div>
+          </div>
+          <div style="height: 120px"></div>
+        </div>
+
+        <div class="bottom-bar">
+          <div class="bar-btn">
+            <svg viewBox="0 0 24 24">
+              <path
+                d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"
+              />
+              <circle cx="12" cy="12" r="3" />
+            </svg>
+          </div>
+          <div class="add-btn">
+            <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" /></svg>
+          </div>
+          <div class="bar-btn">
+            <svg viewBox="0 0 24 24">
+              <path
+                d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"
+              />
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================
+       VARIANT 2: Streak Active (Dark)
+       ============================================ -->
+    <div class="col-wrap">
+      <div class="variant-label">Evening · Streak · Dark</div>
+      <div class="phone dark">
+        <div class="status-bar">
+          <span>7:18 PM</span>
+          <div class="sb-icons">
+            <div class="sb-bar"><div class="sb-fill"></div></div>
+          </div>
+        </div>
+        <div class="content">
+          <div class="calendar-header">
+            <div class="header-top-row">
+              <div class="greeting-text streak-active">5-day streak</div>
+              <div class="progress-block">
+                <div class="progress-count">
+                  <span class="done-num">4</span> of 6
+                </div>
+                <div class="progress-dots">
+                  <div class="p-dot filled"></div>
+                  <div class="p-dot filled"></div>
+                  <div class="p-dot filled"></div>
+                  <div class="p-dot filled"></div>
+                  <div class="p-dot"></div>
+                  <div class="p-dot"></div>
+                </div>
+              </div>
+            </div>
+            <div class="header-date-row">
+              <div class="date-tap">
+                <i
+                  data-lucide="calendar-days"
+                  class="date-icon"
+                  style="width: 14px; height: 14px; stroke-width: 2"
+                ></i>
+                <span class="date-text">Tuesday, March 2</span>
+                <i
+                  data-lucide="chevron-down"
+                  class="date-icon"
+                  style="width: 12px; height: 12px; stroke-width: 2"
+                ></i>
+              </div>
+              <div class="streak-pill">
+                <span class="fire">⚡</span> On fire!
+              </div>
+            </div>
+          </div>
+
+          <div class="shelf">
+            <div class="strip-nav">
+              <div class="swipe-hint left">
+                <i
+                  data-lucide="chevron-left"
+                  style="
+                    width: 14px;
+                    height: 14px;
+                    color: #6b7280;
+                    stroke-width: 2.5;
+                  "
+                ></i>
+              </div>
+              <div class="day-strip">
+                <div class="day-col">
+                  <span class="day-label">Mon</span>
+                  <div class="day-circle complete"><span>24</span></div>
+                </div>
+                <div class="day-col">
+                  <span class="day-label today-label">Today</span>
+                  <div class="day-circle today">2</div>
+                </div>
+                <div class="day-col">
+                  <span class="day-label">Wed</span>
+                  <div class="day-circle future">3</div>
+                </div>
+                <div class="day-col">
+                  <span class="day-label">Thu</span>
+                  <div class="day-circle future">4</div>
+                </div>
+                <div class="day-col">
+                  <span class="day-label">Fri</span>
+                  <div class="day-circle future">5</div>
+                </div>
+                <div class="day-col">
+                  <span class="day-label">Sat</span>
+                  <div class="day-circle future">6</div>
+                </div>
+                <div class="day-col">
+                  <span class="day-label">Sun</span>
+                  <div class="day-circle future">7</div>
+                </div>
+              </div>
+              <div class="swipe-hint right" style="display: none"></div>
+            </div>
+          </div>
+
+          <div class="section-label">
+            Today's habits
+            <span class="section-count">4/6 complete</span>
+          </div>
+          <div class="habits">
+            <div class="habit-card completed">
+              <div class="accent-bar green"></div>
+              <div class="h-emoji">🏃</div>
+              <div class="h-info">
+                <div class="h-name">Morning Run</div>
+                <div class="h-meta">
+                  <span class="streak-badge">🔥 12 days</span>
+                </div>
+              </div>
+              <div class="h-check done"></div>
+            </div>
+            <div class="habit-card completed">
+              <div class="accent-bar green"></div>
+              <div class="h-emoji">🧘</div>
+              <div class="h-info">
+                <div class="h-name">Meditate</div>
+                <div class="h-meta">
+                  <span class="streak-badge">🔥 8 days</span>
+                </div>
+              </div>
+              <div class="h-check done"></div>
+            </div>
+            <div class="habit-card completed">
+              <div class="accent-bar green"></div>
+              <div class="h-emoji">💧</div>
+              <div class="h-info">
+                <div class="h-name">Drink 2L Water</div>
+                <div class="h-meta">62% strength</div>
+              </div>
+              <div class="h-check done"></div>
+            </div>
+            <div class="habit-card completed">
+              <div class="accent-bar green"></div>
+              <div class="h-emoji">📖</div>
+              <div class="h-info">
+                <div class="h-name">Read 20 Pages</div>
+                <div class="h-meta">75% strength</div>
+              </div>
+              <div class="h-check done"></div>
+            </div>
+            <div class="habit-card">
+              <div class="accent-bar amber"></div>
+              <div class="h-emoji">✍️</div>
+              <div class="h-info">
+                <div class="h-name">Journal</div>
+                <div class="h-meta">45% strength</div>
+              </div>
+              <div class="h-check"></div>
+            </div>
+            <div class="habit-card">
+              <div class="accent-bar amber"></div>
+              <div class="h-emoji">🎸</div>
+              <div class="h-info">
+                <div class="h-name">Practice Guitar</div>
+                <div class="h-meta">3x per week</div>
+              </div>
+              <div class="h-check"></div>
+            </div>
+          </div>
+          <div style="height: 120px"></div>
+        </div>
+
+        <div class="bottom-bar">
+          <div class="bar-btn">
+            <svg viewBox="0 0 24 24">
+              <path
+                d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"
+              />
+              <circle cx="12" cy="12" r="3" />
+            </svg>
+          </div>
+          <div class="add-btn">
+            <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" /></svg>
+          </div>
+          <div class="bar-btn">
+            <svg viewBox="0 0 24 24">
+              <path
+                d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"
+              />
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================
+       VARIANT 3: All Complete (Light)
+       ============================================ -->
+    <div class="col-wrap">
+      <div class="variant-label">All Complete · 6 of 6</div>
+      <div class="phone">
+        <div class="status-bar">
+          <span>9:41 PM</span>
+          <div class="sb-icons">
+            <div class="sb-bar"><div class="sb-fill"></div></div>
+          </div>
+        </div>
+        <div class="content">
+          <div class="calendar-header">
+            <div class="header-top-row">
+              <div class="greeting-text all-done">Perfect day</div>
+              <div class="progress-block">
+                <div class="all-done-text">All done!</div>
+                <div class="progress-dots">
+                  <div class="p-dot filled golden"></div>
+                  <div class="p-dot filled golden"></div>
+                  <div class="p-dot filled golden"></div>
+                  <div class="p-dot filled golden"></div>
+                  <div class="p-dot filled golden"></div>
+                  <div class="p-dot filled golden"></div>
+                </div>
+              </div>
+            </div>
+            <div class="header-date-row">
+              <div class="date-tap">
+                <i
+                  data-lucide="calendar-days"
+                  class="date-icon"
+                  style="width: 14px; height: 14px; stroke-width: 2"
+                ></i>
+                <span class="date-text">Tuesday, March 2</span>
+                <i
+                  data-lucide="chevron-down"
+                  class="date-icon"
+                  style="width: 12px; height: 12px; stroke-width: 2"
+                ></i>
+              </div>
+              <div class="streak-pill">
+                <span class="fire">⚡</span> 13 days
+              </div>
+            </div>
+          </div>
+
+          <div class="shelf">
+            <div class="strip-nav">
+              <div class="swipe-hint left">
+                <i
+                  data-lucide="chevron-left"
+                  style="
+                    width: 14px;
+                    height: 14px;
+                    color: #a8a29e;
+                    stroke-width: 2.5;
+                  "
+                ></i>
+              </div>
+              <div class="day-strip">
+                <div class="day-col">
+                  <span class="day-label">Mon</span>
+                  <div class="day-circle complete"><span>24</span></div>
+                </div>
+                <div class="day-col">
+                  <span class="day-label today-label">Today</span>
+                  <div class="day-circle today-complete"><span>2</span></div>
+                </div>
+                <div class="day-col">
+                  <span class="day-label">Wed</span>
+                  <div class="day-circle future">3</div>
+                </div>
+                <div class="day-col">
+                  <span class="day-label">Thu</span>
+                  <div class="day-circle future">4</div>
+                </div>
+                <div class="day-col">
+                  <span class="day-label">Fri</span>
+                  <div class="day-circle future">5</div>
+                </div>
+                <div class="day-col">
+                  <span class="day-label">Sat</span>
+                  <div class="day-circle future">6</div>
+                </div>
+                <div class="day-col">
+                  <span class="day-label">Sun</span>
+                  <div class="day-circle future">7</div>
+                </div>
+              </div>
+              <div class="swipe-hint right" style="display: none"></div>
+            </div>
+          </div>
+
+          <div class="section-label">
+            Today's victories
+            <span class="section-count" style="color: #10b981"
+              >6/6 complete</span
+            >
+          </div>
+          <div class="habits">
+            <div class="habit-card completed">
+              <div class="accent-bar green"></div>
+              <div class="h-emoji">🏃</div>
+              <div class="h-info">
+                <div class="h-name">Morning Run</div>
+                <div class="h-meta">
+                  <span class="streak-badge">🔥 12 days</span>
+                </div>
+              </div>
+              <div class="h-check done"></div>
+            </div>
+            <div class="habit-card completed">
+              <div class="accent-bar green"></div>
+              <div class="h-emoji">🧘</div>
+              <div class="h-info">
+                <div class="h-name">Meditate</div>
+                <div class="h-meta">
+                  <span class="streak-badge">🔥 8 days</span>
+                </div>
+              </div>
+              <div class="h-check done"></div>
+            </div>
+            <div class="habit-card completed">
+              <div class="accent-bar green"></div>
+              <div class="h-emoji">💧</div>
+              <div class="h-info">
+                <div class="h-name">Drink 2L Water</div>
+                <div class="h-meta">62% strength</div>
+              </div>
+              <div class="h-check done"></div>
+            </div>
+            <div class="habit-card completed">
+              <div class="accent-bar green"></div>
+              <div class="h-emoji">📖</div>
+              <div class="h-info">
+                <div class="h-name">Read 20 Pages</div>
+                <div class="h-meta">75% strength</div>
+              </div>
+              <div class="h-check done"></div>
+            </div>
+            <div class="habit-card completed">
+              <div class="accent-bar green"></div>
+              <div class="h-emoji">✍️</div>
+              <div class="h-info">
+                <div class="h-name">Journal</div>
+                <div class="h-meta">45% strength</div>
+              </div>
+              <div class="h-check done"></div>
+            </div>
+            <div class="habit-card completed">
+              <div class="accent-bar green"></div>
+              <div class="h-emoji">🎸</div>
+              <div class="h-info">
+                <div class="h-name">Practice Guitar</div>
+                <div class="h-meta">3x per week</div>
+              </div>
+              <div class="h-check done"></div>
+            </div>
+          </div>
+          <div style="height: 120px"></div>
+        </div>
+
+        <div class="bottom-bar">
+          <div class="bar-btn">
+            <svg viewBox="0 0 24 24">
+              <path
+                d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"
+              />
+              <circle cx="12" cy="12" r="3" />
+            </svg>
+          </div>
+          <div class="add-btn">
+            <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" /></svg>
+          </div>
+          <div class="bar-btn">
+            <svg viewBox="0 0 24 24">
+              <path
+                d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"
+              />
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      lucide.createIcons();
+    </script>
+  </body>
+</html>

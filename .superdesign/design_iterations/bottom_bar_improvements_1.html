@@ -1,0 +1,1421 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bottom Bar — Improvement Concepts</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: 'DM Sans', sans-serif !important;
+        background: #09090b !important;
+        color: #fafafa !important;
+        min-height: 100vh;
+        padding: 32px 16px 60px;
+      }
+      h1 {
+        font-family: 'Space Grotesk', sans-serif !important;
+        font-size: 28px !important;
+        font-weight: 700 !important;
+        text-align: center;
+        margin-bottom: 4px !important;
+        letter-spacing: -0.5px;
+      }
+      .subtitle {
+        text-align: center;
+        color: #71717a;
+        font-size: 13px;
+        margin-bottom: 40px;
+        line-height: 1.5;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      /* Tab switcher */
+      .tab-bar {
+        display: flex;
+        justify-content: center;
+        gap: 4px;
+        margin-bottom: 32px;
+        background: #18181b;
+        border-radius: 12px;
+        padding: 4px;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      .tab-btn {
+        flex: 1;
+        padding: 10px 16px;
+        border: none;
+        background: transparent;
+        color: #71717a;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 13px;
+        font-weight: 600;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .tab-btn.active {
+        background: #27272a;
+        color: #fafafa;
+      }
+      .tab-btn:hover:not(.active) {
+        color: #a1a1aa;
+      }
+
+      /* Phone frame */
+      .phone-frame {
+        background: #111113;
+        border-radius: 44px;
+        padding: 10px;
+        border: 2px solid #27272a;
+        width: 390px;
+        height: 760px;
+        margin: 0 auto;
+        position: relative;
+        overflow: hidden;
+      }
+      .phone-screen {
+        background: #0c0a09;
+        border-radius: 36px;
+        width: 100%;
+        height: 100%;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+      .phone-notch {
+        width: 126px;
+        height: 34px;
+        background: #111113;
+        border-radius: 0 0 20px 20px;
+        margin: 0 auto;
+        position: relative;
+        z-index: 10;
+      }
+      .phone-content {
+        flex: 1;
+        padding: 8px 16px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* Mock habit cards */
+      .mock-header {
+        padding: 8px 0 16px;
+      }
+      .mock-greeting {
+        font-size: 11px;
+        color: #78716c;
+        font-weight: 500;
+      }
+      .mock-title {
+        font-size: 20px;
+        font-weight: 700;
+        color: #d6d3d1;
+        letter-spacing: -0.3px;
+      }
+      .mock-week {
+        display: flex;
+        gap: 6px;
+        margin-top: 12px;
+      }
+      .mock-day {
+        width: 40px;
+        height: 52px;
+        border-radius: 12px;
+        background: #1c1917;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 2px;
+      }
+      .mock-day-label {
+        font-size: 9px;
+        color: #78716c;
+        font-weight: 500;
+        text-transform: uppercase;
+      }
+      .mock-day-num {
+        font-size: 14px;
+        color: #a8a29e;
+        font-weight: 600;
+      }
+      .mock-day.active {
+        background: #292524;
+        border: 1.5px solid #059669;
+      }
+      .mock-day.active .mock-day-num {
+        color: #d6d3d1;
+      }
+
+      .habit-cards {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-top: 12px;
+        overflow: hidden;
+      }
+      .habit-card {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        background: #1c1917;
+        border-radius: 16px;
+        padding: 14px 16px;
+        border: 1px solid #292524;
+      }
+      .habit-emoji {
+        font-size: 22px;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #292524;
+        border-radius: 12px;
+        flex-shrink: 0;
+      }
+      .habit-info {
+        flex: 1;
+      }
+      .habit-name {
+        font-size: 14px;
+        font-weight: 600;
+        color: #d6d3d1;
+      }
+      .habit-meta {
+        font-size: 11px;
+        color: #78716c;
+        margin-top: 2px;
+      }
+      .habit-check {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        border: 2px solid #374151;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+      .habit-check.done {
+        background: #059669;
+        border-color: #059669;
+      }
+      .habit-check.done::after {
+        content: '✓';
+        color: white;
+        font-size: 14px;
+        font-weight: 700;
+      }
+
+      /* View panels */
+      .view-panel {
+        display: none;
+      }
+      .view-panel.active {
+        display: block;
+      }
+
+      /* Label */
+      .variant-label {
+        text-align: center;
+        font-size: 11px;
+        color: #71717a;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        margin-bottom: 16px;
+      }
+      .variant-desc {
+        text-align: center;
+        font-size: 13px;
+        color: #a1a1aa;
+        max-width: 420px;
+        margin: 0 auto 24px;
+        line-height: 1.5;
+      }
+
+      /* ═══════ CURRENT BAR ═══════ */
+      .bar-current {
+        position: absolute;
+        bottom: 32px;
+        left: 20px;
+        right: 20px;
+        background: rgba(28, 25, 23, 0.75);
+        backdrop-filter: blur(24px);
+        -webkit-backdrop-filter: blur(24px);
+        border-radius: 32px;
+        border: 1px solid rgba(55, 65, 81, 0.35);
+        padding: 8px 24px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      }
+      .bar-icon-btn {
+        width: 44px;
+        height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 22px;
+        cursor: pointer;
+        transition: all 0.15s;
+        position: relative;
+      }
+      .bar-icon-btn:hover {
+        background: rgba(255, 255, 255, 0.06);
+      }
+      .bar-icon-btn svg {
+        color: #a8a29e;
+      }
+      .bar-icon-btn.gold svg {
+        color: #d97706;
+      }
+
+      .notif-dot {
+        position: absolute;
+        top: 8px;
+        right: 6px;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #d97706;
+      }
+
+      /* Center FAB */
+      .fab-wrapper {
+        position: relative;
+        margin-top: -20px;
+      }
+      .fab-ring {
+        width: 64px;
+        height: 64px;
+        position: relative;
+      }
+      .fab-ring svg.ring-svg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        transform: rotate(-90deg);
+      }
+      .fab-button {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: #059669;
+        border: 2px solid rgba(17, 24, 39, 0.9);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.15s;
+        box-shadow: 0 4px 16px rgba(5, 150, 105, 0.25);
+      }
+      .fab-button:hover {
+        transform: translate(-50%, -50%) scale(1.05);
+      }
+      .fab-button svg {
+        color: #fff;
+      }
+
+      /* ═══════ OPTION A: Progress-First ═══════ */
+      .bar-progress-first {
+        position: absolute;
+        bottom: 32px;
+        left: 16px;
+        right: 16px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+      }
+      .bar-a-capsule {
+        width: 100%;
+        background: rgba(28, 25, 23, 0.8);
+        backdrop-filter: blur(28px);
+        -webkit-backdrop-filter: blur(28px);
+        border-radius: 32px;
+        border: 1px solid rgba(55, 65, 81, 0.3);
+        padding: 8px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        box-shadow:
+          0 8px 32px rgba(0, 0, 0, 0.35),
+          0 0 0 0.5px rgba(255, 255, 255, 0.05) inset;
+      }
+      .bar-a-side {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2px;
+      }
+      .bar-a-side-label {
+        font-size: 9px;
+        color: #78716c;
+        font-weight: 600;
+        letter-spacing: 0.3px;
+      }
+      .bar-a-center {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: -22px;
+      }
+      .bar-a-counter {
+        font-size: 11px;
+        color: #a8a29e;
+        font-weight: 600;
+        margin-top: 4px;
+        letter-spacing: -0.2px;
+      }
+      .bar-a-streak-chip {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        background: rgba(28, 25, 23, 0.7);
+        backdrop-filter: blur(16px);
+        border: 1px solid rgba(55, 65, 81, 0.25);
+        border-radius: 20px;
+        padding: 5px 14px;
+        font-size: 12px;
+        color: #d97706;
+        font-weight: 600;
+      }
+      .bar-a-streak-chip .streak-fire {
+        font-size: 13px;
+      }
+
+      /* ═══════ OPTION B: 4-Action Bar ═══════ */
+      .bar-four-action {
+        position: absolute;
+        bottom: 28px;
+        left: 16px;
+        right: 16px;
+        background: rgba(28, 25, 23, 0.82);
+        backdrop-filter: blur(28px);
+        -webkit-backdrop-filter: blur(28px);
+        border-radius: 28px;
+        border: 1px solid rgba(55, 65, 81, 0.3);
+        padding: 6px 12px;
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-around;
+        box-shadow:
+          0 8px 32px rgba(0, 0, 0, 0.35),
+          0 0 0 0.5px rgba(255, 255, 255, 0.05) inset;
+      }
+      .bar-b-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 3px;
+        padding: 6px 8px;
+        cursor: pointer;
+        transition: all 0.15s;
+        border-radius: 12px;
+        min-width: 56px;
+      }
+      .bar-b-item:hover {
+        background: rgba(255, 255, 255, 0.04);
+      }
+      .bar-b-item svg {
+        color: #78716c;
+        width: 22px;
+        height: 22px;
+      }
+      .bar-b-item.active svg {
+        color: #d6d3d1;
+      }
+      .bar-b-label {
+        font-size: 10px;
+        color: #57534e;
+        font-weight: 600;
+      }
+      .bar-b-item.active .bar-b-label {
+        color: #a8a29e;
+      }
+      .bar-b-fab {
+        margin-top: -16px;
+        margin-bottom: 4px;
+      }
+      .bar-b-fab .fab-button-b {
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        background: #059669;
+        border: 2px solid rgba(17, 24, 39, 0.9);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.15s;
+        box-shadow: 0 4px 20px rgba(5, 150, 105, 0.3);
+      }
+      .bar-b-fab .fab-button-b:hover {
+        transform: scale(1.06);
+      }
+      .bar-b-fab .fab-button-b svg {
+        color: #fff;
+        width: 24px;
+        height: 24px;
+      }
+
+      /* ═══════ OPTION C: Split Bar + Floating FAB ═══════ */
+      .bar-split {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .bar-c-fab-area {
+        position: absolute;
+        bottom: 80px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+      }
+      .bar-c-fab {
+        width: 64px;
+        height: 64px;
+        position: relative;
+      }
+      .bar-c-fab-btn {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        background: #059669;
+        border: 3px solid #0c0a09;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s;
+        box-shadow:
+          0 6px 24px rgba(5, 150, 105, 0.35),
+          0 0 0 2px rgba(5, 150, 105, 0.15);
+      }
+      .bar-c-fab-btn:hover {
+        transform: translate(-50%, -50%) scale(1.08);
+        box-shadow:
+          0 8px 28px rgba(5, 150, 105, 0.45),
+          0 0 0 3px rgba(5, 150, 105, 0.2);
+      }
+      .bar-c-fab-btn svg {
+        color: #fff;
+        width: 24px;
+        height: 24px;
+      }
+      .bar-c-counter {
+        font-size: 11px;
+        color: #a8a29e;
+        font-weight: 600;
+        background: rgba(28, 25, 23, 0.8);
+        backdrop-filter: blur(12px);
+        padding: 3px 10px;
+        border-radius: 10px;
+        border: 1px solid rgba(55, 65, 81, 0.2);
+      }
+      .bar-c-tabbar {
+        width: 100%;
+        background: rgba(18, 16, 15, 0.95);
+        backdrop-filter: blur(20px);
+        border-top: 1px solid rgba(55, 65, 81, 0.2);
+        padding: 8px 24px 28px;
+        display: flex;
+        justify-content: space-around;
+        align-items: flex-start;
+      }
+      .bar-c-tab {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 3px;
+        cursor: pointer;
+        padding: 4px 12px;
+        transition: all 0.15s;
+      }
+      .bar-c-tab svg {
+        color: #57534e;
+        width: 22px;
+        height: 22px;
+      }
+      .bar-c-tab.active svg {
+        color: #d6d3d1;
+      }
+      .bar-c-tab-label {
+        font-size: 10px;
+        color: #57534e;
+        font-weight: 600;
+      }
+      .bar-c-tab.active .bar-c-tab-label {
+        color: #a8a29e;
+      }
+      .bar-c-tab.active .bar-c-indicator {
+        width: 4px;
+        height: 4px;
+        border-radius: 50%;
+        background: #059669;
+        margin-top: 1px;
+      }
+
+      /* Comparison grid */
+      .comparison {
+        display: flex;
+        gap: 24px;
+        justify-content: center;
+        flex-wrap: wrap;
+        padding: 0 16px;
+      }
+
+      /* Animation */
+      @keyframes pulseGlow {
+        0%,
+        100% {
+          box-shadow: 0 0 0 0 rgba(5, 150, 105, 0);
+        }
+        50% {
+          box-shadow: 0 0 16px 4px rgba(5, 150, 105, 0.2);
+        }
+      }
+      .pulse-glow {
+        animation: pulseGlow 2.5s ease-in-out infinite;
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(12px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .fade-in {
+        animation: fadeInUp 0.4s ease-out;
+      }
+
+      /* Pros/Cons */
+      .pros-cons {
+        max-width: 420px;
+        margin: 16px auto 0;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+      .pros-cons h4 {
+        font-size: 11px;
+        color: #059669;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 6px;
+      }
+      .pros-cons .cons h4 {
+        color: #ef4444;
+      }
+      .pros-cons li {
+        font-size: 12px;
+        color: #a1a1aa;
+        line-height: 1.6;
+        list-style: none;
+        padding-left: 14px;
+        position: relative;
+      }
+      .pros-cons li::before {
+        content: '•';
+        position: absolute;
+        left: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Bottom Bar — Improvement Concepts</h1>
+    <p class="subtitle">
+      Three directions for improving the floating bottom action bar. Each
+      preserves the glass capsule DNA while adding more utility.
+    </p>
+
+    <div class="tab-bar">
+      <button class="tab-btn active" onclick="showView('current')">
+        Current
+      </button>
+      <button class="tab-btn" onclick="showView('optionA')">
+        A: Progress-First
+      </button>
+      <button class="tab-btn" onclick="showView('optionB')">B: 4-Action</button>
+      <button class="tab-btn" onclick="showView('optionC')">
+        C: Split Bar
+      </button>
+    </div>
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- CURRENT -->
+    <!-- ═══════════════════════════════════════════ -->
+    <div id="view-current" class="view-panel active">
+      <div class="variant-label">Current Implementation</div>
+      <div class="variant-desc">
+        Glass capsule with Settings (left), Progress Ring FAB (center), Sparkles
+        (right). Clean but minimal — no labels, no visible progress text, no
+        streak info.
+      </div>
+
+      <div class="phone-frame">
+        <div class="phone-screen">
+          <div class="phone-notch"></div>
+          <div class="phone-content">
+            <div class="mock-header">
+              <div class="mock-greeting">Good evening</div>
+              <div class="mock-title">Today's Habits</div>
+              <div class="mock-week">
+                <div class="mock-day">
+                  <span class="mock-day-label">Mon</span
+                  ><span class="mock-day-num">24</span>
+                </div>
+                <div class="mock-day">
+                  <span class="mock-day-label">Tue</span
+                  ><span class="mock-day-num">25</span>
+                </div>
+                <div class="mock-day">
+                  <span class="mock-day-label">Wed</span
+                  ><span class="mock-day-num">26</span>
+                </div>
+                <div class="mock-day active">
+                  <span class="mock-day-label">Thu</span
+                  ><span class="mock-day-num">27</span>
+                </div>
+                <div class="mock-day">
+                  <span class="mock-day-label">Fri</span
+                  ><span class="mock-day-num">28</span>
+                </div>
+                <div class="mock-day">
+                  <span class="mock-day-label">Sat</span
+                  ><span class="mock-day-num">1</span>
+                </div>
+                <div class="mock-day">
+                  <span class="mock-day-label">Sun</span
+                  ><span class="mock-day-num">2</span>
+                </div>
+              </div>
+            </div>
+            <div class="habit-cards">
+              <div class="habit-card">
+                <div class="habit-emoji">🧘</div>
+                <div class="habit-info">
+                  <div class="habit-name">Meditation</div>
+                  <div class="habit-meta">10 min · Morning</div>
+                </div>
+                <div class="habit-check done"></div>
+              </div>
+              <div class="habit-card">
+                <div class="habit-emoji">📖</div>
+                <div class="habit-info">
+                  <div class="habit-name">Reading</div>
+                  <div class="habit-meta">20 pages · Evening</div>
+                </div>
+                <div class="habit-check done"></div>
+              </div>
+              <div class="habit-card">
+                <div class="habit-emoji">💪</div>
+                <div class="habit-info">
+                  <div class="habit-name">Exercise</div>
+                  <div class="habit-meta">30 min · Afternoon</div>
+                </div>
+                <div class="habit-check done"></div>
+              </div>
+              <div class="habit-card">
+                <div class="habit-emoji">💧</div>
+                <div class="habit-info">
+                  <div class="habit-name">Drink Water</div>
+                  <div class="habit-meta">8 glasses · All day</div>
+                </div>
+                <div class="habit-check"></div>
+              </div>
+              <div class="habit-card">
+                <div class="habit-emoji">✍️</div>
+                <div class="habit-info">
+                  <div class="habit-name">Journal</div>
+                  <div class="habit-meta">5 min · Evening</div>
+                </div>
+                <div class="habit-check"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Current bar -->
+          <div class="bar-current">
+            <div class="bar-icon-btn">
+              <i
+                data-lucide="settings"
+                style="width: 24px; height: 24px; color: #a8a29e"
+              ></i>
+            </div>
+            <div class="fab-wrapper">
+              <div class="fab-ring">
+                <svg
+                  class="ring-svg"
+                  width="64"
+                  height="64"
+                  viewBox="0 0 64 64"
+                >
+                  <circle
+                    cx="32"
+                    cy="32"
+                    r="28"
+                    fill="none"
+                    stroke="#292524"
+                    stroke-width="4"
+                  />
+                  <circle
+                    cx="32"
+                    cy="32"
+                    r="28"
+                    fill="none"
+                    stroke="#059669"
+                    stroke-width="4"
+                    stroke-dasharray="175.93"
+                    stroke-dashoffset="70.37"
+                    stroke-linecap="round"
+                  />
+                </svg>
+                <div class="fab-button">
+                  <i
+                    data-lucide="plus"
+                    style="width: 24px; height: 24px; color: #fff"
+                  ></i>
+                </div>
+              </div>
+            </div>
+            <div class="bar-icon-btn gold" style="position: relative">
+              <i
+                data-lucide="sparkles"
+                style="width: 24px; height: 24px; color: #d97706"
+              ></i>
+              <div class="notif-dot"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pros-cons">
+        <div class="pros">
+          <h4>Strengths</h4>
+          <ul>
+            <li>Clean, minimal design</li>
+            <li>Strong visual hierarchy</li>
+            <li>Glass capsule feels premium</li>
+          </ul>
+        </div>
+        <div class="cons">
+          <h4>Weaknesses</h4>
+          <ul>
+            <li>No visible progress count</li>
+            <li>No labels — icons need guessing</li>
+            <li>Streak not shown anywhere</li>
+            <li>Only 2 quick actions</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- OPTION A: Progress-First -->
+    <!-- ═══════════════════════════════════════════ -->
+    <div id="view-optionA" class="view-panel">
+      <div class="variant-label">Option A — Progress-First</div>
+      <div class="variant-desc">
+        Same capsule layout + "3 of 5" counter under FAB + streak chip below the
+        capsule. Minimal changes to current code, maximum info boost.
+      </div>
+
+      <div class="phone-frame">
+        <div class="phone-screen">
+          <div class="phone-notch"></div>
+          <div class="phone-content">
+            <div class="mock-header">
+              <div class="mock-greeting">Good evening</div>
+              <div class="mock-title">Today's Habits</div>
+              <div class="mock-week">
+                <div class="mock-day">
+                  <span class="mock-day-label">Mon</span
+                  ><span class="mock-day-num">24</span>
+                </div>
+                <div class="mock-day">
+                  <span class="mock-day-label">Tue</span
+                  ><span class="mock-day-num">25</span>
+                </div>
+                <div class="mock-day">
+                  <span class="mock-day-label">Wed</span
+                  ><span class="mock-day-num">26</span>
+                </div>
+                <div class="mock-day active">
+                  <span class="mock-day-label">Thu</span
+                  ><span class="mock-day-num">27</span>
+                </div>
+                <div class="mock-day">
+                  <span class="mock-day-label">Fri</span
+                  ><span class="mock-day-num">28</span>
+                </div>
+                <div class="mock-day">
+                  <span class="mock-day-label">Sat</span
+                  ><span class="mock-day-num">1</span>
+                </div>
+                <div class="mock-day">
+                  <span class="mock-day-label">Sun</span
+                  ><span class="mock-day-num">2</span>
+                </div>
+              </div>
+            </div>
+            <div class="habit-cards">
+              <div class="habit-card">
+                <div class="habit-emoji">🧘</div>
+                <div class="habit-info">
+                  <div class="habit-name">Meditation</div>
+                  <div class="habit-meta">10 min · Morning</div>
+                </div>
+                <div class="habit-check done"></div>
+              </div>
+              <div class="habit-card">
+                <div class="habit-emoji">📖</div>
+                <div class="habit-info">
+                  <div class="habit-name">Reading</div>
+                  <div class="habit-meta">20 pages · Evening</div>
+                </div>
+                <div class="habit-check done"></div>
+              </div>
+              <div class="habit-card">
+                <div class="habit-emoji">💪</div>
+                <div class="habit-info">
+                  <div class="habit-name">Exercise</div>
+                  <div class="habit-meta">30 min · Afternoon</div>
+                </div>
+                <div class="habit-check done"></div>
+              </div>
+              <div class="habit-card">
+                <div class="habit-emoji">💧</div>
+                <div class="habit-info">
+                  <div class="habit-name">Drink Water</div>
+                  <div class="habit-meta">8 glasses · All day</div>
+                </div>
+                <div class="habit-check"></div>
+              </div>
+              <div class="habit-card">
+                <div class="habit-emoji">✍️</div>
+                <div class="habit-info">
+                  <div class="habit-name">Journal</div>
+                  <div class="habit-meta">5 min · Evening</div>
+                </div>
+                <div class="habit-check"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Option A bar -->
+          <div class="bar-progress-first">
+            <div class="bar-a-capsule">
+              <div class="bar-a-side">
+                <div class="bar-icon-btn">
+                  <i
+                    data-lucide="settings"
+                    style="width: 22px; height: 22px; color: #a8a29e"
+                  ></i>
+                </div>
+                <span class="bar-a-side-label">Settings</span>
+              </div>
+
+              <div class="bar-a-center">
+                <div class="fab-ring">
+                  <svg
+                    class="ring-svg"
+                    width="64"
+                    height="64"
+                    viewBox="0 0 64 64"
+                  >
+                    <circle
+                      cx="32"
+                      cy="32"
+                      r="28"
+                      fill="none"
+                      stroke="#292524"
+                      stroke-width="4"
+                    />
+                    <circle
+                      cx="32"
+                      cy="32"
+                      r="28"
+                      fill="none"
+                      stroke="#059669"
+                      stroke-width="4"
+                      stroke-dasharray="175.93"
+                      stroke-dashoffset="70.37"
+                      stroke-linecap="round"
+                    />
+                  </svg>
+                  <div class="fab-button pulse-glow">
+                    <i
+                      data-lucide="plus"
+                      style="width: 24px; height: 24px; color: #fff"
+                    ></i>
+                  </div>
+                </div>
+                <div class="bar-a-counter">3 of 5</div>
+              </div>
+
+              <div class="bar-a-side">
+                <div class="bar-icon-btn gold" style="position: relative">
+                  <i
+                    data-lucide="sparkles"
+                    style="width: 22px; height: 22px; color: #d97706"
+                  ></i>
+                  <div class="notif-dot"></div>
+                </div>
+                <span class="bar-a-side-label">Inspire</span>
+              </div>
+            </div>
+
+            <div class="bar-a-streak-chip fade-in">
+              <span class="streak-fire">🔥</span>
+              <span>7-day streak</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pros-cons">
+        <div class="pros">
+          <h4>Strengths</h4>
+          <ul>
+            <li>Visible progress counter</li>
+            <li>Streak motivates at a glance</li>
+            <li>Labels remove guesswork</li>
+            <li>Minimal code change needed</li>
+          </ul>
+        </div>
+        <div class="cons">
+          <h4>Trade-offs</h4>
+          <ul>
+            <li>Slightly taller footprint</li>
+            <li>Streak chip may feel cluttered</li>
+            <li>Still only 2 side actions</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- OPTION B: 4-Action Bar -->
+    <!-- ═══════════════════════════════════════════ -->
+    <div id="view-optionB" class="view-panel">
+      <div class="variant-label">Option B — 4-Action Bar</div>
+      <div class="variant-desc">
+        Wider capsule with 4 labeled icons flanking the center FAB. Adds Stats
+        and Calendar for quick access without leaving the home screen.
+      </div>
+
+      <div class="phone-frame">
+        <div class="phone-screen">
+          <div class="phone-notch"></div>
+          <div class="phone-content">
+            <div class="mock-header">
+              <div class="mock-greeting">Good evening</div>
+              <div class="mock-title">Today's Habits</div>
+              <div class="mock-week">
+                <div class="mock-day">
+                  <span class="mock-day-label">Mon</span
+                  ><span class="mock-day-num">24</span>
+                </div>
+                <div class="mock-day">
+                  <span class="mock-day-label">Tue</span
+                  ><span class="mock-day-num">25</span>
+                </div>
+                <div class="mock-day">
+                  <span class="mock-day-label">Wed</span
+                  ><span class="mock-day-num">26</span>
+                </div>
+                <div class="mock-day active">
+                  <span class="mock-day-label">Thu</span
+                  ><span class="mock-day-num">27</span>
+                </div>
+                <div class="mock-day">
+                  <span class="mock-day-label">Fri</span
+                  ><span class="mock-day-num">28</span>
+                </div>
+                <div class="mock-day">
+                  <span class="mock-day-label">Sat</span
+                  ><span class="mock-day-num">1</span>
+                </div>
+                <div class="mock-day">
+                  <span class="mock-day-label">Sun</span
+                  ><span class="mock-day-num">2</span>
+                </div>
+              </div>
+            </div>
+            <div class="habit-cards">
+              <div class="habit-card">
+                <div class="habit-emoji">🧘</div>
+                <div class="habit-info">
+                  <div class="habit-name">Meditation</div>
+                  <div class="habit-meta">10 min · Morning</div>
+                </div>
+                <div class="habit-check done"></div>
+              </div>
+              <div class="habit-card">
+                <div class="habit-emoji">📖</div>
+                <div class="habit-info">
+                  <div class="habit-name">Reading</div>
+                  <div class="habit-meta">20 pages · Evening</div>
+                </div>
+                <div class="habit-check done"></div>
+              </div>
+              <div class="habit-card">
+                <div class="habit-emoji">💪</div>
+                <div class="habit-info">
+                  <div class="habit-name">Exercise</div>
+                  <div class="habit-meta">30 min · Afternoon</div>
+                </div>
+                <div class="habit-check done"></div>
+              </div>
+              <div class="habit-card">
+                <div class="habit-emoji">💧</div>
+                <div class="habit-info">
+                  <div class="habit-name">Drink Water</div>
+                  <div class="habit-meta">8 glasses · All day</div>
+                </div>
+                <div class="habit-check"></div>
+              </div>
+              <div class="habit-card">
+                <div class="habit-emoji">✍️</div>
+                <div class="habit-info">
+                  <div class="habit-name">Journal</div>
+                  <div class="habit-meta">5 min · Evening</div>
+                </div>
+                <div class="habit-check"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Option B bar -->
+          <div class="bar-four-action">
+            <div class="bar-b-item">
+              <i
+                data-lucide="bar-chart-3"
+                style="width: 22px; height: 22px; color: #78716c"
+              ></i>
+              <span class="bar-b-label">Stats</span>
+            </div>
+            <div class="bar-b-item active">
+              <i
+                data-lucide="settings"
+                style="width: 22px; height: 22px; color: #d6d3d1"
+              ></i>
+              <span class="bar-b-label" style="color: #a8a29e">Settings</span>
+            </div>
+            <div class="bar-b-fab">
+              <div class="fab-button-b">
+                <i
+                  data-lucide="plus"
+                  style="width: 24px; height: 24px; color: #fff"
+                ></i>
+              </div>
+            </div>
+            <div class="bar-b-item">
+              <i
+                data-lucide="sparkles"
+                style="width: 22px; height: 22px; color: #d97706"
+              ></i>
+              <span class="bar-b-label">Inspire</span>
+            </div>
+            <div class="bar-b-item">
+              <i
+                data-lucide="calendar"
+                style="width: 22px; height: 22px; color: #78716c"
+              ></i>
+              <span class="bar-b-label">Calendar</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pros-cons">
+        <div class="pros">
+          <h4>Strengths</h4>
+          <ul>
+            <li>4 quick-access actions</li>
+            <li>Labeled icons = no guessing</li>
+            <li>Standard tab-bar mental model</li>
+            <li>Room for future expansion</li>
+          </ul>
+        </div>
+        <div class="cons">
+          <h4>Trade-offs</h4>
+          <ul>
+            <li>Loses unique capsule feel</li>
+            <li>More complex navigation</li>
+            <li>No progress ring on FAB</li>
+            <li>Bigger footprint</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- OPTION C: Split Bar + Floating FAB -->
+    <!-- ═══════════════════════════════════════════ -->
+    <div id="view-optionC" class="view-panel">
+      <div class="variant-label">Option C — Split Bar + Floating FAB</div>
+      <div class="variant-desc">
+        Flat icon-label tab bar at bottom + independently floating FAB with
+        progress ring. The FAB "hovers" above the tab bar with a subtle counter
+        pill.
+      </div>
+
+      <div class="phone-frame">
+        <div class="phone-screen">
+          <div class="phone-notch"></div>
+          <div class="phone-content">
+            <div class="mock-header">
+              <div class="mock-greeting">Good evening</div>
+              <div class="mock-title">Today's Habits</div>
+              <div class="mock-week">
+                <div class="mock-day">
+                  <span class="mock-day-label">Mon</span
+                  ><span class="mock-day-num">24</span>
+                </div>
+                <div class="mock-day">
+                  <span class="mock-day-label">Tue</span
+                  ><span class="mock-day-num">25</span>
+                </div>
+                <div class="mock-day">
+                  <span class="mock-day-label">Wed</span
+                  ><span class="mock-day-num">26</span>
+                </div>
+                <div class="mock-day active">
+                  <span class="mock-day-label">Thu</span
+                  ><span class="mock-day-num">27</span>
+                </div>
+                <div class="mock-day">
+                  <span class="mock-day-label">Fri</span
+                  ><span class="mock-day-num">28</span>
+                </div>
+                <div class="mock-day">
+                  <span class="mock-day-label">Sat</span
+                  ><span class="mock-day-num">1</span>
+                </div>
+                <div class="mock-day">
+                  <span class="mock-day-label">Sun</span
+                  ><span class="mock-day-num">2</span>
+                </div>
+              </div>
+            </div>
+            <div class="habit-cards">
+              <div class="habit-card">
+                <div class="habit-emoji">🧘</div>
+                <div class="habit-info">
+                  <div class="habit-name">Meditation</div>
+                  <div class="habit-meta">10 min · Morning</div>
+                </div>
+                <div class="habit-check done"></div>
+              </div>
+              <div class="habit-card">
+                <div class="habit-emoji">📖</div>
+                <div class="habit-info">
+                  <div class="habit-name">Reading</div>
+                  <div class="habit-meta">20 pages · Evening</div>
+                </div>
+                <div class="habit-check done"></div>
+              </div>
+              <div class="habit-card">
+                <div class="habit-emoji">💪</div>
+                <div class="habit-info">
+                  <div class="habit-name">Exercise</div>
+                  <div class="habit-meta">30 min · Afternoon</div>
+                </div>
+                <div class="habit-check done"></div>
+              </div>
+              <div class="habit-card">
+                <div class="habit-emoji">💧</div>
+                <div class="habit-info">
+                  <div class="habit-name">Drink Water</div>
+                  <div class="habit-meta">8 glasses · All day</div>
+                </div>
+                <div class="habit-check"></div>
+              </div>
+              <div class="habit-card">
+                <div class="habit-emoji">✍️</div>
+                <div class="habit-info">
+                  <div class="habit-name">Journal</div>
+                  <div class="habit-meta">5 min · Evening</div>
+                </div>
+                <div class="habit-check"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Option C -->
+          <div class="bar-split">
+            <div class="bar-c-fab-area">
+              <div class="bar-c-fab">
+                <svg
+                  width="64"
+                  height="64"
+                  viewBox="0 0 64 64"
+                  style="
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    transform: rotate(-90deg);
+                  "
+                >
+                  <circle
+                    cx="32"
+                    cy="32"
+                    r="28"
+                    fill="none"
+                    stroke="rgba(41,37,36,0.5)"
+                    stroke-width="4"
+                  />
+                  <circle
+                    cx="32"
+                    cy="32"
+                    r="28"
+                    fill="none"
+                    stroke="#059669"
+                    stroke-width="4"
+                    stroke-dasharray="175.93"
+                    stroke-dashoffset="70.37"
+                    stroke-linecap="round"
+                  />
+                </svg>
+                <div class="bar-c-fab-btn pulse-glow">
+                  <i
+                    data-lucide="plus"
+                    style="width: 24px; height: 24px; color: #fff"
+                  ></i>
+                </div>
+              </div>
+              <div class="bar-c-counter">3 of 5</div>
+            </div>
+
+            <div class="bar-c-tabbar">
+              <div class="bar-c-tab active">
+                <i
+                  data-lucide="home"
+                  style="width: 22px; height: 22px; color: #d6d3d1"
+                ></i>
+                <span class="bar-c-tab-label" style="color: #a8a29e">Home</span>
+                <div
+                  class="bar-c-indicator"
+                  style="
+                    width: 4px;
+                    height: 4px;
+                    border-radius: 50%;
+                    background: #059669;
+                    margin-top: 1px;
+                  "
+                ></div>
+              </div>
+              <div class="bar-c-tab">
+                <i
+                  data-lucide="bar-chart-3"
+                  style="width: 22px; height: 22px; color: #57534e"
+                ></i>
+                <span class="bar-c-tab-label">Stats</span>
+                <div class="bar-c-indicator"></div>
+              </div>
+              <div style="width: 56px"></div>
+              <!-- spacer for FAB -->
+              <div class="bar-c-tab">
+                <i
+                  data-lucide="sparkles"
+                  style="width: 22px; height: 22px; color: #57534e"
+                ></i>
+                <span class="bar-c-tab-label">Inspire</span>
+                <div class="bar-c-indicator"></div>
+              </div>
+              <div class="bar-c-tab">
+                <i
+                  data-lucide="settings"
+                  style="width: 22px; height: 22px; color: #57534e"
+                ></i>
+                <span class="bar-c-tab-label">Settings</span>
+                <div class="bar-c-indicator"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pros-cons">
+        <div class="pros">
+          <h4>Strengths</h4>
+          <ul>
+            <li>FAB stands out prominently</li>
+            <li>Progress ring + counter visible</li>
+            <li>4 labeled tabs = clear nav</li>
+            <li>Standard iOS/Android pattern</li>
+          </ul>
+        </div>
+        <div class="cons">
+          <h4>Trade-offs</h4>
+          <ul>
+            <li>Loses the floating capsule feel</li>
+            <li>Two separate layers to render</li>
+            <li>More vertical space used</li>
+            <li>Less "unique" — more standard</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Initialize Lucide icons
+      lucide.createIcons();
+
+      function showView(id) {
+        document
+          .querySelectorAll('.view-panel')
+          .forEach((p) => p.classList.remove('active'));
+        document
+          .querySelectorAll('.tab-btn')
+          .forEach((b) => b.classList.remove('active'));
+        document.getElementById('view-' + id).classList.add('active');
+        event.target.classList.add('active');
+      }
+    </script>
+  </body>
+</html>

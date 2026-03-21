@@ -1,0 +1,1983 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Calendar Timeline — Elevated Redesign v1</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <style>
+      /* ─── Reset ─── */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      :root {
+        /* Light mode app palette */
+        --bg: #f5f1ed;
+        --card: #edeae5;
+        --shelf-bg: #edeae5;
+        --border: #ddd8d2;
+        --tx: #2d2a26;
+        --sec: #6b6560;
+        --mut: #a8a29e;
+        --ter: #c4bfb7;
+
+        --green-600: #059669;
+        --green-500: #10b981;
+        --green-400: #34d399;
+        --green-300: #6ee7b7;
+        --green-200: #a7f3d0;
+        --green-100: #d1fae5;
+        --green-50: #ecfdf5;
+
+        --amber-600: #d97706;
+        --amber-500: #f59e0b;
+        --amber-400: #fbbf24;
+        --amber-300: #fcd34d;
+        --amber-200: #fde68a;
+        --amber-100: #fef3c7;
+
+        --red: #ef4444;
+        --red-light: #fee2e2;
+      }
+
+      body {
+        background: #1a1714;
+        font-family: 'Outfit', sans-serif;
+        color: var(--tx);
+        -webkit-font-smoothing: antialiased;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 40px 20px;
+        min-height: 100vh;
+        gap: 60px;
+      }
+
+      h1 {
+        color: #f5f1ed;
+        font-size: 28px;
+        font-weight: 700;
+        text-align: center;
+        letter-spacing: -0.5px;
+      }
+      .subtitle {
+        color: #a8a29e;
+        font-size: 14px;
+        text-align: center;
+        margin-top: 6px;
+      }
+
+      /* ─── Phone Frame ─── */
+      .phone-row {
+        display: flex;
+        gap: 40px;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: flex-start;
+      }
+
+      .phone-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+      }
+      .phone-label {
+        color: #a8a29e;
+        font-size: 13px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .phone {
+        width: 375px;
+        background: var(--bg);
+        border-radius: 40px;
+        overflow: hidden;
+        box-shadow:
+          0 25px 60px rgba(0, 0, 0, 0.4),
+          0 0 0 1px rgba(245, 241, 237, 0.08);
+        position: relative;
+      }
+      .phone::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 120px;
+        height: 28px;
+        background: #1a1714;
+        border-radius: 0 0 16px 16px;
+        z-index: 10;
+      }
+
+      .phone-content {
+        padding: 48px 0 0;
+      }
+
+      /* ─── Shelf Container ─── */
+      .shelf {
+        background: var(--shelf-bg);
+        border-radius: 0 0 20px 20px;
+        padding: 12px 20px 16px;
+        position: relative;
+      }
+      .shelf::after {
+        content: '';
+        position: absolute;
+        bottom: -12px;
+        left: 0;
+        right: 0;
+        height: 12px;
+        background: linear-gradient(to bottom, var(--shelf-bg), transparent);
+        pointer-events: none;
+      }
+
+      /* ─── Header Row ─── */
+      .header-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 2px;
+      }
+
+      .greeting {
+        font-size: 20px;
+        font-weight: 800;
+        letter-spacing: -0.5px;
+        color: var(--green-600);
+      }
+      .greeting.risk {
+        color: var(--red);
+      }
+      .greeting.neutral {
+        color: var(--tx);
+        font-size: 16px;
+        font-weight: 700;
+      }
+
+      .progress-right {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 4px;
+      }
+      .progress-count {
+        font-size: 18px;
+        font-weight: 800;
+        color: var(--tx);
+        letter-spacing: -0.3px;
+      }
+      .progress-count span {
+        color: var(--mut);
+        font-weight: 500;
+      }
+      .progress-dots {
+        display: flex;
+        gap: 4px;
+      }
+      .progress-dots .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--ter);
+        transition: all 0.3s;
+      }
+      .progress-dots .dot.filled {
+        background: var(--green-500);
+        box-shadow: 0 0 6px rgba(16, 185, 129, 0.3);
+      }
+
+      /* ─── Date Row ─── */
+      .date-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 4px;
+        margin-bottom: 12px;
+      }
+      .date-chip {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        cursor: pointer;
+      }
+      .date-chip .date-text {
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--sec);
+      }
+      .streak-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 3px;
+        background: var(--amber-100);
+        color: var(--amber-600);
+        font-size: 12px;
+        font-weight: 700;
+        padding: 3px 10px;
+        border-radius: 99px;
+      }
+
+      /* ─── Day Strip ─── */
+      .day-strip {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        position: relative;
+        padding: 0 2px;
+      }
+
+      /* ─── Streak Chain Connector ─── */
+      .chain-track {
+        position: absolute;
+        top: 36px; /* center of day circles */
+        left: 0;
+        right: 0;
+        height: 0;
+        pointer-events: none;
+        z-index: 0;
+      }
+      .chain-segment {
+        position: absolute;
+        height: 4px;
+        border-radius: 2px;
+        top: -2px;
+      }
+      .chain-segment.active {
+        background: linear-gradient(90deg, var(--green-400), var(--green-500));
+        box-shadow: 0 1px 4px rgba(16, 185, 129, 0.25);
+      }
+      .chain-segment.faded {
+        background: var(--green-200);
+        opacity: 0.5;
+      }
+
+      /* ─── Day Cell ─── */
+      .day-cell {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2px;
+        position: relative;
+        z-index: 1;
+        width: 44px;
+      }
+
+      .weekday-label {
+        font-size: 10px;
+        font-weight: 400;
+        color: var(--mut);
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+        line-height: 14px;
+      }
+      .weekday-label.today {
+        font-weight: 700;
+        color: var(--sec);
+      }
+
+      /* Ring container */
+      .ring-container {
+        width: 46px;
+        height: 46px;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .ring-svg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 46px;
+        height: 46px;
+        transform: rotate(-90deg);
+      }
+      .ring-track {
+        fill: none;
+        stroke: rgba(0, 0, 0, 0.04);
+        stroke-width: 2.5;
+      }
+      .ring-fill {
+        fill: none;
+        stroke-width: 2.5;
+        stroke-linecap: round;
+        transition: stroke-dashoffset 0.6s ease;
+      }
+      .ring-fill.green {
+        stroke: var(--green-500);
+      }
+      .ring-fill.amber {
+        stroke: var(--amber-400);
+      }
+
+      /* Inner circle */
+      .day-circle {
+        width: 38px;
+        height: 38px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        z-index: 2;
+        transition: all 0.3s;
+      }
+
+      .day-number {
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 1;
+      }
+
+      /* States */
+      .day-circle.complete {
+        background: var(--green-500);
+        box-shadow: 0 2px 10px rgba(16, 185, 129, 0.35);
+      }
+      .day-circle.complete .day-number {
+        color: white;
+        font-weight: 700;
+      }
+
+      .day-circle.today {
+        background: var(--amber-100);
+        border: 2px solid var(--amber-400);
+        box-shadow: 0 2px 12px rgba(251, 191, 36, 0.25);
+        animation: todayPulse 2.5s ease-in-out infinite;
+      }
+      .day-circle.today .day-number {
+        color: var(--amber-600);
+        font-weight: 700;
+      }
+
+      .day-circle.today.complete {
+        background: var(--green-500);
+        border: 2px solid var(--amber-400);
+        box-shadow:
+          0 2px 12px rgba(16, 185, 129, 0.35),
+          0 0 0 3px rgba(251, 191, 36, 0.2);
+        animation: none;
+      }
+      .day-circle.today.complete .day-number {
+        color: white;
+      }
+
+      .day-circle.past {
+        background: var(--card);
+      }
+      .day-circle.past .day-number {
+        color: var(--sec);
+      }
+
+      .day-circle.future {
+        background: transparent;
+        border: 1.5px dashed var(--border);
+      }
+      .day-circle.future .day-number {
+        color: var(--ter);
+        font-weight: 400;
+      }
+
+      /* Check badge */
+      .check-badge {
+        position: absolute;
+        bottom: -2px;
+        right: -2px;
+        width: 16px;
+        height: 16px;
+        background: var(--green-600);
+        border-radius: 50%;
+        border: 2px solid var(--shelf-bg);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 3;
+        animation: badgePop 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      }
+      .check-badge svg {
+        width: 8px;
+        height: 8px;
+      }
+
+      /* Completion dot */
+      .completion-indicator {
+        height: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 2px;
+      }
+      .comp-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--ter);
+      }
+      .comp-dot.partial {
+        background: var(--amber-400);
+        box-shadow: 0 0 4px rgba(251, 191, 36, 0.3);
+      }
+      .comp-dot.today-incomplete {
+        width: 7px;
+        height: 7px;
+        background: var(--amber-400);
+        animation: dotPulse 1.5s ease-in-out infinite;
+      }
+
+      /* ─── Progress Bar (thicker) ─── */
+      .progress-bar-container {
+        margin-top: 10px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .progress-track {
+        flex: 1;
+        height: 6px;
+        background: rgba(0, 0, 0, 0.05);
+        border-radius: 3px;
+        overflow: hidden;
+      }
+      .progress-fill {
+        height: 100%;
+        border-radius: 3px;
+        background: linear-gradient(90deg, var(--green-500), var(--green-400));
+        transition: width 0.6s ease;
+        position: relative;
+      }
+      .progress-fill.complete {
+        background: linear-gradient(90deg, var(--green-400), var(--green-300));
+      }
+      .progress-fill::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 20px;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.3)
+        );
+        border-radius: 0 3px 3px 0;
+      }
+      .progress-label {
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--mut);
+        min-width: 28px;
+        text-align: right;
+      }
+
+      /* ─── Habit Cards (placeholder below) ─── */
+      .habits-area {
+        padding: 28px 20px 40px;
+      }
+      .habit-card-placeholder {
+        height: 64px;
+        background: white;
+        border-radius: 16px;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        padding: 0 16px;
+        gap: 12px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+      }
+      .habit-emoji {
+        font-size: 24px;
+      }
+      .habit-info {
+        flex: 1;
+      }
+      .habit-name {
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--tx);
+      }
+      .habit-sub {
+        font-size: 12px;
+        color: var(--mut);
+      }
+      .habit-check {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        border: 2px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .habit-check.done {
+        background: var(--green-500);
+        border-color: var(--green-500);
+      }
+
+      /* ─── DARK MODE ─── */
+      .phone.dark {
+        --bg: #0f0d0a;
+        --card: #1a1714;
+        --shelf-bg: #1a1714;
+        --border: rgba(245, 241, 237, 0.08);
+        --tx: #f5f1ed;
+        --sec: #a8a29e;
+        --mut: #6b6560;
+        --ter: #4a4540;
+      }
+      .phone.dark .progress-track {
+        background: rgba(255, 255, 255, 0.06);
+      }
+      .phone.dark .ring-track {
+        stroke: rgba(255, 255, 255, 0.06);
+      }
+      .phone.dark .day-circle.past {
+        background: #252220;
+      }
+      .phone.dark .day-circle.future {
+        border-color: rgba(245, 241, 237, 0.08);
+      }
+      .phone.dark .day-circle.today {
+        background: #3d2f0a;
+        border-color: #b8860b;
+        box-shadow: 0 2px 16px rgba(184, 134, 11, 0.25);
+      }
+      .phone.dark .day-circle.today .day-number {
+        color: #e8b94d;
+      }
+      .phone.dark .habit-card-placeholder {
+        background: #1a1714;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+      }
+      .phone.dark .habit-name {
+        color: #f5f1ed;
+      }
+      .phone.dark .habit-check {
+        border-color: rgba(245, 241, 237, 0.12);
+      }
+      .phone.dark .streak-pill {
+        background: rgba(232, 185, 77, 0.15);
+        color: #e8b94d;
+      }
+      .phone.dark::before {
+        background: #0f0d0a;
+      }
+      .phone.dark .comp-dot {
+        background: #4a4540;
+      }
+      .phone.dark .day-circle.today.complete {
+        border-color: #b8860b;
+        box-shadow:
+          0 2px 12px rgba(16, 185, 129, 0.35),
+          0 0 0 3px rgba(184, 134, 11, 0.15);
+      }
+
+      /* ─── PERFECT DAY (celebration) ─── */
+      .shelf.perfect {
+        position: relative;
+        overflow: hidden;
+      }
+      .shelf.perfect::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(
+          135deg,
+          rgba(16, 185, 129, 0.04) 0%,
+          transparent 50%,
+          rgba(251, 191, 36, 0.04) 100%
+        );
+        pointer-events: none;
+      }
+      .greeting.perfect {
+        color: var(--green-600);
+        position: relative;
+      }
+      .shimmer-text {
+        background: linear-gradient(
+          90deg,
+          var(--green-600) 0%,
+          var(--green-400) 40%,
+          var(--amber-400) 60%,
+          var(--green-600) 100%
+        );
+        background-size: 200% 100%;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: shimmer 3s ease-in-out infinite;
+      }
+      .progress-fill.celebration {
+        background: linear-gradient(
+          90deg,
+          var(--green-500),
+          var(--green-400),
+          var(--amber-400),
+          var(--green-400)
+        );
+        background-size: 300% 100%;
+        animation: celebrationFill 2s ease-in-out infinite;
+      }
+      .sparkle {
+        position: absolute;
+        width: 4px;
+        height: 4px;
+        background: var(--amber-400);
+        border-radius: 50%;
+        animation: sparkle 1.5s ease-in-out infinite;
+        pointer-events: none;
+      }
+
+      /* ─── Animations ─── */
+      @keyframes todayPulse {
+        0%,
+        100% {
+          box-shadow: 0 2px 12px rgba(251, 191, 36, 0.2);
+        }
+        50% {
+          box-shadow: 0 2px 20px rgba(251, 191, 36, 0.4);
+        }
+      }
+
+      @keyframes dotPulse {
+        0%,
+        100% {
+          transform: scale(1);
+          opacity: 0.8;
+        }
+        50% {
+          transform: scale(1.3);
+          opacity: 1;
+        }
+      }
+
+      @keyframes badgePop {
+        0% {
+          transform: scale(0);
+        }
+        70% {
+          transform: scale(1.2);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+
+      @keyframes shimmer {
+        0%,
+        100% {
+          background-position: -100% 0;
+        }
+        50% {
+          background-position: 200% 0;
+        }
+      }
+
+      @keyframes celebrationFill {
+        0%,
+        100% {
+          background-position: 0% 0;
+        }
+        50% {
+          background-position: 100% 0;
+        }
+      }
+
+      @keyframes sparkle {
+        0%,
+        100% {
+          opacity: 0;
+          transform: scale(0);
+        }
+        50% {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+
+      /* ─── Comparison Labels ─── */
+      .section-title {
+        color: #f5f1ed;
+        font-size: 18px;
+        font-weight: 700;
+        text-align: center;
+        margin-bottom: 24px;
+        width: 100%;
+      }
+      .section-title span {
+        color: #6b6560;
+        font-weight: 400;
+        font-size: 14px;
+        display: block;
+        margin-top: 4px;
+      }
+
+      /* ─── Feature callouts ─── */
+      .callout-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 16px;
+        max-width: 800px;
+        width: 100%;
+        margin-top: -20px;
+      }
+      .callout {
+        background: rgba(245, 241, 237, 0.04);
+        border: 1px solid rgba(245, 241, 237, 0.06);
+        border-radius: 12px;
+        padding: 16px;
+      }
+      .callout-title {
+        color: var(--green-400);
+        font-size: 13px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 6px;
+      }
+      .callout-desc {
+        color: #a8a29e;
+        font-size: 13px;
+        line-height: 1.5;
+      }
+    </style>
+  </head>
+  <body>
+    <div>
+      <h1>Calendar Timeline — Elevated</h1>
+      <p class="subtitle">
+        Ring progress, chain connectors, celebration states, thicker progress
+        bar
+      </p>
+    </div>
+
+    <!-- ═══════════ STATE 1: Mid-week progress (Light) ═══════════ -->
+    <div>
+      <div class="section-title">
+        Mid-Week Progress<span>4 of 6 habits done today · 5-day streak</span>
+      </div>
+      <div class="phone-row">
+        <!-- Light Mode -->
+        <div class="phone-wrapper">
+          <span class="phone-label">Light Mode</span>
+          <div class="phone">
+            <div class="phone-content">
+              <div class="shelf">
+                <!-- Header -->
+                <div class="header-row">
+                  <div class="greeting">5-day streak</div>
+                  <div class="progress-right">
+                    <div class="progress-count">4 <span>of 6</span></div>
+                    <div class="progress-dots">
+                      <div class="dot filled"></div>
+                      <div class="dot filled"></div>
+                      <div class="dot filled"></div>
+                      <div class="dot filled"></div>
+                      <div class="dot"></div>
+                      <div class="dot"></div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Date row -->
+                <div class="date-row">
+                  <div class="date-chip">
+                    <i
+                      data-lucide="calendar-days"
+                      style="width: 14px; height: 14px; color: var(--ter)"
+                    ></i>
+                    <span class="date-text">Wed, March 5</span>
+                    <i
+                      data-lucide="chevron-down"
+                      style="width: 11px; height: 11px; color: var(--ter)"
+                    ></i>
+                  </div>
+                  <div class="streak-pill">🔥 5 days</div>
+                </div>
+
+                <!-- Day Strip -->
+                <div class="day-strip">
+                  <!-- Chain connector track -->
+                  <div class="chain-track">
+                    <!-- Mon-Tue connector -->
+                    <div
+                      class="chain-segment active"
+                      style="left: calc(22px); width: calc(14.28% - 2px)"
+                    ></div>
+                    <!-- Tue-Wed connector -->
+                    <div
+                      class="chain-segment active"
+                      style="
+                        left: calc(14.28% + 20px);
+                        width: calc(14.28% - 2px);
+                      "
+                    ></div>
+                  </div>
+
+                  <!-- Mon - Complete -->
+                  <div class="day-cell">
+                    <span class="weekday-label">Mon</span>
+                    <div class="ring-container">
+                      <svg class="ring-svg" viewBox="0 0 46 46">
+                        <circle class="ring-track" cx="23" cy="23" r="21" />
+                        <circle
+                          class="ring-fill green"
+                          cx="23"
+                          cy="23"
+                          r="21"
+                          stroke-dasharray="131.95"
+                          stroke-dashoffset="0"
+                        />
+                      </svg>
+                      <div class="day-circle complete">
+                        <span class="day-number">3</span>
+                        <div class="check-badge">
+                          <svg viewBox="0 0 12 12" fill="none">
+                            <path
+                              d="M2.5 6L5 8.5L9.5 3.5"
+                              stroke="white"
+                              stroke-width="2"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                            />
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="completion-indicator"></div>
+                  </div>
+
+                  <!-- Tue - Complete -->
+                  <div class="day-cell">
+                    <span class="weekday-label">Tue</span>
+                    <div class="ring-container">
+                      <svg class="ring-svg" viewBox="0 0 46 46">
+                        <circle class="ring-track" cx="23" cy="23" r="21" />
+                        <circle
+                          class="ring-fill green"
+                          cx="23"
+                          cy="23"
+                          r="21"
+                          stroke-dasharray="131.95"
+                          stroke-dashoffset="0"
+                        />
+                      </svg>
+                      <div class="day-circle complete">
+                        <span class="day-number">4</span>
+                        <div class="check-badge">
+                          <svg viewBox="0 0 12 12" fill="none">
+                            <path
+                              d="M2.5 6L5 8.5L9.5 3.5"
+                              stroke="white"
+                              stroke-width="2"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                            />
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="completion-indicator"></div>
+                  </div>
+
+                  <!-- Wed - Today (partially done, 4/6) -->
+                  <div class="day-cell">
+                    <span class="weekday-label today">Wed</span>
+                    <div class="ring-container">
+                      <svg class="ring-svg" viewBox="0 0 46 46">
+                        <circle class="ring-track" cx="23" cy="23" r="21" />
+                        <circle
+                          class="ring-fill amber"
+                          cx="23"
+                          cy="23"
+                          r="21"
+                          stroke-dasharray="131.95"
+                          stroke-dashoffset="44"
+                        />
+                      </svg>
+                      <div class="day-circle today">
+                        <span class="day-number">5</span>
+                      </div>
+                    </div>
+                    <div class="completion-indicator">
+                      <div class="comp-dot today-incomplete"></div>
+                    </div>
+                  </div>
+
+                  <!-- Thu - Future -->
+                  <div class="day-cell">
+                    <span class="weekday-label">Thu</span>
+                    <div class="ring-container">
+                      <svg class="ring-svg" viewBox="0 0 46 46">
+                        <circle class="ring-track" cx="23" cy="23" r="21" />
+                      </svg>
+                      <div class="day-circle future">
+                        <span class="day-number">6</span>
+                      </div>
+                    </div>
+                    <div class="completion-indicator"></div>
+                  </div>
+
+                  <!-- Fri - Future -->
+                  <div class="day-cell">
+                    <span class="weekday-label">Fri</span>
+                    <div class="ring-container">
+                      <svg class="ring-svg" viewBox="0 0 46 46">
+                        <circle class="ring-track" cx="23" cy="23" r="21" />
+                      </svg>
+                      <div class="day-circle future">
+                        <span class="day-number">7</span>
+                      </div>
+                    </div>
+                    <div class="completion-indicator"></div>
+                  </div>
+
+                  <!-- Sat - Future -->
+                  <div class="day-cell">
+                    <span class="weekday-label">Sat</span>
+                    <div class="ring-container">
+                      <svg class="ring-svg" viewBox="0 0 46 46">
+                        <circle class="ring-track" cx="23" cy="23" r="21" />
+                      </svg>
+                      <div class="day-circle future">
+                        <span class="day-number">8</span>
+                      </div>
+                    </div>
+                    <div class="completion-indicator"></div>
+                  </div>
+
+                  <!-- Sun - Future -->
+                  <div class="day-cell">
+                    <span class="weekday-label">Sun</span>
+                    <div class="ring-container">
+                      <svg class="ring-svg" viewBox="0 0 46 46">
+                        <circle class="ring-track" cx="23" cy="23" r="21" />
+                      </svg>
+                      <div class="day-circle future">
+                        <span class="day-number">9</span>
+                      </div>
+                    </div>
+                    <div class="completion-indicator"></div>
+                  </div>
+                </div>
+
+                <!-- Thicker progress bar -->
+                <div class="progress-bar-container">
+                  <div class="progress-track">
+                    <div class="progress-fill" style="width: 67%"></div>
+                  </div>
+                  <span class="progress-label">67%</span>
+                </div>
+              </div>
+
+              <!-- Habit cards below -->
+              <div class="habits-area">
+                <div class="habit-card-placeholder">
+                  <span class="habit-emoji">🧘</span>
+                  <div class="habit-info">
+                    <div class="habit-name">Meditate</div>
+                    <div class="habit-sub">10 min · Morning</div>
+                  </div>
+                  <div class="habit-check done">
+                    <svg width="14" height="14" viewBox="0 0 12 12" fill="none">
+                      <path
+                        d="M2.5 6L5 8.5L9.5 3.5"
+                        stroke="white"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </div>
+                </div>
+                <div class="habit-card-placeholder">
+                  <span class="habit-emoji">📖</span>
+                  <div class="habit-info">
+                    <div class="habit-name">Read</div>
+                    <div class="habit-sub">20 pages · Evening</div>
+                  </div>
+                  <div class="habit-check done">
+                    <svg width="14" height="14" viewBox="0 0 12 12" fill="none">
+                      <path
+                        d="M2.5 6L5 8.5L9.5 3.5"
+                        stroke="white"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </div>
+                </div>
+                <div class="habit-card-placeholder">
+                  <span class="habit-emoji">💪</span>
+                  <div class="habit-info">
+                    <div class="habit-name">Exercise</div>
+                    <div class="habit-sub">30 min · Anytime</div>
+                  </div>
+                  <div class="habit-check"></div>
+                </div>
+                <div class="habit-card-placeholder">
+                  <span class="habit-emoji">💧</span>
+                  <div class="habit-info">
+                    <div class="habit-name">Drink Water</div>
+                    <div class="habit-sub">8 glasses · All day</div>
+                  </div>
+                  <div class="habit-check"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dark Mode -->
+        <div class="phone-wrapper">
+          <span class="phone-label">Dark Mode</span>
+          <div class="phone dark">
+            <div class="phone-content">
+              <div class="shelf">
+                <!-- Header -->
+                <div class="header-row">
+                  <div class="greeting">5-day streak</div>
+                  <div class="progress-right">
+                    <div class="progress-count">4 <span>of 6</span></div>
+                    <div class="progress-dots">
+                      <div class="dot filled"></div>
+                      <div class="dot filled"></div>
+                      <div class="dot filled"></div>
+                      <div class="dot filled"></div>
+                      <div class="dot"></div>
+                      <div class="dot"></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="date-row">
+                  <div class="date-chip">
+                    <i
+                      data-lucide="calendar-days"
+                      style="width: 14px; height: 14px; color: var(--ter)"
+                    ></i>
+                    <span class="date-text">Wed, March 5</span>
+                    <i
+                      data-lucide="chevron-down"
+                      style="width: 11px; height: 11px; color: var(--ter)"
+                    ></i>
+                  </div>
+                  <div class="streak-pill">🔥 5 days</div>
+                </div>
+
+                <!-- Day Strip (same structure, dark themed) -->
+                <div class="day-strip">
+                  <div class="chain-track">
+                    <div
+                      class="chain-segment active"
+                      style="left: calc(22px); width: calc(14.28% - 2px)"
+                    ></div>
+                    <div
+                      class="chain-segment active"
+                      style="
+                        left: calc(14.28% + 20px);
+                        width: calc(14.28% - 2px);
+                      "
+                    ></div>
+                  </div>
+
+                  <div class="day-cell">
+                    <span class="weekday-label">Mon</span>
+                    <div class="ring-container">
+                      <svg class="ring-svg" viewBox="0 0 46 46">
+                        <circle class="ring-track" cx="23" cy="23" r="21" />
+                        <circle
+                          class="ring-fill green"
+                          cx="23"
+                          cy="23"
+                          r="21"
+                          stroke-dasharray="131.95"
+                          stroke-dashoffset="0"
+                        />
+                      </svg>
+                      <div class="day-circle complete">
+                        <span class="day-number">3</span>
+                        <div class="check-badge">
+                          <svg viewBox="0 0 12 12" fill="none">
+                            <path
+                              d="M2.5 6L5 8.5L9.5 3.5"
+                              stroke="white"
+                              stroke-width="2"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                            />
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="completion-indicator"></div>
+                  </div>
+
+                  <div class="day-cell">
+                    <span class="weekday-label">Tue</span>
+                    <div class="ring-container">
+                      <svg class="ring-svg" viewBox="0 0 46 46">
+                        <circle class="ring-track" cx="23" cy="23" r="21" />
+                        <circle
+                          class="ring-fill green"
+                          cx="23"
+                          cy="23"
+                          r="21"
+                          stroke-dasharray="131.95"
+                          stroke-dashoffset="0"
+                        />
+                      </svg>
+                      <div class="day-circle complete">
+                        <span class="day-number">4</span>
+                        <div class="check-badge">
+                          <svg viewBox="0 0 12 12" fill="none">
+                            <path
+                              d="M2.5 6L5 8.5L9.5 3.5"
+                              stroke="white"
+                              stroke-width="2"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                            />
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="completion-indicator"></div>
+                  </div>
+
+                  <div class="day-cell">
+                    <span class="weekday-label today">Wed</span>
+                    <div class="ring-container">
+                      <svg class="ring-svg" viewBox="0 0 46 46">
+                        <circle class="ring-track" cx="23" cy="23" r="21" />
+                        <circle
+                          class="ring-fill amber"
+                          cx="23"
+                          cy="23"
+                          r="21"
+                          stroke-dasharray="131.95"
+                          stroke-dashoffset="44"
+                        />
+                      </svg>
+                      <div class="day-circle today">
+                        <span class="day-number">5</span>
+                      </div>
+                    </div>
+                    <div class="completion-indicator">
+                      <div class="comp-dot today-incomplete"></div>
+                    </div>
+                  </div>
+
+                  <div class="day-cell">
+                    <span class="weekday-label">Thu</span>
+                    <div class="ring-container">
+                      <svg class="ring-svg" viewBox="0 0 46 46">
+                        <circle class="ring-track" cx="23" cy="23" r="21" />
+                      </svg>
+                      <div class="day-circle future">
+                        <span class="day-number">6</span>
+                      </div>
+                    </div>
+                    <div class="completion-indicator"></div>
+                  </div>
+
+                  <div class="day-cell">
+                    <span class="weekday-label">Fri</span>
+                    <div class="ring-container">
+                      <svg class="ring-svg" viewBox="0 0 46 46">
+                        <circle class="ring-track" cx="23" cy="23" r="21" />
+                      </svg>
+                      <div class="day-circle future">
+                        <span class="day-number">7</span>
+                      </div>
+                    </div>
+                    <div class="completion-indicator"></div>
+                  </div>
+
+                  <div class="day-cell">
+                    <span class="weekday-label">Sat</span>
+                    <div class="ring-container">
+                      <svg class="ring-svg" viewBox="0 0 46 46">
+                        <circle class="ring-track" cx="23" cy="23" r="21" />
+                      </svg>
+                      <div class="day-circle future">
+                        <span class="day-number">8</span>
+                      </div>
+                    </div>
+                    <div class="completion-indicator"></div>
+                  </div>
+
+                  <div class="day-cell">
+                    <span class="weekday-label">Sun</span>
+                    <div class="ring-container">
+                      <svg class="ring-svg" viewBox="0 0 46 46">
+                        <circle class="ring-track" cx="23" cy="23" r="21" />
+                      </svg>
+                      <div class="day-circle future">
+                        <span class="day-number">9</span>
+                      </div>
+                    </div>
+                    <div class="completion-indicator"></div>
+                  </div>
+                </div>
+
+                <div class="progress-bar-container">
+                  <div class="progress-track">
+                    <div class="progress-fill" style="width: 67%"></div>
+                  </div>
+                  <span class="progress-label">67%</span>
+                </div>
+              </div>
+
+              <div class="habits-area">
+                <div class="habit-card-placeholder">
+                  <span class="habit-emoji">🧘</span>
+                  <div class="habit-info">
+                    <div class="habit-name">Meditate</div>
+                    <div class="habit-sub">10 min · Morning</div>
+                  </div>
+                  <div class="habit-check done">
+                    <svg width="14" height="14" viewBox="0 0 12 12" fill="none">
+                      <path
+                        d="M2.5 6L5 8.5L9.5 3.5"
+                        stroke="white"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </div>
+                </div>
+                <div class="habit-card-placeholder">
+                  <span class="habit-emoji">📖</span>
+                  <div class="habit-info">
+                    <div class="habit-name">Read</div>
+                    <div class="habit-sub">20 pages · Evening</div>
+                  </div>
+                  <div class="habit-check done">
+                    <svg width="14" height="14" viewBox="0 0 12 12" fill="none">
+                      <path
+                        d="M2.5 6L5 8.5L9.5 3.5"
+                        stroke="white"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </div>
+                </div>
+                <div class="habit-card-placeholder">
+                  <span class="habit-emoji">💪</span>
+                  <div class="habit-info">
+                    <div class="habit-name">Exercise</div>
+                    <div class="habit-sub">30 min · Anytime</div>
+                  </div>
+                  <div class="habit-check"></div>
+                </div>
+                <div class="habit-card-placeholder">
+                  <span class="habit-emoji">💧</span>
+                  <div class="habit-info">
+                    <div class="habit-name">Drink Water</div>
+                    <div class="habit-sub">8 glasses · All day</div>
+                  </div>
+                  <div class="habit-check"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════ STATE 2: Perfect Day (Celebration) ═══════════ -->
+    <div>
+      <div class="section-title">
+        Perfect Day — All Complete<span
+          >6 of 6 habits done · celebration state</span
+        >
+      </div>
+      <div class="phone-row">
+        <!-- Light Perfect -->
+        <div class="phone-wrapper">
+          <span class="phone-label">Light — Celebration</span>
+          <div class="phone">
+            <div class="phone-content">
+              <div class="shelf perfect">
+                <div
+                  class="sparkle"
+                  style="top: 12px; right: 60px; animation-delay: 0s"
+                ></div>
+                <div
+                  class="sparkle"
+                  style="top: 30px; right: 120px; animation-delay: 0.5s"
+                ></div>
+                <div
+                  class="sparkle"
+                  style="top: 8px; right: 180px; animation-delay: 1s"
+                ></div>
+                <div class="header-row">
+                  <div class="greeting perfect">
+                    <span class="shimmer-text">Perfect day ✨</span>
+                  </div>
+                  <div class="progress-right">
+                    <div class="progress-count" style="color: var(--green-600)">
+                      6 <span style="color: var(--green-400)">of 6</span>
+                    </div>
+                    <div class="progress-dots">
+                      <div class="dot filled"></div>
+                      <div class="dot filled"></div>
+                      <div class="dot filled"></div>
+                      <div class="dot filled"></div>
+                      <div class="dot filled"></div>
+                      <div class="dot filled"></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="date-row">
+                  <div class="date-chip">
+                    <i
+                      data-lucide="calendar-days"
+                      style="width: 14px; height: 14px; color: var(--ter)"
+                    ></i>
+                    <span class="date-text">Wed, March 5</span>
+                    <i
+                      data-lucide="chevron-down"
+                      style="width: 11px; height: 11px; color: var(--ter)"
+                    ></i>
+                  </div>
+                  <div class="streak-pill">🔥 6 days</div>
+                </div>
+
+                <div class="day-strip">
+                  <div class="chain-track">
+                    <div
+                      class="chain-segment active"
+                      style="left: 22px; width: calc(14.28% - 2px)"
+                    ></div>
+                    <div
+                      class="chain-segment active"
+                      style="
+                        left: calc(14.28% + 20px);
+                        width: calc(14.28% - 2px);
+                      "
+                    ></div>
+                    <div
+                      class="chain-segment active"
+                      style="
+                        left: calc(28.56% + 18px);
+                        width: calc(14.28% - 2px);
+                      "
+                    ></div>
+                  </div>
+
+                  <!-- Mon complete -->
+                  <div class="day-cell">
+                    <span class="weekday-label">Mon</span>
+                    <div class="ring-container">
+                      <svg class="ring-svg" viewBox="0 0 46 46">
+                        <circle class="ring-track" cx="23" cy="23" r="21" />
+                        <circle
+                          class="ring-fill green"
+                          cx="23"
+                          cy="23"
+                          r="21"
+                          stroke-dasharray="131.95"
+                          stroke-dashoffset="0"
+                        />
+                      </svg>
+                      <div class="day-circle complete">
+                        <span class="day-number">3</span>
+                        <div class="check-badge">
+                          <svg viewBox="0 0 12 12" fill="none">
+                            <path
+                              d="M2.5 6L5 8.5L9.5 3.5"
+                              stroke="white"
+                              stroke-width="2"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                            />
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="completion-indicator"></div>
+                  </div>
+                  <!-- Tue complete -->
+                  <div class="day-cell">
+                    <span class="weekday-label">Tue</span>
+                    <div class="ring-container">
+                      <svg class="ring-svg" viewBox="0 0 46 46">
+                        <circle class="ring-track" cx="23" cy="23" r="21" />
+                        <circle
+                          class="ring-fill green"
+                          cx="23"
+                          cy="23"
+                          r="21"
+                          stroke-dasharray="131.95"
+                          stroke-dashoffset="0"
+                        />
+                      </svg>
+                      <div class="day-circle complete">
+                        <span class="day-number">4</span>
+                        <div class="check-badge">
+                          <svg viewBox="0 0 12 12" fill="none">
+                            <path
+                              d="M2.5 6L5 8.5L9.5 3.5"
+                              stroke="white"
+                              stroke-width="2"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                            />
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="completion-indicator"></div>
+                  </div>
+                  <!-- Wed TODAY complete -->
+                  <div class="day-cell">
+                    <span class="weekday-label today">Wed</span>
+                    <div class="ring-container">
+                      <svg class="ring-svg" viewBox="0 0 46 46">
+                        <circle class="ring-track" cx="23" cy="23" r="21" />
+                        <circle
+                          class="ring-fill green"
+                          cx="23"
+                          cy="23"
+                          r="21"
+                          stroke-dasharray="131.95"
+                          stroke-dashoffset="0"
+                        />
+                      </svg>
+                      <div class="day-circle today complete">
+                        <span class="day-number">5</span>
+                        <div class="check-badge">
+                          <svg viewBox="0 0 12 12" fill="none">
+                            <path
+                              d="M2.5 6L5 8.5L9.5 3.5"
+                              stroke="white"
+                              stroke-width="2"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                            />
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="completion-indicator"></div>
+                  </div>
+                  <!-- Thu future -->
+                  <div class="day-cell">
+                    <span class="weekday-label">Thu</span>
+                    <div class="ring-container">
+                      <svg class="ring-svg" viewBox="0 0 46 46">
+                        <circle class="ring-track" cx="23" cy="23" r="21" />
+                      </svg>
+                      <div class="day-circle future">
+                        <span class="day-number">6</span>
+                      </div>
+                    </div>
+                    <div class="completion-indicator"></div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="weekday-label">Fri</span>
+                    <div class="ring-container">
+                      <svg class="ring-svg" viewBox="0 0 46 46">
+                        <circle class="ring-track" cx="23" cy="23" r="21" />
+                      </svg>
+                      <div class="day-circle future">
+                        <span class="day-number">7</span>
+                      </div>
+                    </div>
+                    <div class="completion-indicator"></div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="weekday-label">Sat</span>
+                    <div class="ring-container">
+                      <svg class="ring-svg" viewBox="0 0 46 46">
+                        <circle class="ring-track" cx="23" cy="23" r="21" />
+                      </svg>
+                      <div class="day-circle future">
+                        <span class="day-number">8</span>
+                      </div>
+                    </div>
+                    <div class="completion-indicator"></div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="weekday-label">Sun</span>
+                    <div class="ring-container">
+                      <svg class="ring-svg" viewBox="0 0 46 46">
+                        <circle class="ring-track" cx="23" cy="23" r="21" />
+                      </svg>
+                      <div class="day-circle future">
+                        <span class="day-number">9</span>
+                      </div>
+                    </div>
+                    <div class="completion-indicator"></div>
+                  </div>
+                </div>
+
+                <div class="progress-bar-container">
+                  <div class="progress-track">
+                    <div
+                      class="progress-fill celebration"
+                      style="width: 100%"
+                    ></div>
+                  </div>
+                  <span class="progress-label" style="color: var(--green-600)"
+                    >100%</span
+                  >
+                </div>
+              </div>
+
+              <div class="habits-area">
+                <div class="habit-card-placeholder">
+                  <span class="habit-emoji">🧘</span>
+                  <div class="habit-info">
+                    <div class="habit-name">Meditate</div>
+                    <div class="habit-sub">10 min · Morning</div>
+                  </div>
+                  <div class="habit-check done">
+                    <svg width="14" height="14" viewBox="0 0 12 12" fill="none">
+                      <path
+                        d="M2.5 6L5 8.5L9.5 3.5"
+                        stroke="white"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </div>
+                </div>
+                <div class="habit-card-placeholder">
+                  <span class="habit-emoji">📖</span>
+                  <div class="habit-info">
+                    <div class="habit-name">Read</div>
+                    <div class="habit-sub">20 pages · Evening</div>
+                  </div>
+                  <div class="habit-check done">
+                    <svg width="14" height="14" viewBox="0 0 12 12" fill="none">
+                      <path
+                        d="M2.5 6L5 8.5L9.5 3.5"
+                        stroke="white"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </div>
+                </div>
+                <div class="habit-card-placeholder">
+                  <span class="habit-emoji">💪</span>
+                  <div class="habit-info">
+                    <div class="habit-name">Exercise</div>
+                    <div class="habit-sub">30 min · Anytime</div>
+                  </div>
+                  <div class="habit-check done">
+                    <svg width="14" height="14" viewBox="0 0 12 12" fill="none">
+                      <path
+                        d="M2.5 6L5 8.5L9.5 3.5"
+                        stroke="white"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </div>
+                </div>
+                <div class="habit-card-placeholder">
+                  <span class="habit-emoji">💧</span>
+                  <div class="habit-info">
+                    <div class="habit-name">Drink Water</div>
+                    <div class="habit-sub">8 glasses · All day</div>
+                  </div>
+                  <div class="habit-check done">
+                    <svg width="14" height="14" viewBox="0 0 12 12" fill="none">
+                      <path
+                        d="M2.5 6L5 8.5L9.5 3.5"
+                        stroke="white"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dark Perfect -->
+        <div class="phone-wrapper">
+          <span class="phone-label">Dark — Celebration</span>
+          <div class="phone dark">
+            <div class="phone-content">
+              <div class="shelf perfect">
+                <div
+                  class="sparkle"
+                  style="top: 12px; right: 60px; animation-delay: 0s"
+                ></div>
+                <div
+                  class="sparkle"
+                  style="top: 30px; right: 120px; animation-delay: 0.5s"
+                ></div>
+                <div
+                  class="sparkle"
+                  style="top: 8px; right: 180px; animation-delay: 1s"
+                ></div>
+                <div class="header-row">
+                  <div class="greeting perfect">
+                    <span class="shimmer-text">Perfect day ✨</span>
+                  </div>
+                  <div class="progress-right">
+                    <div class="progress-count" style="color: var(--green-400)">
+                      6 <span style="color: var(--green-300)">of 6</span>
+                    </div>
+                    <div class="progress-dots">
+                      <div class="dot filled"></div>
+                      <div class="dot filled"></div>
+                      <div class="dot filled"></div>
+                      <div class="dot filled"></div>
+                      <div class="dot filled"></div>
+                      <div class="dot filled"></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="date-row">
+                  <div class="date-chip">
+                    <i
+                      data-lucide="calendar-days"
+                      style="width: 14px; height: 14px; color: var(--ter)"
+                    ></i>
+                    <span class="date-text">Wed, March 5</span>
+                    <i
+                      data-lucide="chevron-down"
+                      style="width: 11px; height: 11px; color: var(--ter)"
+                    ></i>
+                  </div>
+                  <div class="streak-pill">🔥 6 days</div>
+                </div>
+
+                <div class="day-strip">
+                  <div class="chain-track">
+                    <div
+                      class="chain-segment active"
+                      style="left: 22px; width: calc(14.28% - 2px)"
+                    ></div>
+                    <div
+                      class="chain-segment active"
+                      style="
+                        left: calc(14.28% + 20px);
+                        width: calc(14.28% - 2px);
+                      "
+                    ></div>
+                    <div
+                      class="chain-segment active"
+                      style="
+                        left: calc(28.56% + 18px);
+                        width: calc(14.28% - 2px);
+                      "
+                    ></div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="weekday-label">Mon</span>
+                    <div class="ring-container">
+                      <svg class="ring-svg" viewBox="0 0 46 46">
+                        <circle class="ring-track" cx="23" cy="23" r="21" />
+                        <circle
+                          class="ring-fill green"
+                          cx="23"
+                          cy="23"
+                          r="21"
+                          stroke-dasharray="131.95"
+                          stroke-dashoffset="0"
+                        />
+                      </svg>
+                      <div class="day-circle complete">
+                        <span class="day-number">3</span>
+                        <div class="check-badge">
+                          <svg viewBox="0 0 12 12" fill="none">
+                            <path
+                              d="M2.5 6L5 8.5L9.5 3.5"
+                              stroke="white"
+                              stroke-width="2"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                            />
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="completion-indicator"></div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="weekday-label">Tue</span>
+                    <div class="ring-container">
+                      <svg class="ring-svg" viewBox="0 0 46 46">
+                        <circle class="ring-track" cx="23" cy="23" r="21" />
+                        <circle
+                          class="ring-fill green"
+                          cx="23"
+                          cy="23"
+                          r="21"
+                          stroke-dasharray="131.95"
+                          stroke-dashoffset="0"
+                        />
+                      </svg>
+                      <div class="day-circle complete">
+                        <span class="day-number">4</span>
+                        <div class="check-badge">
+                          <svg viewBox="0 0 12 12" fill="none">
+                            <path
+                              d="M2.5 6L5 8.5L9.5 3.5"
+                              stroke="white"
+                              stroke-width="2"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                            />
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="completion-indicator"></div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="weekday-label today">Wed</span>
+                    <div class="ring-container">
+                      <svg class="ring-svg" viewBox="0 0 46 46">
+                        <circle class="ring-track" cx="23" cy="23" r="21" />
+                        <circle
+                          class="ring-fill green"
+                          cx="23"
+                          cy="23"
+                          r="21"
+                          stroke-dasharray="131.95"
+                          stroke-dashoffset="0"
+                        />
+                      </svg>
+                      <div class="day-circle today complete">
+                        <span class="day-number">5</span>
+                        <div class="check-badge">
+                          <svg viewBox="0 0 12 12" fill="none">
+                            <path
+                              d="M2.5 6L5 8.5L9.5 3.5"
+                              stroke="white"
+                              stroke-width="2"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                            />
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="completion-indicator"></div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="weekday-label">Thu</span>
+                    <div class="ring-container">
+                      <svg class="ring-svg" viewBox="0 0 46 46">
+                        <circle class="ring-track" cx="23" cy="23" r="21" />
+                      </svg>
+                      <div class="day-circle future">
+                        <span class="day-number">6</span>
+                      </div>
+                    </div>
+                    <div class="completion-indicator"></div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="weekday-label">Fri</span>
+                    <div class="ring-container">
+                      <svg class="ring-svg" viewBox="0 0 46 46">
+                        <circle class="ring-track" cx="23" cy="23" r="21" />
+                      </svg>
+                      <div class="day-circle future">
+                        <span class="day-number">7</span>
+                      </div>
+                    </div>
+                    <div class="completion-indicator"></div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="weekday-label">Sat</span>
+                    <div class="ring-container">
+                      <svg class="ring-svg" viewBox="0 0 46 46">
+                        <circle class="ring-track" cx="23" cy="23" r="21" />
+                      </svg>
+                      <div class="day-circle future">
+                        <span class="day-number">8</span>
+                      </div>
+                    </div>
+                    <div class="completion-indicator"></div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="weekday-label">Sun</span>
+                    <div class="ring-container">
+                      <svg class="ring-svg" viewBox="0 0 46 46">
+                        <circle class="ring-track" cx="23" cy="23" r="21" />
+                      </svg>
+                      <div class="day-circle future">
+                        <span class="day-number">9</span>
+                      </div>
+                    </div>
+                    <div class="completion-indicator"></div>
+                  </div>
+                </div>
+
+                <div class="progress-bar-container">
+                  <div class="progress-track">
+                    <div
+                      class="progress-fill celebration"
+                      style="width: 100%"
+                    ></div>
+                  </div>
+                  <span class="progress-label" style="color: var(--green-400)"
+                    >100%</span
+                  >
+                </div>
+              </div>
+
+              <div class="habits-area">
+                <div class="habit-card-placeholder">
+                  <span class="habit-emoji">🧘</span>
+                  <div class="habit-info">
+                    <div class="habit-name">Meditate</div>
+                    <div class="habit-sub">10 min · Morning</div>
+                  </div>
+                  <div class="habit-check done">
+                    <svg width="14" height="14" viewBox="0 0 12 12" fill="none">
+                      <path
+                        d="M2.5 6L5 8.5L9.5 3.5"
+                        stroke="white"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </div>
+                </div>
+                <div class="habit-card-placeholder">
+                  <span class="habit-emoji">📖</span>
+                  <div class="habit-info">
+                    <div class="habit-name">Read</div>
+                    <div class="habit-sub">20 pages · Evening</div>
+                  </div>
+                  <div class="habit-check done">
+                    <svg width="14" height="14" viewBox="0 0 12 12" fill="none">
+                      <path
+                        d="M2.5 6L5 8.5L9.5 3.5"
+                        stroke="white"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </div>
+                </div>
+                <div class="habit-card-placeholder">
+                  <span class="habit-emoji">💪</span>
+                  <div class="habit-info">
+                    <div class="habit-name">Exercise</div>
+                    <div class="habit-sub">30 min · Anytime</div>
+                  </div>
+                  <div class="habit-check done">
+                    <svg width="14" height="14" viewBox="0 0 12 12" fill="none">
+                      <path
+                        d="M2.5 6L5 8.5L9.5 3.5"
+                        stroke="white"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </div>
+                </div>
+                <div class="habit-card-placeholder">
+                  <span class="habit-emoji">💧</span>
+                  <div class="habit-info">
+                    <div class="habit-name">Drink Water</div>
+                    <div class="habit-sub">8 glasses · All day</div>
+                  </div>
+                  <div class="habit-check done">
+                    <svg width="14" height="14" viewBox="0 0 12 12" fill="none">
+                      <path
+                        d="M2.5 6L5 8.5L9.5 3.5"
+                        stroke="white"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════ Feature Callouts ═══════════ -->
+    <div class="callout-grid">
+      <div class="callout">
+        <div class="callout-title">Ring Progress</div>
+        <div class="callout-desc">
+          SVG ring around each day cell shows partial completion (e.g. 4/6
+          habits). Green when complete, amber for today's in-progress.
+        </div>
+      </div>
+      <div class="callout">
+        <div class="callout-title">Chain Connectors</div>
+        <div class="callout-desc">
+          Gradient bars (4px, rounded) connect consecutive complete days.
+          Creates a visual "chain" that you don't want to break.
+        </div>
+      </div>
+      <div class="callout">
+        <div class="callout-title">Celebration State</div>
+        <div class="callout-desc">
+          Perfect day triggers shimmer text, sparkle particles, gradient
+          progress bar animation. Visceral reward for completing all habits.
+        </div>
+      </div>
+      <div class="callout">
+        <div class="callout-title">Thicker Progress Bar</div>
+        <div class="callout-desc">
+          6px bar (was 3px) with percentage label. Gradient fill with highlight
+          edge. Actually visible at a glance.
+        </div>
+      </div>
+      <div class="callout">
+        <div class="callout-title">Future Day Treatment</div>
+        <div class="callout-desc">
+          Dashed border instead of opacity:0.5. Feels inviting and "ready to be
+          filled" rather than dead/disabled.
+        </div>
+      </div>
+      <div class="callout">
+        <div class="callout-title">Today Emphasis</div>
+        <div class="callout-desc">
+          Amber pulsing shadow, ring showing today's progress percentage. The
+          day that matters most gets the strongest visual weight.
+        </div>
+      </div>
+    </div>
+
+    <script>
+      lucide.createIcons();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,840 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=414, initial-scale=1.0, maximum-scale=1.0"
+    />
+    <title>Templates Screen — MainBrowseView (Post-Chip Removal)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <style>
+      /* ── Reset ──────────────────────────────────────── */
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      /* ── Design Tokens (from codebase) ─────────────── */
+      :root {
+        --bg: #f5f1ed;
+        --card: #edeae5;
+        --surface-muted: #faf8f5;
+        --border: #ddd8d2;
+        --text-primary: #2d2a26;
+        --text-secondary: #6b6560;
+        --text-tertiary: #6e6660;
+        --primary-100: #d1fae5;
+        --primary-400: #34d399;
+        --primary-500: #10b981;
+        --primary-600: #059669;
+        --primary-700: #047857;
+        --streak-600: #936a08;
+        --white: #ffffff;
+        --radius-sm: 8px;
+        --radius-md: 12px;
+        --radius-lg: 16px;
+        --radius-xl: 24px;
+        --shadow-card: 0 2px 8px rgba(45, 42, 38, 0.06);
+        --shadow-fab: 0 4px 16px rgba(45, 42, 38, 0.08);
+        --font: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      }
+
+      html {
+        font-size: 16px;
+      }
+      body {
+        font-family: var(--font) !important;
+        background: #2d2a26 !important;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        min-height: 100vh;
+        padding: 24px 0;
+      }
+
+      /* ── Phone Frame ───────────────────────────────── */
+      .phone-frame {
+        width: 393px;
+        min-height: 852px;
+        background: var(--bg);
+        border-radius: 40px;
+        overflow: hidden;
+        box-shadow:
+          0 0 0 4px #1a1816,
+          0 20px 60px rgba(0, 0, 0, 0.35);
+        position: relative;
+      }
+      .status-bar {
+        height: 54px;
+        padding: 14px 24px 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text-primary);
+      }
+      .status-bar-icons {
+        display: flex;
+        gap: 6px;
+        align-items: center;
+      }
+
+      /* ── Screen Content ────────────────────────────── */
+      .screen-content {
+        height: calc(852px - 54px);
+        overflow-y: auto;
+        overflow-x: hidden;
+        scrollbar-width: none;
+      }
+      .screen-content::-webkit-scrollbar {
+        display: none;
+      }
+
+      /* ── Screen Header ─────────────────────────────── */
+      .screen-header {
+        padding: 8px 16px 12px;
+      }
+      .screen-header h1 {
+        font-size: 28px !important;
+        font-weight: 800 !important;
+        color: var(--text-primary) !important;
+        letter-spacing: -0.5px;
+        line-height: 1.15;
+      }
+      .screen-header p {
+        font-size: 14px !important;
+        color: var(--text-secondary) !important;
+        margin-top: 2px;
+      }
+
+      /* ── Search Bar ────────────────────────────────── */
+      .search-section {
+        padding: 0 16px;
+        margin-bottom: 8px;
+      }
+      .search-bar {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        padding: 10px 14px;
+      }
+      .search-bar input {
+        flex: 1;
+        border: none;
+        outline: none;
+        background: transparent;
+        font-family: var(--font);
+        font-size: 15px;
+        color: var(--text-primary);
+      }
+      .search-bar input::placeholder {
+        color: var(--text-tertiary);
+      }
+      .search-icon {
+        color: var(--text-tertiary);
+      }
+
+      /* ── Featured Collection Hero ──────────────────── */
+      .featured-hero {
+        margin: 12px 16px 0;
+        border-radius: var(--radius-lg);
+        background: linear-gradient(135deg, #065f46, #059669, #34d399);
+        padding: 24px;
+        position: relative;
+        overflow: hidden;
+        box-shadow: var(--shadow-fab);
+        cursor: pointer;
+        transition: transform 0.15s ease;
+      }
+      .featured-hero:active {
+        transform: scale(0.98);
+      }
+      .featured-hero .circle-1 {
+        position: absolute;
+        right: -40px;
+        top: -40px;
+        width: 180px;
+        height: 180px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.08);
+      }
+      .featured-hero .circle-2 {
+        position: absolute;
+        left: -30px;
+        bottom: -60px;
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.05);
+      }
+      .featured-badge {
+        display: inline-block;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 999px;
+        padding: 4px 10px;
+        font-size: 11px;
+        font-weight: 700;
+        color: white;
+        letter-spacing: 0.5px;
+      }
+      .featured-title {
+        color: white !important;
+        font-size: 24px !important;
+        font-weight: 800 !important;
+        letter-spacing: -0.5px;
+        margin-top: 12px;
+      }
+      .featured-desc {
+        color: rgba(255, 255, 255, 0.85);
+        font-size: 14px;
+        margin-top: 4px;
+      }
+      .featured-chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 16px;
+      }
+      .featured-chip {
+        background: rgba(255, 255, 255, 0.18);
+        border-radius: 999px;
+        padding: 5px 12px;
+        font-size: 13px;
+        color: white;
+      }
+      .featured-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 16px;
+      }
+      .featured-users {
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 13px;
+      }
+      .featured-cta {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(255, 255, 255, 0.25);
+        border-radius: 12px;
+        padding: 8px 16px;
+        font-size: 14px;
+        font-weight: 700;
+        color: white;
+      }
+
+      /* ── Trending Section ──────────────────────────── */
+      .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 16px;
+        margin-top: 24px;
+      }
+      .section-title {
+        font-size: 18px !important;
+        font-weight: 700 !important;
+        color: var(--text-primary) !important;
+      }
+      .see-all {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--primary-600);
+        cursor: pointer;
+      }
+      .trending-scroll {
+        display: flex;
+        gap: 12px;
+        padding: 12px 16px 4px;
+        overflow-x: auto;
+        scrollbar-width: none;
+      }
+      .trending-scroll::-webkit-scrollbar {
+        display: none;
+      }
+
+      .trending-card {
+        min-width: 150px;
+        max-width: 150px;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        padding: 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        cursor: pointer;
+        transition: transform 0.12s ease;
+      }
+      .trending-card:active {
+        transform: scale(0.97);
+      }
+      .trending-icon-box {
+        width: 42px;
+        height: 42px;
+        border-radius: var(--radius-sm);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+      }
+      .trending-name {
+        font-size: 14px !important;
+        font-weight: 600 !important;
+        color: var(--text-primary) !important;
+        line-height: 1.3;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+      .trending-freq {
+        font-size: 12px;
+        color: var(--text-tertiary);
+      }
+      .trending-meta {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .science-badge {
+        font-size: 11px;
+        background: var(--primary-100);
+        color: var(--primary-700);
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-weight: 600;
+      }
+      .trending-bottom {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: auto;
+        padding-top: 4px;
+      }
+      .trending-pop {
+        display: flex;
+        align-items: center;
+        gap: 3px;
+        font-size: 11px;
+        color: var(--primary-600);
+        font-weight: 600;
+      }
+      .add-btn {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: var(--primary-600);
+        color: white;
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: transform 0.1s ease;
+        line-height: 1;
+      }
+      .add-btn:active {
+        transform: scale(0.9);
+      }
+
+      /* ── Curated Packs ─────────────────────────────── */
+      .packs-section {
+        margin-top: 24px;
+        padding: 0 16px;
+      }
+      .pack-card {
+        border-radius: var(--radius-lg);
+        padding: 20px;
+        margin-top: 10px;
+        position: relative;
+        overflow: hidden;
+        cursor: pointer;
+        transition: transform 0.12s ease;
+      }
+      .pack-card:active {
+        transform: scale(0.98);
+      }
+      .pack-emojis {
+        display: flex;
+        gap: 6px;
+        font-size: 20px;
+        margin-bottom: 8px;
+      }
+      .pack-name {
+        color: white !important;
+        font-size: 18px !important;
+        font-weight: 700 !important;
+      }
+      .pack-desc {
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 13px;
+        margin-top: 2px;
+      }
+      .pack-habit-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-top: 12px;
+      }
+      .pack-habit {
+        background: rgba(255, 255, 255, 0.18);
+        border-radius: 999px;
+        padding: 4px 10px;
+        font-size: 12px;
+        color: white;
+      }
+
+      /* ── Category Grid ─────────────────────────────── */
+      .category-grid {
+        margin-top: 24px;
+        padding: 0 16px 100px;
+      }
+      .category-grid-title {
+        font-size: 18px !important;
+        font-weight: 700 !important;
+        color: var(--text-primary) !important;
+        margin-bottom: 10px;
+      }
+      .grid-row {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 8px;
+      }
+      .category-tile {
+        flex: 1;
+        min-height: 120px;
+        border-radius: var(--radius-md);
+        padding: 12px;
+        display: flex;
+        flex-direction: column;
+        cursor: pointer;
+        transition: transform 0.12s ease;
+      }
+      .category-tile:active {
+        transform: scale(0.97);
+      }
+      .tile-icon {
+        font-size: 28px;
+      }
+      .tile-label {
+        font-size: 14px !important;
+        font-weight: 600 !important;
+        margin-top: 8px;
+      }
+      .tile-count {
+        font-size: 12px;
+        color: var(--text-tertiary);
+        margin-top: 2px;
+      }
+      .tile-preview {
+        display: flex;
+        gap: 4px;
+        margin-top: auto;
+        padding-top: 8px;
+        font-size: 14px;
+        opacity: 0.6;
+      }
+
+      /* ── Animations ─────────────────────────────────── */
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .animate-in {
+        animation: fadeInUp 0.45s ease-out both;
+      }
+      .delay-1 {
+        animation-delay: 0.08s;
+      }
+      .delay-2 {
+        animation-delay: 0.16s;
+      }
+      .delay-3 {
+        animation-delay: 0.24s;
+      }
+      .delay-4 {
+        animation-delay: 0.32s;
+      }
+
+      /* ── Label ──────────────────────────────────────── */
+      .design-label {
+        position: fixed;
+        bottom: 12px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(45, 42, 38, 0.85);
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 11px;
+        padding: 6px 14px;
+        border-radius: 999px;
+        font-family: var(--font);
+        backdrop-filter: blur(8px);
+        z-index: 100;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="phone-frame">
+      <!-- Status Bar -->
+      <div class="status-bar">
+        <span>9:41</span>
+        <div class="status-bar-icons">
+          <i data-lucide="signal" style="width: 14px; height: 14px"></i>
+          <i data-lucide="wifi" style="width: 14px; height: 14px"></i>
+          <i data-lucide="battery-full" style="width: 18px; height: 14px"></i>
+        </div>
+      </div>
+
+      <div class="screen-content">
+        <!-- Screen Header (leftAction=null → no back button) -->
+        <div class="screen-header animate-in">
+          <h1>Import Habits</h1>
+          <p>Science-backed templates to build great habits</p>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="search-section animate-in delay-1">
+          <div class="search-bar">
+            <i
+              data-lucide="search"
+              class="search-icon"
+              style="width: 18px; height: 18px"
+            ></i>
+            <input type="text" placeholder="Search for habits..." />
+          </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════
+         QuickFilterChips REMOVED — content flows
+         directly from SearchBar → FeaturedCollection
+         ═══════════════════════════════════════════════ -->
+
+        <!-- Featured Collection (stagger 0) -->
+        <div class="featured-hero animate-in delay-2">
+          <div class="circle-1"></div>
+          <div class="circle-2"></div>
+          <span class="featured-badge">⭐ FEATURED</span>
+          <div class="featured-title">Morning Mastery</div>
+          <div class="featured-desc">
+            Start your day with science-backed habits for energy and focus
+          </div>
+          <div class="featured-chips">
+            <span class="featured-chip">🌅 Wake Early</span>
+            <span class="featured-chip">💧 Hydrate</span>
+            <span class="featured-chip">🧘 Meditate</span>
+            <span class="featured-chip">📝 Journal</span>
+          </div>
+          <div class="featured-footer">
+            <span class="featured-users">12.4k users</span>
+            <div class="featured-cta">
+              Explore
+              <i
+                data-lucide="chevron-right"
+                style="width: 16px; height: 16px"
+              ></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- Trending Now (stagger 1) -->
+        <div class="animate-in delay-3">
+          <div class="section-header">
+            <span class="section-title">🔥 Trending Now</span>
+            <span class="see-all">See all</span>
+          </div>
+          <div class="trending-scroll">
+            <!-- Card 1 -->
+            <div class="trending-card">
+              <div class="trending-icon-box" style="background: #d1fae525">
+                🌅
+              </div>
+              <div class="trending-name">Morning Sunlight Viewing</div>
+              <div class="trending-meta">
+                <span class="trending-freq">Daily</span>
+                <span class="science-badge">🔬 Science</span>
+              </div>
+              <div class="trending-bottom">
+                <span class="trending-pop">
+                  <i
+                    data-lucide="trending-up"
+                    style="width: 12px; height: 12px"
+                  ></i>
+                  8.2k
+                </span>
+                <button class="add-btn">+</button>
+              </div>
+            </div>
+            <!-- Card 2 -->
+            <div class="trending-card">
+              <div class="trending-icon-box" style="background: #e0e7ff">
+                🧠
+              </div>
+              <div class="trending-name">Gratitude Journaling</div>
+              <div class="trending-meta">
+                <span class="trending-freq">Daily</span>
+                <span class="science-badge">🔬 Science</span>
+              </div>
+              <div class="trending-bottom">
+                <span class="trending-pop">
+                  <i
+                    data-lucide="trending-up"
+                    style="width: 12px; height: 12px"
+                  ></i>
+                  6.1k
+                </span>
+                <button class="add-btn">+</button>
+              </div>
+            </div>
+            <!-- Card 3 -->
+            <div class="trending-card">
+              <div class="trending-icon-box" style="background: #d1fae5">
+                💪
+              </div>
+              <div class="trending-name">Zone 2 Cardio Training</div>
+              <div class="trending-meta">
+                <span class="trending-freq">Daily</span>
+              </div>
+              <div class="trending-bottom">
+                <span class="trending-pop">
+                  <i
+                    data-lucide="trending-up"
+                    style="width: 12px; height: 12px"
+                  ></i>
+                  5.4k
+                </span>
+                <button class="add-btn">+</button>
+              </div>
+            </div>
+            <!-- Card 4 -->
+            <div class="trending-card">
+              <div class="trending-icon-box" style="background: #e0f2fe">
+                🌬️
+              </div>
+              <div class="trending-name">Box Breathing</div>
+              <div class="trending-meta">
+                <span class="trending-freq">Daily</span>
+                <span class="science-badge">🔬 Science</span>
+              </div>
+              <div class="trending-bottom">
+                <span class="trending-pop">
+                  <i
+                    data-lucide="trending-up"
+                    style="width: 12px; height: 12px"
+                  ></i>
+                  4.8k
+                </span>
+                <button class="add-btn">+</button>
+              </div>
+            </div>
+            <!-- Card 5 -->
+            <div class="trending-card">
+              <div class="trending-icon-box" style="background: #e0e7ff">
+                😴
+              </div>
+              <div class="trending-name">Digital Detox Hour</div>
+              <div class="trending-meta">
+                <span class="trending-freq">Daily</span>
+              </div>
+              <div class="trending-bottom">
+                <span class="trending-pop">
+                  <i
+                    data-lucide="trending-up"
+                    style="width: 12px; height: 12px"
+                  ></i>
+                  3.9k
+                </span>
+                <button class="add-btn">+</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Curated Packs (stagger 2) -->
+        <div class="packs-section animate-in delay-4">
+          <span class="section-title">📦 Curated Packs</span>
+
+          <!-- Huberman Essentials -->
+          <div
+            class="pack-card"
+            style="background: linear-gradient(135deg, #7c3aed, #4f46e5)"
+          >
+            <div class="pack-emojis">🔬🧠💪🧬</div>
+            <div class="pack-name">Huberman Essentials</div>
+            <div class="pack-desc">
+              Science-backed protocols for peak performance
+            </div>
+            <div class="pack-habit-list">
+              <span class="pack-habit">🌅 Morning Sunlight</span>
+              <span class="pack-habit">🧊 Cold Exposure</span>
+              <span class="pack-habit">🧘 NSDR</span>
+              <span class="pack-habit">🥩 Protein Protocol</span>
+              <span class="pack-habit">🏋️ Zone 2 Cardio</span>
+            </div>
+          </div>
+
+          <!-- Morning Mastery -->
+          <div
+            class="pack-card"
+            style="background: linear-gradient(135deg, #059669, #047857)"
+          >
+            <div class="pack-emojis">🌅📝🧘💧</div>
+            <div class="pack-name">Morning Mastery</div>
+            <div class="pack-desc">Build an unshakeable morning foundation</div>
+            <div class="pack-habit-list">
+              <span class="pack-habit">🌅 Consistent Wake</span>
+              <span class="pack-habit">💧 Hydration First</span>
+              <span class="pack-habit">📝 Morning Pages</span>
+              <span class="pack-habit">🧘 5-Min Meditation</span>
+            </div>
+          </div>
+
+          <!-- Mindful Peak -->
+          <div
+            class="pack-card"
+            style="background: linear-gradient(135deg, #0891b2, #0e7490)"
+          >
+            <div class="pack-emojis">🧠📖🌬️😴</div>
+            <div class="pack-name">Mindful Peak</div>
+            <div class="pack-desc">Optimize your mind for clarity and calm</div>
+            <div class="pack-habit-list">
+              <span class="pack-habit">🌬️ Box Breathing</span>
+              <span class="pack-habit">📖 Daily Reading</span>
+              <span class="pack-habit">🧠 Gratitude Journal</span>
+              <span class="pack-habit">😴 Digital Detox</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Category Grid (stagger 3) -->
+        <div class="category-grid">
+          <div class="category-grid-title">🗂️ Browse by Category</div>
+
+          <div class="grid-row">
+            <div class="category-tile" style="background: #fef3c7">
+              <span class="tile-icon">🌅</span>
+              <span class="tile-label" style="color: #9a5504">Morning</span>
+              <span class="tile-count">8 templates</span>
+              <div class="tile-preview">🌅💧📝🧘</div>
+            </div>
+            <div class="category-tile" style="background: #e0e7ff">
+              <span class="tile-icon">🧠</span>
+              <span class="tile-label" style="color: #4f46e5"
+                >Mental Health</span
+              >
+              <span class="tile-count">6 templates</span>
+              <div class="tile-preview">🧠📝🎯🌿</div>
+            </div>
+          </div>
+
+          <div class="grid-row">
+            <div class="category-tile" style="background: #d1fae5">
+              <span class="tile-icon">💪</span>
+              <span class="tile-label" style="color: #047857">Health</span>
+              <span class="tile-count">10 templates</span>
+              <div class="tile-preview">💪🏋️🥩🏃</div>
+            </div>
+            <div class="category-tile" style="background: #e0e7ff">
+              <span class="tile-icon">😴</span>
+              <span class="tile-label" style="color: #1e40af">Sleep</span>
+              <span class="tile-count">5 templates</span>
+              <div class="tile-preview">😴🌙🛏️📵</div>
+            </div>
+          </div>
+
+          <div class="grid-row">
+            <div class="category-tile" style="background: #f5f3ff">
+              <span class="tile-icon">🧘</span>
+              <span class="tile-label" style="color: #7c3aed">Mindfulness</span>
+              <span class="tile-count">7 templates</span>
+              <div class="tile-preview">🧘🌬️🎵🌿</div>
+            </div>
+            <div class="category-tile" style="background: #f3e8ff">
+              <span class="tile-icon">📚</span>
+              <span class="tile-label" style="color: #7c3aed">Learning</span>
+              <span class="tile-count">5 templates</span>
+              <div class="tile-preview">📚✍️🎧💡</div>
+            </div>
+          </div>
+
+          <div class="grid-row">
+            <div class="category-tile" style="background: #ecfdf5">
+              <span class="tile-icon">💰</span>
+              <span class="tile-label" style="color: #059669">Financial</span>
+              <span class="tile-count">4 templates</span>
+              <div class="tile-preview">💰📊💳🏦</div>
+            </div>
+            <div class="category-tile" style="background: #dbeafe">
+              <span class="tile-icon">🎯</span>
+              <span class="tile-label" style="color: #2563eb"
+                >Productivity</span
+              >
+              <span class="tile-count">6 templates</span>
+              <div class="tile-preview">🎯⏰📋✅</div>
+            </div>
+          </div>
+
+          <div class="grid-row">
+            <div class="category-tile" style="background: #e0f2fe">
+              <span class="tile-icon">🌬️</span>
+              <span class="tile-label" style="color: #0369a1">Breathing</span>
+              <span class="tile-count">3 templates</span>
+              <div class="tile-preview">🌬️🫁💨</div>
+            </div>
+            <div class="category-tile" style="background: #ecfdf5">
+              <span class="tile-icon">🔬</span>
+              <span class="tile-label" style="color: #047857">Huberman</span>
+              <span class="tile-count">5 templates</span>
+              <div class="tile-preview">🔬🧠💪🧬</div>
+            </div>
+          </div>
+
+          <div class="grid-row">
+            <div class="category-tile" style="background: #fdf2f8">
+              <span class="tile-icon">🎨</span>
+              <span class="tile-label" style="color: #be185d">Creativity</span>
+              <span class="tile-count">4 templates</span>
+              <div class="tile-preview">🎨🎸📷✏️</div>
+            </div>
+            <div class="category-tile" style="background: #ffe4e6">
+              <span class="tile-icon">👥</span>
+              <span class="tile-label" style="color: #e11d48">Social</span>
+              <span class="tile-count">3 templates</span>
+              <div class="tile-preview">👥💬🤝📞</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="design-label">
+      Templates Screen — MainBrowseView (chips removed)
+    </div>
+
+    <script>
+      lucide.createIcons();
+    </script>
+  </body>
+</html>

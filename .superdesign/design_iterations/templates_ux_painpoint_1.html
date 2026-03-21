@@ -1,0 +1,1417 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Templates – Pain-Point Priority Redesign</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&family=Literata:wght@600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: 'Plus Jakarta Sans', sans-serif !important;
+        background: #0f0f0f !important;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        padding: 24px 16px;
+      }
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6,
+      p,
+      span,
+      div {
+        font-family: 'Plus Jakarta Sans', sans-serif !important;
+      }
+      .mono {
+        font-family: 'JetBrains Mono', monospace !important;
+      }
+      .serif {
+        font-family: 'Literata', serif !important;
+      }
+
+      /* Phone frame */
+      .phone-frame {
+        width: 393px;
+        min-height: 852px;
+        background: #faf8f5;
+        border-radius: 44px;
+        overflow: hidden;
+        box-shadow:
+          0 0 0 3px #2a2a2a,
+          0 0 0 6px #1a1a1a,
+          0 25px 80px rgba(0, 0, 0, 0.6);
+        position: relative;
+      }
+      .phone-content {
+        height: 852px;
+        overflow-y: auto;
+        scroll-behavior: smooth;
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+        padding-bottom: 90px;
+      }
+      .phone-content::-webkit-scrollbar {
+        display: none;
+      }
+
+      /* Dynamic island */
+      .dynamic-island {
+        width: 126px;
+        height: 36px;
+        background: #000;
+        border-radius: 20px;
+        position: sticky;
+        top: 8px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 50;
+        margin-bottom: -36px;
+      }
+
+      /* Annotation badges */
+      .ux-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        padding: 2px 7px;
+        border-radius: 4px;
+        text-transform: uppercase;
+        position: absolute;
+        right: 12px;
+        top: 8px;
+        z-index: 10;
+      }
+      .badge-p1 {
+        background: #fee2e2;
+        color: #991b1b;
+      }
+      .badge-p2 {
+        background: #fef3c7;
+        color: #92400e;
+      }
+      .badge-p3 {
+        background: #dbeafe;
+        color: #1e40af;
+      }
+      .badge-fogg {
+        background: #ecfdf5;
+        color: #065f46;
+      }
+
+      /* Chips */
+      .chip {
+        flex-shrink: 0;
+        padding: 8px 16px;
+        border-radius: 999px;
+        font-size: 13px;
+        font-weight: 600;
+        white-space: nowrap;
+        transition: all 0.2s ease;
+        cursor: pointer;
+        border: 1.5px solid transparent;
+      }
+      .chip-active {
+        background: #059669;
+        color: white;
+        border-color: #047857;
+        box-shadow: 0 2px 8px rgba(5, 150, 105, 0.3);
+      }
+      .chip-inactive {
+        background: #f0ece6;
+        color: #6b5e4f;
+        border-color: #e8e2d8;
+      }
+      .chip-inactive:hover {
+        background: #e8e2d8;
+      }
+
+      /* Trending card */
+      .trending-card {
+        flex-shrink: 0;
+        width: 165px;
+        background: #f8f5f0;
+        border-radius: 16px;
+        padding: 14px;
+        border: 1.5px solid #ede8df;
+        position: relative;
+        transition:
+          transform 0.2s ease,
+          box-shadow 0.2s ease;
+      }
+      .trending-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+      }
+
+      /* Add button */
+      .add-btn {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        background: #059669;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 8px rgba(5, 150, 105, 0.35);
+        cursor: pointer;
+        transition:
+          transform 0.15s ease,
+          box-shadow 0.15s ease;
+      }
+      .add-btn:hover {
+        transform: scale(1.1);
+        box-shadow: 0 4px 12px rgba(5, 150, 105, 0.45);
+      }
+      .add-btn.added {
+        background: #e8e2d8;
+        box-shadow: none;
+      }
+
+      /* Science badge */
+      .science-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 3px;
+        font-size: 10px;
+        font-weight: 600;
+        padding: 2px 6px;
+        border-radius: 6px;
+        background: #fef3c7;
+        color: #92400e;
+      }
+
+      /* Pack card */
+      .pack-card {
+        border-radius: 16px;
+        padding: 18px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        position: relative;
+        overflow: hidden;
+        cursor: pointer;
+        transition: transform 0.2s ease;
+      }
+      .pack-card:hover {
+        transform: translateY(-1px);
+      }
+
+      /* Category tile */
+      .cat-tile {
+        background: #f8f5f0;
+        border-radius: 16px;
+        padding: 16px;
+        border: 1.5px solid #ede8df;
+        min-height: 120px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        cursor: pointer;
+        transition:
+          transform 0.2s ease,
+          box-shadow 0.2s ease;
+      }
+      .cat-tile:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+      }
+
+      /* For You section */
+      .for-you-card {
+        background: #f8f5f0;
+        border-radius: 16px;
+        padding: 16px;
+        border: 1.5px solid #ede8df;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        cursor: pointer;
+        transition: transform 0.2s ease;
+      }
+      .for-you-card:hover {
+        transform: translateY(-1px);
+      }
+
+      /* Hero card */
+      .hero-card {
+        background: linear-gradient(
+          135deg,
+          #065f46 0%,
+          #059669 50%,
+          #34d399 100%
+        );
+        border-radius: 20px;
+        padding: 24px;
+        position: relative;
+        overflow: hidden;
+        cursor: pointer;
+      }
+      .hero-card::before {
+        content: '';
+        position: absolute;
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.08);
+        top: -60px;
+        right: -40px;
+      }
+      .hero-card::after {
+        content: '';
+        position: absolute;
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.05);
+        bottom: -20px;
+        left: -20px;
+      }
+
+      /* Stagger animations */
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(16px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .stagger-1 {
+        animation: fadeInUp 0.5s ease-out 0.05s both;
+      }
+      .stagger-2 {
+        animation: fadeInUp 0.5s ease-out 0.12s both;
+      }
+      .stagger-3 {
+        animation: fadeInUp 0.5s ease-out 0.2s both;
+      }
+      .stagger-4 {
+        animation: fadeInUp 0.5s ease-out 0.28s both;
+      }
+      .stagger-5 {
+        animation: fadeInUp 0.5s ease-out 0.36s both;
+      }
+      .stagger-6 {
+        animation: fadeInUp 0.5s ease-out 0.44s both;
+      }
+      .stagger-7 {
+        animation: fadeInUp 0.5s ease-out 0.52s both;
+      }
+
+      /* Priority sidebar labels */
+      .priority-label {
+        position: absolute;
+        left: -2px;
+        top: 50%;
+        transform: translateY(-50%) rotate(-90deg);
+        font-size: 8px;
+        font-weight: 800;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        padding: 2px 6px;
+        border-radius: 3px;
+        z-index: 5;
+        white-space: nowrap;
+      }
+
+      /* Annotation panel */
+      .annotation-panel {
+        position: fixed;
+        left: max(16px, calc(50% - 560px));
+        top: 50%;
+        transform: translateY(-50%);
+        width: 220px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .anno-card {
+        background: #1a1a1a;
+        border: 1px solid #333;
+        border-radius: 12px;
+        padding: 14px;
+        color: #ccc;
+        font-size: 11px;
+        line-height: 1.5;
+      }
+      .anno-card .anno-title {
+        font-size: 10px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-bottom: 6px;
+      }
+      .anno-card .anno-title.green {
+        color: #34d399;
+      }
+      .anno-card .anno-title.amber {
+        color: #fbbf24;
+      }
+      .anno-card .anno-title.red {
+        color: #f87171;
+      }
+      .anno-card .anno-title.blue {
+        color: #60a5fa;
+      }
+
+      /* Right annotation panel */
+      .annotation-right {
+        position: fixed;
+        right: max(16px, calc(50% - 560px));
+        top: 50%;
+        transform: translateY(-50%);
+        width: 220px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      @media (max-width: 1100px) {
+        .annotation-panel,
+        .annotation-right {
+          display: none;
+        }
+      }
+
+      /* Search bar */
+      .search-bar {
+        background: #f0ece6;
+        border-radius: 14px;
+        padding: 12px 16px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        border: 1.5px solid transparent;
+        transition: border-color 0.2s;
+      }
+      .search-bar:focus-within {
+        border-color: #059669;
+        background: white;
+      }
+
+      /* Section header */
+      .section-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 12px;
+      }
+      .section-title {
+        font-size: 16px;
+        font-weight: 700;
+        color: #2d2416;
+      }
+      .see-all {
+        font-size: 13px;
+        font-weight: 600;
+        color: #059669;
+        cursor: pointer;
+      }
+
+      /* Bottom nav */
+      .bottom-nav {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 84px;
+        background: rgba(250, 248, 245, 0.95);
+        backdrop-filter: blur(20px);
+        border-top: 1px solid #ede8df;
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-around;
+        padding-top: 10px;
+      }
+      .nav-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+        cursor: pointer;
+      }
+      .nav-item span {
+        font-size: 10px;
+        font-weight: 600;
+        color: #a89e8f;
+      }
+      .nav-item.active span {
+        color: #059669;
+      }
+
+      /* Page title */
+      .page-title {
+        font-size: 28px;
+        font-weight: 800;
+        color: #2d2416;
+        letter-spacing: -0.02em;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- LEFT ANNOTATIONS -->
+    <div class="annotation-panel">
+      <div class="anno-card">
+        <div class="anno-title green">Fogg: Ability First</div>
+        Search + Filter chips at top reduce friction to near-zero. Users find
+        what they need in <strong>1 tap</strong> instead of 3+ scrolls.
+      </div>
+      <div class="anno-card">
+        <div class="anno-title red">Pain Point #1</div>
+        <strong>1-tap import</strong> on trending cards is the single biggest
+        conversion lever. Moved from preview→modal→import (3 taps) to direct
+        add.
+      </div>
+      <div class="anno-card">
+        <div class="anno-title amber">Kano: Performance</div>
+        <strong>"For You"</strong> section addresses choice paralysis by showing
+        personalized picks based on existing habits. New Tier 2 feature.
+      </div>
+      <div class="anno-card">
+        <div class="anno-title blue">JTBD: Confidence</div>
+        Science badges + trending signals + user counts build trust. Users need
+        to believe <strong>"this will work for me"</strong> before committing.
+      </div>
+    </div>
+
+    <!-- PHONE MOCKUP -->
+    <div class="phone-frame">
+      <div class="dynamic-island"></div>
+      <div class="phone-content">
+        <!-- STATUS BAR SPACER -->
+        <div style="height: 56px"></div>
+
+        <!-- HEADER -->
+        <div class="stagger-1" style="padding: 0 20px; margin-bottom: 4px">
+          <div
+            style="
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+            "
+          >
+            <div class="page-title">Templates</div>
+            <div style="display: flex; gap: 8px">
+              <div
+                style="
+                  width: 36px;
+                  height: 36px;
+                  border-radius: 12px;
+                  background: #f0ece6;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                "
+              >
+                <i
+                  data-lucide="sliders-horizontal"
+                  style="width: 18px; height: 18px; color: #6b5e4f"
+                ></i>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════ -->
+        <!-- TIER 1: ABILITY (REDUCE FRICTION)       -->
+        <!-- ═══════════════════════════════════════ -->
+
+        <!-- SEARCH BAR — Pain Point: "Can't find what I'm looking for" -->
+        <div class="stagger-2" style="padding: 12px 20px 0">
+          <div class="search-bar">
+            <i
+              data-lucide="search"
+              style="width: 18px; height: 18px; color: #a89e8f; flex-shrink: 0"
+            ></i>
+            <span style="font-size: 14px; color: #a89e8f"
+              >Search 200+ habits...</span
+            >
+          </div>
+        </div>
+
+        <!-- QUICK FILTER CHIPS — Pain Point: "Choice paralysis" -->
+        <div
+          class="stagger-2"
+          style="
+            padding: 14px 0 4px;
+            overflow-x: auto;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+          "
+        >
+          <div
+            style="display: flex; gap: 8px; padding: 0 20px; width: max-content"
+          >
+            <div class="chip chip-active">✨ All</div>
+            <div class="chip chip-inactive">🌅 Morning</div>
+            <div class="chip chip-inactive">🧠 Mental</div>
+            <div class="chip chip-inactive">💪 Fitness</div>
+            <div class="chip chip-inactive">😴 Sleep</div>
+            <div class="chip chip-inactive">🧘 Mindful</div>
+            <div class="chip chip-inactive">📚 Learning</div>
+            <div class="chip chip-inactive">💰 Finance</div>
+          </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════ -->
+        <!-- TIER 1: 1-TAP IMPORT (BIGGEST LEVER)    -->
+        <!-- ═══════════════════════════════════════ -->
+
+        <!-- TRENDING NOW — Pain Point: "Too many taps to start" -->
+        <div class="stagger-3" style="padding: 16px 0 0; position: relative">
+          <div style="padding: 0 20px">
+            <div class="section-header">
+              <div class="section-title">🔥 Trending Now</div>
+              <div class="see-all">See all</div>
+            </div>
+          </div>
+          <div
+            style="
+              overflow-x: auto;
+              -ms-overflow-style: none;
+              scrollbar-width: none;
+            "
+          >
+            <div
+              style="
+                display: flex;
+                gap: 12px;
+                padding: 0 20px 4px;
+                width: max-content;
+              "
+            >
+              <!-- Card 1 -->
+              <div class="trending-card">
+                <div
+                  style="
+                    width: 48px;
+                    height: 48px;
+                    border-radius: 14px;
+                    background: rgba(5, 150, 105, 0.12);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 24px;
+                    margin-bottom: 10px;
+                  "
+                >
+                  🧘
+                </div>
+                <div
+                  style="
+                    font-size: 14px;
+                    font-weight: 700;
+                    color: #2d2416;
+                    margin-bottom: 4px;
+                  "
+                >
+                  Morning Meditation
+                </div>
+                <div
+                  class="mono"
+                  style="font-size: 11px; color: #8a7e6f; margin-bottom: 6px"
+                >
+                  Daily · 10 min
+                </div>
+                <div
+                  style="
+                    display: flex;
+                    align-items: center;
+                    gap: 4px;
+                    margin-bottom: 10px;
+                  "
+                >
+                  <span class="science-badge">🔬 Science</span>
+                </div>
+                <div
+                  style="
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                  "
+                >
+                  <div style="display: flex; align-items: center; gap: 4px">
+                    <i
+                      data-lucide="trending-up"
+                      style="width: 12px; height: 12px; color: #059669"
+                    ></i>
+                    <span class="mono" style="font-size: 11px; color: #8a7e6f"
+                      >3.2k</span
+                    >
+                  </div>
+                  <div class="add-btn">
+                    <i
+                      data-lucide="plus"
+                      style="width: 18px; height: 18px; color: white"
+                    ></i>
+                  </div>
+                </div>
+              </div>
+              <!-- Card 2 -->
+              <div class="trending-card">
+                <div
+                  style="
+                    width: 48px;
+                    height: 48px;
+                    border-radius: 14px;
+                    background: rgba(245, 158, 11, 0.12);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 24px;
+                    margin-bottom: 10px;
+                  "
+                >
+                  📖
+                </div>
+                <div
+                  style="
+                    font-size: 14px;
+                    font-weight: 700;
+                    color: #2d2416;
+                    margin-bottom: 4px;
+                  "
+                >
+                  Read 20 Pages
+                </div>
+                <div
+                  class="mono"
+                  style="font-size: 11px; color: #8a7e6f; margin-bottom: 6px"
+                >
+                  Daily · 30 min
+                </div>
+                <div
+                  style="
+                    display: flex;
+                    align-items: center;
+                    gap: 4px;
+                    margin-bottom: 10px;
+                  "
+                >
+                  <span class="science-badge">🔬 Science</span>
+                </div>
+                <div
+                  style="
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                  "
+                >
+                  <div style="display: flex; align-items: center; gap: 4px">
+                    <i
+                      data-lucide="trending-up"
+                      style="width: 12px; height: 12px; color: #059669"
+                    ></i>
+                    <span class="mono" style="font-size: 11px; color: #8a7e6f"
+                      >2.8k</span
+                    >
+                  </div>
+                  <div class="add-btn added">
+                    <i
+                      data-lucide="check"
+                      style="width: 18px; height: 18px; color: #8a7e6f"
+                    ></i>
+                  </div>
+                </div>
+              </div>
+              <!-- Card 3 -->
+              <div class="trending-card">
+                <div
+                  style="
+                    width: 48px;
+                    height: 48px;
+                    border-radius: 14px;
+                    background: rgba(99, 102, 241, 0.12);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 24px;
+                    margin-bottom: 10px;
+                  "
+                >
+                  💧
+                </div>
+                <div
+                  style="
+                    font-size: 14px;
+                    font-weight: 700;
+                    color: #2d2416;
+                    margin-bottom: 4px;
+                  "
+                >
+                  Drink 8 Glasses
+                </div>
+                <div
+                  class="mono"
+                  style="font-size: 11px; color: #8a7e6f; margin-bottom: 6px"
+                >
+                  Daily
+                </div>
+                <div style="height: 22px; margin-bottom: 10px"></div>
+                <div
+                  style="
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                  "
+                >
+                  <div style="display: flex; align-items: center; gap: 4px">
+                    <i
+                      data-lucide="trending-up"
+                      style="width: 12px; height: 12px; color: #059669"
+                    ></i>
+                    <span class="mono" style="font-size: 11px; color: #8a7e6f"
+                      >2.1k</span
+                    >
+                  </div>
+                  <div class="add-btn">
+                    <i
+                      data-lucide="plus"
+                      style="width: 18px; height: 18px; color: white"
+                    ></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════ -->
+        <!-- TIER 2: MOTIVATION (BUILD CONFIDENCE)   -->
+        <!-- ═══════════════════════════════════════ -->
+
+        <!-- FOR YOU — Pain Point: "Which habit is right for ME?" (NEW) -->
+        <div class="stagger-4" style="padding: 20px 20px 0">
+          <div class="section-header">
+            <div class="section-title">✨ For You</div>
+            <div
+              style="
+                display: inline-flex;
+                align-items: center;
+                gap: 4px;
+                padding: 3px 8px;
+                border-radius: 6px;
+                background: #ecfdf5;
+              "
+            >
+              <span
+                style="
+                  font-size: 10px;
+                  font-weight: 700;
+                  color: #065f46;
+                  letter-spacing: 0.04em;
+                "
+                >PERSONALIZED</span
+              >
+            </div>
+          </div>
+          <div
+            style="
+              font-size: 12px;
+              color: #8a7e6f;
+              margin-top: -8px;
+              margin-bottom: 12px;
+            "
+          >
+            Based on your current habits
+          </div>
+
+          <!-- For You Card 1 -->
+          <div class="for-you-card" style="margin-bottom: 10px">
+            <div
+              style="
+                width: 44px;
+                height: 44px;
+                border-radius: 12px;
+                background: rgba(168, 85, 247, 0.1);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 22px;
+                flex-shrink: 0;
+              "
+            >
+              🌙
+            </div>
+            <div style="flex: 1; min-width: 0">
+              <div style="font-size: 14px; font-weight: 700; color: #2d2416">
+                Wind-Down Routine
+              </div>
+              <div style="font-size: 12px; color: #8a7e6f; margin-top: 2px">
+                Pairs well with your Morning Meditation
+              </div>
+            </div>
+            <div class="add-btn" style="flex-shrink: 0">
+              <i
+                data-lucide="plus"
+                style="width: 16px; height: 16px; color: white"
+              ></i>
+            </div>
+          </div>
+
+          <!-- For You Card 2 -->
+          <div class="for-you-card">
+            <div
+              style="
+                width: 44px;
+                height: 44px;
+                border-radius: 12px;
+                background: rgba(236, 72, 153, 0.1);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 22px;
+                flex-shrink: 0;
+              "
+            >
+              🏃
+            </div>
+            <div style="flex: 1; min-width: 0">
+              <div style="font-size: 14px; font-weight: 700; color: #2d2416">
+                Evening Walk
+              </div>
+              <div style="font-size: 12px; color: #8a7e6f; margin-top: 2px">
+                Users who read daily also walk 2x more
+              </div>
+            </div>
+            <div class="add-btn" style="flex-shrink: 0">
+              <i
+                data-lucide="plus"
+                style="width: 16px; height: 16px; color: white"
+              ></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════ -->
+        <!-- TIER 2: PROMPT (DRIVE DISCOVERY)        -->
+        <!-- ═══════════════════════════════════════ -->
+
+        <!-- HERO FEATURED CARD — Moved DOWN from position 1 to position 4 -->
+        <div class="stagger-5" style="padding: 20px 20px 0">
+          <div class="hero-card">
+            <div style="position: relative; z-index: 2">
+              <div
+                style="
+                  display: inline-flex;
+                  align-items: center;
+                  padding: 4px 10px;
+                  border-radius: 8px;
+                  background: rgba(255, 255, 255, 0.18);
+                  backdrop-filter: blur(8px);
+                  margin-bottom: 12px;
+                "
+              >
+                <span
+                  style="
+                    font-size: 10px;
+                    font-weight: 800;
+                    color: white;
+                    letter-spacing: 0.1em;
+                  "
+                  >FEATURED</span
+                >
+              </div>
+              <div
+                class="serif"
+                style="
+                  font-size: 22px;
+                  font-weight: 700;
+                  color: white;
+                  margin-bottom: 6px;
+                "
+              >
+                Morning Mastery
+              </div>
+              <div
+                style="
+                  font-size: 13px;
+                  color: rgba(255, 255, 255, 0.8);
+                  margin-bottom: 14px;
+                  line-height: 1.4;
+                "
+              >
+                Start your day with intention. 5 science-backed morning habits.
+              </div>
+              <div
+                style="
+                  display: flex;
+                  gap: 6px;
+                  margin-bottom: 16px;
+                  flex-wrap: wrap;
+                "
+              >
+                <span
+                  style="
+                    padding: 4px 10px;
+                    border-radius: 999px;
+                    background: rgba(255, 255, 255, 0.15);
+                    font-size: 12px;
+                    color: white;
+                    font-weight: 500;
+                  "
+                  >🧘 Meditate</span
+                >
+                <span
+                  style="
+                    padding: 4px 10px;
+                    border-radius: 999px;
+                    background: rgba(255, 255, 255, 0.15);
+                    font-size: 12px;
+                    color: white;
+                    font-weight: 500;
+                  "
+                  >💧 Hydrate</span
+                >
+                <span
+                  style="
+                    padding: 4px 10px;
+                    border-radius: 999px;
+                    background: rgba(255, 255, 255, 0.15);
+                    font-size: 12px;
+                    color: white;
+                    font-weight: 500;
+                  "
+                  >📖 Read</span
+                >
+                <span
+                  style="
+                    padding: 4px 10px;
+                    border-radius: 999px;
+                    background: rgba(255, 255, 255, 0.15);
+                    font-size: 12px;
+                    color: white;
+                    font-weight: 500;
+                  "
+                  >+2 more</span
+                >
+              </div>
+              <div
+                style="
+                  display: flex;
+                  align-items: center;
+                  justify-content: space-between;
+                "
+              >
+                <div style="display: flex; align-items: center; gap: 6px">
+                  <i
+                    data-lucide="users"
+                    style="
+                      width: 14px;
+                      height: 14px;
+                      color: rgba(255, 255, 255, 0.7);
+                    "
+                  ></i>
+                  <span
+                    class="mono"
+                    style="font-size: 12px; color: rgba(255, 255, 255, 0.7)"
+                    >2.4k users</span
+                  >
+                </div>
+                <div
+                  style="
+                    display: flex;
+                    align-items: center;
+                    gap: 6px;
+                    padding: 8px 16px;
+                    border-radius: 12px;
+                    background: rgba(255, 255, 255, 0.2);
+                    backdrop-filter: blur(8px);
+                    cursor: pointer;
+                  "
+                >
+                  <span style="font-size: 13px; font-weight: 700; color: white"
+                    >Explore</span
+                  >
+                  <i
+                    data-lucide="chevron-right"
+                    style="width: 16px; height: 16px; color: white"
+                  ></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CURATED PACKS -->
+        <div class="stagger-6" style="padding: 20px 20px 0">
+          <div class="section-header">
+            <div class="section-title">📦 Curated Packs</div>
+            <div class="see-all">See all</div>
+          </div>
+
+          <!-- Pack 1 -->
+          <div
+            class="pack-card"
+            style="
+              background: linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%);
+              margin-bottom: 10px;
+            "
+          >
+            <div
+              style="
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+                flex-shrink: 0;
+              "
+            >
+              <span style="font-size: 20px">🧠📖🎯</span>
+            </div>
+            <div style="flex: 1; min-width: 0">
+              <div style="font-size: 15px; font-weight: 700; color: white">
+                Deep Focus Pack
+              </div>
+              <div
+                style="
+                  font-size: 12px;
+                  color: rgba(255, 255, 255, 0.75);
+                  margin-top: 2px;
+                "
+              >
+                Build unbreakable concentration
+              </div>
+              <div
+                class="mono"
+                style="
+                  font-size: 10px;
+                  color: rgba(255, 255, 255, 0.5);
+                  margin-top: 4px;
+                "
+              >
+                4 habits
+              </div>
+            </div>
+            <div
+              style="
+                padding: 7px 14px;
+                border-radius: 10px;
+                background: rgba(255, 255, 255, 0.2);
+                backdrop-filter: blur(8px);
+                flex-shrink: 0;
+              "
+            >
+              <span style="font-size: 12px; font-weight: 700; color: white"
+                >Import</span
+              >
+            </div>
+          </div>
+
+          <!-- Pack 2 -->
+          <div
+            class="pack-card"
+            style="
+              background: linear-gradient(135deg, #059669 0%, #34d399 100%);
+              margin-bottom: 10px;
+            "
+          >
+            <div
+              style="
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+                flex-shrink: 0;
+              "
+            >
+              <span style="font-size: 20px">🌅💪🧘</span>
+            </div>
+            <div style="flex: 1; min-width: 0">
+              <div style="font-size: 15px; font-weight: 700; color: white">
+                Morning Warrior
+              </div>
+              <div
+                style="
+                  font-size: 12px;
+                  color: rgba(255, 255, 255, 0.75);
+                  margin-top: 2px;
+                "
+              >
+                Own the first hour
+              </div>
+              <div
+                class="mono"
+                style="
+                  font-size: 10px;
+                  color: rgba(255, 255, 255, 0.5);
+                  margin-top: 4px;
+                "
+              >
+                5 habits
+              </div>
+            </div>
+            <div
+              style="
+                padding: 7px 14px;
+                border-radius: 10px;
+                background: rgba(255, 255, 255, 0.2);
+                backdrop-filter: blur(8px);
+                flex-shrink: 0;
+              "
+            >
+              <span style="font-size: 12px; font-weight: 700; color: white"
+                >Import</span
+              >
+            </div>
+          </div>
+
+          <!-- Pack 3 -->
+          <div
+            class="pack-card"
+            style="
+              background: linear-gradient(135deg, #dc2626 0%, #f87171 100%);
+            "
+          >
+            <div
+              style="
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+                flex-shrink: 0;
+              "
+            >
+              <span style="font-size: 20px">😴🌙🧊</span>
+            </div>
+            <div style="flex: 1; min-width: 0">
+              <div style="font-size: 15px; font-weight: 700; color: white">
+                Sleep Optimizer
+              </div>
+              <div
+                style="
+                  font-size: 12px;
+                  color: rgba(255, 255, 255, 0.75);
+                  margin-top: 2px;
+                "
+              >
+                Science-backed sleep hygiene
+              </div>
+              <div
+                class="mono"
+                style="
+                  font-size: 10px;
+                  color: rgba(255, 255, 255, 0.5);
+                  margin-top: 4px;
+                "
+              >
+                4 habits
+              </div>
+            </div>
+            <div
+              style="
+                padding: 7px 14px;
+                border-radius: 10px;
+                background: rgba(255, 255, 255, 0.2);
+                backdrop-filter: blur(8px);
+                flex-shrink: 0;
+              "
+            >
+              <span style="font-size: 12px; font-weight: 700; color: white"
+                >Import</span
+              >
+            </div>
+          </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════ -->
+        <!-- TIER 3: BROWSE (EXPLORATION)            -->
+        <!-- ═══════════════════════════════════════ -->
+
+        <!-- CATEGORY GRID -->
+        <div class="stagger-7" style="padding: 20px 20px 0">
+          <div class="section-header">
+            <div class="section-title">🗂️ Browse by Category</div>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px">
+            <div class="cat-tile">
+              <div>
+                <div style="font-size: 24px; margin-bottom: 8px">🌅</div>
+                <div style="font-size: 14px; font-weight: 700; color: #2d2416">
+                  Morning
+                </div>
+                <div
+                  class="mono"
+                  style="font-size: 11px; color: #8a7e6f; margin-top: 2px"
+                >
+                  24 habits
+                </div>
+              </div>
+              <div style="display: flex; gap: 4px; margin-top: 8px">
+                <span style="font-size: 14px">🧘</span>
+                <span style="font-size: 14px">💧</span>
+                <span style="font-size: 14px">☀️</span>
+                <span style="font-size: 14px">📖</span>
+              </div>
+            </div>
+            <div class="cat-tile">
+              <div>
+                <div style="font-size: 24px; margin-bottom: 8px">🧠</div>
+                <div style="font-size: 14px; font-weight: 700; color: #2d2416">
+                  Mental
+                </div>
+                <div
+                  class="mono"
+                  style="font-size: 11px; color: #8a7e6f; margin-top: 2px"
+                >
+                  31 habits
+                </div>
+              </div>
+              <div style="display: flex; gap: 4px; margin-top: 8px">
+                <span style="font-size: 14px">📓</span>
+                <span style="font-size: 14px">🎯</span>
+                <span style="font-size: 14px">🧩</span>
+                <span style="font-size: 14px">💭</span>
+              </div>
+            </div>
+            <div class="cat-tile">
+              <div>
+                <div style="font-size: 24px; margin-bottom: 8px">💪</div>
+                <div style="font-size: 14px; font-weight: 700; color: #2d2416">
+                  Fitness
+                </div>
+                <div
+                  class="mono"
+                  style="font-size: 11px; color: #8a7e6f; margin-top: 2px"
+                >
+                  28 habits
+                </div>
+              </div>
+              <div style="display: flex; gap: 4px; margin-top: 8px">
+                <span style="font-size: 14px">🏃</span>
+                <span style="font-size: 14px">🏋️</span>
+                <span style="font-size: 14px">🚴</span>
+                <span style="font-size: 14px">🧗</span>
+              </div>
+            </div>
+            <div class="cat-tile">
+              <div>
+                <div style="font-size: 24px; margin-bottom: 8px">😴</div>
+                <div style="font-size: 14px; font-weight: 700; color: #2d2416">
+                  Sleep
+                </div>
+                <div
+                  class="mono"
+                  style="font-size: 11px; color: #8a7e6f; margin-top: 2px"
+                >
+                  18 habits
+                </div>
+              </div>
+              <div style="display: flex; gap: 4px; margin-top: 8px">
+                <span style="font-size: 14px">🌙</span>
+                <span style="font-size: 14px">📵</span>
+                <span style="font-size: 14px">🧊</span>
+                <span style="font-size: 14px">🫖</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="height: 20px"></div>
+      </div>
+
+      <!-- BOTTOM NAV -->
+      <div class="bottom-nav">
+        <div class="nav-item">
+          <i
+            data-lucide="home"
+            style="width: 22px; height: 22px; color: #a89e8f"
+          ></i>
+          <span>Home</span>
+        </div>
+        <div class="nav-item active">
+          <i
+            data-lucide="layout-grid"
+            style="width: 22px; height: 22px; color: #059669"
+          ></i>
+          <span style="color: #059669 !important">Templates</span>
+        </div>
+        <div class="nav-item">
+          <i
+            data-lucide="bar-chart-3"
+            style="width: 22px; height: 22px; color: #a89e8f"
+          ></i>
+          <span>Stats</span>
+        </div>
+        <div class="nav-item">
+          <i
+            data-lucide="settings"
+            style="width: 22px; height: 22px; color: #a89e8f"
+          ></i>
+          <span>Settings</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT ANNOTATIONS -->
+    <div class="annotation-right">
+      <div class="anno-card">
+        <div class="anno-title green">Tier 1 — Ability</div>
+        <strong>Search + Chips + 1-Tap Add</strong> are the first 3 things the
+        user sees. These alone solve 60% of discovery friction.
+      </div>
+      <div class="anno-card">
+        <div class="anno-title amber">Tier 2 — Motivation</div>
+        <strong>"For You"</strong> is NEW — addresses #1 unsolved pain point
+        (choice paralysis) using collaborative filtering patterns.
+      </div>
+      <div class="anno-card">
+        <div class="anno-title red">Key Change</div>
+        Hero card <strong>moved from #1 to #4</strong>. Pretty but decorative —
+        users who know what they want shouldn't scroll past it.
+      </div>
+      <div class="anno-card">
+        <div class="anno-title blue">Tier 3 — Browse</div>
+        Category grid + Packs are for <strong>exploratory users</strong> who
+        want to browse. Important, but not the first thing shown.
+      </div>
+    </div>
+
+    <script>
+      lucide.createIcons();
+
+      // Chip click interaction
+      document.querySelectorAll('.chip').forEach((chip) => {
+        chip.addEventListener('click', function () {
+          document.querySelectorAll('.chip').forEach((c) => {
+            c.classList.remove('chip-active');
+            c.classList.add('chip-inactive');
+          });
+          this.classList.remove('chip-inactive');
+          this.classList.add('chip-active');
+        });
+      });
+
+      // Add button interaction
+      document.querySelectorAll('.add-btn:not(.added)').forEach((btn) => {
+        btn.addEventListener('click', function (e) {
+          e.stopPropagation();
+          const icon = this.querySelector('[data-lucide]');
+          this.classList.add('added');
+          this.style.transform = 'scale(1.2)';
+          setTimeout(() => {
+            this.style.transform = 'scale(1)';
+          }, 200);
+          icon.setAttribute('data-lucide', 'check');
+          icon.style.color = '#8a7e6f';
+          lucide.createIcons();
+        });
+      });
+    </script>
+  </body>
+</html>
