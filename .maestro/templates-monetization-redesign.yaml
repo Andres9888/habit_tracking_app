@@ -1,0 +1,458 @@
+# Templates Monetization Redesign — E2E Validation Flow
+# Validates the redesigned templates browsing experience with monetization flows.
+#
+# Spec: specs/002-templates-monetization-redesign/spec.md
+# Mock: .superdesign/design_iterations/templates_redesign_2.html
+#
+# Prerequisites:
+#   - App built and installed on simulator
+#   - User signed in (Clerk auth)
+#   - User has 0–2 habits (below free limit of 3)
+#   - Template seed data loaded
+#
+# Required testIDs (must be added during implementation):
+#   See bottom of this file for full testID inventory.
+#
+# Run: JAVA_HOME=~/java/jdk-21.0.10+7/Contents/Home maestro test .maestro/templates-monetization-redesign.yaml
+
+appId: com.chainday.app
+
+---
+# ══════════════════════════════════════════════════
+# Phase 1: Launch and navigate to Templates screen
+# ══════════════════════════════════════════════════
+
+- launchApp:
+    appId: com.chainday.app
+    clearState: false
+    clearKeychain: false
+
+- extendedWaitUntil:
+    visible: 'Today'
+    timeout: 15000
+
+- waitForAnimationToEnd
+
+# Navigate to Templates via header button
+- tapOn:
+    id: 'home-templates-button'
+
+- extendedWaitUntil:
+    visible: 'Templates'
+    timeout: 5000
+
+- waitForAnimationToEnd
+
+- takeScreenshot: templates-redesign-main-screen
+
+# ══════════════════════════════════════════════════
+# Phase 2: Validate main screen structure
+# ══════════════════════════════════════════════════
+
+# -- Header --
+- assertVisible:
+    id: 'templates-header'
+
+- assertVisible:
+    text: 'Templates'
+
+# -- Search bar --
+- assertVisible:
+    id: 'templates-search-bar'
+
+# -- Usage banner --
+- assertVisible:
+    id: 'templates-usage-banner'
+
+- assertVisible:
+    id: 'templates-usage-dots'
+
+- assertVisible:
+    id: 'templates-usage-unlock-cta'
+
+# -- Featured collection --
+- assertVisible:
+    id: 'templates-featured-collection'
+
+# -- Popular section header --
+- assertVisible:
+    id: 'templates-popular-section'
+
+- assertVisible:
+    text: 'Popular'
+
+- assertVisible:
+    id: 'templates-popular-see-all'
+
+# -- Popular carousel has at least one card --
+- assertVisible:
+    id: 'templates-popular-scroll'
+
+- takeScreenshot: templates-redesign-above-fold
+
+# ══════════════════════════════════════════════════
+# Phase 3: Scroll to reveal below-fold content
+# ══════════════════════════════════════════════════
+
+- scrollUntilVisible:
+    element:
+      id: 'templates-premium-packs-section'
+    direction: DOWN
+    timeout: 5000
+
+- assertVisible:
+    text: 'Premium Packs'
+
+- takeScreenshot: templates-redesign-premium-packs
+
+- scrollUntilVisible:
+    element:
+      id: 'templates-category-grid'
+    direction: DOWN
+    timeout: 5000
+
+- assertVisible:
+    text: 'Browse by Category'
+
+- takeScreenshot: templates-redesign-categories
+
+# ══════════════════════════════════════════════════
+# Phase 4: Add a free template from Popular carousel
+# ══════════════════════════════════════════════════
+
+# Scroll back to top
+- scrollUntilVisible:
+    element:
+      id: 'templates-popular-section'
+    direction: UP
+    timeout: 5000
+
+- waitForAnimationToEnd
+
+# Tap the first popular card's add button
+- tapOn:
+    id: 'templates-popular-card-0-add'
+
+- waitForAnimationToEnd
+
+# Verify success toast appears
+- extendedWaitUntil:
+    visible:
+      id: 'templates-toast'
+    timeout: 5000
+
+- takeScreenshot: templates-redesign-toast-after-add
+
+# Wait for toast to dismiss (5 seconds)
+- extendedWaitUntil:
+    notVisible:
+      id: 'templates-toast'
+    timeout: 8000
+
+# Verify the card shows "Added" state
+- assertVisible:
+    id: 'templates-popular-card-0-added'
+
+- takeScreenshot: templates-redesign-card-added-state
+
+# ══════════════════════════════════════════════════
+# Phase 5: Open "See All" popular templates
+# ══════════════════════════════════════════════════
+
+- tapOn:
+    id: 'templates-popular-see-all'
+
+- extendedWaitUntil:
+    visible: 'All Popular Templates'
+    timeout: 5000
+
+- waitForAnimationToEnd
+
+- assertVisible:
+    id: 'templates-see-all-view'
+
+# Verify the previously added template shows added state here too
+- assertVisible:
+    id: 'templates-see-all-card-0-added'
+
+- takeScreenshot: templates-redesign-see-all-view
+
+# Navigate back
+- tapOn:
+    id: 'templates-see-all-back'
+
+- extendedWaitUntil:
+    visible:
+      id: 'templates-popular-section'
+    timeout: 5000
+
+- waitForAnimationToEnd
+
+# ══════════════════════════════════════════════════
+# Phase 6: Open a category drill-in view
+# ══════════════════════════════════════════════════
+
+- scrollUntilVisible:
+    element:
+      id: 'templates-category-grid'
+    direction: DOWN
+    timeout: 5000
+
+# Tap the first category tile
+- tapOn:
+    id: 'templates-category-tile-0'
+
+- extendedWaitUntil:
+    visible:
+      id: 'templates-category-view'
+    timeout: 5000
+
+- waitForAnimationToEnd
+
+# Verify category view structure
+- assertVisible:
+    id: 'templates-category-back'
+
+- assertVisible:
+    id: 'templates-category-view-title'
+
+- takeScreenshot: templates-redesign-category-view
+
+# ══════════════════════════════════════════════════
+# Phase 7: Preview a template from category view
+# ══════════════════════════════════════════════════
+
+# Tap "Preview" on the first template card
+- tapOn:
+    id: 'templates-category-card-0-preview'
+
+- extendedWaitUntil:
+    visible:
+      id: 'templates-preview-modal'
+    timeout: 5000
+
+- waitForAnimationToEnd
+
+# Verify light-themed preview modal structure
+- assertVisible:
+    id: 'templates-preview-handle'
+
+- assertVisible:
+    id: 'templates-preview-icon'
+
+- assertVisible:
+    id: 'templates-preview-name'
+
+- assertVisible:
+    id: 'templates-preview-pills'
+
+- assertVisible:
+    id: 'templates-preview-quick-add'
+
+- takeScreenshot: templates-redesign-preview-modal
+
+# ══════════════════════════════════════════════════
+# Phase 8: Quick Add from preview modal
+# ══════════════════════════════════════════════════
+
+- tapOn:
+    id: 'templates-preview-quick-add'
+
+- waitForAnimationToEnd
+
+# Verify button updates to added state
+- assertVisible:
+    id: 'templates-preview-added'
+
+# Toast should appear
+- extendedWaitUntil:
+    visible:
+      id: 'templates-toast'
+    timeout: 5000
+
+- takeScreenshot: templates-redesign-preview-quick-add
+
+# Close preview modal
+- tapOn:
+    id: 'templates-preview-close'
+
+- extendedWaitUntil:
+    notVisible:
+      id: 'templates-preview-modal'
+    timeout: 3000
+
+- waitForAnimationToEnd
+
+# ══════════════════════════════════════════════════
+# Phase 9: Navigate back from category view
+# ══════════════════════════════════════════════════
+
+- tapOn:
+    id: 'templates-category-back'
+
+- extendedWaitUntil:
+    visible:
+      id: 'templates-popular-section'
+    timeout: 5000
+
+- waitForAnimationToEnd
+
+# ══════════════════════════════════════════════════
+# Phase 10: Tap a premium pack → paywall
+# ══════════════════════════════════════════════════
+
+- scrollUntilVisible:
+    element:
+      id: 'templates-premium-packs-section'
+    direction: DOWN
+    timeout: 5000
+
+- tapOn:
+    id: 'templates-premium-pack-0'
+
+- extendedWaitUntil:
+    visible:
+      id: 'templates-paywall'
+    timeout: 5000
+
+- waitForAnimationToEnd
+
+# Verify paywall structure
+- assertVisible:
+    text: 'Unlock Unlimited Habits'
+
+- assertVisible:
+    id: 'templates-paywall-cta'
+
+- assertVisible:
+    text: '$6.99/month'
+
+- takeScreenshot: templates-redesign-paywall
+
+# Dismiss paywall
+- tapOn:
+    id: 'templates-paywall-close'
+
+- extendedWaitUntil:
+    notVisible:
+      id: 'templates-paywall'
+    timeout: 3000
+
+- waitForAnimationToEnd
+
+# ══════════════════════════════════════════════════
+# Phase 11: Search for a template
+# ══════════════════════════════════════════════════
+
+# Scroll back to top
+- scrollUntilVisible:
+    element:
+      id: 'templates-search-bar'
+    direction: UP
+    timeout: 5000
+
+- tapOn:
+    id: 'templates-search-bar'
+
+- inputText: 'meditation'
+
+- extendedWaitUntil:
+    visible:
+      id: 'templates-search-results'
+    timeout: 5000
+
+- waitForAnimationToEnd
+
+- takeScreenshot: templates-redesign-search-results
+
+# Clear search
+- tapOn:
+    id: 'templates-search-clear'
+
+- extendedWaitUntil:
+    visible:
+      id: 'templates-popular-section'
+    timeout: 5000
+
+- waitForAnimationToEnd
+
+# ══════════════════════════════════════════════════
+# Phase 12: Final state screenshot and exit
+# ══════════════════════════════════════════════════
+
+- takeScreenshot: templates-redesign-final-state
+
+# Navigate back to home
+- back
+
+- extendedWaitUntil:
+    visible: 'Today'
+    timeout: 5000
+
+- takeScreenshot: templates-redesign-back-to-home
+# ══════════════════════════════════════════════════════════════════
+# REQUIRED testID INVENTORY
+# ══════════════════════════════════════════════════════════════════
+#
+# These testIDs must be added to components during implementation.
+# Format: testID value → Component → Element
+#
+# ── Main Screen ──
+# templates-header                    → BrowseHeader       → Container View
+# templates-search-bar                → SearchBar          → TextInput or wrapper
+# templates-search-clear              → SearchBar          → Clear/X button
+# templates-search-results            → CategorySearchView → Results container
+# templates-usage-banner              → UsageBanner (new)  → Container View
+# templates-usage-dots                → UsageBanner (new)  → Dots row
+# templates-usage-unlock-cta          → UsageBanner (new)  → "Unlock All" button
+# templates-featured-collection       → FeaturedCard (new) → Container View
+# templates-popular-section           → Section header     → "Popular" header View
+# templates-popular-see-all           → Section header     → "See all" Pressable
+# templates-popular-scroll            → Popular carousel   → ScrollView/FlatList
+# templates-popular-card-{N}-add      → MiniTemplateCard   → "+ Add" button (indexed)
+# templates-popular-card-{N}-added    → MiniTemplateCard   → "✓ Added" state (indexed)
+# templates-premium-packs-section     → Section header     → "Premium Packs" header View
+# templates-premium-pack-{N}          → PremiumPackCard(new)→ Card Pressable (indexed)
+# templates-category-grid             → Category grid      → Grid container View
+# templates-category-tile-{N}         → CategoryTile (new) → Tile Pressable (indexed)
+#
+# ── See All View ──
+# templates-see-all-view              → SeeAllView (new)   → Container View
+# templates-see-all-back              → SeeAllView (new)   → Back button Pressable
+# templates-see-all-card-{N}-add      → TemplateCard        → "+ Add" button (indexed)
+# templates-see-all-card-{N}-added    → TemplateCard        → "✓ Added" state (indexed)
+#
+# ── Category View ──
+# templates-category-view             → CategoryView (new) → Container View
+# templates-category-back             → CategoryView (new) → Back button Pressable
+# templates-category-view-title       → CategoryView (new) → Title Text
+# templates-category-card-{N}-preview → TemplateCard        → "Preview" button (indexed)
+# templates-category-card-{N}-add     → TemplateCard        → "+ Add" button (indexed)
+#
+# ── Preview Modal ──
+# templates-preview-modal             → FullsizeTemplatePreview → Modal container
+# templates-preview-handle            → FullsizeTemplatePreview → Pull indicator
+# templates-preview-close             → FullsizeTemplatePreview → Close/X button
+# templates-preview-icon              → FullsizeTemplatePreview → Hero icon
+# templates-preview-name              → FullsizeTemplatePreview → Template name Text
+# templates-preview-pills             → FullsizeTemplatePreview → Frequency/duration pills
+# templates-preview-quick-add         → FullsizeTemplatePreview → "Quick Add" button
+# templates-preview-added             → FullsizeTemplatePreview → "✓ Added" state
+# templates-preview-customize         → FullsizeTemplatePreview → "Customize" button
+#
+# ── Paywall ──
+# templates-paywall                   → PaywallSheet (new)  → Container View
+# templates-paywall-close             → PaywallSheet (new)  → Close button
+# templates-paywall-cta               → PaywallSheet (new)  → "Upgrade to Premium" button
+#
+# ── Pack Confirmation ──
+# templates-pack-confirm              → PackConfirm (new)   → Container View
+# templates-pack-confirm-add-all      → PackConfirm (new)   → "Add All" button
+# templates-pack-confirm-cancel       → PackConfirm (new)   → "Cancel" button
+# templates-pack-confirm-item-{N}     → PackConfirm (new)   → Habit row (indexed)
+# templates-pack-confirm-check-{N}    → PackConfirm (new)   → Checkmark (indexed)
+#
+# ── Toast ──
+# templates-toast                     → TemplateAddedToast  → Toast container
+# templates-toast-name                → TemplateAddedToast  → Template name Text
+# templates-toast-sub                 → TemplateAddedToast  → Subtitle Text

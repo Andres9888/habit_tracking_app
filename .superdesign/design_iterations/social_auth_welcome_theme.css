@@ -1,0 +1,54 @@
+/* Chain Day – Social Auth Welcome Theme
+ * Based on existing app design system (warm minimal)
+ */
+
+:root {
+  /* Background */
+  --background: #f5f1ed;
+  --background-light: #faf8f5;
+  --card-surface: #edeae5;
+  --border: #ddd8d2;
+
+  /* Text */
+  --text-primary: #2d2a26;
+  --text-secondary: #6b6560;
+  --text-tertiary: #a8a29e;
+  --text-inverse: #ffffff;
+
+  /* Primary (Forest Green) */
+  --primary-100: #d1fae5;
+  --primary-400: #34d399;
+  --primary-500: #10b981;
+  --primary-600: #059669;
+  --primary-700: #047857;
+
+  /* Streak Gold (accent only) */
+  --gold-bg: linear-gradient(135deg, #fef3c7, #fde68a);
+  --gold-border: #fcd34d;
+  --gold-text: #92400e;
+
+  /* Typography */
+  --font-display: 'Literata', serif;
+  --font-body: 'DM Sans', sans-serif;
+
+  /* Spacing */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 12px;
+  --space-base: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+
+  /* Radii */
+  --radius-button: 12px;
+  --radius-card: 16px;
+  --radius-pill: 9999px;
+  --radius-logo: 16px;
+
+  /* Shadows (warm-toned) */
+  --shadow-subtle: 0 1px 3px rgba(45, 42, 38, 0.04);
+  --shadow-card: 0 2px 8px rgba(45, 42, 38, 0.06);
+  --shadow-logo: 0 8px 24px rgba(5, 150, 105, 0.3);
+  --shadow-button: 0 4px 16px rgba(5, 150, 105, 0.2);
+}

@@ -1,0 +1,1099 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>Templates – UX Redesign v1</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Literata:wght@700;800&family=JetBrains+Mono:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="templates_ux_redesign_theme.css" />
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <style>
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        -webkit-tap-highlight-color: transparent;
+      }
+      html {
+        font-size: 16px !important;
+      }
+      body {
+        font-family: var(--font-body) !important;
+        background: #1a1a2e !important;
+        color: var(--text-primary) !important;
+        overflow-x: hidden !important;
+        -webkit-font-smoothing: antialiased;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        min-height: 100vh;
+        padding: 24px 0;
+      }
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6,
+      p,
+      span,
+      a,
+      button,
+      input {
+        font-family: var(--font-body) !important;
+      }
+      button {
+        border: none;
+        background: none;
+        cursor: pointer;
+        font-family: inherit;
+      }
+      input {
+        font-family: inherit;
+      }
+
+      /* ═══ PHONE FRAME ═══ */
+      .phone {
+        width: 393px;
+        height: 852px;
+        background: var(--bg);
+        border-radius: 44px;
+        border: 3px solid #e0ddd8;
+        overflow: hidden;
+        position: relative;
+        box-shadow:
+          0 30px 100px rgba(0, 0, 0, 0.5),
+          0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+      }
+      .notch {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 126px;
+        height: 34px;
+        background: #1a1a1a;
+        border-radius: 0 0 20px 20px;
+        z-index: 100;
+      }
+      .statusbar {
+        height: 54px;
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        padding: 0 28px 6px;
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text-primary);
+      }
+      .statusbar-r {
+        display: flex;
+        gap: 6px;
+        align-items: center;
+        font-size: 12px;
+      }
+
+      /* ═══ SCREEN ═══ */
+      .screen {
+        height: calc(100% - 54px);
+        overflow-y: auto;
+        overflow-x: hidden;
+        scroll-behavior: smooth;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 24px;
+      }
+      .screen::-webkit-scrollbar {
+        display: none;
+      }
+
+      /* ═══ HEADER ═══ */
+      .header {
+        padding: 8px var(--sp-base) 0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .header-left {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .header-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        background: var(--primary-100);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+      }
+      .header-title {
+        font-family: var(--font-display) !important;
+        font-size: 22px !important;
+        font-weight: 700 !important;
+        letter-spacing: -0.35px;
+        color: var(--text-primary);
+        line-height: 28px;
+      }
+      .icon-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: var(--surface-muted);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text-tertiary);
+        transition: all 150ms;
+      }
+      .icon-btn:active {
+        transform: scale(0.9);
+        background: var(--border);
+      }
+
+      /* ═══ SEARCH ═══ */
+      .search-wrap {
+        padding: var(--sp-md) var(--sp-base) var(--sp-xs);
+      }
+      .search {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        height: 44px;
+        padding: 0 14px;
+        background: var(--surface-elevated);
+        border: 1.5px solid var(--border-light);
+        border-radius: var(--radius-md);
+        transition: all 200ms;
+        box-shadow: var(--shadow-sm);
+      }
+      .search:focus-within {
+        border-color: var(--primary-400);
+        box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.08);
+      }
+      .search input {
+        flex: 1;
+        border: none;
+        outline: none;
+        background: none;
+        font-size: 15px;
+        color: var(--text-primary);
+      }
+      .search input::placeholder {
+        color: var(--text-tertiary);
+      }
+      .search-icon {
+        color: var(--text-tertiary);
+        flex-shrink: 0;
+      }
+
+      /* ═══ QUICK FILTER CHIPS ═══ */
+      .chips-row {
+        display: flex;
+        gap: var(--sp-sm);
+        padding: var(--sp-sm) var(--sp-base);
+        overflow-x: auto;
+        scrollbar-width: none;
+      }
+      .chips-row::-webkit-scrollbar {
+        display: none;
+      }
+      .chip {
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 14px;
+        border-radius: var(--radius-full);
+        background: var(--surface-elevated);
+        border: 1.5px solid var(--border-light);
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text-secondary);
+        transition: all 180ms;
+        white-space: nowrap;
+        cursor: pointer;
+      }
+      .chip:hover,
+      .chip:active {
+        border-color: var(--primary-400);
+        color: var(--primary-700);
+        background: var(--primary-50);
+      }
+      .chip.active {
+        background: var(--primary-600);
+        color: var(--text-inverse);
+        border-color: var(--primary-600);
+      }
+      .chip-emoji {
+        font-size: 15px;
+      }
+
+      /* ═══ SECTION HEADER ═══ */
+      .section-hdr {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: var(--sp-lg) var(--sp-base) var(--sp-md);
+      }
+      .section-title {
+        font-family: var(--font-display) !important;
+        font-size: 18px !important;
+        font-weight: 700 !important;
+        color: var(--text-primary);
+        letter-spacing: -0.3px;
+      }
+      .section-action {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--primary-600);
+        cursor: pointer;
+        transition: color 150ms;
+      }
+      .section-action:hover {
+        color: var(--primary-700);
+      }
+
+      /* ═══ HERO FEATURED CARD ═══ */
+      .hero-card {
+        margin: var(--sp-sm) var(--sp-base) 0;
+        border-radius: var(--radius-lg);
+        padding: var(--sp-lg);
+        background: linear-gradient(
+          135deg,
+          #065f46 0%,
+          #059669 50%,
+          #34d399 100%
+        );
+        position: relative;
+        overflow: hidden;
+        box-shadow: var(--shadow-hero);
+        cursor: pointer;
+        transition:
+          transform 200ms,
+          box-shadow 200ms;
+      }
+      .hero-card:active {
+        transform: scale(0.98);
+      }
+      .hero-card::before {
+        content: '';
+        position: absolute;
+        top: -40px;
+        right: -40px;
+        width: 180px;
+        height: 180px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.08);
+      }
+      .hero-card::after {
+        content: '';
+        position: absolute;
+        bottom: -60px;
+        left: -30px;
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.05);
+      }
+      .hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 4px 10px;
+        border-radius: var(--radius-full);
+        background: rgba(255, 255, 255, 0.2);
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--text-inverse);
+        letter-spacing: 0.5px;
+        backdrop-filter: blur(8px);
+      }
+      .hero-title {
+        font-family: var(--font-display) !important;
+        font-size: 24px !important;
+        font-weight: 800 !important;
+        color: var(--text-inverse);
+        margin-top: var(--sp-md);
+        letter-spacing: -0.5px;
+        line-height: 1.2;
+        position: relative;
+        z-index: 1;
+      }
+      .hero-desc {
+        font-size: 14px;
+        color: rgba(255, 255, 255, 0.85);
+        margin-top: var(--sp-xs);
+        line-height: 1.5;
+        position: relative;
+        z-index: 1;
+      }
+      .hero-chips {
+        display: flex;
+        gap: var(--sp-sm);
+        margin-top: var(--sp-base);
+        flex-wrap: wrap;
+        position: relative;
+        z-index: 1;
+      }
+      .hero-chip {
+        padding: 5px 12px;
+        border-radius: var(--radius-full);
+        background: rgba(255, 255, 255, 0.18);
+        font-size: 13px;
+        color: var(--text-inverse);
+        font-weight: 500;
+        backdrop-filter: blur(4px);
+      }
+      .hero-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: var(--sp-base);
+        position: relative;
+        z-index: 1;
+      }
+      .hero-users {
+        font-size: 13px;
+        color: rgba(255, 255, 255, 0.7);
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .hero-users-dots {
+        display: flex;
+      }
+      .hero-users-dot {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        border: 2px solid var(--primary-700);
+        margin-left: -6px;
+        font-size: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255, 255, 255, 0.15);
+      }
+      .hero-users-dot:first-child {
+        margin-left: 0;
+      }
+      .hero-cta {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 16px;
+        border-radius: var(--radius-md);
+        background: rgba(255, 255, 255, 0.25);
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--text-inverse);
+        backdrop-filter: blur(8px);
+        transition: all 150ms;
+      }
+      .hero-cta:active {
+        transform: scale(0.95);
+        background: rgba(255, 255, 255, 0.35);
+      }
+
+      /* ═══ TRENDING CARDS ═══ */
+      .trending-scroll {
+        display: flex;
+        gap: var(--sp-md);
+        padding: 0 var(--sp-base);
+        overflow-x: auto;
+        scrollbar-width: none;
+      }
+      .trending-scroll::-webkit-scrollbar {
+        display: none;
+      }
+      .trending-card {
+        flex-shrink: 0;
+        width: 165px;
+        background: var(--surface-elevated);
+        border: 1.5px solid var(--border-light);
+        border-radius: var(--radius-lg);
+        padding: var(--sp-base);
+        box-shadow: var(--shadow-card);
+        cursor: pointer;
+        transition: all 200ms;
+        display: flex;
+        flex-direction: column;
+      }
+      .trending-card:active {
+        transform: scale(0.97);
+        box-shadow: var(--shadow-elevated);
+      }
+      .trending-icon-wrap {
+        width: 48px;
+        height: 48px;
+        border-radius: var(--radius-md);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+      }
+      .trending-name {
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-top: var(--sp-md);
+        line-height: 1.3;
+      }
+      .trending-meta {
+        display: flex;
+        align-items: center;
+        gap: var(--sp-xs);
+        margin-top: var(--sp-xs);
+      }
+      .trending-freq {
+        font-family: var(--font-mono) !important;
+        font-size: 11px;
+        color: var(--text-tertiary);
+      }
+      .trending-science {
+        font-size: 10px;
+        padding: 2px 6px;
+        border-radius: var(--radius-full);
+        background: #fef3c7;
+        color: #92400e;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 3px;
+      }
+      .trending-bottom {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: auto;
+        padding-top: var(--sp-md);
+      }
+      .trending-pop {
+        font-size: 11px;
+        color: var(--text-tertiary);
+        display: flex;
+        align-items: center;
+        gap: 3px;
+      }
+      .add-btn {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: var(--primary-600);
+        color: var(--text-inverse);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 150ms;
+        box-shadow: 0 2px 6px rgba(5, 150, 105, 0.25);
+      }
+      .add-btn:active {
+        transform: scale(0.9);
+        background: var(--primary-700);
+      }
+      .add-btn.added {
+        background: var(--surface-muted);
+        color: var(--primary-600);
+        box-shadow: none;
+      }
+
+      /* ═══ CURATED PACKS ═══ */
+      .pack-card {
+        margin: 0 var(--sp-base) var(--sp-md);
+        border-radius: var(--radius-lg);
+        padding: var(--sp-base) var(--sp-lg);
+        display: flex;
+        align-items: center;
+        gap: var(--sp-base);
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        transition: all 200ms;
+        box-shadow: var(--shadow-card);
+      }
+      .pack-card:active {
+        transform: scale(0.98);
+      }
+      .pack-left {
+        flex: 1;
+      }
+      .pack-emojis {
+        font-size: 22px;
+        display: flex;
+        gap: 6px;
+      }
+      .pack-name {
+        font-size: 16px;
+        font-weight: 700;
+        color: var(--text-inverse);
+        margin-top: var(--sp-sm);
+        line-height: 1.3;
+      }
+      .pack-desc {
+        font-size: 13px;
+        color: rgba(255, 255, 255, 0.75);
+        margin-top: 3px;
+        line-height: 1.4;
+      }
+      .pack-count {
+        font-family: var(--font-mono) !important;
+        font-size: 11px;
+        color: rgba(255, 255, 255, 0.5);
+        margin-top: var(--sp-xs);
+      }
+      .pack-cta {
+        flex-shrink: 0;
+        padding: 10px 18px;
+        border-radius: var(--radius-md);
+        background: rgba(255, 255, 255, 0.2);
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--text-inverse);
+        backdrop-filter: blur(4px);
+        transition: all 150ms;
+      }
+      .pack-cta:active {
+        transform: scale(0.95);
+        background: rgba(255, 255, 255, 0.3);
+      }
+
+      /* ═══ CATEGORY GRID ═══ */
+      .cat-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: var(--sp-md);
+        padding: 0 var(--sp-base);
+      }
+      .cat-tile {
+        border-radius: var(--radius-lg);
+        padding: var(--sp-base);
+        min-height: 120px;
+        display: flex;
+        flex-direction: column;
+        cursor: pointer;
+        transition: all 200ms;
+        border: 1.5px solid transparent;
+        position: relative;
+      }
+      .cat-tile:active {
+        transform: scale(0.97);
+      }
+      .cat-tile:hover {
+        border-color: rgba(0, 0, 0, 0.06);
+      }
+      .cat-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .cat-icon {
+        font-size: 28px;
+      }
+      .cat-label {
+        font-size: 14px;
+        font-weight: 600;
+        margin-top: var(--sp-sm);
+        line-height: 1.2;
+      }
+      .cat-count {
+        font-size: 12px;
+        color: var(--text-tertiary);
+        margin-top: 2px;
+      }
+      .cat-preview {
+        display: flex;
+        gap: 4px;
+        margin-top: auto;
+        padding-top: var(--sp-sm);
+      }
+      .cat-preview-emoji {
+        font-size: 14px;
+        opacity: 0.6;
+      }
+
+      /* ═══ ANIMATIONS ═══ */
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(16px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes slideInRight {
+        from {
+          opacity: 0;
+          transform: translateX(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+      .anim-1 {
+        animation: fadeInUp 400ms ease-out 100ms both;
+      }
+      .anim-2 {
+        animation: fadeInUp 400ms ease-out 200ms both;
+      }
+      .anim-3 {
+        animation: fadeInUp 400ms ease-out 300ms both;
+      }
+      .anim-4 {
+        animation: fadeInUp 400ms ease-out 400ms both;
+      }
+      .anim-5 {
+        animation: fadeInUp 400ms ease-out 500ms both;
+      }
+      .anim-6 {
+        animation: fadeInUp 400ms ease-out 600ms both;
+      }
+
+      .trending-card:nth-child(1) {
+        animation: slideInRight 350ms ease-out 350ms both;
+      }
+      .trending-card:nth-child(2) {
+        animation: slideInRight 350ms ease-out 430ms both;
+      }
+      .trending-card:nth-child(3) {
+        animation: slideInRight 350ms ease-out 510ms both;
+      }
+      .trending-card:nth-child(4) {
+        animation: slideInRight 350ms ease-out 590ms both;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="statusbar">
+        <span>9:41</span>
+        <div class="statusbar-r">
+          <i data-lucide="signal" style="width: 14px; height: 14px"></i>
+          <i data-lucide="wifi" style="width: 14px; height: 14px"></i>
+          <i data-lucide="battery-full" style="width: 18px; height: 14px"></i>
+        </div>
+      </div>
+
+      <div class="screen">
+        <!-- ═══ HEADER ═══ -->
+        <div class="header anim-1">
+          <div class="header-left">
+            <div class="header-icon">📋</div>
+            <span class="header-title">Import Habits</span>
+          </div>
+          <button class="icon-btn">
+            <i data-lucide="x" style="width: 18px; height: 18px"></i>
+          </button>
+        </div>
+
+        <!-- ═══ SEARCH BAR ═══ -->
+        <div class="search-wrap anim-1">
+          <div class="search">
+            <i
+              data-lucide="search"
+              class="search-icon"
+              style="width: 18px; height: 18px"
+            ></i>
+            <input
+              type="text"
+              placeholder="Search habits or science keywords..."
+            />
+          </div>
+        </div>
+
+        <!-- ═══ QUICK FILTER CHIPS ═══ -->
+        <div class="chips-row anim-2">
+          <div class="chip active"><span class="chip-emoji">✨</span> All</div>
+          <div class="chip"><span class="chip-emoji">🌅</span> Morning</div>
+          <div class="chip"><span class="chip-emoji">🧠</span> Mental</div>
+          <div class="chip"><span class="chip-emoji">💪</span> Fitness</div>
+          <div class="chip"><span class="chip-emoji">😴</span> Sleep</div>
+          <div class="chip"><span class="chip-emoji">🧘</span> Mindful</div>
+          <div class="chip"><span class="chip-emoji">📚</span> Learning</div>
+          <div class="chip"><span class="chip-emoji">💰</span> Finance</div>
+        </div>
+
+        <!-- ═══ HERO FEATURED CARD ═══ -->
+        <div class="hero-card anim-3">
+          <div class="hero-badge"><span>⭐</span> FEATURED</div>
+          <div class="hero-title">Morning Mastery</div>
+          <div class="hero-desc">
+            Start your day with science-backed habits for energy and focus
+          </div>
+          <div class="hero-chips">
+            <span class="hero-chip">🌅 Wake Early</span>
+            <span class="hero-chip">💧 Hydrate</span>
+            <span class="hero-chip">📝 Journal</span>
+            <span class="hero-chip">🧘 Meditate</span>
+          </div>
+          <div class="hero-footer">
+            <div class="hero-users">
+              <div class="hero-users-dots">
+                <div class="hero-users-dot">🌅</div>
+                <div class="hero-users-dot">💧</div>
+                <div class="hero-users-dot">📝</div>
+              </div>
+              <span>2.4k users</span>
+            </div>
+            <div class="hero-cta">
+              Explore
+              <i
+                data-lucide="chevron-right"
+                style="width: 16px; height: 16px"
+              ></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- ═══ TRENDING NOW ═══ -->
+        <div class="anim-4">
+          <div class="section-hdr">
+            <span class="section-title">🔥 Trending Now</span>
+            <span class="section-action">See all</span>
+          </div>
+          <div class="trending-scroll">
+            <!-- Card 1 -->
+            <div class="trending-card">
+              <div class="trending-icon-wrap" style="background: #fef3c7">
+                🧘
+              </div>
+              <div class="trending-name">Morning Meditation</div>
+              <div class="trending-meta">
+                <span class="trending-freq">Daily</span>
+                <span class="trending-science">🔬 Science</span>
+              </div>
+              <div class="trending-bottom">
+                <span class="trending-pop">
+                  <i
+                    data-lucide="trending-up"
+                    style="width: 12px; height: 12px; color: var(--primary-600)"
+                  ></i>
+                  1.2k
+                </span>
+                <button class="add-btn" data-action="add">
+                  <i data-lucide="plus" style="width: 16px; height: 16px"></i>
+                </button>
+              </div>
+            </div>
+            <!-- Card 2 -->
+            <div class="trending-card">
+              <div class="trending-icon-wrap" style="background: #dbeafe">
+                💧
+              </div>
+              <div class="trending-name">Hydrate First Thing</div>
+              <div class="trending-meta">
+                <span class="trending-freq">Daily</span>
+                <span class="trending-science">🔬 Science</span>
+              </div>
+              <div class="trending-bottom">
+                <span class="trending-pop">
+                  <i
+                    data-lucide="trending-up"
+                    style="width: 12px; height: 12px; color: var(--primary-600)"
+                  ></i>
+                  980
+                </span>
+                <button class="add-btn" data-action="add">
+                  <i data-lucide="plus" style="width: 16px; height: 16px"></i>
+                </button>
+              </div>
+            </div>
+            <!-- Card 3 -->
+            <div class="trending-card">
+              <div class="trending-icon-wrap" style="background: #ede9fe">
+                📝
+              </div>
+              <div class="trending-name">Gratitude Journal</div>
+              <div class="trending-meta">
+                <span class="trending-freq">Daily</span>
+              </div>
+              <div class="trending-bottom">
+                <span class="trending-pop">
+                  <i
+                    data-lucide="trending-up"
+                    style="width: 12px; height: 12px; color: var(--primary-600)"
+                  ></i>
+                  870
+                </span>
+                <button class="add-btn" data-action="add">
+                  <i data-lucide="plus" style="width: 16px; height: 16px"></i>
+                </button>
+              </div>
+            </div>
+            <!-- Card 4 -->
+            <div class="trending-card">
+              <div class="trending-icon-wrap" style="background: #d1fae5">
+                🏃
+              </div>
+              <div class="trending-name">30-Min Walk</div>
+              <div class="trending-meta">
+                <span class="trending-freq">Daily</span>
+                <span class="trending-science">🔬 Science</span>
+              </div>
+              <div class="trending-bottom">
+                <span class="trending-pop">
+                  <i
+                    data-lucide="trending-up"
+                    style="width: 12px; height: 12px; color: var(--primary-600)"
+                  ></i>
+                  750
+                </span>
+                <button class="add-btn" data-action="add">
+                  <i data-lucide="plus" style="width: 16px; height: 16px"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ═══ CURATED PACKS ═══ -->
+        <div class="anim-5">
+          <div class="section-hdr">
+            <span class="section-title">📦 Curated Packs</span>
+          </div>
+          <!-- Pack 1: Huberman -->
+          <div
+            class="pack-card"
+            style="
+              background: linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%);
+            "
+          >
+            <div class="pack-left">
+              <div class="pack-emojis">🧪 🧠 ☀️ 🧊</div>
+              <div class="pack-name">Huberman Essentials</div>
+              <div class="pack-desc">
+                Science protocols from Andrew Huberman
+              </div>
+              <div class="pack-count">5 habits</div>
+            </div>
+            <button class="pack-cta">Import Pack</button>
+          </div>
+          <!-- Pack 2: Morning -->
+          <div
+            class="pack-card"
+            style="
+              background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            "
+          >
+            <div class="pack-left">
+              <div class="pack-emojis">🌄 ☕ 🏃 ✍️</div>
+              <div class="pack-name">Morning Mastery</div>
+              <div class="pack-desc">Build an unstoppable morning routine</div>
+              <div class="pack-count">4 habits</div>
+            </div>
+            <button class="pack-cta">Import Pack</button>
+          </div>
+          <!-- Pack 3: Mindful -->
+          <div
+            class="pack-card"
+            style="
+              background: linear-gradient(135deg, #0891b2 0%, #0e7490 100%);
+            "
+          >
+            <div class="pack-left">
+              <div class="pack-emojis">🧘 📓 🙏 🌿</div>
+              <div class="pack-name">Mindful Peak</div>
+              <div class="pack-desc">Find calm and clarity every day</div>
+              <div class="pack-count">4 habits</div>
+            </div>
+            <button class="pack-cta">Import Pack</button>
+          </div>
+        </div>
+
+        <!-- ═══ BROWSE BY CATEGORY ═══ -->
+        <div class="anim-6">
+          <div class="section-hdr">
+            <span class="section-title">🗂️ Browse by Category</span>
+          </div>
+          <div class="cat-grid">
+            <!-- Morning Routine -->
+            <div class="cat-tile" style="background: var(--cat-morning)">
+              <div class="cat-top">
+                <span class="cat-icon">🌅</span>
+              </div>
+              <span class="cat-label" style="color: var(--cat-morning-text)"
+                >Morning Routine</span
+              >
+              <span class="cat-count">8 templates</span>
+              <div class="cat-preview">
+                <span class="cat-preview-emoji">🧘</span>
+                <span class="cat-preview-emoji">💧</span>
+                <span class="cat-preview-emoji">📝</span>
+                <span class="cat-preview-emoji">☀️</span>
+              </div>
+            </div>
+            <!-- Mental Health -->
+            <div class="cat-tile" style="background: var(--cat-mental)">
+              <div class="cat-top">
+                <span class="cat-icon">🧠</span>
+              </div>
+              <span class="cat-label" style="color: var(--cat-mental-text)"
+                >Mental Health</span
+              >
+              <span class="cat-count">12 templates</span>
+              <div class="cat-preview">
+                <span class="cat-preview-emoji">😌</span>
+                <span class="cat-preview-emoji">🙏</span>
+                <span class="cat-preview-emoji">📓</span>
+                <span class="cat-preview-emoji">💭</span>
+              </div>
+            </div>
+            <!-- Health & Fitness -->
+            <div class="cat-tile" style="background: var(--cat-fitness)">
+              <div class="cat-top">
+                <span class="cat-icon">💪</span>
+              </div>
+              <span class="cat-label" style="color: var(--cat-fitness-text)"
+                >Health & Fitness</span
+              >
+              <span class="cat-count">10 templates</span>
+              <div class="cat-preview">
+                <span class="cat-preview-emoji">🏋️</span>
+                <span class="cat-preview-emoji">🏃</span>
+                <span class="cat-preview-emoji">🥗</span>
+                <span class="cat-preview-emoji">💪</span>
+              </div>
+            </div>
+            <!-- Sleep -->
+            <div class="cat-tile" style="background: var(--cat-sleep)">
+              <div class="cat-top">
+                <span class="cat-icon">😴</span>
+              </div>
+              <span class="cat-label" style="color: var(--cat-sleep-text)"
+                >Sleep</span
+              >
+              <span class="cat-count">6 templates</span>
+              <div class="cat-preview">
+                <span class="cat-preview-emoji">🌙</span>
+                <span class="cat-preview-emoji">📵</span>
+                <span class="cat-preview-emoji">🛏️</span>
+                <span class="cat-preview-emoji">🫖</span>
+              </div>
+            </div>
+            <!-- Mindfulness -->
+            <div class="cat-tile" style="background: var(--cat-mindfulness)">
+              <div class="cat-top">
+                <span class="cat-icon">🧘</span>
+              </div>
+              <span class="cat-label" style="color: var(--cat-mindfulness-text)"
+                >Mindfulness</span
+              >
+              <span class="cat-count">9 templates</span>
+              <div class="cat-preview">
+                <span class="cat-preview-emoji">🌿</span>
+                <span class="cat-preview-emoji">🕯️</span>
+                <span class="cat-preview-emoji">🫁</span>
+                <span class="cat-preview-emoji">☮️</span>
+              </div>
+            </div>
+            <!-- Productivity -->
+            <div class="cat-tile" style="background: var(--cat-productivity)">
+              <div class="cat-top">
+                <span class="cat-icon">⚡</span>
+              </div>
+              <span
+                class="cat-label"
+                style="color: var(--cat-productivity-text)"
+                >Productivity</span
+              >
+              <span class="cat-count">7 templates</span>
+              <div class="cat-preview">
+                <span class="cat-preview-emoji">📋</span>
+                <span class="cat-preview-emoji">⏰</span>
+                <span class="cat-preview-emoji">🎯</span>
+                <span class="cat-preview-emoji">📊</span>
+              </div>
+            </div>
+            <!-- Andrew Huberman -->
+            <div class="cat-tile" style="background: var(--cat-huberman)">
+              <div class="cat-top">
+                <span class="cat-icon">🧪</span>
+              </div>
+              <span class="cat-label" style="color: var(--cat-huberman-text)"
+                >Andrew Huberman</span
+              >
+              <span class="cat-count">5 templates</span>
+              <div class="cat-preview">
+                <span class="cat-preview-emoji">☀️</span>
+                <span class="cat-preview-emoji">🧊</span>
+                <span class="cat-preview-emoji">🧠</span>
+                <span class="cat-preview-emoji">💊</span>
+              </div>
+            </div>
+            <!-- Learning -->
+            <div class="cat-tile" style="background: var(--cat-learning)">
+              <div class="cat-top">
+                <span class="cat-icon">📚</span>
+              </div>
+              <span class="cat-label" style="color: var(--cat-learning-text)"
+                >Learning</span
+              >
+              <span class="cat-count">8 templates</span>
+              <div class="cat-preview">
+                <span class="cat-preview-emoji">📖</span>
+                <span class="cat-preview-emoji">✍️</span>
+                <span class="cat-preview-emoji">🎧</span>
+                <span class="cat-preview-emoji">🤔</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- bottom spacer -->
+        <div style="height: 32px"></div>
+      </div>
+    </div>
+
+    <script>
+      // Initialize Lucide icons
+      lucide.createIcons();
+
+      // Add habit button interaction
+      document
+        .querySelectorAll('.add-btn[data-action="add"]')
+        .forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            if (btn.classList.contains('added')) return;
+            btn.classList.add('added');
+            // Clear existing icon and add check mark
+            while (btn.firstChild) btn.removeChild(btn.firstChild);
+            var icon = document.createElement('i');
+            icon.setAttribute('data-lucide', 'check');
+            icon.setAttribute('style', 'width:16px;height:16px');
+            btn.appendChild(icon);
+            lucide.createIcons({ nodes: [icon] });
+            btn.style.transform = 'scale(1.2)';
+            setTimeout(function () {
+              btn.style.transform = '';
+            }, 200);
+          });
+        });
+
+      // Chip single-select toggle
+      document.querySelectorAll('.chip').forEach(function (chip) {
+        chip.addEventListener('click', function () {
+          document.querySelectorAll('.chip').forEach(function (c) {
+            c.classList.remove('active');
+          });
+          chip.classList.add('active');
+        });
+      });
+    </script>
+  </body>
+</html>
