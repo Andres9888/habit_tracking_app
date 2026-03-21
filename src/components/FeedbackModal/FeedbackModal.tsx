@@ -31,6 +31,7 @@ import { useThemeColors } from '../../theme/ThemeContext';
 import type { FeedbackModalProps, FeedbackType } from './FeedbackModal.types';
 import { getDescriptionPlaceholder } from './FeedbackModalHelpers';
 import { useFeedbackModalStyles } from './FeedbackModal.styles';
+import { buildTextInputHintProps } from '@/utils/textInputHintProps';
 import { MAX_SHORT_TEXT_LENGTH, MAX_LONG_TEXT_LENGTH } from '@/constants';
 
 const SUPPORT_EMAIL = 'support@chainday.app';
@@ -220,9 +221,11 @@ export function FeedbackModal({ visible, onClose }: FeedbackModalProps) {
               </Text>
               <TextInput
                 style={styles.input}
-                placeholder='Brief summary of your feedback'
-                placeholderTextColor={colors.text.tertiary}
                 value={title}
+                {...buildTextInputHintProps(
+                  'Brief summary of your feedback',
+                  colors.text.tertiary
+                )}
                 onChangeText={setTitle}
                 maxLength={MAX_SHORT_TEXT_LENGTH}
                 returnKeyType='next'
@@ -238,9 +241,11 @@ export function FeedbackModal({ visible, onClose }: FeedbackModalProps) {
               </Text>
               <TextInput
                 style={[styles.input, styles.textArea]}
-                placeholder={getDescriptionPlaceholder(selectedType)}
-                placeholderTextColor={colors.text.tertiary}
                 value={description}
+                {...buildTextInputHintProps(
+                  getDescriptionPlaceholder(selectedType),
+                  colors.text.tertiary
+                )}
                 onChangeText={setDescription}
                 maxLength={MAX_LONG_TEXT_LENGTH}
                 multiline
@@ -258,9 +263,11 @@ export function FeedbackModal({ visible, onClose }: FeedbackModalProps) {
               </Text>
               <TextInput
                 style={styles.input}
-                placeholder='your.email@example.com'
-                placeholderTextColor={colors.text.tertiary}
                 value={email}
+                {...buildTextInputHintProps(
+                  'your.email@example.com',
+                  colors.text.tertiary
+                )}
                 onChangeText={setEmail}
                 keyboardType='email-address'
                 autoCapitalize='none'

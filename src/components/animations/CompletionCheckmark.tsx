@@ -27,6 +27,7 @@ import {
   BASE_CHECKMARK_DELAY,
 } from './constants';
 import { springs } from '@/theme/animations';
+import { useThemeColors } from '@/theme/ThemeContext';
 
 export interface CompletionCheckmarkProps {
   /** Whether the checkmark should be visible */
@@ -45,6 +46,7 @@ export function CompletionCheckmark({
   shouldAnimate,
   reduceMotion = false,
 }: CompletionCheckmarkProps) {
+  const { colors } = useThemeColors();
   const scale = useSharedValue(
     isVisible && shouldAnimate && !reduceMotion ? 0 : isVisible ? 1 : 0
   );
@@ -96,7 +98,7 @@ export function CompletionCheckmark({
         },
       ]}
     >
-      <View className='h-5 w-5 items-center justify-center rounded-full bg-emerald-500 shadow-sm'>
+      <View className='h-5 w-5 items-center justify-center rounded-full shadow-sm' style={{ backgroundColor: colors.status.success }}>
         <Check className='text-white' size={12} strokeWidth={3} />
       </View>
     </Animated.View>

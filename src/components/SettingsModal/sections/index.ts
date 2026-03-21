@@ -1,5 +1,9 @@
 export { AccountInfo } from './AccountInfo';
+export { AccountSection } from './AccountSection';
 export { AppActions } from './AppActions';
 export { LegalLinks } from './LegalLinks';
 export { PremiumStatus } from './PremiumStatus';
 export { AboutSection } from './AboutSection';
+export { SignOutCard } from './SignOutCard';
+export { AboutLegalSection } from './AboutLegalSection';
+export { DeleteAccountButton } from './DeleteAccountButton';

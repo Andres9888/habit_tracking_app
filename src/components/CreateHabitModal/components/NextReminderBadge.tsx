@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { Text, View } from 'react-native';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 import { Clock } from 'lucide-react-native';
+import { useThemeColors } from '../../../theme/ThemeContext';
 import { formatReminderTime } from '../../../utils/notifications';
 
 /**
@@ -74,6 +75,7 @@ export const NextReminderBadge = ({
 }: NextReminderBadgeProps) => {
   // Memoize the text computation - must be called before any early returns
   // to follow React's rules of hooks (consistent hook call order)
+  const { colors } = useThemeColors();
   const text = useMemo(() => getNextReminderText(reminderTime), [reminderTime]);
 
   // Don't render if reminders are disabled
@@ -89,9 +91,9 @@ export const NextReminderBadge = ({
       exiting={FadeOut.duration(150)}
       testID='next-reminder-badge'
     >
-      <View className='flex-row items-center justify-center gap-1.5 rounded-full bg-amber-100 px-3 py-1.5'>
-        <Clock color='#92400E' size={12} />
-        <Text className='text-xs font-medium text-amber-800'>Next: {text}</Text>
+      <View className='flex-row items-center justify-center gap-1.5 rounded-full px-3 py-1.5' style={{ backgroundColor: colors.status.warningLight }}>
+        <Clock color={colors.status.warningText} size={12} />
+        <Text className='text-xs font-medium' style={{ color: colors.status.warningText }}>Next: {text}</Text>
       </View>
     </Animated.View>
   );

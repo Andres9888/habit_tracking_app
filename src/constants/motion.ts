@@ -15,9 +15,9 @@ import { durations, springs } from '@/theme/animations';
 export const Motion = {
   duration: {
     base: durations.quick,
-    emphasized: 220,
+    emphasized: durations.transition,
     enter: durations.enter,
-    exit: 220,
+    exit: durations.transition,
     fast: durations.instant,
     reveal: durations.reveal,
   },

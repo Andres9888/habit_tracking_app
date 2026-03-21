@@ -1,5 +1,6 @@
 import { Text, View } from 'react-native';
 import { colors } from '@/theme/colors';
+import { useThemeColors } from '@/theme/ThemeContext';
 import type { HubermanPhase } from '../../../constants/hubermanPhases';
 import { HUBERMAN_PHASES } from '../../../constants/hubermanPhases';
 import { AnimatedPressable } from '../../ui';
@@ -16,6 +17,7 @@ export const PhaseOption = ({
   onPress,
 }: PhaseOptionProps) => {
   const phase = HUBERMAN_PHASES[phaseId];
+  const { colors: themeColors } = useThemeColors();
 
   return (
     <AnimatedPressable
@@ -40,9 +42,9 @@ export const PhaseOption = ({
           >
             {phase.shortLabel}
           </Text>
-          <Text className='ml-2 text-xs text-stone-500'>{phase.timeRange}</Text>
+          <Text className='ml-2 text-xs' style={{ color: themeColors.text.secondary }}>{phase.timeRange}</Text>
         </View>
-        <Text className='mt-0.5 text-xs text-stone-500'>
+        <Text className='mt-0.5 text-xs' style={{ color: themeColors.text.secondary }}>
           {phase.description}
         </Text>
       </View>

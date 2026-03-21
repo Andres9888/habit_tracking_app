@@ -1,7 +1,8 @@
 import { format, isToday } from 'date-fns';
-import clsx from 'clsx';
 import { Pressable, Text, View } from 'react-native';
+import type { ViewStyle, TextStyle } from 'react-native';
 import { useThemeColors } from '../../../theme/ThemeContext';
+import type { SemanticColors } from '../../../theme/darkColors';
 import type { HabitStatus } from '../HabitCalendarView.hooks';
 
 interface CalendarDayProps {
@@ -17,87 +18,57 @@ const STATUS_LABELS: Record<HabitStatus, string> = {
   upcoming: 'Upcoming day',
 };
 
+interface StatusStyles {
+  container: ViewStyle;
+  indicator: ViewStyle;
+  text: TextStyle;
+}
+
 /**
  * Maps habit status to appropriate styling based on theme.
  * Uses semantic colors from ThemeContext for dark mode support.
  */
 function getStatusStyles(
   status: HabitStatus,
-  isDark: boolean
-): { container: string; indicator: string; text: string } {
-  if (isDark) {
-    // Dark mode color scheme
-    switch (status) {
-      case 'done': {
-        return {
-          container: 'border-emerald-600 bg-emerald-900',
-          indicator: 'bg-emerald-400',
-          text: 'text-emerald-200',
-        };
-      }
-      case 'missed': {
-        return {
-          container: 'border-rose-600 bg-rose-900',
-          indicator: 'bg-rose-400',
-          text: 'text-rose-200',
-        };
-      }
-      case 'planned': {
-        return {
-          container: 'border-emerald-600 bg-emerald-900',
-          indicator: 'bg-emerald-400',
-          text: 'text-emerald-200',
-        };
-      }
-      case 'upcoming':
-      default: {
-        return {
-          container: 'border-gray-600 bg-gray-800',
-          indicator: 'bg-gray-600 opacity-40',
-          text: 'text-gray-400',
-        };
-      }
-    }
-  }
-
-  // Light mode color scheme (original)
+  colors: SemanticColors,
+): StatusStyles {
   switch (status) {
     case 'done': {
       return {
-        container: 'border-transparent bg-emerald-100',
-        indicator: 'bg-emerald-500',
-        text: 'text-emerald-700',
+        container: { borderColor: 'transparent', backgroundColor: colors.status.successLight },
+        indicator: { backgroundColor: colors.status.success },
+        text: { color: colors.status.successText },
       };
     }
     case 'missed': {
       return {
-        container: 'border-transparent bg-rose-50',
-        indicator: 'bg-rose-400',
-        text: 'text-rose-500',
+        container: { borderColor: 'transparent', backgroundColor: colors.status.errorLight },
+        indicator: { backgroundColor: colors.status.error },
+        text: { color: colors.status.errorText },
       };
     }
     case 'planned': {
       return {
-        container: 'border-emerald-200 bg-emerald-50',
-        indicator: 'bg-emerald-500',
-        text: 'text-emerald-600',
+        container: { borderColor: colors.status.success, backgroundColor: colors.status.successLight },
+        indicator: { backgroundColor: colors.status.success },
+        text: { color: colors.status.successText },
       };
     }
     case 'upcoming':
     default: {
       return {
-        container: 'border-stone-200 bg-white',
-        indicator: 'bg-stone-300 opacity-60',
-        text: 'text-stone-400',
+        container: { borderColor: 'transparent', backgroundColor: colors.card },
+        indicator: { backgroundColor: colors.gray[300], opacity: 0.6 },
+        text: { color: colors.text.tertiary },
       };
     }
   }
 }
 
 export function CalendarDay({ date, status, onPress }: CalendarDayProps) {
-  const { isDark } = useThemeColors();
+  const { colors } = useThemeColors();
   const isCurrentDay = isToday(date);
-  const { container, indicator, text } = getStatusStyles(status, isDark);
+  const { container, indicator, text } = getStatusStyles(status, colors);
   const isDisabled = status === 'upcoming';
 
   return (
@@ -119,16 +90,16 @@ export function CalendarDay({ date, status, onPress }: CalendarDayProps) {
       }}
     >
       <View
-        className={clsx(
-          'w-full flex-1 items-center justify-center rounded-lg border px-0.5 py-1',
+        className='w-full flex-1 items-center justify-center rounded-lg border px-0.5 py-1'
+        style={[
           container,
-          isCurrentDay && isDark ? 'border-emerald-300' : 'border-emerald-400'
-        )}
+          isCurrentDay ? { borderColor: colors.status.success } : undefined,
+        ]}
       >
-        <Text className={clsx('text-sm font-semibold', text)}>
+        <Text className='text-sm font-semibold' style={text}>
           {format(date, 'd')}
         </Text>
-        <View className={clsx('mt-1 h-1.5 w-1.5 rounded-full', indicator)} />
+        <View className='mt-1 h-1.5 w-1.5 rounded-full' style={indicator} />
       </View>
     </Pressable>
   );

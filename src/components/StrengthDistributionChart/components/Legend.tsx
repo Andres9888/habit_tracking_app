@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
     width: 12,
   },
   legendEmoji: {
-    fontSize: 18,
+    fontSize: 17,
     marginRight: spacing.xs,
   },
   legendItem: {

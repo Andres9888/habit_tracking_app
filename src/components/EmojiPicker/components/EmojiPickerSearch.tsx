@@ -2,6 +2,8 @@ import { memo } from 'react';
 import { TextInput, View } from 'react-native';
 import { Search, X } from 'lucide-react-native';
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
+import { useThemeColors } from '@/theme/ThemeContext';
+import { buildTextInputHintProps } from '@/utils/textInputHintProps';
 
 interface EmojiPickerSearchProps {
   searchQuery: string;
@@ -10,18 +12,24 @@ interface EmojiPickerSearchProps {
 }
 
 export const EmojiPickerSearch = memo(
-  ({ searchQuery, onChangeText, onClear }: EmojiPickerSearchProps) => (
+  ({ searchQuery, onChangeText, onClear }: EmojiPickerSearchProps) => {
+    const { colors } = useThemeColors();
+
+    return (
     <View className='px-4 pb-3 pt-3'>
       <View className='flex-row items-center rounded-xl bg-white px-3 py-2 shadow-sm'>
         <Search color='#78716c' size={20} />
         <TextInput
           accessibilityHint='Type keywords like run, water, or sleep to find emojis'
           accessibilityLabel='Search emojis'
-          className='ml-2 flex-1 text-base text-stone-800'
-          placeholder='Search "run", "water", "sleep"...'
-          placeholderTextColor='#a8a29e'
+          className='ml-2 flex-1 text-base'
+          style={{ color: colors.text.primary }}
           returnKeyType='search'
           value={searchQuery}
+          {...buildTextInputHintProps(
+            'Search "run", "water", "sleep"...',
+            '#a8a29e'
+          )}
           onChangeText={onChangeText}
         />
         {searchQuery.length > 0 ? <AnimatedPressable
@@ -33,7 +41,8 @@ export const EmojiPickerSearch = memo(
           </AnimatedPressable> : null}
       </View>
     </View>
-  )
+    );
+  }
 );
 
 EmojiPickerSearch.displayName = 'EmojiPickerSearch';

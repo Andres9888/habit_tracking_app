@@ -4,7 +4,7 @@
  * Tests for the loading skeleton component:
  * - Renders 3 pulse cards for comparison section
  * - Renders gradient shimmer for timeline chart
- * - Renders 3 insight card placeholders
+ * - Renders 3 insight card hints
  * - Respects reduced motion preference
  * - Has correct accessibility attributes
  */

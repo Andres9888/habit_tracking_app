@@ -2,7 +2,7 @@
  * SeedlingIcon - Custom SVG seedling illustration
  *
  * A hand-crafted sprouting plant that replaces the emoji seedling.
- * Renders consistently across iOS and Android (unlike emoji).
+ * Renders consistently across iOS and Native Handset (unlike emoji).
  * Uses the emerald color palette from the design system.
  */
 

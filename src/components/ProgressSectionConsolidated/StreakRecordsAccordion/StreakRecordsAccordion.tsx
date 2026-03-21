@@ -9,6 +9,7 @@ import { MedalCardsRow } from './MedalCardsRow';
 import { MeasurementContainer } from './MeasurementContainer';
 import { StreakEmptyState } from './StreakEmptyState';
 import { useStreakAccordionState } from './useStreakAccordionState';
+import { useThemeColors } from '@/theme/ThemeContext';
 
 export const StreakRecordsAccordion = React.memo(
   function StreakRecordsAccordion({
@@ -16,6 +17,7 @@ export const StreakRecordsAccordion = React.memo(
     currentStreak,
     defaultExpanded = false,
   }: StreakRecordsAccordionProps) {
+    const { colors } = useThemeColors();
     const state = useStreakAccordionState({
       currentStreak,
       defaultExpanded,
@@ -41,7 +43,8 @@ export const StreakRecordsAccordion = React.memo(
     return (
       <View
         accessibilityLabel={accessibilityLabel}
-        className='mt-3 overflow-hidden rounded-xl border border-stone-200 bg-white'
+        className='mt-3 overflow-hidden rounded-xl border'
+        style={{ borderColor: colors.border, backgroundColor: colors.card }}
       >
         <AccordionHeader
           chevronStyle={chevronAnimatedStyle}

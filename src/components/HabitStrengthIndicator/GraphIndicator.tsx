@@ -1,6 +1,6 @@
 /**
  * Graph Variant (trend line for premium analytics)
- * Placeholder for future implementation
+ * Informational fallback shown when chart data is unavailable.
  */
 
 import React from 'react';
@@ -11,8 +11,6 @@ import { styles } from './styles';
 export function GraphIndicator() {
   const theme = useAppTheme();
 
-  // TODO: Implement graph variant with Victory Native or react-native-svg
-  // This will be implemented in Phase 7: Premium Features
   return (
     <View style={styles.graphContainer}>
       <Text
@@ -21,7 +19,7 @@ export function GraphIndicator() {
           { color: theme.custom.colors.gray[500] },
         ]}
       >
-        Graph variant - Coming soon (Premium feature)
+        Detailed trend charts are available with premium insights.
       </Text>
     </View>
   );

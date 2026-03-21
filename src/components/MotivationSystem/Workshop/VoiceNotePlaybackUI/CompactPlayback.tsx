@@ -5,6 +5,7 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import { PlayPauseButton } from './PlayPauseButton';
 import { ProgressBar } from './ProgressBar';
 
@@ -33,6 +34,8 @@ export function CompactPlayback({
   onPlayPause,
   onSeek,
 }: CompactPlaybackProps) {
+  const { colors } = useThemeColors();
+
   return (
     <View className='flex-row items-center gap-3'>
       <PlayPauseButton
@@ -52,7 +55,7 @@ export function CompactPlayback({
         />
       </View>
 
-      <Text className='min-w-[48px] text-right text-xs text-stone-500'>
+      <Text className='min-w-[48px] text-right text-xs' style={{ color: colors.text.secondary }}>
         {isReady ? formattedPosition : '0:00'}/{displayDuration}
       </Text>
     </View>

@@ -1,5 +1,6 @@
 import { memo } from 'react';
 import { Pressable, ScrollView, Text } from 'react-native';
+import { useThemeColors } from '@/theme/ThemeContext';
 import { shadows } from '../../../theme/spacing';
 import { typography, fontFamilies} from '../../../theme/typography';
 import { HABIT_CATEGORIES } from '../../../constants/habitEmojis';
@@ -10,10 +11,14 @@ interface CategoryChipsProps {
 }
 
 export const CategoryChips = memo(
-  ({ selectedCategory, onCategorySelect }: CategoryChipsProps) => (
+  ({ selectedCategory, onCategorySelect }: CategoryChipsProps) => {
+    const { colors } = useThemeColors();
+
+    return (
     <ScrollView
       horizontal
-      className='border-b border-stone-200'
+      className='border-b'
+      style={{ borderColor: colors.border }}
       contentContainerStyle={{
         gap: 8,
         paddingHorizontal: 16,
@@ -62,7 +67,8 @@ export const CategoryChips = memo(
         );
       })}
     </ScrollView>
-  )
+    );
+  }
 );
 
 CategoryChips.displayName = 'CategoryChips';

@@ -1,5 +1,6 @@
 import { memo } from 'react';
 import { ScrollView, Text, View } from 'react-native';
+import { useThemeColors } from '@/theme/ThemeContext';
 import { QuickAccessEmojiItem } from './QuickAccessEmojiItem';
 
 interface RecentEmojisProps {
@@ -9,9 +10,12 @@ interface RecentEmojisProps {
 }
 
 export const RecentEmojis = memo(
-  ({ recentEmojis, selectedEmoji, onEmojiSelect }: RecentEmojisProps) => (
+  ({ recentEmojis, selectedEmoji, onEmojiSelect }: RecentEmojisProps) => {
+    const { colors } = useThemeColors();
+
+    return (
     <View className='px-4 pb-2'>
-      <Text className='mb-2 text-xs font-semibold uppercase tracking-wider text-stone-500'>
+      <Text className='mb-2 text-xs font-semibold uppercase tracking-wider' style={{ color: colors.text.secondary }}>
         Recently Used
       </Text>
       <ScrollView
@@ -30,7 +34,8 @@ export const RecentEmojis = memo(
         ))}
       </ScrollView>
     </View>
-  )
+    );
+  }
 );
 
 RecentEmojis.displayName = 'RecentEmojis';

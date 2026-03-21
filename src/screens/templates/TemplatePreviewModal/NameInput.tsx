@@ -4,6 +4,7 @@
 
 import React from 'react';
 import { View, Text, TextInput } from 'react-native';
+import { buildTextInputHintProps } from '@/utils/textInputHintProps';
 import { useAppTheme } from '../../../theme';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { styles } from './styles';
@@ -33,8 +34,6 @@ export function NameInput({
       <TextInput
         accessibilityLabel='Habit name'
         editable={!disabled}
-        placeholder='Enter habit name'
-        placeholderTextColor={colors.text.tertiary}
         style={[
           styles.input,
           {
@@ -45,6 +44,7 @@ export function NameInput({
           },
         ]}
         value={customName}
+        {...buildTextInputHintProps('Enter habit name', colors.text.tertiary)}
         onChangeText={onChangeName}
       />
     </View>

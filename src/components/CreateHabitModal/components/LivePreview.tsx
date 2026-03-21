@@ -1,5 +1,6 @@
 import { memo } from 'react';
 import { Text, View } from 'react-native';
+import { useThemeColors } from '@/theme/ThemeContext';
 
 /**
  * V11 Live Preview Micro-Component
@@ -29,6 +30,7 @@ interface LivePreviewProps {
  * V11 Live Preview Component - Simple 40px card with emoji + color + name
  */
 export const LivePreview = memo(({ emoji, color, habitName }: LivePreviewProps) => {
+  const { colors: themeColors } = useThemeColors();
   // Use default values when fields are empty
   const displayEmoji = emoji || '🎯';
   const displayName = habitName.trim() || 'Your new habit';
@@ -57,9 +59,10 @@ export const LivePreview = memo(({ emoji, color, habitName }: LivePreviewProps) 
       {/* Habit Name */}
       <Text
         accessible={false}
-        className='ml-3 flex-1 text-[15px] font-medium text-stone-700'
+        className='ml-3 flex-1 text-[15px] font-medium'
         ellipsizeMode='tail'
         numberOfLines={1}
+        style={{ color: themeColors.text.primary }}
       >
         {displayName}
       </Text>

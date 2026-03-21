@@ -102,7 +102,7 @@ export const COPY = {
   // Question headline - line break after "thing" for rhythm
   headline: "What's one small thing\nyou want to do daily?",
 
-  // Input placeholder - motivating and descriptive
+  // Input hint - motivating and descriptive
   inputPlaceholder: 'What habit do you want to build?',
 
   // Success state
@@ -136,7 +136,7 @@ export const COLORS = {
   green50: '#F0FDF4', // No exact match in design system
 
   // Character counter error color
-  red500: '#EF4444', // Brighter red; design system `error` is #B53030
+  red500: colors.error,
 
   stone200: colors.gray[200],
 
@@ -155,6 +155,9 @@ export const COLORS = {
 
   // Success state
   successBackground: colors.primary[100],
+
+  // Text on dark/colored backgrounds
+  textInverse: colors.text.inverse,
 } as const;
 
 /**

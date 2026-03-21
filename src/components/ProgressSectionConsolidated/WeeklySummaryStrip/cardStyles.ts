@@ -15,7 +15,7 @@ export const cardStyles = StyleSheet.create({
     shadowOpacity: 0.08,
   },
   cardGradient: {
-    borderColor: '#a7f3d0', // emerald-200
+    borderColor: '#a7f3d0', // status.success border
     borderRadius: 16,
     borderWidth: 1,
     overflow: 'hidden',

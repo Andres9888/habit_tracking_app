@@ -722,7 +722,7 @@ describe('AC4: Full-size Image Viewer - Tap to view, controls', () => {
     });
   });
 
-  describe('Caption Placeholder', () => {
+  describe('Caption Hint', () => {
     it('shows edit hint for images without caption', () => {
       const { getByLabelText, getByText } = render(
         <VisionBoardSection {...filledProps} />

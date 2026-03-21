@@ -1,13 +1,18 @@
 import React from 'react';
 import { View } from 'react-native';
+import { useThemeColors } from '@/theme/ThemeContext';
 import { SkeletonLoader } from '../SkeletonLoader';
 import type { ReduceMotionProps } from '../types';
 
 export function CharacterCardSkeleton({ reduceMotion }: ReduceMotionProps) {
+  const { colors: themeColors } = useThemeColors();
+
   return (
     <View
-      className='mb-6 items-center rounded-3xl border border-stone-100 bg-white p-6'
+      className='mb-6 items-center rounded-3xl border p-6'
       style={{
+        borderColor: themeColors.border,
+        backgroundColor: themeColors.card,
         shadowColor: '#1c1917',
         shadowOffset: { height: 4, width: 0 },
         shadowOpacity: 0.08,

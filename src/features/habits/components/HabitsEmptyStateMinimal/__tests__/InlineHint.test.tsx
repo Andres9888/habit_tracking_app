@@ -66,7 +66,7 @@ describe('InlineHint', () => {
       // Style is an array: [badgeTextStyle, { color: ctaText }]
       expect(badgeText.props.style).toEqual(
         expect.arrayContaining([
-          expect.objectContaining({ fontSize: 11, fontWeight: '800' }),
+          expect.objectContaining({ fontSize: 13, fontWeight: '700' }),
           expect.objectContaining({ color: '#ffffff' }),
         ])
       );

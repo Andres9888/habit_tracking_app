@@ -8,13 +8,8 @@
  * - Auth domain is configured via environment variable (CLERK_AUTH_DOMAIN)
  * - Clerk domain should be set during deployment, not build time
  */
-const authDomain = 'https://vital-elf-64.clerk.accounts.dev';
-
-if (!authDomain) {
-  throw new Error(
-    'CLERK_AUTH_DOMAIN environment variable is required for Convex authentication'
-  );
-}
+const authDomain =
+  process.env.CLERK_AUTH_DOMAIN || 'https://vital-elf-64.clerk.accounts.dev';
 
 export default {
   providers: [

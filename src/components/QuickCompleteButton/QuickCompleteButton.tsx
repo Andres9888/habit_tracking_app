@@ -14,6 +14,7 @@ import { Pressable, Text, View } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { Check, Zap } from 'lucide-react-native';
 
+import { useThemeColors } from '@/theme/ThemeContext';
 import type { QuickCompleteButtonProps } from './QuickCompleteButton.types';
 import { useQuickCompleteButton } from './useQuickCompleteButton';
 import { ConfettiBurst } from './components';
@@ -28,6 +29,7 @@ export function QuickCompleteButton({
   onComplete,
   onUncomplete,
 }: QuickCompleteButtonProps) {
+  const { colors } = useThemeColors();
   const {
     buttonAnimatedStyle,
     checkAnimatedStyle,
@@ -60,19 +62,20 @@ export function QuickCompleteButton({
         }
         accessibilityRole='button'
         accessibilityState={{ checked: localCompleted }}
-        className={`flex-row items-center justify-center gap-3 rounded-2xl px-6 py-5 ${
-          localCompleted
-            ? 'border-2 border-emerald-200 bg-emerald-50'
-            : 'bg-emerald-500 shadow-lg shadow-emerald-500/30'
-        } `}
+        className='flex-row items-center justify-center gap-3 rounded-2xl px-6 py-5'
         disabled={isToggling}
-        style={buttonAnimatedStyle}
+        style={[
+          buttonAnimatedStyle,
+          localCompleted
+            ? { borderWidth: 2, borderColor: colors.status.success, backgroundColor: colors.status.successLight }
+            : { backgroundColor: colors.status.success, shadowColor: colors.status.success, shadowOpacity: 0.3, shadowRadius: 8, shadowOffset: { width: 0, height: 4 }, elevation: 8 },
+        ]}
         onPress={handlePress}
       >
         <View className='relative h-7 w-7 items-center justify-center'>
           {localCompleted ? (
             <Animated.View style={checkAnimatedStyle}>
-              <Check className='text-emerald-600' size={28} strokeWidth={3} />
+              <Check color={colors.status.success} size={28} strokeWidth={3} />
             </Animated.View>
           ) : (
             <Zap className='text-white' fill='white' size={24} />
@@ -80,9 +83,8 @@ export function QuickCompleteButton({
         </View>
 
         <Text
-          className={`text-[15px] font-semibold ${
-            localCompleted ? 'text-emerald-700' : 'text-white'
-          }`}
+          className='text-[15px] font-semibold'
+          style={{ color: localCompleted ? colors.status.successText : '#FFFFFF' }}
         >
           {localCompleted ? 'Done for Today' : 'Complete Today'}
         </Text>

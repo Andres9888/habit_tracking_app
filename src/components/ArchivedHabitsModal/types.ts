@@ -30,4 +30,6 @@ export interface StrengthInfo {
   label: string;
   bgColor: string;
   textColor: string;
+  bgStyle?: string;
+  textStyle?: string;
 }

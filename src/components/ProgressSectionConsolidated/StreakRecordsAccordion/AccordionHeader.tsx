@@ -8,6 +8,7 @@ import Animated from 'react-native-reanimated';
 import type { AnimatedStyle } from 'react-native-reanimated';
 import type { ViewStyle } from 'react-native';
 import { ChevronDown } from 'lucide-react-native';
+import { useThemeColors } from '@/theme/ThemeContext';
 
 interface AccordionHeaderProps {
   isExpanded: boolean;
@@ -24,6 +25,8 @@ export function AccordionHeader({
   chevronStyle,
   onToggle,
 }: AccordionHeaderProps) {
+  const { colors } = useThemeColors();
+
   return (
     <Pressable
       accessibilityHint={`Double tap to ${isExpanded ? 'collapse' : 'expand'} streak records`}
@@ -33,13 +36,13 @@ export function AccordionHeader({
       onPress={onToggle}
     >
       <View className='flex-row items-center gap-2'>
-        <Text className='text-sm font-medium text-stone-700'>
+        <Text className='text-sm font-medium' style={{ color: colors.text.primary }}>
           Streak Records
         </Text>
-        {!isExpanded && hasRecords ? <Text className='text-xs text-stone-500'>{previewText}</Text> : null}
+        {!isExpanded && hasRecords ? <Text className='text-xs' style={{ color: colors.text.secondary }}>{previewText}</Text> : null}
       </View>
       <Animated.View style={chevronStyle}>
-        <ChevronDown color='#78716c' size={18} />
+        <ChevronDown color={colors.text.secondary} size={18} />
       </Animated.View>
     </Pressable>
   );

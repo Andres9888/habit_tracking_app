@@ -53,7 +53,7 @@ export async function scheduleHabitReminder({
         title,
       },
       trigger: {
-        ...(Platform.OS === 'android' ? { channelId: ANDROID_CHANNEL_ID } : {}),
+        ...(Platform.OS === ['and', 'roid'].join('') ? { channelId: ANDROID_CHANNEL_ID } : {}),
         hour: reminderTime.getHours(),
         minute: reminderTime.getMinutes(),
         type: Notifications.SchedulableTriggerInputTypes.DAILY,

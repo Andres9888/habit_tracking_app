@@ -13,6 +13,7 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import { Plus, Pencil } from 'lucide-react-native';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import { CompletionCheckmark } from '../../../animations';
 import { SectionCard } from '../CueTriggerSection/SectionCard';
 import { AnimatedSection } from '../CueTriggerSection/AnimatedSection';
@@ -34,6 +35,7 @@ export function YourWhySection({
   reduceMotion = false,
   sectionIndex = 0,
 }: YourWhySectionProps) {
+  const { colors } = useThemeColors();
   const hasWhy = !!why;
 
   return (
@@ -44,34 +46,35 @@ export function YourWhySection({
     >
       <SectionCard
         accessibilityLabel={hasWhy ? 'Edit your why' : 'Add your why'}
-        className='border-l-4 border-l-rose-400'
+        className='border-l-4'
+        style={{ borderLeftColor: colors.status.error }}
         onPress={onPress}
       >
         {/* Header row: icon + title on left, action on right */}
         <View className='mb-1.5 flex-row items-center justify-between'>
           <View className='flex-row items-center gap-2'>
             <Text className='text-base'>❤️</Text>
-            <Text className='text-xs font-semibold text-rose-600'>
+            <Text className='text-xs font-semibold' style={{ color: colors.status.error }}>
               Your Why
             </Text>
           </View>
           {hasWhy ? (
-            <Pencil className='text-stone-400' size={14} />
+            <Pencil color={colors.text.tertiary} size={14} />
           ) : (
             <View className='flex-row items-center gap-1'>
-              <Plus className='text-rose-600' size={12} />
-              <Text className='text-xs font-medium text-rose-600'>Set up</Text>
+              <Plus color={colors.status.error} size={12} />
+              <Text className='text-xs font-medium' style={{ color: colors.status.error }}>Set up</Text>
             </View>
           )}
         </View>
 
         {/* Content */}
         {hasWhy ? (
-          <Text className='text-sm italic leading-relaxed text-stone-700'>
+          <Text className='text-sm italic leading-relaxed' style={{ color: colors.text.primary }}>
             "{why}"
           </Text>
         ) : (
-          <Text className='text-sm text-stone-500'>
+          <Text className='text-sm' style={{ color: colors.text.secondary }}>
             Define your deeper motivation
           </Text>
         )}

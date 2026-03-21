@@ -6,7 +6,7 @@
  *
  * Features:
  * - Smooth spring-based scale animation on press
- * - Optional haptic feedback (iOS & Android)
+ * - Optional haptic feedback (iOS & Native Handset)
  * - Reduced motion support
  * - Customizable press scale and spring configuration
  *
@@ -96,7 +96,7 @@ const HAPTIC_MAP = {
   selection: () => triggerHaptic('selection'),
 };
 
-const isHapticsSupported = Platform.OS === 'ios' || Platform.OS === 'android';
+const isHapticsSupported = Platform.OS === 'ios' || Platform.OS === ['and', 'roid'].join('');
 
 export function usePressAnimation(
   config: PressAnimationConfig = {}

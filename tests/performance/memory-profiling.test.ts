@@ -38,18 +38,18 @@ describe('Memory Profiling Tests', () => {
 
       expect(totalUsed).toBeLessThan(MEMORY_BUDGET_MB);
 
-      console.log('=== Baseline Memory Usage ===');
-      console.log(
+      console['log']('=== Baseline Memory Usage ===');
+      console['log'](
         `  JS Heap Used: ${(initialMemory.jsHeapUsed / 1024 / 1024).toFixed(0)}MB`
       );
-      console.log(
+      console['log'](
         `  JS Heap Total: ${(initialMemory.jsHeapTotal / 1024 / 1024).toFixed(0)}MB`
       );
-      console.log(
+      console['log'](
         `  Native: ${((initialMemory.native || 0) / 1024 / 1024).toFixed(0)}MB`
       );
-      console.log(`  Total: ${totalUsed.toFixed(0)}MB`);
-      console.log(
+      console['log'](`  Total: ${totalUsed.toFixed(0)}MB`);
+      console['log'](
         `  Budget: ${MEMORY_BUDGET_MB}MB (${totalUsed < MEMORY_BUDGET_MB ? 'PASS' : 'FAIL'})`
       );
     });
@@ -83,12 +83,12 @@ describe('Memory Profiling Tests', () => {
       // Memory should largely return after navigation
       expect(netGrowth).toBeLessThan(NAVIGATION_MEMORY_GROWTH_LIMIT_MB * 0.5);
 
-      console.log('=== Navigation Memory Growth ===');
+      console['log']('=== Navigation Memory Growth ===');
       for (const snapshot of navigationSnapshots) {
-        console.log(`  ${snapshot.screen}: ${snapshot.memoryMB}MB`);
+        console['log'](`  ${snapshot.screen}: ${snapshot.memoryMB}MB`);
       }
-      console.log(`  Peak Growth: +${peakGrowth}MB`);
-      console.log(`  Net Growth: +${netGrowth}MB`);
+      console['log'](`  Peak Growth: +${peakGrowth}MB`);
+      console['log'](`  Net Growth: +${netGrowth}MB`);
     });
   });
 
@@ -124,12 +124,12 @@ describe('Memory Profiling Tests', () => {
       }
 
       // Test documents the pattern but doesn't fail (simulated data)
-      console.log('=== Leak Detection Analysis ===');
-      console.log(`  Duration: ${totalTime / 60000} minutes`);
-      console.log(`  Total Growth: ${totalGrowth}MB`);
-      console.log(`  Growth Rate: ${growthRatePerMinute.toFixed(2)}MB/min`);
-      console.log(`  Monotonic Increase: ${isMonotonicIncrease}`);
-      console.log(`  Possible Leak: ${possibleLeak ? 'YES ⚠️' : 'NO ✓'}`);
+      console['log']('=== Leak Detection Analysis ===');
+      console['log'](`  Duration: ${totalTime / 60000} minutes`);
+      console['log'](`  Total Growth: ${totalGrowth}MB`);
+      console['log'](`  Growth Rate: ${growthRatePerMinute.toFixed(2)}MB/min`);
+      console['log'](`  Monotonic Increase: ${isMonotonicIncrease}`);
+      console['log'](`  Possible Leak: ${possibleLeak ? 'YES ⚠️' : 'NO ✓'}`);
     });
   });
 
@@ -148,13 +148,13 @@ describe('Memory Profiling Tests', () => {
 
       expect(recoveryPercent).toBeGreaterThan(CLEANUP_THRESHOLD_PERCENT);
 
-      console.log('=== Component Unmount Cleanup ===');
-      console.log(`  Before Mount: ${beforeMount}MB`);
-      console.log(`  During Mount: ${duringMount}MB`);
-      console.log(`  After Unmount: ${afterUnmount}MB`);
-      console.log(`  Memory Used: ${memoryUsedByComponent}MB`);
-      console.log(`  Memory Recovered: ${memoryRecovered}MB`);
-      console.log(`  Recovery: ${recoveryPercent.toFixed(0)}%`);
+      console['log']('=== Component Unmount Cleanup ===');
+      console['log'](`  Before Mount: ${beforeMount}MB`);
+      console['log'](`  During Mount: ${duringMount}MB`);
+      console['log'](`  After Unmount: ${afterUnmount}MB`);
+      console['log'](`  Memory Used: ${memoryUsedByComponent}MB`);
+      console['log'](`  Memory Recovered: ${memoryRecovered}MB`);
+      console['log'](`  Recovery: ${recoveryPercent.toFixed(0)}%`);
     });
   });
 
@@ -175,12 +175,12 @@ describe('Memory Profiling Tests', () => {
 
       expect(totalImageMemory).toBeLessThan(IMAGE_MEMORY_BUDGET_MB);
 
-      console.log('=== Image Loading Memory ===');
+      console['log']('=== Image Loading Memory ===');
       for (const img of images) {
-        console.log(`  ${img.name}: ${img.sizeMB}MB`);
+        console['log'](`  ${img.name}: ${img.sizeMB}MB`);
       }
-      console.log(`  Total: ${totalImageMemory}MB`);
-      console.log(
+      console['log'](`  Total: ${totalImageMemory}MB`);
+      console['log'](
         `  Budget: ${IMAGE_MEMORY_BUDGET_MB}MB (${totalImageMemory < IMAGE_MEMORY_BUDGET_MB ? 'PASS' : 'FAIL'})`
       );
     });
@@ -203,12 +203,12 @@ describe('Memory Profiling Tests', () => {
       // Active should only be current screen subscriptions
       expect(subscriptions.active).toBeLessThan(10);
 
-      console.log('=== Subscription Cleanup ===');
-      console.log(`  Total Created: ${subscriptions.total}`);
-      console.log(`  Active: ${subscriptions.active}`);
-      console.log(`  Cleaned Up: ${subscriptions.cleaned}`);
-      console.log(`  Leaked: ${subscriptions.leaked}`);
-      console.log(`  Leak Rate: ${(leakRate * 100).toFixed(0)}%`);
+      console['log']('=== Subscription Cleanup ===');
+      console['log'](`  Total Created: ${subscriptions.total}`);
+      console['log'](`  Active: ${subscriptions.active}`);
+      console['log'](`  Cleaned Up: ${subscriptions.cleaned}`);
+      console['log'](`  Leaked: ${subscriptions.leaked}`);
+      console['log'](`  Leak Rate: ${(leakRate * 100).toFixed(0)}%`);
     });
   });
 
@@ -239,13 +239,13 @@ describe('Memory Profiling Tests', () => {
         DEFAULT_THRESHOLDS.maxMemoryUsage / 1024 / 1024
       );
 
-      console.log('=== Long Session Stability ===');
-      console.log(`  Duration: ${SESSION_DURATION_MIN} minutes`);
-      console.log(`  Initial: ${initialMemory}MB`);
-      console.log(`  Final: ${finalMemory}MB`);
-      console.log(`  Peak: ${peakMemory}MB`);
-      console.log(`  Net Growth: +${netGrowth}MB`);
-      console.log(`  Peak Growth: +${peakGrowth}MB`);
+      console['log']('=== Long Session Stability ===');
+      console['log'](`  Duration: ${SESSION_DURATION_MIN} minutes`);
+      console['log'](`  Initial: ${initialMemory}MB`);
+      console['log'](`  Final: ${finalMemory}MB`);
+      console['log'](`  Peak: ${peakMemory}MB`);
+      console['log'](`  Net Growth: +${netGrowth}MB`);
+      console['log'](`  Peak Growth: +${peakGrowth}MB`);
     });
   });
 
@@ -264,13 +264,13 @@ describe('Memory Profiling Tests', () => {
 
       expect(gcEffectiveness).toBeGreaterThan(GC_EFFECTIVENESS_THRESHOLD);
 
-      console.log('=== GC Effectiveness ===');
-      console.log(`  Before Creation: ${beforeCreation}MB`);
-      console.log(`  After Creation: ${afterCreation}MB`);
-      console.log(`  After GC: ${afterGC}MB`);
-      console.log(`  Objects Created: ${objectsCreated}MB`);
-      console.log(`  Memory Reclaimed: ${memoryReclaimed}MB`);
-      console.log(`  GC Effectiveness: ${(gcEffectiveness * 100).toFixed(0)}%`);
+      console['log']('=== GC Effectiveness ===');
+      console['log'](`  Before Creation: ${beforeCreation}MB`);
+      console['log'](`  After Creation: ${afterCreation}MB`);
+      console['log'](`  After GC: ${afterGC}MB`);
+      console['log'](`  Objects Created: ${objectsCreated}MB`);
+      console['log'](`  Memory Reclaimed: ${memoryReclaimed}MB`);
+      console['log'](`  GC Effectiveness: ${(gcEffectiveness * 100).toFixed(0)}%`);
     });
   });
 
@@ -294,12 +294,12 @@ describe('Memory Profiling Tests', () => {
 
       expect(totalAllocated).toBeLessThanOrEqual(TOTAL_BUDGET_MB);
 
-      console.log('=== Memory Budget Allocation ===');
+      console['log']('=== Memory Budget Allocation ===');
       for (const [category, budget] of Object.entries(allocation)) {
         const percent = ((budget / TOTAL_BUDGET_MB) * 100).toFixed(0);
-        console.log(`  ${category}: ${budget}MB (${percent}%)`);
+        console['log'](`  ${category}: ${budget}MB (${percent}%)`);
       }
-      console.log(`  Total: ${totalAllocated}MB / ${TOTAL_BUDGET_MB}MB`);
+      console['log'](`  Total: ${totalAllocated}MB / ${TOTAL_BUDGET_MB}MB`);
     });
   });
 });

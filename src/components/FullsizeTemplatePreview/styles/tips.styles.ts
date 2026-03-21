@@ -58,7 +58,7 @@ export const tipsStyles = StyleSheet.create({
     color: '#713f12',
     flex: 1,
     fontFamily: fontFamilies.primary.text,
-    fontSize: 15,
+    fontSize: 14,
     lineHeight: 22,
   },
 });

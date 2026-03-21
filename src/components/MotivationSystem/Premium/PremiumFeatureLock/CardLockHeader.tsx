@@ -21,7 +21,7 @@ export function CardLockHeader({ meta }: CardLockHeaderProps) {
       </View>
       <View className='flex-1'>
         <Text className='text-base font-bold text-white'>{meta.title}</Text>
-        {meta.freeLimit ? <Text className='text-xs text-violet-100'>
+        {meta.freeLimit ? <Text className='text-xs' style={{ color: 'rgba(255,255,255,0.8)' }}>
             Free: {meta.freeLimit}
           </Text> : null}
       </View>

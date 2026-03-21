@@ -680,13 +680,13 @@ describe('AC4: User can complete WOOP plan', () => {
       expect(getByLabelText('Edit your WOOP plan')).toBeTruthy();
     });
 
-    it('shows placeholder text for unfilled fields', () => {
+    it('shows hint text for unfilled fields', () => {
       const partialWOOP: WOOPData = { wish: 'Run daily' };
       const { getByText } = render(
         <WOOPSection woop={partialWOOP} onPress={jest.fn()} />
       );
 
-      // Unfilled fields show placeholder text
+      // Unfilled fields show hint text
       expect(getByText(/Add your outcome/i)).toBeTruthy();
       expect(getByText(/Add your obstacle/i)).toBeTruthy();
       expect(getByText(/Add your plan/i)).toBeTruthy();
@@ -1093,7 +1093,7 @@ describe('AC5: User can set up basic visualization (success + failure)', () => {
       expect(getByLabelText('Edit your visualizations')).toBeTruthy();
     });
 
-    it('shows placeholder text for unfilled success fields', () => {
+    it('shows hint text for unfilled success fields', () => {
       const failureOnlyViz: VisualizationData = {
         failureBody: 'Tired',
         failureMind: 'Foggy',
@@ -1103,11 +1103,11 @@ describe('AC5: User can set up basic visualization (success + failure)', () => {
         <DualVizSetup visualization={failureOnlyViz} onPress={jest.fn()} />
       );
 
-      // Empty success section shows placeholder
+      // Empty success section shows hint
       expect(getByText(/How will you feel\?/i)).toBeTruthy();
     });
 
-    it('shows placeholder text for unfilled failure fields', () => {
+    it('shows hint text for unfilled failure fields', () => {
       const successOnlyViz: VisualizationData = {
         successBody: 'Energized',
         successMind: 'Clear',
@@ -1117,7 +1117,7 @@ describe('AC5: User can set up basic visualization (success + failure)', () => {
         <DualVizSetup visualization={successOnlyViz} onPress={jest.fn()} />
       );
 
-      // Empty failure section shows placeholder
+      // Empty failure section shows hint
       expect(getByText(/What will you avoid\?/i)).toBeTruthy();
     });
 

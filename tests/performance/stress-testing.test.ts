@@ -59,11 +59,11 @@ describe('Stress Testing', () => {
       expect(totalRenderTime).toBeLessThan(MAX_TOTAL_RENDER_TIME);
       expect(renderTracker.getTotalRenderCount()).toBeLessThan(HABIT_COUNT); // Virtualized
 
-      console.log('=== High Volume Habits Test ===');
-      console.log(`  Total Habits: ${HABIT_COUNT}`);
-      console.log(`  Initially Rendered: ${VISIBLE_WINDOW}`);
-      console.log(`  Total Render Time: ${totalRenderTime.toFixed(0)}ms`);
-      console.log(`  Actual Renders: ${renderTracker.getTotalRenderCount()}`);
+      console['log']('=== High Volume Habits Test ===');
+      console['log'](`  Total Habits: ${HABIT_COUNT}`);
+      console['log'](`  Initially Rendered: ${VISIBLE_WINDOW}`);
+      console['log'](`  Total Render Time: ${totalRenderTime.toFixed(0)}ms`);
+      console['log'](`  Actual Renders: ${renderTracker.getTotalRenderCount()}`);
     });
   });
 
@@ -101,11 +101,11 @@ describe('Stress Testing', () => {
       // No dropped toggles
       expect(networkMonitor.getAllTimings().length).toBe(TOGGLE_COUNT);
 
-      console.log('=== Rapid Toggle Test ===');
-      console.log(`  Toggle Count: ${TOGGLE_COUNT}`);
-      console.log(`  Avg Response: ${avgToggleTime.toFixed(2)}ms`);
-      console.log(`  Total Renders: ${renderTracker.getTotalRenderCount()}`);
-      console.log(`  Network Calls: ${networkMonitor.getAllTimings().length}`);
+      console['log']('=== Rapid Toggle Test ===');
+      console['log'](`  Toggle Count: ${TOGGLE_COUNT}`);
+      console['log'](`  Avg Response: ${avgToggleTime.toFixed(2)}ms`);
+      console['log'](`  Total Renders: ${renderTracker.getTotalRenderCount()}`);
+      console['log'](`  Network Calls: ${networkMonitor.getAllTimings().length}`);
     });
   });
 
@@ -141,11 +141,11 @@ describe('Stress Testing', () => {
 
       expect(avgBatchTime).toBeLessThan(MAX_BATCH_TIME);
 
-      console.log('=== Heavy Data Fetch Test ===');
-      console.log(`  Total Records: ${RECORD_COUNT}`);
-      console.log(`  Batches: ${batches}`);
-      console.log(`  Avg Batch Time: ${avgBatchTime.toFixed(0)}ms`);
-      console.log(`  Total Time (parallel): ${totalTime.toFixed(0)}ms`);
+      console['log']('=== Heavy Data Fetch Test ===');
+      console['log'](`  Total Records: ${RECORD_COUNT}`);
+      console['log'](`  Batches: ${batches}`);
+      console['log'](`  Avg Batch Time: ${avgBatchTime.toFixed(0)}ms`);
+      console['log'](`  Total Time (parallel): ${totalTime.toFixed(0)}ms`);
     });
   });
 
@@ -187,10 +187,10 @@ describe('Stress Testing', () => {
 
       expect(concurrentTime).toBeLessThan(MAX_TOTAL_TIME);
 
-      console.log('=== Concurrent Actions Test ===');
-      console.log(`  Total Actions: ${actionTimes.length}`);
-      console.log(`  Concurrent Time: ${concurrentTime.toFixed(0)}ms`);
-      console.log(
+      console['log']('=== Concurrent Actions Test ===');
+      console['log'](`  Total Actions: ${actionTimes.length}`);
+      console['log'](`  Concurrent Time: ${concurrentTime.toFixed(0)}ms`);
+      console['log'](
         `  Sequential Would Be: ${actionTimes.reduce((a, b) => a + b, 0).toFixed(0)}ms`
       );
     });
@@ -221,10 +221,10 @@ describe('Stress Testing', () => {
       const maxProcessing = Math.max(...processingTimes.map((p) => p.time));
       expect(maxProcessing).toBeLessThan(200);
 
-      console.log('=== Long Text Processing ===');
+      console['log']('=== Long Text Processing ===');
       for (const item of processingTimes) {
         const textSize = TEXT_SIZES.find((t) => t.name === item.name)!.chars;
-        console.log(
+        console['log'](
           `  ${item.name} (${textSize} chars): ${item.time.toFixed(0)}ms`
         );
       }
@@ -262,11 +262,11 @@ describe('Stress Testing', () => {
         frameTimes.reduce((a, b) => a + b, 0) / frameTimes.length;
       const fps = 1000 / avgFrameTime;
 
-      console.log('=== Animation Under Load ===');
-      console.log(`  Frame Count: ${FRAME_COUNT}`);
-      console.log(`  Jank Frames: ${jankFrames} (${jankPercent.toFixed(1)}%)`);
-      console.log(`  Avg Frame Time: ${avgFrameTime.toFixed(2)}ms`);
-      console.log(`  Effective FPS: ${fps.toFixed(1)}`);
+      console['log']('=== Animation Under Load ===');
+      console['log'](`  Frame Count: ${FRAME_COUNT}`);
+      console['log'](`  Jank Frames: ${jankFrames} (${jankPercent.toFixed(1)}%)`);
+      console['log'](`  Avg Frame Time: ${avgFrameTime.toFixed(2)}ms`);
+      console['log'](`  Effective FPS: ${fps.toFixed(1)}`);
     });
   });
 
@@ -304,10 +304,10 @@ describe('Stress Testing', () => {
       const stackMemoryMB = MAX_STACK_DEPTH * 2; // ~2MB per screen
       expect(stackMemoryMB).toBeLessThan(30);
 
-      console.log('=== Navigation Stack Test ===');
-      console.log(`  Stack Depth: ${MAX_STACK_DEPTH}`);
-      console.log(`  Last Nav Time: ${lastNavTime.toFixed(0)}ms`);
-      console.log(`  Est. Stack Memory: ${stackMemoryMB}MB`);
+      console['log']('=== Navigation Stack Test ===');
+      console['log'](`  Stack Depth: ${MAX_STACK_DEPTH}`);
+      console['log'](`  Last Nav Time: ${lastNavTime.toFixed(0)}ms`);
+      console['log'](`  Est. Stack Memory: ${stackMemoryMB}MB`);
     });
   });
 
@@ -340,11 +340,11 @@ describe('Stress Testing', () => {
 
       expect(initialLoadTime).toBeLessThan(MAX_INITIAL_LOAD);
 
-      console.log('=== Image Gallery Load ===');
-      console.log(`  Total Images: ${IMAGE_COUNT}`);
-      console.log(`  Initially Loaded: ${VISIBLE_IMAGES}`);
-      console.log(`  Initial Load Time: ${initialLoadTime.toFixed(0)}ms`);
-      console.log(`  Deferred: ${IMAGE_COUNT - VISIBLE_IMAGES} images`);
+      console['log']('=== Image Gallery Load ===');
+      console['log'](`  Total Images: ${IMAGE_COUNT}`);
+      console['log'](`  Initially Loaded: ${VISIBLE_IMAGES}`);
+      console['log'](`  Initial Load Time: ${initialLoadTime.toFixed(0)}ms`);
+      console['log'](`  Deferred: ${IMAGE_COUNT - VISIBLE_IMAGES} images`);
     });
   });
 
@@ -373,10 +373,10 @@ describe('Stress Testing', () => {
         expect(filterTime).toBeLessThan(SEARCH_BUDGET);
       }
 
-      console.log('=== Search Performance ===');
-      console.log(`  Dataset Size: ${TOTAL_ITEMS} items`);
+      console['log']('=== Search Performance ===');
+      console['log'](`  Dataset Size: ${TOTAL_ITEMS} items`);
       for (const search of searches) {
-        console.log(`  "${search.query || '*'}": ${search.results} results`);
+        console['log'](`  "${search.query || '*'}": ${search.results} results`);
       }
     });
   });
@@ -400,11 +400,11 @@ describe('Stress Testing', () => {
       const maxTextRender = maxTextChars * 0.005; // 50ms
       expect(maxTextRender).toBeLessThan(100);
 
-      console.log('=== Edge Cases ===');
-      console.log(`  Empty State: ${emptyListRender}ms`);
-      console.log(`  Single Item: 10ms`);
-      console.log(`  Max Habits (1000): ${maxHabitsProcessing}ms`);
-      console.log(`  Max Text (10k chars): ${maxTextRender}ms`);
+      console['log']('=== Edge Cases ===');
+      console['log'](`  Empty State: ${emptyListRender}ms`);
+      console['log'](`  Single Item: 10ms`);
+      console['log'](`  Max Habits (1000): ${maxHabitsProcessing}ms`);
+      console['log'](`  Max Text (10k chars): ${maxTextRender}ms`);
     });
   });
 });

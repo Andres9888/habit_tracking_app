@@ -4,6 +4,7 @@
 
 import React, { useMemo } from 'react';
 import Animated, { FadeIn } from 'react-native-reanimated';
+import { useThemeColors } from '@/theme/ThemeContext';
 
 import { getStrengthColor } from '../strengthUtils';
 import {
@@ -27,6 +28,7 @@ export function StrengthTimelineChart({
   habitColor,
   height = DEFAULT_HEIGHT,
 }: StrengthTimelineChartProps) {
+  const { colors: themeColors } = useThemeColors();
   const dimensions = useChartDimensions(height);
 
   const chartColor = useMemo(() => {
@@ -64,7 +66,8 @@ export function StrengthTimelineChart({
       accessible
       accessibilityLabel={`Strength timeline chart showing ${strengthHistory.length} days of history. ${trendDescription}`}
       accessibilityRole='image'
-      className='overflow-hidden rounded-xl bg-stone-50'
+      className='overflow-hidden rounded-xl'
+      style={{ backgroundColor: themeColors.background }}
       entering={FadeIn.duration(PATH_ANIMATION_DURATION)}
     >
       <ChartSvg

@@ -5,6 +5,7 @@
 import { Pressable, Switch, Text, View } from 'react-native';
 import { Bell } from 'lucide-react-native';
 import { colors } from '@/theme/colors';
+import { useThemeColors } from '@/theme/ThemeContext';
 import { formatReminderTime } from '../../../../utils/notifications';
 
 interface ReminderHeaderProps {
@@ -20,6 +21,8 @@ export function ReminderHeader({
   onToggle,
   triggerSelection,
 }: ReminderHeaderProps) {
+  const { colors: themeColors } = useThemeColors();
+
   return (
     <Pressable
       accessibilityLabel={
@@ -33,14 +36,14 @@ export function ReminderHeader({
       }}
     >
       <View className='flex-row items-center'>
-        <View className='mr-3 h-10 w-10 items-center justify-center rounded-xl bg-blue-50'>
+        <View className='mr-3 h-10 w-10 items-center justify-center rounded-xl' style={{ backgroundColor: themeColors.status.infoLight }}>
           <Bell color={colors.secondary[500]} size={20} />
         </View>
         <View>
-          <Text className='text-base font-semibold text-stone-800'>
+          <Text className='text-base font-semibold' style={{ color: themeColors.text.primary }}>
             Remind me
           </Text>
-          <Text className='text-xs text-stone-500'>
+          <Text className='text-xs' style={{ color: themeColors.text.secondary }}>
             {remindersEnabled ? formatReminderTime(reminderTime) : 'Off'}
           </Text>
         </View>

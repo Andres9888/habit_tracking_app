@@ -14,6 +14,7 @@ import type { FailureVizProps } from './FailureViz.types';
 import { VizFieldsList } from './VizFieldsList';
 import { StreakLossPreview } from './StreakLossPreview';
 import { useFailureVizAnimation } from './useFailureVizAnimation';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 
 export function FailureViz({
   visualization,
@@ -21,25 +22,26 @@ export function FailureViz({
   reduceMotion = false,
   className,
 }: FailureVizProps) {
+  const { colors } = useThemeColors();
   const containerAnimatedStyle = useFailureVizAnimation(reduceMotion);
 
   return (
     <Animated.View
       className={clsx(
-        'rounded-2xl border-l-4 border-l-rose-400 bg-rose-50/80 p-4',
+        'rounded-2xl border-l-4 p-4',
         className
       )}
-      style={containerAnimatedStyle}
+      style={[containerAnimatedStyle, { borderLeftColor: colors.status.error, backgroundColor: colors.status.errorLight }]}
     >
       <View className='mb-4 flex-row items-center gap-3'>
-        <View className='h-10 w-10 items-center justify-center rounded-xl bg-rose-100'>
-          <AlertTriangle className='text-rose-600' size={20} />
+        <View className='h-10 w-10 items-center justify-center rounded-xl' style={{ backgroundColor: colors.status.errorLight }}>
+          <AlertTriangle color={colors.status.error} size={20} />
         </View>
         <View className='flex-1'>
-          <Text className='text-base font-semibold text-rose-800'>
+          <Text className='text-base font-semibold' style={{ color: colors.status.errorText }}>
             If You Skip Today...
           </Text>
-          <Text className='text-xs text-rose-500'>
+          <Text className='text-xs' style={{ color: colors.status.error }}>
             Feel the weight of not doing this
           </Text>
         </View>
@@ -57,8 +59,8 @@ export function FailureViz({
           streakCount={streakCount}
         /> : null}
 
-      <View className='mt-3 rounded-lg bg-rose-100/50 px-3 py-2'>
-        <Text className='text-center text-xs text-rose-600'>
+      <View className='mt-3 rounded-lg px-3 py-2' style={{ backgroundColor: colors.status.errorLight }}>
+        <Text className='text-center text-xs' style={{ color: colors.status.error }}>
           Loss aversion: This feeling moves you 2x more effectively than rewards
         </Text>
       </View>

@@ -64,7 +64,7 @@ export function CategoryHeader({
               { backgroundColor: catColors.bg },
             ]}
           >
-            <Text style={{ fontSize: 24 }}>{categoryIcon}</Text>
+            <Text style={{ fontSize: 22 }}>{categoryIcon}</Text>
           </View> : null}
         <View>
           <Text

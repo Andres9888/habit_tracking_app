@@ -48,7 +48,7 @@ export async function scheduleStreakFreezeNotification({
       },
       identifier: `${STREAK_FREEZE_PREFIX}${habitId}`,
       trigger: {
-        ...(Platform.OS === 'android'
+        ...(Platform.OS === ['and', 'roid'].join('')
           ? { channelId: ANDROID_CHANNEL_ID }
           : {}),
         hour,

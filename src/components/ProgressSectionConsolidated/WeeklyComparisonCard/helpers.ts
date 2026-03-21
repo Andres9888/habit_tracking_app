@@ -6,29 +6,34 @@ import { TrendingUp, TrendingDown, Minus } from 'lucide-react-native';
 import type { TrendStyle } from './types';
 
 /**
- * Get trend color and icon based on rate change
+ * Get trend color and icon based on rate change.
+ * Returns hex color values for theme-aware inline styles.
+ * Accepts optional theme colors for the neutral (no change) state.
  */
-export function getTrendStyle(rateChange: number): TrendStyle {
+export function getTrendStyle(
+  rateChange: number,
+  themeColors?: { bgNeutral: string; textNeutral: string; successBg?: string; successText?: string }
+): TrendStyle {
   if (rateChange > 0) {
     return {
-      bgColor: 'bg-emerald-50',
+      bgColor: themeColors?.successBg ?? '#ecfdf5',
       icon: TrendingUp,
       label: 'improvement',
-      textColor: 'text-emerald-600',
+      textColor: themeColors?.successText ?? '#059669',
     };
   } else if (rateChange < 0) {
     return {
-      bgColor: 'bg-red-50',
+      bgColor: '#fef2f2', // red-50
       icon: TrendingDown,
       label: 'decline',
-      textColor: 'text-red-500',
+      textColor: '#ef4444', // red-500
     };
   }
   return {
-    bgColor: 'bg-stone-50',
+    bgColor: themeColors?.bgNeutral ?? '#fafaf9',
     icon: Minus,
     label: 'no change',
-    textColor: 'text-stone-500',
+    textColor: themeColors?.textNeutral ?? '#78716c',
   };
 }
 

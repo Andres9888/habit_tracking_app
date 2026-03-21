@@ -10,6 +10,7 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
+import { useThemeColors } from '@/theme/ThemeContext';
 import {
   CheckCircle2,
   TrendingUp,
@@ -33,59 +34,69 @@ export function StatsGrid({
   successRate,
   totalCompletions,
 }: StatsGridProps) {
+  const { colors: themeColors } = useThemeColors();
   const displayRate = Math.round(successRate);
 
   return (
-    <View className='rounded-2xl bg-white/90 p-4 shadow-sm shadow-stone-200/50'>
+    <View className='rounded-2xl p-4 shadow-sm' style={{ backgroundColor: themeColors.card, shadowColor: themeColors.border }}>
       {/* Header */}
       <View className='mb-4 flex-row items-center justify-center gap-2'>
-        <BarChart3 className='text-stone-500' size={18} />
-        <Text className='text-lg font-semibold text-stone-800'>Statistics</Text>
+        <BarChart3 color={themeColors.text.secondary} size={18} />
+        <Text className='text-lg font-semibold' style={{ color: themeColors.text.primary }}>Statistics</Text>
       </View>
 
       <View className='gap-3'>
         {/* Top Row */}
         <View className='flex-row gap-3'>
           <StatCard
-            bgColor='bg-emerald-50'
+            bgColor=''
+            bgStyle={{ backgroundColor: themeColors.status.successLight }}
             delay={0}
-            icon={<CheckCircle2 className='text-emerald-600' size={20} />}
-            iconBgColor='bg-emerald-100'
+            icon={<CheckCircle2 color={themeColors.status.success} size={20} />}
+            iconBgColor=''
+            iconBgStyle={{ backgroundColor: themeColors.status.successLight }}
             label='Completed'
             value={totalCompletions}
-            valueColor='text-emerald-700'
+            valueColor=''
+            valueStyle={{ color: themeColors.status.successText }}
           />
           <StatCard
-            bgColor='bg-stone-50'
+            bgColor=''
             delay={80}
-            icon={<TrendingUp className='text-stone-600' size={20} />}
-            iconBgColor='bg-stone-100'
+            icon={<TrendingUp color={themeColors.text.primary} size={20} />}
+            iconBgColor=''
             label='Success Rate'
             suffix='%'
             value={displayRate}
-            valueColor='text-stone-700'
+            valueColor=''
           />
         </View>
 
         {/* Bottom Row */}
         <View className='flex-row gap-3'>
           <StatCard
-            bgColor='bg-amber-50'
+            bgColor=''
+            bgStyle={{ backgroundColor: themeColors.status.warningLight }}
             delay={160}
-            icon={<Flame className='text-amber-600' fill='#d97706' size={20} />}
-            iconBgColor='bg-amber-100'
+            icon={<Flame color={themeColors.status.warning} fill={themeColors.status.warning} size={20} />}
+            iconBgColor=''
+            iconBgStyle={{ backgroundColor: themeColors.status.warningLight }}
             label='Current Streak'
             value={currentStreak}
-            valueColor='text-amber-700'
+            valueColor=''
+            valueStyle={{ color: themeColors.status.warningText }}
           />
           <StatCard
-            bgColor='bg-violet-50'
+            bgColor=''
+            bgStyle={{ backgroundColor: themeColors.status.premiumLight }}
             delay={240}
-            icon={<Calendar className='text-violet-600' size={20} />}
-            iconBgColor='bg-violet-100'
+            icon={<Calendar color={themeColors.status.premium} size={20} />}
+            iconBgColor=''
+            iconBgStyle={{ backgroundColor: themeColors.status.premiumLight }}
             label='Days Tracking'
             value={daysTracking}
-            valueColor='text-violet-700'
+            valueColor=''
+            valueStyle={{ color: themeColors.status.premiumText }}
           />
         </View>
       </View>

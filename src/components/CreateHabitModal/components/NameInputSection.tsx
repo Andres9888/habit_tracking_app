@@ -5,6 +5,7 @@
 import { Keyboard, Text, TextInput, View } from 'react-native';
 import { colors as themeTokens } from '@/theme/colors';
 import { spacing } from '@/theme/spacing';
+import { buildTextInputHintProps } from '@/utils/textInputHintProps';
 
 interface NameInputSectionProps {
   habitName: string;
@@ -41,8 +42,6 @@ export function NameInputSection({
         autoFocus={autoFocus}
         className='w-full rounded-2xl border-2 px-5 py-4 text-center text-[22px] font-medium'
         maxLength={50}
-        placeholder='e.g., Read 20 minutes daily'
-        placeholderTextColor={themeColors.text.tertiary}
         returnKeyType='done'
         style={{
           lineHeight: 28,
@@ -51,6 +50,7 @@ export function NameInputSection({
           borderColor: showNameError ? themeTokens.error : themeColors.border,
         }}
         value={habitName}
+        {...buildTextInputHintProps('Name your habit', themeColors.text.tertiary)}
         onChangeText={onHabitNameChange}
         onSubmitEditing={Keyboard.dismiss}
       />

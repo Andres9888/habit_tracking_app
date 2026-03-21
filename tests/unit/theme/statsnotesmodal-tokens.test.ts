@@ -141,7 +141,7 @@ describe('StatsNotesModal Token Migration - Phase 2', () => {
       expect(source).not.toContain('#a8a29e');
     });
 
-    it('uses colors.gray[400] for placeholder text color', () => {
+    it('uses colors.gray[400] for hint text color', () => {
       expect(source).toContain('colors.gray[400]');
     });
   });
@@ -159,7 +159,7 @@ describe('StatsNotesModal Token Migration - Phase 2', () => {
       expect(colors.gray[300]).toBe('#D1D5DB');
     });
 
-    it('gray[400] is placeholder gray', () => {
+    it('gray[400] is hint gray', () => {
       expect(colors.gray[400]).toBe('#6B7280');
     });
 

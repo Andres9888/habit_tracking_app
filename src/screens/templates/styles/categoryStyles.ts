@@ -21,7 +21,7 @@ export const categoryStyles = StyleSheet.create({
     gap: 6,
     marginRight: 8,
     paddingHorizontal: 14,
-    paddingVertical: 10,
+    paddingVertical: 12,
     ...shadows.subtle,
   },
   categoryColorDot: {

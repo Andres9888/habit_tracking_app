@@ -75,6 +75,28 @@ export const darkColors = {
   /** Accent color for highlights, icons, and activity indicators */
   accent: '#34D399',
 
+  /** Semantic status colors — adapted for dark backgrounds */
+  status: {
+    success: '#34D399',
+    successLight: 'rgba(5,150,105,0.15)',
+    successText: '#6EE7B7',
+    error: '#F87171',
+    errorLight: 'rgba(239,68,68,0.15)',
+    errorText: '#FCA5A5',
+    warning: '#FBBF24',
+    warningLight: 'rgba(245,158,11,0.15)',
+    warningText: '#FDE68A',
+    info: '#60A5FA',
+    infoLight: 'rgba(59,130,246,0.15)',
+    infoText: '#93C5FD',
+    premium: '#A78BFA',
+    premiumLight: 'rgba(139,92,246,0.15)',
+    premiumText: '#C4B5FD',
+    streak: '#FBBF24',
+    streakLight: 'rgba(245,158,11,0.15)',
+    streakText: '#FDE68A',
+  },
+
   /**
    * Gray Scale (Inverted)
    *
@@ -86,7 +108,7 @@ export const darkColors = {
     100: '#1F2937', // Dark surfaces
     200: '#374151', // Borders, dividers
     300: '#4B5563', // Disabled elements
-    400: '#6B7280', // Placeholder text
+    400: '#6B7280', // Hint text
     500: '#9CA3AF', // Secondary text
     600: '#D1D5DB', // Light text
     700: '#E5E7EB', // Lighter text
@@ -154,6 +176,28 @@ export const lightColors = {
   /** Accent color for highlights, icons, and activity indicators */
   accent: '#059669',
 
+  /** Semantic status colors — light mode values */
+  status: {
+    success: '#059669',
+    successLight: '#D1FAE5',
+    successText: '#047857',
+    error: '#DC2626',
+    errorLight: '#FEE2E2',
+    errorText: '#B91C1C',
+    warning: '#D97706',
+    warningLight: '#FEF3C7',
+    warningText: '#92400E',
+    info: '#2563EB',
+    infoLight: '#DBEAFE',
+    infoText: '#1D4ED8',
+    premium: '#7C3AED',
+    premiumLight: '#EDE9FE',
+    premiumText: '#6D28D9',
+    streak: '#D97706',
+    streakLight: '#FEF3C7',
+    streakText: '#92400E',
+  },
+
   /**
    * Gray Scale (Standard)
    *
@@ -165,7 +209,7 @@ export const lightColors = {
     100: '#F5F1ED', // Background
     200: '#DDD8D2', // Borders, dividers
     300: '#C4BFB7', // Disabled elements
-    400: '#6E6660', // Placeholder text, tertiary
+    400: '#6E6660', // Hint text, tertiary
     500: '#6B6560', // Secondary text
     600: '#524D47', // Body text
     700: '#3D3833', // Headings
@@ -234,6 +278,28 @@ export interface SemanticColors {
 
   /** Accent color for highlights, icons, and activity indicators */
   accent: string;
+
+  /** Semantic status colors for both light and dark modes */
+  status: {
+    success: string;
+    successLight: string;
+    successText: string;
+    error: string;
+    errorLight: string;
+    errorText: string;
+    warning: string;
+    warningLight: string;
+    warningText: string;
+    info: string;
+    infoLight: string;
+    infoText: string;
+    premium: string;
+    premiumLight: string;
+    premiumText: string;
+    streak: string;
+    streakLight: string;
+    streakText: string;
+  };
 
   /** Text colors by emphasis level */
   text: {

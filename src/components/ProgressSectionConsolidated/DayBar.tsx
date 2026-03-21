@@ -19,9 +19,11 @@ import {
   BAR_WIDTH,
   BAR_MAX_HEIGHT,
   getBarColor,
-  getDayLabelClass,
+  getDayLabelColor,
+  isDayLabelBold,
 } from './DayBar.constants';
 import { springs } from '@/theme/animations';
+import { useThemeColors } from '@/theme/ThemeContext';
 
 export interface DayBarProps {
   dayIndex: number;
@@ -46,6 +48,7 @@ export const DayBar = React.memo(function DayBar({
   index,
   reduceMotion,
 }: DayBarProps) {
+  const { colors } = useThemeColors();
   const scaleY = useSharedValue(reduceMotion ? 1 : 0);
   const opacity = useSharedValue(reduceMotion ? 1 : 0);
 
@@ -102,7 +105,7 @@ export const DayBar = React.memo(function DayBar({
           className='rounded-t-sm'
           style={[
             {
-              backgroundColor: getBarColor(rate, isBest, isWorst),
+              backgroundColor: getBarColor(rate, isBest, isWorst, colors.gray, colors.status.success),
               transformOrigin: 'bottom',
               width: BAR_WIDTH - 4,
             },
@@ -110,7 +113,10 @@ export const DayBar = React.memo(function DayBar({
           ]}
         />
       </View>
-      <Text className={`mt-1 text-[10px] ${getDayLabelClass(isBest, isWorst)}`}>
+      <Text
+        className={`mt-1 text-[10px] ${isDayLabelBold(isBest, isWorst) ? 'font-bold' : ''}`}
+        style={{ color: getDayLabelColor(isBest, isWorst, colors.text.secondary, colors.status.successText) }}
+      >
         {DAY_LABELS_SHORT[dayIndex]}
       </Text>
     </View>

@@ -52,12 +52,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     gap: 12,
-    paddingHorizontal: 14,
-    paddingVertical: 10,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
   },
   label: {
     fontFamily: fontFamilies.primary.text,
-    fontSize: 15,
+    fontSize: 14,
     fontWeight: '500',
   },
 });

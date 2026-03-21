@@ -7,6 +7,7 @@ import React, { useCallback } from 'react';
 import { View, Text, Pressable } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 import type { LucideIcon } from 'lucide-react-native';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import { triggerHaptic } from '@/utils/haptics';
 import { springs } from '@/theme/animations';
 
@@ -29,6 +30,7 @@ export function ImageSourceOption({
   onPress,
   onClose,
 }: ImageSourceOptionProps) {
+  const { colors } = useThemeColors();
   const scale = useSharedValue(1);
 
   const handlePressIn = useCallback(() => {
@@ -47,8 +49,8 @@ export function ImageSourceOption({
     <AnimatedPressable
       accessibilityLabel={accessibilityLabel}
       accessibilityRole='button'
-      className='flex-row items-center gap-3 rounded-xl border border-stone-200 p-4'
-      style={animatedStyle}
+      className='flex-row items-center gap-3 rounded-xl border p-4'
+      style={[animatedStyle, { borderColor: colors.border }]}
       onPress={() => {
         triggerHaptic('tap');
         onPress();
@@ -61,8 +63,8 @@ export function ImageSourceOption({
         <Icon className='text-fuchsia-500' size={20} />
       </View>
       <View className='flex-1'>
-        <Text className='font-medium text-stone-800'>{title}</Text>
-        <Text className='text-xs text-stone-500'>{description}</Text>
+        <Text className='font-medium' style={{ color: colors.text.primary }}>{title}</Text>
+        <Text className='text-xs' style={{ color: colors.text.secondary }}>{description}</Text>
       </View>
     </AnimatedPressable>
   );

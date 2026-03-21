@@ -4,6 +4,7 @@
 
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
+import { useThemeColors } from '@/theme/ThemeContext';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -20,6 +21,7 @@ export function StatCard({
   accessibilityHint,
   animationKey,
   color,
+  colorStyle,
   delay,
   emoji,
   label,
@@ -28,6 +30,7 @@ export function StatCard({
   suffix = '',
   targetValue,
 }: StatCardProps) {
+  const { colors: themeColors } = useThemeColors();
   const scale = useSharedValue(1);
   const displayValue = useCountAnimation({
     animationKey,
@@ -58,8 +61,8 @@ export function StatCard({
       accessibilityHint={accessibilityHint}
       accessibilityLabel={`${label}: ${targetValue}${suffix}`}
       accessibilityRole='button'
-      className='flex-1 items-center rounded-xl bg-white p-3 shadow-sm shadow-stone-200/50'
-      style={animatedStyle}
+      className='flex-1 items-center rounded-xl p-3 shadow-sm'
+      style={[animatedStyle, { backgroundColor: themeColors.card, shadowColor: themeColors.border }]}
       onPress={handlePress}
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}
@@ -67,13 +70,14 @@ export function StatCard({
       <Text
         accessibilityElementsHidden
         className={`text-2xl font-bold ${color}`}
+        style={colorStyle ? { color: colorStyle } : undefined}
       >
         {displayValue}
         {suffix}
       </Text>
       <View accessibilityElementsHidden className='flex-row items-center gap-1'>
         <Text className='text-xs'>{emoji}</Text>
-        <Text className='text-xs text-stone-500'>{label}</Text>
+        <Text className='text-xs' style={{ color: themeColors.text.secondary }}>{label}</Text>
       </View>
     </AnimatedPressable>
   );

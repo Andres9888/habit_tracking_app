@@ -109,14 +109,14 @@ describe('PersonalBestsCard', () => {
     expect(getByText('7')).toBeTruthy(); // Third record
   });
 
-  it('shows placeholder medals when fewer than 3 records', () => {
+  it('shows hint medals when fewer than 3 records', () => {
     const propsWithFewRecords = {
       ...defaultProps,
       streakRecords: [createStreakRecord(7, '2024-11-01')],
     };
 
     const { getAllByText } = render(<PersonalBestsCard {...propsWithFewRecords} />);
-    // Should show one real medal and two placeholders with '-'
+    // Should show one real medal and two hints with '-'
     const dashes = getAllByText('-');
     expect(dashes.length).toBe(2);
   });

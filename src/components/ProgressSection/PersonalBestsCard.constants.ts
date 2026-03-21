@@ -2,21 +2,21 @@ export const MEDALS = ['🥇', '🥈', '🥉'];
 
 export const MEDAL_COLORS = [
   {
-    bg: 'bg-amber-50',
-    border: 'border-amber-200',
-    subtext: 'text-amber-500',
-    text: 'text-amber-700',
+    bg: '#FFFBEB',
+    border: '#FDE68A',
+    subtext: '#F59E0B',
+    text: '#B45309',
   },
   {
-    bg: 'bg-stone-50',
-    border: 'border-stone-200',
-    subtext: 'text-stone-500',
-    text: 'text-stone-700',
+    bg: 'theme:background',
+    border: 'theme:border',
+    subtext: 'theme:text.secondary',
+    text: 'theme:text.primary',
   },
   {
-    bg: 'bg-orange-50',
-    border: 'border-orange-200',
-    subtext: 'text-orange-500',
-    text: 'text-orange-700',
+    bg: '#FFF7ED',
+    border: '#FED7AA',
+    subtext: '#F97316',
+    text: '#C2410C',
   },
 ];

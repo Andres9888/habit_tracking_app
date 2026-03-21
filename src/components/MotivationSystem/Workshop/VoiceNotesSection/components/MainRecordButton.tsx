@@ -7,6 +7,7 @@ import Animated, { useAnimatedStyle, useSharedValue, withSpring, withTiming, wit
 import { Mic, Pause, Play } from 'lucide-react-native';
 import { clsx } from 'clsx';
 import { SPRING_BUTTON } from '../../../../animations';
+import { useThemeColors } from '../../../../../theme/ThemeContext';
 import { triggerHaptic } from '@/utils/haptics';
 
 interface MainRecordButtonProps {
@@ -18,6 +19,7 @@ interface MainRecordButtonProps {
 }
 
 export function MainRecordButton({ isRecording, isPaused, onStartRecording, onPauseRecording, onResumeRecording }: MainRecordButtonProps) {
+  const { colors } = useThemeColors();
   const recordButtonScale = useSharedValue(1);
   const pulseOpacity = useSharedValue(0);
 
@@ -52,12 +54,13 @@ export function MainRecordButton({ isRecording, isPaused, onStartRecording, onPa
 
   return (
     <View className='relative'>
-      <Animated.View className='absolute inset-0 rounded-full bg-teal-500' style={[pulseStyle, { transform: [{ scale: 1.3 }] }]} />
+      <Animated.View className='absolute inset-0 rounded-full' style={[pulseStyle, { transform: [{ scale: 1.3 }], backgroundColor: colors.status.success }]} />
       <Animated.View style={buttonStyle}>
         <Pressable
           accessibilityLabel={label}
           accessibilityRole='button'
-          className={clsx('h-16 w-16 items-center justify-center rounded-full', isRecording && !isPaused ? 'bg-teal-600' : 'bg-teal-500')}
+          className='h-16 w-16 items-center justify-center rounded-full'
+          style={{ backgroundColor: colors.status.success }}
           onPress={handleRecordPress}
           onPressIn={handlePressIn}
           onPressOut={handlePressOut}

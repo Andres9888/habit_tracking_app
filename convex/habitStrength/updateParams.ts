@@ -20,7 +20,7 @@ export const updateHabitParameters = mutation({
     const habit = await ctx.db.get(args.habitId);
     if (!habit) throw new Error('Habit not found');
 
-    if (!habit || habit.userId !== identity.subject) {
+    if (habit.userId !== identity.subject) {
       throw new Error('Not authorized to update this habit');
     }
 

@@ -136,7 +136,7 @@ export function useHabitsListState(): HabitsListState {
 
   // Completion sound hook (premium feature)
   const { playCompletionSound } = useCompletionSound({
-    soundEnabled: isPremiumUser && completionSoundEnabled,
+    soundEnabled: completionSoundEnabled,
     soundType: completionSoundType,
   });
 

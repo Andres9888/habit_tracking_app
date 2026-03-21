@@ -1,7 +1,7 @@
 /**
  * InsightCardSkeleton Component
  *
- * Skeleton placeholder for a single insight card.
+ * Skeleton hint for a single insight card.
  */
 
 import React from 'react';

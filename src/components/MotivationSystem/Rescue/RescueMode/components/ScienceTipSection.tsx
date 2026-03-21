@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text } from 'react-native';
-
+import { useThemeColors } from '../../../../../theme/ThemeContext';
 import { AnimatedContent } from './AnimatedContent';
 
 interface ScienceTipSectionProps {
@@ -23,6 +23,7 @@ export function ScienceTipSection({
   reduceMotion,
   visible,
 }: ScienceTipSectionProps) {
+  const { colors } = useThemeColors();
   // Calculate stagger delay index based on how many sections appear before this one
   const animationIndex =
     (hasStreak ? 1 : 0) +
@@ -33,8 +34,8 @@ export function ScienceTipSection({
 
   return (
     <AnimatedContent index={animationIndex} reduceMotion={reduceMotion} visible={visible}>
-      <View className='mt-4 rounded-xl bg-stone-100 p-3'>
-        <Text className='text-center text-xs italic text-stone-600'>
+      <View className='mt-4 rounded-xl p-3' style={{ backgroundColor: colors.background }}>
+        <Text className='text-center text-xs italic' style={{ color: colors.text.secondary }}>
           💡 Research shows: Just 2 minutes is enough to maintain your habit.
           The hardest part is starting.
         </Text>

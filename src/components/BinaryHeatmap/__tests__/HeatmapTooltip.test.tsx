@@ -199,7 +199,7 @@ describe('HeatmapTooltip', () => {
       expect(onClose).toHaveBeenCalledTimes(1);
     });
 
-    it('should have onRequestClose handler for back button (Android)', () => {
+    it('should have onRequestClose handler for the hardware back action', () => {
       const onClose = jest.fn();
       const { UNSAFE_getByType } = render(
         <HeatmapTooltip {...defaultProps} onClose={onClose} />

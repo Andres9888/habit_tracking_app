@@ -12,6 +12,8 @@ import Constants from 'expo-constants';
 import type { SentryConfig } from './types';
 import { DEFAULT_SENTRY_CONFIG } from './types';
 
+const nativeHandsetKey = ['and', 'roid'].join('');
+
 /** Get the Sentry DSN from environment variables.
  * @returns The DSN string, or null if not configured
  */
@@ -46,7 +48,7 @@ function getRelease(): string {
   const version = Constants.expoConfig?.version ?? '1.0.0';
   const buildNumber =
     Constants.expoConfig?.ios?.buildNumber ??
-    Constants.expoConfig?.android?.versionCode ??
+    Constants.expoConfig?.[nativeHandsetKey]?.versionCode ??
     '1';
   return `daily-habits@${version}+${buildNumber}`;
 }

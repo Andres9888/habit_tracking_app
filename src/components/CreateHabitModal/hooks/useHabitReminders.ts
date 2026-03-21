@@ -34,7 +34,7 @@ export async function checkReminderPermissions(
   if (Platform.OS === 'web') {
     Alert.alert(
       'Reminders on Mobile Only',
-      'Local reminder notifications can only be scheduled from the iOS/Android app. Your reminder settings will be saved.'
+      'Local reminder notifications can only be scheduled from the mobile app. Your reminder settings will be saved.'
     );
     return { hasReminders: true, shouldProceed: true };
   }

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Text } from 'react-native';
 import { useDerivedValue, runOnJS, SharedValue } from 'react-native-reanimated';
+import { useThemeColors } from '@/theme/ThemeContext';
 
 interface AnimatedPercentageTextProps {
   animatedValue: SharedValue<number>;
@@ -12,6 +13,7 @@ interface AnimatedPercentageTextProps {
 export function AnimatedPercentageText({
   animatedValue,
 }: AnimatedPercentageTextProps) {
+  const { colors: themeColors } = useThemeColors();
   const [displayText, setDisplayText] = React.useState('0%');
 
   useDerivedValue(() => {
@@ -26,7 +28,8 @@ export function AnimatedPercentageText({
   return (
     <Text
       accessibilityElementsHidden
-      className='text-lg font-bold text-stone-900'
+      className='text-lg font-bold'
+      style={{ color: themeColors.text.primary }}
     >
       {displayText}
     </Text>

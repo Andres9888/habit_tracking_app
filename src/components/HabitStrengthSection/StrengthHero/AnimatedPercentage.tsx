@@ -6,6 +6,7 @@
 
 import React, { useState } from 'react';
 import { Text } from 'react-native';
+import { useThemeColors } from '@/theme/ThemeContext';
 
 import { runOnJS, useDerivedValue } from 'react-native-reanimated';
 
@@ -15,6 +16,7 @@ import type { AnimatedPercentageProps } from './types';
  * Animated text component that displays a counting percentage.
  */
 export function AnimatedPercentage({ animatedValue }: AnimatedPercentageProps) {
+  const { colors: themeColors } = useThemeColors();
   const [displayValue, setDisplayValue] = useState(0);
 
   useDerivedValue(() => {
@@ -30,6 +32,6 @@ export function AnimatedPercentage({ animatedValue }: AnimatedPercentageProps) {
   }, [animatedValue]);
 
   return (
-    <Text className='text-2xl font-bold text-stone-900'>{displayValue}%</Text>
+    <Text className='text-2xl font-bold' style={{ color: themeColors.text.primary }}>{displayValue}%</Text>
   );
 }

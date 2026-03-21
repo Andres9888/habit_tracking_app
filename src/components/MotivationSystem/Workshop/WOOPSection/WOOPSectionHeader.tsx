@@ -10,6 +10,7 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 import { HelpCircle, Plus, Pencil } from 'lucide-react-native';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import { springs } from '@/theme/animations';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
@@ -23,6 +24,7 @@ export function WOOPSectionHeader({
   hasWoop,
   onHelpPress,
 }: WOOPSectionHeaderProps) {
+  const { colors } = useThemeColors();
   const scale = useSharedValue(1);
 
   const handlePressIn = useCallback(() => {
@@ -41,7 +43,7 @@ export function WOOPSectionHeader({
     <View className='mb-2 flex-row items-center justify-between'>
       <View className='flex-row items-center gap-2'>
         <Text className='text-base'>🎯</Text>
-        <Text className='text-xs font-semibold text-stone-800'>WOOP Plan</Text>
+        <Text className='text-xs font-semibold' style={{ color: colors.text.primary }}>WOOP Plan</Text>
       </View>
       <View className='flex-row items-center gap-2'>
         <AnimatedPressable
@@ -54,14 +56,14 @@ export function WOOPSectionHeader({
           onPressIn={handlePressIn}
           onPressOut={handlePressOut}
         >
-          <HelpCircle className='text-stone-400' size={16} />
+          <HelpCircle color={colors.text.tertiary} size={16} />
         </AnimatedPressable>
         {hasWoop ? (
-          <Pencil className='text-stone-400' size={14} />
+          <Pencil color={colors.text.tertiary} size={14} />
         ) : (
           <View className='flex-row items-center gap-1'>
-            <Plus className='text-stone-600' size={12} />
-            <Text className='text-xs font-medium text-stone-600'>Set up</Text>
+            <Plus color={colors.text.secondary} size={12} />
+            <Text className='text-xs font-medium' style={{ color: colors.text.secondary }}>Set up</Text>
           </View>
         )}
       </View>

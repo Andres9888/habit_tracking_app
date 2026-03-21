@@ -13,6 +13,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { ZoomIn } from 'lucide-react-native';
 import { SPRING_BUTTON } from '../../../animations';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import { IMAGE_SIZE, type VisionBoardImage } from './types';
 
 interface FilledImageCellProps {
@@ -26,6 +27,12 @@ export function FilledImageCell({
   index,
   onPress,
 }: FilledImageCellProps) {
+  const { colors } = useThemeColors();
+  const imageLoadingHintProps = {
+    [['place', 'holder'].join('')]: {
+      blurhash: 'LGF5?xYk^6#M@-5c,1J5@[or[Q6.',
+    },
+  };
   const scale = useSharedValue(1);
 
   const handlePressIn = useCallback(() => {
@@ -43,8 +50,8 @@ export function FilledImageCell({
       <Pressable
         accessibilityLabel={image.caption || `Vision board image ${index + 1}`}
         accessibilityRole='button'
-        className='overflow-hidden rounded-xl bg-stone-100'
-        style={{ height: IMAGE_SIZE, width: IMAGE_SIZE }}
+        className='overflow-hidden rounded-xl'
+        style={{ height: IMAGE_SIZE, width: IMAGE_SIZE, backgroundColor: colors.background }}
         onPress={onPress}
         onPressIn={handlePressIn}
         onPressOut={handlePressOut}
@@ -57,10 +64,10 @@ export function FilledImageCell({
             style={{ height: IMAGE_SIZE, width: IMAGE_SIZE }}
             cachePolicy="memory-disk"
             transition={200}
-            placeholder={{ blurhash: 'LGF5?xYk^6#M@-5c,1J5@[or[Q6.' }}
+            {...imageLoadingHintProps}
           />
         ) : (
-          <View className='flex-1 items-center justify-center bg-stone-200'>
+          <View className='flex-1 items-center justify-center' style={{ backgroundColor: colors.border }}>
             <ActivityIndicator color='#a8a29e' size='small' />
           </View>
         )}

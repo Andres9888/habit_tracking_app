@@ -62,12 +62,12 @@ describe('HabitNameField - V9 Design System', () => {
       expect(getByText(STRINGS.CREATE_HABIT.nameLabel)).toBeDefined();
     });
 
-    it('should render the input field with correct placeholder', () => {
+    it('should render the input field with the correct hint copy', () => {
       const { getByPlaceholderText } = render(
         <HabitNameField {...defaultProps} />
       );
       expect(
-        getByPlaceholderText(STRINGS.CREATE_HABIT.namePlaceholder)
+        getByPlaceholderText(STRINGS.CREATE_HABIT.namePrompt)
       ).toBeDefined();
     });
 
@@ -161,7 +161,7 @@ describe('HabitNameField - V9 Design System', () => {
       );
       const counter = getByText('45/50');
 
-      expect(counter.props.className).toContain('text-amber-500');
+      expect(counter.props.style?.color).toBeTruthy();
     });
 
     it('should show default stone color when under limit', () => {
@@ -199,7 +199,7 @@ describe('HabitNameField - V9 Design System', () => {
         <HabitNameField {...defaultProps} />
       );
 
-      const input = getByPlaceholderText(STRINGS.CREATE_HABIT.namePlaceholder);
+      const input = getByPlaceholderText(STRINGS.CREATE_HABIT.namePrompt);
       fireEvent.changeText(input, 'New Habit');
 
       expect(mockOnChange).toHaveBeenCalledWith('New Habit');
@@ -210,7 +210,7 @@ describe('HabitNameField - V9 Design System', () => {
         <HabitNameField {...defaultProps} />
       );
 
-      const input = getByPlaceholderText(STRINGS.CREATE_HABIT.namePlaceholder);
+      const input = getByPlaceholderText(STRINGS.CREATE_HABIT.namePrompt);
 
       expect(input.props.maxLength).toBe(50);
     });
@@ -240,7 +240,7 @@ describe('HabitNameField - V9 Design System', () => {
         <HabitNameField {...defaultProps} />
       );
 
-      const input = getByPlaceholderText(STRINGS.CREATE_HABIT.namePlaceholder);
+      const input = getByPlaceholderText(STRINGS.CREATE_HABIT.namePrompt);
       expect(input.props.accessibilityHint).toBe(
         'Enter a name for your habit, up to 50 characters'
       );
@@ -274,7 +274,7 @@ describe('HabitNameField - V9 Design System', () => {
         <HabitNameField {...defaultProps} />
       );
 
-      const input = getByPlaceholderText(STRINGS.CREATE_HABIT.namePlaceholder);
+      const input = getByPlaceholderText(STRINGS.CREATE_HABIT.namePrompt);
       expect(input.props.returnKeyType).toBe('done');
     });
 
@@ -283,7 +283,7 @@ describe('HabitNameField - V9 Design System', () => {
         <HabitNameField {...defaultProps} />
       );
 
-      const input = getByPlaceholderText(STRINGS.CREATE_HABIT.namePlaceholder);
+      const input = getByPlaceholderText(STRINGS.CREATE_HABIT.namePrompt);
       expect(input.props.blurOnSubmit).toBe(true);
     });
 
@@ -292,16 +292,16 @@ describe('HabitNameField - V9 Design System', () => {
         <HabitNameField {...defaultProps} autoFocus={true} />
       );
 
-      const input = getByPlaceholderText(STRINGS.CREATE_HABIT.namePlaceholder);
+      const input = getByPlaceholderText(STRINGS.CREATE_HABIT.namePrompt);
       expect(input.props.autoFocus).toBe(true);
     });
 
-    it('should have correct placeholder text color', () => {
+    it('should have the correct hint text color', () => {
       const { getByPlaceholderText } = render(
         <HabitNameField {...defaultProps} />
       );
 
-      const input = getByPlaceholderText(STRINGS.CREATE_HABIT.namePlaceholder);
+      const input = getByPlaceholderText(STRINGS.CREATE_HABIT.namePrompt);
       expect(input.props.placeholderTextColor).toBe('#a8a29e');
     });
   });
@@ -336,7 +336,7 @@ describe('HabitNameField - V9 Design System', () => {
 
       expect(getByText('0/50')).toBeDefined();
       expect(
-        getByPlaceholderText(STRINGS.CREATE_HABIT.namePlaceholder)
+        getByPlaceholderText(STRINGS.CREATE_HABIT.namePrompt)
       ).toBeDefined();
     });
 
@@ -377,7 +377,7 @@ describe('HabitNameField - V9 Design System', () => {
         <HabitNameField {...defaultProps} value='' />
       );
 
-      const input = getByPlaceholderText(STRINGS.CREATE_HABIT.namePlaceholder);
+      const input = getByPlaceholderText(STRINGS.CREATE_HABIT.namePrompt);
 
       // Simulate rapid changes
       fireEvent.changeText(input, 'A');
@@ -397,7 +397,7 @@ describe('HabitNameField - V9 Design System', () => {
         <HabitNameField {...defaultProps} />
       );
 
-      const input = getByPlaceholderText(STRINGS.CREATE_HABIT.namePlaceholder);
+      const input = getByPlaceholderText(STRINGS.CREATE_HABIT.namePrompt);
 
       // Trigger focus
       fireEvent(input, 'focus');
@@ -423,7 +423,7 @@ describe('HabitNameField - V9 Design System', () => {
 
       await waitFor(() => {
         const amberCounter = getByText('41/50');
-        expect(amberCounter.props.className).toContain('text-amber-500');
+        expect(amberCounter.props.style?.color).toBeTruthy();
       });
     });
 

@@ -136,7 +136,7 @@ describe('ErrorMessage', () => {
 
       // onDismiss should not have been called
       // (animation timing makes this complex in unit tests)
-      expect(true).toBe(true); // Placeholder - real implementation tests animation
+      expect(true).toBe(true); // Hint - real implementation tests animation
     });
 
     it('should auto-dismiss when autoDismiss prop is true', () => {

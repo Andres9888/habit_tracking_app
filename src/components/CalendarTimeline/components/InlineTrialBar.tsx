@@ -27,7 +27,7 @@ export const InlineTrialBar: React.FC<InlineTrialBarProps> = ({
             alignItems: 'center',
             justifyContent: 'space-between',
             paddingHorizontal: 16,
-            paddingVertical: 6,
+            paddingVertical: 8,
             opacity: pressed ? 0.75 : 1,
             transform: [{ scale: pressed ? 0.985 : 1 }],
           }}
@@ -35,7 +35,7 @@ export const InlineTrialBar: React.FC<InlineTrialBarProps> = ({
           <Text
             style={{
               fontFamily: fontFamilies.primary.text,
-              fontSize: 11,
+              fontSize: 10,
               fontWeight: '700',
               color: '#fff',
             }}

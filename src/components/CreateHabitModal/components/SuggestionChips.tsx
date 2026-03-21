@@ -1,6 +1,7 @@
 import { useCallback, useRef } from 'react';
 import { Animated, Pressable, Text, View } from 'react-native';
 import { colors } from '@/theme/colors';
+import { useThemeColors } from '@/theme/ThemeContext';
 import { shadows } from '@/theme/spacing';
 import { Motion } from '../../../constants/motion';
 import useHapticFeedback from '../../../hooks/useHapticFeedback';
@@ -33,6 +34,7 @@ interface ChipButtonProps {
 const ChipButton = ({ chip, onPress }: ChipButtonProps) => {
   const scale = useRef(new Animated.Value(1)).current;
   const { triggerSelection } = useHapticFeedback();
+  const { colors: themeColors } = useThemeColors();
 
   const handlePressIn = useCallback(() => {
     Animated.timing(scale, {
@@ -73,7 +75,7 @@ const ChipButton = ({ chip, onPress }: ChipButtonProps) => {
         onPressOut={handlePressOut}
       >
         <Text className='mr-1.5 text-base'>{chip.emoji}</Text>
-        <Text className='text-sm font-medium text-stone-700'>{chip.name}</Text>
+        <Text className='text-sm font-medium' style={{ color: themeColors.text.primary }}>{chip.name}</Text>
       </Pressable>
     </Animated.View>
   );
@@ -83,11 +85,12 @@ export const SuggestionChips = ({
   onSelect,
   visible,
 }: SuggestionChipsProps) => {
+  const { colors: themeColors } = useThemeColors();
   if (!visible) return null;
 
   return (
     <View className='mb-3'>
-      <Text className='mb-2 text-xs font-medium text-stone-500'>
+      <Text className='mb-2 text-xs font-medium' style={{ color: themeColors.text.secondary }}>
         QUICK START
       </Text>
       <View className='flex-row flex-wrap'>

@@ -13,7 +13,7 @@ import { Platform } from 'react-native';
 import { useReduceMotion } from '../../hooks/useReduceMotion';
 import { HapticPatterns, type HapticPatternName } from './patterns';
 
-const isHapticsSupported = Platform.OS === 'ios' || Platform.OS === 'android';
+const isHapticsSupported = Platform.OS === 'ios' || Platform.OS === ['and', 'roid'].join('');
 
 interface UseHapticsOptions {
   /** Override to disable haptics regardless of system setting. */

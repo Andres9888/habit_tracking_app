@@ -3,7 +3,7 @@
  */
 
 import { ViewStyle, TextStyle } from 'react-native';
-import { fontFamilies } from '@/theme/typography';
+import { fontWeights, typography } from '@/theme/typography';
 import { BORDER_RADIUS, TOUCH_TARGETS } from '../constants';
 
 interface ContainerStyleParams {
@@ -35,11 +35,10 @@ export function getContainerStyle({
 
 export function getInputTextStyle(color: string): TextStyle {
   return {
+    ...typography.body,
     color,
     flex: 1,
-    fontFamily: fontFamilies.primary.text,
-    fontSize: 15,
-    fontWeight: '500',
+    fontWeight: fontWeights.medium,
   };
 }
 
@@ -49,18 +48,14 @@ export const clearButtonPressedStyle = (pressed: boolean): ViewStyle => ({
 });
 
 export const characterCounterStyle = (color: string): TextStyle => ({
+  ...typography.caption,
   color,
-  fontFamily: fontFamilies.primary.text,
-  fontSize: 13,
-  fontWeight: '500',
   marginLeft: 8,
 });
 
 export const placeholderOverlayStyle = (color: string): TextStyle => ({
+  ...typography.body,
   color,
-  fontFamily: fontFamilies.primary.text,
-  fontSize: 15,
-  fontWeight: '400',
   left: 16,
   position: 'absolute',
 });

@@ -20,9 +20,13 @@ export function HabitStatsBadges({
       {/* Strength Badge */}
       <View
         className={`flex-row items-center gap-1.5 rounded-lg px-2.5 py-1 ${strengthInfo.bgColor}`}
+        style={strengthInfo.bgStyle ? { backgroundColor: strengthInfo.bgStyle } : undefined}
       >
         <Text className='text-sm'>{strengthInfo.emoji}</Text>
-        <Text className={`text-xs font-semibold ${strengthInfo.textColor}`}>
+        <Text
+          className={`text-xs font-semibold ${strengthInfo.textColor}`}
+          style={strengthInfo.textStyle ? { color: strengthInfo.textStyle } : undefined}
+        >
           {Math.round(strength)}% {strengthInfo.label}
         </Text>
       </View>

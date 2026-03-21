@@ -7,7 +7,7 @@ import React from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { ChevronRight } from 'lucide-react-native';
-import { clsx } from 'clsx';
+import { useThemeColors } from '@/theme/ThemeContext';
 import type { ButtonContentProps } from './ButtonContent.types';
 import { IconContainer } from './IconContainer';
 import { triggerHaptic } from '@/utils/haptics';
@@ -22,16 +22,14 @@ export function ButtonContent({
   accessibleLabel,
   onPress,
 }: ButtonContentProps) {
+  const { colors: themeColors } = useThemeColors();
+
   return (
     <Pressable
       accessibilityLabel={accessibleLabel}
       accessibilityRole='button'
-      className={clsx(
-        'flex-row items-center gap-3 rounded-xl border px-4 py-3.5 active:opacity-70',
-        isDestructive && 'border-red-200/60 bg-red-50/50',
-        isBoost && 'border-violet-200/60',
-        !isDestructive && !isBoost && 'border-stone-200 bg-white/80'
-      )}
+      className='flex-row items-center gap-3 rounded-xl border px-4 py-3.5 active:opacity-70'
+      style={isBoost ? { borderColor: themeColors.status.premiumLight } : isDestructive ? { borderColor: themeColors.status.errorLight, backgroundColor: themeColors.status.errorLight } : { borderColor: themeColors.border, backgroundColor: themeColors.card }}
       onPress={() => {
         triggerHaptic('tap');
         onPress();
@@ -45,41 +43,27 @@ export function ButtonContent({
         /> : null}
       <IconContainer isBoost={isBoost} isDestructive={isDestructive}>
         <Icon
-          className={clsx(
-            isDestructive && 'text-red-500',
-            isBoost && 'text-white',
-            !isDestructive && !isBoost && 'text-stone-600'
-          )}
+          color={isDestructive ? themeColors.status.error : isBoost ? '#ffffff' : themeColors.text.primary}
           size={20}
           strokeWidth={2.25}
         />
       </IconContainer>
       <View className='flex-1'>
         <Text
-          className={clsx(
-            'text-base font-medium',
-            isDestructive && 'text-red-600',
-            isBoost && 'text-violet-900',
-            !isDestructive && !isBoost && 'text-stone-800'
-          )}
+          className='text-base font-medium'
+          style={{ color: isDestructive ? themeColors.status.error : isBoost ? themeColors.status.premiumText : themeColors.text.primary }}
         >
           {label}
         </Text>
         {subtitle ? <Text
-            className={clsx(
-              'text-xs',
-              isBoost ? 'text-violet-600' : 'text-stone-500'
-            )}
+            className='text-xs'
+            style={{ color: isBoost ? themeColors.status.premiumText : themeColors.text.secondary }}
           >
             {subtitle}
           </Text> : null}
       </View>
       {showChevron ? <ChevronRight
-          className={clsx(
-            isDestructive && 'text-red-400',
-            isBoost && 'text-violet-400',
-            !isDestructive && !isBoost && 'text-stone-400'
-          )}
+          color={isDestructive ? themeColors.status.error : isBoost ? themeColors.status.premium : themeColors.text.tertiary}
           size={20}
         /> : null}
     </Pressable>

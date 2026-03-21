@@ -1,3 +1,5 @@
+// TODO: Migrate from legacy Animated API to react-native-reanimated
+// Requires coordinated changes across useFABAnimations, useFABHandlers, and FloatingActionButton
 import { useEffect, useRef } from 'react';
 import { Animated, Easing } from 'react-native';
 import { FAB, RIPPLE_EFFECT } from '../../../../constants';

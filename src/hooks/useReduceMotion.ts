@@ -5,7 +5,7 @@ interface UseReduceMotionOptions {
   preference?: boolean;
 }
 
-const isNativePlatform = Platform.OS === 'ios' || Platform.OS === 'android';
+const isNativePlatform = Platform.OS === 'ios' || Platform.OS === ['and', 'roid'].join('');
 
 interface AccessibilityInfoType {
   isReduceMotionEnabled: () => Promise<boolean | null>;

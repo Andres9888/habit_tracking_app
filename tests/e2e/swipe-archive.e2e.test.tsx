@@ -6,7 +6,7 @@
  *
  * Setup Requirements:
  * - Detox configured in package.json
- * - iOS Simulator or Android Emulator running
+ * - iOS Simulator or Native Handset Emulator running
  * - Convex backend running (dev or test deployment)
  *
  * Run with: npm run test:e2e

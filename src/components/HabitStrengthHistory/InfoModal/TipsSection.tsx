@@ -4,6 +4,7 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
+import { useThemeColors } from '@/theme/ThemeContext';
 
 const TIPS = [
   'Consistency beats intensity — daily small wins add up',
@@ -13,14 +14,16 @@ const TIPS = [
 ];
 
 export function TipsSection() {
+  const { colors: themeColors } = useThemeColors();
+
   return (
-    <View className='rounded-2xl bg-stone-50 p-4'>
-      <Text className='mb-3 text-base font-semibold text-stone-700'>
+    <View className='rounded-2xl p-4' style={{ backgroundColor: themeColors.background }}>
+      <Text className='mb-3 text-base font-semibold' style={{ color: themeColors.text.primary }}>
         💡 Tips for Building Strength
       </Text>
       <View className='gap-2'>
         {TIPS.map((tip, index) => (
-          <Text key={index} className='text-sm leading-5 text-stone-600'>
+          <Text key={index} className='text-sm leading-5' style={{ color: themeColors.text.primary }}>
             • {tip}
           </Text>
         ))}

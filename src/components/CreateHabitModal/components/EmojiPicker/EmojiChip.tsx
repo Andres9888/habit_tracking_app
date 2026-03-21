@@ -16,6 +16,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import type { EmojiChipProps } from './types';
 import { springs } from '@/theme/animations';
+import { useThemeColors } from '@/theme/ThemeContext';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -26,6 +27,7 @@ function EmojiChipComponent({
   reduceMotion,
 }: EmojiChipProps) {
   const scale = useSharedValue(1);
+  const { colors: themeColors } = useThemeColors();
 
   const handlePressIn = useCallback(() => {
     'worklet';
@@ -70,17 +72,22 @@ function EmojiChipComponent({
         className={`h-14 w-14 items-center justify-center rounded-2xl ${
           isSelected
             ? 'border-2 border-[#059669] bg-[#D1FAE5]'
-            : 'border border-stone-200 bg-stone-100'
+            : 'border'
         }`}
         style={[
           animatedStyle,
-          isSelected && {
-            elevation: 4,
-            shadowColor: '#059669',
-            shadowOffset: { height: 2, width: 0 },
-            shadowOpacity: 0.25,
-            shadowRadius: 4,
-          },
+          isSelected
+            ? {
+                elevation: 4,
+                shadowColor: '#059669',
+                shadowOffset: { height: 2, width: 0 },
+                shadowOpacity: 0.25,
+                shadowRadius: 4,
+              }
+            : {
+                borderColor: themeColors.border,
+                backgroundColor: themeColors.background,
+              },
         ]}
         onPress={onPress}
         onPressIn={handlePressIn}

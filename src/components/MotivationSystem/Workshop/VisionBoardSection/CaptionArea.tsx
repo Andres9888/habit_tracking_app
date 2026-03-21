@@ -5,7 +5,9 @@
 
 import React from 'react';
 import { View, Text, Pressable, TextInput } from 'react-native';
+import { buildTextInputHintProps } from '@/utils/textInputHintProps';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import { MAX_CAPTION_LENGTH, type VisionBoardImage } from './types';
 
 interface CaptionAreaProps {
@@ -27,6 +29,7 @@ export function CaptionArea({
   isSaving,
   image,
 }: CaptionAreaProps) {
+  const { colors } = useThemeColors();
   const insets = useSafeAreaInsets();
   if (isEditingCaption) {
     return (
@@ -37,19 +40,19 @@ export function CaptionArea({
             multiline
             className='rounded-xl bg-white/10 px-4 py-3 text-base text-white'
             maxLength={MAX_CAPTION_LENGTH}
-            placeholder='Add a caption...'
-            placeholderTextColor='#a8a29e'
             value={captionText}
+            {...buildTextInputHintProps('Add a caption...', '#a8a29e')}
             onChangeText={onChangeText}
           />
           <View className='flex-row items-center justify-between'>
-            <Text className='text-xs text-stone-400'>
+            <Text className='text-xs' style={{ color: colors.text.tertiary }}>
               {captionText.length}/{MAX_CAPTION_LENGTH}
             </Text>
             <View className='flex-row gap-2'>
               <Pressable
                 accessibilityLabel='Cancel editing'
-                className='rounded-lg bg-stone-700 px-4 py-2'
+                className='rounded-lg px-4 py-2'
+                style={{ backgroundColor: '#44403c' }}
                 onPress={onCancel}
               >
                 <Text className='font-medium text-white'>Cancel</Text>
@@ -79,7 +82,7 @@ export function CaptionArea({
             {image.caption}
           </Text>
         ) : (
-          <Text className='text-center text-base text-stone-500'>
+          <Text className='text-center text-base' style={{ color: colors.text.secondary }}>
             Tap the edit button to add a caption
           </Text>
         )}

@@ -34,7 +34,7 @@ export const progressStyles = StyleSheet.create({
   headerTitle: {
     color: '#1f2937', // gray-800
     fontFamily: fontFamilies.primary.text,
-    fontSize: 15,
+    fontSize: 14,
     fontWeight: '600',
   },
   milestoneName: {

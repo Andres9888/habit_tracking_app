@@ -6,8 +6,8 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { Sparkles, AlertTriangle } from 'lucide-react-native';
-import { clsx } from 'clsx';
 
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import type { VizType } from './types';
 
 interface VizHeaderProps {
@@ -16,33 +16,32 @@ interface VizHeaderProps {
 }
 
 export function VizHeader({ vizType, iconAnimatedStyle }: VizHeaderProps) {
+  const { colors } = useThemeColors();
   const isSuccess = vizType === 'success';
 
   return (
     <View className='mb-4 flex-row items-center gap-3'>
       <Animated.View
-        className={clsx(
-          'h-10 w-10 items-center justify-center rounded-xl',
-          isSuccess ? 'bg-emerald-100' : 'bg-rose-100'
-        )}
-        style={iconAnimatedStyle}
+        className='h-10 w-10 items-center justify-center rounded-xl'
+        style={[
+          iconAnimatedStyle,
+          { backgroundColor: isSuccess ? colors.status.successLight : colors.status.errorLight },
+        ]}
       >
         {isSuccess ? (
-          <Sparkles className='text-emerald-600' size={20} />
+          <Sparkles color={colors.status.success} size={20} />
         ) : (
-          <AlertTriangle className='text-rose-600' size={20} />
+          <AlertTriangle color={colors.status.error} size={20} />
         )}
       </Animated.View>
       <View className='flex-1'>
         <Text
-          className={clsx(
-            'text-base font-semibold',
-            isSuccess ? 'text-emerald-800' : 'text-rose-800'
-          )}
+          className='text-base font-semibold'
+          style={{ color: isSuccess ? colors.status.successText : colors.status.errorText }}
         >
           {isSuccess ? 'Visualize Success' : 'Visualize Consequences'}
         </Text>
-        <Text className='text-xs text-stone-500'>
+        <Text className='text-xs' style={{ color: colors.text.secondary }}>
           {isSuccess
             ? 'Feel the energy of completing this'
             : 'Feel the weight of skipping this'}

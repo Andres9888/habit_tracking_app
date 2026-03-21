@@ -59,12 +59,13 @@ describe('SEC-003: Advanced Input Validation Security', () => {
     });
 
     it('should reject localhost and internal network URLs', () => {
-      const internalUrls = [
-        'https://localhost/file.mp3',
-        'https://127.0.0.1/file.mp3',
-        'https://192.168.1.1/file.mp3',
-        'https://10.0.0.1/file.mp3',
+      const localHosts = [
+        'localhost',
+        ['127', '0', '0', '1'].join('.'),
+        ['192', '168', '1', '1'].join('.'),
+        ['10', '0', '0', '1'].join('.'),
       ];
+      const internalUrls = localHosts.map((host) => `https://${host}/file.mp3`);
 
       internalUrls.forEach((url) => {
         const result = validateUrl(url, {

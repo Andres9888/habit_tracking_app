@@ -6,6 +6,7 @@
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { Volume2, VolumeX } from 'lucide-react-native';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import { SpeedControl } from './SpeedControl';
 import type { TimeControlsProps } from './types';
 
@@ -21,9 +22,11 @@ export function TimeControls({
   onToggleMute,
   onSpeedChange,
 }: TimeControlsProps) {
+  const { colors } = useThemeColors();
+
   return (
     <View className='mt-2 flex-row items-center justify-between'>
-      <Text className='text-xs text-stone-500'>
+      <Text className='text-xs' style={{ color: colors.text.secondary }}>
         {isReady ? formattedPosition : '0:00'}
       </Text>
 
@@ -31,13 +34,14 @@ export function TimeControls({
         {showMuteButton && isReady ? <Pressable
             accessibilityLabel={isMuted ? 'Unmute' : 'Mute'}
             accessibilityRole='button'
-            className='rounded-lg bg-stone-100 p-1.5'
+            className='rounded-lg p-1.5'
+            style={{ backgroundColor: colors.background }}
             onPress={onToggleMute}
           >
             {isMuted ? (
-              <VolumeX className='text-stone-500' size={14} />
+              <VolumeX color={colors.text.secondary} size={14} />
             ) : (
-              <Volume2 className='text-stone-500' size={14} />
+              <Volume2 color={colors.text.secondary} size={14} />
             )}
           </Pressable> : null}
 
@@ -47,7 +51,7 @@ export function TimeControls({
           /> : null}
       </View>
 
-      <Text className='text-xs text-stone-500'>
+      <Text className='text-xs' style={{ color: colors.text.secondary }}>
         {isReady ? formattedRemaining : `-${displayDuration}`}
       </Text>
     </View>

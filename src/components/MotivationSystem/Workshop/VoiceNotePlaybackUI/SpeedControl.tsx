@@ -10,6 +10,7 @@ import {
   PlaybackSpeed,
   PLAYBACK_SPEEDS,
 } from '../../../../hooks/useAudioPlayback';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import type { SpeedControlProps } from './types';
 import { triggerHaptic } from '@/utils/haptics';
 
@@ -17,6 +18,7 @@ export function SpeedControl({
   currentSpeed,
   onSpeedChange,
 }: SpeedControlProps) {
+  const { colors } = useThemeColors();
   const [isOpen, setIsOpen] = useState(false);
 
   const handleSpeedPress = useCallback(
@@ -38,31 +40,28 @@ export function SpeedControl({
       <Pressable
         accessibilityLabel={`Playback speed: ${currentSpeed}x`}
         accessibilityRole='button'
-        className='rounded-lg bg-stone-100 px-2 py-1'
+        className='rounded-lg px-2 py-1'
+        style={{ backgroundColor: colors.background }}
         onPress={toggleOpen}
       >
-        <Text className='text-xs font-medium text-stone-600'>
+        <Text className='text-xs font-medium' style={{ color: colors.text.secondary }}>
           {currentSpeed}x
         </Text>
       </Pressable>
 
-      {isOpen ? <View className='absolute bottom-full right-0 mb-1 rounded-lg bg-white p-1 shadow-lg'>
+      {isOpen ? <View className='absolute bottom-full right-0 mb-1 rounded-lg p-1 shadow-lg' style={{ backgroundColor: colors.card }}>
           {PLAYBACK_SPEEDS.map((speed) => (
             <Pressable
               key={speed}
               accessibilityLabel={`Set speed to ${speed}x`}
               accessibilityRole='button'
-              className={clsx(
-                'rounded-md px-3 py-1.5',
-                currentSpeed === speed ? 'bg-teal-100' : ''
-              )}
+              className='rounded-md px-3 py-1.5'
+              style={currentSpeed === speed ? { backgroundColor: colors.status.successLight } : undefined}
               onPress={() => handleSpeedPress(speed)}
             >
               <Text
-                className={clsx(
-                  'text-sm font-medium',
-                  currentSpeed === speed ? 'text-teal-700' : 'text-stone-600'
-                )}
+                className='text-sm font-medium'
+              style={{ color: currentSpeed === speed ? colors.status.successText : colors.text.secondary }}
               >
                 {speed}x
               </Text>

@@ -6,7 +6,7 @@
 import { StyleSheet } from 'react-native';
 import { colors } from '@/theme/colors';
 import { borderRadius } from '../../../theme/spacing';
-import { typography, fontFamilies} from '../../../theme/typography';
+import { typography, fontFamilies, fontWeights } from '../../../theme/typography';
 
 export const shareCardContentStyles = StyleSheet.create({
   cardContainer: {
@@ -85,8 +85,8 @@ export const shareCardContentStyles = StyleSheet.create({
   strengthPercentage: {
     color: colors.text.inverse,
     fontFamily: fontFamilies.primary.display,
-    fontSize: 48,
-    fontWeight: '800',
+    fontSize: 34,
+    fontWeight: fontWeights.bold,
     textShadowColor: 'rgba(0, 0, 0, 0.3)',
     textShadowOffset: { height: 2, width: 0 },
     textShadowRadius: 4,

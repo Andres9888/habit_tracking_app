@@ -1,5 +1,5 @@
 /* eslint-disable max-lines, max-lines-per-function */
-/** SettingsContent - Stagger animations, stone-100 bg, 12px version */
+/** SettingsContent - Apple Settings layout: Profile → Appearance → Behavior → Data → Notifications → Support → About → Sign Out */
 import {
   ArrowUpDown,
   BookOpen,
@@ -19,9 +19,11 @@ import Animated, {
 } from 'react-native-reanimated';
 import { SettingsRow } from './SettingsRow';
 import { SettingsSection } from './SettingsSection';
+import { SoundPicker } from './SoundPicker';
 import { StreakRemindersSection } from './StreakRemindersSection';
-import { AccountSection } from './AccountSection';
-import { AboutSection } from './sections';
+import { useAccountActions } from './useAccountActions';
+import { AppActions, AboutLegalSection, AccountSection, DeleteAccountButton } from './sections';
+import { FeedbackModal } from '../FeedbackModal';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { SORT_LABEL_MAP } from './SortPicker.constants';
 import type { HabitSortMode } from '../../features/habits/types';
@@ -50,6 +52,8 @@ export function SettingsContent(p: SettingsContentProps) {
     opacity: scrollY.value > 4 ? 1 : 0,
   }));
 
+  const actions = useAccountActions();
+
   return (
     <View style={SCROLL_STYLES.wrapper}>
       <Animated.View
@@ -69,22 +73,9 @@ export function SettingsContent(p: SettingsContentProps) {
         onScroll={scrollHandler}
       >
         <View className='gap-5'>
-          {/* Preferences Section - ordered by impact */}
+          {/* Appearance Section */}
           <Animated.View entering={anim(0)}>
-            <SettingsSection highContrastMode={hc} title='Preferences'>
-              <SettingsRow
-                hapticStyle='selection'
-                highContrastMode={hc}
-                icon={<ArrowUpDown color={settingsIcons.sort.icon} size={16} />}
-                iconBackgroundColor={settingsIcons.sort.bg}
-                label='Sort Order'
-                subtitle='Choose how your habits are ordered'
-                type='selection'
-                value={
-                  SORT_LABEL_MAP[p.habitSortMode as HabitSortMode] ?? 'Custom'
-                }
-                onPress={p.onOpenSortPicker}
-              />
+            <SettingsSection highContrastMode={hc} title='Appearance'>
               <SettingsRow
                 highContrastMode={hc}
                 icon={<Rows3 color={settingsIcons.compact.icon} size={16} />}
@@ -94,42 +85,6 @@ export function SettingsContent(p: SettingsContentProps) {
                 type='toggle'
                 value={p.compactView}
                 onToggle={(v) => void p.onChangeCompactView(v)}
-              />
-              <SettingsRow
-                highContrastMode={hc}
-                icon={<Check color={settingsIcons.checkbox.icon} size={16} />}
-                iconBackgroundColor={settingsIcons.checkbox.bg}
-                label='Completion icon'
-                subtitle='Choose between checkmark and chain link'
-                type='toggle'
-                value={p.habitCompletionIcon === 'checkbox'}
-                onToggle={(v) =>
-                  void p.onChangeHabitCompletionIcon(v ? 'checkbox' : 'chain')
-                }
-              />
-              <SettingsRow
-                highContrastMode={hc}
-                icon={<Volume2 color={settingsIcons.sound.icon} size={16} />}
-                iconBackgroundColor={settingsIcons.sound.bg}
-                label='Play sound on habit completion'
-                subtitle='Hear a sound effect when you check off a habit'
-                type='toggle'
-                value={p.completionSoundEnabled}
-                onToggle={(v) => void p.onChangeCompletionSoundEnabled(v)}
-              />
-              <SettingsRow
-                highContrastMode={hc}
-                icon={
-                  <Calendar
-                    color={settingsIcons.calendarHeader.icon}
-                    size={16}
-                  />
-                }
-                iconBackgroundColor={settingsIcons.calendarHeader.bg}
-                label='Pin calendar header'
-                type='toggle'
-                value={p.stickyCalendarHeader}
-                onToggle={(v) => void p.onChangeStickyCalendarHeader(v)}
               />
               <SettingsRow
                 highContrastMode={hc}
@@ -156,6 +111,77 @@ export function SettingsContent(p: SettingsContentProps) {
                 onToggle={(v) => void p.onChangeShowGradientFill(v)}
               />
               <SettingsRow
+                hapticStyle='selection'
+                highContrastMode={hc}
+                icon={<Check color={settingsIcons.checkbox.icon} size={16} />}
+                iconBackgroundColor={settingsIcons.checkbox.bg}
+                label='Completion icon'
+                subtitle='Choose between checkmark and chain link'
+                showBorder={false}
+                type='toggle'
+                value={p.habitCompletionIcon === 'checkbox'}
+                onToggle={(v) =>
+                  void p.onChangeHabitCompletionIcon(v ? 'checkbox' : 'chain')
+                }
+              />
+            </SettingsSection>
+          </Animated.View>
+
+          {/* Behavior Section */}
+          <Animated.View entering={anim(40)}>
+            <SettingsSection highContrastMode={hc} title='Behavior'>
+              <SettingsRow
+                hapticStyle='selection'
+                highContrastMode={hc}
+                icon={<ArrowUpDown color={settingsIcons.sort.icon} size={16} />}
+                iconBackgroundColor={settingsIcons.sort.bg}
+                label='Sort Order'
+                subtitle='Choose how your habits are ordered'
+                type='selection'
+                value={
+                  SORT_LABEL_MAP[p.habitSortMode as HabitSortMode] ?? 'Custom'
+                }
+                onPress={p.onOpenSortPicker}
+              />
+              <SettingsRow
+                highContrastMode={hc}
+                icon={<Volume2 color={settingsIcons.sound.icon} size={16} />}
+                iconBackgroundColor={settingsIcons.sound.bg}
+                label='Completion sound'
+                subtitle='Hear a sound when you check off a habit'
+                showBorder={!p.completionSoundEnabled}
+                type='toggle'
+                value={p.completionSoundEnabled}
+                onToggle={(v) => void p.onChangeCompletionSoundEnabled(v)}
+              />
+              {p.completionSoundEnabled ? (
+                <SoundPicker
+                  selected={p.completionSoundType}
+                  onSelect={(v) => void p.onChangeCompletionSoundType(v)}
+                />
+              ) : null}
+              <SettingsRow
+                highContrastMode={hc}
+                icon={
+                  <Calendar
+                    color={settingsIcons.calendarHeader.icon}
+                    size={16}
+                  />
+                }
+                iconBackgroundColor={settingsIcons.calendarHeader.bg}
+                label='Pin calendar header'
+                showBorder={false}
+                type='toggle'
+                value={p.stickyCalendarHeader}
+                onToggle={(v) => void p.onChangeStickyCalendarHeader(v)}
+              />
+            </SettingsSection>
+          </Animated.View>
+
+          {/* Data Section */}
+          <Animated.View entering={anim(80)}>
+            <SettingsSection highContrastMode={hc} title='Data'>
+              <SettingsRow
                 badge={p.archivedHabitsCount}
                 highContrastMode={hc}
                 icon={<BookOpen color={settingsIcons.archive.icon} size={16} />}
@@ -170,7 +196,7 @@ export function SettingsContent(p: SettingsContentProps) {
           </Animated.View>
 
           {/* Notifications Section */}
-          <Animated.View entering={anim(60)}>
+          <Animated.View entering={anim(120)}>
             <StreakRemindersSection
               enabled={p.streakRemindersEnabled}
               highContrastMode={hc}
@@ -182,19 +208,51 @@ export function SettingsContent(p: SettingsContentProps) {
             />
           </Animated.View>
 
-          {/* Account Section — sub-sections stagger internally */}
-          <AccountSection
-            isHighContrastActive={hc}
-            isPremium={p.isPremium}
-            onPremiumUpsell={p.onPremiumUpsell}
-          />
+          {/* Support Section */}
+          <Animated.View entering={anim(160)}>
+            <AppActions
+              highContrast={hc}
+              onFeedback={actions.handleFeedback}
+              onRate={actions.handleRateApp}
+              onShare={actions.handleShare}
+              onWhatsNew={actions.handleWhatsNew}
+            />
+          </Animated.View>
 
-          {/* About Section - Version info */}
-          <Animated.View entering={anim(180)}>
-            <AboutSection buildNumber='1' highContrast={hc} version='1.0.0' />
+          {/* About + Legal */}
+          <Animated.View entering={anim(200)}>
+            <AboutLegalSection
+              buildNumber='1'
+              highContrast={hc}
+              version='1.0.0'
+              onPrivacy={actions.openPrivacy}
+              onTerms={actions.openTerms}
+            />
+          </Animated.View>
+
+          {/* Account — Profile + Sign Out */}
+          <Animated.View entering={anim(240)}>
+            <AccountSection
+              highContrastMode={hc}
+              isSigningOut={actions.isSigningOut}
+              onSignOut={actions.handleSignOut}
+            />
+          </Animated.View>
+
+          {/* Delete Account — standalone danger link */}
+          <Animated.View entering={anim(280)}>
+            <DeleteAccountButton
+              isDeletingAccount={actions.isDeletingAccount}
+              onDeleteAccount={actions.handleDeleteAccount}
+            />
           </Animated.View>
         </View>
       </Animated.ScrollView>
+
+      <FeedbackModal
+        visible={actions.showFeedbackModal}
+        onClose={actions.closeFeedback}
+      />
     </View>
   );
 }

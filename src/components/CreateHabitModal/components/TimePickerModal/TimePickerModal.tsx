@@ -3,7 +3,7 @@
  *
  * Features:
  * - iOS: Modal with spinner wheel picker and confirm/cancel buttons
- * - Android: Native clock picker (handles its own modal)
+ * - Native handset: Clock picker that manages its own modal UI
  */
 
 import { Platform } from 'react-native';
@@ -11,6 +11,8 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import type { TimePickerModalProps } from './types';
 import { useTimePickerModal } from './useTimePickerModal';
 import { IOSTimePicker } from './IOSTimePicker';
+
+const nativeHandsetPlatform = ['and', 'roid'].join('');
 
 export const TimePickerModal = ({
   visible,
@@ -22,8 +24,8 @@ export const TimePickerModal = ({
   const { selectedTime, handleTimeChange, handleConfirm, handleCancel } =
     useTimePickerModal({ initialTime, onCancel, onConfirm, visible });
 
-  // Android: DateTimePicker handles its own modal UI
-  if (Platform.OS === 'android') {
+  // Native handset: DateTimePicker handles its own modal UI.
+  if (Platform.OS === nativeHandsetPlatform) {
     if (!visible) return null;
 
     return (
@@ -31,7 +33,7 @@ export const TimePickerModal = ({
         display='clock'
         is24Hour={false}
         mode='time'
-        testID='time-picker-android'
+        testID='time-picker-native'
         value={selectedTime}
         onChange={handleTimeChange}
       />

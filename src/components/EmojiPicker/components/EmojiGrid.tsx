@@ -1,6 +1,7 @@
 import { memo, useCallback, useMemo } from 'react';
 import { FlatList, Text, View } from 'react-native';
 import { Search } from 'lucide-react-native';
+import { useThemeColors } from '@/theme/ThemeContext';
 import { EmojiItem } from './EmojiItem';
 import { EMOJIS_PER_ROW } from '../EmojiPicker.constants';
 
@@ -20,6 +21,7 @@ export const EmojiGrid = memo(
     isSearching,
     onEmojiSelect,
   }: EmojiGridProps) => {
+    const { colors } = useThemeColors();
     const emojiRows = useMemo(() => {
       const rows: string[][] = [];
       for (let i = 0; i < displayedEmojis.length; i += EMOJIS_PER_ROW) {
@@ -48,10 +50,10 @@ export const EmojiGrid = memo(
       return (
         <View className='flex-1 items-center justify-center bg-white'>
           <Search color='#78716c' size={48} />
-          <Text className='mt-3 text-base font-medium text-stone-800'>
+          <Text className='mt-3 text-base font-medium' style={{ color: colors.text.primary }}>
             No emojis found
           </Text>
-          <Text className='mt-1 text-sm text-stone-500'>
+          <Text className='mt-1 text-sm' style={{ color: colors.text.secondary }}>
             Try a different search term
           </Text>
         </View>
@@ -61,7 +63,7 @@ export const EmojiGrid = memo(
     return (
       <View className='flex-1 bg-white'>
         {isSearching ? null : <View className='px-4 pb-2 pt-3'>
-            <Text className='text-xs font-semibold uppercase tracking-wider text-stone-500'>
+            <Text className='text-xs font-semibold uppercase tracking-wider' style={{ color: colors.text.secondary }}>
               {categoryName}
             </Text>
           </View>}

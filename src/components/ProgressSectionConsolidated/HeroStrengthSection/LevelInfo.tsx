@@ -9,6 +9,7 @@ import { View, Text } from 'react-native';
 import Animated from 'react-native-reanimated';
 
 import { TrendIndicator } from '../TrendIndicator';
+import { useThemeColors } from '@/theme/ThemeContext';
 
 interface LevelInfoProps {
   currentLevel: {
@@ -31,6 +32,8 @@ export function LevelInfo({
   pointsToNext,
   progressBarAnimatedStyle,
 }: LevelInfoProps) {
+  const { colors } = useThemeColors();
+
   return (
     <View className='flex-1'>
       <View className='mb-1.5 flex-row items-center gap-2'>
@@ -47,11 +50,11 @@ export function LevelInfo({
         </View>
         <TrendIndicator weeklyChange={weeklyChange} />
       </View>
-      <Text className='mb-1 text-sm text-stone-600'>
+      <Text className='mb-1 text-sm' style={{ color: colors.text.secondary }}>
         {currentLevel.description}
       </Text>
       <View className='flex-row items-center gap-1.5'>
-        <View className='h-1.5 flex-1 overflow-hidden rounded-full bg-stone-100'>
+        <View className='h-1.5 flex-1 overflow-hidden rounded-full' style={{ backgroundColor: colors.gray[100] }}>
           <Animated.View
             className='h-full rounded-full'
             style={[
@@ -61,11 +64,11 @@ export function LevelInfo({
           />
         </View>
         {nextLevel ? (
-          <Text className='whitespace-nowrap text-[10px] text-stone-400'>
+          <Text className='whitespace-nowrap text-[10px]' style={{ color: colors.text.tertiary }}>
             {pointsToNext}% to {nextLevel.emoji}
           </Text>
         ) : (
-          <Text className='whitespace-nowrap text-[10px] text-stone-400'>
+          <Text className='whitespace-nowrap text-[10px]' style={{ color: colors.text.tertiary }}>
             Max level! {currentLevel.emoji}
           </Text>
         )}

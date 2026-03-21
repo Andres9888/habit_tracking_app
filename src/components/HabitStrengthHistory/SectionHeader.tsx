@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { Info } from 'lucide-react-native';
+import { useThemeColors } from '@/theme/ThemeContext';
 
 interface SectionHeaderProps {
   title: string;
@@ -11,9 +12,11 @@ interface SectionHeaderProps {
  * Section header with title and info icon button
  */
 export function SectionHeader({ title, onInfoPress }: SectionHeaderProps) {
+  const { colors: themeColors } = useThemeColors();
+
   return (
     <View className='flex-row items-center justify-between'>
-      <Text className='text-base font-semibold text-stone-700'>{title}</Text>
+      <Text className='text-base font-semibold' style={{ color: themeColors.text.primary }}>{title}</Text>
       <Pressable
         accessible
         accessibilityLabel='Learn more about habit strength'
@@ -22,7 +25,7 @@ export function SectionHeader({ title, onInfoPress }: SectionHeaderProps) {
         testID='strength-history-info-button'
         onPress={onInfoPress}
       >
-        <Info color='#78716c' size={18} />
+        <Info color={themeColors.text.secondary} size={18} />
       </Pressable>
     </View>
   );

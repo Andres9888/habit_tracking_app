@@ -6,6 +6,7 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
+import { useThemeColors } from '@/theme/ThemeContext';
 
 interface BreakdownSectionProps {
   day30: number;
@@ -18,19 +19,21 @@ export function BreakdownSection({
   day60,
   day90,
 }: BreakdownSectionProps) {
+  const { colors } = useThemeColors();
+
   return (
     <View className='flex-1 space-y-2'>
       <View className='flex-row justify-between'>
-        <Text className='text-sm text-stone-500'>30-day avg</Text>
-        <Text className='text-sm font-medium text-stone-700'>{day30}%</Text>
+        <Text className='text-sm' style={{ color: colors.text.secondary }}>30-day avg</Text>
+        <Text className='text-sm font-medium' style={{ color: colors.text.primary }}>{day30}%</Text>
       </View>
       <View className='flex-row justify-between'>
-        <Text className='text-sm text-stone-500'>60-day avg</Text>
-        <Text className='text-sm font-medium text-stone-700'>{day60}%</Text>
+        <Text className='text-sm' style={{ color: colors.text.secondary }}>60-day avg</Text>
+        <Text className='text-sm font-medium' style={{ color: colors.text.primary }}>{day60}%</Text>
       </View>
       <View className='flex-row justify-between'>
-        <Text className='text-sm text-stone-500'>90-day avg</Text>
-        <Text className='text-sm font-medium text-stone-700'>{day90}%</Text>
+        <Text className='text-sm' style={{ color: colors.text.secondary }}>90-day avg</Text>
+        <Text className='text-sm font-medium' style={{ color: colors.text.primary }}>{day90}%</Text>
       </View>
     </View>
   );

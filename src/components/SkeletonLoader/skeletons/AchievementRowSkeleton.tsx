@@ -1,13 +1,18 @@
 import React from 'react';
 import { View } from 'react-native';
+import { useThemeColors } from '@/theme/ThemeContext';
 import { SkeletonLoader } from '../SkeletonLoader';
 import type { ReduceMotionProps } from '../types';
 
 export function AchievementRowSkeleton({ reduceMotion }: ReduceMotionProps) {
+  const { colors: themeColors } = useThemeColors();
+
   return (
     <View
-      className='mb-3 flex-row items-center gap-4 rounded-3xl border border-stone-100 bg-white px-6 py-6'
+      className='mb-3 flex-row items-center gap-4 rounded-3xl border px-6 py-6'
       style={{
+        borderColor: themeColors.border,
+        backgroundColor: themeColors.card,
         shadowColor: '#1c1917',
         shadowOffset: { height: 4, width: 0 },
         shadowOpacity: 0.08,

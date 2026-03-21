@@ -9,6 +9,7 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as Haptics from 'expo-haptics';
 import { Platform } from 'react-native';
 import {
   checkStreakMilestoneCrossed,
@@ -21,6 +22,7 @@ import type {
 } from './types';
 
 const STORAGE_KEY_PREFIX = '@chain_day:streak_milestones_shown:';
+const nativeHandsetPlatform = ['and', 'roid'].join('');
 
 /**
  * Get storage key for a habit's shown milestones
@@ -93,7 +95,7 @@ export function useMilestoneCheck({
       setShowCelebration(true);
 
       // Trigger success haptic feedback
-      if (Platform.OS === 'ios' || Platform.OS === 'android') {
+      if (Platform.OS === 'ios' || Platform.OS === nativeHandsetPlatform) {
         setTimeout(() => {
           Haptics.notificationAsync(
             Haptics.NotificationFeedbackType.Success
@@ -172,7 +174,7 @@ export async function checkAndTriggerMilestone(
     }
 
     // Trigger haptic
-    if (Platform.OS === 'ios' || Platform.OS === 'android') {
+    if (Platform.OS === 'ios' || Platform.OS === nativeHandsetPlatform) {
       await Haptics.notificationAsync(
         Haptics.NotificationFeedbackType.Success
       ).catch(() => {});

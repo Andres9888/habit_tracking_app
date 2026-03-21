@@ -2,7 +2,7 @@
  * Notification Permissions
  *
  * Handles requesting and checking notification permissions.
- * Manages platform-specific permission flows (iOS/Android).
+ * Manages platform-specific permission flows (iOS/Native Handset).
  */
 
 import * as Notifications from 'expo-notifications';

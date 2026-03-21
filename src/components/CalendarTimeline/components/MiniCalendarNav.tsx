@@ -34,7 +34,7 @@ export const MiniCalendarNav: React.FC<MiniCalendarNavProps> = ({
       <Pressable hitSlop={8} onPress={onPrev}>
         <ChevronLeft color={iconColor} size={20} />
       </Pressable>
-      <Text style={{ fontFamily: fontFamilies.primary.text, fontSize: 15, fontWeight: '700', color: titleColor }}>
+      <Text style={{ fontFamily: fontFamilies.primary.text, fontSize: 14, fontWeight: '700', color: titleColor }}>
         {format(month, 'MMMM yyyy')}
       </Text>
       <Pressable hitSlop={8} onPress={onNext}>

@@ -22,7 +22,7 @@ export function AppActions({
   const { settings } = useThemeColors();
 
   return (
-    <SettingsSection highContrastMode={highContrast} title='App'>
+    <SettingsSection highContrastMode={highContrast} title='Support'>
       <SettingsRow
         highContrastMode={highContrast}
         icon={<Star color={settings.star.icon} size={16} />}

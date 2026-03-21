@@ -61,7 +61,7 @@ export const FOCUS_STATE_CONFIGS: Record<FocusState, FocusStateConfig> = {
   completed: {
     getGoalLabel: () => '🔥',
     getMessage: (streak: number) => `${streak} day streak and counting!`,
-    gradientColors: ['#22c55e', '#10b981'], // green-500 → emerald-500
+    gradientColors: ['#22c55e', '#10b981'], // green-500 → success
     icon: CheckCircle2,
     iconColor: '#ffffff',
     subTextColor: 'rgba(255, 255, 255, 0.9)',
@@ -98,7 +98,7 @@ export const FOCUS_STATE_CONFIGS: Record<FocusState, FocusStateConfig> = {
   thriving: {
     getGoalLabel: () => 'next milestone',
     getMessage: (goal: number) => `Complete today to hit ${goal} days!`,
-    gradientColors: ['#10b981', '#14b8a6'], // emerald-500 → teal-500
+    gradientColors: ['#10b981', '#14b8a6'], // success → teal-500
     icon: Crosshair,
     iconColor: '#ffffff',
     subTextColor: 'rgba(255, 255, 255, 0.9)',

@@ -15,7 +15,7 @@ export const styles = StyleSheet.create({
     borderRadius: borderRadius.small,
     justifyContent: 'center',
     minWidth: 32,
-    paddingHorizontal: 10,
+    paddingHorizontal: 12,
     paddingVertical: 4,
   },
   buttonActive: {

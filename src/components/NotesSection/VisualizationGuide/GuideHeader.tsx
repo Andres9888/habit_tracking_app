@@ -32,13 +32,13 @@ export function GuideHeader({ habitName }: GuideHeaderProps) {
           <Text className='text-lg font-bold text-white'>
             Goal Visualization
           </Text>
-          <Text className='mt-0.5 text-sm text-violet-100'>
+          <Text className='mt-0.5 text-sm' style={{ color: 'rgba(255,255,255,0.8)' }}>
             Science-backed techniques from neuroscience research
           </Text>
         </View>
       </View>
       <View className='mt-4 flex-row items-center gap-2 rounded-xl bg-white/10 p-3'>
-        <Sparkles className='text-amber-300' size={16} />
+        <Sparkles color='#FCD34D' size={16} />
         <Text className='flex-1 text-xs leading-relaxed text-white/90'>
           <Text className='font-semibold'>
             Based on Andrew Huberman's research:{' '}
@@ -47,8 +47,8 @@ export function GuideHeader({ habitName }: GuideHeaderProps) {
         </Text>
       </View>
       {habitName ? <View className='mt-3 flex-row items-center gap-2'>
-          <Target className='text-violet-200' size={14} />
-          <Text className='text-xs text-violet-200'>
+          <Target color='rgba(255,255,255,0.7)' size={14} />
+          <Text className='text-xs' style={{ color: 'rgba(255,255,255,0.7)' }}>
             Apply these techniques to:{' '}
             <Text className='font-medium text-white'>{habitName}</Text>
           </Text>

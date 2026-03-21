@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: fontFamilies.primary.text,
-    fontSize: 15,
+    fontSize: 14,
     fontWeight: '600',
     marginBottom: 2,
   },

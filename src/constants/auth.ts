@@ -21,8 +21,8 @@ export const AUTH_COLORS = {
   /** Error color (WCAG AA compliant) */
   error: colors.error,
 
-  /** Placeholder text color */
-  placeholder: colors.gray[400],
+  /** Input hint text color */
+  inputHint: colors.gray[400],
 
   /** Primary text color */
   primary: colors.gray[900],

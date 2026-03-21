@@ -4,9 +4,8 @@
  */
 
 export const EXTERNAL_URLS = {
-  // App Store and Play Store links
+  // Store links
   APP_STORE: 'https://apps.apple.com/app/chain-day',
-  PLAY_STORE: 'https://play.google.com/store/apps/details?id=com.chainday',
   
   // Marketing and legal pages
   WEBSITE: 'https://chainday.app',
@@ -14,7 +13,6 @@ export const EXTERNAL_URLS = {
   TERMS: 'https://andres9888.github.io/chainday-landing/terms.html',
   PRIVACY: 'https://andres9888.github.io/chainday-landing/privacy.html',
   
-  // Platform-specific subscription management
+  // Subscription management
   IOS_SUBSCRIPTIONS: 'https://apps.apple.com/account/subscriptions',
-  ANDROID_SUBSCRIPTIONS: 'https://play.google.com/store/account/subscriptions',
 } as const;

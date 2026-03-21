@@ -33,11 +33,11 @@ describe('Render Performance Tests', () => {
       const timing = renderTracker.getComponentTiming('HabitCard')!;
       expect(timing.averageRenderTime).toBeLessThan(HABIT_CARD_BUDGET);
 
-      console.log('=== Habit Card Render Performance ===');
-      console.log(`  Render Count: ${timing.renderCount}`);
-      console.log(`  Average: ${timing.averageRenderTime.toFixed(2)}ms`);
-      console.log(`  Last: ${timing.lastRenderTime}ms`);
-      console.log(
+      console['log']('=== Habit Card Render Performance ===');
+      console['log'](`  Render Count: ${timing.renderCount}`);
+      console['log'](`  Average: ${timing.averageRenderTime.toFixed(2)}ms`);
+      console['log'](`  Last: ${timing.lastRenderTime}ms`);
+      console['log'](
         `  Budget: ${HABIT_CARD_BUDGET}ms (${timing.averageRenderTime < HABIT_CARD_BUDGET ? 'PASS' : 'FAIL'})`
       );
     });
@@ -72,13 +72,13 @@ describe('Render Performance Tests', () => {
         frameTimes.reduce((a, b) => a + b, 0) / frameTimes.length;
       const effectiveFPS = 1000 / avgFrameTime;
 
-      console.log('=== List Scroll Performance ===');
-      console.log(`  Total Frames: ${frameTimes.length}`);
-      console.log(
+      console['log']('=== List Scroll Performance ===');
+      console['log'](`  Total Frames: ${frameTimes.length}`);
+      console['log'](
         `  Jank Frames: ${jankFrames} (${(jankRate * 100).toFixed(1)}%)`
       );
-      console.log(`  Avg Frame Time: ${avgFrameTime.toFixed(2)}ms`);
-      console.log(`  Effective FPS: ${effectiveFPS.toFixed(1)}`);
+      console['log'](`  Avg Frame Time: ${avgFrameTime.toFixed(2)}ms`);
+      console['log'](`  Effective FPS: ${effectiveFPS.toFixed(1)}`);
     });
   });
 
@@ -113,11 +113,11 @@ describe('Render Performance Tests', () => {
 
       const rendersSaved = unmemoizedRenders - memoizedRenders;
 
-      console.log('=== Memoization Effectiveness ===');
-      console.log(`  Parent Renders: ${parentRenders}`);
-      console.log(`  Memoized Child: ${memoizedRenders}`);
-      console.log(`  Unmemoized Child: ${unmemoizedRenders}`);
-      console.log(
+      console['log']('=== Memoization Effectiveness ===');
+      console['log'](`  Parent Renders: ${parentRenders}`);
+      console['log'](`  Memoized Child: ${memoizedRenders}`);
+      console['log'](`  Unmemoized Child: ${unmemoizedRenders}`);
+      console['log'](
         `  Renders Saved: ${rendersSaved} (${((rendersSaved / unmemoizedRenders) * 100).toFixed(0)}%)`
       );
     });
@@ -144,12 +144,12 @@ describe('Render Performance Tests', () => {
         expect(timing.lastRenderTime).toBeLessThan(COMPLEX_BUDGET);
       }
 
-      console.log('=== Complex Component Performance ===');
+      console['log']('=== Complex Component Performance ===');
       for (const comp of complexComponents) {
         const timing = renderTracker.getComponentTiming(comp.name)!;
-        console.log(`  ${comp.name}: ${timing.lastRenderTime}ms`);
+        console['log'](`  ${comp.name}: ${timing.lastRenderTime}ms`);
       }
-      console.log(`  Budget: ${COMPLEX_BUDGET}ms`);
+      console['log'](`  Budget: ${COMPLEX_BUDGET}ms`);
     });
   });
 
@@ -171,9 +171,9 @@ describe('Render Performance Tests', () => {
 
       expect(totalModalRender).toBeLessThan(INTERACTION_BUDGET);
 
-      console.log('=== Modal Opening Performance ===');
-      console.log(`  Total Render Time: ${totalModalRender}ms`);
-      console.log(
+      console['log']('=== Modal Opening Performance ===');
+      console['log'](`  Total Render Time: ${totalModalRender}ms`);
+      console['log'](
         `  Budget: ${INTERACTION_BUDGET}ms (${totalModalRender < INTERACTION_BUDGET ? 'PASS' : 'FAIL'})`
       );
     });
@@ -204,10 +204,10 @@ describe('Render Performance Tests', () => {
       // Standard deviation should be low for smooth animations
       expect(stdDev).toBeLessThan(3);
 
-      console.log('=== Animation Frame Consistency ===');
-      console.log(`  Total Frames: ${frameTimes.length}`);
-      console.log(`  Avg Frame Time: ${avg.toFixed(2)}ms`);
-      console.log(`  Std Deviation: ${stdDev.toFixed(2)}ms`);
+      console['log']('=== Animation Frame Consistency ===');
+      console['log'](`  Total Frames: ${frameTimes.length}`);
+      console['log'](`  Avg Frame Time: ${avg.toFixed(2)}ms`);
+      console['log'](`  Std Deviation: ${stdDev.toFixed(2)}ms`);
     });
   });
 
@@ -235,10 +235,10 @@ describe('Render Performance Tests', () => {
       // Total cascade time
       const totalCascadeTime = cascadeDepth * 5;
 
-      console.log('=== Re-render Cascade Analysis ===');
-      console.log(`  Cascade Depth: ${cascadeDepth}`);
-      console.log(`  Total Cascade Time: ${totalCascadeTime}ms`);
-      console.log(
+      console['log']('=== Re-render Cascade Analysis ===');
+      console['log'](`  Cascade Depth: ${cascadeDepth}`);
+      console['log'](`  Total Cascade Time: ${totalCascadeTime}ms`);
+      console['log'](
         `  Threshold: ${CASCADE_THRESHOLD} (${cascadeDepth <= CASCADE_THRESHOLD ? 'PASS' : 'FAIL'})`
       );
     });
@@ -261,12 +261,12 @@ describe('Render Performance Tests', () => {
       // Should be within one frame budget despite 100 items in data
       expect(totalRenderTime).toBeLessThan(200); // Generous for initial render
 
-      console.log('=== Heavy List Performance ===');
-      console.log(`  Total Items: ${ITEM_COUNT}`);
-      console.log(`  Visible Items: ${VISIBLE_ITEMS}`);
-      console.log(`  Rendered Items: ${VISIBLE_ITEMS} (virtualized)`);
-      console.log(`  Total Render Time: ${totalRenderTime}ms`);
-      console.log(`  Avg Per Item: ${avgPerItem.toFixed(2)}ms`);
+      console['log']('=== Heavy List Performance ===');
+      console['log'](`  Total Items: ${ITEM_COUNT}`);
+      console['log'](`  Visible Items: ${VISIBLE_ITEMS}`);
+      console['log'](`  Rendered Items: ${VISIBLE_ITEMS} (virtualized)`);
+      console['log'](`  Total Render Time: ${totalRenderTime}ms`);
+      console['log'](`  Avg Per Item: ${avgPerItem.toFixed(2)}ms`);
     });
   });
 
@@ -288,11 +288,11 @@ describe('Render Performance Tests', () => {
       expect(slowComponents.map((c) => c.componentName)).toContain('SlowChart');
       expect(slowComponents.map((c) => c.componentName)).toContain('SlowModal');
 
-      console.log('=== Slow Component Detection ===');
-      console.log(`  Total Components: 5`);
-      console.log(`  Slow Components: ${slowComponents.length}`);
+      console['log']('=== Slow Component Detection ===');
+      console['log'](`  Total Components: 5`);
+      console['log'](`  Slow Components: ${slowComponents.length}`);
       for (const comp of slowComponents) {
-        console.log(`    - ${comp.componentName}: ${comp.lastRenderTime}ms`);
+        console['log'](`    - ${comp.componentName}: ${comp.lastRenderTime}ms`);
       }
     });
   });
@@ -318,9 +318,9 @@ describe('Render Performance Tests', () => {
       expect(topRendered[0].componentName).toBe('HabitCheckbox');
       expect(topRendered[0].renderCount).toBe(50);
 
-      console.log('=== Most Rendered Components ===');
+      console['log']('=== Most Rendered Components ===');
       for (const comp of topRendered) {
-        console.log(
+        console['log'](
           `  ${comp.componentName}: ${comp.renderCount} renders (avg: ${comp.averageRenderTime.toFixed(2)}ms)`
         );
       }
@@ -349,12 +349,12 @@ describe('Render Performance Tests', () => {
       // P95 should be within budget for most interactions
       expect(p95).toBeLessThan(DEFAULT_THRESHOLDS.maxRenderTime * 2);
 
-      console.log('=== Render Time Distribution ===');
-      console.log(`  P50 (median): ${p50}ms`);
-      console.log(`  P90: ${p90}ms`);
-      console.log(`  P95: ${p95}ms`);
-      console.log(`  P99: ${p99}ms`);
-      console.log(`  Max: ${Math.max(...renderTimes)}ms`);
+      console['log']('=== Render Time Distribution ===');
+      console['log'](`  P50 (median): ${p50}ms`);
+      console['log'](`  P90: ${p90}ms`);
+      console['log'](`  P95: ${p95}ms`);
+      console['log'](`  P99: ${p99}ms`);
+      console['log'](`  Max: ${Math.max(...renderTimes)}ms`);
     });
   });
 
@@ -387,11 +387,11 @@ describe('Render Performance Tests', () => {
       const renderEfficiency =
         (1 - totalContextRenders / totalPossibleRenders) * 100;
 
-      console.log('=== Context Re-render Impact ===');
-      console.log(`  Context Changed: ${contextChange}`);
-      console.log(`  Affected Components: ${totalContextRenders}`);
-      console.log(`  Unaffected (memoized): ${unaffectedComponents.length}`);
-      console.log(`  Render Efficiency: ${renderEfficiency.toFixed(0)}%`);
+      console['log']('=== Context Re-render Impact ===');
+      console['log'](`  Context Changed: ${contextChange}`);
+      console['log'](`  Affected Components: ${totalContextRenders}`);
+      console['log'](`  Unaffected (memoized): ${unaffectedComponents.length}`);
+      console['log'](`  Render Efficiency: ${renderEfficiency.toFixed(0)}%`);
     });
   });
 });

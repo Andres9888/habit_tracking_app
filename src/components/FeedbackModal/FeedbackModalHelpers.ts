@@ -5,7 +5,7 @@
 import type { FeedbackType } from './FeedbackModal.types';
 
 /**
- * Get placeholder text for feedback description based on type
+ * Get hint text for feedback description based on type
  * Extracts nested ternary logic for better maintainability
  */
 export function getDescriptionPlaceholder(

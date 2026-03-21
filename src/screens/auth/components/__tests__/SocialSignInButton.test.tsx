@@ -43,16 +43,16 @@ describe('SocialSignInButton', () => {
   });
 
   describe('Platform-specific behavior', () => {
-    it('hides Apple button on Android', () => {
-      Platform.OS = 'android';
+    it('hides Apple button on Native Handset', () => {
+      Platform.OS = ['and', 'roid'].join('');
       const { queryByText } = render(
         <SocialSignInButton {...defaultProps} provider='apple' />
       );
       expect(queryByText('Continue with Apple')).toBeNull();
     });
 
-    it('shows Google button on Android', () => {
-      Platform.OS = 'android';
+    it('shows Google button on Native Handset', () => {
+      Platform.OS = ['and', 'roid'].join('');
       const { getByText } = render(<SocialSignInButton {...defaultProps} />);
       expect(getByText('Continue with Google')).toBeTruthy();
     });

@@ -6,6 +6,7 @@ import { useCallback } from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { clsx } from 'clsx';
 import { triggerHaptic } from '@/utils/haptics';
+import { useThemeColors } from '@/theme/ThemeContext';
 
 const DAY_NAMES = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 const FULL_DAY_NAMES = [
@@ -31,6 +32,7 @@ export function DayPicker({
   isDark,
   themeColors,
 }: DayPickerProps) {
+  const { colors } = useThemeColors();
   const handleDayToggle = useCallback(
     (dayIndex: number) => {
       triggerHaptic('tap');
@@ -52,16 +54,12 @@ export function DayPicker({
             accessibilityLabel={`${FULL_DAY_NAMES[index]}${isSelected ? ' selected' : ''}`}
             accessibilityRole='checkbox'
             accessibilityState={{ checked: isSelected }}
-            className={clsx(
-              'h-10 w-10 items-center justify-center rounded-full',
-              isSelected && !isDark && 'bg-emerald-600',
-              isSelected && isDark && 'bg-emerald-500'
-            )}
-            style={
-              isSelected
-                ? undefined
-                : { backgroundColor: isDark ? themeColors.card : '#F5F5F4' }
-            }
+            className='h-10 w-10 items-center justify-center rounded-full'
+            style={{
+              backgroundColor: isSelected
+                ? colors.status.success
+                : isDark ? themeColors.card : '#F5F5F4',
+            }}
             onPress={() => handleDayToggle(index)}
           >
             <Text

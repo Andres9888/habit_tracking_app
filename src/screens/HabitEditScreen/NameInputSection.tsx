@@ -7,6 +7,7 @@ import { useState } from 'react';
 import { View, Text, TextInput, Keyboard } from 'react-native';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import { useThemeColors } from '../../theme';
+import { buildTextInputHintProps } from '@/utils/textInputHintProps';
 
 interface NameInputSectionProps {
   habitName: string;
@@ -47,8 +48,6 @@ export function NameInputSection({
           accessibilityLabel='Habit name'
           className='w-full rounded-2xl border-2 px-5 py-4 text-center text-[22px] font-medium'
           maxLength={50}
-          placeholder='e.g., Read for 20 minutes before bed'
-          placeholderTextColor={isDark ? colors.text.tertiary : '#a1a1aa'}
           returnKeyType='done'
           style={{
             lineHeight: 28,
@@ -57,6 +56,10 @@ export function NameInputSection({
             borderColor: isFocused ? colors.primary[600] : colors.border,
           }}
           value={habitName}
+          {...buildTextInputHintProps(
+            'Update your habit name',
+            isDark ? colors.text.tertiary : '#a1a1aa'
+          )}
           onBlur={() => setIsFocused(false)}
           onChangeText={onChangeText}
           onFocus={() => setIsFocused(true)}
