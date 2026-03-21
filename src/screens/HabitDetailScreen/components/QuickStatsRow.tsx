@@ -1,109 +1,91 @@
-/**
- * QuickStatsRow - Best ever, completion rate, total completions
- *
- * Surfaces data already computed in useHabitDetailScreenState
- * that was previously never rendered to users.
- */
+/** QuickStatsRow - Compact pill badges: current streak, best streak, total days */
 
-import React, { memo, useMemo } from 'react';
+import React, { memo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
-import { useThemeColors } from '../../../theme';
-import { borderRadius, shadows } from '../../../theme/spacing';
+import { borderRadius } from '../../../theme/spacing';
 import { fontFamilies } from '../../../theme/typography';
 
 interface QuickStatsRowProps {
   bestStreak: number;
-  daysTracking: number;
+  currentStreak: number;
   totalCompletions: number;
 }
 
-const anim = (delay: number) =>
-  FadeInUp.duration(280).delay(delay).springify().damping(18);
+const ENTERING = FadeInUp.duration(280).delay(120).springify().damping(18);
 
-function StatChip({
-  delay,
+function StatPill({
+  emoji,
+  isActive,
   label,
-  prefix,
   value,
 }: {
-  delay: number;
+  emoji: string;
+  isActive?: boolean;
   label: string;
-  prefix?: string;
-  value: number | string;
+  value: number;
 }) {
-  const { colors, isDark } = useThemeColors();
-
   return (
-    <Animated.View
+    <View
       accessibilityLabel={`${label}: ${value}`}
-      entering={anim(delay)}
-      style={[
-        styles.chip,
-        {
-          backgroundColor: isDark ? colors.card : '#FFFFFF',
-          borderColor: colors.border,
-        },
-      ]}
+      style={[styles.pill, isActive ? styles.activePill : styles.inactivePill]}
     >
-      <Text style={[styles.value, { color: colors.text.primary }]}>
-        {prefix}
+      <Text style={styles.emoji}>{emoji}</Text>
+      <Text style={[styles.value, { color: isActive ? '#047857' : '#6B6560' }]}>
         {value}
       </Text>
-      <Text style={[styles.label, { color: colors.text.tertiary }]}>
+      <Text style={[styles.label, { color: isActive ? '#059669' : '#9C958D' }]}>
         {label}
       </Text>
-    </Animated.View>
+    </View>
   );
 }
 
 export const QuickStatsRow = memo(function QuickStatsRow({
   bestStreak,
-  daysTracking,
+  currentStreak,
   totalCompletions,
 }: QuickStatsRowProps) {
-  const rate = useMemo(() => {
-    if (daysTracking === 0) return '—';
-    return `${Math.round((totalCompletions / daysTracking) * 100)}%`;
-  }, [daysTracking, totalCompletions]);
-
   return (
-    <View style={styles.row}>
-      <StatChip delay={120} label="Best" prefix="⭐ " value={bestStreak} />
-      <StatChip delay={160} label="Rate" value={rate} />
-      <StatChip delay={200} label="Total" value={totalCompletions} />
-    </View>
+    <Animated.View entering={ENTERING} style={styles.row}>
+      <StatPill isActive emoji='🔥' label='current' value={currentStreak} />
+      <StatPill emoji='⭐' label='best' value={bestStreak} />
+      <StatPill emoji='📅' label='total' value={totalCompletions} />
+    </Animated.View>
   );
 });
 
 const styles = StyleSheet.create({
-  chip: {
-    alignItems: 'center',
-    borderRadius: borderRadius.medium,
-    borderWidth: 1,
-    flex: 1,
-    paddingHorizontal: 6,
-    paddingVertical: 10,
-    ...shadows.subtle,
+  activePill: {
+    backgroundColor: '#ecfdf5',
+  },
+  emoji: {
+    fontSize: 12,
+  },
+  inactivePill: {
+    backgroundColor: '#F5F0EB',
   },
   label: {
     fontFamily: fontFamilies.primary.text,
-    fontSize: 10,
-    fontWeight: '600',
-    letterSpacing: 0.5,
-    marginTop: 3,
-    textTransform: 'uppercase',
+    fontSize: 11,
+  },
+  pill: {
+    alignItems: 'center',
+    borderRadius: borderRadius.full,
+    flexDirection: 'row',
+    gap: 4,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
   },
   row: {
     flexDirection: 'row',
-    gap: 6,
-    paddingHorizontal: 4,
+    gap: 8,
+    justifyContent: 'center',
     paddingVertical: 8,
   },
   value: {
-    fontFamily: fontFamilies.primary.text,
-    fontSize: 18,
+    fontFamily: fontFamilies.monospace,
+    fontSize: 13,
     fontWeight: '700',
-    lineHeight: 22,
   },
 });

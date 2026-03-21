@@ -95,7 +95,6 @@ function HabitDetailScreenContent({
                   <DetailHero habit={habit} />
                   <HabitDetailContent
                     completedDates={screenState.completedDates}
-                    daysTracking={screenState.daysTracking}
                     habit={habit}
                     totalCompletions={screenState.totalCompletions}
                     onDayPress={calendarHandlers.handleCalendarDayPress}
