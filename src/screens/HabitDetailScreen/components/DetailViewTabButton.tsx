@@ -10,6 +10,7 @@ import { useThemeColors } from '@/theme';
 export type DetailView = 'calendar' | 'strength';
 
 interface DetailViewTabButtonProps {
+  accentColor: string;
   activeView: DetailView;
   hint?: string;
   icon: LucideIcon;
@@ -19,6 +20,7 @@ interface DetailViewTabButtonProps {
 }
 
 export function DetailViewTabButton({
+  accentColor,
   activeView,
   hint,
   icon: Icon,
@@ -26,8 +28,10 @@ export function DetailViewTabButton({
   view,
   onPress,
 }: DetailViewTabButtonProps) {
-  const { colors } = useThemeColors();
+  const { colors, isDark } = useThemeColors();
   const isActive = activeView === view;
+  const foreground = isActive ? accentColor : colors.text.tertiary;
+  const hintBg = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)';
 
   return (
     <Pressable
@@ -37,24 +41,27 @@ export function DetailViewTabButton({
       onPress={() => onPress(view)}
     >
       <Icon
-        color={isActive ? '#059669' : colors.text.tertiary}
+        color={foreground}
         size={16}
         strokeWidth={isActive ? 2.5 : 2}
       />
       <Text
         className='text-[13px]'
         style={{
-          color: isActive ? '#059669' : colors.text.tertiary,
+          color: foreground,
           fontWeight: isActive ? '600' : '500',
         }}
       >
         {label}
       </Text>
       {hint ? (
-        <View className='ml-0.5 rounded-full bg-stone-200/60 px-1.5 py-0.5'>
+        <View
+          className='ml-0.5 rounded-full px-1.5 py-0.5'
+          style={{ backgroundColor: hintBg }}
+        >
           <Text
-            className='text-[10px] font-medium'
-            style={{ color: isActive ? '#059669' : colors.text.tertiary }}
+            className='text-[12px] font-medium'
+            style={{ color: foreground }}
           >
             {hint}
           </Text>

@@ -92,7 +92,10 @@ function HabitDetailScreenContent({
                     variant='transparent'
                     onBack={onClose}
                   />
-                  <DetailHero habit={habit} />
+                  <DetailHero
+                    habit={habit}
+                    isCompletedToday={screenState.isCompletedToday}
+                  />
                   <HabitDetailContent
                     completedDates={screenState.completedDates}
                     habit={habit}

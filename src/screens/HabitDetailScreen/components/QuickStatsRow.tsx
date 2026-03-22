@@ -3,6 +3,7 @@
 import React, { memo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
+import { useThemeColors } from '../../../theme';
 import { borderRadius } from '../../../theme/spacing';
 import { fontFamilies } from '../../../theme/typography';
 
@@ -15,12 +16,24 @@ interface QuickStatsRowProps {
 const ENTERING = FadeInUp.duration(280).delay(120).springify().damping(18);
 
 function StatPill({
+  activeBg,
+  activeText,
+  activeLabel,
   emoji,
+  inactiveBg,
+  inactiveText,
+  inactiveLabel,
   isActive,
   label,
   value,
 }: {
+  activeBg: string;
+  activeText: string;
+  activeLabel: string;
   emoji: string;
+  inactiveBg: string;
+  inactiveText: string;
+  inactiveLabel: string;
   isActive?: boolean;
   label: string;
   value: number;
@@ -28,13 +41,16 @@ function StatPill({
   return (
     <View
       accessibilityLabel={`${label}: ${value}`}
-      style={[styles.pill, isActive ? styles.activePill : styles.inactivePill]}
+      style={[
+        styles.pill,
+        { backgroundColor: isActive ? activeBg : inactiveBg },
+      ]}
     >
       <Text style={styles.emoji}>{emoji}</Text>
-      <Text style={[styles.value, { color: isActive ? '#047857' : '#6B6560' }]}>
+      <Text style={[styles.value, { color: isActive ? activeText : inactiveText }]}>
         {value}
       </Text>
-      <Text style={[styles.label, { color: isActive ? '#059669' : '#9C958D' }]}>
+      <Text style={[styles.label, { color: isActive ? activeLabel : inactiveLabel }]}>
         {label}
       </Text>
     </View>
@@ -46,24 +62,28 @@ export const QuickStatsRow = memo(function QuickStatsRow({
   currentStreak,
   totalCompletions,
 }: QuickStatsRowProps) {
+  const { colors } = useThemeColors();
+  const pillColors = {
+    activeBg: colors.status.successLight,
+    activeLabel: colors.status.success,
+    activeText: colors.status.successText,
+    inactiveBg: colors.card,
+    inactiveLabel: colors.text.tertiary,
+    inactiveText: colors.text.secondary,
+  };
+
   return (
     <Animated.View entering={ENTERING} style={styles.row}>
-      <StatPill isActive emoji='🔥' label='current' value={currentStreak} />
-      <StatPill emoji='⭐' label='best' value={bestStreak} />
-      <StatPill emoji='📅' label='total' value={totalCompletions} />
+      <StatPill isActive emoji='🔥' label='streak' value={currentStreak} {...pillColors} />
+      <StatPill emoji='⭐' label='best streak' value={bestStreak} {...pillColors} />
+      <StatPill emoji='📅' label='completions' value={totalCompletions} {...pillColors} />
     </Animated.View>
   );
 });
 
 const styles = StyleSheet.create({
-  activePill: {
-    backgroundColor: '#ecfdf5',
-  },
   emoji: {
     fontSize: 12,
-  },
-  inactivePill: {
-    backgroundColor: '#F5F0EB',
   },
   label: {
     fontFamily: fontFamilies.primary.text,

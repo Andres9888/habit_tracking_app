@@ -22,8 +22,8 @@ export function YearHeatmapSection({
   habitId,
   onDayPress,
 }: YearHeatmapSectionProps) {
-  const { colors, isDark } = useThemeColors();
-  const cardBg = isDark ? colors.card : '#FFFFFF';
+  const { colors } = useThemeColors();
+  const cardBg = colors.card;
 
   return (
     <Animated.View

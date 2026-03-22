@@ -33,13 +33,6 @@ export interface HabitDetailScreenProps {
   visible: boolean;
 }
 
-export interface HeroSectionProps {
-  currentStreak: number;
-  habit: Habit;
-  isCompletedToday: boolean;
-  reduceMotion?: boolean;
-}
-
 export interface UseHabitDetailScreenStateReturn {
   completedDates: Set<string>;
   daysTracking: number;
