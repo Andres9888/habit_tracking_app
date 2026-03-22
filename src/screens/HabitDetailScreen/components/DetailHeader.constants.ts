@@ -1,4 +1,3 @@
-import { colors } from '../../../theme/colors';
 import { shadows } from '../../../theme/spacing';
 
 export const buttonShadow = {
@@ -10,12 +9,4 @@ export const iconShadow = {
   shadowOffset: { height: 6, width: 0 },
   shadowOpacity: 0.15,
   shadowRadius: 16,
-} as const;
-
-export const streakShadow = {
-  backgroundColor: '#ecfdf5',
-  shadowColor: colors.primary[600],
-  shadowOffset: { height: 2, width: 0 },
-  shadowOpacity: 0.1,
-  shadowRadius: 8,
 } as const;

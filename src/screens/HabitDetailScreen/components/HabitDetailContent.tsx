@@ -1,7 +1,7 @@
 /** HabitDetailContent - Tabbed layout: Calendar vs Habit Strength */
 import { useCallback, useRef, useState } from 'react';
 import { ScrollView } from 'react-native';
-import Animated, { FadeIn } from 'react-native-reanimated';
+import Animated, { FadeInDown } from 'react-native-reanimated';
 import { MonthlyCalendarGrid } from '../../../components/BinaryHeatmap';
 import ErrorBoundary from '../../../components/ErrorBoundary';
 import { HabitStrengthSection } from '../../../components/HabitStrengthSection';
@@ -25,11 +25,11 @@ export function HabitDetailContent({
   totalCompletions,
   onDayPress,
 }: HabitDetailContentProps) {
-  const { colors, isDark } = useThemeColors();
+  const { colors } = useThemeColors();
   const [activeView, setActiveView] = useState<DetailView>('calendar');
   const scrollRef = useRef<ScrollView>(null);
   const habitColor = habit.color ?? habit.iconColor ?? colors.primary[700];
-  const cardBg = isDark ? colors.card : '#FFFFFF';
+  const cardBg = colors.card;
   const strengthHint =
     typeof habit.strength === 'number'
       ? `${Math.round(habit.strength)}%`
@@ -37,7 +37,7 @@ export function HabitDetailContent({
 
   const handleViewChange = useCallback((view: DetailView) => {
     setActiveView(view);
-    scrollRef.current?.scrollTo({ animated: false, y: 0 });
+    scrollRef.current?.scrollTo({ animated: true, y: 0 });
   }, []);
 
   return (
@@ -62,7 +62,7 @@ export function HabitDetailContent({
       />
 
       {activeView === 'calendar' ? (
-        <Animated.View entering={FadeIn.duration(200)}>
+        <Animated.View entering={FadeInDown.duration(300).springify().damping(20)}>
           <ErrorBoundary>
             <YearHeatmapSection
               completedDates={completedDates}
@@ -85,7 +85,7 @@ export function HabitDetailContent({
       ) : habit.createdAt ? (
         <Animated.View
           className='mt-2 rounded-2xl'
-          entering={FadeIn.duration(200)}
+          entering={FadeInDown.duration(300).springify().damping(20)}
           style={{ backgroundColor: cardBg, ...shadows.card }}
         >
           <ErrorBoundary>

@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Habit Detail Screen - UX Review Mock</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter', sans-serif; background: #1a1a2e; display: flex; justify-content: center; gap: 40px; padding: 40px 20px; min-height: 100vh; flex-wrap: wrap; }
+
+  .phone-frame {
+    width: 375px;
+    height: 812px;
+    border-radius: 40px;
+    overflow: hidden;
+    position: relative;
+    flex-shrink: 0;
+    box-shadow: 0 25px 80px rgba(0,0,0,0.5);
+  }
+  .phone-frame::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 150px; height: 30px;
+    background: #000;
+    border-radius: 0 0 20px 20px;
+    z-index: 10;
+  }
+
+  .label-tag {
+    position: absolute;
+    top: -32px;
+    left: 0; right: 0;
+    text-align: center;
+    color: #9ca3af;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  /* Annotation system */
+  .annotation {
+    position: absolute;
+    z-index: 20;
+    pointer-events: none;
+  }
+  .annotation .line {
+    position: absolute;
+    background: #ef4444;
+    opacity: 0.7;
+  }
+  .annotation .badge {
+    background: #ef4444;
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 4px;
+    white-space: nowrap;
+    position: absolute;
+  }
+  .annotation.fix .line { background: #22c55e; }
+  .annotation.fix .badge { background: #22c55e; }
+
+  /* Heatmap cells */
+  .heatmap-cell {
+    width: 10px; height: 10px;
+    border-radius: 2px;
+    display: inline-block;
+  }
+
+  .section-title {
+    color: #e2e8f0;
+    font-size: 24px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 8px;
+  }
+  .section-subtitle {
+    color: #94a3b8;
+    font-size: 14px;
+    text-align: center;
+    margin-bottom: 32px;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.5;
+  }
+
+  .finding-list {
+    max-width: 820px;
+    margin: 0 auto;
+  }
+  .finding {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .finding .sev {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 6px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .sev.critical { background: #ef4444; color: white; }
+  .sev.high { background: #f97316; color: white; }
+  .sev.medium { background: #eab308; color: #1a1a2e; }
+  .sev.low { background: #6b7280; color: white; }
+  .finding .desc { color: #d1d5db; font-size: 13px; line-height: 1.5; }
+  .finding .desc strong { color: #f3f4f6; }
+</style>
+</head>
+<body>
+
+<!-- ==================== CURRENT (BROKEN) ==================== -->
+<div style="position: relative; padding-top: 40px;">
+  <div class="label-tag" style="color: #ef4444;">CURRENT (Dark Mode)</div>
+  <div class="phone-frame" style="background: #111827;">
+
+    <!-- Status bar -->
+    <div style="height: 54px; padding: 14px 24px 0; display: flex; justify-content: space-between; align-items: center;">
+      <span style="color: #f9fafb; font-size: 15px; font-weight: 600;">9:41</span>
+      <div style="display: flex; gap: 6px; align-items: center;">
+        <div style="width: 18px; height: 10px; border: 1.5px solid #f9fafb; border-radius: 3px; position: relative;">
+          <div style="position: absolute; top: 1px; left: 1px; bottom: 1px; width: 60%; background: #f9fafb; border-radius: 1px;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Header -->
+    <div style="padding: 8px 16px 0; display: flex; justify-content: space-between; align-items: center;">
+      <div style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center;">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f9fafb" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </div>
+      <div style="display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.1); border-radius: 24px; height: 44px; padding: 0 16px;">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2.5" stroke-linecap="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
+        <span style="color: #9ca3af; font-size: 14px; font-weight: 500;">Edit Habit</span>
+      </div>
+    </div>
+
+    <!-- Hero -->
+    <div style="text-align: center; padding: 16px 16px 24px;">
+      <div style="width: 80px; height: 80px; background: #fef3c7; border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; box-shadow: 0 6px 16px rgba(245,158,11,0.15);">
+        <span style="font-size: 34px;">🧘</span>
+      </div>
+      <div style="font-size: 34px; font-weight: 700; color: #f9fafb; letter-spacing: -0.5px; line-height: 41px;">Meditate</div>
+    </div>
+
+    <!-- PROBLEM: QuickStatsRow with hardcoded light colors -->
+    <div style="display: flex; gap: 8px; justify-content: center; padding: 8px 0; position: relative;">
+      <!-- These are the ACTUAL hardcoded colors from the code -->
+      <div style="display: flex; align-items: center; gap: 4px; padding: 6px 12px; border-radius: 999px; background: #ecfdf5;">
+        <span style="font-size: 12px;">🔥</span>
+        <span style="font-family: 'JetBrains Mono'; font-size: 13px; font-weight: 700; color: #047857;">12</span>
+        <span style="font-size: 11px; color: #059669;">current</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 4px; padding: 6px 12px; border-radius: 999px; background: #F5F0EB;">
+        <span style="font-size: 12px;">⭐</span>
+        <span style="font-family: 'JetBrains Mono'; font-size: 13px; font-weight: 700; color: #6B6560;">28</span>
+        <span style="font-size: 11px; color: #9C958D;">best</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 4px; padding: 6px 12px; border-radius: 999px; background: #F5F0EB;">
+        <span style="font-size: 12px;">📅</span>
+        <span style="font-family: 'JetBrains Mono'; font-size: 13px; font-weight: 700; color: #6B6560;">94</span>
+        <span style="font-size: 11px; color: #9C958D;">total</span>
+      </div>
+
+      <!-- Annotation: C1 -->
+      <div class="annotation" style="left: -4px; right: -4px; top: -4px; bottom: -4px; border: 2px dashed #ef4444; border-radius: 12px;">
+        <div class="badge" style="top: -12px; right: 8px;">C1: HARDCODED LIGHT COLORS</div>
+      </div>
+    </div>
+
+    <!-- PROBLEM: Tabs with hardcoded colors -->
+    <div style="margin: 16px 16px 0; position: relative;">
+      <div style="background: #f5f5f4; border-radius: 8px; padding: 4px; display: flex; position: relative;">
+        <!-- White indicator -->
+        <div style="position: absolute; top: 4px; bottom: 4px; left: 4px; width: calc(50% - 4px); background: white; border-radius: 6px; box-shadow: 0 3px 8px rgba(5,150,105,0.12);"></div>
+        <div style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 10px 0; position: relative; z-index: 1;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          <span style="font-size: 13px; font-weight: 600; color: #059669;">Calendar</span>
+          <span style="font-size: 10px; font-weight: 500; color: #059669; background: rgba(214,211,209,0.6); padding: 2px 6px; border-radius: 999px;">42 days</span>
+        </div>
+        <div style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 10px 0; position: relative; z-index: 1;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round"><polyline points="22,12 18,12 15,21 9,3 6,12 2,12"/></svg>
+          <span style="font-size: 13px; font-weight: 500; color: #9ca3af;">Strength</span>
+          <span style="font-size: 10px; font-weight: 500; color: #9ca3af; background: rgba(214,211,209,0.6); padding: 2px 6px; border-radius: 999px;">75%</span>
+        </div>
+      </div>
+
+      <!-- Annotation: C2 -->
+      <div class="annotation" style="left: -4px; right: -4px; top: -4px; bottom: -4px; border: 2px dashed #ef4444; border-radius: 12px;">
+        <div class="badge" style="bottom: -12px; left: 8px;">C2: LIGHT BG + HARDCODED GREEN</div>
+      </div>
+    </div>
+
+    <!-- Year Heatmap Card -->
+    <div style="margin: 20px 16px 12px; background: #FFFFFF; border-radius: 16px; padding: 16px; position: relative;">
+      <div style="font-size: 14px; font-weight: 600; color: #1f2937; margin-bottom: 12px;">Year Overview</div>
+      <!-- Heatmap grid (simplified) -->
+      <div style="display: flex; gap: 3px; flex-wrap: wrap; max-width: 100%; overflow: hidden; height: 80px;">
+        <script>
+          // Generate heatmap cells inline
+          const colors = ['#e7e5e4', '#e7e5e4', '#34d399', '#e7e5e4', '#34d399', '#34d399', '#e7e5e4'];
+          for(let i = 0; i < 140; i++) {
+            const c = colors[Math.floor(Math.random() * colors.length)];
+            document.write(`<div class="heatmap-cell" style="background:${c}"></div>`);
+          }
+        </script>
+      </div>
+
+      <!-- Annotation: M4 -->
+      <div class="annotation" style="left: -4px; right: -4px; top: -4px; bottom: -4px; border: 2px dashed #eab308; border-radius: 20px;">
+        <div class="badge" style="background: #eab308; color: #1a1a2e; top: -12px; left: 8px;">M4: #FFFFFF CARD ON DARK BG</div>
+      </div>
+    </div>
+
+    <!-- Missing info annotation -->
+    <div style="margin: 8px 16px; padding: 12px 16px; border: 2px dashed #f97316; border-radius: 12px; position: relative;">
+      <div style="color: #f97316; font-size: 11px; font-weight: 600; margin-bottom: 4px;">MISSING (H2, H3)</div>
+      <div style="color: #9ca3af; font-size: 12px; line-height: 1.5;">
+        No "completed today" indicator<br>
+        No frequency/schedule info<br>
+        No habit notes display
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ==================== FIXED (PROPOSED) ==================== -->
+<div style="position: relative; padding-top: 40px;">
+  <div class="label-tag" style="color: #22c55e;">PROPOSED (Dark Mode)</div>
+  <div class="phone-frame" style="background: #111827;">
+
+    <!-- Status bar -->
+    <div style="height: 54px; padding: 14px 24px 0; display: flex; justify-content: space-between; align-items: center;">
+      <span style="color: #f9fafb; font-size: 15px; font-weight: 600;">9:41</span>
+      <div style="display: flex; gap: 6px; align-items: center;">
+        <div style="width: 18px; height: 10px; border: 1.5px solid #f9fafb; border-radius: 3px; position: relative;">
+          <div style="position: absolute; top: 1px; left: 1px; bottom: 1px; width: 60%; background: #f9fafb; border-radius: 1px;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Header -->
+    <div style="padding: 8px 16px 0; display: flex; justify-content: space-between; align-items: center;">
+      <div style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center;">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f9fafb" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </div>
+      <div style="display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.1); border-radius: 24px; height: 44px; padding: 0 16px;">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2.5" stroke-linecap="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
+        <span style="color: #9ca3af; font-size: 14px; font-weight: 500;">Edit Habit</span>
+      </div>
+    </div>
+
+    <!-- Hero (FIXED: dark-aware icon bg + completed today + notes) -->
+    <div style="text-align: center; padding: 16px 16px 8px;">
+      <div style="position: relative; width: 80px; margin: 0 auto 16px;">
+        <div style="width: 80px; height: 80px; background: #064E3B; border-radius: 16px; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 16px rgba(52,211,153,0.15);">
+          <span style="font-size: 34px;">🧘</span>
+        </div>
+        <!-- Completed today checkmark -->
+        <div style="position: absolute; bottom: -4px; right: -4px; width: 24px; height: 24px; background: #34d399; border-radius: 999px; display: flex; align-items: center; justify-content: center; border: 2px solid #111827;">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20,6 9,17 4,12"/></svg>
+        </div>
+      </div>
+      <div style="font-size: 34px; font-weight: 700; color: #f9fafb; letter-spacing: -0.5px; line-height: 41px;">Meditate</div>
+
+      <!-- NEW: Schedule info (H3) -->
+      <div style="margin-top: 6px; color: #9ca3af; font-size: 13px;">Daily &middot; Mornings</div>
+
+      <!-- NEW: Streak badge from HeroSection (H1) -->
+      <div style="display: inline-flex; align-items: center; gap: 4px; margin-top: 8px; padding: 4px 12px; border-radius: 999px; background: linear-gradient(90deg, #422006, #451a03);">
+        <span style="font-size: 12px; font-weight: 600; color: #FDBA74;">🔥 12 day streak!</span>
+      </div>
+    </div>
+
+    <!-- FIXED: QuickStatsRow with dark-mode tokens -->
+    <div style="display: flex; gap: 8px; justify-content: center; padding: 8px 0; position: relative;">
+      <div style="display: flex; align-items: center; gap: 4px; padding: 6px 12px; border-radius: 999px; background: rgba(5,150,105,0.15);">
+        <span style="font-size: 12px;">🔥</span>
+        <span style="font-family: 'JetBrains Mono'; font-size: 13px; font-weight: 700; color: #34d399;">12</span>
+        <span style="font-size: 11px; color: #6ee7b7;">streak</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 4px; padding: 6px 12px; border-radius: 999px; background: #1F2937;">
+        <span style="font-size: 12px;">⭐</span>
+        <span style="font-family: 'JetBrains Mono'; font-size: 13px; font-weight: 700; color: #d1d5db;">28</span>
+        <span style="font-size: 11px; color: #9ca3af;">best streak</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 4px; padding: 6px 12px; border-radius: 999px; background: #1F2937;">
+        <span style="font-size: 12px;">📅</span>
+        <span style="font-family: 'JetBrains Mono'; font-size: 13px; font-weight: 700; color: #d1d5db;">94</span>
+        <span style="font-size: 11px; color: #9ca3af;">completions</span>
+      </div>
+
+      <!-- Annotation: fixed -->
+      <div class="annotation fix" style="left: -4px; right: -4px; top: -4px; bottom: -4px; border: 2px solid #22c55e; border-radius: 12px;">
+        <div class="badge" style="top: -12px; right: 8px;">C1 FIX: THEME TOKENS</div>
+      </div>
+    </div>
+
+    <!-- FIXED: Tabs with dark-mode colors -->
+    <div style="margin: 12px 16px 0; position: relative;">
+      <div style="background: #1F2937; border-radius: 8px; padding: 4px; display: flex; position: relative;">
+        <!-- Dark card indicator -->
+        <div style="position: absolute; top: 4px; bottom: 4px; left: 4px; width: calc(50% - 4px); background: #374151; border-radius: 6px; box-shadow: 0 3px 8px rgba(52,211,153,0.12);"></div>
+        <div style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 10px 0; position: relative; z-index: 1;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2.5" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          <span style="font-size: 13px; font-weight: 600; color: #34d399;">Calendar</span>
+          <span style="font-size: 12px; font-weight: 500; color: #34d399; background: rgba(52,211,153,0.15); padding: 2px 8px; border-radius: 999px;">42 days</span>
+        </div>
+        <div style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 10px 0; position: relative; z-index: 1;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8E95A2" stroke-width="2" stroke-linecap="round"><polyline points="22,12 18,12 15,21 9,3 6,12 2,12"/></svg>
+          <span style="font-size: 13px; font-weight: 500; color: #8E95A2;">Strength</span>
+          <span style="font-size: 12px; font-weight: 500; color: #8E95A2; background: rgba(255,255,255,0.06); padding: 2px 8px; border-radius: 999px;">75%</span>
+        </div>
+      </div>
+
+      <!-- Annotation: fixed -->
+      <div class="annotation fix" style="left: -4px; right: -4px; top: -4px; bottom: -4px; border: 2px solid #22c55e; border-radius: 12px;">
+        <div class="badge" style="bottom: -12px; left: 8px;">C2 FIX: DARK BG + THEME GREEN</div>
+      </div>
+    </div>
+
+    <!-- FIXED: Year Heatmap Card with dark card color -->
+    <div style="margin: 20px 16px 12px; background: #1F2937; border-radius: 16px; padding: 16px; position: relative;">
+      <div style="font-size: 14px; font-weight: 600; color: #f9fafb; margin-bottom: 12px;">Year Overview</div>
+      <!-- Heatmap grid -->
+      <div style="display: flex; gap: 3px; flex-wrap: wrap; max-width: 100%; overflow: hidden; height: 80px;">
+        <script>
+          const darkColors = ['#374151', '#374151', '#34d399', '#374151', '#34d399', '#34d399', '#374151'];
+          for(let i = 0; i < 140; i++) {
+            const c = darkColors[Math.floor(Math.random() * darkColors.length)];
+            document.write(`<div class="heatmap-cell" style="background:${c}"></div>`);
+          }
+        </script>
+      </div>
+
+      <!-- Annotation: fixed -->
+      <div class="annotation fix" style="left: -4px; right: -4px; top: -4px; bottom: -4px; border: 2px solid #22c55e; border-radius: 20px;">
+        <div class="badge" style="background: #22c55e; top: -12px; left: 8px;">M4 FIX: colors.card</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ==================== FINDINGS LEGEND ==================== -->
+<div style="width: 100%; max-width: 820px; margin-top: 20px;">
+  <div class="section-title">Findings Summary</div>
+  <div class="section-subtitle">Side-by-side comparison above shows dark mode. Left = current (broken), Right = proposed (fixed). Dashed red = issue, solid green = fix.</div>
+
+  <div class="finding-list">
+    <div class="finding">
+      <span class="sev critical">C1</span>
+      <div class="desc"><strong>QuickStatsRow:</strong> 6 hardcoded light-mode colors (#ecfdf5, #F5F0EB, #047857, etc.). Light blobs on dark background. Fix: use theme tokens (colors.status.successLight, colors.card, colors.text.secondary).</div>
+    </div>
+    <div class="finding">
+      <span class="sev critical">C2</span>
+      <div class="desc"><strong>DetailViewTabs + TabButton:</strong> bg-stone-100, bg-white NativeWind classes with no dark: variants. #059669 hardcoded 3x. Fix: isDark-aware styles + colors.primary tokens.</div>
+    </div>
+    <div class="finding">
+      <span class="sev critical">C3</span>
+      <div class="desc"><strong>DetailHeader.constants:</strong> streakShadow has hardcoded backgroundColor: '#ecfdf5'. Latent dark-mode bug. Fix: remove or make theme-aware.</div>
+    </div>
+    <div class="finding">
+      <span class="sev high">H1</span>
+      <div class="desc"><strong>Dead component:</strong> HeroSection.tsx exported but never rendered. Has streak badge + notes that DetailHero lacks. Fix: consolidate into one component.</div>
+    </div>
+    <div class="finding">
+      <span class="sev high">H2</span>
+      <div class="desc"><strong>isCompletedToday unused:</strong> Computed in state hook but never passed to UI. No celebration when habit is done today. Fix: add checkmark overlay on icon.</div>
+    </div>
+    <div class="finding">
+      <span class="sev high">H3</span>
+      <div class="desc"><strong>No schedule info:</strong> Frequency, preferred time, cues exist in schema but aren't displayed. Fix: add "Daily &middot; Mornings" subtitle below name.</div>
+    </div>
+    <div class="finding">
+      <span class="sev medium">M1</span>
+      <div class="desc"><strong>Amber fallbacks:</strong> DetailHero icon falls back to #fef3c7 (bright amber) when no habit color set. Jarring on dark bg. Fix: dark-aware default (#064E3B).</div>
+    </div>
+    <div class="finding">
+      <span class="sev medium">M2</span>
+      <div class="desc"><strong>10px hint text:</strong> Tab hint badges at 10px (~7.5pt) below Apple HIG 11pt minimum. Fix: increase to 12px.</div>
+    </div>
+    <div class="finding">
+      <span class="sev medium">M3</span>
+      <div class="desc"><strong>Abrupt tab transition:</strong> 200ms FadeIn vs 300ms indicator spring = timing mismatch. Fix: extend to 300ms + add translateY.</div>
+    </div>
+    <div class="finding">
+      <span class="sev medium">M4</span>
+      <div class="desc"><strong>#FFFFFF card bg:</strong> Pure white cards on warm-stone theme look cold. In dark mode, should use colors.card (#1F2937). Fix: replace hardcoded white.</div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
