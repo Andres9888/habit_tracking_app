@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Habit Garden V4 — Modern Minimal Garden</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Literata:opsz,wght@7..72,400;7..72,600;7..72,700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif !important;
+    background: #E8E4E0 !important;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    padding: 20px 0;
+  }
+
+  .phone-frame {
+    width: 390px;
+    min-height: 844px;
+    background: #F5F1ED;
+    border-radius: 44px;
+    overflow: hidden;
+    position: relative;
+    box-shadow:
+      0 25px 60px rgba(0,0,0,0.12),
+      0 8px 20px rgba(0,0,0,0.08),
+      inset 0 0 0 1px rgba(0,0,0,0.06);
+  }
+
+  .screen-content {
+    padding: 60px 20px 100px 20px;
+    position: relative;
+  }
+
+  /* Title in Literata serif */
+  .page-title {
+    font-family: 'Literata', serif !important;
+    font-weight: 700 !important;
+    font-size: 20px !important;
+    color: #1C1917 !important;
+    letter-spacing: -0.01em;
+  }
+
+  .page-subtitle {
+    font-size: 14px !important;
+    color: #78716C !important;
+    margin-top: 2px;
+  }
+
+  /* Garden bed divider */
+  .garden-divider {
+    position: relative;
+    height: 1px;
+    background: #D6CFC7;
+    margin: 16px 0 20px 0;
+  }
+
+  .garden-divider::before,
+  .garden-divider::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 8px;
+    height: 8px;
+    border-radius: 0 8px 0 8px;
+    background: #A8A29E;
+    opacity: 0.4;
+  }
+
+  .garden-divider::before {
+    left: 0;
+    transform: translateY(-50%) rotate(-10deg);
+  }
+
+  .garden-divider::after {
+    right: 0;
+    transform: translateY(-50%) rotate(10deg) scaleX(-1);
+  }
+
+  /* Circle icon buttons */
+  .icon-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #E7E5E4;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: #57534E;
+    flex-shrink: 0;
+  }
+
+  .icon-btn:active {
+    transform: scale(0.94);
+    background: #D6D3D1;
+  }
+
+  /* Habit cards */
+  .habit-card {
+    background: #FFFFFF;
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 12px;
+    box-shadow: 0 1px 3px rgba(28,25,23,0.04), 0 1px 2px rgba(28,25,23,0.02);
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .habit-card.selected {
+    border-color: #059669;
+    box-shadow: 0 0 0 1px #059669, 0 2px 8px rgba(5,150,105,0.12);
+  }
+
+  .habit-card.removing {
+    animation: wiltAway 0.5s ease-in forwards;
+  }
+
+  .habit-card.replanting {
+    animation: replantGlow 0.6s ease-out forwards;
+  }
+
+  /* Staggered entrance */
+  .habit-card {
+    opacity: 0;
+    transform: translateY(16px);
+    animation: fadeUp 0.4s ease-out forwards;
+  }
+
+  .habit-card:nth-child(1) { animation-delay: 0ms; }
+  .habit-card:nth-child(2) { animation-delay: 60ms; }
+  .habit-card:nth-child(3) { animation-delay: 120ms; }
+  .habit-card:nth-child(4) { animation-delay: 180ms; }
+
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes wiltAway {
+    0% { opacity: 1; transform: scale(1) rotate(0deg); max-height: 200px; margin-bottom: 12px; }
+    60% { opacity: 0.3; transform: scale(0.92) rotate(-2deg); }
+    100% { opacity: 0; transform: scale(0.85) rotate(-3deg); max-height: 0; margin-bottom: 0; padding: 0 16px; overflow: hidden; }
+  }
+
+  @keyframes replantGlow {
+    0% { box-shadow: 0 1px 3px rgba(28,25,23,0.04); }
+    40% { box-shadow: 0 0 0 3px rgba(5,150,105,0.25), 0 2px 12px rgba(5,150,105,0.15); }
+    100% { opacity: 0; transform: translateY(-20px) scale(0.96); max-height: 0; margin-bottom: 0; padding: 0 16px; overflow: hidden; }
+  }
+
+  /* Emoji circle with strength-tinted bg */
+  .emoji-circle {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    flex-shrink: 0;
+  }
+
+  .emoji-circle.strength-high { background: rgba(5,150,105,0.10); }
+  .emoji-circle.strength-mid { background: rgba(217,119,6,0.10); }
+  .emoji-circle.strength-low { background: rgba(107,114,128,0.10); }
+
+  .habit-name {
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    color: #1C1917 !important;
+    line-height: 1.3;
+  }
+
+  .hibernate-label {
+    font-size: 12px !important;
+    color: #A8A29E !important;
+    margin-top: 1px;
+  }
+
+  /* Stat badges */
+  .stat-badges {
+    display: flex;
+    gap: 6px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+  }
+
+  .stat-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    border-radius: 100px;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  .stat-badge.green {
+    background: #ECFDF5;
+    color: #059669;
+  }
+
+  .stat-badge.amber {
+    background: #FFFBEB;
+    color: #D97706;
+  }
+
+  .stat-badge.blue {
+    background: #EFF6FF;
+    color: #2563EB;
+  }
+
+  /* Dormancy pulse bar */
+  .dormancy-bar-track {
+    height: 2px;
+    background: #F5F5F4;
+    border-radius: 1px;
+    margin-top: 10px;
+    position: relative;
+    overflow: visible;
+  }
+
+  .dormancy-bar-fill {
+    height: 100%;
+    border-radius: 1px;
+    position: relative;
+    transition: width 0.6s ease;
+  }
+
+  .dormancy-bar-fill.high { background: #059669; }
+  .dormancy-bar-fill.mid { background: #D97706; }
+  .dormancy-bar-fill.low { background: #9CA3AF; }
+
+  .dormancy-pulse {
+    position: absolute;
+    right: -3px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    animation: heartbeat 2.4s ease-in-out infinite;
+  }
+
+  .dormancy-pulse.high { background: #059669; }
+  .dormancy-pulse.mid { background: #D97706; }
+  .dormancy-pulse.low { background: #9CA3AF; }
+
+  @keyframes heartbeat {
+    0%, 100% { transform: translateY(-50%) scale(1); opacity: 0.6; }
+    10% { transform: translateY(-50%) scale(1.8); opacity: 1; }
+    20% { transform: translateY(-50%) scale(1); opacity: 0.6; }
+    30% { transform: translateY(-50%) scale(1.5); opacity: 0.9; }
+    40% { transform: translateY(-50%) scale(1); opacity: 0.6; }
+  }
+
+  .dormancy-pulse.fast-beat {
+    animation: fastHeartbeat 0.3s ease-in-out infinite;
+  }
+
+  @keyframes fastHeartbeat {
+    0%, 100% { transform: translateY(-50%) scale(1); opacity: 0.7; }
+    50% { transform: translateY(-50%) scale(2); opacity: 1; }
+  }
+
+  /* Action buttons */
+  .action-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 14px;
+  }
+
+  .btn-replant {
+    flex: 2;
+    height: 40px;
+    border-radius: 12px;
+    background: #ECFDF5;
+    color: #059669;
+    border: 1px solid #D1FAE5;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+  }
+
+  .btn-replant:hover { background: #D1FAE5; }
+  .btn-replant:active { transform: scale(0.97); }
+
+  .btn-remove {
+    flex: 1;
+    height: 40px;
+    border-radius: 12px;
+    background: #FEF2F2;
+    color: #DC2626;
+    border: 1px solid #FECACA;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .btn-remove:hover { background: #FEE2E2; }
+  .btn-remove:active { transform: scale(0.97); }
+
+  /* Selection checkbox */
+  .select-checkbox {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 2px solid #D6D3D1;
+    background: #FFFFFF;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    z-index: 2;
+  }
+
+  .select-checkbox.visible { display: flex; }
+
+  .select-checkbox.checked {
+    background: #059669;
+    border-color: #059669;
+  }
+
+  .select-checkbox.checked::after {
+    content: '';
+    display: block;
+    width: 10px;
+    height: 6px;
+    border-left: 2px solid #FFFFFF;
+    border-bottom: 2px solid #FFFFFF;
+    transform: rotate(-45deg) translateY(-1px);
+  }
+
+  /* Delete confirmation overlay */
+  .delete-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(255,255,255,0.96);
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    z-index: 5;
+    border-radius: 16px;
+    padding: 16px;
+    backdrop-filter: blur(4px);
+  }
+
+  .delete-overlay.visible {
+    display: flex;
+    animation: overlayIn 0.2s ease-out;
+  }
+
+  @keyframes overlayIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  .delete-overlay-text {
+    font-size: 14px;
+    font-weight: 600;
+    color: #44403C;
+    text-align: center;
+  }
+
+  .delete-overlay-actions {
+    display: flex;
+    gap: 8px;
+  }
+
+  .btn-confirm-remove {
+    height: 36px;
+    padding: 0 20px;
+    border-radius: 10px;
+    background: #DC2626;
+    color: #FFFFFF;
+    border: none;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .btn-confirm-remove:active { transform: scale(0.96); }
+
+  .btn-keep {
+    height: 36px;
+    padding: 0 20px;
+    border-radius: 10px;
+    background: #F5F5F4;
+    color: #57534E;
+    border: 1px solid #E7E5E4;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .btn-keep:active { transform: scale(0.96); }
+
+  /* Bottom bar — glassmorphism capsule */
+  .bottom-bar {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 390px;
+    padding: 0 20px 34px 20px;
+    z-index: 10;
+  }
+
+  .bottom-capsule {
+    background: rgba(255,255,255,0.82);
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    border-radius: 20px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border: 1px solid rgba(0,0,0,0.06);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
+  }
+
+  .bottom-capsule.batch-mode {
+    justify-content: space-between;
+  }
+
+  .btn-select-mode {
+    height: 40px;
+    padding: 0 20px;
+    border-radius: 12px;
+    background: #F5F5F4;
+    color: #44403C;
+    border: 1px solid #E7E5E4;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .btn-select-mode:active { transform: scale(0.97); }
+
+  .batch-actions {
+    display: none;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+  }
+
+  .batch-actions.visible {
+    display: flex;
+  }
+
+  .btn-batch {
+    height: 38px;
+    padding: 0 14px;
+    border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+    white-space: nowrap;
+  }
+
+  .btn-batch:active { transform: scale(0.96); }
+
+  .btn-batch.cancel {
+    background: #F5F5F4;
+    color: #78716C;
+    border: 1px solid #E7E5E4;
+  }
+
+  .btn-batch.replant-all {
+    background: #ECFDF5;
+    color: #059669;
+    border: 1px solid #D1FAE5;
+    flex: 1;
+  }
+
+  .btn-batch.remove-all {
+    background: #FEF2F2;
+    color: #DC2626;
+    border: 1px solid #FECACA;
+  }
+
+  .batch-count {
+    font-size: 12px;
+    color: #A8A29E;
+    font-weight: 500;
+    margin-left: auto;
+    white-space: nowrap;
+  }
+
+  /* Empty state */
+  .empty-state {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 30px;
+    text-align: center;
+  }
+
+  .empty-state.visible { display: flex; }
+
+  .empty-circle {
+    width: 88px;
+    height: 88px;
+    border-radius: 50%;
+    background: #ECFDF5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+    margin-bottom: 20px;
+  }
+
+  .empty-title {
+    font-family: 'Literata', serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: #1C1917;
+    margin-bottom: 6px;
+  }
+
+  .empty-subtitle {
+    font-size: 14px;
+    color: #A8A29E;
+    line-height: 1.5;
+  }
+
+  /* Notch */
+  .notch {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 160px;
+    height: 34px;
+    background: #000;
+    border-radius: 0 0 20px 20px;
+    z-index: 20;
+  }
+</style>
+</head>
+<body>
+
+<div class="phone-frame">
+  <div class="notch"></div>
+
+  <div class="screen-content">
+    <!-- Header -->
+    <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 4px;">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <button class="icon-btn" onclick="window.history.back()" aria-label="Back">
+          <i data-lucide="arrow-left" style="width:20px;height:20px;"></i>
+        </button>
+        <div>
+          <h1 class="page-title">Dormant Habits</h1>
+          <p class="page-subtitle" id="habitCount">3 habits in hibernation</p>
+        </div>
+      </div>
+      <button class="icon-btn" aria-label="Close">
+        <i data-lucide="x" style="width:20px;height:20px;"></i>
+      </button>
+    </div>
+
+    <!-- Garden bed divider -->
+    <div class="garden-divider"></div>
+
+    <!-- Habit cards container -->
+    <div id="habitList">
+      <!-- Card 1: Daily Journal -->
+      <div class="habit-card" data-id="1">
+        <div class="select-checkbox" onclick="toggleSelect(event, this)"></div>
+        <div class="delete-overlay">
+          <span class="delete-overlay-text">Remove from garden forever?</span>
+          <div class="delete-overlay-actions">
+            <button class="btn-confirm-remove" onclick="confirmRemove(this)">Remove</button>
+            <button class="btn-keep" onclick="cancelRemove(this)">Keep</button>
+          </div>
+        </div>
+        <div style="display:flex; align-items:center; gap:12px;">
+          <div class="emoji-circle strength-high">&#x270D;&#xFE0F;</div>
+          <div>
+            <div class="habit-name">Daily Journal</div>
+            <div class="hibernate-label">Hibernating for 3 days</div>
+          </div>
+        </div>
+        <div class="stat-badges">
+          <span class="stat-badge green">&#x26A1; 85% Automatic</span>
+          <span class="stat-badge amber">&#x1F525; 67 day streak</span>
+          <span class="stat-badge blue">&#x2713; 312 total</span>
+        </div>
+        <div class="dormancy-bar-track">
+          <div class="dormancy-bar-fill high" style="width:85%;">
+            <div class="dormancy-pulse high"></div>
+          </div>
+        </div>
+        <div class="action-row">
+          <button class="btn-replant" onclick="replantHabit(this)">Replant &#x1F331;</button>
+          <button class="btn-remove" onclick="showRemoveConfirm(this)">Remove</button>
+        </div>
+      </div>
+
+      <!-- Card 2: Morning Meditation -->
+      <div class="habit-card" data-id="2">
+        <div class="select-checkbox" onclick="toggleSelect(event, this)"></div>
+        <div class="delete-overlay">
+          <span class="delete-overlay-text">Remove from garden forever?</span>
+          <div class="delete-overlay-actions">
+            <button class="btn-confirm-remove" onclick="confirmRemove(this)">Remove</button>
+            <button class="btn-keep" onclick="cancelRemove(this)">Keep</button>
+          </div>
+        </div>
+        <div style="display:flex; align-items:center; gap:12px;">
+          <div class="emoji-circle strength-high">&#x1F9D8;</div>
+          <div>
+            <div class="habit-name">Morning Meditation</div>
+            <div class="hibernate-label">Hibernating for 34 days</div>
+          </div>
+        </div>
+        <div class="stat-badges">
+          <span class="stat-badge green">&#x1F4AA; 72% Strong</span>
+          <span class="stat-badge amber">&#x1F525; 45 day streak</span>
+          <span class="stat-badge blue">&#x2713; 234 total</span>
+        </div>
+        <div class="dormancy-bar-track">
+          <div class="dormancy-bar-fill high" style="width:72%;">
+            <div class="dormancy-pulse high"></div>
+          </div>
+        </div>
+        <div class="action-row">
+          <button class="btn-replant" onclick="replantHabit(this)">Replant &#x1F331;</button>
+          <button class="btn-remove" onclick="showRemoveConfirm(this)">Remove</button>
+        </div>
+      </div>
+
+      <!-- Card 3: Read 30 Minutes -->
+      <div class="habit-card" data-id="3">
+        <div class="select-checkbox" onclick="toggleSelect(event, this)"></div>
+        <div class="delete-overlay">
+          <span class="delete-overlay-text">Remove from garden forever?</span>
+          <div class="delete-overlay-actions">
+            <button class="btn-confirm-remove" onclick="confirmRemove(this)">Remove</button>
+            <button class="btn-keep" onclick="cancelRemove(this)">Keep</button>
+          </div>
+        </div>
+        <div style="display:flex; align-items:center; gap:12px;">
+          <div class="emoji-circle strength-mid">&#x1F4D6;</div>
+          <div>
+            <div class="habit-name">Read 30 Minutes</div>
+            <div class="hibernate-label">Hibernating for 20 days</div>
+          </div>
+        </div>
+        <div class="stat-badges">
+          <span class="stat-badge green">&#x1F333; 58% Developing</span>
+          <span class="stat-badge amber">&#x1F525; 28 day streak</span>
+          <span class="stat-badge blue">&#x2713; 156 total</span>
+        </div>
+        <div class="dormancy-bar-track">
+          <div class="dormancy-bar-fill mid" style="width:58%;">
+            <div class="dormancy-pulse mid"></div>
+          </div>
+        </div>
+        <div class="action-row">
+          <button class="btn-replant" onclick="replantHabit(this)">Replant &#x1F331;</button>
+          <button class="btn-remove" onclick="showRemoveConfirm(this)">Remove</button>
+        </div>
+      </div>
+
+      <!-- Card 4: Cold Shower -->
+      <div class="habit-card" data-id="4">
+        <div class="select-checkbox" onclick="toggleSelect(event, this)"></div>
+        <div class="delete-overlay">
+          <span class="delete-overlay-text">Remove from garden forever?</span>
+          <div class="delete-overlay-actions">
+            <button class="btn-confirm-remove" onclick="confirmRemove(this)">Remove</button>
+            <button class="btn-keep" onclick="cancelRemove(this)">Keep</button>
+          </div>
+        </div>
+        <div style="display:flex; align-items:center; gap:12px;">
+          <div class="emoji-circle strength-low">&#x1F976;</div>
+          <div>
+            <div class="habit-name">Cold Shower</div>
+            <div class="hibernate-label">Hibernating for 11 days</div>
+          </div>
+        </div>
+        <div class="stat-badges">
+          <span class="stat-badge green">&#x1F33F; 35% Building</span>
+          <span class="stat-badge amber">&#x1F525; 12 day streak</span>
+          <span class="stat-badge blue">&#x2713; 89 total</span>
+        </div>
+        <div class="dormancy-bar-track">
+          <div class="dormancy-bar-fill low" style="width:35%;">
+            <div class="dormancy-pulse low"></div>
+          </div>
+        </div>
+        <div class="action-row">
+          <button class="btn-replant" onclick="replantHabit(this)">Replant &#x1F331;</button>
+          <button class="btn-remove" onclick="showRemoveConfirm(this)">Remove</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty state (hidden by default) -->
+    <div class="empty-state" id="emptyState">
+      <div class="empty-circle">&#x1F33B;</div>
+      <div class="empty-title">Your garden is thriving!</div>
+      <div class="empty-subtitle">Every habit is active. Nothing is dormant right now.</div>
+    </div>
+  </div>
+
+  <!-- Bottom bar -->
+  <div class="bottom-bar">
+    <div class="bottom-capsule" id="bottomCapsule">
+      <button class="btn-select-mode" id="selectModeBtn" onclick="enterBatchMode()">
+        <i data-lucide="check-square" style="width:16px;height:16px;"></i>
+        Select
+      </button>
+      <div class="batch-actions" id="batchActions">
+        <button class="btn-batch cancel" onclick="exitBatchMode()">Cancel</button>
+        <button class="btn-batch replant-all" onclick="replantAllSelected()">Replant All &#x1F331;</button>
+        <button class="btn-batch remove-all" onclick="removeAllSelected()">Remove All &#x1F5D1;&#xFE0F;</button>
+        <span class="batch-count" id="batchCount">0 selected</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Initialize Lucide icons
+  lucide.createIcons();
+
+  let batchMode = false;
+  let selectedCards = new Set();
+
+  function updateHabitCount() {
+    const cards = document.querySelectorAll('#habitList .habit-card:not(.removing):not(.replanting)');
+    const count = cards.length;
+    const countEl = document.getElementById('habitCount');
+    if (count === 0) {
+      countEl.textContent = 'No habits in hibernation';
+      document.getElementById('emptyState').classList.add('visible');
+      document.getElementById('bottomCapsule').style.display = 'none';
+    } else {
+      countEl.textContent = count + (count === 1 ? ' habit' : ' habits') + ' in hibernation';
+    }
+  }
+
+  function replantHabit(btn) {
+    const card = btn.closest('.habit-card');
+    const pulse = card.querySelector('.dormancy-pulse');
+    // Accelerate heartbeat first
+    pulse.classList.add('fast-beat');
+    setTimeout(() => {
+      card.classList.add('replanting');
+      card.addEventListener('animationend', () => {
+        card.style.display = 'none';
+        updateHabitCount();
+      }, { once: true });
+    }, 600);
+  }
+
+  function showRemoveConfirm(btn) {
+    const card = btn.closest('.habit-card');
+    const overlay = card.querySelector('.delete-overlay');
+    overlay.classList.add('visible');
+  }
+
+  function confirmRemove(btn) {
+    const card = btn.closest('.habit-card');
+    const overlay = card.querySelector('.delete-overlay');
+    overlay.classList.remove('visible');
+    card.classList.add('removing');
+    card.addEventListener('animationend', () => {
+      card.style.display = 'none';
+      updateHabitCount();
+    }, { once: true });
+  }
+
+  function cancelRemove(btn) {
+    const overlay = btn.closest('.delete-overlay');
+    overlay.classList.remove('visible');
+  }
+
+  function enterBatchMode() {
+    batchMode = true;
+    document.getElementById('selectModeBtn').style.display = 'none';
+    document.getElementById('batchActions').classList.add('visible');
+    document.getElementById('bottomCapsule').classList.add('batch-mode');
+    document.querySelectorAll('.select-checkbox').forEach(cb => cb.classList.add('visible'));
+    // Hide per-card action rows
+    document.querySelectorAll('.action-row').forEach(row => row.style.display = 'none');
+    selectedCards.clear();
+    updateBatchCount();
+  }
+
+  function exitBatchMode() {
+    batchMode = false;
+    document.getElementById('selectModeBtn').style.display = 'flex';
+    document.getElementById('batchActions').classList.remove('visible');
+    document.getElementById('bottomCapsule').classList.remove('batch-mode');
+    document.querySelectorAll('.select-checkbox').forEach(cb => {
+      cb.classList.remove('visible', 'checked');
+    });
+    document.querySelectorAll('.habit-card').forEach(card => card.classList.remove('selected'));
+    // Restore per-card action rows
+    document.querySelectorAll('.action-row').forEach(row => row.style.display = 'flex');
+    selectedCards.clear();
+    updateBatchCount();
+  }
+
+  function toggleSelect(event, checkbox) {
+    event.stopPropagation();
+    const card = checkbox.closest('.habit-card');
+    const id = card.dataset.id;
+    if (selectedCards.has(id)) {
+      selectedCards.delete(id);
+      checkbox.classList.remove('checked');
+      card.classList.remove('selected');
+    } else {
+      selectedCards.add(id);
+      checkbox.classList.add('checked');
+      card.classList.add('selected');
+    }
+    updateBatchCount();
+  }
+
+  function updateBatchCount() {
+    document.getElementById('batchCount').textContent = selectedCards.size + ' selected';
+  }
+
+  function replantAllSelected() {
+    if (selectedCards.size === 0) return;
+    selectedCards.forEach(id => {
+      const card = document.querySelector(`.habit-card[data-id="${id}"]`);
+      if (card) {
+        const pulse = card.querySelector('.dormancy-pulse');
+        pulse.classList.add('fast-beat');
+        setTimeout(() => {
+          card.classList.add('replanting');
+          card.addEventListener('animationend', () => {
+            card.style.display = 'none';
+            updateHabitCount();
+          }, { once: true });
+        }, 400);
+      }
+    });
+    setTimeout(() => exitBatchMode(), 500);
+  }
+
+  function removeAllSelected() {
+    if (selectedCards.size === 0) return;
+    selectedCards.forEach(id => {
+      const card = document.querySelector(`.habit-card[data-id="${id}"]`);
+      if (card) {
+        card.classList.add('removing');
+        card.addEventListener('animationend', () => {
+          card.style.display = 'none';
+          updateHabitCount();
+        }, { once: true });
+      }
+    });
+    setTimeout(() => exitBatchMode(), 600);
+  }
+</script>
+
+</body>
+</html>

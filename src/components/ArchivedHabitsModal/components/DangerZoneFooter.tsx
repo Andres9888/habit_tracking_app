@@ -8,15 +8,16 @@ interface DangerZoneFooterProps {
   onDeleteAll: () => void;
 }
 
-const LIGHT_DANGER = { bg: '#FEF2F2', border: '#FECACA', text: '#DC2626' };
-const DARK_DANGER = { bg: '#7F1D1D', border: '#991B1B', text: '#FCA5A5' };
-
 export function DangerZoneFooter({ habitCount, onDeleteAll }: DangerZoneFooterProps) {
-  const { isDark } = useThemeColors();
+  const { colors, isDark } = useThemeColors();
 
   if (habitCount <= 1) return null;
 
-  const danger = isDark ? DARK_DANGER : LIGHT_DANGER;
+  const danger = {
+    bg: colors.status.errorLight,
+    border: colors.status.error,
+    text: isDark ? colors.status.errorText : colors.status.error,
+  };
 
   return (
     <View
@@ -61,7 +62,7 @@ export function DangerZoneFooter({ habitCount, onDeleteAll }: DangerZoneFooterPr
       <Text
         style={{
           fontSize: 13,
-          color: isDark ? '#9CA3AF' : '#78716C',
+          color: colors.text.secondary,
           marginTop: 4,
           textAlign: 'center',
         }}

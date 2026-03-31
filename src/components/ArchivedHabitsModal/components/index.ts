@@ -1,9 +1,3 @@
-export { AnimatedHabitCard } from './AnimatedHabitCard';
-export { ActionButtons } from './ActionButtons';
-export { DangerZoneFooter } from './DangerZoneFooter';
+export { CompactHabitRow } from './CompactHabitRow';
 export { EmptyState } from './EmptyState';
-export { HabitCardHeader } from './HabitCardHeader';
-export { HabitStatsBadges } from './HabitStatsBadges';
 export { ModalHeader } from './ModalHeader';
-export { StatsSummaryBar } from './StatsSummaryBar';
-export { StrengthBackground } from './StrengthBackground';

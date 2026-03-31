@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Archived Habits — Tinder Card Stack</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Literata:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'DM Sans', sans-serif !important;
+    background: #F5F1ED !important;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    -webkit-user-select: none;
+    user-select: none;
+    overflow: hidden;
+  }
+
+  .phone-frame {
+    width: 390px;
+    min-height: 100vh;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Header */
+  .header {
+    display: flex;
+    align-items: center;
+    padding: 56px 24px 16px;
+    gap: 12px;
+  }
+  .header-back {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: rgba(31,41,55,0.06);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .header-back:hover { background: rgba(31,41,55,0.12); }
+  .header-title {
+    font-family: 'Literata', serif !important;
+    font-size: 24px;
+    font-weight: 700;
+    color: #1F2937;
+  }
+
+  /* Stack container */
+  .stack-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    padding: 0 24px;
+    margin-top: -20px;
+  }
+
+  .card-area {
+    position: relative;
+    width: 310px;
+    height: 400px;
+  }
+
+  /* Cards */
+  .habit-card {
+    position: absolute;
+    top: 0; left: 0;
+    width: 310px;
+    height: 390px;
+    background: #FFFFFF;
+    border-radius: 20px;
+    box-shadow: 0 4px 24px rgba(139,115,85,0.12), 0 1px 4px rgba(139,115,85,0.08);
+    padding: 28px 24px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: grab;
+    transform-origin: center bottom;
+    will-change: transform;
+    touch-action: none;
+    overflow: hidden;
+  }
+  .habit-card:active { cursor: grabbing; }
+
+  .habit-card.behind {
+    pointer-events: none;
+    cursor: default;
+  }
+
+  /* Card overlays */
+  .card-overlay {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.05s;
+    pointer-events: none;
+    z-index: 10;
+  }
+  .card-overlay.restore {
+    background: rgba(5,150,105,0.15);
+  }
+  .card-overlay.delete {
+    background: rgba(181,48,48,0.15);
+  }
+  .card-stamp {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    padding: 8px 20px;
+    border: 4px solid;
+    border-radius: 12px;
+    transform: rotate(-20deg);
+  }
+  .card-stamp.restore-stamp {
+    color: #059669;
+    border-color: #059669;
+  }
+  .card-stamp.delete-stamp {
+    color: #B53030;
+    border-color: #B53030;
+    transform: rotate(20deg);
+  }
+
+  /* Card content */
+  .card-emoji { font-size: 64px; line-height: 1; margin-bottom: 12px; }
+  .card-name {
+    font-size: 22px;
+    font-weight: 700;
+    color: #1F2937;
+    text-align: center;
+    margin-bottom: 4px;
+  }
+  .card-date {
+    font-size: 13px;
+    color: #6B7280;
+    font-weight: 500;
+    margin-bottom: 16px;
+  }
+  .card-divider {
+    width: 100%;
+    height: 1px;
+    background: #E5E1DC;
+    margin-bottom: 20px;
+  }
+  .stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px 24px;
+    width: 100%;
+  }
+  .stat-item { text-align: center; }
+  .stat-value {
+    font-size: 28px;
+    font-weight: 700;
+    color: #1F2937;
+    line-height: 1.1;
+  }
+  .stat-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #9CA3AF;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 2px;
+  }
+
+  /* Direction indicators */
+  .direction-indicators {
+    position: absolute;
+    top: 50%;
+    left: -56px;
+    right: -56px;
+    transform: translateY(-50%);
+    display: flex;
+    justify-content: space-between;
+    pointer-events: none;
+    z-index: 5;
+  }
+  .dir-indicator {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
+    opacity: 0.4;
+  }
+  .dir-indicator.left-ind {
+    background: rgba(181,48,48,0.1);
+    color: #B53030;
+    border: 2px solid rgba(181,48,48,0.25);
+  }
+  .dir-indicator.right-ind {
+    background: rgba(5,150,105,0.1);
+    color: #059669;
+    border: 2px solid rgba(5,150,105,0.25);
+  }
+  .dir-indicator.active {
+    opacity: 1;
+    transform: scale(1.25);
+  }
+  .dir-indicator.active.left-ind {
+    box-shadow: 0 0 20px rgba(181,48,48,0.35);
+    background: rgba(181,48,48,0.18);
+  }
+  .dir-indicator.active.right-ind {
+    box-shadow: 0 0 20px rgba(5,150,105,0.35);
+    background: rgba(5,150,105,0.18);
+  }
+
+  /* Progress text */
+  .progress-text {
+    text-align: center;
+    font-size: 14px;
+    color: #6B7280;
+    font-weight: 500;
+    margin-top: 28px;
+  }
+
+  /* Action buttons */
+  .action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 48px;
+    padding: 24px 0 60px;
+  }
+  .action-btn {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  }
+  .action-btn:hover { transform: scale(1.1); }
+  .action-btn:active { transform: scale(0.95); }
+  .btn-delete {
+    background: #FEF2F2;
+    color: #B53030;
+  }
+  .btn-delete:hover { box-shadow: 0 4px 24px rgba(181,48,48,0.2); }
+  .btn-restore {
+    background: #ECFDF5;
+    color: #059669;
+  }
+  .btn-restore:hover { box-shadow: 0 4px 24px rgba(5,150,105,0.2); }
+
+  /* Empty state */
+  .empty-state {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding: 60px 40px;
+    text-align: center;
+  }
+  .empty-state.visible {
+    display: flex;
+  }
+  .empty-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: rgba(5,150,105,0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 8px;
+  }
+  .empty-title {
+    font-family: 'Literata', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: #1F2937;
+  }
+  .empty-subtitle {
+    font-size: 15px;
+    color: #6B7280;
+    line-height: 1.5;
+  }
+
+  /* Card fly-off animation */
+  @keyframes flyRight {
+    0% { opacity: 1; }
+    100% { transform: translateX(600px) rotate(30deg); opacity: 0; }
+  }
+  @keyframes flyLeft {
+    0% { opacity: 1; }
+    100% { transform: translateX(-600px) rotate(-30deg); opacity: 0; }
+  }
+  .fly-right { animation: flyRight 0.45s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+  .fly-left { animation: flyLeft 0.45s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+
+  /* Stack promotion animation */
+  @keyframes promoteCard {
+    0% { }
+    100% { }
+  }
+
+  /* Confetti */
+  .confetti-piece {
+    position: fixed;
+    width: 8px;
+    height: 8px;
+    border-radius: 2px;
+    pointer-events: none;
+    z-index: 999;
+    animation: confettiFall 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  }
+  @keyframes confettiFall {
+    0% { opacity: 1; transform: translateY(0) rotate(0deg) scale(1); }
+    100% { opacity: 0; transform: translateY(300px) rotate(720deg) scale(0.3); }
+  }
+</style>
+</head>
+<body>
+<div class="phone-frame">
+  <!-- Header -->
+  <div class="header">
+    <div class="header-back" onclick="window.history.back()">
+      <i data-lucide="arrow-left" style="width:20px;height:20px;color:#1F2937;"></i>
+    </div>
+    <h1 class="header-title">Archived Habits</h1>
+  </div>
+
+  <!-- Stack Container -->
+  <div class="stack-container">
+    <div class="card-area" id="cardArea">
+      <!-- Direction indicators -->
+      <div class="direction-indicators">
+        <div class="dir-indicator left-ind" id="leftInd">
+          <i data-lucide="x" style="width:22px;height:22px;"></i>
+        </div>
+        <div class="dir-indicator right-ind" id="rightInd">
+          <i data-lucide="check" style="width:22px;height:22px;"></i>
+        </div>
+      </div>
+
+      <!-- Cards will be rendered by JS -->
+    </div>
+
+    <div class="progress-text" id="progressText"></div>
+
+    <!-- Empty State -->
+    <div class="empty-state" id="emptyState">
+      <div class="empty-icon">
+        <i data-lucide="inbox" style="width:36px;height:36px;color:#059669;"></i>
+      </div>
+      <div class="empty-title">All Clear!</div>
+      <div class="empty-subtitle">You've reviewed all your archived habits. Nice work!</div>
+    </div>
+  </div>
+
+  <!-- Action Buttons -->
+  <div class="action-buttons" id="actionButtons">
+    <button class="action-btn btn-delete" id="btnDelete" title="Delete">
+      <i data-lucide="x" style="width:28px;height:28px;"></i>
+    </button>
+    <button class="action-btn btn-restore" id="btnRestore" title="Restore">
+      <i data-lucide="check" style="width:28px;height:28px;"></i>
+    </button>
+  </div>
+</div>
+
+<script>
+// Habit data
+const habits = [
+  {
+    emoji: '\u{1F9D8}',
+    name: 'Morning Meditation',
+    date: 'Archived Feb 15',
+    stats: [
+      { value: '72%', label: 'Strength' },
+      { value: '45d', label: 'Best Streak' },
+      { value: '180', label: 'Total Days' },
+      { value: '234', label: 'Completions' },
+    ],
+  },
+  {
+    emoji: '\u{1F4D6}',
+    name: 'Read 30 Minutes',
+    date: 'Archived Mar 1',
+    stats: [
+      { value: '58%', label: 'Strength' },
+      { value: '28d', label: 'Best Streak' },
+      { value: '120', label: 'Total Days' },
+      { value: '156', label: 'Completions' },
+    ],
+  },
+  {
+    emoji: '\u{1F976}',
+    name: 'Cold Shower',
+    date: 'Archived Mar 10',
+    stats: [
+      { value: '35%', label: 'Strength' },
+      { value: '12d', label: 'Best Streak' },
+      { value: '45', label: 'Total Days' },
+      { value: '89', label: 'Completions' },
+    ],
+  },
+  {
+    emoji: '\u{270D}\u{FE0F}',
+    name: 'Daily Journal',
+    date: 'Archived Mar 18',
+    stats: [
+      { value: '85%', label: 'Strength' },
+      { value: '67d', label: 'Best Streak' },
+      { value: '240', label: 'Total Days' },
+      { value: '312', label: 'Completions' },
+    ],
+  },
+];
+
+const cardArea = document.getElementById('cardArea');
+const progressText = document.getElementById('progressText');
+const emptyState = document.getElementById('emptyState');
+const actionButtons = document.getElementById('actionButtons');
+const leftInd = document.getElementById('leftInd');
+const rightInd = document.getElementById('rightInd');
+
+let currentIndex = 0;
+let isDragging = false;
+let startX = 0;
+let startY = 0;
+let currentX = 0;
+let animating = false;
+
+function createCardHTML(habit) {
+  return `
+    <div class="card-overlay restore">
+      <div class="card-stamp restore-stamp">RESTORE</div>
+    </div>
+    <div class="card-overlay delete">
+      <div class="card-stamp delete-stamp">DELETE</div>
+    </div>
+    <div class="card-emoji">${habit.emoji}</div>
+    <div class="card-name">${habit.name}</div>
+    <div class="card-date">${habit.date}</div>
+    <div class="card-divider"></div>
+    <div class="stats-grid">
+      ${habit.stats.map(s => `
+        <div class="stat-item">
+          <div class="stat-value">${s.value}</div>
+          <div class="stat-label">${s.label}</div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+function renderStack() {
+  // Remove existing cards
+  const existingCards = cardArea.querySelectorAll('.habit-card');
+  existingCards.forEach(c => c.remove());
+
+  const remaining = habits.length - currentIndex;
+
+  if (remaining <= 0) {
+    progressText.style.display = 'none';
+    emptyState.classList.add('visible');
+    actionButtons.style.display = 'none';
+    leftInd.style.display = 'none';
+    rightInd.style.display = 'none';
+    return;
+  }
+
+  progressText.textContent = `${currentIndex + 1} of ${habits.length} remaining`;
+
+  // Render up to 3 cards (bottom to top)
+  const cardsToShow = Math.min(remaining, 3);
+  for (let i = cardsToShow - 1; i >= 0; i--) {
+    const idx = currentIndex + i;
+    const card = document.createElement('div');
+    card.className = 'habit-card' + (i > 0 ? ' behind' : '');
+    card.innerHTML = createCardHTML(habits[idx]);
+    card.dataset.index = idx;
+
+    // Stack offset
+    const scale = 1 - i * 0.05;
+    const offsetY = i * 10;
+    const opacity = 1 - i * 0.15;
+    card.style.transform = `translateY(${offsetY}px) scale(${scale})`;
+    card.style.opacity = opacity;
+    card.style.zIndex = 10 - i;
+
+    cardArea.appendChild(card);
+  }
+
+  // Attach drag to top card
+  const topCard = cardArea.querySelector('.habit-card:not(.behind)');
+  if (topCard) attachDrag(topCard);
+}
+
+function attachDrag(card) {
+  // Mouse
+  card.addEventListener('mousedown', onDragStart);
+  // Touch
+  card.addEventListener('touchstart', onDragStart, { passive: false });
+}
+
+function onDragStart(e) {
+  if (animating) return;
+  isDragging = true;
+  const pos = e.type === 'touchstart' ? e.touches[0] : e;
+  startX = pos.clientX;
+  startY = pos.clientY;
+  currentX = 0;
+
+  const card = e.currentTarget;
+  card.style.transition = 'none';
+
+  const onMove = (ev) => {
+    if (!isDragging) return;
+    const p = ev.type === 'touchmove' ? ev.touches[0] : ev;
+    currentX = p.clientX - startX;
+    const rotation = (currentX / 400) * 15;
+    card.style.transform = `translateX(${currentX}px) rotate(${rotation}deg)`;
+
+    // Overlays
+    const restoreOverlay = card.querySelector('.card-overlay.restore');
+    const deleteOverlay = card.querySelector('.card-overlay.delete');
+    const threshold = 80;
+
+    if (currentX > 0) {
+      const progress = Math.min(currentX / threshold, 1);
+      restoreOverlay.style.opacity = progress * 0.9;
+      deleteOverlay.style.opacity = 0;
+      rightInd.classList.toggle('active', currentX > threshold);
+      leftInd.classList.remove('active');
+    } else if (currentX < 0) {
+      const progress = Math.min(Math.abs(currentX) / threshold, 1);
+      deleteOverlay.style.opacity = progress * 0.9;
+      restoreOverlay.style.opacity = 0;
+      leftInd.classList.toggle('active', Math.abs(currentX) > threshold);
+      rightInd.classList.remove('active');
+    } else {
+      restoreOverlay.style.opacity = 0;
+      deleteOverlay.style.opacity = 0;
+      leftInd.classList.remove('active');
+      rightInd.classList.remove('active');
+    }
+  };
+
+  const onEnd = () => {
+    isDragging = false;
+    document.removeEventListener('mousemove', onMove);
+    document.removeEventListener('mouseup', onEnd);
+    document.removeEventListener('touchmove', onMove);
+    document.removeEventListener('touchend', onEnd);
+
+    leftInd.classList.remove('active');
+    rightInd.classList.remove('active');
+
+    const threshold = 80;
+    if (currentX > threshold) {
+      swipeOff(card, 'right');
+    } else if (currentX < -threshold) {
+      swipeOff(card, 'left');
+    } else {
+      // Spring back
+      card.style.transition = 'transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)';
+      card.style.transform = 'translateX(0) rotate(0deg)';
+      const restoreOverlay = card.querySelector('.card-overlay.restore');
+      const deleteOverlay = card.querySelector('.card-overlay.delete');
+      restoreOverlay.style.opacity = 0;
+      deleteOverlay.style.opacity = 0;
+    }
+  };
+
+  document.addEventListener('mousemove', onMove);
+  document.addEventListener('mouseup', onEnd);
+  document.addEventListener('touchmove', onMove, { passive: false });
+  document.addEventListener('touchend', onEnd);
+}
+
+function swipeOff(card, direction) {
+  animating = true;
+  card.style.transition = 'none';
+
+  if (direction === 'right') {
+    card.classList.add('fly-right');
+    spawnConfetti('#059669');
+  } else {
+    card.classList.add('fly-left');
+  }
+
+  setTimeout(() => {
+    currentIndex++;
+    animating = false;
+    renderStack();
+  }, 450);
+}
+
+function spawnConfetti(color) {
+  const colors = ['#059669', '#10B981', '#34D399', '#6EE7B7', '#A7F3D0'];
+  const container = document.body;
+  for (let i = 0; i < 18; i++) {
+    const piece = document.createElement('div');
+    piece.className = 'confetti-piece';
+    piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+    piece.style.left = (195 + (Math.random() - 0.5) * 200) + 'px';
+    piece.style.top = '40%';
+    piece.style.width = (6 + Math.random() * 6) + 'px';
+    piece.style.height = (6 + Math.random() * 6) + 'px';
+    piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+    piece.style.animationDuration = (0.8 + Math.random() * 0.6) + 's';
+    piece.style.animationDelay = (Math.random() * 0.15) + 's';
+    const spreadX = (Math.random() - 0.5) * 250;
+    piece.style.setProperty('--spread', spreadX + 'px');
+    piece.style.animation = `confettiFall ${0.8 + Math.random() * 0.6}s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards`;
+    piece.style.transform = `translateX(${spreadX}px)`;
+    container.appendChild(piece);
+    setTimeout(() => piece.remove(), 1500);
+  }
+}
+
+// Button actions
+document.getElementById('btnDelete').addEventListener('click', () => {
+  if (animating || currentIndex >= habits.length) return;
+  const topCard = cardArea.querySelector('.habit-card:not(.behind)');
+  if (topCard) {
+    const deleteOverlay = topCard.querySelector('.card-overlay.delete');
+    deleteOverlay.style.opacity = 0.9;
+    setTimeout(() => swipeOff(topCard, 'left'), 150);
+  }
+});
+
+document.getElementById('btnRestore').addEventListener('click', () => {
+  if (animating || currentIndex >= habits.length) return;
+  const topCard = cardArea.querySelector('.habit-card:not(.behind)');
+  if (topCard) {
+    const restoreOverlay = topCard.querySelector('.card-overlay.restore');
+    restoreOverlay.style.opacity = 0.9;
+    setTimeout(() => swipeOff(topCard, 'right'), 150);
+  }
+});
+
+// Initialize
+lucide.createIcons();
+renderStack();
+</script>
+</body>
+</html>

@@ -23,12 +23,11 @@ const s = StyleSheet.create({
 });
 
 export function EmptyState() {
-  const { colors, isDark } = useThemeColors();
-  const greenBg = isDark ? '#064E3B' : '#ECFDF5';
+  const { colors } = useThemeColors();
 
   return (
     <View style={s.container}>
-      <Animated.View entering={anim(0)} style={[s.illustration, { backgroundColor: greenBg }]}>
+      <Animated.View entering={anim(0)} style={[s.illustration, { backgroundColor: colors.status.successLight }]}>
         <Text style={s.emoji}>🌱</Text>
       </Animated.View>
 
@@ -44,12 +43,12 @@ export function EmptyState() {
 
       <Animated.View
         entering={anim(240)}
-        style={[s.tipCard, { backgroundColor: greenBg, borderColor: isDark ? '#065F46' : '#D1FAE5' }]}
+        style={[s.tipCard, { backgroundColor: colors.status.successLight, borderColor: colors.primary[100] }]}
       >
         <Text style={s.tipEmoji}>💚</Text>
         <View style={s.tipContent}>
-          <Text style={[s.tipTitle, { color: isDark ? '#6EE7B7' : '#065F46' }]}>Good to Know</Text>
-          <Text style={[s.tipDesc, { color: isDark ? '#A7F3D0' : '#047857' }]}>
+          <Text style={[s.tipTitle, { color: colors.primary[700] }]}>Good to Know</Text>
+          <Text style={[s.tipDesc, { color: colors.primary[700] }]}>
             Archiving preserves all your progress and streaks. Restore habits anytime and pick up
             right where you left off!
           </Text>

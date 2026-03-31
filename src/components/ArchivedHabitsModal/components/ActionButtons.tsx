@@ -1,7 +1,7 @@
+import { useState } from 'react';
 import { Text, View } from 'react-native';
-import { Check, RotateCcw, Trash2 } from 'lucide-react-native';
+import { RotateCcw, Check, Lock } from 'lucide-react-native';
 import Animated, { type AnimatedStyle } from 'react-native-reanimated';
-import { colors } from '../../../theme/colors';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { AnimatedPressable } from '../../ui';
 
@@ -9,91 +9,138 @@ interface ActionButtonsProps {
   habitName: string;
   isRestoring: boolean;
   showSuccess: boolean;
+  hasReachedLimit?: boolean;
   successIconStyle: AnimatedStyle;
   onRestorePress: () => void;
   onDeletePress: () => void;
+  onUpgradePress?: () => void;
 }
 
 export function ActionButtons({
   habitName,
   isRestoring,
   showSuccess,
+  hasReachedLimit,
   successIconStyle,
   onRestorePress,
   onDeletePress,
+  onUpgradePress,
 }: ActionButtonsProps) {
-  const { isDark } = useThemeColors();
+  const { colors, isDark } = useThemeColors();
+  const [showConfirm, setShowConfirm] = useState(false);
 
-  const greenColor = isDark ? '#6EE7B7' : '#059669';
-  const redColor = isDark ? '#FCA5A5' : '#DC2626';
-
-  const restoreButtonStyle = showSuccess
-    ? {
-        backgroundColor: isDark ? '#064e3b' : '#ecfdf5',
-        borderColor: isDark ? '#059669' : '#10b981',
-      }
-    : isRestoring
-      ? {
-          backgroundColor: isDark ? 'rgba(5,150,105,0.12)' : '#ECFDF5',
-          borderColor: isDark ? 'rgba(5,150,105,0.2)' : '#D1FAE5',
-          opacity: 0.7,
-        }
-      : {
-          backgroundColor: isDark ? 'rgba(5,150,105,0.12)' : '#ECFDF5',
-          borderColor: isDark ? 'rgba(5,150,105,0.2)' : '#D1FAE5',
-        };
+  const greenColor = colors.text.inverse;
+  const btnBg = showSuccess
+    ? colors.primary[700]
+    : colors.status.success;
 
   return (
-    <View className='flex-row gap-2'>
-      <AnimatedPressable
-        accessibilityLabel={`Restore ${habitName}`}
-        accessibilityRole='button'
-        className='flex-1 flex-row items-center justify-center gap-2 rounded-xl border py-2.5'
-        disabled={isRestoring}
-        style={restoreButtonStyle}
-        onPress={onRestorePress}
-      >
-        {showSuccess ? (
-          <Animated.View
-            className='flex-row items-center gap-2'
-            style={successIconStyle}
-          >
-            <View
-              className='h-5 w-5 items-center justify-center rounded-full'
-              style={{ backgroundColor: isDark ? '#059669' : '#10b981' }}
-            >
-              <Check color={colors.text.inverse} size={14} strokeWidth={3} />
-            </View>
-            <Text style={{ color: greenColor, fontSize: 13, fontWeight: '600' }}>
-              Restored!
+    <View>
+      {hasReachedLimit ? (
+        <LimitReachedButtons isDark={isDark} onDeletePress={() => setShowConfirm(true)} onUpgradePress={onUpgradePress} />
+      ) : (
+        <ResumeButton
+          btnBg={btnBg} greenColor={greenColor} habitName={habitName}
+          isRestoring={isRestoring} showSuccess={showSuccess}
+          successIconStyle={successIconStyle} onRestorePress={onRestorePress}
+        />
+      )}
+
+      <View className='mt-3 min-h-[20px] items-center'>
+        {hasReachedLimit ? null : !showConfirm ? (
+          <AnimatedPressable accessibilityLabel={`Delete ${habitName}`} onPress={() => setShowConfirm(true)}>
+            <Text className='text-[13px]' style={{ color: colors.text.tertiary }}>
+              or delete permanently
             </Text>
-          </Animated.View>
+          </AnimatedPressable>
         ) : (
-          <>
-            <RotateCcw color={greenColor} size={15} strokeWidth={2.5} />
-            <Text style={{ color: greenColor, fontSize: 13, fontWeight: '600' }}>
-              {isRestoring ? 'Restoring...' : 'Restore'}
-            </Text>
-          </>
+          <DeleteConfirmRow isDark={isDark} onCancel={() => setShowConfirm(false)} onDelete={onDeletePress} />
         )}
+      </View>
+    </View>
+  );
+}
+
+function ResumeButton({ btnBg, greenColor, habitName, isRestoring, showSuccess, successIconStyle, onRestorePress }: {
+  btnBg: string; greenColor: string; habitName: string;
+  isRestoring: boolean; showSuccess: boolean;
+  successIconStyle: AnimatedStyle; onRestorePress: () => void;
+}) {
+  const { colors: themeColors } = useThemeColors();
+  return (
+    <AnimatedPressable
+      accessibilityLabel={`Resume ${habitName}`} accessibilityRole='button'
+      className='h-11 flex-row items-center justify-center gap-2 rounded-xl'
+      disabled={isRestoring}
+      style={{ backgroundColor: btnBg, opacity: isRestoring && !showSuccess ? 0.7 : 1 }}
+      onPress={onRestorePress}
+    >
+      {showSuccess ? (
+        <Animated.View className='flex-row items-center gap-2' style={successIconStyle}>
+          <View className='h-5 w-5 items-center justify-center rounded-full' style={{ backgroundColor: themeColors.primary[400] }}>
+            <Check color={themeColors.text.inverse} size={14} strokeWidth={3} />
+          </View>
+          <Text style={{ color: greenColor, fontSize: 15, fontWeight: '600' }}>Restored!</Text>
+        </Animated.View>
+      ) : (
+        <>
+          <RotateCcw color={greenColor} size={16} strokeWidth={2.5} />
+          <Text style={{ color: greenColor, fontSize: 15, fontWeight: '600' }}>
+            {isRestoring ? 'Restoring...' : 'Resume This Habit'}
+          </Text>
+        </>
+      )}
+    </AnimatedPressable>
+  );
+}
+
+function LimitReachedButtons({ isDark, onDeletePress, onUpgradePress }: {
+  isDark: boolean; onDeletePress: () => void; onUpgradePress?: () => void;
+}) {
+  const { colors: themeColors } = useThemeColors();
+  return (
+    <View className='gap-2'>
+      <AnimatedPressable
+        accessibilityLabel='Upgrade to resume habits' accessibilityRole='button'
+        className='h-11 flex-row items-center justify-center gap-2 rounded-xl'
+        style={{ backgroundColor: themeColors.status.success }}
+        onPress={onUpgradePress}
+      >
+        <Lock color={themeColors.text.inverse} size={15} strokeWidth={2.5} />
+        <Text style={{ color: themeColors.text.inverse, fontSize: 15, fontWeight: '600' }}>
+          Upgrade to Resume
+        </Text>
       </AnimatedPressable>
       <AnimatedPressable
-        accessibilityLabel={`Permanently delete ${habitName}`}
-        accessibilityRole='button'
-        className={`flex-1 flex-row items-center justify-center gap-2 rounded-xl border py-2.5 ${
-          isRestoring ? 'opacity-50' : ''
-        }`}
-        disabled={isRestoring}
-        style={{
-          backgroundColor: isDark ? 'rgba(220,38,38,0.1)' : '#FEF2F2',
-          borderColor: isDark ? 'rgba(220,38,38,0.2)' : '#FECACA',
-        }}
+        accessibilityLabel='Delete habit permanently' accessibilityRole='button'
+        className='h-11 flex-row items-center justify-center rounded-xl border'
+        style={{ borderColor: themeColors.status.error }}
         onPress={onDeletePress}
       >
-        <Trash2 color={redColor} size={15} strokeWidth={2.5} />
-        <Text style={{ color: redColor, fontSize: 13, fontWeight: '600' }}>
-          Delete
+        <Text style={{ color: themeColors.status.error, fontSize: 14, fontWeight: '600' }}>
+          Delete Permanently
         </Text>
+      </AnimatedPressable>
+    </View>
+  );
+}
+
+function DeleteConfirmRow({ isDark, onCancel, onDelete }: {
+  isDark: boolean; onCancel: () => void; onDelete: () => void;
+}) {
+  const { colors: themeColors } = useThemeColors();
+  return (
+    <View className='flex-row items-center gap-3'>
+      <Text className='text-[13px] font-medium' style={{ color: themeColors.text.secondary }}>
+        Are you sure?
+      </Text>
+      <AnimatedPressable className='rounded-lg px-3 py-1' style={{ backgroundColor: themeColors.status.error }} onPress={onDelete}>
+        <Text className='text-[13px] font-semibold text-white'>Delete</Text>
+      </AnimatedPressable>
+      <AnimatedPressable
+        className='rounded-lg px-3 py-1' style={{ backgroundColor: isDark ? themeColors.gray[200] : themeColors.gray[50] }} onPress={onCancel}
+      >
+        <Text className='text-[13px] font-semibold' style={{ color: themeColors.text.secondary }}>Cancel</Text>
       </AnimatedPressable>
     </View>
   );

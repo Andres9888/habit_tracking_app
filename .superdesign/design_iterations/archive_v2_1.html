@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=390, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Archived Habits — Polaroid Board</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Literata:opsz,wght@7..72,400;7..72,500;7..72,600;7..72,700&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['DM Sans', 'sans-serif'],
+            serif: ['Literata', 'serif'],
+            hand: ['Architects Daughter', 'cursive'],
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    * {
+      margin: 0 !important;
+      padding: 0 !important;
+      box-sizing: border-box !important;
+    }
+
+    html {
+      background: #2D2A26 !important;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif !important;
+      background: #2D2A26 !important;
+      display: flex !important;
+      justify-content: center !important;
+      align-items: flex-start !important;
+      min-height: 100vh !important;
+      padding: 20px 0 !important;
+      -webkit-font-smoothing: antialiased !important;
+    }
+
+    .phone-frame {
+      width: 390px !important;
+      min-height: 844px !important;
+      border-radius: 44px !important;
+      overflow: hidden !important;
+      position: relative !important;
+      box-shadow:
+        0 0 0 2px rgba(255,255,255,0.08),
+        0 25px 60px rgba(0,0,0,0.35),
+        0 8px 20px rgba(0,0,0,0.2),
+        inset 0 1px 0 rgba(255,255,255,0.1) !important;
+    }
+
+    /* Pin board background with cork texture */
+    .pin-board-bg {
+      background-color: #F5F1ED !important;
+      background-image:
+        radial-gradient(ellipse at 20% 50%, rgba(210,190,165,0.15) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 20%, rgba(200,180,155,0.12) 0%, transparent 40%),
+        radial-gradient(ellipse at 60% 80%, rgba(215,195,170,0.1) 0%, transparent 45%),
+        radial-gradient(circle at 10% 10%, rgba(180,160,130,0.06) 0%, transparent 30%),
+        radial-gradient(circle at 90% 90%, rgba(190,170,140,0.08) 0%, transparent 35%),
+        url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='60' height='60' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E") !important;
+    }
+
+    /* Status bar */
+    .status-bar {
+      height: 54px !important;
+      padding: 14px 28px 0 28px !important;
+      display: flex !important;
+      justify-content: space-between !important;
+      align-items: center !important;
+    }
+
+    .status-bar-time {
+      font-family: 'DM Sans', sans-serif !important;
+      font-size: 15px !important;
+      font-weight: 600 !important;
+      color: #1F2937 !important;
+      letter-spacing: 0.01em !important;
+    }
+
+    .status-bar-icons {
+      display: flex !important;
+      gap: 5px !important;
+      align-items: center !important;
+    }
+
+    /* Dynamic Island */
+    .dynamic-island {
+      width: 120px !important;
+      height: 34px !important;
+      background: #1F2937 !important;
+      border-radius: 20px !important;
+      position: absolute !important;
+      top: 10px !important;
+      left: 50% !important;
+      transform: translateX(-50%) !important;
+      z-index: 100 !important;
+    }
+
+    /* Navigation bar */
+    .nav-bar {
+      display: flex !important;
+      justify-content: space-between !important;
+      align-items: center !important;
+      padding: 8px 20px 12px 20px !important;
+    }
+
+    .nav-btn {
+      width: 44px !important;
+      height: 44px !important;
+      border-radius: 50% !important;
+      background: rgba(243,240,236,0.7) !important;
+      backdrop-filter: blur(8px) !important;
+      border: none !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      cursor: pointer !important;
+      transition: all 0.2s ease !important;
+      color: #1F2937 !important;
+    }
+
+    .nav-btn:hover {
+      background: #E8E3DD !important;
+      transform: scale(1.05) !important;
+    }
+
+    .nav-btn:active {
+      transform: scale(0.95) !important;
+    }
+
+    /* Content area */
+    .content-area {
+      padding: 0 16px 32px 16px !important;
+      overflow-y: auto !important;
+      max-height: calc(844px - 54px - 64px) !important;
+    }
+
+    .content-area::-webkit-scrollbar {
+      display: none !important;
+    }
+
+    /* Header */
+    .page-header {
+      padding: 4px 4px 20px 4px !important;
+    }
+
+    .page-title {
+      font-family: 'Literata', serif !important;
+      font-size: 24px !important;
+      font-weight: 600 !important;
+      color: #1F2937 !important;
+      line-height: 1.3 !important;
+      margin-bottom: 4px !important;
+    }
+
+    .page-subtitle {
+      font-family: 'DM Sans', sans-serif !important;
+      font-size: 14px !important;
+      font-weight: 400 !important;
+      color: #9CA3AF !important;
+      line-height: 1.4 !important;
+    }
+
+    /* Polaroid grid */
+    .polaroid-grid {
+      display: grid !important;
+      grid-template-columns: 1fr 1fr !important;
+      gap: 16px !important;
+      padding: 4px !important;
+    }
+
+    /* Polaroid card */
+    .polaroid {
+      background: #FFFFFF !important;
+      border-radius: 4px !important;
+      padding: 10px 10px 0 10px !important;
+      cursor: pointer !important;
+      transition: all 0.45s cubic-bezier(0.23, 1, 0.32, 1) !important;
+      position: relative !important;
+      box-shadow:
+        0 2px 8px rgba(60,50,40,0.1),
+        0 6px 20px rgba(60,50,40,0.06),
+        1px 1px 0 rgba(0,0,0,0.02) !important;
+      opacity: 0 !important;
+      transform-origin: center center !important;
+    }
+
+    .polaroid.visible {
+      opacity: 1 !important;
+    }
+
+    /* Push pin */
+    .push-pin {
+      position: absolute !important;
+      top: -6px !important;
+      left: 50% !important;
+      transform: translateX(-50%) !important;
+      width: 16px !important;
+      height: 16px !important;
+      border-radius: 50% !important;
+      z-index: 10 !important;
+      box-shadow:
+        0 2px 4px rgba(0,0,0,0.2),
+        inset 0 1px 1px rgba(255,255,255,0.4) !important;
+      transition: all 0.3s ease !important;
+    }
+
+    .push-pin::after {
+      content: '' !important;
+      position: absolute !important;
+      top: 50% !important;
+      left: 50% !important;
+      transform: translate(-50%, -50%) !important;
+      width: 5px !important;
+      height: 5px !important;
+      border-radius: 50% !important;
+      background: rgba(255,255,255,0.5) !important;
+    }
+
+    /* Emoji photo area */
+    .polaroid-photo {
+      width: 100% !important;
+      aspect-ratio: 1 !important;
+      border-radius: 2px !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      position: relative !important;
+      overflow: hidden !important;
+    }
+
+    .polaroid-emoji {
+      font-size: 52px !important;
+      line-height: 1 !important;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)) !important;
+      transition: transform 0.3s ease !important;
+    }
+
+    /* Completion ring behind emoji */
+    .completion-ring {
+      position: absolute !important;
+      width: 80px !important;
+      height: 80px !important;
+      border-radius: 50% !important;
+    }
+
+    .completion-ring svg {
+      transform: rotate(-90deg) !important;
+      width: 80px !important;
+      height: 80px !important;
+    }
+
+    .completion-ring .ring-bg {
+      fill: none !important;
+      stroke: rgba(0,0,0,0.06) !important;
+      stroke-width: 3 !important;
+    }
+
+    .completion-ring .ring-fill {
+      fill: none !important;
+      stroke-width: 3 !important;
+      stroke-linecap: round !important;
+      transition: stroke-dashoffset 0.8s ease !important;
+    }
+
+    /* Polaroid bottom / caption area */
+    .polaroid-caption {
+      padding: 10px 2px 12px 2px !important;
+      text-align: center !important;
+    }
+
+    .habit-name-hand {
+      font-family: 'Architects Daughter', cursive !important;
+      font-size: 14px !important;
+      color: #3D3429 !important;
+      line-height: 1.3 !important;
+      margin-bottom: 4px !important;
+    }
+
+    .polaroid-stats {
+      display: flex !important;
+      justify-content: center !important;
+      gap: 10px !important;
+      font-family: 'DM Sans', sans-serif !important;
+      font-size: 11px !important;
+      color: #9CA3AF !important;
+      font-weight: 500 !important;
+    }
+
+    .stat-item {
+      display: flex !important;
+      align-items: center !important;
+      gap: 3px !important;
+    }
+
+    .stat-pct {
+      font-weight: 700 !important;
+      color: #6B7280 !important;
+    }
+
+    /* Focused polaroid state */
+    .polaroid.focused {
+      transform: rotate(0deg) scale(1.08) !important;
+      z-index: 50 !important;
+      box-shadow:
+        0 8px 30px rgba(60,50,40,0.18),
+        0 2px 8px rgba(60,50,40,0.08) !important;
+    }
+
+    .polaroid.focused .polaroid-emoji {
+      transform: scale(1.1) !important;
+    }
+
+    /* Action overlay (shown when focused) */
+    .polaroid-actions {
+      display: flex !important;
+      gap: 8px !important;
+      padding: 0 2px 10px 2px !important;
+      opacity: 0 !important;
+      max-height: 0 !important;
+      overflow: hidden !important;
+      transition: all 0.35s cubic-bezier(0.23, 1, 0.32, 1) !important;
+    }
+
+    .polaroid.focused .polaroid-actions {
+      opacity: 1 !important;
+      max-height: 60px !important;
+      padding-top: 6px !important;
+    }
+
+    .action-btn {
+      flex: 1 !important;
+      height: 34px !important;
+      border: none !important;
+      border-radius: 8px !important;
+      font-family: 'DM Sans', sans-serif !important;
+      font-size: 12px !important;
+      font-weight: 600 !important;
+      cursor: pointer !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      gap: 4px !important;
+      transition: all 0.15s ease !important;
+    }
+
+    .action-btn:active {
+      transform: scale(0.95) !important;
+    }
+
+    .action-btn.resume {
+      background: #059669 !important;
+      color: #FFFFFF !important;
+    }
+
+    .action-btn.resume:hover {
+      background: #047857 !important;
+    }
+
+    .action-btn.delete {
+      background: rgba(181,48,48,0.08) !important;
+      color: #B53030 !important;
+    }
+
+    .action-btn.delete:hover {
+      background: rgba(181,48,48,0.15) !important;
+    }
+
+    /* Slide up animation for restore */
+    .polaroid.restoring {
+      animation: restoreSlideUp 0.6s cubic-bezier(0.23, 1, 0.32, 1) forwards !important;
+    }
+
+    @keyframes restoreSlideUp {
+      0% {
+        opacity: 1;
+        transform: rotate(0deg) scale(1.08) translateY(0);
+      }
+      30% {
+        opacity: 1;
+        transform: rotate(0deg) scale(1.12) translateY(-10px);
+        box-shadow: 0 12px 40px rgba(5,150,105,0.25);
+      }
+      100% {
+        opacity: 0;
+        transform: rotate(0deg) scale(0.9) translateY(-80px);
+        box-shadow: 0 0 0 rgba(5,150,105,0);
+      }
+    }
+
+    /* Fade out for delete */
+    .polaroid.deleting {
+      animation: deleteFadeOut 0.5s cubic-bezier(0.23, 1, 0.32, 1) forwards !important;
+    }
+
+    @keyframes deleteFadeOut {
+      0% {
+        opacity: 1;
+        transform: rotate(0deg) scale(1.08);
+        filter: grayscale(0);
+      }
+      40% {
+        filter: grayscale(1);
+        opacity: 0.6;
+      }
+      100% {
+        opacity: 0;
+        transform: rotate(0deg) scale(0.85);
+        filter: grayscale(1);
+      }
+    }
+
+    /* Home indicator */
+    .home-indicator {
+      position: absolute !important;
+      bottom: 8px !important;
+      left: 50% !important;
+      transform: translateX(-50%) !important;
+      width: 134px !important;
+      height: 5px !important;
+      background: #1F2937 !important;
+      border-radius: 3px !important;
+      opacity: 0.2 !important;
+    }
+
+    /* Empty state */
+    .empty-state {
+      display: none !important;
+      flex-direction: column !important;
+      align-items: center !important;
+      justify-content: center !important;
+      padding: 80px 40px !important;
+      text-align: center !important;
+    }
+
+    .empty-state.active {
+      display: flex !important;
+      animation: emptyFadeIn 0.6s cubic-bezier(0.23, 1, 0.32, 1) !important;
+    }
+
+    @keyframes emptyFadeIn {
+      from { opacity: 0; transform: scale(0.9) translateY(20px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .empty-icon-circle {
+      width: 80px !important;
+      height: 80px !important;
+      border-radius: 50% !important;
+      background: rgba(5, 150, 105, 0.08) !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      margin-bottom: 20px !important;
+    }
+
+    .empty-icon-circle span {
+      font-size: 36px !important;
+      line-height: 1 !important;
+    }
+
+    .empty-heading {
+      font-family: 'Literata', serif !important;
+      font-size: 22px !important;
+      font-weight: 600 !important;
+      color: #1F2937 !important;
+      margin-bottom: 8px !important;
+    }
+
+    .empty-text {
+      font-size: 14px !important;
+      color: #9CA3AF !important;
+      line-height: 1.5 !important;
+    }
+
+    /* Delete confirmation overlay */
+    .delete-overlay {
+      display: none !important;
+      position: absolute !important;
+      inset: 0 !important;
+      background: rgba(255,255,255,0.92) !important;
+      backdrop-filter: blur(4px) !important;
+      border-radius: 4px !important;
+      z-index: 60 !important;
+      flex-direction: column !important;
+      align-items: center !important;
+      justify-content: center !important;
+      gap: 8px !important;
+      padding: 12px !important;
+    }
+
+    .delete-overlay.active {
+      display: flex !important;
+      animation: overlayIn 0.2s ease !important;
+    }
+
+    @keyframes overlayIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .delete-overlay-text {
+      font-family: 'DM Sans', sans-serif !important;
+      font-size: 13px !important;
+      font-weight: 600 !important;
+      color: #4B5563 !important;
+      text-align: center !important;
+      margin-bottom: 4px !important;
+    }
+
+    .delete-overlay-btns {
+      display: flex !important;
+      gap: 8px !important;
+    }
+
+    .delete-overlay-btn {
+      height: 32px !important;
+      padding: 0 16px !important;
+      border: none !important;
+      border-radius: 8px !important;
+      font-family: 'DM Sans', sans-serif !important;
+      font-size: 12px !important;
+      font-weight: 600 !important;
+      cursor: pointer !important;
+      transition: all 0.15s ease !important;
+    }
+
+    .delete-overlay-btn:active {
+      transform: scale(0.95) !important;
+    }
+
+    .delete-overlay-btn.confirm {
+      background: #B53030 !important;
+      color: #FFFFFF !important;
+    }
+
+    .delete-overlay-btn.cancel {
+      background: #F3F0EC !important;
+      color: #6B7280 !important;
+    }
+
+    /* Staggered line under pin board header */
+    .pin-line {
+      height: 1px !important;
+      background: linear-gradient(90deg, transparent, rgba(180,160,130,0.3), transparent) !important;
+      margin: 0 20px 16px 20px !important;
+    }
+  </style>
+</head>
+<body>
+  <div class="phone-frame pin-board-bg">
+    <!-- Dynamic Island -->
+    <div class="dynamic-island"></div>
+
+    <!-- Status Bar -->
+    <div class="status-bar">
+      <span class="status-bar-time">9:41</span>
+      <div class="status-bar-icons">
+        <svg width="17" height="12" viewBox="0 0 17 12" fill="none"><rect x="0" y="3" width="3" height="9" rx="1" fill="#1F2937"/><rect x="4.5" y="2" width="3" height="10" rx="1" fill="#1F2937"/><rect x="9" y="0.5" width="3" height="11.5" rx="1" fill="#1F2937"/><rect x="13.5" y="0" width="3" height="12" rx="1" fill="#1F2937"/></svg>
+        <svg width="15" height="12" viewBox="0 0 15 12" fill="none"><path d="M7.5 3.5C9.4 3.5 11.1 4.3 12.3 5.5L13.8 4C12.2 2.4 10 1.5 7.5 1.5C5 1.5 2.8 2.4 1.2 4L2.7 5.5C3.9 4.3 5.6 3.5 7.5 3.5Z" fill="#1F2937"/><path d="M7.5 6.5C8.6 6.5 9.6 6.9 10.4 7.6L11.8 6.1C10.6 5 9.1 4.5 7.5 4.5C5.9 4.5 4.4 5 3.2 6.1L4.6 7.6C5.4 6.9 6.4 6.5 7.5 6.5Z" fill="#1F2937"/><circle cx="7.5" cy="10" r="1.5" fill="#1F2937"/></svg>
+        <svg width="25" height="12" viewBox="0 0 25 12" fill="none"><rect x="0" y="1" width="22" height="10" rx="2" stroke="#1F2937" stroke-width="1"/><rect x="1.5" y="2.5" width="17" height="7" rx="1" fill="#1F2937"/><rect x="23" y="4" width="2" height="4" rx="0.5" fill="#1F2937"/></svg>
+      </div>
+    </div>
+
+    <!-- Navigation Bar -->
+    <div class="nav-bar">
+      <button class="nav-btn" aria-label="Go back">
+        <i data-lucide="arrow-left" style="width: 20px; height: 20px;"></i>
+      </button>
+      <div style="width: 44px;"></div>
+      <button class="nav-btn" aria-label="Close">
+        <i data-lucide="x" style="width: 20px; height: 20px;"></i>
+      </button>
+    </div>
+
+    <!-- Content -->
+    <div class="content-area">
+      <!-- Header -->
+      <div class="page-header">
+        <div class="page-title">Habit Board</div>
+        <div class="page-subtitle" id="subtitle">5 archived memories</div>
+      </div>
+
+      <div class="pin-line"></div>
+
+      <!-- Polaroid Grid -->
+      <div class="polaroid-grid" id="polaroid-grid">
+
+        <!-- Polaroid 1: Morning Meditation -->
+        <div class="polaroid" id="p-1" style="transform: rotate(-2.5deg);" data-rotation="-2.5" onclick="toggleFocus(this)">
+          <div class="push-pin" style="background: radial-gradient(circle at 40% 35%, #7DD3A0, #059669);"></div>
+          <div class="polaroid-photo" style="background: linear-gradient(135deg, #ECFDF5 0%, #D1FAE5 50%, #A7F3D0 100%);">
+            <div class="completion-ring">
+              <svg viewBox="0 0 80 80">
+                <circle class="ring-bg" cx="40" cy="40" r="34" />
+                <circle class="ring-fill" cx="40" cy="40" r="34" stroke="#059669" stroke-dasharray="213.6" stroke-dashoffset="59.8" />
+              </svg>
+            </div>
+            <span class="polaroid-emoji">&#x1F9D8;</span>
+          </div>
+          <div class="polaroid-caption">
+            <div class="habit-name-hand">Morning Meditation</div>
+            <div class="polaroid-stats">
+              <span class="stat-item"><span class="stat-pct">72%</span></span>
+              <span class="stat-item">&#x1F525; 45d</span>
+            </div>
+          </div>
+          <div class="polaroid-actions">
+            <button class="action-btn resume" onclick="event.stopPropagation(); restoreHabit('p-1')">
+              <i data-lucide="rotate-ccw" style="width: 13px; height: 13px;"></i> Resume
+            </button>
+            <button class="action-btn delete" onclick="event.stopPropagation(); showDeleteConfirm('p-1')">
+              <i data-lucide="trash-2" style="width: 13px; height: 13px;"></i>
+            </button>
+          </div>
+          <div class="delete-overlay" id="del-p-1">
+            <div class="delete-overlay-text">Delete this habit<br/>permanently?</div>
+            <div class="delete-overlay-btns">
+              <button class="delete-overlay-btn confirm" onclick="event.stopPropagation(); deleteHabit('p-1')">Delete</button>
+              <button class="delete-overlay-btn cancel" onclick="event.stopPropagation(); hideDeleteConfirm('p-1')">Cancel</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Polaroid 2: Read 30 Min -->
+        <div class="polaroid" id="p-2" style="transform: rotate(1.8deg);" data-rotation="1.8" onclick="toggleFocus(this)">
+          <div class="push-pin" style="background: radial-gradient(circle at 40% 35%, #93C5FD, #3B82F6);"></div>
+          <div class="polaroid-photo" style="background: linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 50%, #BFDBFE 100%);">
+            <div class="completion-ring">
+              <svg viewBox="0 0 80 80">
+                <circle class="ring-bg" cx="40" cy="40" r="34" />
+                <circle class="ring-fill" cx="40" cy="40" r="34" stroke="#3B82F6" stroke-dasharray="213.6" stroke-dashoffset="89.7" />
+              </svg>
+            </div>
+            <span class="polaroid-emoji">&#x1F4D6;</span>
+          </div>
+          <div class="polaroid-caption">
+            <div class="habit-name-hand">Read 30 Min</div>
+            <div class="polaroid-stats">
+              <span class="stat-item"><span class="stat-pct">58%</span></span>
+              <span class="stat-item">&#x1F525; 28d</span>
+            </div>
+          </div>
+          <div class="polaroid-actions">
+            <button class="action-btn resume" onclick="event.stopPropagation(); restoreHabit('p-2')">
+              <i data-lucide="rotate-ccw" style="width: 13px; height: 13px;"></i> Resume
+            </button>
+            <button class="action-btn delete" onclick="event.stopPropagation(); showDeleteConfirm('p-2')">
+              <i data-lucide="trash-2" style="width: 13px; height: 13px;"></i>
+            </button>
+          </div>
+          <div class="delete-overlay" id="del-p-2">
+            <div class="delete-overlay-text">Delete this habit<br/>permanently?</div>
+            <div class="delete-overlay-btns">
+              <button class="delete-overlay-btn confirm" onclick="event.stopPropagation(); deleteHabit('p-2')">Delete</button>
+              <button class="delete-overlay-btn cancel" onclick="event.stopPropagation(); hideDeleteConfirm('p-2')">Cancel</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Polaroid 3: Cold Shower -->
+        <div class="polaroid" id="p-3" style="transform: rotate(-1.2deg);" data-rotation="-1.2" onclick="toggleFocus(this)">
+          <div class="push-pin" style="background: radial-gradient(circle at 40% 35%, #7DD3FC, #0EA5E9);"></div>
+          <div class="polaroid-photo" style="background: linear-gradient(135deg, #F0F9FF 0%, #E0F2FE 50%, #BAE6FD 100%);">
+            <div class="completion-ring">
+              <svg viewBox="0 0 80 80">
+                <circle class="ring-bg" cx="40" cy="40" r="34" />
+                <circle class="ring-fill" cx="40" cy="40" r="34" stroke="#0EA5E9" stroke-dasharray="213.6" stroke-dashoffset="138.8" />
+              </svg>
+            </div>
+            <span class="polaroid-emoji">&#x1F9CA;</span>
+          </div>
+          <div class="polaroid-caption">
+            <div class="habit-name-hand">Cold Shower</div>
+            <div class="polaroid-stats">
+              <span class="stat-item"><span class="stat-pct">35%</span></span>
+              <span class="stat-item">&#x1F525; 12d</span>
+            </div>
+          </div>
+          <div class="polaroid-actions">
+            <button class="action-btn resume" onclick="event.stopPropagation(); restoreHabit('p-3')">
+              <i data-lucide="rotate-ccw" style="width: 13px; height: 13px;"></i> Resume
+            </button>
+            <button class="action-btn delete" onclick="event.stopPropagation(); showDeleteConfirm('p-3')">
+              <i data-lucide="trash-2" style="width: 13px; height: 13px;"></i>
+            </button>
+          </div>
+          <div class="delete-overlay" id="del-p-3">
+            <div class="delete-overlay-text">Delete this habit<br/>permanently?</div>
+            <div class="delete-overlay-btns">
+              <button class="delete-overlay-btn confirm" onclick="event.stopPropagation(); deleteHabit('p-3')">Delete</button>
+              <button class="delete-overlay-btn cancel" onclick="event.stopPropagation(); hideDeleteConfirm('p-3')">Cancel</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Polaroid 4: Daily Journal -->
+        <div class="polaroid" id="p-4" style="transform: rotate(2.8deg);" data-rotation="2.8" onclick="toggleFocus(this)">
+          <div class="push-pin" style="background: radial-gradient(circle at 40% 35%, #FCD34D, #F59E0B);"></div>
+          <div class="polaroid-photo" style="background: linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 50%, #FDE68A 100%);">
+            <div class="completion-ring">
+              <svg viewBox="0 0 80 80">
+                <circle class="ring-bg" cx="40" cy="40" r="34" />
+                <circle class="ring-fill" cx="40" cy="40" r="34" stroke="#F59E0B" stroke-dasharray="213.6" stroke-dashoffset="32.0" />
+              </svg>
+            </div>
+            <span class="polaroid-emoji">&#x270D;&#xFE0F;</span>
+          </div>
+          <div class="polaroid-caption">
+            <div class="habit-name-hand">Daily Journal</div>
+            <div class="polaroid-stats">
+              <span class="stat-item"><span class="stat-pct">85%</span></span>
+              <span class="stat-item">&#x1F525; 67d</span>
+            </div>
+          </div>
+          <div class="polaroid-actions">
+            <button class="action-btn resume" onclick="event.stopPropagation(); restoreHabit('p-4')">
+              <i data-lucide="rotate-ccw" style="width: 13px; height: 13px;"></i> Resume
+            </button>
+            <button class="action-btn delete" onclick="event.stopPropagation(); showDeleteConfirm('p-4')">
+              <i data-lucide="trash-2" style="width: 13px; height: 13px;"></i>
+            </button>
+          </div>
+          <div class="delete-overlay" id="del-p-4">
+            <div class="delete-overlay-text">Delete this habit<br/>permanently?</div>
+            <div class="delete-overlay-btns">
+              <button class="delete-overlay-btn confirm" onclick="event.stopPropagation(); deleteHabit('p-4')">Delete</button>
+              <button class="delete-overlay-btn cancel" onclick="event.stopPropagation(); hideDeleteConfirm('p-4')">Cancel</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Polaroid 5: Push-ups (centered on last row) -->
+        <div class="polaroid" id="p-5" style="transform: rotate(-0.8deg); grid-column: 1 / -1; justify-self: center; width: calc(50% - 8px);" data-rotation="-0.8" onclick="toggleFocus(this)">
+          <div class="push-pin" style="background: radial-gradient(circle at 40% 35%, #FDA4AF, #E11D48);"></div>
+          <div class="polaroid-photo" style="background: linear-gradient(135deg, #FFF1F2 0%, #FFE4E6 50%, #FECDD3 100%);">
+            <div class="completion-ring">
+              <svg viewBox="0 0 80 80">
+                <circle class="ring-bg" cx="40" cy="40" r="34" />
+                <circle class="ring-fill" cx="40" cy="40" r="34" stroke="#E11D48" stroke-dasharray="213.6" stroke-dashoffset="123.9" />
+              </svg>
+            </div>
+            <span class="polaroid-emoji">&#x1F4AA;</span>
+          </div>
+          <div class="polaroid-caption">
+            <div class="habit-name-hand">Push-ups</div>
+            <div class="polaroid-stats">
+              <span class="stat-item"><span class="stat-pct">42%</span></span>
+              <span class="stat-item">&#x1F525; 18d</span>
+            </div>
+          </div>
+          <div class="polaroid-actions">
+            <button class="action-btn resume" onclick="event.stopPropagation(); restoreHabit('p-5')">
+              <i data-lucide="rotate-ccw" style="width: 13px; height: 13px;"></i> Resume
+            </button>
+            <button class="action-btn delete" onclick="event.stopPropagation(); showDeleteConfirm('p-5')">
+              <i data-lucide="trash-2" style="width: 13px; height: 13px;"></i>
+            </button>
+          </div>
+          <div class="delete-overlay" id="del-p-5">
+            <div class="delete-overlay-text">Delete this habit<br/>permanently?</div>
+            <div class="delete-overlay-btns">
+              <button class="delete-overlay-btn confirm" onclick="event.stopPropagation(); deleteHabit('p-5')">Delete</button>
+              <button class="delete-overlay-btn cancel" onclick="event.stopPropagation(); hideDeleteConfirm('p-5')">Cancel</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Empty State -->
+      <div class="empty-state" id="empty-state">
+        <div class="empty-icon-circle">
+          <span>&#x1F4F7;</span>
+        </div>
+        <div class="empty-heading">Board Cleared!</div>
+        <div class="empty-text">All polaroids have been taken down.<br/>Your active habits are waiting for you.</div>
+      </div>
+    </div>
+
+    <!-- Home Indicator -->
+    <div class="home-indicator"></div>
+  </div>
+
+  <script>
+    // Initialize
+    document.addEventListener('DOMContentLoaded', function () {
+      lucide.createIcons();
+
+      // Staggered entrance
+      var polaroids = document.querySelectorAll('.polaroid');
+      polaroids.forEach(function (p, i) {
+        setTimeout(function () {
+          p.classList.add('visible');
+        }, 150 + i * 100);
+      });
+    });
+
+    var totalCards = 5;
+    var focusedCard = null;
+
+    function toggleFocus(card) {
+      if (card.classList.contains('restoring') || card.classList.contains('deleting')) return;
+
+      if (focusedCard && focusedCard !== card) {
+        unfocus(focusedCard);
+      }
+
+      if (card.classList.contains('focused')) {
+        unfocus(card);
+      } else {
+        card.classList.add('focused');
+        focusedCard = card;
+      }
+    }
+
+    function unfocus(card) {
+      card.classList.remove('focused');
+      var rotation = card.getAttribute('data-rotation') || 0;
+      card.style.transform = 'rotate(' + rotation + 'deg)';
+      // Also hide any delete confirm
+      var overlay = card.querySelector('.delete-overlay');
+      if (overlay) overlay.classList.remove('active');
+      if (focusedCard === card) focusedCard = null;
+    }
+
+    // Click outside to unfocus
+    document.addEventListener('click', function (e) {
+      if (focusedCard && !focusedCard.contains(e.target)) {
+        unfocus(focusedCard);
+      }
+    });
+
+    function restoreHabit(id) {
+      var card = document.getElementById(id);
+      if (!card) return;
+      card.classList.add('restoring');
+      card.onclick = null;
+
+      setTimeout(function () {
+        card.style.display = 'none';
+        totalCards--;
+        updateSubtitle();
+        checkEmpty();
+        focusedCard = null;
+      }, 600);
+    }
+
+    function showDeleteConfirm(id) {
+      var overlay = document.getElementById('del-' + id);
+      if (overlay) overlay.classList.add('active');
+    }
+
+    function hideDeleteConfirm(id) {
+      var overlay = document.getElementById('del-' + id);
+      if (overlay) overlay.classList.remove('active');
+    }
+
+    function deleteHabit(id) {
+      var card = document.getElementById(id);
+      if (!card) return;
+      hideDeleteConfirm(id);
+      card.classList.remove('focused');
+      card.classList.add('deleting');
+      card.onclick = null;
+
+      setTimeout(function () {
+        card.style.display = 'none';
+        totalCards--;
+        updateSubtitle();
+        checkEmpty();
+        focusedCard = null;
+      }, 500);
+    }
+
+    function updateSubtitle() {
+      var el = document.getElementById('subtitle');
+      if (totalCards === 0) {
+        el.textContent = 'No archived habits';
+      } else if (totalCards === 1) {
+        el.textContent = '1 archived memory';
+      } else {
+        el.textContent = totalCards + ' archived memories';
+      }
+    }
+
+    function checkEmpty() {
+      if (totalCards <= 0) {
+        document.getElementById('polaroid-grid').style.display = 'none';
+        document.getElementById('empty-state').classList.add('active');
+      }
+    }
+  </script>
+</body>
+</html>

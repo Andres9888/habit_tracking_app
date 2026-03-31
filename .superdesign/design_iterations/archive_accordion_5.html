@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Archived Habits — Accordion Cards</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Literata:opsz,wght@7..72,400;7..72,500;7..72,600;7..72,700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'DM Sans', sans-serif !important;
+      background: #F5F1ED !important;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+    }
+    .phone-frame {
+      width: 390px;
+      min-height: 100vh;
+      position: relative;
+    }
+    .title-font {
+      font-family: 'Literata', serif !important;
+    }
+
+    /* Card styles */
+    .habit-card {
+      background: #FFFFFF;
+      border-radius: 16px;
+      box-shadow: 0 1px 3px rgba(120, 100, 80, 0.08), 0 1px 2px rgba(120, 100, 80, 0.06);
+      overflow: hidden;
+      transition: box-shadow 0.3s ease, transform 0.3s ease;
+      cursor: pointer;
+    }
+    .habit-card.expanded {
+      box-shadow: 0 8px 24px rgba(120, 100, 80, 0.12), 0 2px 8px rgba(120, 100, 80, 0.08);
+    }
+    .habit-card.slide-out {
+      animation: slideOutLeft 0.45s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+    @keyframes slideOutLeft {
+      0% { transform: translateX(0); opacity: 1; }
+      60% { transform: translateX(-30px); opacity: 0.7; }
+      100% { transform: translateX(-120%); opacity: 0; max-height: 0; margin-bottom: 0; padding: 0; }
+    }
+
+    /* Chevron rotation */
+    .chevron-icon {
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .habit-card.expanded .chevron-icon {
+      transform: rotate(180deg);
+    }
+
+    /* Expandable content */
+    .expand-content {
+      max-height: 0;
+      opacity: 0;
+      overflow: hidden;
+      transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease 0.05s;
+    }
+    .habit-card.expanded .expand-content {
+      max-height: 320px;
+      opacity: 1;
+    }
+
+    /* Progress ring */
+    .progress-ring-bg {
+      stroke: #E5E7EB;
+      fill: none;
+    }
+    .progress-ring-fill {
+      fill: none;
+      stroke-linecap: round;
+      transition: stroke-dashoffset 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Stat mini cards */
+    .stat-card {
+      background: #F9FAFB;
+      border-radius: 12px;
+      padding: 12px 8px;
+      text-align: center;
+      flex: 1;
+    }
+
+    /* Buttons */
+    .btn-resume {
+      background: #059669;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 12px 0;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: background 0.2s ease, transform 0.15s ease;
+    }
+    .btn-resume:hover { background: #047857; }
+    .btn-resume:active { transform: scale(0.97); }
+
+    .btn-delete {
+      background: transparent;
+      color: #B53030;
+      border: 1.5px solid #B53030;
+      border-radius: 12px;
+      padding: 12px 0;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: background 0.2s ease, color 0.2s ease, transform 0.15s ease;
+    }
+    .btn-delete:hover { background: #FEF2F2; }
+    .btn-delete:active { transform: scale(0.97); }
+
+    /* Confirm bar */
+    .confirm-bar {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 12px 0;
+      animation: fadeIn 0.2s ease;
+    }
+    .confirm-bar.visible { display: flex; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .confirm-yes {
+      background: #B53030;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 8px 20px;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .confirm-yes:hover { background: #991B1B; }
+    .confirm-cancel {
+      background: #F3F4F6;
+      color: #6B7280;
+      border: none;
+      border-radius: 10px;
+      padding: 8px 20px;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .confirm-cancel:hover { background: #E5E7EB; }
+
+    /* Green trail on resume */
+    .green-trail {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(90deg, transparent 0%, rgba(5, 150, 105, 0.08) 60%, rgba(5, 150, 105, 0.15) 100%);
+      border-radius: 16px;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .habit-card.slide-out .green-trail { opacity: 1; }
+  </style>
+</head>
+<body>
+  <div class="phone-frame">
+    <!-- Header -->
+    <div style="padding: 56px 20px 20px; display: flex; align-items: center; gap: 16px;">
+      <button onclick="window.history.back()" style="background: none; border: none; cursor: pointer; padding: 4px; display: flex; align-items: center;">
+        <i data-lucide="arrow-left" style="width: 24px; height: 24px; color: #1F2937;"></i>
+      </button>
+      <h1 class="title-font" style="font-size: 24px; font-weight: 700; color: #1F2937; flex: 1;">
+        Archived Habits
+      </h1>
+      <span style="background: #E5E7EB; color: #6B7280; font-size: 13px; font-weight: 600; padding: 4px 10px; border-radius: 20px;" id="count-badge">4</span>
+    </div>
+
+    <!-- Cards container -->
+    <div id="cards-container" style="padding: 0 20px 40px; display: flex; flex-direction: column; gap: 12px;"></div>
+  </div>
+
+  <script>
+    const habits = [
+      { id: 1, emoji: '🧘', name: 'Morning Meditation', daysAgo: 34, strength: 72, streak: 45, completions: 234, color: '#8B5CF6' },
+      { id: 2, emoji: '📖', name: 'Read 30 Minutes', daysAgo: 20, strength: 58, streak: 28, completions: 156, color: '#F59E0B' },
+      { id: 3, emoji: '🥶', name: 'Cold Shower', daysAgo: 11, strength: 35, streak: 12, completions: 89, color: '#3B82F6' },
+      { id: 4, emoji: '✍️', name: 'Daily Journal', daysAgo: 3, strength: 85, streak: 67, completions: 312, color: '#059669' },
+    ];
+
+    let expandedId = null;
+
+    function createProgressRing(percent, color) {
+      const r = 28;
+      const circ = 2 * Math.PI * r;
+      const offset = circ - (percent / 100) * circ;
+      return `
+        <svg width="72" height="72" viewBox="0 0 72 72">
+          <circle class="progress-ring-bg" cx="36" cy="36" r="${r}" stroke-width="5"/>
+          <circle class="progress-ring-fill" cx="36" cy="36" r="${r}" stroke-width="5"
+            stroke="${color}" stroke-dasharray="${circ}" stroke-dashoffset="${offset}"
+            transform="rotate(-90 36 36)"/>
+          <text x="36" y="40" text-anchor="middle" font-family="DM Sans" font-size="16" font-weight="700" fill="#1F2937">${percent}%</text>
+        </svg>
+      `;
+    }
+
+    function renderCards() {
+      const container = document.getElementById('cards-container');
+      container.innerHTML = '';
+
+      habits.forEach(h => {
+        const card = document.createElement('div');
+        card.className = 'habit-card';
+        card.dataset.id = h.id;
+        card.style.position = 'relative';
+
+        card.innerHTML = `
+          <div class="green-trail"></div>
+          <!-- Collapsed header -->
+          <div class="card-header" style="display: flex; align-items: center; padding: 16px 18px; gap: 14px;"
+               onclick="toggleCard(${h.id})">
+            <span style="font-size: 28px; line-height: 1; flex-shrink: 0;">${h.emoji}</span>
+            <div style="flex: 1; min-width: 0;">
+              <div style="font-weight: 600; font-size: 15px; color: #1F2937; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                ${h.name}
+              </div>
+              <div style="font-size: 13px; color: #6B7280; margin-top: 2px;">
+                Archived ${h.daysAgo} days ago
+              </div>
+            </div>
+            <i data-lucide="chevron-down" class="chevron-icon" style="width: 20px; height: 20px; color: #9CA3AF; flex-shrink: 0;"></i>
+          </div>
+
+          <!-- Expandable content -->
+          <div class="expand-content">
+            <div style="margin: 0 18px; height: 1px; background: #F3F4F6;"></div>
+            <div style="padding: 16px 18px 18px;">
+              <!-- Stats row -->
+              <div style="display: flex; gap: 8px; margin-bottom: 16px;">
+                <!-- Strength -->
+                <div class="stat-card">
+                  <div style="display: flex; justify-content: center; margin-bottom: 4px;">
+                    ${createProgressRing(h.strength, h.color)}
+                  </div>
+                  <div style="font-size: 11px; color: #6B7280; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;">Strength</div>
+                </div>
+                <!-- Streak -->
+                <div class="stat-card" style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                  <span style="font-size: 22px; margin-bottom: 2px;">🔥</span>
+                  <span style="font-size: 24px; font-weight: 700; color: #1F2937; line-height: 1.1;">${h.streak}</span>
+                  <span style="font-size: 12px; color: #6B7280; margin-top: 2px;">day streak</span>
+                </div>
+                <!-- Total -->
+                <div class="stat-card" style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                  <span style="font-size: 22px; margin-bottom: 2px;">✓</span>
+                  <span style="font-size: 24px; font-weight: 700; color: #1F2937; line-height: 1.1;">${h.completions}</span>
+                  <span style="font-size: 12px; color: #6B7280; margin-top: 2px;">completions</span>
+                </div>
+              </div>
+
+              <!-- Action buttons -->
+              <div class="action-buttons" style="display: flex; gap: 10px;">
+                <button class="btn-resume" style="flex: 3;" onclick="resumeHabit(event, ${h.id})">
+                  <i data-lucide="rotate-ccw" style="width: 16px; height: 16px;"></i>
+                  Resume Habit
+                </button>
+                <button class="btn-delete" style="flex: 2;" onclick="showDeleteConfirm(event, ${h.id})">
+                  <i data-lucide="trash-2" style="width: 16px; height: 16px;"></i>
+                  Delete
+                </button>
+              </div>
+
+              <!-- Delete confirmation -->
+              <div class="confirm-bar" id="confirm-${h.id}">
+                <span style="font-size: 13px; color: #6B7280; font-weight: 500;">Are you sure?</span>
+                <button class="confirm-yes" onclick="deleteHabit(event, ${h.id})">Yes, Delete</button>
+                <button class="confirm-cancel" onclick="cancelDelete(event, ${h.id})">Cancel</button>
+              </div>
+            </div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+
+      lucide.createIcons();
+    }
+
+    function toggleCard(id) {
+      const cards = document.querySelectorAll('.habit-card');
+      if (expandedId === id) {
+        expandedId = null;
+        cards.forEach(c => c.classList.remove('expanded'));
+      } else {
+        expandedId = id;
+        cards.forEach(c => {
+          if (parseInt(c.dataset.id) === id) {
+            c.classList.add('expanded');
+          } else {
+            c.classList.remove('expanded');
+          }
+        });
+      }
+      // Reset any open delete confirms
+      document.querySelectorAll('.confirm-bar').forEach(bar => {
+        bar.classList.remove('visible');
+      });
+      document.querySelectorAll('.action-buttons').forEach(ab => {
+        ab.style.display = 'flex';
+      });
+    }
+
+    function resumeHabit(event, id) {
+      event.stopPropagation();
+      const card = document.querySelector(`.habit-card[data-id="${id}"]`);
+      card.classList.add('slide-out');
+      setTimeout(() => {
+        const idx = habits.findIndex(h => h.id === id);
+        if (idx !== -1) habits.splice(idx, 1);
+        expandedId = null;
+        updateBadge();
+        renderCards();
+      }, 500);
+    }
+
+    function showDeleteConfirm(event, id) {
+      event.stopPropagation();
+      const card = document.querySelector(`.habit-card[data-id="${id}"]`);
+      const buttons = card.querySelector('.action-buttons');
+      const confirm = document.getElementById(`confirm-${id}`);
+      buttons.style.display = 'none';
+      confirm.classList.add('visible');
+    }
+
+    function deleteHabit(event, id) {
+      event.stopPropagation();
+      const card = document.querySelector(`.habit-card[data-id="${id}"]`);
+      card.style.transition = 'opacity 0.3s ease, transform 0.3s ease, max-height 0.3s ease';
+      card.style.opacity = '0';
+      card.style.transform = 'scale(0.95)';
+      setTimeout(() => {
+        const idx = habits.findIndex(h => h.id === id);
+        if (idx !== -1) habits.splice(idx, 1);
+        expandedId = null;
+        updateBadge();
+        renderCards();
+      }, 350);
+    }
+
+    function cancelDelete(event, id) {
+      event.stopPropagation();
+      const card = document.querySelector(`.habit-card[data-id="${id}"]`);
+      const buttons = card.querySelector('.action-buttons');
+      const confirm = document.getElementById(`confirm-${id}`);
+      confirm.classList.remove('visible');
+      buttons.style.display = 'flex';
+    }
+
+    function updateBadge() {
+      document.getElementById('count-badge').textContent = habits.length;
+    }
+
+    // Initialize
+    renderCards();
+  </script>
+</body>
+</html>

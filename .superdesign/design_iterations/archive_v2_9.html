@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Archived Habits — RPG Inventory</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    body {
+      font-family: 'DM Sans', sans-serif !important;
+      background: #F5F1ED !important;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 20px 0;
+    }
+    .stat-font { font-family: 'Space Mono', monospace !important; }
+
+    /* Subtle grid background */
+    .inventory-bg {
+      background-color: #F5F1ED;
+      background-image:
+        linear-gradient(rgba(0,0,0,0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,0,0,0.035) 1px, transparent 1px);
+      background-size: 20px 20px;
+    }
+
+    /* Inventory slot */
+    .inv-slot {
+      width: 100%;
+      aspect-ratio: 1;
+      background: #2D2A26;
+      border-radius: 12px;
+      border: 3px solid #4A4540;
+      position: relative;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      overflow: hidden;
+    }
+    .inv-slot::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 9px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.07) 0%, transparent 50%);
+      pointer-events: none;
+    }
+    .inv-slot:active {
+      transform: scale(0.95);
+    }
+    .inv-slot.selected {
+      transform: translateY(-3px);
+    }
+
+    /* Rarity borders */
+    .rarity-legendary {
+      border-color: #FFD700 !important;
+      box-shadow: 0 0 10px rgba(255,215,0,0.25), inset 0 0 10px rgba(255,215,0,0.06);
+    }
+    .rarity-legendary.selected {
+      box-shadow: 0 0 18px rgba(255,215,0,0.5), inset 0 0 10px rgba(255,215,0,0.06), 0 8px 20px rgba(0,0,0,0.3);
+    }
+
+    .rarity-epic {
+      border-color: #9B59B6 !important;
+      box-shadow: 0 0 10px rgba(155,89,182,0.25), inset 0 0 10px rgba(155,89,182,0.06);
+    }
+    .rarity-epic.selected {
+      box-shadow: 0 0 18px rgba(155,89,182,0.5), inset 0 0 10px rgba(155,89,182,0.06), 0 8px 20px rgba(0,0,0,0.3);
+    }
+
+    .rarity-rare {
+      border-color: #3498DB !important;
+      box-shadow: 0 0 10px rgba(52,152,219,0.25), inset 0 0 10px rgba(52,152,219,0.06);
+    }
+    .rarity-rare.selected {
+      box-shadow: 0 0 18px rgba(52,152,219,0.5), inset 0 0 10px rgba(52,152,219,0.06), 0 8px 20px rgba(0,0,0,0.3);
+    }
+
+    .rarity-common {
+      border-color: #27AE60 !important;
+      box-shadow: 0 0 10px rgba(39,174,96,0.25), inset 0 0 10px rgba(39,174,96,0.06);
+    }
+    .rarity-common.selected {
+      box-shadow: 0 0 18px rgba(39,174,96,0.5), inset 0 0 10px rgba(39,174,96,0.06), 0 8px 20px rgba(0,0,0,0.3);
+    }
+
+    /* Rarity label text colors */
+    .rarity-text-legendary { color: #FFD700 !important; }
+    .rarity-text-epic { color: #9B59B6 !important; }
+    .rarity-text-rare { color: #3498DB !important; }
+    .rarity-text-common { color: #27AE60 !important; }
+
+    /* Rarity bar colors */
+    .rarity-bar-legendary { background: linear-gradient(90deg, #FFD700, #F0C040) !important; }
+    .rarity-bar-epic { background: linear-gradient(90deg, #9B59B6, #C39BD3) !important; }
+    .rarity-bar-rare { background: linear-gradient(90deg, #3498DB, #5DADE2) !important; }
+    .rarity-bar-common { background: linear-gradient(90deg, #27AE60, #52D68C) !important; }
+
+    /* Item count badge */
+    .item-count {
+      position: absolute;
+      bottom: 5px;
+      right: 7px;
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      color: rgba(255,255,255,0.4);
+      font-weight: 700;
+    }
+
+    /* Rarity pip in top-left */
+    .rarity-pip {
+      position: absolute;
+      top: 6px;
+      left: 6px;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+    }
+
+    /* Emoji icon */
+    .item-emoji {
+      font-size: 32px;
+      line-height: 1;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+      transition: transform 0.2s ease;
+    }
+    .inv-slot.selected .item-emoji {
+      transform: scale(1.15);
+    }
+
+    /* Tooltip card */
+    .tooltip-card {
+      background: #1A1816;
+      border: 2px solid #3A3632;
+      border-radius: 14px;
+      padding: 16px;
+      margin: 0 20px;
+      opacity: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      pointer-events: none;
+    }
+    .tooltip-card.visible {
+      opacity: 1;
+      max-height: 300px;
+      pointer-events: auto;
+      margin-top: 4px;
+    }
+
+    /* Stat bar */
+    .stat-bar-track {
+      height: 4px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .stat-bar-fill {
+      height: 100%;
+      border-radius: 2px;
+      transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Equip button */
+    .btn-equip {
+      background: linear-gradient(135deg, #27AE60, #2ECC71) !important;
+      color: white !important;
+      border: none !important;
+      border-radius: 8px !important;
+      padding: 10px 0 !important;
+      font-family: 'DM Sans', sans-serif !important;
+      font-weight: 700 !important;
+      font-size: 13px !important;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      flex: 1;
+    }
+    .btn-equip:active { transform: scale(0.96); opacity: 0.9; }
+
+    /* Discard button */
+    .btn-discard {
+      background: rgba(231,76,60,0.12) !important;
+      color: #E74C3C !important;
+      border: 1.5px solid rgba(231,76,60,0.25) !important;
+      border-radius: 8px !important;
+      padding: 10px 0 !important;
+      font-family: 'DM Sans', sans-serif !important;
+      font-weight: 700 !important;
+      font-size: 13px !important;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      flex: 1;
+    }
+    .btn-discard:active { transform: scale(0.96); opacity: 0.8; }
+
+    /* Shimmer on legendary */
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+    .rarity-legendary::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 9px;
+      background: linear-gradient(90deg, transparent 25%, rgba(255,215,0,0.07) 50%, transparent 75%);
+      background-size: 200% 100%;
+      animation: shimmer 3s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    /* Empty slot */
+    .inv-slot-empty {
+      width: 100%;
+      aspect-ratio: 1;
+      background: rgba(45,42,38,0.3);
+      border-radius: 12px;
+      border: 2px dashed rgba(74,69,64,0.4);
+    }
+
+    /* Pulse for selected */
+    @keyframes glow-pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.75; }
+    }
+    .inv-slot.selected {
+      animation: glow-pulse 2s ease-in-out infinite;
+    }
+
+    /* Header */
+    .inventory-header {
+      background: #2D2A26;
+      border-bottom: 2px solid #4A4540;
+    }
+
+    /* Slot removal animation */
+    .inv-slot.removing {
+      transition: all 0.4s ease;
+      transform: scale(0.6) rotateZ(10deg);
+      opacity: 0;
+    }
+
+    /* Flash overlay */
+    .flash-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.15s ease;
+    }
+    .flash-overlay.flash {
+      opacity: 1;
+    }
+
+    /* Toast */
+    .toast-msg {
+      position: fixed;
+      bottom: 60px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: #2D2A26;
+      border: 1.5px solid #4A4540;
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      z-index: 300;
+      opacity: 0;
+      transition: all 0.3s ease;
+      pointer-events: none;
+      white-space: nowrap;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .toast-msg.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+  </style>
+</head>
+<body class="inventory-bg">
+
+  <!-- iPhone container -->
+  <div style="width: 390px; min-height: 100vh; position: relative; overflow-x: hidden;">
+
+    <!-- Header -->
+    <div class="inventory-header px-5 pt-14 pb-4">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <button class="text-white/50 hover:text-white/80 transition-colors" style="background:none;border:none;cursor:pointer;">
+            <i data-lucide="arrow-left" class="w-5 h-5"></i>
+          </button>
+          <div>
+            <h1 class="text-white font-bold text-lg leading-tight" style="font-family: 'DM Sans', sans-serif !important;">Inventory</h1>
+            <p class="text-white/35 text-[10px] stat-font tracking-widest" style="margin-top: 1px;">ARCHIVED LOADOUT</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <div class="bg-white/8 rounded-lg px-3 py-1.5 flex items-center gap-1.5" style="background: rgba(255,255,255,0.08);">
+            <i data-lucide="backpack" class="w-3.5 h-3.5 text-white/40"></i>
+            <span class="stat-font text-white/60 text-xs font-bold" id="total-count">6/9</span>
+          </div>
+          <button class="text-white/35 hover:text-white/60 transition-colors" style="background:none;border:none;cursor:pointer;">
+            <i data-lucide="sliders-horizontal" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Rarity legend bar -->
+    <div class="px-5 py-2.5 flex items-center justify-between" style="border-bottom: 1px solid rgba(0,0,0,0.06);">
+      <div class="flex items-center gap-1">
+        <div class="w-2 h-2 rounded-full" style="background: #FFD700; box-shadow: 0 0 4px rgba(255,215,0,0.4);"></div>
+        <span class="text-[10px] stat-font" style="color: #9B9588;">LGD</span>
+      </div>
+      <div class="flex items-center gap-1">
+        <div class="w-2 h-2 rounded-full" style="background: #9B59B6; box-shadow: 0 0 4px rgba(155,89,182,0.4);"></div>
+        <span class="text-[10px] stat-font" style="color: #9B9588;">EPIC</span>
+      </div>
+      <div class="flex items-center gap-1">
+        <div class="w-2 h-2 rounded-full" style="background: #3498DB; box-shadow: 0 0 4px rgba(52,152,219,0.4);"></div>
+        <span class="text-[10px] stat-font" style="color: #9B9588;">RARE</span>
+      </div>
+      <div class="flex items-center gap-1">
+        <div class="w-2 h-2 rounded-full" style="background: #27AE60; box-shadow: 0 0 4px rgba(39,174,96,0.4);"></div>
+        <span class="text-[10px] stat-font" style="color: #9B9588;">CMN</span>
+      </div>
+      <div class="stat-font text-[10px]" style="color: #B5AFA7;">
+        TAP TO INSPECT
+      </div>
+    </div>
+
+    <!-- Inventory Grid -->
+    <div class="px-4 pt-4 pb-2" id="grid-container">
+      <div class="grid grid-cols-3 gap-2.5" id="inventory-grid"></div>
+    </div>
+
+    <!-- Tooltip / Stats Card -->
+    <div class="tooltip-card" id="tooltip">
+      <!-- Tooltip header -->
+      <div class="flex items-start justify-between mb-3">
+        <div class="flex items-center gap-2.5">
+          <span id="tip-emoji" class="text-2xl"></span>
+          <div>
+            <h3 id="tip-name" class="text-white font-bold text-[15px] leading-tight" style="font-family: 'DM Sans', sans-serif !important;"></h3>
+            <span id="tip-rarity" class="stat-font text-[10px] font-bold uppercase tracking-wider"></span>
+          </div>
+        </div>
+        <button id="tip-close" class="text-white/25 hover:text-white/50 transition-colors" style="background:none;border:none;cursor:pointer;padding:2px;">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <!-- Stats grid -->
+      <div style="background: rgba(255,255,255,0.04); border-radius: 10px; padding: 12px;" class="mb-3">
+        <div class="grid grid-cols-2 gap-x-4 gap-y-3">
+          <!-- STR -->
+          <div>
+            <div class="flex justify-between items-center mb-1">
+              <span class="stat-font text-[9px] text-white/35 uppercase tracking-wide">STR</span>
+              <span id="tip-str-val" class="stat-font text-[11px] text-white/75 font-bold"></span>
+            </div>
+            <div class="stat-bar-track">
+              <div id="tip-str-bar" class="stat-bar-fill"></div>
+            </div>
+          </div>
+          <!-- STREAK -->
+          <div>
+            <div class="flex justify-between items-center mb-1">
+              <span class="stat-font text-[9px] text-white/35 uppercase tracking-wide">STREAK</span>
+              <span id="tip-streak-val" class="stat-font text-[11px] text-white/75 font-bold"></span>
+            </div>
+            <div class="stat-bar-track">
+              <div id="tip-streak-bar" class="stat-bar-fill" style="background: linear-gradient(90deg, #3498DB, #2ECC71);"></div>
+            </div>
+          </div>
+          <!-- TOTAL -->
+          <div>
+            <div class="flex justify-between items-center">
+              <span class="stat-font text-[9px] text-white/35 uppercase tracking-wide">TOTAL DAYS</span>
+              <span id="tip-total" class="stat-font text-[11px] text-white/75 font-bold"></span>
+            </div>
+          </div>
+          <!-- STORED -->
+          <div>
+            <div class="flex justify-between items-center">
+              <span class="stat-font text-[9px] text-white/35 uppercase tracking-wide">STORED</span>
+              <span id="tip-stored" class="stat-font text-[11px] text-white/75 font-bold"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action buttons -->
+      <div class="flex gap-2">
+        <button class="btn-equip" id="btn-equip">
+          <span style="display:flex;align-items:center;justify-content:center;gap:6px;">
+            <i data-lucide="swords" class="w-3.5 h-3.5"></i>
+            Equip
+          </span>
+        </button>
+        <button class="btn-discard" id="btn-discard">
+          <span style="display:flex;align-items:center;justify-content:center;gap:6px;">
+            <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+            Discard
+          </span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Empty state -->
+    <div id="empty-state" class="hidden px-5 py-16 text-center">
+      <div class="text-5xl mb-3 opacity-25">🎒</div>
+      <p class="font-semibold text-sm" style="color: #9B9588;">Inventory Empty</p>
+      <p class="text-xs mt-1" style="color: #B5AFA7;">Archived items will appear here</p>
+    </div>
+
+    <div class="h-10"></div>
+  </div>
+
+  <!-- Flash overlays -->
+  <div class="flash-overlay" id="flash-green" style="background: rgba(39,174,96,0.15);"></div>
+  <div class="flash-overlay" id="flash-red" style="background: rgba(231,76,60,0.12);"></div>
+
+  <!-- Toast -->
+  <div class="toast-msg" id="toast"></div>
+
+<script>
+  const habits = [
+    { id: 1, emoji: '🧘', name: 'Meditation',  strength: 92, bestStreak: 45, totalDays: 180, storedAgo: '2w ago',  dayCount: 180 },
+    { id: 2, emoji: '📖', name: 'Read 30 min',  strength: 78, bestStreak: 21, totalDays: 95,  storedAgo: '1mo ago', dayCount: 95  },
+    { id: 3, emoji: '💪', name: 'Workout',      strength: 55, bestStreak: 14, totalDays: 60,  storedAgo: '3w ago',  dayCount: 60  },
+    { id: 4, emoji: '🎨', name: 'Draw Daily',   strength: 42, bestStreak: 8,  totalDays: 30,  storedAgo: '2mo ago', dayCount: 30  },
+    { id: 5, emoji: '🌊', name: 'Cold Shower',  strength: 85, bestStreak: 30, totalDays: 120, storedAgo: '1w ago',  dayCount: 120 },
+    { id: 6, emoji: '✍️', name: 'Journal',      strength: 25, bestStreak: 5,  totalDays: 15,  storedAgo: '3mo ago', dayCount: 15  },
+  ];
+
+  function getRarity(str) {
+    if (str >= 80) return { cls: 'legendary', label: 'Legendary', color: '#FFD700' };
+    if (str >= 60) return { cls: 'epic',      label: 'Epic',      color: '#9B59B6' };
+    if (str >= 40) return { cls: 'rare',      label: 'Rare',      color: '#3498DB' };
+    return                { cls: 'common',    label: 'Common',    color: '#27AE60' };
+  }
+
+  let selectedId = null;
+
+  function updateCount() {
+    document.getElementById('total-count').textContent = habits.length + '/9';
+  }
+
+  function renderGrid() {
+    const grid = document.getElementById('inventory-grid');
+    grid.innerHTML = '';
+
+    habits.forEach(h => {
+      const r = getRarity(h.strength);
+      const slot = document.createElement('div');
+      slot.className = `inv-slot rarity-${r.cls}`;
+      slot.dataset.id = h.id;
+      if (selectedId === h.id) slot.classList.add('selected');
+
+      slot.innerHTML = `
+        <div class="rarity-pip" style="background: ${r.color}; box-shadow: 0 0 4px ${r.color}80;"></div>
+        <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;position:relative;">
+          <span class="item-emoji">${h.emoji}</span>
+          <p style="color:rgba(255,255,255,0.55);font-size:10px;font-weight:500;margin-top:4px;text-align:center;padding:0 4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;width:100%;font-family:'DM Sans',sans-serif;">${h.name}</p>
+        </div>
+        <span class="item-count">x${h.dayCount}</span>
+      `;
+
+      slot.addEventListener('click', () => selectSlot(h.id));
+      grid.appendChild(slot);
+    });
+
+    // Fill remaining slots in current row to make complete row
+    const remainder = (3 - (habits.length % 3)) % 3;
+    for (let i = 0; i < remainder; i++) {
+      const empty = document.createElement('div');
+      empty.className = 'inv-slot-empty';
+      grid.appendChild(empty);
+    }
+
+    // One additional row of empty slots
+    for (let i = 0; i < 3; i++) {
+      const empty = document.createElement('div');
+      empty.className = 'inv-slot-empty';
+      grid.appendChild(empty);
+    }
+  }
+
+  function selectSlot(id) {
+    const tooltip = document.getElementById('tooltip');
+
+    if (selectedId === id) {
+      deselectAll();
+      return;
+    }
+
+    selectedId = id;
+    const h = habits.find(x => x.id === id);
+    const r = getRarity(h.strength);
+
+    // Visual selection
+    document.querySelectorAll('.inv-slot').forEach(s => s.classList.remove('selected'));
+    const slotEl = document.querySelector(`.inv-slot[data-id="${id}"]`);
+    if (slotEl) slotEl.classList.add('selected');
+
+    // Populate tooltip
+    document.getElementById('tip-emoji').textContent = h.emoji;
+    document.getElementById('tip-name').textContent = h.name;
+
+    const rarityEl = document.getElementById('tip-rarity');
+    rarityEl.textContent = r.label;
+    rarityEl.className = `stat-font text-[10px] font-bold uppercase tracking-wider rarity-text-${r.cls}`;
+
+    document.getElementById('tip-str-val').textContent = h.strength + '%';
+    const strBar = document.getElementById('tip-str-bar');
+    strBar.style.width = '0%';
+    strBar.className = `stat-bar-fill rarity-bar-${r.cls}`;
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => { strBar.style.width = h.strength + '%'; });
+    });
+
+    const streakPct = Math.min((h.bestStreak / 60) * 100, 100);
+    document.getElementById('tip-streak-val').textContent = h.bestStreak + 'd best';
+    const streakBar = document.getElementById('tip-streak-bar');
+    streakBar.style.width = '0%';
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => { streakBar.style.width = streakPct + '%'; });
+    });
+
+    document.getElementById('tip-total').textContent = h.totalDays;
+    document.getElementById('tip-stored').textContent = h.storedAgo;
+
+    // Show tooltip
+    tooltip.classList.add('visible');
+    // Update border color to match rarity
+    tooltip.style.borderColor = r.color + '40';
+
+    lucide.createIcons();
+  }
+
+  function deselectAll() {
+    selectedId = null;
+    document.getElementById('tooltip').classList.remove('visible');
+    document.querySelectorAll('.inv-slot').forEach(s => s.classList.remove('selected'));
+  }
+
+  // Close tooltip
+  document.getElementById('tip-close').addEventListener('click', (e) => {
+    e.stopPropagation();
+    deselectAll();
+  });
+
+  // Equip (restore)
+  document.getElementById('btn-equip').addEventListener('click', () => {
+    if (!selectedId) return;
+    const h = habits.find(x => x.id === selectedId);
+    const slotEl = document.querySelector(`.inv-slot[data-id="${selectedId}"]`);
+
+    if (slotEl) {
+      slotEl.classList.add('removing');
+      slotEl.style.borderColor = '#27AE60';
+    }
+
+    // Flash green
+    const flash = document.getElementById('flash-green');
+    flash.classList.add('flash');
+    setTimeout(() => flash.classList.remove('flash'), 300);
+
+    setTimeout(() => {
+      const idx = habits.findIndex(x => x.id === selectedId);
+      const name = h.name;
+      if (idx > -1) habits.splice(idx, 1);
+      selectedId = null;
+      document.getElementById('tooltip').classList.remove('visible');
+      updateCount();
+      renderGrid();
+      showToast('⚔️ ' + name + ' equipped!');
+      if (habits.length === 0) {
+        document.getElementById('empty-state').classList.remove('hidden');
+        document.getElementById('grid-container').classList.add('hidden');
+      }
+    }, 400);
+  });
+
+  // Discard (delete)
+  document.getElementById('btn-discard').addEventListener('click', () => {
+    if (!selectedId) return;
+    const h = habits.find(x => x.id === selectedId);
+    const slotEl = document.querySelector(`.inv-slot[data-id="${selectedId}"]`);
+
+    if (slotEl) {
+      slotEl.classList.add('removing');
+      slotEl.style.filter = 'saturate(0) brightness(0.5)';
+    }
+
+    // Flash red
+    const flash = document.getElementById('flash-red');
+    flash.classList.add('flash');
+    setTimeout(() => flash.classList.remove('flash'), 300);
+
+    setTimeout(() => {
+      const idx = habits.findIndex(x => x.id === selectedId);
+      const name = h.name;
+      if (idx > -1) habits.splice(idx, 1);
+      selectedId = null;
+      document.getElementById('tooltip').classList.remove('visible');
+      updateCount();
+      renderGrid();
+      showToast('🗑️ ' + name + ' discarded');
+      if (habits.length === 0) {
+        document.getElementById('empty-state').classList.remove('hidden');
+        document.getElementById('grid-container').classList.add('hidden');
+      }
+    }, 380);
+  });
+
+  // Toast
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2200);
+  }
+
+  // Init
+  renderGrid();
+  updateCount();
+  lucide.createIcons();
+</script>
+</body>
+</html>

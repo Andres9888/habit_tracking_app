@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Habit Garden - Archived Habits</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Literata:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif !important;
+    background: #F5F1ED !important;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 20px 0;
+  }
+
+  .phone-frame {
+    width: 390px;
+    min-height: 780px;
+    background: #F5F1ED;
+    border-radius: 40px;
+    border: 6px solid #2C2C2E;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.15), inset 0 0 0 2px rgba(255,255,255,0.1);
+  }
+
+  .phone-notch {
+    width: 120px;
+    height: 28px;
+    background: #2C2C2E;
+    border-radius: 0 0 16px 16px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 10;
+  }
+
+  .screen-content {
+    padding: 0 20px 32px;
+    overflow-y: auto;
+    max-height: 720px;
+  }
+
+  /* Header */
+  .page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 0 4px;
+  }
+
+  .nav-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #FFFFFF;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .nav-btn:active {
+    transform: scale(0.94);
+  }
+
+  .title-section {
+    text-align: center;
+    padding: 8px 0 16px;
+  }
+
+  .title-section h1 {
+    font-family: 'Literata', serif !important;
+    font-size: 22px !important;
+    font-weight: 600 !important;
+    color: #1F2937 !important;
+    line-height: 1.3 !important;
+  }
+
+  .title-section .subtitle {
+    font-size: 13px !important;
+    color: #9CA3AF !important;
+    margin-top: 4px !important;
+    font-weight: 400 !important;
+  }
+
+  /* Plant Card */
+  .plant-card {
+    background: #FFFFFF;
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 14px;
+    display: flex;
+    gap: 14px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.04), 0 1px 3px rgba(0,0,0,0.03);
+    min-height: 120px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+  }
+
+  .plant-card.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .plant-card.watered {
+    animation: waterAndGo 1.4s ease-out forwards;
+  }
+
+  @keyframes waterAndGo {
+    0% { opacity: 1; transform: translateY(0) scale(1); }
+    50% { opacity: 1; transform: translateY(-8px) scale(1.02); }
+    80% { opacity: 0.4; transform: translateY(-30px) scale(0.96); }
+    100% { opacity: 0; transform: translateY(-50px) scale(0.9); height: 0; padding: 0; margin: 0; min-height: 0; overflow: hidden; }
+  }
+
+  /* Plant Illustration Area */
+  .plant-area {
+    width: 40%;
+    min-width: 120px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    padding-bottom: 4px;
+  }
+
+  /* Needs-water indicator */
+  .water-ring {
+    position: absolute;
+    bottom: 2px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 70px;
+    height: 50px;
+    border: 2px dashed rgba(96, 165, 250, 0.4);
+    border-radius: 50%;
+    animation: pulseRing 2.5s ease-in-out infinite;
+  }
+
+  @keyframes pulseRing {
+    0%, 100% { opacity: 0.3; transform: translateX(-50%) scale(1); }
+    50% { opacity: 0.7; transform: translateX(-50%) scale(1.06); }
+  }
+
+  /* Pot */
+  .pot-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    justify-content: flex-end;
+  }
+
+  .pot-rim {
+    width: 62px;
+    height: 8px;
+    background: linear-gradient(180deg, #D4B896, #C4A882);
+    border-radius: 3px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .pot-body {
+    width: 54px;
+    height: 30px;
+    background: linear-gradient(180deg, #C4A882 0%, #B09570 60%, #9E8460 100%);
+    clip-path: polygon(5% 0%, 95% 0%, 85% 100%, 15% 100%);
+    position: relative;
+    z-index: 2;
+  }
+
+  .soil {
+    position: absolute;
+    top: -3px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50px;
+    height: 10px;
+    background: linear-gradient(180deg, #6B5B45, #8B7355);
+    border-radius: 50% 50% 0 0;
+    z-index: 3;
+  }
+
+  /* Stem */
+  .stem-wrapper {
+    position: absolute;
+    bottom: 42px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 1;
+  }
+
+  .stem {
+    width: 3px;
+    background: linear-gradient(180deg, #86EFAC, #6DD49E);
+    opacity: 0.6;
+    border-radius: 1px;
+    transform-origin: bottom center;
+    transition: height 0.8s ease-out, opacity 0.6s ease;
+  }
+
+  .stem.active {
+    opacity: 1;
+    background: linear-gradient(180deg, #22C55E, #16A34A);
+  }
+
+  /* Leaves */
+  .leaf {
+    position: absolute;
+    opacity: 0.6;
+    transition: opacity 0.6s ease;
+  }
+
+  .leaf.active {
+    opacity: 1;
+  }
+
+  .leaf-left {
+    width: 12px;
+    height: 8px;
+    background: #86EFAC;
+    border-radius: 0 80% 0 80%;
+    transform: rotate(-25deg);
+  }
+
+  .leaf-right {
+    width: 12px;
+    height: 8px;
+    background: #86EFAC;
+    border-radius: 80% 0 80% 0;
+    transform: rotate(25deg);
+  }
+
+  .leaf-left.active, .leaf-right.active {
+    background: #22C55E;
+  }
+
+  /* Flower emoji */
+  .flower-emoji {
+    position: absolute;
+    font-size: 20px;
+    opacity: 0.6;
+    transition: opacity 0.6s ease, transform 0.4s ease;
+    filter: saturate(0.4);
+  }
+
+  .flower-emoji.active {
+    opacity: 1;
+    filter: saturate(1);
+    animation: bloomBounce 0.5s ease-out;
+  }
+
+  @keyframes bloomBounce {
+    0% { transform: scale(0.6); }
+    50% { transform: scale(1.3); }
+    100% { transform: scale(1); }
+  }
+
+  /* Grow animation on entrance */
+  @keyframes stemGrow {
+    from { height: 0; }
+  }
+
+  /* Info area */
+  .plant-info {
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .plant-name {
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    color: #1F2937 !important;
+    line-height: 1.3 !important;
+  }
+
+  .dormant-text {
+    font-size: 12px !important;
+    color: #9CA3AF !important;
+    font-weight: 400 !important;
+  }
+
+  .strength-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .strength-label {
+    font-size: 11px !important;
+    color: #6B7280 !important;
+    white-space: nowrap;
+    font-weight: 500 !important;
+  }
+
+  .strength-bar-bg {
+    flex: 1;
+    height: 4px;
+    background: #F3F4F6;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .strength-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #059669, #34D399);
+    border-radius: 2px;
+    transition: width 1s ease-out;
+    opacity: 0.5;
+  }
+
+  .stats-text {
+    font-size: 11px !important;
+    color: #9CA3AF !important;
+    font-weight: 400 !important;
+  }
+
+  /* Buttons */
+  .btn-water {
+    width: 100%;
+    height: 40px;
+    background: #059669 !important;
+    color: #FFFFFF !important;
+    border: none;
+    border-radius: 12px;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    font-family: 'DM Sans', sans-serif !important;
+    cursor: pointer;
+    transition: background 0.15s ease, transform 0.1s ease;
+    margin-top: 4px;
+  }
+
+  .btn-water:active {
+    transform: scale(0.97);
+    background: #047857 !important;
+  }
+
+  .btn-compost {
+    background: none;
+    border: none;
+    color: #D97706 !important;
+    font-size: 12px !important;
+    font-family: 'DM Sans', sans-serif !important;
+    cursor: pointer;
+    text-align: center;
+    padding: 4px 0 0;
+    opacity: 0.6;
+    transition: opacity 0.15s ease, color 0.15s ease;
+    font-weight: 500 !important;
+  }
+
+  .btn-compost:hover {
+    opacity: 1;
+    color: #DC2626 !important;
+  }
+
+  /* Compost confirmation */
+  .compost-confirm {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 4px 0 0;
+    font-size: 12px !important;
+    color: #6B7280 !important;
+  }
+
+  .compost-confirm.show {
+    display: flex;
+  }
+
+  .compost-confirm span {
+    font-weight: 500;
+  }
+
+  .compost-yes, .compost-no {
+    background: none;
+    border: none;
+    font-size: 12px !important;
+    font-family: 'DM Sans', sans-serif !important;
+    cursor: pointer;
+    padding: 2px 10px;
+    border-radius: 6px;
+    font-weight: 600 !important;
+  }
+
+  .compost-yes {
+    color: #DC2626 !important;
+    background: #FEF2F2 !important;
+  }
+
+  .compost-no {
+    color: #6B7280 !important;
+    background: #F3F4F6 !important;
+  }
+
+  /* Watering droplets */
+  .droplets-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 10;
+    overflow: hidden;
+  }
+
+  .droplet {
+    position: absolute;
+    width: 6px;
+    height: 9px;
+    background: rgba(96, 165, 250, 0.7);
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    animation: dropFall 0.8s ease-in forwards;
+  }
+
+  @keyframes dropFall {
+    0% { transform: translateY(-10px); opacity: 1; }
+    80% { opacity: 0.8; }
+    100% { transform: translateY(90px); opacity: 0; }
+  }
+
+  /* Sparkle */
+  .sparkle {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: #FCD34D;
+    border-radius: 50%;
+    animation: sparklePop 0.6s ease-out forwards;
+    z-index: 10;
+  }
+
+  @keyframes sparklePop {
+    0% { transform: scale(0); opacity: 1; }
+    50% { transform: scale(1.5); opacity: 1; }
+    100% { transform: scale(0); opacity: 0; }
+  }
+
+  /* Empty state */
+  .empty-state {
+    display: none;
+    text-align: center;
+    padding: 80px 20px;
+  }
+
+  .empty-state.show {
+    display: block;
+  }
+
+  .empty-emoji {
+    font-size: 48px;
+    margin-bottom: 12px;
+  }
+
+  .empty-text {
+    font-family: 'Literata', serif !important;
+    font-size: 18px !important;
+    color: #1F2937 !important;
+    font-weight: 600 !important;
+  }
+
+  .empty-sub {
+    font-size: 13px !important;
+    color: #9CA3AF !important;
+    margin-top: 6px !important;
+  }
+</style>
+</head>
+<body>
+  <div class="phone-frame">
+    <div class="phone-notch"></div>
+    <div class="screen-content">
+      <!-- Header -->
+      <div class="page-header">
+        <button class="nav-btn" aria-label="Go back">
+          <i data-lucide="chevron-left" style="width:20px;height:20px;color:#1F2937;"></i>
+        </button>
+        <button class="nav-btn" aria-label="Close">
+          <i data-lucide="x" style="width:18px;height:18px;color:#1F2937;"></i>
+        </button>
+      </div>
+
+      <!-- Title -->
+      <div class="title-section">
+        <h1>Your Garden <span style="font-size:18px;">&#127807;</span></h1>
+        <p class="subtitle" id="subtitleText">3 dormant plants need attention</p>
+      </div>
+
+      <!-- Plant Cards Container -->
+      <div id="plantsContainer">
+
+        <!-- Plant 1: Morning Meditation -->
+        <div class="plant-card" id="plant1" data-strength="72" data-emoji="&#129496;">
+          <div class="plant-area">
+            <div class="water-ring"></div>
+            <div class="pot-container">
+              <div class="stem-wrapper" id="stem1-wrapper">
+                <div class="stem" id="stem1" style="height:0px;"></div>
+              </div>
+              <div style="position:relative;">
+                <div class="soil"></div>
+                <div class="pot-rim"></div>
+                <div class="pot-body"></div>
+              </div>
+            </div>
+          </div>
+          <div class="plant-info">
+            <div class="plant-name">Morning Meditation</div>
+            <div class="dormant-text">Dormant for 34 days</div>
+            <div class="strength-row">
+              <span class="strength-label">Grew to 72%</span>
+              <div class="strength-bar-bg">
+                <div class="strength-bar-fill" style="width:0%;"></div>
+              </div>
+            </div>
+            <div class="stats-text">&#128293; 45d best &middot; &#10003; 234 times</div>
+            <button class="btn-water" onclick="waterPlant('plant1')">Water &amp; Replant &#128167;</button>
+            <button class="btn-compost" id="compost-btn-plant1" onclick="showCompost('plant1')">Compost</button>
+            <div class="compost-confirm" id="compost-confirm-plant1">
+              <span>Return to earth?</span>
+              <button class="compost-yes" onclick="compostPlant('plant1')">Yes</button>
+              <button class="compost-no" onclick="hideCompost('plant1')">No</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Plant 2: Read 30 Minutes -->
+        <div class="plant-card" id="plant2" data-strength="58" data-emoji="&#128214;">
+          <div class="plant-area">
+            <div class="water-ring"></div>
+            <div class="pot-container">
+              <div class="stem-wrapper" id="stem2-wrapper">
+                <div class="stem" id="stem2" style="height:0px;"></div>
+              </div>
+              <div style="position:relative;">
+                <div class="soil"></div>
+                <div class="pot-rim"></div>
+                <div class="pot-body"></div>
+              </div>
+            </div>
+          </div>
+          <div class="plant-info">
+            <div class="plant-name">Read 30 Minutes</div>
+            <div class="dormant-text">Dormant for 20 days</div>
+            <div class="strength-row">
+              <span class="strength-label">Grew to 58%</span>
+              <div class="strength-bar-bg">
+                <div class="strength-bar-fill" style="width:0%;"></div>
+              </div>
+            </div>
+            <div class="stats-text">&#128293; 28d best &middot; &#10003; 156 times</div>
+            <button class="btn-water" onclick="waterPlant('plant2')">Water &amp; Replant &#128167;</button>
+            <button class="btn-compost" id="compost-btn-plant2" onclick="showCompost('plant2')">Compost</button>
+            <div class="compost-confirm" id="compost-confirm-plant2">
+              <span>Return to earth?</span>
+              <button class="compost-yes" onclick="compostPlant('plant2')">Yes</button>
+              <button class="compost-no" onclick="hideCompost('plant2')">No</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Plant 3: Daily Journal -->
+        <div class="plant-card" id="plant3" data-strength="85" data-emoji="&#9997;&#65039;">
+          <div class="plant-area">
+            <div class="water-ring"></div>
+            <div class="pot-container">
+              <div class="stem-wrapper" id="stem3-wrapper">
+                <div class="stem" id="stem3" style="height:0px;"></div>
+              </div>
+              <div style="position:relative;">
+                <div class="soil"></div>
+                <div class="pot-rim"></div>
+                <div class="pot-body"></div>
+              </div>
+            </div>
+          </div>
+          <div class="plant-info">
+            <div class="plant-name">Daily Journal</div>
+            <div class="dormant-text">Dormant for 3 days</div>
+            <div class="strength-row">
+              <span class="strength-label">Grew to 85%</span>
+              <div class="strength-bar-bg">
+                <div class="strength-bar-fill" style="width:0%;"></div>
+              </div>
+            </div>
+            <div class="stats-text">&#128293; 67d best &middot; &#10003; 312 times</div>
+            <button class="btn-water" onclick="waterPlant('plant3')">Water &amp; Replant &#128167;</button>
+            <button class="btn-compost" id="compost-btn-plant3" onclick="showCompost('plant3')">Compost</button>
+            <div class="compost-confirm" id="compost-confirm-plant3">
+              <span>Return to earth?</span>
+              <button class="compost-yes" onclick="compostPlant('plant3')">Yes</button>
+              <button class="compost-no" onclick="hideCompost('plant3')">No</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Empty State -->
+      <div class="empty-state" id="emptyState">
+        <div class="empty-emoji">&#127803;</div>
+        <div class="empty-text">Garden is blooming!</div>
+        <p class="empty-sub">All your plants are active and thriving</p>
+      </div>
+
+    </div>
+  </div>
+
+<script>
+  // Initialize Lucide icons
+  lucide.createIcons();
+
+  // Track remaining plants
+  let plantCount = 3;
+
+  // Animate plants on load
+  function initPlants() {
+    const cards = document.querySelectorAll('.plant-card');
+    cards.forEach((card, index) => {
+      const strength = parseInt(card.dataset.strength);
+      const emoji = card.dataset.emoji;
+      const maxStemHeight = 55; // max px
+      const stemHeight = Math.round((strength / 100) * maxStemHeight);
+      const stemId = `stem${index + 1}`;
+      const stemEl = document.getElementById(stemId);
+      const stemWrapper = document.getElementById(`${stemId}-wrapper`);
+
+      // Show card with stagger
+      setTimeout(() => {
+        card.classList.add('visible');
+      }, 150 * index);
+
+      // Grow stem with stagger
+      setTimeout(() => {
+        stemEl.style.height = stemHeight + 'px';
+        stemEl.style.animation = `stemGrow 0.6s ease-out`;
+
+        // Add leaves along stem
+        addLeaves(stemWrapper, stemHeight, strength);
+
+        // Add flower emoji at top
+        addFlowerEmoji(stemWrapper, stemHeight, emoji);
+      }, 300 + (200 * index));
+
+      // Animate strength bar
+      const bar = card.querySelector('.strength-bar-fill');
+      setTimeout(() => {
+        bar.style.width = strength + '%';
+      }, 500 + (200 * index));
+    });
+  }
+
+  function addLeaves(wrapper, stemHeight, strength) {
+    const leafCount = Math.max(1, Math.floor(stemHeight / 18));
+    for (let i = 0; i < leafCount; i++) {
+      const leaf = document.createElement('div');
+      const isLeft = i % 2 === 0;
+      leaf.className = `leaf ${isLeft ? 'leaf-left' : 'leaf-right'}`;
+      const bottomOffset = 8 + (i * (stemHeight / (leafCount + 1)));
+      leaf.style.bottom = bottomOffset + 'px';
+      leaf.style.left = isLeft ? '-8px' : '11px';
+      leaf.style.position = 'absolute';
+      leaf.style.animationDelay = (i * 0.1) + 's';
+      wrapper.appendChild(leaf);
+    }
+  }
+
+  function addFlowerEmoji(wrapper, stemHeight, emoji) {
+    const flower = document.createElement('div');
+    flower.className = 'flower-emoji';
+    flower.innerHTML = emoji;
+    flower.style.bottom = (stemHeight + 4) + 'px';
+    flower.style.left = '50%';
+    flower.style.transform = 'translateX(-50%)';
+    wrapper.appendChild(flower);
+  }
+
+  // Water & Replant
+  function waterPlant(plantId) {
+    const card = document.getElementById(plantId);
+    const plantArea = card.querySelector('.plant-area');
+    const stem = card.querySelector('.stem');
+    const leaves = card.querySelectorAll('.leaf');
+    const flower = card.querySelector('.flower-emoji');
+    const waterRing = card.querySelector('.water-ring');
+
+    // 1. Create droplets
+    const dropletsContainer = document.createElement('div');
+    dropletsContainer.className = 'droplets-container';
+    plantArea.appendChild(dropletsContainer);
+
+    for (let i = 0; i < 6; i++) {
+      const drop = document.createElement('div');
+      drop.className = 'droplet';
+      drop.style.left = (20 + Math.random() * 60) + '%';
+      drop.style.animationDelay = (i * 0.12) + 's';
+      dropletsContainer.appendChild(drop);
+    }
+
+    // 2. Saturate plant after droplets land
+    setTimeout(() => {
+      stem.classList.add('active');
+      leaves.forEach(l => l.classList.add('active'));
+      if (flower) flower.classList.add('active');
+      waterRing.style.display = 'none';
+
+      // Grow stem taller
+      const currentHeight = parseInt(stem.style.height);
+      stem.style.height = (currentHeight + 15) + 'px';
+
+      // Sparkles
+      for (let i = 0; i < 4; i++) {
+        const sparkle = document.createElement('div');
+        sparkle.className = 'sparkle';
+        sparkle.style.left = (30 + Math.random() * 40) + '%';
+        sparkle.style.top = (10 + Math.random() * 40) + '%';
+        sparkle.style.animationDelay = (i * 0.15) + 's';
+        plantArea.appendChild(sparkle);
+      }
+    }, 700);
+
+    // 3. Card slides away
+    setTimeout(() => {
+      card.classList.add('watered');
+      plantCount--;
+      updateSubtitle();
+    }, 1200);
+
+    // 4. Remove from DOM after animation
+    setTimeout(() => {
+      card.remove();
+      checkEmpty();
+    }, 2600);
+  }
+
+  // Compost
+  function showCompost(plantId) {
+    document.getElementById(`compost-btn-${plantId}`).style.display = 'none';
+    document.getElementById(`compost-confirm-${plantId}`).classList.add('show');
+  }
+
+  function hideCompost(plantId) {
+    document.getElementById(`compost-btn-${plantId}`).style.display = 'block';
+    document.getElementById(`compost-confirm-${plantId}`).classList.remove('show');
+  }
+
+  function compostPlant(plantId) {
+    const card = document.getElementById(plantId);
+    card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+    card.style.opacity = '0';
+    card.style.transform = 'translateY(10px) scale(0.95)';
+    plantCount--;
+    updateSubtitle();
+    setTimeout(() => {
+      card.remove();
+      checkEmpty();
+    }, 500);
+  }
+
+  function updateSubtitle() {
+    const el = document.getElementById('subtitleText');
+    if (plantCount <= 0) {
+      el.textContent = 'All plants are thriving!';
+    } else if (plantCount === 1) {
+      el.textContent = '1 dormant plant needs attention';
+    } else {
+      el.textContent = plantCount + ' dormant plants need attention';
+    }
+  }
+
+  function checkEmpty() {
+    const container = document.getElementById('plantsContainer');
+    if (container.children.length === 0) {
+      document.getElementById('emptyState').classList.add('show');
+    }
+  }
+
+  // Init on load
+  window.addEventListener('DOMContentLoaded', initPlants);
+</script>
+</body>
+</html>

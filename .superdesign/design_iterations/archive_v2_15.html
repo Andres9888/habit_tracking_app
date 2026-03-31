@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Archive Bookshelf</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Literata:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'DM Sans', sans-serif !important;
+      background: #F5F1ED !important;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      padding: 20px 0;
+    }
+    .phone-frame {
+      width: 390px;
+      min-height: 844px;
+      background: #F5F1ED;
+      position: relative;
+      overflow: hidden;
+      border-radius: 40px;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.15), inset 0 0 0 3px #D6D0CA;
+    }
+
+    /* Header */
+    .archive-header {
+      padding: 60px 24px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .archive-header h1 {
+      font-family: 'Literata', serif !important;
+      font-size: 22px !important;
+      font-weight: 700 !important;
+      color: #3D3229 !important;
+      letter-spacing: -0.3px;
+    }
+    .archive-header .subtitle {
+      font-size: 13px !important;
+      color: #8C7B6B !important;
+      margin-top: 2px;
+    }
+    .header-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: rgba(61,50,41,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #3D3229;
+    }
+
+    /* Bookshelf */
+    .bookshelf-container {
+      padding: 0 20px;
+    }
+    .shelf {
+      position: relative;
+      margin-bottom: 10px;
+    }
+    .shelf-label {
+      font-size: 11px !important;
+      font-weight: 600 !important;
+      text-transform: uppercase !important;
+      letter-spacing: 1.2px !important;
+      color: #A0936F !important;
+      padding: 0 4px 10px;
+    }
+    .books-row {
+      display: flex;
+      align-items: flex-end;
+      gap: 6px;
+      padding: 0 4px;
+      min-height: 180px;
+      position: relative;
+      z-index: 2;
+    }
+    .shelf-board {
+      height: 14px;
+      background: linear-gradient(180deg, #B89B6A 0%, #A0845C 40%, #8B7355 100%);
+      border-radius: 0 0 4px 4px;
+      position: relative;
+      z-index: 1;
+      margin: 0 -4px;
+    }
+    .shelf-board::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 4px;
+      right: 4px;
+      height: 8px;
+      background: linear-gradient(180deg, rgba(107,84,56,0.25) 0%, transparent 100%);
+      border-radius: 0 0 6px 6px;
+    }
+    .shelf-board::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #C9A96E, #D4B87A, #C9A96E);
+      border-radius: 0;
+    }
+
+    /* Book spine */
+    .book {
+      width: 52px;
+      min-height: 150px;
+      border-radius: 3px 6px 6px 3px;
+      cursor: pointer;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+      transform-origin: bottom center;
+      flex-shrink: 0;
+    }
+    .book:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    }
+    .book:active {
+      transform: translateY(-4px) scale(0.97);
+    }
+    .book::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 4px;
+      bottom: 4px;
+      width: 4px;
+      background: rgba(0,0,0,0.15);
+      border-radius: 2px 0 0 2px;
+    }
+    .book::after {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      width: 6px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), rgba(0,0,0,0.08));
+      border-radius: 0 6px 6px 0;
+    }
+    .book-emoji {
+      font-size: 22px;
+      margin-bottom: 6px;
+      filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));
+    }
+    .book-title {
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      font-family: 'Literata', serif !important;
+      font-size: 10px !important;
+      font-weight: 600 !important;
+      color: rgba(255,255,255,0.95) !important;
+      letter-spacing: 0.5px;
+      max-height: 80px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    }
+    .book-streak {
+      position: absolute;
+      bottom: 6px;
+      font-size: 8px !important;
+      font-weight: 700 !important;
+      color: rgba(255,255,255,0.7) !important;
+      background: rgba(0,0,0,0.2);
+      padding: 2px 6px;
+      border-radius: 3px;
+    }
+
+    /* Book colors by strength tier */
+    .book-purple {
+      background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 50%, #5B21B6 100%);
+      box-shadow: 2px 4px 8px rgba(124,58,237,0.25), inset -2px 0 4px rgba(0,0,0,0.1);
+    }
+    .book-green {
+      background: linear-gradient(135deg, #059669 0%, #047857 50%, #065F46 100%);
+      box-shadow: 2px 4px 8px rgba(5,150,105,0.25), inset -2px 0 4px rgba(0,0,0,0.1);
+    }
+    .book-teal {
+      background: linear-gradient(135deg, #0D9488 0%, #0F766E 50%, #115E59 100%);
+      box-shadow: 2px 4px 8px rgba(13,148,136,0.25), inset -2px 0 4px rgba(0,0,0,0.1);
+    }
+    .book-amber {
+      background: linear-gradient(135deg, #D97706 0%, #B45309 50%, #92400E 100%);
+      box-shadow: 2px 4px 8px rgba(217,119,6,0.25), inset -2px 0 4px rgba(0,0,0,0.1);
+    }
+    .book-rose {
+      background: linear-gradient(135deg, #E11D48 0%, #BE123C 50%, #9F1239 100%);
+      box-shadow: 2px 4px 8px rgba(225,29,72,0.25), inset -2px 0 4px rgba(0,0,0,0.1);
+    }
+    .book-slate {
+      background: linear-gradient(135deg, #475569 0%, #334155 50%, #1E293B 100%);
+      box-shadow: 2px 4px 8px rgba(71,85,105,0.25), inset -2px 0 4px rgba(0,0,0,0.1);
+    }
+
+    /* Height variations */
+    .book-tall { min-height: 175px; }
+    .book-medium { min-height: 150px; }
+    .book-short { min-height: 130px; }
+    .book-wide { width: 58px; }
+    .book-narrow { width: 44px; }
+
+    /* Overlay / Pulled-out book */
+    .book-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(45,35,25,0.65);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    .book-overlay.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    /* Book cover (pulled out view) */
+    .book-cover {
+      width: 280px;
+      min-height: 400px;
+      border-radius: 4px 16px 16px 4px;
+      padding: 32px 28px;
+      position: relative;
+      transform: scale(0.8) rotateY(-15deg);
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      overflow: hidden;
+    }
+    .book-overlay.active .book-cover {
+      transform: scale(1) rotateY(0deg);
+    }
+    .book-cover::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 12px;
+      background: linear-gradient(90deg, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.08) 40%, transparent 100%);
+    }
+    .book-cover::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 4px 16px 16px 4px;
+      pointer-events: none;
+    }
+
+    .cover-emoji {
+      font-size: 56px;
+      margin-bottom: 16px;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+    }
+    .cover-title {
+      font-family: 'Literata', serif !important;
+      font-size: 22px !important;
+      font-weight: 700 !important;
+      color: white !important;
+      text-align: center;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+      margin-bottom: 6px;
+    }
+    .cover-subtitle {
+      font-size: 12px !important;
+      color: rgba(255,255,255,0.65) !important;
+      margin-bottom: 24px;
+      text-align: center;
+    }
+
+    /* Stats on cover */
+    .cover-stats {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 28px;
+    }
+    .stat-card {
+      background: rgba(255,255,255,0.12);
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      padding: 12px;
+      text-align: center;
+    }
+    .stat-value {
+      font-size: 20px !important;
+      font-weight: 700 !important;
+      color: white !important;
+    }
+    .stat-label {
+      font-size: 10px !important;
+      color: rgba(255,255,255,0.6) !important;
+      text-transform: uppercase !important;
+      letter-spacing: 0.8px !important;
+      margin-top: 2px;
+    }
+
+    /* Tier badge */
+    .tier-badge {
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 20px;
+      padding: 5px 14px;
+      font-size: 11px !important;
+      font-weight: 600 !important;
+      color: white !important;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Action buttons */
+    .cover-actions {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: auto;
+    }
+    .btn-restore {
+      width: 100%;
+      padding: 14px;
+      border-radius: 12px;
+      background: white !important;
+      color: #059669 !important;
+      font-family: 'DM Sans', sans-serif !important;
+      font-size: 15px !important;
+      font-weight: 700 !important;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    .btn-restore:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+    }
+    .btn-restore:active {
+      transform: translateY(0);
+    }
+    .btn-delete {
+      width: 100%;
+      padding: 14px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.1) !important;
+      border: 1px solid rgba(255,255,255,0.15) !important;
+      color: rgba(255,255,255,0.8) !important;
+      font-family: 'DM Sans', sans-serif !important;
+      font-size: 15px !important;
+      font-weight: 600 !important;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+    .btn-delete:hover {
+      background: rgba(181,48,48,0.3) !important;
+      border-color: rgba(181,48,48,0.5) !important;
+      color: #FCA5A5 !important;
+    }
+
+    /* Close button */
+    .close-cover {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.15);
+      border: none;
+      color: white;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+    .close-cover:hover {
+      background: rgba(255,255,255,0.25);
+    }
+
+    /* Empty state quote */
+    .shelf-quote {
+      text-align: center;
+      padding: 20px 40px;
+      margin-top: 8px;
+    }
+    .shelf-quote p {
+      font-family: 'Literata', serif !important;
+      font-style: italic;
+      font-size: 13px !important;
+      color: #A09080 !important;
+      line-height: 1.6 !important;
+    }
+    .shelf-quote .author {
+      font-family: 'DM Sans', sans-serif !important;
+      font-style: normal;
+      font-size: 11px !important;
+      color: #B0A090 !important;
+      margin-top: 6px;
+      display: block;
+    }
+
+    /* Bottom count */
+    .shelf-footer {
+      text-align: center;
+      padding: 24px 20px 40px;
+    }
+    .shelf-footer p {
+      font-size: 12px !important;
+      color: #A09080 !important;
+    }
+    .shelf-footer span {
+      font-weight: 700 !important;
+      color: #7C6B5A !important;
+    }
+
+    /* Wall texture */
+    .wall-texture {
+      position: absolute;
+      inset: 0;
+      background-image:
+        radial-gradient(ellipse at 20% 50%, rgba(200,180,150,0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 30%, rgba(200,180,150,0.06) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="phone-frame">
+    <div class="wall-texture"></div>
+
+    <!-- Header -->
+    <div class="archive-header" style="position: relative; z-index: 2;">
+      <div>
+        <h1>Your Bookshelf</h1>
+        <p class="subtitle">6 archived habits</p>
+      </div>
+      <div class="header-icon">
+        <i data-lucide="library" style="width: 20px; height: 20px;"></i>
+      </div>
+    </div>
+
+    <div class="bookshelf-container" style="position: relative; z-index: 2;">
+      <!-- Shelf 1 -->
+      <div class="shelf">
+        <p class="shelf-label">Strong Habits</p>
+        <div class="books-row">
+          <div class="book book-purple book-tall book-wide" onclick="openBook(this)"
+               data-emoji="🧘" data-title="Meditation" data-tier="Mastered" data-streak="142" data-total="268" data-rate="87%" data-archived="Jan 15, 2026" data-color="purple">
+            <span class="book-emoji">🧘</span>
+            <span class="book-title">Meditation</span>
+            <span class="book-streak">142d</span>
+          </div>
+          <div class="book book-green book-tall" onclick="openBook(this)"
+               data-emoji="📖" data-title="Read 30 min" data-tier="Strong" data-streak="89" data-total="195" data-rate="78%" data-archived="Feb 3, 2026" data-color="green">
+            <span class="book-emoji">📖</span>
+            <span class="book-title">Read 30 min</span>
+            <span class="book-streak">89d</span>
+          </div>
+          <div class="book book-teal book-medium" onclick="openBook(this)"
+               data-emoji="🏃" data-title="Morning Run" data-tier="Steady" data-streak="56" data-total="134" data-rate="65%" data-archived="Feb 20, 2026" data-color="teal">
+            <span class="book-emoji">🏃</span>
+            <span class="book-title">Morning Run</span>
+            <span class="book-streak">56d</span>
+          </div>
+        </div>
+        <div class="shelf-board"></div>
+      </div>
+
+      <!-- Shelf 2 -->
+      <div class="shelf" style="margin-top: 18px;">
+        <p class="shelf-label">Building Habits</p>
+        <div class="books-row">
+          <div class="book book-amber book-medium book-narrow" onclick="openBook(this)"
+               data-emoji="🎸" data-title="Practice Guitar" data-tier="Growing" data-streak="23" data-total="67" data-rate="48%" data-archived="Mar 1, 2026" data-color="amber">
+            <span class="book-emoji">🎸</span>
+            <span class="book-title">Guitar</span>
+            <span class="book-streak">23d</span>
+          </div>
+          <div class="book book-rose book-short" onclick="openBook(this)"
+               data-emoji="💧" data-title="Drink Water" data-tier="Budding" data-streak="12" data-total="45" data-rate="35%" data-archived="Mar 10, 2026" data-color="rose">
+            <span class="book-emoji">💧</span>
+            <span class="book-title">Water</span>
+            <span class="book-streak">12d</span>
+          </div>
+          <div class="book book-slate book-short book-narrow" onclick="openBook(this)"
+               data-emoji="📝" data-title="Journal Entry" data-tier="Fresh" data-streak="7" data-total="21" data-rate="22%" data-archived="Mar 18, 2026" data-color="slate">
+            <span class="book-emoji">📝</span>
+            <span class="book-title">Journal</span>
+            <span class="book-streak">7d</span>
+          </div>
+        </div>
+        <div class="shelf-board"></div>
+      </div>
+
+      <!-- Quote -->
+      <div class="shelf-quote">
+        <p>"Every habit you built is a chapter in your story. They're never truly gone."</p>
+        <span class="author">- Your Bookshelf</span>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="shelf-footer">
+      <p><span>6 books</span> on your shelf &middot; Tap to revisit</p>
+    </div>
+  </div>
+
+  <!-- Book Cover Overlay -->
+  <div class="book-overlay" id="bookOverlay" onclick="closeBook(event)">
+    <div class="book-cover" id="bookCover" onclick="event.stopPropagation()">
+      <button class="close-cover" onclick="closeBook(event)">
+        <i data-lucide="x" style="width: 16px; height: 16px;"></i>
+      </button>
+      <span class="cover-emoji" id="coverEmoji">🧘</span>
+      <h2 class="cover-title" id="coverTitle">Meditation</h2>
+      <p class="cover-subtitle" id="coverSubtitle">Archived Jan 15, 2026</p>
+      <div class="tier-badge" id="coverTier">
+        <i data-lucide="award" style="width: 14px; height: 14px;"></i>
+        <span id="coverTierText">Mastered</span>
+      </div>
+      <div class="cover-stats">
+        <div class="stat-card">
+          <div class="stat-value" id="coverStreak">142</div>
+          <div class="stat-label">Best Streak</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="coverTotal">268</div>
+          <div class="stat-label">Total Days</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="coverRate">87%</div>
+          <div class="stat-label">Success Rate</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="coverChapters">9</div>
+          <div class="stat-label">Months Active</div>
+        </div>
+      </div>
+      <div class="cover-actions">
+        <button class="btn-restore">
+          <i data-lucide="book-open" style="width: 18px; height: 18px;"></i>
+          Read Again
+        </button>
+        <button class="btn-delete">
+          <i data-lucide="heart-handshake" style="width: 18px; height: 18px;"></i>
+          Donate
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+
+    const colorMap = {
+      purple: 'linear-gradient(135deg, #7C3AED 0%, #6D28D9 50%, #5B21B6 100%)',
+      green: 'linear-gradient(135deg, #059669 0%, #047857 50%, #065F46 100%)',
+      teal: 'linear-gradient(135deg, #0D9488 0%, #0F766E 50%, #115E59 100%)',
+      amber: 'linear-gradient(135deg, #D97706 0%, #B45309 50%, #92400E 100%)',
+      rose: 'linear-gradient(135deg, #E11D48 0%, #BE123C 50%, #9F1239 100%)',
+      slate: 'linear-gradient(135deg, #475569 0%, #334155 50%, #1E293B 100%)',
+    };
+
+    function openBook(el) {
+      const overlay = document.getElementById('bookOverlay');
+      const cover = document.getElementById('bookCover');
+
+      document.getElementById('coverEmoji').textContent = el.dataset.emoji;
+      document.getElementById('coverTitle').textContent = el.dataset.title;
+      document.getElementById('coverSubtitle').textContent = 'Archived ' + el.dataset.archived;
+      document.getElementById('coverTierText').textContent = el.dataset.tier;
+      document.getElementById('coverStreak').textContent = el.dataset.streak;
+      document.getElementById('coverTotal').textContent = el.dataset.total;
+      document.getElementById('coverRate').textContent = el.dataset.rate;
+
+      const totalDays = parseInt(el.dataset.total);
+      const months = Math.round(totalDays / 30);
+      document.getElementById('coverChapters').textContent = months;
+
+      cover.style.background = colorMap[el.dataset.color];
+
+      // Animate the book pulling out
+      el.style.transform = 'translateY(-20px) scale(0.95)';
+      el.style.opacity = '0.5';
+      setTimeout(() => {
+        el.style.transform = '';
+        el.style.opacity = '';
+      }, 400);
+
+      overlay.classList.add('active');
+    }
+
+    function closeBook(event) {
+      if (event) event.stopPropagation();
+      const overlay = document.getElementById('bookOverlay');
+      overlay.classList.remove('active');
+    }
+
+    // Escape key closes
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeBook();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,1107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Archived Habits — Pinterest Masonry</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,500;0,7..72,600;0,7..72,700;1,7..72,400&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif !important;
+    background: #1a1a1a;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    padding: 20px 0;
+  }
+
+  .iphone-frame {
+    width: 390px;
+    min-height: 844px;
+    background: #F5F1ED;
+    border-radius: 44px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 25px 80px rgba(0,0,0,0.4), inset 0 0 0 1px rgba(0,0,0,0.08);
+  }
+
+  .screen-content {
+    padding: 60px 16px 100px;
+    min-height: 844px;
+    overflow-y: auto;
+  }
+
+  /* Notch */
+  .notch {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 160px;
+    height: 34px;
+    background: #1a1a1a;
+    border-radius: 0 0 24px 24px;
+    z-index: 10;
+  }
+
+  /* Status bar */
+  .status-bar {
+    height: 54px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding-bottom: 10px;
+  }
+
+  .status-bar-time {
+    font-size: 15px;
+    font-weight: 600;
+    color: #2C2520;
+  }
+
+  /* Header */
+  .page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 4px;
+    padding: 0 4px;
+  }
+
+  .header-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(5, 150, 105, 0.08);
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: #059669;
+  }
+
+  .header-btn:hover {
+    background: rgba(5, 150, 105, 0.15);
+  }
+
+  .page-title {
+    font-family: 'Literata', serif !important;
+    font-weight: 600;
+    font-size: 20px;
+    color: #1C1917;
+    letter-spacing: -0.3px;
+  }
+
+  .page-subtitle {
+    font-size: 13px;
+    color: #78716C;
+    text-align: center;
+    margin-bottom: 20px;
+    font-weight: 400;
+    padding: 0 4px;
+  }
+
+  /* Masonry Grid */
+  .masonry-grid {
+    column-count: 2;
+    column-gap: 12px;
+  }
+
+  /* Cards */
+  .masonry-card {
+    break-inside: avoid;
+    background: #FFFFFF;
+    border-radius: 16px;
+    margin-bottom: 12px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04), 0 2px 8px rgba(0,0,0,0.03);
+    opacity: 0;
+    transform: translateY(20px);
+    animation: cardReveal 0.5s ease-out forwards;
+    position: relative;
+  }
+
+  .masonry-card:nth-child(1) { animation-delay: 0.05s; }
+  .masonry-card:nth-child(2) { animation-delay: 0.12s; }
+  .masonry-card:nth-child(3) { animation-delay: 0.19s; }
+  .masonry-card:nth-child(4) { animation-delay: 0.26s; }
+  .masonry-card:nth-child(5) { animation-delay: 0.33s; }
+  .masonry-card:nth-child(6) { animation-delay: 0.40s; }
+
+  @keyframes cardReveal {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Gradient Top Band */
+  .card-gradient-top {
+    height: 6px;
+    width: 100%;
+  }
+
+  .strength-high .card-gradient-top    { background: linear-gradient(90deg, #059669, #34D399); }
+  .strength-good .card-gradient-top    { background: linear-gradient(90deg, #059669, #6EE7B7); }
+  .strength-medium .card-gradient-top  { background: linear-gradient(90deg, #D97706, #FCD34D); }
+  .strength-low .card-gradient-top     { background: linear-gradient(90deg, #78716C, #D6D3D1); }
+
+  /* Card Body */
+  .card-body {
+    padding: 16px 14px;
+  }
+
+  /* Tall cards get more padding */
+  .card-tall .card-body {
+    padding: 20px 14px;
+  }
+
+  .card-emoji {
+    font-size: 40px;
+    line-height: 1;
+    margin-bottom: 10px;
+    display: block;
+  }
+
+  .card-tall .card-emoji {
+    font-size: 52px;
+    margin-bottom: 14px;
+  }
+
+  .card-name {
+    font-family: 'Literata', serif !important;
+    font-weight: 600;
+    font-size: 15px;
+    color: #1C1917;
+    margin-bottom: 6px;
+    line-height: 1.25;
+    letter-spacing: -0.2px;
+  }
+
+  .card-tall .card-name {
+    font-size: 17px;
+    margin-bottom: 8px;
+  }
+
+  /* Key Stat */
+  .card-key-stat {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 3px 8px;
+    border-radius: 8px;
+    margin-bottom: 4px;
+  }
+
+  .strength-high .card-key-stat  { background: rgba(5, 150, 105, 0.10); color: #059669; }
+  .strength-good .card-key-stat  { background: rgba(5, 150, 105, 0.08); color: #059669; }
+  .strength-medium .card-key-stat { background: rgba(217, 119, 6, 0.10); color: #B45309; }
+  .strength-low .card-key-stat   { background: rgba(120, 113, 108, 0.10); color: #78716C; }
+
+  /* Tall card extra stats */
+  .card-extra-stats {
+    display: none;
+    margin-top: 8px;
+  }
+
+  .card-tall .card-extra-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .extra-stat {
+    font-size: 11.5px;
+    color: #78716C;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .extra-stat-value {
+    font-weight: 600;
+    color: #44403C;
+  }
+
+  /* Strength Meter (tall cards) */
+  .strength-meter {
+    display: none;
+    margin-top: 10px;
+  }
+
+  .card-tall .strength-meter {
+    display: block;
+  }
+
+  .meter-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    font-weight: 500;
+    color: #A8A29E;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .meter-bar {
+    width: 100%;
+    height: 4px;
+    border-radius: 2px;
+    background: #E7E5E4;
+    overflow: hidden;
+  }
+
+  .meter-fill {
+    height: 100%;
+    border-radius: 2px;
+    width: 0;
+    transition: width 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.5s;
+  }
+
+  .strength-high .meter-fill  { background: #059669; }
+  .strength-good .meter-fill  { background: #34D399; }
+  .strength-medium .meter-fill { background: #D97706; }
+  .strength-low .meter-fill   { background: #A8A29E; }
+
+  /* Expanded State */
+  .masonry-card.expanded {
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.04);
+    z-index: 5;
+  }
+
+  .expanded-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), padding 0.4s ease;
+    padding: 0 14px;
+  }
+
+  .masonry-card.expanded .expanded-content {
+    max-height: 300px;
+    padding: 0 14px 16px;
+  }
+
+  .expanded-divider {
+    height: 1px;
+    background: #E7E5E4;
+    margin-bottom: 12px;
+  }
+
+  .expanded-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+
+  .expanded-stat-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .expanded-stat-label {
+    font-size: 12px;
+    color: #78716C;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .expanded-stat-value {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1C1917;
+  }
+
+  /* Action Buttons */
+  .card-actions {
+    display: flex;
+    gap: 8px;
+  }
+
+  .btn-restore {
+    flex: 1;
+    height: 38px;
+    border-radius: 10px;
+    background: #059669;
+    color: #FFFFFF;
+    font-family: 'DM Sans', sans-serif !important;
+    font-size: 13px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+  }
+
+  .btn-restore:hover {
+    background: #047857;
+    transform: translateY(-1px);
+  }
+
+  .btn-restore:active {
+    transform: scale(0.97);
+  }
+
+  .btn-delete {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    background: rgba(181, 48, 48, 0.08);
+    color: #B53030;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .btn-delete:hover {
+    background: rgba(181, 48, 48, 0.15);
+  }
+
+  /* Confirm Delete Overlay */
+  .confirm-overlay {
+    display: none;
+    position: absolute;
+    inset: 0;
+    background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(4px);
+    z-index: 10;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 16px;
+    border-radius: 16px;
+    animation: fadeIn 0.2s ease-out;
+  }
+
+  .confirm-overlay.visible {
+    display: flex;
+  }
+
+  .confirm-overlay-text {
+    font-size: 13px;
+    font-weight: 500;
+    color: #44403C;
+    text-align: center;
+    margin-bottom: 14px;
+    line-height: 1.4;
+  }
+
+  .confirm-btns {
+    display: flex;
+    gap: 10px;
+  }
+
+  .confirm-btn-yes {
+    padding: 8px 20px;
+    border-radius: 10px;
+    background: #B53030;
+    color: #FFFFFF;
+    font-family: 'DM Sans', sans-serif !important;
+    font-size: 13px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .confirm-btn-yes:hover { background: #991B1B; }
+
+  .confirm-btn-cancel {
+    padding: 8px 20px;
+    border-radius: 10px;
+    background: #F5F5F4;
+    color: #44403C;
+    font-family: 'DM Sans', sans-serif !important;
+    font-size: 13px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .confirm-btn-cancel:hover { background: #E7E5E4; }
+
+  /* Floating Bulk Restore Button */
+  .floating-restore-btn {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 22px;
+    border-radius: 50px;
+    background: #059669;
+    color: #FFFFFF;
+    font-family: 'DM Sans', sans-serif !important;
+    font-size: 14px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(5, 150, 105, 0.35), 0 2px 8px rgba(0,0,0,0.1);
+    z-index: 20;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    white-space: nowrap;
+    opacity: 0;
+    animation: floatUp 0.6s ease-out 0.8s forwards;
+  }
+
+  .floating-restore-btn:hover {
+    background: #047857;
+    transform: translateX(-50%) translateY(-2px);
+    box-shadow: 0 6px 28px rgba(5, 150, 105, 0.4), 0 3px 10px rgba(0,0,0,0.12);
+  }
+
+  .floating-restore-btn:active {
+    transform: translateX(-50%) scale(0.97);
+  }
+
+  .floating-restore-count {
+    background: rgba(255,255,255,0.25);
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  @keyframes floatUp {
+    from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+    to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+  }
+
+  /* Card remove animations */
+  @keyframes cardSlideOut {
+    0%   { opacity: 1; transform: scale(1); }
+    100% { opacity: 0; transform: scale(0.9) translateY(-10px); max-height: 0; margin-bottom: 0; padding: 0; }
+  }
+
+  .card-removing {
+    animation: cardSlideOut 0.45s ease-in forwards;
+    pointer-events: none;
+  }
+
+  @keyframes cardRestoring {
+    0%   { opacity: 1; transform: scale(1); }
+    50%  { background: rgba(5, 150, 105, 0.08); transform: scale(1.03); }
+    100% { opacity: 0; transform: scale(0.92) translateY(-15px); }
+  }
+
+  .card-restoring-anim {
+    animation: cardRestoring 0.7s ease-in-out forwards;
+    pointer-events: none;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  /* Empty State */
+  .empty-state {
+    display: none;
+    text-align: center;
+    padding: 100px 30px 60px;
+    animation: fadeIn 0.5s ease-out;
+  }
+
+  .empty-state.visible { display: block; }
+
+  .empty-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(5,150,105,0.1), rgba(52,211,153,0.1));
+    margin: 0 auto 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 36px;
+  }
+
+  .empty-title {
+    font-family: 'Literata', serif !important;
+    font-size: 18px;
+    font-weight: 600;
+    color: #1C1917;
+    margin-bottom: 8px;
+  }
+
+  .empty-subtitle {
+    font-size: 14px;
+    color: #78716C;
+    line-height: 1.5;
+  }
+
+  /* Home indicator */
+  .home-indicator {
+    position: absolute;
+    bottom: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 134px;
+    height: 5px;
+    background: #2C2520;
+    border-radius: 3px;
+    opacity: 0.2;
+  }
+
+  /* Pulse on strong badge */
+  @keyframes subtlePulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+  }
+
+  .strong-badge {
+    animation: subtlePulse 2.5s ease-in-out infinite;
+  }
+</style>
+</head>
+<body>
+
+<div class="iphone-frame">
+  <div class="notch"></div>
+
+  <div class="screen-content">
+    <div class="status-bar">
+      <span class="status-bar-time">9:41</span>
+    </div>
+
+    <!-- Header -->
+    <div class="page-header">
+      <button class="header-btn" aria-label="Go back">
+        <i data-lucide="arrow-left" style="width:18px;height:18px;"></i>
+      </button>
+      <h1 class="page-title">Archived Habits</h1>
+      <button class="header-btn" aria-label="Close">
+        <i data-lucide="x" style="width:18px;height:18px;"></i>
+      </button>
+    </div>
+
+    <p class="page-subtitle" id="subtitleText">6 habits resting &middot; 4 above 60% strength</p>
+
+    <!-- Masonry Grid -->
+    <div class="masonry-grid" id="masonryGrid">
+
+      <!-- Card 1: Daily Journal — 92% (TALL, Strong) -->
+      <div class="masonry-card card-tall strength-high" data-name="Daily Journal" data-strength="92" onclick="toggleExpand(this, event)">
+        <div class="card-gradient-top"></div>
+        <div class="card-body">
+          <span class="card-emoji">&#x270D;&#xFE0F;</span>
+          <div class="card-name">Daily Journal</div>
+          <div class="card-key-stat">
+            <span class="strong-badge">&#x1F4AA;</span> 92% strength
+          </div>
+          <div class="card-extra-stats">
+            <div class="extra-stat">
+              <i data-lucide="flame" style="width:12px;height:12px;color:#D97706;"></i>
+              Best streak: <span class="extra-stat-value">67 days</span>
+            </div>
+            <div class="extra-stat">
+              <i data-lucide="check-circle" style="width:12px;height:12px;color:#059669;"></i>
+              Completed: <span class="extra-stat-value">312 times</span>
+            </div>
+          </div>
+          <div class="strength-meter">
+            <div class="meter-label">
+              <span>Strength</span>
+              <span>92%</span>
+            </div>
+            <div class="meter-bar">
+              <div class="meter-fill" data-width="92"></div>
+            </div>
+          </div>
+        </div>
+        <div class="expanded-content">
+          <div class="expanded-divider"></div>
+          <div class="expanded-stats">
+            <div class="expanded-stat-row">
+              <span class="expanded-stat-label">
+                <i data-lucide="calendar" style="width:13px;height:13px;"></i> Active
+              </span>
+              <span class="expanded-stat-value">240 days</span>
+            </div>
+            <div class="expanded-stat-row">
+              <span class="expanded-stat-label">
+                <i data-lucide="clock" style="width:13px;height:13px;"></i> Archived
+              </span>
+              <span class="expanded-stat-value">2 weeks ago</span>
+            </div>
+            <div class="expanded-stat-row">
+              <span class="expanded-stat-label">
+                <i data-lucide="trophy" style="width:13px;height:13px;"></i> Completion
+              </span>
+              <span class="expanded-stat-value">92%</span>
+            </div>
+          </div>
+          <div class="card-actions">
+            <button class="btn-restore" onclick="handleRestore(event, this)">
+              <i data-lucide="rotate-ccw" style="width:14px;height:14px;"></i> Restore
+            </button>
+            <button class="btn-delete" onclick="handleDelete(event, this)" aria-label="Delete">
+              <i data-lucide="trash-2" style="width:15px;height:15px;"></i>
+            </button>
+          </div>
+        </div>
+        <div class="confirm-overlay">
+          <div class="confirm-overlay-text">Permanently delete<br><strong>Daily Journal</strong>?</div>
+          <div class="confirm-btns">
+            <button class="confirm-btn-yes" onclick="confirmDelete(event, this)">Delete</button>
+            <button class="confirm-btn-cancel" onclick="cancelDelete(event, this)">Cancel</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 2: Morning Run — 78% (SHORT, Strong) -->
+      <div class="masonry-card strength-good" data-name="Morning Run" data-strength="78" onclick="toggleExpand(this, event)">
+        <div class="card-gradient-top"></div>
+        <div class="card-body">
+          <span class="card-emoji">&#x1F3C3;</span>
+          <div class="card-name">Morning Run</div>
+          <div class="card-key-stat">
+            <span>&#x26A1;</span> 78% strength
+          </div>
+        </div>
+        <div class="expanded-content">
+          <div class="expanded-divider"></div>
+          <div class="expanded-stats">
+            <div class="expanded-stat-row">
+              <span class="expanded-stat-label">
+                <i data-lucide="flame" style="width:13px;height:13px;"></i> Best streak
+              </span>
+              <span class="expanded-stat-value">45 days</span>
+            </div>
+            <div class="expanded-stat-row">
+              <span class="expanded-stat-label">
+                <i data-lucide="check-circle" style="width:13px;height:13px;"></i> Completed
+              </span>
+              <span class="expanded-stat-value">198 times</span>
+            </div>
+            <div class="expanded-stat-row">
+              <span class="expanded-stat-label">
+                <i data-lucide="calendar" style="width:13px;height:13px;"></i> Active
+              </span>
+              <span class="expanded-stat-value">165 days</span>
+            </div>
+          </div>
+          <div class="card-actions">
+            <button class="btn-restore" onclick="handleRestore(event, this)">
+              <i data-lucide="rotate-ccw" style="width:14px;height:14px;"></i> Restore
+            </button>
+            <button class="btn-delete" onclick="handleDelete(event, this)" aria-label="Delete">
+              <i data-lucide="trash-2" style="width:15px;height:15px;"></i>
+            </button>
+          </div>
+        </div>
+        <div class="confirm-overlay">
+          <div class="confirm-overlay-text">Permanently delete<br><strong>Morning Run</strong>?</div>
+          <div class="confirm-btns">
+            <button class="confirm-btn-yes" onclick="confirmDelete(event, this)">Delete</button>
+            <button class="confirm-btn-cancel" onclick="cancelDelete(event, this)">Cancel</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 3: Meditation — 85% (TALL, Strong) -->
+      <div class="masonry-card card-tall strength-high" data-name="Meditation" data-strength="85" onclick="toggleExpand(this, event)">
+        <div class="card-gradient-top"></div>
+        <div class="card-body">
+          <span class="card-emoji">&#x1F9D8;</span>
+          <div class="card-name">Meditation</div>
+          <div class="card-key-stat">
+            <span class="strong-badge">&#x1F4AA;</span> 85% strength
+          </div>
+          <div class="card-extra-stats">
+            <div class="extra-stat">
+              <i data-lucide="flame" style="width:12px;height:12px;color:#D97706;"></i>
+              Best streak: <span class="extra-stat-value">52 days</span>
+            </div>
+            <div class="extra-stat">
+              <i data-lucide="check-circle" style="width:12px;height:12px;color:#059669;"></i>
+              Completed: <span class="extra-stat-value">275 times</span>
+            </div>
+          </div>
+          <div class="strength-meter">
+            <div class="meter-label">
+              <span>Strength</span>
+              <span>85%</span>
+            </div>
+            <div class="meter-bar">
+              <div class="meter-fill" data-width="85"></div>
+            </div>
+          </div>
+        </div>
+        <div class="expanded-content">
+          <div class="expanded-divider"></div>
+          <div class="expanded-stats">
+            <div class="expanded-stat-row">
+              <span class="expanded-stat-label">
+                <i data-lucide="calendar" style="width:13px;height:13px;"></i> Active
+              </span>
+              <span class="expanded-stat-value">210 days</span>
+            </div>
+            <div class="expanded-stat-row">
+              <span class="expanded-stat-label">
+                <i data-lucide="clock" style="width:13px;height:13px;"></i> Archived
+              </span>
+              <span class="expanded-stat-value">5 days ago</span>
+            </div>
+            <div class="expanded-stat-row">
+              <span class="expanded-stat-label">
+                <i data-lucide="trophy" style="width:13px;height:13px;"></i> Completion
+              </span>
+              <span class="expanded-stat-value">85%</span>
+            </div>
+          </div>
+          <div class="card-actions">
+            <button class="btn-restore" onclick="handleRestore(event, this)">
+              <i data-lucide="rotate-ccw" style="width:14px;height:14px;"></i> Restore
+            </button>
+            <button class="btn-delete" onclick="handleDelete(event, this)" aria-label="Delete">
+              <i data-lucide="trash-2" style="width:15px;height:15px;"></i>
+            </button>
+          </div>
+        </div>
+        <div class="confirm-overlay">
+          <div class="confirm-overlay-text">Permanently delete<br><strong>Meditation</strong>?</div>
+          <div class="confirm-btns">
+            <button class="confirm-btn-yes" onclick="confirmDelete(event, this)">Delete</button>
+            <button class="confirm-btn-cancel" onclick="cancelDelete(event, this)">Cancel</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 4: Read 30 Min — 55% (SHORT, Medium) -->
+      <div class="masonry-card strength-medium" data-name="Read 30 Min" data-strength="55" onclick="toggleExpand(this, event)">
+        <div class="card-gradient-top"></div>
+        <div class="card-body">
+          <span class="card-emoji">&#x1F4D6;</span>
+          <div class="card-name">Read 30 Min</div>
+          <div class="card-key-stat">
+            <span>&#x1F4D3;</span> 55% strength
+          </div>
+        </div>
+        <div class="expanded-content">
+          <div class="expanded-divider"></div>
+          <div class="expanded-stats">
+            <div class="expanded-stat-row">
+              <span class="expanded-stat-label">
+                <i data-lucide="flame" style="width:13px;height:13px;"></i> Best streak
+              </span>
+              <span class="expanded-stat-value">28 days</span>
+            </div>
+            <div class="expanded-stat-row">
+              <span class="expanded-stat-label">
+                <i data-lucide="check-circle" style="width:13px;height:13px;"></i> Completed
+              </span>
+              <span class="expanded-stat-value">156 times</span>
+            </div>
+            <div class="expanded-stat-row">
+              <span class="expanded-stat-label">
+                <i data-lucide="calendar" style="width:13px;height:13px;"></i> Active
+              </span>
+              <span class="expanded-stat-value">120 days</span>
+            </div>
+          </div>
+          <div class="card-actions">
+            <button class="btn-restore" onclick="handleRestore(event, this)">
+              <i data-lucide="rotate-ccw" style="width:14px;height:14px;"></i> Restore
+            </button>
+            <button class="btn-delete" onclick="handleDelete(event, this)" aria-label="Delete">
+              <i data-lucide="trash-2" style="width:15px;height:15px;"></i>
+            </button>
+          </div>
+        </div>
+        <div class="confirm-overlay">
+          <div class="confirm-overlay-text">Permanently delete<br><strong>Read 30 Min</strong>?</div>
+          <div class="confirm-btns">
+            <button class="confirm-btn-yes" onclick="confirmDelete(event, this)">Delete</button>
+            <button class="confirm-btn-cancel" onclick="cancelDelete(event, this)">Cancel</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 5: Vitamins — 65% (SHORT, Strong threshold) -->
+      <div class="masonry-card strength-good" data-name="Vitamins" data-strength="65" onclick="toggleExpand(this, event)">
+        <div class="card-gradient-top"></div>
+        <div class="card-body">
+          <span class="card-emoji">&#x1F48A;</span>
+          <div class="card-name">Vitamins</div>
+          <div class="card-key-stat">
+            <span>&#x2705;</span> 65% strength
+          </div>
+        </div>
+        <div class="expanded-content">
+          <div class="expanded-divider"></div>
+          <div class="expanded-stats">
+            <div class="expanded-stat-row">
+              <span class="expanded-stat-label">
+                <i data-lucide="flame" style="width:13px;height:13px;"></i> Best streak
+              </span>
+              <span class="expanded-stat-value">34 days</span>
+            </div>
+            <div class="expanded-stat-row">
+              <span class="expanded-stat-label">
+                <i data-lucide="check-circle" style="width:13px;height:13px;"></i> Completed
+              </span>
+              <span class="expanded-stat-value">180 times</span>
+            </div>
+            <div class="expanded-stat-row">
+              <span class="expanded-stat-label">
+                <i data-lucide="calendar" style="width:13px;height:13px;"></i> Active
+              </span>
+              <span class="expanded-stat-value">140 days</span>
+            </div>
+          </div>
+          <div class="card-actions">
+            <button class="btn-restore" onclick="handleRestore(event, this)">
+              <i data-lucide="rotate-ccw" style="width:14px;height:14px;"></i> Restore
+            </button>
+            <button class="btn-delete" onclick="handleDelete(event, this)" aria-label="Delete">
+              <i data-lucide="trash-2" style="width:15px;height:15px;"></i>
+            </button>
+          </div>
+        </div>
+        <div class="confirm-overlay">
+          <div class="confirm-overlay-text">Permanently delete<br><strong>Vitamins</strong>?</div>
+          <div class="confirm-btns">
+            <button class="confirm-btn-yes" onclick="confirmDelete(event, this)">Delete</button>
+            <button class="confirm-btn-cancel" onclick="cancelDelete(event, this)">Cancel</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 6: Cold Shower — 28% (SHORT, Low) -->
+      <div class="masonry-card strength-low" data-name="Cold Shower" data-strength="28" onclick="toggleExpand(this, event)">
+        <div class="card-gradient-top"></div>
+        <div class="card-body">
+          <span class="card-emoji">&#x1F976;</span>
+          <div class="card-name">Cold Shower</div>
+          <div class="card-key-stat">
+            <span>&#x1F4A4;</span> 28% strength
+          </div>
+        </div>
+        <div class="expanded-content">
+          <div class="expanded-divider"></div>
+          <div class="expanded-stats">
+            <div class="expanded-stat-row">
+              <span class="expanded-stat-label">
+                <i data-lucide="flame" style="width:13px;height:13px;"></i> Best streak
+              </span>
+              <span class="expanded-stat-value">12 days</span>
+            </div>
+            <div class="expanded-stat-row">
+              <span class="expanded-stat-label">
+                <i data-lucide="check-circle" style="width:13px;height:13px;"></i> Completed
+              </span>
+              <span class="expanded-stat-value">42 times</span>
+            </div>
+            <div class="expanded-stat-row">
+              <span class="expanded-stat-label">
+                <i data-lucide="calendar" style="width:13px;height:13px;"></i> Active
+              </span>
+              <span class="expanded-stat-value">45 days</span>
+            </div>
+          </div>
+          <div class="card-actions">
+            <button class="btn-restore" onclick="handleRestore(event, this)">
+              <i data-lucide="rotate-ccw" style="width:14px;height:14px;"></i> Restore
+            </button>
+            <button class="btn-delete" onclick="handleDelete(event, this)" aria-label="Delete">
+              <i data-lucide="trash-2" style="width:15px;height:15px;"></i>
+            </button>
+          </div>
+        </div>
+        <div class="confirm-overlay">
+          <div class="confirm-overlay-text">Permanently delete<br><strong>Cold Shower</strong>?</div>
+          <div class="confirm-btns">
+            <button class="confirm-btn-yes" onclick="confirmDelete(event, this)">Delete</button>
+            <button class="confirm-btn-cancel" onclick="cancelDelete(event, this)">Cancel</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state" id="emptyState">
+      <div class="empty-icon">&#x1F331;</div>
+      <div class="empty-title">All clear</div>
+      <div class="empty-subtitle">No archived habits remaining.<br>Time to build new ones.</div>
+    </div>
+
+  </div>
+
+  <!-- Floating Bulk Restore Button -->
+  <button class="floating-restore-btn" id="floatingBtn" onclick="handleBulkRestore()">
+    <i data-lucide="sparkles" style="width:16px;height:16px;"></i>
+    Restore All Strong
+    <span class="floating-restore-count" id="strongCount">4</span>
+  </button>
+
+  <div class="home-indicator"></div>
+</div>
+
+<script>
+  // Init Lucide icons
+  lucide.createIcons();
+
+  // Animate strength meter fills on load
+  window.addEventListener('load', function() {
+    setTimeout(function() {
+      document.querySelectorAll('.meter-fill').forEach(function(fill) {
+        var w = fill.getAttribute('data-width');
+        fill.style.width = w + '%';
+      });
+    }, 400);
+  });
+
+  // Toggle card expand
+  function toggleExpand(card, e) {
+    // Don't toggle if clicking buttons or confirm overlay
+    if (e.target.closest('.btn-restore') || e.target.closest('.btn-delete') ||
+        e.target.closest('.confirm-overlay') || e.target.closest('.card-actions')) {
+      return;
+    }
+
+    var wasExpanded = card.classList.contains('expanded');
+
+    // Collapse all other cards
+    document.querySelectorAll('.masonry-card.expanded').forEach(function(c) {
+      if (c !== card) c.classList.remove('expanded');
+    });
+
+    if (wasExpanded) {
+      card.classList.remove('expanded');
+    } else {
+      card.classList.add('expanded');
+    }
+  }
+
+  // Restore single habit
+  function handleRestore(e, btn) {
+    e.stopPropagation();
+    var card = btn.closest('.masonry-card');
+    var name = card.getAttribute('data-name');
+
+    btn.innerHTML = '<i data-lucide="check" style="width:14px;height:14px;"></i> Restored!';
+    btn.style.background = '#047857';
+    lucide.createIcons();
+
+    setTimeout(function() {
+      card.classList.add('card-restoring-anim');
+      setTimeout(function() {
+        card.style.display = 'none';
+        updateCounts();
+      }, 700);
+    }, 400);
+  }
+
+  // Delete flow
+  function handleDelete(e, btn) {
+    e.stopPropagation();
+    var card = btn.closest('.masonry-card');
+    card.querySelector('.confirm-overlay').classList.add('visible');
+  }
+
+  function confirmDelete(e, btn) {
+    e.stopPropagation();
+    var card = btn.closest('.masonry-card');
+    card.querySelector('.confirm-overlay').classList.remove('visible');
+    card.classList.add('card-removing');
+    setTimeout(function() {
+      card.style.display = 'none';
+      updateCounts();
+    }, 450);
+  }
+
+  function cancelDelete(e, btn) {
+    e.stopPropagation();
+    btn.closest('.confirm-overlay').classList.remove('visible');
+  }
+
+  // Bulk restore all strong habits (>= 60%)
+  function handleBulkRestore() {
+    var cards = document.querySelectorAll('.masonry-card');
+    var delay = 0;
+    cards.forEach(function(card) {
+      if (card.style.display === 'none') return;
+      var strength = parseInt(card.getAttribute('data-strength'), 10);
+      if (strength >= 60) {
+        setTimeout(function() {
+          card.classList.add('card-restoring-anim');
+          setTimeout(function() {
+            card.style.display = 'none';
+            updateCounts();
+          }, 700);
+        }, delay);
+        delay += 150;
+      }
+    });
+
+    // Hide floating button
+    setTimeout(function() {
+      var fb = document.getElementById('floatingBtn');
+      fb.style.opacity = '0';
+      fb.style.transform = 'translateX(-50%) translateY(20px)';
+      setTimeout(function() { fb.style.display = 'none'; }, 300);
+    }, delay + 200);
+  }
+
+  // Update subtitle and strong count
+  function updateCounts() {
+    var cards = document.querySelectorAll('.masonry-card');
+    var total = 0;
+    var strongCount = 0;
+
+    cards.forEach(function(card) {
+      if (card.style.display !== 'none') {
+        total++;
+        var strength = parseInt(card.getAttribute('data-strength'), 10);
+        if (strength >= 60) strongCount++;
+      }
+    });
+
+    var subtitle = document.getElementById('subtitleText');
+    if (total === 0) {
+      subtitle.style.display = 'none';
+      document.getElementById('emptyState').classList.add('visible');
+      document.getElementById('masonryGrid').style.display = 'none';
+      var fb = document.getElementById('floatingBtn');
+      fb.style.opacity = '0';
+      fb.style.display = 'none';
+    } else {
+      var strongText = strongCount > 0 ? ' \u00B7 ' + strongCount + ' above 60%' : '';
+      subtitle.textContent = total + ' habit' + (total !== 1 ? 's' : '') + ' resting' + strongText;
+    }
+
+    document.getElementById('strongCount').textContent = strongCount;
+    if (strongCount === 0) {
+      var fb = document.getElementById('floatingBtn');
+      fb.style.opacity = '0';
+      setTimeout(function() { fb.style.display = 'none'; }, 300);
+    }
+  }
+</script>
+
+</body>
+</html>

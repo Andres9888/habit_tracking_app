@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title>Archived Habits — Habits Talking to You</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Literata:opsz,wght@7..72,400;7..72,500;7..72,600;7..72,700&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      box-sizing: border-box !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      -webkit-tap-highlight-color: transparent;
+    }
+    body {
+      font-family: 'DM Sans', sans-serif !important;
+      background: #E8E0D8 !important;
+      min-height: 100vh !important;
+      display: flex !important;
+      justify-content: center !important;
+      align-items: flex-start !important;
+      padding: 20px 0 !important;
+    }
+    h1, h2, h3 {
+      font-family: 'Literata', serif !important;
+    }
+
+    /* Phone frame */
+    .phone-frame {
+      width: 390px !important;
+      min-height: 844px !important;
+      max-height: 844px !important;
+      background: #F5F1ED !important;
+      border-radius: 44px !important;
+      border: 8px solid #1F2937 !important;
+      overflow: hidden !important;
+      position: relative !important;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.15), 0 0 0 2px rgba(0,0,0,0.05) !important;
+      display: flex !important;
+      flex-direction: column !important;
+    }
+    .notch {
+      position: absolute !important;
+      top: 0 !important;
+      left: 50% !important;
+      transform: translateX(-50%) !important;
+      width: 150px !important;
+      height: 28px !important;
+      background: #1F2937 !important;
+      border-radius: 0 0 20px 20px !important;
+      z-index: 50 !important;
+    }
+
+    /* Header */
+    .chat-header {
+      padding: 52px 20px 14px !important;
+      position: relative !important;
+      z-index: 20 !important;
+      flex-shrink: 0 !important;
+    }
+    .header-row {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+    }
+    .header-btn {
+      width: 36px !important;
+      height: 36px !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      border-radius: 12px !important;
+      border: none !important;
+      background: transparent !important;
+      color: #6B7280 !important;
+      cursor: pointer !important;
+      transition: background 0.2s !important;
+    }
+    .header-btn:hover { background: rgba(0,0,0,0.05) !important; }
+    .header-center {
+      text-align: center !important;
+    }
+    .header-title {
+      font-family: 'Literata', serif !important;
+      font-size: 18px !important;
+      font-weight: 600 !important;
+      color: #3D3229 !important;
+      line-height: 1.2 !important;
+    }
+    .header-subtitle {
+      font-size: 12px !important;
+      color: #9C8E80 !important;
+      margin-top: 2px !important;
+      font-weight: 400 !important;
+    }
+
+    /* Divider below header */
+    .header-divider {
+      height: 1px !important;
+      background: rgba(0,0,0,0.06) !important;
+      margin: 0 20px !important;
+      flex-shrink: 0 !important;
+    }
+
+    /* Chat scroll area */
+    .chat-scroll {
+      flex: 1 !important;
+      overflow-y: auto !important;
+      overflow-x: hidden !important;
+      padding: 12px 16px 90px !important;
+      -webkit-overflow-scrolling: touch !important;
+    }
+
+    /* Date divider */
+    .date-divider {
+      display: flex !important;
+      align-items: center !important;
+      gap: 12px !important;
+      margin: 6px 0 14px !important;
+    }
+    .date-divider::before,
+    .date-divider::after {
+      content: '' !important;
+      flex: 1 !important;
+      height: 1px !important;
+      background: rgba(0,0,0,0.07) !important;
+    }
+    .date-divider span {
+      font-size: 11px !important;
+      font-weight: 500 !important;
+      color: #9C8E80 !important;
+      text-transform: uppercase !important;
+      letter-spacing: 0.06em !important;
+    }
+
+    /* Message group */
+    .msg-group {
+      display: flex !important;
+      align-items: flex-start !important;
+      margin-bottom: 16px !important;
+      position: relative !important;
+      opacity: 0 !important;
+      animation: msgSlideIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both !important;
+    }
+    .msg-group:nth-child(2) { animation-delay: 0.1s !important; }
+    .msg-group:nth-child(3) { animation-delay: 0.22s !important; }
+    .msg-group:nth-child(5) { animation-delay: 0.34s !important; }
+    .msg-group:nth-child(6) { animation-delay: 0.46s !important; }
+    .msg-group:nth-child(8) { animation-delay: 0.58s !important; }
+
+    @keyframes msgSlideIn {
+      0% { opacity: 0; transform: translateY(20px) scale(0.94); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    /* Avatar */
+    .avatar-circle {
+      width: 40px !important;
+      height: 40px !important;
+      min-width: 40px !important;
+      border-radius: 50% !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      font-size: 20px !important;
+      flex-shrink: 0 !important;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08) !important;
+      margin-right: 0 !important;
+    }
+
+    /* Message bubble */
+    .msg-bubble {
+      background: #FFFFFF !important;
+      border-radius: 0 16px 16px 16px !important;
+      box-shadow: 0 2px 8px rgba(139,110,78,0.09), 0 1px 2px rgba(139,110,78,0.05) !important;
+      padding: 12px 14px !important;
+      margin-left: 10px !important;
+      max-width: calc(100% - 50px) !important;
+      position: relative !important;
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+      transform-origin: left top !important;
+    }
+    .msg-bubble::before {
+      content: '' !important;
+      position: absolute !important;
+      left: -7px !important;
+      top: 0 !important;
+      width: 0 !important;
+      height: 0 !important;
+      border-top: 0 solid transparent !important;
+      border-bottom: 10px solid transparent !important;
+      border-right: 8px solid #FFFFFF !important;
+    }
+
+    /* Habit name */
+    .habit-name {
+      font-family: 'Literata', serif !important;
+      font-weight: 600 !important;
+      font-size: 13px !important;
+      color: #3D3229 !important;
+      line-height: 1.2 !important;
+    }
+
+    /* Streak badge */
+    .streak-badge {
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 3px !important;
+      font-size: 10px !important;
+      font-weight: 600 !important;
+      padding: 2px 7px !important;
+      border-radius: 100px !important;
+      margin-left: 6px !important;
+      vertical-align: middle !important;
+    }
+
+    /* Message text */
+    .habit-msg {
+      font-size: 13.5px !important;
+      line-height: 1.5 !important;
+      color: #5C4F43 !important;
+      margin: 6px 0 0 !important;
+    }
+
+    /* Timestamp */
+    .timestamp {
+      font-size: 10px !important;
+      color: #B8ADA2 !important;
+      font-family: 'DM Sans', sans-serif !important;
+      margin-top: 6px !important;
+      display: block !important;
+    }
+
+    /* Reply buttons bar */
+    .reply-bar {
+      display: flex !important;
+      gap: 8px !important;
+      margin-top: 10px !important;
+      padding-top: 10px !important;
+      border-top: 1px solid rgba(0,0,0,0.05) !important;
+    }
+
+    .reply-btn {
+      padding: 7px 16px !important;
+      border-radius: 100px !important;
+      font-size: 12.5px !important;
+      font-weight: 600 !important;
+      font-family: 'DM Sans', sans-serif !important;
+      cursor: pointer !important;
+      transition: all 0.2s ease !important;
+      border: none !important;
+      outline: none !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 5px !important;
+    }
+    .reply-btn:active {
+      transform: scale(0.94) !important;
+    }
+    .reply-btn:disabled {
+      opacity: 0.5 !important;
+      cursor: not-allowed !important;
+    }
+
+    .btn-restore {
+      background: #059669 !important;
+      color: #fff !important;
+    }
+    .btn-restore:hover:not(:disabled) {
+      background: #047857 !important;
+      box-shadow: 0 3px 10px rgba(5,150,105,0.3) !important;
+    }
+
+    .btn-delete {
+      background: transparent !important;
+      color: #B53030 !important;
+      border: 1.5px solid #B53030 !important;
+    }
+    .btn-delete:hover:not(:disabled) {
+      background: #B53030 !important;
+      color: #fff !important;
+    }
+
+    /* Slide-away animations */
+    @keyframes slideOutRight {
+      0% { opacity: 1; transform: translateX(0) scale(1); }
+      100% { opacity: 0; transform: translateX(140px) scale(0.85); }
+    }
+    @keyframes slideOutLeft {
+      0% { opacity: 1; transform: translateX(0) scale(1); }
+      100% { opacity: 0; transform: translateX(-140px) scale(0.85); }
+    }
+    .slide-out-right {
+      animation: slideOutRight 0.4s cubic-bezier(0.55, 0, 1, 0.45) forwards !important;
+    }
+    .slide-out-left {
+      animation: slideOutLeft 0.4s cubic-bezier(0.55, 0, 1, 0.45) forwards !important;
+    }
+
+    /* Collapse wrapper height after slide */
+    @keyframes collapseHeight {
+      0% { max-height: 300px; margin-bottom: 16px; opacity: 1; }
+      100% { max-height: 0; margin-bottom: 0; opacity: 0; overflow: hidden; }
+    }
+    .collapse-out {
+      animation: collapseHeight 0.3s 0.35s ease forwards !important;
+    }
+
+    /* Toast */
+    .toast {
+      position: absolute !important;
+      bottom: 50px !important;
+      left: 50% !important;
+      transform: translateX(-50%) translateY(16px) !important;
+      background: #3D3229 !important;
+      color: #F5F1ED !important;
+      padding: 9px 18px !important;
+      border-radius: 100px !important;
+      font-size: 12.5px !important;
+      font-weight: 500 !important;
+      font-family: 'DM Sans', sans-serif !important;
+      opacity: 0 !important;
+      pointer-events: none !important;
+      transition: all 0.3s ease !important;
+      z-index: 100 !important;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.18) !important;
+      white-space: nowrap !important;
+    }
+    .toast.show {
+      opacity: 1 !important;
+      transform: translateX(-50%) translateY(0) !important;
+    }
+
+    /* Empty state */
+    .empty-state {
+      display: none;
+      flex-direction: column !important;
+      align-items: center !important;
+      justify-content: center !important;
+      padding: 50px 36px !important;
+      text-align: center !important;
+    }
+    .empty-state.visible {
+      display: flex !important;
+      animation: msgSlideIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both !important;
+    }
+
+    /* Home indicator */
+    .home-indicator {
+      position: absolute !important;
+      bottom: 8px !important;
+      left: 50% !important;
+      transform: translateX(-50%) !important;
+      width: 134px !important;
+      height: 5px !important;
+      background: #1F2937 !important;
+      border-radius: 3px !important;
+      opacity: 0.3 !important;
+      z-index: 30 !important;
+    }
+
+    /* Typing dots animation for initial load feel */
+    @keyframes typingDot {
+      0%, 60%, 100% { opacity: 0.3; transform: translateY(0); }
+      30% { opacity: 1; transform: translateY(-3px); }
+    }
+    .typing-dot {
+      width: 6px !important;
+      height: 6px !important;
+      border-radius: 50% !important;
+      background: #9C8E80 !important;
+      display: inline-block !important;
+      animation: typingDot 1.2s infinite !important;
+    }
+    .typing-dot:nth-child(2) { animation-delay: 0.2s !important; }
+    .typing-dot:nth-child(3) { animation-delay: 0.4s !important; }
+  </style>
+</head>
+<body>
+  <div class="phone-frame">
+    <div class="notch"></div>
+
+    <!-- Header -->
+    <div class="chat-header">
+      <div class="header-row">
+        <button class="header-btn" aria-label="Go back">
+          <i data-lucide="chevron-left" style="width:22px;height:22px;"></i>
+        </button>
+        <div class="header-center">
+          <div class="header-title">Archived Habits</div>
+          <div class="header-subtitle" id="headerSub">5 habits want to talk</div>
+        </div>
+        <button class="header-btn" aria-label="Close">
+          <i data-lucide="x" style="width:20px;height:20px;"></i>
+        </button>
+      </div>
+    </div>
+    <div class="header-divider"></div>
+
+    <!-- Chat Timeline -->
+    <div class="chat-scroll" id="chatScroll">
+
+      <!-- Date: Today -->
+      <div class="date-divider"><span>Today</span></div>
+
+      <!-- Habit 1: Strong — Morning Meditation (42-day streak) -->
+      <div class="msg-group" id="msg-1">
+        <div class="avatar-circle" style="background: linear-gradient(135deg, #FDE68A, #F59E0B) !important;">
+          🧘
+        </div>
+        <div class="msg-bubble">
+          <div style="display:flex !important; align-items:center !important; flex-wrap:wrap !important; gap:4px !important;">
+            <span class="habit-name">Morning Meditation</span>
+            <span class="streak-badge" style="background:#ECFDF5 !important; color:#059669 !important;">🔥 42 days</span>
+          </div>
+          <p class="habit-msg">I miss being part of your routine! We had 42 amazing days together. Remember how calm mornings used to feel? 💪</p>
+          <span class="timestamp">Archived 3 days ago</span>
+          <div class="reply-bar">
+            <button class="reply-btn btn-restore" onclick="restoreHabit('msg-1', 'Morning Meditation')">Come Back!</button>
+            <button class="reply-btn btn-delete" onclick="deleteHabit('msg-1', 'Morning Meditation')">Goodbye</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Habit 2: Strong — Evening Run (28-day streak) -->
+      <div class="msg-group" id="msg-2">
+        <div class="avatar-circle" style="background: linear-gradient(135deg, #BBF7D0, #22C55E) !important;">
+          🏃
+        </div>
+        <div class="msg-bubble">
+          <div style="display:flex !important; align-items:center !important; flex-wrap:wrap !important; gap:4px !important;">
+            <span class="habit-name">Evening Run</span>
+            <span class="streak-badge" style="background:#ECFDF5 !important; color:#059669 !important;">🔥 28 days</span>
+          </div>
+          <p class="habit-msg">Hey, we were on a roll! 28 days of fresh air and endorphins. The sunset misses you too 🌅</p>
+          <span class="timestamp">Archived 1 week ago</span>
+          <div class="reply-bar">
+            <button class="reply-btn btn-restore" onclick="restoreHabit('msg-2', 'Evening Run')">Come Back!</button>
+            <button class="reply-btn btn-delete" onclick="deleteHabit('msg-2', 'Evening Run')">Goodbye</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Date: Last Week -->
+      <div class="date-divider"><span>Last Week</span></div>
+
+      <!-- Habit 3: Medium — Read 20 Pages (12-day streak) -->
+      <div class="msg-group" id="msg-3">
+        <div class="avatar-circle" style="background: linear-gradient(135deg, #DDD6FE, #8B5CF6) !important;">
+          📖
+        </div>
+        <div class="msg-bubble">
+          <div style="display:flex !important; align-items:center !important; flex-wrap:wrap !important; gap:4px !important;">
+            <span class="habit-name">Read 20 Pages</span>
+            <span class="streak-badge" style="background:#FEF3C7 !important; color:#D97706 !important;">📊 12 days</span>
+          </div>
+          <p class="habit-msg">We had a good thing going... 12 days isn't bad! That book on your nightstand is getting dusty though 📚</p>
+          <span class="timestamp">Archived 2 weeks ago</span>
+          <div class="reply-bar">
+            <button class="reply-btn btn-restore" onclick="restoreHabit('msg-3', 'Read 20 Pages')">Come Back!</button>
+            <button class="reply-btn btn-delete" onclick="deleteHabit('msg-3', 'Read 20 Pages')">Goodbye</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Habit 4: Weak — Cold Shower (3-day streak) -->
+      <div class="msg-group" id="msg-4">
+        <div class="avatar-circle" style="background: linear-gradient(135deg, #BFDBFE, #3B82F6) !important;">
+          🚿
+        </div>
+        <div class="msg-bubble">
+          <div style="display:flex !important; align-items:center !important; flex-wrap:wrap !important; gap:4px !important;">
+            <span class="habit-name">Cold Shower</span>
+            <span class="streak-badge" style="background:#FEE2E2 !important; color:#B53030 !important;">📊 3 days</span>
+          </div>
+          <p class="habit-msg">Look, I get it... I'm not for everyone. Only 3 days, huh? Maybe it's time to let me go... 🥶</p>
+          <span class="timestamp">Archived 3 weeks ago</span>
+          <div class="reply-bar">
+            <button class="reply-btn btn-restore" onclick="restoreHabit('msg-4', 'Cold Shower')">Come Back!</button>
+            <button class="reply-btn btn-delete" onclick="deleteHabit('msg-4', 'Cold Shower')">Goodbye</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Date: Earlier -->
+      <div class="date-divider"><span>Earlier</span></div>
+
+      <!-- Habit 5: Weak — Journal Writing (1-day streak) -->
+      <div class="msg-group" id="msg-5">
+        <div class="avatar-circle" style="background: linear-gradient(135deg, #FECACA, #EF4444) !important;">
+          ✍️
+        </div>
+        <div class="msg-bubble">
+          <div style="display:flex !important; align-items:center !important; flex-wrap:wrap !important; gap:4px !important;">
+            <span class="habit-name">Journal Writing</span>
+            <span class="streak-badge" style="background:#FEE2E2 !important; color:#B53030 !important;">📊 1 day</span>
+          </div>
+          <p class="habit-msg">One day. That's all we had. I barely got to know you... Maybe some stories just aren't meant to be written 😔</p>
+          <span class="timestamp">Archived 1 month ago</span>
+          <div class="reply-bar">
+            <button class="reply-btn btn-restore" onclick="restoreHabit('msg-5', 'Journal Writing')">Come Back!</button>
+            <button class="reply-btn btn-delete" onclick="deleteHabit('msg-5', 'Journal Writing')">Goodbye</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Empty State (hidden) -->
+      <div class="empty-state" id="emptyState">
+        <div style="width:72px !important; height:72px !important; border-radius:50% !important; background: linear-gradient(135deg, #E8E0D8, #D4C8BC) !important; display:flex !important; align-items:center !important; justify-content:center !important; margin-bottom:16px !important; font-size:32px !important;">
+          💬
+        </div>
+        <h2 style="font-family:'Literata',serif !important; font-size:18px !important; color:#3D3229 !important; margin-bottom:6px !important;">Inbox Zero</h2>
+        <p style="font-size:13px !important; color:#9C8E80 !important; line-height:1.5 !important;">
+          All caught up! No archived habits<br />are waiting to hear from you.
+        </p>
+      </div>
+
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+
+    <!-- Home indicator -->
+    <div class="home-indicator"></div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+
+    let habitCount = 5;
+
+    function updateHeader() {
+      const sub = document.getElementById('headerSub');
+      if (habitCount <= 0) {
+        sub.textContent = 'Inbox zero ✨';
+        document.getElementById('emptyState').classList.add('visible');
+      } else if (habitCount === 1) {
+        sub.textContent = '1 habit wants to talk';
+      } else {
+        sub.textContent = habitCount + ' habits want to talk';
+      }
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2200);
+    }
+
+    function restoreHabit(id, name) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.querySelectorAll('.reply-btn').forEach(function(btn) { btn.disabled = true; });
+      el.classList.add('slide-out-right', 'collapse-out');
+      showToast('✅ ' + name + ' is back!');
+      el.addEventListener('animationend', function handler(e) {
+        if (e.animationName === 'collapseHeight') {
+          el.remove();
+          habitCount--;
+          updateHeader();
+          cleanupEmptyDividers();
+        }
+      });
+    }
+
+    function deleteHabit(id, name) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.querySelectorAll('.reply-btn').forEach(function(btn) { btn.disabled = true; });
+      el.classList.add('slide-out-left', 'collapse-out');
+      showToast('👋 Farewell, ' + name);
+      el.addEventListener('animationend', function handler(e) {
+        if (e.animationName === 'collapseHeight') {
+          el.remove();
+          habitCount--;
+          updateHeader();
+          cleanupEmptyDividers();
+        }
+      });
+    }
+
+    /* Remove orphaned date dividers when all messages under them are gone */
+    function cleanupEmptyDividers() {
+      const scroll = document.getElementById('chatScroll');
+      const children = Array.from(scroll.children);
+      for (let i = children.length - 1; i >= 0; i--) {
+        const child = children[i];
+        if (!child.classList.contains('date-divider')) continue;
+        /* Check if next sibling is another divider, empty-state, or nothing */
+        const next = children[i + 1];
+        if (!next || next.classList.contains('date-divider') || next.classList.contains('empty-state')) {
+          child.remove();
+          children.splice(i, 1);
+        }
+      }
+    }
+  </script>
+</body>
+</html>

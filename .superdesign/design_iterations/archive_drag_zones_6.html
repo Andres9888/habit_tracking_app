@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Archived Habits — Two-Zone Drag Sort</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..800;1,9..40,300..800&family=Literata:opsz,wght@7..72,400;7..72,600;7..72,700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; overflow: hidden; }
+  body {
+    font-family: 'DM Sans', sans-serif !important;
+    background: #F5F1ED !important;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+  }
+  .literata { font-family: 'Literata', serif !important; }
+
+  /* Phone frame */
+  .phone-frame {
+    width: 390px;
+    max-height: 100vh;
+    height: 844px;
+    background: #F5F1ED;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Drop zones */
+  .drop-zone {
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  .drop-zone.zone-active {
+    transform: scale(1.06);
+  }
+  .drop-zone .zone-icon {
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .drop-zone.zone-active .zone-icon {
+    transform: scale(1.3);
+  }
+
+  /* Restore zone states */
+  .restore-zone {
+    background: #ECFDF5;
+    border: 2px dashed #059669;
+  }
+  .restore-zone.zone-active {
+    background: #059669;
+    border: 2px solid #059669;
+    box-shadow: 0 0 24px rgba(5, 150, 105, 0.45), 0 0 48px rgba(5, 150, 105, 0.2);
+  }
+  .restore-zone.zone-active .zone-label,
+  .restore-zone.zone-active .zone-icon { color: #fff !important; }
+
+  /* Delete zone states */
+  .delete-zone {
+    background: #FEF2F2;
+    border: 2px dashed #B53030;
+  }
+  .delete-zone.zone-active {
+    background: #B53030;
+    border: 2px solid #B53030;
+    box-shadow: 0 0 24px rgba(181, 48, 48, 0.45), 0 0 48px rgba(181, 48, 48, 0.2);
+  }
+  .delete-zone.zone-active .zone-label,
+  .delete-zone.zone-active .zone-icon { color: #fff !important; }
+
+  /* Habit card */
+  .habit-card {
+    background: #FFFFFF;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(120, 100, 80, 0.08), 0 1px 3px rgba(120, 100, 80, 0.06);
+    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease, opacity 0.25s ease;
+    cursor: grab;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: none;
+  }
+  .habit-card:active { cursor: grabbing; }
+  .habit-card.dragging {
+    transform: scale(1.03) rotate(-1.5deg) !important;
+    box-shadow: 0 12px 32px rgba(120, 100, 80, 0.2), 0 4px 12px rgba(120, 100, 80, 0.12);
+    z-index: 1000;
+    opacity: 0.92;
+    pointer-events: none;
+  }
+  .habit-card.returning {
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease, opacity 0.3s ease;
+  }
+  .habit-card.absorbed {
+    transition: transform 0.35s cubic-bezier(0.5, 0, 0.75, 0), opacity 0.35s ease;
+    opacity: 0 !important;
+  }
+
+  /* Strength pill */
+  .strength-pill {
+    font-size: 12px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 999px;
+  }
+  .strength-high { background: #ECFDF5; color: #059669; }
+  .strength-mid { background: #FFF7ED; color: #D97706; }
+  .strength-low { background: #FEF2F2; color: #B53030; }
+
+  /* Counter badge */
+  .counter-badge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    min-width: 22px;
+    height: 22px;
+    border-radius: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    color: #fff;
+    opacity: 0;
+    transform: scale(0);
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    padding: 0 6px;
+  }
+  .counter-badge.visible {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  /* Flash animation on accept */
+  @keyframes zoneFlash {
+    0% { filter: brightness(1); }
+    50% { filter: brightness(1.4); }
+    100% { filter: brightness(1); }
+  }
+  .zone-flash {
+    animation: zoneFlash 0.4s ease;
+  }
+
+  /* Card list scroll area */
+  .card-list {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 32px;
+  }
+  .card-list::-webkit-scrollbar { display: none; }
+
+  /* Empty state */
+  .empty-state {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 32px;
+    text-align: center;
+    gap: 12px;
+  }
+  .empty-state.visible {
+    display: flex;
+  }
+
+  /* Drag ghost (hidden) */
+  .drag-ghost {
+    position: fixed;
+    top: -9999px;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+  }
+</style>
+</head>
+<body>
+<div class="phone-frame" id="phoneFrame">
+
+  <!-- Header -->
+  <div style="padding: 56px 24px 12px;">
+    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 4px;">
+      <button id="backBtn" style="width: 36px; height: 36px; border-radius: 12px; border: none; background: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 1px 4px rgba(0,0,0,0.06);">
+        <i data-lucide="arrow-left" style="width: 18px; height: 18px; color: #1F2937;"></i>
+      </button>
+      <h1 class="literata" style="font-size: 26px; font-weight: 700; color: #1F2937; letter-spacing: -0.3px;">Archived Habits</h1>
+    </div>
+    <p style="font-size: 13px; color: #9CA3AF; padding-left: 48px; margin-top: -2px;">Drag habits to restore or delete</p>
+  </div>
+
+  <!-- Drop Zones -->
+  <div style="display: flex; gap: 12px; padding: 8px 24px 16px;" id="dropZoneContainer">
+
+    <!-- Restore Zone -->
+    <div class="drop-zone restore-zone" id="restoreZone" style="flex: 1; height: 80px; border-radius: 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; position: relative;">
+      <div class="counter-badge" id="restoreCounter" style="background: #059669;">0</div>
+      <i data-lucide="rotate-ccw" class="zone-icon" style="width: 22px; height: 22px; color: #059669;"></i>
+      <span class="zone-label" style="font-size: 13px; font-weight: 600; color: #059669;">Restore</span>
+    </div>
+
+    <!-- Delete Zone -->
+    <div class="drop-zone delete-zone" id="deleteZone" style="flex: 1; height: 80px; border-radius: 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; position: relative;">
+      <div class="counter-badge" id="deleteCounter" style="background: #B53030;">0</div>
+      <i data-lucide="trash-2" class="zone-icon" style="width: 22px; height: 22px; color: #B53030;"></i>
+      <span class="zone-label" style="font-size: 13px; font-weight: 600; color: #B53030;">Delete</span>
+    </div>
+  </div>
+
+  <!-- Card List -->
+  <div class="card-list" id="cardList">
+
+    <!-- Card 1 -->
+    <div class="habit-card" data-id="1" draggable="true" style="margin: 0 24px 12px; padding: 16px 18px; display: flex; align-items: center; gap: 14px;">
+      <i data-lucide="grip-vertical" style="width: 16px; height: 16px; color: #CBD5E1; flex-shrink: 0;"></i>
+      <span style="font-size: 28px; flex-shrink: 0; line-height: 1;">&#x1F9D8;</span>
+      <div style="flex: 1; min-width: 0;">
+        <div style="font-size: 15px; font-weight: 600; color: #1F2937; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Morning Meditation</div>
+        <div style="font-size: 12px; color: #9CA3AF; margin-top: 2px;">Archived Feb 15</div>
+      </div>
+      <span class="strength-pill strength-high">72%</span>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="habit-card" data-id="2" draggable="true" style="margin: 0 24px 12px; padding: 16px 18px; display: flex; align-items: center; gap: 14px;">
+      <i data-lucide="grip-vertical" style="width: 16px; height: 16px; color: #CBD5E1; flex-shrink: 0;"></i>
+      <span style="font-size: 28px; flex-shrink: 0; line-height: 1;">&#x1F4D6;</span>
+      <div style="flex: 1; min-width: 0;">
+        <div style="font-size: 15px; font-weight: 600; color: #1F2937; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Read 30 Minutes</div>
+        <div style="font-size: 12px; color: #9CA3AF; margin-top: 2px;">Archived Mar 1</div>
+      </div>
+      <span class="strength-pill strength-mid">58%</span>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="habit-card" data-id="3" draggable="true" style="margin: 0 24px 12px; padding: 16px 18px; display: flex; align-items: center; gap: 14px;">
+      <i data-lucide="grip-vertical" style="width: 16px; height: 16px; color: #CBD5E1; flex-shrink: 0;"></i>
+      <span style="font-size: 28px; flex-shrink: 0; line-height: 1;">&#x1F976;</span>
+      <div style="flex: 1; min-width: 0;">
+        <div style="font-size: 15px; font-weight: 600; color: #1F2937; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Cold Shower</div>
+        <div style="font-size: 12px; color: #9CA3AF; margin-top: 2px;">Archived Mar 10</div>
+      </div>
+      <span class="strength-pill strength-low">35%</span>
+    </div>
+
+    <!-- Card 4 -->
+    <div class="habit-card" data-id="4" draggable="true" style="margin: 0 24px 12px; padding: 16px 18px; display: flex; align-items: center; gap: 14px;">
+      <i data-lucide="grip-vertical" style="width: 16px; height: 16px; color: #CBD5E1; flex-shrink: 0;"></i>
+      <span style="font-size: 28px; flex-shrink: 0; line-height: 1;">&#x270D;&#xFE0F;</span>
+      <div style="flex: 1; min-width: 0;">
+        <div style="font-size: 15px; font-weight: 600; color: #1F2937; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Daily Journal</div>
+        <div style="font-size: 12px; color: #9CA3AF; margin-top: 2px;">Archived Mar 18</div>
+      </div>
+      <span class="strength-pill strength-high">85%</span>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div class="empty-state" id="emptyState">
+    <i data-lucide="archive" style="width: 48px; height: 48px; color: #CBD5E1;"></i>
+    <p style="font-size: 16px; font-weight: 600; color: #6B7280;">All clear!</p>
+    <p style="font-size: 13px; color: #9CA3AF;">No archived habits remaining.</p>
+  </div>
+
+  <!-- Hidden drag ghost image -->
+  <div class="drag-ghost" id="dragGhost"></div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  lucide.createIcons();
+
+  const restoreZone = document.getElementById('restoreZone');
+  const deleteZone = document.getElementById('deleteZone');
+  const cardList = document.getElementById('cardList');
+  const emptyState = document.getElementById('emptyState');
+  const restoreCounterEl = document.getElementById('restoreCounter');
+  const deleteCounterEl = document.getElementById('deleteCounter');
+  const dragGhost = document.getElementById('dragGhost');
+
+  let restoreCount = 0;
+  let deleteCount = 0;
+
+  // ─── STATE ───
+  let dragCard = null;
+  let touchStartY = 0;
+  let touchStartX = 0;
+  let cardStartRect = null;
+  let isDraggingTouch = false;
+  let activeZone = null;
+
+  // ─── HELPERS ───
+  function updateCounter(type) {
+    if (type === 'restore') {
+      restoreCount++;
+      restoreCounterEl.textContent = restoreCount;
+      restoreCounterEl.classList.add('visible');
+    } else {
+      deleteCount++;
+      deleteCounterEl.textContent = deleteCount;
+      deleteCounterEl.classList.add('visible');
+    }
+  }
+
+  function checkEmpty() {
+    const remaining = cardList.querySelectorAll('.habit-card');
+    if (remaining.length === 0) {
+      emptyState.classList.add('visible');
+    }
+  }
+
+  function getZoneUnderPoint(x, y) {
+    const rRect = restoreZone.getBoundingClientRect();
+    const dRect = deleteZone.getBoundingClientRect();
+
+    if (x >= rRect.left && x <= rRect.right && y >= rRect.top && y <= rRect.bottom) {
+      return 'restore';
+    }
+    if (x >= dRect.left && x <= dRect.right && y >= dRect.top && y <= dRect.bottom) {
+      return 'delete';
+    }
+    return null;
+  }
+
+  function setZoneActive(zone) {
+    if (activeZone === zone) return;
+    restoreZone.classList.remove('zone-active');
+    deleteZone.classList.remove('zone-active');
+    activeZone = zone;
+    if (zone === 'restore') restoreZone.classList.add('zone-active');
+    if (zone === 'delete') deleteZone.classList.add('zone-active');
+  }
+
+  function absorbCard(card, zone) {
+    const zoneEl = zone === 'restore' ? restoreZone : deleteZone;
+    const zoneRect = zoneEl.getBoundingClientRect();
+    const cardRect = card.getBoundingClientRect();
+
+    const dx = (zoneRect.left + zoneRect.width / 2) - (cardRect.left + cardRect.width / 2);
+    const dy = (zoneRect.top + zoneRect.height / 2) - (cardRect.top + cardRect.height / 2);
+
+    card.classList.add('absorbed');
+    card.style.transform = `translate(${dx}px, ${dy}px) scale(0.15)`;
+
+    // Flash the zone
+    zoneEl.classList.add('zone-flash');
+    setTimeout(() => zoneEl.classList.remove('zone-flash'), 400);
+
+    updateCounter(zone);
+
+    setTimeout(() => {
+      card.remove();
+      checkEmpty();
+    }, 360);
+  }
+
+  function returnCard(card) {
+    card.classList.add('returning');
+    card.classList.remove('dragging');
+    card.style.transform = '';
+    card.style.position = '';
+    card.style.left = '';
+    card.style.top = '';
+    card.style.width = '';
+    card.style.zIndex = '';
+
+    setTimeout(() => {
+      card.classList.remove('returning');
+    }, 400);
+  }
+
+  // ─── NATIVE DRAG & DROP (desktop) ───
+  cardList.addEventListener('dragstart', (e) => {
+    const card = e.target.closest('.habit-card');
+    if (!card) return;
+    dragCard = card;
+    // Use invisible ghost
+    e.dataTransfer.setDragImage(dragGhost, 0, 0);
+    e.dataTransfer.effectAllowed = 'move';
+
+    requestAnimationFrame(() => {
+      card.classList.add('dragging');
+    });
+  });
+
+  document.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    if (!dragCard) return;
+
+    const zone = getZoneUnderPoint(e.clientX, e.clientY);
+    setZoneActive(zone);
+
+    // Move card to follow cursor
+    const rect = cardStartRect || dragCard.getBoundingClientRect();
+    if (!cardStartRect) cardStartRect = { ...rect, left: rect.left, top: rect.top, width: rect.width, height: rect.height };
+  });
+
+  document.addEventListener('dragend', (e) => {
+    if (!dragCard) return;
+
+    const zone = getZoneUnderPoint(e.clientX, e.clientY);
+    setZoneActive(null);
+
+    if (zone) {
+      absorbCard(dragCard, zone);
+    } else {
+      returnCard(dragCard);
+    }
+
+    dragCard = null;
+    cardStartRect = null;
+  });
+
+  // Drop zone listeners
+  [restoreZone, deleteZone].forEach(zoneEl => {
+    zoneEl.addEventListener('dragover', (e) => e.preventDefault());
+    zoneEl.addEventListener('drop', (e) => {
+      e.preventDefault();
+      // handled in dragend
+    });
+  });
+
+
+  // ─── TOUCH DRAG (mobile) ───
+  cardList.addEventListener('touchstart', (e) => {
+    const card = e.target.closest('.habit-card');
+    if (!card) return;
+
+    const touch = e.touches[0];
+    touchStartX = touch.clientX;
+    touchStartY = touch.clientY;
+    dragCard = card;
+    isDraggingTouch = false;
+
+    cardStartRect = card.getBoundingClientRect();
+  }, { passive: true });
+
+  document.addEventListener('touchmove', (e) => {
+    if (!dragCard) return;
+
+    const touch = e.touches[0];
+    const dx = touch.clientX - touchStartX;
+    const dy = touch.clientY - touchStartY;
+
+    // Require minimum movement to start drag
+    if (!isDraggingTouch) {
+      if (Math.abs(dx) > 8 || Math.abs(dy) > 8) {
+        isDraggingTouch = true;
+        dragCard.classList.add('dragging');
+        dragCard.style.position = 'fixed';
+        dragCard.style.left = cardStartRect.left + 'px';
+        dragCard.style.top = cardStartRect.top + 'px';
+        dragCard.style.width = cardStartRect.width + 'px';
+        dragCard.style.zIndex = '1000';
+        // Prevent scrolling
+        e.preventDefault();
+      } else {
+        return;
+      }
+    }
+
+    e.preventDefault();
+
+    // Move card
+    dragCard.style.transform = `translate(${dx}px, ${dy}px) scale(1.03) rotate(${dx * 0.02}deg)`;
+
+    // Check zone hover
+    const zone = getZoneUnderPoint(touch.clientX, touch.clientY);
+    setZoneActive(zone);
+  }, { passive: false });
+
+  document.addEventListener('touchend', (e) => {
+    if (!dragCard || !isDraggingTouch) {
+      dragCard = null;
+      isDraggingTouch = false;
+      return;
+    }
+
+    const touch = e.changedTouches[0];
+    const zone = getZoneUnderPoint(touch.clientX, touch.clientY);
+    setZoneActive(null);
+
+    if (zone) {
+      absorbCard(dragCard, zone);
+    } else {
+      returnCard(dragCard);
+    }
+
+    dragCard = null;
+    isDraggingTouch = false;
+    cardStartRect = null;
+  });
+
+
+  // ─── DESKTOP: MAKE CARDS FOLLOW CURSOR DURING DRAG ───
+  // Since native drag doesn't move the element, we simulate it
+  let desktopDragOffset = null;
+
+  cardList.addEventListener('mousedown', (e) => {
+    const card = e.target.closest('.habit-card');
+    if (!card) return;
+    // Store offset for smooth following
+    const rect = card.getBoundingClientRect();
+    desktopDragOffset = {
+      card,
+      startX: e.clientX,
+      startY: e.clientY,
+      origLeft: rect.left,
+      origTop: rect.top,
+      width: rect.width,
+      isDragging: false
+    };
+  });
+
+  document.addEventListener('mousemove', (e) => {
+    if (!desktopDragOffset) return;
+    const { card, startX, startY } = desktopDragOffset;
+
+    const dx = e.clientX - startX;
+    const dy = e.clientY - startY;
+
+    if (!desktopDragOffset.isDragging) {
+      if (Math.abs(dx) > 5 || Math.abs(dy) > 5) {
+        desktopDragOffset.isDragging = true;
+        card.setAttribute('draggable', 'false');  // take over from native drag
+        card.classList.add('dragging');
+        card.style.position = 'fixed';
+        card.style.left = desktopDragOffset.origLeft + 'px';
+        card.style.top = desktopDragOffset.origTop + 'px';
+        card.style.width = desktopDragOffset.width + 'px';
+        card.style.zIndex = '1000';
+        card.style.margin = '0';
+      } else {
+        return;
+      }
+    }
+
+    card.style.transform = `translate(${dx}px, ${dy}px) scale(1.03) rotate(${dx * 0.015}deg)`;
+
+    const zone = getZoneUnderPoint(e.clientX, e.clientY);
+    setZoneActive(zone);
+  });
+
+  document.addEventListener('mouseup', (e) => {
+    if (!desktopDragOffset || !desktopDragOffset.isDragging) {
+      if (desktopDragOffset) {
+        desktopDragOffset = null;
+      }
+      return;
+    }
+
+    const { card } = desktopDragOffset;
+    const zone = getZoneUnderPoint(e.clientX, e.clientY);
+    setZoneActive(null);
+
+    if (zone) {
+      absorbCard(card, zone);
+    } else {
+      card.classList.remove('dragging');
+      card.classList.add('returning');
+      card.style.transform = '';
+      card.style.position = '';
+      card.style.left = '';
+      card.style.top = '';
+      card.style.width = '';
+      card.style.zIndex = '';
+      card.style.margin = '';
+      setTimeout(() => {
+        card.classList.remove('returning');
+        card.setAttribute('draggable', 'true');
+      }, 400);
+    }
+
+    desktopDragOffset = null;
+  });
+
+});
+</script>
+</body>
+</html>

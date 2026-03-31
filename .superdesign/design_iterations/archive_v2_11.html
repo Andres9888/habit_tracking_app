@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inbox Zero — Archived Habits</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=Literata:opsz,wght@7..72,400;7..72,500;7..72,600&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif !important;
+    background: #1a1a1a;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    padding: 20px 0;
+  }
+
+  .iphone-frame {
+    width: 390px;
+    min-height: 844px;
+    background: #F5F1ED;
+    border-radius: 44px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 25px 80px rgba(0,0,0,0.4), inset 0 0 0 1px rgba(0,0,0,0.08);
+  }
+
+  .notch {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 160px;
+    height: 34px;
+    background: #1a1a1a;
+    border-radius: 0 0 24px 24px;
+    z-index: 10;
+  }
+
+  .screen-content {
+    padding: 0;
+    min-height: 844px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Status bar */
+  .status-bar {
+    height: 54px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding-bottom: 10px;
+  }
+
+  .status-bar-time {
+    font-size: 15px;
+    font-weight: 600;
+    color: #2C2520;
+  }
+
+  /* Top toolbar */
+  .inbox-toolbar {
+    padding: 8px 20px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2px;
+  }
+
+  .inbox-toolbar-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .back-btn {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: transparent;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #059669;
+    transition: background 0.2s;
+  }
+
+  .back-btn:hover { background: rgba(5, 150, 105, 0.08); }
+
+  .inbox-title {
+    font-family: 'Literata', serif !important;
+    font-size: 22px;
+    font-weight: 600;
+    color: #2C2520;
+    letter-spacing: -0.3px;
+  }
+
+  .inbox-count {
+    font-size: 13px;
+    font-weight: 600;
+    color: #fff;
+    background: #059669;
+    border-radius: 12px;
+    padding: 1px 9px;
+    margin-left: 6px;
+    vertical-align: middle;
+  }
+
+  .inbox-toolbar-right {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .toolbar-icon-btn {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: transparent;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #6B5E54;
+    transition: all 0.2s;
+  }
+
+  .toolbar-icon-btn:hover { background: rgba(0,0,0,0.06); color: #2C2520; }
+
+  /* Subtitle / progress */
+  .inbox-subtitle {
+    padding: 4px 20px 10px;
+    font-size: 13px;
+    color: #8B7E74;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .progress-track {
+    flex: 1;
+    height: 4px;
+    background: #E0D9D1;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: #059669;
+    border-radius: 2px;
+    transition: width 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  /* Batch action bar */
+  .batch-bar {
+    display: none;
+    padding: 8px 20px;
+    background: #059669;
+    align-items: center;
+    justify-content: space-between;
+    animation: slideDown 0.25s ease-out;
+  }
+
+  .batch-bar.visible { display: flex; }
+
+  .batch-bar-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .batch-bar-left label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .batch-bar-right {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .batch-action-btn {
+    height: 32px;
+    border-radius: 8px;
+    padding: 0 14px;
+    border: none;
+    font-family: 'DM Sans', sans-serif !important;
+    font-size: 12.5px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: all 0.2s;
+  }
+
+  .batch-restore {
+    background: rgba(255,255,255,0.2);
+    color: #fff;
+  }
+
+  .batch-restore:hover { background: rgba(255,255,255,0.3); }
+
+  .batch-delete {
+    background: rgba(181, 48, 48, 0.85);
+    color: #fff;
+  }
+
+  .batch-delete:hover { background: #B53030; }
+
+  @keyframes slideDown {
+    from { transform: translateY(-100%); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+
+  /* Inbox list */
+  .inbox-list {
+    flex: 1;
+    overflow-y: auto;
+    padding-bottom: 40px;
+  }
+
+  /* Individual inbox row */
+  .inbox-row {
+    position: relative;
+    height: 72px;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    background: #FFFFFF;
+    border-bottom: 1px solid #EDE8E3;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.3s ease;
+    overflow: hidden;
+    user-select: none;
+    opacity: 0;
+    animation: rowFadeIn 0.35s ease-out forwards;
+  }
+
+  .inbox-row:nth-child(1) { animation-delay: 0.05s; }
+  .inbox-row:nth-child(2) { animation-delay: 0.1s; }
+  .inbox-row:nth-child(3) { animation-delay: 0.15s; }
+  .inbox-row:nth-child(4) { animation-delay: 0.2s; }
+  .inbox-row:nth-child(5) { animation-delay: 0.25s; }
+  .inbox-row:nth-child(6) { animation-delay: 0.3s; }
+
+  @keyframes rowFadeIn {
+    from { opacity: 0; transform: translateX(-10px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  .inbox-row:hover { background: #FAF7F4; }
+  .inbox-row.selected { background: #F0FAF5; }
+
+  /* Swipe delete zone (behind the row) */
+  .swipe-zone {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 100px;
+    background: #B53030;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    gap: 4px;
+    z-index: 0;
+  }
+
+  .row-content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    background: inherit;
+    transition: transform 0.3s ease;
+  }
+
+  /* Checkbox */
+  .row-checkbox {
+    width: 0;
+    overflow: hidden;
+    transition: width 0.2s ease, margin 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .row-checkbox.visible {
+    width: 26px;
+    margin-right: 10px;
+  }
+
+  .row-checkbox input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 2px solid #C4BBB2;
+    appearance: none;
+    -webkit-appearance: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    background: #fff;
+    flex-shrink: 0;
+  }
+
+  .row-checkbox input[type="checkbox"]:checked {
+    background: #059669;
+    border-color: #059669;
+  }
+
+  .row-checkbox input[type="checkbox"]:checked::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 5px;
+    width: 4px;
+    height: 8px;
+    border: solid #fff;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+
+  /* Emoji avatar */
+  .row-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+    margin-right: 12px;
+    background: #F5F1ED;
+  }
+
+  /* Row body */
+  .row-body {
+    flex: 1;
+    min-width: 0;
+    padding-right: 8px;
+  }
+
+  .row-name {
+    font-size: 15px;
+    font-weight: 700;
+    color: #2C2520;
+    letter-spacing: -0.1px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 2px;
+  }
+
+  .row-name.read {
+    font-weight: 400;
+    color: #6B5E54;
+  }
+
+  .row-preview {
+    font-size: 12.5px;
+    color: #9B918A;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.3;
+  }
+
+  .row-preview .strength {
+    font-weight: 600;
+  }
+
+  .row-preview .strength.high { color: #059669; }
+  .row-preview .strength.mid { color: #D97706; }
+  .row-preview .strength.low { color: #B53030; }
+
+  /* Right side: timestamp + star */
+  .row-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 6px;
+    flex-shrink: 0;
+  }
+
+  .row-timestamp {
+    font-size: 11.5px;
+    color: #A69A90;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  .row-star {
+    width: 28px;
+    height: 28px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s;
+    color: #D0C8C0;
+  }
+
+  .row-star:hover { color: #F59E0B; background: rgba(245, 158, 11, 0.08); }
+  .row-star.starred { color: #F59E0B; }
+
+  /* Unread indicator dot */
+  .unread-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #059669;
+    flex-shrink: 0;
+    margin-right: 10px;
+    transition: opacity 0.3s;
+  }
+
+  .unread-dot.hidden { opacity: 0; }
+
+  /* Row removing animation */
+  @keyframes rowSlideOut {
+    0% { transform: translateX(0); opacity: 1; max-height: 72px; }
+    50% { transform: translateX(100%); opacity: 0.5; }
+    100% { transform: translateX(100%); opacity: 0; max-height: 0; border-bottom: none; overflow: hidden; }
+  }
+
+  .row-removing {
+    animation: rowSlideOut 0.45s ease-in forwards;
+  }
+
+  @keyframes rowSwipeDelete {
+    0% { max-height: 72px; }
+    100% { max-height: 0; border-bottom: none; overflow: hidden; padding: 0; }
+  }
+
+  .row-collapsing {
+    animation: rowSwipeDelete 0.3s ease-out forwards;
+  }
+
+  /* Restore animation */
+  @keyframes rowRestoreFlash {
+    0% { background: #F0FAF5; }
+    50% { background: #D1FAE5; }
+    100% { background: #F0FAF5; }
+  }
+
+  .row-restoring {
+    animation: rowRestoreFlash 0.4s ease;
+  }
+
+  .row-restoring .row-name::after {
+    content: ' - Restored!';
+    font-size: 12px;
+    color: #059669;
+    font-weight: 600;
+  }
+
+  /* Empty state / Inbox Zero */
+  .inbox-zero {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 40px;
+    text-align: center;
+    animation: zeroAppear 0.6s ease-out;
+  }
+
+  .inbox-zero.visible {
+    display: flex;
+  }
+
+  @keyframes zeroAppear {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  .zero-circle {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #D1FAE5, #A7F3D0);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 48px;
+    margin-bottom: 20px;
+    box-shadow: 0 8px 30px rgba(5, 150, 105, 0.15);
+  }
+
+  .zero-title {
+    font-family: 'Literata', serif !important;
+    font-size: 22px;
+    font-weight: 600;
+    color: #059669;
+    margin-bottom: 8px;
+    letter-spacing: -0.3px;
+  }
+
+  .zero-subtitle {
+    font-size: 14px;
+    color: #8B7E74;
+    line-height: 1.5;
+  }
+
+  .zero-confetti {
+    font-size: 32px;
+    margin-top: 16px;
+    animation: confettiBounce 1s ease infinite;
+  }
+
+  @keyframes confettiBounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+
+  /* Home indicator */
+  .home-indicator {
+    position: absolute;
+    bottom: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 134px;
+    height: 5px;
+    background: #2C2520;
+    border-radius: 3px;
+    opacity: 0.2;
+  }
+
+  /* Touch hint overlay */
+  .touch-hint {
+    position: fixed;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(44, 37, 32, 0.9);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 8px 16px;
+    border-radius: 20px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+    z-index: 100;
+    white-space: nowrap;
+  }
+
+  .touch-hint.visible { opacity: 1; }
+</style>
+</head>
+<body>
+
+<div class="iphone-frame">
+  <div class="notch"></div>
+
+  <div class="screen-content">
+    <div class="status-bar">
+      <span class="status-bar-time">9:41</span>
+    </div>
+
+    <!-- Top toolbar -->
+    <div class="inbox-toolbar">
+      <div class="inbox-toolbar-left">
+        <button class="back-btn" aria-label="Go back">
+          <i data-lucide="arrow-left" style="width:18px;height:18px;"></i>
+        </button>
+        <h1 class="inbox-title">Archive<span class="inbox-count" id="inboxCount">6</span></h1>
+      </div>
+      <div class="inbox-toolbar-right">
+        <button class="toolbar-icon-btn" id="editBtn" onclick="toggleEditMode()" aria-label="Select">
+          <i data-lucide="check-square" style="width:18px;height:18px;"></i>
+        </button>
+        <button class="toolbar-icon-btn" aria-label="Filter">
+          <i data-lucide="sliders-horizontal" style="width:18px;height:18px;"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Progress subtitle -->
+    <div class="inbox-subtitle" id="inboxSubtitle">
+      <span id="progressLabel">0 of 6 decided</span>
+      <div class="progress-track">
+        <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+      </div>
+    </div>
+
+    <!-- Batch action bar (hidden until edit mode) -->
+    <div class="batch-bar" id="batchBar">
+      <div class="batch-bar-left">
+        <label>
+          <input type="checkbox" id="selectAll" onchange="toggleSelectAll()" style="width:16px;height:16px;border-radius:4px;accent-color:#fff;">
+          <span id="selectAllLabel">Select All</span>
+        </label>
+      </div>
+      <div class="batch-bar-right">
+        <button class="batch-action-btn batch-restore" onclick="batchRestore()">
+          <i data-lucide="rotate-ccw" style="width:13px;height:13px;"></i>
+          Restore
+        </button>
+        <button class="batch-action-btn batch-delete" onclick="batchDelete()">
+          <i data-lucide="trash-2" style="width:13px;height:13px;"></i>
+          Delete
+        </button>
+      </div>
+    </div>
+
+    <!-- Inbox list -->
+    <div class="inbox-list" id="inboxList">
+
+      <!-- Row 1 -->
+      <div class="inbox-row" data-id="1" data-name="Daily Journal">
+        <div class="swipe-zone"><i data-lucide="trash-2" style="width:16px;height:16px;"></i> Delete</div>
+        <div class="row-content">
+          <div class="row-checkbox"><input type="checkbox" onchange="handleRowCheck(this)"></div>
+          <div class="unread-dot"></div>
+          <div class="row-avatar">&#x270D;&#xFE0F;</div>
+          <div class="row-body">
+            <div class="row-name">Daily Journal</div>
+            <div class="row-preview">Dormant for 14 days &middot; Strength <span class="strength high">85%</span></div>
+          </div>
+          <div class="row-right">
+            <span class="row-timestamp">2 weeks</span>
+            <button class="row-star" onclick="toggleStar(event, this)" aria-label="Star for restore">
+              <i data-lucide="star" style="width:16px;height:16px;"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Row 2 -->
+      <div class="inbox-row" data-id="2" data-name="Morning Meditation">
+        <div class="swipe-zone"><i data-lucide="trash-2" style="width:16px;height:16px;"></i> Delete</div>
+        <div class="row-content">
+          <div class="row-checkbox"><input type="checkbox" onchange="handleRowCheck(this)"></div>
+          <div class="unread-dot"></div>
+          <div class="row-avatar">&#x1F9D8;</div>
+          <div class="row-body">
+            <div class="row-name">Morning Meditation</div>
+            <div class="row-preview">Dormant for 30 days &middot; Strength <span class="strength high">72%</span></div>
+          </div>
+          <div class="row-right">
+            <span class="row-timestamp">1 month</span>
+            <button class="row-star" onclick="toggleStar(event, this)" aria-label="Star for restore">
+              <i data-lucide="star" style="width:16px;height:16px;"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Row 3 -->
+      <div class="inbox-row" data-id="3" data-name="Read 30 Minutes">
+        <div class="swipe-zone"><i data-lucide="trash-2" style="width:16px;height:16px;"></i> Delete</div>
+        <div class="row-content">
+          <div class="row-checkbox"><input type="checkbox" onchange="handleRowCheck(this)"></div>
+          <div class="unread-dot"></div>
+          <div class="row-avatar">&#x1F4D6;</div>
+          <div class="row-body">
+            <div class="row-name">Read 30 Minutes</div>
+            <div class="row-preview">Dormant for 45 days &middot; Strength <span class="strength mid">58%</span></div>
+          </div>
+          <div class="row-right">
+            <span class="row-timestamp">6 weeks</span>
+            <button class="row-star" onclick="toggleStar(event, this)" aria-label="Star for restore">
+              <i data-lucide="star" style="width:16px;height:16px;"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Row 4 -->
+      <div class="inbox-row" data-id="4" data-name="Cold Shower">
+        <div class="swipe-zone"><i data-lucide="trash-2" style="width:16px;height:16px;"></i> Delete</div>
+        <div class="row-content">
+          <div class="row-checkbox"><input type="checkbox" onchange="handleRowCheck(this)"></div>
+          <div class="unread-dot"></div>
+          <div class="row-avatar">&#x1F976;</div>
+          <div class="row-body">
+            <div class="row-name">Cold Shower</div>
+            <div class="row-preview">Dormant for 60 days &middot; Strength <span class="strength low">35%</span></div>
+          </div>
+          <div class="row-right">
+            <span class="row-timestamp">2 months</span>
+            <button class="row-star" onclick="toggleStar(event, this)" aria-label="Star for restore">
+              <i data-lucide="star" style="width:16px;height:16px;"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Row 5 -->
+      <div class="inbox-row" data-id="5" data-name="Evening Walk">
+        <div class="swipe-zone"><i data-lucide="trash-2" style="width:16px;height:16px;"></i> Delete</div>
+        <div class="row-content">
+          <div class="row-checkbox"><input type="checkbox" onchange="handleRowCheck(this)"></div>
+          <div class="unread-dot"></div>
+          <div class="row-avatar">&#x1F6B6;</div>
+          <div class="row-body">
+            <div class="row-name">Evening Walk</div>
+            <div class="row-preview">Dormant for 90 days &middot; Strength <span class="strength mid">48%</span></div>
+          </div>
+          <div class="row-right">
+            <span class="row-timestamp">3 months</span>
+            <button class="row-star" onclick="toggleStar(event, this)" aria-label="Star for restore">
+              <i data-lucide="star" style="width:16px;height:16px;"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Row 6 -->
+      <div class="inbox-row" data-id="6" data-name="Drink Water">
+        <div class="swipe-zone"><i data-lucide="trash-2" style="width:16px;height:16px;"></i> Delete</div>
+        <div class="row-content">
+          <div class="row-checkbox"><input type="checkbox" onchange="handleRowCheck(this)"></div>
+          <div class="unread-dot"></div>
+          <div class="row-avatar">&#x1F4A7;</div>
+          <div class="row-body">
+            <div class="row-name">Drink Water</div>
+            <div class="row-preview">Dormant for 120 days &middot; Strength <span class="strength low">22%</span></div>
+          </div>
+          <div class="row-right">
+            <span class="row-timestamp">4 months</span>
+            <button class="row-star" onclick="toggleStar(event, this)" aria-label="Star for restore">
+              <i data-lucide="star" style="width:16px;height:16px;"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Inbox Zero empty state -->
+    <div class="inbox-zero" id="inboxZero">
+      <div class="zero-circle">&#x2728;</div>
+      <div class="zero-title">Inbox Zero!</div>
+      <div class="zero-subtitle">All archived habits have been decided.<br>Your habit list is clean and focused.</div>
+      <div class="zero-confetti">&#x1F389;</div>
+    </div>
+
+  </div>
+
+  <div class="home-indicator"></div>
+</div>
+
+<div class="touch-hint" id="touchHint">Swipe left on a row to delete</div>
+
+<script>
+  // Init Lucide
+  lucide.createIcons();
+
+  // State
+  var editMode = false;
+  var totalHabits = 6;
+  var decidedCount = 0;
+  var touchStartX = 0;
+  var touchCurrentX = 0;
+  var activeSwipeRow = null;
+  var swipeThreshold = 80;
+
+  // Show touch hint briefly
+  setTimeout(function() {
+    document.getElementById('touchHint').classList.add('visible');
+    setTimeout(function() {
+      document.getElementById('touchHint').classList.remove('visible');
+    }, 3000);
+  }, 1500);
+
+  // --- Edit / Batch Mode ---
+  function toggleEditMode() {
+    editMode = !editMode;
+    var checkboxes = document.querySelectorAll('.row-checkbox');
+    var batchBar = document.getElementById('batchBar');
+    var editBtn = document.getElementById('editBtn');
+
+    checkboxes.forEach(function(cb) {
+      cb.classList.toggle('visible', editMode);
+      if (!editMode) {
+        cb.querySelector('input').checked = false;
+      }
+    });
+
+    batchBar.classList.toggle('visible', editMode);
+    editBtn.style.color = editMode ? '#059669' : '';
+    document.getElementById('selectAll').checked = false;
+    updateSelectAllLabel();
+    lucide.createIcons();
+  }
+
+  function toggleSelectAll() {
+    var checked = document.getElementById('selectAll').checked;
+    var rows = document.querySelectorAll('.inbox-row');
+    rows.forEach(function(row) {
+      var cb = row.querySelector('.row-checkbox input');
+      cb.checked = checked;
+      row.classList.toggle('selected', checked);
+    });
+    updateSelectAllLabel();
+  }
+
+  function handleRowCheck(checkbox) {
+    var row = checkbox.closest('.inbox-row');
+    row.classList.toggle('selected', checkbox.checked);
+    updateSelectAllLabel();
+  }
+
+  function updateSelectAllLabel() {
+    var allRows = document.querySelectorAll('.inbox-row');
+    var checkedRows = document.querySelectorAll('.inbox-row .row-checkbox input:checked');
+    var label = document.getElementById('selectAllLabel');
+    if (checkedRows.length === 0) {
+      label.textContent = 'Select All';
+    } else {
+      label.textContent = checkedRows.length + ' selected';
+    }
+    document.getElementById('selectAll').checked = allRows.length > 0 && checkedRows.length === allRows.length;
+  }
+
+  function getSelectedRows() {
+    return document.querySelectorAll('.inbox-row .row-checkbox input:checked');
+  }
+
+  function batchRestore() {
+    var selected = getSelectedRows();
+    selected.forEach(function(cb, i) {
+      var row = cb.closest('.inbox-row');
+      setTimeout(function() {
+        restoreRow(row);
+      }, i * 120);
+    });
+  }
+
+  function batchDelete() {
+    var selected = getSelectedRows();
+    selected.forEach(function(cb, i) {
+      var row = cb.closest('.inbox-row');
+      setTimeout(function() {
+        deleteRow(row);
+      }, i * 100);
+    });
+  }
+
+  // --- Star Toggle ---
+  function toggleStar(e, btn) {
+    e.stopPropagation();
+    btn.classList.toggle('starred');
+
+    // Fill vs outline
+    var icon = btn.querySelector('svg');
+    if (btn.classList.contains('starred')) {
+      icon.setAttribute('fill', '#F59E0B');
+      icon.setAttribute('stroke', '#F59E0B');
+    } else {
+      icon.setAttribute('fill', 'none');
+      icon.setAttribute('stroke', 'currentColor');
+    }
+  }
+
+  // --- Row Actions ---
+  function restoreRow(row) {
+    row.classList.add('row-restoring');
+    var dot = row.querySelector('.unread-dot');
+    if (dot) dot.classList.add('hidden');
+
+    var nameEl = row.querySelector('.row-name');
+    nameEl.classList.add('read');
+
+    setTimeout(function() {
+      row.classList.add('row-removing');
+      setTimeout(function() {
+        row.remove();
+        decidedCount++;
+        updateProgress();
+        checkInboxZero();
+        updateSelectAllLabel();
+      }, 450);
+    }, 600);
+  }
+
+  function deleteRow(row) {
+    var content = row.querySelector('.row-content');
+    content.style.transform = 'translateX(-100%)';
+    content.style.transition = 'transform 0.3s ease';
+
+    setTimeout(function() {
+      row.classList.add('row-collapsing');
+      setTimeout(function() {
+        row.remove();
+        decidedCount++;
+        updateProgress();
+        checkInboxZero();
+        updateSelectAllLabel();
+      }, 300);
+    }, 300);
+  }
+
+  // --- Progress ---
+  function updateProgress() {
+    var remaining = document.querySelectorAll('.inbox-row').length;
+    var decided = totalHabits - remaining;
+    decidedCount = decided;
+
+    document.getElementById('inboxCount').textContent = remaining;
+    document.getElementById('progressLabel').textContent = decided + ' of ' + totalHabits + ' decided';
+    document.getElementById('progressFill').style.width = ((decided / totalHabits) * 100) + '%';
+  }
+
+  function checkInboxZero() {
+    var remaining = document.querySelectorAll('.inbox-row').length;
+    if (remaining === 0) {
+      document.getElementById('inboxZero').classList.add('visible');
+      document.getElementById('batchBar').classList.remove('visible');
+      document.getElementById('inboxSubtitle').style.display = 'none';
+      document.getElementById('inboxCount').style.display = 'none';
+    }
+  }
+
+  // --- Swipe to Delete ---
+  var rows = document.querySelectorAll('.inbox-row');
+  rows.forEach(function(row) {
+    var content = row.querySelector('.row-content');
+    var startX = 0;
+    var currentX = 0;
+    var swiping = false;
+
+    content.addEventListener('touchstart', function(e) {
+      if (editMode) return;
+      startX = e.touches[0].clientX;
+      swiping = true;
+      content.style.transition = 'none';
+    });
+
+    content.addEventListener('touchmove', function(e) {
+      if (!swiping || editMode) return;
+      currentX = e.touches[0].clientX;
+      var diff = currentX - startX;
+      if (diff < 0) {
+        // Swiping left
+        var move = Math.max(diff, -120);
+        content.style.transform = 'translateX(' + move + 'px)';
+      }
+    });
+
+    content.addEventListener('touchend', function(e) {
+      if (!swiping || editMode) return;
+      swiping = false;
+      var diff = currentX - startX;
+      content.style.transition = 'transform 0.3s ease';
+
+      if (diff < -swipeThreshold) {
+        // Complete the swipe - delete
+        content.style.transform = 'translateX(-100%)';
+        setTimeout(function() {
+          row.classList.add('row-collapsing');
+          setTimeout(function() {
+            row.remove();
+            decidedCount++;
+            updateProgress();
+            checkInboxZero();
+          }, 300);
+        }, 200);
+      } else {
+        // Snap back
+        content.style.transform = 'translateX(0)';
+      }
+      currentX = 0;
+    });
+
+    // Mouse-based swipe for desktop demo
+    var mouseDown = false;
+    var mouseStartX = 0;
+
+    content.addEventListener('mousedown', function(e) {
+      if (editMode) return;
+      mouseDown = true;
+      mouseStartX = e.clientX;
+      content.style.transition = 'none';
+      e.preventDefault();
+    });
+
+    content.addEventListener('mousemove', function(e) {
+      if (!mouseDown || editMode) return;
+      var diff = e.clientX - mouseStartX;
+      if (diff < 0) {
+        content.style.transform = 'translateX(' + Math.max(diff, -120) + 'px)';
+      }
+    });
+
+    content.addEventListener('mouseup', function(e) {
+      if (!mouseDown || editMode) return;
+      mouseDown = false;
+      var diff = e.clientX - mouseStartX;
+      content.style.transition = 'transform 0.3s ease';
+
+      if (diff < -swipeThreshold) {
+        content.style.transform = 'translateX(-100%)';
+        setTimeout(function() {
+          row.classList.add('row-collapsing');
+          setTimeout(function() {
+            row.remove();
+            decidedCount++;
+            updateProgress();
+            checkInboxZero();
+          }, 300);
+        }, 200);
+      } else {
+        content.style.transform = 'translateX(0)';
+      }
+    });
+
+    content.addEventListener('mouseleave', function() {
+      if (mouseDown) {
+        mouseDown = false;
+        content.style.transition = 'transform 0.3s ease';
+        content.style.transform = 'translateX(0)';
+      }
+    });
+
+    // Tap to restore (when not in edit mode and not swiping)
+    row.addEventListener('click', function(e) {
+      if (editMode) return;
+      if (e.target.closest('.row-star')) return;
+      if (Math.abs((currentX || e.clientX) - (startX || mouseStartX)) > 10) return;
+      restoreRow(row);
+    });
+  });
+</script>
+
+</body>
+</html>

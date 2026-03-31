@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Archived Habits — Swipe Actions</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..800;1,9..40,300..800&family=Literata:opsz,wght@7..72,400;7..72,500;7..72,600;7..72,700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif !important;
+      background: #E8E4E0;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      padding: 24px 0;
+    }
+
+    .phone-frame {
+      width: 390px;
+      min-height: 720px;
+      background: #F5F1ED;
+      border-radius: 40px;
+      overflow: hidden;
+      box-shadow:
+        0 0 0 1px rgba(45,42,38,0.08),
+        0 24px 48px rgba(45,42,38,0.12),
+        0 8px 16px rgba(45,42,38,0.06);
+      position: relative;
+    }
+
+    /* Notch */
+    .phone-frame::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 126px;
+      height: 28px;
+      background: #1F2937;
+      border-radius: 0 0 18px 18px;
+      z-index: 50;
+    }
+
+    .header {
+      padding: 52px 20px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(45,42,38,0.08);
+      background: #F5F1ED;
+      position: sticky;
+      top: 0;
+      z-index: 40;
+    }
+
+    .header-back {
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px;
+      color: #1F2937;
+      cursor: pointer;
+      transition: background 0.15s ease;
+    }
+
+    .header-back:hover {
+      background: rgba(45,42,38,0.06);
+    }
+
+    .header-title {
+      font-family: 'Literata', serif !important;
+      font-size: 18px;
+      font-weight: 600;
+      color: #1F2937;
+      letter-spacing: -0.02em;
+    }
+
+    .header-count {
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      background: rgba(45,42,38,0.06);
+      font-size: 13px;
+      font-weight: 600;
+      color: #6B7280;
+    }
+
+    .card-list {
+      padding: 16px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    /* Swipe container */
+    .swipe-container {
+      position: relative;
+      border-radius: 16px;
+      overflow: hidden;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    /* Action layers behind the card */
+    .swipe-action {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      color: white;
+      letter-spacing: 0.01em;
+      opacity: 0;
+      transition: opacity 0.15s ease;
+    }
+
+    .swipe-action-restore {
+      left: 0;
+      background: #059669;
+      padding-left: 24px;
+      justify-content: flex-start;
+    }
+
+    .swipe-action-delete {
+      right: 0;
+      background: #B53030;
+      padding-right: 24px;
+      justify-content: flex-end;
+    }
+
+    .swipe-action.visible {
+      opacity: 1;
+    }
+
+    .swipe-action.triggered {
+      opacity: 1;
+    }
+
+    .swipe-action .action-icon {
+      width: 20px;
+      height: 20px;
+      transition: transform 0.2s ease;
+    }
+
+    .swipe-action.triggered .action-icon {
+      transform: scale(1.2);
+    }
+
+    /* Card */
+    .habit-card {
+      position: relative;
+      background: #FFFFFF;
+      border-radius: 16px;
+      padding: 16px;
+      box-shadow: 0 1px 3px rgba(45,42,38,0.06);
+      cursor: grab;
+      touch-action: pan-y;
+      will-change: transform;
+      transition: none;
+      z-index: 2;
+    }
+
+    .habit-card.snapping {
+      transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    .habit-card.dismissing {
+      transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                  opacity 0.35s ease;
+    }
+
+    .habit-card:active {
+      cursor: grabbing;
+    }
+
+    .card-top {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .card-emoji {
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      background: rgba(45,42,38,0.03);
+      border-radius: 12px;
+      flex-shrink: 0;
+    }
+
+    .card-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .card-name {
+      font-size: 15px;
+      font-weight: 600;
+      color: #1F2937;
+      line-height: 1.3;
+      margin-bottom: 2px;
+    }
+
+    .card-date {
+      font-size: 12px;
+      color: #6B7280;
+      line-height: 1.4;
+    }
+
+    .card-strength {
+      flex-shrink: 0;
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .strength-high {
+      background: rgba(5,150,105,0.08);
+      color: #059669;
+    }
+
+    .strength-mid {
+      background: rgba(217,119,6,0.08);
+      color: #D97706;
+    }
+
+    .strength-low {
+      background: rgba(181,48,48,0.08);
+      color: #B53030;
+    }
+
+    .card-stats {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+      padding-left: 56px;
+    }
+
+    .stat-pill {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 8px;
+      border-radius: 6px;
+      background: rgba(45,42,38,0.04);
+      font-size: 12px;
+      color: #6B7280;
+      font-weight: 500;
+    }
+
+    .stat-pill .stat-icon {
+      font-size: 11px;
+    }
+
+    /* Footer hint */
+    .footer-hint {
+      text-align: center;
+      padding: 20px 20px 32px;
+      font-size: 12px;
+      color: #9CA3AF;
+      letter-spacing: 0.01em;
+    }
+
+    .footer-hint span {
+      color: #6B7280;
+      font-weight: 500;
+    }
+
+    /* Dismiss animation for the whole container */
+    .swipe-container.collapsing {
+      overflow: hidden;
+      transition: max-height 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                  margin 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                  opacity 0.25s ease,
+                  padding 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    /* Empty state */
+    .empty-state {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 80px 40px;
+      text-align: center;
+    }
+
+    .empty-state.visible {
+      display: flex;
+    }
+
+    .empty-icon {
+      width: 64px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 16px;
+      background: rgba(45,42,38,0.04);
+      margin-bottom: 16px;
+      color: #9CA3AF;
+    }
+
+    .empty-title {
+      font-family: 'Literata', serif !important;
+      font-size: 17px;
+      font-weight: 600;
+      color: #1F2937;
+      margin-bottom: 6px;
+    }
+
+    .empty-subtitle {
+      font-size: 13px;
+      color: #6B7280;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+
+<div class="phone-frame">
+  <!-- Header -->
+  <div class="header">
+    <div class="header-back">
+      <i data-lucide="arrow-left" style="width:20px;height:20px"></i>
+    </div>
+    <div class="header-title">Archived Habits</div>
+    <div class="header-count" id="card-count">4</div>
+  </div>
+
+  <!-- Card list -->
+  <div class="card-list" id="card-list">
+
+    <!-- Card 1: Morning Meditation -->
+    <div class="swipe-container" data-habit="Morning Meditation">
+      <div class="swipe-action swipe-action-restore">
+        <svg class="action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+        <span>Restore</span>
+      </div>
+      <div class="swipe-action swipe-action-delete">
+        <span>Delete</span>
+        <svg class="action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+      </div>
+      <div class="habit-card">
+        <div class="card-top">
+          <div class="card-emoji">🧘</div>
+          <div class="card-info">
+            <div class="card-name">Morning Meditation</div>
+            <div class="card-date">Archived Feb 15 &middot; 34 days ago</div>
+          </div>
+          <div class="card-strength strength-high">72%</div>
+        </div>
+        <div class="card-stats">
+          <div class="stat-pill"><span class="stat-icon">🔥</span> 45d</div>
+          <div class="stat-pill"><span class="stat-icon">✓</span> 234</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 2: Read 30 Minutes -->
+    <div class="swipe-container" data-habit="Read 30 Minutes">
+      <div class="swipe-action swipe-action-restore">
+        <svg class="action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+        <span>Restore</span>
+      </div>
+      <div class="swipe-action swipe-action-delete">
+        <span>Delete</span>
+        <svg class="action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+      </div>
+      <div class="habit-card">
+        <div class="card-top">
+          <div class="card-emoji">📖</div>
+          <div class="card-info">
+            <div class="card-name">Read 30 Minutes</div>
+            <div class="card-date">Archived Mar 1 &middot; 20 days ago</div>
+          </div>
+          <div class="card-strength strength-mid">58%</div>
+        </div>
+        <div class="card-stats">
+          <div class="stat-pill"><span class="stat-icon">🔥</span> 28d</div>
+          <div class="stat-pill"><span class="stat-icon">✓</span> 156</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 3: Cold Shower -->
+    <div class="swipe-container" data-habit="Cold Shower">
+      <div class="swipe-action swipe-action-restore">
+        <svg class="action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+        <span>Restore</span>
+      </div>
+      <div class="swipe-action swipe-action-delete">
+        <span>Delete</span>
+        <svg class="action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+      </div>
+      <div class="habit-card">
+        <div class="card-top">
+          <div class="card-emoji">🥶</div>
+          <div class="card-info">
+            <div class="card-name">Cold Shower</div>
+            <div class="card-date">Archived Mar 10 &middot; 11 days ago</div>
+          </div>
+          <div class="card-strength strength-low">35%</div>
+        </div>
+        <div class="card-stats">
+          <div class="stat-pill"><span class="stat-icon">🔥</span> 12d</div>
+          <div class="stat-pill"><span class="stat-icon">✓</span> 89</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 4: Daily Journal -->
+    <div class="swipe-container" data-habit="Daily Journal">
+      <div class="swipe-action swipe-action-restore">
+        <svg class="action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+        <span>Restore</span>
+      </div>
+      <div class="swipe-action swipe-action-delete">
+        <span>Delete</span>
+        <svg class="action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+      </div>
+      <div class="habit-card">
+        <div class="card-top">
+          <div class="card-emoji">✍️</div>
+          <div class="card-info">
+            <div class="card-name">Daily Journal</div>
+            <div class="card-date">Archived Mar 18 &middot; 3 days ago</div>
+          </div>
+          <div class="card-strength strength-high">85%</div>
+        </div>
+        <div class="card-stats">
+          <div class="stat-pill"><span class="stat-icon">🔥</span> 67d</div>
+          <div class="stat-pill"><span class="stat-icon">✓</span> 312</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Footer hint -->
+  <div class="footer-hint" id="footer-hint">
+    Swipe <span>right to restore</span> &middot; Swipe <span>left to delete</span>
+  </div>
+
+  <!-- Empty state -->
+  <div class="empty-state" id="empty-state">
+    <div class="empty-icon">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8v13H3V8"/><path d="M1 3h22v5H1z"/><path d="M10 12h4"/></svg>
+    </div>
+    <div class="empty-title">No archived habits</div>
+    <div class="empty-subtitle">Habits you archive will appear here.<br>You can restore them anytime.</div>
+  </div>
+</div>
+
+<script>
+(function() {
+  const THRESHOLD = 80;
+  const DISMISS_DISTANCE = 400;
+  let activeCard = null;
+
+  function initSwipeCards() {
+    const containers = document.querySelectorAll('.swipe-container');
+    containers.forEach(container => {
+      const card = container.querySelector('.habit-card');
+      setupSwipe(container, card);
+    });
+  }
+
+  function setupSwipe(container, card) {
+    let startX = 0;
+    let currentX = 0;
+    let isDragging = false;
+
+    // Touch events
+    card.addEventListener('touchstart', onStart, { passive: true });
+    card.addEventListener('touchmove', onMove, { passive: false });
+    card.addEventListener('touchend', onEnd);
+    card.addEventListener('touchcancel', onEnd);
+
+    // Mouse events
+    card.addEventListener('mousedown', onStart);
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
+
+    function onStart(e) {
+      if (activeCard && activeCard !== card) return;
+      activeCard = card;
+      isDragging = true;
+
+      card.classList.remove('snapping', 'dismissing');
+
+      const point = e.touches ? e.touches[0] : e;
+      startX = point.clientX;
+      currentX = 0;
+    }
+
+    function onMove(e) {
+      if (!isDragging) return;
+      e.preventDefault();
+
+      const point = e.touches ? e.touches[0] : e;
+      currentX = point.clientX - startX;
+
+      // Apply resistance at edges
+      const dampened = applyResistance(currentX);
+      card.style.transform = `translateX(${dampened}px)`;
+
+      updateActions(container, currentX);
+    }
+
+    function onMouseMove(e) {
+      if (!isDragging || activeCard !== card) return;
+      currentX = e.clientX - startX;
+      const dampened = applyResistance(currentX);
+      card.style.transform = `translateX(${dampened}px)`;
+      updateActions(container, currentX);
+    }
+
+    function onEnd() {
+      if (!isDragging || activeCard !== card) return;
+      isDragging = false;
+      activeCard = null;
+
+      if (Math.abs(currentX) >= THRESHOLD) {
+        dismissCard(container, card, currentX > 0 ? 'restore' : 'delete');
+      } else {
+        snapBack(container, card);
+      }
+    }
+
+    function onMouseUp() {
+      if (activeCard === card) {
+        onEnd();
+      }
+    }
+  }
+
+  function applyResistance(x) {
+    const maxStretch = 200;
+    const sign = x >= 0 ? 1 : -1;
+    const abs = Math.abs(x);
+    // Slight rubber-band effect beyond threshold
+    if (abs > maxStretch) {
+      return sign * (maxStretch + (abs - maxStretch) * 0.3);
+    }
+    return x;
+  }
+
+  function updateActions(container, deltaX) {
+    const restoreAction = container.querySelector('.swipe-action-restore');
+    const deleteAction = container.querySelector('.swipe-action-delete');
+
+    if (deltaX > 10) {
+      restoreAction.classList.add('visible');
+      deleteAction.classList.remove('visible');
+
+      if (deltaX >= THRESHOLD) {
+        restoreAction.classList.add('triggered');
+      } else {
+        restoreAction.classList.remove('triggered');
+      }
+    } else if (deltaX < -10) {
+      deleteAction.classList.add('visible');
+      restoreAction.classList.remove('visible');
+
+      if (deltaX <= -THRESHOLD) {
+        deleteAction.classList.add('triggered');
+      } else {
+        deleteAction.classList.remove('triggered');
+      }
+    } else {
+      restoreAction.classList.remove('visible', 'triggered');
+      deleteAction.classList.remove('visible', 'triggered');
+    }
+  }
+
+  function snapBack(container, card) {
+    card.classList.add('snapping');
+    card.style.transform = 'translateX(0)';
+
+    const restoreAction = container.querySelector('.swipe-action-restore');
+    const deleteAction = container.querySelector('.swipe-action-delete');
+    restoreAction.classList.remove('visible', 'triggered');
+    deleteAction.classList.remove('visible', 'triggered');
+
+    card.addEventListener('transitionend', function handler() {
+      card.classList.remove('snapping');
+      card.removeEventListener('transitionend', handler);
+    });
+  }
+
+  function dismissCard(container, card, action) {
+    const direction = action === 'restore' ? 1 : -1;
+    const habitName = container.dataset.habit;
+
+    card.classList.add('dismissing');
+    card.style.transform = `translateX(${direction * DISMISS_DISTANCE}px)`;
+    card.style.opacity = '0';
+
+    // Brief flash: make the triggered action fully visible
+    const actionEl = action === 'restore'
+      ? container.querySelector('.swipe-action-restore')
+      : container.querySelector('.swipe-action-delete');
+    actionEl.classList.add('visible', 'triggered');
+
+    setTimeout(() => {
+      // Collapse the container
+      const height = container.offsetHeight;
+      container.style.maxHeight = height + 'px';
+      container.style.overflow = 'hidden';
+      container.classList.add('collapsing');
+
+      // Force reflow
+      container.offsetHeight;
+
+      container.style.maxHeight = '0px';
+      container.style.marginTop = '0px';
+      container.style.marginBottom = '0px';
+      container.style.opacity = '0';
+
+      setTimeout(() => {
+        container.remove();
+        updateCount();
+        showToast(habitName, action);
+      }, 350);
+    }, 200);
+  }
+
+  function updateCount() {
+    const remaining = document.querySelectorAll('.swipe-container').length;
+    const countEl = document.getElementById('card-count');
+    countEl.textContent = remaining;
+
+    if (remaining === 0) {
+      document.getElementById('footer-hint').style.display = 'none';
+      document.getElementById('empty-state').classList.add('visible');
+    }
+  }
+
+  // Toast notification
+  function showToast(name, action) {
+    // Remove existing toast
+    const existing = document.querySelector('.toast');
+    if (existing) existing.remove();
+
+    const toast = document.createElement('div');
+    toast.className = 'toast';
+
+    const isRestore = action === 'restore';
+    const bg = isRestore ? '#059669' : '#B53030';
+    const icon = isRestore
+      ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>'
+      : '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>';
+    const verb = isRestore ? 'restored' : 'deleted';
+
+    Object.assign(toast.style, {
+      position: 'fixed',
+      bottom: '40px',
+      left: '50%',
+      transform: 'translateX(-50%) translateY(20px)',
+      background: bg,
+      color: 'white',
+      padding: '10px 20px',
+      borderRadius: '12px',
+      fontSize: '13px',
+      fontWeight: '600',
+      fontFamily: "'DM Sans', sans-serif",
+      display: 'flex',
+      alignItems: 'center',
+      gap: '8px',
+      boxShadow: '0 8px 24px rgba(0,0,0,0.16)',
+      opacity: '0',
+      transition: 'opacity 0.25s ease, transform 0.25s ease',
+      zIndex: '1000',
+      whiteSpace: 'nowrap'
+    });
+
+    toast.innerHTML = `${icon} <span>${name} ${verb}</span>`;
+    document.body.appendChild(toast);
+
+    // Animate in
+    requestAnimationFrame(() => {
+      toast.style.opacity = '1';
+      toast.style.transform = 'translateX(-50%) translateY(0)';
+    });
+
+    // Animate out
+    setTimeout(() => {
+      toast.style.opacity = '0';
+      toast.style.transform = 'translateX(-50%) translateY(20px)';
+      setTimeout(() => toast.remove(), 300);
+    }, 2200);
+  }
+
+  // Initialize
+  initSwipeCards();
+  lucide.createIcons();
+})();
+</script>
+
+</body>
+</html>
