@@ -12,6 +12,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { Activity, Calendar } from 'lucide-react-native';
 import { springs } from '@/theme/animations';
+import { useThemeColors } from '@/theme';
 import { DetailViewTabButton, type DetailView } from './DetailViewTabButton';
 
 interface DetailViewTabsProps {
@@ -56,20 +57,26 @@ export function DetailViewTabs({
     };
   });
 
+  const { colors, isDark } = useThemeColors();
+  const containerBg = isDark ? colors.surface : colors.gray[200];
+  const indicatorBg = isDark ? colors.card : '#FFFFFF';
+  const accentColor = isDark ? colors.primary[500] : colors.primary[600];
+
   return (
     <View
       accessibilityRole='tablist'
-      className='mt-4 rounded-lg bg-stone-100'
-      style={{ padding: PADDING }}
+      className='mt-4 rounded-lg'
+      style={{ backgroundColor: containerBg, padding: PADDING }}
       onLayout={handleLayout}
     >
       <Animated.View
-        className='absolute bottom-1 top-1 rounded-md bg-white'
+        className='absolute bottom-1 top-1 rounded-md'
         style={[
           indicatorStyle,
           {
+            backgroundColor: indicatorBg,
             elevation: 3,
-            shadowColor: '#059669',
+            shadowColor: accentColor,
             shadowOffset: { height: 3, width: 0 },
             shadowOpacity: 0.12,
             shadowRadius: 8,
@@ -78,6 +85,7 @@ export function DetailViewTabs({
       />
       <View className='flex-row'>
         <DetailViewTabButton
+          accentColor={accentColor}
           activeView={activeView}
           hint={calendarHint}
           icon={Calendar}
@@ -86,6 +94,7 @@ export function DetailViewTabs({
           onPress={onViewChange}
         />
         <DetailViewTabButton
+          accentColor={accentColor}
           activeView={activeView}
           hint={strengthHint}
           icon={Activity}
