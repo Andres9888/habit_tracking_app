@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Habit Weather — Archived Habits</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..800;1,9..40,300..800&family=Literata:opsz,wght@7..72,400;7..72,600;7..72,700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body {
+      font-family: 'DM Sans', sans-serif !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      background: #0f172a !important;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      font-family: 'Literata', serif !important;
+    }
+
+    /* Sky gradient background — mixed health */
+    .sky-bg {
+      background: linear-gradient(180deg,
+        #1e3a5f 0%,
+        #2d5a87 20%,
+        #6b9bc3 45%,
+        #a8c8e8 65%,
+        #f0d9a8 85%,
+        #e8a87c 100%
+      ) !important;
+      min-height: 100vh;
+    }
+
+    /* Frosted glass base */
+    .glass {
+      background: rgba(255,255,255,0.12) !important;
+      backdrop-filter: blur(16px) !important;
+      -webkit-backdrop-filter: blur(16px) !important;
+      border: 1px solid rgba(255,255,255,0.18) !important;
+    }
+
+    /* Weather-specific card gradients */
+    .weather-sunny {
+      background: linear-gradient(135deg,
+        rgba(251,191,36,0.25) 0%,
+        rgba(245,158,11,0.18) 40%,
+        rgba(234,88,12,0.12) 100%
+      ) !important;
+      border-color: rgba(251,191,36,0.35) !important;
+    }
+    .weather-partly-cloudy {
+      background: linear-gradient(135deg,
+        rgba(148,163,184,0.25) 0%,
+        rgba(100,116,139,0.2) 40%,
+        rgba(71,85,105,0.15) 100%
+      ) !important;
+      border-color: rgba(148,163,184,0.3) !important;
+    }
+    .weather-rainy {
+      background: linear-gradient(135deg,
+        rgba(99,102,241,0.2) 0%,
+        rgba(79,70,229,0.18) 40%,
+        rgba(109,40,217,0.15) 100%
+      ) !important;
+      border-color: rgba(129,140,248,0.25) !important;
+    }
+    .weather-stormy {
+      background: linear-gradient(135deg,
+        rgba(51,65,85,0.35) 0%,
+        rgba(30,41,59,0.3) 40%,
+        rgba(88,28,135,0.25) 100%
+      ) !important;
+      border-color: rgba(148,163,184,0.2) !important;
+    }
+
+    /* ---- WEATHER ANIMATIONS ---- */
+
+    /* Sun rays */
+    @keyframes sunRays {
+      0%, 100% { transform: rotate(0deg) scale(1); opacity: 0.6; }
+      50% { transform: rotate(180deg) scale(1.1); opacity: 0.9; }
+    }
+    .sun-rays {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      width: 72px;
+      height: 72px;
+      background: radial-gradient(circle, rgba(251,191,36,0.4) 0%, transparent 70%);
+      border-radius: 50%;
+      animation: sunRays 6s ease-in-out infinite;
+      pointer-events: none;
+    }
+    .sun-rays::before {
+      content: '';
+      position: absolute;
+      inset: 8px;
+      background: radial-gradient(circle, rgba(245,158,11,0.5) 0%, transparent 65%);
+      border-radius: 50%;
+      animation: sunRays 4s ease-in-out infinite reverse;
+    }
+
+    /* Floating clouds */
+    @keyframes floatCloud {
+      0%, 100% { transform: translateX(0px) translateY(0px); }
+      25% { transform: translateX(6px) translateY(-2px); }
+      50% { transform: translateX(12px) translateY(0px); }
+      75% { transform: translateX(6px) translateY(2px); }
+    }
+    .cloud {
+      position: absolute;
+      width: 40px;
+      height: 16px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 999px;
+      pointer-events: none;
+    }
+    .cloud::before {
+      content: '';
+      position: absolute;
+      top: -8px;
+      left: 8px;
+      width: 20px;
+      height: 20px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 50%;
+    }
+    .cloud::after {
+      content: '';
+      position: absolute;
+      top: -5px;
+      left: 20px;
+      width: 14px;
+      height: 14px;
+      background: rgba(255,255,255,0.15);
+      border-radius: 50%;
+    }
+    .cloud-1 { top: 12px; right: 8px; animation: floatCloud 5s ease-in-out infinite; }
+    .cloud-2 { top: 28px; right: 32px; animation: floatCloud 7s ease-in-out infinite 1s; opacity: 0.7; transform: scale(0.7); }
+
+    /* Rain drops */
+    @keyframes rainDrop {
+      0% { transform: translateY(-8px); opacity: 0; }
+      30% { opacity: 1; }
+      100% { transform: translateY(60px); opacity: 0; }
+    }
+    .rain-container {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 80px;
+      height: 100%;
+      overflow: hidden;
+      pointer-events: none;
+    }
+    .raindrop {
+      position: absolute;
+      width: 2px;
+      height: 10px;
+      background: linear-gradient(180deg, transparent, rgba(129,140,248,0.5));
+      border-radius: 0 0 2px 2px;
+      animation: rainDrop 1.2s linear infinite;
+    }
+    .raindrop:nth-child(1) { left: 12px; animation-delay: 0s; }
+    .raindrop:nth-child(2) { left: 28px; animation-delay: 0.3s; }
+    .raindrop:nth-child(3) { left: 44px; animation-delay: 0.6s; }
+    .raindrop:nth-child(4) { left: 58px; animation-delay: 0.15s; }
+    .raindrop:nth-child(5) { left: 70px; animation-delay: 0.45s; }
+    .raindrop:nth-child(6) { left: 20px; animation-delay: 0.9s; }
+    .raindrop:nth-child(7) { left: 50px; animation-delay: 0.75s; }
+
+    /* Lightning flash */
+    @keyframes lightning {
+      0%, 94%, 100% { opacity: 0; }
+      95% { opacity: 0.6; }
+      96% { opacity: 0; }
+      97% { opacity: 0.4; }
+      98% { opacity: 0; }
+    }
+    .lightning-flash {
+      position: absolute;
+      inset: 0;
+      background: rgba(255,255,255,0.08);
+      border-radius: inherit;
+      animation: lightning 4s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    /* Temperature styling */
+    .temp-sunny { color: #fbbf24 !important; }
+    .temp-cloudy { color: #94a3b8 !important; }
+    .temp-rainy { color: #818cf8 !important; }
+    .temp-stormy { color: #a78bfa !important; }
+
+    /* Button styles */
+    .btn-restore {
+      background: #059669 !important;
+      color: white !important;
+      border: none !important;
+      transition: all 0.2s ease !important;
+    }
+    .btn-restore:hover {
+      background: #047857 !important;
+      transform: translateY(-1px) !important;
+    }
+    .btn-delete {
+      background: rgba(181,48,48,0.15) !important;
+      color: #f87171 !important;
+      border: 1px solid rgba(181,48,48,0.3) !important;
+      transition: all 0.2s ease !important;
+    }
+    .btn-delete:hover {
+      background: rgba(181,48,48,0.25) !important;
+    }
+
+    /* Summary bar */
+    .summary-bar {
+      background: rgba(255,255,255,0.08) !important;
+      backdrop-filter: blur(12px) !important;
+      -webkit-backdrop-filter: blur(12px) !important;
+      border: 1px solid rgba(255,255,255,0.12) !important;
+    }
+
+    /* Scroll area */
+    .scroll-area::-webkit-scrollbar { width: 3px; }
+    .scroll-area::-webkit-scrollbar-track { background: transparent; }
+    .scroll-area::-webkit-scrollbar-thumb {
+      background: rgba(255,255,255,0.15);
+      border-radius: 999px;
+    }
+
+    /* Card hover */
+    .weather-card {
+      transition: transform 0.25s ease, box-shadow 0.25s ease !important;
+    }
+    .weather-card:hover {
+      transform: translateY(-2px) !important;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2) !important;
+    }
+
+    /* Stat label */
+    .stat-label {
+      font-size: 9px !important;
+      letter-spacing: 0.08em !important;
+      text-transform: uppercase !important;
+      color: rgba(255,255,255,0.45) !important;
+    }
+    .stat-value {
+      font-size: 13px !important;
+      font-weight: 600 !important;
+      color: rgba(255,255,255,0.9) !important;
+    }
+
+    /* Pulsing glow for sunny */
+    @keyframes sunGlow {
+      0%, 100% { box-shadow: 0 0 12px rgba(251,191,36,0.15); }
+      50% { box-shadow: 0 0 20px rgba(251,191,36,0.3); }
+    }
+    .weather-sunny { animation: sunGlow 3s ease-in-out infinite; }
+
+    /* Wind indicator animation */
+    @keyframes windBlow {
+      0%, 100% { transform: translateX(0); }
+      50% { transform: translateX(3px); }
+    }
+    .wind-indicator { animation: windBlow 2s ease-in-out infinite; }
+
+    /* Header forecast icon */
+    @keyframes gentleFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-4px); }
+    }
+    .float-icon { animation: gentleFloat 3s ease-in-out infinite; }
+  </style>
+</head>
+<body>
+  <div class="sky-bg" style="width:390px; min-height:100vh; position:relative; overflow:hidden;">
+
+    <!-- Ambient background clouds -->
+    <div style="position:absolute; top:40px; left:20px; opacity:0.08; pointer-events:none;">
+      <div class="cloud" style="animation: floatCloud 12s ease-in-out infinite; width:80px; height:28px;"></div>
+    </div>
+    <div style="position:absolute; top:120px; right:10px; opacity:0.06; pointer-events:none;">
+      <div class="cloud" style="animation: floatCloud 15s ease-in-out infinite 3s; width:60px; height:22px;"></div>
+    </div>
+
+    <!-- Header -->
+    <div style="padding: 56px 20px 16px;">
+      <div class="flex items-center justify-between">
+        <div>
+          <div class="flex items-center gap-2 mb-1">
+            <span class="float-icon text-2xl">🌤️</span>
+            <h1 style="font-size:22px; font-weight:700; color:white; margin:0; line-height:1.2;">
+              Habit Weather
+            </h1>
+          </div>
+          <p style="font-size:13px; color:rgba(255,255,255,0.55); margin:0; margin-top:2px;">
+            Forecast for archived habits
+          </p>
+        </div>
+        <button style="background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.15); border-radius:12px; padding:8px 12px; color:rgba(255,255,255,0.7); font-size:12px; font-family:'DM Sans',sans-serif; cursor:pointer; display:flex; align-items:center; gap:4px;">
+          <i data-lucide="x" style="width:14px; height:14px;"></i>
+          Close
+        </button>
+      </div>
+    </div>
+
+    <!-- Summary Bar -->
+    <div class="summary-bar" style="margin:0 16px 16px; border-radius:14px; padding:12px 16px;">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="text-center">
+            <div style="font-size:18px;">☀️</div>
+            <div style="font-size:10px; color:rgba(255,255,255,0.5); margin-top:1px;">1</div>
+          </div>
+          <div class="text-center">
+            <div style="font-size:18px;">⛅</div>
+            <div style="font-size:10px; color:rgba(255,255,255,0.5); margin-top:1px;">1</div>
+          </div>
+          <div class="text-center">
+            <div style="font-size:18px;">🌧️</div>
+            <div style="font-size:10px; color:rgba(255,255,255,0.5); margin-top:1px;">1</div>
+          </div>
+          <div class="text-center">
+            <div style="font-size:18px;">⛈️</div>
+            <div style="font-size:10px; color:rgba(255,255,255,0.5); margin-top:1px;">1</div>
+          </div>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-size:11px; color:rgba(255,255,255,0.45);">Avg Temp</div>
+          <div style="font-size:16px; font-weight:700; color:rgba(255,255,255,0.9);">54°</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cards scroll area -->
+    <div class="scroll-area" style="padding:0 16px 100px; display:flex; flex-direction:column; gap:14px; overflow-y:auto; max-height:calc(100vh - 200px);">
+
+      <!-- ============== CARD 1: SUNNY (92%) ============== -->
+      <div class="weather-card glass weather-sunny" style="border-radius:18px; padding:16px; position:relative; overflow:hidden;">
+        <!-- Sun rays animation -->
+        <div class="sun-rays"></div>
+
+        <!-- City / Emoji row -->
+        <div class="flex items-center gap-3 mb-3">
+          <div style="font-size:36px; line-height:1;">🏃</div>
+          <div>
+            <h3 style="font-size:16px; font-weight:700; color:white; margin:0; line-height:1.2;">
+              Morning Run
+            </h3>
+            <div class="flex items-center gap-1" style="margin-top:2px;">
+              <span style="font-size:11px; color:rgba(255,255,255,0.5);">☀️ Sunny</span>
+              <span style="font-size:11px; color:rgba(255,255,255,0.3);">·</span>
+              <span style="font-size:11px; color:rgba(255,255,255,0.45);">Archived 2w ago</span>
+            </div>
+          </div>
+          <!-- Temperature -->
+          <div style="margin-left:auto; text-align:right;">
+            <span class="temp-sunny" style="font-size:28px; font-weight:700; line-height:1;">92°</span>
+            <div style="font-size:9px; color:rgba(255,255,255,0.4); text-transform:uppercase; letter-spacing:0.05em;">strength</div>
+          </div>
+        </div>
+
+        <!-- Weather stats row -->
+        <div class="flex items-center justify-between" style="padding:10px 12px; background:rgba(0,0,0,0.12); border-radius:10px; margin-bottom:12px;">
+          <div class="text-center">
+            <div class="stat-label">Wind (streak)</div>
+            <div class="stat-value wind-indicator flex items-center justify-center gap-1">
+              <i data-lucide="wind" style="width:12px; height:12px; color:rgba(251,191,36,0.7);"></i>
+              21 days
+            </div>
+          </div>
+          <div style="width:1px; height:24px; background:rgba(255,255,255,0.1);"></div>
+          <div class="text-center">
+            <div class="stat-label">Precip (done)</div>
+            <div class="stat-value flex items-center justify-center gap-1">
+              <i data-lucide="droplets" style="width:12px; height:12px; color:rgba(251,191,36,0.7);"></i>
+              89/97
+            </div>
+          </div>
+          <div style="width:1px; height:24px; background:rgba(255,255,255,0.1);"></div>
+          <div class="text-center">
+            <div class="stat-label">Humidity</div>
+            <div class="stat-value">High</div>
+          </div>
+        </div>
+
+        <!-- Action buttons -->
+        <div class="flex gap-2">
+          <button class="btn-restore flex-1 flex items-center justify-center gap-1.5" style="padding:9px 0; border-radius:10px; font-size:12px; font-weight:600; font-family:'DM Sans',sans-serif; cursor:pointer;">
+            <i data-lucide="sun" style="width:14px; height:14px;"></i>
+            Clear skies ahead
+          </button>
+          <button class="btn-delete flex items-center justify-center gap-1" style="padding:9px 14px; border-radius:10px; font-size:12px; font-weight:500; font-family:'DM Sans',sans-serif; cursor:pointer;">
+            <i data-lucide="cloud-off" style="width:13px; height:13px;"></i>
+            End
+          </button>
+        </div>
+      </div>
+
+      <!-- ============== CARD 2: PARTLY CLOUDY (65%) ============== -->
+      <div class="weather-card glass weather-partly-cloudy" style="border-radius:18px; padding:16px; position:relative; overflow:hidden;">
+        <!-- Floating clouds -->
+        <div class="cloud cloud-1"></div>
+        <div class="cloud cloud-2"></div>
+
+        <div class="flex items-center gap-3 mb-3">
+          <div style="font-size:36px; line-height:1;">📖</div>
+          <div>
+            <h3 style="font-size:16px; font-weight:700; color:white; margin:0; line-height:1.2;">
+              Read 30 mins
+            </h3>
+            <div class="flex items-center gap-1" style="margin-top:2px;">
+              <span style="font-size:11px; color:rgba(255,255,255,0.5);">⛅ Partly Cloudy</span>
+              <span style="font-size:11px; color:rgba(255,255,255,0.3);">·</span>
+              <span style="font-size:11px; color:rgba(255,255,255,0.45);">Archived 1mo ago</span>
+            </div>
+          </div>
+          <div style="margin-left:auto; text-align:right;">
+            <span class="temp-cloudy" style="font-size:28px; font-weight:700; line-height:1;">65°</span>
+            <div style="font-size:9px; color:rgba(255,255,255,0.4); text-transform:uppercase; letter-spacing:0.05em;">strength</div>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between" style="padding:10px 12px; background:rgba(0,0,0,0.12); border-radius:10px; margin-bottom:12px;">
+          <div class="text-center">
+            <div class="stat-label">Wind (streak)</div>
+            <div class="stat-value wind-indicator flex items-center justify-center gap-1">
+              <i data-lucide="wind" style="width:12px; height:12px; color:rgba(148,163,184,0.7);"></i>
+              8 days
+            </div>
+          </div>
+          <div style="width:1px; height:24px; background:rgba(255,255,255,0.1);"></div>
+          <div class="text-center">
+            <div class="stat-label">Precip (done)</div>
+            <div class="stat-value flex items-center justify-center gap-1">
+              <i data-lucide="droplets" style="width:12px; height:12px; color:rgba(148,163,184,0.7);"></i>
+              42/65
+            </div>
+          </div>
+          <div style="width:1px; height:24px; background:rgba(255,255,255,0.1);"></div>
+          <div class="text-center">
+            <div class="stat-label">Humidity</div>
+            <div class="stat-value">Med</div>
+          </div>
+        </div>
+
+        <div class="flex gap-2">
+          <button class="btn-restore flex-1 flex items-center justify-center gap-1.5" style="padding:9px 0; border-radius:10px; font-size:12px; font-weight:600; font-family:'DM Sans',sans-serif; cursor:pointer;">
+            <i data-lucide="sun" style="width:14px; height:14px;"></i>
+            Clear skies ahead
+          </button>
+          <button class="btn-delete flex items-center justify-center gap-1" style="padding:9px 14px; border-radius:10px; font-size:12px; font-weight:500; font-family:'DM Sans',sans-serif; cursor:pointer;">
+            <i data-lucide="cloud-off" style="width:13px; height:13px;"></i>
+            End
+          </button>
+        </div>
+      </div>
+
+      <!-- ============== CARD 3: RAINY (38%) ============== -->
+      <div class="weather-card glass weather-rainy" style="border-radius:18px; padding:16px; position:relative; overflow:hidden;">
+        <!-- Rain drops -->
+        <div class="rain-container">
+          <div class="raindrop"></div>
+          <div class="raindrop"></div>
+          <div class="raindrop"></div>
+          <div class="raindrop"></div>
+          <div class="raindrop"></div>
+          <div class="raindrop"></div>
+          <div class="raindrop"></div>
+        </div>
+
+        <div class="flex items-center gap-3 mb-3">
+          <div style="font-size:36px; line-height:1;">🧘</div>
+          <div>
+            <h3 style="font-size:16px; font-weight:700; color:white; margin:0; line-height:1.2;">
+              Meditate
+            </h3>
+            <div class="flex items-center gap-1" style="margin-top:2px;">
+              <span style="font-size:11px; color:rgba(255,255,255,0.5);">🌧️ Rainy</span>
+              <span style="font-size:11px; color:rgba(255,255,255,0.3);">·</span>
+              <span style="font-size:11px; color:rgba(255,255,255,0.45);">Archived 3mo ago</span>
+            </div>
+          </div>
+          <div style="margin-left:auto; text-align:right;">
+            <span class="temp-rainy" style="font-size:28px; font-weight:700; line-height:1;">38°</span>
+            <div style="font-size:9px; color:rgba(255,255,255,0.4); text-transform:uppercase; letter-spacing:0.05em;">strength</div>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between" style="padding:10px 12px; background:rgba(0,0,0,0.12); border-radius:10px; margin-bottom:12px;">
+          <div class="text-center">
+            <div class="stat-label">Wind (streak)</div>
+            <div class="stat-value wind-indicator flex items-center justify-center gap-1">
+              <i data-lucide="wind" style="width:12px; height:12px; color:rgba(129,140,248,0.7);"></i>
+              3 days
+            </div>
+          </div>
+          <div style="width:1px; height:24px; background:rgba(255,255,255,0.1);"></div>
+          <div class="text-center">
+            <div class="stat-label">Precip (done)</div>
+            <div class="stat-value flex items-center justify-center gap-1">
+              <i data-lucide="droplets" style="width:12px; height:12px; color:rgba(129,140,248,0.7);"></i>
+              18/47
+            </div>
+          </div>
+          <div style="width:1px; height:24px; background:rgba(255,255,255,0.1);"></div>
+          <div class="text-center">
+            <div class="stat-label">Humidity</div>
+            <div class="stat-value">Low</div>
+          </div>
+        </div>
+
+        <div class="flex gap-2">
+          <button class="btn-restore flex-1 flex items-center justify-center gap-1.5" style="padding:9px 0; border-radius:10px; font-size:12px; font-weight:600; font-family:'DM Sans',sans-serif; cursor:pointer;">
+            <i data-lucide="sun" style="width:14px; height:14px;"></i>
+            Clear skies ahead
+          </button>
+          <button class="btn-delete flex items-center justify-center gap-1" style="padding:9px 14px; border-radius:10px; font-size:12px; font-weight:500; font-family:'DM Sans',sans-serif; cursor:pointer;">
+            <i data-lucide="cloud-off" style="width:13px; height:13px;"></i>
+            End
+          </button>
+        </div>
+      </div>
+
+      <!-- ============== CARD 4: STORMY (12%) ============== -->
+      <div class="weather-card glass weather-stormy" style="border-radius:18px; padding:16px; position:relative; overflow:hidden;">
+        <!-- Lightning flash -->
+        <div class="lightning-flash"></div>
+        <!-- Rain drops (heavier) -->
+        <div class="rain-container">
+          <div class="raindrop" style="height:14px;"></div>
+          <div class="raindrop" style="height:14px;"></div>
+          <div class="raindrop" style="height:14px;"></div>
+          <div class="raindrop" style="height:14px;"></div>
+          <div class="raindrop" style="height:14px;"></div>
+          <div class="raindrop" style="height:14px;"></div>
+          <div class="raindrop" style="height:14px;"></div>
+        </div>
+
+        <div class="flex items-center gap-3 mb-3">
+          <div style="font-size:36px; line-height:1;">💊</div>
+          <div>
+            <h3 style="font-size:16px; font-weight:700; color:white; margin:0; line-height:1.2;">
+              Take Vitamins
+            </h3>
+            <div class="flex items-center gap-1" style="margin-top:2px;">
+              <span style="font-size:11px; color:rgba(255,255,255,0.5);">⛈️ Stormy</span>
+              <span style="font-size:11px; color:rgba(255,255,255,0.3);">·</span>
+              <span style="font-size:11px; color:rgba(255,255,255,0.45);">Archived 5mo ago</span>
+            </div>
+          </div>
+          <div style="margin-left:auto; text-align:right;">
+            <span class="temp-stormy" style="font-size:28px; font-weight:700; line-height:1;">12°</span>
+            <div style="font-size:9px; color:rgba(255,255,255,0.4); text-transform:uppercase; letter-spacing:0.05em;">strength</div>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between" style="padding:10px 12px; background:rgba(0,0,0,0.15); border-radius:10px; margin-bottom:12px;">
+          <div class="text-center">
+            <div class="stat-label">Wind (streak)</div>
+            <div class="stat-value wind-indicator flex items-center justify-center gap-1">
+              <i data-lucide="wind" style="width:12px; height:12px; color:rgba(167,139,250,0.7);"></i>
+              0 days
+            </div>
+          </div>
+          <div style="width:1px; height:24px; background:rgba(255,255,255,0.1);"></div>
+          <div class="text-center">
+            <div class="stat-label">Precip (done)</div>
+            <div class="stat-value flex items-center justify-center gap-1">
+              <i data-lucide="droplets" style="width:12px; height:12px; color:rgba(167,139,250,0.7);"></i>
+              5/42
+            </div>
+          </div>
+          <div style="width:1px; height:24px; background:rgba(255,255,255,0.1);"></div>
+          <div class="text-center">
+            <div class="stat-label">Humidity</div>
+            <div class="stat-value">V.Low</div>
+          </div>
+        </div>
+
+        <div class="flex gap-2">
+          <button class="btn-restore flex-1 flex items-center justify-center gap-1.5" style="padding:9px 0; border-radius:10px; font-size:12px; font-weight:600; font-family:'DM Sans',sans-serif; cursor:pointer;">
+            <i data-lucide="sun" style="width:14px; height:14px;"></i>
+            Clear skies ahead
+          </button>
+          <button class="btn-delete flex items-center justify-center gap-1" style="padding:9px 14px; border-radius:10px; font-size:12px; font-weight:500; font-family:'DM Sans',sans-serif; cursor:pointer;">
+            <i data-lucide="cloud-off" style="width:13px; height:13px;"></i>
+            End
+          </button>
+        </div>
+      </div>
+
+    </div><!-- end scroll area -->
+
+  </div><!-- end phone frame -->
+
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>

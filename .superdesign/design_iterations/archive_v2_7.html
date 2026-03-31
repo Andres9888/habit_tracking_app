@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=390, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Archived Habits — Wallet Stack</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Literata:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body {
+    font-family: 'DM Sans', sans-serif !important;
+    background: #E0DBD5;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 20px 0;
+  }
+  h1, h2, h3, h4, h5, h6, p, span, div {
+    font-family: 'DM Sans', sans-serif !important;
+  }
+  .literata { font-family: 'Literata', serif !important; }
+
+  .phone-frame {
+    width: 390px;
+    min-height: 844px;
+    background: #F5F1ED;
+    border-radius: 44px;
+    box-shadow: 0 0 0 3px #1a1a1a, 0 20px 60px rgba(0,0,0,0.18);
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* Header */
+  .page-header {
+    padding: 60px 24px 20px;
+    background: #F5F1ED;
+    position: relative;
+    z-index: 10;
+  }
+
+  /* Wallet container */
+  .wallet-container {
+    position: relative;
+    padding: 20px 20px 40px;
+    min-height: 600px;
+  }
+
+  /* Habit card (credit card style) */
+  .habit-card {
+    position: absolute;
+    left: 20px;
+    right: 20px;
+    height: 200px;
+    border-radius: 20px;
+    padding: 24px;
+    cursor: pointer;
+    transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1),
+                box-shadow 0.4s ease;
+    will-change: transform;
+    overflow: hidden;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  .habit-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.15);
+    pointer-events: none;
+  }
+  .habit-card.expanded {
+    z-index: 15 !important;
+    height: auto;
+    min-height: 200px;
+  }
+  .habit-card:active:not(.expanded) {
+    transform: scale(0.98) !important;
+  }
+
+  /* Emoji watermark */
+  .emoji-watermark {
+    position: absolute;
+    right: -10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 120px;
+    opacity: 0.12;
+    pointer-events: none;
+    line-height: 1;
+    filter: grayscale(20%);
+  }
+
+  /* Card content */
+  .card-chip {
+    width: 40px;
+    height: 28px;
+    border-radius: 6px;
+    background: linear-gradient(135deg, rgba(255,255,255,0.4), rgba(255,255,255,0.15));
+    border: 1px solid rgba(255,255,255,0.25);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+  }
+
+  .card-name {
+    font-family: 'Literata', serif !important;
+    font-size: 20px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -0.3px;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.15);
+    margin-bottom: 4px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .card-dormant {
+    font-size: 12px;
+    color: rgba(255,255,255,0.7);
+    font-weight: 500;
+    position: relative;
+    z-index: 2;
+  }
+
+  /* Stats bar at bottom of card */
+  .card-stats {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 14px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(to top, rgba(0,0,0,0.2), transparent);
+    border-radius: 0 0 20px 20px;
+  }
+  .card-stat {
+    text-align: center;
+  }
+  .card-stat-value {
+    font-size: 16px;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1;
+  }
+  .card-stat-label {
+    font-size: 9px;
+    color: rgba(255,255,255,0.6);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+    margin-top: 2px;
+  }
+
+  /* Strength indicator */
+  .strength-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #fff;
+    display: inline-block;
+    margin-right: 6px;
+    box-shadow: 0 0 6px rgba(255,255,255,0.5);
+  }
+  .card-strength-row {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    z-index: 2;
+  }
+  .card-strength-text {
+    font-size: 13px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.9);
+  }
+
+  /* Expanded card action area */
+  .card-actions {
+    display: none;
+    padding: 16px 0 0;
+    position: relative;
+    z-index: 2;
+  }
+  .habit-card.expanded .card-actions {
+    display: block;
+  }
+  .habit-card.expanded .card-stats {
+    position: relative;
+    margin-top: 20px;
+    background: rgba(0,0,0,0.15);
+    border-radius: 12px;
+    padding: 16px 20px;
+  }
+
+  .action-btn {
+    width: 100%;
+    height: 44px;
+    border-radius: 12px;
+    border: none;
+    font-family: 'DM Sans', sans-serif !important;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: transform 0.15s, opacity 0.2s;
+    margin-bottom: 8px;
+  }
+  .action-btn:active {
+    transform: scale(0.97);
+  }
+  .btn-restore-card {
+    background: rgba(255,255,255,0.95);
+    color: #1C1917;
+  }
+  .btn-delete-card {
+    background: rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.9);
+    border: 1px solid rgba(255,255,255,0.25);
+  }
+  .btn-collapse {
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.6);
+    font-family: 'DM Sans', sans-serif !important;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 8px 0 0;
+    width: 100%;
+    text-align: center;
+  }
+
+  /* Drag hint */
+  .drag-hint {
+    position: absolute;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    opacity: 0.5;
+    pointer-events: none;
+    z-index: 5;
+  }
+  .drag-hint-text {
+    font-size: 12px;
+    color: #78716C;
+    font-weight: 500;
+  }
+  .drag-hint-chevrons {
+    animation: bounceUp 1.5s ease-in-out infinite;
+  }
+  @keyframes bounceUp {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+  }
+
+  /* Confirm overlay */
+  .confirm-overlay {
+    display: none;
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    border-radius: 20px;
+    z-index: 20;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+  }
+  .confirm-overlay.active {
+    display: flex;
+  }
+  .confirm-overlay .confirm-emoji { font-size: 36px; margin-bottom: 12px; }
+  .confirm-overlay .confirm-title {
+    font-family: 'Literata', serif !important;
+    font-size: 17px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 6px;
+  }
+  .confirm-overlay .confirm-text {
+    font-size: 13px;
+    color: rgba(255,255,255,0.6);
+    text-align: center;
+    margin-bottom: 20px;
+    line-height: 1.5;
+  }
+  .confirm-overlay .btn-confirm-yes {
+    width: 100%;
+    height: 44px;
+    border-radius: 12px;
+    border: none;
+    background: #DC4545;
+    color: #fff;
+    font-family: 'DM Sans', sans-serif !important;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-bottom: 8px;
+    transition: transform 0.15s;
+  }
+  .confirm-overlay .btn-confirm-yes:active { transform: scale(0.97); }
+  .confirm-overlay .btn-confirm-no {
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.5);
+    font-family: 'DM Sans', sans-serif !important;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 8px 0;
+  }
+
+  /* Toast notification */
+  .toast {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: #1C1917;
+    color: #fff;
+    padding: 12px 24px;
+    border-radius: 14px;
+    font-size: 14px;
+    font-weight: 500;
+    z-index: 100;
+    opacity: 0;
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease;
+    white-space: nowrap;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+  }
+  .toast.visible {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+  }
+
+  /* Empty state */
+  .empty-wallet {
+    display: none;
+    text-align: center;
+    padding: 120px 40px;
+  }
+  .empty-wallet.visible { display: block; }
+  .empty-wallet-icon { font-size: 56px; margin-bottom: 16px; opacity: 0.4; }
+  .empty-wallet-title {
+    font-family: 'Literata', serif !important;
+    font-size: 18px;
+    font-weight: 600;
+    color: #78716C;
+    margin-bottom: 8px;
+  }
+  .empty-wallet-text {
+    font-size: 13px;
+    color: #A8A29E;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="phone-frame" id="phone">
+  <!-- Header -->
+  <div class="page-header">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <button onclick="window.history.back()" style="width:36px;height:36px;border-radius:50%;background:rgba(28,25,23,0.06);display:flex;align-items:center;justify-content:center;border:none;cursor:pointer;">
+          <i data-lucide="arrow-left" style="width:18px;height:18px;color:#1C1917;"></i>
+        </button>
+        <div>
+          <div class="literata" style="font-size:22px;font-weight:700;color:#1C1917;letter-spacing:-0.5px;">Archive</div>
+          <div style="font-size:12px;color:#A8A29E;font-weight:500;margin-top:1px;">
+            <span id="countLabel">5 habits</span> &middot; Tap card to expand
+          </div>
+        </div>
+      </div>
+      <button style="width:36px;height:36px;border-radius:50%;background:rgba(28,25,23,0.06);display:flex;align-items:center;justify-content:center;border:none;cursor:pointer;">
+        <i data-lucide="x" style="width:18px;height:18px;color:#1C1917;"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Wallet Stack -->
+  <div class="wallet-container" id="walletContainer"></div>
+
+  <!-- Empty State -->
+  <div class="empty-wallet" id="emptyState">
+    <div class="empty-wallet-icon">👛</div>
+    <div class="empty-wallet-title">Wallet is empty</div>
+    <div class="empty-wallet-text">No archived habits to show</div>
+  </div>
+
+  <!-- Drag hint -->
+  <div class="drag-hint" id="dragHint">
+    <div class="drag-hint-chevrons">
+      <i data-lucide="chevrons-up" style="width:20px;height:20px;color:#78716C;"></i>
+    </div>
+    <div class="drag-hint-text">Tap a card to expand</div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+</div>
+
+<script>
+// ---- Data ----
+const PEEK = 20; // pixels each card peeks
+const CARD_HEIGHT = 200;
+
+const habits = [
+  { id: 1, emoji: '🧘', name: 'Morning Meditation', strength: 85, streak: 67, total: 312, dormant: 7 },
+  { id: 2, emoji: '📖', name: 'Read 30 Minutes', strength: 72, streak: 45, total: 234, dormant: 34 },
+  { id: 3, emoji: '🎵', name: 'Practice Guitar', strength: 55, streak: 28, total: 156, dormant: 21 },
+  { id: 4, emoji: '💪', name: 'Push-ups', strength: 42, streak: 18, total: 89, dormant: 45 },
+  { id: 5, emoji: '🥶', name: 'Cold Shower', strength: 28, streak: 8, total: 42, dormant: 72 },
+];
+
+function getGradient(strength) {
+  if (strength >= 80) return 'linear-gradient(135deg, #6B21A8, #9333EA, #7C3AED)';
+  if (strength >= 60) return 'linear-gradient(135deg, #15803D, #22C55E, #16A34A)';
+  if (strength >= 40) return 'linear-gradient(135deg, #0E7490, #06B6D4, #0891B2)';
+  return 'linear-gradient(135deg, #D97706, #F59E0B, #FBBF24)';
+}
+
+function getTierLabel(strength) {
+  if (strength >= 80) return 'Strong';
+  if (strength >= 60) return 'Solid';
+  if (strength >= 40) return 'Building';
+  return 'Growing';
+}
+
+function getShadowColor(strength) {
+  if (strength >= 80) return 'rgba(107,33,168,0.4)';
+  if (strength >= 60) return 'rgba(21,128,61,0.4)';
+  if (strength >= 40) return 'rgba(14,116,144,0.4)';
+  return 'rgba(217,119,6,0.4)';
+}
+
+// ---- State ----
+let expandedId = null;
+let draggingCard = null;
+let dragStartY = 0;
+let dragCurrentY = 0;
+let isDragging = false;
+
+// ---- DOM refs ----
+const walletContainer = document.getElementById('walletContainer');
+const emptyState = document.getElementById('emptyState');
+const countLabel = document.getElementById('countLabel');
+const dragHint = document.getElementById('dragHint');
+const toast = document.getElementById('toast');
+
+// ---- Render ----
+function renderWallet() {
+  walletContainer.innerHTML = '';
+  const total = habits.length;
+  countLabel.textContent = `${total} habit${total !== 1 ? 's' : ''}`;
+  emptyState.classList.toggle('visible', total === 0);
+  dragHint.style.display = total === 0 ? 'none' : 'flex';
+
+  if (total === 0) {
+    walletContainer.style.minHeight = '0';
+    return;
+  }
+
+  // Calculate container height: first card height + (remaining cards * peek)
+  const containerHeight = CARD_HEIGHT + (total - 1) * PEEK + 80;
+  walletContainer.style.minHeight = containerHeight + 'px';
+
+  habits.forEach((habit, index) => {
+    const card = document.createElement('div');
+    card.className = 'habit-card';
+    card.dataset.id = habit.id;
+    card.style.background = getGradient(habit.strength);
+    card.style.top = (index * PEEK) + 'px';
+    card.style.zIndex = total - index;
+    card.style.boxShadow = `0 4px 20px ${getShadowColor(habit.strength)}, 0 2px 8px rgba(0,0,0,0.1)`;
+
+    // Entrance animation
+    card.style.opacity = '0';
+    card.style.transform = `translateY(${40 + index * 10}px)`;
+
+    card.innerHTML = `
+      <!-- Emoji watermark -->
+      <div class="emoji-watermark">${habit.emoji}</div>
+
+      <!-- Chip with emoji -->
+      <div class="card-chip">${habit.emoji}</div>
+
+      <!-- Strength indicator top right -->
+      <div class="card-strength-row">
+        <span class="strength-dot"></span>
+        <span class="card-strength-text">${habit.strength}% ${getTierLabel(habit.strength)}</span>
+      </div>
+
+      <!-- Name + dormant -->
+      <div class="card-name">${habit.name}</div>
+      <div class="card-dormant">Dormant for ${habit.dormant} day${habit.dormant !== 1 ? 's' : ''}</div>
+
+      <!-- Stats along bottom -->
+      <div class="card-stats">
+        <div class="card-stat">
+          <div class="card-stat-value">${habit.strength}%</div>
+          <div class="card-stat-label">Strength</div>
+        </div>
+        <div class="card-stat">
+          <div class="card-stat-value">${habit.streak}</div>
+          <div class="card-stat-label">Best Streak</div>
+        </div>
+        <div class="card-stat">
+          <div class="card-stat-value">${habit.total}</div>
+          <div class="card-stat-label">Total</div>
+        </div>
+        <div class="card-stat">
+          <div class="card-stat-value">${habit.dormant}d</div>
+          <div class="card-stat-label">Dormant</div>
+        </div>
+      </div>
+
+      <!-- Action buttons (shown when expanded) -->
+      <div class="card-actions">
+        <button class="action-btn btn-restore-card" data-action="restore" data-id="${habit.id}">
+          <i data-lucide="rotate-ccw" style="width:15px;height:15px;"></i>
+          Restore Habit
+        </button>
+        <button class="action-btn btn-delete-card" data-action="delete" data-id="${habit.id}">
+          <i data-lucide="trash-2" style="width:15px;height:15px;"></i>
+          Delete Permanently
+        </button>
+        <button class="btn-collapse" data-action="collapse">Tap to collapse</button>
+      </div>
+
+      <!-- Confirm delete overlay -->
+      <div class="confirm-overlay" data-confirm="${habit.id}">
+        <div class="confirm-emoji">⚠️</div>
+        <div class="confirm-title">Delete Forever?</div>
+        <div class="confirm-text">
+          This will permanently remove<br>
+          <strong>"${habit.name}"</strong><br>
+          and all its history.
+        </div>
+        <button class="btn-confirm-yes" data-action="confirm-delete" data-id="${habit.id}">
+          Yes, Delete Permanently
+        </button>
+        <button class="btn-confirm-no" data-action="cancel-delete" data-id="${habit.id}">
+          Go Back
+        </button>
+      </div>
+    `;
+
+    // Click handler
+    card.addEventListener('click', (e) => {
+      const action = e.target.closest('[data-action]');
+      if (action) {
+        e.stopPropagation();
+        handleAction(action.dataset.action, parseInt(action.dataset.id));
+        return;
+      }
+      toggleCard(habit.id);
+    });
+
+    // Touch drag for restore/dismiss
+    card.addEventListener('touchstart', (e) => {
+      if (expandedId !== habit.id) return;
+      dragStartY = e.touches[0].clientY;
+      draggingCard = card;
+      isDragging = false;
+    }, { passive: true });
+
+    card.addEventListener('touchmove', (e) => {
+      if (!draggingCard || draggingCard !== card) return;
+      const dy = e.touches[0].clientY - dragStartY;
+      if (Math.abs(dy) > 10) isDragging = true;
+      if (!isDragging) return;
+      dragCurrentY = dy;
+      // Only allow upward drag (restore) or downward drag (dismiss)
+      card.style.transition = 'none';
+      card.style.transform = `translateY(${dy}px)`;
+      card.style.opacity = Math.max(0.3, 1 - Math.abs(dy) / 300);
+    }, { passive: true });
+
+    card.addEventListener('touchend', () => {
+      if (!draggingCard || draggingCard !== card) return;
+      card.style.transition = '';
+      if (isDragging && dragCurrentY < -100) {
+        // Swiped up: restore
+        card.style.transform = 'translateY(-400px)';
+        card.style.opacity = '0';
+        setTimeout(() => {
+          restoreHabit(habit.id);
+        }, 300);
+      } else if (isDragging && dragCurrentY > 100) {
+        // Swiped down: dismiss (collapse)
+        card.style.transform = '';
+        card.style.opacity = '1';
+        collapseAll();
+      } else {
+        card.style.transform = '';
+        card.style.opacity = '1';
+      }
+      draggingCard = null;
+      dragCurrentY = 0;
+      isDragging = false;
+    });
+
+    walletContainer.appendChild(card);
+
+    // Animate entrance
+    requestAnimationFrame(() => {
+      setTimeout(() => {
+        card.style.transition = 'opacity 0.5s ease, transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s ease';
+        card.style.opacity = '1';
+        card.style.transform = 'translateY(0)';
+      }, 80 * index);
+    });
+  });
+
+  lucide.createIcons();
+}
+
+// ---- Toggle expand/collapse ----
+function toggleCard(id) {
+  if (isDragging) return;
+  if (expandedId === id) {
+    collapseAll();
+  } else {
+    expandCard(id);
+  }
+}
+
+function expandCard(id) {
+  expandedId = id;
+  const cards = walletContainer.querySelectorAll('.habit-card');
+  const total = cards.length;
+  let expandedIndex = -1;
+
+  cards.forEach((card, index) => {
+    if (parseInt(card.dataset.id) === id) {
+      expandedIndex = index;
+    }
+  });
+
+  cards.forEach((card, index) => {
+    const cardId = parseInt(card.dataset.id);
+    if (cardId === id) {
+      card.classList.add('expanded');
+      card.style.zIndex = 20;
+      card.style.top = '0px';
+      card.style.boxShadow = `0 12px 40px ${getShadowColor(habits.find(h => h.id === id).strength)}, 0 4px 12px rgba(0,0,0,0.15)`;
+    } else if (index < expandedIndex) {
+      // Cards above: slide up and fade
+      card.style.transform = 'translateY(-120px)';
+      card.style.opacity = '0.3';
+      card.style.pointerEvents = 'none';
+    } else {
+      // Cards below: push down
+      card.style.top = (380 + (index - expandedIndex - 1) * PEEK) + 'px';
+      card.style.opacity = '0.5';
+      card.style.pointerEvents = 'none';
+    }
+  });
+
+  dragHint.style.opacity = '0';
+}
+
+function collapseAll() {
+  expandedId = null;
+  const cards = walletContainer.querySelectorAll('.habit-card');
+  const total = cards.length;
+
+  cards.forEach((card, index) => {
+    card.classList.remove('expanded');
+    card.style.top = (index * PEEK) + 'px';
+    card.style.zIndex = total - index;
+    card.style.transform = '';
+    card.style.opacity = '1';
+    card.style.pointerEvents = '';
+    const habit = habits.find(h => h.id === parseInt(card.dataset.id));
+    if (habit) {
+      card.style.boxShadow = `0 4px 20px ${getShadowColor(habit.strength)}, 0 2px 8px rgba(0,0,0,0.1)`;
+    }
+    // Hide confirm overlay
+    const overlay = card.querySelector('.confirm-overlay');
+    if (overlay) overlay.classList.remove('active');
+  });
+
+  dragHint.style.opacity = '0.5';
+}
+
+// ---- Actions ----
+function handleAction(action, id) {
+  switch (action) {
+    case 'restore':
+      restoreHabit(id);
+      break;
+    case 'delete':
+      showConfirm(id);
+      break;
+    case 'confirm-delete':
+      deleteHabit(id);
+      break;
+    case 'cancel-delete':
+      hideConfirm(id);
+      break;
+    case 'collapse':
+      collapseAll();
+      break;
+  }
+}
+
+function restoreHabit(id) {
+  const habit = habits.find(h => h.id === id);
+  const idx = habits.findIndex(h => h.id === id);
+  if (idx > -1) {
+    habits.splice(idx, 1);
+    expandedId = null;
+    renderWallet();
+    showToast(`${habit.emoji} ${habit.name} restored`);
+  }
+}
+
+function deleteHabit(id) {
+  const habit = habits.find(h => h.id === id);
+  const idx = habits.findIndex(h => h.id === id);
+  if (idx > -1) {
+    habits.splice(idx, 1);
+    expandedId = null;
+    renderWallet();
+    showToast(`${habit.emoji} ${habit.name} deleted`);
+  }
+}
+
+function showConfirm(id) {
+  const overlay = walletContainer.querySelector(`[data-confirm="${id}"]`);
+  if (overlay) overlay.classList.add('active');
+}
+
+function hideConfirm(id) {
+  const overlay = walletContainer.querySelector(`[data-confirm="${id}"]`);
+  if (overlay) overlay.classList.remove('active');
+}
+
+// ---- Toast ----
+function showToast(msg) {
+  toast.textContent = msg;
+  toast.classList.add('visible');
+  setTimeout(() => {
+    toast.classList.remove('visible');
+  }, 2200);
+}
+
+// ---- Init ----
+renderWallet();
+lucide.createIcons();
+</script>
+</body>
+</html>

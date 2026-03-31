@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Archived Habits — Star Map</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Literata:ital,wght@1,400;1,500&display=swap" rel="stylesheet" />
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'DM Sans', sans-serif !important;
+    background: linear-gradient(160deg, #0F172A 0%, #1E293B 100%) !important;
+    min-height: 100vh;
+    overflow-x: hidden;
+    color: #E2E8F0 !important;
+  }
+  .italic-label { font-family: 'Literata', serif !important; font-style: italic; }
+
+  /* Tiny background stars */
+  .sky {
+    position: fixed; inset: 0; overflow: hidden; pointer-events: none; z-index: 0;
+  }
+  .sky-dot {
+    position: absolute; border-radius: 50%; background: #fff;
+    animation: sky-twinkle var(--dur) ease-in-out infinite alternate;
+    opacity: var(--o);
+  }
+  @keyframes sky-twinkle {
+    0% { opacity: var(--o); }
+    100% { opacity: calc(var(--o) * 0.3); }
+  }
+
+  /* Star pulse */
+  @keyframes star-pulse {
+    0%, 100% { transform: scale(1); filter: brightness(1); }
+    50% { transform: scale(1.15); filter: brightness(1.3); }
+  }
+  .star-node {
+    position: absolute; cursor: pointer;
+    animation: star-pulse var(--pulse-dur, 3s) ease-in-out infinite;
+    transition: all 0.4s ease;
+    z-index: 2;
+  }
+  .star-node:hover { transform: scale(1.25) !important; filter: brightness(1.5) !important; }
+
+  /* Glow behind each star */
+  .star-glow {
+    position: absolute; inset: -12px; border-radius: 50%;
+    background: radial-gradient(circle, var(--glow-color) 0%, transparent 70%);
+    opacity: var(--glow-opacity, 0.5);
+    pointer-events: none;
+  }
+
+  /* Constellation lines */
+  .constellation-lines {
+    position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  }
+  .constellation-lines line {
+    stroke: rgba(255,255,255,0.08);
+    stroke-width: 1;
+  }
+
+  /* Info card */
+  .info-card {
+    position: absolute; z-index: 10;
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 16px;
+    padding: 16px 18px;
+    width: 220px;
+    opacity: 0; pointer-events: none;
+    transform: translateY(8px) scale(0.95);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+  .info-card.visible {
+    opacity: 1; pointer-events: auto;
+    transform: translateY(0) scale(1);
+  }
+
+  /* Flare animation (reignite) */
+  @keyframes star-flare {
+    0% { transform: scale(1); opacity: 1; filter: brightness(1); }
+    30% { transform: scale(2.5); opacity: 1; filter: brightness(3); }
+    100% { transform: scale(0.2) translateY(-200px); opacity: 0; filter: brightness(5); }
+  }
+  .star-flare {
+    animation: star-flare 0.9s ease-in forwards !important;
+  }
+
+  /* Fade animation (delete) */
+  @keyframes star-fade {
+    0% { opacity: 1; filter: brightness(1); }
+    60% { opacity: 0.4; filter: brightness(0.3); }
+    100% { opacity: 0; filter: brightness(0); transform: scale(0.5); }
+  }
+  .star-fade {
+    animation: star-fade 1.2s ease-out forwards !important;
+  }
+
+  /* Crescent moon */
+  .crescent {
+    position: absolute; top: 40px; right: 24px; z-index: 1;
+    width: 40px; height: 40px; border-radius: 50%;
+    box-shadow:
+      6px -4px 0 0 #FBBF24,
+      6px -4px 12px 2px rgba(251,191,36,0.25);
+    animation: moon-glow 4s ease-in-out infinite alternate;
+  }
+  @keyframes moon-glow {
+    0% { box-shadow: 6px -4px 0 0 #FBBF24, 6px -4px 12px 2px rgba(251,191,36,0.2); }
+    100% { box-shadow: 6px -4px 0 0 #FCD34D, 6px -4px 20px 4px rgba(251,191,36,0.4); }
+  }
+
+  /* Action buttons */
+  .btn-reignite {
+    background: #059669 !important; color: #fff !important;
+    border: none; border-radius: 10px; padding: 8px 14px;
+    font-family: 'DM Sans', sans-serif !important; font-size: 13px; font-weight: 600;
+    cursor: pointer; transition: all 0.2s ease;
+  }
+  .btn-reignite:hover { background: #047857 !important; transform: scale(1.05); }
+
+  .btn-fadeaway {
+    background: rgba(181,48,48,0.2) !important; color: #F87171 !important;
+    border: 1px solid rgba(181,48,48,0.3); border-radius: 10px; padding: 8px 14px;
+    font-family: 'DM Sans', sans-serif !important; font-size: 13px; font-weight: 600;
+    cursor: pointer; transition: all 0.2s ease;
+  }
+  .btn-fadeaway:hover { background: rgba(181,48,48,0.35) !important; transform: scale(1.05); }
+
+  /* Header area */
+  .page-header {
+    position: relative; z-index: 5;
+    padding: 52px 20px 8px;
+  }
+
+  /* Stat chip */
+  .stat-chip {
+    display: inline-flex; align-items: center; gap: 4px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 8px; padding: 4px 10px;
+    font-size: 12px; color: #94A3B8;
+  }
+
+  /* Star field wrapper */
+  .star-field {
+    position: relative;
+    width: 100%; height: 520px;
+    margin-top: 8px;
+  }
+
+  /* Shooting star */
+  @keyframes shoot {
+    0% { transform: translateX(0) translateY(0); opacity: 1; }
+    100% { transform: translateX(120px) translateY(80px); opacity: 0; }
+  }
+  .shooting-star {
+    position: absolute; width: 2px; height: 2px;
+    background: #fff; border-radius: 50%;
+    box-shadow: 0 0 4px 1px rgba(255,255,255,0.6);
+    opacity: 0;
+    z-index: 1;
+  }
+  .shooting-star::after {
+    content: ''; position: absolute; top: 0; right: 0;
+    width: 40px; height: 1px;
+    background: linear-gradient(to left, rgba(255,255,255,0.6), transparent);
+    transform-origin: right center;
+    transform: rotate(-33deg);
+  }
+  .shooting-star.animate {
+    animation: shoot 0.8s ease-out forwards;
+  }
+</style>
+</head>
+<body>
+
+<!-- iPhone frame wrapper -->
+<div style="max-width:390px; margin:0 auto; position:relative; min-height:100vh; overflow:hidden;">
+
+  <!-- Background sky dots -->
+  <div class="sky" id="sky"></div>
+
+  <!-- Crescent moon -->
+  <div class="crescent"></div>
+
+  <!-- Shooting star (periodic) -->
+  <div class="shooting-star" id="shootingStar" style="top:80px; left:40px;"></div>
+
+  <!-- Header -->
+  <div class="page-header">
+    <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+      <i data-lucide="arrow-left" style="width:20px;height:20px;color:#94A3B8;cursor:pointer;"></i>
+      <span class="italic-label" style="font-size:11px; color:#64748B; letter-spacing:0.5px;">the quiet sky</span>
+    </div>
+    <h1 style="font-size:22px; font-weight:700; color:#F1F5F9; margin-bottom:2px;">Archived Habits</h1>
+    <p class="italic-label" style="font-size:13px; color:#64748B; margin-bottom:12px;">Stars that once guided your path</p>
+
+    <div style="display:flex; gap:8px; flex-wrap:wrap;">
+      <div class="stat-chip">
+        <i data-lucide="star" style="width:12px;height:12px;color:#FBBF24;"></i>
+        <span>5 stars</span>
+      </div>
+      <div class="stat-chip">
+        <i data-lucide="flame" style="width:12px;height:12px;color:#F97316;"></i>
+        <span>847 total days</span>
+      </div>
+      <div class="stat-chip">
+        <i data-lucide="calendar" style="width:12px;height:12px;color:#8B5CF6;"></i>
+        <span>Since Jan 2024</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Star Field -->
+  <div class="star-field" id="starField">
+    <!-- Constellation SVG lines -->
+    <svg class="constellation-lines" id="constellationSvg" width="100%" height="100%"></svg>
+
+    <!-- Stars are injected by JS -->
+  </div>
+
+  <!-- Bottom hint -->
+  <div style="text-align:center; padding:8px 20px 32px; position:relative; z-index:5;">
+    <p class="italic-label" style="font-size:12px; color:#475569;">Tap a star to remember</p>
+  </div>
+
+</div>
+
+<!-- Info Card (floating, repositioned per star) -->
+<div class="info-card" id="infoCard">
+  <div id="cardContent"></div>
+</div>
+
+<script>
+// Habit data
+const habits = [
+  {
+    id: 1,
+    name: 'Morning Meditation',
+    emoji: '\u2728',
+    streak: 42,
+    totalDays: 280,
+    archived: 'Dec 2024',
+    strength: 0.9, // brightness factor
+    x: 25, y: 15, // percent positions
+    pulseDur: '2.8s',
+    glowColor: 'rgba(251,191,36,0.35)',
+    size: 32
+  },
+  {
+    id: 2,
+    name: 'Read 30 mins',
+    emoji: '\uD83D\uDCDA',
+    streak: 18,
+    totalDays: 195,
+    archived: 'Nov 2024',
+    strength: 0.7,
+    x: 65, y: 10,
+    pulseDur: '3.4s',
+    glowColor: 'rgba(139,92,246,0.3)',
+    size: 28
+  },
+  {
+    id: 3,
+    name: 'Drink Water',
+    emoji: '\uD83D\uDCA7',
+    streak: 90,
+    totalDays: 220,
+    archived: 'Oct 2024',
+    strength: 0.95,
+    x: 45, y: 40,
+    pulseDur: '2.5s',
+    glowColor: 'rgba(56,189,248,0.35)',
+    size: 34
+  },
+  {
+    id: 4,
+    name: 'Evening Walk',
+    emoji: '\uD83C\uDF1F',
+    streak: 7,
+    totalDays: 85,
+    archived: 'Sep 2024',
+    strength: 0.45,
+    x: 78, y: 55,
+    pulseDur: '4s',
+    glowColor: 'rgba(248,113,113,0.25)',
+    size: 22
+  },
+  {
+    id: 5,
+    name: 'Journal',
+    emoji: '\uD83D\uDCDD',
+    streak: 25,
+    totalDays: 67,
+    archived: 'Aug 2024',
+    strength: 0.55,
+    x: 18, y: 65,
+    pulseDur: '3.8s',
+    glowColor: 'rgba(52,211,153,0.3)',
+    size: 24
+  }
+];
+
+// Constellation connections (pairs of habit indices)
+const connections = [
+  [0, 2], // Meditation -> Water
+  [2, 1], // Water -> Read
+  [2, 3], // Water -> Walk
+  [2, 4], // Water -> Journal
+  [0, 4], // Meditation -> Journal
+];
+
+const starField = document.getElementById('starField');
+const constellationSvg = document.getElementById('constellationSvg');
+const infoCard = document.getElementById('infoCard');
+const cardContent = document.getElementById('cardContent');
+const sky = document.getElementById('sky');
+
+// Generate sky background dots
+for (let i = 0; i < 80; i++) {
+  const dot = document.createElement('div');
+  dot.className = 'sky-dot';
+  const size = Math.random() * 2 + 0.5;
+  dot.style.cssText = `
+    width:${size}px; height:${size}px;
+    left:${Math.random()*100}%; top:${Math.random()*100}%;
+    --o:${Math.random()*0.5+0.15};
+    --dur:${Math.random()*4+2}s;
+    animation-delay:${Math.random()*3}s;
+  `;
+  sky.appendChild(dot);
+}
+
+// Create star nodes
+const starElements = [];
+habits.forEach((h, i) => {
+  const node = document.createElement('div');
+  node.className = 'star-node';
+  node.dataset.index = i;
+  node.style.cssText = `
+    left:${h.x}%; top:${h.y}%;
+    --pulse-dur:${h.pulseDur};
+    font-size:${h.size}px;
+    filter: brightness(${0.5 + h.strength * 0.8});
+    transform-origin: center center;
+  `;
+  // Glow
+  const glow = document.createElement('div');
+  glow.className = 'star-glow';
+  glow.style.cssText = `--glow-color:${h.glowColor}; --glow-opacity:${h.strength * 0.6};`;
+  node.appendChild(glow);
+
+  // Emoji
+  const emoji = document.createElement('span');
+  emoji.textContent = h.emoji;
+  emoji.style.cssText = 'position:relative; z-index:2; display:block; text-align:center; line-height:1;';
+  node.appendChild(emoji);
+
+  // Label below star
+  const label = document.createElement('div');
+  label.className = 'italic-label';
+  label.style.cssText = `
+    position:absolute; left:50%; transform:translateX(-50%);
+    bottom:-20px; white-space:nowrap;
+    font-size:10px; color:rgba(148,163,184,${0.4 + h.strength * 0.4});
+    pointer-events:none;
+  `;
+  label.textContent = h.name;
+  node.appendChild(label);
+
+  node.addEventListener('click', (e) => {
+    e.stopPropagation();
+    showInfoCard(i, node);
+  });
+
+  starField.appendChild(node);
+  starElements.push(node);
+});
+
+// Draw constellation lines
+function drawLines() {
+  constellationSvg.innerHTML = '';
+  connections.forEach(([a, b]) => {
+    const elA = starElements[a];
+    const elB = starElements[b];
+    if (!elA || !elB || elA.style.display === 'none' || elB.style.display === 'none') return;
+
+    const rectA = elA.getBoundingClientRect();
+    const rectB = elB.getBoundingClientRect();
+    const fieldRect = starField.getBoundingClientRect();
+
+    const x1 = rectA.left + rectA.width/2 - fieldRect.left;
+    const y1 = rectA.top + rectA.height/2 - fieldRect.top;
+    const x2 = rectB.left + rectB.width/2 - fieldRect.left;
+    const y2 = rectB.top + rectB.height/2 - fieldRect.top;
+
+    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    line.setAttribute('x1', x1);
+    line.setAttribute('y1', y1);
+    line.setAttribute('x2', x2);
+    line.setAttribute('y2', y2);
+    constellationSvg.appendChild(line);
+  });
+}
+// Draw initially and on resize
+setTimeout(drawLines, 100);
+window.addEventListener('resize', drawLines);
+
+// Info card
+let activeStarIndex = null;
+
+function showInfoCard(index, starNode) {
+  if (activeStarIndex === index) {
+    hideInfoCard();
+    return;
+  }
+  activeStarIndex = index;
+  const h = habits[index];
+
+  cardContent.innerHTML = `
+    <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px;">
+      <span style="font-size:24px;">${h.emoji}</span>
+      <div>
+        <div style="font-size:14px; font-weight:600; color:#F1F5F9;">${h.name}</div>
+        <div class="italic-label" style="font-size:11px; color:#64748B;">Archived ${h.archived}</div>
+      </div>
+    </div>
+    <div style="display:flex; gap:12px; margin-bottom:14px;">
+      <div style="text-align:center;">
+        <div style="font-size:18px; font-weight:700; color:#FBBF24;">${h.streak}</div>
+        <div style="font-size:10px; color:#64748B;">best streak</div>
+      </div>
+      <div style="text-align:center;">
+        <div style="font-size:18px; font-weight:700; color:#8B5CF6;">${h.totalDays}</div>
+        <div style="font-size:10px; color:#64748B;">total days</div>
+      </div>
+      <div style="text-align:center;">
+        <div style="font-size:18px; font-weight:700; color:#38BDF8;">${Math.round(h.strength*100)}%</div>
+        <div style="font-size:10px; color:#64748B;">strength</div>
+      </div>
+    </div>
+    <div style="display:flex; gap:8px;">
+      <button class="btn-reignite" onclick="reigniteStar(${index})">
+        <span style="display:inline-flex; align-items:center; gap:4px;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/></svg>
+          Reignite
+        </span>
+      </button>
+      <button class="btn-fadeaway" onclick="fadeAwayStar(${index})">
+        <span style="display:inline-flex; align-items:center; gap:4px;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+          Fade Away
+        </span>
+      </button>
+    </div>
+  `;
+
+  // Position card near star
+  const starRect = starNode.getBoundingClientRect();
+  const wrapper = document.querySelector('[style*="max-width:390px"]');
+  const wrapperRect = wrapper.getBoundingClientRect();
+
+  let cardLeft = starRect.left - wrapperRect.left + starRect.width / 2 - 110;
+  let cardTop = starRect.bottom - wrapperRect.top + 12;
+
+  // Keep within bounds
+  if (cardLeft < 8) cardLeft = 8;
+  if (cardLeft + 220 > 382) cardLeft = 382 - 220;
+  if (cardTop + 200 > wrapperRect.height - 40) {
+    cardTop = starRect.top - wrapperRect.top - 190;
+  }
+
+  infoCard.style.left = cardLeft + 'px';
+  infoCard.style.top = cardTop + 'px';
+  infoCard.classList.add('visible');
+}
+
+function hideInfoCard() {
+  infoCard.classList.remove('visible');
+  activeStarIndex = null;
+}
+
+// Click outside to close
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('.star-node') && !e.target.closest('.info-card')) {
+    hideInfoCard();
+  }
+});
+
+// Reignite (restore)
+function reigniteStar(index) {
+  hideInfoCard();
+  const el = starElements[index];
+  el.classList.add('star-flare');
+  el.style.pointerEvents = 'none';
+  setTimeout(() => {
+    el.style.display = 'none';
+    drawLines();
+  }, 900);
+}
+
+// Fade Away (delete)
+function fadeAwayStar(index) {
+  hideInfoCard();
+  const el = starElements[index];
+  el.classList.add('star-fade');
+  el.style.pointerEvents = 'none';
+  setTimeout(() => {
+    el.style.display = 'none';
+    drawLines();
+  }, 1200);
+}
+
+// Periodic shooting star
+function triggerShootingStar() {
+  const ss = document.getElementById('shootingStar');
+  ss.style.top = (Math.random() * 30 + 5) + '%';
+  ss.style.left = (Math.random() * 40 + 5) + '%';
+  ss.classList.remove('animate');
+  void ss.offsetWidth; // reflow
+  ss.classList.add('animate');
+  setTimeout(() => ss.classList.remove('animate'), 1000);
+}
+setInterval(triggerShootingStar, 6000);
+setTimeout(triggerShootingStar, 2000);
+
+// Init lucide
+lucide.createIcons();
+</script>
+</body>
+</html>

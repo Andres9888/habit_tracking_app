@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=390" />
+  <title>Habit Museum — Archived Habits</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Literata:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            serif: ['Literata', 'Georgia', 'serif'],
+            sans: ['DM Sans', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            gallery: '#F5F1ED',
+            gold: '#C4A882',
+            'gold-light': '#D4C4A8',
+            'gold-dark': '#A88C66',
+            museum: {
+              green: '#059669',
+              red: '#B53030',
+              plaque: '#3D3428',
+              subtitle: '#7A6E5D',
+            },
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    * { box-sizing: border-box !important; }
+    body {
+      font-family: 'DM Sans', sans-serif !important;
+      background-color: #F5F1ED !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      -webkit-font-smoothing: antialiased !important;
+    }
+
+    h1, h2, h3, h4 {
+      font-family: 'Literata', Georgia, serif !important;
+    }
+
+    .exhibit-frame {
+      border: 1.5px solid #C4A882 !important;
+      border-radius: 2px !important;
+      background: linear-gradient(135deg, #FFFDF9 0%, #FFF9F0 100%) !important;
+      position: relative !important;
+    }
+
+    .exhibit-frame::before {
+      content: '' !important;
+      position: absolute !important;
+      inset: 3px !important;
+      border: 0.5px solid rgba(196, 168, 130, 0.3) !important;
+      border-radius: 1px !important;
+      pointer-events: none !important;
+    }
+
+    .emoji-display {
+      font-size: 48px !important;
+      line-height: 1 !important;
+      filter: drop-shadow(0 1px 2px rgba(0,0,0,0.06)) !important;
+    }
+
+    .plaque {
+      background: linear-gradient(180deg, #FDFCFA 0%, #F8F5F0 100%) !important;
+      border: 1px solid #C4A882 !important;
+      border-radius: 3px !important;
+      box-shadow: 0 1px 3px rgba(61, 52, 40, 0.06), inset 0 1px 0 rgba(255,255,255,0.8) !important;
+    }
+
+    .plaque-title {
+      font-family: 'Literata', Georgia, serif !important;
+      font-weight: 600 !important;
+      font-size: 16px !important;
+      color: #3D3428 !important;
+      letter-spacing: -0.01em !important;
+    }
+
+    .plaque-subtitle {
+      font-family: 'Literata', Georgia, serif !important;
+      font-style: italic !important;
+      font-weight: 300 !important;
+      font-size: 12px !important;
+      color: #7A6E5D !important;
+    }
+
+    .stat-label {
+      font-family: 'Literata', Georgia, serif !important;
+      font-size: 10px !important;
+      text-transform: uppercase !important;
+      letter-spacing: 0.08em !important;
+      color: #7A6E5D !important;
+    }
+
+    .stat-value {
+      font-family: 'Literata', Georgia, serif !important;
+      font-weight: 600 !important;
+      font-size: 14px !important;
+      color: #3D3428 !important;
+    }
+
+    .museum-btn {
+      font-family: 'DM Sans', sans-serif !important;
+      font-weight: 600 !important;
+      font-size: 12px !important;
+      letter-spacing: 0.04em !important;
+      text-transform: uppercase !important;
+      padding: 8px 16px !important;
+      border-radius: 2px !important;
+      cursor: pointer !important;
+      transition: all 0.2s ease !important;
+      border: 1px solid !important;
+    }
+
+    .btn-restore {
+      background-color: #059669 !important;
+      border-color: #059669 !important;
+      color: #fff !important;
+    }
+    .btn-restore:hover {
+      background-color: #047857 !important;
+      border-color: #047857 !important;
+      transform: translateY(-1px) !important;
+      box-shadow: 0 2px 6px rgba(5, 150, 105, 0.25) !important;
+    }
+    .btn-restore:active {
+      transform: translateY(0) !important;
+    }
+
+    .btn-deaccession {
+      background-color: transparent !important;
+      border-color: #B53030 !important;
+      color: #B53030 !important;
+    }
+    .btn-deaccession:hover {
+      background-color: #B53030 !important;
+      color: #fff !important;
+      transform: translateY(-1px) !important;
+      box-shadow: 0 2px 6px rgba(181, 48, 48, 0.2) !important;
+    }
+    .btn-deaccession:active {
+      transform: translateY(0) !important;
+    }
+
+    .exhibit-card {
+      background: #FFFFFF !important;
+      border: 1px solid #C4A882 !important;
+      border-radius: 4px !important;
+      transition: all 0.3s ease !important;
+      overflow: hidden !important;
+    }
+
+    .exhibit-card:hover {
+      box-shadow: 0 4px 16px rgba(61, 52, 40, 0.08) !important;
+    }
+
+    .detail-panel {
+      max-height: 0 !important;
+      overflow: hidden !important;
+      transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease !important;
+      opacity: 0 !important;
+    }
+    .detail-panel.open {
+      max-height: 300px !important;
+      opacity: 1 !important;
+    }
+
+    .gallery-divider {
+      height: 1px !important;
+      background: linear-gradient(90deg, transparent 0%, #C4A882 50%, transparent 100%) !important;
+    }
+
+    .museum-header {
+      font-family: 'Literata', Georgia, serif !important;
+      font-weight: 300 !important;
+      letter-spacing: 0.12em !important;
+      text-transform: uppercase !important;
+    }
+
+    .wing-label {
+      font-family: 'Literata', Georgia, serif !important;
+      font-size: 10px !important;
+      font-weight: 400 !important;
+      letter-spacing: 0.15em !important;
+      text-transform: uppercase !important;
+      color: #A88C66 !important;
+    }
+
+    .tap-hint {
+      font-family: 'DM Sans', sans-serif !important;
+      font-size: 10px !important;
+      color: #A88C66 !important;
+      letter-spacing: 0.02em !important;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .exhibit-enter {
+      animation: fadeInUp 0.5s ease forwards !important;
+    }
+    .exhibit-enter:nth-child(1) { animation-delay: 0.05s !important; }
+    .exhibit-enter:nth-child(2) { animation-delay: 0.12s !important; }
+    .exhibit-enter:nth-child(3) { animation-delay: 0.19s !important; }
+    .exhibit-enter:nth-child(4) { animation-delay: 0.26s !important; }
+
+    .toast {
+      position: fixed !important;
+      bottom: 24px !important;
+      left: 50% !important;
+      transform: translateX(-50%) translateY(80px) !important;
+      opacity: 0 !important;
+      transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1) !important;
+      pointer-events: none !important;
+      z-index: 50 !important;
+    }
+    .toast.show {
+      transform: translateX(-50%) translateY(0) !important;
+      opacity: 1 !important;
+      pointer-events: auto !important;
+    }
+
+    /* Scrollbar styling */
+    ::-webkit-scrollbar { width: 3px !important; }
+    ::-webkit-scrollbar-track { background: transparent !important; }
+    ::-webkit-scrollbar-thumb { background: #C4A882 !important; border-radius: 2px !important; }
+  </style>
+</head>
+<body>
+  <div class="max-w-[390px] mx-auto min-h-screen bg-gallery relative" style="max-width: 390px;">
+
+    <!-- Museum Header -->
+    <header class="pt-14 pb-6 px-6 text-center">
+      <div class="wing-label mb-2">West Wing</div>
+      <h1 class="museum-header text-museum-plaque text-xl mb-1" style="font-size: 20px;">The Habit Museum</h1>
+      <div class="gallery-divider w-16 mx-auto my-3"></div>
+      <p class="text-museum-subtitle font-serif text-xs italic" style="font-weight: 300;">
+        A curated collection of past endeavours
+      </p>
+      <p class="tap-hint mt-3 flex items-center justify-center gap-1">
+        <i data-lucide="hand" style="width: 11px; height: 11px;"></i>
+        Tap any plaque for exhibition details
+      </p>
+    </header>
+
+    <!-- Exhibit Count -->
+    <div class="px-6 mb-4 flex items-center justify-between">
+      <span class="wing-label">4 Exhibits on Display</span>
+      <button onclick="restoreAll()" class="text-museum-green font-sans text-xs font-semibold uppercase tracking-wide hover:underline" style="letter-spacing: 0.04em; cursor: pointer; background: none; border: none;">
+        Return All
+      </button>
+    </div>
+
+    <!-- Exhibits -->
+    <div class="px-5 pb-32 space-y-5" id="exhibits">
+
+      <!-- Exhibit 1: Morning Meditation -->
+      <article class="exhibit-card exhibit-enter" style="opacity: 0;" data-id="1">
+        <div class="p-5">
+          <!-- Frame + Emoji -->
+          <div class="flex items-start gap-4">
+            <div class="exhibit-frame w-[72px] h-[72px] flex items-center justify-center flex-shrink-0">
+              <span class="emoji-display">🧘</span>
+            </div>
+            <div class="flex-1 min-w-0 pt-0.5">
+              <h3 class="plaque-title leading-tight">Morning Meditation</h3>
+              <p class="plaque-subtitle mt-1">On loan since Jan 15, 2026</p>
+            </div>
+          </div>
+
+          <!-- Plaque Stats -->
+          <div class="plaque mt-4 px-4 py-3 cursor-pointer" onclick="toggleDetail(this)">
+            <div class="flex justify-between items-center">
+              <div class="text-center flex-1">
+                <div class="stat-value">142</div>
+                <div class="stat-label mt-0.5">Days</div>
+              </div>
+              <div class="w-px h-8 bg-gold-light mx-2"></div>
+              <div class="text-center flex-1">
+                <div class="stat-value">87%</div>
+                <div class="stat-label mt-0.5">Rate</div>
+              </div>
+              <div class="w-px h-8 bg-gold-light mx-2"></div>
+              <div class="text-center flex-1">
+                <div class="stat-value">23</div>
+                <div class="stat-label mt-0.5">Best Streak</div>
+              </div>
+            </div>
+
+            <!-- Detail Panel (hidden by default) -->
+            <div class="detail-panel">
+              <div class="gallery-divider my-3"></div>
+              <p class="font-serif text-xs text-museum-subtitle leading-relaxed" style="font-weight: 400;">
+                This exhibit chronicles a dedicated morning meditation practice maintained over nearly five months.
+                The practitioner achieved notable consistency, with a peak streak of 23 consecutive days of mindful reflection.
+              </p>
+              <div class="flex items-center gap-2 mt-3">
+                <span class="inline-flex items-center gap-1 text-xs text-museum-subtitle font-serif">
+                  <i data-lucide="calendar" style="width: 11px; height: 11px;"></i>
+                  Acquired: Aug 26, 2025
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="flex gap-3 mt-4">
+            <button class="museum-btn btn-restore flex-1 flex items-center justify-center gap-1.5" onclick="restoreExhibit(this)">
+              <i data-lucide="undo-2" style="width: 13px; height: 13px;"></i>
+              Return to Collection
+            </button>
+            <button class="museum-btn btn-deaccession flex items-center justify-center gap-1.5" onclick="deaccession(this)" style="padding-left: 12px; padding-right: 12px;">
+              <i data-lucide="trash-2" style="width: 13px; height: 13px;"></i>
+            </button>
+          </div>
+        </div>
+      </article>
+
+      <!-- Exhibit 2: Daily Reading -->
+      <article class="exhibit-card exhibit-enter" style="opacity: 0;" data-id="2">
+        <div class="p-5">
+          <div class="flex items-start gap-4">
+            <div class="exhibit-frame w-[72px] h-[72px] flex items-center justify-center flex-shrink-0">
+              <span class="emoji-display">📚</span>
+            </div>
+            <div class="flex-1 min-w-0 pt-0.5">
+              <h3 class="plaque-title leading-tight">Daily Reading</h3>
+              <p class="plaque-subtitle mt-1">On loan since Feb 3, 2026</p>
+            </div>
+          </div>
+
+          <div class="plaque mt-4 px-4 py-3 cursor-pointer" onclick="toggleDetail(this)">
+            <div class="flex justify-between items-center">
+              <div class="text-center flex-1">
+                <div class="stat-value">89</div>
+                <div class="stat-label mt-0.5">Days</div>
+              </div>
+              <div class="w-px h-8 bg-gold-light mx-2"></div>
+              <div class="text-center flex-1">
+                <div class="stat-value">72%</div>
+                <div class="stat-label mt-0.5">Rate</div>
+              </div>
+              <div class="w-px h-8 bg-gold-light mx-2"></div>
+              <div class="text-center flex-1">
+                <div class="stat-value">14</div>
+                <div class="stat-label mt-0.5">Best Streak</div>
+              </div>
+            </div>
+
+            <div class="detail-panel">
+              <div class="gallery-divider my-3"></div>
+              <p class="font-serif text-xs text-museum-subtitle leading-relaxed" style="font-weight: 400;">
+                A commitment to daily reading spanning nearly three months. The collection documents
+                12 books completed, with a preference for evening sessions averaging 35 minutes each.
+              </p>
+              <div class="flex items-center gap-2 mt-3">
+                <span class="inline-flex items-center gap-1 text-xs text-museum-subtitle font-serif">
+                  <i data-lucide="calendar" style="width: 11px; height: 11px;"></i>
+                  Acquired: Nov 7, 2025
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex gap-3 mt-4">
+            <button class="museum-btn btn-restore flex-1 flex items-center justify-center gap-1.5" onclick="restoreExhibit(this)">
+              <i data-lucide="undo-2" style="width: 13px; height: 13px;"></i>
+              Return to Collection
+            </button>
+            <button class="museum-btn btn-deaccession flex items-center justify-center gap-1.5" onclick="deaccession(this)" style="padding-left: 12px; padding-right: 12px;">
+              <i data-lucide="trash-2" style="width: 13px; height: 13px;"></i>
+            </button>
+          </div>
+        </div>
+      </article>
+
+      <!-- Exhibit 3: Cold Showers -->
+      <article class="exhibit-card exhibit-enter" style="opacity: 0;" data-id="3">
+        <div class="p-5">
+          <div class="flex items-start gap-4">
+            <div class="exhibit-frame w-[72px] h-[72px] flex items-center justify-center flex-shrink-0">
+              <span class="emoji-display">🚿</span>
+            </div>
+            <div class="flex-1 min-w-0 pt-0.5">
+              <h3 class="plaque-title leading-tight">Cold Showers</h3>
+              <p class="plaque-subtitle mt-1">On loan since Mar 1, 2026</p>
+            </div>
+          </div>
+
+          <div class="plaque mt-4 px-4 py-3 cursor-pointer" onclick="toggleDetail(this)">
+            <div class="flex justify-between items-center">
+              <div class="text-center flex-1">
+                <div class="stat-value">31</div>
+                <div class="stat-label mt-0.5">Days</div>
+              </div>
+              <div class="w-px h-8 bg-gold-light mx-2"></div>
+              <div class="text-center flex-1">
+                <div class="stat-value">58%</div>
+                <div class="stat-label mt-0.5">Rate</div>
+              </div>
+              <div class="w-px h-8 bg-gold-light mx-2"></div>
+              <div class="text-center flex-1">
+                <div class="stat-value">7</div>
+                <div class="stat-label mt-0.5">Best Streak</div>
+              </div>
+            </div>
+
+            <div class="detail-panel">
+              <div class="gallery-divider my-3"></div>
+              <p class="font-serif text-xs text-museum-subtitle leading-relaxed" style="font-weight: 400;">
+                A brief but spirited experiment in cold water therapy. Though the exhibit was short-lived,
+                it demonstrated commendable resilience with a full week of unbroken commitment at its zenith.
+              </p>
+              <div class="flex items-center gap-2 mt-3">
+                <span class="inline-flex items-center gap-1 text-xs text-museum-subtitle font-serif">
+                  <i data-lucide="calendar" style="width: 11px; height: 11px;"></i>
+                  Acquired: Jan 29, 2026
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex gap-3 mt-4">
+            <button class="museum-btn btn-restore flex-1 flex items-center justify-center gap-1.5" onclick="restoreExhibit(this)">
+              <i data-lucide="undo-2" style="width: 13px; height: 13px;"></i>
+              Return to Collection
+            </button>
+            <button class="museum-btn btn-deaccession flex items-center justify-center gap-1.5" onclick="deaccession(this)" style="padding-left: 12px; padding-right: 12px;">
+              <i data-lucide="trash-2" style="width: 13px; height: 13px;"></i>
+            </button>
+          </div>
+        </div>
+      </article>
+
+      <!-- Exhibit 4: Journaling -->
+      <article class="exhibit-card exhibit-enter" style="opacity: 0;" data-id="4">
+        <div class="p-5">
+          <div class="flex items-start gap-4">
+            <div class="exhibit-frame w-[72px] h-[72px] flex items-center justify-center flex-shrink-0">
+              <span class="emoji-display">✍️</span>
+            </div>
+            <div class="flex-1 min-w-0 pt-0.5">
+              <h3 class="plaque-title leading-tight">Evening Journaling</h3>
+              <p class="plaque-subtitle mt-1">On loan since Dec 20, 2025</p>
+            </div>
+          </div>
+
+          <div class="plaque mt-4 px-4 py-3 cursor-pointer" onclick="toggleDetail(this)">
+            <div class="flex justify-between items-center">
+              <div class="text-center flex-1">
+                <div class="stat-value">210</div>
+                <div class="stat-label mt-0.5">Days</div>
+              </div>
+              <div class="w-px h-8 bg-gold-light mx-2"></div>
+              <div class="text-center flex-1">
+                <div class="stat-value">91%</div>
+                <div class="stat-label mt-0.5">Rate</div>
+              </div>
+              <div class="w-px h-8 bg-gold-light mx-2"></div>
+              <div class="text-center flex-1">
+                <div class="stat-value">45</div>
+                <div class="stat-label mt-0.5">Best Streak</div>
+              </div>
+            </div>
+
+            <div class="detail-panel">
+              <div class="gallery-divider my-3"></div>
+              <p class="font-serif text-xs text-museum-subtitle leading-relaxed" style="font-weight: 400;">
+                The crown jewel of this collection. Seven months of dedicated evening reflection,
+                achieving an extraordinary 91% completion rate and a remarkable 45-day unbroken streak.
+                A masterwork of personal discipline.
+              </p>
+              <div class="flex items-center gap-2 mt-3">
+                <span class="inline-flex items-center gap-1 text-xs text-museum-subtitle font-serif">
+                  <i data-lucide="calendar" style="width: 11px; height: 11px;"></i>
+                  Acquired: May 24, 2025
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex gap-3 mt-4">
+            <button class="museum-btn btn-restore flex-1 flex items-center justify-center gap-1.5" onclick="restoreExhibit(this)">
+              <i data-lucide="undo-2" style="width: 13px; height: 13px;"></i>
+              Return to Collection
+            </button>
+            <button class="museum-btn btn-deaccession flex items-center justify-center gap-1.5" onclick="deaccession(this)" style="padding-left: 12px; padding-right: 12px;">
+              <i data-lucide="trash-2" style="width: 13px; height: 13px;"></i>
+            </button>
+          </div>
+        </div>
+      </article>
+
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">
+      <div class="bg-museum-plaque text-white font-sans text-sm px-5 py-3 rounded shadow-lg flex items-center gap-2" style="border-radius: 4px;">
+        <i data-lucide="check-circle" style="width: 16px; height: 16px;"></i>
+        <span id="toast-msg">Exhibit returned to active collection</span>
+      </div>
+    </div>
+
+    <!-- Confirm Delete Modal -->
+    <div id="deleteModal" class="fixed inset-0 z-40 flex items-center justify-center px-8" style="display: none;">
+      <div class="absolute inset-0 bg-black/30 backdrop-blur-sm" onclick="closeDeleteModal()"></div>
+      <div class="relative bg-white border border-gold rounded p-6 w-full max-w-[320px] text-center" style="border-radius: 4px;">
+        <div class="w-12 h-12 mx-auto mb-3 rounded-full flex items-center justify-center" style="background: #FEF2F2;">
+          <i data-lucide="alert-triangle" style="width: 22px; height: 22px; color: #B53030;"></i>
+        </div>
+        <h3 class="plaque-title text-base">Deaccession Exhibit?</h3>
+        <p class="font-serif text-xs text-museum-subtitle mt-2 leading-relaxed" style="font-weight: 400;">
+          This action will permanently remove the exhibit and all associated records from the museum archives.
+        </p>
+        <div class="flex gap-3 mt-5">
+          <button class="museum-btn flex-1" onclick="closeDeleteModal()" style="background: #F5F1ED !important; border-color: #C4A882 !important; color: #3D3428 !important;">
+            Preserve
+          </button>
+          <button class="museum-btn btn-deaccession flex-1" onclick="confirmDelete()" style="background-color: #B53030 !important; color: #fff !important;">
+            Deaccession
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Navigation Bar -->
+    <div class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[390px] bg-white/90 backdrop-blur-md border-t border-gold-light">
+      <div class="flex items-center justify-around py-2.5 pb-6">
+        <button class="flex flex-col items-center gap-0.5 text-museum-subtitle" style="background: none; border: none; cursor: pointer;">
+          <i data-lucide="home" style="width: 20px; height: 20px;"></i>
+          <span class="text-[10px] font-sans font-medium">Gallery</span>
+        </button>
+        <button class="flex flex-col items-center gap-0.5 text-museum-green" style="background: none; border: none; cursor: pointer;">
+          <i data-lucide="archive" style="width: 20px; height: 20px;"></i>
+          <span class="text-[10px] font-sans font-semibold">Archives</span>
+        </button>
+        <button class="flex flex-col items-center gap-0.5 text-museum-subtitle" style="background: none; border: none; cursor: pointer;">
+          <i data-lucide="search" style="width: 20px; height: 20px;"></i>
+          <span class="text-[10px] font-sans font-medium">Search</span>
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // Initialize Lucide icons
+    lucide.createIcons();
+
+    // Toggle plaque detail panel
+    function toggleDetail(plaqueEl) {
+      const panel = plaqueEl.querySelector('.detail-panel');
+      if (panel) {
+        panel.classList.toggle('open');
+      }
+    }
+
+    // Show toast notification
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      const msg = document.getElementById('toast-msg');
+      msg.textContent = message;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 2400);
+    }
+
+    // Restore exhibit (with animation)
+    function restoreExhibit(btn) {
+      const card = btn.closest('.exhibit-card');
+      card.style.transition = 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
+      card.style.opacity = '0';
+      card.style.transform = 'translateX(60px) scale(0.95)';
+      showToast('Exhibit returned to active collection');
+      setTimeout(() => {
+        card.style.maxHeight = card.offsetHeight + 'px';
+        requestAnimationFrame(() => {
+          card.style.maxHeight = '0px';
+          card.style.marginBottom = '0px';
+          card.style.padding = '0px';
+          card.style.overflow = 'hidden';
+        });
+      }, 350);
+      setTimeout(() => {
+        card.remove();
+        updateExhibitCount();
+      }, 700);
+    }
+
+    // Delete modal state
+    let pendingDeleteCard = null;
+
+    function deaccession(btn) {
+      pendingDeleteCard = btn.closest('.exhibit-card');
+      document.getElementById('deleteModal').style.display = 'flex';
+    }
+
+    function closeDeleteModal() {
+      document.getElementById('deleteModal').style.display = 'none';
+      pendingDeleteCard = null;
+    }
+
+    function confirmDelete() {
+      if (pendingDeleteCard) {
+        const card = pendingDeleteCard;
+        closeDeleteModal();
+        card.style.transition = 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
+        card.style.opacity = '0';
+        card.style.transform = 'scale(0.9)';
+        showToast('Exhibit permanently deaccessioned');
+        setTimeout(() => {
+          card.style.maxHeight = card.offsetHeight + 'px';
+          requestAnimationFrame(() => {
+            card.style.maxHeight = '0px';
+            card.style.marginBottom = '0px';
+            card.style.padding = '0px';
+            card.style.overflow = 'hidden';
+          });
+        }, 350);
+        setTimeout(() => {
+          card.remove();
+          updateExhibitCount();
+        }, 700);
+      }
+    }
+
+    function restoreAll() {
+      const cards = document.querySelectorAll('.exhibit-card');
+      cards.forEach((card, i) => {
+        setTimeout(() => {
+          card.style.transition = 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
+          card.style.opacity = '0';
+          card.style.transform = 'translateX(60px) scale(0.95)';
+        }, i * 100);
+      });
+      showToast('All exhibits returned to active collection');
+      setTimeout(() => {
+        cards.forEach(card => card.remove());
+        updateExhibitCount();
+      }, 600 + cards.length * 100);
+    }
+
+    function updateExhibitCount() {
+      const count = document.querySelectorAll('.exhibit-card').length;
+      const label = document.querySelector('.wing-label:not(header .wing-label)');
+      if (label && !label.closest('header')) {
+        label.textContent = count + ' Exhibit' + (count !== 1 ? 's' : '') + ' on Display';
+      }
+      if (count === 0) {
+        const exhibitsContainer = document.getElementById('exhibits');
+        exhibitsContainer.innerHTML = `
+          <div class="text-center py-16 exhibit-enter" style="opacity: 0; animation-delay: 0.1s;">
+            <div class="exhibit-frame w-20 h-20 mx-auto flex items-center justify-center mb-4">
+              <span style="font-size: 36px;">🏛️</span>
+            </div>
+            <h3 class="plaque-title text-base mb-2">Gallery Empty</h3>
+            <p class="font-serif text-xs text-museum-subtitle italic" style="font-weight: 300;">
+              All exhibits have been returned or deaccessioned.<br/>
+              The museum awaits new acquisitions.
+            </p>
+          </div>
+        `;
+      }
+    }
+  </script>
+</body>
+</html>

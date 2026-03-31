@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Zen Garden — Archived Habits</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Literata:ital,wght@0,400;1,300;1,400&display=swap" rel="stylesheet" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'DM Sans', sans-serif !important;
+      background-color: #E8DFD0 !important;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    .phone-frame {
+      width: 390px;
+      min-height: 100vh;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* ── Raked sand pattern ── */
+    .sand-bg {
+      background-color: #E8DFD0;
+      background-image:
+        repeating-linear-gradient(
+          0deg,
+          transparent,
+          transparent 11px,
+          rgba(0,0,0,0.04) 11px,
+          rgba(0,0,0,0.04) 12px
+        );
+    }
+
+    /* ── Concentric rake rings around stones ── */
+    .rake-rings {
+      position: absolute;
+      inset: -28px;
+      border-radius: 50%;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.8s ease;
+    }
+    .stone-wrapper:not(.dissolving) .rake-rings {
+      opacity: 1;
+    }
+    .rake-rings::before,
+    .rake-rings::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+    }
+    .rake-rings::before {
+      border: 1.5px solid rgba(0,0,0,0.06);
+      inset: -6px;
+    }
+    .rake-rings::after {
+      border: 1.5px solid rgba(0,0,0,0.04);
+      inset: -18px;
+    }
+
+    /* ── Stone base ── */
+    .stone {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      cursor: pointer;
+      position: relative;
+      transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1),
+                  box-shadow 0.6s ease,
+                  opacity 0.8s ease;
+      box-shadow:
+        0 4px 12px rgba(0,0,0,0.10),
+        0 1px 3px rgba(0,0,0,0.08),
+        inset 0 2px 4px rgba(255,255,255,0.15);
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    .stone:active {
+      transform: scale(0.95);
+    }
+    .stone.selected {
+      transform: scale(1.08);
+      box-shadow:
+        0 8px 24px rgba(0,0,0,0.14),
+        0 2px 6px rgba(0,0,0,0.10),
+        inset 0 2px 4px rgba(255,255,255,0.15);
+    }
+
+    /* ── Stone colors ── */
+    .stone-warm   { background: linear-gradient(135deg, #C4A882, #B89B72); }
+    .stone-cool   { background: linear-gradient(135deg, #A8B5A0, #8FA387); }
+    .stone-grey   { background: linear-gradient(135deg, #B8B0A4, #A39A8E); }
+    .stone-slate  { background: linear-gradient(135deg, #9CA8B0, #8A969E); }
+
+    /* ── Stone wrapper for positioning ── */
+    .stone-wrapper {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 1.2s ease, transform 1.2s ease;
+    }
+    .stone-wrapper.dissolving {
+      opacity: 0;
+      transform: scale(0.3);
+    }
+    .stone-wrapper.restoring {
+      opacity: 0;
+      transform: translateY(-20px) scale(0.8);
+    }
+
+    /* ── Habit name label ── */
+    .stone-label {
+      position: absolute;
+      bottom: -22px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 11px;
+      font-weight: 500;
+      color: rgba(0,0,0,0.45);
+      white-space: nowrap;
+      letter-spacing: 0.02em;
+      transition: color 0.4s ease;
+    }
+    .stone.selected ~ .stone-label,
+    .stone-wrapper:hover .stone-label {
+      color: rgba(0,0,0,0.65);
+    }
+
+    /* ── Floating stats card ── */
+    .stats-card {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%) translateY(10px);
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: 16px;
+      padding: 16px 20px;
+      width: 260px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.04);
+      z-index: 20;
+    }
+    .stats-card.visible {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateX(-50%) translateY(0);
+    }
+    .stats-card h3 {
+      font-family: 'DM Sans', sans-serif !important;
+      font-size: 14px !important;
+      font-weight: 600 !important;
+      color: #2D2A24 !important;
+      margin-bottom: 10px !important;
+    }
+
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 5px 0;
+      font-size: 12px;
+      color: #6B6560;
+    }
+    .stat-row .stat-value {
+      font-weight: 600;
+      color: #3D3A34;
+    }
+
+    /* ── Action buttons ── */
+    .action-buttons {
+      display: flex;
+      gap: 8px;
+      margin-top: 14px;
+    }
+    .btn {
+      flex: 1;
+      padding: 9px 12px;
+      border: none;
+      border-radius: 10px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      transition: all 0.4s ease;
+    }
+    .btn-restore {
+      background: #059669;
+      color: white;
+    }
+    .btn-restore:hover { background: #047857; }
+    .btn-release {
+      background: rgba(181, 48, 48, 0.08);
+      color: #B53030;
+    }
+    .btn-release:hover { background: rgba(181, 48, 48, 0.15); }
+
+    /* ── Header ── */
+    .zen-header {
+      padding: 56px 24px 12px;
+      text-align: center;
+    }
+    .zen-header h1 {
+      font-family: 'DM Sans', sans-serif !important;
+      font-size: 18px !important;
+      font-weight: 600 !important;
+      color: #2D2A24 !important;
+      letter-spacing: -0.01em !important;
+    }
+    .zen-header .subtitle {
+      font-family: 'Literata', serif !important;
+      font-style: italic;
+      font-size: 13px !important;
+      color: rgba(0,0,0,0.35) !important;
+      margin-top: 6px !important;
+    }
+    .stone-count {
+      font-size: 11px;
+      color: rgba(0,0,0,0.30);
+      margin-top: 4px;
+    }
+
+    /* ── Garden area ── */
+    .garden {
+      position: relative;
+      width: 100%;
+      height: 520px;
+      margin-top: 16px;
+    }
+
+    /* ── Zen quote ── */
+    .zen-quote {
+      text-align: center;
+      padding: 24px 40px 48px;
+    }
+    .zen-quote p {
+      font-family: 'Literata', serif !important;
+      font-style: italic;
+      font-size: 13px !important;
+      line-height: 1.6 !important;
+      color: rgba(0,0,0,0.28) !important;
+    }
+
+    /* ── Close button ── */
+    .close-btn {
+      position: absolute;
+      top: 54px;
+      right: 20px;
+      width: 32px;
+      height: 32px;
+      border: none;
+      background: rgba(0,0,0,0.05);
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: rgba(0,0,0,0.35);
+      transition: all 0.4s ease;
+    }
+    .close-btn:hover {
+      background: rgba(0,0,0,0.08);
+      color: rgba(0,0,0,0.5);
+    }
+
+    /* ── Back button ── */
+    .back-btn {
+      position: absolute;
+      top: 54px;
+      left: 20px;
+      width: 32px;
+      height: 32px;
+      border: none;
+      background: rgba(0,0,0,0.05);
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: rgba(0,0,0,0.35);
+      transition: all 0.4s ease;
+    }
+    .back-btn:hover {
+      background: rgba(0,0,0,0.08);
+      color: rgba(0,0,0,0.5);
+    }
+
+    /* ── Ripple on tap ── */
+    .ripple {
+      position: absolute;
+      border-radius: 50%;
+      border: 1.5px solid rgba(0,0,0,0.06);
+      animation: rippleExpand 1.2s ease-out forwards;
+      pointer-events: none;
+    }
+    @keyframes rippleExpand {
+      0% { width: 80px; height: 80px; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+      100% { width: 200px; height: 200px; opacity: 0; transform: translate(-50%, -50%) scale(1); }
+    }
+
+    /* ── Confirm dialog ── */
+    .confirm-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(232, 223, 208, 0.85);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      z-index: 50;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.6s ease;
+    }
+    .confirm-overlay.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .confirm-card {
+      background: rgba(255,255,255,0.95);
+      border-radius: 20px;
+      padding: 28px 24px;
+      width: 280px;
+      text-align: center;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.08);
+      transform: scale(0.9);
+      transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+    .confirm-overlay.visible .confirm-card {
+      transform: scale(1);
+    }
+    .confirm-card .confirm-emoji {
+      font-size: 36px;
+      margin-bottom: 12px;
+    }
+    .confirm-card h3 {
+      font-size: 16px !important;
+      font-weight: 600 !important;
+      color: #2D2A24 !important;
+      margin-bottom: 6px !important;
+    }
+    .confirm-card p {
+      font-size: 13px !important;
+      color: #6B6560 !important;
+      line-height: 1.5 !important;
+      margin-bottom: 18px !important;
+    }
+    .confirm-actions {
+      display: flex;
+      gap: 8px;
+    }
+    .confirm-actions .btn {
+      flex: 1;
+      padding: 11px 16px;
+      border-radius: 12px;
+      font-size: 13px;
+    }
+    .btn-cancel {
+      background: rgba(0,0,0,0.05);
+      color: #6B6560;
+      border: none;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
+    }
+    .btn-cancel:hover { background: rgba(0,0,0,0.08); }
+
+    /* ── Toast ── */
+    .toast {
+      position: absolute;
+      bottom: 48px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: rgba(45, 42, 36, 0.9);
+      color: white;
+      font-size: 13px;
+      padding: 10px 20px;
+      border-radius: 12px;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+      z-index: 60;
+      white-space: nowrap;
+    }
+    .toast.visible {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* ── Gentle float animation for idle stones ── */
+    @keyframes gentleFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-3px); }
+    }
+    .stone-wrapper:not(.dissolving):not(.restoring) .stone:not(.selected) {
+      animation: gentleFloat 6s ease-in-out infinite;
+    }
+    .stone-wrapper:nth-child(2) .stone { animation-delay: 1.5s; }
+    .stone-wrapper:nth-child(3) .stone { animation-delay: 3s; }
+    .stone-wrapper:nth-child(4) .stone { animation-delay: 4.5s; }
+
+    /* ── Empty state ── */
+    .empty-state {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.8s ease;
+      pointer-events: none;
+    }
+    .empty-state.visible {
+      opacity: 1;
+    }
+    .empty-state p {
+      font-family: 'Literata', serif !important;
+      font-style: italic;
+      font-size: 14px !important;
+      color: rgba(0,0,0,0.25) !important;
+      margin-top: 12px !important;
+    }
+  </style>
+</head>
+<body>
+  <div class="phone-frame sand-bg">
+
+    <!-- Header -->
+    <div class="zen-header">
+      <button class="back-btn" onclick="showToast('Back to habits')">
+        <i data-lucide="chevron-left" style="width:18px;height:18px;"></i>
+      </button>
+      <button class="close-btn" onclick="showToast('Closed')">
+        <i data-lucide="x" style="width:16px;height:16px;"></i>
+      </button>
+      <h1>Resting Garden</h1>
+      <p class="subtitle">habits at peace</p>
+      <p class="stone-count" id="stoneCount">4 stones resting</p>
+    </div>
+
+    <!-- Garden -->
+    <div class="garden" id="garden">
+
+      <!-- Stone 1: Meditation -->
+      <div class="stone-wrapper" id="stone-1" style="top: 60px; left: 60px;" onclick="selectStone(1, event)">
+        <div class="rake-rings"></div>
+        <div class="stone stone-warm">🧘</div>
+        <span class="stone-label">Meditate</span>
+        <div class="stats-card" id="stats-1">
+          <h3>🧘 Meditate</h3>
+          <div class="stat-row"><span>Total days</span><span class="stat-value">147</span></div>
+          <div class="stat-row"><span>Best streak</span><span class="stat-value">23 days</span></div>
+          <div class="stat-row"><span>Archived</span><span class="stat-value">2 weeks ago</span></div>
+          <div class="stat-row"><span>Completion</span><span class="stat-value">68%</span></div>
+          <div class="action-buttons">
+            <button class="btn btn-restore" onclick="event.stopPropagation(); restoreStone(1)">
+              <i data-lucide="sunrise" style="width:14px;height:14px;"></i>
+              Return to path
+            </button>
+            <button class="btn btn-release" onclick="event.stopPropagation(); confirmRelease(1)">
+              <i data-lucide="wind" style="width:14px;height:14px;"></i>
+              Release
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stone 2: Read -->
+      <div class="stone-wrapper" id="stone-2" style="top: 180px; left: 220px;" onclick="selectStone(2, event)">
+        <div class="rake-rings"></div>
+        <div class="stone stone-cool">📚</div>
+        <span class="stone-label">Read</span>
+        <div class="stats-card" id="stats-2">
+          <h3>📚 Read</h3>
+          <div class="stat-row"><span>Total days</span><span class="stat-value">89</span></div>
+          <div class="stat-row"><span>Best streak</span><span class="stat-value">14 days</span></div>
+          <div class="stat-row"><span>Archived</span><span class="stat-value">1 month ago</span></div>
+          <div class="stat-row"><span>Completion</span><span class="stat-value">52%</span></div>
+          <div class="action-buttons">
+            <button class="btn btn-restore" onclick="event.stopPropagation(); restoreStone(2)">
+              <i data-lucide="sunrise" style="width:14px;height:14px;"></i>
+              Return to path
+            </button>
+            <button class="btn btn-release" onclick="event.stopPropagation(); confirmRelease(2)">
+              <i data-lucide="wind" style="width:14px;height:14px;"></i>
+              Release
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stone 3: Journal -->
+      <div class="stone-wrapper" id="stone-3" style="top: 310px; left: 80px;" onclick="selectStone(3, event)">
+        <div class="rake-rings"></div>
+        <div class="stone stone-grey">✍️</div>
+        <span class="stone-label">Journal</span>
+        <div class="stats-card" id="stats-3">
+          <h3>✍️ Journal</h3>
+          <div class="stat-row"><span>Total days</span><span class="stat-value">62</span></div>
+          <div class="stat-row"><span>Best streak</span><span class="stat-value">11 days</span></div>
+          <div class="stat-row"><span>Archived</span><span class="stat-value">3 weeks ago</span></div>
+          <div class="stat-row"><span>Completion</span><span class="stat-value">45%</span></div>
+          <div class="action-buttons">
+            <button class="btn btn-restore" onclick="event.stopPropagation(); restoreStone(3)">
+              <i data-lucide="sunrise" style="width:14px;height:14px;"></i>
+              Return to path
+            </button>
+            <button class="btn btn-release" onclick="event.stopPropagation(); confirmRelease(3)">
+              <i data-lucide="wind" style="width:14px;height:14px;"></i>
+              Release
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stone 4: Stretch -->
+      <div class="stone-wrapper" id="stone-4" style="top: 400px; left: 240px;" onclick="selectStone(4, event)">
+        <div class="rake-rings"></div>
+        <div class="stone stone-slate">🌿</div>
+        <span class="stone-label">Stretch</span>
+        <div class="stats-card" id="stats-4">
+          <h3>🌿 Stretch</h3>
+          <div class="stat-row"><span>Total days</span><span class="stat-value">34</span></div>
+          <div class="stat-row"><span>Best streak</span><span class="stat-value">8 days</span></div>
+          <div class="stat-row"><span>Archived</span><span class="stat-value">5 days ago</span></div>
+          <div class="stat-row"><span>Completion</span><span class="stat-value">38%</span></div>
+          <div class="action-buttons">
+            <button class="btn btn-restore" onclick="event.stopPropagation(); restoreStone(4)">
+              <i data-lucide="sunrise" style="width:14px;height:14px;"></i>
+              Return to path
+            </button>
+            <button class="btn btn-release" onclick="event.stopPropagation(); confirmRelease(4)">
+              <i data-lucide="wind" style="width:14px;height:14px;"></i>
+              Release
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Empty state -->
+      <div class="empty-state" id="emptyState">
+        <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+          <circle cx="24" cy="24" r="20" stroke="rgba(0,0,0,0.12)" stroke-width="1.5" stroke-dasharray="4 4"/>
+          <path d="M18 28 C20 24, 28 24, 30 28" stroke="rgba(0,0,0,0.12)" stroke-width="1.5" fill="none"/>
+        </svg>
+        <p>The garden is clear</p>
+      </div>
+    </div>
+
+    <!-- Zen quote -->
+    <div class="zen-quote">
+      <p>"The quieter you become, the more you can hear."</p>
+    </div>
+
+    <!-- Confirm dialog -->
+    <div class="confirm-overlay" id="confirmOverlay">
+      <div class="confirm-card">
+        <div class="confirm-emoji" id="confirmEmoji">🧘</div>
+        <h3 id="confirmTitle">Release this habit?</h3>
+        <p>This stone will dissolve back into the garden. Its journey data will be lost.</p>
+        <div class="confirm-actions">
+          <button class="btn btn-cancel" onclick="hideConfirm()">Keep</button>
+          <button class="btn btn-release" id="confirmReleaseBtn" style="background: #B53030; color: white;">
+            <i data-lucide="wind" style="width:14px;height:14px;"></i>
+            Release
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+  </div>
+
+  <script>
+    // Init Lucide icons
+    lucide.createIcons();
+
+    let selectedStone = null;
+    let stoneCount = 4;
+    let pendingRelease = null;
+
+    const habitNames = {
+      1: 'Meditate',
+      2: 'Read',
+      3: 'Journal',
+      4: 'Stretch'
+    };
+    const habitEmojis = {
+      1: '🧘',
+      2: '📚',
+      3: '✍️',
+      4: '🌿'
+    };
+
+    function selectStone(id, event) {
+      event.stopPropagation();
+      const wrapper = document.getElementById(`stone-${id}`);
+      const stone = wrapper.querySelector('.stone');
+      const stats = document.getElementById(`stats-${id}`);
+
+      // If already selected, deselect
+      if (selectedStone === id) {
+        deselectAll();
+        return;
+      }
+
+      // Deselect previous
+      deselectAll();
+
+      // Select new
+      selectedStone = id;
+      stone.classList.add('selected');
+
+      // Position stats card
+      const stoneRect = stone.getBoundingClientRect();
+      const gardenRect = document.getElementById('garden').getBoundingClientRect();
+      const stoneBottom = stoneRect.bottom - gardenRect.top;
+      const stoneLeft = stoneRect.left - gardenRect.left + stoneRect.width / 2;
+
+      // If stone is in lower half, show card above
+      if (stoneBottom > 340) {
+        stats.style.bottom = '110px';
+        stats.style.top = 'auto';
+      } else {
+        stats.style.top = '110px';
+        stats.style.bottom = 'auto';
+      }
+
+      stats.classList.add('visible');
+
+      // Create ripple
+      createRipple(wrapper, stone);
+    }
+
+    function deselectAll() {
+      selectedStone = null;
+      document.querySelectorAll('.stone').forEach(s => s.classList.remove('selected'));
+      document.querySelectorAll('.stats-card').forEach(s => s.classList.remove('visible'));
+    }
+
+    function createRipple(wrapper, stone) {
+      const ripple = document.createElement('div');
+      ripple.className = 'ripple';
+      ripple.style.left = '50%';
+      ripple.style.top = '50%';
+      wrapper.appendChild(ripple);
+      setTimeout(() => ripple.remove(), 1200);
+    }
+
+    function restoreStone(id) {
+      const wrapper = document.getElementById(`stone-${id}`);
+      deselectAll();
+      wrapper.classList.add('restoring');
+
+      showToast(`${habitEmojis[id]} ${habitNames[id]} returns to your path`);
+
+      setTimeout(() => {
+        wrapper.style.display = 'none';
+        stoneCount--;
+        updateStoneCount();
+        checkEmpty();
+      }, 1200);
+    }
+
+    function confirmRelease(id) {
+      pendingRelease = id;
+      const overlay = document.getElementById('confirmOverlay');
+      document.getElementById('confirmEmoji').textContent = habitEmojis[id];
+      document.getElementById('confirmTitle').textContent = `Release ${habitNames[id]}?`;
+
+      // Wire up confirm button
+      const confirmBtn = document.getElementById('confirmReleaseBtn');
+      confirmBtn.onclick = () => releaseStone(id);
+
+      overlay.classList.add('visible');
+      deselectAll();
+    }
+
+    function hideConfirm() {
+      document.getElementById('confirmOverlay').classList.remove('visible');
+      pendingRelease = null;
+    }
+
+    function releaseStone(id) {
+      hideConfirm();
+      const wrapper = document.getElementById(`stone-${id}`);
+      wrapper.classList.add('dissolving');
+
+      showToast(`${habitEmojis[id]} ${habitNames[id]} has been released`);
+
+      setTimeout(() => {
+        wrapper.style.display = 'none';
+        stoneCount--;
+        updateStoneCount();
+        checkEmpty();
+      }, 1200);
+    }
+
+    function updateStoneCount() {
+      const label = stoneCount === 1 ? 'stone resting' : 'stones resting';
+      document.getElementById('stoneCount').textContent = `${stoneCount} ${label}`;
+    }
+
+    function checkEmpty() {
+      if (stoneCount <= 0) {
+        document.getElementById('emptyState').classList.add('visible');
+      }
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.classList.add('visible');
+      setTimeout(() => toast.classList.remove('visible'), 2400);
+    }
+
+    // Close stats when tapping garden background
+    document.getElementById('garden').addEventListener('click', (e) => {
+      if (e.target === e.currentTarget || e.target.classList.contains('sand-bg')) {
+        deselectAll();
+      }
+    });
+
+    // Close stats when tapping outside
+    document.querySelector('.phone-frame').addEventListener('click', (e) => {
+      if (!e.target.closest('.stone-wrapper') && !e.target.closest('.confirm-overlay')) {
+        deselectAll();
+      }
+    });
+  </script>
+</body>
+</html>

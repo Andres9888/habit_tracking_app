@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Archived Habits — Batch Selection</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Literata:wght@500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'DM Sans', sans-serif !important;
+      background: #F5F1ED !important;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    .phone-frame {
+      width: 390px;
+      min-height: 100vh;
+      position: relative;
+      overflow: hidden;
+      background: #F5F1ED;
+    }
+    .literata { font-family: 'Literata', serif !important; }
+
+    /* Header */
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      background: rgba(245, 241, 237, 0.92);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      padding: 56px 20px 14px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Card styles */
+    .habit-card {
+      background: #FFFFFF;
+      border-radius: 16px;
+      padding: 16px;
+      margin: 0 20px 12px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      cursor: pointer;
+      transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+      border: 2px solid transparent;
+      box-shadow: 0 1px 3px rgba(120, 100, 80, 0.06), 0 1px 2px rgba(120, 100, 80, 0.04);
+      user-select: none;
+      -webkit-user-select: none;
+      position: relative;
+      overflow: hidden;
+    }
+    .habit-card:active {
+      transform: scale(0.98);
+    }
+    .habit-card.selected {
+      border-color: rgba(5, 150, 105, 0.25);
+      background: rgba(5, 150, 105, 0.04);
+      box-shadow: 0 1px 4px rgba(5, 150, 105, 0.1), 0 1px 2px rgba(5, 150, 105, 0.06);
+    }
+
+    /* Checkbox */
+    .checkbox-ring {
+      width: 26px;
+      height: 26px;
+      min-width: 26px;
+      border-radius: 50%;
+      border: 2px solid #D1D5DB;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .checkbox-ring.checked {
+      background: #059669;
+      border-color: #059669;
+      transform: scale(1.08);
+    }
+    .checkbox-ring .check-icon {
+      opacity: 0;
+      transform: scale(0.3) rotate(-45deg);
+      transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .checkbox-ring.checked .check-icon {
+      opacity: 1;
+      transform: scale(1) rotate(0deg);
+    }
+
+    /* Emoji container */
+    .emoji-icon {
+      font-size: 36px;
+      line-height: 1;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    /* Strength badge */
+    .strength-badge {
+      font-size: 12px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 20px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .strength-high { background: rgba(5, 150, 105, 0.1); color: #059669; }
+    .strength-med { background: rgba(217, 119, 6, 0.1); color: #B45309; }
+    .strength-low { background: rgba(181, 48, 48, 0.1); color: #B53030; }
+
+    /* Action Bar */
+    .action-bar {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%) translateY(100%);
+      width: 390px;
+      padding: 16px 20px calc(16px + env(safe-area-inset-bottom, 20px));
+      background: rgba(255, 255, 255, 0.82);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-top: 1px solid rgba(0, 0, 0, 0.06);
+      display: flex;
+      gap: 12px;
+      z-index: 50;
+      transition: transform 0.4s cubic-bezier(0.34, 1.3, 0.64, 1);
+    }
+    .action-bar.visible {
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .btn-restore {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 14px 20px;
+      background: #059669;
+      color: #FFFFFF;
+      border: none;
+      border-radius: 14px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .btn-restore:active { transform: scale(0.96); background: #047857; }
+
+    .btn-delete {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 14px 20px;
+      background: transparent;
+      color: #B53030;
+      border: 2px solid rgba(181, 48, 48, 0.25);
+      border-radius: 14px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .btn-delete:active { transform: scale(0.96); background: rgba(181, 48, 48, 0.06); }
+
+    /* Removal animations */
+    @keyframes slideOutRight {
+      0% { transform: translateX(0); opacity: 1; max-height: 100px; margin-bottom: 12px; }
+      50% { transform: translateX(80px); opacity: 0.3; }
+      100% { transform: translateX(200px); opacity: 0; max-height: 0; margin-bottom: 0; padding: 0; border-width: 0; }
+    }
+    @keyframes shrinkOut {
+      0% { transform: scale(1); opacity: 1; max-height: 100px; margin-bottom: 12px; }
+      30% { transform: scale(1.02); background: rgba(181, 48, 48, 0.08); border-color: rgba(181, 48, 48, 0.3); }
+      100% { transform: scale(0.7); opacity: 0; max-height: 0; margin-bottom: 0; padding: 0; border-width: 0; }
+    }
+
+    /* Entrance animation */
+    @keyframes fadeSlideIn {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .habit-card {
+      animation: fadeSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) both;
+    }
+
+    /* Count badge on header */
+    .selection-count {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: #059669;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      min-width: 22px;
+      height: 22px;
+      padding: 0 6px;
+      border-radius: 11px;
+      margin-left: 6px;
+    }
+
+    /* Empty state after all deleted */
+    .empty-state {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 80px 40px;
+      text-align: center;
+      animation: fadeSlideIn 0.5s ease both;
+    }
+    .empty-state.visible { display: flex; }
+  </style>
+</head>
+<body>
+  <div class="phone-frame">
+    <!-- Header: Default state -->
+    <div class="header" id="header">
+      <div id="headerDefault" class="flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <button onclick="history.back()" class="w-9 h-9 flex items-center justify-center rounded-full hover:bg-black/5 transition-colors">
+            <i data-lucide="arrow-left" class="w-5 h-5" style="color: #1F2937;"></i>
+          </button>
+          <h1 class="literata text-xl font-semibold" style="color: #1F2937;">Archived Habits</h1>
+        </div>
+        <button id="selectAllBtn" onclick="toggleSelectAll()" class="text-sm font-semibold px-3 py-1.5 rounded-lg transition-colors" style="color: #059669;">
+          Select All
+        </button>
+      </div>
+      <!-- Header: Selection state -->
+      <div id="headerSelection" class="flex items-center justify-between" style="display: none;">
+        <div class="flex items-center gap-2">
+          <button onclick="deselectAll()" class="w-9 h-9 flex items-center justify-center rounded-full hover:bg-black/5 transition-colors">
+            <i data-lucide="x" class="w-5 h-5" style="color: #1F2937;"></i>
+          </button>
+          <span class="text-base font-semibold" style="color: #1F2937;" id="selectionLabel">0 selected</span>
+        </div>
+        <button onclick="deselectAll()" class="text-sm font-semibold px-3 py-1.5 rounded-lg transition-colors" style="color: #6B7280;">
+          Deselect All
+        </button>
+      </div>
+    </div>
+
+    <!-- Subtitle info -->
+    <div class="px-5 pb-3 pt-1" id="subtitle">
+      <p class="text-xs" style="color: #6B7280;">Tap cards to select, then restore or delete in batch.</p>
+    </div>
+
+    <!-- Card list -->
+    <div id="cardList">
+      <!-- Cards are rendered via JS -->
+    </div>
+
+    <!-- Empty state -->
+    <div class="empty-state" id="emptyState">
+      <div class="text-5xl mb-4">📭</div>
+      <p class="text-lg font-semibold mb-1" style="color: #1F2937;">All clear!</p>
+      <p class="text-sm" style="color: #6B7280;">No archived habits remaining.</p>
+    </div>
+
+    <!-- Bottom spacer for when action bar is showing -->
+    <div id="bottomSpacer" style="height: 0; transition: height 0.4s ease;"></div>
+  </div>
+
+  <!-- Action Bar (outside phone-frame to allow fixed positioning) -->
+  <div class="action-bar" id="actionBar">
+    <button class="btn-restore" id="restoreBtn" onclick="restoreSelected()">
+      <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+      <span id="restoreLabel">Restore (0)</span>
+    </button>
+    <button class="btn-delete" id="deleteBtn" onclick="deleteSelected()">
+      <i data-lucide="trash-2" class="w-4 h-4"></i>
+      <span id="deleteLabel">Delete (0)</span>
+    </button>
+  </div>
+
+  <script>
+    // Habit data
+    const habits = [
+      { id: 1, emoji: '🧘', name: 'Morning Meditation', date: 'Archived Feb 15', strength: 72 },
+      { id: 2, emoji: '📖', name: 'Read 30 Minutes',    date: 'Archived Mar 1',  strength: 58 },
+      { id: 3, emoji: '🥶', name: 'Cold Shower',        date: 'Archived Mar 10', strength: 35 },
+      { id: 4, emoji: '✍️', name: 'Daily Journal',      date: 'Archived Mar 18', strength: 85 },
+      { id: 5, emoji: '💪', name: 'Push-ups',           date: 'Archived Jan 20', strength: 42 },
+      { id: 6, emoji: '🎵', name: 'Practice Guitar',    date: 'Archived Feb 28', strength: 61 },
+    ];
+
+    const selected = new Set();
+
+    function strengthClass(val) {
+      if (val >= 65) return 'strength-high';
+      if (val >= 45) return 'strength-med';
+      return 'strength-low';
+    }
+
+    function renderCards() {
+      const list = document.getElementById('cardList');
+      list.innerHTML = '';
+      habits.forEach((h, i) => {
+        const card = document.createElement('div');
+        card.className = 'habit-card' + (selected.has(h.id) ? ' selected' : '');
+        card.style.animationDelay = `${i * 60}ms`;
+        card.setAttribute('data-id', h.id);
+        card.onclick = () => toggleSelect(h.id);
+        card.innerHTML = `
+          <div class="checkbox-ring ${selected.has(h.id) ? 'checked' : ''}">
+            <svg class="check-icon" width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <path d="M3 7.5L5.5 10L11 4" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="emoji-icon">${h.emoji}</div>
+          <div class="flex-1 min-w-0">
+            <div class="text-sm font-semibold truncate" style="color: #1F2937;">${h.name}</div>
+            <div class="text-xs mt-0.5" style="color: #9CA3AF;">${h.date}</div>
+          </div>
+          <div class="strength-badge ${strengthClass(h.strength)}">${h.strength}%</div>
+        `;
+        list.appendChild(card);
+      });
+      updateUI();
+    }
+
+    function toggleSelect(id) {
+      if (selected.has(id)) {
+        selected.delete(id);
+      } else {
+        selected.add(id);
+      }
+      // Update just the card visually (no full re-render for snappier feel)
+      const card = document.querySelector(`[data-id="${id}"]`);
+      if (card) {
+        const ring = card.querySelector('.checkbox-ring');
+        if (selected.has(id)) {
+          card.classList.add('selected');
+          ring.classList.add('checked');
+        } else {
+          card.classList.remove('selected');
+          ring.classList.remove('checked');
+        }
+      }
+      updateUI();
+    }
+
+    function toggleSelectAll() {
+      if (selected.size === habits.length) {
+        deselectAll();
+      } else {
+        habits.forEach(h => selected.add(h.id));
+        document.querySelectorAll('.habit-card').forEach(card => {
+          card.classList.add('selected');
+          card.querySelector('.checkbox-ring').classList.add('checked');
+        });
+        updateUI();
+      }
+    }
+
+    function deselectAll() {
+      selected.clear();
+      document.querySelectorAll('.habit-card').forEach(card => {
+        card.classList.remove('selected');
+        card.querySelector('.checkbox-ring').classList.remove('checked');
+      });
+      updateUI();
+    }
+
+    function updateUI() {
+      const count = selected.size;
+      const headerDefault = document.getElementById('headerDefault');
+      const headerSelection = document.getElementById('headerSelection');
+      const actionBar = document.getElementById('actionBar');
+      const restoreLabel = document.getElementById('restoreLabel');
+      const deleteLabel = document.getElementById('deleteLabel');
+      const selectionLabel = document.getElementById('selectionLabel');
+      const spacer = document.getElementById('bottomSpacer');
+      const subtitle = document.getElementById('subtitle');
+
+      if (count > 0) {
+        headerDefault.style.display = 'none';
+        headerSelection.style.display = 'flex';
+        actionBar.classList.add('visible');
+        selectionLabel.textContent = `${count} selected`;
+        restoreLabel.textContent = `Restore (${count})`;
+        deleteLabel.textContent = `Delete (${count})`;
+        spacer.style.height = '100px';
+        subtitle.style.display = 'none';
+      } else {
+        headerDefault.style.display = 'flex';
+        headerSelection.style.display = 'none';
+        actionBar.classList.remove('visible');
+        spacer.style.height = '0';
+        subtitle.style.display = 'block';
+      }
+
+      // Update Select All button text
+      const selectAllBtn = document.getElementById('selectAllBtn');
+      if (selectAllBtn) {
+        selectAllBtn.textContent = selected.size === habits.length && habits.length > 0 ? 'Deselect All' : 'Select All';
+      }
+    }
+
+    function restoreSelected() {
+      if (selected.size === 0) return;
+      const ids = [...selected];
+      ids.forEach((id, i) => {
+        const card = document.querySelector(`[data-id="${id}"]`);
+        if (card) {
+          card.style.animationDelay = `${i * 80}ms`;
+          card.style.animation = `slideOutRight 0.5s cubic-bezier(0.4, 0, 0.2, 1) ${i * 80}ms forwards`;
+        }
+      });
+      const totalDelay = ids.length * 80 + 500;
+      setTimeout(() => {
+        ids.forEach(id => {
+          const idx = habits.findIndex(h => h.id === id);
+          if (idx !== -1) habits.splice(idx, 1);
+        });
+        selected.clear();
+        renderCards();
+        checkEmpty();
+      }, totalDelay);
+    }
+
+    function deleteSelected() {
+      if (selected.size === 0) return;
+      const ids = [...selected];
+      ids.forEach((id, i) => {
+        const card = document.querySelector(`[data-id="${id}"]`);
+        if (card) {
+          card.style.animation = `shrinkOut 0.45s cubic-bezier(0.4, 0, 0.2, 1) ${i * 60}ms forwards`;
+        }
+      });
+      const totalDelay = ids.length * 60 + 450;
+      setTimeout(() => {
+        ids.forEach(id => {
+          const idx = habits.findIndex(h => h.id === id);
+          if (idx !== -1) habits.splice(idx, 1);
+        });
+        selected.clear();
+        renderCards();
+        checkEmpty();
+      }, totalDelay);
+    }
+
+    function checkEmpty() {
+      const emptyState = document.getElementById('emptyState');
+      const subtitle = document.getElementById('subtitle');
+      if (habits.length === 0) {
+        emptyState.classList.add('visible');
+        subtitle.style.display = 'none';
+        document.getElementById('selectAllBtn').style.display = 'none';
+      }
+    }
+
+    // Initialize
+    renderCards();
+    lucide.createIcons();
+  </script>
+</body>
+</html>
