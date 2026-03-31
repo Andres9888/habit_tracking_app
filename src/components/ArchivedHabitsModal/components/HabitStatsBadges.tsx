@@ -13,13 +13,13 @@ export function HabitStatsBadges({
   strength,
   strengthInfo,
 }: HabitStatsBadgesProps) {
-  const { isDark } = useThemeColors();
+  const { colors, isDark } = useThemeColors();
 
   return (
-    <View className='mb-3 flex-row flex-wrap gap-2'>
+    <View className='mb-4 flex-row flex-wrap gap-2'>
       {/* Strength Badge */}
       <View
-        className={`flex-row items-center gap-1.5 rounded-lg px-2.5 py-1 ${strengthInfo.bgColor}`}
+        className={`flex-row items-center gap-1.5 rounded-lg px-3 py-1.5 ${strengthInfo.bgColor}`}
         style={strengthInfo.bgStyle ? { backgroundColor: strengthInfo.bgStyle } : undefined}
       >
         <Text className='text-sm'>{strengthInfo.emoji}</Text>
@@ -34,30 +34,30 @@ export function HabitStatsBadges({
       {/* Streak Badge */}
       {(habit.currentStreak ?? 0) > 0 ? (
         <View
-          className='flex-row items-center gap-1.5 rounded-lg px-2.5 py-1'
+          className='flex-row items-center gap-1.5 rounded-lg px-3 py-1.5'
           style={{
-            backgroundColor: isDark ? '#78350f' : '#fef3c7',
+            backgroundColor: colors.status.streakLight,
           }}
         >
           <Text className='text-sm'>🔥</Text>
           <Text
             className='text-xs font-semibold'
-            style={{ color: isDark ? '#fde68a' : '#b45309' }}
+            style={{ color: colors.status.streakText }}
           >
             {habit.currentStreak} day streak
           </Text>
         </View>
       ) : (
         <View
-          className='flex-row items-center gap-1.5 rounded-lg px-2.5 py-1'
+          className='flex-row items-center gap-1.5 rounded-lg px-3 py-1.5'
           style={{
-            backgroundColor: isDark ? '#374151' : '#f5f5f4',
+            backgroundColor: isDark ? colors.gray[200] : colors.gray[50],
           }}
         >
           <Text className='text-sm'>🔥</Text>
           <Text
             className='text-xs font-semibold'
-            style={{ color: isDark ? '#9ca3af' : '#78716c' }}
+            style={{ color: colors.text.tertiary }}
           >
             No streak
           </Text>
@@ -66,20 +66,20 @@ export function HabitStatsBadges({
 
       {/* Total Completions Badge */}
       {(habit.totalCompletions ?? 0) > 0 ? <View
-          className='flex-row items-center gap-1.5 rounded-lg px-2.5 py-1'
+          className='flex-row items-center gap-1.5 rounded-lg px-3 py-1.5'
           style={{
-            backgroundColor: isDark ? '#1e3a8a' : '#dbeafe',
+            backgroundColor: colors.status.infoLight,
           }}
         >
           <Text
             className='text-xs font-bold'
-            style={{ color: isDark ? '#93c5fd' : '#2563eb' }}
+            style={{ color: colors.status.info }}
           >
             ✓
           </Text>
           <Text
             className='text-xs font-semibold'
-            style={{ color: isDark ? '#93c5fd' : '#1d4ed8' }}
+            style={{ color: colors.status.infoText }}
           >
             {habit.totalCompletions} total
           </Text>

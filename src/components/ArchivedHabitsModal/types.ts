@@ -21,8 +21,13 @@ export interface AnimatedHabitCardProps {
   habit: ArchivedHabit;
   index: number;
   reducedMotion: boolean;
+  selectionMode: boolean;
+  isSelected: boolean;
+  hasReachedLimit?: boolean;
   onRestore: (id: Id<'habits'>, name: string) => Promise<boolean>;
   onDelete: (id: Id<'habits'>, name: string) => void;
+  onToggleSelect: (id: Id<'habits'>) => void;
+  onUpgradePress?: () => void;
 }
 
 export interface StrengthInfo {
