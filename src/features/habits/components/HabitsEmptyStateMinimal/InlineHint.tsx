@@ -12,6 +12,7 @@ import {
 } from './InlineHint.styles';
 import { InlineHintDivider } from './InlineHintDivider';
 import { TemplatesButton } from './TemplatesButton';
+import { TEMPLATES_ENABLED } from '@/config/featureFlags';
 import type { InlineHintProps } from './types';
 import { useEmptyStateColors } from './useEmptyStateColors';
 
@@ -32,13 +33,15 @@ export function InlineHint({
     <View style={{ alignSelf: 'stretch', marginTop: 12, width: '100%' }}>
       <InlineHintDivider />
       <View style={actionsColumnStyle} testID='inline-hint-actions'>
-        <TemplatesButton
-          animatedStyle={press.templatesAnimatedStyle}
-          colors={colors}
-          onPress={onBrowseTemplates}
-          onPressIn={press.templatesPressIn}
-          onPressOut={press.templatesPressOut}
-        />
+        {TEMPLATES_ENABLED && (
+          <TemplatesButton
+            animatedStyle={press.templatesAnimatedStyle}
+            colors={colors}
+            onPress={onBrowseTemplates}
+            onPressIn={press.templatesPressIn}
+            onPressOut={press.templatesPressOut}
+          />
+        )}
         <View style={{ width: '100%' }}>
           <Animated.View
             style={[{ width: '100%' }, press.buildMyOwnAnimatedStyle]}

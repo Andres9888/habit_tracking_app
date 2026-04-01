@@ -17,6 +17,7 @@ import { useCelebrationState } from './useCelebrationState';
 import { useCelebrationAnimations, useProgressAnimation } from './useCelebrationAnimations';
 import { ProgressRingFAB } from './ProgressRingFAB';
 import { BLUR_INTENSITY, BORDER_DARK, BORDER_LIGHT, CAPSULE_SHADOW, ENTERING, styles } from './BottomActionBar.styles';
+import { TEMPLATES_ENABLED } from '../../../../config/featureFlags';
 import type { BottomActionBarProps } from './types';
 
 const iconButtonHitSlop = {
@@ -85,24 +86,26 @@ function BottomActionBarComponent(props: BottomActionBarProps) {
           </Animated.View>
         </View>
 
-        <View style={styles.rightZone}>
-          <Animated.View style={anim.templatesStyle}>
-            <Pressable
-              accessibilityLabel='Get inspired with habit templates'
-              accessibilityRole='button'
-              hitSlop={iconButtonHitSlop}
-              style={styles.iconTouchArea}
-              onPress={props.onOpenTemplates}
-              onPressIn={anim.onTemplatesPressIn}
-              onPressOut={anim.onTemplatesPressOut}
-            >
-              <View style={styles.iconButton}>
-                <Sparkles color={goldColor} size={24} strokeWidth={2} />
-                <View style={styles.notifDot} />
-              </View>
-            </Pressable>
-          </Animated.View>
-        </View>
+        {TEMPLATES_ENABLED && (
+          <View style={styles.rightZone}>
+            <Animated.View style={anim.templatesStyle}>
+              <Pressable
+                accessibilityLabel='Get inspired with habit templates'
+                accessibilityRole='button'
+                hitSlop={iconButtonHitSlop}
+                style={styles.iconTouchArea}
+                onPress={props.onOpenTemplates}
+                onPressIn={anim.onTemplatesPressIn}
+                onPressOut={anim.onTemplatesPressOut}
+              >
+                <View style={styles.iconButton}>
+                  <Sparkles color={goldColor} size={24} strokeWidth={2} />
+                  <View style={styles.notifDot} />
+                </View>
+              </Pressable>
+            </Animated.View>
+          </View>
+        )}
       </View>
     </Animated.View>
   );
