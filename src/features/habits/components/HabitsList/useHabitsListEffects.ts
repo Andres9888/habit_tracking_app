@@ -16,7 +16,6 @@ interface UseHabitsListEffectsOptions {
   justCreatedHabitId: Id<'habits'> | null;
   setJustCreatedHabitId: (id: Id<'habits'> | null) => void;
   shouldTriggerHabitEntrance: boolean;
-  isInSuccessCelebration: boolean;
   setShouldTriggerHabitEntrance: (value: boolean) => void;
   habitsLength: number;
 }
@@ -31,7 +30,6 @@ export function useHabitsListEffects(options: UseHabitsListEffectsOptions) {
     justCreatedHabitId,
     setJustCreatedHabitId,
     shouldTriggerHabitEntrance,
-    isInSuccessCelebration,
     setShouldTriggerHabitEntrance,
     habitsLength,
   } = options;
@@ -45,17 +43,11 @@ export function useHabitsListEffects(options: UseHabitsListEffectsOptions) {
 
   // Trigger entrance animation after layout settles
   useEffect(() => {
-    if (
-      shouldTriggerHabitEntrance ||
-      isInSuccessCelebration ||
-      habitsLength === 0
-    )
-      return;
+    if (shouldTriggerHabitEntrance || habitsLength === 0) return;
     const timer = setTimeout(() => setShouldTriggerHabitEntrance(true), ENTRANCE_ANIMATION_DELAY_MS);
     return () => clearTimeout(timer);
   }, [
     habitsLength,
-    isInSuccessCelebration,
     shouldTriggerHabitEntrance,
     setShouldTriggerHabitEntrance,
   ]);

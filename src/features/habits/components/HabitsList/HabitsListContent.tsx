@@ -19,7 +19,6 @@ import DraggableFlatList, {
 } from 'react-native-draggable-flatlist';
 import {
   renderHabitsListHeader,
-  renderHabitsListEmpty,
   renderHabitRow,
 } from './HabitsListRenders';
 import { HabitsListModals } from './HabitsListModals';
@@ -33,7 +32,6 @@ export function HabitsListContent({
   state,
   handlers,
   renderItem,
-  handleSuccessTransitionComplete,
 }: HabitsListContentProps) {
   const {
     list,
@@ -45,30 +43,16 @@ export function HabitsListContent({
 
   const stickyEnabled = props.modals.settings?.stickyCalendarHeader ?? false;
   const { scrollHandler, contextValue } = useStickyHeader(stickyEnabled);
-  const isEmpty = list.habits.length === 0;
   const contentContainerStyle = useMemo(
     () => ({
-      flexGrow: isEmpty ? 1 : undefined,
       paddingBottom: list.contentPadding.paddingBottom,
-      paddingHorizontal: isEmpty ? 0 : list.contentPadding.paddingHorizontal,
+      paddingHorizontal: list.contentPadding.paddingHorizontal,
       paddingTop: 0,
     }),
     [
-      isEmpty,
       list.contentPadding.paddingBottom,
       list.contentPadding.paddingHorizontal,
     ]
-  );
-
-  const listEmptyComponent = useMemo(
-    () =>
-      renderHabitsListEmpty({
-        handlers,
-        list,
-        modals,
-        onTransitionComplete: handleSuccessTransitionComplete,
-      }),
-    [handlers, list, modals, handleSuccessTransitionComplete]
   );
 
   const listHeaderComponent = useMemo(
@@ -93,10 +77,6 @@ export function HabitsListContent({
       renderItem,
     ]
   );
-
-  if (isEmpty) {
-    return <View style={{ flex: 1 }}>{listEmptyComponent}</View>;
-  }
 
   return (
     <StickyHeaderContext.Provider value={contextValue}>

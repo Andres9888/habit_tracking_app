@@ -117,7 +117,7 @@ function HabitsAppContent() {
             />
           </Animated.View>
         )}
-        {list.habits.length > 0 ? selection.isSelectionMode ? (
+        {selection.isSelectionMode ? (
             <SelectionActionBar
               selectedCount={selection.selectedCount}
               onArchive={handleBatchArchivePress}
@@ -126,7 +126,7 @@ function HabitsAppContent() {
             />
           ) : (
             <BottomActionBar {...bottomBar} />
-          ) : null}
+          )}
 
         {overlaysMounted ? <HabitsAppOverlays
             batchArchiveUndoCount={selectionActions.batchArchiveUndoCount}
