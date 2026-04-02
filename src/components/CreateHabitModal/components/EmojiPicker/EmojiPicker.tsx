@@ -60,7 +60,7 @@ function EmojiPickerComponent({
   );
 
   return (
-    <View className='mb-4'>
+    <View className='mb-6'>
       {hideLabel ? null : <Text
           accessibilityLabel={`Suggested emojis for ${debouncedHabitName || 'your habit'}`}
           accessibilityRole='text'
@@ -81,7 +81,7 @@ function EmojiPickerComponent({
         accessibilityHint='Opens full emoji picker with hundreds of options'
         accessibilityLabel='Browse more emojis'
         accessibilityRole='button'
-        className='mt-2 flex-row items-center justify-center'
+        className='mt-3 flex-row items-center justify-center'
         style={{ minHeight: 44 }}
         onPress={handleMorePress}
       >
