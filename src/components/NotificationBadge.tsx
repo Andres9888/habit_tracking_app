@@ -13,6 +13,7 @@ import { colors } from '../theme/colors';
 import { useThemeColors } from '../theme/ThemeContext';
 import { borderRadius } from '../theme/spacing';
 import { typography, fontFamilies} from '@/theme/typography';
+import { durations } from '@/theme/animations';
 
 interface NotificationBadgeProps {
   count?: number;
@@ -36,14 +37,14 @@ export function NotificationBadge({
     // Subtle pulsing animation
     scale.value = withRepeat(
       withSequence(
-        withTiming(1.15, { duration: 800, easing: Easing.ease }),
-        withTiming(1, { duration: 800, easing: Easing.ease })
+        withTiming(1.15, { duration: durations.progress, easing: Easing.ease }),
+        withTiming(1, { duration: durations.progress, easing: Easing.ease })
       ),
       -1, // Infinite repeat
       false
     );
 
-    opacity.value = withTiming(1, { duration: 200 });
+    opacity.value = withTiming(1, { duration: durations.standard });
   }, [visible, scale, opacity]);
 
   const animatedStyle = useAnimatedStyle(() => ({
@@ -61,7 +62,7 @@ export function NotificationBadge({
         animatedStyle,
         {
           alignItems: 'center',
-          backgroundColor: '#ef4444',
+          backgroundColor: themeColors.status.error,
           borderColor: themeColors.background,
           borderRadius: borderRadius.full,
           borderWidth: 2,

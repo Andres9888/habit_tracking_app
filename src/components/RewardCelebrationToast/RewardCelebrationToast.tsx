@@ -25,7 +25,7 @@ function RewardCelebrationToastComponent({
   streak,
   visible,
 }: RewardCelebrationToastProps) {
-  const { colors: themeColors } = useThemeColors();
+  const { colors: themeColors, isDark } = useThemeColors();
   const { translateY, opacity } = useRewardToastAnimation(visible);
   const { title, premiumCTA } = useRewardToastContent(streak);
   const { triggerLightImpact } = useHapticFeedback({});
@@ -37,8 +37,8 @@ function RewardCelebrationToastComponent({
       pointerEvents='box-none'
       style={{ opacity, transform: [{ translateY }] }}
     >
-      <View className='rounded-3xl bg-white p-5 shadow-lg shadow-blue-100'>
-        <Text className='text-[17px] font-bold leading-[24px] text-[#1c1917]'>
+      <View className='rounded-3xl p-5' style={{ backgroundColor: themeColors.card, shadowColor: themeColors.border, shadowOffset: { height: 4, width: 0 }, shadowOpacity: 0.3, shadowRadius: 12, elevation: 6 }}>
+        <Text className='text-[17px] font-bold leading-[24px]' style={{ color: themeColors.text.primary }}>
           {title}
         </Text>
         <Text className='mt-2 text-[17px] leading-[22px]' style={{ color: themeColors.text.primary }}>
@@ -47,11 +47,11 @@ function RewardCelebrationToastComponent({
         <View className='mt-3 rounded-2xl p-3'>
           <LinearGradient
             className='absolute inset-0 rounded-2xl'
-            colors={['#faf5ff', '#eff6ff']}
+            colors={isDark ? [themeColors.status.premiumLight, themeColors.card] : ['#faf5ff', '#eff6ff']}
             end={{ x: 1, y: 1 }}
             start={{ x: 0, y: 0 }}
           />
-          <Text className='text-[13px] font-semibold text-[#7c3aed]'>
+          <Text className='text-[13px] font-semibold' style={{ color: themeColors.status.premium }}>
             ✨ {premiumCTA.benefit}
           </Text>
         </View>
@@ -59,7 +59,8 @@ function RewardCelebrationToastComponent({
           <AnimatedPressable
             accessibilityHint='Share this streak to motivate friends'
             accessibilityLabel='Share streak'
-            className='flex-1 items-center justify-center rounded-full border border-[#d6d3d1] px-4 py-2.5'
+            className='flex-1 items-center justify-center rounded-full border px-4 py-2.5'
+            style={{ borderColor: themeColors.border }}
             onPress={() => {
               triggerLightImpact();
               onSecondaryAction();
@@ -73,7 +74,7 @@ function RewardCelebrationToastComponent({
             accessibilityHint={`${premiumCTA.text}: ${premiumCTA.benefit}`}
             accessibilityLabel={premiumCTA.text}
             className='flex-1 items-center justify-center rounded-full px-4 py-2.5'
-            style={{ backgroundColor: '#7c3aed' }}
+            style={{ backgroundColor: themeColors.status.premium }}
             onPress={() => {
               triggerLightImpact();
               onPrimaryAction();
