@@ -31,7 +31,7 @@ export function NameInputSection({
   return (
     <View className='items-center' style={{ marginBottom: 40, marginTop: spacing.xl }}>
       <Text
-        className='mb-6 text-center text-[28px] font-bold leading-tight'
+        className='mb-6 text-center text-[22px] font-bold leading-tight'
         style={{ color: themeColors.text.primary }}
       >
         Name your new habit
@@ -40,7 +40,7 @@ export function NameInputSection({
       <TextInput
         accessibilityLabel='Habit name'
         autoFocus={autoFocus}
-        className='w-full rounded-2xl border-2 px-5 py-4 text-center text-[22px] font-medium'
+        className='w-full rounded-2xl border-2 px-5 py-4 text-center text-[22px] font-semibold'
         maxLength={50}
         returnKeyType='done'
         style={{
