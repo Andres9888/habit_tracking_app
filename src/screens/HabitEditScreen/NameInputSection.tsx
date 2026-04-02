@@ -6,6 +6,7 @@
 import { useState } from 'react';
 import { View, Text, TextInput, Keyboard } from 'react-native';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
+import { MAX_HABIT_NAME_LENGTH } from '@/constants';
 import { useThemeColors } from '../../theme';
 import { buildTextInputHintProps } from '@/utils/textInputHintProps';
 
@@ -47,7 +48,7 @@ export function NameInputSection({
         <TextInput
           accessibilityLabel='Habit name'
           className='w-full rounded-2xl border-2 px-5 py-4 text-center text-[22px] font-medium'
-          maxLength={50}
+          maxLength={MAX_HABIT_NAME_LENGTH}
           returnKeyType='done'
           style={{
             lineHeight: 28,
@@ -69,7 +70,7 @@ export function NameInputSection({
           className='mt-2 text-center text-[13px]'
           style={{ color: colors.text.tertiary }}
         >
-          {habitName.length}/50 characters
+          {habitName.length}/{MAX_HABIT_NAME_LENGTH} characters
           {habitName.length > 0 && habitName.trim().length < 2
             ? ' · At least 2 characters required'
             : ''}

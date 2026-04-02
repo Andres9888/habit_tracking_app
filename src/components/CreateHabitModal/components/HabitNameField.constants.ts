@@ -1,11 +1,16 @@
 /**
  * HabitNameField Constants
+ *
+ * Re-exports centralized habit name limits for backward compatibility.
+ * Source of truth: @/constants/app.ts
  */
 
-export const MAX_LENGTH = 50;
-export const MAX_CHARS = 40; // V11: Soft limit for character counter
-export const WARNING_THRESHOLD = 30;
-export const SHOW_THRESHOLD = 20;
+export {
+  MAX_HABIT_NAME_LENGTH as MAX_LENGTH,
+  HABIT_NAME_SOFT_DISPLAY as MAX_CHARS,
+  HABIT_NAME_WARNING_AT as WARNING_THRESHOLD,
+  HABIT_NAME_COUNTER_SHOW_AT as SHOW_THRESHOLD,
+} from '@/constants';
 
 export interface HabitNameFieldProps {
   value: string;

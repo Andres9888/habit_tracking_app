@@ -10,6 +10,7 @@ import { colors } from '@/theme/colors';
 import { useThemeColors } from '@/theme/ThemeContext';
 import { buildTextInputHintProps } from '@/utils/textInputHintProps';
 import useHapticFeedback from '../../../../hooks/useHapticFeedback';
+import { HABIT_NAME_SOFT_DISPLAY } from '@/constants';
 import type { HeroNameInputProps } from './types';
 import { MAX_LENGTH } from './types';
 import { useHeroNameInputAnimations } from './useHeroNameInputAnimations';
@@ -21,7 +22,7 @@ export const HeroNameInput = ({
 }: HeroNameInputProps) => {
   const { colors: themeColors } = useThemeColors();
   const charCount = value.length;
-  const isNearLimit = charCount > 40;
+  const isNearLimit = charCount > HABIT_NAME_SOFT_DISPLAY;
   const { triggerWarning } = useHapticFeedback();
   const previousCount = useRef(charCount);
   const inputRef = useRef<TextInput>(null);

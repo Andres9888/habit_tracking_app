@@ -73,23 +73,23 @@ describe('validation - enhanced edge cases', () => {
       });
 
       it('accepts name at maximum length', () => {
-        const maxName = 'a'.repeat(200);
+        const maxName = 'a'.repeat(50);
         const result = validateHabitName(maxName);
         expect(result.isValid).toBe(true);
         expect(result.sanitized).toBe(maxName);
       });
 
       it('rejects name exceeding maximum length', () => {
-        const tooLong = 'a'.repeat(201);
+        const tooLong = 'a'.repeat(51);
         const result = validateHabitName(tooLong);
         expect(result.isValid).toBe(false);
-        expect(result.error).toContain('200 characters or less');
+        expect(result.error).toContain('50 characters or less');
       });
 
       it('truncates overly long name in sanitized output', () => {
         const tooLong = 'a'.repeat(250);
         const result = validateHabitName(tooLong);
-        expect(result.sanitized).toHaveLength(200);
+        expect(result.sanitized).toHaveLength(50);
       });
 
       it('handles empty string', () => {

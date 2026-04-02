@@ -5,6 +5,11 @@
  * Reference: docs/specs/empty-habit-screen/minimal-redesign.md
  */
 
+import {
+  MAX_HABIT_NAME_LENGTH,
+  HABIT_NAME_WARNING_AT,
+  HABIT_NAME_ERROR_AT,
+} from '@/constants';
 import { colors } from '../../../../theme/colors';
 import type { SuggestionChip } from './types';
 
@@ -183,11 +188,11 @@ export const BORDER_RADIUS = {
 } as const;
 
 /**
- * Character limit configuration for habit name input
- * Shows visual warning at warningThreshold, error color at errorThreshold
+ * Character limit configuration for habit name input.
+ * Derived from centralized constants in @/constants/app.ts.
  */
 export const CHARACTER_LIMIT = {
-  errorThreshold: 45,
-  max: 50,
-  warningThreshold: 35,
+  errorThreshold: HABIT_NAME_ERROR_AT,
+  max: MAX_HABIT_NAME_LENGTH,
+  warningThreshold: HABIT_NAME_WARNING_AT,
 } as const;

@@ -1,4 +1,8 @@
 import {
+  MAX_HABIT_NAME_LENGTH,
+  MIN_HABIT_NAME_LENGTH,
+} from '@/constants';
+import {
   createDateFromTimeString,
   getDefaultReminderTime,
 } from '../../utils/notifications';
@@ -6,12 +10,6 @@ import { HABIT_NAME_REGEX } from './constants';
 
 // Re-export from utils folder
 export { extractTemplateDetails } from './utils/templateUtils';
-
-/**
- * Habit name validation constants
- */
-export const HABIT_NAME_MAX_LENGTH = 100;
-export const HABIT_NAME_MIN_LENGTH = 1;
 
 /**
  * Characters allowed in habit names (alphanumeric, spaces, common punctuation, emojis)
@@ -39,16 +37,16 @@ export const validateHabitName = (name: string): HabitNameValidationResult => {
   const trimmed = name.trim();
 
   // Check empty
-  if (!trimmed || trimmed.length < HABIT_NAME_MIN_LENGTH) {
+  if (!trimmed || trimmed.length < MIN_HABIT_NAME_LENGTH) {
     return { error: 'Habit name is required', isValid: false, sanitized: '' };
   }
 
   // Check max length
-  if (trimmed.length > HABIT_NAME_MAX_LENGTH) {
+  if (trimmed.length > MAX_HABIT_NAME_LENGTH) {
     return {
-      error: `Habit name must be ${HABIT_NAME_MAX_LENGTH} characters or less`,
+      error: `Habit name must be ${MAX_HABIT_NAME_LENGTH} characters or less`,
       isValid: false,
-      sanitized: trimmed.slice(0, HABIT_NAME_MAX_LENGTH),
+      sanitized: trimmed.slice(0, MAX_HABIT_NAME_LENGTH),
     };
   }
 

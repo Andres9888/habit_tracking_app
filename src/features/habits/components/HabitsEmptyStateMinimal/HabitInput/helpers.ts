@@ -5,10 +5,8 @@
 import { CHARACTER_LIMIT } from '../constants';
 
 /**
- * Get character counter color based on length
- * - Default: under warning threshold
- * - Warning: 35+ characters
- * - Error: 45+ characters
+ * Get character counter color based on length.
+ * Thresholds derived from centralized constants in @/constants/app.ts.
  */
 export function getCharacterCounterColor(
   length: number,

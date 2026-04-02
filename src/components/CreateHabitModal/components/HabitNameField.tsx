@@ -50,7 +50,7 @@ const HabitNameFieldComponent = ({
     <View className='mb-3'>
       <AnimatedTextInput
         blurOnSubmit
-        accessibilityHint='Enter a name for your habit, up to 50 characters'
+        accessibilityHint={`Enter a name for your habit, up to ${MAX_LENGTH} characters`}
         accessibilityLabel='Habit name'
         autoFocus={autoFocus}
         className='h-14 rounded-xl bg-white px-4 text-base'

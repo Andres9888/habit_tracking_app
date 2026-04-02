@@ -91,8 +91,24 @@ export const DEFAULT_RECONNECT_DELAY_MS = 1000;
 /** Maximum email length (RFC 5321) */
 export const MAX_EMAIL_LENGTH = 254;
 
-/** Maximum habit name length */
-export const MAX_HABIT_NAME_LENGTH = 100;
+/**
+ * Maximum habit name length (hard limit).
+ *
+ * Why 50:
+ * - All 200+ app templates fit within 38 chars; 50 gives 32% headroom for custom names
+ * - Two-line card displays (HabitCard, DraggableHabitCard) comfortably render 40-55 chars
+ * - Single-line displays (rankings, toasts) truncate via numberOfLines regardless of limit
+ * - 40 is too tight (barely fits longest template); 60+ is a sentence, not a name
+ *
+ * SYNC: convex/lib/inputValidation.ts must match this value
+ */
+export const MAX_HABIT_NAME_LENGTH = 50;
+
+/** Minimum habit name length */
+export const MIN_HABIT_NAME_LENGTH = 1;
+
+/** Maximum habits to render before truncation (performance guard) */
+export const MAX_HABITS_RENDER_LIMIT = 500;
 
 /** Maximum length for long text fields */
 export const MAX_LONG_TEXT_LENGTH = 5000;
@@ -102,6 +118,25 @@ export const MAX_SHORT_TEXT_LENGTH = 500;
 
 /** Minimum password length */
 export const MIN_PASSWORD_LENGTH = 8;
+
+// ============================================================================
+// HABIT NAME UI THRESHOLDS
+// ============================================================================
+// Progressive feedback: counter appears → warning color → error color → hard stop
+// Thresholds are percentages of MAX_HABIT_NAME_LENGTH (50):
+//   40% show, 60% warn, 80% error, 100% stop
+
+/** Character count at which the counter becomes visible (~40% of limit) */
+export const HABIT_NAME_COUNTER_SHOW_AT = 20;
+
+/** Character count at which warning color appears (~60% of limit) */
+export const HABIT_NAME_WARNING_AT = 30;
+
+/** Character count at which error color appears (~80% of limit) */
+export const HABIT_NAME_ERROR_AT = 40;
+
+/** Soft display limit shown in counter UI ("X/40") — matches error threshold */
+export const HABIT_NAME_SOFT_DISPLAY = 40;
 
 // ============================================================================
 // STORE REVIEW / RATINGS
@@ -119,13 +154,3 @@ export const MIN_COMPLETIONS_FOR_RATING = 5;
 
 /** Maximum days to look back for streak calculation (> 1 year) */
 export const STREAK_MAX_LOOKBACK_DAYS = 400;
-
-// ============================================================================
-// INPUT CHARACTER LIMITS (UI Feedback Thresholds)
-// ============================================================================
-
-/** Warning threshold for input length (shows warning color) */
-export const INPUT_WARNING_LENGTH = 35;
-
-/** Error threshold for input length (shows error color) */
-export const INPUT_ERROR_LENGTH = 45;

@@ -3,7 +3,7 @@
  *
  * Tests for the habit name text input with character counter:
  * - Character counter shows correct count
- * - Counter color changes at thresholds (35+ amber, 45+ red)
+ * - Counter color changes at thresholds (30+ amber, 40+ red)
  * - Counter visible when input focused or has text
  * - Max length enforced at 50 characters
  * - Clear button appears when text present
@@ -111,8 +111,8 @@ describe('HabitInput', () => {
       expect(counter.props.style.color).toBe(COLORS.stone400);
     });
 
-    it('should use warning color (amber-500) at 35+ characters', () => {
-      const value = 'A'.repeat(35); // Exactly 35 characters
+    it('should use warning color (amber-500) at 30+ characters', () => {
+      const value = 'A'.repeat(30); // Exactly 30 characters
       const { UNSAFE_getByProps } = render(
         <HabitInput {...defaultProps} value={value} />
       );
@@ -121,8 +121,8 @@ describe('HabitInput', () => {
       expect(counter.props.style.color).toBe(COLORS.amber500);
     });
 
-    it('should use warning color at 36 characters', () => {
-      const value = 'A'.repeat(36);
+    it('should use warning color at 31 characters', () => {
+      const value = 'A'.repeat(31);
       const { UNSAFE_getByProps } = render(
         <HabitInput {...defaultProps} value={value} />
       );
@@ -131,8 +131,8 @@ describe('HabitInput', () => {
       expect(counter.props.style.color).toBe(COLORS.amber500);
     });
 
-    it('should use warning color at 44 characters (just below error)', () => {
-      const value = 'A'.repeat(44);
+    it('should use warning color at 39 characters (just below error)', () => {
+      const value = 'A'.repeat(39);
       const { UNSAFE_getByProps } = render(
         <HabitInput {...defaultProps} value={value} />
       );
@@ -141,8 +141,8 @@ describe('HabitInput', () => {
       expect(counter.props.style.color).toBe(COLORS.amber500);
     });
 
-    it('should use error color (red-500) at 45+ characters', () => {
-      const value = 'A'.repeat(45); // Exactly 45 characters
+    it('should use error color (red-500) at 40+ characters', () => {
+      const value = 'A'.repeat(40); // Exactly 40 characters
       const { UNSAFE_getByProps } = render(
         <HabitInput {...defaultProps} value={value} />
       );
@@ -167,12 +167,12 @@ describe('HabitInput', () => {
       expect(CHARACTER_LIMIT.max).toBe(50);
     });
 
-    it('should have correct warning threshold (35)', () => {
-      expect(CHARACTER_LIMIT.warningThreshold).toBe(35);
+    it('should have correct warning threshold (30)', () => {
+      expect(CHARACTER_LIMIT.warningThreshold).toBe(30);
     });
 
-    it('should have correct error threshold (45)', () => {
-      expect(CHARACTER_LIMIT.errorThreshold).toBe(45);
+    it('should have correct error threshold (40)', () => {
+      expect(CHARACTER_LIMIT.errorThreshold).toBe(40);
     });
   });
 

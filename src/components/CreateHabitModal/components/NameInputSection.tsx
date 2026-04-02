@@ -3,6 +3,7 @@
  */
 
 import { Keyboard, Text, TextInput, View } from 'react-native';
+import { MAX_HABIT_NAME_LENGTH } from '@/constants';
 import { colors as themeTokens } from '@/theme/colors';
 import { spacing } from '@/theme/spacing';
 import { buildTextInputHintProps } from '@/utils/textInputHintProps';
@@ -41,7 +42,7 @@ export function NameInputSection({
         accessibilityLabel='Habit name'
         autoFocus={autoFocus}
         className='w-full rounded-2xl border-2 px-5 py-4 text-center text-[22px] font-medium'
-        maxLength={50}
+        maxLength={MAX_HABIT_NAME_LENGTH}
         returnKeyType='done'
         style={{
           lineHeight: 28,
@@ -69,7 +70,7 @@ export function NameInputSection({
           className='mt-3 self-end px-1 text-xs'
           style={{ color: themeColors.text.tertiary }}
         >
-          {habitName.length}/50
+          {habitName.length}/{MAX_HABIT_NAME_LENGTH}
         </Text>
       ) : null}
     </View>

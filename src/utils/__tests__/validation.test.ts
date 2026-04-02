@@ -40,8 +40,8 @@ describe('validateHabitName', () => {
     const longName = 'a'.repeat(500);
     const result = validateHabitName(longName);
     expect(result.isValid).toBe(false);
-    expect(result.error).toContain('200 characters or less');
-    expect(result.sanitized).toHaveLength(200);
+    expect(result.error).toContain('50 characters or less');
+    expect(result.sanitized).toHaveLength(50);
   });
 
   it('handles null/undefined gracefully', () => {

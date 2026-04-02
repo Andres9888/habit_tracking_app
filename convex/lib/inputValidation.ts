@@ -11,8 +11,8 @@ import { VALIDATION_ERRORS } from './inputValidation.constants';
 // Constants
 // =============================================================================
 
-/** Max length for habit names */
-export const MAX_HABIT_NAME_LENGTH = 100;
+/** Max length for habit names. SYNC: must match src/constants/app.ts */
+export const MAX_HABIT_NAME_LENGTH = 50;
 
 /** Max length for long text content */
 export const MAX_LONG_TEXT_LENGTH = 5000;

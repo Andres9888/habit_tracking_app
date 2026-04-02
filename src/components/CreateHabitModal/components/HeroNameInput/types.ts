@@ -13,4 +13,4 @@ export interface ValidationResult {
   type: 'success' | 'tip' | 'warning';
 }
 
-export const MAX_LENGTH = 50;
+export { MAX_HABIT_NAME_LENGTH as MAX_LENGTH } from '@/constants';

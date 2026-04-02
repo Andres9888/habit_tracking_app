@@ -2,6 +2,7 @@
  * Basic Input Validators
  */
 
+import { MAX_HABIT_NAME_LENGTH } from '@/constants';
 import { containsDangerousPatterns } from './security';
 import type { ValidationResult } from './types';
 
@@ -24,8 +25,8 @@ export function validateHabitNameInput(
     };
   }
 
-  if (trimmed.length > 100) {
-    return { isValid: false, error: 'Habit name cannot exceed 100 characters' };
+  if (trimmed.length > MAX_HABIT_NAME_LENGTH) {
+    return { isValid: false, error: `Habit name cannot exceed ${MAX_HABIT_NAME_LENGTH} characters` };
   }
 
   if (containsDangerousPatterns(trimmed)) {
