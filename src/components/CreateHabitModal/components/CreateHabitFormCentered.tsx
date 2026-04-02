@@ -57,7 +57,7 @@ const CreateHabitFormCenteredComponent = ({
         />
 
         <Text
-          className='mb-3 text-center text-[13px] font-semibold uppercase'
+          className='mt-4 mb-3 text-center text-[13px] font-semibold uppercase'
           style={{ letterSpacing: 0.5, color: themeColors.text.tertiary }}
         >
           Pick a color
