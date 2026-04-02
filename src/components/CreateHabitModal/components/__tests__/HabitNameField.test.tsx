@@ -5,7 +5,6 @@
  * Tests:
  * - Label styling (13px uppercase semibold, gray.500)
  * - Input focus state with green border and shadow ring
- * - Tip text below input (12px, gray.400)
  * - Character counter behavior
  * - Accessibility labels
  */
@@ -71,11 +70,6 @@ describe('HabitNameField - V9 Design System', () => {
       ).toBeDefined();
     });
 
-    it('should render the tip text below input (V9)', () => {
-      const { getByText } = render(<HabitNameField {...defaultProps} />);
-      expect(getByText(STRINGS.CREATE_HABIT.nameHelper)).toBeDefined();
-    });
-
     it('should render character counter showing 0/50 initially', () => {
       const { getByText } = render(<HabitNameField {...defaultProps} />);
       expect(getByText('0/50')).toBeDefined();
@@ -120,29 +114,6 @@ describe('HabitNameField - V9 Design System', () => {
       expect(label.props.style).toEqual(
         expect.objectContaining({ letterSpacing: 0.5 })
       );
-    });
-  });
-
-  describe('V9 Tip Text Styling', () => {
-    it('should have text-stone-400 color on tip text', () => {
-      const { getByText } = render(<HabitNameField {...defaultProps} />);
-      const tipText = getByText(STRINGS.CREATE_HABIT.nameHelper);
-
-      expect(tipText.props.className).toContain('text-stone-400');
-    });
-
-    it('should have text-xs (12px) font size on tip text', () => {
-      const { getByText } = render(<HabitNameField {...defaultProps} />);
-      const tipText = getByText(STRINGS.CREATE_HABIT.nameHelper);
-
-      expect(tipText.props.className).toContain('text-xs');
-    });
-
-    it('should have mt-2 (8px) margin top on tip text', () => {
-      const { getByText } = render(<HabitNameField {...defaultProps} />);
-      const tipText = getByText(STRINGS.CREATE_HABIT.nameHelper);
-
-      expect(tipText.props.className).toContain('mt-2');
     });
   });
 
@@ -251,13 +222,6 @@ describe('HabitNameField - V9 Design System', () => {
       const label = getByText(STRINGS.CREATE_HABIT.nameLabel);
 
       expect(label.props.accessibilityRole).toBe('text');
-    });
-
-    it('should have accessibilityRole on tip text', () => {
-      const { getByText } = render(<HabitNameField {...defaultProps} />);
-      const tipText = getByText(STRINGS.CREATE_HABIT.nameHelper);
-
-      expect(tipText.props.accessibilityRole).toBe('text');
     });
 
     it('should have accessibilityRole on character counter', () => {
