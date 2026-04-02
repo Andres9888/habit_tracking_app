@@ -3,6 +3,7 @@ import { Text, View } from 'react-native';
 import { ChevronRight, Crown } from 'lucide-react-native';
 import { useUser } from '@clerk/clerk-expo';
 import { useThemeColors } from '../../theme/ThemeContext';
+import { borderRadius, shadows } from '../../theme/spacing';
 
 interface ProfileCardProps {
   isPremium: boolean;
@@ -17,29 +18,27 @@ export function ProfileCard({ isPremium, highContrastMode }: ProfileCardProps) {
   const email = user?.primaryEmailAddress?.emailAddress;
   const initial = name.charAt(0).toUpperCase();
 
-  const cardBg = highContrastMode ? '#111111' : themeColors.card;
-  const borderColor = highContrastMode ? '#2f2f2f' : undefined;
+  const cardBg = highContrastMode ? (isDark ? '#111111' : '#000000') : themeColors.card;
+  const cardBorder = highContrastMode ? themeColors.border : undefined;
 
   return (
     <View
       className='overflow-hidden rounded-2xl'
       style={{
         backgroundColor: cardBg,
-        borderColor,
+        borderColor: cardBorder,
         borderWidth: highContrastMode ? 1 : 0,
-        elevation: highContrastMode ? 0 : 3,
-        shadowColor: isDark ? '#000' : '#1c1917',
-        shadowOffset: { height: 4, width: 0 },
-        shadowOpacity: highContrastMode ? 0 : 0.08,
-        shadowRadius: 16,
+        ...shadows.floatingActionButton,
+        elevation: highContrastMode ? 0 : shadows.card.elevation,
+        shadowOpacity: highContrastMode ? 0 : shadows.floatingActionButton.shadowOpacity,
       }}
     >
       <View className='flex-row items-center px-4 py-4' style={{ gap: 14 }}>
         <View
           className='items-center justify-center'
           style={{
-            backgroundColor: '#7c3aed',
-            borderRadius: 26,
+            backgroundColor: themeColors.status.premium,
+            borderRadius: borderRadius.full,
             height: 52,
             width: 52,
           }}
@@ -64,12 +63,12 @@ export function ProfileCard({ isPremium, highContrastMode }: ProfileCardProps) {
           {isPremium ? (
             <View
               className='mt-1.5 flex-row items-center self-start rounded-md px-2 py-0.5'
-              style={{ backgroundColor: isDark ? '#3d2e06' : '#fef3c7', gap: 4 }}
+              style={{ backgroundColor: themeColors.status.streakLight, gap: 4 }}
             >
-              <Crown color={isDark ? '#fbbf24' : '#92400e'} size={11} />
+              <Crown color={themeColors.status.streakText} size={11} />
               <Text
                 className='text-[11px] font-bold'
-                style={{ color: isDark ? '#fbbf24' : '#92400e' }}
+                style={{ color: themeColors.status.streakText }}
               >
                 PRO
               </Text>

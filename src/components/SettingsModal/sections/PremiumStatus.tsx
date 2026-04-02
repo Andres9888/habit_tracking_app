@@ -17,6 +17,7 @@ import { SettingsRow } from '../SettingsRow';
 import { AnimatedPressable } from '../../ui/AnimatedPressable';
 import { colors as palette } from '@/theme/colors';
 import { useThemeColors } from '../../../theme/ThemeContext';
+import { durations } from '@/theme/animations';
 
 interface Props {
   highContrast: boolean;
@@ -24,7 +25,7 @@ interface Props {
   onUpgrade?: () => void;
 }
 
-const SHIMMER_DURATION = 3000;
+const SHIMMER_DURATION = durations.celebration;
 const nativeHandsetPlatform = ['and', 'roid'].join('');
 const alternateSubscriptionUrl = [
   'https://play.',
@@ -59,8 +60,8 @@ export function PremiumStatus({ highContrast, isPremium, onUpgrade }: Props) {
     );
     proBadgeScale.value = withRepeat(
       withSequence(
-        withTiming(1.06, { duration: 1000, easing: Easing.inOut(Easing.ease) }),
-        withTiming(1, { duration: 1000, easing: Easing.inOut(Easing.ease) }),
+        withTiming(1.06, { duration: durations.loop, easing: Easing.inOut(Easing.ease) }),
+        withTiming(1, { duration: durations.loop, easing: Easing.inOut(Easing.ease) }),
       ),
       -1,
       false,
@@ -96,7 +97,7 @@ export function PremiumStatus({ highContrast, isPremium, onUpgrade }: Props) {
               </Text>
               <View
                 className='rounded-full px-2 py-0.5'
-                style={{ backgroundColor: isDark ? '#422006' : palette.warningLight }}
+                style={{ backgroundColor: themeColors.status.streakLight }}
               >
                 <Text
                   className='text-[10px] font-bold uppercase'
@@ -127,6 +128,7 @@ export function PremiumStatus({ highContrast, isPremium, onUpgrade }: Props) {
     );
   }
 
+  // Premium gradient uses custom indigo/violet tones on a non-semantic surface
   const gradientColors = isDark
     ? ['#2e1f5e', '#1e1b4b', '#312e81'] as const
     : ['#8b5cf6', '#6366f1', '#818cf8'] as const;
@@ -199,7 +201,7 @@ export function PremiumStatus({ highContrast, isPremium, onUpgrade }: Props) {
             >
               <Text
                 className='text-[13px] font-bold'
-                style={{ color: isDark ? '#C4B5FD' : palette.text.inverse }}
+                style={{ color: isDark ? themeColors.status.premiumText : palette.text.inverse }}
               >
                 PRO
               </Text>
