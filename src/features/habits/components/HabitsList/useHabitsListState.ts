@@ -4,7 +4,7 @@
  * ### State shape
  * | Group | Fields | Purpose |
  * |-------|--------|---------|
- * | **Habit creation** | `justCreatedHabitId`, `isInSuccessCelebration`, `shouldTriggerHabitEntrance` | Transient flags that drive the create-then-animate flow |
+ * | **Habit creation** | `justCreatedHabitId`, `shouldTriggerHabitEntrance` | Transient flags that drive the create-then-animate flow |
  * | **Seen tracking** | `seenHabitIdsRef` | Mutable ref of habit IDs whose entrance animation already played |
  * | **Animated values** | `header*`, `calendar*`, `habitRow*` (opacity + translateY) | RN `Animated.Value`s for staggered entrance transitions |
  *
@@ -19,7 +19,6 @@ import type { Id } from '../../../../../convex/_generated/dataModel';
 export function useHabitsListState() {
   const [justCreatedHabitId, setJustCreatedHabitId] =
     useState<Id<'habits'> | null>(null);
-  const [isInSuccessCelebration, setIsInSuccessCelebration] = useState(false);
   const [shouldTriggerHabitEntrance, setShouldTriggerHabitEntrance] =
     useState(false);
 
@@ -53,10 +52,8 @@ export function useHabitsListState() {
     handleHabitEntranceComplete,
     headerOpacity,
     headerTranslateY,
-    isInSuccessCelebration,
     justCreatedHabitId,
     seenHabitIdsRef,
-    setIsInSuccessCelebration,
     setJustCreatedHabitId,
     setShouldTriggerHabitEntrance,
     shouldTriggerHabitEntrance,

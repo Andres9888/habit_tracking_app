@@ -11,5 +11,4 @@
  */
 
 export { renderHabitsListHeader } from './renderHabitsListHeader';
-export { renderHabitsListEmpty } from './renderHabitsListEmpty';
 export { renderHabitRow } from './renderHabitRow';

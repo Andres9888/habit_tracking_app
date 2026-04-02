@@ -43,7 +43,6 @@ export interface HabitsListContentProps {
   renderItem: ReturnType<
     typeof import('../../hooks/useHabitRenderItem').useHabitRenderItem
   >;
-  handleSuccessTransitionComplete: () => void;
 }
 
 export interface UseHabitsListHandlersOptions {
@@ -53,9 +52,7 @@ export interface UseHabitsListHandlersOptions {
   state: {
     justCreatedHabitId: Id<'habits'> | null;
     setJustCreatedHabitId: (id: Id<'habits'> | null) => void;
-    setIsInSuccessCelebration: (value: boolean) => void;
     shouldTriggerHabitEntrance: boolean;
-    isInSuccessCelebration: boolean;
     setShouldTriggerHabitEntrance: (value: boolean) => void;
   };
 }
