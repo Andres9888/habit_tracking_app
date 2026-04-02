@@ -1,81 +1,18 @@
-import { memo, useCallback } from 'react';
-import { Pressable, ScrollView, Text } from 'react-native';
-import Animated, {
-  useAnimatedStyle,
-  withSpring,
-  useSharedValue,
-} from 'react-native-reanimated';
-import { springs } from '@/theme/animations';
+import { memo, useMemo } from 'react';
+import { ScrollView, View } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+import { useThemeColors } from '../../theme/ThemeContext';
 import { HABIT_CATEGORIES } from '../../constants/habitEmojis';
+import { CategoryPill } from './CategoryPill';
 import { styles } from './CategoryPills.styles';
+import { useHorizontalScrollFade } from './useHorizontalScrollFade';
 
-export interface Category {
-  id: string;
-  name: string;
-  icon: string;
-  emojis: string[];
-}
-
-interface CategoryPillProps {
-  icon: string;
-  name: string;
-  isSelected: boolean;
-  onPress: () => void;
-}
-
-export const CategoryPill = memo(
-  ({ icon, name, isSelected, onPress }: CategoryPillProps) => {
-    const scale = useSharedValue(1);
-
-    const animatedStyle = useAnimatedStyle(() => ({
-      transform: [{ scale: scale.value }],
-    }));
-
-    const handlePressIn = useCallback(() => {
-      scale.value = withSpring(0.95, springs.button);
-    }, [scale]);
-
-    const handlePressOut = useCallback(() => {
-      scale.value = withSpring(1, springs.button);
-    }, [scale]);
-
-    return (
-      <Pressable
-        accessibilityLabel={`Filter by ${name} category`}
-        accessibilityRole='tab'
-        accessibilityState={{ selected: isSelected }}
-        onPress={onPress}
-        onPressIn={handlePressIn}
-        onPressOut={handlePressOut}
-      >
-        <Animated.View
-          style={[
-            styles.categoryPill,
-            isSelected && styles.categoryPillActive,
-            animatedStyle,
-          ]}
-        >
-          <Text style={styles.categoryPillIcon}>{icon}</Text>
-          <Text
-            style={[
-              styles.categoryPillText,
-              isSelected && styles.categoryPillTextActive,
-            ]}
-          >
-            {name}
-          </Text>
-        </Animated.View>
-      </Pressable>
-    );
-  }
-);
-
-CategoryPill.displayName = 'CategoryPill';
+export type { Category } from './CategoryPill.types';
 
 interface CategoryPillsProps {
   selectedCategory: string;
   onCategorySelect: (categoryId: string) => void;
-  categories?: Category[];
+  categories?: typeof HABIT_CATEGORIES;
 }
 
 export const CategoryPills = memo(
@@ -83,25 +20,64 @@ export const CategoryPills = memo(
     selectedCategory,
     onCategorySelect,
     categories = HABIT_CATEGORIES,
-  }: CategoryPillsProps) => (
-    <ScrollView
-      horizontal
-      contentContainerStyle={styles.categoriesContent}
-      showsHorizontalScrollIndicator={false}
-      style={styles.categoriesScroll}
-    >
-      {categories.map((category) => (
-        <CategoryPill
-          key={category.id}
-          icon={category.icon}
-          isSelected={selectedCategory === category.id}
-          name={category.name}
-          onPress={() => onCategorySelect(category.id)}
-        />
-      ))}
-    </ScrollView>
-  )
+  }: CategoryPillsProps) => {
+    const { handleScroll, showLeftFade, showRightFade } =
+      useHorizontalScrollFade();
+    const { isDark } = useThemeColors();
+
+    const fadeColors = useMemo(
+      (): [string, string] =>
+        isDark
+          ? ['rgba(31,41,55,1)', 'rgba(31,41,55,0)']
+          : ['rgba(237,234,229,1)', 'rgba(237,234,229,0)'],
+      [isDark]
+    );
+
+    return (
+      <View style={styles.container}>
+        <ScrollView
+          horizontal
+          contentContainerStyle={styles.categoriesContent}
+          scrollEventThrottle={16}
+          showsHorizontalScrollIndicator={false}
+          style={styles.categoriesScroll}
+          onScroll={handleScroll}
+        >
+          {categories.map((category) => (
+            <CategoryPill
+              key={category.id}
+              icon={category.icon}
+              isSelected={selectedCategory === category.id}
+              name={category.name}
+              onPress={() => onCategorySelect(category.id)}
+            />
+          ))}
+        </ScrollView>
+
+        {showLeftFade ? (
+          <LinearGradient
+            colors={fadeColors}
+            end={{ x: 1, y: 0 }}
+            pointerEvents='none'
+            start={{ x: 0, y: 0 }}
+            style={styles.fadeLeft}
+          />
+        ) : null}
+
+        {showRightFade ? (
+          <LinearGradient
+            colors={fadeColors}
+            end={{ x: 0, y: 0 }}
+            pointerEvents='none'
+            start={{ x: 1, y: 0 }}
+            style={styles.fadeRight}
+          />
+        ) : null}
+      </View>
+    );
+  }
 );
 
 CategoryPills.displayName = 'CategoryPills';
+export { CategoryPill } from './CategoryPill';
 export default CategoryPills;

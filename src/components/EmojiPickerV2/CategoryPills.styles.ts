@@ -2,7 +2,9 @@ import { StyleSheet } from 'react-native';
 
 import { colors } from '../../theme/colors';
 import { borderRadius, shadows, spacing } from '../../theme/spacing';
-import { typography, fontFamilies} from '../../theme/typography';
+import { typography, fontFamilies } from '../../theme/typography';
+
+const FADE_WIDTH = 48;
 
 export const styles = StyleSheet.create({
   categoriesContent: {
@@ -11,7 +13,6 @@ export const styles = StyleSheet.create({
   },
   categoriesScroll: {
     flexGrow: 0,
-    marginBottom: spacing.md,
   },
   categoryPill: {
     alignItems: 'center',
@@ -38,5 +39,23 @@ export const styles = StyleSheet.create({
   },
   categoryPillTextActive: {
     color: colors.text.inverse,
+  },
+  container: {
+    marginBottom: spacing.md,
+    position: 'relative',
+  },
+  fadeLeft: {
+    bottom: 0,
+    left: 0,
+    position: 'absolute',
+    top: 0,
+    width: FADE_WIDTH,
+  },
+  fadeRight: {
+    bottom: 0,
+    position: 'absolute',
+    right: 0,
+    top: 0,
+    width: FADE_WIDTH,
   },
 });
