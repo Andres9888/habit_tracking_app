@@ -48,7 +48,7 @@ export const SaveButton = ({
         }}
         onPress={canSave ? onSave : onInvalidSave}
       >
-        <Text className='text-[15px] font-semibold text-white'>
+        <Text className='text-[17px] font-semibold text-white'>
           {isEditMode
             ? STRINGS.CREATE_HABIT.save
             : STRINGS.CREATE_HABIT.createAction}
