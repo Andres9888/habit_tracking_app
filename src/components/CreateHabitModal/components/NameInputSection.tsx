@@ -1,5 +1,5 @@
 /**
- * NameInputSection - Heading, name input, hint text & character counter
+ * NameInputSection - Heading, name input & character counter
  */
 
 import { Keyboard, Text, TextInput, View } from 'react-native';
@@ -64,22 +64,14 @@ export function NameInputSection({
         >
           Give your habit a name (at least 2 characters)
         </Text>
-      ) : (
-        <View className='mt-3 flex-row items-center justify-between self-stretch px-1'>
-          <Text
-            className='text-xs'
-            style={{ color: themeColors.text.tertiary }}
-          >
-            Be specific — include when, how long, or where
-          </Text>
-          {habitName.length > 0 ? <Text
-              className='text-xs'
-              style={{ color: themeColors.text.tertiary }}
-            >
-              {habitName.length}/50
-            </Text> : null}
-        </View>
-      )}
+      ) : habitName.length > 0 ? (
+        <Text
+          className='mt-3 self-end px-1 text-xs'
+          style={{ color: themeColors.text.tertiary }}
+        >
+          {habitName.length}/50
+        </Text>
+      ) : null}
     </View>
   );
 }

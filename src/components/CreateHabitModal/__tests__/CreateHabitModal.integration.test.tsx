@@ -526,12 +526,6 @@ describe('CreateHabitModal Integration - Template → Form Flow', () => {
       expect(getByText(/consistency is key/)).toBeDefined();
     });
 
-    it('should render V9 tip text below habit name input', () => {
-      const { getByText } = render(<CreateHabitModal {...defaultProps} />);
-
-      expect(getByText(/Tip: Be specific/)).toBeDefined();
-    });
-
     it('should render V9 uppercase section labels (Daily reminder)', () => {
       const { getByText } = render(<CreateHabitModal {...defaultProps} />);
 

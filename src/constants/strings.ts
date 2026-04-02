@@ -14,7 +14,6 @@ export const STRINGS = {
     iconLabel: 'Icon',
     motivationHighlight: 'Start your streak today',
     motivationSuffix: ' — consistency is key 🔥',
-    nameHelper: 'Tip: Be specific — include a time, trigger, or place.',
     nameLabel: 'Habit name',
     namePrompt: 'Name your habit',
     // V9 additions
