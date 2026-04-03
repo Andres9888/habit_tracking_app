@@ -5,7 +5,7 @@ import type { Habit } from '../types';
  * Syncs a habit state snapshot when the habits array updates
  * Used to keep modal/screen state in sync with the source of truth
  *
- * Only syncs when actual tracked values change (streak, strength)
+ * Only syncs when actual tracked values change (streak, strength, name, icon, color)
  * to avoid infinite loops from reference changes
  */
 export function useHabitStateSync(
@@ -23,11 +23,31 @@ export function useHabitStateSync(
     id: string | null;
     streak: number | undefined;
     strength: number | undefined;
-  }>({ id: null, streak: undefined, strength: undefined });
+    name: string | undefined;
+    icon: string | undefined;
+    color: string | undefined;
+    iconColor: string | undefined;
+  }>({
+    id: null,
+    streak: undefined,
+    strength: undefined,
+    name: undefined,
+    icon: undefined,
+    color: undefined,
+    iconColor: undefined,
+  });
 
   useEffect(() => {
     if (!currentHabit) {
-      prevValuesRef.current = { id: null, streak: undefined, strength: undefined };
+      prevValuesRef.current = {
+        id: null,
+        streak: undefined,
+        strength: undefined,
+        name: undefined,
+        icon: undefined,
+        color: undefined,
+        iconColor: undefined,
+      };
       return;
     }
 
@@ -38,14 +58,30 @@ export function useHabitStateSync(
     const idChanged = prevValuesRef.current.id !== updated._id;
     const prevStreakChanged = prevValuesRef.current.streak !== updated.currentStreak;
     const prevStrengthChanged = prevValuesRef.current.strength !== updated.strength;
+    const prevNameChanged = prevValuesRef.current.name !== updated.name;
+    const prevIconChanged = prevValuesRef.current.icon !== updated.icon;
+    const prevColorChanged = prevValuesRef.current.color !== updated.color;
+    const prevIconColorChanged = prevValuesRef.current.iconColor !== updated.iconColor;
 
     // Only sync if meaningful values changed
-    if (idChanged || prevStreakChanged || prevStrengthChanged) {
+    if (
+      idChanged ||
+      prevStreakChanged ||
+      prevStrengthChanged ||
+      prevNameChanged ||
+      prevIconChanged ||
+      prevColorChanged ||
+      prevIconColorChanged
+    ) {
       // Update tracking ref before calling setHabit to prevent re-sync
       prevValuesRef.current = {
         id: updated._id,
         streak: updated.currentStreak,
         strength: updated.strength,
+        name: updated.name,
+        icon: updated.icon,
+        color: updated.color,
+        iconColor: updated.iconColor,
       };
 
       setHabitRef.current(updated);

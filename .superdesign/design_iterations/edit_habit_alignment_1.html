@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Edit Habit → Create Habit Alignment Mock</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important; }
+  body { background: #1a1a1a !important; margin: 0; padding: 24px; }
+  .phone-frame {
+    width: 375px;
+    height: 812px;
+    border-radius: 40px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.5);
+  }
+  .label-badge {
+    position: absolute;
+    top: -36px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 8px;
+    padding: 4px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #fff;
+    white-space: nowrap;
+  }
+  .section-label-line {
+    height: 1px;
+    flex: 1;
+    background: #3a3a3a;
+  }
+  .drag-handle {
+    width: 36px;
+    height: 5px;
+    border-radius: 4px;
+    background: #555;
+    margin: 8px auto 4px;
+  }
+  .change-highlight {
+    position: relative;
+  }
+  .change-highlight::after {
+    content: attr(data-change);
+    position: absolute;
+    right: -8px;
+    top: 50%;
+    transform: translate(100%, -50%);
+    background: #22c55e;
+    color: #000;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 4px;
+    white-space: nowrap;
+    pointer-events: none;
+  }
+  .arrow-connector {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 48px;
+    color: #22c55e;
+    padding: 0 24px;
+  }
+  .diff-callout {
+    background: rgba(34,197,94,0.1);
+    border: 1px solid rgba(34,197,94,0.3);
+    border-radius: 8px;
+    padding: 3px 8px;
+    font-size: 11px;
+    color: #22c55e;
+    font-weight: 600;
+    display: inline-block;
+    margin-left: 8px;
+  }
+  .emoji-chip {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    background: #2a2a2a;
+    border: 2px solid #3a3a3a;
+  }
+  .color-swatch {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+  }
+  .color-swatch.selected {
+    outline: 2px solid #22c55e;
+    outline-offset: 2px;
+  }
+</style>
+</head>
+<body>
+<div style="max-width: 1200px; margin: 0 auto;">
+  <!-- Title -->
+  <h1 style="color: #fff; font-size: 28px; font-weight: 700; margin-bottom: 8px; text-align: center;">
+    Edit Habit Screen Alignment
+  </h1>
+  <p style="color: #999; font-size: 14px; text-align: center; margin-bottom: 48px;">
+    Aligning Edit Habit (left) with Create Habit (right) — green callouts show changes
+  </p>
+
+  <div style="display: flex; align-items: flex-start; justify-content: center; gap: 32px; flex-wrap: wrap;">
+
+    <!-- BEFORE: Current Edit Habit -->
+    <div style="position: relative; padding-top: 44px;">
+      <div class="label-badge" style="background: rgba(239,68,68,0.15); border-color: rgba(239,68,68,0.3); color: #f87171;">
+        CURRENT — Edit Habit
+      </div>
+      <div class="phone-frame" style="background: #1c1c1e;">
+        <!-- No drag handle currently -->
+        <div style="padding-top: 56px;">
+          <!-- Header -->
+          <div style="display: flex; align-items: center; justify-content: space-between; padding: 0 16px 8px;">
+            <span style="color: #10b981; font-size: 17px; font-weight: 600;">Cancel</span>
+            <div style="flex: 1;"></div>
+            <!-- rounded-xl button -->
+            <div style="background: #10b981; border-radius: 12px; padding: 10px 20px;">
+              <span style="color: #fff; font-size: 17px; font-weight: 600;">Save</span>
+            </div>
+          </div>
+
+          <!-- Title - 34px -->
+          <div style="padding: 16px 16px 0;">
+            <h2 style="font-size: 34px !important; font-weight: 700; color: #fff; text-align: center; margin: 0 0 24px;">
+              Edit your habit
+            </h2>
+
+            <!-- Input -->
+            <div style="border: 2px solid #3a3a3a; border-radius: 16px; padding: 16px 20px; background: #2a2a2a;">
+              <p style="font-size: 22px; font-weight: 500; color: #fff; text-align: center; margin: 0;">Morning Run</p>
+            </div>
+            <p style="font-size: 13px; color: #888; text-align: center; margin-top: 8px;">11/50 characters</p>
+          </div>
+
+          <!-- CUSTOMIZE section divider -->
+          <div style="display: flex; align-items: center; gap: 8px; padding: 24px 16px 12px;">
+            <div class="section-label-line"></div>
+            <span style="font-size: 13px; font-weight: 600; color: #888; letter-spacing: 1px;">CUSTOMIZE</span>
+            <div class="section-label-line"></div>
+          </div>
+
+          <!-- Emoji row (no label) -->
+          <div style="padding: 0 16px;">
+            <div style="display: flex; gap: 8px; justify-content: center; flex-wrap: wrap;">
+              <div class="emoji-chip">🏃</div>
+              <div class="emoji-chip">💪</div>
+              <div class="emoji-chip" style="border-color: #10b981;">🌅</div>
+              <div class="emoji-chip">🏋️</div>
+              <div class="emoji-chip">🧘</div>
+            </div>
+
+            <!-- Color row (no label) -->
+            <div style="display: flex; gap: 10px; justify-content: center; margin-top: 16px;">
+              <div class="color-swatch" style="background: #ef4444;"></div>
+              <div class="color-swatch" style="background: #f97316;"></div>
+              <div class="color-swatch" style="background: #f59e0b;"></div>
+              <div class="color-swatch selected" style="background: #10b981;"></div>
+              <div class="color-swatch" style="background: #14b8a6;"></div>
+              <div class="color-swatch" style="background: #06b6d4;"></div>
+            </div>
+          </div>
+
+          <!-- DANGER ZONE -->
+          <div style="display: flex; align-items: center; gap: 8px; padding: 24px 16px 12px;">
+            <div class="section-label-line"></div>
+            <span style="font-size: 13px; font-weight: 600; color: #f87171; letter-spacing: 1px;">DANGER ZONE</span>
+            <div class="section-label-line"></div>
+          </div>
+
+          <div style="margin: 0 16px; background: #2a2a2a; border-radius: 16px; padding: 16px;">
+            <div style="background: rgba(146,64,14,0.15); border: 1px solid rgba(146,64,14,0.3); border-radius: 12px; padding: 16px; text-align: center; margin-bottom: 12px;">
+              <span style="color: #fbbf24; font-size: 17px; font-weight: 600;">📦 Archive Habit</span>
+            </div>
+            <div style="background: rgba(153,27,27,0.15); border: 1px solid rgba(153,27,27,0.3); border-radius: 12px; padding: 16px; text-align: center;">
+              <span style="color: #f87171; font-size: 17px; font-weight: 600;">🗑 Delete Habit</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Arrow -->
+    <div class="arrow-connector" style="align-self: center;">→</div>
+
+    <!-- AFTER: Proposed Edit Habit (aligned with Create) -->
+    <div style="position: relative; padding-top: 44px;">
+      <div class="label-badge" style="background: rgba(34,197,94,0.15); border-color: rgba(34,197,94,0.3); color: #22c55e;">
+        PROPOSED — Edit Habit (aligned)
+      </div>
+      <div class="phone-frame" style="background: #1c1c1e;">
+        <!-- Drag handle -->
+        <div style="padding-top: 48px;">
+          <div class="drag-handle"></div>
+          <span class="diff-callout" style="position: absolute; top: 52px; right: 12px;">+ drag handle</span>
+        </div>
+
+        <!-- Header -->
+        <div style="display: flex; align-items: center; justify-content: space-between; padding: 0 16px 8px;">
+          <span style="color: #10b981; font-size: 17px; font-weight: 600;">Cancel</span>
+          <div style="flex: 1;"></div>
+          <!-- rounded-full pill button -->
+          <div style="background: #10b981; border-radius: 9999px; padding: 0 24px; height: 44px; display: flex; align-items: center; justify-content: center;">
+            <span style="color: #fff; font-size: 17px; font-weight: 600;">Save</span>
+          </div>
+          <span class="diff-callout" style="position: absolute; right: 12px; margin-top: 48px;">pill shape</span>
+        </div>
+
+        <!-- Title - 22px (matching Create) -->
+        <div style="padding: 32px 24px 0; margin-bottom: 40px;">
+          <h2 style="font-size: 22px !important; font-weight: 700; color: #fff; text-align: center; margin: 0 0 24px; line-height: 1.25;">
+            Edit your habit
+          </h2>
+          <span class="diff-callout" style="position: absolute; right: 12px;">22px title</span>
+
+          <!-- Input -->
+          <div style="border: 2px solid #3a3a3a; border-radius: 16px; padding: 16px 20px; background: #2a2a2a;">
+            <p style="font-size: 22px; font-weight: 500; color: #fff; text-align: center; margin: 0;">Morning Run</p>
+          </div>
+          <p style="font-size: 13px; color: #888; text-align: center; margin-top: 8px;">11/50 characters</p>
+        </div>
+
+        <!-- "Choose an icon" inline label (matching Create) -->
+        <div style="padding: 0 24px;">
+          <p style="font-size: 13px; font-weight: 600; color: #888; text-align: center; text-transform: uppercase; letter-spacing: 0.5px; margin: 0 0 12px;">
+            Choose an icon
+          </p>
+          <span class="diff-callout" style="position: absolute; right: 12px;">+ label</span>
+
+          <!-- Emoji row -->
+          <div style="display: flex; gap: 8px; justify-content: center; flex-wrap: wrap;">
+            <div class="emoji-chip">🏃</div>
+            <div class="emoji-chip">💪</div>
+            <div class="emoji-chip" style="border-color: #10b981;">🌅</div>
+            <div class="emoji-chip">🏋️</div>
+            <div class="emoji-chip">🧘</div>
+          </div>
+
+          <!-- "Pick a color" inline label (matching Create) -->
+          <p style="font-size: 13px; font-weight: 600; color: #888; text-align: center; text-transform: uppercase; letter-spacing: 0.5px; margin: 16px 0 12px;">
+            Pick a color
+          </p>
+          <span class="diff-callout" style="position: absolute; right: 12px;">+ label</span>
+
+          <!-- Color row -->
+          <div style="display: flex; gap: 10px; justify-content: center;">
+            <div class="color-swatch" style="background: #ef4444;"></div>
+            <div class="color-swatch" style="background: #f97316;"></div>
+            <div class="color-swatch" style="background: #f59e0b;"></div>
+            <div class="color-swatch selected" style="background: #10b981;"></div>
+            <div class="color-swatch" style="background: #14b8a6;"></div>
+            <div class="color-swatch" style="background: #06b6d4;"></div>
+          </div>
+        </div>
+
+        <!-- DANGER ZONE stays the same -->
+        <div style="display: flex; align-items: center; gap: 8px; padding: 24px 24px 12px;">
+          <div class="section-label-line"></div>
+          <span style="font-size: 13px; font-weight: 600; color: #f87171; letter-spacing: 1px;">DANGER ZONE</span>
+          <div class="section-label-line"></div>
+        </div>
+
+        <div style="margin: 0 24px; background: #2a2a2a; border-radius: 16px; padding: 16px;">
+          <div style="background: rgba(146,64,14,0.15); border: 1px solid rgba(146,64,14,0.3); border-radius: 12px; padding: 16px; text-align: center; margin-bottom: 12px;">
+            <span style="color: #fbbf24; font-size: 17px; font-weight: 600;">📦 Archive Habit</span>
+          </div>
+          <div style="background: rgba(153,27,27,0.15); border: 1px solid rgba(153,27,27,0.3); border-radius: 12px; padding: 16px; text-align: center;">
+            <span style="color: #f87171; font-size: 17px; font-weight: 600;">🗑 Delete Habit</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Change Summary -->
+  <div style="max-width: 700px; margin: 48px auto 0; background: #2a2a2a; border-radius: 16px; padding: 24px; border: 1px solid #3a3a3a;">
+    <h3 style="color: #fff; font-size: 18px; font-weight: 700; margin: 0 0 16px;">Changes Summary</h3>
+    <table style="width: 100%; border-collapse: collapse;">
+      <tr style="border-bottom: 1px solid #3a3a3a;">
+        <td style="padding: 8px 0; color: #888; font-size: 13px;">Title size</td>
+        <td style="padding: 8px 0; color: #f87171; font-size: 13px;">34px bold</td>
+        <td style="padding: 8px 0; color: #22c55e; font-size: 13px;">22px bold leading-tight</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #3a3a3a;">
+        <td style="padding: 8px 0; color: #888; font-size: 13px;">Drag handle</td>
+        <td style="padding: 8px 0; color: #f87171; font-size: 13px;">None</td>
+        <td style="padding: 8px 0; color: #22c55e; font-size: 13px;">36x5px bar</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #3a3a3a;">
+        <td style="padding: 8px 0; color: #888; font-size: 13px;">Save button</td>
+        <td style="padding: 8px 0; color: #f87171; font-size: 13px;">rounded-xl rectangle</td>
+        <td style="padding: 8px 0; color: #22c55e; font-size: 13px;">rounded-full pill</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #3a3a3a;">
+        <td style="padding: 8px 0; color: #888; font-size: 13px;">Section divider</td>
+        <td style="padding: 8px 0; color: #f87171; font-size: 13px;">"CUSTOMIZE" with lines</td>
+        <td style="padding: 8px 0; color: #22c55e; font-size: 13px;">Inline labels per section</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #3a3a3a;">
+        <td style="padding: 8px 0; color: #888; font-size: 13px;">Padding</td>
+        <td style="padding: 8px 0; color: #f87171; font-size: 13px;">px-4 (16px)</td>
+        <td style="padding: 8px 0; color: #22c55e; font-size: 13px;">px-6 (24px)</td>
+      </tr>
+      <tr>
+        <td style="padding: 8px 0; color: #888; font-size: 13px;">Background</td>
+        <td style="padding: 8px 0; color: #f87171; font-size: 13px;">colors.background</td>
+        <td style="padding: 8px 0; color: #22c55e; font-size: 13px;">colors.surface</td>
+      </tr>
+    </table>
+  </div>
+</div>
+</body>
+</html>

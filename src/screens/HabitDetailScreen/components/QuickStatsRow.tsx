@@ -1,11 +1,11 @@
-/** QuickStatsRow - Compact pill badges: current streak, best streak, total days */
+/** QuickStatsRow - Stats card with 3 equal columns: streak, best streak, completions */
 
 import React, { memo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { useThemeColors } from '../../../theme';
-import { borderRadius } from '../../../theme/spacing';
-import { fontFamilies } from '../../../theme/typography';
+import { borderRadius, shadows, spacing } from '../../../theme/spacing';
+import { fontFamilies, fontWeights } from '../../../theme/typography';
 
 interface QuickStatsRowProps {
   bestStreak: number;
@@ -15,44 +15,27 @@ interface QuickStatsRowProps {
 
 const ENTERING = FadeInUp.duration(280).delay(120).springify().damping(18);
 
-function StatPill({
-  activeBg,
-  activeText,
-  activeLabel,
-  emoji,
-  inactiveBg,
-  inactiveText,
-  inactiveLabel,
-  isActive,
-  label,
-  value,
-}: {
+interface StatColumnProps {
   activeBg: string;
-  activeText: string;
-  activeLabel: string;
+  activeColor: string;
+  defaultColor: string;
   emoji: string;
-  inactiveBg: string;
-  inactiveText: string;
-  inactiveLabel: string;
   isActive?: boolean;
   label: string;
+  labelColor: string;
   value: number;
-}) {
+}
+
+function StatColumn({ emoji, isActive, label, activeColor, activeBg, defaultColor, labelColor, value }: StatColumnProps) {
   return (
-    <View
-      accessibilityLabel={`${label}: ${value}`}
-      style={[
-        styles.pill,
-        { backgroundColor: isActive ? activeBg : inactiveBg },
-      ]}
-    >
-      <Text style={styles.emoji}>{emoji}</Text>
-      <Text style={[styles.value, { color: isActive ? activeText : inactiveText }]}>
+    <View accessibilityLabel={`${label}: ${value}`} style={styles.column}>
+      <View style={[styles.emojiWrap, isActive && { backgroundColor: activeBg }]}>
+        <Text style={styles.emoji}>{emoji}</Text>
+      </View>
+      <Text style={[styles.value, { color: isActive ? activeColor : defaultColor }]}>
         {value}
       </Text>
-      <Text style={[styles.label, { color: isActive ? activeLabel : inactiveLabel }]}>
-        {label}
-      </Text>
+      <Text style={[styles.label, { color: labelColor }]}>{label}</Text>
     </View>
   );
 }
@@ -63,49 +46,59 @@ export const QuickStatsRow = memo(function QuickStatsRow({
   totalCompletions,
 }: QuickStatsRowProps) {
   const { colors } = useThemeColors();
-  const pillColors = {
+  const columnColors = {
     activeBg: colors.status.successLight,
-    activeLabel: colors.status.success,
-    activeText: colors.status.successText,
-    inactiveBg: colors.card,
-    inactiveLabel: colors.text.tertiary,
-    inactiveText: colors.text.secondary,
+    activeColor: colors.status.successText,
+    defaultColor: colors.text.primary,
+    labelColor: colors.text.tertiary,
   };
 
   return (
-    <Animated.View entering={ENTERING} style={styles.row}>
-      <StatPill isActive emoji='🔥' label='streak' value={currentStreak} {...pillColors} />
-      <StatPill emoji='⭐' label='best streak' value={bestStreak} {...pillColors} />
-      <StatPill emoji='📅' label='completions' value={totalCompletions} {...pillColors} />
+    <Animated.View
+      entering={ENTERING}
+      style={[styles.card, { backgroundColor: colors.card }]}
+    >
+      <StatColumn isActive emoji='🔥' label='streak' value={currentStreak} {...columnColors} />
+      <View style={[styles.separator, { backgroundColor: colors.border }]} />
+      <StatColumn emoji='⭐' label='best streak' value={bestStreak} {...columnColors} />
+      <View style={[styles.separator, { backgroundColor: colors.border }]} />
+      <StatColumn emoji='📅' label='completions' value={totalCompletions} {...columnColors} />
     </Animated.View>
   );
 });
 
 const styles = StyleSheet.create({
-  emoji: {
-    fontSize: 12,
+  card: {
+    alignItems: 'center',
+    borderRadius: borderRadius.card,
+    flexDirection: 'row',
+    marginTop: spacing.sm,
+    ...shadows.card,
+  },
+  column: {
+    alignItems: 'center',
+    flex: 1,
+    gap: 2,
+    paddingVertical: spacing.md,
+  },
+  emoji: { fontSize: 18 },
+  emojiWrap: {
+    alignItems: 'center',
+    borderRadius: borderRadius.full,
+    height: 30,
+    justifyContent: 'center',
+    marginBottom: 2,
+    width: 30,
   },
   label: {
     fontFamily: fontFamilies.primary.text,
     fontSize: 11,
+    fontWeight: fontWeights.medium,
   },
-  pill: {
-    alignItems: 'center',
-    borderRadius: borderRadius.full,
-    flexDirection: 'row',
-    gap: 4,
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-  },
-  row: {
-    flexDirection: 'row',
-    gap: 8,
-    justifyContent: 'center',
-    paddingVertical: 8,
-  },
+  separator: { height: 32, width: 1 },
   value: {
     fontFamily: fontFamilies.monospace,
-    fontSize: 13,
-    fontWeight: '700',
+    fontSize: 20,
+    fontWeight: fontWeights.bold,
   },
 });

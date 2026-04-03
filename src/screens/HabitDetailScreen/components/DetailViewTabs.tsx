@@ -13,6 +13,7 @@ import Animated, {
 import { Activity, Calendar } from 'lucide-react-native';
 import { springs } from '@/theme/animations';
 import { useThemeColors } from '@/theme';
+import { shadows } from '@/theme/spacing';
 import { DetailViewTabButton, type DetailView } from './DetailViewTabButton';
 
 interface DetailViewTabsProps {
@@ -75,11 +76,8 @@ export function DetailViewTabs({
           indicatorStyle,
           {
             backgroundColor: indicatorBg,
-            elevation: 3,
+            ...shadows.card,
             shadowColor: accentColor,
-            shadowOffset: { height: 3, width: 0 },
-            shadowOpacity: 0.12,
-            shadowRadius: 8,
           },
         ]}
       />

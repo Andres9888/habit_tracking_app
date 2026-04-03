@@ -7,6 +7,7 @@ import { useState } from 'react';
 import { View, Text, TextInput, Keyboard } from 'react-native';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import { useThemeColors } from '../../theme';
+import { spacing } from '@/theme/spacing';
 import { buildTextInputHintProps } from '@/utils/textInputHintProps';
 
 interface NameInputSectionProps {
@@ -22,28 +23,25 @@ export function NameInputSection({
   const [isFocused, setIsFocused] = useState(false);
 
   return (
-    <View className='px-4'>
-      {/* Hero Title - 34px bold centered like Create modal */}
+    <View
+      className='items-center px-6'
+      style={{ marginBottom: 40, marginTop: spacing.xl }}
+    >
       <Animated.View
         className='mb-6'
         entering={FadeInDown.duration(280).delay(100).springify().damping(18)}
       >
         <Text
           accessibilityRole='header'
-          className='text-center font-bold'
-          style={{
-            fontSize: 34,
-            letterSpacing: -34 * 0.02,
-            lineHeight: 34 * 1.2,
-            color: colors.text.primary,
-          }}
+          className='text-center text-[22px] font-bold leading-tight'
+          style={{ color: colors.text.primary }}
         >
           Edit your habit
         </Text>
       </Animated.View>
 
       {/* Name Input */}
-      <Animated.View entering={FadeInUp.duration(280).delay(160).springify().damping(18)}>
+      <Animated.View className='w-full' entering={FadeInUp.duration(280).delay(160).springify().damping(18)}>
         <TextInput
           accessibilityLabel='Habit name'
           className='w-full rounded-2xl border-2 px-5 py-4 text-center text-[22px] font-medium'

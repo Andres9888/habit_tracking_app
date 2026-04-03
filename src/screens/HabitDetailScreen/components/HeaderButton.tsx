@@ -8,7 +8,9 @@ import Animated, {
 } from 'react-native-reanimated';
 import { triggerHaptic } from '@/utils/haptics';
 import { useThemeColors } from '../../../theme/ThemeContext';
-import { fontFamilies } from '../../../theme/typography';
+import { typography } from '../../../theme/typography';
+import { borderRadius, spacing, componentSpacing } from '../../../theme/spacing';
+import { OPACITY } from '../../../constants/ui-values';
 import { buttonShadow } from './DetailHeader.constants';
 import { springs } from '@/theme/animations';
 
@@ -61,7 +63,7 @@ export function HeaderButton({
           scale.value = withSpring(1, springs.button);
         }}
       >
-        <View style={{ opacity: 0.7 }}>
+        <View style={{ opacity: OPACITY.high }}>
           {React.cloneElement(icon as React.ReactElement<{ color: string }>, {
             color: iconColor,
           })}
@@ -91,10 +93,9 @@ export function HeaderButton({
 }
 
 const s = StyleSheet.create({
-  textButton: { alignItems: 'center', borderRadius: 24, borderWidth: 1, flexDirection: 'row', gap: 8, height: 44, paddingHorizontal: 16 },
+  textButton: { alignItems: 'center', borderRadius: borderRadius.xl, borderWidth: 1, flexDirection: 'row', gap: spacing.sm, height: componentSpacing.button.height, paddingHorizontal: spacing.base },
   textLabel: {
-    fontFamily: fontFamilies.primary.text,
-    fontSize: 14,
+    ...typography.bodySmall,
     fontWeight: '500',
     letterSpacing: -0.2,
   },

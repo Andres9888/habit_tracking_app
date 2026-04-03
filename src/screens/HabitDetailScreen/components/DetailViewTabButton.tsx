@@ -6,6 +6,7 @@
 import { Pressable, Text, View } from 'react-native';
 import type { LucideIcon } from 'lucide-react-native';
 import { useThemeColors } from '@/theme';
+import { typography, fontWeights } from '@/theme/typography';
 
 export type DetailView = 'calendar' | 'strength';
 
@@ -46,10 +47,10 @@ export function DetailViewTabButton({
         strokeWidth={isActive ? 2.5 : 2}
       />
       <Text
-        className='text-[13px]'
         style={{
+          ...typography.caption,
           color: foreground,
-          fontWeight: isActive ? '600' : '500',
+          fontWeight: isActive ? fontWeights.semibold : fontWeights.medium,
         }}
       >
         {label}
