@@ -14,6 +14,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import type { DayBarProps } from '../InsightsSection.types';
 import { DAY_LABELS_SHORT } from '../InsightsSection.constants';
+import { colors } from '@/theme';
 import { springs } from '@/theme/animations';
 import { useThemeColors } from '@/theme/ThemeContext';
 
@@ -26,10 +27,10 @@ function getBarHexColor(
   rate: number,
   colors: { gray: { 200: string; 300: string } }
 ): string {
-  if (isBest) return '#10b981'; // emerald-500
-  if (isWorst && rate < 70) return '#fbbf24'; // amber-400
-  if (rate >= 80) return '#34d399'; // emerald-400
-  if (rate >= 60) return '#60a5fa'; // blue-400
+  if (isBest) return colors.primary[500]; // emerald-500
+  if (isWorst && rate < 70) return '#fbbf24'; // amber-400 (no exact token)
+  if (rate >= 80) return colors.primary[400]; // emerald-400
+  if (rate >= 60) return colors.secondary[400]; // blue-400
   if (rate >= 40) return colors.gray[300];
   return colors.gray[200];
 }
@@ -65,14 +66,14 @@ export function DayBar({
 
   const bgHex = getBarHexColor(isBest, isWorst, dayStats.rate, colors);
   const labelColor = isBest
-    ? '#059669' // emerald-600
+    ? colors.primary[600] // emerald-600
     : isWorst
-      ? '#d97706' // amber-600
+      ? '#d97706' // amber-600 (no exact token)
       : colors.text.secondary;
   const rateColor = isBest
-    ? '#047857' // emerald-700
+    ? colors.primary[700] // emerald-700
     : isWorst
-      ? '#b45309' // amber-700
+      ? '#b45309' // amber-700 (no exact token)
       : colors.text.tertiary;
 
   return (

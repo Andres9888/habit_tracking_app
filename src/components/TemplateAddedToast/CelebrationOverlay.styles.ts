@@ -3,6 +3,7 @@
  */
 
 import { Dimensions, StyleSheet } from 'react-native';
+import { colors } from '@/theme';
 import { fontFamilies, fontWeights, typography } from '@/theme/typography';
 
 const { width: SCREEN_W } = Dimensions.get('window');
@@ -19,7 +20,7 @@ export const celebrationStyles = StyleSheet.create({
     width: SCREEN_W - 96,
   },
   actionSecondaryText: {
-    color: '#808098',
+    color: colors.gray[500],
     fontFamily: fontFamilies.primary.text,
     fontSize: 14,
     fontWeight: '600',
@@ -31,8 +32,8 @@ export const celebrationStyles = StyleSheet.create({
   },
   checkBadge: {
     alignItems: 'center',
-    backgroundColor: '#22c55e',
-    borderColor: '#1a0f30',
+    backgroundColor: colors.primary[500],
+    borderColor: colors.gray[900],
     borderRadius: 16,
     borderWidth: 3,
     bottom: 2,
@@ -71,10 +72,10 @@ export const celebrationStyles = StyleSheet.create({
   },
   primaryBtnText: {
     ...typography.button,
-    color: '#fff',
+    color: colors.text.inverse,
   },
   subtitle: {
-    color: '#808098',
+    color: colors.gray[500],
     fontFamily: fontFamilies.primary.text,
     fontSize: 14,
     lineHeight: 22,
@@ -83,7 +84,7 @@ export const celebrationStyles = StyleSheet.create({
   },
   title: {
     ...typography.heading2,
-    color: '#fff',
+    color: colors.text.inverse,
     fontWeight: fontWeights.bold,
     marginTop: 28,
     textAlign: 'center',

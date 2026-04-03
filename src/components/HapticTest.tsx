@@ -10,6 +10,8 @@ import { View, StyleSheet, ScrollView, Platform } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { Button, Text, Surface } from 'react-native-paper';
 import { useAppTheme } from '../theme';
+import { fontWeights } from '../theme/typography';
+import { spacing } from '../theme/spacing';
 import { triggerHaptic } from '@/utils/haptics';
 
 export function HapticTest() {
@@ -221,7 +223,7 @@ const styles = StyleSheet.create({
     opacity: 0.8,
   },
   sectionTitle: {
-    fontWeight: 'bold',
+    fontWeight: fontWeights.bold,
     marginBottom: 12,
     marginTop: 24,
   },
@@ -232,7 +234,7 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   statusLabel: {
-    fontWeight: 'bold',
+    fontWeight: fontWeights.bold,
     marginBottom: 4,
   },
   statusText: {
@@ -245,7 +247,7 @@ const styles = StyleSheet.create({
   },
   surface: {
     borderRadius: 12,
-    padding: 20,
+    padding: spacing.lg,
   },
   title: {
     marginBottom: 8,

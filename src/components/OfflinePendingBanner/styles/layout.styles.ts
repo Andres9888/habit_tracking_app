@@ -11,7 +11,7 @@ export const layoutStyles = StyleSheet.create({
     paddingVertical: 12,
   },
   container: {
-    backgroundColor: '#F4F4F5',
+    backgroundColor: colors.gray[50],
     borderRadius: 12,
     marginHorizontal: 16,
     marginVertical: 8,

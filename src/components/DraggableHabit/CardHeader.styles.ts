@@ -1,6 +1,7 @@
 /** Style helpers for CardHeader — icon container, title overlay, and chevron color. */
 
 import { ViewStyle } from 'react-native';
+import { colors } from '@/theme';
 
 /** Build the icon container style with accent-tinted shadow and high-contrast border. */
 export function getIconContainerStyle(
@@ -10,7 +11,7 @@ export function getIconContainerStyle(
 ): ViewStyle {
   return {
     backgroundColor: iconBg,
-    borderColor: highContrastMode ? '#111111' : 'rgba(0,0,0,0.04)',
+    borderColor: highContrastMode ? colors.gray[900] : 'rgba(0,0,0,0.04)',
     borderWidth: highContrastMode ? 2 : 1,
     shadowColor: accentColor,
     shadowOffset: { height: 0, width: 0 },
@@ -31,5 +32,5 @@ export const TITLE_OVERLAY_STYLE: ViewStyle = {
 };
 
 export function getChevronColor(highContrastMode: boolean): string {
-  return highContrastMode ? '#facc15' : '#a8a29e';
+  return highContrastMode ? colors.streak[300] : colors.gray[300];
 }

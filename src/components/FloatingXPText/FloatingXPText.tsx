@@ -21,6 +21,7 @@ import Animated, {
   runOnJS,
 } from 'react-native-reanimated';
 import { useReduceMotion } from '../../hooks/useReduceMotion';
+import { colors } from '@/theme';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { fontFamilies } from '@/theme/typography';
 
@@ -114,7 +115,7 @@ export function FloatingXPText({
         <Animated.Text
           style={[
             styles.xpText,
-            isDark && { color: '#34D399', textShadowColor: '#34D399' },
+            isDark && { color: colors.primary[400], textShadowColor: colors.primary[400] },
           ]}
         >
           +{value} XP
@@ -140,11 +141,11 @@ const styles = StyleSheet.create({
     zIndex: 1000,
   },
   xpText: {
-    color: '#047857',
+    color: colors.primary[700],
     fontFamily: fontFamilies.primary.text,
     fontSize: 17,
     fontWeight: '600', // Green 700 (WCAG AA compliant text)
-    textShadowColor: '#10B981',
+    textShadowColor: colors.primary[500],
     textShadowOffset: { height: 0, width: 0 },
     textShadowRadius: 8,
   },

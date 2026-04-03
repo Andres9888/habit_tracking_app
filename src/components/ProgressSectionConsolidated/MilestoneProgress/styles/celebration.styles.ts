@@ -1,11 +1,12 @@
 import { StyleSheet } from 'react-native';
-import { typography, fontFamilies} from '@/theme/typography';
+import { colors } from '@/theme';
+import { typography, fontFamilies } from '@/theme/typography';
 
 export const celebrationStyles = StyleSheet.create({
   celebrationContainer: {
     alignItems: 'center',
-    backgroundColor: '#fefce8', // amber-50
-    borderColor: '#fbbf24', // amber-400
+    backgroundColor: colors.warningLight,
+    borderColor: colors.streak[300],
     borderWidth: 1,
   },
   celebrationContent: {
@@ -17,20 +18,20 @@ export const celebrationStyles = StyleSheet.create({
     marginBottom: 4,
   },
   celebrationSubtext: {
-    color: '#92400e', // amber-800
+    color: colors.warning,
     fontFamily: fontFamilies.primary.text,
     fontSize: 13,
     fontWeight: '500',
   },
   celebrationTitle: {
-    color: '#78350f', // amber-900
+    color: colors.warning,
     fontFamily: fontFamilies.primary.text,
     fontSize: typography.body.fontSize,
     fontWeight: '700',
     marginBottom: 2,
   },
   nextMilestoneText: {
-    color: '#92400e', // amber-800
+    color: colors.warning,
     fontFamily: fontFamilies.primary.text,
     fontSize: typography.caption.fontSize,
     marginTop: 8,

@@ -2,7 +2,8 @@ import { View, Text, StyleSheet } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useThemeColors } from '../../../theme/ThemeContext';
-import { spacing, borderRadius } from '../../../theme/spacing';
+import { spacing, borderRadius, shadows } from '../../../theme/spacing';
+import { fontWeights } from '../../../theme/typography';
 import type { AttributeCardProps } from '../types';
 
 export function AttributeCard({
@@ -89,12 +90,10 @@ const styles = StyleSheet.create({
     top: 0,
   },
   card: {
+    ...shadows.floatingActionButton,
     borderRadius: borderRadius.xl,
     borderWidth: 1,
     overflow: 'hidden',
-    shadowOffset: { height: 4, width: 0 },
-    shadowOpacity: 0.08,
-    shadowRadius: 16,
   },
   contentCol: {
     flexDirection: 'column',
@@ -121,7 +120,7 @@ const styles = StyleSheet.create({
   },
   nameText: {
     fontSize: 16,
-    fontWeight: '400',
+    fontWeight: fontWeights.regular,
     letterSpacing: -0.3125,
     lineHeight: 24,
   },
@@ -138,7 +137,7 @@ const styles = StyleSheet.create({
   },
   valueText: {
     fontSize: 16,
-    fontWeight: '400',
+    fontWeight: fontWeights.regular,
     letterSpacing: -0.3125,
     lineHeight: 24,
   },

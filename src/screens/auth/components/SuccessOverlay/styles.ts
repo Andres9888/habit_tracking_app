@@ -1,20 +1,21 @@
 import { StyleSheet } from 'react-native';
-import { fontFamilies } from '@/theme/typography';
+import { colors } from '@/theme';
+import { fontFamilies, fontWeights } from '@/theme/typography';
 
 export const styles = StyleSheet.create({
   checkmark: {
     alignItems: 'center',
-    backgroundColor: '#10b981',
+    backgroundColor: colors.primary[500],
     borderRadius: 24,
     height: 80,
     justifyContent: 'center',
     width: 80,
   },
   checkmarkText: {
-    color: '#ffffff',
+    color: colors.text.inverse,
     fontFamily: fontFamilies.primary.text,
     fontSize: 34,
-    fontWeight: 'bold',
+    fontWeight: fontWeights.bold,
   },
   content: {
     alignItems: 'center',
@@ -34,7 +35,7 @@ export const styles = StyleSheet.create({
     zIndex: 100,
   },
   ring: {
-    borderColor: '#10b981',
+    borderColor: colors.primary[500],
     borderRadius: 9999,
     borderWidth: 3,
     height: 100,
@@ -42,10 +43,10 @@ export const styles = StyleSheet.create({
     width: 100,
   },
   successText: {
-    color: '#1c1917',
+    color: colors.gray[900],
     fontFamily: fontFamilies.primary.display,
     fontSize: 22,
-    fontWeight: '700',
+    fontWeight: fontWeights.bold,
     letterSpacing: 0.5,
     marginTop: 24,
   },

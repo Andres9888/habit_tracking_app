@@ -5,11 +5,11 @@ import { fontFamilies } from '../../../theme/typography';;
 
 export const controlsStyles = StyleSheet.create({
   progressBar: {
-    backgroundColor: '#0EA5E9',
+    backgroundColor: colors.info,
     height: '100%',
   },
   progressContainer: {
-    backgroundColor: '#E4E4E7',
+    backgroundColor: colors.gray[200],
     bottom: 0,
     height: 3,
     left: 0,
@@ -17,14 +17,14 @@ export const controlsStyles = StyleSheet.create({
     right: 0,
   },
   subtitle: {
-    color: '#71717A',
+    color: colors.gray[500],
     fontFamily: fontFamilies.primary.text,
     fontSize: 13,
     marginTop: 2,
   },
   syncButton: {
     alignItems: 'center',
-    backgroundColor: '#0EA5E9',
+    backgroundColor: colors.info,
     borderRadius: 16,
     flexDirection: 'row',
     paddingHorizontal: 12,
@@ -38,7 +38,7 @@ export const controlsStyles = StyleSheet.create({
     marginLeft: 4,
   },
   title: {
-    color: '#27272A',
+    color: colors.gray[800],
     fontFamily: fontFamilies.primary.text,
     fontSize: 17,
     fontWeight: '600',

@@ -7,9 +7,10 @@ import { View, Text } from 'react-native';
 import { BarChart3, Sparkles } from 'lucide-react-native';
 import Animated from 'react-native-reanimated';
 import { useThemeColors } from '../../../theme/ThemeContext';
-import { fontFamilies } from '../../../theme/typography';
+import { fontFamilies, typography, fontWeights } from '../../../theme/typography';
 import { useReducedMotionEntry } from '../../../components/EmptyState/useReducedMotionEntry';
 import { colors as themeColors } from '../../../theme/colors';
+import { spacing, shadows } from '../../../theme/spacing';
 
 export const EmptyState: React.FC = () => {
   const { colors, isDark } = useThemeColors();
@@ -48,8 +49,8 @@ export const EmptyState: React.FC = () => {
         style={{
           color: colors.text.primary,
           fontFamily: fontFamilies.primary.display,
-          fontSize: 22,
-          fontWeight: '700',
+          fontSize: typography.heading1.fontSize,
+          fontWeight: fontWeights.bold,
           letterSpacing: -0.5,
           marginBottom: 8,
           textAlign: 'center',
@@ -64,7 +65,7 @@ export const EmptyState: React.FC = () => {
         style={{
           color: colors.text.secondary,
           fontFamily: fontFamilies.primary.text,
-          fontSize: 17,
+          fontSize: typography.body.fontSize,
           lineHeight: 22,
           marginBottom: 32,
           maxWidth: 280,
@@ -79,19 +80,17 @@ export const EmptyState: React.FC = () => {
       <Animated.View
         entering={entry(150)}
         style={{
+          ...shadows.floatingActionButton,
           backgroundColor: colors.card,
           borderRadius: 16,
-          padding: 20,
+          padding: spacing.lg,
           shadowColor: colors.text.primary,
-          shadowOffset: { height: 4, width: 0 },
-          shadowOpacity: 0.08,
-          shadowRadius: 16,
           width: '100%',
         }}
       >
         <View style={{ alignItems: 'center', flexDirection: 'row', gap: 8, marginBottom: 12 }}>
           <Sparkles color={isDark ? themeColors.streak[300] : themeColors.streak[500]} size={16} />
-          <Text style={{ color: isDark ? themeColors.streak[300] : themeColors.streak[500], fontFamily: fontFamilies.primary.text, fontSize: 13, fontWeight: '600' }}>
+          <Text style={{ color: isDark ? themeColors.streak[300] : themeColors.streak[500], fontFamily: fontFamilies.primary.text, fontSize: typography.caption.fontSize, fontWeight: fontWeights.semibold }}>
             GET STARTED
           </Text>
         </View>
@@ -119,11 +118,11 @@ function StepItem({ number, text, colors }: { number: string; text: string; colo
           width: 28,
         }}
       >
-        <Text style={{ color: colors.text.secondary, fontFamily: fontFamilies.primary.text, fontSize: 13, fontWeight: '600' }}>
+        <Text style={{ color: colors.text.secondary, fontFamily: fontFamilies.primary.text, fontSize: typography.caption.fontSize, fontWeight: fontWeights.semibold }}>
           {number}
         </Text>
       </View>
-      <Text style={{ color: colors.text.primary, fontFamily: fontFamilies.primary.text, fontSize: 17 }}>{text}</Text>
+      <Text style={{ color: colors.text.primary, fontFamily: fontFamilies.primary.text, fontSize: typography.body.fontSize }}>{text}</Text>
     </View>
   );
 }

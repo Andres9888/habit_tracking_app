@@ -4,8 +4,9 @@
 
 import { StyleSheet } from 'react-native';
 
+import { colors } from '@/theme';
 import { shadows, borderRadius } from '../../theme/spacing';
-import { typography, fontFamilies} from '@/theme/typography';
+import { typography, fontFamilies } from '@/theme/typography';
 import { useThemeColors } from '@/theme/ThemeContext';
 import { COLORS, FOCUS } from './constants';
 
@@ -20,7 +21,7 @@ export const styles = StyleSheet.create({
   },
   buttonActive: {
     ...shadows.subtle,
-    backgroundColor: '#ffffff', // overridden by useThemedToggleStyles
+    backgroundColor: colors.light.surfaceMuted, // overridden by useThemedToggleStyles
     shadowOpacity: 0.1,
   },
   buttonText: {
@@ -35,7 +36,7 @@ export const styles = StyleSheet.create({
     color: COLORS.TEXT_SECONDARY,
   },
   container: {
-    backgroundColor: '#f5f5f4', // overridden by useThemedToggleStyles
+    backgroundColor: colors.gray[50], // overridden by useThemedToggleStyles
     borderRadius: borderRadius.small,
     flexDirection: 'row',
     padding: 2,

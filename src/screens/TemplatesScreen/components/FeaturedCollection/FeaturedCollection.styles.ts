@@ -3,6 +3,7 @@
  */
 
 import { StyleSheet } from 'react-native';
+import { colors } from '@/theme';
 import { borderRadius, shadows, spacing } from '../../../../theme/spacing';
 import { fontWeights, typography } from '../../../../theme/typography';
 
@@ -16,7 +17,7 @@ export const s = StyleSheet.create({
   },
   badgeText: {
     ...typography.tabBar,
-    color: '#FFFFFF',
+    color: colors.text.inverse,
     fontWeight: fontWeights.bold,
     letterSpacing: 0.5,
   },
@@ -26,7 +27,7 @@ export const s = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 4,
   },
-  chipText: { color: '#FFFFFF', fontSize: 13 },
+  chipText: { color: colors.text.inverse, fontSize: 13 },
   chips: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginTop: 16 },
   circleOne: {
     backgroundColor: 'rgba(255,255,255,0.08)',
@@ -55,7 +56,7 @@ export const s = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 8,
   },
-  ctaText: { ...typography.bodySmall, color: '#FFFFFF', fontWeight: fontWeights.bold },
+  ctaText: { ...typography.bodySmall, color: colors.text.inverse, fontWeight: fontWeights.bold },
   description: {
     color: 'rgba(255,255,255,0.85)',
     fontSize: 14,
@@ -78,7 +79,7 @@ export const s = StyleSheet.create({
   },
   title: {
     ...typography.heading2,
-    color: '#FFFFFF',
+    color: colors.text.inverse,
     letterSpacing: -0.5,
     marginTop: 12,
   },

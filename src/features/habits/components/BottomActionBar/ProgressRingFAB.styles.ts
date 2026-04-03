@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { colors } from '@/theme';
 import { shadows } from '../../../../theme/spacing';
 
 export const RING_SIZE = 64;
@@ -18,7 +19,7 @@ export const GLOW_SHADOW_BASE = {
 };
 
 export const DARK_FAB_SHADOW = {
-  shadowColor: '#059669',
+  shadowColor: colors.primary[600],
   shadowOffset: { width: 0, height: 4 },
   shadowOpacity: 0.25,
   shadowRadius: 20,

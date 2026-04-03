@@ -12,6 +12,7 @@ import { ChevronRight } from 'lucide-react-native';
 import ReAnimated, { useAnimatedStyle } from 'react-native-reanimated';
 import type { SharedValue } from 'react-native-reanimated';
 import { PhaseTag } from '../PhaseTag';
+import { colors } from '@/theme';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { getIconBackground } from './colorUtils';
 import type { CardColors, Habit } from './types';
@@ -89,7 +90,7 @@ export function CardHeader({
           {isPaused ? (
             <View
               className='rounded-full px-2 py-0.5'
-              style={{ backgroundColor: '#8b5cf6' }}
+              style={{ backgroundColor: colors.premium[400] }}
             >
               <Text className='text-[11px] font-semibold text-white'>
                 Paused

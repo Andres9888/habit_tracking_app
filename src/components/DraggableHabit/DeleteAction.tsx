@@ -1,6 +1,7 @@
 import React from 'react';
 import { Animated, Pressable, View, Text } from 'react-native';
 import { Trash2 } from 'lucide-react-native';
+import { colors } from '@/theme';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { borderRadius } from '../../theme/spacing';
 import { typography, fontFamilies } from '@/theme/typography';
@@ -32,7 +33,7 @@ export function DeleteAction({ dragX, onPress }: DeleteActionProps) {
       onPress={onPress}
       style={{
         alignItems: 'center',
-        backgroundColor: isDark ? '#991b1b' : '#dc2626',
+        backgroundColor: colors.error,
         height: '100%',
         justifyContent: 'center',
         width: 80,

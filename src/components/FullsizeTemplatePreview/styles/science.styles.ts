@@ -4,15 +4,16 @@
 
 import { StyleSheet } from 'react-native';
 
-import { borderRadius } from '../../../theme/spacing';
-import { typography, fontFamilies} from '@/theme/typography';
+import { colors } from '@/theme';
+import { borderRadius, spacing } from '../../../theme/spacing';
+import { typography, fontFamilies } from '@/theme/typography';
 
 export const scienceStyles = StyleSheet.create({
   researchLinkButton: {
     alignItems: 'center',
     alignSelf: 'flex-start',
-    backgroundColor: '#EFF6FF',
-    borderColor: '#BFDBFE',
+    backgroundColor: colors.secondary[100],
+    borderColor: colors.secondary[100],
     borderRadius: borderRadius.medium,
     borderWidth: 1,
     flexDirection: 'row',
@@ -22,22 +23,22 @@ export const scienceStyles = StyleSheet.create({
     paddingVertical: 12,
   },
   researchLinkText: {
-    color: '#2563EB',
+    color: colors.secondary[600],
     fontFamily: fontFamilies.primary.text,
     fontSize: typography.bodySmall.fontSize,
     fontWeight: '600',
   },
   scienceBox: {
-    backgroundColor: '#f0fdf4',
-    borderColor: '#bbf7d0',
+    backgroundColor: colors.primary[100],
+    borderColor: colors.primary[100],
     borderRadius: borderRadius.large,
     borderWidth: 2,
-    marginHorizontal: 20,
-    marginTop: 24,
-    padding: 20,
+    marginHorizontal: spacing.lg,
+    marginTop: spacing.lg,
+    padding: spacing.lg,
   },
   scienceDivider: {
-    backgroundColor: '#bbf7d0',
+    backgroundColor: colors.primary[100],
     height: 1,
     marginBottom: 12,
   },
@@ -51,7 +52,7 @@ export const scienceStyles = StyleSheet.create({
     fontSize: typography.heading2.fontSize,
   },
   scienceLabel: {
-    color: '#166534',
+    color: colors.primary[700],
     fontFamily: fontFamilies.primary.text,
     fontSize: typography.caption.fontSize,
     fontWeight: '700',
@@ -59,7 +60,7 @@ export const scienceStyles = StyleSheet.create({
     textTransform: 'uppercase',
   },
   scienceQuote: {
-    color: '#166534',
+    color: colors.primary[700],
     fontFamily: fontFamilies.primary.text,
     fontSize: 13,
     fontStyle: 'italic',

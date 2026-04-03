@@ -6,7 +6,7 @@
 import { StyleSheet } from 'react-native';
 import { colors } from '../../theme/colors';
 import { spacing, borderRadius } from '@/theme/spacing';
-import { fontFamilies, typography } from '@/theme/typography';
+import { fontFamilies, fontWeights, typography } from '@/theme/typography';
 import { REDESIGN_COLORS } from './HabitCard.colors';
 
 export const statusStyles = StyleSheet.create({
@@ -46,7 +46,7 @@ export const statusStyles = StyleSheet.create({
     color: colors.text.inverse,
     fontFamily: fontFamilies.primary.text,
     fontSize: typography.bodySmall.fontSize,
-    fontWeight: 'bold',
+    fontWeight: fontWeights.bold,
   },
   statusContainer: {
     alignItems: 'center',
