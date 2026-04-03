@@ -32,10 +32,13 @@ export const getComplianceData = query({
     const activeHabits = habits.filter((h) => !h.archived && !h.paused);
     const habitIds = new Set(activeHabits.map((h) => h._id));
 
-    // PERF: Single query for all user's tracking records instead of N queries
+    // PERF: Limit tracking query to 90-day window instead of loading all records
+    const ninetyDaysAgoStr = getDateString(getDaysAgo(89));
     const allTrackings = await ctx.db
       .query('tracking')
-      .withIndex('by_user_and_date', (q) => q.eq('userId', identity.subject))
+      .withIndex('by_user_and_date', (q) =>
+        q.eq('userId', identity.subject).gte('date', ninetyDaysAgoStr)
+      )
       .collect();
 
     // Filter to only active habits

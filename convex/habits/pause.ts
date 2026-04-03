@@ -4,6 +4,8 @@
  */
 import { v } from 'convex/values';
 import { mutation, query } from '../_generated/server';
+import type { MutationCtx } from '../_generated/server';
+import type { Id } from '../_generated/dataModel';
 import { calculateStreakFromHistory } from '../streakUtils';
 import { fullHabitValidator } from './types';
 import { getTodayForTimezone, maxDateKey } from './utils';
@@ -13,8 +15,8 @@ import { calculateMomentumStrengthSnapshot } from '../habitStrength';
  * Internal function to recalculate streak and strength after pause/resume
  */
 async function recalculateOnPauseChange(
-  ctx: unknown,
-  habitId: unknown,
+  ctx: MutationCtx,
+  habitId: Id<'habits'>,
   timezone?: string
 ): Promise<void> {
   const habit = await ctx.db.get(habitId);
@@ -32,7 +34,7 @@ async function recalculateOnPauseChange(
   }
   const evaluationDateKey = maxDateKey(today, maxTrackingDateKey);
 
-  const tracking = allTracking.map((r: unknown) => ({ completed: r.completed, date: r.date }));
+  const tracking = allTracking.map((r) => ({ completed: r.completed, date: r.date }));
   const snapshot = calculateMomentumStrengthSnapshot({
     habitCreatedAt: habit.createdAt,
     throughDate: evaluationDateKey,
@@ -143,13 +145,8 @@ export const resume = mutation({
 export const listPaused = query({
   args: {},
   handler: async (ctx) => {
-    // SEC-001: Authentication check
     const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
-      throw new Error('Unauthenticated: Must be logged in to view paused habits');
-    }
-
-    // SEC-001: Return only the user's paused habits
+    if (!identity) return [];
     return await ctx.db
       .query('habits')
       .withIndex('by_userId', (q) => q.eq('userId', identity.subject))

@@ -112,9 +112,10 @@ export const deleteCurrentUserData = mutation({
       .query('deletedHabits')
       .withIndex('by_userId', (q) => q.eq('userId', userId))
       .collect();
-    const templateUsage = (
-      await ctx.db.query('templateUsage').collect()
-    ).filter((entry) => entry.userId === userId);
+    const templateUsage = await ctx.db
+      .query('templateUsage')
+      .withIndex('by_user', (q) => q.eq('userId', userId))
+      .collect();
 
     const deletedTemplateUsage = await deleteDocuments(
       ctx,
