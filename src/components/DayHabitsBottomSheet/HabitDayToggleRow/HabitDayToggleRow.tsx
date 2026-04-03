@@ -3,6 +3,8 @@ import { memo, useCallback, useState } from 'react';
 import { Animated, Pressable, Text, View } from 'react-native';
 import { useThemeColors } from '@/theme/ThemeContext';
 
+import { getEmojiAndName } from '@/components/DraggableHabit/DraggableHabit.hooks';
+
 import { Checkbox } from './Checkbox';
 import type { HabitDayToggleRowProps } from './types';
 import { useToggleAnimations } from './useToggleAnimations';
@@ -29,6 +31,8 @@ function HabitDayToggleRowComponent({
   const { scaleAnim, checkScaleAnim, animateCheckbox, animatePressEffect } =
     useToggleAnimations({ isCompleted, reduceMotion });
 
+  const { name: displayName } = getEmojiAndName(habit.name);
+
   const handlePress = useCallback(async () => {
     if (isLoading || isToggling) return;
 
@@ -52,7 +56,7 @@ function HabitDayToggleRowComponent({
     onToggle,
   ]);
 
-  const accessibilityLabel = `${habit.name}, ${isCompleted ? 'completed' : 'not completed'}`;
+  const accessibilityLabel = `${displayName}, ${isCompleted ? 'completed' : 'not completed'}`;
 
   return (
     <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
@@ -81,7 +85,7 @@ function HabitDayToggleRowComponent({
           ellipsizeMode='tail'
           numberOfLines={2}
         >
-          {habit.name}
+          {displayName}
         </Text>
 
         <Checkbox
