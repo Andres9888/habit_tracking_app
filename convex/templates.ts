@@ -36,6 +36,7 @@ const requireAuthenticatedUser = async (
 // ─────────────────────────────────────────────────────────────────────────────
 export {
   getById,
+  getImportedTemplateIds,
   getPopular,
   getTemplateCount,
   getUsageStats,

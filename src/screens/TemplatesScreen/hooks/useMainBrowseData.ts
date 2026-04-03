@@ -11,7 +11,7 @@ import { PREMIUM_PACKS } from '../data/premiumPacks';
 import type { CategoryMeta } from '../data/categoryMeta';
 import { CATEGORY_META } from '../data/categoryMeta';
 
-const POPULAR_LIMIT = 5;
+const POPULAR_LIMIT = 10;
 const PREVIEW_EMOJI_LIMIT = 4;
 
 interface UseMainBrowseDataOptions {

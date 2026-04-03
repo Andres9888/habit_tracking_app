@@ -40,6 +40,17 @@ export const importTemplate = mutation({
       throw new Error('Template not found');
     }
 
+    // Duplicate prevention: check if user already imported this template
+    const existing = await ctx.db
+      .query('templateUsage')
+      .withIndex('by_user_template', (q) =>
+        q.eq('userId', userId).eq('templateId', args.templateId)
+      )
+      .first();
+    if (existing) {
+      return { alreadyExists: true, habitId: existing.habitId, success: true };
+    }
+
     // SEC-003: Input validation - name customization
     let validatedName = template.name;
     if (args.customizations?.name !== undefined) {

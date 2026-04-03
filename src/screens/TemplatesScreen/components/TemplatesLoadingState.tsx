@@ -21,7 +21,7 @@ export function TemplatesLoadingState() {
             letterSpacing: -0.35,
           }}
         >
-          Import Habits
+          Habit Library
         </Text>
         <Text
           style={{

@@ -33,7 +33,7 @@ export function SeeAllView({
       />
       <FlatList
         data={templates}
-        contentContainerStyle={{ paddingBottom: 100, paddingHorizontal: spacing.base }}
+        contentContainerStyle={{ paddingBottom: 100 }}
         keyExtractor={(item) => item._id}
         renderItem={({ item, index }) => (
           <Animated.View entering={FadeInDown.delay(index * durations.stagger).duration(durations.enter).springify().damping(springs.standard.damping)}>

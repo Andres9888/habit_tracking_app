@@ -61,12 +61,28 @@ export function useTemplatesData() {
   const allTemplates = useQuery(api.templates.list, {});
   const userHabits = useQuery(api.habits.list);
   const settings = useQuery(api.settings.get);
+  const hasImportedIdsQuery = 'getImportedTemplateIds' in api.templates;
+  // Query only available after `npx convex dev` deploys the new function
+  const importedIds = useQuery(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    hasImportedIdsQuery ? (api.templates as any).getImportedTemplateIds : api.templates.list,
+    hasImportedIdsQuery ? {} : 'skip'
+  );
   const isLoading = allTemplates === undefined;
   const userHabitCount = userHabits?.length ?? 0;
   const isPremiumUser = settings?.hasPremium ?? false;
   const categories = useMemo(
     () => getCategoriesFromTemplates(allTemplates),
     [allTemplates]
+  );
+
+  const initialImportedIds = useMemo(
+    () => new Set(
+      hasImportedIdsQuery && Array.isArray(importedIds)
+        ? importedIds.map(String)
+        : []
+    ),
+    [hasImportedIdsQuery, importedIds]
   );
 
   const importTemplate = useMutation(api.templates.importTemplate);
@@ -76,6 +92,7 @@ export function useTemplatesData() {
     allTemplates,
     categories,
     importTemplate,
+    initialImportedIds,
     isLoading,
     isPremiumUser,
     seedTemplates,

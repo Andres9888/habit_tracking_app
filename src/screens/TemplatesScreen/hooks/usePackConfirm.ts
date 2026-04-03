@@ -27,8 +27,9 @@ export function usePackConfirm(o: PackConfirmOptions) {
 
   const handleConfirm = useCallback(async () => {
     if (!selectedPack || !o.allTemplates) return;
-    const names = new Set(selectedPack.habits.map((h) => h.name));
-    const matches = o.allTemplates.filter((t) => names.has(t.name));
+    const normalize = (s: string) => s.trim().toLowerCase();
+    const names = new Set(selectedPack.habits.map((h) => normalize(h.name)));
+    const matches = o.allTemplates.filter((t) => names.has(normalize(t.name)));
     let count = 0;
     for (const t of matches) {
       try {
