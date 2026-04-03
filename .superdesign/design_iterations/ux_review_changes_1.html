@@ -1,0 +1,1161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ChainDay UX Review — Proposed Changes</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Literata:wght@400;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  :root {
+    --bg: #F5F1ED;
+    --surface: #FFFFFF;
+    --primary: #059669;
+    --primary-dark: #047857;
+    --gray-50: #FAF8F5;
+    --gray-100: #F5F0EB;
+    --gray-200: #E8E2DB;
+    --gray-300: #D6D0C8;
+    --gray-400: #A8A29E;
+    --gray-500: #57534E;
+    --gray-600: #44403C;
+    --gray-700: #292524;
+    --gray-800: #1C1917;
+    --gray-900: #1A1816;
+    --error: #EF4444;
+    --warning: #F59E0B;
+    --premium: #7B52C4;
+    --streak: #8B6208;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif !important;
+    background: #1A1816 !important;
+    color: #FAF8F5 !important;
+    padding: 32px !important;
+    line-height: 1.5 !important;
+  }
+
+  h1, h2, h3 { font-family: 'Literata', serif !important; }
+
+  .phone-frame {
+    width: 375px;
+    height: 700px;
+    border-radius: 40px;
+    border: 3px solid #44403C;
+    overflow: hidden;
+    position: relative;
+    flex-shrink: 0;
+    background: var(--bg);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+  }
+
+  .phone-frame.dark {
+    background: #1C1917;
+  }
+
+  .phone-notch {
+    width: 150px;
+    height: 28px;
+    background: #000;
+    border-radius: 0 0 20px 20px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 10;
+  }
+
+  .phone-content {
+    padding: 8px 16px 16px;
+    height: calc(100% - 28px);
+    overflow-y: auto;
+    scrollbar-width: none;
+  }
+
+  .phone-content::-webkit-scrollbar { display: none; }
+
+  .before-after {
+    display: flex;
+    gap: 32px;
+    align-items: flex-start;
+  }
+
+  .label-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 9999px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .badge-before { background: #44403C; color: #A8A29E; }
+  .badge-after { background: #059669; color: #fff; }
+  .badge-p0 { background: #EF4444; color: #fff; }
+  .badge-p1 { background: #F59E0B; color: #1C1917; }
+
+  .change-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    color: var(--primary);
+    font-size: 28px;
+    flex-shrink: 0;
+    align-self: center;
+  }
+
+  .section-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #44403C, transparent);
+    margin: 48px 0;
+  }
+
+  .habit-card {
+    background: var(--surface);
+    border-radius: 16px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 8px rgba(45,42,38,0.08);
+    position: relative;
+  }
+
+  .habit-card.dark-card {
+    background: #292524;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  }
+
+  .accent-bar {
+    position: absolute;
+    left: 0;
+    top: 12px;
+    bottom: 12px;
+    width: 4px;
+    border-radius: 0 4px 4px 0;
+  }
+
+  .chain-dot {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    margin-right: 3px;
+  }
+
+  .chain-filled { background: var(--primary); color: white; }
+  .chain-empty { background: #E8E2DB; color: #A8A29E; }
+  .chain-today { background: var(--primary); color: white; box-shadow: 0 0 0 3px rgba(5,150,105,0.25); }
+
+  .modal-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 20;
+    backdrop-filter: blur(4px);
+  }
+
+  .modal-card {
+    background: var(--surface);
+    border-radius: 16px;
+    padding: 24px;
+    margin: 24px;
+    width: calc(100% - 48px);
+    box-shadow: 0 16px 48px rgba(0,0,0,0.2);
+  }
+
+  .highlight-box {
+    border: 2px dashed var(--primary);
+    border-radius: 12px;
+    padding: 8px;
+    position: relative;
+  }
+
+  .highlight-label {
+    position: absolute;
+    top: -10px;
+    left: 12px;
+    background: var(--primary);
+    color: white;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .stats-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 12px;
+    border-radius: 9999px;
+    font-size: 13px;
+    background: var(--gray-50);
+  }
+
+  .lock-icon {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--premium);
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .premium-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    background: linear-gradient(135deg, #7B52C4, #9333EA);
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 13px;
+    color: var(--gray-400);
+    padding: 8px 0;
+  }
+
+  .breadcrumb-active { color: var(--gray-700); font-weight: 600; }
+
+  .achievement-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border-radius: 12px;
+    margin-bottom: 8px;
+  }
+
+  .achievement-badge {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+  }
+
+  .title-level {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 500;
+  }
+
+  .export-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 18px;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+  }
+
+  .toast-bar {
+    position: absolute;
+    bottom: 80px;
+    left: 16px;
+    right: 16px;
+    border-radius: 12px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 15;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+  }
+
+  .paywall-context-toast {
+    background: #FEF3C7;
+    color: #92400E;
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+
+  @keyframes pulse-ring {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(5,150,105,0.3); }
+    50% { box-shadow: 0 0 0 6px rgba(5,150,105,0); }
+  }
+
+  .today-pulse { animation: pulse-ring 2s ease-in-out infinite; }
+
+  .nav-section { margin-bottom: 64px; }
+
+  .annotation {
+    font-size: 12px;
+    color: #A8A29E;
+    font-style: italic;
+    margin-top: 6px;
+    line-height: 1.4;
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div style="max-width: 1400px; margin: 0 auto 48px;">
+  <h1 style="font-size: 36px; font-weight: 700; margin-bottom: 8px; color: #FAF8F5;">
+    ChainDay — Proposed UX Changes
+  </h1>
+  <p style="font-size: 16px; color: #A8A29E; margin-bottom: 24px;">
+    Before/After mocks for P0 and P1 findings from the comprehensive UX review
+  </p>
+  <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+    <span class="label-badge badge-p0">8 P0 Critical</span>
+    <span class="label-badge badge-p1">20 P1 High</span>
+    <span class="label-badge" style="background: #292524; color: #D6D0C8;">15 Quick Wins</span>
+  </div>
+</div>
+
+<!-- ========================================== -->
+<!-- CHANGE 1: Unsaved Changes Warning (P0) -->
+<!-- ========================================== -->
+<div class="nav-section" style="max-width: 1400px; margin: 0 auto;">
+  <div style="margin-bottom: 24px;">
+    <span class="label-badge badge-p0">P0</span>
+    <h2 style="font-size: 24px; margin-top: 12px; color: #FAF8F5;">1. Unsaved Changes Warning</h2>
+    <p style="color: #A8A29E; font-size: 14px; margin-top: 4px;">CreateHabitModal & HabitEditScreen — swipe-dismiss loses all form data without warning</p>
+  </div>
+
+  <div class="before-after">
+    <!-- BEFORE -->
+    <div>
+      <span class="label-badge badge-before" style="margin-bottom: 12px; display: block; width: fit-content;">Before</span>
+      <div class="phone-frame">
+        <div class="phone-notch"></div>
+        <div class="phone-content">
+          <!-- Edit Screen -->
+          <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0;">
+            <span style="font-size: 15px; color: var(--gray-400);">Cancel</span>
+            <span style="font-size: 17px; font-weight: 600; color: var(--gray-800);">Edit Habit</span>
+            <span style="font-size: 15px; font-weight: 600; color: var(--primary);">Save</span>
+          </div>
+
+          <div style="margin-top: 16px;">
+            <label style="font-size: 13px; color: var(--gray-400); text-transform: uppercase; letter-spacing: 0.05em;">Name</label>
+            <div style="background: var(--gray-50); border-radius: 12px; padding: 14px 16px; margin-top: 6px; border: 1.5px solid var(--primary);">
+              <span style="font-size: 17px; color: var(--gray-800);">Morning Meditation</span>
+            </div>
+            <span style="font-size: 12px; color: var(--gray-400); float: right; margin-top: 4px;">20/50</span>
+          </div>
+
+          <div style="margin-top: 32px;">
+            <label style="font-size: 13px; color: var(--gray-400); text-transform: uppercase;">Emoji</label>
+            <div style="display: flex; gap: 8px; margin-top: 8px;">
+              <div style="width: 44px; height: 44px; border-radius: 12px; background: var(--gray-50); display: flex; align-items: center; justify-content: center; font-size: 24px; border: 2px solid var(--primary);">🧘</div>
+              <div style="width: 44px; height: 44px; border-radius: 12px; background: var(--gray-50); display: flex; align-items: center; justify-content: center; font-size: 24px;">🏃</div>
+              <div style="width: 44px; height: 44px; border-radius: 12px; background: var(--gray-50); display: flex; align-items: center; justify-content: center; font-size: 24px;">📚</div>
+            </div>
+          </div>
+
+          <!-- Swipe indicator -->
+          <div style="position: absolute; bottom: 120px; left: 0; right: 0; text-align: center;">
+            <div style="display: inline-flex; align-items: center; gap: 6px; color: var(--error); font-size: 13px; font-weight: 500; background: #FEE2E2; padding: 8px 16px; border-radius: 8px;">
+              <span>👆 User swipes down to dismiss</span>
+            </div>
+          </div>
+
+          <div style="position: absolute; bottom: 60px; left: 0; right: 0; text-align: center;">
+            <div style="display: inline-flex; align-items: center; gap: 6px; color: var(--error); font-size: 13px; font-weight: 600;">
+              All changes silently lost
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="change-arrow">&#10132;</div>
+
+    <!-- AFTER -->
+    <div>
+      <span class="label-badge badge-after" style="margin-bottom: 12px; display: block; width: fit-content;">After</span>
+      <div class="phone-frame">
+        <div class="phone-notch"></div>
+        <div class="phone-content" style="filter: blur(1px); opacity: 0.3;">
+          <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0;">
+            <span style="font-size: 15px; color: var(--gray-400);">Cancel</span>
+            <span style="font-size: 17px; font-weight: 600; color: var(--gray-800);">Edit Habit</span>
+            <span style="font-size: 15px; font-weight: 600; color: var(--primary);">Save</span>
+          </div>
+        </div>
+        <!-- Modal overlay -->
+        <div class="modal-overlay">
+          <div class="modal-card">
+            <h3 style="font-size: 17px; font-weight: 700; color: var(--gray-800); text-align: center;">Discard Changes?</h3>
+            <p style="font-size: 15px; color: var(--gray-500); text-align: center; margin-top: 8px;">
+              You have unsaved changes that will be lost.
+            </p>
+            <div style="display: flex; gap: 12px; margin-top: 20px;">
+              <button style="flex: 1; padding: 14px; border-radius: 12px; border: 1.5px solid var(--gray-200); background: transparent; font-size: 15px; font-weight: 600; color: var(--gray-700); cursor: pointer;">
+                Keep Editing
+              </button>
+              <button style="flex: 1; padding: 14px; border-radius: 12px; border: none; background: var(--error); color: white; font-size: 15px; font-weight: 600; cursor: pointer;">
+                Discard
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p class="annotation">Applies to: CreateHabitModal (CM1) and HabitEditScreen (E1). Check form dirty state before allowing dismiss.</p>
+</div>
+
+<div class="section-divider"></div>
+
+<!-- ========================================== -->
+<!-- CHANGE 2: Analytics Lock Icon + Paywall (P0) -->
+<!-- ========================================== -->
+<div class="nav-section" style="max-width: 1400px; margin: 0 auto;">
+  <div style="margin-bottom: 24px;">
+    <span class="label-badge badge-p0">P0</span>
+    <h2 style="font-size: 24px; margin-top: 12px; color: #FAF8F5;">2. Premium Content Lock Icons</h2>
+    <p style="color: #A8A29E; font-size: 14px; margin-top: 4px;">Analytics export button & template packs — users discover paywall through friction, not foresight</p>
+  </div>
+
+  <div class="before-after">
+    <!-- BEFORE -->
+    <div>
+      <span class="label-badge badge-before" style="margin-bottom: 12px; display: block; width: fit-content;">Before</span>
+      <div class="phone-frame">
+        <div class="phone-notch"></div>
+        <div class="phone-content">
+          <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0;">
+            <h2 style="font-size: 22px; font-weight: 700; color: var(--gray-800);">Analytics</h2>
+            <div class="export-btn" style="background: var(--primary); color: white;">
+              <i data-lucide="download" style="width: 16px; height: 16px;"></i>
+              Export
+            </div>
+          </div>
+
+          <!-- Stats row -->
+          <div style="display: flex; gap: 8px; margin-top: 12px;">
+            <div style="flex: 1; background: var(--surface); border-radius: 12px; padding: 14px; box-shadow: 0 1px 4px rgba(0,0,0,0.06);">
+              <div style="font-size: 24px; font-weight: 700; color: var(--gray-800); font-family: 'JetBrains Mono';">87%</div>
+              <div style="font-size: 12px; color: var(--gray-400);">Completion</div>
+            </div>
+            <div style="flex: 1; background: var(--surface); border-radius: 12px; padding: 14px; box-shadow: 0 1px 4px rgba(0,0,0,0.06);">
+              <div style="font-size: 24px; font-weight: 700; color: var(--streak); font-family: 'JetBrains Mono';">14</div>
+              <div style="font-size: 12px; color: var(--gray-400);">Best Streak</div>
+            </div>
+          </div>
+
+          <!-- Chart placeholder -->
+          <div style="background: var(--surface); border-radius: 16px; padding: 16px; margin-top: 16px; box-shadow: 0 1px 4px rgba(0,0,0,0.06);">
+            <div style="font-size: 15px; font-weight: 600; color: var(--gray-800); margin-bottom: 12px;">30-Day Trend</div>
+            <div style="height: 120px; background: linear-gradient(180deg, rgba(5,150,105,0.08), transparent); border-radius: 8px; display: flex; align-items: flex-end; padding: 0 8px; gap: 4px;">
+              <div style="width: 100%; height: 60%; background: var(--primary); border-radius: 4px 4px 0 0; opacity: 0.6;"></div>
+              <div style="width: 100%; height: 80%; background: var(--primary); border-radius: 4px 4px 0 0; opacity: 0.7;"></div>
+              <div style="width: 100%; height: 45%; background: var(--primary); border-radius: 4px 4px 0 0; opacity: 0.5;"></div>
+              <div style="width: 100%; height: 90%; background: var(--primary); border-radius: 4px 4px 0 0; opacity: 0.8;"></div>
+              <div style="width: 100%; height: 70%; background: var(--primary); border-radius: 4px 4px 0 0; opacity: 0.65;"></div>
+              <div style="width: 100%; height: 95%; background: var(--primary); border-radius: 4px 4px 0 0;"></div>
+              <div style="width: 100%; height: 85%; background: var(--primary); border-radius: 4px 4px 0 0; opacity: 0.75;"></div>
+            </div>
+          </div>
+
+          <!-- Problem annotation -->
+          <div style="margin-top: 16px; padding: 12px; background: #FEE2E2; border-radius: 8px;">
+            <p style="font-size: 13px; color: #B91C1C; font-weight: 500;">Free user taps Export &rarr; surprise paywall (no warning)</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="change-arrow">&#10132;</div>
+
+    <!-- AFTER -->
+    <div>
+      <span class="label-badge badge-after" style="margin-bottom: 12px; display: block; width: fit-content;">After</span>
+      <div class="phone-frame">
+        <div class="phone-notch"></div>
+        <div class="phone-content">
+          <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0;">
+            <h2 style="font-size: 22px; font-weight: 700; color: var(--gray-800);">Analytics</h2>
+            <div class="highlight-box">
+              <span class="highlight-label">NEW</span>
+              <div class="export-btn" style="background: var(--gray-100); color: var(--gray-500); border: 1.5px solid var(--gray-200);">
+                <i data-lucide="lock" style="width: 14px; height: 14px; color: var(--premium);"></i>
+                Export
+                <span class="premium-badge">PRO</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Stats row -->
+          <div style="display: flex; gap: 8px; margin-top: 12px;">
+            <div style="flex: 1; background: var(--surface); border-radius: 12px; padding: 14px; box-shadow: 0 1px 4px rgba(0,0,0,0.06);">
+              <div style="font-size: 24px; font-weight: 700; color: var(--gray-800); font-family: 'JetBrains Mono';">87%</div>
+              <div style="font-size: 12px; color: var(--gray-400);">Completion</div>
+            </div>
+            <div style="flex: 1; background: var(--surface); border-radius: 12px; padding: 14px; box-shadow: 0 1px 4px rgba(0,0,0,0.06);">
+              <div style="font-size: 24px; font-weight: 700; color: var(--streak); font-family: 'JetBrains Mono';">14</div>
+              <div style="font-size: 12px; color: var(--gray-400);">Best Streak</div>
+            </div>
+          </div>
+
+          <!-- Chart -->
+          <div style="background: var(--surface); border-radius: 16px; padding: 16px; margin-top: 16px; box-shadow: 0 1px 4px rgba(0,0,0,0.06);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+              <div style="font-size: 15px; font-weight: 600; color: var(--gray-800);">30-Day Trend</div>
+              <div class="highlight-box" style="padding: 4px 8px;">
+                <span class="highlight-label">NEW</span>
+                <div style="display: flex; gap: 6px;">
+                  <span style="font-size: 12px; padding: 4px 10px; border-radius: 8px; background: var(--primary); color: white; font-weight: 600;">30d</span>
+                  <span style="font-size: 12px; padding: 4px 10px; border-radius: 8px; background: var(--gray-100); color: var(--gray-500); font-weight: 500;">90d</span>
+                  <span style="font-size: 12px; padding: 4px 10px; border-radius: 8px; background: var(--gray-100); color: var(--gray-500); font-weight: 500;">All</span>
+                </div>
+              </div>
+            </div>
+            <div style="height: 120px; background: linear-gradient(180deg, rgba(5,150,105,0.08), transparent); border-radius: 8px; display: flex; align-items: flex-end; padding: 0 8px; gap: 4px;">
+              <div style="width: 100%; height: 60%; background: var(--primary); border-radius: 4px 4px 0 0; opacity: 0.6;"></div>
+              <div style="width: 100%; height: 80%; background: var(--primary); border-radius: 4px 4px 0 0; opacity: 0.7;"></div>
+              <div style="width: 100%; height: 45%; background: var(--primary); border-radius: 4px 4px 0 0; opacity: 0.5;"></div>
+              <div style="width: 100%; height: 90%; background: var(--primary); border-radius: 4px 4px 0 0; opacity: 0.8;"></div>
+              <div style="width: 100%; height: 70%; background: var(--primary); border-radius: 4px 4px 0 0; opacity: 0.65;"></div>
+              <div style="width: 100%; height: 95%; background: var(--primary); border-radius: 4px 4px 0 0;"></div>
+              <div style="width: 100%; height: 85%; background: var(--primary); border-radius: 4px 4px 0 0; opacity: 0.75;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p class="annotation">Fixes A2 (lock icon on export) + A5 (time period selector). Lock icon + PRO badge sets expectation before user taps.</p>
+</div>
+
+<div class="section-divider"></div>
+
+<!-- ========================================== -->
+<!-- CHANGE 3: UndoToast Fix (P0) -->
+<!-- ========================================== -->
+<div class="nav-section" style="max-width: 1400px; margin: 0 auto;">
+  <div style="margin-bottom: 24px;">
+    <span class="label-badge badge-p0">P0</span>
+    <h2 style="font-size: 24px; margin-top: 12px; color: #FAF8F5;">3. UndoToast Dismiss Semantics</h2>
+    <p style="color: #A8A29E; font-size: 14px; margin-top: 4px;">Dismissing the undo toast currently auto-confirms archive — should cancel instead</p>
+  </div>
+
+  <div class="before-after">
+    <!-- BEFORE -->
+    <div>
+      <span class="label-badge badge-before" style="margin-bottom: 12px; display: block; width: fit-content;">Before</span>
+      <div class="phone-frame">
+        <div class="phone-notch"></div>
+        <div class="phone-content">
+          <div style="padding-top: 20px;">
+            <div class="habit-card" style="opacity: 0.4;">
+              <div class="accent-bar" style="background: #8B5CF6;"></div>
+              <div style="padding-left: 12px;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <span style="font-size: 22px;">🧘</span>
+                  <span style="font-size: 17px; font-weight: 600; color: var(--gray-800);">Meditation</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="toast-bar" style="background: var(--gray-800); color: white;">
+            <div>
+              <div style="font-size: 14px; font-weight: 600;">Habit archived</div>
+              <div style="font-size: 12px; color: var(--gray-400); margin-top: 2px;">Tap Undo to restore</div>
+            </div>
+            <div style="display: flex; gap: 12px; align-items: center;">
+              <span style="font-size: 14px; font-weight: 700; color: var(--primary);">Undo</span>
+              <span style="font-size: 18px; color: var(--gray-400);">&times;</span>
+            </div>
+          </div>
+
+          <div style="position: absolute; bottom: 30px; left: 16px; right: 16px;">
+            <div style="padding: 10px; background: #FEE2E2; border-radius: 8px; text-align: center;">
+              <p style="font-size: 12px; color: #B91C1C; font-weight: 500;">
+                Tapping &times; = <strong>confirms archive</strong> (wrong!)
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="change-arrow">&#10132;</div>
+
+    <!-- AFTER -->
+    <div>
+      <span class="label-badge badge-after" style="margin-bottom: 12px; display: block; width: fit-content;">After</span>
+      <div class="phone-frame">
+        <div class="phone-notch"></div>
+        <div class="phone-content">
+          <div style="padding-top: 20px;">
+            <div class="habit-card">
+              <div class="accent-bar" style="background: #8B5CF6;"></div>
+              <div style="padding-left: 12px;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <span style="font-size: 22px;">🧘</span>
+                  <span style="font-size: 17px; font-weight: 600; color: var(--gray-800);">Meditation</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="toast-bar" style="background: var(--gray-800); color: white;">
+            <div>
+              <div style="font-size: 14px; font-weight: 600;">Habit archived</div>
+              <div style="font-size: 12px; color: var(--gray-400); margin-top: 2px;">Tap Undo to restore</div>
+            </div>
+            <div style="display: flex; gap: 12px; align-items: center;">
+              <span style="font-size: 14px; font-weight: 700; color: var(--primary);">Undo</span>
+              <span style="font-size: 18px; color: var(--gray-400);">&times;</span>
+            </div>
+          </div>
+
+          <div style="position: absolute; bottom: 30px; left: 16px; right: 16px;">
+            <div style="padding: 10px; background: #D1FAE5; border-radius: 8px; text-align: center;">
+              <p style="font-size: 12px; color: #065F46; font-weight: 500;">
+                Tapping &times; = <strong>cancels archive</strong> (correct!)
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p class="annotation">Fix D1: Change UndoToasts.tsx:44 onDismiss from onConfirmArchive to setPendingArchive(false). 5-minute fix.</p>
+</div>
+
+<div class="section-divider"></div>
+
+<!-- ========================================== -->
+<!-- CHANGE 4: Character Screen Progression (P0) -->
+<!-- ========================================== -->
+<div class="nav-section" style="max-width: 1400px; margin: 0 auto;">
+  <div style="margin-bottom: 24px;">
+    <span class="label-badge badge-p0">P0</span>
+    <span class="label-badge badge-p1" style="margin-left: 4px;">P1</span>
+    <h2 style="font-size: 24px; margin-top: 12px; color: #FAF8F5;">4. Character Screen Progression</h2>
+    <p style="color: #A8A29E; font-size: 14px; margin-top: 4px;">Dynamic titles, theme-aware achievement colors, and attribute explanations</p>
+  </div>
+
+  <div class="before-after">
+    <!-- BEFORE -->
+    <div>
+      <span class="label-badge badge-before" style="margin-bottom: 12px; display: block; width: fit-content;">Before</span>
+      <div class="phone-frame">
+        <div class="phone-notch"></div>
+        <div class="phone-content">
+          <!-- Character Card -->
+          <div style="background: linear-gradient(135deg, var(--primary-dark), var(--primary)); border-radius: 16px; padding: 20px; text-align: center; color: white;">
+            <div style="font-size: 48px; margin-bottom: 8px;">🧙</div>
+            <div style="font-size: 20px; font-weight: 700; font-family: 'Literata';">Habit Hero</div>
+            <div style="font-size: 13px; opacity: 0.8; margin-top: 4px;">Level 12</div>
+            <div style="background: rgba(255,255,255,0.2); border-radius: 8px; height: 8px; margin-top: 12px;">
+              <div style="background: white; border-radius: 8px; height: 100%; width: 65%;"></div>
+            </div>
+            <div style="font-size: 12px; opacity: 0.7; margin-top: 4px; font-family: 'JetBrains Mono';">78/120 XP</div>
+          </div>
+
+          <!-- Attributes (no explanation) -->
+          <div style="margin-top: 20px;">
+            <div style="font-size: 15px; font-weight: 600; color: var(--gray-800); margin-bottom: 10px;">Attributes</div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+              <div style="background: var(--surface); border-radius: 12px; padding: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.06);">
+                <span style="font-size: 18px;">❤️</span>
+                <div style="font-size: 20px; font-weight: 700; color: var(--gray-800); font-family: 'JetBrains Mono';">68</div>
+                <div style="font-size: 13px; color: var(--gray-400);">Energy</div>
+              </div>
+              <div style="background: var(--surface); border-radius: 12px; padding: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.06);">
+                <span style="font-size: 18px;">💪</span>
+                <div style="font-size: 20px; font-weight: 700; color: var(--gray-800); font-family: 'JetBrains Mono';">54</div>
+                <div style="font-size: 13px; color: var(--gray-400);">Strength</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Achievement with hardcoded colors -->
+          <div style="margin-top: 20px;">
+            <div style="font-size: 15px; font-weight: 600; color: var(--gray-800); margin-bottom: 10px;">Achievements</div>
+            <div class="achievement-card" style="background: #333D2B;">
+              <div class="achievement-badge" style="background: #FEF3C7;">🏆</div>
+              <div>
+                <div style="font-size: 15px; font-weight: 600; color: #FEF3C7;">Habit Builder</div>
+                <div style="font-size: 12px; color: #A8A29E;">Created your first habit</div>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top: 12px; padding: 10px; background: #FEE2E2; border-radius: 8px;">
+            <p style="font-size: 12px; color: #B91C1C;">Title always "Habit Hero" &middot; Hardcoded #333D2B &middot; No attribute explanation</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="change-arrow">&#10132;</div>
+
+    <!-- AFTER -->
+    <div>
+      <span class="label-badge badge-after" style="margin-bottom: 12px; display: block; width: fit-content;">After</span>
+      <div class="phone-frame">
+        <div class="phone-notch"></div>
+        <div class="phone-content">
+          <!-- Character Card with dynamic title -->
+          <div style="background: linear-gradient(135deg, var(--primary-dark), var(--primary)); border-radius: 16px; padding: 20px; text-align: center; color: white;">
+            <div style="font-size: 48px; margin-bottom: 8px;">🧙</div>
+            <div class="highlight-box" style="display: inline-block; border-color: rgba(255,255,255,0.5);">
+              <span class="highlight-label" style="background: rgba(255,255,255,0.9); color: var(--primary);">Dynamic</span>
+              <div style="font-size: 20px; font-weight: 700; font-family: 'Literata';">Habit Legend</div>
+            </div>
+            <div style="font-size: 13px; opacity: 0.8; margin-top: 8px;">Level 12</div>
+            <div style="background: rgba(255,255,255,0.2); border-radius: 8px; height: 8px; margin-top: 12px;">
+              <div style="background: white; border-radius: 8px; height: 100%; width: 65%;"></div>
+            </div>
+            <div style="font-size: 12px; opacity: 0.7; margin-top: 4px; font-family: 'JetBrains Mono';">78/120 XP</div>
+          </div>
+
+          <!-- Attributes WITH explanation -->
+          <div style="margin-top: 20px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+              <div style="font-size: 15px; font-weight: 600; color: var(--gray-800);">Attributes</div>
+              <div class="highlight-box" style="padding: 4px;">
+                <span class="highlight-label">NEW</span>
+                <span style="font-size: 12px; color: var(--primary); font-weight: 600;">ⓘ How it works</span>
+              </div>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+              <div style="background: var(--surface); border-radius: 12px; padding: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.06);">
+                <span style="font-size: 18px;">❤️</span>
+                <div style="font-size: 20px; font-weight: 700; color: var(--gray-800); font-family: 'JetBrains Mono';">68</div>
+                <div style="font-size: 13px; color: var(--gray-400);">Energy</div>
+                <div class="highlight-box" style="margin-top: 6px; padding: 4px 6px;">
+                  <span class="highlight-label" style="font-size: 8px;">NEW</span>
+                  <div style="font-size: 10px; color: var(--gray-500);">From your streak</div>
+                </div>
+              </div>
+              <div style="background: var(--surface); border-radius: 12px; padding: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.06);">
+                <span style="font-size: 18px;">💪</span>
+                <div style="font-size: 20px; font-weight: 700; color: var(--gray-800); font-family: 'JetBrains Mono';">54</div>
+                <div style="font-size: 13px; color: var(--gray-400);">Strength</div>
+                <div class="highlight-box" style="margin-top: 6px; padding: 4px 6px;">
+                  <span class="highlight-label" style="font-size: 8px;">NEW</span>
+                  <div style="font-size: 10px; color: var(--gray-500);">From active habits</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Achievement with theme colors -->
+          <div style="margin-top: 20px;">
+            <div style="font-size: 15px; font-weight: 600; color: var(--gray-800); margin-bottom: 10px;">Achievements</div>
+            <div class="highlight-box">
+              <span class="highlight-label">Theme-aware</span>
+              <div class="achievement-card" style="background: var(--gray-50);">
+                <div class="achievement-badge" style="background: #FEF9C3;">🏆</div>
+                <div>
+                  <div style="font-size: 15px; font-weight: 600; color: var(--gray-800);">Habit Builder</div>
+                  <div style="font-size: 12px; color: var(--gray-400);">Created your first habit</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p class="annotation">Fixes C1 (theme colors), C2 (dynamic titles), C3 (attribute explanations). Title tiers: Lv1-5 "Habit Starter", 6-10 "Habit Hero", 11-20 "Habit Legend", 21+ "Habit Master".</p>
+</div>
+
+<div class="section-divider"></div>
+
+<!-- ========================================== -->
+<!-- CHANGE 5: Templates Navigation (P1) -->
+<!-- ========================================== -->
+<div class="nav-section" style="max-width: 1400px; margin: 0 auto;">
+  <div style="margin-bottom: 24px;">
+    <span class="label-badge badge-p1">P1</span>
+    <h2 style="font-size: 24px; margin-top: 12px; color: #FAF8F5;">5. Templates Breadcrumb Navigation</h2>
+    <p style="color: #A8A29E; font-size: 14px; margin-top: 4px;">4-view navigation with no position indicator — users lose their place</p>
+  </div>
+
+  <div class="before-after">
+    <!-- BEFORE -->
+    <div>
+      <span class="label-badge badge-before" style="margin-bottom: 12px; display: block; width: fit-content;">Before</span>
+      <div class="phone-frame">
+        <div class="phone-notch"></div>
+        <div class="phone-content">
+          <div style="display: flex; align-items: center; gap: 8px; padding: 12px 0;">
+            <span style="font-size: 22px; color: var(--gray-400);">&larr;</span>
+            <h2 style="font-size: 22px; font-weight: 700; color: var(--gray-800);">Health & Fitness</h2>
+          </div>
+
+          <!-- Template list -->
+          <div class="habit-card">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <span style="font-size: 28px;">🏃</span>
+              <div>
+                <div style="font-size: 15px; font-weight: 600; color: var(--gray-800);">Morning Run</div>
+                <div style="font-size: 13px; color: var(--gray-400);">30 min daily jog</div>
+              </div>
+            </div>
+          </div>
+          <div class="habit-card">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <span style="font-size: 28px;">💪</span>
+              <div>
+                <div style="font-size: 15px; font-weight: 600; color: var(--gray-800);">Strength Training</div>
+                <div style="font-size: 13px; color: var(--gray-400);">3x/week workout</div>
+              </div>
+            </div>
+          </div>
+          <div class="habit-card">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <span style="font-size: 28px;">🧘</span>
+              <div>
+                <div style="font-size: 15px; font-weight: 600; color: var(--gray-800);">Evening Stretch</div>
+                <div style="font-size: 13px; color: var(--gray-400);">10 min flexibility</div>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top: 12px; padding: 10px; background: #FEE2E2; border-radius: 8px; text-align: center;">
+            <p style="font-size: 12px; color: #B91C1C;">Where am I? How deep? Back goes where?</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="change-arrow">&#10132;</div>
+
+    <!-- AFTER -->
+    <div>
+      <span class="label-badge badge-after" style="margin-bottom: 12px; display: block; width: fit-content;">After</span>
+      <div class="phone-frame">
+        <div class="phone-notch"></div>
+        <div class="phone-content">
+          <div style="display: flex; align-items: center; gap: 8px; padding: 12px 0;">
+            <span style="font-size: 22px; color: var(--gray-400);">&larr;</span>
+            <h2 style="font-size: 22px; font-weight: 700; color: var(--gray-800);">Health & Fitness</h2>
+          </div>
+
+          <!-- Breadcrumb -->
+          <div class="highlight-box" style="margin-bottom: 12px;">
+            <span class="highlight-label">NEW</span>
+            <div class="breadcrumb">
+              <span style="color: var(--primary); font-weight: 500;">Browse</span>
+              <span>&rsaquo;</span>
+              <span class="breadcrumb-active" style="color: var(--gray-800);">Health & Fitness</span>
+              <span style="font-size: 11px; color: var(--gray-300); margin-left: 4px;">(8 templates)</span>
+            </div>
+          </div>
+
+          <!-- Template list -->
+          <div class="habit-card">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <span style="font-size: 28px;">🏃</span>
+              <div style="flex: 1;">
+                <div style="font-size: 15px; font-weight: 600; color: var(--gray-800);">Morning Run</div>
+                <div style="font-size: 13px; color: var(--gray-400);">30 min daily jog</div>
+              </div>
+              <span style="font-size: 22px; color: var(--primary);">+</span>
+            </div>
+          </div>
+          <div class="habit-card">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <span style="font-size: 28px;">💪</span>
+              <div style="flex: 1;">
+                <div style="font-size: 15px; font-weight: 600; color: var(--gray-800);">Strength Training</div>
+                <div style="font-size: 13px; color: var(--gray-400);">3x/week workout</div>
+              </div>
+              <span style="font-size: 22px; color: var(--primary);">+</span>
+            </div>
+          </div>
+          <div class="habit-card">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <span style="font-size: 28px;">🧘</span>
+              <div style="flex: 1;">
+                <div style="font-size: 15px; font-weight: 600; color: var(--gray-800);">Evening Stretch</div>
+                <div style="font-size: 13px; color: var(--gray-400);">10 min flexibility</div>
+              </div>
+              <span style="font-size: 22px; color: var(--primary);">+</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p class="annotation">Fixes T4: Breadcrumb shows position in browse/category/search/seeAll. "Browse" is always clickable to return to root.</p>
+</div>
+
+<div class="section-divider"></div>
+
+<!-- ========================================== -->
+<!-- CHANGE 6: Template Import → Navigate Home (P0) -->
+<!-- ========================================== -->
+<div class="nav-section" style="max-width: 1400px; margin: 0 auto;">
+  <div style="margin-bottom: 24px;">
+    <span class="label-badge badge-p0">P0</span>
+    <h2 style="font-size: 24px; margin-top: 12px; color: #FAF8F5;">6. Template Import → Navigate Home</h2>
+    <p style="color: #A8A29E; font-size: 14px; margin-top: 4px;">After importing a template, user stays in browse view with no next action. Also: paywall appears without explanation.</p>
+  </div>
+
+  <div class="before-after">
+    <!-- BEFORE -->
+    <div>
+      <span class="label-badge badge-before" style="margin-bottom: 12px; display: block; width: fit-content;">Before</span>
+      <div class="phone-frame">
+        <div class="phone-notch"></div>
+        <div class="phone-content">
+          <h2 style="font-size: 22px; font-weight: 700; color: var(--gray-800); padding: 12px 0;">Templates</h2>
+          <div class="habit-card">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <span style="font-size: 28px;">🧘</span>
+              <div style="flex: 1;">
+                <div style="font-size: 15px; font-weight: 600; color: var(--gray-800);">Meditation</div>
+                <div style="font-size: 13px; color: var(--gray-400);">Daily mindfulness</div>
+              </div>
+              <div style="padding: 8px 14px; border-radius: 8px; background: var(--gray-100); font-size: 13px; color: var(--gray-400); font-weight: 600;">
+                Added ✓
+              </div>
+            </div>
+          </div>
+          <div class="habit-card">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <span style="font-size: 28px;">📚</span>
+              <div style="flex: 1;">
+                <div style="font-size: 15px; font-weight: 600; color: var(--gray-800);">Read 20 min</div>
+              </div>
+              <div style="padding: 8px 14px; border-radius: 8px; background: var(--primary); color: white; font-size: 13px; font-weight: 600;">
+                Add
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top: 24px; padding: 10px; background: #FEE2E2; border-radius: 8px; text-align: center;">
+            <p style="font-size: 12px; color: #B91C1C;">User imported but...now what? No CTA to view new habit.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="change-arrow">&#10132;</div>
+
+    <!-- AFTER -->
+    <div>
+      <span class="label-badge badge-after" style="margin-bottom: 12px; display: block; width: fit-content;">After</span>
+      <div class="phone-frame">
+        <div class="phone-notch"></div>
+        <div class="phone-content">
+          <h2 style="font-size: 22px; font-weight: 700; color: var(--gray-800); padding: 12px 0;">Templates</h2>
+          <div class="habit-card">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <span style="font-size: 28px;">🧘</span>
+              <div style="flex: 1;">
+                <div style="font-size: 15px; font-weight: 600; color: var(--gray-800);">Meditation</div>
+                <div style="font-size: 13px; color: var(--gray-400);">Daily mindfulness</div>
+              </div>
+              <div style="padding: 8px 14px; border-radius: 8px; background: var(--gray-100); font-size: 13px; color: var(--gray-400); font-weight: 600;">
+                Added ✓
+              </div>
+            </div>
+          </div>
+
+          <!-- Success toast with CTA -->
+          <div class="highlight-box" style="margin-top: 16px;">
+            <span class="highlight-label">NEW</span>
+            <div class="toast-bar" style="position: relative; bottom: auto; left: auto; right: auto; background: var(--primary-dark); color: white;">
+              <div>
+                <div style="font-size: 14px; font-weight: 600;">🧘 Meditation added!</div>
+              </div>
+              <div style="padding: 6px 14px; border-radius: 8px; background: rgba(255,255,255,0.2); font-size: 13px; font-weight: 600; color: white;">
+                View Habit &rarr;
+              </div>
+            </div>
+          </div>
+
+          <!-- Paywall context toast -->
+          <div class="highlight-box" style="margin-top: 20px;">
+            <span class="highlight-label">NEW · T2</span>
+            <div class="toast-bar paywall-context-toast" style="position: relative; bottom: auto; left: auto; right: auto;">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="font-size: 16px;">⚠️</span>
+                <div>
+                  <div style="font-size: 13px; font-weight: 600;">You've used 3 of 3 free habits</div>
+                  <div style="font-size: 11px; opacity: 0.8;">Upgrade to track unlimited habits</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p class="annotation">Fixes T1 (navigate home after import) + T2 (context toast before paywall). "View Habit" navigates to new habit on home screen.</p>
+</div>
+
+<div class="section-divider"></div>
+
+<!-- ========================================== -->
+<!-- CHANGE 7: Consistent Premium Copy (P1) -->
+<!-- ========================================== -->
+<div class="nav-section" style="max-width: 1400px; margin: 0 auto;">
+  <div style="margin-bottom: 24px;">
+    <span class="label-badge badge-p1">P1</span>
+    <h2 style="font-size: 24px; margin-top: 12px; color: #FAF8F5;">7. Standardized Premium Messaging</h2>
+    <p style="color: #A8A29E; font-size: 14px; margin-top: 4px;">4 paywall variants use different trial copy, pricing, and CTAs — standardize to one voice</p>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; max-width: 900px;">
+    <!-- Before cards -->
+    <div style="background: #292524; border-radius: 16px; padding: 20px;">
+      <span class="label-badge badge-before" style="margin-bottom: 16px; display: block; width: fit-content;">Before — 4 different versions</span>
+
+      <div style="border-left: 3px solid var(--error); padding-left: 12px; margin-bottom: 16px;">
+        <div style="font-size: 11px; color: var(--gray-400); text-transform: uppercase; letter-spacing: 0.05em;">UpgradePrompt</div>
+        <div style="font-size: 14px; color: #FAF8F5; font-weight: 500; margin-top: 4px;">"$0 for 7 days · Cancel anytime"</div>
+      </div>
+
+      <div style="border-left: 3px solid var(--warning); padding-left: 12px; margin-bottom: 16px;">
+        <div style="font-size: 11px; color: var(--gray-400); text-transform: uppercase; letter-spacing: 0.05em;">BenefitsCTAFooter</div>
+        <div style="font-size: 14px; color: #FAF8F5; font-weight: 500; margin-top: 4px;">"7-day free trial • Cancel anytime"</div>
+        <div style="font-size: 12px; color: var(--gray-400); margin-top: 2px;">$6.99/month</div>
+      </div>
+
+      <div style="border-left: 3px solid var(--premium); padding-left: 12px; margin-bottom: 16px;">
+        <div style="font-size: 11px; color: var(--gray-400); text-transform: uppercase; letter-spacing: 0.05em;">MonetizationHero</div>
+        <div style="font-size: 14px; color: #FAF8F5; font-weight: 500; margin-top: 4px;">"Try free for 7 days"</div>
+        <div style="font-size: 12px; color: var(--gray-400); margin-top: 2px;">No price shown</div>
+      </div>
+
+      <div style="border-left: 3px solid var(--gray-500); padding-left: 12px;">
+        <div style="font-size: 11px; color: var(--gray-400); text-transform: uppercase; letter-spacing: 0.05em;">PremiumStatus</div>
+        <div style="font-size: 14px; color: #FAF8F5; font-weight: 500; margin-top: 4px;">"Unlock sounds, reminders & more"</div>
+        <div style="font-size: 12px; color: var(--error); margin-top: 2px;">"All features unlocked" (wrong!)</div>
+      </div>
+    </div>
+
+    <!-- After card -->
+    <div style="background: #292524; border-radius: 16px; padding: 20px;">
+      <span class="label-badge badge-after" style="margin-bottom: 16px; display: block; width: fit-content;">After — unified voice</span>
+
+      <div class="highlight-box" style="padding: 16px; border-color: var(--primary);">
+        <span class="highlight-label">Standard</span>
+
+        <div style="margin-bottom: 20px;">
+          <div style="font-size: 11px; color: var(--primary); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600;">Trial Copy</div>
+          <div style="font-size: 16px; color: #FAF8F5; font-weight: 600; margin-top: 6px;">"Try Premium free for 7 days"</div>
+          <div style="font-size: 13px; color: var(--gray-400); margin-top: 2px;">Then $6.99/month · Cancel anytime</div>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+          <div style="font-size: 11px; color: var(--primary); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600;">CTA Button</div>
+          <div style="margin-top: 8px; padding: 14px; border-radius: 12px; background: var(--primary); color: white; text-align: center; font-size: 15px; font-weight: 700;">
+            Start Free Trial
+          </div>
+        </div>
+
+        <div>
+          <div style="font-size: 11px; color: var(--primary); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600;">Premium Status (active)</div>
+          <div style="font-size: 14px; color: #FAF8F5; font-weight: 500; margin-top: 6px;">"Premium features unlocked"</div>
+          <div style="font-size: 12px; color: var(--gray-400);">Not "All features" — free tier has core features too</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p class="annotation" style="max-width: 900px;">Create shared constants: TRIAL_MESSAGE, PRICE_LABEL, CTA_TEXT. Use across UpgradePrompt, BenefitsCTAFooter, MonetizationHero, PremiumStatus.</p>
+</div>
+
+<div class="section-divider"></div>
+
+<!-- ========================================== -->
+<!-- SUMMARY -->
+<!-- ========================================== -->
+<div style="max-width: 1400px; margin: 0 auto; padding: 32px 0;">
+  <h2 style="font-size: 28px; font-weight: 700; color: #FAF8F5; margin-bottom: 24px; font-family: 'Literata';">Summary of All Proposed Changes</h2>
+
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px;">
+
+    <div style="background: #292524; border-radius: 16px; padding: 20px; border-left: 4px solid #EF4444;">
+      <div style="font-size: 13px; font-weight: 700; color: #EF4444; text-transform: uppercase; letter-spacing: 0.05em;">P0 — This Sprint</div>
+      <ul style="margin-top: 12px; padding-left: 16px; font-size: 14px; color: #D6D0C8; line-height: 2;">
+        <li>Unsaved changes warning (CreateHabit + HabitEdit)</li>
+        <li>Form reset on swipe-close</li>
+        <li>UndoToast dismiss = cancel, not confirm</li>
+        <li>Analytics handleHabitPress dead-end</li>
+        <li>Export button lock icon for free users</li>
+        <li>AchievementCard theme-aware colors</li>
+        <li>AccountSection avatar theme color</li>
+        <li>Template import → navigate home</li>
+      </ul>
+    </div>
+
+    <div style="background: #292524; border-radius: 16px; padding: 20px; border-left: 4px solid #F59E0B;">
+      <div style="font-size: 13px; font-weight: 700; color: #F59E0B; text-transform: uppercase; letter-spacing: 0.05em;">P1 — Next Sprint</div>
+      <ul style="margin-top: 12px; padding-left: 16px; font-size: 14px; color: #D6D0C8; line-height: 2;">
+        <li>Standardized premium trial copy</li>
+        <li>Templates breadcrumb navigation</li>
+        <li>Context toast before paywall</li>
+        <li>Dynamic character titles by level</li>
+        <li>Attribute explanation tooltips</li>
+        <li>Chart empty states</li>
+        <li>Time period selector (30d/90d/All)</li>
+        <li>PremiumStatus copy fix</li>
+        <li>Auth screen theme token migration</li>
+        <li>Delete account secondary confirmation</li>
+      </ul>
+    </div>
+
+    <div style="background: #292524; border-radius: 16px; padding: 20px; border-left: 4px solid var(--primary);">
+      <div style="font-size: 13px; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: 0.05em;">Quick Wins — ~75 min total</div>
+      <ul style="margin-top: 12px; padding-left: 16px; font-size: 14px; color: #D6D0C8; line-height: 2;">
+        <li>Fix UndoToasts onDismiss (5 min)</li>
+        <li>AchievementCard theme colors (5 min)</li>
+        <li>AccountSection avatar color (5 min)</li>
+        <li>Export lock icon (5 min)</li>
+        <li>Analytics paywall default fix (2 min)</li>
+        <li>PremiumStatus copy fix (5 min)</li>
+        <li>DetailViewTabs a11y label (2 min)</li>
+        <li>YearHeatmap streak pass-through (3 min)</li>
+        <li>SuccessOverlay theme tokens (5 min)</li>
+        <li>UsageBanner theme bg (2 min)</li>
+        <li>+ 5 more (see review doc)</li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  lucide.createIcons();
+</script>
+</body>
+</html>
