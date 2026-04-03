@@ -60,7 +60,7 @@ export function EditHeader({
         accessibilityLabel={isSaving ? 'Saving changes' : 'Save changes'}
         accessibilityRole='button'
         accessibilityState={{ busy: isSaving, disabled: !canSave || isSaving }}
-        className='flex-row items-center gap-2 rounded-xl px-5 py-2.5'
+        className='flex-row items-center justify-center gap-2 rounded-full h-11 px-6'
         disabled={!canSave || isSaving}
         style={[
           animatedStyle,

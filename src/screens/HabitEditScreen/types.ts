@@ -4,6 +4,7 @@ export interface HabitEditScreenProps {
   visible: boolean;
   habitId: Id<'habits'> | null;
   onClose: () => void;
+  onHabitRemoved?: () => void;
   onOpenCueEditor?: () => void;
   onOpenVisionBoard?: () => void;
 }

@@ -6,6 +6,7 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
+import { typography, fontWeights } from '../../../theme/typography';
 
 interface SectionLabelProps {
   borderColor: string;
@@ -30,8 +31,12 @@ export function SectionLabel({
     >
       <View className='h-px flex-1' style={{ backgroundColor: borderColor }} />
       <Text
-        className='text-[13px] font-semibold tracking-wider'
-        style={{ color: textColor }}
+        style={{
+          ...typography.caption,
+          fontWeight: fontWeights.semibold,
+          letterSpacing: 0.8,
+          color: textColor,
+        }}
       >
         {text}
       </Text>

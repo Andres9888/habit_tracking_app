@@ -22,6 +22,7 @@ export interface WeekDayData {
 }
 
 export interface HabitDetailScreenProps {
+  editOverlay?: React.ReactNode;
   habit: Habit | null;
   onArchive?: (habitId: Id<'habits'>) => void;
   onClose: () => void;

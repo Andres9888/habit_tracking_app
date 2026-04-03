@@ -20,7 +20,7 @@ export function SectionLabel({
 
   return (
     <Animated.View
-      className='mb-3 mt-6 flex-row items-center justify-center gap-2 px-4'
+      className='mb-3 mt-6 flex-row items-center justify-center gap-2 px-6'
       entering={FadeInUp.delay(delay).springify().damping(18)}
     >
       <View className='h-px flex-1' style={{ backgroundColor: borderColor }} />

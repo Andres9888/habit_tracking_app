@@ -4,6 +4,7 @@ import { View, Text } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { Check } from 'lucide-react-native';
 import { useThemeColors } from '../../../theme';
+import { typography } from '../../../theme/typography';
 import type { Habit } from '../HabitDetailScreen.types';
 import { iconShadow } from './DetailHeader.constants';
 import { formatSchedule } from './DetailHero.utils';
@@ -54,7 +55,7 @@ export function DetailHero({ habit, isCompletedToday }: DetailHeroProps) {
                 width: 24,
               }}
             >
-              <Check color='#FFFFFF' size={12} strokeWidth={3} />
+              <Check color={colors.text.inverse} size={12} strokeWidth={3} />
             </View>
           ) : null}
         </View>
@@ -62,11 +63,9 @@ export function DetailHero({ habit, isCompletedToday }: DetailHeroProps) {
       <Text
         accessibilityLabel={`Habit: ${habitName}`}
         accessibilityRole='header'
-        className='text-center font-bold'
+        className='text-center'
         style={{
-          fontSize: 34,
-          letterSpacing: -0.5,
-          lineHeight: 41,
+          ...typography.displayLarge,
           color: textPrimary,
         }}
       >
@@ -75,8 +74,7 @@ export function DetailHero({ habit, isCompletedToday }: DetailHeroProps) {
       {schedule ? (
         <Text
           accessibilityLabel={`Schedule: ${schedule}`}
-          className='mt-1 text-[13px]'
-          style={{ color: colors.text.secondary }}
+          style={{ ...typography.caption, marginTop: 4, color: colors.text.secondary }}
         >
           {schedule}
         </Text>

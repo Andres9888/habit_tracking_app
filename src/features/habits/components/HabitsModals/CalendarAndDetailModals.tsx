@@ -62,6 +62,19 @@ export function CalendarAndDetailModals(props: CalendarAndDetailModalsProps) {
       </ErrorBoundary>
       <ErrorBoundary>
         <HabitDetailScreen
+          editOverlay={
+            <HabitEditScreen
+              habitId={habitToEdit?._id ?? null}
+              visible={showEditScreen}
+              onClose={closeEditScreen}
+              onHabitRemoved={() => {
+                closeEditScreen();
+                closeHabitDetail();
+              }}
+              onOpenCueEditor={openMotivationFromEdit}
+              onOpenVisionBoard={openMotivationFromEdit}
+            />
+          }
           habit={selectedHabit}
           tracking={tracking}
           visible={showHabitDetail}
@@ -69,20 +82,10 @@ export function CalendarAndDetailModals(props: CalendarAndDetailModalsProps) {
           onClose={closeHabitDetail}
           onDelete={handleDeleteHabit}
           onEdit={(habit) => {
-            closeHabitDetail();
             openEditHabit(habit);
           }}
           onOpenCalendar={openHabitCalendar}
           onPause={openPauseModal}
-        />
-      </ErrorBoundary>
-      <ErrorBoundary>
-        <HabitEditScreen
-          habitId={habitToEdit?._id ?? null}
-          visible={showEditScreen}
-          onClose={closeEditScreen}
-          onOpenCueEditor={openMotivationFromEdit}
-          onOpenVisionBoard={openMotivationFromEdit}
         />
       </ErrorBoundary>
     </>

@@ -7,12 +7,13 @@
  * - Reminder scheduling
  */
 
-import { View } from 'react-native';
+import { Text, View } from 'react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { EmojiPicker } from '../../components/CreateHabitModal/components/EmojiPicker';
 import { ColorPickerSection } from '../../components/CreateHabitModal/components/ColorPickerSection';
 import { EnhancedReminderSelector } from '../../components/CreateHabitModal/components/EnhancedReminderSelector';
 import { HABIT_COLORS } from '../../components/CreateHabitModal/constants';
+import { useThemeColors } from '../../theme/ThemeContext';
 
 const entrance = (delay: number) => FadeInUp.delay(delay).springify().damping(18);
 
@@ -39,8 +40,17 @@ export function CustomizeSection({
   onReminderToggle,
   onReminderTimeChange,
 }: CustomizeSectionProps) {
+  const { colors: themeColors } = useThemeColors();
+
   return (
     <View className='flex-1'>
+      <Text
+        className='mb-3 text-center text-[13px] font-semibold uppercase'
+        style={{ letterSpacing: 0.5, color: themeColors.text.tertiary }}
+      >
+        Choose an icon
+      </Text>
+
       <Animated.View entering={entrance(0)}>
         <EmojiPicker
           hideLabel
@@ -49,6 +59,13 @@ export function CustomizeSection({
           onSelect={onEmojiSelect}
         />
       </Animated.View>
+
+      <Text
+        className='mt-4 mb-3 text-center text-[13px] font-semibold uppercase'
+        style={{ letterSpacing: 0.5, color: themeColors.text.tertiary }}
+      >
+        Pick a color
+      </Text>
 
       <Animated.View entering={entrance(60)}>
         <ColorPickerSection

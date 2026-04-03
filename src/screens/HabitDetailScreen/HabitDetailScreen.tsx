@@ -25,6 +25,7 @@ import type { HabitDetailScreenProps } from './HabitDetailScreen.types';
 
 // eslint-disable-next-line max-lines-per-function
 function HabitDetailScreenContent({
+  editOverlay,
   habit,
   onArchive,
   onClose,
@@ -83,7 +84,7 @@ function HabitDetailScreenContent({
                     leftAction='close'
                     rightAction={
                       <HeaderButton
-                        icon={<Edit3 size={15} strokeWidth={2.5} />}
+                        icon={<Edit3 size={16} strokeWidth={2.5} />}
                         label='Edit habit'
                         text='Edit Habit'
                         onPress={handleEdit}
@@ -115,6 +116,7 @@ function HabitDetailScreenContent({
       ) : (
         <DetailLoadingState />
       )}
+      {editOverlay}
     </Modal>
   );
 }

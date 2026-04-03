@@ -30,13 +30,14 @@ function HabitEditScreenContent({
   visible,
   habitId,
   onClose,
+  onHabitRemoved,
 }: HabitEditScreenProps) {
   const insets = useSafeAreaInsets();
   const { colors: themeColors } = useThemeColors();
   const { animateOut, backdropStyle, panGesture, sheetStyle } = useSwipeDismiss(
     { visible, onClose }
   );
-  const state = useHabitEditScreen({ habitId, onClose: animateOut });
+  const state = useHabitEditScreen({ habitId, onClose: animateOut, onHabitRemoved });
   return (
     <Modal
       accessibilityViewIsModal
@@ -56,7 +57,7 @@ function HabitEditScreenContent({
             style={[
               styles.sheet,
               sheetStyle,
-              { backgroundColor: themeColors.background },
+              { backgroundColor: themeColors.surface },
             ]}
           >
             <KeyboardAvoidingView
@@ -72,6 +73,14 @@ function HabitEditScreenContent({
                   entering={FadeIn.duration(300)}
                   style={{ flex: 1 }}
                 >
+                  <View style={styles.dragHandleRow}>
+                    <View
+                      style={[
+                        styles.dragHandle,
+                        { backgroundColor: themeColors.gray[300] },
+                      ]}
+                    />
+                  </View>
                   <EditHeader
                     canSave={state.habitName.trim().length >= 2}
                     isSaving={state.isSaving}
@@ -92,15 +101,12 @@ function HabitEditScreenContent({
                     showsVerticalScrollIndicator={false}
                   >
                     <Pressable onPress={Keyboard.dismiss}>
-                      <View className='pt-4'>
-                        <NameInputSection
-                          habitName={state.habitName}
-                          onChangeText={state.setHabitName}
-                        />
-                      </View>
-                      <SectionLabel delay={220} text='CUSTOMIZE' />
+                      <NameInputSection
+                        habitName={state.habitName}
+                        onChangeText={state.setHabitName}
+                      />
                       <Animated.View
-                        className='px-4'
+                        className='px-6'
                         entering={FadeInUp.delay(280).springify().damping(18)}
                       >
                         <CustomizeSection
@@ -121,7 +127,7 @@ function HabitEditScreenContent({
                         variant='danger'
                       />
                       <Animated.View
-                        className='mx-4 rounded-2xl p-4'
+                        className='mx-6 rounded-2xl p-4'
                         entering={FadeInUp.delay(400).springify().damping(18)}
                         style={{
                           backgroundColor: themeColors.card,
@@ -156,5 +162,7 @@ export default function HabitEditScreen(props: HabitEditScreenProps) {
 }
 
 const styles = StyleSheet.create({
+  dragHandle: { borderRadius: 4, height: 5, width: 36 },
+  dragHandleRow: { alignItems: 'center', paddingBottom: 4, paddingTop: 8 },
   sheet: StyleSheet.absoluteFillObject,
 });

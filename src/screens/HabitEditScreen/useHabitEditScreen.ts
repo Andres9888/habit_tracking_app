@@ -11,9 +11,10 @@ import { parseHabitName } from '../../components/CreateHabitModal/utils';
 interface UseHabitEditScreenProps {
   habitId: Id<'habits'> | null;
   onClose: () => void;
+  onHabitRemoved?: () => void;
 }
 
-export function useHabitEditScreen({ habitId, onClose }: UseHabitEditScreenProps) {
+export function useHabitEditScreen({ habitId, onClose, onHabitRemoved }: UseHabitEditScreenProps) {
   const { triggerSelection, triggerSuccess } = useHapticFeedback();
   const defaultEmoji = '💪';
 
@@ -55,7 +56,7 @@ export function useHabitEditScreen({ habitId, onClose }: UseHabitEditScreenProps
     habitId,
     onSuccess: () => {
       triggerSelection();
-      onClose();
+      (onHabitRemoved ?? onClose)();
     },
   });
 
