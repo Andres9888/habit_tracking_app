@@ -2,7 +2,7 @@
  * State management for TemplatesScreen
  */
 
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { FlatList } from 'react-native';
 import type { Doc, Id } from '../../../convex/_generated/dataModel';
 import type { TemplateToastData } from '../../components/TemplateAddedToast';
@@ -12,10 +12,12 @@ import type { BrowseTab, ViewMode } from './TemplatesScreen.types';
 
 interface UseTemplatesScreenStateOptions {
   categories: { id: string }[] | undefined;
+  initialImportedIds?: Set<string>;
 }
 
 export function useTemplatesScreenState({
   categories,
+  initialImportedIds,
 }: UseTemplatesScreenStateOptions) {
   const flatListRef = useRef<FlatList<Doc<'templates'>>>(null);
 
@@ -34,6 +36,17 @@ export function useTemplatesScreenState({
   const [importedTemplateIds, setImportedTemplateIds] = useState<Set<string>>(
     new Set()
   );
+  const syncedRef = useRef(false);
+  useEffect(() => {
+    if (initialImportedIds && initialImportedIds.size > 0 && !syncedRef.current) {
+      syncedRef.current = true;
+      setImportedTemplateIds((prev) => {
+        const merged = new Set(prev);
+        for (const id of initialImportedIds) merged.add(id);
+        return merged;
+      });
+    }
+  }, [initialImportedIds]);
   const [showToast, setShowToast] = useState(false);
   const [showCelebration, setShowCelebration] = useState(false);
   const [toastMessage, setToastMessage] = useState('');

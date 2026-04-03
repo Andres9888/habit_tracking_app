@@ -27,7 +27,7 @@ export function MainBrowseView(p: MainBrowseViewProps) {
       <ScreenHeader
         leftAction={null}
         subtitle='Science-backed templates to build great habits'
-        title='Import Habits'
+        title='Habit Library'
       />
       <Animated.View style={[styles.searchSection, p.searchAnimatedStyle]}>
         <SearchBar

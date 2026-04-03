@@ -300,7 +300,9 @@ const applicationTables = {
     userId: v.optional(v.string()), // Reference to created habit
   })
     .index('by_template', ['templateId'])
-    .index('by_habit', ['habitId']),
+    .index('by_habit', ['habitId'])
+    .index('by_user', ['userId'])
+    .index('by_user_template', ['userId', 'templateId']),
 
   tracking: defineTable({
     completed: v.boolean(),

@@ -9,7 +9,7 @@ import type { TemplateCustomizations } from '../TemplatesScreen.types';
 export type ImportFn = (args: {
   templateId: Id<'templates'>;
   customizations?: TemplateCustomizations;
-}) => Promise<{ success: boolean }>;
+}) => Promise<{ success: boolean; alreadyExists?: boolean }>;
 
 export interface UseTemplateImportHandlersOptions {
   importTemplate: ImportFn;

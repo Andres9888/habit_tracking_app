@@ -9,7 +9,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated from 'react-native-reanimated';
 import { BlurView } from 'expo-blur';
-import { Sparkles, Settings } from 'lucide-react-native';
+import { BookOpen, Settings } from 'lucide-react-native';
 import { colors as palette } from '../../../../theme/colors';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import { useBarAnimations } from './useBarAnimations';
@@ -97,7 +97,7 @@ function BottomActionBarComponent(props: BottomActionBarProps) {
               onPressOut={anim.onTemplatesPressOut}
             >
               <View style={styles.iconButton}>
-                <Sparkles color={goldColor} size={24} strokeWidth={2} />
+                <BookOpen color={goldColor} size={24} strokeWidth={2} />
                 <View style={styles.notifDot} />
               </View>
             </Pressable>

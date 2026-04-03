@@ -25,7 +25,10 @@ export function useTemplatesScreenProps() {
   const animations = useEntranceAnimations({ reducedMotion });
   const tabIndicator = useTabIndicator({ reducedMotion });
   const data = useTemplatesData();
-  const state = useTemplatesScreenState({ categories: data.categories });
+  const state = useTemplatesScreenState({
+    categories: data.categories,
+    initialImportedIds: data.initialImportedIds,
+  });
 
   const templatesByCategory = useTemplatesByCategory(data.allTemplates);
   const scienceCountsByCategory = useScienceCountsByCategory(data.allTemplates);

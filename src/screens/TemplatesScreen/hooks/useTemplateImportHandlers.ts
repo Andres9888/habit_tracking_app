@@ -36,12 +36,23 @@ export function useTemplateImportHandlers(o: UseTemplateImportHandlersOptions) {
     [o.setPreviewTemplate, o.setShowCustomizeModal, o.setShowFullsizePreview]
   );
 
+  const showAlreadyImported = useCallback(() => {
+    o.setToastTemplateData(null);
+    o.setShowToast(true);
+    o.setToastMessage('You\'ve already added this habit');
+  }, [o.setShowToast, o.setToastMessage, o.setToastTemplateData]);
+
   const handleDirectImport = useCallback(
     async (id: Id<'templates'>) => {
       if (guardImport()) return;
       try {
         o.setImportingTemplateId(id);
         const res = await o.importTemplate({ templateId: id });
+        if (res.alreadyExists) {
+          o.setImportedTemplateIds((p) => new Set(p).add(id));
+          showAlreadyImported();
+          return;
+        }
         if (res.success) {
           o.setImportedTemplateIds((p) => new Set(p).add(id));
           showSuccess();
@@ -63,6 +74,7 @@ export function useTemplateImportHandlers(o: UseTemplateImportHandlersOptions) {
       o.setImportingTemplateId,
       o.setShowFullsizePreview,
       guardImport,
+      showAlreadyImported,
       showSuccess,
       showError,
     ]
@@ -75,6 +87,12 @@ export function useTemplateImportHandlers(o: UseTemplateImportHandlersOptions) {
         o.setImportingTemplateId(id);
         const args = { ...(c ? { customizations: c } : {}), templateId: id };
         const res = await o.importTemplate(args);
+        if (res.alreadyExists) {
+          o.setImportedTemplateIds((p) => new Set(p).add(id));
+          showAlreadyImported();
+          o.setShowCustomizeModal(false);
+          return;
+        }
         if (res.success) {
           o.setImportedTemplateIds((p) => new Set(p).add(id));
           showSuccess();
@@ -92,6 +110,7 @@ export function useTemplateImportHandlers(o: UseTemplateImportHandlersOptions) {
       o.setImportingTemplateId,
       o.setShowCustomizeModal,
       guardImport,
+      showAlreadyImported,
       showSuccess,
       showError,
     ]

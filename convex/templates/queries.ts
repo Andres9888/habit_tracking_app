@@ -107,6 +107,23 @@ export const getTemplateCount = query({
 });
 
 /**
+ * Query: Get template IDs already imported by the current user
+ * Returns a list of templateId strings for quick Set construction on the client.
+ */
+export const getImportedTemplateIds = query({
+  args: {},
+  handler: async (ctx) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) return [];
+    const usage = await ctx.db
+      .query('templateUsage')
+      .withIndex('by_user', (q) => q.eq('userId', identity.subject))
+      .collect();
+    return [...new Set(usage.map((u) => u.templateId))];
+  },
+});
+
+/**
  * Query: List all template names (for debugging)
  * PERF: Use index scan to avoid full table scan
  */
