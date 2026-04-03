@@ -1,6 +1,7 @@
 import { StyleSheet } from 'react-native';
 import { lightColors } from '../../../theme/darkColors';
 import type { SemanticColors } from '../../../theme/darkColors';
+import { spacing } from '../../../theme/spacing';
 
 export const getSkeletonStyles = (
   themeColors: Pick<SemanticColors, 'border' | 'surface'>,
@@ -22,7 +23,7 @@ export const getSkeletonStyles = (
       borderRadius: 16,
       marginHorizontal: 16,
       marginVertical: 8,
-      padding: 20,
+      padding: spacing.lg,
     },
     skeletonIcon: {
       backgroundColor: themeColors.border,

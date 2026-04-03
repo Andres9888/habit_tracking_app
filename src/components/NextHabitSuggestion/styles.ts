@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { colors } from '@/theme/colors';
-import { shadows, borderRadius, componentSpacing } from '@/theme/spacing';
+import { shadows, borderRadius, componentSpacing, spacing } from '@/theme/spacing';
 import { fontFamilies } from '@/theme/typography';
 
 export const styles = StyleSheet.create({
@@ -35,7 +35,7 @@ export const styles = StyleSheet.create({
     borderRadius: borderRadius.large,
     marginVertical: componentSpacing.card.marginVertical,
     alignItems: 'center',
-    padding: 20,
+    padding: spacing.lg,
     backgroundColor: colors.primary[100],
   },
   glow: {

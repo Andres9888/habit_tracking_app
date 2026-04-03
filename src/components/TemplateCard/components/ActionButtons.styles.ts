@@ -3,6 +3,7 @@
  */
 
 import { StyleSheet } from 'react-native';
+import { colors } from '@/theme';
 import { borderRadius, spacing } from '../../../theme/spacing';
 import { typography, fontFamilies } from '../../../theme/typography';
 
@@ -15,7 +16,7 @@ export const styles = StyleSheet.create({
   },
   successButton: {
     alignItems: 'center',
-    backgroundColor: '#22c55e',
+    backgroundColor: colors.primary[500],
     borderRadius: borderRadius.medium,
     flexDirection: 'row',
     gap: spacing.sm,
@@ -25,7 +26,7 @@ export const styles = StyleSheet.create({
     width: '100%',
   },
   successButtonText: {
-    color: '#fff',
+    color: colors.text.inverse,
     fontFamily: fontFamilies.primary.text,
     fontSize: typography.body.fontSize,
     fontWeight: '700',

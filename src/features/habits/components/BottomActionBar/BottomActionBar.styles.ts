@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { FadeInUp } from 'react-native-reanimated';
+import { colors } from '@/theme';
 import { durations, springs } from '../../../../theme/animations';
 
 export const ENTERING = FadeInUp.duration(durations.enter).springify().damping(springs.standard.damping);
@@ -9,7 +10,7 @@ export const BORDER_LIGHT = 'rgba(255,255,255,0.5)';
 export const BORDER_DARK = 'rgba(55,65,81,0.35)';
 
 export const CAPSULE_SHADOW = {
-  shadowColor: '#000',
+  shadowColor: colors.gray[800],
   shadowOffset: { width: 0, height: 8 },
   shadowOpacity: 0.08,
   shadowRadius: 32,
@@ -58,7 +59,7 @@ export const styles = StyleSheet.create({
   },
   leftZone: { alignItems: 'center' },
   notifDot: {
-    backgroundColor: '#D97706',
+    backgroundColor: colors.warning,
     borderRadius: NOTIF_SIZE / 2,
     height: NOTIF_SIZE,
     position: 'absolute',

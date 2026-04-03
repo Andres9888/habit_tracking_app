@@ -1,6 +1,7 @@
 import { StyleSheet } from 'react-native';
+import { colors } from '@/theme';
 import { borderRadius } from '../../../../theme/spacing';
-import { typography, fontFamilies} from '@/theme/typography';
+import { typography, fontFamilies } from '@/theme/typography';
 
 export const progressStyles = StyleSheet.create({
   badgeIcon: {
@@ -8,15 +9,15 @@ export const progressStyles = StyleSheet.create({
     marginLeft: 4,
   },
   container: {
-    backgroundColor: '#ffffff',
-    borderColor: '#e5e7eb', // gray-200
+    backgroundColor: colors.light.surfaceMuted,
+    borderColor: colors.gray[200],
     borderRadius: borderRadius.medium,
     borderWidth: 1,
     marginTop: 12,
     padding: 12,
   },
   daysAway: {
-    color: '#6b7280', // gray-500
+    color: colors.gray[500],
     fontFamily: fontFamilies.primary.text,
     fontSize: 13,
     fontWeight: '500',
@@ -32,21 +33,21 @@ export const progressStyles = StyleSheet.create({
     flexDirection: 'row',
   },
   headerTitle: {
-    color: '#1f2937', // gray-800
+    color: colors.gray[800],
     fontFamily: fontFamilies.primary.text,
     fontSize: 14,
     fontWeight: '600',
   },
   milestoneName: {
-    color: '#78716c', // gray-500 (WCAG AA compliant)
+    color: colors.gray[400],
     fontFamily: fontFamilies.primary.text,
     fontSize: typography.caption.fontSize,
     marginBottom: 12,
   },
   progressBadge: {
     alignItems: 'center',
-    backgroundColor: '#fef3c7', // amber-100
-    borderColor: '#fbbf24', // amber-400
+    backgroundColor: colors.warningLight,
+    borderColor: colors.streak[300],
     borderRadius: borderRadius.medium,
     borderWidth: 1,
     height: 24,
@@ -63,12 +64,12 @@ export const progressStyles = StyleSheet.create({
     flexDirection: 'row',
   },
   progressBarFill: {
-    backgroundColor: '#f59e0b', // amber-500
+    backgroundColor: colors.streak[300],
     borderRadius: borderRadius.xs,
     height: '100%',
   },
   progressBarTrack: {
-    backgroundColor: '#e5e7eb', // gray-200
+    backgroundColor: colors.gray[200],
     borderRadius: borderRadius.xs,
     flex: 1,
     height: 8,
@@ -80,7 +81,7 @@ export const progressStyles = StyleSheet.create({
     marginTop: 6,
   },
   progressLabelText: {
-    color: '#78716c', // gray-500 (WCAG AA compliant)
+    color: colors.gray[400],
     fontFamily: fontFamilies.primary.text,
     fontSize: typography.tabBar.fontSize,
   },

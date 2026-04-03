@@ -10,7 +10,8 @@ import {
 } from 'react-native';
 
 import { COLORS, FOCUS } from './constants';
-import { typography, fontFamilies} from '@/theme/typography';
+import { colors } from '@/theme';
+import { typography, fontFamilies } from '@/theme/typography';
 import { useThemeColors } from '@/theme/ThemeContext';
 
 const STATS_CONFIG = {
@@ -34,7 +35,7 @@ export const styles = StyleSheet.create({
     paddingVertical: 4,
   } as ViewStyle,
   frequencyBadge: {
-    backgroundColor: '#f5f5f4', // overridden by useThemedStatsStyles
+    backgroundColor: colors.gray[50], // overridden by useThemedStatsStyles
     borderRadius: STATS_CONFIG.BADGE_BORDER_RADIUS,
     paddingHorizontal: STATS_CONFIG.BADGE_PADDING_X,
     paddingVertical: STATS_CONFIG.BADGE_PADDING_Y,
@@ -47,7 +48,7 @@ export const styles = StyleSheet.create({
   } as TextStyle,
   settingsButton: {
     alignItems: 'center',
-    backgroundColor: '#f5f5f4', // overridden by useThemedStatsStyles
+    backgroundColor: colors.gray[50], // overridden by useThemedStatsStyles
     borderRadius: STATS_CONFIG.SETTINGS_BUTTON_SIZE / 2,
     height: STATS_CONFIG.SETTINGS_BUTTON_SIZE,
     justifyContent: 'center',

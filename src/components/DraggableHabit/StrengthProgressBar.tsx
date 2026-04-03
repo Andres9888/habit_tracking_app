@@ -12,6 +12,7 @@ import { View, Text } from 'react-native';
 import ReAnimated, { type AnimatedStyle } from 'react-native-reanimated';
 import { getStrengthEmoji } from './strengthUtils';
 import { useCountingPercent } from './useCountingPercent';
+import { colors } from '@/theme';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { borderRadius } from '../../theme/spacing';
 import { typography, fontFamilies} from '../../theme/typography';
@@ -54,7 +55,7 @@ export function StrengthProgressBar({
       <View className='flex-1 items-center'>
         <Text
           className='text-[13px] font-bold'
-          style={{ color: isDark ? '#A3E635' : '#4D7A0A', marginLeft: 12 }}
+          style={{ color: isDark ? '#A3E635' : colors.strength.starting, marginLeft: 12 }}
         >
           {displayPercent}%
         </Text>
@@ -86,7 +87,7 @@ export function StrengthProgressBar({
           <ReAnimated.View
             style={[
               {
-                backgroundColor: isDark ? '#A3E635' : '#4D7A0A',
+                backgroundColor: isDark ? '#A3E635' : colors.strength.starting,
                 borderRadius: borderRadius.xs,
                 height: '100%',
               },

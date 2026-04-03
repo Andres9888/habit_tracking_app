@@ -31,6 +31,7 @@ import { StrengthFillBackground } from '../HabitCard/components/StrengthFillBack
 import { getEffectiveAccentColor, getBorderAccentColor } from './colorUtils';
 import { buildStaticCardStyle } from './cardStyles';
 import type { DraggableHabitCardProps } from './DraggableHabitCard.types';
+import { colors } from '@/theme';
 import { borderRadius } from '../../theme/spacing';
 
 export type { DraggableHabitCardProps } from './DraggableHabitCard.types';
@@ -124,7 +125,7 @@ function DraggableHabitCardComponent(props: DraggableHabitCardProps) {
               pointerEvents='none'
               style={[
                 {
-                  borderColor: props.accentColor ?? '#a855f7',
+                  borderColor: props.accentColor ?? colors.premium[400],
                   borderRadius: borderRadius.xl,
                   borderWidth: 2,
                   ...StyleSheet.absoluteFillObject,

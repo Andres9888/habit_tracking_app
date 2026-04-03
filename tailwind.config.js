@@ -17,9 +17,9 @@ module.exports = {
     },
     extend: {
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
-        heading: ['Inter', 'system-ui', 'sans-serif'],
-        dyslexic: ['OpenDyslexic', 'Inter', 'system-ui', 'sans-serif'],
+        sans: ['DMSans', 'system-ui', 'sans-serif'],
+        heading: ['Literata', 'system-ui', 'sans-serif'],
+        dyslexic: ['OpenDyslexic', 'DMSans', 'system-ui', 'sans-serif'],
       },
       colors: {
         border: 'hsl(var(--border))',
@@ -54,7 +54,7 @@ module.exports = {
         },
         card: {
           DEFAULT: '#EDEAE5',
-          foreground: '#1F2937',
+          foreground: '#2D2A26',
         },
         // Home screen redesign palette (see src/theme/colors/semantic.ts warmPalette)
         dominant: '#faf9f7',

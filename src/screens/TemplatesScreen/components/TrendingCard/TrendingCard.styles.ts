@@ -43,12 +43,12 @@ export const s = StyleSheet.create({
     fontSize: 13,
   },
   scienceBadge: {
-    backgroundColor: '#FEF3C7',
+    backgroundColor: colors.warningLight,
     borderRadius: 9999,
     paddingHorizontal: 8,
     paddingVertical: 2,
   },
-  scienceText: { color: '#92400E', fontSize: 10, fontWeight: '600' },
+  scienceText: { color: colors.warning, fontSize: 10, fontWeight: '600' },
   bottomRow: {
     alignItems: 'center',
     flexDirection: 'row',

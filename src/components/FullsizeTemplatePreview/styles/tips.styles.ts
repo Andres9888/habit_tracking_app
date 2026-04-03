@@ -4,8 +4,9 @@
 
 import { StyleSheet } from 'react-native';
 
-import { borderRadius } from '../../../theme/spacing';
-import { typography, fontFamilies} from '@/theme/typography';
+import { colors } from '@/theme';
+import { borderRadius, spacing } from '../../../theme/spacing';
+import { typography, fontFamilies } from '@/theme/typography';
 
 export const tipsStyles = StyleSheet.create({
   tipIconContainer: {
@@ -27,16 +28,16 @@ export const tipsStyles = StyleSheet.create({
     fontWeight: '700',
   },
   tipsBox: {
-    backgroundColor: '#fefce8',
-    borderColor: '#fef08a',
+    backgroundColor: colors.warningLight,
+    borderColor: colors.streak[100],
     borderRadius: borderRadius.large,
     borderWidth: 2,
-    marginHorizontal: 20,
-    marginTop: 16,
-    padding: 20,
+    marginHorizontal: spacing.lg,
+    marginTop: spacing.base,
+    padding: spacing.lg,
   },
   tipsDivider: {
-    backgroundColor: '#fef08a',
+    backgroundColor: colors.streak[100],
     height: 1,
     marginBottom: 12,
   },
@@ -47,7 +48,7 @@ export const tipsStyles = StyleSheet.create({
     marginBottom: 12,
   },
   tipsLabel: {
-    color: '#854d0e',
+    color: colors.warning,
     fontFamily: fontFamilies.primary.text,
     fontSize: typography.caption.fontSize,
     fontWeight: '700',
@@ -55,7 +56,7 @@ export const tipsStyles = StyleSheet.create({
     textTransform: 'uppercase',
   },
   tipText: {
-    color: '#713f12',
+    color: colors.warning,
     flex: 1,
     fontFamily: fontFamilies.primary.text,
     fontSize: 14,

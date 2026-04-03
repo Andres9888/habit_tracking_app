@@ -1,6 +1,7 @@
 import React from 'react';
 import { Animated, Text, Pressable } from 'react-native';
 import { Pause, Play } from 'lucide-react-native';
+import { colors } from '@/theme';
 import { borderRadius } from '../../theme/spacing';
 import { typography, fontFamilies} from '@/theme/typography';
 
@@ -35,7 +36,7 @@ export function PauseAction({
     outputRange: [1, 0.85, 0.6],
   });
 
-  const actionColor = isPaused ? '#10b981' : '#8b5cf6'; // green for resume, purple for pause
+  const actionColor = isPaused ? colors.primary[500] : colors.premium[400]; // green for resume, purple for pause
   const actionLabel = isPaused ? 'Resume' : 'Pause';
 
   const handlePress = () => {

@@ -1,10 +1,11 @@
 import { StyleSheet } from 'react-native';
+import { colors } from '@/theme';
 import { borderRadius } from '../../../theme/spacing';
-import { typography, fontFamilies} from '@/theme/typography';
+import { typography, fontFamilies } from '@/theme/typography';
 
 export const statsStyles = StyleSheet.create({
   ageText: {
-    color: '#71717A',
+    color: colors.gray[500],
     fontFamily: fontFamilies.primary.text,
     fontSize: typography.caption.fontSize,
     marginTop: 10,
@@ -14,14 +15,14 @@ export const statsStyles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   statsDot: {
-    backgroundColor: '#A1A1AA',
+    backgroundColor: colors.gray[300],
     borderRadius: 4,
     height: 6,
     marginRight: 8,
     width: 6,
   },
   statsHeader: {
-    color: '#52525B',
+    color: colors.gray[500],
     fontFamily: fontFamilies.monospace,
     fontSize: typography.caption.fontSize,
     fontWeight: '600',
@@ -37,13 +38,13 @@ export const statsStyles = StyleSheet.create({
     gap: 6,
   },
   statsText: {
-    color: '#3F3F46',
+    color: colors.gray[700],
     fontFamily: fontFamilies.monospace,
     fontSize: typography.bodySmall.fontSize,
   },
   warningContainer: {
     alignItems: 'center',
-    backgroundColor: '#FEF3C7',
+    backgroundColor: colors.warningLight,
     borderRadius: borderRadius.small,
     flexDirection: 'row',
     marginTop: 10,
@@ -51,7 +52,7 @@ export const statsStyles = StyleSheet.create({
     paddingVertical: 8,
   },
   warningText: {
-    color: '#92400E',
+    color: colors.warning,
     fontFamily: fontFamilies.primary.text,
     fontSize: 13,
     marginLeft: 6,

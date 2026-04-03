@@ -1,7 +1,8 @@
 import { Text, StyleSheet } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useThemeColors } from '../../../theme/ThemeContext';
-import { spacing, borderRadius } from '../../../theme/spacing';
+import { spacing, borderRadius, shadows } from '../../../theme/spacing';
+import { typography, fontWeights } from '../../../theme/typography';
 import type { StatCardProps } from '../types';
 
 export function StatCard({
@@ -40,6 +41,7 @@ export function StatCard({
 
 const styles = StyleSheet.create({
   card: {
+    ...shadows.floatingActionButton,
     alignItems: 'center',
     borderRadius: borderRadius.large,
     borderWidth: 1,
@@ -48,22 +50,19 @@ const styles = StyleSheet.create({
     gap: spacing.xs,
     paddingHorizontal: spacing.base,
     paddingVertical: spacing.base,
-    shadowOffset: { height: 4, width: 0 },
-    shadowOpacity: 0.08,
-    shadowRadius: 16,
   },
   emoji: {
-    fontSize: 22,
+    fontSize: typography.heading2.fontSize,
     lineHeight: 28,
   },
   label: {
-    fontSize: 13,
+    fontSize: typography.caption.fontSize,
     lineHeight: 18,
     textAlign: 'center',
   },
   value: {
-    fontSize: 17,
-    fontWeight: '600',
+    fontSize: typography.body.fontSize,
+    fontWeight: fontWeights.semibold,
     letterSpacing: -0.41,
     lineHeight: 22,
   },

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Animated, Pressable, Text, View } from 'react-native';
 import { Archive } from 'lucide-react-native';
+import { colors } from '@/theme';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { borderRadius } from '../../theme/spacing';
 import { typography, fontFamilies } from '@/theme/typography';
@@ -44,7 +45,7 @@ export function SwipeActions({ dragX, onArchive, onDelete }: SwipeActionsProps) 
         onPress={onArchive}
         style={{
           alignItems: 'center',
-          backgroundColor: isDark ? '#D97706' : '#f59e0b',
+          backgroundColor: isDark ? colors.warning : colors.streak[300],
           borderBottomRightRadius: borderRadius.xl,
           borderTopRightRadius: borderRadius.xl,
           height: '100%',

@@ -7,6 +7,7 @@ import { Text, View } from 'react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { fontFamilies } from '@/theme/typography';
+import { spacing } from '@/theme';
 
 const anim = (delay: number) =>
   FadeInUp.duration(280).delay(delay).springify().damping(18);
@@ -19,7 +20,7 @@ export function EmptyState() {
       style={{
         backgroundColor: colors.card,
         borderRadius: 16,
-        padding: 20,
+        padding: spacing.lg,
         shadowColor: colors.text.primary,
         shadowOffset: { height: 4, width: 0 },
         shadowOpacity: 0.04,

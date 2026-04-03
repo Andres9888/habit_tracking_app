@@ -3,7 +3,8 @@ import { Trophy } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useThemeColors } from '../../../theme/ThemeContext';
-import { spacing, borderRadius } from '../../../theme/spacing';
+import { spacing, borderRadius, shadows } from '../../../theme/spacing';
+import { typography, fontWeights } from '../../../theme/typography';
 import { AVATAR_GRADIENT, XP_GRADIENT, TROPHY_GRADIENT } from '../constants';
 import type { CharacterData } from '../types';
 
@@ -105,7 +106,7 @@ const styles = StyleSheet.create({
     width: 80,
   },
   avatarEmoji: {
-    fontSize: 34,
+    fontSize: typography.displayLarge.fontSize,
     lineHeight: 41,
   },
   avatarGradient: {
@@ -120,13 +121,11 @@ const styles = StyleSheet.create({
     gap: spacing.md,
   },
   card: {
+    ...shadows.floatingActionButton,
     borderRadius: borderRadius.xl,
     borderWidth: 1,
     marginBottom: spacing.lg,
     overflow: 'hidden',
-    shadowOffset: { height: 4, width: 0 },
-    shadowOpacity: 0.08,
-    shadowRadius: 16,
   },
   cardInner: {
     flexDirection: 'column',
@@ -148,17 +147,17 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
   },
   levelText: {
-    fontSize: 17,
-    fontWeight: '400',
+    fontSize: typography.body.fontSize,
+    fontWeight: fontWeights.regular,
     letterSpacing: -0.3125,
     lineHeight: 24,
   },
   sparkleEmoji: {
-    fontSize: 17,
+    fontSize: typography.body.fontSize,
   },
   titleText: {
-    fontSize: 14,
-    fontWeight: '400',
+    fontSize: typography.bodySmall.fontSize,
+    fontWeight: fontWeights.regular,
     letterSpacing: -0.15,
     lineHeight: 20,
   },
@@ -175,8 +174,8 @@ const styles = StyleSheet.create({
   },
   trophyText: {
     color: 'white',
-    fontSize: 17,
-    fontWeight: '400',
+    fontSize: typography.body.fontSize,
+    fontWeight: fontWeights.regular,
     letterSpacing: -0.3125,
     lineHeight: 24,
   },
@@ -192,8 +191,8 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   xpLabel: {
-    fontSize: 14,
-    fontWeight: '400',
+    fontSize: typography.bodySmall.fontSize,
+    fontWeight: fontWeights.regular,
     letterSpacing: -0.15,
     lineHeight: 20,
   },
@@ -203,8 +202,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   xpRemaining: {
-    fontSize: 13,
-    fontWeight: '400',
+    fontSize: typography.caption.fontSize,
+    fontWeight: fontWeights.regular,
     lineHeight: 16,
     textAlign: 'center',
   },
@@ -213,8 +212,8 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
   },
   xpValue: {
-    fontSize: 14,
-    fontWeight: '400',
+    fontSize: typography.bodySmall.fontSize,
+    fontWeight: fontWeights.regular,
     letterSpacing: -0.15,
     lineHeight: 20,
   },

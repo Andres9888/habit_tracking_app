@@ -4,6 +4,7 @@ import ReAnimated, { useAnimatedStyle } from 'react-native-reanimated';
 import type { SharedValue } from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
 import { TrendingUp } from 'lucide-react-native';
+import { colors } from '@/theme';
 import { useThemeColors } from '../../theme/ThemeContext';
 
 interface NewRecordBadgeProps {
@@ -27,7 +28,7 @@ export function NewRecordBadge({
       className='mx-3 mb-3 flex-row items-center justify-center gap-1.5 rounded-full py-2'
       style={[
         {
-          borderColor: isDark ? '#D97706' : '#fcd34d',
+          borderColor: isDark ? colors.warning : colors.streak[300],
           borderWidth: 1,
         },
         badgeStyle,
@@ -35,18 +36,18 @@ export function NewRecordBadge({
     >
       <LinearGradient
         className='absolute inset-0 rounded-full'
-        colors={isDark ? ['#451A03', '#78350F'] : ['#fef3c7', '#fffbeb']}
+        colors={isDark ? [colors.gray[900], colors.warning] : [colors.warningLight, colors.streak[100]]}
         end={{ x: 1, y: 0 }}
         start={{ x: 0, y: 0 }}
       />
       <TrendingUp
-        color={isDark ? '#FBBF24' : '#d97706'}
+        color={isDark ? colors.streak[300] : colors.warning}
         size={16}
         strokeWidth={2.5}
       />
       <Text
         className='text-[13px] font-bold uppercase tracking-wide'
-        style={{ color: isDark ? '#FCD34D' : '#b45309' }}
+        style={{ color: isDark ? colors.streak[300] : colors.warning }}
       >
         New Personal Record! 🎉
       </Text>

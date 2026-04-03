@@ -5,7 +5,7 @@
 import { StyleSheet } from 'react-native';
 import { colors } from '../../theme/colors';
 import { borderRadius } from '../../theme/spacing';
-import { typography} from '../../theme/typography';
+import { fontWeights, typography } from '../../theme/typography';
 
 export const styles = StyleSheet.create({
   actionButton: {
@@ -29,12 +29,12 @@ export const styles = StyleSheet.create({
   },
   dismissIcon: {
     fontSize: typography.body.fontSize,
-    fontWeight: 'bold',
+    fontWeight: fontWeights.bold,
   },
   icon: {
     color: colors.text.inverse,
     fontSize: typography.bodySmall.fontSize,
-    fontWeight: 'bold',
+    fontWeight: fontWeights.bold,
   },
   iconContainer: {
     alignItems: 'center',

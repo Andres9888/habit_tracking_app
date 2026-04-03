@@ -10,6 +10,7 @@ import { BarChart3, Calendar } from 'lucide-react-native';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import type { EmptyInsightsStateProps } from '../InsightsSection.types';
 import { fontFamilies } from '@/theme/typography';
+import { spacing } from '@/theme';
 
 export function EmptyInsightsState({ daysRemaining }: EmptyInsightsStateProps) {
   const { colors, isDark } = useThemeColors();
@@ -27,7 +28,7 @@ export function EmptyInsightsState({ daysRemaining }: EmptyInsightsStateProps) {
         shadowRadius: 8,
       }}
     >
-      <View style={{ padding: 20 }}>
+      <View style={{ padding: spacing.lg }}>
         <View
           style={{
             alignItems: 'center',

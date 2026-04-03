@@ -2,6 +2,7 @@
  * StrengthRing Styles
  */
 import { StyleSheet } from 'react-native';
+import { fontWeights } from '@/theme/typography';
 
 export const styles = StyleSheet.create({
   centerText: {
@@ -44,7 +45,7 @@ export const styles = StyleSheet.create({
     fontWeight: '700',
   },
   trendArrow: {
-    fontWeight: 'bold',
+    fontWeight: fontWeights.bold,
     marginLeft: 1,
   },
 });

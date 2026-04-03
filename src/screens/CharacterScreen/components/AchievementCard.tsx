@@ -2,8 +2,8 @@ import { View, Text, StyleSheet } from 'react-native';
 import { Trophy } from 'lucide-react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useThemeColors } from '../../../theme/ThemeContext';
-import { fontFamilies } from '../../../theme/typography';
-import { spacing, borderRadius } from '../../../theme/spacing';
+import { fontFamilies, typography, fontWeights } from '../../../theme/typography';
+import { spacing, borderRadius, shadows } from '../../../theme/spacing';
 import type { Achievement } from '../types';
 
 interface AchievementCardProps {
@@ -62,6 +62,7 @@ const styles = StyleSheet.create({
     width: 48,
   },
   card: {
+    ...shadows.floatingActionButton,
     alignItems: 'center',
     borderRadius: borderRadius.xl,
     borderWidth: 1,
@@ -69,26 +70,23 @@ const styles = StyleSheet.create({
     gap: spacing.base,
     paddingHorizontal: spacing.lg,
     paddingVertical: spacing.lg,
-    shadowOffset: { height: 4, width: 0 },
-    shadowOpacity: 0.08,
-    shadowRadius: 16,
   },
   description: {
     fontFamily: fontFamilies.primary.text,
-    fontSize: 13,
+    fontSize: typography.caption.fontSize,
     letterSpacing: -0.08,
     lineHeight: 18,
   },
   icon: {
-    fontSize: 22,
+    fontSize: typography.heading2.fontSize,
   },
   textCol: {
     flex: 1,
     flexDirection: 'column',
   },
   title: {
-    fontSize: 17,
-    fontWeight: '600',
+    fontSize: typography.body.fontSize,
+    fontWeight: fontWeights.semibold,
     letterSpacing: -0.41,
     lineHeight: 22,
   },

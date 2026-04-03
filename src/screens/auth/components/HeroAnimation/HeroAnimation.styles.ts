@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { colors } from '@/theme';
 
 export const styles = StyleSheet.create({
   absoluteEmoji: {
@@ -18,7 +19,7 @@ export const styles = StyleSheet.create({
   },
   emojiContainer: {
     alignItems: 'center',
-    backgroundColor: '#f5f5f4',
+    backgroundColor: colors.gray[50],
     borderRadius: 9999,
     height: 120,
     justifyContent: 'center',

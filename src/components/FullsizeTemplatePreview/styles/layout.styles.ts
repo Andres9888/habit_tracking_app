@@ -3,6 +3,7 @@
  */
 
 import { StyleSheet } from 'react-native';
+import { colors } from '@/theme';
 
 export const layoutStyles = StyleSheet.create({
   bottomSpacer: {
@@ -24,7 +25,7 @@ export const layoutStyles = StyleSheet.create({
     zIndex: 1000,
   },
   container: {
-    backgroundColor: '#FAFAF9',
+    backgroundColor: colors.gray[50],
     flex: 1,
   },
   contentContainer: {
