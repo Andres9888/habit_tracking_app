@@ -67,10 +67,10 @@ export const listArchived = query({
   args: {},
   handler: async (ctx) => {
     const identity = await ctx.auth.getUserIdentity();
-    requireAuth(identity, 'view archived habits');
+    if (!identity) return [];
     return await ctx.db
       .query('habits')
-      .withIndex('by_userId', (q) => q.eq('userId', identity!.subject))
+      .withIndex('by_userId', (q) => q.eq('userId', identity.subject))
       .filter((q) => q.eq(q.field('archived'), true))
       .collect();
   },
@@ -81,10 +81,10 @@ export const listArchivedCount = query({
   args: {},
   handler: async (ctx) => {
     const identity = await ctx.auth.getUserIdentity();
-    requireAuth(identity, 'view archived habits');
+    if (!identity) return 0;
     const archivedHabits = await ctx.db
       .query('habits')
-      .withIndex('by_userId', (q) => q.eq('userId', identity!.subject))
+      .withIndex('by_userId', (q) => q.eq('userId', identity.subject))
       .filter((q) => q.eq(q.field('archived'), true))
       .collect();
     return archivedHabits.length;

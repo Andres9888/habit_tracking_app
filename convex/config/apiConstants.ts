@@ -25,8 +25,7 @@ export const FIGMA_API = {
  * This should be set during deployment based on your Clerk instance.
  */
 export const CLERK_API = {
-  AUTH_DOMAIN:
-    process.env.CLERK_AUTH_DOMAIN || 'https://vital-elf-64.clerk.accounts.dev',
+  AUTH_DOMAIN: process.env.CLERK_AUTH_DOMAIN ?? '',
 } as const;
 
 /**

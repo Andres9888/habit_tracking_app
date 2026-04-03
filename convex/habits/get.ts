@@ -1,12 +1,14 @@
 /**
  * Get Single Habit Query
- * Fetch a habit by ID with computed strength
+ * Fetch a habit by ID with stored strength values
+ *
+ * PERF: Uses stored strength/strengthLevel from the habit document
+ * (kept up-to-date by recalculateStreakAndStrength on toggle)
+ * instead of loading the full tracking history to recompute.
  */
 import { v } from 'convex/values';
 import { query } from '../_generated/server';
-import { calculateMomentumStrengthSnapshot } from '../habitStrength';
 import { fullHabitValidator } from './types';
-import { getTodayForTimezone, maxDateKey } from './utils';
 
 export const get = query({
   args: { habitId: v.id('habits'), timezone: v.optional(v.string()) },
@@ -18,32 +20,7 @@ export const get = query({
     if (!habit) return null;
     if (habit.userId !== identity.subject) return null;
 
-    const tracking = await ctx.db
-      .query('tracking')
-      .withIndex('by_habit_and_date', (q) => q.eq('habitId', habit._id))
-      .collect();
-
-    const todayDateKey = getTodayForTimezone(args.timezone);
-    let maxTrackingDateKey = todayDateKey;
-    for (const record of tracking) {
-      maxTrackingDateKey = maxDateKey(maxTrackingDateKey, record.date);
-    }
-    const evaluationDateKey = maxDateKey(todayDateKey, maxTrackingDateKey);
-
-    const snapshot = calculateMomentumStrengthSnapshot({
-      habitCreatedAt: habit.createdAt,
-      throughDate: evaluationDateKey,
-      tracking: tracking.map((record) => ({
-        completed: record.completed,
-        date: record.date,
-      })),
-    });
-
-    return {
-      ...habit,
-      strength: snapshot.strength,
-      strengthLevel: snapshot.strengthLevel,
-    };
+    return habit;
   },
   returns: v.union(v.null(), fullHabitValidator),
 });
