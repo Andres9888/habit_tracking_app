@@ -89,6 +89,15 @@ export function createStateManagement(
       notify();
     },
 
+    reset(): void {
+      state.operations.clear();
+      state.pendingArchives.clear();
+      state.pendingPauses.clear();
+      state.pendingReorder = null;
+      state.pendingToggles.clear();
+      notify();
+    },
+
     getPendingArchive(habitId: Id<'habits'>): boolean | undefined {
       return state.pendingArchives.get(habitId);
     },

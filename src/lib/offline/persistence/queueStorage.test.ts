@@ -20,6 +20,7 @@ import {
   loadQueueState,
   OFFLINE_QUEUE_STORAGE_KEY,
   saveQueueState,
+  setQueueStorageScope,
 } from './queueStorage';
 
 jest.mock('@react-native-async-storage/async-storage');
@@ -41,6 +42,10 @@ function createTestQueueState(
 describe('queueStorage', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    setQueueStorageScope(null);
+    (AsyncStorage.getItem as jest.Mock).mockResolvedValue(null);
+    (AsyncStorage.setItem as jest.Mock).mockResolvedValue(undefined);
+    (AsyncStorage.removeItem as jest.Mock).mockResolvedValue(undefined);
   });
 
   describe('OFFLINE_QUEUE_STORAGE_KEY', () => {
@@ -150,6 +155,21 @@ describe('queueStorage', () => {
 
       await expect(saveQueueState(state)).rejects.toThrow('Storage full');
     });
+
+    it('uses a user-scoped storage key when configured', async () => {
+      setQueueStorageScope('user_123');
+
+      await saveQueueState(createTestQueueState());
+
+      expect(AsyncStorage.setItem).toHaveBeenCalledWith(
+        '@chainday:offline_queue_v1:user_123_pending',
+        expect.any(String)
+      );
+      expect(AsyncStorage.setItem).toHaveBeenCalledWith(
+        '@chainday:offline_queue_v1:user_123',
+        expect.any(String)
+      );
+    });
   });
 
   describe('loadQueueState', () => {
@@ -191,6 +211,25 @@ describe('queueStorage', () => {
       expect(result.operations).toEqual([]);
       expect(result.createdAt).toBeGreaterThan(0);
       expect(result.updatedAt).toBeGreaterThan(0);
+    });
+
+    it('loads from the scoped storage key when configured', async () => {
+      setQueueStorageScope('user_456');
+      (AsyncStorage.getItem as jest.Mock).mockResolvedValueOnce(null);
+      (AsyncStorage.getItem as jest.Mock).mockResolvedValueOnce(
+        JSON.stringify(createTestQueueState())
+      );
+
+      await loadQueueState();
+
+      expect(AsyncStorage.getItem).toHaveBeenNthCalledWith(
+        1,
+        '@chainday:offline_queue_v1:user_456_pending'
+      );
+      expect(AsyncStorage.getItem).toHaveBeenNthCalledWith(
+        2,
+        '@chainday:offline_queue_v1:user_456'
+      );
     });
 
     it('returns default state when data is invalid JSON', async () => {

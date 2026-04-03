@@ -5,10 +5,12 @@
 // Main queue storage
 export {
   clearQueueState,
+  clearLegacyQueueState,
   loadQueueState,
   OFFLINE_QUEUE_STORAGE_KEY,
   saveQueueState,
   saveQueueStateUnsafe,
+  setQueueStorageScope,
 } from './queueStorage';
 
 // Queue storage helpers

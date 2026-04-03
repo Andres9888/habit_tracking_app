@@ -5,6 +5,7 @@
 
 import { v } from 'convex/values';
 import { mutation } from './_generated/server';
+import { getInvalidImageUploadReason } from './storageValidation';
 
 /**
  * Generate a signed upload URL for file storage
@@ -21,4 +22,48 @@ export const generateUploadUrl = mutation({
     return await ctx.storage.generateUploadUrl();
   },
   returns: v.string(),
+});
+
+export const validateImageUpload = mutation({
+  args: {
+    storageId: v.id('_storage'),
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error('Unauthenticated: Must be logged in to upload files');
+    }
+
+    const metadata = await ctx.storage.getMetadata(args.storageId);
+    const validationError = getInvalidImageUploadReason(metadata);
+
+    if (validationError) {
+      if (metadata) {
+        await ctx.storage.delete(args.storageId);
+      }
+      throw new Error(validationError);
+    }
+
+    if (!metadata) {
+      throw new Error('Uploaded file was not found');
+    }
+
+    const contentType = metadata.contentType;
+    if (!contentType) {
+      throw new Error(
+        'Unsupported image format. Use JPEG, PNG, WebP, or HEIC.'
+      );
+    }
+
+    return {
+      contentType,
+      size: metadata.size,
+      storageId: args.storageId,
+    };
+  },
+  returns: v.object({
+    contentType: v.string(),
+    size: v.number(),
+    storageId: v.id('_storage'),
+  }),
 });

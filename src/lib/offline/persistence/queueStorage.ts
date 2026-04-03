@@ -15,6 +15,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import type { OfflineQueueState } from '../queue';
 import { OFFLINE_QUEUE_VERSION } from '../queue';
+import { buildScopedStorageKey } from '../../../utils/storage/scopedStorageKey';
 import {
   createDefaultState,
   isValidQueueState,
@@ -29,6 +30,16 @@ import {
 /** Storage key for the offline queue state */
 export const OFFLINE_QUEUE_STORAGE_KEY = '@chainday:offline_queue_v1';
 
+let queueStorageScope: string | null = null;
+
+function getQueueStorageKey(scope: string | null = queueStorageScope): string {
+  return buildScopedStorageKey(OFFLINE_QUEUE_STORAGE_KEY, scope);
+}
+
+export function setQueueStorageScope(scope: string | null): void {
+  queueStorageScope = scope;
+}
+
 /**
  * Save the offline queue state to AsyncStorage with transaction safety
  *
@@ -40,15 +51,19 @@ export const OFFLINE_QUEUE_STORAGE_KEY = '@chainday:offline_queue_v1';
  * If app crashes during write, recovery happens on next load.
  *
  * @param state - The queue state to persist
+ * @param scope - Optional user/session scope for persistence isolation
  * @throws Error if storage operation fails (caller should handle)
  */
-export async function saveQueueState(state: OfflineQueueState): Promise<void> {
+export async function saveQueueState(
+  state: OfflineQueueState,
+  scope?: string | null
+): Promise<void> {
   const stateToSave: OfflineQueueState = {
     ...state,
     updatedAt: Date.now(),
   };
 
-  await transactionSafeWrite(OFFLINE_QUEUE_STORAGE_KEY, stateToSave);
+  await transactionSafeWrite(getQueueStorageKey(scope), stateToSave);
 }
 
 /**
@@ -58,7 +73,8 @@ export async function saveQueueState(state: OfflineQueueState): Promise<void> {
  * Prefer saveQueueState() for production use.
  */
 export async function saveQueueStateUnsafe(
-  state: OfflineQueueState
+  state: OfflineQueueState,
+  scope?: string | null
 ): Promise<void> {
   const stateToSave: OfflineQueueState = {
     ...state,
@@ -66,7 +82,7 @@ export async function saveQueueStateUnsafe(
   };
 
   await AsyncStorage.setItem(
-    OFFLINE_QUEUE_STORAGE_KEY,
+    getQueueStorageKey(scope),
     JSON.stringify(stateToSave)
   );
 }
@@ -80,18 +96,24 @@ export async function saveQueueStateUnsafe(
  * Returns the default empty queue state if no persisted state exists
  * or if the stored state is corrupted.
  *
+ * @param scope - Optional user/session scope for persistence isolation
  * @returns The persisted queue state or default empty state
  */
-export async function loadQueueState(): Promise<OfflineQueueState> {
+export async function loadQueueState(
+  scope?: string | null
+): Promise<OfflineQueueState> {
+  const storageKey = getQueueStorageKey(scope);
+
   try {
     // First, check for and recover any interrupted transactions
     const recovery = await recoverTransaction<OfflineQueueState>(
-      OFFLINE_QUEUE_STORAGE_KEY,
+      storageKey,
       isValidQueueState
     );
 
     if (recovery.recovered && recovery.data) {
-      if (__DEV__) console.warn('[queueStorage] Recovered from interrupted write');
+      if (__DEV__)
+        console.warn('[queueStorage] Recovered from interrupted write');
       if (recovery.data.version !== OFFLINE_QUEUE_VERSION) {
         return migrateQueueState(recovery.data);
       }
@@ -99,12 +121,15 @@ export async function loadQueueState(): Promise<OfflineQueueState> {
     }
 
     // Normal load path
-    const raw = await AsyncStorage.getItem(OFFLINE_QUEUE_STORAGE_KEY);
+    const raw = await AsyncStorage.getItem(storageKey);
     if (!raw) return createDefaultState();
 
     const parsed = JSON.parse(raw) as unknown;
     if (!isValidQueueState(parsed)) {
-      if (__DEV__) console.warn('[queueStorage] Invalid queue state, resetting to default');
+      if (__DEV__)
+        console.warn(
+          '[queueStorage] Invalid queue state, resetting to default'
+        );
       return createDefaultState();
     }
 
@@ -114,7 +139,8 @@ export async function loadQueueState(): Promise<OfflineQueueState> {
 
     return parsed;
   } catch (error) {
-    if (__DEV__) console.warn('[queueStorage] Failed to load queue state:', error);
+    if (__DEV__)
+      console.warn('[queueStorage] Failed to load queue state:', error);
     return createDefaultState();
   }
 }
@@ -124,7 +150,13 @@ export async function loadQueueState(): Promise<OfflineQueueState> {
  *
  * Also cleans up any transaction artifacts (pending/backup keys)
  */
-export async function clearQueueState(): Promise<void> {
+export async function clearQueueState(scope?: string | null): Promise<void> {
+  const storageKey = getQueueStorageKey(scope);
+  await AsyncStorage.removeItem(storageKey);
+  await cleanupTransaction(storageKey);
+}
+
+export async function clearLegacyQueueState(): Promise<void> {
   await AsyncStorage.removeItem(OFFLINE_QUEUE_STORAGE_KEY);
   await cleanupTransaction(OFFLINE_QUEUE_STORAGE_KEY);
 }

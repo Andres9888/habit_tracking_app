@@ -18,6 +18,10 @@ import { useMutation } from 'convex/react';
 import * as ImageManipulator from 'expo-image-manipulator';
 import { api } from '../../convex/_generated/api';
 import { Id } from '../../convex/_generated/dataModel';
+import {
+  ALLOWED_IMAGE_CONTENT_TYPES,
+  MAX_IMAGE_UPLOAD_BYTES,
+} from '../../convex/storageValidation';
 import type { PickedImage } from './useImagePicker';
 
 /** Maximum image dimension (width or height) - balances quality and performance */
@@ -64,6 +68,7 @@ export function useImageUpload(): UseImageUploadReturn {
 
   // Convex mutation for generating upload URL
   const generateUploadUrl = useMutation(api.storage.generateUploadUrl);
+  const validateImageUpload = useMutation(api.storage.validateImageUpload);
 
   /**
    * Resize image if dimensions exceed MAX_IMAGE_DIMENSION
@@ -72,7 +77,7 @@ export function useImageUpload(): UseImageUploadReturn {
   const resizeImageIfNeeded = useCallback(
     async (image: PickedImage): Promise<string> => {
       const maxDimension = Math.max(image.width, image.height);
-      
+
       // No resize needed if already within limits
       if (maxDimension <= MAX_IMAGE_DIMENSION) {
         return image.uri;
@@ -84,7 +89,9 @@ export function useImageUpload(): UseImageUploadReturn {
       const newHeight = Math.round(image.height * ratio);
 
       if (__DEV__) {
-        console.log(`Resizing image from ${image.width}x${image.height} to ${newWidth}x${newHeight}`);
+        console.log(
+          `Resizing image from ${image.width}x${image.height} to ${newWidth}x${newHeight}`
+        );
       }
 
       // Resize using expo-image-manipulator
@@ -122,12 +129,18 @@ export function useImageUpload(): UseImageUploadReturn {
           throw new Error(`Failed to read local file: ${fileResponse.status}`);
         }
         const blob = await fileResponse.blob();
+        const contentType = blob.type || image.mimeType || 'image/jpeg';
+
+        if (!ALLOWED_IMAGE_CONTENT_TYPES.has(contentType)) {
+          throw new Error(
+            'Unsupported image format. Use JPEG, PNG, WebP, or HEIC.'
+          );
+        }
 
         // Validate blob size (Convex has no hard limit but we set a reasonable one)
-        const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 MB
-        if (blob.size > MAX_FILE_SIZE) {
+        if (blob.size > MAX_IMAGE_UPLOAD_BYTES) {
           throw new Error(
-            `Image too large. Maximum size is ${MAX_FILE_SIZE / 1024 / 1024}MB`
+            `Image too large. Maximum size is ${MAX_IMAGE_UPLOAD_BYTES / 1024 / 1024}MB`
           );
         }
 
@@ -135,7 +148,7 @@ export function useImageUpload(): UseImageUploadReturn {
         const uploadResponse = await fetch(uploadUrl, {
           body: blob,
           headers: {
-            'Content-Type': image.mimeType || 'image/jpeg',
+            'Content-Type': contentType,
           },
           method: 'POST',
         });
@@ -149,6 +162,7 @@ export function useImageUpload(): UseImageUploadReturn {
 
         // Step 5: Parse the storage ID from the response
         const { storageId } = await uploadResponse.json();
+        await validateImageUpload({ storageId });
 
         // The URL will be the upload response but we typically get
         // the final URL via a query. For now, return the storage ID.
@@ -169,7 +183,7 @@ export function useImageUpload(): UseImageUploadReturn {
         return null;
       }
     },
-    [generateUploadUrl, resizeImageIfNeeded]
+    [generateUploadUrl, resizeImageIfNeeded, validateImageUpload]
   );
 
   /**
