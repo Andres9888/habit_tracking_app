@@ -16,7 +16,7 @@ export function useOfflineContext(): OfflineContextValue {
   const context = useContext(OfflineContext);
 
   if (!context) {
-    throw new Error('UseOfflineContext must be used within an OfflineProvider');
+    throw new Error('useOfflineContext must be used within an OfflineProvider');
   }
 
   return context;

@@ -14,6 +14,7 @@ import {
   resetOfflineQueueManager,
 } from '../../lib/offline';
 import * as persistence from '../../lib/offline/persistence';
+import { optimisticStore } from '../../lib/optimistic/store';
 
 // Mock AsyncStorage
 jest.mock('@react-native-async-storage/async-storage', () => ({
@@ -22,16 +23,25 @@ jest.mock('@react-native-async-storage/async-storage', () => ({
   removeItem: jest.fn(),
 }));
 
+const mockUseAuth = jest.fn();
+
+jest.mock('@clerk/clerk-expo', () => ({
+  useAuth: () => mockUseAuth(),
+}));
+
 // Mock the persistence module
 jest.mock('../../lib/offline/persistence', () => ({
   loadQueueState: jest.fn(),
   saveQueueState: jest.fn(),
   clearQueueState: jest.fn(),
+  clearLegacyQueueState: jest.fn(),
   OFFLINE_QUEUE_STORAGE_KEY: '@chainday:offline_queue_v1',
+  setQueueStorageScope: jest.fn(),
 }));
 
 const mockLoadQueueState = persistence.loadQueueState as jest.Mock;
 const mockSaveQueueState = persistence.saveQueueState as jest.Mock;
+const mockClearQueueState = persistence.clearQueueState as jest.Mock;
 
 /**
  * Test component that displays context values
@@ -51,6 +61,12 @@ describe('OfflineProvider', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     resetOfflineQueueManager();
+    optimisticStore.reset();
+    mockUseAuth.mockReturnValue({
+      isLoaded: true,
+      isSignedIn: true,
+      userId: 'user_123',
+    });
     mockLoadQueueState.mockResolvedValue({
       version: 1,
       operations: [],
@@ -58,6 +74,7 @@ describe('OfflineProvider', () => {
       updatedAt: Date.now(),
     });
     mockSaveQueueState.mockResolvedValue(undefined);
+    mockClearQueueState.mockResolvedValue(undefined);
   });
 
   describe('rendering', () => {
@@ -90,6 +107,27 @@ describe('OfflineProvider', () => {
       });
 
       expect(mockLoadQueueState).toHaveBeenCalledTimes(1);
+    });
+
+    it('does not restore queue while signed out', async () => {
+      mockUseAuth.mockReturnValue({
+        isLoaded: true,
+        isSignedIn: false,
+        userId: null,
+      });
+
+      const { getByTestId } = render(
+        <OfflineProvider>
+          <TestConsumer />
+        </OfflineProvider>
+      );
+
+      await waitFor(() => {
+        expect(getByTestId('isRestored').props.children).toBe('true');
+        expect(getByTestId('isRestoring').props.children).toBe('false');
+      });
+
+      expect(mockLoadQueueState).not.toHaveBeenCalled();
     });
 
     it('skips auto-restore when skipAutoRestore is true', async () => {
@@ -308,6 +346,36 @@ describe('OfflineProvider', () => {
 
       await waitFor(() => {
         expect(events).toContain('queue:restored');
+      });
+    });
+  });
+
+  describe('session cleanup', () => {
+    it('clears persisted state when the authenticated user changes', async () => {
+      const { rerender } = render(
+        <OfflineProvider>
+          <TestConsumer />
+        </OfflineProvider>
+      );
+
+      await waitFor(() => {
+        expect(mockLoadQueueState).toHaveBeenCalledTimes(1);
+      });
+
+      mockUseAuth.mockReturnValue({
+        isLoaded: true,
+        isSignedIn: true,
+        userId: 'user_456',
+      });
+
+      rerender(
+        <OfflineProvider>
+          <TestConsumer />
+        </OfflineProvider>
+      );
+
+      await waitFor(() => {
+        expect(mockClearQueueState).toHaveBeenCalledWith('user_123');
       });
     });
   });

@@ -433,19 +433,23 @@ try {
 }
 
 // Mock @shopify/react-native-skia if needed
-jest.mock('@shopify/react-native-skia', () => ({
-  Canvas: 'Canvas',
-  Path: 'Path',
-  Skia: {
-    Path: {
-      Make: jest.fn(() => ({
-        moveTo: jest.fn(),
-        lineTo: jest.fn(),
-        close: jest.fn(),
-      })),
+jest.mock(
+  '@shopify/react-native-skia',
+  () => ({
+    Canvas: 'Canvas',
+    Path: 'Path',
+    Skia: {
+      Path: {
+        Make: jest.fn(() => ({
+          moveTo: jest.fn(),
+          lineTo: jest.fn(),
+          close: jest.fn(),
+        })),
+      },
     },
-  },
-}));
+  }),
+  { virtual: true }
+);
 
 // Mock @react-native-community/netinfo (virtual module - not installed)
 jest.mock(

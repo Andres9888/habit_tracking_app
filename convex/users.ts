@@ -6,7 +6,19 @@
  */
 
 import { mutation, query } from './_generated/server';
+import type { MutationCtx } from './_generated/server';
 import { v } from 'convex/values';
+
+async function deleteDocuments(
+  ctx: MutationCtx,
+  ids: Array<Parameters<MutationCtx['db']['delete']>[0]>
+): Promise<number> {
+  for (const id of ids) {
+    await ctx.db.delete(id);
+  }
+
+  return ids.length;
+}
 
 /**
  * Get or create user based on Clerk authentication
@@ -65,6 +77,93 @@ export const currentUser = query({
       .withIndex('by_clerk_id', (q) => q.eq('clerkId', identity.subject))
       .unique();
   },
+});
+
+export const deleteCurrentUserData = mutation({
+  args: {},
+  handler: async (ctx) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error('Not authenticated');
+    }
+
+    const userId = identity.subject;
+    const habits = await ctx.db
+      .query('habits')
+      .withIndex('by_userId', (q) => q.eq('userId', userId))
+      .collect();
+    const tracking = await ctx.db
+      .query('tracking')
+      .withIndex('by_user_and_date', (q) => q.eq('userId', userId))
+      .collect();
+    const settings = await ctx.db
+      .query('userSettings')
+      .withIndex('by_userId', (q) => q.eq('userId', userId))
+      .collect();
+    const subscriptions = await ctx.db
+      .query('subscriptions')
+      .withIndex('by_clerk_id', (q) => q.eq('clerkId', userId))
+      .collect();
+    const users = await ctx.db
+      .query('users')
+      .withIndex('by_clerk_id', (q) => q.eq('clerkId', userId))
+      .collect();
+    const deletedHabits = await ctx.db
+      .query('deletedHabits')
+      .withIndex('by_userId', (q) => q.eq('userId', userId))
+      .collect();
+    const templateUsage = (
+      await ctx.db.query('templateUsage').collect()
+    ).filter((entry) => entry.userId === userId);
+
+    const deletedTemplateUsage = await deleteDocuments(
+      ctx,
+      templateUsage.map((entry) => entry._id)
+    );
+    const deletedTracking = await deleteDocuments(
+      ctx,
+      tracking.map((entry) => entry._id)
+    );
+    const deletedHabitsCount = await deleteDocuments(
+      ctx,
+      habits.map((entry) => entry._id)
+    );
+    const deletedSettings = await deleteDocuments(
+      ctx,
+      settings.map((entry) => entry._id)
+    );
+    const deletedSubscriptions = await deleteDocuments(
+      ctx,
+      subscriptions.map((entry) => entry._id)
+    );
+    const deletedUsers = await deleteDocuments(
+      ctx,
+      users.map((entry) => entry._id)
+    );
+    const deletedUndoRecords = await deleteDocuments(
+      ctx,
+      deletedHabits.map((entry) => entry._id)
+    );
+
+    return {
+      deletedHabits: deletedHabitsCount,
+      deletedSettings,
+      deletedSubscriptions,
+      deletedTemplateUsage,
+      deletedTracking,
+      deletedUndoRecords,
+      deletedUsers,
+    };
+  },
+  returns: v.object({
+    deletedHabits: v.number(),
+    deletedSettings: v.number(),
+    deletedSubscriptions: v.number(),
+    deletedTemplateUsage: v.number(),
+    deletedTracking: v.number(),
+    deletedUndoRecords: v.number(),
+    deletedUsers: v.number(),
+  }),
 });
 
 /**

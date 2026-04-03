@@ -8,9 +8,16 @@ import { renderHook, act, waitFor } from '@testing-library/react-native';
 
 // Mock Convex
 const mockGenerateUploadUrl = jest.fn();
+const mockValidateImageUpload = jest.fn();
 
 jest.mock('convex/react', () => ({
-  useMutation: () => mockGenerateUploadUrl,
+  useMutation: (reference: string) => {
+    if (reference === 'storage:validateImageUpload') {
+      return mockValidateImageUpload;
+    }
+
+    return mockGenerateUploadUrl;
+  },
 }));
 
 // Mock convex API
@@ -18,6 +25,7 @@ jest.mock('../../../convex/_generated/api', () => ({
   api: {
     storage: {
       generateUploadUrl: 'storage:generateUploadUrl',
+      validateImageUpload: 'storage:validateImageUpload',
     },
   },
 }));
@@ -41,6 +49,11 @@ describe('useImageUpload', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
+    mockValidateImageUpload.mockResolvedValue({
+      contentType: 'image/jpeg',
+      size: 50000,
+      storageId: 'storage-id-123',
+    });
   });
 
   describe('initial state', () => {
@@ -83,6 +96,9 @@ describe('useImageUpload', () => {
       });
 
       expect(mockGenerateUploadUrl).toHaveBeenCalled();
+      expect(mockValidateImageUpload).toHaveBeenCalledWith({
+        storageId: 'storage-id-123',
+      });
     });
 
     it('fetches local file as blob', async () => {
@@ -166,6 +182,29 @@ describe('useImageUpload', () => {
         storageId: 'storage-id-123',
         url: 'https://upload-url.test',
       });
+    });
+
+    it('rejects unsupported blob content types', async () => {
+      mockGenerateUploadUrl.mockResolvedValueOnce('https://upload-url.test');
+
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        blob: () =>
+          Promise.resolve(new Blob(['test'], { type: 'application/pdf' })),
+      });
+
+      const { result } = renderHook(() => useImageUpload());
+
+      let uploadResult: unknown;
+      await act(async () => {
+        uploadResult = await result.current.uploadImage(mockImage);
+      });
+
+      expect(uploadResult).toBeNull();
+      expect(result.current.error).toBe(
+        'Unsupported image format. Use JPEG, PNG, WebP, or HEIC.'
+      );
+      expect(mockValidateImageUpload).not.toHaveBeenCalled();
     });
 
     it('sets progress to 1 on completion', async () => {
@@ -273,6 +312,35 @@ describe('useImageUpload', () => {
 
       expect(uploadResult).toBeNull();
       expect(result.current.error).toBe('Upload failed: 500 - Server error');
+    });
+
+    it('sets error when server-side validation fails', async () => {
+      mockGenerateUploadUrl.mockResolvedValueOnce('https://upload-url.test');
+      mockValidateImageUpload.mockRejectedValueOnce(
+        new Error('Unsupported image format. Use JPEG, PNG, WebP, or HEIC.')
+      );
+
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        blob: () => Promise.resolve(new Blob(['test'], { type: 'image/jpeg' })),
+      });
+
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve({ storageId: 'storage-id-123' }),
+      });
+
+      const { result } = renderHook(() => useImageUpload());
+
+      let uploadResult: unknown;
+      await act(async () => {
+        uploadResult = await result.current.uploadImage(mockImage);
+      });
+
+      expect(uploadResult).toBeNull();
+      expect(result.current.error).toBe(
+        'Unsupported image format. Use JPEG, PNG, WebP, or HEIC.'
+      );
     });
 
     it('sets error when file is too large', async () => {

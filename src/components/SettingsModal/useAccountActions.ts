@@ -3,11 +3,14 @@
 import { useState, useCallback } from 'react';
 import { Alert, Linking, Platform, Share } from 'react-native';
 import { useClerk, useUser } from '@clerk/clerk-expo';
+import { useMutation } from 'convex/react';
+import { api } from '../../../convex/_generated/api';
 import { ERROR_MESSAGES, EXTERNAL_URLS } from '../../constants';
 
 export function useAccountActions() {
   const { signOut } = useClerk();
   const { user } = useUser();
+  const deleteCurrentUserData = useMutation(api.users.deleteCurrentUserData);
   const [isSigningOut, setIsSigningOut] = useState(false);
   const [isDeletingAccount, setIsDeletingAccount] = useState(false);
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
@@ -19,7 +22,9 @@ export function useAccountActions() {
         onPress: () => {
           setIsSigningOut(true);
           void signOut()
-            .catch(() => Alert.alert('Error', ERROR_MESSAGES.AUTH.SIGN_OUT_FAILED))
+            .catch(() =>
+              Alert.alert('Error', ERROR_MESSAGES.AUTH.SIGN_OUT_FAILED)
+            )
             .finally(() => setIsSigningOut(false));
         },
         style: 'destructive',
@@ -39,9 +44,13 @@ export function useAccountActions() {
             setIsDeletingAccount(true);
             void (async () => {
               try {
+                await deleteCurrentUserData({});
                 await user?.delete();
               } catch {
-                Alert.alert('Error', 'Failed to delete account. Please try again.');
+                Alert.alert(
+                  'Error',
+                  'Failed to delete account. Please try again.'
+                );
               } finally {
                 setIsDeletingAccount(false);
               }
@@ -52,7 +61,7 @@ export function useAccountActions() {
         },
       ]
     );
-  }, [user]);
+  }, [deleteCurrentUserData, user]);
 
   const handleRateApp = useCallback(() => {
     void (async () => {

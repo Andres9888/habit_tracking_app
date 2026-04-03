@@ -90,3 +90,13 @@ export function validateWebhookTimestamp(
 
   return timestamp;
 }
+
+export function isStaleWebhookTimestamp(
+  lastProcessedTimestamp: number | undefined,
+  incomingTimestamp: number
+): boolean {
+  return (
+    typeof lastProcessedTimestamp === 'number' &&
+    incomingTimestamp < lastProcessedTimestamp
+  );
+}

@@ -3,6 +3,7 @@
 import { v } from 'convex/values';
 import { internalMutation, query } from './_generated/server';
 import { updateUserSettingsPremium } from './subscriptions/helpers';
+import { isStaleWebhookTimestamp } from './subscriptions/premiumCheck';
 
 // Export premium checking utilities
 export { hasPremiumAccess, requirePremium } from './subscriptions/premiumCheck';
@@ -47,6 +48,7 @@ export const grantPremium = internalMutation({
   args: {
     clerkId: v.string(),
     eventId: v.optional(v.string()),
+    eventTimestamp: v.number(),
     eventType: v.string(),
     expiresAt: v.optional(v.number()),
     isTrialing: v.optional(v.boolean()),
@@ -72,6 +74,16 @@ export const grantPremium = internalMutation({
       return;
     }
 
+    if (
+      existing &&
+      isStaleWebhookTimestamp(
+        existing.lastWebhookEventTimestamp,
+        args.eventTimestamp
+      )
+    ) {
+      return;
+    }
+
     // eslint-disable-next-line unicorn/prefer-ternary
     if (existing) {
       await ctx.db.patch(existing._id, {
@@ -80,6 +92,7 @@ export const grantPremium = internalMutation({
         lastWebhookAt: now,
         lastWebhookEvent: args.eventType,
         lastWebhookEventId: args.eventId,
+        lastWebhookEventTimestamp: args.eventTimestamp,
         planType,
         productId: args.productId,
         status,
@@ -94,6 +107,7 @@ export const grantPremium = internalMutation({
         lastWebhookAt: now,
         lastWebhookEvent: args.eventType,
         lastWebhookEventId: args.eventId,
+        lastWebhookEventTimestamp: args.eventTimestamp,
         planType,
         productId: args.productId,
         revenueCatId: args.revenueCatId,
@@ -125,9 +139,10 @@ export const revokePremium = internalMutation({
   args: {
     clerkId: v.string(),
     eventId: v.optional(v.string()),
+    eventTimestamp: v.number(),
     eventType: v.string(),
   },
-  handler: async (ctx, { clerkId, eventId, eventType }) => {
+  handler: async (ctx, { clerkId, eventId, eventTimestamp, eventType }) => {
     const now = Date.now();
     const existing = await ctx.db
       .query('subscriptions')
@@ -138,12 +153,23 @@ export const revokePremium = internalMutation({
       return;
     }
 
+    if (
+      existing &&
+      isStaleWebhookTimestamp(
+        existing.lastWebhookEventTimestamp,
+        eventTimestamp
+      )
+    ) {
+      return;
+    }
+
     if (existing) {
       await ctx.db.patch(existing._id, {
         cancelledAt: eventType === 'CANCELLATION' ? now : existing.cancelledAt,
         lastWebhookAt: now,
         lastWebhookEvent: eventType,
         lastWebhookEventId: eventId,
+        lastWebhookEventTimestamp: eventTimestamp,
         status: eventType === 'CANCELLATION' ? 'cancelled' : 'expired',
         updatedAt: now,
       });
@@ -159,8 +185,12 @@ export const revokePremium = internalMutation({
 
 /** Set billing issue flag (BILLING_ISSUE) — user keeps access during grace period */
 export const setBillingIssue = internalMutation({
-  args: { clerkId: v.string(), eventId: v.optional(v.string()) },
-  handler: async (ctx, { clerkId, eventId }) => {
+  args: {
+    clerkId: v.string(),
+    eventId: v.optional(v.string()),
+    eventTimestamp: v.number(),
+  },
+  handler: async (ctx, { clerkId, eventId, eventTimestamp }) => {
     const now = Date.now();
     const existing = await ctx.db
       .query('subscriptions')
@@ -171,12 +201,23 @@ export const setBillingIssue = internalMutation({
       return;
     }
 
+    if (
+      existing &&
+      isStaleWebhookTimestamp(
+        existing.lastWebhookEventTimestamp,
+        eventTimestamp
+      )
+    ) {
+      return;
+    }
+
     if (existing) {
       await ctx.db.patch(existing._id, {
         hasBillingIssue: true,
         lastWebhookAt: now,
         lastWebhookEvent: 'BILLING_ISSUE',
         lastWebhookEventId: eventId,
+        lastWebhookEventTimestamp: eventTimestamp,
         status: 'past_due',
         updatedAt: now,
       });

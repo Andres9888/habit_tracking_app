@@ -192,6 +192,15 @@ const applicationTables = {
     woopWish: v.optional(v.string()),
   }).index('by_userId', ['userId']),
 
+  deletedHabits: defineTable({
+    createdAt: v.number(),
+    expiresAt: v.number(),
+    payload: v.string(),
+    userId: v.string(),
+  })
+    .index('by_expiresAt', ['expiresAt'])
+    .index('by_userId', ['userId']),
+
   // Subscriptions - RevenueCat webhook-driven subscription state
   // SEC-002: Server-side premium validation
   // This is the source of truth for subscription status, synced via webhooks
@@ -216,6 +225,7 @@ const applicationTables = {
     // Idempotency: tracks the last processed RevenueCat event ID to prevent
     // double-processing when RevenueCat retries on 5xx responses
     lastWebhookEventId: v.optional(v.string()),
+    lastWebhookEventTimestamp: v.optional(v.number()),
 
     // e.g., "premium_monthly_699"
     planType: v.optional(planType),

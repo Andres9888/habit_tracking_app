@@ -23,6 +23,7 @@ export interface OptimisticStoreAPI {
   addPause(payload: PauseOperationPayload): string;
   confirm(operationId: string): void;
   fail(operationId: string, error: Error): void;
+  reset(): void;
   clearPendingState(operation: OptimisticOperation): void;
   getPendingToggle(habitId: Id<'habits'>, date: string): boolean | undefined;
   getPendingArchive(habitId: Id<'habits'>): boolean | undefined;

@@ -25,6 +25,25 @@ const GRANT_EVENTS = new Set([
 const REVOKE_EVENTS = new Set(['CANCELLATION', 'EXPIRATION']);
 const BILLING_EVENTS = new Set(['BILLING_ISSUE']);
 
+function getWebhookEventTimestamp(
+  event: Record<string, number | string | undefined>
+): number | undefined {
+  return (
+    validateWebhookTimestamp(
+      event.event_timestamp_ms as number | undefined,
+      'event_timestamp_ms'
+    ) ??
+    validateWebhookTimestamp(
+      event.purchased_at_ms as number | undefined,
+      'purchased_at_ms'
+    ) ??
+    validateWebhookTimestamp(
+      event.expiration_at_ms as number | undefined,
+      'expiration_at_ms'
+    )
+  );
+}
+
 /**
  * Main webhook handler for RevenueCat events
  */
@@ -53,6 +72,12 @@ export const revenuecatWebhook = httpAction(async (ctx, request) => {
       return new Response('Invalid payload', { status: 400 });
     }
 
+    const eventTimestamp = getWebhookEventTimestamp(event ?? {});
+    if (!eventTimestamp) {
+      console.error('[RevenueCat] Missing valid webhook event timestamp');
+      return new Response('Invalid payload', { status: 400 });
+    }
+
     // Event processing logged via Convex dashboard
 
     // Extract and validate timestamps from webhook
@@ -70,6 +95,7 @@ export const revenuecatWebhook = httpAction(async (ctx, request) => {
       await ctx.runMutation(internal.subscriptions.grantPremium, {
         clerkId: appUserId,
         eventId,
+        eventTimestamp,
         eventType,
         expiresAt: validatedExpiresAt,
         isTrialing: event.period_type === 'TRIAL',
@@ -81,12 +107,14 @@ export const revenuecatWebhook = httpAction(async (ctx, request) => {
       await ctx.runMutation(internal.subscriptions.revokePremium, {
         clerkId: appUserId,
         eventId,
+        eventTimestamp,
         eventType,
       });
     } else if (BILLING_EVENTS.has(eventType)) {
       await ctx.runMutation(internal.subscriptions.setBillingIssue, {
         clerkId: appUserId,
         eventId,
+        eventTimestamp,
       });
     } else {
       // Unhandled event type — no action needed
