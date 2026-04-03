@@ -32,7 +32,7 @@ export function HabitDetailContent({
   const cardBg = colors.card;
   const strengthHint =
     typeof habit.strength === 'number'
-      ? `${Math.round(habit.strength)}%`
+      ? `${Math.round(habit.strength * 100)}%`
       : undefined;
 
   const handleViewChange = useCallback((view: DetailView) => {
