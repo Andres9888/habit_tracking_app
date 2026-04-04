@@ -14,3 +14,8 @@ export {
   useOptimisticArchiveMutation,
   useOptimisticUnarchiveMutation,
 } from './useOptimisticArchiveMutation';
+
+export {
+  useOptimisticDeleteMutation,
+  type DeleteMutationResult,
+} from './useOptimisticDeleteMutation';

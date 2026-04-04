@@ -9,6 +9,7 @@ import type {
   ArchiveOperationPayload,
   ReorderOperationPayload,
   PauseOperationPayload,
+  DeleteOperationPayload,
 } from '../types';
 import { generateId, getToggleKey } from './helpers';
 
@@ -63,6 +64,24 @@ export function createOperations(state: OptimisticStore, notify: () => void) {
 
       state.operations.set(id, operation);
       state.pendingReorder = [...payload.habitIds];
+      notify();
+
+      return id;
+    },
+
+    addDelete(payload: DeleteOperationPayload): string {
+      const id = generateId();
+
+      const operation: OptimisticOperation<DeleteOperationPayload> = {
+        id,
+        payload,
+        startedAt: Date.now(),
+        state: 'pending',
+        type: 'delete',
+      };
+
+      state.operations.set(id, operation);
+      state.pendingDeletes.set(payload.habitId, true);
       notify();
 
       return id;

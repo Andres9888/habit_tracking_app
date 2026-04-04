@@ -71,18 +71,27 @@ export interface PauseOperationPayload {
 }
 
 /**
+ * Delete operation payload
+ */
+export interface DeleteOperationPayload {
+  habitId: Id<'habits'>;
+  habitName: string;
+}
+
+/**
  * Union of all operation payloads
  */
 export type OperationPayload =
   | ToggleOperationPayload
   | ArchiveOperationPayload
   | ReorderOperationPayload
-  | PauseOperationPayload;
+  | PauseOperationPayload
+  | DeleteOperationPayload;
 
 /**
  * Operation type discriminator
  */
-export type OperationType = 'toggle' | 'archive' | 'reorder' | 'pause';
+export type OperationType = 'toggle' | 'archive' | 'reorder' | 'pause' | 'delete';
 
 /**
  * Typed optimistic operation
@@ -96,7 +105,9 @@ export type TypedOptimisticOperation<T extends OperationType> =
         ? OptimisticOperation<ReorderOperationPayload>
         : T extends 'pause'
           ? OptimisticOperation<PauseOperationPayload>
-          : never;
+          : T extends 'delete'
+            ? OptimisticOperation<DeleteOperationPayload>
+            : never;
 
 /**
  * Optimistic update store state
@@ -112,6 +123,8 @@ export interface OptimisticStore {
   pendingReorder: Id<'habits'>[] | null;
   /** Pending pause states (habitId -> toPaused) */
   pendingPauses: Map<string, boolean>;
+  /** Pending delete states (habitId -> true) */
+  pendingDeletes: Map<string, boolean>;
 }
 
 /**

@@ -14,6 +14,7 @@ function createOptimisticStore(): OptimisticStoreAPI {
   const state: OptimisticStore = {
     operations: new Map(),
     pendingArchives: new Map(),
+    pendingDeletes: new Map(),
     pendingPauses: new Map(),
     pendingReorder: null,
     pendingToggles: new Map(),
@@ -21,6 +22,7 @@ function createOptimisticStore(): OptimisticStoreAPI {
   let snapshot: OptimisticStore = {
     operations: new Map(),
     pendingArchives: new Map(),
+    pendingDeletes: new Map(),
     pendingPauses: new Map(),
     pendingReorder: null,
     pendingToggles: new Map(),
@@ -31,6 +33,7 @@ function createOptimisticStore(): OptimisticStoreAPI {
   const buildSnapshot = (): OptimisticStore => ({
     operations: new Map(state.operations),
     pendingArchives: new Map(state.pendingArchives),
+    pendingDeletes: new Map(state.pendingDeletes),
     pendingPauses: new Map(state.pendingPauses),
     pendingReorder: state.pendingReorder ? [...state.pendingReorder] : null,
     pendingToggles: new Map(state.pendingToggles),

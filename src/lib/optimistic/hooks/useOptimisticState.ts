@@ -42,6 +42,16 @@ export function useOptimisticArchive(
 }
 
 /**
+ * Hook to get optimistic delete state for a habit
+ */
+export function useOptimisticDelete(
+  habitId: Id<'habits'>
+): boolean | undefined {
+  const store = useOptimisticStore();
+  return store.pendingDeletes.get(habitId);
+}
+
+/**
  * Hook to get optimistic pause state for a habit
  */
 export function useOptimisticPause(habitId: Id<'habits'>): boolean | undefined {

@@ -9,6 +9,7 @@ import type {
   ToggleOperationPayload,
   ArchiveOperationPayload,
   PauseOperationPayload,
+  DeleteOperationPayload,
 } from '../types';
 import { getToggleKey } from './helpers';
 
@@ -36,6 +37,11 @@ export function createStateManagement(
       case 'pause': {
         const payload = operation.payload as PauseOperationPayload;
         state.pendingPauses.delete(payload.habitId);
+        break;
+      }
+      case 'delete': {
+        const payload = operation.payload as DeleteOperationPayload;
+        state.pendingDeletes.delete(payload.habitId);
         break;
       }
     }
@@ -92,6 +98,7 @@ export function createStateManagement(
     reset(): void {
       state.operations.clear();
       state.pendingArchives.clear();
+      state.pendingDeletes.clear();
       state.pendingPauses.clear();
       state.pendingReorder = null;
       state.pendingToggles.clear();
@@ -100,6 +107,10 @@ export function createStateManagement(
 
     getPendingArchive(habitId: Id<'habits'>): boolean | undefined {
       return state.pendingArchives.get(habitId);
+    },
+
+    getPendingDelete(habitId: Id<'habits'>): boolean | undefined {
+      return state.pendingDeletes.get(habitId);
     },
 
     getPendingCount(): number {

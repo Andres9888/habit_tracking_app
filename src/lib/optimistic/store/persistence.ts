@@ -21,7 +21,7 @@ import { buildScopedStorageKey } from '../../../utils/storage/scopedStorageKey';
 export const OPTIMISTIC_STORE_STORAGE_KEY = '@chainday:optimistic_store_v1';
 
 /** Current schema version for migration support */
-export const OPTIMISTIC_STORE_VERSION = 1;
+export const OPTIMISTIC_STORE_VERSION = 2;
 
 let optimisticStoreScope: string | null = null;
 
@@ -46,6 +46,7 @@ export interface SerializedOptimisticStore {
   operations: [string, OptimisticOperation][];
   pendingToggles: [string, boolean][];
   pendingArchives: [string, boolean][];
+  pendingDeletes: [string, boolean][];
   pendingReorder: Id<'habits'>[] | null;
   pendingPauses: [string, boolean][];
   savedAt: number;
@@ -64,6 +65,7 @@ export async function saveOptimisticStore(
   const serialized: SerializedOptimisticStore = {
     operations: [...store.operations.entries()],
     pendingArchives: [...store.pendingArchives.entries()],
+    pendingDeletes: [...store.pendingDeletes.entries()],
     pendingPauses: [...store.pendingPauses.entries()],
     pendingReorder: store.pendingReorder,
     pendingToggles: [...store.pendingToggles.entries()],
@@ -155,6 +157,7 @@ function isValidSerializedStore(
     Array.isArray(store.operations) &&
     Array.isArray(store.pendingToggles) &&
     Array.isArray(store.pendingArchives) &&
+    (!store.pendingDeletes || Array.isArray(store.pendingDeletes)) &&
     (store.pendingReorder === null || Array.isArray(store.pendingReorder)) &&
     Array.isArray(store.pendingPauses) &&
     typeof store.savedAt === 'number'
@@ -170,6 +173,7 @@ function deserializeStore(
   return {
     operations: new Map(serialized.operations),
     pendingArchives: new Map(serialized.pendingArchives),
+    pendingDeletes: new Map(serialized.pendingDeletes ?? []),
     pendingPauses: new Map(serialized.pendingPauses),
     pendingReorder: serialized.pendingReorder,
     pendingToggles: new Map(serialized.pendingToggles),
@@ -183,10 +187,13 @@ function deserializeStore(
 function migrateSerializedStore(
   store: SerializedOptimisticStore
 ): SerializedOptimisticStore {
-  // Future migrations would be handled here
-  // For now, just update the version and return
-  return {
-    ...store,
-    version: OPTIMISTIC_STORE_VERSION,
-  };
+  let migrated = { ...store };
+
+  // v1 → v2: add pendingDeletes
+  if (migrated.version < 2) {
+    migrated = { ...migrated, pendingDeletes: [] };
+  }
+
+  migrated.version = OPTIMISTIC_STORE_VERSION;
+  return migrated;
 }

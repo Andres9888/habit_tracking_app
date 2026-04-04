@@ -24,7 +24,10 @@ import { useHabitsSorting } from './useHabitsSorting';
 import { useHabitsArchive } from './useHabitsArchive';
 import { useHabitDelete } from './useHabitDelete';
 import { useRewardToast } from './useRewardToast';
-import { useOptimisticToggleMutation } from '../../../lib/optimistic';
+import {
+  useOptimisticToggleMutation,
+  useOptimisticStore,
+} from '../../../lib/optimistic';
 import { useOptimisticDragEnd } from './useOptimisticDragEnd';
 import { useIsOnline } from '../../../contexts/NetworkStatusContext';
 import { useToggleHabitWithTimezone } from '../../../hooks/useToggleHabitWithTimezone';
@@ -113,13 +116,29 @@ export function useHabitsListState(): HabitsListState {
     () => validateHabitsArray(habitsQuery ?? []),
     [habitsQuery]
   );
-  const habitsFromQuery = habitsValidation.limited;
+  const habitsRaw = habitsValidation.limited;
   const isHabitsLoading = habitsQuery === undefined;
 
   // Warn if habits array was limited
   if (habitsValidation.warning && __DEV__) {
     console.warn('[useHabitsListState]', habitsValidation.warning);
   }
+
+  // Filter out habits with pending optimistic deletes or archives
+  const optimistic = useOptimisticStore();
+  const habitsFromQuery = useMemo(() => {
+    if (
+      optimistic.pendingDeletes.size === 0 &&
+      optimistic.pendingArchives.size === 0
+    ) {
+      return habitsRaw;
+    }
+    return habitsRaw.filter(
+      (h) =>
+        !optimistic.pendingDeletes.get(h._id) &&
+        !optimistic.pendingArchives.get(h._id)
+    );
+  }, [habitsRaw, optimistic]);
 
   const settingsQuery = useQuery(api.settings.get);
   const settings = (settingsQuery ?? undefined) as HabitSettings | undefined;

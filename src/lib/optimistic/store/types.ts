@@ -10,6 +10,7 @@ import type {
   ArchiveOperationPayload,
   ReorderOperationPayload,
   PauseOperationPayload,
+  DeleteOperationPayload,
 } from '../types';
 
 export type StoreListener = () => void;
@@ -19,6 +20,7 @@ export interface OptimisticStoreAPI {
   getSnapshot(): OptimisticStore;
   addToggle(payload: ToggleOperationPayload): string;
   addArchive(payload: ArchiveOperationPayload): string;
+  addDelete(payload: DeleteOperationPayload): string;
   addReorder(payload: ReorderOperationPayload): string;
   addPause(payload: PauseOperationPayload): string;
   confirm(operationId: string): void;
@@ -27,6 +29,7 @@ export interface OptimisticStoreAPI {
   clearPendingState(operation: OptimisticOperation): void;
   getPendingToggle(habitId: Id<'habits'>, date: string): boolean | undefined;
   getPendingArchive(habitId: Id<'habits'>): boolean | undefined;
+  getPendingDelete(habitId: Id<'habits'>): boolean | undefined;
   getPendingReorder(): Id<'habits'>[] | null;
   getPendingPause(habitId: Id<'habits'>): boolean | undefined;
   hasPendingOperations(): boolean;

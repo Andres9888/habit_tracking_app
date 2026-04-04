@@ -28,10 +28,12 @@ export {
   useHasPendingOperations,
   useOptimisticToggle,
   useOptimisticArchive,
+  useOptimisticDelete,
   useOptimisticPause,
   useOptimisticReorder,
   useOptimisticToggleMutation,
   useOptimisticArchiveMutation,
+  useOptimisticDeleteMutation,
   useOptimisticUnarchiveMutation,
   useOptimisticReorderMutation,
   useOptimisticPauseMutation,
@@ -50,7 +52,12 @@ export type {
   ArchiveOperationPayload,
   ReorderOperationPayload,
   PauseOperationPayload,
+  DeleteOperationPayload,
 } from './types';
 
 // T010: Offline queue integration types
-export type { OptimisticToggleOptions, ToggleMutationResult } from './hooks';
+export type {
+  OptimisticToggleOptions,
+  ToggleMutationResult,
+  DeleteMutationResult,
+} from './hooks';
