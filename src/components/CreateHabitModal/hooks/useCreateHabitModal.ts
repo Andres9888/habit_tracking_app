@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useRef } from 'react';
 import type { CreateHabitModalProps } from '../types';
 import { useHabitForm } from './useHabitForm';
 import useHapticFeedback from '../../../hooks/useHapticFeedback';
@@ -16,6 +16,7 @@ export const useCreateHabitModal = (props: CreateHabitModalProps) => {
   const form = useHabitForm({ habitToEdit });
   const { triggerSuccess } = useHapticFeedback();
   const { handleEdit, handleCreate: createNewHabit } = useCreateHabitHandlers();
+  const isSaving = useRef(false);
 
   useVisibilityReset({
     isEditMode,
@@ -44,18 +45,28 @@ export const useCreateHabitModal = (props: CreateHabitModalProps) => {
 
   const handleCreate = useCallback(async () => {
     if (!form.habitName.trim() || !form.fullHabitName) return;
+    if (isSaving.current) return;
+    isSaving.current = true;
     try {
       const { hasReminders } = await checkReminderPermissions(
         form.remindersEnabled
       );
       const data = { ...habitData, hasReminders };
 
-      await (isEditMode && habitToEdit
-        ? handleEdit({ ...data, habitToEdit })
-        : createNewHabit(data));
-      cleanup();
+      if (isEditMode && habitToEdit) {
+        // Edit mode: await mutation before closing
+        await handleEdit({ ...data, habitToEdit });
+        cleanup();
+      } else {
+        // Create mode: close immediately, fire mutation in background
+        cleanup();
+        // Error already logged inside useCreateHabitHandlers
+        void createNewHabit(data).catch(() => {});
+      }
     } catch (error) {
       if (__DEV__) console.error('Failed to save habit:', error);
+    } finally {
+      isSaving.current = false;
     }
   }, [
     form.habitName,
