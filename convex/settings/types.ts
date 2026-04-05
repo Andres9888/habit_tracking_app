@@ -28,7 +28,7 @@ export const DEFAULT_SETTINGS = {
   compactView: false,
   completionSoundEnabled: false,
   completionSoundType: 'chime' as CompletionSoundType,
-  darkMode: 'system' as DarkModePreference,
+  darkMode: 'light' as DarkModePreference,
   dayShape: 'square' as const,
   habitCompletionIcon: 'chain' as const,
   habitSortMode: 'manual' as HabitSortMode,
