@@ -68,7 +68,6 @@ export interface HeroSectionProps {
 /** Props for ScienceBox component */
 export interface ScienceBoxProps {
   template: Doc<'templates'>;
-  onResearchPress: () => void;
 }
 
 /** Props for TipsBox component */

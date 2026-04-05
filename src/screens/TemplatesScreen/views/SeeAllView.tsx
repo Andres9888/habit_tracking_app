@@ -49,7 +49,6 @@ export function SeeAllView({
               isImporting={importingTemplateId === item._id}
               name={item.name}
               popularityScore={item.popularityScore}
-              scientificLink={item.scientificLink}
               scientificReference={item.scientificReference}
               showPreviewCTA
               youtubeLink={item.youtubeLink}

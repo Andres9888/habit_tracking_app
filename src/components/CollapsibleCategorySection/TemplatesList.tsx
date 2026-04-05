@@ -46,7 +46,7 @@ export function TemplatesList({
         >
           <MiniTemplateCard
             description={template.description || ''}
-            hasResearch={Boolean(template.scientificLink)}
+            hasResearch={Boolean(template.scientificReference)}
             icon={template.icon || '📝'}
             iconColor={template.iconColor}
             isImported={importedTemplateIds?.has(template._id)}

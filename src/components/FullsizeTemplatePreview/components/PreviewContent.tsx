@@ -44,7 +44,6 @@ export function PreviewContent({
         iconColor={iconColor}
         iconGlowStyle={animatedStyles.iconGlowStyle}
         template={template}
-        onResearchPress={handlers.handleResearchPress}
       />
       <FooterSection
         bottomInset={insets.bottom}

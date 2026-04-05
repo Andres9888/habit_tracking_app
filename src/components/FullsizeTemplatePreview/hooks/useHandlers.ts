@@ -3,10 +3,8 @@
  */
 
 import { useCallback } from 'react';
-import { Linking } from 'react-native';
 import type { Doc, Id } from '../../../../convex/_generated/dataModel';
 import { triggerHaptic } from '@/utils/haptics';
-import { isSafeExternalUrl } from '@/utils/safeExternalUrl';
 
 interface UseHandlersProps {
   template: Doc<'templates'> | null;
@@ -50,22 +48,9 @@ export const useHandlers = ({
     onCustomize(template);
   }, [template, onCustomize, reducedMotion]);
 
-  const handleResearchPress = useCallback(async () => {
-    if (!template?.scientificLink) return;
-    if (!isSafeExternalUrl(template.scientificLink)) return;
-    if (!reducedMotion) {
-      triggerHaptic('tap');
-    }
-    const canOpen = await Linking.canOpenURL(template.scientificLink);
-    if (canOpen) {
-      await Linking.openURL(template.scientificLink);
-    }
-  }, [template?.scientificLink, reducedMotion]);
-
   return {
     handleClose,
     handleCustomize,
     handleImport,
-    handleResearchPress,
   };
 };

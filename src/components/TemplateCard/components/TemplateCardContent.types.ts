@@ -21,8 +21,7 @@ export interface TemplateCardContentProps {
   onImportPress: (e: GestureResponderEvent) => void;
   onPreview?: () => void;
   popularityScore?: number;
-  scientificLink?: string;
-  scientificReference: string;
+  scientificReference?: string | null;
   showPreviewCTA: boolean;
   youtubeLink?: string;
 }

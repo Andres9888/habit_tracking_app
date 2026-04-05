@@ -17,7 +17,6 @@ interface ScrollableContentProps {
   iconColor: string;
   iconAnimatedStyle: ViewStyle;
   iconGlowStyle: ViewStyle;
-  onResearchPress: () => void;
 }
 
 export function ScrollableContent({
@@ -25,7 +24,6 @@ export function ScrollableContent({
   iconColor,
   iconAnimatedStyle,
   iconGlowStyle,
-  onResearchPress,
 }: ScrollableContentProps) {
   const tips = template?.tips;
 
@@ -42,7 +40,7 @@ export function ScrollableContent({
         template={template}
       />
       <DescriptionSection description={template?.description ?? ''} />
-      <ScienceBox template={template} onResearchPress={onResearchPress} />
+      <ScienceBox template={template} />
       {tips && Array.isArray(tips) && tips.length > 0 ? <TipsBox iconColor={iconColor} tips={tips} /> : null}
       <View style={layoutStyles.bottomSpacer} />
     </ScrollView>

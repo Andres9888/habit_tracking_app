@@ -25,7 +25,6 @@ export interface PreviewContentHandlers {
   handleClose: () => void;
   handleCustomize: () => void;
   handleImport: () => void;
-  handleResearchPress: () => void;
 }
 
 export interface PreviewContentProps {

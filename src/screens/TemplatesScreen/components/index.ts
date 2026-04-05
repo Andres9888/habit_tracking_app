@@ -4,6 +4,7 @@
 
 export { CategoryHeader } from './CategoryHeader';
 export { FilterControls } from './FilterControls';
+export { QuickFilterChips } from './QuickFilterChips';
 export { ResearchFilterButton } from './ResearchFilterButton';
 export { ScrollShadows } from './ScrollShadows';
 export { SearchBar } from './SearchBar';

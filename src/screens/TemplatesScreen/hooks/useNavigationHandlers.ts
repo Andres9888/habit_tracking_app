@@ -45,14 +45,7 @@ export function useNavigationHandlers(opts: UseNavigationHandlersOptions) {
     [setExpandedCategories]
   );
 
-  const handleBackToBrowse = useCallback(() => {
-    void triggerHaptic('tap');
-    setSelectedCategory('all');
-    setViewMode('browse');
-    flatListRef.current?.scrollToOffset({ animated: true, offset: 0 });
-  }, [flatListRef, setSelectedCategory, setViewMode]);
-
-  const handleResetFilters = useCallback(() => {
+  const resetToBrowse = useCallback(() => {
     setSelectedCategory('all');
     setSearchQuery('');
     setResearchOnly(false);
@@ -68,9 +61,30 @@ export function useNavigationHandlers(opts: UseNavigationHandlersOptions) {
     setViewMode,
   ]);
 
+  const handleBackToBrowse = useCallback(() => {
+    void triggerHaptic('tap');
+    resetToBrowse();
+  }, [resetToBrowse]);
+
+  const handleSelectCategory = useCallback(
+    (categoryId: string) => {
+      void triggerHaptic('selection');
+      setSearchQuery('');
+      setSelectedCategory(categoryId as Category);
+      setViewMode(categoryId === 'all' ? 'browse' : 'category');
+      flatListRef.current?.scrollToOffset({ animated: true, offset: 0 });
+    },
+    [flatListRef, setSearchQuery, setSelectedCategory, setViewMode]
+  );
+
+  const handleResetFilters = useCallback(() => {
+    resetToBrowse();
+  }, [resetToBrowse]);
+
   return {
     handleBackToBrowse,
     handleResetFilters,
+    handleSelectCategory,
     handleToggleCategory,
   };
 }
