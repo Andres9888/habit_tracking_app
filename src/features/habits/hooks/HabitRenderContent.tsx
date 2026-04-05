@@ -11,6 +11,7 @@ import { springs } from '@/theme/animations';
 import DraggableHabit from '../../../components/DraggableHabit';
 import type { Habit, HabitStatus } from '../types';
 import type { UseHabitRenderItemArgs } from './useHabitRenderItem.types';
+import { isOptimisticHabitId } from './optimisticHabitCreationStore';
 
 type HabitRenderContentProps = {
   item: Habit;
@@ -81,6 +82,8 @@ function HabitRenderContentComponent({
   toggleHabit,
   weekDateStrings,
 }: HabitRenderContentProps) {
+  const isOptimisticHabit = isOptimisticHabitId(item._id);
+
   // Memoize callbacks to prevent recreating on every render
   const handleEntranceComplete = useCallback(() => {
     onHabitEntranceComplete?.(item._id);
@@ -95,7 +98,9 @@ function HabitRenderContentComponent({
 
   const handleLongPress = isSelectionMode
     ? undefined
-    : isReorderingEnabled
+    : isOptimisticHabit
+      ? undefined
+      : isReorderingEnabled
       ? drag
       : undefined;
   const handleToggle = useCallback(
@@ -103,6 +108,7 @@ function HabitRenderContentComponent({
     [onToggleSelection, item._id]
   );
   const handleToggleHabit = (args: Parameters<typeof toggleHabit>[0]) => {
+    if (isOptimisticHabit) return;
     void toggleHabit(args);
   };
 
@@ -158,14 +164,22 @@ function HabitRenderContentComponent({
           weekStatus={weekStatus}
           isSelected={isSelectionMode ? selectedIds?.has(item._id) : undefined}
           showSelectionOverlay={isSelectionMode}
-          onArchive={isSelectionMode ? undefined : handleArchive}
-          onDelete={isSelectionMode ? undefined : handleDelete}
+          onArchive={
+            isSelectionMode || isOptimisticHabit ? undefined : handleArchive
+          }
+          onDelete={
+            isSelectionMode || isOptimisticHabit ? undefined : handleDelete
+          }
           onEntranceComplete={handleEntranceComplete}
           onLongPress={handleLongPress}
-          onPause={handlePause}
-          onPress={isSelectionMode ? undefined : handleHabitPress}
+          onPause={isOptimisticHabit ? undefined : handlePause}
+          onPress={
+            isSelectionMode || isOptimisticHabit
+              ? undefined
+              : handleHabitPress
+          }
           onToggleSelection={isSelectionMode ? handleToggle : undefined}
-          onResume={handleResume}
+          onResume={isOptimisticHabit ? undefined : handleResume}
           onWeekComplete={handleWeekComplete}
         />
       </Animated.View>
