@@ -328,9 +328,9 @@ describe('HabitNameField - V11 Validation Logic', () => {
       expect(value.trim().length < 2).toBe(true);
     });
 
-    it('should be invalid with 1 character', () => {
+    it('should be valid with 1 character', () => {
       const value = 'A';
-      expect(value.trim().length < 2).toBe(true);
+      expect(value.trim().length < 1).toBe(false);
     });
 
     it('should be valid with 2 characters', () => {

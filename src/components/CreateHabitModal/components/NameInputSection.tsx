@@ -62,7 +62,7 @@ export function NameInputSection({
           className='mt-3 text-sm font-medium'
           style={{ color: themeTokens.error }}
         >
-          Give your habit a name (at least 2 characters)
+          Give your habit a name
         </Text>
       ) : habitName.length > 0 ? (
         <Text
