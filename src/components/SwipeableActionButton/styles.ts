@@ -3,7 +3,7 @@
  */
 
 import { StyleSheet } from 'react-native';
-import { typography, fontFamilies} from '@/theme/typography';
+import { typography, fontWeights, fontFamilies} from '@/theme/typography';
 
 export const styles = StyleSheet.create({
   swipeAction: {
@@ -30,7 +30,7 @@ export const styles = StyleSheet.create({
   swipeLabel: {
     fontFamily: fontFamilies.primary.text,
     fontSize: typography.tabBar.fontSize,
-    fontWeight: '600',
+    fontWeight: fontWeights.semibold,
     letterSpacing: 0.2,
     marginTop: 4,
   },

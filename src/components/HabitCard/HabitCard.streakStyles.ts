@@ -6,7 +6,7 @@
 import { StyleSheet } from 'react-native';
 import { colors } from '../../theme/colors';
 import { spacing, borderRadius } from '@/theme/spacing';
-import { fontFamilies, typography } from '@/theme/typography';
+import { fontFamilies, fontWeights, typography } from '@/theme/typography';
 
 export const streakStyles = StyleSheet.create({
   bestStreakBadge: {
@@ -24,7 +24,7 @@ export const streakStyles = StyleSheet.create({
   bestStreakText: {
     fontFamily: fontFamilies.primary.text,
     fontSize: typography.tabBar.fontSize,
-    fontWeight: '600',
+    fontWeight: fontWeights.semibold,
   },
   rippleOverlay: {
     backgroundColor: colors.streak[500],
@@ -58,7 +58,7 @@ export const streakStyles = StyleSheet.create({
   streakText: {
     fontFamily: fontFamilies.primary.text,
     fontSize: typography.caption.fontSize,
-    fontWeight: '700',
+    fontWeight: fontWeights.bold,
     letterSpacing: 0.3,
     textTransform: 'uppercase',
   },

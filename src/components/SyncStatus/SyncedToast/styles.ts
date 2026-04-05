@@ -7,14 +7,15 @@
 
 import { StyleSheet } from 'react-native';
 
+import { colors } from '../../../theme/colors';
 import { borderRadius } from '../../../theme/spacing';
-import { typography, fontFamilies} from '@/theme/typography';
+import { typography, fontWeights, fontFamilies} from '@/theme/typography';
 
 export const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    backgroundColor: '#f0fdf4', // green-50 - soft success background
-    borderColor: '#86efac', // green-300 - visible border
+    backgroundColor: colors.primary[100],
+    borderColor: colors.primary[300],
     borderRadius: borderRadius.large,
     borderWidth: 1,
     flexDirection: 'row',
@@ -24,15 +25,15 @@ export const styles = StyleSheet.create({
   },
 
   countText: {
-    color: '#166534', // green-800
+    color: colors.success,
     fontFamily: fontFamilies.monospace,
     fontSize: typography.caption.fontSize,
-    fontWeight: '500',
+    fontWeight: fontWeights.medium,
   },
 
   iconContainer: {
     alignItems: 'center',
-    backgroundColor: '#dcfce7', // green-100
+    backgroundColor: colors.primary[100],
     borderRadius: borderRadius.medium,
     height: 20,
     justifyContent: 'center',
@@ -40,13 +41,13 @@ export const styles = StyleSheet.create({
   },
 
   text: {
-    color: '#166534', // green-800
+    color: colors.success,
     fontFamily: fontFamilies.primary.text,
     fontSize: typography.caption.fontSize,
-    fontWeight: '500',
+    fontWeight: fontWeights.medium,
     letterSpacing: 0.2,
   },
 });
 
 export const ICON_SIZE = 12;
-export const ICON_COLOR = '#16a34a'; // green-600
+export const ICON_COLOR = colors.primary[600];

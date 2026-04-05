@@ -1,5 +1,6 @@
 import { View } from 'react-native';
 import { Check } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '../../../theme/ThemeContext';
 
 interface SelectionCheckboxProps {
@@ -20,7 +21,7 @@ export function SelectionCheckbox({ isSelected }: SelectionCheckboxProps) {
         backgroundColor: isSelected ? colors.status.success : colors.card,
       }}
     >
-      {isSelected && <Check color={colors.text.inverse} size={14} strokeWidth={3} />}
+      {isSelected && <Check color={colors.text.inverse} size={iconSizes.small} strokeWidth={3} />}
     </View>
   );
 }

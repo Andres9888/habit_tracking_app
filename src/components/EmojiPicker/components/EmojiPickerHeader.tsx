@@ -3,6 +3,7 @@ import { Text, View } from 'react-native';
 import { X } from 'lucide-react-native';
 import { AnimatedPressable } from '../../ui';
 import { useThemeColors } from '@/theme/ThemeContext';
+import { iconSizes } from '@/theme/iconSizes';
 
 interface EmojiPickerHeaderProps {
   onClose: () => void;
@@ -23,7 +24,7 @@ export const EmojiPickerHeader = memo(({ onClose }: EmojiPickerHeaderProps) => {
         style={{ backgroundColor: colors.border }}
         onPress={onClose}
       >
-        <X color={colors.text.primary} size={24} strokeWidth={2} />
+        <X color={colors.text.primary} size={iconSizes.large} strokeWidth={2} />
       </AnimatedPressable>
     </View>
   );

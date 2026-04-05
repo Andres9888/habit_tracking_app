@@ -5,7 +5,7 @@
 import { StyleSheet } from 'react-native';
 
 import { borderRadius } from '../../../theme/spacing';
-import { typography, fontFamilies} from '@/theme/typography';
+import { typography, fontWeights } from '@/theme/typography';
 
 export const dayCellStyles = StyleSheet.create({
   dayCellContainer: {
@@ -26,10 +26,8 @@ export const dayCellStyles = StyleSheet.create({
     shadowRadius: 6,
   },
   dayLabel: {
+    ...typography.tabBar,
     color: '#a8a29e', // stone-400
-    fontFamily: fontFamilies.primary.text,
-    fontSize: typography.tabBar.fontSize,
-    fontWeight: '500',
     marginBottom: 6,
   },
   dayPressable: {
@@ -41,9 +39,8 @@ export const dayCellStyles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   todayText: {
-    fontFamily: fontFamilies.primary.text,
-    fontSize: 10,
-    fontWeight: '700',
+    ...typography.tabBar,
+    fontWeight: fontWeights.bold,
     letterSpacing: 0.3,
     textTransform: 'uppercase',
   },

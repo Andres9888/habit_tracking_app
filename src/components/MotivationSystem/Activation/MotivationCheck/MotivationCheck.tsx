@@ -11,6 +11,7 @@
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { HelpCircle, Sparkles } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { clsx } from 'clsx';
 import { useThemeColors } from '@/theme/ThemeContext';
 
@@ -53,7 +54,7 @@ export function MotivationCheck({
       <View className='mb-4 flex-row items-center justify-between'>
         <View className='flex-row items-center gap-2'>
           <View className='h-8 w-8 items-center justify-center rounded-lg' style={{ backgroundColor: colors.status.premiumLight }}>
-            <Sparkles color={colors.status.premiumText} size={16} />
+            <Sparkles color={colors.status.premiumText} size={iconSizes.small} />
           </View>
           <Text className='font-semibold' style={{ color: colors.status.premiumText }}>
             Motivation Check
@@ -66,7 +67,7 @@ export function MotivationCheck({
             className='h-8 w-8 items-center justify-center rounded-lg'
             onPress={onExplainerPress}
           >
-            <HelpCircle color={colors.status.premium} size={18} />
+            <HelpCircle color={colors.status.premium} size={iconSizes.medium} />
           </Pressable> : null}
       </View>
 

@@ -6,7 +6,7 @@ import React from 'react';
 import { Text, View } from 'react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { useThemeColors } from '../../../theme/ThemeContext';
-import { fontFamilies } from '@/theme/typography';
+import { fontFamilies, fontWeights } from '@/theme/typography';
 import { spacing } from '@/theme';
 
 const anim = (delay: number) =>
@@ -32,7 +32,7 @@ export function EmptyState() {
           color: colors.text.primary,
           fontFamily: fontFamilies.primary.text,
           fontSize: 17,
-          fontWeight: '700',
+          fontWeight: fontWeights.bold,
           marginBottom: 8,
         }}
       >

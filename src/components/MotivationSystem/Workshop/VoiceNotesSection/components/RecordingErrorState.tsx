@@ -4,6 +4,7 @@
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { AlertCircle } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '../../../../../theme/ThemeContext';
 
 interface RecordingErrorStateProps {
@@ -17,7 +18,7 @@ export function RecordingErrorState({ errorMessage, onTryAgain }: RecordingError
   return (
     <View className='items-center py-4'>
       <View className='flex-row items-center gap-2'>
-        <AlertCircle color={colors.status.error} size={16} />
+        <AlertCircle color={colors.status.error} size={iconSizes.small} />
         <Text className='text-sm' style={{ color: colors.status.errorText }}>
           {errorMessage || 'Recording failed. Please try again.'}
         </Text>

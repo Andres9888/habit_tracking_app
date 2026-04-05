@@ -5,7 +5,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { useThemeColors } from '../../../theme';
 import { borderRadius, shadows, spacing } from '../../../theme/spacing';
-import { fontFamilies, fontWeights } from '../../../theme/typography';
+import { typography, fontFamilies, fontWeights } from '../../../theme/typography';
 
 interface QuickStatsRowProps {
   bestStreak: number;
@@ -97,8 +97,8 @@ const styles = StyleSheet.create({
   },
   separator: { height: 32, width: 1 },
   value: {
+    ...typography.heading3,
     fontFamily: fontFamilies.monospace,
-    fontSize: 20,
     fontWeight: fontWeights.bold,
   },
 });

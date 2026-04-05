@@ -7,6 +7,7 @@ import { Text, View } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { ChevronRight, FlaskConical } from 'lucide-react-native';
 import { styles } from './MiniTemplateCard.styles';
+import { iconSizes } from '@/theme/iconSizes';
 
 interface CardHeaderProps {
   icon: string;
@@ -35,14 +36,14 @@ export function CardHeader({
             accessibilityLabel='Science-backed habit'
             style={[styles.scienceBadge, scienceBadgeStyle]}
           >
-            <FlaskConical color='#fff' size={10} strokeWidth={2.5} />
+            <FlaskConical color='#fff' size={iconSizes.micro} strokeWidth={2.5} />
           </Animated.View> : null}
       </View>
       <Animated.View
         accessibilityLabel='View details'
         style={[styles.chevronContainer, chevronStyle]}
       >
-        <ChevronRight color='#a8a29e' size={16} strokeWidth={2.5} />
+        <ChevronRight color='#a8a29e' size={iconSizes.small} strokeWidth={2.5} />
       </Animated.View>
     </View>
   );

@@ -12,6 +12,7 @@ import { colors } from '../../../theme/colors';
 import { durations, springs } from '../../../theme/animations';
 import { spacing } from '../../../theme/spacing';
 import { getCategoryMeta } from '../data/categoryMeta';
+import { fontWeights } from '@/theme/typography';
 import {
   useCategoryDrillFilters,
   type DrillSort,
@@ -113,7 +114,7 @@ const s = StyleSheet.create({
     backgroundColor: colors.primary[600],
     borderColor: colors.primary[700],
   },
-  chipText: { color: colors.text.secondary, fontSize: 13, fontWeight: '600' },
+  chipText: { color: colors.text.secondary, fontSize: 13, fontWeight: fontWeights.semibold },
   chipTextActive: { color: '#fff' },
   container: { backgroundColor: colors.background, flex: 1 },
   filterBarContent: { flexDirection: 'row', gap: 8, paddingHorizontal: spacing.base, paddingVertical: 8 },

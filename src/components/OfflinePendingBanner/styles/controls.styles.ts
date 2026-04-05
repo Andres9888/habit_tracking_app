@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native';
 
 import { colors } from '../../../theme/colors'
-import { fontFamilies } from '../../../theme/typography';;
+import { typography, fontWeights } from '../../../theme/typography';
 
 export const controlsStyles = StyleSheet.create({
   progressBar: {
@@ -17,9 +17,8 @@ export const controlsStyles = StyleSheet.create({
     right: 0,
   },
   subtitle: {
+    ...typography.caption,
     color: colors.gray[500],
-    fontFamily: fontFamilies.primary.text,
-    fontSize: 13,
     marginTop: 2,
   },
   syncButton: {
@@ -31,16 +30,13 @@ export const controlsStyles = StyleSheet.create({
     paddingVertical: 8,
   },
   syncButtonText: {
+    ...typography.caption,
     color: colors.text.inverse,
-    fontFamily: fontFamilies.primary.text,
-    fontSize: 13,
-    fontWeight: '600',
+    fontWeight: fontWeights.semibold,
     marginLeft: 4,
   },
   title: {
+    ...typography.button,
     color: colors.gray[800],
-    fontFamily: fontFamilies.primary.text,
-    fontSize: 17,
-    fontWeight: '600',
   },
 });

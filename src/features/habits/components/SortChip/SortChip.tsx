@@ -1,4 +1,5 @@
 import { ArrowUpDown, ChevronRight, LayoutList } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { Pressable, Text, View } from 'react-native';
 import Animated, {
   useSharedValue,
@@ -109,7 +110,7 @@ export function SortChip({
       >
         {/* Left side: icon + label */}
         <View className='flex-row items-center gap-2'>
-          <LayoutList color={colors.text.secondary} size={18} strokeWidth={2} />
+          <LayoutList color={colors.text.secondary} size={iconSizes.medium} strokeWidth={2} />
           <Text className='text-[14px] font-semibold' style={{ color: colors.text.primary }}>
             My Habits
           </Text>
@@ -117,11 +118,11 @@ export function SortChip({
 
         {/* Right side: sort icon + sort label + chevron */}
         <View className='flex-row items-center gap-1'>
-          <ArrowUpDown color={colors.text.tertiary} size={14} strokeWidth={2} />
+          <ArrowUpDown color={colors.text.tertiary} size={iconSizes.small} strokeWidth={2} />
           <Text className='text-[13px] font-normal' style={{ color: colors.text.tertiary }}>
             {sortLabel}
           </Text>
-          <ChevronRight color={colors.text.tertiary} size={16} strokeWidth={2} />
+          <ChevronRight color={colors.text.tertiary} size={iconSizes.small} strokeWidth={2} />
         </View>
       </AnimatedPressable>
     </Animated.View>

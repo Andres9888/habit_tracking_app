@@ -68,7 +68,7 @@ export const statusStyles = StyleSheet.create({
   streakText: {
     fontFamily: fontFamilies.primary.text,
     fontSize: typography.bodySmall.fontSize,
-    fontWeight: '500',
+    fontWeight: fontWeights.medium,
     lineHeight: 20,
   },
   streakTextCompleted: {

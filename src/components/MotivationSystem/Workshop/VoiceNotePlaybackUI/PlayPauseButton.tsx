@@ -11,6 +11,7 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 import { Play, Pause, RotateCcw } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { SPRING_BUTTON } from '../../../animations';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import type { PlayPauseButtonProps } from './types';
@@ -69,11 +70,11 @@ export function PlayPauseButton({
         onPressOut={handlePressOut}
       >
         {isFinished ? (
-          <RotateCcw className='text-white' size={18} />
+          <RotateCcw className='text-white' size={iconSizes.medium} />
         ) : isPlaying ? (
-          <Pause className='text-white' fill='white' size={18} />
+          <Pause className='text-white' fill='white' size={iconSizes.medium} />
         ) : (
-          <Play className='text-white' fill='white' size={18} />
+          <Play className='text-white' fill='white' size={iconSizes.medium} />
         )}
       </Pressable>
     </Animated.View>

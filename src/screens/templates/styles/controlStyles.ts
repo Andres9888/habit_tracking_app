@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { fontFamilies } from '@/theme/typography';
+import { fontWeights, typography } from '@/theme/typography';
 
 export const controlStyles = StyleSheet.create({
   controlButton: {
@@ -13,9 +13,8 @@ export const controlStyles = StyleSheet.create({
   },
   controlButtonActive: {},
   controlButtonText: {
-    fontFamily: fontFamilies.primary.text,
-    fontSize: 13,
-    fontWeight: '600',
+    ...typography.caption,
+    fontWeight: fontWeights.semibold,
   },
   controlRow: {
     flexDirection: 'row',

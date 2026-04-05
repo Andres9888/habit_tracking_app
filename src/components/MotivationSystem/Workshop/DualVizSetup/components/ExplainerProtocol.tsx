@@ -6,6 +6,7 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import { Sparkles, AlertTriangle } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '../../../../../theme/ThemeContext';
 
 export function ExplainerProtocol() {
@@ -22,7 +23,7 @@ export function ExplainerProtocol() {
       <View className='mb-4 gap-3'>
         <View className='flex-row gap-3'>
           <View className='h-8 w-8 items-center justify-center rounded-lg' style={{ backgroundColor: colors.status.successLight }}>
-            <Sparkles color={colors.status.success} size={16} />
+            <Sparkles color={colors.status.success} size={iconSizes.small} />
           </View>
           <View className='flex-1'>
             <Text className='font-semibold' style={{ color: colors.status.successText }}>
@@ -35,7 +36,7 @@ export function ExplainerProtocol() {
         </View>
         <View className='flex-row gap-3'>
           <View className='h-8 w-8 items-center justify-center rounded-lg' style={{ backgroundColor: colors.status.errorLight }}>
-            <AlertTriangle color={colors.status.error} size={16} />
+            <AlertTriangle color={colors.status.error} size={iconSizes.small} />
           </View>
           <View className='flex-1'>
             <Text className='font-semibold' style={{ color: colors.status.errorText }}>Not Motivated?</Text>

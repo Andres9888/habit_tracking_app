@@ -10,6 +10,7 @@ import { Share2 } from 'lucide-react-native';
 
 import { AnimatedPressable } from '../../../ui/AnimatedPressable';
 import type { FocusState } from '../../TodaysFocusCardTypes';
+import { iconSizes } from '@/theme/iconSizes';
 import { styles } from '../TodaysFocusCard.styles';
 
 export interface ShareButtonProps {
@@ -41,7 +42,7 @@ export function ShareButton({
         style={({ pressed }) => [styles.shareButton, { opacity: pressed ? 0.7 : 1 }]}
         onPress={onPress}
       >
-        <Share2 color={iconColor} size={20} />
+        <Share2 color={iconColor} size={iconSizes.medium} />
       </AnimatedPressable>
     </Animated.View>
   );

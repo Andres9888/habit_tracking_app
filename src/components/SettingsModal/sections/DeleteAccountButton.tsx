@@ -1,6 +1,7 @@
 /** DeleteAccountButton — Standalone danger action, last item in settings */
 import { Text, View } from 'react-native';
 import { Trash2 } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { AnimatedPressable } from '../../ui/AnimatedPressable';
 import { shadows } from '../../../theme';
 import { useThemeColors } from '../../../theme/ThemeContext';
@@ -70,7 +71,7 @@ export function DeleteAccountButton({
                 width: 40,
               }}
             >
-              <Trash2 color={iconColor} size={16} />
+              <Trash2 color={iconColor} size={iconSizes.small} />
             </View>
             <View className='flex-1'>
               <Text className='text-[17px] font-semibold' style={{ color: labelColor }}>

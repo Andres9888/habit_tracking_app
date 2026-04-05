@@ -11,6 +11,7 @@ import { useHapticFeedback } from '../../../hooks/useHapticFeedback';
 import type { QuickAction } from './types';
 import { ICON_MAP, ACTION_COLORS } from './constants';
 import { styles } from './styles';
+import { iconSizes } from '@/theme/iconSizes';
 
 interface QuickActionItemProps {
   action: QuickAction;
@@ -58,7 +59,7 @@ export const QuickActionItem = React.memo(function QuickActionItem({
           importantForAccessibility='no-hide-descendants'
           style={[styles.iconContainer, { backgroundColor: colors.bg }]}
         >
-          <Icon color={colors.icon} size={20} strokeWidth={2} />
+          <Icon color={colors.icon} size={iconSizes.medium} strokeWidth={2} />
         </View>
         <View style={styles.actionTextContainer}>
           <Text style={styles.actionLabel}>{action.label}</Text>

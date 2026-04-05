@@ -6,6 +6,7 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import { Sparkles, AlertTriangle } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '../../../../../theme/ThemeContext';
 import type { VizPreviewProps } from '../DualVizSetup.types';
 
@@ -22,9 +23,9 @@ export function VizPreview({ type, body, mind, emotion }: VizPreviewProps) {
       >
         <View className='mb-2 flex-row items-center gap-2'>
           {isSuccess ? (
-            <Sparkles color={colors.status.success} size={14} />
+            <Sparkles color={colors.status.success} size={iconSizes.small} />
           ) : (
-            <AlertTriangle color={colors.status.error} size={14} />
+            <AlertTriangle color={colors.status.error} size={iconSizes.small} />
           )}
           <Text
             className='text-xs font-semibold'
@@ -47,9 +48,9 @@ export function VizPreview({ type, body, mind, emotion }: VizPreviewProps) {
     >
       <View className='mb-2 flex-row items-center gap-2'>
         {isSuccess ? (
-          <Sparkles color={colors.status.success} size={14} />
+          <Sparkles color={colors.status.success} size={iconSizes.small} />
         ) : (
-          <AlertTriangle color={colors.status.error} size={14} />
+          <AlertTriangle color={colors.status.error} size={iconSizes.small} />
         )}
         <Text
           className='text-xs font-semibold'

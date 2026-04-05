@@ -1,6 +1,7 @@
 /** AccountRow — Compact tappable card that opens the Account sub-page */
 import { Text, View } from 'react-native';
 import { ChevronRight, Crown } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { useUser } from '@clerk/clerk-expo';
 import { LinearGradient } from 'expo-linear-gradient';
 import { AnimatedPressable } from '../ui/AnimatedPressable';
@@ -56,7 +57,7 @@ export function AccountRow({ highContrastMode, isPremium, onPress }: AccountRowP
               <Text className='text-[16px] font-semibold' style={{ color: themeColors.text.primary }}>{name}</Text>
               {isPremium ? (
                 <View className='flex-row items-center rounded-md px-1.5 py-0.5' style={{ backgroundColor: themeColors.status.warningLight, gap: 3 }}>
-                  <Crown color={themeColors.status.warningText} size={10} />
+                  <Crown color={themeColors.status.warningText} size={iconSizes.micro} />
                   <Text className='text-[10px] font-bold' style={{ color: themeColors.status.warningText }}>PRO</Text>
                 </View>
               ) : null}
@@ -65,7 +66,7 @@ export function AccountRow({ highContrastMode, isPremium, onPress }: AccountRowP
               <Text className='mt-0.5 text-[13px]' numberOfLines={1} style={{ color: themeColors.text.secondary }}>{email}</Text>
             ) : null}
           </View>
-          <ChevronRight color={themeColors.text.tertiary} size={18} />
+          <ChevronRight color={themeColors.text.tertiary} size={iconSizes.medium} />
         </View>
       </View>
     </AnimatedPressable>

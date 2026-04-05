@@ -5,6 +5,7 @@
 import { StyleSheet } from 'react-native';
 
 import { colors } from '@/theme/colors';
+import { fontWeights } from '@/theme/typography';
 
 export const styles = StyleSheet.create({
   arrow: {
@@ -40,7 +41,7 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   label: {
-    fontWeight: '600',
+    fontWeight: fontWeights.semibold,
   },
   nextEmoji: {
     opacity: 0.6,
@@ -53,7 +54,7 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   percentage: {
-    fontWeight: '700',
+    fontWeight: fontWeights.bold,
     minWidth: 32,
     textAlign: 'right',
   },

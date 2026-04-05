@@ -2,6 +2,7 @@ import { View, Pressable, Text } from 'react-native';
 import { MoreVertical } from 'lucide-react-native';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { ModalCloseButton } from '../ui/ModalCloseButton';
+import { iconSizes } from '@/theme/iconSizes';
 
 interface ModalHeaderProps {
   name: string;
@@ -25,7 +26,7 @@ export function ModalHeader({ name, onClose, onEdit }: ModalHeaderProps) {
         })}
         onPress={onEdit}
       >
-        <MoreVertical color={colors.text.primary} size={20} />
+        <MoreVertical color={colors.text.primary} size={iconSizes.medium} />
       </Pressable>
       <Text
         className='flex-1 text-center text-xl font-bold'

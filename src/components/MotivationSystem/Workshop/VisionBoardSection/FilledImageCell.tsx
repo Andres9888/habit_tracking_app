@@ -12,6 +12,7 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 import { ZoomIn } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { SPRING_BUTTON } from '../../../animations';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import { IMAGE_SIZE, type VisionBoardImage } from './types';
@@ -77,7 +78,7 @@ export function FilledImageCell({
             </Text>
           </View> : null}
         <View className='absolute right-2 top-2 h-6 w-6 items-center justify-center rounded-full bg-black/30'>
-          <ZoomIn className='text-white' size={12} />
+          <ZoomIn className='text-white' size={iconSizes.small} />
         </View>
       </Pressable>
     </Animated.View>

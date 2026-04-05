@@ -6,6 +6,7 @@
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { AlertCircle } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '@/theme/ThemeContext';
 import type { ErrorStateProps } from './types';
 
@@ -15,7 +16,7 @@ export function ErrorState({ errorMessage, onRetry }: ErrorStateProps) {
   return (
     <View className='flex-row items-center gap-3 rounded-lg p-3' style={{ backgroundColor: colors.status.errorLight }}>
       <View className='h-10 w-10 items-center justify-center rounded-full' style={{ backgroundColor: colors.status.errorLight }}>
-        <AlertCircle color={colors.status.error} size={18} />
+        <AlertCircle color={colors.status.error} size={iconSizes.medium} />
       </View>
       <View className='flex-1'>
         <Text className='text-sm font-medium' style={{ color: colors.status.errorText }}>

@@ -7,13 +7,14 @@
  */
 
 import { StyleSheet } from 'react-native';
+import { colors } from '../../../theme/colors';
 import { borderRadius } from '../../../theme/spacing';
 
 export const styles = StyleSheet.create({
   badge: {
     alignItems: 'center',
-    backgroundColor: '#fef3c7', // amber-100 - soft pending indicator
-    borderColor: '#fcd34d', // amber-300 - subtle border
+    backgroundColor: colors.streak[100],
+    borderColor: colors.streak[300],
     borderRadius: borderRadius.small,
     borderWidth: 1,
     justifyContent: 'center',
@@ -43,4 +44,4 @@ export const ICON_SIZES = {
 } as const;
 
 // Icon color - amber-600 for visibility
-export const ICON_COLOR = '#d97706';
+export const ICON_COLOR = colors.streak[500];

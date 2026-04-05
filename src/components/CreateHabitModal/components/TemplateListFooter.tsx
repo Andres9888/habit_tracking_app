@@ -14,6 +14,7 @@ import { springs } from '@/theme/animations';
 import { useThemeColors } from '@/theme/ThemeContext';
 import { useHapticFeedback } from '../../../hooks/useHapticFeedback';
 import { useReduceMotion } from '../../../hooks/useReduceMotion';
+import { iconSizes } from '@/theme/iconSizes';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -106,7 +107,7 @@ export const TemplateListFooter = ({ onClose }: TemplateListFooterProps) => {
           <Text className='mr-2 text-[15px] font-semibold' style={{ color: themeColors.text.primary }}>
             Hide habits
           </Text>
-          <ChevronDown color='#1c1917' size={16} />
+          <ChevronDown color='#1c1917' size={iconSizes.small} />
         </AnimatedPressable>
       </View>
     </Animated.View>

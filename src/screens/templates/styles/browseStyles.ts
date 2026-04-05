@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { fontFamilies } from '@/theme/typography';
+import { typography } from '@/theme/typography';
 
 export const browseStyles = StyleSheet.create({
   backButton: {
@@ -9,9 +9,7 @@ export const browseStyles = StyleSheet.create({
     marginBottom: 12,
   },
   backButtonText: {
-    fontFamily: fontFamilies.primary.text,
-    fontSize: 17,
-    fontWeight: '600',
+    ...typography.button,
   },
   browseContent: {
     paddingBottom: 40,

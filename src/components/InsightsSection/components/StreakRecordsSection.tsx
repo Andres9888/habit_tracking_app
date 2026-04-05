@@ -10,6 +10,7 @@ import { Trophy } from 'lucide-react-native';
 import type { StreakRecordsSectionProps } from '../InsightsSection.types';
 import { TOP_STREAK_MEDAL_COUNT } from '../InsightsSection.constants';
 import { useThemeColors } from '@/theme/ThemeContext';
+import { iconSizes } from '@/theme/iconSizes';
 
 const MEDAL_EMOJIS = ['🥇', '🥈', '🥉'];
 
@@ -40,7 +41,7 @@ export function StreakRecordsSection({
       <View className='p-5'>
         <View className='mb-4 flex-row items-center justify-center gap-2'>
           <View className='h-8 w-8 items-center justify-center rounded-lg' style={{ backgroundColor: colors.status.premiumLight }}>
-            <Trophy color={colors.status.premium} size={16} />
+            <Trophy color={colors.status.premium} size={iconSizes.small} />
           </View>
           <Text className='text-lg font-bold' style={{ color: colors.text.primary }}>
             Streak Records

@@ -5,6 +5,7 @@
 import { memo } from 'react';
 import { Modal, Pressable, StyleSheet, Text, View } from 'react-native';
 import { AlertTriangle } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { colors as palette } from '../../../theme/colors';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { fontWeights, typography } from '../../../theme/typography';
@@ -29,7 +30,7 @@ function BatchDeleteConfirmModalComponent({
       <View style={s.overlay}>
         <View style={[s.box, { backgroundColor: colors.card }]}>
           <View style={s.iconWrap}>
-            <AlertTriangle color={palette.error} size={24} strokeWidth={2} />
+            <AlertTriangle color={palette.error} size={iconSizes.large} strokeWidth={2} />
           </View>
           <Text style={[s.title, { color: colors.text.primary }]}>
             Delete {count} habit{count === 1 ? '' : 's'}?

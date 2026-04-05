@@ -1,13 +1,12 @@
 import { StyleSheet } from 'react-native';
 import { colors } from '@/theme';
 import { borderRadius } from '../../../theme/spacing';
-import { typography, fontFamilies } from '@/theme/typography';
+import { typography, fontWeights, fontFamilies } from '@/theme/typography';
 
 export const statsStyles = StyleSheet.create({
   ageText: {
+    ...typography.caption,
     color: colors.gray[500],
-    fontFamily: fontFamilies.primary.text,
-    fontSize: typography.caption.fontSize,
     marginTop: 10,
   },
   statsContainer: {
@@ -22,10 +21,10 @@ export const statsStyles = StyleSheet.create({
     width: 6,
   },
   statsHeader: {
-    color: colors.gray[500],
+    ...typography.caption,
     fontFamily: fontFamilies.monospace,
-    fontSize: typography.caption.fontSize,
-    fontWeight: '600',
+    color: colors.gray[500],
+    fontWeight: fontWeights.semibold,
     letterSpacing: 0.5,
     marginBottom: 8,
     textTransform: 'uppercase',
@@ -38,9 +37,9 @@ export const statsStyles = StyleSheet.create({
     gap: 6,
   },
   statsText: {
-    color: colors.gray[700],
+    ...typography.bodySmall,
     fontFamily: fontFamilies.monospace,
-    fontSize: typography.bodySmall.fontSize,
+    color: colors.gray[700],
   },
   warningContainer: {
     alignItems: 'center',
@@ -52,9 +51,8 @@ export const statsStyles = StyleSheet.create({
     paddingVertical: 8,
   },
   warningText: {
+    ...typography.caption,
     color: colors.warning,
-    fontFamily: fontFamilies.primary.text,
-    fontSize: 13,
     marginLeft: 6,
   },
 });

@@ -6,6 +6,7 @@
 import React, { useCallback } from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { ChevronRight } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import { useHapticFeedback } from '../../../../hooks/useHapticFeedback';
 
@@ -57,7 +58,7 @@ export function FeatureLimitBadge({
         >
           {current}/{limit} Free
         </Text>
-        {isAtLimit ? <ChevronRight color={colors.status.warning} size={12} /> : null}
+        {isAtLimit ? <ChevronRight color={colors.status.warning} size={iconSizes.small} /> : null}
       </View>
     </Pressable>
   );

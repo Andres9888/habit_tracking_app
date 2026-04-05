@@ -3,7 +3,7 @@
  */
 
 import { StyleSheet } from 'react-native';
-import { typography, fontFamilies} from '../../theme/typography';
+import { typography, fontWeights, fontFamilies} from '../../theme/typography';
 
 export const styles = StyleSheet.create({
   container: {
@@ -51,7 +51,7 @@ export const styles = StyleSheet.create({
   templateName: {
     fontFamily: fontFamilies.primary.text,
     fontSize: typography.bodySmall.fontSize,
-    fontWeight: '500',
+    fontWeight: fontWeights.medium,
   },
   templateRow: {
     flexDirection: 'row',

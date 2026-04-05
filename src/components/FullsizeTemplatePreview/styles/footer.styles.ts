@@ -6,7 +6,7 @@ import { StyleSheet } from 'react-native';
 
 import { colors } from '@/theme/colors';
 import { shadows, borderRadius } from '../../../theme/spacing'
-import { fontFamilies } from '../../../theme/typography';
+import { fontFamilies, fontWeights } from '../../../theme/typography';
 
 export const footerStyles = StyleSheet.create({
   customizeLink: {
@@ -17,7 +17,7 @@ export const footerStyles = StyleSheet.create({
     color: colors.gray[500],
     fontFamily: fontFamilies.primary.text,
     fontSize: 13,
-    fontWeight: '600',
+    fontWeight: fontWeights.semibold,
   },
   footer: {
     gap: 12,
@@ -45,7 +45,7 @@ export const footerStyles = StyleSheet.create({
     color: colors.text.inverse,
     fontFamily: fontFamilies.primary.text,
     fontSize: 17,
-    fontWeight: '700',
+    fontWeight: fontWeights.bold,
   },
   successButton: {
     ...shadows.modal,
@@ -77,7 +77,7 @@ export const footerStyles = StyleSheet.create({
     color: colors.text.inverse,
     fontFamily: fontFamilies.primary.text,
     fontSize: 17,
-    fontWeight: '700',
+    fontWeight: fontWeights.bold,
   },
   successButtonWrapper: {
     position: 'relative',

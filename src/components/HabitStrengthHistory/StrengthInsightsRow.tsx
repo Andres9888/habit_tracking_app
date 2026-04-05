@@ -12,6 +12,7 @@ import { View } from 'react-native';
 import { Trophy, BarChart3 } from 'lucide-react-native';
 import { InsightCard } from './InsightCard';
 import { getDeltaIcon, getDeltaColor, formatDelta } from './deltaHelpers';
+import { iconSizes } from '@/theme/iconSizes';
 
 const ANIMATION_DELAY_BASE = 300;
 
@@ -47,14 +48,14 @@ export function StrengthInsightsRow({
       <InsightCard
         accessibilityLabel={`Peak strength: ${Math.round(peak)} percent`}
         animationDelay={ANIMATION_DELAY_BASE + 100}
-        icon={<Trophy color='#f59e0b' size={18} testID='icon-trophy' />}
+        icon={<Trophy color='#f59e0b' size={iconSizes.medium} testID='icon-trophy' />}
         label='Peak'
         value={`${Math.round(peak)}%`}
       />
       <InsightCard
         accessibilityLabel={`Lowest strength: ${Math.round(lowest)} percent`}
         animationDelay={ANIMATION_DELAY_BASE + 200}
-        icon={<BarChart3 color='#6b7280' size={18} testID='icon-chart' />}
+        icon={<BarChart3 color='#6b7280' size={iconSizes.medium} testID='icon-chart' />}
         label='Lowest'
         value={`${Math.round(lowest)}%`}
       />

@@ -10,6 +10,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { InfoCard } from './InfoCard';
 import { TipsSection } from './TipsSection';
+import { iconSizes } from '@/theme/iconSizes';
 
 interface Props {
   visible: boolean;
@@ -53,7 +54,7 @@ function Header({ onClose }: { onClose: () => void }) {
         style={{ backgroundColor: colors.gray[200] }}
         onPress={onClose}
       >
-        <X color={colors.text.secondary} size={20} />
+        <X color={colors.text.secondary} size={iconSizes.medium} />
       </Pressable>
     </View>
   );

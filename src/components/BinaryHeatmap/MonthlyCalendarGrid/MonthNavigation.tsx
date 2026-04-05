@@ -11,6 +11,7 @@ import { ChevronLeft, ChevronRight, Calendar } from 'lucide-react-native';
 import { format, isValid } from 'date-fns';
 import { useThemeColors } from '@/theme';
 import { styles } from './styles';
+import { iconSizes } from '@/theme/iconSizes';
 
 /** Safely format a date, returning fallback on error */
 function safeFormat(date: Date, formatStr: string, fallback: string): string {
@@ -46,7 +47,7 @@ export const MonthNavigation = memo(function MonthNavigation({
         accessibilityRole='header'
         style={[styles.monthButton, { borderColor: colors.border }]}
       >
-        <Calendar color={iconColor} size={14} />
+        <Calendar color={iconColor} size={iconSizes.small} />
         <Text style={[styles.monthText, { color: colors.text.primary }]}>
           {safeFormat(currentMonth, 'MMM yyyy', 'Month')}
         </Text>
@@ -59,7 +60,7 @@ export const MonthNavigation = memo(function MonthNavigation({
           hitSlop={{ bottom: 10, left: 10, right: 10, top: 10 }}
           onPress={onPreviousMonth}
         >
-          <ChevronLeft color={iconColor} size={18} />
+          <ChevronLeft color={iconColor} size={iconSizes.medium} />
         </Pressable>
         <Pressable
           accessibilityLabel='Next month'
@@ -68,7 +69,7 @@ export const MonthNavigation = memo(function MonthNavigation({
           hitSlop={{ bottom: 10, left: 10, right: 10, top: 10 }}
           onPress={onNextMonth}
         >
-          <ChevronRight color={iconColor} size={18} />
+          <ChevronRight color={iconColor} size={iconSizes.medium} />
         </Pressable>
       </View>
     </View>

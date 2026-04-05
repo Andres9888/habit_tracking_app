@@ -11,7 +11,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import { Modal } from './Modal';
 import { Button } from './Button/Button';
 import { useAppTheme } from '../theme';
-import { typography, fontFamilies} from '../theme/typography';
+import { typography, fontWeights, fontFamilies} from '../theme/typography';
 
 interface PauseHabitModalProps {
   visible: boolean;
@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: fontFamilies.primary.text,
     fontSize: typography.heading2.fontSize,
-    fontWeight: '600',
+    fontWeight: fontWeights.semibold,
     marginBottom: 12,
     textAlign: 'center',
   },

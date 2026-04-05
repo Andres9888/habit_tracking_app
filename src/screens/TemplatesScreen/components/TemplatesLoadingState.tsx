@@ -2,7 +2,7 @@
 import { View, Text } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useThemeColors } from '../../../theme/ThemeContext';
-import { fontFamilies } from '../../../theme/typography';
+import { fontFamilies, fontWeights } from '../../../theme/typography';
 import { ShimmerBox } from './ShimmerBox';
 import { SkeletonCard } from './SkeletonCard';
 
@@ -19,7 +19,7 @@ export function TemplatesLoadingState() {
             color: colors.text.primary,
             fontFamily: fontFamilies.primary.display,
             fontSize: 22,
-            fontWeight: '600',
+            fontWeight: fontWeights.semibold,
             letterSpacing: -0.35,
           }}
         >

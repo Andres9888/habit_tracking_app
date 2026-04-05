@@ -15,7 +15,7 @@ import Animated, {
   runOnJS,
 } from 'react-native-reanimated';
 import { useThemeColors } from '../../theme/ThemeContext';
-import { fontFamilies } from '@/theme/typography';
+import { fontFamilies, fontWeights } from '@/theme/typography';
 
 export interface ConflictNotificationProps {
   visible: boolean;
@@ -176,7 +176,7 @@ const styles = StyleSheet.create({
   message: {
     fontFamily: fontFamilies.primary.text,
     fontSize: 13,
-    fontWeight: '400',
+    fontWeight: fontWeights.regular,
     lineHeight: 18,
   },
   textContainer: {
@@ -185,7 +185,7 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: fontFamilies.primary.text,
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: fontWeights.semibold,
     marginBottom: 3,
   },
 });

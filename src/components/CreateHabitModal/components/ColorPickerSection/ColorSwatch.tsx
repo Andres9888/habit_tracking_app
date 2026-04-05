@@ -6,7 +6,7 @@
 import { useCallback, useRef } from 'react';
 import { Animated, View } from 'react-native';
 import { Motion } from '../../../../constants/motion';
-import { shadows } from '../../../../theme/spacing';
+import { borderRadius, shadows } from '../../../../theme/spacing';
 import { AnimatedPressable } from '../../../ui';
 
 interface ColorSwatchProps {
@@ -23,7 +23,7 @@ const TAP_TARGET = 48;
 
 const getSwatchStyle = (color: string, isSelected: boolean) => ({
   backgroundColor: color,
-  borderRadius: 999,
+  borderRadius: borderRadius.full,
   height: SWATCH_SIZE,
   width: SWATCH_SIZE,
   ...shadows.subtle,
@@ -82,14 +82,14 @@ export const ColorSwatch = ({
         <View
           style={{
             backgroundColor: isSelected ? color : 'transparent',
-            borderRadius: 999,
+            borderRadius: borderRadius.full,
             padding: isSelected ? 2 : 0,
           }}
         >
           <View
             style={{
               backgroundColor: isSelected ? '#fff' : 'transparent',
-              borderRadius: 999,
+              borderRadius: borderRadius.full,
               padding: isSelected ? 3 : 0,
             }}
           >

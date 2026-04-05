@@ -1,5 +1,6 @@
 import { View, Text, StyleSheet } from 'react-native';
 import { Trophy } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { LinearGradient } from 'expo-linear-gradient';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useThemeColors } from '../../../theme/ThemeContext';
@@ -62,7 +63,7 @@ export function CharacterCard({ data }: CharacterCardProps) {
               start={{ x: 0, y: 0 }}
               style={styles.trophyGradient}
             >
-              <Trophy color='white' size={20} />
+              <Trophy color='white' size={iconSizes.medium} />
               <Text style={styles.trophyText}>{data.recentAchievements.length}</Text>
             </LinearGradient>
           </View>

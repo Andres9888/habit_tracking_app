@@ -4,13 +4,13 @@
 
 import { StyleSheet } from 'react-native';
 import { colors } from '@/theme/colors';
-import { typography, fontFamilies} from '../../../theme/typography';
+import { typography, fontWeights, fontFamilies} from '../../../theme/typography';
 
 export const containerStyles = StyleSheet.create({
   closeButton: {
     fontFamily: fontFamilies.primary.text,
     fontSize: 17,
-    fontWeight: '600',
+    fontWeight: fontWeights.semibold,
   },
   container: {
     backgroundColor: colors.light.card,
@@ -44,6 +44,6 @@ export const containerStyles = StyleSheet.create({
   title: {
     fontFamily: fontFamilies.primary.text,
     fontSize: typography.heading2.fontSize,
-    fontWeight: '600',
+    fontWeight: fontWeights.semibold,
   },
 });

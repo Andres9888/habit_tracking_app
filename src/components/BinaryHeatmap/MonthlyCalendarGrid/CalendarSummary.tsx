@@ -5,7 +5,7 @@
 
 import React, { memo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { fontFamilies } from '@/theme/typography';
+import { fontFamilies, fontWeights } from '@/theme/typography';
 
 interface CalendarSummaryProps {
   borderColor: string;
@@ -75,7 +75,7 @@ const summaryStyles = StyleSheet.create({
   rateText: {
     fontFamily: fontFamilies.primary.text,
     fontSize: 13,
-    fontWeight: '700',
+    fontWeight: fontWeights.bold,
     minWidth: 32,
     textAlign: 'right',
   },
@@ -94,6 +94,6 @@ const summaryStyles = StyleSheet.create({
   text: {
     fontFamily: fontFamilies.primary.text,
     fontSize: 13,
-    fontWeight: '500',
+    fontWeight: fontWeights.medium,
   },
 });

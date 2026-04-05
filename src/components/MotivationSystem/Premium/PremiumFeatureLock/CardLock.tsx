@@ -8,6 +8,7 @@ import React, { useCallback } from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Sparkles } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -79,7 +80,7 @@ export function CardLock({
             {meta.description}
           </Text>
           {showScience ? <View className='flex-row items-start gap-2 rounded-lg px-3 py-2' style={{ backgroundColor: colors.status.warningLight }}>
-              <Sparkles className='mt-0.5' color={colors.status.warning} size={14} />
+              <Sparkles className='mt-0.5' color={colors.status.warning} size={iconSizes.small} />
               <Text className='flex-1 text-xs italic' style={{ color: colors.status.warningText }}>
                 {meta.scienceBasis}
               </Text>

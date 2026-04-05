@@ -5,11 +5,12 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import { Sparkles, AlertTriangle } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 
 import type { VizType } from './types';
-import { fontFamilies } from '@/theme/typography';
+import { fontFamilies, fontWeights } from '@/theme/typography';
 
 interface EmptyVizStateProps {
   type: VizType;
@@ -65,9 +66,9 @@ export function EmptyVizState({ type, compact }: EmptyVizStateProps) {
         }}
       >
         {isSuccess ? (
-          <Sparkles color={accentColor} size={24} />
+          <Sparkles color={accentColor} size={iconSizes.large} />
         ) : (
-          <AlertTriangle color={accentColor} size={24} />
+          <AlertTriangle color={accentColor} size={iconSizes.large} />
         )}
       </Animated.View>
       <Animated.Text
@@ -76,7 +77,7 @@ export function EmptyVizState({ type, compact }: EmptyVizStateProps) {
           color: colors.text.primary,
           fontFamily: fontFamilies.primary.text,
           fontSize: 14,
-          fontWeight: '500',
+          fontWeight: fontWeights.medium,
           marginBottom: 4,
           textAlign: 'center',
         }}

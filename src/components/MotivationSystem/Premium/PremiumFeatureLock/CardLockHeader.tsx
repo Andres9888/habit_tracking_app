@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Crown, ChevronRight } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import type { FeatureMeta } from './PremiumFeatureLock.types';
 
 interface CardLockHeaderProps {
@@ -17,7 +18,7 @@ export function CardLockHeader({ meta }: CardLockHeaderProps) {
       start={{ x: 0, y: 0 }}
     >
       <View className='h-10 w-10 items-center justify-center rounded-full bg-white/20'>
-        <Crown color='#ffffff' size={20} />
+        <Crown color='#ffffff' size={iconSizes.medium} />
       </View>
       <View className='flex-1'>
         <Text className='text-base font-bold text-white'>{meta.title}</Text>
@@ -27,7 +28,7 @@ export function CardLockHeader({ meta }: CardLockHeaderProps) {
       </View>
       <View className='flex-row items-center gap-1'>
         <Text className='text-sm font-medium text-white'>Upgrade</Text>
-        <ChevronRight color='#ffffff' size={16} />
+        <ChevronRight color='#ffffff' size={iconSizes.small} />
       </View>
     </LinearGradient>
   );

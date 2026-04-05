@@ -5,6 +5,7 @@
 
 import React from 'react';
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 
 // WCAG AA compliant colors (4.5:1 minimum contrast ratio)
 export const DELTA_COLORS = {
@@ -15,7 +16,7 @@ export const DELTA_COLORS = {
   positive: '#047857', // Stone-500 (WCAG AA: 4.80:1)
 } as const;
 
-const DELTA_ICON_SIZE = 18;
+const DELTA_ICON_SIZE = iconSizes.medium;
 
 /**
  * Get the appropriate icon for the delta value

@@ -5,6 +5,7 @@
 import React from 'react';
 import { View } from 'react-native';
 import { User, Brain, Heart } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import type { VizType, ColorClass } from './types';
@@ -34,19 +35,19 @@ export function VizFields({
     <View className={compact ? 'gap-1' : 'gap-2'}>
       {body ? <VizField
           colorClass={colorClass}
-          icon={<User color={iconColor} size={16} />}
+          icon={<User color={iconColor} size={iconSizes.small} />}
           label='Body'
           value={body}
         /> : null}
       {mind ? <VizField
           colorClass={colorClass}
-          icon={<Brain color={iconColor} size={16} />}
+          icon={<Brain color={iconColor} size={iconSizes.small} />}
           label='Mind'
           value={mind}
         /> : null}
       {emotion ? <VizField
           colorClass={colorClass}
-          icon={<Heart color={iconColor} size={16} />}
+          icon={<Heart color={iconColor} size={iconSizes.small} />}
           label='Emotion'
           value={emotion}
         /> : null}

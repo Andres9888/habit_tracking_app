@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { Zap, X } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '@/theme/ThemeContext';
 
 interface ActivationModalHeaderProps {
@@ -16,7 +17,7 @@ export function ActivationModalHeader({ onClose }: ActivationModalHeaderProps) {
   return (
     <View className='flex-row items-center justify-between px-4 py-3'>
       <View className='flex-row items-center gap-2'>
-        <Zap color={themeColors.status.warning} size={20} />
+        <Zap color={themeColors.status.warning} size={iconSizes.medium} />
         <Text className='text-lg font-bold' style={{ color: themeColors.text.primary }}>Time to Build</Text>
       </View>
       <Pressable
@@ -26,7 +27,7 @@ export function ActivationModalHeader({ onClose }: ActivationModalHeaderProps) {
         style={{ backgroundColor: themeColors.border }}
         onPress={onClose}
       >
-        <X color={themeColors.text.primary} size={24} />
+        <X color={themeColors.text.primary} size={iconSizes.large} />
       </Pressable>
     </View>
   );

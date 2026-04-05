@@ -9,6 +9,7 @@ import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import { triggerHaptic } from '@/utils/haptics';
+import { fontWeights } from '@/theme/typography';
 
 export interface ChipCategory {
   icon: string;
@@ -126,7 +127,7 @@ const s = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 8,
   },
-  chipText: { fontSize: 13, fontWeight: '600', lineHeight: 16 },
+  chipText: { fontSize: 13, fontWeight: fontWeights.semibold, lineHeight: 16 },
   container: {
     minHeight: 44,
   },

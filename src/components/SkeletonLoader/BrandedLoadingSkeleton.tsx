@@ -9,7 +9,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { SkeletonLoader } from './SkeletonLoader';
 import { HabitCardSkeleton } from './HabitCardSkeleton';
 import { useSkeletonTheme } from './useSkeletonTheme';
-import { fontFamilies } from '@/theme/typography';
+import { fontFamilies, fontWeights } from '@/theme/typography';
 
 function ChainIcon({ isDark }: { isDark: boolean }) {
   return (
@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
   appName: {
     fontFamily: fontFamilies.primary.text,
     fontSize: 22,
-    fontWeight: '700',
+    fontWeight: fontWeights.bold,
     letterSpacing: -0.35,
     marginTop: 12,
   },

@@ -9,6 +9,7 @@ import { useThemeColors } from '../../../theme/ThemeContext';
 import { SORT_LABELS, type SortOption } from '../../templates/constants';
 import { styles } from '../../templates/templatesScreenStyles';
 import { SortDropdown } from './SortDropdown';
+import { iconSizes } from '@/theme/iconSizes';
 
 interface FilterControlsProps {
   onSelectSort: (option: SortOption) => void;
@@ -43,7 +44,7 @@ export function FilterControls({
         ]}
         onPress={onToggleSortOptions}
       >
-        <SlidersHorizontal color={iconColor} size={16} />
+        <SlidersHorizontal color={iconColor} size={iconSizes.small} />
         <Text
           style={[
             styles.controlButtonText,
@@ -55,7 +56,7 @@ export function FilterControls({
         </Text>
         <ChevronDown
           color={iconColor}
-          size={14}
+          size={iconSizes.small}
           style={{
             transform: [{ rotate: showSortOptions ? '180deg' : '0deg' }],
           }}

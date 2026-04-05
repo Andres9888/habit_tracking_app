@@ -2,6 +2,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Text, View } from 'react-native';
 import { ChevronDown } from 'lucide-react-native';
 import { useThemeColors } from '@/theme/ThemeContext';
+import { iconSizes } from '@/theme/iconSizes';
 
 interface TemplateListShadowsProps {
   showTop: boolean;
@@ -40,7 +41,7 @@ export const TemplateListShadows = ({
         }}
       >
         <View className='mb-1 flex-row items-center rounded-full bg-[rgba(28,25,23,0.08)] px-3 py-1.5'>
-          <ChevronDown color='#1c1917' size={16} />
+          <ChevronDown color='#1c1917' size={iconSizes.small} />
           <Text className='ml-1.5 text-xs font-semibold' style={{ color: colors.text.primary }}>
             Scroll for more habits
           </Text>

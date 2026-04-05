@@ -12,7 +12,7 @@
 import React, { memo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
-import { typography, fontFamilies } from '@/theme/typography';
+import { typography, fontWeights, fontFamilies } from '@/theme/typography';
 import type { HeatmapLegendProps } from './types';
 import { LEGEND_INDICATOR_SIZE, COLORS, CELL_BORDER_RADIUS } from './constants';
 
@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
   completionText: {
     fontFamily: fontFamilies.primary.text,
     fontSize: typography.caption.fontSize,
-    fontWeight: '600',
+    fontWeight: fontWeights.semibold,
   },
   container: {
     alignItems: 'center',

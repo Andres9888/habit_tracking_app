@@ -7,6 +7,7 @@
 import { Linking, Pressable, Text, View } from 'react-native';
 import { AlertTriangle } from 'lucide-react-native';
 import { useThemeColors } from '../../../../theme/ThemeContext';
+import { iconSizes } from '@/theme/iconSizes';
 
 interface PermissionBannerProps {
   visible: boolean;
@@ -26,7 +27,7 @@ export function PermissionBanner({ visible }: PermissionBannerProps) {
       style={{ backgroundColor: '#FEF3C7' }}
       onPress={() => void Linking.openSettings()}
     >
-      <AlertTriangle color='#D97706' size={18} />
+      <AlertTriangle color='#D97706' size={iconSizes.medium} />
       <View className='flex-1'>
         <Text className='text-sm font-medium' style={{ color: '#92400E' }}>
           Notifications are disabled

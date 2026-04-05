@@ -6,6 +6,7 @@
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { Volume2, VolumeX } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import { SpeedControl } from './SpeedControl';
 import type { TimeControlsProps } from './types';
@@ -39,9 +40,9 @@ export function TimeControls({
             onPress={onToggleMute}
           >
             {isMuted ? (
-              <VolumeX color={colors.text.secondary} size={14} />
+              <VolumeX color={colors.text.secondary} size={iconSizes.small} />
             ) : (
-              <Volume2 color={colors.text.secondary} size={14} />
+              <Volume2 color={colors.text.secondary} size={iconSizes.small} />
             )}
           </Pressable> : null}
 

@@ -3,7 +3,7 @@
  */
 
 import { StyleSheet } from 'react-native';
-import { fontFamilies } from '@/theme/typography';
+import { typography, fontWeights } from '@/theme/typography';
 import { ICON_BADGE_SIZE } from './constants';
 
 export const styles = StyleSheet.create({
@@ -17,10 +17,9 @@ export const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   actionText: {
+    ...typography.caption,
     color: '#FFFFFF',
-    fontFamily: fontFamilies.primary.text,
-    fontSize: 13,
-    fontWeight: '700',
+    fontWeight: fontWeights.bold,
   },
   container: {
     alignItems: 'center',
@@ -46,10 +45,9 @@ export const styles = StyleSheet.create({
     fontSize: 20,
   },
   nameText: {
+    ...typography.bodySmall,
     color: '#FFFFFF',
-    fontFamily: fontFamilies.primary.text,
-    fontSize: 14,
-    fontWeight: '700',
+    fontWeight: fontWeights.bold,
   },
   toast: {
     alignItems: 'center',

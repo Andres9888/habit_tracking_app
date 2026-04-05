@@ -13,7 +13,7 @@ import { View, Text, StyleSheet, type ViewStyle } from 'react-native';
 import { Lock, Flame, Sparkles } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { shadows, borderRadius } from '../theme/spacing'
-import { fontFamilies } from '../theme/typography';;
+import { fontFamilies, fontWeights } from '../theme/typography';
 import { colors } from '../theme/colors';
 
 type PremiumBadgeVariant = 'pro' | 'popular' | 'new';
@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
   badgeText: {
     fontFamily: fontFamilies.primary.text,
     fontSize: 13,
-    fontWeight: '600',
+    fontWeight: fontWeights.semibold,
     letterSpacing: 0.5,
     textTransform: 'uppercase',
   },

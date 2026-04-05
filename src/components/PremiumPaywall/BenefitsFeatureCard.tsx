@@ -6,6 +6,7 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import { useThemeColors } from '@/theme/ThemeContext';
 import type { MotivationFeatureItem } from './PremiumPaywall.types';
+import { iconSizes } from '@/theme/iconSizes';
 
 interface BenefitsFeatureCardProps {
   feature: MotivationFeatureItem;
@@ -25,7 +26,7 @@ export function BenefitsFeatureCard({ feature, isHighlighted }: BenefitsFeatureC
           className='h-10 w-10 items-center justify-center rounded-full'
           style={{ backgroundColor: `${feature.accentColor}20` }}
         >
-          <feature.icon color={feature.accentColor ?? '#8b5cf6'} size={20} />
+          <feature.icon color={feature.accentColor ?? '#8b5cf6'} size={iconSizes.medium} />
         </View>
         <View className='flex-1'>
           <Text className='text-base font-semibold' style={{ color: themeColors.text.primary }}>{feature.title}</Text>

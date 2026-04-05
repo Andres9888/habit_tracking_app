@@ -7,7 +7,7 @@
 import { StyleSheet } from 'react-native';
 
 import { shadows, borderRadius as br } from '../../../theme/spacing';
-import { typography, fontFamilies } from '@/theme/typography';
+import { typography, fontFamilies, fontWeights } from '@/theme/typography';
 
 export const styles = StyleSheet.create({
   container: {
@@ -26,7 +26,7 @@ export const styles = StyleSheet.create({
   dayText: {
     fontFamily: fontFamilies.primary.text,
     fontSize: typography.bodySmall.fontSize,
-    fontWeight: '500',
+    fontWeight: fontWeights.medium,
   },
   dayWrapper: {
     alignItems: 'center',
@@ -49,7 +49,7 @@ export const styles = StyleSheet.create({
   headerText: {
     fontFamily: fontFamilies.primary.text,
     fontSize: 10,
-    fontWeight: '600',
+    fontWeight: fontWeights.semibold,
     letterSpacing: 0.3,
     textTransform: 'uppercase',
   },
@@ -86,7 +86,7 @@ export const styles = StyleSheet.create({
   monthText: {
     fontFamily: fontFamilies.primary.text,
     fontSize: 13,
-    fontWeight: '700',
+    fontWeight: fontWeights.bold,
   },
   row: {
     flexDirection: 'row',
@@ -106,6 +106,6 @@ export const styles = StyleSheet.create({
     width: 6,
   },
   todayText: {
-    fontWeight: '700',
+    fontWeight: fontWeights.bold,
   },
 });

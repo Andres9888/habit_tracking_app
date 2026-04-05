@@ -1,6 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
 import { Clock, Zap } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '@/theme/ThemeContext';
 import { AnimatedContent } from './AnimatedContent';
 import { StartNowButton } from './StartNowButton';
@@ -61,12 +62,12 @@ export function ActivationModalActions({
       >
         <View className='mt-3 flex-row gap-3'>
           <QuickAction
-            icon={<Clock color={themeColors.text.secondary} size={16} />}
+            icon={<Clock color={themeColors.text.secondary} size={iconSizes.small} />}
             label='Snooze'
             onPress={onSnooze}
           />
           <QuickAction
-            icon={<Zap color={themeColors.status.warning} size={16} />}
+            icon={<Zap color={themeColors.status.warning} size={iconSizes.small} />}
             label='Just 2 Min'
             onPress={onJustTwoMin}
           />

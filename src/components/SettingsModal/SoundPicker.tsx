@@ -5,6 +5,7 @@
 import { Pressable, Text, View } from 'react-native';
 import Animated, { FadeInDown, FadeOutUp } from 'react-native-reanimated';
 import { Volume1, Droplet, TrendingUp } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { useSoundPreview } from './SoundPicker.hooks';
 import type { CompletionSoundType } from '../../../convex/settings/types';
@@ -58,7 +59,7 @@ export function SoundPicker({ selected, onSelect }: SoundPickerProps) {
             >
               <Icon
                 color={on ? accent : colors.text.secondary}
-                size={14}
+                size={iconSizes.small}
                 strokeWidth={on ? 2.5 : 2}
               />
               <Text

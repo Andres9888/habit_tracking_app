@@ -13,6 +13,7 @@ import { clsx } from 'clsx';
 import { SPRING_BUTTON } from '../../../animations';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import type { ActionButtonProps } from './types';
+import { iconSizes } from '@/theme/iconSizes';
 import { triggerHaptic } from '@/utils/haptics';
 
 export function ActionButton({
@@ -59,7 +60,7 @@ export function ActionButton({
       >
         <Icon
           color={isPrimary ? '#ffffff' : colors.text.secondary}
-          size={18}
+          size={iconSizes.medium}
         />
         <Text
           className={clsx(

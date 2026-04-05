@@ -6,6 +6,7 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import { Plus } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '../../../../../theme/ThemeContext';
 
 interface VoiceNotesSectionHeaderProps {
@@ -32,7 +33,7 @@ export function VoiceNotesSectionHeader({
       ) : (
         <View className='ml-auto flex-row items-center gap-1'>
           {!hasVoiceNotes && !isRecording ? <>
-              <Plus color={colors.status.success} size={12} />
+              <Plus color={colors.status.success} size={iconSizes.small} />
               <Text className='text-xs font-medium' style={{ color: colors.status.success }}>Record</Text>
             </> : null}
         </View>

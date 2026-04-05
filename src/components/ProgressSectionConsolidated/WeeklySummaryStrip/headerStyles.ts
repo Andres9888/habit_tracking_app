@@ -5,13 +5,12 @@
 import { StyleSheet } from 'react-native';
 
 import { borderRadius } from '../../../theme/spacing';
-import { typography, fontFamilies} from '@/theme/typography';
+import { typography, fontWeights } from '@/theme/typography';
 
 export const headerStyles = StyleSheet.create({
   comparisonText: {
+    ...typography.caption,
     color: '#78716c', // stone-500
-    fontFamily: fontFamilies.primary.text,
-    fontSize: 13,
   },
   header: {
     alignItems: 'center',
@@ -30,10 +29,8 @@ export const headerStyles = StyleSheet.create({
     gap: 4,
   },
   headerTitle: {
+    ...typography.button,
     color: '#1c1917', // stone-900
-    fontFamily: fontFamilies.primary.text,
-    fontSize: typography.body.fontSize,
-    fontWeight: '600',
   },
   perfectBadge: {
     backgroundColor: '#10b981', // status.success fallback, overridden by theme in CardContent
@@ -42,10 +39,9 @@ export const headerStyles = StyleSheet.create({
     paddingVertical: 2,
   },
   perfectBadgeText: {
+    ...typography.tabBar,
     color: '#ffffff',
-    fontFamily: fontFamilies.primary.text,
-    fontSize: typography.tabBar.fontSize,
-    fontWeight: '600',
+    fontWeight: fontWeights.semibold,
   },
   sparkleContainer: {
     position: 'absolute',

@@ -10,6 +10,7 @@ import Animated from 'react-native-reanimated';
 import { useThemeColors } from '@/theme/ThemeContext';
 import type { VariantConfig } from './PremiumPaywall.types';
 import type { PremiumPaywallHandlers } from './usePremiumPaywall';
+import { iconSizes } from '@/theme/iconSizes';
 
 interface BenefitsCTAFooterProps {
   config: VariantConfig;
@@ -55,7 +56,7 @@ export function BenefitsCTAFooter({
             style={handlers.priceLabel ? undefined : { opacity: 0.5 }}
           >
             <Text className='text-base font-semibold text-white'>{config.ctaText}</Text>
-            <ChevronRight color='#ffffff' size={18} />
+            <ChevronRight color='#ffffff' size={iconSizes.medium} />
           </LinearGradient>
         </Animated.View>
       </Pressable>

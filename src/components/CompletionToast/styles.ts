@@ -3,7 +3,7 @@
  */
 
 import { StyleSheet } from 'react-native';
-import { fontFamilies } from '@/theme/typography';
+import { fontFamilies, fontWeights } from '@/theme/typography';
 
 export const styles = StyleSheet.create({
   container: {
@@ -25,7 +25,7 @@ export const styles = StyleSheet.create({
     flex: 1,
   },
   primaryText: {
-    fontWeight: '600',
+    fontWeight: fontWeights.semibold,
   },
   streakBadge: {
     alignItems: 'center',
@@ -41,7 +41,7 @@ export const styles = StyleSheet.create({
   streakText: {
     fontFamily: fontFamilies.primary.text,
     fontSize: 13,
-    fontWeight: '700',
+    fontWeight: fontWeights.bold,
   },
   toast: {
     alignItems: 'center',

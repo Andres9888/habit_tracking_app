@@ -5,6 +5,7 @@ import React from 'react';
 import { View, Text, Pressable } from 'react-native';
 import Animated, { AnimatedStyle } from 'react-native-reanimated';
 import { Mic, ChevronDown } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '../../../../../theme/ThemeContext';
 import { formatDuration, formatRelativeTime } from '../VoiceNotesSection.utils';
 import type { VoiceNoteSummary } from '../VoiceNotesSection.types';
@@ -27,14 +28,14 @@ export function VoiceNoteItemHeader({ note, hasPlayback, isExpanded, iconStyle, 
   return (
     <Pressable accessibilityLabel={label} accessibilityRole={hasPlayback ? 'button' : 'text'} className='flex-row items-center gap-3 p-3' disabled={!hasPlayback} onPress={onPress}>
       <View className='h-8 w-8 items-center justify-center rounded-full' style={{ backgroundColor: colors.status.successLight }}>
-        <Mic color={colors.status.success} size={14} />
+        <Mic color={colors.status.success} size={iconSizes.small} />
       </View>
       <View className='flex-1'>
         <Text className='text-sm font-medium' style={{ color: colors.text.primary }}>{note.label || `Recording ${formatDuration(note.duration)}`}</Text>
         <Text className='text-xs' style={{ color: colors.text.secondary }}>{formatRelativeTime(note.createdAt)}{note.isDay1 ? ' . Day 1' : null}</Text>
       </View>
       <Text className='mr-2 text-xs' style={{ color: colors.text.tertiary }}>{formatDuration(note.duration)}</Text>
-      {hasPlayback ? <Animated.View style={iconStyle}><ChevronDown color={colors.text.tertiary} size={16} /></Animated.View> : null}
+      {hasPlayback ? <Animated.View style={iconStyle}><ChevronDown color={colors.text.tertiary} size={iconSizes.small} /></Animated.View> : null}
     </Pressable>
   );
 }

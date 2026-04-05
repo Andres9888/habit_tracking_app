@@ -4,6 +4,7 @@
 import React, { useCallback } from 'react';
 import { Pressable } from 'react-native';
 import { Square } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '@/theme/ThemeContext';
 import { triggerHaptic } from '@/utils/haptics';
 
@@ -27,7 +28,7 @@ export function StopButton({ onStopRecording }: StopButtonProps) {
       style={{ backgroundColor: colors.status.error }}
       onPress={handleStopPress}
     >
-      <Square color='white' fill='white' size={20} />
+      <Square color='white' fill='white' size={iconSizes.medium} />
     </Pressable>
   );
 }

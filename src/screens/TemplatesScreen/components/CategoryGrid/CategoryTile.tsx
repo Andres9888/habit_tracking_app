@@ -5,7 +5,7 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { colors } from '../../../../theme/colors';
 import { borderRadius, spacing } from '../../../../theme/spacing';
-import { typography } from '../../../../theme/typography';
+import { typography, fontWeights } from '../../../../theme/typography';
 
 interface CategoryTileProps {
   bgColor: string;
@@ -55,7 +55,7 @@ export function CategoryTile({
 const s = StyleSheet.create({
   count: { ...typography.caption, color: colors.text.tertiary, marginTop: 2 },
   icon: { fontSize: 28 },
-  label: { ...typography.bodySmall, fontWeight: '600', marginTop: spacing.sm },
+  label: { ...typography.bodySmall, fontWeight: fontWeights.semibold, marginTop: spacing.sm },
   previewEmoji: { fontSize: 14, opacity: 0.6 },
   previewRow: {
     flexDirection: 'row',

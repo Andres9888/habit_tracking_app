@@ -1,7 +1,7 @@
 import { Text, View } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import { useThemeColors } from '../../../../theme/ThemeContext';
-import { fontFamilies } from '@/theme/typography';
+import { fontFamilies, fontWeights } from '@/theme/typography';
 
 interface EmptyStateProps {
   label: string;
@@ -17,7 +17,7 @@ export function EmptyState({ label }: EmptyStateProps) {
           color: colors.text.secondary,
           fontFamily: fontFamilies.primary.text,
           fontSize: 14,
-          fontWeight: '600',
+          fontWeight: fontWeights.semibold,
           marginBottom: 12,
         }}
       >

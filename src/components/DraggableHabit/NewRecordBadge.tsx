@@ -4,6 +4,7 @@ import ReAnimated, { useAnimatedStyle } from 'react-native-reanimated';
 import type { SharedValue } from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
 import { TrendingUp } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { colors } from '@/theme';
 import { useThemeColors } from '../../theme/ThemeContext';
 
@@ -42,7 +43,7 @@ export function NewRecordBadge({
       />
       <TrendingUp
         color={isDark ? colors.streak[300] : colors.warning}
-        size={16}
+        size={iconSizes.small}
         strokeWidth={2.5}
       />
       <Text

@@ -8,6 +8,7 @@ import Animated from 'react-native-reanimated';
 import { Check, Plus } from 'lucide-react-native';
 import { styles } from './MiniTemplateCard.styles';
 import { SUCCESS_COLOR } from './constants';
+import { iconSizes } from '@/theme/iconSizes';
 
 interface ImportButtonProps {
   name: string;
@@ -46,12 +47,12 @@ export function ImportButton({
           <ActivityIndicator color='#fff' size={12} />
         ) : isImported ? (
           <Animated.View style={[styles.checkmarkContainer, checkmarkStyle]}>
-            <Check color='#fff' size={14} strokeWidth={3} />
+            <Check color='#fff' size={iconSizes.small} strokeWidth={3} />
             <Text style={styles.importButtonText}>Added</Text>
           </Animated.View>
         ) : (
           <>
-            <Plus color='#fff' size={14} strokeWidth={3} />
+            <Plus color='#fff' size={iconSizes.small} strokeWidth={3} />
             <Text style={styles.importButtonText}>Add</Text>
           </>
         )}

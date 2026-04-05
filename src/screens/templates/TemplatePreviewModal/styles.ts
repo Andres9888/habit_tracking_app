@@ -5,7 +5,7 @@
 
 import { StyleSheet } from 'react-native';
 import { shadows } from '@/theme/spacing';
-import { fontFamilies } from '@/theme/typography';
+import { fontFamilies, fontWeights } from '@/theme/typography';
 
 export const styles = StyleSheet.create({
   closeButton: {
@@ -46,7 +46,7 @@ export const styles = StyleSheet.create({
   headerTitle: {
     fontFamily: fontFamilies.primary.display,
     fontSize: 22,
-    fontWeight: '700',
+    fontWeight: fontWeights.bold,
     letterSpacing: -0.5,
   },
   iconContainer: {
@@ -74,7 +74,7 @@ export const styles = StyleSheet.create({
   label: {
     fontFamily: fontFamilies.primary.text,
     fontSize: 13,
-    fontWeight: '600',
+    fontWeight: fontWeights.semibold,
     marginBottom: 8,
   },
   previewContainer: {

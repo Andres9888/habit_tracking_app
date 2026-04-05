@@ -19,6 +19,7 @@ import { BreakdownSection } from './BreakdownSection';
 import { ChangeIndicator } from './ChangeIndicator';
 import { triggerHaptic } from '@/utils/haptics';
 import { useThemeColors } from '@/theme/ThemeContext';
+import { iconSizes } from '@/theme/iconSizes';
 
 export function ConsistencyIndexCard({
   consistencyIndex,
@@ -53,7 +54,7 @@ export function ConsistencyIndexCard({
       <View className='mb-3 flex-row items-center justify-between'>
         <View className='flex-row items-center gap-2'>
           <View className='h-8 w-8 items-center justify-center rounded-lg' style={{ backgroundColor: colors.status.premiumLight }}>
-            <Activity color={colors.status.premiumText} size={16} />
+            <Activity color={colors.status.premiumText} size={iconSizes.small} />
           </View>
           <Text className='font-semibold' style={{ color: colors.text.primary }}>
             Consistency Index
@@ -67,7 +68,7 @@ export function ConsistencyIndexCard({
           className='rounded-full p-1'
           onPress={handleInfoPress}
         >
-          <Info color={colors.text.tertiary} size={16} />
+          <Info color={colors.text.tertiary} size={iconSizes.small} />
         </Pressable>
       </View>
 

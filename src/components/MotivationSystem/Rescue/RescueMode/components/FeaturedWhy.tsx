@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Heart } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '../../../../../theme/ThemeContext';
 
 interface FeaturedWhyProps {
@@ -24,7 +25,7 @@ export function FeaturedWhy({ why }: FeaturedWhyProps) {
       />
       <View className='mb-3 flex-row items-center gap-2'>
         <View className='h-10 w-10 items-center justify-center rounded-xl' style={{ backgroundColor: colors.status.errorLight }}>
-          <Heart color={colors.status.error} fill={colors.status.error} size={20} />
+          <Heart color={colors.status.error} fill={colors.status.error} size={iconSizes.medium} />
         </View>
         <Text className='text-lg font-bold' style={{ color: colors.status.errorText }}>
           Remember Your Why

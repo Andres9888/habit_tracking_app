@@ -45,7 +45,7 @@ export function ButtonContent({
         <Icon
           color={isDestructive ? themeColors.status.error : isBoost ? '#ffffff' : themeColors.text.primary}
           size={20}
-          strokeWidth={2.25}
+          strokeWidth={2.5}
         />
       </IconContainer>
       <View className='flex-1'>

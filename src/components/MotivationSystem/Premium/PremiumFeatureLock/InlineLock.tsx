@@ -7,6 +7,7 @@ import React, { useCallback } from 'react';
 import { Text, Pressable } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Lock } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -62,7 +63,7 @@ export function InlineLock({
           end={{ x: 1, y: 1 }}
           start={{ x: 0, y: 0 }}
         >
-          <Lock color='#ffffff' size={10} strokeWidth={2.5} />
+          <Lock color='#ffffff' size={iconSizes.micro} strokeWidth={2.5} />
           <Text className='text-[10px] font-bold uppercase tracking-wide text-white'>
             PRO
           </Text>

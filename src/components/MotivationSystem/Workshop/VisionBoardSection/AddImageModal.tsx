@@ -5,6 +5,7 @@
 import React from 'react';
 import { View, Text, Pressable, Modal } from 'react-native';
 import { Image as ImageIcon, ImagePlus, Camera, X } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import { ImageSourceOption } from './ImageSourceOption';
 
@@ -43,7 +44,7 @@ export function AddImageModal({
           <View className='mb-4 flex-row items-center justify-between'>
             <View className='flex-row items-center gap-3'>
               <View className='h-10 w-10 items-center justify-center rounded-xl bg-fuchsia-100'>
-                <ImagePlus className='text-fuchsia-600' size={20} />
+                <ImagePlus className='text-fuchsia-600' size={iconSizes.medium} />
               </View>
               <View>
                 <Text className='text-lg font-bold' style={{ color: colors.text.primary }}>
@@ -61,7 +62,7 @@ export function AddImageModal({
               style={{ backgroundColor: colors.gray[200] }}
               onPress={onClose}
             >
-              <X color={colors.text.secondary} size={20} />
+              <X color={colors.text.secondary} size={iconSizes.medium} />
             </Pressable>
           </View>
 

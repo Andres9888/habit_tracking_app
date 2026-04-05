@@ -1,6 +1,7 @@
 /* eslint-disable max-lines */
 import { Modal, Pressable, ScrollView, Text, View } from 'react-native';
 import { X } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { GestureDetector } from 'react-native-gesture-handler';
 import Animated from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -89,7 +90,7 @@ export function SortBottomSheet({
                   style={{ backgroundColor: isDark ? themeColors.gray[800] : themeColors.gray[100] }}
                   onPress={handleDismiss}
                 >
-                  <X color={themeColors.text.secondary} size={24} />
+                  <X color={themeColors.text.secondary} size={iconSizes.large} />
                 </Pressable>
               </View>
 

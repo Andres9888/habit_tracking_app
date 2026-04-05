@@ -8,6 +8,7 @@ import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import { buildTextInputHintProps } from '@/utils/textInputHintProps';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { styles } from '../../templates/templatesScreenStyles';
+import { iconSizes } from '@/theme/iconSizes';
 
 interface SearchBarProps {
   onChangeText: (text: string) => void;
@@ -33,7 +34,7 @@ export function SearchBar({
         { backgroundColor: colors.card, borderColor: colors.border },
       ]}
     >
-      <Search color={placeholderColor} size={18} strokeWidth={2.25} />
+      <Search color={placeholderColor} size={iconSizes.medium} strokeWidth={2.5} />
       <TextInput
         accessibilityLabel='Search templates'
         returnKeyType='search'
@@ -49,7 +50,7 @@ export function SearchBar({
           accessibilityRole='button'
           onPress={onClear}
         >
-          <X color={placeholderColor} size={18} strokeWidth={2.25} />
+          <X color={placeholderColor} size={iconSizes.medium} strokeWidth={2.5} />
         </AnimatedPressable>
       ) : null}
     </View>

@@ -7,6 +7,7 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 import { useThemeColors } from '../../theme';
+import { typography } from '@/theme/typography';
 import { triggerHaptic } from '@/utils/haptics';
 import { springs } from '@/theme/animations';
 import { ModalCloseButton } from '@/components/ui/ModalCloseButton';
@@ -78,7 +79,7 @@ export function EditHeader({
         <Text
           className='font-semibold'
           style={{
-            fontSize: 17,
+            ...typography.button,
             letterSpacing: -0.41,
             color: canSave && !isSaving ? '#FFFFFF' : disabledText,
           }}

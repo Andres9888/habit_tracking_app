@@ -4,6 +4,7 @@ import Animated, { FadeIn } from 'react-native-reanimated';
 import { useThemeColors } from '../../../theme/ThemeContext';
 
 import { styles } from './styles';
+import { iconSizes } from '@/theme/iconSizes';
 
 /**
  * Empty state shown when no emojis match search
@@ -13,7 +14,7 @@ export function EmptyState() {
 
   return (
     <Animated.View entering={FadeIn.duration(250)} style={styles.emptyState}>
-      <Search color={colors.text.tertiary} size={48} />
+      <Search color={colors.text.tertiary} size={iconSizes.xxl} />
       <Text style={[styles.emptyStateTitle, { color: colors.text.primary }]}>
         No emojis found
       </Text>

@@ -6,6 +6,7 @@ import React from 'react';
 import { View } from 'react-native';
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import { X } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 
 interface BlurOverlayHeaderProps {
   disabled: boolean;
@@ -23,7 +24,7 @@ export function BlurOverlayHeader({ disabled, onPress }: BlurOverlayHeaderProps)
         disabled={disabled}
         onPress={onPress}
       >
-        <X color='#000000' size={24} />
+        <X color='#000000' size={iconSizes.large} />
       </AnimatedPressable>
     </View>
   );

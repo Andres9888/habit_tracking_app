@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { Info } from 'lucide-react-native';
 import { useThemeColors } from '@/theme/ThemeContext';
+import { iconSizes } from '@/theme/iconSizes';
 
 interface SectionHeaderProps {
   title: string;
@@ -25,7 +26,7 @@ export function SectionHeader({ title, onInfoPress }: SectionHeaderProps) {
         testID='strength-history-info-button'
         onPress={onInfoPress}
       >
-        <Info color={themeColors.text.secondary} size={18} />
+        <Info color={themeColors.text.secondary} size={iconSizes.medium} />
       </Pressable>
     </View>
   );

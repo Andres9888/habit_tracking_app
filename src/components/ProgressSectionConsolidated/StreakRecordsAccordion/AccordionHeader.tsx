@@ -9,6 +9,7 @@ import type { AnimatedStyle } from 'react-native-reanimated';
 import type { ViewStyle } from 'react-native';
 import { ChevronDown } from 'lucide-react-native';
 import { useThemeColors } from '@/theme/ThemeContext';
+import { iconSizes } from '@/theme/iconSizes';
 
 interface AccordionHeaderProps {
   isExpanded: boolean;
@@ -42,7 +43,7 @@ export function AccordionHeader({
         {!isExpanded && hasRecords ? <Text className='text-xs' style={{ color: colors.text.secondary }}>{previewText}</Text> : null}
       </View>
       <Animated.View style={chevronStyle}>
-        <ChevronDown color={colors.text.secondary} size={18} />
+        <ChevronDown color={colors.text.secondary} size={iconSizes.medium} />
       </Animated.View>
     </Pressable>
   );

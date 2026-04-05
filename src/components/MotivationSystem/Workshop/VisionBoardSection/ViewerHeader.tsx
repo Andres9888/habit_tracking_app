@@ -12,6 +12,7 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 import { X, Edit3, Trash2 } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { triggerHaptic } from '@/utils/haptics';
 import { springs } from '@/theme/animations';
 
@@ -64,7 +65,7 @@ export function ViewerHeader({
           onPressIn={editAnim.handlePressIn}
           onPressOut={editAnim.handlePressOut}
         >
-          <Edit3 className='text-white' size={20} />
+          <Edit3 className='text-white' size={iconSizes.medium} />
         </AnimatedPressable>
         <AnimatedPressable
           accessibilityLabel='Delete image'
@@ -82,7 +83,7 @@ export function ViewerHeader({
           {isDeleting ? (
             <ActivityIndicator color='#fff' size='small' />
           ) : (
-            <Trash2 className='text-white' size={20} />
+            <Trash2 className='text-white' size={iconSizes.medium} />
           )}
         </AnimatedPressable>
       </View>
@@ -98,7 +99,7 @@ export function ViewerHeader({
         onPressIn={closeAnim.handlePressIn}
         onPressOut={closeAnim.handlePressOut}
       >
-        <X className='text-white' size={24} />
+        <X className='text-white' size={iconSizes.large} />
       </AnimatedPressable>
     </View>
   );

@@ -5,6 +5,7 @@
 
 import { useState } from 'react';
 import { Bell, ChevronRight, Clock, Crown } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { Platform, Text, View } from 'react-native';
 import Animated, { FadeInDown, FadeOutUp } from 'react-native-reanimated';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -57,7 +58,7 @@ export function StreakRemindersSection({
     <SettingsSection highContrastMode={highContrastMode} title='Notifications'>
       <SettingsRow
         highContrastMode={highContrastMode}
-        icon={<Bell color={settings.bell.icon} size={16} />}
+        icon={<Bell color={settings.bell.icon} size={iconSizes.small} />}
         iconBackgroundColor={settings.bell.bg}
         label='Streak Reminders'
         subtitle='Get nudged before an active streak slips'
@@ -106,7 +107,7 @@ export function StreakRemindersSection({
                       width: 36,
                     }}
                   >
-                    <Clock color={settings.clock.icon} size={15} />
+                    <Clock color={settings.clock.icon} size={iconSizes.small} />
                   </View>
                   <Text
                     className='flex-1 text-[17px] font-semibold'
@@ -122,7 +123,7 @@ export function StreakRemindersSection({
                   </Text>
                   <ChevronRight
                     color={themeColors.text.secondary}
-                    size={14}
+                    size={iconSizes.small}
                     strokeWidth={2}
                   />
                 </View>
@@ -166,7 +167,7 @@ export function StreakRemindersSection({
                         width: 36,
                       }}
                     >
-                      <Crown color={settings.premiumTime.icon} size={15} />
+                      <Crown color={settings.premiumTime.icon} size={iconSizes.small} />
                     </View>
                     <View className='flex-1'>
                       <Text
@@ -184,7 +185,7 @@ export function StreakRemindersSection({
                     </View>
                     <ChevronRight
                       color={themeColors.text.secondary}
-                      size={14}
+                      size={iconSizes.small}
                       strokeWidth={2}
                     />
                   </View>

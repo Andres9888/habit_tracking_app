@@ -1,12 +1,12 @@
 import { StyleSheet } from 'react-native';
 import { colors as themeColors } from '@/theme/colors';
 import type { SemanticColors } from '../../../theme/darkColors';
-import { fontFamilies } from '../../../theme/typography';
+import { fontFamilies, fontWeights } from '../../../theme/typography';
 
 export function createErrorFallbackStyles(colors: SemanticColors) {
   return StyleSheet.create({
     button: { backgroundColor: colors.text.primary, borderRadius: 12, paddingHorizontal: 24, paddingVertical: 12 },
-    buttonText: { color: colors.text.inverse, fontFamily: fontFamilies.primary.text, fontSize: 13, fontWeight: '600' },
+    buttonText: { color: colors.text.inverse, fontFamily: fontFamilies.primary.text, fontSize: 13, fontWeight: fontWeights.semibold },
     container: { alignItems: 'center', backgroundColor: colors.background, flex: 1, justifyContent: 'center', padding: 24 },
     content: { alignItems: 'center', maxWidth: 320 },
     emoji: { fontSize: 34, marginBottom: 16 },
@@ -32,7 +32,7 @@ export function createErrorFallbackStyles(colors: SemanticColors) {
       color: colors.text.primary,
       fontFamily: fontFamilies.primary.text,
       fontSize: 13,
-      fontWeight: '600',
+      fontWeight: fontWeights.semibold,
       marginBottom: 16,
       textAlign: 'center',
     },
@@ -41,14 +41,14 @@ export function createErrorFallbackStyles(colors: SemanticColors) {
       color: colors.text.secondary,
       fontFamily: fontFamilies.primary.text,
       fontSize: 13,
-      fontWeight: '500',
+      fontWeight: fontWeights.medium,
       textDecorationLine: 'underline',
     },
     title: {
       color: colors.text.primary,
       fontFamily: fontFamilies.primary.display,
       fontSize: 22,
-      fontWeight: '600',
+      fontWeight: fontWeights.semibold,
       marginBottom: 8,
       textAlign: 'center',
     },

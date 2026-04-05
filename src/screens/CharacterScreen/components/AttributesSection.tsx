@@ -1,8 +1,10 @@
 import { View, StyleSheet } from 'react-native';
 import { Heart, Dumbbell, Brain, Zap } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { spacing } from '../../../theme/spacing';
+import { typography } from '../../../theme/typography';
 import { AttributeCard } from './AttributeCard';
 import { ATTRIBUTE_CONFIGS } from '../constants';
 import type { CharacterAttributes } from '../types';
@@ -29,7 +31,7 @@ export function AttributesSection({ attributes }: AttributesSectionProps) {
         bgGradient={ATTRIBUTE_CONFIGS.vitality.bgGradient}
         delay={BASE_DELAY + STAGGER_DELAY}
         gradientColors={ATTRIBUTE_CONFIGS.vitality.gradientColors}
-        icon={<Heart color={ATTRIBUTE_CONFIGS.vitality.iconColor} size={20} />}
+        icon={<Heart color={ATTRIBUTE_CONFIGS.vitality.iconColor} size={iconSizes.medium} />}
         maxValue={100}
         name='Vitality'
         value={attributes.vitality}
@@ -39,7 +41,7 @@ export function AttributesSection({ attributes }: AttributesSectionProps) {
         delay={BASE_DELAY + STAGGER_DELAY * 2}
         gradientColors={ATTRIBUTE_CONFIGS.strength.gradientColors}
         icon={
-          <Dumbbell color={ATTRIBUTE_CONFIGS.strength.iconColor} size={20} />
+          <Dumbbell color={ATTRIBUTE_CONFIGS.strength.iconColor} size={iconSizes.medium} />
         }
         maxValue={100}
         name='Strength'
@@ -49,7 +51,7 @@ export function AttributesSection({ attributes }: AttributesSectionProps) {
         bgGradient={ATTRIBUTE_CONFIGS.wisdom.bgGradient}
         delay={BASE_DELAY + STAGGER_DELAY * 3}
         gradientColors={ATTRIBUTE_CONFIGS.wisdom.gradientColors}
-        icon={<Brain color={ATTRIBUTE_CONFIGS.wisdom.iconColor} size={20} />}
+        icon={<Brain color={ATTRIBUTE_CONFIGS.wisdom.iconColor} size={iconSizes.medium} />}
         maxValue={100}
         name='Wisdom'
         value={attributes.wisdom}
@@ -58,7 +60,7 @@ export function AttributesSection({ attributes }: AttributesSectionProps) {
         bgGradient={ATTRIBUTE_CONFIGS.energy.bgGradient}
         delay={BASE_DELAY + STAGGER_DELAY * 4}
         gradientColors={ATTRIBUTE_CONFIGS.energy.gradientColors}
-        icon={<Zap color={ATTRIBUTE_CONFIGS.energy.iconColor} size={20} />}
+        icon={<Zap color={ATTRIBUTE_CONFIGS.energy.iconColor} size={iconSizes.medium} />}
         maxValue={100}
         name='Energy'
         value={attributes.energy}
@@ -74,8 +76,7 @@ const styles = StyleSheet.create({
     marginBottom: spacing.lg,
   },
   sectionTitle: {
-    fontSize: 17,
-    fontWeight: '600',
+    ...typography.button,
     letterSpacing: -0.41,
     lineHeight: 22,
     paddingHorizontal: spacing.xs,

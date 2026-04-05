@@ -4,7 +4,7 @@
 
 import { StyleSheet } from 'react-native';
 
-import { fontFamilies } from '@/theme/typography';
+import { fontFamilies, fontWeights } from '@/theme/typography';
 import {
   CELL_SIZE,
   CELL_GAP,
@@ -33,7 +33,7 @@ export const styles = StyleSheet.create({
     color: COLORS.TEXT_SECONDARY,
     fontFamily: fontFamilies.primary.text,
     fontSize: 10,
-    fontWeight: '500',
+    fontWeight: fontWeights.medium,
     paddingRight: 4,
     textAlign: 'right',
   },

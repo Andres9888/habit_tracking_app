@@ -8,7 +8,7 @@ import { View } from 'react-native';
 import { Activity } from 'lucide-react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { useThemeColors } from '../../../theme/ThemeContext';
-import { fontFamilies } from '@/theme/typography';
+import { fontFamilies, fontWeights } from '@/theme/typography';
 
 const anim = (delay: number) =>
   FadeInUp.duration(280).delay(delay).springify().damping(18);
@@ -51,7 +51,7 @@ export function EmptyState({ height }: EmptyStateProps) {
           color: colors.text.primary,
           fontFamily: fontFamilies.primary.text,
           fontSize: 17,
-          fontWeight: '600',
+          fontWeight: fontWeights.semibold,
           marginBottom: 4,
           textAlign: 'center',
         }}

@@ -5,6 +5,7 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import { Flame, ChevronDown, ChevronUp, Mic } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 
 interface CardHeaderProps {
@@ -27,10 +28,10 @@ export function CardHeader({
       <View className='flex-1 flex-row items-center gap-3'>
         <View className='relative'>
           <View className='h-10 w-10 items-center justify-center rounded-full' style={{ backgroundColor: colors.status.warningLight }}>
-            <Mic color={colors.status.warning} size={18} />
+            <Mic color={colors.status.warning} size={iconSizes.medium} />
           </View>
           <View className='absolute -bottom-1 -right-1 flex-row items-center gap-0.5 rounded-full px-1.5 py-0.5' style={{ backgroundColor: colors.status.streak }}>
-            <Flame className='text-white' size={10} />
+            <Flame className='text-white' size={iconSizes.micro} />
             <Text className='text-[10px] font-bold text-white'>
               {streakAtRecording}
             </Text>
@@ -45,9 +46,9 @@ export function CardHeader({
       </View>
       <View className='ml-2 h-8 w-8 items-center justify-center rounded-full' style={{ backgroundColor: colors.status.warningLight }}>
         {isExpanded ? (
-          <ChevronUp color={colors.status.warning} size={16} />
+          <ChevronUp color={colors.status.warning} size={iconSizes.small} />
         ) : (
-          <ChevronDown color={colors.status.warning} size={16} />
+          <ChevronDown color={colors.status.warning} size={iconSizes.small} />
         )}
       </View>
     </>

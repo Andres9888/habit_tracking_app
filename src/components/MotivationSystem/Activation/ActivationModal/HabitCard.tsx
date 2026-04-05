@@ -9,6 +9,7 @@ import Animated, {
   withSequence,
 } from 'react-native-reanimated';
 import { Flame, Target } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import type { ActivationHabitData } from './types';
 import { SPRING_BOUNCY, SPRING_BUTTON } from './constants';
 
@@ -56,7 +57,7 @@ export function HabitCard({ habit, reduceMotion }: HabitCardProps) {
               className='flex-row items-center gap-1'
               style={streakAnimatedStyle}
             >
-              <Flame color={themeColors.status.streak} size={14} />
+              <Flame color={themeColors.status.streak} size={iconSizes.small} />
               <Text className='text-sm font-medium' style={{ color: themeColors.text.primary }}>
                 {habit.currentStreak} day streak
               </Text>
@@ -64,7 +65,7 @@ export function HabitCard({ habit, reduceMotion }: HabitCardProps) {
           {/* Completions */}
           {habit.totalCompletions !== undefined &&
             habit.totalCompletions > 0 ? <View className='flex-row items-center gap-1'>
-                <Target color={themeColors.status.success} size={14} />
+                <Target color={themeColors.status.success} size={iconSizes.small} />
                 <Text className='text-sm' style={{ color: themeColors.text.secondary }}>
                   {habit.totalCompletions} total
                 </Text>

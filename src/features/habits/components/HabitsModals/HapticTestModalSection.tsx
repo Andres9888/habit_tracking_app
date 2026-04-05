@@ -1,5 +1,5 @@
 import { Modal, Pressable, Text, View } from 'react-native';
-import { fontFamilies } from '@/theme/typography';
+import { fontFamilies, fontWeights } from '@/theme/typography';
 import HapticTest from '../../../../components/HapticTest';
 import type { HapticTestModalSectionProps } from './HabitsModals.types';
 
@@ -25,7 +25,7 @@ export function HapticTestModalSection({
             accessibilityRole='button'
             onPress={closeHapticTest}
           >
-            <Text style={{ color: '#ffffff', fontFamily: fontFamilies.primary.text, fontSize: 17, fontWeight: '600' }}>
+            <Text style={{ color: '#ffffff', fontFamily: fontFamilies.primary.text, fontSize: 17, fontWeight: fontWeights.semibold }}>
               ← Back to App
             </Text>
           </Pressable>

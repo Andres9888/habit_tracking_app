@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import { Clock } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 
 interface CueReminderProps {
   time?: string;
@@ -23,7 +24,7 @@ export function CueReminder({
     <View className='rounded-2xl bg-sky-50 p-4'>
       <View className='mb-2 flex-row items-center gap-2'>
         <View className='h-8 w-8 items-center justify-center rounded-lg bg-sky-100'>
-          <Clock className='text-sky-600' size={16} />
+          <Clock className='text-sky-600' size={iconSizes.small} />
         </View>
         <Text className='font-semibold text-sky-800'>Your Cue</Text>
       </View>

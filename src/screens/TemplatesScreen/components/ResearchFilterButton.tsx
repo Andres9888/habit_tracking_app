@@ -7,6 +7,7 @@ import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import { Filter } from 'lucide-react-native';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { styles } from '../../templates/templatesScreenStyles';
+import { iconSizes } from '@/theme/iconSizes';
 
 interface ResearchFilterButtonProps {
   label?: string;
@@ -40,7 +41,7 @@ export function ResearchFilterButton({
     >
       <Filter
         color={researchOnly ? colors.text.inverse : defaultColor}
-        size={16}
+        size={iconSizes.small}
       />
       <Text
         style={[

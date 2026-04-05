@@ -14,6 +14,7 @@ import type { TipQuickActionsSheetProps, QuickAction } from './types';
 import { getQuickActionsForTipType } from './getQuickActionsForTipType';
 import { QuickActionItem } from './QuickActionItem';
 import { styles } from './styles';
+import { iconSizes } from '@/theme/iconSizes';
 
 export const TipQuickActionsSheet = React.memo(function TipQuickActionsSheet({
   visible,
@@ -70,7 +71,7 @@ export const TipQuickActionsSheet = React.memo(function TipQuickActionsSheet({
             testID='close-quick-actions'
             onPress={handleClose}
           >
-            <X color='#78716c' size={24} strokeWidth={2} />
+            <X color='#78716c' size={iconSizes.large} strokeWidth={2} />
           </Pressable>
         </View>
 

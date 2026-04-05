@@ -13,6 +13,7 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import { Plus, Pencil } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import { CompletionCheckmark } from '../../../animations';
 import { SectionCard } from '../CueTriggerSection/SectionCard';
@@ -59,10 +60,10 @@ export function YourWhySection({
             </Text>
           </View>
           {hasWhy ? (
-            <Pencil color={colors.text.tertiary} size={14} />
+            <Pencil color={colors.text.tertiary} size={iconSizes.small} />
           ) : (
             <View className='flex-row items-center gap-1'>
-              <Plus color={colors.status.error} size={12} />
+              <Plus color={colors.status.error} size={iconSizes.small} />
               <Text className='text-xs font-medium' style={{ color: colors.status.error }}>Set up</Text>
             </View>
           )}

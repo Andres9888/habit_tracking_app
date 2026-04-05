@@ -2,6 +2,7 @@ import { View, StyleSheet } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { spacing } from '../../../theme/spacing';
+import { typography } from '../../../theme/typography';
 import { AchievementCard } from './AchievementCard';
 import type { Achievement } from '../types';
 
@@ -43,8 +44,7 @@ const styles = StyleSheet.create({
     marginBottom: spacing.xl, // 32px ~ mb-8
   },
   sectionTitle: {
-    fontSize: 17,
-    fontWeight: '600',
+    ...typography.button,
     letterSpacing: -0.41,
     lineHeight: 22,
     paddingHorizontal: spacing.xs,

@@ -8,6 +8,7 @@ import { typography } from '../../../theme/typography';
 import type { Habit } from '../HabitDetailScreen.types';
 import { iconShadow } from './DetailHeader.constants';
 import { formatSchedule } from './DetailHero.utils';
+import { iconSizes } from '@/theme/iconSizes';
 
 interface DetailHeroProps {
   habit: Habit;
@@ -55,7 +56,7 @@ export function DetailHero({ habit, isCompletedToday }: DetailHeroProps) {
                 width: 24,
               }}
             >
-              <Check color={colors.text.inverse} size={12} strokeWidth={3} />
+              <Check color={colors.text.inverse} size={iconSizes.small} strokeWidth={3} />
             </View>
           ) : null}
         </View>

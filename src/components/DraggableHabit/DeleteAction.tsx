@@ -1,10 +1,11 @@
 import React from 'react';
 import { Animated, Pressable, View, Text } from 'react-native';
 import { Trash2 } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { colors } from '@/theme';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { borderRadius } from '../../theme/spacing';
-import { typography, fontFamilies } from '@/theme/typography';
+import { typography, fontWeights, fontFamilies } from '@/theme/typography';
 
 interface DeleteActionProps {
   dragX: Animated.AnimatedInterpolation<number>;
@@ -47,13 +48,13 @@ export function DeleteAction({ dragX, onPress }: DeleteActionProps) {
           transform: [{ scale: iconScale }],
         }}
       >
-        <Trash2 color="white" size={22} strokeWidth={2} />
+        <Trash2 color="white" size={iconSizes.large} strokeWidth={2} />
         <Text
           style={{
             color: 'white',
             fontFamily: fontFamilies.primary.text,
             fontSize: typography.tabBar.fontSize,
-            fontWeight: '600',
+            fontWeight: fontWeights.semibold,
             letterSpacing: 0.2,
             marginTop: 4,
           }}

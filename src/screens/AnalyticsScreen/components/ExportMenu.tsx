@@ -8,6 +8,7 @@ import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import { colors } from '../../../theme/colors';
 import type { ExportFormat } from '../AnalyticsScreen.types';
 import { styles } from './ExportMenu.styles';
+import { iconSizes } from '@/theme/iconSizes';
 
 interface ExportMenuProps {
   visible: boolean;
@@ -43,7 +44,7 @@ export const ExportMenu: React.FC<ExportMenuProps> = ({
             style={styles.exportMenuItem}
             onPress={() => onExport('csv')}
           >
-            <FileText color={colors.primary[500]} size={24} />
+            <FileText color={colors.primary[500]} size={iconSizes.large} />
             <View style={styles.exportMenuItemContent}>
               <Text style={styles.exportMenuItemTitle}>CSV</Text>
               <Text style={styles.exportMenuItemDescription}>
@@ -58,7 +59,7 @@ export const ExportMenu: React.FC<ExportMenuProps> = ({
             style={styles.exportMenuItem}
             onPress={() => onExport('json')}
           >
-            <Code color={colors.primary[500]} size={24} />
+            <Code color={colors.primary[500]} size={iconSizes.large} />
             <View style={styles.exportMenuItemContent}>
               <Text style={styles.exportMenuItemTitle}>JSON</Text>
               <Text style={styles.exportMenuItemDescription}>

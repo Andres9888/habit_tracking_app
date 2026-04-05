@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native';
 
 import { borderRadius, shadows } from '../../theme/spacing';
-import { typography, fontFamilies} from '../../theme/typography';
+import { typography, fontWeights, fontFamilies} from '../../theme/typography';
 import { useThemeColors } from '../../theme/ThemeContext';
 
 export const DISMISS_THRESHOLD = 50;
@@ -35,7 +35,7 @@ export function useToastStyles() {
     },
     itemName: {
       color: colors.text.primary,
-      fontWeight: '600',
+      fontWeight: fontWeights.semibold,
     },
     message: {
       flex: 1,
@@ -85,7 +85,7 @@ export function useToastStyles() {
       color: isDark ? '#FCA5A5' : '#dc2626',
       fontFamily: fontFamilies.primary.text,
       fontSize: 13,
-      fontWeight: '700',
+      fontWeight: fontWeights.bold,
       letterSpacing: 0.3,
     },
   });

@@ -6,6 +6,7 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 import { Check } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 
 import { springs } from '../../../theme/animations';
 import { useThemeColors } from '../../../theme/ThemeContext';
@@ -50,7 +51,7 @@ export const CheckBadge: React.FC<CheckBadgeProps> = ({ reduceMotion }) => {
         animatedStyle,
       ]}
     >
-      <Check color={colors.primary[500]} size={10} strokeWidth={2.5} />
+      <Check color={colors.primary[500]} size={iconSizes.micro} strokeWidth={2.5} />
     </Animated.View>
   );
 };

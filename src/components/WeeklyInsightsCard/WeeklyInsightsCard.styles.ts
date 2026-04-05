@@ -4,7 +4,7 @@
 
 import { StyleSheet } from 'react-native';
 import { colors } from '../../theme/colors';
-import { typography } from '../../theme/typography';
+import { typography, fontWeights } from '../../theme/typography';
 import { spacing, borderRadius } from '../../theme/spacing';
 
 export const styles = StyleSheet.create({
@@ -33,7 +33,7 @@ export const styles = StyleSheet.create({
     ...typography.caption,
     color: colors.success,
     fontSize: 10,
-    fontWeight: '600',
+    fontWeight: fontWeights.semibold,
   },
   container: {
     flex: 1,

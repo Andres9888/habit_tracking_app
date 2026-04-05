@@ -12,6 +12,7 @@ import {
   Square,
   Volume2,
 } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import Constants from 'expo-constants';
 import { StyleSheet, View } from 'react-native';
 import Animated, {
@@ -88,7 +89,7 @@ export function SettingsContent(p: SettingsContentProps) {
             <SettingsSection highContrastMode={hc} title='Appearance'>
               <SettingsRow
                 highContrastMode={hc}
-                icon={<Rows3 color={settingsIcons.compact.icon} size={16} />}
+                icon={<Rows3 color={settingsIcons.compact.icon} size={iconSizes.small} />}
                 iconBackgroundColor={settingsIcons.compact.bg}
                 label='Compact habit cards'
                 subtitle='Show smaller cards to fit more on screen'
@@ -100,9 +101,9 @@ export function SettingsContent(p: SettingsContentProps) {
                 highContrastMode={hc}
                 icon={
                   p.dayShape === 'circle' ? (
-                    <Circle color={settingsIcons.circle.icon} size={16} />
+                    <Circle color={settingsIcons.circle.icon} size={iconSizes.small} />
                   ) : (
-                    <Square color={settingsIcons.circle.icon} size={16} />
+                    <Square color={settingsIcons.circle.icon} size={iconSizes.small} />
                   )
                 }
                 iconBackgroundColor={settingsIcons.circle.bg}
@@ -118,7 +119,7 @@ export function SettingsContent(p: SettingsContentProps) {
               <SettingsRow
                 highContrastMode={hc}
                 icon={
-                  <Droplets color={settingsIcons.gradient.icon} size={16} />
+                  <Droplets color={settingsIcons.gradient.icon} size={iconSizes.small} />
                 }
                 iconBackgroundColor={settingsIcons.gradient.bg}
                 label='Gradient streak fill'
@@ -131,9 +132,9 @@ export function SettingsContent(p: SettingsContentProps) {
                 highContrastMode={hc}
                 icon={
                   p.habitCompletionIcon === 'checkbox' ? (
-                    <Check color={settingsIcons.checkbox.icon} size={16} />
+                    <Check color={settingsIcons.checkbox.icon} size={iconSizes.small} />
                   ) : (
-                    <Link2 color={settingsIcons.checkbox.icon} size={16} />
+                    <Link2 color={settingsIcons.checkbox.icon} size={iconSizes.small} />
                   )
                 }
                 iconBackgroundColor={settingsIcons.checkbox.bg}
@@ -155,7 +156,7 @@ export function SettingsContent(p: SettingsContentProps) {
               <SettingsRow
                 hapticStyle='selection'
                 highContrastMode={hc}
-                icon={<ArrowUpDown color={settingsIcons.sort.icon} size={16} />}
+                icon={<ArrowUpDown color={settingsIcons.sort.icon} size={iconSizes.small} />}
                 iconBackgroundColor={settingsIcons.sort.bg}
                 label='Sort Order'
                 subtitle='Choose how your habits are ordered'
@@ -167,7 +168,7 @@ export function SettingsContent(p: SettingsContentProps) {
               />
               <SettingsRow
                 highContrastMode={hc}
-                icon={<Volume2 color={settingsIcons.sound.icon} size={16} />}
+                icon={<Volume2 color={settingsIcons.sound.icon} size={iconSizes.small} />}
                 iconBackgroundColor={settingsIcons.sound.bg}
                 label='Completion sound'
                 subtitle='Hear a sound when you check off a habit'
@@ -187,7 +188,7 @@ export function SettingsContent(p: SettingsContentProps) {
                 icon={
                   <Calendar
                     color={settingsIcons.calendarHeader.icon}
-                    size={16}
+                    size={iconSizes.small}
                   />
                 }
                 iconBackgroundColor={settingsIcons.calendarHeader.bg}
@@ -200,7 +201,7 @@ export function SettingsContent(p: SettingsContentProps) {
               <SettingsRow
                 badge={p.archivedHabitsCount}
                 highContrastMode={hc}
-                icon={<BookOpen color={settingsIcons.archive.icon} size={16} />}
+                icon={<BookOpen color={settingsIcons.archive.icon} size={iconSizes.small} />}
                 iconBackgroundColor={settingsIcons.archive.bg}
                 label='Archived Habits'
                 subtitle='View and restore hidden habits'

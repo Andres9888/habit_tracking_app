@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Mic, Sparkles } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 
 import { useThemeColors } from '../../../../../theme/ThemeContext';
 import { VoiceNotePlaybackUI } from '../../../Workshop/VoiceNotePlaybackUI';
@@ -45,7 +46,7 @@ export function FeaturedVoiceNote({
       {/* Header */}
       <View className='mb-3 flex-row items-center gap-2'>
         <View className='h-10 w-10 items-center justify-center rounded-xl' style={{ backgroundColor: colors.status.successLight }}>
-          <Mic color={colors.status.success} size={20} />
+          <Mic color={colors.status.success} size={iconSizes.medium} />
         </View>
         <View className='flex-1'>
           <Text className='text-lg font-bold' style={{ color: colors.status.successText }}>
@@ -56,7 +57,7 @@ export function FeaturedVoiceNote({
             </Text> : null}
         </View>
         <View className='flex-row items-center gap-1 rounded-full px-2 py-0.5' style={{ backgroundColor: colors.status.warningLight }}>
-          <Sparkles color={colors.status.warning} size={12} />
+          <Sparkles color={colors.status.warning} size={iconSizes.small} />
           <Text className='text-xs font-medium' style={{ color: colors.status.warningText }}>Day 1</Text>
         </View>
       </View>

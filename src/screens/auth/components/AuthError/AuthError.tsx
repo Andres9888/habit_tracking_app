@@ -5,6 +5,7 @@ import Animated, { FadeInDown, FadeOut } from 'react-native-reanimated';
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import { useThemeColors } from '@/theme/ThemeContext';
 import { AuthErrorProps } from './types';
+import { iconSizes } from '@/theme/iconSizes';
 
 export function AuthError({ message, onDismiss }: AuthErrorProps) {
   const { colors } = useThemeColors();
@@ -26,7 +27,7 @@ export function AuthError({ message, onDismiss }: AuthErrorProps) {
       }}
     >
       <View className='mt-0.5 h-8 w-8 items-center justify-center rounded-full' style={{ backgroundColor: colors.status.errorLight }}>
-        <AlertCircle color={colors.status.error} size={18} strokeWidth={2.5} />
+        <AlertCircle color={colors.status.error} size={iconSizes.medium} strokeWidth={2.5} />
       </View>
       <View className='flex-1'>
         <Text className='text-[17px] font-medium leading-[22px]' style={{ color: colors.status.errorText }}>
@@ -41,7 +42,7 @@ export function AuthError({ message, onDismiss }: AuthErrorProps) {
         style={{ backgroundColor: 'transparent' }}
         onPress={onDismiss}
       >
-        <X color={colors.status.error} size={18} strokeWidth={2} />
+        <X color={colors.status.error} size={iconSizes.medium} strokeWidth={2} />
       </AnimatedPressable>
     </Animated.View>
   );

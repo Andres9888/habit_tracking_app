@@ -6,6 +6,7 @@ import { styles } from './MilestoneProgress.styles';
 import { MILESTONES } from '../MilestoneProgressTypes';
 import type { AnimatedStyle } from 'react-native-reanimated';
 import type { ViewStyle } from 'react-native';
+import { iconSizes } from '@/theme/iconSizes';
 
 interface NoStreakStateProps {
   accessibilityLabel: string;
@@ -26,7 +27,7 @@ export const NoStreakState = React.memo(function NoStreakState({
       <View style={styles.noStreakContainer}>
         <CircleArrowRight
           color='#6B7280'
-          size={24}
+          size={iconSizes.large}
           style={styles.noStreakIcon}
         />
         <View style={styles.noStreakTextContainer}>

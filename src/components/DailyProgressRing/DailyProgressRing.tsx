@@ -18,6 +18,7 @@ import Animated, {
   FadeIn,
 } from 'react-native-reanimated';
 import Svg, { Circle } from 'react-native-svg';
+import { fontWeights } from '@/theme/typography';
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
@@ -117,7 +118,7 @@ function DailyProgressRingComponent({
             color: themeColors.primary?.[700] ?? '#047857',
             fontFamily: FONT_FAMILY,
             fontSize: 13,
-            fontWeight: '700',
+            fontWeight: fontWeights.bold,
             letterSpacing: -0.3,
           }}
         >

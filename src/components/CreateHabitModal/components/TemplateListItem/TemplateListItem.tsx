@@ -9,6 +9,7 @@ import { useReduceMotion } from '../../../../hooks/useReduceMotion';
 import type { HabitTemplate } from '../../types';
 import { useTemplateListItemAnimations } from './useTemplateListItemAnimations';
 import { useTemplateListItemHandlers } from './useTemplateListItemHandlers';
+import { iconSizes } from '@/theme/iconSizes';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -100,7 +101,7 @@ const TemplateListItemComponent = ({
           onPressIn={handleSciencePressIn}
           onPressOut={handleSciencePressOut}
         >
-          <Microscope color={colors.secondary[500]} size={18} strokeWidth={2} />
+          <Microscope color={colors.secondary[500]} size={iconSizes.medium} strokeWidth={2} />
         </AnimatedPressable>
       </View>
     </Animated.View>

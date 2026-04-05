@@ -6,6 +6,7 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import { AlertCircle } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { clsx } from 'clsx';
 import { useThemeColors } from '../../../../../theme/ThemeContext';
 
@@ -36,7 +37,7 @@ export function RecordingDurationDisplay({
         {isMaxDurationReached ? <Text className='text-xs' style={{ color: colors.status.error }}>Max reached</Text> : null}
       </View>
       {isApproachingMaxDuration && !isMaxDurationReached ? <View className='flex-row items-center gap-1.5 rounded-full px-3 py-1' style={{ backgroundColor: colors.status.warningLight }}>
-          <AlertCircle color={colors.status.warning} size={14} />
+          <AlertCircle color={colors.status.warning} size={iconSizes.small} />
           <Text className='text-xs font-medium' style={{ color: colors.status.warningText }}>
             {secondsUntilMaxDuration !== null && secondsUntilMaxDuration > 0
               ? `${secondsUntilMaxDuration}s remaining`

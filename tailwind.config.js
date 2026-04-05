@@ -44,7 +44,7 @@ module.exports = {
           foreground: 'hsl(var(--muted-foreground))',
         },
         accent: {
-          DEFAULT: '#10B981',
+          DEFAULT: '#059669',
           foreground: '#FFFFFF',
         },
         'accent-muted': '#D1FAE5',
@@ -69,11 +69,21 @@ module.exports = {
         xl: '32px',
         '2xl': '48px',
       },
+      fontSize: {
+        // Match typography.ts token scale for NativeWind className usage
+        'tab': ['10px', { lineHeight: '12px', fontWeight: '500' }],
+        'caption': ['13px', { lineHeight: '18px', fontWeight: '500' }],
+        'body-sm': ['14px', { lineHeight: '20px', fontWeight: '400' }],
+        'body': ['17px', { lineHeight: '24px', fontWeight: '400' }],
+        'heading-3': ['20px', { lineHeight: '26px', fontWeight: '600' }],
+        'heading-2': ['22px', { lineHeight: '28px', fontWeight: '600' }],
+        'display': ['34px', { lineHeight: '41px', fontWeight: '700' }],
+      },
       borderRadius: {
         lg: 'var(--radius)',
         md: 'calc(var(--radius) - 2px)',
         sm: 'calc(var(--radius) - 4px)',
-        card: '12px',
+        card: '16px',
       },
     },
   },

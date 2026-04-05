@@ -13,6 +13,7 @@ import Animated, {
   withDelay,
 } from 'react-native-reanimated';
 import { Flame } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import type { StreakLossPreviewProps } from './FailureViz.types';
 import { SPRING_BOUNCY } from './FailureViz.constants';
 import { useThemeColors } from '../../../../theme/ThemeContext';
@@ -46,7 +47,7 @@ export function StreakLossPreview({
       className='mt-3 flex-row items-center gap-2 rounded-xl p-3'
       style={[animatedStyle, { backgroundColor: colors.status.errorLight }]}
     >
-      <Flame color={colors.status.error} size={18} />
+      <Flame color={colors.status.error} size={iconSizes.medium} />
       <Text className='flex-1 text-sm font-medium' style={{ color: colors.status.errorText }}>
         {streakCount} days gone. Starting over from zero.
       </Text>

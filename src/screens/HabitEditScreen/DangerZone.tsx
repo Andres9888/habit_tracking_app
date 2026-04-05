@@ -13,7 +13,9 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 import { useThemeColors } from '../../theme';
+import { typography } from '@/theme/typography';
 import { springs } from '@/theme/animations';
+import { iconSizes } from '@/theme/iconSizes';
 
 interface DangerZoneProps {
   onArchive: () => void;
@@ -75,10 +77,10 @@ export function DangerZone({ onArchive, onDelete }: DangerZoneProps) {
         onPressIn={() => { archiveScale.value = withSpring(0.97, springs.button); }}
         onPressOut={() => { archiveScale.value = withSpring(1, springs.button); }}
       >
-        <Archive color={isDark ? '#FBBF24' : '#d97706'} size={18} strokeWidth={2} />
+        <Archive color={isDark ? '#FBBF24' : '#d97706'} size={iconSizes.medium} strokeWidth={2} />
         <Text
           className='font-semibold'
-          style={{ fontSize: 17, letterSpacing: -0.41, color: isDark ? '#FBBF24' : '#B45309' }}
+          style={{ ...typography.button, letterSpacing: -0.41, color: isDark ? '#FBBF24' : '#B45309' }}
         >
           Archive Habit
         </Text>
@@ -93,10 +95,10 @@ export function DangerZone({ onArchive, onDelete }: DangerZoneProps) {
         onPressIn={() => { deleteScale.value = withSpring(0.97, springs.button); }}
         onPressOut={() => { deleteScale.value = withSpring(1, springs.button); }}
       >
-        <Trash2 color={isDark ? '#F87171' : '#dc2626'} size={18} strokeWidth={2} />
+        <Trash2 color={isDark ? '#F87171' : '#dc2626'} size={iconSizes.medium} strokeWidth={2} />
         <Text
           className='font-semibold'
-          style={{ fontSize: 17, letterSpacing: -0.41, color: isDark ? '#F87171' : '#DC2626' }}
+          style={{ ...typography.button, letterSpacing: -0.41, color: isDark ? '#F87171' : '#DC2626' }}
         >
           Delete Habit
         </Text>

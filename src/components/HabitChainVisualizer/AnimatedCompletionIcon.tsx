@@ -32,7 +32,7 @@ export function AnimatedCompletionIcon({
       }}
     >
       {completionIcon === 'checkbox' ? (
-        <Check color={colors.text.inverse} size={20} strokeWidth={2.25} />
+        <Check color={colors.text.inverse} size={20} strokeWidth={2.5} />
       ) : (
         <ChainLinkIcon color={colors.text.inverse} size={20} variant='stroke' />
       )}

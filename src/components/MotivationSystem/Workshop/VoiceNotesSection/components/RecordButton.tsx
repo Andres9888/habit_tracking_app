@@ -6,6 +6,7 @@
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { Mic } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { clsx } from 'clsx';
 import { useThemeColors } from '../../../../../theme/ThemeContext';
 
@@ -31,7 +32,7 @@ export function RecordButton({
         style={{ backgroundColor: canRecord ? colors.status.success : colors.border }}
         onPress={onStartRecording}
       >
-        <Mic className='text-white' size={16} />
+        <Mic className='text-white' size={iconSizes.small} />
         <Text className='font-medium text-white'>
           {hasVoiceNotes ? 'New Recording' : 'Record Your Day 1'}
         </Text>

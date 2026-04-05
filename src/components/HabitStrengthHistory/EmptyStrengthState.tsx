@@ -3,7 +3,8 @@ import { View, Text, Pressable } from 'react-native';
 import Animated, { FadeIn, FadeInUp } from 'react-native-reanimated';
 import { Info, Zap } from 'lucide-react-native';
 import { useThemeColors } from '../../theme/ThemeContext';
-import { fontFamilies } from '@/theme/typography';
+import { fontFamilies, fontWeights } from '@/theme/typography';
+import { iconSizes } from '@/theme/iconSizes';
 
 const SECTION_FADE_DURATION = 400;
 const SECTION_SLIDE_DURATION = 400;
@@ -42,7 +43,7 @@ export function EmptyStrengthState({
       testID='habit-strength-history-empty'
     >
       <View style={{ alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between' }}>
-        <Text style={{ color: colors.text.primary, fontFamily: fontFamilies.primary.text, fontSize: 17, fontWeight: '600' }}>
+        <Text style={{ color: colors.text.primary, fontFamily: fontFamilies.primary.text, fontSize: 17, fontWeight: fontWeights.semibold }}>
           Strength History
         </Text>
         <Pressable
@@ -53,7 +54,7 @@ export function EmptyStrengthState({
           testID='strength-history-info-button'
           onPress={onInfoPress}
         >
-          <Info color={colors.text.tertiary} size={18} />
+          <Info color={colors.text.tertiary} size={iconSizes.medium} />
         </Pressable>
       </View>
 
@@ -78,14 +79,14 @@ export function EmptyStrengthState({
             width: 48,
           }}
         >
-          <Zap color={isDark ? '#FCD34D' : '#D97706'} size={24} />
+          <Zap color={isDark ? '#FCD34D' : '#D97706'} size={iconSizes.large} />
         </View>
         <Text
           style={{
             color: colors.text.primary,
             fontFamily: fontFamilies.primary.text,
             fontSize: 17,
-            fontWeight: '600',
+            fontWeight: fontWeights.semibold,
             marginBottom: 4,
             textAlign: 'center',
           }}

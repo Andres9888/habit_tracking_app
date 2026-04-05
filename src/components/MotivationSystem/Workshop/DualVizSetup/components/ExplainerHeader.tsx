@@ -7,6 +7,7 @@ import React from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Eye, X } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '../../../../../theme/ThemeContext';
 
 interface ExplainerHeaderProps {
@@ -26,7 +27,7 @@ export function ExplainerHeader({ onClose }: ExplainerHeaderProps) {
             end={{ x: 1, y: 1 }}
             start={{ x: 0, y: 0 }}
           />
-          <Eye color={colors.text.primary} size={20} />
+          <Eye color={colors.text.primary} size={iconSizes.medium} />
         </View>
         <View>
           <Text className='text-lg font-bold' style={{ color: colors.text.primary }}>
@@ -43,7 +44,7 @@ export function ExplainerHeader({ onClose }: ExplainerHeaderProps) {
         style={{ backgroundColor: colors.gray[200] }}
         onPress={onClose}
       >
-        <X color={colors.text.secondary} size={20} />
+        <X color={colors.text.secondary} size={iconSizes.medium} />
       </Pressable>
     </View>
   );

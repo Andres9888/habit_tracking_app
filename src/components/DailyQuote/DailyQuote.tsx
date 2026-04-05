@@ -9,7 +9,7 @@ import Animated, { FadeIn } from 'react-native-reanimated';
 import { Quote, RefreshCw } from 'lucide-react-native';
 import { QUOTES } from './quotes';
 import { useThemeColors } from '../../theme/ThemeContext';
-import { fontFamilies } from '@/theme/typography';
+import { fontFamilies, fontWeights } from '@/theme/typography';
 
 interface DailyQuoteProps {
   /** Override the quote (optional) */
@@ -49,7 +49,7 @@ export function DailyQuote({
           color: colors.gray[500],
           fontFamily: fontFamilies.primary.text,
           fontSize: 13,
-          fontWeight: '500',
+          fontWeight: fontWeights.medium,
         },
         container: {
           backgroundColor: colors.gray[50],

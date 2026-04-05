@@ -23,6 +23,7 @@ import { getTrendStyle, getMessage } from './helpers';
 import { TrendBadge } from './TrendBadge';
 import { ComparisonStats } from './ComparisonStats';
 import { triggerHaptic } from '@/utils/haptics';
+import { iconSizes } from '@/theme/iconSizes';
 
 export const WeeklyComparisonCard = React.memo(function WeeklyComparisonCard({
   trend,
@@ -76,7 +77,7 @@ export const WeeklyComparisonCard = React.memo(function WeeklyComparisonCard({
                 className='h-4 w-4 items-center justify-center rounded-full'
                 style={{ backgroundColor: colors.gray[100] }}
               >
-                <Info color={colors.text.tertiary} size={10} />
+                <Info color={colors.text.tertiary} size={iconSizes.micro} />
               </View>
             </Pressable> : null}
         </View>

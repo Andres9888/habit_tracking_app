@@ -6,6 +6,7 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import { Sparkles } from 'lucide-react-native';
 import { useThemeColors } from '@/theme/ThemeContext';
+import { iconSizes } from '@/theme/iconSizes';
 
 export function PerfectBadge() {
   const { colors } = useThemeColors();
@@ -18,7 +19,7 @@ export function PerfectBadge() {
       style={{ backgroundColor: colors.status.warningLight }}
       testID='perfect-badge'
     >
-      <Sparkles color={colors.status.warning} size={10} />
+      <Sparkles color={colors.status.warning} size={iconSizes.micro} />
       <Text className='text-[10px] font-bold' style={{ color: colors.status.warningText }}>Perfect!</Text>
     </View>
   );

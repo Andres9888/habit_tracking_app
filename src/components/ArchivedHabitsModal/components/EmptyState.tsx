@@ -1,25 +1,23 @@
 import { StyleSheet, Text, View } from 'react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { useThemeColors } from '../../../theme/ThemeContext';
-import { fontFamilies } from '@/theme/typography';
+import { typography, fontWeights } from '@/theme/typography';
 
 const anim = (delay: number) =>
   FadeInUp.duration(280).delay(delay).springify().damping(18);
-
-const font = fontFamilies.primary.text;
 
 const s = StyleSheet.create({
   container: { alignItems: 'center', justifyContent: 'center', paddingHorizontal: 24, paddingVertical: 64 },
   illustration: { alignItems: 'center', borderRadius: 16, height: 112, justifyContent: 'center', marginBottom: 24, width: 128 },
   emoji: { fontSize: 34 },
-  heading: { fontFamily: font, fontSize: 22, fontWeight: '700', letterSpacing: -0.5, marginBottom: 8, textAlign: 'center' as const },
-  desc1: { fontFamily: font, fontSize: 14, marginBottom: 4, textAlign: 'center' as const },
-  desc2: { fontFamily: font, fontSize: 14, marginBottom: 24, maxWidth: 280, textAlign: 'center' as const },
+  heading: { ...typography.heading2, fontWeight: fontWeights.bold, letterSpacing: -0.5, marginBottom: 8, textAlign: 'center' as const },
+  desc1: { ...typography.bodySmall, marginBottom: 4, textAlign: 'center' as const },
+  desc2: { ...typography.bodySmall, marginBottom: 24, maxWidth: 280, textAlign: 'center' as const },
   tipCard: { borderRadius: 16, borderWidth: 1, flexDirection: 'row' as const, gap: 12, maxWidth: 320, padding: 16, width: '100%' as const },
   tipEmoji: { fontSize: 22 },
   tipContent: { flex: 1 },
-  tipTitle: { fontFamily: font, fontSize: 14, fontWeight: '500' as const, marginBottom: 4 },
-  tipDesc: { fontFamily: font, fontSize: 13, lineHeight: 18 },
+  tipTitle: { ...typography.bodySmall, fontWeight: fontWeights.medium, marginBottom: 4 },
+  tipDesc: { ...typography.caption },
 });
 
 export function EmptyState() {

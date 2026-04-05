@@ -5,6 +5,7 @@ import {
   formatActivityTime,
 } from '../../utils/habitCalculations';
 import { useThemeColors } from '../../theme/ThemeContext';
+import { iconSizes } from '@/theme/iconSizes';
 
 interface ActivityEntry {
   _creationTime: number;
@@ -69,9 +70,9 @@ export function ActivityLog({ tracking }: ActivityLogProps) {
             {/* Right side - Time with Icon */}
             <View className='flex-row items-center gap-2'>
               {activity.completed ? (
-                <CheckCircle2 color='#10b981' fill='#10b981' size={18} />
+                <CheckCircle2 color='#10b981' fill='#10b981' size={iconSizes.medium} />
               ) : (
-                <FastForward color='#a8a29e' size={18} />
+                <FastForward color='#a8a29e' size={iconSizes.medium} />
               )}
               <Text
                 className='text-sm font-semibold'

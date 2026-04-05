@@ -5,6 +5,7 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import { TrendingUp, TrendingDown } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 
 interface StatCardTrendBadgeProps {
   showTrend?: boolean;
@@ -34,7 +35,7 @@ export const StatCardTrendBadge = React.memo(function StatCardTrendBadge({
       className='ml-1 flex-row items-center rounded-full px-1.5 py-0.5'
       style={{ backgroundColor: bgColor }}
     >
-      <Icon color={color} size={10} />
+      <Icon color={color} size={iconSizes.micro} />
       <Text className='ml-0.5 text-[10px] font-medium' style={{ color }}>
         {prefix}
         {trend}

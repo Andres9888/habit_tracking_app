@@ -7,6 +7,7 @@ import { View, Pressable } from 'react-native';
 import { X } from 'lucide-react-native';
 import { colors } from '../../theme/colors/core';
 import { spacing } from '../../theme/spacing';
+import { iconSizes } from '@/theme/iconSizes';
 
 interface PaywallHeaderProps {
   onClose: () => void;
@@ -53,7 +54,7 @@ export function PaywallHeader({ onClose, disabled }: PaywallHeaderProps) {
         }}
         onPress={onClose}
       >
-        <X color={colors.gray[600]} size={18} />
+        <X color={colors.gray[600]} size={iconSizes.medium} />
       </Pressable>
     </View>
   );

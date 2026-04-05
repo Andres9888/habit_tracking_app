@@ -9,7 +9,7 @@ import { Grid3X3 } from 'lucide-react-native';
 import Animated from 'react-native-reanimated';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { useReducedMotionEntry } from '../EmptyState/useReducedMotionEntry';
-import { fontFamilies } from '@/theme/typography';
+import { typography, fontWeights } from '@/theme/typography';
 
 export function EmptyState() {
   const { colors, isDark } = useThemeColors();
@@ -43,10 +43,9 @@ export function EmptyState() {
       <Animated.Text
         entering={entry(60)}
         style={{
+          ...typography.heading2,
           color: colors.text.primary,
-          fontFamily: fontFamilies.primary.text,
-          fontSize: 22,
-          fontWeight: '700',
+          fontWeight: fontWeights.bold,
           letterSpacing: -0.5,
           marginBottom: 8,
           textAlign: 'center',
@@ -57,9 +56,8 @@ export function EmptyState() {
       <Animated.Text
         entering={entry(120)}
         style={{
+          ...typography.body,
           color: colors.text.secondary,
-          fontFamily: fontFamilies.primary.text,
-          fontSize: 17,
           lineHeight: 22,
           maxWidth: 280,
           textAlign: 'center',

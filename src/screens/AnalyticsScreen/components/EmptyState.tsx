@@ -11,6 +11,7 @@ import { fontFamilies, typography, fontWeights } from '../../../theme/typography
 import { useReducedMotionEntry } from '../../../components/EmptyState/useReducedMotionEntry';
 import { colors as themeColors } from '../../../theme/colors';
 import { spacing, shadows } from '../../../theme/spacing';
+import { iconSizes } from '@/theme/iconSizes';
 
 export const EmptyState: React.FC = () => {
   const { colors, isDark } = useThemeColors();
@@ -40,7 +41,7 @@ export const EmptyState: React.FC = () => {
           width: 96,
         }}
       >
-        <BarChart3 color={colors.accent} size={48} strokeWidth={1.5} />
+        <BarChart3 color={colors.accent} size={iconSizes.xxl} strokeWidth={1.5} />
       </Animated.View>
 
       {/* Title */}
@@ -89,7 +90,7 @@ export const EmptyState: React.FC = () => {
         }}
       >
         <View style={{ alignItems: 'center', flexDirection: 'row', gap: 8, marginBottom: 12 }}>
-          <Sparkles color={isDark ? themeColors.streak[300] : themeColors.streak[500]} size={16} />
+          <Sparkles color={isDark ? themeColors.streak[300] : themeColors.streak[500]} size={iconSizes.small} />
           <Text style={{ color: isDark ? themeColors.streak[300] : themeColors.streak[500], fontFamily: fontFamilies.primary.text, fontSize: typography.caption.fontSize, fontWeight: fontWeights.semibold }}>
             GET STARTED
           </Text>

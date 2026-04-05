@@ -1,6 +1,6 @@
 import { Text, View } from 'react-native';
 import { useThemeColors } from '../../../theme/ThemeContext';
-import { fontFamilies } from '@/theme/typography';
+import { fontFamilies, fontWeights } from '@/theme/typography';
 
 interface LegendItem {
   label: string;
@@ -75,7 +75,7 @@ export function CalendarLegend() {
             style={{
               fontFamily: fontFamilies.primary.text,
               fontSize: 10,
-              fontWeight: '500',
+              fontWeight: fontWeights.medium,
               color: textColor,
             }}
           >

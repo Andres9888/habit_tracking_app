@@ -4,7 +4,7 @@
 
 import { StyleSheet } from 'react-native';
 import { colors } from '../../../../theme/colors';
-import { fontFamilies } from '../../../../theme/typography';
+import { fontFamilies, fontWeights } from '../../../../theme/typography';
 import { borderRadius, shadows } from '../../../../theme/spacing';
 
 export const CARD_WIDTH = 165;
@@ -32,7 +32,7 @@ export const s = StyleSheet.create({
   name: {
     color: colors.text.primary,
     fontSize: 14,
-    fontWeight: '700',
+    fontWeight: fontWeights.bold,
     lineHeight: 14 * 1.3,
     marginTop: 12,
   },
@@ -48,7 +48,7 @@ export const s = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 2,
   },
-  scienceText: { color: colors.warning, fontSize: 10, fontWeight: '600' },
+  scienceText: { color: colors.warning, fontSize: 10, fontWeight: fontWeights.semibold },
   bottomRow: {
     alignItems: 'center',
     flexDirection: 'row',
@@ -56,7 +56,7 @@ export const s = StyleSheet.create({
     marginTop: 'auto' as unknown as number,
     paddingTop: 12,
   },
-  popularityText: { color: colors.primary[600], fontSize: 13, fontWeight: '500' },
+  popularityText: { color: colors.primary[600], fontSize: 13, fontWeight: fontWeights.medium },
 });
 
 export const addButtonStyles = StyleSheet.create({

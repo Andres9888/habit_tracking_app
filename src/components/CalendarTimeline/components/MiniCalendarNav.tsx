@@ -1,10 +1,11 @@
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { ChevronLeft, ChevronRight } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { format } from 'date-fns';
 
 import { useThemeColors } from '../../../theme/ThemeContext';
-import { fontFamilies } from '@/theme/typography';
+import { fontFamilies, fontWeights } from '@/theme/typography';
 
 interface MiniCalendarNavProps {
   month: Date;
@@ -32,13 +33,13 @@ export const MiniCalendarNav: React.FC<MiniCalendarNavProps> = ({
       }}
     >
       <Pressable hitSlop={8} onPress={onPrev}>
-        <ChevronLeft color={iconColor} size={20} />
+        <ChevronLeft color={iconColor} size={iconSizes.medium} />
       </Pressable>
-      <Text style={{ fontFamily: fontFamilies.primary.text, fontSize: 14, fontWeight: '700', color: titleColor }}>
+      <Text style={{ fontFamily: fontFamilies.primary.text, fontSize: 14, fontWeight: fontWeights.bold, color: titleColor }}>
         {format(month, 'MMMM yyyy')}
       </Text>
       <Pressable hitSlop={8} onPress={onNext}>
-        <ChevronRight color={iconColor} size={20} />
+        <ChevronRight color={iconColor} size={iconSizes.medium} />
       </Pressable>
     </View>
   );

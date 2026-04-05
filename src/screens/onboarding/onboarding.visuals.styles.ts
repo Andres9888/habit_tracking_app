@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { borderRadius, shadows, spacing } from '../../theme/spacing';
-import { typography } from '../../theme/typography';
+import { typography, fontWeights } from '../../theme/typography';
 
 export const visualStyles = StyleSheet.create({
   chainContainer: {
@@ -34,7 +34,7 @@ export const visualStyles = StyleSheet.create({
     ...typography.caption,
   },
   strengthLabelActive: {
-    fontWeight: '700',
+    fontWeight: fontWeights.bold,
   },
   strengthRow: {
     alignItems: 'center',

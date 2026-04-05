@@ -3,8 +3,10 @@ import { memo, useCallback, useRef } from 'react';
 import { Animated, Keyboard, View } from 'react-native';
 import useHapticFeedback from '../../../../hooks/useHapticFeedback';
 import { Motion } from '../../../../constants/motion';
+import { borderRadius } from '../../../../theme/spacing';
 import type { CustomColorButtonProps } from './types';
 import { AnimatedPressable } from '../../../ui';
+import { iconSizes } from '@/theme/iconSizes';
 
 /**
  * Custom color button with dashed border and plus icon
@@ -56,7 +58,7 @@ const CustomColorButtonComponent = ({ onPress }: CustomColorButtonProps) => {
           style={{
             alignItems: 'center',
             borderColor: '#a8a29e',
-            borderRadius: 999,
+            borderRadius: borderRadius.full,
             borderStyle: 'dashed',
             borderWidth: 2,
             height: 44,
@@ -68,7 +70,7 @@ const CustomColorButtonComponent = ({ onPress }: CustomColorButtonProps) => {
           onPressIn={handlePressIn}
           onPressOut={handlePressOut}
         >
-          <Plus color='#a8a29e' size={20} />
+          <Plus color='#a8a29e' size={iconSizes.medium} />
         </AnimatedPressable>
       </Animated.View>
     </View>

@@ -3,6 +3,7 @@ import { Text, View } from 'react-native';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 import { Clock } from 'lucide-react-native';
 import { useThemeColors } from '../../../theme/ThemeContext';
+import { iconSizes } from '@/theme/iconSizes';
 import { formatReminderTime } from '../../../utils/notifications';
 
 /**
@@ -92,7 +93,7 @@ export const NextReminderBadge = ({
       testID='next-reminder-badge'
     >
       <View className='flex-row items-center justify-center gap-1.5 rounded-full px-3 py-1.5' style={{ backgroundColor: colors.status.warningLight }}>
-        <Clock color={colors.status.warningText} size={12} />
+        <Clock color={colors.status.warningText} size={iconSizes.small} />
         <Text className='text-xs font-medium' style={{ color: colors.status.warningText }}>Next: {text}</Text>
       </View>
     </Animated.View>

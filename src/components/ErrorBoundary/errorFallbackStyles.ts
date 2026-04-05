@@ -6,7 +6,7 @@ import { StyleSheet } from 'react-native';
 
 import { colors as themeColors } from '../../theme/colors';
 import { useThemeColors } from '../../theme/ThemeContext';
-import { fontFamilies } from '../../theme/typography';
+import { fontWeights, typography } from '../../theme/typography';
 
 export const useStyles = () => {
   const { colors, isDark } = useThemeColors();
@@ -21,9 +21,8 @@ export const useStyles = () => {
       padding: 24,
     },
     description: {
+      ...typography.caption,
       color: colors.text.secondary,
-      fontFamily: fontFamilies.primary.text,
-      fontSize: 13,
       lineHeight: 20,
       marginBottom: 20,
       maxWidth: 300,
@@ -38,27 +37,24 @@ export const useStyles = () => {
       maxWidth: 300,
     },
     headline: {
+      ...typography.heading1,
       color: colors.text.primary,
-      fontFamily: fontFamilies.primary.display,
-      fontSize: 22,
-      fontWeight: '700',
       marginBottom: 4,
       textAlign: 'center',
     },
     link: { padding: 8 },
-    linkText: { color: colors.primary[600], fontFamily: fontFamilies.primary.text, fontSize: 13, fontWeight: '500' },
+    linkText: { ...typography.caption, color: colors.primary[600] },
     logoutButton: {
       backgroundColor: isDark ? '#B91C1C' : themeColors.error,
       borderRadius: 12,
       paddingHorizontal: 24,
       paddingVertical: 12,
     },
-    logoutText: { color: colors.text.inverse, fontFamily: fontFamilies.primary.text, fontSize: 17, fontWeight: '600' },
+    logoutText: { ...typography.button, color: colors.text.inverse },
     safetyNote: {
+      ...typography.caption,
       color: colors.primary[700],
-      fontFamily: fontFamilies.primary.text,
-      fontSize: 13,
-      fontWeight: '600',
+      fontWeight: fontWeights.semibold,
       marginBottom: 8,
     },
   });

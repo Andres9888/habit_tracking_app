@@ -7,6 +7,7 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import { TrendingUp, TrendingDown } from 'lucide-react-native';
 import { useThemeColors } from '@/theme/ThemeContext';
+import { iconSizes } from '@/theme/iconSizes';
 
 interface TrendChangeBadgeProps {
   change: number;
@@ -30,14 +31,14 @@ export function TrendChangeBadge({ change }: TrendChangeBadgeProps) {
     >
       {isPositive ? (
         <>
-          <TrendingUp color={colors.status.success} size={16} />
+          <TrendingUp color={colors.status.success} size={iconSizes.small} />
           <Text className='text-sm font-semibold' style={{ color: colors.status.success }}>
             +{change}% improvement
           </Text>
         </>
       ) : isNegative ? (
         <>
-          <TrendingDown color={colors.status.error} size={16} />
+          <TrendingDown color={colors.status.error} size={iconSizes.small} />
           <Text className='text-sm font-semibold' style={{ color: colors.status.error }}>
             {change}% from last month
           </Text>

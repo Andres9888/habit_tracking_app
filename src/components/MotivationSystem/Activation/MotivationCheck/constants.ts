@@ -6,6 +6,7 @@
 
 import type { MotivationOption, MotivationLevel } from './types';
 import { springs } from '@/theme/animations';
+import { fontWeights } from '@/theme/typography';
 
 /** Animation spring configs */
 export const SPRING_BUTTON = springs.responsive;
@@ -72,6 +73,6 @@ export const ACCENT_CLASSES = {
 
 /** Style overrides for amber accent (uses theme tokens) */
 export const AMBER_STYLES = {
-  label: { fontWeight: '500' as const },
+  label: { fontWeight: fontWeights.medium },
   ring: { borderWidth: 2 },
 };

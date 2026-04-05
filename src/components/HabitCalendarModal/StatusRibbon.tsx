@@ -1,6 +1,7 @@
 import { View, Text } from 'react-native';
 import { AlertTriangle } from 'lucide-react-native';
 import { useThemeColors } from '../../theme/ThemeContext';
+import { iconSizes } from '@/theme/iconSizes';
 import { StreakBadge } from './StreakBadge';
 import { ActionButtons } from './ActionButtons';
 
@@ -76,7 +77,7 @@ export function StatusRibbon({
 
             {recentMissBadge ? (
               <View className='mt-3 flex-row items-center gap-1.5 rounded-full px-3 py-1' style={{ backgroundColor: colors.status.warningLight }}>
-                <AlertTriangle color={colors.status.warning} size={14} />
+                <AlertTriangle color={colors.status.warning} size={iconSizes.small} />
                 <Text className='text-xs font-medium' style={{ color: colors.status.warningText }}>
                   {recentMissBadge} · Tap to review
                 </Text>

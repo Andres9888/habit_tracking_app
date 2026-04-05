@@ -10,6 +10,7 @@ import React, { memo } from 'react';
 import { View, Text, Pressable } from 'react-native';
 import type { DayData } from './types';
 import { styles } from './styles';
+import { fontWeights } from '@/theme/typography';
 
 interface CalendarDayColors {
   muted: string;
@@ -87,7 +88,7 @@ export const CalendarDay = memo(function CalendarDay({
             styles.dayText,
             { color: isToday ? '#FFFFFF' : getTextColor(day, textColors) },
             isToday && styles.todayText,
-            showCompleted && !isToday && { fontWeight: '600' },
+            showCompleted && !isToday && { fontWeight: fontWeights.semibold },
           ]}
         >
           {day?.dayNumber ?? ''}
