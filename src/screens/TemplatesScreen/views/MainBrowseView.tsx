@@ -11,13 +11,16 @@ import { ScreenHeader } from '../../../components/ScreenHeader';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { durations, springs } from '../../../theme/animations';
 import { styles } from '../../templates/templatesScreenStyles';
-import { SearchBar } from '../components';
+import { QuickFilterChips, SearchBar } from '../components';
 import { FeaturedCollection } from '../components/FeaturedCollection';
 import { PopularSection } from '../components/PopularSection';
 import type { MainBrowseViewProps } from './MainBrowseView.types';
 
 const stagger = (index: number) =>
-  FadeInDown.delay(index * durations.stagger).duration(durations.enter).springify().damping(springs.standard.damping);
+  FadeInDown.delay(index * durations.stagger)
+    .duration(durations.enter)
+    .springify()
+    .damping(springs.standard.damping);
 
 export function MainBrowseView(p: MainBrowseViewProps) {
   const { colors } = useThemeColors();
@@ -26,8 +29,8 @@ export function MainBrowseView(p: MainBrowseViewProps) {
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       <ScreenHeader
         leftAction={null}
-        subtitle='Science-backed templates to build great habits'
-        title='Habit Library'
+        subtitle='Start with a category, a curated collection, or a quick add'
+        title='Templates'
       />
       <Animated.View style={[styles.searchSection, p.searchAnimatedStyle]}>
         <SearchBar
@@ -36,6 +39,11 @@ export function MainBrowseView(p: MainBrowseViewProps) {
           onClear={p.onSearchClear}
         />
       </Animated.View>
+      <QuickFilterChips
+        activeCategory={p.selectedQuickFilter}
+        categories={p.quickFilterCategories}
+        onSelectCategory={p.onSelectQuickFilter}
+      />
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 100, paddingTop: 12 }}
@@ -53,10 +61,10 @@ export function MainBrowseView(p: MainBrowseViewProps) {
             onSeeAll={p.onSeeAll}
           />
         </Animated.View>
-        <Animated.View entering={stagger(2)}>{p.categoryGrid}</Animated.View>
-        <Animated.View entering={stagger(3)}>
+        <Animated.View entering={stagger(2)}>
           {p.premiumPacksSection}
         </Animated.View>
+        <Animated.View entering={stagger(3)}>{p.categoryGrid}</Animated.View>
       </ScrollView>
       {p.modals}
       {p.feedbackOverlays}

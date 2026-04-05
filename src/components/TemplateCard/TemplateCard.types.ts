@@ -62,11 +62,8 @@ export interface TemplateCardProps {
   /** Popularity score (optional) */
   popularityScore?: number;
 
-  /** Optional scientific link */
-  scientificLink?: string;
-
   /** Scientific reference citation */
-  scientificReference: string;
+  scientificReference?: string | null;
 
   /** Should preview CTA render */
   showPreviewCTA?: boolean;
@@ -93,7 +90,6 @@ export type TemplateCardRenderProps = Pick<
   | 'name'
   | 'onPreview'
   | 'popularityScore'
-  | 'scientificLink'
   | 'scientificReference'
   | 'showPreviewCTA'
   | 'style'

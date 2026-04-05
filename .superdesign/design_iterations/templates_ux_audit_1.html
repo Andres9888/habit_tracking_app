@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Templates Page — UX Pain Point Audit</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', sans-serif !important; background: #0a0a0a !important; color: #e5e5e5 !important; }
+  h1, h2, h3, h4, h5, h6 { font-family: 'Inter', sans-serif !important; }
+
+  .phone-frame {
+    width: 390px;
+    height: 844px;
+    border-radius: 40px;
+    border: 3px solid #333;
+    overflow: hidden;
+    background: #1a1a1a;
+    position: relative;
+    flex-shrink: 0;
+  }
+  .phone-content {
+    height: 100%;
+    overflow-y: auto;
+    padding-bottom: 80px;
+  }
+  .phone-content::-webkit-scrollbar { width: 0; }
+
+  .callout {
+    position: absolute;
+    padding: 12px 16px;
+    border-radius: 12px;
+    font-size: 13px;
+    line-height: 1.5;
+    max-width: 320px;
+    z-index: 100;
+    backdrop-filter: blur(8px);
+  }
+  .callout-good {
+    background: rgba(5, 150, 105, 0.15);
+    border: 1.5px solid rgba(16, 185, 129, 0.4);
+    color: #6ee7b7;
+  }
+  .callout-bad {
+    background: rgba(220, 38, 38, 0.15);
+    border: 1.5px solid rgba(248, 113, 113, 0.4);
+    color: #fca5a5;
+  }
+  .callout-warn {
+    background: rgba(217, 119, 6, 0.15);
+    border: 1.5px solid rgba(251, 191, 36, 0.4);
+    color: #fcd34d;
+  }
+  .callout-neutral {
+    background: rgba(99, 102, 241, 0.12);
+    border: 1.5px solid rgba(129, 140, 248, 0.35);
+    color: #a5b4fc;
+  }
+  .callout::before {
+    content: '';
+    position: absolute;
+    width: 48px;
+    height: 2px;
+  }
+  .callout-left::before {
+    right: -48px;
+    top: 50%;
+  }
+  .callout-right::before {
+    left: -48px;
+    top: 50%;
+  }
+  .callout-good::before { background: rgba(16, 185, 129, 0.4); }
+  .callout-bad::before { background: rgba(248, 113, 113, 0.4); }
+  .callout-warn::before { background: rgba(251, 191, 36, 0.4); }
+  .callout-neutral::before { background: rgba(129, 140, 248, 0.35); }
+
+  .grade { font-weight: 800; font-size: 15px; display: inline-block; margin-bottom: 4px; }
+  .grade-a { color: #10b981; }
+  .grade-b { color: #60a5fa; }
+  .grade-c { color: #fbbf24; }
+  .grade-d { color: #f87171; }
+
+  .section-label {
+    position: absolute;
+    left: -4px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    writing-mode: vertical-lr;
+    transform: rotate(180deg);
+    opacity: 0.4;
+  }
+
+  .bottom-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 72px;
+    background: rgba(26, 26, 26, 0.95);
+    backdrop-filter: blur(12px);
+    border-top: 1px solid #333;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding: 0 24px;
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 16px;
+    border-radius: 9999px;
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+    border: 1px solid;
+  }
+  .chip-active {
+    background: #059669;
+    border-color: #047857;
+    color: white;
+  }
+  .chip-inactive {
+    background: #262626;
+    border-color: #404040;
+    color: #a3a3a3;
+  }
+
+  .meta-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 10px;
+    border-radius: 9999px;
+    font-size: 11px;
+    font-weight: 600;
+    border: 1px solid;
+  }
+
+  .trending-card {
+    min-width: 165px;
+    max-width: 165px;
+    background: #262626;
+    border: 1.5px solid #404040;
+    border-radius: 16px;
+    padding: 16px;
+    flex-shrink: 0;
+  }
+
+  .category-tile {
+    flex: 1;
+    min-height: 110px;
+    border-radius: 12px;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .pack-card {
+    border-radius: 16px;
+    padding: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .list-card {
+    background: #262626;
+    border: 1px solid #404040;
+    border-radius: 16px;
+    padding: 16px;
+    margin: 6px 16px;
+  }
+
+  .view-tab {
+    display: flex;
+    gap: 32px;
+    margin-bottom: 32px;
+  }
+  .view-tab-item {
+    padding: 8px 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: #737373;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .view-tab-item.active {
+    color: #e5e5e5;
+    border-bottom-color: #10b981;
+  }
+
+  .audit-section {
+    margin-bottom: 64px;
+  }
+</style>
+</head>
+<body>
+
+<!-- ==================== HEADER ==================== -->
+<div style="max-width: 1400px; margin: 0 auto; padding: 48px 32px 32px;">
+  <div style="margin-bottom: 48px;">
+    <p style="font-size: 12px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #10b981; margin-bottom: 8px;">UX AUDIT</p>
+    <h1 style="font-size: 36px; font-weight: 800; letter-spacing: -1px; color: #fafafa; margin-bottom: 12px;">Does the Templates Page Solve User Pain Points?</h1>
+    <p style="font-size: 16px; color: #737373; max-width: 680px; line-height: 1.6;">Annotated mockup of the current implementation with findings. Each callout explains what works, what's broken, and why.</p>
+  </div>
+
+  <!-- Scorecard -->
+  <div style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; margin-bottom: 56px;">
+    <div style="background: #171717; border: 1px solid #262626; border-radius: 12px; padding: 16px;">
+      <div style="font-size: 11px; color: #737373; font-weight: 600; margin-bottom: 6px;">Cold Start</div>
+      <div style="font-size: 28px; font-weight: 800; color: #f87171;">C-</div>
+      <div style="font-size: 11px; color: #525252; margin-top: 4px;">Buried discovery</div>
+    </div>
+    <div style="background: #171717; border: 1px solid #262626; border-radius: 12px; padding: 16px;">
+      <div style="font-size: 11px; color: #737373; font-weight: 600; margin-bottom: 6px;">Decisions</div>
+      <div style="font-size: 28px; font-weight: 800; color: #60a5fa;">B-</div>
+      <div style="font-size: 11px; color: #525252; margin-top: 4px;">Good browse, bad drill</div>
+    </div>
+    <div style="background: #171717; border: 1px solid #262626; border-radius: 12px; padding: 16px;">
+      <div style="font-size: 11px; color: #737373; font-weight: 600; margin-bottom: 6px;">Import UX</div>
+      <div style="font-size: 28px; font-weight: 800; color: #10b981;">A-</div>
+      <div style="font-size: 11px; color: #525252; margin-top: 4px;">1-tap, low friction</div>
+    </div>
+    <div style="background: #171717; border: 1px solid #262626; border-radius: 12px; padding: 16px;">
+      <div style="font-size: 11px; color: #737373; font-weight: 600; margin-bottom: 6px;">Science Cred</div>
+      <div style="font-size: 28px; font-weight: 800; color: #f87171;">D+</div>
+      <div style="font-size: 11px; color: #525252; margin-top: 4px;">Filter is a no-op</div>
+    </div>
+    <div style="background: #171717; border: 1px solid #262626; border-radius: 12px; padding: 16px;">
+      <div style="font-size: 11px; color: #737373; font-weight: 600; margin-bottom: 6px;">Post-Import</div>
+      <div style="font-size: 28px; font-weight: 800; color: #fbbf24;">C-</div>
+      <div style="font-size: 11px; color: #525252; margin-top: 4px;">Hollow habits</div>
+    </div>
+    <div style="background: #171717; border: 1px solid #262626; border-radius: 12px; padding: 16px;">
+      <div style="font-size: 11px; color: #737373; font-weight: 600; margin-bottom: 6px;">Premium</div>
+      <div style="font-size: 28px; font-weight: 800; color: #fbbf24;">C</div>
+      <div style="font-size: 11px; color: #525252; margin-top: 4px;">Structural issues</div>
+    </div>
+  </div>
+
+  <!-- View tabs -->
+  <div class="view-tab">
+    <div class="view-tab-item active" onclick="showView('browse')">Main Browse View</div>
+    <div class="view-tab-item" onclick="showView('category')">Category Drill View</div>
+    <div class="view-tab-item" onclick="showView('empty')">New User (Empty State)</div>
+  </div>
+</div>
+
+<!-- ==================== VIEW 1: MAIN BROWSE ==================== -->
+<div id="view-browse" style="max-width: 1400px; margin: 0 auto; padding: 0 32px;">
+  <div class="audit-section" style="display: flex; gap: 48px; align-items: flex-start; position: relative;">
+
+    <!-- Left callouts -->
+    <div style="width: 320px; flex-shrink: 0; display: flex; flex-direction: column; gap: 24px; padding-top: 40px;">
+
+      <div class="callout callout-good" style="position: relative;">
+        <div class="grade grade-a">A- — Import Friction</div>
+        <div>The 1-tap "Add" button on trending cards is the strongest UX win. Goes from 10-field form → single tap. Duplicate detection prevents double imports gracefully.</div>
+      </div>
+
+      <div class="callout callout-good" style="position: relative;">
+        <div class="grade grade-b">B — Information Hierarchy</div>
+        <div>Smart curated layout: Featured hero → Popular carousel → Packs → Categories. Time-aware featured collection rotates by morning/afternoon/evening. Users see the best content first.</div>
+      </div>
+
+      <div class="callout callout-warn" style="position: relative;">
+        <div class="grade grade-c">B- — Quick Filter Chips</div>
+        <div>Only shows <strong>7 of 14</strong> categories. Missing: Breathing, Creativity, Recovery, Social, Longevity, Huberman. Users interested in those must scroll past everything to the category grid.</div>
+      </div>
+
+      <div class="callout callout-bad" style="position: relative;">
+        <div class="grade grade-d">D — "See All" Dead End</div>
+        <div>Tapping "See all" on Trending dumps the user into a flat FlatList of 200+ templates with <strong>no search, no sort, no filter</strong>. The paradox of choice returns.</div>
+      </div>
+
+      <div class="callout callout-warn" style="position: relative;">
+        <div class="grade grade-c">C — Category Grid</div>
+        <div>Initially shows only <strong>6 of 14</strong> categories behind a "Show all" button. Categories like Recovery and Social are hidden by default. Users must know to expand.</div>
+      </div>
+    </div>
+
+    <!-- Phone mockup -->
+    <div class="phone-frame">
+      <div class="phone-content">
+        <!-- Status bar -->
+        <div style="height: 54px; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 8px;">
+          <span style="font-size: 15px; font-weight: 600; color: #fafafa;">9:41</span>
+        </div>
+
+        <!-- Header -->
+        <div style="padding: 12px 20px 4px;">
+          <h2 style="font-size: 28px; font-weight: 800; color: #fafafa; letter-spacing: -0.5px;">Templates</h2>
+          <p style="font-size: 14px; color: #737373; margin-top: 4px;">Start with a category, a curated collection, or a quick add</p>
+        </div>
+
+        <!-- Search bar -->
+        <div style="padding: 12px 16px 8px;">
+          <div style="background: #262626; border: 1px solid #404040; border-radius: 12px; padding: 12px 16px; display: flex; align-items: center; gap: 8px;">
+            <span style="color: #525252;">🔍</span>
+            <span style="font-size: 15px; color: #525252;">Search templates...</span>
+          </div>
+        </div>
+
+        <!-- Quick filter chips -->
+        <div style="padding: 4px 16px; display: flex; gap: 8px; overflow-x: auto; min-height: 44px; align-items: center;">
+          <div class="chip chip-active">✨ All</div>
+          <div class="chip chip-inactive">🌅 Morning</div>
+          <div class="chip chip-inactive">🧠 Mental</div>
+          <div class="chip chip-inactive">💪 Fitness</div>
+          <div class="chip chip-inactive">😴 Sleep</div>
+          <div class="chip chip-inactive" style="opacity: 0.5;">🧘 Mind...</div>
+        </div>
+
+        <!-- Featured collection -->
+        <div style="padding: 12px 16px;">
+          <div style="background: linear-gradient(135deg, #065F46, #059669, #34D399); border-radius: 20px; padding: 20px; position: relative; overflow: hidden;">
+            <div style="position: absolute; top: -20px; right: -20px; width: 100px; height: 100px; border-radius: 50%; background: rgba(255,255,255,0.08);"></div>
+            <div style="position: absolute; bottom: -30px; left: 20px; width: 60px; height: 60px; border-radius: 50%; background: rgba(255,255,255,0.05);"></div>
+            <div style="display: inline-flex; background: rgba(255,255,255,0.2); padding: 4px 12px; border-radius: 9999px; margin-bottom: 10px;">
+              <span style="font-size: 11px; font-weight: 700; color: white; letter-spacing: 0.5px;">🌅 MORNING PICK</span>
+            </div>
+            <h3 style="font-size: 22px; font-weight: 800; color: white; letter-spacing: -0.5px;">Morning Mastery</h3>
+            <p style="font-size: 14px; color: rgba(255,255,255,0.85); margin-top: 6px;">Start your day with science-backed habits for energy and focus</p>
+            <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px;">
+              <span style="background: rgba(255,255,255,0.18); padding: 4px 10px; border-radius: 9999px; font-size: 13px; color: white;">🌅 Wake Early</span>
+              <span style="background: rgba(255,255,255,0.18); padding: 4px 10px; border-radius: 9999px; font-size: 13px; color: white;">💧 Hydrate</span>
+              <span style="background: rgba(255,255,255,0.18); padding: 4px 10px; border-radius: 9999px; font-size: 13px; color: white;">📝 Journal</span>
+              <span style="background: rgba(255,255,255,0.18); padding: 4px 10px; border-radius: 9999px; font-size: 13px; color: white;">🧘 Meditate</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 14px;">
+              <span style="font-size: 13px; color: rgba(255,255,255,0.7);">2.1k users started</span>
+              <div style="background: rgba(255,255,255,0.2); padding: 8px 14px; border-radius: 12px; font-size: 13px; font-weight: 700; color: white;">Explore →</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Popular section -->
+        <div style="padding: 16px 16px 8px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <span style="font-size: 17px; font-weight: 700; color: #fafafa;">🔥 Trending Now</span>
+            <span style="font-size: 13px; color: #059669; font-weight: 500;">See all</span>
+          </div>
+          <div style="display: flex; gap: 12px; overflow-x: auto; padding-bottom: 8px;">
+            <!-- Card 1 -->
+            <div class="trending-card">
+              <div style="width: 48px; height: 48px; background: rgba(16,185,129,0.15); border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                <span style="font-size: 28px;">🧘</span>
+              </div>
+              <div style="font-size: 14px; font-weight: 700; color: #fafafa; margin-top: 10px; line-height: 1.3;">5-Min Morning Meditation</div>
+              <div style="display: flex; gap: 4px; align-items: center; margin-top: 6px;">
+                <span style="font-size: 12px; color: #737373; font-family: monospace;">Daily</span>
+                <span style="background: #fef3c7; padding: 1px 6px; border-radius: 6px; font-size: 10px; font-weight: 700; color: #92400e;">🔬</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
+                <span style="font-size: 13px; color: #059669; font-weight: 700;">2.1k saved</span>
+                <div style="width: 32px; height: 32px; background: #059669; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                  <span style="color: white; font-size: 18px; font-weight: 300;">+</span>
+                </div>
+              </div>
+            </div>
+            <!-- Card 2 -->
+            <div class="trending-card">
+              <div style="width: 48px; height: 48px; background: rgba(99,102,241,0.15); border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                <span style="font-size: 28px;">📚</span>
+              </div>
+              <div style="font-size: 14px; font-weight: 700; color: #fafafa; margin-top: 10px; line-height: 1.3;">Read 20 Pages Daily</div>
+              <div style="display: flex; gap: 4px; align-items: center; margin-top: 6px;">
+                <span style="font-size: 12px; color: #737373; font-family: monospace;">Daily</span>
+                <span style="background: #fef3c7; padding: 1px 6px; border-radius: 6px; font-size: 10px; font-weight: 700; color: #92400e;">🔬</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
+                <span style="font-size: 13px; color: #059669; font-weight: 700;">1.8k saved</span>
+                <div style="width: 32px; height: 32px; background: #059669; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                  <span style="color: white; font-size: 18px; font-weight: 300;">+</span>
+                </div>
+              </div>
+            </div>
+            <!-- Card 3 (partial) -->
+            <div class="trending-card" style="opacity: 0.6;">
+              <div style="width: 48px; height: 48px; background: rgba(236,72,153,0.15); border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                <span style="font-size: 28px;">💤</span>
+              </div>
+              <div style="font-size: 14px; font-weight: 700; color: #fafafa; margin-top: 10px; line-height: 1.3;">Wind Down Rout...</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Premium Packs -->
+        <div style="padding: 16px;">
+          <div style="font-size: 17px; font-weight: 700; color: #fafafa; margin-bottom: 12px;">📦 Curated Packs</div>
+          <div class="pack-card" style="background: linear-gradient(135deg, #7C3AED, #4F46E5); margin-bottom: 10px;">
+            <div>
+              <div style="display: flex; gap: 6px; font-size: 22px;">🔬🧠💪😴</div>
+              <div style="font-size: 16px; font-weight: 700; color: white; margin-top: 8px;">Huberman Essentials</div>
+              <div style="font-size: 13px; color: rgba(255,255,255,0.75); margin-top: 3px;">Science-backed daily protocols</div>
+              <div style="font-size: 13px; color: rgba(255,255,255,0.5); margin-top: 4px; font-family: monospace;">5 habits</div>
+            </div>
+            <div style="background: rgba(255,255,255,0.2); padding: 12px 16px; border-radius: 12px;">
+              <span style="font-size: 13px; font-weight: 700; color: white;">Import Pack</span>
+            </div>
+          </div>
+          <div class="pack-card" style="background: linear-gradient(135deg, #059669, #047857);">
+            <div>
+              <div style="display: flex; gap: 6px; font-size: 22px;">🌅☀️📝💧</div>
+              <div style="font-size: 16px; font-weight: 700; color: white; margin-top: 8px;">Morning Mastery</div>
+              <div style="font-size: 13px; color: rgba(255,255,255,0.75); margin-top: 3px;">Build a powerful morning routine</div>
+              <div style="font-size: 13px; color: rgba(255,255,255,0.5); margin-top: 4px; font-family: monospace;">4 habits</div>
+            </div>
+            <div style="background: rgba(255,255,255,0.2); padding: 12px 16px; border-radius: 12px;">
+              <span style="font-size: 13px; font-weight: 700; color: white;">Import Pack</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Category Grid -->
+        <div style="padding: 16px;">
+          <div style="font-size: 17px; font-weight: 700; color: #fafafa; margin-bottom: 12px;">🗂️ Browse by Category</div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+            <div class="category-tile" style="background: #FEF3C7;">
+              <span style="font-size: 28px;">🌅</span>
+              <span style="font-size: 13px; font-weight: 600; color: #9A5504; margin-top: 8px;">Morning</span>
+              <span style="font-size: 11px; color: #78716c; margin-top: 2px;">18 templates</span>
+              <div style="display: flex; gap: 4px; margin-top: auto; opacity: 0.6; font-size: 14px; padding-top: 8px;">☀️💧📝🧘</div>
+            </div>
+            <div class="category-tile" style="background: #E0E7FF;">
+              <span style="font-size: 28px;">🧠</span>
+              <span style="font-size: 13px; font-weight: 600; color: #4F46E5; margin-top: 8px;">Mental Health</span>
+              <span style="font-size: 11px; color: #78716c; margin-top: 2px;">22 templates</span>
+              <div style="display: flex; gap: 4px; margin-top: auto; opacity: 0.6; font-size: 14px; padding-top: 8px;">🧘📖🎵💭</div>
+            </div>
+            <div class="category-tile" style="background: #D1FAE5;">
+              <span style="font-size: 28px;">💪</span>
+              <span style="font-size: 13px; font-weight: 600; color: #047857; margin-top: 8px;">Health</span>
+              <span style="font-size: 11px; color: #78716c; margin-top: 2px;">25 templates</span>
+              <div style="display: flex; gap: 4px; margin-top: auto; opacity: 0.6; font-size: 14px; padding-top: 8px;">🏃🥗💧🏋️</div>
+            </div>
+            <div class="category-tile" style="background: #E0E7FF;">
+              <span style="font-size: 28px;">😴</span>
+              <span style="font-size: 13px; font-weight: 600; color: #1E40AF; margin-top: 8px;">Sleep</span>
+              <span style="font-size: 11px; color: #78716c; margin-top: 2px;">14 templates</span>
+              <div style="display: flex; gap: 4px; margin-top: auto; opacity: 0.6; font-size: 14px; padding-top: 8px;">🌙📵🫖🛁</div>
+            </div>
+            <div class="category-tile" style="background: #F5F3FF;">
+              <span style="font-size: 28px;">🧘</span>
+              <span style="font-size: 13px; font-weight: 600; color: #7C3AED; margin-top: 8px;">Mindfulness</span>
+              <span style="font-size: 11px; color: #78716c; margin-top: 2px;">16 templates</span>
+              <div style="display: flex; gap: 4px; margin-top: auto; opacity: 0.6; font-size: 14px; padding-top: 8px;">🕯️🌿📿🎋</div>
+            </div>
+            <div class="category-tile" style="background: #F3E8FF;">
+              <span style="font-size: 28px;">📚</span>
+              <span style="font-size: 13px; font-weight: 600; color: #7C3AED; margin-top: 8px;">Learning</span>
+              <span style="font-size: 11px; color: #78716c; margin-top: 2px;">19 templates</span>
+              <div style="display: flex; gap: 4px; margin-top: auto; opacity: 0.6; font-size: 14px; padding-top: 8px;">📖🎓✍️🧩</div>
+            </div>
+          </div>
+          <div style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 14px; text-align: center; margin-top: 10px;">
+            <span style="font-size: 13px; color: #737373; font-weight: 500;">Show all 14 categories</span>
+          </div>
+        </div>
+        <div style="height: 100px;"></div>
+      </div>
+
+      <!-- Bottom bar -->
+      <div class="bottom-bar">
+        <div style="display: flex; align-items: center; background: #262626; border: 1px solid #404040; border-radius: 9999px; padding: 8px 4px; gap: 4px;">
+          <div style="width: 48px; height: 48px; background: #171717; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+            <span style="font-size: 14px; color: #737373;">📅</span>
+          </div>
+          <div style="width: 48px; height: 48px; background: #059669; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 12px rgba(5,150,105,0.4);">
+            <span style="font-size: 22px; color: white; font-weight: 300;">+</span>
+          </div>
+          <div style="width: 48px; height: 48px; background: #171717; border-radius: 50%; display: flex; align-items: center; justify-content: center; position: relative;">
+            <span style="font-size: 14px; color: #737373;">📖</span>
+            <div style="position: absolute; top: 6px; right: 6px; width: 8px; height: 8px; background: #059669; border-radius: 50%; border: 2px solid #262626;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right callouts -->
+    <div style="width: 320px; flex-shrink: 0; display: flex; flex-direction: column; gap: 24px; padding-top: 120px;">
+
+      <div class="callout callout-good" style="position: relative;">
+        <div class="grade grade-a">Strength — Time-Aware Featured</div>
+        <div>The hero card rotates by time of day (morning green, afternoon blue, evening purple, weekend magenta). Contextually relevant content increases engagement.</div>
+      </div>
+
+      <div class="callout callout-warn" style="position: relative;">
+        <div class="grade grade-c">C — Science Badge Everywhere</div>
+        <div>Every template shows the 🔬 science badge because <code>scientificReference</code> is required in the schema. The "Research only" toggle is a no-op — it filters nothing out.</div>
+      </div>
+
+      <div class="callout callout-warn" style="position: relative;">
+        <div class="grade grade-c">C — Premium Packs No Gate</div>
+        <div>Pack cards show "Import Pack" with no premium badge or lock icon. Free users discover the limit <strong>only after tapping</strong> and having the import partially fail. Should show premium status upfront.</div>
+      </div>
+
+      <div class="callout callout-bad" style="position: relative;">
+        <div class="grade grade-d">D — Bottom Bar Discovery</div>
+        <div>Templates are accessed via this tiny 📖 icon. No label. New users see a notification dot but have no idea what it means. The #1 reason cold-start isn't solved.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== VIEW 2: CATEGORY DRILL ==================== -->
+<div id="view-category" style="max-width: 1400px; margin: 0 auto; padding: 0 32px; display: none;">
+  <div class="audit-section" style="display: flex; gap: 48px; align-items: flex-start;">
+
+    <!-- Left callouts -->
+    <div style="width: 320px; flex-shrink: 0; display: flex; flex-direction: column; gap: 24px; padding-top: 60px;">
+      <div class="callout callout-good" style="position: relative;">
+        <div class="grade grade-b">B — List Card Design</div>
+        <div>Compact cards with icon + title + 2-line description + action buttons. "Add" and "Preview" are clearly separated. Match reason shown during search. Good information density.</div>
+      </div>
+
+      <div class="callout callout-good" style="position: relative;">
+        <div class="grade grade-a">A — Match Feedback</div>
+        <div>When searching, each card shows <em>why</em> it matched ("Match: title", "Match: research summary"). Reduces confusion about irrelevant-looking results.</div>
+      </div>
+
+      <div class="callout callout-bad" style="position: relative;">
+        <div class="grade grade-d">C- — Post-Import Gap</div>
+        <div>After tapping "Add", the habit is created with <strong>only name, icon, color, frequency</strong>. The rich fields the app supports (cues, identity, goals, WOOP) are all empty. Template habits ≈ manual habits.</div>
+      </div>
+    </div>
+
+    <!-- Phone mockup -->
+    <div class="phone-frame">
+      <div class="phone-content">
+        <!-- Status bar -->
+        <div style="height: 54px; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 8px;">
+          <span style="font-size: 15px; font-weight: 600; color: #fafafa;">9:41</span>
+        </div>
+
+        <!-- Category header -->
+        <div style="padding: 8px 16px 4px; display: flex; align-items: center; gap: 12px;">
+          <div style="width: 36px; height: 36px; background: #262626; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+            <span style="color: #a3a3a3;">←</span>
+          </div>
+          <div>
+            <h2 style="font-size: 22px; font-weight: 800; color: #fafafa;">🧠 Mental Health</h2>
+            <span style="font-size: 13px; color: #737373;">22 templates</span>
+          </div>
+        </div>
+
+        <!-- Search bar -->
+        <div style="padding: 12px 16px 8px;">
+          <div style="background: #262626; border: 1px solid #404040; border-radius: 12px; padding: 12px 16px; display: flex; align-items: center; gap: 8px;">
+            <span style="color: #525252;">🔍</span>
+            <span style="font-size: 15px; color: #fafafa;">gratitude</span>
+            <span style="margin-left: auto; color: #525252;">✕</span>
+          </div>
+        </div>
+
+        <!-- Sort / Research filter -->
+        <div style="padding: 4px 16px 8px; display: flex; justify-content: space-between; align-items: center;">
+          <div style="display: flex; gap: 8px;">
+            <div class="chip chip-active" style="padding: 6px 12px; font-size: 12px;">Popular</div>
+            <div class="chip chip-inactive" style="padding: 6px 12px; font-size: 12px;">A → Z</div>
+          </div>
+          <div class="chip chip-inactive" style="padding: 6px 12px; font-size: 12px; border-color: #059669; color: #059669;">🔬 Research</div>
+        </div>
+
+        <!-- Template list cards -->
+        <div class="list-card">
+          <div style="display: flex; gap: 12px; align-items: flex-start;">
+            <div style="width: 42px; height: 42px; background: rgba(79,70,229,0.12); border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+              <span style="font-size: 22px;">🙏</span>
+            </div>
+            <div style="flex: 1; min-width: 0;">
+              <div style="font-size: 18px; font-weight: 700; color: #fafafa; line-height: 1.2;">Gratitude Journal</div>
+              <div style="font-size: 13px; color: #a3a3a3; margin-top: 4px; line-height: 1.4;">Write three things you're grateful for each morning</div>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 6px; align-items: center;">
+              <div style="background: #059669; border-radius: 10px; padding: 8px 16px; min-width: 78px; text-align: center;">
+                <span style="font-size: 13px; font-weight: 700; color: white;">Add</span>
+              </div>
+              <div style="background: #1a1a1a; border: 1px solid #404040; border-radius: 10px; padding: 8px 16px; min-width: 78px; text-align: center;">
+                <span style="font-size: 13px; font-weight: 700; color: #a3a3a3;">Preview</span>
+              </div>
+            </div>
+          </div>
+          <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px;">
+            <span class="meta-pill" style="background: #1a1a1a; border-color: #404040; color: #a3a3a3;">Daily</span>
+            <span class="meta-pill" style="background: #1a1a1a; border-color: #404040; color: #a3a3a3;">Mental Health</span>
+            <span class="meta-pill" style="background: rgba(16,185,129,0.1); border-color: rgba(16,185,129,0.3); color: #10b981;">Science</span>
+          </div>
+          <div style="margin-top: 10px;">
+            <span style="font-size: 12px; font-weight: 700; color: #059669;">Match: title</span>
+          </div>
+        </div>
+
+        <div class="list-card">
+          <div style="display: flex; gap: 12px; align-items: flex-start;">
+            <div style="width: 42px; height: 42px; background: rgba(236,72,153,0.12); border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+              <span style="font-size: 22px;">💝</span>
+            </div>
+            <div style="flex: 1; min-width: 0;">
+              <div style="font-size: 18px; font-weight: 700; color: #fafafa; line-height: 1.2;">Self-Compassion Practice</div>
+              <div style="font-size: 13px; color: #a3a3a3; margin-top: 4px; line-height: 1.4;">Practice gratitude and kindness toward yourself daily</div>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 6px; align-items: center;">
+              <div style="background: rgba(16,185,129,0.1); border-radius: 10px; padding: 8px 16px; min-width: 78px; text-align: center;">
+                <span style="font-size: 13px; font-weight: 700; color: #047857;">Added</span>
+              </div>
+              <div style="background: #1a1a1a; border: 1px solid #404040; border-radius: 10px; padding: 8px 16px; min-width: 78px; text-align: center;">
+                <span style="font-size: 13px; font-weight: 700; color: #a3a3a3;">Preview</span>
+              </div>
+            </div>
+          </div>
+          <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px;">
+            <span class="meta-pill" style="background: #1a1a1a; border-color: #404040; color: #a3a3a3;">Daily</span>
+            <span class="meta-pill" style="background: #1a1a1a; border-color: #404040; color: #a3a3a3;">Mental Health</span>
+            <span class="meta-pill" style="background: rgba(16,185,129,0.1); border-color: rgba(16,185,129,0.3); color: #10b981;">Science</span>
+          </div>
+          <div style="margin-top: 10px;">
+            <span style="font-size: 12px; font-weight: 700; color: #059669;">Match: description</span>
+          </div>
+        </div>
+
+        <div class="list-card">
+          <div style="display: flex; gap: 12px; align-items: flex-start;">
+            <div style="width: 42px; height: 42px; background: rgba(99,102,241,0.12); border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+              <span style="font-size: 22px;">📓</span>
+            </div>
+            <div style="flex: 1; min-width: 0;">
+              <div style="font-size: 18px; font-weight: 700; color: #fafafa; line-height: 1.2;">Evening Reflection</div>
+              <div style="font-size: 13px; color: #a3a3a3; margin-top: 4px; line-height: 1.4;">Reflect on your day with structured gratitude prompts</div>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 6px; align-items: center;">
+              <div style="background: #059669; border-radius: 10px; padding: 8px 16px; min-width: 78px; text-align: center;">
+                <span style="font-size: 13px; font-weight: 700; color: white;">Add</span>
+              </div>
+              <div style="background: #1a1a1a; border: 1px solid #404040; border-radius: 10px; padding: 8px 16px; min-width: 78px; text-align: center;">
+                <span style="font-size: 13px; font-weight: 700; color: #a3a3a3;">Preview</span>
+              </div>
+            </div>
+          </div>
+          <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px;">
+            <span class="meta-pill" style="background: #1a1a1a; border-color: #404040; color: #a3a3a3;">Daily</span>
+            <span class="meta-pill" style="background: #1a1a1a; border-color: #404040; color: #a3a3a3;">Mental Health</span>
+            <span class="meta-pill" style="background: rgba(16,185,129,0.1); border-color: rgba(16,185,129,0.3); color: #10b981;">Science</span>
+          </div>
+          <div style="margin-top: 10px;">
+            <span style="font-size: 12px; font-weight: 700; color: #059669;">Match: description</span>
+          </div>
+        </div>
+
+        <div style="height: 100px;"></div>
+      </div>
+    </div>
+
+    <!-- Right callouts -->
+    <div style="width: 320px; flex-shrink: 0; display: flex; flex-direction: column; gap: 24px; padding-top: 40px;">
+      <div class="callout callout-good" style="position: relative;">
+        <div class="grade grade-b">Strength — Sort + Filter</div>
+        <div>Category view has sort (Popular/A-Z) and research toggle. Significantly better than the flat "See All" view which has neither.</div>
+      </div>
+
+      <div class="callout callout-bad" style="position: relative;">
+        <div class="grade grade-d">D+ — "Science" Badge on Everything</div>
+        <div>All 3 results show the green "Science" pill. Since <code>scientificReference</code> is required on every template, this badge appears on 100% of templates. It communicates nothing.</div>
+      </div>
+
+      <div class="callout callout-neutral" style="position: relative;">
+        <div class="grade grade-b">Missing — No Difficulty/Time Info</div>
+        <div>Cards show frequency (Daily) and category but no time commitment. Users can't tell if "Gratitude Journal" is 2 min or 20 min. The HeroSection hardcodes "5-10 min" for everything.</div>
+      </div>
+
+      <div class="callout callout-warn" style="position: relative;">
+        <div class="grade grade-c">C- — What Gets Imported</div>
+        <div>Tapping "Add" creates a habit with: name, icon, color, frequency, and a notes field stuffing description + scientific reference together. No cues, no identity statement, no goals. The psychology engine goes unused.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== VIEW 3: NEW USER EMPTY STATE ==================== -->
+<div id="view-empty" style="max-width: 1400px; margin: 0 auto; padding: 0 32px; display: none;">
+  <div class="audit-section" style="display: flex; gap: 48px; align-items: flex-start;">
+
+    <!-- Left callouts -->
+    <div style="width: 320px; flex-shrink: 0; display: flex; flex-direction: column; gap: 24px; padding-top: 100px;">
+      <div class="callout callout-bad" style="position: relative;">
+        <div class="grade grade-d">CRITICAL — Onboarding Skipped</div>
+        <div>The 3-screen onboarding carousel (which mentions "200+ Templates" on page 3) is <strong>auto-completed</strong> for all new users in <code>useOnboardingStatus.ts:25-26</code>. New users never see it.</div>
+      </div>
+
+      <div class="callout callout-bad" style="position: relative;">
+        <div class="grade grade-d">CRITICAL — Empty State ≠ Templates</div>
+        <div>The quick-start chips (Meditate, Read, Exercise, Drink Water) are hardcoded constants using <code>QuickStartTemplate</code> type — <strong>not connected to the real template library</strong>. They create bare habits, not template imports.</div>
+      </div>
+
+      <div class="callout callout-bad" style="position: relative;">
+        <div class="grade grade-d">CRITICAL — No Path to Templates</div>
+        <div>A new user with 0 habits sees this empty state. The only path to templates is the tiny 📖 icon in the bottom bar. There is no "Browse Templates" CTA, no onboarding nudge, no contextual prompt.</div>
+      </div>
+    </div>
+
+    <!-- Phone mockup: New user empty state -->
+    <div class="phone-frame">
+      <div class="phone-content" style="display: flex; flex-direction: column;">
+        <!-- Status bar -->
+        <div style="height: 54px; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 8px;">
+          <span style="font-size: 15px; font-weight: 600; color: #fafafa;">9:41</span>
+        </div>
+
+        <!-- Calendar header area (simplified) -->
+        <div style="padding: 16px 20px 8px;">
+          <h2 style="font-size: 24px; font-weight: 800; color: #fafafa;">Today</h2>
+          <p style="font-size: 14px; color: #737373; margin-top: 2px;">Friday, April 4</p>
+        </div>
+
+        <!-- Calendar strip -->
+        <div style="padding: 8px 16px; display: flex; gap: 6px; justify-content: center;">
+          <div style="width: 44px; height: 56px; border-radius: 12px; background: #262626; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;">
+            <span style="font-size: 10px; color: #737373;">Mon</span>
+            <span style="font-size: 16px; color: #a3a3a3;">31</span>
+          </div>
+          <div style="width: 44px; height: 56px; border-radius: 12px; background: #262626; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;">
+            <span style="font-size: 10px; color: #737373;">Tue</span>
+            <span style="font-size: 16px; color: #a3a3a3;">1</span>
+          </div>
+          <div style="width: 44px; height: 56px; border-radius: 12px; background: #262626; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;">
+            <span style="font-size: 10px; color: #737373;">Wed</span>
+            <span style="font-size: 16px; color: #a3a3a3;">2</span>
+          </div>
+          <div style="width: 44px; height: 56px; border-radius: 12px; background: #262626; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;">
+            <span style="font-size: 10px; color: #737373;">Thu</span>
+            <span style="font-size: 16px; color: #a3a3a3;">3</span>
+          </div>
+          <div style="width: 44px; height: 56px; border-radius: 12px; background: #059669; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;">
+            <span style="font-size: 10px; color: rgba(255,255,255,0.7);">Fri</span>
+            <span style="font-size: 16px; color: white; font-weight: 700;">4</span>
+          </div>
+          <div style="width: 44px; height: 56px; border-radius: 12px; background: #262626; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;">
+            <span style="font-size: 10px; color: #737373;">Sat</span>
+            <span style="font-size: 16px; color: #a3a3a3;">5</span>
+          </div>
+          <div style="width: 44px; height: 56px; border-radius: 12px; background: #262626; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;">
+            <span style="font-size: 10px; color: #737373;">Sun</span>
+            <span style="font-size: 16px; color: #a3a3a3;">6</span>
+          </div>
+        </div>
+
+        <!-- Empty state -->
+        <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 32px 24px; text-align: center;">
+          <div style="font-size: 48px; margin-bottom: 16px;">🌱</div>
+          <h3 style="font-size: 20px; font-weight: 700; color: #fafafa; margin-bottom: 8px;">Start Your First Habit</h3>
+          <p style="font-size: 14px; color: #737373; line-height: 1.5; margin-bottom: 24px;">Small actions, repeated daily, create lasting change. Pick one to begin.</p>
+
+          <!-- Quick start chips -->
+          <div style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 20px;">
+            <div style="background: #262626; border: 1px solid #404040; border-radius: 12px; padding: 10px 16px; display: flex; align-items: center; gap: 8px;">
+              <span>🧘</span>
+              <span style="font-size: 14px; font-weight: 600; color: #e5e5e5;">Meditate</span>
+              <span style="font-size: 11px; color: #737373;">5 min</span>
+            </div>
+            <div style="background: #262626; border: 1px solid #404040; border-radius: 12px; padding: 10px 16px; display: flex; align-items: center; gap: 8px;">
+              <span>📖</span>
+              <span style="font-size: 14px; font-weight: 600; color: #e5e5e5;">Read</span>
+              <span style="font-size: 11px; color: #737373;">15 min</span>
+            </div>
+            <div style="background: #262626; border: 1px solid #404040; border-radius: 12px; padding: 10px 16px; display: flex; align-items: center; gap: 8px;">
+              <span>🏃</span>
+              <span style="font-size: 14px; font-weight: 600; color: #e5e5e5;">Exercise</span>
+              <span style="font-size: 11px; color: #737373;">20 min</span>
+            </div>
+            <div style="background: #262626; border: 1px solid #404040; border-radius: 12px; padding: 10px 16px; display: flex; align-items: center; gap: 8px;">
+              <span>💧</span>
+              <span style="font-size: 14px; font-weight: 600; color: #e5e5e5;">Drink Water</span>
+              <span style="font-size: 11px; color: #737373;">Daily</span>
+            </div>
+          </div>
+
+          <p style="font-size: 12px; color: #525252;">or tap + to create your own</p>
+        </div>
+
+        <div style="height: 80px;"></div>
+      </div>
+
+      <!-- Bottom bar -->
+      <div class="bottom-bar">
+        <div style="display: flex; align-items: center; background: #262626; border: 1px solid #404040; border-radius: 9999px; padding: 8px 4px; gap: 4px;">
+          <div style="width: 48px; height: 48px; background: #171717; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+            <span style="font-size: 14px; color: #737373;">📅</span>
+          </div>
+          <div style="width: 48px; height: 48px; background: #059669; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 12px rgba(5,150,105,0.4);">
+            <span style="font-size: 22px; color: white; font-weight: 300;">+</span>
+          </div>
+          <div style="width: 48px; height: 48px; background: #171717; border-radius: 50%; display: flex; align-items: center; justify-content: center; position: relative;">
+            <span style="font-size: 14px; color: #737373;">📖</span>
+            <div style="position: absolute; top: 6px; right: 6px; width: 8px; height: 8px; background: #059669; border-radius: 50%; border: 2px solid #262626;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Arrow pointing to book icon -->
+      <div style="position: absolute; bottom: 28px; right: -8px; display: flex; align-items: center; gap: 4px;">
+        <span style="font-size: 24px; color: #f87171;">←</span>
+      </div>
+    </div>
+
+    <!-- Right callouts -->
+    <div style="width: 320px; flex-shrink: 0; display: flex; flex-direction: column; gap: 24px; padding-top: 80px;">
+
+      <div class="callout callout-neutral" style="position: relative;">
+        <div style="font-weight: 700; color: #c4b5fd; margin-bottom: 6px;">This is what a new user sees</div>
+        <div>After sign-up, onboarding auto-completes. The user lands here with 0 habits. The quick-start chips are nice but create bare-bones habits with no science backing, no cues, no identity framing.</div>
+      </div>
+
+      <div class="callout callout-warn" style="position: relative;">
+        <div style="font-weight: 700; color: #fcd34d; margin-bottom: 6px;">Disconnected Systems</div>
+        <div>These chips use a <code>QuickStartTemplate</code> type (name + emoji + duration). The real template library has 200+ templates with scientific references, categories, popularity scores, tips. <strong>The two systems don't talk to each other.</strong></div>
+      </div>
+
+      <div class="callout callout-bad" style="position: relative;">
+        <div style="font-weight: 700; color: #fca5a5; margin-bottom: 6px;">The Biggest Gap</div>
+        <div>The templates page was built to solve cold-start. But the cold-start moment (this screen) has no connection to it. The entire feature is hidden behind an unlabeled icon that looks like a settings page. <strong>The solution exists but the problem never sees it.</strong></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== BOTTOM SUMMARY ==================== -->
+<div style="max-width: 1400px; margin: 0 auto; padding: 48px 32px 64px;">
+  <div style="background: #171717; border: 1px solid #262626; border-radius: 20px; padding: 32px;">
+    <h2 style="font-size: 22px; font-weight: 800; color: #fafafa; margin-bottom: 20px;">3 Highest-Leverage Fixes</h2>
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+      <div style="background: #0a0a0a; border: 1px solid #dc2626; border-radius: 14px; padding: 20px;">
+        <div style="font-size: 12px; font-weight: 700; color: #f87171; letter-spacing: 1px; margin-bottom: 8px;">FIX 1 — DISCOVERY</div>
+        <div style="font-size: 15px; font-weight: 700; color: #fafafa; margin-bottom: 8px;">Surface templates at the moment of need</div>
+        <div style="font-size: 13px; color: #a3a3a3; line-height: 1.5;">Make the empty-state CTA open templates (not create-habit). Or show a curated 6-8 template picker as the first post-signup screen. The feature exists — it just needs a front door.</div>
+      </div>
+      <div style="background: #0a0a0a; border: 1px solid #d97706; border-radius: 14px; padding: 20px;">
+        <div style="font-size: 12px; font-weight: 700; color: #fbbf24; letter-spacing: 1px; margin-bottom: 8px;">FIX 2 — DEPTH</div>
+        <div style="font-size: 15px; font-weight: 700; color: #fafafa; margin-bottom: 8px;">Enrich template schema with cues + identity</div>
+        <div style="font-size: 13px; color: #a3a3a3; line-height: 1.5;">Add <code style="color: #fbbf24;">cueAfterBehavior</code>, <code style="color: #fbbf24;">identity</code>, <code style="color: #fbbf24;">cueTime</code> to template data. Pass them through in importTemplate. Template habits should be genuinely richer than manual ones.</div>
+      </div>
+      <div style="background: #0a0a0a; border: 1px solid #d97706; border-radius: 14px; padding: 20px;">
+        <div style="font-size: 12px; font-weight: 700; color: #fbbf24; letter-spacing: 1px; margin-bottom: 8px;">FIX 3 — CREDIBILITY</div>
+        <div style="font-size: 15px; font-weight: 700; color: #fafafa; margin-bottom: 8px;">Fix the research filter + science badges</div>
+        <div style="font-size: 13px; color: #a3a3a3; line-height: 1.5;">Change "Research only" to filter by <code style="color: #fbbf24;">scientificLink</code> (verifiable URLs), not the always-present <code style="color: #fbbf24;">scientificReference</code>. Show the science badge only when there's a real link.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function showView(view) {
+  document.getElementById('view-browse').style.display = view === 'browse' ? 'block' : 'none';
+  document.getElementById('view-category').style.display = view === 'category' ? 'block' : 'none';
+  document.getElementById('view-empty').style.display = view === 'empty' ? 'block' : 'none';
+
+  document.querySelectorAll('.view-tab-item').forEach((tab, i) => {
+    const views = ['browse', 'category', 'empty'];
+    tab.classList.toggle('active', views[i] === view);
+  });
+}
+</script>
+
+</body>
+</html>

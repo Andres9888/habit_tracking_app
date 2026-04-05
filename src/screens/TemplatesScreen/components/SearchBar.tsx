@@ -19,7 +19,7 @@ interface SearchBarProps {
 export function SearchBar({
   onChangeText,
   onClear,
-  inputHint = 'Search for habits...',
+  inputHint = 'Search templates, categories, or research',
   value,
 }: SearchBarProps) {
   const { colors } = useThemeColors();
@@ -27,7 +27,7 @@ export function SearchBar({
 
   return (
     <View
-      testID="templates-search-bar"
+      testID='templates-search-bar'
       style={[
         styles.searchBar,
         { backgroundColor: colors.card, borderColor: colors.border },
@@ -35,7 +35,7 @@ export function SearchBar({
     >
       <Search color={placeholderColor} size={18} strokeWidth={2.25} />
       <TextInput
-        accessibilityLabel='Search habits'
+        accessibilityLabel='Search templates'
         returnKeyType='search'
         style={[styles.searchInput, { color: colors.text.primary }]}
         value={value}
@@ -44,7 +44,7 @@ export function SearchBar({
       />
       {value ? (
         <AnimatedPressable
-          testID="templates-search-clear"
+          testID='templates-search-clear'
           accessibilityLabel='Clear search'
           accessibilityRole='button'
           onPress={onClear}

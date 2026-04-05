@@ -18,13 +18,29 @@ import { renderSubView } from './views/renderSubView';
 function TemplatesScreenContent() {
   const props = useTemplatesScreenProps();
   const { data, handlers, mainBrowseData, packConfirm, state, viewNav } = props;
-  const handleImport = (template: Doc<'templates'>) => { void handlers.handleDirectImport(template._id); };
-  const handleSeedTemplates = () => { void handlers.handleSeedTemplates(); };
-  const handlePackConfirm = () => { void packConfirm.handleConfirm(); };
-  const handleSeeAll = () => { void viewNav.openSeeAll(); };
+  const handleImport = (template: Doc<'templates'>) => {
+    void handlers.handleDirectImport(template._id);
+  };
+  const handleSeedTemplates = () => {
+    void handlers.handleSeedTemplates();
+  };
+  const handlePackConfirm = () => {
+    void packConfirm.handleConfirm();
+  };
+  const handleSeeAll = () => {
+    void viewNav.openSeeAll();
+  };
+  const handleSelectCategory = (categoryId: string | null) => {
+    handlers.handleSelectCategory(categoryId ?? 'all');
+  };
 
   if (!data.isLoading && !data.allTemplates?.length) {
-    return <TemplatesEmptyState isSeeding={state.isSeeding} onSeedTemplates={handleSeedTemplates} />;
+    return (
+      <TemplatesEmptyState
+        isSeeding={state.isSeeding}
+        onSeedTemplates={handleSeedTemplates}
+      />
+    );
   }
 
   if (state.effectiveViewMode !== 'browse') return renderCategorySearch(props);
@@ -44,7 +60,9 @@ function TemplatesScreenContent() {
       categoryGrid={
         <CategoryGrid
           categories={mainBrowseData.categoryList}
-          onSelectCategory={viewNav.openCategory}
+          onSelectCategory={(categoryId) =>
+            handlers.handleSelectCategory(categoryId)
+          }
         />
       }
       feedbackOverlays={
@@ -79,11 +97,14 @@ function TemplatesScreenContent() {
           onPackConfirm={handlePackConfirm}
         />
       }
-      onFeaturedPress={(categoryId: string) => viewNav.openCategory(categoryId)}
+      onFeaturedPress={(categoryId: string) =>
+        handlers.handleSelectCategory(categoryId)
+      }
       onImport={handleImport}
       onPreview={handlers.handleTemplatePreview}
       onSearchChange={state.setSearchQuery}
       onSearchClear={() => state.setSearchQuery('')}
+      onSelectQuickFilter={handleSelectCategory}
       onSeeAll={handleSeeAll}
       popularTemplates={mainBrowseData.popularTemplates}
       premiumPacksSection={
@@ -92,12 +113,20 @@ function TemplatesScreenContent() {
           onPackPress={packConfirm.handlePackPress}
         />
       }
+      quickFilterCategories={mainBrowseData.quickFilterCategories}
       searchAnimatedStyle={props.animations.searchAnimatedStyle}
       searchQuery={state.searchQuery}
+      selectedQuickFilter={
+        state.selectedCategory === 'all' ? null : state.selectedCategory
+      }
     />
   );
 }
 
 export default function TemplatesScreen() {
-  return <ScreenErrorBoundary screenName='Templates'><TemplatesScreenContent /></ScreenErrorBoundary>;
+  return (
+    <ScreenErrorBoundary screenName='Templates'>
+      <TemplatesScreenContent />
+    </ScreenErrorBoundary>
+  );
 }

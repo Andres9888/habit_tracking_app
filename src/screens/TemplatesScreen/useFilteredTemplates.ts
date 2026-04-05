@@ -5,6 +5,16 @@
 import { useMemo } from 'react';
 import type { Doc } from '../../../convex/_generated/dataModel';
 import type { Category, SortOption } from '../templates/constants';
+import { getCategoryMeta } from './data/categoryMeta';
+
+function normalizeSearchValue(value: string | null | undefined) {
+  return (value ?? '').trim().toLowerCase();
+}
+
+function getSearchableCategoryLabel(categoryId: string) {
+  const fallback = categoryId.replaceAll('_', ' ');
+  return `${fallback} ${getCategoryMeta(categoryId).label}`.trim();
+}
 
 export function useTemplatesByCategory(
   allTemplates: Doc<'templates'>[] | undefined
@@ -55,7 +65,7 @@ export function useScienceCountsByCategory(
     if (!allTemplates) return {} as Record<string, number>;
     const counts: Record<string, number> = {};
     for (const template of allTemplates) {
-      if (template.scientificLink)
+      if (template.scientificReference)
         counts[template.category] = (counts[template.category] || 0) + 1;
     }
     return counts;
@@ -75,15 +85,25 @@ export function useFilteredTemplates(
     let data = [...allTemplates];
     if (selectedCategory !== 'all')
       data = data.filter((t) => t.category === selectedCategory);
-    if (researchOnly) data = data.filter((t) => Boolean(t.scientificLink));
+    if (researchOnly) {
+      data = data.filter((t) =>
+        Boolean(t.scientificReference)
+      );
+    }
 
-    const safeSearchQuery = (searchQuery ?? '').trim();
+    const safeSearchQuery = normalizeSearchValue(searchQuery);
     if (safeSearchQuery) {
-      const query = safeSearchQuery.toLowerCase();
       data = data.filter(
         (t) =>
-          (t.name || '').toLowerCase().includes(query) ||
-          (t.description || '').toLowerCase().includes(query)
+          normalizeSearchValue(t.name).includes(safeSearchQuery) ||
+          normalizeSearchValue(t.description).includes(safeSearchQuery) ||
+          normalizeSearchValue(t.scientificReference).includes(
+            safeSearchQuery
+          ) ||
+          normalizeSearchValue(t.frequency).includes(safeSearchQuery) ||
+          normalizeSearchValue(getSearchableCategoryLabel(t.category)).includes(
+            safeSearchQuery
+          )
       );
     }
 

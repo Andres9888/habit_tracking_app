@@ -27,7 +27,6 @@ const mockTemplate = {
   iconColor: '#f00',
   name: 'Morning Run',
   popularityScore: 100,
-  scientificLink: null,
   scientificReference: null,
   youtubeLink: null,
 } as never;

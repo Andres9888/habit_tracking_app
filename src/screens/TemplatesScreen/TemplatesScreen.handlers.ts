@@ -65,6 +65,8 @@ export function useTemplateHandlers(opts: UseTemplateHandlersOptions) {
 
     handleSeedTemplates: seed.handleSeedTemplates,
 
+    handleSelectCategory: navigation.handleSelectCategory,
+
     handleSelectSortOption: sort.handleSelectSortOption,
 
     handleTemplateImport: imports.handleTemplateImport,

@@ -11,7 +11,9 @@ export function TemplatesLoadingState() {
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.background }}>
-      <View style={{ paddingHorizontal: 20, paddingBottom: 16, paddingTop: 24 }}>
+      <View
+        style={{ paddingHorizontal: 20, paddingBottom: 16, paddingTop: 24 }}
+      >
         <Text
           style={{
             color: colors.text.primary,
@@ -21,7 +23,7 @@ export function TemplatesLoadingState() {
             letterSpacing: -0.35,
           }}
         >
-          Habit Library
+          Templates
         </Text>
         <Text
           style={{
@@ -31,7 +33,7 @@ export function TemplatesLoadingState() {
             marginTop: 4,
           }}
         >
-          Science-backed habits to get you started
+          Start with a category, a curated collection, or a quick add
         </Text>
       </View>
       <Animated.View
@@ -40,6 +42,23 @@ export function TemplatesLoadingState() {
       >
         <ShimmerBox height={48} style={{ borderRadius: 24 }} width='100%' />
       </Animated.View>
+      <View
+        style={{
+          flexDirection: 'row',
+          gap: 8,
+          marginBottom: 16,
+          paddingHorizontal: 16,
+        }}
+      >
+        {[64, 86, 78, 74, 68, 82].map((w, i) => (
+          <ShimmerBox
+            key={i}
+            height={36}
+            style={{ borderRadius: 9999 }}
+            width={w}
+          />
+        ))}
+      </View>
       {[0, 1, 2, 3].map((i) => (
         <SkeletonCard key={i} index={i} />
       ))}

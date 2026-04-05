@@ -19,6 +19,7 @@ interface CategoryHeaderProps {
   filteredCount: number;
   getCategoryLabel: (categoryId: string) => string;
   onBackPress: () => void;
+  searchQuery: string;
   selectedCategory: Category;
   viewMode: ViewMode;
 }
@@ -28,6 +29,7 @@ export function CategoryHeader({
   filteredCount,
   getCategoryLabel,
   onBackPress,
+  searchQuery,
   selectedCategory,
   viewMode,
 }: CategoryHeaderProps) {
@@ -38,10 +40,24 @@ export function CategoryHeader({
     getDefaultCategoryColors(isDark);
   const categoryIcon =
     categories?.find((c) => c.id === selectedCategory)?.icon || '📌';
+  const trimmedQuery = searchQuery.trim();
+  const isSearchView = viewMode === 'search';
+  const shouldShowBackButton = viewMode === 'category' || isSearchView;
+  const title = isSearchView
+    ? `Results for "${trimmedQuery}"`
+    : getCategoryLabel(selectedCategory);
+  const subtitle = isSearchView
+    ? `${filteredCount} match${filteredCount === 1 ? '' : 'es'}${
+        selectedCategory !== 'all'
+          ? ` in ${getCategoryLabel(selectedCategory)}`
+          : ''
+      } across names, descriptions, categories, and research`
+    : `${filteredCount} template${filteredCount === 1 ? '' : 's'}`;
 
   return (
     <View style={styles.header}>
-      {viewMode === 'category' ? <Pressable
+      {shouldShowBackButton ? (
+        <Pressable
           accessible
           accessibilityLabel='Go back to browse'
           accessibilityRole='button'
@@ -53,19 +69,27 @@ export function CategoryHeader({
             size={20}
             strokeWidth={2.5}
           />
-          <Text style={[styles.backButtonText, { color: themeColors.text.secondary }]}>
+          <Text
+            style={[
+              styles.backButtonText,
+              { color: themeColors.text.secondary },
+            ]}
+          >
             Back
           </Text>
-        </Pressable> : null}
+        </Pressable>
+      ) : null}
       <View style={styles.categoryHeaderRow}>
-        {viewMode === 'category' ? <View
+        {viewMode === 'category' ? (
+          <View
             style={[
               styles.categoryHeaderIcon,
               { backgroundColor: catColors.bg },
             ]}
           >
             <Text style={{ fontSize: 22 }}>{categoryIcon}</Text>
-          </View> : null}
+          </View>
+        ) : null}
         <View>
           <Text
             style={[
@@ -73,9 +97,7 @@ export function CategoryHeader({
               { color: themeColors.text.primary, fontWeight: '700' },
             ]}
           >
-            {viewMode === 'search'
-              ? 'Search Results'
-              : getCategoryLabel(selectedCategory)}
+            {title}
           </Text>
           <Text
             style={[
@@ -83,7 +105,7 @@ export function CategoryHeader({
               { color: themeColors.text.secondary, marginTop: 2 },
             ]}
           >
-            {filteredCount} template{filteredCount === 1 ? '' : 's'}
+            {subtitle}
           </Text>
         </View>
       </View>

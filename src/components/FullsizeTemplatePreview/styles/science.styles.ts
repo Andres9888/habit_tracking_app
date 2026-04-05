@@ -9,25 +9,6 @@ import { borderRadius, spacing } from '../../../theme/spacing';
 import { typography, fontFamilies } from '@/theme/typography';
 
 export const scienceStyles = StyleSheet.create({
-  researchLinkButton: {
-    alignItems: 'center',
-    alignSelf: 'flex-start',
-    backgroundColor: colors.secondary[100],
-    borderColor: colors.secondary[100],
-    borderRadius: borderRadius.medium,
-    borderWidth: 1,
-    flexDirection: 'row',
-    gap: 8,
-    marginTop: 16,
-    paddingHorizontal: 14,
-    paddingVertical: 12,
-  },
-  researchLinkText: {
-    color: colors.secondary[600],
-    fontFamily: fontFamilies.primary.text,
-    fontSize: typography.bodySmall.fontSize,
-    fontWeight: '600',
-  },
   scienceBox: {
     backgroundColor: colors.primary[100],
     borderColor: colors.primary[100],

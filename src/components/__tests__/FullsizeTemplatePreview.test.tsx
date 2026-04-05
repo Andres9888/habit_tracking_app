@@ -151,7 +151,6 @@ const createMockTemplate = (
   category: 'mindfulness',
   frequency: 'daily',
   scientificReference: 'Morning meditation reduces cortisol by 23%.',
-  scientificLink: 'https://example.com/research',
   createdAt: Date.now(),
   ...overrides,
 });
@@ -279,48 +278,6 @@ describe('FullsizeTemplatePreview', () => {
       );
 
       expect(getByText(longDescription)).toBeTruthy();
-    });
-
-    it('handles missing scientificLink gracefully', () => {
-      const template = createMockTemplate({
-        scientificLink: undefined,
-      });
-
-      const { queryByText, getByText } = render(
-        <FullsizeTemplatePreview
-          template={template}
-          visible={true}
-          onClose={mockOnClose}
-          onImport={mockOnImport}
-          onCustomize={mockOnCustomize}
-        />
-      );
-
-      // Science box should still show the reference
-      expect(getByText(/Morning meditation reduces cortisol/)).toBeTruthy();
-      // But the research link button should not be present
-      expect(queryByText('Read Research')).toBeNull();
-    });
-
-    it('handles empty scientificLink gracefully', () => {
-      const template = createMockTemplate({
-        scientificLink: '',
-      });
-
-      const { queryByText, getByText } = render(
-        <FullsizeTemplatePreview
-          template={template}
-          visible={true}
-          onClose={mockOnClose}
-          onImport={mockOnImport}
-          onCustomize={mockOnCustomize}
-        />
-      );
-
-      // Empty string is falsy, so the research link button should not render
-      expect(queryByText('Read Research')).toBeNull();
-      // But the science box should still show the reference
-      expect(getByText(/Morning meditation reduces cortisol/)).toBeTruthy();
     });
 
     it('handles missing iconColor with default', () => {
@@ -493,31 +450,6 @@ describe('FullsizeTemplatePreview', () => {
       expect(mockOnCustomize).toHaveBeenCalledWith(template);
     });
 
-    it('triggers light haptic on research link press', async () => {
-      const template = createMockTemplate({
-        scientificLink: 'https://example.com/research',
-      });
-
-      const { getByLabelText } = render(
-        <FullsizeTemplatePreview
-          template={template}
-          visible={true}
-          onClose={mockOnClose}
-          onImport={mockOnImport}
-          onCustomize={mockOnCustomize}
-        />
-      );
-
-      const researchLink = getByLabelText('Read research paper');
-      fireEvent.press(researchLink);
-
-      await waitFor(() => {
-        expect(Haptics.impactAsync).toHaveBeenCalledWith(
-          Haptics.ImpactFeedbackStyle.Light
-        );
-      });
-    });
-
     it('does not trigger haptic when reduced motion is enabled', () => {
       // Re-mock useReduceMotion to return true
       const useReduceMotionMock = require('../../hooks/useReduceMotion');
@@ -626,62 +558,6 @@ describe('FullsizeTemplatePreview', () => {
     });
   });
 
-  describe('Research Link', () => {
-    it('opens research link when pressed', async () => {
-      const template = createMockTemplate({
-        scientificLink: 'https://pubmed.ncbi.nlm.nih.gov/12345',
-      });
-
-      const { getByLabelText } = render(
-        <FullsizeTemplatePreview
-          template={template}
-          visible={true}
-          onClose={mockOnClose}
-          onImport={mockOnImport}
-          onCustomize={mockOnCustomize}
-        />
-      );
-
-      const researchLink = getByLabelText('Read research paper');
-      fireEvent.press(researchLink);
-
-      await waitFor(() => {
-        expect(Linking.canOpenURL).toHaveBeenCalledWith(
-          'https://pubmed.ncbi.nlm.nih.gov/12345'
-        );
-        expect(Linking.openURL).toHaveBeenCalledWith(
-          'https://pubmed.ncbi.nlm.nih.gov/12345'
-        );
-      });
-    });
-
-    it('does not open URL if canOpenURL returns false', async () => {
-      (Linking.canOpenURL as jest.Mock).mockResolvedValueOnce(false);
-
-      const template = createMockTemplate({
-        scientificLink: 'invalid://link',
-      });
-
-      const { getByLabelText } = render(
-        <FullsizeTemplatePreview
-          template={template}
-          visible={true}
-          onClose={mockOnClose}
-          onImport={mockOnImport}
-          onCustomize={mockOnCustomize}
-        />
-      );
-
-      const researchLink = getByLabelText('Read research paper');
-      fireEvent.press(researchLink);
-
-      await waitFor(() => {
-        expect(Linking.canOpenURL).toHaveBeenCalled();
-        expect(Linking.openURL).not.toHaveBeenCalled();
-      });
-    });
-  });
-
   describe('Accessibility', () => {
     it('has accessible close button', () => {
       const template = createMockTemplate();
@@ -734,26 +610,6 @@ describe('FullsizeTemplatePreview', () => {
       expect(customizeButton.props.accessibilityRole).toBe('button');
     });
 
-    it('has accessible research link', () => {
-      const template = createMockTemplate({
-        scientificLink: 'https://example.com',
-      });
-      const { getByLabelText } = render(
-        <FullsizeTemplatePreview
-          template={template}
-          visible={true}
-          onClose={mockOnClose}
-          onImport={mockOnImport}
-          onCustomize={mockOnCustomize}
-        />
-      );
-
-      const researchLink = getByLabelText('Read research paper');
-      expect(researchLink.props.accessibilityRole).toBe('link');
-      expect(researchLink.props.accessibilityHint).toBe(
-        'Opens the research paper in your browser'
-      );
-    });
   });
 
   describe('Tips for Success Section', () => {

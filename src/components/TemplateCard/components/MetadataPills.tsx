@@ -15,7 +15,6 @@ interface MetadataPillsProps {
   frequency?: string;
   iconColor: string;
   popularityScore?: number;
-  scientificLink?: string;
   youtubeLink?: string;
 }
 
@@ -23,7 +22,6 @@ export function MetadataPills({
   frequency,
   iconColor,
   popularityScore,
-  scientificLink,
   youtubeLink,
 }: MetadataPillsProps) {
   const theme = useAppTheme();
@@ -32,7 +30,6 @@ export function MetadataPills({
 
   const hasMetadata =
     formattedFrequency ||
-    scientificLink ||
     youtubeLink ||
     typeof popularityScore === 'number';
 
@@ -43,12 +40,6 @@ export function MetadataPills({
       {formattedFrequency ? <View style={[styles.metadataPill, { backgroundColor: themeColors.surface, borderColor: `${iconColor}30` }]}>
           <Text style={[theme.custom.typography.caption, { color: themeColors.text.secondary }]}>
             ⏱️ {formattedFrequency}
-          </Text>
-        </View> : null}
-
-      {scientificLink ? <View style={[styles.metadataPill, { backgroundColor: themeColors.surface, borderColor: `${iconColor}30` }]}>
-          <Text style={[theme.custom.typography.caption, { color: themeColors.text.secondary }]}>
-            🔗 Research
           </Text>
         </View> : null}
 

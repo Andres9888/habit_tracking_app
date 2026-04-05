@@ -20,21 +20,29 @@ export function CategorySearchView(p: CategorySearchViewProps) {
   const { colors } = useThemeColors();
   const { handlers: h, filteredTemplates: templates } = p;
   const toggle = () => p.setResearchOnly((v) => !v);
-  const handleImport = (templateId: Parameters<typeof h.handleTemplateImport>[0]) => { void h.handleTemplateImport(templateId); };
+  const handleImport = (
+    templateId: Parameters<typeof h.handleTemplateImport>[0]
+  ) => {
+    void h.handleTemplateImport(templateId);
+  };
 
   return (
-    <View testID="templates-search-results" style={[styles.container, { backgroundColor: colors.background }]}>
+    <View
+      testID='templates-search-results'
+      style={[styles.container, { backgroundColor: colors.background }]}
+    >
       <CategoryHeader
         categories={p.categories}
         filteredCount={templates.length}
         getCategoryLabel={p.getCategoryLabel}
+        searchQuery={p.searchQuery}
         selectedCategory={p.selectedCategory}
         viewMode={p.effectiveViewMode}
         onBackPress={h.handleBackToBrowse}
       />
       <View style={styles.searchSection}>
         <SearchBar
-          inputHint='Search habits or science keywords'
+          inputHint='Search templates, categories, or research'
           value={p.searchQuery}
           onChangeText={p.setSearchQuery}
           onClear={() => p.setSearchQuery('')}
@@ -55,8 +63,11 @@ export function CategorySearchView(p: CategorySearchViewProps) {
       <TemplatesList
         effectiveViewMode={p.effectiveViewMode}
         filteredTemplates={templates}
+        getCategoryLabel={p.getCategoryLabel}
         hasActiveFilters={p.hasActiveFilters}
+        importedTemplateIds={p.importedTemplateIds}
         importingTemplateId={p.importingTemplateId}
+        searchQuery={p.searchQuery}
         selectedCategory={p.selectedCategory}
         onImport={handleImport}
         onPreview={h.handleTemplatePreview}
@@ -82,12 +93,14 @@ export function CategorySearchView(p: CategorySearchViewProps) {
         onDismissCelebration={() => p.setShowCelebration(false)}
         onDismissToast={() => p.setShowToast(false)}
       />
-      {p.showSortOptions ? <Pressable
+      {p.showSortOptions ? (
+        <Pressable
           accessibilityLabel='Close sort options'
           accessibilityRole='button'
           style={styles.dropdownBackdrop}
           onPress={() => p.setShowSortOptions(false)}
-        /> : null}
+        />
+      ) : null}
     </View>
   );
 }

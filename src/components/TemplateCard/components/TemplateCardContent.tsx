@@ -31,7 +31,6 @@ export function TemplateCardContent({
   onImportPress,
   onPreview,
   popularityScore,
-  scientificLink,
   scientificReference,
   showPreviewCTA,
   youtubeLink,
@@ -58,7 +57,6 @@ export function TemplateCardContent({
         frequency={frequency}
         iconColor={iconColor}
         popularityScore={popularityScore}
-        scientificLink={scientificLink}
         youtubeLink={youtubeLink}
       />
       <Text
@@ -67,7 +65,9 @@ export function TemplateCardContent({
       >
         {description}
       </Text>
-      <ScienceBox scientificReference={scientificReference} />
+      {scientificReference ? (
+        <ScienceBox scientificReference={scientificReference} />
+      ) : null}
       <View style={styles.footer}>
         <ActionButtons
           checkmarkStyle={checkmarkStyle}

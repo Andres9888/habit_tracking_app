@@ -29,7 +29,6 @@ export function TemplateCardRender({
   onPreview,
   popularityScore,
   reducedMotion,
-  scientificLink,
   scientificReference,
   shadowStyle,
   showPreviewCTA,
@@ -69,7 +68,6 @@ export function TemplateCardRender({
           isPremium={isPremium ?? false}
           name={name}
           popularityScore={popularityScore}
-          scientificLink={scientificLink}
           scientificReference={scientificReference}
           showPreviewCTA={showPreviewCTA ?? false}
           youtubeLink={youtubeLink}

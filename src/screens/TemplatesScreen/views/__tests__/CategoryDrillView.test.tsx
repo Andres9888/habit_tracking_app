@@ -31,7 +31,6 @@ const mockTemplate = {
   iconColor: '#f00',
   name: 'Morning Routine',
   popularityScore: 100,
-  scientificLink: null,
   scientificReference: 'Smith et al. 2023',
   youtubeLink: null,
 } as never;
