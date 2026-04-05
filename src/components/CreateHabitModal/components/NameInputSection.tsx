@@ -50,7 +50,7 @@ export function NameInputSection({
           borderColor: showNameError ? themeTokens.error : themeColors.border,
         }}
         value={habitName}
-        {...buildTextInputHintProps('Name your habit', themeColors.text.tertiary)}
+        {...buildTextInputHintProps('e.g. Morning run', themeColors.text.tertiary)}
         onChangeText={onHabitNameChange}
         onSubmitEditing={Keyboard.dismiss}
       />
