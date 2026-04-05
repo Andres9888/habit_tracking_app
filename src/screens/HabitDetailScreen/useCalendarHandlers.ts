@@ -9,7 +9,7 @@
  * - Timezone-aware habit toggling
  */
 
-import { useCallback } from 'react';
+import { useCallback, useRef } from 'react';
 import * as Haptics from 'expo-haptics';
 import { Alert, AccessibilityInfo } from 'react-native';
 import type { Id } from '../../../convex/_generated/dataModel';
@@ -40,6 +40,7 @@ export const useCalendarHandlers = ({
   setPendingDelete,
 }: UseCalendarHandlersProps) => {
   const toggleHabitMutation = useToggleHabitWithTimezone();
+  const togglingRef = useRef(false);
 
   const swipeActions = useSwipeActions({
     habit,
@@ -52,7 +53,7 @@ export const useCalendarHandlers = ({
 
   const handleCalendarDayPress = useCallback(
     (date: string, wasCompleted: boolean): void => {
-      if (isTogglingCalendar || !habit?._id) return;
+      if (togglingRef.current || !habit?._id) return;
 
       const inputDate = new Date(date);
       const todayDate = new Date();
@@ -60,6 +61,7 @@ export const useCalendarHandlers = ({
       todayDate.setHours(0, 0, 0, 0);
       if (inputDate > todayDate) return;
 
+      togglingRef.current = true;
       setIsTogglingCalendar(true);
       void Haptics.impactAsync(
         wasCompleted
@@ -86,10 +88,12 @@ export const useCalendarHandlers = ({
           if (__DEV__) console.error('Failed to toggle habit:', error);
           Alert.alert('Error', ERROR_MESSAGES.DATA_OPS.TOGGLE_HABIT_FAILED);
         })
-        .finally(() => setIsTogglingCalendar(false));
+        .finally(() => {
+          togglingRef.current = false;
+          setIsTogglingCalendar(false);
+        });
     },
     [
-      isTogglingCalendar,
       habit?._id,
       habit?.name,
       toggleHabitMutation,
