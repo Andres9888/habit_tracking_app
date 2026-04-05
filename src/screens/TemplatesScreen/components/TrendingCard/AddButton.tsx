@@ -39,9 +39,9 @@ export function AddButton({
     transform: [{ scale: scale.value }],
   }));
 
-  const label = isImported ? `${name} added` : `Add ${name}`;
+  const label = isImported ? `${name} added` : `Add ${name} habit`;
   const iconColor = isImported ? colors.primary[600] : '#FFFFFF';
-  const iconSize = 16;
+  const iconSize = 18;
 
   return (
     <AnimatedPressable

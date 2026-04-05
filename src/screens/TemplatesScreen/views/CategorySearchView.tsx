@@ -8,7 +8,6 @@ import { styles } from '../../templates/templatesScreenStyles';
 import {
   CategoryHeader,
   FilterControls,
-  ResearchFilterButton,
   SearchBar,
   TemplateModals,
 } from '../components';
@@ -19,7 +18,6 @@ import { TemplatesList } from './TemplatesList';
 export function CategorySearchView(p: CategorySearchViewProps) {
   const { colors } = useThemeColors();
   const { handlers: h, filteredTemplates: templates } = p;
-  const toggle = () => p.setResearchOnly((v) => !v);
   const handleImport = (
     templateId: Parameters<typeof h.handleTemplateImport>[0]
   ) => {
@@ -42,7 +40,8 @@ export function CategorySearchView(p: CategorySearchViewProps) {
       />
       <View style={styles.searchSection}>
         <SearchBar
-          inputHint='Search templates, categories, or research'
+          autoFocus={p.searchQuery.length > 0}
+          inputHint='Search habits, categories, or science'
           value={p.searchQuery}
           onChangeText={p.setSearchQuery}
           onClear={() => p.setSearchQuery('')}
@@ -53,10 +52,6 @@ export function CategorySearchView(p: CategorySearchViewProps) {
             sortOption={p.sortOption}
             onSelectSort={h.handleSelectSortOption}
             onToggleSortOptions={() => p.setShowSortOptions((v) => !v)}
-          />
-          <ResearchFilterButton
-            researchOnly={p.researchOnly}
-            onToggle={toggle}
           />
         </View>
       </View>

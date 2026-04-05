@@ -8,6 +8,7 @@
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useThemeColors } from '../../../../theme/ThemeContext';
+import { spacing } from '@/theme/spacing';
 import { triggerHaptic } from '@/utils/haptics';
 import { fontWeights } from '@/theme/typography';
 
@@ -124,8 +125,8 @@ const s = StyleSheet.create({
     borderWidth: 1,
     justifyContent: 'center',
     minHeight: 36,
-    paddingHorizontal: 16,
-    paddingVertical: 8,
+    paddingHorizontal: spacing.base,
+    paddingVertical: spacing.sm,
   },
   chipText: { fontSize: 13, fontWeight: fontWeights.semibold, lineHeight: 16 },
   container: {
@@ -136,14 +137,14 @@ const s = StyleSheet.create({
     position: 'absolute',
     right: 0,
     top: 0,
-    width: 32,
+    width: spacing.xl,
   },
   row: {
     alignItems: 'center',
-    gap: 8,
-    paddingHorizontal: 16,
+    gap: spacing.sm,
+    paddingHorizontal: spacing.base,
     paddingRight: 40,
-    paddingVertical: 4,
+    paddingVertical: spacing.xs,
   },
   wrapper: {
     position: 'relative',

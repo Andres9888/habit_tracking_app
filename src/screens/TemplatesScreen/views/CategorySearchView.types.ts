@@ -34,10 +34,8 @@ export interface CategorySearchViewProps {
   importedTemplateIds: Set<string>;
   importingTemplateId: Id<'templates'> | null;
   previewTemplate: Doc<'templates'> | null;
-  researchOnly: boolean;
   searchQuery: string;
   selectedCategory: Category;
-  setResearchOnly: React.Dispatch<React.SetStateAction<boolean>>;
   setSearchQuery: React.Dispatch<React.SetStateAction<string>>;
   setShowCustomizeModal: React.Dispatch<React.SetStateAction<boolean>>;
   setShowFullsizePreview: React.Dispatch<React.SetStateAction<boolean>>;

@@ -28,7 +28,6 @@ export function useTemplatesScreenState({
     useExpandedCategories(categories);
   const [searchQuery, setSearchQuery] = useState('');
   const [sortOption, setSortOption] = useState<SortOption>('popular');
-  const [researchOnly, setResearchOnly] = useState(false);
   const [previewTemplate, setPreviewTemplate] =
     useState<Doc<'templates'> | null>(null);
   const [showFullsizePreview, setShowFullsizePreview] = useState(false);
@@ -62,9 +61,7 @@ export function useTemplatesScreenState({
   const isSearching = safeSearchQuery.trim().length > 0;
   const effectiveViewMode = isSearching ? 'search' : viewMode;
   const hasActiveFilters =
-    selectedCategory !== 'all' ||
-    Boolean(safeSearchQuery.trim()) ||
-    researchOnly;
+    selectedCategory !== 'all' || Boolean(safeSearchQuery.trim());
 
   return {
     browseTab,
@@ -77,7 +74,6 @@ export function useTemplatesScreenState({
     isSearching,
     isSeeding,
     previewTemplate,
-    researchOnly,
     searchQuery,
     selectedCategory,
     setBrowseTab,
@@ -87,7 +83,6 @@ export function useTemplatesScreenState({
     setImportingTemplateId,
     setIsSeeding,
     setPreviewTemplate,
-    setResearchOnly,
     setSearchQuery,
     setSelectedCategory,
     setShowCustomizeModal,

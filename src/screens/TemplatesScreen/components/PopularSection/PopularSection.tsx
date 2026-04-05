@@ -29,7 +29,7 @@ export function PopularSection({
   return (
     <View testID='templates-trending-section' style={s.container}>
       <View style={s.header}>
-        <Text style={s.title}>🔥 Trending Now</Text>
+        <Text style={s.title}>Trending right now</Text>
         <Pressable
           testID='templates-trending-see-all'
           accessibilityLabel='See all trending templates'

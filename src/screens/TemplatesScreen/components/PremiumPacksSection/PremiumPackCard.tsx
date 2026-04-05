@@ -1,9 +1,11 @@
 /**
- * PremiumPackCard - Full-width horizontal card for curated habit packs
+ * PremiumPackCard - softer premium shelf card for curated habit bundles
  */
 
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { colors } from '../../../../theme/colors';
+import { borderRadius, spacing } from '../../../../theme/spacing';
 import { fontFamilies, fontWeights } from '../../../../theme/typography';
 import type { PremiumPack } from '../../data/premiumPacks';
 
@@ -12,7 +14,17 @@ interface PremiumPackCardProps {
   pack: PremiumPack;
 }
 
+function withAlpha(hex: string, alpha: string) {
+  return /^#[0-9A-Fa-f]{6}$/.test(hex) ? `${hex}${alpha}` : hex;
+}
+
 export function PremiumPackCard({ onPress, pack }: PremiumPackCardProps) {
+  const accent = pack.backgroundGradient[1];
+  const gradientColors: [string, string] = [
+    withAlpha(pack.backgroundGradient[0], '22'),
+    withAlpha(pack.backgroundGradient[1], '12'),
+  ];
+
   return (
     <Pressable
       testID={`templates-pack-${pack.id}`}
@@ -21,7 +33,7 @@ export function PremiumPackCard({ onPress, pack }: PremiumPackCardProps) {
       onPress={onPress}
     >
       <LinearGradient
-        colors={pack.backgroundGradient}
+        colors={gradientColors}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
         style={s.gradient}
@@ -40,10 +52,12 @@ export function PremiumPackCard({ onPress, pack }: PremiumPackCardProps) {
           <Text style={s.desc} numberOfLines={2}>
             {pack.description}
           </Text>
-          <Text style={s.habitCount}>{pack.habits.length} habits</Text>
+          <Text style={[s.habitCount, { color: accent }]}>
+            {pack.habits.length} habits
+          </Text>
         </View>
-        <View style={s.cta}>
-          <Text style={s.ctaText}>Import Pack</Text>
+        <View style={[s.cta, { borderColor: withAlpha(accent, '33') }]}>
+          <Text style={[s.ctaText, { color: accent }]}>Preview pack</Text>
         </View>
       </LinearGradient>
     </Pressable>
@@ -53,30 +67,38 @@ export function PremiumPackCard({ onPress, pack }: PremiumPackCardProps) {
 const s = StyleSheet.create({
   content: { flex: 1 },
   cta: {
-    backgroundColor: 'rgba(255,255,255,0.2)',
-    borderRadius: 12,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
+    backgroundColor: 'rgba(255,255,255,0.76)',
+    borderRadius: borderRadius.medium,
+    borderWidth: 1,
+    paddingHorizontal: spacing.base,
+    paddingVertical: spacing.md,
   },
-  ctaText: { color: '#fff', fontSize: 13, fontWeight: fontWeights.bold },
-  desc: { color: 'rgba(255,255,255,0.75)', fontSize: 13, marginTop: 3 },
+  ctaText: { fontSize: 13, fontWeight: fontWeights.bold },
+  desc: { color: colors.text.secondary, fontSize: 13, marginTop: spacing.xs },
   emoji: { fontSize: 22 },
-  emojiGroup: { flexDirection: 'row', gap: 6 },
+  emojiGroup: { flexDirection: 'row', gap: spacing.sm },
   gradient: {
     alignItems: 'center',
-    borderRadius: 16,
+    borderColor: colors.border,
+    borderRadius: borderRadius.large,
+    borderWidth: 1,
     flexDirection: 'row',
-    gap: 16,
-    marginBottom: 12,
-    marginHorizontal: 16,
-    paddingHorizontal: 24,
-    paddingVertical: 16,
+    gap: spacing.base,
+    marginBottom: spacing.md,
+    marginHorizontal: spacing.base,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.base,
   },
   habitCount: {
     color: 'rgba(255,255,255,0.5)',
     fontFamily: fontFamilies.monospace,
     fontSize: 13,
-    marginTop: 4,
+    marginTop: spacing.xs,
   },
-  name: { color: '#fff', fontSize: 16, fontWeight: fontWeights.bold, marginTop: 8 },
+  name: {
+    color: colors.text.primary,
+    fontSize: 16,
+    fontWeight: fontWeights.bold,
+    marginTop: spacing.sm,
+  },
 });

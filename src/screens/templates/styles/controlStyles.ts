@@ -1,15 +1,16 @@
 import { StyleSheet } from 'react-native';
+import { borderRadius, spacing } from '@/theme/spacing';
 import { fontWeights, typography } from '@/theme/typography';
 
 export const controlStyles = StyleSheet.create({
   controlButton: {
     alignItems: 'center',
-    borderRadius: 999,
+    borderRadius: borderRadius.full,
     borderWidth: 1,
     flexDirection: 'row',
-    gap: 8,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
+    gap: spacing.sm,
+    paddingHorizontal: spacing.base,
+    paddingVertical: spacing.md,
   },
   controlButtonActive: {},
   controlButtonText: {
@@ -18,13 +19,14 @@ export const controlStyles = StyleSheet.create({
   },
   controlRow: {
     flexDirection: 'row',
-    gap: 12,
-    marginTop: 12,
+    flexWrap: 'wrap',
+    gap: spacing.md,
+    marginTop: spacing.md,
   },
   filterControlsRow: {
     flexDirection: 'row',
-    gap: 12,
-    paddingBottom: 12,
-    paddingHorizontal: 16,
+    gap: spacing.md,
+    paddingBottom: spacing.md,
+    paddingHorizontal: spacing.base,
   },
 });

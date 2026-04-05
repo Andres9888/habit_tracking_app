@@ -14,8 +14,8 @@ jest.mock('../../../../theme/ThemeContext', () => ({
   }),
 }));
 
-jest.mock('../../../../components/TemplateCard', () => ({
-  TemplateCard: () => null,
+jest.mock('../TemplateListCard', () => ({
+  TemplateListCard: () => null,
 }));
 
 jest.mock('../../data/categoryMeta', () => ({
@@ -53,7 +53,7 @@ describe('CategoryDrillView', () => {
 
   it('renders subtitle with template and science counts', () => {
     const { getByText } = render(<CategoryDrillView {...baseProps} />);
-    expect(getByText('1 templates · 1 science-backed')).toBeTruthy();
+    expect(getByText('1 habit · 1 science-backed')).toBeTruthy();
   });
 
   it('renders back button via ScreenHeader', () => {

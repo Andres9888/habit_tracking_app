@@ -22,11 +22,9 @@ export function renderCategorySearch({ data, filteredTemplates, getCategoryLabel
       importedTemplateIds={state.importedTemplateIds}
       importingTemplateId={state.importingTemplateId}
       previewTemplate={state.previewTemplate}
-      researchOnly={state.researchOnly}
       searchQuery={state.searchQuery}
       selectedCategory={state.selectedCategory}
       setShowCelebration={state.setShowCelebration}
-      setResearchOnly={state.setResearchOnly}
       setSearchQuery={state.setSearchQuery}
       setShowCustomizeModal={state.setShowCustomizeModal}
       setShowFullsizePreview={state.setShowFullsizePreview}

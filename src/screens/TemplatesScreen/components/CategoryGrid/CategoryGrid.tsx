@@ -5,7 +5,7 @@
 import { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { colors } from '../../../../theme/colors';
-import { spacing } from '../../../../theme/spacing';
+import { borderRadius, shadows, spacing } from '../../../../theme/spacing';
 import { typography, fontWeights } from '../../../../theme/typography';
 import { CategoryTile } from './CategoryTile';
 
@@ -84,17 +84,18 @@ const s = StyleSheet.create({
   row: { flexDirection: 'row', gap: spacing.sm },
   showAllButton: {
     alignItems: 'center',
-    backgroundColor: 'rgba(255,255,255,0.04)',
-    borderColor: 'rgba(255,255,255,0.08)',
-    borderRadius: 12,
+    backgroundColor: colors.light.surfaceMuted,
+    borderColor: colors.border,
+    borderRadius: borderRadius.large,
     borderWidth: 1,
+    ...shadows.subtle,
     marginTop: spacing.xs,
     paddingVertical: spacing.md,
   },
   showAllText: {
-    color: colors.text.secondary,
+    color: colors.text.primary,
     fontSize: 13,
-    fontWeight: fontWeights.medium,
+    fontWeight: fontWeights.semibold,
   },
   title: {
     ...typography.heading3,

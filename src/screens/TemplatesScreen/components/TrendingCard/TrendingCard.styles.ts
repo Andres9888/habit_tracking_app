@@ -5,11 +5,11 @@
 import { StyleSheet } from 'react-native';
 import { colors } from '../../../../theme/colors';
 import { fontFamilies, fontWeights } from '../../../../theme/typography';
-import { borderRadius, shadows } from '../../../../theme/spacing';
+import { borderRadius, shadows, spacing } from '../../../../theme/spacing';
 
 export const CARD_WIDTH = 165;
 const ICON_BOX = 48;
-const ADD_BUTTON_SIZE = 32;
+const ADD_BUTTON_SIZE = 44;
 
 export const s = StyleSheet.create({
   card: {
@@ -18,7 +18,7 @@ export const s = StyleSheet.create({
     borderColor: colors.border,
     borderRadius: borderRadius.large,
     borderWidth: 1.5,
-    padding: 16,
+    padding: spacing.base,
     width: CARD_WIDTH,
   },
   iconBox: {
@@ -34,9 +34,9 @@ export const s = StyleSheet.create({
     fontSize: 14,
     fontWeight: fontWeights.bold,
     lineHeight: 14 * 1.3,
-    marginTop: 12,
+    marginTop: spacing.md,
   },
-  metaRow: { flexDirection: 'row', gap: 4, marginTop: 4 },
+  metaRow: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.xs, marginTop: spacing.xs },
   frequency: {
     color: colors.text.tertiary,
     fontFamily: fontFamilies.monospace,
@@ -44,17 +44,21 @@ export const s = StyleSheet.create({
   },
   scienceBadge: {
     backgroundColor: colors.warningLight,
-    borderRadius: 9999,
-    paddingHorizontal: 8,
+    borderRadius: borderRadius.full,
+    paddingHorizontal: spacing.sm,
     paddingVertical: 2,
   },
-  scienceText: { color: colors.warning, fontSize: 10, fontWeight: fontWeights.semibold },
+  scienceText: {
+    color: colors.warning,
+    fontSize: 10,
+    fontWeight: fontWeights.semibold,
+  },
   bottomRow: {
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: 'auto' as unknown as number,
-    paddingTop: 12,
+    paddingTop: spacing.md,
   },
   popularityText: { color: colors.primary[600], fontSize: 13, fontWeight: fontWeights.medium },
 });
@@ -62,18 +66,14 @@ export const s = StyleSheet.create({
 export const addButtonStyles = StyleSheet.create({
   button: {
     alignItems: 'center',
-    borderRadius: ADD_BUTTON_SIZE / 2,
+    borderRadius: borderRadius.full,
     height: ADD_BUTTON_SIZE,
     justifyContent: 'center',
     width: ADD_BUTTON_SIZE,
   },
   default: {
+    ...shadows.card,
     backgroundColor: colors.primary[600],
-    elevation: 3,
-    shadowColor: 'rgba(5,150,105,0.25)',
-    shadowOffset: { height: 2, width: 0 },
-    shadowOpacity: 1,
-    shadowRadius: 6,
   },
   imported: {
     backgroundColor: colors.light.surfaceMuted,

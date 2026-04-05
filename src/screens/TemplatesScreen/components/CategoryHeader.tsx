@@ -54,7 +54,7 @@ export function CategoryHeader({
           ? ` in ${getCategoryLabel(selectedCategory)}`
           : ''
       } across names, descriptions, categories, and research`
-    : `${filteredCount} template${filteredCount === 1 ? '' : 's'}`;
+    : `${filteredCount} habit${filteredCount === 1 ? '' : 's'}`;
 
   return (
     <View style={styles.header}>

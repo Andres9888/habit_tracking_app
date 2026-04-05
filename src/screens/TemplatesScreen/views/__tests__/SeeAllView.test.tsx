@@ -14,8 +14,8 @@ jest.mock('../../../../theme/ThemeContext', () => ({
   }),
 }));
 
-jest.mock('../../../../components/TemplateCard', () => ({
-  TemplateCard: () => null,
+jest.mock('../TemplateListCard', () => ({
+  TemplateListCard: () => null,
 }));
 
 const mockTemplate = {
@@ -43,12 +43,12 @@ describe('SeeAllView', () => {
 
   it('renders the shared ScreenHeader with title', () => {
     const { getByText } = render(<SeeAllView {...baseProps} />);
-    expect(getByText('All Popular Templates')).toBeTruthy();
+    expect(getByText('Trending habits')).toBeTruthy();
   });
 
   it('renders subtitle with template count', () => {
     const { getByText } = render(<SeeAllView {...baseProps} />);
-    expect(getByText('1 templates · sorted by popularity')).toBeTruthy();
+    expect(getByText('1 habit · sorted by popularity')).toBeTruthy();
   });
 
   it('renders back button via ScreenHeader', () => {
