@@ -31,6 +31,10 @@ import { useToggleHabitWithTimezone } from '../../../hooks/useToggleHabitWithTim
 import { useCompletionSound } from '../../../hooks/useCompletionSound';
 import { validateHabitsArray } from '../../../utils/validation';
 import type { HabitsListState } from './types';
+import {
+  optimisticHabitCreationStore,
+  usePendingCreatedHabits,
+} from './optimisticHabitCreationStore';
 
 import { FREE_HABIT_LIMIT } from '@/constants';
 
@@ -114,6 +118,7 @@ export function useHabitsListState(): HabitsListState {
     [habitsQuery]
   );
   const habitsFromQuery = habitsValidation.limited;
+  const pendingCreatedHabits = usePendingCreatedHabits();
   const isHabitsLoading = habitsQuery === undefined;
 
   // Warn if habits array was limited
@@ -159,6 +164,29 @@ export function useHabitsListState(): HabitsListState {
   );
 
   useEffect(() => {
+    optimisticHabitCreationStore.reconcile(habitsFromQuery);
+  }, [habitsFromQuery]);
+
+  const habitsWithOptimisticCreates = useMemo(() => {
+    if (pendingCreatedHabits.length === 0) {
+      return habitsFromQuery;
+    }
+
+    const maxOrder = habitsFromQuery.reduce(
+      (currentMax, habit) => Math.max(currentMax, habit.order ?? currentMax),
+      0
+    );
+
+    return [
+      ...habitsFromQuery,
+      ...pendingCreatedHabits.map((habit, index) => ({
+        ...habit,
+        order: habit.order ?? maxOrder + index + 1,
+      })),
+    ];
+  }, [habitsFromQuery, pendingCreatedHabits]);
+
+  useEffect(() => {
     const timers = cleanupTimersRef.current;
 
     return () => {
@@ -173,11 +201,11 @@ export function useHabitsListState(): HabitsListState {
   const habitsServerStrengthById = useMemo(
     () =>
       new Map(
-        habitsFromQuery.map(
+        habitsWithOptimisticCreates.map(
           (habit) => [habit._id, habit.strength ?? 0] as const
         )
       ),
-    [habitsFromQuery]
+    [habitsWithOptimisticCreates]
   );
 
   useEffect(() => {
@@ -217,10 +245,10 @@ export function useHabitsListState(): HabitsListState {
 
   const habitsWithPredictedStrength = useMemo(() => {
     if (predictedStrengths.size === 0) {
-      return habitsFromQuery;
+      return habitsWithOptimisticCreates;
     }
 
-    return habitsFromQuery.map((habit) => {
+    return habitsWithOptimisticCreates.map((habit) => {
       const prediction = predictedStrengths.get(habit._id);
       if (!prediction) return habit;
 
@@ -229,7 +257,7 @@ export function useHabitsListState(): HabitsListState {
         strength: prediction.strength,
       };
     });
-  }, [habitsFromQuery, predictedStrengths]);
+  }, [habitsWithOptimisticCreates, predictedStrengths]);
 
   const habits = useHabitsSorting({
     getStreak,

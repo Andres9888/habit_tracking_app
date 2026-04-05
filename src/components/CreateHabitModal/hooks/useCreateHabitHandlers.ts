@@ -12,6 +12,7 @@ import { markFirstHabitCreated } from '../../../hooks/useStreakReminders/useStre
 import { cancelReminder, scheduleReminder } from './useHabitReminders';
 import { validateHabitName } from '../../../utils/validation';
 import type { Id } from '../../../../convex/_generated/dataModel';
+import { optimisticHabitCreationStore } from '../../../features/habits/hooks/optimisticHabitCreationStore';
 
 interface HabitData {
   dayPhase: string | null;
@@ -113,6 +114,22 @@ export function useCreateHabitHandlers() {
       throw new Error(validation.error ?? 'Invalid habit name');
     }
     const sanitizedName = validation.sanitized;
+    const formattedReminderTime = hasReminders
+      ? formatReminderTime24(reminderTime)
+      : undefined;
+    const optimisticOperationId = optimisticHabitCreationStore.add({
+      color: selectedColor,
+      daysOfWeek: selectedDays.length < 7 ? selectedDays : undefined,
+      frequency: frequency || undefined,
+      icon: selectedEmoji ?? undefined,
+      iconColor: selectedColor,
+      name: sanitizedName,
+      preferredTime: dayPhase ?? undefined,
+      reminderSound: hasReminders ? (reminderSound ?? undefined) : undefined,
+      reminderTime: formattedReminderTime,
+      remindersEnabled: hasReminders,
+    });
+    let isCreateConfirmed = false;
 
     try {
       const habitId = await createHabit({
@@ -125,10 +142,10 @@ export function useCreateHabitHandlers() {
         preferredTime: dayPhase ?? undefined,
         remindersEnabled: hasReminders,
         reminderSound: hasReminders ? (reminderSound ?? undefined) : undefined,
-        reminderTime: hasReminders
-          ? formatReminderTime24(reminderTime)
-          : undefined,
+        reminderTime: formattedReminderTime,
       });
+      optimisticHabitCreationStore.confirm(optimisticOperationId);
+      isCreateConfirmed = true;
 
       // Mark first habit creation for deferred notification permission request
       void markFirstHabitCreated();
@@ -141,6 +158,9 @@ export function useCreateHabitHandlers() {
         });
       }
     } catch (error) {
+      if (!isCreateConfirmed) {
+        optimisticHabitCreationStore.fail(optimisticOperationId);
+      }
       if (__DEV__) console.error('Failed to create habit:', error);
       throw error;
     }
