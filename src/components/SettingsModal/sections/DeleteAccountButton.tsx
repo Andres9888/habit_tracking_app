@@ -13,8 +13,8 @@ export function DeleteAccountButton({
   isDeletingAccount,
   onDeleteAccount,
 }: Props) {
-  const { isDark } = useThemeColors();
-  const color = isDark ? '#f87171' : '#ef4444';
+  const { colors: themeColors } = useThemeColors();
+  const color = themeColors.status.error;
 
   return (
     <AnimatedPressable

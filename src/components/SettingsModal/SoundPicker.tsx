@@ -24,7 +24,8 @@ export function SoundPicker({ selected, onSelect }: SoundPickerProps) {
   const { colors, isDark } = useThemeColors();
   const handleSelect = useSoundPreview(onSelect);
 
-  const accent = isDark ? '#34d399' : '#059669';
+  const accent = colors.primary[600];
+  /* Intentional rgba — alpha overlays on theme surfaces */
   const accentBg = isDark ? 'rgba(52,211,153,0.12)' : 'rgba(5,150,105,0.08)';
   const pillBg = isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)';
   const trayBg = isDark ? 'rgba(0,0,0,0.2)' : 'rgba(0,0,0,0.02)';

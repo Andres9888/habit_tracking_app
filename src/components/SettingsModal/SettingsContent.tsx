@@ -10,6 +10,7 @@ import {
   Rows3,
   Volume2,
 } from 'lucide-react-native';
+import Constants from 'expo-constants';
 import { StyleSheet, View } from 'react-native';
 import Animated, {
   FadeInDown,
@@ -170,6 +171,7 @@ export function SettingsContent(p: SettingsContentProps) {
                 }
                 iconBackgroundColor={settingsIcons.calendarHeader.bg}
                 label='Pin calendar header'
+                subtitle='Keep the month header visible when scrolling'
                 showBorder={false}
                 type='toggle'
                 value={p.stickyCalendarHeader}
@@ -222,9 +224,9 @@ export function SettingsContent(p: SettingsContentProps) {
           {/* About + Legal */}
           <Animated.View entering={anim(200)}>
             <AboutLegalSection
-              buildNumber='1'
+              buildNumber={Constants.expoConfig?.ios?.buildNumber ?? '1'}
               highContrast={hc}
-              version='1.0.0'
+              version={Constants.expoConfig?.version ?? '1.0.0'}
               onPrivacy={actions.openPrivacy}
               onTerms={actions.openTerms}
             />
