@@ -75,11 +75,6 @@ describe('SortBottomSheet', () => {
         description: 'Drag to reorder manually',
       },
       {
-        value: 'day_phase',
-        label: 'Day Phase',
-        description: 'Push → Pivot → Pull',
-      },
-      {
         value: 'name_asc',
         label: 'Name (A–Z)',
         description: 'Alphabetical order',
@@ -163,7 +158,6 @@ describe('SortBottomSheet', () => {
   describe('Quick Pick Chips', () => {
     const quickPickOptions = [
       { chipLabel: 'Custom', value: 'manual' },
-      { chipLabel: 'Day Phase', value: 'day_phase' },
       { chipLabel: 'A-Z', value: 'name_asc' },
       { chipLabel: 'Strength', value: 'strength_asc' },
       { chipLabel: 'Streak', value: 'streak_asc' },

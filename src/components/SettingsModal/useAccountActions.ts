@@ -1,5 +1,5 @@
 /* eslint-disable max-lines */
-/** useAccountActions — Extracted account handlers from AccountSection */
+/** useAccountActions — Shared settings handlers for account/support actions */
 import { useState, useCallback } from 'react';
 import { Alert, Linking, Platform, Share } from 'react-native';
 import { useClerk, useUser } from '@clerk/clerk-expo';

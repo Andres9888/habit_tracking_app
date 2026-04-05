@@ -19,10 +19,6 @@ export function useHabitsSorting({
 
     const sortedHabits = [...habitsFromQuery];
 
-    if (habitSortMode === 'day_phase') {
-      return sortByDayPhase(sortedHabits);
-    }
-
     if (habitSortMode === 'name_asc' || habitSortMode === 'name_desc') {
       return sortByName(sortedHabits, habitSortMode);
     }
@@ -33,28 +29,6 @@ export function useHabitsSorting({
 
     return sortByStreak(sortedHabits, habitSortMode, getStreak);
   }, [getStreak, habitSortMode, habitsFromQuery]);
-}
-
-function sortByDayPhase(habits: Habit[]): Habit[] {
-  const phaseOrder: Record<string, number> = {
-    afternoon: 1,
-    evening: 2,
-    morning: 0,
-    phase1_push: 0,
-    phase2_pivot: 1,
-    phase3_pull: 2,
-  };
-
-  return habits.sort((a, b) => {
-    const aPhase = a.preferredTime ? (phaseOrder[a.preferredTime] ?? 99) : 99;
-    const bPhase = b.preferredTime ? (phaseOrder[b.preferredTime] ?? 99) : 99;
-
-    if (aPhase !== bPhase) {
-      return aPhase - bPhase;
-    }
-
-    return compareNames(a.name, b.name);
-  });
 }
 
 function sortByName(habits: Habit[], mode: 'name_asc' | 'name_desc'): Habit[] {

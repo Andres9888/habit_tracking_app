@@ -23,73 +23,73 @@ interface IconColor {
 /** Dark mode settings colors - darker backgrounds with brighter icons */
 export const darkSettingsColors: SettingsColors = {
   // Preferences
-  checkbox: { icon: '#38bdf8', bg: '#1e3a5f' },
-  compact: { icon: '#f472b6', bg: '#4a1942' },
-  circle: { icon: '#a78bfa', bg: '#2e1f5e' },
-  gradient: { icon: '#34d399', bg: '#052e2a' },
-  sound: { icon: '#fbbf24', bg: '#3d2e06' },
-  calendarHeader: { icon: '#22d3ee', bg: '#0f4b55' },
+  checkbox: { icon: '#fbbf24', bg: '#3b2a10' },
+  compact: { icon: '#fb7185', bg: '#4c1d2c' },
+  circle: { icon: '#93c5fd', bg: '#1e3a5f' },
+  gradient: { icon: '#6ee7b7', bg: '#0f3b31' },
+  sound: { icon: '#fbbf24', bg: '#3b2a10' },
+  calendarHeader: { icon: '#d6d3d1', bg: '#2c2824' },
   // Data
-  sort: { icon: '#818cf8', bg: '#1e1b4b' },
-  export: { icon: '#2dd4bf', bg: '#134e4a' },
-  archive: { icon: '#a8a29e', bg: '#292524' },
+  sort: { icon: '#c4b5fd', bg: '#31214b' },
+  export: { icon: '#6ee7b7', bg: '#0f3b31' },
+  archive: { icon: '#d6d3d1', bg: '#2c2824' },
   // Notifications
-  bell: { icon: '#fb923c', bg: '#431407' },
-  clock: { icon: '#38bdf8', bg: '#1e3a5f' },
-  premiumTime: { icon: '#fbbf24', bg: '#3d2e06' },
+  bell: { icon: '#fdba74', bg: '#4a2410' },
+  clock: { icon: '#93c5fd', bg: '#1e3a5f' },
+  premiumTime: { icon: '#fbbf24', bg: '#3b2a10' },
   // Account
-  user: { icon: '#818cf8', bg: '#1e1b4b' },
-  signOut: { icon: '#f87171', bg: '#450a0a' },
-  deleteAccount: { icon: '#ef4444', bg: '#450a0a' },
+  user: { icon: '#6ee7b7', bg: '#0f3b31' },
+  signOut: { icon: '#fca5a5', bg: '#4b1f1f' },
+  deleteAccount: { icon: '#fca5a5', bg: '#4b1f1f' },
   // Premium
-  crown: { icon: '#fbbf24', bg: '#3d2e06' },
-  zap: { icon: '#a78bfa', bg: '#2e1f5e' },
-  manageSub: { icon: '#818cf8', bg: '#1e1b4b' },
+  crown: { icon: '#fbbf24', bg: '#3b2a10' },
+  zap: { icon: '#c4b5fd', bg: '#31214b' },
+  manageSub: { icon: '#c4b5fd', bg: '#31214b' },
   // App
-  star: { icon: '#fbbf24', bg: '#3d2e06' },
-  share: { icon: '#34d399', bg: '#052e2a' },
-  feedback: { icon: '#a78bfa', bg: '#2e1f5e' },
-  whatsNew: { icon: '#c084fc', bg: '#3b0764' },
+  star: { icon: '#fbbf24', bg: '#3b2a10' },
+  share: { icon: '#6ee7b7', bg: '#0f3b31' },
+  feedback: { icon: '#93c5fd', bg: '#1e3a5f' },
+  whatsNew: { icon: '#c4b5fd', bg: '#31214b' },
   // Legal
-  legal: { icon: '#a8a29e', bg: '#292524' },
+  legal: { icon: '#d6d3d1', bg: '#2c2824' },
   // About
-  info: { icon: '#818cf8', bg: '#1e1b4b' },
+  info: { icon: '#d6d3d1', bg: '#2c2824' },
 };
 
 /** Light mode settings colors - light backgrounds with colored icons */
 export const lightSettingsColors: SettingsColors = {
   // Preferences
-  checkbox: { icon: '#0284c7', bg: '#bae6fd' },
-  compact: { icon: '#ec4899', bg: '#fce7f3' },
-  circle: { icon: '#8b5cf6', bg: '#ddd6fe' },
-  gradient: { icon: '#059669', bg: '#d1fae5' },
-  sound: { icon: '#f59e0b', bg: '#fef3c7' },
-  calendarHeader: { icon: '#0ea5e9', bg: '#dbeafe' },
+  checkbox: { icon: '#a16207', bg: '#fef3c7' },
+  compact: { icon: '#be123c', bg: '#ffe4e6' },
+  circle: { icon: '#1d4ed8', bg: '#dbeafe' },
+  gradient: { icon: '#047857', bg: '#d1fae5' },
+  sound: { icon: '#b45309', bg: '#fef3c7' },
+  calendarHeader: { icon: '#57534e', bg: '#f5f5f4' },
   // Data
-  sort: { icon: '#6366f1', bg: '#e0e7ff' },
-  export: { icon: '#0d9488', bg: '#ccfbf1' },
+  sort: { icon: '#6d28d9', bg: '#ede9fe' },
+  export: { icon: '#047857', bg: '#d1fae5' },
   archive: { icon: '#78716c', bg: '#e7e5e4' },
   // Notifications
-  bell: { icon: '#ea580c', bg: '#fed7aa' },
-  clock: { icon: '#0284c7', bg: '#bae6fd' },
-  premiumTime: { icon: '#ca8a04', bg: '#fef9c3' },
+  bell: { icon: '#c2410c', bg: '#ffedd5' },
+  clock: { icon: '#1d4ed8', bg: '#dbeafe' },
+  premiumTime: { icon: '#a16207', bg: '#fef3c7' },
   // Account
-  user: { icon: '#6366f1', bg: '#e0e7ff' },
-  signOut: { icon: '#ef4444', bg: '#fecaca' },
-  deleteAccount: { icon: '#dc2626', bg: '#fecaca' },
+  user: { icon: '#047857', bg: '#d1fae5' },
+  signOut: { icon: '#b53030', bg: '#fee2e2' },
+  deleteAccount: { icon: '#b53030', bg: '#fee2e2' },
   // Premium
-  crown: { icon: '#f59e0b', bg: '#fef3c7' },
-  zap: { icon: '#8b5cf6', bg: '#ede9fe' },
-  manageSub: { icon: '#6366f1', bg: '#e0e7ff' },
+  crown: { icon: '#a16207', bg: '#fef3c7' },
+  zap: { icon: '#6d28d9', bg: '#ede9fe' },
+  manageSub: { icon: '#6d28d9', bg: '#ede9fe' },
   // App
-  star: { icon: '#f59e0b', bg: '#fef3c7' },
-  share: { icon: '#10b981', bg: '#d1fae5' },
-  feedback: { icon: '#8b5cf6', bg: '#ede9fe' },
-  whatsNew: { icon: '#a855f7', bg: '#f3e8ff' },
+  star: { icon: '#a16207', bg: '#fef3c7' },
+  share: { icon: '#047857', bg: '#d1fae5' },
+  feedback: { icon: '#1d4ed8', bg: '#dbeafe' },
+  whatsNew: { icon: '#6d28d9', bg: '#ede9fe' },
   // Legal
   legal: { icon: '#78716c', bg: '#e7e5e4' },
   // About
-  info: { icon: '#6366f1', bg: '#e0e7ff' },
+  info: { icon: '#78716c', bg: '#e7e5e4' },
 };
 
 /** Settings color type definition */

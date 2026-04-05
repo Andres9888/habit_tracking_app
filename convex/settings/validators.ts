@@ -24,8 +24,7 @@ export const settingsReturnValidator = v.object({
     v.literal('strength_asc'),
     v.literal('strength_desc'),
     v.literal('streak_asc'),
-    v.literal('streak_desc'),
-    v.literal('day_phase')
+    v.literal('streak_desc')
   ),
   hasPremium: v.boolean(),
   highContrastMode: v.boolean(),
@@ -73,8 +72,7 @@ export const updateArgsValidator = {
       v.literal('strength_asc'),
       v.literal('strength_desc'),
       v.literal('streak_asc'),
-      v.literal('streak_desc'),
-      v.literal('day_phase')
+      v.literal('streak_desc')
     )
   ),
   hasPremium: v.optional(v.boolean()),

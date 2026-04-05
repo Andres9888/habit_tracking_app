@@ -1,6 +1,7 @@
 /** SignOutCard — Apple-style centered red Sign Out card */
 import { Text, View } from 'react-native';
 import { AnimatedPressable } from '../../ui/AnimatedPressable';
+import { shadows } from '../../../theme';
 import { useThemeColors } from '../../../theme/ThemeContext';
 
 interface SignOutCardProps {
@@ -14,10 +15,12 @@ export function SignOutCard({
   highContrastMode,
   onSignOut,
 }: SignOutCardProps) {
-  const { colors: themeColors, isDark } = useThemeColors();
+  const { colors: themeColors } = useThemeColors();
 
   const cardBg = highContrastMode ? '#111111' : themeColors.card;
-  const borderColor = highContrastMode ? '#2f2f2f' : undefined;
+  const borderColor = highContrastMode
+    ? '#2f2f2f'
+    : themeColors.border;
 
   return (
     <AnimatedPressable
@@ -30,16 +33,17 @@ export function SignOutCard({
         style={{
           backgroundColor: cardBg,
           borderColor,
-          borderWidth: highContrastMode ? 1 : 0,
-          elevation: highContrastMode ? 0 : 3,
-          shadowColor: isDark ? '#000' : '#1c1917',
-          shadowOffset: { height: 4, width: 0 },
-          shadowOpacity: highContrastMode ? 0 : 0.08,
-          shadowRadius: 16,
+          borderWidth: 1,
+          ...(highContrastMode
+            ? { elevation: 0, shadowColor: 'transparent' }
+            : shadows.card),
         }}
       >
         <View className='items-center py-4'>
-          <Text className='text-[16px] font-semibold' style={{ color: '#ef4444' }}>
+          <Text
+            className='text-[17px] font-semibold'
+            style={{ color: themeColors.status.error }}
+          >
             {isLoading ? 'Signing out...' : 'Sign Out'}
           </Text>
         </View>

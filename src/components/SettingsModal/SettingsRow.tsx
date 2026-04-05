@@ -26,6 +26,8 @@ interface SettingsRowProps {
   badge?: number;
   onPress?: () => void;
   onToggle?: (value: boolean) => void;
+  /** Custom right-side content — replaces the default type-based accessory */
+  rightAccessory?: ReactNode;
   showBorder?: boolean;
   highContrastMode?: boolean;
   /** Override haptic: toggle→Medium, selection→Selection, navigation→Light */
@@ -42,6 +44,7 @@ export function SettingsRow({
   badge,
   onPress,
   onToggle,
+  rightAccessory,
   showBorder = true,
   highContrastMode = false,
   hapticStyle,
@@ -120,55 +123,57 @@ export function SettingsRow({
           </Text>
         ) : null}
       </View>
-      {type === 'toggle' ? (
-        <Switch
-          accessibilityLabel={label}
-          ios_backgroundColor={colors.switchTrackFalse}
-          thumbColor={colors.switchThumb}
-          trackColor={{
-            false: colors.switchTrackFalse,
-            true: colors.switchTrackTrue,
-          }}
-          value={value as boolean}
-          onValueChange={handleToggle}
-        />
-      ) : null}
-      {type === 'selection' ? <View className='flex-row items-center gap-1'>
-          <Text
-            className='text-[17px] font-medium'
-            style={{ color: colors.value }}
-          >
-            {value as string}
-          </Text>
-          <ChevronRight color={colors.chevron} size={16} strokeWidth={2} />
-        </View> : null}
-      {type === 'info' && typeof value === 'string' ? <Text
-          className='ml-3 text-[15px] font-medium'
-          numberOfLines={1}
-          style={{
-            color: colors.value,
-            flexShrink: 1,
-            maxWidth: '45%',
-            textAlign: 'right',
-          }}
-        >
-          {value}
-        </Text> : null}
-      {type === 'navigation' ? <View className='flex-row items-center gap-2'>
-          {badge != null && badge > 0 ? <Animated.View
-              className='min-w-[22px] items-center justify-center rounded-full px-1.5 py-0.5'
-              entering={ZoomIn.springify().damping(18)}
-              style={{ backgroundColor: themeColors.surface }}
+      {rightAccessory ?? (<>
+        {type === 'toggle' ? (
+          <Switch
+            accessibilityLabel={label}
+            ios_backgroundColor={colors.switchTrackFalse}
+            thumbColor={colors.switchThumb}
+            trackColor={{
+              false: colors.switchTrackFalse,
+              true: colors.switchTrackTrue,
+            }}
+            value={value as boolean}
+            onValueChange={handleToggle}
+          />
+        ) : null}
+        {type === 'selection' ? <View className='flex-row items-center gap-1'>
+            <Text
+              className='text-[17px] font-medium'
+              style={{ color: colors.value }}
             >
-              <Text
-                className='text-[12px] font-bold'
-                style={{ color: themeColors.text.secondary }}
+              {value as string}
+            </Text>
+            <ChevronRight color={colors.chevron} size={16} strokeWidth={2} />
+          </View> : null}
+        {type === 'info' && typeof value === 'string' ? <Text
+            className='ml-3 text-[15px] font-medium'
+            numberOfLines={1}
+            style={{
+              color: colors.value,
+              flexShrink: 1,
+              maxWidth: '45%',
+              textAlign: 'right',
+            }}
+          >
+            {value}
+          </Text> : null}
+        {type === 'navigation' ? <View className='flex-row items-center gap-2'>
+            {badge != null && badge > 0 ? <Animated.View
+                className='min-w-[22px] items-center justify-center rounded-full px-1.5 py-0.5'
+                entering={ZoomIn.springify().damping(18)}
+                style={{ backgroundColor: themeColors.surface }}
               >
-                {badge}
-              </Text>
-            </Animated.View> : null}
-          <ChevronRight color={colors.chevron} size={16} strokeWidth={2} />
-        </View> : null}
+                <Text
+                  className='text-[12px] font-bold'
+                  style={{ color: themeColors.text.secondary }}
+                >
+                  {badge}
+                </Text>
+              </Animated.View> : null}
+            <ChevronRight color={colors.chevron} size={16} strokeWidth={2} />
+          </View> : null}
+      </>)}
     </View>
   );
 

@@ -1,36 +1,22 @@
-/** SettingsHeader - Theme-aware header with close button */
-import { Text, View } from 'react-native';
-import Animated, { FadeInDown } from 'react-native-reanimated';
+/** SettingsHeader - Shared screen header styling for settings */
+import { View } from 'react-native';
 import { ModalCloseButton } from '../ui/ModalCloseButton';
+import { ScreenHeader } from '../ScreenHeader';
 import type { SettingsColors } from './types';
 
 interface SettingsHeaderProps {
   colors: SettingsColors;
-  paddingTop: number;
   onClose: () => void;
 }
 
-export function SettingsHeader({
-  colors,
-  paddingTop,
-  onClose,
-}: SettingsHeaderProps) {
+export function SettingsHeader({ colors, onClose }: SettingsHeaderProps) {
   return (
-    <Animated.View
-      className='px-4 pb-4'
-      entering={FadeInDown.duration(280).springify().damping(18)}
-      style={{ backgroundColor: colors.background, paddingTop }}
-    >
-      <View className='flex-row items-center justify-between'>
-        <View className='h-10 w-10' />
-        <Text
-          className='text-[22px] font-bold tracking-tight'
-          style={{ color: colors.headerText, letterSpacing: -0.5 }}
-        >
-          Settings
-        </Text>
-        <ModalCloseButton label='Close settings' onClose={onClose} />
-      </View>
-    </Animated.View>
+    <View style={{ backgroundColor: colors.background }}>
+      <ScreenHeader
+        leftAction={null}
+        rightAction={<ModalCloseButton label='Close settings' onClose={onClose} />}
+        title='Settings'
+      />
+    </View>
   );
 }

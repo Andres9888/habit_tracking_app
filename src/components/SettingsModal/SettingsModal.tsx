@@ -12,6 +12,7 @@ import { SettingsModalSkeleton } from '../SkeletonLoader';
 import { useSettingsModalLogic } from './SettingsModal.hooks';
 import { getSettingsColors } from './colors';
 import { SettingsHeader } from './SettingsHeader';
+import { AccountPage } from './AccountPage';
 import { SettingsContent } from './SettingsContent';
 import { SortPicker } from './SortPicker';
 import { useThemeColors } from '../../theme/ThemeContext';
@@ -94,6 +95,33 @@ function SettingsModalContent({
     );
   }
 
+  if (view === 'account') {
+    return (
+      <Modal
+        accessibilityViewIsModal
+        animationType='slide'
+        presentationStyle='overFullScreen'
+        statusBarTranslucent
+        transparent
+        visible={visible}
+        onRequestClose={handleClose}
+      >
+        <View
+          className='flex-1'
+          style={{ backgroundColor: colors.background }}
+        >
+          <AccountPage
+            highContrastMode={isHighContrastActive}
+            isPremium={isPremium}
+            onBack={() => setView('settings')}
+            onClose={handleClose}
+            onPremiumUpsell={onPremiumUpsell}
+          />
+        </View>
+      </Modal>
+    );
+  }
+
   if (view === 'sort') {
     return (
       <Modal
@@ -134,7 +162,6 @@ function SettingsModalContent({
           <>
             <SettingsHeader
               colors={colors}
-              paddingTop={insets.top + 8}
               onClose={handleClose}
             />
             <SettingsContent
@@ -161,6 +188,7 @@ function SettingsModalContent({
               onChangeShowGradientFill={setShowGradientFill}
               onChangeStickyCalendarHeader={onChangeStickyCalendarHeader}
               onChangeStreakReminderTime={onChangeStreakReminderTime}
+              onOpenAccount={() => setView('account')}
               onOpenArchivedHabits={() => setView('archived')}
               onExportHabitsData={onExportHabitsData}
               onOpenSortPicker={() => setView('sort')}

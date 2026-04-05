@@ -3,7 +3,6 @@ import {
   ArrowUpAZ,
   Flame,
   GripVertical,
-  Sun,
   Zap,
 } from 'lucide-react-native';
 import { Dimensions } from 'react-native';
@@ -27,14 +26,6 @@ export const SORT_OPTIONS: SortOptionConfig[] = [
     iconBgColors: ['#78716c', '#57534e'],
     label: 'Custom Order',
     value: 'manual',
-  },
-  {
-    chipLabel: 'Day Phase',
-    description: 'Push → Pivot → Pull',
-    Icon: Sun,
-    iconBgColors: ['#fbbf24', '#f97316'],
-    label: 'Day Phase',
-    value: 'day_phase',
   },
   {
     chipLabel: 'A-Z',
