@@ -7,7 +7,7 @@
     "description": "Chain Day makes consistency visible with chain-based habit tracking, streak progress, and offline-friendly routines.",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "automatic",
+    "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",

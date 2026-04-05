@@ -41,7 +41,7 @@ export function ThemeColorProvider({
   const value = useMemo(() => {
     const raw = settings?.darkMode;
     const mode: DarkModePref =
-      raw === 'dark' || raw === 'light' || raw === 'system' ? raw : 'system';
+      raw === 'dark' || raw === 'light' || raw === 'system' ? raw : 'light';
 
     let isDark = false;
     if (mode === 'dark') isDark = true;
