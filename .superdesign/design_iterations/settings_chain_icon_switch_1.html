@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Completion Icon Switch — Inline Segmented Control</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    display: flex;
+    justify-content: center;
+    padding: 40px 20px;
+    gap: 60px;
+    background: #1a1a2e;
+    min-height: 100vh;
+  }
+
+  .phone {
+    width: 390px;
+    border-radius: 40px;
+    overflow: hidden;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.4);
+    flex-shrink: 0;
+  }
+
+  .label-tag {
+    text-align: center;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    padding: 6px 16px;
+    border-radius: 20px;
+    display: inline-block;
+  }
+  .label-wrapper { text-align: center; margin-bottom: 16px; }
+
+  /* ═══ DARK THEME ═══ */
+  .dark { background: #0f0f0f; }
+  .dark .label-tag { color: #34d399; background: rgba(52,211,153,0.12); }
+
+  .dark .settings-section {
+    background: #1a1a1a;
+    border-radius: 16px;
+    overflow: hidden;
+    margin: 16px;
+  }
+  .dark .section-title {
+    color: #888;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 20px 16px 8px;
+    margin: 0 16px;
+  }
+
+  .dark .row {
+    display: flex;
+    align-items: center;
+    padding: 14px 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .dark .row:last-child, .dark .row.no-border { border-bottom: none; }
+
+  .dark .row-icon-box {
+    width: 40px; height: 40px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    margin-right: 14px;
+    flex-shrink: 0;
+  }
+
+  .dark .row-text { flex: 1; min-width: 0; }
+  .dark .row-label { color: #f0f0f0; font-size: 17px; font-weight: 600; }
+  .dark .row-subtitle { color: #888; font-size: 13px; margin-top: 3px; }
+
+  /* ─── Toggle switch (for context rows) ─── */
+  .toggle {
+    width: 51px; height: 31px;
+    border-radius: 16px;
+    position: relative;
+    cursor: pointer;
+    transition: background 0.25s;
+    flex-shrink: 0;
+  }
+  .toggle.on { background: #34d399; }
+  .toggle.off { background: #3a3a3c; }
+  .toggle .thumb {
+    width: 27px; height: 27px;
+    border-radius: 14px;
+    background: #fff;
+    position: absolute;
+    top: 2px;
+    transition: left 0.25s;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  }
+  .toggle.on .thumb { left: 22px; }
+  .toggle.off .thumb { left: 2px; }
+
+  /* ─── CURRENT: Selection row with chevron ─── */
+  .selection-value {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: #888;
+    font-size: 17px;
+    font-weight: 500;
+    flex-shrink: 0;
+  }
+  .chevron { color: #555; }
+
+  /* ─── CURRENT: Expanding tray ─── */
+  .expanding-tray {
+    display: flex;
+    align-items: center;
+    padding: 10px 16px;
+    background: rgba(255,255,255,0.03);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    gap: 8px;
+  }
+  .tray-spacer { width: 40px; margin-right: 14px; flex-shrink: 0; }
+  .tray-pills { display: flex; flex: 1; gap: 8px; }
+  .tray-pill {
+    flex: 1;
+    display: flex; align-items: center; justify-content: center;
+    gap: 6px;
+    padding: 8px 0;
+    border-radius: 12px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .tray-pill.selected {
+    background: rgba(52,211,153,0.12);
+    color: #34d399;
+    font-weight: 600;
+  }
+  .tray-pill.unselected {
+    background: rgba(255,255,255,0.05);
+    color: #888;
+    font-weight: 400;
+  }
+  .tray-pill svg { flex-shrink: 0; }
+
+  /* ═══ NEW: Inline segmented control ═══ */
+  .segment-control {
+    display: flex;
+    border-radius: 10px;
+    padding: 3px;
+    background: rgba(255,255,255,0.06);
+    gap: 2px;
+    flex-shrink: 0;
+  }
+  .segment-btn {
+    width: 36px; height: 30px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+  }
+  .segment-btn.selected {
+    background: rgba(52,211,153,0.18);
+  }
+  .segment-btn.unselected {
+    background: transparent;
+  }
+  .segment-btn.selected svg { color: #34d399; }
+  .segment-btn.unselected svg { color: #666; }
+
+  .segment-btn:hover:not(.selected) {
+    background: rgba(255,255,255,0.04);
+  }
+  .segment-btn:active {
+    transform: scale(0.92);
+  }
+
+  /* ═══ LIGHT THEME ═══ */
+  .light { background: #f5f5f5; }
+  .light .label-tag { color: #059669; background: rgba(5,150,105,0.08); }
+
+  .light .settings-section {
+    background: #fff;
+    border-radius: 16px;
+    overflow: hidden;
+    margin: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  }
+  .light .section-title {
+    color: #999;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 20px 16px 8px;
+    margin: 0 16px;
+  }
+
+  .light .row {
+    display: flex;
+    align-items: center;
+    padding: 14px 16px;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+  }
+  .light .row:last-child, .light .row.no-border { border-bottom: none; }
+
+  .light .row-icon-box {
+    width: 40px; height: 40px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    margin-right: 14px;
+    flex-shrink: 0;
+  }
+
+  .light .row-text { flex: 1; min-width: 0; }
+  .light .row-label { color: #1a1a1a; font-size: 17px; font-weight: 600; }
+  .light .row-subtitle { color: #888; font-size: 13px; margin-top: 3px; }
+
+  .light .selection-value { color: #999; }
+  .light .chevron { color: #bbb; }
+
+  .light .expanding-tray {
+    background: rgba(0,0,0,0.02);
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+  }
+  .light .tray-pill.selected {
+    background: rgba(5,150,105,0.08);
+    color: #059669;
+  }
+  .light .tray-pill.unselected {
+    background: rgba(0,0,0,0.03);
+    color: #999;
+  }
+
+  .light .segment-control {
+    background: rgba(0,0,0,0.05);
+  }
+  .light .segment-btn.selected {
+    background: rgba(5,150,105,0.12);
+  }
+  .light .segment-btn.selected svg { color: #059669; }
+  .light .segment-btn.unselected svg { color: #aaa; }
+  .light .segment-btn:hover:not(.selected) {
+    background: rgba(0,0,0,0.03);
+  }
+
+  .light .toggle.on { background: #059669; }
+  .light .toggle.off { background: #d1d5db; }
+
+  /* ═══ Annotations ═══ */
+  .annotation {
+    position: absolute;
+    font-size: 11px;
+    font-weight: 500;
+    color: #f87171;
+    white-space: nowrap;
+    pointer-events: none;
+  }
+  .row-wrapper { position: relative; }
+
+  /* Header bar mock */
+  .status-bar {
+    height: 54px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding-bottom: 8px;
+    font-size: 15px;
+    font-weight: 600;
+  }
+  .dark .status-bar { color: #f0f0f0; }
+  .light .status-bar { color: #1a1a1a; }
+
+  .header-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 16px 16px;
+    font-size: 18px;
+    font-weight: 700;
+  }
+  .dark .header-bar { color: #f0f0f0; }
+  .light .header-bar { color: #1a1a1a; }
+
+  /* ═══ Comparison label ═══ */
+  .comparison-header {
+    text-align: center;
+    margin-bottom: 40px;
+    width: 100%;
+  }
+  .comparison-header h1 {
+    color: #f0f0f0;
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .comparison-header p {
+    color: #666;
+    font-size: 14px;
+  }
+
+  .columns {
+    display: flex;
+    gap: 40px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .column { display: flex; flex-direction: column; align-items: center; }
+</style>
+</head>
+<body>
+
+<div class="columns">
+
+  <!-- ═══ CURRENT (Dark) ═══ -->
+  <div class="column">
+    <div class="label-wrapper"><span class="label-tag" style="color:#f87171;background:rgba(248,113,113,0.12);">Current — Expanding Tray</span></div>
+    <div class="phone dark">
+      <div class="status-bar">Settings</div>
+      <div class="section-title">Appearance</div>
+      <div class="settings-section">
+        <!-- Compact habit cards -->
+        <div class="row">
+          <div class="row-icon-box" style="background:rgba(168,85,247,0.12);">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#a855f7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          </div>
+          <div class="row-text">
+            <div class="row-label">Compact habit cards</div>
+            <div class="row-subtitle">Show smaller cards to fit more on screen</div>
+          </div>
+          <div class="toggle off"><div class="thumb"></div></div>
+        </div>
+
+        <!-- Gradient streak fill -->
+        <div class="row">
+          <div class="row-icon-box" style="background:rgba(59,130,246,0.12);">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+          </div>
+          <div class="row-text">
+            <div class="row-label">Gradient streak fill</div>
+            <div class="row-subtitle">Add a color gradient to active streak cells</div>
+          </div>
+          <div class="toggle on"><div class="thumb"></div></div>
+        </div>
+
+        <!-- Completion icon — CURRENT: selection + expanding tray -->
+        <div class="row no-border">
+          <div class="row-icon-box" style="background:rgba(52,211,153,0.12);">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 1 1 0 10h-2"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+          </div>
+          <div class="row-text">
+            <div class="row-label">Completion icon</div>
+            <div class="row-subtitle">Choose between checkmark and chain link styles</div>
+          </div>
+          <div class="selection-value">
+            Chain
+            <span class="chevron">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+            </span>
+          </div>
+        </div>
+        <!-- Expanding tray -->
+        <div class="expanding-tray">
+          <div class="tray-spacer"></div>
+          <div class="tray-pills">
+            <div class="tray-pill selected">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 1 1 0 10h-2"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+              Chain
+            </div>
+            <div class="tray-pill unselected">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Checkmark
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ PROPOSED (Dark) ═══ -->
+  <div class="column">
+    <div class="label-wrapper"><span class="label-tag" style="color:#34d399;background:rgba(52,211,153,0.12);">Proposed — Inline Segment</span></div>
+    <div class="phone dark">
+      <div class="status-bar">Settings</div>
+      <div class="section-title">Appearance</div>
+      <div class="settings-section">
+        <!-- Compact habit cards -->
+        <div class="row">
+          <div class="row-icon-box" style="background:rgba(168,85,247,0.12);">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#a855f7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          </div>
+          <div class="row-text">
+            <div class="row-label">Compact habit cards</div>
+            <div class="row-subtitle">Show smaller cards to fit more on screen</div>
+          </div>
+          <div class="toggle off"><div class="thumb"></div></div>
+        </div>
+
+        <!-- Gradient streak fill -->
+        <div class="row">
+          <div class="row-icon-box" style="background:rgba(59,130,246,0.12);">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+          </div>
+          <div class="row-text">
+            <div class="row-label">Gradient streak fill</div>
+            <div class="row-subtitle">Add a color gradient to active streak cells</div>
+          </div>
+          <div class="toggle on"><div class="thumb"></div></div>
+        </div>
+
+        <!-- Completion icon — PROPOSED: inline segmented control -->
+        <div class="row" id="proposed-row">
+          <div class="row-icon-box" style="background:rgba(52,211,153,0.12);">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="row-icon"><path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 1 1 0 10h-2"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+          </div>
+          <div class="row-text">
+            <div class="row-label">Completion icon</div>
+            <div class="row-subtitle">Choose between checkmark and chain link styles</div>
+          </div>
+          <div class="segment-control" role="radiogroup" aria-label="Completion icon style">
+            <div class="segment-btn selected" id="seg-chain" role="radio" aria-checked="true" aria-label="Chain" tabindex="0" onclick="selectIcon('chain')">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 1 1 0 10h-2"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+            </div>
+            <div class="segment-btn unselected" id="seg-check" role="radio" aria-checked="false" aria-label="Checkmark" tabindex="0" onclick="selectIcon('check')">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ PROPOSED (Light) ═══ -->
+  <div class="column">
+    <div class="label-wrapper"><span class="label-tag" style="color:#059669;background:rgba(5,150,105,0.08);">Proposed — Light Mode</span></div>
+    <div class="phone light">
+      <div class="status-bar">Settings</div>
+      <div class="section-title">Appearance</div>
+      <div class="settings-section">
+        <!-- Compact habit cards -->
+        <div class="row">
+          <div class="row-icon-box" style="background:rgba(168,85,247,0.08);">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9333ea" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          </div>
+          <div class="row-text">
+            <div class="row-label">Compact habit cards</div>
+            <div class="row-subtitle">Show smaller cards to fit more on screen</div>
+          </div>
+          <div class="toggle off"><div class="thumb"></div></div>
+        </div>
+
+        <!-- Gradient streak fill -->
+        <div class="row">
+          <div class="row-icon-box" style="background:rgba(59,130,246,0.08);">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+          </div>
+          <div class="row-text">
+            <div class="row-label">Gradient streak fill</div>
+            <div class="row-subtitle">Add a color gradient to active streak cells</div>
+          </div>
+          <div class="toggle on"><div class="thumb"></div></div>
+        </div>
+
+        <!-- Completion icon — PROPOSED LIGHT -->
+        <div class="row" id="proposed-row-light">
+          <div class="row-icon-box" style="background:rgba(5,150,105,0.08);">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="row-icon-light"><path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 1 1 0 10h-2"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+          </div>
+          <div class="row-text">
+            <div class="row-label">Completion icon</div>
+            <div class="row-subtitle">Choose between checkmark and chain link styles</div>
+          </div>
+          <div class="segment-control" role="radiogroup" aria-label="Completion icon style">
+            <div class="segment-btn selected" id="seg-chain-light" role="radio" aria-checked="true" aria-label="Chain" tabindex="0" onclick="selectIconLight('chain')">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 1 1 0 10h-2"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+            </div>
+            <div class="segment-btn unselected" id="seg-check-light" role="radio" aria-checked="false" aria-label="Checkmark" tabindex="0" onclick="selectIconLight('check')">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // Interactive toggle for dark proposed
+  function selectIcon(type) {
+    const chainBtn = document.getElementById('seg-chain');
+    const checkBtn = document.getElementById('seg-check');
+
+    if (type === 'chain') {
+      chainBtn.className = 'segment-btn selected';
+      chainBtn.querySelector('svg').setAttribute('stroke', '#34d399');
+      chainBtn.querySelector('svg').setAttribute('stroke-width', '2.5');
+      checkBtn.className = 'segment-btn unselected';
+      checkBtn.querySelector('svg').setAttribute('stroke', '#666');
+      checkBtn.querySelector('svg').setAttribute('stroke-width', '2');
+    } else {
+      checkBtn.className = 'segment-btn selected';
+      checkBtn.querySelector('svg').setAttribute('stroke', '#34d399');
+      checkBtn.querySelector('svg').setAttribute('stroke-width', '2.5');
+      chainBtn.className = 'segment-btn unselected';
+      chainBtn.querySelector('svg').setAttribute('stroke', '#666');
+      chainBtn.querySelector('svg').setAttribute('stroke-width', '2');
+    }
+
+    // Animate press
+    const btn = type === 'chain' ? chainBtn : checkBtn;
+    btn.style.transform = 'scale(0.88)';
+    setTimeout(() => { btn.style.transform = ''; }, 120);
+  }
+
+  // Interactive toggle for light proposed
+  function selectIconLight(type) {
+    const chainBtn = document.getElementById('seg-chain-light');
+    const checkBtn = document.getElementById('seg-check-light');
+
+    if (type === 'chain') {
+      chainBtn.className = 'segment-btn selected';
+      chainBtn.querySelector('svg').setAttribute('stroke', '#059669');
+      chainBtn.querySelector('svg').setAttribute('stroke-width', '2.5');
+      checkBtn.className = 'segment-btn unselected';
+      checkBtn.querySelector('svg').setAttribute('stroke', '#aaa');
+      checkBtn.querySelector('svg').setAttribute('stroke-width', '2');
+    } else {
+      checkBtn.className = 'segment-btn selected';
+      checkBtn.querySelector('svg').setAttribute('stroke', '#059669');
+      checkBtn.querySelector('svg').setAttribute('stroke-width', '2.5');
+      chainBtn.className = 'segment-btn unselected';
+      chainBtn.querySelector('svg').setAttribute('stroke', '#aaa');
+      chainBtn.querySelector('svg').setAttribute('stroke-width', '2');
+    }
+
+    const btn = type === 'chain' ? chainBtn : checkBtn;
+    btn.style.transform = 'scale(0.88)';
+    setTimeout(() => { btn.style.transform = ''; }, 120);
+  }
+
+  // Toggle switches are clickable for realism
+  document.querySelectorAll('.toggle').forEach(t => {
+    t.addEventListener('click', () => {
+      t.classList.toggle('on');
+      t.classList.toggle('off');
+    });
+  });
+</script>
+</body>
+</html>
