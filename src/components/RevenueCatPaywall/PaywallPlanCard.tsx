@@ -5,7 +5,7 @@
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { colors } from '../../theme/colors/core';
-import { fontFamilies, fontWeights } from '../../theme/typography';
+import { typography, fontWeights } from '../../theme/typography';
 import { spacing, borderRadius } from '../../theme/spacing';
 import type { PaywallPlanCardProps } from './paywall.types';
 
@@ -44,9 +44,8 @@ export function PaywallPlanCard({ type, pkg, isSelected, savingsPercent, onSelec
         >
           <Text
             style={{
+              ...typography.tabBar,
               color: colors.text.inverse,
-              fontFamily: fontFamilies.primary.text,
-              fontSize: 10,
               fontWeight: fontWeights.bold,
             }}
           >
@@ -57,25 +56,22 @@ export function PaywallPlanCard({ type, pkg, isSelected, savingsPercent, onSelec
 
       <Text
         style={{
+          ...typography.caption,
           color: colors.text.secondary,
-          fontFamily: fontFamilies.primary.text,
-          fontSize: 13,
-          fontWeight: fontWeights.medium,
         }}
       >
         {label}
       </Text>
       <Text
         style={{
+          ...typography.heading3,
           color: colors.text.primary,
-          fontFamily: fontFamilies.primary.text,
-          fontSize: 20,
           fontWeight: fontWeights.bold,
           marginTop: 2,
         }}
       >
         {priceString}
-        <Text style={{ color: colors.text.tertiary, fontSize: 14, fontWeight: fontWeights.regular }}>
+        <Text style={{ ...typography.bodySmall, color: colors.text.tertiary }}>
           {period}
         </Text>
       </Text>

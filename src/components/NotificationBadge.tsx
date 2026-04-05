@@ -12,7 +12,7 @@ import Animated, {
 import { colors } from '../theme/colors';
 import { useThemeColors } from '../theme/ThemeContext';
 import { borderRadius } from '../theme/spacing';
-import { typography, fontFamilies} from '@/theme/typography';
+import { typography, fontWeights, fontFamilies} from '@/theme/typography';
 import { durations } from '@/theme/animations';
 
 interface NotificationBadgeProps {
@@ -81,7 +81,7 @@ export function NotificationBadge({
             color: colors.text.inverse,
             fontFamily: fontFamilies.primary.text,
             fontSize: typography.tabBar.fontSize,
-            fontWeight: '700',
+            fontWeight: fontWeights.bold,
             lineHeight: 14,
           }}
         >

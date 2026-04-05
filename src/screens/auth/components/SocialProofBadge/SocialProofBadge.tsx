@@ -4,7 +4,7 @@
 
 import React, { useEffect } from 'react';
 import { Text, StyleSheet } from 'react-native';
-import { fontFamilies } from '@/theme/typography';
+import { fontFamilies, fontWeights } from '@/theme/typography';
 import { colors } from '@/theme/colors';
 import Animated, {
   useSharedValue,
@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   count: {
-    fontWeight: '600',
+    fontWeight: fontWeights.semibold,
   },
   star: {
     fontSize: 13, // caption scale

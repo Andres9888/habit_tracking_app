@@ -1,7 +1,7 @@
 import { View } from 'react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { useThemeColors } from '../../../theme/ThemeContext';
-import { fontFamilies } from '@/theme/typography';
+import { fontFamilies, fontWeights } from '@/theme/typography';
 
 const anim = (delay: number) =>
   FadeInUp.duration(280).delay(delay).springify().damping(18);
@@ -28,7 +28,7 @@ export const TemplateListEmpty = () => {
           color: colors.text.primary,
           fontFamily: fontFamilies.primary.text,
           fontSize: 14,
-          fontWeight: '500',
+          fontWeight: fontWeights.medium,
           marginTop: 8,
         }}
       >

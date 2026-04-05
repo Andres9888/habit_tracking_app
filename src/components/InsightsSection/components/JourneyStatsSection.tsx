@@ -14,6 +14,7 @@ import {
 } from 'lucide-react-native';
 import type { JourneyStatsSectionProps } from '../InsightsSection.types';
 import { useThemeColors } from '@/theme/ThemeContext';
+import { iconSizes } from '@/theme/iconSizes';
 
 export function JourneyStatsSection({
   totalCompletions,
@@ -33,7 +34,7 @@ export function JourneyStatsSection({
       <View className='p-5'>
         <View className='mb-4 flex-row items-center justify-center gap-2'>
           <View className='h-8 w-8 items-center justify-center rounded-lg' style={{ backgroundColor: colors.status.premiumLight }}>
-            <BarChart3 color={colors.status.premium} size={16} />
+            <BarChart3 color={colors.status.premium} size={iconSizes.small} />
           </View>
           <Text className='text-lg font-bold' style={{ color: colors.text.primary }}>Your Journey</Text>
         </View>
@@ -44,7 +45,7 @@ export function JourneyStatsSection({
         <View className='flex-row gap-3'>
           <View className='flex-1 items-center rounded-xl border bg-white/60 p-3' style={{ borderColor: colors.status.successLight }}>
             <View className='mb-2 h-8 w-8 items-center justify-center rounded-full' style={{ backgroundColor: colors.status.successLight }}>
-              <CheckCircle2 color={colors.status.success} size={16} />
+              <CheckCircle2 color={colors.status.success} size={iconSizes.small} />
             </View>
             <Text className='text-2xl font-bold' style={{ color: colors.status.successText }}>
               {totalCompletions}
@@ -53,7 +54,7 @@ export function JourneyStatsSection({
           </View>
           <View className='flex-1 items-center rounded-xl border bg-white/60 p-3' style={{ borderColor: colors.status.infoLight }}>
             <View className='mb-2 h-8 w-8 items-center justify-center rounded-full' style={{ backgroundColor: colors.status.infoLight }}>
-              <Percent color={colors.status.info} size={16} />
+              <Percent color={colors.status.info} size={iconSizes.small} />
             </View>
             <Text className='text-2xl font-bold' style={{ color: colors.status.infoText }}>
               {Math.round(successRate)}%
@@ -62,7 +63,7 @@ export function JourneyStatsSection({
           </View>
           <View className='flex-1 items-center rounded-xl border bg-white/60 p-3' style={{ borderColor: colors.status.premiumLight }}>
             <View className='mb-2 h-8 w-8 items-center justify-center rounded-full' style={{ backgroundColor: colors.status.premiumLight }}>
-              <Calendar color={colors.status.premium} size={16} />
+              <Calendar color={colors.status.premium} size={iconSizes.small} />
             </View>
             <Text className='text-2xl font-bold' style={{ color: colors.status.premiumText }}>
               {daysTracking}

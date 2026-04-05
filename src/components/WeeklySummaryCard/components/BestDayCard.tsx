@@ -2,6 +2,7 @@ import { View, Text } from 'react-native';
 import { Calendar } from 'lucide-react-native';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import type { ColorScheme } from '../types';
+import { iconSizes } from '@/theme/iconSizes';
 
 interface BestDayCardProps {
   dayLabel: string;
@@ -21,7 +22,7 @@ export function BestDayCard({ dayLabel, rate, colors }: BestDayCardProps) {
         className='h-10 w-10 items-center justify-center rounded-xl'
         style={{ backgroundColor: colors.accent + '20' }}
       >
-        <Calendar color={colors.accent} size={18} />
+        <Calendar color={colors.accent} size={iconSizes.medium} />
       </View>
       <View className='flex-1'>
         <Text

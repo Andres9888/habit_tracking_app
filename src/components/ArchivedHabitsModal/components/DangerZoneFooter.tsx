@@ -1,6 +1,8 @@
 import { Text, View } from 'react-native';
 import { Trash2 } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '../../../theme/ThemeContext';
+import { typography, fontWeights } from '@/theme/typography';
 import { AnimatedPressable } from '../../ui';
 
 interface DangerZoneFooterProps {
@@ -35,7 +37,7 @@ export function DangerZoneFooter({ habitCount, onDeleteAll }: DangerZoneFooterPr
       <Text
         style={{
           fontSize: 10,
-          fontWeight: '600',
+          fontWeight: fontWeights.semibold,
           letterSpacing: 0.5,
           textTransform: 'uppercase',
           color: danger.text,
@@ -53,15 +55,15 @@ export function DangerZoneFooter({ habitCount, onDeleteAll }: DangerZoneFooterPr
         style={{ width: '100%' }}
         onPress={onDeleteAll}
       >
-        <Trash2 color={danger.text} size={16} strokeWidth={2.5} />
-        <Text style={{ fontSize: 14, fontWeight: '600', color: danger.text }}>
+        <Trash2 color={danger.text} size={iconSizes.small} strokeWidth={2.5} />
+        <Text style={{ ...typography.bodySmall, fontWeight: fontWeights.semibold, color: danger.text }}>
           Delete All Archived
         </Text>
       </AnimatedPressable>
 
       <Text
         style={{
-          fontSize: 13,
+          ...typography.caption,
           color: colors.text.secondary,
           marginTop: 4,
           textAlign: 'center',

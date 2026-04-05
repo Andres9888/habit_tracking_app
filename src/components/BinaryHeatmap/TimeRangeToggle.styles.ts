@@ -6,7 +6,7 @@ import { StyleSheet } from 'react-native';
 
 import { colors } from '@/theme';
 import { shadows, borderRadius } from '../../theme/spacing';
-import { typography, fontFamilies } from '@/theme/typography';
+import { typography, fontWeights, fontFamilies } from '@/theme/typography';
 import { useThemeColors } from '@/theme/ThemeContext';
 import { COLORS, FOCUS } from './constants';
 
@@ -27,7 +27,7 @@ export const styles = StyleSheet.create({
   buttonText: {
     fontFamily: fontFamilies.primary.text,
     fontSize: typography.tabBar.fontSize,
-    fontWeight: '500',
+    fontWeight: fontWeights.medium,
   },
   buttonTextActive: {
     color: COLORS.TEXT_PRIMARY,

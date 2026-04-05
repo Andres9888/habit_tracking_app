@@ -5,6 +5,7 @@ import React, { useCallback, useEffect } from 'react';
 import { View, Pressable } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withSpring, withTiming, withRepeat, cancelAnimation } from 'react-native-reanimated';
 import { Mic, Pause, Play } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { clsx } from 'clsx';
 import { SPRING_BUTTON } from '../../../../animations';
 import { useThemeColors } from '../../../../../theme/ThemeContext';
@@ -65,7 +66,7 @@ export function MainRecordButton({ isRecording, isPaused, onStartRecording, onPa
           onPressIn={handlePressIn}
           onPressOut={handlePressOut}
         >
-          {isRecording ? (isPaused ? <Play className='text-white' fill='white' size={28} /> : <Pause className='text-white' fill='white' size={28} />) : <Mic className='text-white' size={28} />}
+          {isRecording ? (isPaused ? <Play className='text-white' fill='white' size={iconSizes.xl} /> : <Pause className='text-white' fill='white' size={iconSizes.xl} />) : <Mic className='text-white' size={iconSizes.xl} />}
         </Pressable>
       </Animated.View>
     </View>

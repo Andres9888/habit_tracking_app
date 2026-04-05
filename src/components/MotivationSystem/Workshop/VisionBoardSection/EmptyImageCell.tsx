@@ -10,6 +10,7 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 import { Plus } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { SPRING_BUTTON } from '../../../animations';
 import { IMAGE_SIZE } from './types';
 
@@ -52,7 +53,7 @@ export function EmptyImageCell({
         ) : (
           <View className='items-center gap-1'>
             <View className='h-10 w-10 items-center justify-center rounded-full bg-fuchsia-100'>
-              <Plus className='text-fuchsia-500' size={20} />
+              <Plus className='text-fuchsia-500' size={iconSizes.medium} />
             </View>
             <Text className='text-xs font-medium text-fuchsia-500'>
               Add Image

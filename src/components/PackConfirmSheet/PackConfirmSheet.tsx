@@ -10,7 +10,7 @@ import { Check } from 'lucide-react-native';
 import Modal from '../Modal';
 import { colors } from '../../theme/colors';
 import { spacing } from '../../theme/spacing';
-import { typography } from '../../theme/typography';
+import { typography, fontWeights } from '../../theme/typography';
 import { ActionButtons } from './ActionButtons';
 import type { PackConfirmSheetProps } from './PackConfirmSheet.types';
 
@@ -45,7 +45,7 @@ const s = StyleSheet.create({
   desc: { ...typography.bodySmall, color: colors.text.secondary, marginBottom: spacing.md },
   emoji: { fontSize: 22 },
   freq: { ...typography.caption, color: colors.text.tertiary },
-  habitName: { ...typography.bodySmall, color: colors.text.primary, fontWeight: '600' },
+  habitName: { ...typography.bodySmall, color: colors.text.primary, fontWeight: fontWeights.semibold },
   row: { alignItems: 'center', flexDirection: 'row', gap: spacing.md, paddingVertical: spacing.sm },
   rowContent: { flex: 1 },
   title: { ...typography.heading3, color: colors.text.primary, marginBottom: 4 },

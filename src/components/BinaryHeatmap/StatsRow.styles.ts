@@ -11,7 +11,7 @@ import {
 
 import { COLORS, FOCUS } from './constants';
 import { colors } from '@/theme';
-import { typography, fontFamilies } from '@/theme/typography';
+import { typography, fontWeights, fontFamilies } from '@/theme/typography';
 import { useThemeColors } from '@/theme/ThemeContext';
 
 const STATS_CONFIG = {
@@ -44,7 +44,7 @@ export const styles = StyleSheet.create({
     color: COLORS.TEXT_PRIMARY,
     fontFamily: fontFamilies.primary.text,
     fontSize: typography.caption.fontSize,
-    fontWeight: '600',
+    fontWeight: fontWeights.semibold,
   } as TextStyle,
   settingsButton: {
     alignItems: 'center',
@@ -66,7 +66,7 @@ export const styles = StyleSheet.create({
   streakText: {
     fontFamily: fontFamilies.primary.text,
     fontSize: typography.caption.fontSize,
-    fontWeight: '600',
+    fontWeight: fontWeights.semibold,
   } as TextStyle,
   webFocus: {
     outlineColor: FOCUS.RING_COLOR,

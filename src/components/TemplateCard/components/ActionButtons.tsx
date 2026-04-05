@@ -13,6 +13,7 @@ import { useThemeColors } from '../../../theme/ThemeContext';
 import type { ActionButtonsProps } from './ActionButtons.types';
 import { styles } from './ActionButtons.styles';
 import { triggerHaptic } from '@/utils/haptics';
+import { iconSizes } from '@/theme/iconSizes';
 
 export function ActionButtons({
   checkmarkStyle,
@@ -35,7 +36,7 @@ export function ActionButtons({
         testID={testPrefix ? `${testPrefix}-added` : undefined}
         style={[styles.successButton, checkmarkStyle]}
       >
-        <Check color='#fff' size={18} strokeWidth={3} />
+        <Check color='#fff' size={iconSizes.medium} strokeWidth={3} />
         <Text style={styles.successButtonText}>Added to Habits</Text>
       </Animated.View>
     );
@@ -45,7 +46,7 @@ export function ActionButtons({
     <View style={styles.buttonRow}>
       {showPreviewCTA && onPreview ? <Button
           accessibilityLabel={`Preview ${name} habit`}
-          icon={<Eye color={themeColors.text.secondary} size={18} />}
+          icon={<Eye color={themeColors.text.secondary} size={iconSizes.medium} />}
           size='medium'
           style={[styles.cardButton, { backgroundColor: themeColors.surface }]}
           testID={testPrefix ? `${testPrefix}-preview` : undefined}

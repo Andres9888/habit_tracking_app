@@ -6,6 +6,7 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import { Plus } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import { MAX_IMAGES } from './types';
 
@@ -39,7 +40,7 @@ export function SectionHeader({
         </Text>
       ) : (
         <View className='flex-row items-center gap-1'>
-          <Plus className='text-fuchsia-600' size={12} />
+          <Plus className='text-fuchsia-600' size={iconSizes.small} />
           <Text className='text-xs font-medium text-fuchsia-600'>Add</Text>
         </View>
       )}

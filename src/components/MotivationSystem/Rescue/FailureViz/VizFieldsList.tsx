@@ -6,6 +6,7 @@
 import React from 'react';
 import { View } from 'react-native';
 import { Brain, Heart, User } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { VizField } from './VizField';
 import { EmptyVizState } from './EmptyVizState';
 import { useThemeColors } from '../../../../theme/ThemeContext';
@@ -33,21 +34,21 @@ export function VizFieldsList({
   return (
     <View className='gap-1'>
       {failureBody ? <VizField
-          icon={<User color={colors.status.error} size={16} />}
+          icon={<User color={colors.status.error} size={iconSizes.small} />}
           index={0}
           label='Body'
           reduceMotion={reduceMotion}
           value={failureBody}
         /> : null}
       {failureMind ? <VizField
-          icon={<Brain color={colors.status.error} size={16} />}
+          icon={<Brain color={colors.status.error} size={iconSizes.small} />}
           index={1}
           label='Mind'
           reduceMotion={reduceMotion}
           value={failureMind}
         /> : null}
       {failureEmotion ? <VizField
-          icon={<Heart color={colors.status.error} size={16} />}
+          icon={<Heart color={colors.status.error} size={iconSizes.small} />}
           index={2}
           label='Emotion'
           reduceMotion={reduceMotion}

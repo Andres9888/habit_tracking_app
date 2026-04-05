@@ -6,6 +6,7 @@ import { Switch, Text, View } from 'react-native';
 import { Bell } from 'lucide-react-native';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import { shadows } from '../../../../theme/spacing';
+import { iconSizes } from '@/theme/iconSizes';
 
 interface ToggleRowProps {
   enabled: boolean;
@@ -34,7 +35,7 @@ export function ToggleRow(props?: ToggleRowProps) {
           className='h-10 w-10 items-center justify-center rounded-full'
           style={{ backgroundColor: colors.primary[100] }}
         >
-          <Bell color={colors.primary[600]} size={18} />
+          <Bell color={colors.primary[600]} size={iconSizes.medium} />
         </View>
         <Text
           className='text-base font-medium'

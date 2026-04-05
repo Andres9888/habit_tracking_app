@@ -6,6 +6,7 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 import { X } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 
 import CustomModal from '../../../../components/Modal';
 import { VisualizationExercise } from '../../../../components/VisualizationExercise';
@@ -81,7 +82,7 @@ export function VisualizationModalSection({
               closeScale.value = withSpring(1, springs.button);
             }}
           >
-            <X color={colors.text.secondary} size={24} />
+            <X color={colors.text.secondary} size={iconSizes.large} />
           </AnimatedPressable>
         </View>
         <View

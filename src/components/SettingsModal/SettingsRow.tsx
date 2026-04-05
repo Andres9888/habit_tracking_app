@@ -10,6 +10,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import { ChevronRight } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import * as Haptics from 'expo-haptics';
 import { AnimatedPressable } from '../ui/AnimatedPressable';
 import { getSettingsRowColors } from './SettingsRow.colors';
@@ -144,7 +145,7 @@ export function SettingsRow({
             >
               {value as string}
             </Text>
-            <ChevronRight color={colors.chevron} size={16} strokeWidth={2} />
+            <ChevronRight color={colors.chevron} size={iconSizes.small} strokeWidth={2} />
           </View> : null}
         {type === 'info' && typeof value === 'string' ? <Text
             className='ml-3 text-[15px] font-medium'
@@ -171,7 +172,7 @@ export function SettingsRow({
                   {badge}
                 </Text>
               </Animated.View> : null}
-            <ChevronRight color={colors.chevron} size={16} strokeWidth={2} />
+            <ChevronRight color={colors.chevron} size={iconSizes.small} strokeWidth={2} />
           </View> : null}
       </>)}
     </View>

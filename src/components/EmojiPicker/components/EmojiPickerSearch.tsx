@@ -4,6 +4,7 @@ import { Search, X } from 'lucide-react-native';
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import { useThemeColors } from '@/theme/ThemeContext';
 import { buildTextInputHintProps } from '@/utils/textInputHintProps';
+import { iconSizes } from '@/theme/iconSizes';
 
 interface EmojiPickerSearchProps {
   searchQuery: string;
@@ -18,7 +19,7 @@ export const EmojiPickerSearch = memo(
     return (
     <View className='px-4 pb-3 pt-3'>
       <View className='flex-row items-center rounded-xl bg-white px-3 py-2 shadow-sm'>
-        <Search color='#78716c' size={20} />
+        <Search color='#78716c' size={iconSizes.medium} />
         <TextInput
           accessibilityHint='Type keywords like run, water, or sleep to find emojis'
           accessibilityLabel='Search emojis'
@@ -37,7 +38,7 @@ export const EmojiPickerSearch = memo(
             accessibilityRole='button'
             onPress={onClear}
           >
-            <X color='#78716c' size={18} />
+            <X color='#78716c' size={iconSizes.medium} />
           </AnimatedPressable> : null}
       </View>
     </View>

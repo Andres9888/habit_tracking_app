@@ -4,8 +4,10 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { BlurView } from 'expo-blur';
 import { RotateCcw, Trash2, X } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { durations, springs } from '../../../theme/animations';
 import { useThemeColors } from '../../../theme/ThemeContext';
+import { typography, fontWeights } from '@/theme/typography';
 import {
   BLUR_INTENSITY,
   BORDER_DARK,
@@ -62,7 +64,7 @@ function ArchiveSelectionBarComponent({
           style={s.btn}
           onPress={onCancel}
         >
-          <X color={colors.text.secondary} size={20} strokeWidth={2} />
+          <X color={colors.text.secondary} size={iconSizes.medium} strokeWidth={2} />
         </Pressable>
 
         <Pressable
@@ -72,7 +74,7 @@ function ArchiveSelectionBarComponent({
           style={[s.btn, disabled && s.disabled]}
           onPress={onRestore}
         >
-          <RotateCcw color={colors.status.success} size={20} strokeWidth={2} />
+          <RotateCcw color={colors.status.success} size={iconSizes.medium} strokeWidth={2} />
         </Pressable>
 
         <Text style={[s.count, { color: colors.text.primary }]}>
@@ -86,7 +88,7 @@ function ArchiveSelectionBarComponent({
           style={[s.btn, disabled && s.disabled]}
           onPress={onDelete}
         >
-          <Trash2 color={colors.status.error} size={20} strokeWidth={2} />
+          <Trash2 color={colors.status.error} size={iconSizes.medium} strokeWidth={2} />
         </Pressable>
       </View>
     </Animated.View>
@@ -96,7 +98,7 @@ function ArchiveSelectionBarComponent({
 const s = StyleSheet.create({
   btn: { alignItems: 'center', borderRadius: 22, height: 44, justifyContent: 'center', width: 44 },
   capsuleBorder: { ...StyleSheet.absoluteFillObject, borderRadius: CAPSULE_RADIUS, borderWidth: 1 },
-  count: { flex: 1, fontSize: 13, fontWeight: '600', paddingHorizontal: 12, textAlign: 'center' },
+  count: { ...typography.caption, flex: 1, fontWeight: fontWeights.semibold, paddingHorizontal: 12, textAlign: 'center' },
   disabled: { opacity: 0.35 },
   glassBg: { ...StyleSheet.absoluteFillObject, borderRadius: CAPSULE_RADIUS, overflow: 'hidden' },
   row: { alignItems: 'center', flexDirection: 'row', paddingHorizontal: 16, paddingVertical: 8 },

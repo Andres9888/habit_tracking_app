@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { colors } from '../../../../theme/colors';
 import { spacing } from '../../../../theme/spacing';
-import { typography } from '../../../../theme/typography';
+import { typography, fontWeights } from '../../../../theme/typography';
 import { CategoryTile } from './CategoryTile';
 
 const INITIAL_VISIBLE = 6;
@@ -94,7 +94,7 @@ const s = StyleSheet.create({
   showAllText: {
     color: colors.text.secondary,
     fontSize: 13,
-    fontWeight: '500',
+    fontWeight: fontWeights.medium,
   },
   title: {
     ...typography.heading3,

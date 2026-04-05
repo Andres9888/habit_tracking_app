@@ -4,10 +4,12 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { BlurView } from 'expo-blur';
 import { Archive, Trash2, X } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { durations, springs } from '../../../../theme/animations';
 import { colors as palette } from '../../../../theme/colors';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import { BLUR_INTENSITY, BORDER_DARK, BORDER_LIGHT, CAPSULE_SHADOW } from '../BottomActionBar/BottomActionBar.styles';
+import { fontWeights } from '@/theme/typography';
 
 const ENTERING = FadeInUp.duration(durations.enter).springify().damping(springs.standard.damping);
 const CAPSULE_RADIUS = 32;
@@ -46,7 +48,7 @@ function SelectionActionBarComponent({
 
       <View style={s.row}>
         <Pressable accessibilityLabel='Cancel selection' hitSlop={HIT_SLOP} style={s.btn} onPress={onCancel}>
-          <X color={colors.text.secondary} size={20} strokeWidth={2} />
+          <X color={colors.text.secondary} size={iconSizes.medium} strokeWidth={2} />
         </Pressable>
 
         <Text style={[s.count, { color: colors.text.primary }]}>
@@ -60,7 +62,7 @@ function SelectionActionBarComponent({
           style={[s.btn, disabled && s.disabled]}
           onPress={onArchive}
         >
-          <Archive color={isDark ? palette.streak[300] : palette.streak[500]} size={20} strokeWidth={2} />
+          <Archive color={isDark ? palette.streak[300] : palette.streak[500]} size={iconSizes.medium} strokeWidth={2} />
         </Pressable>
 
         <Pressable
@@ -70,7 +72,7 @@ function SelectionActionBarComponent({
           style={[s.btn, disabled && s.disabled]}
           onPress={onDelete}
         >
-          <Trash2 color={palette.error} size={20} strokeWidth={2} />
+          <Trash2 color={palette.error} size={iconSizes.medium} strokeWidth={2} />
         </Pressable>
       </View>
     </Animated.View>
@@ -80,7 +82,7 @@ function SelectionActionBarComponent({
 const s = StyleSheet.create({
   btn: { alignItems: 'center', borderRadius: 22, height: 44, justifyContent: 'center', width: 44 },
   capsuleBorder: { ...StyleSheet.absoluteFillObject, borderRadius: CAPSULE_RADIUS, borderWidth: 1 },
-  count: { fontSize: 13, fontWeight: '600', paddingHorizontal: 12 },
+  count: { fontSize: 13, fontWeight: fontWeights.semibold, paddingHorizontal: 12 },
   disabled: { opacity: 0.35 },
   glassBg: { ...StyleSheet.absoluteFillObject, borderRadius: CAPSULE_RADIUS, overflow: 'hidden' },
   row: { alignItems: 'center', flexDirection: 'row', paddingHorizontal: 16, paddingVertical: 8 },

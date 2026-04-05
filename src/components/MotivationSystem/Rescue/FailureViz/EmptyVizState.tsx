@@ -6,9 +6,10 @@
 import React from 'react';
 import { View } from 'react-native';
 import { AlertTriangle } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { useThemeColors } from '../../../../theme/ThemeContext';
-import { fontFamilies } from '@/theme/typography';
+import { fontFamilies, fontWeights } from '@/theme/typography';
 
 const anim = (delay: number) =>
   FadeInUp.duration(280).delay(delay).springify().damping(18);
@@ -36,7 +37,7 @@ export function EmptyVizState() {
           width: 48,
         }}
       >
-        <AlertTriangle color={isDark ? '#FCA5A5' : '#F43F5E'} size={24} />
+        <AlertTriangle color={isDark ? '#FCA5A5' : '#F43F5E'} size={iconSizes.large} />
       </Animated.View>
       <Animated.Text
         entering={anim(60)}
@@ -44,7 +45,7 @@ export function EmptyVizState() {
           color: colors.text.primary,
           fontFamily: fontFamilies.primary.text,
           fontSize: 14,
-          fontWeight: '500',
+          fontWeight: fontWeights.medium,
           marginBottom: 4,
           textAlign: 'center',
         }}

@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native';
 import { colors } from '@/theme';
 import { borderRadius } from '../../../../theme/spacing';
-import { typography, fontFamilies } from '@/theme/typography';
+import { typography, fontWeights, fontFamilies } from '@/theme/typography';
 
 export const progressStyles = StyleSheet.create({
   badgeIcon: {
@@ -17,10 +17,8 @@ export const progressStyles = StyleSheet.create({
     padding: 12,
   },
   daysAway: {
+    ...typography.caption,
     color: colors.gray[500],
-    fontFamily: fontFamilies.primary.text,
-    fontSize: 13,
-    fontWeight: '500',
   },
   header: {
     alignItems: 'center',
@@ -33,15 +31,13 @@ export const progressStyles = StyleSheet.create({
     flexDirection: 'row',
   },
   headerTitle: {
+    ...typography.bodySmall,
     color: colors.gray[800],
-    fontFamily: fontFamilies.primary.text,
-    fontSize: 14,
-    fontWeight: '600',
+    fontWeight: fontWeights.semibold,
   },
   milestoneName: {
+    ...typography.caption,
     color: colors.gray[400],
-    fontFamily: fontFamilies.primary.text,
-    fontSize: typography.caption.fontSize,
     marginBottom: 12,
   },
   progressBadge: {
@@ -56,8 +52,7 @@ export const progressStyles = StyleSheet.create({
     width: 24,
   },
   progressBadgeText: {
-    fontFamily: fontFamilies.primary.text,
-    fontSize: typography.caption.fontSize,
+    ...typography.caption,
   },
   progressBarContainer: {
     alignItems: 'center',
@@ -81,8 +76,7 @@ export const progressStyles = StyleSheet.create({
     marginTop: 6,
   },
   progressLabelText: {
+    ...typography.tabBar,
     color: colors.gray[400],
-    fontFamily: fontFamilies.primary.text,
-    fontSize: typography.tabBar.fontSize,
   },
 });

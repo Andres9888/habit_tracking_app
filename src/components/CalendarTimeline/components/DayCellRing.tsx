@@ -10,6 +10,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import Svg, { Circle } from 'react-native-svg';
 import { Check, Link2 } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 
 import { springs, durations } from '../../../theme/animations';
 import type { CompletionStatus } from '../CalendarTimeline.types';
@@ -82,9 +83,9 @@ export const DayCellRing: React.FC<DayCellRingProps> = ({
       <Animated.View style={[styles.container, COMPLETE_GLOW, fillStyle]}>
         <View style={[styles.solidFill, { backgroundColor: rc.fill }]}>
           {completionIcon === 'chain' ? (
-            <Link2 color={rc.checkIcon} size={18} strokeWidth={2.5} />
+            <Link2 color={rc.checkIcon} size={iconSizes.medium} strokeWidth={2.5} />
           ) : (
-            <Check color={rc.checkIcon} size={18} strokeWidth={2.5} />
+            <Check color={rc.checkIcon} size={iconSizes.medium} strokeWidth={2.5} />
           )}
         </View>
       </Animated.View>

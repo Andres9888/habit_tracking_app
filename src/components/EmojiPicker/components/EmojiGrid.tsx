@@ -2,6 +2,7 @@ import { memo, useCallback, useMemo } from 'react';
 import { FlatList, Text, View } from 'react-native';
 import { Search } from 'lucide-react-native';
 import { useThemeColors } from '@/theme/ThemeContext';
+import { iconSizes } from '@/theme/iconSizes';
 import { EmojiItem } from './EmojiItem';
 import { EMOJIS_PER_ROW } from '../EmojiPicker.constants';
 
@@ -49,7 +50,7 @@ export const EmojiGrid = memo(
     if (displayedEmojis.length === 0) {
       return (
         <View className='flex-1 items-center justify-center bg-white'>
-          <Search color='#78716c' size={48} />
+          <Search color='#78716c' size={iconSizes.xxl} />
           <Text className='mt-3 text-base font-medium' style={{ color: colors.text.primary }}>
             No emojis found
           </Text>

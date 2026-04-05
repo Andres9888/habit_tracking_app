@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text, Pressable } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { fontFamilies } from '@/theme/typography';
+import { fontFamilies, fontWeights } from '@/theme/typography';
 import { getTrialBarCopy } from './InlineTrialBar.helpers';
 
 interface InlineTrialBarProps {
@@ -36,7 +36,7 @@ export const InlineTrialBar: React.FC<InlineTrialBarProps> = ({
             style={{
               fontFamily: fontFamilies.primary.text,
               fontSize: 10,
-              fontWeight: '700',
+              fontWeight: fontWeights.bold,
               color: '#fff',
             }}
           >
@@ -46,7 +46,7 @@ export const InlineTrialBar: React.FC<InlineTrialBarProps> = ({
             style={{
               fontFamily: fontFamilies.primary.text,
               fontSize: 10,
-              fontWeight: '600',
+              fontWeight: fontWeights.semibold,
               color: '#fef3c7',
             }}
           >

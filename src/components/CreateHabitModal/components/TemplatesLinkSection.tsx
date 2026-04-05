@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import { LayoutGrid, ChevronRight } from 'lucide-react-native';
 import useHapticFeedback from '../../../hooks/useHapticFeedback';
+import { iconSizes } from '@/theme/iconSizes';
 
 interface TemplatesLinkSectionProps {
   onPress: () => void;
@@ -78,7 +79,7 @@ export const TemplatesLinkSection = ({
             className='mr-4 h-10 w-10 items-center justify-center rounded-xl bg-[#ECFDF5]'
             testID='templates-link-icon'
           >
-            <LayoutGrid color='#10B981' size={20} strokeWidth={2} />
+            <LayoutGrid color='#10B981' size={iconSizes.medium} strokeWidth={2} />
           </View>
 
           {/* Text content */}
@@ -92,7 +93,7 @@ export const TemplatesLinkSection = ({
           </View>
 
           {/* Chevron */}
-          <ChevronRight color='#6B7280' size={20} strokeWidth={2} />
+          <ChevronRight color='#6B7280' size={iconSizes.medium} strokeWidth={2} />
         </Animated.View>
       </Pressable>
     </View>

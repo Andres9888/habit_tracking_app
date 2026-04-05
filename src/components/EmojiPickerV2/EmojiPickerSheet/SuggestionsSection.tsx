@@ -10,7 +10,8 @@ import { SuggestionEmojiCell } from './SuggestionEmojiCell';
 
 import { colors } from '../../../theme/colors';
 import { borderRadius, spacing } from '../../../theme/spacing';
-import { typography, fontFamilies} from '../../../theme/typography';
+import { typography, fontWeights, fontFamilies} from '../../../theme/typography';
+import { iconSizes } from '@/theme/iconSizes';
 
 interface SuggestionsSectionProps {
   habitName: string;
@@ -30,7 +31,7 @@ export function SuggestionsSection({
   return (
     <View style={suggestionStyles.container}>
       <View style={suggestionStyles.header}>
-        <Sparkles color={colors.warning[500]} size={16} />
+        <Sparkles color={colors.warning[500]} size={iconSizes.small} />
         <Text style={suggestionStyles.headerText}>
           Perfect for "{habitName}"
         </Text>
@@ -72,7 +73,7 @@ export const suggestionStyles = StyleSheet.create({
     color: colors.warning[700],
     fontFamily: fontFamilies.primary.text,
     fontSize: typography.bodySmall.fontSize,
-    fontWeight: '600',
+    fontWeight: fontWeights.semibold,
     marginLeft: spacing.sm,
   },
 });

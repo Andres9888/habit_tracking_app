@@ -3,12 +3,12 @@ import Animated, { ZoomIn } from 'react-native-reanimated';
 
 import { useReduceMotion } from '../../../hooks/useReduceMotion';
 import { useThemeColors } from '../../../theme/ThemeContext';
-import { fontFamilies } from '../../../theme/typography';
+import { fontFamilies, fontWeights } from '../../../theme/typography';
 
 const PROGRESS_BASE = {
   fontFamily: fontFamilies.primary.text,
   fontSize: 14,
-  fontWeight: '600' as const,
+  fontWeight: fontWeights.semibold,
   letterSpacing: -0.2,
 };
 
@@ -34,7 +34,7 @@ export function ProgressText({ completed, total }: ProgressTextProps) {
         entering={reduceMotion ? undefined : DONE_ENTER}
         style={[
           PROGRESS_BASE,
-          { color: colors.primary[600], fontWeight: '700' },
+          { color: colors.primary[600], fontWeight: fontWeights.bold },
         ]}
       >
         All done!
@@ -49,7 +49,7 @@ export function ProgressText({ completed, total }: ProgressTextProps) {
       <Text
         style={{
           color: countColor,
-          fontWeight: '700',
+          fontWeight: fontWeights.bold,
           fontFamily: fontFamilies.monospace,
         }}
       >

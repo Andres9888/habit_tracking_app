@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { fontFamilies } from '@/theme/typography';
+import { typography } from '@/theme/typography';
 
 export const searchStyles = StyleSheet.create({
   searchBar: {
@@ -12,9 +12,8 @@ export const searchStyles = StyleSheet.create({
     paddingHorizontal: 14,
   },
   searchInput: {
+    ...typography.body,
     flex: 1,
-    fontFamily: fontFamilies.primary.text,
-    fontSize: 17,
   },
   searchSection: {
     paddingHorizontal: 16,

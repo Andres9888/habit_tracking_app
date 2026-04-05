@@ -5,7 +5,7 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { colors } from '../../theme/colors';
 import { borderRadius, spacing } from '../../theme/spacing';
-import { typography } from '../../theme/typography';
+import { typography, fontWeights } from '../../theme/typography';
 
 interface ActionButtonsProps {
   count: number;
@@ -28,8 +28,8 @@ export function ActionButtons({ count, onCancel, onConfirm }: ActionButtonsProps
 
 const s = StyleSheet.create({
   addBtn: { backgroundColor: colors.primary[600], borderRadius: borderRadius.medium, flex: 1, paddingVertical: spacing.md },
-  addText: { ...typography.bodySmall, color: '#fff', fontWeight: '700', textAlign: 'center' },
+  addText: { ...typography.bodySmall, color: '#fff', fontWeight: fontWeights.bold, textAlign: 'center' },
   buttons: { flexDirection: 'row', gap: spacing.sm, marginTop: spacing.lg, paddingBottom: spacing.sm },
   cancelBtn: { backgroundColor: colors.light.surfaceMuted, borderRadius: borderRadius.medium, flex: 1, paddingVertical: spacing.md },
-  cancelText: { ...typography.bodySmall, color: colors.text.secondary, fontWeight: '600', textAlign: 'center' },
+  cancelText: { ...typography.bodySmall, color: colors.text.secondary, fontWeight: fontWeights.semibold, textAlign: 'center' },
 });

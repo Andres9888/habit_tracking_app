@@ -13,6 +13,8 @@ import {
 import { styles } from '../../templates/templatesScreenStyles';
 import type { Category } from '../../templates/constants';
 import type { CategoryDoc, ViewMode } from '../TemplatesScreen.types';
+import { fontWeights } from '@/theme/typography';
+import { iconSizes } from '@/theme/iconSizes';
 
 interface CategoryHeaderProps {
   categories: CategoryDoc[] | undefined;
@@ -66,7 +68,7 @@ export function CategoryHeader({
         >
           <ArrowLeft
             color={themeColors.text.secondary}
-            size={20}
+            size={iconSizes.medium}
             strokeWidth={2.5}
           />
           <Text
@@ -94,7 +96,7 @@ export function CategoryHeader({
           <Text
             style={[
               theme.custom.typography.heading1,
-              { color: themeColors.text.primary, fontWeight: '700' },
+              { color: themeColors.text.primary, fontWeight: fontWeights.bold },
             ]}
           >
             {title}

@@ -10,6 +10,7 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import { Plus, Pencil } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import { CompletionCheckmark } from '../../../animations';
 import { SectionCard } from './SectionCard';
@@ -48,10 +49,10 @@ export function CueTriggerSection({
             </Text>
           </View>
           {hasCue ? (
-            <Pencil color={colors.text.tertiary} size={14} />
+            <Pencil color={colors.text.tertiary} size={iconSizes.small} />
           ) : (
             <View className='flex-row items-center gap-1'>
-              <Plus className='text-sky-600' size={12} />
+              <Plus className='text-sky-600' size={iconSizes.small} />
               <Text className='text-xs font-medium text-sky-600'>Set up</Text>
             </View>
           )}

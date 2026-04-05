@@ -7,7 +7,7 @@
 import { StyleSheet } from 'react-native';
 
 import { shadows, borderRadius } from '../../../../theme/spacing';
-import { typography, fontFamilies} from '@/theme/typography';
+import { typography, fontFamilies, fontWeights} from '@/theme/typography';
 
 export const elementStyles = StyleSheet.create({
   badgeContainer: {
@@ -26,9 +26,8 @@ export const elementStyles = StyleSheet.create({
     gap: 2,
   },
   celebrationSubtext: {
-    fontFamily: fontFamilies.primary.text,
-    fontSize: typography.bodySmall.fontSize,
-    fontWeight: '500',
+    ...typography.bodySmall,
+    fontWeight: fontWeights.medium,
   },
   confettiContainer: {
     height: 0,
@@ -50,14 +49,10 @@ export const elementStyles = StyleSheet.create({
     paddingTop: 4,
   },
   dismissText: {
-    fontFamily: fontFamilies.primary.text,
-    fontSize: typography.caption.fontSize,
-    fontWeight: '500',
+    ...typography.caption,
   },
   goalLabel: {
-    fontFamily: fontFamilies.primary.text,
-    fontSize: 13,
-    fontWeight: '500',
+    ...typography.caption,
   },
   goalRow: {
     alignItems: 'center',
@@ -65,9 +60,9 @@ export const elementStyles = StyleSheet.create({
     gap: 4,
   },
   goalValue: {
+    ...typography.body,
     fontFamily: fontFamilies.monospace,
-    fontSize: typography.body.fontSize,
-    fontWeight: '700',
+    fontWeight: fontWeights.bold,
   },
   iconContainer: {
     alignItems: 'center',
@@ -78,15 +73,12 @@ export const elementStyles = StyleSheet.create({
     width: 48,
   },
   message: {
-    fontFamily: fontFamilies.primary.text,
-    fontSize: typography.body.fontSize,
-    fontWeight: '600',
+    ...typography.button,
     marginBottom: 4,
   },
   nextMilestone: {
-    fontFamily: fontFamilies.primary.text,
-    fontSize: typography.caption.fontSize,
-    fontWeight: '400',
+    ...typography.caption,
+    fontWeight: fontWeights.regular,
     opacity: 0.85,
   },
   shareButton: {

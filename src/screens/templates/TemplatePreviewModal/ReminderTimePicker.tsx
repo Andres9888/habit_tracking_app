@@ -13,6 +13,7 @@ import { useThemeColors } from '../../../theme/ThemeContext';
 import { styles as baseStyles } from './styles';
 import type { ReminderTimePickerProps } from './types';
 import { triggerHaptic } from '@/utils/haptics';
+import { fontWeights } from '@/theme/typography';
 
 const localStyles = StyleSheet.create({
   timePickerButton: {
@@ -26,7 +27,7 @@ const localStyles = StyleSheet.create({
   },
   timeText: {
     fontSize: 17,
-    fontWeight: '600',
+    fontWeight: fontWeights.semibold,
   },
 });
 

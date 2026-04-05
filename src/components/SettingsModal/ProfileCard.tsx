@@ -1,6 +1,7 @@
 /** ProfileCard — User identity anchor at top of settings */
 import { Text, View } from 'react-native';
 import { Crown } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { useUser } from '@clerk/clerk-expo';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useThemeColors } from '../../theme/ThemeContext';
@@ -83,7 +84,7 @@ export function ProfileCard({ isPremium, highContrastMode }: ProfileCardProps) {
               className='mt-1.5 flex-row items-center self-start rounded-lg px-2 py-0.5'
               style={{ backgroundColor: themeColors.status.warningLight, gap: 4 }}
             >
-              <Crown color={themeColors.status.warningText} size={11} />
+              <Crown color={themeColors.status.warningText} size={iconSizes.micro} />
               <Text
                 className='text-[11px] font-bold'
                 style={{ color: themeColors.status.warningText }}

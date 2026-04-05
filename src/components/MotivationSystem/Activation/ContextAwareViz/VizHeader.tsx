@@ -6,6 +6,7 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { Sparkles, AlertTriangle } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import type { VizType } from './types';
@@ -29,9 +30,9 @@ export function VizHeader({ vizType, iconAnimatedStyle }: VizHeaderProps) {
         ]}
       >
         {isSuccess ? (
-          <Sparkles color={colors.status.success} size={20} />
+          <Sparkles color={colors.status.success} size={iconSizes.medium} />
         ) : (
-          <AlertTriangle color={colors.status.error} size={20} />
+          <AlertTriangle color={colors.status.error} size={iconSizes.medium} />
         )}
       </Animated.View>
       <View className='flex-1'>

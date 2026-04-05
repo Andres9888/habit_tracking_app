@@ -8,8 +8,9 @@ import { View, Text } from 'react-native';
 import { Flame } from 'lucide-react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { useThemeColors } from '../../../theme/ThemeContext';
-import { fontFamilies } from '@/theme/typography';
+import { typography } from '@/theme/typography';
 import { spacing } from '@/theme';
+import { iconSizes } from '@/theme/iconSizes';
 
 const anim = (delay: number) =>
   FadeInUp.duration(280).delay(delay).springify().damping(18);
@@ -46,14 +47,12 @@ export function StreakEmptyState() {
           width: 40,
         }}
       >
-        <Flame color={isDark ? '#FDBA74' : '#F97316'} size={20} strokeWidth={1.5} />
+        <Flame color={isDark ? '#FDBA74' : '#F97316'} size={iconSizes.medium} strokeWidth={1.5} />
       </View>
       <Text
         style={{
+          ...typography.button,
           color: colors.text.primary,
-          fontFamily: fontFamilies.primary.text,
-          fontSize: 17,
-          fontWeight: '600',
           marginBottom: 4,
           textAlign: 'center',
         }}
@@ -62,9 +61,8 @@ export function StreakEmptyState() {
       </Text>
       <Text
         style={{
+          ...typography.caption,
           color: colors.text.secondary,
-          fontFamily: fontFamilies.primary.text,
-          fontSize: 13,
           textAlign: 'center',
         }}
       >

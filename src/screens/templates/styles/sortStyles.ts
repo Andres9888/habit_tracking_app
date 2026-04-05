@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { colors } from '../../../theme/colors';
-import { fontFamilies } from '../../../theme/typography';
+import { fontWeights, typography } from '../../../theme/typography';
 
 export const sortStyles = StyleSheet.create({
   dropdownBackdrop: {
@@ -40,12 +40,11 @@ export const sortStyles = StyleSheet.create({
   },
   sortDropdownOptionSelected: {},
   sortDropdownOptionText: {
-    fontFamily: fontFamilies.primary.text,
-    fontSize: 17,
-    fontWeight: '500',
+    ...typography.body,
+    fontWeight: fontWeights.medium,
   },
   sortDropdownOptionTextSelected: {
     color: colors.primary[600],
-    fontWeight: '600',
+    fontWeight: fontWeights.semibold,
   },
 });

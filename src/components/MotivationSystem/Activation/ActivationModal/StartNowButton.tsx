@@ -8,6 +8,7 @@ import Animated, {
   runOnJS,
 } from 'react-native-reanimated';
 import { Play } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { SPRING_BUTTON } from './constants';
 import { triggerHaptic } from '@/utils/haptics';
 import { useThemeColors } from '@/theme/ThemeContext';
@@ -91,7 +92,7 @@ export function StartNowButton({
         onPressIn={handlePressIn}
         onPressOut={handlePressOut}
       >
-        <Play className='text-white' fill='white' size={20} />
+        <Play className='text-white' fill='white' size={iconSizes.medium} />
         <Text className='text-lg font-bold text-white'>Start Now</Text>
       </Pressable>
     </Animated.View>

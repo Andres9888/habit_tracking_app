@@ -1,6 +1,7 @@
 import { View, Text, Animated } from 'react-native';
 import { Star, ChevronRight } from 'lucide-react-native';
 import type { ColorScheme } from '../types';
+import { iconSizes } from '@/theme/iconSizes';
 
 interface CardHeaderProps {
   colors: ColorScheme;
@@ -17,7 +18,7 @@ export function CardHeader({
     <View className='flex-row items-center justify-between px-5 pt-5'>
       <View className='flex-row items-center gap-2'>
         <Animated.View style={{ transform: [{ rotate: starRotation }] }}>
-          <Star color={colors.accent} fill={colors.accent} size={18} />
+          <Star color={colors.accent} fill={colors.accent} size={iconSizes.medium} />
         </Animated.View>
         <Text
           className='text-[13px] font-bold uppercase tracking-wider'
@@ -33,7 +34,7 @@ export function CardHeader({
           >
             Details
           </Text>
-          <ChevronRight color={colors.accent} size={14} />
+          <ChevronRight color={colors.accent} size={iconSizes.small} />
         </View> : null}
     </View>
   );

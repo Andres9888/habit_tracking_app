@@ -7,6 +7,7 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import { Trophy, AlertTriangle } from 'lucide-react-native';
 import { useThemeColors } from '@/theme/ThemeContext';
+import { iconSizes } from '@/theme/iconSizes';
 import type { DayStats } from '../InsightsSection.types';
 
 interface DayStatsCardsProps {
@@ -22,7 +23,7 @@ export function DayStatsCards({ bestDay, worstDay }: DayStatsCardsProps) {
     <View className='flex-row gap-3'>
       {bestDay ? <View className='flex-1 rounded-xl border p-3' style={{ borderColor: colors.status.successLight, backgroundColor: colors.status.successLight }}>
           <View className='mb-1 flex-row items-center gap-1.5'>
-            <Trophy color={colors.status.success} size={14} />
+            <Trophy color={colors.status.success} size={iconSizes.small} />
             <Text className='text-xs font-medium' style={{ color: colors.status.successText }}>
               Best Day
             </Text>
@@ -36,7 +37,7 @@ export function DayStatsCards({ bestDay, worstDay }: DayStatsCardsProps) {
         </View> : null}
       {showWorst ? <View className='flex-1 rounded-xl border p-3' style={{ borderColor: colors.status.warningLight, backgroundColor: colors.status.warningLight }}>
           <View className='mb-1 flex-row items-center gap-1.5'>
-            <AlertTriangle color={colors.status.warning} size={14} />
+            <AlertTriangle color={colors.status.warning} size={iconSizes.small} />
             <Text className='text-xs font-medium' style={{ color: colors.status.warningText }}>
               Needs Work
             </Text>

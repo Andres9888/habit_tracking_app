@@ -7,14 +7,14 @@
 
 import { StyleSheet } from 'react-native';
 import { borderRadius } from '../../../theme/spacing';
-import { typography, fontFamilies} from '@/theme/typography';
+import { typography, fontWeights, fontFamilies} from '@/theme/typography';
 import { colors } from '../../../theme/colors';
 
 export const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    backgroundColor: '#fffbeb', // amber-50 - warm active background
-    borderColor: '#fde68a', // amber-200 - soft border
+    backgroundColor: colors.warningLight,
+    borderColor: colors.streak[100],
     borderRadius: borderRadius.large,
     borderWidth: 1,
     flexDirection: 'row',
@@ -24,7 +24,7 @@ export const styles = StyleSheet.create({
   },
 
   countBadge: {
-    backgroundColor: '#f59e0b', // amber-500
+    backgroundColor: colors.streak[500],
     borderRadius: borderRadius.small,
     marginLeft: 2,
     minWidth: 16,
@@ -36,13 +36,13 @@ export const styles = StyleSheet.create({
     color: colors.text.inverse,
     fontFamily: fontFamilies.monospace,
     fontSize: 10,
-    fontWeight: '600',
+    fontWeight: fontWeights.semibold,
     textAlign: 'center',
   },
 
   iconContainer: {
     alignItems: 'center',
-    backgroundColor: '#fef3c7', // amber-100
+    backgroundColor: colors.streak[100],
     borderRadius: borderRadius.small,
     height: 20,
     justifyContent: 'center',
@@ -50,10 +50,10 @@ export const styles = StyleSheet.create({
   },
 
   text: {
-    color: '#92400e', // amber-800 - visible but not harsh
+    color: colors.warning,
     fontFamily: fontFamilies.primary.text,
     fontSize: typography.caption.fontSize,
-    fontWeight: '500',
+    fontWeight: fontWeights.medium,
     letterSpacing: 0.2,
   },
 });

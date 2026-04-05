@@ -8,6 +8,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Crown, X } from 'lucide-react-native';
 import { useThemeColors } from '@/theme/ThemeContext';
 import type { VariantConfig } from './PremiumPaywall.types';
+import { iconSizes } from '@/theme/iconSizes';
 
 interface BenefitsHeaderProps {
   config: VariantConfig;
@@ -26,7 +27,7 @@ export function BenefitsHeader({ config, onClose }: BenefitsHeaderProps) {
           end={{ x: 1, y: 1 }}
           start={{ x: 0, y: 0 }}
         >
-          <Crown color='#ffffff' size={16} />
+          <Crown color='#ffffff' size={iconSizes.small} />
         </LinearGradient>
         <Text className='text-lg font-bold' style={{ color: themeColors.text.primary }}>Premium Features</Text>
       </View>
@@ -38,7 +39,7 @@ export function BenefitsHeader({ config, onClose }: BenefitsHeaderProps) {
         hitSlop={12}
         onPress={onClose}
       >
-        <X color={themeColors.text.secondary} size={24} />
+        <X color={themeColors.text.secondary} size={iconSizes.large} />
       </Pressable>
     </View>
   );

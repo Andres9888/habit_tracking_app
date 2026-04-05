@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native';
 import { colors } from '@/theme/colors';
 import { shadows, borderRadius, componentSpacing, spacing } from '@/theme/spacing';
-import { fontFamilies } from '@/theme/typography';
+import { fontWeights, typography } from '@/theme/typography';
 
 export const styles = StyleSheet.create({
   badge: {
@@ -14,10 +14,9 @@ export const styles = StyleSheet.create({
     paddingVertical: 4,
   },
   badgeText: {
+    ...typography.caption,
     color: colors.warning,
-    fontFamily: fontFamilies.primary.text,
-    fontSize: 13,
-    fontWeight: '600',
+    fontWeight: fontWeights.semibold,
   },
   container: {
     ...shadows.card,
@@ -51,23 +50,19 @@ export const styles = StyleSheet.create({
     marginBottom: 8,
   },
   habitHint: {
+    ...typography.caption,
     color: colors.text.secondary,
-    fontFamily: fontFamilies.primary.text,
-    fontSize: 13,
   },
   completedSubtitle: {
+    ...typography.caption,
     color: colors.primary[600],
-    fontFamily: fontFamilies.primary.text,
-    fontSize: 13,
   },
   habitIcon: {
     fontSize: 32,
   },
   completedTitle: {
+    ...typography.button,
     color: colors.primary[700],
-    fontFamily: fontFamilies.primary.text,
-    fontSize: 17,
-    fontWeight: '600',
     marginBottom: 4,
   },
   habitRow: {
@@ -85,16 +80,12 @@ export const styles = StyleSheet.create({
     marginBottom: 12,
   },
   habitName: {
+    ...typography.button,
     color: colors.gray[900],
-    fontFamily: fontFamilies.primary.text,
-    fontSize: 17,
-    fontWeight: '600',
     marginBottom: 2,
   },
   progress: {
-    fontFamily: fontFamilies.primary.text,
-    fontSize: 13,
+    ...typography.caption,
     color: colors.text.secondary,
-    fontWeight: '500',
   },
 });

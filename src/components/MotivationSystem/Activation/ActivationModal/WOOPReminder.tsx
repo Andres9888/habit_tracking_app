@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Target } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '@/theme/ThemeContext';
 
 interface WOOPReminderProps {
@@ -25,7 +26,7 @@ export function WOOPReminder({ obstacle, plan }: WOOPReminderProps) {
       />
       <View className='mb-2 flex-row items-center gap-2'>
         <View className='h-8 w-8 items-center justify-center rounded-lg' style={{ backgroundColor: themeColors.status.warningLight }}>
-          <Target color={themeColors.status.warning} size={16} />
+          <Target color={themeColors.status.warning} size={iconSizes.small} />
         </View>
         <Text className='font-semibold' style={{ color: themeColors.text.primary }}>Your Plan</Text>
       </View>

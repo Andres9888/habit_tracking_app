@@ -8,7 +8,7 @@ import { StyleSheet } from 'react-native';
 import { colors as appColors } from '../../theme/colors';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { borderRadius, spacing } from '../../theme/spacing';
-import { fontFamilies, typography } from '../../theme/typography';
+import { fontFamilies, fontWeights, typography } from '../../theme/typography';
 
 export function useFeedbackModalStyles() {
   const { colors } = useThemeColors();
@@ -67,7 +67,7 @@ export function useFeedbackModalStyles() {
     },
     sectionLabel: {
       color: colors.text.primary,
-      fontWeight: '600',
+      fontWeight: fontWeights.semibold,
       marginBottom: spacing.md,
       ...typography.body,
     },
@@ -113,7 +113,7 @@ export function useFeedbackModalStyles() {
     },
     typeLabel: {
       color: colors.text.primary,
-      fontWeight: '600',
+      fontWeight: fontWeights.semibold,
       marginBottom: 2,
       ...typography.body,
     },

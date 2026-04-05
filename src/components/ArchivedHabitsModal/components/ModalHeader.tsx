@@ -3,6 +3,7 @@ import { Text } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { BlurView } from 'expo-blur';
 import { ChevronLeft } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import type { EdgeInsets } from 'react-native-safe-area-context';
 import { durations, springs } from '../../../theme/animations';
 import { shadows } from '../../../theme/spacing';
@@ -55,7 +56,7 @@ export function ModalHeader({
             ]}
             onPress={onBack}
           >
-            <ChevronLeft color={colors.text.secondary} size={24} strokeWidth={2} />
+            <ChevronLeft color={colors.text.secondary} size={iconSizes.large} strokeWidth={2} />
           </Pressable>
           <View style={{ width: 44 }} />
           <ModalCloseButton label='Close archived habits' onClose={onClose} />

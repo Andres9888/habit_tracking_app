@@ -1,4 +1,5 @@
 import { Plus } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { Animated, Pressable } from 'react-native';
 import { colors } from '../../../../theme/colors';
 import { useFocusRing } from '../../../../utils/accessibility';
@@ -63,7 +64,7 @@ export function FloatingActionButton({
           transform: [{ scale: rippleScale }],
         }}
       />
-      <Plus color={themeColors.text.inverse} size={24} strokeWidth={2.5} />
+      <Plus color={themeColors.text.inverse} size={iconSizes.large} strokeWidth={2.5} />
     </AnimatedPressable>
   );
 }

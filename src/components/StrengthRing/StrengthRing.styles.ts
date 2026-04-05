@@ -13,7 +13,7 @@ export const styles = StyleSheet.create({
     top: 0,
   },
   changeText: {
-    fontWeight: '600',
+    fontWeight: fontWeights.semibold,
     marginLeft: 4,
   },
   container: {
@@ -33,7 +33,7 @@ export const styles = StyleSheet.create({
     marginRight: 2,
   },
   levelText: {
-    fontWeight: '600',
+    fontWeight: fontWeights.semibold,
     textAlign: 'center',
   },
   percentageContainer: {
@@ -42,7 +42,7 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   percentageText: {
-    fontWeight: '700',
+    fontWeight: fontWeights.bold,
   },
   trendArrow: {
     fontWeight: fontWeights.bold,

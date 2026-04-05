@@ -4,7 +4,7 @@
 
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { fontFamilies } from '../../../../theme/typography';
+import { fontFamilies, fontWeights } from '../../../../theme/typography';
 import type { PremiumPack } from '../../data/premiumPacks';
 
 interface PremiumPackCardProps {
@@ -58,7 +58,7 @@ const s = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
   },
-  ctaText: { color: '#fff', fontSize: 13, fontWeight: '700' },
+  ctaText: { color: '#fff', fontSize: 13, fontWeight: fontWeights.bold },
   desc: { color: 'rgba(255,255,255,0.75)', fontSize: 13, marginTop: 3 },
   emoji: { fontSize: 22 },
   emojiGroup: { flexDirection: 'row', gap: 6 },
@@ -78,5 +78,5 @@ const s = StyleSheet.create({
     fontSize: 13,
     marginTop: 4,
   },
-  name: { color: '#fff', fontSize: 16, fontWeight: '700', marginTop: 8 },
+  name: { color: '#fff', fontSize: 16, fontWeight: fontWeights.bold, marginTop: 8 },
 });

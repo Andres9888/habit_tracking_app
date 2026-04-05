@@ -10,6 +10,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated from 'react-native-reanimated';
 import { BlurView } from 'expo-blur';
 import { BookOpen, Settings } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { colors as palette } from '../../../../theme/colors';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import { useBarAnimations } from './useBarAnimations';
@@ -62,7 +63,7 @@ function BottomActionBarComponent(props: BottomActionBarProps) {
               onPressOut={anim.onSettingsPressOut}
             >
               <View style={styles.iconButton}>
-                <Settings color={colors.text.secondary} size={24} strokeWidth={2} />
+                <Settings color={colors.text.secondary} size={iconSizes.large} strokeWidth={2} />
               </View>
             </Pressable>
           </Animated.View>
@@ -97,7 +98,7 @@ function BottomActionBarComponent(props: BottomActionBarProps) {
               onPressOut={anim.onTemplatesPressOut}
             >
               <View style={styles.iconButton}>
-                <BookOpen color={goldColor} size={24} strokeWidth={2} />
+                <BookOpen color={goldColor} size={iconSizes.large} strokeWidth={2} />
                 <View style={styles.notifDot} />
               </View>
             </Pressable>

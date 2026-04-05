@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { Lock, Trash2 } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { shadows } from '../../../theme/spacing';
-import { typography } from '../../../theme/typography';
+import { typography, fontWeights } from '../../../theme/typography';
 import { getStrengthGradientColor, getRelativeTime } from '../utils';
 import type { ArchivedHabit } from '../types';
 import type { Id } from '../../../../convex/_generated/dataModel';
@@ -50,7 +51,7 @@ export function CompactHabitRow({
           <View className='ml-3 mr-3 flex-1'>
             <Text
               numberOfLines={1}
-              style={[typography.body, { color: colors.text.primary, fontWeight: '600' }]}
+              style={[typography.body, { color: colors.text.primary, fontWeight: fontWeights.semibold }]}
             >{habit.name}</Text>
             <Text style={[typography.caption, { color: colors.text.tertiary }]}>
               {getRelativeTime(archiveDate)}
@@ -63,8 +64,8 @@ export function CompactHabitRow({
               style={{ backgroundColor: colors.status.success, opacity: isRestoring ? 0.6 : 1 }}
               onPress={hasReachedLimit ? onUpgradePress : handleRestore}
             >
-              {hasReachedLimit && <Lock color={colors.text.inverse} size={12} strokeWidth={2.5} />}
-              <Text style={[typography.caption, { color: colors.text.inverse, fontWeight: '600' }]}>
+              {hasReachedLimit && <Lock color={colors.text.inverse} size={iconSizes.small} strokeWidth={2.5} />}
+              <Text style={[typography.caption, { color: colors.text.inverse, fontWeight: fontWeights.semibold }]}>
                 {isRestoring ? 'Done!' : 'Resume'}
               </Text>
             </Pressable>
@@ -74,7 +75,7 @@ export function CompactHabitRow({
               style={{ backgroundColor: colors.status.errorLight }}
               onPress={() => onDelete(habit._id, habit.name)}
             >
-              <Trash2 color={colors.status.error} size={16} />
+              <Trash2 color={colors.status.error} size={iconSizes.small} />
             </Pressable>
           </View>
         </View>

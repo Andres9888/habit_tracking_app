@@ -14,7 +14,7 @@ import type { Doc, Id } from '../../../../convex/_generated/dataModel';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { springs } from '../../../theme/animations';
 import { borderRadius, spacing } from '../../../theme/spacing';
-import { typography } from '../../../theme/typography';
+import { typography, fontWeights } from '../../../theme/typography';
 import { triggerHaptic } from '@/utils/haptics';
 
 interface TemplateListCardProps {
@@ -247,7 +247,7 @@ const styles = StyleSheet.create({
   },
   actionLabel: {
     ...typography.caption,
-    fontWeight: '700',
+    fontWeight: fontWeights.bold,
   },
   card: {
     borderRadius: borderRadius.large,
@@ -285,11 +285,11 @@ const styles = StyleSheet.create({
   },
   matchText: {
     ...typography.caption,
-    fontWeight: '700',
+    fontWeight: fontWeights.bold,
   },
   metaLabel: {
     ...typography.caption,
-    fontWeight: '600',
+    fontWeight: fontWeights.semibold,
   },
   metaPill: {
     borderRadius: borderRadius.full,

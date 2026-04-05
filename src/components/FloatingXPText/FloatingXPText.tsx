@@ -23,7 +23,7 @@ import Animated, {
 import { useReduceMotion } from '../../hooks/useReduceMotion';
 import { colors } from '@/theme';
 import { useThemeColors } from '../../theme/ThemeContext';
-import { fontFamilies } from '@/theme/typography';
+import { typography } from '@/theme/typography';
 
 export interface FloatingXPTextProps {
   /** XP value to display (e.g., 10, 50, 100) */
@@ -127,10 +127,8 @@ export function FloatingXPText({
 
 const styles = StyleSheet.create({
   coinText: {
-    color: '#F59E0B',
-    fontFamily: fontFamilies.primary.text,
-    fontSize: 17,
-    fontWeight: '600', // Amber 500
+    ...typography.button,
+    color: '#F59E0B', // Amber 500
     textShadowColor: '#F59E0B',
     textShadowOffset: { height: 0, width: 0 },
     textShadowRadius: 8,
@@ -141,10 +139,8 @@ const styles = StyleSheet.create({
     zIndex: 1000,
   },
   xpText: {
-    color: colors.primary[700],
-    fontFamily: fontFamilies.primary.text,
-    fontSize: 17,
-    fontWeight: '600', // Green 700 (WCAG AA compliant text)
+    ...typography.button,
+    color: colors.primary[700], // Green 700 (WCAG AA compliant text)
     textShadowColor: colors.primary[500],
     textShadowOffset: { height: 0, width: 0 },
     textShadowRadius: 8,

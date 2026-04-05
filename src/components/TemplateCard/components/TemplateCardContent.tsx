@@ -14,6 +14,7 @@ import { MetadataPills } from './MetadataPills';
 import { ScienceBox } from './ScienceBox';
 import { TemplateIcon } from './TemplateIcon';
 import type { TemplateCardContentProps } from './TemplateCardContent.types';
+import { fontWeights } from '@/theme/typography';
 
 export function TemplateCardContent({
   category,
@@ -91,5 +92,5 @@ export const styles = StyleSheet.create({
   descriptionText: { color: '#4b5563', lineHeight: 20, marginTop: spacing.sm },
   footer: { marginTop: spacing.base },
   header: { alignItems: 'center', flexDirection: 'row', gap: spacing.sm },
-  nameText: { color: '#1c1917', fontWeight: '700', marginTop: spacing.md },
+  nameText: { color: '#1c1917', fontWeight: fontWeights.bold, marginTop: spacing.md },
 });

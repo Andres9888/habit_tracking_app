@@ -11,6 +11,7 @@ import type { BestDaysSectionProps } from '../InsightsSection.types';
 import { DayBar } from './DayBar';
 import { DayStatsCards } from './DayStatsCards';
 import { useThemeColors } from '@/theme/ThemeContext';
+import { iconSizes } from '@/theme/iconSizes';
 
 export function BestDaysSection({
   dayStats,
@@ -31,7 +32,7 @@ export function BestDaysSection({
       <View className='p-5'>
         <View className='mb-4 flex-row items-center justify-center gap-2'>
           <View className='h-8 w-8 items-center justify-center rounded-lg' style={{ backgroundColor: colors.status.premiumLight }}>
-            <Calendar color={colors.status.premium} size={16} />
+            <Calendar color={colors.status.premium} size={iconSizes.small} />
           </View>
           <Text className='text-lg font-bold' style={{ color: colors.text.primary }}>Best Days</Text>
         </View>

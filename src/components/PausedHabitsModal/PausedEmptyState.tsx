@@ -3,7 +3,7 @@ import { Text } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { useReducedMotionEntry } from '../EmptyState/useReducedMotionEntry';
-import { fontFamilies } from '@/theme/typography';
+import { fontFamilies, fontWeights } from '@/theme/typography';
 
 export function PausedEmptyState() {
   const { colors } = useThemeColors();
@@ -23,7 +23,7 @@ export function PausedEmptyState() {
           color: colors.text.primary,
           fontFamily: fontFamilies.primary.text,
           fontSize: 22,
-          fontWeight: '600',
+          fontWeight: fontWeights.semibold,
           letterSpacing: -0.35,
         }}
       >

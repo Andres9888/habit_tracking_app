@@ -4,7 +4,7 @@
 
 import { StyleSheet } from 'react-native';
 import { colors } from '@/theme/colors';
-import { typography, fontFamilies} from '@/theme/typography';
+import { typography, fontWeights, fontFamilies} from '@/theme/typography';
 
 export const controlsStyles = StyleSheet.create({
   characterCount: {
@@ -46,7 +46,7 @@ export const controlsStyles = StyleSheet.create({
   optionLabel: {
     fontFamily: fontFamilies.primary.text,
     fontSize: 17,
-    fontWeight: '600',
+    fontWeight: fontWeights.semibold,
     marginBottom: 12,
   },
   platformButton: {
@@ -66,7 +66,7 @@ export const controlsStyles = StyleSheet.create({
     color: colors.gray[600],
     fontFamily: fontFamilies.primary.text,
     fontSize: typography.bodySmall.fontSize,
-    fontWeight: '500',
+    fontWeight: fontWeights.medium,
     textTransform: 'capitalize',
   },
   platformButtonTextActive: {

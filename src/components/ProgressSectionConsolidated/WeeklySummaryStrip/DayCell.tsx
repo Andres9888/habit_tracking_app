@@ -16,6 +16,7 @@ import {
 import { styles } from './WeeklySummaryStripStyles';
 import { usePulseAnimation } from './usePulseAnimation';
 import { useThemeColors } from '@/theme/ThemeContext';
+import { iconSizes } from '@/theme/iconSizes';
 
 interface DayCellProps {
   day: WeekDayData;
@@ -77,7 +78,7 @@ export const DayCell = React.memo(function DayCell({
         ]}
       >
         {config.icon ? (
-          <config.icon color={config.iconColor} size={16} />
+          <config.icon color={config.iconColor} size={iconSizes.small} />
         ) : null}
         {config.text ? (
           <Text style={[styles.todayText, { color: config.textColor }]}>

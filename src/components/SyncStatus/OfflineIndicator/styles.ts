@@ -6,14 +6,16 @@
  */
 
 import { StyleSheet } from 'react-native';
-import { typography, fontFamilies} from '@/theme/typography';
+import { colors } from '../../../theme/colors';
+import { borderRadius } from '../../../theme/spacing';
+import { typography, fontWeights, fontFamilies} from '@/theme/typography';
 
 export const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    backgroundColor: '#fafaf9', // stone-50 - subtle background
-    borderColor: '#e7e5e4', // stone-200 - soft border
-    borderRadius: 16,
+    backgroundColor: colors.gray[50],
+    borderColor: colors.gray[200],
+    borderRadius: borderRadius.large,
     borderWidth: 1,
     flexDirection: 'row',
     gap: 6,
@@ -23,18 +25,18 @@ export const styles = StyleSheet.create({
 
   iconContainer: {
     alignItems: 'center',
-    backgroundColor: '#f5f5f4', // stone-100
-    borderRadius: 8,
+    backgroundColor: colors.gray[100],
+    borderRadius: borderRadius.small,
     height: 20,
     justifyContent: 'center',
     width: 20,
   },
 
   text: {
-    color: '#78716c', // stone-500 - muted text
+    color: colors.gray[500],
     fontFamily: fontFamilies.primary.text,
     fontSize: typography.caption.fontSize,
-    fontWeight: '500',
+    fontWeight: fontWeights.medium,
     letterSpacing: 0.2,
   },
 });

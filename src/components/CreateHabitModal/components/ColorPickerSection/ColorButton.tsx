@@ -7,7 +7,7 @@ import {
   View,
 } from 'react-native';
 import useHapticFeedback from '../../../../hooks/useHapticFeedback';
-import { shadows } from '../../../../theme/spacing';
+import { borderRadius, shadows } from '../../../../theme/spacing';
 import { getColorName } from '../../constants';
 import type { ColorButtonProps } from './types';
 import { useColorButtonAnimations } from './useColorButtonAnimations';
@@ -67,7 +67,7 @@ const ColorButtonComponent = ({
         <View
           style={{
             backgroundColor: color,
-            borderRadius: 999,
+            borderRadius: borderRadius.full,
             height: 44,
             width: 44,
           }}

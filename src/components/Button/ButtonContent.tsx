@@ -3,6 +3,7 @@ import { View, Text, ActivityIndicator, type TextStyle } from 'react-native';
 import baseTheme, { useAppTheme } from '../../theme';
 import { styles } from './styles';
 import type { ButtonVariant, VariantStyles } from './types';
+import { fontWeights } from '@/theme/typography';
 
 interface ButtonContentProps {
   children: React.ReactNode;
@@ -46,7 +47,7 @@ export function ButtonContent({
     (mergedTypography as { button?: TextStyle })?.button ??
     {
       fontSize: 17,
-      fontWeight: '600',
+      fontWeight: fontWeights.semibold,
       color: mergedColors?.text?.primary ?? '#2D2A26',
     };
 

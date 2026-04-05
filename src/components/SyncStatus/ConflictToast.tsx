@@ -12,7 +12,7 @@ import Animated, {
   Easing,
 } from 'react-native-reanimated';
 import { useThemeColors } from '../../theme/ThemeContext';
-import { fontFamilies } from '@/theme/typography';
+import { fontFamilies, fontWeights } from '@/theme/typography';
 
 interface ConflictToastProps {
   visible: boolean;
@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
   message: {
     fontFamily: fontFamilies.primary.text,
     fontSize: 13,
-    fontWeight: '400',
+    fontWeight: fontWeights.regular,
   },
   textContainer: {
     flex: 1,
@@ -125,7 +125,7 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: fontFamilies.primary.text,
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: fontWeights.semibold,
     marginBottom: 2,
   },
 });

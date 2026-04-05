@@ -1,23 +1,20 @@
 import { StyleSheet } from 'react-native';
-import { fontFamilies } from '@/theme/typography';
+import { fontWeights, typography } from '@/theme/typography';
 
 export const customizeStyles = StyleSheet.create({
   customizeSection: {
     marginTop: 4,
   },
   customizeSubtitle: {
+    ...typography.caption,
     borderRadius: 8,
-    fontFamily: fontFamilies.primary.text,
-    fontSize: 13,
-    fontWeight: '500',
     overflow: 'hidden',
     paddingHorizontal: 8,
     paddingVertical: 3,
   },
   customizeTitle: {
-    fontFamily: fontFamilies.primary.text,
-    fontSize: 17,
-    fontWeight: '700',
+    ...typography.body,
+    fontWeight: fontWeights.bold,
     letterSpacing: -0.2,
   },
   customizeTitleRow: {

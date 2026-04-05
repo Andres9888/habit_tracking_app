@@ -7,6 +7,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { ChevronDown } from 'lucide-react-native';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { styles } from '../../templates/templatesScreenStyles';
+import { iconSizes } from '@/theme/iconSizes';
 
 interface ScrollShadowsProps {
   showBottomShadow: boolean;
@@ -48,8 +49,8 @@ export function ScrollShadows({
           >
             <ChevronDown
               color={colors.text.secondary}
-              size={16}
-              strokeWidth={2.25}
+              size={iconSizes.small}
+              strokeWidth={2.5}
             />
             <Text
               style={[

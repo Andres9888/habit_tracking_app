@@ -1,6 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
 import { Play, Clock } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import type { EdgeInsets } from 'react-native-safe-area-context';
 import { useThemeColors } from '../../../../../theme/ThemeContext';
 
@@ -68,13 +69,13 @@ export function RescueModeActions({
       >
         <View className='mt-3 flex-row gap-3'>
           <SecondaryAction
-            icon={<Play color={colors.status.success} size={16} />}
+            icon={<Play color={colors.status.success} size={iconSizes.small} />}
             label='Full Habit'
             variant='default'
             onPress={onStartFull}
           />
           <SecondaryAction
-            icon={<Clock color={colors.text.tertiary} size={16} />}
+            icon={<Clock color={colors.text.tertiary} size={iconSizes.small} />}
             label='Skip Today'
             variant='destructive'
             onPress={onSkipToday}

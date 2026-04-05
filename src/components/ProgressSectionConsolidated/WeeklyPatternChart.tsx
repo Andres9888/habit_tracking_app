@@ -17,6 +17,7 @@ import { PatternLegend } from './PatternLegend';
 import { useWeeklyPatternData } from './useWeeklyPatternData';
 
 import type { WeeklyPatternChartProps } from './types';
+import { iconSizes } from '@/theme/iconSizes';
 
 const CHART_HEIGHT = 56;
 
@@ -47,7 +48,7 @@ export const WeeklyPatternChart = React.memo(function WeeklyPatternChart({
             onPress={onSeeAllPress}
           >
             <Text className='text-xs font-medium' style={{ color: colors.status.premiumText }}>Details</Text>
-            <ChevronRight color={colors.status.premium} size={14} />
+            <ChevronRight color={colors.status.premium} size={iconSizes.small} />
           </Pressable> : null}
       </View>
 

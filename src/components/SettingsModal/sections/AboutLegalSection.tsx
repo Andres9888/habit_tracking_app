@@ -1,5 +1,6 @@
 /** AboutLegalSection — Privacy, Terms, Version */
 import { FileText, Info, Shield } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { SettingsSection } from '../SettingsSection';
 import { SettingsRow } from '../SettingsRow';
 import { useThemeColors } from '../../../theme/ThemeContext';
@@ -25,7 +26,7 @@ export function AboutLegalSection({
     <SettingsSection highContrastMode={highContrast} title='About'>
       <SettingsRow
         highContrastMode={highContrast}
-        icon={<Shield color={settings.legal.icon} size={16} />}
+        icon={<Shield color={settings.legal.icon} size={iconSizes.small} />}
         iconBackgroundColor={settings.legal.bg}
         label='Privacy Policy'
         type='navigation'
@@ -33,7 +34,7 @@ export function AboutLegalSection({
       />
       <SettingsRow
         highContrastMode={highContrast}
-        icon={<FileText color={settings.legal.icon} size={16} />}
+        icon={<FileText color={settings.legal.icon} size={iconSizes.small} />}
         iconBackgroundColor={settings.legal.bg}
         label='Terms of Service'
         type='navigation'
@@ -41,7 +42,7 @@ export function AboutLegalSection({
       />
       <SettingsRow
         highContrastMode={highContrast}
-        icon={<Info color={settings.info.icon} size={16} />}
+        icon={<Info color={settings.info.icon} size={iconSizes.small} />}
         iconBackgroundColor={settings.info.bg}
         label='Version'
         showBorder={false}

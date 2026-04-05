@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { Text, View } from 'react-native';
 import { RotateCcw, Check, Lock } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import Animated, { type AnimatedStyle } from 'react-native-reanimated';
 import { useThemeColors } from '../../../theme/ThemeContext';
+import { typography, fontWeights } from '../../../theme/typography';
 import { AnimatedPressable } from '../../ui';
 
 interface ActionButtonsProps {
@@ -78,14 +80,14 @@ function ResumeButton({ btnBg, greenColor, habitName, isRestoring, showSuccess, 
       {showSuccess ? (
         <Animated.View className='flex-row items-center gap-2' style={successIconStyle}>
           <View className='h-5 w-5 items-center justify-center rounded-full' style={{ backgroundColor: themeColors.primary[400] }}>
-            <Check color={themeColors.text.inverse} size={14} strokeWidth={3} />
+            <Check color={themeColors.text.inverse} size={iconSizes.small} strokeWidth={3} />
           </View>
-          <Text style={{ color: greenColor, fontSize: 15, fontWeight: '600' }}>Restored!</Text>
+          <Text style={{ ...typography.button, color: greenColor }}>Restored!</Text>
         </Animated.View>
       ) : (
         <>
-          <RotateCcw color={greenColor} size={16} strokeWidth={2.5} />
-          <Text style={{ color: greenColor, fontSize: 15, fontWeight: '600' }}>
+          <RotateCcw color={greenColor} size={iconSizes.small} strokeWidth={2.5} />
+          <Text style={{ ...typography.button, color: greenColor }}>
             {isRestoring ? 'Restoring...' : 'Resume This Habit'}
           </Text>
         </>
@@ -106,8 +108,8 @@ function LimitReachedButtons({ isDark, onDeletePress, onUpgradePress }: {
         style={{ backgroundColor: themeColors.status.success }}
         onPress={onUpgradePress}
       >
-        <Lock color={themeColors.text.inverse} size={15} strokeWidth={2.5} />
-        <Text style={{ color: themeColors.text.inverse, fontSize: 15, fontWeight: '600' }}>
+        <Lock color={themeColors.text.inverse} size={iconSizes.small} strokeWidth={2.5} />
+        <Text style={{ ...typography.button, color: themeColors.text.inverse }}>
           Upgrade to Resume
         </Text>
       </AnimatedPressable>
@@ -117,7 +119,7 @@ function LimitReachedButtons({ isDark, onDeletePress, onUpgradePress }: {
         style={{ borderColor: themeColors.status.error }}
         onPress={onDeletePress}
       >
-        <Text style={{ color: themeColors.status.error, fontSize: 14, fontWeight: '600' }}>
+        <Text style={{ ...typography.bodySmall, fontWeight: fontWeights.semibold, color: themeColors.status.error }}>
           Delete Permanently
         </Text>
       </AnimatedPressable>

@@ -1,6 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
 import { useThemeColors } from '@/theme/ThemeContext';
+import { shadows } from '@/theme/spacing';
 import { SkeletonLoader } from '../SkeletonLoader';
 import type { ReduceMotionProps } from '../types';
 
@@ -13,10 +14,7 @@ export function AchievementRowSkeleton({ reduceMotion }: ReduceMotionProps) {
       style={{
         borderColor: themeColors.border,
         backgroundColor: themeColors.card,
-        shadowColor: '#1c1917',
-        shadowOffset: { height: 4, width: 0 },
-        shadowOpacity: 0.08,
-        shadowRadius: 16,
+        ...shadows.floatingActionButton,
       }}
     >
       <SkeletonLoader

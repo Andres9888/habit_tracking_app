@@ -4,7 +4,7 @@
 
 import type { ViewStyle, TextStyle } from 'react-native';
 import { shadows, borderRadius } from '../../../theme/spacing';
-import { typography, fontFamilies} from '../../../theme/typography';
+import { typography, fontWeights, fontFamilies} from '../../../theme/typography';
 
 export const cardStyles: Record<string, ViewStyle | TextStyle> = {
   accent: {
@@ -46,14 +46,14 @@ export const cardStyles: Record<string, ViewStyle | TextStyle> = {
   name: {
     fontFamily: fontFamilies.primary.text,
     fontSize: typography.body.fontSize,
-    fontWeight: '700',
+    fontWeight: fontWeights.bold,
     lineHeight: 21,
     marginBottom: 2,
   },
   subtitle: {
     fontFamily: fontFamilies.primary.text,
     fontSize: 13,
-    fontWeight: '500',
+    fontWeight: fontWeights.medium,
     lineHeight: 16,
     marginBottom: 4,
   },

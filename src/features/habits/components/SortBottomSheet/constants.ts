@@ -8,6 +8,7 @@ import {
 import { Dimensions } from 'react-native';
 
 import { springs } from '@/theme/animations';
+import { iconSizes } from '@/theme/iconSizes';
 import type { SortOptionConfig } from './types';
 
 export const { height: SCREEN_HEIGHT } = Dimensions.get('window');
@@ -80,9 +81,9 @@ export const QUICK_PICK_OPTIONS = SORT_OPTIONS.filter((opt) => opt.chipLabel);
 export { DISMISS_THRESHOLD, VELOCITY_THRESHOLD } from '@/constants';
 
 // Icon sizing
-export const CHECK_ICON_SIZE = 14;
+export const CHECK_ICON_SIZE = iconSizes.small;
 export const CHECK_ICON_STROKE_WIDTH = 2.5;
-export const SORT_OPTION_ICON_SIZE = 18;
+export const SORT_OPTION_ICON_SIZE = iconSizes.medium;
 export const SORT_OPTION_ICON_STROKE_WIDTH = 2.25;
 
 // Colors

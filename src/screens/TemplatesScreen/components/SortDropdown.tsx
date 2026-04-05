@@ -9,6 +9,8 @@ import { Check } from 'lucide-react-native';
 import { SORT_OPTIONS, type SortOption } from '../../templates/constants';
 import { styles } from '../../templates/templatesScreenStyles';
 import type { SemanticColors } from '../../../theme/darkColors';
+import { fontWeights } from '@/theme/typography';
+import { iconSizes } from '@/theme/iconSizes';
 
 interface SortDropdownProps {
   colors: SemanticColors;
@@ -48,12 +50,12 @@ export function SortDropdown({ colors, onSelectSort, sortOption }: SortDropdownP
               style={[
                 styles.sortDropdownOptionText,
                 { color: colors.text.primary },
-                selected && { color: colors.primary[600], fontWeight: '600' },
+                selected && { color: colors.primary[600], fontWeight: fontWeights.semibold },
               ]}
             >
               {opt.label}
             </Text>
-            {selected ? <Check color={colors.primary[500]} size={16} strokeWidth={2.5} /> : null}
+            {selected ? <Check color={colors.primary[500]} size={iconSizes.small} strokeWidth={2.5} /> : null}
           </AnimatedPressable>
         );
       })}

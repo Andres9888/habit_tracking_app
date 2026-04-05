@@ -1,6 +1,7 @@
 /** CompletionIconPicker — Inline segmented control for chain vs checkmark */
 import { Pressable, View } from 'react-native';
 import { Check, Link2 } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import * as Haptics from 'expo-haptics';
 import { useThemeColors } from '../../theme/ThemeContext';
 
@@ -58,7 +59,7 @@ export function CompletionIconPicker({
           >
             <Icon
               color={isSelected ? accent : colors.text.secondary}
-              size={16}
+              size={iconSizes.small}
               strokeWidth={isSelected ? 2.5 : 2}
             />
           </Pressable>

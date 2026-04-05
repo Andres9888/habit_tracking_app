@@ -8,6 +8,7 @@ import { TrendingUp, TrendingDown, Minus } from 'lucide-react-native';
 import { useThemeColors } from '@/theme/ThemeContext';
 import { DELTA_BADGE_COLORS } from './constants';
 import type { DeltaBadgeProps } from './types';
+import { iconSizes } from '@/theme/iconSizes';
 
 export function DeltaBadge({ delta }: DeltaBadgeProps) {
   const { colors: themeColors } = useThemeColors();
@@ -47,7 +48,7 @@ export function DeltaBadge({ delta }: DeltaBadgeProps) {
       className='mt-1.5 flex-row items-center gap-0.5 rounded-full px-2 py-0.5'
       style={{ backgroundColor: bgColor }}
     >
-      <Icon color={iconColor} size={10} />
+      <Icon color={iconColor} size={iconSizes.micro} />
       <Text className='text-[10px] font-semibold' style={{ color: textColor }}>
         {isPositive ? '+' : ''}
         {delta.toFixed(1)}%

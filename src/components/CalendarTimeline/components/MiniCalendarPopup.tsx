@@ -5,7 +5,7 @@ import { addMonths, subMonths } from 'date-fns';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { MiniCalendarGrid } from './MiniCalendarGrid';
 import { MiniCalendarNav } from './MiniCalendarNav';
-import { fontFamilies } from '@/theme/typography';
+import { fontFamilies, fontWeights } from '@/theme/typography';
 
 interface MiniCalendarPopupProps {
   visible: boolean;
@@ -54,7 +54,7 @@ export const MiniCalendarPopup: React.FC<MiniCalendarPopupProps> = ({
             style={{ alignSelf: 'center', marginTop: 8, paddingVertical: 4, paddingHorizontal: 12 }}
             onPress={onClose}
           >
-            <Text style={{ fontFamily: fontFamilies.primary.text, fontSize: 13, fontWeight: '600', color: closeColor }}>Close</Text>
+            <Text style={{ fontFamily: fontFamilies.primary.text, fontSize: 13, fontWeight: fontWeights.semibold, color: closeColor }}>Close</Text>
           </Pressable>
         </Pressable>
       </Pressable>

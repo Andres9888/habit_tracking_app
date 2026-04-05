@@ -2,7 +2,7 @@ import { StyleSheet } from 'react-native';
 
 import { colors } from '../../../theme/colors';
 import { borderRadius, spacing } from '../../../theme/spacing';
-import { typography, fontFamilies} from '@/theme/typography';
+import { typography, fontWeights, fontFamilies} from '@/theme/typography';
 
 export const styles = StyleSheet.create({
   categoryHeader: {
@@ -13,7 +13,7 @@ export const styles = StyleSheet.create({
     color: colors.gray[500],
     fontFamily: fontFamilies.primary.text,
     fontSize: typography.caption.fontSize,
-    fontWeight: '600',
+    fontWeight: fontWeights.semibold,
     letterSpacing: 0.5,
   },
   container: {
@@ -62,7 +62,7 @@ export const styles = StyleSheet.create({
     color: colors.gray[900],
     fontFamily: fontFamilies.monospace,
     fontSize: typography.body.fontSize,
-    fontWeight: '500',
+    fontWeight: fontWeights.medium,
     marginTop: spacing.md,
   },
   gridContent: {

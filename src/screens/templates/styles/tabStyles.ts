@@ -5,7 +5,7 @@
  * are applied inline via useThemeColors() in the TabBar component.
  */
 import { StyleSheet } from 'react-native';
-import { fontFamilies } from '@/theme/typography';
+import { fontWeights, typography } from '@/theme/typography';
 
 export const tabStyles = StyleSheet.create({
   tab: {
@@ -28,9 +28,8 @@ export const tabStyles = StyleSheet.create({
     position: 'relative',
   },
   tabCount: {
-    fontFamily: fontFamilies.primary.text,
-    fontSize: 13,
-    fontWeight: '700',
+    ...typography.caption,
+    fontWeight: fontWeights.bold,
     marginLeft: 6,
   },
   tabCountActive: {
@@ -48,9 +47,8 @@ export const tabStyles = StyleSheet.create({
     top: 5,
   },
   tabText: {
-    fontFamily: fontFamilies.primary.text,
-    fontSize: 13,
-    fontWeight: '600',
+    ...typography.caption,
+    fontWeight: fontWeights.semibold,
   },
   tabTextActive: {
     // Applied dynamically via theme colors in TabBar

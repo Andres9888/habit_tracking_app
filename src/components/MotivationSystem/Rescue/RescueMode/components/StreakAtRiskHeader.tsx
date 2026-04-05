@@ -8,6 +8,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import { AlertTriangle, Flame, Timer } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '../../../../../theme/ThemeContext';
 
 interface StreakAtRiskHeaderProps {
@@ -52,12 +53,12 @@ export function StreakAtRiskHeader({
         className='mb-3 h-16 w-16 items-center justify-center rounded-full'
         style={[pulseStyle, { backgroundColor: colors.status.errorLight }]}
       >
-        <AlertTriangle color={colors.status.error} size={32} />
+        <AlertTriangle color={colors.status.error} size={iconSizes.xl} />
       </Animated.View>
 
       {/* Streak at risk badge */}
       <View className='mb-2 flex-row items-center gap-2 rounded-full px-4 py-2' style={{ backgroundColor: colors.status.error }}>
-        <Flame className='text-white' size={18} />
+        <Flame className='text-white' size={iconSizes.medium} />
         <Text className='text-base font-bold text-white'>
           {streak} Day Streak at Risk!
         </Text>
@@ -65,7 +66,7 @@ export function StreakAtRiskHeader({
 
       {/* Time remaining */}
       {hoursRemaining === undefined ? null : <View className='mt-2 flex-row items-center gap-1'>
-          <Timer color={colors.status.error} size={14} />
+          <Timer color={colors.status.error} size={iconSizes.small} />
           <Text className='text-sm font-medium' style={{ color: colors.status.error }}>
             {hoursRemaining <= 1
               ? 'Less than 1 hour left'

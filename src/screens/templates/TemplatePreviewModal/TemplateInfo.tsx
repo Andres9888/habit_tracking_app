@@ -5,7 +5,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { useThemeColors } from '../../../theme/ThemeContext';
-import { fontFamilies } from '../../../theme/typography';
+import { fontFamilies, fontWeights } from '../../../theme/typography';
 import type { TemplateInfoProps } from './types';
 
 const localStyles = StyleSheet.create({
@@ -22,14 +22,14 @@ const localStyles = StyleSheet.create({
   infoPillLabel: {
     fontFamily: fontFamilies.primary.text,
     fontSize: 13,
-    fontWeight: '600',
+    fontWeight: fontWeights.semibold,
     marginBottom: 4,
     textTransform: 'uppercase',
   },
   infoPillValue: {
     fontFamily: fontFamilies.primary.text,
     fontSize: 17,
-    fontWeight: '700',
+    fontWeight: fontWeights.bold,
   },
 });
 

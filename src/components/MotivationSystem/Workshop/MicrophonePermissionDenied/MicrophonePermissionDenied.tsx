@@ -8,6 +8,7 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import { MicOff, AlertCircle } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { clsx } from 'clsx';
 import { useThemeColors } from '@/theme/ThemeContext';
 import { PermissionActionButtons } from './PermissionActionButtons';
@@ -74,7 +75,7 @@ export function MicrophonePermissionDenied({
       </Text>
 
       {compact ? null : <View className='mb-4 flex-row items-start gap-2 rounded-lg p-3' style={{ backgroundColor: colors.status.errorLight }}>
-          <AlertCircle className='mt-0.5' color={colors.status.error} size={16} />
+          <AlertCircle className='mt-0.5' color={colors.status.error} size={iconSizes.small} />
           <Text className='flex-1 text-sm' style={{ color: colors.status.error }}>
             {MESSAGES.science}
           </Text>

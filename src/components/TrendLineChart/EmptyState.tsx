@@ -8,7 +8,7 @@ import { View } from 'react-native';
 import { TrendingUp } from 'lucide-react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { useThemeColors } from '../../theme/ThemeContext';
-import { fontFamilies } from '@/theme/typography';
+import { typography, fontWeights } from '@/theme/typography';
 
 const anim = (delay: number) =>
   FadeInUp.duration(280).delay(delay).springify().damping(18);
@@ -39,10 +39,9 @@ export function EmptyState() {
       <Animated.Text
         entering={anim(60)}
         style={{
+          ...typography.heading2,
           color: colors.text.primary,
-          fontFamily: fontFamilies.primary.text,
-          fontSize: 22,
-          fontWeight: '700',
+          fontWeight: fontWeights.bold,
           letterSpacing: -0.5,
           marginBottom: 8,
           textAlign: 'center',
@@ -53,9 +52,8 @@ export function EmptyState() {
       <Animated.Text
         entering={anim(120)}
         style={{
+          ...typography.body,
           color: colors.text.secondary,
-          fontFamily: fontFamilies.primary.text,
-          fontSize: 17,
           lineHeight: 22,
           maxWidth: 280,
           textAlign: 'center',

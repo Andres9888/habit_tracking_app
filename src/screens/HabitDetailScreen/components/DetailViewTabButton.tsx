@@ -7,6 +7,7 @@ import { Pressable, Text, View } from 'react-native';
 import type { LucideIcon } from 'lucide-react-native';
 import { useThemeColors } from '@/theme';
 import { typography, fontWeights } from '@/theme/typography';
+import { iconSizes } from '@/theme/iconSizes';
 
 export type DetailView = 'calendar' | 'strength';
 
@@ -43,7 +44,7 @@ export function DetailViewTabButton({
     >
       <Icon
         color={foreground}
-        size={16}
+        size={iconSizes.small}
         strokeWidth={isActive ? 2.5 : 2}
       />
       <Text

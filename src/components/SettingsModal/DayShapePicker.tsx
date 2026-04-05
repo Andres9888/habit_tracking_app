@@ -1,6 +1,7 @@
 /** DayShapePicker — Inline segmented control for circle vs square day markers */
 import { Pressable, View } from 'react-native';
 import { Circle, Square } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import * as Haptics from 'expo-haptics';
 import { useThemeColors } from '../../theme/ThemeContext';
 
@@ -55,7 +56,7 @@ export function DayShapePicker({ selected, onSelect }: DayShapePickerProps) {
           >
             <Icon
               color={isSelected ? accent : colors.text.secondary}
-              size={16}
+              size={iconSizes.small}
               strokeWidth={isSelected ? 2.5 : 2}
             />
           </Pressable>

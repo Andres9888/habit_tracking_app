@@ -5,7 +5,7 @@
 import { StyleSheet } from 'react-native';
 
 import { borderRadius, shadows } from '../../theme/spacing';
-import { typography, fontFamilies} from '../../theme/typography';
+import { typography, fontFamilies, fontWeights} from '../../theme/typography';
 import { useThemeColors } from '../../theme/ThemeContext';
 
 export function useToastStyles() {
@@ -29,7 +29,7 @@ export function useToastStyles() {
     },
     habitName: {
       color: colors.text.primary,
-      fontWeight: '600',
+      fontWeight: fontWeights.semibold,
     },
     iconContainer: {
       alignItems: 'center',
@@ -88,7 +88,7 @@ export function useToastStyles() {
       color: isDark ? '#FCD34D' : '#b45309',
       fontFamily: fontFamilies.primary.text,
       fontSize: 13,
-      fontWeight: '700',
+      fontWeight: fontWeights.bold,
       letterSpacing: 0.3,
     },
   });

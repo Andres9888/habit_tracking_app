@@ -12,6 +12,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Crown, Zap, Settings } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { SettingsSection } from '../SettingsSection';
 import { SettingsRow } from '../SettingsRow';
 import { AnimatedPressable } from '../../ui/AnimatedPressable';
@@ -85,7 +86,7 @@ export function PremiumStatus({ highContrast, isPremium, onUpgrade }: Props) {
             className='mr-4 h-10 w-10 items-center justify-center rounded-xl'
             style={{ backgroundColor: settings.crown.bg }}
           >
-            <Crown color={settings.crown.icon} size={16} />
+            <Crown color={settings.crown.icon} size={iconSizes.small} />
           </View>
           <View className='flex-1'>
             <View className='flex-row items-center gap-2'>
@@ -117,7 +118,7 @@ export function PremiumStatus({ highContrast, isPremium, onUpgrade }: Props) {
         </View>
         <SettingsRow
           highContrastMode={highContrast}
-          icon={<Settings color={settings.manageSub.icon} size={16} />}
+          icon={<Settings color={settings.manageSub.icon} size={iconSizes.small} />}
           iconBackgroundColor={settings.manageSub.bg}
           label='Manage Subscription'
           showBorder={false}
@@ -176,7 +177,7 @@ export function PremiumStatus({ highContrast, isPremium, onUpgrade }: Props) {
               className='mr-4 h-10 w-10 items-center justify-center rounded-xl'
               style={{ backgroundColor: 'rgba(255,255,255,0.15)' }}
             >
-              <Zap color={palette.text.inverse} size={20} />
+              <Zap color={palette.text.inverse} size={iconSizes.medium} />
             </View>
             <View className='flex-1'>
               <Text

@@ -7,6 +7,7 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import { useThemeColors } from '@/theme/ThemeContext';
+import { iconSizes } from '@/theme/iconSizes';
 
 import type { TrendDirection, WeekDayData } from '../WeeklySummaryStripTypes';
 import { DayCell } from './DayCell';
@@ -69,7 +70,7 @@ export const CardContent = React.memo(function CardContent({
           </Text>
           <TrendIcon
             color={getTrendColor(trend, colors.status.success)}
-            size={14}
+            size={iconSizes.small}
             style={styles.trendIcon}
           />
         </View>

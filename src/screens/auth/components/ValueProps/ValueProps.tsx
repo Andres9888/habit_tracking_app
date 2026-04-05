@@ -5,7 +5,8 @@
 import { Text, View, StyleSheet } from 'react-native';
 import { Link, Activity, Trophy } from 'lucide-react-native';
 import { useThemeColors } from '@/theme/ThemeContext';
-import { fontFamilies } from '@/theme/typography';
+import { fontFamilies, fontWeights } from '@/theme/typography';
+import { iconSizes } from '@/theme/iconSizes';
 
 const PROPS = [
   { Icon: Link, label: 'Start your chain' },
@@ -23,7 +24,7 @@ export function ValueProps() {
       {PROPS.map(({ Icon, label }) => (
         <View key={label} style={styles.item}>
           <View style={[styles.iconBox, { backgroundColor: '#D1FAE5' }]}>
-            <Icon color='#059669' size={18} strokeWidth={2.5} />
+            <Icon color='#059669' size={iconSizes.medium} strokeWidth={2.5} />
           </View>
           <Text style={[styles.label, { color: colors.text.primary }]}>
             {label}
@@ -58,6 +59,6 @@ const styles = StyleSheet.create({
   label: {
     fontFamily: fontFamilies.primary.text,
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: fontWeights.medium,
   },
 });

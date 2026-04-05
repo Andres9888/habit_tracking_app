@@ -6,6 +6,7 @@ import { memo } from 'react';
 import { Pressable, Text } from 'react-native';
 import { Clock } from 'lucide-react-native';
 import { useThemeColors } from '@/theme/ThemeContext';
+import { iconSizes } from '@/theme/iconSizes';
 
 interface CustomTimeButtonProps {
   isCustomTime: boolean;
@@ -34,7 +35,7 @@ function CustomTimeButtonComponent({
     >
       {isCustomTime ? (
         <>
-          <Clock color={colors.status.success} size={16} />
+          <Clock color={colors.status.success} size={iconSizes.small} />
           <Text className='ml-1.5 text-sm font-medium' style={{ color: colors.status.success }}>
             {customTimeLabel}
           </Text>

@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { shadows } from '@/theme/spacing';
-import { fontFamilies } from '@/theme/typography';
+import { fontWeights, typography } from '@/theme/typography';
 
 export const categoryStyles = StyleSheet.create({
   categoriesContainer: {
@@ -36,9 +36,8 @@ export const categoryStyles = StyleSheet.create({
     paddingVertical: 2,
   },
   categoryCountText: {
-    fontFamily: fontFamilies.primary.text,
-    fontSize: 13,
-    fontWeight: '600',
+    ...typography.caption,
+    fontWeight: fontWeights.semibold,
   },
   categoryHeaderIcon: {
     alignItems: 'center',

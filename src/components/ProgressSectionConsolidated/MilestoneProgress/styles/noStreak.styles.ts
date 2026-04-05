@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { colors } from '@/theme';
-import { typography, fontFamilies } from '@/theme/typography';
+import { typography, fontWeights, fontFamilies } from '@/theme/typography';
 
 export const noStreakStyles = StyleSheet.create({
   noStreakContainer: {
@@ -24,6 +24,6 @@ export const noStreakStyles = StyleSheet.create({
     color: colors.gray[700],
     fontFamily: fontFamilies.primary.text,
     fontSize: typography.bodySmall.fontSize,
-    fontWeight: '600',
+    fontWeight: fontWeights.semibold,
   },
 });

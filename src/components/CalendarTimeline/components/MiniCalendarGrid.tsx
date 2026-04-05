@@ -53,7 +53,7 @@ export const MiniCalendarGrid: React.FC<MiniCalendarGridProps> = ({
         {DAY_LABELS.map((d) => (
           <Text
             key={d}
-            style={{ flex: 1, textAlign: 'center', fontFamily: fontFamilies.primary.text, fontSize: 10, color: c.label, fontWeight: '600' }}
+            style={{ flex: 1, textAlign: 'center', fontFamily: fontFamilies.primary.text, fontSize: 10, color: c.label, fontWeight: fontWeights.semibold }}
           >
             {d}
           </Text>

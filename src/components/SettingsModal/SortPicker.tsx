@@ -5,6 +5,7 @@
 
 import { Text, View } from 'react-native';
 import { Check } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { LinearGradient } from 'expo-linear-gradient';
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import { ScreenHeader } from '@/components/ScreenHeader';
@@ -66,7 +67,7 @@ export function SortPicker({ currentMode, onBack, onSelect }: SortPickerProps) {
                 end={{ x: 1, y: 1 }}
                 start={{ x: 0, y: 0 }}
               >
-                <option.Icon color='#ffffff' size={18} strokeWidth={2.25} />
+                <option.Icon color='#ffffff' size={iconSizes.medium} strokeWidth={2.5} />
               </LinearGradient>
               <View className='flex-1'>
                 <Text
@@ -87,7 +88,7 @@ export function SortPicker({ currentMode, onBack, onSelect }: SortPickerProps) {
                   className='h-6 w-6 items-center justify-center rounded-full'
                   style={{ backgroundColor: colors.primary[500] }}
                 >
-                  <Check color='#ffffff' size={14} strokeWidth={2.5} />
+                  <Check color='#ffffff' size={iconSizes.small} strokeWidth={2.5} />
                 </View>
               ) : null}
             </AnimatedPressable>

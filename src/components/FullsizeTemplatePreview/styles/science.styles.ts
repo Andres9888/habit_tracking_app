@@ -6,7 +6,7 @@ import { StyleSheet } from 'react-native';
 
 import { colors } from '@/theme';
 import { borderRadius, spacing } from '../../../theme/spacing';
-import { typography, fontFamilies } from '@/theme/typography';
+import { typography, fontWeights, fontFamilies } from '@/theme/typography';
 
 export const scienceStyles = StyleSheet.create({
   scienceBox: {
@@ -36,7 +36,7 @@ export const scienceStyles = StyleSheet.create({
     color: colors.primary[700],
     fontFamily: fontFamilies.primary.text,
     fontSize: typography.caption.fontSize,
-    fontWeight: '700',
+    fontWeight: fontWeights.bold,
     letterSpacing: 0.8,
     textTransform: 'uppercase',
   },

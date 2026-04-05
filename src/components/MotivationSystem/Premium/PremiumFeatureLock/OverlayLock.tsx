@@ -7,6 +7,7 @@ import React, { useCallback, useEffect } from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Lock, Crown, ChevronRight, Sparkles } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import {
   useSharedValue,
   withRepeat,
@@ -61,7 +62,7 @@ export function OverlayLock({
       <View className='mb-4 items-center'>
         <View className='absolute h-16 w-16 rounded-full' style={{ backgroundColor: colors.status.premiumLight }} />
         <View className='h-14 w-14 items-center justify-center rounded-full' style={{ backgroundColor: colors.status.premiumLight }}>
-          <Lock color={colors.status.premiumText} size={28} />
+          <Lock color={colors.status.premiumText} size={iconSizes.xl} />
         </View>
       </View>
 
@@ -73,7 +74,7 @@ export function OverlayLock({
       </Text>
 
       {showScience ? <View className='mb-4 flex-row items-start gap-2 rounded-lg bg-white/10 px-3 py-2'>
-          <Sparkles className='mt-0.5' color={colors.status.warning} size={14} />
+          <Sparkles className='mt-0.5' color={colors.status.warning} size={iconSizes.small} />
           <Text className='flex-1 text-xs italic text-white/70'>
             {meta.scienceBasis}
           </Text>
@@ -92,11 +93,11 @@ export function OverlayLock({
           end={{ x: 1, y: 0 }}
           start={{ x: 0, y: 0 }}
         >
-          <Crown color='#ffffff' size={18} />
+          <Crown color='#ffffff' size={iconSizes.medium} />
           <Text className='text-base font-semibold text-white'>
             Unlock with Premium
           </Text>
-          <ChevronRight color='#ffffff' size={18} />
+          <ChevronRight color='#ffffff' size={iconSizes.medium} />
         </LinearGradient>
       </Pressable>
 

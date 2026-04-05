@@ -3,6 +3,7 @@ import React from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { ChevronRight } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import type { ActionItemProps } from './types';
 import { ActionItemIcon } from './ActionItemIcon';
 import { useThemeColors } from '../../theme/ThemeContext';
@@ -111,7 +112,7 @@ export const ActionItem = ({
                 ? isDark ? '#fca5a5' : '#f87171'  // red-300/red-400
                 : colors.text.tertiary
           }
-          size={20}
+          size={iconSizes.medium}
         /> : null}
     </Pressable>
   );

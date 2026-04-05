@@ -7,7 +7,7 @@ import { View, Text, Pressable, ActivityIndicator } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import Animated from 'react-native-reanimated';
 import { colors } from '../../theme/colors/core';
-import { fontFamilies, fontWeights } from '../../theme/typography';
+import { typography } from '../../theme/typography';
 import { spacing, borderRadius } from '../../theme/spacing';
 import type { PaywallCTAProps } from './paywall.types';
 
@@ -51,11 +51,8 @@ export function PaywallCTA({
             ) : (
               <Text
                 style={{
+                  ...typography.button,
                   color: colors.text.inverse,
-                  fontFamily: fontFamilies.primary.text,
-                  fontSize: 17,
-                  fontWeight: fontWeights.semibold,
-                  letterSpacing: 0.08,
                 }}
               >
                 {label}

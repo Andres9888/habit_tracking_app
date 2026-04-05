@@ -8,6 +8,7 @@ import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import { colors } from '../../../theme/colors';
 import { typography } from '../../../theme/typography';
 import { spacing, borderRadius } from '../../../theme/spacing';
+import { iconSizes } from '@/theme/iconSizes';
 
 interface ExportButtonProps {
   onPress: () => void;
@@ -23,7 +24,7 @@ export const ExportButton: React.FC<ExportButtonProps> = ({ onPress }) => {
       style={styles.exportButton}
       onPress={onPress}
     >
-      <Download color={colors.surface} size={20} />
+      <Download color={colors.surface} size={iconSizes.medium} />
       <Text style={styles.exportButtonText}>Export Data</Text>
     </AnimatedPressable>
   );

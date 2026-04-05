@@ -6,6 +6,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import { ArrowRight, Calendar, ChevronDown } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 
 import { AnimatedPressable } from '../../ui/AnimatedPressable';
 import { colors as palette } from '../../../theme/colors';
@@ -85,7 +86,7 @@ export const WeekNavRow: React.FC<WeekNavRowProps> = ({
         >
           <Calendar
             color={isDark ? palette.primary[500] : palette.primary[600]}
-            size={16}
+            size={iconSizes.small}
             strokeWidth={2}
           />
           <Text
@@ -99,7 +100,7 @@ export const WeekNavRow: React.FC<WeekNavRowProps> = ({
           <Text style={[s.dateText, { color: colors.text.secondary }]}>
             {dateSuffix}
           </Text>
-          <ChevronDown color={colors.gray[300]} size={11} strokeWidth={2} />
+          <ChevronDown color={colors.gray[300]} size={iconSizes.micro} strokeWidth={2} />
         </View>
       </AnimatedPressable>
 
@@ -114,7 +115,7 @@ export const WeekNavRow: React.FC<WeekNavRowProps> = ({
             >
               <View style={[s.solidChip, { backgroundColor: chipBg }]}>
                 <Text style={[s.chipText, { color: chipText }]}>Today</Text>
-                <ArrowRight color={chipText} size={11} strokeWidth={2.5} />
+                <ArrowRight color={chipText} size={iconSizes.micro} strokeWidth={2.5} />
               </View>
             </AnimatedPressable>
           </Animated.View> : null}
@@ -135,7 +136,7 @@ const s = StyleSheet.create({
   chipText: {
     fontFamily: fontFamilies.primary.text,
     fontSize: 10,
-    fontWeight: '700',
+    fontWeight: fontWeights.bold,
     letterSpacing: 0.3,
   },
   dateText: {

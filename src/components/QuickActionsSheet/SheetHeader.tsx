@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { X } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '../../theme/ThemeContext';
 
 interface SheetHeaderProps {
@@ -34,7 +35,7 @@ export const SheetHeader = ({
         style={{ backgroundColor: colors.gray[200] }}
         onPress={onClose}
       >
-        <X color={colors.text.secondary} size={20} />
+        <X color={colors.text.secondary} size={iconSizes.medium} />
       </Pressable>
     </View>
   );

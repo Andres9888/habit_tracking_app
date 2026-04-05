@@ -9,6 +9,7 @@ import { Pressable, View } from 'react-native';
 import Animated, { useAnimatedProps, useAnimatedStyle } from 'react-native-reanimated';
 import Svg, { Circle } from 'react-native-svg';
 import { Plus, Check } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import {
   CIRCUMFERENCE, DARK_FAB_SHADOW, FAB_BORDER_DARK,
@@ -81,12 +82,12 @@ export function ProgressRingFAB(props: ProgressRingFABProps) {
               <Animated.View
                 style={[s.iconAbsolute, safeCelebrationAnim.plusStyle]}
               >
-                <Plus color='#ffffff' size={24} strokeWidth={2.5} />
+                <Plus color='#ffffff' size={iconSizes.large} strokeWidth={2.5} />
               </Animated.View>
               <Animated.View
                 style={[s.iconAbsolute, safeCelebrationAnim.checkStyle]}
               >
-                <Check color='#ffffff' size={24} strokeWidth={2.5} />
+                <Check color='#ffffff' size={iconSizes.large} strokeWidth={2.5} />
               </Animated.View>
             </View>
           </Pressable>

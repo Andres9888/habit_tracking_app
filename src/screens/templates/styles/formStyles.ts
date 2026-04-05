@@ -1,10 +1,9 @@
 import { StyleSheet } from 'react-native';
-import { fontFamilies } from '@/theme/typography';
+import { fontWeights, typography } from '@/theme/typography';
 
 export const formStyles = StyleSheet.create({
   charCount: {
-    fontFamily: fontFamilies.primary.text,
-    fontSize: 13,
+    ...typography.caption,
     marginTop: 4,
     textAlign: 'right',
   },
@@ -22,9 +21,8 @@ export const formStyles = StyleSheet.create({
     borderWidth: 3,
   },
   inputLabel: {
-    fontFamily: fontFamilies.primary.text,
-    fontSize: 13,
-    fontWeight: '600',
+    ...typography.caption,
+    fontWeight: fontWeights.semibold,
     marginTop: 16,
   },
   inputWrapper: {
@@ -32,10 +30,9 @@ export const formStyles = StyleSheet.create({
     position: 'relative',
   },
   nameInput: {
+    ...typography.body,
     borderRadius: 12,
     borderWidth: 1,
-    fontFamily: fontFamilies.primary.text,
-    fontSize: 17,
     paddingHorizontal: 16,
     paddingVertical: 12,
   },
@@ -47,9 +44,8 @@ export const formStyles = StyleSheet.create({
   },
   reminderChipActive: {},
   reminderChipText: {
-    fontFamily: fontFamilies.primary.text,
-    fontSize: 13,
-    fontWeight: '600',
+    ...typography.caption,
+    fontWeight: fontWeights.semibold,
   },
   reminderRow: {
     flexDirection: 'row',

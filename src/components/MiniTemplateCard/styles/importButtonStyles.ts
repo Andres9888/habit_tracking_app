@@ -3,7 +3,7 @@
  */
 
 import type { ViewStyle, TextStyle } from 'react-native';
-import { typography, fontFamilies} from '@/theme/typography';
+import { typography, fontWeights, fontFamilies} from '@/theme/typography';
 
 export const importButtonStyles: Record<string, ViewStyle | TextStyle> = {
   checkmarkContainer: {
@@ -24,7 +24,7 @@ export const importButtonStyles: Record<string, ViewStyle | TextStyle> = {
     color: '#fff',
     fontFamily: fontFamilies.primary.text,
     fontSize: typography.caption.fontSize,
-    fontWeight: '700',
+    fontWeight: fontWeights.bold,
   },
   importButtonWrapper: {
     bottom: 14,

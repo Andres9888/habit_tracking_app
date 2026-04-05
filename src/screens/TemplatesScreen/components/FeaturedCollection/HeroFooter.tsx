@@ -5,6 +5,7 @@
 import { Text, View } from 'react-native';
 import { ChevronRight } from 'lucide-react-native';
 import { s } from './FeaturedCollection.styles';
+import { iconSizes } from '@/theme/iconSizes';
 
 export function HeroFooter() {
   return (
@@ -12,7 +13,7 @@ export function HeroFooter() {
       <Text style={s.userCount}>2.4k users</Text>
       <View style={s.cta}>
         <Text style={s.ctaText}>Explore</Text>
-        <ChevronRight size={16} color='#FFFFFF' strokeWidth={2} />
+        <ChevronRight size={iconSizes.small} color='#FFFFFF' strokeWidth={2} />
       </View>
     </View>
   );

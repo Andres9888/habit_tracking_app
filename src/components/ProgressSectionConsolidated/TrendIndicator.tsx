@@ -10,6 +10,7 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react-native';
 import { useThemeColors } from '@/theme/ThemeContext';
+import { iconSizes } from '@/theme/iconSizes';
 
 interface TrendIndicatorProps {
   weeklyChange: number;
@@ -32,7 +33,7 @@ export const TrendIndicator = React.memo(function TrendIndicator({
         className='flex-row items-center gap-1 rounded-full px-2 py-0.5'
         style={{ backgroundColor: colors.status.successLight }}
       >
-        <TrendingUp color={colors.status.success} size={12} />
+        <TrendingUp color={colors.status.success} size={iconSizes.small} />
         <Text className='text-xs font-medium' style={{ color: colors.status.success }}>
           +{weeklyChange}%
         </Text>
@@ -48,7 +49,7 @@ export const TrendIndicator = React.memo(function TrendIndicator({
         className='flex-row items-center gap-1 rounded-full px-2 py-0.5'
         style={{ backgroundColor: colors.status.errorLight }}
       >
-        <TrendingDown color={colors.status.error} size={12} />
+        <TrendingDown color={colors.status.error} size={iconSizes.small} />
         <Text className='text-xs font-medium' style={{ color: colors.status.error }}>
           {weeklyChange}%
         </Text>
@@ -63,7 +64,7 @@ export const TrendIndicator = React.memo(function TrendIndicator({
       className='flex-row items-center gap-1 rounded-full px-2 py-0.5'
       style={{ backgroundColor: colors.gray[100] }}
     >
-      <Minus color={colors.text.secondary} size={12} />
+      <Minus color={colors.text.secondary} size={iconSizes.small} />
       <Text className='text-xs font-medium' style={{ color: colors.text.secondary }}>Stable</Text>
     </View>
   );

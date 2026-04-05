@@ -8,6 +8,7 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import { TrendingUp, TrendingDown } from 'lucide-react-native';
 import { useThemeColors } from '@/theme/ThemeContext';
+import { iconSizes } from '@/theme/iconSizes';
 
 interface ChangeIndicatorProps {
   change: number | null;
@@ -21,9 +22,9 @@ export function ChangeIndicator({ change }: ChangeIndicatorProps) {
   return (
     <View className='mt-3 flex-row items-center justify-center border-t pt-3' style={{ borderColor: colors.gray[100] }}>
       {change >= 0 ? (
-        <TrendingUp color={colors.status.success} size={14} style={{ marginRight: 4 }} />
+        <TrendingUp color={colors.status.success} size={iconSizes.small} style={{ marginRight: 4 }} />
       ) : (
-        <TrendingDown color={colors.status.warning} size={14} style={{ marginRight: 4 }} />
+        <TrendingDown color={colors.status.warning} size={iconSizes.small} style={{ marginRight: 4 }} />
       )}
       <Text
         className='text-xs font-medium'

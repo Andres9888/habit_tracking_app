@@ -14,6 +14,7 @@ import Animated, {
 import { buildTextInputHintProps } from '@/utils/textInputHintProps';
 import { colors } from '../../../theme/colors';
 import { styles } from './EmojiPickerSheet.styles';
+import { iconSizes } from '@/theme/iconSizes';
 
 interface SearchBarProps {
   value: string;
@@ -49,7 +50,7 @@ export function SearchBar({
       <Animated.View style={[styles.searchBar, animatedStyle]}>
         <Search
           color={isSearchFocused ? colors.secondary[500] : colors.gray[400]}
-          size={20}
+          size={iconSizes.medium}
         />
         <TextInput
           accessibilityHint='Type keywords to search for emojis'
@@ -71,7 +72,7 @@ export function SearchBar({
             style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
             onPress={onClear}
           >
-            <X color={colors.gray[400]} size={18} />
+            <X color={colors.gray[400]} size={iconSizes.medium} />
           </Pressable> : null}
       </Animated.View>
     </View>

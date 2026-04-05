@@ -8,6 +8,7 @@ import { CheckCircle2 } from 'lucide-react-native';
 import { colors } from '../../theme/colors';
 import { MOTIVATION_FEATURES } from './motivationFeatures';
 import { ANALYTICS_FEATURES } from './analyticsFeatures';
+import { iconSizes } from '@/theme/iconSizes';
 
 interface MotivationFeatureListProps {
   triggeredByFeature?: string;
@@ -24,7 +25,7 @@ export function AnalyticsFeatureList() {
           <View className='mr-4 h-10 w-10 items-center justify-center rounded-xl bg-white/10'>
             <feature.icon
               color={colors.premium?.[600] ?? '#8b5cf6'}
-              size={24}
+              size={iconSizes.large}
             />
           </View>
           <View className='mr-2 flex-1'>
@@ -35,7 +36,7 @@ export function AnalyticsFeatureList() {
           </View>
           <CheckCircle2
             color={colors.success ?? '#10b981'}
-            size={20}
+            size={iconSizes.medium}
           />
         </View>
       ))}
@@ -59,7 +60,7 @@ export function MotivationFeatureList({
           }
         >
           <View className='mr-3 h-10 w-10 items-center justify-center rounded-full bg-white/10'>
-            <feature.icon color='#ffffff' size={20} />
+            <feature.icon color='#ffffff' size={iconSizes.medium} />
           </View>
           <View className='flex-1'>
             <Text className='text-base font-semibold text-white'>
@@ -67,7 +68,7 @@ export function MotivationFeatureList({
             </Text>
             <Text className='text-xs text-white/60'>{feature.subtitle}</Text>
           </View>
-          <CheckCircle2 color='#10b981' size={20} />
+          <CheckCircle2 color='#10b981' size={iconSizes.medium} />
         </View>
       ))}
     </View>

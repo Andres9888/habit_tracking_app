@@ -5,7 +5,7 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import { colors } from '../../theme/colors/core';
-import { fontFamilies, fontWeights } from '../../theme/typography';
+import { typography, fontWeights } from '../../theme/typography';
 import { spacing } from '../../theme/spacing';
 import type { PaywallFeature } from './paywall.types';
 
@@ -34,22 +34,18 @@ export function PaywallFeatureItem({ feature }: PaywallFeatureItemProps) {
       <View style={{ flex: 1 }}>
         <Text
           style={{
+            ...typography.bodySmall,
             color: colors.text.primary,
-            fontFamily: fontFamilies.primary.text,
-            fontSize: 14,
             fontWeight: fontWeights.semibold,
-            lineHeight: 20,
           }}
         >
           {feature.title}
         </Text>
         <Text
           style={{
+            ...typography.caption,
             color: colors.text.tertiary,
-            fontFamily: fontFamilies.primary.text,
-            fontSize: 13,
             fontWeight: fontWeights.regular,
-            lineHeight: 18,
           }}
         >
           {feature.description}

@@ -5,6 +5,7 @@
 import { Pressable, Text, View } from 'react-native';
 import { ChevronRight } from 'lucide-react-native';
 import { useThemeColors } from '@/theme/ThemeContext';
+import { iconSizes } from '@/theme/iconSizes';
 import { formatReminderTime } from '../../../../utils/notifications';
 
 interface CustomTimeButtonProps {
@@ -35,7 +36,7 @@ export function CustomTimeButton({
         <Text className='mr-2 text-sm font-semibold' style={{ color: colors.status.info }}>
           {formatReminderTime(reminderTime)}
         </Text>
-        <ChevronRight color='#a8a29e' size={16} />
+        <ChevronRight color='#a8a29e' size={iconSizes.small} />
       </View>
     </Pressable>
   );

@@ -7,7 +7,7 @@ import { Text, View, Pressable, StyleSheet } from 'react-native';
 import { colors } from '@/theme/colors';
 import type { TrialCountdownBannerProps } from './types';
 import { getTrialMessage } from './styles';
-import { fontFamilies } from '@/theme/typography';
+import { fontFamilies, fontWeights } from '@/theme/typography';
 
 export function TrialCountdownBanner({
   daysRemaining,
@@ -55,12 +55,12 @@ const localStyles = StyleSheet.create({
     width: 44,
   },
   dismissText: { color: colors.gray[500], fontFamily: fontFamilies.primary.text, fontSize: 17 },
-  text: { color: colors.gray[800], flex: 1, fontFamily: fontFamilies.primary.text, fontSize: 13, fontWeight: '500' },
+  text: { color: colors.gray[800], flex: 1, fontFamily: fontFamilies.primary.text, fontSize: 13, fontWeight: fontWeights.medium },
   upgradeButton: {
     backgroundColor: '#7c3aed',
     borderRadius: 8,
     paddingHorizontal: 16,
     paddingVertical: 8,
   },
-  upgradeText: { color: colors.text.inverse, fontFamily: fontFamilies.primary.text, fontSize: 13, fontWeight: '600' },
+  upgradeText: { color: colors.text.inverse, fontFamily: fontFamilies.primary.text, fontSize: 13, fontWeight: fontWeights.semibold },
 });

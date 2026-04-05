@@ -2,7 +2,7 @@ import { StyleSheet } from 'react-native';
 
 import { colors } from '../../theme/colors';
 import { borderRadius, shadows, spacing } from '../../theme/spacing';
-import { typography, fontFamilies } from '../../theme/typography';
+import { typography, fontWeights, fontFamilies } from '../../theme/typography';
 
 const FADE_WIDTH = 48;
 
@@ -34,7 +34,7 @@ export const styles = StyleSheet.create({
     color: colors.gray[500],
     fontFamily: fontFamilies.primary.text,
     fontSize: typography.bodySmall.fontSize,
-    fontWeight: '500',
+    fontWeight: fontWeights.medium,
     marginLeft: spacing.xs,
   },
   categoryPillTextActive: {

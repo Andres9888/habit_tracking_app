@@ -8,7 +8,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { triggerHaptic } from '@/utils/haptics';
 import { useThemeColors } from '../../../theme/ThemeContext';
-import { typography } from '../../../theme/typography';
+import { typography, fontWeights } from '../../../theme/typography';
 import { borderRadius, spacing, componentSpacing } from '../../../theme/spacing';
 import { OPACITY } from '../../../constants/ui-values';
 import { buttonShadow } from './DetailHeader.constants';
@@ -96,7 +96,7 @@ const s = StyleSheet.create({
   textButton: { alignItems: 'center', borderRadius: borderRadius.xl, borderWidth: 1, flexDirection: 'row', gap: spacing.sm, height: componentSpacing.button.height, paddingHorizontal: spacing.base },
   textLabel: {
     ...typography.bodySmall,
-    fontWeight: '500',
+    fontWeight: fontWeights.medium,
     letterSpacing: -0.2,
   },
 });

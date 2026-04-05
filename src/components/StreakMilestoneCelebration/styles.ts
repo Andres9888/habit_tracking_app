@@ -6,7 +6,7 @@
 
 import { StyleSheet } from 'react-native';
 import { spacing, borderRadius, shadows } from '../../theme/spacing';
-import { typography } from '../../theme/typography';
+import { typography, fontWeights } from '../../theme/typography';
 import { colors } from '../../theme/colors';
 
 export const styles = StyleSheet.create({
@@ -131,7 +131,7 @@ export const styles = StyleSheet.create({
 
   streakCount: {
     ...typography.displayLarge,
-    fontWeight: '700',
+    fontWeight: fontWeights.bold,
     marginRight: spacing.xs,
   },
 

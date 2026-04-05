@@ -9,6 +9,7 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import { ChevronRight } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import ReAnimated, { useAnimatedStyle } from 'react-native-reanimated';
 import type { SharedValue } from 'react-native-reanimated';
 import { PhaseTag } from '../PhaseTag';
@@ -100,7 +101,7 @@ export function CardHeader({
           <View className='ml-auto'>
             <ChevronRight
               color={getChevronColor(highContrastMode)}
-              size={isCompactMode ? 16 : 18}
+              size={isCompactMode ? iconSizes.small : iconSizes.medium}
               strokeWidth={2}
             />
           </View>

@@ -5,7 +5,7 @@
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { colors } from '../../theme/colors/core';
-import { fontFamilies, fontWeights } from '../../theme/typography';
+import { typography, fontWeights } from '../../theme/typography';
 import { spacing } from '../../theme/spacing';
 
 interface PaywallRestoreLinkProps {
@@ -19,9 +19,8 @@ export function PaywallRestoreLink({ onRestore, disabled }: PaywallRestoreLinkPr
       <Pressable disabled={disabled} hitSlop={8} onPress={onRestore}>
         <Text
           style={{
+            ...typography.bodySmall,
             color: colors.premium[400],
-            fontFamily: fontFamilies.primary.text,
-            fontSize: 14,
             fontWeight: fontWeights.medium,
           }}
         >
@@ -30,9 +29,8 @@ export function PaywallRestoreLink({ onRestore, disabled }: PaywallRestoreLinkPr
       </Pressable>
       <Text
         style={{
+          ...typography.tabBar,
           color: colors.text.tertiary,
-          fontFamily: fontFamilies.primary.text,
-          fontSize: 10,
           lineHeight: 16,
           marginTop: spacing.sm,
           paddingHorizontal: spacing.xl,

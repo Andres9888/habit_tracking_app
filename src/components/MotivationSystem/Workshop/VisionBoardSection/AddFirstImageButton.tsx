@@ -7,6 +7,7 @@ import React, { useCallback } from 'react';
 import { View, Text, Pressable } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 import { ImagePlus } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { springs } from '@/theme/animations';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
@@ -41,7 +42,7 @@ export function AddFirstImageButton({ onPress }: AddFirstImageButtonProps) {
         onPressIn={handlePressIn}
         onPressOut={handlePressOut}
       >
-        <ImagePlus className='text-white' size={16} />
+        <ImagePlus className='text-white' size={iconSizes.small} />
         <Text className='font-medium text-white'>Add Your First Image</Text>
       </AnimatedPressable>
     </View>

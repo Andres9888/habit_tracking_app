@@ -2,6 +2,7 @@ import { View, Text, Pressable } from 'react-native';
 import { ChevronLeft, ChevronRight } from 'lucide-react-native';
 import { format } from 'date-fns';
 import { useThemeColors } from '../../../theme/ThemeContext';
+import { iconSizes } from '@/theme/iconSizes';
 
 interface MonthNavigatorProps {
   currentDate: Date;
@@ -30,7 +31,7 @@ export function MonthNavigator({
           hitSlop={{ bottom: 8, left: 8, right: 8, top: 8 }}
           onPress={onPreviousMonth}
         >
-          <ChevronLeft color={colors.text.primary} size={20} />
+          <ChevronLeft color={colors.text.primary} size={iconSizes.medium} />
         </Pressable>
 
         <Pressable
@@ -40,7 +41,7 @@ export function MonthNavigator({
           hitSlop={{ bottom: 8, left: 8, right: 8, top: 8 }}
           onPress={onNextMonth}
         >
-          <ChevronRight color={colors.text.primary} size={20} />
+          <ChevronRight color={colors.text.primary} size={iconSizes.medium} />
         </Pressable>
       </View>
     </View>

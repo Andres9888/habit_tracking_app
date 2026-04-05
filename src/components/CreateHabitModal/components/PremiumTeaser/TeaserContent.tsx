@@ -1,6 +1,7 @@
 import { Text, View } from 'react-native';
 import { Sparkles, Lock } from 'lucide-react-native';
 import { useThemeColors } from '../../../../theme/ThemeContext';
+import { iconSizes } from '@/theme/iconSizes';
 
 interface TeaserContentProps {
   suggestions: string[];
@@ -14,13 +15,13 @@ export function TeaserContent({ suggestions }: TeaserContentProps) {
       {/* Header */}
       <View className='mb-3 flex-row items-center justify-between'>
         <View className='flex-row items-center'>
-          <Sparkles color={colors.status.premium} size={18} />
+          <Sparkles color={colors.status.premium} size={iconSizes.medium} />
           <Text className='ml-2 text-sm font-bold' style={{ color: colors.status.premiumText }}>
             AI Suggestions
           </Text>
         </View>
         <View className='flex-row items-center rounded-full px-2 py-1' style={{ backgroundColor: colors.status.premiumLight }}>
-          <Lock color={colors.status.premiumText} size={12} />
+          <Lock color={colors.status.premiumText} size={iconSizes.small} />
           <Text className='ml-1 text-[10px] font-bold' style={{ color: colors.status.premiumText }}>
             PRO
           </Text>

@@ -6,7 +6,7 @@
 import { StyleSheet, Text, View } from 'react-native';
 
 import { useThemeColors } from '../../theme/ThemeContext';
-import { fontFamilies } from '@/theme/typography';
+import { fontWeights, typography } from '@/theme/typography';
 
 export function SuggestionsCard() {
   const { colors } = useThemeColors();
@@ -23,16 +23,14 @@ export function SuggestionsCard() {
       width: '100%',
     },
     item: {
+      ...typography.caption,
       color: colors.text.secondary,
-      fontFamily: fontFamilies.primary.text,
-      fontSize: 13,
       lineHeight: 20,
     },
     title: {
+      ...typography.caption,
       color: colors.text.primary,
-      fontFamily: fontFamilies.primary.text,
-      fontSize: 13,
-      fontWeight: '600',
+      fontWeight: fontWeights.semibold,
       marginBottom: 8,
     },
   });

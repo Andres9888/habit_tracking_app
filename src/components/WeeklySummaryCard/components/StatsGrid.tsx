@@ -2,6 +2,7 @@ import { View, Text } from 'react-native';
 import { Trophy, Sparkles } from 'lucide-react-native';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import type { ColorScheme } from '../types';
+import { iconSizes } from '@/theme/iconSizes';
 
 interface StatsGridProps {
   totalCompleted: number;
@@ -27,7 +28,7 @@ export function StatsGrid({
         style={{ backgroundColor: cardBg }}
       >
         <View className='mb-1 flex-row items-center gap-1.5'>
-          <Trophy color={colors.accent} size={14} />
+          <Trophy color={colors.accent} size={iconSizes.small} />
           <Text
             className='text-[10px] font-medium uppercase'
             style={{ color: colors.accent }}
@@ -49,7 +50,7 @@ export function StatsGrid({
         style={{ backgroundColor: cardBg }}
       >
         <View className='mb-1 flex-row items-center gap-1.5'>
-          <Sparkles color={colors.accent} size={14} />
+          <Sparkles color={colors.accent} size={iconSizes.small} />
           <Text
             className='text-[10px] font-medium uppercase'
             style={{ color: colors.accent }}

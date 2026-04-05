@@ -12,6 +12,7 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import type { TrendStyle } from './types';
+import { iconSizes } from '@/theme/iconSizes';
 
 interface TrendBadgeProps {
   trendStyle: TrendStyle;
@@ -32,7 +33,7 @@ export function TrendBadge({ trendStyle, rateChange }: TrendBadgeProps) {
         className='flex-row items-center gap-1 rounded-full px-2 py-1'
         style={{ backgroundColor: trendStyle.bgColor }}
       >
-        <TrendIcon color={trendStyle.textColor} size={12} />
+        <TrendIcon color={trendStyle.textColor} size={iconSizes.small} />
         <Text className='text-xs font-semibold' style={{ color: trendStyle.textColor }}>
           {rateChange > 0 ? '+' : ''}
           {rateChange}%

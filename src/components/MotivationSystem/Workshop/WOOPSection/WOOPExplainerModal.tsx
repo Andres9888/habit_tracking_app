@@ -6,6 +6,7 @@
 import React from 'react';
 import { View, Text, Pressable, Modal } from 'react-native';
 import { Target, X } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import { WOOP_STEPS } from './WOOPExplainerModal.constants';
@@ -41,7 +42,7 @@ export function WOOPExplainerModal({
           <View className='mb-4 flex-row items-start justify-between'>
             <View className='flex-row items-center gap-2'>
               <View className='h-10 w-10 items-center justify-center rounded-xl' style={{ backgroundColor: colors.status.warningLight }}>
-                <Target color={colors.status.warning} size={20} />
+                <Target color={colors.status.warning} size={iconSizes.medium} />
               </View>
               <View>
                 <Text className='text-lg font-bold' style={{ color: colors.text.primary }}>
@@ -58,7 +59,7 @@ export function WOOPExplainerModal({
               style={{ backgroundColor: colors.gray[200] }}
               onPress={onClose}
             >
-              <X color={colors.text.secondary} size={20} />
+              <X color={colors.text.secondary} size={iconSizes.medium} />
             </Pressable>
           </View>
 

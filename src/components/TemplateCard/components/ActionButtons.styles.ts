@@ -5,7 +5,7 @@
 import { StyleSheet } from 'react-native';
 import { colors } from '@/theme';
 import { borderRadius, spacing } from '../../../theme/spacing';
-import { typography, fontFamilies } from '../../../theme/typography';
+import { typography, fontWeights, fontFamilies } from '../../../theme/typography';
 
 export const styles = StyleSheet.create({
   buttonRow: { flexDirection: 'row', gap: spacing.sm },
@@ -29,6 +29,6 @@ export const styles = StyleSheet.create({
     color: colors.text.inverse,
     fontFamily: fontFamilies.primary.text,
     fontSize: typography.body.fontSize,
-    fontWeight: '700',
+    fontWeight: fontWeights.bold,
   },
 });

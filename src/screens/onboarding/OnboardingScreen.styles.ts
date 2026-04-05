@@ -5,7 +5,7 @@ import {
   shadows,
   spacing,
 } from '../../theme/spacing';
-import { typography } from '../../theme/typography';
+import { typography, fontWeights } from '../../theme/typography';
 
 export const styles = StyleSheet.create({
   actionButton: {
@@ -59,7 +59,7 @@ export const styles = StyleSheet.create({
     zIndex: 10,
   },
   skipText: {
-    fontWeight: '500',
+    fontWeight: fontWeights.medium,
     ...typography.body,
   },
   subtitle: {

@@ -1,6 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
 import { ChevronLeft, ChevronRight } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 
 import { useThemeColors } from '../../../theme/ThemeContext';
 
@@ -9,7 +10,7 @@ interface StripNavProps {
   canNavigateForward: boolean;
 }
 
-const ICON_SIZE = 16;
+const ICON_SIZE = iconSizes.small;
 const HINT_OPACITY = 0.35;
 
 /** Circle center Y: 14px label + 2px gap + 22px half-circle - 8px half-icon */

@@ -9,7 +9,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import { useAppTheme } from '../../../theme';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { borderRadius, spacing } from '../../../theme/spacing';
-import { typography, fontFamilies} from '@/theme/typography';
+import { typography, fontWeights, fontFamilies} from '@/theme/typography';
 import { CATEGORY_LABELS } from '../TemplateCard.constants';
 
 interface CategoryBadgeProps {
@@ -34,7 +34,7 @@ export function CategoryBadge({
           <Text
             style={[
               theme.custom.typography.caption,
-              { color: colors.text.secondary, fontWeight: '600' },
+              { color: colors.text.secondary, fontWeight: fontWeights.semibold },
             ]}
           >
             {CATEGORY_LABELS[category] || category}
@@ -72,7 +72,7 @@ export const styles = StyleSheet.create({
     color: '#7c3aed',
     fontFamily: fontFamilies.primary.text,
     fontSize: typography.tabBar.fontSize,
-    fontWeight: '600',
+    fontWeight: fontWeights.semibold,
     letterSpacing: 0.5,
     textTransform: 'uppercase',
   },

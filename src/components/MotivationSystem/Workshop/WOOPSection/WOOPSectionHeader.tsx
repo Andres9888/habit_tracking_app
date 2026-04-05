@@ -10,6 +10,7 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 import { HelpCircle, Plus, Pencil } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import { springs } from '@/theme/animations';
 
@@ -56,13 +57,13 @@ export function WOOPSectionHeader({
           onPressIn={handlePressIn}
           onPressOut={handlePressOut}
         >
-          <HelpCircle color={colors.text.tertiary} size={16} />
+          <HelpCircle color={colors.text.tertiary} size={iconSizes.small} />
         </AnimatedPressable>
         {hasWoop ? (
-          <Pencil color={colors.text.tertiary} size={14} />
+          <Pencil color={colors.text.tertiary} size={iconSizes.small} />
         ) : (
           <View className='flex-row items-center gap-1'>
-            <Plus color={colors.text.secondary} size={12} />
+            <Plus color={colors.text.secondary} size={iconSizes.small} />
             <Text className='text-xs font-medium' style={{ color: colors.text.secondary }}>Set up</Text>
           </View>
         )}

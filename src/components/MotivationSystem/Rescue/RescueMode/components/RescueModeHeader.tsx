@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { AlertTriangle, X } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '../../../../../theme/ThemeContext';
 
 interface RescueModeHeaderProps {
@@ -16,7 +17,7 @@ export function RescueModeHeader({ onClose }: RescueModeHeaderProps) {
   return (
     <View className='flex-row items-center justify-between px-4 py-3'>
       <View className='flex-row items-center gap-2'>
-        <AlertTriangle color={colors.status.error} size={20} />
+        <AlertTriangle color={colors.status.error} size={iconSizes.medium} />
         <Text className='text-lg font-bold' style={{ color: colors.status.errorText }}>🆘 Rescue Mode</Text>
       </View>
       <Pressable
@@ -26,7 +27,7 @@ export function RescueModeHeader({ onClose }: RescueModeHeaderProps) {
         style={{ backgroundColor: `${colors.border}80` }}
         onPress={onClose}
       >
-        <X color={colors.text.secondary} size={24} />
+        <X color={colors.text.secondary} size={iconSizes.large} />
       </Pressable>
     </View>
   );

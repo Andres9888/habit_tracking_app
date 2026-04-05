@@ -1,5 +1,6 @@
 import { View, Text, StyleSheet } from 'react-native';
 import { Trophy } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { fontFamilies, typography, fontWeights } from '../../../theme/typography';
@@ -34,7 +35,7 @@ export function AchievementCard({
       <View
         style={[styles.badge, { backgroundColor: badgeBgColor }]}
       >
-        <Trophy color={trophyColor} size={24} />
+        <Trophy color={trophyColor} size={iconSizes.large} />
       </View>
       <View style={styles.textCol}>
         <Text

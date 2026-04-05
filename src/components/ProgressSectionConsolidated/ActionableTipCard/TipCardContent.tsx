@@ -8,6 +8,7 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import { ChevronRight } from 'lucide-react-native';
 import { useThemeColors } from '@/theme/ThemeContext';
+import { iconSizes } from '@/theme/iconSizes';
 
 import { COLORS } from './constants';
 
@@ -63,7 +64,7 @@ export function TipCardContent({
         >
           <ChevronRight
             color={COLORS.chevron}
-            size={20}
+            size={iconSizes.medium}
             style={{ flexShrink: 0 }}
           />
         </View> : null}

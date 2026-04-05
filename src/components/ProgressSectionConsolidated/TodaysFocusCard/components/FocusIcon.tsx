@@ -13,6 +13,7 @@ import type {
 } from '../../TodaysFocusCardTypes';
 import type { FocusStateConfig } from '../../TodaysFocusCardTypes';
 import { styles } from '../TodaysFocusCard.styles';
+import { iconSizes } from '@/theme/iconSizes';
 
 export interface FocusIconProps {
   focusState: FocusState;
@@ -44,7 +45,7 @@ export function FocusIcon({
       importantForAccessibility='no-hide-descendants'
       style={styles.iconContainer}
     >
-      <config.icon color={config.iconColor} size={28} />
+      <config.icon color={config.iconColor} size={iconSizes.xl} />
     </View>
   );
 }

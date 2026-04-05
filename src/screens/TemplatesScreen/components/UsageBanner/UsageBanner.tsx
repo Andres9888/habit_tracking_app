@@ -5,7 +5,7 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { colors } from '../../../../theme/colors';
 import { borderRadius, spacing } from '../../../../theme/spacing';
-import { typography } from '../../../../theme/typography';
+import { typography, fontWeights } from '../../../../theme/typography';
 import { useUsageBanner } from './UsageBanner.hooks';
 import type { UsageBannerProps } from './UsageBanner.types';
 
@@ -72,7 +72,7 @@ const s = StyleSheet.create({
   ctaText: {
     ...typography.caption,
     color: colors.text.inverse,
-    fontWeight: '700',
+    fontWeight: fontWeights.bold,
   },
   dot: {
     borderRadius: borderRadius.full,

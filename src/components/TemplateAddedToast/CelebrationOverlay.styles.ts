@@ -20,10 +20,9 @@ export const celebrationStyles = StyleSheet.create({
     width: SCREEN_W - 96,
   },
   actionSecondaryText: {
+    ...typography.bodySmall,
     color: colors.gray[500],
-    fontFamily: fontFamilies.primary.text,
-    fontSize: 14,
-    fontWeight: '600',
+    fontWeight: fontWeights.semibold,
   },
   actions: {
     alignItems: 'center',
@@ -75,9 +74,8 @@ export const celebrationStyles = StyleSheet.create({
     color: colors.text.inverse,
   },
   subtitle: {
+    ...typography.bodySmall,
     color: colors.gray[500],
-    fontFamily: fontFamilies.primary.text,
-    fontSize: 14,
     lineHeight: 22,
     marginTop: 8,
     textAlign: 'center',

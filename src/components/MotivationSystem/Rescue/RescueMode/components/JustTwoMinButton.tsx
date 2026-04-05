@@ -9,6 +9,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Zap } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 
 import { useThemeColors } from '../../../../../theme/ThemeContext';
 import { SPRING_BUTTON } from '../RescueMode.constants';
@@ -100,7 +101,7 @@ export function JustTwoMinButton({
           end={{ x: 1, y: 0 }}
           start={{ x: 0, y: 0 }}
         />
-        <Zap className='text-white' fill='white' size={24} />
+        <Zap className='text-white' fill='white' size={iconSizes.large} />
         <View>
           <Text className='text-xl font-bold text-white'>
             Just Do 2 Minutes

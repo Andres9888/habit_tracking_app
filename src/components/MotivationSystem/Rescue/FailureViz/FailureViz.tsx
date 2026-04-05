@@ -8,6 +8,7 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { AlertTriangle } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { clsx } from 'clsx';
 
 import type { FailureVizProps } from './FailureViz.types';
@@ -35,7 +36,7 @@ export function FailureViz({
     >
       <View className='mb-4 flex-row items-center gap-3'>
         <View className='h-10 w-10 items-center justify-center rounded-xl' style={{ backgroundColor: colors.status.errorLight }}>
-          <AlertTriangle color={colors.status.error} size={20} />
+          <AlertTriangle color={colors.status.error} size={iconSizes.medium} />
         </View>
         <View className='flex-1'>
           <Text className='text-base font-semibold' style={{ color: colors.status.errorText }}>
