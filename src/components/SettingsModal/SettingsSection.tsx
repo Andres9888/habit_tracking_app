@@ -1,8 +1,8 @@
-/* eslint-disable max-lines-per-function */
-/** SettingsSection - OPTIMIZED: Deeper shadows, better card styling */
+/** SettingsSection - Card container with section title */
 import { ReactNode } from 'react';
 import { Text, View } from 'react-native';
 
+import { shadows } from '@/theme';
 import { useThemeColors } from '@/theme/ThemeContext';
 
 interface SettingsSectionProps {
@@ -18,7 +18,7 @@ export function SettingsSection({
   children,
   highContrastMode = false,
 }: SettingsSectionProps) {
-  const { colors: themeColors, isDark } = useThemeColors();
+  const { colors: themeColors } = useThemeColors();
 
   const colors = highContrastMode
     ? {
@@ -52,15 +52,9 @@ export function SettingsSection({
           backgroundColor: colors.background,
           borderColor: highContrastMode ? colors.border : undefined,
           borderWidth: highContrastMode ? 1 : 0,
-          elevation: highContrastMode ? 0 : 3,
-          shadowColor: highContrastMode
-            ? 'transparent'
-            : isDark
-              ? '#000000'
-              : '#1c1917',
-          shadowOffset: { height: 4, width: 0 },
-          shadowOpacity: highContrastMode ? 0 : 0.08,
-          shadowRadius: 16,
+          ...(highContrastMode
+            ? { elevation: 0, shadowColor: 'transparent' }
+            : shadows.card),
         }}
       >
         {children}
