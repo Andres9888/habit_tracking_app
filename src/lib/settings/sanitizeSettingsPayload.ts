@@ -10,7 +10,6 @@ const VALID_SORT_MODE: Set<string> = new Set([
   'strength_desc',
   'streak_asc',
   'streak_desc',
-  'day_phase',
 ]);
 const VALID_DAY_SHAPE: Set<string> = new Set(['circle', 'square']);
 const VALID_ICON: Set<string> = new Set(['chain', 'checkbox']);

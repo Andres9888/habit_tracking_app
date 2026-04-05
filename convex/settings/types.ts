@@ -13,7 +13,6 @@ export const HABIT_SORT_MODE_OPTIONS = [
   'strength_desc',
   'streak_asc',
   'streak_desc',
-  'day_phase',
 ] as const;
 export type HabitSortMode = (typeof HABIT_SORT_MODE_OPTIONS)[number];
 

@@ -34,7 +34,6 @@ export type HabitStatus = 'done' | 'missed' | 'planned';
 /** Available sort orders for the habit list. */
 export type HabitSortMode =
   | 'manual'
-  | 'day_phase'
   | 'name_asc'
   | 'name_desc'
   | 'strength_asc'

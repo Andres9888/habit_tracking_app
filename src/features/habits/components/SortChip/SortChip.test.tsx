@@ -47,7 +47,6 @@ describe('SortChip', () => {
   describe('Sort Label Mapping', () => {
     const sortModes: Array<{ mode: HabitSortMode; expectedLabel: string }> = [
       { mode: 'manual', expectedLabel: 'Custom' },
-      { mode: 'day_phase', expectedLabel: 'Day Phase' },
       { mode: 'name_asc', expectedLabel: 'A–Z' },
       { mode: 'name_desc', expectedLabel: 'Z–A' },
       { mode: 'strength_asc', expectedLabel: 'Strength ↑' },

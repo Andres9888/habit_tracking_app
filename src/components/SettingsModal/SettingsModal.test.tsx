@@ -4,9 +4,11 @@ import { render } from '@testing-library/react-native';
 import SettingsModal from './SettingsModal';
 
 describe('SettingsModal', () => {
-  it('renders visual preferences section when visible', () => {
-    const { getByText } = render(<SettingsModal onClose={() => {}} visible />);
+  it('renders redesigned settings sections when visible', () => {
+    const { getByText, getByLabelText } = render(<SettingsModal onClose={() => {}} visible />);
 
-    expect(getByText('Visual Preferences')).toBeTruthy();
+    expect(getByText('Appearance')).toBeTruthy();
+    expect(getByText('Behavior')).toBeTruthy();
+    expect(getByLabelText('Account settings')).toBeTruthy();
   });
 });

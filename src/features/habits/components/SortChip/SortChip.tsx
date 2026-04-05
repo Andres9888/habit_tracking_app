@@ -1,4 +1,4 @@
-import { ChevronRight, LayoutList } from 'lucide-react-native';
+import { ArrowUpDown, ChevronRight, LayoutList } from 'lucide-react-native';
 import { Pressable, Text, View } from 'react-native';
 import Animated, {
   useSharedValue,
@@ -115,8 +115,9 @@ export function SortChip({
           </Text>
         </View>
 
-        {/* Right side: sort label + chevron */}
+        {/* Right side: sort icon + sort label + chevron */}
         <View className='flex-row items-center gap-1'>
+          <ArrowUpDown color={colors.text.tertiary} size={14} strokeWidth={2} />
           <Text className='text-[13px] font-normal' style={{ color: colors.text.tertiary }}>
             {sortLabel}
           </Text>

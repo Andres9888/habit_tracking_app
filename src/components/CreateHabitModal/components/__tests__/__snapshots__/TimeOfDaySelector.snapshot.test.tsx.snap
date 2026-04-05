@@ -1,0 +1,889 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TimeOfDaySelector Snapshots should match snapshot with Pivot (Afternoon) selected 1`] = `
+<View
+  className="mb-6 rounded-2xl bg-white p-4"
+>
+  <Text
+    className="mb-3 text-base font-semibold"
+    style={
+      {
+        "color": "#2D2A26",
+      }
+    }
+  >
+    When
+  </Text>
+  <View
+    className="flex-row gap-3"
+  >
+    <View
+      accessibilityLabel="Push - 0-8h after waking"
+      accessibilityRole="button"
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": false,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      className="flex-1"
+      collapsable={false}
+      focusable={true}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+    >
+      <View
+        className="items-center justify-center rounded-xl px-3 py-3"
+        collapsable={false}
+        style={
+          {
+            "backgroundColor": "#fafaf9",
+            "borderColor": "#e7e5e4",
+            "borderWidth": 1.5,
+            "transform": [
+              {
+                "scale": 1,
+              },
+            ],
+          }
+        }
+      >
+        <Text
+          className="mb-1 text-lg"
+        >
+          🌅
+        </Text>
+        <Text
+          className="text-sm font-semibold"
+          style={
+            {
+              "color": "#1c1917",
+            }
+          }
+        >
+          Push
+        </Text>
+      </View>
+    </View>
+    <View
+      accessibilityLabel="Pivot - 9-15h after waking"
+      accessibilityRole="button"
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": true,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      className="flex-1"
+      collapsable={false}
+      focusable={true}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+    >
+      <View
+        className="items-center justify-center rounded-xl px-3 py-3"
+        collapsable={false}
+        style={
+          {
+            "backgroundColor": "#22C55E",
+            "borderColor": "#16A34A",
+            "borderWidth": 1.5,
+            "transform": [
+              {
+                "scale": 1,
+              },
+            ],
+          }
+        }
+      >
+        <Text
+          className="mb-1 text-lg"
+        >
+          ☀️
+        </Text>
+        <Text
+          className="text-sm font-semibold"
+          style={
+            {
+              "color": "#FFFFFF",
+            }
+          }
+        >
+          Pivot
+        </Text>
+      </View>
+    </View>
+    <View
+      accessibilityLabel="Pull - 16+h after waking"
+      accessibilityRole="button"
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": false,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      className="flex-1"
+      collapsable={false}
+      focusable={true}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+    >
+      <View
+        className="items-center justify-center rounded-xl px-3 py-3"
+        collapsable={false}
+        style={
+          {
+            "backgroundColor": "#fafaf9",
+            "borderColor": "#e7e5e4",
+            "borderWidth": 1.5,
+            "transform": [
+              {
+                "scale": 1,
+              },
+            ],
+          }
+        }
+      >
+        <Text
+          className="mb-1 text-lg"
+        >
+          🌙
+        </Text>
+        <Text
+          className="text-sm font-semibold"
+          style={
+            {
+              "color": "#1c1917",
+            }
+          }
+        >
+          Pull
+        </Text>
+      </View>
+    </View>
+  </View>
+</View>
+`;
+
+exports[`TimeOfDaySelector Snapshots should match snapshot with Pull (Evening) selected 1`] = `
+<View
+  className="mb-6 rounded-2xl bg-white p-4"
+>
+  <Text
+    className="mb-3 text-base font-semibold"
+    style={
+      {
+        "color": "#2D2A26",
+      }
+    }
+  >
+    When
+  </Text>
+  <View
+    className="flex-row gap-3"
+  >
+    <View
+      accessibilityLabel="Push - 0-8h after waking"
+      accessibilityRole="button"
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": false,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      className="flex-1"
+      collapsable={false}
+      focusable={true}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+    >
+      <View
+        className="items-center justify-center rounded-xl px-3 py-3"
+        collapsable={false}
+        style={
+          {
+            "backgroundColor": "#fafaf9",
+            "borderColor": "#e7e5e4",
+            "borderWidth": 1.5,
+            "transform": [
+              {
+                "scale": 1,
+              },
+            ],
+          }
+        }
+      >
+        <Text
+          className="mb-1 text-lg"
+        >
+          🌅
+        </Text>
+        <Text
+          className="text-sm font-semibold"
+          style={
+            {
+              "color": "#1c1917",
+            }
+          }
+        >
+          Push
+        </Text>
+      </View>
+    </View>
+    <View
+      accessibilityLabel="Pivot - 9-15h after waking"
+      accessibilityRole="button"
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": false,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      className="flex-1"
+      collapsable={false}
+      focusable={true}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+    >
+      <View
+        className="items-center justify-center rounded-xl px-3 py-3"
+        collapsable={false}
+        style={
+          {
+            "backgroundColor": "#fafaf9",
+            "borderColor": "#e7e5e4",
+            "borderWidth": 1.5,
+            "transform": [
+              {
+                "scale": 1,
+              },
+            ],
+          }
+        }
+      >
+        <Text
+          className="mb-1 text-lg"
+        >
+          ☀️
+        </Text>
+        <Text
+          className="text-sm font-semibold"
+          style={
+            {
+              "color": "#1c1917",
+            }
+          }
+        >
+          Pivot
+        </Text>
+      </View>
+    </View>
+    <View
+      accessibilityLabel="Pull - 16+h after waking"
+      accessibilityRole="button"
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": true,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      className="flex-1"
+      collapsable={false}
+      focusable={true}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+    >
+      <View
+        className="items-center justify-center rounded-xl px-3 py-3"
+        collapsable={false}
+        style={
+          {
+            "backgroundColor": "#22C55E",
+            "borderColor": "#16A34A",
+            "borderWidth": 1.5,
+            "transform": [
+              {
+                "scale": 1,
+              },
+            ],
+          }
+        }
+      >
+        <Text
+          className="mb-1 text-lg"
+        >
+          🌙
+        </Text>
+        <Text
+          className="text-sm font-semibold"
+          style={
+            {
+              "color": "#FFFFFF",
+            }
+          }
+        >
+          Pull
+        </Text>
+      </View>
+    </View>
+  </View>
+</View>
+`;
+
+exports[`TimeOfDaySelector Snapshots should match snapshot with Push (Morning) selected 1`] = `
+<View
+  className="mb-6 rounded-2xl bg-white p-4"
+>
+  <Text
+    className="mb-3 text-base font-semibold"
+    style={
+      {
+        "color": "#2D2A26",
+      }
+    }
+  >
+    When
+  </Text>
+  <View
+    className="flex-row gap-3"
+  >
+    <View
+      accessibilityLabel="Push - 0-8h after waking"
+      accessibilityRole="button"
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": true,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      className="flex-1"
+      collapsable={false}
+      focusable={true}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+    >
+      <View
+        className="items-center justify-center rounded-xl px-3 py-3"
+        collapsable={false}
+        style={
+          {
+            "backgroundColor": "#22C55E",
+            "borderColor": "#16A34A",
+            "borderWidth": 1.5,
+            "transform": [
+              {
+                "scale": 1,
+              },
+            ],
+          }
+        }
+      >
+        <Text
+          className="mb-1 text-lg"
+        >
+          🌅
+        </Text>
+        <Text
+          className="text-sm font-semibold"
+          style={
+            {
+              "color": "#FFFFFF",
+            }
+          }
+        >
+          Push
+        </Text>
+      </View>
+    </View>
+    <View
+      accessibilityLabel="Pivot - 9-15h after waking"
+      accessibilityRole="button"
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": false,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      className="flex-1"
+      collapsable={false}
+      focusable={true}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+    >
+      <View
+        className="items-center justify-center rounded-xl px-3 py-3"
+        collapsable={false}
+        style={
+          {
+            "backgroundColor": "#fafaf9",
+            "borderColor": "#e7e5e4",
+            "borderWidth": 1.5,
+            "transform": [
+              {
+                "scale": 1,
+              },
+            ],
+          }
+        }
+      >
+        <Text
+          className="mb-1 text-lg"
+        >
+          ☀️
+        </Text>
+        <Text
+          className="text-sm font-semibold"
+          style={
+            {
+              "color": "#1c1917",
+            }
+          }
+        >
+          Pivot
+        </Text>
+      </View>
+    </View>
+    <View
+      accessibilityLabel="Pull - 16+h after waking"
+      accessibilityRole="button"
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": false,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      className="flex-1"
+      collapsable={false}
+      focusable={true}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+    >
+      <View
+        className="items-center justify-center rounded-xl px-3 py-3"
+        collapsable={false}
+        style={
+          {
+            "backgroundColor": "#fafaf9",
+            "borderColor": "#e7e5e4",
+            "borderWidth": 1.5,
+            "transform": [
+              {
+                "scale": 1,
+              },
+            ],
+          }
+        }
+      >
+        <Text
+          className="mb-1 text-lg"
+        >
+          🌙
+        </Text>
+        <Text
+          className="text-sm font-semibold"
+          style={
+            {
+              "color": "#1c1917",
+            }
+          }
+        >
+          Pull
+        </Text>
+      </View>
+    </View>
+  </View>
+</View>
+`;
+
+exports[`TimeOfDaySelector Snapshots should match snapshot with no selection 1`] = `
+<View
+  className="mb-6 rounded-2xl bg-white p-4"
+>
+  <Text
+    className="mb-3 text-base font-semibold"
+    style={
+      {
+        "color": "#2D2A26",
+      }
+    }
+  >
+    When
+  </Text>
+  <View
+    className="flex-row gap-3"
+  >
+    <View
+      accessibilityLabel="Push - 0-8h after waking"
+      accessibilityRole="button"
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": false,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      className="flex-1"
+      collapsable={false}
+      focusable={true}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+    >
+      <View
+        className="items-center justify-center rounded-xl px-3 py-3"
+        collapsable={false}
+        style={
+          {
+            "backgroundColor": "#fafaf9",
+            "borderColor": "#e7e5e4",
+            "borderWidth": 1.5,
+            "transform": [
+              {
+                "scale": 1,
+              },
+            ],
+          }
+        }
+      >
+        <Text
+          className="mb-1 text-lg"
+        >
+          🌅
+        </Text>
+        <Text
+          className="text-sm font-semibold"
+          style={
+            {
+              "color": "#1c1917",
+            }
+          }
+        >
+          Push
+        </Text>
+      </View>
+    </View>
+    <View
+      accessibilityLabel="Pivot - 9-15h after waking"
+      accessibilityRole="button"
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": false,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      className="flex-1"
+      collapsable={false}
+      focusable={true}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+    >
+      <View
+        className="items-center justify-center rounded-xl px-3 py-3"
+        collapsable={false}
+        style={
+          {
+            "backgroundColor": "#fafaf9",
+            "borderColor": "#e7e5e4",
+            "borderWidth": 1.5,
+            "transform": [
+              {
+                "scale": 1,
+              },
+            ],
+          }
+        }
+      >
+        <Text
+          className="mb-1 text-lg"
+        >
+          ☀️
+        </Text>
+        <Text
+          className="text-sm font-semibold"
+          style={
+            {
+              "color": "#1c1917",
+            }
+          }
+        >
+          Pivot
+        </Text>
+      </View>
+    </View>
+    <View
+      accessibilityLabel="Pull - 16+h after waking"
+      accessibilityRole="button"
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": false,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      className="flex-1"
+      collapsable={false}
+      focusable={true}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+    >
+      <View
+        className="items-center justify-center rounded-xl px-3 py-3"
+        collapsable={false}
+        style={
+          {
+            "backgroundColor": "#fafaf9",
+            "borderColor": "#e7e5e4",
+            "borderWidth": 1.5,
+            "transform": [
+              {
+                "scale": 1,
+              },
+            ],
+          }
+        }
+      >
+        <Text
+          className="mb-1 text-lg"
+        >
+          🌙
+        </Text>
+        <Text
+          className="text-sm font-semibold"
+          style={
+            {
+              "color": "#1c1917",
+            }
+          }
+        >
+          Pull
+        </Text>
+      </View>
+    </View>
+  </View>
+</View>
+`;

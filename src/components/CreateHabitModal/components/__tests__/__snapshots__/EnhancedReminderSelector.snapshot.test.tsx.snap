@@ -1,0 +1,2833 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`EnhancedReminderSelector Snapshots Disabled State renders in disabled state (collapsed) 1`] = `
+<View
+  className="mb-6"
+  testID="enhanced-reminder-selector"
+>
+  <View
+    className="flex-row items-center justify-between rounded-2xl border px-4 py-4"
+    style={
+      [
+        {
+          "elevation": 1,
+          "shadowColor": "#2D2A26",
+          "shadowOffset": {
+            "height": 1,
+            "width": 0,
+          },
+          "shadowOpacity": 0.04,
+          "shadowRadius": 3,
+        },
+        {
+          "backgroundColor": "#EDEAE5",
+          "borderColor": "#DDD8D2",
+        },
+      ]
+    }
+  >
+    <View
+      className="flex-row items-center gap-3"
+    >
+      <View
+        className="h-10 w-10 items-center justify-center rounded-full"
+        style={
+          {
+            "backgroundColor": "#D1FAE5",
+          }
+        }
+      >
+        <View
+          color="#059669"
+          size={18}
+          testID="lucide-icon-Bell"
+        />
+      </View>
+      <Text
+        className="text-base font-medium"
+        style={
+          {
+            "color": "#2D2A26",
+          }
+        }
+      >
+        Daily Reminder
+      </Text>
+    </View>
+    <RCTSwitch
+      accessibilityLabel="Enable reminder"
+      accessibilityRole="switch"
+      onChange={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      onTintColor="#059669"
+      style={
+        [
+          {
+            "alignSelf": "flex-start",
+          },
+          {
+            "backgroundColor": "#DDD8D2",
+            "borderRadius": 16,
+          },
+        ]
+      }
+      testID="reminder-toggle"
+      thumbTintColor="#ffffff"
+      tintColor="#DDD8D2"
+      value={false}
+    />
+  </View>
+</View>
+`;
+
+exports[`EnhancedReminderSelector Snapshots Enabled State renders with custom time (no preset selected) 1`] = `
+<View
+  className="mb-6"
+  testID="enhanced-reminder-selector"
+>
+  <View
+    className="flex-row items-center justify-between rounded-2xl border px-4 py-4"
+    style={
+      [
+        {
+          "elevation": 1,
+          "shadowColor": "#2D2A26",
+          "shadowOffset": {
+            "height": 1,
+            "width": 0,
+          },
+          "shadowOpacity": 0.04,
+          "shadowRadius": 3,
+        },
+        {
+          "backgroundColor": "#EDEAE5",
+          "borderColor": "#DDD8D2",
+        },
+      ]
+    }
+  >
+    <View
+      className="flex-row items-center gap-3"
+    >
+      <View
+        className="h-10 w-10 items-center justify-center rounded-full"
+        style={
+          {
+            "backgroundColor": "#D1FAE5",
+          }
+        }
+      >
+        <View
+          color="#059669"
+          size={18}
+          testID="lucide-icon-Bell"
+        />
+      </View>
+      <Text
+        className="text-base font-medium"
+        style={
+          {
+            "color": "#2D2A26",
+          }
+        }
+      >
+        Daily Reminder
+      </Text>
+    </View>
+    <RCTSwitch
+      accessibilityLabel="Disable reminder"
+      accessibilityRole="switch"
+      onChange={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      onTintColor="#059669"
+      style={
+        [
+          {
+            "alignSelf": "flex-start",
+          },
+          {
+            "backgroundColor": "#DDD8D2",
+            "borderRadius": 16,
+          },
+        ]
+      }
+      testID="reminder-toggle"
+      thumbTintColor="#ffffff"
+      tintColor="#DDD8D2"
+      value={true}
+    />
+  </View>
+  <View
+    className="mt-4"
+  >
+    <View
+      className="mb-4 flex-row gap-3"
+      testID="preset-buttons"
+    >
+      <View
+        accessibilityLabel="Set reminder for Morning at 7:00 AM"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": false,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        className="flex-1"
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        testID="preset-morning"
+      >
+        <View
+          className="items-center justify-center rounded-xl px-3"
+          collapsable={false}
+          style={
+            {
+              "backgroundColor": "#f5f5f4",
+              "borderColor": "transparent",
+              "borderWidth": 1,
+              "height": 48,
+              "transform": [
+                {
+                  "scale": 1,
+                },
+              ],
+            }
+          }
+        >
+          <View
+            className="flex-row items-center gap-1.5"
+          >
+            <Text
+              className="text-base"
+            >
+              🌅
+            </Text>
+            <Text
+              className="text-sm font-semibold"
+              style={
+                {
+                  "color": "#57534e",
+                }
+              }
+            >
+              Morning
+            </Text>
+          </View>
+          <Text
+            className="mt-0.5 text-xs"
+            style={
+              {
+                "color": "#a8a29e",
+              }
+            }
+          >
+            7:00 AM
+          </Text>
+        </View>
+      </View>
+      <View
+        accessibilityLabel="Set reminder for Midday at 12:00 PM"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": false,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        className="flex-1"
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        testID="preset-midday"
+      >
+        <View
+          className="items-center justify-center rounded-xl px-3"
+          collapsable={false}
+          style={
+            {
+              "backgroundColor": "#f5f5f4",
+              "borderColor": "transparent",
+              "borderWidth": 1,
+              "height": 48,
+              "transform": [
+                {
+                  "scale": 1,
+                },
+              ],
+            }
+          }
+        >
+          <View
+            className="flex-row items-center gap-1.5"
+          >
+            <Text
+              className="text-base"
+            >
+              ☀️
+            </Text>
+            <Text
+              className="text-sm font-semibold"
+              style={
+                {
+                  "color": "#57534e",
+                }
+              }
+            >
+              Midday
+            </Text>
+          </View>
+          <Text
+            className="mt-0.5 text-xs"
+            style={
+              {
+                "color": "#a8a29e",
+              }
+            }
+          >
+            12:00 PM
+          </Text>
+        </View>
+      </View>
+      <View
+        accessibilityLabel="Set reminder for Evening at 8:00 PM"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": false,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        className="flex-1"
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        testID="preset-evening"
+      >
+        <View
+          className="items-center justify-center rounded-xl px-3"
+          collapsable={false}
+          style={
+            {
+              "backgroundColor": "#f5f5f4",
+              "borderColor": "transparent",
+              "borderWidth": 1,
+              "height": 48,
+              "transform": [
+                {
+                  "scale": 1,
+                },
+              ],
+            }
+          }
+        >
+          <View
+            className="flex-row items-center gap-1.5"
+          >
+            <Text
+              className="text-base"
+            >
+              🌙
+            </Text>
+            <Text
+              className="text-sm font-semibold"
+              style={
+                {
+                  "color": "#57534e",
+                }
+              }
+            >
+              Evening
+            </Text>
+          </View>
+          <Text
+            className="mt-0.5 text-xs"
+            style={
+              {
+                "color": "#a8a29e",
+              }
+            }
+          >
+            8:00 PM
+          </Text>
+        </View>
+      </View>
+    </View>
+    <View
+      accessibilityHint="Opens time picker"
+      accessibilityLabel="Custom time set to 6:30 AM. Double tap to change."
+      accessibilityRole="button"
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      className="mb-4 flex-row items-center justify-center py-3"
+      collapsable={false}
+      focusable={true}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      testID="custom-time-button"
+    >
+      <View
+        color="#059669"
+        size={16}
+        testID="lucide-icon-Clock"
+      />
+      <Text
+        className="ml-1.5 text-sm font-medium"
+        style={
+          {
+            "color": "#059669",
+          }
+        }
+      >
+        6:30 AM
+      </Text>
+      <Text
+        className="ml-1 text-sm"
+        style={
+          {
+            "color": "#059669",
+          }
+        }
+      >
+        (tap to change)
+      </Text>
+    </View>
+    <View
+      className="items-center"
+    >
+      <View
+        testID="next-reminder-badge"
+      >
+        <Text>
+          Next: 
+          6:30 AM
+        </Text>
+      </View>
+    </View>
+  </View>
+</View>
+`;
+
+exports[`EnhancedReminderSelector Snapshots Enabled State renders with custom time at midnight 1`] = `
+<View
+  className="mb-6"
+  testID="enhanced-reminder-selector"
+>
+  <View
+    className="flex-row items-center justify-between rounded-2xl border px-4 py-4"
+    style={
+      [
+        {
+          "elevation": 1,
+          "shadowColor": "#2D2A26",
+          "shadowOffset": {
+            "height": 1,
+            "width": 0,
+          },
+          "shadowOpacity": 0.04,
+          "shadowRadius": 3,
+        },
+        {
+          "backgroundColor": "#EDEAE5",
+          "borderColor": "#DDD8D2",
+        },
+      ]
+    }
+  >
+    <View
+      className="flex-row items-center gap-3"
+    >
+      <View
+        className="h-10 w-10 items-center justify-center rounded-full"
+        style={
+          {
+            "backgroundColor": "#D1FAE5",
+          }
+        }
+      >
+        <View
+          color="#059669"
+          size={18}
+          testID="lucide-icon-Bell"
+        />
+      </View>
+      <Text
+        className="text-base font-medium"
+        style={
+          {
+            "color": "#2D2A26",
+          }
+        }
+      >
+        Daily Reminder
+      </Text>
+    </View>
+    <RCTSwitch
+      accessibilityLabel="Disable reminder"
+      accessibilityRole="switch"
+      onChange={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      onTintColor="#059669"
+      style={
+        [
+          {
+            "alignSelf": "flex-start",
+          },
+          {
+            "backgroundColor": "#DDD8D2",
+            "borderRadius": 16,
+          },
+        ]
+      }
+      testID="reminder-toggle"
+      thumbTintColor="#ffffff"
+      tintColor="#DDD8D2"
+      value={true}
+    />
+  </View>
+  <View
+    className="mt-4"
+  >
+    <View
+      className="mb-4 flex-row gap-3"
+      testID="preset-buttons"
+    >
+      <View
+        accessibilityLabel="Set reminder for Morning at 7:00 AM"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": false,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        className="flex-1"
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        testID="preset-morning"
+      >
+        <View
+          className="items-center justify-center rounded-xl px-3"
+          collapsable={false}
+          style={
+            {
+              "backgroundColor": "#f5f5f4",
+              "borderColor": "transparent",
+              "borderWidth": 1,
+              "height": 48,
+              "transform": [
+                {
+                  "scale": 1,
+                },
+              ],
+            }
+          }
+        >
+          <View
+            className="flex-row items-center gap-1.5"
+          >
+            <Text
+              className="text-base"
+            >
+              🌅
+            </Text>
+            <Text
+              className="text-sm font-semibold"
+              style={
+                {
+                  "color": "#57534e",
+                }
+              }
+            >
+              Morning
+            </Text>
+          </View>
+          <Text
+            className="mt-0.5 text-xs"
+            style={
+              {
+                "color": "#a8a29e",
+              }
+            }
+          >
+            7:00 AM
+          </Text>
+        </View>
+      </View>
+      <View
+        accessibilityLabel="Set reminder for Midday at 12:00 PM"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": false,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        className="flex-1"
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        testID="preset-midday"
+      >
+        <View
+          className="items-center justify-center rounded-xl px-3"
+          collapsable={false}
+          style={
+            {
+              "backgroundColor": "#f5f5f4",
+              "borderColor": "transparent",
+              "borderWidth": 1,
+              "height": 48,
+              "transform": [
+                {
+                  "scale": 1,
+                },
+              ],
+            }
+          }
+        >
+          <View
+            className="flex-row items-center gap-1.5"
+          >
+            <Text
+              className="text-base"
+            >
+              ☀️
+            </Text>
+            <Text
+              className="text-sm font-semibold"
+              style={
+                {
+                  "color": "#57534e",
+                }
+              }
+            >
+              Midday
+            </Text>
+          </View>
+          <Text
+            className="mt-0.5 text-xs"
+            style={
+              {
+                "color": "#a8a29e",
+              }
+            }
+          >
+            12:00 PM
+          </Text>
+        </View>
+      </View>
+      <View
+        accessibilityLabel="Set reminder for Evening at 8:00 PM"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": false,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        className="flex-1"
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        testID="preset-evening"
+      >
+        <View
+          className="items-center justify-center rounded-xl px-3"
+          collapsable={false}
+          style={
+            {
+              "backgroundColor": "#f5f5f4",
+              "borderColor": "transparent",
+              "borderWidth": 1,
+              "height": 48,
+              "transform": [
+                {
+                  "scale": 1,
+                },
+              ],
+            }
+          }
+        >
+          <View
+            className="flex-row items-center gap-1.5"
+          >
+            <Text
+              className="text-base"
+            >
+              🌙
+            </Text>
+            <Text
+              className="text-sm font-semibold"
+              style={
+                {
+                  "color": "#57534e",
+                }
+              }
+            >
+              Evening
+            </Text>
+          </View>
+          <Text
+            className="mt-0.5 text-xs"
+            style={
+              {
+                "color": "#a8a29e",
+              }
+            }
+          >
+            8:00 PM
+          </Text>
+        </View>
+      </View>
+    </View>
+    <View
+      accessibilityHint="Opens time picker"
+      accessibilityLabel="Custom time set to 12:00 AM. Double tap to change."
+      accessibilityRole="button"
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      className="mb-4 flex-row items-center justify-center py-3"
+      collapsable={false}
+      focusable={true}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      testID="custom-time-button"
+    >
+      <View
+        color="#059669"
+        size={16}
+        testID="lucide-icon-Clock"
+      />
+      <Text
+        className="ml-1.5 text-sm font-medium"
+        style={
+          {
+            "color": "#059669",
+          }
+        }
+      >
+        12:00 AM
+      </Text>
+      <Text
+        className="ml-1 text-sm"
+        style={
+          {
+            "color": "#059669",
+          }
+        }
+      >
+        (tap to change)
+      </Text>
+    </View>
+    <View
+      className="items-center"
+    >
+      <View
+        testID="next-reminder-badge"
+      >
+        <Text>
+          Next: 
+          12:00 AM
+        </Text>
+      </View>
+    </View>
+  </View>
+</View>
+`;
+
+exports[`EnhancedReminderSelector Snapshots Enabled State renders with evening preset selected 1`] = `
+<View
+  className="mb-6"
+  testID="enhanced-reminder-selector"
+>
+  <View
+    className="flex-row items-center justify-between rounded-2xl border px-4 py-4"
+    style={
+      [
+        {
+          "elevation": 1,
+          "shadowColor": "#2D2A26",
+          "shadowOffset": {
+            "height": 1,
+            "width": 0,
+          },
+          "shadowOpacity": 0.04,
+          "shadowRadius": 3,
+        },
+        {
+          "backgroundColor": "#EDEAE5",
+          "borderColor": "#DDD8D2",
+        },
+      ]
+    }
+  >
+    <View
+      className="flex-row items-center gap-3"
+    >
+      <View
+        className="h-10 w-10 items-center justify-center rounded-full"
+        style={
+          {
+            "backgroundColor": "#D1FAE5",
+          }
+        }
+      >
+        <View
+          color="#059669"
+          size={18}
+          testID="lucide-icon-Bell"
+        />
+      </View>
+      <Text
+        className="text-base font-medium"
+        style={
+          {
+            "color": "#2D2A26",
+          }
+        }
+      >
+        Daily Reminder
+      </Text>
+    </View>
+    <RCTSwitch
+      accessibilityLabel="Disable reminder"
+      accessibilityRole="switch"
+      onChange={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      onTintColor="#059669"
+      style={
+        [
+          {
+            "alignSelf": "flex-start",
+          },
+          {
+            "backgroundColor": "#DDD8D2",
+            "borderRadius": 16,
+          },
+        ]
+      }
+      testID="reminder-toggle"
+      thumbTintColor="#ffffff"
+      tintColor="#DDD8D2"
+      value={true}
+    />
+  </View>
+  <View
+    className="mt-4"
+  >
+    <View
+      className="mb-4 flex-row gap-3"
+      testID="preset-buttons"
+    >
+      <View
+        accessibilityLabel="Set reminder for Morning at 7:00 AM"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": false,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        className="flex-1"
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        testID="preset-morning"
+      >
+        <View
+          className="items-center justify-center rounded-xl px-3"
+          collapsable={false}
+          style={
+            {
+              "backgroundColor": "#f5f5f4",
+              "borderColor": "transparent",
+              "borderWidth": 1,
+              "height": 48,
+              "transform": [
+                {
+                  "scale": 1,
+                },
+              ],
+            }
+          }
+        >
+          <View
+            className="flex-row items-center gap-1.5"
+          >
+            <Text
+              className="text-base"
+            >
+              🌅
+            </Text>
+            <Text
+              className="text-sm font-semibold"
+              style={
+                {
+                  "color": "#57534e",
+                }
+              }
+            >
+              Morning
+            </Text>
+          </View>
+          <Text
+            className="mt-0.5 text-xs"
+            style={
+              {
+                "color": "#a8a29e",
+              }
+            }
+          >
+            7:00 AM
+          </Text>
+        </View>
+      </View>
+      <View
+        accessibilityLabel="Set reminder for Midday at 12:00 PM"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": false,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        className="flex-1"
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        testID="preset-midday"
+      >
+        <View
+          className="items-center justify-center rounded-xl px-3"
+          collapsable={false}
+          style={
+            {
+              "backgroundColor": "#f5f5f4",
+              "borderColor": "transparent",
+              "borderWidth": 1,
+              "height": 48,
+              "transform": [
+                {
+                  "scale": 1,
+                },
+              ],
+            }
+          }
+        >
+          <View
+            className="flex-row items-center gap-1.5"
+          >
+            <Text
+              className="text-base"
+            >
+              ☀️
+            </Text>
+            <Text
+              className="text-sm font-semibold"
+              style={
+                {
+                  "color": "#57534e",
+                }
+              }
+            >
+              Midday
+            </Text>
+          </View>
+          <Text
+            className="mt-0.5 text-xs"
+            style={
+              {
+                "color": "#a8a29e",
+              }
+            }
+          >
+            12:00 PM
+          </Text>
+        </View>
+      </View>
+      <View
+        accessibilityLabel="Set reminder for Evening at 8:00 PM"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": true,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        className="flex-1"
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        testID="preset-evening"
+      >
+        <View
+          className="items-center justify-center rounded-xl px-3"
+          collapsable={false}
+          style={
+            {
+              "backgroundColor": "#ECFDF5",
+              "borderColor": "#10B981",
+              "borderWidth": 2,
+              "height": 48,
+              "transform": [
+                {
+                  "scale": 1,
+                },
+              ],
+            }
+          }
+        >
+          <View
+            className="flex-row items-center gap-1.5"
+          >
+            <Text
+              className="text-base"
+            >
+              🌙
+            </Text>
+            <Text
+              className="text-sm font-semibold"
+              style={
+                {
+                  "color": "#059669",
+                }
+              }
+            >
+              Evening
+            </Text>
+          </View>
+          <Text
+            className="mt-0.5 text-xs"
+            style={
+              {
+                "color": "#047857",
+              }
+            }
+          >
+            8:00 PM
+          </Text>
+        </View>
+      </View>
+    </View>
+    <View
+      accessibilityHint="Opens time picker"
+      accessibilityLabel="Set a custom reminder time"
+      accessibilityRole="button"
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      className="mb-4 flex-row items-center justify-center py-3"
+      collapsable={false}
+      focusable={true}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      testID="custom-time-button"
+    >
+      <Text
+        className="text-sm font-medium"
+        style={
+          {
+            "color": "#059669",
+          }
+        }
+      >
+        Pick a different time
+      </Text>
+      <Text
+        className="ml-1"
+        style={
+          {
+            "color": "#059669",
+          }
+        }
+      >
+        →
+      </Text>
+    </View>
+    <View
+      className="items-center"
+    >
+      <View
+        testID="next-reminder-badge"
+      >
+        <Text>
+          Next: 
+          8:00 PM
+        </Text>
+      </View>
+    </View>
+  </View>
+</View>
+`;
+
+exports[`EnhancedReminderSelector Snapshots Enabled State renders with midday preset selected 1`] = `
+<View
+  className="mb-6"
+  testID="enhanced-reminder-selector"
+>
+  <View
+    className="flex-row items-center justify-between rounded-2xl border px-4 py-4"
+    style={
+      [
+        {
+          "elevation": 1,
+          "shadowColor": "#2D2A26",
+          "shadowOffset": {
+            "height": 1,
+            "width": 0,
+          },
+          "shadowOpacity": 0.04,
+          "shadowRadius": 3,
+        },
+        {
+          "backgroundColor": "#EDEAE5",
+          "borderColor": "#DDD8D2",
+        },
+      ]
+    }
+  >
+    <View
+      className="flex-row items-center gap-3"
+    >
+      <View
+        className="h-10 w-10 items-center justify-center rounded-full"
+        style={
+          {
+            "backgroundColor": "#D1FAE5",
+          }
+        }
+      >
+        <View
+          color="#059669"
+          size={18}
+          testID="lucide-icon-Bell"
+        />
+      </View>
+      <Text
+        className="text-base font-medium"
+        style={
+          {
+            "color": "#2D2A26",
+          }
+        }
+      >
+        Daily Reminder
+      </Text>
+    </View>
+    <RCTSwitch
+      accessibilityLabel="Disable reminder"
+      accessibilityRole="switch"
+      onChange={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      onTintColor="#059669"
+      style={
+        [
+          {
+            "alignSelf": "flex-start",
+          },
+          {
+            "backgroundColor": "#DDD8D2",
+            "borderRadius": 16,
+          },
+        ]
+      }
+      testID="reminder-toggle"
+      thumbTintColor="#ffffff"
+      tintColor="#DDD8D2"
+      value={true}
+    />
+  </View>
+  <View
+    className="mt-4"
+  >
+    <View
+      className="mb-4 flex-row gap-3"
+      testID="preset-buttons"
+    >
+      <View
+        accessibilityLabel="Set reminder for Morning at 7:00 AM"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": false,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        className="flex-1"
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        testID="preset-morning"
+      >
+        <View
+          className="items-center justify-center rounded-xl px-3"
+          collapsable={false}
+          style={
+            {
+              "backgroundColor": "#f5f5f4",
+              "borderColor": "transparent",
+              "borderWidth": 1,
+              "height": 48,
+              "transform": [
+                {
+                  "scale": 1,
+                },
+              ],
+            }
+          }
+        >
+          <View
+            className="flex-row items-center gap-1.5"
+          >
+            <Text
+              className="text-base"
+            >
+              🌅
+            </Text>
+            <Text
+              className="text-sm font-semibold"
+              style={
+                {
+                  "color": "#57534e",
+                }
+              }
+            >
+              Morning
+            </Text>
+          </View>
+          <Text
+            className="mt-0.5 text-xs"
+            style={
+              {
+                "color": "#a8a29e",
+              }
+            }
+          >
+            7:00 AM
+          </Text>
+        </View>
+      </View>
+      <View
+        accessibilityLabel="Set reminder for Midday at 12:00 PM"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": true,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        className="flex-1"
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        testID="preset-midday"
+      >
+        <View
+          className="items-center justify-center rounded-xl px-3"
+          collapsable={false}
+          style={
+            {
+              "backgroundColor": "#ECFDF5",
+              "borderColor": "#10B981",
+              "borderWidth": 2,
+              "height": 48,
+              "transform": [
+                {
+                  "scale": 1,
+                },
+              ],
+            }
+          }
+        >
+          <View
+            className="flex-row items-center gap-1.5"
+          >
+            <Text
+              className="text-base"
+            >
+              ☀️
+            </Text>
+            <Text
+              className="text-sm font-semibold"
+              style={
+                {
+                  "color": "#059669",
+                }
+              }
+            >
+              Midday
+            </Text>
+          </View>
+          <Text
+            className="mt-0.5 text-xs"
+            style={
+              {
+                "color": "#047857",
+              }
+            }
+          >
+            12:00 PM
+          </Text>
+        </View>
+      </View>
+      <View
+        accessibilityLabel="Set reminder for Evening at 8:00 PM"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": false,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        className="flex-1"
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        testID="preset-evening"
+      >
+        <View
+          className="items-center justify-center rounded-xl px-3"
+          collapsable={false}
+          style={
+            {
+              "backgroundColor": "#f5f5f4",
+              "borderColor": "transparent",
+              "borderWidth": 1,
+              "height": 48,
+              "transform": [
+                {
+                  "scale": 1,
+                },
+              ],
+            }
+          }
+        >
+          <View
+            className="flex-row items-center gap-1.5"
+          >
+            <Text
+              className="text-base"
+            >
+              🌙
+            </Text>
+            <Text
+              className="text-sm font-semibold"
+              style={
+                {
+                  "color": "#57534e",
+                }
+              }
+            >
+              Evening
+            </Text>
+          </View>
+          <Text
+            className="mt-0.5 text-xs"
+            style={
+              {
+                "color": "#a8a29e",
+              }
+            }
+          >
+            8:00 PM
+          </Text>
+        </View>
+      </View>
+    </View>
+    <View
+      accessibilityHint="Opens time picker"
+      accessibilityLabel="Set a custom reminder time"
+      accessibilityRole="button"
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      className="mb-4 flex-row items-center justify-center py-3"
+      collapsable={false}
+      focusable={true}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      testID="custom-time-button"
+    >
+      <Text
+        className="text-sm font-medium"
+        style={
+          {
+            "color": "#059669",
+          }
+        }
+      >
+        Pick a different time
+      </Text>
+      <Text
+        className="ml-1"
+        style={
+          {
+            "color": "#059669",
+          }
+        }
+      >
+        →
+      </Text>
+    </View>
+    <View
+      className="items-center"
+    >
+      <View
+        testID="next-reminder-badge"
+      >
+        <Text>
+          Next: 
+          12:00 PM
+        </Text>
+      </View>
+    </View>
+  </View>
+</View>
+`;
+
+exports[`EnhancedReminderSelector Snapshots Enabled State renders with morning preset selected 1`] = `
+<View
+  className="mb-6"
+  testID="enhanced-reminder-selector"
+>
+  <View
+    className="flex-row items-center justify-between rounded-2xl border px-4 py-4"
+    style={
+      [
+        {
+          "elevation": 1,
+          "shadowColor": "#2D2A26",
+          "shadowOffset": {
+            "height": 1,
+            "width": 0,
+          },
+          "shadowOpacity": 0.04,
+          "shadowRadius": 3,
+        },
+        {
+          "backgroundColor": "#EDEAE5",
+          "borderColor": "#DDD8D2",
+        },
+      ]
+    }
+  >
+    <View
+      className="flex-row items-center gap-3"
+    >
+      <View
+        className="h-10 w-10 items-center justify-center rounded-full"
+        style={
+          {
+            "backgroundColor": "#D1FAE5",
+          }
+        }
+      >
+        <View
+          color="#059669"
+          size={18}
+          testID="lucide-icon-Bell"
+        />
+      </View>
+      <Text
+        className="text-base font-medium"
+        style={
+          {
+            "color": "#2D2A26",
+          }
+        }
+      >
+        Daily Reminder
+      </Text>
+    </View>
+    <RCTSwitch
+      accessibilityLabel="Disable reminder"
+      accessibilityRole="switch"
+      onChange={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      onTintColor="#059669"
+      style={
+        [
+          {
+            "alignSelf": "flex-start",
+          },
+          {
+            "backgroundColor": "#DDD8D2",
+            "borderRadius": 16,
+          },
+        ]
+      }
+      testID="reminder-toggle"
+      thumbTintColor="#ffffff"
+      tintColor="#DDD8D2"
+      value={true}
+    />
+  </View>
+  <View
+    className="mt-4"
+  >
+    <View
+      className="mb-4 flex-row gap-3"
+      testID="preset-buttons"
+    >
+      <View
+        accessibilityLabel="Set reminder for Morning at 7:00 AM"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": true,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        className="flex-1"
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        testID="preset-morning"
+      >
+        <View
+          className="items-center justify-center rounded-xl px-3"
+          collapsable={false}
+          style={
+            {
+              "backgroundColor": "#ECFDF5",
+              "borderColor": "#10B981",
+              "borderWidth": 2,
+              "height": 48,
+              "transform": [
+                {
+                  "scale": 1,
+                },
+              ],
+            }
+          }
+        >
+          <View
+            className="flex-row items-center gap-1.5"
+          >
+            <Text
+              className="text-base"
+            >
+              🌅
+            </Text>
+            <Text
+              className="text-sm font-semibold"
+              style={
+                {
+                  "color": "#059669",
+                }
+              }
+            >
+              Morning
+            </Text>
+          </View>
+          <Text
+            className="mt-0.5 text-xs"
+            style={
+              {
+                "color": "#047857",
+              }
+            }
+          >
+            7:00 AM
+          </Text>
+        </View>
+      </View>
+      <View
+        accessibilityLabel="Set reminder for Midday at 12:00 PM"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": false,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        className="flex-1"
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        testID="preset-midday"
+      >
+        <View
+          className="items-center justify-center rounded-xl px-3"
+          collapsable={false}
+          style={
+            {
+              "backgroundColor": "#f5f5f4",
+              "borderColor": "transparent",
+              "borderWidth": 1,
+              "height": 48,
+              "transform": [
+                {
+                  "scale": 1,
+                },
+              ],
+            }
+          }
+        >
+          <View
+            className="flex-row items-center gap-1.5"
+          >
+            <Text
+              className="text-base"
+            >
+              ☀️
+            </Text>
+            <Text
+              className="text-sm font-semibold"
+              style={
+                {
+                  "color": "#57534e",
+                }
+              }
+            >
+              Midday
+            </Text>
+          </View>
+          <Text
+            className="mt-0.5 text-xs"
+            style={
+              {
+                "color": "#a8a29e",
+              }
+            }
+          >
+            12:00 PM
+          </Text>
+        </View>
+      </View>
+      <View
+        accessibilityLabel="Set reminder for Evening at 8:00 PM"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": false,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        className="flex-1"
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        testID="preset-evening"
+      >
+        <View
+          className="items-center justify-center rounded-xl px-3"
+          collapsable={false}
+          style={
+            {
+              "backgroundColor": "#f5f5f4",
+              "borderColor": "transparent",
+              "borderWidth": 1,
+              "height": 48,
+              "transform": [
+                {
+                  "scale": 1,
+                },
+              ],
+            }
+          }
+        >
+          <View
+            className="flex-row items-center gap-1.5"
+          >
+            <Text
+              className="text-base"
+            >
+              🌙
+            </Text>
+            <Text
+              className="text-sm font-semibold"
+              style={
+                {
+                  "color": "#57534e",
+                }
+              }
+            >
+              Evening
+            </Text>
+          </View>
+          <Text
+            className="mt-0.5 text-xs"
+            style={
+              {
+                "color": "#a8a29e",
+              }
+            }
+          >
+            8:00 PM
+          </Text>
+        </View>
+      </View>
+    </View>
+    <View
+      accessibilityHint="Opens time picker"
+      accessibilityLabel="Set a custom reminder time"
+      accessibilityRole="button"
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      className="mb-4 flex-row items-center justify-center py-3"
+      collapsable={false}
+      focusable={true}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      testID="custom-time-button"
+    >
+      <Text
+        className="text-sm font-medium"
+        style={
+          {
+            "color": "#059669",
+          }
+        }
+      >
+        Pick a different time
+      </Text>
+      <Text
+        className="ml-1"
+        style={
+          {
+            "color": "#059669",
+          }
+        }
+      >
+        →
+      </Text>
+    </View>
+    <View
+      className="items-center"
+    >
+      <View
+        testID="next-reminder-badge"
+      >
+        <Text>
+          Next: 
+          7:00 AM
+        </Text>
+      </View>
+    </View>
+  </View>
+</View>
+`;
+
+exports[`EnhancedReminderSelector Snapshots Optional Props renders with custom presets 1`] = `
+<View
+  className="mb-6"
+  testID="enhanced-reminder-selector"
+>
+  <View
+    className="flex-row items-center justify-between rounded-2xl border px-4 py-4"
+    style={
+      [
+        {
+          "elevation": 1,
+          "shadowColor": "#2D2A26",
+          "shadowOffset": {
+            "height": 1,
+            "width": 0,
+          },
+          "shadowOpacity": 0.04,
+          "shadowRadius": 3,
+        },
+        {
+          "backgroundColor": "#EDEAE5",
+          "borderColor": "#DDD8D2",
+        },
+      ]
+    }
+  >
+    <View
+      className="flex-row items-center gap-3"
+    >
+      <View
+        className="h-10 w-10 items-center justify-center rounded-full"
+        style={
+          {
+            "backgroundColor": "#D1FAE5",
+          }
+        }
+      >
+        <View
+          color="#059669"
+          size={18}
+          testID="lucide-icon-Bell"
+        />
+      </View>
+      <Text
+        className="text-base font-medium"
+        style={
+          {
+            "color": "#2D2A26",
+          }
+        }
+      >
+        Daily Reminder
+      </Text>
+    </View>
+    <RCTSwitch
+      accessibilityLabel="Disable reminder"
+      accessibilityRole="switch"
+      onChange={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      onTintColor="#059669"
+      style={
+        [
+          {
+            "alignSelf": "flex-start",
+          },
+          {
+            "backgroundColor": "#DDD8D2",
+            "borderRadius": 16,
+          },
+        ]
+      }
+      testID="reminder-toggle"
+      thumbTintColor="#ffffff"
+      tintColor="#DDD8D2"
+      value={true}
+    />
+  </View>
+  <View
+    className="mt-4"
+  >
+    <View
+      className="mb-4 flex-row gap-3"
+      testID="preset-buttons"
+    >
+      <View
+        accessibilityLabel="Set reminder for 5 AM"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": true,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        className="flex-1"
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        testID="preset-early"
+      >
+        <View
+          className="items-center justify-center rounded-xl px-3"
+          collapsable={false}
+          style={
+            {
+              "backgroundColor": "#ECFDF5",
+              "borderColor": "#10B981",
+              "borderWidth": 2,
+              "height": 48,
+              "transform": [
+                {
+                  "scale": 1,
+                },
+              ],
+            }
+          }
+        >
+          <View
+            className="flex-row items-center gap-1.5"
+          >
+            <Text
+              className="text-base"
+            >
+              🌄
+            </Text>
+            <Text
+              className="text-sm font-semibold"
+              style={
+                {
+                  "color": "#059669",
+                }
+              }
+            >
+              5 AM
+            </Text>
+          </View>
+        </View>
+      </View>
+      <View
+        accessibilityLabel="Set reminder for 11 PM"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": false,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        className="flex-1"
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        testID="preset-late"
+      >
+        <View
+          className="items-center justify-center rounded-xl px-3"
+          collapsable={false}
+          style={
+            {
+              "backgroundColor": "#f5f5f4",
+              "borderColor": "transparent",
+              "borderWidth": 1,
+              "height": 48,
+              "transform": [
+                {
+                  "scale": 1,
+                },
+              ],
+            }
+          }
+        >
+          <View
+            className="flex-row items-center gap-1.5"
+          >
+            <Text
+              className="text-base"
+            >
+              🌃
+            </Text>
+            <Text
+              className="text-sm font-semibold"
+              style={
+                {
+                  "color": "#57534e",
+                }
+              }
+            >
+              11 PM
+            </Text>
+          </View>
+        </View>
+      </View>
+    </View>
+    <View
+      accessibilityHint="Opens time picker"
+      accessibilityLabel="Set a custom reminder time"
+      accessibilityRole="button"
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      className="mb-4 flex-row items-center justify-center py-3"
+      collapsable={false}
+      focusable={true}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      testID="custom-time-button"
+    >
+      <Text
+        className="text-sm font-medium"
+        style={
+          {
+            "color": "#059669",
+          }
+        }
+      >
+        Pick a different time
+      </Text>
+      <Text
+        className="ml-1"
+        style={
+          {
+            "color": "#059669",
+          }
+        }
+      >
+        →
+      </Text>
+    </View>
+    <View
+      className="items-center"
+    >
+      <View
+        testID="next-reminder-badge"
+      >
+        <Text>
+          Next: 
+          5:00 AM
+        </Text>
+      </View>
+    </View>
+  </View>
+</View>
+`;
+
+exports[`EnhancedReminderSelector Snapshots Optional Props renders without next reminder badge 1`] = `
+<View
+  className="mb-6"
+  testID="enhanced-reminder-selector"
+>
+  <View
+    className="flex-row items-center justify-between rounded-2xl border px-4 py-4"
+    style={
+      [
+        {
+          "elevation": 1,
+          "shadowColor": "#2D2A26",
+          "shadowOffset": {
+            "height": 1,
+            "width": 0,
+          },
+          "shadowOpacity": 0.04,
+          "shadowRadius": 3,
+        },
+        {
+          "backgroundColor": "#EDEAE5",
+          "borderColor": "#DDD8D2",
+        },
+      ]
+    }
+  >
+    <View
+      className="flex-row items-center gap-3"
+    >
+      <View
+        className="h-10 w-10 items-center justify-center rounded-full"
+        style={
+          {
+            "backgroundColor": "#D1FAE5",
+          }
+        }
+      >
+        <View
+          color="#059669"
+          size={18}
+          testID="lucide-icon-Bell"
+        />
+      </View>
+      <Text
+        className="text-base font-medium"
+        style={
+          {
+            "color": "#2D2A26",
+          }
+        }
+      >
+        Daily Reminder
+      </Text>
+    </View>
+    <RCTSwitch
+      accessibilityLabel="Disable reminder"
+      accessibilityRole="switch"
+      onChange={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      onTintColor="#059669"
+      style={
+        [
+          {
+            "alignSelf": "flex-start",
+          },
+          {
+            "backgroundColor": "#DDD8D2",
+            "borderRadius": 16,
+          },
+        ]
+      }
+      testID="reminder-toggle"
+      thumbTintColor="#ffffff"
+      tintColor="#DDD8D2"
+      value={true}
+    />
+  </View>
+  <View
+    className="mt-4"
+  >
+    <View
+      className="mb-4 flex-row gap-3"
+      testID="preset-buttons"
+    >
+      <View
+        accessibilityLabel="Set reminder for Morning at 7:00 AM"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": false,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        className="flex-1"
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        testID="preset-morning"
+      >
+        <View
+          className="items-center justify-center rounded-xl px-3"
+          collapsable={false}
+          style={
+            {
+              "backgroundColor": "#f5f5f4",
+              "borderColor": "transparent",
+              "borderWidth": 1,
+              "height": 48,
+              "transform": [
+                {
+                  "scale": 1,
+                },
+              ],
+            }
+          }
+        >
+          <View
+            className="flex-row items-center gap-1.5"
+          >
+            <Text
+              className="text-base"
+            >
+              🌅
+            </Text>
+            <Text
+              className="text-sm font-semibold"
+              style={
+                {
+                  "color": "#57534e",
+                }
+              }
+            >
+              Morning
+            </Text>
+          </View>
+          <Text
+            className="mt-0.5 text-xs"
+            style={
+              {
+                "color": "#a8a29e",
+              }
+            }
+          >
+            7:00 AM
+          </Text>
+        </View>
+      </View>
+      <View
+        accessibilityLabel="Set reminder for Midday at 12:00 PM"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": true,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        className="flex-1"
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        testID="preset-midday"
+      >
+        <View
+          className="items-center justify-center rounded-xl px-3"
+          collapsable={false}
+          style={
+            {
+              "backgroundColor": "#ECFDF5",
+              "borderColor": "#10B981",
+              "borderWidth": 2,
+              "height": 48,
+              "transform": [
+                {
+                  "scale": 1,
+                },
+              ],
+            }
+          }
+        >
+          <View
+            className="flex-row items-center gap-1.5"
+          >
+            <Text
+              className="text-base"
+            >
+              ☀️
+            </Text>
+            <Text
+              className="text-sm font-semibold"
+              style={
+                {
+                  "color": "#059669",
+                }
+              }
+            >
+              Midday
+            </Text>
+          </View>
+          <Text
+            className="mt-0.5 text-xs"
+            style={
+              {
+                "color": "#047857",
+              }
+            }
+          >
+            12:00 PM
+          </Text>
+        </View>
+      </View>
+      <View
+        accessibilityLabel="Set reminder for Evening at 8:00 PM"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": false,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        className="flex-1"
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        testID="preset-evening"
+      >
+        <View
+          className="items-center justify-center rounded-xl px-3"
+          collapsable={false}
+          style={
+            {
+              "backgroundColor": "#f5f5f4",
+              "borderColor": "transparent",
+              "borderWidth": 1,
+              "height": 48,
+              "transform": [
+                {
+                  "scale": 1,
+                },
+              ],
+            }
+          }
+        >
+          <View
+            className="flex-row items-center gap-1.5"
+          >
+            <Text
+              className="text-base"
+            >
+              🌙
+            </Text>
+            <Text
+              className="text-sm font-semibold"
+              style={
+                {
+                  "color": "#57534e",
+                }
+              }
+            >
+              Evening
+            </Text>
+          </View>
+          <Text
+            className="mt-0.5 text-xs"
+            style={
+              {
+                "color": "#a8a29e",
+              }
+            }
+          >
+            8:00 PM
+          </Text>
+        </View>
+      </View>
+    </View>
+    <View
+      accessibilityHint="Opens time picker"
+      accessibilityLabel="Set a custom reminder time"
+      accessibilityRole="button"
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      className="mb-4 flex-row items-center justify-center py-3"
+      collapsable={false}
+      focusable={true}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      testID="custom-time-button"
+    >
+      <Text
+        className="text-sm font-medium"
+        style={
+          {
+            "color": "#059669",
+          }
+        }
+      >
+        Pick a different time
+      </Text>
+      <Text
+        className="ml-1"
+        style={
+          {
+            "color": "#059669",
+          }
+        }
+      >
+        →
+      </Text>
+    </View>
+  </View>
+</View>
+`;

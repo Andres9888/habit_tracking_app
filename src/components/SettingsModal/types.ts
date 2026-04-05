@@ -82,6 +82,7 @@ export interface SettingsContentProps {
   onChangeDayShape: (value: 'circle' | 'square') => void | Promise<void>;
   onChangeShowGradientFill: (value: boolean) => void | Promise<void>;
   archivedHabitsCount?: number;
+  onOpenAccount: () => void;
   onOpenArchivedHabits: () => void;
   onOpenSortPicker: () => void;
   onExportHabitsData?: () => void | Promise<void>;

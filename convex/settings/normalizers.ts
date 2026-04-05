@@ -31,8 +31,7 @@ export const normalizeHabitSortMode = (
     value === 'strength_asc' ||
     value === 'strength_desc' ||
     value === 'streak_asc' ||
-    value === 'streak_desc' ||
-    value === 'day_phase'
+    value === 'streak_desc'
   ) {
     return value;
   }

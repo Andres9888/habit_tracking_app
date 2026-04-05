@@ -3,9 +3,11 @@
  * Renders a list of sort options with check marks for the active mode.
  */
 
-import { Text, View, Pressable } from 'react-native';
-import { Check, ArrowLeft } from 'lucide-react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Text, View } from 'react-native';
+import { Check } from 'lucide-react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
+import { ScreenHeader } from '@/components/ScreenHeader';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { SORT_PICKER_OPTIONS } from './SortPicker.constants';
 import type { HabitSortMode } from '../../features/habits/types';
@@ -18,7 +20,6 @@ interface SortPickerProps {
 }
 
 export function SortPicker({ currentMode, onBack, onSelect }: SortPickerProps) {
-  const insets = useSafeAreaInsets();
   const { isDark, colors } = useThemeColors();
 
   const handleSelect = (mode: HabitSortMode) => {
@@ -26,64 +27,72 @@ export function SortPicker({ currentMode, onBack, onSelect }: SortPickerProps) {
     onSelect(mode);
   };
 
+  const DARK_SURFACE = '#1f2937';
+  const SELECTED_LIGHT_BG = '#ecfdf5';
+
   return (
     <View className='flex-1' style={{ backgroundColor: colors.background }}>
-      <View
-        className='flex-row items-center gap-3 border-b px-4 pb-3'
-        style={{
-          borderColor: colors.border,
-          paddingTop: insets.top + 8,
-        }}
-      >
-        <Pressable
-          accessibilityLabel='Back to settings'
-          accessibilityRole='button'
-          hitSlop={12}
-          onPress={onBack}
-        >
-          <ArrowLeft color={colors.text.primary} size={22} strokeWidth={2} />
-        </Pressable>
-        <Text
-          className='text-[20px] font-bold'
-          style={{ color: colors.text.primary }}
-        >
-          Sort Order
-        </Text>
+      <View style={{ backgroundColor: colors.background }}>
+        <ScreenHeader
+          leftAction='back'
+          rightAction={null}
+          title='Sort Order'
+          onBack={onBack}
+        />
       </View>
-      <View className='px-4 pt-3'>
-        {SORT_PICKER_OPTIONS.map((option) => (
-          <Pressable
-            key={option.value}
-            accessibilityRole='radio'
-            accessibilityState={{ selected: currentMode === option.value }}
-            className='flex-row items-center rounded-xl px-4 py-3.5'
-            style={({ pressed }) => ({
-              /* Intentional rgba — subtle press overlay on theme surface */
-              backgroundColor: pressed
-                ? isDark
-                  ? 'rgba(255,255,255,0.05)'
-                  : 'rgba(0,0,0,0.03)'
-                : 'transparent',
-            })}
-            onPress={() => handleSelect(option.value)}
-          >
-            <View className='flex-1'>
-              <Text
-                className='text-[16px] font-semibold'
-                style={{ color: colors.text.primary }}
+      <View className='px-4 pt-2'>
+        {SORT_PICKER_OPTIONS.map((option) => {
+          const selected = currentMode === option.value;
+          return (
+            <AnimatedPressable
+              key={option.value}
+              accessibilityHint={`Select ${option.label} sort option`}
+              accessibilityLabel={`${option.label}. ${option.description}`}
+              accessibilityRole='radio'
+              accessibilityState={{ checked: selected }}
+              className='mb-1 flex-row items-center gap-3 rounded-xl px-3 py-3'
+              style={{
+                backgroundColor: selected
+                  ? isDark ? DARK_SURFACE : SELECTED_LIGHT_BG
+                  : 'transparent',
+                borderColor: selected ? colors.primary[300] : 'transparent',
+                borderWidth: selected ? 1 : 0,
+              }}
+              onPress={() => handleSelect(option.value)}
+            >
+              <LinearGradient
+                className='h-10 w-10 items-center justify-center rounded-xl'
+                colors={option.iconBgColors}
+                end={{ x: 1, y: 1 }}
+                start={{ x: 0, y: 0 }}
               >
-                {option.label}
-              </Text>
-              <Text
-                className='text-[13px]'
-                style={{ color: colors.text.secondary }}
-              >
-                {option.description}
-              </Text>
-            </View>
-            {currentMode === option.value ? <Check color={colors.primary[500]} size={20} strokeWidth={2.5} /> : null}
-          </Pressable>
-        ))}
+                <option.Icon color='#ffffff' size={18} strokeWidth={2.25} />
+              </LinearGradient>
+              <View className='flex-1'>
+                <Text
+                  className='text-[15px] font-medium'
+                  style={{ color: colors.text.primary }}
+                >
+                  {option.label}
+                </Text>
+                <Text
+                  className='text-[13px] font-normal'
+                  style={{ color: colors.text.secondary }}
+                >
+                  {option.description}
+                </Text>
+              </View>
+              {selected ? (
+                <View
+                  className='h-6 w-6 items-center justify-center rounded-full'
+                  style={{ backgroundColor: colors.primary[500] }}
+                >
+                  <Check color='#ffffff' size={14} strokeWidth={2.5} />
+                </View>
+              ) : null}
+            </AnimatedPressable>
+          );
+        })}
       </View>
     </View>
   );

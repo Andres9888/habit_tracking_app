@@ -1,7 +1,8 @@
 /** ProfileCard — User identity anchor at top of settings */
 import { Text, View } from 'react-native';
-import { ChevronRight, Crown } from 'lucide-react-native';
+import { Crown } from 'lucide-react-native';
 import { useUser } from '@clerk/clerk-expo';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { borderRadius, shadows } from '../../theme/spacing';
 
@@ -28,23 +29,40 @@ export function ProfileCard({ isPremium, highContrastMode }: ProfileCardProps) {
         backgroundColor: cardBg,
         borderColor: cardBorder,
         borderWidth: highContrastMode ? 1 : 0,
-        ...shadows.floatingActionButton,
-        elevation: highContrastMode ? 0 : shadows.card.elevation,
-        shadowOpacity: highContrastMode ? 0 : shadows.floatingActionButton.shadowOpacity,
+        ...(highContrastMode
+          ? { elevation: 0, shadowColor: 'transparent' }
+          : shadows.card),
       }}
     >
       <View className='flex-row items-center px-4 py-4' style={{ gap: 14 }}>
-        <View
-          className='items-center justify-center'
-          style={{
-            backgroundColor: themeColors.status.premium,
-            borderRadius: borderRadius.full,
-            height: 52,
-            width: 52,
-          }}
-        >
-          <Text className='text-[22px] font-bold text-white'>{initial}</Text>
-        </View>
+        {highContrastMode ? (
+          <View
+            className='items-center justify-center'
+            style={{
+              backgroundColor: themeColors.text.primary,
+              borderRadius: borderRadius.full,
+              height: 52,
+              width: 52,
+            }}
+          >
+            <Text className='text-[22px] font-bold' style={{ color: themeColors.text.inverse }}>
+              {initial}
+            </Text>
+          </View>
+        ) : (
+          <LinearGradient
+            colors={[themeColors.primary[700], themeColors.primary[600]]}
+            style={{
+              alignItems: 'center',
+              borderRadius: borderRadius.full,
+              height: 52,
+              justifyContent: 'center',
+              width: 52,
+            }}
+          >
+            <Text className='text-[22px] font-bold text-white'>{initial}</Text>
+          </LinearGradient>
+        )}
         <View className='flex-1'>
           <Text
             className='text-[18px] font-bold'
@@ -62,20 +80,19 @@ export function ProfileCard({ isPremium, highContrastMode }: ProfileCardProps) {
           ) : null}
           {isPremium ? (
             <View
-              className='mt-1.5 flex-row items-center self-start rounded-md px-2 py-0.5'
-              style={{ backgroundColor: themeColors.status.streakLight, gap: 4 }}
+              className='mt-1.5 flex-row items-center self-start rounded-lg px-2 py-0.5'
+              style={{ backgroundColor: themeColors.status.warningLight, gap: 4 }}
             >
-              <Crown color={themeColors.status.streakText} size={11} />
+              <Crown color={themeColors.status.warningText} size={11} />
               <Text
                 className='text-[11px] font-bold'
-                style={{ color: themeColors.status.streakText }}
+                style={{ color: themeColors.status.warningText }}
               >
                 PRO
               </Text>
             </View>
           ) : null}
         </View>
-        <ChevronRight color={themeColors.text.secondary} size={18} />
       </View>
     </View>
   );

@@ -1,13 +1,15 @@
 /* eslint-disable max-lines, max-lines-per-function */
-/** SettingsContent - Apple Settings layout: Profile → Appearance → Behavior → Data → Notifications → Support → About → Sign Out */
+/** SettingsContent - Settings layout: Account → Appearance → Behavior → Notifications → Support → About */
 import {
   ArrowUpDown,
   BookOpen,
-  Check,
   Calendar,
+  Check,
   Circle,
   Droplets,
+  Link2,
   Rows3,
+  Square,
   Volume2,
 } from 'lucide-react-native';
 import Constants from 'expo-constants';
@@ -18,12 +20,15 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated';
+import { CompletionIconPicker } from './CompletionIconPicker';
+import { DayShapePicker } from './DayShapePicker';
+import { AccountRow } from './AccountRow';
 import { SettingsRow } from './SettingsRow';
 import { SettingsSection } from './SettingsSection';
 import { SoundPicker } from './SoundPicker';
 import { StreakRemindersSection } from './StreakRemindersSection';
 import { useAccountActions } from './useAccountActions';
-import { AppActions, AboutLegalSection, AccountSection, DeleteAccountButton } from './sections';
+import { AppActions, AboutLegalSection } from './sections';
 import { FeedbackModal } from '../FeedbackModal';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { SORT_LABEL_MAP } from './SortPicker.constants';
@@ -74,8 +79,12 @@ export function SettingsContent(p: SettingsContentProps) {
         onScroll={scrollHandler}
       >
         <View className='gap-5'>
-          {/* Appearance Section */}
           <Animated.View entering={anim(0)}>
+            <AccountRow highContrastMode={hc} isPremium={p.isPremium} onPress={p.onOpenAccount} />
+          </Animated.View>
+
+          {/* Appearance Section */}
+          <Animated.View entering={anim(25)}>
             <SettingsSection highContrastMode={hc} title='Appearance'>
               <SettingsRow
                 highContrastMode={hc}
@@ -89,15 +98,22 @@ export function SettingsContent(p: SettingsContentProps) {
               />
               <SettingsRow
                 highContrastMode={hc}
-                icon={<Circle color={settingsIcons.circle.icon} size={16} />}
-                iconBackgroundColor={settingsIcons.circle.bg}
-                label='Circular day markers'
-                subtitle='Use circles instead of squares on the calendar'
-                type='toggle'
-                value={p.dayShape === 'circle'}
-                onToggle={(v) =>
-                  void p.onChangeDayShape(v ? 'circle' : 'square')
+                icon={
+                  p.dayShape === 'circle' ? (
+                    <Circle color={settingsIcons.circle.icon} size={16} />
+                  ) : (
+                    <Square color={settingsIcons.circle.icon} size={16} />
+                  )
                 }
+                iconBackgroundColor={settingsIcons.circle.bg}
+                label='Day marker shape'
+                rightAccessory={
+                  <DayShapePicker
+                    selected={p.dayShape}
+                    onSelect={(v) => void p.onChangeDayShape(v)}
+                  />
+                }
+                type='info'
               />
               <SettingsRow
                 highContrastMode={hc}
@@ -112,24 +128,29 @@ export function SettingsContent(p: SettingsContentProps) {
                 onToggle={(v) => void p.onChangeShowGradientFill(v)}
               />
               <SettingsRow
-                hapticStyle='selection'
                 highContrastMode={hc}
-                icon={<Check color={settingsIcons.checkbox.icon} size={16} />}
+                icon={
+                  p.habitCompletionIcon === 'checkbox' ? (
+                    <Check color={settingsIcons.checkbox.icon} size={16} />
+                  ) : (
+                    <Link2 color={settingsIcons.checkbox.icon} size={16} />
+                  )
+                }
                 iconBackgroundColor={settingsIcons.checkbox.bg}
                 label='Completion icon'
-                subtitle='Choose between checkmark and chain link'
-                showBorder={false}
-                type='toggle'
-                value={p.habitCompletionIcon === 'checkbox'}
-                onToggle={(v) =>
-                  void p.onChangeHabitCompletionIcon(v ? 'checkbox' : 'chain')
+                rightAccessory={
+                  <CompletionIconPicker
+                    selected={p.habitCompletionIcon}
+                    onSelect={(v) => void p.onChangeHabitCompletionIcon(v)}
+                  />
                 }
+                type='info'
               />
             </SettingsSection>
           </Animated.View>
 
           {/* Behavior Section */}
-          <Animated.View entering={anim(40)}>
+          <Animated.View entering={anim(50)}>
             <SettingsSection highContrastMode={hc} title='Behavior'>
               <SettingsRow
                 hapticStyle='selection'
@@ -172,17 +193,10 @@ export function SettingsContent(p: SettingsContentProps) {
                 iconBackgroundColor={settingsIcons.calendarHeader.bg}
                 label='Pin calendar header'
                 subtitle='Keep the month header visible when scrolling'
-                showBorder={false}
                 type='toggle'
                 value={p.stickyCalendarHeader}
                 onToggle={(v) => void p.onChangeStickyCalendarHeader(v)}
               />
-            </SettingsSection>
-          </Animated.View>
-
-          {/* Data Section */}
-          <Animated.View entering={anim(80)}>
-            <SettingsSection highContrastMode={hc} title='Data'>
               <SettingsRow
                 badge={p.archivedHabitsCount}
                 highContrastMode={hc}
@@ -198,7 +212,7 @@ export function SettingsContent(p: SettingsContentProps) {
           </Animated.View>
 
           {/* Notifications Section */}
-          <Animated.View entering={anim(120)}>
+          <Animated.View entering={anim(75)}>
             <StreakRemindersSection
               enabled={p.streakRemindersEnabled}
               highContrastMode={hc}
@@ -211,7 +225,7 @@ export function SettingsContent(p: SettingsContentProps) {
           </Animated.View>
 
           {/* Support Section */}
-          <Animated.View entering={anim(160)}>
+          <Animated.View entering={anim(100)}>
             <AppActions
               highContrast={hc}
               onFeedback={actions.handleFeedback}
@@ -222,30 +236,13 @@ export function SettingsContent(p: SettingsContentProps) {
           </Animated.View>
 
           {/* About + Legal */}
-          <Animated.View entering={anim(200)}>
+          <Animated.View entering={anim(125)}>
             <AboutLegalSection
               buildNumber={Constants.expoConfig?.ios?.buildNumber ?? '1'}
               highContrast={hc}
               version={Constants.expoConfig?.version ?? '1.0.0'}
               onPrivacy={actions.openPrivacy}
               onTerms={actions.openTerms}
-            />
-          </Animated.View>
-
-          {/* Account — Profile + Sign Out */}
-          <Animated.View entering={anim(240)}>
-            <AccountSection
-              highContrastMode={hc}
-              isSigningOut={actions.isSigningOut}
-              onSignOut={actions.handleSignOut}
-            />
-          </Animated.View>
-
-          {/* Delete Account — standalone danger link */}
-          <Animated.View entering={anim(280)}>
-            <DeleteAccountButton
-              isDeletingAccount={actions.isDeletingAccount}
-              onDeleteAccount={actions.handleDeleteAccount}
             />
           </Animated.View>
         </View>

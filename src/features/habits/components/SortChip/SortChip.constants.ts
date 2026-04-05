@@ -8,7 +8,6 @@ import type { HabitSortMode } from '../../types';
  * Abbreviated labels for each sort mode, displayed in the chip trigger
  */
 export const SORT_LABEL_MAP: Record<HabitSortMode, string> = {
-  day_phase: 'Day Phase',
   manual: 'Custom',
   name_asc: 'A–Z',
   name_desc: 'Z–A',
@@ -22,7 +21,6 @@ export const SORT_LABEL_MAP: Record<HabitSortMode, string> = {
  * Full labels for accessibility announcements
  */
 export const SORT_ACCESSIBILITY_LABEL_MAP: Record<HabitSortMode, string> = {
-  day_phase: 'Day phase',
   manual: 'Custom order',
   name_asc: 'Name A to Z',
   name_desc: 'Name Z to A',
