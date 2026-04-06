@@ -82,7 +82,7 @@ function HabitEditScreenContent({
                     />
                   </View>
                   <EditHeader
-                    canSave={state.habitName.trim().length >= 2}
+                    canSave={state.habitName.trim().length > 0}
                     isSaving={state.isSaving}
                     paddingTop={Math.max(insets.top + 4, 12)}
                     onCancel={() => {
