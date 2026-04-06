@@ -68,9 +68,6 @@ export function NameInputSection({
           style={{ color: colors.text.tertiary }}
         >
           {habitName.length}/50 characters
-          {habitName.length > 0 && habitName.trim().length < 2
-            ? ' · At least 2 characters required'
-            : ''}
         </Text>
       </Animated.View>
     </View>
