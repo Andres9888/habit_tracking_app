@@ -1,7 +1,8 @@
 import { Pressable, View } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { useAnimatedHabitCard } from './AnimatedHabitCard.hooks';
-import { getStrengthInfo, getStrengthGradientColor } from '../utils';
+import { getStrengthInfo } from '../utils';
+import { pickAccentColor } from '../../DraggableHabit/DraggableHabit.hooks';
 import { HabitCardHeader } from './HabitCardHeader';
 import { HabitStatsBadges } from './HabitStatsBadges';
 import { ActionButtons } from './ActionButtons';
@@ -41,7 +42,7 @@ export function AnimatedHabitCard({
 
   const strength = (habit.strength ?? 0) * 100;
   const strengthInfo = getStrengthInfo(strength, isDark);
-  const gradientColor = getStrengthGradientColor(strength);
+  const accentBarColor = habit.color || habit.iconColor || pickAccentColor(habit.name);
   const archiveDate = habit.archivedAt || habit._creationTime;
 
   const borderColor = isSelected
@@ -64,7 +65,7 @@ export function AnimatedHabitCard({
           {/* Accent bar */}
           <View
             className='absolute bottom-0 left-0 top-0 w-1 rounded-l-2xl'
-            style={{ backgroundColor: gradientColor }}
+            style={{ backgroundColor: accentBarColor }}
           />
 
           <View className='p-6'>
@@ -73,7 +74,7 @@ export function AnimatedHabitCard({
             )}
 
             <HabitCardHeader
-              accentColor={gradientColor}
+              accentColor={accentBarColor}
               archiveDate={archiveDate}
               icon={habit.icon}
               iconColor={habit.iconColor}
