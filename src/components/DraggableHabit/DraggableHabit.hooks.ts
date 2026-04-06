@@ -38,7 +38,7 @@ const ACCENT_COLORS = [
 ];
 
 /** Pick an accent color deterministically from a string (sum of char codes mod palette length). */
-const pickAccentColor = (input: string): string => {
+export const pickAccentColor = (input: string): string => {
   if (!input) {
     return ACCENT_COLORS[0];
   }

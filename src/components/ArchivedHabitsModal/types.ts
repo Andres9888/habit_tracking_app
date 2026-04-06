@@ -9,6 +9,7 @@ export interface ArchivedHabit {
   _id: Id<'habits'>;
   name: string;
   icon?: string;
+  color?: string;
   iconColor?: string;
   strength?: number;
   currentStreak?: number;
