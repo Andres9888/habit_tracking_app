@@ -36,14 +36,6 @@ export function validateHabitName(name: string | undefined): ValidationResult {
     return { error: 'Habit name contains invalid characters', isValid: false };
   }
 
-  // Minimum length check (at least 2 characters)
-  if (trimmed.length < 2) {
-    return {
-      error: 'Habit name must be at least 2 characters',
-      isValid: false,
-    };
-  }
-
   return { isValid: true, sanitized: trimmed };
 }
 

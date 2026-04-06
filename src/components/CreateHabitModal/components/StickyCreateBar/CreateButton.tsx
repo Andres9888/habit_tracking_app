@@ -43,7 +43,7 @@ export function CreateButton({
           }
           accessibilityLabel={
             disabled
-              ? 'Create habit, disabled. Enter at least 2 characters.'
+              ? 'Create habit, disabled. Enter a habit name.'
               : STRINGS.CREATE_HABIT.createAction
           }
           accessibilityRole='button'
