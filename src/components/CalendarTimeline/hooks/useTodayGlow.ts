@@ -8,6 +8,8 @@ import {
   withTiming,
 } from 'react-native-reanimated';
 
+import { colors as palette } from '../../../theme/colors';
+
 interface UseTodayGlowParams {
   isCurrentDay: boolean;
   isComplete: boolean;
@@ -20,8 +22,8 @@ const GLOW_MAX = 0.4;
 const HALF_CYCLE_MS = 1250;
 const SHADOW_RADIUS = 8;
 
-const SHADOW_COLOR_LIGHT = '#E8B94D';
-const SHADOW_COLOR_DARK = '#B8860B';
+const SHADOW_COLOR_LIGHT = palette.streak[300];
+const SHADOW_COLOR_DARK = palette.streak[600];
 
 const SHADOW_OFFSET = { width: 0, height: 0 };
 

@@ -11,7 +11,9 @@ import { iconSizes } from '@/theme/iconSizes';
 import { AnimatedPressable } from '../../ui/AnimatedPressable';
 import { colors as palette } from '../../../theme/colors';
 import { useThemeColors } from '../../../theme/ThemeContext';
+import { durations } from '../../../theme/animations';
 import { fontFamilies, fontWeights } from '../../../theme/typography';
+import { borderRadius } from '../../../theme/spacing';
 
 interface WeekNavRowProps {
   monthName: string;
@@ -25,7 +27,7 @@ const PRESS = {
   date: { pressScale: 0.97 },
   today: { pressScale: 0.95 },
 } as const;
-const ENTRANCE_DURATION = 300;
+const ENTRANCE_DURATION = durations.enter;
 const SLIDE_OFFSET = 16;
 
 /** Date row — centered date pill with optional "Today" pill on past weeks */
@@ -75,6 +77,7 @@ export const WeekNavRow: React.FC<WeekNavRowProps> = ({
           style={[
             s.pill,
             {
+              /* Intentional rgba — derived from primary[600] (#059669) with opacity */
               backgroundColor: isDark
                 ? 'rgba(5,150,105,0.08)'
                 : 'rgba(5,150,105,0.06)',
@@ -126,7 +129,7 @@ export const WeekNavRow: React.FC<WeekNavRowProps> = ({
 
 const CHIP_BASE = {
   alignItems: 'center',
-  borderRadius: 20,
+  borderRadius: borderRadius.full,
   flexDirection: 'row',
   paddingHorizontal: 12,
   paddingVertical: 4,
