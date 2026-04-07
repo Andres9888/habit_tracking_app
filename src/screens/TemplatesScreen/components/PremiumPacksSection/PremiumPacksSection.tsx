@@ -5,7 +5,7 @@
 import { StyleSheet, Text, View } from 'react-native';
 import { colors } from '../../../../theme/colors';
 import { spacing } from '../../../../theme/spacing';
-import { typography } from '../../../../theme/typography';
+import { fontWeights, typography } from '../../../../theme/typography';
 import type { PremiumPack } from '../../data/premiumPacks';
 import { PremiumPackCard } from './PremiumPackCard';
 
@@ -39,7 +39,7 @@ const s = StyleSheet.create({
   badge: {
     ...typography.caption,
     color: colors.premium[700],
-    fontWeight: '700',
+    fontWeight: fontWeights.bold,
   },
   container: { marginTop: spacing.lg },
   headerRow: {

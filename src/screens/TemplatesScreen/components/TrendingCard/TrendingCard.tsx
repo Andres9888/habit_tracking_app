@@ -11,6 +11,7 @@ import { s } from './TrendingCard.styles';
 import type { TrendingCardProps } from './TrendingCard.types';
 
 export function TrendingCard({
+  description,
   frequency,
   hasResearch,
   icon,
@@ -37,6 +38,12 @@ export function TrendingCard({
       <Text numberOfLines={2} style={s.name}>
         {name}
       </Text>
+
+      {description ? (
+        <Text numberOfLines={2} style={s.description}>
+          {description}
+        </Text>
+      ) : null}
 
       <View style={s.metaRow}>
         <Text style={s.frequency}>{frequency}</Text>

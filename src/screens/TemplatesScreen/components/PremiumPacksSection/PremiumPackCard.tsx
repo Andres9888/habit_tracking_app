@@ -6,7 +6,7 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { colors } from '../../../../theme/colors';
 import { borderRadius, spacing } from '../../../../theme/spacing';
-import { fontFamilies, fontWeights } from '../../../../theme/typography';
+import { fontFamilies, fontWeights, typography } from '../../../../theme/typography';
 import type { PremiumPack } from '../../data/premiumPacks';
 
 interface PremiumPackCardProps {
@@ -73,8 +73,8 @@ const s = StyleSheet.create({
     paddingHorizontal: spacing.base,
     paddingVertical: spacing.md,
   },
-  ctaText: { fontSize: 13, fontWeight: fontWeights.bold },
-  desc: { color: colors.text.secondary, fontSize: 13, marginTop: spacing.xs },
+  ctaText: { ...typography.caption, fontWeight: fontWeights.bold },
+  desc: { ...typography.caption, color: colors.text.secondary, marginTop: spacing.xs },
   emoji: { fontSize: 22 },
   emojiGroup: { flexDirection: 'row', gap: spacing.sm },
   gradient: {
@@ -90,14 +90,13 @@ const s = StyleSheet.create({
     paddingVertical: spacing.base,
   },
   habitCount: {
-    color: 'rgba(255,255,255,0.5)',
+    ...typography.caption,
     fontFamily: fontFamilies.monospace,
-    fontSize: 13,
     marginTop: spacing.xs,
   },
   name: {
+    ...typography.body,
     color: colors.text.primary,
-    fontSize: 16,
     fontWeight: fontWeights.bold,
     marginTop: spacing.sm,
   },

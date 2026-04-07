@@ -10,6 +10,7 @@ import type { ChipCategory } from '../components/QuickFilterChips';
 
 export interface MainBrowseViewProps {
   categoryGrid: ReactNode;
+  exploreAllSection: ReactNode;
   feedbackOverlays: ReactNode;
   importedTemplateIds: Set<string>;
   importingTemplateId: string | null;

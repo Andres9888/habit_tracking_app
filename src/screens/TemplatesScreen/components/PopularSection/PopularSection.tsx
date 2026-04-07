@@ -49,6 +49,7 @@ export function PopularSection({
         showsHorizontalScrollIndicator={false}
         renderItem={({ item }) => (
           <TrendingCard
+            description={item.description}
             frequency={item.frequency}
             hasResearch={!!item.scientificReference}
             icon={item.icon}

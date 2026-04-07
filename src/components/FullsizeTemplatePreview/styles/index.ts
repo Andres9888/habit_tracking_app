@@ -7,3 +7,4 @@ export { heroStyles } from './hero.styles';
 export { scienceStyles } from './science.styles';
 export { tipsStyles } from './tips.styles';
 export { footerStyles } from './footer.styles';
+export { videoStyles } from './video.styles';

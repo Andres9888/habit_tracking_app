@@ -31,7 +31,7 @@ export function CategoryTile({
   return (
     <Pressable
       testID={`templates-category-tile-${index}`}
-      accessibilityLabel={`${label} category, ${count} templates`}
+      accessibilityLabel={`${label} category, ${count} ${count === 1 ? 'habit' : 'habits'}`}
       accessibilityRole='button'
       style={[s.tile, { backgroundColor: bgColor }]}
       onPress={onPress}
@@ -40,7 +40,7 @@ export function CategoryTile({
         <Text style={s.icon}>{icon}</Text>
       </View>
       <Text style={[s.label, { color: textColor }]}>{label}</Text>
-      <Text style={s.count}>{count} templates</Text>
+      <Text style={s.count}>{count} {count === 1 ? 'habit' : 'habits'}</Text>
       {previewEmojis.length > 0 ? <View style={s.previewRow}>
           {previewEmojis.map((emoji, i) => (
             <Text key={i} style={s.previewEmoji}>
@@ -53,15 +53,15 @@ export function CategoryTile({
 }
 
 const s = StyleSheet.create({
-  count: { ...typography.caption, color: colors.text.tertiary, marginTop: 2 },
+  count: { ...typography.caption, color: colors.text.tertiary, marginTop: spacing.xs },
   icon: { fontSize: 28 },
   label: { ...typography.bodySmall, fontWeight: fontWeights.semibold, marginTop: spacing.sm },
   previewEmoji: { fontSize: 14, opacity: 0.6 },
   previewRow: {
     flexDirection: 'row',
-    gap: 4,
+    gap: spacing.xs,
     marginTop: 'auto',
-    paddingTop: 8,
+    paddingTop: spacing.sm,
   },
   row: {
     alignItems: 'center',

@@ -3,6 +3,8 @@
  */
 
 export interface TrendingCardProps {
+  /** Short description of the habit */
+  description?: string;
   /** Frequency display string (e.g., "Daily", "3x/week") */
   frequency: string;
   /** Whether template has scientific backing */

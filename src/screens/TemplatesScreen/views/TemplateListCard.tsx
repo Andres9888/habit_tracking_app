@@ -258,11 +258,10 @@ const styles = StyleSheet.create({
   },
   contentColumn: {
     flex: 1,
-    gap: 4,
+    gap: spacing.xs,
   },
   description: {
     ...typography.bodySmall,
-    lineHeight: 18,
   },
   iconText: {
     fontSize: 22,
@@ -278,7 +277,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: borderRadius.small,
     flexDirection: 'row',
-    gap: 6,
+    gap: spacing.xs,
     marginTop: spacing.md,
     paddingHorizontal: spacing.sm,
     paddingVertical: spacing.xs,
@@ -304,9 +303,8 @@ const styles = StyleSheet.create({
     marginTop: spacing.md,
   },
   title: {
-    ...typography.heading3,
-    fontSize: 18,
-    lineHeight: 22,
+    ...typography.body,
+    fontWeight: fontWeights.semibold,
   },
   topRow: {
     alignItems: 'flex-start',

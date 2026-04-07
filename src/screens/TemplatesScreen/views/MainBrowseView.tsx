@@ -72,6 +72,9 @@ export function MainBrowseView(p: MainBrowseViewProps) {
         <Animated.View entering={stagger(3)}>
           {p.premiumPacksSection}
         </Animated.View>
+        <Animated.View entering={stagger(4)}>
+          {p.exploreAllSection}
+        </Animated.View>
       </ScrollView>
       {p.modals}
       {p.feedbackOverlays}

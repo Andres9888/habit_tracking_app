@@ -47,4 +47,14 @@ export const scienceStyles = StyleSheet.create({
     fontStyle: 'italic',
     lineHeight: 24,
   },
+  researchLink: {
+    ...typography.caption,
+    borderBottomColor: `${colors.primary[600]}66`,
+    borderBottomWidth: 1,
+    color: colors.primary[600],
+    fontWeight: fontWeights.semibold,
+    marginTop: spacing.sm,
+    paddingBottom: 1,
+    alignSelf: 'flex-start',
+  },
 });

@@ -9,9 +9,9 @@ import type { Doc } from '../../../../convex/_generated/dataModel';
 import { ScreenHeader } from '../../../components/ScreenHeader';
 import { colors } from '../../../theme/colors';
 import { durations, springs } from '../../../theme/animations';
-import { spacing } from '../../../theme/spacing';
+import { borderRadius, spacing } from '../../../theme/spacing';
 import { getCategoryMeta } from '../data/categoryMeta';
-import { fontWeights } from '@/theme/typography';
+import { fontWeights, typography } from '@/theme/typography';
 import {
   useCategoryDrillFilters,
   type DrillSort,
@@ -102,7 +102,7 @@ const s = StyleSheet.create({
   chip: {
     backgroundColor: colors.light.surfaceMuted,
     borderColor: colors.border,
-    borderRadius: 9999,
+    borderRadius: borderRadius.full,
     borderWidth: 1,
     paddingHorizontal: 14,
     paddingVertical: 6,
@@ -111,14 +111,14 @@ const s = StyleSheet.create({
     backgroundColor: colors.primary[600],
     borderColor: colors.primary[700],
   },
-  chipText: { color: colors.text.secondary, fontSize: 13, fontWeight: fontWeights.semibold },
-  chipTextActive: { color: '#fff' },
+  chipText: { ...typography.caption, color: colors.text.secondary, fontWeight: fontWeights.semibold },
+  chipTextActive: { color: colors.text.inverse },
   container: { backgroundColor: colors.background, flex: 1 },
-  filterBarContent: { flexDirection: 'row', gap: 8, paddingHorizontal: spacing.base, paddingVertical: 8 },
+  filterBarContent: { flexDirection: 'row', gap: spacing.sm, paddingHorizontal: spacing.base, paddingVertical: spacing.sm },
   list: { paddingBottom: spacing['2xl'], paddingTop: spacing.xs },
   toggleActive: {
-    backgroundColor: 'rgba(16,185,129,0.1)',
-    borderColor: 'rgba(16,185,129,0.3)',
+    backgroundColor: `${colors.primary[500]}1A`,
+    borderColor: `${colors.primary[500]}4D`,
   },
   toggleTextActive: { color: colors.primary[600] },
 });

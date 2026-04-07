@@ -4,10 +4,10 @@
 
 import { StyleSheet } from 'react-native';
 import { colors } from '../../../../theme/colors';
-import { fontFamilies, fontWeights } from '../../../../theme/typography';
+import { fontFamilies, fontWeights, typography } from '../../../../theme/typography';
 import { borderRadius, shadows, spacing } from '../../../../theme/spacing';
 
-export const CARD_WIDTH = 165;
+export const CARD_WIDTH = 180;
 const ICON_BOX = 48;
 const ADD_BUTTON_SIZE = 44;
 
@@ -30,17 +30,22 @@ export const s = StyleSheet.create({
   },
   iconEmoji: { fontSize: 28 },
   name: {
+    ...typography.bodySmall,
     color: colors.text.primary,
-    fontSize: 14,
     fontWeight: fontWeights.bold,
-    lineHeight: 14 * 1.3,
     marginTop: spacing.md,
+  },
+  description: {
+    ...typography.caption,
+    color: colors.text.secondary,
+    lineHeight: 17,
+    marginTop: spacing.xs,
   },
   metaRow: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.xs, marginTop: spacing.xs },
   frequency: {
+    ...typography.caption,
     color: colors.text.tertiary,
     fontFamily: fontFamilies.monospace,
-    fontSize: 13,
   },
   scienceBadge: {
     backgroundColor: colors.warningLight,
@@ -49,8 +54,8 @@ export const s = StyleSheet.create({
     paddingVertical: 2,
   },
   scienceText: {
+    ...typography.tabBar,
     color: colors.warning,
-    fontSize: 10,
     fontWeight: fontWeights.semibold,
   },
   bottomRow: {
@@ -60,7 +65,7 @@ export const s = StyleSheet.create({
     marginTop: 'auto' as unknown as number,
     paddingTop: spacing.md,
   },
-  popularityText: { color: colors.primary[600], fontSize: 13, fontWeight: fontWeights.medium },
+  popularityText: { ...typography.caption, color: colors.primary[600] },
 });
 
 export const addButtonStyles = StyleSheet.create({

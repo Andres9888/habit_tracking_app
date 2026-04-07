@@ -8,6 +8,7 @@ import { HeroSection } from './HeroSection';
 import { DescriptionSection } from './DescriptionSection';
 import { ScienceBox } from './ScienceBox';
 import { TipsBox } from './TipsBox';
+import { VideoLink } from './VideoLink';
 import { layoutStyles } from '../styles';
 import type { Template } from '../../../types/template';
 import type { ViewStyle } from 'react-native';
@@ -41,6 +42,7 @@ export function ScrollableContent({
       />
       <DescriptionSection description={template?.description ?? ''} />
       <ScienceBox template={template} />
+      <VideoLink template={template} />
       {tips && Array.isArray(tips) && tips.length > 0 ? <TipsBox iconColor={iconColor} tips={tips} /> : null}
       <View style={layoutStyles.bottomSpacer} />
     </ScrollView>

@@ -6,6 +6,7 @@
 import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 import type { Doc } from '../../../convex/_generated/dataModel';
 import { CategoryGrid } from './components/CategoryGrid';
+import { ExploreAllSection, useGroupedTemplates } from './components/ExploreAllSection';
 import { PremiumPacksSection } from './components/PremiumPacksSection';
 import { TemplatesEmptyState } from './components/TemplatesEmptyState';
 import { TemplatesScreenModals } from './components';
@@ -18,6 +19,7 @@ import { renderSubView } from './views/renderSubView';
 function TemplatesScreenContent() {
   const props = useTemplatesScreenProps();
   const { data, handlers, mainBrowseData, packConfirm, state, viewNav } = props;
+  const { groups, totalCount } = useGroupedTemplates(data.allTemplates);
   const handleImport = (template: Doc<'templates'>) => {
     void handlers.handleDirectImport(template._id);
   };
@@ -63,6 +65,17 @@ function TemplatesScreenContent() {
           onSelectCategory={(categoryId) =>
             handlers.handleSelectCategory(categoryId)
           }
+        />
+      }
+      exploreAllSection={
+        <ExploreAllSection
+          getCategoryLabel={props.getCategoryLabel}
+          groups={groups}
+          importedTemplateIds={state.importedTemplateIds}
+          importingTemplateId={state.importingTemplateId}
+          totalCount={totalCount}
+          onImport={handleImport}
+          onPreview={handlers.handleTemplatePreview}
         />
       }
       feedbackOverlays={
