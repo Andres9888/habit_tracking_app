@@ -8,6 +8,7 @@ import { View, Text, TextInput, Keyboard } from 'react-native';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import { useThemeColors } from '../../theme';
 import { spacing } from '@/theme/spacing';
+import { typography } from '@/theme/typography';
 import { buildTextInputHintProps } from '@/utils/textInputHintProps';
 
 interface NameInputSectionProps {
@@ -25,7 +26,7 @@ export function NameInputSection({
   return (
     <View
       className='items-center px-6'
-      style={{ marginBottom: 40, marginTop: spacing.xl }}
+      style={{ marginBottom: spacing['2xl'], marginTop: spacing.xl }}
     >
       <Animated.View
         className='mb-6'
@@ -33,8 +34,8 @@ export function NameInputSection({
       >
         <Text
           accessibilityRole='header'
-          className='text-center text-[22px] font-bold leading-tight'
-          style={{ color: colors.text.primary }}
+          className='text-center leading-tight'
+          style={{ ...typography.heading2, color: colors.text.primary }}
         >
           Edit your habit
         </Text>
@@ -56,7 +57,7 @@ export function NameInputSection({
           value={habitName}
           {...buildTextInputHintProps(
             'Update your habit name',
-            isDark ? colors.text.tertiary : '#a1a1aa'
+            colors.text.tertiary
           )}
           onBlur={() => setIsFocused(false)}
           onChangeText={onChangeText}
@@ -64,8 +65,8 @@ export function NameInputSection({
           onSubmitEditing={Keyboard.dismiss}
         />
         <Text
-          className='mt-2 text-center text-[13px]'
-          style={{ color: colors.text.tertiary }}
+          className='mt-2 text-center'
+          style={{ ...typography.caption, color: colors.text.tertiary }}
         >
           {habitName.length}/50 characters
         </Text>

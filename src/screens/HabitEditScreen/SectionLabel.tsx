@@ -14,9 +14,9 @@ export function SectionLabel({
   delay,
   variant = 'default',
 }: SectionLabelProps) {
-  const { colors, isDark } = useThemeColors();
-  const color = variant === 'danger' ? '#F87171' : colors.text.tertiary;
-  const borderColor = isDark ? colors.border : '#DDD8D2';
+  const { colors } = useThemeColors();
+  const color = variant === 'danger' ? colors.status.error : colors.text.tertiary;
+  const borderColor = colors.border;
 
   return (
     <Animated.View

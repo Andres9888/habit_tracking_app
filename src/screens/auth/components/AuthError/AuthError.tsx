@@ -4,6 +4,7 @@ import { AlertCircle, X } from 'lucide-react-native';
 import Animated, { FadeInDown, FadeOut } from 'react-native-reanimated';
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import { useThemeColors } from '@/theme/ThemeContext';
+import { shadows } from '@/theme/spacing';
 import { AuthErrorProps } from './types';
 import { iconSizes } from '@/theme/iconSizes';
 
@@ -20,10 +21,7 @@ export function AuthError({ message, onDismiss }: AuthErrorProps) {
       style={{
         backgroundColor: colors.status.errorLight,
         borderColor: colors.status.errorLight,
-        shadowColor: '#1c1917',
-        shadowOffset: { height: 4, width: 0 },
-        shadowOpacity: 0.08,
-        shadowRadius: 16,
+        ...shadows.floatingActionButton,
       }}
     >
       <View className='mt-0.5 h-8 w-8 items-center justify-center rounded-full' style={{ backgroundColor: colors.status.errorLight }}>

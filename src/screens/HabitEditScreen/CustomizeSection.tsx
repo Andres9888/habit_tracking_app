@@ -14,6 +14,7 @@ import { ColorPickerSection } from '../../components/CreateHabitModal/components
 import { EnhancedReminderSelector } from '../../components/CreateHabitModal/components/EnhancedReminderSelector';
 import { HABIT_COLORS } from '../../components/CreateHabitModal/constants';
 import { useThemeColors } from '../../theme/ThemeContext';
+import { typography } from '../../theme/typography';
 
 const entrance = (delay: number) => FadeInUp.delay(delay).springify().damping(18);
 
@@ -45,8 +46,8 @@ export function CustomizeSection({
   return (
     <View className='flex-1'>
       <Text
-        className='mb-3 text-center text-[13px] font-semibold uppercase'
-        style={{ letterSpacing: 0.5, color: themeColors.text.tertiary }}
+        className='mb-3 text-center uppercase'
+        style={{ ...typography.caption, fontWeight: '600', letterSpacing: 0.5, color: themeColors.text.tertiary }}
       >
         Choose an icon
       </Text>
@@ -61,8 +62,8 @@ export function CustomizeSection({
       </Animated.View>
 
       <Text
-        className='mt-4 mb-3 text-center text-[13px] font-semibold uppercase'
-        style={{ letterSpacing: 0.5, color: themeColors.text.tertiary }}
+        className='mt-4 mb-3 text-center uppercase'
+        style={{ ...typography.caption, fontWeight: '600', letterSpacing: 0.5, color: themeColors.text.tertiary }}
       >
         Pick a color
       </Text>

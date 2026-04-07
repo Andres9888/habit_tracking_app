@@ -15,7 +15,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useSwipeDismiss } from '../../components/CreateHabitModal/hooks/useSwipeDismiss';
 import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 import { useThemeColors } from '../../theme/ThemeContext';
-import { shadows } from '../../theme/spacing';
+import { borderRadius, shadows } from '../../theme/spacing';
 import { EditHeader } from './EditHeader';
 import { HabitEditSkeleton } from './HabitEditSkeleton';
 import { NameInputSection } from './NameInputSection';
@@ -162,7 +162,7 @@ export default function HabitEditScreen(props: HabitEditScreenProps) {
 }
 
 const styles = StyleSheet.create({
-  dragHandle: { borderRadius: 4, height: 5, width: 36 },
+  dragHandle: { borderRadius: borderRadius.xs, height: 5, width: 36 },
   dragHandleRow: { alignItems: 'center', paddingBottom: 4, paddingTop: 8 },
   sheet: StyleSheet.absoluteFillObject,
 });

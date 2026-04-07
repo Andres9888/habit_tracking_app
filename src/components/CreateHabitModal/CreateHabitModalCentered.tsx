@@ -20,6 +20,7 @@ import { GestureDetector } from 'react-native-gesture-handler';
 import Animated from 'react-native-reanimated';
 
 import { useThemeColors } from '../../theme/ThemeContext';
+import { borderRadius } from '../../theme/spacing';
 import { CreateHabitScrollContent } from './components/CreateHabitScrollContent';
 import { ModalHeader } from './components/ModalHeader';
 import { useCenteredFormCallbacks } from './hooks/useCenteredFormCallbacks';
@@ -107,7 +108,7 @@ export default function CreateHabitModalCentered(props: CreateHabitModalProps) {
 }
 
 const styles = StyleSheet.create({
-  dragHandle: { borderRadius: 4, height: 5, width: 36 },
+  dragHandle: { borderRadius: borderRadius.xs, height: 5, width: 36 },
   dragHandleRow: { alignItems: 'center', paddingBottom: 4, paddingTop: 8 },
   sheet: StyleSheet.absoluteFillObject,
 });
