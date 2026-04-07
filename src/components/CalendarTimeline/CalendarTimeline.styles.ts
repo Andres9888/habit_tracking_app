@@ -67,7 +67,7 @@ export const getFutureDateTextColor = (isDark: boolean) =>
 /** Today cell shadow (same for both themes) */
 export const TODAY_SHADOW = {
   elevation: 2,
-  shadowColor: colors.gray[800],
+  shadowColor: '#2D2A26',
   shadowOffset: { height: 2, width: 0 },
   shadowOpacity: 0.15,
   shadowRadius: 4,
@@ -83,6 +83,7 @@ export const getCompleteDotGlow = (isDark: boolean) => ({
 });
 
 /** Streak connector bar between consecutive completed days */
+/* Intentional rgba — light: primary[500] rgb, dark: primary[400] rgb */
 export const STREAK_CONNECTOR = {
   height: 4,
   topOffset: 14 + 2 + 22 - 2,

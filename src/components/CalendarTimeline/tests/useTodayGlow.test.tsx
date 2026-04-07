@@ -45,7 +45,7 @@ describe('useTodayGlow', () => {
       {},
       ...([].concat(getByTestId('cell').props.style))
     );
-    expect(flat.shadowColor).toBe('#B8860B');
+    expect(flat.shadowColor).toBe('#936A08');
   });
 
   it('returns empty style when not current day', () => {

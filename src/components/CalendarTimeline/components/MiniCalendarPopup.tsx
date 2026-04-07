@@ -3,6 +3,7 @@ import { Text, Pressable, Modal } from 'react-native';
 import { addMonths, subMonths } from 'date-fns';
 
 import { useThemeColors } from '../../../theme/ThemeContext';
+import { spacing, borderRadius, shadows } from '@/theme/spacing';
 import { MiniCalendarGrid } from './MiniCalendarGrid';
 import { MiniCalendarNav } from './MiniCalendarNav';
 import { fontFamilies, fontWeights } from '@/theme/typography';
@@ -45,7 +46,7 @@ export const MiniCalendarPopup: React.FC<MiniCalendarPopupProps> = ({
         onPress={onClose}
       >
         <Pressable
-          style={{ backgroundColor: cardBg, borderRadius: 16, padding: 16, width: 300 }}
+          style={{ backgroundColor: cardBg, borderRadius: borderRadius.card, padding: spacing.base, width: 300, ...shadows.modal }}
           onPress={(e) => e.stopPropagation()}
         >
           <MiniCalendarNav month={month} onNext={next} onPrev={prev} />

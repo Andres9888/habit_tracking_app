@@ -13,12 +13,14 @@ import type {
   CompletionStatus,
 } from '../CalendarTimeline.types';
 import { useThemeColors } from '../../../theme/ThemeContext';
+import { durations } from '../../../theme/animations';
+import { fontFamilies } from '../../../theme/typography';
 import { useTodayGlow } from '../hooks/useTodayGlow';
 
 import { DayCellRing } from './DayCellRing';
 
-const ENTRANCE_DURATION = 350;
-const STAGGER_DELAY = 50;
+const ENTRANCE_DURATION = durations.enter;
+const STAGGER_DELAY = durations.stagger;
 const ENTRANCE_TRANSLATE_Y = 12;
 
 interface DayCellContentProps {
@@ -88,6 +90,7 @@ export const DayCellContent: React.FC<DayCellContentProps> = ({
         className='text-center text-[10px] leading-[14px]'
         style={{
           color: colors.secondaryText,
+          fontFamily: fontFamilies.primary.text,
           fontWeight: isCurrentDay ? '700' : '500',
           letterSpacing: 0.5,
           ...(isCurrentDay && { transform: [{ translateX: 3 }] }),
