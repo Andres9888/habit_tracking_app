@@ -10,6 +10,7 @@
 import React, { memo, useMemo } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { useThemeColors } from '../../../theme/ThemeContext';
+import { spacing } from '../../../theme/spacing';
 
 const GRIP_LINE_COUNT = 3;
 const GRIP_LINE_KEYS = Array.from({ length: GRIP_LINE_COUNT }, (_, i) => i);
@@ -48,8 +49,8 @@ const gripStyles = StyleSheet.create({
     flexDirection: 'row',
     gap: 2.5,
     justifyContent: 'center',
-    paddingHorizontal: 6,
-    paddingVertical: 16,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.base,
   },
   line: {
     borderRadius: 1,

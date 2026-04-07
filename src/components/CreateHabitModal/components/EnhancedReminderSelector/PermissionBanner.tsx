@@ -24,15 +24,15 @@ export function PermissionBanner({ visible }: PermissionBannerProps) {
       accessibilityLabel='Notifications are disabled. Tap to open Settings.'
       accessibilityRole='button'
       className='mt-3 flex-row items-center gap-3 rounded-xl px-4 py-3'
-      style={{ backgroundColor: '#FEF3C7' }}
+      style={{ backgroundColor: colors.status.warningLight }}
       onPress={() => void Linking.openSettings()}
     >
-      <AlertTriangle color='#D97706' size={iconSizes.medium} />
+      <AlertTriangle color={colors.status.warning} size={iconSizes.medium} />
       <View className='flex-1'>
-        <Text className='text-sm font-medium' style={{ color: '#92400E' }}>
+        <Text className='text-sm font-medium' style={{ color: colors.status.warningText }}>
           Notifications are disabled
         </Text>
-        <Text className='text-xs' style={{ color: '#A16207' }}>
+        <Text className='text-xs' style={{ color: colors.status.warning }}>
           Tap to open Settings and enable notifications
         </Text>
       </View>

@@ -5,7 +5,8 @@ import { iconSizes } from '@/theme/iconSizes';
 import { useUser } from '@clerk/clerk-expo';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useThemeColors } from '../../theme/ThemeContext';
-import { borderRadius, shadows } from '../../theme/spacing';
+import { borderRadius, shadows, spacing } from '../../theme/spacing';
+import { typography } from '../../theme/typography';
 
 interface ProfileCardProps {
   isPremium: boolean;
@@ -20,7 +21,7 @@ export function ProfileCard({ isPremium, highContrastMode }: ProfileCardProps) {
   const email = user?.primaryEmailAddress?.emailAddress;
   const initial = name.charAt(0).toUpperCase();
 
-  const cardBg = highContrastMode ? (isDark ? '#111111' : '#000000') : themeColors.card;
+  const cardBg = highContrastMode ? (isDark ? themeColors.gray[900] : themeColors.text.primary) : themeColors.card;
   const cardBorder = highContrastMode ? themeColors.border : undefined;
 
   return (
@@ -35,7 +36,7 @@ export function ProfileCard({ isPremium, highContrastMode }: ProfileCardProps) {
           : shadows.card),
       }}
     >
-      <View className='flex-row items-center px-4 py-4' style={{ gap: 14 }}>
+      <View className='flex-row items-center px-4 py-4' style={{ gap: spacing.md }}>
         {highContrastMode ? (
           <View
             className='items-center justify-center'
@@ -66,15 +67,14 @@ export function ProfileCard({ isPremium, highContrastMode }: ProfileCardProps) {
         )}
         <View className='flex-1'>
           <Text
-            className='text-[18px] font-bold'
-            style={{ color: themeColors.text.primary }}
+            style={{ ...typography.heading3, color: themeColors.text.primary }}
           >
             {name}
           </Text>
           {email ? (
             <Text
-              className='mt-0.5 text-[13px]'
-              style={{ color: themeColors.text.secondary }}
+              className='mt-0.5'
+              style={{ ...typography.caption, color: themeColors.text.secondary }}
             >
               {email}
             </Text>

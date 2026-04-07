@@ -17,9 +17,9 @@ export function SignOutCard({
 }: SignOutCardProps) {
   const { colors: themeColors } = useThemeColors();
 
-  const cardBg = highContrastMode ? '#111111' : themeColors.card;
+  const cardBg = highContrastMode ? themeColors.gray[900] : themeColors.card;
   const borderColor = highContrastMode
-    ? '#2f2f2f'
+    ? themeColors.gray[700]
     : themeColors.border;
 
   return (
