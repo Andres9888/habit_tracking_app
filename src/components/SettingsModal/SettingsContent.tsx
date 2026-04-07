@@ -198,14 +198,20 @@ export function SettingsContent(p: SettingsContentProps) {
                 value={p.stickyCalendarHeader}
                 onToggle={(v) => void p.onChangeStickyCalendarHeader(v)}
               />
+            </SettingsSection>
+          </Animated.View>
+
+          {/* Habit Management Section */}
+          <Animated.View entering={anim(75)}>
+            <SettingsSection highContrastMode={hc} title='Habit Management'>
               <SettingsRow
                 badge={p.archivedHabitsCount}
                 highContrastMode={hc}
                 icon={<BookOpen color={settingsIcons.archive.icon} size={iconSizes.small} />}
                 iconBackgroundColor={settingsIcons.archive.bg}
                 label='Archived Habits'
-                subtitle='View and restore hidden habits'
                 showBorder={false}
+                subtitle='View and restore hidden habits'
                 type='navigation'
                 onPress={p.onOpenArchivedHabits}
               />
@@ -213,7 +219,7 @@ export function SettingsContent(p: SettingsContentProps) {
           </Animated.View>
 
           {/* Notifications Section */}
-          <Animated.View entering={anim(75)}>
+          <Animated.View entering={anim(100)}>
             <StreakRemindersSection
               enabled={p.streakRemindersEnabled}
               highContrastMode={hc}
@@ -226,7 +232,7 @@ export function SettingsContent(p: SettingsContentProps) {
           </Animated.View>
 
           {/* Support Section */}
-          <Animated.View entering={anim(100)}>
+          <Animated.View entering={anim(125)}>
             <AppActions
               highContrast={hc}
               onFeedback={actions.handleFeedback}
@@ -237,7 +243,7 @@ export function SettingsContent(p: SettingsContentProps) {
           </Animated.View>
 
           {/* About + Legal */}
-          <Animated.View entering={anim(125)}>
+          <Animated.View entering={anim(150)}>
             <AboutLegalSection
               buildNumber={Constants.expoConfig?.ios?.buildNumber ?? '1'}
               highContrast={hc}
