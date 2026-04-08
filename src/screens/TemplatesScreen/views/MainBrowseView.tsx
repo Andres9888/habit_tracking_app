@@ -54,7 +54,7 @@ export function MainBrowseView(p: MainBrowseViewProps) {
         }}
       >
         <Animated.View entering={stagger(0)}>
-          <FeaturedCollection onPress={p.onFeaturedPress} />
+          <FeaturedCollection habitCount={p.featuredHabitCount} onPress={p.onFeaturedPress} />
         </Animated.View>
         <Animated.View entering={stagger(1)}>
           <PopularSection

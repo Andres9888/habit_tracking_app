@@ -3,10 +3,12 @@
  * Browse and import science-backed habit templates
  */
 
+import { useMemo } from 'react';
 import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 import type { Doc } from '../../../convex/_generated/dataModel';
 import { CategoryGrid } from './components/CategoryGrid';
 import { ExploreAllSection, useGroupedTemplates } from './components/ExploreAllSection';
+import { getTimeAwareFeatured } from './components/FeaturedCollection/featuredCollections';
 import { PremiumPacksSection } from './components/PremiumPacksSection';
 import { TemplatesEmptyState } from './components/TemplatesEmptyState';
 import { TemplatesScreenModals } from './components';
@@ -20,6 +22,10 @@ function TemplatesScreenContent() {
   const props = useTemplatesScreenProps();
   const { data, handlers, mainBrowseData, packConfirm, state, viewNav } = props;
   const { groups, totalCount } = useGroupedTemplates(data.allTemplates);
+  const featuredHabitCount = useMemo(() => {
+    const categoryId = getTimeAwareFeatured().categoryId;
+    return data.allTemplates?.filter((t) => t.category === categoryId).length ?? 0;
+  }, [data.allTemplates]);
   const handleImport = (template: Doc<'templates'>) => {
     void handlers.handleDirectImport(template._id);
   };
@@ -78,6 +84,7 @@ function TemplatesScreenContent() {
           onPreview={handlers.handleTemplatePreview}
         />
       }
+      featuredHabitCount={featuredHabitCount}
       feedbackOverlays={
         <FeedbackOverlays
           showCelebration={state.showCelebration}

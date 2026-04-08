@@ -1,5 +1,5 @@
 /**
- * HeroFooter - User count + Explore CTA for the hero featured card
+ * HeroFooter - Habit count + Explore CTA for the hero featured card
  */
 
 import { Text, View } from 'react-native';
@@ -7,10 +7,16 @@ import { ChevronRight } from 'lucide-react-native';
 import { s } from './FeaturedCollection.styles';
 import { iconSizes } from '@/theme/iconSizes';
 
-export function HeroFooter() {
+interface HeroFooterProps {
+  habitCount: number;
+}
+
+export function HeroFooter({ habitCount }: HeroFooterProps) {
   return (
     <View style={s.footer}>
-      <Text style={s.userCount}>2.4k users</Text>
+      <Text style={s.habitCount}>
+        {habitCount} {habitCount === 1 ? 'habit' : 'habits'}
+      </Text>
       <View style={s.cta}>
         <Text style={s.ctaText}>Explore</Text>
         <ChevronRight size={iconSizes.small} color='#FFFFFF' strokeWidth={2} />
