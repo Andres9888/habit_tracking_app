@@ -13,7 +13,6 @@ export function useTemplateHandlers(opts: UseTemplateHandlersOptions) {
   const navigation = useNavigationHandlers({
     flatListRef: opts.flatListRef,
     setExpandedCategories: opts.setExpandedCategories,
-    setResearchOnly: opts.setResearchOnly,
     setSearchQuery: opts.setSearchQuery,
     setSelectedCategory: opts.setSelectedCategory,
     setSortOption: opts.setSortOption,

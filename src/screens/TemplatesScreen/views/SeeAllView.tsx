@@ -6,10 +6,11 @@ import { FlatList, StyleSheet, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import type { Doc } from '../../../../convex/_generated/dataModel';
 import { ScreenHeader } from '../../../components/ScreenHeader';
-import { TemplateCard } from '../../../components/TemplateCard';
 import { colors } from '../../../theme/colors';
 import { durations, springs } from '../../../theme/animations';
 import { spacing } from '../../../theme/spacing';
+import { getCategoryMeta } from '../data/categoryMeta';
+import { TemplateListCard } from './TemplateListCard';
 
 interface SeeAllViewProps {
   importedTemplateIds: Set<string>;
@@ -24,36 +25,34 @@ export function SeeAllView({
   importedTemplateIds, importingTemplateId,
   onBack, onImport, onPreview, templates,
 }: SeeAllViewProps) {
+  const getCategoryLabel = (categoryId: string) =>
+    getCategoryMeta(categoryId).label;
+  const habitCountLabel = `${templates.length} habit${templates.length === 1 ? '' : 's'}`;
+
   return (
     <View testID="templates-see-all-view" style={s.container}>
       <ScreenHeader
-        subtitle={`${templates.length} templates · sorted by popularity`}
-        title="All Popular Templates"
+        subtitle={`${habitCountLabel} · sorted by popularity`}
+        title="Trending habits"
         onBack={onBack}
       />
       <FlatList
         data={templates}
-        contentContainerStyle={{ paddingBottom: 100 }}
+        contentContainerStyle={{
+          paddingBottom: spacing['2xl'],
+          paddingTop: spacing.xs,
+        }}
         keyExtractor={(item) => item._id}
         renderItem={({ item, index }) => (
           <Animated.View entering={FadeInDown.delay(index * durations.stagger).duration(durations.enter).springify().damping(springs.standard.damping)}>
-            <TemplateCard
-              category={item.category}
-              description={item.description}
-              frequency={item.frequency}
-              icon={item.icon}
-              iconColor={item.iconColor}
-              id={item._id}
-              index={index}
-              isImported={importedTemplateIds.has(item._id)}
-              isImporting={importingTemplateId === item._id}
-              name={item.name}
-              popularityScore={item.popularityScore}
-              scientificReference={item.scientificReference}
-              showPreviewCTA
-              youtubeLink={item.youtubeLink}
-              onImport={() => onImport(item)}
-              onPreview={() => onPreview(item)}
+            <TemplateListCard
+              getCategoryLabel={getCategoryLabel}
+              importedTemplateIds={importedTemplateIds}
+              importingTemplateId={importingTemplateId}
+              item={item}
+              searchQuery=''
+              onImport={(_templateId) => onImport(item)}
+              onPreview={(_template) => onPreview(item)}
             />
           </Animated.View>
         )}

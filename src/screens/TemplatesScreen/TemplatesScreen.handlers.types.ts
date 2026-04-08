@@ -27,7 +27,6 @@ export interface UseTemplateHandlersOptions {
   setPreviewTemplate: React.Dispatch<
     React.SetStateAction<Doc<'templates'> | null>
   >;
-  setResearchOnly: React.Dispatch<React.SetStateAction<boolean>>;
   setSearchQuery: React.Dispatch<React.SetStateAction<string>>;
   setSelectedCategory: React.Dispatch<React.SetStateAction<Category>>;
   setShowCelebration: React.Dispatch<React.SetStateAction<boolean>>;

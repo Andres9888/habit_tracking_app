@@ -75,7 +75,6 @@ export function useScienceCountsByCategory(
 export function useFilteredTemplates(
   allTemplates: Doc<'templates'>[] | undefined,
   selectedCategory: Category,
-  researchOnly: boolean,
   searchQuery: string,
   sortOption: SortOption
 ) {
@@ -85,11 +84,6 @@ export function useFilteredTemplates(
     let data = [...allTemplates];
     if (selectedCategory !== 'all')
       data = data.filter((t) => t.category === selectedCategory);
-    if (researchOnly) {
-      data = data.filter((t) =>
-        Boolean(t.scientificReference)
-      );
-    }
 
     const safeSearchQuery = normalizeSearchValue(searchQuery);
     if (safeSearchQuery) {
@@ -117,5 +111,5 @@ export function useFilteredTemplates(
     };
 
     return data.sort(sorter[sortOption]);
-  }, [allTemplates, selectedCategory, researchOnly, searchQuery, sortOption]);
+  }, [allTemplates, selectedCategory, searchQuery, sortOption]);
 }

@@ -3,6 +3,7 @@
  */
 
 import { Pressable, Text, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ArrowLeft } from 'lucide-react-native';
 import { useAppTheme } from '../../../theme';
 import { useThemeColors } from '../../../theme/ThemeContext';
@@ -36,6 +37,7 @@ export function CategoryHeader({
   viewMode,
 }: CategoryHeaderProps) {
   const theme = useAppTheme();
+  const insets = useSafeAreaInsets();
   const { colors: themeColors, isDark } = useThemeColors();
   const catColors =
     getCategoryColors(isDark)[selectedCategory] ||
@@ -54,10 +56,10 @@ export function CategoryHeader({
           ? ` in ${getCategoryLabel(selectedCategory)}`
           : ''
       } across names, descriptions, categories, and research`
-    : `${filteredCount} template${filteredCount === 1 ? '' : 's'}`;
+    : `${filteredCount} habit${filteredCount === 1 ? '' : 's'}`;
 
   return (
-    <View style={styles.header}>
+    <View style={[styles.header, { paddingTop: Math.max(insets.top + 8, 16) }]}>
       {shouldShowBackButton ? (
         <Pressable
           accessible

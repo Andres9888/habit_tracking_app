@@ -12,7 +12,6 @@ import { triggerHaptic } from '@/utils/haptics';
 interface UseNavigationHandlersOptions {
   flatListRef: React.RefObject<FlatList<Doc<'templates'>> | null>;
   setExpandedCategories: React.Dispatch<React.SetStateAction<Set<string>>>;
-  setResearchOnly: React.Dispatch<React.SetStateAction<boolean>>;
   setSearchQuery: React.Dispatch<React.SetStateAction<string>>;
   setSelectedCategory: React.Dispatch<React.SetStateAction<Category>>;
   setSortOption: React.Dispatch<React.SetStateAction<SortOption>>;
@@ -23,7 +22,6 @@ export function useNavigationHandlers(opts: UseNavigationHandlersOptions) {
   const {
     flatListRef,
     setExpandedCategories,
-    setResearchOnly,
     setSearchQuery,
     setSelectedCategory,
     setSortOption,
@@ -48,13 +46,11 @@ export function useNavigationHandlers(opts: UseNavigationHandlersOptions) {
   const resetToBrowse = useCallback(() => {
     setSelectedCategory('all');
     setSearchQuery('');
-    setResearchOnly(false);
     setSortOption('popular');
     setViewMode('browse');
     flatListRef.current?.scrollToOffset({ animated: true, offset: 0 });
   }, [
     flatListRef,
-    setResearchOnly,
     setSearchQuery,
     setSelectedCategory,
     setSortOption,

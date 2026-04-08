@@ -10,10 +10,11 @@ import { HeroFooter } from './HeroFooter';
 import { getTimeAwareFeatured } from './featuredCollections';
 
 interface FeaturedCollectionProps {
+  habitCount: number;
   onPress: (categoryId: string) => void;
 }
 
-export function FeaturedCollection({ onPress }: FeaturedCollectionProps) {
+export function FeaturedCollection({ habitCount, onPress }: FeaturedCollectionProps) {
   const featured = getTimeAwareFeatured();
 
   return (
@@ -38,7 +39,7 @@ export function FeaturedCollection({ onPress }: FeaturedCollectionProps) {
         <Text style={s.title}>{featured.title}</Text>
         <Text style={s.description}>{featured.description}</Text>
         <HeroChips chips={featured.chips} />
-        <HeroFooter />
+        <HeroFooter habitCount={habitCount} />
       </LinearGradient>
     </Pressable>
   );

@@ -17,11 +17,9 @@ const baseTemplate = {
 
 function Harness({
   searchQuery,
-  researchOnly = false,
   selectedCategory = 'all',
   templates,
 }: {
-  researchOnly?: boolean;
   searchQuery: string;
   selectedCategory?: Parameters<typeof useFilteredTemplates>[1];
   templates: Parameters<typeof useFilteredTemplates>[0];
@@ -29,7 +27,6 @@ function Harness({
   const results = useFilteredTemplates(
     templates,
     selectedCategory,
-    researchOnly,
     searchQuery,
     'popular'
   );
@@ -65,6 +62,17 @@ describe('useFilteredTemplates', () => {
     },
   ] as never;
 
+  it('returns all templates when no search or category filter is active', () => {
+    const { getByTestId } = render(
+      <Harness searchQuery='' templates={templates} />
+    );
+
+    const results = getByTestId('results').props.children;
+    expect(results).toContain('sleep-1');
+    expect(results).toContain('science-1');
+    expect(results).toContain('morning-1');
+  });
+
   it('matches templates by scientific reference text', () => {
     const { getByTestId } = render(
       <Harness searchQuery='trial participants' templates={templates} />
@@ -79,13 +87,5 @@ describe('useFilteredTemplates', () => {
     );
 
     expect(getByTestId('results').props.children).toContain('morning-1');
-  });
-
-  it('treats scientific references as research content for research-only filtering', () => {
-    const { getByTestId } = render(
-      <Harness researchOnly searchQuery='' templates={templates} />
-    );
-
-    expect(getByTestId('results').props.children).toBe('science-1');
   });
 });

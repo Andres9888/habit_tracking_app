@@ -35,7 +35,6 @@ export function useTemplatesScreenProps() {
   const filteredTemplates = useFilteredTemplates(
     data.allTemplates,
     state.selectedCategory,
-    state.researchOnly,
     state.searchQuery,
     state.sortOption
   );
@@ -53,7 +52,6 @@ export function useTemplatesScreenProps() {
     setImportingTemplateId: state.setImportingTemplateId,
     setIsSeeding: state.setIsSeeding,
     setPreviewTemplate: state.setPreviewTemplate,
-    setResearchOnly: state.setResearchOnly,
     setSearchQuery: state.setSearchQuery,
     setSelectedCategory: state.setSelectedCategory,
     setShowCustomizeModal: state.setShowCustomizeModal,

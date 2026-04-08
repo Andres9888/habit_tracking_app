@@ -36,26 +36,26 @@ function getMatchReason(
   if (!query) return null;
 
   if ((template.name ?? '').toLowerCase().includes(query)) {
-    return 'Match: title';
+    return 'Matches your search in the title';
   }
 
   if ((template.description ?? '').toLowerCase().includes(query)) {
-    return 'Match: description';
+    return 'Matches the habit description';
   }
 
   if ((template.scientificReference ?? '').toLowerCase().includes(query)) {
-    return 'Match: research summary';
+    return 'Matches the science summary';
   }
 
   if (getCategoryLabel(template.category).toLowerCase().includes(query)) {
-    return `Match: ${getCategoryLabel(template.category)} category`;
+    return `Related category: ${getCategoryLabel(template.category)}`;
   }
 
   if ((template.frequency ?? '').toLowerCase().includes(query)) {
-    return 'Match: frequency';
+    return 'Matches the suggested cadence';
   }
 
-  return 'Match: template details';
+  return 'Related to your search';
 }
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
@@ -94,7 +94,7 @@ export function TemplateListCard({
 
   return (
     <Pressable
-      accessibilityLabel={`${item.name} template`}
+      accessibilityLabel={`${item.name} habit`}
       accessibilityRole='button'
       style={[
         styles.card,
@@ -135,7 +135,7 @@ export function TemplateListCard({
           accessibilityLabel={
             isImported
               ? `${item.name} added`
-              : `Import ${item.name} template`
+              : `Add ${item.name} habit`
           }
           accessibilityRole='button'
           disabled={isImported || isImporting}
@@ -209,7 +209,7 @@ export function TemplateListCard({
             ]}
           >
             <Text style={[styles.metaLabel, { color: colors.primary[700] }]}>
-              Science
+              Science-backed
             </Text>
           </View>
         ) : null}
@@ -239,8 +239,8 @@ export function TemplateListCard({
 const styles = StyleSheet.create({
   actionButton: {
     alignItems: 'center',
-    borderRadius: 10,
-    height: 34,
+    borderRadius: borderRadius.medium,
+    height: 40,
     justifyContent: 'center',
     minWidth: 78,
     paddingHorizontal: spacing.md,
@@ -258,11 +258,10 @@ const styles = StyleSheet.create({
   },
   contentColumn: {
     flex: 1,
-    gap: 4,
+    gap: spacing.xs,
   },
   description: {
     ...typography.bodySmall,
-    lineHeight: 18,
   },
   iconText: {
     fontSize: 22,
@@ -278,7 +277,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: borderRadius.small,
     flexDirection: 'row',
-    gap: 6,
+    gap: spacing.xs,
     marginTop: spacing.md,
     paddingHorizontal: spacing.sm,
     paddingVertical: spacing.xs,
@@ -304,9 +303,8 @@ const styles = StyleSheet.create({
     marginTop: spacing.md,
   },
   title: {
-    ...typography.heading3,
-    fontSize: 18,
-    lineHeight: 22,
+    ...typography.body,
+    fontWeight: fontWeights.semibold,
   },
   topRow: {
     alignItems: 'flex-start',

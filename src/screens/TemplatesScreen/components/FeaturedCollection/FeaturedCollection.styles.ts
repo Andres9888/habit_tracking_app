@@ -83,5 +83,5 @@ export const s = StyleSheet.create({
     letterSpacing: -0.5,
     marginTop: 12,
   },
-  userCount: { color: 'rgba(255,255,255,0.7)', fontSize: 13 },
+  habitCount: { color: 'rgba(255,255,255,0.7)', fontSize: 13 },
 });

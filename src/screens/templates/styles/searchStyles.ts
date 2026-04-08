@@ -1,21 +1,23 @@
 import { StyleSheet } from 'react-native';
+import { borderRadius, spacing } from '@/theme/spacing';
 import { typography } from '@/theme/typography';
 
 export const searchStyles = StyleSheet.create({
   searchBar: {
     alignItems: 'center',
-    borderRadius: 12,
+    borderRadius: borderRadius.medium,
     borderWidth: 1.5,
     flexDirection: 'row',
-    gap: 10,
+    gap: spacing.sm,
     height: 44,
-    paddingHorizontal: 14,
+    paddingHorizontal: spacing.base,
   },
   searchInput: {
     ...typography.body,
     flex: 1,
   },
   searchSection: {
-    paddingHorizontal: 16,
+    paddingBottom: spacing.md,
+    paddingHorizontal: spacing.base,
   },
 });

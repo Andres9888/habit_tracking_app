@@ -29,7 +29,7 @@ export function PopularSection({
   return (
     <View testID='templates-trending-section' style={s.container}>
       <View style={s.header}>
-        <Text style={s.title}>🔥 Trending Now</Text>
+        <Text style={s.title}>Trending right now</Text>
         <Pressable
           testID='templates-trending-see-all'
           accessibilityLabel='See all trending templates'
@@ -49,6 +49,7 @@ export function PopularSection({
         showsHorizontalScrollIndicator={false}
         renderItem={({ item }) => (
           <TrendingCard
+            description={item.description}
             frequency={item.frequency}
             hasResearch={!!item.scientificReference}
             icon={item.icon}

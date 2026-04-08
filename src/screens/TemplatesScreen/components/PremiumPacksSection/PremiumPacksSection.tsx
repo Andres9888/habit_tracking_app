@@ -5,7 +5,7 @@
 import { StyleSheet, Text, View } from 'react-native';
 import { colors } from '../../../../theme/colors';
 import { spacing } from '../../../../theme/spacing';
-import { typography } from '../../../../theme/typography';
+import { fontWeights, typography } from '../../../../theme/typography';
 import type { PremiumPack } from '../../data/premiumPacks';
 import { PremiumPackCard } from './PremiumPackCard';
 
@@ -21,7 +21,8 @@ export function PremiumPacksSection({
   return (
     <View testID='templates-premium-packs-section' style={s.container}>
       <View style={s.headerRow}>
-        <Text style={s.title}>📦 Curated Packs</Text>
+        <Text style={s.title}>Starter Sets</Text>
+        <Text style={s.badge}>Premium</Text>
       </View>
       {packs.map((pack) => (
         <PremiumPackCard
@@ -35,11 +36,16 @@ export function PremiumPacksSection({
 }
 
 const s = StyleSheet.create({
+  badge: {
+    ...typography.caption,
+    color: colors.premium[700],
+    fontWeight: fontWeights.bold,
+  },
   container: { marginTop: spacing.lg },
   headerRow: {
     alignItems: 'center',
     flexDirection: 'row',
-    gap: spacing.sm,
+    justifyContent: 'space-between',
     marginBottom: spacing.md,
     paddingHorizontal: spacing.base,
   },

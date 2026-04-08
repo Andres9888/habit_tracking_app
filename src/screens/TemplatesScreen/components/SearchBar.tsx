@@ -11,6 +11,7 @@ import { styles } from '../../templates/templatesScreenStyles';
 import { iconSizes } from '@/theme/iconSizes';
 
 interface SearchBarProps {
+  autoFocus?: boolean;
   onChangeText: (text: string) => void;
   onClear: () => void;
   inputHint?: string;
@@ -18,9 +19,10 @@ interface SearchBarProps {
 }
 
 export function SearchBar({
+  autoFocus,
   onChangeText,
   onClear,
-  inputHint = 'Search templates, categories, or research',
+  inputHint = 'What do you want to improve?',
   value,
 }: SearchBarProps) {
   const { colors } = useThemeColors();
@@ -36,7 +38,8 @@ export function SearchBar({
     >
       <Search color={placeholderColor} size={iconSizes.medium} strokeWidth={2.5} />
       <TextInput
-        accessibilityLabel='Search templates'
+        autoFocus={autoFocus}
+        accessibilityLabel='Search habit library'
         returnKeyType='search'
         style={[styles.searchInput, { color: colors.text.primary }]}
         value={value}

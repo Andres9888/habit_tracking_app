@@ -8,5 +8,6 @@ export interface CategoryMeta {
   icon: string;
   isPremium: boolean;
   label: string;
+  subtitle?: string;
   textColor: string;
 }

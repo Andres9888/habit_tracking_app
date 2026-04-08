@@ -39,9 +39,9 @@ export function AddButton({
     transform: [{ scale: scale.value }],
   }));
 
-  const label = isImported ? `${name} added` : `Add ${name}`;
-  const iconColor = isImported ? colors.primary[600] : '#FFFFFF';
-  const iconSize = 16;
+  const label = isImported ? `${name} added` : `Add ${name} habit`;
+  const iconColor = isImported ? colors.primary[600] : colors.text.inverse;
+  const iconSize = 18;
 
   return (
     <AnimatedPressable
@@ -58,7 +58,7 @@ export function AddButton({
       onPress={onImport}
     >
       {isImporting ? (
-        <ActivityIndicator color='#FFFFFF' size={iconSize} />
+        <ActivityIndicator color={colors.text.inverse} size={iconSize} />
       ) : isImported ? (
         <Check color={iconColor} size={iconSize} strokeWidth={3} />
       ) : (
