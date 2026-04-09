@@ -75,6 +75,7 @@ export const heroStyles = StyleSheet.create({
   },
   templateName: {
     ...typography.heading1,
+    alignSelf: 'stretch',
     color: colors.gray[900],
     letterSpacing: -0.5,
     marginBottom: 16,
