@@ -103,13 +103,14 @@
  * ## Design System Standards
  *
  * ### Typography Scale
- * - **Display Large**: 38px Literata (serif) — onboarding headlines
- * - **Heading 1**: 30px Literata (serif) — screen titles
- * - **Heading 2**: 24px DM Sans — section titles
+ * - **Display Large**: 34px Literata (serif) — onboarding headlines
+ * - **Heading 1**: 22px Literata (serif) — screen titles
+ * - **Heading 2**: 22px DM Sans — section titles
  * - **Heading 3**: 20px DM Sans — card titles, habit names
- * - **Body**: 16px DM Sans — primary text
+ * - **Body**: 17px DM Sans — primary text
  * - **Body Small**: 14px DM Sans — secondary info
- * - **Caption**: 12px DM Sans — meta info, timestamps
+ * - **Caption**: 13px DM Sans — meta info, timestamps
+ * - **Tab Bar**: 10px DM Sans — tab labels
  *
  * Font pairing: **Literata (display/H1)** + **DM Sans (all other text)**
  *

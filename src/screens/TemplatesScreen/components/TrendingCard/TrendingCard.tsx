@@ -5,6 +5,7 @@
  */
 
 import { Pressable, Text, View } from 'react-native';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import { AddButton } from './AddButton';
 import { formatPopularity } from './formatPopularity';
 import { s } from './TrendingCard.styles';
@@ -23,39 +24,41 @@ export function TrendingCard({
   onPress,
   popularityScore,
 }: TrendingCardProps) {
+  const { colors } = useThemeColors();
+
   return (
     <Pressable
       accessibilityHint='Opens the habit preview'
       accessibilityLabel={`Preview ${name} habit`}
       accessibilityRole='button'
-      style={s.card}
+      style={[s.card, { backgroundColor: colors.card, borderColor: colors.border }]}
       onPress={onPress}
     >
       <View style={[s.iconBox, { backgroundColor: `${iconColor}25` }]}>
         <Text style={s.iconEmoji}>{icon}</Text>
       </View>
 
-      <Text numberOfLines={2} style={s.name}>
+      <Text numberOfLines={2} style={[s.name, { color: colors.text.primary }]}>
         {name}
       </Text>
 
       {description ? (
-        <Text numberOfLines={2} style={s.description}>
+        <Text numberOfLines={2} style={[s.description, { color: colors.text.secondary }]}>
           {description}
         </Text>
       ) : null}
 
       <View style={s.metaRow}>
-        <Text style={s.frequency}>{frequency}</Text>
+        <Text style={[s.frequency, { color: colors.text.tertiary }]}>{frequency}</Text>
         {hasResearch ? (
-          <View style={s.scienceBadge}>
-            <Text style={s.scienceText}>🔬 Science-backed</Text>
+          <View style={[s.scienceBadge, { backgroundColor: colors.status.warningLight }]}>
+            <Text style={[s.scienceText, { color: colors.status.warningText }]}>🔬 Science-backed</Text>
           </View>
         ) : null}
       </View>
 
       <View style={s.bottomRow}>
-        <Text style={s.popularityText}>
+        <Text style={[s.popularityText, { color: colors.primary[600] }]}>
           {formatPopularity(popularityScore)}
         </Text>
         <AddButton

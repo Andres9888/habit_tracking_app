@@ -31,7 +31,7 @@ const s = StyleSheet.create({
     paddingHorizontal: spacing.base,
   },
   label: {
-    fontSize: 11,
+    fontSize: 10,
     fontWeight: fontWeights.semibold,
     letterSpacing: 0.8,
     textTransform: 'uppercase',

@@ -44,7 +44,7 @@ const s = StyleSheet.create({
     paddingVertical: spacing.sm,
   },
   count: { ...typography.caption },
-  icon: { fontSize: 18 },
+  icon: { fontSize: 17 },
   label: { ...typography.body, fontWeight: fontWeights.bold },
   subtitle: { ...typography.caption, marginTop: 2, paddingLeft: 26 },
   topLine: { alignItems: 'center', flexDirection: 'row', gap: spacing.sm },

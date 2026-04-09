@@ -4,7 +4,7 @@
 
 import { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { colors } from '../../../../theme/colors';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import { borderRadius, shadows, spacing } from '../../../../theme/spacing';
 import { typography, fontWeights } from '../../../../theme/typography';
 import { CategoryTile } from './CategoryTile';
@@ -30,6 +30,7 @@ export function CategoryGrid({
   categories,
   onSelectCategory,
 }: CategoryGridProps) {
+  const { colors } = useThemeColors();
   const [showAll, setShowAll] = useState(false);
   const visible = showAll ? categories : categories.slice(0, INITIAL_VISIBLE);
 
@@ -40,7 +41,7 @@ export function CategoryGrid({
 
   return (
     <View testID='templates-category-grid' style={s.container}>
-      <Text style={s.title}>🗂️ Browse by Category</Text>
+      <Text style={[s.title, { color: colors.text.primary }]}>🗂️ Browse by Category</Text>
       {rows.map((row, rowIdx) => (
         <View key={rowIdx} style={s.row}>
           {row.map((cat, colIdx) => (
@@ -63,10 +64,10 @@ export function CategoryGrid({
         <Pressable
           accessibilityLabel={`Show all ${categories.length} categories`}
           accessibilityRole='button'
-          style={s.showAllButton}
+          style={[s.showAllButton, { backgroundColor: colors.card, borderColor: colors.border }]}
           onPress={() => setShowAll(true)}
         >
-          <Text style={s.showAllText}>
+          <Text style={[s.showAllText, { color: colors.text.primary }]}>
             Show all {categories.length} categories
           </Text>
         </Pressable>
@@ -84,8 +85,6 @@ const s = StyleSheet.create({
   row: { flexDirection: 'row', gap: spacing.sm },
   showAllButton: {
     alignItems: 'center',
-    backgroundColor: colors.light.surfaceMuted,
-    borderColor: colors.border,
     borderRadius: borderRadius.large,
     borderWidth: 1,
     ...shadows.subtle,
@@ -93,13 +92,11 @@ const s = StyleSheet.create({
     paddingVertical: spacing.md,
   },
   showAllText: {
-    color: colors.text.primary,
-    fontSize: 13,
+    ...typography.caption,
     fontWeight: fontWeights.semibold,
   },
   title: {
     ...typography.heading3,
-    color: colors.text.primary,
     marginBottom: spacing.xs,
   },
 });

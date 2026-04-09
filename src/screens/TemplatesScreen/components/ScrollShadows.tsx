@@ -19,15 +19,10 @@ export function ScrollShadows({
   showTopShadow,
 }: ScrollShadowsProps) {
   const { colors, isDark } = useThemeColors();
-  const bgOpaque = isDark
-    ? 'rgba(17,24,39,0.96)'
-    : 'rgba(248,247,245,0.96)';
-  const bgTransparent = isDark
-    ? 'rgba(17,24,39,0)'
-    : 'rgba(248,247,245,0)';
-  const chipBg = isDark
-    ? 'rgba(31,41,55,0.9)'
-    : 'rgba(255,255,255,0.9)';
+  const bg = colors.background;
+  const bgOpaque = bg + (isDark ? 'F5' : 'F5');
+  const bgTransparent = bg + '00';
+  const chipBg = colors.card + 'E6';
 
   return (
     <>
