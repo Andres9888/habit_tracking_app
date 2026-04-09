@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Habit Library — Before / After Changes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Literata:wght@400;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: #0a0a0a;
+    color: #F9FAFB;
+    padding: 32px;
+    min-height: 100vh;
+  }
+
+  h1 {
+    font-family: 'Literata', serif;
+    font-size: 28px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 8px;
+    letter-spacing: -0.5px;
+  }
+  .page-sub {
+    text-align: center;
+    color: #9CA3AF;
+    font-size: 14px;
+    margin-bottom: 40px;
+  }
+  .page-sub span {
+    font-family: 'JetBrains Mono', monospace;
+    background: #1F2937;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    color: #6EE7B7;
+  }
+
+  /* ═══ CHANGE SECTION ═══ */
+  .change-section {
+    max-width: 900px;
+    margin: 0 auto 56px;
+  }
+  .change-header {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+  .change-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    color: #111827;
+    background: #6EE7B7;
+    padding: 2px 8px;
+    border-radius: 4px;
+    flex-shrink: 0;
+  }
+  .change-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #F9FAFB;
+  }
+  .change-desc {
+    color: #9CA3AF;
+    font-size: 14px;
+    margin-bottom: 20px;
+    line-height: 1.5;
+  }
+  .change-desc code {
+    font-family: 'JetBrains Mono', monospace;
+    background: #1F2937;
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-size: 12px;
+    color: #F87171;
+  }
+  .change-desc code.new {
+    color: #6EE7B7;
+  }
+
+  /* ═══ COMPARISON ROW ═══ */
+  .compare {
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+  }
+  .compare-side {
+    flex: 1;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 2px solid #374151;
+    position: relative;
+  }
+  .compare-side.before { border-color: #F87171; }
+  .compare-side.after { border-color: #6EE7B7; }
+
+  .compare-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 8px 16px;
+    text-align: center;
+  }
+  .before .compare-label { background: #F87171; color: #1a1a1a; }
+  .after .compare-label { background: #6EE7B7; color: #1a1a1a; }
+
+  .compare-body {
+    padding: 20px;
+  }
+
+  /* ═══ DARK THEME for mocked components ═══ */
+  .dark-bg { background: #111827; }
+  .light-bg { background: #F5F1ED; }
+
+  /* ═══ MINI COMPONENT MOCKS ═══ */
+
+  /* Trending Card */
+  .mini-card {
+    width: 180px;
+    border-radius: 16px;
+    padding: 16px;
+    border-width: 1.5px;
+    border-style: solid;
+  }
+  .mini-card-name {
+    font-size: 14px;
+    font-weight: 700;
+    margin-top: 10px;
+  }
+  .mini-card-desc {
+    font-size: 13px;
+    margin-top: 4px;
+    line-height: 17px;
+  }
+  .mini-card-freq {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    margin-top: 4px;
+  }
+  .mini-card-icon {
+    width: 48px; height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+  }
+  .mini-add-btn {
+    width: 40px; height: 40px;
+    border-radius: 9999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 12px;
+    margin-left: auto;
+  }
+  .mini-card-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: auto;
+    padding-top: 8px;
+  }
+  .mini-pop { font-size: 13px; }
+
+  /* Chip */
+  .mini-chip {
+    display: inline-flex;
+    border-radius: 9999px;
+    border: 1px solid;
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    margin: 4px;
+  }
+
+  /* Show All Button */
+  .mini-show-all {
+    border-radius: 16px;
+    border: 1px solid;
+    padding: 12px 24px;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: center;
+    margin-top: 8px;
+  }
+
+  /* Habit Row */
+  .mini-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-radius: 16px;
+    border-width: 1.5px;
+    border-style: solid;
+    padding: 12px;
+  }
+  .mini-row-icon {
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+  .mini-row-name { font-size: 17px; font-weight: 600; }
+  .mini-row-desc { font-size: 13px; margin-top: 2px; }
+  .mini-row-badge {
+    border-radius: 9999px;
+    padding: 2px 8px;
+    font-size: 10px;
+    font-weight: 600;
+    display: inline-block;
+    margin-top: 4px;
+  }
+
+  /* Usage Banner */
+  .mini-banner {
+    border-radius: 12px;
+    border: 1px solid;
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .mini-banner-label { font-size: 13px; }
+  .mini-banner-dots {
+    display: flex;
+    gap: 4px;
+    margin-top: 4px;
+  }
+  .mini-banner-dot {
+    width: 8px; height: 8px;
+    border-radius: 9999px;
+  }
+  .mini-banner-cta {
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  /* Annotation arrow */
+  .callout {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: #FBBF24;
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .callout::before {
+    content: '→';
+    font-size: 14px;
+  }
+
+  /* ScrollShadow visual */
+  .fade-demo {
+    height: 32px;
+    border-radius: 8px;
+    margin-top: 8px;
+  }
+
+  /* Divider */
+  .section-divider {
+    border: none;
+    border-top: 1px solid #374151;
+    margin: 40px auto;
+    max-width: 900px;
+  }
+
+  /* Files list */
+  .files-list {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: #6B7280;
+    line-height: 1.8;
+    max-width: 900px;
+    margin: 0 auto;
+    column-count: 2;
+    column-gap: 32px;
+  }
+  .files-list span { color: #6EE7B7; }
+</style>
+</head>
+<body>
+
+<h1>Habit Library — What Changed</h1>
+<p class="page-sub"><span>19 files</span> &nbsp; <span>-34 lines</span> &nbsp; <span>4 waves</span></p>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- CHANGE 1: Dark Mode — TrendingCard -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="change-section">
+  <div class="change-header">
+    <span class="change-num">WAVE 1</span>
+    <span class="change-title">Dark Mode: TrendingCard</span>
+  </div>
+  <p class="change-desc">
+    Card used <code>colors.light.surfaceMuted</code> and static <code>colors.text.*</code> in StyleSheet.
+    Now uses <code class="new">useThemeColors()</code> with inline styles that adapt to dark mode.
+  </p>
+  <div class="compare">
+    <div class="compare-side before">
+      <div class="compare-label">Before — Broken in Dark Mode</div>
+      <div class="compare-body dark-bg" style="display:flex; justify-content:center;">
+        <div class="mini-card" style="background: #FAF8F5; border-color: #DDD8D2;">
+          <div class="mini-card-icon" style="background: rgba(5,150,105,0.15);">🧘</div>
+          <div class="mini-card-name" style="color: #2D2A26;">Morning Meditation</div>
+          <div class="mini-card-desc" style="color: #6B6560;">10 min mindfulness</div>
+          <div class="mini-card-freq" style="color: #6E6660;">daily</div>
+          <div class="mini-card-bottom">
+            <span class="mini-pop" style="color: #059669;">★ 9.2</span>
+            <div class="mini-add-btn" style="background: #059669;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </div>
+          </div>
+          <div class="callout">Light-mode bg on dark canvas</div>
+        </div>
+      </div>
+    </div>
+    <div class="compare-side after">
+      <div class="compare-label">After — Adapts to Dark Mode</div>
+      <div class="compare-body dark-bg" style="display:flex; justify-content:center;">
+        <div class="mini-card" style="background: #1F2937; border-color: #374151;">
+          <div class="mini-card-icon" style="background: rgba(5,150,105,0.15);">🧘</div>
+          <div class="mini-card-name" style="color: #F9FAFB;">Morning Meditation</div>
+          <div class="mini-card-desc" style="color: #9CA3AF;">10 min mindfulness</div>
+          <div class="mini-card-freq" style="color: #8E95A2;">daily</div>
+          <div class="mini-card-bottom">
+            <span class="mini-pop" style="color: #6EE7B7;">★ 9.2</span>
+            <div class="mini-add-btn" style="background: #6EE7B7;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#111827" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </div>
+          </div>
+          <div class="callout">colors.card + colors.border from theme</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- CHANGE 2: Dark Mode — CategoryGrid "Show All" -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="change-section">
+  <div class="change-header">
+    <span class="change-num">WAVE 1</span>
+    <span class="change-title">Dark Mode: CategoryGrid & Chips</span>
+  </div>
+  <p class="change-desc">
+    "Show all" button and filter chips used <code>colors.light.surfaceMuted</code>.
+    Now uses <code class="new">colors.card</code> and <code class="new">colors.border</code> from theme.
+  </p>
+  <div class="compare">
+    <div class="compare-side before">
+      <div class="compare-label">Before — Light bg bleeds through</div>
+      <div class="compare-body dark-bg">
+        <div class="mini-chip" style="background: #FAF8F5; border-color: #DDD8D2; color: #6B6560;">
+          🌅 Morning
+        </div>
+        <div class="mini-chip" style="background: #059669; border-color: #047857; color: #fff;">
+          ✨ All
+        </div>
+        <div class="mini-show-all" style="background: #FAF8F5; border-color: #DDD8D2; color: #2D2A26;">
+          Show all 14 categories
+        </div>
+        <div class="callout">Static light colors on dark background</div>
+      </div>
+    </div>
+    <div class="compare-side after">
+      <div class="compare-label">After — Theme-aware surfaces</div>
+      <div class="compare-body dark-bg">
+        <div class="mini-chip" style="background: #1F2937; border-color: #374151; color: #9CA3AF;">
+          🌅 Morning
+        </div>
+        <div class="mini-chip" style="background: #6EE7B7; border-color: #A7F3D0; color: #111827;">
+          ✨ All
+        </div>
+        <div class="mini-show-all" style="background: #1F2937; border-color: #374151; color: #F9FAFB;">
+          Show all 14 categories
+        </div>
+        <div class="callout">Reads from useThemeColors()</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- CHANGE 3: Dark Mode — UsageBanner -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="change-section">
+  <div class="change-header">
+    <span class="change-num">WAVE 1</span>
+    <span class="change-title">Dark Mode: UsageBanner</span>
+  </div>
+  <p class="change-desc">
+    6 static color references removed from StyleSheet. All moved to inline styles with <code class="new">useThemeColors()</code>.
+  </p>
+  <div class="compare">
+    <div class="compare-side before">
+      <div class="compare-label">Before</div>
+      <div class="compare-body dark-bg">
+        <div class="mini-banner" style="background: #FAF8F5; border-color: #DDD8D2;">
+          <div>
+            <div class="mini-banner-label" style="color: #6B6560;">1 of 3 free habits used</div>
+            <div class="mini-banner-dots">
+              <div class="mini-banner-dot" style="background: #059669;"></div>
+              <div class="mini-banner-dot" style="background: #DDD8D2;"></div>
+              <div class="mini-banner-dot" style="background: #DDD8D2;"></div>
+            </div>
+          </div>
+          <div class="mini-banner-cta" style="background: #059669; color: #fff;">Unlock All</div>
+        </div>
+        <div class="callout">Light surface, unreadable on dark bg</div>
+      </div>
+    </div>
+    <div class="compare-side after">
+      <div class="compare-label">After</div>
+      <div class="compare-body dark-bg">
+        <div class="mini-banner" style="background: #1F2937; border-color: #374151;">
+          <div>
+            <div class="mini-banner-label" style="color: #9CA3AF;">1 of 3 free habits used</div>
+            <div class="mini-banner-dots">
+              <div class="mini-banner-dot" style="background: #6EE7B7;"></div>
+              <div class="mini-banner-dot" style="background: #374151;"></div>
+              <div class="mini-banner-dot" style="background: #374151;"></div>
+            </div>
+          </div>
+          <div class="mini-banner-cta" style="background: #6EE7B7; color: #111827;">Unlock All</div>
+        </div>
+        <div class="callout">All colors from theme context</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- CHANGE 4: ScrollShadow / QuickFilterChips -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="change-section">
+  <div class="change-header">
+    <span class="change-num">WAVE 1</span>
+    <span class="change-title">Scroll Fades: Derived from Theme</span>
+  </div>
+  <p class="change-desc">
+    Hardcoded <code>rgba(17,24,39,...)</code> / <code>rgba(248,247,245,...)</code> replaced with<br>
+    <code class="new">colors.background + 'FF'</code> and <code class="new">colors.background + '00'</code>.
+    Fades now match any background.
+  </p>
+  <div class="compare">
+    <div class="compare-side before">
+      <div class="compare-label">Before — Hardcoded rgba</div>
+      <div class="compare-body dark-bg">
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #F87171; line-height: 1.8;">
+          isDark ? 'rgba(17,24,39,1)'<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: 'rgba(250,250,248,1)'<br>
+          isDark ? 'rgba(17,24,39,0)'<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: 'rgba(250,250,248,0)'<br>
+          isDark ? 'rgba(31,41,55,0.9)'<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: 'rgba(255,255,255,0.9)'
+        </div>
+        <div class="callout">9 hardcoded values, 2 dark/light branches</div>
+      </div>
+    </div>
+    <div class="compare-side after">
+      <div class="compare-label">After — Dynamic from theme</div>
+      <div class="compare-body dark-bg">
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #6EE7B7; line-height: 1.8;">
+          const bg = colors.background;<br>
+          const bgOpaque = bg + 'F5';<br>
+          const bgTransparent = bg + '00';<br>
+          const chipBg = colors.card + 'E6';
+        </div>
+        <div style="display: flex; gap: 12px; margin-top: 12px;">
+          <div>
+            <div style="font-size: 10px; color: #6B7280; margin-bottom: 4px;">Light fade</div>
+            <div class="fade-demo" style="width: 120px; background: linear-gradient(to right, #F5F1ED00, #F5F1EDF5);"></div>
+          </div>
+          <div>
+            <div style="font-size: 10px; color: #6B7280; margin-bottom: 4px;">Dark fade</div>
+            <div class="fade-demo" style="width: 120px; background: linear-gradient(to right, #11182700, #111827F5);"></div>
+          </div>
+        </div>
+        <div class="callout">3 lines, auto-adapts to any theme</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="section-divider">
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- CHANGE 5: Typography Docstring -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="change-section">
+  <div class="change-header">
+    <span class="change-num">WAVE 2</span>
+    <span class="change-title">Typography Docstring Fix</span>
+  </div>
+  <p class="change-desc">
+    <code>theme/index.ts</code> docstring was wrong — claimed sizes that didn't match <code>typography.ts</code>.
+  </p>
+  <div class="compare">
+    <div class="compare-side before">
+      <div class="compare-label">Before — Stale values</div>
+      <div class="compare-body" style="background: #1a1a1a;">
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; line-height: 2;">
+          <span style="color: #F87171;">Display Large: 38px</span><br>
+          <span style="color: #F87171;">Heading 1: 30px</span><br>
+          <span style="color: #F87171;">Heading 2: 24px</span><br>
+          <span style="color: #6B7280;">Heading 3: 20px</span><br>
+          <span style="color: #F87171;">Body: 16px</span><br>
+          <span style="color: #6B7280;">Body Small: 14px</span><br>
+          <span style="color: #F87171;">Caption: 12px</span>
+        </div>
+      </div>
+    </div>
+    <div class="compare-side after">
+      <div class="compare-label">After — Matches typography.ts</div>
+      <div class="compare-body" style="background: #1a1a1a;">
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; line-height: 2;">
+          <span style="color: #6EE7B7;">Display Large: 34px</span> Literata<br>
+          <span style="color: #6EE7B7;">Heading 1: 22px</span> Literata<br>
+          <span style="color: #6EE7B7;">Heading 2: 22px</span> DM Sans<br>
+          <span style="color: #9CA3AF;">Heading 3: 20px</span> DM Sans<br>
+          <span style="color: #6EE7B7;">Body: 17px</span> DM Sans<br>
+          <span style="color: #9CA3AF;">Body Small: 14px</span> DM Sans<br>
+          <span style="color: #6EE7B7;">Caption: 13px</span> DM Sans<br>
+          <span style="color: #6EE7B7;">Tab Bar: 10px</span> DM Sans
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- CHANGE 6: Off-scale fixes -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="change-section">
+  <div class="change-header">
+    <span class="change-num">WAVE 2–3</span>
+    <span class="change-title">Token Alignment Fixes</span>
+  </div>
+  <p class="change-desc">Off-scale values snapped to nearest design token.</p>
+  <div class="compare">
+    <div class="compare-side before">
+      <div class="compare-label">Before — Off-scale</div>
+      <div class="compare-body" style="background: #1a1a1a;">
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; line-height: 2.2;">
+          <span style="color:#F87171;">fontSize: 18</span> CategoryGroupHeader icon<br>
+          <span style="color:#F87171;">fontSize: 11</span> ExploreDivider label<br>
+          <span style="color:#F87171;">borderRadius: 90</span> circle decoration<br>
+          <span style="color:#F87171;">borderRadius: 100</span> circle decoration<br>
+          <span style="color:#F87171;">borderRadius: 2</span> meta dot<br>
+          <span style="color:#F87171;">gap: 6</span> meta row<br>
+          <span style="color:#F87171;">paddingLeft: 74</span> magic number
+        </div>
+      </div>
+    </div>
+    <div class="compare-side after">
+      <div class="compare-label">After — On-grid tokens</div>
+      <div class="compare-body" style="background: #1a1a1a;">
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; line-height: 2.2;">
+          <span style="color:#6EE7B7;">fontSize: 17</span> → body scale<br>
+          <span style="color:#6EE7B7;">fontSize: 10</span> → tabBar scale<br>
+          <span style="color:#6EE7B7;">borderRadius: 9999</span> → borderRadius.full<br>
+          <span style="color:#6EE7B7;">borderRadius: 9999</span> → borderRadius.full<br>
+          <span style="color:#6EE7B7;">borderRadius: 4</span> → borderRadius.xs<br>
+          <span style="color:#6EE7B7;">gap: spacing.xs</span> → 4px grid<br>
+          <span style="color:#6EE7B7;">spacing.base + md + 44 + md</span> → calc'd
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="section-divider">
+
+<!-- ═══ FILE LIST ═══ -->
+<div style="max-width: 900px; margin: 0 auto 40px;">
+  <div style="font-size: 14px; font-weight: 700; margin-bottom: 12px; color: #9CA3AF;">Files Modified</div>
+  <div class="files-list">
+    <div><span>W1</span> PopularSection.tsx</div>
+    <div><span>W1</span> CategoryGrid.tsx</div>
+    <div><span>W1</span> CategoryTile.tsx</div>
+    <div><span>W1</span> TrendingCard.styles.ts</div>
+    <div><span>W1</span> TrendingCard.tsx</div>
+    <div><span>W1</span> AddButton.tsx</div>
+    <div><span>W1</span> PremiumPackCard.tsx</div>
+    <div><span>W1</span> PremiumPacksSection.tsx</div>
+    <div><span>W1</span> UsageBanner.tsx</div>
+    <div><span>W1</span> CategoryDrillView.tsx</div>
+    <div><span>W1</span> SeeAllView.tsx</div>
+    <div><span>W1</span> QuickFilterChips.tsx</div>
+    <div><span>W1</span> ScrollShadows.tsx</div>
+    <div><span>W2</span> theme/index.ts</div>
+    <div><span>W2</span> CategoryGroupHeader.tsx</div>
+    <div><span>W2</span> ExploreDivider.tsx</div>
+    <div><span>W3</span> FeaturedCollection.styles.ts</div>
+    <div><span>W3</span> ExploreHabitRow.styles.ts</div>
+    <div><span>W3</span> ExploreAllSection.tsx</div>
+  </div>
+</div>
+
+</body>
+</html>
