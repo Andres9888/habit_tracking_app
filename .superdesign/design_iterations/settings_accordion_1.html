@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Settings Accordion Mock</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: #0a0a0a;
+    color: #e5e5e5;
+    display: flex;
+    justify-content: center;
+    padding: 24px 16px;
+    min-height: 100vh;
+  }
+
+  .phone-frame {
+    width: 390px;
+    max-height: 844px;
+    background: #141414;
+    border-radius: 40px;
+    border: 3px solid #2a2a2a;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .status-bar {
+    height: 54px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding-bottom: 8px;
+    background: #141414;
+  }
+
+  .modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 20px 16px;
+    position: relative;
+  }
+
+  .modal-header h1 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #f5f5f5;
+    flex: 1;
+    text-align: center;
+  }
+
+  .close-btn {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border: none;
+    color: #999;
+    transition: background 0.15s;
+  }
+  .close-btn:hover { background: rgba(255,255,255,0.14); }
+
+  .scroll-area {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 16px 40px;
+    scrollbar-width: none;
+  }
+  .scroll-area::-webkit-scrollbar { display: none; }
+
+  .sections-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  /* Account Row (not collapsible) */
+  .account-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 16px;
+    background: #1c1c1e;
+    border-radius: 16px;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .account-row:hover { background: #242426; }
+
+  .avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 700;
+    color: white;
+  }
+
+  .account-info { flex: 1; }
+  .account-name { font-size: 17px; font-weight: 600; color: #f5f5f5; }
+  .account-email { font-size: 13px; color: #888; margin-top: 1px; }
+
+  /* Section */
+  .section { display: flex; flex-direction: column; gap: 8px; }
+
+  .section-label-row {
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    gap: 10px;
+  }
+
+  .section-icon-spacer { width: 40px; }
+
+  .section-label {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #666;
+  }
+
+  /* Card */
+  .section-card {
+    background: #1c1c1e;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  }
+
+  /* Collapsible Header */
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  .section-header-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section-header .section-label {
+    padding: 0;
+  }
+
+  .chevron-wrapper {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .chevron-wrapper.collapsed {
+    transform: rotate(-90deg);
+  }
+
+  /* Collapsible Content */
+  .section-content {
+    overflow: hidden;
+    transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    max-height: 600px;
+    opacity: 1;
+  }
+
+  .section-content.collapsed {
+    max-height: 0;
+    opacity: 0;
+  }
+
+  /* Settings Row */
+  .settings-row {
+    display: flex;
+    align-items: center;
+    padding: 13px 16px;
+    gap: 14px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    transition: background 0.12s;
+  }
+  .settings-row:hover { background: rgba(255,255,255,0.02); }
+  .settings-row:last-child { border-bottom: none; }
+
+  .row-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .row-text { flex: 1; min-width: 0; }
+  .row-label { font-size: 17px; font-weight: 500; color: #f0f0f0; }
+  .row-subtitle { font-size: 13px; color: #777; margin-top: 2px; line-height: 1.3; }
+
+  /* Toggle */
+  .toggle {
+    width: 51px;
+    height: 31px;
+    border-radius: 16px;
+    background: #39393d;
+    position: relative;
+    cursor: pointer;
+    transition: background 0.25s;
+    flex-shrink: 0;
+  }
+  .toggle.on { background: #34c759; }
+  .toggle::after {
+    content: '';
+    position: absolute;
+    width: 27px;
+    height: 27px;
+    border-radius: 50%;
+    background: white;
+    top: 2px;
+    left: 2px;
+    transition: transform 0.25s;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  }
+  .toggle.on::after { transform: translateX(20px); }
+
+  /* Nav arrow */
+  .nav-arrow { color: #555; flex-shrink: 0; }
+
+  /* Value text */
+  .row-value {
+    font-size: 15px;
+    color: #888;
+    font-weight: 500;
+    flex-shrink: 0;
+  }
+
+  /* Badge */
+  .badge {
+    background: rgba(255,255,255,0.08);
+    color: #999;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 10px;
+    flex-shrink: 0;
+  }
+
+  /* Annotation callout */
+  .annotation {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 280px;
+    background: #1a1a2e;
+    border: 1px solid #2a2a4a;
+    border-radius: 12px;
+    padding: 16px;
+    font-size: 13px;
+    color: #b0b0d0;
+    line-height: 1.5;
+  }
+  .annotation h3 {
+    font-size: 14px;
+    font-weight: 700;
+    color: #e0e0ff;
+    margin-bottom: 8px;
+  }
+  .annotation ul { padding-left: 16px; }
+  .annotation li { margin-bottom: 4px; }
+  .annotation code {
+    background: rgba(255,255,255,0.08);
+    padding: 1px 5px;
+    border-radius: 4px;
+    font-size: 12px;
+    color: #c8b6ff;
+  }
+
+  @media (max-width: 800px) {
+    .annotation { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="phone-frame">
+  <div class="status-bar"></div>
+
+  <div class="modal-header">
+    <div style="width:30px"></div>
+    <h1>Settings</h1>
+    <button class="close-btn"><i data-lucide="x" style="width:16px;height:16px"></i></button>
+  </div>
+
+  <div class="scroll-area">
+    <div class="sections-wrapper">
+
+      <!-- Account (not collapsible) -->
+      <div class="account-row">
+        <div class="avatar">A</div>
+        <div class="account-info">
+          <div class="account-name">Andres</div>
+          <div class="account-email">andres@example.com</div>
+        </div>
+        <i data-lucide="chevron-right" style="width:20px;height:20px;color:#555"></i>
+      </div>
+
+      <!-- Appearance (collapsible) -->
+      <div class="section">
+        <div class="section-card">
+          <div class="section-header" onclick="toggleSection(this)">
+            <div class="section-header-left">
+              <div class="section-icon-spacer"></div>
+              <span class="section-label">Appearance</span>
+            </div>
+            <div class="chevron-wrapper">
+              <i data-lucide="chevron-down" style="width:18px;height:18px;color:#666"></i>
+            </div>
+          </div>
+          <div class="section-content">
+            <div class="settings-row">
+              <div class="row-icon" style="background:rgba(99,102,241,0.12)">
+                <i data-lucide="rows-3" style="width:20px;height:20px;color:#818cf8"></i>
+              </div>
+              <div class="row-text">
+                <div class="row-label">Compact habit cards</div>
+                <div class="row-subtitle">Show smaller cards to fit more on screen</div>
+              </div>
+              <div class="toggle" onclick="event.stopPropagation();this.classList.toggle('on')"></div>
+            </div>
+            <div class="settings-row">
+              <div class="row-icon" style="background:rgba(168,85,247,0.12)">
+                <i data-lucide="circle" style="width:20px;height:20px;color:#a855f7"></i>
+              </div>
+              <div class="row-text">
+                <div class="row-label">Day marker shape</div>
+              </div>
+              <span class="row-value">Circle</span>
+            </div>
+            <div class="settings-row">
+              <div class="row-icon" style="background:rgba(59,130,246,0.12)">
+                <i data-lucide="droplets" style="width:20px;height:20px;color:#60a5fa"></i>
+              </div>
+              <div class="row-text">
+                <div class="row-label">Gradient streak fill</div>
+                <div class="row-subtitle">Add a color gradient to active streak cells</div>
+              </div>
+              <div class="toggle on" onclick="event.stopPropagation();this.classList.toggle('on')"></div>
+            </div>
+            <div class="settings-row">
+              <div class="row-icon" style="background:rgba(34,197,94,0.12)">
+                <i data-lucide="check" style="width:20px;height:20px;color:#4ade80"></i>
+              </div>
+              <div class="row-text">
+                <div class="row-label">Completion icon</div>
+              </div>
+              <span class="row-value">Checkbox</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Behavior (collapsible, starts collapsed for demo) -->
+      <div class="section">
+        <div class="section-card">
+          <div class="section-header" onclick="toggleSection(this)">
+            <div class="section-header-left">
+              <div class="section-icon-spacer"></div>
+              <span class="section-label">Behavior</span>
+            </div>
+            <div class="chevron-wrapper collapsed">
+              <i data-lucide="chevron-down" style="width:18px;height:18px;color:#666"></i>
+            </div>
+          </div>
+          <div class="section-content collapsed">
+            <div class="settings-row">
+              <div class="row-icon" style="background:rgba(251,146,60,0.12)">
+                <i data-lucide="arrow-up-down" style="width:20px;height:20px;color:#fb923c"></i>
+              </div>
+              <div class="row-text">
+                <div class="row-label">Sort Order</div>
+                <div class="row-subtitle">Choose how your habits are ordered</div>
+              </div>
+              <span class="row-value">Custom</span>
+              <i data-lucide="chevron-right" style="width:18px;height:18px;color:#555"></i>
+            </div>
+            <div class="settings-row">
+              <div class="row-icon" style="background:rgba(236,72,153,0.12)">
+                <i data-lucide="volume-2" style="width:20px;height:20px;color:#ec4899"></i>
+              </div>
+              <div class="row-text">
+                <div class="row-label">Completion sound</div>
+                <div class="row-subtitle">Hear a sound when you check off a habit</div>
+              </div>
+              <div class="toggle on" onclick="event.stopPropagation();this.classList.toggle('on')"></div>
+            </div>
+            <div class="settings-row">
+              <div class="row-icon" style="background:rgba(14,165,233,0.12)">
+                <i data-lucide="calendar" style="width:20px;height:20px;color:#0ea5e9"></i>
+              </div>
+              <div class="row-text">
+                <div class="row-label">Pin calendar header</div>
+                <div class="row-subtitle">Keep the month header visible when scrolling</div>
+              </div>
+              <div class="toggle" onclick="event.stopPropagation();this.classList.toggle('on')"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Habit Management (collapsible) -->
+      <div class="section">
+        <div class="section-card">
+          <div class="section-header" onclick="toggleSection(this)">
+            <div class="section-header-left">
+              <div class="section-icon-spacer"></div>
+              <span class="section-label">Habit Management</span>
+            </div>
+            <div class="chevron-wrapper">
+              <i data-lucide="chevron-down" style="width:18px;height:18px;color:#666"></i>
+            </div>
+          </div>
+          <div class="section-content">
+            <div class="settings-row" style="border-bottom:none">
+              <div class="row-icon" style="background:rgba(234,179,8,0.12)">
+                <i data-lucide="book-open" style="width:20px;height:20px;color:#eab308"></i>
+              </div>
+              <div class="row-text">
+                <div class="row-label">Archived Habits</div>
+                <div class="row-subtitle">View and restore hidden habits</div>
+              </div>
+              <span class="badge">3</span>
+              <i data-lucide="chevron-right" style="width:18px;height:18px;color:#555"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Notifications (collapsible) -->
+      <div class="section">
+        <div class="section-card">
+          <div class="section-header" onclick="toggleSection(this)">
+            <div class="section-header-left">
+              <div class="section-icon-spacer"></div>
+              <span class="section-label">Notifications</span>
+            </div>
+            <div class="chevron-wrapper">
+              <i data-lucide="chevron-down" style="width:18px;height:18px;color:#666"></i>
+            </div>
+          </div>
+          <div class="section-content">
+            <div class="settings-row" style="border-bottom:none">
+              <div class="row-icon" style="background:rgba(249,115,22,0.12)">
+                <i data-lucide="bell" style="width:20px;height:20px;color:#f97316"></i>
+              </div>
+              <div class="row-text">
+                <div class="row-label">Streak Reminders</div>
+                <div class="row-subtitle">Get nudged before an active streak slips</div>
+              </div>
+              <div class="toggle on" onclick="event.stopPropagation();this.classList.toggle('on')"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Support (collapsible, starts collapsed for demo) -->
+      <div class="section">
+        <div class="section-card">
+          <div class="section-header" onclick="toggleSection(this)">
+            <div class="section-header-left">
+              <div class="section-icon-spacer"></div>
+              <span class="section-label">Support</span>
+            </div>
+            <div class="chevron-wrapper collapsed">
+              <i data-lucide="chevron-down" style="width:18px;height:18px;color:#666"></i>
+            </div>
+          </div>
+          <div class="section-content collapsed">
+            <div class="settings-row">
+              <div class="row-icon" style="background:rgba(250,204,21,0.12)">
+                <i data-lucide="star" style="width:20px;height:20px;color:#facc15"></i>
+              </div>
+              <div class="row-text"><div class="row-label">Rate Chain Day</div></div>
+              <i data-lucide="chevron-right" style="width:18px;height:18px;color:#555"></i>
+            </div>
+            <div class="settings-row">
+              <div class="row-icon" style="background:rgba(34,211,238,0.12)">
+                <i data-lucide="share-2" style="width:20px;height:20px;color:#22d3ee"></i>
+              </div>
+              <div class="row-text"><div class="row-label">Share with Friends</div></div>
+              <i data-lucide="chevron-right" style="width:18px;height:18px;color:#555"></i>
+            </div>
+            <div class="settings-row">
+              <div class="row-icon" style="background:rgba(129,140,248,0.12)">
+                <i data-lucide="message-square" style="width:20px;height:20px;color:#818cf8"></i>
+              </div>
+              <div class="row-text"><div class="row-label">Send Feedback</div></div>
+              <i data-lucide="chevron-right" style="width:18px;height:18px;color:#555"></i>
+            </div>
+            <div class="settings-row" style="border-bottom:none">
+              <div class="row-icon" style="background:rgba(192,132,252,0.12)">
+                <i data-lucide="sparkles" style="width:20px;height:20px;color:#c084fc"></i>
+              </div>
+              <div class="row-text"><div class="row-label">What's New</div></div>
+              <i data-lucide="chevron-right" style="width:18px;height:18px;color:#555"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- About (collapsible) -->
+      <div class="section">
+        <div class="section-card">
+          <div class="section-header" onclick="toggleSection(this)">
+            <div class="section-header-left">
+              <div class="section-icon-spacer"></div>
+              <span class="section-label">About</span>
+            </div>
+            <div class="chevron-wrapper">
+              <i data-lucide="chevron-down" style="width:18px;height:18px;color:#666"></i>
+            </div>
+          </div>
+          <div class="section-content">
+            <div class="settings-row">
+              <div class="row-icon" style="background:rgba(34,197,94,0.12)">
+                <i data-lucide="shield" style="width:20px;height:20px;color:#22c55e"></i>
+              </div>
+              <div class="row-text"><div class="row-label">Privacy Policy</div></div>
+              <i data-lucide="chevron-right" style="width:18px;height:18px;color:#555"></i>
+            </div>
+            <div class="settings-row">
+              <div class="row-icon" style="background:rgba(148,163,184,0.12)">
+                <i data-lucide="file-text" style="width:20px;height:20px;color:#94a3b8"></i>
+              </div>
+              <div class="row-text"><div class="row-label">Terms of Service</div></div>
+              <i data-lucide="chevron-right" style="width:18px;height:18px;color:#555"></i>
+            </div>
+            <div class="settings-row" style="border-bottom:none">
+              <div class="row-icon" style="background:rgba(96,165,250,0.12)">
+                <i data-lucide="info" style="width:20px;height:20px;color:#60a5fa"></i>
+              </div>
+              <div class="row-text"><div class="row-label">Version</div></div>
+              <span class="row-value">2.4.1 (142)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Annotation -->
+<div class="annotation">
+  <h3>Accordion Behavior</h3>
+  <ul>
+    <li>Tap any section header to <strong>collapse/expand</strong></li>
+    <li>Chevron rotates <code>-90deg</code> when collapsed</li>
+    <li>Smooth height + opacity transition (<code>350ms</code> ease-out)</li>
+    <li><strong>Behavior</strong> and <strong>Support</strong> start collapsed for demo</li>
+    <li>Account row is NOT collapsible</li>
+    <li>State persists to AsyncStorage in the real app</li>
+  </ul>
+</div>
+
+<script>
+  lucide.createIcons();
+
+  function toggleSection(header) {
+    const chevron = header.querySelector('.chevron-wrapper');
+    const content = header.nextElementSibling;
+
+    const isCollapsed = content.classList.contains('collapsed');
+
+    if (isCollapsed) {
+      content.classList.remove('collapsed');
+      chevron.classList.remove('collapsed');
+    } else {
+      content.classList.add('collapsed');
+      chevron.classList.add('collapsed');
+    }
+  }
+</script>
+</body>
+</html>
