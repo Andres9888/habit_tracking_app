@@ -2,6 +2,7 @@
 import { Text, View } from 'react-native';
 import { AnimatedPressable } from '../../ui/AnimatedPressable';
 import { shadows } from '../../../theme';
+import { typography, fontWeights } from '../../../theme/typography';
 import { useThemeColors } from '../../../theme/ThemeContext';
 
 interface SignOutCardProps {
@@ -41,8 +42,7 @@ export function SignOutCard({
       >
         <View className='items-center py-4'>
           <Text
-            className='text-[17px] font-semibold'
-            style={{ color: themeColors.status.error }}
+            style={{ ...typography.body, fontWeight: fontWeights.semibold, color: themeColors.status.error }}
           >
             {isLoading ? 'Signing out...' : 'Sign Out'}
           </Text>

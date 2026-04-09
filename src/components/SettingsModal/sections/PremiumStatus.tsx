@@ -13,6 +13,7 @@ import Animated, {
 import { LinearGradient } from 'expo-linear-gradient';
 import { Crown, Zap, Settings } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
+import { typography, fontWeights } from '@/theme/typography';
 import { SettingsSection } from '../SettingsSection';
 import { SettingsRow } from '../SettingsRow';
 import { AnimatedPressable } from '../../ui/AnimatedPressable';
@@ -91,8 +92,7 @@ export function PremiumStatus({ highContrast, isPremium, onUpgrade }: Props) {
           <View className='flex-1'>
             <View className='flex-row items-center gap-2'>
               <Text
-                className='text-[17px] font-semibold'
-                style={{ color: themeColors.text.primary }}
+                style={{ ...typography.body, fontWeight: fontWeights.semibold, color: themeColors.text.primary }}
               >
                 Premium
               </Text>
@@ -101,16 +101,15 @@ export function PremiumStatus({ highContrast, isPremium, onUpgrade }: Props) {
                 style={{ backgroundColor: themeColors.status.streakLight }}
               >
                 <Text
-                  className='text-[10px] font-bold uppercase'
-                  style={{ color: settings.crown.icon }}
+                  style={{ ...typography.tabBar, fontWeight: fontWeights.bold, textTransform: 'uppercase', color: settings.crown.icon }}
                 >
                   Active
                 </Text>
               </View>
             </View>
             <Text
-              className='mt-0.5 text-[13px]'
-              style={{ color: themeColors.text.secondary }}
+              className='mt-0.5'
+              style={{ ...typography.caption, color: themeColors.text.secondary }}
             >
               All features unlocked
             </Text>
@@ -137,8 +136,8 @@ export function PremiumStatus({ highContrast, isPremium, onUpgrade }: Props) {
   return (
     <View className='gap-2'>
       <Text
-        className='px-1 text-[13px] font-semibold uppercase tracking-[0.7px]'
-        style={{ color: themeColors.text.secondary }}
+        className='px-1'
+        style={{ ...typography.caption, fontWeight: fontWeights.semibold, textTransform: 'uppercase', letterSpacing: 0.7, color: themeColors.text.secondary }}
       >
         Subscription
       </Text>
@@ -181,14 +180,13 @@ export function PremiumStatus({ highContrast, isPremium, onUpgrade }: Props) {
             </View>
             <View className='flex-1'>
               <Text
-                className='text-[17px] font-bold'
-                style={{ color: isDark ? '#E0E7FF' : palette.text.inverse }}
+                style={{ ...typography.body, fontWeight: fontWeights.bold, color: isDark ? '#E0E7FF' : palette.text.inverse }}
               >
                 Upgrade to Premium
               </Text>
               <Text
-                className='mt-0.5 text-[13px]'
-                style={{ color: isDark ? 'rgba(224,231,255,0.6)' : 'rgba(255,255,255,0.8)' }}
+                className='mt-0.5'
+                style={{ ...typography.caption, color: isDark ? 'rgba(224,231,255,0.6)' : 'rgba(255,255,255,0.8)' }}
               >
                 Unlock sounds, reminders & more
               </Text>
@@ -201,8 +199,7 @@ export function PremiumStatus({ highContrast, isPremium, onUpgrade }: Props) {
               ]}
             >
               <Text
-                className='text-[13px] font-bold'
-                style={{ color: isDark ? themeColors.status.premiumText : palette.text.inverse }}
+                style={{ ...typography.caption, fontWeight: fontWeights.bold, color: isDark ? themeColors.status.premiumText : palette.text.inverse }}
               >
                 PRO
               </Text>
