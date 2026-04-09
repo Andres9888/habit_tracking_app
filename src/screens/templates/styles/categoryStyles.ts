@@ -25,12 +25,12 @@ export const categoryStyles = StyleSheet.create({
     ...shadows.subtle,
   },
   categoryColorDot: {
-    borderRadius: 999,
+    borderRadius: 9999,
     height: 6,
     width: 6,
   },
   categoryCount: {
-    borderRadius: 999,
+    borderRadius: 9999,
     marginLeft: 4,
     paddingHorizontal: 8,
     paddingVertical: 2,

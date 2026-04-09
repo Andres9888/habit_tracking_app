@@ -67,7 +67,7 @@ export const getFutureDateTextColor = (isDark: boolean) =>
 /** Today cell shadow (same for both themes) */
 export const TODAY_SHADOW = {
   elevation: 2,
-  shadowColor: '#2D2A26',
+  shadowColor: colors.gray[800],
   shadowOffset: { height: 2, width: 0 },
   shadowOpacity: 0.15,
   shadowRadius: 4,

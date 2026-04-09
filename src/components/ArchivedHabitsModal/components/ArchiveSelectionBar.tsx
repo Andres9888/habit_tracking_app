@@ -6,6 +6,7 @@ import { BlurView } from 'expo-blur';
 import { RotateCcw, Trash2, X } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
 import { durations, springs } from '../../../theme/animations';
+import { borderRadius } from '../../../theme/spacing';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { typography, fontWeights } from '@/theme/typography';
 import {
@@ -96,7 +97,7 @@ function ArchiveSelectionBarComponent({
 }
 
 const s = StyleSheet.create({
-  btn: { alignItems: 'center', borderRadius: 22, height: 44, justifyContent: 'center', width: 44 },
+  btn: { alignItems: 'center', borderRadius: borderRadius.xl, height: 44, justifyContent: 'center', width: 44 },
   capsuleBorder: { ...StyleSheet.absoluteFillObject, borderRadius: CAPSULE_RADIUS, borderWidth: 1 },
   count: { ...typography.caption, flex: 1, fontWeight: fontWeights.semibold, paddingHorizontal: 12, textAlign: 'center' },
   disabled: { opacity: 0.35 },
