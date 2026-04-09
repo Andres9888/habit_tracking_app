@@ -5,6 +5,7 @@ import { api } from '../../../../convex/_generated/api';
 import type { Id } from '../../../../convex/_generated/dataModel';
 import type { Habit } from '../types';
 import { triggerHaptic } from '@/utils/haptics';
+import { cancelHabitReminder } from '@/utils/notifications';
 import { logInteraction } from '../../../lib/analytics/interactions';
 
 export function useHabitDelete(habits: Habit[]) {
@@ -27,6 +28,7 @@ export function useHabitDelete(habits: Habit[]) {
             style: 'destructive',
             onPress: async () => {
               try {
+                await cancelHabitReminder(String(habitId));
                 await removeHabit({ habitId });
                 triggerHaptic('success');
                 logInteraction('habit_deleted', { habitId, habitName });

@@ -4,6 +4,7 @@ import { api } from '../../../convex/_generated/api';
 import type { Id } from '../../../convex/_generated/dataModel';
 import { FREE_HABIT_LIMIT } from '@/constants';
 import { triggerHaptic } from '@/utils/haptics';
+import { cancelHabitReminder } from '@/utils/notifications';
 import { useBatchArchiveActions } from './useBatchArchiveActions';
 
 export const useArchivedHabitsModalLogic = () => {
@@ -55,6 +56,7 @@ export const useArchivedHabitsModalLogic = () => {
         {
           onPress: async () => {
             try {
+              await cancelHabitReminder(String(habitId));
               await removeHabit({ habitId });
               triggerHaptic('success');
             } catch (error) {
@@ -81,6 +83,9 @@ export const useArchivedHabitsModalLogic = () => {
         {
           onPress: async () => {
             try {
+              await Promise.all(
+                archivedHabits.map((h) => cancelHabitReminder(String(h._id)))
+              );
               await deleteAllArchivedMutation();
               triggerHaptic('success');
             } catch (error) {
