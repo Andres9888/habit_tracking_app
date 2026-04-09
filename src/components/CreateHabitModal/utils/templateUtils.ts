@@ -12,7 +12,7 @@ export function extractTemplateDetails(template: HabitTemplate): {
   name: string;
 } {
   const emoji =
-    template.icon?.match(/\p{Emoji}/u)?.[0] ?? template.icon ?? DEFAULT_EMOJI;
-  const name = template.name.replace(/^\p{Emoji}\s*/u, '').trim();
+    template.icon?.match(/(?![0-9#*])\p{Emoji}/u)?.[0] ?? template.icon ?? DEFAULT_EMOJI;
+  const name = template.name.replace(/^(?![0-9#*])\p{Emoji}\s*/u, '').trim();
   return { emoji, name };
 }

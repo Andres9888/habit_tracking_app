@@ -12,7 +12,7 @@
 export const getEmojiAndName = (
   fullName: string
 ): { emoji: string; name: string } => {
-  const emojiRegex = /\p{Emoji}/u;
+  const emojiRegex = /(?![0-9#*])\p{Emoji}/u;
   const match = fullName.match(emojiRegex);
 
   if (match && match.index === 0) {
