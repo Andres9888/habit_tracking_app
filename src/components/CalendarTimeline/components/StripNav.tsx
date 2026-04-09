@@ -3,11 +3,16 @@ import { View } from 'react-native';
 import { ChevronLeft, ChevronRight } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
 
+import { AnimatedPressable } from '../../ui/AnimatedPressable';
 import { useThemeColors } from '../../../theme/ThemeContext';
+import { useSwipeHint } from '../hooks/useSwipeHint';
 
 interface StripNavProps {
   children: React.ReactNode;
   canNavigateForward: boolean;
+  onPreviousWeek?: () => void;
+  onNextWeek?: () => void;
+  reduceMotion?: boolean;
 }
 
 const ICON_SIZE = iconSizes.small;
@@ -18,46 +23,69 @@ const HINT_TOP = 30;
 /** 10px into the 16px parent padding — close to cells, not at shelf edge */
 const HINT_OFFSET = -10;
 
-const HINT_BASE = {
+const HINT_LEFT = {
   position: 'absolute' as const,
   top: HINT_TOP,
+  left: HINT_OFFSET,
   zIndex: 2,
   opacity: HINT_OPACITY,
 };
 
-/** Day-strip with static swipe-hint chevrons in the padding zone */
+const HINT_RIGHT = {
+  position: 'absolute' as const,
+  top: HINT_TOP,
+  right: HINT_OFFSET,
+  zIndex: 2,
+  opacity: HINT_OPACITY,
+};
+
+const HIT_SLOP_LEFT = { top: 12, bottom: 12, left: 16, right: 8 };
+const HIT_SLOP_RIGHT = { top: 12, bottom: 12, left: 8, right: 16 };
+
+/** Day-strip with interactive swipe-hint chevrons in the padding zone */
 export const StripNav: React.FC<StripNavProps> = ({
   children,
   canNavigateForward,
+  onPreviousWeek,
+  onNextWeek,
+  reduceMotion = false,
 }) => {
   const { colors } = useThemeColors();
   const chevronColor = colors.gray[400];
+  const { leftHintStyle, rightHintStyle } = useSwipeHint({
+    reduceMotion,
+    canNavigateForward,
+  });
 
   return (
     <View style={{ position: 'relative' }}>
       {children}
 
-      <View
-        accessibilityElementsHidden
-        importantForAccessibility='no'
-        pointerEvents='none'
-        style={{ ...HINT_BASE, left: HINT_OFFSET }}
+      <AnimatedPressable
+        accessibilityLabel="Previous week"
+        accessibilityRole="button"
+        hitSlop={HIT_SLOP_LEFT}
+        style={[HINT_LEFT, leftHintStyle]}
+        onPress={onPreviousWeek}
       >
         <ChevronLeft color={chevronColor} size={ICON_SIZE} strokeWidth={2.5} />
-      </View>
+      </AnimatedPressable>
 
-      {canNavigateForward ? <View
-          accessibilityElementsHidden
-          importantForAccessibility='no'
-          pointerEvents='none'
-          style={{ ...HINT_BASE, right: HINT_OFFSET }}
+      {canNavigateForward && onNextWeek ? (
+        <AnimatedPressable
+          accessibilityLabel="Next week"
+          accessibilityRole="button"
+          hitSlop={HIT_SLOP_RIGHT}
+          style={[HINT_RIGHT, rightHintStyle]}
+          onPress={onNextWeek}
         >
           <ChevronRight
             color={chevronColor}
             size={ICON_SIZE}
             strokeWidth={2.5}
           />
-        </View> : null}
+        </AnimatedPressable>
+      ) : null}
     </View>
   );
 };
