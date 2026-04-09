@@ -63,7 +63,7 @@ export function ExploreAllSection({
     <View>
       <ExploreDivider />
       <View style={s.header}>
-        <View>
+        <View style={s.headerText}>
           <Text style={[s.title, { color: colors.text.primary }]}>
             Discover more habits
           </Text>
@@ -90,15 +90,17 @@ export function ExploreAllSection({
 }
 
 const s = StyleSheet.create({
-  count: { fontFamily: fontFamilies.monospace, fontSize: 12 },
+  count: { flexShrink: 0, fontFamily: fontFamilies.monospace, fontSize: 12 },
   header: {
     alignItems: 'baseline',
     flexDirection: 'row',
+    gap: spacing.sm,
     justifyContent: 'space-between',
     paddingHorizontal: spacing.base,
     paddingTop: spacing.md,
   },
-  showMore: { paddingLeft: 74, paddingVertical: spacing.sm },
+  headerText: { flex: 1, minWidth: 0 },
+  showMore: { paddingLeft: spacing.base + spacing.md + 44 + spacing.md, paddingVertical: spacing.sm },
   showMoreText: { ...typography.caption, fontWeight: fontWeights.semibold },
   subtitle: { ...typography.caption, marginTop: 2 },
   title: { ...typography.heading3, fontWeight: fontWeights.bold },

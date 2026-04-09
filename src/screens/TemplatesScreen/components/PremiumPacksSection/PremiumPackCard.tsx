@@ -4,7 +4,7 @@
 
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { colors } from '../../../../theme/colors';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import { borderRadius, spacing } from '../../../../theme/spacing';
 import { fontFamilies, fontWeights, typography } from '../../../../theme/typography';
 import type { PremiumPack } from '../../data/premiumPacks';
@@ -19,6 +19,7 @@ function withAlpha(hex: string, alpha: string) {
 }
 
 export function PremiumPackCard({ onPress, pack }: PremiumPackCardProps) {
+  const { colors } = useThemeColors();
   const accent = pack.backgroundGradient[1];
   const gradientColors: [string, string] = [
     withAlpha(pack.backgroundGradient[0], '22'),
@@ -36,7 +37,7 @@ export function PremiumPackCard({ onPress, pack }: PremiumPackCardProps) {
         colors={gradientColors}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
-        style={s.gradient}
+        style={[s.gradient, { borderColor: colors.border }]}
       >
         <View style={s.content}>
           <View style={s.emojiGroup}>
@@ -46,17 +47,17 @@ export function PremiumPackCard({ onPress, pack }: PremiumPackCardProps) {
               </Text>
             ))}
           </View>
-          <Text style={s.name} numberOfLines={1}>
+          <Text style={[s.name, { color: colors.text.primary }]} numberOfLines={1}>
             {pack.name}
           </Text>
-          <Text style={s.desc} numberOfLines={2}>
+          <Text style={[s.desc, { color: colors.text.secondary }]} numberOfLines={2}>
             {pack.description}
           </Text>
           <Text style={[s.habitCount, { color: accent }]}>
             {pack.habits.length} habits
           </Text>
         </View>
-        <View style={[s.cta, { borderColor: withAlpha(accent, '33') }]}>
+        <View style={[s.cta, { backgroundColor: colors.card, borderColor: withAlpha(accent, '33') }]}>
           <Text style={[s.ctaText, { color: accent }]}>Preview pack</Text>
         </View>
       </LinearGradient>
@@ -67,19 +68,17 @@ export function PremiumPackCard({ onPress, pack }: PremiumPackCardProps) {
 const s = StyleSheet.create({
   content: { flex: 1 },
   cta: {
-    backgroundColor: 'rgba(255,255,255,0.76)',
     borderRadius: borderRadius.medium,
     borderWidth: 1,
     paddingHorizontal: spacing.base,
     paddingVertical: spacing.md,
   },
   ctaText: { ...typography.caption, fontWeight: fontWeights.bold },
-  desc: { ...typography.caption, color: colors.text.secondary, marginTop: spacing.xs },
+  desc: { ...typography.caption, marginTop: spacing.xs },
   emoji: { fontSize: 22 },
   emojiGroup: { flexDirection: 'row', gap: spacing.sm },
   gradient: {
     alignItems: 'center',
-    borderColor: colors.border,
     borderRadius: borderRadius.large,
     borderWidth: 1,
     flexDirection: 'row',
@@ -96,7 +95,6 @@ const s = StyleSheet.create({
   },
   name: {
     ...typography.body,
-    color: colors.text.primary,
     fontWeight: fontWeights.bold,
     marginTop: spacing.sm,
   },

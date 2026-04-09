@@ -3,7 +3,6 @@
  */
 
 import { StyleSheet } from 'react-native';
-import { colors } from '../../../../theme/colors';
 import { fontFamilies, fontWeights, typography } from '../../../../theme/typography';
 import { borderRadius, shadows, spacing } from '../../../../theme/spacing';
 
@@ -14,8 +13,6 @@ const ADD_BUTTON_SIZE = 44;
 export const s = StyleSheet.create({
   card: {
     ...shadows.card,
-    backgroundColor: colors.light.surfaceMuted,
-    borderColor: colors.border,
     borderRadius: borderRadius.large,
     borderWidth: 1.5,
     padding: spacing.base,
@@ -31,31 +28,26 @@ export const s = StyleSheet.create({
   iconEmoji: { fontSize: 28 },
   name: {
     ...typography.bodySmall,
-    color: colors.text.primary,
     fontWeight: fontWeights.bold,
     marginTop: spacing.md,
   },
   description: {
     ...typography.caption,
-    color: colors.text.secondary,
     lineHeight: 17,
     marginTop: spacing.xs,
   },
   metaRow: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.xs, marginTop: spacing.xs },
   frequency: {
     ...typography.caption,
-    color: colors.text.tertiary,
     fontFamily: fontFamilies.monospace,
   },
   scienceBadge: {
-    backgroundColor: colors.warningLight,
     borderRadius: borderRadius.full,
     paddingHorizontal: spacing.sm,
     paddingVertical: 2,
   },
   scienceText: {
     ...typography.tabBar,
-    color: colors.warning,
     fontWeight: fontWeights.semibold,
   },
   bottomRow: {
@@ -65,7 +57,7 @@ export const s = StyleSheet.create({
     marginTop: 'auto' as unknown as number,
     paddingTop: spacing.md,
   },
-  popularityText: { ...typography.caption, color: colors.primary[600] },
+  popularityText: { ...typography.caption },
 });
 
 export const addButtonStyles = StyleSheet.create({
@@ -78,9 +70,6 @@ export const addButtonStyles = StyleSheet.create({
   },
   default: {
     ...shadows.card,
-    backgroundColor: colors.primary[600],
   },
-  imported: {
-    backgroundColor: colors.light.surfaceMuted,
-  },
+  imported: {},
 });

@@ -3,7 +3,7 @@
  */
 
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { colors } from '../../../../theme/colors';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import { borderRadius, spacing } from '../../../../theme/spacing';
 import { typography, fontWeights } from '../../../../theme/typography';
 import { useUsageBanner } from './UsageBanner.hooks';
@@ -14,6 +14,7 @@ export function UsageBanner({
   onShowPaywall,
   userHabitCount,
 }: UsageBannerProps) {
+  const { colors } = useThemeColors();
   const { dots, limit, showBanner, showUnlockCta, used } = useUsageBanner(
     userHabitCount,
     isPremiumUser
@@ -22,16 +23,16 @@ export function UsageBanner({
   if (!showBanner) return null;
 
   return (
-    <View testID="templates-usage-banner" style={s.container}>
+    <View testID="templates-usage-banner" style={[s.container, { backgroundColor: colors.card, borderColor: colors.border }]}>
       <View style={s.content}>
-        <Text style={s.label}>
+        <Text style={[s.label, { color: colors.text.secondary }]}>
           {used} of {limit} free habits used
         </Text>
         <View testID="templates-usage-dots" accessibilityLabel={`${used} of ${limit} habits used`} accessibilityRole="progressbar" style={s.dots}>
           {dots.map((filled, i) => (
             <View
               key={i}
-              style={[s.dot, filled ? s.dotFilled : s.dotEmpty]}
+              style={[s.dot, { backgroundColor: filled ? colors.primary[600] : colors.gray[200] }]}
             />
           ))}
         </View>
@@ -40,10 +41,10 @@ export function UsageBanner({
           testID="templates-usage-unlock-cta"
           accessibilityLabel="Unlock all habits"
           accessibilityRole="button"
-          style={s.cta}
+          style={[s.cta, { backgroundColor: colors.primary[600] }]}
           onPress={onShowPaywall}
         >
-          <Text style={s.ctaText}>Unlock All</Text>
+          <Text style={[s.ctaText, { color: colors.text.inverse }]}>Unlock All</Text>
         </Pressable> : null}
     </View>
   );
@@ -52,8 +53,6 @@ export function UsageBanner({
 const s = StyleSheet.create({
   container: {
     alignItems: 'center',
-    backgroundColor: colors.light.surfaceMuted,
-    borderColor: colors.border,
     borderRadius: borderRadius.medium,
     borderWidth: 1,
     flexDirection: 'row',
@@ -64,14 +63,12 @@ const s = StyleSheet.create({
   },
   content: { flex: 1, gap: spacing.xs },
   cta: {
-    backgroundColor: colors.primary[600],
     borderRadius: borderRadius.small,
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.xs + 2,
   },
   ctaText: {
     ...typography.caption,
-    color: colors.text.inverse,
     fontWeight: fontWeights.bold,
   },
   dot: {
@@ -79,15 +76,8 @@ const s = StyleSheet.create({
     height: 8,
     width: 8,
   },
-  dotEmpty: {
-    backgroundColor: colors.gray[200],
-  },
-  dotFilled: {
-    backgroundColor: colors.primary[600],
-  },
   dots: { flexDirection: 'row', gap: spacing.xs },
   label: {
     ...typography.caption,
-    color: colors.text.secondary,
   },
 });

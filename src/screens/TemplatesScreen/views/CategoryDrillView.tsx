@@ -7,7 +7,7 @@ import { FlatList, Pressable, ScrollView, StyleSheet, Text, View } from 'react-n
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import type { Doc } from '../../../../convex/_generated/dataModel';
 import { ScreenHeader } from '../../../components/ScreenHeader';
-import { colors } from '../../../theme/colors';
+import { useThemeColors } from '../../../theme/ThemeContext';
 import { durations, springs } from '../../../theme/animations';
 import { borderRadius, spacing } from '../../../theme/spacing';
 import { getCategoryMeta } from '../data/categoryMeta';
@@ -37,6 +37,7 @@ export function CategoryDrillView({
   categoryId, importedTemplateIds, importingTemplateId,
   onBack, onImport, onPreview, templates,
 }: CategoryDrillViewProps) {
+  const { colors } = useThemeColors();
   const meta = getCategoryMeta(categoryId);
   const getCategoryLabel = (_categoryId: string) => meta.label;
   const habitCountLabel = `${templates.length} habit${templates.length === 1 ? '' : 's'}`;
@@ -45,7 +46,7 @@ export function CategoryDrillView({
     useCategoryDrillFilters(templates, importedTemplateIds);
 
   return (
-    <View testID="templates-category-view" style={s.container}>
+    <View testID="templates-category-view" style={[s.container, { backgroundColor: colors.background }]}>
       <ScreenHeader
         subtitle={`${habitCountLabel} \u00B7 ${scienceCount} science-backed`}
         title={`${meta.icon} ${meta.label}`}
@@ -57,10 +58,10 @@ export function CategoryDrillView({
             accessibilityRole='button'
             accessibilityState={{ selected: sort === opt.key }}
             key={opt.key}
-            style={[s.chip, sort === opt.key && s.chipActive]}
+            style={[s.chip, { backgroundColor: colors.card, borderColor: colors.border }, sort === opt.key && { backgroundColor: colors.primary[600], borderColor: colors.primary[700] }]}
             onPress={() => setSort(opt.key)}
           >
-            <Text style={[s.chipText, sort === opt.key && s.chipTextActive]}>
+            <Text style={[s.chipText, { color: colors.text.secondary }, sort === opt.key && { color: colors.text.inverse }]}>
               {opt.label}
             </Text>
           </Pressable>
@@ -68,10 +69,10 @@ export function CategoryDrillView({
         <Pressable
           accessibilityRole='button'
           accessibilityState={{ selected: hideImported }}
-          style={[s.chip, hideImported && s.toggleActive]}
+          style={[s.chip, { backgroundColor: colors.card, borderColor: colors.border }, hideImported && { backgroundColor: `${colors.primary[500]}1A`, borderColor: `${colors.primary[500]}4D` }]}
           onPress={toggleHideImported}
         >
-          <Text style={[s.chipText, hideImported && s.toggleTextActive]}>
+          <Text style={[s.chipText, { color: colors.text.secondary }, hideImported && { color: colors.primary[600] }]}>
             Hide added
           </Text>
         </Pressable>
@@ -100,25 +101,13 @@ export function CategoryDrillView({
 
 const s = StyleSheet.create({
   chip: {
-    backgroundColor: colors.light.surfaceMuted,
-    borderColor: colors.border,
     borderRadius: borderRadius.full,
     borderWidth: 1,
     paddingHorizontal: 14,
     paddingVertical: 6,
   },
-  chipActive: {
-    backgroundColor: colors.primary[600],
-    borderColor: colors.primary[700],
-  },
-  chipText: { ...typography.caption, color: colors.text.secondary, fontWeight: fontWeights.semibold },
-  chipTextActive: { color: colors.text.inverse },
-  container: { backgroundColor: colors.background, flex: 1 },
+  chipText: { ...typography.caption, fontWeight: fontWeights.semibold },
+  container: { flex: 1 },
   filterBarContent: { flexDirection: 'row', gap: spacing.sm, paddingHorizontal: spacing.base, paddingVertical: spacing.sm },
   list: { paddingBottom: spacing['2xl'], paddingTop: spacing.xs },
-  toggleActive: {
-    backgroundColor: `${colors.primary[500]}1A`,
-    borderColor: `${colors.primary[500]}4D`,
-  },
-  toggleTextActive: { color: colors.primary[600] },
 });

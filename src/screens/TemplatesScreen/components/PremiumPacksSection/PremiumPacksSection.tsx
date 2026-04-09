@@ -3,7 +3,7 @@
  */
 
 import { StyleSheet, Text, View } from 'react-native';
-import { colors } from '../../../../theme/colors';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import { spacing } from '../../../../theme/spacing';
 import { fontWeights, typography } from '../../../../theme/typography';
 import type { PremiumPack } from '../../data/premiumPacks';
@@ -18,11 +18,13 @@ export function PremiumPacksSection({
   onPackPress,
   packs,
 }: PremiumPacksSectionProps) {
+  const { colors } = useThemeColors();
+
   return (
     <View testID='templates-premium-packs-section' style={s.container}>
       <View style={s.headerRow}>
-        <Text style={s.title}>Starter Sets</Text>
-        <Text style={s.badge}>Premium</Text>
+        <Text style={[s.title, { color: colors.text.primary }]}>Starter Sets</Text>
+        <Text style={[s.badge, { color: colors.status.premiumText }]}>Premium</Text>
       </View>
       {packs.map((pack) => (
         <PremiumPackCard
@@ -38,7 +40,6 @@ export function PremiumPacksSection({
 const s = StyleSheet.create({
   badge: {
     ...typography.caption,
-    color: colors.premium[700],
     fontWeight: fontWeights.bold,
   },
   container: { marginTop: spacing.lg },
@@ -49,5 +50,5 @@ const s = StyleSheet.create({
     marginBottom: spacing.md,
     paddingHorizontal: spacing.base,
   },
-  title: { ...typography.heading3, color: colors.text.primary },
+  title: { ...typography.heading3 },
 });

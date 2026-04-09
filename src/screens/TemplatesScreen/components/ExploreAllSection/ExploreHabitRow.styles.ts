@@ -22,7 +22,7 @@ export const s = StyleSheet.create({
   },
   badgeText: { fontSize: 10, fontWeight: fontWeights.semibold },
   desc: { ...typography.caption, lineHeight: 17 },
-  dot: { borderRadius: 2, height: 3, width: 3 },
+  dot: { borderRadius: 4, height: 3, width: 3 },
   emoji: { fontSize: 20 },
   freq: { ...typography.caption },
   iconBox: {
@@ -34,7 +34,7 @@ export const s = StyleSheet.create({
     width: 44,
   },
   info: { flex: 1, gap: spacing.xs, minWidth: 0 },
-  meta: { alignItems: 'center', flexDirection: 'row', flexWrap: 'wrap', gap: 6 },
+  meta: { alignItems: 'center', flexDirection: 'row', flexWrap: 'wrap', gap: spacing.xs },
   name: { ...typography.body, fontWeight: fontWeights.semibold },
   row: {
     alignItems: 'center',

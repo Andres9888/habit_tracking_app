@@ -6,7 +6,7 @@ import { FlatList, StyleSheet, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import type { Doc } from '../../../../convex/_generated/dataModel';
 import { ScreenHeader } from '../../../components/ScreenHeader';
-import { colors } from '../../../theme/colors';
+import { useThemeColors } from '../../../theme/ThemeContext';
 import { durations, springs } from '../../../theme/animations';
 import { spacing } from '../../../theme/spacing';
 import { getCategoryMeta } from '../data/categoryMeta';
@@ -25,12 +25,13 @@ export function SeeAllView({
   importedTemplateIds, importingTemplateId,
   onBack, onImport, onPreview, templates,
 }: SeeAllViewProps) {
+  const { colors } = useThemeColors();
   const getCategoryLabel = (categoryId: string) =>
     getCategoryMeta(categoryId).label;
   const habitCountLabel = `${templates.length} habit${templates.length === 1 ? '' : 's'}`;
 
   return (
-    <View testID="templates-see-all-view" style={s.container}>
+    <View testID="templates-see-all-view" style={[s.container, { backgroundColor: colors.background }]}>
       <ScreenHeader
         subtitle={`${habitCountLabel} · sorted by popularity`}
         title="Trending habits"
@@ -62,5 +63,5 @@ export function SeeAllView({
 }
 
 const s = StyleSheet.create({
-  container: { backgroundColor: colors.background, flex: 1 },
+  container: { flex: 1 },
 });

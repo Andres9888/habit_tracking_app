@@ -4,7 +4,7 @@
 
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 import type { Doc } from '../../../../../convex/_generated/dataModel';
-import { colors } from '../../../../theme/colors';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import { spacing } from '../../../../theme/spacing';
 import { typography } from '../../../../theme/typography';
 import { TrendingCard } from '../TrendingCard';
@@ -26,10 +26,12 @@ export function PopularSection({
   onSeeAll,
   templates,
 }: PopularSectionProps) {
+  const { colors } = useThemeColors();
+
   return (
     <View testID='templates-trending-section' style={s.container}>
       <View style={s.header}>
-        <Text style={s.title}>Trending right now</Text>
+        <Text style={[s.title, { color: colors.text.primary }]}>Trending right now</Text>
         <Pressable
           testID='templates-trending-see-all'
           accessibilityLabel='See all trending templates'
@@ -37,7 +39,7 @@ export function PopularSection({
           hitSlop={8}
           onPress={onSeeAll}
         >
-          <Text style={s.seeAll}>See all</Text>
+          <Text style={[s.seeAll, { color: colors.primary[600] }]}>See all</Text>
         </Pressable>
       </View>
       <FlatList
@@ -76,6 +78,6 @@ const s = StyleSheet.create({
     paddingHorizontal: spacing.base,
   },
   list: { gap: spacing.md, paddingHorizontal: spacing.base },
-  seeAll: { ...typography.bodySmall, color: colors.primary[600] },
-  title: { ...typography.heading3, color: colors.text.primary },
+  seeAll: { ...typography.bodySmall },
+  title: { ...typography.heading3 },
 });

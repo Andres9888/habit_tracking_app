@@ -11,7 +11,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { springs } from '@/theme/animations';
 import { Check, Plus } from 'lucide-react-native';
-import { colors } from '../../../../theme/colors';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import { addButtonStyles as abs } from './TrendingCard.styles';
 import type { AddButtonProps } from './TrendingCard.types';
 
@@ -23,6 +23,7 @@ export function AddButton({
   name,
   onImport,
 }: AddButtonProps) {
+  const { colors } = useThemeColors();
   const scale = useSharedValue(1);
 
   useEffect(() => {
@@ -52,7 +53,7 @@ export function AddButton({
       hitSlop={4}
       style={[
         abs.button,
-        isImported ? abs.imported : abs.default,
+        isImported ? [abs.imported, { backgroundColor: colors.card }] : [abs.default, { backgroundColor: colors.primary[600] }],
         animatedStyle,
       ]}
       onPress={onImport}

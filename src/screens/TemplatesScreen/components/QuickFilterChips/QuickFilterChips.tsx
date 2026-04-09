@@ -79,11 +79,9 @@ export function QuickFilterChips({
   categories,
   onSelectCategory,
 }: QuickFilterChipsProps) {
-  const { colors, isDark } = useThemeColors();
-  const fadeBg = isDark ? 'rgba(17,24,39,1)' : 'rgba(250,250,248,1)';
-  const fadeTransparent = isDark
-    ? 'rgba(17,24,39,0)'
-    : 'rgba(250,250,248,0)';
+  const { colors } = useThemeColors();
+  const fadeBg = colors.background + 'FF';
+  const fadeTransparent = colors.background + '00';
 
   return (
     <View style={s.wrapper}>

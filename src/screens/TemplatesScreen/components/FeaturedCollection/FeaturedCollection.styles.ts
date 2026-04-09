@@ -31,7 +31,7 @@ export const s = StyleSheet.create({
   chips: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginTop: 16 },
   circleOne: {
     backgroundColor: 'rgba(255,255,255,0.08)',
-    borderRadius: 90,
+    borderRadius: 9999,
     height: 180,
     position: 'absolute',
     right: -40,
@@ -40,7 +40,7 @@ export const s = StyleSheet.create({
   },
   circleTwo: {
     backgroundColor: 'rgba(255,255,255,0.05)',
-    borderRadius: 100,
+    borderRadius: 9999,
     bottom: -60,
     height: 200,
     left: -30,

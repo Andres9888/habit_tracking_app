@@ -3,7 +3,7 @@
  */
 
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { colors } from '../../../../theme/colors';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import { borderRadius, spacing } from '../../../../theme/spacing';
 import { typography, fontWeights } from '../../../../theme/typography';
 
@@ -28,6 +28,7 @@ export function CategoryTile({
   previewEmojis,
   textColor,
 }: CategoryTileProps) {
+  const { colors } = useThemeColors();
   return (
     <Pressable
       testID={`templates-category-tile-${index}`}
@@ -40,7 +41,7 @@ export function CategoryTile({
         <Text style={s.icon}>{icon}</Text>
       </View>
       <Text style={[s.label, { color: textColor }]}>{label}</Text>
-      <Text style={s.count}>{count} {count === 1 ? 'habit' : 'habits'}</Text>
+      <Text style={[s.count, { color: colors.text.tertiary }]}>{count} {count === 1 ? 'habit' : 'habits'}</Text>
       {previewEmojis.length > 0 ? <View style={s.previewRow}>
           {previewEmojis.map((emoji, i) => (
             <Text key={i} style={s.previewEmoji}>
@@ -53,7 +54,7 @@ export function CategoryTile({
 }
 
 const s = StyleSheet.create({
-  count: { ...typography.caption, color: colors.text.tertiary, marginTop: spacing.xs },
+  count: { ...typography.caption, marginTop: spacing.xs },
   icon: { fontSize: 28 },
   label: { ...typography.bodySmall, fontWeight: fontWeights.semibold, marginTop: spacing.sm },
   previewEmoji: { fontSize: 14, opacity: 0.6 },
