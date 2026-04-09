@@ -8,11 +8,13 @@ import React from 'react';
 
 import { G, Line } from 'react-native-svg';
 
+import { useThemeColors } from '@/theme/ThemeContext';
+
 import {
   CHART_PADDING_X,
-  COLORS,
   GRID_LINE_DASH,
   GRID_LINE_OPACITY,
+  getThemeColors,
 } from '../constants';
 
 import type { ChartGridProps } from './StrengthChart.types';
@@ -25,13 +27,16 @@ export const ChartGrid = React.memo(function ChartGrid({
   chartWidth,
   paddingX = CHART_PADDING_X,
 }: ChartGridProps) {
+  const { colors: themeColors } = useThemeColors();
+  const sectionColors = getThemeColors(themeColors);
+
   return (
     <G>
       {gridLines.map((y, i) => (
         <Line
           key={i}
           opacity={GRID_LINE_OPACITY}
-          stroke={COLORS.gridLine}
+          stroke={sectionColors.gridLine}
           strokeDasharray={GRID_LINE_DASH}
           strokeWidth={1}
           x1={paddingX}

@@ -7,12 +7,14 @@ import { LayoutChangeEvent, View } from 'react-native';
 
 import Svg from 'react-native-svg';
 
+import { useThemeColors } from '@/theme/ThemeContext';
+
 import { useReduceMotion } from '../../../hooks/useReduceMotion';
 import {
   CHART_HEIGHT,
   CHART_PADDING_BOTTOM,
   CHART_PADDING_X,
-  STRENGTH_COLORS,
+  getStrengthColors,
 } from '../constants';
 import type { StrengthChartProps } from '../types';
 
@@ -35,10 +37,12 @@ export const StrengthChart = React.memo(function StrengthChart({
   color,
 }: StrengthChartProps) {
   const [chartWidth, setChartWidth] = useState(300);
+  const { colors: themeColors } = useThemeColors();
   const reduceMotion = useReduceMotion();
 
   const strengthLabel = getStrengthLabel(currentStrength);
-  const chartColor = color || STRENGTH_COLORS[strengthLabel].primary;
+  const strengthColors = getStrengthColors(themeColors);
+  const chartColor = color || strengthColors[strengthLabel].primary;
 
   const handleLayout = (event: LayoutChangeEvent) => {
     setChartWidth(event.nativeEvent.layout.width);

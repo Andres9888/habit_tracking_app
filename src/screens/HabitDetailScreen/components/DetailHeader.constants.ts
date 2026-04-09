@@ -4,10 +4,8 @@ export const buttonShadow = {
   ...shadows.floatingActionButton,
 } as const;
 
+/** Decorative shadow for hero icon — intentionally stronger than card shadow */
 export const iconShadow = {
-  elevation: 6,
-  shadowColor: '#2D2A26',
-  shadowOffset: { height: 6, width: 0 },
-  shadowOpacity: 0.15,
-  shadowRadius: 16,
+  ...shadows.floatingActionButton,
+  shadowOpacity: 0.12,
 } as const;

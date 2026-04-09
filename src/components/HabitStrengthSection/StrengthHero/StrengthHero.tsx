@@ -21,7 +21,9 @@
 import React from 'react';
 import { View } from 'react-native';
 
-import { STRENGTH_COLORS } from '../constants';
+import { useThemeColors } from '@/theme/ThemeContext';
+
+import { getStrengthColors } from '../constants';
 import { ProgressRing } from './ProgressRing';
 import { StatusDisplay } from './StatusDisplay';
 import type { StrengthHeroProps } from './types';
@@ -37,10 +39,12 @@ export const StrengthHero = React.memo(function StrengthHero({
   deltaLabel,
   color,
 }: StrengthHeroProps) {
+  const { colors: themeColors } = useThemeColors();
+  const strengthColors = getStrengthColors(themeColors);
   // Guard against invalid label - default to 'weak'
-  const safeLabel = label && STRENGTH_COLORS[label] ? label : 'weak';
+  const safeLabel = label && strengthColors[label] ? label : 'weak';
   // Get colors based on strength level
-  const colors = STRENGTH_COLORS[safeLabel];
+  const colors = strengthColors[safeLabel];
   const ringColor = color || colors.primary;
 
   // Animation state

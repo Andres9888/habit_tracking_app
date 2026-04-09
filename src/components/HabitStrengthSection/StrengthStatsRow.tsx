@@ -22,7 +22,7 @@ import React from 'react';
 import { Text, View } from 'react-native';
 import { useThemeColors } from '@/theme/ThemeContext';
 
-import { COLORS } from './constants';
+import { getThemeColors } from './constants';
 import type { StrengthStatsRowProps } from './types';
 
 /**
@@ -46,15 +46,15 @@ function StatColumn({
   isPositive: boolean;
 }) {
   const { colors: themeColors } = useThemeColors();
+  const sectionColors = getThemeColors(themeColors);
 
   return (
     <View className='flex-1 items-center'>
-      {/* Smaller label text for compact layout */}
       <Text className='text-[10px]' style={{ color: themeColors.text.tertiary }}>{label}</Text>
       <Text
         className='text-sm font-semibold'
         style={{
-          color: isPositive ? COLORS.positive : COLORS.textPrimary,
+          color: isPositive ? sectionColors.positive : sectionColors.textPrimary,
         }}
       >
         {value}
@@ -67,8 +67,9 @@ function StatColumn({
  * Vertical divider between stat columns (compact height).
  */
 function Divider() {
+  const { colors: themeColors } = useThemeColors();
   return (
-    <View className='h-6 w-px' style={{ backgroundColor: COLORS.border }} />
+    <View className='h-6 w-px' style={{ backgroundColor: themeColors.border }} />
   );
 }
 
