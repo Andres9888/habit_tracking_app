@@ -3,9 +3,11 @@
  * StreakRemindersSection — Settings toggle for streak reminder notifications
  */
 
-import { useState } from 'react';
+import { ReactNode, useState } from 'react';
 import { Bell, ChevronRight, Clock, Crown } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
+import { typography, fontWeights } from '@/theme/typography';
+import { highContrastColors } from '@/theme/highContrastColors';
 import { Platform, Text, View } from 'react-native';
 import Animated, { FadeInDown, FadeOutUp } from 'react-native-reanimated';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -26,6 +28,7 @@ interface StreakRemindersSectionProps {
   enabled: boolean;
   reminderTime: string;
   isPremium: boolean;
+  icon?: ReactNode;
   onToggle: (value: boolean) => void | Promise<void>;
   onChangeTime: (time: string) => void | Promise<void>;
   onPremiumUpsell?: () => void;
@@ -39,6 +42,7 @@ export function StreakRemindersSection({
   enabled,
   reminderTime,
   isPremium,
+  icon,
   onToggle,
   onChangeTime,
   onPremiumUpsell,
@@ -52,8 +56,8 @@ export function StreakRemindersSection({
   const insetBackground = isDark
     ? 'rgba(255,255,255,0.03)'
     : 'rgba(0,0,0,0.02)';
-  const insetBorder = highContrastMode ? '#2f2f2f' : themeColors.border;
-  const insetCardBackground = highContrastMode ? '#111111' : themeColors.surface;
+  const insetBorder = highContrastMode ? highContrastColors.border : themeColors.border;
+  const insetCardBackground = highContrastMode ? highContrastColors.background : themeColors.surface;
 
   const handleTimeChange = (_event: unknown, selectedDate?: Date) => {
     if (Platform.OS === nativeHandsetPlatform) setShowTimePicker(false);
@@ -61,7 +65,7 @@ export function StreakRemindersSection({
   };
 
   return (
-    <SettingsSection collapsible={collapsible} highContrastMode={highContrastMode} isExpanded={isExpanded} title='Notifications' onToggle={onToggleSection}>
+    <SettingsSection collapsible={collapsible} highContrastMode={highContrastMode} icon={icon} isExpanded={isExpanded} title='Notifications' onToggle={onToggleSection}>
       <SettingsRow
         highContrastMode={highContrastMode}
         icon={<Bell color={settings.bell.icon} size={iconSizes.small} />}
@@ -107,7 +111,7 @@ export function StreakRemindersSection({
                     className='items-center justify-center rounded-[10px]'
                     style={{
                       backgroundColor: settings.clock.bg,
-                      borderColor: highContrastMode ? '#facc15' : 'transparent',
+                      borderColor: highContrastMode ? highContrastColors.accent : 'transparent',
                       borderWidth: highContrastMode ? 1 : 0,
                       height: 36,
                       width: 36,
@@ -116,14 +120,13 @@ export function StreakRemindersSection({
                     <Clock color={settings.clock.icon} size={iconSizes.small} />
                   </View>
                   <Text
-                    className='flex-1 text-[17px] font-semibold'
-                    style={{ color: themeColors.text.primary }}
+                    className='flex-1'
+                    style={{ ...typography.body, fontWeight: fontWeights.semibold, color: themeColors.text.primary }}
                   >
                     Reminder time
                   </Text>
                   <Text
-                    className='text-[17px] font-medium'
-                    style={{ color: themeColors.text.secondary }}
+                    style={{ ...typography.body, fontWeight: fontWeights.medium, color: themeColors.text.secondary }}
                   >
                     {formatDisplayTime(reminderTime)}
                   </Text>
@@ -177,14 +180,12 @@ export function StreakRemindersSection({
                     </View>
                     <View className='flex-1'>
                       <Text
-                        className='text-[17px] font-semibold'
-                        style={{ color: themeColors.text.primary }}
+                        style={{ ...typography.body, fontWeight: fontWeights.semibold, color: themeColors.text.primary }}
                       >
                         Custom times per habit
                       </Text>
                       <Text
-                        className='text-[13px]'
-                        style={{ color: themeColors.text.secondary }}
+                        style={{ ...typography.caption, color: themeColors.text.secondary }}
                       >
                         Premium lets each habit keep its own reminder schedule
                       </Text>
@@ -206,8 +207,7 @@ export function StreakRemindersSection({
         >
           <View className='px-4 pb-3'>
             <Text
-              className='text-[13px] leading-[18px]'
-              style={{ color: themeColors.text.secondary }}
+              style={{ ...typography.caption, lineHeight: 18, color: themeColors.text.secondary }}
             >
               Get a reminder if you haven't completed a habit with an active
               streak by your chosen time.

@@ -9,6 +9,7 @@ import { useSettingsSectionAccordion } from './useSettingsSectionAccordion';
 interface Props {
   title: string;
   subtitle?: string;
+  icon?: ReactNode;
   children: ReactNode;
   highContrastMode?: boolean;
   isExpanded?: boolean;
@@ -17,7 +18,7 @@ interface Props {
 }
 
 export function CollapsibleSectionCard({
-  title, subtitle, children, highContrastMode = false,
+  title, subtitle, icon, children, highContrastMode = false,
   isExpanded = true, onToggle, cardStyle,
 }: Props) {
   const accordion = useSettingsSectionAccordion({ isExpanded });
@@ -32,6 +33,7 @@ export function CollapsibleSectionCard({
       <SettingsSectionHeader
         chevronStyle={accordion.chevronAnimatedStyle}
         highContrastMode={highContrastMode}
+        icon={icon}
         isExpanded={isExpanded}
         subtitle={subtitle}
         title={title}

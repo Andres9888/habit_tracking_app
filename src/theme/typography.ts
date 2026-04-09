@@ -129,6 +129,16 @@ export const typography: Record<string, TextStyle> = {
     lineHeight: 24,
   },
 
+  // Overline (Section headers, uppercase labels) — 12px
+  overline: {
+    fontFamily: fontFamilies.primary.text,
+    fontSize: 12,
+    fontWeight: fontWeights.medium,
+    letterSpacing: 1.5,
+    lineHeight: 16,
+    textTransform: 'uppercase',
+  },
+
   // Tab Bar Labels — 10px
   tabBar: {
     fontFamily: fontFamilies.primary.text,

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { Star, Share2, MessageSquare, Sparkles } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
 import { SettingsSection } from '../SettingsSection';
@@ -7,6 +7,7 @@ import { useThemeColors } from '../../../theme/ThemeContext';
 
 interface Props {
   highContrast: boolean;
+  icon?: ReactNode;
   onRate: () => void;
   onShare: () => void;
   onFeedback: () => void;
@@ -18,6 +19,7 @@ interface Props {
 
 export function AppActions({
   highContrast,
+  icon,
   onRate,
   onShare,
   onFeedback,
@@ -29,7 +31,7 @@ export function AppActions({
   const { settings } = useThemeColors();
 
   return (
-    <SettingsSection collapsible={collapsible} highContrastMode={highContrast} isExpanded={isExpanded} title='Support' onToggle={onToggleSection}>
+    <SettingsSection collapsible={collapsible} highContrastMode={highContrast} icon={icon} isExpanded={isExpanded} title='Support' onToggle={onToggleSection}>
       <SettingsRow
         highContrastMode={highContrast}
         icon={<Star color={settings.star.icon} size={iconSizes.small} />}

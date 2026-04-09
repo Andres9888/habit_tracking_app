@@ -153,7 +153,7 @@ function SettingsModalContent({
       onRequestClose={handleClose}
     >
       <View
-        className='flex-1 bg-background'
+        className='flex-1'
         style={{ backgroundColor: colors.background }}
       >
         {isLoading ? (

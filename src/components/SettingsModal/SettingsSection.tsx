@@ -2,6 +2,7 @@
 import { ReactNode } from 'react';
 import { View } from 'react-native';
 import { shadows } from '@/theme';
+import { highContrastColors } from '@/theme/highContrastColors';
 import { useThemeColors } from '@/theme/ThemeContext';
 import { StaticSectionLabel } from './StaticSectionLabel';
 import { CollapsibleSectionCard } from './CollapsibleSectionCard';
@@ -9,6 +10,7 @@ import { CollapsibleSectionCard } from './CollapsibleSectionCard';
 interface Props {
   title: string;
   subtitle?: string;
+  icon?: ReactNode;
   children: ReactNode;
   highContrastMode?: boolean;
   collapsible?: boolean;
@@ -17,15 +19,15 @@ interface Props {
 }
 
 export function SettingsSection({
-  title, subtitle, children, highContrastMode = false,
+  title, subtitle, icon, children, highContrastMode = false,
   collapsible = false, isExpanded = true, onToggle,
 }: Props) {
   const { colors: themeColors } = useThemeColors();
   const hc = highContrastMode;
 
   const cardStyle = {
-    backgroundColor: hc ? '#111111' : themeColors.card,
-    borderColor: hc ? '#2f2f2f' : undefined,
+    backgroundColor: hc ? highContrastColors.background : themeColors.card,
+    borderColor: hc ? highContrastColors.border : undefined,
     borderWidth: hc ? 1 : 0,
     ...(hc ? { elevation: 0, shadowColor: 'transparent' } : shadows.card),
   };
@@ -35,6 +37,7 @@ export function SettingsSection({
       <CollapsibleSectionCard
         cardStyle={cardStyle}
         highContrastMode={hc}
+        icon={icon}
         isExpanded={isExpanded}
         subtitle={subtitle}
         title={title}
@@ -47,7 +50,7 @@ export function SettingsSection({
 
   return (
     <View className="gap-2">
-      <StaticSectionLabel highContrastMode={hc} subtitle={subtitle} title={title} />
+      <StaticSectionLabel highContrastMode={hc} icon={icon} subtitle={subtitle} title={title} />
       <View className="overflow-hidden rounded-2xl" style={cardStyle}>{children}</View>
     </View>
   );

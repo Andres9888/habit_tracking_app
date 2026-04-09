@@ -2,6 +2,8 @@
 import { Text, View } from 'react-native';
 import { Trash2 } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
+import { typography, fontWeights } from '@/theme/typography';
+import { highContrastColors } from '@/theme/highContrastColors';
 import { AnimatedPressable } from '../../ui/AnimatedPressable';
 import { shadows } from '../../../theme';
 import { useThemeColors } from '../../../theme/ThemeContext';
@@ -22,15 +24,15 @@ export function DeleteAccountButton({
     ? themeColors.status.error
     : themeColors.status.errorText;
   const sectionLabelColor = highContrastMode
-    ? '#facc15'
+    ? highContrastColors.accent
     : themeColors.text.tertiary;
   const cardBackground = highContrastMode
-    ? '#111111'
+    ? highContrastColors.background
     : isDark
       ? 'rgba(248,113,113,0.08)'
       : '#f7f2ee';
   const borderColor = highContrastMode
-    ? '#2f2f2f'
+    ? highContrastColors.border
     : isDark
       ? 'rgba(248,113,113,0.16)'
       : 'rgba(181,48,48,0.14)';
@@ -42,8 +44,8 @@ export function DeleteAccountButton({
   return (
     <View className='gap-2'>
       <Text
-        className='px-4 text-[12px] font-medium uppercase tracking-[1.5px]'
-        style={{ color: sectionLabelColor }}
+        className='px-4'
+        style={{ ...typography.overline, color: sectionLabelColor }}
       >
         Danger Zone
       </Text>
@@ -74,12 +76,12 @@ export function DeleteAccountButton({
               <Trash2 color={iconColor} size={iconSizes.small} />
             </View>
             <View className='flex-1'>
-              <Text className='text-[17px] font-semibold' style={{ color: labelColor }}>
+              <Text style={{ ...typography.body, fontWeight: fontWeights.semibold, color: labelColor }}>
                 {isDeletingAccount ? 'Deleting account...' : 'Delete account'}
               </Text>
               <Text
-                className='mt-1 text-[13px]'
-                style={{ color: themeColors.text.secondary }}
+                className='mt-1'
+                style={{ ...typography.caption, color: themeColors.text.secondary }}
               >
                 Permanently remove your account and all Chain Day data
               </Text>

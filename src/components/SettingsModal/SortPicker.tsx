@@ -6,6 +6,7 @@
 import { Text, View } from 'react-native';
 import { Check } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
+import { typography, fontWeights } from '@/theme/typography';
 import { LinearGradient } from 'expo-linear-gradient';
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import { ScreenHeader } from '@/components/ScreenHeader';
@@ -71,14 +72,12 @@ export function SortPicker({ currentMode, onBack, onSelect }: SortPickerProps) {
               </LinearGradient>
               <View className='flex-1'>
                 <Text
-                  className='text-[15px] font-medium'
-                  style={{ color: colors.text.primary }}
+                  style={{ ...typography.bodySmall, fontWeight: fontWeights.medium, color: colors.text.primary }}
                 >
                   {option.label}
                 </Text>
                 <Text
-                  className='text-[13px] font-normal'
-                  style={{ color: colors.text.secondary }}
+                  style={{ ...typography.caption, color: colors.text.secondary }}
                 >
                   {option.description}
                 </Text>
