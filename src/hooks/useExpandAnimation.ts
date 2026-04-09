@@ -1,6 +1,6 @@
 /** Shared expand/collapse animation hook for accordion components */
 
-import { useCallback } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import {
   useSharedValue,
   useAnimatedStyle,
@@ -25,9 +25,21 @@ export function useExpandAnimation({
 }: UseExpandAnimationProps) {
   const expandProgress = useSharedValue(defaultExpanded ? 1 : 0);
   const chevronRotation = useSharedValue(defaultExpanded ? 180 : 0);
+  const isUserToggle = useRef(false);
+
+  // Sync shared values when defaultExpanded changes externally (e.g. async preference load)
+  useEffect(() => {
+    if (isUserToggle.current) {
+      isUserToggle.current = false;
+      return;
+    }
+    expandProgress.value = defaultExpanded ? 1 : 0;
+    chevronRotation.value = defaultExpanded ? 180 : 0;
+  }, [defaultExpanded, expandProgress, chevronRotation]);
 
   const animateToggle = useCallback(
     (newExpanded: boolean) => {
+      isUserToggle.current = true;
       const duration = reduceMotion ? 0 : ANIMATION_DURATIONS.STANDARD;
       const targetValue = newExpanded ? 1 : 0;
       const chevronTarget = newExpanded ? 180 : 0;
