@@ -23,4 +23,12 @@ describe('getEmojiAndName', () => {
     expect(result.name).toBe('Travel');
     expect(result.emoji.length).toBeGreaterThan(0);
   });
+
+  it('does not treat leading digit as emoji', () => {
+    expect(getEmojiAndName('7-Minute Workout')).toEqual({ emoji: '', name: '7-Minute Workout' });
+  });
+
+  it('still extracts real emoji before a digit name', () => {
+    expect(getEmojiAndName('💪 7-Minute Workout')).toEqual({ emoji: '💪', name: '7-Minute Workout' });
+  });
 });

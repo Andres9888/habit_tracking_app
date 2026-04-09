@@ -21,7 +21,7 @@ export function DetailHero({ habit, isCompletedToday }: DetailHeroProps) {
   const { colors, isDark } = useThemeColors();
   const textPrimary = colors.text.primary;
   const habitName = habit.icon
-    ? (habit.name ?? '').replace(/^\p{Emoji}\s*/u, '')
+    ? (habit.name ?? '').replace(/^(?![0-9#*])\p{Emoji}\s*/u, '')
     : (habit.name ?? 'Habit');
   const defaultIconBg = isDark ? colors.primary[100] : colors.status.warningLight;
   const defaultIconShadow = isDark ? colors.primary[500] : colors.status.warning;

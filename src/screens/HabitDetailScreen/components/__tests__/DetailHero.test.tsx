@@ -62,6 +62,12 @@ describe('DetailHero', () => {
     expect(getByText('Habit')).toBeTruthy();
   });
 
+  it('preserves digit-prefixed name when habit has icon', () => {
+    const digitHabit = { ...mockHabit, name: '5-Minute Meditation', icon: '🧘' };
+    const { getByText } = render(<DetailHero habit={digitHabit as never} />);
+    expect(getByText('5-Minute Meditation')).toBeTruthy();
+  });
+
   it('has accessible header role on habit name', () => {
     const { getByRole } = render(<DetailHero habit={mockHabit} />);
     expect(getByRole('header')).toBeTruthy();
