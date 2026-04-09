@@ -4,6 +4,7 @@ import { View, Text } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { Check } from 'lucide-react-native';
 import { useThemeColors } from '../../../theme';
+import { spacing } from '../../../theme/spacing';
 import { typography } from '../../../theme/typography';
 import type { Habit } from '../HabitDetailScreen.types';
 import { iconShadow } from './DetailHeader.constants';
@@ -75,7 +76,7 @@ export function DetailHero({ habit, isCompletedToday }: DetailHeroProps) {
       {schedule ? (
         <Text
           accessibilityLabel={`Schedule: ${schedule}`}
-          style={{ ...typography.caption, marginTop: 4, color: colors.text.secondary }}
+          style={{ ...typography.caption, marginTop: spacing.xs, color: colors.text.secondary }}
         >
           {schedule}
         </Text>

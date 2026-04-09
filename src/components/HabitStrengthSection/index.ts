@@ -42,7 +42,10 @@ export {
   CHART_HEIGHT,
   STRENGTH_COLORS,
   COLORS,
+  getStrengthColors,
+  getThemeColors,
   ANIMATION,
   TIME_RANGE_OPTIONS,
   STRENGTH_LABELS,
 } from './constants';
+export type { StrengthColorSet } from './constants';

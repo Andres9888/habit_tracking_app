@@ -15,7 +15,8 @@ import { useThemeColors } from '@/theme/ThemeContext';
 
 import { useReduceMotion } from '../../hooks/useReduceMotion';
 import { shadows } from '../../theme/spacing';
-import { COLORS } from './constants';
+import { typography } from '../../theme/typography';
+import { getThemeColors } from './constants';
 import { useHabitStrengthData } from './HabitStrengthSection.hooks';
 import { StrengthChart } from './StrengthChart';
 import { StrengthHero } from './StrengthHero';
@@ -30,6 +31,7 @@ export const HabitStrengthSection = React.memo(function HabitStrengthSection({
   habitStrength,
 }: HabitStrengthSectionProps) {
   const { colors: themeColors } = useThemeColors();
+  const sectionColors = getThemeColors(themeColors);
   const reduceMotion = useReduceMotion();
   const {
     chartData,
@@ -55,7 +57,7 @@ export const HabitStrengthSection = React.memo(function HabitStrengthSection({
   if (isEmpty) {
     return (
       <View className='rounded-2xl p-5 shadow-sm' style={{ backgroundColor: themeColors.card }}>
-        <Text className='mb-2 text-lg font-bold' style={{ color: themeColors.text.primary }}>
+        <Text style={{ ...typography.heading3, marginBottom: 8, color: themeColors.text.primary }}>
           Habit Strength
         </Text>
         <View className='items-center justify-center py-8'>
@@ -75,13 +77,13 @@ export const HabitStrengthSection = React.memo(function HabitStrengthSection({
       style={{
         ...shadows.card,
         backgroundColor: themeColors.card,
-        shadowColor: COLORS.textPrimary,
+        shadowColor: sectionColors.textPrimary,
         shadowOpacity: 0.05,
       }}
     >
       <View className='p-5'>
         <View className='mb-4 flex-row items-center justify-between'>
-          <Text className='text-lg font-bold' style={{ color: themeColors.text.primary }}>
+          <Text style={{ ...typography.heading3, color: themeColors.text.primary }}>
             Habit Strength
           </Text>
           <TimeRangeToggle value={timeRange} onChange={setTimeRange} />

@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
   column: {
     alignItems: 'center',
     flex: 1,
-    gap: 2,
+    gap: spacing.xs,
     paddingVertical: spacing.md,
   },
   emoji: { fontSize: 18 },
@@ -87,12 +87,11 @@ const styles = StyleSheet.create({
     borderRadius: borderRadius.full,
     height: 30,
     justifyContent: 'center',
-    marginBottom: 2,
+    marginBottom: spacing.xs,
     width: 30,
   },
   label: {
-    fontFamily: fontFamilies.primary.text,
-    fontSize: 11,
+    ...typography.tabBar,
     fontWeight: fontWeights.medium,
   },
   separator: { height: 32, width: 1 },

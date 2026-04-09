@@ -60,7 +60,7 @@ export function DetailViewTabs({
 
   const { colors, isDark } = useThemeColors();
   const containerBg = isDark ? colors.surface : colors.gray[200];
-  const indicatorBg = isDark ? colors.card : '#FFFFFF';
+  const indicatorBg = isDark ? colors.card : colors.gray[50];
   const accentColor = isDark ? colors.primary[500] : colors.primary[600];
 
   return (

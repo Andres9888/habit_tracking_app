@@ -5,6 +5,7 @@
  * HabitStrengthSection component and its sub-components.
  */
 
+import type { SemanticColors } from '../../theme/darkColors';
 import type { StrengthLabel } from '../HabitStrengthHistory/types';
 
 // ============================================================================
@@ -36,86 +37,96 @@ export const DOT_PULSE_RADIUS = 8;
 // Colors
 // ============================================================================
 
-/** Strength level colors based on design system */
-export const STRENGTH_COLORS: Record<
-  StrengthLabel,
-  {
-    primary: string;
-    background: string;
-    gradient: {
-      start: string;
-      end: string;
-    };
-  }
-> = {
-  developing: {
-    // amber-500
-    background: '#fffbeb',
-    // amber-50
-    gradient: {
-      end: 'rgba(245, 158, 11, 0.02)',
-      start: 'rgba(245, 158, 11, 0.25)',
+/** Strength level color shape */
+export interface StrengthColorSet {
+  primary: string;
+  background: string;
+  gradient: { start: string; end: string };
+}
+
+/** Theme-aware strength level colors */
+export function getStrengthColors(
+  colors: SemanticColors
+): Record<StrengthLabel, StrengthColorSet> {
+  return {
+    developing: {
+      background: colors.status.warningLight,
+      gradient: {
+        end: 'rgba(245, 158, 11, 0.02)',
+        start: 'rgba(245, 158, 11, 0.25)',
+      },
+      primary: colors.status.warning,
     },
+    strong: {
+      background: colors.status.successLight,
+      gradient: {
+        end: 'rgba(16, 185, 129, 0.02)',
+        start: 'rgba(16, 185, 129, 0.25)',
+      },
+      primary: colors.status.success,
+    },
+    weak: {
+      background: colors.status.errorLight,
+      gradient: {
+        end: 'rgba(239, 68, 68, 0.02)',
+        start: 'rgba(239, 68, 68, 0.25)',
+      },
+      primary: colors.status.error,
+    },
+  };
+}
+
+/** Theme-aware neutral colors */
+export function getThemeColors(colors: SemanticColors) {
+  return {
+    border: colors.border,
+    cardBackground: colors.card,
+    gridLine: colors.gray[300],
+    negative: colors.status.error,
+    positive: colors.status.successText,
+    ringTrack: colors.gray[50],
+    textMuted: colors.text.tertiary,
+    textPrimary: colors.text.primary,
+    textSecondary: colors.text.secondary,
+  };
+}
+
+/**
+ * @deprecated Use getStrengthColors(colors) instead for theme-aware colors.
+ * Kept for backward compatibility with external consumers.
+ */
+export const STRENGTH_COLORS: Record<StrengthLabel, StrengthColorSet> = {
+  developing: {
+    background: '#fffbeb',
+    gradient: { end: 'rgba(245, 158, 11, 0.02)', start: 'rgba(245, 158, 11, 0.25)' },
     primary: '#f59e0b',
   },
   strong: {
-    // emerald-500
     background: '#ecfdf5',
-    // emerald-50
-    gradient: {
-      // 25% opacity
-      end: 'rgba(16, 185, 129, 0.02)',
-      start: 'rgba(16, 185, 129, 0.25)', // 2% opacity
-    },
+    gradient: { end: 'rgba(16, 185, 129, 0.02)', start: 'rgba(16, 185, 129, 0.25)' },
     primary: '#10b981',
   },
   weak: {
-    // red-500
     background: '#fef2f2',
-    // red-50
-    gradient: {
-      end: 'rgba(239, 68, 68, 0.02)',
-      start: 'rgba(239, 68, 68, 0.25)',
-    },
+    gradient: { end: 'rgba(239, 68, 68, 0.02)', start: 'rgba(239, 68, 68, 0.25)' },
     primary: '#ef4444',
   },
 };
 
-/** Neutral colors */
+/**
+ * @deprecated Use getThemeColors(colors) instead for theme-aware colors.
+ * Kept for backward compatibility with external consumers.
+ */
 export const COLORS = {
-  // stone-400
-  /** Border/divider color */
   border: '#e7e5e4',
-
-  /** Card background */
   cardBackground: '#ffffff',
-
-  // stone-200
-  /** Grid line color */
   gridLine: '#d6d3d1',
-
-  // green-500 (success semantic color)
-  /** Negative delta color */
   negative: '#ef4444',
-
-  // stone-300
-  /** Positive delta color */
   positive: '#15793C',
-
-  // red-500
-  /** Ring track color */
   ringTrack: '#f5f5f4',
-
-  // stone-500
-  /** Text muted */
   textMuted: '#a8a29e',
-
-  /** Text primary */
   textPrimary: '#1c1917',
-
-  // stone-900
-  /** Text secondary */
-  textSecondary: '#78716c', // stone-100
+  textSecondary: '#78716c',
 };
 
 // ============================================================================
