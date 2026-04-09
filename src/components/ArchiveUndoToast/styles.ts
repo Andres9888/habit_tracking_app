@@ -9,7 +9,7 @@ import { typography, fontFamilies, fontWeights} from '../../theme/typography';
 import { useThemeColors } from '../../theme/ThemeContext';
 
 export function useToastStyles() {
-  const { colors, isDark } = useThemeColors();
+  const { colors } = useThemeColors();
 
   return StyleSheet.create({
     container: {
@@ -33,7 +33,7 @@ export function useToastStyles() {
     },
     iconContainer: {
       alignItems: 'center',
-      backgroundColor: isDark ? '#78350F' : '#fef3c7',
+      backgroundColor: colors.status.warningLight,
       borderRadius: borderRadius.medium,
       height: 36,
       justifyContent: 'center',
@@ -48,12 +48,12 @@ export function useToastStyles() {
       color: colors.text.secondary,
     },
     progressBar: {
-      backgroundColor: isDark ? '#F59E0B' : '#d97706',
+      backgroundColor: colors.status.warning,
       height: '100%',
       width: '100%',
     },
     progressContainer: {
-      backgroundColor: isDark ? '#78350F' : '#fef3c7',
+      backgroundColor: colors.status.warningLight,
       borderBottomLeftRadius: borderRadius.xl,
       borderBottomRightRadius: borderRadius.xl,
       height: 3,
@@ -62,18 +62,17 @@ export function useToastStyles() {
     },
     toast: {
       backgroundColor: colors.card,
-      borderColor: isDark ? '#92400E' : '#f5f5f4',
+      borderColor: colors.border,
       borderRadius: borderRadius.xl,
       borderWidth: 1,
       ...shadows.alert,
       maxWidth: 400,
       overflow: 'hidden',
-      shadowColor: isDark ? '#000' : '#78716c',
       width: '100%',
     },
     undoButton: {
       alignItems: 'center',
-      backgroundColor: isDark ? '#78350F' : '#fef3c7',
+      backgroundColor: colors.status.warningLight,
       borderRadius: borderRadius.medium,
       flexDirection: 'row',
       gap: 6,
@@ -82,10 +81,10 @@ export function useToastStyles() {
       paddingVertical: 12,
     },
     undoButtonPressed: {
-      backgroundColor: isDark ? '#92400E' : '#fde68a',
+      opacity: 0.8,
     },
     undoText: {
-      color: isDark ? '#FCD34D' : '#b45309',
+      color: colors.status.warningText,
       fontFamily: fontFamilies.primary.text,
       fontSize: 13,
       fontWeight: fontWeights.bold,

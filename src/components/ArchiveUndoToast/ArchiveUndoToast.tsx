@@ -29,12 +29,12 @@ export function ArchiveUndoToast({
   onDismiss,
   onUndo,
 }: ArchiveUndoToastProps) {
-  const { isDark } = useThemeColors();
+  const { colors } = useThemeColors();
   const styles = useToastStyles();
   const insets = useSafeAreaInsets();
   const { panGesture, containerStyle, progressStyle, handleUndo } =
     useArchiveUndoToast({ duration, onDismiss, onUndo, visible });
-  const amberIconColor = isDark ? '#FCD34D' : '#b45309';
+  const amberIconColor = colors.status.warning;
 
   if (!visible) return null;
 

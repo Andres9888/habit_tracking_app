@@ -4,6 +4,7 @@
 
 import { Dimensions, StyleSheet } from 'react-native';
 import { colors } from '@/theme';
+import { borderRadius } from '@/theme/spacing';
 import { fontFamilies, fontWeights, typography } from '@/theme/typography';
 
 const { width: SCREEN_W } = Dimensions.get('window');
@@ -12,7 +13,7 @@ export const celebrationStyles = StyleSheet.create({
   actionSecondary: {
     alignItems: 'center',
     borderColor: 'rgba(255,255,255,0.1)',
-    borderRadius: 50,
+    borderRadius: borderRadius.full,
     borderWidth: 1.5,
     marginTop: 12,
     paddingHorizontal: 48,
@@ -48,7 +49,7 @@ export const celebrationStyles = StyleSheet.create({
   },
   glowRing: {
     alignItems: 'center',
-    borderRadius: 60,
+    borderRadius: borderRadius.full,
     height: 120,
     justifyContent: 'center',
     width: 120,
@@ -64,7 +65,7 @@ export const celebrationStyles = StyleSheet.create({
   },
   primaryBtn: {
     alignItems: 'center',
-    borderRadius: 50,
+    borderRadius: borderRadius.full,
     paddingHorizontal: 48,
     paddingVertical: 16,
     width: SCREEN_W - 96,

@@ -14,6 +14,7 @@ import type { CelebrationOverlayProps } from './CelebrationOverlay.types';
 import { celebrationStyles as s } from './CelebrationOverlay.styles';
 import { FALLBACK_COLOR } from './constants';
 import { useCelebrationAnimations } from './useCelebrationAnimations';
+import { colors as palette } from '@/theme/colors';
 import { fontWeights } from '@/theme/typography';
 
 export function CelebrationOverlay({
@@ -55,7 +56,7 @@ export function CelebrationOverlay({
             </Animated.Text>
           </Animated.View>
           <Animated.View style={[s.checkBadge, anim.badgeStyle]}>
-            <Text style={{ color: '#fff', fontSize: 16, fontWeight: fontWeights.bold }}>
+            <Text style={{ color: palette.text.inverse, fontSize: 16, fontWeight: fontWeights.bold }}>
               ✓
             </Text>
           </Animated.View>

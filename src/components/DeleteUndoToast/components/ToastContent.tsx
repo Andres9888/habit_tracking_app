@@ -14,9 +14,9 @@ interface ToastContentProps {
  * Contains icon, message, and undo button
  */
 export function ToastContent({ itemName, onUndo }: ToastContentProps) {
-  const { isDark } = useThemeColors();
+  const { colors } = useThemeColors();
   const styles = useToastStyles();
-  const redIconColor = isDark ? '#FCA5A5' : '#dc2626';
+  const redIconColor = colors.status.error;
 
   return (
     <View style={styles.content}>

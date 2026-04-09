@@ -9,6 +9,7 @@ import type { AnimatedStyle } from 'react-native-reanimated';
 import type { ViewStyle } from 'react-native';
 import { MEDALS, MEDAL_COLORS } from './constants';
 import { formatDate } from './utils';
+import { useThemeColors } from '../../../theme/ThemeContext';
 
 interface MedalCardProps {
   record: {
@@ -32,6 +33,7 @@ export function MedalCard({
   reduceMotion,
   isForMeasurement = false,
 }: MedalCardProps) {
+  const { colors: themeColors } = useThemeColors();
   const colors = MEDAL_COLORS[index];
   const medal = MEDALS[index];
   const positionLabel =
@@ -48,11 +50,11 @@ export function MedalCard({
       </Text>
       {isCurrentRecord ? <View
           className='mt-1 rounded-full px-1.5 py-0.5'
-          style={{ backgroundColor: '#ffedd5' }}
+          style={{ backgroundColor: themeColors.status.streakLight }}
         >
           <Text
             className='text-[8px] font-semibold'
-            style={{ color: '#c2410c' }}
+            style={{ color: themeColors.status.streakText }}
           >
             NOW 🔥
           </Text>

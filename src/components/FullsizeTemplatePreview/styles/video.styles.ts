@@ -22,7 +22,7 @@ export const videoStyles = StyleSheet.create({
   },
   playCircle: {
     alignItems: 'center',
-    backgroundColor: '#FF0000',
+    backgroundColor: colors.error,
     borderRadius: PLAY_ICON_SIZE / 2,
     height: PLAY_ICON_SIZE,
     justifyContent: 'center',

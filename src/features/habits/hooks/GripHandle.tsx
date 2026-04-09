@@ -31,15 +31,15 @@ function GripHandleComponent() {
 
 const styles = StyleSheet.create({
   bar: {
-    borderRadius: 1.5,
+    borderRadius: 4,
     height: 3,
-    marginVertical: 1.5,
+    marginVertical: 2,
     width: 20,
   },
   container: {
     alignItems: 'center',
     justifyContent: 'center',
-    paddingBottom: 2,
+    paddingBottom: 4,
     paddingTop: 4,
   },
 });
