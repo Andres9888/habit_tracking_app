@@ -7,7 +7,7 @@ import type { LayoutChangeEvent } from 'react-native';
 import { useReduceMotion } from '../../../hooks/useReduceMotion';
 import { useHapticFeedback } from '../../../hooks/useHapticFeedback';
 import { usePulseAnimation } from './usePulseAnimation';
-import { useExpandAnimation } from './useExpandAnimation';
+import { useExpandAnimation } from '@/hooks/useExpandAnimation';
 import { MEDALS } from './constants';
 import type { StreakRecord } from '../types';
 

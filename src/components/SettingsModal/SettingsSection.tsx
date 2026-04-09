@@ -1,64 +1,54 @@
-/** SettingsSection - Card container with section title */
+/** SettingsSection - Card container with optional collapsible accordion behavior */
 import { ReactNode } from 'react';
-import { Text, View } from 'react-native';
-
+import { View } from 'react-native';
 import { shadows } from '@/theme';
 import { useThemeColors } from '@/theme/ThemeContext';
+import { StaticSectionLabel } from './StaticSectionLabel';
+import { CollapsibleSectionCard } from './CollapsibleSectionCard';
 
-interface SettingsSectionProps {
+interface Props {
   title: string;
   subtitle?: string;
   children: ReactNode;
   highContrastMode?: boolean;
+  collapsible?: boolean;
+  isExpanded?: boolean;
+  onToggle?: () => void;
 }
 
 export function SettingsSection({
-  title,
-  subtitle,
-  children,
-  highContrastMode = false,
-}: SettingsSectionProps) {
+  title, subtitle, children, highContrastMode = false,
+  collapsible = false, isExpanded = true, onToggle,
+}: Props) {
   const { colors: themeColors } = useThemeColors();
+  const hc = highContrastMode;
 
-  const colors = highContrastMode
-    ? {
-        background: '#111111',
-        border: '#2f2f2f',
-        title: '#facc15',
-      }
-    : {
-        background: themeColors.card,
-        border: themeColors.border,
-        title: themeColors.text.secondary,
-      };
+  const cardStyle = {
+    backgroundColor: hc ? '#111111' : themeColors.card,
+    borderColor: hc ? '#2f2f2f' : undefined,
+    borderWidth: hc ? 1 : 0,
+    ...(hc ? { elevation: 0, shadowColor: 'transparent' } : shadows.card),
+  };
 
-  return (
-    <View className='gap-2'>
-      <View className='flex-row items-center px-4'>
-        <View className='mr-4 w-10' />
-        <Text
-          className='text-[12px] font-medium uppercase tracking-[1.5px]'
-          style={{ color: colors.title }}
-        >
-          {title}
-        </Text>
-        {subtitle ? <Text className='ml-2 rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase' style={{ backgroundColor: themeColors.status.warningLight, color: themeColors.status.warningText }}>
-            {subtitle}
-          </Text> : null}
-      </View>
-      <View
-        className='overflow-hidden rounded-2xl'
-        style={{
-          backgroundColor: colors.background,
-          borderColor: highContrastMode ? colors.border : undefined,
-          borderWidth: highContrastMode ? 1 : 0,
-          ...(highContrastMode
-            ? { elevation: 0, shadowColor: 'transparent' }
-            : shadows.card),
-        }}
+  if (collapsible) {
+    return (
+      <CollapsibleSectionCard
+        cardStyle={cardStyle}
+        highContrastMode={hc}
+        isExpanded={isExpanded}
+        subtitle={subtitle}
+        title={title}
+        onToggle={onToggle}
       >
         {children}
-      </View>
+      </CollapsibleSectionCard>
+    );
+  }
+
+  return (
+    <View className="gap-2">
+      <StaticSectionLabel highContrastMode={hc} subtitle={subtitle} title={title} />
+      <View className="overflow-hidden rounded-2xl" style={cardStyle}>{children}</View>
     </View>
   );
 }

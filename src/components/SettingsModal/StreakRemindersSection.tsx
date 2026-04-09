@@ -29,6 +29,9 @@ interface StreakRemindersSectionProps {
   onToggle: (value: boolean) => void | Promise<void>;
   onChangeTime: (time: string) => void | Promise<void>;
   onPremiumUpsell?: () => void;
+  collapsible?: boolean;
+  isExpanded?: boolean;
+  onToggleSection?: () => void;
 }
 
 export function StreakRemindersSection({
@@ -39,6 +42,9 @@ export function StreakRemindersSection({
   onToggle,
   onChangeTime,
   onPremiumUpsell,
+  collapsible,
+  isExpanded,
+  onToggleSection,
 }: StreakRemindersSectionProps) {
   const [showTimePicker, setShowTimePicker] = useState(false);
   const { colors: themeColors, isDark, settings } = useThemeColors();
@@ -55,7 +61,7 @@ export function StreakRemindersSection({
   };
 
   return (
-    <SettingsSection highContrastMode={highContrastMode} title='Notifications'>
+    <SettingsSection collapsible={collapsible} highContrastMode={highContrastMode} isExpanded={isExpanded} title='Notifications' onToggle={onToggleSection}>
       <SettingsRow
         highContrastMode={highContrastMode}
         icon={<Bell color={settings.bell.icon} size={iconSizes.small} />}

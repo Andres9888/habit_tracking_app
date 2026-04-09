@@ -1,6 +1,4 @@
-/**
- * Expand/collapse animation hook for accordion
- */
+/** Shared expand/collapse animation hook for accordion components */
 
 import { useCallback } from 'react';
 import {
@@ -10,7 +8,7 @@ import {
   interpolate,
   Easing,
 } from 'react-native-reanimated';
-import { ANIMATION_DURATION } from './constants';
+import { ANIMATION_DURATIONS } from '@/constants/animations';
 
 interface UseExpandAnimationProps {
   defaultExpanded: boolean;
@@ -30,7 +28,7 @@ export function useExpandAnimation({
 
   const animateToggle = useCallback(
     (newExpanded: boolean) => {
-      const duration = reduceMotion ? 0 : ANIMATION_DURATION;
+      const duration = reduceMotion ? 0 : ANIMATION_DURATIONS.STANDARD;
       const targetValue = newExpanded ? 1 : 0;
       const chevronTarget = newExpanded ? 180 : 0;
 

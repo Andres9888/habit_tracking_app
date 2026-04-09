@@ -1,0 +1,45 @@
+/** CollapsibleSectionCard - Animated accordion card for settings sections */
+import { ReactNode, useCallback } from 'react';
+import { View } from 'react-native';
+import type { ViewStyle } from 'react-native';
+import Animated from 'react-native-reanimated';
+import { SettingsSectionHeader } from './SettingsSectionHeader';
+import { useSettingsSectionAccordion } from './useSettingsSectionAccordion';
+
+interface Props {
+  title: string;
+  subtitle?: string;
+  children: ReactNode;
+  highContrastMode?: boolean;
+  isExpanded?: boolean;
+  onToggle?: () => void;
+  cardStyle: ViewStyle;
+}
+
+export function CollapsibleSectionCard({
+  title, subtitle, children, highContrastMode = false,
+  isExpanded = true, onToggle, cardStyle,
+}: Props) {
+  const accordion = useSettingsSectionAccordion({ isExpanded });
+
+  const handleToggle = useCallback(() => {
+    onToggle?.();
+    accordion.animateToggle(!isExpanded);
+  }, [onToggle, accordion.animateToggle, isExpanded]);
+
+  return (
+    <View className="overflow-hidden rounded-2xl" style={cardStyle}>
+      <SettingsSectionHeader
+        chevronStyle={accordion.chevronAnimatedStyle}
+        highContrastMode={highContrastMode}
+        isExpanded={isExpanded}
+        subtitle={subtitle}
+        title={title}
+        onToggle={handleToggle}
+      />
+      <Animated.View style={accordion.contentAnimatedStyle}>
+        <View onLayout={accordion.handleContentLayout}>{children}</View>
+      </Animated.View>
+    </View>
+  );
+}

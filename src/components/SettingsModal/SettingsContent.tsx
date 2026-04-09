@@ -35,6 +35,7 @@ import { useThemeColors } from '../../theme/ThemeContext';
 import { SORT_LABEL_MAP } from './SortPicker.constants';
 import type { HabitSortMode } from '../../features/habits/types';
 import type { SettingsContentProps } from './types';
+import { useSettingsSectionStates, SECTION_IDS } from './useSettingsSectionStates';
 
 const anim = (delay: number) => FadeInDown.delay(delay).springify().damping(18);
 
@@ -60,6 +61,7 @@ export function SettingsContent(p: SettingsContentProps) {
   }));
 
   const actions = useAccountActions();
+  const { sectionStates, toggleSection } = useSettingsSectionStates();
 
   return (
     <View style={SCROLL_STYLES.wrapper}>
@@ -86,7 +88,7 @@ export function SettingsContent(p: SettingsContentProps) {
 
           {/* Appearance Section */}
           <Animated.View entering={anim(25)}>
-            <SettingsSection highContrastMode={hc} title='Appearance'>
+            <SettingsSection collapsible highContrastMode={hc} isExpanded={sectionStates.appearance} title='Appearance' onToggle={() => toggleSection(SECTION_IDS.appearance)}>
               <SettingsRow
                 highContrastMode={hc}
                 icon={<Rows3 color={settingsIcons.compact.icon} size={iconSizes.small} />}
@@ -152,7 +154,7 @@ export function SettingsContent(p: SettingsContentProps) {
 
           {/* Behavior Section */}
           <Animated.View entering={anim(50)}>
-            <SettingsSection highContrastMode={hc} title='Behavior'>
+            <SettingsSection collapsible highContrastMode={hc} isExpanded={sectionStates.behavior} title='Behavior' onToggle={() => toggleSection(SECTION_IDS.behavior)}>
               <SettingsRow
                 hapticStyle='selection'
                 highContrastMode={hc}
@@ -203,7 +205,7 @@ export function SettingsContent(p: SettingsContentProps) {
 
           {/* Habit Management Section */}
           <Animated.View entering={anim(75)}>
-            <SettingsSection highContrastMode={hc} title='Habit Management'>
+            <SettingsSection collapsible highContrastMode={hc} isExpanded={sectionStates.habitManagement} title='Habit Management' onToggle={() => toggleSection(SECTION_IDS.habitManagement)}>
               <SettingsRow
                 badge={p.archivedHabitsCount}
                 highContrastMode={hc}
@@ -221,23 +223,29 @@ export function SettingsContent(p: SettingsContentProps) {
           {/* Notifications Section */}
           <Animated.View entering={anim(100)}>
             <StreakRemindersSection
+              collapsible
               enabled={p.streakRemindersEnabled}
               highContrastMode={hc}
+              isExpanded={sectionStates.notifications}
               isPremium={p.isPremium}
               reminderTime={p.streakReminderTime}
               onChangeTime={p.onChangeStreakReminderTime}
               onPremiumUpsell={p.onPremiumUpsell}
               onToggle={p.onToggleStreakReminders}
+              onToggleSection={() => toggleSection(SECTION_IDS.notifications)}
             />
           </Animated.View>
 
           {/* Support Section */}
           <Animated.View entering={anim(125)}>
             <AppActions
+              collapsible
               highContrast={hc}
+              isExpanded={sectionStates.support}
               onFeedback={actions.handleFeedback}
               onRate={actions.handleRateApp}
               onShare={actions.handleShare}
+              onToggleSection={() => toggleSection(SECTION_IDS.support)}
               onWhatsNew={actions.handleWhatsNew}
             />
           </Animated.View>
@@ -246,10 +254,13 @@ export function SettingsContent(p: SettingsContentProps) {
           <Animated.View entering={anim(150)}>
             <AboutLegalSection
               buildNumber={Constants.expoConfig?.ios?.buildNumber ?? '1'}
+              collapsible
               highContrast={hc}
+              isExpanded={sectionStates.about}
               version={Constants.expoConfig?.version ?? '1.0.0'}
               onPrivacy={actions.openPrivacy}
               onTerms={actions.openTerms}
+              onToggleSection={() => toggleSection(SECTION_IDS.about)}
             />
           </Animated.View>
         </View>
