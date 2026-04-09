@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Habit Detail — Design Consistency Fixes</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Literata:wght@700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: #1a1a2e;
+    color: #e0e0e0;
+    padding: 32px;
+  }
+  h1 {
+    font-family: 'Literata', serif;
+    font-size: 28px;
+    text-align: center;
+    margin-bottom: 8px;
+    color: #fff;
+  }
+  .subtitle {
+    text-align: center;
+    color: #9CA3AF;
+    font-size: 14px;
+    margin-bottom: 40px;
+  }
+  .comparison-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .section-title {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    color: #fff;
+    margin-bottom: 16px;
+    grid-column: 1 / -1;
+    padding: 12px 16px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 8px;
+    border-left: 3px solid #059669;
+  }
+  .section-title .tag {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 9999px;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+  .tag-high { background: #7f1d1d; color: #fca5a5; }
+  .tag-medium { background: #78350f; color: #fde68a; }
+  .tag-low { background: #1e3a5f; color: #93c5fd; }
+  .card {
+    border-radius: 16px;
+    padding: 20px;
+    position: relative;
+  }
+  .card-label {
+    position: absolute;
+    top: -10px;
+    left: 16px;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 10px;
+    border-radius: 9999px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .before { background: #1c1917; }
+  .before .card-label { background: #dc2626; color: #fff; }
+  .after-light { background: #F5F1ED; }
+  .after-light .card-label { background: #059669; color: #fff; }
+  .after-dark { background: #111827; }
+  .after-dark .card-label { background: #34D399; color: #111827; }
+
+  /* ===== P1: Strength Section ===== */
+  .strength-card {
+    border-radius: 16px;
+    padding: 20px;
+    margin-top: 8px;
+  }
+  .strength-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+  .strength-title-before {
+    font-size: 18px;
+    font-weight: 700;
+    /* Tailwind text-lg font-bold — uses system font, not DM Sans */
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+  .strength-title-after {
+    /* typography.heading3 — DM Sans 20px semibold */
+    font-family: 'DM Sans', sans-serif;
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: -0.2px;
+    line-height: 26px;
+  }
+  .time-toggle {
+    display: flex;
+    gap: 2px;
+    background: rgba(0,0,0,0.06);
+    border-radius: 6px;
+    padding: 2px;
+  }
+  .time-btn {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    background: transparent;
+  }
+  .time-btn.active-light { background: #fff; color: #2D2A26; }
+  .time-btn.active-dark { background: #1F2937; color: #F9FAFB; }
+
+  .hero-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+  .ring-wrap {
+    width: 64px;
+    height: 64px;
+    position: relative;
+    flex-shrink: 0;
+  }
+  .ring-track {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    border: 5px solid;
+  }
+  .ring-fill {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 5px solid transparent;
+    border-top-color: #10b981;
+    border-right-color: #10b981;
+    transform: rotate(45deg);
+  }
+  .ring-pct {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    font-weight: 700;
+  }
+  .strength-badge {
+    font-size: 13px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 9999px;
+    display: inline-block;
+    margin-bottom: 4px;
+  }
+  .delta-row {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 13px;
+  }
+  .stats-row {
+    display: flex;
+    border-radius: 8px;
+    padding: 8px 12px;
+  }
+  .stat-col {
+    flex: 1;
+    text-align: center;
+  }
+  .stat-label {
+    font-size: 10px;
+    font-weight: 500;
+  }
+  .stat-value {
+    font-size: 14px;
+    font-weight: 600;
+  }
+  .stat-divider {
+    width: 1px;
+    height: 24px;
+    align-self: center;
+  }
+
+  /* ===== P2: Tab Indicator ===== */
+  .tabs-container {
+    border-radius: 8px;
+    padding: 4px;
+    display: flex;
+    position: relative;
+    margin-top: 12px;
+  }
+  .tab-indicator {
+    position: absolute;
+    top: 4px;
+    bottom: 4px;
+    width: calc(50% - 4px);
+    border-radius: 6px;
+    left: 4px;
+  }
+  .tab-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    position: relative;
+    z-index: 1;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+  }
+
+  /* ===== P4: Quick Stats ===== */
+  .quick-stats {
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    margin-top: 8px;
+    padding: 12px 0;
+  }
+  .qs-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .qs-emoji-wrap {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+  }
+  .qs-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 20px;
+    font-weight: 700;
+  }
+  .qs-label {
+    font-weight: 500;
+  }
+  .qs-label-before { font-size: 11px; } /* off-grid */
+  .qs-label-after { font-size: 10px; line-height: 12px; } /* typography.tabBar */
+  .qs-gap-before { gap: 2px; }
+  .qs-gap-after { gap: 4px; }
+  .qs-divider {
+    width: 1px;
+    height: 32px;
+  }
+
+  /* ===== Annotations ===== */
+  .annotation {
+    font-size: 11px;
+    color: #9CA3AF;
+    margin-top: 8px;
+    padding: 6px 10px;
+    background: rgba(255,255,255,0.03);
+    border-radius: 6px;
+    border-left: 2px solid #374151;
+    line-height: 1.5;
+  }
+  .annotation code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    background: rgba(255,255,255,0.08);
+    padding: 1px 4px;
+    border-radius: 3px;
+    color: #fde68a;
+  }
+  .annotation .strike {
+    text-decoration: line-through;
+    color: #ef4444;
+  }
+  .annotation .new {
+    color: #34D399;
+  }
+
+  /* Full-width sections */
+  .full-width { grid-column: 1 / -1; }
+  .triple-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+  }
+</style>
+</head>
+<body>
+
+<h1>Habit Detail Screen — Design Consistency Fixes</h1>
+<p class="subtitle">Before → After (Light) → After (Dark) &nbsp;·&nbsp; 14 files, 7 fixes</p>
+
+<!-- ============ P1: Strength Section ============ -->
+<div class="comparison-grid" style="max-width: 1200px;">
+
+<div class="section-title full-width">
+  P1: HabitStrengthSection — Hardcoded Colors → Theme Tokens
+  <span class="tag tag-high">HIGH</span>
+</div>
+
+<div class="full-width triple-grid">
+
+  <!-- BEFORE -->
+  <div class="card before">
+    <span class="card-label">Before</span>
+    <div class="strength-card" style="background: #ffffff;">
+      <div class="strength-header">
+        <span class="strength-title-before" style="color: #1c1917;">Habit Strength</span>
+        <div class="time-toggle">
+          <button class="time-btn active-light">1M</button>
+          <button class="time-btn" style="color: #78716c;">3M</button>
+          <button class="time-btn" style="color: #78716c;">1Y</button>
+        </div>
+      </div>
+      <div class="hero-row">
+        <div class="ring-wrap">
+          <div class="ring-track" style="border-color: #f5f5f4;"></div>
+          <div class="ring-fill"></div>
+          <div class="ring-pct" style="color: #1c1917;">72%</div>
+        </div>
+        <div>
+          <div class="strength-badge" style="background: #ecfdf5; color: #10b981;">Strong</div>
+          <div class="delta-row">
+            <span style="color: #15793C;">↑ +12%</span>
+            <span style="color: #78716c;">vs last month</span>
+          </div>
+        </div>
+      </div>
+      <div class="stats-row" style="background: #f5f5f4;">
+        <div class="stat-col"><div class="stat-label" style="color: #a8a29e;">Since Start</div><div class="stat-value" style="color: #15793C;">72%</div></div>
+        <div class="stat-divider" style="background: #e7e5e4;"></div>
+        <div class="stat-col"><div class="stat-label" style="color: #a8a29e;">Last Month</div><div class="stat-value" style="color: #1c1917;">+12%</div></div>
+        <div class="stat-divider" style="background: #e7e5e4;"></div>
+        <div class="stat-col"><div class="stat-label" style="color: #a8a29e;">Last Week</div><div class="stat-value" style="color: #1c1917;">+3%</div></div>
+      </div>
+    </div>
+    <div class="annotation">
+      Stone grays: <code class="strike">#1c1917</code> <code class="strike">#78716c</code> <code class="strike">#a8a29e</code><br>
+      Font: <code class="strike">text-lg font-bold</code> (system sans-serif 18px)<br>
+      Ring track: <code class="strike">#f5f5f4</code> · Borders: <code class="strike">#e7e5e4</code>
+    </div>
+  </div>
+
+  <!-- AFTER LIGHT -->
+  <div class="card after-light">
+    <span class="card-label">After (Light)</span>
+    <div class="strength-card" style="background: #EDEAE5;">
+      <div class="strength-header">
+        <span class="strength-title-after" style="color: #2D2A26;">Habit Strength</span>
+        <div class="time-toggle">
+          <button class="time-btn active-light">1M</button>
+          <button class="time-btn" style="color: #6B6560;">3M</button>
+          <button class="time-btn" style="color: #6B6560;">1Y</button>
+        </div>
+      </div>
+      <div class="hero-row">
+        <div class="ring-wrap">
+          <div class="ring-track" style="border-color: #FAF8F5;"></div>
+          <div class="ring-fill"></div>
+          <div class="ring-pct" style="color: #2D2A26;">72%</div>
+        </div>
+        <div>
+          <div class="strength-badge" style="background: #D1FAE5; color: #059669;">Strong</div>
+          <div class="delta-row">
+            <span style="color: #047857;">↑ +12%</span>
+            <span style="color: #6B6560;">vs last month</span>
+          </div>
+        </div>
+      </div>
+      <div class="stats-row" style="background: #F5F1ED;">
+        <div class="stat-col"><div class="stat-label" style="color: #6E6660;">Since Start</div><div class="stat-value" style="color: #047857;">72%</div></div>
+        <div class="stat-divider" style="background: #DDD8D2;"></div>
+        <div class="stat-col"><div class="stat-label" style="color: #6E6660;">Last Month</div><div class="stat-value" style="color: #2D2A26;">+12%</div></div>
+        <div class="stat-divider" style="background: #DDD8D2;"></div>
+        <div class="stat-col"><div class="stat-label" style="color: #6E6660;">Last Week</div><div class="stat-value" style="color: #2D2A26;">+3%</div></div>
+      </div>
+    </div>
+    <div class="annotation">
+      Warm palette: <code class="new">colors.text.primary #2D2A26</code><br>
+      Font: <code class="new">typography.heading3</code> (DM Sans 20px 600)<br>
+      Ring: <code class="new">colors.gray[50]</code> · Border: <code class="new">colors.border</code>
+    </div>
+  </div>
+
+  <!-- AFTER DARK -->
+  <div class="card after-dark">
+    <span class="card-label">After (Dark)</span>
+    <div class="strength-card" style="background: #1F2937;">
+      <div class="strength-header">
+        <span class="strength-title-after" style="color: #F9FAFB;">Habit Strength</span>
+        <div class="time-toggle" style="background: rgba(255,255,255,0.06);">
+          <button class="time-btn active-dark">1M</button>
+          <button class="time-btn" style="color: #9CA3AF;">3M</button>
+          <button class="time-btn" style="color: #9CA3AF;">1Y</button>
+        </div>
+      </div>
+      <div class="hero-row">
+        <div class="ring-wrap">
+          <div class="ring-track" style="border-color: #111827;"></div>
+          <div class="ring-fill" style="border-top-color: #34D399; border-right-color: #34D399;"></div>
+          <div class="ring-pct" style="color: #F9FAFB;">72%</div>
+        </div>
+        <div>
+          <div class="strength-badge" style="background: rgba(5,150,105,0.15); color: #34D399;">Strong</div>
+          <div class="delta-row">
+            <span style="color: #6EE7B7;">↑ +12%</span>
+            <span style="color: #9CA3AF;">vs last month</span>
+          </div>
+        </div>
+      </div>
+      <div class="stats-row" style="background: #111827;">
+        <div class="stat-col"><div class="stat-label" style="color: #8E95A2;">Since Start</div><div class="stat-value" style="color: #6EE7B7;">72%</div></div>
+        <div class="stat-divider" style="background: #374151;"></div>
+        <div class="stat-col"><div class="stat-label" style="color: #8E95A2;">Last Month</div><div class="stat-value" style="color: #F9FAFB;">+12%</div></div>
+        <div class="stat-divider" style="background: #374151;"></div>
+        <div class="stat-col"><div class="stat-label" style="color: #8E95A2;">Last Week</div><div class="stat-value" style="color: #F9FAFB;">+3%</div></div>
+      </div>
+    </div>
+    <div class="annotation">
+      Dark mode now works: <code class="new">colors.text.primary #F9FAFB</code><br>
+      Badges: <code class="new">colors.status.successLight rgba</code><br>
+      Dividers: <code class="new">colors.border #374151</code>
+    </div>
+  </div>
+</div>
+
+<!-- ============ P2: Tab Indicator ============ -->
+<div class="section-title full-width" style="margin-top: 24px;">
+  P2: DetailViewTabs — Pure White Indicator → Warm Off-White
+  <span class="tag tag-medium">MEDIUM</span>
+</div>
+
+<!-- Before -->
+<div class="card before">
+  <span class="card-label">Before</span>
+  <div style="padding: 16px;">
+    <div class="tabs-container" style="background: #DDD8D2;">
+      <div class="tab-indicator" style="background: #FFFFFF; box-shadow: 0 2px 8px rgba(0,0,0,0.06);"></div>
+      <div class="tab-btn" style="color: #059669;">📅 Calendar</div>
+      <div class="tab-btn" style="color: #6E6660;">📊 Strength</div>
+    </div>
+    <div class="annotation" style="margin-top: 12px;">
+      Indicator: <code class="strike">#FFFFFF</code> — harsh pure white on warm parchment
+    </div>
+  </div>
+</div>
+
+<!-- After -->
+<div class="card after-light">
+  <span class="card-label">After (Light)</span>
+  <div style="padding: 16px;">
+    <div class="tabs-container" style="background: #DDD8D2;">
+      <div class="tab-indicator" style="background: #FAF8F5; box-shadow: 0 2px 8px rgba(5,150,105,0.06);"></div>
+      <div class="tab-btn" style="color: #059669;">📅 Calendar</div>
+      <div class="tab-btn" style="color: #6E6660;">📊 Strength</div>
+    </div>
+    <div class="annotation" style="margin-top: 12px;">
+      Indicator: <code class="new">colors.gray[50] #FAF8F5</code> — warm, blends with palette
+    </div>
+  </div>
+</div>
+
+<!-- ============ P4: QuickStats ============ -->
+<div class="section-title full-width" style="margin-top: 24px;">
+  P4: QuickStatsRow — Off-Grid Values → Token-Aligned
+  <span class="tag tag-low">LOW</span>
+</div>
+
+<!-- Before -->
+<div class="card before">
+  <span class="card-label">Before</span>
+  <div class="quick-stats" style="background: #EDEAE5;">
+    <div class="qs-col qs-gap-before">
+      <div class="qs-emoji-wrap" style="background: #D1FAE5;">🔥</div>
+      <div class="qs-value" style="color: #047857;">5</div>
+      <div class="qs-label qs-label-before" style="color: #6E6660;">streak</div>
+    </div>
+    <div class="qs-divider" style="background: #DDD8D2;"></div>
+    <div class="qs-col qs-gap-before">
+      <div class="qs-emoji-wrap">⭐</div>
+      <div class="qs-value" style="color: #2D2A26;">12</div>
+      <div class="qs-label qs-label-before" style="color: #6E6660;">best streak</div>
+    </div>
+    <div class="qs-divider" style="background: #DDD8D2;"></div>
+    <div class="qs-col qs-gap-before">
+      <div class="qs-emoji-wrap">📅</div>
+      <div class="qs-value" style="color: #2D2A26;">89</div>
+      <div class="qs-label qs-label-before" style="color: #6E6660;">completions</div>
+    </div>
+  </div>
+  <div class="annotation">
+    <code class="strike">gap: 2px</code> · <code class="strike">fontSize: 11px</code> · <code class="strike">marginBottom: 2px</code> — off-grid
+  </div>
+</div>
+
+<!-- After -->
+<div class="card after-light">
+  <span class="card-label">After</span>
+  <div class="quick-stats" style="background: #EDEAE5;">
+    <div class="qs-col qs-gap-after">
+      <div class="qs-emoji-wrap" style="background: #D1FAE5; margin-bottom: 4px;">🔥</div>
+      <div class="qs-value" style="color: #047857;">5</div>
+      <div class="qs-label qs-label-after" style="color: #6E6660;">streak</div>
+    </div>
+    <div class="qs-divider" style="background: #DDD8D2;"></div>
+    <div class="qs-col qs-gap-after">
+      <div class="qs-emoji-wrap" style="margin-bottom: 4px;">⭐</div>
+      <div class="qs-value" style="color: #2D2A26;">12</div>
+      <div class="qs-label qs-label-after" style="color: #6E6660;">best streak</div>
+    </div>
+    <div class="qs-divider" style="background: #DDD8D2;"></div>
+    <div class="qs-col qs-gap-after">
+      <div class="qs-emoji-wrap" style="margin-bottom: 4px;">📅</div>
+      <div class="qs-value" style="color: #2D2A26;">89</div>
+      <div class="qs-label qs-label-after" style="color: #6E6660;">completions</div>
+    </div>
+  </div>
+  <div class="annotation">
+    <code class="new">gap: spacing.xs (4px)</code> · <code class="new">typography.tabBar (10px)</code> · <code class="new">marginBottom: spacing.xs</code>
+  </div>
+</div>
+
+<!-- ============ P5: Modal Props ============ -->
+<div class="section-title full-width" style="margin-top: 24px;">
+  P5: Modal Presentation + P6: DetailHero Token + P7: Shadow Alignment
+  <span class="tag tag-low">LOW</span>
+</div>
+
+<div class="card full-width" style="background: #1F2937; padding: 24px;">
+  <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px;">
+    <div>
+      <div style="font-weight: 600; color: #F9FAFB; margin-bottom: 8px; font-size: 13px;">P5: Modal Props</div>
+      <div class="annotation" style="margin-top: 0;">
+        Added <code class="new">presentationStyle='overFullScreen'</code><br>
+        Added <code class="new">statusBarTranslucent</code><br>
+        Matches Settings, Archive, and Sort modals
+      </div>
+    </div>
+    <div>
+      <div style="font-weight: 600; color: #F9FAFB; margin-bottom: 8px; font-size: 13px;">P6: DetailHero marginTop</div>
+      <div class="annotation" style="margin-top: 0;">
+        Schedule text: <code class="strike">marginTop: 4</code><br>
+        Now: <code class="new">marginTop: spacing.xs</code><br>
+        Same value (4px), now references token
+      </div>
+    </div>
+    <div>
+      <div style="font-weight: 600; color: #F9FAFB; margin-bottom: 8px; font-size: 13px;">P7: Hero Icon Shadow</div>
+      <div class="annotation" style="margin-top: 0;">
+        <code class="strike">custom { opacity: 0.15, height: 6 }</code><br>
+        Now: <code class="new">shadows.floatingActionButton</code><br>
+        Aligned to shadow system preset
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Summary -->
+<div class="full-width" style="margin-top: 32px; text-align: center; padding: 24px; background: rgba(5,150,105,0.08); border-radius: 16px; border: 1px solid rgba(5,150,105,0.2);">
+  <div style="font-family: 'Literata', serif; font-size: 20px; color: #34D399; margin-bottom: 8px;">14 files · 7 fixes · 0 new components</div>
+  <div style="color: #9CA3AF; font-size: 13px;">All colors now flow through <code style="font-family: 'JetBrains Mono'; font-size: 11px; background: rgba(255,255,255,0.08); padding: 2px 6px; border-radius: 4px; color: #34D399;">useThemeColors()</code> → dark mode works everywhere</div>
+</div>
+
+</div>
+
+</body>
+</html>
