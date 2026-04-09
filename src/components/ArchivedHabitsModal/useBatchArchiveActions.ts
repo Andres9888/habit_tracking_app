@@ -1,6 +1,7 @@
 import { Alert } from 'react-native';
 import type { Id } from '../../../convex/_generated/dataModel';
 import { triggerHaptic } from '@/utils/haptics';
+import { cancelHabitReminder } from '@/utils/notifications';
 
 type MutationFn = (args: { habitId: Id<'habits'> }) => Promise<unknown>;
 
@@ -31,6 +32,7 @@ export function useBatchArchiveActions(
         {
           onPress: async () => {
             try {
+              await Promise.all([...ids].map((id) => cancelHabitReminder(String(id))));
               await Promise.all([...ids].map((habitId) => removeHabit({ habitId })));
               triggerHaptic('success');
             } catch (error) {
