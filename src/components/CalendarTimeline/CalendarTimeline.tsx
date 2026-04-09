@@ -82,7 +82,12 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
           </View>
         </GestureDetector>
         <View style={{ paddingHorizontal: 40 }}>
-          <StripNav canNavigateForward={canNavigateForward}>
+          <StripNav
+            canNavigateForward={canNavigateForward}
+            onNextWeek={onNextWeek}
+            onPreviousWeek={onPreviousWeek}
+            reduceMotion={reduceMotion}
+          >
             <DayStrip
               augmentedColors={tl.augmentedColors}
               completionCounts={tl.completionCounts}
