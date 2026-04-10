@@ -11,6 +11,7 @@ import type {
 } from './CalendarTimeline.types';
 import { colors } from '../../theme/colors';
 import { darkColors } from '../../theme/darkColors';
+import { shadows } from '../../theme/spacing';
 
 import { getCalendarTimelineColors } from './theme';
 
@@ -64,13 +65,10 @@ export const getTodayHighlight = (isDark: boolean) =>
 export const getFutureDateTextColor = (isDark: boolean) =>
   isDark ? darkColors.gray[400] : colors.gray[300];
 
-/** Today cell shadow (same for both themes) */
+/** Today cell shadow — based on shadows.subtle with slightly higher opacity */
 export const TODAY_SHADOW = {
-  elevation: 2,
-  shadowColor: colors.gray[800],
-  shadowOffset: { height: 2, width: 0 },
-  shadowOpacity: 0.15,
-  shadowRadius: 4,
+  ...shadows.subtle,
+  shadowOpacity: 0.08,
 };
 
 /** Theme-aware completion dot glow */

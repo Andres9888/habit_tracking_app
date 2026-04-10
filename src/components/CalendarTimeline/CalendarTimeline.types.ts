@@ -45,6 +45,8 @@ export interface CalendarTimelineProps {
   onUpgrade?: () => void;
   /** Completion icon style — 'chain' shows link icon, 'checkbox' shows checkmark */
   completionIcon?: 'chain' | 'checkbox';
+  /** Compact mode — tighter vertical padding to match compact habit cards */
+  compact?: boolean;
 }
 
 export type CompletionStatus = 'complete' | 'partial' | 'none' | 'future';
