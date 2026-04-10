@@ -66,9 +66,8 @@ function SettingsModalContent({
   const handleSortSelect = useCallback(
     (mode: HabitSortMode) => {
       void setHabitSortMode(mode);
-      setView('settings');
     },
-    [setHabitSortMode, setView]
+    [setHabitSortMode]
   );
 
   if (view === 'archived') {
