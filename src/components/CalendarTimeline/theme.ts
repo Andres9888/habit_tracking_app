@@ -88,6 +88,14 @@ export function getCalendarTimelineColors(
 }
 
 /**
+ * Date pill colors for WeekNavRow (derived from primary[600] with opacity)
+ */
+export const getDatePillColors = (isDark: boolean) => ({
+  backgroundColor: isDark ? 'rgba(5,150,105,0.08)' : 'rgba(5,150,105,0.06)',
+  borderColor: isDark ? 'rgba(5,150,105,0.20)' : 'rgba(5,150,105,0.15)',
+});
+
+/**
  * Export individual themes for direct access if needed
  */
 export const CALENDAR_THEMES = {

@@ -14,6 +14,7 @@ import { useThemeColors } from '../../../theme/ThemeContext';
 import { durations } from '../../../theme/animations';
 import { fontFamilies, fontWeights } from '../../../theme/typography';
 import { borderRadius } from '../../../theme/spacing';
+import { getDatePillColors } from '../theme';
 
 interface WeekNavRowProps {
   monthName: string;
@@ -74,18 +75,7 @@ export const WeekNavRow: React.FC<WeekNavRowProps> = ({
         onPress={onDateRangePress}
       >
         <View
-          style={[
-            s.pill,
-            {
-              /* Intentional rgba — derived from primary[600] (#059669) with opacity */
-              backgroundColor: isDark
-                ? 'rgba(5,150,105,0.08)'
-                : 'rgba(5,150,105,0.06)',
-              borderColor: isDark
-                ? 'rgba(5,150,105,0.20)'
-                : 'rgba(5,150,105,0.15)',
-            },
-          ]}
+          style={[s.pill, getDatePillColors(isDark)]}
         >
           <Calendar
             color={isDark ? palette.primary[500] : palette.primary[600]}

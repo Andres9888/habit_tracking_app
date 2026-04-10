@@ -29,4 +29,5 @@ export interface HabitsListHeaderProps {
   onNextWeek: () => void;
   onPreviousWeek: () => void;
   onUpgradePress: () => void;
+  compactView?: boolean;
 }
