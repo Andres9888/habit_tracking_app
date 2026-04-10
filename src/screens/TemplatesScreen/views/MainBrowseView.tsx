@@ -15,6 +15,8 @@ import { styles } from '../../templates/templatesScreenStyles';
 import { QuickFilterChips, SearchBar } from '../components';
 import { FeaturedCollection } from '../components/FeaturedCollection';
 import { PopularSection } from '../components/PopularSection';
+import { StartHereCard } from '../components/StartHereCard';
+import { GoalCollectionGrid } from '../components/GoalCollectionGrid';
 import type { MainBrowseViewProps } from './MainBrowseView.types';
 
 const stagger = (index: number) =>
@@ -53,10 +55,20 @@ export function MainBrowseView(p: MainBrowseViewProps) {
           paddingTop: spacing.md,
         }}
       >
-        <Animated.View entering={stagger(0)}>
+        {p.isNewUser && p.onStartHerePress && (
+          <Animated.View entering={stagger(0)}>
+            <StartHereCard onPress={p.onStartHerePress} />
+          </Animated.View>
+        )}
+        {p.onGoalSelect && (
+          <Animated.View entering={stagger(p.isNewUser ? 1 : 0)}>
+            <GoalCollectionGrid onSelectGoal={p.onGoalSelect} />
+          </Animated.View>
+        )}
+        <Animated.View entering={stagger(p.isNewUser ? 2 : 1)}>
           <FeaturedCollection habitCount={p.featuredHabitCount} onPress={p.onFeaturedPress} />
         </Animated.View>
-        <Animated.View entering={stagger(1)}>
+        <Animated.View entering={stagger(p.isNewUser ? 3 : 2)}>
           <PopularSection
             importedTemplateIds={p.importedTemplateIds}
             importingTemplateId={p.importingTemplateId}
@@ -66,13 +78,13 @@ export function MainBrowseView(p: MainBrowseViewProps) {
             onSeeAll={p.onSeeAll}
           />
         </Animated.View>
-        <Animated.View entering={stagger(2)}>
+        <Animated.View entering={stagger(p.isNewUser ? 4 : 3)}>
           {p.categoryGrid}
         </Animated.View>
-        <Animated.View entering={stagger(3)}>
+        <Animated.View entering={stagger(p.isNewUser ? 5 : 4)}>
           {p.premiumPacksSection}
         </Animated.View>
-        <Animated.View entering={stagger(4)}>
+        <Animated.View entering={stagger(p.isNewUser ? 6 : 5)}>
           {p.exploreAllSection}
         </Animated.View>
       </ScrollView>

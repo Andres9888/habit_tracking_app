@@ -3,25 +3,61 @@
  * Browse and import science-backed habit templates
  */
 
-import { useMemo } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
-import type { Doc } from '../../../convex/_generated/dataModel';
+import type { Doc, Id } from '../../../convex/_generated/dataModel';
 import { CategoryGrid } from './components/CategoryGrid';
 import { ExploreAllSection, useGroupedTemplates } from './components/ExploreAllSection';
 import { getTimeAwareFeatured } from './components/FeaturedCollection/featuredCollections';
 import { PremiumPacksSection } from './components/PremiumPacksSection';
 import { TemplatesEmptyState } from './components/TemplatesEmptyState';
 import { TemplatesScreenModals } from './components';
+import { PostImportSetupSheet } from '../templates/PostImportSetupSheet';
 import { useTemplatesScreenProps } from './hooks/useTemplatesScreenProps';
 import { FeedbackOverlays } from './views/FeedbackOverlays';
 import { MainBrowseView } from './views/MainBrowseView';
 import { renderCategorySearch } from './views/renderCategorySearch';
 import { renderSubView } from './views/renderSubView';
+import type { GoalCollection } from './data/goalCollections';
 
 function TemplatesScreenContent() {
-  const props = useTemplatesScreenProps();
+  // Post-import setup state
+  const [setupHabitId, setSetupHabitId] = useState<Id<'habits'> | null>(null);
+  const [setupTemplate, setSetupTemplate] = useState<Doc<'templates'> | null>(null);
+  const [showSetupSheet, setShowSetupSheet] = useState(false);
+
+  const handlePostImportSetup = useCallback(
+    (habitId: Id<'habits'>, template: Doc<'templates'>) => {
+      setSetupHabitId(habitId);
+      setSetupTemplate(template);
+      setShowSetupSheet(true);
+    },
+    []
+  );
+
+  const props = useTemplatesScreenProps({ onPostImportSetup: handlePostImportSetup });
   const { data, handlers, mainBrowseData, packConfirm, state, viewNav } = props;
   const { groups, totalCount } = useGroupedTemplates(data.allTemplates);
+
+  const handleCloseSetupSheet = useCallback(() => {
+    setShowSetupSheet(false);
+    setSetupHabitId(null);
+    setSetupTemplate(null);
+  }, []);
+
+  const handleGoalSelect = useCallback(
+    (goal: GoalCollection) => {
+      // Filter to the first category in the goal's list
+      handlers.handleSelectCategory(goal.categories[0]);
+    },
+    [handlers]
+  );
+
+  const handleStartHerePress = useCallback(() => {
+    // Show morning_routine as a good default for beginners
+    handlers.handleSelectCategory('morning_routine');
+  }, [handlers]);
+
   const featuredHabitCount = useMemo(() => {
     const categoryId = getTimeAwareFeatured().categoryId;
     return data.allTemplates?.filter((t) => t.category === categoryId).length ?? 0;
@@ -41,6 +77,7 @@ function TemplatesScreenContent() {
   const handleSelectCategory = (categoryId: string | null) => {
     handlers.handleSelectCategory(categoryId ?? 'all');
   };
+  const isNewUser = (data.userHabitCount ?? 0) <= 1;
 
   if (!data.isLoading && !data.allTemplates?.length) {
     return (
@@ -64,7 +101,11 @@ function TemplatesScreenContent() {
   if (subView) return subView;
 
   return (
+  <>
     <MainBrowseView
+      isNewUser={isNewUser}
+      onGoalSelect={handleGoalSelect}
+      onStartHerePress={handleStartHerePress}
       categoryGrid={
         <CategoryGrid
           categories={mainBrowseData.categoryList}
@@ -140,6 +181,13 @@ function TemplatesScreenContent() {
         state.selectedCategory === 'all' ? null : state.selectedCategory
       }
     />
+    <PostImportSetupSheet
+      habitId={setupHabitId}
+      template={setupTemplate}
+      visible={showSetupSheet}
+      onClose={handleCloseSetupSheet}
+    />
+  </>
   );
 }
 

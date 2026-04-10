@@ -19,8 +19,10 @@ export const importTemplate = mutation({
   args: {
     customizations: v.optional(
       v.object({
+        daysOfWeek: v.optional(v.array(v.number())),
         iconColor: v.optional(v.string()),
         name: v.optional(v.string()),
+        preferredTime: v.optional(v.string()),
         reminderTime: v.optional(v.string()),
       })
     ),
@@ -119,6 +121,9 @@ export const importTemplate = mutation({
       consecutiveDays: 0,
       createdAt: Date.now(),
       currentStreak: 0,
+      ...(args.customizations?.daysOfWeek
+        ? { daysOfWeek: args.customizations.daysOfWeek }
+        : {}),
       frequency: template.frequency,
       icon: template.icon,
       iconColor: validatedIconColor,
@@ -126,6 +131,9 @@ export const importTemplate = mutation({
       notes:
         template.description + '\n\nSource: ' + template.scientificReference,
       order: maxOrder + 1,
+      ...(args.customizations?.preferredTime
+        ? { preferredTime: args.customizations.preferredTime }
+        : {}),
       remindersEnabled: !!validatedReminderTime,
       reminderTime: validatedReminderTime,
       strength: 0,

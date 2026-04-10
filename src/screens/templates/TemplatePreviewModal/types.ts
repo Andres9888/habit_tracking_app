@@ -6,8 +6,10 @@ import type { Doc, Id } from '../../../../convex/_generated/dataModel';
 
 /** Customization options when importing a template */
 export interface TemplateCustomizations {
+  daysOfWeek?: number[];
   iconColor?: string;
   name?: string;
+  preferredTime?: string;
   reminderTime?: string;
 }
 
