@@ -89,7 +89,7 @@ export function SettingsRow({
 
   const content = (
     <View
-      className={`flex-row items-center px-4 py-4 ${showBorder ? 'border-b' : ''}`}
+      className={`flex-row ${subtitle ? 'items-start' : 'items-center'} px-4 py-4 ${showBorder ? 'border-b' : ''}`}
       style={{
         backgroundColor: colors.background,
         borderColor: showBorder ? colors.border : undefined,
