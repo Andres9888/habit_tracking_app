@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sort Bottom Sheet — Visual Refresh</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    /* Light mode — warm minimal palette */
+    --background: #F5F1ED;
+    --surface: #EDEAE5;
+    --card: #EDEAE5;
+    --border: #DDD8D2;
+    --text-primary: #2D2A26;
+    --text-secondary: #6B6560;
+    --text-tertiary: #6E6660;
+    --primary-100: #D1FAE5;
+    --primary-300: #6EE7B7;
+    --primary-400: #34D399;
+    --primary-500: #10B981;
+    --primary-600: #059669;
+    --primary-700: #047857;
+    --gray-50: #FAF8F5;
+    --gray-100: #F5F1ED;
+    --gray-200: #DDD8D2;
+    --gray-300: #C4BFB7;
+    --gray-500: #6B6560;
+    --gray-600: #524D47;
+    --success-light: #D1FAE5;
+    --shadow-color: #2D2A26;
+  }
+
+  .dark {
+    --background: #111827;
+    --surface: #1F2937;
+    --card: #1F2937;
+    --border: #374151;
+    --text-primary: #F9FAFB;
+    --text-secondary: #9CA3AF;
+    --text-tertiary: #8E95A2;
+    --primary-100: #064E3B;
+    --primary-300: #059669;
+    --primary-400: #10B981;
+    --primary-500: #34D399;
+    --primary-600: #6EE7B7;
+    --primary-700: #A7F3D0;
+    --gray-50: #111827;
+    --gray-100: #1F2937;
+    --gray-200: #374151;
+    --gray-300: #4B5563;
+    --gray-500: #9CA3AF;
+    --gray-600: #D1D5DB;
+    --success-light: rgba(5,150,105,0.15);
+    --shadow-color: #000000;
+  }
+
+  body {
+    font-family: 'DM Sans', -apple-system, sans-serif;
+    background: #1a1a2e;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 40px;
+    padding: 40px 20px;
+    min-height: 100vh;
+    flex-wrap: wrap;
+  }
+
+  .mode-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: #9CA3AF;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    text-align: center;
+    margin-bottom: 16px;
+  }
+
+  .phone-frame {
+    width: 390px;
+    min-height: 700px;
+    border-radius: 44px;
+    overflow: hidden;
+    position: relative;
+    border: 3px solid #333;
+    background: var(--background);
+  }
+
+  .phone-content {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+
+  /* Backdrop */
+  .backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    z-index: 1;
+  }
+
+  /* Bottom Sheet */
+  .sheet {
+    position: relative;
+    z-index: 2;
+    background: var(--surface);
+    border-radius: 24px 24px 0 0;
+    padding-bottom: 34px; /* safe area */
+    box-shadow:
+      0 8px 24px 0 color-mix(in srgb, var(--shadow-color) 10%, transparent);
+  }
+
+  /* Drag Handle */
+  .drag-handle {
+    display: flex;
+    justify-content: center;
+    padding: 12px 0;
+  }
+  .drag-handle-bar {
+    width: 40px;
+    height: 4px;
+    border-radius: 9999px;
+    background: var(--gray-300);
+  }
+
+  /* Header */
+  .sheet-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px 16px;
+  }
+  .sheet-title {
+    font-size: 17px;
+    font-weight: 600;
+    letter-spacing: 0.08px;
+    line-height: 24px;
+    color: var(--text-primary);
+  }
+  .close-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 9999px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.1s ease;
+  }
+  .close-btn:active { transform: scale(0.95); }
+  .close-btn svg { color: var(--text-secondary); }
+
+  /* Quick Pick Chips */
+  .chips-row {
+    display: flex;
+    gap: 8px;
+    padding: 0 20px;
+    margin-bottom: 16px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .chips-row::-webkit-scrollbar { display: none; }
+
+  .chip {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border-radius: 9999px;
+    min-height: 44px;
+    background: var(--card);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: transform 0.1s ease;
+    border: 1px solid transparent;
+  }
+  .chip:active { transform: scale(0.95); }
+  .chip.selected {
+    background: var(--primary-600);
+    border-color: transparent;
+  }
+  .chip-label {
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.12px;
+    line-height: 18px;
+    color: var(--text-primary);
+  }
+  .chip.selected .chip-label { color: #FFFFFF; }
+  .chip svg { color: var(--text-secondary); width: 16px; height: 16px; }
+  .chip.selected svg { color: #FFFFFF; }
+
+  /* Sort Options List */
+  .options-list {
+    padding: 0 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .sort-option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: transform 0.1s ease;
+    border: 1px solid transparent;
+    background: transparent;
+  }
+  .sort-option:active { transform: scale(0.98); }
+  .sort-option.selected {
+    background: var(--success-light);
+    border-color: var(--primary-300);
+  }
+
+  .icon-wrap {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .icon-wrap svg { color: #FFFFFF; width: 20px; height: 20px; }
+  .icon-wrap.gray { background: linear-gradient(135deg, #6B6560, #524D47); }
+  .icon-wrap.green { background: linear-gradient(135deg, #34D399, #10B981); }
+  .icon-wrap.flame { background: linear-gradient(135deg, #ef4444, #f97316); }
+
+  .option-text {
+    flex: 1;
+    min-width: 0;
+  }
+  .option-title {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 20px;
+    color: var(--text-primary);
+  }
+  .option-desc {
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: 0.12px;
+    line-height: 18px;
+    color: var(--text-secondary);
+  }
+
+  .check-badge {
+    width: 24px;
+    height: 24px;
+    border-radius: 9999px;
+    background: var(--primary-500);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .check-badge svg { color: #FFFFFF; width: 16px; height: 16px; }
+
+  /* Toggle */
+  .toggle-bar {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    gap: 8px;
+    z-index: 100;
+  }
+  .toggle-btn {
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: 1px solid #374151;
+    background: #1F2937;
+    color: #9CA3AF;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .toggle-btn.active {
+    background: #059669;
+    color: #FFFFFF;
+    border-color: #059669;
+  }
+
+  /* Column wrapper */
+  .column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .annotation {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    color: #6B7280;
+    margin-top: 12px;
+    text-align: center;
+    max-width: 390px;
+    line-height: 16px;
+  }
+</style>
+</head>
+<body>
+
+<!-- Light Mode -->
+<div class="column">
+  <div class="mode-label">Light Mode</div>
+  <div class="phone-frame" id="light-frame">
+    <div class="phone-content">
+      <div class="backdrop"></div>
+      <div class="sheet">
+        <div class="drag-handle">
+          <div class="drag-handle-bar"></div>
+        </div>
+
+        <div class="sheet-header">
+          <span class="sheet-title">Sort Habits</span>
+          <button class="close-btn">
+            <i data-lucide="x" style="width:24px;height:24px;stroke-width:2.5"></i>
+          </button>
+        </div>
+
+        <div class="chips-row">
+          <div class="chip selected">
+            <i data-lucide="grip-vertical"></i>
+            <span class="chip-label">Custom</span>
+          </div>
+          <div class="chip">
+            <i data-lucide="arrow-down-a-z"></i>
+            <span class="chip-label">A-Z</span>
+          </div>
+          <div class="chip">
+            <i data-lucide="zap"></i>
+            <span class="chip-label">Strength</span>
+          </div>
+          <div class="chip">
+            <i data-lucide="flame"></i>
+            <span class="chip-label">Streak</span>
+          </div>
+        </div>
+
+        <div class="options-list">
+          <div class="sort-option selected">
+            <div class="icon-wrap gray">
+              <i data-lucide="grip-vertical"></i>
+            </div>
+            <div class="option-text">
+              <div class="option-title">Custom Order</div>
+              <div class="option-desc">Drag to reorder manually</div>
+            </div>
+            <div class="check-badge">
+              <i data-lucide="check"></i>
+            </div>
+          </div>
+
+          <div class="sort-option">
+            <div class="icon-wrap gray">
+              <i data-lucide="arrow-down-a-z"></i>
+            </div>
+            <div class="option-text">
+              <div class="option-title">Name (A–Z)</div>
+              <div class="option-desc">Alphabetical order</div>
+            </div>
+          </div>
+
+          <div class="sort-option">
+            <div class="icon-wrap gray">
+              <i data-lucide="arrow-up-a-z"></i>
+            </div>
+            <div class="option-text">
+              <div class="option-title">Name (Z–A)</div>
+              <div class="option-desc">Reverse alphabetical</div>
+            </div>
+          </div>
+
+          <div class="sort-option">
+            <div class="icon-wrap green">
+              <i data-lucide="zap"></i>
+            </div>
+            <div class="option-text">
+              <div class="option-title">Strength (Low → High)</div>
+              <div class="option-desc">Focus on habits that need attention</div>
+            </div>
+          </div>
+
+          <div class="sort-option">
+            <div class="icon-wrap green">
+              <i data-lucide="zap"></i>
+            </div>
+            <div class="option-text">
+              <div class="option-title">Strength (High → Low)</div>
+              <div class="option-desc">See your strongest habits first</div>
+            </div>
+          </div>
+
+          <div class="sort-option">
+            <div class="icon-wrap flame">
+              <i data-lucide="flame"></i>
+            </div>
+            <div class="option-text">
+              <div class="option-title">Streaks (Low → High)</div>
+              <div class="option-desc">Protect habits at risk</div>
+            </div>
+          </div>
+
+          <div class="sort-option">
+            <div class="icon-wrap flame">
+              <i data-lucide="flame"></i>
+            </div>
+            <div class="option-text">
+              <div class="option-title">Streaks (High → Low)</div>
+              <div class="option-desc">Celebrate your best streaks</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="annotation">
+    Warm stone surface (#EDEAE5) · DM Sans typography scale<br>
+    Selected: successLight (#D1FAE5) + primary[300] border
+  </div>
+</div>
+
+<!-- Dark Mode -->
+<div class="column">
+  <div class="mode-label">Dark Mode</div>
+  <div class="phone-frame dark" id="dark-frame">
+    <div class="phone-content">
+      <div class="backdrop"></div>
+      <div class="sheet">
+        <div class="drag-handle">
+          <div class="drag-handle-bar"></div>
+        </div>
+
+        <div class="sheet-header">
+          <span class="sheet-title">Sort Habits</span>
+          <button class="close-btn">
+            <i data-lucide="x" style="width:24px;height:24px;stroke-width:2.5"></i>
+          </button>
+        </div>
+
+        <div class="chips-row">
+          <div class="chip selected">
+            <i data-lucide="grip-vertical"></i>
+            <span class="chip-label">Custom</span>
+          </div>
+          <div class="chip">
+            <i data-lucide="arrow-down-a-z"></i>
+            <span class="chip-label">A-Z</span>
+          </div>
+          <div class="chip">
+            <i data-lucide="zap"></i>
+            <span class="chip-label">Strength</span>
+          </div>
+          <div class="chip">
+            <i data-lucide="flame"></i>
+            <span class="chip-label">Streak</span>
+          </div>
+        </div>
+
+        <div class="options-list">
+          <div class="sort-option selected">
+            <div class="icon-wrap gray">
+              <i data-lucide="grip-vertical"></i>
+            </div>
+            <div class="option-text">
+              <div class="option-title">Custom Order</div>
+              <div class="option-desc">Drag to reorder manually</div>
+            </div>
+            <div class="check-badge">
+              <i data-lucide="check"></i>
+            </div>
+          </div>
+
+          <div class="sort-option">
+            <div class="icon-wrap gray">
+              <i data-lucide="arrow-down-a-z"></i>
+            </div>
+            <div class="option-text">
+              <div class="option-title">Name (A–Z)</div>
+              <div class="option-desc">Alphabetical order</div>
+            </div>
+          </div>
+
+          <div class="sort-option">
+            <div class="icon-wrap gray">
+              <i data-lucide="arrow-up-a-z"></i>
+            </div>
+            <div class="option-text">
+              <div class="option-title">Name (Z–A)</div>
+              <div class="option-desc">Reverse alphabetical</div>
+            </div>
+          </div>
+
+          <div class="sort-option">
+            <div class="icon-wrap green">
+              <i data-lucide="zap"></i>
+            </div>
+            <div class="option-text">
+              <div class="option-title">Strength (Low → High)</div>
+              <div class="option-desc">Focus on habits that need attention</div>
+            </div>
+          </div>
+
+          <div class="sort-option">
+            <div class="icon-wrap green">
+              <i data-lucide="zap"></i>
+            </div>
+            <div class="option-text">
+              <div class="option-title">Strength (High → Low)</div>
+              <div class="option-desc">See your strongest habits first</div>
+            </div>
+          </div>
+
+          <div class="sort-option">
+            <div class="icon-wrap flame">
+              <i data-lucide="flame"></i>
+            </div>
+            <div class="option-text">
+              <div class="option-title">Streaks (Low → High)</div>
+              <div class="option-desc">Protect habits at risk</div>
+            </div>
+          </div>
+
+          <div class="sort-option">
+            <div class="icon-wrap flame">
+              <i data-lucide="flame"></i>
+            </div>
+            <div class="option-text">
+              <div class="option-title">Streaks (High → Low)</div>
+              <div class="option-desc">Celebrate your best streaks</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="annotation">
+    Dark surface (#1F2937) · successLight overlay rgba(5,150,105,0.15)<br>
+    Selected chip: primary[600] emerald · shadows.modal warm-toned
+  </div>
+</div>
+
+<script>
+  lucide.createIcons();
+</script>
+</body>
+</html>

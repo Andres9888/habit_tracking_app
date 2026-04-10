@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sort Sheet — UX Improvement Options</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --background: #F5F1ED;
+    --surface: #EDEAE5;
+    --card: #EDEAE5;
+    --border: #DDD8D2;
+    --text-primary: #2D2A26;
+    --text-secondary: #6B6560;
+    --text-tertiary: #6E6660;
+    --primary-100: #D1FAE5;
+    --primary-300: #6EE7B7;
+    --primary-400: #34D399;
+    --primary-500: #10B981;
+    --primary-600: #059669;
+    --primary-700: #047857;
+    --gray-50: #FAF8F5;
+    --gray-100: #F5F1ED;
+    --gray-200: #DDD8D2;
+    --gray-300: #C4BFB7;
+    --gray-500: #6B6560;
+    --gray-600: #524D47;
+    --success-light: #D1FAE5;
+    --shadow-color: #2D2A26;
+  }
+
+  body {
+    font-family: 'DM Sans', -apple-system, sans-serif;
+    background: #1a1a2e;
+    padding: 32px 20px;
+    min-height: 100vh;
+  }
+
+  .page-header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  .page-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: #F9FAFB;
+    margin-bottom: 8px;
+  }
+  .page-subtitle {
+    font-size: 14px;
+    color: #9CA3AF;
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 20px;
+  }
+
+  .options-grid {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+
+  .option-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .option-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    border-radius: 9999px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .badge-recommended {
+    background: rgba(5,150,105,0.2);
+    color: #34D399;
+  }
+  .badge-alt {
+    background: rgba(99,102,241,0.15);
+    color: #818CF8;
+  }
+
+  .option-label {
+    font-size: 16px;
+    font-weight: 600;
+    color: #F9FAFB;
+    margin-bottom: 4px;
+    text-align: center;
+  }
+  .option-desc {
+    font-size: 12px;
+    color: #9CA3AF;
+    margin-bottom: 16px;
+    text-align: center;
+    max-width: 340px;
+    line-height: 16px;
+  }
+
+  /* Phone frame */
+  .phone-frame {
+    width: 375px;
+    min-height: 500px;
+    border-radius: 44px;
+    overflow: hidden;
+    position: relative;
+    border: 3px solid #333;
+    background: var(--background);
+  }
+  .phone-content {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+
+  .backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    z-index: 1;
+  }
+
+  .sheet {
+    position: relative;
+    z-index: 2;
+    background: var(--surface);
+    border-radius: 24px 24px 0 0;
+    padding-bottom: 34px;
+    box-shadow: 0 8px 24px 0 color-mix(in srgb, var(--shadow-color) 10%, transparent);
+  }
+
+  .drag-handle {
+    display: flex;
+    justify-content: center;
+    padding: 12px 0;
+  }
+  .drag-handle-bar {
+    width: 40px;
+    height: 4px;
+    border-radius: 9999px;
+    background: var(--gray-300);
+  }
+
+  .sheet-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px 16px;
+  }
+  .sheet-title {
+    font-size: 17px;
+    font-weight: 600;
+    letter-spacing: 0.08px;
+    color: var(--text-primary);
+  }
+  .close-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 9999px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+  .close-btn svg { color: var(--text-secondary); }
+
+  /* ========================================
+     OPTION A — Grouped with Direction Toggles
+     ======================================== */
+
+  .section-divider {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 16px 8px;
+  }
+  .section-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+    white-space: nowrap;
+  }
+  .section-line {
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .featured-option {
+    margin: 0 16px 8px;
+    padding: 14px 12px;
+    border-radius: 12px;
+    background: var(--success-light);
+    border: 1px solid var(--primary-300);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+  }
+
+  .sort-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    margin: 0 16px;
+    border-radius: 12px;
+    cursor: pointer;
+  }
+  .sort-row:hover { background: var(--gray-50); }
+  .sort-row.selected {
+    background: var(--success-light);
+    border: 1px solid var(--primary-300);
+  }
+
+  .icon-wrap {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .icon-wrap svg { color: #FFFFFF; width: 20px; height: 20px; }
+  .icon-wrap.gray { background: linear-gradient(135deg, #6B6560, #524D47); }
+  .icon-wrap.green { background: linear-gradient(135deg, #34D399, #10B981); }
+  .icon-wrap.flame { background: linear-gradient(135deg, #ef4444, #f97316); }
+  .icon-wrap.sm { width: 32px; height: 32px; border-radius: 8px; }
+  .icon-wrap.sm svg { width: 16px; height: 16px; }
+
+  .row-text { flex: 1; }
+  .row-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-primary);
+    line-height: 20px;
+  }
+  .row-desc {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 18px;
+  }
+
+  .check-badge {
+    width: 24px;
+    height: 24px;
+    border-radius: 9999px;
+    background: var(--primary-500);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .check-badge svg { color: #FFFFFF; width: 16px; height: 16px; }
+
+  /* Direction toggle pill */
+  .direction-toggle {
+    display: flex;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+  .dir-btn {
+    padding: 6px 10px;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    white-space: nowrap;
+  }
+  .dir-btn.active {
+    background: var(--primary-600);
+    color: #FFFFFF;
+  }
+  .dir-btn svg { width: 12px; height: 12px; }
+  .dir-divider {
+    width: 1px;
+    background: var(--border);
+  }
+
+  /* ========================================
+     OPTION B — Chips Only
+     ======================================== */
+
+  .chips-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    padding: 0 16px;
+  }
+
+  .chip-card {
+    padding: 14px 12px;
+    border-radius: 16px;
+    background: var(--card);
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    border: 1.5px solid transparent;
+    transition: all 0.15s;
+  }
+  .chip-card.selected {
+    background: var(--success-light);
+    border-color: var(--primary-300);
+  }
+
+  .chip-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .chip-card-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+  .chip-card-desc {
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 16px;
+  }
+
+  .chip-dir-toggle {
+    display: flex;
+    gap: 4px;
+    margin-top: 4px;
+  }
+  .chip-dir-btn {
+    flex: 1;
+    padding: 5px 0;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 500;
+    text-align: center;
+    color: var(--text-secondary);
+    background: var(--gray-50);
+    border: 1px solid var(--border);
+    cursor: pointer;
+  }
+  .chip-dir-btn.active {
+    background: var(--primary-600);
+    color: #FFFFFF;
+    border-color: var(--primary-600);
+  }
+
+  /* ========================================
+     OPTION C — Segmented Sections
+     ======================================== */
+
+  .segment-tabs {
+    display: flex;
+    margin: 0 16px 12px;
+    background: var(--card);
+    border-radius: 10px;
+    padding: 3px;
+    border: 1px solid var(--border);
+  }
+  .seg-tab {
+    flex: 1;
+    padding: 8px 0;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  .seg-tab.active {
+    background: var(--surface);
+    color: var(--text-primary);
+    font-weight: 600;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  }
+
+  .manual-banner {
+    margin: 0 16px 12px;
+    padding: 16px;
+    border-radius: 12px;
+    background: var(--success-light);
+    border: 1px solid var(--primary-300);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+  }
+  .manual-banner-text { flex: 1; }
+
+  .auto-options {
+    padding: 0 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .auto-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    border-radius: 12px;
+    cursor: pointer;
+  }
+  .auto-row.selected {
+    background: var(--success-light);
+  }
+
+  .annotation {
+    font-size: 11px;
+    color: #6B7280;
+    margin-top: 12px;
+    text-align: center;
+    max-width: 375px;
+    line-height: 16px;
+  }
+  .annotation strong { color: #9CA3AF; }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <div class="page-title">Sort Sheet — UX Options</div>
+  <div class="page-subtitle">Three approaches to reduce cognitive load from 7 flat options. All maintain the warm-minimal design system.</div>
+</div>
+
+<div class="options-grid">
+
+<!-- ============================================
+     OPTION A — Grouped with Direction Toggles
+     ============================================ -->
+<div class="option-column">
+  <div class="option-badge badge-recommended">★ Recommended</div>
+  <div class="option-label">A. Direction Toggles</div>
+  <div class="option-desc">4 rows instead of 7. Pairs collapsed into inline ↑↓ toggles. Custom Order is visually elevated.</div>
+
+  <div class="phone-frame">
+    <div class="phone-content">
+      <div class="backdrop"></div>
+      <div class="sheet">
+        <div class="drag-handle"><div class="drag-handle-bar"></div></div>
+        <div class="sheet-header">
+          <span class="sheet-title">Sort Habits</span>
+          <button class="close-btn"><i data-lucide="x" style="width:24px;height:24px;stroke-width:2.5"></i></button>
+        </div>
+
+        <!-- Featured: Custom Order -->
+        <div class="featured-option">
+          <div class="icon-wrap gray">
+            <i data-lucide="grip-vertical"></i>
+          </div>
+          <div class="row-text">
+            <div class="row-title">Custom Order</div>
+            <div class="row-desc">Drag to reorder manually</div>
+          </div>
+          <div class="check-badge">
+            <i data-lucide="check"></i>
+          </div>
+        </div>
+
+        <!-- Section divider -->
+        <div class="section-divider">
+          <span class="section-label">Sort Automatically</span>
+          <div class="section-line"></div>
+        </div>
+
+        <!-- Name row with direction toggle -->
+        <div class="sort-row">
+          <div class="icon-wrap sm gray">
+            <i data-lucide="arrow-down-a-z"></i>
+          </div>
+          <div class="row-text">
+            <div class="row-title">Name</div>
+          </div>
+          <div class="direction-toggle">
+            <button class="dir-btn active">A→Z</button>
+            <div class="dir-divider"></div>
+            <button class="dir-btn">Z→A</button>
+          </div>
+        </div>
+
+        <!-- Strength row with direction toggle -->
+        <div class="sort-row">
+          <div class="icon-wrap sm green">
+            <i data-lucide="zap"></i>
+          </div>
+          <div class="row-text">
+            <div class="row-title">Strength</div>
+          </div>
+          <div class="direction-toggle">
+            <button class="dir-btn active">
+              <i data-lucide="arrow-up" style="width:10px;height:10px"></i>
+              Low
+            </button>
+            <div class="dir-divider"></div>
+            <button class="dir-btn">
+              <i data-lucide="arrow-down" style="width:10px;height:10px"></i>
+              High
+            </button>
+          </div>
+        </div>
+
+        <!-- Streak row with direction toggle -->
+        <div class="sort-row">
+          <div class="icon-wrap sm flame">
+            <i data-lucide="flame"></i>
+          </div>
+          <div class="row-text">
+            <div class="row-title">Streak</div>
+          </div>
+          <div class="direction-toggle">
+            <button class="dir-btn">
+              <i data-lucide="arrow-up" style="width:10px;height:10px"></i>
+              Low
+            </button>
+            <div class="dir-divider"></div>
+            <button class="dir-btn active">
+              <i data-lucide="arrow-down" style="width:10px;height:10px"></i>
+              High
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="annotation">
+    <strong>4 rows</strong> vs 7 · Custom Order elevated · Direction inline<br>
+    Sheet height: ~320px (vs ~520px current)
+  </div>
+</div>
+
+<!-- ============================================
+     OPTION B — Chips / Card Grid
+     ============================================ -->
+<div class="option-column">
+  <div class="option-badge badge-alt">Minimal</div>
+  <div class="option-label">B. Card Grid</div>
+  <div class="option-desc">2×2 grid of tappable cards. Direction toggles inside each card. Most compact layout.</div>
+
+  <div class="phone-frame">
+    <div class="phone-content">
+      <div class="backdrop"></div>
+      <div class="sheet">
+        <div class="drag-handle"><div class="drag-handle-bar"></div></div>
+        <div class="sheet-header">
+          <span class="sheet-title">Sort Habits</span>
+          <button class="close-btn"><i data-lucide="x" style="width:24px;height:24px;stroke-width:2.5"></i></button>
+        </div>
+
+        <div class="chips-grid">
+          <!-- Custom -->
+          <div class="chip-card selected">
+            <div class="chip-card-header">
+              <div class="icon-wrap sm gray">
+                <i data-lucide="grip-vertical"></i>
+              </div>
+              <div class="check-badge" style="width:20px;height:20px">
+                <i data-lucide="check" style="width:12px;height:12px"></i>
+              </div>
+            </div>
+            <div class="chip-card-title">Custom</div>
+            <div class="chip-card-desc">Drag to reorder</div>
+          </div>
+
+          <!-- Name -->
+          <div class="chip-card">
+            <div class="chip-card-header">
+              <div class="icon-wrap sm gray">
+                <i data-lucide="arrow-down-a-z"></i>
+              </div>
+            </div>
+            <div class="chip-card-title">Name</div>
+            <div class="chip-dir-toggle">
+              <button class="chip-dir-btn active">A→Z</button>
+              <button class="chip-dir-btn">Z→A</button>
+            </div>
+          </div>
+
+          <!-- Strength -->
+          <div class="chip-card">
+            <div class="chip-card-header">
+              <div class="icon-wrap sm green">
+                <i data-lucide="zap"></i>
+              </div>
+            </div>
+            <div class="chip-card-title">Strength</div>
+            <div class="chip-dir-toggle">
+              <button class="chip-dir-btn active">Low first</button>
+              <button class="chip-dir-btn">High first</button>
+            </div>
+          </div>
+
+          <!-- Streak -->
+          <div class="chip-card">
+            <div class="chip-card-header">
+              <div class="icon-wrap sm flame">
+                <i data-lucide="flame"></i>
+              </div>
+            </div>
+            <div class="chip-card-title">Streak</div>
+            <div class="chip-dir-toggle">
+              <button class="chip-dir-btn">Low first</button>
+              <button class="chip-dir-btn active">High first</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="annotation">
+    <strong>2×2 grid</strong> · Most compact · Direction inside cards<br>
+    Sheet height: ~290px · No scroll needed on any device
+  </div>
+</div>
+
+<!-- ============================================
+     OPTION C — Segmented Sections
+     ============================================ -->
+<div class="option-column">
+  <div class="option-badge badge-alt">Familiar</div>
+  <div class="option-label">C. Segmented Tabs</div>
+  <div class="option-desc">Tab bar separates Manual vs Automatic. Auto tab shows 3 sort types with direction toggles.</div>
+
+  <div class="phone-frame">
+    <div class="phone-content">
+      <div class="backdrop"></div>
+      <div class="sheet">
+        <div class="drag-handle"><div class="drag-handle-bar"></div></div>
+        <div class="sheet-header">
+          <span class="sheet-title">Sort Habits</span>
+          <button class="close-btn"><i data-lucide="x" style="width:24px;height:24px;stroke-width:2.5"></i></button>
+        </div>
+
+        <!-- Segment tabs -->
+        <div class="segment-tabs">
+          <div class="seg-tab">
+            <span style="display:inline-flex;align-items:center;gap:4px">
+              <i data-lucide="grip-vertical" style="width:14px;height:14px;color:var(--text-secondary)"></i>
+              Manual
+            </span>
+          </div>
+          <div class="seg-tab active">
+            <span style="display:inline-flex;align-items:center;gap:4px">
+              <i data-lucide="arrow-up-down" style="width:14px;height:14px;color:var(--text-primary)"></i>
+              Automatic
+            </span>
+          </div>
+        </div>
+
+        <!-- Auto sort content -->
+        <div class="auto-options">
+          <!-- Name -->
+          <div class="auto-row selected">
+            <div class="icon-wrap sm gray">
+              <i data-lucide="arrow-down-a-z"></i>
+            </div>
+            <div class="row-text">
+              <div class="row-title">Name</div>
+              <div class="row-desc">Alphabetical order</div>
+            </div>
+            <div class="direction-toggle">
+              <button class="dir-btn active">A→Z</button>
+              <div class="dir-divider"></div>
+              <button class="dir-btn">Z→A</button>
+            </div>
+          </div>
+
+          <!-- Strength -->
+          <div class="auto-row">
+            <div class="icon-wrap sm green">
+              <i data-lucide="zap"></i>
+            </div>
+            <div class="row-text">
+              <div class="row-title">Strength</div>
+              <div class="row-desc">By habit strength level</div>
+            </div>
+            <div class="direction-toggle">
+              <button class="dir-btn active">
+                <i data-lucide="arrow-up" style="width:10px;height:10px"></i>
+                Low
+              </button>
+              <div class="dir-divider"></div>
+              <button class="dir-btn">
+                <i data-lucide="arrow-down" style="width:10px;height:10px"></i>
+                High
+              </button>
+            </div>
+          </div>
+
+          <!-- Streak -->
+          <div class="auto-row">
+            <div class="icon-wrap sm flame">
+              <i data-lucide="flame"></i>
+            </div>
+            <div class="row-text">
+              <div class="row-title">Streak</div>
+              <div class="row-desc">By current streak count</div>
+            </div>
+            <div class="direction-toggle">
+              <button class="dir-btn">
+                <i data-lucide="arrow-up" style="width:10px;height:10px"></i>
+                Low
+              </button>
+              <div class="dir-divider"></div>
+              <button class="dir-btn active">
+                <i data-lucide="arrow-down" style="width:10px;height:10px"></i>
+                High
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="annotation">
+    <strong>Segmented control</strong> · iOS-native pattern · Descriptions kept<br>
+    Sheet height: ~340px · Manual tab shows drag instruction + reorder hint
+  </div>
+</div>
+
+</div>
+
+<script>
+  lucide.createIcons();
+</script>
+</body>
+</html>
