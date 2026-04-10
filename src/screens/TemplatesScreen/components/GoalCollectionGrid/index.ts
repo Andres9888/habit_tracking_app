@@ -1,0 +1,1 @@
+export { GoalCollectionGrid } from './GoalCollectionGrid';

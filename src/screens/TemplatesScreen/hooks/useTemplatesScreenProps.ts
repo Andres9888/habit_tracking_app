@@ -20,7 +20,11 @@ import { useMainBrowseData } from './useMainBrowseData';
 import { usePackConfirm } from './usePackConfirm';
 import { useViewNavigation } from './useViewNavigation';
 
-export function useTemplatesScreenProps() {
+interface UseTemplatesScreenPropsOptions {
+  onPostImportSetup?: (habitId: import('../../../../convex/_generated/dataModel').Id<'habits'>, template: import('../../../../convex/_generated/dataModel').Doc<'templates'>) => void;
+}
+
+export function useTemplatesScreenProps(options?: UseTemplatesScreenPropsOptions) {
   const reducedMotion = useReduceMotion();
   const animations = useEntranceAnimations({ reducedMotion });
   const tabIndicator = useTabIndicator({ reducedMotion });
@@ -44,6 +48,7 @@ export function useTemplatesScreenProps() {
     importTemplate: data.importTemplate,
     previewTemplate: state.previewTemplate,
     isPremiumUser: data.isPremiumUser,
+    onPostImportSetup: options?.onPostImportSetup,
     onShowPaywall: () => state.setShowPaywall(true),
     seedTemplates: data.seedTemplates,
     setShowCelebration: state.setShowCelebration,

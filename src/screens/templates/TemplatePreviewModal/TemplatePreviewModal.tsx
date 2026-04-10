@@ -12,6 +12,8 @@ import { ModalFooter } from './ModalFooter';
 import { TemplatePreview } from './TemplatePreview';
 import { NameInput } from './NameInput';
 import { ColorPicker } from './ColorPicker';
+import { PreferredTimePicker } from './PreferredTimePicker';
+import { DaysOfWeekPicker } from './DaysOfWeekPicker';
 import { ReminderTimePicker } from './ReminderTimePicker';
 import { TemplateInfo } from './TemplateInfo';
 import { useTemplatePreview } from './useTemplatePreview';
@@ -31,10 +33,14 @@ export default function TemplatePreviewModal({
     customColor,
     showTimePicker,
     setShowTimePicker,
+    preferredTime,
+    selectedDays,
     reminderTime,
     handleImport,
     handleClose,
     handleColorSelect,
+    handleSelectPreferredTime,
+    handleToggleDay,
     handleTimeChange,
   } = useTemplatePreview({ onClose, onImport, template });
 
@@ -79,6 +85,16 @@ export default function TemplatePreviewModal({
             customColor={customColor}
             disabled={isImporting}
             onSelectColor={handleColorSelect}
+          />
+          <PreferredTimePicker
+            disabled={isImporting}
+            selectedTime={preferredTime}
+            onSelectTime={handleSelectPreferredTime}
+          />
+          <DaysOfWeekPicker
+            disabled={isImporting}
+            selectedDays={selectedDays}
+            onToggleDay={handleToggleDay}
           />
           <ReminderTimePicker
             disabled={isImporting}

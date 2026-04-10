@@ -32,7 +32,9 @@ export interface ScrollMetrics {
 
 // Template import customizations
 export interface TemplateCustomizations {
+  daysOfWeek?: number[];
   iconColor?: string;
   name?: string;
+  preferredTime?: string;
   reminderTime?: string;
 }

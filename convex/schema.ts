@@ -292,6 +292,11 @@ const applicationTables = {
     // "daily", "weekly", "custom"
     scientificReference: v.string(),
 
+    // Suggested psychology fields for post-import setup
+    suggestedCue: v.optional(v.string()),
+    suggestedIdentity: v.optional(v.string()),
+    suggestedWhy: v.optional(v.string()),
+
     // Tips for success - actionable advice for building this habit
     tips: v.optional(v.array(v.string())),
 
