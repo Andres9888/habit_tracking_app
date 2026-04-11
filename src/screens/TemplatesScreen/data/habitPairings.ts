@@ -25,6 +25,10 @@ export const CATEGORY_PAIRINGS: Record<string, HabitPairing[]> = {
     { targetCategory: 'mindfulness', reason: 'Clear your mind to spark ideas' },
     { targetCategory: 'learning', reason: 'Feed your creativity with new knowledge' },
   ],
+  environmental_design: [
+    { targetCategory: 'productivity', reason: 'Design your space to support your goals' },
+    { targetCategory: 'subtraction', reason: 'Remove friction for good habits, add it for bad' },
+  ],
   financial: [
     { targetCategory: 'productivity', reason: 'Build systems that support your goals' },
     { targetCategory: 'learning', reason: 'Grow your financial knowledge' },
@@ -61,6 +65,10 @@ export const CATEGORY_PAIRINGS: Record<string, HabitPairing[]> = {
     { targetCategory: 'sleep', reason: 'Sleep is the ultimate recovery tool' },
     { targetCategory: 'breathing', reason: 'Breathwork activates parasympathetic recovery' },
   ],
+  relationships: [
+    { targetCategory: 'social', reason: 'Strong relationships need consistent attention' },
+    { targetCategory: 'mindfulness', reason: 'Be more present with people you love' },
+  ],
   sleep: [
     { targetCategory: 'breathing', reason: 'Regulate your nervous system before bed' },
     { targetCategory: 'mindfulness', reason: 'Quiet your mind for deeper sleep' },
@@ -68,5 +76,9 @@ export const CATEGORY_PAIRINGS: Record<string, HabitPairing[]> = {
   social: [
     { targetCategory: 'mental_health', reason: 'Strong relationships boost wellbeing' },
     { targetCategory: 'mindfulness', reason: 'Be more present in conversations' },
+  ],
+  subtraction: [
+    { targetCategory: 'sleep', reason: 'Removing stimulation improves sleep quality' },
+    { targetCategory: 'environmental_design', reason: 'Design your environment to make subtraction easy' },
   ],
 };

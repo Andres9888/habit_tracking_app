@@ -24,8 +24,11 @@ type TemplateInsert = {
     | 'morning_routine'
     | 'productivity'
     | 'recovery'
+    | 'relationships'
     | 'sleep'
-    | 'social';
+    | 'social'
+    | 'subtraction'
+    | 'environmental_design';
   createdAt: number;
   description: string;
   frequency: string;
@@ -122,7 +125,10 @@ export const list = query({
         v.literal('longevity'),
         v.literal('mental_health'),
         v.literal('recovery'),
-        v.literal('breathing')
+        v.literal('breathing'),
+        v.literal('relationships'),
+        v.literal('environmental_design'),
+        v.literal('subtraction')
       )
     ),
   },
@@ -5025,5 +5031,661 @@ export const seedUniqueTemplates = internalMutation({
       skippedNames,
       success: true,
     };
+  },
+});
+
+// ═══════════════════════════════════════════════════════════════
+// Research-Backed Templates (April 2026)
+// Evidence-based habits from behavioral psychology, YouTube creators, and meta-analyses
+// ═══════════════════════════════════════════════════════════════
+
+export const seedResearchBackedTemplates = internalMutation({
+  args: {},
+  handler: async (ctx) => {
+    const now = Date.now();
+    let _insertedCount = 0;
+    let _skippedCount = 0;
+    const insertedNames: string[] = [];
+    const skippedNames: string[] = [];
+
+    const existingTemplates = await ctx.db.query('templates').collect();
+    const existingTemplateNameKeys = new Set<string>(
+      existingTemplates.map((t) => normalizeTemplateName(t.name))
+    );
+
+    const insertWithTracking = async (template: TemplateInsert) => {
+      const templateNameKey = normalizeTemplateName(template.name);
+      if (existingTemplateNameKeys.has(templateNameKey)) {
+        _skippedCount++;
+        skippedNames.push(template.name);
+        return false;
+      }
+
+      await ctx.db.insert('templates', template);
+      _insertedCount++;
+      insertedNames.push(template.name);
+      existingTemplateNameKeys.add(templateNameKey);
+      return true;
+    };
+
+    // ═══════════════════════════════════════════════════════════════
+    // RELATIONSHIPS — Gottman-backed relationship habits
+    // ═══════════════════════════════════════════════════════════════
+
+    await insertWithTracking({
+      category: 'relationships',
+      createdAt: now,
+      description:
+        'Have a 20-minute stress-reducing conversation with your partner at the end of the day. Gottman research on 3,000+ couples shows dedicating ~6 hours/week to small consistent moments dramatically improves relationship quality.',
+      frequency: FREQUENCY_DAILY,
+      icon: '💬',
+      iconColor: '#F43F5E',
+      name: 'Stress-Reducing Conversation',
+      popularityScore: 88,
+      scientificReference:
+        'Gottman Institute - 40-year longitudinal couples research',
+      tips: [
+        'Focus on listening and understanding, not solving',
+        'Take turns — each person gets 10 minutes',
+        'Ask "How was your day?" and actually listen to the answer',
+      ],
+    });
+
+    await insertWithTracking({
+      category: 'relationships',
+      createdAt: now,
+      description:
+        'Express genuine appreciation to your partner at least once daily. Gottman research shows stable couples maintain a 5:1 ratio of positive to negative interactions — this predicts relationship stability with 90%+ accuracy.',
+      frequency: FREQUENCY_DAILY,
+      icon: '❤️',
+      iconColor: '#F43F5E',
+      name: 'Express Daily Appreciation',
+      popularityScore: 90,
+      scientificReference:
+        'Gottman (1999) - The Marriage Clinic: 5:1 positive-to-negative interaction ratio',
+      tips: [
+        'Be specific — "I appreciated you making dinner" beats "thanks"',
+        'Notice small things, not just grand gestures',
+        'Say it out loud — thinking it doesn\'t count',
+      ],
+    });
+
+    await insertWithTracking({
+      category: 'relationships',
+      createdAt: now,
+      description:
+        'Ask your partner one meaningful question about their inner world. Gottman calls this "Love Maps" — couples with detailed knowledge of each other\'s world are 60% more likely to report relationship satisfaction.',
+      frequency: FREQUENCY_DAILY,
+      icon: '🗺️',
+      iconColor: '#F43F5E',
+      name: 'Love Maps Question',
+      popularityScore: 85,
+      scientificReference:
+        'Gottman Institute - Sound Relationship House theory',
+      tips: [
+        'Try: "What\'s something you\'re looking forward to this week?"',
+        'Ask about dreams, worries, or things they\'re learning',
+        'Update your map — people change over time',
+      ],
+    });
+
+    await insertWithTracking({
+      category: 'relationships',
+      createdAt: now,
+      description:
+        'Share a kiss lasting at least 6 seconds with your partner daily. Long enough to activate bonding neurochemistry (oxytocin release). Recommended by Gottman as a daily ritual of connection.',
+      frequency: FREQUENCY_DAILY,
+      icon: '💋',
+      iconColor: '#F43F5E',
+      name: 'Six-Second Kiss',
+      popularityScore: 82,
+      scientificReference:
+        'Gottman Institute - Rituals of connection research',
+      tips: [
+        'Make it a hello/goodbye ritual',
+        '6 seconds is longer than you think — count it',
+        'Be present — put the phone down first',
+      ],
+    });
+
+    await insertWithTracking({
+      category: 'relationships',
+      createdAt: now,
+      description:
+        'Maintain at least one weekly recurring social commitment (dinner with friends, sports league, coffee date). Pre-scheduled events prevent the loneliness drift that happens when socializing depends on spontaneous plans.',
+      frequency: 'weekly',
+      icon: '📅',
+      iconColor: '#F43F5E',
+      name: 'Standing Social Events',
+      popularityScore: 83,
+      scientificReference:
+        'Holt-Lunstad et al. (2010) - Social relationships and mortality risk meta-analysis',
+      tips: [
+        'Pick the same day/time each week for consistency',
+        'Even one recurring event dramatically reduces isolation',
+        'Alternate hosting to share the effort',
+      ],
+    });
+
+    // ═══════════════════════════════════════════════════════════════
+    // SUBTRACTION — "Not doing" habits
+    // ═══════════════════════════════════════════════════════════════
+
+    await insertWithTracking({
+      category: 'subtraction',
+      createdAt: now,
+      description:
+        'No phone or screens for the first 60 minutes after waking. Preserves your natural willpower and attention. Recommended by Dr. K (HealthyGamerGG), Huberman, and Matt D\'Avella as one of the highest-impact daily habits.',
+      frequency: FREQUENCY_DAILY,
+      icon: '📵',
+      iconColor: '#7C3AED',
+      name: 'Phone-Free First Hour',
+      popularityScore: 91,
+      scientificReference:
+        'Attention restoration theory — Kaplan (1995); extended by smartphone research 2020-2025',
+      tips: [
+        'Charge your phone outside the bedroom',
+        'Use a physical alarm clock instead',
+        'Fill the time with a morning routine you enjoy',
+      ],
+    });
+
+    await insertWithTracking({
+      category: 'subtraction',
+      createdAt: now,
+      description:
+        'Stop all caffeine at least 6 hours before bedtime. A double-blind RCT showed even moderate caffeine (400mg) consumed 6 hours before bed still reduced total sleep time by over 1 hour.',
+      frequency: FREQUENCY_DAILY,
+      icon: '☕',
+      iconColor: '#7C3AED',
+      name: 'Caffeine Cutoff',
+      popularityScore: 89,
+      scientificLink: 'https://pubmed.ncbi.nlm.nih.gov/24235903/',
+      scientificReference:
+        'Drake et al. (2013) - Caffeine effects on sleep, Journal of Clinical Sleep Medicine',
+      tips: [
+        'Calculate your cutoff: bedtime minus 6 hours',
+        'Switch to decaf or herbal tea after your cutoff',
+        'Watch for hidden caffeine in chocolate and sodas',
+      ],
+    });
+
+    // ═══════════════════════════════════════════════════════════════
+    // ENVIRONMENTAL DESIGN — Upstream habits that enable everything else
+    // ═══════════════════════════════════════════════════════════════
+
+    await insertWithTracking({
+      category: 'environmental_design',
+      createdAt: now,
+      description:
+        'Spend 2 minutes each evening resetting your environment for tomorrow\'s habits (lay out workout clothes, prep coffee, clear desk). Research shows environmental cues are a stronger driver of behavior than motivation.',
+      frequency: FREQUENCY_DAILY,
+      icon: '🏠',
+      iconColor: '#059669',
+      name: 'Evening Environment Reset',
+      popularityScore: 87,
+      scientificReference:
+        'Mazar & Wood (2022) - Environmental cues and habitual behavior, Annual Review of Psychology',
+      tips: [
+        'Set a 2-minute timer — it\'s faster than you think',
+        'Prep for your most important morning habit first',
+        'Make it part of your bedtime routine',
+      ],
+    });
+
+    await insertWithTracking({
+      category: 'environmental_design',
+      createdAt: now,
+      description:
+        'Add one deliberate friction step to an unwanted behavior each week (e.g., log out of social media after each use, move phone charger to another room). Even small increases in effort reduce unwanted behavior by 50%+.',
+      frequency: 'weekly',
+      icon: '🚧',
+      iconColor: '#059669',
+      name: 'Friction Addition',
+      popularityScore: 82,
+      scientificReference:
+        'Verplanken et al. (2021) - Habit discontinuity hypothesis, University of Bath',
+      tips: [
+        'Start with your most problematic habit',
+        'Add just one friction point — don\'t overdo it',
+        'Moving something 6 feet away can cut usage 50%',
+      ],
+    });
+
+    await insertWithTracking({
+      category: 'environmental_design',
+      createdAt: now,
+      description:
+        'Place a visible physical cue in your environment for each desired habit (book on pillow for reading, water bottle on desk for hydration). Research shows event-based cues build automaticity better than app notifications.',
+      frequency: 'weekly',
+      icon: '👁️',
+      iconColor: '#059669',
+      name: 'Visual Cue Placement',
+      popularityScore: 80,
+      scientificReference:
+        'Stawarz et al. (2015) - Event-based cues outperform reminders for habit formation',
+      tips: [
+        'One cue per habit — keep it simple',
+        'Place the cue where you\'ll see it at the right moment',
+        'Physical cues beat digital reminders for building automaticity',
+      ],
+    });
+
+    // ═══════════════════════════════════════════════════════════════
+    // HEALTH & FITNESS — Evidence-based additions
+    // ═══════════════════════════════════════════════════════════════
+
+    await insertWithTracking({
+      category: 'health_fitness',
+      createdAt: now,
+      description:
+        'Walk 7,000+ steps daily. A Lancet Public Health (2025) meta-analysis of 24 cohorts found the sharpest mortality reduction between 2,000-7,000 steps — more achievable than 10,000 and nearly as beneficial.',
+      frequency: FREQUENCY_DAILY,
+      icon: '🚶',
+      iconColor: '#10B981',
+      name: '7,000 Steps',
+      popularityScore: 92,
+      scientificLink:
+        'https://www.thelancet.com/journals/lanpub/article/PIIS2468-2667(25)00164-1/fulltext',
+      scientificReference:
+        'Lancet Public Health (2025) - Step count dose-response meta-analysis, 24 cohorts',
+      tips: [
+        'Take walking meetings when possible',
+        'A 30-minute walk is roughly 3,000-4,000 steps',
+        'Park further away or take one extra loop around the block',
+      ],
+    });
+
+    await insertWithTracking({
+      category: 'health_fitness',
+      createdAt: now,
+      description:
+        'Track daily protein intake targeting 1.2-1.6g per kg of bodyweight. Meta-analysis shows this range significantly increases lean body mass and supports weight management. Beyond 1.62g/kg shows no further benefit.',
+      frequency: FREQUENCY_DAILY,
+      icon: '🥩',
+      iconColor: '#10B981',
+      name: 'Daily Protein Target',
+      popularityScore: 86,
+      scientificLink: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC8978023/',
+      scientificReference:
+        'Nunes et al. (2022) - Protein intake and body composition, Journal of Cachexia, Sarcopenia and Muscle',
+      tips: [
+        'Calculate your target: bodyweight in kg x 1.4',
+        'Front-load protein at breakfast for better satiety',
+        'Track for a week to learn your baseline, then adjust',
+      ],
+    });
+
+    // ═══════════════════════════════════════════════════════════════
+    // PRODUCTIVITY — Research-backed additions
+    // ═══════════════════════════════════════════════════════════════
+
+    await insertWithTracking({
+      category: 'productivity',
+      createdAt: now,
+      description:
+        'Conduct a 15-20 minute weekly review: reflect on the past week, celebrate wins, and set priorities for the next. Recommended by Ali Abdaal and Thomas Frank as a keystone productivity habit.',
+      frequency: 'weekly',
+      icon: '📋',
+      iconColor: '#3B82F6',
+      name: 'Weekly Review',
+      popularityScore: 87,
+      scientificReference:
+        'Implementation intentions research — Gollwitzer (1999); planning increases follow-through 2-3x',
+      tips: [
+        'Block 20 minutes on Sunday or Friday',
+        'Review: What worked? What didn\'t? What\'s next?',
+        'Pick your single most important task for next week',
+      ],
+    });
+
+    await insertWithTracking({
+      category: 'productivity',
+      createdAt: now,
+      description:
+        'Pair an enjoyable activity exclusively with a "should" behavior (only listen to favorite podcast while exercising, only watch shows while stretching). Research shows this increases target behavior by 29-51%.',
+      frequency: FREQUENCY_DAILY,
+      icon: '🎧',
+      iconColor: '#3B82F6',
+      name: 'Temptation Bundling',
+      popularityScore: 85,
+      scientificLink:
+        'https://pubsonline.informs.org/doi/10.1287/mnsc.2013.1784',
+      scientificReference:
+        'Milkman et al. (2014) - Holding the Hunger Games Hostage, Management Science',
+      tips: [
+        'Pick your guiltiest pleasure and pair it with your hardest habit',
+        'Be strict — ONLY enjoy the reward during the target behavior',
+        'Start with exercise + entertainment — highest success pairing',
+      ],
+    });
+
+    await insertWithTracking({
+      category: 'productivity',
+      createdAt: now,
+      description:
+        'Set 90-day goals ("Quarterly Quests") instead of annual resolutions. Shorter timeframes are more manageable and have higher completion rates. Advocated by Ali Abdaal.',
+      frequency: 'weekly',
+      icon: '🎯',
+      iconColor: '#3B82F6',
+      name: 'Quarterly Quest Setting',
+      popularityScore: 80,
+      scientificReference:
+        'Locke & Latham (2002) - Goal setting theory; shorter feedback loops increase persistence',
+      tips: [
+        'Set 1-3 goals per quarter maximum',
+        'Review progress weekly',
+        'Celebrate completion before setting new quests',
+      ],
+    });
+
+    // ═══════════════════════════════════════════════════════════════
+    // MINDFULNESS — Behavioral science additions
+    // ═══════════════════════════════════════════════════════════════
+
+    await insertWithTracking({
+      category: 'mindfulness',
+      createdAt: now,
+      description:
+        'Immediately after completing any habit, do a brief celebration (fist pump, smile, say "yes!") for 2-3 seconds. BJ Fogg\'s research on 40,000+ participants shows celebration is the critical differentiator for habits that stick.',
+      frequency: FREQUENCY_DAILY,
+      icon: '🎉',
+      iconColor: '#8B5CF6',
+      name: 'Post-Behavior Celebration',
+      popularityScore: 84,
+      scientificReference:
+        'Fogg (2020) - Tiny Habits, Stanford Behavior Design Lab (40,000+ participants)',
+      tips: [
+        'Pick a celebration that feels natural — don\'t force it',
+        'Do it immediately — timing matters for neural wiring',
+        'Even a quiet internal "nice!" works',
+      ],
+    });
+
+    await insertWithTracking({
+      category: 'mindfulness',
+      createdAt: now,
+      description:
+        'Walk for 30-60 minutes with NO music, podcasts, or audiobooks. Just walk and think. Dr. K (HealthyGamerGG) recommends this as one of the most powerful habits for rebuilding attention span and processing emotions.',
+      frequency: FREQUENCY_DAILY,
+      icon: '🚶‍♂️',
+      iconColor: '#8B5CF6',
+      name: 'Unstimulated Walk',
+      popularityScore: 83,
+      scientificReference:
+        'Kaplan (1995) - Attention Restoration Theory; Dr. Alok Kanojia (HealthyGamerGG)',
+      tips: [
+        'Leave your phone at home or on airplane mode',
+        'Start with 15 minutes if an hour feels too long',
+        'Let your mind wander — that\'s the point',
+      ],
+    });
+
+    await insertWithTracking({
+      category: 'mindfulness',
+      createdAt: now,
+      description:
+        'Write exactly one sentence about your day before bed. The ultra-low barrier makes this sustainable while still activating the cognitive processing that reduces rumination. Based on Pennebaker\'s expressive writing research.',
+      frequency: FREQUENCY_DAILY,
+      icon: '✏️',
+      iconColor: '#8B5CF6',
+      name: 'Single-Sentence Journal',
+      popularityScore: 86,
+      scientificReference:
+        'Pennebaker (2004) - Expressive writing and health; updated through 2023',
+      tips: [
+        'Keep a notebook by your bed with a pen on top',
+        'One sentence only — resist the urge to write more at first',
+        'There are no wrong answers — write whatever comes to mind',
+      ],
+    });
+
+    await insertWithTracking({
+      category: 'mindfulness',
+      createdAt: now,
+      description:
+        'Weekly 5-minute written reflection: "What did I do this week that aligns with who I want to become?" Identity-based habits are the strongest predictor of long-term persistence. The identity-behavior link is mutually reinforcing.',
+      frequency: 'weekly',
+      icon: '🪞',
+      iconColor: '#8B5CF6',
+      name: 'Identity Journaling',
+      popularityScore: 84,
+      scientificReference:
+        'Berzonsky et al. (2023) - Identity and habit persistence, Identity: An International Journal',
+      tips: [
+        'Start with: "I am becoming someone who..."',
+        'Notice actions that match your desired identity',
+        'Focus on the person you\'re becoming, not the outcome',
+      ],
+    });
+
+    // ═══════════════════════════════════════════════════════════════
+    // LEARNING — Deliberate practice additions
+    // ═══════════════════════════════════════════════════════════════
+
+    await insertWithTracking({
+      category: 'learning',
+      createdAt: now,
+      description:
+        'Spend 30-60 minutes in deliberate practice of a professional skill — focused effort at the edge of your ability with feedback. Research shows ~4 hours/day is the maximum before diminishing returns.',
+      frequency: FREQUENCY_DAILY,
+      icon: '🎯',
+      iconColor: '#7C3AED',
+      name: 'Deliberate Skill Practice',
+      popularityScore: 85,
+      scientificLink: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC6731745/',
+      scientificReference:
+        'Ericsson, Krampe & Tesch-Romer (1993) - Deliberate practice in expert performance',
+      tips: [
+        'Practice at the edge of your ability — comfortable enough to try, hard enough to fail sometimes',
+        'Get feedback — practice without feedback doesn\'t improve performance',
+        'Quality over quantity — 30 focused minutes beats 2 distracted hours',
+      ],
+    });
+
+    await insertWithTracking({
+      category: 'learning',
+      createdAt: now,
+      description:
+        'Spend 15-30 minutes learning something completely new (new language, instrument, skill, topic). Novel learning provides a stronger neuroplasticity stimulus than repeating familiar tasks and maintains cognitive reserve.',
+      frequency: FREQUENCY_DAILY,
+      icon: '🧩',
+      iconColor: '#7C3AED',
+      name: 'Novel Learning Session',
+      popularityScore: 83,
+      scientificReference:
+        'Merzenich et al. (2014) - Neuroplasticity and cognitive training; Harvard Health neuroplasticity review',
+      tips: [
+        'Novelty is the key — pick something unfamiliar',
+        'Rotate topics to maintain the novelty advantage',
+        'Even 15 minutes of effortful learning triggers neuroplasticity',
+      ],
+    });
+
+    // ═══════════════════════════════════════════════════════════════
+    // SOCIAL — Connection habits
+    // ═══════════════════════════════════════════════════════════════
+
+    await insertWithTracking({
+      category: 'social',
+      createdAt: now,
+      description:
+        'Reach out to 2-5 professional contacts per week (emails, coffees, calls). Longitudinal research shows networking directly correlates with salary growth, promotions, and career satisfaction. 70-85% of positions are filled through networking.',
+      frequency: 'weekly',
+      icon: '🤝',
+      iconColor: '#F43F5E',
+      name: 'Weekly Networking Outreach',
+      popularityScore: 81,
+      scientificReference:
+        'Wolff & Moser (2009) - Effects of Networking on Career Success, Journal of Applied Psychology',
+      tips: [
+        'Set a specific day for outreach (e.g., Tuesday mornings)',
+        'Quality over quantity — one meaningful coffee beats 10 generic emails',
+        'Follow up within 48 hours after meetings',
+      ],
+    });
+
+    await insertWithTracking({
+      category: 'social',
+      createdAt: now,
+      description:
+        'Have at least one meaningful social interaction per day (in-person, phone call, or video — not text or social media). Social isolation increases all-cause mortality risk comparable to smoking 15 cigarettes per day.',
+      frequency: FREQUENCY_DAILY,
+      icon: '👋',
+      iconColor: '#F43F5E',
+      name: 'Daily Meaningful Interaction',
+      popularityScore: 86,
+      scientificReference:
+        'Holt-Lunstad et al. (2010) - Social relationships and mortality risk meta-analysis',
+      tips: [
+        'Phone calls count — you don\'t need to meet in person every day',
+        'Make it a real conversation, not just a "hey" text',
+        'Prioritize face-to-face when possible — it has the strongest effect',
+      ],
+    });
+
+    // ═══════════════════════════════════════════════════════════════
+    // FINANCIAL — FinTok trend
+    // ═══════════════════════════════════════════════════════════════
+
+    await insertWithTracking({
+      category: 'financial',
+      createdAt: now,
+      description:
+        'Declare your spending intentions before making purchases — say them out loud or text them to an accountability partner. This "loud budgeting" trend from FinTok leverages the accountability effect to reduce impulse spending.',
+      frequency: FREQUENCY_DAILY,
+      icon: '📢',
+      iconColor: '#10B981',
+      name: 'Loud Budgeting',
+      popularityScore: 78,
+      scientificReference:
+        'Commitment device research — Milkman (2021); social accountability increases follow-through 65%',
+      tips: [
+        'Text a friend before any purchase over $50',
+        'Say "I\'m choosing not to spend on X today" instead of "I can\'t afford it"',
+        'Frame it as empowerment, not restriction',
+      ],
+    });
+
+    return {
+      insertedCount: _insertedCount,
+      insertedNames,
+      message: `${_insertedCount} research-backed templates inserted, ${_skippedCount} skipped (already exist)`,
+      skippedCount: _skippedCount,
+      skippedNames,
+      success: true,
+    };
+  },
+});
+
+// ═══════════════════════════════════════════════════════════════
+// Relabel existing templates based on evidence review (April 2026)
+// ═══════════════════════════════════════════════════════════════
+
+export const relabelExistingTemplates = internalMutation({
+  args: {},
+  handler: async (ctx) => {
+    let updatedCount = 0;
+    const updatedNames: string[] = [];
+
+    const updates: Array<{
+      name: string;
+      patch: Partial<{
+        description: string;
+        icon: string;
+        iconColor: string;
+        name: string;
+        tips: string[];
+      }>;
+    }> = [
+      {
+        name: 'Cold Shower',
+        patch: {
+          description:
+            'Take a 2-3 minute cold shower. Triggers a 200-300% dopamine increase lasting 2+ hours, boosting alertness and mood. Note: immunity and fat-burning claims are not well-supported by current research.',
+          tips: [
+            'Start with 30 seconds of cold at the end of a warm shower',
+            'Focus on the alertness benefit — that\'s what the evidence supports',
+            'End on cold — don\'t warm back up for maximum dopamine effect',
+          ],
+        },
+      },
+      {
+        name: 'Gratitude Journaling',
+        patch: {
+          description:
+            'Write down 3 things you\'re grateful for. Research shows 2-3 times per week is optimal — daily practice can show diminishing returns over time. Focus on specificity and novelty for lasting benefits.',
+          tips: [
+            'Research suggests 2-3x/week produces stronger effects than daily',
+            'Vary what you write about — novelty prevents hedonic adaptation',
+            'Include one specific detail about why you appreciate each item',
+          ],
+        },
+      },
+      {
+        name: 'Daily Reading',
+        patch: {
+          description:
+            'Start with just 2 pages or 10 minutes of reading. This tiny habit version builds consistency — most people naturally scale up. Reading one page daily builds automaticity faster than reading a full chapter once a week.',
+          tips: [
+            'Put the book on your pillow as a visual cue',
+            'Start with 2 pages — you\'ll often read more once you begin',
+            'Read before bed to replace screen time',
+          ],
+        },
+      },
+      {
+        name: 'No Added Sugar',
+        patch: {
+          description:
+            'Add one extra serving of vegetables or whole foods to each meal. Approach-framed habits are more sustainable than avoidance — as whole food intake increases, processed food naturally decreases.',
+          icon: '🥦',
+          iconColor: '#22C55E',
+          name: 'Choose Whole Foods',
+          tips: [
+            'Add a vegetable to one meal today — start small',
+            'Approach framing works better than restriction',
+            'As whole food intake rises, processed food naturally drops',
+          ],
+        },
+      },
+      {
+        name: 'Deliberate Cold Exposure',
+        patch: {
+          description:
+            '11 minutes of deliberate cold exposure per week. Strongly supported for dopamine increase (200-300% for 2+ hours) and improved alertness. Fat-burning and immune system claims are not well-supported by current evidence.',
+          tips: [
+            'Split into 2-4 sessions of 1-5 minutes each',
+            'The alertness and mood benefits are the best-supported effects',
+            'End cold — don\'t warm up artificially for maximum benefit',
+          ],
+        },
+      },
+      {
+        name: 'Body Scan Meditation',
+        patch: {
+          tips: [
+            'Start with just 2 minutes scanning head-to-toe as a micro-habit',
+            'Gradually extend to 10-20 minutes as the habit solidifies',
+            'Can be done lying in bed before sleep or seated during the day',
+            'Focus on noticing sensations without trying to change them',
+          ],
+        },
+      },
+    ];
+
+    for (const { name, patch } of updates) {
+      const template = await ctx.db
+        .query('templates')
+        .filter((q) => q.eq(q.field('name'), name))
+        .first();
+      if (template) {
+        await ctx.db.patch(template._id, patch);
+        updatedCount++;
+        updatedNames.push(name);
+      }
+    }
+
+    return { success: true, updatedCount, updatedNames };
   },
 });

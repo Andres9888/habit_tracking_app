@@ -10,6 +10,7 @@ export type TemplateCategory =
   | 'andrew_huberman'
   | 'breathing'
   | 'creativity'
+  | 'environmental_design'
   | 'financial'
   | 'health_fitness'
   | 'learning'
@@ -19,8 +20,10 @@ export type TemplateCategory =
   | 'morning_routine'
   | 'productivity'
   | 'recovery'
+  | 'relationships'
   | 'sleep'
-  | 'social';
+  | 'social'
+  | 'subtraction';
 
 /**
  * Template insert type for database operations
@@ -57,5 +60,8 @@ export const categoryValidator = v.union(
   v.literal('longevity'),
   v.literal('mental_health'),
   v.literal('recovery'),
-  v.literal('breathing')
+  v.literal('breathing'),
+  v.literal('relationships'),
+  v.literal('environmental_design'),
+  v.literal('subtraction')
 );

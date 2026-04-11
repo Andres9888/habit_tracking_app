@@ -16,6 +16,7 @@ const CATEGORY_METADATA: Record<string, Omit<CategoryFilter, 'id'>> = {
   andrew_huberman: { icon: '🔬', label: 'Huberman' },
   breathing: { icon: '🌬️', label: 'Breathing' },
   creativity: { icon: '🎨', label: 'Creativity' },
+  environmental_design: { icon: '🏠', label: 'Environment' },
   financial: { icon: '💰', label: 'Financial' },
   health_fitness: { icon: '💪', label: 'Health' },
   learning: { icon: '📚', label: 'Learning' },
@@ -25,8 +26,10 @@ const CATEGORY_METADATA: Record<string, Omit<CategoryFilter, 'id'>> = {
   morning_routine: { icon: '🌅', label: 'Morning' },
   productivity: { icon: '🎯', label: 'Productivity' },
   recovery: { icon: '🔄', label: 'Recovery' },
+  relationships: { icon: '💑', label: 'Relationships' },
   sleep: { icon: '😴', label: 'Sleep' },
   social: { icon: '👥', label: 'Social' },
+  subtraction: { icon: '➖', label: 'Less Is More' },
 };
 
 function getCategoriesFromTemplates(templates: Doc<'templates'>[] | undefined) {

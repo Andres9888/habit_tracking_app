@@ -15,6 +15,7 @@ export type Category =
   | 'andrew_huberman'
   | 'breathing'
   | 'creativity'
+  | 'environmental_design'
   | 'financial'
   | 'health_fitness'
   | 'learning'
@@ -24,8 +25,10 @@ export type Category =
   | 'morning_routine'
   | 'productivity'
   | 'recovery'
+  | 'relationships'
   | 'sleep'
-  | 'social';
+  | 'social'
+  | 'subtraction';
 
 export interface CategoryFilter {
   icon: string;
