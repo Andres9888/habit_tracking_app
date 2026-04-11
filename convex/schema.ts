@@ -266,7 +266,10 @@ const applicationTables = {
       v.literal('longevity'),
       v.literal('mental_health'),
       v.literal('recovery'),
-      v.literal('breathing')
+      v.literal('breathing'),
+      v.literal('relationships'),
+      v.literal('environmental_design'),
+      v.literal('subtraction')
     ),
     // For sorting popular templates
     createdAt: v.number(),
