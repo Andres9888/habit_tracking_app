@@ -1,5 +1,5 @@
 /**
- * Science box styles for FullsizeTemplatePreview
+ * Science & Evidence section layout and header styles
  */
 
 import { StyleSheet } from 'react-native';
@@ -8,31 +8,25 @@ import { colors } from '@/theme';
 import { borderRadius, spacing } from '../../../theme/spacing';
 import { typography, fontWeights, fontFamilies } from '@/theme/typography';
 
-export const scienceStyles = StyleSheet.create({
-  scienceBox: {
-    backgroundColor: colors.primary[100],
-    borderColor: colors.primary[100],
-    borderRadius: borderRadius.large,
-    borderWidth: 2,
-    marginHorizontal: spacing.lg,
-    marginTop: spacing.lg,
+export const evidenceStyles = StyleSheet.create({
+  divider: {
+    backgroundColor: `${colors.primary[500]}20`,
+    height: 1,
+    marginBottom: 14,
+  },
+  gradient: {
     padding: spacing.lg,
   },
-  scienceDivider: {
-    backgroundColor: colors.primary[100],
-    height: 1,
-    marginBottom: 12,
-  },
-  scienceHeader: {
+  header: {
     alignItems: 'center',
     flexDirection: 'row',
     gap: 8,
-    marginBottom: 12,
+    marginBottom: 14,
   },
-  scienceIcon: {
+  headerIcon: {
     fontSize: typography.heading2.fontSize,
   },
-  scienceLabel: {
+  headerLabel: {
     color: colors.primary[700],
     fontFamily: fontFamilies.primary.text,
     fontSize: typography.caption.fontSize,
@@ -40,21 +34,29 @@ export const scienceStyles = StyleSheet.create({
     letterSpacing: 0.8,
     textTransform: 'uppercase',
   },
-  scienceQuote: {
+  quoteText: {
     color: colors.primary[700],
     fontFamily: fontFamilies.primary.text,
     fontSize: 13,
     fontStyle: 'italic',
-    lineHeight: 24,
+    lineHeight: 22,
   },
   researchLink: {
     ...typography.caption,
+    alignSelf: 'flex-start',
     borderBottomColor: `${colors.primary[600]}66`,
     borderBottomWidth: 1,
     color: colors.primary[600],
     fontWeight: fontWeights.semibold,
     marginTop: spacing.sm,
     paddingBottom: 1,
-    alignSelf: 'flex-start',
+  },
+  section: {
+    borderLeftColor: colors.primary[500],
+    borderLeftWidth: 3,
+    borderRadius: borderRadius.large,
+    marginHorizontal: spacing.lg,
+    marginTop: spacing.lg,
+    overflow: 'hidden',
   },
 });

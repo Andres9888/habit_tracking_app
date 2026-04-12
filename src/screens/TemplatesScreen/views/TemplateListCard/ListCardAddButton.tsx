@@ -1,0 +1,97 @@
+/**
+ * Full-width bottom add button with bounce animation.
+ */
+
+import { useEffect } from 'react';
+import { ActivityIndicator, Pressable, StyleSheet, Text } from 'react-native';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+} from 'react-native-reanimated';
+import { Check } from 'lucide-react-native';
+import { useThemeColors } from '../../../../theme/ThemeContext';
+import { springs } from '../../../../theme/animations';
+import { borderRadius, spacing } from '../../../../theme/spacing';
+import { typography, fontWeights } from '../../../../theme/typography';
+import { triggerHaptic } from '@/utils/haptics';
+import type { ListCardAddButtonProps } from './TemplateListCard.types';
+
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
+
+export function ListCardAddButton({
+  isImported,
+  isImporting,
+  name,
+  onImport,
+}: ListCardAddButtonProps) {
+  const { colors } = useThemeColors();
+  const scale = useSharedValue(1);
+
+  useEffect(() => {
+    if (isImported) {
+      scale.value = withSpring(1.03, springs.responsive);
+      const timeout = setTimeout(() => {
+        scale.value = withSpring(1, springs.responsive);
+      }, 120);
+      return () => clearTimeout(timeout);
+    }
+  }, [isImported, scale]);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
+
+  return (
+    <AnimatedPressable
+      accessibilityLabel={
+        isImported ? `${name} added` : `Add ${name} habit`
+      }
+      accessibilityRole='button'
+      disabled={isImported || isImporting}
+      style={[
+        s.button,
+        {
+          backgroundColor: isImported
+            ? colors.primary[100]
+            : colors.primary[600],
+        },
+        animatedStyle,
+      ]}
+      onPress={(event) => {
+        event.stopPropagation();
+        void triggerHaptic('selection');
+        onImport();
+      }}
+    >
+      {isImporting ? (
+        <ActivityIndicator color={colors.text.inverse} size='small' />
+      ) : isImported ? (
+        <>
+          <Check color={colors.primary[700]} size={14} strokeWidth={3} />
+          <Text style={[s.label, { color: colors.primary[700] }]}>Added</Text>
+        </>
+      ) : (
+        <Text style={[s.label, { color: colors.text.inverse }]}>
+          + Add Habit
+        </Text>
+      )}
+    </AnimatedPressable>
+  );
+}
+
+const s = StyleSheet.create({
+  button: {
+    alignItems: 'center',
+    borderRadius: borderRadius.medium,
+    flexDirection: 'row',
+    gap: spacing.sm,
+    height: 40,
+    justifyContent: 'center',
+    marginTop: spacing.md,
+  },
+  label: {
+    ...typography.caption,
+    fontWeight: fontWeights.bold,
+  },
+});
