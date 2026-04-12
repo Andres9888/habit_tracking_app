@@ -38,7 +38,7 @@ export const ConnectorArms: React.FC<ConnectorArmsProps> = ({
           right: `50%`,
           marginRight: RING_HALF,
           backgroundColor: streakConnectorColor,
-          opacity: ghostLeft && !connectLeft ? 0.5 : 1,
+          opacity: ghostLeft && !connectLeft ? 0.8 : 1,
         }}
       /> : null}
     {(connectRight || ghostRight) ? <View
@@ -48,7 +48,7 @@ export const ConnectorArms: React.FC<ConnectorArmsProps> = ({
           marginLeft: RING_HALF,
           right: 0,
           backgroundColor: streakConnectorColor,
-          opacity: ghostRight && !connectRight ? 0.5 : 1,
+          opacity: ghostRight && !connectRight ? 0.8 : 1,
         }}
       /> : null}
   </>

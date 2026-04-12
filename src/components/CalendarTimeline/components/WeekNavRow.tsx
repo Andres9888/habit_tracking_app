@@ -93,7 +93,7 @@ export const WeekNavRow: React.FC<WeekNavRowProps> = ({
           <Text style={[s.dateText, { color: colors.text.secondary }]}>
             {dateSuffix}
           </Text>
-          <ChevronDown color={colors.gray[300]} size={iconSizes.micro} strokeWidth={2} />
+          <ChevronDown color={colors.gray[300]} size={12} strokeWidth={2} />
         </View>
       </AnimatedPressable>
 

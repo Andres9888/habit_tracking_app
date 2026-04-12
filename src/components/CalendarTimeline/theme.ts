@@ -41,7 +41,7 @@ const STANDARD_COLORS: CalendarTimelineColors = {
   dayText: colors.gray[600],
   icon: colors.gray[500],
   primaryText: colors.gray[800],
-  secondaryText: colors.gray[300],
+  secondaryText: colors.gray[400],
 };
 
 /**
