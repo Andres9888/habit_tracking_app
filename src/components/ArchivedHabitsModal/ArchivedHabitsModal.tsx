@@ -1,15 +1,14 @@
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { Alert, FlatList, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useArchivedHabitsModalLogic } from './ArchivedHabitsModal.hooks';
-import { EmptyState, ModalHeader } from './components';
-import { CompactHabitRow } from './components/CompactHabitRow';
+import { useArchivedHabitsModalState } from './useArchivedHabitsModalState';
+import { AnimatedHabitCard, ArchiveSelectionBar, EmptyState, ModalHeader } from './components';
 import { LoadingState } from './components/LoadingState';
 import type { ArchivedHabitsModalProps, ArchivedHabit } from './types';
 
 export default function ArchivedHabitsModal({ onClose, onBack }: ArchivedHabitsModalProps) {
   const insets = useSafeAreaInsets();
-  const logic = useArchivedHabitsModalLogic();
+  const state = useArchivedHabitsModalState();
 
   const handleUpgradePress = useCallback(() => {
     Alert.alert(
@@ -21,38 +20,57 @@ export default function ArchivedHabitsModal({ onClose, onBack }: ArchivedHabitsM
 
   const renderItem = useCallback(
     ({ item, index }: { item: ArchivedHabit; index: number }) => (
-      <CompactHabitRow
+      <AnimatedHabitCard
         habit={item}
-        hasReachedLimit={logic.hasReachedHabitLimit}
-        isLast={index === logic.archivedHabits.length - 1}
-        onDelete={logic.handlePermanentDelete}
-        onRestore={logic.handleRestore}
+        hasReachedLimit={state.hasReachedHabitLimit}
+        index={index}
+        isSelected={state.selectedIds.has(item._id)}
+        reducedMotion={state.reducedMotion}
+        selectionMode={state.selectionMode}
+        onDelete={state.handlePermanentDelete}
+        onRestore={state.handleRestore}
+        onToggleSelect={state.toggleSelection}
         onUpgradePress={handleUpgradePress}
       />
     ),
-    [logic, handleUpgradePress]
+    [state, handleUpgradePress]
   );
 
   const keyExtractor = useCallback((item: ArchivedHabit) => item._id, []);
+  const extraData = useMemo(
+    () => [state.selectionMode, state.selectedIds.size],
+    [state.selectionMode, state.selectedIds.size]
+  );
 
   return (
     <View className='flex-1'>
       <ModalHeader
-        habitCount={logic.isLoading ? 0 : logic.archivedHabits.length}
+        habitCount={state.isLoading ? 0 : state.archivedHabits.length}
         insets={insets}
         onBack={onBack}
         onClose={onClose}
       />
-      {logic.isLoading ? <LoadingState /> : logic.archivedHabits.length === 0 ? <EmptyState /> : (
+      {state.isLoading ? <LoadingState /> : state.archivedHabits.length === 0 ? <EmptyState /> : (
         <FlatList
           className='flex-1'
-          contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: insets.bottom + 16 }}
-          data={logic.archivedHabits}
+          contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: insets.bottom + 16 + (state.selectionMode ? 80 : 0) }}
+          data={state.archivedHabits}
+          extraData={extraData}
+          ItemSeparatorComponent={() => <View style={{ height: 14 }} />}
           keyExtractor={keyExtractor}
-          ListHeaderComponent={<View style={{ height: 4 }} />}
           renderItem={renderItem}
           showsVerticalScrollIndicator={false}
         />
+      )}
+      {state.selectionMode && (
+        <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
+          <ArchiveSelectionBar
+            selectedCount={state.selectedCount}
+            onCancel={state.exitSelectionMode}
+            onDelete={state.handleBatchDeletePress}
+            onRestore={state.handleBatchRestorePress}
+          />
+        </View>
       )}
     </View>
   );

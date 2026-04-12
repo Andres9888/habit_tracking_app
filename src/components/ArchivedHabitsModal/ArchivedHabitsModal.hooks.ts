@@ -4,8 +4,8 @@ import { api } from '../../../convex/_generated/api';
 import type { Id } from '../../../convex/_generated/dataModel';
 import { FREE_HABIT_LIMIT } from '@/constants';
 import { triggerHaptic } from '@/utils/haptics';
-import { cancelHabitReminder } from '@/utils/notifications';
 import { useBatchArchiveActions } from './useBatchArchiveActions';
+import { useArchiveDeleteActions } from './useArchiveDeleteActions';
 
 export const useArchivedHabitsModalLogic = () => {
   const archivedHabitsData = useQuery(api.habits.listArchived);
@@ -29,6 +29,12 @@ export const useArchivedHabitsModalLogic = () => {
     removeHabit
   );
 
+  const { handlePermanentDelete, handleDeleteAll } = useArchiveDeleteActions({
+    removeHabit,
+    deleteAllArchivedMutation,
+    archivedHabits,
+  });
+
   const handleRestore = async (
     habitId: Id<'habits'>,
     habitName: string
@@ -38,68 +44,12 @@ export const useArchivedHabitsModalLogic = () => {
       await unarchiveHabit({ habitId });
       triggerHaptic('success');
       return true;
-    } catch (error) {
-      if (__DEV__) console.error('Failed to restore habit:', error);
+    } catch (error_) {
+      if (__DEV__) console.error('Failed to restore habit:', error_);
       triggerHaptic('error');
       Alert.alert('Error', `Failed to restore "${habitName}". Please try again.`);
       return false;
     }
-  };
-
-  const handlePermanentDelete = (habitId: Id<'habits'>, habitName: string) => {
-    triggerHaptic('heavy');
-    Alert.alert(
-      `Permanently Delete "${habitName}"?`,
-      'This will permanently delete the habit and all its tracking data. This action cannot be undone.',
-      [
-        { style: 'cancel', text: 'Cancel' },
-        {
-          onPress: async () => {
-            try {
-              await cancelHabitReminder(String(habitId));
-              await removeHabit({ habitId });
-              triggerHaptic('success');
-            } catch (error) {
-              if (__DEV__) console.error('Failed to delete habit:', error);
-              triggerHaptic('error');
-              Alert.alert('Error', `Failed to delete "${habitName}". Please try again.`);
-            }
-          },
-          style: 'destructive',
-          text: 'Delete Forever',
-        },
-      ],
-      { cancelable: true }
-    );
-  };
-
-  const handleDeleteAll = () => {
-    triggerHaptic('heavy');
-    Alert.alert(
-      'Delete All Archived Habits?',
-      `This will permanently delete ${archivedHabits.length} archived habit${archivedHabits.length === 1 ? '' : 's'} and all their tracking data. This cannot be undone.`,
-      [
-        { style: 'cancel', text: 'Cancel' },
-        {
-          onPress: async () => {
-            try {
-              await Promise.all(
-                archivedHabits.map((h) => cancelHabitReminder(String(h._id)))
-              );
-              await deleteAllArchivedMutation();
-              triggerHaptic('success');
-            } catch (error) {
-              if (__DEV__) console.error('Failed to delete all archived:', error);
-              triggerHaptic('error');
-              Alert.alert('Error', 'Failed to delete archived habits. Please try again.');
-            }
-          },
-          style: 'destructive',
-          text: 'Delete All',
-        },
-      ],
-      { cancelable: true }
-    );
   };
 
   return {
