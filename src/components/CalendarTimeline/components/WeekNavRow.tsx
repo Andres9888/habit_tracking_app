@@ -31,7 +31,7 @@ const PRESS = {
   today: { pressScale: 0.95 },
 } as const;
 const ENTRANCE_DURATION = durations.enter;
-const EXIT_TIMING = { duration: durations.quick, easing: Easing.in(Easing.cubic) };
+const EXIT_TIMING = { duration: durations.transition, easing: Easing.in(Easing.cubic) };
 const SLIDE_OFFSET = 16;
 
 /** Date row — centered date pill with optional "Today" pill on past weeks */
