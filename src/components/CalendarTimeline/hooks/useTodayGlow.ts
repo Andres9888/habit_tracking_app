@@ -19,7 +19,7 @@ interface UseTodayGlowParams {
 
 const GLOW_MIN = 0.15;
 const GLOW_MAX = 0.4;
-const HALF_CYCLE_MS = 1250;
+const HALF_CYCLE_MS = 1500;
 const SHADOW_RADIUS = 8;
 
 const SHADOW_COLOR_LIGHT = palette.streak[300];

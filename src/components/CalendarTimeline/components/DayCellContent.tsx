@@ -93,7 +93,6 @@ export const DayCellContent: React.FC<DayCellContentProps> = ({
           fontFamily: fontFamilies.primary.text,
           fontWeight: isCurrentDay ? '700' : '500',
           letterSpacing: 0.5,
-          ...(isCurrentDay && { transform: [{ translateX: 3 }] }),
         }}
       >
         {isCurrentDay ? 'Today' : weekday.toUpperCase()}
