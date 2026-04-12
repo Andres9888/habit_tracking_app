@@ -2,7 +2,7 @@
  * Templates Screen Types
  */
 
-export type SortOption = 'az' | 'newest' | 'popular';
+export type SortOption = 'az' | 'popular';
 
 export interface SortOptionConfig {
   description: string;

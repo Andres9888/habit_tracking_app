@@ -17,6 +17,7 @@ import {
 } from '../FullsizeTemplatePreview.constants';
 import { formatPopularity } from '../../../screens/TemplatesScreen/components/TrendingCard/formatPopularity';
 import { MetadataPill } from './MetadataPill';
+import { buildHeroGradient } from '../utils/heroGradient';
 import type { HeroSectionProps } from './HeroSection.types';
 
 export function HeroSection({
@@ -26,11 +27,7 @@ export function HeroSection({
   iconGlowStyle,
 }: HeroSectionProps) {
   const theme = useAppTheme();
-  const gradientColors = [
-    `${iconColor}15`,
-    `${iconColor}08`,
-    '#FAFAF9',
-  ] as const;
+  const gradientColors = buildHeroGradient(iconColor);
   const formattedFrequency =
     FREQUENCY_LABELS[template?.frequency] || template?.frequency || 'Daily';
   const formattedCategory =
@@ -40,7 +37,15 @@ export function HeroSection({
   const popularity = template?.popularityScore ?? 0;
 
   return (
-    <LinearGradient colors={gradientColors} style={heroStyles.heroGradient}>
+    <LinearGradient
+      colors={gradientColors}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}
+      style={heroStyles.heroGradient}
+    >
+      <View
+        style={[heroStyles.decorativeCircle, { backgroundColor: `${iconColor}08` }]}
+      />
       <View style={heroStyles.heroContent}>
         <Animated.View style={[heroStyles.iconWrapper, iconAnimatedStyle]}>
           <Animated.View
