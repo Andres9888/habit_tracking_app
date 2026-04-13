@@ -4,7 +4,7 @@
 import { StyleSheet } from 'react-native';
 import { colors } from '../../theme/colors';
 import { typography } from '../../theme/typography';
-import { spacing } from '../../theme/spacing';
+import { borderRadius, spacing } from '../../theme/spacing';
 
 export const styles = StyleSheet.create({
   container: {
@@ -16,7 +16,7 @@ export const styles = StyleSheet.create({
   exportButton: {
     alignItems: 'center',
     backgroundColor: colors.primary[500],
-    borderRadius: 12,
+    borderRadius: borderRadius.button,
     flexDirection: 'row',
     justifyContent: 'center',
     marginHorizontal: spacing.lg,

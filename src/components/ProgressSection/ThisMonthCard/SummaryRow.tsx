@@ -6,6 +6,7 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import { TrendingUp, TrendingDown, CheckCircle2 } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '@/theme/ThemeContext';
 
 interface SummaryRowProps {
@@ -28,11 +29,11 @@ export function SummaryRow({
       {/* Trend */}
       <View className='flex-row items-center gap-1.5'>
         {isPositiveTrend ? (
-          <TrendingUp color={themeColors.status.success} size={16} />
+          <TrendingUp color={themeColors.status.success} size={iconSizes.small} />
         ) : isNegativeTrend ? (
-          <TrendingDown color={themeColors.status.error} size={16} />
+          <TrendingDown color={themeColors.status.error} size={iconSizes.small} />
         ) : (
-          <TrendingUp color={themeColors.text.tertiary} size={16} />
+          <TrendingUp color={themeColors.text.tertiary} size={iconSizes.small} />
         )}
         <Text
           className='text-xs font-semibold'
@@ -48,7 +49,7 @@ export function SummaryRow({
 
       {/* Completed days */}
       <View className='flex-row items-center gap-1.5'>
-        <CheckCircle2 color={themeColors.status.premium} size={16} />
+        <CheckCircle2 color={themeColors.status.premium} size={iconSizes.small} />
         <Text className='text-xs font-semibold' style={{ color: themeColors.text.primary }}>
           {completedDays}/{totalDays} days
         </Text>

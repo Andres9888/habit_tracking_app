@@ -7,8 +7,10 @@ import React from 'react';
 import { View } from 'react-native';
 import { Grid3X3 } from 'lucide-react-native';
 import Animated from 'react-native-reanimated';
+import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { useReducedMotionEntry } from '../EmptyState/useReducedMotionEntry';
+import { borderRadius } from '@/theme/spacing';
 import { typography, fontWeights } from '@/theme/typography';
 
 export function EmptyState() {
@@ -27,7 +29,7 @@ export function EmptyState() {
         style={{
           alignItems: 'center',
           backgroundColor: isDark ? '#1E3A5F' : '#EFF6FF',
-          borderRadius: 12,
+          borderRadius: borderRadius.medium,
           height: 64,
           justifyContent: 'center',
           marginBottom: 16,
@@ -38,7 +40,7 @@ export function EmptyState() {
           width: 64,
         }}
       >
-        <Grid3X3 color={isDark ? '#93C5FD' : '#3b82f6'} size={32} strokeWidth={1.5} />
+        <Grid3X3 color={isDark ? '#93C5FD' : '#3b82f6'} size={iconSizes.xl} strokeWidth={1.5} />
       </Animated.View>
       <Animated.Text
         entering={entry(60)}

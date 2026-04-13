@@ -1,6 +1,6 @@
 import { memo, useCallback, useRef } from 'react';
 import { Animated, Pressable, Text } from 'react-native';
-import { shadows } from '../../../theme/spacing';
+import { borderRadius, shadows } from '../../../theme/spacing';
 import type { QuickAccessEmojiItemProps } from '../EmojiPicker.types';
 
 export const QuickAccessEmojiItem = memo(
@@ -49,7 +49,7 @@ export const QuickAccessEmojiItem = memo(
               alignItems: 'center',
               backgroundColor: isSelected ? '#f5f5f4' : 'white',
               borderColor: isSelected ? '#10b981' : 'transparent',
-              borderRadius: 12,
+              borderRadius: borderRadius.medium,
               borderWidth: isSelected ? 2 : 0,
               height: 44,
               justifyContent: 'center',

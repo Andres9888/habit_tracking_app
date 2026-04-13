@@ -17,6 +17,7 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Trophy } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '@/theme/ThemeContext';
 
 import type { PersonalBestsCardProps } from './types';
@@ -47,7 +48,7 @@ export function PersonalBestsCard({
     >
       <LinearGradient
         className='absolute inset-0'
-        colors={['rgba(255, 251, 235, 0.3)', '#ffffff', 'rgba(255, 237, 213, 0.3)']}
+        colors={['rgba(255, 251, 235, 0.3)', themeColors.card, 'rgba(255, 237, 213, 0.3)']}
         end={{ x: 1, y: 1 }}
         start={{ x: 0, y: 0 }}
       />
@@ -56,7 +57,7 @@ export function PersonalBestsCard({
       <View className='p-4'>
         <View className='mb-3 flex-row items-center gap-2'>
           <View className='h-8 w-8 items-center justify-center rounded-lg' style={{ backgroundColor: themeColors.status.warningLight }}>
-            <Trophy color={themeColors.status.warning} size={16} />
+            <Trophy color={themeColors.status.warning} size={iconSizes.small} />
           </View>
           <Text className='text-base font-semibold' style={{ color: themeColors.text.primary }}>
             Personal Bests

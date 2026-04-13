@@ -68,7 +68,7 @@ export const ReminderSection = ({
           accessibilityRole='switch'
           accessibilityState={{ checked: remindersEnabled }}
           ios_backgroundColor='#E5E5E5'
-          thumbColor='#FFFFFF'
+          thumbColor={themeColors.text.inverse}
           trackColor={{ false: '#E5E5E5', true: '#22C55E' }}
           value={remindersEnabled}
           onValueChange={(val) => {

@@ -3,7 +3,7 @@
  */
 import { StyleSheet } from 'react-native';
 import { typography } from '../../../theme/typography';
-import { spacing } from '../../../theme/spacing';
+import { borderRadius, spacing } from '../../../theme/spacing';
 
 export const styles = StyleSheet.create({
   skeletonSubtitle: {
@@ -24,7 +24,7 @@ export const styles = StyleSheet.create({
     width: 100,
   },
   statCard: {
-    borderRadius: 16,
+    borderRadius: borderRadius.card,
     elevation: 3,
     flex: 1,
     margin: spacing.sm,

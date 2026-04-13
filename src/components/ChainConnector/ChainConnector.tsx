@@ -1,7 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
 import { useThemeColors } from '../../theme/ThemeContext';
-import { shadows } from '../../theme/spacing';
+import { borderRadius, shadows } from '../../theme/spacing';
 import { ChainLinkIcon } from '../ChainLinkIcon/ChainLinkIcon';
 
 /**
@@ -43,7 +43,7 @@ export const ChainConnector: React.FC = () => {
           ...shadows.subtle,
           alignItems: 'center',
           backgroundColor: themeColors.card,
-          borderRadius: 12,
+          borderRadius: borderRadius.medium,
           height: 24,
           justifyContent: 'center',
           shadowOpacity: 0.1,

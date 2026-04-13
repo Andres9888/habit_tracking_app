@@ -5,6 +5,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { useThemeColors } from '../../../theme/ThemeContext';
+import { borderRadius } from '../../../theme/spacing';
 import { fontFamilies, fontWeights } from '../../../theme/typography';
 import type { TemplateInfoProps } from './types';
 
@@ -15,7 +16,7 @@ const localStyles = StyleSheet.create({
     marginTop: 8,
   },
   infoPill: {
-    borderRadius: 12,
+    borderRadius: borderRadius.medium,
     flex: 1,
     padding: 12,
   },

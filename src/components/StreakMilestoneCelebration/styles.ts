@@ -85,7 +85,7 @@ export const styles = StyleSheet.create({
 
   primaryButtonText: {
     ...typography.button,
-    color: '#FFFFFF',
+    color: colors.text.inverse,
   },
 
   // Streak count badge
@@ -198,19 +198,19 @@ export const achievementCardStyles = StyleSheet.create({
 
   habitName: {
     ...typography.heading3,
-    color: '#FFFFFF',
+    color: colors.text.inverse,
   },
 
   streakText: {
     ...typography.displayLarge,
-    color: '#FFFFFF',
+    color: colors.text.inverse,
     marginBottom: spacing.xs,
     textAlign: 'center',
   },
 
   title: {
     ...typography.heading1,
-    color: '#FFFFFF',
+    color: colors.text.inverse,
     marginBottom: spacing.sm,
     textAlign: 'center',
   },

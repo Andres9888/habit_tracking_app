@@ -4,6 +4,7 @@
 
 import { StyleSheet } from 'react-native';
 import { colors } from '@/theme/colors';
+import { borderRadius } from '@/theme/spacing';
 import { typography, fontWeights, fontFamilies} from '../../../theme/typography';
 
 export const containerStyles = StyleSheet.create({
@@ -32,7 +33,7 @@ export const containerStyles = StyleSheet.create({
   },
   previewContainer: {
     backgroundColor: colors.gray[100],
-    borderRadius: 12,
+    borderRadius: borderRadius.medium,
     overflow: 'hidden',
   },
   previewSection: {

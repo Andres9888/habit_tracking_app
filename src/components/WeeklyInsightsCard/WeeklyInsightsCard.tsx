@@ -12,6 +12,7 @@ import {
   AlertTriangle,
 } from 'lucide-react-native';
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
+import { iconSizes } from '@/theme/iconSizes';
 import { colors } from '../../theme/colors';
 import type { WeeklyInsightsCardProps } from './WeeklyInsightsCard.types';
 import { styles } from './WeeklyInsightsCard.styles';
@@ -93,7 +94,7 @@ export default function WeeklyInsightsCard({
         style={styles.archiveButton}
         onPress={onArchivePress}
       >
-        <Archive color={colors.text.secondary} size={20} />
+        <Archive color={colors.text.secondary} size={iconSizes.medium} />
         <Text style={styles.archiveButtonText}>View Past Reports</Text>
       </AnimatedPressable>
 

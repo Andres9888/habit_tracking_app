@@ -9,6 +9,7 @@ import React from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 
 import { ConfettiSystem, useCelebration, determineBurstType, type CompletionContext } from './index';
+import { borderRadius } from '@/theme/spacing';
 import { fontFamilies } from '@/theme/typography';
 
 /**
@@ -134,7 +135,7 @@ const styles = StyleSheet.create({
   button: {
     alignItems: 'center',
     backgroundColor: '#059669',
-    borderRadius: 12,
+    borderRadius: borderRadius.button,
     marginBottom: 12,
     padding: 16,
     width: '100%',
@@ -151,7 +152,7 @@ const styles = StyleSheet.create({
   },
   card: {
     backgroundColor: '#EDEAE5',
-    borderRadius: 16,
+    borderRadius: borderRadius.card,
     padding: 20,
   },
   clearButton: {

@@ -1,6 +1,7 @@
 import { StyleSheet, Text, View } from 'react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { useThemeColors } from '@/theme/ThemeContext';
+import { borderRadius } from '@/theme/spacing';
 import { typography, fontWeights } from '@/theme/typography';
 
 const anim = (delay: number) => FadeInUp.duration(280).delay(delay).springify().damping(18);
@@ -10,7 +11,7 @@ const s = StyleSheet.create({
   icon: { alignItems: 'center', borderRadius: 24, height: 80, justifyContent: 'center', marginBottom: 28, width: 80 },
   heading: { ...typography.heading3, fontWeight: fontWeights.bold, letterSpacing: -0.3, marginBottom: 8, textAlign: 'center' as const },
   desc: { ...typography.bodySmall, lineHeight: 21, marginBottom: 28, maxWidth: 260, textAlign: 'center' as const },
-  tipCard: { borderRadius: 16, flexDirection: 'row' as const, gap: 12, padding: 16, width: '100%' as const },
+  tipCard: { borderRadius: borderRadius.card, flexDirection: 'row' as const, gap: 12, padding: 16, width: '100%' as const },
   tipTitle: { ...typography.caption, fontWeight: fontWeights.semibold, marginBottom: 3 },
   tipDesc: { ...typography.caption, lineHeight: 19 },
 });

@@ -75,13 +75,13 @@ export function EditHeader({
           scale.value = withSpring(1, springs.button);
         }}
       >
-        {isSaving ? <ActivityIndicator color='#ffffff' size='small' /> : null}
+        {isSaving ? <ActivityIndicator color={colors.text.inverse} size='small' /> : null}
         <Text
           className='font-semibold'
           style={{
             ...typography.button,
             letterSpacing: -0.41,
-            color: canSave && !isSaving ? '#FFFFFF' : disabledText,
+            color: canSave && !isSaving ? colors.text.inverse : disabledText,
           }}
         >
           {isSaving ? 'Saving…' : 'Save'}

@@ -8,6 +8,7 @@ import { Pressable, Text, View } from 'react-native';
 import Animated, { type AnimatedStyle } from 'react-native-reanimated';
 import { ChevronDown } from 'lucide-react-native';
 
+import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '../../theme/ThemeContext';
 import type { CategoryColors } from './types';
 import { styles } from './styles';
@@ -96,7 +97,7 @@ export function SectionHeader({
         <Animated.View style={[styles.chevronContainer, chevronAnimatedStyle]}>
           <ChevronDown
             color={isExpanded ? colors.bgSelected : themeColors.text.tertiary}
-            size={20}
+            size={iconSizes.medium}
             strokeWidth={2.5}
           />
         </Animated.View>

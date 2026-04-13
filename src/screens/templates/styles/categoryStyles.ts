@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { shadows } from '@/theme/spacing';
+import { borderRadius, shadows } from '@/theme/spacing';
 import { fontWeights, typography } from '@/theme/typography';
 
 export const categoryStyles = StyleSheet.create({
@@ -41,7 +41,7 @@ export const categoryStyles = StyleSheet.create({
   },
   categoryHeaderIcon: {
     alignItems: 'center',
-    borderRadius: 12,
+    borderRadius: borderRadius.medium,
     height: 48,
     justifyContent: 'center',
     width: 48,

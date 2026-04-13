@@ -9,7 +9,7 @@ import { Flame } from 'lucide-react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { typography } from '@/theme/typography';
-import { spacing } from '@/theme';
+import { borderRadius, spacing } from '@/theme/spacing';
 import { iconSizes } from '@/theme/iconSizes';
 
 const anim = (delay: number) =>
@@ -26,7 +26,7 @@ export function StreakEmptyState() {
         alignItems: 'center',
         backgroundColor: colors.card,
         borderColor: colors.border,
-        borderRadius: 12,
+        borderRadius: borderRadius.medium,
         borderWidth: 1,
         marginTop: 12,
         padding: spacing.lg,

@@ -3,6 +3,8 @@
  */
 
 import { StyleSheet } from 'react-native';
+import { colors } from '@/theme/colors';
+import { borderRadius } from '@/theme/spacing';
 import { typography, fontWeights } from '@/theme/typography';
 import { ICON_BADGE_SIZE } from './constants';
 
@@ -18,7 +20,7 @@ export const styles = StyleSheet.create({
   },
   actionText: {
     ...typography.caption,
-    color: '#FFFFFF',
+    color: colors.text.inverse,
     fontWeight: fontWeights.bold,
   },
   container: {
@@ -46,12 +48,12 @@ export const styles = StyleSheet.create({
   },
   nameText: {
     ...typography.bodySmall,
-    color: '#FFFFFF',
+    color: colors.text.inverse,
     fontWeight: fontWeights.bold,
   },
   toast: {
     alignItems: 'center',
-    borderRadius: 16,
+    borderRadius: borderRadius.card,
     flexDirection: 'row',
     gap: 12,
     justifyContent: 'space-between',

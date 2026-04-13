@@ -5,18 +5,18 @@
 import { StyleSheet } from 'react-native';
 import { colors } from '../../../theme/colors';
 import { typography } from '../../../theme/typography';
-import { spacing } from '../../../theme/spacing';
+import { borderRadius, spacing } from '../../../theme/spacing';
 
 export const auxiliaryStyles = StyleSheet.create({
   container: {
     backgroundColor: colors.surface,
-    borderRadius: 12,
+    borderRadius: borderRadius.medium,
     padding: spacing.md,
   },
   emptyContainer: {
     alignItems: 'center',
     backgroundColor: colors.surface,
-    borderRadius: 12,
+    borderRadius: borderRadius.medium,
     height: 200,
     justifyContent: 'center',
     padding: spacing.xl,

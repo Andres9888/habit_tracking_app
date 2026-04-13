@@ -75,13 +75,13 @@ export function ImportHeader({
           scale.value = withSpring(1, springs.button);
         }}
       >
-        {isImporting ? <ActivityIndicator color='#ffffff' size='small' /> : null}
+        {isImporting ? <ActivityIndicator color={colors.text.inverse} size='small' /> : null}
         <Text
           className='font-semibold'
           style={{
             ...typography.button,
             letterSpacing: -0.41,
-            color: canImport && !isImporting ? '#FFFFFF' : disabledText,
+            color: canImport && !isImporting ? colors.text.inverse : disabledText,
           }}
         >
           {isImporting ? 'Importing…' : 'Import'}

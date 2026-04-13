@@ -5,7 +5,7 @@
  */
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import { spacing } from '../../../theme/spacing';
+import { borderRadius, spacing } from '../../../theme/spacing';
 import { SkeletonLoader } from '../../SkeletonLoader';
 import { useSkeletonTheme } from '../../SkeletonLoader/useSkeletonTheme';
 
@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
     marginTop: spacing.md,
   },
   cardSkeleton: {
-    borderRadius: 12,
+    borderRadius: borderRadius.medium,
     borderWidth: 1,
     marginBottom: spacing.md,
     padding: spacing.md,

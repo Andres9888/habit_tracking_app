@@ -8,6 +8,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { View, Text, Pressable, AccessibilityInfo } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Info } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '@/theme/ThemeContext';
 
 import type { YourProgressCardProps } from '../types';
@@ -70,7 +71,7 @@ export function YourProgressCard({
     >
       <LinearGradient
         className='absolute inset-0'
-        colors={['rgba(240, 253, 250, 0.3)', '#ffffff', 'rgba(236, 253, 245, 0.3)']}
+        colors={['rgba(240, 253, 250, 0.3)', themeColors.card, 'rgba(236, 253, 245, 0.3)']}
         end={{ x: 1, y: 1 }}
         start={{ x: 0, y: 0 }}
       />
@@ -89,7 +90,7 @@ export function YourProgressCard({
             hitSlop={{ bottom: 10, left: 10, right: 10, top: 10 }}
             onPress={handleInfoPress}
           >
-            <Info color={themeColors.text.secondary} size={16} />
+            <Info color={themeColors.text.secondary} size={iconSizes.small} />
           </Pressable>
         </View>
 

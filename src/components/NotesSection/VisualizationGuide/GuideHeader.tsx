@@ -7,6 +7,7 @@ import { View, Text } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Eye, Sparkles, Target } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 
 interface GuideHeaderProps {
   habitName?: string;
@@ -26,7 +27,7 @@ export function GuideHeader({ habitName }: GuideHeaderProps) {
       />
       <View className='flex-row items-start gap-3'>
         <View className='h-12 w-12 items-center justify-center rounded-2xl bg-white/20'>
-          <Eye className='text-white' size={24} />
+          <Eye className='text-white' size={iconSizes.large} />
         </View>
         <View className='flex-1'>
           <Text className='text-lg font-bold text-white'>
@@ -38,7 +39,7 @@ export function GuideHeader({ habitName }: GuideHeaderProps) {
         </View>
       </View>
       <View className='mt-4 flex-row items-center gap-2 rounded-xl bg-white/10 p-3'>
-        <Sparkles color='#FCD34D' size={16} />
+        <Sparkles color='#FCD34D' size={iconSizes.small} />
         <Text className='flex-1 text-xs leading-relaxed text-white/90'>
           <Text className='font-semibold'>
             Based on Andrew Huberman's research:{' '}

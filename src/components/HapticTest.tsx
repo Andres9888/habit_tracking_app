@@ -11,7 +11,7 @@ import * as Haptics from 'expo-haptics';
 import { Button, Text, Surface } from 'react-native-paper';
 import { useAppTheme } from '../theme';
 import { fontWeights } from '../theme/typography';
-import { spacing } from '../theme/spacing';
+import { borderRadius, spacing } from '../theme/spacing';
 import { triggerHaptic } from '@/utils/haptics';
 
 export function HapticTest() {
@@ -246,7 +246,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   surface: {
-    borderRadius: 12,
+    borderRadius: borderRadius.medium,
     padding: spacing.lg,
   },
   title: {

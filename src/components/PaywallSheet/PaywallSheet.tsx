@@ -7,6 +7,7 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { X } from 'lucide-react-native';
 import Modal from '../Modal';
+import { iconSizes } from '@/theme/iconSizes';
 import { colors } from '../../theme/colors';
 import { borderRadius, spacing } from '../../theme/spacing';
 import { typography } from '../../theme/typography';
@@ -21,7 +22,7 @@ export function PaywallSheet({ onClose, onPurchaseSuccess, visible }: PaywallShe
     <Modal variant="bottomSheet" visible={visible} onClose={onClose}>
       <View testID="templates-paywall" style={s.content}>
         <Pressable testID="templates-paywall-close" accessibilityLabel="Close" accessibilityRole="button" hitSlop={8} style={s.close} onPress={onClose}>
-          <X color={colors.text.tertiary} size={20} />
+          <X color={colors.text.tertiary} size={iconSizes.medium} />
         </Pressable>
         <Text style={s.emoji}>🚀</Text>
         <Text style={s.headline}>Unlock Unlimited Habits</Text>
@@ -52,7 +53,7 @@ const s = StyleSheet.create({
   content: { alignItems: 'center' },
   cta: { alignItems: 'center', backgroundColor: colors.primary[600], borderRadius: borderRadius.medium, height: 56, justifyContent: 'center', marginTop: spacing.lg, width: '100%' },
   ctaDisabled: { opacity: 0.6 },
-  ctaText: { ...typography.button, color: '#FFFFFF' },
+  ctaText: { ...typography.button, color: colors.text.inverse },
   description: { ...typography.bodySmall, color: colors.text.secondary, textAlign: 'center' },
   emoji: { fontSize: 34, textAlign: 'center' },
   headline: { ...typography.heading2, color: colors.text.primary, textAlign: 'center' },

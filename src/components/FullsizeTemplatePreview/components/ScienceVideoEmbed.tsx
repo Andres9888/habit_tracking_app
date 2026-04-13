@@ -40,7 +40,7 @@ export function ScienceVideoEmbed({
         style={s.videoThumbnail}
       >
         <View style={s.playCircle}>
-          <Play color="#FFFFFF" fill="#FFFFFF" size={22} />
+          <Play color={colors.text.inverse} fill={colors.text.inverse} size={22} />
         </View>
       </LinearGradient>
       <View style={s.videoMeta}>

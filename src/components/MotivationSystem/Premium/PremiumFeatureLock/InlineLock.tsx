@@ -14,6 +14,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import { useHapticFeedback } from '../../../../hooks/useHapticFeedback';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 
 interface InlineLockProps {
   onUpgrade: () => void;
@@ -26,6 +27,7 @@ export function InlineLock({
   reduceMotion = false,
   testID,
 }: InlineLockProps) {
+  const { colors } = useThemeColors();
   const { triggerLightImpact } = useHapticFeedback({});
   const scale = useSharedValue(1);
 
@@ -63,7 +65,7 @@ export function InlineLock({
           end={{ x: 1, y: 1 }}
           start={{ x: 0, y: 0 }}
         >
-          <Lock color='#ffffff' size={iconSizes.micro} strokeWidth={2.5} />
+          <Lock color={colors.text.inverse} size={iconSizes.micro} strokeWidth={2.5} />
           <Text className='text-[10px] font-bold uppercase tracking-wide text-white'>
             PRO
           </Text>

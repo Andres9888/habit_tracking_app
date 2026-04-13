@@ -8,8 +8,9 @@ import { StyleSheet, Text, View } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import { Check } from 'lucide-react-native';
 import Modal from '../Modal';
+import { iconSizes } from '@/theme/iconSizes';
 import { colors } from '../../theme/colors';
-import { spacing } from '../../theme/spacing';
+import { borderRadius, spacing } from '../../theme/spacing';
 import { typography, fontWeights } from '../../theme/typography';
 import { ActionButtons } from './ActionButtons';
 import type { PackConfirmSheetProps } from './PackConfirmSheet.types';
@@ -30,7 +31,7 @@ export function PackConfirmSheet({ onCancel, onConfirm, pack, visible }: PackCon
               <Text style={s.freq}>{h.frequency}</Text>
             </View>
             <View testID={`templates-pack-confirm-check-${i}`} style={s.check}>
-              <Check color={colors.primary[600]} size={16} strokeWidth={3} />
+              <Check color={colors.primary[600]} size={iconSizes.small} strokeWidth={3} />
             </View>
           </Animated.View>
         ))}
@@ -41,7 +42,7 @@ export function PackConfirmSheet({ onCancel, onConfirm, pack, visible }: PackCon
 }
 
 const s = StyleSheet.create({
-  check: { alignItems: 'center', backgroundColor: `${colors.primary[600]}15`, borderRadius: 12, height: 24, justifyContent: 'center', width: 24 },
+  check: { alignItems: 'center', backgroundColor: `${colors.primary[600]}15`, borderRadius: borderRadius.medium, height: 24, justifyContent: 'center', width: 24 },
   desc: { ...typography.bodySmall, color: colors.text.secondary, marginBottom: spacing.md },
   emoji: { fontSize: 22 },
   freq: { ...typography.caption, color: colors.text.tertiary },

@@ -16,6 +16,7 @@ import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { useThemeColors } from '../../theme/ThemeContext';
+import { borderRadius } from '@/theme/spacing';
 import { fontFamilies, fontWeights, typography } from '@/theme/typography';
 
 interface RetryableErrorViewProps {
@@ -73,7 +74,7 @@ export function RetryableErrorView({
     retryButton: {
       alignItems: 'center',
       backgroundColor: colors.primary[500],
-      borderRadius: 12,
+      borderRadius: borderRadius.button,
       paddingHorizontal: 28,
       paddingVertical: 12,
       shadowColor: colors.primary[500],

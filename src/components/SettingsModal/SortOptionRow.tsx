@@ -65,7 +65,7 @@ export function SortOptionRow({ option, selected, showBorder, onSelect }: SortOp
           entering={CHECKMARK_ENTERING}
           style={{ backgroundColor: colors.primary[500] }}
         >
-          <Check color='#ffffff' size={iconSizes.small} strokeWidth={2.5} />
+          <Check color={colors.text.inverse} size={iconSizes.small} strokeWidth={2.5} />
         </Animated.View>
       ) : (
         <View

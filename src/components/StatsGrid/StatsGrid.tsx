@@ -10,6 +10,7 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '@/theme/ThemeContext';
 import {
   CheckCircle2,
@@ -52,7 +53,7 @@ export function StatsGrid({
             bgColor=''
             bgStyle={{ backgroundColor: themeColors.status.successLight }}
             delay={0}
-            icon={<CheckCircle2 color={themeColors.status.success} size={20} />}
+            icon={<CheckCircle2 color={themeColors.status.success} size={iconSizes.medium} />}
             iconBgColor=''
             iconBgStyle={{ backgroundColor: themeColors.status.successLight }}
             label='Completed'
@@ -63,7 +64,7 @@ export function StatsGrid({
           <StatCard
             bgColor=''
             delay={80}
-            icon={<TrendingUp color={themeColors.text.primary} size={20} />}
+            icon={<TrendingUp color={themeColors.text.primary} size={iconSizes.medium} />}
             iconBgColor=''
             label='Success Rate'
             suffix='%'
@@ -78,7 +79,7 @@ export function StatsGrid({
             bgColor=''
             bgStyle={{ backgroundColor: themeColors.status.warningLight }}
             delay={160}
-            icon={<Flame color={themeColors.status.warning} fill={themeColors.status.warning} size={20} />}
+            icon={<Flame color={themeColors.status.warning} fill={themeColors.status.warning} size={iconSizes.medium} />}
             iconBgColor=''
             iconBgStyle={{ backgroundColor: themeColors.status.warningLight }}
             label='Current Streak'
@@ -90,7 +91,7 @@ export function StatsGrid({
             bgColor=''
             bgStyle={{ backgroundColor: themeColors.status.premiumLight }}
             delay={240}
-            icon={<Calendar color={themeColors.status.premium} size={20} />}
+            icon={<Calendar color={themeColors.status.premium} size={iconSizes.medium} />}
             iconBgColor=''
             iconBgStyle={{ backgroundColor: themeColors.status.premiumLight }}
             label='Days Tracking'

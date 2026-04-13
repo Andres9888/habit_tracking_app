@@ -51,7 +51,7 @@ export function ReminderHeader({
       </View>
       <Switch
         ios_backgroundColor={colors.border}
-        thumbColor='#ffffff'
+        thumbColor={themeColors.text.inverse}
         trackColor={{ false: colors.border, true: colors.secondary[500] }}
         value={remindersEnabled}
         onValueChange={(val) => {

@@ -5,6 +5,7 @@
 import { Text, View, StyleSheet } from 'react-native';
 import { Link, Activity, Trophy } from 'lucide-react-native';
 import { useThemeColors } from '@/theme/ThemeContext';
+import { borderRadius } from '@/theme/spacing';
 import { fontFamilies, fontWeights } from '@/theme/typography';
 import { iconSizes } from '@/theme/iconSizes';
 
@@ -38,7 +39,7 @@ export function ValueProps() {
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    borderRadius: 16,
+    borderRadius: borderRadius.card,
     paddingVertical: 4,
     width: '100%',
   },

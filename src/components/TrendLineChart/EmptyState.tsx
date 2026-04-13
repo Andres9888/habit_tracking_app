@@ -7,7 +7,9 @@ import React from 'react';
 import { View } from 'react-native';
 import { TrendingUp } from 'lucide-react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
+import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '../../theme/ThemeContext';
+import { borderRadius } from '@/theme/spacing';
 import { typography, fontWeights } from '@/theme/typography';
 
 const anim = (delay: number) =>
@@ -23,7 +25,7 @@ export function EmptyState() {
         style={{
           alignItems: 'center',
           backgroundColor: isDark ? '#064E3B' : '#ECFDF5',
-          borderRadius: 12,
+          borderRadius: borderRadius.medium,
           height: 64,
           justifyContent: 'center',
           marginBottom: 16,
@@ -34,7 +36,7 @@ export function EmptyState() {
           width: 64,
         }}
       >
-        <TrendingUp color={isDark ? '#6EE7B7' : '#10b981'} size={32} strokeWidth={1.5} />
+        <TrendingUp color={isDark ? '#6EE7B7' : '#10b981'} size={iconSizes.xl} strokeWidth={1.5} />
       </Animated.View>
       <Animated.Text
         entering={anim(60)}

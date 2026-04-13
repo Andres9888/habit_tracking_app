@@ -5,6 +5,7 @@
 
 import { Check, X } from 'lucide-react-native';
 
+import { colors as themeTokens } from '@/theme/colors';
 import type {
   DayVisualState,
   DayStateConfig,
@@ -29,10 +30,10 @@ export function getDayStateConfigs(
       hasPulse: false,
       hasRing: false,
       icon: Check,
-      iconColor: '#ffffff',
+      iconColor: themeTokens.text.inverse,
       ringColor: 'transparent',
       text: null,
-      textColor: '#ffffff',
+      textColor: themeTokens.text.inverse,
     },
     future: {
       backgroundColor: '#f5f5f4', // stone-100
@@ -68,10 +69,10 @@ export function getDayStateConfigs(
       hasPulse: false,
       hasRing: true,
       icon: Check,
-      iconColor: '#ffffff',
+      iconColor: themeTokens.text.inverse,
       ringColor: successText,
       text: null,
-      textColor: '#ffffff',
+      textColor: themeTokens.text.inverse,
     },
     todayIncomplete: {
       backgroundColor: '#fef3c7', // amber-100

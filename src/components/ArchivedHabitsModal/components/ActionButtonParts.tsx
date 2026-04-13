@@ -76,7 +76,7 @@ export function DeleteConfirmRow({ onCancel, onDelete }: { onCancel: () => void;
     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
       <Text style={{ ...typography.caption, color: c.text.secondary }}>Are you sure?</Text>
       <AnimatedPressable style={{ backgroundColor: c.status.error, borderRadius: 10, paddingHorizontal: 14, paddingVertical: 6 }} onPress={onDelete}>
-        <Text style={{ ...typography.caption, fontWeight: fontWeights.semibold, color: '#FFFFFF' }}>Delete</Text>
+        <Text style={{ ...typography.caption, fontWeight: fontWeights.semibold, color: c.text.inverse }}>Delete</Text>
       </AnimatedPressable>
       <AnimatedPressable style={{ backgroundColor: isDark ? c.gray[200] : c.gray[50], borderRadius: 10, paddingHorizontal: 14, paddingVertical: 6 }} onPress={onCancel}>
         <Text style={{ ...typography.caption, fontWeight: fontWeights.semibold, color: c.text.secondary }}>Cancel</Text>

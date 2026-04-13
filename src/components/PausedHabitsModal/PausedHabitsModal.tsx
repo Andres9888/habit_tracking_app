@@ -11,6 +11,7 @@ import { useThemeColors } from '../../theme/ThemeContext';
 import { usePausedHabitsModalLogic } from './PausedHabitsModal.hooks';
 import { PausedHabitCard } from './PausedHabitCard';
 import { PausedEmptyState } from './PausedEmptyState';
+import { iconSizes } from '@/theme/iconSizes';
 import { fontFamilies } from '@/theme/typography';
 
 interface PausedHabitsModalProps {
@@ -54,7 +55,7 @@ export default function PausedHabitsModal({
             style={{ backgroundColor: themeColors.gray[100] }}
             onPress={onBack}
           >
-            <ChevronLeft color={themeColors.text.secondary} size={24} strokeWidth={2} />
+            <ChevronLeft color={themeColors.text.secondary} size={iconSizes.large} strokeWidth={2} />
           </Pressable>
           <Text
             className='flex-1 text-center font-bold'
@@ -69,7 +70,7 @@ export default function PausedHabitsModal({
             style={{ backgroundColor: themeColors.gray[100] }}
             onPress={onClose}
           >
-            <X color={themeColors.text.secondary} size={24} strokeWidth={2} />
+            <X color={themeColors.text.secondary} size={iconSizes.large} strokeWidth={2} />
           </Pressable>
         </Animated.View>
       </View>

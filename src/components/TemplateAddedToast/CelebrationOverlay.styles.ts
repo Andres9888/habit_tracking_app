@@ -34,7 +34,7 @@ export const celebrationStyles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: colors.primary[500],
     borderColor: colors.gray[900],
-    borderRadius: 16,
+    borderRadius: borderRadius.card,
     borderWidth: 3,
     bottom: 2,
     height: 32,

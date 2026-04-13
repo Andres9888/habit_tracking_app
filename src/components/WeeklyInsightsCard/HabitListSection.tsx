@@ -8,6 +8,7 @@ import { View, Text } from 'react-native';
 import type { LucideIcon } from 'lucide-react-native';
 import { ChevronUp, ChevronDown } from 'lucide-react-native';
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
+import { iconSizes } from '@/theme/iconSizes';
 import { colors } from '../../theme/colors';
 import type { HabitChange, HabitChangeType } from './WeeklyInsightsCard.types';
 import { styles } from './WeeklyInsightsCard.styles';
@@ -52,7 +53,7 @@ export function HabitListSection({
     >
       <View style={styles.sectionHeader}>
         <View style={styles.sectionHeaderLeft}>
-          <Icon color={iconColor} size={20} />
+          <Icon color={iconColor} size={iconSizes.medium} />
           <Text style={styles.sectionTitle}>{title}</Text>
           <View style={[styles.badge, { backgroundColor: badgeBgColor }]}>
             <Text style={[styles.badgeText, { color: badgeTextColor }]}>
@@ -61,9 +62,9 @@ export function HabitListSection({
           </View>
         </View>
         {isExpanded ? (
-          <ChevronUp color={colors.text.tertiary} size={20} />
+          <ChevronUp color={colors.text.tertiary} size={iconSizes.medium} />
         ) : (
-          <ChevronDown color={colors.text.tertiary} size={20} />
+          <ChevronDown color={colors.text.tertiary} size={iconSizes.medium} />
         )}
       </View>
 

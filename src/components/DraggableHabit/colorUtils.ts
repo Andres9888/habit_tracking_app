@@ -5,6 +5,7 @@
  * icon backgrounds, streak badge colors, and accent fallbacks.
  */
 
+import { colors as themeTokens } from '@/theme/colors';
 import type { CardColors } from './types';
 
 /** Fallback accent when no habit-specific color is set (violet-500). */
@@ -20,7 +21,7 @@ export function getCardColors(highContrastMode: boolean): CardColors {
       border: '#facc15',
       cardBackground: '#111111',
       iconContainer: '#facc15',
-      primaryText: '#ffffff',
+      primaryText: themeTokens.text.inverse,
       streakText: '#facc15',
       strengthBackground: '#10b981',
     };

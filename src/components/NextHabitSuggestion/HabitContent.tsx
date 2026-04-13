@@ -3,6 +3,7 @@ import { View, Text } from 'react-native';
 import Animated, { type AnimatedStyle } from 'react-native-reanimated';
 import { ArrowRight, Zap } from 'lucide-react-native';
 import type { ViewStyle } from 'react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import type { NextHabitSuggestionProps } from './types';
 import { styles } from './styles';
 
@@ -43,7 +44,7 @@ export function HabitContent({
             </Text>
             <Text style={styles.habitHint}>Tap to mark complete</Text>
           </View>
-          <ArrowRight color='#a8a29e' size={20} />
+          <ArrowRight color='#a8a29e' size={iconSizes.medium} />
         </View>
       </View>
     </Animated.View>

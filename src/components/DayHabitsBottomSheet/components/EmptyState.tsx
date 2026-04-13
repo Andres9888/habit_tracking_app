@@ -8,6 +8,7 @@ import { ClipboardList } from 'lucide-react-native';
 import Animated from 'react-native-reanimated';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { useReducedMotionEntry } from '../../EmptyState/useReducedMotionEntry';
+import { borderRadius } from '@/theme/spacing';
 import { fontFamilies, fontWeights } from '@/theme/typography';
 
 export function EmptyState() {
@@ -26,7 +27,7 @@ export function EmptyState() {
         style={{
           alignItems: 'center',
           backgroundColor: colors.gray[100],
-          borderRadius: 12,
+          borderRadius: borderRadius.medium,
           height: 56,
           justifyContent: 'center',
           marginBottom: 16,

@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import { ChevronRight } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '@/theme/ThemeContext';
 
 interface ActionableTipProps {
@@ -18,7 +19,7 @@ export function ActionableTip({ tip }: ActionableTipProps) {
     >
       <Text className='text-base'>💡</Text>
       <Text className='flex-1 text-sm' style={{ color: colors.status.successText }}>{tip}</Text>
-      <ChevronRight color={colors.status.success} size={16} />
+      <ChevronRight color={colors.status.success} size={iconSizes.small} />
     </View>
   );
 }

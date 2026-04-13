@@ -4,19 +4,19 @@
  */
 
 import { StyleSheet } from 'react-native';
-import { shadows } from '@/theme/spacing';
+import { borderRadius, shadows } from '@/theme/spacing';
 import { fontFamilies, fontWeights } from '@/theme/typography';
 
 export const styles = StyleSheet.create({
   closeButton: {
     alignItems: 'center',
-    borderRadius: 16,
+    borderRadius: borderRadius.card,
     height: 44,
     justifyContent: 'center',
     width: 44,
   },
   colorOption: {
-    borderRadius: 16,
+    borderRadius: borderRadius.card,
     height: 44,
     width: 44,
   },
@@ -64,7 +64,7 @@ export const styles = StyleSheet.create({
     ...shadows.modal,
   },
   input: {
-    borderRadius: 12,
+    borderRadius: borderRadius.medium,
     borderWidth: 1,
     fontFamily: fontFamilies.primary.text,
     fontSize: 17,
