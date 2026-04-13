@@ -9,7 +9,16 @@ jest.mock('react-native-safe-area-context', () => ({
 jest.mock('../../../../theme/ThemeContext', () => ({
   useThemeColors: () => ({
     colors: {
-      text: { primary: '#1a1a1a', secondary: '#666' },
+      background: '#F5F1ED',
+      card: '#EDEAE5',
+      border: '#DDD8D2',
+      primary: { 500: '#10b981', 600: '#059669', 700: '#047857' },
+      text: {
+        primary: '#1a1a1a',
+        secondary: '#666',
+        tertiary: '#6e6660',
+        inverse: '#fff',
+      },
     },
   }),
 }));
@@ -19,7 +28,15 @@ jest.mock('../TemplateListCard', () => ({
 }));
 
 jest.mock('../../data/categoryMeta', () => ({
-  getCategoryMeta: (id: string) => ({ icon: '🌅', label: 'Morning' }),
+  getCategoryMeta: (_id: string) => ({
+    bgColor: '#FEF3C7',
+    borderColor: '#FDE68A',
+    icon: '🌅',
+    isPremium: false,
+    label: 'Morning',
+    subtitle: 'Build energy and momentum before 9am',
+    textColor: '#9A5504',
+  }),
 }));
 
 const mockTemplate = {
@@ -46,20 +63,19 @@ describe('CategoryDrillView', () => {
     templates: [mockTemplate],
   };
 
-  it('renders the shared ScreenHeader with category title', () => {
+  it('renders the category title in the hero header', () => {
     const { getByText } = render(<CategoryDrillView {...baseProps} />);
-    expect(getByText('🌅 Morning')).toBeTruthy();
+    expect(getByText('Morning')).toBeTruthy();
   });
 
-  it('renders subtitle with template and science counts', () => {
+  it('renders habit count and science count as separate badges', () => {
     const { getByText } = render(<CategoryDrillView {...baseProps} />);
-    expect(getByText('1 habit · 1 science-backed')).toBeTruthy();
+    expect(getByText('📋 1 habit')).toBeTruthy();
+    expect(getByText('🔬 1 science-backed')).toBeTruthy();
   });
 
   it('renders back button via ScreenHeader', () => {
-    const { getByLabelText } = render(
-      <CategoryDrillView {...baseProps} />
-    );
+    const { getByLabelText } = render(<CategoryDrillView {...baseProps} />);
     expect(getByLabelText('Go back')).toBeTruthy();
   });
 
@@ -73,9 +89,7 @@ describe('CategoryDrillView', () => {
   });
 
   it('renders with testID for view container', () => {
-    const { getByTestId } = render(
-      <CategoryDrillView {...baseProps} />
-    );
+    const { getByTestId } = render(<CategoryDrillView {...baseProps} />);
     expect(getByTestId('templates-category-view')).toBeTruthy();
   });
 });

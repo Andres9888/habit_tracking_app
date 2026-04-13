@@ -1,5 +1,5 @@
 /**
- * Full-width bottom add button with bounce animation.
+ * Compact inline pill add button with bounce animation.
  */
 
 import { useEffect } from 'react';
@@ -44,9 +44,7 @@ export function ListCardAddButton({
 
   return (
     <AnimatedPressable
-      accessibilityLabel={
-        isImported ? `${name} added` : `Add ${name} habit`
-      }
+      accessibilityLabel={isImported ? `${name} added` : `Add ${name} habit`}
       accessibilityRole='button'
       disabled={isImported || isImporting}
       style={[
@@ -72,9 +70,7 @@ export function ListCardAddButton({
           <Text style={[s.label, { color: colors.primary[700] }]}>Added</Text>
         </>
       ) : (
-        <Text style={[s.label, { color: colors.text.inverse }]}>
-          + Add Habit
-        </Text>
+        <Text style={[s.label, { color: colors.text.inverse }]}>+ Add</Text>
       )}
     </AnimatedPressable>
   );
@@ -83,12 +79,12 @@ export function ListCardAddButton({
 const s = StyleSheet.create({
   button: {
     alignItems: 'center',
-    borderRadius: borderRadius.medium,
+    borderRadius: borderRadius.full,
     flexDirection: 'row',
-    gap: spacing.sm,
-    height: 40,
+    gap: spacing.xs,
+    height: 30,
     justifyContent: 'center',
-    marginTop: spacing.md,
+    paddingHorizontal: spacing.md,
   },
   label: {
     ...typography.caption,

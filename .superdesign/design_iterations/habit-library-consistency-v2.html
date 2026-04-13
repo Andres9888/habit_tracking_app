@@ -1,0 +1,1878 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Habit Library — Design Consistency v2</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* ══════════════════════════════════════════════
+       DESIGN CONSTITUTION — Semantic Color Tokens
+       Each role has one owner. No color does two jobs.
+    ══════════════════════════════════════════════ */
+      :root {
+        /* Surface system (warm stone — from darkColors.ts lightColors) */
+        --bg: #f5f1ed;
+        --card: #edeae5;
+        --border: #ddd8d2;
+        --surface: #edeae5;
+        --text-1: #2d2a26; /* primary */
+        --text-2: #6b6560; /* secondary */
+        --text-3: #6e6660; /* tertiary */
+
+        /* ── ROLE: Action (Add CTA) ── sole green owner */
+        --c-action: #059669;
+        --c-action-dark: #047857;
+        --c-action-bg: #d1fae5;
+        --c-action-bdr: #a7f3d0;
+
+        /* ── ROLE: Award (TOP PICK) ── amber */
+        --c-award: #d97706;
+        --c-award-dark: #b45309;
+        --c-award-bg: #fef9c3;
+        --c-award-bdr: #fde68a;
+        --c-award-accent: #f59e0b; /* left-border accent */
+
+        /* ── ROLE: Science (credibility) ── sky/teal */
+        --c-science: #0369a1;
+        --c-science-bg: #e0f2fe;
+        --c-science-bdr: #bae6fd;
+
+        /* ── ROLE: Trend (popularity / social proof) ── orange */
+        --c-trend: #c2410c;
+        --c-trend-bg: #fff7ed;
+        --c-trend-bdr: #fed7aa;
+
+        /* ── ROLE: Neutral (metadata / frequency) ── stone */
+        --c-neutral: #6b6560;
+        --c-neutral-bg: #edeae5;
+        --c-neutral-bdr: #ddd8d2;
+
+        /* Category: morning_routine hero */
+        --hero-bg: #fef3c7;
+        --hero-bdr: #fde68a;
+        --hero-text: #9a5504;
+
+        /* Typography */
+        --ff: 'DM Sans', sans-serif;
+        --r-full: 9999px;
+        --r-lg: 14px;
+        --r-md: 10px;
+        --r-sm: 6px;
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        -webkit-font-smoothing: antialiased;
+      }
+
+      body {
+        background: #1c1917;
+        font-family: var(--ff);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 48px 32px 80px;
+        gap: 40px;
+      }
+
+      /* ── Page title ── */
+      .page-title {
+        color: #a8a29e;
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        text-align: center;
+      }
+
+      /* ── Layout: phones + legend ── */
+      .layout {
+        display: flex;
+        align-items: flex-start;
+        gap: 28px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      /* ══════════════════════════════════
+       PHONE FRAME
+    ══════════════════════════════════ */
+      .phone {
+        width: 390px;
+        height: 844px;
+        background: var(--bg);
+        border-radius: 44px;
+        overflow: hidden;
+        position: relative;
+        box-shadow:
+          0 0 0 2px #3a3632,
+          0 32px 80px rgba(0, 0, 0, 0.55);
+        flex-shrink: 0;
+        display: flex;
+        flex-direction: column;
+      }
+      .phone-label {
+        color: #78716c;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        text-align: center;
+        margin-bottom: 10px;
+      }
+
+      /* ── Status Bar ── */
+      .status-bar {
+        height: 54px;
+        padding: 16px 28px 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--text-1);
+        flex-shrink: 0;
+      }
+      .status-icons {
+        display: flex;
+        gap: 6px;
+        align-items: center;
+      }
+      .status-icons span {
+        font-size: 12px;
+      }
+
+      /* ══════════════════════════════════
+       PHONE 1 — MAIN BROWSE
+    ══════════════════════════════════ */
+
+      /* Screen Header */
+      .screen-header {
+        padding: 12px 20px 10px;
+        flex-shrink: 0;
+      }
+      .screen-header h1 {
+        font-size: 24px;
+        font-weight: 700;
+        color: var(--text-1);
+        letter-spacing: -0.4px;
+        line-height: 1.2;
+      }
+      .screen-header p {
+        font-size: 13px;
+        color: var(--text-2);
+        margin-top: 2px;
+      }
+
+      /* Search bar */
+      .search-bar {
+        margin: 0 16px 10px;
+        background: var(--card);
+        border: 1.5px solid var(--border);
+        border-radius: var(--r-lg);
+        padding: 10px 14px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-shrink: 0;
+      }
+      .search-icon {
+        font-size: 14px;
+        color: var(--text-3);
+      }
+      .search-placeholder {
+        font-size: 14px;
+        color: var(--text-3);
+      }
+
+      /* Quick Filter Chips */
+      .filter-chips {
+        display: flex;
+        gap: 8px;
+        padding: 4px 16px 10px;
+        overflow-x: auto;
+        flex-shrink: 0;
+        scrollbar-width: none;
+      }
+      .filter-chips::-webkit-scrollbar {
+        display: none;
+      }
+      .chip {
+        display: inline-flex;
+        align-items: center;
+        border-radius: var(--r-full);
+        border: 1.5px solid;
+        padding: 6px 14px;
+        font-size: 13px;
+        font-weight: 600;
+        white-space: nowrap;
+        cursor: pointer;
+        flex-shrink: 0;
+      }
+      .chip-active {
+        background: var(--c-action);
+        border-color: var(--c-action-dark);
+        color: #fff;
+      }
+      .chip-inactive {
+        background: var(--card);
+        border-color: var(--border);
+        color: var(--text-2);
+      }
+
+      /* Scroll content */
+      .scroll-content {
+        flex: 1;
+        overflow-y: auto;
+        padding-bottom: 24px;
+        scrollbar-width: none;
+      }
+      .scroll-content::-webkit-scrollbar {
+        display: none;
+      }
+
+      /* Section label */
+      .section-label {
+        padding: 14px 16px 6px;
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--text-3);
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+
+      /* Featured Collection card */
+      .featured-card {
+        margin: 0 16px 4px;
+        border-radius: var(--r-lg);
+        overflow: hidden;
+        background: linear-gradient(
+          135deg,
+          #065f46 0%,
+          #0f766e 60%,
+          #164e63 100%
+        );
+        padding: 20px;
+        position: relative;
+        box-shadow: 0 4px 20px rgba(6, 95, 70, 0.35);
+      }
+      .featured-card::before {
+        content: '';
+        position: absolute;
+        top: -40px;
+        right: -40px;
+        width: 180px;
+        height: 180px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.07);
+      }
+      .featured-card::after {
+        content: '';
+        position: absolute;
+        bottom: -60px;
+        left: -30px;
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.04);
+      }
+      .featured-badge {
+        display: inline-flex;
+        background: rgba(255, 255, 255, 0.18);
+        border-radius: var(--r-full);
+        padding: 3px 12px;
+        font-size: 11px;
+        font-weight: 700;
+        color: #fff;
+        letter-spacing: 0.06em;
+        margin-bottom: 10px;
+      }
+      .featured-title {
+        font-size: 18px;
+        font-weight: 700;
+        color: #fff;
+        line-height: 1.25;
+      }
+      .featured-desc {
+        font-size: 13px;
+        color: rgba(255, 255, 255, 0.8);
+        margin-top: 4px;
+        line-height: 1.4;
+      }
+      .featured-chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-top: 14px;
+      }
+      .featured-chip {
+        background: rgba(255, 255, 255, 0.16);
+        border-radius: var(--r-full);
+        padding: 3px 10px;
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.9);
+      }
+      .featured-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 14px;
+      }
+      .featured-cta {
+        background: rgba(255, 255, 255, 0.22);
+        border-radius: var(--r-md);
+        padding: 7px 14px;
+        font-size: 13px;
+        font-weight: 700;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+      .featured-count {
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.65);
+      }
+
+      /* Popular trending card */
+      .trending-card {
+        margin: 0 16px 8px;
+        background: var(--card);
+        border: 1.5px solid var(--border);
+        border-radius: var(--r-lg);
+        padding: 14px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .trending-icon-wrap {
+        width: 44px;
+        height: 44px;
+        border-radius: var(--r-md);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+        flex-shrink: 0;
+      }
+      .trending-content {
+        flex: 1;
+        min-width: 0;
+      }
+      .trending-name {
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--text-1);
+      }
+      .trending-desc {
+        font-size: 12px;
+        color: var(--text-2);
+        margin-top: 2px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .trending-meta {
+        display: flex;
+        gap: 6px;
+        margin-top: 7px;
+        flex-wrap: wrap;
+      }
+
+      /* Category grid */
+      .cat-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        padding: 0 16px;
+      }
+      .cat-tile {
+        border-radius: var(--r-lg);
+        border: 1.5px solid;
+        padding: 12px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .cat-tile-icon {
+        font-size: 22px;
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: var(--r-sm);
+        flex-shrink: 0;
+      }
+      .cat-tile-label {
+        font-size: 13px;
+        font-weight: 600;
+        line-height: 1.2;
+      }
+      .cat-tile-sub {
+        font-size: 11px;
+        margin-top: 1px;
+      }
+
+      /* ══════════════════════════════════
+       PHONE 2 — CATEGORY DRILL VIEW
+    ══════════════════════════════════ */
+
+      /* CategoryHero */
+      .cat-hero {
+        background: var(--hero-bg);
+        border-bottom: 1.5px solid var(--hero-bdr);
+        padding: 14px 20px 18px;
+        flex-shrink: 0;
+      }
+      .back-btn {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--hero-text);
+        margin-bottom: 14px;
+        cursor: pointer;
+        background: none;
+        border: none;
+      }
+      .hero-body {
+        display: flex;
+        align-items: flex-start;
+        gap: 14px;
+      }
+      .hero-icon-wrap {
+        width: 52px;
+        height: 52px;
+        border-radius: var(--r-md);
+        background: var(--hero-bdr);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 26px;
+        flex-shrink: 0;
+      }
+      .hero-text-block {
+        flex: 1;
+      }
+      .hero-title {
+        font-size: 22px;
+        font-weight: 700;
+        color: var(--hero-text);
+        letter-spacing: -0.4px;
+      }
+      .hero-subtitle {
+        font-size: 13px;
+        color: var(--text-2);
+        margin-top: 2px;
+        line-height: 1.35;
+      }
+      .hero-badges {
+        display: flex;
+        gap: 8px;
+        margin-top: 8px;
+        flex-wrap: wrap;
+      }
+      .hero-count-badge {
+        border-radius: var(--r-full);
+        border: 1.5px solid var(--hero-bdr);
+        background: var(--hero-bg);
+        padding: 3px 10px;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--hero-text);
+      }
+      /* Science badge in hero: sky-blue, not green */
+      .hero-science-badge {
+        border-radius: var(--r-full);
+        border: 1.5px solid var(--c-science-bdr);
+        background: var(--c-science-bg);
+        padding: 3px 10px;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--c-science);
+      }
+
+      /* Sort chip row */
+      .sort-row {
+        display: flex;
+        gap: 8px;
+        padding: 10px 16px;
+        border-bottom: 1.5px solid var(--border);
+        overflow-x: auto;
+        flex-shrink: 0;
+        scrollbar-width: none;
+      }
+      .sort-row::-webkit-scrollbar {
+        display: none;
+      }
+
+      /* Drill section label */
+      .drill-section-label {
+        padding: 12px 16px 4px;
+        font-size: 10px;
+        font-weight: 700;
+        color: var(--text-3);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      /* ── TEMPLATE LIST CARD ── */
+      .template-card {
+        margin: 0 16px 8px;
+        background: var(--card);
+        border: 1.5px solid var(--border);
+        border-radius: var(--r-lg);
+        padding: 14px;
+        overflow: hidden;
+      }
+
+      /* TOP PICK state — amber left accent, NO green */
+      .template-card--top-pick {
+        border-left: 3.5px solid var(--c-award-accent);
+        background: var(--c-award-bg);
+        border-color: var(--c-award-bdr);
+      }
+
+      /* ADDED/imported state — green tint, green border */
+      .template-card--added {
+        background: var(--c-action-bg);
+        border-color: var(--c-action-bdr);
+      }
+
+      .card-top-row {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+      }
+      .card-icon-wrap {
+        width: 42px;
+        height: 42px;
+        border-radius: var(--r-md);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        flex-shrink: 0;
+      }
+      .card-content {
+        flex: 1;
+        min-width: 0;
+      }
+
+      /* TOP PICK badge — amber, not green */
+      .top-pick-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 3px;
+        background: var(--c-award-bg);
+        border: 1px solid var(--c-award-bdr);
+        border-radius: var(--r-sm);
+        padding: 2px 7px;
+        font-size: 10px;
+        font-weight: 700;
+        color: var(--c-award-dark);
+        letter-spacing: 0.05em;
+        margin-bottom: 5px;
+      }
+
+      .card-title-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        margin-bottom: 4px;
+      }
+      .card-title {
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--text-1);
+        flex: 1;
+        line-height: 1.25;
+      }
+      .card-desc {
+        font-size: 12px;
+        color: var(--text-2);
+        line-height: 1.4;
+        margin-bottom: 8px;
+      }
+
+      /* ── ADD BUTTON — green sole owner ── */
+      .add-btn {
+        background: var(--c-action);
+        border: none;
+        border-radius: var(--r-sm);
+        padding: 7px 12px;
+        font-size: 13px;
+        font-weight: 700;
+        color: #fff;
+        cursor: pointer;
+        white-space: nowrap;
+        flex-shrink: 0;
+        font-family: var(--ff);
+      }
+
+      /* ── ADDED checkmark ── */
+      .added-btn {
+        background: var(--c-action-bg);
+        border: 1.5px solid var(--c-action-bdr);
+        border-radius: var(--r-sm);
+        padding: 6px 11px;
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--c-action-dark);
+        cursor: pointer;
+        white-space: nowrap;
+        flex-shrink: 0;
+        font-family: var(--ff);
+      }
+
+      /* Trending card added state */
+      .trending-card--added {
+        background: var(--c-action-bg);
+        border-color: var(--c-action-bdr);
+      }
+
+      /* Button transition */
+      .add-btn,
+      .added-btn {
+        transition: all 0.18s ease;
+      }
+
+      /* ── PILL system — semantic roles ── */
+      .meta-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        border-radius: var(--r-full);
+        border: 1.5px solid;
+        padding: 3px 9px;
+        font-size: 11px;
+        font-weight: 600;
+        white-space: nowrap;
+      }
+      .pill-science {
+        background: var(--c-science-bg);
+        border-color: var(--c-science-bdr);
+        color: var(--c-science);
+      }
+      .pill-trend {
+        background: var(--c-trend-bg);
+        border-color: var(--c-trend-bdr);
+        color: var(--c-trend);
+      }
+      .pill-neutral {
+        background: var(--c-neutral-bg);
+        border-color: var(--c-neutral-bdr);
+        color: var(--c-neutral);
+      }
+
+      /* ══════════════════════════════════
+       COLOR LEGEND PANEL
+    ══════════════════════════════════ */
+      .legend {
+        width: 220px;
+        flex-shrink: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .legend-title {
+        color: #a8a29e;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        font-family: var(--ff);
+        margin-bottom: 4px;
+      }
+      .legend-card {
+        background: #292524;
+        border-radius: 14px;
+        padding: 18px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .legend-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .legend-swatch {
+        width: 28px;
+        height: 28px;
+        border-radius: 8px;
+        flex-shrink: 0;
+        border: 1.5px solid rgba(255, 255, 255, 0.1);
+      }
+      .legend-info {
+      }
+      .legend-role {
+        font-size: 11px;
+        font-weight: 700;
+        color: #e7e5e4;
+        font-family: var(--ff);
+      }
+      .legend-hex {
+        font-size: 10px;
+        color: #78716c;
+        font-family: var(--ff);
+      }
+      .legend-note {
+        font-size: 10px;
+        color: #57534e;
+        font-family: var(--ff);
+        margin-top: 2px;
+      }
+      .legend-divider {
+        border: none;
+        border-top: 1px solid #3d3533;
+      }
+      .problem-label {
+        font-size: 10px;
+        font-weight: 700;
+        color: #dc2626;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        font-family: var(--ff);
+      }
+      .problem-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        opacity: 0.7;
+      }
+      .problem-swatch {
+        width: 28px;
+        height: 28px;
+        border-radius: 8px;
+        flex-shrink: 0;
+        border: 2px dashed #dc2626;
+      }
+      .problem-text {
+        font-size: 10px;
+        color: #a8a29e;
+        font-family: var(--ff);
+        text-decoration: line-through;
+        text-decoration-color: #dc2626;
+      }
+
+      /* ══════════════════════════════════
+       DETAIL OVERLAY (FullsizeTemplatePreview)
+    ══════════════════════════════════ */
+      .detail-overlay {
+        position: absolute;
+        inset: 0;
+        background: var(--bg);
+        z-index: 100;
+        display: none;
+        flex-direction: column;
+      }
+      .detail-overlay.open {
+        display: flex;
+      }
+
+      /* ── Added state via data attribute — no JS class juggling ── */
+      .template-card[data-added='true'],
+      .trending-card[data-added='true'] {
+        background: var(--c-action-bg) !important;
+        border-color: var(--c-action-bdr) !important;
+        border-left-color: var(--c-action-bdr) !important;
+      }
+      .template-card[data-added='true'] .card-icon-wrap,
+      .trending-card[data-added='true'] .trending-icon-wrap {
+        background: var(--c-action-bg) !important;
+      }
+      .detail-hero {
+        padding: 56px 20px 22px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        border-bottom: 1.5px solid var(--border);
+        position: relative;
+      }
+      .detail-back {
+        position: absolute;
+        top: 16px;
+        left: 16px;
+        background: none;
+        border: none;
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--c-action);
+        font-family: var(--ff);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        padding: 4px;
+      }
+      .detail-hero-icon {
+        font-size: 48px;
+        margin-bottom: 12px;
+      }
+      .detail-hero-top-pick {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        background: var(--c-award-bg);
+        border: 1px solid var(--c-award-bdr);
+        border-radius: var(--r-sm);
+        padding: 3px 8px;
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--c-award-dark);
+        margin-bottom: 8px;
+      }
+      .detail-title {
+        font-size: 24px;
+        font-weight: 700;
+        color: var(--text-1);
+        letter-spacing: -0.4px;
+        line-height: 1.2;
+        margin-bottom: 8px;
+      }
+      .detail-meta-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-bottom: 12px;
+      }
+      .detail-desc {
+        font-size: 14px;
+        color: var(--text-2);
+        line-height: 1.6;
+      }
+      .detail-scroll {
+        flex: 1;
+        overflow-y: auto;
+        padding: 18px 20px 100px;
+        scrollbar-width: none;
+      }
+      .detail-scroll::-webkit-scrollbar {
+        display: none;
+      }
+      .detail-section-title {
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--text-3);
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        margin-bottom: 10px;
+      }
+      .detail-science-card {
+        background: var(--c-science-bg);
+        border: 1.5px solid var(--c-science-bdr);
+        border-radius: var(--r-lg);
+        padding: 14px;
+        margin-bottom: 20px;
+      }
+      .detail-science-label {
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--c-science);
+        margin-bottom: 4px;
+      }
+      .detail-science-text {
+        font-size: 13px;
+        color: var(--text-1);
+        line-height: 1.5;
+      }
+      .detail-pairs-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-bottom: 20px;
+      }
+      .detail-pair-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        background: var(--card);
+        border: 1.5px solid var(--border);
+        border-radius: var(--r-md);
+        padding: 10px 12px;
+      }
+      .detail-pair-icon {
+        font-size: 20px;
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--bg);
+        border-radius: var(--r-sm);
+        flex-shrink: 0;
+      }
+      .detail-pair-name {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text-1);
+      }
+      .detail-pair-sub {
+        font-size: 12px;
+        color: var(--text-2);
+        margin-top: 1px;
+      }
+      .detail-cta-bar {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 14px 20px 28px;
+        background: linear-gradient(to top, var(--bg) 80%, transparent);
+        display: flex;
+        gap: 10px;
+      }
+      .detail-add-btn {
+        flex: 1;
+        background: var(--c-action);
+        border: none;
+        border-radius: var(--r-lg);
+        padding: 14px;
+        font-size: 16px;
+        font-weight: 700;
+        color: #fff;
+        cursor: pointer;
+        font-family: var(--ff);
+        transition: all 0.18s ease;
+      }
+      .detail-add-btn.is-added {
+        background: var(--c-action-bg);
+        border: 1.5px solid var(--c-action-bdr);
+        color: var(--c-action-dark);
+      }
+      /* Clickable card cursor */
+      .template-card,
+      .trending-card {
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <p class="page-title">
+      Habit Library — Design Consistency v2 &nbsp;·&nbsp; Semantic Color System
+    </p>
+
+    <div class="layout">
+      <!-- ══════ PHONE 1: MAIN BROWSE ══════ -->
+      <div>
+        <p class="phone-label">Main Browse</p>
+        <div class="phone">
+          <!-- Status Bar -->
+          <div class="status-bar">
+            <span>9:41</span>
+            <div class="status-icons">
+              <span>●●●</span>
+              <span>WiFi</span>
+              <span>100%</span>
+            </div>
+          </div>
+
+          <!-- Screen Header -->
+          <div class="screen-header">
+            <h1>Habit Library</h1>
+            <p>Start with a goal, a category, or a quick add</p>
+          </div>
+
+          <!-- Search Bar -->
+          <div class="search-bar">
+            <span class="search-icon">🔍</span>
+            <span class="search-placeholder">What do you want to improve?</span>
+          </div>
+
+          <!-- Quick Filter Chips -->
+          <div class="filter-chips">
+            <div class="chip chip-active">✨ All</div>
+            <div class="chip chip-inactive">🌅 Morning</div>
+            <div class="chip chip-inactive">🧠 Mental</div>
+            <div class="chip chip-inactive">💪 Fitness</div>
+            <div class="chip chip-inactive">😴 Sleep</div>
+            <div class="chip chip-inactive">🧘 Mindful</div>
+          </div>
+
+          <!-- Scroll area -->
+          <div class="scroll-content">
+            <!-- Featured Collection -->
+            <div class="section-label">Featured</div>
+            <div class="featured-card">
+              <div class="featured-badge">✦ FEATURED COLLECTION</div>
+              <div class="featured-title">Start Here Bundle</div>
+              <div class="featured-desc">
+                5 essential habits to build momentum in week 1
+              </div>
+              <div class="featured-chips">
+                <div class="featured-chip">🌅 Morning</div>
+                <div class="featured-chip">💪 Movement</div>
+                <div class="featured-chip">📖 Reflection</div>
+                <div class="featured-chip">💧 Hydration</div>
+              </div>
+              <div class="featured-footer">
+                <div class="featured-cta">Explore →</div>
+                <div class="featured-count">24 habits inside</div>
+              </div>
+            </div>
+
+            <!-- Popular This Week -->
+            <div class="section-label">Popular This Week</div>
+
+            <!-- Trending card 1 -->
+            <div
+              class="trending-card"
+              onclick="handleCardTap(event, this)"
+              data-icon="☀️"
+              data-icon-bg="#FEF9C3"
+              data-title="Morning Sunlight"
+              data-desc="10 min outdoor light within 1 hour of waking helps regulate cortisol, boost serotonin, and set your circadian rhythm for better sleep at night."
+              data-science="Huberman Lab research shows morning sunlight exposure in the first hour of waking anchors circadian rhythm and improves nighttime melatonin production."
+              data-frequency="Daily"
+              data-popularity="4.2k"
+              data-pairs='[{"icon":"🧊","name":"Cold Shower","sub":"Build morning resilience"},{"icon":"☕","name":"No-Phone Morning","sub":"Protect attention budget"}]'
+            >
+              <div class="trending-icon-wrap" style="background: #fef9c3">
+                ☀️
+              </div>
+              <div class="trending-content">
+                <div class="trending-name">Morning Sunlight</div>
+                <div class="trending-desc">
+                  10 min outdoor light within 1hr of waking
+                </div>
+                <div class="trending-meta">
+                  <span class="pill pill-science">🔬 Science-backed</span>
+                  <span class="pill pill-trend">🔥 4.2k added</span>
+                </div>
+              </div>
+              <button class="add-btn" onclick="handleAddBtn(event, this)">
+                + Add
+              </button>
+            </div>
+
+            <!-- Trending card 2 -->
+            <div
+              class="trending-card"
+              onclick="handleCardTap(event, this)"
+              data-icon="🧊"
+              data-icon-bg="#E0F2FE"
+              data-title="Cold Shower"
+              data-desc="2–3 minutes of cold water exposure at the end of your shower. Releases norepinephrine, builds stress tolerance, and sharpens alertness."
+              data-science="Wim Hof protocol studies show deliberate cold exposure significantly increases norepinephrine (up to 300%) and builds mental resilience."
+              data-frequency="Daily"
+              data-popularity="3.1k"
+              data-pairs='[{"icon":"☀️","name":"Morning Sunlight","sub":"Anchor circadian rhythm"},{"icon":"📓","name":"Morning Journal","sub":"Reflect after the reset"}]'
+            >
+              <div class="trending-icon-wrap" style="background: #e0f2fe">
+                🧊
+              </div>
+              <div class="trending-content">
+                <div class="trending-name">Cold Shower</div>
+                <div class="trending-desc">
+                  Build mental resilience through cold exposure
+                </div>
+                <div class="trending-meta">
+                  <span class="pill pill-science">🔬 Science-backed</span>
+                  <span class="pill pill-neutral">📅 Daily</span>
+                </div>
+              </div>
+              <button class="add-btn" onclick="handleAddBtn(event, this)">
+                + Add
+              </button>
+            </div>
+
+            <!-- Browse By Category -->
+            <div class="section-label">Browse By Category</div>
+            <div class="cat-grid">
+              <!-- morning_routine: amber -->
+              <div
+                class="cat-tile"
+                style="background: #fef3c7; border-color: #fde68a"
+              >
+                <div class="cat-tile-icon" style="background: #fde68a">🌅</div>
+                <div>
+                  <div class="cat-tile-label" style="color: #9a5504">
+                    Morning
+                  </div>
+                  <div class="cat-tile-sub" style="color: #b45309">
+                    14 habits
+                  </div>
+                </div>
+              </div>
+              <!-- mental_health: indigo -->
+              <div
+                class="cat-tile"
+                style="background: #e0e7ff; border-color: #c7d2fe"
+              >
+                <div class="cat-tile-icon" style="background: #c7d2fe">🧠</div>
+                <div>
+                  <div class="cat-tile-label" style="color: #4f46e5">
+                    Mental Health
+                  </div>
+                  <div class="cat-tile-sub" style="color: #4338ca">
+                    11 habits
+                  </div>
+                </div>
+              </div>
+              <!-- health_fitness: green (category color — NOT action color) -->
+              <div
+                class="cat-tile"
+                style="background: #d1fae5; border-color: #6ee7b7"
+              >
+                <div class="cat-tile-icon" style="background: #6ee7b7">💪</div>
+                <div>
+                  <div class="cat-tile-label" style="color: #047857">
+                    Health
+                  </div>
+                  <div class="cat-tile-sub" style="color: #065f46">
+                    18 habits
+                  </div>
+                </div>
+              </div>
+              <!-- sleep: blue -->
+              <div
+                class="cat-tile"
+                style="background: #e0e7ff; border-color: #c7d2fe"
+              >
+                <div class="cat-tile-icon" style="background: #c7d2fe">😴</div>
+                <div>
+                  <div class="cat-tile-label" style="color: #1e40af">Sleep</div>
+                  <div class="cat-tile-sub" style="color: #1e3a8a">
+                    9 habits
+                  </div>
+                </div>
+              </div>
+              <!-- mindfulness: violet -->
+              <div
+                class="cat-tile"
+                style="background: #f5f3ff; border-color: #e9d5ff"
+              >
+                <div class="cat-tile-icon" style="background: #e9d5ff">🧘</div>
+                <div>
+                  <div class="cat-tile-label" style="color: #7c3aed">
+                    Mindfulness
+                  </div>
+                  <div class="cat-tile-sub" style="color: #6d28d9">
+                    12 habits
+                  </div>
+                </div>
+              </div>
+              <!-- learning: purple -->
+              <div
+                class="cat-tile"
+                style="background: #f3e8ff; border-color: #ddd6fe"
+              >
+                <div class="cat-tile-icon" style="background: #ddd6fe">📚</div>
+                <div>
+                  <div class="cat-tile-label" style="color: #7c3aed">
+                    Learning
+                  </div>
+                  <div class="cat-tile-sub" style="color: #6d28d9">
+                    8 habits
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- /scroll-content -->
+
+          <!-- Detail overlay for phone 1 -->
+          <div class="detail-overlay" id="browse-detail">
+            <div class="detail-hero" id="browse-detail-hero">
+              <button
+                class="detail-back"
+                onclick="closeDetail('browse-detail')"
+              >
+                ‹ Back
+              </button>
+              <div class="detail-hero-icon" id="browse-detail-icon"></div>
+              <div
+                class="detail-hero-top-pick"
+                id="browse-detail-top-pick"
+                style="display: none"
+              >
+                ⭐ TOP PICK
+              </div>
+              <div class="detail-title" id="browse-detail-title"></div>
+              <div class="detail-meta-row" id="browse-detail-meta"></div>
+              <div class="detail-desc" id="browse-detail-desc"></div>
+            </div>
+            <div class="detail-scroll">
+              <div id="browse-detail-science-section" style="display: none">
+                <div class="detail-section-title">Why it works</div>
+                <div class="detail-science-card">
+                  <div class="detail-science-label">🔬 Research-backed</div>
+                  <div
+                    class="detail-science-text"
+                    id="browse-detail-science"
+                  ></div>
+                </div>
+              </div>
+              <div id="browse-detail-pairs-section" style="display: none">
+                <div class="detail-section-title">Pairs well with</div>
+                <div class="detail-pairs-grid" id="browse-detail-pairs"></div>
+              </div>
+            </div>
+            <div class="detail-cta-bar">
+              <button
+                class="detail-add-btn"
+                id="browse-detail-add-btn"
+                onclick="toggleDetailAdd('browse-detail')"
+              >
+                + Add to My Habits
+              </button>
+            </div>
+          </div>
+        </div>
+        <!-- /phone -->
+      </div>
+
+      <!-- ══════ PHONE 2: CATEGORY DRILL ══════ -->
+      <div>
+        <p class="phone-label">Category Drill — Morning</p>
+        <div class="phone">
+          <!-- Status Bar -->
+          <div class="status-bar">
+            <span>9:41</span>
+            <div class="status-icons">
+              <span>●●●</span>
+              <span>WiFi</span>
+              <span>100%</span>
+            </div>
+          </div>
+
+          <!-- CategoryHero — morning_routine (amber) -->
+          <div class="cat-hero">
+            <button class="back-btn">‹ Library</button>
+            <div class="hero-body">
+              <div class="hero-icon-wrap">🌅</div>
+              <div class="hero-text-block">
+                <div class="hero-title">Morning</div>
+                <div class="hero-subtitle">
+                  Build energy, clarity, and momentum before 9am
+                </div>
+                <div class="hero-badges">
+                  <span class="hero-count-badge">📋 14 habits</span>
+                  <!-- Science badge: sky-blue — not green -->
+                  <span class="hero-science-badge">🔬 5 science-backed</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sort chips -->
+          <div class="sort-row">
+            <div
+              class="chip chip-active"
+              style="font-size: 12px; padding: 5px 12px"
+            >
+              Most used
+            </div>
+            <div
+              class="chip chip-inactive"
+              style="font-size: 12px; padding: 5px 12px"
+            >
+              A–Z
+            </div>
+            <div
+              class="chip chip-inactive"
+              style="font-size: 12px; padding: 5px 12px"
+            >
+              🔬 Science
+            </div>
+          </div>
+
+          <!-- Scroll -->
+          <div class="scroll-content">
+            <!-- POPULAR section -->
+            <div class="drill-section-label">Popular</div>
+
+            <!-- Card 1: TOP PICK — amber accent, amber badge -->
+            <div
+              class="template-card template-card--top-pick"
+              onclick="handleCardTap(event, this)"
+              data-icon="☀️"
+              data-icon-bg="#FEF9C3"
+              data-top-pick="1"
+              data-title="Morning Sunlight"
+              data-desc="10 min outdoor light within 1 hour of waking helps regulate cortisol, boost serotonin, and anchor your circadian rhythm for deeper sleep at night."
+              data-science="Huberman Lab research: morning sunlight in the first hour of waking calibrates the circadian clock via intrinsically photosensitive retinal ganglion cells (ipRGCs), elevating cortisol at the right time and improving melatonin onset at night."
+              data-frequency="Daily"
+              data-popularity="4.2k"
+              data-pairs='[{"icon":"🧊","name":"Cold Shower","sub":"Stack for full morning reset"},{"icon":"📓","name":"Morning Journal","sub":"Reflect while neurons fire"},{"icon":"☕","name":"Delay Caffeine 90min","sub":"Let adenosine clear first"}]'
+            >
+              <div class="card-top-row">
+                <div class="card-icon-wrap" style="background: #fef9c3">☀️</div>
+                <div class="card-content">
+                  <div class="top-pick-badge">⭐ TOP PICK</div>
+                  <div class="card-title-row">
+                    <span class="card-title">Morning Sunlight</span>
+                    <button class="add-btn" onclick="handleAddBtn(event, this)">
+                      + Add
+                    </button>
+                  </div>
+                  <div class="card-desc">
+                    10 min outdoor light within 1hr of waking for cortisol
+                    regulation
+                  </div>
+                  <div class="meta-row">
+                    <span class="pill pill-science">🔬 Science-backed</span>
+                    <span class="pill pill-trend">🔥 4.2k added</span>
+                    <span class="pill pill-neutral">📅 Daily</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 2: Normal card with science + popularity -->
+            <div
+              class="template-card"
+              onclick="handleCardTap(event, this)"
+              data-icon="🧊"
+              data-icon-bg="#E0F2FE"
+              data-title="Cold Shower"
+              data-desc="End your shower with 2–3 minutes of cold water. Releases norepinephrine, builds stress tolerance, and sharpens alertness without caffeine."
+              data-science="Deliberate cold exposure (Søberg et al. 2021) raises norepinephrine by up to 300% and dopamine by 250%, lasting hours after the exposure ends."
+              data-frequency="Daily"
+              data-popularity="3.1k"
+              data-pairs='[{"icon":"☀️","name":"Morning Sunlight","sub":"Anchor circadian rhythm"},{"icon":"🏋️","name":"Zone 2 Cardio","sub":"Both build mitochondria"}]'
+            >
+              <div class="card-top-row">
+                <div class="card-icon-wrap" style="background: #e0f2fe">🧊</div>
+                <div class="card-content">
+                  <div class="card-title-row">
+                    <span class="card-title">Cold Shower</span>
+                    <button class="add-btn" onclick="handleAddBtn(event, this)">
+                      + Add
+                    </button>
+                  </div>
+                  <div class="card-desc">
+                    2 min cold exposure builds resilience and alertness
+                  </div>
+                  <div class="meta-row">
+                    <span class="pill pill-science">🔬 Science-backed</span>
+                    <span class="pill pill-trend">🔥 3.1k added</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 3: ADDED state — green tint, checkmark -->
+            <div
+              class="template-card template-card--added"
+              onclick="handleCardTap(event, this)"
+              data-icon="📓"
+              data-icon-bg="#D1FAE5"
+              data-title="Morning Journal"
+              data-desc="5 min of stream-of-consciousness writing. Gets thoughts out of your head and onto paper, reducing mental noise and sharpening daily priorities."
+              data-frequency="Daily"
+              data-pairs='[{"icon":"☀️","name":"Morning Sunlight","sub":"Natural light first, then write"},{"icon":"🧘","name":"Breathwork","sub":"Calm before you reflect"}]'
+            >
+              <div class="card-top-row">
+                <div class="card-icon-wrap" style="background: #d1fae5">📓</div>
+                <div class="card-content">
+                  <div class="card-title-row">
+                    <span class="card-title">Morning Journal</span>
+                    <button
+                      class="added-btn"
+                      onclick="handleAddBtn(event, this)"
+                    >
+                      ✓ Added
+                    </button>
+                  </div>
+                  <div class="card-desc">
+                    5 min stream-of-consciousness to clear mental noise
+                  </div>
+                  <div class="meta-row">
+                    <span class="pill pill-neutral">📅 Daily</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ALL HABITS section -->
+            <div class="drill-section-label">All Habits</div>
+
+            <!-- Card 4: Science-only, no popularity -->
+            <div
+              class="template-card"
+              onclick="handleCardTap(event, this)"
+              data-icon="🏋️"
+              data-icon-bg="#ECFDF5"
+              data-title="Zone 2 Cardio"
+              data-desc="30–45 minutes at a pace where you can hold a conversation. Builds mitochondrial density, improves fat oxidation, and lowers resting heart rate over time."
+              data-science="Peter Attia / Iñigo San Millán research: Zone 2 is the primary driver of mitochondrial biogenesis and is most under-trained in modern fitness routines."
+              data-frequency="3× / week"
+              data-pairs='[{"icon":"🧊","name":"Cold Shower","sub":"Cold after cardio accelerates recovery"},{"icon":"😴","name":"Sleep 8hrs","sub":"Recovery is where gains happen"}]'
+            >
+              <div class="card-top-row">
+                <div class="card-icon-wrap" style="background: #ecfdf5">🏋️</div>
+                <div class="card-content">
+                  <div class="card-title-row">
+                    <span class="card-title">Zone 2 Cardio</span>
+                    <button class="add-btn" onclick="handleAddBtn(event, this)">
+                      + Add
+                    </button>
+                  </div>
+                  <div class="card-desc">
+                    30–45 min low-intensity cardio for mitochondrial density
+                  </div>
+                  <div class="meta-row">
+                    <span class="pill pill-science">🔬 Science-backed</span>
+                    <span class="pill pill-neutral">📅 3× / week</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 5: Simple, neutral only -->
+            <div
+              class="template-card"
+              onclick="handleCardTap(event, this)"
+              data-icon="💧"
+              data-icon-bg="#FEF3C7"
+              data-title="Hydrate on Wake"
+              data-desc="Drink 500ml of water within the first 10 minutes of waking. You lose roughly 1 liter of water overnight — rehydrating first thing supports cognition and energy."
+              data-frequency="Daily"
+              data-pairs='[{"icon":"☀️","name":"Morning Sunlight","sub":"Step outside with your water"},{"icon":"☕","name":"Delay Caffeine 90min","sub":"Hydrate before coffee"}]'
+            >
+              <div class="card-top-row">
+                <div class="card-icon-wrap" style="background: #fef3c7">💧</div>
+                <div class="card-content">
+                  <div class="card-title-row">
+                    <span class="card-title">Hydrate on Wake</span>
+                    <button class="add-btn" onclick="handleAddBtn(event, this)">
+                      + Add
+                    </button>
+                  </div>
+                  <div class="card-desc">
+                    500ml water immediately after waking
+                  </div>
+                  <div class="meta-row">
+                    <span class="pill pill-neutral">📅 Daily</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- /scroll-content -->
+
+          <!-- Detail overlay (slides in on card tap) -->
+          <div class="detail-overlay" id="drill-detail">
+            <div class="detail-hero" id="drill-detail-hero">
+              <button class="detail-back" onclick="closeDetail('drill-detail')">
+                ‹ Back
+              </button>
+              <div class="detail-hero-icon" id="drill-detail-icon"></div>
+              <div
+                class="detail-hero-top-pick"
+                id="drill-detail-top-pick"
+                style="display: none"
+              >
+                ⭐ TOP PICK
+              </div>
+              <div class="detail-title" id="drill-detail-title"></div>
+              <div class="detail-meta-row" id="drill-detail-meta"></div>
+              <div class="detail-desc" id="drill-detail-desc"></div>
+            </div>
+            <div class="detail-scroll">
+              <div id="drill-detail-science-section" style="display: none">
+                <div class="detail-section-title">Why it works</div>
+                <div class="detail-science-card">
+                  <div class="detail-science-label">🔬 Research-backed</div>
+                  <div
+                    class="detail-science-text"
+                    id="drill-detail-science"
+                  ></div>
+                </div>
+              </div>
+              <div id="drill-detail-pairs-section" style="display: none">
+                <div class="detail-section-title">Pairs well with</div>
+                <div class="detail-pairs-grid" id="drill-detail-pairs"></div>
+              </div>
+            </div>
+            <div class="detail-cta-bar">
+              <button
+                class="detail-add-btn"
+                id="drill-detail-add-btn"
+                onclick="toggleDetailAdd('drill-detail')"
+              >
+                + Add to My Habits
+              </button>
+            </div>
+          </div>
+        </div>
+        <!-- /phone -->
+      </div>
+
+      <!-- ══════ COLOR LEGEND PANEL ══════ -->
+      <div class="legend">
+        <div class="legend-title">Design Constitution</div>
+        <div class="legend-card">
+          <div
+            style="
+              font-size: 10px;
+              font-weight: 700;
+              color: #78716c;
+              letter-spacing: 0.08em;
+              text-transform: uppercase;
+              font-family: var(--ff);
+            "
+          >
+            Correct Semantic Roles
+          </div>
+
+          <!-- Action / Green -->
+          <div class="legend-row">
+            <div class="legend-swatch" style="background: #059669"></div>
+            <div class="legend-info">
+              <div class="legend-role">Action / CTA</div>
+              <div class="legend-hex">#059669 · emerald-600</div>
+              <div class="legend-note">Add button · Added state</div>
+            </div>
+          </div>
+
+          <!-- Award / Amber -->
+          <div class="legend-row">
+            <div class="legend-swatch" style="background: #d97706"></div>
+            <div class="legend-info">
+              <div class="legend-role">Award / TOP PICK</div>
+              <div class="legend-hex">#D97706 · amber-600</div>
+              <div class="legend-note">Badge bg · Left accent</div>
+            </div>
+          </div>
+
+          <!-- Science / Sky -->
+          <div class="legend-row">
+            <div class="legend-swatch" style="background: #0369a1"></div>
+            <div class="legend-info">
+              <div class="legend-role">Science-backed</div>
+              <div class="legend-hex">#0369A1 · sky-700</div>
+              <div class="legend-note">Pill text · Hero badge</div>
+            </div>
+          </div>
+
+          <!-- Trend / Orange -->
+          <div class="legend-row">
+            <div class="legend-swatch" style="background: #c2410c"></div>
+            <div class="legend-info">
+              <div class="legend-role">Popularity / Fire</div>
+              <div class="legend-hex">#C2410C · orange-700</div>
+              <div class="legend-note">🔥 N added pill</div>
+            </div>
+          </div>
+
+          <!-- Neutral / Stone -->
+          <div class="legend-row">
+            <div class="legend-swatch" style="background: #6b6560"></div>
+            <div class="legend-info">
+              <div class="legend-role">Metadata / Neutral</div>
+              <div class="legend-hex">#6B6560 · stone-500</div>
+              <div class="legend-note">Frequency · Category</div>
+            </div>
+          </div>
+
+          <hr class="legend-divider" />
+
+          <!-- Category colors note -->
+          <div
+            style="
+              font-size: 10px;
+              font-weight: 700;
+              color: #78716c;
+              letter-spacing: 0.08em;
+              text-transform: uppercase;
+              font-family: var(--ff);
+            "
+          >
+            Category Hero = per-category color
+          </div>
+          <div
+            style="
+              font-size: 10px;
+              color: #57534e;
+              font-family: var(--ff);
+              line-height: 1.5;
+              margin-top: -4px;
+            "
+          >
+            Hero uses categoryMeta.bgColor/textColor, not a global color.
+            Morning → amber. Mental → indigo. Health → green.
+          </div>
+
+          <hr class="legend-divider" />
+
+          <!-- Before: Problems -->
+          <div class="problem-label">❌ Before (the bug)</div>
+
+          <div class="problem-row">
+            <div class="problem-swatch" style="background: #059669"></div>
+            <div>
+              <div
+                class="problem-text"
+                style="color: #a8a29e; font-size: 10px; font-family: var(--ff)"
+              >
+                TOP PICK badge = green
+              </div>
+              <div
+                class="problem-text"
+                style="color: #a8a29e; font-size: 10px; font-family: var(--ff)"
+              >
+                Science pill = green
+              </div>
+              <div
+                class="problem-text"
+                style="color: #a8a29e; font-size: 10px; font-family: var(--ff)"
+              >
+                Left accent = green
+              </div>
+            </div>
+          </div>
+
+          <div
+            style="
+              font-size: 10px;
+              color: #57534e;
+              font-family: var(--ff);
+              margin-top: -2px;
+            "
+          >
+            Green was doing 4 jobs. Now it owns 1: the add action.
+          </div>
+
+          <hr class="legend-divider" />
+
+          <!-- Surface tokens -->
+          <div
+            style="
+              font-size: 10px;
+              font-weight: 700;
+              color: #78716c;
+              letter-spacing: 0.08em;
+              text-transform: uppercase;
+              font-family: var(--ff);
+            "
+          >
+            Surface Tokens
+          </div>
+
+          <div class="legend-row">
+            <div
+              class="legend-swatch"
+              style="
+                background: #f5f1ed;
+                border-color: rgba(255, 255, 255, 0.15);
+              "
+            ></div>
+            <div class="legend-info">
+              <div class="legend-role">Background</div>
+              <div class="legend-hex">#F5F1ED · warm parchment</div>
+            </div>
+          </div>
+          <div class="legend-row">
+            <div
+              class="legend-swatch"
+              style="
+                background: #edeae5;
+                border-color: rgba(255, 255, 255, 0.12);
+              "
+            ></div>
+            <div class="legend-info">
+              <div class="legend-role">Card surface</div>
+              <div class="legend-hex">#EDEAE5</div>
+            </div>
+          </div>
+          <div class="legend-row">
+            <div
+              class="legend-swatch"
+              style="
+                background: #ddd8d2;
+                border-color: rgba(255, 255, 255, 0.1);
+              "
+            ></div>
+            <div class="legend-info">
+              <div class="legend-role">Border / divider</div>
+              <div class="legend-hex">#DDD8D2</div>
+            </div>
+          </div>
+        </div>
+        <!-- /legend-card -->
+      </div>
+      <!-- /legend -->
+    </div>
+    <!-- /layout -->
+
+    <script>
+      // ── Persistent state via URL hash (works on file://) ──
+      function loadAdded() {
+        try {
+          if (location.hash && location.hash.length > 1) {
+            const data = JSON.parse(decodeURIComponent(location.hash.slice(1)));
+            if (Array.isArray(data)) return new Set(data);
+          }
+        } catch {}
+        return new Set(['Morning Journal']);
+      }
+
+      function saveAdded(set) {
+        try {
+          history.replaceState(
+            null,
+            '',
+            '#' + encodeURIComponent(JSON.stringify([...set]))
+          );
+        } catch {}
+      }
+
+      const addedHabits = loadAdded();
+
+      // ── Sync all list cards to current addedHabits state ──
+      function syncCardStates() {
+        document
+          .querySelectorAll('.template-card, .trending-card')
+          .forEach((card) => {
+            const title = card.dataset.title;
+            if (!title) return;
+            const isAdded = addedHabits.has(title);
+            const btn = card.querySelector('button');
+
+            // Data attribute drives the [data-added="true"] CSS selectors
+            card.dataset.added = isAdded ? 'true' : 'false';
+
+            // Update button
+            if (btn) {
+              btn.textContent = isAdded ? '✓ Added' : '+ Add';
+              btn.className = isAdded ? 'added-btn' : 'add-btn';
+            }
+          });
+      }
+
+      // ── Open detail overlay ──
+      function openDetail(overlayId, card) {
+        const title = card.dataset.title || '';
+        const icon = card.dataset.icon || '';
+        const iconBg = card.dataset.iconBg || '#EDEAE5';
+        const desc = card.dataset.desc || '';
+        const science = card.dataset.science || '';
+        const freq = card.dataset.frequency || '';
+        const pop = card.dataset.popularity || '';
+        const isTopPick = !!card.dataset.topPick;
+        let pairs = [];
+        try {
+          if (card.dataset.pairs) pairs = JSON.parse(card.dataset.pairs);
+        } catch {}
+
+        const el = (id) => document.getElementById(overlayId + '-' + id);
+
+        el('icon').textContent = icon;
+        el('icon').style.cssText =
+          `font-size:48px;width:72px;height:72px;border-radius:18px;background:${iconBg};display:flex;align-items:center;justify-content:center;margin-bottom:12px;`;
+        el('top-pick').style.display = isTopPick ? 'inline-flex' : 'none';
+        el('title').textContent = title;
+        el('desc').textContent = desc;
+
+        const meta = el('meta');
+        meta.innerHTML = '';
+        if (science)
+          meta.innerHTML +=
+            '<span class="pill pill-science">🔬 Science-backed</span>';
+        if (pop)
+          meta.innerHTML += `<span class="pill pill-trend">🔥 ${pop} added</span>`;
+        if (freq)
+          meta.innerHTML += `<span class="pill pill-neutral">📅 ${freq}</span>`;
+
+        el('science-section').style.display = science ? 'block' : 'none';
+        if (science) el('science').textContent = science;
+
+        el('pairs-section').style.display = pairs.length ? 'block' : 'none';
+        el('pairs').innerHTML = pairs
+          .map(
+            (p) =>
+              `<div class="detail-pair-row">
+          <div class="detail-pair-icon">${p.icon}</div>
+          <div><div class="detail-pair-name">${p.name}</div><div class="detail-pair-sub">${p.sub}</div></div>
+        </div>`
+          )
+          .join('');
+
+        const addBtn = el('add-btn');
+        const isAdded = addedHabits.has(title);
+        addBtn.textContent = isAdded
+          ? '✓ Added to My Habits'
+          : '+ Add to My Habits';
+        addBtn.className = isAdded
+          ? 'detail-add-btn is-added'
+          : 'detail-add-btn';
+        addBtn.dataset.habitTitle = title;
+
+        document.getElementById(overlayId).classList.add('open');
+      }
+
+      // ── Close overlay (called by back button) ──
+      function closeDetail(overlayId) {
+        document.getElementById(overlayId).classList.remove('open');
+      }
+
+      // ── Add/remove from detail CTA ──
+      function toggleDetailAdd(overlayId) {
+        const addBtn = document.getElementById(overlayId + '-add-btn');
+        const title = addBtn.dataset.habitTitle;
+        const isAdded = addedHabits.has(title);
+        if (!isAdded) {
+          addedHabits.add(title);
+          addBtn.textContent = '✓ Added to My Habits';
+          addBtn.className = 'detail-add-btn is-added';
+        } else {
+          addedHabits.delete(title);
+          addBtn.textContent = '+ Add to My Habits';
+          addBtn.className = 'detail-add-btn';
+        }
+        saveAdded(addedHabits);
+        syncCardStates();
+      }
+
+      // ── Card tap: opens detail overlay ──
+      function handleCardTap(e, card) {
+        // Ignore if the tap was on the add/added button itself
+        if (e.target.closest('button')) return;
+        const phone = card.closest('.phone');
+        if (!phone) return;
+        const overlayId = phone.contains(
+          document.getElementById('browse-detail')
+        )
+          ? 'browse-detail'
+          : 'drill-detail';
+        openDetail(overlayId, card);
+      }
+
+      // ── Add button: toggles added state ──
+      function handleAddBtn(e, btn) {
+        e.stopPropagation();
+        const card = btn.closest('.template-card, .trending-card');
+        const title = card && card.dataset.title;
+        if (!title) return;
+        if (addedHabits.has(title)) addedHabits.delete(title);
+        else addedHabits.add(title);
+        saveAdded(addedHabits);
+        syncCardStates();
+      }
+
+      // Init
+      syncCardStates();
+    </script>
+  </body>
+</html>

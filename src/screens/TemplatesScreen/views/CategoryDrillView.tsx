@@ -1,12 +1,18 @@
 /**
- * CategoryDrillView - Slide-in view showing templates for a single category
- * With sort/filter controls and "hide imported" toggle
+ * CategoryDrillView - Slide-in view showing templates for a single category.
+ * With sort controls, section grouping (Popular / All), Top Pick badge, and social proof.
  */
 
-import { FlatList, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import {
+  FlatList,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import type { Doc } from '../../../../convex/_generated/dataModel';
-import { ScreenHeader } from '../../../components/ScreenHeader';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { durations, springs } from '../../../theme/animations';
 import { borderRadius, spacing } from '../../../theme/spacing';
@@ -16,7 +22,13 @@ import {
   useCategoryDrillFilters,
   type DrillSort,
 } from '../hooks/useCategoryDrillFilters';
+import {
+  useDrillSections,
+  type DrillListItem,
+} from '../hooks/useDrillSections';
 import { TemplateListCard } from './TemplateListCard';
+import { CategoryHero } from './CategoryHero';
+import { DrillSectionLabel } from './DrillSectionLabel';
 
 interface CategoryDrillViewProps {
   categoryId: string;
@@ -31,69 +43,108 @@ interface CategoryDrillViewProps {
 const SORT_OPTIONS: { key: DrillSort; label: string }[] = [
   { key: 'popular', label: 'Most used' },
   { key: 'az', label: 'A-Z' },
+  { key: 'science', label: '🔬 Science' },
 ];
 
 export function CategoryDrillView({
-  categoryId, importedTemplateIds, importingTemplateId,
-  onBack, onImport, onPreview, templates,
+  categoryId,
+  importedTemplateIds,
+  importingTemplateId,
+  onBack,
+  onImport,
+  onPreview,
+  templates,
 }: CategoryDrillViewProps) {
   const { colors } = useThemeColors();
   const meta = getCategoryMeta(categoryId);
-  const getCategoryLabel = (_categoryId: string) => meta.label;
-  const habitCountLabel = `${templates.length} habit${templates.length === 1 ? '' : 's'}`;
   const scienceCount = templates.filter((t) => t.scientificReference).length;
-  const { filtered, hideImported, setSort, sort, toggleHideImported } =
-    useCategoryDrillFilters(templates, importedTemplateIds);
+  const { filtered, setSort, sort } = useCategoryDrillFilters(
+    templates,
+    importedTemplateIds
+  );
+  const listData = useDrillSections(filtered, sort);
+
+  const renderItem = ({
+    item,
+    index,
+  }: {
+    item: DrillListItem;
+    index: number;
+  }) => {
+    if (item.kind === 'header') return <DrillSectionLabel label={item.label} />;
+    return (
+      <Animated.View
+        entering={FadeInDown.delay(index * durations.stagger)
+          .duration(durations.enter)
+          .springify()
+          .damping(springs.standard.damping)}
+      >
+        <TemplateListCard
+          getCategoryLabel={() => ''}
+          importedTemplateIds={importedTemplateIds}
+          importingTemplateId={importingTemplateId}
+          isTopPick={item.isTopPick}
+          item={item.template}
+          popularityCount={item.popularityCount}
+          searchQuery=''
+          onImport={() => onImport(item.template)}
+          onPreview={() => onPreview(item.template)}
+        />
+      </Animated.View>
+    );
+  };
 
   return (
-    <View testID="templates-category-view" style={[s.container, { backgroundColor: colors.background }]}>
-      <ScreenHeader
-        subtitle={`${habitCountLabel} \u00B7 ${scienceCount} science-backed`}
-        title={`${meta.icon} ${meta.label}`}
+    <View
+      testID='templates-category-view'
+      style={[s.container, { backgroundColor: colors.background }]}
+    >
+      <CategoryHero
+        habitCount={templates.length}
+        meta={meta}
+        scienceCount={scienceCount}
         onBack={onBack}
       />
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={s.filterBarContent}>
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        style={[s.filterBar, { borderBottomColor: colors.border }]}
+        contentContainerStyle={s.filterBarContent}
+      >
         {SORT_OPTIONS.map((opt) => (
           <Pressable
             accessibilityRole='button'
             accessibilityState={{ selected: sort === opt.key }}
             key={opt.key}
-            style={[s.chip, { backgroundColor: colors.card, borderColor: colors.border }, sort === opt.key && { backgroundColor: colors.primary[600], borderColor: colors.primary[700] }]}
+            style={[
+              s.chip,
+              { backgroundColor: colors.card, borderColor: colors.border },
+              sort === opt.key && {
+                backgroundColor: meta.bgColor,
+                borderColor: meta.borderColor,
+              },
+            ]}
             onPress={() => setSort(opt.key)}
           >
-            <Text style={[s.chipText, { color: colors.text.secondary }, sort === opt.key && { color: colors.text.inverse }]}>
+            <Text
+              style={[
+                s.chipText,
+                { color: colors.text.secondary },
+                sort === opt.key && { color: meta.textColor },
+              ]}
+            >
               {opt.label}
             </Text>
           </Pressable>
         ))}
-        <Pressable
-          accessibilityRole='button'
-          accessibilityState={{ selected: hideImported }}
-          style={[s.chip, { backgroundColor: colors.card, borderColor: colors.border }, hideImported && { backgroundColor: `${colors.primary[500]}1A`, borderColor: `${colors.primary[500]}4D` }]}
-          onPress={toggleHideImported}
-        >
-          <Text style={[s.chipText, { color: colors.text.secondary }, hideImported && { color: colors.primary[600] }]}>
-            Hide added
-          </Text>
-        </Pressable>
       </ScrollView>
       <FlatList
-        data={filtered}
+        data={listData}
         contentContainerStyle={s.list}
-        keyExtractor={(item) => item._id}
-        renderItem={({ item, index }) => (
-          <Animated.View entering={FadeInDown.delay(index * durations.stagger).duration(durations.enter).springify().damping(springs.standard.damping)}>
-            <TemplateListCard
-              getCategoryLabel={getCategoryLabel}
-              importedTemplateIds={importedTemplateIds}
-              importingTemplateId={importingTemplateId}
-              item={item}
-              searchQuery=''
-              onImport={(_templateId) => onImport(item)}
-              onPreview={(_template) => onPreview(item)}
-            />
-          </Animated.View>
-        )}
+        keyExtractor={(item, index) =>
+          item.kind === 'header' ? `header-${index}` : item.template._id
+        }
+        renderItem={renderItem}
       />
     </View>
   );
@@ -108,6 +159,13 @@ const s = StyleSheet.create({
   },
   chipText: { ...typography.caption, fontWeight: fontWeights.semibold },
   container: { flex: 1 },
-  filterBarContent: { flexDirection: 'row', gap: spacing.sm, paddingHorizontal: spacing.base, paddingVertical: spacing.sm },
+  filterBar: { borderBottomWidth: 1, flexShrink: 0 },
+  filterBarContent: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: spacing.sm,
+    paddingHorizontal: spacing.base,
+    paddingVertical: spacing.sm,
+  },
   list: { paddingBottom: spacing['2xl'], paddingTop: spacing.xs },
 });
