@@ -17,10 +17,10 @@ export type DrillListItem =
       popularityCount: string | null;
     };
 
-function formatPopularityCount(
+export function formatPopularityCount(
   score: number | null | undefined
 ): string | null {
-  if (!score || score < 50) return null;
+  if (!score || score < 1) return null;
   if (score >= 1000) {
     const k = score / 1000;
     return `${k % 1 === 0 ? k.toFixed(0) : k.toFixed(1)}k`;
@@ -33,36 +33,26 @@ export function useDrillSections(
   sort: DrillSort
 ): DrillListItem[] {
   return useMemo(() => {
+    const toItem = (t: Doc<'templates'>, isTopPick = false) => ({
+      kind: 'template' as const,
+      isTopPick,
+      popularityCount: formatPopularityCount(t.popularityScore),
+      template: t,
+    });
+
     if (sort !== 'popular' || filtered.length === 0) {
-      return filtered.map((t) => ({
-        kind: 'template' as const,
-        isTopPick: false,
-        popularityCount: null,
-        template: t,
-      }));
+      return filtered.map((t) => toItem(t));
     }
 
     const popular = filtered.slice(0, 3);
     const rest = filtered.slice(3);
     const items: DrillListItem[] = [{ kind: 'header', label: '⭐ Popular' }];
 
-    for (const [i, t] of popular.entries())
-      items.push({
-        kind: 'template',
-        isTopPick: i === 0,
-        popularityCount: formatPopularityCount(t.popularityScore),
-        template: t,
-      });
+    for (const [i, t] of popular.entries()) items.push(toItem(t, i === 0));
 
     if (rest.length > 0) {
       items.push({ kind: 'header', label: 'All habits' });
-      for (const t of rest)
-        items.push({
-          kind: 'template',
-          isTopPick: false,
-          popularityCount: null,
-          template: t,
-        });
+      for (const t of rest) items.push(toItem(t));
     }
 
     return items;
