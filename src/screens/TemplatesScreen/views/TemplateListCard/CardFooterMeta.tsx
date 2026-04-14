@@ -1,5 +1,5 @@
 /**
- * Meta pills row (frequency, category, science, popularity) and search match row.
+ * Meta pills row (frequency, category, popularity) and search match row.
  */
 
 import { Text, View } from 'react-native';
@@ -12,7 +12,6 @@ interface CardFooterMetaProps {
   frequency: string | undefined;
   matchReason: string | null;
   popularityCount?: string | null;
-  scientificReference?: string | null;
 }
 
 export function CardFooterMeta({
@@ -20,20 +19,12 @@ export function CardFooterMeta({
   frequency,
   matchReason,
   popularityCount,
-  scientificReference,
 }: CardFooterMetaProps) {
   const { colors } = useThemeColors();
 
   return (
     <>
       <View style={styles.metaRow}>
-        {scientificReference ? (
-          <View style={styles.sciencePill}>
-            <Text style={[styles.metaLabel, { color: '#0369A1' }]}>
-              🔬 Science-backed
-            </Text>
-          </View>
-        ) : null}
         {frequency ? (
           <View
             style={[

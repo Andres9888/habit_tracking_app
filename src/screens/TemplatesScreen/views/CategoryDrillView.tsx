@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
  * CategoryDrillView - Slide-in view showing templates for a single category.
  * With sort controls, section grouping (Popular / All), Top Pick badge, and social proof.
@@ -43,7 +44,6 @@ interface CategoryDrillViewProps {
 const SORT_OPTIONS: { key: DrillSort; label: string }[] = [
   { key: 'popular', label: 'Most used' },
   { key: 'az', label: 'A-Z' },
-  { key: 'science', label: '🔬 Science' },
 ];
 
 export function CategoryDrillView({
@@ -58,10 +58,8 @@ export function CategoryDrillView({
   const { colors } = useThemeColors();
   const meta = getCategoryMeta(categoryId);
   const scienceCount = templates.filter((t) => t.scientificReference).length;
-  const { filtered, setSort, sort } = useCategoryDrillFilters(
-    templates,
-    importedTemplateIds
-  );
+  const { filtered, hideImported, setSort, sort, toggleHideImported } =
+    useCategoryDrillFilters(templates, importedTemplateIds);
   const listData = useDrillSections(filtered, sort);
 
   const renderItem = ({
@@ -137,6 +135,30 @@ export function CategoryDrillView({
             </Text>
           </Pressable>
         ))}
+        <View style={[s.chipDivider, { backgroundColor: colors.border }]} />
+        <Pressable
+          accessibilityRole='button'
+          accessibilityState={{ selected: hideImported }}
+          style={[
+            s.chip,
+            { backgroundColor: colors.card, borderColor: colors.border },
+            hideImported && {
+              backgroundColor: meta.bgColor,
+              borderColor: meta.borderColor,
+            },
+          ]}
+          onPress={toggleHideImported}
+        >
+          <Text
+            style={[
+              s.chipText,
+              { color: colors.text.secondary },
+              hideImported && { color: meta.textColor },
+            ]}
+          >
+            {hideImported ? '✓ Not added' : 'Not added'}
+          </Text>
+        </Pressable>
       </ScrollView>
       <FlatList
         data={listData}
@@ -157,6 +179,7 @@ const s = StyleSheet.create({
     paddingHorizontal: 14,
     paddingVertical: 6,
   },
+  chipDivider: { alignSelf: 'center', height: 18, width: 1 },
   chipText: { ...typography.caption, fontWeight: fontWeights.semibold },
   container: { flex: 1 },
   filterBar: { borderBottomWidth: 1, flexShrink: 0 },

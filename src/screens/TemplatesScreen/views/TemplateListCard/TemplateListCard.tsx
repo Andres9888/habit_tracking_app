@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
  * Compact template result card for filtered list views.
  * Layout: icon + [title + inline add btn] + desc + meta pills.
@@ -98,7 +99,6 @@ export function TemplateListCard({
             frequency={item.frequency}
             matchReason={matchReason}
             popularityCount={popularityCount}
-            scientificReference={item.scientificReference}
           />
           <View style={[styles.detailsRow, { borderTopColor: colors.border }]}>
             <Text
