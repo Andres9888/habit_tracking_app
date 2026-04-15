@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Habit Library — Redesign</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Literata:opsz,wght@7..72,400;7..72,500;7..72,600;7..72,700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+
+    :root {
+      /* Warm stone palette */
+      --bg: #FAF8F5;
+      --card: #FFFFFF;
+      --card-elevated: #FFFFFF;
+      --border: #EDEAE5;
+      --border-subtle: #F3F0EB;
+
+      /* Text hierarchy */
+      --text-primary: #2D2A26;
+      --text-secondary: #7A756E;
+      --text-tertiary: #A8A29E;
+      --text-inverse: #FFFFFF;
+
+      /* Brand */
+      --primary-500: #10B981;
+      --primary-600: #059669;
+      --primary-700: #047857;
+
+      /* Category colors */
+      --morning: #FEF3C7;
+      --morning-border: #F59E0B;
+      --mental: #EDE9FE;
+      --mental-border: #8B5CF6;
+      --fitness: #FEE2E2;
+      --fitness-border: #EF4444;
+      --sleep: #E0E7FF;
+      --sleep-border: #6366F1;
+      --mindful: #D1FAE5;
+      --mindful-border: #059669;
+      --learning: #FEF3C7;
+      --learning-border: #D97706;
+      --finance: #ECFDF5;
+      --finance-border: #10B981;
+
+      /* Shadows */
+      --shadow-subtle: 0 1px 3px rgba(45,42,38,0.04);
+      --shadow-card: 0 2px 8px rgba(45,42,38,0.06), 0 1px 2px rgba(45,42,38,0.04);
+      --shadow-elevated: 0 4px 16px rgba(45,42,38,0.08), 0 2px 4px rgba(45,42,38,0.04);
+
+      /* Spacing */
+      --sp-xs: 4px;
+      --sp-sm: 8px;
+      --sp-md: 12px;
+      --sp-base: 16px;
+      --sp-lg: 24px;
+      --sp-xl: 32px;
+      --sp-2xl: 48px;
+
+      /* Radius */
+      --r-sm: 8px;
+      --r-md: 12px;
+      --r-lg: 16px;
+      --r-xl: 24px;
+      --r-full: 9999px;
+    }
+
+    body {
+      background: #1a1a1a;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      padding: 24px;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    .phone-frame {
+      width: 390px;
+      height: 844px;
+      background: var(--bg);
+      border-radius: 44px;
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 0 0 12px #1a1a1a, 0 0 0 14px #333, 0 24px 80px rgba(0,0,0,0.4);
+    }
+
+    /* Status bar */
+    .status-bar {
+      height: 54px;
+      padding: 14px 24px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    .status-icons { display: flex; gap: 6px; align-items: center; }
+
+    /* Sticky area (header + search + chips) */
+    .sticky-area {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: var(--bg);
+      padding-bottom: var(--sp-md);
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* Header */
+    .header {
+      padding: var(--sp-base) var(--sp-lg) var(--sp-sm);
+    }
+    .header-title {
+      font-family: 'Literata', serif;
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.3px;
+    }
+    .header-subtitle {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-top: 2px;
+    }
+
+    /* Search bar */
+    .search-bar {
+      margin: var(--sp-sm) var(--sp-lg) 0;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+      height: 44px;
+      display: flex;
+      align-items: center;
+      padding: 0 var(--sp-base);
+      gap: var(--sp-sm);
+      box-shadow: var(--shadow-subtle);
+    }
+    .search-bar input {
+      flex: 1;
+      border: none;
+      outline: none;
+      font-size: 15px;
+      font-family: 'DM Sans', sans-serif;
+      color: var(--text-primary);
+      background: transparent;
+    }
+    .search-bar input::placeholder { color: var(--text-tertiary); }
+    .search-icon { color: var(--text-tertiary); flex-shrink: 0; }
+
+    /* Quick filter chips */
+    .chips-row {
+      display: flex;
+      gap: var(--sp-sm);
+      padding: var(--sp-md) var(--sp-lg) 0;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .chips-row::-webkit-scrollbar { display: none; }
+    .chip {
+      flex-shrink: 0;
+      padding: 7px 14px;
+      border-radius: var(--r-full);
+      font-size: 13px;
+      font-weight: 600;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .chip.active {
+      background: var(--primary-600);
+      border-color: var(--primary-700);
+      color: var(--text-inverse);
+    }
+    .chip:hover:not(.active) {
+      border-color: var(--text-tertiary);
+    }
+
+    /* Scrollable content area */
+    .scroll-content {
+      height: calc(844px - 54px);
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .scroll-content::-webkit-scrollbar { display: none; }
+
+    /* Section header */
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 var(--sp-lg);
+      margin-bottom: var(--sp-base);
+    }
+    .section-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.8px;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+    }
+    .section-link {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--primary-600);
+      cursor: pointer;
+    }
+
+    /* ═══ SECTION: Popular This Week ═══ */
+    .popular-section {
+      padding-top: var(--sp-lg);
+    }
+    .ranked-list {
+      padding: 0 var(--sp-lg);
+    }
+    .ranked-row {
+      display: flex;
+      align-items: center;
+      padding: var(--sp-md) 0;
+      gap: var(--sp-base);
+      border-bottom: 1px solid var(--border-subtle);
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .ranked-row:hover { background: rgba(0,0,0,0.01); }
+    .ranked-row:last-child { border-bottom: none; }
+
+    .rank-number {
+      font-family: 'Literata', serif;
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--text-primary);
+      opacity: 0.15;
+      width: 32px;
+      text-align: center;
+      flex-shrink: 0;
+      line-height: 1;
+    }
+    .rank-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: var(--r-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+    .rank-info {
+      flex: 1;
+      min-width: 0;
+    }
+    .rank-name {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .rank-meta {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-sm);
+      margin-top: 2px;
+    }
+    .rank-frequency {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-tertiary);
+    }
+    .rank-science {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      color: var(--primary-600);
+    }
+    .rank-science svg { width: 12px; height: 12px; }
+    .rank-science span {
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .rank-popularity {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--text-tertiary);
+    }
+    .rank-add-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--primary-500);
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: transform 0.15s, box-shadow 0.15s;
+      box-shadow: 0 2px 8px rgba(16,185,129,0.3);
+    }
+    .rank-add-btn:hover {
+      transform: scale(1.08);
+      box-shadow: 0 4px 12px rgba(16,185,129,0.4);
+    }
+    .rank-add-btn svg { color: white; width: 18px; height: 18px; }
+
+    /* Section spacing */
+    .section-gap { height: var(--sp-2xl); }
+
+    /* ═══ SECTION: Starter Packs ═══ */
+    .packs-section {
+      padding: 0 var(--sp-lg);
+    }
+    .pack-card {
+      border-radius: var(--r-xl);
+      padding: var(--sp-lg);
+      margin-bottom: var(--sp-md);
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.15s;
+    }
+    .pack-card:hover { transform: scale(0.985); }
+    .pack-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: var(--r-xl);
+      pointer-events: none;
+    }
+    .pack-emojis {
+      font-size: 20px;
+      letter-spacing: 4px;
+      margin-bottom: var(--sp-sm);
+    }
+    .pack-name {
+      font-family: 'Literata', serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: white;
+      margin-bottom: var(--sp-xs);
+    }
+    .pack-desc {
+      font-size: 13px;
+      color: rgba(255,255,255,0.75);
+      line-height: 1.4;
+      margin-bottom: var(--sp-base);
+    }
+    .pack-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .pack-count {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: rgba(255,255,255,0.5);
+      font-weight: 500;
+    }
+    .pack-cta {
+      padding: 8px 20px;
+      border-radius: var(--r-full);
+      background: rgba(255,255,255,0.2);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: white;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+      backdrop-filter: blur(4px);
+    }
+    .pack-cta:hover {
+      background: rgba(255,255,255,0.3);
+    }
+
+    /* ═══ SECTION: Backed by Research ═══ */
+    .research-section { }
+    .research-scroll {
+      display: flex;
+      gap: var(--sp-md);
+      padding: 0 var(--sp-lg);
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .research-scroll::-webkit-scrollbar { display: none; }
+    .research-card {
+      flex-shrink: 0;
+      width: 180px;
+      background: var(--card);
+      border-radius: var(--r-lg);
+      padding: var(--sp-base);
+      box-shadow: var(--shadow-card);
+      border-top: 3px solid var(--primary-500);
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .research-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-elevated);
+    }
+    .research-source-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--r-sm);
+      background: #ECFDF5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: var(--sp-md);
+    }
+    .research-source-icon svg { color: var(--primary-600); width: 18px; height: 18px; }
+    .research-source-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: 1.3;
+      margin-bottom: var(--sp-xs);
+    }
+    .research-count {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--text-tertiary);
+      font-weight: 500;
+    }
+    .research-type {
+      margin-top: var(--sp-sm);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 8px;
+      border-radius: var(--r-full);
+      background: var(--border-subtle);
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* ═══ SECTION: Categories ═══ */
+    .categories-section {
+      padding: 0 var(--sp-lg);
+    }
+    .category-row {
+      display: flex;
+      align-items: center;
+      padding: var(--sp-md) 0;
+      gap: var(--sp-md);
+      border-bottom: 1px solid var(--border-subtle);
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .category-row:hover { background: rgba(0,0,0,0.01); }
+    .category-icon-circle {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+    .category-name {
+      flex: 1;
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+    .category-count {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--text-tertiary);
+      font-weight: 500;
+    }
+    .category-chevron {
+      color: var(--text-tertiary);
+      flex-shrink: 0;
+    }
+    .show-all-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--sp-md);
+      margin-top: var(--sp-sm);
+      border-radius: var(--r-md);
+      background: var(--border-subtle);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .show-all-btn:hover { background: var(--border); }
+
+    /* ═══ Footer ═══ */
+    .credibility-footer {
+      text-align: center;
+      padding: var(--sp-xl) var(--sp-2xl);
+      color: var(--text-tertiary);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+    .credibility-icon {
+      display: flex;
+      justify-content: center;
+      margin-bottom: var(--sp-sm);
+      opacity: 0.4;
+    }
+    .credibility-icon svg { color: var(--primary-600); }
+
+    /* Bottom safe area */
+    .bottom-safe { height: 100px; }
+
+    /* Animations */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-in {
+      animation: fadeInUp 0.4s ease-out both;
+    }
+    .delay-1 { animation-delay: 0.08s; }
+    .delay-2 { animation-delay: 0.16s; }
+    .delay-3 { animation-delay: 0.24s; }
+    .delay-4 { animation-delay: 0.32s; }
+    .delay-5 { animation-delay: 0.40s; }
+
+    /* ═══ DARK MODE ═══ */
+    .phone-frame.dark {
+      --bg: #1C1B19;
+      --card: #2A2825;
+      --card-elevated: #33312D;
+      --border: #3A3733;
+      --border-subtle: #2F2D29;
+      --text-primary: #F5F1ED;
+      --text-secondary: #A8A29E;
+      --text-tertiary: #6B6560;
+      --shadow-subtle: 0 1px 3px rgba(0,0,0,0.2);
+      --shadow-card: 0 2px 8px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.2);
+      --shadow-elevated: 0 4px 16px rgba(0,0,0,0.4), 0 2px 4px rgba(0,0,0,0.2);
+    }
+    .dark .research-source-icon { background: rgba(16,185,129,0.15); }
+    .dark .rank-number { opacity: 0.12; }
+
+    /* Mode toggle */
+    .mode-toggle {
+      position: fixed;
+      top: 24px;
+      right: 24px;
+      padding: 10px 16px;
+      background: #333;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      z-index: 100;
+    }
+    .mode-toggle:hover { background: #444; }
+  </style>
+</head>
+<body>
+
+<button class="mode-toggle" onclick="document.querySelector('.phone-frame').classList.toggle('dark'); this.textContent = this.textContent === 'Dark Mode' ? 'Light Mode' : 'Dark Mode'">Dark Mode</button>
+
+<div class="phone-frame">
+  <!-- Status Bar -->
+  <div class="status-bar">
+    <span>9:41</span>
+    <div class="status-icons">
+      <span style="font-size:12px">●●●●</span>
+      <span style="font-size:12px">WiFi</span>
+      <span style="font-size:13px">🔋</span>
+    </div>
+  </div>
+
+  <!-- Scrollable content -->
+  <div class="scroll-content">
+
+    <!-- Sticky area: Header + Search + Chips -->
+    <div class="sticky-area">
+      <div class="header">
+        <div class="header-title">Habit Library</div>
+        <div class="header-subtitle">Good morning — discover something new</div>
+      </div>
+      <div class="search-bar">
+        <div class="search-icon"><i data-lucide="search" style="width:18px;height:18px"></i></div>
+        <input type="text" placeholder="Search habits, packs, topics...">
+      </div>
+      <div class="chips-row">
+        <div class="chip active">✨ All</div>
+        <div class="chip">🌅 Morning</div>
+        <div class="chip">🧠 Mental</div>
+        <div class="chip">💪 Fitness</div>
+        <div class="chip">😴 Sleep</div>
+        <div class="chip">🧘 Mindful</div>
+        <div class="chip">📚 Learning</div>
+        <div class="chip">💰 Finance</div>
+      </div>
+    </div>
+
+    <!-- ═══ POPULAR THIS WEEK ═══ -->
+    <div class="popular-section animate-in">
+      <div class="section-header">
+        <span class="section-label">Popular This Week</span>
+        <span class="section-link">See all 47 →</span>
+      </div>
+      <div class="ranked-list">
+        <!-- #1 -->
+        <div class="ranked-row">
+          <div class="rank-number">1</div>
+          <div class="rank-icon" style="background:#FEF3C720">🌅</div>
+          <div class="rank-info">
+            <div class="rank-name">Morning Sunlight</div>
+            <div class="rank-meta">
+              <span class="rank-frequency">Daily</span>
+              <span class="rank-science">
+                <i data-lucide="flask-conical" style="width:12px;height:12px"></i>
+                <span>Research</span>
+              </span>
+              <span class="rank-popularity">2.4k</span>
+            </div>
+          </div>
+          <button class="rank-add-btn"><i data-lucide="plus" style="width:18px;height:18px;color:white"></i></button>
+        </div>
+        <!-- #2 -->
+        <div class="ranked-row">
+          <div class="rank-number">2</div>
+          <div class="rank-icon" style="background:#E0E7FF30">💧</div>
+          <div class="rank-info">
+            <div class="rank-name">Hydrate on Wake</div>
+            <div class="rank-meta">
+              <span class="rank-frequency">Daily</span>
+              <span class="rank-science">
+                <i data-lucide="flask-conical" style="width:12px;height:12px"></i>
+                <span>Research</span>
+              </span>
+              <span class="rank-popularity">1.8k</span>
+            </div>
+          </div>
+          <button class="rank-add-btn"><i data-lucide="plus" style="width:18px;height:18px;color:white"></i></button>
+        </div>
+        <!-- #3 -->
+        <div class="ranked-row">
+          <div class="rank-number">3</div>
+          <div class="rank-icon" style="background:#EDE9FE30">🧘</div>
+          <div class="rank-info">
+            <div class="rank-name">5-Minute Meditation</div>
+            <div class="rank-meta">
+              <span class="rank-frequency">Daily</span>
+              <span class="rank-science">
+                <i data-lucide="flask-conical" style="width:12px;height:12px"></i>
+                <span>Research</span>
+              </span>
+              <span class="rank-popularity">1.5k</span>
+            </div>
+          </div>
+          <button class="rank-add-btn"><i data-lucide="plus" style="width:18px;height:18px;color:white"></i></button>
+        </div>
+        <!-- #4 -->
+        <div class="ranked-row">
+          <div class="rank-number">4</div>
+          <div class="rank-icon" style="background:#FEE2E230">🏃</div>
+          <div class="rank-info">
+            <div class="rank-name">Daily Movement</div>
+            <div class="rank-meta">
+              <span class="rank-frequency">Daily</span>
+              <span class="rank-popularity">1.2k</span>
+            </div>
+          </div>
+          <button class="rank-add-btn"><i data-lucide="plus" style="width:18px;height:18px;color:white"></i></button>
+        </div>
+        <!-- #5 -->
+        <div class="ranked-row">
+          <div class="rank-number">5</div>
+          <div class="rank-icon" style="background:#D1FAE530">📖</div>
+          <div class="rank-info">
+            <div class="rank-name">Read 20 Minutes</div>
+            <div class="rank-meta">
+              <span class="rank-frequency">Daily</span>
+              <span class="rank-science">
+                <i data-lucide="flask-conical" style="width:12px;height:12px"></i>
+                <span>Research</span>
+              </span>
+              <span class="rank-popularity">980</span>
+            </div>
+          </div>
+          <button class="rank-add-btn"><i data-lucide="plus" style="width:18px;height:18px;color:white"></i></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-gap"></div>
+
+    <!-- ═══ STARTER PACKS ═══ -->
+    <div class="animate-in delay-1">
+      <div class="section-header">
+        <span class="section-label">Starter Packs</span>
+      </div>
+      <div class="packs-section">
+        <div class="pack-card" style="background: linear-gradient(135deg, #059669, #047857)">
+          <div class="pack-emojis">🔬 🧠 💪 🧬</div>
+          <div class="pack-name">Huberman Essentials</div>
+          <div class="pack-desc">Science protocols for peak performance — sleep, focus, and recovery</div>
+          <div class="pack-footer">
+            <span class="pack-count">5 habits</span>
+            <button class="pack-cta">Start This Pack</button>
+          </div>
+        </div>
+        <div class="pack-card" style="background: linear-gradient(135deg, #D97706, #B45309)">
+          <div class="pack-emojis">🌅 💧 🧘 📝</div>
+          <div class="pack-name">Morning Mastery</div>
+          <div class="pack-desc">Build an unshakeable morning routine that sets up your entire day</div>
+          <div class="pack-footer">
+            <span class="pack-count">4 habits</span>
+            <button class="pack-cta">Start This Pack</button>
+          </div>
+        </div>
+        <div class="pack-card" style="background: linear-gradient(135deg, #6366F1, #4F46E5)">
+          <div class="pack-emojis">🧘 📖 🌙 🫁</div>
+          <div class="pack-name">Mindful Peak</div>
+          <div class="pack-desc">Calm the noise and build deep focus through daily mindfulness</div>
+          <div class="pack-footer">
+            <span class="pack-count">4 habits</span>
+            <button class="pack-cta">Start This Pack</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-gap"></div>
+
+    <!-- ═══ BACKED BY RESEARCH ═══ -->
+    <div class="research-section animate-in delay-2">
+      <div class="section-header">
+        <span class="section-label">Backed by Research</span>
+      </div>
+      <div class="research-scroll">
+        <div class="research-card">
+          <div class="research-source-icon"><i data-lucide="flask-conical"></i></div>
+          <div class="research-source-name">Huberman Lab Protocols</div>
+          <div class="research-count">8 templates</div>
+          <div class="research-type">Podcast</div>
+        </div>
+        <div class="research-card" style="border-top-color: #D97706">
+          <div class="research-source-icon" style="background:#FEF3C7"><i data-lucide="book-open" style="color:#D97706"></i></div>
+          <div class="research-source-name">Atomic Habits Framework</div>
+          <div class="research-count">6 templates</div>
+          <div class="research-type">Book</div>
+        </div>
+        <div class="research-card" style="border-top-color: #6366F1">
+          <div class="research-source-icon" style="background:#EDE9FE"><i data-lucide="graduation-cap" style="color:#6366F1"></i></div>
+          <div class="research-source-name">Sleep Hygiene Research</div>
+          <div class="research-count">4 templates</div>
+          <div class="research-type">Study</div>
+        </div>
+        <div class="research-card" style="border-top-color: #EF4444">
+          <div class="research-source-icon" style="background:#FEE2E2"><i data-lucide="flask-conical" style="color:#EF4444"></i></div>
+          <div class="research-source-name">CBT & Behavioral Science</div>
+          <div class="research-count">5 templates</div>
+          <div class="research-type">Study</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-gap"></div>
+
+    <!-- ═══ CATEGORIES ═══ -->
+    <div class="animate-in delay-3">
+      <div class="section-header">
+        <span class="section-label">Categories</span>
+      </div>
+      <div class="categories-section">
+        <div class="category-row">
+          <div class="category-icon-circle" style="background: var(--morning)">🌅</div>
+          <div class="category-name">Morning Routine</div>
+          <div class="category-count">12</div>
+          <div class="category-chevron"><i data-lucide="chevron-right" style="width:16px;height:16px"></i></div>
+        </div>
+        <div class="category-row">
+          <div class="category-icon-circle" style="background: var(--fitness)">💪</div>
+          <div class="category-name">Health & Fitness</div>
+          <div class="category-count">18</div>
+          <div class="category-chevron"><i data-lucide="chevron-right" style="width:16px;height:16px"></i></div>
+        </div>
+        <div class="category-row">
+          <div class="category-icon-circle" style="background: var(--mental)">🧠</div>
+          <div class="category-name">Mental Health</div>
+          <div class="category-count">8</div>
+          <div class="category-chevron"><i data-lucide="chevron-right" style="width:16px;height:16px"></i></div>
+        </div>
+        <div class="category-row">
+          <div class="category-icon-circle" style="background: var(--sleep)">😴</div>
+          <div class="category-name">Sleep</div>
+          <div class="category-count">6</div>
+          <div class="category-chevron"><i data-lucide="chevron-right" style="width:16px;height:16px"></i></div>
+        </div>
+        <div class="category-row">
+          <div class="category-icon-circle" style="background: var(--mindful)">🧘</div>
+          <div class="category-name">Mindfulness</div>
+          <div class="category-count">7</div>
+          <div class="category-chevron"><i data-lucide="chevron-right" style="width:16px;height:16px"></i></div>
+        </div>
+        <div class="category-row">
+          <div class="category-icon-circle" style="background: var(--learning)">📚</div>
+          <div class="category-name">Learning</div>
+          <div class="category-count">9</div>
+          <div class="category-chevron"><i data-lucide="chevron-right" style="width:16px;height:16px"></i></div>
+        </div>
+        <div class="show-all-btn">Show all 14 categories</div>
+      </div>
+    </div>
+
+    <div class="section-gap"></div>
+
+    <!-- ═══ Credibility Footer ═══ -->
+    <div class="credibility-footer animate-in delay-4">
+      <div class="credibility-icon"><i data-lucide="flask-conical" style="width:20px;height:20px"></i></div>
+      Every template links to peer-reviewed research.<br>Tap any template to see the study behind it.
+    </div>
+
+    <div class="bottom-safe"></div>
+
+  </div><!-- end scroll-content -->
+</div><!-- end phone-frame -->
+
+<script>
+  lucide.createIcons();
+</script>
+</body>
+</html>
