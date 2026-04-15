@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Archive Page — Design Comparison</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Literata:wght@700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'DM Sans', sans-serif !important;
+    background: #1a1816;
+    color: #2D2A26;
+    padding: 40px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 48px;
+  }
+
+  h1 {
+    font-family: 'Literata', serif !important;
+    font-size: 28px !important;
+    font-weight: 700 !important;
+    color: #FAF8F5 !important;
+    text-align: center;
+  }
+  .subtitle {
+    font-size: 15px !important;
+    color: #C4BFB7 !important;
+    text-align: center;
+    max-width: 600px;
+    line-height: 1.5;
+  }
+
+  .comparison {
+    display: flex;
+    gap: 32px;
+    width: 100%;
+    max-width: 900px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .phone-frame {
+    width: 375px;
+    background: #F5F1ED;
+    border-radius: 40px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    position: relative;
+  }
+
+  .label {
+    text-align: center;
+    margin-bottom: 12px;
+  }
+  .label-title {
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    letter-spacing: -0.3px;
+  }
+  .label-bad { color: #B53030 !important; }
+  .label-good { color: #15793C !important; }
+  .label-desc {
+    font-size: 13px !important;
+    color: #6E6660 !important;
+    margin-top: 2px;
+  }
+
+  /* Status bar */
+  .status-bar {
+    height: 54px;
+    padding: 14px 24px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 15px !important;
+    font-weight: 600 !important;
+    color: #2D2A26;
+  }
+  .status-bar .time { font-size: 15px !important; font-weight: 600 !important; }
+  .status-bar .icons { display: flex; gap: 6px; font-size: 12px !important; }
+
+  /* ========== CURRENT (Bad) Header ========== */
+  .current-header {
+    backdrop-filter: blur(20px);
+    background: rgba(245, 241, 237, 0.85);
+    padding: 0 16px 8px;
+  }
+  .current-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  .current-back-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #EDEAE5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 1px 3px rgba(45,42,38,0.04);
+  }
+  .current-close-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #DDD8D2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px !important;
+    color: #6B6560;
+  }
+  .current-title-area {
+    padding: 0 20px 8px;
+  }
+  .current-title {
+    font-family: 'Literata', serif !important;
+    font-size: 22px !important;
+    font-weight: 700 !important;
+    color: #2D2A26 !important;
+  }
+  .current-subtitle {
+    font-size: 13px !important;
+    color: #6E6660 !important;
+    margin-top: 4px;
+  }
+
+  /* ========== FIXED (Good) Header ========== */
+  .fixed-header {
+    padding: 0 16px 8px;
+  }
+  .fixed-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .fixed-back-btn {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* No background, no shadow — clean icon */
+  }
+  .fixed-title {
+    font-family: 'Literata', serif !important;
+    font-size: 22px !important;
+    font-weight: 700 !important;
+    color: #2D2A26 !important;
+    flex: 1;
+    text-align: center;
+  }
+  .fixed-subtitle-area {
+    padding: 4px 16px 0;
+  }
+  .fixed-subtitle {
+    font-size: 17px !important;
+    color: #6B6560 !important;
+  }
+
+  /* ========== Shared Card Styles ========== */
+  .card-list {
+    padding: 8px 16px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .habit-card {
+    background: #FFFFFF;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(45,42,38,0.06);
+    display: flex;
+    align-items: center;
+    padding: 16px;
+    gap: 12px;
+  }
+  .habit-card.accent-left {
+    border-left: 4px solid;
+    padding-left: 12px;
+  }
+  .habit-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px !important;
+    flex-shrink: 0;
+  }
+  .habit-info {
+    flex: 1;
+    min-width: 0;
+  }
+  .habit-name {
+    font-size: 17px !important;
+    font-weight: 600 !important;
+    color: #2D2A26 !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .habit-meta {
+    font-size: 13px !important;
+    color: #6E6660 !important;
+    margin-top: 2px;
+  }
+  .habit-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-shrink: 0;
+  }
+  .btn-resume {
+    height: 32px;
+    padding: 0 14px;
+    border-radius: 9999px;
+    background: #15793C;
+    color: #fff !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    border: none;
+    display: flex;
+    align-items: center;
+  }
+  .btn-delete {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: #fde8e8;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px !important;
+  }
+
+  /* Annotation callouts */
+  .annotation-group {
+    width: 100%;
+    max-width: 900px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 24px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+  .annotation {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .annotation-num {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: #B53030;
+    color: #fff !important;
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .annotation-num.fix { background: #15793C; }
+  .annotation-text {
+    font-size: 14px !important;
+    color: #C4BFB7 !important;
+    line-height: 1.5;
+  }
+  .annotation-text strong {
+    color: #FAF8F5 !important;
+    font-weight: 600 !important;
+  }
+
+  /* Chevron SVG */
+  .chevron-icon {
+    width: 24px;
+    height: 24px;
+  }
+  .x-icon {
+    width: 18px;
+    height: 18px;
+  }
+
+  /* Highlight overlays */
+  .highlight-issue {
+    position: relative;
+  }
+  .highlight-issue::after {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border: 2px dashed #B53030;
+    border-radius: inherit;
+    pointer-events: none;
+  }
+</style>
+</head>
+<body>
+
+<div>
+  <h1>Archive Page — Design Mismatch</h1>
+  <p class="subtitle">
+    The archived habits page uses a custom header that doesn't match how every other settings sub-page (Account, Sort Order) looks. Here's the current state vs the fix.
+  </p>
+</div>
+
+<div class="comparison">
+  <!-- CURRENT (Bad) -->
+  <div>
+    <div class="label">
+      <div class="label-title label-bad">Current — Custom Header</div>
+      <div class="label-desc">Doesn't match other settings sub-pages</div>
+    </div>
+    <div class="phone-frame">
+      <div class="status-bar">
+        <span class="time">9:41</span>
+        <span class="icons">⦿ ⦿ ⦿</span>
+      </div>
+
+      <div class="current-header highlight-issue" style="border-radius: 0;">
+        <div class="current-nav">
+          <!-- Issue 1: Circular back button with shadow -->
+          <div class="current-back-btn">
+            <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="#6B6560" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+          </div>
+          <!-- Spacer where nothing is (title is below) -->
+          <div style="flex:1"></div>
+          <div class="current-close-btn">
+            <svg class="x-icon" viewBox="0 0 24 24" fill="none" stroke="#6B6560" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+          </div>
+        </div>
+        <!-- Issue 2: Title below nav bar, left-aligned -->
+        <div class="current-title-area">
+          <div class="current-title">Your Archived Habits</div>
+          <div class="current-subtitle">2 habits waiting to come back</div>
+        </div>
+      </div>
+
+      <div class="card-list">
+        <div class="habit-card accent-left" style="border-left-color: #059669;">
+          <div class="habit-icon" style="background: rgba(5,150,105,0.08);">🏃</div>
+          <div class="habit-info">
+            <div class="habit-name">Morning Run</div>
+            <div class="habit-meta">2 weeks ago</div>
+          </div>
+          <div class="habit-actions">
+            <button class="btn-resume">Resume</button>
+            <button class="btn-delete">🗑</button>
+          </div>
+        </div>
+        <div class="habit-card accent-left" style="border-left-color: #8B6208;">
+          <div class="habit-icon" style="background: rgba(139,98,8,0.08);">📖</div>
+          <div class="habit-info">
+            <div class="habit-name">Read 30 Minutes</div>
+            <div class="habit-meta">1 month ago</div>
+          </div>
+          <div class="habit-actions">
+            <button class="btn-resume">Resume</button>
+            <button class="btn-delete">🗑</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FIXED (Good) -->
+  <div>
+    <div class="label">
+      <div class="label-title label-good">Fixed — ScreenHeader Pattern</div>
+      <div class="label-desc">Matches Account page & Sort Order page</div>
+    </div>
+    <div class="phone-frame">
+      <div class="status-bar">
+        <span class="time">9:41</span>
+        <span class="icons">⦿ ⦿ ⦿</span>
+      </div>
+
+      <div class="fixed-header">
+        <div class="fixed-nav">
+          <!-- Fix 1: Clean icon button, no bg/shadow -->
+          <div class="fixed-back-btn">
+            <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="#2D2A26" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+          </div>
+          <!-- Fix 2: Centered title in nav row -->
+          <div class="fixed-title">Archived Habits</div>
+          <div class="current-close-btn">
+            <svg class="x-icon" viewBox="0 0 24 24" fill="none" stroke="#6B6560" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+          </div>
+        </div>
+        <div class="fixed-subtitle-area">
+          <div class="fixed-subtitle">2 habits waiting to come back</div>
+        </div>
+      </div>
+
+      <div class="card-list">
+        <div class="habit-card accent-left" style="border-left-color: #059669;">
+          <div class="habit-icon" style="background: rgba(5,150,105,0.08);">🏃</div>
+          <div class="habit-info">
+            <div class="habit-name">Morning Run</div>
+            <div class="habit-meta">2 weeks ago</div>
+          </div>
+          <div class="habit-actions">
+            <button class="btn-resume">Resume</button>
+            <button class="btn-delete">🗑</button>
+          </div>
+        </div>
+        <div class="habit-card accent-left" style="border-left-color: #8B6208;">
+          <div class="habit-icon" style="background: rgba(139,98,8,0.08);">📖</div>
+          <div class="habit-info">
+            <div class="habit-name">Read 30 Minutes</div>
+            <div class="habit-meta">1 month ago</div>
+          </div>
+          <div class="habit-actions">
+            <button class="btn-resume">Resume</button>
+            <button class="btn-delete">🗑</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Annotations -->
+<div class="annotation-group">
+  <div style="font-size:16px; font-weight:700; color:#FAF8F5; margin-bottom:4px;">What's changing and why</div>
+
+  <div class="annotation">
+    <div class="annotation-num">1</div>
+    <div class="annotation-text">
+      <strong>Back button style</strong> — Currently a circular button with card background and shadow. Every other sub-page uses a clean 40x40 icon with no background. Fix: use shared <code>ScreenHeader</code> component.
+    </div>
+  </div>
+
+  <div class="annotation">
+    <div class="annotation-num">2</div>
+    <div class="annotation-text">
+      <strong>Title placement</strong> — Currently a large left-aligned title below the nav bar. Every other sub-page centers the title in the nav row. Fix: title moves to center of nav row.
+    </div>
+  </div>
+
+  <div class="annotation">
+    <div class="annotation-num">3</div>
+    <div class="annotation-text">
+      <strong>BlurView header</strong> — Currently uses a frosted glass blur effect. No other settings sub-page does this. Fix: solid background matching the page.
+    </div>
+  </div>
+
+  <div class="annotation">
+    <div class="annotation-num fix">4</div>
+    <div class="annotation-text">
+      <strong>Cards stay the same</strong> — The habit cards with colored left accent bars, emoji avatars, Resume/Delete actions all remain unchanged. They work well visually.
+    </div>
+  </div>
+
+  <div class="annotation">
+    <div class="annotation-num fix">5</div>
+    <div class="annotation-text">
+      <strong>Loading skeleton fix</strong> — Skeleton cards currently use 12px border radius. Design system cards use 16px. Small fix for consistency.
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
