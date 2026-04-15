@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
  * @module DraggableHabitCard
  *
@@ -60,19 +61,18 @@ function DraggableHabitCardComponent(props: DraggableHabitCardProps) {
     opacity: props.highlightGlow.value,
   }));
 
-  // PERF: Memoize pressable style to prevent recreating function on every render
-  const pressableStyle = useMemo(
-    () =>
-      ({ pressed }: { pressed: boolean }) => ({
-        opacity: pressed ? 0.92 : 1,
-      }),
-    []
-  );
+  // PERF: static style avoids recreating function on every render
+  const pressableStyle = useMemo(() => ({ flex: 1 as const }), []);
 
   const handlePress = useMemo(() => {
     if (props.showSelectionOverlay) return () => props.onToggleSelection?.();
     return () => props.onPress?.(props.habit);
-  }, [props.showSelectionOverlay, props.onToggleSelection, props.onPress, props.habit]);
+  }, [
+    props.showSelectionOverlay,
+    props.onToggleSelection,
+    props.onPress,
+    props.habit,
+  ]);
 
   const handleArchivePress = useCallback(() => {
     props.onArchive?.(props.habit._id);
@@ -85,20 +85,40 @@ function DraggableHabitCardComponent(props: DraggableHabitCardProps) {
   const hasSwipeActions = props.onArchive || props.onDelete;
 
   const habitCard = (
-    <ReAnimated.View style={[props.entranceCardStyle, { flexDirection: 'row', alignItems: 'center' }]}>
-      {props.showSelectionOverlay ? <SelectionOverlay isSelected={!!props.isSelected} onToggle={() => props.onToggleSelection?.()} /> : null}
+    <ReAnimated.View
+      collapsable={false}
+      style={[
+        props.entranceCardStyle,
+        { flexDirection: 'row', alignItems: 'center' },
+      ]}
+    >
+      {props.showSelectionOverlay ? (
+        <SelectionOverlay
+          isSelected={!!props.isSelected}
+          onToggle={() => props.onToggleSelection?.()}
+        />
+      ) : null}
       <Pressable
-        accessibilityHint={props.showSelectionOverlay ? 'Tap to toggle selection' : `Tap to view details${hasSwipeActions ? ', swipe left for actions' : ''}`}
+        accessibilityHint={
+          props.showSelectionOverlay
+            ? 'Tap to toggle selection'
+            : `Tap to view details${hasSwipeActions ? ', swipe left for actions' : ''}`
+        }
         accessibilityLabel={`${props.habit.name}, ${props.streak} day streak`}
         accessibilityRole='button'
-        style={[pressableStyle, { flex: 1 }]}
-        onLongPress={props.showSelectionOverlay ? undefined : props.handleLongPress}
+        style={pressableStyle}
+        onLongPress={
+          props.showSelectionOverlay ? undefined : props.handleLongPress
+        }
         onPress={handlePress}
         onPressIn={props.showSelectionOverlay ? undefined : props.handlePressIn}
-        onPressOut={props.showSelectionOverlay ? undefined : props.handlePressOut}
+        onPressOut={
+          props.showSelectionOverlay ? undefined : props.handlePressOut
+        }
       >
         <ReAnimated.View
           className='flex-row overflow-hidden rounded-3xl'
+          collapsable={false}
           style={[staticCardStyle, cardAnimatedStyle]}
         >
           <ReAnimated.View
@@ -116,11 +136,13 @@ function DraggableHabitCardComponent(props: DraggableHabitCardProps) {
             className='flex-1'
             style={props.entranceContentStyle}
           >
-            {props.showGradientFill ? <StrengthFillBackground
+            {props.showGradientFill ? (
+              <StrengthFillBackground
                 isDark={props.isDark}
                 strengthColor={effectiveAccentColor}
                 strengthFillStyle={props.strengthFillStyle}
-              /> : null}
+              />
+            ) : null}
             <ReAnimated.View
               pointerEvents='none'
               style={[
