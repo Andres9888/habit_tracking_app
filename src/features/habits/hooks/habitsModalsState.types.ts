@@ -12,7 +12,6 @@ import type {
   HabitSettings,
   HabitSettingsUpdate,
   HabitTrackingEntry,
-  ShareCardData,
 } from '../types';
 
 export interface HabitsModalsState {
@@ -27,7 +26,6 @@ export interface HabitsModalsState {
   showHabitDetail: boolean;
   habitDetailInitialTab: 'progress' | 'motivation' | 'manage';
   showHapticTest: boolean;
-  showShareCard: boolean;
   showPauseModal: boolean;
   showTemplatesScreen: boolean;
   showQuickActions: boolean;
@@ -38,7 +36,6 @@ export interface HabitsModalsState {
   habitToPause: Habit | null;
   selectedHabit: Habit | null;
   quickActionsHabit: Habit | null;
-  shareCardData: ShareCardData | null;
   milestone: unknown;
   tracking: HabitTrackingEntry[];
   showHabitStrengthPercentage: boolean;
@@ -51,7 +48,6 @@ export interface HabitsModalsState {
   closeEditScreen: () => void;
   closeHabitCalendar: () => void;
   closeHabitDetail: () => void;
-  closeShareCard: () => void;
   closePauseModal: () => void;
   openHapticTest: () => void;
   closeHapticTest: () => void;
@@ -73,7 +69,6 @@ export interface HabitsModalsState {
   closeActivationModal: () => void;
   onSettingsChange: (updates: Partial<HabitSettingsUpdate>) => Promise<void>;
   onDeleteHabit: (habitId: Id<'habits'>) => Promise<void>;
-  onShareMilestone: (data: ShareCardData) => void;
   clearMilestone: () => void;
   confirmPause: () => Promise<void>;
   /** Toggle habit completion with offline queue support (T011) */

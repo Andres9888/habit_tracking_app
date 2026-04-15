@@ -23,7 +23,6 @@ const {
   LABEL_DELAY,
   LABEL_DURATION,
   PERCENTAGE_DURATION,
-  SHARE_BUTTON_DELAY,
   CONTINUE_BUTTON_DELAY,
 } = ANIMATION_TIMING;
 const inOutEase = Easing.inOut(Easing.ease);
@@ -60,17 +59,6 @@ export function runAnimationSequence(anim: AnimationValues, strength: number) {
     withTiming(strength, { duration: PERCENTAGE_DURATION, easing: outEase })
   );
 
-  anim.shareButtonTranslateY.value = withDelay(
-    SHARE_BUTTON_DELAY,
-    withSpring(0, {
-      damping: BADGE_SETTLE_DAMPING,
-      stiffness: BADGE_SETTLE_STIFFNESS,
-    })
-  );
-  anim.shareButtonOpacity.value = withDelay(
-    SHARE_BUTTON_DELAY,
-    withTiming(1, { duration: 200 })
-  );
   anim.continueButtonOpacity.value = withDelay(
     CONTINUE_BUTTON_DELAY,
     withTiming(1, { duration: LABEL_DURATION })
@@ -82,7 +70,5 @@ export function resetAnimations(anim: AnimationValues) {
   anim.glowOpacity.value = 0.3;
   anim.labelOpacity.value = 0;
   anim.percentageValue.value = 0;
-  anim.shareButtonTranslateY.value = 50;
-  anim.shareButtonOpacity.value = 0;
   anim.continueButtonOpacity.value = 0;
 }

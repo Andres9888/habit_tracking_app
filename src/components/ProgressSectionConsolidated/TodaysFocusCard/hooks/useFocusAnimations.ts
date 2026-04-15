@@ -28,11 +28,9 @@ export interface UseFocusAnimationsResult {
   opacity: SharedValue<number>;
   shimmerPosition: SharedValue<number>;
   badgeScale: SharedValue<number>;
-  shareButtonOpacity: SharedValue<number>;
   containerAnimatedStyle: ReturnType<typeof useAnimatedStyle>;
   shimmerAnimatedStyle: ReturnType<typeof useAnimatedStyle>;
   badgeAnimatedStyle: ReturnType<typeof useAnimatedStyle>;
-  shareButtonAnimatedStyle: ReturnType<typeof useAnimatedStyle>;
 }
 
 export function useFocusAnimations(
@@ -42,7 +40,6 @@ export function useFocusAnimations(
   const opacity = useSharedValue(reduceMotion ? 1 : 0);
   const shimmerPosition = useSharedValue(0);
   const badgeScale = useSharedValue(0);
-  const shareButtonOpacity = useSharedValue(0);
 
   // Entrance animation
   useEffect(() => {
@@ -93,18 +90,12 @@ export function useFocusAnimations(
     transform: [{ scale: badgeScale.value }],
   }));
 
-  const shareButtonAnimatedStyle = useAnimatedStyle(() => ({
-    opacity: shareButtonOpacity.value,
-  }));
-
   return {
     badgeAnimatedStyle,
     badgeScale,
     containerAnimatedStyle,
     opacity,
     scale,
-    shareButtonAnimatedStyle,
-    shareButtonOpacity,
     shimmerAnimatedStyle,
     shimmerPosition,
   };

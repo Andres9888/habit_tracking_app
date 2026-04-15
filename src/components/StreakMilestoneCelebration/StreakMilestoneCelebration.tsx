@@ -25,7 +25,6 @@ export function StreakMilestoneCelebration({
   habitName,
   streakDays,
   habitEmoji = '⭐',
-  onShare,
 }: StreakMilestoneCelebrationProps) {
   const reduceMotion = useReduceMotion();
   const animations = useCelebrationAnimations(visible, reduceMotion);
@@ -66,9 +65,7 @@ export function StreakMilestoneCelebration({
               continueButtonAnimatedStyle={
                 animations.continueButtonAnimatedStyle
               }
-              shareButtonAnimatedStyle={animations.shareButtonAnimatedStyle}
               onClose={onClose}
-              onShare={onShare}
             />
           </View>
         </View>

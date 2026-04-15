@@ -83,8 +83,6 @@ export interface TodaysFocusCardProps {
   celebratedMilestones?: number[];
   /** Callback when a milestone celebration is acknowledged */
   onMilestoneCelebrated?: (milestone: number) => void;
-  /** Optional callback when share button is pressed during celebration */
-  onShare?: () => void;
 }
 
 /**

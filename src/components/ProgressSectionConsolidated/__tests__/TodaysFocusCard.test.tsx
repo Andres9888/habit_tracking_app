@@ -673,36 +673,6 @@ describe('TodaysFocusCard', () => {
       expect(mockOnMilestoneCelebrated).toHaveBeenCalledWith(7);
     });
 
-    it('renders share button when onShare is provided', () => {
-      const mockOnShare = jest.fn();
-      const { getByLabelText } = render(
-        <TodaysFocusCard {...celebrating7DaysProps} onShare={mockOnShare} />
-      );
-
-      expect(getByLabelText('Share')).toBeTruthy();
-    });
-
-    it('calls onShare when share button is pressed', () => {
-      const mockOnShare = jest.fn();
-      const { getByLabelText } = render(
-        <TodaysFocusCard {...celebrating7DaysProps} onShare={mockOnShare} />
-      );
-
-      const shareButton = getByLabelText('Share');
-      const { fireEvent } = require('@testing-library/react-native');
-      fireEvent.press(shareButton);
-
-      expect(mockOnShare).toHaveBeenCalled();
-    });
-
-    it('does not render share button when onShare is not provided', () => {
-      const { queryByLabelText } = render(
-        <TodaysFocusCard {...celebrating7DaysProps} />
-      );
-
-      expect(queryByLabelText('Share')).toBeNull();
-    });
-
     it('does not render dismiss button when onMilestoneCelebrated is not provided', () => {
       const { queryByText } = render(
         <TodaysFocusCard {...celebrating7DaysProps} />

@@ -20,8 +20,6 @@ export interface MilestoneCelebrationProps {
   /** Habit name for context */
   habitName: string;
 
-  /** On share callback */
-  onShare?: () => void;
 }
 
 export interface AnimationValues {
@@ -29,7 +27,5 @@ export interface AnimationValues {
   glowOpacity: { value: number };
   labelOpacity: { value: number };
   percentageValue: { value: number };
-  shareButtonTranslateY: { value: number };
-  shareButtonOpacity: { value: number };
   continueButtonOpacity: { value: number };
 }

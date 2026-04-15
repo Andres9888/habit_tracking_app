@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { Habit, ShareCardData } from '../types';
+import type { Habit } from '../types';
 
 export interface HabitSelectionState {
   selectedHabit: Habit | null;
@@ -14,8 +14,6 @@ export interface HabitSelectionState {
   setActivationModalHabit: (h: Habit | null) => void;
   habitDetailInitialTab: 'progress' | 'motivation' | 'manage';
   setHabitDetailInitialTab: (t: 'progress' | 'motivation' | 'manage') => void;
-  shareCardData: ShareCardData | null;
-  setShareCardData: (d: ShareCardData | null) => void;
 }
 
 /**
@@ -34,9 +32,6 @@ export function useHabitSelectionState(): HabitSelectionState {
   const [habitDetailInitialTab, setHabitDetailInitialTab] = useState<
     'progress' | 'motivation' | 'manage'
   >('progress');
-  const [shareCardData, setShareCardData] = useState<ShareCardData | null>(
-    null
-  );
 
   return {
     activationModalHabit,
@@ -51,7 +46,5 @@ export function useHabitSelectionState(): HabitSelectionState {
     setHabitToPause,
     setQuickActionsHabit,
     setSelectedHabit,
-    setShareCardData,
-    shareCardData,
   };
 }

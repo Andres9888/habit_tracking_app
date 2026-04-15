@@ -9,8 +9,6 @@ export interface ModalVisibilityState {
   setIsHabitCalendarOpen: (v: boolean) => void;
   isHabitDetailOpen: boolean;
   setIsHabitDetailOpen: (v: boolean) => void;
-  showShareCard: boolean;
-  setShowShareCard: (v: boolean) => void;
   showPauseModal: boolean;
   setShowPauseModal: (v: boolean) => void;
   showEditScreen: boolean;
@@ -36,7 +34,6 @@ export function useModalVisibilityState(): ModalVisibilityState {
   const [isCreateHabitOpen, setIsCreateHabitOpen] = useState(false);
   const [isHabitCalendarOpen, setIsHabitCalendarOpen] = useState(false);
   const [isHabitDetailOpen, setIsHabitDetailOpen] = useState(false);
-  const [showShareCard, setShowShareCard] = useState(false);
   const [showPauseModal, setShowPauseModal] = useState(false);
   const [showEditScreen, setShowEditScreen] = useState(false);
   const [showHapticTest, setShowHapticTest] = useState(false);
@@ -60,7 +57,6 @@ export function useModalVisibilityState(): ModalVisibilityState {
     setShowHapticTest,
     setShowPauseModal,
     setShowQuickActions,
-    setShowShareCard,
     setShowTemplatesScreen,
     setShowVisualizationExercise,
     showActivationModal,
@@ -68,7 +64,6 @@ export function useModalVisibilityState(): ModalVisibilityState {
     showHapticTest,
     showPauseModal,
     showQuickActions,
-    showShareCard,
     showTemplatesScreen,
     showVisualizationExercise,
   };

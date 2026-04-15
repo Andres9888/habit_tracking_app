@@ -35,12 +35,6 @@ const STYLESHEET_TEXT_FILES = [
     pattern: 'colors.primary[700]',
     antiPattern: 'colors.primary[500]',
   },
-  {
-    file: 'components/ShareCardGenerator/components/ShareCardHeader.tsx',
-    description: 'Done button text',
-    pattern: 'colors.primary[700]',
-    antiPattern: 'colors.primary[500]',
-  },
 ];
 
 /**

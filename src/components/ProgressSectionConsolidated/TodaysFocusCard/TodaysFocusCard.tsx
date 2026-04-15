@@ -19,7 +19,6 @@ import { styles } from './TodaysFocusCard.styles';
 import { ConfettiBurst } from './components/ConfettiBurst';
 import { FocusIcon } from './components/FocusIcon';
 import { FocusTextContent } from './components/FocusTextContent';
-import { ShareButton } from './components/ShareButton';
 import { DismissButton } from './components/DismissButton';
 import {
   useFocusState,
@@ -30,7 +29,7 @@ import {
 export const TodaysFocusCard = React.memo(function TodaysFocusCard(
   props: TodaysFocusCardProps
 ) {
-  const { currentStreak, onMilestoneCelebrated, onShare } = props;
+  const { currentStreak, onMilestoneCelebrated } = props;
   const reduceMotion = useReduceMotion();
 
   const focusStateResult = useFocusState(props);
@@ -39,10 +38,8 @@ export const TodaysFocusCard = React.memo(function TodaysFocusCard(
     focusStateResult.focusState,
     reduceMotion,
     animations.badgeScale,
-    animations.shareButtonOpacity,
     currentStreak,
     onMilestoneCelebrated,
-    onShare
   );
 
   const { focusState, config, celebrationConfig } = focusStateResult;
@@ -79,13 +76,6 @@ export const TodaysFocusCard = React.memo(function TodaysFocusCard(
             focusState={focusState}
           />
           <FocusTextContent {...focusStateResult} reduceMotion={reduceMotion} />
-          <ShareButton
-            focusState={focusState}
-            iconColor={config.iconColor}
-            shareButtonAnimatedStyle={animations.shareButtonAnimatedStyle}
-            onPress={celebration.handleSharePress}
-            onShare={onShare}
-          />
         </View>
 
         <DismissButton

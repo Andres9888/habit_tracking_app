@@ -9,7 +9,6 @@
 
 import type { Doc, Id } from '../../../convex/_generated/dataModel';
 import type { CompletionSoundType } from '../../../convex/settings/types';
-import type { MilestoneAchievement } from '../../hooks/useMilestoneDetection';
 
 // ---------------------------------------------------------------------------
 // 1. Core entities
@@ -44,14 +43,6 @@ export type HabitSortMode =
 // ---------------------------------------------------------------------------
 // 3. Compound types
 // ---------------------------------------------------------------------------
-
-/** Data needed to render a shareable milestone card. */
-export type ShareCardData = {
-  habitName: string;
-  milestoneLevel: MilestoneAchievement['level'];
-  strengthPercentage: number;
-  userName?: string;
-};
 
 /** Payload for the streak reward toast notification. */
 export interface RewardToastData {

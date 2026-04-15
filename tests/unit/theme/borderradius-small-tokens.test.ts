@@ -25,21 +25,7 @@ describe('borderRadius.small token migration', () => {
     });
   });
 
-  describe('ShareCardGenerator/shareCardContent.styles', () => {
-    it('should use borderRadius.small token', () => {
-      const {
-        shareCardContentStyles,
-      } = require('../../../src/components/ShareCardGenerator/styles/shareCardContent.styles');
-      expect(shareCardContentStyles.progressBarBackground.borderRadius).toBe(
-        borderRadius.small
-      );
-      expect(shareCardContentStyles.progressBarFill.borderRadius).toBe(
-        borderRadius.small
-      );
-    });
-  });
-
-  describe('BinaryHeatmap/TimeRangeToggle.styles', () => {
+describe('BinaryHeatmap/TimeRangeToggle.styles', () => {
     it('should use borderRadius.small token', () => {
       const {
         styles,

@@ -52,14 +52,11 @@ export function getQuickActionsProps(state: HabitsModalsProps['state']) {
   };
 }
 
-export function getShareAndPauseProps(state: HabitsModalsProps['state']) {
+export function getPauseProps(state: HabitsModalsProps['state']) {
   return {
     closePauseModal: state.closePauseModal,
-    closeShareCard: state.closeShareCard,
     confirmPause: state.confirmPause,
     habitToPause: state.habitToPause,
-    shareCardData: state.shareCardData,
     showPauseModal: state.showPauseModal,
-    showShareCard: state.showShareCard,
   };
 }

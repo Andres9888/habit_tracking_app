@@ -8,7 +8,6 @@ import {
   maybeRequestReview,
   incrementCompletionCount,
 } from '../../utils/storeReview';
-import type { MilestoneLevel } from '../ShareCardGenerator/ShareCardGenerator.types';
 
 interface CelebrationData {
   milestone: StreakMilestone;
@@ -18,17 +17,8 @@ interface CelebrationData {
   streakDays: number;
 }
 
-interface ShareCardData {
-  habitName: string;
-  milestoneLevel: MilestoneLevel;
-  strengthPercentage: number;
-  userName: string;
-}
-
-export function useCelebrationHandlers(userName: string) {
+export function useCelebrationHandlers() {
   const [celebrationData, setCelebrationData] = useState<CelebrationData | null>(null);
-  const [showShareCard, setShowShareCard] = useState(false);
-  const [shareData, setShareData] = useState<ShareCardData | null>(null);
 
   const checkAndCelebrate = useCallback(
     (
@@ -67,40 +57,9 @@ export function useCelebrationHandlers(userName: string) {
     setCelebrationData(null);
   }, [celebrationData]);
 
-  const handleShare = useCallback(() => {
-    if (celebrationData) {
-      const milestoneLevel: MilestoneLevel =
-        celebrationData.milestone.days >= 100
-          ? 'automatic'
-          : celebrationData.milestone.days >= 30
-            ? 'strong'
-            : 'developing';
-
-      setShareData({
-        habitName: celebrationData.habitName,
-        milestoneLevel,
-        strengthPercentage: Math.round(
-          (celebrationData.streakDays / celebrationData.milestone.days) * 100
-        ),
-        userName,
-      });
-      setShowShareCard(true);
-    }
-  }, [celebrationData, userName]);
-
-  const handleShareClose = useCallback(() => {
-    setShowShareCard(false);
-    setShareData(null);
-    handleClose();
-  }, [handleClose]);
-
   return {
     celebrationData,
-    shareData,
-    showShareCard,
     checkAndCelebrate,
     handleClose,
-    handleShare,
-    handleShareClose,
   };
 }

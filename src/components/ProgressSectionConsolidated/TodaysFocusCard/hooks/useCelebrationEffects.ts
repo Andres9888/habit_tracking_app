@@ -7,9 +7,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import {
   withSpring,
-  withTiming,
   withSequence,
-  withDelay,
   SharedValue,
 } from 'react-native-reanimated';
 import { triggerHaptic } from '@/utils/haptics';
@@ -21,17 +19,14 @@ import { CONFETTI_DURATION } from '../TodaysFocusCard.constants';
 export interface UseCelebrationEffectsResult {
   showConfetti: boolean;
   handleCelebrationAcknowledge: () => void;
-  handleSharePress: () => void;
 }
 
 export function useCelebrationEffects(
   focusState: FocusState,
   reduceMotion: boolean,
   badgeScale: SharedValue<number>,
-  shareButtonOpacity: SharedValue<number>,
   currentStreak: number,
   onMilestoneCelebrated?: (milestone: number) => void,
-  onShare?: () => void
 ): UseCelebrationEffectsResult {
   const [showConfetti, setShowConfetti] = useState(false);
 
@@ -45,18 +40,13 @@ export function useCelebrationEffects(
         withSpring(1.4, springs.bouncy),
         withSpring(1, springs.standard)
       );
-      shareButtonOpacity.value = withDelay(
-        400,
-        withTiming(1, { duration: 300 })
-      );
 
       return () => clearTimeout(timer);
     } else if (focusState === 'celebrating' && reduceMotion) {
       triggerHaptic('toggle');
       badgeScale.value = 1;
-      shareButtonOpacity.value = 1;
     }
-  }, [focusState, reduceMotion, badgeScale, shareButtonOpacity]);
+  }, [focusState, reduceMotion, badgeScale]);
 
   const handleCelebrationAcknowledge = useCallback(() => {
     if (focusState === 'celebrating' && onMilestoneCelebrated) {
@@ -65,16 +55,8 @@ export function useCelebrationEffects(
     }
   }, [focusState, currentStreak, onMilestoneCelebrated]);
 
-  const handleSharePress = useCallback(() => {
-    if (onShare) {
-      triggerHaptic('toggle');
-      onShare();
-    }
-  }, [onShare]);
-
   return {
     handleCelebrationAcknowledge,
-    handleSharePress,
     showConfetti,
   };
 }

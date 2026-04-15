@@ -19,12 +19,10 @@ export function buildModalsSettersArg(
     setIsHabitDetailOpen: v.setIsHabitDetailOpen,
     setQuickActionsHabit: s.setQuickActionsHabit,
     setSelectedHabit: s.setSelectedHabit,
-    setShareCardData: s.setShareCardData,
     setShowActivationModal: v.setShowActivationModal,
     setShowEditScreen: v.setShowEditScreen,
     setShowPauseModal: v.setShowPauseModal,
     setShowQuickActions: v.setShowQuickActions,
-    setShowShareCard: v.setShowShareCard,
     setShowVisualizationExercise: v.setShowVisualizationExercise,
   };
 }

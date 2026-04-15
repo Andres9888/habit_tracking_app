@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 /**
  * StreakMilestoneProvider
  * Global provider for managing streak milestone celebrations
@@ -9,7 +8,6 @@
 
 import React, { createContext, useContext, useMemo, type ReactNode } from 'react';
 import { StreakMilestoneCelebration } from './StreakMilestoneCelebration';
-import { ShareCardGenerator } from '../ShareCardGenerator';
 import { useCelebrationHandlers } from './useCelebrationHandlers';
 
 interface StreakMilestoneContextValue {
@@ -27,23 +25,16 @@ const StreakMilestoneContext =
 
 interface StreakMilestoneProviderProps {
   children: ReactNode;
-  /** User name for share cards */
-  userName?: string;
 }
 
 export function StreakMilestoneProvider({
   children,
-  userName = '',
 }: StreakMilestoneProviderProps) {
   const {
     celebrationData,
-    shareData,
-    showShareCard,
     checkAndCelebrate,
     handleClose,
-    handleShare,
-    handleShareClose,
-  } = useCelebrationHandlers(userName);
+  } = useCelebrationHandlers();
 
   const contextValue = useMemo<StreakMilestoneContextValue>(
     () => ({
@@ -64,14 +55,6 @@ export function StreakMilestoneProvider({
           streakDays={celebrationData.streakDays}
           visible={!!celebrationData}
           onClose={handleClose}
-          onShare={handleShare}
-        /> : null}
-
-      {/* Share Card Generator */}
-      {shareData ? <ShareCardGenerator
-          data={shareData}
-          visible={showShareCard}
-          onClose={handleShareClose}
         /> : null}
     </StreakMilestoneContext.Provider>
   );

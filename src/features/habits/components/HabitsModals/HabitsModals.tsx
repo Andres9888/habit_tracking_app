@@ -5,7 +5,7 @@ import { CreateHabitModalSection } from './CreateHabitModalSection';
 import { HapticTestModalSection } from './HapticTestModalSection';
 import { QuickActionsSection } from './QuickActionsSection';
 import { SettingsModalSection } from './SettingsModalSection';
-import { ShareAndPauseModals } from './ShareAndPauseModals';
+import { PauseModal } from './PauseModal';
 import { TemplatesModalSection } from './TemplatesModalSection';
 import type { HabitsModalsProps } from './HabitsModals.types';
 import { VisualizationModalSection } from './VisualizationModalSection';
@@ -13,7 +13,7 @@ import {
   getCalendarAndDetailProps,
   getQuickActionsProps,
   getSettingsProps,
-  getShareAndPauseProps,
+  getPauseProps,
 } from './HabitsModals.helpers';
 
 export function HabitsModals({ state }: HabitsModalsProps) {
@@ -44,7 +44,7 @@ export function HabitsModals({ state }: HabitsModalsProps) {
       {shouldRenderCalendarAndDetail ? <ErrorBoundary fallback={null}>
           <CalendarAndDetailModals {...getCalendarAndDetailProps(state)} />
         </ErrorBoundary> : null}
-      <ShareAndPauseModals {...getShareAndPauseProps(state)} />
+      <PauseModal {...getPauseProps(state)} />
       <ErrorBoundary fallback={null}>
         <TemplatesModalSection
           closeTemplatesScreen={state.closeTemplatesScreen}

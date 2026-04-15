@@ -1,5 +1,5 @@
 /**
- * ActionButtons - Share and Continue buttons for milestone celebration
+ * ActionButtons - Continue button for milestone celebration
  */
 
 import React, { useCallback } from 'react';
@@ -11,23 +11,14 @@ import { triggerHaptic } from '@/utils/haptics';
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 interface ActionButtonsProps {
-  onShare?: () => void;
   onClose: () => void;
-  shareButtonAnimatedStyle: AnimatedStyle;
   continueButtonAnimatedStyle: AnimatedStyle;
 }
 
 export function ActionButtons({
-  onShare,
   onClose,
-  shareButtonAnimatedStyle,
   continueButtonAnimatedStyle,
 }: ActionButtonsProps) {
-  const handleShare = useCallback(() => {
-    triggerHaptic('tap');
-    onShare?.();
-  }, [onShare]);
-
   const handleContinue = useCallback(() => {
     triggerHaptic('tap');
     onClose();
@@ -35,16 +26,6 @@ export function ActionButtons({
 
   return (
     <View style={styles.actionsContainer}>
-      {onShare ? <AnimatedPressable
-          accessible
-          accessibilityLabel="Share your achievement"
-          accessibilityRole="button"
-          style={[styles.primaryButton, shareButtonAnimatedStyle]}
-          onPress={handleShare}
-        >
-          <Text style={styles.primaryButtonText}>Share Achievement 🎉</Text>
-        </AnimatedPressable> : null}
-
       <AnimatedPressable
         accessible
         accessibilityLabel="Keep going"

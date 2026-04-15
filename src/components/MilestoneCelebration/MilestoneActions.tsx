@@ -11,25 +11,14 @@ import { styles } from './styles';
 import { triggerHaptic } from '@/utils/haptics';
 
 interface MilestoneActionsProps {
-  onShare?: () => void;
   onClose: () => void;
-  shareButtonStyle: AnimatedStyle<ViewStyle>;
   continueButtonStyle: AnimatedStyle<ViewStyle>;
 }
 
 export function MilestoneActions({
-  onShare,
   onClose,
-  shareButtonStyle,
   continueButtonStyle,
 }: MilestoneActionsProps) {
-  const handleShare = useCallback(() => {
-    if (onShare) {
-      triggerHaptic('toggle');
-      onShare();
-    }
-  }, [onShare]);
-
   const handleContinue = useCallback(() => {
     triggerHaptic('tap');
     onClose();
@@ -37,20 +26,6 @@ export function MilestoneActions({
 
   return (
     <View style={styles.actions}>
-      {/* Share Button */}
-      {onShare ? <Animated.View style={[styles.shareButton, shareButtonStyle]}>
-          <Button
-            accessible
-            accessibilityHint='Opens share card preview'
-            accessibilityLabel='Share your achievement'
-            size='large'
-            variant='primary'
-            onPress={handleShare}
-          >
-            Share Your Achievement
-          </Button>
-        </Animated.View> : null}
-
       {/* Continue Button */}
       <Animated.View style={continueButtonStyle}>
         <Button

@@ -8,8 +8,6 @@ interface AnimationValues {
   badgeScale: { value: number };
   glowOpacity: { value: number };
   labelOpacity: { value: number };
-  shareButtonTranslateY: { value: number };
-  shareButtonOpacity: { value: number };
   continueButtonOpacity: { value: number };
 }
 
@@ -30,11 +28,6 @@ export function useMilestoneAnimatedStyles(animations: AnimationValues) {
     opacity: animations.labelOpacity.value,
   }));
 
-  const shareButtonStyle = useAnimatedStyle(() => ({
-    opacity: animations.shareButtonOpacity.value,
-    transform: [{ translateY: animations.shareButtonTranslateY.value }],
-  }));
-
   const continueButtonStyle = useAnimatedStyle(() => ({
     opacity: animations.continueButtonOpacity.value,
   }));
@@ -45,6 +38,5 @@ export function useMilestoneAnimatedStyles(animations: AnimationValues) {
     glowStyle,
     labelStyle,
     percentageStyle,
-    shareButtonStyle,
   };
 }

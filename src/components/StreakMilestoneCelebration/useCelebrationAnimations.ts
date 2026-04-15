@@ -22,8 +22,6 @@ export function useCelebrationAnimations(
   const titleOpacity = useSharedValue(0);
   const titleTranslateY = useSharedValue(20);
   const contentOpacity = useSharedValue(0);
-  const shareButtonOpacity = useSharedValue(0);
-  const shareButtonTranslateY = useSharedValue(20);
   const continueButtonOpacity = useSharedValue(0);
   const continueButtonTranslateY = useSharedValue(20);
 
@@ -34,8 +32,6 @@ export function useCelebrationAnimations(
       titleOpacity.value = 0;
       titleTranslateY.value = 20;
       contentOpacity.value = 0;
-      shareButtonOpacity.value = 0;
-      shareButtonTranslateY.value = 20;
       continueButtonOpacity.value = 0;
       continueButtonTranslateY.value = 20;
       return;
@@ -46,8 +42,6 @@ export function useCelebrationAnimations(
       titleOpacity.value = 1;
       titleTranslateY.value = 0;
       contentOpacity.value = 1;
-      shareButtonOpacity.value = 1;
-      shareButtonTranslateY.value = 0;
       continueButtonOpacity.value = 1;
       continueButtonTranslateY.value = 0;
     } else {
@@ -78,19 +72,11 @@ export function useCelebrationAnimations(
         })
       );
       const bd = ANIMATION_TIMING.TITLE_DELAY + 200;
-      shareButtonOpacity.value = withDelay(
+      continueButtonOpacity.value = withDelay(
         bd,
         withTiming(1, { duration: ANIMATION_TIMING.CONTENT_FADE_DURATION })
       );
-      shareButtonTranslateY.value = withDelay(bd, withSpring(0, SPRING_CONFIG));
-      continueButtonOpacity.value = withDelay(
-        bd + ANIMATION_TIMING.BUTTON_STAGGER,
-        withTiming(1, { duration: ANIMATION_TIMING.CONTENT_FADE_DURATION })
-      );
-      continueButtonTranslateY.value = withDelay(
-        bd + ANIMATION_TIMING.BUTTON_STAGGER,
-        withSpring(0, SPRING_CONFIG)
-      );
+      continueButtonTranslateY.value = withDelay(bd, withSpring(0, SPRING_CONFIG));
     }
   }, [visible, reduceMotion]);
 
@@ -107,10 +93,6 @@ export function useCelebrationAnimations(
   const contentAnimatedStyle = useAnimatedStyle(() => ({
     opacity: contentOpacity.value,
   }));
-  const shareButtonAnimatedStyle = useAnimatedStyle(() => ({
-    opacity: shareButtonOpacity.value,
-    transform: [{ translateY: shareButtonTranslateY.value }],
-  }));
   const continueButtonAnimatedStyle = useAnimatedStyle(() => ({
     opacity: continueButtonOpacity.value,
     transform: [{ translateY: continueButtonTranslateY.value }],
@@ -120,7 +102,6 @@ export function useCelebrationAnimations(
     badgeAnimatedStyle,
     contentAnimatedStyle,
     continueButtonAnimatedStyle,
-    shareButtonAnimatedStyle,
     titleAnimatedStyle,
   };
 }

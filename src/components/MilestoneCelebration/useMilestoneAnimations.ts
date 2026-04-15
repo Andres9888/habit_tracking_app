@@ -22,8 +22,6 @@ export function useMilestoneAnimations({
   const glowOpacity = useSharedValue(0.3);
   const labelOpacity = useSharedValue(0);
   const percentageValue = useSharedValue(0);
-  const shareButtonTranslateY = useSharedValue(50);
-  const shareButtonOpacity = useSharedValue(0);
   const continueButtonOpacity = useSharedValue(0);
 
   const animations = {
@@ -32,8 +30,6 @@ export function useMilestoneAnimations({
     glowOpacity,
     labelOpacity,
     percentageValue,
-    shareButtonOpacity,
-    shareButtonTranslateY,
   };
 
   useEffect(() => {
@@ -45,8 +41,6 @@ export function useMilestoneAnimations({
         glowOpacity.value = 0.5;
         labelOpacity.value = 1;
         percentageValue.value = strength;
-        shareButtonTranslateY.value = 0;
-        shareButtonOpacity.value = 1;
         continueButtonOpacity.value = 1;
       } else {
         runAnimationSequence(animations, strength);

@@ -1,6 +1,4 @@
-import type { ComponentType } from 'react';
 import type { Id } from '../../../../../convex/_generated/dataModel';
-import type { ShareCardData } from '../../types';
 import type { HabitsModalsState } from '../../hooks/useHabitsApp';
 
 /** Props for the main HabitsModals orchestrator component */
@@ -55,11 +53,8 @@ export interface CalendarAndDetailModalsProps {
   onDeleteHabit: (habitId: Id<'habits'>) => void | Promise<void>;
 }
 
-/** Props for ShareCard and PauseModal components */
-export interface ShareAndPauseModalsProps {
-  showShareCard: boolean;
-  shareCardData: ShareCardData | null;
-  closeShareCard: () => void;
+/** Props for PauseModal component */
+export interface PauseModalProps {
   habitToPause: HabitsModalsState['habitToPause'];
   showPauseModal: boolean;
   closePauseModal: () => void;
@@ -104,9 +99,3 @@ export interface ActivationModalSectionProps {
   reduceMotionPreference: boolean;
 }
 
-/** Lazy-loaded ShareCardGenerator component type */
-export type ShareCardGeneratorComponent = ComponentType<{
-  data: ShareCardData;
-  visible: boolean;
-  onClose: () => void;
-}>;

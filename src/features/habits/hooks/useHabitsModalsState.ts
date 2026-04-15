@@ -140,7 +140,6 @@ export function useHabitsModalsState({
   const handlers = useHabitsModalsHandlers(
     buildModalsSettersArg(visibility, selection),
     {
-      clearMilestone,
       habits,
       habitToPause: selection.habitToPause,
       pauseHabit: wrappedPauseHabit,

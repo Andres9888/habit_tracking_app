@@ -29,7 +29,6 @@ export function MilestoneCelebration({
   level,
   strength,
   habitName,
-  onShare,
 }: MilestoneCelebrationProps) {
   const reduceMotion = useReduceMotion();
 
@@ -72,9 +71,7 @@ export function MilestoneCelebration({
 
           <MilestoneActions
             continueButtonStyle={animatedStyles.continueButtonStyle}
-            shareButtonStyle={animatedStyles.shareButtonStyle}
             onClose={onClose}
-            onShare={onShare}
           />
         </View>
       </Modal>

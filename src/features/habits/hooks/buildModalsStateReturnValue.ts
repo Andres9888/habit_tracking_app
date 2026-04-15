@@ -34,8 +34,6 @@ export function buildModalsStateReturnValue(
 
     closeQuickActions: handlers.closeQuickActions,
 
-    closeShareCard: handlers.closeShareCard,
-
     closeActivationModal: handlers.closeActivationModal,
 
     habitDetailInitialTab: selection.habitDetailInitialTab,
@@ -76,8 +74,6 @@ export function buildModalsStateReturnValue(
     // Inline close handlers
     closeSettings: () => visibility.setIsSettingsOpen(false),
 
-    shareCardData: selection.shareCardData,
-
     closeHabitCalendar: () => visibility.setIsHabitCalendarOpen(false),
 
     showActivationModal: visibility.showActivationModal,
@@ -101,8 +97,6 @@ export function buildModalsStateReturnValue(
 
     showHabitDetail: visibility.isHabitDetailOpen,
 
-    onShareMilestone: handlers.onShareMilestone,
-
     showHapticTest: visibility.showHapticTest,
 
     openActivationModal: handlers.openActivationModal,
@@ -120,8 +114,6 @@ export function buildModalsStateReturnValue(
     openEditHabit: handlers.openEditHabit,
 
     openHabitCalendar: handlers.openHabitCalendar,
-
-    showShareCard: visibility.showShareCard,
 
     openHabitDetail: handlers.openHabitDetail,
 

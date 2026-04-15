@@ -23,9 +23,6 @@ export interface StreakMilestoneCelebrationProps {
 
   /** Habit emoji icon */
   habitEmoji?: string;
-
-  /** On share callback - opens share card generator */
-  onShare?: () => void;
 }
 
 export interface AchievementCardProps {

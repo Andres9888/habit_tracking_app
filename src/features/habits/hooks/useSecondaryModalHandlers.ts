@@ -1,9 +1,7 @@
 import { useCallback } from 'react';
-import type { Habit, ShareCardData } from '../types';
+import type { Habit } from '../types';
 
 interface SecondaryModalSetters {
-  setShowShareCard: (v: boolean) => void;
-  setShareCardData: (d: ShareCardData | null) => void;
   setShowQuickActions: (v: boolean) => void;
   setQuickActionsHabit: (h: Habit | null) => void;
   setSelectedHabit: (h: Habit | null) => void;
@@ -14,28 +12,16 @@ interface SecondaryModalSetters {
 
 interface SecondaryModalDeps {
   habits: Habit[];
-  clearMilestone: () => void;
 }
 
 /**
- * Handles secondary modal interactions: share, quick actions,
+ * Handles secondary modal interactions: quick actions,
  * visualization exercise, and activation modals.
  */
 export function useSecondaryModalHandlers(
   setters: SecondaryModalSetters,
   deps: SecondaryModalDeps
 ) {
-  const closeShareCard = useCallback(() => {
-    setters.setShowShareCard(false);
-    setters.setShareCardData(null);
-    deps.clearMilestone();
-  }, [deps.clearMilestone]);
-
-  const onShareMilestone = useCallback((data: ShareCardData) => {
-    setters.setShareCardData(data);
-    setters.setShowShareCard(true);
-  }, []);
-
   const openQuickActions = useCallback((habit: Habit) => {
     setters.setQuickActionsHabit(habit);
     setters.setShowQuickActions(true);
@@ -79,9 +65,7 @@ export function useSecondaryModalHandlers(
   return {
     closeActivationModal,
     closeQuickActions,
-    closeShareCard,
     closeVisualizationExercise,
-    onShareMilestone,
     openActivationModal,
     openActivationModalById,
     openQuickActions,

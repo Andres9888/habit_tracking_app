@@ -65,7 +65,4 @@ export const styles = StyleSheet.create({
     gap: 4,
     marginTop: 24,
   },
-  shareButton: {
-    width: '100%',
-  },
 });
