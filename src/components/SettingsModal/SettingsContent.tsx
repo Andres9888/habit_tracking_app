@@ -7,6 +7,7 @@ import {
   Check,
   Circle,
   Droplets,
+  Dumbbell,
   Link2,
   Rows3,
   Square,
@@ -23,6 +24,8 @@ import Animated, {
 } from 'react-native-reanimated';
 import { CompletionIconPicker } from './CompletionIconPicker';
 import { DayShapePicker } from './DayShapePicker';
+import { StrengthAlgorithmPicker } from './StrengthAlgorithmPicker';
+import type { StrengthAlgorithmMode } from './StrengthAlgorithmPicker';
 import { AccountRow } from './AccountRow';
 import { SettingsRow } from './SettingsRow';
 import { SettingsSection } from './SettingsSection';
@@ -199,6 +202,28 @@ export function SettingsContent(p: SettingsContentProps) {
                 type='toggle'
                 value={p.stickyCalendarHeader}
                 onToggle={(v) => void p.onChangeStickyCalendarHeader(v)}
+              />
+              <SettingsRow
+                highContrastMode={hc}
+                icon={
+                  <Dumbbell
+                    color={settingsIcons.strength.icon}
+                    size={iconSizes.small}
+                  />
+                }
+                iconBackgroundColor={settingsIcons.strength.bg}
+                label='Strength algorithm'
+                subtitle='How forgiving missed days are'
+                rightAccessory={
+                  <StrengthAlgorithmPicker
+                    selected={
+                      (p.strengthAlgorithm as StrengthAlgorithmMode) ??
+                      'balanced'
+                    }
+                    onSelect={(v) => void p.onChangeStrengthAlgorithm(v)}
+                  />
+                }
+                type='info'
               />
             </SettingsSection>
           </Animated.View>

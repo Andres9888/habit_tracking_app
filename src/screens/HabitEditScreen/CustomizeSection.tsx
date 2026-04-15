@@ -15,6 +15,7 @@ import { EnhancedReminderSelector } from '../../components/CreateHabitModal/comp
 import { HABIT_COLORS } from '../../components/CreateHabitModal/constants';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { typography } from '../../theme/typography';
+import { HabitAlgorithmPicker } from './HabitAlgorithmPicker';
 
 const entrance = (delay: number) => FadeInUp.delay(delay).springify().damping(18);
 
@@ -24,10 +25,12 @@ interface CustomizeSectionProps {
   selectedColor: string;
   remindersEnabled: boolean;
   reminderTime: Date;
+  strengthAlgorithm?: string;
   onEmojiSelect: (emoji: string | null) => void;
   onColorSelect: (color: string) => void;
   onReminderToggle: (enabled: boolean) => void;
   onReminderTimeChange: (time: Date) => void;
+  onStrengthAlgorithmChange?: (mode: string | undefined) => void;
 }
 
 export function CustomizeSection({
@@ -38,8 +41,10 @@ export function CustomizeSection({
   reminderTime,
   onEmojiSelect,
   onColorSelect,
+  strengthAlgorithm,
   onReminderToggle,
   onReminderTimeChange,
+  onStrengthAlgorithmChange,
 }: CustomizeSectionProps) {
   const { colors: themeColors } = useThemeColors();
 
@@ -85,6 +90,23 @@ export function CustomizeSection({
           onToggle={onReminderToggle}
         />
       </Animated.View>
+
+      {onStrengthAlgorithmChange ? (
+        <>
+          <Text
+            className='mt-4 mb-3 text-center uppercase'
+            style={{ ...typography.caption, fontWeight: '600', letterSpacing: 0.5, color: themeColors.text.tertiary }}
+          >
+            Strength algorithm
+          </Text>
+          <Animated.View className='items-center' entering={entrance(180)}>
+            <HabitAlgorithmPicker
+              selected={strengthAlgorithm}
+              onSelect={onStrengthAlgorithmChange}
+            />
+          </Animated.View>
+        </>
+      ) : null}
     </View>
   );
 }

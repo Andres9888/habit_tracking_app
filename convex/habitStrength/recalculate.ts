@@ -4,6 +4,7 @@
  */
 import { v } from 'convex/values';
 import { mutation } from '../_generated/server';
+import { resolveAlgorithmMode } from './algorithmConfig';
 import { calculateMomentumStrengthSnapshot } from './momentum';
 
 export const recalculateHabitStrength = mutation({
@@ -30,8 +31,19 @@ export const recalculateHabitStrength = mutation({
       .withIndex('by_habit_and_date', (q) => q.eq('habitId', args.habitId))
       .collect();
 
+    // Resolve algorithm mode: per-habit override > user setting > 'balanced'
+    const userSettings = await ctx.db
+      .query('userSettings')
+      .withIndex('by_userId', (q) => q.eq('userId', habit.userId ?? ''))
+      .first();
+    const mode = resolveAlgorithmMode(
+      habit.strengthAlgorithm,
+      userSettings?.strengthAlgorithm
+    );
+
     const snapshot = calculateMomentumStrengthSnapshot({
       habitCreatedAt: habit.createdAt,
+      mode,
       tracking: tracking.map((entry) => ({
         completed: entry.completed,
         date: entry.date,

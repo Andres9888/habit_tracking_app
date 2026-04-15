@@ -81,5 +81,12 @@ export const updateHabitArgs = {
   remindersEnabled: v.optional(v.boolean()),
   reminderSound: v.optional(v.string()),
   reminderTime: v.optional(v.string()),
+  strengthAlgorithm: v.optional(
+    v.union(
+      v.literal('forgiving'),
+      v.literal('balanced'),
+      v.literal('strict')
+    )
+  ),
   why: v.optional(v.string()),
 };

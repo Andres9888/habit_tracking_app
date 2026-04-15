@@ -28,6 +28,19 @@
  */
 
 // ─────────────────────────────────────────────────────────────────────────────
+// Algorithm Config
+// ─────────────────────────────────────────────────────────────────────────────
+export type {
+  AlgorithmParams,
+  StrengthAlgorithmMode,
+} from './habitStrength/algorithmConfig';
+export {
+  ALGORITHM_CONFIGS,
+  getAlgorithmConfig,
+  resolveAlgorithmMode,
+} from './habitStrength/algorithmConfig';
+
+// ─────────────────────────────────────────────────────────────────────────────
 // Constants
 // ─────────────────────────────────────────────────────────────────────────────
 export {

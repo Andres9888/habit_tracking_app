@@ -115,10 +115,12 @@ function HabitEditScreenContent({
                           reminderTime={state.reminderTime}
                           selectedColor={state.selectedColor}
                           selectedEmoji={state.selectedEmoji}
+                          strengthAlgorithm={state.strengthAlgorithm}
                           onColorSelect={state.handleColorSelect}
                           onEmojiSelect={state.handleEmojiSelect}
                           onReminderTimeChange={state.handleReminderTimeChange}
                           onReminderToggle={state.handleReminderToggle}
+                          onStrengthAlgorithmChange={state.handleStrengthAlgorithmChange}
                         />
                       </Animated.View>
                       <SectionLabel

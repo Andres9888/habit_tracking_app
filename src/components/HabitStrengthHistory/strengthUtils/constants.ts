@@ -1,9 +1,22 @@
-import type { StrengthColors, StrengthLabel } from '../types';
+import type { StrengthAlgorithmConfig, StrengthColors, StrengthLabel } from '../types';
 
 // Algorithm constants (based on Loop Habit Tracker)
 export const DEFAULT_GROWTH_RATE = 0.05; // ~5% growth per completion
 export const DEFAULT_DECAY_RATE = 0.95; // ~5% decay per miss
 export const DEFAULT_MAX_SAMPLE_POINTS = 100;
+
+/**
+ * Frontend algorithm configs mapped from backend modes.
+ * These approximate the backend momentum formula for chart display.
+ */
+export const ALGORITHM_MODE_CONFIGS: Record<
+  string,
+  Pick<StrengthAlgorithmConfig, 'growthRate' | 'decayRate'>
+> = {
+  forgiving: { growthRate: 0.04, decayRate: 0.97 },
+  balanced: { growthRate: 0.05, decayRate: 0.95 },
+  strict: { growthRate: 0.07, decayRate: 0.90 },
+};
 
 // Threshold constants for strength labels
 export const WEAK_THRESHOLD = 30;

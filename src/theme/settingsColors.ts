@@ -29,6 +29,7 @@ export const darkSettingsColors: SettingsColors = {
   gradient: { icon: '#6ee7b7', bg: '#0f3b31' },
   sound: { icon: '#fbbf24', bg: '#3b2a10' },
   calendarHeader: { icon: '#d6d3d1', bg: '#2c2824' },
+  strength: { icon: '#a78bfa', bg: '#31214b' },
   // Data
   sort: { icon: '#c4b5fd', bg: '#31214b' },
   export: { icon: '#6ee7b7', bg: '#0f3b31' },
@@ -65,6 +66,7 @@ export const lightSettingsColors: SettingsColors = {
   gradient: { icon: '#047857', bg: '#d1fae5' },
   sound: { icon: '#b45309', bg: '#fef3c7' },
   calendarHeader: { icon: '#57534e', bg: '#f5f5f4' },
+  strength: { icon: '#7c3aed', bg: '#ede9fe' },
   // Data
   sort: { icon: '#6d28d9', bg: '#ede9fe' },
   export: { icon: '#047857', bg: '#d1fae5' },
@@ -101,6 +103,7 @@ export interface SettingsColors {
   gradient: IconColor;
   sound: IconColor;
   calendarHeader: IconColor;
+  strength: IconColor;
   // Data
   sort: IconColor;
   export: IconColor;

@@ -6,7 +6,10 @@
 import { v } from 'convex/values';
 import { internal } from '../_generated/api';
 import { internalMutation, mutation } from '../_generated/server';
-import { calculateMomentumStrengthSnapshot } from '../habitStrength';
+import {
+  calculateMomentumStrengthSnapshot,
+  resolveAlgorithmMode,
+} from '../habitStrength';
 import { calculateStreakFromHistory } from '../streakUtils';
 import {
   getTodayForTimezone,
@@ -114,8 +117,20 @@ export const recalculateStreakAndStrength = internalMutation({
       completed: r.completed,
       date: r.date,
     }));
+
+    // Resolve algorithm mode: per-habit override > user setting > 'balanced'
+    const userSettings = await ctx.db
+      .query('userSettings')
+      .withIndex('by_userId', (q) => q.eq('userId', habit.userId ?? ''))
+      .first();
+    const mode = resolveAlgorithmMode(
+      habit.strengthAlgorithm,
+      userSettings?.strengthAlgorithm
+    );
+
     const snapshot = calculateMomentumStrengthSnapshot({
       habitCreatedAt: habit.createdAt,
+      mode,
       throughDate: evaluationDateKey,
       tracking,
     });

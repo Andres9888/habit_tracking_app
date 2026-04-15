@@ -144,6 +144,15 @@ const applicationTables = {
 
     strengthAtPause: v.optional(v.number()),
 
+    // "forgiving", "balanced", "strict" — per-habit override (falls back to user setting)
+    strengthAlgorithm: v.optional(
+      v.union(
+        v.literal('forgiving'),
+        v.literal('balanced'),
+        v.literal('strict')
+      )
+    ),
+
     // "starting", "building", "developing", "strong", "automatic"
     strengthLevel: v.optional(v.string()),
 
@@ -402,6 +411,14 @@ const applicationTables = {
 
     showWeekCompletionBar: v.optional(v.boolean()),
     sortHabitsAlphabetically: v.optional(v.boolean()),
+    // "forgiving", "balanced", "strict" — global default for habit strength algorithm
+    strengthAlgorithm: v.optional(
+      v.union(
+        v.literal('forgiving'),
+        v.literal('balanced'),
+        v.literal('strict')
+      )
+    ),
     // Streak reminder notifications
     streakRemindersEnabled: v.optional(v.boolean()),
     // "20:00" (24h format) — default 8 PM

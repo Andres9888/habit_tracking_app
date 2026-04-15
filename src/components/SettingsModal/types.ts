@@ -87,6 +87,9 @@ export interface SettingsContentProps {
   onOpenSortPicker: () => void;
   onExportHabitsData?: () => void | Promise<void>;
   showGradientFill: boolean;
+  // Strength algorithm
+  strengthAlgorithm: string;
+  onChangeStrengthAlgorithm: (value: string) => void | Promise<void>;
   // Streak reminders
   streakRemindersEnabled: boolean;
   stickyCalendarHeader: boolean;
