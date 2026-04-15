@@ -29,6 +29,7 @@ export function useHabitCard(props: HabitCardProps) {
     strength,
     currentStreak: currentStreakProp = 0,
     bestStreak: bestStreakProp = 0,
+    goalDuration,
     atRisk = false,
     completed: completedProp = false,
     disabled = false,
@@ -59,6 +60,7 @@ export function useHabitCard(props: HabitCardProps) {
   // Integrate streak milestone celebrations
   useStreakMilestoneIntegration({
     currentStreak: habitState.currentStreak,
+    goalDuration,
     habitEmoji: icon,
     habitId: id,
     habitName: name,

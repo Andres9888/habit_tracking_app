@@ -17,6 +17,7 @@ import { shadows } from '../../theme/spacing';
 import { ActionableTipCard } from './ActionableTipCard';
 import { MilestoneProgress } from './MilestoneProgress';
 import { StatsGrid } from './StatsGrid';
+import { StreakGoalProgress } from './StreakGoalProgress';
 import { StreakRecordsAccordion } from './StreakRecordsAccordion';
 import type { ProgressSectionConsolidatedProps } from './types';
 import { useProgressSectionStats } from './useProgressSectionStats';
@@ -31,6 +32,8 @@ export function ProgressSectionConsolidated({
   habitCreatedAt,
   strength,
   weeklyChange = 0,
+  goalDuration,
+  goalAchievedAt,
   onInfoPress: _onInfoPress, // Kept for backwards compatibility
   onFocusDayPress,
   onSeeAllPress,
@@ -81,6 +84,15 @@ export function ProgressSectionConsolidated({
 
         {/* Section 2: Milestone Progress */}
         <MilestoneProgress currentStreak={currentStreak} />
+
+        {/* Section 2b: Streak Goal Progress */}
+        {goalDuration ? (
+          <StreakGoalProgress
+            currentStreak={currentStreak}
+            goalAchievedAt={goalAchievedAt}
+            goalDuration={goalDuration}
+          />
+        ) : null}
 
         {/* Section 3: Weekly Pattern Chart */}
         {hasEnoughData ? <WeeklyPatternChart

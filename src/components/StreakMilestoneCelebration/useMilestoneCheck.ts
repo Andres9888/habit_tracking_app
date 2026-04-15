@@ -12,13 +12,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Haptics from 'expo-haptics';
 import { Platform } from 'react-native';
 import {
-  checkStreakMilestoneCrossed,
+  checkStreakMilestoneConfigCrossed,
   ANIMATION_TIMING,
-  type StreakMilestone,
+  type StreakMilestoneConfigConfig,
 } from './constants';
 import type {
-  UseStreakMilestoneCheckOptions,
-  UseStreakMilestoneCheckReturn,
+  UseStreakMilestoneConfigCheckOptions,
+  UseStreakMilestoneConfigCheckReturn,
 } from './types';
 
 const STORAGE_KEY_PREFIX = '@chain_day:streak_milestones_shown:';
@@ -58,8 +58,8 @@ export function useMilestoneCheck({
   currentStreak,
   previousStreak,
   habitId,
-}: UseStreakMilestoneCheckOptions): UseStreakMilestoneCheckReturn {
-  const [milestone, setMilestone] = useState<StreakMilestone | null>(null);
+}: UseStreakMilestoneConfigCheckOptions): UseStreakMilestoneConfigCheckReturn {
+  const [milestone, setMilestone] = useState<StreakMilestoneConfig | null>(null);
   const [showCelebration, setShowCelebration] = useState(false);
   const [shownMilestones, setShownMilestones] = useState<number[]>([]);
   const hasChecked = useRef(false);
@@ -84,7 +84,7 @@ export function useMilestoneCheck({
       return;
     }
 
-    const crossedMilestone = checkStreakMilestoneCrossed(
+    const crossedMilestone = checkStreakMilestoneConfigCrossed(
       previousStreak,
       currentStreak
     );
@@ -154,8 +154,8 @@ export async function checkAndTriggerMilestone(
   habitId: string,
   previousStreak: number,
   currentStreak: number
-): Promise<StreakMilestone | null> {
-  const crossedMilestone = checkStreakMilestoneCrossed(
+): Promise<StreakMilestoneConfig | null> {
+  const crossedMilestone = checkStreakMilestoneConfigCrossed(
     previousStreak,
     currentStreak
   );

@@ -4,11 +4,11 @@ import {
   maybeRequestReview,
   incrementCompletionCount,
 } from '../../utils/storeReview';
-import { checkStreakMilestoneCrossed, type StreakMilestone } from './constants';
+import { checkStreakMilestoneCrossed, type StreakMilestoneConfig } from './constants';
 import type { MilestoneLevel } from '../ShareCardGenerator/ShareCardGenerator.types';
 
 export interface CelebrationData {
-  milestone: StreakMilestone;
+  milestone: StreakMilestoneConfig;
   habitId: string;
   habitName: string;
   habitEmoji: string;

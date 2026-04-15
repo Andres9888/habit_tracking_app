@@ -53,6 +53,8 @@ export const create = mutation({
       currentStreak: 0,
       daysOfWeek: args.daysOfWeek,
       frequency: args.frequency,
+      goalDuration: validated.goalDuration,
+      goalUnit: validated.goalDuration ? 'streak_days' : undefined,
       icon: validated.icon,
       color: validated.color,
       iconColor: validated.iconColor ?? validated.color,

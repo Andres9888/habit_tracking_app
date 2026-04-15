@@ -36,6 +36,9 @@ export interface HabitCardProps {
   /** Best streak (Story 1.4) */
   bestStreak?: number;
 
+  /** Streak goal target in days */
+  goalDuration?: number;
+
   /** Is completed today */
   completed?: boolean;
 

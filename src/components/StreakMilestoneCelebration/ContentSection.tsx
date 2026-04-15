@@ -6,10 +6,10 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import Animated, { type AnimatedStyle } from 'react-native-reanimated';
 import { styles } from './styles';
-import type { StreakMilestone } from './constants';
+import type { StreakMilestoneConfig } from './constants';
 
 interface ContentSectionProps {
-  milestone: StreakMilestone;
+  milestone: StreakMilestoneConfig;
   streakDays: number;
   habitName: string;
   habitEmoji: string;

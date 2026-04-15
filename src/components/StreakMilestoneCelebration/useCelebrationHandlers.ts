@@ -1,7 +1,8 @@
 import { useCallback, useState } from 'react';
 import {
   checkStreakMilestoneCrossed,
-  type StreakMilestone,
+  createGoalMilestone,
+  type StreakMilestoneConfig,
 } from './constants';
 import { persistMilestoneShown } from './useMilestoneCheck';
 import {
@@ -11,7 +12,7 @@ import {
 import type { MilestoneLevel } from '../ShareCardGenerator/ShareCardGenerator.types';
 
 interface CelebrationData {
-  milestone: StreakMilestone;
+  milestone: StreakMilestoneConfig;
   habitId: string;
   habitName: string;
   habitEmoji: string;
@@ -36,9 +37,23 @@ export function useCelebrationHandlers(userName: string) {
       habitName: string,
       habitEmoji: string,
       previousStreak: number,
-      currentStreak: number
+      currentStreak: number,
+      goalDuration?: number
     ) => {
       void incrementCompletionCount();
+
+      // Goal achievement takes priority over fixed milestones
+      if (goalDuration && previousStreak < goalDuration && currentStreak >= goalDuration) {
+        setCelebrationData({
+          habitEmoji,
+          habitId,
+          habitName,
+          milestone: createGoalMilestone(goalDuration),
+          streakDays: currentStreak,
+        });
+        return;
+      }
+
       const milestone = checkStreakMilestoneCrossed(previousStreak, currentStreak);
 
       if (milestone) {

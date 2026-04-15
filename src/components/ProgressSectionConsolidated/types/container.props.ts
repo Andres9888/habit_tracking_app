@@ -19,6 +19,10 @@ export interface ProgressSectionConsolidatedProps {
   strength: number;
   /** Weekly change in strength (positive = improving, negative = declining) */
   weeklyChange?: number;
+  /** Streak goal target in days */
+  goalDuration?: number;
+  /** Timestamp when streak goal was achieved */
+  goalAchievedAt?: number;
   /** Callback when info button is pressed */
   onInfoPress?: () => void;
   /** Callback when focus day chip is pressed */

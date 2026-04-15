@@ -12,6 +12,7 @@ import {
 import { showSaveError } from '../../utils/errorAlerts';
 
 interface UseSaveHandlerProps {
+  goalDuration: number | null;
   habitId: Id<'habits'> | null;
   habitName: string;
   selectedEmoji: string | null;
@@ -22,6 +23,7 @@ interface UseSaveHandlerProps {
 }
 
 export function useHabitSaveHandler({
+  goalDuration,
   habitId,
   habitName,
   selectedEmoji,
@@ -74,6 +76,8 @@ export function useHabitSaveHandler({
       }
 
       await updateHabit({
+        goalDuration: goalDuration ?? undefined,
+        goalUnit: goalDuration ? 'streak_days' : undefined,
         habitId,
         icon: selectedEmoji ?? undefined,
         color: selectedColor,
@@ -93,6 +97,7 @@ export function useHabitSaveHandler({
     }
   }, [
     isSaving,
+    goalDuration,
     habitId,
     habitName,
     selectedEmoji,

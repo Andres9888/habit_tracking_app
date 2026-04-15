@@ -33,6 +33,7 @@ interface HabitArgs {
   identity?: string;
   why?: string;
   frequency?: string;
+  goalDuration?: number;
   goalUnit?: string;
 }
 
@@ -52,6 +53,7 @@ interface ValidatedHabitFields {
   identity?: string;
   why?: string;
   frequency?: string;
+  goalDuration?: number;
   goalUnit?: string;
 }
 
@@ -126,6 +128,15 @@ export function validateHabitFields(args: HabitArgs): ValidatedHabitFields {
   const goalUnitResult = validateShortText(args.goalUnit, 50, 'Goal unit');
   const goalUnit = requireValid(goalUnitResult, args.goalUnit);
 
+  // Optional: goal duration (positive integer, max 3650 days / ~10 years)
+  let goalDuration: number | undefined;
+  if (args.goalDuration !== undefined) {
+    if (!Number.isInteger(args.goalDuration) || args.goalDuration < 1 || args.goalDuration > 3650) {
+      throw new Error('Goal duration must be a whole number between 1 and 3650 days');
+    }
+    goalDuration = args.goalDuration;
+  }
+
   return {
     name,
     notes,
@@ -141,6 +152,7 @@ export function validateHabitFields(args: HabitArgs): ValidatedHabitFields {
     identity,
     why,
     frequency,
+    goalDuration,
     goalUnit,
   };
 }
@@ -234,6 +246,13 @@ export function validateHabitUpdateFields(
   if (args.goalUnit !== undefined) {
     const goalUnitResult = validateShortText(args.goalUnit, 50, 'Goal unit');
     result.goalUnit = requireValid(goalUnitResult, args.goalUnit);
+  }
+
+  if (args.goalDuration !== undefined) {
+    if (!Number.isInteger(args.goalDuration) || args.goalDuration < 1 || args.goalDuration > 3650) {
+      throw new Error('Goal duration must be a whole number between 1 and 3650 days');
+    }
+    result.goalDuration = args.goalDuration;
   }
 
   return result;

@@ -24,6 +24,9 @@ interface UseStreakMilestoneIntegrationOptions {
 
   /** Whether the habit was just completed (true) or uncompleted (false) */
   isCompleted: boolean;
+
+  /** User-defined streak goal target in days */
+  goalDuration?: number;
 }
 
 /**
@@ -38,6 +41,7 @@ export function useStreakMilestoneIntegration({
   habitEmoji,
   currentStreak,
   isCompleted,
+  goalDuration,
 }: UseStreakMilestoneIntegrationOptions): void {
   const { checkAndCelebrate } = useStreakMilestone();
 
@@ -56,7 +60,8 @@ export function useStreakMilestoneIntegration({
         habitName,
         habitEmoji,
         previousStreakRef.current,
-        currentStreak
+        currentStreak,
+        goalDuration
       );
     }
 
@@ -69,6 +74,7 @@ export function useStreakMilestoneIntegration({
     habitId,
     habitName,
     habitEmoji,
+    goalDuration,
     checkAndCelebrate,
   ]);
 }

@@ -3,7 +3,7 @@
  */
 
 import type { View } from 'react-native';
-import type { StreakMilestone } from './constants';
+import type { StreakMilestoneConfig } from './constants';
 
 export interface StreakMilestoneCelebrationProps {
   /** Modal visibility */
@@ -13,7 +13,7 @@ export interface StreakMilestoneCelebrationProps {
   onClose: () => void;
 
   /** The milestone achieved */
-  milestone: StreakMilestone;
+  milestone: StreakMilestoneConfig;
 
   /** Habit name for context */
   habitName: string;
@@ -30,7 +30,7 @@ export interface StreakMilestoneCelebrationProps {
 
 export interface AchievementCardProps {
   /** The milestone achieved */
-  milestone: StreakMilestone;
+  milestone: StreakMilestoneConfig;
 
   /** Habit name */
   habitName: string;
@@ -66,7 +66,7 @@ export interface UseStreakMilestoneCheckOptions {
 
 export interface UseStreakMilestoneCheckReturn {
   /** The milestone to celebrate, if any */
-  milestone: StreakMilestone | null;
+  milestone: StreakMilestoneConfig | null;
 
   /** Whether the celebration modal should be visible */
   showCelebration: boolean;

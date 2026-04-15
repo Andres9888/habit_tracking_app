@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Streak Goal System — Mock</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Inter', -apple-system, sans-serif !important;
+    background: #0a0f1a;
+    color: #F9FAFB;
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    padding: 32px 16px;
+    flex-wrap: wrap;
+    min-height: 100vh;
+  }
+
+  .phone-frame {
+    width: 390px;
+    min-height: 760px;
+    background: #111827;
+    border-radius: 40px;
+    border: 3px solid #374151;
+    overflow: hidden;
+    position: relative;
+    flex-shrink: 0;
+  }
+  .phone-frame::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 120px; height: 28px;
+    background: #111827;
+    border-radius: 0 0 16px 16px;
+    z-index: 10;
+  }
+  .screen-label {
+    text-align: center;
+    font-size: 13px;
+    font-weight: 600;
+    color: #9CA3AF;
+    letter-spacing: 0.5px;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+  }
+
+  /* ===== EDIT SCREEN ===== */
+  .edit-screen { padding: 48px 0 0; }
+  .drag-handle {
+    width: 36px; height: 5px;
+    background: #4B5563;
+    border-radius: 3px;
+    margin: 0 auto 12px;
+  }
+  .edit-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px 16px;
+  }
+  .edit-header .cancel { color: #9CA3AF; font-size: 15px; cursor: pointer; }
+  .edit-header .title { font-size: 17px; font-weight: 700; }
+  .edit-header .save {
+    color: #34D399; font-size: 15px; font-weight: 600; cursor: pointer;
+  }
+
+  .section-label {
+    font-size: 12px; font-weight: 700; color: #6B7280;
+    letter-spacing: 1px; padding: 16px 24px 8px;
+    text-transform: uppercase;
+  }
+  .section-label.goal-label { color: #FBBF24; }
+
+  .card {
+    margin: 0 16px 0;
+    background: #1F2937;
+    border-radius: 16px;
+    padding: 16px;
+    border: 1px solid #374151;
+  }
+
+  /* Name input mock */
+  .name-input {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 16px;
+    background: #1F2937;
+    border-radius: 12px;
+    margin: 0 16px;
+    border: 1px solid #374151;
+  }
+  .name-input .emoji { font-size: 28px; }
+  .name-input .name { font-size: 18px; font-weight: 600; }
+
+  /* Goal Section */
+  .goal-subtitle {
+    font-size: 13px; color: #9CA3AF; margin-bottom: 14px;
+  }
+  .preset-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .preset-btn {
+    background: #111827;
+    border: 1.5px solid #374151;
+    border-radius: 10px;
+    padding: 10px 0;
+    text-align: center;
+    font-size: 15px;
+    font-weight: 600;
+    color: #F9FAFB;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Inter', sans-serif;
+  }
+  .preset-btn:hover { border-color: #FBBF24; color: #FBBF24; }
+  .preset-btn.selected {
+    background: rgba(251,191,36,0.12);
+    border-color: #FBBF24;
+    color: #FBBF24;
+    box-shadow: 0 0 12px rgba(251,191,36,0.15);
+  }
+  .preset-btn .unit {
+    font-size: 11px; font-weight: 500; color: #6B7280;
+  }
+  .preset-btn.selected .unit { color: #FBBF24; opacity: 0.7; }
+
+  .custom-row {
+    display: flex; align-items: center; gap: 8px;
+    margin-top: 4px;
+  }
+  .custom-input {
+    flex: 1;
+    background: #111827;
+    border: 1.5px solid #374151;
+    border-radius: 10px;
+    padding: 10px 14px;
+    color: #F9FAFB;
+    font-size: 15px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    outline: none;
+  }
+  .custom-input:focus { border-color: #FBBF24; }
+  .custom-input::placeholder { color: #4B5563; }
+  .clear-btn {
+    background: rgba(248,113,113,0.1);
+    border: 1px solid rgba(248,113,113,0.3);
+    border-radius: 10px;
+    padding: 10px 14px;
+    color: #F87171;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    font-family: 'Inter', sans-serif;
+  }
+
+  /* ===== PROGRESS SCREEN ===== */
+  .detail-screen { padding: 48px 0 0; }
+  .detail-header {
+    display: flex; align-items: center; gap: 10px;
+    padding: 0 20px 16px;
+  }
+  .detail-header .back { color: #9CA3AF; font-size: 20px; cursor: pointer; }
+  .detail-header .habit-name { font-size: 18px; font-weight: 700; flex: 1; }
+  .detail-header .gear { color: #6B7280; font-size: 18px; cursor: pointer; }
+
+  /* Quick Stats */
+  .quick-stats {
+    display: flex; gap: 8px; padding: 0 16px; margin-bottom: 4px;
+  }
+  .stat-card {
+    flex: 1;
+    background: #1F2937;
+    border-radius: 12px;
+    padding: 12px 10px;
+    text-align: center;
+    border: 1px solid #374151;
+  }
+  .stat-card .stat-icon { font-size: 16px; margin-bottom: 2px; }
+  .stat-card .stat-value { font-size: 20px; font-weight: 800; }
+  .stat-card .stat-label { font-size: 10px; color: #6B7280; font-weight: 500; text-transform: uppercase; letter-spacing: 0.3px; }
+  .stat-card.streak .stat-value { color: #FBBF24; }
+  .stat-card.strength .stat-value { color: #34D399; }
+  .stat-card.rate .stat-value { color: #60A5FA; }
+
+  /* Goal Progress Card */
+  .goal-progress-card {
+    margin: 0 16px;
+    background: #1F2937;
+    border-radius: 16px;
+    padding: 18px;
+    border: 1px solid #374151;
+    position: relative;
+    overflow: hidden;
+  }
+  .goal-progress-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #FBBF24, #F59E0B);
+  }
+  .goal-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 14px;
+  }
+  .goal-header .label {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 13px; font-weight: 700; color: #FBBF24;
+    text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .goal-header .days-label {
+    font-size: 13px; color: #6B7280; font-weight: 500;
+  }
+
+  .progress-bar-container {
+    background: #111827;
+    border-radius: 8px;
+    height: 28px;
+    overflow: hidden;
+    position: relative;
+    margin-bottom: 10px;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    border-radius: 8px;
+    background: linear-gradient(90deg, #F59E0B, #FBBF24);
+    transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 8px;
+    min-width: 48px;
+  }
+  .progress-bar-fill .bar-text {
+    font-size: 12px; font-weight: 700; color: #111827;
+  }
+  .progress-bar-fill::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.15) 50%, transparent 100%);
+    animation: shimmer 2s infinite;
+  }
+  @keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+  }
+
+  .progress-meta {
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .progress-fraction {
+    font-size: 14px; font-weight: 600;
+  }
+  .progress-fraction .current { color: #FBBF24; }
+  .progress-fraction .total { color: #6B7280; }
+  .progress-motivation {
+    font-size: 12px; color: #9CA3AF; font-weight: 500;
+  }
+
+  /* Achieved state */
+  .goal-achieved-card {
+    margin: 0 16px;
+    background: linear-gradient(135deg, rgba(251,191,36,0.08), rgba(52,211,153,0.08));
+    border-radius: 16px;
+    padding: 24px 18px;
+    border: 1px solid rgba(251,191,36,0.25);
+    text-align: center;
+  }
+  .achieved-emoji { font-size: 48px; margin-bottom: 8px; }
+  .achieved-title {
+    font-size: 18px; font-weight: 800; color: #FBBF24;
+    margin-bottom: 4px;
+  }
+  .achieved-date { font-size: 13px; color: #9CA3AF; margin-bottom: 16px; }
+  .new-goal-btn {
+    display: inline-block;
+    background: rgba(251,191,36,0.15);
+    border: 1px solid rgba(251,191,36,0.4);
+    border-radius: 10px;
+    padding: 10px 24px;
+    color: #FBBF24;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    transition: all 0.2s;
+  }
+  .new-goal-btn:hover {
+    background: rgba(251,191,36,0.25);
+  }
+
+  /* Milestone row */
+  .milestone-row {
+    display: flex; gap: 4px; padding: 0 16px; margin-top: 0;
+    overflow-x: auto;
+  }
+  .milestone-pill {
+    display: flex; align-items: center; gap: 4px;
+    background: #1F2937;
+    border: 1px solid #374151;
+    border-radius: 20px;
+    padding: 6px 10px;
+    font-size: 12px;
+    white-space: nowrap;
+    color: #6B7280;
+  }
+  .milestone-pill.achieved { border-color: #34D399; color: #34D399; }
+  .milestone-pill.current {
+    border-color: #FBBF24;
+    color: #FBBF24;
+    background: rgba(251,191,36,0.08);
+  }
+
+  /* View toggle */
+  .view-toggle {
+    display: flex; justify-content: center; gap: 8px;
+    margin: 20px 0 0;
+    padding: 0 16px;
+  }
+  .toggle-btn {
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: 1px solid #374151;
+    background: transparent;
+    color: #6B7280;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    transition: all 0.2s;
+  }
+  .toggle-btn.active {
+    background: rgba(251,191,36,0.12);
+    border-color: #FBBF24;
+    color: #FBBF24;
+  }
+
+  .spacer { height: 12px; }
+  .spacer-sm { height: 6px; }
+
+  .column { display: flex; flex-direction: column; align-items: center; }
+</style>
+</head>
+<body>
+
+<!-- ===== SCREEN 1: GOAL SETTING (Edit Habit) ===== -->
+<div class="column">
+  <div class="screen-label">Goal Setting (Edit Screen)</div>
+  <div class="phone-frame">
+    <div class="edit-screen">
+      <div class="drag-handle"></div>
+      <div class="edit-header">
+        <span class="cancel">Cancel</span>
+        <span class="title">Edit Habit</span>
+        <span class="save">Save</span>
+      </div>
+
+      <div class="name-input">
+        <span class="emoji">🏃</span>
+        <span class="name">Morning Run</span>
+      </div>
+
+      <div class="section-label">Customize</div>
+      <div class="card" style="padding:12px 16px; margin-bottom: 0;">
+        <div style="display:flex; gap:12px; align-items:center;">
+          <div style="width:36px;height:36px;background:#34D399;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;">🏃</div>
+          <div style="flex:1;font-size:13px;color:#9CA3AF;">Emoji, Color, Reminders</div>
+          <div style="color:#4B5563;">&#9656;</div>
+        </div>
+      </div>
+
+      <div class="section-label goal-label">🎯 Streak Goal</div>
+      <div class="card">
+        <div class="goal-subtitle">Set a streak target to work toward</div>
+        <div class="preset-grid">
+          <button class="preset-btn" onclick="selectPreset(this, 7)">7 <span class="unit">days</span></button>
+          <button class="preset-btn" onclick="selectPreset(this, 14)">14 <span class="unit">days</span></button>
+          <button class="preset-btn selected" onclick="selectPreset(this, 21)">21 <span class="unit">days</span></button>
+          <button class="preset-btn" onclick="selectPreset(this, 30)">30 <span class="unit">days</span></button>
+          <button class="preset-btn" onclick="selectPreset(this, 60)">60 <span class="unit">days</span></button>
+          <button class="preset-btn" onclick="selectPreset(this, 90)">90 <span class="unit">days</span></button>
+        </div>
+        <div class="custom-row">
+          <input class="custom-input" type="number" placeholder="Custom days..." min="1" max="3650" id="customInput" oninput="handleCustom(this)">
+          <button class="clear-btn" onclick="clearGoal()">No Goal</button>
+        </div>
+      </div>
+
+      <div class="section-label" style="color: #F87171;">Danger Zone</div>
+      <div class="card" style="padding:12px 16px;">
+        <div style="display:flex; gap:12px; align-items:center;">
+          <div style="font-size:13px;color:#F87171;">Archive or Delete</div>
+          <div style="flex:1"></div>
+          <div style="color:#4B5563;">&#9656;</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SCREEN 2: GOAL PROGRESS (Habit Detail) ===== -->
+<div class="column">
+  <div class="screen-label">Goal Progress (Habit Detail)</div>
+  <div class="phone-frame">
+    <div class="detail-screen">
+      <div class="detail-header">
+        <span class="back">&#8249;</span>
+        <span class="habit-name">🏃 Morning Run</span>
+        <span class="gear">&#9881;</span>
+      </div>
+
+      <div class="quick-stats">
+        <div class="stat-card streak">
+          <div class="stat-icon">🔥</div>
+          <div class="stat-value" id="streakValue">12</div>
+          <div class="stat-label">Streak</div>
+        </div>
+        <div class="stat-card strength">
+          <div class="stat-icon">💪</div>
+          <div class="stat-value">67%</div>
+          <div class="stat-label">Strength</div>
+        </div>
+        <div class="stat-card rate">
+          <div class="stat-icon">✓</div>
+          <div class="stat-value">85%</div>
+          <div class="stat-label">Rate</div>
+        </div>
+      </div>
+
+      <div class="spacer"></div>
+
+      <!-- In-Progress State -->
+      <div id="progressState">
+        <div class="section-label goal-label">🎯 Streak Goal</div>
+        <div class="goal-progress-card">
+          <div class="goal-header">
+            <span class="label">🎯 21-Day Goal</span>
+            <span class="days-label" id="daysRemaining">9 days left</span>
+          </div>
+          <div class="progress-bar-container">
+            <div class="progress-bar-fill" id="progressFill" style="width: 57%;">
+              <span class="bar-text" id="barPercent">57%</span>
+            </div>
+          </div>
+          <div class="progress-meta">
+            <span class="progress-fraction">
+              <span class="current" id="currentDays">12</span>
+              <span class="total"> / 21 days</span>
+            </span>
+            <span class="progress-motivation" id="motivation">Over halfway there! 💪</span>
+          </div>
+        </div>
+
+        <div class="spacer"></div>
+
+        <div class="milestone-row">
+          <div class="milestone-pill achieved">⚡ 3</div>
+          <div class="milestone-pill achieved">⭐ 7</div>
+          <div class="milestone-pill current">🔥 14</div>
+          <div class="milestone-pill">🏅 21</div>
+          <div class="milestone-pill">🏆 30</div>
+          <div class="milestone-pill">💎 60</div>
+        </div>
+      </div>
+
+      <!-- Achieved State (hidden by default) -->
+      <div id="achievedState" style="display:none;">
+        <div class="section-label goal-label">🎯 Streak Goal</div>
+        <div class="goal-achieved-card">
+          <div class="achieved-emoji">🎯</div>
+          <div class="achieved-title">21-Day Goal Achieved!</div>
+          <div class="achieved-date">Completed Apr 9, 2026</div>
+          <button class="new-goal-btn" onclick="toggleView('progress')">Set New Goal</button>
+        </div>
+
+        <div class="spacer"></div>
+
+        <div class="milestone-row">
+          <div class="milestone-pill achieved">⚡ 3</div>
+          <div class="milestone-pill achieved">⭐ 7</div>
+          <div class="milestone-pill achieved">🔥 14</div>
+          <div class="milestone-pill achieved">🏅 21</div>
+          <div class="milestone-pill current">🏆 30</div>
+          <div class="milestone-pill">💎 60</div>
+        </div>
+      </div>
+
+      <div class="view-toggle">
+        <button class="toggle-btn active" id="toggleProgress" onclick="toggleView('progress')">In Progress</button>
+        <button class="toggle-btn" id="toggleAchieved" onclick="toggleView('achieved')">Achieved</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function selectPreset(btn, days) {
+    document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    document.getElementById('customInput').value = '';
+  }
+
+  function handleCustom(input) {
+    if (input.value) {
+      document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('selected'));
+    }
+  }
+
+  function clearGoal() {
+    document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('selected'));
+    document.getElementById('customInput').value = '';
+  }
+
+  function toggleView(view) {
+    const progress = document.getElementById('progressState');
+    const achieved = document.getElementById('achievedState');
+    const btnP = document.getElementById('toggleProgress');
+    const btnA = document.getElementById('toggleAchieved');
+
+    if (view === 'achieved') {
+      progress.style.display = 'none';
+      achieved.style.display = 'block';
+      btnP.classList.remove('active');
+      btnA.classList.add('active');
+      document.getElementById('streakValue').textContent = '24';
+    } else {
+      progress.style.display = 'block';
+      achieved.style.display = 'none';
+      btnP.classList.add('active');
+      btnA.classList.remove('active');
+      document.getElementById('streakValue').textContent = '12';
+    }
+  }
+
+  // Animate progress bar on load
+  window.addEventListener('load', () => {
+    const fill = document.getElementById('progressFill');
+    fill.style.width = '0%';
+    setTimeout(() => { fill.style.width = '57%'; }, 300);
+  });
+</script>
+
+</body>
+</html>

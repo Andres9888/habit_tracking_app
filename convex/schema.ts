@@ -76,10 +76,13 @@ const applicationTables = {
     // Background color for icon
     frequency: v.optional(v.string()),
 
-    // "default", etc.
+    // Streak goal: target number of consecutive days (e.g., 21)
+    goalAchievedAt: v.optional(v.number()),
+
+    // Streak goal target in days
     goalDuration: v.optional(v.number()),
 
-    // Goal value
+    // Goal type identifier (e.g., "streak_days")
     goalUnit: v.optional(v.string()),
 
     // HDP - validated optimal: 0.15-0.2 (default: 0.175)

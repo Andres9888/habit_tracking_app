@@ -20,6 +20,19 @@ export const STREAK_MILESTONES = [
 
 export type StreakMilestone = (typeof STREAK_MILESTONES)[number];
 
+/** Broader type for milestone configs including user-defined goals */
+export interface StreakMilestoneConfig {
+  color: string;
+  days: number;
+  emoji: string;
+  title: string;
+}
+
+/** Create a milestone config for a user-defined streak goal */
+export function createGoalMilestone(goalDuration: number): StreakMilestoneConfig {
+  return { color: '#10b981', days: goalDuration, emoji: '🎯', title: `${goalDuration}-Day Goal Achieved!` };
+}
+
 /**
  * Get milestone config for a given streak count
  * Returns null if streak doesn't match any milestone

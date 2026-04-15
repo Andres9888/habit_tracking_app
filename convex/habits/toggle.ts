@@ -126,9 +126,18 @@ export const recalculateStreakAndStrength = internalMutation({
       resumedAt: habit.resumedAt,
     });
 
+    // Detect streak goal achievement
+    const goalAchievedAt =
+      habit.goalDuration &&
+      !habit.goalAchievedAt &&
+      streakData.currentStreak >= habit.goalDuration
+        ? Date.now()
+        : undefined;
+
     await ctx.db.patch(args.habitId, {
       bestStreak: streakData.bestStreak,
       currentStreak: streakData.currentStreak,
+      ...(goalAchievedAt ? { goalAchievedAt } : {}),
       lastCompletedDate: streakData.lastCompletedDate,
       pendingStrengthRecalcId: undefined,
       pendingStrengthRecalcRequestedAt: undefined,

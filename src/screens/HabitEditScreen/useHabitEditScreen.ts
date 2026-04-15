@@ -25,6 +25,7 @@ export function useHabitEditScreen({ habitId, onClose, onHabitRemoved }: UseHabi
   const [selectedColor, setSelectedColor] = useState('#DBEAFE');
   const [remindersEnabled, setRemindersEnabled] = useState(false);
   const [reminderTime, setReminderTime] = useState<Date>(() => getDefaultReminderTime());
+  const [goalDuration, setGoalDuration] = useState<number | null>(null);
 
   useEffect(() => {
     if (habit) {
@@ -36,10 +37,12 @@ export function useHabitEditScreen({ habitId, onClose, onHabitRemoved }: UseHabi
       setSelectedColor(habit.color || habit.iconColor || '#10B981');
       setRemindersEnabled(habit.remindersEnabled ?? false);
       setReminderTime(createDateFromTimeString(habit.reminderTime, getDefaultReminderTime()));
+      setGoalDuration(habit.goalDuration ?? null);
     }
   }, [habit]);
 
   const { handleSave, isSaving } = useHabitSaveHandler({
+    goalDuration,
     habitId,
     habitName,
     onSuccess: () => {
@@ -78,6 +81,7 @@ export function useHabitEditScreen({ habitId, onClose, onHabitRemoved }: UseHabi
   }, []);
 
   return {
+    goalDuration,
     habitName,
     handleColorSelect,
     handleDelete,
@@ -90,6 +94,7 @@ export function useHabitEditScreen({ habitId, onClose, onHabitRemoved }: UseHabi
     handleSave,
     selectedEmoji,
     isSaving,
+    setGoalDuration,
     setHabitName,
     reminderTime,
     selectedColor,

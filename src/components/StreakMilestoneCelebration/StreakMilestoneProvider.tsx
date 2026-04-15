@@ -18,7 +18,8 @@ interface StreakMilestoneContextValue {
     habitName: string,
     habitEmoji: string,
     previousStreak: number,
-    currentStreak: number
+    currentStreak: number,
+    goalDuration?: number
   ) => void;
 }
 
