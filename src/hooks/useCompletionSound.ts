@@ -72,8 +72,9 @@ export function useCompletionSound({
       sound.setOnPlaybackStatusUpdate(
         (status: { isLoaded: boolean; didJustFinish?: boolean }) => {
           if (status.isLoaded && status.didJustFinish) {
-            sound.unloadAsync();
-            soundRef.current = undefined;
+            sound.unloadAsync().then(() => {
+              soundRef.current = undefined;
+            });
           }
         }
       );

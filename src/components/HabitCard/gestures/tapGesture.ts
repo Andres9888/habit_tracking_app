@@ -89,8 +89,8 @@ export function createTapGesture(options: TapGestureOptions) {
         } catch (error) {
           if (__DEV__) console.error('Toggle completion failed:', error);
           showSyncError();
-          // Revert optimistic state on error
-          runOnJS(toggleOptimistic)();
+          // Revert optimistic state on error (already on JS thread via outer runOnJS)
+          toggleOptimistic();
         }
       })();
 

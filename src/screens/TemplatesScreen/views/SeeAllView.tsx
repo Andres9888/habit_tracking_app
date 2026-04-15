@@ -36,7 +36,7 @@ export function SeeAllView({
         contentContainerStyle={{ paddingBottom: 100 }}
         keyExtractor={(item) => item._id}
         renderItem={({ item, index }) => (
-          <Animated.View entering={FadeInDown.delay(index * durations.stagger).duration(durations.enter).springify().damping(springs.standard.damping)}>
+          <Animated.View entering={FadeInDown.delay(Math.min(index * durations.stagger, 600)).duration(durations.enter).springify().damping(springs.standard.damping)}>
             <TemplateCard
               category={item.category}
               description={item.description}

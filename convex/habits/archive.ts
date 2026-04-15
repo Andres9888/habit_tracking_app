@@ -113,9 +113,10 @@ export const deleteAllArchived = mutation({
         .withIndex('by_habit', (q) => q.eq('habitId', habit._id))
         .collect();
 
-      for (const record of records) await ctx.db.delete(record._id);
-      for (const usageEntry of templateUsageEntries)
-        await ctx.db.delete(usageEntry._id);
+      await Promise.all(records.map((record) => ctx.db.delete(record._id)));
+      await Promise.all(
+        templateUsageEntries.map((entry) => ctx.db.delete(entry._id))
+      );
 
       await ctx.db.delete(habit._id);
       deletedCount++;
