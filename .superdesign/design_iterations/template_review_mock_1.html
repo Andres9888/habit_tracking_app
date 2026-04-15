@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=390, initial-scale=1.0">
+<title>Habit Template Library — Proposed Improvements</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+    background: #0a0a0a !important;
+    color: #fafafa !important;
+    overflow-x: hidden !important;
+  }
+  h1, h2, h3, h4, h5, h6 { font-family: 'Inter', sans-serif !important; }
+
+  /* Phone frames */
+  .phone-frame {
+    width: 390px;
+    height: 844px;
+    background: #111111;
+    border-radius: 44px;
+    border: 3px solid #333;
+    overflow: hidden;
+    position: relative;
+    flex-shrink: 0;
+  }
+  .phone-frame::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 126px;
+    height: 34px;
+    background: #000;
+    border-radius: 0 0 20px 20px;
+    z-index: 50;
+  }
+  .phone-screen {
+    height: 100%;
+    overflow-y: auto;
+    padding: 54px 0 34px;
+    -webkit-overflow-scrolling: touch;
+  }
+  .phone-screen::-webkit-scrollbar { display: none; }
+
+  /* Tab bar */
+  .tab-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 83px;
+    background: rgba(17,17,17,0.95);
+    backdrop-filter: blur(20px);
+    border-top: 1px solid rgba(255,255,255,0.06);
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-around;
+    padding-top: 8px;
+    z-index: 40;
+  }
+  .tab-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    font-size: 10px;
+    color: #666;
+  }
+  .tab-item.active { color: #818cf8; }
+
+  /* Section headers */
+  .section-title {
+    font-size: 17px !important;
+    font-weight: 700 !important;
+    color: #fafafa !important;
+    padding: 0 20px;
+    margin-bottom: 12px;
+  }
+
+  /* Cards */
+  .trending-card {
+    width: 148px;
+    min-width: 148px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+  .icon-box {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+  }
+
+  /* Category tiles */
+  .cat-tile {
+    flex: 1;
+    min-height: 88px;
+    border-radius: 14px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    cursor: pointer;
+    transition: transform 0.15s;
+  }
+  .cat-tile:active { transform: scale(0.97); }
+
+  /* Horizontal scroll */
+  .h-scroll {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    padding: 0 20px;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+  }
+  .h-scroll::-webkit-scrollbar { display: none; }
+  .h-scroll > * { scroll-snap-align: start; }
+
+  /* Badge */
+  .science-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    background: rgba(16, 185, 129, 0.12);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+    border-radius: 6px;
+    padding: 2px 6px;
+    font-size: 10px;
+    color: #34d399;
+    font-weight: 600;
+  }
+  .no-badge .science-badge { display: none; }
+
+  /* Featured spotlight (smaller, below categories) */
+  .spotlight-card {
+    margin: 0 20px;
+    border-radius: 20px;
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+  }
+  .spotlight-card::before {
+    content: '';
+    position: absolute;
+    top: -30px; right: -30px;
+    width: 120px; height: 120px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.06);
+  }
+
+  /* Preview modal */
+  .preview-modal {
+    background: #fafaf9;
+    height: 100%;
+    color: #1a1a1a;
+    display: flex;
+    flex-direction: column;
+  }
+  .preview-hero {
+    padding: 20px;
+    text-align: center;
+    position: relative;
+  }
+  .preview-icon-wrap {
+    width: 80px; height: 80px;
+    border-radius: 24px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 40px;
+    margin: 0 auto 16px;
+    position: relative;
+  }
+  .preview-icon-glow {
+    position: absolute;
+    inset: -8px;
+    border-radius: 32px;
+    opacity: 0.25;
+    filter: blur(16px);
+  }
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+  }
+  .science-box {
+    margin: 0 20px;
+    background: rgba(16, 185, 129, 0.06);
+    border: 1px solid rgba(16, 185, 129, 0.15);
+    border-radius: 14px;
+    padding: 16px;
+  }
+  .tips-box {
+    margin: 12px 20px 0;
+    background: rgba(245, 158, 11, 0.06);
+    border: 1px solid rgba(245, 158, 11, 0.15);
+    border-radius: 14px;
+    padding: 16px;
+  }
+  .intent-box {
+    margin: 12px 20px 0;
+    background: rgba(99, 102, 241, 0.06);
+    border: 1px solid rgba(99, 102, 241, 0.15);
+    border-radius: 14px;
+    padding: 16px;
+  }
+  .intent-option {
+    padding: 10px 14px;
+    background: rgba(99, 102, 241, 0.08);
+    border: 1px solid rgba(99, 102, 241, 0.2);
+    border-radius: 10px;
+    font-size: 13px;
+    color: #4338ca;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .intent-option:hover {
+    background: rgba(99, 102, 241, 0.15);
+  }
+  .intent-option.selected {
+    background: #6366f1;
+    color: white;
+    border-color: #6366f1;
+  }
+
+  /* Comparison layout */
+  .comparison {
+    display: flex;
+    gap: 48px;
+    justify-content: center;
+    padding: 40px 24px;
+    flex-wrap: wrap;
+  }
+  .mock-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+  .mock-label {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 6px 16px;
+    border-radius: 8px;
+  }
+
+  /* Starter pack view */
+  .starter-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 16px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 14px;
+    margin: 0 20px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .starter-card:hover {
+    background: rgba(255,255,255,0.07);
+  }
+  .starter-card.selected {
+    border-color: rgba(99, 102, 241, 0.5);
+    background: rgba(99, 102, 241, 0.08);
+  }
+  .starter-check {
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.15);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .starter-card.selected .starter-check {
+    background: #6366f1;
+    border-color: #6366f1;
+  }
+
+  /* Nav tabs for switching views */
+  .view-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    padding: 24px 0 8px;
+    position: sticky;
+    top: 0;
+    background: #0a0a0a;
+    z-index: 10;
+  }
+  .view-tab {
+    padding: 8px 20px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid rgba(255,255,255,0.1);
+    color: #999;
+    background: transparent;
+    transition: all 0.2s;
+  }
+  .view-tab.active {
+    background: rgba(99,102,241,0.15);
+    border-color: rgba(99,102,241,0.4);
+    color: #a5b4fc;
+  }
+
+  /* Annotation callouts */
+  .callout {
+    position: absolute;
+    background: #1a1a2e;
+    border: 1px solid rgba(99,102,241,0.4);
+    border-radius: 10px;
+    padding: 8px 12px;
+    font-size: 11px;
+    color: #c7d2fe;
+    max-width: 200px;
+    z-index: 30;
+    pointer-events: none;
+    line-height: 1.4;
+  }
+  .callout::before {
+    content: '→';
+    position: absolute;
+    left: -16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: rgba(99,102,241,0.6);
+    font-size: 14px;
+  }
+
+  .change-marker {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .change-marker.new { background: rgba(16,185,129,0.15); color: #34d399; }
+  .change-marker.changed { background: rgba(245,158,11,0.15); color: #fbbf24; }
+  .change-marker.removed { background: rgba(239,68,68,0.15); color: #f87171; }
+</style>
+</head>
+<body>
+
+<!-- Page Header -->
+<div style="text-align:center; padding: 48px 24px 0;">
+  <h1 style="font-size: 28px; font-weight: 800; background: linear-gradient(135deg, #818cf8, #c084fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Habit Template Library Review</h1>
+  <p style="color: #666; font-size: 14px; margin-top: 8px;">Proposed improvements based on behavioral science frameworks</p>
+</div>
+
+<!-- View switching tabs -->
+<div class="view-tabs" id="viewTabs">
+  <button class="view-tab active" onclick="showView('browse')">Browse Screen</button>
+  <button class="view-tab" onclick="showView('preview')">Template Preview</button>
+  <button class="view-tab" onclick="showView('starter')">New User Flow</button>
+  <button class="view-tab" onclick="showView('postimport')">Post-Import</button>
+</div>
+
+<!-- ===================== VIEW 1: BROWSE SCREEN ===================== -->
+<div id="view-browse" class="comparison">
+
+  <!-- CURRENT -->
+  <div class="mock-column">
+    <div class="mock-label" style="background:rgba(239,68,68,0.12); color:#f87171;">Current</div>
+    <div class="phone-frame">
+      <div class="phone-screen" style="padding-bottom: 120px;">
+        <!-- Header -->
+        <div style="padding: 16px 20px 4px;">
+          <h2 style="font-size: 22px; font-weight: 800; color: #fafafa;">Habit Library</h2>
+          <p style="font-size: 13px; color: #888; margin-top: 2px;">Science-backed templates to build great habits</p>
+        </div>
+
+        <!-- Search -->
+        <div style="padding: 12px 20px;">
+          <div style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 12px 16px; color: #555; font-size: 14px;">
+            🔍 Search for habits...
+          </div>
+        </div>
+
+        <!-- Featured Hero (LARGE, dominates) -->
+        <div style="margin: 4px 20px 16px; border-radius: 20px; padding: 28px 24px; background: linear-gradient(135deg, #065F46, #059669, #34D399); position: relative; overflow: hidden;">
+          <div style="position:absolute; top:-20px; right:-20px; width:100px; height:100px; border-radius:50%; background:rgba(255,255,255,0.08);"></div>
+          <div style="position:absolute; bottom:-30px; left:-10px; width:80px; height:80px; border-radius:50%; background:rgba(255,255,255,0.05);"></div>
+          <span style="display:inline-block; background:rgba(0,0,0,0.2); padding:3px 10px; border-radius:8px; font-size:11px; font-weight:600; color:rgba(255,255,255,0.9);">🌅 MORNING PICK</span>
+          <h3 style="font-size: 22px; font-weight: 800; color: white; margin: 10px 0 6px;">Morning Mastery</h3>
+          <p style="font-size: 13px; color: rgba(255,255,255,0.8); line-height: 1.4;">Start your day with science-backed habits for energy and focus</p>
+          <div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:12px;">
+            <span style="background:rgba(255,255,255,0.15); padding:4px 10px; border-radius:8px; font-size:11px; color:white;">🌅 Wake Early</span>
+            <span style="background:rgba(255,255,255,0.15); padding:4px 10px; border-radius:8px; font-size:11px; color:white;">💧 Hydrate</span>
+            <span style="background:rgba(255,255,255,0.15); padding:4px 10px; border-radius:8px; font-size:11px; color:white;">📝 Journal</span>
+            <span style="background:rgba(255,255,255,0.15); padding:4px 10px; border-radius:8px; font-size:11px; color:white;">🧘 Meditate</span>
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-top:16px;">
+            <span style="font-size:12px; color:rgba(255,255,255,0.6);">2.4k users</span>
+            <span style="font-size:13px; color:white; font-weight:600;">Explore →</span>
+          </div>
+        </div>
+
+        <!-- Trending -->
+        <div style="margin-bottom: 16px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; padding:0 20px; margin-bottom:10px;">
+            <span style="font-size:17px; font-weight:700;">🔥 Trending Now</span>
+            <span style="font-size:13px; color:#818cf8;">See all</span>
+          </div>
+          <div class="h-scroll">
+            <div class="trending-card">
+              <div class="icon-box" style="background:rgba(16,185,129,0.15);">🧘</div>
+              <div style="font-size:13px; font-weight:600; color:#fafafa;">5-Min Meditation</div>
+              <div style="display:flex; gap:4px; align-items:center; flex-wrap:wrap;">
+                <span style="font-size:10px; color:#888;">daily</span>
+                <span class="science-badge">🔬 Science</span>
+              </div>
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <span style="font-size:10px; color:#666;">95 🔥</span>
+                <div style="width:28px; height:28px; border-radius:50%; background:#818cf8; display:flex; align-items:center; justify-content:center; font-size:16px; color:white;">+</div>
+              </div>
+            </div>
+            <div class="trending-card">
+              <div class="icon-box" style="background:rgba(239,68,68,0.15);">🏃</div>
+              <div style="font-size:13px; font-weight:600; color:#fafafa;">7-Min Workout</div>
+              <div style="display:flex; gap:4px; align-items:center; flex-wrap:wrap;">
+                <span style="font-size:10px; color:#888;">daily</span>
+                <span class="science-badge">🔬 Science</span>
+              </div>
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <span style="font-size:10px; color:#666;">98 🔥</span>
+                <div style="width:28px; height:28px; border-radius:50%; background:#818cf8; display:flex; align-items:center; justify-content:center; font-size:16px; color:white;">+</div>
+              </div>
+            </div>
+            <div class="trending-card">
+              <div class="icon-box" style="background:rgba(59,130,246,0.15);">📖</div>
+              <div style="font-size:13px; font-weight:600; color:#fafafa;">Daily Reading</div>
+              <div style="display:flex; gap:4px; align-items:center; flex-wrap:wrap;">
+                <span style="font-size:10px; color:#888;">daily</span>
+                <span class="science-badge">🔬 Science</span>
+              </div>
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <span style="font-size:10px; color:#666;">88 🔥</span>
+                <div style="width:28px; height:28px; border-radius:50%; background:#818cf8; display:flex; align-items:center; justify-content:center; font-size:16px; color:white;">+</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Categories (BELOW THE FOLD) -->
+        <div style="padding: 0 20px; margin-top: 8px;">
+          <div style="font-size:17px; font-weight:700; margin-bottom:10px;">🗂️ Browse by Category</div>
+          <div style="display:flex; gap:10px; margin-bottom:10px;">
+            <div class="cat-tile" style="background:rgba(254,243,199,0.08); border:1px solid rgba(254,243,199,0.12);">
+              <div>
+                <span style="font-size:22px;">🌅</span>
+                <div style="font-size:13px; font-weight:600; color:#fde68a; margin-top:4px;">Morning</div>
+                <div style="font-size:10px; color:#888;">18 templates</div>
+              </div>
+            </div>
+            <div class="cat-tile" style="background:rgba(209,250,229,0.08); border:1px solid rgba(209,250,229,0.12);">
+              <div>
+                <span style="font-size:22px;">💪</span>
+                <div style="font-size:13px; font-weight:600; color:#6ee7b7; margin-top:4px;">Health</div>
+                <div style="font-size:10px; color:#888;">24 templates</div>
+              </div>
+            </div>
+          </div>
+          <div style="display:flex; gap:10px; margin-bottom:10px;">
+            <div class="cat-tile" style="background:rgba(219,234,254,0.08); border:1px solid rgba(219,234,254,0.12);">
+              <div>
+                <span style="font-size:22px;">🎯</span>
+                <div style="font-size:13px; font-weight:600; color:#93c5fd; margin-top:4px;">Productivity</div>
+                <div style="font-size:10px; color:#888;">20 templates</div>
+              </div>
+            </div>
+            <div class="cat-tile" style="background:rgba(245,243,255,0.08); border:1px solid rgba(245,243,255,0.12);">
+              <div>
+                <span style="font-size:22px;">🧘</span>
+                <div style="font-size:13px; font-weight:600; color:#c4b5fd; margin-top:4px;">Mindfulness</div>
+                <div style="font-size:10px; color:#888;">15 templates</div>
+              </div>
+            </div>
+          </div>
+          <div style="display:flex; gap:10px; margin-bottom:10px;">
+            <div class="cat-tile" style="background:rgba(236,253,245,0.08); border:1px solid rgba(236,253,245,0.12);">
+              <div>
+                <span style="font-size:22px;">🔬</span>
+                <div style="font-size:13px; font-weight:600; color:#6ee7b7; margin-top:4px;">Huberman</div>
+                <div style="font-size:10px; color:#888;">12 templates</div>
+              </div>
+            </div>
+            <div class="cat-tile" style="background:rgba(243,232,255,0.08); border:1px solid rgba(243,232,255,0.12);">
+              <div>
+                <span style="font-size:22px;">📚</span>
+                <div style="font-size:13px; font-weight:600; color:#d8b4fe; margin-top:4px;">Learning</div>
+                <div style="font-size:10px; color:#888;">14 templates</div>
+              </div>
+            </div>
+          </div>
+          <div style="text-align:center; padding:14px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:12px; margin-top:4px;">
+            <span style="font-size:13px; color:#888; font-weight:500;">Show all 14 categories</span>
+          </div>
+        </div>
+
+        <!-- Curated Packs -->
+        <div style="padding: 0 20px; margin-top: 24px;">
+          <div style="font-size:17px; font-weight:700; margin-bottom:10px;">📦 Curated Packs</div>
+          <div style="background: linear-gradient(135deg, #7C3AED, #4F46E5); border-radius:16px; padding:18px; margin-bottom:10px;">
+            <div style="display:flex; gap:4px; margin-bottom:6px;">
+              <span>🔬</span><span>🧠</span><span>💪</span><span>🧬</span>
+            </div>
+            <div style="font-size:15px; font-weight:700; color:white;">Huberman Essentials</div>
+            <div style="font-size:12px; color:rgba(255,255,255,0.7); margin-top:2px;">5 habits · Science-backed protocols</div>
+          </div>
+        </div>
+
+      </div>
+      <div class="tab-bar">
+        <div class="tab-item"><span style="font-size:20px;">📊</span><span>Today</span></div>
+        <div class="tab-item active"><span style="font-size:20px;">📚</span><span>Library</span></div>
+        <div class="tab-item"><span style="font-size:20px;">⚙️</span><span>Settings</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROPOSED -->
+  <div class="mock-column">
+    <div class="mock-label" style="background:rgba(16,185,129,0.12); color:#34d399;">Proposed</div>
+    <div class="phone-frame">
+      <div class="phone-screen" style="padding-bottom: 120px;">
+        <!-- Header -->
+        <div style="padding: 16px 20px 4px;">
+          <h2 style="font-size: 22px; font-weight: 800; color: #fafafa;">Habit Library</h2>
+          <p style="font-size: 13px; color: #888; margin-top: 2px;">Science-backed templates to build great habits</p>
+        </div>
+
+        <!-- Search -->
+        <div style="padding: 12px 20px;">
+          <div style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 12px 16px; color: #555; font-size: 14px;">
+            🔍 Search for habits...
+          </div>
+        </div>
+
+        <!-- CHANGE #5: Trending FIRST (compact) -->
+        <div style="margin-bottom: 16px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; padding:0 20px; margin-bottom:10px;">
+            <span style="font-size:17px; font-weight:700;">🔥 Trending Now</span>
+            <span style="font-size:13px; color:#818cf8;">See all</span>
+          </div>
+          <div class="h-scroll">
+            <div class="trending-card">
+              <div class="icon-box" style="background:rgba(16,185,129,0.15);">🧘</div>
+              <div style="font-size:13px; font-weight:600; color:#fafafa;">5-Min Meditation</div>
+              <div style="display:flex; gap:4px; align-items:center; flex-wrap:wrap;">
+                <span style="font-size:10px; color:#888;">daily</span>
+                <!-- CHANGE #4: Badge only when scientificLink exists -->
+                <span class="science-badge">🔬 Verified</span>
+              </div>
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <span style="font-size:10px; color:#666;">95 🔥</span>
+                <div style="width:28px; height:28px; border-radius:50%; background:#818cf8; display:flex; align-items:center; justify-content:center; font-size:16px; color:white;">+</div>
+              </div>
+            </div>
+            <div class="trending-card no-badge">
+              <div class="icon-box" style="background:rgba(239,68,68,0.15);">🏃</div>
+              <div style="font-size:13px; font-weight:600; color:#fafafa;">7-Min Workout</div>
+              <div style="display:flex; gap:4px; align-items:center; flex-wrap:wrap;">
+                <span style="font-size:10px; color:#888;">daily</span>
+                <!-- No badge — has reference but no link -->
+                <span class="science-badge">🔬 Verified</span>
+              </div>
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <span style="font-size:10px; color:#666;">98 🔥</span>
+                <div style="width:28px; height:28px; border-radius:50%; background:#818cf8; display:flex; align-items:center; justify-content:center; font-size:16px; color:white;">+</div>
+              </div>
+            </div>
+            <div class="trending-card">
+              <div class="icon-box" style="background:rgba(59,130,246,0.15);">📖</div>
+              <div style="font-size:13px; font-weight:600; color:#fafafa;">Daily Reading</div>
+              <div style="display:flex; gap:4px; align-items:center; flex-wrap:wrap;">
+                <span style="font-size:10px; color:#888;">daily</span>
+                <span class="science-badge">🔬 Verified</span>
+              </div>
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <span style="font-size:10px; color:#666;">88 🔥</span>
+                <div style="width:28px; height:28px; border-radius:50%; background:#818cf8; display:flex; align-items:center; justify-content:center; font-size:16px; color:white;">+</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CHANGE #5: Categories ABOVE featured, show 8 -->
+        <div style="padding: 0 20px; margin-top: 4px;">
+          <div style="font-size:17px; font-weight:700; margin-bottom:10px;">🗂️ Browse by Category</div>
+          <div style="display:flex; gap:10px; margin-bottom:10px;">
+            <div class="cat-tile" style="background:rgba(254,243,199,0.08); border:1px solid rgba(254,243,199,0.12);">
+              <div>
+                <span style="font-size:22px;">🌅</span>
+                <div style="font-size:13px; font-weight:600; color:#fde68a; margin-top:4px;">Morning</div>
+                <div style="font-size:10px; color:#888;">18 templates</div>
+              </div>
+            </div>
+            <div class="cat-tile" style="background:rgba(209,250,229,0.08); border:1px solid rgba(209,250,229,0.12);">
+              <div>
+                <span style="font-size:22px;">💪</span>
+                <div style="font-size:13px; font-weight:600; color:#6ee7b7; margin-top:4px;">Health</div>
+                <div style="font-size:10px; color:#888;">24 templates</div>
+              </div>
+            </div>
+          </div>
+          <div style="display:flex; gap:10px; margin-bottom:10px;">
+            <div class="cat-tile" style="background:rgba(219,234,254,0.08); border:1px solid rgba(219,234,254,0.12);">
+              <div>
+                <span style="font-size:22px;">🎯</span>
+                <div style="font-size:13px; font-weight:600; color:#93c5fd; margin-top:4px;">Productivity</div>
+                <div style="font-size:10px; color:#888;">20 templates</div>
+              </div>
+            </div>
+            <div class="cat-tile" style="background:rgba(245,243,255,0.08); border:1px solid rgba(245,243,255,0.12);">
+              <div>
+                <span style="font-size:22px;">🧘</span>
+                <div style="font-size:13px; font-weight:600; color:#c4b5fd; margin-top:4px;">Mindfulness</div>
+                <div style="font-size:10px; color:#888;">15 templates</div>
+              </div>
+            </div>
+          </div>
+          <div style="display:flex; gap:10px; margin-bottom:10px;">
+            <div class="cat-tile" style="background:rgba(236,253,245,0.08); border:1px solid rgba(236,253,245,0.12);">
+              <div>
+                <span style="font-size:22px;">🔬</span>
+                <div style="font-size:13px; font-weight:600; color:#6ee7b7; margin-top:4px;">Huberman</div>
+                <div style="font-size:10px; color:#888;">12 templates</div>
+              </div>
+            </div>
+            <div class="cat-tile" style="background:rgba(243,232,255,0.08); border:1px solid rgba(243,232,255,0.12);">
+              <div>
+                <span style="font-size:22px;">📚</span>
+                <div style="font-size:13px; font-weight:600; color:#d8b4fe; margin-top:4px;">Learning</div>
+                <div style="font-size:10px; color:#888;">14 templates</div>
+              </div>
+            </div>
+          </div>
+          <div style="display:flex; gap:10px; margin-bottom:10px;">
+            <div class="cat-tile" style="background:rgba(255,228,230,0.08); border:1px solid rgba(255,228,230,0.12);">
+              <div>
+                <span style="font-size:22px;">👥</span>
+                <div style="font-size:13px; font-weight:600; color:#fca5a5; margin-top:4px;">Social</div>
+                <div style="font-size:10px; color:#888;">10 templates</div>
+              </div>
+            </div>
+            <div class="cat-tile" style="background:rgba(236,253,245,0.08); border:1px solid rgba(236,253,245,0.12);">
+              <div>
+                <span style="font-size:22px;">💰</span>
+                <div style="font-size:13px; font-weight:600; color:#6ee7b7; margin-top:4px;">Financial</div>
+                <div style="font-size:10px; color:#888;">8 templates</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CHANGE #5: Featured DEMOTED to spotlight -->
+        <div style="margin-top: 20px;">
+          <div style="font-size:17px; font-weight:700; padding:0 20px; margin-bottom:10px;">✨ Spotlight</div>
+          <div class="spotlight-card" style="background: linear-gradient(135deg, #065F46, #059669, #34D399);">
+            <span style="display:inline-block; background:rgba(0,0,0,0.2); padding:3px 10px; border-radius:8px; font-size:11px; font-weight:600; color:rgba(255,255,255,0.9);">🌅 MORNING PICK</span>
+            <h3 style="font-size: 18px; font-weight: 800; color: white; margin: 8px 0 4px;">Morning Mastery</h3>
+            <p style="font-size: 12px; color: rgba(255,255,255,0.8); line-height: 1.4;">Science-backed habits for energy and focus</p>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:12px;">
+              <!-- CHANGE #2: Real data, not "2.4k users" -->
+              <span style="font-size:12px; color:rgba(255,255,255,0.6);">18 habits · Science-backed</span>
+              <span style="font-size:13px; color:white; font-weight:600;">Explore →</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Curated Packs -->
+        <div style="padding: 0 20px; margin-top: 24px;">
+          <div style="font-size:17px; font-weight:700; margin-bottom:10px;">📦 Curated Packs</div>
+          <div style="background: linear-gradient(135deg, #7C3AED, #4F46E5); border-radius:16px; padding:18px; margin-bottom:10px;">
+            <div style="display:flex; gap:4px; margin-bottom:6px;">
+              <span>🔬</span><span>🧠</span><span>💪</span><span>🧬</span>
+            </div>
+            <div style="font-size:15px; font-weight:700; color:white;">Huberman Essentials</div>
+            <div style="font-size:12px; color:rgba(255,255,255,0.7); margin-top:2px;">5 habits · Science-backed protocols</div>
+          </div>
+        </div>
+
+      </div>
+      <div class="tab-bar">
+        <div class="tab-item"><span style="font-size:20px;">📊</span><span>Today</span></div>
+        <div class="tab-item active"><span style="font-size:20px;">📚</span><span>Library</span></div>
+        <div class="tab-item"><span style="font-size:20px;">⚙️</span><span>Settings</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Change annotations -->
+  <div style="max-width:320px; display:flex; flex-direction:column; gap:16px; align-self:center;">
+    <h3 style="font-size:16px; font-weight:700; color:#fafafa;">Browse Screen Changes</h3>
+    <div style="display:flex; align-items:flex-start; gap:10px;">
+      <span class="change-marker changed">Reorder</span>
+      <div>
+        <div style="font-size:13px; font-weight:600; color:#fafafa;">Trending first, Categories second</div>
+        <div style="font-size:12px; color:#888; margin-top:2px;">Categories are navigation — they should be above the fold, not buried. Featured hero demoted to "Spotlight" section. <strong>Hick's Law / Information Scent.</strong></div>
+      </div>
+    </div>
+    <div style="display:flex; align-items:flex-start; gap:10px;">
+      <span class="change-marker removed">Fix</span>
+      <div>
+        <div style="font-size:13px; font-weight:600; color:#fafafa;">Remove "2.4k users" fake</div>
+        <div style="font-size:12px; color:#888; margin-top:2px;">Replaced with real template count. Static numbers destroy trust. <strong>Cialdini social proof.</strong></div>
+      </div>
+    </div>
+    <div style="display:flex; align-items:flex-start; gap:10px;">
+      <span class="change-marker changed">Tier</span>
+      <div>
+        <div style="font-size:13px; font-weight:600; color:#fafafa;">Science badge = "Verified" only</div>
+        <div style="font-size:12px; color:#888; margin-top:2px;">Badge only shown when <code>scientificLink</code> exists (verifiable). Currently on 100% of cards. <strong>Von Restorff effect.</strong></div>
+      </div>
+    </div>
+    <div style="display:flex; align-items:flex-start; gap:10px;">
+      <span class="change-marker changed">Show 8</span>
+      <div>
+        <div style="font-size:13px; font-weight:600; color:#fafafa;">Category grid: 8 tiles visible</div>
+        <div style="font-size:12px; color:#888; margin-top:2px;">Up from 6. Removes the "Show all" button for most users. More categories visible = faster navigation.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== VIEW 2: TEMPLATE PREVIEW ===================== -->
+<div id="view-preview" class="comparison" style="display:none;">
+
+  <!-- CURRENT Preview -->
+  <div class="mock-column">
+    <div class="mock-label" style="background:rgba(239,68,68,0.12); color:#f87171;">Current Preview</div>
+    <div class="phone-frame">
+      <div class="phone-screen">
+        <div class="preview-modal">
+          <!-- Close button -->
+          <div style="padding:12px 20px 0; display:flex; justify-content:flex-end;">
+            <div style="width:32px; height:32px; border-radius:50%; background:rgba(0,0,0,0.06); display:flex; align-items:center; justify-content:center; font-size:16px; color:#666;">✕</div>
+          </div>
+
+          <!-- Hero -->
+          <div class="preview-hero" style="background: linear-gradient(to bottom, rgba(16,185,129,0.08), rgba(16,185,129,0.03), #fafaf9);">
+            <div class="preview-icon-wrap" style="background:rgba(16,185,129,0.12);">
+              <div class="preview-icon-glow" style="background:#10B981;"></div>
+              <span style="position:relative; z-index:2;">🧘</span>
+            </div>
+            <h2 style="font-size:24px; font-weight:800; color:#1a1a1a;">5-Minute Meditation</h2>
+            <div style="display:flex; gap:8px; justify-content:center; margin-top:12px; flex-wrap:wrap;">
+              <span class="pill" style="background:rgba(16,185,129,0.08); color:#059669;">🕐 Daily</span>
+              <span class="pill" style="background:rgba(16,185,129,0.08); color:#059669;">✨ Mindfulness</span>
+              <!-- PROBLEM: Hardcoded duration -->
+              <span class="pill" style="background:rgba(16,185,129,0.08); color:#059669;">⏱️ 5-10 min</span>
+            </div>
+          </div>
+
+          <div style="flex:1; overflow-y:auto; padding-bottom:120px;">
+            <!-- Description -->
+            <div style="padding:0 20px 16px;">
+              <p style="font-size:15px; color:#444; line-height:1.6;">Start your day with mindful meditation. Research shows just 5 minutes daily can reduce stress and improve focus throughout the day.</p>
+            </div>
+
+            <!-- Science Box -->
+            <div class="science-box" style="background:rgba(16,185,129,0.06); border-color:rgba(16,185,129,0.15);">
+              <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+                <span style="font-size:18px;">🔬</span>
+                <span style="font-size:11px; font-weight:700; color:#059669; letter-spacing:0.05em;">SCIENCE BEHIND THIS HABIT</span>
+              </div>
+              <div style="height:1px; background:rgba(16,185,129,0.15); margin-bottom:10px;"></div>
+              <!-- PROBLEM: Citation displayed as a "quote" -->
+              <p style="font-size:13px; color:#555; line-height:1.5; font-style:italic;">"Goyal et al. (2014) - Meditation programs for psychological stress and well-being"</p>
+              <div style="display:flex; align-items:center; gap:6px; margin-top:10px; cursor:pointer;">
+                <span style="color:#3B82F6;">🔗</span>
+                <span style="font-size:13px; color:#3B82F6; font-weight:500;">Read Research</span>
+              </div>
+            </div>
+
+            <!-- Tips -->
+            <div class="tips-box" style="margin-top:12px; background:rgba(245,158,11,0.06); border-color:rgba(245,158,11,0.15);">
+              <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+                <span style="font-size:18px;">💡</span>
+                <span style="font-size:11px; font-weight:700; color:#d97706; letter-spacing:0.05em;">TIPS FOR SUCCESS</span>
+              </div>
+              <div style="height:1px; background:rgba(245,158,11,0.15); margin-bottom:10px;"></div>
+              <div style="display:flex; gap:10px; align-items:flex-start; margin-bottom:8px;">
+                <div style="width:24px; height:24px; border-radius:50%; background:rgba(16,185,129,0.1); display:flex; align-items:center; justify-content:center; font-size:12px; color:#10B981; font-weight:700; flex-shrink:0;">1</div>
+                <span style="font-size:13px; color:#555; line-height:1.4;">Start with just 2 minutes and gradually increase</span>
+              </div>
+              <div style="display:flex; gap:10px; align-items:flex-start; margin-bottom:8px;">
+                <div style="width:24px; height:24px; border-radius:50%; background:rgba(16,185,129,0.1); display:flex; align-items:center; justify-content:center; font-size:12px; color:#10B981; font-weight:700; flex-shrink:0;">2</div>
+                <span style="font-size:13px; color:#555; line-height:1.4;">Use a guided meditation app for your first few weeks</span>
+              </div>
+              <div style="display:flex; gap:10px; align-items:flex-start;">
+                <div style="width:24px; height:24px; border-radius:50%; background:rgba(16,185,129,0.1); display:flex; align-items:center; justify-content:center; font-size:12px; color:#10B981; font-weight:700; flex-shrink:0;">3</div>
+                <span style="font-size:13px; color:#555; line-height:1.4;">Same time each morning builds the habit faster</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Footer -->
+          <div style="position:absolute; bottom:0; left:0; right:0; background: linear-gradient(to top, #fafaf9, #fafaf9, rgba(250,248,245,0)); padding: 20px 20px 40px;">
+            <div style="background:#10B981; border-radius:14px; padding:16px; text-align:center; cursor:pointer;">
+              <span style="font-size:16px; font-weight:700; color:white;">Quick Add</span>
+            </div>
+            <!-- PROBLEM: "Customize First" framing -->
+            <div style="text-align:center; margin-top:12px;">
+              <span style="font-size:14px; color:#10B981; font-weight:500;">Customize First →</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROPOSED Preview -->
+  <div class="mock-column">
+    <div class="mock-label" style="background:rgba(16,185,129,0.12); color:#34d399;">Proposed Preview</div>
+    <div class="phone-frame">
+      <div class="phone-screen">
+        <div class="preview-modal">
+          <!-- Close button -->
+          <div style="padding:12px 20px 0; display:flex; justify-content:flex-end;">
+            <div style="width:32px; height:32px; border-radius:50%; background:rgba(0,0,0,0.06); display:flex; align-items:center; justify-content:center; font-size:16px; color:#666;">✕</div>
+          </div>
+
+          <!-- Hero -->
+          <div class="preview-hero" style="background: linear-gradient(to bottom, rgba(16,185,129,0.08), rgba(16,185,129,0.03), #fafaf9);">
+            <div class="preview-icon-wrap" style="background:rgba(16,185,129,0.12);">
+              <div class="preview-icon-glow" style="background:#10B981;"></div>
+              <span style="position:relative; z-index:2;">🧘</span>
+            </div>
+            <h2 style="font-size:24px; font-weight:800; color:#1a1a1a;">5-Minute Meditation</h2>
+            <!-- CHANGE #1: Only 2 pills, no hardcoded duration -->
+            <div style="display:flex; gap:8px; justify-content:center; margin-top:12px; flex-wrap:wrap;">
+              <span class="pill" style="background:rgba(16,185,129,0.08); color:#059669;">🕐 Daily</span>
+              <span class="pill" style="background:rgba(16,185,129,0.08); color:#059669;">✨ Mindfulness</span>
+            </div>
+          </div>
+
+          <div style="flex:1; overflow-y:auto; padding-bottom:120px;">
+            <!-- Description -->
+            <div style="padding:0 20px 16px;">
+              <p style="font-size:15px; color:#444; line-height:1.6;">Start your day with mindful meditation. Research shows just 5 minutes daily can reduce stress and improve focus throughout the day.</p>
+            </div>
+
+            <!-- CHANGE #3: Restructured Science Box -->
+            <div class="science-box" style="background:rgba(16,185,129,0.06); border-color:rgba(16,185,129,0.15);">
+              <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+                <span style="font-size:18px;">🔬</span>
+                <span style="font-size:11px; font-weight:700; color:#059669; letter-spacing:0.05em;">WHY THIS WORKS</span>
+              </div>
+              <div style="height:1px; background:rgba(16,185,129,0.15); margin-bottom:10px;"></div>
+              <!-- Summary first (actionable insight) -->
+              <p style="font-size:14px; color:#333; line-height:1.5; font-weight:500;">Just 5 minutes of daily meditation reduces anxiety markers by 38% and improves sustained attention.</p>
+              <!-- Citation as attribution, not "quote" -->
+              <p style="font-size:11px; color:#888; margin-top:8px;">Goyal et al. (2014) · JAMA Internal Medicine</p>
+              <div style="display:flex; align-items:center; gap:6px; margin-top:10px; cursor:pointer;">
+                <span style="color:#3B82F6;">🔗</span>
+                <span style="font-size:13px; color:#3B82F6; font-weight:500;">Read Full Study</span>
+              </div>
+            </div>
+
+            <!-- Tips (unchanged) -->
+            <div class="tips-box" style="margin-top:12px; background:rgba(245,158,11,0.06); border-color:rgba(245,158,11,0.15);">
+              <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+                <span style="font-size:18px;">💡</span>
+                <span style="font-size:11px; font-weight:700; color:#d97706; letter-spacing:0.05em;">TIPS FOR SUCCESS</span>
+              </div>
+              <div style="height:1px; background:rgba(245,158,11,0.15); margin-bottom:10px;"></div>
+              <div style="display:flex; gap:10px; align-items:flex-start; margin-bottom:8px;">
+                <div style="width:24px; height:24px; border-radius:50%; background:rgba(16,185,129,0.1); display:flex; align-items:center; justify-content:center; font-size:12px; color:#10B981; font-weight:700; flex-shrink:0;">1</div>
+                <span style="font-size:13px; color:#555; line-height:1.4;">Start with just 2 minutes and gradually increase</span>
+              </div>
+              <div style="display:flex; gap:10px; align-items:flex-start; margin-bottom:8px;">
+                <div style="width:24px; height:24px; border-radius:50%; background:rgba(16,185,129,0.1); display:flex; align-items:center; justify-content:center; font-size:12px; color:#10B981; font-weight:700; flex-shrink:0;">2</div>
+                <span style="font-size:13px; color:#555; line-height:1.4;">Use a guided meditation app for your first few weeks</span>
+              </div>
+              <div style="display:flex; gap:10px; align-items:flex-start;">
+                <div style="width:24px; height:24px; border-radius:50%; background:rgba(16,185,129,0.1); display:flex; align-items:center; justify-content:center; font-size:12px; color:#10B981; font-weight:700; flex-shrink:0;">3</div>
+                <span style="font-size:13px; color:#555; line-height:1.4;">Same time each morning builds the habit faster</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Footer -->
+          <div style="position:absolute; bottom:0; left:0; right:0; background: linear-gradient(to top, #fafaf9, #fafaf9, rgba(250,248,245,0)); padding: 20px 20px 40px;">
+            <div style="background:#10B981; border-radius:14px; padding:16px; text-align:center; cursor:pointer;">
+              <span style="font-size:16px; font-weight:700; color:white;">Quick Add</span>
+            </div>
+            <!-- CHANGE #10: Better CTA copy -->
+            <div style="text-align:center; margin-top:12px;">
+              <span style="font-size:14px; color:#10B981; font-weight:500;">Make it yours</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Change annotations -->
+  <div style="max-width:320px; display:flex; flex-direction:column; gap:16px; align-self:center;">
+    <h3 style="font-size:16px; font-weight:700; color:#fafafa;">Preview Modal Changes</h3>
+    <div style="display:flex; align-items:flex-start; gap:10px;">
+      <span class="change-marker removed">Remove</span>
+      <div>
+        <div style="font-size:13px; font-weight:600; color:#fafafa;">Hardcoded "5-10 min" pill</div>
+        <div style="font-size:12px; color:#888; margin-top:2px;">No duration field in schema. "Zone 2 Cardio" is 30-60 min. The pill lies. Remove until we have real data. <strong>Trust erosion (Cialdini).</strong></div>
+      </div>
+    </div>
+    <div style="display:flex; align-items:flex-start; gap:10px;">
+      <span class="change-marker changed">Rewrite</span>
+      <div>
+        <div style="font-size:13px; font-weight:600; color:#fafafa;">Science box: insight first, citation second</div>
+        <div style="font-size:12px; color:#888; margin-top:2px;">Currently shows raw citation in quotes. Now: actionable summary ("reduces anxiety by 38%") + small attribution below. <strong>Elaboration Likelihood Model.</strong></div>
+      </div>
+    </div>
+    <div style="display:flex; align-items:flex-start; gap:10px;">
+      <span class="change-marker changed">Reframe</span>
+      <div>
+        <div style="font-size:13px; font-weight:600; color:#fafafa;">"Customize First →" becomes "Make it yours"</div>
+        <div style="font-size:12px; color:#888; margin-top:2px;">"First" implies Quick Add skips a step. "Make it yours" frames customization as optional enhancement. <strong>Framing effects (Kahneman).</strong></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== VIEW 3: NEW USER FLOW ===================== -->
+<div id="view-starter" class="comparison" style="display:none;">
+
+  <div class="mock-column">
+    <div class="mock-label" style="background:rgba(16,185,129,0.12); color:#34d399;">New: Starter Pack (userHabitCount === 0)</div>
+    <div class="phone-frame">
+      <div class="phone-screen" style="padding-bottom: 120px;">
+        <div style="padding: 40px 24px 0; text-align:center;">
+          <div style="font-size:48px; margin-bottom:16px;">🌱</div>
+          <h2 style="font-size:24px; font-weight:800; color:#fafafa; line-height:1.3;">Start with 1-3 habits</h2>
+          <p style="font-size:14px; color:#888; margin-top:8px; line-height:1.5;">Research shows starting small is the key to lasting change. Pick a few to begin with.</p>
+        </div>
+
+        <div style="padding:24px 0; display:flex; flex-direction:column; gap:10px;">
+          <div class="starter-card selected">
+            <div class="icon-box" style="background:rgba(16,185,129,0.15); width:48px; height:48px; border-radius:14px; font-size:24px; flex-shrink:0;">🧘</div>
+            <div style="flex:1;">
+              <div style="font-size:15px; font-weight:600; color:#fafafa;">5-Minute Meditation</div>
+              <div style="font-size:12px; color:#888; margin-top:2px;">Daily · Mindfulness</div>
+            </div>
+            <div class="starter-check">
+              <span style="font-size:14px; color:white;">✓</span>
+            </div>
+          </div>
+
+          <div class="starter-card">
+            <div class="icon-box" style="background:rgba(59,130,246,0.15); width:48px; height:48px; border-radius:14px; font-size:24px; flex-shrink:0;">📖</div>
+            <div style="flex:1;">
+              <div style="font-size:15px; font-weight:600; color:#fafafa;">Daily Reading</div>
+              <div style="font-size:12px; color:#888; margin-top:2px;">Daily · Learning</div>
+            </div>
+            <div class="starter-check"></div>
+          </div>
+
+          <div class="starter-card selected">
+            <div class="icon-box" style="background:rgba(245,158,11,0.15); width:48px; height:48px; border-radius:14px; font-size:24px; flex-shrink:0;">💧</div>
+            <div style="flex:1;">
+              <div style="font-size:15px; font-weight:600; color:#fafafa;">Hydration First</div>
+              <div style="font-size:12px; color:#888; margin-top:2px;">Daily · Morning Routine</div>
+            </div>
+            <div class="starter-check">
+              <span style="font-size:14px; color:white;">✓</span>
+            </div>
+          </div>
+
+          <div class="starter-card">
+            <div class="icon-box" style="background:rgba(239,68,68,0.15); width:48px; height:48px; border-radius:14px; font-size:24px; flex-shrink:0;">🏃</div>
+            <div style="flex:1;">
+              <div style="font-size:15px; font-weight:600; color:#fafafa;">7-Minute Workout</div>
+              <div style="font-size:12px; color:#888; margin-top:2px;">Daily · Health & Fitness</div>
+            </div>
+            <div class="starter-check"></div>
+          </div>
+
+          <div class="starter-card">
+            <div class="icon-box" style="background:rgba(168,85,247,0.15); width:48px; height:48px; border-radius:14px; font-size:24px; flex-shrink:0;">📝</div>
+            <div style="flex:1;">
+              <div style="font-size:15px; font-weight:600; color:#fafafa;">Gratitude Journal</div>
+              <div style="font-size:12px; color:#888; margin-top:2px;">Daily · Mental Health</div>
+            </div>
+            <div class="starter-check"></div>
+          </div>
+        </div>
+
+        <!-- CTA -->
+        <div style="padding:0 20px; margin-top:8px;">
+          <div style="background:#6366f1; border-radius:14px; padding:16px; text-align:center; cursor:pointer;">
+            <span style="font-size:16px; font-weight:700; color:white;">Add 2 habits</span>
+          </div>
+          <div style="text-align:center; margin-top:14px;">
+            <span style="font-size:13px; color:#818cf8; font-weight:500;">Browse all templates instead</span>
+          </div>
+        </div>
+
+        <div style="padding:20px 24px 0; text-align:center;">
+          <p style="font-size:11px; color:#555; line-height:1.5;">Based on popularity among 200+ science-backed habits. You can always add more later.</p>
+        </div>
+      </div>
+      <div class="tab-bar">
+        <div class="tab-item"><span style="font-size:20px;">📊</span><span>Today</span></div>
+        <div class="tab-item active"><span style="font-size:20px;">📚</span><span>Library</span></div>
+        <div class="tab-item"><span style="font-size:20px;">⚙️</span><span>Settings</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div style="max-width:360px; display:flex; flex-direction:column; gap:16px; align-self:center;">
+    <h3 style="font-size:16px; font-weight:700; color:#fafafa;">New User Starter Pack</h3>
+    <div style="display:flex; align-items:flex-start; gap:10px;">
+      <span class="change-marker new">New</span>
+      <div>
+        <div style="font-size:13px; font-weight:600; color:#fafafa;">Guided first experience</div>
+        <div style="font-size:12px; color:#888; margin-top:2px;">When <code>userHabitCount === 0</code>, show 5 curated beginner habits instead of the full 200+ catalog. Pick 1-3 to start. <strong>Paradox of choice (Schwartz) + Fogg's Tiny Habits.</strong></div>
+      </div>
+    </div>
+    <div style="display:flex; align-items:flex-start; gap:10px;">
+      <span class="change-marker new">New</span>
+      <div>
+        <div style="font-size:13px; font-weight:600; color:#fafafa;">Multi-select import</div>
+        <div style="font-size:12px; color:#888; margin-top:2px;">Tap to toggle habits on/off. CTA dynamically updates count ("Add 2 habits"). One-tap batch import. Escape hatch to full browse at bottom.</div>
+      </div>
+    </div>
+    <div style="display:flex; align-items:flex-start; gap:10px;">
+      <span class="change-marker new">New</span>
+      <div>
+        <div style="font-size:13px; font-weight:600; color:#fafafa;">Science-backed defaults</div>
+        <div style="font-size:12px; color:#888; margin-top:2px;">Top 5 habits by popularity score. Research shows people who start with popular choices persist longer (social validation).</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== VIEW 4: POST-IMPORT ===================== -->
+<div id="view-postimport" class="comparison" style="display:none;">
+
+  <div class="mock-column">
+    <div class="mock-label" style="background:rgba(239,68,68,0.12); color:#f87171;">Current: After Import</div>
+    <div class="phone-frame">
+      <div class="phone-screen">
+        <div class="preview-modal" style="justify-content:center; align-items:center;">
+          <div style="text-align:center; padding:40px;">
+            <div style="width:72px; height:72px; border-radius:50%; background:#10B981; display:flex; align-items:center; justify-content:center; margin:0 auto; font-size:32px; color:white;">✓</div>
+            <h3 style="font-size:20px; font-weight:700; color:#1a1a1a; margin-top:20px;">Added!</h3>
+            <p style="font-size:13px; color:#888; margin-top:8px;">Modal auto-closes in 1 second...</p>
+            <p style="font-size:12px; color:#aaa; margin-top:24px;">(No commitment prompt)<br/>(No implementation intention)<br/>(No cue/context pairing)</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mock-column">
+    <div class="mock-label" style="background:rgba(16,185,129,0.12); color:#34d399;">Proposed: Implementation Intent</div>
+    <div class="phone-frame">
+      <div class="phone-screen">
+        <div class="preview-modal">
+          <!-- Close button -->
+          <div style="padding:12px 20px 0; display:flex; justify-content:flex-end;">
+            <div style="width:32px; height:32px; border-radius:50%; background:rgba(0,0,0,0.06); display:flex; align-items:center; justify-content:center; font-size:16px; color:#666;">✕</div>
+          </div>
+
+          <div style="text-align:center; padding:20px 24px 0;">
+            <div style="width:64px; height:64px; border-radius:20px; background:rgba(16,185,129,0.12); display:flex; align-items:center; justify-content:center; margin:0 auto; font-size:32px;">🧘</div>
+            <h3 style="font-size:20px; font-weight:700; color:#1a1a1a; margin-top:16px;">5-Minute Meditation added!</h3>
+            <p style="font-size:14px; color:#666; margin-top:6px;">One more step to make it stick:</p>
+          </div>
+
+          <!-- CHANGE #8: Implementation Intention Prompt -->
+          <div class="intent-box" style="margin-top:20px;">
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
+              <span style="font-size:16px;">🎯</span>
+              <span style="font-size:12px; font-weight:700; color:#4338ca; letter-spacing:0.05em;">WHEN WILL YOU DO THIS?</span>
+            </div>
+            <p style="font-size:12px; color:#666; margin-bottom:12px; line-height:1.4;">People who set a specific cue are <strong>2x more likely</strong> to follow through (Gollwitzer, 1999)</p>
+            <div style="display:flex; flex-direction:column; gap:8px;">
+              <div class="intent-option selected">☀️ After I wake up</div>
+              <div class="intent-option">☕ After my morning coffee</div>
+              <div class="intent-option">🍽️ Before breakfast</div>
+              <div class="intent-option" style="border-style:dashed; color:#888;">✏️ Custom cue...</div>
+            </div>
+          </div>
+
+          <div style="flex:1;"></div>
+
+          <!-- Footer -->
+          <div style="padding: 20px 20px 40px;">
+            <div style="background:#6366f1; border-radius:14px; padding:16px; text-align:center; cursor:pointer;">
+              <span style="font-size:16px; font-weight:700; color:white;">Done — I'll do it after waking up</span>
+            </div>
+            <div style="text-align:center; margin-top:12px;">
+              <span style="font-size:13px; color:#888;">Skip for now</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="max-width:360px; display:flex; flex-direction:column; gap:16px; align-self:center;">
+    <h3 style="font-size:16px; font-weight:700; color:#fafafa;">Post-Import Intent</h3>
+    <div style="display:flex; align-items:flex-start; gap:10px;">
+      <span class="change-marker new">New</span>
+      <div>
+        <div style="font-size:13px; font-weight:600; color:#fafafa;">Implementation intention prompt</div>
+        <div style="font-size:12px; color:#888; margin-top:2px;">After successful import, ask "When will you do this?" with 3 contextual cues based on category. <strong>Gollwitzer (1999): 33% → 62% follow-through.</strong></div>
+      </div>
+    </div>
+    <div style="display:flex; align-items:flex-start; gap:10px;">
+      <span class="change-marker new">New</span>
+      <div>
+        <div style="font-size:13px; font-weight:600; color:#fafafa;">Context-aware cue options</div>
+        <div style="font-size:12px; color:#888; margin-top:2px;">Morning habits → "After waking up", "After coffee". Evening → "After dinner", "Before bed". Custom option for power users.</div>
+      </div>
+    </div>
+    <div style="display:flex; align-items:flex-start; gap:10px;">
+      <span class="change-marker new">New</span>
+      <div>
+        <div style="font-size:13px; font-weight:600; color:#fafafa;">Low friction, skippable</div>
+        <div style="font-size:12px; color:#888; margin-top:2px;">"Skip for now" link preserves the Quick Add speed. The prompt adds ~5 seconds for users who engage, massive ROI on retention.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function showView(viewId) {
+  // Hide all views
+  document.querySelectorAll('[id^="view-"]').forEach(el => el.style.display = 'none');
+  // Show selected
+  document.getElementById('view-' + viewId).style.display = 'flex';
+  // Update tabs
+  document.querySelectorAll('.view-tab').forEach(tab => tab.classList.remove('active'));
+  event.target.classList.add('active');
+}
+
+// Initialize Lucide icons
+document.addEventListener('DOMContentLoaded', () => {
+  if (window.lucide) lucide.createIcons();
+});
+</script>
+
+</body>
+</html>

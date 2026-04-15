@@ -83,6 +83,7 @@ import type * as templates_clearAndDedupe from "../templates/clearAndDedupe.js";
 import type * as templates_helpers from "../templates/helpers.js";
 import type * as templates_importTemplate from "../templates/importTemplate.js";
 import type * as templates_queries from "../templates/queries.js";
+import type * as templates_resetPopularity from "../templates/resetPopularity.js";
 import type * as templates_types from "../templates/types.js";
 import type * as templates_updateLinks from "../templates/updateLinks.js";
 import type * as templates from "../templates.js";
@@ -175,6 +176,7 @@ declare const fullApi: ApiFromModules<{
   "templates/helpers": typeof templates_helpers;
   "templates/importTemplate": typeof templates_importTemplate;
   "templates/queries": typeof templates_queries;
+  "templates/resetPopularity": typeof templates_resetPopularity;
   "templates/types": typeof templates_types;
   "templates/updateLinks": typeof templates_updateLinks;
   templates: typeof templates;

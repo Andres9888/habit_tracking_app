@@ -49,7 +49,7 @@ export function ScienceBox({ template, onResearchPress }: ScienceBoxProps) {
             { fontFamily: theme.custom.fontFamilies.primary.text },
           ]}
         >
-          SCIENCE BEHIND THIS HABIT
+          {template?.scientificLink ? 'SCIENCE BEHIND THIS HABIT' : 'WHY THIS WORKS'}
         </Text>
       </View>
       <View style={scienceStyles.scienceDivider} />
@@ -59,7 +59,7 @@ export function ScienceBox({ template, onResearchPress }: ScienceBoxProps) {
           { fontFamily: theme.custom.fontFamilies.primary.text },
         ]}
       >
-        "{template?.scientificReference ?? ''}"
+        {template?.scientificReference ?? ''}
       </Text>
 
       {template?.scientificLink ? <AnimatedPressable
@@ -73,7 +73,7 @@ export function ScienceBox({ template, onResearchPress }: ScienceBoxProps) {
           onPressOut={handlePressOut}
         >
           <ExternalLink color='#3B82F6' size={16} strokeWidth={2} />
-          <Text style={scienceStyles.researchLinkText}>Read Research</Text>
+          <Text style={scienceStyles.researchLinkText}>Read Full Study</Text>
         </AnimatedPressable> : null}
     </View>
   );

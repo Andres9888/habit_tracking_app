@@ -144,6 +144,11 @@ export const importTemplate = mutation({
       userId,
     });
 
+    // Increment real popularity count
+    await ctx.db.patch(args.templateId, {
+      popularityScore: (template.popularityScore ?? 0) + 1,
+    });
+
     return { habitId, success: true };
   },
 });

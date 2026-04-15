@@ -14,6 +14,10 @@ export const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: spacing.md,
   },
+  previewButton: {
+    borderRadius: borderRadius.medium,
+    paddingVertical: spacing.md,
+  },
   successButton: {
     alignItems: 'center',
     backgroundColor: colors.primary[500],

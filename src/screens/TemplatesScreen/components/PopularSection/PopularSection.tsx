@@ -50,7 +50,7 @@ export function PopularSection({
         renderItem={({ item }) => (
           <TrendingCard
             frequency={item.frequency}
-            hasResearch={!!item.scientificReference}
+            hasResearch={!!item.scientificLink}
             icon={item.icon}
             iconColor={item.iconColor}
             isImported={importedTemplateIds.has(item._id)}

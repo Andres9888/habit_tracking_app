@@ -50,7 +50,8 @@ const _insertTemplateIfMissing = async (
 
   if (existing) return;
 
-  await ctx.db.insert('templates', template);
+  // Strip hardcoded popularity — real scores come from actual imports
+  await ctx.db.insert('templates', { ...template, popularityScore: 0 });
 };
 
 const normalizeTemplateName = (name: string) => name.trim().toLowerCase();

@@ -89,6 +89,13 @@ export const remove = mutation({
       await ctx.db.delete(entry._id);
     }
     for (const usageEntry of templateUsageEntries) {
+      // Decrement real popularity count on the source template
+      const tpl = await ctx.db.get(usageEntry.templateId);
+      if (tpl) {
+        await ctx.db.patch(usageEntry.templateId, {
+          popularityScore: Math.max((tpl.popularityScore ?? 0) - 1, 0),
+        });
+      }
       await ctx.db.delete(usageEntry._id);
     }
 

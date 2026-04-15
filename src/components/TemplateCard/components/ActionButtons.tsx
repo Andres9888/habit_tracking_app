@@ -47,7 +47,7 @@ export function ActionButtons({
           accessibilityLabel={`Preview ${name} habit`}
           icon={<Eye color={themeColors.text.secondary} size={18} />}
           size='medium'
-          style={[styles.cardButton, { backgroundColor: themeColors.surface }]}
+          style={[styles.previewButton, { backgroundColor: themeColors.surface }]}
           testID={testPrefix ? `${testPrefix}-preview` : undefined}
           textStyle={{ color: themeColors.text.secondary }}
           variant='primary'

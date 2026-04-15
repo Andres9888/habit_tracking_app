@@ -89,7 +89,7 @@ export function FooterSection({
           {isImported ? null : <AnimatedPressable
               accessible
               accessibilityHint='Customize habit details before adding'
-              accessibilityLabel='Customize habit before importing'
+              accessibilityLabel='Personalize habit before adding'
               accessibilityRole='button'
               disabled={isImporting}
               testID="templates-preview-customize"
@@ -98,7 +98,7 @@ export function FooterSection({
               {...createPressHandlers(customizeButtonScale, 0.98)}
             >
               <Text style={footerStyles.customizeLinkText}>
-                Customize First →
+                Make it yours
               </Text>
             </AnimatedPressable>}
         </View>

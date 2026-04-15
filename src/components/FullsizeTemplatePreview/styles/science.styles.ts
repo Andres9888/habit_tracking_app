@@ -63,7 +63,6 @@ export const scienceStyles = StyleSheet.create({
     color: colors.primary[700],
     fontFamily: fontFamilies.primary.text,
     fontSize: 13,
-    fontStyle: 'italic',
     lineHeight: 24,
   },
 });

@@ -10,7 +10,7 @@ import { ScreenHeader } from '../../../components/ScreenHeader';
 import { TemplateCard } from '../../../components/TemplateCard';
 import { colors } from '../../../theme/colors';
 import { durations, springs } from '../../../theme/animations';
-import { spacing } from '../../../theme/spacing';
+import { shadows, spacing } from '../../../theme/spacing';
 import { getCategoryMeta } from '../data/categoryMeta';
 import {
   useCategoryDrillFilters,
@@ -103,21 +103,22 @@ export function CategoryDrillView({
 
 const s = StyleSheet.create({
   chip: {
-    backgroundColor: colors.light.surfaceMuted,
+    ...shadows.card,
+    backgroundColor: '#FFFFFF',
     borderColor: colors.border,
     borderRadius: 9999,
     borderWidth: 1,
     paddingHorizontal: 14,
-    paddingVertical: 6,
+    paddingVertical: 8,
   },
   chipActive: {
     backgroundColor: colors.primary[600],
     borderColor: colors.primary[700],
   },
-  chipText: { color: colors.text.secondary, fontSize: 13, fontWeight: '600' },
+  chipText: { color: colors.text.secondary, fontSize: 13, fontWeight: '600', lineHeight: 18 },
   chipTextActive: { color: '#fff' },
   container: { backgroundColor: colors.background, flex: 1 },
-  filterBarContent: { flexDirection: 'row', gap: 8, paddingHorizontal: spacing.base, paddingVertical: 8 },
+  filterBarContent: { flexDirection: 'row', gap: 8, paddingBottom: 12, paddingHorizontal: spacing.base, paddingTop: 8 },
   list: { paddingBottom: 100 },
   toggleActive: {
     backgroundColor: 'rgba(16,185,129,0.1)',

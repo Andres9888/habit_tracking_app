@@ -7,6 +7,7 @@
 
 import { Pressable, ScrollView, StyleSheet, Text } from 'react-native';
 import { colors } from '../../../../theme/colors';
+import { shadows } from '../../../../theme/spacing';
 
 export interface ChipCategory {
   icon: string;
@@ -84,6 +85,7 @@ export function QuickFilterChips({
 
 const s = StyleSheet.create({
   chip: {
+    ...shadows.card,
     borderRadius: 9999,
     borderWidth: 1,
     paddingHorizontal: 16,
@@ -94,10 +96,10 @@ const s = StyleSheet.create({
     borderColor: colors.primary[700],
   },
   chipInactive: {
-    backgroundColor: colors.light.surfaceMuted,
+    backgroundColor: '#FFFFFF',
     borderColor: colors.border,
   },
-  chipText: { fontSize: 13, fontWeight: '600' },
+  chipText: { fontSize: 13, fontWeight: '600', lineHeight: 18 },
   row: { gap: 8, paddingHorizontal: 16 },
   textActive: { color: '#FFFFFF' },
   textInactive: { color: colors.text.secondary },

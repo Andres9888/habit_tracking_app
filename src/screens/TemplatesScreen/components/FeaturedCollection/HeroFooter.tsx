@@ -9,7 +9,7 @@ import { s } from './FeaturedCollection.styles';
 export function HeroFooter() {
   return (
     <View style={s.footer}>
-      <Text style={s.userCount}>2.4k users</Text>
+      <Text style={s.userCount}>Science-backed collection</Text>
       <View style={s.cta}>
         <Text style={s.ctaText}>Explore</Text>
         <ChevronRight size={16} color='#FFFFFF' strokeWidth={2} />

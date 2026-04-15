@@ -58,9 +58,9 @@ export function MetadataPills({
           </Text>
         </View> : null}
 
-      {typeof popularityScore === 'number' ? <View style={[styles.metadataPill, { backgroundColor: themeColors.surface, borderColor: `${iconColor}30` }]}>
+      {typeof popularityScore === 'number' && popularityScore > 0 ? <View style={[styles.metadataPill, { backgroundColor: themeColors.surface, borderColor: `${iconColor}30` }]}>
           <Text style={[theme.custom.typography.caption, { color: themeColors.text.secondary }]}>
-            {popularityScore >= 90 ? 'Popular' : '⭐ Trusted'}
+            {popularityScore >= 90 ? '🔥 Popular' : `👥 ${popularityScore} tracking`}
           </Text>
         </View> : null}
     </View>

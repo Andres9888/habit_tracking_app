@@ -79,7 +79,7 @@ export function HeroSection({
           >
             {formattedCategory}
           </MetadataPill>
-          <MetadataPill iconColor={iconColor}>⏱️ 5-10 min</MetadataPill>
+
         </View>
       </View>
     </LinearGradient>
