@@ -2,12 +2,11 @@
  * PremiumPackCard - softer premium shelf card for curated habit bundles
  */
 
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useThemeColors } from '../../../../theme/ThemeContext';
-import { borderRadius, spacing } from '../../../../theme/spacing';
-import { fontFamilies, fontWeights, typography } from '../../../../theme/typography';
 import type { PremiumPack } from '../../data/premiumPacks';
+import { s } from './PremiumPackCard.styles';
 
 interface PremiumPackCardProps {
   onPress: () => void;
@@ -64,38 +63,3 @@ export function PremiumPackCard({ onPress, pack }: PremiumPackCardProps) {
     </Pressable>
   );
 }
-
-const s = StyleSheet.create({
-  content: { flex: 1 },
-  cta: {
-    borderRadius: borderRadius.medium,
-    borderWidth: 1,
-    paddingHorizontal: spacing.base,
-    paddingVertical: spacing.md,
-  },
-  ctaText: { ...typography.caption, fontWeight: fontWeights.bold },
-  desc: { ...typography.caption, marginTop: spacing.xs },
-  emoji: { fontSize: 22 },
-  emojiGroup: { flexDirection: 'row', gap: spacing.sm },
-  gradient: {
-    alignItems: 'center',
-    borderRadius: borderRadius.large,
-    borderWidth: 1,
-    flexDirection: 'row',
-    gap: spacing.base,
-    marginBottom: spacing.md,
-    marginHorizontal: spacing.base,
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.base,
-  },
-  habitCount: {
-    ...typography.caption,
-    fontFamily: fontFamilies.monospace,
-    marginTop: spacing.xs,
-  },
-  name: {
-    ...typography.body,
-    fontWeight: fontWeights.bold,
-    marginTop: spacing.sm,
-  },
-});

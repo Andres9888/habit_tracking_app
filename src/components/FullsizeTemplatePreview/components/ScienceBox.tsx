@@ -6,7 +6,8 @@
 import React from 'react';
 import { View, Text, Pressable, Linking } from 'react-native';
 import { useAppTheme } from '../../../theme';
-import { scienceStyles } from '../styles';
+import { useThemeColors } from '../../../theme/ThemeContext';
+import { createScienceStyles } from '../styles/science.styles';
 import type { Doc } from '../../../../convex/_generated/dataModel';
 
 interface ScienceBoxProps {
@@ -15,19 +16,21 @@ interface ScienceBoxProps {
 
 export function ScienceBox({ template }: ScienceBoxProps) {
   const theme = useAppTheme();
+  const { colors } = useThemeColors();
+  const styles = createScienceStyles(colors);
   const fontFamily = theme.custom.fontFamilies.primary.text;
   const hasLink = Boolean(template?.scientificLink);
 
   return (
-    <View style={scienceStyles.scienceBox}>
-      <View style={scienceStyles.scienceHeader}>
-        <Text style={scienceStyles.scienceIcon}>🔬</Text>
-        <Text style={[scienceStyles.scienceLabel, { fontFamily }]}>
+    <View style={styles.scienceBox}>
+      <View style={styles.scienceHeader}>
+        <Text style={styles.scienceIcon}>🔬</Text>
+        <Text style={[styles.scienceLabel, { fontFamily }]}>
           SCIENCE BEHIND THIS HABIT
         </Text>
       </View>
-      <View style={scienceStyles.scienceDivider} />
-      <Text style={[scienceStyles.scienceQuote, { fontFamily }]}>
+      <View style={styles.scienceDivider} />
+      <Text style={[styles.scienceQuote, { fontFamily }]}>
         "{template?.scientificReference ?? ''}"
       </Text>
       {hasLink ? (
@@ -37,7 +40,7 @@ export function ScienceBox({ template }: ScienceBoxProps) {
           hitSlop={8}
           onPress={() => void Linking.openURL(template.scientificLink!)}
         >
-          <Text style={[scienceStyles.researchLink, { fontFamily }]}>
+          <Text style={[styles.researchLink, { fontFamily }]}>
             📄 Read the research →
           </Text>
         </Pressable>

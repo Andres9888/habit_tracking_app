@@ -1,36 +1,52 @@
 /**
  * FeaturedCollection Hero Card Styles
+ *
+ * This card always renders on a green gradient, so overlay text
+ * is white regardless of light/dark theme.
  */
 
 import { StyleSheet } from 'react-native';
-import { colors } from '@/theme';
 import { borderRadius, shadows, spacing } from '../../../../theme/spacing';
 import { fontWeights, typography } from '../../../../theme/typography';
+
+/** Text/overlay colors for elements rendered on the gradient hero card */
+const HERO = {
+  bg20: 'rgba(255,255,255,0.20)',
+  bg25: 'rgba(255,255,255,0.25)',
+  circle05: 'rgba(255,255,255,0.05)',
+  circle08: 'rgba(255,255,255,0.08)',
+  chip18: 'rgba(255,255,255,0.18)',
+  text: '#FFFFFF',
+  text85: 'rgba(255,255,255,0.85)',
+  text70: 'rgba(255,255,255,0.70)',
+} as const;
+
+export { HERO };
 
 export const s = StyleSheet.create({
   badge: {
     alignSelf: 'flex-start',
-    backgroundColor: 'rgba(255,255,255,0.2)',
+    backgroundColor: HERO.bg20,
     borderRadius: 9999,
     paddingHorizontal: 12,
     paddingVertical: 4,
   },
   badgeText: {
     ...typography.tabBar,
-    color: colors.text.inverse,
+    color: HERO.text,
     fontWeight: fontWeights.bold,
     letterSpacing: 0.5,
   },
   chip: {
-    backgroundColor: 'rgba(255,255,255,0.18)',
+    backgroundColor: HERO.chip18,
     borderRadius: 9999,
     paddingHorizontal: 12,
     paddingVertical: 4,
   },
-  chipText: { color: colors.text.inverse, fontSize: 13 },
+  chipText: { color: HERO.text, fontSize: 13 },
   chips: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginTop: 16 },
   circleOne: {
-    backgroundColor: 'rgba(255,255,255,0.08)',
+    backgroundColor: HERO.circle08,
     borderRadius: 9999,
     height: 180,
     position: 'absolute',
@@ -39,7 +55,7 @@ export const s = StyleSheet.create({
     width: 180,
   },
   circleTwo: {
-    backgroundColor: 'rgba(255,255,255,0.05)',
+    backgroundColor: HERO.circle05,
     borderRadius: 9999,
     bottom: -60,
     height: 200,
@@ -49,19 +65,15 @@ export const s = StyleSheet.create({
   },
   cta: {
     alignItems: 'center',
-    backgroundColor: 'rgba(255,255,255,0.25)',
+    backgroundColor: HERO.bg25,
     borderRadius: 12,
     flexDirection: 'row',
     gap: 6,
     paddingHorizontal: 16,
     paddingVertical: 8,
   },
-  ctaText: { ...typography.bodySmall, color: colors.text.inverse, fontWeight: fontWeights.bold },
-  description: {
-    color: 'rgba(255,255,255,0.85)',
-    fontSize: 14,
-    marginTop: 4,
-  },
+  ctaText: { ...typography.bodySmall, color: HERO.text, fontWeight: fontWeights.bold },
+  description: { color: HERO.text85, fontSize: 14, marginTop: 4 },
   footer: {
     alignItems: 'center',
     flexDirection: 'row',
@@ -79,9 +91,9 @@ export const s = StyleSheet.create({
   },
   title: {
     ...typography.heading2,
-    color: colors.text.inverse,
+    color: HERO.text,
     letterSpacing: -0.5,
     marginTop: 12,
   },
-  habitCount: { color: 'rgba(255,255,255,0.7)', fontSize: 13 },
+  habitCount: { color: HERO.text70, fontSize: 13 },
 });

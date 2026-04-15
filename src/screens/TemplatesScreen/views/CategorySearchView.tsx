@@ -62,6 +62,10 @@ export function CategorySearchView(p: CategorySearchViewProps) {
         hasActiveFilters={p.hasActiveFilters}
         importedTemplateIds={p.importedTemplateIds}
         importingTemplateId={p.importingTemplateId}
+        onCreateCustom={h.handleBackToBrowse}
+        onSelectCategory={(categoryId) => {
+          p.setSearchQuery(p.getCategoryLabel(categoryId));
+        }}
         searchQuery={p.searchQuery}
         selectedCategory={p.selectedCategory}
         onImport={handleImport}

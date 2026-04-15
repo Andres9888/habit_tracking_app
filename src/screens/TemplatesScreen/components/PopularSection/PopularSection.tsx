@@ -7,6 +7,7 @@ import type { Doc } from '../../../../../convex/_generated/dataModel';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import { spacing } from '../../../../theme/spacing';
 import { typography } from '../../../../theme/typography';
+import { isSimpleHabit } from '../../utils/simplicityScore';
 import { TrendingCard } from '../TrendingCard';
 
 interface PopularSectionProps {
@@ -58,6 +59,7 @@ export function PopularSection({
             iconColor={item.iconColor}
             isImported={importedTemplateIds.has(item._id)}
             isImporting={importingTemplateId === item._id}
+            isSimple={isSimpleHabit(item)}
             name={item.name}
             popularityScore={item.popularityScore ?? 0}
             onImport={() => onImport(item)}

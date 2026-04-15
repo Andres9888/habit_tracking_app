@@ -19,6 +19,7 @@ export function TrendingCard({
   iconColor,
   isImported,
   isImporting,
+  isSimple,
   name,
   onImport,
   onPress,
@@ -50,9 +51,14 @@ export function TrendingCard({
 
       <View style={s.metaRow}>
         <Text style={[s.frequency, { color: colors.text.tertiary }]}>{frequency}</Text>
+        {isSimple ? (
+          <View style={[s.simpleBadge, { backgroundColor: colors.primary[100] }]}>
+            <Text style={[s.simpleText, { color: colors.primary[700] }]}>🌱 Start small</Text>
+          </View>
+        ) : null}
         {hasResearch ? (
-          <View style={[s.scienceBadge, { backgroundColor: colors.status.warningLight }]}>
-            <Text style={[s.scienceText, { color: colors.status.warningText }]}>🔬 Science-backed</Text>
+          <View style={[s.scienceBadge, { backgroundColor: colors.status.streakLight }]}>
+            <Text style={[s.scienceText, { color: colors.status.streakText }]}>🔬 Science-backed</Text>
           </View>
         ) : null}
       </View>

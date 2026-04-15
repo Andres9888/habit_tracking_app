@@ -8,7 +8,7 @@ export function SkeletonCard({ index }: { index: number }) {
   const staggerDelay = index * 100;
   return (
     <Animated.View
-      className='mx-5 my-2 rounded-2xl p-5'
+      className='mx-4 my-2 rounded-2xl p-4'
       entering={FadeIn.duration(300).delay(staggerDelay)}
       style={{
         backgroundColor: cardBg,

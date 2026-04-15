@@ -4,7 +4,7 @@
 
 import { Text, View } from 'react-native';
 import { ChevronRight } from 'lucide-react-native';
-import { s } from './FeaturedCollection.styles';
+import { HERO, s } from './FeaturedCollection.styles';
 import { iconSizes } from '@/theme/iconSizes';
 
 interface HeroFooterProps {
@@ -19,7 +19,7 @@ export function HeroFooter({ habitCount }: HeroFooterProps) {
       </Text>
       <View style={s.cta}>
         <Text style={s.ctaText}>Explore</Text>
-        <ChevronRight size={iconSizes.small} color='#FFFFFF' strokeWidth={2} />
+        <ChevronRight size={iconSizes.small} color={HERO.text} strokeWidth={2} />
       </View>
     </View>
   );

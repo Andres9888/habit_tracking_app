@@ -203,12 +203,12 @@ export function TemplateListCard({
             style={[
               styles.metaPill,
               {
-                backgroundColor: colors.primary[100],
-                borderColor: colors.primary[300],
+                backgroundColor: colors.status.streakLight,
+                borderColor: colors.status.streak,
               },
             ]}
           >
-            <Text style={[styles.metaLabel, { color: colors.primary[700] }]}>
+            <Text style={[styles.metaLabel, { color: colors.status.streakText }]}>
               Science-backed
             </Text>
           </View>

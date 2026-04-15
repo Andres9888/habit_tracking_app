@@ -10,6 +10,7 @@ import type { Doc } from '../../../../convex/_generated/dataModel';
 import { PREMIUM_PACKS } from '../data/premiumPacks';
 import type { CategoryMeta } from '../data/categoryMeta';
 import { CATEGORY_META } from '../data/categoryMeta';
+import { getSimplicityScore } from '../utils/simplicityScore';
 
 const POPULAR_LIMIT = 10;
 const PREVIEW_EMOJI_LIMIT = 4;
@@ -52,7 +53,12 @@ export function useMainBrowseData({
   const popularTemplates = useMemo(() => {
     if (!allTemplates) return [];
     return [...allTemplates]
-      .sort((a, b) => (b.popularityScore ?? 0) - (a.popularityScore ?? 0))
+      .sort((a, b) => {
+        // Blend simplicity into sort: simple habits get a boost
+        const aScore = (a.popularityScore ?? 0) + getSimplicityScore(a) * 5;
+        const bScore = (b.popularityScore ?? 0) + getSimplicityScore(b) * 5;
+        return bScore - aScore;
+      })
       .slice(0, POPULAR_LIMIT);
   }, [allTemplates]);
 

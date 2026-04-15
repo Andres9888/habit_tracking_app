@@ -9,6 +9,8 @@ export interface TrendingCardProps {
   frequency: string;
   /** Whether template has scientific backing */
   hasResearch: boolean;
+  /** Whether this is a simple, easy-to-start habit */
+  isSimple?: boolean;
   /** Template emoji icon */
   icon: string;
   /** Background tint color for the icon area */

@@ -58,8 +58,8 @@ export function ExploreHabitRow({
           {item.scientificReference ? (
             <>
               <View style={[s.dot, { backgroundColor: colors.text.tertiary }]} />
-              <View style={[s.badge, { backgroundColor: colors.primary[100] }]}>
-                <Text style={[s.badgeText, { color: colors.primary[700] }]}>Science</Text>
+              <View style={[s.badge, { backgroundColor: colors.status.streakLight }]}>
+                <Text style={[s.badgeText, { color: colors.status.streakText }]}>Science</Text>
               </View>
             </>
           ) : null}

@@ -18,6 +18,8 @@ interface TemplatesListProps {
   hasActiveFilters: boolean;
   importedTemplateIds: Set<string>;
   importingTemplateId: Id<'templates'> | null;
+  onCreateCustom?: () => void;
+  onSelectCategory?: (categoryId: string) => void;
   searchQuery: string;
   selectedCategory: string;
   onImport: (templateId: Id<'templates'>) => void;
@@ -33,6 +35,8 @@ export function TemplatesList(props: TemplatesListProps) {
     hasActiveFilters,
     importedTemplateIds,
     importingTemplateId,
+    onCreateCustom,
+    onSelectCategory,
     searchQuery,
     selectedCategory,
     onImport,
@@ -78,7 +82,9 @@ export function TemplatesList(props: TemplatesListProps) {
         ListEmptyComponent={
           <TemplatesListEmpty
             hasActiveFilters={hasActiveFilters}
+            onCreateCustom={onCreateCustom}
             onResetFilters={onResetFilters}
+            onSelectCategory={onSelectCategory}
           />
         }
         maxToRenderPerBatch={8}

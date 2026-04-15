@@ -50,6 +50,15 @@ export const s = StyleSheet.create({
     ...typography.tabBar,
     fontWeight: fontWeights.semibold,
   },
+  simpleBadge: {
+    borderRadius: borderRadius.full,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: 2,
+  },
+  simpleText: {
+    ...typography.tabBar,
+    fontWeight: fontWeights.semibold,
+  },
   bottomRow: {
     alignItems: 'center',
     flexDirection: 'row',

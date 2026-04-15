@@ -67,13 +67,13 @@ export function MainBrowseView(p: MainBrowseViewProps) {
           />
         </Animated.View>
         <Animated.View entering={stagger(2)}>
-          {p.categoryGrid}
+          {p.exploreAllSection}
         </Animated.View>
         <Animated.View entering={stagger(3)}>
-          {p.premiumPacksSection}
+          {p.categoryGrid}
         </Animated.View>
         <Animated.View entering={stagger(4)}>
-          {p.exploreAllSection}
+          {p.premiumPacksSection}
         </Animated.View>
       </ScrollView>
       {p.modals}

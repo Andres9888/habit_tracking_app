@@ -13,6 +13,7 @@ const INITIAL_VISIBLE = 6;
 
 interface CategoryItem {
   bgColor: string;
+  borderColor: string;
   categoryId: string;
   count: number;
   icon: string;
@@ -48,6 +49,7 @@ export function CategoryGrid({
             <CategoryTile
               key={cat.categoryId}
               bgColor={cat.bgColor}
+              borderColor={cat.borderColor}
               count={cat.count}
               icon={cat.icon}
               index={rowIdx * 2 + colIdx}
