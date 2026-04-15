@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Premium Upgrade — Attached to Account Card — 10 Mocks</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: #0a0a0a;
+    color: #fff;
+    min-height: 100vh;
+    padding: 40px 20px;
+  }
+  h1 {
+    text-align: center; font-size: 24px; font-weight: 800;
+    margin-bottom: 6px; letter-spacing: -0.5px;
+    background: linear-gradient(135deg, #fff, #999);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .subtitle { text-align: center; color: #666; font-size: 13px; margin-bottom: 48px; }
+  .grid {
+    display: grid; grid-template-columns: repeat(2, 1fr);
+    gap: 32px; max-width: 900px; margin: 0 auto;
+  }
+  .mock-card {
+    background: #141414; border-radius: 20px; padding: 24px; border: 1px solid #222;
+  }
+  .mock-label {
+    font-size: 11px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 1.5px; color: #555; margin-bottom: 16px;
+  }
+  .phone-frame {
+    background: #1a1a1a; border-radius: 16px; padding: 16px;
+  }
+
+  /* === Shared Account Row base === */
+  .account-top {
+    display: flex; align-items: center; gap: 14px; padding: 14px 16px;
+  }
+  .avatar {
+    width: 40px; height: 40px; border-radius: 50%;
+    background: linear-gradient(135deg, #7c5e3c, #a0845c);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; font-weight: 700; color: #fff; flex-shrink: 0;
+  }
+  .account-info { flex: 1; min-width: 0; }
+  .account-name { font-size: 16px; font-weight: 600; color: #e5e5e5; }
+  .account-email { font-size: 13px; color: #888; margin-top: 1px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .chevron { color: #555; flex-shrink: 0; }
+
+  /* ====== MOCK 1: Bottom Strip ====== */
+  .m1-card { background: #1c1c1e; border-radius: 16px; overflow: hidden; }
+  .m1-divider { height: 1px; background: #2a2a2e; }
+  .m1-strip {
+    display: flex; align-items: center; gap: 10px;
+    padding: 12px 16px; cursor: pointer;
+    background: linear-gradient(135deg, #1a1520, #0d0a14);
+    transition: background 0.2s;
+  }
+  .m1-strip:hover { background: linear-gradient(135deg, #221a30, #140f1e); }
+  .m1-icon { color: #a78bfa; flex-shrink: 0; }
+  .m1-text { flex: 1; font-size: 14px; font-weight: 600; color: #c4b5fd; }
+  .m1-badge {
+    font-size: 10px; font-weight: 800; color: #a78bfa; letter-spacing: 1px;
+    background: rgba(167,139,250,0.12); padding: 4px 10px; border-radius: 6px;
+  }
+
+  /* ====== MOCK 2: Gradient Bottom Band ====== */
+  .m2-card { background: #1c1c1e; border-radius: 16px; overflow: hidden; }
+  .m2-band {
+    display: flex; align-items: center; gap: 10px;
+    padding: 14px 16px; cursor: pointer;
+    background: linear-gradient(135deg, #2e1f5e, #1e1b4b);
+    position: relative; overflow: hidden;
+  }
+  .m2-band::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, #a78bfa, transparent);
+  }
+  .m2-text { flex: 1; }
+  .m2-title { font-size: 14px; font-weight: 700; color: #e0e7ff; }
+  .m2-sub { font-size: 11px; color: rgba(224,231,255,0.5); margin-top: 1px; }
+  .m2-arrow { color: rgba(224,231,255,0.4); }
+
+  /* ====== MOCK 3: Inline Banner ====== */
+  .m3-card { background: #1c1c1e; border-radius: 16px; overflow: hidden; }
+  .m3-banner {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 16px; cursor: pointer;
+    background: rgba(139,92,246,0.08);
+    border-top: 1px solid rgba(139,92,246,0.15);
+  }
+  .m3-icon-wrap {
+    width: 28px; height: 28px; border-radius: 8px;
+    background: rgba(139,92,246,0.15); display: flex;
+    align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .m3-icon-wrap i { color: #a78bfa; }
+  .m3-text { flex: 1; font-size: 13px; font-weight: 600; color: #c4b5fd; }
+  .m3-cta {
+    font-size: 11px; font-weight: 700; color: #a78bfa;
+    text-transform: uppercase; letter-spacing: 0.5px;
+  }
+
+  /* ====== MOCK 4: Full-Width Gradient Footer ====== */
+  .m4-card { background: #1c1c1e; border-radius: 16px; overflow: hidden; }
+  .m4-footer {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 14px 16px; cursor: pointer;
+    background: linear-gradient(135deg, #7c3aed, #6366f1);
+  }
+  .m4-text { font-size: 14px; font-weight: 700; color: #fff; }
+  .m4-icon { color: rgba(255,255,255,0.8); }
+
+  /* ====== MOCK 5: Subtle Link Row ====== */
+  .m5-card { background: #1c1c1e; border-radius: 16px; overflow: hidden; }
+  .m5-row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 11px 16px; cursor: pointer;
+    border-top: 1px solid #2a2a2e;
+  }
+  .m5-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: #a78bfa; box-shadow: 0 0 6px #a78bfa; flex-shrink: 0;
+  }
+  .m5-text { flex: 1; font-size: 13px; font-weight: 600; color: #a78bfa; }
+  .m5-arrow { color: #6d5aad; }
+
+  /* ====== MOCK 6: Chip Inside Account Row ====== */
+  .m6-card { background: #1c1c1e; border-radius: 16px; overflow: hidden; }
+  .m6-chip {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 3px 10px 3px 7px; border-radius: 100px; cursor: pointer;
+    background: linear-gradient(135deg, rgba(139,92,246,0.2), rgba(99,102,241,0.2));
+    border: 1px solid rgba(139,92,246,0.25); margin-top: 6px;
+  }
+  .m6-chip-icon { color: #a78bfa; }
+  .m6-chip-text { font-size: 11px; font-weight: 700; color: #c4b5fd; }
+
+  /* ====== MOCK 7: Two-Tone Split ====== */
+  .m7-card { border-radius: 16px; overflow: hidden; }
+  .m7-top {
+    display: flex; align-items: center; gap: 14px;
+    padding: 14px 16px; background: #1c1c1e;
+  }
+  .m7-bottom {
+    display: flex; align-items: center; gap: 12px;
+    padding: 14px 16px; cursor: pointer;
+    background: linear-gradient(160deg, #1a1520, #12101a);
+    border-top: 1px solid #2a2035;
+  }
+  .m7-crown-wrap {
+    width: 36px; height: 36px; border-radius: 10px;
+    background: linear-gradient(135deg, #2a1f3d, #1a1528);
+    border: 1px solid #3b2d5c;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .m7-crown-wrap i { color: #fbbf24; }
+  .m7-text { flex: 1; }
+  .m7-title { font-size: 14px; font-weight: 700; color: #e8e0f0; }
+  .m7-sub { font-size: 11px; color: #6b5f7d; margin-top: 1px; }
+  .m7-arrow { color: #4a3d5e; }
+
+  /* ====== MOCK 8: Amber Gold Attached ====== */
+  .m8-card { border-radius: 16px; overflow: hidden; }
+  .m8-top {
+    display: flex; align-items: center; gap: 14px;
+    padding: 14px 16px; background: #1c1c1e;
+  }
+  .m8-bottom {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 16px; cursor: pointer;
+    background: linear-gradient(135deg, #2a1f0a, #1a150a);
+    border-top: 1px solid #3b2a10;
+  }
+  .m8-crown { color: #fbbf24; flex-shrink: 0; }
+  .m8-text { flex: 1; font-size: 13px; font-weight: 700; color: #fde68a; }
+  .m8-badge {
+    font-size: 10px; font-weight: 800; color: #fbbf24;
+    background: rgba(251,191,36,0.12); padding: 4px 10px; border-radius: 6px;
+    letter-spacing: 1px;
+  }
+
+  /* ====== MOCK 9: Feature Pills Attached ====== */
+  .m9-card { border-radius: 16px; overflow: hidden; }
+  .m9-top {
+    display: flex; align-items: center; gap: 14px;
+    padding: 14px 16px; background: #1c1c1e;
+  }
+  .m9-bottom {
+    padding: 14px 16px; cursor: pointer;
+    background: linear-gradient(135deg, #2e1f5e, #1e1b4b);
+    position: relative; overflow: hidden;
+  }
+  .m9-bottom::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, #a78bfa40, transparent);
+  }
+  .m9-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+  .m9-title { font-size: 14px; font-weight: 700; color: #e0e7ff; }
+  .m9-arrow-r { color: rgba(224,231,255,0.4); margin-left: auto; }
+  .m9-pills { display: flex; gap: 6px; flex-wrap: wrap; }
+  .m9-pill {
+    font-size: 11px; font-weight: 600; color: rgba(224,231,255,0.7);
+    background: rgba(255,255,255,0.1); padding: 4px 10px; border-radius: 100px;
+  }
+
+  /* ====== MOCK 10: Floating Badge on Card ====== */
+  .m10-card { background: #1c1c1e; border-radius: 16px; overflow: hidden; position: relative; }
+  .m10-float {
+    position: absolute; top: -1px; right: 16px;
+    display: flex; align-items: center; gap: 4px;
+    padding: 5px 12px 6px;
+    background: linear-gradient(135deg, #7c3aed, #6366f1);
+    border-radius: 0 0 10px 10px; cursor: pointer;
+    box-shadow: 0 2px 8px rgba(124,58,237,0.3);
+  }
+  .m10-float-icon { color: rgba(255,255,255,0.9); }
+  .m10-float-text { font-size: 11px; font-weight: 800; color: #fff; letter-spacing: 0.5px; }
+  .m10-account { padding-right: 120px; }
+</style>
+</head>
+<body>
+
+<h1>Premium Upgrade — Attached to Account Card</h1>
+<p class="subtitle">10 variations showing the upgrade CTA integrated with the Account row (dark mode)</p>
+
+<div class="grid">
+
+  <!-- Mock 1: Bottom Strip -->
+  <div class="mock-card">
+    <div class="mock-label">1 — Bottom Strip</div>
+    <div class="phone-frame">
+      <div class="m1-card">
+        <div class="account-top">
+          <div class="avatar">A</div>
+          <div class="account-info">
+            <div class="account-name">Andres</div>
+            <div class="account-email">andres@example.com</div>
+          </div>
+          <i data-lucide="chevron-right" class="chevron" style="width:20px;height:20px;"></i>
+        </div>
+        <div class="m1-divider"></div>
+        <div class="m1-strip">
+          <i data-lucide="zap" class="m1-icon" style="width:16px;height:16px;"></i>
+          <div class="m1-text">Unlock Unlimited Habits</div>
+          <div class="m1-badge">PRO</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mock 2: Gradient Bottom Band -->
+  <div class="mock-card">
+    <div class="mock-label">2 — Gradient Band</div>
+    <div class="phone-frame">
+      <div class="m2-card">
+        <div class="account-top">
+          <div class="avatar">A</div>
+          <div class="account-info">
+            <div class="account-name">Andres</div>
+            <div class="account-email">andres@example.com</div>
+          </div>
+          <i data-lucide="chevron-right" class="chevron" style="width:20px;height:20px;"></i>
+        </div>
+        <div class="m2-band">
+          <i data-lucide="crown" style="width:16px;height:16px;color:#fbbf24;flex-shrink:0;"></i>
+          <div class="m2-text">
+            <div class="m2-title">Unlock Unlimited Habits</div>
+            <div class="m2-sub">with Premium</div>
+          </div>
+          <i data-lucide="chevron-right" class="m2-arrow" style="width:16px;height:16px;"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mock 3: Inline Banner -->
+  <div class="mock-card">
+    <div class="mock-label">3 — Inline Banner</div>
+    <div class="phone-frame">
+      <div class="m3-card">
+        <div class="account-top">
+          <div class="avatar">A</div>
+          <div class="account-info">
+            <div class="account-name">Andres</div>
+            <div class="account-email">andres@example.com</div>
+          </div>
+          <i data-lucide="chevron-right" class="chevron" style="width:20px;height:20px;"></i>
+        </div>
+        <div class="m3-banner">
+          <div class="m3-icon-wrap">
+            <i data-lucide="zap" style="width:14px;height:14px;color:#a78bfa;"></i>
+          </div>
+          <div class="m3-text">Unlock Unlimited Habits</div>
+          <div class="m3-cta">Upgrade →</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mock 4: Full-Width Gradient Footer -->
+  <div class="mock-card">
+    <div class="mock-label">4 — Bold CTA Footer</div>
+    <div class="phone-frame">
+      <div class="m4-card">
+        <div class="account-top">
+          <div class="avatar">A</div>
+          <div class="account-info">
+            <div class="account-name">Andres</div>
+            <div class="account-email">andres@example.com</div>
+          </div>
+          <i data-lucide="chevron-right" class="chevron" style="width:20px;height:20px;"></i>
+        </div>
+        <div class="m4-footer">
+          <i data-lucide="zap" class="m4-icon" style="width:16px;height:16px;"></i>
+          <div class="m4-text">Unlock Unlimited Habits</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mock 5: Subtle Link Row -->
+  <div class="mock-card">
+    <div class="mock-label">5 — Subtle Link</div>
+    <div class="phone-frame">
+      <div class="m5-card">
+        <div class="account-top">
+          <div class="avatar">A</div>
+          <div class="account-info">
+            <div class="account-name">Andres</div>
+            <div class="account-email">andres@example.com</div>
+          </div>
+          <i data-lucide="chevron-right" class="chevron" style="width:20px;height:20px;"></i>
+        </div>
+        <div class="m5-row">
+          <div class="m5-dot"></div>
+          <div class="m5-text">Unlock Unlimited Habits with Premium</div>
+          <i data-lucide="chevron-right" class="m5-arrow" style="width:14px;height:14px;"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mock 6: Chip Inside Row -->
+  <div class="mock-card">
+    <div class="mock-label">6 — Inline Chip</div>
+    <div class="phone-frame">
+      <div class="m6-card">
+        <div class="account-top">
+          <div class="avatar">A</div>
+          <div class="account-info">
+            <div class="account-name">Andres</div>
+            <div class="account-email">andres@example.com</div>
+            <div class="m6-chip">
+              <i data-lucide="zap" class="m6-chip-icon" style="width:12px;height:12px;"></i>
+              <span class="m6-chip-text">Unlock Premium</span>
+            </div>
+          </div>
+          <i data-lucide="chevron-right" class="chevron" style="width:20px;height:20px;"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mock 7: Two-Tone Split (Dark Luxury attached) -->
+  <div class="mock-card">
+    <div class="mock-label">7 — Dark Luxury Split</div>
+    <div class="phone-frame">
+      <div class="m7-card">
+        <div class="m7-top">
+          <div class="avatar">A</div>
+          <div class="account-info">
+            <div class="account-name">Andres</div>
+            <div class="account-email">andres@example.com</div>
+          </div>
+          <i data-lucide="chevron-right" class="chevron" style="width:20px;height:20px;"></i>
+        </div>
+        <div class="m7-bottom">
+          <div class="m7-crown-wrap">
+            <i data-lucide="crown" style="width:16px;height:16px;"></i>
+          </div>
+          <div class="m7-text">
+            <div class="m7-title">Unlock Unlimited Habits</div>
+            <div class="m7-sub">with Premium</div>
+          </div>
+          <i data-lucide="chevron-right" class="m7-arrow" style="width:16px;height:16px;"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mock 8: Amber Gold Attached -->
+  <div class="mock-card">
+    <div class="mock-label">8 — Amber Gold</div>
+    <div class="phone-frame">
+      <div class="m8-card">
+        <div class="m8-top">
+          <div class="avatar">A</div>
+          <div class="account-info">
+            <div class="account-name">Andres</div>
+            <div class="account-email">andres@example.com</div>
+          </div>
+          <i data-lucide="chevron-right" class="chevron" style="width:20px;height:20px;"></i>
+        </div>
+        <div class="m8-bottom">
+          <i data-lucide="crown" class="m8-crown" style="width:16px;height:16px;"></i>
+          <div class="m8-text">Unlock Unlimited Habits</div>
+          <div class="m8-badge">PRO</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mock 9: Feature Pills Attached -->
+  <div class="mock-card">
+    <div class="mock-label">9 — Feature Pills</div>
+    <div class="phone-frame">
+      <div class="m9-card">
+        <div class="m9-top">
+          <div class="avatar">A</div>
+          <div class="account-info">
+            <div class="account-name">Andres</div>
+            <div class="account-email">andres@example.com</div>
+          </div>
+          <i data-lucide="chevron-right" class="chevron" style="width:20px;height:20px;"></i>
+        </div>
+        <div class="m9-bottom">
+          <div class="m9-header">
+            <i data-lucide="crown" style="width:14px;height:14px;color:#fbbf24;"></i>
+            <div class="m9-title">Unlock Unlimited Habits</div>
+            <i data-lucide="chevron-right" class="m9-arrow-r" style="width:14px;height:14px;"></i>
+          </div>
+          <div class="m9-pills">
+            <div class="m9-pill">Reminders</div>
+            <div class="m9-pill">Sounds</div>
+            <div class="m9-pill">Themes</div>
+            <div class="m9-pill">Unlimited</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mock 10: Floating Badge -->
+  <div class="mock-card">
+    <div class="mock-label">10 — Floating Badge</div>
+    <div class="phone-frame">
+      <div class="m10-card">
+        <div class="m10-float">
+          <i data-lucide="zap" class="m10-float-icon" style="width:12px;height:12px;"></i>
+          <span class="m10-float-text">PRO</span>
+        </div>
+        <div class="account-top m10-account">
+          <div class="avatar">A</div>
+          <div class="account-info">
+            <div class="account-name">Andres</div>
+            <div class="account-email">andres@example.com</div>
+          </div>
+          <i data-lucide="chevron-right" class="chevron" style="width:20px;height:20px;"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>lucide.createIcons();</script>
+</body>
+</html>

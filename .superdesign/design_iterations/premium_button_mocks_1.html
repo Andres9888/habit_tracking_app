@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Upgrade to Premium — 10 Button Mocks</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: #0a0a0a;
+    color: #fff;
+    min-height: 100vh;
+    padding: 40px 20px;
+  }
+
+  h1 {
+    text-align: center;
+    font-size: 28px;
+    font-weight: 800;
+    margin-bottom: 8px;
+    letter-spacing: -0.5px;
+    background: linear-gradient(135deg, #fff, #999);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .subtitle {
+    text-align: center;
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 48px;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 32px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .mock-card {
+    background: #141414;
+    border-radius: 20px;
+    padding: 24px;
+    border: 1px solid #222;
+    position: relative;
+  }
+
+  .mock-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #555;
+    margin-bottom: 16px;
+  }
+
+  .phone-frame {
+    background: #1a1a1a;
+    border-radius: 16px;
+    padding: 16px;
+    min-height: 100px;
+  }
+
+  /* ====== MOCK 1: Minimal Glass ====== */
+  .mock1-btn {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 20px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+    backdrop-filter: blur(20px);
+  }
+  .mock1-btn:hover { background: rgba(255, 255, 255, 0.1); }
+  .mock1-icon {
+    width: 40px; height: 40px;
+    background: linear-gradient(135deg, #a855f7, #6366f1);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+  }
+  .mock1-text { flex: 1; }
+  .mock1-title { font-size: 15px; font-weight: 700; color: #f0f0f0; }
+  .mock1-sub { font-size: 12px; color: #888; margin-top: 2px; }
+  .mock1-arrow { color: #555; font-size: 18px; }
+
+  /* ====== MOCK 2: Bold Gradient Banner ====== */
+  .mock2-btn {
+    padding: 20px;
+    background: linear-gradient(135deg, #7c3aed, #2563eb, #06b6d4);
+    border-radius: 20px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .mock2-btn::after {
+    content: '';
+    position: absolute;
+    top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
+    animation: mock2-glow 3s ease-in-out infinite;
+  }
+  @keyframes mock2-glow {
+    0%, 100% { transform: translate(0, 0); }
+    50% { transform: translate(20%, 20%); }
+  }
+  .mock2-content { position: relative; z-index: 1; display: flex; align-items: center; gap: 14px; }
+  .mock2-icon {
+    width: 44px; height: 44px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+  }
+  .mock2-text { flex: 1; }
+  .mock2-title { font-size: 17px; font-weight: 800; color: #fff; letter-spacing: -0.3px; }
+  .mock2-sub { font-size: 12px; color: rgba(255,255,255,0.7); margin-top: 3px; }
+  .mock2-badge {
+    background: rgba(255,255,255,0.25);
+    padding: 6px 14px;
+    border-radius: 100px;
+    font-size: 12px;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: 1px;
+  }
+
+  /* ====== MOCK 3: Neon Outline ====== */
+  .mock3-btn {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 20px;
+    background: transparent;
+    border: 2px solid #8b5cf6;
+    border-radius: 16px;
+    cursor: pointer;
+    position: relative;
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.15), inset 0 0 20px rgba(139, 92, 246, 0.05);
+    transition: all 0.3s;
+  }
+  .mock3-btn:hover {
+    box-shadow: 0 0 30px rgba(139, 92, 246, 0.3), inset 0 0 30px rgba(139, 92, 246, 0.1);
+    border-color: #a78bfa;
+  }
+  .mock3-icon {
+    width: 36px; height: 36px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    color: #a78bfa;
+  }
+  .mock3-text { flex: 1; }
+  .mock3-title { font-size: 15px; font-weight: 700; color: #c4b5fd; }
+  .mock3-sub { font-size: 12px; color: #7c3aed; margin-top: 2px; }
+  .mock3-cta {
+    font-size: 12px; font-weight: 700; color: #a78bfa;
+    text-transform: uppercase; letter-spacing: 1px;
+  }
+
+  /* ====== MOCK 4: Compact Pill ====== */
+  .mock4-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 20px 10px 14px;
+    background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    border-radius: 100px;
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+  .mock4-btn:hover { transform: scale(1.02); }
+  .mock4-icon { font-size: 16px; }
+  .mock4-title { font-size: 14px; font-weight: 700; color: #fff; }
+  .mock4-wrapper { display: flex; justify-content: center; }
+
+  /* ====== MOCK 5: Dark Luxury ====== */
+  .mock5-btn {
+    padding: 20px;
+    background: linear-gradient(160deg, #1a1520, #0d0a14);
+    border: 1px solid #2a2035;
+    border-radius: 20px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .mock5-btn::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #a78bfa, transparent);
+  }
+  .mock5-content { display: flex; align-items: center; gap: 16px; position: relative; }
+  .mock5-icon {
+    width: 48px; height: 48px;
+    background: linear-gradient(135deg, #2a1f3d, #1a1528);
+    border: 1px solid #3b2d5c;
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+  }
+  .mock5-text { flex: 1; }
+  .mock5-eyebrow { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: #a78bfa; margin-bottom: 4px; }
+  .mock5-title { font-size: 16px; font-weight: 700; color: #e8e0f0; }
+  .mock5-sub { font-size: 12px; color: #6b5f7d; margin-top: 3px; }
+  .mock5-arrow { color: #4a3d5e; font-size: 20px; }
+
+  /* ====== MOCK 6: Warm Amber ====== */
+  .mock6-btn {
+    padding: 18px 20px;
+    background: linear-gradient(135deg, #92400e, #b45309, #d97706);
+    border-radius: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    position: relative;
+    overflow: hidden;
+  }
+  .mock6-btn::after {
+    content: '';
+    position: absolute;
+    top: -2px; right: -2px; bottom: -2px; left: -2px;
+    border-radius: 20px;
+    background: linear-gradient(135deg, #f59e0b33, transparent, #f59e0b33);
+    z-index: -1;
+  }
+  .mock6-icon {
+    width: 40px; height: 40px;
+    background: rgba(0,0,0,0.2);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+  }
+  .mock6-text { flex: 1; }
+  .mock6-title { font-size: 16px; font-weight: 800; color: #fff; }
+  .mock6-sub { font-size: 12px; color: rgba(255,255,255,0.7); margin-top: 2px; }
+  .mock6-price {
+    font-size: 11px; font-weight: 700; color: #fef3c7;
+    background: rgba(0,0,0,0.2);
+    padding: 4px 12px;
+    border-radius: 100px;
+  }
+
+  /* ====== MOCK 7: Stacked Card ====== */
+  .mock7-btn {
+    padding: 24px 20px;
+    background: linear-gradient(180deg, #1e1b4b, #312e81);
+    border-radius: 20px;
+    cursor: pointer;
+    text-align: center;
+  }
+  .mock7-icon-row { display: flex; justify-content: center; margin-bottom: 14px; font-size: 28px; }
+  .mock7-title { font-size: 18px; font-weight: 800; color: #e0e7ff; letter-spacing: -0.3px; }
+  .mock7-sub { font-size: 13px; color: rgba(224,231,255,0.5); margin-top: 6px; }
+  .mock7-cta {
+    display: inline-block;
+    margin-top: 16px;
+    padding: 10px 28px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 100px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #c7d2fe;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+
+  /* ====== MOCK 8: Split Row ====== */
+  .mock8-btn {
+    display: flex;
+    align-items: center;
+    padding: 14px 16px;
+    background: #1c1c1e;
+    border-radius: 14px;
+    cursor: pointer;
+    gap: 12px;
+  }
+  .mock8-dot {
+    width: 8px; height: 8px;
+    background: #a78bfa;
+    border-radius: 50%;
+    box-shadow: 0 0 8px #a78bfa;
+  }
+  .mock8-title { flex: 1; font-size: 15px; font-weight: 600; color: #e5e5e5; }
+  .mock8-badge {
+    font-size: 12px; font-weight: 700;
+    color: #a78bfa;
+    background: rgba(167, 139, 250, 0.12);
+    padding: 5px 12px;
+    border-radius: 8px;
+  }
+
+  /* ====== MOCK 9: Emoji Fun ====== */
+  .mock9-btn {
+    padding: 18px 20px;
+    background: linear-gradient(135deg, #581c87, #7e22ce, #a855f7);
+    border-radius: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .mock9-emojis { font-size: 24px; display: flex; gap: 2px; }
+  .mock9-text { flex: 1; }
+  .mock9-title { font-size: 15px; font-weight: 800; color: #fff; }
+  .mock9-features {
+    display: flex; gap: 8px; margin-top: 6px; flex-wrap: wrap;
+  }
+  .mock9-chip {
+    font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.8);
+    background: rgba(255,255,255,0.15);
+    padding: 3px 10px;
+    border-radius: 100px;
+  }
+  .mock9-arrow { color: rgba(255,255,255,0.5); font-size: 20px; }
+
+  /* ====== MOCK 10: Floating Island ====== */
+  .mock10-wrapper {
+    display: flex; justify-content: center;
+  }
+  .mock10-btn {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 20px 12px 14px;
+    background: linear-gradient(135deg, rgba(139,92,246,0.2), rgba(99,102,241,0.2));
+    border: 1px solid rgba(139,92,246,0.3);
+    border-radius: 100px;
+    cursor: pointer;
+    backdrop-filter: blur(20px);
+    transition: all 0.3s;
+  }
+  .mock10-btn:hover {
+    background: linear-gradient(135deg, rgba(139,92,246,0.3), rgba(99,102,241,0.3));
+    border-color: rgba(139,92,246,0.5);
+  }
+  .mock10-icon {
+    width: 32px; height: 32px;
+    background: linear-gradient(135deg, #8b5cf6, #6366f1);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+  }
+  .mock10-title { font-size: 14px; font-weight: 700; color: #c4b5fd; }
+  .mock10-sep { width: 1px; height: 20px; background: rgba(139,92,246,0.3); }
+  .mock10-cta { font-size: 12px; font-weight: 700; color: #a78bfa; }
+</style>
+</head>
+<body>
+
+<h1>Upgrade to Premium — Button Mocks</h1>
+<p class="subtitle">10 design directions for the account settings upgrade button (dark mode)</p>
+
+<div class="grid">
+
+  <!-- Mock 1: Minimal Glass -->
+  <div class="mock-card">
+    <div class="mock-label">1 — Minimal Glass</div>
+    <div class="phone-frame">
+      <div class="mock1-btn">
+        <div class="mock1-icon">⚡</div>
+        <div class="mock1-text">
+          <div class="mock1-title">Upgrade to Premium</div>
+          <div class="mock1-sub">Sounds, reminders & more</div>
+        </div>
+        <div class="mock1-arrow">›</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mock 2: Bold Gradient Banner -->
+  <div class="mock-card">
+    <div class="mock-label">2 — Bold Gradient Banner</div>
+    <div class="phone-frame">
+      <div class="mock2-btn">
+        <div class="mock2-content">
+          <div class="mock2-icon">✨</div>
+          <div class="mock2-text">
+            <div class="mock2-title">Go Premium</div>
+            <div class="mock2-sub">Unlock the full experience</div>
+          </div>
+          <div class="mock2-badge">PRO</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mock 3: Neon Outline -->
+  <div class="mock-card">
+    <div class="mock-label">3 — Neon Outline</div>
+    <div class="phone-frame">
+      <div class="mock3-btn">
+        <div class="mock3-icon">⚡</div>
+        <div class="mock3-text">
+          <div class="mock3-title">Unlock Premium</div>
+          <div class="mock3-sub">Sounds, themes & reminders</div>
+        </div>
+        <div class="mock3-cta">Upgrade →</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mock 4: Compact Pill -->
+  <div class="mock-card">
+    <div class="mock-label">4 — Compact Pill</div>
+    <div class="phone-frame">
+      <div class="mock4-wrapper">
+        <div class="mock4-btn">
+          <div class="mock4-icon">⚡</div>
+          <div class="mock4-title">Upgrade to Premium</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mock 5: Dark Luxury -->
+  <div class="mock-card">
+    <div class="mock-label">5 — Dark Luxury</div>
+    <div class="phone-frame">
+      <div class="mock5-btn">
+        <div class="mock5-content">
+          <div class="mock5-icon">👑</div>
+          <div class="mock5-text">
+            <div class="mock5-eyebrow">Premium</div>
+            <div class="mock5-title">Upgrade Your Experience</div>
+            <div class="mock5-sub">Unlock all sounds, reminders & themes</div>
+          </div>
+          <div class="mock5-arrow">›</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mock 6: Warm Amber -->
+  <div class="mock-card">
+    <div class="mock-label">6 — Warm Amber / Gold</div>
+    <div class="phone-frame">
+      <div class="mock6-btn">
+        <div class="mock6-icon">👑</div>
+        <div class="mock6-text">
+          <div class="mock6-title">Go Premium</div>
+          <div class="mock6-sub">Unlock everything</div>
+        </div>
+        <div class="mock6-price">$4.99/mo</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mock 7: Stacked Card -->
+  <div class="mock-card">
+    <div class="mock-label">7 — Stacked / Centered</div>
+    <div class="phone-frame">
+      <div class="mock7-btn">
+        <div class="mock7-icon-row">🚀</div>
+        <div class="mock7-title">Supercharge Your Habits</div>
+        <div class="mock7-sub">Sounds, reminders, themes & more</div>
+        <div class="mock7-cta">Upgrade to Premium</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mock 8: Settings Row Style -->
+  <div class="mock-card">
+    <div class="mock-label">8 — Native Settings Row</div>
+    <div class="phone-frame">
+      <div class="mock8-btn">
+        <div class="mock8-dot"></div>
+        <div class="mock8-title">Upgrade to Premium</div>
+        <div class="mock8-badge">PRO</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mock 9: Feature Chips -->
+  <div class="mock-card">
+    <div class="mock-label">9 — Feature Chips</div>
+    <div class="phone-frame">
+      <div class="mock9-btn">
+        <div class="mock9-emojis">⚡</div>
+        <div class="mock9-text">
+          <div class="mock9-title">Upgrade to Premium</div>
+          <div class="mock9-features">
+            <div class="mock9-chip">🔔 Reminders</div>
+            <div class="mock9-chip">🎵 Sounds</div>
+            <div class="mock9-chip">🎨 Themes</div>
+          </div>
+        </div>
+        <div class="mock9-arrow">›</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mock 10: Floating Island -->
+  <div class="mock-card">
+    <div class="mock-label">10 — Floating Island</div>
+    <div class="phone-frame">
+      <div class="mock10-wrapper">
+        <div class="mock10-btn">
+          <div class="mock10-icon">⚡</div>
+          <div class="mock10-title">Premium</div>
+          <div class="mock10-sep"></div>
+          <div class="mock10-cta">Upgrade →</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

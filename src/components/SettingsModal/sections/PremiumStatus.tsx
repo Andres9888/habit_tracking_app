@@ -1,24 +1,12 @@
-/* eslint-disable max-lines */
-import React, { useEffect } from 'react';
-import { Linking, Platform, StyleSheet, Text, View } from 'react-native';
-import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withRepeat,
-  withTiming,
-  withSequence,
-  Easing,
-  interpolate,
-} from 'react-native-reanimated';
+import React from 'react';
+import { Linking, Platform, Text, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Crown, Zap, Settings } from 'lucide-react-native';
+import { ChevronRight, Crown, Settings } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
 import { SettingsSection } from '../SettingsSection';
 import { SettingsRow } from '../SettingsRow';
 import { AnimatedPressable } from '../../ui/AnimatedPressable';
-import { colors as palette } from '@/theme/colors';
 import { useThemeColors } from '../../../theme/ThemeContext';
-import { durations } from '@/theme/animations';
 
 interface Props {
   highContrast: boolean;
@@ -26,18 +14,11 @@ interface Props {
   onUpgrade?: () => void;
 }
 
-const SHIMMER_DURATION = durations.celebration;
 const nativeHandsetPlatform = ['and', 'roid'].join('');
 const alternateSubscriptionUrl = [
   'https://play.',
   'google.com/store/account/subscriptions',
 ].join('');
-
-const styles = StyleSheet.create({
-  shimmerOverlay: {
-    ...StyleSheet.absoluteFillObject,
-  },
-});
 
 function handleManageSubscription() {
   if (Platform.OS === 'ios') {
@@ -49,34 +30,6 @@ function handleManageSubscription() {
 
 export function PremiumStatus({ highContrast, isPremium, onUpgrade }: Props) {
   const { colors: themeColors, isDark, settings } = useThemeColors();
-  const shimmerPos = useSharedValue(0);
-  const proBadgeScale = useSharedValue(1);
-
-  useEffect(() => {
-    if (isPremium) return;
-    shimmerPos.value = withRepeat(
-      withTiming(1, { duration: SHIMMER_DURATION, easing: Easing.inOut(Easing.ease) }),
-      -1,
-      false,
-    );
-    proBadgeScale.value = withRepeat(
-      withSequence(
-        withTiming(1.06, { duration: durations.loop, easing: Easing.inOut(Easing.ease) }),
-        withTiming(1, { duration: durations.loop, easing: Easing.inOut(Easing.ease) }),
-      ),
-      -1,
-      false,
-    );
-  }, [isPremium, shimmerPos, proBadgeScale]);
-
-  const shimmerStyle = useAnimatedStyle(() => ({
-    transform: [{ translateX: interpolate(shimmerPos.value, [0, 1], [-200, 400]) }],
-    opacity: 0.12,
-  }));
-
-  const badgePulseStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: proBadgeScale.value }],
-  }));
 
   if (isPremium) {
     return (
@@ -129,10 +82,14 @@ export function PremiumStatus({ highContrast, isPremium, onUpgrade }: Props) {
     );
   }
 
-  // Premium gradient uses custom indigo/violet tones on a non-semantic surface
   const gradientColors = isDark
-    ? ['#2e1f5e', '#1e1b4b', '#312e81'] as const
-    : ['#8b5cf6', '#6366f1', '#818cf8'] as const;
+    ? (['#1a1520', '#0d0a14'] as const)
+    : (['#f5f0ff', '#ede5ff'] as const);
+
+  const borderColor = isDark ? '#2a2035' : 'rgba(139,92,246,0.15)';
+  const titleColor = isDark ? '#e8e0f0' : '#1a1028';
+  const subtitleColor = isDark ? '#6b5f7d' : '#7c6f94';
+  const chevronColor = isDark ? '#4a3d5e' : '#b0a3c4';
 
   return (
     <View className='gap-2'>
@@ -153,60 +110,38 @@ export function PremiumStatus({ highContrast, isPremium, onUpgrade }: Props) {
           colors={[...gradientColors]}
           end={{ x: 1, y: 1 }}
           start={{ x: 0, y: 0 }}
-          style={{
-            shadowColor: palette.premium[500],
-            shadowOffset: { height: 4, width: 0 },
-            shadowOpacity: isDark ? 0.15 : 0.3,
-            shadowRadius: 16,
-            elevation: 6,
-          }}
+          style={{ borderWidth: 1, borderColor }}
         >
-          {/* Shimmer sweep overlay */}
-          <Animated.View style={[styles.shimmerOverlay, shimmerStyle]}>
-            {/* Intentional rgba for shimmer transparency effect */}
+          {/* Top accent line */}
+          <View className='absolute left-0 right-0 top-0 overflow-hidden rounded-t-2xl'>
             <LinearGradient
-              colors={['transparent', 'rgba(255,255,255,0.6)', 'transparent']}
+              colors={['transparent', '#a78bfa', 'transparent']}
               end={{ x: 1, y: 0 }}
               start={{ x: 0, y: 0 }}
-              style={{ width: 120, height: '100%' }}
+              style={{ height: 1 }}
             />
-          </Animated.View>
+          </View>
 
           <View className='flex-row items-center'>
             <View
-              className='mr-4 h-10 w-10 items-center justify-center rounded-xl'
-              style={{ backgroundColor: 'rgba(255,255,255,0.15)' }}
+              className='mr-4 h-12 w-12 items-center justify-center rounded-xl'
+              style={{
+                backgroundColor: isDark ? '#2a1f3d' : '#ede5ff',
+                borderWidth: 1,
+                borderColor: isDark ? '#3b2d5c' : 'rgba(139,92,246,0.2)',
+              }}
             >
-              <Zap color={palette.text.inverse} size={iconSizes.medium} />
+              <Crown color={settings.crown.icon} size={iconSizes.small} />
             </View>
             <View className='flex-1'>
-              <Text
-                className='text-[17px] font-bold'
-                style={{ color: isDark ? '#E0E7FF' : palette.text.inverse }}
-              >
-                Upgrade to Premium
+              <Text className='text-[16px] font-bold' style={{ color: titleColor }}>
+                Unlock Unlimited Habits
               </Text>
-              <Text
-                className='mt-0.5 text-[13px]'
-                style={{ color: isDark ? 'rgba(224,231,255,0.6)' : 'rgba(255,255,255,0.8)' }}
-              >
-                Unlock sounds, reminders & more
+              <Text className='mt-0.5 text-[12px]' style={{ color: subtitleColor }}>
+                with Premium
               </Text>
             </View>
-            <Animated.View
-              className='rounded-full px-3.5 py-1.5'
-              style={[
-                { backgroundColor: 'rgba(255,255,255,0.2)' },
-                badgePulseStyle,
-              ]}
-            >
-              <Text
-                className='text-[13px] font-bold'
-                style={{ color: isDark ? themeColors.status.premiumText : palette.text.inverse }}
-              >
-                PRO
-              </Text>
-            </Animated.View>
+            <ChevronRight color={chevronColor} size={iconSizes.small} />
           </View>
         </LinearGradient>
       </AnimatedPressable>

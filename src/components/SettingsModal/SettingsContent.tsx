@@ -29,7 +29,7 @@ import { SettingsSection } from './SettingsSection';
 import { SoundPicker } from './SoundPicker';
 import { StreakRemindersSection } from './StreakRemindersSection';
 import { useAccountActions } from './useAccountActions';
-import { AppActions, AboutLegalSection } from './sections';
+import { AppActions, AboutLegalSection, PremiumStatus } from './sections';
 import { FeedbackModal } from '../FeedbackModal';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { SORT_LABEL_MAP } from './SortPicker.constants';
@@ -85,6 +85,12 @@ export function SettingsContent(p: SettingsContentProps) {
           <Animated.View entering={anim(0)}>
             <AccountRow highContrastMode={hc} isPremium={p.isPremium} onPress={p.onOpenAccount} />
           </Animated.View>
+
+          {!p.isPremium && (
+            <Animated.View entering={anim(12)}>
+              <PremiumStatus highContrast={hc} isPremium={false} onUpgrade={p.onPremiumUpsell} />
+            </Animated.View>
+          )}
 
           {/* Appearance Section */}
           <Animated.View entering={anim(25)}>
