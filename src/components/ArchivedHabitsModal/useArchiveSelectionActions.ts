@@ -4,8 +4,11 @@ import type { Id } from '../../../convex/_generated/dataModel';
 interface UseArchiveSelectionActionsParams {
   selectedIds: Set<Id<'habits'>>;
   archivedHabitIds: Id<'habits'>[];
-  handleBatchRestore: (ids: Set<Id<'habits'>>) => Promise<void>;
-  handleBatchDelete: (ids: Set<Id<'habits'>>) => void;
+  handleBatchRestore: (ids: Set<Id<'habits'>>) => Promise<boolean>;
+  handleBatchDelete: (
+    ids: Set<Id<'habits'>>,
+    options?: { onSuccess?: () => void }
+  ) => void;
   exitSelectionMode: () => void;
   selectAll: (allIds: Id<'habits'>[]) => void;
 }
@@ -23,14 +26,13 @@ export function useArchiveSelectionActions({
     [selectAll, archivedHabitIds]
   );
 
-  const handleBatchRestorePress = useCallback(() => {
-    handleBatchRestore(selectedIds);
-    exitSelectionMode();
+  const handleBatchRestorePress = useCallback(async () => {
+    const didRestore = await handleBatchRestore(selectedIds);
+    if (didRestore) exitSelectionMode();
   }, [handleBatchRestore, selectedIds, exitSelectionMode]);
 
   const handleBatchDeletePress = useCallback(() => {
-    handleBatchDelete(selectedIds);
-    exitSelectionMode();
+    handleBatchDelete(selectedIds, { onSuccess: exitSelectionMode });
   }, [handleBatchDelete, selectedIds, exitSelectionMode]);
 
   return { handleSelectAll, handleBatchRestorePress, handleBatchDeletePress };

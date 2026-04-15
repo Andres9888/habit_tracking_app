@@ -14,18 +14,22 @@ export const useArchivedHabitsModalLogic = () => {
   const archivedHabits = [...(archivedHabitsData ?? [])].sort(
     (a, b) => (b.archivedAt ?? 0) - (a.archivedAt ?? 0)
   );
-  const isPremiumUser = (settingsData as { hasPremium?: boolean } | null)?.hasPremium ?? false;
+  const isPremiumUser =
+    (settingsData as { hasPremium?: boolean } | null)?.hasPremium ?? false;
   const activeHabitCount = (habitsData ?? []).filter(
     (h: { archived?: boolean; paused?: boolean }) => !h.archived && !h.paused
   ).length;
-  const hasReachedHabitLimit = !isPremiumUser && activeHabitCount >= FREE_HABIT_LIMIT;
+  const hasReachedHabitLimit =
+    !isPremiumUser && activeHabitCount >= FREE_HABIT_LIMIT;
+  const batchUnarchiveHabits = useMutation(api.habits.batchUnarchive);
   const unarchiveHabit = useMutation(api.habits.unarchive);
   const removeHabit = useMutation(api.habits.remove);
   const deleteAllArchivedMutation = useMutation(api.habits.deleteAllArchived);
 
   const { handleBatchRestore, handleBatchDelete } = useBatchArchiveActions(
     unarchiveHabit,
-    removeHabit
+    removeHabit,
+    batchUnarchiveHabits
   );
 
   const handleRestore = async (
@@ -40,7 +44,10 @@ export const useArchivedHabitsModalLogic = () => {
     } catch (error) {
       if (__DEV__) console.error('Failed to restore habit:', error);
       triggerHaptic('error');
-      Alert.alert('Error', `Failed to restore "${habitName}". Please try again.`);
+      Alert.alert(
+        'Error',
+        `Failed to restore "${habitName}". Please try again.`
+      );
       return false;
     }
   };
@@ -60,7 +67,10 @@ export const useArchivedHabitsModalLogic = () => {
             } catch (error) {
               if (__DEV__) console.error('Failed to delete habit:', error);
               triggerHaptic('error');
-              Alert.alert('Error', `Failed to delete "${habitName}". Please try again.`);
+              Alert.alert(
+                'Error',
+                `Failed to delete "${habitName}". Please try again.`
+              );
             }
           },
           style: 'destructive',
@@ -84,9 +94,13 @@ export const useArchivedHabitsModalLogic = () => {
               await deleteAllArchivedMutation();
               triggerHaptic('success');
             } catch (error) {
-              if (__DEV__) console.error('Failed to delete all archived:', error);
+              if (__DEV__)
+                console.error('Failed to delete all archived:', error);
               triggerHaptic('error');
-              Alert.alert('Error', 'Failed to delete archived habits. Please try again.');
+              Alert.alert(
+                'Error',
+                'Failed to delete archived habits. Please try again.'
+              );
             }
           },
           style: 'destructive',
