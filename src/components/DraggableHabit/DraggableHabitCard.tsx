@@ -81,6 +81,10 @@ function DraggableHabitCardComponent(props: DraggableHabitCardProps) {
     props.onDelete?.(props.habit._id);
   }, [props.onDelete, props.habit._id]);
 
+  const handleFormedPress = useCallback(() => {
+    props.onFormed?.(props.habit._id);
+  }, [props.onFormed, props.habit._id]);
+
   const hasSwipeActions = props.onArchive || props.onDelete;
 
   const habitCard = (
@@ -153,6 +157,7 @@ function DraggableHabitCardComponent(props: DraggableHabitCardProps) {
           dragX={dragX}
           onArchive={handleArchivePress}
           onDelete={handleDeletePress}
+          onFormed={props.onFormed ? handleFormedPress : undefined}
         />
       )}
     >

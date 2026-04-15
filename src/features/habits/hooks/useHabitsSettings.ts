@@ -15,6 +15,7 @@ export interface HabitsSettingsResult {
   completionSoundEnabled: boolean;
   completionSoundType: CompletionSoundType;
   archivedHabitsCount: number;
+  formedHabitsCount: number;
   reduceMotionPreference: boolean;
 }
 
@@ -34,6 +35,7 @@ export function useHabitsSettings(): HabitsSettingsResult {
   return useMemo(
     () => ({
       archivedHabitsCount,
+      formedHabitsCount: 0, // Fetched lazily by FormedHabitsModal when opened
       celebrationsEnabled: settings?.showMotivationalMessages ?? true,
       completionSoundEnabled: settings?.completionSoundEnabled ?? false,
       completionSoundType: settings?.completionSoundType ?? 'chime',

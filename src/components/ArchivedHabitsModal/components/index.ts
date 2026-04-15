@@ -1,9 +1,14 @@
 export { AnimatedHabitCard } from './AnimatedHabitCard';
 export { ActionButtons } from './ActionButtons';
+export { ArchiveCard } from './ArchiveCard';
+export { CardActions } from './CardActions';
+export { CardStack } from './CardStack';
+export { CompletionSummary } from './CompletionSummary';
 export { DangerZoneFooter } from './DangerZoneFooter';
 export { EmptyState } from './EmptyState';
 export { HabitCardHeader } from './HabitCardHeader';
 export { HabitStatsBadges } from './HabitStatsBadges';
 export { ModalHeader } from './ModalHeader';
+export { ProgressDots } from './ProgressDots';
 export { StatsSummaryBar } from './StatsSummaryBar';
 export { StrengthBackground } from './StrengthBackground';

@@ -16,6 +16,8 @@ export const fullHabitValidator = v.object({
   accessibilityUpdatedAt: v.optional(v.number()),
   archived: v.optional(v.boolean()),
   archivedAt: v.optional(v.number()),
+  formed: v.optional(v.boolean()),
+  formedAt: v.optional(v.number()),
   bestStreak: v.optional(v.number()),
   consecutiveDays: v.optional(v.number()),
   createdAt: v.number(),

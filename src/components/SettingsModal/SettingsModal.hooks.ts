@@ -28,7 +28,7 @@ export const useSettingsModalLogic = ({
   settingsDocument,
   visible,
 }: UseSettingsModalLogicProps) => {
-  const [view, setView] = useState<'settings' | 'archived' | 'paused' | 'sort'>(
+  const [view, setView] = useState<'settings' | 'archived' | 'formed' | 'paused' | 'sort'>(
     'settings'
   );
   const settings = settingsDocument;

@@ -62,6 +62,7 @@ function getTrackingStartDate(habits: HabitDoc[]): string {
  */
 export function SettingsModalSection({
   archivedHabitsCount,
+  formedHabitsCount,
   celebrationsEnabled,
   settings,
   showSettings,
@@ -146,6 +147,7 @@ export function SettingsModalSection({
     <>
       <SettingsModal
         archivedHabitsCount={archivedHabitsCount}
+        formedHabitsCount={formedHabitsCount}
         celebrationsEnabled={celebrationsEnabled}
         completionSoundEnabled={settings?.completionSoundEnabled ?? false}
         completionSoundType={settings?.completionSoundType ?? 'chime'}

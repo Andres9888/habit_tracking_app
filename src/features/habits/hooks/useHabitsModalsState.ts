@@ -44,6 +44,7 @@ export function useHabitsModalsState({
   const selection = useHabitSelectionState();
   const {
     archivedHabitsCount,
+    formedHabitsCount,
     settings,
     celebrationsEnabled,
     reduceMotionPreference,
@@ -173,6 +174,7 @@ export function useHabitsModalsState({
 
   return buildModalsStateReturnValue(visibility, selection, handlers, {
     archivedHabitsCount,
+    formedHabitsCount,
     celebrationsEnabled,
     clearMilestone,
     getStreak,

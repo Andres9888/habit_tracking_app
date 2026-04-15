@@ -49,6 +49,10 @@ const applicationTables = {
 
     archivedAt: v.optional(v.number()),
 
+    // Formed = habit successfully built into identity
+    formed: v.optional(v.boolean()),
+    formedAt: v.optional(v.number()),
+
     bestStreak: v.optional(v.number()),
 
     // ISO date string (YYYY-MM-DD)

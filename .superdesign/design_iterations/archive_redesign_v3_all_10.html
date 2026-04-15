@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Archive Page Redesign v3 — 10 More Variations</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Literata:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --green-primary:#059669; --green-dark:#047857; --green-light:#ECFDF5; --green-50:#F0FDF4;
+      --violet-primary:#8b5cf6; --violet-dark:#7c3aed; --violet-light:#EDE9FE; --violet-50:#F5F3FF;
+      --red-primary:#dc2626; --red-light:#FEF2F2;
+      --amber-primary:#d97706; --amber-light:#FFFBEB;
+      --gold:#8B6208;
+      --warm-bg:#F5F1ED; --warm-card:#FFFFFF; --warm-border:#E5E1DC;
+      --text-primary:#1a1a1a; --text-secondary:#6b7280; --text-tertiary:#9ca3af;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'DM Sans',sans-serif!important;background:#0f172a!important;min-height:100vh;padding:40px 20px}
+    h1,h2,h3,.serif{font-family:'Literata',serif!important}
+    .mono{font-family:'JetBrains Mono',monospace!important}
+    .page-title{font-family:'DM Sans',sans-serif!important;color:white;text-align:center;font-size:32px;font-weight:700;margin-bottom:8px}
+    .page-subtitle{color:#94a3b8;text-align:center;font-size:16px;margin-bottom:48px}
+    .variations-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(420px,1fr));gap:48px;max-width:1800px;margin:0 auto;justify-items:center}
+    .variation-wrapper{display:flex;flex-direction:column;align-items:center;gap:16px}
+    .variation-label{color:white;font-size:14px;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;display:flex;align-items:center;gap:8px}
+    .variation-label .num{background:var(--green-primary);color:white;width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700}
+    .variation-principle{color:#64748b;font-size:13px;font-style:italic;margin-top:-8px}
+    .phone{width:390px;height:844px;background:var(--warm-bg);border-radius:40px;overflow:hidden;box-shadow:0 25px 60px -12px rgba(0,0,0,0.6);position:relative;flex-shrink:0}
+    .phone-inner{height:100%;overflow-y:auto;padding-top:47px;scrollbar-width:none}
+    .phone-inner::-webkit-scrollbar{display:none}
+    .status-bar{position:absolute;top:0;left:0;right:0;height:47px;background:rgba(245,241,237,0.9);backdrop-filter:blur(10px);z-index:10}
+    .hdr{display:flex;align-items:center;justify-content:space-between;padding:12px 20px;background:rgba(245,241,237,0.95);backdrop-filter:blur(10px);position:sticky;top:0;z-index:5}
+    .hdr-title{font-size:17px;font-weight:700;color:var(--text-primary)}
+    .hdr-btn{width:32px;height:32px;border-radius:10px;background:rgba(0,0,0,0.06);display:flex;align-items:center;justify-content:center;color:var(--text-primary)}
+    .card{background:white;border-radius:16px;border:1px solid var(--warm-border);margin:0 16px 12px;overflow:hidden}
+    .cp{padding:16px}
+    .btn-g{background:var(--green-primary);color:white;border:none;border-radius:12px;padding:14px;font-size:15px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;width:100%;text-align:center}
+    .btn-sm{background:var(--green-primary);color:white;border:none;border-radius:12px;padding:10px 20px;font-size:14px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;display:flex;align-items:center;gap:6px;justify-content:center}
+    .btn-del{color:var(--text-tertiary);font-size:13px;border:none;background:none;cursor:pointer;font-family:'DM Sans',sans-serif}
+    .btn-p{background:linear-gradient(135deg,#8b5cf6,#7c3aed);color:white;border:none;border-radius:12px;padding:12px 20px;font-size:14px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;width:100%;text-align:center}
+    .btn-o{padding:10px 20px;border-radius:12px;border:1px solid var(--warm-border);background:white;color:var(--text-secondary);font-size:14px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;text-align:center}
+    .pc{background:linear-gradient(135deg,#F5F3FF,#EDE9FE);border:1px solid #DDD6FE}
+    .badge{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:8px;font-size:12px;font-weight:600}
+    .sl{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-tertiary);padding:8px 20px 4px}
+    .pb{height:6px;border-radius:3px;background:#E5E7EB;overflow:hidden}
+    .pf{height:100%;border-radius:3px}
+    .chevron{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2}
+  </style>
+</head>
+<body>
+
+<div class="page-title">Archive Redesign v3</div>
+<div class="page-subtitle">10 more variations &middot; pushing UX + monetization boundaries</div>
+
+<div class="variations-grid">
+
+<!-- ============================================ -->
+<!-- V1: THE NEGOTIATOR -->
+<!-- ============================================ -->
+<div class="variation-wrapper">
+  <div class="variation-label"><span class="num">1</span> The Negotiator</div>
+  <div class="variation-principle">Objection Handling + Alternative Offers</div>
+  <div class="phone">
+    <div class="status-bar"></div>
+    <div class="phone-inner">
+      <div class="hdr">
+        <div class="hdr-btn"><svg class="chevron" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></div>
+        <div class="hdr-title">Archived Habits</div>
+        <div class="hdr-btn"><svg class="chevron" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></div>
+      </div>
+
+      <!-- Habit being negotiated -->
+      <div class="card" style="margin:12px 16px;">
+        <div class="cp">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
+            <span style="font-size:28px;">🧘</span>
+            <div>
+              <div style="font-weight:700;font-size:17px;">Meditation</div>
+              <div style="font-size:12px;color:var(--text-tertiary);" class="mono">82% strength · 43-day streak · 127 completions</div>
+            </div>
+          </div>
+
+          <!-- Negotiation dialog -->
+          <div style="background:#F9FAFB;border-radius:14px;padding:16px;margin-bottom:14px;">
+            <div style="font-size:14px;font-weight:600;color:var(--text-primary);margin-bottom:12px;">Before you go... what if we adjusted?</div>
+
+            <!-- Option 1 -->
+            <button style="width:100%;padding:14px;border-radius:12px;border:2px solid var(--green-primary);background:var(--green-light);cursor:pointer;text-align:left;font-family:'DM Sans',sans-serif;margin-bottom:8px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <div>
+                  <div style="font-size:14px;font-weight:600;color:var(--green-dark);">⚡ Quick version — 5 min/day</div>
+                  <div style="font-size:12px;color:var(--green-primary);margin-top:2px;">Same habit, half the time commitment</div>
+                </div>
+                <span style="font-size:11px;font-weight:700;color:var(--green-primary);background:white;padding:4px 8px;border-radius:6px;" class="mono">⭐ Best</span>
+              </div>
+            </button>
+
+            <!-- Option 2 -->
+            <button style="width:100%;padding:14px;border-radius:12px;border:1px solid var(--warm-border);background:white;cursor:pointer;text-align:left;font-family:'DM Sans',sans-serif;margin-bottom:8px;">
+              <div style="font-size:14px;font-weight:600;color:var(--text-primary);">📅 Weekends only — 2x/week</div>
+              <div style="font-size:12px;color:var(--text-secondary);margin-top:2px;">Keep the connection without daily pressure</div>
+            </button>
+
+            <!-- Option 3 -->
+            <button style="width:100%;padding:14px;border-radius:12px;border:1px solid var(--warm-border);background:white;cursor:pointer;text-align:left;font-family:'DM Sans',sans-serif;margin-bottom:8px;">
+              <div style="font-size:14px;font-weight:600;color:var(--text-primary);">⏸️ Pause 2 weeks — auto-restart</div>
+              <div style="font-size:12px;color:var(--text-secondary);margin-top:2px;">Take a break, come back refreshed</div>
+            </button>
+
+            <!-- Option 4 -->
+            <button style="width:100%;padding:14px;border-radius:12px;border:1px solid var(--warm-border);background:white;cursor:pointer;text-align:left;font-family:'DM Sans',sans-serif;">
+              <div style="font-size:14px;font-weight:600;color:var(--text-primary);">🔄 Change time — move to evening</div>
+              <div style="font-size:12px;color:var(--text-secondary);margin-top:2px;">Maybe morning wasn't the right slot</div>
+            </button>
+          </div>
+
+          <div style="text-align:center;">
+            <button class="btn-del" style="font-size:12px;">None of these work — keep archived</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Already processed habit -->
+      <div class="card">
+        <div class="cp" style="padding:14px 16px;">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span style="font-size:20px;">🏃</span>
+            <div style="flex:1;">
+              <div style="font-weight:600;font-size:14px;">Morning Run</div>
+              <div style="font-size:12px;color:var(--text-tertiary);" class="mono">38% · 12🔥</div>
+            </div>
+            <button class="btn-sm" style="padding:8px 14px;font-size:13px;">Negotiate</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="cp" style="padding:14px 16px;">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span style="font-size:20px;">📖</span>
+            <div style="flex:1;">
+              <div style="font-weight:600;font-size:14px;">Reading</div>
+              <div style="font-size:12px;color:var(--text-tertiary);" class="mono">15% · 3🔥</div>
+            </div>
+            <button class="btn-sm" style="padding:8px 14px;font-size:13px;">Negotiate</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card pc" style="margin:12px 16px 24px;">
+        <div class="cp" style="text-align:center;">
+          <div style="font-size:18px;margin-bottom:4px;">🤝</div>
+          <div style="font-weight:700;font-size:15px;color:#5B21B6;margin-bottom:4px;">Smart Negotiations</div>
+          <div style="font-size:12px;color:#6D28D9;margin-bottom:12px;">Premium auto-detects why habits fail and offers personalized alternatives before you archive.</div>
+          <button class="btn-p">Unlock Smart Negotiate</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- V2: VALUE CALCULATOR -->
+<!-- ============================================ -->
+<div class="variation-wrapper">
+  <div class="variation-label"><span class="num">2</span> Value Calculator</div>
+  <div class="variation-principle">Concrete Value + ROI Framing</div>
+  <div class="phone">
+    <div class="status-bar"></div>
+    <div class="phone-inner">
+      <div class="hdr">
+        <div class="hdr-btn"><svg class="chevron" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></div>
+        <div class="hdr-title">Your Habit Value</div>
+        <div class="hdr-btn"><svg class="chevron" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></div>
+      </div>
+
+      <!-- Total value banner -->
+      <div class="card" style="margin:12px 16px;background:linear-gradient(135deg,#065F46,#047857);border:none;">
+        <div class="cp" style="text-align:center;padding:24px;">
+          <div style="font-size:11px;font-weight:700;color:rgba(255,255,255,0.7);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;">TOTAL VALUE OF YOUR ARCHIVED HABITS</div>
+          <div style="font-size:42px;font-weight:700;color:white;" class="mono">$1,247</div>
+          <div style="font-size:13px;color:#A7F3D0;margin-top:4px;">Based on time invested + equivalent service costs</div>
+        </div>
+      </div>
+
+      <!-- Habit with value breakdown -->
+      <div class="card">
+        <div class="cp">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
+            <span style="font-size:24px;">🧘</span>
+            <div style="flex:1;">
+              <div style="font-weight:600;font-size:15px;">Meditation</div>
+              <div style="font-size:12px;color:var(--text-tertiary);">127 sessions · ~15 min each</div>
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+            <div style="padding:10px;background:#F0FDF4;border-radius:10px;text-align:center;">
+              <div style="font-size:10px;color:var(--green-dark);font-weight:600;">TIME INVESTED</div>
+              <div style="font-size:18px;font-weight:700;color:var(--green-primary);" class="mono">31.7h</div>
+            </div>
+            <div style="padding:10px;background:#F0FDF4;border-radius:10px;text-align:center;">
+              <div style="font-size:10px;color:var(--green-dark);font-weight:600;">EQUIVALENT VALUE</div>
+              <div style="font-size:18px;font-weight:700;color:var(--green-primary);" class="mono">$847</div>
+            </div>
+          </div>
+
+          <div style="font-size:11px;color:var(--text-secondary);background:#F9FAFB;padding:8px 12px;border-radius:8px;margin-bottom:12px;">
+            💡 127 guided meditation sessions would cost ~$847 on Headspace/Calm
+          </div>
+
+          <button class="btn-g" style="margin-bottom:6px;">Protect This Investment</button>
+          <div style="text-align:center;"><button class="btn-del">Delete $847 of progress</button></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="cp">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
+            <span style="font-size:24px;">🏃</span>
+            <div style="flex:1;">
+              <div style="font-weight:600;font-size:15px;">Morning Run</div>
+              <div style="font-size:12px;color:var(--text-tertiary);">89 runs · ~30 min each</div>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+            <div style="padding:10px;background:#F0FDF4;border-radius:10px;text-align:center;">
+              <div style="font-size:10px;color:var(--green-dark);font-weight:600;">TIME INVESTED</div>
+              <div style="font-size:18px;font-weight:700;color:var(--green-primary);" class="mono">44.5h</div>
+            </div>
+            <div style="padding:10px;background:#F0FDF4;border-radius:10px;text-align:center;">
+              <div style="font-size:10px;color:var(--green-dark);font-weight:600;">EQUIVALENT VALUE</div>
+              <div style="font-size:18px;font-weight:700;color:var(--green-primary);" class="mono">$356</div>
+            </div>
+          </div>
+          <button class="btn-g" style="margin-bottom:6px;">Protect This Investment</button>
+          <div style="text-align:center;"><button class="btn-del">Delete $356 of progress</button></div>
+        </div>
+      </div>
+
+      <div class="card pc" style="margin:8px 16px 24px;">
+        <div class="cp" style="text-align:center;">
+          <div style="font-size:18px;margin-bottom:4px;">💰</div>
+          <div style="font-weight:700;font-size:15px;color:#5B21B6;margin-bottom:4px;">Value Dashboard</div>
+          <div style="font-size:12px;color:#6D28D9;margin-bottom:12px;">Track total ROI across all habits. Export reports. See your investment grow.</div>
+          <button class="btn-p">Unlock Value Tracking</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- V3: SNAP BACK — Ultra Minimal -->
+<!-- ============================================ -->
+<div class="variation-wrapper">
+  <div class="variation-label"><span class="num">3</span> Snap Back</div>
+  <div class="variation-principle">Zero Guilt + Radical Simplicity</div>
+  <div class="phone">
+    <div class="status-bar"></div>
+    <div class="phone-inner" style="background:white;">
+      <div class="hdr" style="background:rgba(255,255,255,0.95);">
+        <div class="hdr-btn"><svg class="chevron" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></div>
+        <div class="hdr-title">Archive</div>
+        <div class="hdr-btn"><svg class="chevron" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></div>
+      </div>
+
+      <div style="padding:24px 20px 8px;font-size:13px;color:var(--text-tertiary);">
+        4 habits resting. No pressure.
+      </div>
+
+      <!-- Ultra-minimal cards -->
+      <div style="padding:0 16px;">
+        <!-- Habit 1 -->
+        <div style="padding:20px 0;border-bottom:1px solid #F3F4F6;">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+            <span style="font-size:32px;">🧘</span>
+            <div>
+              <div style="font-weight:600;font-size:17px;">Meditation</div>
+              <div style="font-size:13px;color:var(--text-tertiary);">127 sessions · 12 days resting</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:10px;">
+            <button style="flex:1;padding:16px;border-radius:14px;background:var(--green-primary);border:none;cursor:pointer;font-family:'DM Sans',sans-serif;">
+              <div style="font-size:16px;font-weight:700;color:white;">Snap Back</div>
+            </button>
+            <button style="width:56px;padding:16px;border-radius:14px;background:#F9FAFB;border:1px solid #E5E7EB;cursor:pointer;text-align:center;">
+              <div style="font-size:14px;color:var(--text-tertiary);">✕</div>
+            </button>
+          </div>
+        </div>
+
+        <!-- Habit 2 -->
+        <div style="padding:20px 0;border-bottom:1px solid #F3F4F6;">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+            <span style="font-size:32px;">🏃</span>
+            <div>
+              <div style="font-weight:600;font-size:17px;">Morning Run</div>
+              <div style="font-size:13px;color:var(--text-tertiary);">89 sessions · 34 days resting</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:10px;">
+            <button style="flex:1;padding:16px;border-radius:14px;background:var(--green-primary);border:none;cursor:pointer;font-family:'DM Sans',sans-serif;">
+              <div style="font-size:16px;font-weight:700;color:white;">Snap Back</div>
+            </button>
+            <button style="width:56px;padding:16px;border-radius:14px;background:#F9FAFB;border:1px solid #E5E7EB;cursor:pointer;text-align:center;">
+              <div style="font-size:14px;color:var(--text-tertiary);">✕</div>
+            </button>
+          </div>
+        </div>
+
+        <!-- Habit 3 -->
+        <div style="padding:20px 0;border-bottom:1px solid #F3F4F6;">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+            <span style="font-size:32px;">📖</span>
+            <div>
+              <div style="font-weight:600;font-size:17px;">Reading</div>
+              <div style="font-size:13px;color:var(--text-tertiary);">12 sessions · 2 months resting</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:10px;">
+            <button style="flex:1;padding:16px;border-radius:14px;background:var(--green-primary);border:none;cursor:pointer;font-family:'DM Sans',sans-serif;">
+              <div style="font-size:16px;font-weight:700;color:white;">Snap Back</div>
+            </button>
+            <button style="width:56px;padding:16px;border-radius:14px;background:#F9FAFB;border:1px solid #E5E7EB;cursor:pointer;text-align:center;">
+              <div style="font-size:14px;color:var(--text-tertiary);">✕</div>
+            </button>
+          </div>
+        </div>
+
+        <!-- Habit 4 -->
+        <div style="padding:20px 0;">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+            <span style="font-size:32px;">✍️</span>
+            <div>
+              <div style="font-weight:600;font-size:17px;">Journaling</div>
+              <div style="font-size:13px;color:var(--text-tertiary);">203 sessions · 5 days resting</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:10px;">
+            <button style="flex:1;padding:16px;border-radius:14px;background:var(--green-primary);border:none;cursor:pointer;font-family:'DM Sans',sans-serif;">
+              <div style="font-size:16px;font-weight:700;color:white;">Snap Back</div>
+            </button>
+            <button style="width:56px;padding:16px;border-radius:14px;background:#F9FAFB;border:1px solid #E5E7EB;cursor:pointer;text-align:center;">
+              <div style="font-size:14px;color:var(--text-tertiary);">✕</div>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div style="padding:24px 20px;text-align:center;">
+        <button style="padding:14px 24px;border-radius:14px;background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;color:var(--green-primary);">
+          Snap All Back
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- V4: SMART BUNDLES -->
+<!-- ============================================ -->
+<div class="variation-wrapper">
+  <div class="variation-label"><span class="num">4</span> Smart Bundles</div>
+  <div class="variation-principle">Bundling Effect + Routine Architecture</div>
+  <div class="phone">
+    <div class="status-bar"></div>
+    <div class="phone-inner">
+      <div class="hdr">
+        <div class="hdr-btn"><svg class="chevron" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></div>
+        <div class="hdr-title">Archived Habits</div>
+        <div class="hdr-btn"><svg class="chevron" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></div>
+      </div>
+
+      <div class="sl" style="color:var(--green-primary);padding-top:12px;">🎯 SUGGESTED ROUTINE BUNDLES</div>
+
+      <!-- Morning bundle -->
+      <div class="card" style="border:2px solid var(--green-primary);">
+        <div class="cp">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+            <span style="font-size:20px;">☀️</span>
+            <div style="font-weight:700;font-size:16px;color:var(--green-dark);">Morning Power Bundle</div>
+          </div>
+          <div style="font-size:12px;color:var(--text-secondary);margin-bottom:12px;">Restore these together for a complete morning routine</div>
+
+          <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:14px;">
+            <div style="display:flex;align-items:center;gap:8px;padding:10px 12px;background:var(--green-50);border-radius:10px;">
+              <span style="font-size:18px;">🧘</span>
+              <div style="flex:1;">
+                <div style="font-size:14px;font-weight:600;">Meditation</div>
+                <div style="font-size:11px;color:var(--text-tertiary);" class="mono">82% · 43🔥</div>
+              </div>
+              <span style="font-size:12px;color:var(--green-primary);">✓</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;padding:10px 12px;background:var(--green-50);border-radius:10px;">
+              <span style="font-size:18px;">🏃</span>
+              <div style="flex:1;">
+                <div style="font-size:14px;font-weight:600;">Morning Run</div>
+                <div style="font-size:11px;color:var(--text-tertiary);" class="mono">38% · 12🔥</div>
+              </div>
+              <span style="font-size:12px;color:var(--green-primary);">✓</span>
+            </div>
+          </div>
+
+          <div style="background:var(--green-light);border-radius:10px;padding:8px 12px;margin-bottom:12px;text-align:center;">
+            <span style="font-size:12px;color:var(--green-dark);">Restoring together boosts success by <strong>47%</strong></span>
+          </div>
+
+          <button class="btn-g">Restore Morning Bundle</button>
+        </div>
+      </div>
+
+      <!-- Evening bundle -->
+      <div class="card" style="border:2px solid #6366F1;">
+        <div class="cp">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+            <span style="font-size:20px;">🌙</span>
+            <div style="font-weight:700;font-size:16px;color:#4338CA;">Evening Wind-Down</div>
+          </div>
+          <div style="font-size:12px;color:var(--text-secondary);margin-bottom:12px;">A peaceful end to your day</div>
+
+          <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:14px;">
+            <div style="display:flex;align-items:center;gap:8px;padding:10px 12px;background:#EEF2FF;border-radius:10px;">
+              <span style="font-size:18px;">📖</span>
+              <div style="flex:1;">
+                <div style="font-size:14px;font-weight:600;">Reading</div>
+                <div style="font-size:11px;color:var(--text-tertiary);" class="mono">15% · 3🔥</div>
+              </div>
+              <span style="font-size:12px;color:#6366F1;">✓</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;padding:10px 12px;background:#EEF2FF;border-radius:10px;">
+              <span style="font-size:18px;">✍️</span>
+              <div style="flex:1;">
+                <div style="font-size:14px;font-weight:600;">Journaling</div>
+                <div style="font-size:11px;color:var(--text-tertiary);" class="mono">65% · 28🔥</div>
+              </div>
+              <span style="font-size:12px;color:#6366F1;">✓</span>
+            </div>
+          </div>
+
+          <button style="width:100%;padding:14px;border-radius:12px;background:#6366F1;color:white;border:none;font-size:15px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;">Restore Evening Bundle</button>
+        </div>
+      </div>
+
+      <div class="sl">INDIVIDUAL HABITS</div>
+
+      <div style="padding:0 16px 12px;font-size:13px;color:var(--text-tertiary);">
+        Or restore habits individually — tap any habit above to remove from bundle.
+      </div>
+
+      <div class="card pc" style="margin:8px 16px 24px;">
+        <div class="cp" style="text-align:center;">
+          <div style="font-size:18px;margin-bottom:4px;">📦</div>
+          <div style="font-weight:700;font-size:15px;color:#5B21B6;margin-bottom:4px;">Custom Bundles</div>
+          <div style="font-size:12px;color:#6D28D9;margin-bottom:12px;">Create your own routine bundles, set bundle schedules, and track bundle streaks.</div>
+          <button class="btn-p">Unlock Custom Bundles</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- V5: THE REWIND -->
+<!-- ============================================ -->
+<div class="variation-wrapper">
+  <div class="variation-label"><span class="num">5</span> The Rewind</div>
+  <div class="variation-principle">Temporal Self-Continuity + Regret</div>
+  <div class="phone">
+    <div class="status-bar"></div>
+    <div class="phone-inner">
+      <div class="hdr">
+        <div class="hdr-btn"><svg class="chevron" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></div>
+        <div class="hdr-title">Archived Habits</div>
+        <div class="hdr-btn"><svg class="chevron" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></div>
+      </div>
+
+      <div class="card" style="margin:12px 16px;">
+        <div class="cp">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;">
+            <span style="font-size:28px;">🧘</span>
+            <div>
+              <div style="font-weight:700;font-size:17px;">Meditation</div>
+              <div style="font-size:12px;color:var(--text-tertiary);">Archived March 9, 2026</div>
+            </div>
+          </div>
+
+          <!-- Timeline scrubber -->
+          <div style="background:#1a1a1a;border-radius:14px;padding:16px;margin-bottom:14px;">
+            <div style="display:flex;justify-content:space-between;margin-bottom:10px;">
+              <span style="font-size:10px;color:#6b7280;" class="mono">DAY 1</span>
+              <span style="font-size:10px;color:#FBBF24;" class="mono">⭐ PEAK</span>
+              <span style="font-size:10px;color:#EF4444;" class="mono">NOW</span>
+            </div>
+
+            <!-- Mini sparkline -->
+            <svg width="100%" height="40" viewBox="0 0 300 40" style="margin-bottom:8px;">
+              <path d="M 0 38 Q 30 35, 60 30 Q 90 22, 120 15 Q 150 8, 180 4 Q 195 3, 210 3" fill="none" stroke="#34D399" stroke-width="2"/>
+              <path d="M 210 3 Q 230 5, 250 15 Q 270 25, 290 35" fill="none" stroke="#EF4444" stroke-width="2" stroke-dasharray="4"/>
+              <circle cx="210" cy="3" r="4" fill="#FBBF24"/>
+              <circle cx="290" cy="35" r="4" fill="#EF4444"/>
+            </svg>
+
+            <!-- Rewind slider -->
+            <div style="position:relative;height:32px;margin-bottom:4px;">
+              <div style="position:absolute;top:12px;left:0;right:0;height:8px;background:#374151;border-radius:4px;">
+                <div style="width:70%;height:100%;background:linear-gradient(90deg,#059669,#FBBF24);border-radius:4px;"></div>
+              </div>
+              <div style="position:absolute;top:4px;left:68%;width:24px;height:24px;background:white;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,0.3);display:flex;align-items:center;justify-content:center;">
+                <span style="font-size:10px;">⏪</span>
+              </div>
+            </div>
+            <div style="text-align:center;font-size:11px;color:#9ca3af;">Drag to rewind to any point</div>
+          </div>
+
+          <!-- Rewind preview -->
+          <div style="background:var(--green-light);border-radius:12px;padding:14px;margin-bottom:14px;border:1px solid #A7F3D0;">
+            <div style="font-size:11px;font-weight:700;color:var(--green-dark);text-transform:uppercase;margin-bottom:8px;">⏪ REWIND TO PEAK (DAY 127)</div>
+            <div style="display:flex;gap:12px;">
+              <div style="flex:1;text-align:center;">
+                <div style="font-size:20px;font-weight:700;color:var(--green-primary);" class="mono">43</div>
+                <div style="font-size:10px;color:var(--green-dark);">streak</div>
+              </div>
+              <div style="flex:1;text-align:center;">
+                <div style="font-size:20px;font-weight:700;color:var(--green-primary);" class="mono">82%</div>
+                <div style="font-size:10px;color:var(--green-dark);">strength</div>
+              </div>
+              <div style="flex:1;text-align:center;">
+                <div style="font-size:20px;font-weight:700;color:var(--green-primary);" class="mono">127</div>
+                <div style="font-size:10px;color:var(--green-dark);">sessions</div>
+              </div>
+            </div>
+          </div>
+
+          <button class="btn-g">Rewind & Restore</button>
+          <div style="text-align:center;margin-top:6px;"><button class="btn-del">Let go</button></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="cp" style="padding:14px 16px;">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span style="font-size:20px;">🏃</span>
+            <div style="flex:1;">
+              <div style="font-weight:600;font-size:14px;">Morning Run</div>
+              <div style="font-size:12px;color:var(--text-tertiary);">Peak: Day 89 · 38% strength</div>
+            </div>
+            <button class="btn-sm" style="padding:8px 14px;font-size:13px;">Rewind</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card pc" style="margin:12px 16px 24px;">
+        <div class="cp" style="text-align:center;">
+          <div style="font-size:18px;margin-bottom:4px;">⏪</div>
+          <div style="font-weight:700;font-size:15px;color:#5B21B6;margin-bottom:4px;">Time Machine</div>
+          <div style="font-size:12px;color:#6D28D9;margin-bottom:12px;">Premium can rewind to any point AND restore with that day's streak and strength intact.</div>
+          <button class="btn-p">Unlock Time Machine</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- V6: THE OFFER — Contextual Premium -->
+<!-- ============================================ -->
+<div class="variation-wrapper">
+  <div class="variation-label"><span class="num">6</span> The Offer</div>
+  <div class="variation-principle">Contextual Urgency + Pain-Point Pricing</div>
+  <div class="phone">
+    <div class="status-bar"></div>
+    <div class="phone-inner">
+      <div class="hdr">
+        <div class="hdr-btn"><svg class="chevron" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></div>
+        <div class="hdr-title">Archived Habits</div>
+        <div class="hdr-btn"><svg class="chevron" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></div>
+      </div>
+
+      <!-- Contextual offer — appears because user has archived habits -->
+      <div style="margin:12px 16px;background:linear-gradient(135deg,#5B21B6,#7C3AED);border-radius:20px;padding:24px 20px;text-align:center;">
+        <div style="font-size:11px;font-weight:700;color:rgba(255,255,255,0.7);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px;">ARCHIVE RECOVERY OFFER</div>
+        <div style="font-size:22px;font-weight:700;color:white;margin-bottom:4px;" class="serif">Don't lose 431 completions</div>
+        <div style="font-size:14px;color:#DDD6FE;margin-bottom:16px;">Upgrade now and we'll freeze all your streaks & strength — forever.</div>
+
+        <div style="display:flex;gap:8px;justify-content:center;margin-bottom:16px;">
+          <div style="background:rgba(255,255,255,0.15);border-radius:12px;padding:10px 16px;">
+            <div style="font-size:20px;font-weight:700;color:white;" class="mono">4</div>
+            <div style="font-size:10px;color:#DDD6FE;">habits at risk</div>
+          </div>
+          <div style="background:rgba(255,255,255,0.15);border-radius:12px;padding:10px 16px;">
+            <div style="font-size:20px;font-weight:700;color:#FBBF24;" class="mono">43</div>
+            <div style="font-size:10px;color:#DDD6FE;">best streak</div>
+          </div>
+          <div style="background:rgba(255,255,255,0.15);border-radius:12px;padding:10px 16px;">
+            <div style="font-size:20px;font-weight:700;color:#34D399;" class="mono">431</div>
+            <div style="font-size:10px;color:#DDD6FE;">completions</div>
+          </div>
+        </div>
+
+        <button style="width:100%;padding:16px;border-radius:14px;background:white;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;">
+          <div style="font-size:16px;font-weight:700;color:#5B21B6;">Try Premium Free — 7 Days</div>
+          <div style="font-size:12px;color:#7C3AED;margin-top:2px;">Then $4.99/mo · Cancel anytime</div>
+        </button>
+
+        <div style="font-size:11px;color:rgba(255,255,255,0.5);margin-top:8px;">This offer is only available from your archive</div>
+      </div>
+
+      <div class="sl">YOUR ARCHIVED HABITS</div>
+
+      <!-- Compact list -->
+      <div class="card">
+        <div class="cp" style="padding:12px 16px;">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span style="font-size:20px;">🧘</span>
+            <div style="flex:1;"><div style="font-weight:600;font-size:14px;">Meditation</div><div style="font-size:11px;color:var(--text-tertiary);" class="mono">82% · 43🔥 · 12d ago</div></div>
+            <button class="btn-sm" style="padding:8px 14px;font-size:13px;">Restore</button>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="cp" style="padding:12px 16px;">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span style="font-size:20px;">🏃</span>
+            <div style="flex:1;"><div style="font-weight:600;font-size:14px;">Morning Run</div><div style="font-size:11px;color:var(--text-tertiary);" class="mono">38% · 12🔥 · 34d ago</div></div>
+            <button class="btn-sm" style="padding:8px 14px;font-size:13px;">Restore</button>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="cp" style="padding:12px 16px;">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span style="font-size:20px;">📖</span>
+            <div style="flex:1;"><div style="font-weight:600;font-size:14px;">Reading</div><div style="font-size:11px;color:var(--text-tertiary);" class="mono">15% · 3🔥 · 2mo ago</div></div>
+            <button class="btn-sm" style="padding:8px 14px;font-size:13px;">Restore</button>
+          </div>
+        </div>
+      </div>
+      <div class="card" style="margin-bottom:24px;">
+        <div class="cp" style="padding:12px 16px;">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span style="font-size:20px;">✍️</span>
+            <div style="flex:1;"><div style="font-weight:600;font-size:14px;">Journaling</div><div style="font-size:11px;color:var(--text-tertiary);" class="mono">65% · 28🔥 · 5d ago</div></div>
+            <button class="btn-sm" style="padding:8px 14px;font-size:13px;">Restore</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- V7: STORY MODE — Narrative Journey -->
+<!-- ============================================ -->
+<div class="variation-wrapper">
+  <div class="variation-label"><span class="num">7</span> Story Mode</div>
+  <div class="variation-principle">Narrative Transport + Continuation Desire</div>
+  <div class="phone">
+    <div class="status-bar"></div>
+    <div class="phone-inner">
+      <div class="hdr">
+        <div class="hdr-btn"><svg class="chevron" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></div>
+        <div class="hdr-title serif" style="color:#78350F;">Your Story</div>
+        <div class="hdr-btn"><svg class="chevron" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></div>
+      </div>
+
+      <div class="card" style="margin:12px 16px;background:linear-gradient(135deg,#FFFBEB,#FEF3C7);border-color:#FDE68A;">
+        <div class="cp">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;">
+            <span style="font-size:28px;">🧘</span>
+            <div>
+              <div style="font-weight:700;font-size:17px;">Meditation</div>
+              <div style="font-size:12px;color:#92400E;">A story in 3 chapters</div>
+            </div>
+          </div>
+
+          <!-- Chapter 1 -->
+          <div style="position:relative;padding-left:24px;margin-bottom:16px;">
+            <div style="position:absolute;left:8px;top:4px;bottom:-12px;width:2px;background:#D97706;"></div>
+            <div style="position:absolute;left:2px;top:4px;width:14px;height:14px;background:#D97706;border-radius:7px;"></div>
+            <div style="font-size:11px;font-weight:700;color:#92400E;text-transform:uppercase;" class="mono">Ch 1 · The Beginning</div>
+            <div style="font-size:13px;color:#78350F;margin-top:2px;" class="serif">Jan 2, 2026 — You started with 5 minutes a day. "Just breathe," you told yourself.</div>
+          </div>
+
+          <!-- Chapter 2 -->
+          <div style="position:relative;padding-left:24px;margin-bottom:16px;">
+            <div style="position:absolute;left:8px;top:4px;bottom:-12px;width:2px;background:#059669;"></div>
+            <div style="position:absolute;left:2px;top:4px;width:14px;height:14px;background:#059669;border-radius:7px;"></div>
+            <div style="font-size:11px;font-weight:700;color:var(--green-dark);text-transform:uppercase;" class="mono">Ch 2 · The Streak</div>
+            <div style="font-size:13px;color:#065F46;margin-top:2px;" class="serif">43 consecutive days. You hit 82% strength — Automatic. It became part of who you are.</div>
+          </div>
+
+          <!-- Chapter 3 (current - paused) -->
+          <div style="position:relative;padding-left:24px;margin-bottom:16px;">
+            <div style="position:absolute;left:8px;top:4px;bottom:-12px;width:2px;background:#D97706;border-style:dashed;"></div>
+            <div style="position:absolute;left:2px;top:4px;width:14px;height:14px;background:white;border:2px solid #D97706;border-radius:7px;"></div>
+            <div style="font-size:11px;font-weight:700;color:#92400E;text-transform:uppercase;" class="mono">Ch 3 · The Pause</div>
+            <div style="font-size:13px;color:#78350F;margin-top:2px;" class="serif">March 9 — You stepped away. The story isn't over. Just... waiting.</div>
+          </div>
+
+          <!-- Next chapter prompt -->
+          <div style="position:relative;padding-left:24px;margin-bottom:14px;">
+            <div style="position:absolute;left:2px;top:4px;width:14px;height:14px;background:var(--green-light);border:2px dashed var(--green-primary);border-radius:7px;"></div>
+            <div style="font-size:11px;font-weight:700;color:var(--green-primary);text-transform:uppercase;" class="mono">Ch 4 · ?</div>
+            <div style="font-size:14px;color:var(--green-dark);margin-top:2px;font-weight:600;" class="serif">Write the next chapter.</div>
+          </div>
+
+          <button class="btn-g">Continue This Story</button>
+          <div style="text-align:center;margin-top:6px;"><button class="btn-del">End this story</button></div>
+        </div>
+      </div>
+
+      <!-- Compact story 2 -->
+      <div class="card">
+        <div class="cp">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+            <span style="font-size:22px;">🏃</span>
+            <div style="flex:1;"><div style="font-weight:600;font-size:15px;">Morning Run</div></div>
+          </div>
+          <div style="font-size:13px;color:var(--text-secondary);margin-bottom:10px;font-style:italic;" class="serif">"89 mornings. Then life got in the way. But the road is still there."</div>
+          <button class="btn-g">Continue This Story</button>
+        </div>
+      </div>
+
+      <div class="card pc" style="margin:12px 16px 24px;">
+        <div class="cp" style="text-align:center;">
+          <div style="font-size:18px;margin-bottom:4px;">📚</div>
+          <div style="font-weight:700;font-size:15px;color:#5B21B6;margin-bottom:4px;">Story Export</div>
+          <div style="font-size:12px;color:#6D28D9;margin-bottom:12px;">Premium members can export beautiful story cards to share their habit journeys.</div>
+          <button class="btn-p">Unlock Story Export</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- V8: ACCOUNTABILITY MIRROR -->
+<!-- ============================================ -->
+<div class="variation-wrapper">
+  <div class="variation-label"><span class="num">8</span> Accountability Mirror</div>
+  <div class="variation-principle">Self-Accountability + Commitment Contracts</div>
+  <div class="phone">
+    <div class="status-bar"></div>
+    <div class="phone-inner">
+      <div class="hdr">
+        <div class="hdr-btn"><svg class="chevron" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></div>
+        <div class="hdr-title">Archived Habits</div>
+        <div class="hdr-btn"><svg class="chevron" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></div>
+      </div>
+
+      <!-- Accountability summary -->
+      <div class="card" style="margin:12px 16px;background:#1a1a1a;border:none;">
+        <div class="cp" style="text-align:center;padding:20px;">
+          <div style="font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;">PROMISES MADE · PROMISES KEPT</div>
+          <div style="display:flex;justify-content:center;gap:16px;">
+            <div>
+              <div style="font-size:36px;font-weight:700;color:#34D399;" class="mono">431</div>
+              <div style="font-size:11px;color:#6b7280;">days you showed up</div>
+            </div>
+            <div style="width:1px;background:#374151;"></div>
+            <div>
+              <div style="font-size:36px;font-weight:700;color:#EF4444;" class="mono">4</div>
+              <div style="font-size:11px;color:#6b7280;">habits you stepped away from</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="cp">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+            <span style="font-size:24px;">🧘</span>
+            <div>
+              <div style="font-weight:600;font-size:15px;">Meditation</div>
+              <div style="font-size:12px;color:var(--text-tertiary);" class="mono">127 of 139 days · 91% kept</div>
+            </div>
+          </div>
+
+          <!-- Commitment meter -->
+          <div style="margin-bottom:12px;">
+            <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+              <span style="font-size:11px;color:var(--text-tertiary);">Commitment kept</span>
+              <span style="font-size:11px;font-weight:700;color:var(--green-primary);" class="mono">91%</span>
+            </div>
+            <div class="pb" style="height:8px;">
+              <div class="pf" style="width:91%;background:linear-gradient(90deg,#059669,#34D399);"></div>
+            </div>
+          </div>
+
+          <div style="font-size:13px;color:#065F46;background:var(--green-light);padding:10px 14px;border-radius:10px;margin-bottom:12px;border-left:3px solid var(--green-primary);">
+            "You were 91% reliable. That's exceptional. Are you sure you want to break that record?"
+          </div>
+
+          <button class="btn-g" style="margin-bottom:6px;">Keep My Promise — Restore</button>
+          <div style="text-align:center;"><button class="btn-del">I'm releasing this commitment</button></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="cp">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+            <span style="font-size:24px;">🏃</span>
+            <div>
+              <div style="font-weight:600;font-size:15px;">Morning Run</div>
+              <div style="font-size:12px;color:var(--text-tertiary);" class="mono">89 of 120 days · 74% kept</div>
+            </div>
+          </div>
+          <div style="margin-bottom:12px;">
+            <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+              <span style="font-size:11px;color:var(--text-tertiary);">Commitment kept</span>
+              <span style="font-size:11px;font-weight:700;color:var(--amber-primary);" class="mono">74%</span>
+            </div>
+            <div class="pb" style="height:8px;">
+              <div class="pf" style="width:74%;background:linear-gradient(90deg,#D97706,#FBBF24);"></div>
+            </div>
+          </div>
+          <button class="btn-g" style="margin-bottom:6px;">Keep My Promise — Restore</button>
+          <div style="text-align:center;"><button class="btn-del">I'm releasing this commitment</button></div>
+        </div>
+      </div>
+
+      <div class="card pc" style="margin:8px 16px 24px;">
+        <div class="cp" style="text-align:center;">
+          <div style="font-size:18px;margin-bottom:4px;">🤝</div>
+          <div style="font-weight:700;font-size:15px;color:#5B21B6;margin-bottom:4px;">Accountability Partner</div>
+          <div style="font-size:12px;color:#6D28D9;margin-bottom:12px;">Share commitments with a friend. They get notified when you archive — gentle accountability.</div>
+          <button class="btn-p">Add Accountability Partner</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- V9: THE CHALLENGE — Gamified Restart -->
+<!-- ============================================ -->
+<div class="variation-wrapper">
+  <div class="variation-label"><span class="num">9</span> The Challenge</div>
+  <div class="variation-principle">Goal Gradient + Fresh Start Effect</div>
+  <div class="phone">
+    <div class="status-bar"></div>
+    <div class="phone-inner">
+      <div class="hdr">
+        <div class="hdr-btn"><svg class="chevron" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></div>
+        <div class="hdr-title">Archived Habits</div>
+        <div class="hdr-btn"><svg class="chevron" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></div>
+      </div>
+
+      <div style="padding:12px 20px 4px;font-size:14px;color:var(--text-secondary);">Ready for a fresh start? Pick a challenge.</div>
+
+      <!-- Challenge card -->
+      <div class="card" style="border:2px solid var(--green-primary);margin:12px 16px;">
+        <div style="background:linear-gradient(135deg,#059669,#047857);padding:16px 16px 12px;text-align:center;">
+          <div style="font-size:11px;font-weight:700;color:rgba(255,255,255,0.7);text-transform:uppercase;letter-spacing:0.08em;">7-DAY COMEBACK CHALLENGE</div>
+          <div style="font-size:28px;font-weight:700;color:white;margin-top:4px;" class="serif">🧘 Meditation</div>
+        </div>
+        <div class="cp">
+          <div style="display:flex;justify-content:space-between;margin-bottom:12px;">
+            <div style="text-align:center;flex:1;">
+              <div style="font-size:18px;font-weight:700;" class="mono">7</div>
+              <div style="font-size:10px;color:var(--text-tertiary);">days</div>
+            </div>
+            <div style="text-align:center;flex:1;">
+              <div style="font-size:18px;font-weight:700;" class="mono">5m</div>
+              <div style="font-size:10px;color:var(--text-tertiary);">per day</div>
+            </div>
+            <div style="text-align:center;flex:1;">
+              <div style="font-size:18px;font-weight:700;color:var(--green-primary);" class="mono">🏆</div>
+              <div style="font-size:10px;color:var(--text-tertiary);">badge</div>
+            </div>
+          </div>
+
+          <div style="font-size:13px;color:var(--text-secondary);background:#F9FAFB;padding:10px;border-radius:10px;margin-bottom:12px;text-align:center;">
+            Complete 7 days and earn the <strong>Comeback King</strong> badge. Your old streak of 43 will be waiting for you to beat.
+          </div>
+
+          <button class="btn-g" style="font-size:16px;">Accept Challenge</button>
+        </div>
+      </div>
+
+      <!-- Other habits with mini challenges -->
+      <div class="card">
+        <div class="cp" style="padding:14px 16px;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+            <span style="font-size:20px;">🏃</span>
+            <div style="flex:1;">
+              <div style="font-weight:600;font-size:14px;">Morning Run</div>
+              <div style="font-size:11px;color:var(--text-tertiary);" class="mono">38% · 12🔥</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <button style="flex:1;padding:10px;border-radius:10px;border:1px solid var(--green-primary);background:var(--green-light);color:var(--green-dark);font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;">3-Day Sprint</button>
+            <button style="flex:1;padding:10px;border-radius:10px;border:1px solid var(--warm-border);background:white;color:var(--text-secondary);font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;">7-Day Challenge</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="cp" style="padding:14px 16px;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+            <span style="font-size:20px;">📖</span>
+            <div style="flex:1;">
+              <div style="font-weight:600;font-size:14px;">Reading</div>
+              <div style="font-size:11px;color:var(--text-tertiary);" class="mono">15% · 3🔥</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <button style="flex:1;padding:10px;border-radius:10px;border:1px solid var(--green-primary);background:var(--green-light);color:var(--green-dark);font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;">3-Day Sprint</button>
+            <button style="flex:1;padding:10px;border-radius:10px;border:1px solid var(--warm-border);background:white;color:var(--text-secondary);font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;">7-Day Challenge</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card pc" style="margin:8px 16px 24px;">
+        <div class="cp" style="text-align:center;">
+          <div style="font-size:18px;margin-bottom:4px;">🏆</div>
+          <div style="font-weight:700;font-size:15px;color:#5B21B6;margin-bottom:4px;">Custom Challenges</div>
+          <div style="font-size:12px;color:#6D28D9;margin-bottom:12px;">Create custom comeback challenges with rewards, difficulty scaling, and social sharing.</div>
+          <button class="btn-p">Unlock Custom Challenges</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- V10: THE HYBRID — Best of Everything -->
+<!-- ============================================ -->
+<div class="variation-wrapper">
+  <div class="variation-label"><span class="num">10</span> The Hybrid</div>
+  <div class="variation-principle">Combined Best Elements from All 30 Variations</div>
+  <div class="phone">
+    <div class="status-bar"></div>
+    <div class="phone-inner">
+      <div class="hdr">
+        <div class="hdr-btn"><svg class="chevron" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></div>
+        <div class="hdr-title">Archived Habits</div>
+        <div class="hdr-btn"><svg class="chevron" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></div>
+      </div>
+
+      <!-- Momentum score (from v2#8) -->
+      <div style="margin:12px 16px;background:#1a1a1a;border-radius:16px;padding:16px;display:flex;align-items:center;gap:16px;">
+        <div style="position:relative;width:64px;height:64px;flex-shrink:0;">
+          <svg width="64" height="64" viewBox="0 0 64 64">
+            <circle cx="32" cy="32" r="28" fill="none" stroke="#374151" stroke-width="5"/>
+            <circle cx="32" cy="32" r="28" fill="none" stroke="url(#mGrad)" stroke-width="5" stroke-dasharray="132" stroke-dashoffset="55" stroke-linecap="round" transform="rotate(-90 32 32)"/>
+            <defs><linearGradient id="mGrad"><stop offset="0%" stop-color="#D97706"/><stop offset="100%" stop-color="#34D399"/></linearGradient></defs>
+          </svg>
+          <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;">
+            <span style="font-size:20px;font-weight:700;color:white;" class="mono">58</span>
+          </div>
+        </div>
+        <div>
+          <div style="font-size:13px;font-weight:600;color:white;">Momentum: Moderate</div>
+          <div style="font-size:11px;color:#9ca3af;">Restore habits to boost to <span style="color:#34D399;">75 Strong</span></div>
+        </div>
+      </div>
+
+      <!-- Habit card with identity + micro-restore + ecosystem (combined) -->
+      <div class="card">
+        <div class="cp">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+            <span style="font-size:24px;">🧘</span>
+            <div style="flex:1;">
+              <div style="font-weight:700;font-size:16px;">Meditation</div>
+              <div style="font-size:12px;color:var(--text-tertiary);" class="mono">82% · 43🔥 · 12d ago</div>
+            </div>
+            <div style="text-align:right;">
+              <div style="font-size:14px;font-weight:700;color:var(--green-primary);" class="mono">+8</div>
+              <div style="font-size:9px;color:var(--green-dark);">momentum</div>
+            </div>
+          </div>
+
+          <!-- Identity reminder (from v2#1) -->
+          <div style="border-left:3px solid #EA580C;padding:8px 12px;background:#FFF7ED;border-radius:0 10px 10px 0;margin:10px 0;">
+            <div style="font-size:10px;font-weight:700;color:#9A3412;">YOU SAID:</div>
+            <div style="font-size:13px;color:#7C2D12;font-style:italic;" class="serif">"I am someone who starts each day with clarity."</div>
+          </div>
+
+          <!-- Ecosystem impact (from v2#3) -->
+          <div style="display:flex;align-items:center;gap:6px;padding:6px 10px;background:#FEF2F2;border-radius:8px;margin-bottom:10px;">
+            <span style="font-size:12px;">😴</span>
+            <span style="font-size:11px;color:#991B1B;">Sleep Quality ↓ 23% since archived</span>
+          </div>
+
+          <!-- Micro-restore options (from v2#7) -->
+          <div style="display:flex;gap:6px;margin-bottom:6px;">
+            <button style="flex:1;padding:12px 8px;border-radius:10px;border:2px solid var(--green-primary);background:var(--green-light);cursor:pointer;font-family:'DM Sans',sans-serif;text-align:center;">
+              <div style="font-size:13px;font-weight:600;color:var(--green-dark);">Daily</div>
+              <div style="font-size:10px;color:var(--green-primary);">Full restore</div>
+            </button>
+            <button style="flex:1;padding:12px 8px;border-radius:10px;border:1px solid var(--warm-border);background:white;cursor:pointer;font-family:'DM Sans',sans-serif;text-align:center;">
+              <div style="font-size:13px;font-weight:600;color:var(--text-primary);">3x/wk</div>
+              <div style="font-size:10px;color:var(--text-tertiary);">Ease in</div>
+            </button>
+            <button style="flex:1;padding:12px 8px;border-radius:10px;border:1px solid var(--warm-border);background:white;cursor:pointer;font-family:'DM Sans',sans-serif;text-align:center;">
+              <div style="font-size:13px;font-weight:600;color:var(--text-primary);">1x/wk</div>
+              <div style="font-size:10px;color:var(--text-tertiary);">Stay connected</div>
+            </button>
+          </div>
+          <div style="text-align:center;"><button class="btn-del" style="font-size:11px;">Delete permanently</button></div>
+        </div>
+      </div>
+
+      <!-- Second habit (compact) -->
+      <div class="card">
+        <div class="cp">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+            <span style="font-size:24px;">🏃</span>
+            <div style="flex:1;">
+              <div style="font-weight:700;font-size:16px;">Morning Run</div>
+              <div style="font-size:12px;color:var(--text-tertiary);" class="mono">38% · 12🔥 · 34d ago</div>
+            </div>
+            <div style="text-align:right;">
+              <div style="font-size:14px;font-weight:700;color:var(--amber-primary);" class="mono">+3</div>
+              <div style="font-size:9px;color:#92400E;">momentum</div>
+            </div>
+          </div>
+
+          <div style="border-left:3px solid #EA580C;padding:8px 12px;background:#FFF7ED;border-radius:0 10px 10px 0;margin:10px 0;">
+            <div style="font-size:10px;font-weight:700;color:#9A3412;">YOUR WHY:</div>
+            <div style="font-size:13px;color:#7C2D12;font-style:italic;" class="serif">"Energy to be present for my family."</div>
+          </div>
+
+          <div style="display:flex;gap:6px;margin-bottom:6px;">
+            <button style="flex:1;padding:12px 8px;border-radius:10px;border:1px solid var(--warm-border);background:white;cursor:pointer;font-family:'DM Sans',sans-serif;text-align:center;">
+              <div style="font-size:13px;font-weight:600;">Daily</div>
+            </button>
+            <button style="flex:1;padding:12px 8px;border-radius:10px;border:2px solid var(--green-primary);background:var(--green-light);cursor:pointer;font-family:'DM Sans',sans-serif;text-align:center;">
+              <div style="font-size:13px;font-weight:600;color:var(--green-dark);">3x/wk ⭐</div>
+            </button>
+            <button style="flex:1;padding:12px 8px;border-radius:10px;border:1px solid var(--warm-border);background:white;cursor:pointer;font-family:'DM Sans',sans-serif;text-align:center;">
+              <div style="font-size:13px;font-weight:600;">1x/wk</div>
+            </button>
+          </div>
+          <div style="text-align:center;"><button class="btn-del" style="font-size:11px;">Delete permanently</button></div>
+        </div>
+      </div>
+
+      <!-- Premium — Streak freeze (from v2#5) -->
+      <div style="margin:8px 16px;background:linear-gradient(135deg,#5B21B6,#7C3AED);border-radius:16px;padding:20px;text-align:center;">
+        <div style="font-size:16px;font-weight:700;color:white;margin-bottom:4px;">🛡️ Protect Everything</div>
+        <div style="font-size:13px;color:#DDD6FE;margin-bottom:14px;">Premium freezes streaks, strength, and stats while archived. Restore at full power, anytime.</div>
+        <button style="width:100%;padding:14px;border-radius:12px;background:white;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;">
+          <div style="font-size:15px;font-weight:700;color:#5B21B6;">Try Free — 7 Days</div>
+          <div style="font-size:11px;color:#7C3AED;margin-top:2px;">$4.99/mo after · Cancel anytime</div>
+        </button>
+      </div>
+
+      <div style="height:24px;"></div>
+    </div>
+  </div>
+</div>
+
+</div><!-- end grid -->
+
+</body>
+</html>

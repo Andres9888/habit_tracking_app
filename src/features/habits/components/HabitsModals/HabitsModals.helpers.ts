@@ -3,6 +3,7 @@ import type { HabitsModalsProps } from './HabitsModals.types';
 export function getSettingsProps(state: HabitsModalsProps['state']) {
   return {
     archivedHabitsCount: state.archivedHabitsCount,
+    formedHabitsCount: state.formedHabitsCount,
     celebrationsEnabled: state.celebrationsEnabled,
     closeSettings: state.closeSettings,
     onSettingsChange: state.onSettingsChange,

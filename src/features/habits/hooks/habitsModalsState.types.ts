@@ -17,6 +17,7 @@ import type {
 
 export interface HabitsModalsState {
   archivedHabitsCount: number;
+  formedHabitsCount: number;
   celebrationsEnabled: boolean;
   habits: Habit[];
   settings: HabitSettings | undefined;

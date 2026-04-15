@@ -3,11 +3,13 @@
  * SettingsModal Component
  */
 
-import React, { useCallback } from 'react';
-import { Modal, View } from 'react-native';
+import React, { Suspense, lazy, useCallback } from 'react';
+import { ActivityIndicator, Modal, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ErrorBoundary, ScreenErrorFallback } from '../ErrorBoundary';
 import ArchivedHabitsModal from '../ArchivedHabitsModal';
+
+const FormedHabitsModal = lazy(() => import('../FormedHabitsModal'));
 import { SettingsModalSkeleton } from '../SkeletonLoader';
 import { useSettingsModalLogic } from './SettingsModal.hooks';
 import { getSettingsColors } from './colors';
@@ -41,6 +43,7 @@ function SettingsModalContent({
   onPremiumUpsell,
   onExportHabitsData = () => {},
   archivedHabitsCount = 0,
+  formedHabitsCount = 0,
   settingsDocument,
 }: SettingsModalProps) {
   const {
@@ -69,6 +72,32 @@ function SettingsModalContent({
     },
     [setHabitSortMode, setView]
   );
+
+  if (view === 'formed') {
+    return (
+      <Modal
+        accessibilityViewIsModal
+        animationType='slide'
+        presentationStyle='overFullScreen'
+        statusBarTranslucent
+        transparent
+        visible={visible}
+        onRequestClose={handleClose}
+      >
+        <View
+          className='flex-1'
+          style={{ backgroundColor: colors.background }}
+        >
+          <Suspense fallback={<ActivityIndicator style={{ flex: 1 }} />}>
+            <FormedHabitsModal
+              onBack={() => setView('settings')}
+              onClose={handleClose}
+            />
+          </Suspense>
+        </View>
+      </Modal>
+    );
+  }
 
   if (view === 'archived') {
     return (
@@ -139,6 +168,7 @@ function SettingsModalContent({
             />
             <SettingsContent
               archivedHabitsCount={archivedHabitsCount}
+              formedHabitsCount={formedHabitsCount}
               bottomInset={insets.bottom}
               colors={colors}
               compactView={compactView}
@@ -162,6 +192,7 @@ function SettingsModalContent({
               onChangeStickyCalendarHeader={onChangeStickyCalendarHeader}
               onChangeStreakReminderTime={onChangeStreakReminderTime}
               onOpenArchivedHabits={() => setView('archived')}
+              onOpenFormedHabits={() => setView('formed')}
               onExportHabitsData={onExportHabitsData}
               onOpenSortPicker={() => setView('sort')}
               onPremiumUpsell={onPremiumUpsell}

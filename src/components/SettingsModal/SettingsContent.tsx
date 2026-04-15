@@ -188,9 +188,19 @@ export function SettingsContent(p: SettingsContentProps) {
                 iconBackgroundColor={settingsIcons.archive.bg}
                 label='Archived Habits'
                 subtitle='View and restore hidden habits'
-                showBorder={false}
                 type='navigation'
                 onPress={p.onOpenArchivedHabits}
+              />
+              <SettingsRow
+                badge={p.formedHabitsCount}
+                highContrastMode={hc}
+                icon={<BookOpen color='#7c3aed' size={16} />}
+                iconBackgroundColor='#EDE9FE'
+                label='Formed Habits'
+                subtitle='Habits you successfully built'
+                showBorder={false}
+                type='navigation'
+                onPress={p.onOpenFormedHabits}
               />
             </SettingsSection>
           </Animated.View>

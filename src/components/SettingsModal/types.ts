@@ -49,6 +49,7 @@ export interface SettingsModalProps {
   onExportHabitsData?: () => void | Promise<void>;
   isLoading?: boolean;
   archivedHabitsCount?: number;
+  formedHabitsCount?: number;
   settingsDocument?: SettingsModalSettingsDocument;
 }
 
@@ -82,7 +83,9 @@ export interface SettingsContentProps {
   onChangeDayShape: (value: 'circle' | 'square') => void | Promise<void>;
   onChangeShowGradientFill: (value: boolean) => void | Promise<void>;
   archivedHabitsCount?: number;
+  formedHabitsCount?: number;
   onOpenArchivedHabits: () => void;
+  onOpenFormedHabits: () => void;
   onOpenSortPicker: () => void;
   onExportHabitsData?: () => void | Promise<void>;
   showGradientFill: boolean;

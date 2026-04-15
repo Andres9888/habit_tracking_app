@@ -12,8 +12,11 @@ export interface ArchivedHabit {
   iconColor?: string;
   strength?: number;
   currentStreak?: number;
+  bestStreak?: number;
   totalCompletions?: number;
   archivedAt?: number;
+  identity?: string;
+  why?: string;
   _creationTime: number;
 }
 

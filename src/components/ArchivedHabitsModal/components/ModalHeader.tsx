@@ -14,9 +14,10 @@ interface ModalHeaderProps {
   insets: EdgeInsets;
   onBack: () => void;
   onClose: () => void;
+  title?: string;
 }
 
-export function ModalHeader({ insets, onBack, onClose }: ModalHeaderProps) {
+export function ModalHeader({ insets, onBack, onClose, title = 'Archived Habits' }: ModalHeaderProps) {
   const { colors, isDark } = useThemeColors();
 
   return (
@@ -59,7 +60,7 @@ export function ModalHeader({ insets, onBack, onClose }: ModalHeaderProps) {
           className='flex-1 text-center text-xl font-bold'
           style={{ color: colors.text.primary }}
         >
-          Archived Habits
+          {title}
         </Text>
         <ModalCloseButton label='Close archived habits' onClose={onClose} />
       </View>

@@ -64,6 +64,7 @@ export interface DraggableHabitCardProps {
   newRecordScale: SharedValue<number>;
   onArchive?: (habitId: Id<'habits'>) => void;
   onDelete?: (habitId: Id<'habits'>) => void;
+  onFormed?: (habitId: Id<'habits'>) => void;
   onPause?: (habitId: Id<'habits'>) => void;
   onPress?: (habit: Habit) => void;
   onResume?: (habitId: Id<'habits'>) => void;
