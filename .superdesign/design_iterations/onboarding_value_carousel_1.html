@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Onboarding - Value Carousel</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=JetBrains+Mono:wght@400;500;600&family=Literata:opsz,wght@7..72,400;7..72,500;7..72,600;7..72,700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0 !important; padding: 0 !important; box-sizing: border-box !important; }
+  body { font-family: 'DM Sans', sans-serif !important; background: #1a1a1a !important; }
+  h1, h2, h3 { font-family: 'Literata', serif !important; }
+
+  .carousel-container {
+    display: flex !important;
+    overflow-x: auto !important;
+    scroll-snap-type: x mandatory !important;
+    -webkit-overflow-scrolling: touch !important;
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+  }
+  .carousel-container::-webkit-scrollbar { display: none !important; }
+
+  .carousel-slide {
+    flex: 0 0 100% !important;
+    scroll-snap-align: start !important;
+    width: 100% !important;
+    min-height: 100% !important;
+  }
+
+  .cta-btn {
+    background: #059669 !important;
+    color: #fff !important;
+    font-family: 'DM Sans', sans-serif !important;
+    font-weight: 600 !important;
+    font-size: 16px !important;
+    border: none !important;
+    border-radius: 12px !important;
+    padding: 16px 24px !important;
+    width: 100% !important;
+    cursor: pointer !important;
+    transition: background 0.2s ease !important;
+  }
+  .cta-btn:hover { background: #047857 !important; }
+
+  .dot {
+    width: 8px !important;
+    height: 8px !important;
+    border-radius: 9999px !important;
+    background: #DDD8D2 !important;
+    transition: all 0.3s ease !important;
+  }
+  .dot.active {
+    width: 24px !important;
+    background: #059669 !important;
+  }
+
+  .skip-link {
+    font-family: 'DM Sans', sans-serif !important;
+    font-size: 14px !important;
+    color: #6B6560 !important;
+    text-decoration: none !important;
+    cursor: pointer !important;
+    transition: color 0.2s ease !important;
+    background: none !important;
+    border: none !important;
+  }
+  .skip-link:hover { color: #2D2A26 !important; }
+
+  .chain-link {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 48px !important;
+    height: 48px !important;
+    border-radius: 12px !important;
+    background: #EDEAE5 !important;
+    border: 1.5px solid #DDD8D2 !important;
+  }
+
+  .strength-bar-track {
+    width: 100% !important;
+    height: 12px !important;
+    background: #EDEAE5 !important;
+    border-radius: 9999px !important;
+    overflow: hidden !important;
+    position: relative !important;
+  }
+  .strength-bar-fill {
+    height: 100% !important;
+    border-radius: 9999px !important;
+    background: linear-gradient(90deg, #DDD8D2 0%, #059669 50%, #E8B94D 100%) !important;
+    width: 75% !important;
+    transition: width 1s ease !important;
+  }
+
+  .template-card {
+    background: #EDEAE5 !important;
+    border: 1.5px solid #DDD8D2 !important;
+    border-radius: 12px !important;
+    padding: 14px 12px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 6px !important;
+    transition: transform 0.2s ease, border-color 0.2s ease !important;
+  }
+  .template-card:hover {
+    transform: translateY(-2px) !important;
+    border-color: #C4BFB7 !important;
+  }
+
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .animate-in { animation: fadeInUp 0.6s ease forwards !important; }
+</style>
+</head>
+<body>
+<div style="display:flex;justify-content:center;align-items:center;min-height:100vh;background:#1a1a1a;padding:20px;">
+  <div style="width:375px;height:812px;border-radius:40px;overflow:hidden;box-shadow:0 25px 60px rgba(0,0,0,0.5);position:relative;background:#F5F1ED;">
+
+    <!-- STATUS BAR -->
+    <div style="height:54px;display:flex;align-items:flex-end;justify-content:space-between;padding:0 24px 8px;background:#F5F1ED;">
+      <span style="font-family:'DM Sans';font-size:15px;font-weight:600;color:#2D2A26;">9:41</span>
+      <div style="display:flex;gap:6px;align-items:center;">
+        <i data-lucide="signal" style="width:16px;height:16px;color:#2D2A26;"></i>
+        <i data-lucide="wifi" style="width:16px;height:16px;color:#2D2A26;"></i>
+        <i data-lucide="battery-full" style="width:16px;height:16px;color:#2D2A26;"></i>
+      </div>
+    </div>
+
+    <!-- SKIP BUTTON -->
+    <div style="display:flex;justify-content:flex-end;padding:4px 24px 0;">
+      <button class="skip-link" onclick="skipOnboarding()">Skip</button>
+    </div>
+
+    <!-- CAROUSEL -->
+    <div class="carousel-container" id="carousel" style="height:618px;">
+
+      <!-- SLIDE 1: Build Unbreakable Habits -->
+      <div class="carousel-slide" style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 32px;">
+        <!-- Chain link illustration -->
+        <div style="display:flex;align-items:center;gap:0;margin-bottom:40px;" class="animate-in">
+          <div style="display:flex;align-items:center;">
+            <svg width="200" height="80" viewBox="0 0 200 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <!-- Chain link 1 -->
+              <rect x="4" y="16" width="52" height="48" rx="24" stroke="#DDD8D2" stroke-width="3" fill="none"/>
+              <!-- Chain link 2 (overlapping) -->
+              <rect x="40" y="16" width="52" height="48" rx="24" stroke="#059669" stroke-width="3" fill="none"/>
+              <!-- Chain link 3 (overlapping) -->
+              <rect x="76" y="16" width="52" height="48" rx="24" stroke="#059669" stroke-width="3" fill="none"/>
+              <!-- Chain link 4 (overlapping) -->
+              <rect x="112" y="16" width="52" height="48" rx="24" stroke="#E8B94D" stroke-width="3" fill="none"/>
+              <!-- Chain link 5 (overlapping) -->
+              <rect x="148" y="16" width="48" height="48" rx="24" stroke="#936A08" stroke-width="3" fill="none" stroke-dasharray="6 4"/>
+            </svg>
+          </div>
+        </div>
+
+        <h1 style="font-family:'Literata',serif;font-size:28px;font-weight:700;color:#2D2A26;text-align:center;line-height:1.25;margin-bottom:14px;" class="animate-in">
+          Build Unbreakable Habits
+        </h1>
+        <p style="font-family:'DM Sans',sans-serif;font-size:16px;color:#6B6560;text-align:center;line-height:1.55;max-width:280px;margin-bottom:32px;" class="animate-in">
+          Small daily actions compound into life-changing results
+        </p>
+
+        <!-- Social proof -->
+        <div style="display:flex;align-items:center;gap:8px;opacity:0.85;" class="animate-in">
+          <i data-lucide="users" style="width:15px;height:15px;color:#6B6560;"></i>
+          <span style="font-family:'DM Sans',sans-serif;font-size:13px;color:#6B6560;">Join 12,000+ habit builders</span>
+        </div>
+      </div>
+
+      <!-- SLIDE 2: Science-Backed Strength -->
+      <div class="carousel-slide" style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 32px;">
+        <!-- Strength meter visualization -->
+        <div style="width:100%;max-width:280px;margin-bottom:40px;" class="animate-in">
+          <div style="background:#EDEAE5;border:1.5px solid #DDD8D2;border-radius:16px;padding:24px 20px;">
+            <!-- Meter header -->
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;">
+              <i data-lucide="activity" style="width:20px;height:20px;color:#059669;"></i>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;color:#2D2A26;">HABIT STRENGTH</span>
+            </div>
+
+            <!-- Strength bar -->
+            <div class="strength-bar-track" style="margin-bottom:12px;">
+              <div class="strength-bar-fill"></div>
+            </div>
+
+            <!-- Labels -->
+            <div style="display:flex;justify-content:space-between;">
+              <span style="font-family:'DM Sans',sans-serif;font-size:11px;color:#C4BFB7;">Starting</span>
+              <span style="font-family:'DM Sans',sans-serif;font-size:11px;color:#059669;font-weight:600;">Growing</span>
+              <span style="font-family:'DM Sans',sans-serif;font-size:11px;color:#C4BFB7;">Automatic</span>
+            </div>
+
+            <!-- Score -->
+            <div style="text-align:center;margin-top:16px;">
+              <span style="font-family:'JetBrains Mono',monospace;font-size:32px;font-weight:700;color:#059669;">75</span>
+              <span style="font-family:'DM Sans',sans-serif;font-size:13px;color:#6B6560;display:block;margin-top:2px;">out of 100</span>
+            </div>
+          </div>
+        </div>
+
+        <h1 style="font-family:'Literata',serif;font-size:28px;font-weight:700;color:#2D2A26;text-align:center;line-height:1.25;margin-bottom:14px;" class="animate-in">
+          Watch Your Habits Get Stronger
+        </h1>
+        <p style="font-family:'DM Sans',sans-serif;font-size:16px;color:#6B6560;text-align:center;line-height:1.55;max-width:280px;" class="animate-in">
+          Our Habit Strength meter shows your progress based on real behavioral science
+        </p>
+      </div>
+
+      <!-- SLIDE 3: 200+ Templates -->
+      <div class="carousel-slide" style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 32px;">
+        <!-- Template grid -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;width:100%;max-width:280px;margin-bottom:36px;" class="animate-in">
+          <div class="template-card">
+            <i data-lucide="sun" style="width:24px;height:24px;color:#E8B94D;"></i>
+            <span style="font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;color:#2D2A26;">Morning Routine</span>
+            <span style="font-family:'DM Sans',sans-serif;font-size:11px;color:#C4BFB7;">7 habits</span>
+          </div>
+          <div class="template-card">
+            <i data-lucide="dumbbell" style="width:24px;height:24px;color:#059669;"></i>
+            <span style="font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;color:#2D2A26;">Daily Exercise</span>
+            <span style="font-family:'DM Sans',sans-serif;font-size:11px;color:#C4BFB7;">5 habits</span>
+          </div>
+          <div class="template-card">
+            <i data-lucide="book-open" style="width:24px;height:24px;color:#7B52C4;"></i>
+            <span style="font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;color:#2D2A26;">Read 30 Min</span>
+            <span style="font-family:'DM Sans',sans-serif;font-size:11px;color:#C4BFB7;">3 habits</span>
+          </div>
+          <div class="template-card">
+            <i data-lucide="brain" style="width:24px;height:24px;color:#059669;"></i>
+            <span style="font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;color:#2D2A26;">Meditate</span>
+            <span style="font-family:'DM Sans',sans-serif;font-size:11px;color:#C4BFB7;">4 habits</span>
+          </div>
+        </div>
+
+        <h1 style="font-family:'Literata',serif;font-size:28px;font-weight:700;color:#2D2A26;text-align:center;line-height:1.25;margin-bottom:14px;" class="animate-in">
+          Start With a Template
+        </h1>
+        <p style="font-family:'DM Sans',sans-serif;font-size:16px;color:#6B6560;text-align:center;line-height:1.55;max-width:280px;" class="animate-in">
+          Choose from 200+ pre-built habits or create your own
+        </p>
+      </div>
+    </div>
+
+    <!-- BOTTOM BAR -->
+    <div style="position:absolute;bottom:0;left:0;right:0;padding:0 24px 40px;background:#F5F1ED;">
+      <!-- Dot indicators -->
+      <div style="display:flex;justify-content:center;align-items:center;gap:8px;margin-bottom:20px;">
+        <div class="dot active" id="dot-0"></div>
+        <div class="dot" id="dot-1"></div>
+        <div class="dot" id="dot-2"></div>
+      </div>
+
+      <!-- CTA Button -->
+      <button class="cta-btn" id="cta-btn" onclick="nextSlide()">Next</button>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  lucide.createIcons();
+
+  const carousel = document.getElementById('carousel');
+  const ctaBtn = document.getElementById('cta-btn');
+  const dots = [document.getElementById('dot-0'), document.getElementById('dot-1'), document.getElementById('dot-2')];
+  let currentSlide = 0;
+
+  function updateDots(index) {
+    dots.forEach((dot, i) => {
+      if (i === index) {
+        dot.classList.add('active');
+      } else {
+        dot.classList.remove('active');
+      }
+    });
+  }
+
+  function updateCTA(index) {
+    ctaBtn.textContent = index === 2 ? 'Get Started' : 'Next';
+  }
+
+  function nextSlide() {
+    if (currentSlide < 2) {
+      currentSlide++;
+      carousel.scrollTo({ left: carousel.offsetWidth * currentSlide, behavior: 'smooth' });
+      updateDots(currentSlide);
+      updateCTA(currentSlide);
+    } else {
+      // Get Started action
+      alert('Welcome aboard!');
+    }
+  }
+
+  function skipOnboarding() {
+    alert('Skipping to app...');
+  }
+
+  // Listen for manual scroll
+  carousel.addEventListener('scroll', () => {
+    const scrollLeft = carousel.scrollLeft;
+    const slideWidth = carousel.offsetWidth;
+    const newIndex = Math.round(scrollLeft / slideWidth);
+    if (newIndex !== currentSlide) {
+      currentSlide = newIndex;
+      updateDots(currentSlide);
+      updateCTA(currentSlide);
+    }
+  });
+</script>
+</body>
+</html>

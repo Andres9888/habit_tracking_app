@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Onboarding — Commitment Device</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=JetBrains+Mono:wght@400;500;600&family=Literata:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0 !important;
+      padding: 0 !important;
+      box-sizing: border-box !important;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif !important;
+      -webkit-font-smoothing: antialiased !important;
+      background: #1a1a1a !important;
+    }
+
+    .font-literata {
+      font-family: 'Literata', serif !important;
+    }
+
+    .font-dm {
+      font-family: 'DM Sans', sans-serif !important;
+    }
+
+    .font-mono {
+      font-family: 'JetBrains Mono', monospace !important;
+    }
+
+    /* Form input styling */
+    .commitment-input {
+      width: 100% !important;
+      border: none !important;
+      border-bottom: 2px solid #DDD8D2 !important;
+      background: transparent !important;
+      font-family: 'DM Sans', sans-serif !important;
+      font-size: 16px !important;
+      font-weight: 500 !important;
+      color: #2D2A26 !important;
+      padding: 8px 0 10px !important;
+      outline: none !important;
+      transition: border-color 0.3s ease !important;
+      border-radius: 0 !important;
+    }
+
+    .commitment-input::placeholder {
+      color: #C4BFB7 !important;
+      font-weight: 400 !important;
+    }
+
+    .commitment-input:focus {
+      border-bottom-color: #059669 !important;
+    }
+
+    /* CTA pulse animation */
+    @keyframes commitPulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(5, 150, 105, 0.3); }
+      50% { box-shadow: 0 0 0 12px rgba(5, 150, 105, 0); }
+    }
+
+    .cta-pulse {
+      animation: commitPulse 2.5s ease-in-out infinite !important;
+    }
+
+    /* Subtle fade-in for the form */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .animate-fade-in {
+      animation: fadeInUp 0.6s ease-out forwards !important;
+    }
+
+    .animate-fade-in-delay-1 {
+      animation: fadeInUp 0.6s ease-out 0.15s forwards !important;
+      opacity: 0;
+    }
+
+    .animate-fade-in-delay-2 {
+      animation: fadeInUp 0.6s ease-out 0.3s forwards !important;
+      opacity: 0;
+    }
+
+    .animate-fade-in-delay-3 {
+      animation: fadeInUp 0.6s ease-out 0.45s forwards !important;
+      opacity: 0;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Page wrapper: dark background with centered phone -->
+  <div style="display:flex;justify-content:center;align-items:center;min-height:100vh;background:#1a1a1a;padding:20px;">
+
+    <!-- Phone frame -->
+    <div style="width:375px;height:812px;border-radius:40px;overflow:hidden;box-shadow:0 25px 60px rgba(0,0,0,0.5);position:relative;background:#F5F1ED;">
+
+      <!-- STATUS BAR -->
+      <div style="height:54px;display:flex;align-items:flex-end;justify-content:space-between;padding:0 24px 8px;background:#F5F1ED;">
+        <span style="font-family:'DM Sans';font-size:15px;font-weight:600;color:#2D2A26;">9:41</span>
+        <div style="display:flex;gap:6px;align-items:center;">
+          <i data-lucide="signal" style="width:16px;height:16px;color:#2D2A26;"></i>
+          <i data-lucide="wifi" style="width:16px;height:16px;color:#2D2A26;"></i>
+          <i data-lucide="battery-full" style="width:16px;height:16px;color:#2D2A26;"></i>
+        </div>
+      </div>
+
+      <!-- CONTENT -->
+      <div style="display:flex;flex-direction:column;justify-content:space-between;height:calc(812px - 54px);padding:24px 24px 36px;">
+
+        <!-- Top section: Icon + Headline + Subtext -->
+        <div class="animate-fade-in">
+          <!-- Brain icon -->
+          <div style="margin-bottom:16px !important;">
+            <i data-lucide="brain" style="width:32px;height:32px;color:#059669;stroke-width:1.8;"></i>
+          </div>
+
+          <!-- Headline -->
+          <h1 class="font-literata" style="font-size:26px !important;font-weight:700 !important;color:#2D2A26 !important;line-height:1.2 !important;margin-bottom:16px !important;">
+            Make It Real
+          </h1>
+
+          <!-- Subtext card -->
+          <div style="background:#EDEAE5 !important;border-left:3px solid #059669 !important;border-radius:0 10px 10px 0 !important;padding:14px 16px !important;">
+            <p class="font-dm" style="font-size:15px !important;font-weight:400 !important;color:#6B6560 !important;line-height:1.55 !important;">
+              Research shows writing a specific plan makes you <strong style="color:#2D2A26 !important;font-weight:600 !important;">2-3x more likely</strong> to follow through.
+            </p>
+          </div>
+        </div>
+
+        <!-- Commitment form -->
+        <div style="flex:1;display:flex;flex-direction:column;justify-content:center;padding:0 4px !important;">
+
+          <!-- I will... -->
+          <div class="animate-fade-in-delay-1" style="margin-bottom:28px !important;">
+            <label class="font-dm" style="font-size:13px !important;font-weight:600 !important;color:#6B6560 !important;text-transform:uppercase !important;letter-spacing:0.5px !important;display:block !important;margin-bottom:4px !important;">
+              I will...
+            </label>
+            <input type="text" class="commitment-input" placeholder="meditate for 10 minutes">
+          </div>
+
+          <!-- at... -->
+          <div class="animate-fade-in-delay-2" style="margin-bottom:28px !important;">
+            <label class="font-dm" style="font-size:13px !important;font-weight:600 !important;color:#6B6560 !important;text-transform:uppercase !important;letter-spacing:0.5px !important;display:block !important;margin-bottom:4px !important;">
+              at...
+            </label>
+            <input type="text" class="commitment-input" placeholder="7:00 AM">
+          </div>
+
+          <!-- in... -->
+          <div class="animate-fade-in-delay-3" style="margin-bottom:20px !important;">
+            <label class="font-dm" style="font-size:13px !important;font-weight:600 !important;color:#6B6560 !important;text-transform:uppercase !important;letter-spacing:0.5px !important;display:block !important;margin-bottom:4px !important;">
+              in...
+            </label>
+            <input type="text" class="commitment-input" placeholder="my living room">
+          </div>
+
+          <!-- Research citation -->
+          <p class="font-dm" style="font-size:12px !important;font-style:italic !important;color:#C4BFB7 !important;margin-top:8px !important;">
+            Based on Gollwitzer's Implementation Intentions (1999)
+          </p>
+        </div>
+
+        <!-- Bottom section: CTA + Skip -->
+        <div style="padding-top:8px !important;">
+          <!-- Green CTA button with pulse -->
+          <button class="cta-pulse" style="
+            width:100% !important;
+            height:54px !important;
+            background:#059669 !important;
+            color:#fff !important;
+            font-family:'DM Sans',sans-serif !important;
+            font-size:17px !important;
+            font-weight:600 !important;
+            border:none !important;
+            border-radius:12px !important;
+            cursor:pointer !important;
+            transition:background 0.2s ease !important;
+            letter-spacing:0.2px !important;
+          " onmouseover="this.style.background='#047857'" onmouseout="this.style.background='#059669'">
+            I Commit
+          </button>
+
+          <!-- Skip link -->
+          <div style="text-align:center !important;margin-top:16px !important;">
+            <a href="#" class="font-dm" style="
+              font-size:14px !important;
+              font-weight:500 !important;
+              color:#6B6560 !important;
+              text-decoration:none !important;
+              transition:color 0.2s ease !important;
+            " onmouseover="this.style.color='#2D2A26'" onmouseout="this.style.color='#6B6560'">
+              Skip for now
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>

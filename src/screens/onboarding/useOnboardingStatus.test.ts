@@ -11,7 +11,7 @@ describe('useOnboardingStatus', () => {
     jest.clearAllMocks();
   });
 
-  it('uses the shared onboarding storage key for reads and writes', async () => {
+  it('reads onboarding status from storage on sign-in', async () => {
     (AsyncStorage.getItem as jest.Mock).mockResolvedValue(null);
 
     const { result } = renderHook(() => useOnboardingStatus(true));
@@ -20,9 +20,16 @@ describe('useOnboardingStatus', () => {
       expect(AsyncStorage.getItem).toHaveBeenCalledWith(ONBOARDING_KEY);
     });
 
+    // New user (no stored value) → not complete, shown onboarding
     await waitFor(() => {
-      expect(AsyncStorage.setItem).toHaveBeenCalledWith(ONBOARDING_KEY, 'true');
+      expect(result.current.complete).toBe(false);
     });
+  });
+
+  it('marks returning user as complete', async () => {
+    (AsyncStorage.getItem as jest.Mock).mockResolvedValue('true');
+
+    const { result } = renderHook(() => useOnboardingStatus(true));
 
     await waitFor(() => {
       expect(result.current.complete).toBe(true);

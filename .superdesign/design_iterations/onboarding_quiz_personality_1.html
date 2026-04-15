@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Onboarding — Personality Quiz</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Literata:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0 !important; padding: 0 !important; box-sizing: border-box !important; }
+  body { font-family: 'DM Sans', sans-serif !important; background: #1a1a1a !important; -webkit-font-smoothing: antialiased !important; }
+  .font-literata { font-family: 'Literata', serif !important; }
+  .font-dm { font-family: 'DM Sans', sans-serif !important; }
+  .font-mono { font-family: 'JetBrains Mono', monospace !important; }
+
+  .answer-card {
+    transition: all 0.2s ease !important;
+    cursor: pointer !important;
+  }
+  .answer-card:hover {
+    transform: translateY(-1px) !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06) !important;
+  }
+
+  .cta-btn {
+    transition: all 0.15s ease !important;
+  }
+  .cta-btn:hover {
+    background: #047857 !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3) !important;
+  }
+  .cta-btn:active {
+    transform: translateY(0) !important;
+  }
+
+  /* Radio button animations */
+  @keyframes radio-pop {
+    0% { transform: scale(0); }
+    60% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+  }
+  .radio-filled {
+    animation: radio-pop 0.3s ease forwards !important;
+  }
+</style>
+</head>
+<body>
+  <!-- PHONE FRAME -->
+  <div style="display:flex;justify-content:center;align-items:center;min-height:100vh;background:#1a1a1a;padding:20px;">
+    <div style="width:375px;height:812px;border-radius:40px;overflow:hidden;box-shadow:0 25px 60px rgba(0,0,0,0.5);position:relative;background:#F5F1ED;">
+
+      <!-- STATUS BAR -->
+      <div style="height:54px;display:flex;align-items:flex-end;justify-content:space-between;padding:0 24px 8px;background:#F5F1ED;">
+        <span style="font-family:'DM Sans';font-size:15px;font-weight:600;color:#2D2A26;">9:41</span>
+        <div style="display:flex;gap:6px;align-items:center;">
+          <i data-lucide="signal" style="width:16px;height:16px;color:#2D2A26;"></i>
+          <i data-lucide="wifi" style="width:16px;height:16px;color:#2D2A26;"></i>
+          <i data-lucide="battery-full" style="width:16px;height:16px;color:#2D2A26;"></i>
+        </div>
+      </div>
+
+      <!-- SCROLLABLE CONTENT -->
+      <div style="height:calc(812px - 54px);overflow-y:auto;padding:20px 20px 32px;display:flex;flex-direction:column;">
+
+        <!-- TOP SECTION -->
+        <div style="text-align:center;margin-bottom:24px !important;">
+          <!-- Sparkles icon -->
+          <div style="display:inline-flex;align-items:center;justify-content:center;width:56px;height:56px;border-radius:16px;background:rgba(123,82,196,0.1);margin-bottom:12px !important;">
+            <i data-lucide="sparkles" style="width:28px;height:28px;color:#7B52C4;"></i>
+          </div>
+          <h1 class="font-literata" style="font-size:22px !important;font-weight:700 !important;color:#2D2A26 !important;line-height:1.25 !important;margin-bottom:6px !important;">What Kind of Habit Builder Are You?</h1>
+          <p class="font-dm" style="font-size:15px !important;color:#6B6560 !important;line-height:1.4 !important;">3 quick questions to personalize your experience</p>
+        </div>
+
+        <!-- QUESTION INDICATOR -->
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px !important;">
+          <span class="font-dm" style="font-size:13px !important;font-weight:600 !important;color:#6B6560 !important;">Question 1 of 3</span>
+          <div style="display:flex;align-items:center;gap:6px;margin-left:auto !important;">
+            <!-- Dot 1: active pill -->
+            <div style="width:20px;height:8px;border-radius:9999px;background:#059669;"></div>
+            <!-- Dot 2: inactive circle -->
+            <div style="width:8px;height:8px;border-radius:50%;background:#DDD8D2;"></div>
+            <!-- Dot 3: inactive circle -->
+            <div style="width:8px;height:8px;border-radius:50%;background:#DDD8D2;"></div>
+          </div>
+        </div>
+
+        <!-- QUESTION -->
+        <h2 class="font-dm" style="font-size:18px !important;font-weight:600 !important;color:#2D2A26 !important;margin-bottom:16px !important;line-height:1.3 !important;">How do you stay motivated?</h2>
+
+        <!-- ANSWER CARDS -->
+        <div style="display:flex;flex-direction:column;gap:10px;flex:1;">
+
+          <!-- CARD 1 — SELECTED: Streaks -->
+          <div class="answer-card" style="background:#D1FAE5 !important;border:2px solid #059669 !important;border-radius:16px !important;padding:16px !important;display:flex;align-items:center;gap:14px;">
+            <!-- Icon circle -->
+            <div style="width:44px;height:44px;min-width:44px;border-radius:50%;background:#D1FAE5;display:flex;align-items:center;justify-content:center;border:1.5px solid rgba(5,150,105,0.2);">
+              <i data-lucide="flame" style="width:24px;height:24px;color:#059669;"></i>
+            </div>
+            <!-- Text -->
+            <div style="flex:1;min-width:0;">
+              <span class="font-dm" style="font-size:15px !important;font-weight:600 !important;color:#2D2A26 !important;display:block;margin-bottom:2px !important;">Streaks & Consistency</span>
+              <span class="font-dm" style="font-size:13px !important;color:#6B6560 !important;line-height:1.3 !important;">I love seeing my streak grow day by day</span>
+            </div>
+            <!-- Radio: filled -->
+            <div style="width:22px;height:22px;min-width:22px;border-radius:50%;border:2px solid #059669;display:flex;align-items:center;justify-content:center;">
+              <div class="radio-filled" style="width:12px;height:12px;border-radius:50%;background:#059669;"></div>
+            </div>
+          </div>
+
+          <!-- CARD 2 — Goals -->
+          <div class="answer-card" style="background:#EDEAE5 !important;border:1.5px solid #DDD8D2 !important;border-radius:16px !important;padding:16px !important;display:flex;align-items:center;gap:14px;">
+            <!-- Icon circle -->
+            <div style="width:44px;height:44px;min-width:44px;border-radius:50%;background:#F5F1ED;display:flex;align-items:center;justify-content:center;">
+              <i data-lucide="target" style="width:24px;height:24px;color:#6B6560;"></i>
+            </div>
+            <!-- Text -->
+            <div style="flex:1;min-width:0;">
+              <span class="font-dm" style="font-size:15px !important;font-weight:600 !important;color:#2D2A26 !important;display:block;margin-bottom:2px !important;">Clear Goals</span>
+              <span class="font-dm" style="font-size:13px !important;color:#6B6560 !important;line-height:1.3 !important;">I need a concrete target to work toward</span>
+            </div>
+            <!-- Radio: empty -->
+            <div style="width:22px;height:22px;min-width:22px;border-radius:50%;border:2px solid #DDD8D2;"></div>
+          </div>
+
+          <!-- CARD 3 — Community -->
+          <div class="answer-card" style="background:#EDEAE5 !important;border:1.5px solid #DDD8D2 !important;border-radius:16px !important;padding:16px !important;display:flex;align-items:center;gap:14px;">
+            <!-- Icon circle -->
+            <div style="width:44px;height:44px;min-width:44px;border-radius:50%;background:#F5F1ED;display:flex;align-items:center;justify-content:center;">
+              <i data-lucide="users" style="width:24px;height:24px;color:#6B6560;"></i>
+            </div>
+            <!-- Text -->
+            <div style="flex:1;min-width:0;">
+              <span class="font-dm" style="font-size:15px !important;font-weight:600 !important;color:#2D2A26 !important;display:block;margin-bottom:2px !important;">Community & Accountability</span>
+              <span class="font-dm" style="font-size:13px !important;color:#6B6560 !important;line-height:1.3 !important;">Knowing others are doing it too keeps me going</span>
+            </div>
+            <!-- Radio: empty -->
+            <div style="width:22px;height:22px;min-width:22px;border-radius:50%;border:2px solid #DDD8D2;"></div>
+          </div>
+
+          <!-- CARD 4 — Data & Insights -->
+          <div class="answer-card" style="background:#EDEAE5 !important;border:1.5px solid #DDD8D2 !important;border-radius:16px !important;padding:16px !important;display:flex;align-items:center;gap:14px;">
+            <!-- Icon circle -->
+            <div style="width:44px;height:44px;min-width:44px;border-radius:50%;background:#F5F1ED;display:flex;align-items:center;justify-content:center;">
+              <i data-lucide="bar-chart-3" style="width:24px;height:24px;color:#6B6560;"></i>
+            </div>
+            <!-- Text -->
+            <div style="flex:1;min-width:0;">
+              <span class="font-dm" style="font-size:15px !important;font-weight:600 !important;color:#2D2A26 !important;display:block;margin-bottom:2px !important;">Data & Insights</span>
+              <span class="font-dm" style="font-size:13px !important;color:#6B6560 !important;line-height:1.3 !important;">I love tracking metrics and seeing my progress</span>
+            </div>
+            <!-- Radio: empty -->
+            <div style="width:22px;height:22px;min-width:22px;border-radius:50%;border:2px solid #DDD8D2;"></div>
+          </div>
+        </div>
+
+        <!-- BOTTOM SECTION -->
+        <div style="margin-top:24px !important;">
+          <!-- CTA Button -->
+          <button class="cta-btn font-dm" style="width:100% !important;height:52px !important;border:none !important;border-radius:12px !important;background:#059669 !important;color:#fff !important;font-size:16px !important;font-weight:600 !important;cursor:pointer !important;display:flex;align-items:center;justify-content:center;gap:8px;">
+            Next Question
+            <i data-lucide="arrow-right" style="width:20px;height:20px;color:#fff;"></i>
+          </button>
+
+          <!-- Progress text -->
+          <p class="font-dm" style="font-size:12px !important;color:#C4BFB7 !important;text-align:center;margin-top:14px !important;">Your results will personalize your app</p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>

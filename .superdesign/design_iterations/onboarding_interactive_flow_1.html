@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>ChainDay — Interactive Onboarding Flow</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Literata:wght@400;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif !important; background: #1a1a1a; overflow: hidden; }
+  h1, h2, h3 { font-family: 'Literata', serif !important; }
+
+  .phone-frame {
+    width: 390px; height: 844px;
+    border-radius: 44px; overflow: hidden;
+    border: 8px solid #2a2a2a;
+    position: relative;
+    background: #FAFAF9;
+    margin: 20px auto;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.5);
+  }
+
+  .status-bar {
+    height: 54px; padding: 14px 28px 0;
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 14px; font-weight: 600; color: #1a1816;
+  }
+
+  /* Progress bar */
+  .progress-bar { display: flex; gap: 6px; padding: 0 24px; }
+  .progress-segment {
+    flex: 1; height: 4px; border-radius: 4px;
+    background: #E5E0DB; transition: background 0.4s ease;
+  }
+  .progress-segment.active { background: #059669; }
+
+  /* Skip button */
+  .skip-btn {
+    text-align: right; padding: 8px 24px;
+    color: #78716c; font-size: 14px; font-weight: 500;
+    cursor: pointer; user-select: none;
+  }
+  .skip-btn:hover { color: #57534e; }
+
+  /* Step container */
+  .step { display: none; flex-direction: column; height: calc(100% - 100px); }
+  .step.active { display: flex; }
+
+  /* Step header */
+  .step-header { padding: 8px 24px 0; }
+  .step-title {
+    font-size: 30px !important; font-weight: 700 !important; color: #047857;
+    letter-spacing: -0.5px; line-height: 1.2;
+    animation: fadeInUp 0.5s ease-out;
+  }
+  .step-subtitle {
+    font-size: 16px !important; color: #78716c; margin-top: 8px; line-height: 1.5;
+    font-family: 'DM Sans', sans-serif !important;
+    animation: fadeInUp 0.6s ease-out;
+  }
+
+  /* Category pills */
+  .pills-row {
+    display: flex; gap: 8px; padding: 16px 24px 8px;
+    overflow-x: auto; -webkit-overflow-scrolling: touch;
+  }
+  .pills-row::-webkit-scrollbar { display: none; }
+  .pill {
+    white-space: nowrap; padding: 7px 16px;
+    border-radius: 999px; border: 1.5px solid #d6d3d1;
+    font-size: 13px; font-weight: 600; color: #78716c;
+    cursor: pointer; transition: all 0.2s; user-select: none;
+    flex-shrink: 0;
+  }
+  .pill.active {
+    background: #059669; color: white; border-color: #059669;
+  }
+  .pill:not(.active):hover { border-color: #a8a29e; }
+
+  /* Template cards */
+  .templates-list {
+    flex: 1; overflow-y: auto; padding: 8px 16px;
+    -webkit-overflow-scrolling: touch;
+  }
+  .templates-list::-webkit-scrollbar { width: 0; }
+
+  .template-card {
+    display: flex; align-items: center; gap: 12px;
+    padding: 14px 16px; margin-bottom: 8px;
+    background: white; border-radius: 16px;
+    border: 1px solid #e7e5e4;
+    cursor: pointer; transition: all 0.2s;
+    box-shadow: 0 2px 8px rgba(45,42,38,0.06);
+    user-select: none;
+  }
+  .template-card:hover {
+    border-color: #059669; transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(5,150,105,0.12);
+  }
+  .template-card:active { transform: scale(0.98); }
+  .template-card.importing {
+    border-color: #059669; background: #f0fdf4;
+    pointer-events: none;
+  }
+
+  .template-emoji {
+    width: 44px; height: 44px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px; flex-shrink: 0;
+  }
+  .template-info { flex: 1; min-width: 0; }
+  .template-name {
+    font-size: 15px; font-weight: 600; color: #1c1917;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .template-desc {
+    font-size: 12px; color: #a8a29e; margin-top: 2px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .template-badge {
+    font-size: 10px; background: #ecfdf5; color: #059669;
+    padding: 2px 8px; border-radius: 999px; font-weight: 600;
+    flex-shrink: 0;
+  }
+  .template-import-btn {
+    width: 32px; height: 32px; border-radius: 10px;
+    background: #059669; color: white; border: none;
+    font-size: 18px; cursor: pointer; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s;
+  }
+  .template-import-btn:hover { background: #047857; transform: scale(1.05); }
+
+  /* Create own link */
+  .create-own {
+    text-align: center; padding: 16px;
+    color: #059669; font-weight: 500; font-size: 15px;
+    cursor: pointer; user-select: none;
+  }
+  .create-own:hover { color: #047857; text-decoration: underline; }
+
+  /* Step 1 — Try completion */
+  .habit-card-large {
+    background: white; border-radius: 20px;
+    padding: 32px 24px; text-align: center;
+    border: 1px solid #e7e5e4;
+    box-shadow: 0 4px 16px rgba(45,42,38,0.08);
+    margin: 0 24px;
+    animation: fadeInUp 0.5s ease-out;
+  }
+  .habit-card-emoji { font-size: 56px; margin-bottom: 12px; }
+  .habit-card-name {
+    font-size: 22px; font-weight: 600; color: #1c1917;
+    font-family: 'DM Sans', sans-serif !important;
+  }
+  .chain-text {
+    font-size: 18px; font-weight: 600; color: #059669;
+    margin-top: 8px; animation: fadeInUp 0.4s ease-out;
+    font-family: 'DM Sans', sans-serif !important;
+  }
+
+  .complete-btn {
+    display: flex; align-items: center; justify-content: center; gap: 12px;
+    margin: 24px auto 0; padding: 18px 32px;
+    background: #15803d; color: white; border: none;
+    border-radius: 16px; font-size: 15px; font-weight: 600;
+    cursor: pointer; transition: all 0.2s;
+    box-shadow: 0 4px 12px rgba(21,128,61,0.3);
+    font-family: 'DM Sans', sans-serif !important;
+  }
+  .complete-btn:hover { background: #166534; transform: translateY(-1px); }
+  .complete-btn:active { transform: scale(0.96); }
+  .complete-btn.done {
+    background: #f0fdf4; color: #15803d; border: 2px solid #15803d;
+    box-shadow: none;
+  }
+
+  .continue-btn {
+    display: block; margin: 24px auto 0;
+    padding: 16px 48px; background: #059669;
+    color: white; border: none; border-radius: 12px;
+    font-size: 17px; font-weight: 600; cursor: pointer;
+    box-shadow: 0 4px 16px rgba(5,150,105,0.2);
+    transition: all 0.2s; animation: fadeInUp 0.5s ease-out;
+    font-family: 'DM Sans', sans-serif !important;
+  }
+  .continue-btn:hover { background: #047857; }
+
+  /* Step 2 — Celebration */
+  .celebration-content {
+    flex: 1; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 0 24px; text-align: center;
+  }
+  .celebration-title {
+    font-size: 34px !important; font-weight: 700 !important; color: #047857;
+    animation: scaleIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .celebration-subtitle {
+    font-size: 16px; color: #78716c; margin-top: 12px;
+    font-family: 'DM Sans', sans-serif !important;
+    animation: fadeInUp 0.6s ease-out 0.2s both;
+  }
+  .celebration-chip {
+    display: flex; align-items: center; gap: 12px;
+    background: white; border: 1px solid #e7e5e4;
+    border-radius: 16px; padding: 16px 24px;
+    margin-top: 32px; box-shadow: 0 2px 8px rgba(45,42,38,0.06);
+    animation: fadeInUp 0.5s ease-out 0.4s both;
+  }
+  .celebration-chip-emoji { font-size: 28px; }
+  .celebration-chip-name {
+    font-size: 18px; font-weight: 600; color: #1c1917;
+    font-family: 'DM Sans', sans-serif !important;
+  }
+  .celebration-cta {
+    width: calc(100% - 48px); position: absolute; bottom: 48px;
+    padding: 18px; background: #059669; color: white;
+    border: none; border-radius: 12px; font-size: 17px;
+    font-weight: 600; cursor: pointer; transition: all 0.2s;
+    box-shadow: 0 4px 16px rgba(5,150,105,0.25);
+    animation: fadeInUp 0.5s ease-out 0.6s both;
+    font-family: 'DM Sans', sans-serif !important;
+  }
+  .celebration-cta:hover { background: #047857; }
+
+  /* Confetti */
+  .confetti-container {
+    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    pointer-events: none; overflow: hidden; z-index: 50;
+  }
+  .confetti-piece {
+    position: absolute; width: 10px; height: 10px;
+    border-radius: 2px; animation: confettiFall 3s ease-in forwards;
+  }
+
+  /* Animations */
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes scaleIn {
+    from { opacity: 0; transform: scale(0.8); }
+    to { opacity: 1; transform: scale(1); }
+  }
+  @keyframes confettiFall {
+    0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(800px) rotate(720deg); opacity: 0; }
+  }
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+  .spinner {
+    width: 18px; height: 18px; border: 2.5px solid rgba(255,255,255,0.3);
+    border-top-color: white; border-radius: 50%;
+    animation: spin 0.6s linear infinite; display: inline-block;
+  }
+
+  /* Step labels */
+  .step-labels {
+    display: flex; justify-content: center; gap: 16px;
+    padding: 12px 0; position: absolute; bottom: -50px;
+    left: 0; right: 0;
+  }
+  .step-label {
+    font-size: 12px; color: #78716c; cursor: pointer;
+    padding: 6px 14px; border-radius: 8px; transition: all 0.2s;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .step-label:hover { background: #333; color: #e5e0db; }
+  .step-label.current { background: #059669; color: white; }
+</style>
+</head>
+<body>
+<div style="position:relative; width:390px; margin:0 auto;">
+  <div class="phone-frame" id="phone">
+    <!-- Status bar -->
+    <div class="status-bar">
+      <span>9:41</span>
+      <div style="display:flex;gap:6px;align-items:center;">
+        <svg width="16" height="12" viewBox="0 0 16 12"><rect x="0" y="6" width="3" height="6" rx="1" fill="#1a1816"/><rect x="4.5" y="4" width="3" height="8" rx="1" fill="#1a1816"/><rect x="9" y="2" width="3" height="10" rx="1" fill="#1a1816"/><rect x="13" y="0" width="3" height="12" rx="1" fill="#1a1816"/></svg>
+        <svg width="24" height="12" viewBox="0 0 24 12"><rect x="0" y="0" width="22" height="12" rx="3" stroke="#1a1816" stroke-width="1.5" fill="none"/><rect x="22.5" y="3.5" width="2" height="5" rx="1" fill="#1a1816"/><rect x="2" y="2" width="16" height="8" rx="1.5" fill="#15803d"/></svg>
+      </div>
+    </div>
+
+    <!-- Progress bar -->
+    <div class="progress-bar" id="progressBar">
+      <div class="progress-segment active"></div>
+      <div class="progress-segment"></div>
+      <div class="progress-segment"></div>
+    </div>
+
+    <!-- Skip -->
+    <div class="skip-btn" id="skipBtn" onclick="skipOnboarding()">I'll explore later</div>
+
+    <!-- ═══ STEP 0: Add Your First Habit ═══ -->
+    <div class="step active" id="step0">
+      <div class="step-header">
+        <h1 class="step-title">Let's add your first habit</h1>
+        <p class="step-subtitle">Pick one to get started — you can always add more later.</p>
+      </div>
+
+      <div class="pills-row" id="pillsRow">
+        <div class="pill active" data-cat="popular" onclick="selectCategory(this)">Popular</div>
+        <div class="pill" data-cat="health" onclick="selectCategory(this)">Health</div>
+        <div class="pill" data-cat="mindfulness" onclick="selectCategory(this)">Mindfulness</div>
+        <div class="pill" data-cat="productivity" onclick="selectCategory(this)">Productivity</div>
+        <div class="pill" data-cat="morning" onclick="selectCategory(this)">Morning</div>
+        <div class="pill" data-cat="learning" onclick="selectCategory(this)">Learning</div>
+        <div class="pill" data-cat="sleep" onclick="selectCategory(this)">Sleep</div>
+      </div>
+
+      <div class="templates-list" id="templatesList"></div>
+
+      <div class="create-own" onclick="alert('Opens the Create Habit modal')">Or create your own</div>
+    </div>
+
+    <!-- ═══ STEP 1: Try Completing It ═══ -->
+    <div class="step" id="step1">
+      <div class="step-header">
+        <h1 class="step-title">Nice! Now let's try it</h1>
+        <p class="step-subtitle">Tap to complete your first habit for today.</p>
+      </div>
+
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+        <div class="habit-card-large" id="habitCardLarge">
+          <div class="habit-card-emoji" id="selectedEmoji">🧘</div>
+          <div class="habit-card-name" id="selectedName">Meditation</div>
+          <div class="chain-text" id="chainText" style="display:none;">Chain: Day 1!</div>
+        </div>
+
+        <button class="complete-btn" id="completeBtn" onclick="completeHabit()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="white" stroke="white" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          Complete Today
+        </button>
+
+        <button class="continue-btn" id="continueBtn" style="display:none;" onclick="goToStep(2)">Continue</button>
+      </div>
+    </div>
+
+    <!-- ═══ STEP 2: Celebration ═══ -->
+    <div class="step" id="step2">
+      <div class="confetti-container" id="confettiContainer"></div>
+      <div class="celebration-content">
+        <h1 class="celebration-title">You're all set!</h1>
+        <p class="celebration-subtitle">Come back tomorrow to keep your chain going.</p>
+        <div class="celebration-chip">
+          <span class="celebration-chip-emoji" id="celebrationEmoji">🧘</span>
+          <span class="celebration-chip-name" id="celebrationName">Meditation</span>
+        </div>
+      </div>
+      <button class="celebration-cta" onclick="alert('→ Transitions to HabitsApp')">Start Building Habits</button>
+    </div>
+  </div>
+
+  <!-- Nav labels below phone -->
+  <div class="step-labels">
+    <div class="step-label current" onclick="goToStep(0)">Step 1: Add Habit</div>
+    <div class="step-label" onclick="goToStep(1)">Step 2: Try It</div>
+    <div class="step-label" onclick="goToStep(2)">Step 3: Celebrate</div>
+  </div>
+</div>
+
+<script>
+// ── Template Data ──
+const templates = {
+  popular: [
+    { emoji: '🧘', name: 'Meditation', desc: '10 min mindfulness', color: '#059669', badge: 'Science-backed' },
+    { emoji: '💧', name: 'Drink Water', desc: '8 glasses daily', color: '#0ea5e9', badge: 'Science-backed' },
+    { emoji: '📖', name: 'Read 20 Pages', desc: 'Daily reading habit', color: '#8b5cf6', badge: '' },
+    { emoji: '🏃', name: 'Morning Run', desc: '30 min cardio', color: '#f59e0b', badge: 'Science-backed' },
+    { emoji: '😴', name: 'Sleep by 10pm', desc: 'Consistent bedtime', color: '#6366f1', badge: '' },
+    { emoji: '🥗', name: 'Eat Vegetables', desc: '5 servings per day', color: '#22c55e', badge: 'Science-backed' },
+    { emoji: '✍️', name: 'Journaling', desc: '5 min daily writing', color: '#ec4899', badge: '' },
+    { emoji: '🧠', name: 'Brain Training', desc: '15 min cognitive exercises', color: '#14b8a6', badge: 'Science-backed' },
+  ],
+  health: [
+    { emoji: '🏋️', name: 'Strength Training', desc: '3x per week', color: '#ef4444', badge: 'Science-backed' },
+    { emoji: '🚶', name: '10K Steps', desc: 'Daily walking goal', color: '#f97316', badge: '' },
+    { emoji: '🧘', name: 'Stretching', desc: '10 min flexibility', color: '#059669', badge: '' },
+    { emoji: '💊', name: 'Take Vitamins', desc: 'Daily supplement', color: '#a855f7', badge: '' },
+    { emoji: '🥤', name: 'No Sugary Drinks', desc: 'Water only', color: '#0ea5e9', badge: 'Science-backed' },
+    { emoji: '🏊', name: 'Swimming', desc: '30 min, 3x/week', color: '#06b6d4', badge: '' },
+  ],
+  mindfulness: [
+    { emoji: '🧘', name: 'Meditation', desc: '10 min mindfulness', color: '#059669', badge: 'Science-backed' },
+    { emoji: '🌬️', name: 'Box Breathing', desc: '4-7-8 technique', color: '#6366f1', badge: 'Huberman' },
+    { emoji: '🙏', name: 'Gratitude Journal', desc: '3 things daily', color: '#f59e0b', badge: 'Science-backed' },
+    { emoji: '🌿', name: 'Nature Walk', desc: '20 min outdoors', color: '#22c55e', badge: '' },
+    { emoji: '📵', name: 'Digital Detox', desc: '1 hour screen-free', color: '#78716c', badge: '' },
+  ],
+  productivity: [
+    { emoji: '🎯', name: 'Set Daily Goals', desc: 'Top 3 priorities', color: '#ef4444', badge: '' },
+    { emoji: '⏰', name: 'Wake at 6am', desc: 'Consistent wake time', color: '#f59e0b', badge: 'Science-backed' },
+    { emoji: '📝', name: 'Plan Tomorrow', desc: '5 min evening review', color: '#8b5cf6', badge: '' },
+    { emoji: '🚫', name: 'No Social Media', desc: 'Until noon', color: '#64748b', badge: '' },
+    { emoji: '⏱️', name: 'Pomodoro Sessions', desc: '4 blocks of deep work', color: '#ec4899', badge: '' },
+  ],
+  morning: [
+    { emoji: '🌅', name: 'Morning Sunlight', desc: '10 min outdoor light', color: '#f59e0b', badge: 'Huberman' },
+    { emoji: '💧', name: 'Hydrate First', desc: '500ml upon waking', color: '#0ea5e9', badge: '' },
+    { emoji: '🛏️', name: 'Make Bed', desc: 'First win of the day', color: '#78716c', badge: '' },
+    { emoji: '🧊', name: 'Cold Shower', desc: '2 min cold exposure', color: '#06b6d4', badge: 'Huberman' },
+  ],
+  learning: [
+    { emoji: '📚', name: 'Read 30 Minutes', desc: 'Non-fiction books', color: '#8b5cf6', badge: '' },
+    { emoji: '🎧', name: 'Listen to Podcast', desc: 'Educational content', color: '#ec4899', badge: '' },
+    { emoji: '✏️', name: 'Practice Drawing', desc: '15 min sketching', color: '#f97316', badge: '' },
+    { emoji: '🗣️', name: 'Language Practice', desc: '20 min daily', color: '#14b8a6', badge: '' },
+  ],
+  sleep: [
+    { emoji: '😴', name: 'Sleep by 10pm', desc: 'Consistent bedtime', color: '#6366f1', badge: 'Science-backed' },
+    { emoji: '📵', name: 'No Screens', desc: '1 hour before bed', color: '#78716c', badge: 'Huberman' },
+    { emoji: '🌙', name: 'Evening Routine', desc: '30 min wind-down', color: '#a855f7', badge: '' },
+    { emoji: '☕', name: 'No Caffeine After 2pm', desc: 'Better sleep quality', color: '#92400e', badge: 'Science-backed' },
+  ],
+};
+
+let currentStep = 0;
+let selectedHabit = null;
+
+// ── Render Templates ──
+function renderTemplates(category) {
+  const list = document.getElementById('templatesList');
+  const items = templates[category] || templates.popular;
+  list.innerHTML = items.map((t, i) => `
+    <div class="template-card" onclick="selectTemplate(${i}, '${category}')" style="animation: fadeInUp ${0.3 + i * 0.06}s ease-out">
+      <div class="template-emoji" style="background:${t.color}15">${t.emoji}</div>
+      <div class="template-info">
+        <div class="template-name">${t.name}</div>
+        <div class="template-desc">${t.desc}</div>
+      </div>
+      ${t.badge ? `<span class="template-badge">${t.badge}</span>` : ''}
+      <button class="template-import-btn">+</button>
+    </div>
+  `).join('');
+}
+
+function selectCategory(el) {
+  document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  renderTemplates(el.dataset.cat);
+}
+
+function selectTemplate(index, category) {
+  const items = templates[category] || templates.popular;
+  selectedHabit = items[index];
+
+  // Show importing animation
+  const cards = document.querySelectorAll('.template-card');
+  cards[index].classList.add('importing');
+  cards[index].innerHTML = `
+    <div class="template-emoji" style="background:${selectedHabit.color}15">${selectedHabit.emoji}</div>
+    <div class="template-info">
+      <div class="template-name">${selectedHabit.name}</div>
+      <div class="template-desc">Adding to your habits...</div>
+    </div>
+    <div class="spinner"></div>
+  `;
+
+  setTimeout(() => goToStep(1), 800);
+}
+
+// ── Step Navigation ──
+function goToStep(step) {
+  currentStep = step;
+
+  // Update steps
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+  document.getElementById(`step${step}`).classList.add('active');
+
+  // Update progress bar
+  document.querySelectorAll('.progress-segment').forEach((seg, i) => {
+    seg.classList.toggle('active', i <= step);
+  });
+
+  // Update nav labels
+  document.querySelectorAll('.step-label').forEach((label, i) => {
+    label.classList.toggle('current', i === step);
+  });
+
+  // Hide skip on celebration
+  document.getElementById('skipBtn').style.display = step === 2 ? 'none' : 'block';
+
+  // Reset step 1 state
+  if (step === 1 && selectedHabit) {
+    document.getElementById('selectedEmoji').textContent = selectedHabit.emoji;
+    document.getElementById('selectedName').textContent = selectedHabit.name;
+    document.getElementById('chainText').style.display = 'none';
+    document.getElementById('completeBtn').className = 'complete-btn';
+    document.getElementById('completeBtn').innerHTML = `
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="white" stroke="white" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+      Complete Today
+    `;
+    document.getElementById('completeBtn').style.display = 'flex';
+    document.getElementById('continueBtn').style.display = 'none';
+  }
+
+  // Celebration confetti
+  if (step === 2) {
+    if (selectedHabit) {
+      document.getElementById('celebrationEmoji').textContent = selectedHabit.emoji;
+      document.getElementById('celebrationName').textContent = selectedHabit.name;
+    }
+    launchConfetti();
+  }
+}
+
+// ── Complete Habit ──
+function completeHabit() {
+  const btn = document.getElementById('completeBtn');
+  btn.classList.add('done');
+  btn.innerHTML = `
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#15803d" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+    Done for Today
+  `;
+
+  document.getElementById('chainText').style.display = 'block';
+
+  // Show continue after delay
+  setTimeout(() => {
+    btn.style.display = 'none';
+    document.getElementById('continueBtn').style.display = 'block';
+  }, 1200);
+}
+
+// ── Confetti ──
+function launchConfetti() {
+  const container = document.getElementById('confettiContainer');
+  container.innerHTML = '';
+  const colors = ['#059669', '#f59e0b', '#8b5cf6', '#ec4899', '#0ea5e9', '#ef4444', '#22c55e'];
+
+  for (let i = 0; i < 60; i++) {
+    const piece = document.createElement('div');
+    piece.className = 'confetti-piece';
+    piece.style.left = Math.random() * 100 + '%';
+    piece.style.top = -10 + 'px';
+    piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+    piece.style.animationDelay = Math.random() * 1.5 + 's';
+    piece.style.animationDuration = 2 + Math.random() * 2 + 's';
+    piece.style.width = (6 + Math.random() * 6) + 'px';
+    piece.style.height = (6 + Math.random() * 6) + 'px';
+    piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+    container.appendChild(piece);
+  }
+}
+
+function skipOnboarding() {
+  alert('→ Marks onboarding complete, transitions to empty HabitsApp');
+}
+
+// Init
+renderTemplates('popular');
+</script>
+</body>
+</html>

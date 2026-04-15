@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Onboarding — Gamified First Steps</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Literata:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0 !important; padding: 0 !important; box-sizing: border-box !important; }
+  body { font-family: 'DM Sans', sans-serif !important; background: #1a1a1a !important; -webkit-font-smoothing: antialiased !important; }
+  .font-literata { font-family: 'Literata', serif !important; }
+  .font-dm { font-family: 'DM Sans', sans-serif !important; }
+  .font-mono { font-family: 'JetBrains Mono', monospace !important; }
+
+  @keyframes pulse-ring {
+    0% { box-shadow: 0 0 0 0 rgba(5, 150, 105, 0.4); }
+    70% { box-shadow: 0 0 0 8px rgba(5, 150, 105, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(5, 150, 105, 0); }
+  }
+  .pulse-anim {
+    animation: pulse-ring 2s ease-out infinite !important;
+  }
+
+  @keyframes float-confetti {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-3px) rotate(8deg); }
+  }
+  .confetti-anim {
+    animation: float-confetti 1.5s ease-in-out infinite !important;
+  }
+
+  .step-card {
+    transition: all 0.2s ease !important;
+  }
+
+  .cta-btn {
+    transition: all 0.15s ease !important;
+  }
+  .cta-btn:hover {
+    background: #047857 !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3) !important;
+  }
+  .cta-btn:active {
+    transform: translateY(0) !important;
+  }
+
+  .skip-link {
+    transition: color 0.15s ease !important;
+  }
+  .skip-link:hover {
+    color: #2D2A26 !important;
+  }
+</style>
+</head>
+<body>
+  <!-- PHONE FRAME -->
+  <div style="display:flex;justify-content:center;align-items:center;min-height:100vh;background:#1a1a1a;padding:20px;">
+    <div style="width:375px;height:812px;border-radius:40px;overflow:hidden;box-shadow:0 25px 60px rgba(0,0,0,0.5);position:relative;background:#F5F1ED;">
+
+      <!-- STATUS BAR -->
+      <div style="height:54px;display:flex;align-items:flex-end;justify-content:space-between;padding:0 24px 8px;background:#F5F1ED;">
+        <span style="font-family:'DM Sans';font-size:15px;font-weight:600;color:#2D2A26;">9:41</span>
+        <div style="display:flex;gap:6px;align-items:center;">
+          <i data-lucide="signal" style="width:16px;height:16px;color:#2D2A26;"></i>
+          <i data-lucide="wifi" style="width:16px;height:16px;color:#2D2A26;"></i>
+          <i data-lucide="battery-full" style="width:16px;height:16px;color:#2D2A26;"></i>
+        </div>
+      </div>
+
+      <!-- SCROLLABLE CONTENT -->
+      <div style="height:calc(812px - 54px);overflow-y:auto;padding:20px 20px 32px;display:flex;flex-direction:column;">
+
+        <!-- TOP SECTION -->
+        <div style="text-align:center;margin-bottom:24px !important;">
+          <!-- Trophy icon -->
+          <div style="display:inline-flex;align-items:center;justify-content:center;width:56px;height:56px;border-radius:16px;background:rgba(232,185,77,0.12);margin-bottom:12px !important;">
+            <i data-lucide="trophy" style="width:28px;height:28px;color:#E8B94D;"></i>
+          </div>
+          <h1 class="font-literata" style="font-size:24px !important;font-weight:700 !important;color:#2D2A26 !important;line-height:1.2 !important;margin-bottom:6px !important;">Your First Quest</h1>
+          <p class="font-dm" style="font-size:15px !important;color:#6B6560 !important;line-height:1.4 !important;">Complete these 4 steps to unlock your full potential</p>
+        </div>
+
+        <!-- PROGRESS BAR -->
+        <div style="margin-bottom:20px !important;">
+          <div style="height:8px;border-radius:4px;background:#EDEAE5;overflow:hidden;">
+            <div style="width:25%;height:100%;border-radius:4px;background:linear-gradient(90deg,#059669,#10B981);"></div>
+          </div>
+          <div style="display:flex;justify-content:flex-end;margin-top:6px !important;">
+            <span class="font-mono" style="font-size:12px !important;color:#059669 !important;font-weight:500 !important;">1 of 4 complete</span>
+          </div>
+        </div>
+
+        <!-- STEP CARDS -->
+        <div style="display:flex;flex-direction:column;gap:12px;flex:1;">
+
+          <!-- STEP 1 — COMPLETED -->
+          <div class="step-card" style="background:#EDEAE5 !important;border:1.5px solid #DDD8D2 !important;border-left:3px solid #059669 !important;border-radius:16px !important;padding:16px !important;display:flex;align-items:center;gap:12px;">
+            <!-- Circle with checkmark -->
+            <div style="width:32px;height:32px;min-width:32px;border-radius:50%;background:#059669;display:flex;align-items:center;justify-content:center;">
+              <i data-lucide="check" style="width:16px;height:16px;color:#fff;"></i>
+            </div>
+            <!-- Text -->
+            <div style="flex:1;min-width:0;">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:2px !important;">
+                <span class="font-dm" style="font-size:15px !important;font-weight:600 !important;color:#059669 !important;text-decoration:line-through !important;">Create Your Profile</span>
+              </div>
+              <span class="font-dm" style="font-size:13px !important;color:#6B6560 !important;">Welcome aboard!</span>
+            </div>
+            <!-- Right: Done badge + XP -->
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0;">
+              <div style="display:flex;align-items:center;gap:4px;">
+                <span class="confetti-anim" style="font-size:14px;">🎊</span>
+                <span class="font-dm" style="font-size:12px !important;font-weight:600 !important;color:#059669 !important;">Done</span>
+              </div>
+              <span class="font-mono" style="font-size:11px !important;font-weight:500 !important;color:#fff !important;background:#059669 !important;padding:2px 8px !important;border-radius:9999px !important;">+10 XP</span>
+            </div>
+          </div>
+
+          <!-- STEP 2 — CURRENT -->
+          <div class="step-card" style="background:#FAFAF8 !important;border:2px solid #059669 !important;border-radius:16px !important;padding:16px !important;display:flex;align-items:center;gap:12px;box-shadow:0 2px 8px rgba(5,150,105,0.1);">
+            <!-- Circle with number + pulse -->
+            <div class="pulse-anim" style="width:32px;height:32px;min-width:32px;border-radius:50%;background:#059669;display:flex;align-items:center;justify-content:center;">
+              <span class="font-dm" style="font-size:14px !important;font-weight:700 !important;color:#fff !important;">2</span>
+            </div>
+            <!-- Text -->
+            <div style="flex:1;min-width:0;">
+              <span class="font-dm" style="font-size:15px !important;font-weight:700 !important;color:#2D2A26 !important;display:block;margin-bottom:2px !important;">Add Your First Habit</span>
+              <span class="font-dm" style="font-size:13px !important;color:#6B6560 !important;">Choose a small, daily habit to start with</span>
+            </div>
+            <!-- Right: Arrow + XP -->
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0;">
+              <i data-lucide="arrow-right" style="width:20px;height:20px;color:#059669;"></i>
+              <span class="font-dm" style="font-size:11px !important;font-weight:500 !important;color:#6B6560 !important;background:#EDEAE5 !important;padding:2px 8px !important;border-radius:9999px !important;">+25 XP</span>
+            </div>
+          </div>
+
+          <!-- STEP 3 — LOCKED -->
+          <div class="step-card" style="background:#EDEAE5 !important;border:1.5px solid #DDD8D2 !important;border-radius:16px !important;padding:16px !important;display:flex;align-items:center;gap:12px;opacity:0.7;">
+            <!-- Circle -->
+            <div style="width:32px;height:32px;min-width:32px;border-radius:50%;background:#DDD8D2;display:flex;align-items:center;justify-content:center;">
+              <span class="font-dm" style="font-size:14px !important;font-weight:600 !important;color:#C4BFB7 !important;">3</span>
+            </div>
+            <!-- Text -->
+            <div style="flex:1;min-width:0;">
+              <span class="font-dm" style="font-size:15px !important;font-weight:600 !important;color:#C4BFB7 !important;display:block;margin-bottom:2px !important;">Set a Reminder</span>
+              <span class="font-dm" style="font-size:13px !important;color:#C4BFB7 !important;">Never forget your habit</span>
+            </div>
+            <!-- Right: Lock + XP -->
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0;">
+              <i data-lucide="lock" style="width:18px;height:18px;color:#C4BFB7;"></i>
+              <span class="font-dm" style="font-size:11px !important;font-weight:500 !important;color:#C4BFB7 !important;background:#DDD8D2 !important;padding:2px 8px !important;border-radius:9999px !important;">+15 XP</span>
+            </div>
+          </div>
+
+          <!-- STEP 4 — LOCKED -->
+          <div class="step-card" style="background:#EDEAE5 !important;border:1.5px solid #DDD8D2 !important;border-radius:16px !important;padding:16px !important;display:flex;align-items:center;gap:12px;opacity:0.7;">
+            <!-- Circle -->
+            <div style="width:32px;height:32px;min-width:32px;border-radius:50%;background:#DDD8D2;display:flex;align-items:center;justify-content:center;">
+              <span class="font-dm" style="font-size:14px !important;font-weight:600 !important;color:#C4BFB7 !important;">4</span>
+            </div>
+            <!-- Text -->
+            <div style="flex:1;min-width:0;">
+              <span class="font-dm" style="font-size:15px !important;font-weight:600 !important;color:#C4BFB7 !important;display:block;margin-bottom:2px !important;">Complete Your First Day</span>
+              <span class="font-dm" style="font-size:13px !important;color:#C4BFB7 !important;">Mark your habit as done</span>
+            </div>
+            <!-- Right: Lock + XP -->
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0;">
+              <i data-lucide="lock" style="width:18px;height:18px;color:#C4BFB7;"></i>
+              <span class="font-dm" style="font-size:11px !important;font-weight:500 !important;color:#C4BFB7 !important;background:#DDD8D2 !important;padding:2px 8px !important;border-radius:9999px !important;">+50 XP</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- BOTTOM SECTION -->
+        <div style="margin-top:24px !important;">
+          <!-- XP Indicator -->
+          <div style="text-align:center;margin-bottom:4px !important;">
+            <span class="font-mono" style="font-size:14px !important;font-weight:600 !important;color:#2D2A26 !important;">0 / 100 XP</span>
+          </div>
+          <p class="font-dm" style="font-size:13px !important;color:#6B6560 !important;text-align:center;margin-bottom:16px !important;">Complete all steps to earn the "Habit Hero" badge</p>
+
+          <!-- CTA Button -->
+          <button class="cta-btn font-dm" style="width:100% !important;height:52px !important;border:none !important;border-radius:12px !important;background:#059669 !important;color:#fff !important;font-size:16px !important;font-weight:600 !important;cursor:pointer !important;display:flex;align-items:center;justify-content:center;gap:8px;">
+            <i data-lucide="plus" style="width:20px;height:20px;color:#fff;"></i>
+            Add Your First Habit
+          </button>
+
+          <!-- Skip link -->
+          <div style="text-align:center;margin-top:14px !important;">
+            <a href="#" class="skip-link font-dm" style="font-size:14px !important;color:#C4BFB7 !important;text-decoration:none !important;">Skip quest</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>

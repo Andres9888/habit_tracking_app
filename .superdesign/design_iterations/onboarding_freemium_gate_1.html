@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Onboarding — Freemium Gate</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=JetBrains+Mono:wght@400;500;600;700&family=Literata:opsz,wght@7..72,400;7..72,500;7..72,600;7..72,700&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    * {
+      margin: 0 !important;
+      padding: 0 !important;
+      box-sizing: border-box !important;
+    }
+    body {
+      font-family: 'DM Sans', sans-serif !important;
+      background: #1a1a1a !important;
+      -webkit-font-smoothing: antialiased !important;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      font-family: 'Literata', serif !important;
+      color: #2D2A26 !important;
+    }
+    .font-literata { font-family: 'Literata', serif !important; }
+    .font-dm { font-family: 'DM Sans', sans-serif !important; }
+    .font-mono { font-family: 'JetBrains Mono', monospace !important; }
+
+    /* Subtle entrance animations */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-in {
+      animation: fadeUp 0.5s ease-out forwards !important;
+      opacity: 0 !important;
+    }
+    .delay-1 { animation-delay: 0.1s !important; }
+    .delay-2 { animation-delay: 0.2s !important; }
+    .delay-3 { animation-delay: 0.3s !important; }
+    .delay-4 { animation-delay: 0.4s !important; }
+    .delay-5 { animation-delay: 0.5s !important; }
+
+    .plan-card {
+      border-radius: 16px !important;
+      padding: 20px 16px !important;
+      display: flex !important;
+      flex-direction: column !important;
+      position: relative !important;
+    }
+
+    .feature-row {
+      display: flex !important;
+      align-items: flex-start !important;
+      gap: 8px !important;
+      margin-bottom: 8px !important;
+    }
+    .feature-row:last-child {
+      margin-bottom: 0 !important;
+    }
+    .feature-icon {
+      width: 16px !important;
+      height: 16px !important;
+      min-width: 16px !important;
+      margin-top: 1px !important;
+    }
+    .feature-text {
+      font-family: 'DM Sans', sans-serif !important;
+      font-size: 13px !important;
+      line-height: 1.35 !important;
+    }
+
+    .cta-primary {
+      background-color: #059669 !important;
+      color: white !important;
+      font-family: 'DM Sans', sans-serif !important;
+      font-weight: 600 !important;
+      font-size: 16px !important;
+      border-radius: 12px !important;
+      padding: 16px !important;
+      width: 100% !important;
+      border: none !important;
+      cursor: pointer !important;
+      transition: background-color 0.2s ease !important;
+    }
+    .cta-primary:hover {
+      background-color: #047857 !important;
+    }
+
+    .cta-secondary {
+      background-color: transparent !important;
+      color: #7B52C4 !important;
+      font-family: 'DM Sans', sans-serif !important;
+      font-weight: 600 !important;
+      font-size: 15px !important;
+      border-radius: 12px !important;
+      padding: 14px !important;
+      width: 100% !important;
+      border: 2px solid #7B52C4 !important;
+      cursor: pointer !important;
+      transition: all 0.2s ease !important;
+    }
+    .cta-secondary:hover {
+      background-color: rgba(123, 82, 196, 0.06) !important;
+    }
+
+    .recommended-badge {
+      position: absolute !important;
+      top: -11px !important;
+      left: 50% !important;
+      transform: translateX(-50%) !important;
+      background-color: #7B52C4 !important;
+      color: white !important;
+      font-family: 'DM Sans', sans-serif !important;
+      font-size: 11px !important;
+      font-weight: 700 !important;
+      letter-spacing: 0.5px !important;
+      padding: 4px 12px !important;
+      border-radius: 9999px !important;
+      white-space: nowrap !important;
+    }
+
+    /* Subtle gold shimmer at bottom of premium card */
+    .premium-shimmer {
+      position: absolute !important;
+      bottom: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      height: 60px !important;
+      border-radius: 0 0 16px 16px !important;
+      background: linear-gradient(to top, rgba(232, 185, 77, 0.08), transparent) !important;
+      pointer-events: none !important;
+    }
+  </style>
+</head>
+<body>
+  <div style="display:flex;justify-content:center;align-items:center;min-height:100vh;background:#1a1a1a;padding:20px;">
+    <div style="width:375px;height:812px;border-radius:40px;overflow:hidden;box-shadow:0 25px 60px rgba(0,0,0,0.5);position:relative;background:#F5F1ED;">
+
+      <!-- STATUS BAR -->
+      <div style="height:54px;display:flex;align-items:flex-end;justify-content:space-between;padding:0 24px 8px;background:#F5F1ED;">
+        <span style="font-family:'DM Sans';font-size:15px;font-weight:600;color:#2D2A26;">9:41</span>
+        <div style="display:flex;gap:6px;align-items:center;">
+          <i data-lucide="signal" style="width:16px;height:16px;color:#2D2A26;"></i>
+          <i data-lucide="wifi" style="width:16px;height:16px;color:#2D2A26;"></i>
+          <i data-lucide="battery-full" style="width:16px;height:16px;color:#2D2A26;"></i>
+        </div>
+      </div>
+
+      <!-- CONTENT -->
+      <div style="padding:20px 20px 0;height:calc(812px - 54px);display:flex;flex-direction:column;overflow:hidden;">
+
+        <!-- Top: Headline -->
+        <div class="animate-in delay-1" style="text-align:center;margin-bottom:24px !important;">
+          <h1 class="font-literata" style="font-size:24px !important;font-weight:700 !important;color:#2D2A26 !important;line-height:1.2 !important;margin-bottom:6px !important;">
+            Choose Your Path
+          </h1>
+          <p class="font-dm" style="font-size:15px !important;color:#6B6560 !important;line-height:1.4 !important;">
+            Start free, upgrade anytime
+          </p>
+        </div>
+
+        <!-- Plan Cards Side by Side -->
+        <div class="animate-in delay-2" style="display:flex;gap:12px !important;margin-bottom:auto !important;flex:1;min-height:0;">
+
+          <!-- FREE CARD -->
+          <div class="plan-card" style="flex:1 !important;background-color:#EDEAE5 !important;border:1.5px solid #DDD8D2 !important;">
+            <!-- Header -->
+            <p class="font-dm" style="font-size:18px !important;font-weight:700 !important;color:#2D2A26 !important;margin-bottom:4px !important;">Free</p>
+            <p class="font-mono" style="font-size:28px !important;font-weight:700 !important;color:#2D2A26 !important;margin-bottom:16px !important;">$0</p>
+
+            <!-- Included Features -->
+            <div class="feature-row">
+              <i data-lucide="check" class="feature-icon" style="color:#059669;"></i>
+              <span class="feature-text" style="color:#6B6560 !important;">3 habits</span>
+            </div>
+            <div class="feature-row">
+              <i data-lucide="check" class="feature-icon" style="color:#059669;"></i>
+              <span class="feature-text" style="color:#6B6560 !important;">Daily tracking</span>
+            </div>
+            <div class="feature-row">
+              <i data-lucide="check" class="feature-icon" style="color:#059669;"></i>
+              <span class="feature-text" style="color:#6B6560 !important;">Basic streaks</span>
+            </div>
+            <div class="feature-row" style="margin-bottom:16px !important;">
+              <i data-lucide="check" class="feature-icon" style="color:#059669;"></i>
+              <span class="feature-text" style="color:#6B6560 !important;">10 templates</span>
+            </div>
+
+            <!-- Excluded Features -->
+            <div class="feature-row">
+              <i data-lucide="x" class="feature-icon" style="color:#C4BFB7;"></i>
+              <span class="feature-text" style="color:#C4BFB7 !important;">Unlimited habits</span>
+            </div>
+            <div class="feature-row">
+              <i data-lucide="x" class="feature-icon" style="color:#C4BFB7;"></i>
+              <span class="feature-text" style="color:#C4BFB7 !important;">Strength analytics</span>
+            </div>
+            <div class="feature-row">
+              <i data-lucide="x" class="feature-icon" style="color:#C4BFB7;"></i>
+              <span class="feature-text" style="color:#C4BFB7 !important;">All 200+ templates</span>
+            </div>
+            <div class="feature-row">
+              <i data-lucide="x" class="feature-icon" style="color:#C4BFB7;"></i>
+              <span class="feature-text" style="color:#C4BFB7 !important;">Priority support</span>
+            </div>
+          </div>
+
+          <!-- PREMIUM CARD -->
+          <div class="plan-card" style="flex:1 !important;background-color:#FAFAF8 !important;border:2px solid #7B52C4 !important;overflow:hidden !important;">
+            <!-- Recommended Badge -->
+            <div class="recommended-badge">RECOMMENDED</div>
+
+            <!-- Header -->
+            <p class="font-dm" style="font-size:18px !important;font-weight:700 !important;color:#7B52C4 !important;margin-bottom:4px !important;margin-top:6px !important;">Premium</p>
+            <div style="margin-bottom:16px !important;display:flex;align-items:baseline;gap:2px !important;">
+              <span class="font-mono" style="font-size:28px !important;font-weight:700 !important;color:#2D2A26 !important;">$4.99</span>
+              <span class="font-dm" style="font-size:14px !important;color:#6B6560 !important;">/mo</span>
+            </div>
+
+            <!-- All Features -->
+            <div class="feature-row">
+              <i data-lucide="check" class="feature-icon" style="color:#7B52C4;"></i>
+              <span class="feature-text" style="color:#6B6560 !important;">Unlimited habits</span>
+            </div>
+            <div class="feature-row">
+              <i data-lucide="check" class="feature-icon" style="color:#7B52C4;"></i>
+              <span class="feature-text" style="color:#6B6560 !important;">Daily tracking</span>
+            </div>
+            <div class="feature-row">
+              <i data-lucide="check" class="feature-icon" style="color:#7B52C4;"></i>
+              <span class="feature-text" style="color:#6B6560 !important;">Advanced streaks</span>
+            </div>
+            <div class="feature-row">
+              <i data-lucide="check" class="feature-icon" style="color:#7B52C4;"></i>
+              <span class="feature-text" style="color:#6B6560 !important;">All 200+ templates</span>
+            </div>
+            <div class="feature-row">
+              <i data-lucide="check" class="feature-icon" style="color:#7B52C4;"></i>
+              <span class="feature-text" style="color:#6B6560 !important;">Strength analytics</span>
+            </div>
+            <div class="feature-row">
+              <i data-lucide="check" class="feature-icon" style="color:#7B52C4;"></i>
+              <span class="feature-text" style="color:#6B6560 !important;">Habit insights</span>
+            </div>
+            <div class="feature-row">
+              <i data-lucide="check" class="feature-icon" style="color:#7B52C4;"></i>
+              <span class="feature-text" style="color:#6B6560 !important;">Priority support</span>
+            </div>
+            <div class="feature-row">
+              <i data-lucide="check" class="feature-icon" style="color:#7B52C4;"></i>
+              <span class="feature-text" style="color:#6B6560 !important;">Early access features</span>
+            </div>
+
+            <!-- Gold Shimmer -->
+            <div class="premium-shimmer"></div>
+          </div>
+        </div>
+
+        <!-- Bottom CTAs -->
+        <div class="animate-in delay-3" style="padding-top:20px !important;padding-bottom:28px !important;">
+          <button class="cta-primary" style="margin-bottom:10px !important;">Start Free</button>
+          <button class="cta-secondary" style="margin-bottom:10px !important;">Try Premium — 7 Days Free</button>
+          <p class="font-dm" style="font-size:12px !important;color:#C4BFB7 !important;text-align:center !important;">
+            No credit card required
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>

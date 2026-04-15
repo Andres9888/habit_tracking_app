@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Onboarding - Goal Setting</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=JetBrains+Mono:wght@400;500;600&family=Literata:opsz,wght@7..72,400;7..72,500;7..72,600;7..72,700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0 !important; padding: 0 !important; box-sizing: border-box !important; }
+  body { font-family: 'DM Sans', sans-serif !important; background: #1a1a1a !important; }
+  h1, h2, h3 { font-family: 'Literata', serif !important; }
+
+  .category-card {
+    background: #EDEAE5 !important;
+    border: 1.5px solid #DDD8D2 !important;
+    border-radius: 16px !important;
+    padding: 18px 14px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    cursor: pointer !important;
+    transition: all 0.25s ease !important;
+    text-align: center !important;
+    min-height: 120px !important;
+  }
+  .category-card:hover {
+    transform: translateY(-2px) !important;
+    border-color: #C4BFB7 !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06) !important;
+  }
+  .category-card.selected {
+    border-color: #059669 !important;
+    background: #D1FAE5 !important;
+    box-shadow: 0 0 0 1px #059669, 0 4px 12px rgba(5,150,105,0.12) !important;
+  }
+  .category-card.selected .card-icon { color: #047857 !important; }
+  .category-card.selected .card-title { color: #047857 !important; }
+
+  .card-icon {
+    color: #059669 !important;
+    transition: color 0.25s ease !important;
+  }
+
+  .card-title {
+    font-family: 'DM Sans', sans-serif !important;
+    font-size: 15px !important;
+    font-weight: 600 !important;
+    color: #2D2A26 !important;
+    line-height: 1.2 !important;
+    transition: color 0.25s ease !important;
+  }
+
+  .card-desc {
+    font-family: 'DM Sans', sans-serif !important;
+    font-size: 12px !important;
+    color: #6B6560 !important;
+    line-height: 1.35 !important;
+  }
+
+  .cta-btn {
+    background: #059669 !important;
+    color: #fff !important;
+    font-family: 'DM Sans', sans-serif !important;
+    font-weight: 600 !important;
+    font-size: 16px !important;
+    border: none !important;
+    border-radius: 12px !important;
+    padding: 16px 24px !important;
+    width: 100% !important;
+    cursor: pointer !important;
+    transition: background 0.2s ease !important;
+  }
+  .cta-btn:hover { background: #047857 !important; }
+
+  .skip-link {
+    font-family: 'DM Sans', sans-serif !important;
+    font-size: 14px !important;
+    color: #6B6560 !important;
+    text-decoration: none !important;
+    cursor: pointer !important;
+    transition: color 0.2s ease !important;
+    background: none !important;
+    border: none !important;
+  }
+  .skip-link:hover { color: #2D2A26 !important; }
+
+  .progress-track {
+    width: 100% !important;
+    height: 4px !important;
+    background: #EDEAE5 !important;
+    border-radius: 4px !important;
+    overflow: hidden !important;
+  }
+  .progress-fill {
+    height: 100% !important;
+    width: 33.33% !important;
+    background: #059669 !important;
+    border-radius: 4px !important;
+    transition: width 0.4s ease !important;
+  }
+
+  .checkmark-badge {
+    position: absolute !important;
+    top: -4px !important;
+    right: -4px !important;
+    width: 22px !important;
+    height: 22px !important;
+    background: #059669 !important;
+    border-radius: 9999px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    opacity: 0 !important;
+    transform: scale(0.5) !important;
+    transition: all 0.25s ease !important;
+  }
+  .category-card.selected .checkmark-badge {
+    opacity: 1 !important;
+    transform: scale(1) !important;
+  }
+
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .animate-in {
+    animation: fadeInUp 0.5s ease forwards !important;
+  }
+  .animate-delay-1 { animation-delay: 0.08s !important; opacity: 0 !important; }
+  .animate-delay-2 { animation-delay: 0.16s !important; opacity: 0 !important; }
+  .animate-delay-3 { animation-delay: 0.24s !important; opacity: 0 !important; }
+  .animate-delay-4 { animation-delay: 0.32s !important; opacity: 0 !important; }
+  .animate-delay-5 { animation-delay: 0.40s !important; opacity: 0 !important; }
+  .animate-delay-6 { animation-delay: 0.48s !important; opacity: 0 !important; }
+</style>
+</head>
+<body>
+<div style="display:flex;justify-content:center;align-items:center;min-height:100vh;background:#1a1a1a;padding:20px;">
+  <div style="width:375px;height:812px;border-radius:40px;overflow:hidden;box-shadow:0 25px 60px rgba(0,0,0,0.5);position:relative;background:#F5F1ED;">
+
+    <!-- STATUS BAR -->
+    <div style="height:54px;display:flex;align-items:flex-end;justify-content:space-between;padding:0 24px 8px;background:#F5F1ED;">
+      <span style="font-family:'DM Sans';font-size:15px;font-weight:600;color:#2D2A26;">9:41</span>
+      <div style="display:flex;gap:6px;align-items:center;">
+        <i data-lucide="signal" style="width:16px;height:16px;color:#2D2A26;"></i>
+        <i data-lucide="wifi" style="width:16px;height:16px;color:#2D2A26;"></i>
+        <i data-lucide="battery-full" style="width:16px;height:16px;color:#2D2A26;"></i>
+      </div>
+    </div>
+
+    <!-- HEADER: Step indicator + Progress bar -->
+    <div style="padding:8px 24px 0;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+        <span style="font-family:'DM Sans',sans-serif;font-size:13px;color:#6B6560;">Step 1 of 3</span>
+        <button class="skip-link" style="font-size:13px;">Back</button>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill"></div>
+      </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div style="padding:28px 24px 0;overflow-y:auto;height:calc(100% - 54px - 52px - 140px);">
+      <!-- Headline -->
+      <h1 style="font-family:'Literata',serif;font-size:24px;font-weight:700;color:#2D2A26;line-height:1.3;margin-bottom:8px;" class="animate-in">
+        What Do You Want to Build?
+      </h1>
+      <p style="font-family:'DM Sans',sans-serif;font-size:15px;color:#6B6560;line-height:1.5;margin-bottom:28px;" class="animate-in">
+        Choose your focus area. We'll personalize your experience.
+      </p>
+
+      <!-- 6 Category Cards (2x3 grid) -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+
+        <!-- Card 1: Health -->
+        <div class="category-card animate-in animate-delay-1" onclick="selectCard(this)" data-category="health" style="position:relative;">
+          <div class="checkmark-badge">
+            <i data-lucide="check" style="width:13px;height:13px;color:#fff;stroke-width:3;"></i>
+          </div>
+          <i data-lucide="heart" class="card-icon" style="width:28px;height:28px;"></i>
+          <span class="card-title">Health</span>
+          <span class="card-desc">Sleep, nutrition, wellness</span>
+        </div>
+
+        <!-- Card 2: Productivity (selected by default) -->
+        <div class="category-card selected animate-in animate-delay-2" onclick="selectCard(this)" data-category="productivity" style="position:relative;">
+          <div class="checkmark-badge">
+            <i data-lucide="check" style="width:13px;height:13px;color:#fff;stroke-width:3;"></i>
+          </div>
+          <i data-lucide="zap" class="card-icon" style="width:28px;height:28px;"></i>
+          <span class="card-title">Productivity</span>
+          <span class="card-desc">Focus, planning, output</span>
+        </div>
+
+        <!-- Card 3: Mindfulness -->
+        <div class="category-card animate-in animate-delay-3" onclick="selectCard(this)" data-category="mindfulness" style="position:relative;">
+          <div class="checkmark-badge">
+            <i data-lucide="check" style="width:13px;height:13px;color:#fff;stroke-width:3;"></i>
+          </div>
+          <i data-lucide="brain" class="card-icon" style="width:28px;height:28px;"></i>
+          <span class="card-title">Mindfulness</span>
+          <span class="card-desc">Meditation, journaling</span>
+        </div>
+
+        <!-- Card 4: Fitness -->
+        <div class="category-card animate-in animate-delay-4" onclick="selectCard(this)" data-category="fitness" style="position:relative;">
+          <div class="checkmark-badge">
+            <i data-lucide="check" style="width:13px;height:13px;color:#fff;stroke-width:3;"></i>
+          </div>
+          <i data-lucide="dumbbell" class="card-icon" style="width:28px;height:28px;"></i>
+          <span class="card-title">Fitness</span>
+          <span class="card-desc">Exercise, movement</span>
+        </div>
+
+        <!-- Card 5: Learning -->
+        <div class="category-card animate-in animate-delay-5" onclick="selectCard(this)" data-category="learning" style="position:relative;">
+          <div class="checkmark-badge">
+            <i data-lucide="check" style="width:13px;height:13px;color:#fff;stroke-width:3;"></i>
+          </div>
+          <i data-lucide="book-open" class="card-icon" style="width:28px;height:28px;"></i>
+          <span class="card-title">Learning</span>
+          <span class="card-desc">Reading, skills, growth</span>
+        </div>
+
+        <!-- Card 6: Custom -->
+        <div class="category-card animate-in animate-delay-6" onclick="selectCard(this)" data-category="custom" style="position:relative;">
+          <div class="checkmark-badge">
+            <i data-lucide="check" style="width:13px;height:13px;color:#fff;stroke-width:3;"></i>
+          </div>
+          <i data-lucide="plus" class="card-icon" style="width:28px;height:28px;"></i>
+          <span class="card-title">Custom</span>
+          <span class="card-desc">Create your own path</span>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- BOTTOM AREA -->
+    <div style="position:absolute;bottom:0;left:0;right:0;padding:0 24px 40px;background:linear-gradient(to top, #F5F1ED 85%, transparent);">
+      <button class="cta-btn" onclick="continueFlow()">Continue</button>
+      <div style="text-align:center;margin-top:14px;">
+        <button class="skip-link" onclick="decideLater()">I'll decide later</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  lucide.createIcons();
+
+  function selectCard(card) {
+    // Remove selected from all cards
+    document.querySelectorAll('.category-card').forEach(c => {
+      c.classList.remove('selected');
+    });
+    // Add selected to clicked card
+    card.classList.add('selected');
+    // Re-initialize icons for the checkmark
+    lucide.createIcons();
+  }
+
+  function continueFlow() {
+    const selected = document.querySelector('.category-card.selected');
+    if (selected) {
+      const category = selected.getAttribute('data-category');
+      alert('Selected: ' + category + ' — proceeding to Step 2');
+    }
+  }
+
+  function decideLater() {
+    alert('Skipping to app...');
+  }
+</script>
+</body>
+</html>

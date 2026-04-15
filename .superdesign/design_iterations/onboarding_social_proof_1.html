@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Onboarding — Social Proof & Stats</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=JetBrains+Mono:wght@400;500;600;700&family=Literata:opsz,wght@7..72,400;7..72,500;7..72,600;7..72,700&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    * {
+      margin: 0 !important;
+      padding: 0 !important;
+      box-sizing: border-box !important;
+    }
+    body {
+      font-family: 'DM Sans', sans-serif !important;
+      background: #1a1a1a !important;
+      -webkit-font-smoothing: antialiased !important;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      font-family: 'Literata', serif !important;
+      color: #2D2A26 !important;
+    }
+    .font-literata { font-family: 'Literata', serif !important; }
+    .font-dm { font-family: 'DM Sans', sans-serif !important; }
+    .font-mono { font-family: 'JetBrains Mono', monospace !important; }
+    .bg-parchment { background-color: #F5F1ED !important; }
+    .bg-card { background-color: #EDEAE5 !important; }
+    .border-card { border-color: #DDD8D2 !important; }
+    .text-heading { color: #2D2A26 !important; }
+    .text-body { color: #6B6560 !important; }
+    .text-muted { color: #C4BFB7 !important; }
+    .text-green { color: #059669 !important; }
+    .text-gold { color: #936A08 !important; }
+    .bg-green { background-color: #059669 !important; }
+    .bg-green-hover:hover { background-color: #047857 !important; }
+    .bg-gold { background-color: #E8B94D !important; }
+    .bg-purple { background-color: #7B52C4 !important; }
+
+    .cta-button {
+      background-color: #059669 !important;
+      color: white !important;
+      font-family: 'DM Sans', sans-serif !important;
+      font-weight: 600 !important;
+      font-size: 16px !important;
+      border-radius: 12px !important;
+      padding: 16px !important;
+      width: 100% !important;
+      border: none !important;
+      cursor: pointer !important;
+      transition: background-color 0.2s ease !important;
+    }
+    .cta-button:hover {
+      background-color: #047857 !important;
+    }
+
+    .skip-link {
+      font-family: 'DM Sans', sans-serif !important;
+      font-size: 14px !important;
+      color: #C4BFB7 !important;
+      text-decoration: none !important;
+      cursor: pointer !important;
+      transition: color 0.2s ease !important;
+      background: none !important;
+      border: none !important;
+    }
+    .skip-link:hover {
+      color: #6B6560 !important;
+    }
+
+    .testimonial-card {
+      background-color: #EDEAE5 !important;
+      border: 1.5px solid #DDD8D2 !important;
+      border-radius: 12px !important;
+      padding: 14px 16px !important;
+      display: flex !important;
+      gap: 12px !important;
+      align-items: flex-start !important;
+    }
+
+    .avatar {
+      width: 36px !important;
+      height: 36px !important;
+      min-width: 36px !important;
+      border-radius: 9999px !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      font-family: 'DM Sans', sans-serif !important;
+      font-weight: 700 !important;
+      font-size: 13px !important;
+      color: white !important;
+    }
+
+    .trust-bar {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      gap: 0 !important;
+    }
+    .trust-item {
+      display: flex !important;
+      align-items: center !important;
+      gap: 4px !important;
+      padding: 0 12px !important;
+    }
+    .trust-divider {
+      width: 1px !important;
+      height: 14px !important;
+      background-color: #DDD8D2 !important;
+    }
+
+    /* Subtle entrance animation */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-in {
+      animation: fadeUp 0.5s ease-out forwards !important;
+      opacity: 0 !important;
+    }
+    .delay-1 { animation-delay: 0.1s !important; }
+    .delay-2 { animation-delay: 0.2s !important; }
+    .delay-3 { animation-delay: 0.3s !important; }
+    .delay-4 { animation-delay: 0.4s !important; }
+    .delay-5 { animation-delay: 0.5s !important; }
+    .delay-6 { animation-delay: 0.6s !important; }
+
+    /* Counter animation */
+    @keyframes countPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.02); }
+    }
+  </style>
+</head>
+<body>
+  <div style="display:flex;justify-content:center;align-items:center;min-height:100vh;background:#1a1a1a;padding:20px;">
+    <div style="width:375px;height:812px;border-radius:40px;overflow:hidden;box-shadow:0 25px 60px rgba(0,0,0,0.5);position:relative;background:#F5F1ED;">
+
+      <!-- STATUS BAR -->
+      <div style="height:54px;display:flex;align-items:flex-end;justify-content:space-between;padding:0 24px 8px;background:#F5F1ED;">
+        <span style="font-family:'DM Sans';font-size:15px;font-weight:600;color:#2D2A26;">9:41</span>
+        <div style="display:flex;gap:6px;align-items:center;">
+          <i data-lucide="signal" style="width:16px;height:16px;color:#2D2A26;"></i>
+          <i data-lucide="wifi" style="width:16px;height:16px;color:#2D2A26;"></i>
+          <i data-lucide="battery-full" style="width:16px;height:16px;color:#2D2A26;"></i>
+        </div>
+      </div>
+
+      <!-- CONTENT -->
+      <div style="padding:20px 20px 0;height:calc(812px - 54px);display:flex;flex-direction:column;overflow:hidden;">
+
+        <!-- Top Section: Sparkle + Headline -->
+        <div class="animate-in delay-1" style="text-align:center;margin-bottom:20px !important;">
+          <div style="margin-bottom:8px !important;">
+            <i data-lucide="sparkles" style="width:24px;height:24px;color:#E8B94D;"></i>
+          </div>
+          <h1 class="font-literata" style="font-size:26px !important;font-weight:700 !important;color:#2D2A26 !important;line-height:1.2 !important;margin-bottom:6px !important;">
+            You're in Good Company
+          </h1>
+          <p class="font-dm text-body" style="font-size:15px !important;line-height:1.4 !important;">
+            Thousands are building stronger habits every day
+          </p>
+        </div>
+
+        <!-- Hero Stat Card -->
+        <div class="animate-in delay-2" style="background:#EDEAE5 !important;border:1.5px solid #DDD8D2 !important;border-radius:16px !important;padding:24px !important;text-align:center;margin-bottom:16px !important;">
+          <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:4px !important;">
+            <span class="font-mono" style="font-size:36px !important;font-weight:700 !important;color:#059669 !important;letter-spacing:-0.5px !important;">847,291</span>
+            <i data-lucide="trending-up" style="width:22px;height:22px;color:#059669;"></i>
+          </div>
+          <p class="font-dm text-body" style="font-size:14px !important;">
+            habits completed this month
+          </p>
+        </div>
+
+        <!-- Testimonial Cards -->
+        <div style="display:flex;flex-direction:column;gap:8px !important;margin-bottom:16px !important;flex:1;min-height:0;">
+
+          <!-- Testimonial 1 -->
+          <div class="testimonial-card animate-in delay-3">
+            <div class="avatar" style="background-color:#059669 !important;">SK</div>
+            <div style="flex:1;min-width:0;">
+              <p class="font-dm" style="font-size:14px !important;font-weight:600 !important;color:#2D2A26 !important;margin-bottom:3px !important;">Sarah K.</p>
+              <p class="font-dm text-body" style="font-size:13px !important;line-height:1.35 !important;margin-bottom:5px !important;">"Finally an app that makes habits stick. The strength meter is genius."</p>
+              <span class="font-dm" style="font-size:12px !important;color:#936A08 !important;">&#x1F525; 45 day streak</span>
+            </div>
+          </div>
+
+          <!-- Testimonial 2 -->
+          <div class="testimonial-card animate-in delay-4">
+            <div class="avatar" style="background-color:#E8B94D !important;">MR</div>
+            <div style="flex:1;min-width:0;">
+              <p class="font-dm" style="font-size:14px !important;font-weight:600 !important;color:#2D2A26 !important;margin-bottom:3px !important;">Marco R.</p>
+              <p class="font-dm text-body" style="font-size:13px !important;line-height:1.35 !important;margin-bottom:5px !important;">"I've tried 5 habit apps. This is the one that worked."</p>
+              <span class="font-dm" style="font-size:12px !important;color:#936A08 !important;">&#x1F525; 120 day streak</span>
+            </div>
+          </div>
+
+          <!-- Testimonial 3 -->
+          <div class="testimonial-card animate-in delay-5">
+            <div class="avatar" style="background-color:#7B52C4 !important;">JL</div>
+            <div style="flex:1;min-width:0;">
+              <p class="font-dm" style="font-size:14px !important;font-weight:600 !important;color:#2D2A26 !important;margin-bottom:3px !important;">Jamie L.</p>
+              <p class="font-dm text-body" style="font-size:13px !important;line-height:1.35 !important;margin-bottom:5px !important;">"The templates got me started in seconds. Love it."</p>
+              <span class="font-dm" style="font-size:12px !important;color:#936A08 !important;">&#x1F525; 78 day streak</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Trust Bar -->
+        <div class="trust-bar animate-in delay-5" style="margin-bottom:16px !important;">
+          <div class="trust-item">
+            <span style="font-size:14px !important;">&#x2B50;</span>
+            <span class="font-dm" style="font-size:14px !important;font-weight:600 !important;color:#2D2A26 !important;">4.8</span>
+          </div>
+          <div class="trust-divider"></div>
+          <div class="trust-item">
+            <span class="font-dm text-body" style="font-size:13px !important;">10K+ Reviews</span>
+          </div>
+          <div class="trust-divider"></div>
+          <div class="trust-item">
+            <span class="font-dm text-body" style="font-size:13px !important;">Featured by Apple</span>
+          </div>
+        </div>
+
+        <!-- Bottom CTA -->
+        <div class="animate-in delay-6" style="padding-bottom:32px !important;">
+          <button class="cta-button">Join the Community</button>
+          <div style="text-align:center;margin-top:12px !important;">
+            <button class="skip-link">Skip</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>
