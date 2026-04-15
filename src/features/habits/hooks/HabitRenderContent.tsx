@@ -2,12 +2,10 @@
 import React, { useCallback, memo } from 'react';
 import Animated, {
   useAnimatedStyle,
-  withSpring,
   withTiming,
 } from 'react-native-reanimated';
 import { ScaleDecorator } from 'react-native-draggable-flatlist';
 import type { Id } from '../../../../convex/_generated/dataModel';
-import { springs } from '@/theme/animations';
 import DraggableHabit from '../../../components/DraggableHabit';
 import type { Habit, HabitStatus } from '../types';
 import type { UseHabitRenderItemArgs } from './useHabitRenderItem.types';
@@ -101,8 +99,8 @@ function HabitRenderContentComponent({
     : isOptimisticHabit
       ? undefined
       : isReorderingEnabled
-      ? drag
-      : undefined;
+        ? drag
+        : undefined;
   const handleToggle = useCallback(
     () => onToggleSelection?.(item._id),
     [onToggleSelection, item._id]
@@ -112,20 +110,15 @@ function HabitRenderContentComponent({
     void toggleHabit(args);
   };
 
-  // Animated style for the active drag state
+  // Animated style for the active drag state — no scale to avoid GPU blur
   const activeStyle = useAnimatedStyle(() => ({
     opacity: withTiming(isActive ? 0.92 : 1, { duration: 150 }),
-    transform: [
-      {
-        scale: withSpring(isActive ? 1.03 : 1, springs.sheet),
-      },
-    ],
     ...(isActive
       ? {
           shadowColor: '#000',
-          shadowOffset: { width: 0, height: 8 },
-          shadowOpacity: 0.18,
-          shadowRadius: 16,
+          shadowOffset: { width: 0, height: 12 },
+          shadowOpacity: 0.22,
+          shadowRadius: 24,
           elevation: 12,
           zIndex: 999,
         }
@@ -141,7 +134,10 @@ function HabitRenderContentComponent({
 
   return (
     <ScaleDecorator activeScale={1}>
-      <Animated.View className={compactView ? 'mb-2' : 'mb-5'} style={activeStyle}>
+      <Animated.View
+        className={compactView ? 'mb-2' : 'mb-5'}
+        style={activeStyle}
+      >
         <DraggableHabit
           celebrationsEnabled={celebrationsEnabled}
           completionIcon={completionIcon}
@@ -174,9 +170,7 @@ function HabitRenderContentComponent({
           onLongPress={handleLongPress}
           onPause={isOptimisticHabit ? undefined : handlePause}
           onPress={
-            isSelectionMode || isOptimisticHabit
-              ? undefined
-              : handleHabitPress
+            isSelectionMode || isOptimisticHabit ? undefined : handleHabitPress
           }
           onToggleSelection={isSelectionMode ? handleToggle : undefined}
           onResume={isOptimisticHabit ? undefined : handleResume}
