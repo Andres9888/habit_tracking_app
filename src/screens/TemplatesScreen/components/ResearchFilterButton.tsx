@@ -16,7 +16,7 @@ interface ResearchFilterButtonProps {
 }
 
 export function ResearchFilterButton({
-  label = 'Research',
+  label = 'Science-backed',
   onToggle,
   researchOnly,
 }: ResearchFilterButtonProps) {
@@ -27,8 +27,9 @@ export function ResearchFilterButton({
 
   return (
     <AnimatedPressable
-      accessibilityLabel='Toggle research-only filter'
+      accessibilityLabel='Toggle science-backed only filter'
       accessibilityRole='button'
+      accessibilityState={{ selected: researchOnly }}
       style={[
         styles.controlButton,
         { borderColor: colors.border },

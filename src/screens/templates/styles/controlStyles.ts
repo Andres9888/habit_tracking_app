@@ -18,6 +18,7 @@ export const controlStyles = StyleSheet.create({
   },
   controlRow: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
     gap: 12,
     marginTop: 12,
   },

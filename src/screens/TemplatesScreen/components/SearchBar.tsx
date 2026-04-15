@@ -20,7 +20,7 @@ interface SearchBarProps {
 export function SearchBar({
   onChangeText,
   onClear,
-  inputHint = 'Search templates, categories, or research',
+  inputHint = 'What do you want to improve?',
   value,
 }: SearchBarProps) {
   const { colors } = useThemeColors();
@@ -36,7 +36,7 @@ export function SearchBar({
     >
       <Search color={placeholderColor} size={iconSizes.medium} strokeWidth={2.5} />
       <TextInput
-        accessibilityLabel='Search templates'
+        accessibilityLabel='Search habit library'
         returnKeyType='search'
         style={[styles.searchInput, { color: colors.text.primary }]}
         value={value}

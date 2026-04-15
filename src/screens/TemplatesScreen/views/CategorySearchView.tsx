@@ -42,7 +42,7 @@ export function CategorySearchView(p: CategorySearchViewProps) {
       />
       <View style={styles.searchSection}>
         <SearchBar
-          inputHint='Search templates, categories, or research'
+          inputHint='Search habits, categories, or science'
           value={p.searchQuery}
           onChangeText={p.setSearchQuery}
           onClear={() => p.setSearchQuery('')}

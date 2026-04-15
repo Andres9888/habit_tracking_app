@@ -23,7 +23,13 @@ export function TrendingCard({
   popularityScore,
 }: TrendingCardProps) {
   return (
-    <Pressable accessibilityRole='button' style={s.card} onPress={onPress}>
+    <Pressable
+      accessibilityHint='Opens the habit preview'
+      accessibilityLabel={`Preview ${name} habit`}
+      accessibilityRole='button'
+      style={s.card}
+      onPress={onPress}
+    >
       <View style={[s.iconBox, { backgroundColor: `${iconColor}25` }]}>
         <Text style={s.iconEmoji}>{icon}</Text>
       </View>
@@ -34,9 +40,11 @@ export function TrendingCard({
 
       <View style={s.metaRow}>
         <Text style={s.frequency}>{frequency}</Text>
-        {hasResearch ? <View style={s.scienceBadge}>
-            <Text style={s.scienceText}>🔬 Science</Text>
-          </View> : null}
+        {hasResearch ? (
+          <View style={s.scienceBadge}>
+            <Text style={s.scienceText}>🔬 Science-backed</Text>
+          </View>
+        ) : null}
       </View>
 
       <View style={s.bottomRow}>

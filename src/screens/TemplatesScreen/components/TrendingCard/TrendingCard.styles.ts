@@ -9,7 +9,7 @@ import { borderRadius, shadows } from '../../../../theme/spacing';
 
 export const CARD_WIDTH = 165;
 const ICON_BOX = 48;
-const ADD_BUTTON_SIZE = 32;
+const ADD_BUTTON_SIZE = 44;
 
 export const s = StyleSheet.create({
   card: {
@@ -36,7 +36,7 @@ export const s = StyleSheet.create({
     lineHeight: 14 * 1.3,
     marginTop: 12,
   },
-  metaRow: { flexDirection: 'row', gap: 4, marginTop: 4 },
+  metaRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 4, marginTop: 4 },
   frequency: {
     color: colors.text.tertiary,
     fontFamily: fontFamilies.monospace,
@@ -48,7 +48,11 @@ export const s = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 2,
   },
-  scienceText: { color: colors.warning, fontSize: 10, fontWeight: fontWeights.semibold },
+  scienceText: {
+    color: colors.warning,
+    fontSize: 10,
+    fontWeight: fontWeights.semibold,
+  },
   bottomRow: {
     alignItems: 'center',
     flexDirection: 'row',

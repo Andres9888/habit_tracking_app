@@ -2,6 +2,8 @@
  * Time-aware featured collection data
  */
 
+import { colors } from '../../../../theme/colors';
+
 export interface FeaturedCollectionData {
   badge: string;
   categoryId: string;
@@ -16,7 +18,7 @@ const MORNING: FeaturedCollectionData = {
   categoryId: 'morning_routine',
   chips: ['\u{1F305} Wake Early', '\u{1F4A7} Hydrate', '\u{1F4DD} Journal', '\u{1F9D8} Meditate'],
   description: 'Start your day with science-backed habits for energy and focus',
-  gradientColors: ['#065F46', '#059669', '#34D399'],
+  gradientColors: ['#065F46', colors.primary[600], colors.primary[400]],
   title: 'Morning Mastery',
 };
 
@@ -25,7 +27,7 @@ const AFTERNOON: FeaturedCollectionData = {
   categoryId: 'productivity',
   chips: ['\u{1F3AF} Deep Work', '\u{1F6B6} Walk Break', '\u{1F4A7} Hydrate', '\u{1F4D6} Read'],
   description: 'Stay sharp and productive through the afternoon',
-  gradientColors: ['#1E3A5F', '#2563EB', '#60A5FA'],
+  gradientColors: ['#17594D', '#0F766E', '#34D399'],
   title: 'Afternoon Focus',
 };
 
@@ -34,7 +36,7 @@ const EVENING: FeaturedCollectionData = {
   categoryId: 'sleep',
   chips: ['\u{1F4F5} Screen Off', '\u{1F4D6} Read', '\u{1F9D8} Stretch', '\u{1F634} Wind Down'],
   description: 'End your day with habits that improve sleep quality',
-  gradientColors: ['#1E1B4B', '#312E81', '#6366F1'],
+  gradientColors: ['#26413C', '#1F5E57', '#2A8C77'],
   title: 'Wind Down & Restore',
 };
 
@@ -43,7 +45,7 @@ const WEEKEND: FeaturedCollectionData = {
   categoryId: 'mindfulness',
   chips: ['\u{1F9D8} Meditate', '\u{1F4D6} Read', '\u{1F3A8} Create', '\u{1F465} Connect'],
   description: 'Recharge with habits that nourish mind and body',
-  gradientColors: ['#701A75', '#A21CAF', '#E879F9'],
+  gradientColors: ['#6D5414', colors.streak[600], '#C9922E'],
   title: 'Weekend Recharge',
 };
 
