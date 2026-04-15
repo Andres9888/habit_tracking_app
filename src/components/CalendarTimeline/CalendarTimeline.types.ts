@@ -83,6 +83,10 @@ export interface DayCellProps {
   ghostLeft?: boolean;
   /** Ghost connector on right — reaching toward today */
   ghostRight?: boolean;
+  /** Color for ghost connectors (distinct from active) */
+  ghostConnectorColor?: string;
+  /** Current streak length — drives connector strength evolution */
+  currentStreak?: number;
   /** Completion icon style for the ring */
   completionIcon?: 'chain' | 'checkbox';
 }

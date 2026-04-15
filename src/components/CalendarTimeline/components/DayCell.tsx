@@ -32,6 +32,8 @@ const DayCellComponent: React.FC<DayCellProps> = ({
   streakConnectorColor,
   ghostLeft,
   ghostRight,
+  ghostConnectorColor,
+  currentStreak,
   completionIcon,
 }) => {
   const weekday = format(date, 'EEE');
@@ -79,8 +81,11 @@ const DayCellComponent: React.FC<DayCellProps> = ({
     <ConnectorArms
       connectLeft={Boolean(connectLeft)}
       connectRight={Boolean(connectRight)}
+      currentStreak={currentStreak}
+      ghostConnectorColor={ghostConnectorColor}
       ghostLeft={Boolean(ghostLeft)}
       ghostRight={Boolean(ghostRight)}
+      reduceMotion={reduceMotion}
       streakConnectorColor={streakConnectorColor}
     />
   ) : null;

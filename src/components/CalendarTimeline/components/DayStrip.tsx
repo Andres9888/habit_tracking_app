@@ -22,6 +22,8 @@ interface DayStripProps {
   connectorColor: string;
   reduceMotion: boolean;
   completionIcon?: 'chain' | 'checkbox';
+  ghostConnectorColor: string;
+  currentStreak?: number;
   disableFutureDayPress: boolean;
   isDayPressEnabled: boolean;
   isToday: (d: Date) => boolean;
@@ -48,6 +50,8 @@ export const DayStrip: React.FC<DayStripProps> = ({
   augmentedColors,
   hasCompletionData,
   completionIcon,
+  ghostConnectorColor,
+  currentStreak,
   connectorColor,
   reduceMotion,
   disableFutureDayPress,
@@ -89,8 +93,10 @@ export const DayStrip: React.FC<DayStripProps> = ({
               completionStatus={status}
               connectLeft={isComplete ? prevComplete : null}
               connectRight={isComplete ? nextComplete : null}
+              currentStreak={currentStreak}
               date={date}
               disableFutureDayPress={disableFutureDayPress}
+              ghostConnectorColor={ghostConnectorColor}
               ghostLeft={ghostLeft}
               ghostRight={ghostRight}
               hasCompletionData={hasCompletionData}
