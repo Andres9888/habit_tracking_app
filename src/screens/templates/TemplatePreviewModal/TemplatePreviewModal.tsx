@@ -24,7 +24,7 @@ import { EnhancedReminderSelector } from '../../../components/CreateHabitModal/c
 import { HABIT_COLORS } from '../../../components/CreateHabitModal/constants';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { borderRadius, shadows } from '../../../theme/spacing';
-import { typography } from '../../../theme/typography';
+import { fontWeights, typography } from '../../../theme/typography';
 import { useTemplatePreview } from './useTemplatePreview';
 import { ImportHeader } from './ImportHeader';
 import { TemplatePreview } from './TemplatePreview';
@@ -188,7 +188,7 @@ export default function TemplatePreviewModal({
                         className='mb-3 text-center uppercase'
                         style={{
                           ...typography.caption,
-                          fontWeight: '600',
+                          fontWeight: fontWeights.semibold,
                           letterSpacing: 0.5,
                           color: colors.text.tertiary,
                         }}
@@ -224,7 +224,7 @@ export default function TemplatePreviewModal({
                         className='mt-4 mb-3 text-center uppercase'
                         style={{
                           ...typography.caption,
-                          fontWeight: '600',
+                          fontWeight: fontWeights.semibold,
                           letterSpacing: 0.5,
                           color: colors.text.tertiary,
                         }}
