@@ -5,6 +5,7 @@
 import React from 'react';
 import Animated from 'react-native-reanimated';
 import { layoutStyles } from '../styles';
+import { buildHeroGradient } from '../utils/heroGradient';
 import { SuccessGlowOverlay } from './SuccessGlowOverlay';
 import { ModalHeader } from './ModalHeader';
 import { ScrollableContent } from './ScrollableContent';
@@ -26,6 +27,7 @@ export function PreviewContent({
   reducedMotion,
   template,
 }: PreviewContentProps) {
+  const headerTint = buildHeroGradient(iconColor)[0];
   return (
     <Animated.View
       testID="templates-preview-modal"
@@ -36,6 +38,7 @@ export function PreviewContent({
         closeButtonAnimatedOpacityStyle={
           animatedStyles.closeButtonAnimatedOpacityStyle
         }
+        tintColor={headerTint}
         topInset={insets.top}
         onClose={handlers.handleClose}
       />
