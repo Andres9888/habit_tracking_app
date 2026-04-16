@@ -76,7 +76,18 @@ export const evidenceDetailStyles = StyleSheet.create({
   },
   videoThumbnail: {
     alignItems: 'center',
-    height: 120,
+    height: 180,
     justifyContent: 'center',
+    position: 'relative',
+  },
+  videoThumbnailFallback: {
+    ...StyleSheet.absoluteFillObject,
+  },
+  videoThumbnailImage: {
+    ...StyleSheet.absoluteFillObject,
+  },
+  videoThumbnailScrim: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0,0,0,0.18)',
   },
 });

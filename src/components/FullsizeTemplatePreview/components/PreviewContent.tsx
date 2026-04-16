@@ -6,6 +6,7 @@ import React from 'react';
 import Animated from 'react-native-reanimated';
 import { layoutStyles } from '../styles';
 import { SuccessGlowOverlay } from './SuccessGlowOverlay';
+import { HeroBackdrop } from './HeroBackdrop';
 import { ModalHeader } from './ModalHeader';
 import { ScrollableContent } from './ScrollableContent';
 import { FooterSection } from './FooterSection';
@@ -28,10 +29,11 @@ export function PreviewContent({
 }: PreviewContentProps) {
   return (
     <Animated.View
-      testID="templates-preview-modal"
+      testID='templates-preview-modal'
       style={[layoutStyles.container, animatedStyles.contentStyle]}
     >
       <SuccessGlowOverlay animatedStyle={animatedStyles.successGlowStyle} />
+      <HeroBackdrop iconColor={iconColor} topInset={insets.top} />
       <ModalHeader
         closeButtonAnimatedOpacityStyle={
           animatedStyles.closeButtonAnimatedOpacityStyle

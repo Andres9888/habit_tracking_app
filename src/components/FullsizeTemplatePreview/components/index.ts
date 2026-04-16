@@ -2,6 +2,7 @@
  * Components barrel export for FullsizeTemplatePreview
  */
 
+export { HeroBackdrop } from './HeroBackdrop';
 export { HeroSection } from './HeroSection';
 export { DescriptionSection } from './DescriptionSection';
 export { ScienceEvidenceSection } from './ScienceEvidenceSection';
