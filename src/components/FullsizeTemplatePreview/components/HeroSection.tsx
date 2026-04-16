@@ -6,7 +6,6 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import Animated from 'react-native-reanimated';
-import { LinearGradient } from 'expo-linear-gradient';
 import { Clock, Sparkles, Users } from 'lucide-react-native';
 import { useAppTheme } from '../../../theme';
 import { heroStyles } from '../styles';
@@ -17,7 +16,6 @@ import {
 } from '../FullsizeTemplatePreview.constants';
 import { formatPopularity } from '../../../screens/TemplatesScreen/components/TrendingCard/formatPopularity';
 import { MetadataPill } from './MetadataPill';
-import { buildHeroGradient } from '../utils/heroGradient';
 import type { HeroSectionProps } from './HeroSection.types';
 
 export function HeroSection({
@@ -27,24 +25,20 @@ export function HeroSection({
   iconGlowStyle,
 }: HeroSectionProps) {
   const theme = useAppTheme();
-  const gradientColors = buildHeroGradient(iconColor);
   const formattedFrequency =
     FREQUENCY_LABELS[template?.frequency] || template?.frequency || 'Daily';
   const formattedCategory =
     CATEGORY_LABELS[template?.category] || template?.category || 'General';
-  const duration =
-    CATEGORY_DURATION_DEFAULTS[template?.category] || '5-10 min';
+  const duration = CATEGORY_DURATION_DEFAULTS[template?.category] || '5-10 min';
   const popularity = template?.popularityScore ?? 0;
 
   return (
-    <LinearGradient
-      colors={gradientColors}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 1 }}
-      style={heroStyles.heroGradient}
-    >
+    <View style={heroStyles.heroGradient}>
       <View
-        style={[heroStyles.decorativeCircle, { backgroundColor: `${iconColor}08` }]}
+        style={[
+          heroStyles.decorativeCircle,
+          { backgroundColor: `${iconColor}08` },
+        ]}
       />
       <View style={heroStyles.heroContent}>
         <Animated.View style={[heroStyles.iconWrapper, iconAnimatedStyle]}>
@@ -56,7 +50,7 @@ export function HeroSection({
             ]}
           />
           <View
-            testID="templates-preview-icon"
+            testID='templates-preview-icon'
             style={[
               heroStyles.iconContainer,
               { backgroundColor: `${iconColor}20` },
@@ -67,7 +61,7 @@ export function HeroSection({
         </Animated.View>
 
         <Text
-          testID="templates-preview-name"
+          testID='templates-preview-name'
           style={[
             heroStyles.templateName,
             { fontFamily: theme.custom.fontFamilies.primary.text },
@@ -76,7 +70,7 @@ export function HeroSection({
           {template?.name ?? 'Template'}
         </Text>
 
-        <View testID="templates-preview-pills" style={heroStyles.pillsRow}>
+        <View testID='templates-preview-pills' style={heroStyles.pillsRow}>
           <MetadataPill
             icon={<Clock color={iconColor} size={14} strokeWidth={2} />}
             iconColor={iconColor}
@@ -89,19 +83,17 @@ export function HeroSection({
           >
             {formattedCategory}
           </MetadataPill>
-          <MetadataPill iconColor={iconColor}>
-            {`⏱️ ${duration}`}
-          </MetadataPill>
-          {popularity > 0 && (
+          <MetadataPill iconColor={iconColor}>{`⏱️ ${duration}`}</MetadataPill>
+          {popularity > 0 ? (
             <MetadataPill
               icon={<Users color={iconColor} size={14} strokeWidth={2} />}
               iconColor={iconColor}
             >
               {formatPopularity(popularity)}
             </MetadataPill>
-          )}
+          ) : null}
         </View>
       </View>
-    </LinearGradient>
+    </View>
   );
 }

@@ -1,27 +1,31 @@
 /**
- * Solid wash that paints behind the ModalHeader and up under the notch,
- * matching the exact top color of the hero gradient so there's no seam
- * between the status-bar area and the hero section.
+ * Single gradient painted behind the ModalHeader and the hero content,
+ * extending the hero's color wash under the notch / status bar with no
+ * internal seams. HeroSection renders its content transparently on top
+ * of this backdrop so there is only one gradient in the stack.
  */
 
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
-import { darkenColor } from '../../CreateHabitModal/components/StickyCreateBar/colorUtils';
+import { StyleSheet } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+import { buildHeroGradient } from '../utils/heroGradient';
 
 interface HeroBackdropProps {
   iconColor: string;
   topInset: number;
 }
 
-const MODAL_HEADER_HEIGHT = 68;
+const HERO_REGION_HEIGHT = 360;
 
 export function HeroBackdrop({ iconColor, topInset }: HeroBackdropProps) {
-  const topColor = `${darkenColor(iconColor, 15)}40`;
-  const height = topInset + MODAL_HEADER_HEIGHT;
+  const height = topInset + HERO_REGION_HEIGHT;
   return (
-    <View
+    <LinearGradient
+      colors={buildHeroGradient(iconColor)}
+      end={{ x: 1, y: 1 }}
       pointerEvents='none'
-      style={[s.backdrop, { backgroundColor: topColor, height }]}
+      start={{ x: 0, y: 0 }}
+      style={[s.backdrop, { height }]}
     />
   );
 }
