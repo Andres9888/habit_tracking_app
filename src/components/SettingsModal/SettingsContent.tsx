@@ -26,6 +26,7 @@ import { CompletionIconPicker } from './CompletionIconPicker';
 import { DayShapePicker } from './DayShapePicker';
 import { StrengthAlgorithmPicker } from './StrengthAlgorithmPicker';
 import type { StrengthAlgorithmMode } from './StrengthAlgorithmPicker';
+import { AlgorithmLegend } from '../AlgorithmPicker';
 import { AccountRow } from './AccountRow';
 import { SettingsRow } from './SettingsRow';
 import { SettingsSection } from './SettingsSection';
@@ -213,7 +214,7 @@ export function SettingsContent(p: SettingsContentProps) {
                 }
                 iconBackgroundColor={settingsIcons.strength.bg}
                 label='Strength algorithm'
-                subtitle='How forgiving missed days are'
+                subtitle='Match to how complex your habits are'
                 rightAccessory={
                   <StrengthAlgorithmPicker
                     selected={
@@ -225,6 +226,7 @@ export function SettingsContent(p: SettingsContentProps) {
                 }
                 type='info'
               />
+              <AlgorithmLegend activeMode={p.strengthAlgorithm} />
             </SettingsSection>
           </Animated.View>
 

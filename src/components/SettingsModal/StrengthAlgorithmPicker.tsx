@@ -1,6 +1,6 @@
 /** StrengthAlgorithmPicker — 3-option segmented control for strength algorithm mode */
 import { Pressable, View } from 'react-native';
-import { Feather, Scale, Flame } from 'lucide-react-native';
+import { Heart, Activity, Zap } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
 import * as Haptics from 'expo-haptics';
 import { useThemeColors } from '../../theme/ThemeContext';
@@ -9,12 +9,12 @@ export type StrengthAlgorithmMode = 'forgiving' | 'balanced' | 'strict';
 
 const OPTIONS: {
   key: StrengthAlgorithmMode;
-  Icon: typeof Feather;
+  Icon: typeof Heart;
   label: string;
 }[] = [
-  { key: 'forgiving', Icon: Feather, label: 'Forgiving' },
-  { key: 'balanced', Icon: Scale, label: 'Balanced' },
-  { key: 'strict', Icon: Flame, label: 'Strict' },
+  { key: 'forgiving', Icon: Heart, label: 'Forgiving' },
+  { key: 'balanced', Icon: Activity, label: 'Balanced' },
+  { key: 'strict', Icon: Zap, label: 'Strict' },
 ];
 
 interface StrengthAlgorithmPickerProps {

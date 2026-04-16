@@ -49,7 +49,6 @@ export {
   DEFAULT_HABIT_DECAY_PARAM,
   DEFAULT_HABIT_GAIN_PARAM,
   GROWTH_RATE,
-  SHIELD_EFFECTIVENESS,
 } from './habitStrength/constants';
 
 // ─────────────────────────────────────────────────────────────────────────────

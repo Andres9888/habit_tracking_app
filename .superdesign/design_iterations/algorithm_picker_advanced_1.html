@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Algorithm Picker — Advanced Disclosure Redesign</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+    body { background: #1c1917; }
+
+    /* iPhone-style frame */
+    .phone {
+      width: 340px;
+      height: 720px;
+      background: #fafaf9;
+      border-radius: 44px;
+      padding: 14px;
+      box-shadow: 0 0 0 10px #0c0a09, 0 30px 60px -20px rgba(0,0,0,0.8);
+      position: relative;
+      overflow: hidden;
+    }
+    .phone-inner {
+      width: 100%;
+      height: 100%;
+      background: #ffffff;
+      border-radius: 32px;
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+    .notch {
+      position: absolute;
+      top: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 110px;
+      height: 28px;
+      background: #0c0a09;
+      border-radius: 20px;
+      z-index: 30;
+    }
+
+    /* App chrome */
+    .status-bar {
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 24px 0;
+      font-size: 14px;
+      font-weight: 600;
+      color: #1c1917;
+    }
+    .nav-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 16px 12px;
+      border-bottom: 1px solid #f5f5f4;
+    }
+    .nav-title { font-size: 17px; font-weight: 700; color: #1c1917; }
+    .nav-btn { font-size: 15px; font-weight: 600; color: #059669; }
+    .nav-btn.secondary { color: #78716c; font-weight: 500; }
+
+    /* Form rows */
+    .scroll { flex: 1; overflow-y: auto; padding: 16px; }
+    .form-row {
+      background: #ffffff;
+      border: 1px solid #f5f5f4;
+      border-radius: 14px;
+      padding: 14px 16px;
+      margin-bottom: 10px;
+    }
+    .form-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: #a8a29e;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .form-value {
+      font-size: 15px;
+      font-weight: 500;
+      color: #1c1917;
+    }
+
+    /* Current icon-only picker (BEFORE) */
+    .picker-current {
+      display: inline-flex;
+      background: rgba(0,0,0,0.05);
+      border-radius: 10px;
+      padding: 3px;
+      gap: 2px;
+    }
+    .picker-current .seg {
+      width: 36px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      color: #78716c;
+    }
+    .picker-current .seg.active {
+      background: rgba(5,150,105,0.12);
+      color: #059669;
+    }
+
+    /* Advanced disclosure row */
+    .disclosure {
+      background: #ffffff;
+      border: 1px solid #f5f5f4;
+      border-radius: 14px;
+      margin-bottom: 10px;
+      overflow: hidden;
+    }
+    .disclosure-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px;
+      cursor: pointer;
+    }
+    .disclosure-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: #1c1917;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .disclosure-sub {
+      font-size: 12px;
+      color: #a8a29e;
+      margin-top: 2px;
+    }
+    .chevron { transition: transform 0.2s; color: #a8a29e; }
+    .chevron.open { transform: rotate(180deg); }
+
+    /* Expanded content */
+    .disclosure-body {
+      border-top: 1px solid #f5f5f4;
+      padding: 12px 12px 14px;
+      background: #fafaf9;
+    }
+
+    /* Labeled cards */
+    .algo-card {
+      background: #ffffff;
+      border: 1.5px solid #e7e5e4;
+      border-radius: 12px;
+      padding: 12px 14px;
+      margin-bottom: 8px;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .algo-card:hover { border-color: #d6d3d1; }
+    .algo-card.selected {
+      border-color: #059669;
+      background: linear-gradient(135deg, #ecfdf5 0%, #f0fdf4 100%);
+      box-shadow: 0 0 0 4px rgba(5,150,105,0.08);
+    }
+    .algo-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .algo-icon.forgiving { background: #fef2f2; color: #ef4444; }
+    .algo-icon.balanced { background: #eff6ff; color: #3b82f6; }
+    .algo-icon.strict { background: #fffbeb; color: #d97706; }
+    .algo-card.selected .algo-icon.balanced {
+      background: #dbeafe;
+    }
+    .algo-text { flex: 1; min-width: 0; }
+    .algo-name {
+      font-size: 14px;
+      font-weight: 700;
+      color: #1c1917;
+      margin-bottom: 2px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .algo-desc {
+      font-size: 12px;
+      color: #57534e;
+      line-height: 1.4;
+      margin-bottom: 6px;
+    }
+    .algo-delta {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 6px;
+      background: rgba(0,0,0,0.04);
+      color: #44403c;
+      font-variant-numeric: tabular-nums;
+    }
+    .algo-delta.selected {
+      background: rgba(5,150,105,0.1);
+      color: #047857;
+    }
+    .default-pill {
+      font-size: 9px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: #059669;
+      color: white;
+      letter-spacing: 0.04em;
+    }
+
+    /* Live preview strip */
+    .preview-strip {
+      background: #ffffff;
+      border: 1px dashed #d6d3d1;
+      border-radius: 10px;
+      padding: 10px 12px;
+      margin-top: 10px;
+      font-size: 11px;
+      color: #57534e;
+    }
+    .preview-strip strong { color: #1c1917; font-weight: 600; }
+
+    /* Frame labels */
+    .frame-label {
+      color: #fafaf9;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .frame-desc {
+      color: #78716c;
+      font-size: 12px;
+      margin-bottom: 16px;
+      max-width: 340px;
+    }
+    .label-badge {
+      font-size: 9px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 4px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .label-badge.bad { background: #fee2e2; color: #991b1b; }
+    .label-badge.good { background: #d1fae5; color: #065f46; }
+    .label-badge.new { background: #dbeafe; color: #1e40af; }
+
+    /* Callouts */
+    .callout {
+      position: absolute;
+      background: #0c0a09;
+      color: #fafaf9;
+      font-size: 11px;
+      padding: 6px 10px;
+      border-radius: 6px;
+      max-width: 180px;
+      line-height: 1.4;
+      z-index: 40;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    }
+    .callout::before {
+      content: '';
+      position: absolute;
+      border: 6px solid transparent;
+    }
+
+    /* Settings row */
+    .settings-group {
+      background: white;
+      border-radius: 14px;
+      border: 1px solid #f5f5f4;
+      margin-bottom: 10px;
+      overflow: hidden;
+    }
+    .settings-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px;
+      border-bottom: 1px solid #f5f5f4;
+    }
+    .settings-row:last-child { border-bottom: none; }
+    .settings-label { font-size: 15px; color: #1c1917; font-weight: 500; }
+  </style>
+</head>
+<body class="min-h-screen p-8">
+
+  <!-- Header -->
+  <div class="max-w-7xl mx-auto mb-10">
+    <h1 class="text-white text-3xl font-bold mb-2">Habit Algorithm Picker — Advanced Disclosure</h1>
+    <p class="text-stone-400 text-sm max-w-3xl leading-relaxed">
+      Problem: current picker is icon-only (Heart / Activity / Zap) with no labels or explanation — users pick on vibes.
+      Solution: hide behind an <strong class="text-stone-200">Advanced</strong> disclosure, and reframe the choice around
+      <strong class="text-stone-200">habit complexity</strong>. UCL research shows habits take 18–254 days to form depending on
+      difficulty (66 days average) — the algorithm should match how hard the habit is, not how harshly to punish yourself.
+    </p>
+  </div>
+
+  <!-- Three frames -->
+  <div class="max-w-7xl mx-auto grid grid-cols-3 gap-10 justify-items-center">
+
+    <!-- ======================================== -->
+    <!-- FRAME 1: BEFORE — current icon-only -->
+    <!-- ======================================== -->
+    <div>
+      <div class="frame-label">
+        <span class="label-badge bad">Before</span>
+        Current picker (problem)
+      </div>
+      <div class="frame-desc">Icon-only. No labels, no explanation, no way to know what Heart vs Zap actually changes.</div>
+
+      <div class="phone">
+        <div class="notch"></div>
+        <div class="phone-inner">
+          <div class="status-bar">
+            <span>9:41</span>
+            <span>●●●</span>
+          </div>
+          <div class="nav-bar">
+            <span class="nav-btn secondary">Cancel</span>
+            <span class="nav-title">Edit Habit</span>
+            <span class="nav-btn">Save</span>
+          </div>
+
+          <div class="scroll">
+            <div class="form-row">
+              <div class="form-label">Name</div>
+              <div class="form-value">Morning meditation</div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-label">Frequency</div>
+              <div class="form-value">Every day</div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-label">Reminder</div>
+              <div class="form-value">7:00 AM</div>
+            </div>
+
+            <!-- The problem: exposed, icon-only -->
+            <div class="form-row" style="border-color: #fca5a5; background: #fef2f2;">
+              <div class="form-label" style="color: #991b1b;">Strength algorithm</div>
+              <div class="flex items-center justify-between mt-2">
+                <div class="picker-current">
+                  <div class="seg"><i data-lucide="undo-2" class="w-4 h-4"></i></div>
+                  <div class="seg"><i data-lucide="heart" class="w-4 h-4"></i></div>
+                  <div class="seg active"><i data-lucide="activity" class="w-4 h-4"></i></div>
+                  <div class="seg"><i data-lucide="zap" class="w-4 h-4"></i></div>
+                </div>
+                <span style="font-size: 11px; color: #991b1b; font-weight: 500;">?</span>
+              </div>
+              <div style="font-size: 11px; color: #991b1b; margin-top: 8px; line-height: 1.3;">
+                User: "Is Heart the hard one or the easy one?"
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-label">Color</div>
+              <div class="flex gap-2">
+                <div class="w-6 h-6 rounded-full bg-emerald-500"></div>
+                <div class="w-6 h-6 rounded-full bg-blue-500 opacity-40"></div>
+                <div class="w-6 h-6 rounded-full bg-purple-500 opacity-40"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======================================== -->
+    <!-- FRAME 2: AFTER — collapsed Advanced -->
+    <!-- ======================================== -->
+    <div>
+      <div class="frame-label">
+        <span class="label-badge good">After · Default</span>
+        Advanced collapsed
+      </div>
+      <div class="frame-desc">Most users never see it. "Balanced" just works. Form is calmer.</div>
+
+      <div class="phone">
+        <div class="notch"></div>
+        <div class="phone-inner">
+          <div class="status-bar">
+            <span>9:41</span>
+            <span>●●●</span>
+          </div>
+          <div class="nav-bar">
+            <span class="nav-btn secondary">Cancel</span>
+            <span class="nav-title">Edit Habit</span>
+            <span class="nav-btn">Save</span>
+          </div>
+
+          <div class="scroll">
+            <div class="form-row">
+              <div class="form-label">Name</div>
+              <div class="form-value">Morning meditation</div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-label">Frequency</div>
+              <div class="form-value">Every day</div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-label">Reminder</div>
+              <div class="form-value">7:00 AM</div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-label">Color</div>
+              <div class="flex gap-2">
+                <div class="w-6 h-6 rounded-full bg-emerald-500"></div>
+                <div class="w-6 h-6 rounded-full bg-blue-500 opacity-40"></div>
+                <div class="w-6 h-6 rounded-full bg-purple-500 opacity-40"></div>
+              </div>
+            </div>
+
+            <!-- Advanced disclosure — collapsed default -->
+            <div class="disclosure">
+              <div class="disclosure-header">
+                <div>
+                  <div class="disclosure-title">
+                    <i data-lucide="sliders-horizontal" class="w-4 h-4" style="color: #78716c;"></i>
+                    Advanced
+                  </div>
+                  <div class="disclosure-sub">Strength algorithm · Using default (Balanced)</div>
+                </div>
+                <i data-lucide="chevron-down" class="chevron w-5 h-5"></i>
+              </div>
+            </div>
+
+            <div style="font-size: 11px; color: #a8a29e; text-align: center; padding: 12px; line-height: 1.5;">
+              Your strength is calculated using the <strong style="color: #44403c;">Balanced</strong> algorithm.<br>
+              Tap Advanced to customize for this habit.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======================================== -->
+    <!-- FRAME 3: AFTER — expanded with cards -->
+    <!-- ======================================== -->
+    <div>
+      <div class="frame-label">
+        <span class="label-badge new">After · Expanded</span>
+        Cards + live preview
+      </div>
+      <div class="frame-desc">Label + plain-language outcome + concrete streak delta. No more guessing.</div>
+
+      <div class="phone">
+        <div class="notch"></div>
+        <div class="phone-inner">
+          <div class="status-bar">
+            <span>9:41</span>
+            <span>●●●</span>
+          </div>
+          <div class="nav-bar">
+            <span class="nav-btn secondary">Cancel</span>
+            <span class="nav-title">Edit Habit</span>
+            <span class="nav-btn">Save</span>
+          </div>
+
+          <div class="scroll">
+            <div class="form-row">
+              <div class="form-label">Name</div>
+              <div class="form-value">Morning meditation</div>
+            </div>
+
+            <!-- Advanced disclosure — expanded -->
+            <div class="disclosure">
+              <div class="disclosure-header">
+                <div>
+                  <div class="disclosure-title">
+                    <i data-lucide="sliders-horizontal" class="w-4 h-4" style="color: #059669;"></i>
+                    Advanced
+                  </div>
+                  <div class="disclosure-sub">How hard is this habit?</div>
+                </div>
+                <i data-lucide="chevron-down" class="chevron open w-5 h-5"></i>
+              </div>
+
+              <div class="disclosure-body">
+
+                <div style="font-size: 11px; color: #78716c; padding: 2px 6px 10px; line-height: 1.5;">
+                  Complex habits take longer to form — research shows a range of 18 to 254 days, 66 days on average. Match the algorithm to your habit's complexity.
+                </div>
+
+                <!-- Card 1 — Forgiving (Simple · forms fastest, lightest touch) -->
+                <div class="algo-card">
+                  <div class="algo-icon forgiving">
+                    <i data-lucide="heart" class="w-4 h-4"></i>
+                  </div>
+                  <div class="algo-text">
+                    <div class="algo-name">Forgiving · Simple habits</div>
+                    <div class="algo-desc">A glass of water, taking a vitamin, one push-up. Forms fast and missing a day barely matters — you'll do it tomorrow anyway.</div>
+                    <span class="algo-delta">
+                      <i data-lucide="clock" class="w-3 h-3"></i>
+                      ~18 days to form
+                    </span>
+                  </div>
+                </div>
+
+                <!-- Card 2 — Balanced (Moderate · selected · default) -->
+                <div class="algo-card selected">
+                  <div class="algo-icon balanced">
+                    <i data-lucide="activity" class="w-4 h-4"></i>
+                  </div>
+                  <div class="algo-text">
+                    <div class="algo-name">
+                      Balanced · Moderate habits
+                      <span class="default-pill">Default</span>
+                    </div>
+                    <div class="algo-desc">Journaling, reading, stretching. The typical 66-day formation curve from UCL research — noticeable dip on a miss, recovers with a few good days.</div>
+                    <span class="algo-delta selected">
+                      <i data-lucide="clock" class="w-3 h-3"></i>
+                      ~66 days to form
+                    </span>
+                  </div>
+                </div>
+
+                <!-- Card 3 — Strict (Complex · takes longest, tightest accountability) -->
+                <div class="algo-card">
+                  <div class="algo-icon strict">
+                    <i data-lucide="zap" class="w-4 h-4"></i>
+                  </div>
+                  <div class="algo-text">
+                    <div class="algo-name">Strict · Complex habits</div>
+                    <div class="algo-desc">Running 5K, meditation, learning an instrument. Takes much longer to build (up to 254 days) — tight accountability keeps you showing up through the long climb.</div>
+                    <span class="algo-delta">
+                      <i data-lucide="clock" class="w-3 h-3"></i>
+                      ~120 days to form
+                    </span>
+                  </div>
+                </div>
+
+                <!-- Live preview strip -->
+                <div class="preview-strip">
+                  <div class="flex items-center gap-2 mb-1">
+                    <i data-lucide="sparkles" class="w-3 h-3" style="color: #059669;"></i>
+                    <strong>"Morning meditation" looks Complex</strong>
+                  </div>
+                  Consider <strong style="color: #047857;">Strict</strong> — complex habits take the longest to form, and consistent accountability helps you push through the hardest stretch.
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Bottom: Settings view -->
+  <div class="max-w-7xl mx-auto mt-16">
+    <div class="text-white text-lg font-bold mb-2">Settings view — keep compact picker (power users only)</div>
+    <p class="text-stone-400 text-sm mb-6 max-w-2xl">
+      In Settings where the user has already navigated to "Strength algorithm," show the icon-only picker alongside the same three cards as reference. No Advanced disclosure needed here — they chose to be here.
+    </p>
+
+    <div class="grid grid-cols-2 gap-10 justify-items-center">
+      <div>
+        <div class="frame-label">
+          <span class="label-badge new">Settings</span>
+          Compact + inline legend
+        </div>
+        <div class="phone">
+          <div class="notch"></div>
+          <div class="phone-inner">
+            <div class="status-bar">
+              <span>9:41</span>
+              <span>●●●</span>
+            </div>
+            <div class="nav-bar">
+              <span class="nav-btn secondary">
+                <i data-lucide="chevron-left" class="w-4 h-4 inline"></i> Back
+              </span>
+              <span class="nav-title">Algorithm</span>
+              <span style="width: 40px;"></span>
+            </div>
+
+            <div class="scroll" style="background: #fafaf9;">
+              <div class="settings-group">
+                <div class="settings-row">
+                  <span class="settings-label">Default mode</span>
+                  <div class="picker-current">
+                    <div class="seg"><i data-lucide="heart" class="w-4 h-4"></i></div>
+                    <div class="seg active"><i data-lucide="activity" class="w-4 h-4"></i></div>
+                    <div class="seg"><i data-lucide="zap" class="w-4 h-4"></i></div>
+                  </div>
+                </div>
+              </div>
+
+              <div style="font-size: 11px; color: #a8a29e; padding: 4px 4px 12px; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 600;">
+                What each mode does
+              </div>
+
+              <!-- Reference cards (non-interactive legend) -->
+              <div class="algo-card" style="background: white;">
+                <div class="algo-icon forgiving"><i data-lucide="heart" class="w-4 h-4"></i></div>
+                <div class="algo-text">
+                  <div class="algo-name">Forgiving · Simple habits</div>
+                  <div class="algo-desc">Water, vitamins, one push-up. ~18 days — easy enough that a missed day barely matters.</div>
+                </div>
+              </div>
+
+              <div class="algo-card selected" style="background: linear-gradient(135deg, #ecfdf5 0%, #f0fdf4 100%);">
+                <div class="algo-icon balanced"><i data-lucide="activity" class="w-4 h-4"></i></div>
+                <div class="algo-text">
+                  <div class="algo-name">Balanced · Moderate <span class="default-pill">Active</span></div>
+                  <div class="algo-desc">Journaling, reading, stretching. ~66 days — the UCL research average.</div>
+                </div>
+              </div>
+
+              <div class="algo-card" style="background: white;">
+                <div class="algo-icon strict"><i data-lucide="zap" class="w-4 h-4"></i></div>
+                <div class="algo-text">
+                  <div class="algo-name">Strict · Complex habits</div>
+                  <div class="algo-desc">Running, meditation, instruments. ~120 days — tight accountability keeps you on track through the long climb.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Design rationale panel -->
+      <div class="max-w-md">
+        <div class="frame-label mb-6">
+          <span class="label-badge new">Rationale</span>
+          Why this works
+        </div>
+
+        <div class="space-y-4 text-stone-300 text-sm leading-relaxed">
+          <div class="bg-stone-800 rounded-xl p-4 border border-stone-700">
+            <div class="font-semibold text-white mb-1 flex items-center gap-2">
+              <i data-lucide="eye-off" class="w-4 h-4" style="color: #fbbf24;"></i>
+              Hide by default
+            </div>
+            Advanced section keeps the create/edit forms calm. Users who don't care about algorithm never see it. Matches the existing settings-accordion pattern.
+          </div>
+
+          <div class="bg-stone-800 rounded-xl p-4 border border-stone-700">
+            <div class="font-semibold text-white mb-1 flex items-center gap-2">
+              <i data-lucide="type" class="w-4 h-4" style="color: #60a5fa;"></i>
+              Labels over icons
+            </div>
+            Heart/Activity/Zap mean nothing without context. Plain names + outcome sentences remove ambiguity in under a second.
+          </div>
+
+          <div class="bg-stone-800 rounded-xl p-4 border border-stone-700">
+            <div class="font-semibold text-white mb-1 flex items-center gap-2">
+              <i data-lucide="flask-conical" class="w-4 h-4" style="color: #34d399;"></i>
+              Science-backed framing
+            </div>
+            UCL research: habits form in 18–254 days (66-day average). Reframing from "penalty strength" to "habit complexity" grounds the choice in evidence, not self-discipline theater.
+          </div>
+
+          <div class="bg-stone-800 rounded-xl p-4 border border-stone-700">
+            <div class="font-semibold text-white mb-1 flex items-center gap-2">
+              <i data-lucide="user" class="w-4 h-4" style="color: #f472b6;"></i>
+              Smart recommendation
+            </div>
+            Preview strip detects complexity from the habit name and nudges the right algorithm — "'Meditation' looks Complex. Try Forgiving." Turns an abstract setting into a one-tap decision.
+          </div>
+
+          <div class="bg-stone-800 rounded-xl p-4 border border-stone-700">
+            <div class="font-semibold text-white mb-1 flex items-center gap-2">
+              <i data-lucide="git-branch" class="w-4 h-4" style="color: #a78bfa;"></i>
+              Two-surface strategy
+            </div>
+            Create/Edit: hide behind Advanced. Settings: compact picker + inline legend (user navigated there deliberately).
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>

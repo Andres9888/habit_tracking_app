@@ -23,6 +23,13 @@ export const createHabitArgs = {
   remindersEnabled: v.optional(v.boolean()),
   reminderSound: v.optional(v.string()),
   reminderTime: v.optional(v.string()),
+  strengthAlgorithm: v.optional(
+    v.union(
+      v.literal('forgiving'),
+      v.literal('balanced'),
+      v.literal('strict')
+    )
+  ),
 };
 
 /** Validator for habit data returned by remove (used by restore) */

@@ -13,9 +13,9 @@ import { EmojiPicker } from '../../components/CreateHabitModal/components/EmojiP
 import { ColorPickerSection } from '../../components/CreateHabitModal/components/ColorPickerSection';
 import { EnhancedReminderSelector } from '../../components/CreateHabitModal/components/EnhancedReminderSelector';
 import { HABIT_COLORS } from '../../components/CreateHabitModal/constants';
+import { AdvancedAlgorithmDisclosure } from '../../components/AlgorithmPicker';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { typography } from '../../theme/typography';
-import { HabitAlgorithmPicker } from './HabitAlgorithmPicker';
 
 const entrance = (delay: number) => FadeInUp.delay(delay).springify().damping(18);
 
@@ -92,20 +92,12 @@ export function CustomizeSection({
       </Animated.View>
 
       {onStrengthAlgorithmChange ? (
-        <>
-          <Text
-            className='mt-4 mb-3 text-center uppercase'
-            style={{ ...typography.caption, fontWeight: '600', letterSpacing: 0.5, color: themeColors.text.tertiary }}
-          >
-            Strength algorithm
-          </Text>
-          <Animated.View className='items-center' entering={entrance(180)}>
-            <HabitAlgorithmPicker
-              selected={strengthAlgorithm}
-              onSelect={onStrengthAlgorithmChange}
-            />
-          </Animated.View>
-        </>
+        <Animated.View className='mt-4' entering={entrance(180)}>
+          <AdvancedAlgorithmDisclosure
+            selected={strengthAlgorithm}
+            onSelect={onStrengthAlgorithmChange}
+          />
+        </Animated.View>
       ) : null}
     </View>
   );

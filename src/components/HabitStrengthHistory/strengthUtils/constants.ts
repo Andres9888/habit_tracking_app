@@ -6,16 +6,16 @@ export const DEFAULT_DECAY_RATE = 0.95; // ~5% decay per miss
 export const DEFAULT_MAX_SAMPLE_POINTS = 100;
 
 /**
- * Frontend algorithm configs mapped from backend modes.
- * These approximate the backend momentum formula for chart display.
+ * Frontend chart configs calibrated to Lally et al. (2010) timeframes.
+ * growthRate matches backend; decayRate = 1 - baseDecay for chart smoothing.
  */
 export const ALGORITHM_MODE_CONFIGS: Record<
   string,
   Pick<StrengthAlgorithmConfig, 'growthRate' | 'decayRate'>
 > = {
-  forgiving: { growthRate: 0.04, decayRate: 0.97 },
-  balanced: { growthRate: 0.05, decayRate: 0.95 },
-  strict: { growthRate: 0.07, decayRate: 0.90 },
+  forgiving: { growthRate: 0.10, decayRate: 0.99 },
+  balanced: { growthRate: 0.03, decayRate: 0.98 },
+  strict: { growthRate: 0.013, decayRate: 0.96 },
 };
 
 // Threshold constants for strength labels
