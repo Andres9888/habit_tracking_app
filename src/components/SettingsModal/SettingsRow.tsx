@@ -11,6 +11,8 @@ import Animated, {
 } from 'react-native-reanimated';
 import { ChevronRight } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
+import { typography, fontWeights } from '@/theme/typography';
+import { highContrastColors } from '@/theme/highContrastColors';
 import * as Haptics from 'expo-haptics';
 import { AnimatedPressable } from '../ui/AnimatedPressable';
 import { getSettingsRowColors } from './SettingsRow.colors';
@@ -87,7 +89,7 @@ export function SettingsRow({
 
   const content = (
     <View
-      className={`flex-row items-center px-4 py-4 ${showBorder ? 'border-b' : ''}`}
+      className={`flex-row ${subtitle ? 'items-start' : 'items-center'} px-4 py-4 ${showBorder ? 'border-b' : ''}`}
       style={{
         backgroundColor: colors.background,
         borderColor: showBorder ? colors.border : undefined,
@@ -99,7 +101,7 @@ export function SettingsRow({
         className='mr-4 h-10 w-10 items-center justify-center rounded-xl'
         style={{
           backgroundColor: iconBackgroundColor,
-          borderColor: highContrastMode ? '#facc15' : 'transparent',
+          borderColor: highContrastMode ? highContrastColors.accent : 'transparent',
           borderWidth: highContrastMode ? 2 : 0,
         }}
       >
@@ -107,18 +109,17 @@ export function SettingsRow({
       </View>
       <View className='flex-1'>
         <Text
-          className='text-[17px] font-semibold'
           numberOfLines={type === 'toggle' || type === 'navigation' ? 2 : 1}
           ellipsizeMode='tail'
-          style={{ color: colors.label }}
+          style={{ ...typography.body, fontWeight: fontWeights.semibold, color: colors.label }}
         >
           {label}
         </Text>
         {subtitle ? (
           <Text
-            className='mt-1 text-[13px]'
+            className='mt-1'
             numberOfLines={2}
-            style={{ color: themeColors.text.secondary }}
+            style={{ ...typography.caption, color: themeColors.text.secondary }}
           >
             {subtitle}
           </Text>
@@ -140,17 +141,18 @@ export function SettingsRow({
         ) : null}
         {type === 'selection' ? <View className='flex-row items-center gap-1'>
             <Text
-              className='text-[17px] font-medium'
-              style={{ color: colors.value }}
+              style={{ ...typography.body, fontWeight: fontWeights.medium, color: colors.value }}
             >
               {value as string}
             </Text>
             <ChevronRight color={colors.chevron} size={iconSizes.small} strokeWidth={2} />
           </View> : null}
         {type === 'info' && typeof value === 'string' ? <Text
-            className='ml-3 text-[15px] font-medium'
+            className='ml-3'
             numberOfLines={1}
             style={{
+              ...typography.bodySmall,
+              fontWeight: fontWeights.medium,
               color: colors.value,
               flexShrink: 1,
               maxWidth: '45%',
@@ -166,8 +168,7 @@ export function SettingsRow({
                 style={{ backgroundColor: themeColors.surface }}
               >
                 <Text
-                  className='text-[12px] font-bold'
-                  style={{ color: themeColors.text.secondary }}
+                  style={{ ...typography.tabBar, fontWeight: fontWeights.bold, color: themeColors.text.secondary }}
                 >
                   {badge}
                 </Text>

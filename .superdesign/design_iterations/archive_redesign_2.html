@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Archive Redesign v2 — Refined</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Literata:ital,opsz,wght@0,7..72,200..900;1,7..72,200..900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'DM Sans', sans-serif !important;
+      background: #E8E2DB !important;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 24px 0;
+    }
+    .literata { font-family: 'Literata', serif !important; }
+    .mono { font-family: 'JetBrains Mono', monospace !important; }
+
+    .phone {
+      width: 390px; min-height: 844px; background: #FAF8F5;
+      border-radius: 44px; overflow: hidden; position: relative;
+      box-shadow: 0 25px 60px rgba(45,42,38,0.18), 0 8px 20px rgba(45,42,38,0.1);
+      border: 8px solid #2D2A26; display: flex; flex-direction: column;
+    }
+    .phone::before {
+      content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+      width: 126px; height: 34px; background: #2D2A26; border-radius: 0 0 20px 20px; z-index: 50;
+    }
+
+    /* Refined card with warm shadow */
+    .habit-card {
+      background: #FFFFFF;
+      border-radius: 20px;
+      border: 1px solid rgba(221,216,210,0.5);
+      box-shadow: 0 1px 2px rgba(45,42,38,0.04), 0 4px 12px rgba(45,42,38,0.06);
+      transition: box-shadow 200ms, transform 200ms;
+      overflow: hidden;
+    }
+    .habit-card:hover {
+      box-shadow: 0 2px 4px rgba(45,42,38,0.06), 0 8px 24px rgba(45,42,38,0.1);
+      transform: translateY(-1px);
+    }
+
+    /* Subtle strength indicator */
+    .strength-track { height: 3px; border-radius: 2px; background: #F0ECE6; }
+    .strength-fill { height: 3px; border-radius: 2px; transition: width 400ms ease-out; }
+
+    /* Buttons */
+    .btn-resume {
+      background: #059669; color: #fff; border: none; border-radius: 14px;
+      font-weight: 600; font-size: 15px; cursor: pointer;
+      height: 48px; display: flex; align-items: center; justify-content: center; gap: 8px;
+      width: 100%;
+      box-shadow: 0 1px 2px rgba(5,150,105,0.2), 0 4px 12px rgba(5,150,105,0.15);
+      transition: all 150ms;
+    }
+    .btn-resume:hover { background: #047857; box-shadow: 0 2px 4px rgba(5,150,105,0.25), 0 8px 20px rgba(5,150,105,0.2); }
+    .btn-resume:active { transform: scale(0.98); }
+
+    .btn-delete {
+      background: transparent; color: #B53030; border: 1.5px solid rgba(181,48,48,0.15);
+      border-radius: 14px; font-weight: 600; font-size: 14px; cursor: pointer;
+      height: 44px; display: flex; align-items: center; justify-content: center; gap: 8px;
+      width: 100%; transition: all 150ms;
+    }
+    .btn-delete:hover { background: #FEF2F2; border-color: rgba(181,48,48,0.3); }
+    .btn-delete:active { transform: scale(0.98); }
+
+    /* Stat line - subtle, typographic */
+    .stat-line { display: flex; align-items: center; gap: 16px; }
+    .stat-item { display: flex; align-items: center; gap: 5px; font-size: 13px; color: #9B958E; }
+    .stat-value { font-weight: 600; color: #6E6660; }
+    .stat-dot { width: 3px; height: 3px; border-radius: 50%; background: #DDD8D2; }
+
+    /* Scroll */
+    .scroll { overflow-y: auto; flex: 1; -webkit-overflow-scrolling: touch; }
+    .scroll::-webkit-scrollbar { display: none; }
+
+    /* Animate */
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+    .anim { animation: fadeUp 320ms cubic-bezier(0.22,1,0.36,1) forwards; opacity: 0; }
+    .anim:nth-child(1) { animation-delay: 0ms; }
+    .anim:nth-child(2) { animation-delay: 60ms; }
+    .anim:nth-child(3) { animation-delay: 120ms; }
+    .anim:nth-child(4) { animation-delay: 180ms; }
+
+    /* View toggle */
+    .views { position: fixed; top: 16px; left: 50%; transform: translateX(-50%); z-index: 100; display: flex; gap: 4px; background: #FAF8F5; padding: 4px; border-radius: 12px; box-shadow: 0 2px 8px rgba(45,42,38,0.12); }
+    .vbtn { cursor: pointer; padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; border: none; transition: all 150ms; }
+    .vbtn.on { background: #2D2A26; color: #FAF8F5; }
+    .vbtn:not(.on) { background: transparent; color: #9B958E; }
+    .vbtn:not(.on):hover { background: rgba(45,42,38,0.06); }
+
+    /* Accent strip */
+    .accent-strip { position: absolute; left: 0; top: 0; bottom: 0; width: 4px; border-radius: 20px 0 0 20px; }
+  </style>
+</head>
+<body>
+
+  <div class="views">
+    <button class="vbtn on" onclick="show('main')">Cards</button>
+    <button class="vbtn" onclick="show('select')">Selection</button>
+    <button class="vbtn" onclick="show('empty')">Empty</button>
+  </div>
+
+  <!-- ===== MAIN VIEW ===== -->
+  <div id="v-main" class="phone">
+    <div style="height: 54px;"></div>
+
+    <!-- Header -->
+    <div style="padding: 0 20px 16px 20px;">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+        <button style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: none; border: none; cursor: pointer; opacity: 0.5;">
+          <i data-lucide="chevron-left" style="width: 24px; height: 24px; color: #2D2A26;"></i>
+        </button>
+        <button style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: none; border: none; cursor: pointer; opacity: 0.5;">
+          <i data-lucide="x" style="width: 20px; height: 20px; color: #2D2A26;"></i>
+        </button>
+      </div>
+      <h1 class="literata" style="font-size: 26px; font-weight: 700; color: #2D2A26; letter-spacing: -0.5px; line-height: 1.15;">Archived Habits</h1>
+      <p style="font-size: 14px; color: #9B958E; margin-top: 6px; letter-spacing: -0.1px;">3 habits paused &middot; tap to bring them back</p>
+    </div>
+
+    <div class="scroll" style="padding: 0 16px 32px 16px;">
+
+      <!-- Card 1: Meditation — strong -->
+      <div class="habit-card anim" style="margin-bottom: 14px; position: relative;">
+        <div class="accent-strip" style="background: #7B52C4;"></div>
+        <div style="padding: 20px 20px 18px 24px;">
+
+          <!-- Top row: icon + name + time -->
+          <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 14px;">
+            <div style="width: 44px; height: 44px; border-radius: 14px; background: rgba(123,82,196,0.08); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+              <span style="font-size: 24px; line-height: 1;">🧘</span>
+            </div>
+            <div style="flex: 1; min-width: 0;">
+              <div style="font-size: 16px; font-weight: 600; color: #2D2A26; letter-spacing: -0.2px; line-height: 1.25;">Meditation</div>
+              <div style="font-size: 12px; color: #B5AFA8; margin-top: 2px; letter-spacing: 0.1px;">Archived 2 weeks ago</div>
+            </div>
+          </div>
+
+          <!-- Strength bar + stats line -->
+          <div style="margin-bottom: 16px;">
+            <div class="strength-track" style="margin-bottom: 8px;">
+              <div class="strength-fill" style="width: 72%; background: linear-gradient(90deg, #059669, #10B981);"></div>
+            </div>
+            <div class="stat-line">
+              <div class="stat-item"><span class="stat-value mono" style="font-size: 12px;">72%</span> strength</div>
+              <div class="stat-dot"></div>
+              <div class="stat-item"><span class="stat-value">14d</span> streak</div>
+              <div class="stat-dot"></div>
+              <div class="stat-item"><span class="stat-value">89</span> completions</div>
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <div style="display: flex; gap: 10px;">
+            <button class="btn-resume" style="flex: 1;">
+              <i data-lucide="rotate-ccw" style="width: 16px; height: 16px;"></i>
+              Resume
+            </button>
+            <button class="btn-delete" style="width: 48px; flex: none; padding: 0;">
+              <i data-lucide="trash-2" style="width: 16px; height: 16px;"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 2: Reading — medium -->
+      <div class="habit-card anim" style="margin-bottom: 14px; position: relative;">
+        <div class="accent-strip" style="background: #3B82F6;"></div>
+        <div style="padding: 20px 20px 18px 24px;">
+          <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 14px;">
+            <div style="width: 44px; height: 44px; border-radius: 14px; background: rgba(59,130,246,0.08); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+              <span style="font-size: 24px; line-height: 1;">📚</span>
+            </div>
+            <div style="flex: 1; min-width: 0;">
+              <div style="font-size: 16px; font-weight: 600; color: #2D2A26; letter-spacing: -0.2px; line-height: 1.25;">Read 30 Minutes</div>
+              <div style="font-size: 12px; color: #B5AFA8; margin-top: 2px;">Archived 1 month ago</div>
+            </div>
+          </div>
+          <div style="margin-bottom: 16px;">
+            <div class="strength-track" style="margin-bottom: 8px;">
+              <div class="strength-fill" style="width: 45%; background: linear-gradient(90deg, #EAB308, #FACC15);"></div>
+            </div>
+            <div class="stat-line">
+              <div class="stat-item"><span class="stat-value mono" style="font-size: 12px;">45%</span> strength</div>
+              <div class="stat-dot"></div>
+              <div class="stat-item" style="color: #CCC5BD;"><span style="color: #CCC5BD;">no streak</span></div>
+              <div class="stat-dot"></div>
+              <div class="stat-item"><span class="stat-value">34</span> completions</div>
+            </div>
+          </div>
+          <div style="display: flex; gap: 10px;">
+            <button class="btn-resume" style="flex: 1;">
+              <i data-lucide="rotate-ccw" style="width: 16px; height: 16px;"></i>
+              Resume
+            </button>
+            <button class="btn-delete" style="width: 48px; flex: none; padding: 0;">
+              <i data-lucide="trash-2" style="width: 16px; height: 16px;"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 3: Exercise — fading -->
+      <div class="habit-card anim" style="margin-bottom: 14px; position: relative;">
+        <div class="accent-strip" style="background: #EF4444;"></div>
+        <div style="padding: 20px 20px 18px 24px;">
+          <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 14px;">
+            <div style="width: 44px; height: 44px; border-radius: 14px; background: rgba(239,68,68,0.08); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+              <span style="font-size: 24px; line-height: 1;">🏋️</span>
+            </div>
+            <div style="flex: 1; min-width: 0;">
+              <div style="font-size: 16px; font-weight: 600; color: #2D2A26; letter-spacing: -0.2px; line-height: 1.25;">Exercise</div>
+              <div style="font-size: 12px; color: #B5AFA8; margin-top: 2px;">Archived 3 months ago</div>
+            </div>
+          </div>
+          <div style="margin-bottom: 16px;">
+            <div class="strength-track" style="margin-bottom: 8px;">
+              <div class="strength-fill" style="width: 12%; background: linear-gradient(90deg, #EF4444, #F87171);"></div>
+            </div>
+            <div class="stat-line">
+              <div class="stat-item"><span class="stat-value mono" style="font-size: 12px;">12%</span> strength</div>
+              <div class="stat-dot"></div>
+              <div class="stat-item" style="color: #CCC5BD;"><span style="color: #CCC5BD;">no streak</span></div>
+              <div class="stat-dot"></div>
+              <div class="stat-item"><span class="stat-value">156</span> completions</div>
+            </div>
+          </div>
+          <div style="display: flex; gap: 10px;">
+            <button class="btn-resume" style="flex: 1;">
+              <i data-lucide="rotate-ccw" style="width: 16px; height: 16px;"></i>
+              Resume
+            </button>
+            <button class="btn-delete" style="width: 48px; flex: none; padding: 0;">
+              <i data-lucide="trash-2" style="width: 16px; height: 16px;"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quiet footer -->
+      <div class="anim" style="text-align: center; padding: 20px 0 8px 0;">
+        <button style="font-size: 13px; color: #B5AFA8; background: none; border: none; cursor: pointer; padding: 8px 16px; border-radius: 8px; transition: all 150ms;" onmouseover="this.style.color='#EF4444';this.style.background='#FEF2F2'" onmouseout="this.style.color='#B5AFA8';this.style.background='none'">
+          Delete all archived habits
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===== SELECTION VIEW ===== -->
+  <div id="v-select" class="phone" style="display: none;">
+    <div style="height: 54px;"></div>
+    <div style="padding: 0 20px 16px 20px;">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+        <button style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: none; border: none; cursor: pointer; opacity: 0.5;">
+          <i data-lucide="chevron-left" style="width: 24px; height: 24px; color: #2D2A26;"></i>
+        </button>
+        <button style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: none; border: none; cursor: pointer; opacity: 0.5;">
+          <i data-lucide="x" style="width: 20px; height: 20px; color: #2D2A26;"></i>
+        </button>
+      </div>
+      <h1 class="literata" style="font-size: 26px; font-weight: 700; color: #2D2A26; letter-spacing: -0.5px;">Archived Habits</h1>
+      <p style="font-size: 14px; color: #9B958E; margin-top: 6px;">2 of 3 selected</p>
+    </div>
+
+    <div class="scroll" style="padding: 0 16px 100px 16px;">
+
+      <!-- Selected card -->
+      <div class="habit-card" style="margin-bottom: 14px; position: relative; border-color: rgba(5,150,105,0.25);">
+        <div class="accent-strip" style="background: #7B52C4;"></div>
+        <div style="position: absolute; top: 14px; right: 14px; width: 22px; height: 22px; border-radius: 7px; background: #059669; display: flex; align-items: center; justify-content: center;">
+          <i data-lucide="check" style="width: 13px; height: 13px; color: #fff; stroke-width: 3;"></i>
+        </div>
+        <div style="padding: 20px 20px 18px 24px;">
+          <div style="display: flex; align-items: center; gap: 14px;">
+            <div style="width: 44px; height: 44px; border-radius: 14px; background: rgba(123,82,196,0.08); display: flex; align-items: center; justify-content: center;">
+              <span style="font-size: 24px;">🧘</span>
+            </div>
+            <div>
+              <div style="font-size: 16px; font-weight: 600; color: #2D2A26; letter-spacing: -0.2px;">Meditation</div>
+              <div style="font-size: 12px; color: #B5AFA8; margin-top: 2px;">72% strength &middot; 14d streak</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Unselected card -->
+      <div class="habit-card" style="margin-bottom: 14px; position: relative; opacity: 0.7;">
+        <div class="accent-strip" style="background: #3B82F6;"></div>
+        <div style="position: absolute; top: 14px; right: 14px; width: 22px; height: 22px; border-radius: 7px; border: 2px solid #DDD8D2;"></div>
+        <div style="padding: 20px 20px 18px 24px;">
+          <div style="display: flex; align-items: center; gap: 14px;">
+            <div style="width: 44px; height: 44px; border-radius: 14px; background: rgba(59,130,246,0.08); display: flex; align-items: center; justify-content: center;">
+              <span style="font-size: 24px;">📚</span>
+            </div>
+            <div>
+              <div style="font-size: 16px; font-weight: 600; color: #2D2A26; letter-spacing: -0.2px;">Read 30 Minutes</div>
+              <div style="font-size: 12px; color: #B5AFA8; margin-top: 2px;">45% strength &middot; no streak</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Selected card -->
+      <div class="habit-card" style="margin-bottom: 14px; position: relative; border-color: rgba(5,150,105,0.25);">
+        <div class="accent-strip" style="background: #EF4444;"></div>
+        <div style="position: absolute; top: 14px; right: 14px; width: 22px; height: 22px; border-radius: 7px; background: #059669; display: flex; align-items: center; justify-content: center;">
+          <i data-lucide="check" style="width: 13px; height: 13px; color: #fff; stroke-width: 3;"></i>
+        </div>
+        <div style="padding: 20px 20px 18px 24px;">
+          <div style="display: flex; align-items: center; gap: 14px;">
+            <div style="width: 44px; height: 44px; border-radius: 14px; background: rgba(239,68,68,0.08); display: flex; align-items: center; justify-content: center;">
+              <span style="font-size: 24px;">🏋️</span>
+            </div>
+            <div>
+              <div style="font-size: 16px; font-weight: 600; color: #2D2A26; letter-spacing: -0.2px;">Exercise</div>
+              <div style="font-size: 12px; color: #B5AFA8; margin-top: 2px;">12% strength &middot; no streak</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Floating bar -->
+    <div style="position: absolute; bottom: 40px; left: 20px; right: 20px;">
+      <div style="backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); background: rgba(250,248,245,0.88); border: 1px solid rgba(221,216,210,0.5); border-radius: 28px; padding: 8px 12px; display: flex; align-items: center; box-shadow: 0 8px 32px rgba(45,42,38,0.12);">
+        <button style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; background: none; border: none; border-radius: 14px; cursor: pointer;">
+          <i data-lucide="x" style="width: 18px; height: 18px; color: #9B958E;"></i>
+        </button>
+        <button style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; background: none; border: none; border-radius: 14px; cursor: pointer;">
+          <i data-lucide="rotate-ccw" style="width: 18px; height: 18px; color: #059669;"></i>
+        </button>
+        <span style="flex: 1; text-align: center; font-size: 13px; font-weight: 600; color: #2D2A26; letter-spacing: -0.2px;">2 selected</span>
+        <button style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; background: none; border: none; border-radius: 14px; cursor: pointer;">
+          <i data-lucide="trash-2" style="width: 18px; height: 18px; color: #B53030;"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== EMPTY VIEW ===== -->
+  <div id="v-empty" class="phone" style="display: none;">
+    <div style="height: 54px;"></div>
+    <div style="padding: 0 20px 16px 20px;">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+        <button style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: none; border: none; cursor: pointer; opacity: 0.5;">
+          <i data-lucide="chevron-left" style="width: 24px; height: 24px; color: #2D2A26;"></i>
+        </button>
+        <button style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: none; border: none; cursor: pointer; opacity: 0.5;">
+          <i data-lucide="x" style="width: 20px; height: 20px; color: #2D2A26;"></i>
+        </button>
+      </div>
+      <h1 class="literata" style="font-size: 26px; font-weight: 700; color: #2D2A26; letter-spacing: -0.5px;">Archived Habits</h1>
+      <p style="font-size: 14px; color: #9B958E; margin-top: 6px;">No archived habits</p>
+    </div>
+
+    <div style="flex: 1; display: flex; align-items: center; justify-content: center; padding: 0 32px 80px 32px;">
+      <div style="text-align: center;">
+        <div style="width: 80px; height: 80px; background: #F0ECE6; border-radius: 24px; display: flex; align-items: center; justify-content: center; margin: 0 auto 28px auto;">
+          <span style="font-size: 36px;">🌱</span>
+        </div>
+        <h2 style="font-size: 18px; font-weight: 700; color: #2D2A26; letter-spacing: -0.3px; margin-bottom: 8px;">All habits are active</h2>
+        <p style="font-size: 14px; color: #9B958E; line-height: 1.5; max-width: 260px; margin: 0 auto 28px auto;">Swipe left on any habit to archive it. Your progress and streaks are always preserved.</p>
+        <div style="background: #F7F5F2; border-radius: 16px; padding: 16px; display: flex; gap: 12px; text-align: left;">
+          <span style="font-size: 20px; margin-top: 1px;">💡</span>
+          <div>
+            <div style="font-size: 13px; font-weight: 600; color: #6E6660; margin-bottom: 3px;">Tip</div>
+            <div style="font-size: 13px; color: #9B958E; line-height: 1.45;">Archiving is reversible. Restore any habit and pick up right where you left off.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+    function show(v) {
+      ['main','select','empty'].forEach(id => {
+        document.getElementById('v-'+id).style.display = id === v ? 'flex' : 'none';
+      });
+      document.querySelectorAll('.vbtn').forEach(b => {
+        b.classList.toggle('on', b.textContent.toLowerCase().includes(
+          v === 'main' ? 'card' : v === 'select' ? 'select' : 'empty'
+        ));
+      });
+      setTimeout(() => lucide.createIcons(), 10);
+    }
+  </script>
+</body>
+</html>

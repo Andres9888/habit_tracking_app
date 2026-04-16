@@ -11,11 +11,6 @@ export const SORT_OPTIONS: SortOptionConfig[] = [
     value: 'popular',
   },
   {
-    description: 'Recently added templates first',
-    label: 'Newest',
-    value: 'newest',
-  },
-  {
     description: 'Alphabetically by name',
     label: 'A-Z',
     value: 'az',
@@ -24,7 +19,6 @@ export const SORT_OPTIONS: SortOptionConfig[] = [
 
 export const SORT_LABELS: Record<SortOption, string> = {
   az: 'A-Z',
-  newest: 'Newest',
   popular: 'Popular',
 };
 

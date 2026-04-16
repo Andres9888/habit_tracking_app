@@ -13,7 +13,8 @@ import { useReduceMotion } from '../../../hooks/useReduceMotion';
 import type { TipQuickActionsSheetProps, QuickAction } from './types';
 import { getQuickActionsForTipType } from './getQuickActionsForTipType';
 import { QuickActionItem } from './QuickActionItem';
-import { styles } from './styles';
+import { useStyles } from './styles';
+import { useThemeColors } from '../../../theme/ThemeContext';
 import { iconSizes } from '@/theme/iconSizes';
 
 export const TipQuickActionsSheet = React.memo(function TipQuickActionsSheet({
@@ -25,6 +26,8 @@ export const TipQuickActionsSheet = React.memo(function TipQuickActionsSheet({
   onActionPress,
   onClose,
 }: TipQuickActionsSheetProps) {
+  const styles = useStyles();
+  const { colors } = useThemeColors();
   const reduceMotion = useReduceMotion();
   const { triggerLightImpact } = useHapticFeedback();
 
@@ -71,7 +74,7 @@ export const TipQuickActionsSheet = React.memo(function TipQuickActionsSheet({
             testID='close-quick-actions'
             onPress={handleClose}
           >
-            <X color='#78716c' size={iconSizes.large} strokeWidth={2} />
+            <X color={colors.text.secondary} size={iconSizes.large} strokeWidth={2} />
           </Pressable>
         </View>
 

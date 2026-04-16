@@ -275,7 +275,10 @@ const applicationTables = {
       v.literal('longevity'),
       v.literal('mental_health'),
       v.literal('recovery'),
-      v.literal('breathing')
+      v.literal('breathing'),
+      v.literal('relationships'),
+      v.literal('environmental_design'),
+      v.literal('subtraction')
     ),
     // For sorting popular templates
     createdAt: v.number(),
@@ -300,6 +303,11 @@ const applicationTables = {
 
     // "daily", "weekly", "custom"
     scientificReference: v.string(),
+
+    // Suggested psychology fields for post-import setup
+    suggestedCue: v.optional(v.string()),
+    suggestedIdentity: v.optional(v.string()),
+    suggestedWhy: v.optional(v.string()),
 
     // Tips for success - actionable advice for building this habit
     tips: v.optional(v.array(v.string())),

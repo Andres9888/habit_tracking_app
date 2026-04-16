@@ -8,7 +8,7 @@ import Animated, {
   withSpring,
   withTiming,
 } from 'react-native-reanimated';
-import Svg, { Circle } from 'react-native-svg';
+import Svg, { Circle, Line } from 'react-native-svg';
 import { Check, Link2 } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
 
@@ -140,6 +140,15 @@ export const DayCellRing: React.FC<DayCellRingProps> = ({
             strokeDasharray={CIRCUMFERENCE}
             strokeLinecap='round'
             strokeWidth={STROKE_WIDTH}
+          /> : null}
+        {isMissed ? <Line
+            stroke={rc.track}
+            strokeLinecap='round'
+            strokeWidth={1.5}
+            x1={HALF - 5}
+            x2={HALF + 5}
+            y1={HALF}
+            y2={HALF}
           /> : null}
       </Svg>
       <View style={styles.centerLabel}>

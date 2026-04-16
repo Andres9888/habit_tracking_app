@@ -7,6 +7,7 @@ import { Archive, Trash2, X } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
 import { durations, springs } from '../../../../theme/animations';
 import { colors as palette } from '../../../../theme/colors';
+import { borderRadius } from '../../../../theme/spacing';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import { BLUR_INTENSITY, BORDER_DARK, BORDER_LIGHT, CAPSULE_SHADOW } from '../BottomActionBar/BottomActionBar.styles';
 import { fontWeights } from '@/theme/typography';
@@ -80,7 +81,7 @@ function SelectionActionBarComponent({
 }
 
 const s = StyleSheet.create({
-  btn: { alignItems: 'center', borderRadius: 22, height: 44, justifyContent: 'center', width: 44 },
+  btn: { alignItems: 'center', borderRadius: borderRadius.xl, height: 44, justifyContent: 'center', width: 44 },
   capsuleBorder: { ...StyleSheet.absoluteFillObject, borderRadius: CAPSULE_RADIUS, borderWidth: 1 },
   count: { fontSize: 13, fontWeight: fontWeights.semibold, paddingHorizontal: 12 },
   disabled: { opacity: 0.35 },

@@ -11,6 +11,7 @@ import type {
 } from './CalendarTimeline.types';
 import { colors } from '../../theme/colors';
 import { darkColors } from '../../theme/darkColors';
+import { shadows } from '../../theme/spacing';
 
 import { getCalendarTimelineColors } from './theme';
 
@@ -64,13 +65,10 @@ export const getTodayHighlight = (isDark: boolean) =>
 export const getFutureDateTextColor = (isDark: boolean) =>
   isDark ? darkColors.gray[400] : colors.gray[300];
 
-/** Today cell shadow (same for both themes) */
+/** Today cell shadow — based on shadows.subtle with slightly higher opacity */
 export const TODAY_SHADOW = {
-  elevation: 2,
-  shadowColor: '#2D2A26',
-  shadowOffset: { height: 2, width: 0 },
-  shadowOpacity: 0.15,
-  shadowRadius: 4,
+  ...shadows.subtle,
+  shadowOpacity: 0.08,
 };
 
 /** Theme-aware completion dot glow */
@@ -83,13 +81,17 @@ export const getCompleteDotGlow = (isDark: boolean) => ({
 });
 
 /** Streak connector bar between consecutive completed days */
-/* Intentional rgba — light: primary[500] rgb, dark: primary[400] rgb */
+/* Intentional rgba — base colors at full opacity; strength config controls opacity */
 export const STREAK_CONNECTOR = {
-  height: 4,
   topOffset: 14 + 2 + 22 - 2,
-  light: 'rgba(16, 185, 129, 0.35)',
-  dark: 'rgba(52, 211, 153, 0.30)',
-  highContrast: 'rgba(250, 204, 21, 0.35)',
+  light: 'rgb(16, 185, 129)',
+  dark: 'rgb(52, 211, 153)',
+  highContrast: 'rgb(250, 204, 21)',
+  ghostLight: 'rgba(16, 185, 129, 0.15)',
+  ghostDark: 'rgba(52, 211, 153, 0.12)',
+  ghostHighContrast: 'rgba(250, 204, 21, 0.15)',
+  glowLight: 'rgba(16, 185, 129, 0.45)',
+  glowDark: 'rgba(52, 211, 153, 0.40)',
 };
 
 /** Shelf background color (shared with HabitsListHeader sticky fill) */

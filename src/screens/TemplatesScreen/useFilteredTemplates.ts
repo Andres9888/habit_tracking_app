@@ -106,7 +106,6 @@ export function useFilteredTemplates(
       (a: Doc<'templates'>, b: Doc<'templates'>) => number
     > = {
       az: (a, b) => (a.name || '').localeCompare(b.name || ''),
-      newest: (a, b) => (b.createdAt || 0) - (a.createdAt || 0),
       popular: (a, b) => (b.popularityScore || 0) - (a.popularityScore || 0),
     };
 

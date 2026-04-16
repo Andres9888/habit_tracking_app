@@ -1,6 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import Animated, {
+  Easing,
+  runOnJS,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
@@ -14,6 +16,7 @@ import { useThemeColors } from '../../../theme/ThemeContext';
 import { durations } from '../../../theme/animations';
 import { fontFamilies, fontWeights } from '../../../theme/typography';
 import { borderRadius } from '../../../theme/spacing';
+import { getDatePillColors } from '../theme';
 
 interface WeekNavRowProps {
   monthName: string;
@@ -28,6 +31,7 @@ const PRESS = {
   today: { pressScale: 0.95 },
 } as const;
 const ENTRANCE_DURATION = durations.enter;
+const EXIT_TIMING = { duration: durations.transition, easing: Easing.in(Easing.cubic) };
 const SLIDE_OFFSET = 16;
 
 /** Date row — centered date pill with optional "Today" pill on past weeks */
@@ -42,21 +46,34 @@ export const WeekNavRow: React.FC<WeekNavRowProps> = ({
   const dateLabel = `${monthName} ${dateSuffix}`;
   const showToday = isViewingPast && !!onJumpToToday;
 
+  const [shouldRender, setShouldRender] = useState(showToday);
   const spacerFlex = useSharedValue(showToday ? 0 : 1);
   const todayOpacity = useSharedValue(0);
   const todayTranslateX = useSharedValue(SLIDE_OFFSET);
+  const todayScale = useSharedValue(0.9);
 
   useEffect(() => {
-    const timing = { duration: ENTRANCE_DURATION };
-    spacerFlex.value = withTiming(showToday ? 0 : 1, timing);
-    todayOpacity.value = withTiming(showToday ? 1 : 0, timing);
-    todayTranslateX.value = withTiming(showToday ? 0 : SLIDE_OFFSET, timing);
-  }, [showToday, spacerFlex, todayOpacity, todayTranslateX]);
+    if (showToday) {
+      setShouldRender(true);
+      const timing = { duration: ENTRANCE_DURATION };
+      spacerFlex.value = withTiming(0, timing);
+      todayOpacity.value = withTiming(1, timing);
+      todayTranslateX.value = withTiming(0, timing);
+      todayScale.value = withTiming(1, timing);
+    } else {
+      todayOpacity.value = withTiming(0, EXIT_TIMING, (finished) => {
+        if (finished) runOnJS(setShouldRender)(false);
+      });
+      todayScale.value = withTiming(0.85, EXIT_TIMING);
+      todayTranslateX.value = withTiming(SLIDE_OFFSET, EXIT_TIMING);
+      spacerFlex.value = withTiming(1, EXIT_TIMING);
+    }
+  }, [showToday, spacerFlex, todayOpacity, todayTranslateX, todayScale]);
 
   const spacerStyle = useAnimatedStyle(() => ({ flex: spacerFlex.value }));
   const todayEntranceStyle = useAnimatedStyle(() => ({
     opacity: todayOpacity.value,
-    transform: [{ translateX: todayTranslateX.value }],
+    transform: [{ translateX: todayTranslateX.value }, { scale: todayScale.value }],
   }));
 
   const chipBg = palette.streak[300];
@@ -74,18 +91,7 @@ export const WeekNavRow: React.FC<WeekNavRowProps> = ({
         onPress={onDateRangePress}
       >
         <View
-          style={[
-            s.pill,
-            {
-              /* Intentional rgba — derived from primary[600] (#059669) with opacity */
-              backgroundColor: isDark
-                ? 'rgba(5,150,105,0.08)'
-                : 'rgba(5,150,105,0.06)',
-              borderColor: isDark
-                ? 'rgba(5,150,105,0.20)'
-                : 'rgba(5,150,105,0.15)',
-            },
-          ]}
+          style={[s.pill, getDatePillColors(isDark)]}
         >
           <Calendar
             color={isDark ? palette.primary[500] : palette.primary[600]}
@@ -103,12 +109,12 @@ export const WeekNavRow: React.FC<WeekNavRowProps> = ({
           <Text style={[s.dateText, { color: colors.text.secondary }]}>
             {dateSuffix}
           </Text>
-          <ChevronDown color={colors.gray[300]} size={iconSizes.micro} strokeWidth={2} />
+          <ChevronDown color={colors.gray[300]} size={12} strokeWidth={2} />
         </View>
       </AnimatedPressable>
 
       <View style={s.sideColumnRight}>
-        {showToday && onJumpToToday ? <Animated.View style={todayEntranceStyle}>
+        {shouldRender && onJumpToToday ? <Animated.View style={todayEntranceStyle}>
             <AnimatedPressable
               accessibilityHint='Jump back to the current week'
               accessibilityLabel='Today'

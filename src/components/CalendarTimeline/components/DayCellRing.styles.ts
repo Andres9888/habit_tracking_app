@@ -11,7 +11,8 @@ export const STROKE_WIDTH = 4;
 export const RADIUS = (RING_SIZE - STROKE_WIDTH) / 2;
 export const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
 
-const TRACK_LIGHT = palette.gray[200];
+/* Intentional rgba — black overlay for consistent ring definition */
+const TRACK_LIGHT = 'rgba(0,0,0,0.12)';
 /* Intentional rgba — white overlay on dark surface for track visibility */
 const TRACK_DARK = 'rgba(255,255,255,0.15)';
 const PROGRESS_EMERALD_LIGHT = palette.primary[500];
@@ -132,10 +133,10 @@ export const ringStyles = StyleSheet.create({
   },
   monthPrefixText: {
     fontFamily: fontFamilies.primary.text,
-    fontSize: 7,
+    fontSize: 9,
     fontWeight: fontWeights.bold,
     letterSpacing: 0.5,
-    marginBottom: -1,
+    marginBottom: 0,
     textAlign: 'center',
   },
   solidFill: {

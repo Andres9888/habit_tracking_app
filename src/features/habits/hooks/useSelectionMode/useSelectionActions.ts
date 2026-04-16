@@ -3,6 +3,7 @@ import { useMutation } from 'convex/react';
 import { api } from '../../../../../convex/_generated/api';
 import { logInteraction } from '../../../../lib/analytics/interactions';
 import { optimisticStore } from '../../../../lib/optimistic';
+import { cancelHabitReminder } from '@/utils/notifications';
 import { showGenericError } from '../../../../utils/errorAlerts';
 import { ERROR_MESSAGES } from '../../../../constants/errorMessages';
 import type { BatchUndoState, UseSelectionActionsArgs, UseSelectionActionsResult } from './useSelectionActions.types';
@@ -84,6 +85,7 @@ export function useSelectionActions({
     setConfirmDeleteVisible(false);
     exitSelectionMode();
     try {
+      await Promise.all(ids.map((id) => cancelHabitReminder(String(id))));
       await batchRemoveMutation({ habitIds: ids });
       logInteraction('habits_batch_deleted', { count: ids.length });
     } catch (error) {

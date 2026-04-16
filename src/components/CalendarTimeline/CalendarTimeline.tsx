@@ -28,6 +28,8 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
   trialDaysRemaining,
   onUpgrade,
   completionIcon,
+  compact = false,
+  currentStreak,
 }) => {
   const tl = useCalendarTimelineSetup(
     dates,
@@ -58,7 +60,7 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
   }
 
   return (
-    <View style={getShelfStyle(tl.isDark)} className='pb-4 pt-2'>
+    <View style={getShelfStyle(tl.isDark)} className={compact ? 'pb-2 pt-1' : 'pb-4 pt-2'}>
       <View>
         {trialDaysRemaining != null && trialDaysRemaining > 0 && onUpgrade ? <View className='px-6'>
             <InlineTrialBar
@@ -68,7 +70,7 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
           </View> : null}
         <GestureDetector gesture={tl.headerPanGesture}>
           <View
-            className='mb-3'
+            className={compact ? 'mb-1' : 'mb-3'}
             collapsable={false}
             style={{ paddingHorizontal: 40 }}
           >
@@ -82,14 +84,21 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
           </View>
         </GestureDetector>
         <View style={{ paddingHorizontal: 40 }}>
-          <StripNav canNavigateForward={canNavigateForward}>
+          <StripNav
+            canNavigateForward={canNavigateForward}
+            onNextWeek={onNextWeek}
+            onPreviousWeek={onPreviousWeek}
+            reduceMotion={reduceMotion}
+          >
             <DayStrip
               augmentedColors={tl.augmentedColors}
               completionCounts={tl.completionCounts}
               completionStatuses={tl.completionStatuses}
               connectorColor={tl.connectorColor}
+              currentStreak={currentStreak}
               dates={dates}
               disableFutureDayPress={disableFutureDayPress}
+              ghostConnectorColor={tl.ghostConnectorColor}
               hasCompletionData={Object.keys(completionByDay).length > 0}
               isDayPressEnabled={isDayPressEnabled ?? !!onDayPress}
               isFuture={tl.isFuture}

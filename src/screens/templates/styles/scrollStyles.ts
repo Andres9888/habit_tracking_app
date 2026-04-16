@@ -21,7 +21,7 @@ export const scrollStyles = StyleSheet.create({
   },
   scrollHintChip: {
     alignItems: 'center',
-    borderRadius: 999,
+    borderRadius: 9999,
     elevation: 2,
     flexDirection: 'row',
     paddingHorizontal: 14,

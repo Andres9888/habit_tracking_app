@@ -1,89 +1,52 @@
 import { Text, View } from 'react-native';
-import { useThemeColors } from '../../../theme/ThemeContext';
-import type { ArchivedHabit, StrengthInfo } from '../types';
+import { useThemeColors } from '@/theme/ThemeContext';
+import { fontFamilies, fontWeights } from '@/theme/typography';
+import { getStrengthGradientColor } from '../utils';
+import type { ArchivedHabit } from '../types';
 
 interface HabitStatsBadgesProps {
   habit: ArchivedHabit;
   strength: number;
-  strengthInfo: StrengthInfo;
 }
 
-export function HabitStatsBadges({
-  habit,
-  strength,
-  strengthInfo,
-}: HabitStatsBadgesProps) {
+export function HabitStatsBadges({ habit, strength }: HabitStatsBadgesProps) {
   const { colors, isDark } = useThemeColors();
+  const barColor = getStrengthGradientColor(strength);
+  const streak = habit.currentStreak ?? 0;
+  const completions = habit.totalCompletions ?? 0;
+  const muted = isDark ? colors.gray[400] : '#B5AFA8';
+  const label = isDark ? colors.gray[300] : '#6E6660';
+  const trackBg = isDark ? colors.gray[200] : '#F0ECE6';
+
+  const statText = { fontFamily: fontFamilies.primary.text, fontSize: 12, lineHeight: 16, letterSpacing: 0 } as const;
+  const statValue = { ...statText, fontWeight: fontWeights.semibold, color: label } as const;
 
   return (
-    <View className='mb-4 flex-row flex-wrap gap-2'>
-      {/* Strength Badge */}
-      <View
-        className={`flex-row items-center gap-1.5 rounded-lg px-3 py-1.5 ${strengthInfo.bgColor}`}
-        style={strengthInfo.bgStyle ? { backgroundColor: strengthInfo.bgStyle } : undefined}
-      >
-        <Text className='text-sm'>{strengthInfo.emoji}</Text>
-        <Text
-          className={`text-xs font-semibold ${strengthInfo.textColor}`}
-          style={strengthInfo.textStyle ? { color: strengthInfo.textStyle } : undefined}
-        >
-          {Math.round(strength)}% {strengthInfo.label}
-        </Text>
+    <View style={{ marginBottom: 14 }}>
+      {/* Strength bar */}
+      <View style={{ height: 3, borderRadius: 2, backgroundColor: trackBg, marginBottom: 10 }}>
+        <View style={{ height: 3, borderRadius: 2, width: `${Math.min(strength, 100)}%`, backgroundColor: barColor }} />
       </View>
-
-      {/* Streak Badge */}
-      {(habit.currentStreak ?? 0) > 0 ? (
-        <View
-          className='flex-row items-center gap-1.5 rounded-lg px-3 py-1.5'
-          style={{
-            backgroundColor: colors.status.streakLight,
-          }}
-        >
-          <Text className='text-sm'>🔥</Text>
-          <Text
-            className='text-xs font-semibold'
-            style={{ color: colors.status.streakText }}
-          >
-            {habit.currentStreak} day streak
-          </Text>
-        </View>
-      ) : (
-        <View
-          className='flex-row items-center gap-1.5 rounded-lg px-3 py-1.5'
-          style={{
-            backgroundColor: isDark ? colors.gray[200] : colors.gray[50],
-          }}
-        >
-          <Text className='text-sm'>🔥</Text>
-          <Text
-            className='text-xs font-semibold'
-            style={{ color: colors.text.tertiary }}
-          >
-            No streak
-          </Text>
-        </View>
-      )}
-
-      {/* Total Completions Badge */}
-      {(habit.totalCompletions ?? 0) > 0 ? <View
-          className='flex-row items-center gap-1.5 rounded-lg px-3 py-1.5'
-          style={{
-            backgroundColor: colors.status.infoLight,
-          }}
-        >
-          <Text
-            className='text-xs font-bold'
-            style={{ color: colors.status.info }}
-          >
-            ✓
-          </Text>
-          <Text
-            className='text-xs font-semibold'
-            style={{ color: colors.status.infoText }}
-          >
-            {habit.totalCompletions} total
-          </Text>
-        </View> : null}
+      {/* Stat line */}
+      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+        <Text style={{ fontFamily: fontFamilies.monospace, fontSize: 12, lineHeight: 16, fontWeight: fontWeights.semibold, color: label }}>
+          {Math.round(strength)}%
+        </Text>
+        <Text style={{ ...statText, color: muted }}> strength</Text>
+        <Dot color={trackBg} />
+        <Text style={streak > 0 ? statValue : { ...statText, color: muted }}>
+          {streak > 0 ? `${streak}d streak` : 'no streak'}
+        </Text>
+        {completions > 0 && (<>
+          <Dot color={trackBg} />
+          <Text style={statValue}>{completions}</Text>
+          <Text style={{ ...statText, color: muted }}> done</Text>
+        </>)}
+      </View>
     </View>
   );
+}
+
+function Dot({ color }: { color: string }) {
+  return <View style={{ width: 3, height: 3, borderRadius: 2, backgroundColor: color, marginHorizontal: 4 }} />;
 }

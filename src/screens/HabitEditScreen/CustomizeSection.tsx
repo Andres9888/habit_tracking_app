@@ -15,7 +15,7 @@ import { EnhancedReminderSelector } from '../../components/CreateHabitModal/comp
 import { HABIT_COLORS } from '../../components/CreateHabitModal/constants';
 import { AdvancedAlgorithmDisclosure } from '../../components/AlgorithmPicker';
 import { useThemeColors } from '../../theme/ThemeContext';
-import { typography } from '../../theme/typography';
+import { fontWeights, typography } from '../../theme/typography';
 
 const entrance = (delay: number) => FadeInUp.delay(delay).springify().damping(18);
 
@@ -52,7 +52,7 @@ export function CustomizeSection({
     <View className='flex-1'>
       <Text
         className='mb-3 text-center uppercase'
-        style={{ ...typography.caption, fontWeight: '600', letterSpacing: 0.5, color: themeColors.text.tertiary }}
+        style={{ ...typography.caption, fontWeight: fontWeights.semibold, letterSpacing: 0.5, color: themeColors.text.tertiary }}
       >
         Choose an icon
       </Text>
@@ -68,7 +68,7 @@ export function CustomizeSection({
 
       <Text
         className='mt-4 mb-3 text-center uppercase'
-        style={{ ...typography.caption, fontWeight: '600', letterSpacing: 0.5, color: themeColors.text.tertiary }}
+        style={{ ...typography.caption, fontWeight: fontWeights.semibold, letterSpacing: 0.5, color: themeColors.text.tertiary }}
       >
         Pick a color
       </Text>

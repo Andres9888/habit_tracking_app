@@ -9,8 +9,12 @@ import { ScreenHeader } from '../../../components/ScreenHeader';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { durations, springs } from '../../../theme/animations';
 import { spacing } from '../../../theme/spacing';
+import { formatPopularityCount } from '../hooks/useDrillSections';
 import { getCategoryMeta } from '../data/categoryMeta';
 import { TemplateListCard } from './TemplateListCard';
+
+const getCategoryLabel = (categoryId: string) =>
+  getCategoryMeta(categoryId).label;
 
 interface SeeAllViewProps {
   importedTemplateIds: Set<string>;
@@ -22,19 +26,24 @@ interface SeeAllViewProps {
 }
 
 export function SeeAllView({
-  importedTemplateIds, importingTemplateId,
-  onBack, onImport, onPreview, templates,
+  importedTemplateIds,
+  importingTemplateId,
+  onBack,
+  onImport,
+  onPreview,
+  templates,
 }: SeeAllViewProps) {
   const { colors } = useThemeColors();
-  const getCategoryLabel = (categoryId: string) =>
-    getCategoryMeta(categoryId).label;
   const habitCountLabel = `${templates.length} habit${templates.length === 1 ? '' : 's'}`;
 
   return (
-    <View testID="templates-see-all-view" style={[s.container, { backgroundColor: colors.background }]}>
+    <View
+      testID='templates-see-all-view'
+      style={[s.container, { backgroundColor: colors.background }]}
+    >
       <ScreenHeader
         subtitle={`${habitCountLabel} · sorted by popularity`}
-        title="Trending habits"
+        title='Trending habits'
         onBack={onBack}
       />
       <FlatList
@@ -45,12 +54,18 @@ export function SeeAllView({
         }}
         keyExtractor={(item) => item._id}
         renderItem={({ item, index }) => (
-          <Animated.View entering={FadeInDown.delay(index * durations.stagger).duration(durations.enter).springify().damping(springs.standard.damping)}>
+          <Animated.View
+            entering={FadeInDown.delay(index * durations.stagger)
+              .duration(durations.enter)
+              .springify()
+              .damping(springs.standard.damping)}
+          >
             <TemplateListCard
               getCategoryLabel={getCategoryLabel}
               importedTemplateIds={importedTemplateIds}
               importingTemplateId={importingTemplateId}
               item={item}
+              popularityCount={formatPopularityCount(item.popularityScore)}
               searchQuery=''
               onImport={(_templateId) => onImport(item)}
               onPreview={(_template) => onPreview(item)}

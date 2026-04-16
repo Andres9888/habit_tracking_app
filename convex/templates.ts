@@ -86,6 +86,16 @@ export const seedTemplates = mutation({
       internal.templatesDataSeed.seedUniqueTemplates,
       {}
     );
+    await ctx.scheduler.runAfter(
+      0,
+      internal.templatesDataSeed.seedResearchBackedTemplates,
+      {}
+    );
+    await ctx.scheduler.runAfter(
+      0,
+      internal.templatesDataSeed.relabelExistingTemplates,
+      {}
+    );
     return { queued: true };
   },
 });

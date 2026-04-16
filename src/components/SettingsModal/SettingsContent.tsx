@@ -2,18 +2,26 @@
 /** SettingsContent - Settings layout: Account → Appearance → Behavior → Notifications → Support → About */
 import {
   ArrowUpDown,
+  BellRing,
   BookOpen,
   Calendar,
   Check,
   Circle,
+  Download,
   Droplets,
   Dumbbell,
+  FolderOpen,
+  Heart,
+  Info,
   Link2,
+  Palette,
   Rows3,
+  SlidersHorizontal,
   Square,
   Volume2,
 } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
+import { durations } from '@/theme/animations';
 import Constants from 'expo-constants';
 import { StyleSheet, View } from 'react-native';
 import Animated, {
@@ -41,7 +49,10 @@ import type { HabitSortMode } from '../../features/habits/types';
 import type { SettingsContentProps } from './types';
 import { useSettingsSectionStates, SECTION_IDS } from './useSettingsSectionStates';
 
-const anim = (delay: number) => FadeInDown.delay(delay).springify().damping(18);
+const STAGGER = durations.stagger; // 60ms per design system
+const MAX_STAGGER_ITEMS = 5;
+const anim = (index: number) =>
+  FadeInDown.delay(Math.min(index, MAX_STAGGER_ITEMS) * STAGGER).springify().damping(18);
 
 const SCROLL_STYLES = StyleSheet.create({
   wrapper: {
@@ -50,9 +61,16 @@ const SCROLL_STYLES = StyleSheet.create({
   },
 });
 
+/** Section header icon color — subtle, non-competing with row icons */
+const useSectionIconColor = () => {
+  const { colors: themeColors } = useThemeColors();
+  return themeColors.text.secondary;
+};
+
 export function SettingsContent(p: SettingsContentProps) {
   const { colors, isHighContrastActive: hc } = p;
   const { colors: themeColors, settings: settingsIcons } = useThemeColors();
+  const sectionIconColor = useSectionIconColor();
   const bottomPadding = Math.max((p.bottomInset ?? 0) + 16, 24);
   const scrollY = useSharedValue(0);
   const scrollHandler = useAnimatedScrollHandler({
@@ -66,6 +84,8 @@ export function SettingsContent(p: SettingsContentProps) {
 
   const actions = useAccountActions();
   const { sectionStates, toggleSection } = useSettingsSectionStates();
+
+  const iconSize = iconSizes.small;
 
   return (
     <View style={SCROLL_STYLES.wrapper}>
@@ -91,11 +111,18 @@ export function SettingsContent(p: SettingsContentProps) {
           </Animated.View>
 
           {/* Appearance Section */}
-          <Animated.View entering={anim(25)}>
-            <SettingsSection collapsible highContrastMode={hc} isExpanded={sectionStates.appearance} title='Appearance' onToggle={() => toggleSection(SECTION_IDS.appearance)}>
+          <Animated.View entering={anim(1)}>
+            <SettingsSection
+              collapsible
+              highContrastMode={hc}
+              icon={<Palette color={sectionIconColor} size={iconSize} />}
+              isExpanded={sectionStates.appearance}
+              title='Appearance'
+              onToggle={() => toggleSection(SECTION_IDS.appearance)}
+            >
               <SettingsRow
                 highContrastMode={hc}
-                icon={<Rows3 color={settingsIcons.compact.icon} size={iconSizes.small} />}
+                icon={<Rows3 color={settingsIcons.compact.icon} size={iconSize} />}
                 iconBackgroundColor={settingsIcons.compact.bg}
                 label='Compact habit cards'
                 subtitle='Show smaller cards to fit more on screen'
@@ -107,9 +134,9 @@ export function SettingsContent(p: SettingsContentProps) {
                 highContrastMode={hc}
                 icon={
                   p.dayShape === 'circle' ? (
-                    <Circle color={settingsIcons.circle.icon} size={iconSizes.small} />
+                    <Circle color={settingsIcons.circle.icon} size={iconSize} />
                   ) : (
-                    <Square color={settingsIcons.circle.icon} size={iconSizes.small} />
+                    <Square color={settingsIcons.circle.icon} size={iconSize} />
                   )
                 }
                 iconBackgroundColor={settingsIcons.circle.bg}
@@ -125,7 +152,7 @@ export function SettingsContent(p: SettingsContentProps) {
               <SettingsRow
                 highContrastMode={hc}
                 icon={
-                  <Droplets color={settingsIcons.gradient.icon} size={iconSizes.small} />
+                  <Droplets color={settingsIcons.gradient.icon} size={iconSize} />
                 }
                 iconBackgroundColor={settingsIcons.gradient.bg}
                 label='Gradient streak fill'
@@ -138,9 +165,9 @@ export function SettingsContent(p: SettingsContentProps) {
                 highContrastMode={hc}
                 icon={
                   p.habitCompletionIcon === 'checkbox' ? (
-                    <Check color={settingsIcons.checkbox.icon} size={iconSizes.small} />
+                    <Check color={settingsIcons.checkbox.icon} size={iconSize} />
                   ) : (
-                    <Link2 color={settingsIcons.checkbox.icon} size={iconSizes.small} />
+                    <Link2 color={settingsIcons.checkbox.icon} size={iconSize} />
                   )
                 }
                 iconBackgroundColor={settingsIcons.checkbox.bg}
@@ -157,12 +184,19 @@ export function SettingsContent(p: SettingsContentProps) {
           </Animated.View>
 
           {/* Behavior Section */}
-          <Animated.View entering={anim(50)}>
-            <SettingsSection collapsible highContrastMode={hc} isExpanded={sectionStates.behavior} title='Behavior' onToggle={() => toggleSection(SECTION_IDS.behavior)}>
+          <Animated.View entering={anim(2)}>
+            <SettingsSection
+              collapsible
+              highContrastMode={hc}
+              icon={<SlidersHorizontal color={sectionIconColor} size={iconSize} />}
+              isExpanded={sectionStates.behavior}
+              title='Behavior'
+              onToggle={() => toggleSection(SECTION_IDS.behavior)}
+            >
               <SettingsRow
                 hapticStyle='selection'
                 highContrastMode={hc}
-                icon={<ArrowUpDown color={settingsIcons.sort.icon} size={iconSizes.small} />}
+                icon={<ArrowUpDown color={settingsIcons.sort.icon} size={iconSize} />}
                 iconBackgroundColor={settingsIcons.sort.bg}
                 label='Sort Order'
                 subtitle='Choose how your habits are ordered'
@@ -174,7 +208,7 @@ export function SettingsContent(p: SettingsContentProps) {
               />
               <SettingsRow
                 highContrastMode={hc}
-                icon={<Volume2 color={settingsIcons.sound.icon} size={iconSizes.small} />}
+                icon={<Volume2 color={settingsIcons.sound.icon} size={iconSize} />}
                 iconBackgroundColor={settingsIcons.sound.bg}
                 label='Completion sound'
                 subtitle='Hear a sound when you check off a habit'
@@ -194,7 +228,7 @@ export function SettingsContent(p: SettingsContentProps) {
                 icon={
                   <Calendar
                     color={settingsIcons.calendarHeader.icon}
-                    size={iconSizes.small}
+                    size={iconSize}
                   />
                 }
                 iconBackgroundColor={settingsIcons.calendarHeader.bg}
@@ -231,28 +265,45 @@ export function SettingsContent(p: SettingsContentProps) {
           </Animated.View>
 
           {/* Habit Management Section */}
-          <Animated.View entering={anim(75)}>
-            <SettingsSection collapsible highContrastMode={hc} isExpanded={sectionStates.habitManagement} title='Habit Management' onToggle={() => toggleSection(SECTION_IDS.habitManagement)}>
+          <Animated.View entering={anim(3)}>
+            <SettingsSection
+              collapsible
+              highContrastMode={hc}
+              icon={<FolderOpen color={sectionIconColor} size={iconSize} />}
+              isExpanded={sectionStates.habitManagement}
+              title='Habit Management'
+              onToggle={() => toggleSection(SECTION_IDS.habitManagement)}
+            >
               <SettingsRow
                 badge={p.archivedHabitsCount}
                 highContrastMode={hc}
-                icon={<BookOpen color={settingsIcons.archive.icon} size={iconSizes.small} />}
+                icon={<BookOpen color={settingsIcons.archive.icon} size={iconSize} />}
                 iconBackgroundColor={settingsIcons.archive.bg}
                 label='Archived Habits'
-                showBorder={false}
                 subtitle='View and restore hidden habits'
                 type='navigation'
                 onPress={p.onOpenArchivedHabits}
+              />
+              <SettingsRow
+                highContrastMode={hc}
+                icon={<Download color={settingsIcons.export.icon} size={iconSize} />}
+                iconBackgroundColor={settingsIcons.export.bg}
+                label='Export Habits Data'
+                showBorder={false}
+                subtitle='Download your habits as a file'
+                type='navigation'
+                onPress={p.onExportHabitsData}
               />
             </SettingsSection>
           </Animated.View>
 
           {/* Notifications Section */}
-          <Animated.View entering={anim(100)}>
+          <Animated.View entering={anim(4)}>
             <StreakRemindersSection
               collapsible
               enabled={p.streakRemindersEnabled}
               highContrastMode={hc}
+              icon={<BellRing color={sectionIconColor} size={iconSize} />}
               isExpanded={sectionStates.notifications}
               isPremium={p.isPremium}
               reminderTime={p.streakReminderTime}
@@ -264,10 +315,11 @@ export function SettingsContent(p: SettingsContentProps) {
           </Animated.View>
 
           {/* Support Section */}
-          <Animated.View entering={anim(125)}>
+          <Animated.View entering={anim(5)}>
             <AppActions
               collapsible
               highContrast={hc}
+              icon={<Heart color={sectionIconColor} size={iconSize} />}
               isExpanded={sectionStates.support}
               onFeedback={actions.handleFeedback}
               onRate={actions.handleRateApp}
@@ -278,11 +330,12 @@ export function SettingsContent(p: SettingsContentProps) {
           </Animated.View>
 
           {/* About + Legal */}
-          <Animated.View entering={anim(150)}>
+          <Animated.View entering={anim(5)}>
             <AboutLegalSection
               buildNumber={Constants.expoConfig?.ios?.buildNumber ?? '1'}
               collapsible
               highContrast={hc}
+              icon={<Info color={sectionIconColor} size={iconSize} />}
               isExpanded={sectionStates.about}
               version={Constants.expoConfig?.version ?? '1.0.0'}
               onPrivacy={actions.openPrivacy}

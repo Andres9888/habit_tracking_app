@@ -9,13 +9,14 @@ import type { TemplateCustomizations } from '../TemplatesScreen.types';
 export type ImportFn = (args: {
   templateId: Id<'templates'>;
   customizations?: TemplateCustomizations;
-}) => Promise<{ success: boolean; alreadyExists?: boolean }>;
+}) => Promise<{ success: boolean; alreadyExists?: boolean; habitId?: Id<'habits'> }>;
 
 export interface UseTemplateImportHandlersOptions {
   importTemplate: ImportFn;
   previewTemplate: Doc<'templates'> | null;
   isPremiumUser: boolean;
   onShowPaywall?: () => void;
+  onPostImportSetup?: (habitId: Id<'habits'>, template: Doc<'templates'>) => void;
   setImportedTemplateIds: React.Dispatch<React.SetStateAction<Set<string>>>;
   setImportingTemplateId: React.Dispatch<
     React.SetStateAction<Id<'templates'> | null>

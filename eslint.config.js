@@ -285,6 +285,7 @@ export default tseslint.config(
       '**/emojiKeywords/keywords.ts',
       '**/templatesDataSeed.ts',
       '**/SmartSuggestions/suggestions.data.ts', // Curated habit suggestions array
+      '**/templates/youtubeLinks.data.ts', // YouTube links mapping for 280+ habit templates
       '**/TipQuickActionsSheet/quickActionsByType.ts', // Quick action configurations
       '**/constants/habitEmojis.data.ts', // Static emoji category data arrays
       '**/constants/habitEmojis.ts', // Emoji category exports (mostly re-exports)

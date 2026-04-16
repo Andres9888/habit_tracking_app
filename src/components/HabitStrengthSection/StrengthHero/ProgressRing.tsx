@@ -10,8 +10,10 @@ import { View } from 'react-native';
 import Animated, { useAnimatedProps } from 'react-native-reanimated';
 import Svg, { Circle } from 'react-native-svg';
 
+import { useThemeColors } from '@/theme/ThemeContext';
+
 import {
-  COLORS,
+  getThemeColors,
   RING_CIRCUMFERENCE,
   RING_RADIUS,
   RING_SIZE,
@@ -31,6 +33,8 @@ export function ProgressRing({
   ringColor,
   animatedStrength,
 }: ProgressRingProps) {
+  const { colors: themeColors } = useThemeColors();
+  const sectionColors = getThemeColors(themeColors);
   const center = RING_SIZE / 2;
 
   // Animated props for the progress circle
@@ -57,7 +61,7 @@ export function ProgressRing({
           cy={center}
           fill='none'
           r={RING_RADIUS}
-          stroke={COLORS.ringTrack}
+          stroke={sectionColors.ringTrack}
           strokeWidth={RING_STROKE_WIDTH}
         />
         {/* Progress arc */}

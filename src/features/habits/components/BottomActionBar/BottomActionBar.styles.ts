@@ -2,6 +2,7 @@ import { StyleSheet } from 'react-native';
 import { FadeInUp } from 'react-native-reanimated';
 import { colors } from '@/theme';
 import { durations, springs } from '../../../../theme/animations';
+import { borderRadius } from '../../../../theme/spacing';
 
 export const ENTERING = FadeInUp.duration(durations.enter).springify().damping(springs.standard.damping);
 export const BLUR_INTENSITY = 50;
@@ -45,7 +46,7 @@ export const styles = StyleSheet.create({
   },
   iconButton: {
     alignItems: 'center',
-    borderRadius: 22,
+    borderRadius: borderRadius.xl,
     height: 44,
     justifyContent: 'center',
     width: 44,

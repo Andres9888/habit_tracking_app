@@ -39,11 +39,13 @@ export const getWeeklyInsights = query({
     const twoWeeksAgo = new Date();
     twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
 
-    // Single query: fetch ALL tracking records for the user
+    // Bound the query to the comparison window so per-user payload size
+    // does not grow unbounded with account age.
+    const twoWeeksAgoKey = twoWeeksAgo.toISOString().slice(0, 10);
     const trackings = await ctx.db
       .query('tracking')
       .withIndex('by_user_and_date', (q: unknown) =>
-        q.eq('userId', identity.subject)
+        q.eq('userId', identity.subject).gte('date', twoWeeksAgoKey)
       )
       .collect();
 

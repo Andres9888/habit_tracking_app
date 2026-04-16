@@ -1,4 +1,5 @@
 /** AboutLegalSection — Privacy, Terms, Version */
+import { ReactNode } from 'react';
 import { FileText, Info, Shield } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
 import { SettingsSection } from '../SettingsSection';
@@ -7,6 +8,7 @@ import { useThemeColors } from '../../../theme/ThemeContext';
 
 interface Props {
   highContrast: boolean;
+  icon?: ReactNode;
   version: string;
   buildNumber: string;
   onPrivacy: () => void;
@@ -18,6 +20,7 @@ interface Props {
 
 export function AboutLegalSection({
   highContrast,
+  icon,
   version,
   buildNumber,
   onPrivacy,
@@ -29,7 +32,7 @@ export function AboutLegalSection({
   const { settings } = useThemeColors();
 
   return (
-    <SettingsSection collapsible={collapsible} highContrastMode={highContrast} isExpanded={isExpanded} title='About' onToggle={onToggleSection}>
+    <SettingsSection collapsible={collapsible} highContrastMode={highContrast} icon={icon} isExpanded={isExpanded} title='About' onToggle={onToggleSection}>
       <SettingsRow
         highContrastMode={highContrast}
         icon={<Shield color={settings.legal.icon} size={iconSizes.small} />}

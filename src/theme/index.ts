@@ -602,3 +602,4 @@ export { iconSizes } from './iconSizes';
 export { ThemeColorProvider, useThemeColors } from './ThemeContext';
 export { darkColors, lightColors } from './darkColors';
 export type { SemanticColors } from './darkColors';
+export { highContrastColors } from './highContrastColors';

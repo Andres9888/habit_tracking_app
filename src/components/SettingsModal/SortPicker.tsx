@@ -1,18 +1,15 @@
-/**
- * SortPicker — inline sort mode selector for the Settings modal.
- * Renders a list of sort options with check marks for the active mode.
- */
+/** SortPicker — grouped card layout for selecting habit sort mode */
 
 import { Text, View } from 'react-native';
-import { Check } from 'lucide-react-native';
-import { iconSizes } from '@/theme/iconSizes';
-import { LinearGradient } from 'expo-linear-gradient';
-import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
+import Animated, { FadeInDown } from 'react-native-reanimated';
+import { shadows } from '@/theme';
+import { typography, fontWeights } from '@/theme/typography';
+import { durations, springs } from '@/theme/animations';
 import { ScreenHeader } from '@/components/ScreenHeader';
 import { useThemeColors } from '../../theme/ThemeContext';
-import { SORT_PICKER_OPTIONS } from './SortPicker.constants';
+import { SORT_SECTIONS } from './SortPicker.constants';
+import { SortOptionRow } from './SortOptionRow';
 import type { HabitSortMode } from '../../features/habits/types';
-import { triggerHaptic } from '@/utils/haptics';
 
 interface SortPickerProps {
   currentMode: HabitSortMode;
@@ -20,81 +17,51 @@ interface SortPickerProps {
   onSelect: (mode: HabitSortMode) => void;
 }
 
+const stagger = (index: number) =>
+  FadeInDown.delay(Math.min(index, 5) * durations.stagger).springify().damping(springs.standard.damping);
+
 export function SortPicker({ currentMode, onBack, onSelect }: SortPickerProps) {
-  const { isDark, colors } = useThemeColors();
-
-  const handleSelect = (mode: HabitSortMode) => {
-    triggerHaptic('tap');
-    onSelect(mode);
-  };
-
-  const DARK_SURFACE = '#1f2937';
-  const SELECTED_LIGHT_BG = '#ecfdf5';
+  const { colors } = useThemeColors();
 
   return (
     <View className='flex-1' style={{ backgroundColor: colors.background }}>
       <View style={{ backgroundColor: colors.background }}>
-        <ScreenHeader
-          leftAction='back'
-          rightAction={null}
-          title='Sort Order'
-          onBack={onBack}
-        />
+        <ScreenHeader leftAction='back' rightAction={null} title='Sort Order' onBack={onBack} />
       </View>
-      <View className='px-4 pt-2'>
-        {SORT_PICKER_OPTIONS.map((option) => {
-          const selected = currentMode === option.value;
-          return (
-            <AnimatedPressable
-              key={option.value}
-              accessibilityHint={`Select ${option.label} sort option`}
-              accessibilityLabel={`${option.label}. ${option.description}`}
-              accessibilityRole='radio'
-              accessibilityState={{ checked: selected }}
-              className='mb-1 flex-row items-center gap-3 rounded-xl px-3 py-3'
-              style={{
-                backgroundColor: selected
-                  ? isDark ? DARK_SURFACE : SELECTED_LIGHT_BG
-                  : 'transparent',
-                borderColor: selected ? colors.primary[300] : 'transparent',
-                borderWidth: selected ? 1 : 0,
-              }}
-              onPress={() => handleSelect(option.value)}
-            >
-              <LinearGradient
-                className='h-10 w-10 items-center justify-center rounded-xl'
-                colors={option.iconBgColors}
-                end={{ x: 1, y: 1 }}
-                start={{ x: 0, y: 0 }}
+
+      <Animated.ScrollView
+        className='flex-1 px-4'
+        contentContainerStyle={{ paddingTop: 8, paddingBottom: 32 }}
+        showsVerticalScrollIndicator={false}
+      >
+        <View className='gap-5'>
+          {SORT_SECTIONS.map((section, sectionIndex) => (
+            <Animated.View key={section.key} entering={stagger(sectionIndex)}>
+              <Text
+                className='mb-1 px-1'
+                style={{ ...typography.caption, fontWeight: fontWeights.semibold, color: colors.text.secondary, textTransform: 'uppercase', letterSpacing: 0.5 }}
               >
-                <option.Icon color='#ffffff' size={iconSizes.medium} strokeWidth={2.5} />
-              </LinearGradient>
-              <View className='flex-1'>
-                <Text
-                  className='text-[15px] font-medium'
-                  style={{ color: colors.text.primary }}
-                >
-                  {option.label}
-                </Text>
-                <Text
-                  className='text-[13px] font-normal'
-                  style={{ color: colors.text.secondary }}
-                >
-                  {option.description}
-                </Text>
+                {section.title}
+              </Text>
+              <Text className='mb-2 px-1' style={{ ...typography.caption, color: colors.text.tertiary }}>
+                {section.subtitle}
+              </Text>
+
+              <View className='overflow-hidden rounded-2xl' style={{ backgroundColor: colors.card, ...shadows.card }}>
+                {section.options.map((option, optionIndex) => (
+                  <SortOptionRow
+                    key={option.value}
+                    option={option}
+                    selected={currentMode === option.value}
+                    showBorder={optionIndex < section.options.length - 1}
+                    onSelect={onSelect}
+                  />
+                ))}
               </View>
-              {selected ? (
-                <View
-                  className='h-6 w-6 items-center justify-center rounded-full'
-                  style={{ backgroundColor: colors.primary[500] }}
-                >
-                  <Check color='#ffffff' size={iconSizes.small} strokeWidth={2.5} />
-                </View>
-              ) : null}
-            </AnimatedPressable>
-          );
-        })}
-      </View>
+            </Animated.View>
+          ))}
+        </View>
+      </Animated.ScrollView>
     </View>
   );
 }

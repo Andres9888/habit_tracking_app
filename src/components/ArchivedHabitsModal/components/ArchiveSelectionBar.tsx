@@ -6,6 +6,7 @@ import { BlurView } from 'expo-blur';
 import { RotateCcw, Trash2, X } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
 import { durations, springs } from '../../../theme/animations';
+import { borderRadius } from '../../../theme/spacing';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { typography, fontWeights } from '@/theme/typography';
 import {
@@ -15,11 +16,9 @@ import {
   CAPSULE_SHADOW,
 } from '../../../features/habits/components/BottomActionBar/BottomActionBar.styles';
 
-const ENTERING = FadeInUp.duration(durations.enter)
-  .springify()
-  .damping(springs.standard.damping);
+const ENTERING = FadeInUp.duration(durations.enter).springify().damping(springs.standard.damping);
 const CAPSULE_RADIUS = 32;
-const HIT_SLOP = { bottom: 18, left: 18, right: 18, top: 18 };
+const HIT = { bottom: 18, left: 18, right: 18, top: 18 };
 
 interface ArchiveSelectionBarProps {
   selectedCount: number;
@@ -40,14 +39,7 @@ function ArchiveSelectionBarComponent({
   const disabled = selectedCount === 0;
 
   return (
-    <Animated.View
-      entering={ENTERING}
-      style={[
-        s.wrapper,
-        CAPSULE_SHADOW,
-        { marginBottom: Math.max(insets.bottom, 16) },
-      ]}
-    >
+    <Animated.View entering={ENTERING} style={[s.wrapper, CAPSULE_SHADOW, { marginBottom: Math.max(insets.bottom, 16) }]}>
       <View style={s.glassBg} pointerEvents='none'>
         <BlurView
           intensity={BLUR_INTENSITY}
@@ -60,7 +52,7 @@ function ArchiveSelectionBarComponent({
       <View style={s.row}>
         <Pressable
           accessibilityLabel='Cancel selection'
-          hitSlop={HIT_SLOP}
+          hitSlop={HIT}
           style={s.btn}
           onPress={onCancel}
         >
@@ -70,7 +62,7 @@ function ArchiveSelectionBarComponent({
         <Pressable
           accessibilityLabel='Restore selected habits'
           disabled={disabled}
-          hitSlop={HIT_SLOP}
+          hitSlop={HIT}
           style={[s.btn, disabled && s.disabled]}
           onPress={onRestore}
         >
@@ -84,7 +76,7 @@ function ArchiveSelectionBarComponent({
         <Pressable
           accessibilityLabel='Delete selected habits'
           disabled={disabled}
-          hitSlop={HIT_SLOP}
+          hitSlop={HIT}
           style={[s.btn, disabled && s.disabled]}
           onPress={onDelete}
         >
@@ -96,7 +88,7 @@ function ArchiveSelectionBarComponent({
 }
 
 const s = StyleSheet.create({
-  btn: { alignItems: 'center', borderRadius: 22, height: 44, justifyContent: 'center', width: 44 },
+  btn: { alignItems: 'center', borderRadius: borderRadius.xl, height: 44, justifyContent: 'center', width: 44 },
   capsuleBorder: { ...StyleSheet.absoluteFillObject, borderRadius: CAPSULE_RADIUS, borderWidth: 1 },
   count: { ...typography.caption, flex: 1, fontWeight: fontWeights.semibold, paddingHorizontal: 12, textAlign: 'center' },
   disabled: { opacity: 0.35 },

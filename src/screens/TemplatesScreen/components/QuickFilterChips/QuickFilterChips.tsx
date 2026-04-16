@@ -1,16 +1,18 @@
+/* eslint-disable max-lines */
 /**
  * QuickFilterChips — horizontally scrollable category filter pills
  *
  * Renders "All" + curated category chips for one-tap filtering.
- * Active chip uses primary green; inactive uses warm stone surface.
+ * Active chip uses per-category color; inactive uses warm stone surface.
  */
 
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useThemeColors } from '../../../../theme/ThemeContext';
-import { spacing } from '@/theme/spacing';
+import { borderRadius, spacing } from '@/theme/spacing';
 import { triggerHaptic } from '@/utils/haptics';
 import { fontWeights } from '@/theme/typography';
+import { getCategoryMeta } from '../../data/categoryMeta';
 
 export interface ChipCategory {
   icon: string;
@@ -37,10 +39,12 @@ export const CHIP_CATEGORIES: ChipCategory[] = [
 
 function Chip({
   active,
+  activeMeta,
   label,
   onPress,
 }: {
   active: boolean;
+  activeMeta?: { bgColor: string; borderColor: string; textColor: string };
   label: string;
   onPress: () => void;
 }) {
@@ -53,8 +57,12 @@ function Chip({
       style={[
         s.chip,
         {
-          backgroundColor: active ? colors.primary[600] : colors.card,
-          borderColor: active ? colors.primary[700] : colors.border,
+          backgroundColor: active
+            ? (activeMeta?.bgColor ?? colors.primary[600])
+            : colors.card,
+          borderColor: active
+            ? (activeMeta?.borderColor ?? colors.primary[700])
+            : colors.border,
         },
       ]}
       onPress={() => {
@@ -65,7 +73,11 @@ function Chip({
       <Text
         style={[
           s.chipText,
-          { color: active ? colors.text.inverse : colors.text.secondary },
+          {
+            color: active
+              ? (activeMeta?.textColor ?? colors.text.inverse)
+              : colors.text.secondary,
+          },
         ]}
       >
         {label}
@@ -100,6 +112,7 @@ export function QuickFilterChips({
           <Chip
             key={cat.id}
             active={activeCategory === cat.id}
+            activeMeta={getCategoryMeta(cat.id)}
             label={`${cat.icon} ${cat.label}`}
             onPress={() => onSelectCategory(cat.id)}
           />
@@ -119,7 +132,7 @@ export function QuickFilterChips({
 const s = StyleSheet.create({
   chip: {
     alignItems: 'center',
-    borderRadius: 9999,
+    borderRadius: borderRadius.full,
     borderWidth: 1,
     justifyContent: 'center',
     minHeight: 36,

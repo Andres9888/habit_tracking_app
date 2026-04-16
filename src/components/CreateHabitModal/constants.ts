@@ -54,4 +54,4 @@ export const getColorName = (hex: string): string => {
 /** @deprecated Use HABIT_COLORS instead - kept for backward compatibility */
 export const COLORS = HABIT_COLORS;
 
-export const HABIT_NAME_REGEX = /^(\p{Emoji})\s+(.+)$/u;
+export const HABIT_NAME_REGEX = /^((?![0-9#*])\p{Emoji})\s+(.+)$/u;

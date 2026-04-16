@@ -45,6 +45,8 @@ export interface CalendarTimelineProps {
   onUpgrade?: () => void;
   /** Completion icon style — 'chain' shows link icon, 'checkbox' shows checkmark */
   completionIcon?: 'chain' | 'checkbox';
+  /** Compact mode — tighter vertical padding to match compact habit cards */
+  compact?: boolean;
 }
 
 export type CompletionStatus = 'complete' | 'partial' | 'none' | 'future';
@@ -81,6 +83,10 @@ export interface DayCellProps {
   ghostLeft?: boolean;
   /** Ghost connector on right — reaching toward today */
   ghostRight?: boolean;
+  /** Color for ghost connectors (distinct from active) */
+  ghostConnectorColor?: string;
+  /** Current streak length — drives connector strength evolution */
+  currentStreak?: number;
   /** Completion icon style for the ring */
   completionIcon?: 'chain' | 'checkbox';
 }

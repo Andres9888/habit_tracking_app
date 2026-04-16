@@ -10,7 +10,7 @@ import { useThemeColors } from '@/theme/ThemeContext';
 
 import { TrendingDown, TrendingUp } from 'lucide-react-native';
 
-import { COLORS, STRENGTH_COLORS, STRENGTH_LABELS } from '../constants';
+import { getStrengthColors, getThemeColors, STRENGTH_LABELS } from '../constants';
 import type { StatusDisplayProps } from './types';
 
 /**
@@ -22,9 +22,11 @@ export function StatusDisplay({
   deltaLabel,
 }: StatusDisplayProps) {
   const { colors: themeColors } = useThemeColors();
+  const strengthColors = getStrengthColors(themeColors);
+  const sectionColors = getThemeColors(themeColors);
   // Guard against invalid label - default to 'weak'
-  const safeLabel = label && STRENGTH_COLORS[label] ? label : 'weak';
-  const colors = STRENGTH_COLORS[safeLabel];
+  const safeLabel = label && strengthColors[label] ? label : 'weak';
+  const colors = strengthColors[safeLabel];
 
   // Guard against NaN/undefined delta - default to 0
   const safeDelta =
@@ -52,16 +54,16 @@ export function StatusDisplay({
 
       {/* Delta badge */}
       <View className='flex-row items-center gap-1'>
-        {deltaIsPositive ? <TrendingUp color={COLORS.positive} size={14} /> : null}
-        {deltaIsNegative ? <TrendingDown color={COLORS.negative} size={14} /> : null}
+        {deltaIsPositive ? <TrendingUp color={sectionColors.positive} size={14} /> : null}
+        {deltaIsNegative ? <TrendingDown color={sectionColors.negative} size={14} /> : null}
         <Text
           className='text-sm'
           style={{
             color: deltaIsPositive
-              ? COLORS.positive
+              ? sectionColors.positive
               : deltaIsNegative
-                ? COLORS.negative
-                : COLORS.textSecondary,
+                ? sectionColors.negative
+                : sectionColors.textSecondary,
           }}
         >
           {deltaText}

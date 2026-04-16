@@ -16,6 +16,7 @@ const CATEGORY_METADATA: Record<string, Omit<CategoryFilter, 'id'>> = {
   andrew_huberman: { icon: '🔬', label: 'Huberman' },
   breathing: { icon: '🌬️', label: 'Breathing' },
   creativity: { icon: '🎨', label: 'Creativity' },
+  environmental_design: { icon: '🏠', label: 'Environment' },
   financial: { icon: '💰', label: 'Financial' },
   health_fitness: { icon: '💪', label: 'Health' },
   learning: { icon: '📚', label: 'Learning' },
@@ -25,8 +26,10 @@ const CATEGORY_METADATA: Record<string, Omit<CategoryFilter, 'id'>> = {
   morning_routine: { icon: '🌅', label: 'Morning' },
   productivity: { icon: '🎯', label: 'Productivity' },
   recovery: { icon: '🔄', label: 'Recovery' },
+  relationships: { icon: '💑', label: 'Relationships' },
   sleep: { icon: '😴', label: 'Sleep' },
   social: { icon: '👥', label: 'Social' },
+  subtraction: { icon: '➖', label: 'Less Is More' },
 };
 
 function getCategoriesFromTemplates(templates: Doc<'templates'>[] | undefined) {
@@ -61,13 +64,7 @@ export function useTemplatesData() {
   const allTemplates = useQuery(api.templates.list, {});
   const userHabits = useQuery(api.habits.list);
   const settings = useQuery(api.settings.get);
-  const hasImportedIdsQuery = 'getImportedTemplateIds' in api.templates;
-  // Query only available after `npx convex dev` deploys the new function
-  const importedIds = useQuery(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    hasImportedIdsQuery ? (api.templates as any).getImportedTemplateIds : api.templates.list,
-    hasImportedIdsQuery ? {} : 'skip'
-  );
+  const importedIds = useQuery(api.templates.getImportedTemplateIds, {});
   const isLoading = allTemplates === undefined;
   const userHabitCount = userHabits?.length ?? 0;
   const isPremiumUser = settings?.hasPremium ?? false;
@@ -77,12 +74,8 @@ export function useTemplatesData() {
   );
 
   const initialImportedIds = useMemo(
-    () => new Set(
-      hasImportedIdsQuery && Array.isArray(importedIds)
-        ? importedIds.map(String)
-        : []
-    ),
-    [hasImportedIdsQuery, importedIds]
+    () => new Set(Array.isArray(importedIds) ? importedIds.map(String) : []),
+    [importedIds]
   );
 
   const importTemplate = useMutation(api.templates.importTemplate);

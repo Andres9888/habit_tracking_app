@@ -3,37 +3,42 @@
  */
 
 import { calculateBestStreakFromDates, differenceInDays } from './dateHelpers';
+import { msToDateKeyForTimezone } from '../habits/utils';
 import type { StreakData, TrackingRecord } from './types';
 
 /**
- * Optional pause information for streak calculation
+ * Optional pause information for streak calculation.
+ * `timezone` (IANA name) ensures pause boundaries are evaluated against the
+ * user's calendar day, matching how tracking date strings are stored.
  */
 export interface PauseInfo {
   pausedAt?: number;
   resumedAt?: number;
+  timezone?: string;
 }
 
 /**
- * Check if a date falls within a pause period
+ * Check if a date falls within a pause period. Compares date keys
+ * (YYYY-MM-DD strings in the user's timezone) lexicographically — equivalent
+ * to chronological comparison for ISO-formatted dates and immune to the
+ * local-midnight-vs-UTC-ms offset bug.
  */
 function isDateInPausePeriod(date: string, pauseInfo?: PauseInfo): boolean {
   if (!pauseInfo?.pausedAt) return false;
-  
-  const dateMs = new Date(date + 'T00:00:00').getTime();
-  const pausedAtMs = pauseInfo.pausedAt;
-  const resumedAtMs = pauseInfo.resumedAt;
-  
-  // If paused and not yet resumed, check if date is after pausedAt
-  if (pausedAtMs && !resumedAtMs) {
-    return dateMs >= pausedAtMs;
+
+  const pausedAtKey = msToDateKeyForTimezone(
+    pauseInfo.pausedAt,
+    pauseInfo.timezone
+  );
+  const resumedAtKey =
+    pauseInfo.resumedAt === undefined
+      ? undefined
+      : msToDateKeyForTimezone(pauseInfo.resumedAt, pauseInfo.timezone);
+
+  if (resumedAtKey === undefined) {
+    return date >= pausedAtKey;
   }
-  
-  // If paused and resumed, check if date is within pause period
-  if (pausedAtMs && resumedAtMs) {
-    return dateMs >= pausedAtMs && dateMs < resumedAtMs;
-  }
-  
-  return false;
+  return date >= pausedAtKey && date < resumedAtKey;
 }
 
 /**

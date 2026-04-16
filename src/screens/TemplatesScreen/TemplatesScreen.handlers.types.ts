@@ -13,8 +13,9 @@ export interface UseTemplateHandlersOptions {
   importTemplate: (args: {
     templateId: Id<'templates'>;
     customizations?: TemplateCustomizations;
-  }) => Promise<{ success: boolean }>;
+  }) => Promise<{ success: boolean; habitId?: Id<'habits'> }>;
   isPremiumUser: boolean;
+  onPostImportSetup?: (habitId: Id<'habits'>, template: Doc<'templates'>) => void;
   onShowPaywall?: () => void;
   previewTemplate: Doc<'templates'> | null;
   seedTemplates: (args: Record<string, never>) => Promise<unknown>;

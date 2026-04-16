@@ -41,7 +41,7 @@ const STANDARD_COLORS: CalendarTimelineColors = {
   dayText: colors.gray[600],
   icon: colors.gray[500],
   primaryText: colors.gray[800],
-  secondaryText: colors.gray[300],
+  secondaryText: colors.gray[400],
 };
 
 /**
@@ -86,6 +86,14 @@ export function getCalendarTimelineColors(
   if (highContrastMode) return HIGH_CONTRAST_COLORS;
   return isDark ? DARK_COLORS : STANDARD_COLORS;
 }
+
+/**
+ * Date pill colors for WeekNavRow (derived from primary[600] with opacity)
+ */
+export const getDatePillColors = (isDark: boolean) => ({
+  backgroundColor: isDark ? 'rgba(5,150,105,0.08)' : 'rgba(5,150,105,0.06)',
+  borderColor: isDark ? 'rgba(5,150,105,0.20)' : 'rgba(5,150,105,0.15)',
+});
 
 /**
  * Export individual themes for direct access if needed

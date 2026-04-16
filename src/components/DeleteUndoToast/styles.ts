@@ -7,7 +7,7 @@ import { useThemeColors } from '../../theme/ThemeContext';
 export const DISMISS_THRESHOLD = 50;
 
 export function useToastStyles() {
-  const { colors, isDark } = useThemeColors();
+  const { colors } = useThemeColors();
 
   return StyleSheet.create({
     container: {
@@ -27,7 +27,7 @@ export function useToastStyles() {
     },
     iconContainer: {
       alignItems: 'center',
-      backgroundColor: isDark ? '#7F1D1D' : '#fee2e2',
+      backgroundColor: colors.status.errorLight,
       borderRadius: borderRadius.medium,
       height: 36,
       justifyContent: 'center',
@@ -46,11 +46,11 @@ export function useToastStyles() {
       color: colors.text.secondary,
     },
     progressBar: {
-      backgroundColor: isDark ? '#EF4444' : '#dc2626',
+      backgroundColor: colors.status.error,
       height: '100%',
     },
     progressContainer: {
-      backgroundColor: isDark ? '#7F1D1D' : '#fee2e2',
+      backgroundColor: colors.status.errorLight,
       borderBottomLeftRadius: borderRadius.xl,
       borderBottomRightRadius: borderRadius.xl,
       height: 3,
@@ -59,18 +59,17 @@ export function useToastStyles() {
     },
     toast: {
       backgroundColor: colors.card,
-      borderColor: isDark ? '#991B1B' : '#fecaca',
+      borderColor: colors.status.errorLight,
       borderRadius: borderRadius.xl,
       borderWidth: 1,
       ...shadows.alert,
       maxWidth: 400,
       overflow: 'hidden',
-      shadowColor: isDark ? '#000' : '#dc2626',
       width: '100%',
     },
     undoButton: {
       alignItems: 'center',
-      backgroundColor: isDark ? '#7F1D1D' : '#fee2e2',
+      backgroundColor: colors.status.errorLight,
       borderRadius: borderRadius.medium,
       flexDirection: 'row',
       gap: 6,
@@ -79,10 +78,10 @@ export function useToastStyles() {
       paddingVertical: 12,
     },
     undoButtonPressed: {
-      backgroundColor: isDark ? '#991B1B' : '#fecaca',
+      opacity: 0.8,
     },
     undoText: {
-      color: isDark ? '#FCA5A5' : '#dc2626',
+      color: colors.status.errorText,
       fontFamily: fontFamilies.primary.text,
       fontSize: 13,
       fontWeight: fontWeights.bold,

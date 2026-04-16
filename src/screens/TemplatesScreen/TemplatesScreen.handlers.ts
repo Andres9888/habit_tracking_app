@@ -22,6 +22,7 @@ export function useTemplateHandlers(opts: UseTemplateHandlersOptions) {
   const imports = useTemplateImportHandlers({
     importTemplate: opts.importTemplate,
     isPremiumUser: opts.isPremiumUser,
+    onPostImportSetup: opts.onPostImportSetup,
     onShowPaywall: opts.onShowPaywall,
     previewTemplate: opts.previewTemplate,
     setImportedTemplateIds: opts.setImportedTemplateIds,

@@ -81,6 +81,7 @@ function HabitsListHeaderComponent(
           }}
         >
           <CalendarTimeline
+            compact={props.compactView}
             disableFutureDayPress
             canNavigateForward={props.canNavigateForward}
             completedToday={computed.completedToday}

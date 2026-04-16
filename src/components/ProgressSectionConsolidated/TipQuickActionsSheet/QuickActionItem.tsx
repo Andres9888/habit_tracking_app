@@ -10,7 +10,7 @@ import Animated, { FadeIn } from 'react-native-reanimated';
 import { useHapticFeedback } from '../../../hooks/useHapticFeedback';
 import type { QuickAction } from './types';
 import { ICON_MAP, ACTION_COLORS } from './constants';
-import { styles } from './styles';
+import { useStyles } from './styles';
 import { iconSizes } from '@/theme/iconSizes';
 
 interface QuickActionItemProps {
@@ -26,6 +26,7 @@ export const QuickActionItem = React.memo(function QuickActionItem({
   index,
   reduceMotion,
 }: QuickActionItemProps) {
+  const styles = useStyles();
   const { triggerLightImpact } = useHapticFeedback();
   const Icon = ICON_MAP[action.icon];
   const colors = ACTION_COLORS[action.actionType];

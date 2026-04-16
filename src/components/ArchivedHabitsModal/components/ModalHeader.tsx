@@ -1,14 +1,12 @@
-import { Pressable, View } from 'react-native';
-import { Text } from 'react-native';
+import { Pressable, View, Text } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { BlurView } from 'expo-blur';
 import { ChevronLeft } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
 import type { EdgeInsets } from 'react-native-safe-area-context';
-import { durations, springs } from '../../../theme/animations';
-import { shadows } from '../../../theme/spacing';
-import { useThemeColors } from '../../../theme/ThemeContext';
-import { typography } from '../../../theme/typography';
+import { durations, springs } from '@/theme/animations';
+import { useThemeColors } from '@/theme/ThemeContext';
+import { typography } from '@/theme/typography';
 import { ModalCloseButton } from '../../ui/ModalCloseButton';
 
 const ENTERING = FadeInDown.duration(durations.enter).springify().damping(springs.standard.damping);
@@ -20,57 +18,33 @@ interface ModalHeaderProps {
   onClose: () => void;
 }
 
-export function ModalHeader({
-  insets,
-  habitCount,
-  onBack,
-  onClose,
-}: ModalHeaderProps) {
+export function ModalHeader({ insets, habitCount, onBack, onClose }: ModalHeaderProps) {
   const { colors, isDark } = useThemeColors();
 
   const subtitle = habitCount === 0
     ? 'No archived habits'
-    : habitCount === 1
-      ? '1 habit waiting to come back'
-      : `${habitCount} habits waiting to come back`;
+    : `${habitCount} habit${habitCount === 1 ? '' : 's'} paused · tap to bring ${habitCount === 1 ? 'it' : 'them'} back`;
 
   return (
     <Animated.View entering={ENTERING}>
-      <BlurView
-        intensity={20}
-        style={{ paddingBottom: 4, paddingTop: insets.top + 8 }}
-        tint={isDark ? 'dark' : 'light'}
-      >
-        <View className='mb-2 flex-row items-center justify-between px-4'>
+      <BlurView intensity={20} style={{ paddingBottom: 8, paddingTop: insets.top + 8 }} tint={isDark ? 'dark' : 'light'}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 16, marginBottom: 16 }}>
           <Pressable
-            accessibilityLabel='Back to settings'
-            accessibilityRole='button'
-            className='h-11 w-11 items-center justify-center rounded-full'
-            style={({ pressed }) => [
-              shadows.subtle,
-              {
-                backgroundColor: pressed
-                  ? colors.gray[200]
-                  : colors.card,
-              },
-            ]}
+            accessibilityLabel='Back to settings' accessibilityRole='button'
+            style={{ width: 40, height: 40, alignItems: 'center', justifyContent: 'center', opacity: 0.5 }}
             onPress={onBack}
           >
-            <ChevronLeft color={colors.text.secondary} size={iconSizes.large} strokeWidth={2} />
+            <ChevronLeft color={colors.text.primary} size={iconSizes.large} strokeWidth={2} />
           </Pressable>
-          <View style={{ width: 44 }} />
           <ModalCloseButton label='Close archived habits' onClose={onClose} />
         </View>
-
-        <View className='px-5 pb-2'>
-          <Text style={[typography.heading1, { color: colors.text.primary }]}>
-            Your Archived Habits
+        <View style={{ paddingHorizontal: 20, paddingBottom: 4 }}>
+          <Text style={[typography.heading1, { color: colors.text.primary, letterSpacing: -0.5, fontSize: 24, lineHeight: 30 }]}>
+            Archived Habits
           </Text>
-          <View className='mt-1.5'>
-            <Text style={[typography.caption, { color: colors.text.tertiary }]}>
-              {subtitle}
-            </Text>
-          </View>
+          <Text style={[typography.bodySmall, { color: isDark ? colors.gray[400] : '#9B958E', marginTop: 6, letterSpacing: -0.1 }]}>
+            {subtitle}
+          </Text>
         </View>
       </BlurView>
     </Animated.View>

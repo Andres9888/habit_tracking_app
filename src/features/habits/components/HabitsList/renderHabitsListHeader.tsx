@@ -44,6 +44,7 @@ export function renderHabitsListHeader({
         calendarOpacity={state.calendarOpacity}
         calendarTranslateY={state.calendarTranslateY}
         canNavigateForward={canNavigateForward}
+        compactView={list.compactView}
         completionIcon={list.habitCompletionIcon}
         getHabitStatus={list.getHabitStatus}
         getStreak={list.getStreak}

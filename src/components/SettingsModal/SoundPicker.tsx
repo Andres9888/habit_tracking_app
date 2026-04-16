@@ -6,6 +6,7 @@ import { Pressable, Text, View } from 'react-native';
 import Animated, { FadeInDown, FadeOutUp } from 'react-native-reanimated';
 import { Volume1, Droplet, TrendingUp } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
+import { typography, fontWeights } from '@/theme/typography';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { useSoundPreview } from './SoundPicker.hooks';
 import type { CompletionSoundType } from '../../../convex/settings/types';
@@ -63,10 +64,10 @@ export function SoundPicker({ selected, onSelect }: SoundPickerProps) {
                 strokeWidth={on ? 2.5 : 2}
               />
               <Text
-                className="text-[13px]"
                 style={{
+                  ...typography.caption,
                   color: on ? accent : colors.text.secondary,
-                  fontWeight: on ? '600' : '400',
+                  fontWeight: on ? fontWeights.semibold : fontWeights.regular,
                 }}
               >
                 {label}

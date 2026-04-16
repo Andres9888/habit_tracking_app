@@ -62,8 +62,10 @@ function HabitDetailScreenContent({
   return (
     <Modal
       accessibilityViewIsModal
+      statusBarTranslucent
       transparent
       animationType='slide'
+      presentationStyle='overFullScreen'
       visible={visible}
       onRequestClose={onClose}
     >

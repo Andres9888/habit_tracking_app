@@ -20,13 +20,23 @@ export const heroStyles = StyleSheet.create({
     lineHeight: 26,
     textAlign: 'center',
   },
+  decorativeCircle: {
+    borderRadius: 9999,
+    height: 160,
+    position: 'absolute',
+    right: -40,
+    top: -40,
+    width: 160,
+  },
   heroContent: {
     alignItems: 'center',
   },
   heroGradient: {
+    overflow: 'hidden',
     paddingBottom: 28,
     paddingHorizontal: 20,
     paddingTop: 16,
+    position: 'relative',
   },
   iconContainer: {
     alignItems: 'center',
@@ -75,6 +85,7 @@ export const heroStyles = StyleSheet.create({
   },
   templateName: {
     ...typography.heading1,
+    alignSelf: 'stretch',
     color: colors.gray[900],
     letterSpacing: -0.5,
     marginBottom: 16,
