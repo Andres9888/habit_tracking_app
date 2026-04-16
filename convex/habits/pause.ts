@@ -45,6 +45,7 @@ async function recalculateOnPauseChange(
   const streakData = calculateStreakFromHistory(tracking, evaluationDateKey, {
     pausedAt: habit.pausedAt,
     resumedAt: habit.resumedAt,
+    timezone,
   });
 
   await ctx.db.patch(habitId, {
@@ -124,11 +125,11 @@ export const resume = mutation({
     await ctx.db.patch(args.habitId, {
       paused: false,
       resumedAt: now,
-      // Restore strength from before pause
-      strength: habit.strengthAtPause,
+      // Restore strength from before pause; preserve current value if pause
+      // was taken before any strength snapshot existed.
+      strength: habit.strengthAtPause ?? habit.strength,
       strengthLevel: habit.strengthLevel,
-      // Restore accessibility from before pause
-      accessibility: habit.accessibilityAtPause,
+      accessibility: habit.accessibilityAtPause ?? habit.accessibility,
     });
 
     // Recalculate streak to include the post-pause period
