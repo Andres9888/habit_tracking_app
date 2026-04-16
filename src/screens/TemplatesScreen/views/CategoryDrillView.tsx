@@ -57,7 +57,6 @@ export function CategoryDrillView({
 }: CategoryDrillViewProps) {
   const { colors } = useThemeColors();
   const meta = getCategoryMeta(categoryId);
-  const scienceCount = templates.filter((t) => t.scientificReference).length;
   const { filtered, hideImported, setSort, sort, toggleHideImported } =
     useCategoryDrillFilters(templates, importedTemplateIds);
   const listData = useDrillSections(filtered, sort);
@@ -100,7 +99,6 @@ export function CategoryDrillView({
       <CategoryHero
         habitCount={templates.length}
         meta={meta}
-        scienceCount={scienceCount}
         onBack={onBack}
       />
       <ScrollView
