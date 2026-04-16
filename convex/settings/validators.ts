@@ -38,11 +38,6 @@ export const settingsReturnValidator = v.object({
   showStreaks: v.boolean(),
   stickyCalendarHeader: v.boolean(),
   showWeekCompletionBar: v.boolean(),
-  strengthAlgorithm: v.union(
-    v.literal('forgiving'),
-    v.literal('balanced'),
-    v.literal('strict')
-  ),
   streakRemindersEnabled: v.boolean(),
   streakReminderTime: v.string(),
   useDyslexicFont: v.boolean(),
@@ -92,13 +87,6 @@ export const updateArgsValidator = {
   showStreaks: v.optional(v.boolean()),
   stickyCalendarHeader: v.optional(v.boolean()),
   showWeekCompletionBar: v.optional(v.boolean()),
-  strengthAlgorithm: v.optional(
-    v.union(
-      v.literal('forgiving'),
-      v.literal('balanced'),
-      v.literal('strict')
-    )
-  ),
   streakRemindersEnabled: v.optional(v.boolean()),
   streakReminderTime: v.optional(v.string()),
   useDyslexicFont: v.optional(v.boolean()),

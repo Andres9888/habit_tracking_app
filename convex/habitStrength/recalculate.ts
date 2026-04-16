@@ -31,15 +31,8 @@ export const recalculateHabitStrength = mutation({
       .withIndex('by_habit_and_date', (q) => q.eq('habitId', args.habitId))
       .collect();
 
-    // Resolve algorithm mode: per-habit override > user setting > 'balanced'
-    const userSettings = await ctx.db
-      .query('userSettings')
-      .withIndex('by_userId', (q) => q.eq('userId', habit.userId ?? ''))
-      .first();
-    const mode = resolveAlgorithmMode(
-      habit.strengthAlgorithm,
-      userSettings?.strengthAlgorithm
-    );
+    // Resolve algorithm mode from per-habit setting, fallback 'balanced'
+    const mode = resolveAlgorithmMode(habit.strengthAlgorithm);
 
     const snapshot = calculateMomentumStrengthSnapshot({
       habitCreatedAt: habit.createdAt,

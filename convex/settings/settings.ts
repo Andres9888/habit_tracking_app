@@ -63,8 +63,6 @@ export const get = query({
       stickyCalendarHeader:
         settings?.stickyCalendarHeader ?? DEFAULT_SETTINGS.stickyCalendarHeader,
       showStreaks: settings?.showStreaks ?? DEFAULT_SETTINGS.showStreaks,
-      strengthAlgorithm:
-        settings?.strengthAlgorithm ?? DEFAULT_SETTINGS.strengthAlgorithm,
       showWeekCompletionBar:
         settings?.showWeekCompletionBar ??
         DEFAULT_SETTINGS.showWeekCompletionBar,

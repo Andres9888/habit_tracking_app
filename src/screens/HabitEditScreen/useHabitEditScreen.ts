@@ -25,7 +25,7 @@ export function useHabitEditScreen({ habitId, onClose, onHabitRemoved }: UseHabi
   const [selectedColor, setSelectedColor] = useState('#DBEAFE');
   const [remindersEnabled, setRemindersEnabled] = useState(false);
   const [reminderTime, setReminderTime] = useState<Date>(() => getDefaultReminderTime());
-  const [strengthAlgorithm, setStrengthAlgorithm] = useState<string | undefined>(undefined);
+  const [strengthAlgorithm, setStrengthAlgorithm] = useState<'forgiving' | 'balanced' | 'strict'>('balanced');
 
   useEffect(() => {
     if (habit) {
@@ -37,7 +37,12 @@ export function useHabitEditScreen({ habitId, onClose, onHabitRemoved }: UseHabi
       setSelectedColor(habit.color || habit.iconColor || '#10B981');
       setRemindersEnabled(habit.remindersEnabled ?? false);
       setReminderTime(createDateFromTimeString(habit.reminderTime, getDefaultReminderTime()));
-      setStrengthAlgorithm(habit.strengthAlgorithm ?? undefined);
+      const mode = habit.strengthAlgorithm;
+      setStrengthAlgorithm(
+        mode === 'forgiving' || mode === 'balanced' || mode === 'strict'
+          ? mode
+          : 'balanced'
+      );
     }
   }, [habit]);
 
@@ -80,7 +85,7 @@ export function useHabitEditScreen({ habitId, onClose, onHabitRemoved }: UseHabi
     setReminderTime(time);
   }, []);
 
-  const handleStrengthAlgorithmChange = useCallback((mode: string | undefined) => {
+  const handleStrengthAlgorithmChange = useCallback((mode: 'forgiving' | 'balanced' | 'strict') => {
     triggerSelection();
     setStrengthAlgorithm(mode);
   }, [triggerSelection]);

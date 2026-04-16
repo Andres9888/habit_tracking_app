@@ -80,14 +80,12 @@ const CreateHabitFormCenteredComponent = ({
           onToggle={onReminderToggle}
         />
 
-        {onStrengthAlgorithmChange ? (
-          <View className='mt-4'>
-            <AdvancedAlgorithmDisclosure
-              selected={strengthAlgorithm}
-              onSelect={onStrengthAlgorithmChange}
-            />
-          </View>
-        ) : null}
+        <View className='mt-4'>
+          <AdvancedAlgorithmDisclosure
+            selected={strengthAlgorithm}
+            onSelect={onStrengthAlgorithmChange}
+          />
+        </View>
       </View>
     </View>
   );

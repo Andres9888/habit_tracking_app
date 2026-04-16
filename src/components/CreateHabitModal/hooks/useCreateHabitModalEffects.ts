@@ -30,7 +30,7 @@ interface HabitDataParams {
   selectedColor: string;
   selectedDays: number[];
   selectedEmoji: string | null;
-  strengthAlgorithm?: string;
+  strengthAlgorithm: 'forgiving' | 'balanced' | 'strict';
 }
 
 export function useHabitData(params: HabitDataParams) {
