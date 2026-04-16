@@ -23,7 +23,7 @@ export function TrendBadge({ weeklyChange }: TrendBadgeProps) {
       className='absolute -right-1 -top-1 rounded-full px-1'
       style={{ backgroundColor: bgColor }}
     >
-      <Text className='text-[8px] font-semibold' style={{ color: textColor }}>
+      <Text className='text-[10px] font-semibold' style={{ color: textColor }}>
         {prefix}
         {weeklyChange}%
       </Text>
