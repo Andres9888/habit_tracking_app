@@ -30,6 +30,7 @@ interface HabitDataParams {
   selectedColor: string;
   selectedDays: number[];
   selectedEmoji: string | null;
+  strengthAlgorithm?: string;
 }
 
 export function useHabitData(params: HabitDataParams) {
@@ -43,6 +44,7 @@ export function useHabitData(params: HabitDataParams) {
       selectedColor: params.selectedColor,
       selectedDays: params.selectedDays,
       selectedEmoji: params.selectedEmoji,
+      strengthAlgorithm: params.strengthAlgorithm,
     }),
     [
       params.dayPhase,
@@ -53,6 +55,7 @@ export function useHabitData(params: HabitDataParams) {
       params.selectedColor,
       params.selectedDays,
       params.selectedEmoji,
+      params.strengthAlgorithm,
     ]
   );
 }

@@ -1,5 +1,6 @@
 import type { GenericMutationCtx } from 'convex/server';
 import type { DataModel, Id } from '../_generated/dataModel';
+import type { StrengthAlgorithmMode } from '../habitStrength';
 import { calculateMomentumStrengthSnapshot } from '../habitStrength';
 import { findMaxTrackingDate, getTodayForTimezone, maxDateKey } from './helpers';
 
@@ -13,6 +14,7 @@ interface StrengthUpdateParams {
   habitId: Id<'habits'>;
   habitCreatedAt: number;
   currentStrength: number;
+  mode?: StrengthAlgorithmMode;
   toggleDate: string;
   timezone?: string;
 }
@@ -23,7 +25,7 @@ interface StrengthUpdateParams {
 export async function updateHabitStrength(
   params: StrengthUpdateParams
 ): Promise<void> {
-  const { ctx, habitCreatedAt, habitId, currentStrength, toggleDate, timezone } =
+  const { ctx, habitCreatedAt, habitId, currentStrength, mode, toggleDate, timezone } =
     params;
 
   const allTracking = await ctx.db
@@ -44,6 +46,7 @@ export async function updateHabitStrength(
 
   const snapshot = calculateMomentumStrengthSnapshot({
     habitCreatedAt,
+    mode,
     throughDate: evaluationDateKey,
     tracking: trackingData,
   });

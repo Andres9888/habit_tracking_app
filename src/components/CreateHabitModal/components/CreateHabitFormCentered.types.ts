@@ -20,4 +20,7 @@ export interface CreateHabitFormCenteredProps {
   autoFocus?: boolean;
   /** Whether to show validation error for empty habit name */
   showNameError?: boolean;
+  /** Per-habit strength algorithm override (undefined = use global default) */
+  strengthAlgorithm?: string;
+  onStrengthAlgorithmChange?: (mode: string | undefined) => void;
 }

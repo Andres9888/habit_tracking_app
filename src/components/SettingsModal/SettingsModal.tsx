@@ -51,6 +51,8 @@ function SettingsModalContent({
     showGradientFill,
     setShowGradientFill,
     setHabitSortMode,
+    strengthAlgorithm,
+    setStrengthAlgorithm,
     view,
     setView,
     handleClose,
@@ -178,6 +180,7 @@ function SettingsModalContent({
               isPremium={isPremium}
               showGradientFill={showGradientFill}
               stickyCalendarHeader={stickyCalendarHeader}
+              strengthAlgorithm={strengthAlgorithm}
               streakRemindersEnabled={streakRemindersEnabled}
               streakReminderTime={streakReminderTime}
               onChangeCompletionSoundEnabled={onChangeCompletionSoundEnabled}
@@ -186,6 +189,7 @@ function SettingsModalContent({
               onChangeHabitCompletionIcon={onChangeHabitCompletionIcon}
               onChangeShowGradientFill={setShowGradientFill}
               onChangeStickyCalendarHeader={onChangeStickyCalendarHeader}
+              onChangeStrengthAlgorithm={setStrengthAlgorithm}
               onChangeStreakReminderTime={onChangeStreakReminderTime}
               onOpenAccount={() => setView('account')}
               onOpenArchivedHabits={() => setView('archived')}

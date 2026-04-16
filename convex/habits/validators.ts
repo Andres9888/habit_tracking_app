@@ -49,6 +49,13 @@ export const fullHabitValidator = v.object({
   reminderTime: v.optional(v.string()),
   resumedAt: v.optional(v.number()),
   strength: v.optional(v.number()),
+  strengthAlgorithm: v.optional(
+    v.union(
+      v.literal('forgiving'),
+      v.literal('balanced'),
+      v.literal('strict')
+    )
+  ),
   strengthAtPause: v.optional(v.number()),
   strengthLevel: v.optional(v.string()),
   strengthUpdatedAt: v.optional(v.number()),

@@ -9,6 +9,7 @@ import {
   Circle,
   Download,
   Droplets,
+  Dumbbell,
   FolderOpen,
   Heart,
   Info,
@@ -31,6 +32,9 @@ import Animated, {
 } from 'react-native-reanimated';
 import { CompletionIconPicker } from './CompletionIconPicker';
 import { DayShapePicker } from './DayShapePicker';
+import { StrengthAlgorithmPicker } from './StrengthAlgorithmPicker';
+import type { StrengthAlgorithmMode } from './StrengthAlgorithmPicker';
+import { AlgorithmLegend } from '../AlgorithmPicker';
 import { AccountRow } from './AccountRow';
 import { SettingsRow } from './SettingsRow';
 import { SettingsSection } from './SettingsSection';
@@ -234,6 +238,29 @@ export function SettingsContent(p: SettingsContentProps) {
                 value={p.stickyCalendarHeader}
                 onToggle={(v) => void p.onChangeStickyCalendarHeader(v)}
               />
+              <SettingsRow
+                highContrastMode={hc}
+                icon={
+                  <Dumbbell
+                    color={settingsIcons.strength.icon}
+                    size={iconSizes.small}
+                  />
+                }
+                iconBackgroundColor={settingsIcons.strength.bg}
+                label='Strength algorithm'
+                subtitle='Match to how complex your habits are'
+                rightAccessory={
+                  <StrengthAlgorithmPicker
+                    selected={
+                      (p.strengthAlgorithm as StrengthAlgorithmMode) ??
+                      'balanced'
+                    }
+                    onSelect={(v) => void p.onChangeStrengthAlgorithm(v)}
+                  />
+                }
+                type='info'
+              />
+              <AlgorithmLegend activeMode={p.strengthAlgorithm} />
             </SettingsSection>
           </Animated.View>
 

@@ -13,6 +13,7 @@ import { EmojiPicker } from '../../components/CreateHabitModal/components/EmojiP
 import { ColorPickerSection } from '../../components/CreateHabitModal/components/ColorPickerSection';
 import { EnhancedReminderSelector } from '../../components/CreateHabitModal/components/EnhancedReminderSelector';
 import { HABIT_COLORS } from '../../components/CreateHabitModal/constants';
+import { AdvancedAlgorithmDisclosure } from '../../components/AlgorithmPicker';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { fontWeights, typography } from '../../theme/typography';
 
@@ -24,10 +25,12 @@ interface CustomizeSectionProps {
   selectedColor: string;
   remindersEnabled: boolean;
   reminderTime: Date;
+  strengthAlgorithm?: string;
   onEmojiSelect: (emoji: string | null) => void;
   onColorSelect: (color: string) => void;
   onReminderToggle: (enabled: boolean) => void;
   onReminderTimeChange: (time: Date) => void;
+  onStrengthAlgorithmChange?: (mode: string | undefined) => void;
 }
 
 export function CustomizeSection({
@@ -38,8 +41,10 @@ export function CustomizeSection({
   reminderTime,
   onEmojiSelect,
   onColorSelect,
+  strengthAlgorithm,
   onReminderToggle,
   onReminderTimeChange,
+  onStrengthAlgorithmChange,
 }: CustomizeSectionProps) {
   const { colors: themeColors } = useThemeColors();
 
@@ -85,6 +90,15 @@ export function CustomizeSection({
           onToggle={onReminderToggle}
         />
       </Animated.View>
+
+      {onStrengthAlgorithmChange ? (
+        <Animated.View className='mt-4' entering={entrance(180)}>
+          <AdvancedAlgorithmDisclosure
+            selected={strengthAlgorithm}
+            onSelect={onStrengthAlgorithmChange}
+          />
+        </Animated.View>
+      ) : null}
     </View>
   );
 }

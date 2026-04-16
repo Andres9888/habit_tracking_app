@@ -58,6 +58,9 @@ export function useHabitFormState({ habitToEdit }: UseHabitFormStateOptions) {
       habitToEdit?.reminderTime
     )
   );
+  const [strengthAlgorithm, setStrengthAlgorithm] = useState<
+    string | undefined
+  >(habitToEdit?.strengthAlgorithm ?? undefined);
 
   return {
     dayPhase,
@@ -84,6 +87,8 @@ export function useHabitFormState({ habitToEdit }: UseHabitFormStateOptions) {
     setSelectedDays,
     setSelectedEmoji,
     setShowTimePicker,
+    setStrengthAlgorithm,
     showTimePicker,
+    strengthAlgorithm,
   };
 }

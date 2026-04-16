@@ -1,13 +1,14 @@
 /**
- * Momentum-Based Strength Calculation (v2.0)
- * Forgiving strength formula with streak protection
+ * Momentum-Based Strength Calculation
+ * Gap-fill growth on completion days, proportional decay on miss days.
+ * Calibrated to Lally et al. (2010) asymptotic habit formation curve.
  */
-import {
-  BASE_DECAY,
-  GROWTH_RATE,
-  MS_PER_DAY,
-  SHIELD_EFFECTIVENESS,
-} from './constants';
+import type {
+  AlgorithmParams,
+  StrengthAlgorithmMode,
+} from './algorithmConfig';
+import { getAlgorithmConfig } from './algorithmConfig';
+import { MS_PER_DAY } from './constants';
 import {
   addDays,
   findEarliestTrackingDate,
@@ -22,27 +23,28 @@ import { getStrengthLevel } from './strengthLevel';
 export function calculateNewStrength(
   currentStrength: number,
   completed: boolean,
-  completionsLast7Days: number
+  _completionsLast7Days: number,
+  params?: AlgorithmParams
 ): number {
+  const config = params ?? getAlgorithmConfig('balanced');
   const strength = Math.max(0, Math.min(100, currentStrength));
-  const recentCompletions = Math.max(0, Math.min(7, completionsLast7Days));
 
   if (completed) {
     const gap = 100 - strength;
-    return Math.min(100, strength + gap * GROWTH_RATE);
+    return Math.min(100, strength + gap * config.growthRate);
   }
-  const streakShield = recentCompletions / 7;
-  const protectedDecay = BASE_DECAY * (1 - streakShield * SHIELD_EFFECTIVENESS);
-  return Math.max(0, strength * (1 - protectedDecay));
+  return Math.max(0, strength * (1 - config.baseDecay));
 }
 
 /** Calculate strength snapshot by simulating day-by-day strength changes */
 export function calculateMomentumStrengthSnapshot({
   habitCreatedAt,
+  mode,
   throughDate,
   tracking,
 }: {
   habitCreatedAt: number;
+  mode?: StrengthAlgorithmMode;
   throughDate?: string;
   tracking: HabitTrackingRecord[];
 }): {
@@ -83,6 +85,7 @@ export function calculateMomentumStrengthSnapshot({
     Math.floor((evaluationDate.getTime() - startDate.getTime()) / MS_PER_DAY) +
     1;
 
+  const config = getAlgorithmConfig(mode);
   let strength100 = 0;
 
   for (
@@ -91,16 +94,11 @@ export function calculateMomentumStrengthSnapshot({
     cursor = addDays(cursor, 1)
   ) {
     const dateKey = formatDateKey(cursor);
-    let completionsLast7Days = 0;
-    for (let offset = 1; offset <= 7; offset++) {
-      if (completionDates.has(formatDateKey(addDays(cursor, -offset)))) {
-        completionsLast7Days++;
-      }
-    }
     strength100 = calculateNewStrength(
       strength100,
       completionDates.has(dateKey),
-      completionsLast7Days
+      0,
+      config
     );
   }
 

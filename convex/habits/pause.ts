@@ -9,7 +9,10 @@ import type { Id } from '../_generated/dataModel';
 import { calculateStreakFromHistory } from '../streakUtils';
 import { fullHabitValidator } from './types';
 import { getTodayForTimezone, maxDateKey } from './utils';
-import { calculateMomentumStrengthSnapshot } from '../habitStrength';
+import {
+  calculateMomentumStrengthSnapshot,
+  resolveAlgorithmMode,
+} from '../habitStrength';
 
 /**
  * Internal function to recalculate streak and strength after pause/resume
@@ -35,8 +38,20 @@ async function recalculateOnPauseChange(
   const evaluationDateKey = maxDateKey(today, maxTrackingDateKey);
 
   const tracking = allTracking.map((r) => ({ completed: r.completed, date: r.date }));
+
+  // Resolve algorithm mode: per-habit override > user setting > 'balanced'
+  const userSettings = await ctx.db
+    .query('userSettings')
+    .withIndex('by_userId', (q) => q.eq('userId', habit.userId ?? ''))
+    .first();
+  const mode = resolveAlgorithmMode(
+    habit.strengthAlgorithm,
+    userSettings?.strengthAlgorithm
+  );
+
   const snapshot = calculateMomentumStrengthSnapshot({
     habitCreatedAt: habit.createdAt,
+    mode,
     throughDate: evaluationDateKey,
     tracking,
   });
