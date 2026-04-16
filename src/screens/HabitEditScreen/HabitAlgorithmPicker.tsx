@@ -1,27 +1,25 @@
-/** HabitAlgorithmPicker — Per-habit strength algorithm override with Default option */
+/** HabitAlgorithmPicker — Per-habit strength algorithm selector */
 import { Pressable, View } from 'react-native';
-import { Heart, Activity, Zap, Undo2 } from 'lucide-react-native';
+import { Heart, Activity, Zap } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
 import * as Haptics from 'expo-haptics';
 import { useThemeColors } from '../../theme/ThemeContext';
 
-type AlgorithmOption = 'default' | 'forgiving' | 'balanced' | 'strict';
+type AlgorithmOption = 'forgiving' | 'balanced' | 'strict';
 
 const OPTIONS: {
   key: AlgorithmOption;
   Icon: typeof Heart;
   label: string;
 }[] = [
-  { key: 'default', Icon: Undo2, label: 'Default' },
   { key: 'forgiving', Icon: Heart, label: 'Forgiving' },
   { key: 'balanced', Icon: Activity, label: 'Balanced' },
   { key: 'strict', Icon: Zap, label: 'Strict' },
 ];
 
 interface HabitAlgorithmPickerProps {
-  /** undefined = use global default */
-  selected: string | undefined;
-  onSelect: (mode: string | undefined) => void;
+  selected: AlgorithmOption;
+  onSelect: (mode: AlgorithmOption) => void;
 }
 
 export function HabitAlgorithmPicker({
@@ -36,12 +34,12 @@ export function HabitAlgorithmPicker({
     ? 'rgba(255,255,255,0.06)'
     : 'rgba(0,0,0,0.05)';
 
-  const activeKey: AlgorithmOption = selected ?? 'default';
+  const activeKey: AlgorithmOption = selected;
 
   const handleSelect = (key: AlgorithmOption) => {
     if (key === activeKey) return;
     void Haptics.selectionAsync();
-    onSelect(key === 'default' ? undefined : key);
+    onSelect(key);
   };
 
   return (

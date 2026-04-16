@@ -419,7 +419,8 @@ const applicationTables = {
 
     showWeekCompletionBar: v.optional(v.boolean()),
     sortHabitsAlphabetically: v.optional(v.boolean()),
-    // "forgiving", "balanced", "strict" — global default for habit strength algorithm
+    // Retained for backwards compatibility with existing user data — global
+    // strength algorithm setting was removed; per-habit setting lives on `habits`.
     strengthAlgorithm: v.optional(
       v.union(
         v.literal('forgiving'),

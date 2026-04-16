@@ -39,15 +39,8 @@ async function recalculateOnPauseChange(
 
   const tracking = allTracking.map((r) => ({ completed: r.completed, date: r.date }));
 
-  // Resolve algorithm mode: per-habit override > user setting > 'balanced'
-  const userSettings = await ctx.db
-    .query('userSettings')
-    .withIndex('by_userId', (q) => q.eq('userId', habit.userId ?? ''))
-    .first();
-  const mode = resolveAlgorithmMode(
-    habit.strengthAlgorithm,
-    userSettings?.strengthAlgorithm
-  );
+  // Resolve algorithm mode from per-habit setting, fallback 'balanced'
+  const mode = resolveAlgorithmMode(habit.strengthAlgorithm);
 
   const snapshot = calculateMomentumStrengthSnapshot({
     habitCreatedAt: habit.createdAt,

@@ -109,12 +109,6 @@ export const useSettingsModalLogic = ({
     await update({ habitSortMode: value });
   };
 
-  const strengthAlgorithm =
-    (settings?.strengthAlgorithm as string) ?? 'balanced';
-  const setStrengthAlgorithm = async (value: string) => {
-    await update({ strengthAlgorithm: value });
-  };
-
   return {
     compactView,
     darkModePreference,
@@ -128,11 +122,9 @@ export const useSettingsModalLogic = ({
     setHighContrastMode,
     setReduceMotion,
     setShowGradientFill,
-    setStrengthAlgorithm,
     setUseDyslexicFont,
     setView,
     showGradientFill,
-    strengthAlgorithm,
     useDyslexicFont,
     view,
   };

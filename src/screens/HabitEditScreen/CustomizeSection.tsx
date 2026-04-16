@@ -25,12 +25,12 @@ interface CustomizeSectionProps {
   selectedColor: string;
   remindersEnabled: boolean;
   reminderTime: Date;
-  strengthAlgorithm?: string;
+  strengthAlgorithm: 'forgiving' | 'balanced' | 'strict';
   onEmojiSelect: (emoji: string | null) => void;
   onColorSelect: (color: string) => void;
   onReminderToggle: (enabled: boolean) => void;
   onReminderTimeChange: (time: Date) => void;
-  onStrengthAlgorithmChange?: (mode: string | undefined) => void;
+  onStrengthAlgorithmChange: (mode: 'forgiving' | 'balanced' | 'strict') => void;
 }
 
 export function CustomizeSection({
@@ -91,14 +91,12 @@ export function CustomizeSection({
         />
       </Animated.View>
 
-      {onStrengthAlgorithmChange ? (
-        <Animated.View className='mt-4' entering={entrance(180)}>
-          <AdvancedAlgorithmDisclosure
-            selected={strengthAlgorithm}
-            onSelect={onStrengthAlgorithmChange}
-          />
-        </Animated.View>
-      ) : null}
+      <Animated.View className='mt-4' entering={entrance(180)}>
+        <AdvancedAlgorithmDisclosure
+          selected={strengthAlgorithm}
+          onSelect={onStrengthAlgorithmChange}
+        />
+      </Animated.View>
     </View>
   );
 }

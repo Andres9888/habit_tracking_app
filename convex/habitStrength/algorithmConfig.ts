@@ -47,14 +47,13 @@ export function getAlgorithmConfig(
 }
 
 /**
- * Resolve effective algorithm mode from per-habit and global settings.
- * Priority: habit override > user setting > default ('balanced')
+ * Resolve effective algorithm mode from a per-habit setting.
+ * Falls back to DEFAULT_ALGORITHM_MODE when unset or invalid.
  */
 export function resolveAlgorithmMode(
-  habitMode?: string | null,
-  userSettingMode?: string | null
+  habitMode?: string | null
 ): StrengthAlgorithmMode {
-  const mode = habitMode ?? userSettingMode ?? DEFAULT_ALGORITHM_MODE;
+  const mode = habitMode ?? DEFAULT_ALGORITHM_MODE;
   if (mode in ALGORITHM_CONFIGS) {
     return mode as StrengthAlgorithmMode;
   }

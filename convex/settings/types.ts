@@ -20,15 +20,6 @@ export type HabitSortMode = (typeof HABIT_SORT_MODE_OPTIONS)[number];
 export const COMPLETION_SOUND_OPTIONS = ['chime', 'pop', 'success'] as const;
 export type CompletionSoundType = (typeof COMPLETION_SOUND_OPTIONS)[number];
 
-// Strength algorithm mode options
-export const STRENGTH_ALGORITHM_OPTIONS = [
-  'forgiving',
-  'balanced',
-  'strict',
-] as const;
-export type StrengthAlgorithmMode =
-  (typeof STRENGTH_ALGORITHM_OPTIONS)[number];
-
 export const DEFAULT_SETTINGS = {
   appIcon: 'default' as const,
   catTheme: true,
@@ -53,7 +44,6 @@ export const DEFAULT_SETTINGS = {
   showStreaks: true,
   stickyCalendarHeader: false,
   showWeekCompletionBar: false,
-  strengthAlgorithm: 'balanced' as StrengthAlgorithmMode,
   streakRemindersEnabled: false,
   streakReminderTime: '20:00',
   useDyslexicFont: false,
