@@ -22,6 +22,7 @@ import { NameInputSection } from './NameInputSection';
 import { CustomizeSection } from './CustomizeSection';
 import { DangerZone } from './DangerZone';
 import { SectionLabel } from './SectionLabel';
+import { StreakGoalSection } from './StreakGoalSection';
 import { useHabitEditScreen } from './useHabitEditScreen';
 import type { HabitEditScreenProps } from './types';
 
@@ -120,15 +121,19 @@ function HabitEditScreenContent({
                           onReminderTimeChange={state.handleReminderTimeChange}
                           onReminderToggle={state.handleReminderToggle}
                         />
+                        <StreakGoalSection
+                          streakGoal={state.streakGoal}
+                          onStreakGoalChange={state.handleStreakGoalChange}
+                        />
                       </Animated.View>
                       <SectionLabel
-                        delay={340}
+                        delay={400}
                         text='DANGER ZONE'
                         variant='danger'
                       />
                       <Animated.View
                         className='mx-6 rounded-2xl p-4'
-                        entering={FadeInUp.delay(400).springify().damping(18)}
+                        entering={FadeInUp.delay(460).springify().damping(18)}
                         style={{
                           backgroundColor: themeColors.card,
                           ...shadows.card,

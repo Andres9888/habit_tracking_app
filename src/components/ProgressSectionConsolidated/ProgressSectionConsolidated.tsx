@@ -17,6 +17,7 @@ import { shadows } from '../../theme/spacing';
 import { ActionableTipCard } from './ActionableTipCard';
 import { MilestoneProgress } from './MilestoneProgress';
 import { StatsGrid } from './StatsGrid';
+import { StreakGoalCard } from './StreakGoalCard';
 import { StreakRecordsAccordion } from './StreakRecordsAccordion';
 import type { ProgressSectionConsolidatedProps } from './types';
 import { useProgressSectionStats } from './useProgressSectionStats';
@@ -36,10 +37,13 @@ export function ProgressSectionConsolidated({
   onSeeAllPress,
   onTipPress,
   onTipQuickAction,
+  streakGoal,
 }: ProgressSectionConsolidatedProps) {
   const {
     actionableTip,
     bestDayData,
+    bestStreak,
+    completionRate,
     currentStreak,
     dayStats,
     focusDayData,
@@ -81,6 +85,16 @@ export function ProgressSectionConsolidated({
 
         {/* Section 2: Milestone Progress */}
         <MilestoneProgress currentStreak={currentStreak} />
+
+        {/* Section 2b: Streak Goal (if user has set a goal) */}
+        {streakGoal && streakGoal > 0 ? (
+          <StreakGoalCard
+            bestStreak={bestStreak}
+            completionRate={completionRate}
+            currentStreak={currentStreak}
+            streakGoal={streakGoal}
+          />
+        ) : null}
 
         {/* Section 3: Weekly Pattern Chart */}
         {hasEnoughData ? <WeeklyPatternChart

@@ -25,6 +25,7 @@ export function useHabitEditScreen({ habitId, onClose, onHabitRemoved }: UseHabi
   const [selectedColor, setSelectedColor] = useState('#DBEAFE');
   const [remindersEnabled, setRemindersEnabled] = useState(false);
   const [reminderTime, setReminderTime] = useState<Date>(() => getDefaultReminderTime());
+  const [streakGoal, setStreakGoal] = useState(0);
 
   useEffect(() => {
     if (habit) {
@@ -36,6 +37,7 @@ export function useHabitEditScreen({ habitId, onClose, onHabitRemoved }: UseHabi
       setSelectedColor(habit.color || habit.iconColor || '#10B981');
       setRemindersEnabled(habit.remindersEnabled ?? false);
       setReminderTime(createDateFromTimeString(habit.reminderTime, getDefaultReminderTime()));
+      setStreakGoal(habit.goalDuration ?? 0);
     }
   }, [habit]);
 
@@ -50,6 +52,7 @@ export function useHabitEditScreen({ habitId, onClose, onHabitRemoved }: UseHabi
     reminderTime,
     selectedColor,
     selectedEmoji,
+    streakGoal,
   });
 
   const { handleDelete, handleArchive } = useHabitActions({
@@ -77,6 +80,10 @@ export function useHabitEditScreen({ habitId, onClose, onHabitRemoved }: UseHabi
     setReminderTime(time);
   }, []);
 
+  const handleStreakGoalChange = useCallback((days: number) => {
+    setStreakGoal(days);
+  }, []);
+
   return {
     habitName,
     handleColorSelect,
@@ -85,6 +92,7 @@ export function useHabitEditScreen({ habitId, onClose, onHabitRemoved }: UseHabi
     handleArchive,
     handleReminderTimeChange,
     handleReminderToggle,
+    handleStreakGoalChange,
     isLoading: habitId != null && habit === undefined,
     remindersEnabled,
     handleSave,
@@ -93,6 +101,7 @@ export function useHabitEditScreen({ habitId, onClose, onHabitRemoved }: UseHabi
     setHabitName,
     reminderTime,
     selectedColor,
+    streakGoal,
     triggerSelection,
   };
 }
