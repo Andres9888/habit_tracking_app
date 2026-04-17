@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
  * ProgressSectionConsolidated Component
  *
@@ -33,6 +34,7 @@ export function ProgressSectionConsolidated({
   habitCreatedAt,
   strength,
   weeklyChange = 0,
+  progressEmojis,
   onInfoPress: _onInfoPress, // Kept for backwards compatibility
   onFocusDayPress,
   onSeeAllPress,
@@ -80,6 +82,7 @@ export function ProgressSectionConsolidated({
           monthlyChange={monthlyChange}
           monthlyCompleted={monthlyCompleted}
           monthlyTotal={monthlyTotal}
+          progressEmojis={progressEmojis}
           strength={strength}
           weeklyChange={weeklyChange}
           onFocusDayPress={onFocusDayPress}
@@ -99,10 +102,12 @@ export function ProgressSectionConsolidated({
         ) : null}
 
         {/* Section 3: Weekly Pattern Chart */}
-        {hasEnoughData ? <WeeklyPatternChart
+        {hasEnoughData ? (
+          <WeeklyPatternChart
             dayStats={dayStats}
             onSeeAllPress={onSeeAllPress}
-          /> : null}
+          />
+        ) : null}
 
         {/* Section 4: Actionable Tip */}
         <ActionableTipCard
@@ -118,10 +123,12 @@ export function ProgressSectionConsolidated({
         />
 
         {/* Section 5: Streak Records Accordion */}
-        {hasEnoughData ? <StreakRecordsAccordion
+        {hasEnoughData ? (
+          <StreakRecordsAccordion
             currentStreak={currentStreak}
             streakRecords={streakRecords}
-          /> : null}
+          />
+        ) : null}
       </View>
     </Animated.View>
   );

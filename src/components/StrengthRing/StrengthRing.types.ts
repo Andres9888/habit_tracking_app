@@ -2,6 +2,8 @@
  * StrengthRing Type Definitions
  */
 
+import type { PartialProgressEmojiSet } from '@/utils/progressEmojis';
+
 export interface StrengthRingProps {
   /** Strength value (0-100) */
   strength: number;
@@ -23,6 +25,8 @@ export interface StrengthRingProps {
   trend?: 'up' | 'down' | 'stable';
   /** Weekly change percentage (shown next to percentage) */
   weeklyChange?: number;
+  /** Per-stage emoji overrides (per-habit or user default) */
+  emojiOverrides?: PartialProgressEmojiSet;
 }
 
 export interface LevelInfo {

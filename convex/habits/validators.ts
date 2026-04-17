@@ -4,6 +4,8 @@
  */
 import { v } from 'convex/values';
 
+import { progressEmojisValidator } from '../lib/progressEmojisValidator';
+
 /** Full habit object validator - used in query returns */
 export const fullHabitValidator = v.object({
   _creationTime: v.number(),
@@ -44,17 +46,14 @@ export const fullHabitValidator = v.object({
   pendingStrengthRecalcRequestedAt: v.optional(v.number()),
   predictedCompletionProb: v.optional(v.number()),
   preferredTime: v.optional(v.string()),
+  progressEmojis: v.optional(progressEmojisValidator),
   remindersEnabled: v.optional(v.boolean()),
   reminderSound: v.optional(v.string()),
   reminderTime: v.optional(v.string()),
   resumedAt: v.optional(v.number()),
   strength: v.optional(v.number()),
   strengthAlgorithm: v.optional(
-    v.union(
-      v.literal('forgiving'),
-      v.literal('balanced'),
-      v.literal('strict')
-    )
+    v.union(v.literal('forgiving'), v.literal('balanced'), v.literal('strict'))
   ),
   strengthAtPause: v.optional(v.number()),
   strengthLevel: v.optional(v.string()),

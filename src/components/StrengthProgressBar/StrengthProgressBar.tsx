@@ -17,7 +17,7 @@ import { styles } from './StrengthProgressBar.styles';
 import { ProgressBarBottomRow } from './ProgressBarBottomRow';
 import { ProgressBarRow } from './ProgressBarRow';
 
-export const StrengthProgressBar = memo(({
+const StrengthProgressBarInner = ({
   showDividers = true,
   showEmoji = true,
   showLabel = false,
@@ -25,11 +25,12 @@ export const StrengthProgressBar = memo(({
   showPercentage = true,
   size = 'default',
   strength,
+  emojiOverrides,
 }: StrengthProgressBarProps) => {
   const clampedStrength = Math.max(0, Math.min(100, strength));
   const strengthLabel = formatStrengthPercentage(clampedStrength);
-  const currentLevel = getCurrentLevel(clampedStrength);
-  const nextLevel = getNextLevel(clampedStrength);
+  const currentLevel = getCurrentLevel(clampedStrength, emojiOverrides);
+  const nextLevel = getNextLevel(clampedStrength, emojiOverrides);
   const config = SIZE_CONFIG[size];
   const pointsToNext = nextLevel
     ? Math.round(nextLevel.threshold - clampedStrength)
@@ -69,7 +70,9 @@ export const StrengthProgressBar = memo(({
       />
     </View>
   );
-});
+};
+StrengthProgressBarInner.displayName = 'StrengthProgressBar';
+export const StrengthProgressBar = memo(StrengthProgressBarInner);
 
 export type { StrengthProgressBarProps } from './StrengthProgressBar.types';
 export default StrengthProgressBar;

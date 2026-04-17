@@ -14,10 +14,14 @@ import { ColorPickerSection } from '../../components/CreateHabitModal/components
 import { EnhancedReminderSelector } from '../../components/CreateHabitModal/components/EnhancedReminderSelector';
 import { HABIT_COLORS } from '../../components/CreateHabitModal/constants';
 import { AdvancedAlgorithmDisclosure } from '../../components/AlgorithmPicker';
+import { ProgressEmojiPicker } from '../../components/ProgressEmojiPicker';
+import { useUserDefaultProgressEmojis } from '../../hooks/useProgressEmojis';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { fontWeights, typography } from '../../theme/typography';
+import type { ProgressEmojiSet } from '../../utils/progressEmojis';
 
-const entrance = (delay: number) => FadeInUp.delay(delay).springify().damping(18);
+const entrance = (delay: number) =>
+  FadeInUp.delay(delay).springify().damping(18);
 
 interface CustomizeSectionProps {
   habitName: string;
@@ -26,11 +30,15 @@ interface CustomizeSectionProps {
   remindersEnabled: boolean;
   reminderTime: Date;
   strengthAlgorithm: 'forgiving' | 'balanced' | 'strict';
+  progressEmojis: ProgressEmojiSet | undefined;
   onEmojiSelect: (emoji: string | null) => void;
   onColorSelect: (color: string) => void;
   onReminderToggle: (enabled: boolean) => void;
   onReminderTimeChange: (time: Date) => void;
-  onStrengthAlgorithmChange: (mode: 'forgiving' | 'balanced' | 'strict') => void;
+  onStrengthAlgorithmChange: (
+    mode: 'forgiving' | 'balanced' | 'strict'
+  ) => void;
+  onProgressEmojisChange: (next: ProgressEmojiSet | undefined) => void;
 }
 
 export function CustomizeSection({
@@ -42,17 +50,25 @@ export function CustomizeSection({
   onEmojiSelect,
   onColorSelect,
   strengthAlgorithm,
+  progressEmojis,
   onReminderToggle,
   onReminderTimeChange,
   onStrengthAlgorithmChange,
+  onProgressEmojisChange,
 }: CustomizeSectionProps) {
   const { colors: themeColors } = useThemeColors();
+  const userDefaultEmojis = useUserDefaultProgressEmojis();
 
   return (
     <View className='flex-1'>
       <Text
         className='mb-3 text-center uppercase'
-        style={{ ...typography.caption, fontWeight: fontWeights.semibold, letterSpacing: 0.5, color: themeColors.text.tertiary }}
+        style={{
+          ...typography.caption,
+          fontWeight: fontWeights.semibold,
+          letterSpacing: 0.5,
+          color: themeColors.text.tertiary,
+        }}
       >
         Choose an icon
       </Text>
@@ -67,8 +83,13 @@ export function CustomizeSection({
       </Animated.View>
 
       <Text
-        className='mt-4 mb-3 text-center uppercase'
-        style={{ ...typography.caption, fontWeight: fontWeights.semibold, letterSpacing: 0.5, color: themeColors.text.tertiary }}
+        className='mb-3 mt-4 text-center uppercase'
+        style={{
+          ...typography.caption,
+          fontWeight: fontWeights.semibold,
+          letterSpacing: 0.5,
+          color: themeColors.text.tertiary,
+        }}
       >
         Pick a color
       </Text>
@@ -79,6 +100,15 @@ export function CustomizeSection({
           colors={HABIT_COLORS}
           selectedColor={selectedColor}
           onSelectColor={onColorSelect}
+        />
+      </Animated.View>
+
+      <Animated.View className='mt-4' entering={entrance(90)}>
+        <ProgressEmojiPicker
+          fallback={userDefaultEmojis}
+          label='Growth icons'
+          value={progressEmojis}
+          onChange={onProgressEmojisChange}
         />
       </Animated.View>
 

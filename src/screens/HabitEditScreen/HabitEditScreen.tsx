@@ -38,7 +38,11 @@ function HabitEditScreenContent({
   const { animateOut, backdropStyle, panGesture, sheetStyle } = useSwipeDismiss(
     { visible, onClose }
   );
-  const state = useHabitEditScreen({ habitId, onClose: animateOut, onHabitRemoved });
+  const state = useHabitEditScreen({
+    habitId,
+    onClose: animateOut,
+    onHabitRemoved,
+  });
   return (
     <Modal
       accessibilityViewIsModal
@@ -112,6 +116,7 @@ function HabitEditScreenContent({
                       >
                         <CustomizeSection
                           habitName={state.habitName}
+                          progressEmojis={state.progressEmojis}
                           remindersEnabled={state.remindersEnabled}
                           reminderTime={state.reminderTime}
                           selectedColor={state.selectedColor}
@@ -119,9 +124,14 @@ function HabitEditScreenContent({
                           strengthAlgorithm={state.strengthAlgorithm}
                           onColorSelect={state.handleColorSelect}
                           onEmojiSelect={state.handleEmojiSelect}
+                          onProgressEmojisChange={
+                            state.handleProgressEmojisChange
+                          }
                           onReminderTimeChange={state.handleReminderTimeChange}
                           onReminderToggle={state.handleReminderToggle}
-                          onStrengthAlgorithmChange={state.handleStrengthAlgorithmChange}
+                          onStrengthAlgorithmChange={
+                            state.handleStrengthAlgorithmChange
+                          }
                         />
                         <StreakGoalSection
                           streakGoal={state.streakGoal}
