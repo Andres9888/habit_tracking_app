@@ -1,4 +1,6 @@
-import { Text, View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
+import { Trash2 } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '@/theme/ThemeContext';
 import { typography, fontWeights } from '@/theme/typography';
 import { getRelativeTime } from '../utils';
@@ -9,9 +11,11 @@ interface HabitCardHeaderProps {
   iconColor?: string;
   archiveDate: number;
   accentColor: string;
+  onDeletePress?: () => void;
+  showDelete?: boolean;
 }
 
-export function HabitCardHeader({ name, icon, accentColor, archiveDate }: HabitCardHeaderProps) {
+export function HabitCardHeader({ name, icon, accentColor, archiveDate, onDeletePress, showDelete }: HabitCardHeaderProps) {
   const { colors, isDark } = useThemeColors();
 
   return (
@@ -36,6 +40,20 @@ export function HabitCardHeader({ name, icon, accentColor, archiveDate }: HabitC
           Archived {getRelativeTime(archiveDate)}
         </Text>
       </View>
+      {showDelete && onDeletePress && (
+        <Pressable
+          accessibilityLabel={`Delete ${name}`} accessibilityRole='button'
+          hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+          style={({ pressed }) => ({
+            width: 32, height: 32, borderRadius: 10,
+            alignItems: 'center', justifyContent: 'center',
+            backgroundColor: pressed ? (isDark ? colors.status.error + '25' : '#FDEBEB') : 'transparent',
+          })}
+          onPress={onDeletePress}
+        >
+          <Trash2 color={isDark ? colors.gray[400] : '#C4BCB3'} size={iconSizes.small} strokeWidth={2} />
+        </Pressable>
+      )}
     </View>
   );
 }
