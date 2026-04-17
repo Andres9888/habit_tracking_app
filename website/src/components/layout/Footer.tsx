@@ -8,7 +8,9 @@ const footerLinks = {
     { name: "Press Kit", href: "/press" },
   ],
   legal: [
-    { name: "Privacy", href: "https://andres9888.github.io/chainday-landing/privacy.html" },
+    { name: "Privacy", href: "/privacy" },
+    // Terms still hosted externally until in-domain content lands; see
+    // SR-2026-04-17-07 for the follow-up.
     { name: "Terms", href: "https://andres9888.github.io/chainday-landing/terms.html" },
   ],
   connect: [
