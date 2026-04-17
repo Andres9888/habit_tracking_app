@@ -14,15 +14,17 @@ interface ModalHeaderProps {
   topInset: number;
   closeButtonAnimatedOpacityStyle: object;
   onClose: () => void;
+  tintColor?: string;
 }
 
 export function ModalHeader({
   topInset,
   closeButtonAnimatedOpacityStyle,
   onClose,
+  tintColor,
 }: ModalHeaderProps) {
   return (
-    <>
+    <View style={tintColor ? { backgroundColor: tintColor } : undefined}>
       <View testID="templates-preview-handle" style={s.handleRow}>
         <View style={s.handle} />
       </View>
@@ -36,7 +38,7 @@ export function ModalHeader({
       >
         <ModalCloseButton label='Close preview' onClose={onClose} />
       </Animated.View>
-    </>
+    </View>
   );
 }
 

@@ -36,7 +36,7 @@ export const StatCardTrendBadge = React.memo(function StatCardTrendBadge({
       style={{ backgroundColor: bgColor }}
     >
       <Icon color={color} size={iconSizes.micro} />
-      <Text className='ml-0.5 text-[10px] font-medium' style={{ color }}>
+      <Text className='ml-0.5 text-xs font-medium' style={{ color }}>
         {prefix}
         {trend}
         {label}

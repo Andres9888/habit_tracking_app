@@ -118,15 +118,8 @@ export const recalculateStreakAndStrength = internalMutation({
       date: r.date,
     }));
 
-    // Resolve algorithm mode: per-habit override > user setting > 'balanced'
-    const userSettings = await ctx.db
-      .query('userSettings')
-      .withIndex('by_userId', (q) => q.eq('userId', habit.userId ?? ''))
-      .first();
-    const mode = resolveAlgorithmMode(
-      habit.strengthAlgorithm,
-      userSettings?.strengthAlgorithm
-    );
+    // Resolve algorithm mode from per-habit setting, fallback 'balanced'
+    const mode = resolveAlgorithmMode(habit.strengthAlgorithm);
 
     // Always clear the pending recalc fields, even if computation fails — a
     // stuck pendingStrengthRecalcId would block all subsequent toggles from

@@ -3,6 +3,8 @@
  */
 import { v } from 'convex/values';
 
+import { progressEmojisValidator } from '../lib/progressEmojisValidator';
+
 export const settingsReturnValidator = v.object({
   appIcon: v.string(),
   catTheme: v.boolean(),
@@ -28,6 +30,7 @@ export const settingsReturnValidator = v.object({
   ),
   hasPremium: v.boolean(),
   highContrastMode: v.boolean(),
+  progressEmojis: v.optional(progressEmojisValidator),
   reduceMotion: v.boolean(),
   showCalendarView: v.boolean(),
   showCharacterScreen: v.boolean(),
@@ -38,11 +41,6 @@ export const settingsReturnValidator = v.object({
   showStreaks: v.boolean(),
   stickyCalendarHeader: v.boolean(),
   showWeekCompletionBar: v.boolean(),
-  strengthAlgorithm: v.union(
-    v.literal('forgiving'),
-    v.literal('balanced'),
-    v.literal('strict')
-  ),
   streakRemindersEnabled: v.boolean(),
   streakReminderTime: v.string(),
   useDyslexicFont: v.boolean(),
@@ -82,6 +80,7 @@ export const updateArgsValidator = {
   ),
   hasPremium: v.optional(v.boolean()),
   highContrastMode: v.optional(v.boolean()),
+  progressEmojis: v.optional(progressEmojisValidator),
   reduceMotion: v.optional(v.boolean()),
   showCalendarView: v.optional(v.boolean()),
   showCharacterScreen: v.optional(v.boolean()),
@@ -92,13 +91,6 @@ export const updateArgsValidator = {
   showStreaks: v.optional(v.boolean()),
   stickyCalendarHeader: v.optional(v.boolean()),
   showWeekCompletionBar: v.optional(v.boolean()),
-  strengthAlgorithm: v.optional(
-    v.union(
-      v.literal('forgiving'),
-      v.literal('balanced'),
-      v.literal('strict')
-    )
-  ),
   streakRemindersEnabled: v.optional(v.boolean()),
   streakReminderTime: v.optional(v.string()),
   useDyslexicFont: v.optional(v.boolean()),

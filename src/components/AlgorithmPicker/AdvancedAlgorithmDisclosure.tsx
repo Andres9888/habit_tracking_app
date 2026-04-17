@@ -17,33 +17,27 @@ import { useReduceMotion } from '@/hooks/useReduceMotion';
 import { AdvancedAlgorithmBody } from './AdvancedAlgorithmBody';
 import {
   ALGORITHM_COPY,
-  DEFAULT_ALGORITHM,
-  isAlgorithmMode,
   type AlgorithmMode,
 } from './algorithmCopy';
 
 interface Props {
-  selected: string | undefined;
-  onSelect: (mode: AlgorithmMode | undefined) => void;
+  selected: AlgorithmMode;
+  onSelect: (mode: AlgorithmMode) => void;
 }
 
 export function AdvancedAlgorithmDisclosure({ selected, onSelect }: Props) {
   const { colors } = useThemeColors();
   const reduceMotion = useReduceMotion();
-  const hasOverride = isAlgorithmMode(selected);
-  const [expanded, setExpanded] = useState(hasOverride);
-  const chevron = useSharedValue(hasOverride ? 180 : 0);
+  const [expanded, setExpanded] = useState(false);
+  const chevron = useSharedValue(0);
   const duration = reduceMotion ? 0 : 200;
 
   useEffect(() => {
-    setExpanded(hasOverride);
-    chevron.value = withTiming(hasOverride ? 180 : 0, { duration });
-  }, [hasOverride, duration, chevron]);
+    chevron.value = withTiming(expanded ? 180 : 0, { duration });
+  }, [expanded, duration, chevron]);
 
-  const activeMode: AlgorithmMode = hasOverride ? selected : DEFAULT_ALGORITHM;
-  const subtitle = hasOverride
-    ? `Using ${ALGORITHM_COPY[activeMode].name} (${ALGORITHM_COPY[activeMode].complexity})`
-    : `Using default (${ALGORITHM_COPY[DEFAULT_ALGORITHM].name})`;
+  const activeMode: AlgorithmMode = selected;
+  const subtitle = `Using ${ALGORITHM_COPY[activeMode].name} (${ALGORITHM_COPY[activeMode].complexity})`;
 
   const chevronStyle = useAnimatedStyle(() => ({
     transform: [{ rotate: `${chevron.value}deg` }],
@@ -90,7 +84,6 @@ export function AdvancedAlgorithmDisclosure({ selected, onSelect }: Props) {
         >
           <AdvancedAlgorithmBody
             activeMode={activeMode}
-            hasOverride={hasOverride}
             onSelect={onSelect}
           />
         </Animated.View>

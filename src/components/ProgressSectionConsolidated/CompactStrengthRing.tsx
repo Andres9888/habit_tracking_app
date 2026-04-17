@@ -22,9 +22,10 @@ const { CENTER, CIRCUMFERENCE, RADIUS, RING_SIZE, STROKE_WIDTH } =
 export const CompactStrengthRing = React.memo(function CompactStrengthRing({
   strength,
   weeklyChange = 0,
+  progressEmojis,
 }: CompactStrengthRingProps) {
   const { animatedCircleProps, clampedStrength, levelInfo } =
-    useStrengthRingAnimation(strength);
+    useStrengthRingAnimation(strength, progressEmojis);
 
   const accessibilityLabel = `Habit strength at ${Math.round(clampedStrength)} percent${
     weeklyChange === 0

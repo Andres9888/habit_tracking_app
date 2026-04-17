@@ -1,8 +1,7 @@
 /**
- * DetailViewTabs - Segmented control for Calendar vs Strength views.
- * Apple HIG pill + Dual Coding (icons) + Information Scent (hints).
+ * DetailViewTabs - Segmented control for Calendar / Strength / Goal views.
+ * Horizontal icon + label, no hints.
  */
-
 import { useCallback, useEffect } from 'react';
 import { View, type LayoutChangeEvent } from 'react-native';
 import Animated, {
@@ -10,7 +9,7 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
-import { Activity, Calendar } from 'lucide-react-native';
+import { Activity, Calendar, Target } from 'lucide-react-native';
 import { springs } from '@/theme/animations';
 import { useThemeColors } from '@/theme';
 import { shadows } from '@/theme/spacing';
@@ -18,27 +17,24 @@ import { DetailViewTabButton, type DetailView } from './DetailViewTabButton';
 
 interface DetailViewTabsProps {
   activeView: DetailView;
-  calendarHint?: string;
-  strengthHint?: string;
   onViewChange: (view: DetailView) => void;
 }
 
 const PADDING = 4;
+const TABS = [
+  { icon: Calendar, label: 'Calendar', view: 'calendar' as const },
+  { icon: Activity, label: 'Strength', view: 'strength' as const },
+  { icon: Target, label: 'Goal', view: 'goal' as const },
+];
 
-export function DetailViewTabs({
-  activeView,
-  calendarHint,
-  strengthHint,
-  onViewChange,
-}: DetailViewTabsProps) {
+export function DetailViewTabs({ activeView, onViewChange }: DetailViewTabsProps) {
   const containerWidth = useSharedValue(0);
-  const indicatorX = useSharedValue(activeView === 'calendar' ? 0 : 1);
+  const activeIndex = TABS.findIndex((t) => t.view === activeView);
+  const indicatorX = useSharedValue(activeIndex < 0 ? 0 : activeIndex);
 
   useEffect(() => {
-    indicatorX.value = withSpring(
-      activeView === 'calendar' ? 0 : 1,
-      springs.standard
-    );
+    const next = TABS.findIndex((t) => t.view === activeView);
+    indicatorX.value = withSpring(next < 0 ? 0 : next, springs.standard);
   }, [activeView, indicatorX]);
 
   const handleLayout = useCallback(
@@ -49,7 +45,7 @@ export function DetailViewTabs({
   );
 
   const indicatorStyle = useAnimatedStyle(() => {
-    const tabWidth = (containerWidth.value - PADDING * 2) / 2;
+    const tabWidth = (containerWidth.value - PADDING * 2) / TABS.length;
     if (tabWidth <= 0) return { opacity: 0 };
     return {
       left: PADDING + indicatorX.value * tabWidth,
@@ -66,7 +62,7 @@ export function DetailViewTabs({
   return (
     <View
       accessibilityRole='tablist'
-      className='mt-4 rounded-lg'
+      className='mt-2 rounded-lg'
       style={{ backgroundColor: containerBg, padding: PADDING }}
       onLayout={handleLayout}
     >
@@ -74,32 +70,21 @@ export function DetailViewTabs({
         className='absolute bottom-1 top-1 rounded-md'
         style={[
           indicatorStyle,
-          {
-            backgroundColor: indicatorBg,
-            ...shadows.card,
-            shadowColor: accentColor,
-          },
+          { backgroundColor: indicatorBg, ...shadows.card, shadowColor: accentColor },
         ]}
       />
       <View className='flex-row'>
-        <DetailViewTabButton
-          accentColor={accentColor}
-          activeView={activeView}
-          hint={calendarHint}
-          icon={Calendar}
-          label='Calendar'
-          view='calendar'
-          onPress={onViewChange}
-        />
-        <DetailViewTabButton
-          accentColor={accentColor}
-          activeView={activeView}
-          hint={strengthHint}
-          icon={Activity}
-          label='Strength'
-          view='strength'
-          onPress={onViewChange}
-        />
+        {TABS.map(({ icon, label, view }) => (
+          <DetailViewTabButton
+            key={view}
+            accentColor={accentColor}
+            activeView={activeView}
+            icon={icon}
+            label={label}
+            view={view}
+            onPress={onViewChange}
+          />
+        ))}
       </View>
     </View>
   );

@@ -22,6 +22,7 @@ import { NameInputSection } from './NameInputSection';
 import { CustomizeSection } from './CustomizeSection';
 import { DangerZone } from './DangerZone';
 import { SectionLabel } from './SectionLabel';
+import { StreakGoalSection } from './StreakGoalSection';
 import { useHabitEditScreen } from './useHabitEditScreen';
 import type { HabitEditScreenProps } from './types';
 
@@ -37,7 +38,11 @@ function HabitEditScreenContent({
   const { animateOut, backdropStyle, panGesture, sheetStyle } = useSwipeDismiss(
     { visible, onClose }
   );
-  const state = useHabitEditScreen({ habitId, onClose: animateOut, onHabitRemoved });
+  const state = useHabitEditScreen({
+    habitId,
+    onClose: animateOut,
+    onHabitRemoved,
+  });
   return (
     <Modal
       accessibilityViewIsModal
@@ -111,6 +116,7 @@ function HabitEditScreenContent({
                       >
                         <CustomizeSection
                           habitName={state.habitName}
+                          progressEmojis={state.progressEmojis}
                           remindersEnabled={state.remindersEnabled}
                           reminderTime={state.reminderTime}
                           selectedColor={state.selectedColor}
@@ -118,19 +124,28 @@ function HabitEditScreenContent({
                           strengthAlgorithm={state.strengthAlgorithm}
                           onColorSelect={state.handleColorSelect}
                           onEmojiSelect={state.handleEmojiSelect}
+                          onProgressEmojisChange={
+                            state.handleProgressEmojisChange
+                          }
                           onReminderTimeChange={state.handleReminderTimeChange}
                           onReminderToggle={state.handleReminderToggle}
-                          onStrengthAlgorithmChange={state.handleStrengthAlgorithmChange}
+                          onStrengthAlgorithmChange={
+                            state.handleStrengthAlgorithmChange
+                          }
+                        />
+                        <StreakGoalSection
+                          streakGoal={state.streakGoal}
+                          onStreakGoalChange={state.handleStreakGoalChange}
                         />
                       </Animated.View>
                       <SectionLabel
-                        delay={340}
+                        delay={400}
                         text='DANGER ZONE'
                         variant='danger'
                       />
                       <Animated.View
                         className='mx-6 rounded-2xl p-4'
-                        entering={FadeInUp.delay(400).springify().damping(18)}
+                        entering={FadeInUp.delay(460).springify().damping(18)}
                         style={{
                           backgroundColor: themeColors.card,
                           ...shadows.card,

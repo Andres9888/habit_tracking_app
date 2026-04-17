@@ -61,17 +61,7 @@ export const update = mutation({
           .withIndex('by_habit_and_date', (q) => q.eq('habitId', habitId))
           .collect();
 
-        const userSettings = await ctx.db
-          .query('userSettings')
-          .withIndex('by_userId', (q) =>
-            q.eq('userId', identity.subject)
-          )
-          .first();
-
-        const mode = resolveAlgorithmMode(
-          updatedHabit.strengthAlgorithm,
-          userSettings?.strengthAlgorithm
-        );
+        const mode = resolveAlgorithmMode(updatedHabit.strengthAlgorithm);
 
         const snapshot = calculateMomentumStrengthSnapshot({
           habitCreatedAt: updatedHabit.createdAt,

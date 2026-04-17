@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { useCallback, useState } from 'react';
 import { Alert } from 'react-native';
 import { useMutation } from 'convex/react';
@@ -10,6 +11,7 @@ import {
   scheduleHabitReminder,
 } from '../../utils/notifications';
 import { showSaveError } from '../../utils/errorAlerts';
+import type { ProgressEmojiSet } from '../../utils/progressEmojis';
 
 interface UseSaveHandlerProps {
   habitId: Id<'habits'> | null;
@@ -18,7 +20,9 @@ interface UseSaveHandlerProps {
   selectedColor: string;
   remindersEnabled: boolean;
   reminderTime: Date;
-  strengthAlgorithm?: string;
+  streakGoal: number;
+  strengthAlgorithm: 'forgiving' | 'balanced' | 'strict';
+  progressEmojis: ProgressEmojiSet | undefined;
   onSuccess: () => void;
 }
 
@@ -29,7 +33,9 @@ export function useHabitSaveHandler({
   selectedColor,
   remindersEnabled,
   reminderTime,
+  streakGoal,
   strengthAlgorithm,
+  progressEmojis,
   onSuccess,
 }: UseSaveHandlerProps) {
   const updateHabit = useMutation(api.habits.update);
@@ -81,14 +87,12 @@ export function useHabitSaveHandler({
         color: selectedColor,
         iconColor: selectedColor,
         name: fullName,
+        progressEmojis,
         remindersEnabled: enableReminders,
         reminderSound: enableReminders ? 'default' : undefined,
         reminderTime: enableReminders ? reminderTimeString : undefined,
-        strengthAlgorithm: strengthAlgorithm as
-          | 'forgiving'
-          | 'balanced'
-          | 'strict'
-          | undefined,
+        goalDuration: streakGoal > 0 ? streakGoal : undefined,
+        strengthAlgorithm,
       });
 
       onSuccess();
@@ -106,7 +110,9 @@ export function useHabitSaveHandler({
     selectedColor,
     remindersEnabled,
     reminderTime,
+    streakGoal,
     strengthAlgorithm,
+    progressEmojis,
     updateHabit,
     onSuccess,
   ]);

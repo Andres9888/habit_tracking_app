@@ -2,6 +2,8 @@
  * StrengthProgressBar Types
  */
 
+import type { PartialProgressEmojiSet } from '@/utils/progressEmojis';
+
 export interface StrengthProgressBarProps {
   /** Strength value (0-100) */
   strength: number;
@@ -17,6 +19,8 @@ export interface StrengthProgressBarProps {
   showNextLevel?: boolean;
   /** Show percentage text */
   showPercentage?: boolean;
+  /** Per-stage emoji overrides (per-habit or user default) */
+  emojiOverrides?: PartialProgressEmojiSet;
 }
 
 export interface LevelConfig {

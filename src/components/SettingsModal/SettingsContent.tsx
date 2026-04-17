@@ -9,7 +9,6 @@ import {
   Circle,
   Download,
   Droplets,
-  Dumbbell,
   FolderOpen,
   Heart,
   Info,
@@ -32,9 +31,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { CompletionIconPicker } from './CompletionIconPicker';
 import { DayShapePicker } from './DayShapePicker';
-import { StrengthAlgorithmPicker } from './StrengthAlgorithmPicker';
-import type { StrengthAlgorithmMode } from './StrengthAlgorithmPicker';
-import { AlgorithmLegendDisclosure } from './AlgorithmLegendDisclosure';
+import { GrowthIconsSettingsRow } from './GrowthIconsSettingsRow';
 import { AccountRow } from './AccountRow';
 import { SettingsRow } from './SettingsRow';
 import { SettingsSection } from './SettingsSection';
@@ -47,12 +44,17 @@ import { useThemeColors } from '../../theme/ThemeContext';
 import { SORT_LABEL_MAP } from './SortPicker.constants';
 import type { HabitSortMode } from '../../features/habits/types';
 import type { SettingsContentProps } from './types';
-import { useSettingsSectionStates, SECTION_IDS } from './useSettingsSectionStates';
+import {
+  useSettingsSectionStates,
+  SECTION_IDS,
+} from './useSettingsSectionStates';
 
 const STAGGER = durations.stagger; // 60ms per design system
 const MAX_STAGGER_ITEMS = 6;
 const anim = (index: number) =>
-  FadeInDown.delay(Math.min(index, MAX_STAGGER_ITEMS) * STAGGER).springify().damping(18);
+  FadeInDown.delay(Math.min(index, MAX_STAGGER_ITEMS) * STAGGER)
+    .springify()
+    .damping(18);
 
 const SCROLL_STYLES = StyleSheet.create({
   wrapper: {
@@ -107,7 +109,11 @@ export function SettingsContent(p: SettingsContentProps) {
       >
         <View className='gap-5'>
           <Animated.View entering={anim(0)}>
-            <AccountRow highContrastMode={hc} isPremium={p.isPremium} onPress={p.onOpenAccount} />
+            <AccountRow
+              highContrastMode={hc}
+              isPremium={p.isPremium}
+              onPress={p.onOpenAccount}
+            />
           </Animated.View>
 
           {/* Appearance Section */}
@@ -122,7 +128,9 @@ export function SettingsContent(p: SettingsContentProps) {
             >
               <SettingsRow
                 highContrastMode={hc}
-                icon={<Rows3 color={settingsIcons.compact.icon} size={iconSize} />}
+                icon={
+                  <Rows3 color={settingsIcons.compact.icon} size={iconSize} />
+                }
                 iconBackgroundColor={settingsIcons.compact.bg}
                 label='Compact habit cards'
                 subtitle='Fit more on screen'
@@ -152,7 +160,10 @@ export function SettingsContent(p: SettingsContentProps) {
               <SettingsRow
                 highContrastMode={hc}
                 icon={
-                  <Droplets color={settingsIcons.gradient.icon} size={iconSize} />
+                  <Droplets
+                    color={settingsIcons.gradient.icon}
+                    size={iconSize}
+                  />
                 }
                 iconBackgroundColor={settingsIcons.gradient.bg}
                 label='Gradient streak fill'
@@ -165,9 +176,15 @@ export function SettingsContent(p: SettingsContentProps) {
                 highContrastMode={hc}
                 icon={
                   p.habitCompletionIcon === 'checkbox' ? (
-                    <Check color={settingsIcons.checkbox.icon} size={iconSize} />
+                    <Check
+                      color={settingsIcons.checkbox.icon}
+                      size={iconSize}
+                    />
                   ) : (
-                    <Link2 color={settingsIcons.checkbox.icon} size={iconSize} />
+                    <Link2
+                      color={settingsIcons.checkbox.icon}
+                      size={iconSize}
+                    />
                   )
                 }
                 iconBackgroundColor={settingsIcons.checkbox.bg}
@@ -180,6 +197,7 @@ export function SettingsContent(p: SettingsContentProps) {
                 }
                 type='info'
               />
+              <GrowthIconsSettingsRow highContrastMode={hc} />
             </SettingsSection>
           </Animated.View>
 
@@ -188,7 +206,9 @@ export function SettingsContent(p: SettingsContentProps) {
             <SettingsSection
               collapsible
               highContrastMode={hc}
-              icon={<SlidersHorizontal color={sectionIconColor} size={iconSize} />}
+              icon={
+                <SlidersHorizontal color={sectionIconColor} size={iconSize} />
+              }
               isExpanded={sectionStates.behavior}
               title='Behavior'
               onToggle={() => toggleSection(SECTION_IDS.behavior)}
@@ -196,7 +216,12 @@ export function SettingsContent(p: SettingsContentProps) {
               <SettingsRow
                 hapticStyle='selection'
                 highContrastMode={hc}
-                icon={<ArrowUpDown color={settingsIcons.sort.icon} size={iconSize} />}
+                icon={
+                  <ArrowUpDown
+                    color={settingsIcons.sort.icon}
+                    size={iconSize}
+                  />
+                }
                 iconBackgroundColor={settingsIcons.sort.bg}
                 label='Sort order'
                 subtitle='How habits are ordered'
@@ -208,7 +233,9 @@ export function SettingsContent(p: SettingsContentProps) {
               />
               <SettingsRow
                 highContrastMode={hc}
-                icon={<Volume2 color={settingsIcons.sound.icon} size={iconSize} />}
+                icon={
+                  <Volume2 color={settingsIcons.sound.icon} size={iconSize} />
+                }
                 iconBackgroundColor={settingsIcons.sound.bg}
                 label='Completion sound'
                 subtitle='Play sound when checking off'
@@ -238,29 +265,6 @@ export function SettingsContent(p: SettingsContentProps) {
                 value={p.stickyCalendarHeader}
                 onToggle={(v) => void p.onChangeStickyCalendarHeader(v)}
               />
-              <SettingsRow
-                highContrastMode={hc}
-                icon={
-                  <Dumbbell
-                    color={settingsIcons.strength.icon}
-                    size={iconSizes.small}
-                  />
-                }
-                iconBackgroundColor={settingsIcons.strength.bg}
-                label='Strength algorithm'
-                subtitle='Forgiving for new habits, strict for veterans'
-                rightAccessory={
-                  <StrengthAlgorithmPicker
-                    selected={
-                      (p.strengthAlgorithm as StrengthAlgorithmMode) ??
-                      'balanced'
-                    }
-                    onSelect={(v) => void p.onChangeStrengthAlgorithm(v)}
-                  />
-                }
-                type='info'
-              />
-              <AlgorithmLegendDisclosure activeMode={p.strengthAlgorithm} />
             </SettingsSection>
           </Animated.View>
 
@@ -277,7 +281,12 @@ export function SettingsContent(p: SettingsContentProps) {
               <SettingsRow
                 badge={p.archivedHabitsCount}
                 highContrastMode={hc}
-                icon={<BookOpen color={settingsIcons.archive.icon} size={iconSize} />}
+                icon={
+                  <BookOpen
+                    color={settingsIcons.archive.icon}
+                    size={iconSize}
+                  />
+                }
                 iconBackgroundColor={settingsIcons.archive.bg}
                 label='Archived habits'
                 subtitle='View and restore hidden habits'
@@ -286,7 +295,9 @@ export function SettingsContent(p: SettingsContentProps) {
               />
               <SettingsRow
                 highContrastMode={hc}
-                icon={<Download color={settingsIcons.export.icon} size={iconSize} />}
+                icon={
+                  <Download color={settingsIcons.export.icon} size={iconSize} />
+                }
                 iconBackgroundColor={settingsIcons.export.bg}
                 label='Export habits data'
                 showBorder={false}

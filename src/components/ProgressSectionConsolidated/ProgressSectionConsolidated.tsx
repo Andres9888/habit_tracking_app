@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
  * ProgressSectionConsolidated Component
  *
@@ -14,9 +15,11 @@ import { View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 
 import { shadows } from '../../theme/spacing';
+import { useThemeColors } from '../../theme/ThemeContext';
 import { ActionableTipCard } from './ActionableTipCard';
 import { MilestoneProgress } from './MilestoneProgress';
 import { StatsGrid } from './StatsGrid';
+import { StreakGoalCard } from './StreakGoalCard';
 import { StreakRecordsAccordion } from './StreakRecordsAccordion';
 import type { ProgressSectionConsolidatedProps } from './types';
 import { useProgressSectionStats } from './useProgressSectionStats';
@@ -31,15 +34,20 @@ export function ProgressSectionConsolidated({
   habitCreatedAt,
   strength,
   weeklyChange = 0,
+  progressEmojis,
   onInfoPress: _onInfoPress, // Kept for backwards compatibility
   onFocusDayPress,
   onSeeAllPress,
   onTipPress,
   onTipQuickAction,
+  streakGoal,
 }: ProgressSectionConsolidatedProps) {
+  const { colors: themeColors } = useThemeColors();
   const {
     actionableTip,
     bestDayData,
+    bestStreak,
+    completionRate,
     currentStreak,
     dayStats,
     focusDayData,
@@ -61,8 +69,8 @@ export function ProgressSectionConsolidated({
         className='overflow-hidden rounded-2xl p-4'
         style={{
           ...shadows.card,
-          backgroundColor: '#ffffff',
-          borderColor: 'rgba(214, 211, 209, 0.6)', // stone-300/60
+          backgroundColor: themeColors.card,
+          borderColor: themeColors.border,
           borderWidth: 1,
         }}
       >
@@ -74,6 +82,7 @@ export function ProgressSectionConsolidated({
           monthlyChange={monthlyChange}
           monthlyCompleted={monthlyCompleted}
           monthlyTotal={monthlyTotal}
+          progressEmojis={progressEmojis}
           strength={strength}
           weeklyChange={weeklyChange}
           onFocusDayPress={onFocusDayPress}
@@ -82,11 +91,23 @@ export function ProgressSectionConsolidated({
         {/* Section 2: Milestone Progress */}
         <MilestoneProgress currentStreak={currentStreak} />
 
+        {/* Section 2b: Streak Goal (if user has set a goal) */}
+        {streakGoal && streakGoal > 0 ? (
+          <StreakGoalCard
+            bestStreak={bestStreak}
+            completionRate={completionRate}
+            currentStreak={currentStreak}
+            streakGoal={streakGoal}
+          />
+        ) : null}
+
         {/* Section 3: Weekly Pattern Chart */}
-        {hasEnoughData ? <WeeklyPatternChart
+        {hasEnoughData ? (
+          <WeeklyPatternChart
             dayStats={dayStats}
             onSeeAllPress={onSeeAllPress}
-          /> : null}
+          />
+        ) : null}
 
         {/* Section 4: Actionable Tip */}
         <ActionableTipCard
@@ -102,10 +123,12 @@ export function ProgressSectionConsolidated({
         />
 
         {/* Section 5: Streak Records Accordion */}
-        {hasEnoughData ? <StreakRecordsAccordion
+        {hasEnoughData ? (
+          <StreakRecordsAccordion
             currentStreak={currentStreak}
             streakRecords={streakRecords}
-          /> : null}
+          />
+        ) : null}
       </View>
     </Animated.View>
   );

@@ -59,8 +59,13 @@ export function useHabitFormState({ habitToEdit }: UseHabitFormStateOptions) {
     )
   );
   const [strengthAlgorithm, setStrengthAlgorithm] = useState<
-    string | undefined
-  >(habitToEdit?.strengthAlgorithm ?? undefined);
+    'forgiving' | 'balanced' | 'strict'
+  >(() => {
+    const mode = habitToEdit?.strengthAlgorithm;
+    return mode === 'forgiving' || mode === 'balanced' || mode === 'strict'
+      ? mode
+      : 'balanced';
+  });
 
   return {
     dayPhase,
