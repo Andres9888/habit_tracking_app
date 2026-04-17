@@ -16,9 +16,9 @@ export function AchievementCard({
   achievement,
   delay = 0,
 }: AchievementCardProps) {
-  const { colors, isDark } = useThemeColors();
-  const badgeBgColor = isDark ? '#333D2B' : '#FEF3C7';
-  const trophyColor = '#F59E0B';
+  const { colors } = useThemeColors();
+  const badgeBgColor = colors.streak[100];
+  const trophyColor = colors.streak[700];
 
   return (
     <Animated.View
@@ -63,14 +63,14 @@ const styles = StyleSheet.create({
     width: 48,
   },
   card: {
-    ...shadows.floatingActionButton,
+    ...shadows.subtle,
     alignItems: 'center',
-    borderRadius: borderRadius.xl,
+    borderRadius: borderRadius.medium,
     borderWidth: 1,
     flexDirection: 'row',
     gap: spacing.base,
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.lg,
+    paddingHorizontal: spacing.base,
+    paddingVertical: spacing.md,
   },
   description: {
     fontFamily: fontFamilies.primary.text,

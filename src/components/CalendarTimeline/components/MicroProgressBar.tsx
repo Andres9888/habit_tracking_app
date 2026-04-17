@@ -7,6 +7,7 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import { useReduceMotion } from '../../../hooks/useReduceMotion';
+import { borderRadius } from '../../../theme/spacing';
 import { useThemeColors } from '../../../theme/ThemeContext';
 
 interface MicroProgressBarProps {
@@ -14,9 +15,9 @@ interface MicroProgressBarProps {
   total: number;
 }
 
-const BAR_HEIGHT = 3;
+const BAR_HEIGHT = 4;
 const FILL_DURATION = 600;
-const BORDER_RADIUS = 1.5;
+const BORDER_RADIUS = borderRadius.xs;
 
 /** Thin progress bar showing weekly completion ratio */
 export function MicroProgressBar({ completed, total }: MicroProgressBarProps) {
@@ -35,7 +36,7 @@ export function MicroProgressBar({ completed, total }: MicroProgressBarProps) {
   const trackColor = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)';
 
   const isComplete = completed >= total && total > 0;
-  const fillColor = isComplete ? colors.primary[400] : colors.primary[500];
+  const fillColor = isComplete ? colors.primary[400] : colors.primary[600];
 
   const fillStyle = useAnimatedStyle(() => ({
     width: `${progress.value}%`,

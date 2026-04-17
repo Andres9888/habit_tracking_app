@@ -24,6 +24,7 @@ import {
 import { HabitsListModals } from './HabitsListModals';
 import { StickyHeaderContext } from '../../../../components/CalendarTimeline/StickyHeaderContext';
 import { useStickyHeader } from './useStickyHeader';
+import { HabitsEmptyState } from '../HabitsEmptyState';
 import type { Habit } from '../../types';
 import type { HabitsListContentProps } from './HabitsList.types';
 
@@ -59,6 +60,11 @@ export function HabitsListContent({
     () => renderHabitsListHeader({ handlers, props, state }),
     [handlers, props, state]
   );
+
+  const listEmptyComponent = useMemo(() => {
+    if (list.isHabitsLoading) return null;
+    return <HabitsEmptyState onCreate={() => props.onCreateHabitRequest()} />;
+  }, [list.isHabitsLoading, props]);
 
   const renderHabitItem = useCallback(
     (p: RenderItemParams<Habit>) =>
@@ -107,6 +113,7 @@ export function HabitsListContent({
             contentContainerStyle={contentContainerStyle}
             data={list.habits}
             keyExtractor={handlers.keyExtractor}
+            ListEmptyComponent={listEmptyComponent}
             renderItem={renderHabitItem}
             scrollEventThrottle={16}
             showsVerticalScrollIndicator={false}
