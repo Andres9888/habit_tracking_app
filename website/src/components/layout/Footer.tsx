@@ -17,6 +17,12 @@ const footerLinks = {
   ],
 };
 
+// Any https URL is opened in a new tab with noopener/noreferrer so
+// window.opener isn't leaked to third-party sites (SR-2026-04-17-13).
+function isExternal(href: string): boolean {
+  return href.startsWith("https://") || href.startsWith("http://");
+}
+
 export function Footer() {
   return (
     <footer className="bg-zinc-50 dark:bg-zinc-900">
@@ -44,6 +50,9 @@ export function Footer() {
                   <li key={item.name}>
                     <a
                       href={item.href}
+                      {...(isExternal(item.href)
+                        ? { target: "_blank", rel: "noopener noreferrer" }
+                        : {})}
                       className="text-sm leading-6 text-zinc-600 transition hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white"
                     >
                       {item.name}
@@ -62,6 +71,9 @@ export function Footer() {
                   <li key={item.name}>
                     <a
                       href={item.href}
+                      {...(isExternal(item.href)
+                        ? { target: "_blank", rel: "noopener noreferrer" }
+                        : {})}
                       className="text-sm leading-6 text-zinc-600 transition hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white"
                     >
                       {item.name}
@@ -80,6 +92,9 @@ export function Footer() {
                   <li key={item.name}>
                     <a
                       href={item.href}
+                      {...(isExternal(item.href)
+                        ? { target: "_blank", rel: "noopener noreferrer" }
+                        : {})}
                       className="text-sm leading-6 text-zinc-600 transition hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white"
                     >
                       {item.name}
