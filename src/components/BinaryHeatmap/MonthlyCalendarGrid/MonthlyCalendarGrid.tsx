@@ -7,7 +7,6 @@ import type { MonthlyCalendarGridProps } from './types';
 import { styles } from './styles';
 import { useCalendarDays } from './useCalendarDays';
 import { AnimatedWeeksGrid } from './AnimatedWeeksGrid';
-import { CalendarSummary } from './CalendarSummary';
 import { MonthNavigation } from './MonthNavigation';
 
 const DAY_HEADERS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
@@ -58,6 +57,15 @@ export const MonthlyCalendarGrid = memo(function MonthlyCalendarGrid({
 
   return (
     <View style={[styles.container, { backgroundColor: isDark ? colors.card : '#FFFFFF', borderColor: colors.border }]}>
+      <MonthNavigation
+        completed={completed}
+        currentMonth={currentMonth}
+        habitColor={habitColor}
+        missed={missed}
+        onNextMonth={goToNextMonth}
+        onPreviousMonth={goToPreviousMonth}
+      />
+
       <View style={styles.row}>
         {DAY_HEADERS.map((day) => (
           <View key={day} style={styles.headerCell}>
@@ -74,15 +82,6 @@ export const MonthlyCalendarGrid = memo(function MonthlyCalendarGrid({
         textColors={textColors}
         weeks={weeks}
       />
-
-      <CalendarSummary
-        borderColor={colors.border}
-        completed={completed}
-        habitColor={habitColor}
-        missed={missed}
-        textColor={colors.text.secondary}
-      />
-      <MonthNavigation currentMonth={currentMonth} onNextMonth={goToNextMonth} onPreviousMonth={goToPreviousMonth} />
     </View>
   );
 });

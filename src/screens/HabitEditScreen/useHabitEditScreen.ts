@@ -14,6 +14,8 @@ interface UseHabitEditScreenProps {
   onHabitRemoved?: () => void;
 }
 
+type StrengthAlgorithm = 'forgiving' | 'balanced' | 'strict';
+
 export function useHabitEditScreen({ habitId, onClose, onHabitRemoved }: UseHabitEditScreenProps) {
   const { triggerSelection, triggerSuccess } = useHapticFeedback();
   const defaultEmoji = '💪';
@@ -25,7 +27,8 @@ export function useHabitEditScreen({ habitId, onClose, onHabitRemoved }: UseHabi
   const [selectedColor, setSelectedColor] = useState('#DBEAFE');
   const [remindersEnabled, setRemindersEnabled] = useState(false);
   const [reminderTime, setReminderTime] = useState<Date>(() => getDefaultReminderTime());
-  const [strengthAlgorithm, setStrengthAlgorithm] = useState<'forgiving' | 'balanced' | 'strict'>('balanced');
+  const [streakGoal, setStreakGoal] = useState(0);
+  const [strengthAlgorithm, setStrengthAlgorithm] = useState<StrengthAlgorithm>('balanced');
 
   useEffect(() => {
     if (habit) {
@@ -37,11 +40,10 @@ export function useHabitEditScreen({ habitId, onClose, onHabitRemoved }: UseHabi
       setSelectedColor(habit.color || habit.iconColor || '#10B981');
       setRemindersEnabled(habit.remindersEnabled ?? false);
       setReminderTime(createDateFromTimeString(habit.reminderTime, getDefaultReminderTime()));
+      setStreakGoal(habit.goalDuration ?? 0);
       const mode = habit.strengthAlgorithm;
       setStrengthAlgorithm(
-        mode === 'forgiving' || mode === 'balanced' || mode === 'strict'
-          ? mode
-          : 'balanced'
+        mode === 'forgiving' || mode === 'balanced' || mode === 'strict' ? mode : 'balanced'
       );
     }
   }, [habit]);
@@ -57,6 +59,7 @@ export function useHabitEditScreen({ habitId, onClose, onHabitRemoved }: UseHabi
     reminderTime,
     selectedColor,
     selectedEmoji,
+    streakGoal,
     strengthAlgorithm,
   });
 
@@ -85,7 +88,11 @@ export function useHabitEditScreen({ habitId, onClose, onHabitRemoved }: UseHabi
     setReminderTime(time);
   }, []);
 
-  const handleStrengthAlgorithmChange = useCallback((mode: 'forgiving' | 'balanced' | 'strict') => {
+  const handleStreakGoalChange = useCallback((days: number) => {
+    setStreakGoal(days);
+  }, []);
+
+  const handleStrengthAlgorithmChange = useCallback((mode: StrengthAlgorithm) => {
     triggerSelection();
     setStrengthAlgorithm(mode);
   }, [triggerSelection]);
@@ -98,6 +105,8 @@ export function useHabitEditScreen({ habitId, onClose, onHabitRemoved }: UseHabi
     handleArchive,
     handleReminderTimeChange,
     handleReminderToggle,
+    handleStreakGoalChange,
+    handleStrengthAlgorithmChange,
     isLoading: habitId != null && habit === undefined,
     remindersEnabled,
     handleSave,
@@ -106,8 +115,8 @@ export function useHabitEditScreen({ habitId, onClose, onHabitRemoved }: UseHabi
     setHabitName,
     reminderTime,
     selectedColor,
+    streakGoal,
     strengthAlgorithm,
-    handleStrengthAlgorithmChange,
     triggerSelection,
   };
 }

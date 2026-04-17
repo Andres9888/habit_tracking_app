@@ -18,6 +18,7 @@ interface UseSaveHandlerProps {
   selectedColor: string;
   remindersEnabled: boolean;
   reminderTime: Date;
+  streakGoal: number;
   strengthAlgorithm: 'forgiving' | 'balanced' | 'strict';
   onSuccess: () => void;
 }
@@ -29,6 +30,7 @@ export function useHabitSaveHandler({
   selectedColor,
   remindersEnabled,
   reminderTime,
+  streakGoal,
   strengthAlgorithm,
   onSuccess,
 }: UseSaveHandlerProps) {
@@ -84,6 +86,7 @@ export function useHabitSaveHandler({
         remindersEnabled: enableReminders,
         reminderSound: enableReminders ? 'default' : undefined,
         reminderTime: enableReminders ? reminderTimeString : undefined,
+        goalDuration: streakGoal > 0 ? streakGoal : undefined,
         strengthAlgorithm,
       });
 
@@ -102,6 +105,7 @@ export function useHabitSaveHandler({
     selectedColor,
     remindersEnabled,
     reminderTime,
+    streakGoal,
     strengthAlgorithm,
     updateHabit,
     onSuccess,
