@@ -65,6 +65,7 @@ import type * as habits from "../habits.js";
 import type * as http from "../http.js";
 import type * as lib_inputValidation from "../lib/inputValidation.js";
 import type * as lib_progressEmojisValidator from "../lib/progressEmojisValidator.js";
+import type * as lib_rateLimit from "../lib/rateLimit.js";
 import type * as router from "../router.js";
 import type * as settings_normalizers from "../settings/normalizers.js";
 import type * as settings_settings from "../settings/settings.js";
@@ -160,6 +161,7 @@ declare const fullApi: ApiFromModules<{
   http: typeof http;
   "lib/inputValidation": typeof lib_inputValidation;
   "lib/progressEmojisValidator": typeof lib_progressEmojisValidator;
+  "lib/rateLimit": typeof lib_rateLimit;
   router: typeof router;
   "settings/normalizers": typeof settings_normalizers;
   "settings/settings": typeof settings_settings;
