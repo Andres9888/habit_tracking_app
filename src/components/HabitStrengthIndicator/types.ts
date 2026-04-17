@@ -3,6 +3,8 @@
  * Based on UX Specification Section 4.2
  */
 
+import type { PartialProgressEmojiSet } from '@/utils/progressEmojis';
+
 export type StrengthLevel =
   | 'starting'
   | 'building'
@@ -41,6 +43,9 @@ export interface HabitStrengthIndicatorProps {
 
   /** Historical data for graph variant (array of strength values over time) */
   historicalData?: number[];
+
+  /** Per-stage emoji overrides (per-habit or user default) */
+  emojiOverrides?: PartialProgressEmojiSet;
 }
 
 /** Props for individual variant components */

@@ -4,6 +4,8 @@
  */
 import { v } from 'convex/values';
 
+import { progressEmojisValidator } from '../lib/progressEmojisValidator';
+
 // Re-export validators for convenience
 export { fullHabitValidator, trackingRecordValidator } from './validators';
 
@@ -20,15 +22,12 @@ export const createHabitArgs = {
   name: v.string(),
   notes: v.optional(v.string()),
   preferredTime: v.optional(v.string()),
+  progressEmojis: v.optional(progressEmojisValidator),
   remindersEnabled: v.optional(v.boolean()),
   reminderSound: v.optional(v.string()),
   reminderTime: v.optional(v.string()),
   strengthAlgorithm: v.optional(
-    v.union(
-      v.literal('forgiving'),
-      v.literal('balanced'),
-      v.literal('strict')
-    )
+    v.union(v.literal('forgiving'), v.literal('balanced'), v.literal('strict'))
   ),
 };
 
@@ -49,6 +48,7 @@ export const removedHabitDataValidator = v.object({
   name: v.string(),
   notes: v.optional(v.string()),
   preferredTime: v.optional(v.string()),
+  progressEmojis: v.optional(progressEmojisValidator),
   remindersEnabled: v.optional(v.boolean()),
   reminderSound: v.optional(v.string()),
   reminderTime: v.optional(v.string()),
@@ -85,15 +85,12 @@ export const updateHabitArgs = {
   name: v.optional(v.string()),
   notes: v.optional(v.string()),
   preferredTime: v.optional(v.string()),
+  progressEmojis: v.optional(progressEmojisValidator),
   remindersEnabled: v.optional(v.boolean()),
   reminderSound: v.optional(v.string()),
   reminderTime: v.optional(v.string()),
   strengthAlgorithm: v.optional(
-    v.union(
-      v.literal('forgiving'),
-      v.literal('balanced'),
-      v.literal('strict')
-    )
+    v.union(v.literal('forgiving'), v.literal('balanced'), v.literal('strict'))
   ),
   why: v.optional(v.string()),
 };

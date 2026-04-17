@@ -28,6 +28,7 @@ export function StrengthRing({
   showLevel = false,
   trend,
   weeklyChange,
+  emojiOverrides,
 }: StrengthRingProps) {
   const clampedStrength = Math.max(0, Math.min(100, strength));
   const config = SIZE_CONFIG[size];
@@ -36,7 +37,7 @@ export function StrengthRing({
   const circumference = 2 * Math.PI * radius;
   const center = ringSize / 2;
 
-  const levelInfo = getLevelInfo(clampedStrength);
+  const levelInfo = getLevelInfo(clampedStrength, emojiOverrides);
   const { animatedProps, emojiAnimatedStyle } = useStrengthRingAnimation({
     circumference,
     levelLabel: levelInfo.label,
@@ -86,11 +87,13 @@ export function StrengthRing({
             trend={trend}
           />
         </View>
-        {showLevel ? <LevelLabel
+        {showLevel ? (
+          <LevelLabel
             fontSize={fontSize}
             levelInfo={levelInfo}
             weeklyChange={weeklyChange}
-          /> : null}
+          />
+        ) : null}
       </View>
     </View>
   );

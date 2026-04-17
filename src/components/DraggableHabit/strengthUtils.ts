@@ -3,9 +3,15 @@
  *
  * Pure functions for the 5-tier habit strength system.
  *
- * Tiers:  🌱 Starting (0–19%)  →  🌿 Building (20–39%)  →  🌳 Developing (40–59%)
- *         →  💪 Strong (60–79%)  →  ⚡ Automatic (80–100%)
+ * Default tiers:  🌱 Starting (0–19%)  →  🌿 Building (20–39%)  →  🌳 Developing (40–59%)
+ *                 →  💪 Strong (60–79%)  →  ⚡ Automatic (80–100%)
+ *
+ * Tier emojis are user-customizable per habit via `emojis` parameter.
  */
+import {
+  DEFAULT_PROGRESS_EMOJIS,
+  type ProgressEmojiSet,
+} from '../../utils/progressEmojis';
 
 /** Convert server-side 0–1 decimal to a 0–100 display percentage. */
 export function getStrengthPercent(strength: number | undefined): number {
@@ -13,12 +19,15 @@ export function getStrengthPercent(strength: number | undefined): number {
 }
 
 /** Map a strength percentage to its tier emoji (matches progress bar dividers at 20/40/60/80). */
-export function getStrengthEmoji(strengthPercent: number): string {
-  if (strengthPercent >= 80) return '⚡'; // Automatic
-  if (strengthPercent >= 60) return '💪'; // Strong
-  if (strengthPercent >= 40) return '🌳'; // Developing
-  if (strengthPercent >= 20) return '🌿'; // Building
-  return '🌱'; // Starting
+export function getStrengthEmoji(
+  strengthPercent: number,
+  emojis: ProgressEmojiSet = DEFAULT_PROGRESS_EMOJIS
+): string {
+  if (strengthPercent >= 80) return emojis.automatic;
+  if (strengthPercent >= 60) return emojis.strong;
+  if (strengthPercent >= 40) return emojis.developing;
+  if (strengthPercent >= 20) return emojis.building;
+  return emojis.starting;
 }
 
 /** Human-readable tier label for a strength percentage. Used to detect level-up transitions. */

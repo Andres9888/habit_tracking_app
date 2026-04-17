@@ -5,6 +5,10 @@
 
 import type { AppTheme } from '../../theme';
 import { getStrengthLevel } from '../HabitStrengthIndicator';
+import {
+  DEFAULT_PROGRESS_EMOJIS,
+  type ProgressEmojiSet,
+} from '../../utils/progressEmojis';
 
 /**
  * Get the color associated with a habit's strength level
@@ -36,28 +40,12 @@ export function getStrengthColor(strength: number, theme: AppTheme): string {
 /**
  * Get the emoji associated with a habit's strength level for visual reinforcement
  */
-export function getStrengthEmoji(strength: number): string {
+export function getStrengthEmoji(
+  strength: number,
+  emojis: ProgressEmojiSet = DEFAULT_PROGRESS_EMOJIS
+): string {
   const level = getStrengthLevel(strength);
-  switch (level) {
-    case 'starting': {
-      return '🌱';
-    }
-    case 'building': {
-      return '🌿';
-    }
-    case 'developing': {
-      return '🌳';
-    }
-    case 'strong': {
-      return '💪';
-    }
-    case 'automatic': {
-      return '⚡';
-    }
-    default: {
-      return '🌱';
-    }
-  }
+  return emojis[level] ?? emojis.starting;
 }
 
 /**

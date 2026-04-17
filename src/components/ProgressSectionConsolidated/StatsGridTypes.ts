@@ -7,6 +7,8 @@
  * @see docs/specs/habit-details-screen/progress-tab-improvements-spec.md
  */
 
+import type { ProgressEmojiSet } from '../../utils/progressEmojis';
+
 /**
  * Day information for best/focus day display
  */
@@ -57,6 +59,8 @@ export interface StatsGridProps {
   weeklyChange?: number;
   /** Month-over-month change in completion count */
   monthlyChange?: number;
+  /** Optional per-habit growth emoji override */
+  progressEmojis?: ProgressEmojiSet;
   /** Callback when focus day is pressed */
   onFocusDayPress?: () => void;
 }
@@ -69,6 +73,8 @@ export interface CompactStrengthRingProps {
   strength: number;
   /** Weekly change for trend badge */
   weeklyChange?: number;
+  /** Optional per-habit growth emoji override */
+  progressEmojis?: ProgressEmojiSet;
 }
 
 /**
