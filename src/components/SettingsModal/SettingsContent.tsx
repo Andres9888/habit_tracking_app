@@ -34,7 +34,7 @@ import { CompletionIconPicker } from './CompletionIconPicker';
 import { DayShapePicker } from './DayShapePicker';
 import { StrengthAlgorithmPicker } from './StrengthAlgorithmPicker';
 import type { StrengthAlgorithmMode } from './StrengthAlgorithmPicker';
-import { AlgorithmLegend } from '../AlgorithmPicker';
+import { AlgorithmLegendDisclosure } from './AlgorithmLegendDisclosure';
 import { AccountRow } from './AccountRow';
 import { SettingsRow } from './SettingsRow';
 import { SettingsSection } from './SettingsSection';
@@ -50,7 +50,7 @@ import type { SettingsContentProps } from './types';
 import { useSettingsSectionStates, SECTION_IDS } from './useSettingsSectionStates';
 
 const STAGGER = durations.stagger; // 60ms per design system
-const MAX_STAGGER_ITEMS = 5;
+const MAX_STAGGER_ITEMS = 6;
 const anim = (index: number) =>
   FadeInDown.delay(Math.min(index, MAX_STAGGER_ITEMS) * STAGGER).springify().damping(18);
 
@@ -61,10 +61,10 @@ const SCROLL_STYLES = StyleSheet.create({
   },
 });
 
-/** Section header icon color — subtle, non-competing with row icons */
+/** Section header icon color — dark enough to anchor the hierarchy */
 const useSectionIconColor = () => {
   const { colors: themeColors } = useThemeColors();
-  return themeColors.text.secondary;
+  return themeColors.text.primary;
 };
 
 export function SettingsContent(p: SettingsContentProps) {
@@ -125,7 +125,7 @@ export function SettingsContent(p: SettingsContentProps) {
                 icon={<Rows3 color={settingsIcons.compact.icon} size={iconSize} />}
                 iconBackgroundColor={settingsIcons.compact.bg}
                 label='Compact habit cards'
-                subtitle='Show smaller cards to fit more on screen'
+                subtitle='Fit more on screen'
                 type='toggle'
                 value={p.compactView}
                 onToggle={(v) => void p.onChangeCompactView(v)}
@@ -156,7 +156,7 @@ export function SettingsContent(p: SettingsContentProps) {
                 }
                 iconBackgroundColor={settingsIcons.gradient.bg}
                 label='Gradient streak fill'
-                subtitle='Add a color gradient to active streak cells'
+                subtitle='Color fills active streak cells'
                 type='toggle'
                 value={p.showGradientFill}
                 onToggle={(v) => void p.onChangeShowGradientFill(v)}
@@ -198,8 +198,8 @@ export function SettingsContent(p: SettingsContentProps) {
                 highContrastMode={hc}
                 icon={<ArrowUpDown color={settingsIcons.sort.icon} size={iconSize} />}
                 iconBackgroundColor={settingsIcons.sort.bg}
-                label='Sort Order'
-                subtitle='Choose how your habits are ordered'
+                label='Sort order'
+                subtitle='How habits are ordered'
                 type='selection'
                 value={
                   SORT_LABEL_MAP[p.habitSortMode as HabitSortMode] ?? 'Custom'
@@ -211,7 +211,7 @@ export function SettingsContent(p: SettingsContentProps) {
                 icon={<Volume2 color={settingsIcons.sound.icon} size={iconSize} />}
                 iconBackgroundColor={settingsIcons.sound.bg}
                 label='Completion sound'
-                subtitle='Hear a sound when you check off a habit'
+                subtitle='Play sound when checking off'
                 showBorder={!p.completionSoundEnabled}
                 type='toggle'
                 value={p.completionSoundEnabled}
@@ -232,8 +232,8 @@ export function SettingsContent(p: SettingsContentProps) {
                   />
                 }
                 iconBackgroundColor={settingsIcons.calendarHeader.bg}
-                label='Pin calendar header'
-                subtitle='Keep the month header visible when scrolling'
+                label='Sticky month header'
+                subtitle='Month stays visible while scrolling'
                 type='toggle'
                 value={p.stickyCalendarHeader}
                 onToggle={(v) => void p.onChangeStickyCalendarHeader(v)}
@@ -248,7 +248,7 @@ export function SettingsContent(p: SettingsContentProps) {
                 }
                 iconBackgroundColor={settingsIcons.strength.bg}
                 label='Strength algorithm'
-                subtitle='Match to how complex your habits are'
+                subtitle='Forgiving for new habits, strict for veterans'
                 rightAccessory={
                   <StrengthAlgorithmPicker
                     selected={
@@ -260,7 +260,7 @@ export function SettingsContent(p: SettingsContentProps) {
                 }
                 type='info'
               />
-              <AlgorithmLegend activeMode={p.strengthAlgorithm} />
+              <AlgorithmLegendDisclosure activeMode={p.strengthAlgorithm} />
             </SettingsSection>
           </Animated.View>
 
@@ -279,7 +279,7 @@ export function SettingsContent(p: SettingsContentProps) {
                 highContrastMode={hc}
                 icon={<BookOpen color={settingsIcons.archive.icon} size={iconSize} />}
                 iconBackgroundColor={settingsIcons.archive.bg}
-                label='Archived Habits'
+                label='Archived habits'
                 subtitle='View and restore hidden habits'
                 type='navigation'
                 onPress={p.onOpenArchivedHabits}
@@ -288,9 +288,9 @@ export function SettingsContent(p: SettingsContentProps) {
                 highContrastMode={hc}
                 icon={<Download color={settingsIcons.export.icon} size={iconSize} />}
                 iconBackgroundColor={settingsIcons.export.bg}
-                label='Export Habits Data'
+                label='Export habits data'
                 showBorder={false}
-                subtitle='Download your habits as a file'
+                subtitle='Download as CSV or JSON'
                 type='navigation'
                 onPress={p.onExportHabitsData}
               />
@@ -330,7 +330,7 @@ export function SettingsContent(p: SettingsContentProps) {
           </Animated.View>
 
           {/* About + Legal */}
-          <Animated.View entering={anim(5)}>
+          <Animated.View entering={anim(6)}>
             <AboutLegalSection
               buildNumber={Constants.expoConfig?.ios?.buildNumber ?? '1'}
               collapsible

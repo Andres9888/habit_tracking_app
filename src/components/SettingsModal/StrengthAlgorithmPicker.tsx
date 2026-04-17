@@ -58,8 +58,8 @@ export function StrengthAlgorithmPicker({
             className='items-center justify-center rounded-lg'
             hitSlop={8}
             style={{
-              width: 36,
-              height: 30,
+              width: 40,
+              height: 36,
               backgroundColor: isSelected ? accentBg : 'transparent',
             }}
             onPress={() => handleSelect(key)}
