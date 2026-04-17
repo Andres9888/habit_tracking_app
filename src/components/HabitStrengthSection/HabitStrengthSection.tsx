@@ -14,8 +14,9 @@ import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useThemeColors } from '@/theme/ThemeContext';
 
 import { useReduceMotion } from '../../hooks/useReduceMotion';
-import { shadows } from '../../theme/spacing';
+import { shadows, spacing } from '../../theme/spacing';
 import { typography } from '../../theme/typography';
+import { SkeletonLoader } from '../SkeletonLoader/SkeletonLoader';
 import { getThemeColors } from './constants';
 import { useHabitStrengthData } from './HabitStrengthSection.hooks';
 import { StrengthChart } from './StrengthChart';
@@ -46,9 +47,26 @@ export const HabitStrengthSection = React.memo(function HabitStrengthSection({
 
   if (isCalculating) {
     return (
-      <View className='rounded-2xl p-5 shadow-sm' style={{ backgroundColor: themeColors.card }}>
-        <View className='h-48 items-center justify-center'>
-          <Text style={{ color: themeColors.text.tertiary }}>Calculating strength...</Text>
+      <View
+        accessible
+        accessibilityLabel='Calculating habit strength'
+        accessibilityRole='progressbar'
+        className='rounded-2xl p-5 shadow-sm'
+        style={{ backgroundColor: themeColors.card }}
+      >
+        <View className='mb-4 flex-row items-center justify-between'>
+          <SkeletonLoader borderRadius={6} height={20} reduceMotion={reduceMotion} width={140} />
+          <SkeletonLoader borderRadius={999} height={28} reduceMotion={reduceMotion} width={120} />
+        </View>
+        <View className='mb-5 flex-row items-end gap-3'>
+          <SkeletonLoader borderRadius={8} height={44} reduceMotion={reduceMotion} width={120} />
+          <SkeletonLoader borderRadius={6} height={14} reduceMotion={reduceMotion} width={80} />
+        </View>
+        <SkeletonLoader borderRadius={12} height={120} reduceMotion={reduceMotion} />
+        <View className='mt-4 flex-row gap-3'>
+          <SkeletonLoader borderRadius={6} height={40} reduceMotion={reduceMotion} width='30%' />
+          <SkeletonLoader borderRadius={6} height={40} reduceMotion={reduceMotion} width='30%' />
+          <SkeletonLoader borderRadius={6} height={40} reduceMotion={reduceMotion} width='30%' />
         </View>
       </View>
     );
@@ -57,13 +75,32 @@ export const HabitStrengthSection = React.memo(function HabitStrengthSection({
   if (isEmpty) {
     return (
       <View className='rounded-2xl p-5 shadow-sm' style={{ backgroundColor: themeColors.card }}>
-        <Text style={{ ...typography.heading3, marginBottom: 8, color: themeColors.text.primary }}>
+        <Text style={{ ...typography.heading3, marginBottom: spacing.sm, color: themeColors.text.primary }}>
           Habit Strength
         </Text>
-        <View className='items-center justify-center py-8'>
-          <Text className='mb-2 text-4xl'>🌱</Text>
-          <Text className='text-center' style={{ color: themeColors.text.secondary }}>
-            Complete your first day to start building strength!
+        <View
+          className='items-center rounded-2xl px-6 py-8'
+          style={{
+            backgroundColor: themeColors.background,
+            borderColor: themeColors.border,
+            borderStyle: 'dashed',
+            borderWidth: 1,
+          }}
+        >
+          <View
+            className='mb-3 h-14 w-14 items-center justify-center rounded-full'
+            style={{ backgroundColor: themeColors.card }}
+          >
+            <Text className='text-3xl'>🌱</Text>
+          </View>
+          <Text style={{ ...typography.heading3, color: themeColors.text.primary, textAlign: 'center' }}>
+            Not enough data yet
+          </Text>
+          <Text
+            className='mt-1 text-center'
+            style={{ color: themeColors.text.secondary, maxWidth: 260 }}
+          >
+            Complete your first day to start building strength.
           </Text>
         </View>
       </View>

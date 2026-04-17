@@ -72,6 +72,10 @@ export const WeeklyComparisonCard = React.memo(function WeeklyComparisonCard({
               accessibilityRole='button'
               hitSlop={8}
               onPress={handleInfoPress}
+              style={({ pressed }) => ({
+                opacity: pressed ? 0.6 : 1,
+                transform: [{ scale: pressed ? 0.92 : 1 }],
+              })}
             >
               <View
                 className='h-4 w-4 items-center justify-center rounded-full'

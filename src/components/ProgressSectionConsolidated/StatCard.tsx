@@ -59,8 +59,8 @@ export const StatCard = React.memo(function StatCard({
       onPressOut={handlePressOut}
     >
       <View
-        className='flex-1 rounded-xl px-3 py-2'
-        style={{ backgroundColor: config.backgroundColor, minHeight: 60 }}
+        className='flex-1 rounded-xl p-4'
+        style={{ backgroundColor: config.backgroundColor, minHeight: 72 }}
       >
         <View className='flex-row items-center'>
           <Text className='text-base'>{config.icon}</Text>
