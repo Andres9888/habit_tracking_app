@@ -16,7 +16,6 @@ export interface UseTemplateImportHandlersOptions {
   previewTemplate: Doc<'templates'> | null;
   isPremiumUser: boolean;
   onShowPaywall?: () => void;
-  onPostImportSetup?: (habitId: Id<'habits'>, template: Doc<'templates'>) => void;
   setImportedTemplateIds: React.Dispatch<React.SetStateAction<Set<string>>>;
   setImportingTemplateId: React.Dispatch<
     React.SetStateAction<Id<'templates'> | null>
