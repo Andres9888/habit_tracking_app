@@ -44,6 +44,8 @@ export function CreateHabitScrollContent({
           onReminderTimeChange={callbacks.handleReminderTimeChange}
           onReminderToggle={callbacks.handleReminderToggle}
           onSubmit={callbacks.handleSubmit}
+          strengthAlgorithm={form.strengthAlgorithm}
+          onStrengthAlgorithmChange={form.setStrengthAlgorithm}
         />
       </Pressable>
     </ScrollView>

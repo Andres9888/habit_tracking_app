@@ -20,4 +20,7 @@ export interface CreateHabitFormCenteredProps {
   autoFocus?: boolean;
   /** Whether to show validation error for empty habit name */
   showNameError?: boolean;
+  /** Per-habit strength algorithm mode */
+  strengthAlgorithm: 'forgiving' | 'balanced' | 'strict';
+  onStrengthAlgorithmChange: (mode: 'forgiving' | 'balanced' | 'strict') => void;
 }

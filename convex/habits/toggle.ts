@@ -6,7 +6,10 @@
 import { v } from 'convex/values';
 import { internal } from '../_generated/api';
 import { internalMutation, mutation } from '../_generated/server';
-import { calculateMomentumStrengthSnapshot } from '../habitStrength';
+import {
+  calculateMomentumStrengthSnapshot,
+  resolveAlgorithmMode,
+} from '../habitStrength';
 import { calculateStreakFromHistory } from '../streakUtils';
 import {
   getTodayForTimezone,
@@ -114,27 +117,57 @@ export const recalculateStreakAndStrength = internalMutation({
       completed: r.completed,
       date: r.date,
     }));
-    const snapshot = calculateMomentumStrengthSnapshot({
-      habitCreatedAt: habit.createdAt,
-      throughDate: evaluationDateKey,
-      tracking,
-    });
 
-    // Pass pause info to streak calculation to exclude paused periods
-    const streakData = calculateStreakFromHistory(tracking, evaluationDateKey, {
-      pausedAt: habit.pausedAt,
-      resumedAt: habit.resumedAt,
-    });
+    // Resolve algorithm mode from per-habit setting, fallback 'balanced'
+    const mode = resolveAlgorithmMode(habit.strengthAlgorithm);
+
+    // Always clear the pending recalc fields, even if computation fails — a
+    // stuck pendingStrengthRecalcId would block all subsequent toggles from
+    // scheduling new recalcs.
+    let strengthPatch: {
+      strength?: number;
+      strengthLevel?: string;
+      strengthUpdatedAt?: number;
+    } = {};
+    let streakPatch: {
+      bestStreak?: number;
+      currentStreak?: number;
+      lastCompletedDate?: string;
+    } = {};
+    try {
+      const snapshot = calculateMomentumStrengthSnapshot({
+        habitCreatedAt: habit.createdAt,
+        mode,
+        throughDate: evaluationDateKey,
+        tracking,
+      });
+      strengthPatch = {
+        strength: snapshot.strength,
+        strengthLevel: snapshot.strengthLevel,
+        strengthUpdatedAt: Date.now(),
+      };
+      const streakData = calculateStreakFromHistory(tracking, evaluationDateKey, {
+        pausedAt: habit.pausedAt,
+        resumedAt: habit.resumedAt,
+        timezone: args.timezone,
+      });
+      streakPatch = {
+        bestStreak: streakData.bestStreak,
+        currentStreak: streakData.currentStreak,
+        lastCompletedDate: streakData.lastCompletedDate,
+      };
+    } catch (error_) {
+      console.error('[recalculateStreakAndStrength] failed', {
+        habitId: args.habitId,
+        error: error_,
+      });
+    }
 
     await ctx.db.patch(args.habitId, {
-      bestStreak: streakData.bestStreak,
-      currentStreak: streakData.currentStreak,
-      lastCompletedDate: streakData.lastCompletedDate,
+      ...streakPatch,
+      ...strengthPatch,
       pendingStrengthRecalcId: undefined,
       pendingStrengthRecalcRequestedAt: undefined,
-      strength: snapshot.strength,
-      strengthLevel: snapshot.strengthLevel,
-      strengthUpdatedAt: Date.now(),
     });
   },
 });

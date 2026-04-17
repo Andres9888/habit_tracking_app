@@ -24,6 +24,7 @@ interface HabitData {
   selectedColor: string;
   selectedDays: number[];
   selectedEmoji: string | null;
+  strengthAlgorithm: 'forgiving' | 'balanced' | 'strict';
 }
 
 interface EditHabitData extends HabitData {
@@ -107,6 +108,7 @@ export function useCreateHabitHandlers() {
     selectedDays,
     dayPhase,
     reminderSound,
+    strengthAlgorithm,
   }: HabitData): Promise<void> {
     // Validate habit name
     const validation = validateHabitName(fullHabitName);
@@ -143,6 +145,7 @@ export function useCreateHabitHandlers() {
         remindersEnabled: hasReminders,
         reminderSound: hasReminders ? (reminderSound ?? undefined) : undefined,
         reminderTime: formattedReminderTime,
+        strengthAlgorithm,
       });
       optimisticHabitCreationStore.confirm(optimisticOperationId);
       isCreateConfirmed = true;

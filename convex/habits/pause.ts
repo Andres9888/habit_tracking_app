@@ -9,7 +9,10 @@ import type { Id } from '../_generated/dataModel';
 import { calculateStreakFromHistory } from '../streakUtils';
 import { fullHabitValidator } from './types';
 import { getTodayForTimezone, maxDateKey } from './utils';
-import { calculateMomentumStrengthSnapshot } from '../habitStrength';
+import {
+  calculateMomentumStrengthSnapshot,
+  resolveAlgorithmMode,
+} from '../habitStrength';
 
 /**
  * Internal function to recalculate streak and strength after pause/resume
@@ -35,8 +38,13 @@ async function recalculateOnPauseChange(
   const evaluationDateKey = maxDateKey(today, maxTrackingDateKey);
 
   const tracking = allTracking.map((r) => ({ completed: r.completed, date: r.date }));
+
+  // Resolve algorithm mode from per-habit setting, fallback 'balanced'
+  const mode = resolveAlgorithmMode(habit.strengthAlgorithm);
+
   const snapshot = calculateMomentumStrengthSnapshot({
     habitCreatedAt: habit.createdAt,
+    mode,
     throughDate: evaluationDateKey,
     tracking,
   });
@@ -45,6 +53,7 @@ async function recalculateOnPauseChange(
   const streakData = calculateStreakFromHistory(tracking, evaluationDateKey, {
     pausedAt: habit.pausedAt,
     resumedAt: habit.resumedAt,
+    timezone,
   });
 
   await ctx.db.patch(habitId, {
@@ -124,11 +133,11 @@ export const resume = mutation({
     await ctx.db.patch(args.habitId, {
       paused: false,
       resumedAt: now,
-      // Restore strength from before pause
-      strength: habit.strengthAtPause,
+      // Restore strength from before pause; preserve current value if pause
+      // was taken before any strength snapshot existed.
+      strength: habit.strengthAtPause ?? habit.strength,
       strengthLevel: habit.strengthLevel,
-      // Restore accessibility from before pause
-      accessibility: habit.accessibilityAtPause,
+      accessibility: habit.accessibilityAtPause ?? habit.accessibility,
     });
 
     // Recalculate streak to include the post-pause period

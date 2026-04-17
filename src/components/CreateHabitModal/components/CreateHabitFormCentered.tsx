@@ -5,6 +5,7 @@ import { NameInputSection } from './NameInputSection';
 import { EmojiPicker } from './EmojiPicker';
 import { ColorPickerSection } from './ColorPickerSection';
 import { EnhancedReminderSelector } from './EnhancedReminderSelector';
+import { AdvancedAlgorithmDisclosure } from '../../AlgorithmPicker';
 import type { CreateHabitFormCenteredProps } from './CreateHabitFormCentered.types';
 
 /**
@@ -26,6 +27,8 @@ const CreateHabitFormCenteredComponent = ({
   onSubmit,
   autoFocus = false,
   showNameError = false,
+  strengthAlgorithm,
+  onStrengthAlgorithmChange,
 }: CreateHabitFormCenteredProps) => {
   const { colors: themeColors, isDark } = useThemeColors();
 
@@ -76,6 +79,13 @@ const CreateHabitFormCenteredComponent = ({
           onTimeChange={onReminderTimeChange}
           onToggle={onReminderToggle}
         />
+
+        <View className='mt-4'>
+          <AdvancedAlgorithmDisclosure
+            selected={strengthAlgorithm}
+            onSelect={onStrengthAlgorithmChange}
+          />
+        </View>
       </View>
     </View>
   );

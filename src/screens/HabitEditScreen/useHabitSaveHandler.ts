@@ -19,6 +19,7 @@ interface UseSaveHandlerProps {
   remindersEnabled: boolean;
   reminderTime: Date;
   streakGoal: number;
+  strengthAlgorithm: 'forgiving' | 'balanced' | 'strict';
   onSuccess: () => void;
 }
 
@@ -30,6 +31,7 @@ export function useHabitSaveHandler({
   remindersEnabled,
   reminderTime,
   streakGoal,
+  strengthAlgorithm,
   onSuccess,
 }: UseSaveHandlerProps) {
   const updateHabit = useMutation(api.habits.update);
@@ -85,6 +87,7 @@ export function useHabitSaveHandler({
         reminderSound: enableReminders ? 'default' : undefined,
         reminderTime: enableReminders ? reminderTimeString : undefined,
         goalDuration: streakGoal > 0 ? streakGoal : undefined,
+        strengthAlgorithm,
       });
 
       onSuccess();
@@ -103,6 +106,7 @@ export function useHabitSaveHandler({
     remindersEnabled,
     reminderTime,
     streakGoal,
+    strengthAlgorithm,
     updateHabit,
     onSuccess,
   ]);

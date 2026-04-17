@@ -1,0 +1,28 @@
+import { cronJobs } from 'convex/server';
+import { internal } from './_generated/api';
+import { internalMutation } from './_generated/server';
+
+export const purgeExpiredDeletedHabits = internalMutation({
+  args: {},
+  handler: async (ctx) => {
+    const now = Date.now();
+    const expired = await ctx.db
+      .query('deletedHabits')
+      .withIndex('by_expiresAt', (q) => q.lt('expiresAt', now))
+      .take(500);
+    for (const row of expired) {
+      await ctx.db.delete(row._id);
+    }
+    return { deleted: expired.length };
+  },
+});
+
+const crons = cronJobs();
+
+crons.daily(
+  'purge expired deletedHabits',
+  { hourUTC: 7, minuteUTC: 0 },
+  internal.crons.purgeExpiredDeletedHabits
+);
+
+export default crons;
