@@ -99,6 +99,7 @@ function HabitDetailScreenContent({
                   <DetailHero
                     habit={habit}
                     isCompletedToday={screenState.isCompletedToday}
+                    totalCompletions={screenState.totalCompletions}
                   />
                   <HabitDetailContent
                     completedDates={screenState.completedDates}

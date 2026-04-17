@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Archive Habits — 10 Tweak Variations</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Literata:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family:'DM Sans',sans-serif;
+    background:#2D2A26;
+    color:#F5F1ED;
+    min-height:100vh;
+    padding:40px 24px 80px;
+  }
+  .wrap { max-width:1720px; margin:0 auto; }
+  .title {
+    font-family:'Literata',serif;
+    font-size:36px; font-weight:700;
+    letter-spacing:-0.5px;
+    margin-bottom:10px;
+  }
+  .subtitle {
+    font-size:16px; color:#B8B0A6;
+    max-width:720px; line-height:1.55;
+    margin-bottom:12px;
+  }
+  .legend {
+    display:flex; gap:14px; flex-wrap:wrap;
+    margin-bottom:36px;
+    font-size:13px; color:#B8B0A6;
+  }
+  .legend b { color:#F5F1ED; font-weight:600; }
+
+  .grid {
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(420px, 1fr));
+    gap:28px;
+  }
+  .card {
+    background:#1E1B18;
+    border-radius:18px;
+    padding:0;
+    overflow:hidden;
+    box-shadow:0 8px 28px rgba(0,0,0,0.35);
+    display:flex; flex-direction:column;
+  }
+  .card-head {
+    padding:18px 20px 16px;
+    border-bottom:1px solid #3A3530;
+  }
+  .card-label {
+    font-family:'DM Sans',sans-serif;
+    font-size:11px; font-weight:700;
+    color:#9C9488;
+    text-transform:uppercase;
+    letter-spacing:0.12em;
+    margin-bottom:6px;
+  }
+  .card-title {
+    font-family:'Literata',serif;
+    font-size:20px; font-weight:700;
+    color:#F5F1ED;
+    letter-spacing:-0.2px;
+    margin-bottom:8px;
+    line-height:1.25;
+  }
+  .card-reason {
+    font-size:13px; color:#B8B0A6;
+    line-height:1.5;
+    margin-bottom:10px;
+  }
+  .card-tags {
+    display:flex; gap:6px; flex-wrap:wrap;
+  }
+  .tag {
+    display:inline-flex; align-items:center;
+    padding:3px 9px; border-radius:999px;
+    font-size:11px; font-weight:600;
+    background:#3A3530; color:#D4CBBE;
+  }
+  .tag.primary { background:rgba(5,150,105,0.18); color:#4ADE80; }
+  .tag.bulk { background:rgba(124,58,237,0.18); color:#C4A8FF; }
+  .tag.context { background:rgba(13,148,136,0.18); color:#5EEAD4; }
+  .tag.interaction { background:rgba(217,119,6,0.18); color:#FCD34D; }
+  .tag.safety { background:rgba(225,29,72,0.18); color:#FCA5A5; }
+
+  .frame-wrap {
+    width:100%; height:720px;
+    background:#E8E4E0;
+    display:flex; align-items:flex-start; justify-content:center;
+    padding-top:16px; padding-bottom:16px;
+    overflow:hidden;
+  }
+  .frame-wrap iframe {
+    width:390px; height:688px;
+    border:none;
+    border-radius:28px;
+    box-shadow:0 12px 28px rgba(0,0,0,0.25);
+    background:#F5F1ED;
+    flex-shrink:0;
+  }
+  .card-open {
+    display:block;
+    padding:12px 20px;
+    text-align:center;
+    border-top:1px solid #3A3530;
+    font-size:13px; font-weight:600;
+    color:#A5D4BA;
+    text-decoration:none;
+    transition:background 0.15s;
+  }
+  .card-open:hover { background:#2A2620; color:#4ADE80; }
+
+  .matrix {
+    background:#1E1B18;
+    border-radius:16px;
+    padding:24px;
+    margin-top:48px;
+    box-shadow:0 6px 20px rgba(0,0,0,0.3);
+  }
+  .matrix h2 {
+    font-family:'Literata',serif;
+    font-size:22px; font-weight:700;
+    margin-bottom:16px;
+  }
+  .matrix table {
+    width:100%; border-collapse:collapse;
+    font-size:13px;
+  }
+  .matrix th, .matrix td {
+    text-align:left; padding:10px 12px;
+    border-bottom:1px solid #3A3530;
+  }
+  .matrix th {
+    color:#9C9488; font-weight:600;
+    text-transform:uppercase;
+    letter-spacing:0.08em; font-size:11px;
+  }
+  .matrix td { color:#D4CBBE; }
+  .matrix td:first-child { color:#F5F1ED; font-weight:600; }
+
+  @media (max-width: 880px) {
+    .grid { grid-template-columns:1fr; }
+    .title { font-size:28px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="title">Archive Habits — 10 Tweak Variations</div>
+  <p class="subtitle">Each mockup is a small, comparable tweak to the existing card-list, not a full redesign. Every variation starts from the same baseline (same palette, typography, card anatomy, corrected copy, Back-only header) so differences are about the <em>problem solved</em>, not the skin.</p>
+  <div class="legend">
+    <span><b>North-star question:</b> If a user opens this screen, what's the shortest path to their goal?</span>
+  </div>
+  <div class="legend">
+    <span class="tag primary">Speed-to-restore</span>
+    <span class="tag bulk">Bulk management</span>
+    <span class="tag context">Context before action</span>
+    <span class="tag interaction">Interaction model</span>
+    <span class="tag safety">Safety / limits</span>
+  </div>
+
+  <div class="grid">
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-label">v4.1</div>
+        <div class="card-title">Asymmetric CTAs</div>
+        <div class="card-reason"><b>Problem:</b> Resume is far more common than Delete, but both buttons have equal weight. <b>Tweak:</b> Resume becomes a full-width green pill; Delete shrinks to a quiet corner icon.</div>
+        <div class="card-tags"><span class="tag primary">Speed-to-restore</span></div>
+      </div>
+      <div class="frame-wrap"><iframe src="archive_v4_1_primary_resume.html"></iframe></div>
+      <a class="card-open" href="archive_v4_1_primary_resume.html" target="_blank">Open fullscreen →</a>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-label">v4.2</div>
+        <div class="card-title">Recently Archived Section</div>
+        <div class="card-reason"><b>Problem:</b> Most restore requests target habits archived in the last 24–48h (accidents). <b>Tweak:</b> Pin last-7-days archives in a top section with an "Undo archive" chip; older archives collapse out of the way.</div>
+        <div class="card-tags"><span class="tag primary">Speed-to-restore</span></div>
+      </div>
+      <div class="frame-wrap"><iframe src="archive_v4_2_recently_archived.html"></iframe></div>
+      <a class="card-open" href="archive_v4_2_recently_archived.html" target="_blank">Open fullscreen →</a>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-label">v4.3</div>
+        <div class="card-title">Search Header</div>
+        <div class="card-reason"><b>Problem:</b> With 10+ archived habits, scanning by scroll is slow. <b>Tweak:</b> A sticky search input at the top lets users jump straight to a habit by name; match highlighting on typed letters.</div>
+        <div class="card-tags"><span class="tag primary">Speed-to-restore</span></div>
+      </div>
+      <div class="frame-wrap"><iframe src="archive_v4_3_search_header.html"></iframe></div>
+      <a class="card-open" href="archive_v4_3_search_header.html" target="_blank">Open fullscreen →</a>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-label">v4.4</div>
+        <div class="card-title">Proactive Free-Tier Lock</div>
+        <div class="card-reason"><b>Problem:</b> Free users at the 3-habit limit learn they can't restore only <em>after</em> tapping Resume. <b>Tweak:</b> Show the lock + "Upgrade" CTA upfront; no wasted taps, honest tradeoff.</div>
+        <div class="card-tags"><span class="tag safety">Safety / limits</span></div>
+      </div>
+      <div class="frame-wrap"><iframe src="archive_v4_4_proactive_lock.html"></iframe></div>
+      <a class="card-open" href="archive_v4_4_proactive_lock.html" target="_blank">Open fullscreen →</a>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-label">v4.5</div>
+        <div class="card-title">Header Select / Batch Mode</div>
+        <div class="card-reason"><b>Problem:</b> The full batch restore/delete infrastructure already exists in code (Convex mutations + hooks + UI components) — it's just unreachable. <b>Tweak:</b> Wire up a header "Select" button to unlock the mode.</div>
+        <div class="card-tags"><span class="tag bulk">Bulk management</span></div>
+      </div>
+      <div class="frame-wrap"><iframe src="archive_v4_5_header_select.html"></iframe></div>
+      <a class="card-open" href="archive_v4_5_header_select.html" target="_blank">Open fullscreen →</a>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-label">v4.6</div>
+        <div class="card-title">Swipe Actions</div>
+        <div class="card-reason"><b>Problem:</b> Always-on Resume + Delete buttons add visual noise. <b>Tweak:</b> Cards become minimal; swipe right reveals Resume (green), swipe left reveals Delete (red). Matches iOS Mail mental model.</div>
+        <div class="card-tags"><span class="tag interaction">Interaction model</span></div>
+      </div>
+      <div class="frame-wrap"><iframe src="archive_v4_6_swipe_actions.html"></iframe></div>
+      <a class="card-open" href="archive_v4_6_swipe_actions.html" target="_blank">Open fullscreen →</a>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-label">v4.7</div>
+        <div class="card-title">Time-Grouped Sections</div>
+        <div class="card-reason"><b>Problem:</b> A flat list erases the "recent mistake vs long-ago abandonment" distinction users already make mentally. <b>Tweak:</b> Collapsible sections — This week / This month / Older (last collapsed by default).</div>
+        <div class="card-tags"><span class="tag context">Context before action</span></div>
+      </div>
+      <div class="frame-wrap"><iframe src="archive_v4_7_time_sections.html"></iframe></div>
+      <a class="card-open" href="archive_v4_7_time_sections.html" target="_blank">Open fullscreen →</a>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-label">v4.8</div>
+        <div class="card-title">Stats Summary Strip</div>
+        <div class="card-reason"><b>Problem:</b> Users open the screen with no sense of scale or composition. <b>Tweak:</b> A one-line context strip — "N archived · strongest X% · oldest Y ago" — orients them before they drill in.</div>
+        <div class="card-tags"><span class="tag context">Context before action</span></div>
+      </div>
+      <div class="frame-wrap"><iframe src="archive_v4_8_stats_summary.html"></iframe></div>
+      <a class="card-open" href="archive_v4_8_stats_summary.html" target="_blank">Open fullscreen →</a>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-label">v4.9</div>
+        <div class="card-title">Expandable Detail Cards</div>
+        <div class="card-reason"><b>Problem:</b> "Should I restore this?" needs context users can't see today — strength trajectory, peak streak, archive reason. <b>Tweak:</b> Collapsed cards stay scannable; tap expands inline with a 14-day sparkline + full stats + actions.</div>
+        <div class="card-tags"><span class="tag context">Context before action</span></div>
+      </div>
+      <div class="frame-wrap"><iframe src="archive_v4_9_expandable_card.html"></iframe></div>
+      <a class="card-open" href="archive_v4_9_expandable_card.html" target="_blank">Open fullscreen →</a>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-label">v4.10</div>
+        <div class="card-title">Danger Zone Footer</div>
+        <div class="card-reason"><b>Problem:</b> Heavy users accumulate dozens of archives; one-by-one delete is painful. <code>handleDeleteAll</code> exists in code but has no UI trigger. <b>Tweak:</b> A clearly-bounded danger zone below the list with "Delete all N" + two-step confirm.</div>
+        <div class="card-tags"><span class="tag bulk">Bulk management</span></div>
+      </div>
+      <div class="frame-wrap"><iframe src="archive_v4_10_danger_footer.html"></iframe></div>
+      <a class="card-open" href="archive_v4_10_danger_footer.html" target="_blank">Open fullscreen →</a>
+    </div>
+
+  </div>
+
+  <div class="matrix">
+    <h2>Which tweak solves which user task?</h2>
+    <table>
+      <thead>
+        <tr><th>User task</th><th>Best tweak(s)</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Restore a fresh accidental archive</td><td>v4.1 (big Resume) + v4.2 (pinned recent)</td></tr>
+        <tr><td>Restore after a break — find by name</td><td>v4.3 (search) or v4.7 (time grouping)</td></tr>
+        <tr><td>Know if restore is blocked by free-tier limit</td><td>v4.4 (proactive lock)</td></tr>
+        <tr><td>Bulk cleanup / clear multiple at once</td><td>v4.5 (batch mode) + v4.10 (delete all)</td></tr>
+        <tr><td>Quick card interactions, minimal UI</td><td>v4.6 (swipe actions)</td></tr>
+        <tr><td>Overview before drilling in</td><td>v4.8 (stats strip)</td></tr>
+        <tr><td>Informed restore/delete decision</td><td>v4.9 (expandable detail)</td></tr>
+      </tbody>
+    </table>
+    <p style="color:#9C9488; font-size:13px; margin-top:16px; line-height:1.6;">
+      These tweaks are mostly <b>additive</b> — a shipped version will combine 3–5 of them. My recommended combo for a single follow-up PR:
+      <b style="color:#F5F1ED;">v4.1 + v4.4 + v4.5 + v4.10</b> — big Resume for the common path, proactive lock so no-one wastes a tap, header Select to unlock batch (reuses existing code), danger footer to unlock Delete All (reuses existing code). That's four high-impact wins with low additive scope.
+    </p>
+  </div>
+
+</div>
+</body>
+</html>

@@ -14,6 +14,8 @@
 import { defineSchema, defineTable } from 'convex/server';
 import { v } from 'convex/values';
 
+import { progressEmojisValidator } from './lib/progressEmojisValidator';
+
 // Subscription status type for type safety
 const subscriptionStatus = v.union(
   v.literal('active'),
@@ -128,6 +130,10 @@ const applicationTables = {
     // 0-6 for Sunday-Saturday
     preferredTime: v.optional(v.string()),
 
+    // Per-habit override of the 5-stage growth emoji set.
+    // Falls back to userSettings.progressEmojis, then built-in defaults.
+    progressEmojis: v.optional(progressEmojisValidator),
+
     // "morning", "afternoon", "evening"
     remindersEnabled: v.optional(v.boolean()),
 
@@ -143,6 +149,15 @@ const applicationTables = {
     strength: v.optional(v.number()),
 
     strengthAtPause: v.optional(v.number()),
+
+    // "forgiving", "balanced", "strict" — per-habit override (falls back to user setting)
+    strengthAlgorithm: v.optional(
+      v.union(
+        v.literal('forgiving'),
+        v.literal('balanced'),
+        v.literal('strict')
+      )
+    ),
 
     // "starting", "building", "developing", "strong", "automatic"
     strengthLevel: v.optional(v.string()),
@@ -387,6 +402,8 @@ const applicationTables = {
 
     hasPremium: v.optional(v.boolean()),
     highContrastMode: v.optional(v.boolean()),
+    // Global default for the 5-stage growth emoji set, overridable per habit.
+    progressEmojis: v.optional(progressEmojisValidator),
     reduceMotion: v.optional(v.boolean()),
 
     showCalendarView: v.boolean(),
@@ -410,6 +427,15 @@ const applicationTables = {
 
     showWeekCompletionBar: v.optional(v.boolean()),
     sortHabitsAlphabetically: v.optional(v.boolean()),
+    // Retained for backwards compatibility with existing user data — global
+    // strength algorithm setting was removed; per-habit setting lives on `habits`.
+    strengthAlgorithm: v.optional(
+      v.union(
+        v.literal('forgiving'),
+        v.literal('balanced'),
+        v.literal('strict')
+      )
+    ),
     // Streak reminder notifications
     streakRemindersEnabled: v.optional(v.boolean()),
     // "20:00" (24h format) — default 8 PM

@@ -1,5 +1,5 @@
 /**
- * Meta pills row (frequency, category) and search match row.
+ * Meta pills row (frequency, category, popularity) and search match row.
  */
 
 import { Text, View } from 'react-native';
@@ -11,12 +11,14 @@ interface CardFooterMetaProps {
   categoryLabel: string;
   frequency: string | undefined;
   matchReason: string | null;
+  popularityCount?: string | null;
 }
 
 export function CardFooterMeta({
   categoryLabel,
   frequency,
   matchReason,
+  popularityCount,
 }: CardFooterMetaProps) {
   const { colors } = useThemeColors();
 
@@ -27,29 +29,47 @@ export function CardFooterMeta({
           <View
             style={[
               styles.metaPill,
-              { backgroundColor: colors.background, borderColor: colors.border },
+              {
+                backgroundColor: colors.background,
+                borderColor: colors.border,
+              },
             ]}
           >
             <Text style={[styles.metaLabel, { color: colors.text.secondary }]}>
-              {frequency}
+              📅 {frequency.charAt(0).toUpperCase() + frequency.slice(1)}
             </Text>
           </View>
         ) : null}
-        <View
-          style={[
-            styles.metaPill,
-            { backgroundColor: colors.background, borderColor: colors.border },
-          ]}
-        >
-          <Text style={[styles.metaLabel, { color: colors.text.secondary }]}>
-            {categoryLabel}
-          </Text>
-        </View>
+        {categoryLabel ? (
+          <View
+            style={[
+              styles.metaPill,
+              {
+                backgroundColor: colors.background,
+                borderColor: colors.border,
+              },
+            ]}
+          >
+            <Text style={[styles.metaLabel, { color: colors.text.secondary }]}>
+              {categoryLabel}
+            </Text>
+          </View>
+        ) : null}
+        {popularityCount ? (
+          <View style={styles.popularityPill}>
+            <Text style={[styles.metaLabel, { color: '#C2410C' }]}>
+              🔥 {popularityCount} added
+            </Text>
+          </View>
+        ) : null}
       </View>
 
       {matchReason ? (
         <View
-          style={[styles.matchRow, { backgroundColor: `${colors.primary[600]}10` }]}
+          style={[
+            styles.matchRow,
+            { backgroundColor: `${colors.primary[600]}10` },
+          ]}
         >
           <Search color={colors.primary[700]} size={12} strokeWidth={2.5} />
           <Text style={[styles.matchText, { color: colors.primary[700] }]}>

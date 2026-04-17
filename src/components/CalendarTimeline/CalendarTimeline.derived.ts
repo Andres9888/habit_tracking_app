@@ -51,6 +51,11 @@ export function useDerivedState(
     : isDark
       ? STREAK_CONNECTOR.dark
       : STREAK_CONNECTOR.light;
+  const ghostConnectorColor = highContrastMode
+    ? STREAK_CONNECTOR.ghostHighContrast
+    : isDark
+      ? STREAK_CONNECTOR.ghostDark
+      : STREAK_CONNECTOR.ghostLight;
 
   return {
     calendarOpen,
@@ -58,6 +63,7 @@ export function useDerivedState(
     completionCounts,
     completionStatuses,
     connectorColor,
+    ghostConnectorColor,
     currentDate,
     dateRangeText,
     firstDate,

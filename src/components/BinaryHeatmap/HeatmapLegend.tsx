@@ -13,6 +13,8 @@ import React, { memo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
 import { typography, fontWeights, fontFamilies } from '@/theme/typography';
+import { spacing } from '@/theme/spacing';
+import { useThemeColors } from '@/theme/ThemeContext';
 import type { HeatmapLegendProps } from './types';
 import { LEGEND_INDICATOR_SIZE, COLORS, CELL_BORDER_RADIUS } from './constants';
 
@@ -37,6 +39,7 @@ export const HeatmapLegend = memo(function HeatmapLegend({
   completionRate,
   showCompletionRate = true,
 }: HeatmapLegendProps) {
+  const { colors: themeColors } = useThemeColors();
   return (
     <View
       accessible
@@ -59,7 +62,7 @@ export const HeatmapLegend = memo(function HeatmapLegend({
               { backgroundColor: COLORS.CELL_EMPTY },
             ]}
           />
-          <Text style={styles.indicatorLabel}>Missed</Text>
+          <Text style={[styles.indicatorLabel, { color: themeColors.text.secondary }]}>Missed</Text>
         </View>
 
         {/* Done indicator */}
@@ -72,7 +75,7 @@ export const HeatmapLegend = memo(function HeatmapLegend({
           <View
             style={[styles.indicatorSquare, { backgroundColor: habitColor }]}
           />
-          <Text style={styles.indicatorLabel}>Done</Text>
+          <Text style={[styles.indicatorLabel, { color: themeColors.text.secondary }]}>Done</Text>
         </View>
       </View>
 
@@ -83,7 +86,7 @@ export const HeatmapLegend = memo(function HeatmapLegend({
           accessibilityRole='text'
           style={[styles.completionText, { color: habitColor }]}
         >
-          {formatCompletionRate(completionRate)} compl
+          {formatCompletionRate(completionRate)} completion
         </Text>
       ) : null}
     </View>
@@ -100,8 +103,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingHorizontal: 4,
-    paddingVertical: 8,
+    paddingHorizontal: spacing.xs,
+    paddingVertical: spacing.sm,
   },
   indicator: {
     alignItems: 'center',

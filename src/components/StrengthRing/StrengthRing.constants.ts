@@ -1,41 +1,73 @@
 /**
  * StrengthRing Constants - Level configs, colors, and size configurations
  */
-import type { LevelInfo, SizeConfig } from './StrengthRing.types';
 import { colors } from '@/theme/colors';
+import {
+  DEFAULT_PROGRESS_EMOJIS,
+  type PartialProgressEmojiSet,
+  type StrengthLevelKey,
+} from '@/utils/progressEmojis';
 
-export const LEVELS: Record<string, LevelInfo> = {
+import type { LevelInfo, SizeConfig } from './StrengthRing.types';
+
+type LevelMeta = Omit<LevelInfo, 'emoji'>;
+
+const LEVEL_META: Record<StrengthLevelKey, LevelMeta> = {
   automatic: {
     color: colors.strength.automatic,
     colorLight: colors.strength.automaticLight,
-    emoji: '⚡',
     label: 'Automatic',
   },
   building: {
     color: colors.strength.building,
     colorLight: colors.strength.buildingLight,
-    emoji: '🌿',
     label: 'Building',
   },
   developing: {
     color: colors.strength.developing,
     colorLight: colors.strength.developingLight,
-    emoji: '🌳',
     label: 'Developing',
   },
   starting: {
     color: colors.strength.starting,
     colorLight: colors.strength.startingLight,
-    emoji: '🌱',
     label: 'Starting',
   },
   strong: {
     color: colors.strength.strong,
     colorLight: colors.strength.strongLight,
-    emoji: '💪',
     label: 'Strong',
   },
 };
+
+export function buildLevels(
+  emojiOverrides?: PartialProgressEmojiSet
+): Record<StrengthLevelKey, LevelInfo> {
+  return {
+    automatic: {
+      ...LEVEL_META.automatic,
+      emoji: emojiOverrides?.automatic ?? DEFAULT_PROGRESS_EMOJIS.automatic,
+    },
+    building: {
+      ...LEVEL_META.building,
+      emoji: emojiOverrides?.building ?? DEFAULT_PROGRESS_EMOJIS.building,
+    },
+    developing: {
+      ...LEVEL_META.developing,
+      emoji: emojiOverrides?.developing ?? DEFAULT_PROGRESS_EMOJIS.developing,
+    },
+    starting: {
+      ...LEVEL_META.starting,
+      emoji: emojiOverrides?.starting ?? DEFAULT_PROGRESS_EMOJIS.starting,
+    },
+    strong: {
+      ...LEVEL_META.strong,
+      emoji: emojiOverrides?.strong ?? DEFAULT_PROGRESS_EMOJIS.strong,
+    },
+  };
+}
+
+export const LEVELS: Record<StrengthLevelKey, LevelInfo> = buildLevels();
 
 export const BACKGROUND_COLOR = colors.gray[200];
 
@@ -53,10 +85,14 @@ export const TREND_CONFIG = {
 };
 
 /** Get level info based on strength percentage */
-export function getLevelInfo(strength: number): LevelInfo {
-  if (strength < 20) return LEVELS.starting;
-  if (strength < 40) return LEVELS.building;
-  if (strength < 60) return LEVELS.developing;
-  if (strength < 80) return LEVELS.strong;
-  return LEVELS.automatic;
+export function getLevelInfo(
+  strength: number,
+  emojiOverrides?: PartialProgressEmojiSet
+): LevelInfo {
+  const levels = emojiOverrides ? buildLevels(emojiOverrides) : LEVELS;
+  if (strength < 20) return levels.starting;
+  if (strength < 40) return levels.building;
+  if (strength < 60) return levels.developing;
+  if (strength < 80) return levels.strong;
+  return levels.automatic;
 }

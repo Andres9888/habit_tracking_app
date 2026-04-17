@@ -4,6 +4,7 @@
  */
 import { v } from 'convex/values';
 import { mutation } from '../_generated/server';
+import { resolveAlgorithmMode } from './algorithmConfig';
 import { calculateMomentumStrengthSnapshot } from './momentum';
 
 export const recalculateHabitStrength = mutation({
@@ -30,8 +31,12 @@ export const recalculateHabitStrength = mutation({
       .withIndex('by_habit_and_date', (q) => q.eq('habitId', args.habitId))
       .collect();
 
+    // Resolve algorithm mode from per-habit setting, fallback 'balanced'
+    const mode = resolveAlgorithmMode(habit.strengthAlgorithm);
+
     const snapshot = calculateMomentumStrengthSnapshot({
       habitCreatedAt: habit.createdAt,
+      mode,
       tracking: tracking.map((entry) => ({
         completed: entry.completed,
         date: entry.date,

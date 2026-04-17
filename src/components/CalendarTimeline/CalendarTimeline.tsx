@@ -29,6 +29,7 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
   onUpgrade,
   completionIcon,
   compact = false,
+  currentStreak,
 }) => {
   const tl = useCalendarTimelineSetup(
     dates,
@@ -94,8 +95,10 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
               completionCounts={tl.completionCounts}
               completionStatuses={tl.completionStatuses}
               connectorColor={tl.connectorColor}
+              currentStreak={currentStreak}
               dates={dates}
               disableFutureDayPress={disableFutureDayPress}
+              ghostConnectorColor={tl.ghostConnectorColor}
               hasCompletionData={Object.keys(completionByDay).length > 0}
               isDayPressEnabled={isDayPressEnabled ?? !!onDayPress}
               isFuture={tl.isFuture}

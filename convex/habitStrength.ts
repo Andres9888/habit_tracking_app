@@ -28,6 +28,19 @@
  */
 
 // ─────────────────────────────────────────────────────────────────────────────
+// Algorithm Config
+// ─────────────────────────────────────────────────────────────────────────────
+export type {
+  AlgorithmParams,
+  StrengthAlgorithmMode,
+} from './habitStrength/algorithmConfig';
+export {
+  ALGORITHM_CONFIGS,
+  getAlgorithmConfig,
+  resolveAlgorithmMode,
+} from './habitStrength/algorithmConfig';
+
+// ─────────────────────────────────────────────────────────────────────────────
 // Constants
 // ─────────────────────────────────────────────────────────────────────────────
 export {
@@ -36,7 +49,6 @@ export {
   DEFAULT_HABIT_DECAY_PARAM,
   DEFAULT_HABIT_GAIN_PARAM,
   GROWTH_RATE,
-  SHIELD_EFFECTIVENESS,
 } from './habitStrength/constants';
 
 // ─────────────────────────────────────────────────────────────────────────────

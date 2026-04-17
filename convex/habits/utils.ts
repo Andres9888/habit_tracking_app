@@ -39,6 +39,37 @@ export function getTodayForTimezone(timezone?: string): string {
 }
 
 
+/**
+ * Convert a millisecond timestamp to a YYYY-MM-DD date key in the user's
+ * timezone. Falls back to UTC if timezone is invalid or not provided.
+ *
+ * Why: Comparing tracking date strings (which represent the user's calendar
+ * day) against raw ms timestamps causes ±1-day offsets near midnight in
+ * timezones offset from UTC.
+ */
+export function msToDateKeyForTimezone(
+  ms: number,
+  timezone?: string
+): string {
+  if (!timezone) {
+    return new Date(ms).toISOString().slice(0, 10);
+  }
+  try {
+    const parts = new Intl.DateTimeFormat('en-CA', {
+      timeZone: timezone,
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    }).formatToParts(new Date(ms));
+    const year = parts.find((p) => p.type === 'year')?.value ?? '';
+    const month = parts.find((p) => p.type === 'month')?.value ?? '';
+    const day = parts.find((p) => p.type === 'day')?.value ?? '';
+    return `${year}-${month}-${day}`;
+  } catch {
+    return new Date(ms).toISOString().slice(0, 10);
+  }
+}
+
 /** Return the lexicographically larger date key.
  * @param a - First date string in YYYY-MM-DD format
  * @param b - Second date string in YYYY-MM-DD format

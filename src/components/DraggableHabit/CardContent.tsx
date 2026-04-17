@@ -12,6 +12,7 @@
 import React from 'react';
 import { View } from 'react-native';
 import { HabitChainVisualizer } from '../HabitChainVisualizer';
+import { useProgressEmojis } from '../../hooks/useProgressEmojis';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { CardHeader } from './CardHeader';
 import { NewRecordBadge } from './NewRecordBadge';
@@ -26,6 +27,7 @@ interface CardContentProps extends DraggableHabitCardProps {
 export function CardContent(props: CardContentProps) {
   const { colors: themeColors } = useThemeColors();
   const compact = props.isCompactMode;
+  const progressEmojis = useProgressEmojis(props.habit);
   return (
     <>
       <View className={compact ? 'pt-3' : 'pt-4'}>
@@ -43,12 +45,12 @@ export function CardContent(props: CardContentProps) {
           showHabitStrengthPercentage={props.showHabitStrengthPercentage}
           streak={props.streak}
         />
-        {!compact && props.showNewRecord && (
+        {!compact && props.showNewRecord ? (
           <NewRecordBadge
             newRecordOpacity={props.newRecordOpacity}
             newRecordScale={props.newRecordScale}
           />
-        )}
+        ) : null}
         {compact ? (
           <View
             className='mx-3 mb-2 h-[1px] rounded-full'
@@ -56,6 +58,7 @@ export function CardContent(props: CardContentProps) {
           />
         ) : props.showHabitStrengthPercentage ? (
           <StrengthProgressBar
+            emojis={progressEmojis}
             progressAnimatedStyle={props.progressAnimatedStyle}
             strengthEmojiAnimatedStyle={props.strengthEmojiAnimatedStyle}
             strengthPercent={props.strengthPercent}
@@ -87,9 +90,9 @@ export function CardContent(props: CardContentProps) {
             props.onWeekComplete?.({ completedDate, habit: props.habit })
           }
         />
-        {!compact && props.isWeekComplete && (
+        {!compact && props.isWeekComplete ? (
           <WeekCompleteIndicator accentColor={props.effectiveAccentColor} />
-        )}
+        ) : null}
       </View>
     </>
   );

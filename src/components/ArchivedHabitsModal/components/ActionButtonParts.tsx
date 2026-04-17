@@ -1,9 +1,9 @@
 import { Text, View } from 'react-native';
-import { RotateCcw, Check, Lock, Trash2 } from 'lucide-react-native';
+import { RotateCcw, Check, Lock } from 'lucide-react-native';
 import Animated, { type AnimatedStyle } from 'react-native-reanimated';
 import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '@/theme/ThemeContext';
-import { typography, fontWeights } from '@/theme/typography';
+import { fontWeights } from '@/theme/typography';
 import { AnimatedPressable } from '../../ui';
 
 export function ResumeButton({ btnBg, greenColor, habitName, isRestoring, showSuccess, successIconStyle, onRestorePress }: {
@@ -28,59 +28,25 @@ export function ResumeButton({ btnBg, greenColor, habitName, isRestoring, showSu
         </Animated.View>
       ) : (<>
         <RotateCcw color={greenColor} size={iconSizes.small} strokeWidth={2.5} />
-        <Text style={{ fontSize: 15, fontWeight: fontWeights.semibold, color: greenColor, letterSpacing: -0.1 }}>{isRestoring ? 'Restoring...' : 'Resume'}</Text>
+        <Text style={{ fontSize: 15, fontWeight: fontWeights.semibold, color: greenColor, letterSpacing: -0.1 }}>{isRestoring ? 'Restoring...' : 'Resume habit'}</Text>
       </>)}
     </AnimatedPressable>
   );
 }
 
-export function DeleteIconButton({ habitName, onPress }: { habitName: string; onPress: () => void }) {
-  const { colors, isDark } = useThemeColors();
+export function LimitReachedResume({ onUpgradePress }: { onUpgradePress?: () => void }) {
+  const { colors: c, isDark } = useThemeColors();
+  const bg = isDark ? c.gray[200] : '#EDE8E2';
+  const fg = isDark ? c.text.secondary : '#6E6660';
   return (
     <AnimatedPressable
-      accessibilityLabel={`Delete ${habitName}`} accessibilityRole='button'
-      style={{
-        width: 48, height: 48, borderRadius: 14, alignItems: 'center', justifyContent: 'center',
-        borderWidth: 1.5, borderColor: isDark ? colors.status.error + '40' : colors.status.error + '20',
-      }}
-      onPress={onPress}
+      accessibilityLabel='Upgrade to resume this habit' accessibilityRole='button'
+      className='flex-row items-center justify-center gap-2'
+      style={{ height: 48, borderRadius: 14, backgroundColor: bg }}
+      onPress={onUpgradePress}
     >
-      <Trash2 color={colors.status.error} size={iconSizes.small} strokeWidth={2.5} />
+      <Lock color={fg} size={iconSizes.small} strokeWidth={2.5} />
+      <Text style={{ fontSize: 15, fontWeight: fontWeights.semibold, color: fg, letterSpacing: -0.1 }}>Upgrade to restore</Text>
     </AnimatedPressable>
-  );
-}
-
-export function LimitReachedButtons({ onDeletePress, onUpgradePress }: {
-  onDeletePress: () => void; onUpgradePress?: () => void;
-}) {
-  const { colors: c } = useThemeColors();
-  return (
-    <View style={{ flexDirection: 'row', gap: 10 }}>
-      <AnimatedPressable
-        accessibilityLabel='Upgrade to resume habits' accessibilityRole='button'
-        className='flex-1 flex-row items-center justify-center gap-2'
-        style={{ height: 48, borderRadius: 14, backgroundColor: c.status.success }}
-        onPress={onUpgradePress}
-      >
-        <Lock color={c.text.inverse} size={iconSizes.small} strokeWidth={2.5} />
-        <Text style={{ fontSize: 15, fontWeight: fontWeights.semibold, color: c.text.inverse, letterSpacing: -0.1 }}>Upgrade</Text>
-      </AnimatedPressable>
-      <DeleteIconButton habitName='archived habit' onPress={onDeletePress} />
-    </View>
-  );
-}
-
-export function DeleteConfirmRow({ onCancel, onDelete }: { onCancel: () => void; onDelete: () => void }) {
-  const { colors: c, isDark } = useThemeColors();
-  return (
-    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
-      <Text style={{ ...typography.caption, color: c.text.secondary }}>Are you sure?</Text>
-      <AnimatedPressable style={{ backgroundColor: c.status.error, borderRadius: 10, paddingHorizontal: 14, paddingVertical: 6 }} onPress={onDelete}>
-        <Text style={{ ...typography.caption, fontWeight: fontWeights.semibold, color: c.text.inverse }}>Delete</Text>
-      </AnimatedPressable>
-      <AnimatedPressable style={{ backgroundColor: isDark ? c.gray[200] : c.gray[50], borderRadius: 10, paddingHorizontal: 14, paddingVertical: 6 }} onPress={onCancel}>
-        <Text style={{ ...typography.caption, fontWeight: fontWeights.semibold, color: c.text.secondary }}>Cancel</Text>
-      </AnimatedPressable>
-    </View>
   );
 }

@@ -4,6 +4,10 @@
  */
 import { v } from 'convex/values';
 import { mutation } from '../_generated/server';
+import {
+  calculateMomentumStrengthSnapshot,
+  resolveAlgorithmMode,
+} from '../habitStrength';
 import { updateHabitArgs } from './types';
 import { validateHabitUpdateFields } from './validation';
 
@@ -47,6 +51,35 @@ export const update = mutation({
     };
 
     await ctx.db.patch(habitId, cleanedUpdates);
+
+    // Recalculate strength when algorithm mode changes
+    if (args.strengthAlgorithm !== undefined) {
+      const updatedHabit = await ctx.db.get(habitId);
+      if (updatedHabit) {
+        const tracking = await ctx.db
+          .query('tracking')
+          .withIndex('by_habit_and_date', (q) => q.eq('habitId', habitId))
+          .collect();
+
+        const mode = resolveAlgorithmMode(updatedHabit.strengthAlgorithm);
+
+        const snapshot = calculateMomentumStrengthSnapshot({
+          habitCreatedAt: updatedHabit.createdAt,
+          mode,
+          tracking: tracking.map((t) => ({
+            completed: t.completed,
+            date: t.date,
+          })),
+        });
+
+        await ctx.db.patch(habitId, {
+          strength: snapshot.strength,
+          strengthLevel: snapshot.strengthLevel,
+          strengthUpdatedAt: Date.now(),
+        });
+      }
+    }
+
     return null;
   },
   returns: v.null(),

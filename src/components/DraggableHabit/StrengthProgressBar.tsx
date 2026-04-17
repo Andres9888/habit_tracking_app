@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
  * StrengthProgressBar — Visualises habit strength as an animated segmented bar.
  *
@@ -15,18 +16,21 @@ import { useCountingPercent } from './useCountingPercent';
 import { colors } from '@/theme';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { borderRadius } from '../../theme/spacing';
-import { typography, fontFamilies} from '../../theme/typography';
+import { typography, fontFamilies } from '../../theme/typography';
+import type { ProgressEmojiSet } from '../../utils/progressEmojis';
 
 interface StrengthProgressBarProps {
   strengthPercent: number;
   strengthEmojiAnimatedStyle: AnimatedStyle;
   progressAnimatedStyle: AnimatedStyle;
+  emojis?: ProgressEmojiSet;
 }
 
 export function StrengthProgressBar({
   strengthPercent,
   strengthEmojiAnimatedStyle,
   progressAnimatedStyle,
+  emojis,
 }: StrengthProgressBarProps) {
   const { colors: themeColors, isDark } = useThemeColors();
   const displayPercent = useCountingPercent(strengthPercent);
@@ -43,7 +47,7 @@ export function StrengthProgressBar({
               strengthEmojiAnimatedStyle,
             ]}
           >
-            {getStrengthEmoji(strengthPercent)}
+            {getStrengthEmoji(strengthPercent, emojis)}
           </ReAnimated.Text>
         </View>
       </View>
@@ -55,7 +59,10 @@ export function StrengthProgressBar({
       <View className='flex-1 items-center'>
         <Text
           className='text-[13px] font-bold'
-          style={{ color: isDark ? '#A3E635' : colors.strength.starting, marginLeft: 12 }}
+          style={{
+            color: isDark ? '#A3E635' : colors.strength.starting,
+            marginLeft: 12,
+          }}
         >
           {displayPercent}%
         </Text>

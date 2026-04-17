@@ -130,6 +130,8 @@ export const useHabitForm = ({ habitToEdit }: UseHabitFormOptions) => {
     setSelectedColor: state.setSelectedColor,
     setSelectedEmoji: state.setSelectedEmoji,
     setShowTimePicker: state.setShowTimePicker,
+    setStrengthAlgorithm: state.setStrengthAlgorithm,
     showTimePicker: state.showTimePicker,
+    strengthAlgorithm: state.strengthAlgorithm,
   };
 };

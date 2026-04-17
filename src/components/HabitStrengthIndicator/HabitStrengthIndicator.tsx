@@ -13,7 +13,7 @@ import React, { memo, useMemo } from 'react';
 import { useAppTheme } from '../../theme';
 
 import type { HabitStrengthIndicatorProps } from './types';
-import { STRENGTH_LEVEL_CONFIG } from './constants';
+import { buildStrengthLevelConfig } from './constants';
 import { getStrengthLevel, getStrengthColor } from './utils';
 import { useStrengthAnimation } from './useStrengthAnimation';
 import { CompactIndicator } from './CompactIndicator';
@@ -28,10 +28,15 @@ function HabitStrengthIndicatorComponent({
   habitName,
   // historicalData will be used by GraphIndicator in Phase 7: Premium Features
   historicalData: _historicalData = [],
+  emojiOverrides,
 }: HabitStrengthIndicatorProps) {
   const theme = useAppTheme();
   const level = strengthLevel || getStrengthLevel(strength);
-  const config = STRENGTH_LEVEL_CONFIG[level];
+  const levelConfig = useMemo(
+    () => buildStrengthLevelConfig(emojiOverrides),
+    [emojiOverrides]
+  );
+  const config = levelConfig[level];
 
   const { progressBarStyle, emojiStyle } = useStrengthAnimation({
     config,
