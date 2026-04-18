@@ -2,6 +2,8 @@
  * Types for CreateHabitFormCentered
  */
 
+import type { ProgressEmojiSet } from '../../../utils/progressEmojis';
+
 export interface CreateHabitFormCenteredProps {
   habitName: string;
   onHabitNameChange: (value: string) => void;
@@ -23,4 +25,10 @@ export interface CreateHabitFormCenteredProps {
   /** Per-habit strength algorithm mode */
   strengthAlgorithm: 'forgiving' | 'balanced' | 'strict';
   onStrengthAlgorithmChange: (mode: 'forgiving' | 'balanced' | 'strict') => void;
+  /** Per-habit growth icons override (undefined = inherit default) */
+  progressEmojis: ProgressEmojiSet | undefined;
+  onProgressEmojisChange: (next: ProgressEmojiSet | undefined) => void;
+  /** Streak goal in days (0 = no goal) */
+  streakGoal: number;
+  onStreakGoalChange: (days: number) => void;
 }

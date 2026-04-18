@@ -5,6 +5,7 @@
 import { useMemo, useState } from 'react';
 import { DEFAULT_COLOR } from '../constants';
 import type { HabitDoc } from '../types';
+import type { ProgressEmojiSet } from '../../../utils/progressEmojis';
 import { parseHabitName, parseReminderTime } from '../utils';
 import {
   type HubermanPhase,
@@ -66,6 +67,12 @@ export function useHabitFormState({ habitToEdit }: UseHabitFormStateOptions) {
       ? mode
       : 'balanced';
   });
+  const [progressEmojis, setProgressEmojis] = useState<
+    ProgressEmojiSet | undefined
+  >(habitToEdit?.progressEmojis as ProgressEmojiSet | undefined);
+  const [streakGoal, setStreakGoal] = useState<number>(
+    habitToEdit?.goalDuration ?? 0
+  );
 
   return {
     dayPhase,
@@ -93,7 +100,11 @@ export function useHabitFormState({ habitToEdit }: UseHabitFormStateOptions) {
     setSelectedEmoji,
     setShowTimePicker,
     setStrengthAlgorithm,
+    setProgressEmojis,
+    setStreakGoal,
     showTimePicker,
     strengthAlgorithm,
+    progressEmojis,
+    streakGoal,
   };
 }

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Variation C — Inline Disclosures</title>
+<link rel="stylesheet" href="advanced_options_theme.css" />
+<style>
+  body { display: flex; gap: 28px; padding: 40px; flex-wrap: wrap; justify-content: center; }
+  .col { display: flex; flex-direction: column; align-items: center; }
+  .disclosure { margin-bottom: 10px; }
+  .disclosure-head {
+    display: flex; align-items: center; gap: 12px;
+    cursor: pointer;
+  }
+</style>
+</head>
+<body>
+
+<script>
+  function phone({ algoOpen, emojiOpen }) {
+    return `
+      <div class="phone">
+        <div class="drag-handle"></div>
+        <div class="content">
+
+          <div class="section-label"><span class="line"></span><span class="text">Streak Goal</span><span class="line"></span></div>
+          <div class="card streak-card">
+            <div class="streak-label">Target days</div>
+            <div class="streak-pills">
+              <button class="streak-pill">Off</button>
+              <button class="streak-pill">7</button>
+              <button class="streak-pill">21</button>
+              <button class="streak-pill active">30</button>
+              <button class="streak-pill">66</button>
+              <button class="streak-pill">100</button>
+              <button class="streak-pill">365</button>
+            </div>
+          </div>
+
+          <div class="section-label"><span class="line"></span><span class="text">Advanced</span><span class="line"></span></div>
+
+          <!-- Algorithm disclosure -->
+          <div class="card expandable disclosure ${algoOpen ? 'open' : ''}" id="d-algo">
+            <div class="disclosure-head" onclick="toggleExpand('d-algo')">
+              <div class="icon-tile">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+              </div>
+              <div style="flex:1;min-width:0;">
+                <div class="row-title">Strength Algorithm</div>
+                <div class="row-subtitle">Balanced · 66-day curve</div>
+              </div>
+              <span class="chevron chev-rot">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+              </span>
+            </div>
+            <div class="expandable-body">
+              <div class="algo-card">
+                <div class="algo-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div>
+                <div class="algo-body">
+                  <div class="algo-title-row"><div class="algo-title">Forgiving</div><span class="algo-tag">Simple · 18d</span></div>
+                  <div class="algo-desc">Forms fast and missing a day barely matters.</div>
+                </div>
+              </div>
+              <div class="algo-card selected">
+                <div class="algo-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+                <div class="algo-body">
+                  <div class="algo-title-row"><div class="algo-title">Balanced</div><span class="algo-tag">Moderate · 66d</span></div>
+                  <div class="algo-desc">UCL 66-day curve — noticeable dip on miss, recovers quickly.</div>
+                </div>
+              </div>
+              <div class="algo-card">
+                <div class="algo-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
+                <div class="algo-body">
+                  <div class="algo-title-row"><div class="algo-title">Strict</div><span class="algo-tag">Complex · 120d</span></div>
+                  <div class="algo-desc">Takes longer to build — tight accountability keeps you going.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Growth Icons disclosure -->
+          <div class="card expandable disclosure ${emojiOpen ? 'open' : ''}" id="d-emoji">
+            <div class="disclosure-head" onclick="toggleExpand('d-emoji')">
+              <div class="icon-tile" style="background:rgba(255,191,0,0.14);color:#f5b638;">
+                <span style="font-size:18px;">🌱</span>
+              </div>
+              <div style="flex:1;min-width:0;">
+                <div class="row-title">Growth Icons</div>
+                <div class="row-subtitle">Plants · 🌱 🌿 🌳 💪 ⚡</div>
+              </div>
+              <span class="chevron chev-rot">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+              </span>
+            </div>
+            <div class="expandable-body">
+              <div class="preset-row">
+                <button class="preset-chip active"><span class="emojis">🌱🌿🌳💪⚡</span> Plants</button>
+                <button class="preset-chip"><span class="emojis">💧🏃🏋️💪🏆</span> Fitness</button>
+                <button class="preset-chip"><span class="emojis">🌑🌓🌕🪐🌌</span> Space</button>
+                <button class="preset-chip"><span class="emojis">💭📖🎓🧠✨</span> Mind</button>
+                <button class="preset-chip"><span class="emojis">🪵🔥🌋⚡👑</span> Fire</button>
+              </div>
+              <div class="stage-row"><div class="stage-emoji">🌱</div><div class="stage-meta"><div class="stage-label">Starting</div></div><div class="stage-change">Change</div></div>
+              <div class="stage-row"><div class="stage-emoji">🌿</div><div class="stage-meta"><div class="stage-label">Building</div></div><div class="stage-change">Change</div></div>
+              <div class="stage-row"><div class="stage-emoji">🌳</div><div class="stage-meta"><div class="stage-label">Developing</div></div><div class="stage-change">Change</div></div>
+              <div class="stage-row"><div class="stage-emoji">💪</div><div class="stage-meta"><div class="stage-label">Strong</div></div><div class="stage-change">Change</div></div>
+              <div class="stage-row"><div class="stage-emoji">⚡</div><div class="stage-meta"><div class="stage-label">Automatic</div></div><div class="stage-change">Change</div></div>
+              <a class="reset-link">Reset to default</a>
+            </div>
+          </div>
+
+          <div class="section-label danger"><span class="line"></span><span class="text">Danger Zone</span><span class="line"></span></div>
+          <div class="danger-card">
+            <div class="danger-row">📦 Archive habit</div>
+            <div class="danger-row">🗑️ Delete habit</div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  document.body.innerHTML = `
+    <div class="col">
+      <div class="state-label">Both collapsed</div>
+      ${phone({ algoOpen: false, emojiOpen: false })}
+    </div>
+    <div class="col">
+      <div class="state-label">Both expanded (independent)</div>
+      ${phone({ algoOpen: true, emojiOpen: true })}
+    </div>
+  `;
+
+  // Need to rebind each phone's disclosures independently — but IDs collide.
+  // Rewrite: use scoped toggles via event delegation.
+  document.querySelectorAll('.disclosure .disclosure-head').forEach(head => {
+    head.onclick = (e) => {
+      e.stopPropagation();
+      head.closest('.disclosure').classList.toggle('open');
+    };
+  });
+</script>
+
+</body>
+</html>
