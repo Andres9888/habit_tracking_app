@@ -2,6 +2,8 @@
  * ProgressEmojiPicker types
  */
 
+import type { StyleProp, ViewStyle } from 'react-native';
+
 import type {
   ProgressEmojiSet,
   StrengthLevelKey,
@@ -16,6 +18,10 @@ export interface ProgressEmojiPickerProps {
   fallback: ProgressEmojiSet;
   /** Optional caption above the preview row. */
   label?: string;
+  /** Style applied to the always-visible preview/toggle row. */
+  toggleRowStyle?: StyleProp<ViewStyle>;
+  /** Style applied to the expanded customization panel. */
+  expandedPanelStyle?: StyleProp<ViewStyle>;
 }
 
 export interface ProgressEmojiSlotRowProps {

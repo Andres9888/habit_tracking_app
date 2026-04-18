@@ -36,6 +36,8 @@ function ProgressEmojiPickerComponent({
   onChange,
   fallback,
   label,
+  toggleRowStyle,
+  expandedPanelStyle,
 }: ProgressEmojiPickerProps) {
   const { colors: themeColors } = useThemeColors();
   const [expanded, setExpanded] = useState(false);
@@ -77,40 +79,61 @@ function ProgressEmojiPickerComponent({
         </Text>
       ) : null}
 
-      <Pressable
-        accessibilityHint='Toggle growth icon customization panel'
-        accessibilityLabel='Growth icons'
-        accessibilityRole='button'
-        accessibilityState={{ expanded }}
-        className='flex-row items-center justify-between rounded-2xl px-4 py-3'
-        style={{
-          backgroundColor: themeColors.surface,
-          borderWidth: 1,
-          borderColor: themeColors.cardBorder,
-          minHeight: 56,
-        }}
-        onPress={() => setExpanded((v) => !v)}
-      >
-        <View className='flex-row items-center gap-1'>
+      <View className='flex-row items-center justify-between py-2' style={toggleRowStyle}>
+        <Pressable
+          accessibilityHint='Toggle growth icon customization panel'
+          accessibilityLabel='Growth icons'
+          accessibilityRole='button'
+          accessibilityState={{ expanded }}
+          className='flex-row items-center gap-1'
+          onPress={() => setExpanded((v) => !v)}
+        >
           {STRENGTH_LEVEL_KEYS.map((k) => (
             <Text key={k} style={{ fontSize: 22 }}>
               {resolved[k]}
             </Text>
           ))}
+        </Pressable>
+        <View className='flex-row items-center gap-3'>
+          {value === undefined ? null : (
+            <Pressable
+              accessibilityLabel='Reset growth icons to default'
+              accessibilityRole='button'
+              hitSlop={8}
+              onPress={() => onChange(undefined)}
+            >
+              <Text
+                style={{
+                  ...typography.bodySmall,
+                  color: themeColors.text.tertiary,
+                  fontWeight: fontWeights.medium,
+                }}
+              >
+                Reset
+              </Text>
+            </Pressable>
+          )}
+          <Pressable
+            accessibilityLabel={expanded ? 'Collapse picker' : 'Customize growth icons'}
+            accessibilityRole='button'
+            hitSlop={8}
+            onPress={() => setExpanded((v) => !v)}
+          >
+            <Text
+              style={{
+                ...typography.bodySmall,
+                color: themeColors.primary[600],
+                fontWeight: fontWeights.semibold,
+              }}
+            >
+              {expanded ? 'Done' : 'Customize'}
+            </Text>
+          </Pressable>
         </View>
-        <Text
-          style={{
-            ...typography.bodySmall,
-            color: themeColors.primary[600],
-            fontWeight: fontWeights.semibold,
-          }}
-        >
-          {expanded ? 'Done' : 'Customize'}
-        </Text>
-      </Pressable>
+      </View>
 
       {expanded ? (
-        <View className='mt-3 gap-2'>
+        <View className='mt-3 gap-2' style={expandedPanelStyle}>
           <ProgressEmojiPresetRow
             activePresetId={activePresetId}
             onSelect={handlePreset}
