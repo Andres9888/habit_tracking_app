@@ -27,7 +27,7 @@ export function CompactHabitRow({
   const [isRestoring, setIsRestoring] = useState(false);
   const accentColor = habit.color || habit.iconColor || pickAccentColor(habit.name);
   const archiveDate = habit.archivedAt || habit._creationTime;
-  const cardBg = isDark ? colors.card : '#FFFFFF';
+  const cardBg = colors.card;
 
   const handleRestore = async () => {
     if (isRestoring) return;

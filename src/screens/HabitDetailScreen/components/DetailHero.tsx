@@ -4,6 +4,7 @@ import { View, Text } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { Check } from 'lucide-react-native';
 import { useThemeColors } from '../../../theme';
+import { borderRadius } from '../../../theme/spacing';
 import { typography, fontFamilies, fontWeights } from '../../../theme/typography';
 import type { Habit } from '../HabitDetailScreen.types';
 import { DetailHeroStat } from './DetailHeroStat';
@@ -26,7 +27,7 @@ export function DetailHero({ habit, isCompletedToday, totalCompletions }: Detail
   const defaultIconBg = isDark ? colors.primary[100] : colors.status.warningLight;
   const defaultIconShadow = isDark ? colors.primary[500] : colors.status.warning;
   const schedule = formatSchedule(habit);
-  const dotStyle = { backgroundColor: colors.gray[300], borderRadius: 999, height: 3, width: 3 };
+  const dotStyle = { backgroundColor: colors.gray[300], borderRadius: borderRadius.full, height: 3, width: 3 };
   const statProps = { labelColor: colors.text.secondary, valueColor: colors.text.primary };
 
   return (

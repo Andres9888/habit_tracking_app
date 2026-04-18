@@ -120,20 +120,20 @@ export const dashboardStyles = StyleSheet.create({
   milestoneCurrentDot: {
     backgroundColor: colors.streak[100],
     borderColor: colors.streak[500],
-    borderRadius: 999,
+    borderRadius: borderRadius.full,
     borderWidth: 2,
     height: 10,
     width: 10,
   },
   milestoneDoneDot: {
     backgroundColor: colors.primary[600],
-    borderRadius: 999,
+    borderRadius: borderRadius.full,
     height: 8,
     width: 8,
   },
   milestoneFutureDot: {
     backgroundColor: colors.gray[200],
-    borderRadius: 999,
+    borderRadius: borderRadius.full,
     height: 8,
     width: 8,
   },

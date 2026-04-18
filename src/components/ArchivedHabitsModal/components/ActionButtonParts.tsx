@@ -35,9 +35,9 @@ export function ResumeButton({ btnBg, greenColor, habitName, isRestoring, showSu
 }
 
 export function LimitReachedResume({ onUpgradePress }: { onUpgradePress?: () => void }) {
-  const { colors: c, isDark } = useThemeColors();
-  const bg = isDark ? c.gray[200] : '#EDE8E2';
-  const fg = isDark ? c.text.secondary : '#6E6660';
+  const { colors: c } = useThemeColors();
+  const bg = c.gray[200];
+  const fg = c.text.tertiary;
   return (
     <AnimatedPressable
       accessibilityLabel='Upgrade to resume this habit' accessibilityRole='button'

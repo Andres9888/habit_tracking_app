@@ -7,6 +7,7 @@ import { HabitStatsBadges } from './HabitStatsBadges';
 import { ActionButtons } from './ActionButtons';
 import { SelectionCheckbox } from './SelectionCheckbox';
 import { useThemeColors } from '@/theme/ThemeContext';
+import { shadows } from '@/theme/spacing';
 import type { AnimatedHabitCardProps } from '../types';
 
 export function AnimatedHabitCard({
@@ -31,12 +32,11 @@ export function AnimatedHabitCard({
       >
         <View
           style={{
-            backgroundColor: isDark ? colors.card : '#FFFFFF',
+            backgroundColor: colors.card,
             borderRadius: 20, overflow: 'hidden',
             borderWidth: selected ? 1.5 : 1,
-            borderColor: selected ? colors.status.success + '40' : (isDark ? colors.border : 'rgba(221,216,210,0.5)'),
-            shadowColor: '#2D2A26', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.06, shadowRadius: 8,
-            elevation: 2,
+            borderColor: selected ? colors.status.success + '40' : colors.border,
+            ...shadows.card,
           }}
         >
           {/* Accent strip */}
