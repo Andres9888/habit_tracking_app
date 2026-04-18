@@ -41,7 +41,10 @@ export const MonthlyCalendarGrid = memo(function MonthlyCalendarGrid({
   }, []);
 
   const handleDayPress = useCallback(
-    (dateString: string, isCompleted: boolean) => { onDayPress?.(dateString, isCompleted); },
+    (dateString: string, isCompleted: boolean) => {
+      void triggerHaptic('toggle');
+      onDayPress?.(dateString, isCompleted);
+    },
     [onDayPress]
   );
 
