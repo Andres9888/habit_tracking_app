@@ -7,6 +7,7 @@ import Animated from 'react-native-reanimated';
 import { Check, Plus } from 'lucide-react-native';
 import type { Doc, Id } from '../../../../../convex/_generated/dataModel';
 import { useThemeColors } from '../../../../theme/ThemeContext';
+import { iconSizes } from '@/theme/iconSizes';
 import { triggerHaptic } from '@/utils/haptics';
 import { useAddAnimation } from './ExploreHabitRow.hooks';
 import { s } from './ExploreHabitRow.styles';
@@ -77,7 +78,7 @@ export function ExploreHabitRow({
         {isImporting ? (
           <ActivityIndicator color={colors.text.inverse} size='small' />
         ) : isImported ? (
-          <Check color={colors.primary[700]} size={16} strokeWidth={3} />
+          <Check color={colors.primary[700]} size={iconSizes.small} strokeWidth={3} />
         ) : (
           <Plus color={colors.text.inverse} size={18} strokeWidth={2.5} />
         )}

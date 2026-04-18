@@ -4,6 +4,7 @@
 
 import { StyleSheet } from 'react-native';
 import { colors } from '@/theme';
+import { borderRadius } from '@/theme/spacing';
 
 export const layoutStyles = StyleSheet.create({
   bottomSpacer: {
@@ -38,7 +39,7 @@ export const layoutStyles = StyleSheet.create({
     zIndex: 10,
   },
   successGlowOverlay: {
-    borderRadius: 12,
+    borderRadius: borderRadius.medium,
     bottom: 0,
     left: 0,
     position: 'absolute',

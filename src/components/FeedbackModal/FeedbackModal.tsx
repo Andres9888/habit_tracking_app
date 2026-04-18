@@ -26,6 +26,7 @@ import {
 import { Modal } from '../Modal';
 import { Button } from '../Button/Button';
 import { Bug, Lightbulb, MessageSquare } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { colors as appColors } from '../../theme/colors';
 import { useThemeColors } from '../../theme/ThemeContext';
 import type { FeedbackModalProps, FeedbackType } from './FeedbackModal.types';
@@ -194,7 +195,7 @@ export function FeedbackModal({ visible, onClose }: FeedbackModalProps) {
                     { backgroundColor: item.bgColor },
                   ]}
                 >
-                  <Icon size={20} color={item.color} />
+                  <Icon size={iconSizes.medium} color={item.color} />
                 </View>
                 <View style={styles.typeContent}>
                   <Text style={styles.typeLabel}>{item.label}</Text>

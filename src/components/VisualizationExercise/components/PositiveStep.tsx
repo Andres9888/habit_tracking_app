@@ -8,6 +8,7 @@ import { View, Text, TextInput } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { Sun, CheckCircle2 } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { buildTextInputHintProps } from '@/utils/textInputHintProps';
 import { PromptList } from './PromptList';
@@ -38,7 +39,7 @@ export function PositiveStep({
             end={{ x: 1, y: 1 }}
             start={{ x: 0, y: 0 }}
           />
-          <Sun className='text-white' size={32} />
+          <Sun className='text-white' size={iconSizes.xl} />
         </View>
         <Text className='text-xl font-bold' style={{ color: colors.text.primary }}>
           Visualize Success

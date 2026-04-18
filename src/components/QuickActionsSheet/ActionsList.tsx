@@ -49,7 +49,7 @@ export const ActionsList = ({
           highlighted
           showChevron
           badge='NEW!'
-          icon={<Brain color='#ffffff' size={iconSizes.medium} strokeWidth={2} />}
+          icon={<Brain color={colors.text.inverse} size={iconSizes.medium} strokeWidth={2} />}
           label='Mental Boost'
           subtitle='Visualize success & strengthen motivation'
           onPress={onMentalBoost}

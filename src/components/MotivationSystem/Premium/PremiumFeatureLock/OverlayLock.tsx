@@ -93,11 +93,11 @@ export function OverlayLock({
           end={{ x: 1, y: 0 }}
           start={{ x: 0, y: 0 }}
         >
-          <Crown color='#ffffff' size={iconSizes.medium} />
+          <Crown color={colors.text.inverse} size={iconSizes.medium} />
           <Text className='text-base font-semibold text-white'>
             Unlock with Premium
           </Text>
-          <ChevronRight color='#ffffff' size={iconSizes.medium} />
+          <ChevronRight color={colors.text.inverse} size={iconSizes.medium} />
         </LinearGradient>
       </Pressable>
 

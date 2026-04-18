@@ -12,6 +12,7 @@ import Animated, {
   Easing,
 } from 'react-native-reanimated';
 import { useThemeColors } from '../../theme/ThemeContext';
+import { borderRadius } from '@/theme/spacing';
 import { fontFamilies, fontWeights } from '@/theme/typography';
 
 interface ConflictToastProps {
@@ -99,7 +100,7 @@ export function ConflictToast({
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    borderRadius: 12,
+    borderRadius: borderRadius.medium,
     flexDirection: 'row',
     paddingHorizontal: 16,
     paddingVertical: 12,
@@ -108,20 +109,14 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.08,
     shadowRadius: 16,
   },
-  icon: {
-    fontSize: 20,
-  },
-  iconContainer: {
-    marginRight: 12,
-  },
+  icon: { fontSize: 20 },
+  iconContainer: { marginRight: 12 },
   message: {
     fontFamily: fontFamilies.primary.text,
     fontSize: 13,
     fontWeight: fontWeights.regular,
   },
-  textContainer: {
-    flex: 1,
-  },
+  textContainer: { flex: 1 },
   title: {
     fontFamily: fontFamilies.primary.text,
     fontSize: 14,

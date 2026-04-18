@@ -82,12 +82,12 @@ export function ProgressRingFAB(props: ProgressRingFABProps) {
               <Animated.View
                 style={[s.iconAbsolute, safeCelebrationAnim.plusStyle]}
               >
-                <Plus color='#ffffff' size={iconSizes.large} strokeWidth={2.5} />
+                <Plus color={colors.text.inverse} size={iconSizes.large} strokeWidth={2.5} />
               </Animated.View>
               <Animated.View
                 style={[s.iconAbsolute, safeCelebrationAnim.checkStyle]}
               >
-                <Check color='#ffffff' size={iconSizes.large} strokeWidth={2.5} />
+                <Check color={colors.text.inverse} size={iconSizes.large} strokeWidth={2.5} />
               </Animated.View>
             </View>
           </Pressable>

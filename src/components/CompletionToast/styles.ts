@@ -3,6 +3,7 @@
  */
 
 import { StyleSheet } from 'react-native';
+import { borderRadius } from '@/theme/spacing';
 import { fontFamilies, fontWeights } from '@/theme/typography';
 
 export const styles = StyleSheet.create({
@@ -29,7 +30,7 @@ export const styles = StyleSheet.create({
   },
   streakBadge: {
     alignItems: 'center',
-    borderRadius: 16,
+    borderRadius: borderRadius.card,
     flexDirection: 'row',
     gap: 4,
     paddingHorizontal: 12,
@@ -45,7 +46,7 @@ export const styles = StyleSheet.create({
   },
   toast: {
     alignItems: 'center',
-    borderRadius: 16,
+    borderRadius: borderRadius.card,
     flexDirection: 'row',
     gap: 12,
     justifyContent: 'space-between',

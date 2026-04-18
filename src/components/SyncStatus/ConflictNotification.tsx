@@ -15,6 +15,7 @@ import Animated, {
   runOnJS,
 } from 'react-native-reanimated';
 import { useThemeColors } from '../../theme/ThemeContext';
+import { borderRadius } from '@/theme/spacing';
 import { fontFamilies, fontWeights } from '@/theme/typography';
 
 export interface ConflictNotificationProps {
@@ -154,7 +155,7 @@ export function useConflictNotification(): UseConflictNotificationResult {
 
 const styles = StyleSheet.create({
   container: {
-    borderRadius: 12,
+    borderRadius: borderRadius.medium,
     marginHorizontal: 16,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
@@ -167,21 +168,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 16,
   },
-  icon: {
-    fontSize: 22,
-  },
-  iconContainer: {
-    marginRight: 12,
-  },
+  icon: { fontSize: 22 },
+  iconContainer: { marginRight: 12 },
   message: {
     fontFamily: fontFamilies.primary.text,
     fontSize: 13,
     fontWeight: fontWeights.regular,
     lineHeight: 18,
   },
-  textContainer: {
-    flex: 1,
-  },
+  textContainer: { flex: 1 },
   title: {
     fontFamily: fontFamilies.primary.text,
     fontSize: 14,

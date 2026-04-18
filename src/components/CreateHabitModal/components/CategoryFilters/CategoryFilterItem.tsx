@@ -6,6 +6,7 @@
 import { Pressable, Text, View } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { useHapticFeedback } from '../../../../hooks/useHapticFeedback';
+import { colors as themeTokens } from '@/theme/colors';
 import { useCategoryFilterAnimations } from './useCategoryFilterAnimations';
 import type { CategoryFilterItemProps } from './CategoryFilters.types';
 
@@ -59,7 +60,7 @@ export function CategoryFilterItem({
         <Text className='text-[15px]'>{category.icon}</Text>
         <Text
           className='text-[15px] font-semibold'
-          style={{ color: selected ? '#FFFFFF' : colors.text }}
+          style={{ color: selected ? themeTokens.text.inverse : colors.text }}
         >
           {category.label}
         </Text>

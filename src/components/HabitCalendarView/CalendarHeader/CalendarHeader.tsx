@@ -1,6 +1,7 @@
 import { format } from 'date-fns';
 import { ChevronLeft, ChevronRight } from 'lucide-react-native';
 import { Pressable, Text, View } from 'react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '../../../theme/ThemeContext';
 
 interface CalendarHeaderProps {
@@ -57,7 +58,7 @@ export function CalendarHeader({
           hitSlop={{ bottom: 8, left: 8, right: 8, top: 8 }}
           onPress={onPrevious}
         >
-          <ChevronLeft color={colors.gray[600]} size={20} />
+          <ChevronLeft color={colors.gray[600]} size={iconSizes.medium} />
         </Pressable>
 
         <Pressable
@@ -67,7 +68,7 @@ export function CalendarHeader({
           hitSlop={{ bottom: 8, left: 8, right: 8, top: 8 }}
           onPress={onNext}
         >
-          <ChevronRight color={colors.gray[600]} size={20} />
+          <ChevronRight color={colors.gray[600]} size={iconSizes.medium} />
         </Pressable>
       </View>
     </View>

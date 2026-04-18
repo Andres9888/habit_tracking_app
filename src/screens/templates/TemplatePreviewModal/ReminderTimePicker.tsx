@@ -12,13 +12,15 @@ import { useAppTheme } from '../../../theme';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { styles as baseStyles } from './styles';
 import type { ReminderTimePickerProps } from './types';
+import { iconSizes } from '@/theme/iconSizes';
 import { triggerHaptic } from '@/utils/haptics';
+import { borderRadius } from '@/theme/spacing';
 import { fontWeights } from '@/theme/typography';
 
 const localStyles = StyleSheet.create({
   timePickerButton: {
     alignItems: 'center',
-    borderRadius: 12,
+    borderRadius: borderRadius.button,
     borderWidth: 1,
     flexDirection: 'row',
     gap: 12,
@@ -87,7 +89,7 @@ export function ReminderTimePicker({
         ]}
         onPress={handlePress}
       >
-        <Clock color={colors.text.tertiary} size={20} />
+        <Clock color={colors.text.tertiary} size={iconSizes.medium} />
         <Text
           style={[
             localStyles.timeText,

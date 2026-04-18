@@ -27,7 +27,7 @@ export function ActionButtons({ isTodayCompleted, onMarkToday, onEdit }: ActionB
       >
         <Text
           className='text-center text-base font-semibold'
-          style={{ color: isTodayCompleted ? colors.text.secondary : '#FFFFFF' }}
+          style={{ color: isTodayCompleted ? colors.text.secondary : colors.text.inverse }}
         >
           {markTodayLabel}
         </Text>

@@ -4,6 +4,7 @@
 
 import { StyleSheet } from 'react-native';
 import { colors } from '@/theme/colors';
+import { borderRadius } from '@/theme/spacing';
 import { typography, fontWeights, fontFamilies} from '@/theme/typography';
 
 export const controlsStyles = StyleSheet.create({
@@ -15,7 +16,7 @@ export const controlsStyles = StyleSheet.create({
   },
   gradientButton: {
     borderColor: 'transparent',
-    borderRadius: 12,
+    borderRadius: borderRadius.medium,
     borderWidth: 2,
     height: 56,
     overflow: 'hidden',

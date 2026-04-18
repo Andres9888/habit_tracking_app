@@ -12,6 +12,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Link } from 'lucide-react-native';
 import { durations } from '@/theme/animations';
 import { colors } from '@/theme/colors';
+import { borderRadius } from '@/theme/spacing';
 
 /**
  * Props for the AnimatedLogo component
@@ -86,7 +87,7 @@ export function AnimatedLogo({ size = 80 }: AnimatedLogoProps) {
         style={[
           animatedStyle,
           {
-            borderRadius: 16,
+            borderRadius: borderRadius.card,
             elevation: 4,
             height: size,
             shadowColor: colors.gray[900],
@@ -107,7 +108,7 @@ export function AnimatedLogo({ size = 80 }: AnimatedLogoProps) {
           start={{ x: 0, y: 0 }}
           style={{
             alignItems: 'center',
-            borderRadius: 16,
+            borderRadius: borderRadius.card,
             height: size,
             justifyContent: 'center',
             width: size,

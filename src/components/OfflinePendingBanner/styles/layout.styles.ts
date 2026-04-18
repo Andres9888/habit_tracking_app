@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 
-import { borderRadius } from '../../../theme/spacing';
+import { borderRadius } from '@/theme/spacing';
 import { colors } from '../../../theme/colors';
 
 export const layoutStyles = StyleSheet.create({
@@ -12,7 +12,7 @@ export const layoutStyles = StyleSheet.create({
   },
   container: {
     backgroundColor: colors.gray[50],
-    borderRadius: 12,
+    borderRadius: borderRadius.medium,
     marginHorizontal: 16,
     marginVertical: 8,
     overflow: 'hidden',

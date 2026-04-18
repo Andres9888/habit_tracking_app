@@ -6,6 +6,7 @@ import { StyleSheet } from 'react-native';
 
 import { colors as themeColors } from '../../theme/colors';
 import { useThemeColors } from '../../theme/ThemeContext';
+import { borderRadius } from '../../theme/spacing';
 import { fontWeights, typography } from '../../theme/typography';
 
 export const useStyles = () => {
@@ -46,7 +47,7 @@ export const useStyles = () => {
     linkText: { ...typography.caption, color: colors.primary[600] },
     logoutButton: {
       backgroundColor: isDark ? '#B91C1C' : themeColors.error,
-      borderRadius: 12,
+      borderRadius: borderRadius.button,
       paddingHorizontal: 24,
       paddingVertical: 12,
     },

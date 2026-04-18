@@ -5,7 +5,7 @@
 import { StyleSheet, Dimensions } from 'react-native';
 import { colors } from '../../theme/colors';
 import { typography } from '../../theme/typography';
-import { spacing, shadows } from '../../theme/spacing';
+import { borderRadius, spacing, shadows } from '../../theme/spacing';
 
 const { width: screenWidth } = Dimensions.get('window');
 export const chartWidth = screenWidth - spacing.xl * 2;
@@ -14,13 +14,13 @@ export const chartHeight = 200;
 export const styles = StyleSheet.create({
   container: {
     backgroundColor: colors.surface,
-    borderRadius: 12,
+    borderRadius: borderRadius.medium,
     padding: spacing.md,
   },
   emptyContainer: {
     alignItems: 'center',
     backgroundColor: colors.surface,
-    borderRadius: 12,
+    borderRadius: borderRadius.medium,
     height: 200,
     justifyContent: 'center',
     padding: spacing.xl,

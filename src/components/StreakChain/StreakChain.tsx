@@ -65,7 +65,7 @@ export default function StreakChain({
                 }}
               >
                 <Link2
-                  color={isDone ? '#FFFFFF' : themeColors.text.tertiary}
+                  color={isDone ? themeColors.text.inverse : themeColors.text.tertiary}
                   size={iconSize}
                 />
               </View>

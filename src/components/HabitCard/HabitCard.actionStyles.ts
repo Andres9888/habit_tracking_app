@@ -4,6 +4,7 @@
  */
 
 import { StyleSheet, TextStyle } from 'react-native';
+import { colors } from '@/theme/colors';
 import { typography, fontWeights } from '@/theme/typography';
 import { ACTION_WIDTH } from './HabitCard.constants';
 
@@ -24,7 +25,7 @@ export const actionStyles = StyleSheet.create({
   },
   actionText: {
     ...typography.bodySmall,
-    color: '#FFFFFF',
+    color: colors.text.inverse,
     fontWeight: fontWeights.semibold,
   } as TextStyle,
 });

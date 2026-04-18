@@ -55,7 +55,7 @@ export function ThisMonthCard({
       {/* Gradient Background */}
       <LinearGradient
         className='absolute inset-0'
-        colors={['rgba(245, 243, 255, 0.3)', '#ffffff', 'rgba(239, 246, 255, 0.3)']}
+        colors={['rgba(245, 243, 255, 0.3)', themeColors.card, 'rgba(239, 246, 255, 0.3)']}
         end={{ x: 1, y: 1 }}
         start={{ x: 0, y: 0 }}
       />

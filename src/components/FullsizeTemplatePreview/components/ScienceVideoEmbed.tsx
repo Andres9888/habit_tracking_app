@@ -52,7 +52,7 @@ export function ScienceVideoEmbed({ template }: ScienceVideoEmbedProps) {
           style={s.videoThumbnailOverlay}
         />
         <View style={s.playCircle}>
-          <Play color="#FFFFFF" fill="#FFFFFF" size={22} />
+          <Play color={colors.text.inverse} fill={colors.text.inverse} size={22} />
         </View>
       </View>
       <View style={s.videoMeta}>

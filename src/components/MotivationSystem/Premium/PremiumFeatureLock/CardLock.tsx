@@ -70,7 +70,7 @@ export function CardLock({
       >
         <LinearGradient
           className='absolute inset-0'
-          colors={['#f5f3ff', '#ffffff']}
+          colors={['#f5f3ff', colors.card]}
           end={{ x: 1, y: 1 }}
           start={{ x: 0, y: 0 }}
         />

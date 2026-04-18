@@ -10,6 +10,7 @@ import Animated, { FadeIn } from 'react-native-reanimated';
 import { useThemeColors } from '../../../theme/ThemeContext';
 
 import { CHART_HEIGHT } from '../constants';
+import { borderRadius } from '@/theme/spacing';
 import { fontFamilies } from '@/theme/typography';
 
 /**
@@ -25,7 +26,7 @@ export const EmptyState = React.memo(function EmptyState() {
       style={{
         alignItems: 'center',
         backgroundColor: colors.gray[50],
-        borderRadius: 12,
+        borderRadius: borderRadius.medium,
         height: CHART_HEIGHT,
         justifyContent: 'center',
       }}

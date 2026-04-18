@@ -2,6 +2,7 @@ import { StyleSheet } from 'react-native';
 import { colors } from '../../../theme/colors';
 import { lightColors } from '../../../theme/darkColors';
 import type { SemanticColors } from '../../../theme/darkColors';
+import { borderRadius } from '../../../theme/spacing';
 
 type PreviewThemeColors = Pick<SemanticColors, 'primary'> & {
   error: string;
@@ -34,7 +35,7 @@ export const getPreviewStyles = (themeColors: PreviewThemeColors) =>
     previewScienceBox: {
       alignItems: 'flex-start',
       borderColor: themeColors.primary[700],
-      borderRadius: 12,
+      borderRadius: borderRadius.medium,
       borderWidth: 1,
       flexDirection: 'row',
       gap: 12,
@@ -58,7 +59,7 @@ export const getPreviewStyles = (themeColors: PreviewThemeColors) =>
     youtubeIconWrapper: {
       alignItems: 'center',
       backgroundColor: themeColors.error,
-      borderRadius: 12,
+      borderRadius: borderRadius.medium,
       height: 40,
       justifyContent: 'center',
       width: 40,
@@ -67,7 +68,7 @@ export const getPreviewStyles = (themeColors: PreviewThemeColors) =>
       alignItems: 'center',
       backgroundColor: themeColors.errorLight,
       borderColor: themeColors.error,
-      borderRadius: 12,
+      borderRadius: borderRadius.medium,
       borderWidth: 1,
       flexDirection: 'row',
       gap: 14,

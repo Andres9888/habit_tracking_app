@@ -10,7 +10,7 @@ import { useThemeColors } from '../../../theme/ThemeContext';
 import { fontFamilies, typography, fontWeights } from '../../../theme/typography';
 import { useReducedMotionEntry } from '../../../components/EmptyState/useReducedMotionEntry';
 import { colors as themeColors } from '../../../theme/colors';
-import { spacing, shadows } from '../../../theme/spacing';
+import { borderRadius, spacing, shadows } from '../../../theme/spacing';
 import { iconSizes } from '@/theme/iconSizes';
 
 export const EmptyState: React.FC = () => {
@@ -83,7 +83,7 @@ export const EmptyState: React.FC = () => {
         style={{
           ...shadows.floatingActionButton,
           backgroundColor: colors.card,
-          borderRadius: 16,
+          borderRadius: borderRadius.card,
           padding: spacing.lg,
           shadowColor: colors.text.primary,
           width: '100%',
@@ -113,7 +113,7 @@ function StepItem({ number, text, colors }: { number: string; text: string; colo
         style={{
           alignItems: 'center',
           backgroundColor: colors.gray[100],
-          borderRadius: 16,
+          borderRadius: borderRadius.card,
           height: 28,
           justifyContent: 'center',
           width: 28,

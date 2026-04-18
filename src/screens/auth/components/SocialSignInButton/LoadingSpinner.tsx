@@ -8,6 +8,7 @@ import Animated, {
   cancelAnimation,
 } from 'react-native-reanimated';
 import { durations } from '@/theme/animations';
+import { borderRadius } from '@/theme/spacing';
 
 interface LoadingSpinnerProps {
   color: string;
@@ -35,7 +36,7 @@ export function LoadingSpinner({ color }: LoadingSpinnerProps) {
         animatedStyle,
         {
           borderColor: color,
-          borderRadius: 12,
+          borderRadius: borderRadius.medium,
           borderTopColor: 'transparent',
           borderWidth: 2,
           height: 20,

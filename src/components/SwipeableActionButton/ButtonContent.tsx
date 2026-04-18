@@ -10,6 +10,7 @@ import { ChevronRight } from 'lucide-react-native';
 import { useThemeColors } from '@/theme/ThemeContext';
 import type { ButtonContentProps } from './ButtonContent.types';
 import { IconContainer } from './IconContainer';
+import { iconSizes } from '@/theme/iconSizes';
 import { triggerHaptic } from '@/utils/haptics';
 
 export function ButtonContent({
@@ -43,8 +44,8 @@ export function ButtonContent({
         /> : null}
       <IconContainer isBoost={isBoost} isDestructive={isDestructive}>
         <Icon
-          color={isDestructive ? themeColors.status.error : isBoost ? '#ffffff' : themeColors.text.primary}
-          size={20}
+          color={isDestructive ? themeColors.status.error : isBoost ? themeColors.text.inverse : themeColors.text.primary}
+          size={iconSizes.medium}
           strokeWidth={2.5}
         />
       </IconContainer>
@@ -64,7 +65,7 @@ export function ButtonContent({
       </View>
       {showChevron ? <ChevronRight
           color={isDestructive ? themeColors.status.error : isBoost ? themeColors.status.premium : themeColors.text.tertiary}
-          size={20}
+          size={iconSizes.medium}
         /> : null}
     </Pressable>
   );

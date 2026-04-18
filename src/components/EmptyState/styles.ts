@@ -3,6 +3,7 @@
  */
 
 import { StyleSheet } from 'react-native';
+import { borderRadius } from '../../theme/spacing';
 import { typography, fontWeights, fontFamilies} from '../../theme/typography';
 
 export const styles = StyleSheet.create({
@@ -36,7 +37,7 @@ export const styles = StyleSheet.create({
   },
   templateChip: {
     alignItems: 'center',
-    borderRadius: 16,
+    borderRadius: borderRadius.card,
     flexDirection: 'row',
     gap: 8,
     paddingHorizontal: 16,

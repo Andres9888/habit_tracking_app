@@ -10,7 +10,7 @@ import { BarChart3, Calendar } from 'lucide-react-native';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import type { EmptyInsightsStateProps } from '../InsightsSection.types';
 import { fontFamilies, fontWeights } from '@/theme/typography';
-import { spacing } from '@/theme';
+import { borderRadius, spacing } from '@/theme/spacing';
 import { iconSizes } from '@/theme/iconSizes';
 
 export function EmptyInsightsState({ daysRemaining }: EmptyInsightsStateProps) {
@@ -21,7 +21,7 @@ export function EmptyInsightsState({ daysRemaining }: EmptyInsightsStateProps) {
       entering={FadeInDown.delay(100).springify().damping(18)}
       style={{
         backgroundColor: colors.card,
-        borderRadius: 16,
+        borderRadius: borderRadius.card,
         overflow: 'hidden',
         shadowColor: colors.text.primary,
         shadowOffset: { height: 2, width: 0 },
@@ -59,7 +59,7 @@ export function EmptyInsightsState({ daysRemaining }: EmptyInsightsStateProps) {
           style={{
             alignItems: 'center',
             backgroundColor: colors.gray[50],
-            borderRadius: 12,
+            borderRadius: borderRadius.medium,
             paddingVertical: 24,
           }}
         >

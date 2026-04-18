@@ -1,6 +1,7 @@
 import { Text, View } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import { useThemeColors } from '../../../../theme/ThemeContext';
+import { borderRadius } from '@/theme/spacing';
 import { fontFamilies, fontWeights } from '@/theme/typography';
 
 interface EmptyStateProps {
@@ -28,7 +29,7 @@ export function EmptyState({ label }: EmptyStateProps) {
         style={{
           alignItems: 'center',
           backgroundColor: colors.gray[50],
-          borderRadius: 16,
+          borderRadius: borderRadius.card,
           paddingVertical: 24,
         }}
       >

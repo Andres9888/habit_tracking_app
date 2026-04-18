@@ -59,7 +59,7 @@ export function ActionButton({
         onPressOut={handlePressOut}
       >
         <Icon
-          color={isPrimary ? '#ffffff' : colors.text.secondary}
+          color={isPrimary ? colors.text.inverse : colors.text.secondary}
           size={iconSizes.medium}
         />
         <Text

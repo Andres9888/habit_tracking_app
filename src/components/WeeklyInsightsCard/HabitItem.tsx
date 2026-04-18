@@ -8,6 +8,7 @@ import { View, Text } from 'react-native';
 import type { LucideIcon } from 'lucide-react-native';
 import { TrendingUp, TrendingDown, AlertTriangle } from 'lucide-react-native';
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
+import { iconSizes } from '@/theme/iconSizes';
 import { colors } from '../../theme/colors';
 import type { HabitChange, HabitChangeType } from './WeeklyInsightsCard.types';
 import { habitItemStyles as styles } from './HabitItem.styles';
@@ -65,7 +66,7 @@ export function HabitItem({ habit, type, onPress }: HabitItemProps) {
       </View>
 
       <View style={styles.habitItemRight}>
-        <Icon color={iconColor} size={20} />
+        <Icon color={iconColor} size={iconSizes.medium} />
         {type === 'risk' ? null : <Text
             style={[
               styles.changePercentage,

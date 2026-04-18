@@ -9,6 +9,7 @@ import { View, Text, TextInput } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { CloudRain, AlertTriangle, Lightbulb } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { buildTextInputHintProps } from '@/utils/textInputHintProps';
 import { PromptList } from './PromptList';
@@ -39,7 +40,7 @@ export function NegativeStep({
             end={{ x: 1, y: 1 }}
             start={{ x: 0, y: 0 }}
           />
-          <CloudRain className='text-white' size={32} />
+          <CloudRain className='text-white' size={iconSizes.xl} />
         </View>
         <Text className='text-xl font-bold' style={{ color: colors.text.primary }}>
           Visualize Failure
@@ -61,7 +62,7 @@ export function NegativeStep({
       />
 
       <View className='flex-row items-start gap-2 rounded-xl p-3' style={{ backgroundColor: colors.status.warningLight }}>
-        <Lightbulb className='mt-0.5' color={colors.status.warning} size={16} />
+        <Lightbulb className='mt-0.5' color={colors.status.warning} size={iconSizes.small} />
         <Text className='flex-1 text-xs leading-relaxed' style={{ color: colors.status.warningText }}>
           <Text className='font-semibold'>Why this works: </Text>
           Fear of loss is neurologically twice as powerful as desire for gain.

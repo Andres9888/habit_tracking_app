@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { colors } from '../../../theme/colors';
+import { borderRadius } from '../../../theme/spacing';
 import { fontWeights, typography } from '../../../theme/typography';
 
 export const sortStyles = StyleSheet.create({
@@ -16,7 +17,7 @@ export const sortStyles = StyleSheet.create({
     zIndex: 100,
   },
   sortDropdown: {
-    borderRadius: 12,
+    borderRadius: borderRadius.medium,
     borderWidth: 1,
     elevation: 8,
     left: 0,

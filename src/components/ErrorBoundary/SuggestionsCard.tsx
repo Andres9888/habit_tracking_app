@@ -6,6 +6,7 @@
 import { StyleSheet, Text, View } from 'react-native';
 
 import { useThemeColors } from '../../theme/ThemeContext';
+import { borderRadius } from '@/theme/spacing';
 import { fontWeights, typography } from '@/theme/typography';
 
 export function SuggestionsCard() {
@@ -15,7 +16,7 @@ export function SuggestionsCard() {
     card: {
       backgroundColor: colors.card,
       borderColor: colors.cardBorder,
-      borderRadius: 12,
+      borderRadius: borderRadius.medium,
       borderWidth: 1,
       marginBottom: 24,
       maxWidth: 280,

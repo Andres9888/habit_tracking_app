@@ -3,6 +3,7 @@
  */
 
 import { StyleSheet } from 'react-native';
+import { colors } from '../../theme/colors';
 import { spacing, borderRadius, shadows } from '../../theme/spacing';
 import { typography } from '../../theme/typography';
 
@@ -44,16 +45,16 @@ export const achievementCardStyles = StyleSheet.create({
     paddingVertical: spacing.sm,
   },
   habitEmoji: { fontSize: 20, marginRight: spacing.sm },
-  habitName: { ...typography.heading3, color: '#FFFFFF' },
+  habitName: { ...typography.heading3, color: colors.text.inverse },
   streakText: {
     ...typography.displayLarge,
-    color: '#FFFFFF',
+    color: colors.text.inverse,
     marginBottom: spacing.xs,
     textAlign: 'center',
   },
   title: {
     ...typography.heading1,
-    color: '#FFFFFF',
+    color: colors.text.inverse,
     marginBottom: spacing.sm,
     textAlign: 'center',
   },

@@ -3,6 +3,8 @@
  */
 
 import { StyleSheet } from 'react-native';
+import { colors } from '@/theme/colors';
+import { borderRadius } from '@/theme/spacing';
 import { typography, fontWeights, fontFamilies} from '@/theme/typography';
 
 export const styles = StyleSheet.create({
@@ -13,7 +15,7 @@ export const styles = StyleSheet.create({
   },
   swipeActionInner: {
     alignItems: 'center',
-    borderRadius: 12,
+    borderRadius: borderRadius.medium,
     height: '100%',
     justifyContent: 'center',
     marginLeft: 8,
@@ -39,6 +41,6 @@ export const styles = StyleSheet.create({
 /** Swipe colors based on variant */
 export function getSwipeColors(swipeVariant: 'destructive' | 'warning') {
   return swipeVariant === 'destructive'
-    ? { bg: '#dc2626', iconBg: 'rgba(255,255,255,0.2)', text: '#ffffff' } // red-600
-    : { bg: '#f59e0b', iconBg: 'rgba(255,255,255,0.2)', text: '#ffffff' }; // amber-500
+    ? { bg: '#dc2626', iconBg: 'rgba(255,255,255,0.2)', text: colors.text.inverse } // red-600
+    : { bg: '#f59e0b', iconBg: 'rgba(255,255,255,0.2)', text: colors.text.inverse }; // amber-500
 }

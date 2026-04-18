@@ -8,7 +8,9 @@ import { View, Text, StyleSheet, Pressable } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import { Quote, RefreshCw } from 'lucide-react-native';
 import { QUOTES } from './quotes';
+import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '../../theme/ThemeContext';
+import { borderRadius } from '@/theme/spacing';
 import { fontFamilies, fontWeights } from '@/theme/typography';
 
 interface DailyQuoteProps {
@@ -55,7 +57,7 @@ export function DailyQuote({
           backgroundColor: colors.gray[50],
           borderLeftColor: colors.gray[400],
           borderLeftWidth: 3,
-          borderRadius: 16,
+          borderRadius: borderRadius.card,
           marginHorizontal: 16,
           marginVertical: 8,
           padding: 16,
@@ -89,7 +91,7 @@ export function DailyQuote({
   return (
     <Animated.View entering={FadeIn.delay(100)} style={styles.container}>
       <View style={styles.iconContainer}>
-        <Quote color={colors.gray[400]} size={16} />
+        <Quote color={colors.gray[400]} size={iconSizes.small} />
       </View>
 
       <Text style={styles.quoteText}>"{quote.text}"</Text>

@@ -6,6 +6,7 @@
 import React from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { fontFamilies, fontWeights } from '@/theme/typography';
+import { useThemeColors } from '@/theme';
 import { GOAL_COLLECTIONS, type GoalCollection } from '../../data/goalCollections';
 
 interface GoalCollectionGridProps {
@@ -13,28 +14,33 @@ interface GoalCollectionGridProps {
 }
 
 export function GoalCollectionGrid({ onSelectGoal }: GoalCollectionGridProps) {
+  const { isDark } = useThemeColors();
   return (
     <View style={goalStyles.container}>
       <Text style={goalStyles.sectionTitle}>What's your goal?</Text>
       <View style={goalStyles.grid}>
-        {GOAL_COLLECTIONS.map((goal) => (
-          <Pressable
-            key={goal.id}
-            style={[goalStyles.card, { backgroundColor: goal.bgColor }]}
-            onPress={() => onSelectGoal(goal)}
-          >
-            <Text style={goalStyles.emoji}>{goal.emoji}</Text>
-            <Text style={[goalStyles.label, { color: goal.textColor }]}>
-              {goal.label}
-            </Text>
-            <Text
-              numberOfLines={2}
-              style={[goalStyles.description, { color: `${goal.textColor}CC` }]}
+        {GOAL_COLLECTIONS.map((goal) => {
+          const bg = isDark ? goal.darkBgColor : goal.bgColor;
+          const text = isDark ? goal.darkTextColor : goal.textColor;
+          return (
+            <Pressable
+              key={goal.id}
+              style={[goalStyles.card, { backgroundColor: bg }]}
+              onPress={() => onSelectGoal(goal)}
             >
-              {goal.description}
-            </Text>
-          </Pressable>
-        ))}
+              <Text style={goalStyles.emoji}>{goal.emoji}</Text>
+              <Text style={[goalStyles.label, { color: text }]}>
+                {goal.label}
+              </Text>
+              <Text
+                numberOfLines={2}
+                style={[goalStyles.description, { color: `${text}CC` }]}
+              >
+                {goal.description}
+              </Text>
+            </Pressable>
+          );
+        })}
       </View>
     </View>
   );

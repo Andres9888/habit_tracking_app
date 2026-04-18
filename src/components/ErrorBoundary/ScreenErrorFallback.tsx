@@ -7,6 +7,7 @@ import React from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useThemeColors } from '../../theme/ThemeContext';
+import { borderRadius } from '../../theme/spacing';
 import { fontWeights, typography } from '../../theme/typography';
 
 interface ScreenErrorFallbackProps {
@@ -60,7 +61,7 @@ export function ScreenErrorFallback({
     primaryButton: {
       alignItems: 'center',
       backgroundColor: colors.primary[500],
-      borderRadius: 12,
+      borderRadius: borderRadius.button,
       marginTop: 24,
       paddingHorizontal: 32,
       paddingVertical: 16,

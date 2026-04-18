@@ -1,11 +1,12 @@
 import { StyleSheet } from 'react-native';
 import { colors as themeColors } from '@/theme/colors';
 import type { SemanticColors } from '../../../theme/darkColors';
+import { borderRadius } from '../../../theme/spacing';
 import { fontFamilies, fontWeights } from '../../../theme/typography';
 
 export function createErrorFallbackStyles(colors: SemanticColors) {
   return StyleSheet.create({
-    button: { backgroundColor: colors.text.primary, borderRadius: 12, paddingHorizontal: 24, paddingVertical: 12 },
+    button: { backgroundColor: colors.text.primary, borderRadius: borderRadius.button, paddingHorizontal: 24, paddingVertical: 12 },
     buttonText: { color: colors.text.inverse, fontFamily: fontFamilies.primary.text, fontSize: 13, fontWeight: fontWeights.semibold },
     container: { alignItems: 'center', backgroundColor: colors.background, flex: 1, justifyContent: 'center', padding: 24 },
     content: { alignItems: 'center', maxWidth: 320 },

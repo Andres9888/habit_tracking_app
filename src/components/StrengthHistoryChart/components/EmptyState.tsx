@@ -7,7 +7,9 @@ import React from 'react';
 import { View } from 'react-native';
 import { Activity } from 'lucide-react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
+import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '../../../theme/ThemeContext';
+import { borderRadius } from '@/theme/spacing';
 import { fontFamilies, fontWeights } from '@/theme/typography';
 
 const anim = (delay: number) =>
@@ -25,7 +27,7 @@ export function EmptyState({ height }: EmptyStateProps) {
       style={{
         alignItems: 'center',
         backgroundColor: colors.gray[50],
-        borderRadius: 12,
+        borderRadius: borderRadius.medium,
         height,
         justifyContent: 'center',
         paddingHorizontal: 24,
@@ -36,14 +38,14 @@ export function EmptyState({ height }: EmptyStateProps) {
         style={{
           alignItems: 'center',
           backgroundColor: isDark ? '#2E1065' : '#F5F3FF',
-          borderRadius: 12,
+          borderRadius: borderRadius.medium,
           height: 48,
           justifyContent: 'center',
           marginBottom: 12,
           width: 48,
         }}
       >
-        <Activity color={isDark ? '#C4B5FD' : '#8b5cf6'} size={24} strokeWidth={1.5} />
+        <Activity color={isDark ? '#C4B5FD' : '#8b5cf6'} size={iconSizes.large} strokeWidth={1.5} />
       </Animated.View>
       <Animated.Text
         entering={anim(60)}

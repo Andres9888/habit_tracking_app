@@ -56,7 +56,7 @@ export function BenefitsCTAFooter({
             style={handlers.priceLabel ? undefined : { opacity: 0.5 }}
           >
             <Text className='text-base font-semibold text-white'>{config.ctaText}</Text>
-            <ChevronRight color='#ffffff' size={iconSizes.medium} />
+            <ChevronRight color={themeColors.text.inverse} size={iconSizes.medium} />
           </LinearGradient>
         </Animated.View>
       </Pressable>

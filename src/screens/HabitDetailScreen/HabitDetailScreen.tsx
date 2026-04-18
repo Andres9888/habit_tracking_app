@@ -4,6 +4,7 @@ import React from 'react';
 import { View, Modal, KeyboardAvoidingView, Platform } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Edit3 } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 import { ScreenHeader } from '../../components/ScreenHeader';
 import {
@@ -86,7 +87,7 @@ function HabitDetailScreenContent({
                     leftAction='close'
                     rightAction={
                       <HeaderButton
-                        icon={<Edit3 size={16} strokeWidth={2.5} />}
+                        icon={<Edit3 size={iconSizes.small} strokeWidth={2.5} />}
                         label='Edit habit'
                         text='Edit Habit'
                         onPress={handleEdit}

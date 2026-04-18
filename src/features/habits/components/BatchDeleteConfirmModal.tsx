@@ -8,6 +8,7 @@ import { AlertTriangle } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
 import { colors as palette } from '../../../theme/colors';
 import { useThemeColors } from '../../../theme/ThemeContext';
+import { borderRadius } from '../../../theme/spacing';
 import { fontWeights, typography } from '../../../theme/typography';
 
 interface BatchDeleteConfirmModalProps {
@@ -56,7 +57,7 @@ function BatchDeleteConfirmModalComponent({
 const s = StyleSheet.create({
   actions: { flexDirection: 'row', gap: 10 },
   box: { borderRadius: 24, padding: 28, width: 320 },
-  btn: { alignItems: 'center', borderRadius: 12, flex: 1, paddingVertical: 12 },
+  btn: { alignItems: 'center', borderRadius: borderRadius.button, flex: 1, paddingVertical: 12 },
   btnText: { ...typography.bodySmall, fontWeight: fontWeights.semibold },
   cancelBtn: { backgroundColor: 'rgba(255,255,255,0.08)' },
   deleteBtn: { backgroundColor: palette.error },

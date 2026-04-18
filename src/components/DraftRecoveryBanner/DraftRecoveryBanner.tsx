@@ -5,6 +5,7 @@ import { RefreshCw, X } from 'lucide-react-native';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { VARIANT_STYLES } from './constants';
 import type { DraftRecoveryBannerProps } from './types';
+import { iconSizes } from '@/theme/iconSizes';
 import { triggerHaptic } from '@/utils/haptics';
 
 export function DraftRecoveryBanner({
@@ -65,7 +66,7 @@ export function DraftRecoveryBanner({
     >
       <View className='flex-row items-center gap-3'>
         <View className={`rounded-lg ${styles.iconBg} p-2`} style={themeStyle?.iconBg}>
-          <RefreshCw color={themeStyle?.iconColor ?? styles.iconColor} size={16} />
+          <RefreshCw color={themeStyle?.iconColor ?? styles.iconColor} size={iconSizes.small} />
         </View>
         <View className='flex-1'>
           <Text className={`text-sm font-medium ${styles.text}`} style={themeStyle?.text}>
