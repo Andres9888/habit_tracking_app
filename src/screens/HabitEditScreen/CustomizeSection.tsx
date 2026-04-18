@@ -1,10 +1,10 @@
 /**
  * CustomizeSection Component
  *
- * Visual customization options for a habit including:
+ * Visual customization options for a habit:
  * - Emoji icon picker
  * - Accent color selection
- * - Reminder scheduling
+ * - Daily reminder scheduling
  */
 
 import { Text, View } from 'react-native';
@@ -13,12 +13,8 @@ import { EmojiPicker } from '../../components/CreateHabitModal/components/EmojiP
 import { ColorPickerSection } from '../../components/CreateHabitModal/components/ColorPickerSection';
 import { EnhancedReminderSelector } from '../../components/CreateHabitModal/components/EnhancedReminderSelector';
 import { HABIT_COLORS } from '../../components/CreateHabitModal/constants';
-import { AdvancedAlgorithmDisclosure } from '../../components/AlgorithmPicker';
-import { ProgressEmojiPicker } from '../../components/ProgressEmojiPicker';
-import { useUserDefaultProgressEmojis } from '../../hooks/useProgressEmojis';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { fontWeights, typography } from '../../theme/typography';
-import type { ProgressEmojiSet } from '../../utils/progressEmojis';
 
 const entrance = (delay: number) =>
   FadeInUp.delay(delay).springify().damping(18);
@@ -29,16 +25,10 @@ interface CustomizeSectionProps {
   selectedColor: string;
   remindersEnabled: boolean;
   reminderTime: Date;
-  strengthAlgorithm: 'forgiving' | 'balanced' | 'strict';
-  progressEmojis: ProgressEmojiSet | undefined;
   onEmojiSelect: (emoji: string | null) => void;
   onColorSelect: (color: string) => void;
   onReminderToggle: (enabled: boolean) => void;
   onReminderTimeChange: (time: Date) => void;
-  onStrengthAlgorithmChange: (
-    mode: 'forgiving' | 'balanced' | 'strict'
-  ) => void;
-  onProgressEmojisChange: (next: ProgressEmojiSet | undefined) => void;
 }
 
 export function CustomizeSection({
@@ -49,15 +39,10 @@ export function CustomizeSection({
   reminderTime,
   onEmojiSelect,
   onColorSelect,
-  strengthAlgorithm,
-  progressEmojis,
   onReminderToggle,
   onReminderTimeChange,
-  onStrengthAlgorithmChange,
-  onProgressEmojisChange,
 }: CustomizeSectionProps) {
   const { colors: themeColors } = useThemeColors();
-  const userDefaultEmojis = useUserDefaultProgressEmojis();
 
   return (
     <View className='flex-1'>
@@ -103,28 +88,12 @@ export function CustomizeSection({
         />
       </Animated.View>
 
-      <Animated.View className='mt-4' entering={entrance(90)}>
-        <ProgressEmojiPicker
-          fallback={userDefaultEmojis}
-          label='Growth icons'
-          value={progressEmojis}
-          onChange={onProgressEmojisChange}
-        />
-      </Animated.View>
-
       <Animated.View entering={entrance(120)}>
         <EnhancedReminderSelector
           enabled={remindersEnabled}
           reminderTime={reminderTime}
           onTimeChange={onReminderTimeChange}
           onToggle={onReminderToggle}
-        />
-      </Animated.View>
-
-      <Animated.View className='mt-4' entering={entrance(180)}>
-        <AdvancedAlgorithmDisclosure
-          selected={strengthAlgorithm}
-          onSelect={onStrengthAlgorithmChange}
         />
       </Animated.View>
     </View>

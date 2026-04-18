@@ -15,14 +15,12 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useSwipeDismiss } from '../../components/CreateHabitModal/hooks/useSwipeDismiss';
 import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 import { useThemeColors } from '../../theme/ThemeContext';
-import { borderRadius, shadows } from '../../theme/spacing';
+import { borderRadius } from '../../theme/spacing';
+import { AdvancedOptionsSection } from '../../components/AdvancedOptions';
 import { EditHeader } from './EditHeader';
 import { HabitEditSkeleton } from './HabitEditSkeleton';
 import { NameInputSection } from './NameInputSection';
 import { CustomizeSection } from './CustomizeSection';
-import { DangerZone } from './DangerZone';
-import { SectionLabel } from './SectionLabel';
-import { StreakGoalSection } from './StreakGoalSection';
 import { useHabitEditScreen } from './useHabitEditScreen';
 import type { HabitEditScreenProps } from './types';
 
@@ -116,46 +114,28 @@ function HabitEditScreenContent({
                       >
                         <CustomizeSection
                           habitName={state.habitName}
-                          progressEmojis={state.progressEmojis}
                           remindersEnabled={state.remindersEnabled}
                           reminderTime={state.reminderTime}
                           selectedColor={state.selectedColor}
                           selectedEmoji={state.selectedEmoji}
-                          strengthAlgorithm={state.strengthAlgorithm}
                           onColorSelect={state.handleColorSelect}
                           onEmojiSelect={state.handleEmojiSelect}
-                          onProgressEmojisChange={
-                            state.handleProgressEmojisChange
-                          }
                           onReminderTimeChange={state.handleReminderTimeChange}
                           onReminderToggle={state.handleReminderToggle}
-                          onStrengthAlgorithmChange={
-                            state.handleStrengthAlgorithmChange
-                          }
-                        />
-                        <StreakGoalSection
-                          streakGoal={state.streakGoal}
-                          onStreakGoalChange={state.handleStreakGoalChange}
                         />
                       </Animated.View>
-                      <SectionLabel
-                        delay={400}
-                        text='DANGER ZONE'
-                        variant='danger'
+                      <AdvancedOptionsSection
+                        progressEmojis={state.progressEmojis}
+                        streakGoal={state.streakGoal}
+                        strengthAlgorithm={state.strengthAlgorithm}
+                        onProgressEmojisChange={
+                          state.handleProgressEmojisChange
+                        }
+                        onStreakGoalChange={state.handleStreakGoalChange}
+                        onStrengthAlgorithmChange={
+                          state.handleStrengthAlgorithmChange
+                        }
                       />
-                      <Animated.View
-                        className='mx-6 rounded-2xl p-4'
-                        entering={FadeInUp.delay(460).springify().damping(18)}
-                        style={{
-                          backgroundColor: themeColors.card,
-                          ...shadows.card,
-                        }}
-                      >
-                        <DangerZone
-                          onArchive={state.handleArchive}
-                          onDelete={state.handleDelete}
-                        />
-                      </Animated.View>
                     </Pressable>
                   </ScrollView>
                 </Animated.View>

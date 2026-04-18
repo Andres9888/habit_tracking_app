@@ -12,6 +12,7 @@ import { markFirstHabitCreated } from '../../../hooks/useStreakReminders/useStre
 import { cancelReminder, scheduleReminder } from './useHabitReminders';
 import { validateHabitName } from '../../../utils/validation';
 import type { Id } from '../../../../convex/_generated/dataModel';
+import type { ProgressEmojiSet } from '../../../utils/progressEmojis';
 import { optimisticHabitCreationStore } from '../../../features/habits/hooks/optimisticHabitCreationStore';
 
 interface HabitData {
@@ -25,6 +26,8 @@ interface HabitData {
   selectedDays: number[];
   selectedEmoji: string | null;
   strengthAlgorithm: 'forgiving' | 'balanced' | 'strict';
+  progressEmojis: ProgressEmojiSet | undefined;
+  streakGoal: number;
 }
 
 interface EditHabitData extends HabitData {
@@ -49,6 +52,9 @@ export function useCreateHabitHandlers() {
     selectedDays,
     dayPhase,
     reminderSound,
+    strengthAlgorithm,
+    progressEmojis,
+    streakGoal,
   }: EditHabitData): Promise<void> {
     // Validate habit name
     const validation = validateHabitName(fullHabitName);
@@ -81,9 +87,11 @@ export function useCreateHabitHandlers() {
         iconColor: selectedColor,
         frequency: frequency || undefined,
         daysOfWeek: selectedDays.length < 7 ? selectedDays : undefined,
+        goalDuration: streakGoal > 0 ? streakGoal : undefined,
         name: sanitizedName,
         notes: habitToEdit.notes ?? '',
         preferredTime: dayPhase ?? undefined,
+        progressEmojis,
         remindersEnabled: finalHasReminders,
         reminderSound: finalHasReminders
           ? (reminderSound ?? undefined)
@@ -91,6 +99,7 @@ export function useCreateHabitHandlers() {
         reminderTime: finalHasReminders
           ? formatReminderTime24(reminderTime)
           : undefined,
+        strengthAlgorithm,
       });
     } catch (error) {
       if (__DEV__) console.error('Failed to edit habit:', error);
@@ -109,6 +118,8 @@ export function useCreateHabitHandlers() {
     dayPhase,
     reminderSound,
     strengthAlgorithm,
+    progressEmojis,
+    streakGoal,
   }: HabitData): Promise<void> {
     // Validate habit name
     const validation = validateHabitName(fullHabitName);
@@ -139,9 +150,11 @@ export function useCreateHabitHandlers() {
         iconColor: selectedColor,
         frequency: frequency || undefined,
         daysOfWeek: selectedDays.length < 7 ? selectedDays : undefined,
+        goalDuration: streakGoal > 0 ? streakGoal : undefined,
         name: sanitizedName,
         notes: '',
         preferredTime: dayPhase ?? undefined,
+        progressEmojis,
         remindersEnabled: hasReminders,
         reminderSound: hasReminders ? (reminderSound ?? undefined) : undefined,
         reminderTime: formattedReminderTime,
