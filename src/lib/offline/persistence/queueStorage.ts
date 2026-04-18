@@ -11,7 +11,7 @@
  * - Edge Case: App crash during queue write - Transaction-safe to prevent corruption
  */
 
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { offlineStorage } from './offlineStorage';
 
 import type { OfflineQueueState } from '../queue';
 import { OFFLINE_QUEUE_VERSION } from '../queue';
@@ -81,7 +81,7 @@ export async function saveQueueStateUnsafe(
     updatedAt: Date.now(),
   };
 
-  await AsyncStorage.setItem(
+  await offlineStorage.setItem(
     getQueueStorageKey(scope),
     JSON.stringify(stateToSave)
   );
@@ -121,7 +121,7 @@ export async function loadQueueState(
     }
 
     // Normal load path
-    const raw = await AsyncStorage.getItem(storageKey);
+    const raw = await offlineStorage.getItem(storageKey);
     if (!raw) return createDefaultState();
 
     const parsed = JSON.parse(raw) as unknown;
@@ -152,11 +152,11 @@ export async function loadQueueState(
  */
 export async function clearQueueState(scope?: string | null): Promise<void> {
   const storageKey = getQueueStorageKey(scope);
-  await AsyncStorage.removeItem(storageKey);
+  await offlineStorage.removeItem(storageKey);
   await cleanupTransaction(storageKey);
 }
 
 export async function clearLegacyQueueState(): Promise<void> {
-  await AsyncStorage.removeItem(OFFLINE_QUEUE_STORAGE_KEY);
+  await offlineStorage.removeItem(OFFLINE_QUEUE_STORAGE_KEY);
   await cleanupTransaction(OFFLINE_QUEUE_STORAGE_KEY);
 }

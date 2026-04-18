@@ -445,6 +445,16 @@ const applicationTables = {
     useDyslexicFont: v.optional(v.boolean()),
     userId: v.optional(v.string()),
   }).index('by_userId', ['userId']),
+
+  // SR-2026-04-17-09: per-user sliding-window rate limiter. One row
+  // per (userId, action) pair; the row is reset when the window
+  // elapses. See convex/lib/rateLimit.ts for the enforcement logic.
+  rateLimits: defineTable({
+    action: v.string(),
+    count: v.number(),
+    userId: v.string(),
+    windowStartMs: v.number(),
+  }).index('by_user_and_action', ['userId', 'action']),
 };
 
 export default defineSchema({

@@ -74,9 +74,11 @@ function sortByStreak(
   });
 }
 
+const nameCollator = new Intl.Collator(undefined, {
+  sensitivity: 'base',
+  usage: 'sort',
+});
+
 function compareNames(nameA: string, nameB: string): number {
-  const normalizedA = nameA.trim().toLowerCase();
-  const normalizedB = nameB.trim().toLowerCase();
-  if (normalizedA === normalizedB) return 0;
-  return normalizedA < normalizedB ? -1 : 1;
+  return nameCollator.compare(nameA.trim(), nameB.trim());
 }

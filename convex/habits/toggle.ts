@@ -11,6 +11,7 @@ import {
   resolveAlgorithmMode,
 } from '../habitStrength';
 import { calculateStreakFromHistory } from '../streakUtils';
+import { enforceRateLimit } from '../lib/rateLimit';
 import {
   getTodayForTimezone,
   isFutureDate,
@@ -32,6 +33,9 @@ export const toggleHabit = mutation({
       throw new Error('Invalid date format; expected YYYY-MM-DD');
     if (isFutureDate(args.date))
       throw new Error('Cannot track habits for future dates');
+
+    // SR-2026-04-17-09: throttle toggle spam per user.
+    await enforceRateLimit(ctx, identity.subject, 'habit.toggle');
 
     const habit = await ctx.db.get(args.habitId);
     if (!habit) throw new Error('Habit not found');

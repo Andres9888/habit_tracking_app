@@ -64,11 +64,9 @@ export function createSentryReporter(): SentryReporter {
     setUser(user: SentryUser | null): void {
       if (!isSentryInitialized()) return;
       if (user) {
-        Sentry.setUser({
-          email: user.email,
-          id: user.id,
-          username: user.username,
-        });
+        // SEC: Only the opaque Clerk user id is sent to Sentry. No email
+        // or username (SR-2026-04-17-02 — PII minimization).
+        Sentry.setUser({ id: user.id });
         Sentry.setTag('user_premium', user.isPremium ? 'true' : 'false');
       } else {
         Sentry.setUser(null);

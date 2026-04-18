@@ -33,19 +33,23 @@ export function CreateHabitScrollContent({
           autoFocus
           colors={HABIT_COLORS}
           habitName={form.habitName}
+          progressEmojis={form.progressEmojis}
           reminderEnabled={form.remindersEnabled}
           reminderTime={form.reminderTime}
           selectedColor={form.selectedColor}
           selectedEmoji={form.selectedEmoji}
           showNameError={showNameError}
+          streakGoal={form.streakGoal}
+          strengthAlgorithm={form.strengthAlgorithm}
           onColorSelect={callbacks.handleColorSelect}
           onEmojiSelect={callbacks.handleEmojiSelect}
           onHabitNameChange={callbacks.handleNameChange}
+          onProgressEmojisChange={form.setProgressEmojis}
           onReminderTimeChange={callbacks.handleReminderTimeChange}
           onReminderToggle={callbacks.handleReminderToggle}
-          onSubmit={callbacks.handleSubmit}
-          strengthAlgorithm={form.strengthAlgorithm}
+          onStreakGoalChange={form.setStreakGoal}
           onStrengthAlgorithmChange={form.setStrengthAlgorithm}
+          onSubmit={callbacks.handleSubmit}
         />
       </Pressable>
     </ScrollView>
