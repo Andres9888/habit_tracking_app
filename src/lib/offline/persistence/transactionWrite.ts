@@ -16,7 +16,7 @@
  * 3. Cleanup pending key
  */
 
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { offlineStorage } from './offlineStorage';
 
 import {
   createEnvelope,
@@ -62,22 +62,22 @@ export async function transactionSafeWrite<T>(
   const envelopeJson = JSON.stringify(envelope);
 
   // Phase 1: Write to pending key (if crash here, we can detect and recover)
-  await AsyncStorage.setItem(pendingKey, envelopeJson);
+  await offlineStorage.setItem(pendingKey, envelopeJson);
 
   // Phase 2: Optional backup of existing data
   if (opts.createBackup) {
-    const existing = await AsyncStorage.getItem(key);
+    const existing = await offlineStorage.getItem(key);
     if (existing) {
-      await AsyncStorage.setItem(backupKey, existing);
+      await offlineStorage.setItem(backupKey, existing);
     }
   }
 
   // Phase 3: Write to main key
   // If this fails, pending key still exists for recovery on next load
-  await AsyncStorage.setItem(key, JSON.stringify(data));
+  await offlineStorage.setItem(key, JSON.stringify(data));
 
   // Phase 4: Remove pending key (commit complete)
-  await AsyncStorage.removeItem(pendingKey);
+  await offlineStorage.removeItem(pendingKey);
 }
 
 /**
@@ -108,7 +108,7 @@ export async function recoverTransaction<T>(
   }
 
   // Write recovered data to main key to complete the transaction
-  await AsyncStorage.setItem(key, JSON.stringify(recovered));
+  await offlineStorage.setItem(key, JSON.stringify(recovered));
   await cleanupTransaction(key);
 
   // Log recovery - this is notable so using warn level for visibility
@@ -123,7 +123,7 @@ export async function cleanupTransaction(key: string): Promise<void> {
   const pendingKey = getPendingKey(key);
   const backupKey = getBackupKey(key);
 
-  await AsyncStorage.multiRemove([pendingKey, backupKey]);
+  await offlineStorage.multiRemove([pendingKey, backupKey]);
 }
 
 /**
@@ -131,7 +131,7 @@ export async function cleanupTransaction(key: string): Promise<void> {
  */
 export async function verifyStorageIntegrity(key: string): Promise<boolean> {
   try {
-    const raw = await AsyncStorage.getItem(key);
+    const raw = await offlineStorage.getItem(key);
     if (!raw) return true; // No data is valid
 
     // Just verify it's parseable JSON

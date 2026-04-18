@@ -47,7 +47,7 @@ export const getCurrentUserSubscription = query({
 export const grantPremium = internalMutation({
   args: {
     clerkId: v.string(),
-    eventId: v.optional(v.string()),
+    eventId: v.string(),
     eventTimestamp: v.number(),
     eventType: v.string(),
     expiresAt: v.optional(v.number()),
@@ -66,11 +66,7 @@ export const grantPremium = internalMutation({
       .first();
 
     // Idempotency: skip if we already processed this exact event
-    if (
-      existing &&
-      args.eventId &&
-      existing.lastWebhookEventId === args.eventId
-    ) {
+    if (existing && existing.lastWebhookEventId === args.eventId) {
       return;
     }
 
@@ -138,7 +134,7 @@ export const grantPremium = internalMutation({
 export const revokePremium = internalMutation({
   args: {
     clerkId: v.string(),
-    eventId: v.optional(v.string()),
+    eventId: v.string(),
     eventTimestamp: v.number(),
     eventType: v.string(),
   },
@@ -149,7 +145,7 @@ export const revokePremium = internalMutation({
       .withIndex('by_clerk_id', (q) => q.eq('clerkId', clerkId))
       .first();
 
-    if (existing && eventId && existing.lastWebhookEventId === eventId) {
+    if (existing && existing.lastWebhookEventId === eventId) {
       return;
     }
 
@@ -187,7 +183,7 @@ export const revokePremium = internalMutation({
 export const setBillingIssue = internalMutation({
   args: {
     clerkId: v.string(),
-    eventId: v.optional(v.string()),
+    eventId: v.string(),
     eventTimestamp: v.number(),
   },
   handler: async (ctx, { clerkId, eventId, eventTimestamp }) => {
@@ -197,7 +193,7 @@ export const setBillingIssue = internalMutation({
       .withIndex('by_clerk_id', (q) => q.eq('clerkId', clerkId))
       .first();
 
-    if (existing && eventId && existing.lastWebhookEventId === eventId) {
+    if (existing && existing.lastWebhookEventId === eventId) {
       return;
     }
 

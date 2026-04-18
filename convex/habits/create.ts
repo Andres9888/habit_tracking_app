@@ -8,6 +8,7 @@ import { createHabitArgs } from './types';
 import { findMaxOrder } from './utils';
 import { validateHabitFields } from './validation';
 import { hasPremiumAccess } from '../subscriptions/premiumCheck';
+import { enforceRateLimit } from '../lib/rateLimit';
 
 const FREE_HABIT_LIMIT = 3;
 
@@ -20,6 +21,9 @@ export const create = mutation({
       throw new Error('Unauthenticated: Must be logged in to create habits');
     }
     const userId = identity.subject;
+
+    // SR-2026-04-17-09: throttle per-user habit creation.
+    await enforceRateLimit(ctx, userId, 'habit.create');
 
     // SEC-003: Input validation
     const validated = validateHabitFields(args);

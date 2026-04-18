@@ -55,6 +55,8 @@ export function Header() {
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
           <a
             href="https://apps.apple.com/app/chain-day"
+            target="_blank"
+            rel="noopener noreferrer"
             className="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-zinc-700 dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-200"
           >
             Download
@@ -100,6 +102,8 @@ export function Header() {
                 <div className="py-6">
                   <a
                     href="https://apps.apple.com/app/chain-day"
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-zinc-900 hover:bg-zinc-50 dark:text-white dark:hover:bg-zinc-900"
                   >
                     Download

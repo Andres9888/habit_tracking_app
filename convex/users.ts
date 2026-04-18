@@ -8,6 +8,7 @@
 import { mutation, query } from './_generated/server';
 import type { MutationCtx } from './_generated/server';
 import { v } from 'convex/values';
+import { enforceRateLimit } from './lib/rateLimit';
 
 async function deleteDocuments(
   ctx: MutationCtx,
@@ -31,6 +32,9 @@ export const getOrCreateUser = mutation({
     if (!identity) {
       throw new Error('Not authenticated');
     }
+
+    // SR-2026-04-17-09: throttle user-upsert churn per Clerk id.
+    await enforceRateLimit(ctx, identity.subject, 'user.getOrCreate');
 
     // Check if user already exists
     const existing = await ctx.db
@@ -116,10 +120,20 @@ export const deleteCurrentUserData = mutation({
       .query('templateUsage')
       .withIndex('by_user', (q) => q.eq('userId', userId))
       .collect();
+    // SR-2026-04-17-09 follow-up: keep GDPR delete complete when the
+    // rate-limits table was added. Purge all per-user throttle rows.
+    const rateLimits = await ctx.db
+      .query('rateLimits')
+      .withIndex('by_user_and_action', (q) => q.eq('userId', userId))
+      .collect();
 
     const deletedTemplateUsage = await deleteDocuments(
       ctx,
       templateUsage.map((entry) => entry._id)
+    );
+    const deletedRateLimits = await deleteDocuments(
+      ctx,
+      rateLimits.map((entry) => entry._id)
     );
     const deletedTracking = await deleteDocuments(
       ctx,
@@ -148,6 +162,7 @@ export const deleteCurrentUserData = mutation({
 
     return {
       deletedHabits: deletedHabitsCount,
+      deletedRateLimits,
       deletedSettings,
       deletedSubscriptions,
       deletedTemplateUsage,
@@ -158,6 +173,7 @@ export const deleteCurrentUserData = mutation({
   },
   returns: v.object({
     deletedHabits: v.number(),
+    deletedRateLimits: v.number(),
     deletedSettings: v.number(),
     deletedSubscriptions: v.number(),
     deletedTemplateUsage: v.number(),

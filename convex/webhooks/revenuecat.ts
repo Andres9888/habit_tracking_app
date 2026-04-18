@@ -64,11 +64,18 @@ export const revenuecatWebhook = httpAction(async (ctx, request) => {
     const eventType = event?.type;
     // app_user_id is nested inside the event object, NOT at the payload root
     const appUserId: string | undefined = event?.app_user_id;
-    // event.id is RevenueCat's unique identifier per event — used for deduplication
+    // event.id is RevenueCat's unique identifier per event — used for
+    // deduplication. SR-2026-04-17-15: required, not optional, so a
+    // malformed payload can't slip past replay protection.
     const eventId: string | undefined = event?.id;
 
     if (!eventType || !appUserId) {
       console.error('[RevenueCat] Missing event type or app_user_id');
+      return new Response('Invalid payload', { status: 400 });
+    }
+
+    if (!eventId || typeof eventId !== 'string') {
+      console.error('[RevenueCat] Missing event id — required for replay protection');
       return new Response('Invalid payload', { status: 400 });
     }
 
