@@ -11,44 +11,49 @@
  */
 
 import { Pressable, Text, View } from 'react-native';
-import Animated, { FadeInDown } from 'react-native-reanimated';
+import Animated, { FadeIn, FadeInDown, FadeOut, FadeOutDown } from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
 import { OPACITY, ANIMATION_DURATION, ANIMATION_VALUES } from '../../../../constants';
 import { useThemeColors, colors as palette } from '../../../../theme';
+import { useHapticFeedback } from '../../../../hooks/useHapticFeedback';
 
 interface UpgradePromptProps {
   onClose: () => void;
   onUpgradePress: () => void;
-  visible: boolean;
 }
 
 export function UpgradePrompt({
   onClose,
   onUpgradePress,
-  visible,
 }: UpgradePromptProps) {
   const { colors, isDark } = useThemeColors();
+  const { triggerLightImpact } = useHapticFeedback();
 
-  if (!visible) return null;
+  const handleClose = () => {
+    triggerLightImpact();
+    onClose();
+  };
 
   return (
     <Animated.View
       className='absolute inset-0 z-20 items-center justify-end'
       style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
-      entering={FadeInDown.duration(ANIMATION_DURATION.medium).springify().damping(ANIMATION_VALUES.springDamping)}
+      entering={FadeIn.duration(ANIMATION_DURATION.medium)}
+      exiting={FadeOut.duration(200)}
     >
       <Pressable
         accessibilityHint='Tap outside to dismiss'
         accessibilityLabel='Close upgrade prompt'
         accessibilityRole='button'
         className='absolute inset-0'
-        onPress={onClose}
+        onPress={handleClose}
       />
       <Animated.View
         className='w-full rounded-t-3xl px-6 py-8'
         entering={FadeInDown.duration(ANIMATION_DURATION.medium).damping(
           ANIMATION_VALUES.springDamping
         )}
+        exiting={FadeOutDown.duration(220)}
       >
         <LinearGradient
           className='absolute inset-0 rounded-t-3xl'
@@ -86,6 +91,7 @@ export function UpgradePrompt({
             className='items-center rounded-full px-5 py-4 shadow-[0px_8px_16px_rgba(109,40,217,0.25)]'
             style={({ pressed }) => ({
               opacity: pressed ? OPACITY.strong : OPACITY.full,
+              transform: [{ scale: pressed ? 0.96 : 1 }],
             })}
             onPress={onUpgradePress}
           >
@@ -108,8 +114,9 @@ export function UpgradePrompt({
               borderColor: colors.border,
               backgroundColor: `${colors.card}CC`,
               opacity: pressed ? OPACITY.high : OPACITY.full,
+              transform: [{ scale: pressed ? 0.96 : 1 }],
             })}
-            onPress={onClose}
+            onPress={handleClose}
           >
             <Text
               className='text-[15px] font-normal'
