@@ -99,14 +99,7 @@ export function SettingsRow({
       }}
     >
       {type === 'toggle' ? <Animated.View style={pulseStyle} /> : null}
-      <View
-        className='mr-4 h-10 w-10 items-center justify-center rounded-xl'
-        style={{
-          backgroundColor: iconBackgroundColor,
-          borderColor: highContrastMode ? highContrastColors.accent : 'transparent',
-          borderWidth: highContrastMode ? 2 : 0,
-        }}
-      >
+      <View className='mr-4 w-10 items-start'>
         {icon}
       </View>
       <View className='flex-1'>
