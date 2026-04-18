@@ -48,11 +48,14 @@ export const computeCurrentStreakFromDates = (
 
   const todayString = format(new Date(today), 'yyyy-MM-dd');
 
-  // Find the most recent completed date that is not in the future
-  const latestCompleted = [...completedDates]
-    .filter((date) => date <= todayString)
-    .sort()
-    .pop();
+  // Find the most recent completed date that is not in the future.
+  // Single-pass max (O(n)) avoids materializing + sorting the full Set.
+  let latestCompleted: string | undefined;
+  for (const date of completedDates) {
+    if (date <= todayString && (latestCompleted === undefined || date > latestCompleted)) {
+      latestCompleted = date;
+    }
+  }
 
   if (!latestCompleted) {
     return 0;
