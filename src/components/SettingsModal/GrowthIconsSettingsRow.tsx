@@ -52,13 +52,13 @@ export function GrowthIconsSettingsRow({ highContrastMode }: Props) {
         subtitle='Pick the 5 emojis used for every habit by default'
         type='info'
       />
-      <View className='pl-4 pr-4'>
-        <ProgressEmojiPicker
-          fallback={fallback}
-          value={currentValue}
-          onChange={handleChange}
-        />
-      </View>
+      <ProgressEmojiPicker
+        expandedPanelStyle={{ paddingLeft: 16, paddingRight: 16 }}
+        fallback={fallback}
+        toggleRowStyle={{ paddingLeft: 72, paddingRight: 16 }}
+        value={currentValue}
+        onChange={handleChange}
+      />
     </View>
   );
 }
