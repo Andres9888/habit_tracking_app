@@ -20,9 +20,9 @@ export const ALGORITHM_COPY: Record<AlgorithmMode, AlgorithmCopyEntry> = {
     mode: 'forgiving',
     name: 'Forgiving',
     complexity: 'Simple',
-    examples: 'A glass of water, taking a vitamin, one push-up.',
+    examples: 'A glass of water, a vitamin, one push-up.',
     description:
-      "Forms fast and missing a day barely matters — you'll do it tomorrow anyway.",
+      'Grows quickly and barely dips when you miss — best for tiny habits that are easy to bounce back from.',
     daysToForm: 18,
     Icon: Heart,
   },
@@ -32,7 +32,7 @@ export const ALGORITHM_COPY: Record<AlgorithmMode, AlgorithmCopyEntry> = {
     complexity: 'Moderate',
     examples: 'Journaling, reading, stretching.',
     description:
-      'The typical 66-day formation curve from UCL research — noticeable dip on a miss, recovers quickly.',
+      'Steady growth with a real dip when you miss — matches the classic 66-day habit curve from UCL research.',
     daysToForm: 66,
     Icon: Activity,
   },
@@ -42,7 +42,7 @@ export const ALGORITHM_COPY: Record<AlgorithmMode, AlgorithmCopyEntry> = {
     complexity: 'Complex',
     examples: 'Running 5K, meditation, learning an instrument.',
     description:
-      'Takes much longer to build — tight accountability keeps you showing up through the long climb.',
+      'Slow to build and unforgiving when you miss — for effortful habits that demand real consistency.',
     daysToForm: 120,
     Icon: Zap,
   },

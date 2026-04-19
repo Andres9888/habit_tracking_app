@@ -84,7 +84,7 @@ export function AlgorithmCard({
             className='text-[11px] font-semibold'
             style={{ color: colors.text.secondary }}
           >
-            ~{entry.daysToForm} days to form
+            ~{entry.daysToForm} days to automatic
           </Text>
         </View>
       </View>
