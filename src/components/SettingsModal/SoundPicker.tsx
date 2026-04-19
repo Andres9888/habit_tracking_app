@@ -3,7 +3,7 @@
  */
 
 import { Pressable, Text, View } from 'react-native';
-import Animated, { FadeInDown, FadeOutUp } from 'react-native-reanimated';
+import Animated, { FadeIn, FadeInDown, FadeOutUp } from 'react-native-reanimated';
 import { Volume1, Droplet, TrendingUp } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
 import { typography, fontWeights } from '@/theme/typography';
@@ -34,7 +34,7 @@ export function SoundPicker({ selected, onSelect }: SoundPickerProps) {
 
   return (
     <Animated.View
-      entering={FadeInDown.duration(250).springify().damping(20)}
+      entering={FadeInDown.duration(280)}
       exiting={FadeOutUp.duration(150)}
     >
       <View
@@ -46,33 +46,38 @@ export function SoundPicker({ selected, onSelect }: SoundPickerProps) {
       >
         <View className="mr-4 w-10" />
         <View className="flex-1 flex-row items-center gap-2">
-        {OPTIONS.map(({ key, label, Icon }) => {
+        {OPTIONS.map(({ key, label, Icon }, index) => {
           const on = key === selected;
           return (
-            <Pressable
+            <Animated.View
               key={key}
-              accessibilityLabel={`${label} sound`}
-              accessibilityRole="button"
-              accessibilityState={{ selected: on }}
-              className="flex-1 flex-row items-center justify-center gap-1.5 rounded-xl py-2"
-              style={{ backgroundColor: on ? accentBg : pillBg }}
-              onPress={() => handleSelect(key)}
+              className="flex-1"
+              entering={FadeIn.duration(200).delay(120 + index * 60)}
             >
-              <Icon
-                color={on ? accent : colors.text.secondary}
-                size={iconSizes.small}
-                strokeWidth={on ? 2.5 : 2}
-              />
-              <Text
-                style={{
-                  ...typography.caption,
-                  color: on ? accent : colors.text.secondary,
-                  fontWeight: on ? fontWeights.semibold : fontWeights.regular,
-                }}
+              <Pressable
+                accessibilityLabel={`${label} sound`}
+                accessibilityRole="button"
+                accessibilityState={{ selected: on }}
+                className="flex-row items-center justify-center gap-1.5 rounded-xl py-2"
+                style={{ backgroundColor: on ? accentBg : pillBg }}
+                onPress={() => handleSelect(key)}
               >
-                {label}
-              </Text>
-            </Pressable>
+                <Icon
+                  color={on ? accent : colors.text.secondary}
+                  size={iconSizes.small}
+                  strokeWidth={on ? 2.5 : 2}
+                />
+                <Text
+                  style={{
+                    ...typography.caption,
+                    color: on ? accent : colors.text.secondary,
+                    fontWeight: on ? fontWeights.semibold : fontWeights.regular,
+                  }}
+                >
+                  {label}
+                </Text>
+              </Pressable>
+            </Animated.View>
           );
         })}
         </View>
