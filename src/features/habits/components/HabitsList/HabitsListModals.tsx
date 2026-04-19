@@ -25,11 +25,12 @@ export interface HabitsListModalsProps {
 export function HabitsListModals(props: HabitsListModalsProps) {
   return (
     <>
-      <UpgradePrompt
-        visible={props.upgradePromptVisible}
-        onClose={props.onUpgradeDismiss}
-        onUpgradePress={props.onUpgradeConfirm}
-      />
+      {props.upgradePromptVisible ? (
+        <UpgradePrompt
+          onClose={props.onUpgradeDismiss}
+          onUpgradePress={props.onUpgradeConfirm}
+        />
+      ) : null}
       <DayHabitsBottomSheet
         date={props.daySheetDate}
         getHabitStatus={props.getHabitStatus}

@@ -46,16 +46,20 @@ function HabitsAppContent() {
 
   const { colors } = useThemeColors();
   const { list, modals } = useHabitsApp();
-  const { triggerSelection, triggerWarning } = useHapticFeedback({
+  const { triggerLightImpact, triggerSelection, triggerWarning } = useHapticFeedback({
     isEnabled: list.celebrationsEnabled,
     preference: list.reduceMotionPreference,
   });
 
   const selection = useSelectionMode(list.habits);
+  const handleExitSelectionMode = () => {
+    triggerLightImpact();
+    selection.exitSelectionMode();
+  };
   const selectionActions = useSelectionActions({
     selectedIds: selection.selectedIds,
     habits: list.habits,
-    exitSelectionMode: selection.exitSelectionMode,
+    exitSelectionMode: handleExitSelectionMode,
   });
 
   const handlers = useHabitsAppHandlers({
@@ -121,7 +125,7 @@ function HabitsAppContent() {
             <SelectionActionBar
               selectedCount={selection.selectedCount}
               onArchive={handleBatchArchivePress}
-              onCancel={selection.exitSelectionMode}
+              onCancel={handleExitSelectionMode}
               onDelete={selectionActions.showDeleteConfirmation}
             />
           ) : (

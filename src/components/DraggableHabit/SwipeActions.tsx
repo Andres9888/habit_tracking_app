@@ -6,6 +6,7 @@ import { colors } from '@/theme';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { borderRadius } from '../../theme/spacing';
 import { typography, fontWeights, fontFamilies } from '@/theme/typography';
+import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 import { DeleteAction } from './DeleteAction';
 
 interface SwipeActionsProps {
@@ -16,6 +17,15 @@ interface SwipeActionsProps {
 
 export function SwipeActions({ dragX, onArchive, onDelete }: SwipeActionsProps) {
   const { isDark } = useThemeColors();
+  const { triggerWarning } = useHapticFeedback();
+  const handleArchive = () => {
+    triggerWarning();
+    onArchive();
+  };
+  const handleDelete = () => {
+    triggerWarning();
+    onDelete();
+  };
   const trans = dragX.interpolate({
     extrapolate: 'clamp',
     inputRange: [-160, 0],
@@ -39,11 +49,11 @@ export function SwipeActions({ dragX, onArchive, onDelete }: SwipeActionsProps) 
       className="flex-row items-center justify-end"
       style={{ transform: [{ translateX: trans }] }}
     >
-      <DeleteAction dragX={dragX} onPress={onDelete} />
+      <DeleteAction dragX={dragX} onPress={handleDelete} />
       <Pressable
         accessibilityLabel="Archive habit"
         accessibilityRole="button"
-        onPress={onArchive}
+        onPress={handleArchive}
         style={{
           alignItems: 'center',
           backgroundColor: isDark ? colors.warning : colors.streak[300],

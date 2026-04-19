@@ -1,7 +1,7 @@
 import { memo } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import Animated, { FadeInUp } from 'react-native-reanimated';
+import Animated, { FadeInUp, FadeOutDown } from 'react-native-reanimated';
 import { BlurView } from 'expo-blur';
 import { Archive, Trash2, X } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
@@ -13,6 +13,7 @@ import { BLUR_INTENSITY, BORDER_DARK, BORDER_LIGHT, CAPSULE_SHADOW } from '../Bo
 import { fontWeights } from '@/theme/typography';
 
 const ENTERING = FadeInUp.duration(durations.enter).springify().damping(springs.standard.damping);
+const EXITING = FadeOutDown.duration(durations.quick);
 const CAPSULE_RADIUS = 32;
 const HIT_SLOP = { bottom: 18, left: 18, right: 18, top: 18 };
 
@@ -32,6 +33,7 @@ function SelectionActionBarComponent({
   return (
     <Animated.View
       entering={ENTERING}
+      exiting={EXITING}
       style={[
         s.wrapper,
         CAPSULE_SHADOW,
