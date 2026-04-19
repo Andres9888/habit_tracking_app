@@ -82,7 +82,7 @@ export function AdvancedOptionsSection({
 
   const algoEntry = ALGORITHM_COPY[strengthAlgorithm];
   const AlgoIcon = ALGO_ICONS[strengthAlgorithm];
-  const algoSubtitle = `${algoEntry.name} · ${algoEntry.daysToForm}-day curve`;
+  const algoSubtitle = `${algoEntry.name} · ~${algoEntry.daysToForm} days to automatic`;
 
   const resolvedEmojis = resolveProgressEmojis(progressEmojis, userDefaultEmojis);
   const presetId = matchPresetId(resolvedEmojis);
@@ -142,7 +142,7 @@ export function AdvancedOptionsSection({
             exiting={reduceMotion ? undefined : FadeOut.duration(120)}
           >
             <AdvancedOptionRow
-              accessibilityHint='Opens strength algorithm picker'
+              accessibilityHint='Opens habit pace picker'
               icon={
                 <AlgoIcon
                   color={colors.primary[600]}
@@ -152,7 +152,7 @@ export function AdvancedOptionsSection({
               }
               iconBackground={colors.primary[100]}
               subtitle={algoSubtitle}
-              title='Strength Algorithm'
+              title='Habit Pace'
               onPress={() => setOpenSheet('algorithm')}
             />
             <AdvancedOptionRow
@@ -184,8 +184,8 @@ export function AdvancedOptionsSection({
       </Animated.View>
 
       <AdvancedSheet
-        subtitle='How this habit is measured. Match the algorithm to the habit’s difficulty.'
-        title='Strength Algorithm'
+        subtitle={`Each check-in grows this habit's strength; missing a day lets it dip. Pick the pace that matches the effort required.`}
+        title='Habit Pace'
         visible={openSheet === 'algorithm'}
         onClose={() => setOpenSheet(null)}
       >
