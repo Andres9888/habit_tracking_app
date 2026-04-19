@@ -95,24 +95,6 @@ function ProgressEmojiPickerComponent({
           ))}
         </Pressable>
         <View className='flex-row items-center gap-3'>
-          {value === undefined ? null : (
-            <Pressable
-              accessibilityLabel='Reset growth icons to default'
-              accessibilityRole='button'
-              hitSlop={8}
-              onPress={() => onChange(undefined)}
-            >
-              <Text
-                style={{
-                  ...typography.bodySmall,
-                  color: themeColors.text.tertiary,
-                  fontWeight: fontWeights.medium,
-                }}
-              >
-                Reset
-              </Text>
-            </Pressable>
-          )}
           <Pressable
             accessibilityLabel={expanded ? 'Collapse picker' : 'Customize growth icons'}
             accessibilityRole='button'
