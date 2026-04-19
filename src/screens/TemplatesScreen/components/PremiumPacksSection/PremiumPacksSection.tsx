@@ -23,7 +23,7 @@ export function PremiumPacksSection({
   return (
     <View testID='templates-premium-packs-section' style={s.container}>
       <View style={s.headerRow}>
-        <Text style={[s.title, { color: colors.text.primary }]}>Starter Sets</Text>
+        <Text style={[s.title, { color: colors.text.primary }]}>Curated bundles</Text>
         <Text style={[s.badge, { color: colors.status.premiumText }]}>Premium</Text>
       </View>
       {packs.map((pack) => (

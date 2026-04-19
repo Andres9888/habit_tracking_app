@@ -2,7 +2,7 @@
  * MainBrowseView — Goal-first browse surface
  *
  * Frames habit discovery around user transformation:
- * Header → GoalCollectionGrid (hero) → Search → Trending → Curated Packs → Explore All
+ * Header → GoalCollectionGrid (hero) → Search → Trending → Explore All → Curated Bundles
  */
 
 import { ScrollView, View } from 'react-native';
@@ -73,10 +73,10 @@ export function MainBrowseView(p: MainBrowseViewProps) {
           />
         </Animated.View>
         <Animated.View entering={stagger(3)}>
-          {p.premiumPacksSection}
+          {p.exploreAllSection}
         </Animated.View>
         <Animated.View entering={stagger(4)}>
-          {p.exploreAllSection}
+          {p.premiumPacksSection}
         </Animated.View>
       </ScrollView>
       {p.modals}
