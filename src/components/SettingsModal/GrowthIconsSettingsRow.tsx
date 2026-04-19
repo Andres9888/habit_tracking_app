@@ -3,7 +3,7 @@
  * Writes directly to userSettings.progressEmojis via a Convex mutation.
  */
 import { Sparkles } from 'lucide-react-native';
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { View } from 'react-native';
 import { useMutation, useQuery } from 'convex/react';
 
@@ -12,7 +12,8 @@ import { iconSizes } from '@/theme/iconSizes';
 import { api } from '../../../convex/_generated/api';
 import { useThemeColors } from '../../theme/ThemeContext';
 import {
-  resolveProgressEmojis,
+  DEFAULT_PROGRESS_EMOJIS,
+  STRENGTH_LEVEL_KEYS,
   type ProgressEmojiSet,
 } from '../../utils/progressEmojis';
 import { ProgressEmojiPicker } from '../ProgressEmojiPicker';
@@ -27,12 +28,23 @@ export function GrowthIconsSettingsRow({ highContrastMode }: Props) {
   const { settings: settingsIcons } = useThemeColors();
   const settings = useQuery(api.settings.get);
   const currentValue = settings?.progressEmojis;
-  const fallback = resolveProgressEmojis(undefined, currentValue);
   const updateSettings = useMutation(api.settings.update);
+
+  // Treat a stored value that matches DEFAULT as "unset" so the picker's
+  // Reset affordance hides after a reset.
+  const pickerValue = useMemo(() => {
+    if (!currentValue) return undefined;
+    const matchesDefault = STRENGTH_LEVEL_KEYS.every(
+      (k) => currentValue[k] === DEFAULT_PROGRESS_EMOJIS[k]
+    );
+    return matchesDefault ? undefined : currentValue;
+  }, [currentValue]);
 
   const handleChange = useCallback(
     (next: ProgressEmojiSet | undefined) => {
-      void updateSettings({ progressEmojis: next });
+      // Convex patch doesn't reliably unset optional fields when passed
+      // `undefined`, so write DEFAULT explicitly on clear.
+      void updateSettings({ progressEmojis: next ?? DEFAULT_PROGRESS_EMOJIS });
     },
     [updateSettings]
   );
@@ -54,9 +66,9 @@ export function GrowthIconsSettingsRow({ highContrastMode }: Props) {
       />
       <ProgressEmojiPicker
         expandedPanelStyle={{ paddingLeft: 16, paddingRight: 16 }}
-        fallback={fallback}
+        fallback={DEFAULT_PROGRESS_EMOJIS}
         toggleRowStyle={{ paddingLeft: 72, paddingRight: 16 }}
-        value={currentValue}
+        value={pickerValue}
         onChange={handleChange}
       />
     </View>
