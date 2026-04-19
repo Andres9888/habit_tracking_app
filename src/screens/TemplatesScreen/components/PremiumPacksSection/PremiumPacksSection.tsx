@@ -7,6 +7,7 @@ import { useThemeColors } from '../../../../theme/ThemeContext';
 import { spacing } from '../../../../theme/spacing';
 import { fontWeights, typography } from '../../../../theme/typography';
 import type { PremiumPack } from '../../data/premiumPacks';
+import { SectionHeader } from '../SectionHeader';
 import { PremiumPackCard } from './PremiumPackCard';
 
 interface PremiumPacksSectionProps {
@@ -22,10 +23,12 @@ export function PremiumPacksSection({
 
   return (
     <View testID='templates-premium-packs-section' style={s.container}>
-      <View style={s.headerRow}>
-        <Text style={[s.title, { color: colors.text.primary }]}>Curated bundles</Text>
-        <Text style={[s.badge, { color: colors.status.premiumText }]}>Premium</Text>
-      </View>
+      <SectionHeader
+        rightSlot={
+          <Text style={[s.badge, { color: colors.status.premiumText }]}>Premium</Text>
+        }
+        title='Curated bundles'
+      />
       {packs.map((pack) => (
         <PremiumPackCard
           key={pack.id}
@@ -43,12 +46,4 @@ const s = StyleSheet.create({
     fontWeight: fontWeights.bold,
   },
   container: { marginTop: spacing.lg },
-  headerRow: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: spacing.md,
-    paddingHorizontal: spacing.base,
-  },
-  title: { ...typography.heading3 },
 });

@@ -4,9 +4,9 @@
 
 import { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { fontFamilies, fontWeights, typography } from '../../../../theme/typography';
-import { spacing } from '../../../../theme/spacing';
+import { fontFamilies } from '../../../../theme/typography';
 import { useThemeColors } from '../../../../theme/ThemeContext';
+import { SectionHeader } from '../SectionHeader';
 import { CategoryGroupHeader } from './CategoryGroupHeader';
 import { ExploreDivider } from './ExploreDivider';
 import { ExploreHabitRow } from './ExploreHabitRow';
@@ -56,19 +56,15 @@ export function ExploreAllSection({
   return (
     <View>
       <ExploreDivider />
-      <View style={s.header}>
-        <View style={s.headerText}>
-          <Text style={[s.title, { color: colors.text.primary }]}>
-            Browse by category
+      <SectionHeader
+        rightSlot={
+          <Text style={[s.count, { color: colors.text.tertiary }]}>
+            {totalCount} habits
           </Text>
-          <Text style={[s.subtitle, { color: colors.text.secondary }]}>
-            Sorted by popularity
-          </Text>
-        </View>
-        <Text style={[s.count, { color: colors.text.tertiary }]}>
-          {totalCount} habits
-        </Text>
-      </View>
+        }
+        subtitle='Sorted by popularity'
+        title='Browse by category'
+      />
       {groups.map((group, index) => (
         <CategoryGroupSection
           key={group.category}
@@ -86,15 +82,4 @@ export function ExploreAllSection({
 
 const s = StyleSheet.create({
   count: { flexShrink: 0, fontFamily: fontFamilies.monospace, fontSize: 12 },
-  header: {
-    alignItems: 'baseline',
-    flexDirection: 'row',
-    gap: spacing.sm,
-    justifyContent: 'space-between',
-    paddingHorizontal: spacing.base,
-    paddingTop: spacing.md,
-  },
-  headerText: { flex: 1, minWidth: 0 },
-  subtitle: { ...typography.caption, marginTop: 2 },
-  title: { ...typography.heading3, fontWeight: fontWeights.bold },
 });
