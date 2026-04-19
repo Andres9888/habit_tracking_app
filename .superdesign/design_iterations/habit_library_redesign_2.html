@@ -1,0 +1,896 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Habit Library — Goal-First Redesign v2</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&family=Literata:wght@600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    :root {
+      --bg: #f5f1ed;
+      --card: #edeae5;
+      --border: #ddd8d2;
+      --text-1: #2d2a26;
+      --text-2: #6b6560;
+      --text-3: #6e6660;
+      --c-action: #059669;
+      --c-action-dark: #047857;
+      --c-action-bg: #d1fae5;
+      --c-science: #0369a1;
+      --c-science-bg: #e0f2fe;
+      --c-trend: #c2410c;
+      --ff: 'DM Sans', sans-serif;
+      --ff-display: 'Literata', serif;
+      --r-full: 9999px;
+      --r-lg: 14px;
+      --r-md: 10px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { -webkit-font-smoothing: antialiased; }
+
+    body {
+      background: #1c1917;
+      font-family: var(--ff);
+      min-height: 100vh;
+      padding: 40px 24px 80px;
+    }
+
+    .page-title {
+      color: #a8a29e;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      text-align: center;
+      margin-bottom: 8px;
+    }
+    .page-subtitle {
+      color: #78716c;
+      font-size: 14px;
+      text-align: center;
+      margin-bottom: 36px;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.5;
+    }
+
+    .comparison {
+      display: flex;
+      gap: 48px;
+      justify-content: center;
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+
+    .phone-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .phone-label {
+      color: #78716c;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+    .phone-label.v1 { color: #f97316; }
+    .phone-label.v2 { color: #22c55e; }
+
+    .phone {
+      width: 390px;
+      height: 844px;
+      background: var(--bg);
+      border-radius: 44px;
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 0 0 2px #3a3632, 0 32px 80px rgba(0,0,0,0.55);
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .status-bar {
+      height: 54px;
+      padding: 16px 28px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-1);
+      flex-shrink: 0;
+    }
+    .status-icons { display: flex; gap: 6px; align-items: center; font-size: 12px; }
+
+    .screen-content {
+      flex: 1;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .screen-content::-webkit-scrollbar { display: none; }
+
+    .screen-header { padding: 10px 20px 8px; }
+    .screen-header h1 {
+      font-family: var(--ff-display);
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--text-1);
+      letter-spacing: -0.5px;
+    }
+    .screen-header .lead {
+      font-size: 14px;
+      color: var(--text-2);
+      margin-top: 4px;
+      line-height: 1.4;
+    }
+
+    .search-bar {
+      margin: 8px 16px 10px;
+      background: var(--card);
+      border: 1.5px solid var(--border);
+      border-radius: var(--r-lg);
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .search-icon { color: var(--text-3); }
+    .search-placeholder { font-size: 14px; color: var(--text-3); }
+
+    .filter-chips {
+      display: flex; gap: 8px;
+      padding: 4px 16px 10px;
+      overflow-x: auto; scrollbar-width: none;
+    }
+    .filter-chips::-webkit-scrollbar { display: none; }
+    .chip {
+      padding: 6px 14px;
+      border-radius: var(--r-full);
+      font-size: 13px;
+      font-weight: 600;
+      white-space: nowrap;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--text-2);
+    }
+    .chip.active {
+      background: var(--c-action-bg);
+      border-color: #a7f3d0;
+      color: var(--c-action-dark);
+    }
+
+    .section-title-lg {
+      font-size: 19px;
+      font-weight: 700;
+      color: var(--text-1);
+      padding: 0 16px;
+      margin-bottom: 6px;
+    }
+    .section-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--text-1);
+      padding: 0 16px;
+      margin-bottom: 8px;
+    }
+    .section-overline {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-3);
+      padding: 0 16px;
+      margin-bottom: 2px;
+    }
+    .section-sub {
+      font-size: 13px;
+      color: var(--text-2);
+      padding: 0 16px;
+      margin-bottom: 12px;
+    }
+
+    /* ══════════════════════════════════════
+       V1 (PREVIOUS) — Goals demoted to "...trigger"
+    ══════════════════════════════════════ */
+    .quick-start-row {
+      display: flex; gap: 8px;
+      padding: 0 16px 12px;
+      overflow-x: auto; scrollbar-width: none;
+    }
+    .quick-start-row::-webkit-scrollbar { display: none; }
+    .quick-start-pill {
+      display: flex; align-items: center; gap: 6px;
+      padding: 8px 14px;
+      background: var(--c-action-bg);
+      border: 1.5px solid #a7f3d0;
+      border-radius: var(--r-full);
+      white-space: nowrap;
+    }
+    .quick-start-pill .pe { font-size: 16px; }
+    .quick-start-pill .pn { font-size: 12px; font-weight: 600; color: var(--c-action-dark); }
+    .quick-start-pill .padd { font-size: 14px; color: var(--c-action); font-weight: 700; }
+
+    .goals-trigger-small {
+      display: flex; align-items: center; gap: 4px;
+      padding: 8px 14px;
+      background: var(--card);
+      border: 1.5px solid var(--border);
+      border-radius: var(--r-full);
+      white-space: nowrap;
+      font-size: 12px; font-weight: 600; color: var(--text-2);
+    }
+
+    .featured-hero {
+      margin: 0 16px 14px;
+      border-radius: var(--r-lg);
+      padding: 18px;
+      color: white;
+      position: relative;
+      overflow: hidden;
+    }
+    .featured-hero.morning { background: linear-gradient(135deg, #92400E, #D97706); }
+    .featured-hero .badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.2);
+      border-radius: var(--r-full);
+      padding: 3px 10px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+    .featured-hero h3 { font-size: 20px; font-weight: 700; margin-top: 10px; letter-spacing: -0.3px; }
+    .featured-hero .desc { font-size: 13px; opacity: 0.85; margin-top: 4px; }
+    .featured-hero .hero-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+    .featured-hero .hero-chip {
+      background: rgba(255,255,255,0.18);
+      border-radius: var(--r-full);
+      padding: 3px 10px;
+      font-size: 12px;
+    }
+
+    .cat-tile-v2 {
+      flex: 1; min-width: 44%;
+      border-radius: var(--r-md);
+      padding: 12px;
+      min-height: 82px;
+      display: flex; flex-direction: column;
+      border-left: 3px solid transparent;
+    }
+    .cat-tile-v2 .icon { font-size: 24px; }
+    .cat-tile-v2 .clabel { font-size: 13px; font-weight: 600; margin-top: 5px; }
+    .cat-tile-v2 .ccount { font-size: 12px; font-weight: 600; margin-top: 2px; }
+
+    .cat-grid {
+      display: flex; flex-wrap: wrap; gap: 8px;
+      padding: 0 16px; margin-bottom: 14px;
+    }
+
+    /* ══════════════════════════════════════
+       V2 (NEW) — Goals as primary hero
+    ══════════════════════════════════════ */
+
+    .hero-question {
+      padding: 14px 20px 4px;
+    }
+    .hero-question .eyebrow {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--c-action);
+    }
+    .hero-question h2 {
+      font-family: var(--ff-display);
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--text-1);
+      letter-spacing: -0.4px;
+      margin-top: 4px;
+      line-height: 1.15;
+    }
+    .hero-question .hsub {
+      font-size: 13px;
+      color: var(--text-2);
+      margin-top: 4px;
+    }
+
+    .goal-hero-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      padding: 12px 16px 4px;
+    }
+
+    .goal-hero-card {
+      border-radius: 16px;
+      padding: 16px;
+      position: relative;
+      overflow: hidden;
+      min-height: 138px;
+      display: flex; flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      border: 1px solid rgba(0,0,0,0.04);
+    }
+    .goal-hero-card.featured {
+      grid-column: span 2;
+      min-height: 116px;
+      flex-direction: row;
+      align-items: center;
+      gap: 14px;
+    }
+    .goal-hero-card .ghc-emoji {
+      font-size: 32px;
+      line-height: 1;
+    }
+    .goal-hero-card.featured .ghc-emoji {
+      font-size: 44px;
+      flex-shrink: 0;
+    }
+    .goal-hero-card .ghc-label {
+      font-size: 16px;
+      font-weight: 700;
+      margin-top: 8px;
+      letter-spacing: -0.2px;
+    }
+    .goal-hero-card.featured .ghc-content { flex: 1; }
+    .goal-hero-card.featured .ghc-label { margin-top: 0; font-size: 17px; }
+    .goal-hero-card .ghc-promise {
+      font-size: 12px;
+      line-height: 1.35;
+      opacity: 0.85;
+      margin-top: 4px;
+    }
+    .goal-hero-card .ghc-meta {
+      display: flex; align-items: center; gap: 6px;
+      margin-top: 10px;
+      font-size: 11px;
+      font-weight: 600;
+      opacity: 0.75;
+    }
+    .goal-hero-card .ghc-arrow {
+      width: 24px; height: 24px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.4);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      font-size: 13px; font-weight: 700;
+    }
+    .goal-hero-card.featured .ghc-arrow {
+      background: rgba(0,0,0,0.08);
+      width: 32px; height: 32px;
+      font-size: 16px;
+    }
+    .goal-hero-card .ghc-time-badge {
+      position: absolute;
+      top: 10px; right: 10px;
+      background: rgba(255,255,255,0.5);
+      border-radius: var(--r-full);
+      padding: 2px 8px;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      backdrop-filter: blur(4px);
+    }
+
+    /* Quick add strip — small, secondary */
+    .quick-add-strip {
+      padding: 10px 16px 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .quick-add-strip .qa-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-3);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      flex-shrink: 0;
+    }
+    .qa-pills {
+      display: flex; gap: 6px;
+      overflow-x: auto; scrollbar-width: none;
+      flex: 1;
+    }
+    .qa-pills::-webkit-scrollbar { display: none; }
+    .qa-pill {
+      display: flex; align-items: center; gap: 4px;
+      padding: 5px 10px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--r-full);
+      white-space: nowrap;
+      font-size: 12px;
+      color: var(--text-1);
+      font-weight: 600;
+    }
+    .qa-pill .qa-emoji { font-size: 13px; }
+    .qa-pill .qa-add { color: var(--c-action); font-weight: 700; }
+
+    /* Trending — vertical inline */
+    .trending-header {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0 16px; margin-bottom: 8px;
+    }
+    .trending-inline {
+      padding: 0 16px; margin-bottom: 14px;
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .trending-inline-card {
+      background: var(--card);
+      border: 1.5px solid var(--border);
+      border-radius: var(--r-lg);
+      padding: 12px 14px;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .trending-inline-card .icon-box {
+      width: 44px; height: 44px;
+      border-radius: var(--r-md);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+    .trending-inline-card .info { flex: 1; min-width: 0; }
+    .trending-inline-card .name { font-size: 14px; font-weight: 700; color: var(--text-1); }
+    .trending-inline-card .tdesc {
+      font-size: 11px; color: var(--text-2); margin-top: 1px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .trending-inline-card .meta-row {
+      display: flex; gap: 6px; align-items: center; margin-top: 3px;
+    }
+    .trending-inline-card .freq { font-size: 10px; color: var(--text-3); font-family: monospace; }
+    .trending-inline-card .pop { font-size: 10px; color: var(--c-trend); font-weight: 600; }
+    .trending-inline-card .sci-badge {
+      font-size: 9px; background: var(--c-science-bg);
+      color: var(--c-science); border-radius: var(--r-full);
+      padding: 1px 6px; font-weight: 600;
+    }
+    .trending-inline-card .add-btn {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: var(--c-action); color: white;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; font-weight: 700;
+      box-shadow: 0 2px 6px rgba(5,150,105,0.3);
+      flex-shrink: 0;
+    }
+
+    /* Browse all categories — collapsed */
+    .browse-cats-link {
+      margin: 4px 16px 14px;
+      padding: 12px 14px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .browse-cats-link .bcl-left {
+      display: flex; align-items: center; gap: 10px;
+    }
+    .browse-cats-link .bcl-icons {
+      font-size: 16px; letter-spacing: -2px;
+    }
+    .browse-cats-link .bcl-text {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-1);
+    }
+    .browse-cats-link .bcl-count {
+      font-size: 11px;
+      color: var(--text-3);
+      font-family: monospace;
+    }
+    .browse-cats-link .bcl-arrow {
+      color: var(--text-3);
+      font-size: 14px;
+    }
+
+    /* Curated packs — horizontal */
+    .packs-scroll {
+      display: flex; gap: 10px;
+      padding: 0 16px; overflow-x: auto; scrollbar-width: none;
+      margin-bottom: 14px;
+    }
+    .packs-scroll::-webkit-scrollbar { display: none; }
+    .pack-card-h {
+      min-width: 200px; max-width: 200px;
+      border-radius: var(--r-lg);
+      padding: 14px;
+      color: white;
+      position: relative;
+      overflow: hidden;
+    }
+    .pack-card-h .pack-emojis { font-size: 20px; margin-bottom: 8px; }
+    .pack-card-h .pname { font-size: 14px; font-weight: 700; }
+    .pack-card-h .pdesc { font-size: 11px; opacity: 0.85; margin-top: 3px; line-height: 1.3; }
+    .pack-card-h .pcount-chip {
+      display: inline-block;
+      margin-top: 8px;
+      background: rgba(255,255,255,0.2);
+      border-radius: var(--r-full);
+      padding: 2px 8px;
+      font-size: 10px; font-weight: 700;
+    }
+
+    /* ══════ CALLOUTS ══════ */
+    .callouts {
+      max-width: 860px;
+      margin: 48px auto 0;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .callout {
+      background: #292524;
+      border-radius: 14px;
+      padding: 20px 24px;
+      border-left: 4px solid;
+    }
+    .callout.hero { border-left-color: #22c55e; }
+    .callout.shift { border-left-color: #eab308; }
+    .callout h3 {
+      font-size: 16px; font-weight: 700; color: #fafaf9;
+      display: flex; align-items: center; gap: 8px;
+      margin-bottom: 12px;
+    }
+    .callout p {
+      color: #a8a29e;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+    .callout p + p { margin-top: 8px; }
+    .callout strong { color: #fafaf9; font-weight: 600; }
+
+    .key-shifts {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 12px;
+    }
+    .key-shift {
+      background: rgba(255,255,255,0.04);
+      border-radius: 10px;
+      padding: 12px 14px;
+    }
+    .key-shift .ks-label {
+      font-size: 10px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.08em; color: #78716c;
+      margin-bottom: 4px;
+    }
+    .key-shift .ks-text {
+      font-size: 12px; color: #d6d3d1; line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+
+  <p class="page-title">Habit Library — Goal-First Redesign v2</p>
+  <p class="page-subtitle">Direction shift: Goals become the <strong style="color:#22c55e">primary entry point</strong> tied to user transformation.<br>"Start with your desired transformation, not a category."</p>
+
+  <div class="comparison">
+
+    <!-- ═══════════════════════════════════
+         V1 — Goals demoted (last mockup)
+    ═══════════════════════════════════ -->
+    <div class="phone-wrapper">
+      <div class="phone-label v1">PREVIOUS V1 — Goals demoted</div>
+      <div class="phone">
+        <div class="status-bar">
+          <span>9:41</span>
+          <div class="status-icons"><span>&#9679;</span><span>&#9679;</span><span>&#9679;</span></div>
+        </div>
+        <div class="screen-content">
+          <div class="screen-header">
+            <h1>Habit Library</h1>
+          </div>
+          <div class="search-bar">
+            <span class="search-icon"><i data-lucide="search" style="width:16px;height:16px"></i></span>
+            <span class="search-placeholder">What do you want to improve?</span>
+          </div>
+          <div class="filter-chips">
+            <span class="chip active">✨ All</span>
+            <span class="chip">🌅 Morning</span>
+            <span class="chip">🧠 Mental</span>
+            <span class="chip">💪 Fitness</span>
+            <span class="chip">😴 Sleep</span>
+          </div>
+
+          <!-- Quick Start (HABITS first, goals as a tiny trigger button) -->
+          <div class="quick-start-row">
+            <div class="quick-start-pill"><span class="pe">💧</span><span class="pn">Drink Water</span><span class="padd">+</span></div>
+            <div class="quick-start-pill"><span class="pe">🧘</span><span class="pn">2-Min Meditate</span><span class="padd">+</span></div>
+            <div class="quick-start-pill"><span class="pe">📝</span><span class="pn">Gratitude</span><span class="padd">+</span></div>
+            <div class="goals-trigger-small">🎯 Goals...</div>
+          </div>
+
+          <div class="featured-hero morning">
+            <span class="badge">&#9728;&#65039; MORNING PICK</span>
+            <h3>Morning Mastery</h3>
+            <div class="desc">Build an unshakeable morning routine</div>
+            <div class="hero-chips">
+              <span class="hero-chip">Sunrise</span>
+              <span class="hero-chip">Energy</span>
+              <span class="hero-chip">Focus</span>
+            </div>
+          </div>
+
+          <div class="section-title-lg" style="margin-top:8px;">Browse by Category</div>
+          <div class="cat-grid">
+            <div class="cat-tile-v2" style="background:#FEF3C7;border-left-color:#F59E0B;">
+              <span class="icon">🌅</span>
+              <div class="clabel" style="color:#78350F">Morning</div>
+              <div class="ccount" style="color:#92400E">18 habits</div>
+            </div>
+            <div class="cat-tile-v2" style="background:#EFF6FF;border-left-color:#3B82F6;">
+              <span class="icon">🧠</span>
+              <div class="clabel" style="color:#1E3A5F">Mental</div>
+              <div class="ccount" style="color:#1E40AF">14 habits</div>
+            </div>
+          </div>
+          <div style="font-size:11px;color:#78716c;text-align:center;padding:14px 16px;font-style:italic;">↑ Goals are buried in the "Goals..." button — not what you want</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════
+         V2 — Goals as primary hero
+    ═══════════════════════════════════ -->
+    <div class="phone-wrapper">
+      <div class="phone-label v2">NEW V2 — Goals as hero</div>
+      <div class="phone">
+        <div class="status-bar">
+          <span>9:41</span>
+          <div class="status-icons"><span>&#9679;</span><span>&#9679;</span><span>&#9679;</span></div>
+        </div>
+        <div class="screen-content">
+          <!-- Header reframed as transformation question -->
+          <div class="screen-header">
+            <h1>What do you want to change?</h1>
+            <p class="lead">Pick a transformation. We'll suggest the science-backed habits to get you there.</p>
+          </div>
+
+          <!-- GOAL HERO GRID — primary entry point -->
+          <div class="goal-hero-grid">
+            <!-- Featured time-aware goal (full width) -->
+            <div class="goal-hero-card featured" style="background:linear-gradient(135deg,#FEF3C7,#FDE68A);color:#78350F;">
+              <span class="ghc-time-badge" style="color:#92400E;">&#9728;&#65039; Morning Pick</span>
+              <span class="ghc-emoji">&#9889;</span>
+              <div class="ghc-content">
+                <div class="ghc-label">Wake up energized</div>
+                <div class="ghc-promise">Build a morning routine that gives you steady energy until evening</div>
+                <div class="ghc-meta">
+                  <span>10 habits</span>
+                  <span>·</span>
+                  <span>~5 min/day</span>
+                </div>
+              </div>
+              <span class="ghc-arrow">→</span>
+            </div>
+
+            <div class="goal-hero-card" style="background:#EFF6FF;color:#1E3A5F;">
+              <div>
+                <span class="ghc-emoji">😴</span>
+                <div class="ghc-label">Sleep deeper</div>
+                <div class="ghc-promise">Wind down, rest fully, wake refreshed</div>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <div class="ghc-meta">8 habits</div>
+                <span class="ghc-arrow" style="background:rgba(30,58,95,0.1);color:#1E3A5F;">→</span>
+              </div>
+            </div>
+
+            <div class="goal-hero-card" style="background:#F0FDF4;color:#14532D;">
+              <div>
+                <span class="ghc-emoji">🧘</span>
+                <div class="ghc-label">Stress less</div>
+                <div class="ghc-promise">Calm your mind, regulate your system</div>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <div class="ghc-meta">12 habits</div>
+                <span class="ghc-arrow" style="background:rgba(20,83,45,0.1);color:#14532D;">→</span>
+              </div>
+            </div>
+
+            <div class="goal-hero-card" style="background:#FAF5FF;color:#581C87;">
+              <div>
+                <span class="ghc-emoji">🎯</span>
+                <div class="ghc-label">Focus deeper</div>
+                <div class="ghc-promise">Build knowledge, beat distraction</div>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <div class="ghc-meta">9 habits</div>
+                <span class="ghc-arrow" style="background:rgba(88,28,135,0.1);color:#581C87;">→</span>
+              </div>
+            </div>
+
+            <div class="goal-hero-card" style="background:#FFF1F2;color:#881337;">
+              <div>
+                <span class="ghc-emoji">💪</span>
+                <div class="ghc-label">Get healthier</div>
+                <div class="ghc-promise">Lasting habits for a longer life</div>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <div class="ghc-meta">14 habits</div>
+                <span class="ghc-arrow" style="background:rgba(136,19,55,0.1);color:#881337;">→</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Search secondary -->
+          <div class="search-bar" style="margin-top:14px;">
+            <span class="search-icon"><i data-lucide="search" style="width:16px;height:16px"></i></span>
+            <span class="search-placeholder">Or search for a specific habit…</span>
+          </div>
+
+          <!-- Trending — for users who want a specific habit, not a goal -->
+          <div class="trending-header" style="margin-top:14px;">
+            <span class="section-title-lg" style="padding:0;">Trending right now</span>
+            <span style="font-size:13px;color:#059669;">See all</span>
+          </div>
+          <div class="trending-inline">
+            <div class="trending-inline-card">
+              <div class="icon-box" style="background:#FEF3C7">🌅</div>
+              <div class="info">
+                <div class="name">Morning Sunlight</div>
+                <div class="tdesc">10 min outdoor light exposure</div>
+                <div class="meta-row">
+                  <span class="freq">Daily</span>
+                  <span class="pop">95% popular</span>
+                  <span class="sci-badge">🔬 Science</span>
+                </div>
+              </div>
+              <span class="add-btn">+</span>
+            </div>
+            <div class="trending-inline-card">
+              <div class="icon-box" style="background:#DBEAFE">💧</div>
+              <div class="info">
+                <div class="name">Drink Water First</div>
+                <div class="tdesc">Hydrate within 30 min of waking</div>
+                <div class="meta-row">
+                  <span class="freq">Daily</span>
+                  <span class="pop">92% popular</span>
+                </div>
+              </div>
+              <span class="add-btn">+</span>
+            </div>
+          </div>
+
+          <!-- Categories collapsed into a single link -->
+          <div class="browse-cats-link">
+            <div class="bcl-left">
+              <span class="bcl-icons">🌅 🧠 💪 😴</span>
+              <div>
+                <div class="bcl-text">Browse all categories</div>
+                <div class="bcl-count">14 categories · 200+ habits</div>
+              </div>
+            </div>
+            <span class="bcl-arrow">→</span>
+          </div>
+
+          <!-- Curated Packs -->
+          <div class="section-overline">CURATED PACKS</div>
+          <div class="section-title" style="margin-bottom:8px;">Ready-made bundles</div>
+          <div class="packs-scroll">
+            <div class="pack-card-h" style="background:linear-gradient(135deg,#1e3a5f,#0369a1);">
+              <div class="pack-emojis">🔬 🌅 🧊 💪 🧘</div>
+              <div class="pname">Huberman Essentials</div>
+              <div class="pdesc">Science-backed daily protocols</div>
+              <span class="pcount-chip">5 habits</span>
+            </div>
+            <div class="pack-card-h" style="background:linear-gradient(135deg,#92400E,#D97706);">
+              <div class="pack-emojis">☀️ 🧘 💧 📝</div>
+              <div class="pname">Morning Mastery</div>
+              <div class="pdesc">Foundational morning routine</div>
+              <span class="pcount-chip">4 habits</span>
+            </div>
+          </div>
+
+          <div style="height: 30px;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CALLOUTS -->
+  <div class="callouts">
+
+    <div class="callout hero">
+      <h3>The Big Shift: Goals = Hero, not a hidden trigger</h3>
+      <p>Instead of leading with "browse our content," the page now leads with <strong>"What do you want to change?"</strong> — putting transformation first. Every other section becomes a fallback path for users who already know what they want.</p>
+      <p><strong>Why this works:</strong> Most users opening a habit library don't think "I want a habit in the morning_routine category." They think <em>"I want to sleep better"</em> or <em>"I want more energy."</em> Goals match how users actually frame their problem.</p>
+    </div>
+
+    <div class="callout shift">
+      <h3>Key Design Shifts vs V1</h3>
+      <div class="key-shifts">
+        <div class="key-shift">
+          <div class="ks-label">Header copy</div>
+          <div class="ks-text">"Habit Library" → <strong style="color:#fafaf9">"What do you want to change?"</strong> — frames the page as a transformation tool, not a content catalog.</div>
+        </div>
+        <div class="key-shift">
+          <div class="ks-label">Goal cards</div>
+          <div class="ks-text">5 small grid cards → <strong style="color:#fafaf9">5 prominent transformation cards</strong> with featured time-aware hero, outcome promises, and habit count.</div>
+        </div>
+        <div class="key-shift">
+          <div class="ks-label">Goal copy</div>
+          <div class="ks-text">"Sleep Better" → <strong style="color:#fafaf9">"Sleep deeper · Wind down, rest fully, wake refreshed"</strong> — outcome-driven, not category-driven.</div>
+        </div>
+        <div class="key-shift">
+          <div class="ks-label">Featured time-aware</div>
+          <div class="ks-text">Separate hero gradient → <strong style="color:#fafaf9">Merged into goal grid</strong> as the featured/highlighted goal card. One hero, not two.</div>
+        </div>
+        <div class="key-shift">
+          <div class="ks-label">Search position</div>
+          <div class="ks-text">Top of page → <strong style="color:#fafaf9">Below goals</strong> with copy "Or search for a specific habit…" — repositioned as the alternate path.</div>
+        </div>
+        <div class="key-shift">
+          <div class="ks-label">Categories</div>
+          <div class="ks-text">2-column grid taking ~300px → <strong style="color:#fafaf9">Single "Browse all categories" link row</strong> taking ~60px. Categories are still discoverable but not competing with goals.</div>
+        </div>
+        <div class="key-shift">
+          <div class="ks-label">Quick filter chips</div>
+          <div class="ks-text">Removed from main view → <strong style="color:#fafaf9">Available inside goal drill-in view</strong> only. They're a category-filtering tool, not an entry point.</div>
+        </div>
+        <div class="key-shift">
+          <div class="ks-label">Trending</div>
+          <div class="ks-text">Stays as vertical inline cards — for users who want to add a popular habit without going through goals.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout hero">
+      <h3>Each Goal Card Tells a Transformation Story</h3>
+      <p><strong>Anatomy of a goal card:</strong></p>
+      <p>1. <strong>Big emoji icon</strong> — instant recognition (😴 ⚡ 🧘 🎯 💪)<br>
+         2. <strong>Outcome verb phrase</strong> — "Sleep deeper" not "Sleep" <br>
+         3. <strong>Promise / transformation</strong> — what life looks like after ("Wind down, rest fully, wake refreshed")<br>
+         4. <strong>Habit count</strong> — proves there's substance ("8 habits")<br>
+         5. <strong>Tap-to-explore arrow</strong> — clear forward affordance</p>
+      <p>The featured goal (full-width row at top) rotates by time of day — morning shows "Wake up energized," evening shows "Sleep deeper," etc. — same time-aware logic as the current FeaturedCollection, but now it lives inside the goal system.</p>
+    </div>
+
+    <div class="callout shift">
+      <h3>What Happens When User Taps a Goal</h3>
+      <p>Tapping a goal card opens a <strong>focused drill-in view</strong> showing only habits relevant to that transformation. The existing <code style="background:#1c1917;padding:2px 6px;border-radius:4px;color:#e7e5e4;">CategoryDrillView</code> can be reused with multi-category filtering — Sleep Deeper goal pulls from {sleep, recovery, breathing} categories (already mapped in <code style="background:#1c1917;padding:2px 6px;border-radius:4px;color:#e7e5e4;">goalCollections.ts</code>).</p>
+      <p>This means: <strong>no new backend, no new data structures</strong>. The cross-category goal grouping is already in <code style="background:#1c1917;padding:2px 6px;border-radius:4px;color:#e7e5e4;">GOAL_COLLECTIONS</code> with `categories: string[]`. We just need to render them prominently and route the tap to a multi-category drill view.</p>
+    </div>
+
+    <div class="callout hero">
+      <h3>For Users Who Don't Know Their Goal</h3>
+      <p>Three escape hatches preserved in priority order:</p>
+      <p><strong>1. Search</strong> ("Or search for a specific habit…") — for users who know the exact habit name<br>
+         <strong>2. Trending</strong> (3 inline vertical cards) — for users who want social proof<br>
+         <strong>3. Browse all categories</strong> (single link row) — for power users who think in categories<br>
+         <strong>4. Curated Packs</strong> (horizontal scroll) — for users who want pre-built bundles</p>
+      <p>Each path is still 1-tap accessible, but goals get the visual weight that matches their importance as the primary discovery flow.</p>
+    </div>
+
+    <div class="callout shift">
+      <h3>Implementation Impact</h3>
+      <p><strong>Files that change:</strong></p>
+      <p>• <code style="background:#1c1917;padding:2px 6px;border-radius:4px;color:#e7e5e4;">MainBrowseView.tsx</code> — major reorder, new hero question header<br>
+         • <code style="background:#1c1917;padding:2px 6px;border-radius:4px;color:#e7e5e4;">GoalCollectionGrid.tsx</code> — redesign cards (bigger, transformation copy, featured row)<br>
+         • <code style="background:#1c1917;padding:2px 6px;border-radius:4px;color:#e7e5e4;">goalCollections.ts</code> — add `promise` field, mark featured, add habit count<br>
+         • <code style="background:#1c1917;padding:2px 6px;border-radius:4px;color:#e7e5e4;">FeaturedCollection.tsx</code> — could be removed or merged into goal grid<br>
+         • <code style="background:#1c1917;padding:2px 6px;border-radius:4px;color:#e7e5e4;">CategoryGrid.tsx</code> — convert to compact "Browse all" link<br>
+         • <code style="background:#1c1917;padding:2px 6px;border-radius:4px;color:#e7e5e4;">QuickFilterChips.tsx</code> — move to drill-in views only<br>
+         • <code style="background:#1c1917;padding:2px 6px;border-radius:4px;color:#e7e5e4;">StartHereCard.tsx</code> — could be removed (goals serve this purpose now)</p>
+      <p><strong>Effort:</strong> MEDIUM — mostly UI/copy changes. The data layer (`GOAL_COLLECTIONS` with category mappings) is already in place.</p>
+    </div>
+
+  </div>
+
+  <script>
+    if (window.lucide) lucide.createIcons();
+  </script>
+</body>
+</html>

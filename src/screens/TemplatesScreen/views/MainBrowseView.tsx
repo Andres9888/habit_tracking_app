@@ -1,10 +1,12 @@
 /**
- * MainBrowseView - curated browse surface for rapid habit discovery
+ * MainBrowseView — Goal-first browse surface
  *
- * Layout: ScreenHeader → SearchBar → QuickFilterChips
- * → FeaturedCollection → PopularSection → CategoryGrid → PremiumPacksSection
+ * Frames habit discovery around user transformation:
+ * Header → GoalCollectionGrid (hero) → Search → Trending → Browse all categories link
+ * → Curated Packs → Explore All
  */
 
+import { useRef } from 'react';
 import { ScrollView, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { ScreenHeader } from '../../../components/ScreenHeader';
@@ -12,11 +14,10 @@ import { useThemeColors } from '../../../theme/ThemeContext';
 import { durations, springs } from '../../../theme/animations';
 import { spacing } from '../../../theme/spacing';
 import { styles } from '../../templates/templatesScreenStyles';
-import { QuickFilterChips, SearchBar } from '../components';
-import { FeaturedCollection } from '../components/FeaturedCollection';
-import { PopularSection } from '../components/PopularSection';
-import { StartHereCard } from '../components/StartHereCard';
+import { SearchBar } from '../components';
+import { BrowseAllCategoriesLink } from '../components/BrowseAllCategoriesLink';
 import { GoalCollectionGrid } from '../components/GoalCollectionGrid';
+import { PopularSection } from '../components/PopularSection';
 import type { MainBrowseViewProps } from './MainBrowseView.types';
 
 const stagger = (index: number) =>
@@ -25,50 +26,50 @@ const stagger = (index: number) =>
     .springify()
     .damping(springs.standard.damping);
 
+const HEADER_SUBTITLE =
+  'Pick a transformation. We\u2019ll suggest the science-backed habits to get you there.';
+
 export function MainBrowseView(p: MainBrowseViewProps) {
   const { colors } = useThemeColors();
+  const scrollRef = useRef<ScrollView>(null);
+  const handleBrowseAllCategories = () =>
+    scrollRef.current?.scrollToEnd({ animated: true });
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       <ScreenHeader
         leftAction={null}
-        subtitle='Start with a goal, a category, or a quick add'
-        title='Habit Library'
-      />
-      <Animated.View style={[styles.searchSection, p.searchAnimatedStyle]}>
-        <SearchBar
-          inputHint='What do you want to improve?'
-          value={p.searchQuery}
-          onChangeText={p.onSearchChange}
-          onClear={p.onSearchClear}
-        />
-      </Animated.View>
-      <QuickFilterChips
-        activeCategory={p.selectedQuickFilter}
-        categories={p.quickFilterCategories}
-        onSelectCategory={p.onSelectQuickFilter}
+        subtitle={HEADER_SUBTITLE}
+        title='What do you want to change?'
       />
       <ScrollView
+        ref={scrollRef}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{
           paddingBottom: spacing['2xl'],
           paddingTop: spacing.md,
         }}
       >
-        {p.isNewUser && p.onStartHerePress && (
-          <Animated.View entering={stagger(0)}>
-            <StartHereCard onPress={p.onStartHerePress} />
-          </Animated.View>
-        )}
-        {p.onGoalSelect && (
-          <Animated.View entering={stagger(p.isNewUser ? 1 : 0)}>
-            <GoalCollectionGrid onSelectGoal={p.onGoalSelect} />
-          </Animated.View>
-        )}
-        <Animated.View entering={stagger(p.isNewUser ? 2 : 1)}>
-          <FeaturedCollection habitCount={p.featuredHabitCount} onPress={p.onFeaturedPress} />
+        <Animated.View entering={stagger(0)}>
+          <GoalCollectionGrid
+            featuredBadgeLabel={p.featuredBadgeLabel}
+            featuredGoalId={p.featuredGoalId}
+            habitCountsByGoalId={p.habitCountsByGoalId}
+            onSelectGoal={p.onGoalSelect}
+          />
         </Animated.View>
-        <Animated.View entering={stagger(p.isNewUser ? 3 : 2)}>
+        <Animated.View
+          entering={stagger(1)}
+          style={[styles.searchSection, p.searchAnimatedStyle]}
+        >
+          <SearchBar
+            inputHint='Or search for a specific habit…'
+            value={p.searchQuery}
+            onChangeText={p.onSearchChange}
+            onClear={p.onSearchClear}
+          />
+        </Animated.View>
+        <Animated.View entering={stagger(2)}>
           <PopularSection
             importedTemplateIds={p.importedTemplateIds}
             importingTemplateId={p.importingTemplateId}
@@ -78,13 +79,18 @@ export function MainBrowseView(p: MainBrowseViewProps) {
             onSeeAll={p.onSeeAll}
           />
         </Animated.View>
-        <Animated.View entering={stagger(p.isNewUser ? 4 : 3)}>
-          {p.categoryGrid}
+        <Animated.View entering={stagger(3)} style={{ marginTop: spacing.lg }}>
+          <BrowseAllCategoriesLink
+            categoryCount={p.browseAllCategoryCount}
+            previewIcons={p.browseAllCategoriesPreviewIcons}
+            totalHabitCount={p.browseAllCategoriesTotalCount}
+            onPress={handleBrowseAllCategories}
+          />
         </Animated.View>
-        <Animated.View entering={stagger(p.isNewUser ? 5 : 4)}>
+        <Animated.View entering={stagger(4)}>
           {p.premiumPacksSection}
         </Animated.View>
-        <Animated.View entering={stagger(p.isNewUser ? 6 : 5)}>
+        <Animated.View entering={stagger(5)}>
           {p.exploreAllSection}
         </Animated.View>
       </ScrollView>

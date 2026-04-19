@@ -3,7 +3,7 @@
  */
 
 import { useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import { fontFamilies, fontWeights, typography } from '../../../../theme/typography';
 import { spacing } from '../../../../theme/spacing';
 import { useThemeColors } from '../../../../theme/ThemeContext';
@@ -12,43 +12,35 @@ import { ExploreDivider } from './ExploreDivider';
 import { ExploreHabitRow } from './ExploreHabitRow';
 import type { CategoryGroup, ExploreAllSectionProps } from './ExploreAllSection.types';
 
-const INITIAL_SHOW = 3;
-
 function CategoryGroupSection({
   group, importedTemplateIds, importingTemplateId, onImport, onPreview,
 }: {
   group: CategoryGroup;
 } & Pick<ExploreAllSectionProps, 'importedTemplateIds' | 'importingTemplateId' | 'onImport' | 'onPreview'>) {
-  const { colors } = useThemeColors();
   const [expanded, setExpanded] = useState(false);
-  const items = expanded ? group.templates : group.templates.slice(0, INITIAL_SHOW);
-  const remaining = group.templates.length - INITIAL_SHOW;
 
   return (
     <View>
       <CategoryGroupHeader
         count={group.templates.length}
+        expanded={expanded}
         icon={group.icon}
         label={group.label}
         subtitle={group.subtitle}
+        onToggle={() => setExpanded((prev) => !prev)}
       />
-      {items.map((item) => (
-        <ExploreHabitRow
-          key={item._id}
-          importedTemplateIds={importedTemplateIds}
-          importingTemplateId={importingTemplateId}
-          item={item}
-          onImport={onImport}
-          onPreview={onPreview}
-        />
-      ))}
-      {!expanded && remaining > 0 ? (
-        <Pressable onPress={() => setExpanded(true)} style={s.showMore}>
-          <Text style={[s.showMoreText, { color: colors.primary[600] }]}>
-            Show all {group.templates.length} {group.label.toLowerCase()} habits
-          </Text>
-        </Pressable>
-      ) : null}
+      {expanded
+        ? group.templates.map((item) => (
+            <ExploreHabitRow
+              key={item._id}
+              importedTemplateIds={importedTemplateIds}
+              importingTemplateId={importingTemplateId}
+              item={item}
+              onImport={onImport}
+              onPreview={onPreview}
+            />
+          ))
+        : null}
     </View>
   );
 }
@@ -100,8 +92,6 @@ const s = StyleSheet.create({
     paddingTop: spacing.md,
   },
   headerText: { flex: 1, minWidth: 0 },
-  showMore: { paddingLeft: spacing.base + spacing.md + 44 + spacing.md, paddingVertical: spacing.sm },
-  showMoreText: { ...typography.caption, fontWeight: fontWeights.semibold },
   subtitle: { ...typography.caption, marginTop: 2 },
   title: { ...typography.heading3, fontWeight: fontWeights.bold },
 });

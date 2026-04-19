@@ -60,6 +60,9 @@ export function CategoryDrillView({
   const { filtered, hideImported, setSort, sort, toggleHideImported } =
     useCategoryDrillFilters(templates, importedTemplateIds);
   const listData = useDrillSections(filtered, sort);
+  const notAddedCount = templates.filter(
+    (t) => !importedTemplateIds.has(t._id)
+  ).length;
 
   const renderItem = ({
     item,
@@ -154,7 +157,7 @@ export function CategoryDrillView({
               hideImported && { color: meta.textColor },
             ]}
           >
-            {hideImported ? '✓ Not added' : 'Not added'}
+            {hideImported ? '✓ Not added' : `Not added · ${notAddedCount}`}
           </Text>
         </Pressable>
       </ScrollView>
