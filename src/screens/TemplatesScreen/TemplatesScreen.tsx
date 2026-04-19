@@ -30,19 +30,12 @@ function TemplatesScreenContent() {
   const { data, handlers, mainBrowseData, packConfirm, state, viewNav } = props;
   const { groups, totalCount } = useGroupedTemplates(data.allTemplates);
 
-  const handleDrillIntoCategory = useCallback(
-    (categoryId: string) => {
-      state.setSearchQuery('');
-      viewNav.openCategory(categoryId);
-    },
-    [state, viewNav]
-  );
-
   const handleGoalSelect = useCallback(
     (goal: GoalCollection) => {
-      handleDrillIntoCategory(goal.categories[0]);
+      state.setSearchQuery('');
+      viewNav.openGoal(goal.id);
     },
-    [handleDrillIntoCategory]
+    [state, viewNav]
   );
 
   const featuredGoalId = useMemo(() => getFeaturedGoalId(), []);

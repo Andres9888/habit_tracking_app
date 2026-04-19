@@ -16,6 +16,7 @@ export type TemplateViewState =
   | { type: 'main' }
   | { type: 'seeAll' }
   | { type: 'category'; categoryId: string }
+  | { type: 'goal'; goalId: string }
   | { type: 'search' };
 
 export function useViewNavigation() {
@@ -51,6 +52,14 @@ export function useViewNavigation() {
     [animateIn]
   );
 
+  const openGoal = useCallback(
+    (goalId: string) => {
+      setActiveView({ type: 'goal', goalId });
+      animateIn();
+    },
+    [animateIn]
+  );
+
   const openSearch = useCallback(() => {
     setActiveView({ type: 'search' });
   }, []);
@@ -68,6 +77,7 @@ export function useViewNavigation() {
     closeSearch,
     goBack,
     openCategory,
+    openGoal,
     openSearch,
     openSeeAll,
     slideProgress,
