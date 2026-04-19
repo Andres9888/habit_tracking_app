@@ -18,19 +18,29 @@ interface ModalCloseButtonProps {
   onClose: () => void;
   /** Accessibility label override */
   label?: string;
-  /** Icon size override (default 24) */
+  /** Icon size override (default 24 solid / 20 subtle) */
   iconSize?: number;
   /** Whether to trigger haptic feedback (default true) */
   haptic?: boolean;
+  /**
+   * Visual weight. `solid` = surface-filled chip (default).
+   * `subtle` = faint overlay chip for secondary dismiss affordances
+   * where a primary back button is already visible in the header.
+   */
+  variant?: 'solid' | 'subtle';
 }
 
 export function ModalCloseButton({
   onClose,
   label = 'Close',
-  iconSize = 24,
+  iconSize,
   haptic = true,
+  variant = 'solid',
 }: ModalCloseButtonProps) {
-  const { colors } = useThemeColors();
+  const { colors, isDark } = useThemeColors();
+  const isSubtle = variant === 'subtle';
+  const resolvedIconSize = iconSize ?? (isSubtle ? 20 : 24);
+  const subtleBg = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.04)';
 
   const handlePress = () => {
     if (haptic) {
@@ -49,11 +59,15 @@ export function ModalCloseButton({
         alignItems: 'center',
         justifyContent: 'center',
         borderRadius: borderRadius.full,
-        backgroundColor: colors.surface,
+        backgroundColor: isSubtle ? subtleBg : colors.surface,
       }}
       onPress={handlePress}
     >
-      <X color={colors.text.secondary} size={iconSize} strokeWidth={2.5} />
+      <X
+        color={isSubtle ? colors.text.tertiary : colors.text.secondary}
+        size={resolvedIconSize}
+        strokeWidth={isSubtle ? 2 : 2.5}
+      />
     </AnimatedPressable>
   );
 }

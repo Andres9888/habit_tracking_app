@@ -40,7 +40,11 @@ export function TemplatesModalSection({
           <TemplatesScreen />
         </ErrorBoundary>
         <View className='absolute right-4' style={{ top: insets.top + 8 }}>
-          <ModalCloseButton label='Close templates' onClose={handleClose} />
+          <ModalCloseButton
+            label='Close templates'
+            variant='subtle'
+            onClose={handleClose}
+          />
         </View>
       </View>
     </Modal>
