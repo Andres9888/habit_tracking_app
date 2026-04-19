@@ -9,9 +9,6 @@ import type { Doc } from '../../../../convex/_generated/dataModel';
 import type { GoalCollection } from '../data/goalCollections';
 
 export interface MainBrowseViewProps {
-  browseAllCategoriesPreviewIcons: string[];
-  browseAllCategoriesTotalCount: number;
-  browseAllCategoryCount: number;
   exploreAllSection: ReactNode;
   featuredBadgeLabel?: string;
   featuredGoalId: string;

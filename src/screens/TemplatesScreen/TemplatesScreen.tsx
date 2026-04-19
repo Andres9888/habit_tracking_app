@@ -55,11 +55,6 @@ function TemplatesScreenContent() {
     });
     return counts;
   }, [data.allTemplates]);
-  const browseAllCategoriesPreviewIcons = useMemo(
-    () => mainBrowseData.categoryList.slice(0, 4).map((cat) => cat.icon),
-    [mainBrowseData.categoryList]
-  );
-  const browseAllCategoriesTotalCount = data.allTemplates?.length ?? 0;
 
   const handleImport = (template: Doc<'templates'>) => {
     void handlers.handleDirectImport(template._id);
@@ -122,9 +117,6 @@ function TemplatesScreenContent() {
   return (
     <>
       <MainBrowseView
-        browseAllCategoriesPreviewIcons={browseAllCategoriesPreviewIcons}
-        browseAllCategoriesTotalCount={browseAllCategoriesTotalCount}
-        browseAllCategoryCount={mainBrowseData.categoryList.length}
         exploreAllSection={
           <ExploreAllSection
             getCategoryLabel={props.getCategoryLabel}

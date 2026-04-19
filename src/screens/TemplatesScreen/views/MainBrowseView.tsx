@@ -2,11 +2,9 @@
  * MainBrowseView — Goal-first browse surface
  *
  * Frames habit discovery around user transformation:
- * Header → GoalCollectionGrid (hero) → Search → Trending → Browse all categories link
- * → Curated Packs → Explore All
+ * Header → GoalCollectionGrid (hero) → Search → Trending → Curated Packs → Explore All
  */
 
-import { useRef } from 'react';
 import { ScrollView, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { ScreenHeader } from '../../../components/ScreenHeader';
@@ -15,7 +13,6 @@ import { durations, springs } from '../../../theme/animations';
 import { spacing } from '../../../theme/spacing';
 import { styles } from '../../templates/templatesScreenStyles';
 import { SearchBar } from '../components';
-import { BrowseAllCategoriesLink } from '../components/BrowseAllCategoriesLink';
 import { GoalCollectionGrid } from '../components/GoalCollectionGrid';
 import { PopularSection } from '../components/PopularSection';
 import type { MainBrowseViewProps } from './MainBrowseView.types';
@@ -31,9 +28,6 @@ const HEADER_SUBTITLE =
 
 export function MainBrowseView(p: MainBrowseViewProps) {
   const { colors } = useThemeColors();
-  const scrollRef = useRef<ScrollView>(null);
-  const handleBrowseAllCategories = () =>
-    scrollRef.current?.scrollToEnd({ animated: true });
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
@@ -43,7 +37,6 @@ export function MainBrowseView(p: MainBrowseViewProps) {
         title='What do you want to change?'
       />
       <ScrollView
-        ref={scrollRef}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{
           paddingBottom: spacing['2xl'],
@@ -79,18 +72,10 @@ export function MainBrowseView(p: MainBrowseViewProps) {
             onSeeAll={p.onSeeAll}
           />
         </Animated.View>
-        <Animated.View entering={stagger(3)} style={{ marginTop: spacing.lg }}>
-          <BrowseAllCategoriesLink
-            categoryCount={p.browseAllCategoryCount}
-            previewIcons={p.browseAllCategoriesPreviewIcons}
-            totalHabitCount={p.browseAllCategoriesTotalCount}
-            onPress={handleBrowseAllCategories}
-          />
-        </Animated.View>
-        <Animated.View entering={stagger(4)}>
+        <Animated.View entering={stagger(3)}>
           {p.premiumPacksSection}
         </Animated.View>
-        <Animated.View entering={stagger(5)}>
+        <Animated.View entering={stagger(4)}>
           {p.exploreAllSection}
         </Animated.View>
       </ScrollView>
