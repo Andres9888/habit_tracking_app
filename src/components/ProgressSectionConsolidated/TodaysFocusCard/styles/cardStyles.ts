@@ -6,12 +6,12 @@
 
 import { StyleSheet } from 'react-native';
 
-import { shadows } from '../../../../theme/spacing';
+import { borderRadius, shadows } from '../../../../theme/spacing';
 
 export const cardStyles = StyleSheet.create({
   container: {
     ...shadows.card,
-    borderRadius: 16,
+    borderRadius: borderRadius.card,
     marginBottom: 12,
     overflow: 'hidden',
   },

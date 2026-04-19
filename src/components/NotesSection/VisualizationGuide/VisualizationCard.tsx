@@ -7,6 +7,7 @@ import { View, Text, Pressable } from 'react-native';
 import Animated, { FadeInDown, FadeIn } from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Brain, ChevronDown, ChevronUp } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '@/theme/ThemeContext';
 import { TechniqueApproach } from './TechniqueApproach';
 import type { VisualizationCardProps } from './VisualizationGuide.types';
@@ -40,7 +41,7 @@ export function VisualizationCard({ technique }: VisualizationCardProps) {
             end={{ x: 1, y: 1 }}
             start={{ x: 0, y: 0 }}
           />
-          <Brain color={themeColors.status.premiumText} size={20} />
+          <Brain color={themeColors.status.premiumText} size={iconSizes.medium} />
         </View>
         <View className='flex-1'>
           <Text className='text-base font-semibold' style={{ color: themeColors.text.primary }}>
@@ -51,9 +52,9 @@ export function VisualizationCard({ technique }: VisualizationCardProps) {
           </Text>
         </View>
         {expanded ? (
-          <ChevronUp color={themeColors.text.tertiary} size={20} />
+          <ChevronUp color={themeColors.text.tertiary} size={iconSizes.medium} />
         ) : (
-          <ChevronDown color={themeColors.text.tertiary} size={20} />
+          <ChevronDown color={themeColors.text.tertiary} size={iconSizes.medium} />
         )}
       </Pressable>
       {expanded ? <Animated.View

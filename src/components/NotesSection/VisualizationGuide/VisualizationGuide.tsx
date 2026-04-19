@@ -20,6 +20,7 @@ import { GuideHeader } from './GuideHeader';
 import { KeyInsightBox } from './KeyInsightBox';
 import { VisualizationCard } from './VisualizationCard';
 import { QuickTip } from './QuickTip';
+import { iconSizes } from '@/theme/iconSizes';
 import { triggerHaptic } from '@/utils/haptics';
 
 export function VisualizationGuide({ habitName }: VisualizationGuideProps) {
@@ -62,9 +63,9 @@ export function VisualizationGuide({ habitName }: VisualizationGuideProps) {
                 : `Show ${VISUALIZATION_TECHNIQUES.length - 2} More Techniques`}
             </Text>
             {showAllTechniques ? (
-              <ChevronUp color={themeColors.status.premiumText} size={16} />
+              <ChevronUp color={themeColors.status.premiumText} size={iconSizes.small} />
             ) : (
-              <ChevronDown color={themeColors.status.premiumText} size={16} />
+              <ChevronDown color={themeColors.status.premiumText} size={iconSizes.small} />
             )}
           </Pressable> : null}
       </View>
@@ -78,17 +79,17 @@ export function VisualizationGuide({ habitName }: VisualizationGuideProps) {
         <View className='gap-2'>
           <QuickTip
             description='Spend 30 seconds visualizing yourself doing the habit, not having done it'
-            icon={<Eye color={themeColors.status.warning} size={16} />}
+            icon={<Eye color={themeColors.status.warning} size={iconSizes.small} />}
             title='Morning Visualization'
           />
           <QuickTip
             description='Identify your biggest obstacle and create an "if-then" plan'
-            icon={<Mountain color={themeColors.status.warning} size={16} />}
+            icon={<Mountain color={themeColors.status.warning} size={iconSizes.small} />}
             title='Obstacle Planning'
           />
           <QuickTip
             description='See yourself taking the first small step of your habit'
-            icon={<ArrowRight color={themeColors.status.warning} size={16} />}
+            icon={<ArrowRight color={themeColors.status.warning} size={iconSizes.small} />}
             title='Next Action Preview'
           />
         </View>

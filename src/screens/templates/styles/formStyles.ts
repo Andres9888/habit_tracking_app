@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { borderRadius } from '@/theme/spacing';
 import { fontWeights, typography } from '@/theme/typography';
 
 export const formStyles = StyleSheet.create({
@@ -31,7 +32,7 @@ export const formStyles = StyleSheet.create({
   },
   nameInput: {
     ...typography.body,
-    borderRadius: 12,
+    borderRadius: borderRadius.medium,
     borderWidth: 1,
     paddingHorizontal: 16,
     paddingVertical: 12,

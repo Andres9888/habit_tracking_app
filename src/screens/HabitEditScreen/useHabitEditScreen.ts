@@ -1,9 +1,14 @@
+/* eslint-disable max-lines */
 import { useState, useEffect, useCallback } from 'react';
 import { useQuery } from 'convex/react';
 import { api } from '../../../convex/_generated/api';
 import type { Id } from '../../../convex/_generated/dataModel';
-import { createDateFromTimeString, getDefaultReminderTime } from '../../utils/notifications';
+import {
+  createDateFromTimeString,
+  getDefaultReminderTime,
+} from '../../utils/notifications';
 import useHapticFeedback from '../../hooks/useHapticFeedback';
+import type { ProgressEmojiSet } from '../../utils/progressEmojis';
 import { useHabitSaveHandler } from './useHabitSaveHandler';
 import { useHabitActions } from './useHabitActions';
 import { parseHabitName } from '../../components/CreateHabitModal/utils';
@@ -14,7 +19,13 @@ interface UseHabitEditScreenProps {
   onHabitRemoved?: () => void;
 }
 
-export function useHabitEditScreen({ habitId, onClose, onHabitRemoved }: UseHabitEditScreenProps) {
+type StrengthAlgorithm = 'forgiving' | 'balanced' | 'strict';
+
+export function useHabitEditScreen({
+  habitId,
+  onClose,
+  onHabitRemoved,
+}: UseHabitEditScreenProps) {
   const { triggerSelection, triggerSuccess } = useHapticFeedback();
   const defaultEmoji = '💪';
 
@@ -24,7 +35,15 @@ export function useHabitEditScreen({ habitId, onClose, onHabitRemoved }: UseHabi
   const [selectedEmoji, setSelectedEmoji] = useState<string | null>('💪');
   const [selectedColor, setSelectedColor] = useState('#DBEAFE');
   const [remindersEnabled, setRemindersEnabled] = useState(false);
-  const [reminderTime, setReminderTime] = useState<Date>(() => getDefaultReminderTime());
+  const [reminderTime, setReminderTime] = useState<Date>(() =>
+    getDefaultReminderTime()
+  );
+  const [streakGoal, setStreakGoal] = useState(0);
+  const [strengthAlgorithm, setStrengthAlgorithm] =
+    useState<StrengthAlgorithm>('balanced');
+  const [progressEmojis, setProgressEmojis] = useState<
+    ProgressEmojiSet | undefined
+  >();
 
   useEffect(() => {
     if (habit) {
@@ -35,7 +54,17 @@ export function useHabitEditScreen({ habitId, onClose, onHabitRemoved }: UseHabi
       setSelectedEmoji(selectedIcon || defaultEmoji);
       setSelectedColor(habit.color || habit.iconColor || '#10B981');
       setRemindersEnabled(habit.remindersEnabled ?? false);
-      setReminderTime(createDateFromTimeString(habit.reminderTime, getDefaultReminderTime()));
+      setReminderTime(
+        createDateFromTimeString(habit.reminderTime, getDefaultReminderTime())
+      );
+      setStreakGoal(habit.goalDuration ?? 0);
+      const mode = habit.strengthAlgorithm;
+      setStrengthAlgorithm(
+        mode === 'forgiving' || mode === 'balanced' || mode === 'strict'
+          ? mode
+          : 'balanced'
+      );
+      setProgressEmojis(habit.progressEmojis ?? undefined);
     }
   }, [habit]);
 
@@ -46,10 +75,13 @@ export function useHabitEditScreen({ habitId, onClose, onHabitRemoved }: UseHabi
       triggerSuccess();
       onClose();
     },
+    progressEmojis,
     remindersEnabled,
     reminderTime,
     selectedColor,
     selectedEmoji,
+    streakGoal,
+    strengthAlgorithm,
   });
 
   const { handleDelete, handleArchive } = useHabitActions({
@@ -64,10 +96,13 @@ export function useHabitEditScreen({ habitId, onClose, onHabitRemoved }: UseHabi
     setSelectedEmoji(emoji);
   }, []);
 
-  const handleColorSelect = useCallback((color: string) => {
-    triggerSelection();
-    setSelectedColor(color);
-  }, [triggerSelection]);
+  const handleColorSelect = useCallback(
+    (color: string) => {
+      triggerSelection();
+      setSelectedColor(color);
+    },
+    [triggerSelection]
+  );
 
   const handleReminderToggle = useCallback((enabled: boolean) => {
     setRemindersEnabled(enabled);
@@ -77,15 +112,39 @@ export function useHabitEditScreen({ habitId, onClose, onHabitRemoved }: UseHabi
     setReminderTime(time);
   }, []);
 
+  const handleStreakGoalChange = useCallback((days: number) => {
+    setStreakGoal(days);
+  }, []);
+
+  const handleStrengthAlgorithmChange = useCallback(
+    (mode: StrengthAlgorithm) => {
+      triggerSelection();
+      setStrengthAlgorithm(mode);
+    },
+    [triggerSelection]
+  );
+
+  const handleProgressEmojisChange = useCallback(
+    (next: ProgressEmojiSet | undefined) => {
+      triggerSelection();
+      setProgressEmojis(next);
+    },
+    [triggerSelection]
+  );
+
   return {
     habitName,
     handleColorSelect,
     handleDelete,
     handleEmojiSelect,
     handleArchive,
+    handleProgressEmojisChange,
     handleReminderTimeChange,
     handleReminderToggle,
+    handleStreakGoalChange,
+    handleStrengthAlgorithmChange,
     isLoading: habitId != null && habit === undefined,
+    progressEmojis,
     remindersEnabled,
     handleSave,
     selectedEmoji,
@@ -93,6 +152,8 @@ export function useHabitEditScreen({ habitId, onClose, onHabitRemoved }: UseHabi
     setHabitName,
     reminderTime,
     selectedColor,
+    streakGoal,
+    strengthAlgorithm,
     triggerSelection,
   };
 }

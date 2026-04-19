@@ -33,6 +33,9 @@ export const useCreateHabitModal = (props: CreateHabitModalProps) => {
     selectedColor: form.selectedColor,
     selectedDays: form.selectedDays,
     selectedEmoji: form.selectedEmoji,
+    strengthAlgorithm: form.strengthAlgorithm,
+    progressEmojis: form.progressEmojis,
+    streakGoal: form.streakGoal,
   });
 
   const cleanup = useModalCleanup({

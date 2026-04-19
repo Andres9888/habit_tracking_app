@@ -23,12 +23,12 @@ export interface SentryConfig {
   tracesSampleRate?: number;
 }
 
-/** User context for Sentry */
+/** User context for Sentry. Only `id` is forwarded to Sentry; other
+ * fields are kept in the app-internal type for correlation and MUST NOT
+ * be sent to Sentry (SR-2026-04-17-02). */
 export interface SentryUser {
-  email?: string;
   id: string;
   isPremium?: boolean;
-  username?: string;
 }
 
 /** Breadcrumb for user actions */

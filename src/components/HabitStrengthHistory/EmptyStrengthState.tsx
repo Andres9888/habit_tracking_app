@@ -3,6 +3,7 @@ import { View, Text, Pressable } from 'react-native';
 import Animated, { FadeIn, FadeInUp } from 'react-native-reanimated';
 import { Info, Zap } from 'lucide-react-native';
 import { useThemeColors } from '../../theme/ThemeContext';
+import { borderRadius } from '@/theme/spacing';
 import { fontFamilies, fontWeights } from '@/theme/typography';
 import { iconSizes } from '@/theme/iconSizes';
 
@@ -62,7 +63,7 @@ export function EmptyStrengthState({
         style={{
           alignItems: 'center',
           backgroundColor: colors.gray[50],
-          borderRadius: 12,
+          borderRadius: borderRadius.medium,
           justifyContent: 'center',
           paddingHorizontal: 24,
           paddingVertical: 32,

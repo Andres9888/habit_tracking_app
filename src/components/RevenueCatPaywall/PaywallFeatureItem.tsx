@@ -6,7 +6,7 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import { colors } from '../../theme/colors/core';
 import { typography, fontWeights } from '../../theme/typography';
-import { spacing } from '../../theme/spacing';
+import { borderRadius, spacing } from '../../theme/spacing';
 import type { PaywallFeature } from './paywall.types';
 
 interface PaywallFeatureItemProps {
@@ -21,7 +21,7 @@ export function PaywallFeatureItem({ feature }: PaywallFeatureItemProps) {
         style={{
           alignItems: 'center',
           backgroundColor: `${colors.premium[400]}12`,
-          borderRadius: 12,
+          borderRadius: borderRadius.medium,
           height: 40,
           justifyContent: 'center',
           width: 40,

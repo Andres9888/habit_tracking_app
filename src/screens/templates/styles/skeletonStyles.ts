@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native';
 import { lightColors } from '../../../theme/darkColors';
 import type { SemanticColors } from '../../../theme/darkColors';
-import { spacing } from '../../../theme/spacing';
+import { borderRadius, spacing } from '../../../theme/spacing';
 
 export const getSkeletonStyles = (
   themeColors: Pick<SemanticColors, 'border' | 'surface'>,
@@ -20,7 +20,7 @@ export const getSkeletonStyles = (
     },
     skeletonCard: {
       backgroundColor: themeColors.surface,
-      borderRadius: 16,
+      borderRadius: borderRadius.card,
       marginHorizontal: 16,
       marginVertical: 8,
       padding: spacing.lg,

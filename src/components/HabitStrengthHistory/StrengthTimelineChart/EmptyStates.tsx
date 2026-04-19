@@ -6,6 +6,7 @@ import React from 'react';
 import { Text } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import { useThemeColors } from '../../../theme/ThemeContext';
+import { borderRadius } from '@/theme/spacing';
 import { fontFamilies } from '@/theme/typography';
 
 interface EmptyStateProps {
@@ -23,7 +24,7 @@ export function NoDataState({ height }: EmptyStateProps) {
       style={{
         alignItems: 'center',
         backgroundColor: colors.gray[50],
-        borderRadius: 12,
+        borderRadius: borderRadius.medium,
         height,
         justifyContent: 'center',
         padding: 16,
@@ -48,7 +49,7 @@ export function BuildingHistoryState({ height }: EmptyStateProps) {
       style={{
         alignItems: 'center',
         backgroundColor: colors.gray[50],
-        borderRadius: 12,
+        borderRadius: borderRadius.medium,
         height,
         justifyContent: 'center',
         padding: 16,

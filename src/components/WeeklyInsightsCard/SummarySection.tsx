@@ -13,6 +13,7 @@ import {
   TrendingDown,
 } from 'lucide-react-native';
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
+import { iconSizes } from '@/theme/iconSizes';
 import { colors } from '../../theme/colors';
 import type { WeeklyInsights } from './WeeklyInsightsCard.types';
 import { styles } from './WeeklyInsightsCard.styles';
@@ -43,13 +44,13 @@ export function SummarySection({
     >
       <View style={styles.sectionHeader}>
         <View style={styles.sectionHeaderLeft}>
-          <Calendar color={colors.primary[500]} size={20} />
+          <Calendar color={colors.primary[500]} size={iconSizes.medium} />
           <Text style={styles.sectionTitle}>This Week's Summary</Text>
         </View>
         {isExpanded ? (
-          <ChevronUp color={colors.text.tertiary} size={20} />
+          <ChevronUp color={colors.text.tertiary} size={iconSizes.medium} />
         ) : (
-          <ChevronDown color={colors.text.tertiary} size={20} />
+          <ChevronDown color={colors.text.tertiary} size={iconSizes.medium} />
         )}
       </View>
 
@@ -58,7 +59,7 @@ export function SummarySection({
             <View style={summaryStyles.summaryRow}>
               <Text style={summaryStyles.summaryLabel}>Overall Change</Text>
               <View style={summaryStyles.summaryValueContainer}>
-                <ChangeIcon color={changeColor} size={16} />
+                <ChangeIcon color={changeColor} size={iconSizes.small} />
                 <Text
                   style={[summaryStyles.summaryValue, { color: changeColor }]}
                 >

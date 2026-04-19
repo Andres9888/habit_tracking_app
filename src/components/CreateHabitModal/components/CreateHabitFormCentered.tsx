@@ -5,12 +5,14 @@ import { NameInputSection } from './NameInputSection';
 import { EmojiPicker } from './EmojiPicker';
 import { ColorPickerSection } from './ColorPickerSection';
 import { EnhancedReminderSelector } from './EnhancedReminderSelector';
+import { AdvancedOptionsSection } from '../../AdvancedOptions';
 import type { CreateHabitFormCenteredProps } from './CreateHabitFormCentered.types';
 
 /**
  * Centered habit creation form with optional fields.
  * Follows "identity before behavior" in habit formation psychology.
  */
+// eslint-disable-next-line max-lines-per-function
 const CreateHabitFormCenteredComponent = ({
   habitName,
   onHabitNameChange,
@@ -23,25 +25,30 @@ const CreateHabitFormCenteredComponent = ({
   reminderTime,
   onReminderToggle,
   onReminderTimeChange,
-  onSubmit,
   autoFocus = false,
   showNameError = false,
+  strengthAlgorithm,
+  onStrengthAlgorithmChange,
+  progressEmojis,
+  onProgressEmojisChange,
+  streakGoal,
+  onStreakGoalChange,
 }: CreateHabitFormCenteredProps) => {
   const { colors: themeColors, isDark } = useThemeColors();
 
   return (
-    <View className='flex-1 px-6'>
-      <NameInputSection
-        autoFocus={autoFocus}
-        habitName={habitName}
-        isDark={isDark}
-        showNameError={showNameError}
-        themeColors={themeColors}
-        onHabitNameChange={onHabitNameChange}
-      />
+    <View className='flex-1'>
+      <View className='px-6'>
+        <NameInputSection
+          autoFocus={autoFocus}
+          habitName={habitName}
+          isDark={isDark}
+          showNameError={showNameError}
+          themeColors={themeColors}
+          onHabitNameChange={onHabitNameChange}
+        />
 
-      {/* Optional fields section */}
-      <View className='flex-1'>
+        {/* Optional fields section */}
         <Text
           className='mb-3 text-center text-[13px] font-semibold uppercase'
           style={{ letterSpacing: 0.5, color: themeColors.text.tertiary }}
@@ -77,6 +84,16 @@ const CreateHabitFormCenteredComponent = ({
           onToggle={onReminderToggle}
         />
       </View>
+
+      <AdvancedOptionsSection
+        baseDelay={0}
+        progressEmojis={progressEmojis}
+        streakGoal={streakGoal}
+        strengthAlgorithm={strengthAlgorithm}
+        onProgressEmojisChange={onProgressEmojisChange}
+        onStreakGoalChange={onStreakGoalChange}
+        onStrengthAlgorithmChange={onStrengthAlgorithmChange}
+      />
     </View>
   );
 };

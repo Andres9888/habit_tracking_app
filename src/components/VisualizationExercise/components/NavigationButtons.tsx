@@ -52,12 +52,12 @@ export function NavigationButtons({
       >
         <Text
           className='text-sm font-semibold'
-          style={{ color: canContinue ? '#ffffff' : colors.text.tertiary }}
+          style={{ color: canContinue ? colors.text.inverse : colors.text.tertiary }}
         >
           Continue
         </Text>
         <ChevronRight
-          color={canContinue ? '#ffffff' : colors.text.tertiary}
+          color={canContinue ? colors.text.inverse : colors.text.tertiary}
           size={18}
         />
       </Pressable>

@@ -8,6 +8,7 @@ import {
 import { Dimensions } from 'react-native';
 
 import { springs } from '@/theme/animations';
+import { colors } from '@/theme/colors';
 import { iconSizes } from '@/theme/iconSizes';
 import type { SortOptionConfig } from './types';
 
@@ -87,9 +88,9 @@ export const SORT_OPTION_ICON_SIZE = iconSizes.medium;
 export const SORT_OPTION_ICON_STROKE_WIDTH = 2.25;
 
 // Colors
-export const WHITE_ICON_COLOR = '#ffffff';
-export const DARK_SURFACE_COLOR = '#1f2937';
-export const LIGHT_SURFACE_COLOR = '#f5f5f4';
+export const WHITE_ICON_COLOR = colors.text.inverse;
+export const DARK_SURFACE_COLOR = colors.dark.surface;
+export const LIGHT_SURFACE_COLOR = colors.gray[50];
 
 // Backdrop animation
 export const BACKDROP_FADE_IN_DURATION_MS = 200;

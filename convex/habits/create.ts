@@ -8,6 +8,7 @@ import { createHabitArgs } from './types';
 import { findMaxOrder } from './utils';
 import { validateHabitFields } from './validation';
 import { hasPremiumAccess } from '../subscriptions/premiumCheck';
+import { enforceRateLimit } from '../lib/rateLimit';
 
 const FREE_HABIT_LIMIT = 3;
 
@@ -21,6 +22,9 @@ export const create = mutation({
     }
     const userId = identity.subject;
 
+    // SR-2026-04-17-09: throttle per-user habit creation.
+    await enforceRateLimit(ctx, userId, 'habit.create');
+
     // SEC-003: Input validation
     const validated = validateHabitFields(args);
 
@@ -32,9 +36,7 @@ export const create = mutation({
 
     // SEC-005: Free tier limit — only count active (non-archived, non-removed, non-paused) habits.
     // Paused habits are excluded so users can temporarily pause all 3 and still create new ones.
-    const activeHabits = allHabits.filter(
-      (h) => !h.archived && !h.paused
-    );
+    const activeHabits = allHabits.filter((h) => !h.archived && !h.paused);
     const isPremiumUser = await hasPremiumAccess(ctx, userId);
     if (!isPremiumUser && activeHabits.length >= FREE_HABIT_LIMIT) {
       throw new Error(
@@ -53,6 +55,7 @@ export const create = mutation({
       currentStreak: 0,
       daysOfWeek: args.daysOfWeek,
       frequency: args.frequency,
+      goalDuration: args.goalDuration,
       icon: validated.icon,
       color: validated.color,
       iconColor: validated.iconColor ?? validated.color,
@@ -61,6 +64,7 @@ export const create = mutation({
       notes: validated.notes,
       order: maxOrder + 1,
       preferredTime: validated.preferredTime,
+      progressEmojis: args.progressEmojis,
       remindersEnabled: args.remindersEnabled,
       reminderSound: validated.reminderSound,
       reminderTime: validated.reminderTime,

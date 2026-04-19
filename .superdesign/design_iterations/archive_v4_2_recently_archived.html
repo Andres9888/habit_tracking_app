@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Archive v4.2 — Recently Archived</title>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Literata:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  body {
+    font-family:'DM Sans',sans-serif;
+    background:#E8E4E0;
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+  }
+  .viewport {
+    width:390px;
+    min-height:100vh;
+    background:#F5F1ED;
+    position:relative;
+    overflow-y:auto;
+    overflow-x:hidden;
+  }
+  .sticky-header {
+    position:sticky; top:0; z-index:50;
+    background:#F5F1ED;
+    padding:16px 20px 14px;
+    border-bottom:1px solid transparent;
+    transition:border-color 0.2s, box-shadow 0.2s;
+  }
+  .sticky-header.scrolled {
+    border-bottom-color:#DDD8D2;
+    box-shadow:0 2px 8px rgba(45,42,38,0.04);
+  }
+  .header-icon-btn {
+    width:36px; height:36px; border-radius:10px;
+    background:rgba(0,0,0,0.04); border:none; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    color:#2D2A26; transition:background 0.15s;
+  }
+  .header-icon-btn:hover { background:rgba(0,0,0,0.08); }
+  .page-title {
+    font-family:'Literata',serif;
+    font-size:24px; font-weight:700; color:#2D2A26;
+    line-height:1.25; letter-spacing:-0.3px;
+    margin-top:8px;
+  }
+  .page-subtitle {
+    font-size:14px; color:#6E6660; font-weight:400;
+    margin-top:4px; letter-spacing:-0.1px;
+  }
+  .rationale {
+    background:#FFFBEE; border:1px solid #F0E5B8; border-radius:12px;
+    margin:12px 20px 16px; padding:10px 12px;
+    font-size:12px; color:#7A6B2E; line-height:1.45;
+  }
+  .rationale strong { color:#5C5120; font-weight:600; }
+
+  .section-label {
+    margin:14px 20px 8px;
+    padding:6px 10px;
+    border-radius:8px;
+    font-size:12px; font-weight:600;
+    letter-spacing:1.2px; text-transform:uppercase;
+    display:inline-flex; align-items:center; gap:6px;
+  }
+  .section-label.fresh {
+    background:rgba(5,150,105,0.10);
+    color:#059669;
+  }
+  .section-label.older {
+    background:rgba(110,102,96,0.10);
+    color:#6E6660;
+  }
+  .section-toggle {
+    display:block;
+    margin:4px 20px 10px;
+    width:calc(100% - 40px);
+    padding:11px 14px;
+    background:rgba(0,0,0,0.03);
+    border:1px dashed #C4BCB3;
+    border-radius:12px;
+    font-family:'DM Sans',sans-serif;
+    font-size:13px; font-weight:500;
+    color:#6E6660; cursor:pointer;
+    transition:background 0.15s, color 0.15s;
+    text-align:center;
+  }
+  .section-toggle:hover { background:rgba(0,0,0,0.05); color:#2D2A26; }
+  .section-toggle .chev {
+    display:inline-block; transition:transform 0.3s ease;
+    vertical-align:-2px; margin-left:4px;
+  }
+  .section-toggle.open .chev { transform:rotate(180deg); }
+  .section-collapse {
+    max-height:0; overflow:hidden;
+    transition:max-height 0.4s cubic-bezier(0.4,0,0.2,1);
+  }
+  .section-collapse.open { max-height:1400px; }
+
+  .habit-card {
+    background:#FFFFFF;
+    border-radius:20px;
+    margin:0 20px 12px;
+    padding:18px 18px 16px 22px;
+    box-shadow:0 2px 8px rgba(45,42,38,0.05);
+    position:relative; overflow:hidden;
+    animation:cardIn 0.4s cubic-bezier(0.34,1.56,0.64,1) both;
+  }
+  .habit-card.removing {
+    animation:cardOut 0.35s ease-out forwards;
+    pointer-events:none;
+  }
+  @keyframes cardIn {
+    from { opacity:0; transform:translateY(12px) scale(0.98); }
+    to { opacity:1; transform:translateY(0) scale(1); }
+  }
+  @keyframes cardOut {
+    to { opacity:0; transform:translateX(40px); }
+  }
+  .habit-card::before {
+    content:''; position:absolute; left:0; top:0; bottom:0;
+    width:4px; border-radius:20px 0 0 20px;
+    background:var(--accent,#059669);
+  }
+  .card-header {
+    display:flex; align-items:flex-start; gap:12px;
+    margin-bottom:12px;
+  }
+  .habit-emoji {
+    width:44px; height:44px; border-radius:14px;
+    display:flex; align-items:center; justify-content:center;
+    font-size:24px; flex-shrink:0;
+  }
+  .habit-meta { flex:1; min-width:0; }
+  .habit-name {
+    font-size:16px; font-weight:600; color:#2D2A26;
+    line-height:1.25; letter-spacing:-0.1px;
+  }
+  .habit-date {
+    font-size:12.5px; color:#9CA3AF; margin-top:2px;
+  }
+  .delete-icon-btn {
+    width:32px; height:32px; border-radius:8px;
+    background:transparent; border:none; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    color:#C4BCB3; transition:background 0.15s, color 0.15s;
+    flex-shrink:0;
+  }
+  .delete-icon-btn:hover { background:#FDEBEB; color:#B53030; }
+  .delete-icon-btn.confirming { background:#B53030; color:#fff; }
+
+  .badges { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:14px; padding-left:2px; }
+  .badge {
+    display:inline-flex; align-items:center; gap:5px;
+    padding:4px 9px; border-radius:8px;
+    font-size:12px; font-weight:500;
+  }
+
+  .cta-row { display:flex; gap:8px; align-items:stretch; }
+  .resume-primary {
+    flex:1; height:46px; border-radius:12px;
+    background:#059669; color:#fff;
+    font-family:'DM Sans',sans-serif;
+    font-size:15px; font-weight:600;
+    border:none; cursor:pointer;
+    display:flex; align-items:center; justify-content:center; gap:7px;
+    position:relative; overflow:hidden;
+    transition:background 0.2s, transform 0.15s;
+    box-shadow:0 2px 6px rgba(5,150,105,0.25);
+  }
+  .resume-primary.full { width:100%; }
+  .resume-primary:hover { background:#047857; }
+  .resume-primary:active { transform:scale(0.985); }
+  .resume-primary .shimmer {
+    position:absolute; top:0; left:-100%; width:60%; height:100%;
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,0.25),transparent);
+    animation:shimmer 2.6s infinite;
+  }
+  @keyframes shimmer { 0%{left:-60%;} 100%{left:160%;} }
+  .resume-primary.done { background:#047857; pointer-events:none; }
+
+  .undo-chip {
+    height:46px; padding:0 12px; border-radius:12px;
+    background:rgba(217,119,6,0.10); color:#B45309;
+    border:1px solid rgba(217,119,6,0.25);
+    font-family:'DM Sans',sans-serif;
+    font-size:13px; font-weight:600;
+    display:inline-flex; align-items:center; gap:5px;
+    cursor:pointer; flex-shrink:0;
+    transition:background 0.15s, transform 0.15s;
+  }
+  .undo-chip:hover { background:rgba(217,119,6,0.18); }
+  .undo-chip:active { transform:scale(0.97); }
+
+  .toast {
+    position:fixed; bottom:40px; left:50%;
+    transform:translateX(-50%) translateY(20px);
+    background:#059669; color:#fff;
+    font-size:14px; font-weight:600;
+    padding:10px 18px; border-radius:999px;
+    box-shadow:0 6px 20px rgba(5,150,105,0.35);
+    opacity:0; transition:opacity 0.3s, transform 0.3s;
+    z-index:100; display:flex; align-items:center; gap:6px;
+  }
+  .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+<div class="viewport" id="viewport">
+  <div class="sticky-header" id="stickyHeader">
+    <button class="header-icon-btn" aria-label="Back">
+      <i data-lucide="arrow-left" style="width:20px;height:20px;"></i>
+    </button>
+    <h1 class="page-title">Archived Habits</h1>
+    <p class="page-subtitle" id="subtitle">5 habits archived · tap Resume to bring them back</p>
+  </div>
+
+  <div class="rationale">
+    <strong>v4.2 — Recently archived section.</strong> Most restore requests target habits archived within the last 24–48h (accidents, second-guessing). Pin the fresh ones with an Undo-vibe chip. Older archives stay out of the way until needed.
+  </div>
+
+  <div id="list" style="padding-bottom:40px;">
+
+    <div class="section-label fresh">Recently archived · Undo?</div>
+
+    <div class="habit-card" data-id="1" style="--accent:#7C3AED;">
+      <div class="card-header">
+        <div class="habit-emoji" style="background:rgba(124,58,237,0.10);">🧘</div>
+        <div class="habit-meta">
+          <div class="habit-name">Morning Meditation</div>
+          <div class="habit-date">Archived today</div>
+        </div>
+        <button class="delete-icon-btn" onclick="deleteHabit(event,this)" aria-label="Delete Morning Meditation">
+          <i data-lucide="trash-2" style="width:16px;height:16px;"></i>
+        </button>
+      </div>
+      <div class="badges">
+        <div class="badge" style="background:rgba(124,58,237,0.10);color:#7C3AED;">
+          <i data-lucide="zap" style="width:12px;height:12px;"></i>72%
+        </div>
+        <div class="badge" style="background:rgba(217,119,6,0.10);color:#D97706;">
+          <i data-lucide="flame" style="width:12px;height:12px;"></i>14d
+        </div>
+        <div class="badge" style="background:rgba(5,150,105,0.10);color:#059669;">
+          <i data-lucide="check-circle" style="width:12px;height:12px;"></i>156
+        </div>
+      </div>
+      <div class="cta-row">
+        <button class="resume-primary" onclick="resumeHabit(event,this,'Morning Meditation')">
+          <span class="shimmer"></span>
+          <i data-lucide="rotate-ccw" style="width:17px;height:17px;"></i>
+          Resume Habit
+        </button>
+        <button class="undo-chip" onclick="resumeHabit(event,this.parentElement.querySelector('.resume-primary'),'Morning Meditation')" aria-label="Undo archive">
+          ✨ Undo archive
+        </button>
+      </div>
+    </div>
+
+    <div class="habit-card" data-id="2" style="--accent:#059669;">
+      <div class="card-header">
+        <div class="habit-emoji" style="background:rgba(5,150,105,0.10);">📖</div>
+        <div class="habit-meta">
+          <div class="habit-name">Read 30 Minutes</div>
+          <div class="habit-date">5 days ago</div>
+        </div>
+        <button class="delete-icon-btn" onclick="deleteHabit(event,this)" aria-label="Delete Read 30 Minutes">
+          <i data-lucide="trash-2" style="width:16px;height:16px;"></i>
+        </button>
+      </div>
+      <div class="badges">
+        <div class="badge" style="background:rgba(5,150,105,0.10);color:#059669;">
+          <i data-lucide="zap" style="width:12px;height:12px;"></i>58%
+        </div>
+        <div class="badge" style="background:rgba(217,119,6,0.10);color:#D97706;">
+          <i data-lucide="flame" style="width:12px;height:12px;"></i>7d
+        </div>
+        <div class="badge" style="background:rgba(5,150,105,0.10);color:#059669;">
+          <i data-lucide="check-circle" style="width:12px;height:12px;"></i>89
+        </div>
+      </div>
+      <div class="cta-row">
+        <button class="resume-primary" onclick="resumeHabit(event,this,'Read 30 Minutes')">
+          <span class="shimmer"></span>
+          <i data-lucide="rotate-ccw" style="width:17px;height:17px;"></i>
+          Resume Habit
+        </button>
+        <button class="undo-chip" onclick="resumeHabit(event,this.parentElement.querySelector('.resume-primary'),'Read 30 Minutes')" aria-label="Undo archive">
+          ✨ Undo archive
+        </button>
+      </div>
+    </div>
+
+    <div class="section-label older">Older</div>
+    <button class="section-toggle" id="olderToggle" onclick="toggleOlder()">
+      Show 3 older archives <span class="chev">↓</span>
+    </button>
+
+    <div class="section-collapse" id="olderCollapse">
+      <div class="habit-card" data-id="3" style="--accent:#0D9488;">
+        <div class="card-header">
+          <div class="habit-emoji" style="background:rgba(13,148,136,0.10);">🧊</div>
+          <div class="habit-meta">
+            <div class="habit-name">Cold Shower</div>
+            <div class="habit-date">20 days ago</div>
+          </div>
+          <button class="delete-icon-btn" onclick="deleteHabit(event,this)" aria-label="Delete Cold Shower">
+            <i data-lucide="trash-2" style="width:16px;height:16px;"></i>
+          </button>
+        </div>
+        <div class="badges">
+          <div class="badge" style="background:rgba(13,148,136,0.10);color:#0D9488;">
+            <i data-lucide="zap" style="width:12px;height:12px;"></i>35%
+          </div>
+          <div class="badge" style="background:rgba(217,119,6,0.10);color:#D97706;">
+            <i data-lucide="flame" style="width:12px;height:12px;"></i>3d
+          </div>
+          <div class="badge" style="background:rgba(5,150,105,0.10);color:#059669;">
+            <i data-lucide="check-circle" style="width:12px;height:12px;"></i>24
+          </div>
+        </div>
+        <button class="resume-primary full" onclick="resumeHabit(event,this,'Cold Shower')">
+          <span class="shimmer"></span>
+          <i data-lucide="rotate-ccw" style="width:17px;height:17px;"></i>
+          Resume Habit
+        </button>
+      </div>
+
+      <div class="habit-card" data-id="4" style="--accent:#7C3AED;">
+        <div class="card-header">
+          <div class="habit-emoji" style="background:rgba(124,58,237,0.10);">✍️</div>
+          <div class="habit-meta">
+            <div class="habit-name">Daily Journal</div>
+            <div class="habit-date">34 days ago</div>
+          </div>
+          <button class="delete-icon-btn" onclick="deleteHabit(event,this)" aria-label="Delete Daily Journal">
+            <i data-lucide="trash-2" style="width:16px;height:16px;"></i>
+          </button>
+        </div>
+        <div class="badges">
+          <div class="badge" style="background:rgba(124,58,237,0.10);color:#7C3AED;">
+            <i data-lucide="zap" style="width:12px;height:12px;"></i>85%
+          </div>
+          <div class="badge" style="background:rgba(217,119,6,0.10);color:#D97706;">
+            <i data-lucide="flame" style="width:12px;height:12px;"></i>42d
+          </div>
+          <div class="badge" style="background:rgba(5,150,105,0.10);color:#059669;">
+            <i data-lucide="check-circle" style="width:12px;height:12px;"></i>312
+          </div>
+        </div>
+        <button class="resume-primary full" onclick="resumeHabit(event,this,'Daily Journal')">
+          <span class="shimmer"></span>
+          <i data-lucide="rotate-ccw" style="width:17px;height:17px;"></i>
+          Resume Habit
+        </button>
+      </div>
+
+      <div class="habit-card" data-id="5" style="--accent:#E11D48;">
+        <div class="card-header">
+          <div class="habit-emoji" style="background:rgba(225,29,72,0.10);">💪</div>
+          <div class="habit-meta">
+            <div class="habit-name">Push-ups</div>
+            <div class="habit-date">67 days ago</div>
+          </div>
+          <button class="delete-icon-btn" onclick="deleteHabit(event,this)" aria-label="Delete Push-ups">
+            <i data-lucide="trash-2" style="width:16px;height:16px;"></i>
+          </button>
+        </div>
+        <div class="badges">
+          <div class="badge" style="background:rgba(225,29,72,0.10);color:#E11D48;">
+            <i data-lucide="zap" style="width:12px;height:12px;"></i>12%
+          </div>
+          <div class="badge" style="background:rgba(217,119,6,0.10);color:#D97706;">
+            <i data-lucide="flame" style="width:12px;height:12px;"></i>1d
+          </div>
+          <div class="badge" style="background:rgba(5,150,105,0.10);color:#059669;">
+            <i data-lucide="check-circle" style="width:12px;height:12px;"></i>8
+          </div>
+        </div>
+        <button class="resume-primary full" onclick="resumeHabit(event,this,'Push-ups')">
+          <span class="shimmer"></span>
+          <i data-lucide="rotate-ccw" style="width:17px;height:17px;"></i>
+          Resume Habit
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="toast" id="toast">
+  <i data-lucide="check-circle" style="width:16px;height:16px;"></i>
+  <span id="toastText">Restored!</span>
+</div>
+
+<script>
+  lucide.createIcons();
+  const viewport = document.getElementById('viewport');
+  const stickyHeader = document.getElementById('stickyHeader');
+  viewport.addEventListener('scroll', () => {
+    stickyHeader.classList.toggle('scrolled', viewport.scrollTop > 8);
+  });
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    document.getElementById('toastText').textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2000);
+  }
+  function updateSubtitle() {
+    const n = document.querySelectorAll('.habit-card:not(.removing)').length;
+    document.getElementById('subtitle').textContent = n === 0
+      ? 'No archived habits'
+      : n + ' habit' + (n===1?'':'s') + ' archived · tap Resume to bring ' + (n===1?'it':'them') + ' back';
+  }
+  function toggleOlder() {
+    const btn = document.getElementById('olderToggle');
+    const panel = document.getElementById('olderCollapse');
+    const open = panel.classList.toggle('open');
+    btn.classList.toggle('open', open);
+    btn.innerHTML = open
+      ? 'Hide older archives <span class="chev" style="transform:rotate(180deg);">↓</span>'
+      : 'Show 3 older archives <span class="chev">↓</span>';
+  }
+  function resumeHabit(event, btn, name) {
+    event.stopPropagation();
+    btn.classList.add('done');
+    btn.innerHTML = '<i data-lucide="check" style="width:17px;height:17px;"></i> Restored!';
+    lucide.createIcons();
+    const card = btn.closest('.habit-card');
+    const undo = card.querySelector('.undo-chip');
+    if (undo) undo.style.display = 'none';
+    setTimeout(() => {
+      card.classList.add('removing');
+      showToast(name + ' restored!');
+      setTimeout(() => { card.remove(); updateSubtitle(); }, 350);
+    }, 500);
+  }
+  function deleteHabit(event, btn) {
+    event.stopPropagation();
+    if (!btn.classList.contains('confirming')) {
+      btn.classList.add('confirming');
+      btn.innerHTML = '<i data-lucide="check" style="width:16px;height:16px;"></i>';
+      lucide.createIcons();
+      setTimeout(() => {
+        if (btn.classList.contains('confirming')) {
+          btn.classList.remove('confirming');
+          btn.innerHTML = '<i data-lucide="trash-2" style="width:16px;height:16px;"></i>';
+          lucide.createIcons();
+        }
+      }, 2500);
+      return;
+    }
+    const card = btn.closest('.habit-card');
+    card.classList.add('removing');
+    setTimeout(() => { card.remove(); updateSubtitle(); }, 350);
+  }
+</script>
+</body>
+</html>

@@ -6,6 +6,7 @@ import React from 'react';
 import { Circle, Line, G, Path } from 'react-native-svg';
 import Animated from 'react-native-reanimated';
 
+import { colors as themeTokens } from '@/theme/colors';
 import {
   GRID_LINE_COUNT,
   DOT_RADIUS,
@@ -91,7 +92,7 @@ export function CurrentPositionDot({
         cy={lastPoint.y}
         fill={chartColor}
         r={DOT_RADIUS}
-        stroke='#ffffff'
+        stroke={themeTokens.text.inverse}
         strokeWidth={2}
       />
     </G>

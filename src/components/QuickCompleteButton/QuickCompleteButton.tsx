@@ -14,6 +14,7 @@ import { Pressable, Text, View } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { Check, Zap } from 'lucide-react-native';
 
+import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '@/theme/ThemeContext';
 import type { QuickCompleteButtonProps } from './QuickCompleteButton.types';
 import { useQuickCompleteButton } from './useQuickCompleteButton';
@@ -78,13 +79,13 @@ export function QuickCompleteButton({
               <Check color={colors.status.success} size={28} strokeWidth={3} />
             </Animated.View>
           ) : (
-            <Zap className='text-white' fill='white' size={24} />
+            <Zap className='text-white' fill='white' size={iconSizes.large} />
           )}
         </View>
 
         <Text
           className='text-[15px] font-semibold'
-          style={{ color: localCompleted ? colors.status.successText : '#FFFFFF' }}
+          style={{ color: localCompleted ? colors.status.successText : colors.text.inverse }}
         >
           {localCompleted ? 'Done for Today' : 'Complete Today'}
         </Text>

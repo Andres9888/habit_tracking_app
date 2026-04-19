@@ -130,6 +130,12 @@ export const useHabitForm = ({ habitToEdit }: UseHabitFormOptions) => {
     setSelectedColor: state.setSelectedColor,
     setSelectedEmoji: state.setSelectedEmoji,
     setShowTimePicker: state.setShowTimePicker,
+    setStrengthAlgorithm: state.setStrengthAlgorithm,
+    setProgressEmojis: state.setProgressEmojis,
+    setStreakGoal: state.setStreakGoal,
     showTimePicker: state.showTimePicker,
+    strengthAlgorithm: state.strengthAlgorithm,
+    progressEmojis: state.progressEmojis,
+    streakGoal: state.streakGoal,
   };
 };

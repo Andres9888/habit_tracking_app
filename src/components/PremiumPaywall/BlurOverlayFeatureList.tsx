@@ -60,7 +60,7 @@ export function MotivationFeatureList({
           }
         >
           <View className='mr-3 h-10 w-10 items-center justify-center rounded-full bg-white/10'>
-            <feature.icon color='#ffffff' size={iconSizes.medium} />
+            <feature.icon color={colors.text.inverse} size={iconSizes.medium} />
           </View>
           <View className='flex-1'>
             <Text className='text-base font-semibold text-white'>

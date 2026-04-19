@@ -46,6 +46,8 @@ export function AnimatedHabitCard({
             <HabitCardHeader
               accentColor={accentBarColor} archiveDate={archiveDate}
               icon={habit.icon} iconColor={habit.iconColor} name={habit.name}
+              showDelete={!selectionMode}
+              onDeletePress={() => onDelete(habit._id, habit.name)}
             />
             <HabitStatsBadges habit={habit} strength={strength} />
             {!selectionMode && (
@@ -53,7 +55,6 @@ export function AnimatedHabitCard({
                 habitName={habit.name} hasReachedLimit={hasReachedLimit}
                 isRestoring={isRestoring} showSuccess={showSuccess}
                 successIconStyle={successIconStyle}
-                onDeletePress={() => onDelete(habit._id, habit.name)}
                 onRestorePress={handleRestorePress} onUpgradePress={onUpgradePress}
               />
             )}

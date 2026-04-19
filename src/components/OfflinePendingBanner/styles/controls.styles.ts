@@ -1,6 +1,7 @@
 import { StyleSheet } from 'react-native';
 
 import { colors } from '../../../theme/colors'
+import { borderRadius } from '../../../theme/spacing';
 import { typography, fontWeights } from '../../../theme/typography';
 
 export const controlsStyles = StyleSheet.create({
@@ -24,7 +25,7 @@ export const controlsStyles = StyleSheet.create({
   syncButton: {
     alignItems: 'center',
     backgroundColor: colors.info,
-    borderRadius: 16,
+    borderRadius: borderRadius.card,
     flexDirection: 'row',
     paddingHorizontal: 12,
     paddingVertical: 8,

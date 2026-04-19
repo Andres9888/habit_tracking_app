@@ -11,6 +11,7 @@ import { Target, Save } from 'lucide-react-native';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import type { SummaryStepProps } from '../types';
 import { VisualizationCards } from './VisualizationCards';
+import { iconSizes } from '@/theme/iconSizes';
 import { triggerHaptic } from '@/utils/haptics';
 
 export function SummaryStep({
@@ -33,7 +34,7 @@ export function SummaryStep({
             end={{ x: 1, y: 1 }}
             start={{ x: 0, y: 0 }}
           />
-          <Target className='text-white' size={32} />
+          <Target className='text-white' size={iconSizes.xl} />
         </View>
         <Text className='text-xl font-bold' style={{ color: colors.text.primary }}>
           Your Visualization

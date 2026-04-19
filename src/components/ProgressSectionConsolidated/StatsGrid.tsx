@@ -31,6 +31,7 @@ export const StatsGrid = React.memo(function StatsGrid({
   focusDay,
   weeklyChange = 0,
   monthlyChange,
+  progressEmojis,
   onFocusDayPress,
 }: StatsGridProps) {
   const reduceMotion = useReduceMotion();
@@ -59,6 +60,7 @@ export const StatsGrid = React.memo(function StatsGrid({
       <View className='flex-row'>
         <View className='mr-3 items-center justify-center'>
           <CompactStrengthRing
+            progressEmojis={progressEmojis}
             strength={strength}
             weeklyChange={weeklyChange}
           />

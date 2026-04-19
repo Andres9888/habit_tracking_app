@@ -50,7 +50,7 @@ export const s = StyleSheet.create({
   cta: {
     alignItems: 'center',
     backgroundColor: 'rgba(255,255,255,0.25)',
-    borderRadius: 12,
+    borderRadius: borderRadius.button,
     flexDirection: 'row',
     gap: 6,
     paddingHorizontal: 16,

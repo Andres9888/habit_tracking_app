@@ -61,9 +61,6 @@ export function useTemplateImportHandlers(o: UseTemplateImportHandlersOptions) {
             () => o.setShowFullsizePreview(false),
             1000
           );
-          if (res.habitId && o.previewTemplate && o.onPostImportSetup) {
-            o.onPostImportSetup(res.habitId, o.previewTemplate);
-          }
         }
       } catch {
         showError();
@@ -73,8 +70,6 @@ export function useTemplateImportHandlers(o: UseTemplateImportHandlersOptions) {
     },
     [
       o.importTemplate,
-      o.previewTemplate,
-      o.onPostImportSetup,
       o.setImportedTemplateIds,
       o.setImportingTemplateId,
       o.setShowFullsizePreview,
@@ -102,9 +97,6 @@ export function useTemplateImportHandlers(o: UseTemplateImportHandlersOptions) {
           o.setImportedTemplateIds((p) => new Set(p).add(id));
           showSuccess();
           o.setShowCustomizeModal(false);
-          if (res.habitId && o.previewTemplate && o.onPostImportSetup) {
-            o.onPostImportSetup(res.habitId, o.previewTemplate);
-          }
         }
       } catch {
         showError();
@@ -114,8 +106,6 @@ export function useTemplateImportHandlers(o: UseTemplateImportHandlersOptions) {
     },
     [
       o.importTemplate,
-      o.previewTemplate,
-      o.onPostImportSetup,
       o.setImportedTemplateIds,
       o.setImportingTemplateId,
       o.setShowCustomizeModal,

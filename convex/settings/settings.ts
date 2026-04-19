@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 /* eslint-disable max-lines-per-function */
 /**
  * Settings Convex queries and mutations
@@ -47,6 +46,7 @@ export const get = query({
       hasPremium: settings?.hasPremium ?? DEFAULT_SETTINGS.hasPremium,
       highContrastMode:
         settings?.highContrastMode ?? DEFAULT_SETTINGS.highContrastMode,
+      progressEmojis: settings?.progressEmojis,
       reduceMotion: settings?.reduceMotion ?? DEFAULT_SETTINGS.reduceMotion,
       showCalendarView:
         settings?.showCalendarView ?? DEFAULT_SETTINGS.showCalendarView,

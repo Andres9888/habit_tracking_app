@@ -50,7 +50,7 @@ export function ToggleRow(props?: ToggleRowProps) {
         accessibilityRole='switch'
         ios_backgroundColor={colors.border}
         testID='reminder-toggle'
-        thumbColor='#ffffff'
+        thumbColor={colors.text.inverse}
         trackColor={{ false: colors.border, true: colors.primary[600] }}
         value={enabled}
         onValueChange={onToggle}

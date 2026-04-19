@@ -10,6 +10,7 @@ import {
   Easing,
 } from 'react-native-reanimated';
 import { useReduceMotion } from '../../hooks/useReduceMotion';
+import type { ProgressEmojiSet } from '../../utils/progressEmojis';
 import { getLevelFromStrength } from './types';
 
 const RING_ANIMATION_DURATION = 800;
@@ -26,7 +27,10 @@ export const RING_CONSTANTS = {
   STROKE_WIDTH,
 };
 
-export function useStrengthRingAnimation(strength: number) {
+export function useStrengthRingAnimation(
+  strength: number,
+  emojis?: ProgressEmojiSet
+) {
   const reduceMotion = useReduceMotion();
 
   const clampedStrength = useMemo(
@@ -35,8 +39,8 @@ export function useStrengthRingAnimation(strength: number) {
   );
 
   const levelInfo = useMemo(
-    () => getLevelFromStrength(clampedStrength),
-    [clampedStrength]
+    () => getLevelFromStrength(clampedStrength, emojis),
+    [clampedStrength, emojis]
   );
 
   const animatedStrength = useSharedValue(reduceMotion ? clampedStrength : 0);

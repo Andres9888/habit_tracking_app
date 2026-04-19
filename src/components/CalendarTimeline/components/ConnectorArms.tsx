@@ -1,26 +1,24 @@
-import React from 'react';
-import { View, type ViewStyle } from 'react-native';
+import React, { useMemo } from 'react';
+import { type ViewStyle } from 'react-native';
 
 import { STREAK_CONNECTOR } from '../CalendarTimeline.styles';
+import { getTimelineConnectorStrength } from '../connectorStrength';
+import { useConnectorShimmer } from '../hooks/useConnectorShimmer';
+import { useGhostPulse } from '../hooks/useGhostPulse';
 import { RING_SIZE } from './DayCellRing.styles';
+import { ConnectorArm } from './ConnectorArm';
 
 const RING_HALF = RING_SIZE / 2;
-
-const armBase: ViewStyle = {
-  position: 'absolute',
-  top: STREAK_CONNECTOR.topOffset,
-  height: STREAK_CONNECTOR.height,
-  borderRadius: 2,
-};
 
 interface ConnectorArmsProps {
   connectLeft: boolean;
   connectRight: boolean;
   streakConnectorColor: string;
-  /** Ghost arm on left — chain "waiting" cue (Zeigarnik effect) */
   ghostLeft?: boolean;
-  /** Ghost arm on right — reaching toward today */
   ghostRight?: boolean;
+  ghostConnectorColor?: string;
+  currentStreak?: number;
+  reduceMotion?: boolean;
 }
 
 export const ConnectorArms: React.FC<ConnectorArmsProps> = ({
@@ -29,27 +27,70 @@ export const ConnectorArms: React.FC<ConnectorArmsProps> = ({
   streakConnectorColor,
   ghostLeft = false,
   ghostRight = false,
-}) => (
-  <>
-    {(connectLeft || ghostLeft) ? <View
-        style={{
-          ...armBase,
-          left: 0,
-          right: `50%`,
-          marginRight: RING_HALF,
-          backgroundColor: streakConnectorColor,
-          opacity: ghostLeft && !connectLeft ? 0.8 : 1,
-        }}
-      /> : null}
-    {(connectRight || ghostRight) ? <View
-        style={{
-          ...armBase,
-          left: `50%`,
-          marginLeft: RING_HALF,
-          right: 0,
-          backgroundColor: streakConnectorColor,
-          opacity: ghostRight && !connectRight ? 0.8 : 1,
-        }}
-      /> : null}
-  </>
-);
+  ghostConnectorColor,
+  currentStreak = 0,
+  reduceMotion = false,
+}) => {
+  const strength = useMemo(
+    () => getTimelineConnectorStrength(currentStreak),
+    [currentStreak]
+  );
+
+  const hasGhost = (ghostLeft && !connectLeft) || (ghostRight && !connectRight);
+  const ghostPulseStyle = useGhostPulse(hasGhost, reduceMotion);
+  const { shimmerStyle, active: hasShimmer } = useConnectorShimmer({
+    shimmerSpeed: strength.shimmerSpeed,
+    reduceMotion,
+  });
+
+  const armBase: ViewStyle = {
+    position: 'absolute',
+    top: STREAK_CONNECTOR.topOffset,
+    height: strength.height,
+    borderRadius: strength.height / 2,
+    overflow: 'hidden',
+  };
+
+  const glowStyle: ViewStyle | undefined = strength.glow
+    ? {
+        shadowColor: streakConnectorColor,
+        shadowOffset: { width: 0, height: 0 },
+        shadowOpacity: 0.4,
+        shadowRadius: 6,
+      }
+    : undefined;
+
+  const getColor = (isGhost: boolean) =>
+    isGhost ? (ghostConnectorColor ?? streakConnectorColor) : streakConnectorColor;
+
+  const shared = {
+    armBase,
+    ghostPulseStyle,
+    glowStyle,
+    hasShimmer,
+    ringHalf: RING_HALF,
+    shimmerStyle,
+    strength,
+  };
+
+  return (
+    <>
+      {(connectLeft || ghostLeft) ? (
+        <ConnectorArm
+          {...shared}
+          color={getColor(ghostLeft && !connectLeft)}
+          isGhost={ghostLeft && !connectLeft}
+          side='left'
+        />
+      ) : null}
+      {(connectRight || ghostRight) ? (
+        <ConnectorArm
+          {...shared}
+          color={getColor(ghostRight && !connectRight)}
+          isGhost={ghostRight && !connectRight}
+          side='right'
+        />
+      ) : null}
+    </>
+  );
+};

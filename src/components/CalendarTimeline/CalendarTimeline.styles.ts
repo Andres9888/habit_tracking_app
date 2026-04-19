@@ -81,13 +81,17 @@ export const getCompleteDotGlow = (isDark: boolean) => ({
 });
 
 /** Streak connector bar between consecutive completed days */
-/* Intentional rgba — light: primary[500] rgb, dark: primary[400] rgb */
+/* Intentional rgba — base colors at full opacity; strength config controls opacity */
 export const STREAK_CONNECTOR = {
-  height: 4,
   topOffset: 14 + 2 + 22 - 2,
-  light: 'rgba(16, 185, 129, 0.35)',
-  dark: 'rgba(52, 211, 153, 0.30)',
-  highContrast: 'rgba(250, 204, 21, 0.35)',
+  light: 'rgb(16, 185, 129)',
+  dark: 'rgb(52, 211, 153)',
+  highContrast: 'rgb(250, 204, 21)',
+  ghostLight: 'rgba(16, 185, 129, 0.15)',
+  ghostDark: 'rgba(52, 211, 153, 0.12)',
+  ghostHighContrast: 'rgba(250, 204, 21, 0.15)',
+  glowLight: 'rgba(16, 185, 129, 0.45)',
+  glowDark: 'rgba(52, 211, 153, 0.40)',
 };
 
 /** Shelf background color (shared with HabitsListHeader sticky fill) */

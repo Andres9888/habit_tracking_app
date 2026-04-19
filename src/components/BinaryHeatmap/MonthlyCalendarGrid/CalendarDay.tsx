@@ -10,6 +10,7 @@ import React, { memo } from 'react';
 import { View, Text, Pressable } from 'react-native';
 import type { DayData } from './types';
 import { styles } from './styles';
+import { colors as themeTokens } from '@/theme/colors';
 import { fontWeights } from '@/theme/typography';
 
 interface CalendarDayColors {
@@ -57,7 +58,7 @@ export const CalendarDay = memo(function CalendarDay({
     <Pressable
       accessibilityLabel={`Day ${day?.dayNumber ?? ''}${showCompleted ? ', completed' : showMissed ? ', missed' : ''}${isToday ? ', today' : ''}`}
       accessibilityHint={
-        day?.isFuture || day?.isBeforeCreation
+        day?.isFuture
           ? 'Not available'
           : showCompleted
             ? 'Press to mark as incomplete'
@@ -65,10 +66,10 @@ export const CalendarDay = memo(function CalendarDay({
       }
       accessibilityRole='button'
       accessibilityState={{
-        disabled: Boolean(day?.isFuture || day?.isBeforeCreation || !day?.isCurrentMonth),
+        disabled: Boolean(day?.isFuture || !day?.isCurrentMonth),
         selected: showCompleted,
       }}
-      disabled={Boolean(day?.isFuture || day?.isBeforeCreation || !day?.isCurrentMonth)}
+      disabled={Boolean(day?.isFuture || !day?.isCurrentMonth)}
       style={styles.dayWrapper}
       onPress={() => onPress(day?.dateString ?? '', Boolean(day?.isCompleted))}
     >
@@ -77,7 +78,7 @@ export const CalendarDay = memo(function CalendarDay({
           styles.dayCell,
           cellBg ? { backgroundColor: cellBg } : undefined,
           isToday && {
-            backgroundColor: habitColor,
+            backgroundColor: showCompleted ? habitColor : 'transparent',
             borderColor: habitColor,
             borderWidth: 2,
           },
@@ -86,7 +87,7 @@ export const CalendarDay = memo(function CalendarDay({
         <Text
           style={[
             styles.dayText,
-            { color: isToday ? '#FFFFFF' : getTextColor(day, textColors) },
+            { color: isToday && showCompleted ? themeTokens.text.inverse : getTextColor(day, textColors) },
             isToday && styles.todayText,
             showCompleted && !isToday && { fontWeight: fontWeights.semibold },
           ]}

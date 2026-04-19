@@ -1,5 +1,6 @@
 import { memo, useCallback, useRef } from 'react';
 import { Animated, Pressable, Text } from 'react-native';
+import { borderRadius } from '@/theme/spacing';
 import { EMOJIS_PER_ROW } from '../EmojiPicker.constants';
 import type { EmojiItemProps } from '../EmojiPicker.types';
 
@@ -44,7 +45,7 @@ export const EmojiItem = memo(
               alignItems: 'center',
               backgroundColor: isSelected ? '#f5f5f4' : '#fafaf9',
               borderColor: isSelected ? '#10b981' : 'transparent',
-              borderRadius: 12,
+              borderRadius: borderRadius.medium,
               borderWidth: isSelected ? 2 : 0,
               flex: 1,
               justifyContent: 'center',

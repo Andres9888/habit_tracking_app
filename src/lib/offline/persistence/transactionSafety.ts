@@ -11,7 +11,7 @@
  * Implements Edge Case: "App crash during queue write: Transaction-safe to prevent corruption"
  */
 
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { offlineStorage } from './offlineStorage';
 
 /**
  * Storage key suffixes for transaction safety
@@ -113,13 +113,13 @@ export async function recoverFromPending<T>(
   const pendingKey = getPendingKey(baseKey);
 
   try {
-    const raw = await AsyncStorage.getItem(pendingKey);
+    const raw = await offlineStorage.getItem(pendingKey);
     if (!raw) return null;
 
     const parsed = JSON.parse(raw) as unknown;
     if (!isValidEnvelope<T>(parsed)) {
       // Invalid envelope, cleanup
-      await AsyncStorage.removeItem(pendingKey);
+      await offlineStorage.removeItem(pendingKey);
       return null;
     }
 
@@ -128,7 +128,7 @@ export async function recoverFromPending<T>(
     if (!verifyChecksum(dataString, parsed.checksum)) {
       // Corrupted, cleanup
       if (__DEV__) console.warn('[transactionSafety] Corrupted pending write detected');
-      await AsyncStorage.removeItem(pendingKey);
+      await offlineStorage.removeItem(pendingKey);
       return null;
     }
 

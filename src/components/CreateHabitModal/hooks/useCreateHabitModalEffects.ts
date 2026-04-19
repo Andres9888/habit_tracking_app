@@ -3,6 +3,7 @@
  */
 
 import { useEffect, useCallback, useMemo } from 'react';
+import type { ProgressEmojiSet } from '../../../utils/progressEmojis';
 
 interface UseModalEffectsParams {
   visible: boolean;
@@ -30,6 +31,9 @@ interface HabitDataParams {
   selectedColor: string;
   selectedDays: number[];
   selectedEmoji: string | null;
+  strengthAlgorithm: 'forgiving' | 'balanced' | 'strict';
+  progressEmojis: ProgressEmojiSet | undefined;
+  streakGoal: number;
 }
 
 export function useHabitData(params: HabitDataParams) {
@@ -43,6 +47,9 @@ export function useHabitData(params: HabitDataParams) {
       selectedColor: params.selectedColor,
       selectedDays: params.selectedDays,
       selectedEmoji: params.selectedEmoji,
+      strengthAlgorithm: params.strengthAlgorithm,
+      progressEmojis: params.progressEmojis,
+      streakGoal: params.streakGoal,
     }),
     [
       params.dayPhase,
@@ -53,6 +60,9 @@ export function useHabitData(params: HabitDataParams) {
       params.selectedColor,
       params.selectedDays,
       params.selectedEmoji,
+      params.strengthAlgorithm,
+      params.progressEmojis,
+      params.streakGoal,
     ]
   );
 }

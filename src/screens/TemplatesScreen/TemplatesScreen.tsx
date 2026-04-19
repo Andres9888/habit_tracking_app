@@ -4,9 +4,9 @@
  * Browse and import science-backed habit templates
  */
 
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo } from 'react';
 import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
-import type { Doc, Id } from '../../../convex/_generated/dataModel';
+import type { Doc } from '../../../convex/_generated/dataModel';
 import {
   ExploreAllSection,
   useGroupedTemplates,
@@ -14,7 +14,6 @@ import {
 import { PremiumPacksSection } from './components/PremiumPacksSection';
 import { TemplatesEmptyState } from './components/TemplatesEmptyState';
 import { TemplatesScreenModals } from './components';
-import { PostImportSetupSheet } from '../templates/PostImportSetupSheet';
 import { useTemplatesScreenProps } from './hooks/useTemplatesScreenProps';
 import { FeedbackOverlays } from './views/FeedbackOverlays';
 import { MainBrowseView } from './views/MainBrowseView';
@@ -27,33 +26,9 @@ import {
 } from './data/goalCollections';
 
 function TemplatesScreenContent() {
-  // Post-import setup state
-  const [setupHabitId, setSetupHabitId] = useState<Id<'habits'> | null>(null);
-  const [setupTemplate, setSetupTemplate] = useState<Doc<'templates'> | null>(
-    null
-  );
-  const [showSetupSheet, setShowSetupSheet] = useState(false);
-
-  const handlePostImportSetup = useCallback(
-    (habitId: Id<'habits'>, template: Doc<'templates'>) => {
-      setSetupHabitId(habitId);
-      setSetupTemplate(template);
-      setShowSetupSheet(true);
-    },
-    []
-  );
-
-  const props = useTemplatesScreenProps({
-    onPostImportSetup: handlePostImportSetup,
-  });
+  const props = useTemplatesScreenProps();
   const { data, handlers, mainBrowseData, packConfirm, state, viewNav } = props;
   const { groups, totalCount } = useGroupedTemplates(data.allTemplates);
-
-  const handleCloseSetupSheet = useCallback(() => {
-    setShowSetupSheet(false);
-    setSetupHabitId(null);
-    setSetupTemplate(null);
-  }, []);
 
   const handleDrillIntoCategory = useCallback(
     (categoryId: string) => {
@@ -140,12 +115,6 @@ function TemplatesScreenContent() {
           onPackCancel={packConfirm.handleCancel}
           onPackConfirm={handlePackConfirm}
         />
-        <PostImportSetupSheet
-          habitId={setupHabitId}
-          template={setupTemplate}
-          visible={showSetupSheet}
-          onClose={handleCloseSetupSheet}
-        />
       </>
     );
   }
@@ -216,12 +185,6 @@ function TemplatesScreenContent() {
         }
         searchAnimatedStyle={props.animations.searchAnimatedStyle}
         searchQuery={state.searchQuery}
-      />
-      <PostImportSetupSheet
-        habitId={setupHabitId}
-        template={setupTemplate}
-        visible={showSetupSheet}
-        onClose={handleCloseSetupSheet}
       />
     </>
   );

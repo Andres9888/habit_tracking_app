@@ -13,10 +13,9 @@ export const DEFAULT_ACCESSIBILITY_DECAY_PARAM = 0.3;
 export const DEFAULT_ACCESSIBILITY_GAIN_BEHAVIOR = 0.5;
 export const DEFAULT_ACCESSIBILITY_GAIN_REMINDER = 0.7;
 
-// Momentum-based formula constants (v2.0)
+// Momentum-based formula constants (balanced mode defaults)
 export const GROWTH_RATE = 0.03;
 export const BASE_DECAY = 0.02;
-export const SHIELD_EFFECTIVENESS = 0.7;
 
 // Time constants
 export const MS_PER_DAY = 24 * 60 * 60 * 1000;

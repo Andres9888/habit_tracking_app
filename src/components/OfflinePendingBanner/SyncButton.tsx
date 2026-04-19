@@ -5,6 +5,7 @@ import { ChevronDown, RefreshCw } from 'lucide-react-native';
 import { styles } from './OfflinePendingBanner.styles';
 import type { AnimatedStyle } from 'react-native-reanimated';
 import type { ViewStyle } from 'react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { colors } from '../../theme/colors';
 
 interface SyncButtonProps {
@@ -32,7 +33,7 @@ export function SyncButton({
         style={styles.syncButton}
         onPress={onSyncPress}
       >
-        <RefreshCw color={colors.text.inverse} size={16} />
+        <RefreshCw color={colors.text.inverse} size={iconSizes.small} />
         <Text style={styles.syncButtonText}>Sync</Text>
       </Pressable>
     );
@@ -40,7 +41,7 @@ export function SyncButton({
 
   return (
     <Animated.View style={chevronAnimatedStyle}>
-      <ChevronDown color='#71717A' size={20} />
+      <ChevronDown color='#71717A' size={iconSizes.medium} />
     </Animated.View>
   );
 }

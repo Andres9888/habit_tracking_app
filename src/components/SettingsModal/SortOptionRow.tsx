@@ -47,7 +47,7 @@ export function SortOptionRow({ option, selected, showBorder, onSelect }: SortOp
         className='h-10 w-10 items-center justify-center rounded-xl'
         style={{ backgroundColor: style.bg }}
       >
-        <option.Icon color={style.icon} size={iconSizes.medium} strokeWidth={2.25} />
+        <option.Icon color={style.icon} size={iconSizes.medium} strokeWidth={2.5} />
       </View>
 
       <View className='flex-1'>
@@ -65,7 +65,7 @@ export function SortOptionRow({ option, selected, showBorder, onSelect }: SortOp
           entering={CHECKMARK_ENTERING}
           style={{ backgroundColor: colors.primary[500] }}
         >
-          <Check color='#ffffff' size={iconSizes.small} strokeWidth={2.5} />
+          <Check color={colors.text.inverse} size={iconSizes.small} strokeWidth={2.5} />
         </Animated.View>
       ) : (
         <View

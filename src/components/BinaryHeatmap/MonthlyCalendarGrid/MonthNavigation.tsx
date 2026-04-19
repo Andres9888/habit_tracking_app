@@ -1,24 +1,18 @@
 /**
- * MonthNavigation Component
- *
- * Month display and navigation controls for the calendar.
- * Theme-aware — uses semantic color tokens.
+ * MonthNavigation - Top header row: month name + prev/next chevrons.
  */
 
 import React, { memo } from 'react';
-import { View, Text, Pressable } from 'react-native';
+import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { ChevronLeft, ChevronRight, Calendar } from 'lucide-react-native';
 import { format, isValid } from 'date-fns';
 import { useThemeColors } from '@/theme';
 import { styles } from './styles';
 import { iconSizes } from '@/theme/iconSizes';
 
-/** Safely format a date, returning fallback on error */
 function safeFormat(date: Date, formatStr: string, fallback: string): string {
   try {
-    if (!date || !(date instanceof Date) || !isValid(date)) {
-      return fallback;
-    }
+    if (!date || !(date instanceof Date) || !isValid(date)) return fallback;
     return format(date, formatStr);
   } catch {
     return fallback;
@@ -40,9 +34,8 @@ export const MonthNavigation = memo(function MonthNavigation({
   const iconColor = colors.text.secondary;
 
   return (
-    <View style={[styles.navigation, { borderTopColor: colors.border }]}>
+    <View style={headerStyles.row}>
       <Pressable
-        accessible
         accessibilityLabel={`Current month: ${safeFormat(currentMonth, 'MMMM yyyy', 'Month')}`}
         accessibilityRole='header'
         style={[styles.monthButton, { borderColor: colors.border }]}
@@ -52,6 +45,7 @@ export const MonthNavigation = memo(function MonthNavigation({
           {safeFormat(currentMonth, 'MMM yyyy', 'Month')}
         </Text>
       </Pressable>
+
       <View style={styles.navButtons}>
         <Pressable
           accessibilityLabel='Previous month'
@@ -74,4 +68,14 @@ export const MonthNavigation = memo(function MonthNavigation({
       </View>
     </View>
   );
+});
+
+const headerStyles = StyleSheet.create({
+  row: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 10,
+    justifyContent: 'space-between',
+    marginBottom: 10,
+  },
 });

@@ -40,12 +40,9 @@ export function HeroSection({
     <LinearGradient
       colors={gradientColors}
       start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 1 }}
+      end={{ x: 0, y: 1 }}
       style={heroStyles.heroGradient}
     >
-      <View
-        style={[heroStyles.decorativeCircle, { backgroundColor: `${iconColor}08` }]}
-      />
       <View style={heroStyles.heroContent}>
         <Animated.View style={[heroStyles.iconWrapper, iconAnimatedStyle]}>
           <Animated.View

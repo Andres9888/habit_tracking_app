@@ -6,24 +6,28 @@ import { iconSizes } from '@/theme/iconSizes';
 import type { EdgeInsets } from 'react-native-safe-area-context';
 import { durations, springs } from '@/theme/animations';
 import { useThemeColors } from '@/theme/ThemeContext';
-import { typography } from '@/theme/typography';
-import { ModalCloseButton } from '../../ui/ModalCloseButton';
+import { typography, fontWeights } from '@/theme/typography';
 
 const ENTERING = FadeInDown.duration(durations.enter).springify().damping(springs.standard.damping);
 
 interface ModalHeaderProps {
   insets: EdgeInsets;
   habitCount: number;
+  selectionMode: boolean;
   onBack: () => void;
-  onClose: () => void;
+  onSelectPress: () => void;
 }
 
-export function ModalHeader({ insets, habitCount, onBack, onClose }: ModalHeaderProps) {
+export function ModalHeader({ insets, habitCount, selectionMode, onBack, onSelectPress }: ModalHeaderProps) {
   const { colors, isDark } = useThemeColors();
 
   const subtitle = habitCount === 0
     ? 'No archived habits'
-    : `${habitCount} habit${habitCount === 1 ? '' : 's'} paused · tap to bring ${habitCount === 1 ? 'it' : 'them'} back`;
+    : `${habitCount} habit${habitCount === 1 ? '' : 's'} archived · tap Resume to bring ${habitCount === 1 ? 'it' : 'them'} back`;
+
+  const selectDisabled = !selectionMode && habitCount === 0;
+  const selectLabel = selectionMode ? 'Cancel' : 'Select';
+  const selectColor = selectionMode ? colors.text.secondary : colors.status.success;
 
   return (
     <Animated.View entering={ENTERING}>
@@ -36,7 +40,19 @@ export function ModalHeader({ insets, habitCount, onBack, onClose }: ModalHeader
           >
             <ChevronLeft color={colors.text.primary} size={iconSizes.large} strokeWidth={2} />
           </Pressable>
-          <ModalCloseButton label='Close archived habits' onClose={onClose} />
+          <Pressable
+            accessibilityLabel={selectionMode ? 'Cancel selection' : 'Enter selection mode'}
+            accessibilityRole='button'
+            accessibilityState={{ disabled: selectDisabled }}
+            disabled={selectDisabled}
+            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+            style={{ paddingHorizontal: 10, paddingVertical: 8, borderRadius: 8, opacity: selectDisabled ? 0.4 : 1 }}
+            onPress={onSelectPress}
+          >
+            <Text style={{ fontSize: 14, fontWeight: fontWeights.semibold, color: selectColor, letterSpacing: -0.1 }}>
+              {selectLabel}
+            </Text>
+          </Pressable>
         </View>
         <View style={{ paddingHorizontal: 20, paddingBottom: 4 }}>
           <Text style={[typography.heading1, { color: colors.text.primary, letterSpacing: -0.5, fontSize: 24, lineHeight: 30 }]}>

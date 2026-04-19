@@ -15,13 +15,12 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useSwipeDismiss } from '../../components/CreateHabitModal/hooks/useSwipeDismiss';
 import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 import { useThemeColors } from '../../theme/ThemeContext';
-import { borderRadius, shadows } from '../../theme/spacing';
+import { borderRadius } from '../../theme/spacing';
+import { AdvancedOptionsSection } from '../../components/AdvancedOptions';
 import { EditHeader } from './EditHeader';
 import { HabitEditSkeleton } from './HabitEditSkeleton';
 import { NameInputSection } from './NameInputSection';
 import { CustomizeSection } from './CustomizeSection';
-import { DangerZone } from './DangerZone';
-import { SectionLabel } from './SectionLabel';
 import { useHabitEditScreen } from './useHabitEditScreen';
 import type { HabitEditScreenProps } from './types';
 
@@ -37,7 +36,11 @@ function HabitEditScreenContent({
   const { animateOut, backdropStyle, panGesture, sheetStyle } = useSwipeDismiss(
     { visible, onClose }
   );
-  const state = useHabitEditScreen({ habitId, onClose: animateOut, onHabitRemoved });
+  const state = useHabitEditScreen({
+    habitId,
+    onClose: animateOut,
+    onHabitRemoved,
+  });
   return (
     <Modal
       accessibilityViewIsModal
@@ -121,24 +124,18 @@ function HabitEditScreenContent({
                           onReminderToggle={state.handleReminderToggle}
                         />
                       </Animated.View>
-                      <SectionLabel
-                        delay={340}
-                        text='DANGER ZONE'
-                        variant='danger'
+                      <AdvancedOptionsSection
+                        progressEmojis={state.progressEmojis}
+                        streakGoal={state.streakGoal}
+                        strengthAlgorithm={state.strengthAlgorithm}
+                        onProgressEmojisChange={
+                          state.handleProgressEmojisChange
+                        }
+                        onStreakGoalChange={state.handleStreakGoalChange}
+                        onStrengthAlgorithmChange={
+                          state.handleStrengthAlgorithmChange
+                        }
                       />
-                      <Animated.View
-                        className='mx-6 rounded-2xl p-4'
-                        entering={FadeInUp.delay(400).springify().damping(18)}
-                        style={{
-                          backgroundColor: themeColors.card,
-                          ...shadows.card,
-                        }}
-                      >
-                        <DangerZone
-                          onArchive={state.handleArchive}
-                          onDelete={state.handleDelete}
-                        />
-                      </Animated.View>
                     </Pressable>
                   </ScrollView>
                 </Animated.View>

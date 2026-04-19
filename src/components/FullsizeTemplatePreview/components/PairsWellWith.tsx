@@ -6,8 +6,10 @@
 import React from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { ChevronRight } from 'lucide-react-native';
-import { useThemeColors } from '../../../theme/ThemeContext';
+import { iconSizes } from '@/theme/iconSizes';
+import { borderRadius } from '@/theme/spacing';
 import { fontFamilies, fontWeights } from '@/theme/typography';
+import { useThemeColors } from '../../../theme/ThemeContext';
 import { CATEGORY_PAIRINGS } from '../../../screens/TemplatesScreen/data/habitPairings';
 import { getCategoryMeta } from '../../../screens/TemplatesScreen/data/categoryMeta';
 
@@ -62,7 +64,7 @@ export function PairsWellWith({ category, onPairPress }: PairsWellWithProps) {
               </View>
               <ChevronRight
                 color={colors.textSecondary}
-                size={16}
+                size={iconSizes.small}
                 strokeWidth={2}
               />
             </Pressable>
@@ -76,7 +78,7 @@ export function PairsWellWith({ category, onPairPress }: PairsWellWithProps) {
 const pairStyles = StyleSheet.create({
   card: {
     alignItems: 'center',
-    borderRadius: 12,
+    borderRadius: borderRadius.medium,
     flexDirection: 'row',
     gap: 12,
     padding: 12,
@@ -86,10 +88,7 @@ const pairStyles = StyleSheet.create({
     fontSize: 11,
     lineHeight: 15,
   },
-  cardText: {
-    flex: 1,
-    gap: 2,
-  },
+  cardText: { flex: 1, gap: 2 },
   cardTitle: {
     fontFamily: fontFamilies.primary.text,
     fontSize: 13,
@@ -102,17 +101,13 @@ const pairStyles = StyleSheet.create({
   },
   iconBox: {
     alignItems: 'center',
-    borderRadius: 12,
+    borderRadius: borderRadius.medium,
     height: 42,
     justifyContent: 'center',
     width: 42,
   },
-  iconText: {
-    fontSize: 20,
-  },
-  list: {
-    gap: 8,
-  },
+  iconText: { fontSize: 20 },
+  list: { gap: 8 },
   title: {
     fontFamily: fontFamilies.primary.display,
     fontSize: 15,

@@ -5,12 +5,13 @@
  * are applied inline via useThemeColors() in the TabBar component.
  */
 import { StyleSheet } from 'react-native';
+import { borderRadius } from '@/theme/spacing';
 import { fontWeights, typography } from '@/theme/typography';
 
 export const tabStyles = StyleSheet.create({
   tab: {
     alignItems: 'center',
-    borderRadius: 12,
+    borderRadius: borderRadius.medium,
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'center',
@@ -19,7 +20,7 @@ export const tabStyles = StyleSheet.create({
     zIndex: 1,
   },
   tabBar: {
-    borderRadius: 12,
+    borderRadius: borderRadius.medium,
     flexDirection: 'row',
     marginBottom: 12,
     marginHorizontal: 16,
@@ -36,7 +37,7 @@ export const tabStyles = StyleSheet.create({
     // Applied dynamically via theme colors in TabBar
   },
   tabIndicator: {
-    borderRadius: 12,
+    borderRadius: borderRadius.medium,
     bottom: 5,
     elevation: 3,
     left: 5,

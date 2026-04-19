@@ -27,7 +27,7 @@ export function BenefitsHeader({ config, onClose }: BenefitsHeaderProps) {
           end={{ x: 1, y: 1 }}
           start={{ x: 0, y: 0 }}
         >
-          <Crown color='#ffffff' size={iconSizes.small} />
+          <Crown color={themeColors.text.inverse} size={iconSizes.small} />
         </LinearGradient>
         <Text className='text-lg font-bold' style={{ color: themeColors.text.primary }}>Premium Features</Text>
       </View>

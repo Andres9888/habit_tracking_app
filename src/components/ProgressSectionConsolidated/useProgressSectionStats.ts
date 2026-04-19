@@ -69,6 +69,23 @@ export function useProgressSectionStats({
     [tracking, currentStreak]
   );
 
+  // Best streak ever — top of streakRecords (sorted desc) or current streak
+  const bestStreak = useMemo(
+    () => Math.max(currentStreak, streakRecords[0]?.days ?? 0),
+    [streakRecords, currentStreak]
+  );
+
+  // Lifetime completion rate as 0-100 percent
+  const completionRate = useMemo(() => {
+    if (!habitCreatedTimestamp) return 0;
+    const completedCount = tracking.filter((t) => t.completed).length;
+    const daysSince = Math.max(
+      1,
+      Math.ceil((Date.now() - habitCreatedTimestamp) / 86_400_000)
+    );
+    return Math.round((completedCount / daysSince) * 100);
+  }, [tracking, habitCreatedTimestamp]);
+
   // Calculate monthly change for trend indicator
   const monthlyChange = useMemo(
     () => calculateMonthlyChangeForStatsGrid(tracking),
@@ -131,6 +148,8 @@ export function useProgressSectionStats({
   return {
     actionableTip,
     bestDayData,
+    bestStreak,
+    completionRate,
     currentStreak,
     dayStats,
     focusDayData,

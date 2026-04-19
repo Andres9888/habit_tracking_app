@@ -7,7 +7,6 @@ import type { MonthlyCalendarGridProps } from './types';
 import { styles } from './styles';
 import { useCalendarDays } from './useCalendarDays';
 import { AnimatedWeeksGrid } from './AnimatedWeeksGrid';
-import { CalendarSummary } from './CalendarSummary';
 import { MonthNavigation } from './MonthNavigation';
 
 const DAY_HEADERS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
@@ -22,22 +21,12 @@ export const MonthlyCalendarGrid = memo(function MonthlyCalendarGrid({
   const { colors, isDark } = useThemeColors();
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const directionRef = useRef<'left' | 'right'>('right');
-  const { days, weeks } = useCalendarDays({ completedDates, currentMonth, habitCreatedAt });
+  const { weeks } = useCalendarDays({ completedDates, currentMonth, habitCreatedAt });
 
   const textColors = useMemo(
     () => ({ muted: isDark ? colors.gray[300] : colors.gray[300], primary: colors.text.primary, tertiary: colors.text.tertiary }),
     [isDark, colors]
   );
-
-  const { completed, missed } = useMemo(() => {
-    let c = 0, m = 0;
-    for (const day of days) {
-      if (!day.isCurrentMonth) continue;
-      if (day.isCompleted) c++;
-      else if (day.isMissed) m++;
-    }
-    return { completed: c, missed: m };
-  }, [days]);
 
   const goToPreviousMonth = useCallback(() => {
     directionRef.current = 'right';
@@ -58,6 +47,12 @@ export const MonthlyCalendarGrid = memo(function MonthlyCalendarGrid({
 
   return (
     <View style={[styles.container, { backgroundColor: isDark ? colors.card : '#FFFFFF', borderColor: colors.border }]}>
+      <MonthNavigation
+        currentMonth={currentMonth}
+        onNextMonth={goToNextMonth}
+        onPreviousMonth={goToPreviousMonth}
+      />
+
       <View style={styles.row}>
         {DAY_HEADERS.map((day) => (
           <View key={day} style={styles.headerCell}>
@@ -74,15 +69,6 @@ export const MonthlyCalendarGrid = memo(function MonthlyCalendarGrid({
         textColors={textColors}
         weeks={weeks}
       />
-
-      <CalendarSummary
-        borderColor={colors.border}
-        completed={completed}
-        habitColor={habitColor}
-        missed={missed}
-        textColor={colors.text.secondary}
-      />
-      <MonthNavigation currentMonth={currentMonth} onNextMonth={goToNextMonth} onPreviousMonth={goToPreviousMonth} />
     </View>
   );
 });

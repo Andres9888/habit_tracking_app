@@ -1,5 +1,6 @@
 import { View } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
+import { borderRadius } from '../../../theme/spacing';
 import { useSkeletonTheme } from '../../../components/SkeletonLoader/useSkeletonTheme';
 import { ShimmerBox } from './ShimmerBox';
 
@@ -23,7 +24,7 @@ export function SkeletonCard({ index }: { index: number }) {
         <ShimmerBox
           delay={staggerDelay}
           height={48}
-          style={{ borderRadius: 16 }}
+          style={{ borderRadius: borderRadius.card }}
           width={48}
         />
         <View className='flex-1 gap-2'>
@@ -39,13 +40,13 @@ export function SkeletonCard({ index }: { index: number }) {
         <ShimmerBox
           delay={staggerDelay + 250}
           height={24}
-          style={{ borderRadius: 12 }}
+          style={{ borderRadius: borderRadius.medium }}
           width={70}
         />
         <ShimmerBox
           delay={staggerDelay + 300}
           height={24}
-          style={{ borderRadius: 12 }}
+          style={{ borderRadius: borderRadius.medium }}
           width={60}
         />
       </View>

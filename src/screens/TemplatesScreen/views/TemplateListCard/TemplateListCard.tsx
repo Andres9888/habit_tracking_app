@@ -88,7 +88,7 @@ export function TemplateListCard({
             />
           </View>
           <Text
-            numberOfLines={2}
+            numberOfLines={3}
             style={[styles.description, { color: colors.text.secondary }]}
           >
             {item.description}

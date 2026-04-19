@@ -1,10 +1,10 @@
 /**
  * CustomizeSection Component
  *
- * Visual customization options for a habit including:
+ * Visual customization options for a habit:
  * - Emoji icon picker
  * - Accent color selection
- * - Reminder scheduling
+ * - Daily reminder scheduling
  */
 
 import { Text, View } from 'react-native';
@@ -14,9 +14,10 @@ import { ColorPickerSection } from '../../components/CreateHabitModal/components
 import { EnhancedReminderSelector } from '../../components/CreateHabitModal/components/EnhancedReminderSelector';
 import { HABIT_COLORS } from '../../components/CreateHabitModal/constants';
 import { useThemeColors } from '../../theme/ThemeContext';
-import { typography } from '../../theme/typography';
+import { fontWeights, typography } from '../../theme/typography';
 
-const entrance = (delay: number) => FadeInUp.delay(delay).springify().damping(18);
+const entrance = (delay: number) =>
+  FadeInUp.delay(delay).springify().damping(18);
 
 interface CustomizeSectionProps {
   habitName: string;
@@ -47,7 +48,12 @@ export function CustomizeSection({
     <View className='flex-1'>
       <Text
         className='mb-3 text-center uppercase'
-        style={{ ...typography.caption, fontWeight: '600', letterSpacing: 0.5, color: themeColors.text.tertiary }}
+        style={{
+          ...typography.caption,
+          fontWeight: fontWeights.semibold,
+          letterSpacing: 0.5,
+          color: themeColors.text.tertiary,
+        }}
       >
         Choose an icon
       </Text>
@@ -62,8 +68,13 @@ export function CustomizeSection({
       </Animated.View>
 
       <Text
-        className='mt-4 mb-3 text-center uppercase'
-        style={{ ...typography.caption, fontWeight: '600', letterSpacing: 0.5, color: themeColors.text.tertiary }}
+        className='mb-3 mt-4 text-center uppercase'
+        style={{
+          ...typography.caption,
+          fontWeight: fontWeights.semibold,
+          letterSpacing: 0.5,
+          color: themeColors.text.tertiary,
+        }}
       >
         Pick a color
       </Text>

@@ -1,9 +1,22 @@
-import type { StrengthColors, StrengthLabel } from '../types';
+import type { StrengthAlgorithmConfig, StrengthColors, StrengthLabel } from '../types';
 
 // Algorithm constants (based on Loop Habit Tracker)
 export const DEFAULT_GROWTH_RATE = 0.05; // ~5% growth per completion
 export const DEFAULT_DECAY_RATE = 0.95; // ~5% decay per miss
 export const DEFAULT_MAX_SAMPLE_POINTS = 100;
+
+/**
+ * Frontend chart configs calibrated to Lally et al. (2010) timeframes.
+ * growthRate matches backend; decayRate = 1 - baseDecay for chart smoothing.
+ */
+export const ALGORITHM_MODE_CONFIGS: Record<
+  string,
+  Pick<StrengthAlgorithmConfig, 'growthRate' | 'decayRate'>
+> = {
+  forgiving: { growthRate: 0.10, decayRate: 0.99 },
+  balanced: { growthRate: 0.03, decayRate: 0.98 },
+  strict: { growthRate: 0.013, decayRate: 0.96 },
+};
 
 // Threshold constants for strength labels
 export const WEAK_THRESHOLD = 30;

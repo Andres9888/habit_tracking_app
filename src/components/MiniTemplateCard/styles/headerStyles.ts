@@ -21,7 +21,7 @@ export const headerStyles: Record<string, ViewStyle | TextStyle> = {
   },
   iconContainer: {
     alignItems: 'center',
-    borderRadius: 12,
+    borderRadius: borderRadius.medium,
     height: 42,
     justifyContent: 'center',
     width: 42,

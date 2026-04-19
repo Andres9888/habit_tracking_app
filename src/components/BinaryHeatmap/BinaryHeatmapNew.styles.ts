@@ -11,6 +11,7 @@ import {
   DAY_LABEL_WIDTH,
   MONTH_LABEL,
 } from './constants';
+import { borderRadius } from '../../theme/spacing';
 import { typography, fontWeights, fontFamilies } from '../../theme/typography';
 
 export const styles = StyleSheet.create({
@@ -22,7 +23,7 @@ export const styles = StyleSheet.create({
   },
   container: {
     backgroundColor: COLORS.CARD_BACKGROUND,
-    borderRadius: 12,
+    borderRadius: borderRadius.medium,
     padding: 16,
   },
   dayLabelCell: {

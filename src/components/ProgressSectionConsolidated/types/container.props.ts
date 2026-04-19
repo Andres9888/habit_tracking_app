@@ -5,6 +5,7 @@
  */
 
 import type { HabitTrackingEntry } from '../../../features/habits/types';
+import type { ProgressEmojiSet } from '../../../utils/progressEmojis';
 import type { QuickAction } from '../TipQuickActionsSheet';
 
 /**
@@ -19,6 +20,10 @@ export interface ProgressSectionConsolidatedProps {
   strength: number;
   /** Weekly change in strength (positive = improving, negative = declining) */
   weeklyChange?: number;
+  /** User-defined streak goal in days (e.g. 66). Omit to hide streak goal card. */
+  streakGoal?: number;
+  /** Optional per-habit growth emoji override */
+  progressEmojis?: ProgressEmojiSet;
   /** Callback when info button is pressed */
   onInfoPress?: () => void;
   /** Callback when focus day chip is pressed */

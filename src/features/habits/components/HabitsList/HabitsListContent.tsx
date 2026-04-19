@@ -12,8 +12,8 @@
  * {@link HabitsListContentProps}.
  */
 
-import { useCallback, useMemo } from 'react';
-import { View } from 'react-native';
+import { memo, useCallback, useMemo } from 'react';
+import { Platform, View, type StyleProp, type ViewStyle } from 'react-native';
 import DraggableFlatList, {
   type RenderItemParams,
 } from 'react-native-draggable-flatlist';
@@ -26,6 +26,18 @@ import { StickyHeaderContext } from '../../../../components/CalendarTimeline/Sti
 import { useStickyHeader } from './useStickyHeader';
 import type { Habit } from '../../types';
 import type { HabitsListContentProps } from './HabitsList.types';
+
+const REMOVE_CLIPPED_SUBVIEWS = Platform.OS === 'android';
+
+const HeaderWrapper = memo(function HeaderWrapper({
+  children,
+  style,
+}: {
+  children: React.ReactNode;
+  style: StyleProp<ViewStyle>;
+}) {
+  return <View style={style}>{children}</View>;
+});
 
 export function HabitsListContent({
   props,
@@ -53,6 +65,13 @@ export function HabitsListContent({
       list.contentPadding.paddingBottom,
       list.contentPadding.paddingHorizontal,
     ]
+  );
+
+  const headerWrapperStyle = useMemo<StyleProp<ViewStyle>>(
+    () => ({
+      marginHorizontal: -(list.contentPadding.paddingHorizontal ?? 0),
+    }),
+    [list.contentPadding.paddingHorizontal]
   );
 
   const listHeaderComponent = useMemo(
@@ -86,15 +105,9 @@ export function HabitsListContent({
           <DraggableFlatList<Habit>
             ListHeaderComponent={
               stickyEnabled ? undefined : (
-                <View
-                  style={{
-                    marginHorizontal: -(
-                      list.contentPadding.paddingHorizontal ?? 0
-                    ),
-                  }}
-                >
+                <HeaderWrapper style={headerWrapperStyle}>
                   {listHeaderComponent}
-                </View>
+                </HeaderWrapper>
               )
             }
             activationDistance={
@@ -106,10 +119,14 @@ export function HabitsListContent({
             }
             contentContainerStyle={contentContainerStyle}
             data={list.habits}
+            initialNumToRender={8}
             keyExtractor={handlers.keyExtractor}
+            maxToRenderPerBatch={6}
+            removeClippedSubviews={REMOVE_CLIPPED_SUBVIEWS}
             renderItem={renderHabitItem}
             scrollEventThrottle={16}
             showsVerticalScrollIndicator={false}
+            windowSize={7}
             onDragBegin={handlers.handleDragBegin}
             onDragEnd={(params) => {
               void list.handleDragEnd(params);

@@ -92,12 +92,12 @@ export function SocialSignInButton({
         ) : provider === 'google' ? (
           <GoogleLogo size={20} />
         ) : (
-          <AppleLogo color='#FFFFFF' size={20} />
+          <AppleLogo color={colors.text.inverse} size={20} />
         )}
       </View>
       <Text
         className='text-[15px] font-semibold'
-        style={{ color: provider === 'google' ? colors.text.primary : '#FFFFFF' }}
+        style={{ color: provider === 'google' ? colors.text.primary : colors.text.inverse }}
       >
         {isLoading ? 'Signing in...' : config.label}
       </Text>

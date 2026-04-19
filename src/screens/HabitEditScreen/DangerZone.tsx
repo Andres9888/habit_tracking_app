@@ -25,7 +25,7 @@ interface DangerZoneProps {
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 export function DangerZone({ onArchive, onDelete }: DangerZoneProps) {
-  const { isDark } = useThemeColors();
+  const { colors } = useThemeColors();
   const archiveScale = useSharedValue(1);
   const deleteScale = useSharedValue(1);
 
@@ -61,10 +61,10 @@ export function DangerZone({ onArchive, onDelete }: DangerZoneProps) {
     );
   };
 
-  const archiveBg = isDark ? 'rgba(146,64,14,0.15)' : '#FFFBEB';
-  const archiveBorder = isDark ? 'rgba(146,64,14,0.3)' : '#FDE68A';
-  const deleteBg = isDark ? 'rgba(153,27,27,0.15)' : '#FEF2F2';
-  const deleteBorder = isDark ? 'rgba(153,27,27,0.3)' : '#FECACA';
+  const archiveBg = colors.status.warningLight;
+  const archiveBorder = `${colors.status.warning}40`;
+  const deleteBg = colors.status.errorLight;
+  const deleteBorder = `${colors.status.error}40`;
 
   return (
     <View className='flex-col gap-3'>
@@ -77,10 +77,10 @@ export function DangerZone({ onArchive, onDelete }: DangerZoneProps) {
         onPressIn={() => { archiveScale.value = withSpring(0.97, springs.button); }}
         onPressOut={() => { archiveScale.value = withSpring(1, springs.button); }}
       >
-        <Archive color={isDark ? '#FBBF24' : '#d97706'} size={iconSizes.medium} strokeWidth={2} />
+        <Archive color={colors.status.warning} size={iconSizes.medium} strokeWidth={2} />
         <Text
           className='font-semibold'
-          style={{ ...typography.button, letterSpacing: -0.41, color: isDark ? '#FBBF24' : '#B45309' }}
+          style={{ ...typography.button, letterSpacing: -0.41, color: colors.status.warningText }}
         >
           Archive Habit
         </Text>
@@ -95,10 +95,10 @@ export function DangerZone({ onArchive, onDelete }: DangerZoneProps) {
         onPressIn={() => { deleteScale.value = withSpring(0.97, springs.button); }}
         onPressOut={() => { deleteScale.value = withSpring(1, springs.button); }}
       >
-        <Trash2 color={isDark ? '#F87171' : '#dc2626'} size={iconSizes.medium} strokeWidth={2} />
+        <Trash2 color={colors.status.error} size={iconSizes.medium} strokeWidth={2} />
         <Text
           className='font-semibold'
-          style={{ ...typography.button, letterSpacing: -0.41, color: isDark ? '#F87171' : '#DC2626' }}
+          style={{ ...typography.button, letterSpacing: -0.41, color: colors.status.errorText }}
         >
           Delete Habit
         </Text>

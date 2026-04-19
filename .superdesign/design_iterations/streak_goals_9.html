@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QuickStats Relocation</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Literata:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'DM Sans', sans-serif !important;
+    background: #1A1816 !important; color: #FAF8F5 !important;
+    padding: 48px 24px !important; min-height: 100vh !important;
+  }
+  h1,h2,h3 { font-family: 'Literata', serif !important; }
+  .mono { font-family: 'JetBrains Mono', monospace !important; }
+
+  .phone {
+    width: 375px !important; height: 580px !important;
+    background: #F5F1ED !important; border-radius: 40px !important;
+    overflow: hidden !important; position: relative !important;
+    box-shadow: 0 0 0 3px #2D2A26, 0 0 0 6px #3D3833, 0 25px 60px rgba(0,0,0,0.5) !important;
+    flex-shrink: 0 !important;
+  }
+  .phone-screen {
+    width: 100% !important; height: 100% !important;
+    padding: 56px 0 24px !important; overflow-y: auto !important;
+    scrollbar-width: none !important;
+  }
+  .phone-screen::-webkit-scrollbar { display: none !important; }
+  .status-bar {
+    position: absolute !important; top: 0 !important; left: 0 !important; right: 0 !important;
+    height: 48px !important; background: #F5F1ED !important;
+    display: flex !important; align-items: center !important; justify-content: center !important;
+    z-index: 10 !important; font-size: 14px !important; font-weight: 600 !important; color: #2D2A26 !important;
+  }
+
+  /* Top header — close + Edit */
+  .top-bar {
+    display: flex; align-items: center; padding: 4px 20px 12px;
+  }
+  .back { font-size: 20px; color: #6B6560; }
+  .edit-btn {
+    margin-left: auto; background: #EDEAE5; border: 1px solid #DDD8D2;
+    border-radius: 20px; padding: 6px 12px; font-size: 12px; color: #6B6560; font-weight: 600;
+  }
+  .edit-btn-compact {
+    background: #EDEAE5; border: 1px solid #DDD8D2;
+    border-radius: 20px; padding: 6px 10px; font-size: 11px; color: #6B6560; font-weight: 600;
+  }
+
+  /* Hero — emoji + name */
+  .hero {
+    display: flex; flex-direction: column; align-items: center; padding: 0 20px 16px;
+  }
+  .hero-emoji {
+    width: 72px; height: 72px; background: #059669; border-radius: 18px;
+    display: flex; align-items: center; justify-content: center; font-size: 38px; position: relative;
+    margin-bottom: 12px;
+  }
+  .hero-check {
+    position: absolute; bottom: -3px; right: -3px;
+    width: 22px; height: 22px; background: #059669; border: 2px solid #F5F1ED;
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    color: white; font-size: 12px; font-weight: 700;
+  }
+  .hero-name {
+    font-family: 'Literata', serif; font-size: 28px; font-weight: 700; color: #2D2A26;
+  }
+
+  /* Original QuickStats Row (before) */
+  .quick-stats {
+    display: flex; gap: 0; padding: 0 20px 16px;
+  }
+  .quick-stat {
+    flex: 1; background: #EDEAE5; border: 1px solid #DDD8D2; text-align: center;
+    padding: 10px 4px;
+  }
+  .quick-stat:first-child { border-radius: 12px 0 0 12px; border-right: 0; }
+  .quick-stat:last-child { border-radius: 0 12px 12px 0; border-left: 0; }
+  .quick-stat:not(:first-child):not(:last-child) { border-left: 0; border-right: 0; border-left: 1px solid #DDD8D2; }
+  .quick-stat-val { font-family: 'Literata', serif; font-size: 20px; font-weight: 700; color: #2D2A26; }
+  .quick-stat-lbl { font-size: 10px; color: #6B6560; margin-top: 2px; }
+
+  /* Inline stats (Option 1) */
+  .inline-stats {
+    display: flex; align-items: center; justify-content: center; gap: 14px;
+    padding: 8px 20px 16px;
+  }
+  .inline-stat {
+    display: flex; align-items: center; gap: 5px;
+    font-size: 12px; color: #6B6560;
+  }
+  .inline-stat .mono { font-family: 'JetBrains Mono', monospace; font-weight: 600; color: #2D2A26; }
+  .inline-divider {
+    width: 3px; height: 3px; border-radius: 50%; background: #C4BFB7;
+  }
+
+  /* Chips (Option 3) */
+  .chip-row {
+    display: flex; gap: 8px; justify-content: center; padding: 4px 20px 16px;
+  }
+  .chip {
+    display: flex; align-items: center; gap: 4px;
+    background: #EDEAE5; border: 1px solid #DDD8D2;
+    padding: 5px 10px; border-radius: 9999px;
+    font-size: 12px; color: #524D47; font-weight: 500;
+  }
+  .chip-gold { background: #FEF3CD; border-color: rgba(139, 98, 8, 0.2); color: #8B6208; font-weight: 600; }
+
+  /* Header summary (Option 4) */
+  .header-stats {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 11px; color: #6B6560; margin-left: auto; margin-right: 10px;
+  }
+  .header-stat {
+    display: flex; align-items: center; gap: 3px;
+    font-family: 'JetBrains Mono', monospace; font-weight: 600;
+  }
+  .header-stat-divider { color: #C4BFB7; }
+
+  /* Tabs */
+  .tab-bar {
+    display: flex; gap: 4px; background: #DDD8D2; border: 1px solid #DDD8D2;
+    border-radius: 10px; padding: 4px; margin: 4px 20px 0;
+  }
+  .tab {
+    flex: 1; padding: 8px 4px; text-align: center; border-radius: 6px;
+    display: flex; flex-direction: column; align-items: center; gap: 2px;
+  }
+  .tab.active {
+    background: #FAF8F5; box-shadow: 0 1px 3px rgba(45,42,38,0.08);
+  }
+  .tab-icon { font-size: 16px; color: #6B6560; }
+  .tab-label { font-size: 12px; color: #6B6560; font-weight: 500; }
+  .tab-hint { font-size: 10px; color: #C4BFB7; font-weight: 500; }
+  .tab.active .tab-icon, .tab.active .tab-label { color: #059669; }
+  .tab.active .tab-label { font-weight: 700; }
+  .tab.active .tab-hint { color: #8B6208; font-weight: 600; }
+
+  /* Labels */
+  .wrapper { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+  .variation-num { font-size: 12px; color: #6B6560; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 600; }
+  .variation-title { font-family: 'Literata', serif; font-size: 22px; font-weight: 700; color: #FAF8F5; margin-top: 4px; }
+  .note { font-size: 13px; color: #6B6560; margin-top: 10px; max-width: 340px; line-height: 1.5; text-align: center; }
+  .variation-label { text-align: center; margin-bottom: 12px; }
+</style>
+</head>
+<body>
+
+<div style="text-align: center; margin-bottom: 40px;">
+  <h1 style="font-size: 32px; font-weight: 700; color: #FAF8F5;">Where should the stats live?</h1>
+  <p style="font-size: 15px; color: #C4BFB7; margin-top: 8px;">Before · Inline hero · Chip row · Header summary</p>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 48px; max-width: 1800px; margin: 0 auto;">
+
+<!-- BEFORE -->
+<div class="wrapper">
+  <div class="variation-label"><div class="variation-num">Before</div><div class="variation-title" style="color:#FCA5A5;">3-tile card</div></div>
+  <div class="phone">
+    <div class="status-bar"><span>9:41</span></div>
+    <div class="phone-screen">
+      <div class="top-bar"><span class="back">✕</span><div class="edit-btn">✏️ Edit Habit</div></div>
+      <div class="hero">
+        <div class="hero-emoji">💪<div class="hero-check">✓</div></div>
+        <div class="hero-name">Medium Habit</div>
+      </div>
+      <div class="quick-stats">
+        <div class="quick-stat">
+          <div class="quick-stat-val" style="color:#059669;">🔥 3</div>
+          <div class="quick-stat-lbl">streak</div>
+        </div>
+        <div class="quick-stat">
+          <div class="quick-stat-val" style="color:#FBBF24;">⭐ 3</div>
+          <div class="quick-stat-lbl">best streak</div>
+        </div>
+        <div class="quick-stat">
+          <div class="quick-stat-val">📅 3</div>
+          <div class="quick-stat-lbl">completions</div>
+        </div>
+      </div>
+      <div class="tab-bar">
+        <div class="tab"><span class="tab-icon">📅</span><span class="tab-label">Calendar</span><span class="tab-hint">3 days</span></div>
+        <div class="tab"><span class="tab-icon">∿</span><span class="tab-label">Strength</span><span class="tab-hint">9%</span></div>
+        <div class="tab active"><span class="tab-icon">🎯</span><span class="tab-label">Goal</span><span class="tab-hint">5%</span></div>
+      </div>
+    </div>
+  </div>
+  <p class="note" style="color:#FCA5A5;">Big card with dividers eating ~80px. Feels like a separate section competing with the hero.</p>
+</div>
+
+<!-- OPTION 1: Inline hero -->
+<div class="wrapper">
+  <div class="variation-label"><div class="variation-num">Option 1</div><div class="variation-title" style="color:#6EE7B7;">Inline under name</div></div>
+  <div class="phone">
+    <div class="status-bar"><span>9:41</span></div>
+    <div class="phone-screen">
+      <div class="top-bar"><span class="back">✕</span><div class="edit-btn">✏️ Edit Habit</div></div>
+      <div class="hero">
+        <div class="hero-emoji">💪<div class="hero-check">✓</div></div>
+        <div class="hero-name">Medium Habit</div>
+      </div>
+      <div class="inline-stats">
+        <div class="inline-stat">🔥 <span class="mono">3</span> streak</div>
+        <div class="inline-divider"></div>
+        <div class="inline-stat">⭐ <span class="mono">3</span> best</div>
+        <div class="inline-divider"></div>
+        <div class="inline-stat">✓ <span class="mono">3</span> total</div>
+      </div>
+      <div class="tab-bar">
+        <div class="tab"><span class="tab-icon">📅</span><span class="tab-label">Calendar</span><span class="tab-hint">3 days</span></div>
+        <div class="tab"><span class="tab-icon">∿</span><span class="tab-label">Strength</span><span class="tab-hint">9%</span></div>
+        <div class="tab active"><span class="tab-icon">🎯</span><span class="tab-label">Goal</span><span class="tab-hint">5%</span></div>
+      </div>
+    </div>
+  </div>
+  <p class="note" style="color:#6EE7B7;">Stats tucked directly under the name as subtitle metadata. No card. ~50px reclaimed. Feels like part of the habit's identity, not a separate section.</p>
+</div>
+
+<!-- OPTION 3: Chip row -->
+<div class="wrapper">
+  <div class="variation-label"><div class="variation-num">Option 3</div><div class="variation-title" style="color:#6EE7B7;">Pill chips</div></div>
+  <div class="phone">
+    <div class="status-bar"><span>9:41</span></div>
+    <div class="phone-screen">
+      <div class="top-bar"><span class="back">✕</span><div class="edit-btn">✏️ Edit Habit</div></div>
+      <div class="hero">
+        <div class="hero-emoji">💪<div class="hero-check">✓</div></div>
+        <div class="hero-name">Medium Habit</div>
+      </div>
+      <div class="chip-row">
+        <div class="chip chip-gold">🔥 3d streak</div>
+        <div class="chip">⭐ 3d best</div>
+        <div class="chip">✓ 3 total</div>
+      </div>
+      <div class="tab-bar">
+        <div class="tab"><span class="tab-icon">📅</span><span class="tab-label">Calendar</span><span class="tab-hint">3 days</span></div>
+        <div class="tab"><span class="tab-icon">∿</span><span class="tab-label">Strength</span><span class="tab-hint">9%</span></div>
+        <div class="tab active"><span class="tab-icon">🎯</span><span class="tab-label">Goal</span><span class="tab-hint">5%</span></div>
+      </div>
+    </div>
+  </div>
+  <p class="note" style="color:#6EE7B7;">Three floating pills. Active "streak" chip gets the gold tint (it's the primary thing you care about). Tap target still good, more modern feel.</p>
+</div>
+
+<!-- OPTION 4: Header summary -->
+<div class="wrapper">
+  <div class="variation-label"><div class="variation-num">Option 4</div><div class="variation-title" style="color:#6EE7B7;">Header one-liner</div></div>
+  <div class="phone">
+    <div class="status-bar"><span>9:41</span></div>
+    <div class="phone-screen">
+      <div class="top-bar">
+        <span class="back">✕</span>
+        <div class="header-stats">
+          <div class="header-stat" style="color:#8B6208;">🔥 3</div>
+          <div class="header-stat-divider">·</div>
+          <div class="header-stat">⭐ 3</div>
+          <div class="header-stat-divider">·</div>
+          <div class="header-stat">✓ 3</div>
+        </div>
+        <div class="edit-btn-compact">✏️</div>
+      </div>
+      <div class="hero">
+        <div class="hero-emoji">💪<div class="hero-check">✓</div></div>
+        <div class="hero-name">Medium Habit</div>
+      </div>
+      <div class="tab-bar">
+        <div class="tab"><span class="tab-icon">📅</span><span class="tab-label">Calendar</span><span class="tab-hint">3 days</span></div>
+        <div class="tab"><span class="tab-icon">∿</span><span class="tab-label">Strength</span><span class="tab-hint">9%</span></div>
+        <div class="tab active"><span class="tab-icon">🎯</span><span class="tab-label">Goal</span><span class="tab-hint">5%</span></div>
+      </div>
+    </div>
+  </div>
+  <p class="note" style="color:#6EE7B7;">Stats live in the top chrome as a single compact line. Edit button shrinks to icon-only. Saves the most vertical space but slightly de-emphasizes the numbers.</p>
+</div>
+
+</div>
+
+<!-- Tradeoffs -->
+<div style="max-width: 1000px; margin: 48px auto 0; padding: 24px; background: #2D2A26; border-radius: 16px;">
+  <h3 style="font-size: 18px; color: #FAF8F5; margin-bottom: 12px;">Tradeoffs</h3>
+  <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; font-size: 13px; color: #C4BFB7; line-height: 1.5;">
+    <div>
+      <p style="color: #6EE7B7; font-weight: 600; margin-bottom: 4px;">Option 1 · Inline hero</p>
+      <p><strong style="color:#FAF8F5;">+</strong> Feels like subtitle. No card.</p>
+      <p><strong style="color:#FAF8F5;">+</strong> Keeps Goal tab's own stats distinct.</p>
+      <p><strong style="color:#FAF8F5;">−</strong> Numbers less prominent.</p>
+    </div>
+    <div>
+      <p style="color: #6EE7B7; font-weight: 600; margin-bottom: 4px;">Option 3 · Chips</p>
+      <p><strong style="color:#FAF8F5;">+</strong> Modern; gold tint on primary.</p>
+      <p><strong style="color:#FAF8F5;">+</strong> Scannable at a glance.</p>
+      <p><strong style="color:#FAF8F5;">−</strong> Still takes a full row.</p>
+    </div>
+    <div>
+      <p style="color: #6EE7B7; font-weight: 600; margin-bottom: 4px;">Option 4 · Header line</p>
+      <p><strong style="color:#FAF8F5;">+</strong> Maximum vertical savings.</p>
+      <p><strong style="color:#FAF8F5;">+</strong> Hero becomes the star.</p>
+      <p><strong style="color:#FAF8F5;">−</strong> Tiny text. Edit button shrinks.</p>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

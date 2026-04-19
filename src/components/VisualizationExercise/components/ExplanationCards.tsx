@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import { Sun, CloudRain, Sparkles } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '../../../theme/ThemeContext';
 
 export function ExplanationCards() {
@@ -17,7 +18,7 @@ export function ExplanationCards() {
             className='h-10 w-10 items-center justify-center rounded-xl'
             style={{ backgroundColor: colors.status.successLight }}
           >
-            <Sun color={colors.status.success} size={20} />
+            <Sun color={colors.status.success} size={iconSizes.medium} />
           </View>
           <View className='flex-1'>
             <Text className='text-sm font-semibold' style={{ color: colors.status.successText }}>
@@ -31,7 +32,7 @@ export function ExplanationCards() {
         </View>
         <View className='flex-row items-start gap-3 rounded-2xl p-4' style={{ backgroundColor: colors.status.errorLight }}>
           <View className='h-10 w-10 items-center justify-center rounded-xl' style={{ backgroundColor: colors.status.errorLight }}>
-            <CloudRain color={colors.status.error} size={20} />
+            <CloudRain color={colors.status.error} size={iconSizes.medium} />
           </View>
           <View className='flex-1'>
             <Text className='text-sm font-semibold' style={{ color: colors.status.errorText }}>
@@ -46,7 +47,7 @@ export function ExplanationCards() {
       </View>
       <View className='rounded-2xl border p-4' style={{ borderColor: colors.status.warningLight, backgroundColor: colors.status.warningLight }}>
         <View className='flex-row items-start gap-2'>
-          <Sparkles className='mt-0.5' color={colors.status.warning} size={16} />
+          <Sparkles className='mt-0.5' color={colors.status.warning} size={iconSizes.small} />
           <Text className='flex-1 text-sm italic leading-relaxed' style={{ color: colors.status.warningText }}>
             "Thinking about failure is actually a very effective way to reach
             your goals... it recruits the autonomic nervous system in ways that

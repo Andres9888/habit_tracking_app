@@ -13,6 +13,9 @@
 /**
  * Cell dimensions (in pixels)
  */
+
+import { colors } from '@/theme/colors';
+
 export const CELL_SIZE = 10;
 
 /**
@@ -111,7 +114,7 @@ export const COLORS = {
 
   /** Tooltip */
   TOOLTIP_BACKGROUND: '#1c1917', // stone-900
-  TOOLTIP_TEXT: '#ffffff',
+  TOOLTIP_TEXT: colors.text.inverse,
 } as const;
 
 /**

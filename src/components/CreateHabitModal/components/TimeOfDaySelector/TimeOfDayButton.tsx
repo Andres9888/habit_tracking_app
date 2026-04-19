@@ -5,6 +5,7 @@
 
 import { useRef } from 'react';
 import { Animated, Pressable, Text } from 'react-native';
+import { colors as themeTokens } from '@/theme/colors';
 import {
   HUBERMAN_PHASES,
   type HubermanPhase,
@@ -66,7 +67,7 @@ export const TimeOfDayButton = ({
         <Text className='mb-1 text-lg'>{phaseInfo.icon}</Text>
         <Text
           className='text-sm font-semibold'
-          style={{ color: isSelected ? '#FFFFFF' : '#1c1917' }}
+          style={{ color: isSelected ? themeTokens.text.inverse : '#1c1917' }}
         >
           {phaseInfo.shortLabel}
         </Text>

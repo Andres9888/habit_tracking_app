@@ -58,7 +58,7 @@ export function CategoryHero({
           {meta.subtitle ? (
             <Text
               style={[s.subtitle, { color: colors.text.tertiary }]}
-              numberOfLines={2}
+              numberOfLines={3}
             >
               {meta.subtitle}
             </Text>

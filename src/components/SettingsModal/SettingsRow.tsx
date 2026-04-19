@@ -64,7 +64,9 @@ export function SettingsRow({
   }));
 
   const handleToggle = (v: boolean) => {
-    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    void Haptics.impactAsync(
+      v ? Haptics.ImpactFeedbackStyle.Medium : Haptics.ImpactFeedbackStyle.Light,
+    );
     pulseOpacity.value = withSequence(
       withTiming(1, { duration: 150 }),
       withTiming(0, { duration: 250 }),

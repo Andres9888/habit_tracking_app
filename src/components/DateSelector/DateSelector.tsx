@@ -2,6 +2,7 @@ import React, { memo } from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { format } from 'date-fns';
 import { ChevronLeft, ChevronRight } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '@/theme/ThemeContext';
 import { useDateSelectorLogic } from './DateSelector.hooks';
 import { DayCell } from './DayCell';
@@ -41,7 +42,7 @@ const DateSelectorComponent: React.FC<DateSelectorProps> = ({
           style={{ backgroundColor: themeColors.background }}
           onPress={onPreviousWeek}
         >
-          <ChevronLeft color={themeColors.text.primary} size={16} strokeWidth={2} />
+          <ChevronLeft color={themeColors.text.primary} size={iconSizes.small} strokeWidth={2} />
         </Pressable>
 
         <Text className='text-[17px] leading-5 tracking-[-0.15px]' style={{ color: themeColors.text.primary }}>
@@ -58,7 +59,7 @@ const DateSelectorComponent: React.FC<DateSelectorProps> = ({
           hitSlop={{ bottom: 8, left: 8, right: 8, top: 8 }}
           onPress={onNextWeek}
         >
-          <ChevronRight color='#1c1917' size={16} strokeWidth={2} />
+          <ChevronRight color='#1c1917' size={iconSizes.small} strokeWidth={2} />
         </Pressable>
       </View>
 
