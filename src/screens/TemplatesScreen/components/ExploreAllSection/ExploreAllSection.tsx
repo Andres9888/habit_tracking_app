@@ -57,10 +57,10 @@ export function ExploreAllSection({
       <View style={s.header}>
         <View style={s.headerText}>
           <Text style={[s.title, { color: colors.text.primary }]}>
-            Discover more habits
+            Browse by category
           </Text>
           <Text style={[s.subtitle, { color: colors.text.secondary }]}>
-            Browse by category, sorted by popularity
+            Sorted by popularity
           </Text>
         </View>
         <Text style={[s.count, { color: colors.text.tertiary }]}>
