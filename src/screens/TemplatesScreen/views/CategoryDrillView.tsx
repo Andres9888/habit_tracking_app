@@ -57,10 +57,12 @@ export function CategoryDrillView({
 }: CategoryDrillViewProps) {
   const { colors } = useThemeColors();
   const meta = getCategoryMeta(categoryId);
-  const scienceCount = templates.filter((t) => t.scientificReference).length;
   const { filtered, hideImported, setSort, sort, toggleHideImported } =
     useCategoryDrillFilters(templates, importedTemplateIds);
   const listData = useDrillSections(filtered, sort);
+  const notAddedCount = templates.filter(
+    (t) => !importedTemplateIds.has(t._id)
+  ).length;
 
   const renderItem = ({
     item,
@@ -100,7 +102,6 @@ export function CategoryDrillView({
       <CategoryHero
         habitCount={templates.length}
         meta={meta}
-        scienceCount={scienceCount}
         onBack={onBack}
       />
       <ScrollView
@@ -156,7 +157,7 @@ export function CategoryDrillView({
               hideImported && { color: meta.textColor },
             ]}
           >
-            {hideImported ? '✓ Not added' : 'Not added'}
+            {hideImported ? '✓ Not added' : `Not added · ${notAddedCount}`}
           </Text>
         </Pressable>
       </ScrollView>

@@ -1,36 +1,33 @@
 /**
- * Props for MainBrowseView
+ * Props for MainBrowseView (goal-first redesign)
  */
 
 import type { ReactNode } from 'react';
 import type { ViewStyle } from 'react-native';
 import type { AnimatedStyle } from 'react-native-reanimated';
 import type { Doc } from '../../../../convex/_generated/dataModel';
-import type { ChipCategory } from '../components/QuickFilterChips';
 import type { GoalCollection } from '../data/goalCollections';
 
 export interface MainBrowseViewProps {
-  categoryGrid: ReactNode;
+  browseAllCategoriesPreviewIcons: string[];
+  browseAllCategoriesTotalCount: number;
+  browseAllCategoryCount: number;
   exploreAllSection: ReactNode;
-  featuredHabitCount: number;
+  featuredBadgeLabel?: string;
+  featuredGoalId: string;
   feedbackOverlays: ReactNode;
+  habitCountsByGoalId: Record<string, number>;
   importedTemplateIds: Set<string>;
   importingTemplateId: string | null;
-  isNewUser?: boolean;
   modals: ReactNode;
-  onFeaturedPress: (categoryId: string) => void;
-  onGoalSelect?: (goal: GoalCollection) => void;
+  onGoalSelect: (goal: GoalCollection) => void;
   onImport: (template: Doc<'templates'>) => void;
   onPreview: (template: Doc<'templates'>) => void;
   onSearchChange: (text: string) => void;
   onSearchClear: () => void;
-  onSelectQuickFilter: (categoryId: string | null) => void;
   onSeeAll: () => void;
-  onStartHerePress?: () => void;
   popularTemplates: Doc<'templates'>[];
   premiumPacksSection: ReactNode;
-  quickFilterCategories: ChipCategory[];
   searchAnimatedStyle: AnimatedStyle<ViewStyle>;
   searchQuery: string;
-  selectedQuickFilter: string | null;
 }

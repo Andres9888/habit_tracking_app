@@ -1,80 +1,53 @@
 /**
- * Goal-based discovery grid
- * "What's your goal?" section for guided habit discovery
+ * GoalCollectionGrid — Goal-first hero entry point
+ *
+ * Frames the page as transformation-driven: featured time-aware goal at top,
+ * remaining goals in a 2-column grid below. Tap routes to the goal's habits.
  */
 
 import React from 'react';
-import { View, Text, Pressable, StyleSheet } from 'react-native';
-import { fontFamilies, fontWeights } from '@/theme/typography';
+import { View } from 'react-native';
 import { GOAL_COLLECTIONS, type GoalCollection } from '../../data/goalCollections';
+import { FeaturedGoalCard } from './FeaturedGoalCard';
+import { GoalCard } from './GoalCard';
+import { s } from './GoalCollectionGrid.styles';
 
 interface GoalCollectionGridProps {
+  featuredBadgeLabel?: string;
+  featuredGoalId: string;
+  habitCountsByGoalId: Record<string, number>;
   onSelectGoal: (goal: GoalCollection) => void;
 }
 
-export function GoalCollectionGrid({ onSelectGoal }: GoalCollectionGridProps) {
+export function GoalCollectionGrid({
+  featuredBadgeLabel = 'Today\u2019s pick',
+  featuredGoalId,
+  habitCountsByGoalId,
+  onSelectGoal,
+}: GoalCollectionGridProps) {
+  const featured =
+    GOAL_COLLECTIONS.find((goal) => goal.id === featuredGoalId) ??
+    GOAL_COLLECTIONS[0];
+  const others = GOAL_COLLECTIONS.filter((goal) => goal.id !== featured.id);
+
   return (
-    <View style={goalStyles.container}>
-      <Text style={goalStyles.sectionTitle}>What's your goal?</Text>
-      <View style={goalStyles.grid}>
-        {GOAL_COLLECTIONS.map((goal) => (
-          <Pressable
+    <View style={s.container}>
+      <FeaturedGoalCard
+        badgeLabel={featuredBadgeLabel}
+        goal={featured}
+        habitCount={habitCountsByGoalId[featured.id] ?? 0}
+        onPress={() => onSelectGoal(featured)}
+      />
+      <View style={s.grid}>
+        {others.map((goal) => (
+          <GoalCard
             key={goal.id}
-            style={[goalStyles.card, { backgroundColor: goal.bgColor }]}
+            goal={goal}
+            habitCount={habitCountsByGoalId[goal.id] ?? 0}
             onPress={() => onSelectGoal(goal)}
-          >
-            <Text style={goalStyles.emoji}>{goal.emoji}</Text>
-            <Text style={[goalStyles.label, { color: goal.textColor }]}>
-              {goal.label}
-            </Text>
-            <Text
-              numberOfLines={2}
-              style={[goalStyles.description, { color: `${goal.textColor}CC` }]}
-            >
-              {goal.description}
-            </Text>
-          </Pressable>
+          />
         ))}
       </View>
     </View>
   );
 }
-
-const goalStyles = StyleSheet.create({
-  card: {
-    borderRadius: 14,
-    flex: 1,
-    minWidth: '45%',
-    padding: 14,
-  },
-  container: {
-    paddingBottom: 16,
-    paddingHorizontal: 16,
-  },
-  description: {
-    fontFamily: fontFamilies.primary.text,
-    fontSize: 11,
-    lineHeight: 15,
-    marginTop: 2,
-  },
-  emoji: {
-    fontSize: 24,
-    marginBottom: 4,
-  },
-  grid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 10,
-  },
-  label: {
-    fontFamily: fontFamilies.primary.text,
-    fontSize: 14,
-    fontWeight: fontWeights.semibold,
-  },
-  sectionTitle: {
-    fontFamily: fontFamilies.primary.display,
-    fontSize: 17,
-    fontWeight: fontWeights.bold,
-    marginBottom: 10,
-  },
-});

@@ -7,12 +7,10 @@
 import { useCallback, useMemo, useState } from 'react';
 import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 import type { Doc, Id } from '../../../convex/_generated/dataModel';
-import { CategoryGrid } from './components/CategoryGrid';
 import {
   ExploreAllSection,
   useGroupedTemplates,
 } from './components/ExploreAllSection';
-import { getTimeAwareFeatured } from './components/FeaturedCollection/featuredCollections';
 import { PremiumPacksSection } from './components/PremiumPacksSection';
 import { TemplatesEmptyState } from './components/TemplatesEmptyState';
 import { TemplatesScreenModals } from './components';
@@ -22,7 +20,11 @@ import { FeedbackOverlays } from './views/FeedbackOverlays';
 import { MainBrowseView } from './views/MainBrowseView';
 import { renderCategorySearch } from './views/renderCategorySearch';
 import { renderSubView } from './views/renderSubView';
-import type { GoalCollection } from './data/goalCollections';
+import {
+  GOAL_COLLECTIONS,
+  getFeaturedGoalId,
+  type GoalCollection,
+} from './data/goalCollections';
 
 function TemplatesScreenContent() {
   // Post-import setup state
@@ -68,16 +70,22 @@ function TemplatesScreenContent() {
     [handleDrillIntoCategory]
   );
 
-  const handleStartHerePress = useCallback(() => {
-    handleDrillIntoCategory('morning_routine');
-  }, [handleDrillIntoCategory]);
-
-  const featuredHabitCount = useMemo(() => {
-    const categoryId = getTimeAwareFeatured().categoryId;
-    return (
-      data.allTemplates?.filter((t) => t.category === categoryId).length ?? 0
-    );
+  const featuredGoalId = useMemo(() => getFeaturedGoalId(), []);
+  const habitCountsByGoalId = useMemo(() => {
+    const counts: Record<string, number> = {};
+    GOAL_COLLECTIONS.forEach((goal) => {
+      counts[goal.id] =
+        data.allTemplates?.filter((t) => goal.categories.includes(t.category))
+          .length ?? 0;
+    });
+    return counts;
   }, [data.allTemplates]);
+  const browseAllCategoriesPreviewIcons = useMemo(
+    () => mainBrowseData.categoryList.slice(0, 4).map((cat) => cat.icon),
+    [mainBrowseData.categoryList]
+  );
+  const browseAllCategoriesTotalCount = data.allTemplates?.length ?? 0;
+
   const handleImport = (template: Doc<'templates'>) => {
     void handlers.handleDirectImport(template._id);
   };
@@ -90,10 +98,6 @@ function TemplatesScreenContent() {
   const handleSeeAll = () => {
     void viewNav.openSeeAll();
   };
-  const handleSelectCategory = (categoryId: string | null) => {
-    handlers.handleSelectCategory(categoryId ?? 'all');
-  };
-  const isNewUser = (data.userHabitCount ?? 0) <= 1;
 
   if (!data.isLoading && !data.allTemplates?.length) {
     return (
@@ -149,15 +153,9 @@ function TemplatesScreenContent() {
   return (
     <>
       <MainBrowseView
-        isNewUser={isNewUser}
-        onGoalSelect={handleGoalSelect}
-        onStartHerePress={handleStartHerePress}
-        categoryGrid={
-          <CategoryGrid
-            categories={mainBrowseData.categoryList}
-            onSelectCategory={handleDrillIntoCategory}
-          />
-        }
+        browseAllCategoriesPreviewIcons={browseAllCategoriesPreviewIcons}
+        browseAllCategoriesTotalCount={browseAllCategoriesTotalCount}
+        browseAllCategoryCount={mainBrowseData.categoryList.length}
         exploreAllSection={
           <ExploreAllSection
             getCategoryLabel={props.getCategoryLabel}
@@ -169,7 +167,7 @@ function TemplatesScreenContent() {
             onPreview={handlers.handleTemplatePreview}
           />
         }
-        featuredHabitCount={featuredHabitCount}
+        featuredGoalId={featuredGoalId}
         feedbackOverlays={
           <FeedbackOverlays
             showCelebration={state.showCelebration}
@@ -180,6 +178,7 @@ function TemplatesScreenContent() {
             onDismissToast={() => state.setShowToast(false)}
           />
         }
+        habitCountsByGoalId={habitCountsByGoalId}
         importedTemplateIds={state.importedTemplateIds}
         importingTemplateId={state.importingTemplateId}
         modals={
@@ -202,14 +201,11 @@ function TemplatesScreenContent() {
             onPackConfirm={handlePackConfirm}
           />
         }
-        onFeaturedPress={handleDrillIntoCategory}
+        onGoalSelect={handleGoalSelect}
         onImport={handleImport}
         onPreview={handlers.handleTemplatePreview}
         onSearchChange={state.setSearchQuery}
         onSearchClear={() => state.setSearchQuery('')}
-        onSelectQuickFilter={(categoryId) => {
-          if (categoryId !== null) handleDrillIntoCategory(categoryId);
-        }}
         onSeeAll={handleSeeAll}
         popularTemplates={mainBrowseData.popularTemplates}
         premiumPacksSection={
@@ -218,12 +214,8 @@ function TemplatesScreenContent() {
             onPackPress={packConfirm.handlePackPress}
           />
         }
-        quickFilterCategories={mainBrowseData.quickFilterCategories}
         searchAnimatedStyle={props.animations.searchAnimatedStyle}
         searchQuery={state.searchQuery}
-        selectedQuickFilter={
-          state.selectedCategory === 'all' ? null : state.selectedCategory
-        }
       />
       <PostImportSetupSheet
         habitId={setupHabitId}

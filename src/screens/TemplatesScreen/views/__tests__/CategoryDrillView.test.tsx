@@ -68,10 +68,12 @@ describe('CategoryDrillView', () => {
     expect(getByText('Morning')).toBeTruthy();
   });
 
-  it('renders habit count and science count as separate badges', () => {
-    const { getByText } = render(<CategoryDrillView {...baseProps} />);
+  it('renders habit count badge', () => {
+    const { getByText, queryByText } = render(
+      <CategoryDrillView {...baseProps} />
+    );
     expect(getByText('📋 1 habit')).toBeTruthy();
-    expect(getByText('🔬 1 science-backed')).toBeTruthy();
+    expect(queryByText(/science-backed/)).toBeNull();
   });
 
   it('renders back button via ScreenHeader', () => {

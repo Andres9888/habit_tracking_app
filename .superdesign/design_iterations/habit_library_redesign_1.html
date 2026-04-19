@@ -1,0 +1,1284 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Habit Library — Current vs Proposed Redesign</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    :root {
+      --bg: #f5f1ed;
+      --card: #edeae5;
+      --border: #ddd8d2;
+      --text-1: #2d2a26;
+      --text-2: #6b6560;
+      --text-3: #6e6660;
+      --c-action: #059669;
+      --c-action-dark: #047857;
+      --c-action-bg: #d1fae5;
+      --c-award: #d97706;
+      --c-award-bg: #fef9c3;
+      --c-science: #0369a1;
+      --c-science-bg: #e0f2fe;
+      --c-trend: #c2410c;
+      --c-trend-bg: #fff7ed;
+      --c-neutral: #6b6560;
+      --c-neutral-bg: #edeae5;
+      --ff: 'DM Sans', sans-serif;
+      --r-full: 9999px;
+      --r-lg: 14px;
+      --r-md: 10px;
+      --r-sm: 6px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { -webkit-font-smoothing: antialiased; }
+
+    body {
+      background: #1c1917;
+      font-family: var(--ff);
+      min-height: 100vh;
+      padding: 40px 24px 80px;
+    }
+
+    .page-title {
+      color: #a8a29e;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      text-align: center;
+      margin-bottom: 8px;
+    }
+    .page-subtitle {
+      color: #78716c;
+      font-size: 14px;
+      text-align: center;
+      margin-bottom: 36px;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.5;
+    }
+
+    .comparison {
+      display: flex;
+      gap: 48px;
+      justify-content: center;
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+
+    .phone-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .phone-label {
+      color: #78716c;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+    .phone-label.current { color: #ef4444; }
+    .phone-label.proposed { color: #22c55e; }
+
+    .phone {
+      width: 390px;
+      height: 844px;
+      background: var(--bg);
+      border-radius: 44px;
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 0 0 2px #3a3632, 0 32px 80px rgba(0,0,0,0.55);
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .status-bar {
+      height: 54px;
+      padding: 16px 28px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-1);
+      flex-shrink: 0;
+    }
+    .status-icons { display: flex; gap: 6px; align-items: center; font-size: 12px; }
+
+    .screen-content {
+      flex: 1;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .screen-content::-webkit-scrollbar { display: none; }
+
+    /* ── Shared section styles ── */
+    .screen-header { padding: 10px 20px 8px; }
+    .screen-header h1 {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--text-1);
+      letter-spacing: -0.4px;
+    }
+    .screen-header p {
+      font-size: 13px;
+      color: var(--text-2);
+      margin-top: 2px;
+    }
+
+    .search-bar {
+      margin: 0 16px 10px;
+      background: var(--card);
+      border: 1.5px solid var(--border);
+      border-radius: var(--r-lg);
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .search-icon { color: var(--text-3); }
+    .search-placeholder { font-size: 14px; color: var(--text-3); }
+
+    .filter-chips {
+      display: flex;
+      gap: 8px;
+      padding: 6px 16px 10px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      flex-shrink: 0;
+    }
+    .filter-chips::-webkit-scrollbar { display: none; }
+    .chip {
+      padding: 6px 14px;
+      border-radius: var(--r-full);
+      font-size: 13px;
+      font-weight: 600;
+      white-space: nowrap;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--text-2);
+    }
+    .chip.active {
+      background: var(--c-action-bg);
+      border-color: #a7f3d0;
+      color: var(--c-action-dark);
+    }
+
+    .section-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--text-1);
+      padding: 0 16px;
+      margin-bottom: 8px;
+    }
+    .section-title-lg {
+      font-size: 19px;
+      font-weight: 700;
+      color: var(--text-1);
+      padding: 0 16px;
+      margin-bottom: 8px;
+    }
+
+    /* ══════════════════════════════════════
+       CURRENT DESIGN — Phone 1
+    ══════════════════════════════════════ */
+
+    /* Start Here Card */
+    .start-here {
+      margin: 0 16px 14px;
+      background: linear-gradient(135deg, #065f46, #059669);
+      border-radius: 18px;
+      padding: 18px;
+      color: white;
+    }
+    .start-here h3 { font-size: 18px; font-weight: 700; }
+    .start-here .sub { font-size: 12px; color: #BBF7D0; margin-top: 3px; }
+    .start-here .starter-chips {
+      display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px;
+    }
+    .start-here .starter-chip {
+      background: rgba(255,255,255,0.18);
+      border-radius: 10px;
+      padding: 6px 10px;
+      font-size: 12px;
+      color: white;
+      display: flex; align-items: center; gap: 4px;
+    }
+    .start-here .cta { font-size: 13px; font-weight: 700; margin-top: 12px; }
+
+    /* Goal Grid */
+    .goal-grid {
+      display: flex; flex-wrap: wrap; gap: 8px;
+      padding: 0 16px; margin-bottom: 14px;
+    }
+    .goal-card {
+      flex: 1; min-width: 44%;
+      border-radius: 14px;
+      padding: 12px;
+    }
+    .goal-card .emoji { font-size: 22px; margin-bottom: 3px; }
+    .goal-card .label { font-size: 13px; font-weight: 600; }
+    .goal-card .desc { font-size: 10px; line-height: 1.35; margin-top: 2px; opacity: 0.8; }
+
+    /* Featured Hero */
+    .featured-hero {
+      margin: 0 16px 14px;
+      border-radius: var(--r-lg);
+      padding: 18px;
+      color: white;
+      position: relative;
+      overflow: hidden;
+    }
+    .featured-hero.morning { background: linear-gradient(135deg, #92400E, #D97706); }
+    .featured-hero .badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.2);
+      border-radius: var(--r-full);
+      padding: 3px 10px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+    .featured-hero h3 { font-size: 20px; font-weight: 700; margin-top: 10px; letter-spacing: -0.3px; }
+    .featured-hero .desc { font-size: 13px; opacity: 0.85; margin-top: 4px; }
+    .featured-hero .hero-chips {
+      display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px;
+    }
+    .featured-hero .hero-chip {
+      background: rgba(255,255,255,0.18);
+      border-radius: var(--r-full);
+      padding: 3px 10px;
+      font-size: 12px;
+    }
+    .featured-hero .circle1 {
+      position: absolute; right: -40px; top: -40px;
+      width: 160px; height: 160px; border-radius: 50%;
+      background: rgba(255,255,255,0.08);
+    }
+    .featured-hero .circle2 {
+      position: absolute; left: -30px; bottom: -50px;
+      width: 180px; height: 180px; border-radius: 50%;
+      background: rgba(255,255,255,0.05);
+    }
+
+    /* Trending Section */
+    .trending-header {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0 16px; margin-bottom: 8px;
+    }
+    .trending-header .see-all { font-size: 13px; color: var(--c-action); }
+    .trending-scroll {
+      display: flex; gap: 10px;
+      padding: 0 16px; overflow-x: auto; scrollbar-width: none;
+      margin-bottom: 14px;
+    }
+    .trending-scroll::-webkit-scrollbar { display: none; }
+    .trending-card {
+      min-width: 170px; max-width: 170px;
+      background: var(--card);
+      border: 1.5px solid var(--border);
+      border-radius: var(--r-lg);
+      padding: 14px;
+    }
+    .trending-card .icon-box {
+      width: 44px; height: 44px;
+      border-radius: var(--r-md);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 24px;
+    }
+    .trending-card .name { font-size: 13px; font-weight: 700; margin-top: 8px; color: var(--text-1); }
+    .trending-card .tdesc { font-size: 11px; color: var(--text-2); margin-top: 2px; line-height: 1.3; }
+    .trending-card .meta { display: flex; gap: 4px; align-items: center; margin-top: 4px; flex-wrap: wrap; }
+    .trending-card .freq { font-size: 10px; color: var(--text-3); font-family: monospace; }
+    .trending-card .sci-badge {
+      font-size: 9px; background: var(--c-science-bg);
+      color: var(--c-science); border-radius: var(--r-full);
+      padding: 1px 6px; font-weight: 600;
+    }
+    .trending-card .bottom-row {
+      display: flex; justify-content: space-between; align-items: center; margin-top: auto; padding-top: 8px;
+    }
+    .trending-card .pop { font-size: 11px; color: var(--c-action); }
+    .trending-card .add-btn {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: var(--c-action); color: white;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; font-weight: 700;
+      box-shadow: 0 2px 6px rgba(5,150,105,0.3);
+    }
+
+    /* Category Grid */
+    .cat-grid {
+      display: flex; flex-wrap: wrap; gap: 8px;
+      padding: 0 16px; margin-bottom: 14px;
+    }
+    .cat-tile {
+      flex: 1; min-width: 44%;
+      border-radius: var(--r-md);
+      padding: 12px;
+      min-height: 110px;
+      display: flex; flex-direction: column;
+    }
+    .cat-tile .icon { font-size: 26px; }
+    .cat-tile .clabel { font-size: 13px; font-weight: 600; margin-top: 6px; }
+    .cat-tile .ccount { font-size: 11px; color: var(--text-3); margin-top: 2px; }
+    .cat-tile .preview-emojis {
+      display: flex; gap: 3px; margin-top: auto; padding-top: 6px;
+      font-size: 13px; opacity: 0.5;
+    }
+
+    /* Premium Packs */
+    .premium-header {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0 16px; margin-bottom: 8px;
+    }
+    .premium-badge { font-size: 12px; color: #7c3aed; font-weight: 700; }
+    .pack-card {
+      margin: 0 16px 8px;
+      background: var(--card);
+      border: 1.5px solid var(--border);
+      border-radius: var(--r-lg);
+      padding: 14px;
+      display: flex; gap: 12px; align-items: center;
+    }
+    .pack-emoji { font-size: 28px; }
+    .pack-info .pname { font-size: 14px; font-weight: 700; color: var(--text-1); }
+    .pack-info .pdesc { font-size: 11px; color: var(--text-2); margin-top: 2px; }
+    .pack-info .pcount { font-size: 10px; color: var(--text-3); font-family: monospace; margin-top: 2px; }
+
+    /* Explore All */
+    .explore-divider {
+      height: 1px;
+      background: var(--border);
+      margin: 16px 16px 14px;
+    }
+    .explore-header {
+      display: flex; justify-content: space-between; align-items: baseline;
+      padding: 0 16px; margin-bottom: 10px;
+    }
+    .explore-header .sub { font-size: 11px; color: var(--text-2); margin-top: 2px; }
+    .explore-header .total { font-size: 11px; color: var(--text-3); font-family: monospace; }
+
+    .explore-group-header {
+      display: flex; align-items: center; gap: 8px;
+      padding: 10px 16px 6px;
+    }
+    .explore-group-header .gi { font-size: 20px; }
+    .explore-group-header .gl { font-size: 14px; font-weight: 700; color: var(--text-1); }
+    .explore-group-header .gc { font-size: 11px; color: var(--text-3); }
+
+    .explore-row {
+      display: flex; align-items: center; gap: 12px;
+      padding: 8px 16px;
+    }
+    .explore-row .ri {
+      width: 40px; height: 40px; border-radius: var(--r-md);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px;
+    }
+    .explore-row .rname { font-size: 13px; font-weight: 600; color: var(--text-1); }
+    .explore-row .rfreq { font-size: 10px; color: var(--text-3); font-family: monospace; }
+    .explore-row .radd {
+      margin-left: auto;
+      width: 32px; height: 32px; border-radius: 50%;
+      background: var(--c-action); color: white;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px;
+    }
+
+    .show-more {
+      padding: 6px 16px 6px 68px;
+      font-size: 12px; font-weight: 600;
+      color: var(--c-action);
+      cursor: pointer;
+    }
+
+    /* ══════════════════════════════════════
+       PROPOSED DESIGN — Phone 2 overrides
+    ══════════════════════════════════════ */
+
+    /* Quick Start Row (replaces Start Here card) */
+    .quick-start-row {
+      display: flex; gap: 8px;
+      padding: 0 16px 12px;
+      overflow-x: auto; scrollbar-width: none;
+    }
+    .quick-start-row::-webkit-scrollbar { display: none; }
+    .quick-start-pill {
+      display: flex; align-items: center; gap: 6px;
+      padding: 8px 14px;
+      background: var(--c-action-bg);
+      border: 1.5px solid #a7f3d0;
+      border-radius: var(--r-full);
+      white-space: nowrap;
+      cursor: pointer;
+      transition: transform 0.15s;
+    }
+    .quick-start-pill:hover { transform: scale(1.03); }
+    .quick-start-pill .pe { font-size: 16px; }
+    .quick-start-pill .pn { font-size: 12px; font-weight: 600; color: var(--c-action-dark); }
+    .quick-start-pill .padd { font-size: 14px; color: var(--c-action); font-weight: 700; }
+
+    .goals-trigger {
+      display: flex; align-items: center; gap: 4px;
+      padding: 8px 14px;
+      background: var(--card);
+      border: 1.5px solid var(--border);
+      border-radius: var(--r-full);
+      white-space: nowrap;
+      font-size: 12px; font-weight: 600; color: var(--text-2);
+      cursor: pointer;
+    }
+
+    /* Compact Trending (vertical inline) */
+    .trending-inline {
+      padding: 0 16px; margin-bottom: 14px;
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .trending-inline-card {
+      background: var(--card);
+      border: 1.5px solid var(--border);
+      border-radius: var(--r-lg);
+      padding: 12px 14px;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .trending-inline-card .icon-box {
+      width: 44px; height: 44px;
+      border-radius: var(--r-md);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+    .trending-inline-card .info { flex: 1; min-width: 0; }
+    .trending-inline-card .name { font-size: 14px; font-weight: 700; color: var(--text-1); }
+    .trending-inline-card .tdesc {
+      font-size: 11px; color: var(--text-2); margin-top: 1px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .trending-inline-card .meta-row {
+      display: flex; gap: 6px; align-items: center; margin-top: 3px;
+    }
+    .trending-inline-card .freq { font-size: 10px; color: var(--text-3); font-family: monospace; }
+    .trending-inline-card .pop { font-size: 10px; color: var(--c-trend); font-weight: 600; }
+    .trending-inline-card .sci-badge {
+      font-size: 9px; background: var(--c-science-bg);
+      color: var(--c-science); border-radius: var(--r-full);
+      padding: 1px 6px; font-weight: 600;
+    }
+    .trending-inline-card .add-btn {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: var(--c-action); color: white;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; font-weight: 700;
+      box-shadow: 0 2px 6px rgba(5,150,105,0.3);
+      flex-shrink: 0;
+    }
+
+    /* Compact Category Tiles */
+    .cat-tile-v2 {
+      flex: 1; min-width: 44%;
+      border-radius: var(--r-md);
+      padding: 12px;
+      min-height: 82px;
+      display: flex; flex-direction: column;
+      border-left: 3px solid transparent;
+    }
+    .cat-tile-v2 .icon { font-size: 24px; }
+    .cat-tile-v2 .clabel { font-size: 13px; font-weight: 600; margin-top: 5px; }
+    .cat-tile-v2 .ccount { font-size: 12px; font-weight: 600; margin-top: 2px; }
+
+    /* Horizontal Premium Packs */
+    .packs-scroll {
+      display: flex; gap: 10px;
+      padding: 0 16px; overflow-x: auto; scrollbar-width: none;
+      margin-bottom: 14px;
+    }
+    .packs-scroll::-webkit-scrollbar { display: none; }
+    .pack-card-h {
+      min-width: 200px; max-width: 200px;
+      border-radius: var(--r-lg);
+      padding: 14px;
+      color: white;
+      position: relative;
+      overflow: hidden;
+    }
+    .pack-card-h .pack-emojis { font-size: 20px; margin-bottom: 8px; }
+    .pack-card-h .pname { font-size: 14px; font-weight: 700; }
+    .pack-card-h .pdesc { font-size: 11px; opacity: 0.85; margin-top: 3px; line-height: 1.3; }
+    .pack-card-h .pcount-chip {
+      display: inline-block;
+      margin-top: 8px;
+      background: rgba(255,255,255,0.2);
+      border-radius: var(--r-full);
+      padding: 2px 8px;
+      font-size: 10px; font-weight: 700;
+    }
+
+    /* Overline section header */
+    .section-overline {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-3);
+      padding: 0 16px;
+      margin-bottom: 2px;
+    }
+
+    /* ══════ ANNOTATIONS ══════ */
+    .annotation {
+      position: absolute;
+      z-index: 10;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      pointer-events: none;
+    }
+    .annotation.problem {
+      background: rgba(239,68,68,0.15);
+      color: #ef4444;
+      border: 1px solid rgba(239,68,68,0.3);
+    }
+    .annotation.improvement {
+      background: rgba(34,197,94,0.15);
+      color: #22c55e;
+      border: 1px solid rgba(34,197,94,0.3);
+    }
+
+    /* ══════ CALLOUT CARDS ══════ */
+    .callouts {
+      max-width: 860px;
+      margin: 48px auto 0;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .callout {
+      background: #292524;
+      border-radius: 14px;
+      padding: 20px 24px;
+      border-left: 4px solid;
+    }
+    .callout.high { border-left-color: #22c55e; }
+    .callout.med { border-left-color: #eab308; }
+    .callout.low { border-left-color: #6b7280; }
+    .callout h3 {
+      font-size: 15px; font-weight: 700; color: #fafaf9;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .callout h3 .tag {
+      font-size: 10px; padding: 2px 8px; border-radius: var(--r-full);
+      font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em;
+    }
+    .callout h3 .tag.high { background: rgba(34,197,94,0.15); color: #22c55e; }
+    .callout h3 .tag.med { background: rgba(234,179,8,0.15); color: #eab308; }
+    .callout h3 .tag.low { background: rgba(107,114,128,0.15); color: #9ca3af; }
+    .callout .before-after {
+      display: flex; gap: 16px; margin-top: 12px;
+    }
+    .callout .ba-col { flex: 1; }
+    .callout .ba-label {
+      font-size: 10px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.08em; margin-bottom: 4px;
+    }
+    .callout .ba-label.before { color: #ef4444; }
+    .callout .ba-label.after { color: #22c55e; }
+    .callout .ba-text { font-size: 13px; color: #a8a29e; line-height: 1.5; }
+
+    /* ══════ SCROLL DEPTH COMPARISON ══════ */
+    .depth-comparison {
+      max-width: 860px;
+      margin: 48px auto 0;
+      background: #292524;
+      border-radius: 14px;
+      padding: 24px;
+    }
+    .depth-comparison h3 {
+      font-size: 16px; font-weight: 700; color: #fafaf9;
+      margin-bottom: 16px;
+    }
+    .depth-bars {
+      display: flex; flex-direction: column; gap: 12px;
+    }
+    .depth-bar-row {
+      display: flex; align-items: center; gap: 12px;
+    }
+    .depth-bar-label {
+      font-size: 12px; font-weight: 600; color: #a8a29e;
+      width: 80px; flex-shrink: 0;
+    }
+    .depth-bar {
+      height: 28px; border-radius: 6px;
+      display: flex; align-items: center;
+      padding: 0 10px;
+      font-size: 11px; font-weight: 700; color: white;
+      transition: width 1s ease;
+    }
+    .depth-bar.current { background: #ef4444; }
+    .depth-bar.proposed { background: #22c55e; }
+
+    .viewport-line {
+      position: absolute;
+      left: 0; right: 0;
+      border-top: 2px dashed rgba(239,68,68,0.5);
+      z-index: 5;
+    }
+    .viewport-label {
+      position: absolute;
+      right: 8px;
+      top: -16px;
+      font-size: 9px;
+      font-weight: 700;
+      color: rgba(239,68,68,0.7);
+      letter-spacing: 0.05em;
+    }
+    .viewport-line.green { border-top-color: rgba(34,197,94,0.5); }
+    .viewport-line.green .viewport-label { color: rgba(34,197,94,0.7); }
+  </style>
+</head>
+<body>
+
+  <p class="page-title">Habit Library Redesign</p>
+  <p class="page-subtitle">Side-by-side comparison: Current layout vs. proposed improvements.<br>Focus: reduce scroll depth, surface high-value content, and create visual hierarchy.</p>
+
+  <div class="comparison">
+
+    <!-- ═══════════════════════════════════
+         PHONE 1 — CURRENT DESIGN
+    ═══════════════════════════════════ -->
+    <div class="phone-wrapper">
+      <div class="phone-label current">CURRENT</div>
+      <div class="phone">
+        <div class="status-bar">
+          <span>9:41</span>
+          <div class="status-icons"><span>&#9679;</span><span>&#9679;</span><span>&#9679;</span></div>
+        </div>
+        <div class="screen-content">
+          <!-- Header -->
+          <div class="screen-header">
+            <h1>Habit Library</h1>
+            <p>Start with a goal, a category, or a quick add</p>
+          </div>
+
+          <!-- Search -->
+          <div class="search-bar">
+            <span class="search-icon"><i data-lucide="search" style="width:16px;height:16px"></i></span>
+            <span class="search-placeholder">What do you want to improve?</span>
+          </div>
+
+          <!-- Filter Chips -->
+          <div class="filter-chips">
+            <span class="chip active">✨ All</span>
+            <span class="chip">🌅 Morning</span>
+            <span class="chip">🧠 Mental</span>
+            <span class="chip">💪 Fitness</span>
+            <span class="chip">😴 Sleep</span>
+            <span class="chip">🧘 Mindful</span>
+          </div>
+
+          <!-- Start Here Card -->
+          <div class="start-here" style="position:relative">
+            <h3>New here? Start with these</h3>
+            <div class="sub">5 habits that take under 5 min and have the highest stick rate</div>
+            <div class="starter-chips">
+              <span class="starter-chip">💧 Drink Water</span>
+              <span class="starter-chip">🧘 2-Min Meditate</span>
+              <span class="starter-chip">📝 Gratitude</span>
+              <span class="starter-chip">🚶 10-Min Walk</span>
+              <span class="starter-chip">📖 Read 1 Page</span>
+            </div>
+            <div class="cta">Browse starter habits &rarr;</div>
+          </div>
+
+          <!-- Goal Grid -->
+          <div class="section-title">What's your goal?</div>
+          <div class="goal-grid">
+            <div class="goal-card" style="background:#EFF6FF; color:#1E3A5F;">
+              <div class="emoji">😴</div>
+              <div class="label">Sleep Better</div>
+              <div class="desc">Wind down, rest deeper</div>
+            </div>
+            <div class="goal-card" style="background:#FEF3C7; color:#78350F;">
+              <div class="emoji">&#9889;</div>
+              <div class="label">More Energy</div>
+              <div class="desc">Morning routines & vitality</div>
+            </div>
+            <div class="goal-card" style="background:#F0FDF4; color:#14532D;">
+              <div class="emoji">🧘</div>
+              <div class="label">Less Stress</div>
+              <div class="desc">Calm your mind</div>
+            </div>
+            <div class="goal-card" style="background:#FAF5FF; color:#581C87;">
+              <div class="emoji">🎯</div>
+              <div class="label">Be Productive</div>
+              <div class="desc">Focus deeper</div>
+            </div>
+            <div class="goal-card" style="background:#FFF1F2; color:#881337;">
+              <div class="emoji">💪</div>
+              <div class="label">Get Healthier</div>
+              <div class="desc">Lasting physical habits</div>
+            </div>
+          </div>
+
+          <!-- Featured Hero -->
+          <div class="featured-hero morning" style="position:relative">
+            <div class="circle1"></div>
+            <div class="circle2"></div>
+            <span class="badge">&#9728;&#65039; MORNING PICK</span>
+            <h3>Morning Mastery</h3>
+            <div class="desc">Build an unshakeable morning routine</div>
+            <div class="hero-chips">
+              <span class="hero-chip">Sunrise</span>
+              <span class="hero-chip">Energy</span>
+              <span class="hero-chip">Focus</span>
+            </div>
+          </div>
+
+          <!-- Trending -->
+          <div class="trending-header">
+            <span class="section-title" style="padding:0;">Trending right now</span>
+            <span class="trending-header see-all" style="font-size:13px;color:#059669;">See all</span>
+          </div>
+          <div class="trending-scroll">
+            <div class="trending-card">
+              <div class="icon-box" style="background:#FEF3C7">🌅</div>
+              <div class="name">Morning Sunlight</div>
+              <div class="tdesc">Get 10 min outdoor light</div>
+              <div class="meta">
+                <span class="freq">Daily</span>
+                <span class="sci-badge">🔬 Science</span>
+              </div>
+              <div class="bottom-row">
+                <span class="pop">95%</span>
+                <span class="add-btn">+</span>
+              </div>
+            </div>
+            <div class="trending-card">
+              <div class="icon-box" style="background:#DBEAFE">💧</div>
+              <div class="name">Drink Water</div>
+              <div class="tdesc">Start day hydrated</div>
+              <div class="meta">
+                <span class="freq">Daily</span>
+                <span class="sci-badge">🔬 Science</span>
+              </div>
+              <div class="bottom-row">
+                <span class="pop">92%</span>
+                <span class="add-btn">+</span>
+              </div>
+            </div>
+            <div class="trending-card" style="opacity:0.4">
+              <div class="icon-box" style="background:#F0FDF4">🧘</div>
+              <div class="name">Meditate</div>
+              <div class="tdesc">2 min mindfulness</div>
+              <div class="meta"><span class="freq">Daily</span></div>
+              <div class="bottom-row">
+                <span class="pop">88%</span>
+                <span class="add-btn">+</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Category Grid -->
+          <div class="section-title">🗂️ Browse by Category</div>
+          <div class="cat-grid">
+            <div class="cat-tile" style="background:#FEF3C7">
+              <span class="icon">🌅</span>
+              <div class="clabel" style="color:#78350F">Morning</div>
+              <div class="ccount">18 habits</div>
+              <div class="preview-emojis">☀️ 🧘 💧 📝</div>
+            </div>
+            <div class="cat-tile" style="background:#EFF6FF">
+              <span class="icon">🧠</span>
+              <div class="clabel" style="color:#1E3A5F">Mental Health</div>
+              <div class="ccount">14 habits</div>
+              <div class="preview-emojis">🧘 📝 🌿 💭</div>
+            </div>
+            <div class="cat-tile" style="background:#FFF1F2">
+              <span class="icon">💪</span>
+              <div class="clabel" style="color:#881337">Fitness</div>
+              <div class="ccount">16 habits</div>
+              <div class="preview-emojis">🏋️ 🚶 🏃 🧘</div>
+            </div>
+            <div class="cat-tile" style="background:#F0FDF4">
+              <span class="icon">😴</span>
+              <div class="clabel" style="color:#14532D">Sleep</div>
+              <div class="ccount">12 habits</div>
+              <div class="preview-emojis">🌙 📵 🧘 ☕</div>
+            </div>
+            <div class="cat-tile" style="background:#FAF5FF">
+              <span class="icon">🧘</span>
+              <div class="clabel" style="color:#581C87">Mindfulness</div>
+              <div class="ccount">10 habits</div>
+              <div class="preview-emojis">🧘 🌿 📝 🌅</div>
+            </div>
+            <div class="cat-tile" style="background:#FFF7ED">
+              <span class="icon">📚</span>
+              <div class="clabel" style="color:#7c2d12">Learning</div>
+              <div class="ccount">8 habits</div>
+              <div class="preview-emojis">📖 🎧 ✍️ 🧠</div>
+            </div>
+          </div>
+
+          <!-- Show all button -->
+          <div style="margin:0 16px 14px; text-align:center; padding:10px; background:var(--card); border:1px solid var(--border); border-radius:var(--r-lg);">
+            <span style="font-size:12px; font-weight:600; color:var(--text-1);">Show all 14 categories</span>
+          </div>
+
+          <!-- Premium Packs -->
+          <div class="premium-header">
+            <span class="section-title" style="padding:0;">Starter Sets</span>
+            <span class="premium-badge">Premium</span>
+          </div>
+          <div class="pack-card">
+            <span class="pack-emoji">🔬🌅🧊</span>
+            <div class="pack-info">
+              <div class="pname">Huberman Essentials</div>
+              <div class="pdesc">5 science-backed protocols</div>
+              <div class="pcount">5 habits</div>
+            </div>
+          </div>
+          <div class="pack-card">
+            <span class="pack-emoji">☀️🧘💧</span>
+            <div class="pack-info">
+              <div class="pname">Morning Mastery</div>
+              <div class="pdesc">4 morning foundation habits</div>
+              <div class="pcount">4 habits</div>
+            </div>
+          </div>
+          <div class="pack-card">
+            <span class="pack-emoji">🧠🌿📝</span>
+            <div class="pack-info">
+              <div class="pname">Mindful Peak</div>
+              <div class="pdesc">4 mental clarity habits</div>
+              <div class="pcount">4 habits</div>
+            </div>
+          </div>
+
+          <!-- Explore All -->
+          <div class="explore-divider"></div>
+          <div class="explore-header">
+            <div>
+              <div class="section-title" style="padding:0;">Discover more habits</div>
+              <div class="sub">Browse by category, sorted by popularity</div>
+            </div>
+            <span class="total">200+ habits</span>
+          </div>
+
+          <div class="explore-group-header">
+            <span class="gi">🌅</span>
+            <span class="gl">Morning Routine</span>
+            <span class="gc">&middot; 18</span>
+          </div>
+          <div class="explore-row">
+            <div class="ri" style="background:#FEF3C7">🌅</div>
+            <div>
+              <div class="rname">Morning Sunlight</div>
+              <div class="rfreq">Daily</div>
+            </div>
+            <span class="radd">+</span>
+          </div>
+          <div class="explore-row">
+            <div class="ri" style="background:#FEF3C7">💧</div>
+            <div>
+              <div class="rname">Drink Water First</div>
+              <div class="rfreq">Daily</div>
+            </div>
+            <span class="radd">+</span>
+          </div>
+          <div class="explore-row">
+            <div class="ri" style="background:#FEF3C7">🧘</div>
+            <div>
+              <div class="rname">Morning Stretch</div>
+              <div class="rfreq">Daily</div>
+            </div>
+            <span class="radd">+</span>
+          </div>
+          <div class="show-more">Show all 18 morning habits</div>
+
+          <div style="height: 40px;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════
+         PHONE 2 — PROPOSED DESIGN
+    ═══════════════════════════════════ -->
+    <div class="phone-wrapper">
+      <div class="phone-label proposed">PROPOSED</div>
+      <div class="phone">
+        <div class="status-bar">
+          <span>9:41</span>
+          <div class="status-icons"><span>&#9679;</span><span>&#9679;</span><span>&#9679;</span></div>
+        </div>
+        <div class="screen-content">
+          <!-- Header (compact — no subtitle for returning users) -->
+          <div class="screen-header">
+            <h1>Habit Library</h1>
+          </div>
+
+          <!-- Search -->
+          <div class="search-bar">
+            <span class="search-icon"><i data-lucide="search" style="width:16px;height:16px"></i></span>
+            <span class="search-placeholder">What do you want to improve?</span>
+          </div>
+
+          <!-- Filter Chips -->
+          <div class="filter-chips">
+            <span class="chip active">✨ All</span>
+            <span class="chip">🌅 Morning</span>
+            <span class="chip">🧠 Mental</span>
+            <span class="chip">💪 Fitness</span>
+            <span class="chip">😴 Sleep</span>
+            <span class="chip">🧘 Mindful</span>
+          </div>
+
+          <!-- Quick Start Row (replaces StartHere + GoalGrid) -->
+          <div class="quick-start-row">
+            <div class="quick-start-pill">
+              <span class="pe">💧</span>
+              <span class="pn">Drink Water</span>
+              <span class="padd">+</span>
+            </div>
+            <div class="quick-start-pill">
+              <span class="pe">🧘</span>
+              <span class="pn">2-Min Meditate</span>
+              <span class="padd">+</span>
+            </div>
+            <div class="quick-start-pill">
+              <span class="pe">📝</span>
+              <span class="pn">Gratitude</span>
+              <span class="padd">+</span>
+            </div>
+            <div class="quick-start-pill">
+              <span class="pe">🚶</span>
+              <span class="pn">10-Min Walk</span>
+              <span class="padd">+</span>
+            </div>
+            <div class="goals-trigger">🎯 Goals...</div>
+          </div>
+
+          <!-- Featured Hero -->
+          <div class="featured-hero morning" style="position:relative">
+            <div class="circle1"></div>
+            <div class="circle2"></div>
+            <span class="badge">&#9728;&#65039; MORNING PICK</span>
+            <h3>Morning Mastery</h3>
+            <div class="desc">Build an unshakeable morning routine</div>
+            <div class="hero-chips">
+              <span class="hero-chip">Sunrise</span>
+              <span class="hero-chip">Energy</span>
+              <span class="hero-chip">Focus</span>
+            </div>
+          </div>
+
+          <!-- Category Grid (MOVED UP + polished) -->
+          <div class="section-title-lg" style="margin-top:4px;">Browse by Category</div>
+          <div class="cat-grid">
+            <div class="cat-tile-v2" style="background:#FEF3C7; border-left-color:#F59E0B;">
+              <span class="icon">🌅</span>
+              <div class="clabel" style="color:#78350F">Morning</div>
+              <div class="ccount" style="color:#92400E">18 habits</div>
+            </div>
+            <div class="cat-tile-v2" style="background:#EFF6FF; border-left-color:#3B82F6;">
+              <span class="icon">🧠</span>
+              <div class="clabel" style="color:#1E3A5F">Mental Health</div>
+              <div class="ccount" style="color:#1E40AF">14 habits</div>
+            </div>
+            <div class="cat-tile-v2" style="background:#FFF1F2; border-left-color:#F43F5E;">
+              <span class="icon">💪</span>
+              <div class="clabel" style="color:#881337">Fitness</div>
+              <div class="ccount" style="color:#9F1239">16 habits</div>
+            </div>
+            <div class="cat-tile-v2" style="background:#F0FDF4; border-left-color:#22C55E;">
+              <span class="icon">😴</span>
+              <div class="clabel" style="color:#14532D">Sleep</div>
+              <div class="ccount" style="color:#166534">12 habits</div>
+            </div>
+            <div class="cat-tile-v2" style="background:#FAF5FF; border-left-color:#A855F7;">
+              <span class="icon">🧘</span>
+              <div class="clabel" style="color:#581C87">Mindfulness</div>
+              <div class="ccount" style="color:#6B21A8">10 habits</div>
+            </div>
+            <div class="cat-tile-v2" style="background:#FFF7ED; border-left-color:#F97316;">
+              <span class="icon">📚</span>
+              <div class="clabel" style="color:#7c2d12">Learning</div>
+              <div class="ccount" style="color:#9A3412">8 habits</div>
+            </div>
+            <div class="cat-tile-v2" style="background:#ECFDF5; border-left-color:#10B981;">
+              <span class="icon">💰</span>
+              <div class="clabel" style="color:#064E3B">Finance</div>
+              <div class="ccount" style="color:#065F46">6 habits</div>
+            </div>
+            <div class="cat-tile-v2" style="background:#FEF9C3; border-left-color:#EAB308;">
+              <span class="icon">🔬</span>
+              <div class="clabel" style="color:#713F12">Huberman</div>
+              <div class="ccount" style="color:#854D0E">5 habits</div>
+            </div>
+          </div>
+
+          <!-- Trending (VERTICAL INLINE — no hidden content) -->
+          <div style="margin-top:8px;">
+            <div class="trending-header">
+              <span class="section-title-lg" style="padding:0;">Trending right now</span>
+              <span style="font-size:13px;color:#059669;">See all</span>
+            </div>
+            <div class="trending-inline">
+              <div class="trending-inline-card">
+                <div class="icon-box" style="background:#FEF3C7">🌅</div>
+                <div class="info">
+                  <div class="name">Morning Sunlight</div>
+                  <div class="tdesc">Get 10 min of outdoor light exposure</div>
+                  <div class="meta-row">
+                    <span class="freq">Daily</span>
+                    <span class="pop">95% popular</span>
+                    <span class="sci-badge">🔬 Science</span>
+                  </div>
+                </div>
+                <span class="add-btn">+</span>
+              </div>
+              <div class="trending-inline-card">
+                <div class="icon-box" style="background:#DBEAFE">💧</div>
+                <div class="info">
+                  <div class="name">Drink Water First</div>
+                  <div class="tdesc">Hydrate within 30 min of waking</div>
+                  <div class="meta-row">
+                    <span class="freq">Daily</span>
+                    <span class="pop">92% popular</span>
+                    <span class="sci-badge">🔬 Science</span>
+                  </div>
+                </div>
+                <span class="add-btn">+</span>
+              </div>
+              <div class="trending-inline-card">
+                <div class="icon-box" style="background:#F0FDF4">🧘</div>
+                <div class="info">
+                  <div class="name">2-Min Meditation</div>
+                  <div class="tdesc">Quick mindfulness break</div>
+                  <div class="meta-row">
+                    <span class="freq">Daily</span>
+                    <span class="pop">88% popular</span>
+                  </div>
+                </div>
+                <span class="add-btn">+</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Curated Packs (HORIZONTAL + rebranded) -->
+          <div style="margin-top:8px;">
+            <div class="section-overline">CURATED PACKS</div>
+            <div class="section-title" style="margin-bottom:4px;">Ready-made habit bundles</div>
+          </div>
+          <div class="packs-scroll">
+            <div class="pack-card-h" style="background:linear-gradient(135deg,#1e3a5f,#0369a1);">
+              <div class="pack-emojis">🔬 🌅 🧊 💪 🧘</div>
+              <div class="pname">Huberman Essentials</div>
+              <div class="pdesc">Science-backed daily protocols</div>
+              <span class="pcount-chip">5 habits</span>
+            </div>
+            <div class="pack-card-h" style="background:linear-gradient(135deg,#92400E,#D97706);">
+              <div class="pack-emojis">☀️ 🧘 💧 📝</div>
+              <div class="pname">Morning Mastery</div>
+              <div class="pdesc">Foundational morning routine</div>
+              <span class="pcount-chip">4 habits</span>
+            </div>
+            <div class="pack-card-h" style="background:linear-gradient(135deg,#581C87,#7C3AED);">
+              <div class="pack-emojis">🧠 🌿 📝 🧘</div>
+              <div class="pname">Mindful Peak</div>
+              <div class="pdesc">Mental clarity stack</div>
+              <span class="pcount-chip">4 habits</span>
+            </div>
+          </div>
+
+          <!-- Explore All -->
+          <div class="explore-divider"></div>
+          <div class="explore-header">
+            <div>
+              <div class="section-title" style="padding:0;">Discover more habits</div>
+              <div class="sub">Browse by category, sorted by popularity</div>
+            </div>
+            <span class="total">200+ habits</span>
+          </div>
+
+          <div class="explore-group-header">
+            <span class="gi">🌅</span>
+            <span class="gl">Morning Routine</span>
+            <span class="gc">&middot; 18</span>
+          </div>
+          <div class="explore-row">
+            <div class="ri" style="background:#FEF3C7">🌅</div>
+            <div>
+              <div class="rname">Morning Sunlight</div>
+              <div class="rfreq">Daily</div>
+            </div>
+            <span class="radd">+</span>
+          </div>
+          <div class="explore-row">
+            <div class="ri" style="background:#FEF3C7">💧</div>
+            <div>
+              <div class="rname">Drink Water First</div>
+              <div class="rfreq">Daily</div>
+            </div>
+            <span class="radd">+</span>
+          </div>
+          <div class="explore-row">
+            <div class="ri" style="background:#FEF3C7">🧘</div>
+            <div>
+              <div class="rname">Morning Stretch</div>
+              <div class="rfreq">Daily</div>
+            </div>
+            <span class="radd">+</span>
+          </div>
+          <div class="show-more">Show all 18 morning habits</div>
+
+          <div style="height: 40px;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ IMPROVEMENT CALLOUTS ═══ -->
+  <div class="callouts">
+    <div class="callout high">
+      <h3>
+        1. Consolidate Guidance Sections
+        <span class="tag high">HIGH IMPACT</span>
+      </h3>
+      <div class="before-after">
+        <div class="ba-col">
+          <div class="ba-label before">BEFORE</div>
+          <div class="ba-text">3 guidance blocks stacked (StartHere card + 5 goal cards + Featured hero) = ~650px of scroll before any actionable habits appear. New users must scroll past all guidance to find specific habits.</div>
+        </div>
+        <div class="ba-col">
+          <div class="ba-label after">AFTER</div>
+          <div class="ba-text">Compact horizontal pill row with 5 starter habits (directly tappable +) + "Goals..." trigger for on-demand bottom sheet. Featured hero stays. Total: ~100px. Saves ~350px of scroll depth.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout high">
+      <h3>
+        2. Vertical Trending Cards
+        <span class="tag high">HIGH IMPACT</span>
+      </h3>
+      <div class="before-after">
+        <div class="ba-col">
+          <div class="ba-label before">BEFORE</div>
+          <div class="ba-text">Horizontal carousel showing 2 visible cards + 1 peeking. Users must discover horizontal swipe gesture. Third card (88% popular) is almost invisible at 40% opacity. Social proof content hidden behind interaction.</div>
+        </div>
+        <div class="ba-col">
+          <div class="ba-label after">AFTER</div>
+          <div class="ba-text">3 compact inline vertical cards. All trending habits visible immediately with full metadata (name, description, frequency, popularity %, science badge, add button). Zero hidden content. 100% discoverability.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout med">
+      <h3>
+        3. Elevate Category Grid
+        <span class="tag med">MEDIUM-HIGH</span>
+      </h3>
+      <div class="before-after">
+        <div class="ba-col">
+          <div class="ba-label before">BEFORE</div>
+          <div class="ba-text">Categories buried at position 5-6 in scroll order. Tiles show faded preview emojis (noise). 6 visible initially. Plain visual treatment makes them easy to scroll past.</div>
+        </div>
+        <div class="ba-col">
+          <div class="ba-label after">AFTER</div>
+          <div class="ba-text">Categories moved to position 3 (right after hero). Tiles have colored left border accent, bold count text, no faded emojis. 8 visible initially. Compact height (82px vs 110px). Categories are within first 1.5 viewport heights.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout med">
+      <h3>
+        4. Rebrand Premium Packs
+        <span class="tag med">MEDIUM</span>
+      </h3>
+      <div class="before-after">
+        <div class="ba-col">
+          <div class="ba-label before">BEFORE</div>
+          <div class="ba-text">"Starter Sets" with "Premium" badge creates paywall anxiety. Vertical stack of 3 cards takes ~300px. Plain card design with emoji cluster + text.</div>
+        </div>
+        <div class="ba-col">
+          <div class="ba-label after">AFTER</div>
+          <div class="ba-text">"Curated Packs" with overline label (no paywall signal). Horizontal scroll with gradient cards takes ~120px. Each pack has prominent habit count chip. Saves ~180px and feels aspirational, not gated.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout med">
+      <h3>
+        5. Section Header Hierarchy
+        <span class="tag med">MEDIUM</span>
+      </h3>
+      <div class="before-after">
+        <div class="ba-col">
+          <div class="ba-label before">BEFORE</div>
+          <div class="ba-text">Every section header uses identical 17px bold text. No visual rhythm. User's eye has no signal about which sections are primary vs secondary. Page feels like a flat list of equal-weight blocks.</div>
+        </div>
+        <div class="ba-col">
+          <div class="ba-label after">AFTER</div>
+          <div class="ba-text">Primary sections (Categories, Trending) use 19px headers. Secondary sections (Packs) use overline label + title pattern. Standardized spacing creates visual rhythm. Users can scan section importance at a glance.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout low">
+      <h3>
+        6. Compact Header
+        <span class="tag low">LOW</span>
+      </h3>
+      <div class="before-after">
+        <div class="ba-col">
+          <div class="ba-label before">BEFORE</div>
+          <div class="ba-text">Title + subtitle ("Start with a goal, a category, or a quick add") shown to all users. 13px subtitle adds ~20px+ of vertical space. Subtitle is instructional — redundant after first visit.</div>
+        </div>
+        <div class="ba-col">
+          <div class="ba-label after">AFTER</div>
+          <div class="ba-text">Subtitle hidden for returning users (2+ habits). Title-only header. Small gain (~20px) but compounds with other changes and removes cognitive noise for experienced users.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SCROLL DEPTH COMPARISON ═══ -->
+  <div class="depth-comparison">
+    <h3>Estimated Scroll Depth Reduction</h3>
+    <div class="depth-bars">
+      <div class="depth-bar-row">
+        <span class="depth-bar-label">New Users</span>
+        <div class="depth-bar current" style="width: 100%;">~2400px (Current)</div>
+      </div>
+      <div class="depth-bar-row">
+        <span class="depth-bar-label"></span>
+        <div class="depth-bar proposed" style="width: 75%;">~1900px (Proposed) &mdash; 21% less</div>
+      </div>
+      <div class="depth-bar-row" style="margin-top:8px;">
+        <span class="depth-bar-label">Returning</span>
+        <div class="depth-bar current" style="width: 85%;">~2050px (Current)</div>
+      </div>
+      <div class="depth-bar-row">
+        <span class="depth-bar-label"></span>
+        <div class="depth-bar proposed" style="width: 62%;">~1700px (Proposed) &mdash; 17% less</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Initialize Lucide icons
+    if (window.lucide) lucide.createIcons();
+  </script>
+</body>
+</html>

@@ -15,14 +15,12 @@ import type { CategoryMeta } from '../data/categoryMeta.types';
 interface CategoryHeroProps {
   habitCount: number;
   meta: CategoryMeta;
-  scienceCount: number;
   onBack: () => void;
 }
 
 export function CategoryHero({
   habitCount,
   meta,
-  scienceCount,
   onBack,
 }: CategoryHeroProps) {
   const { colors } = useThemeColors();
@@ -79,13 +77,6 @@ export function CategoryHero({
                 {countLabel}
               </Text>
             </View>
-            {scienceCount > 0 ? (
-              <View style={s.scienceBadge}>
-                <Text style={s.scienceText}>
-                  🔬 {scienceCount} science-backed
-                </Text>
-              </View>
-            ) : null}
           </View>
         </View>
       </View>
@@ -128,19 +119,6 @@ const s = StyleSheet.create({
     height: 52,
     justifyContent: 'center',
     width: 52,
-  },
-  scienceBadge: {
-    backgroundColor: '#E0F2FE',
-    borderColor: '#BAE6FD',
-    borderRadius: borderRadius.full,
-    borderWidth: 1,
-    paddingHorizontal: spacing.sm,
-    paddingVertical: spacing.xs,
-  },
-  scienceText: {
-    ...typography.caption,
-    color: '#0369A1',
-    fontWeight: fontWeights.semibold,
   },
   subtitle: { ...typography.bodySmall, marginTop: 2 },
   textBlock: { flex: 1 },

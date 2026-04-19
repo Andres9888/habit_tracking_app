@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Category Drill — Before / After</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #f5f1ed;
+        --card: #ffffff;
+        --card-alt: #edeae5;
+        --border: #e4e0d9;
+        --text: #1a1a1a;
+        --text-secondary: #4b4b4b;
+        --text-tertiary: #6e6660;
+        --health-bg: #d1fae5;
+        --health-border: #a7f3d0;
+        --health-text: #065f46;
+        --top-pick-bg: #fffbeb;
+        --top-pick-border: #fbbf24;
+        --top-pick-text: #92400e;
+      }
+      body {
+        font-family: 'Inter', system-ui, sans-serif;
+        background: #fafaf7;
+      }
+      .phone {
+        width: 340px;
+        height: 720px;
+        border-radius: 44px;
+        border: 10px solid #1a1a1a;
+        overflow: hidden;
+        background: var(--bg);
+        position: relative;
+        box-shadow: 0 20px 60px -10px rgba(0, 0, 0, 0.25);
+      }
+      .notch {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 110px;
+        height: 24px;
+        background: #1a1a1a;
+        border-bottom-left-radius: 14px;
+        border-bottom-right-radius: 14px;
+        z-index: 50;
+      }
+      .status-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 22px 4px;
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--text);
+      }
+      .change-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 10px;
+        font-weight: 700;
+        padding: 3px 8px;
+        border-radius: 999px;
+        background: #fef3c7;
+        color: #92400e;
+        border: 1px solid #fde68a;
+        letter-spacing: 0.02em;
+      }
+      .change-pill.good {
+        background: #dcfce7;
+        color: #166534;
+        border-color: #bbf7d0;
+      }
+      .anno {
+        font-size: 10px;
+        color: #6b7280;
+        line-height: 1.3;
+        margin-top: 4px;
+      }
+    </style>
+  </head>
+  <body class="py-10">
+    <div class="max-w-7xl mx-auto px-6">
+      <header class="mb-8">
+        <h1 class="text-2xl font-bold text-gray-900">Category drill — design review</h1>
+        <p class="text-gray-600 mt-1 text-sm">
+          Left: current. Right: proposed. Changes highlighted with yellow pills.
+        </p>
+        <div class="flex gap-2 mt-3 flex-wrap">
+          <span class="change-pill good">Keep: green hero, filter chips, social proof</span>
+          <span class="change-pill">Change: truncation, chrome, top-pick, color story</span>
+        </div>
+      </header>
+
+      <div class="grid grid-cols-2 gap-12 justify-items-center">
+        <!-- ============ BEFORE ============ -->
+        <div class="flex flex-col items-center">
+          <div class="text-xs font-bold uppercase tracking-wider text-gray-400 mb-3">Before</div>
+          <div class="phone">
+            <div class="notch"></div>
+            <div class="status-bar">
+              <span>8:54</span>
+              <span class="flex gap-1 items-center">
+                <span>●●●●</span>
+                <span>📶</span>
+                <span>🔋</span>
+              </span>
+            </div>
+            <!-- HERO -->
+            <div style="background: var(--health-bg); border-bottom: 1px solid var(--health-border); padding: 8px 16px 14px">
+              <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center gap-1 text-[15px] font-semibold" style="color: var(--health-text)">
+                  <span>‹</span><span>Library</span>
+                </div>
+                <div class="w-7 h-7 rounded-full bg-white/60 flex items-center justify-center text-sm" style="color: var(--health-text)">×</div>
+              </div>
+              <div class="flex items-start gap-3">
+                <div class="w-[52px] h-[52px] rounded-xl flex items-center justify-center text-2xl" style="background: var(--health-border)">🧘</div>
+                <div class="flex-1">
+                  <div class="text-[22px] font-bold leading-tight" style="color: var(--health-text)">Health</div>
+                  <div class="text-[12px] mt-[2px]" style="color: var(--text-tertiary)">Strengthen your body with lasting physical habits</div>
+                  <div class="mt-1.5 inline-flex px-2 py-[3px] rounded-full border text-[11px] font-semibold" style="background: var(--health-bg); border-color: var(--health-border); color: var(--health-text)">📋 75 habits</div>
+                </div>
+              </div>
+            </div>
+            <!-- FILTERS -->
+            <div class="flex gap-2 items-center px-4 py-2.5 border-b" style="border-color: var(--border)">
+              <div class="px-3.5 py-1.5 rounded-full border text-[11px] font-semibold" style="background: var(--health-bg); border-color: var(--health-border); color: var(--health-text)">Most used</div>
+              <div class="px-3.5 py-1.5 rounded-full border text-[11px] font-semibold bg-white" style="border-color: var(--border); color: var(--text-secondary)">A-Z</div>
+              <div class="w-px h-4 bg-gray-300"></div>
+              <div class="px-3.5 py-1.5 rounded-full border text-[11px] font-semibold bg-white" style="border-color: var(--border); color: var(--text-secondary)">Not added</div>
+            </div>
+            <!-- SECTION LABEL -->
+            <div class="px-4 pt-3 pb-1 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider" style="color: var(--text-tertiary)">
+              <span>⭐</span><span>POPULAR</span>
+            </div>
+            <!-- TOP PICK CARD -->
+            <div class="mx-4 mt-2 rounded-xl p-3" style="background: var(--card-alt); border-left: 3px solid var(--top-pick-border)">
+              <div class="flex justify-between items-start gap-2">
+                <div class="w-10 h-10 rounded-lg flex items-center justify-center text-lg" style="background: #e5e7eb">🚶</div>
+                <div class="flex-1">
+                  <div class="inline-flex px-1.5 py-0.5 rounded mb-1 text-[9px] font-bold" style="background: var(--top-pick-bg); color: var(--top-pick-text); border: 1px solid var(--top-pick-border)">⭐ TOP PICK</div>
+                  <div class="text-[14px] font-semibold leading-tight">7,000 Steps</div>
+                  <div class="text-[11px] text-gray-600 leading-snug mt-1">
+                    Walk 7,000+ steps daily. A Lancet Public Health (2025) meta-analysis of 24 cohorts fo…
+                  </div>
+                  <div class="flex gap-1.5 mt-2">
+                    <span class="text-[10px] px-1.5 py-0.5 rounded-full bg-white border" style="border-color: var(--border)">📅 Daily</span>
+                    <span class="text-[10px] px-1.5 py-0.5 rounded-full bg-white border" style="border-color: var(--border)">🔥 92 added</span>
+                  </div>
+                </div>
+                <div class="px-2.5 py-1 rounded-full bg-emerald-600 text-white text-[11px] font-semibold">+ Add</div>
+              </div>
+              <div class="text-right text-[10px] mt-2 text-gray-500">View details ›</div>
+            </div>
+            <!-- SECOND CARD -->
+            <div class="mx-4 mt-2 rounded-xl p-3" style="background: var(--card-alt)">
+              <div class="flex justify-between items-start gap-2">
+                <div class="w-10 h-10 rounded-lg flex items-center justify-center text-lg" style="background: #fecaca">🥩</div>
+                <div class="flex-1">
+                  <div class="text-[14px] font-semibold leading-tight">Daily Protein Target</div>
+                  <div class="text-[11px] text-gray-600 leading-snug mt-1">
+                    Track daily protein intake targeting 1.2-1.6g per kg of bodyweight. Meta-analysis shows this r…
+                  </div>
+                  <div class="flex gap-1.5 mt-2">
+                    <span class="text-[10px] px-1.5 py-0.5 rounded-full bg-white border" style="border-color: var(--border)">📅 Daily</span>
+                    <span class="text-[10px] px-1.5 py-0.5 rounded-full bg-white border" style="border-color: var(--border)">🔥 86 added</span>
+                  </div>
+                </div>
+                <div class="px-2.5 py-1 rounded-full bg-emerald-600 text-white text-[11px] font-semibold">+ Add</div>
+              </div>
+              <div class="text-right text-[10px] mt-2 text-gray-500">View details ›</div>
+            </div>
+          </div>
+          <!-- issues list -->
+          <div class="mt-4 w-[340px] space-y-1.5 text-[11px] text-gray-600">
+            <div class="flex gap-2"><span class="text-amber-600">①</span><span>Descriptions truncate mid-word</span></div>
+            <div class="flex gap-2"><span class="text-amber-600">②</span><span>Back and × both present — unclear intent</span></div>
+            <div class="flex gap-2"><span class="text-amber-600">③</span><span>POPULAR label with no second section</span></div>
+            <div class="flex gap-2"><span class="text-amber-600">④</span><span>Top-pick treatment weak for its claim</span></div>
+            <div class="flex gap-2"><span class="text-amber-600">⑤</span><span>"View details ›" redundant — card is the tap target</span></div>
+            <div class="flex gap-2"><span class="text-amber-600">⑥</span><span>Filter chips don't preview count</span></div>
+          </div>
+        </div>
+
+        <!-- ============ AFTER ============ -->
+        <div class="flex flex-col items-center">
+          <div class="text-xs font-bold uppercase tracking-wider text-emerald-600 mb-3">After (proposed)</div>
+          <div class="phone">
+            <div class="notch"></div>
+            <div class="status-bar">
+              <span>8:54</span>
+              <span class="flex gap-1 items-center">
+                <span>●●●●</span>
+                <span>📶</span>
+                <span>🔋</span>
+              </span>
+            </div>
+            <!-- HERO — removed × -->
+            <div style="background: var(--health-bg); border-bottom: 1px solid var(--health-border); padding: 8px 16px 14px">
+              <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center gap-1 text-[15px] font-semibold" style="color: var(--health-text)">
+                  <span>‹</span><span>Library</span>
+                </div>
+                <!-- × removed -->
+              </div>
+              <div class="flex items-start gap-3">
+                <div class="w-[52px] h-[52px] rounded-xl flex items-center justify-center text-2xl" style="background: var(--health-border)">🧘</div>
+                <div class="flex-1">
+                  <div class="text-[22px] font-bold leading-tight" style="color: var(--health-text)">Health</div>
+                  <div class="text-[12px] mt-[2px]" style="color: var(--text-tertiary)">Strengthen your body with lasting physical habits</div>
+                  <div class="mt-1.5 inline-flex px-2 py-[3px] rounded-full border text-[11px] font-semibold" style="background: var(--health-bg); border-color: var(--health-border); color: var(--health-text)">📋 75 habits</div>
+                </div>
+              </div>
+            </div>
+            <!-- FILTERS with counts -->
+            <div class="flex gap-2 items-center px-4 py-2.5 border-b" style="border-color: var(--border)">
+              <div class="px-3.5 py-1.5 rounded-full border text-[11px] font-semibold" style="background: var(--health-bg); border-color: var(--health-border); color: var(--health-text)">Most used</div>
+              <div class="px-3.5 py-1.5 rounded-full border text-[11px] font-semibold bg-white" style="border-color: var(--border); color: var(--text-secondary)">A-Z</div>
+              <div class="w-px h-4 bg-gray-300"></div>
+              <div class="px-3.5 py-1.5 rounded-full border text-[11px] font-semibold bg-white" style="border-color: var(--border); color: var(--text-secondary)">Not added <span class="text-gray-400 font-medium">· 62</span></div>
+            </div>
+            <!-- POPULAR label removed (single section) -->
+            <!-- TOP PICK CARD — stronger, tinted, no view-details -->
+            <div class="mx-4 mt-3 rounded-xl p-3.5 relative" style="background: linear-gradient(180deg, #ecfdf5 0%, #f0fdf4 100%); border: 1.5px solid var(--health-border); box-shadow: 0 2px 8px rgba(5, 150, 105, 0.08)">
+              <div class="absolute -top-2 left-3 inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-bold tracking-wide" style="background: #fbbf24; color: #78350f">⭐ TOP PICK</div>
+              <div class="flex justify-between items-start gap-2.5 mt-0.5">
+                <div class="w-11 h-11 rounded-lg flex items-center justify-center text-lg flex-shrink-0" style="background: #bbf7d0">🚶</div>
+                <div class="flex-1">
+                  <div class="text-[14px] font-bold leading-tight">7,000 Steps</div>
+                  <div class="text-[11px] text-gray-700 leading-snug mt-1">
+                    Walk 7,000+ steps daily to lower all-cause mortality risk. Based on a meta-analysis of 24 cohorts.
+                  </div>
+                  <div class="flex gap-1.5 mt-2 flex-wrap">
+                    <span class="text-[10px] px-1.5 py-0.5 rounded-full bg-white border" style="border-color: var(--border)">📅 Daily</span>
+                    <span class="text-[10px] px-1.5 py-0.5 rounded-full bg-white border" style="border-color: var(--border)">🔥 92 added</span>
+                    <span class="text-[10px] px-1.5 py-0.5 rounded-full border" style="background: #dbeafe; border-color: #bfdbfe; color: #1e40af">🔬 Lancet 2025</span>
+                  </div>
+                </div>
+                <div class="px-2.5 py-1 rounded-full bg-emerald-600 text-white text-[11px] font-semibold self-start">+ Add</div>
+              </div>
+              <!-- no "view details" link — card is tap target -->
+            </div>
+            <!-- SECOND CARD — full sentence, no truncation mid-word, no view-details -->
+            <div class="mx-4 mt-2.5 rounded-xl p-3" style="background: var(--card)">
+              <div class="flex justify-between items-start gap-2.5">
+                <div class="w-11 h-11 rounded-lg flex items-center justify-center text-lg flex-shrink-0" style="background: #fecaca">🥩</div>
+                <div class="flex-1">
+                  <div class="text-[14px] font-semibold leading-tight">Daily Protein Target</div>
+                  <div class="text-[11px] text-gray-700 leading-snug mt-1">
+                    Hit 1.2–1.6g of protein per kg of bodyweight to preserve lean mass as you age.
+                  </div>
+                  <div class="flex gap-1.5 mt-2 flex-wrap">
+                    <span class="text-[10px] px-1.5 py-0.5 rounded-full border bg-gray-50" style="border-color: var(--border)">📅 Daily</span>
+                    <span class="text-[10px] px-1.5 py-0.5 rounded-full border bg-gray-50" style="border-color: var(--border)">🔥 86 added</span>
+                    <span class="text-[10px] px-1.5 py-0.5 rounded-full border" style="background: #dbeafe; border-color: #bfdbfe; color: #1e40af">🔬 2023</span>
+                  </div>
+                </div>
+                <div class="px-2.5 py-1 rounded-full bg-emerald-600 text-white text-[11px] font-semibold self-start">+ Add</div>
+              </div>
+            </div>
+          </div>
+          <!-- fixes list -->
+          <div class="mt-4 w-[340px] space-y-1.5 text-[11px] text-gray-700">
+            <div class="flex gap-2"><span class="text-emerald-600">①</span><span>Descriptions rewritten to fit 2 lines, clean end</span></div>
+            <div class="flex gap-2"><span class="text-emerald-600">②</span><span>× removed — back is the only nav</span></div>
+            <div class="flex gap-2"><span class="text-emerald-600">③</span><span>POPULAR label dropped — no second section</span></div>
+            <div class="flex gap-2"><span class="text-emerald-600">④</span><span>Top-pick: subtle green tint, floating badge, stronger shadow</span></div>
+            <div class="flex gap-2"><span class="text-emerald-600">⑤</span><span>"View details" removed — whole card taps through</span></div>
+            <div class="flex gap-2"><span class="text-emerald-600">⑥</span><span>"Not added · 62" shows filter size pre-tap</span></div>
+            <div class="flex gap-2"><span class="text-emerald-600">⑦</span><span>Science citation broken out as blue chip</span></div>
+          </div>
+        </div>
+      </div>
+
+      <footer class="mt-12 text-center text-xs text-gray-500">
+        Mock only — no code changed yet. Confirm direction before implementation.
+      </footer>
+    </div>
+  </body>
+</html>

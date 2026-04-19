@@ -31,6 +31,7 @@ export const styles = StyleSheet.create({
   },
   titleLeft: {
     ...typography.heading1,
+    paddingRight: 52,
   },
   transparent: { backgroundColor: 'transparent' },
 });

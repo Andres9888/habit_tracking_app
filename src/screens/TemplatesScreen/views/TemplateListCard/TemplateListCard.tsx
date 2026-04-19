@@ -5,7 +5,6 @@
  */
 
 import { Pressable, Text, View } from 'react-native';
-import { ChevronRight } from 'lucide-react-native';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import { fontWeights, typography } from '../../../../theme/typography';
 import type { TemplateListCardProps } from './TemplateListCard.types';
@@ -43,7 +42,7 @@ export function TemplateListCard({
           borderColor: isImported
             ? '#A7F3D0'
             : isTopPick
-              ? '#FDE68A'
+              ? '#FCD34D'
               : colors.border,
           opacity: isImporting ? 0.72 : 1,
         },
@@ -65,7 +64,7 @@ export function TemplateListCard({
               <Text
                 style={{
                   ...typography.caption,
-                  color: '#B45309',
+                  color: '#78350F',
                   fontWeight: fontWeights.bold,
                   letterSpacing: 0.3,
                 }}
@@ -100,18 +99,6 @@ export function TemplateListCard({
             matchReason={matchReason}
             popularityCount={popularityCount}
           />
-          <View style={[styles.detailsRow, { borderTopColor: colors.border }]}>
-            <Text
-              style={[styles.detailsLabel, { color: colors.text.tertiary }]}
-            >
-              View details
-            </Text>
-            <ChevronRight
-              color={colors.text.tertiary}
-              size={12}
-              strokeWidth={2.5}
-            />
-          </View>
         </View>
       </View>
     </Pressable>
