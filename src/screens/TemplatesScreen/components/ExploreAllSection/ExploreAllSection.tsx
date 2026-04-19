@@ -13,11 +13,13 @@ import { ExploreHabitRow } from './ExploreHabitRow';
 import type { CategoryGroup, ExploreAllSectionProps } from './ExploreAllSection.types';
 
 function CategoryGroupSection({
+  defaultExpanded = false,
   group, importedTemplateIds, importingTemplateId, onImport, onPreview,
 }: {
+  defaultExpanded?: boolean;
   group: CategoryGroup;
 } & Pick<ExploreAllSectionProps, 'importedTemplateIds' | 'importingTemplateId' | 'onImport' | 'onPreview'>) {
-  const [expanded, setExpanded] = useState(false);
+  const [expanded, setExpanded] = useState(defaultExpanded);
 
   return (
     <View>
@@ -67,9 +69,10 @@ export function ExploreAllSection({
           {totalCount} habits
         </Text>
       </View>
-      {groups.map((group) => (
+      {groups.map((group, index) => (
         <CategoryGroupSection
           key={group.category}
+          defaultExpanded={index < 3}
           group={group}
           importedTemplateIds={importedTemplateIds}
           importingTemplateId={importingTemplateId}
