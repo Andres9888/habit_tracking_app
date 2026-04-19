@@ -57,10 +57,15 @@ export function GoalTabEmptyState({ habitId }: GoalTabEmptyStateProps) {
         Set a streak goal
       </Text>
       <Text
-        className='mb-6 text-center'
-        style={{ ...typography.bodySmall, color: colors.text.secondary, lineHeight: 20 }}
+        className='mb-1 text-center'
+        style={{ ...typography.bodySmall, color: colors.text.primary, fontWeight: '500' }}
       >
-        Aim for a specific streak length.{'\n'}
+        Pick a target — we'll celebrate every milestone.
+      </Text>
+      <Text
+        className='mb-6 text-center'
+        style={{ ...typography.caption, color: colors.text.secondary, lineHeight: 18 }}
+      >
         66 days is the science-backed sweet spot.
       </Text>
 
