@@ -10,13 +10,13 @@ interface HabitStatsBadgesProps {
 }
 
 export function HabitStatsBadges({ habit, strength }: HabitStatsBadgesProps) {
-  const { colors, isDark } = useThemeColors();
+  const { colors } = useThemeColors();
   const barColor = getStrengthGradientColor(strength);
   const streak = habit.currentStreak ?? 0;
   const completions = habit.totalCompletions ?? 0;
-  const muted = isDark ? colors.gray[400] : '#B5AFA8';
-  const label = isDark ? colors.gray[300] : '#6E6660';
-  const trackBg = isDark ? colors.gray[200] : '#F0ECE6';
+  const muted = colors.text.tertiary;
+  const label = colors.text.secondary;
+  const trackBg = colors.gray[200];
 
   const statText = { fontFamily: fontFamilies.primary.text, fontSize: 12, lineHeight: 16, letterSpacing: 0 } as const;
   const statValue = { ...statText, fontWeight: fontWeights.semibold, color: label } as const;

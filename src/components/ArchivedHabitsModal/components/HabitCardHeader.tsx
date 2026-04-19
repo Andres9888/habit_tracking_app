@@ -2,7 +2,7 @@ import { Pressable, Text, View } from 'react-native';
 import { Trash2 } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '@/theme/ThemeContext';
-import { typography, fontWeights } from '@/theme/typography';
+import { fontFamilies, fontWeights } from '@/theme/typography';
 import { getRelativeTime } from '../utils';
 
 interface HabitCardHeaderProps {
@@ -32,11 +32,11 @@ export function HabitCardHeader({ name, icon, accentColor, archiveDate, onDelete
       <View style={{ flex: 1, minWidth: 0 }}>
         <Text
           numberOfLines={1}
-          style={{ fontFamily: 'DMSans', fontSize: 16, fontWeight: fontWeights.semibold, color: colors.text.primary, letterSpacing: -0.2, lineHeight: 20 }}
+          style={{ fontFamily: fontFamilies.primary.text, fontSize: 16, fontWeight: fontWeights.semibold, color: colors.text.primary, letterSpacing: -0.2, lineHeight: 20 }}
         >
           {name}
         </Text>
-        <Text style={{ fontFamily: 'DMSans', fontSize: 12, lineHeight: 16, color: isDark ? colors.gray[400] : '#B5AFA8', marginTop: 3, letterSpacing: 0.1 }}>
+        <Text style={{ fontFamily: fontFamilies.primary.text, fontSize: 12, lineHeight: 16, color: colors.text.tertiary, marginTop: 3, letterSpacing: 0.1 }}>
           Archived {getRelativeTime(archiveDate)}
         </Text>
       </View>

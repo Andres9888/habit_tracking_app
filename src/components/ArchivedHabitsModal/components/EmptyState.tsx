@@ -17,9 +17,9 @@ const s = StyleSheet.create({
 });
 
 export function EmptyState() {
-  const { colors, isDark } = useThemeColors();
-  const muted = isDark ? colors.gray[200] : '#F0ECE6';
-  const tipText = isDark ? colors.text.secondary : '#6E6660';
+  const { colors } = useThemeColors();
+  const muted = colors.gray[200];
+  const tipText = colors.text.tertiary;
 
   return (
     <View style={s.container}>
@@ -32,7 +32,7 @@ export function EmptyState() {
       <Animated.Text entering={anim(120)} style={[s.desc, { color: colors.text.secondary }]}>
         Swipe left on any habit to archive it. Your progress and streaks are always preserved.
       </Animated.Text>
-      <Animated.View entering={anim(180)} style={[s.tipCard, { backgroundColor: isDark ? colors.gray[100] : '#F7F5F2' }]}>
+      <Animated.View entering={anim(180)} style={[s.tipCard, { backgroundColor: colors.gray[50] }]}>
         <Text style={{ fontSize: 20, marginTop: 1 }}>💡</Text>
         <View style={{ flex: 1 }}>
           <Text style={[s.tipTitle, { color: tipText }]}>Tip</Text>
