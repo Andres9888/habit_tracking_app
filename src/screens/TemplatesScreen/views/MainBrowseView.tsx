@@ -2,7 +2,7 @@
  * MainBrowseView — Goal-first browse surface
  *
  * Frames habit discovery around user transformation:
- * Header → GoalCollectionGrid (hero) → Search → Trending → Explore All → Curated Bundles
+ * Header → Search → GoalCollectionGrid (hero) → Trending → Explore All → Curated Bundles
  */
 
 import { ScrollView, View } from 'react-native';
@@ -43,23 +43,23 @@ export function MainBrowseView(p: MainBrowseViewProps) {
           paddingTop: spacing.md,
         }}
       >
-        <Animated.View entering={stagger(0)}>
+        <Animated.View
+          entering={stagger(0)}
+          style={[styles.searchSection, p.searchAnimatedStyle]}
+        >
+          <SearchBar
+            inputHint='Search habits'
+            value={p.searchQuery}
+            onChangeText={p.onSearchChange}
+            onClear={p.onSearchClear}
+          />
+        </Animated.View>
+        <Animated.View entering={stagger(1)}>
           <GoalCollectionGrid
             featuredBadgeLabel={p.featuredBadgeLabel}
             featuredGoalId={p.featuredGoalId}
             habitCountsByGoalId={p.habitCountsByGoalId}
             onSelectGoal={p.onGoalSelect}
-          />
-        </Animated.View>
-        <Animated.View
-          entering={stagger(1)}
-          style={[styles.searchSection, p.searchAnimatedStyle]}
-        >
-          <SearchBar
-            inputHint='Or search for a specific habit…'
-            value={p.searchQuery}
-            onChangeText={p.onSearchChange}
-            onClear={p.onSearchClear}
           />
         </Animated.View>
         <Animated.View entering={stagger(2)}>
