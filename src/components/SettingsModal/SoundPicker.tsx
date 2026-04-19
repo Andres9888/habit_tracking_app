@@ -2,8 +2,15 @@
  * SoundPicker - Animated inline sound type selector with tap-to-preview
  */
 
+import { useEffect, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
-import Animated, { FadeIn, FadeInDown, FadeOutUp } from 'react-native-reanimated';
+import type { LayoutChangeEvent } from 'react-native';
+import Animated, {
+  Easing,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated';
 import { Volume1, Droplet, TrendingUp } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
 import { typography, fontWeights } from '@/theme/typography';
@@ -18,13 +25,43 @@ const OPTIONS: { key: CompletionSoundType; label: string; Icon: typeof Volume1 }
 ];
 
 interface SoundPickerProps {
+  visible: boolean;
   selected: CompletionSoundType;
   onSelect: (type: CompletionSoundType) => void;
 }
 
-export function SoundPicker({ selected, onSelect }: SoundPickerProps) {
+export function SoundPicker({ visible, selected, onSelect }: SoundPickerProps) {
   const { colors, isDark } = useThemeColors();
   const handleSelect = useSoundPreview(onSelect);
+  const [naturalHeight, setNaturalHeight] = useState(0);
+  const [everVisible, setEverVisible] = useState(visible);
+  const progress = useSharedValue(visible ? 1 : 0);
+
+  useEffect(() => {
+    if (visible) setEverVisible(true);
+    progress.value = withTiming(visible ? 1 : 0, {
+      duration: visible ? 280 : 240,
+      easing: visible ? Easing.out(Easing.cubic) : Easing.in(Easing.cubic),
+    });
+  }, [visible, progress]);
+
+  const animatedStyle = useAnimatedStyle(() => {
+    if (!naturalHeight) {
+      return { opacity: progress.value };
+    }
+    return {
+      height: naturalHeight * progress.value,
+      opacity: progress.value,
+      overflow: 'hidden' as const,
+    };
+  });
+
+  const handleLayout = (event: LayoutChangeEvent) => {
+    const h = event.nativeEvent.layout.height;
+    if (h > 0 && naturalHeight === 0) setNaturalHeight(h);
+  };
+
+  if (!everVisible) return null;
 
   const accent = colors.primary[600];
   /* Intentional rgba — alpha overlays on theme surfaces */
@@ -33,32 +70,23 @@ export function SoundPicker({ selected, onSelect }: SoundPickerProps) {
   const trayBg = isDark ? 'rgba(0,0,0,0.2)' : 'rgba(0,0,0,0.02)';
 
   return (
-    <Animated.View
-      entering={FadeInDown.duration(280)}
-      exiting={FadeOutUp.duration(150)}
-    >
+    <Animated.View style={animatedStyle} pointerEvents={visible ? 'auto' : 'none'}>
       <View
         className="flex-row items-center border-b px-4 py-2.5"
-        style={{
-          borderColor: colors.border,
-          backgroundColor: trayBg,
-        }}
+        style={{ borderColor: colors.border, backgroundColor: trayBg }}
+        onLayout={handleLayout}
       >
         <View className="mr-4 w-10" />
         <View className="flex-1 flex-row items-center gap-2">
-        {OPTIONS.map(({ key, label, Icon }, index) => {
-          const on = key === selected;
-          return (
-            <Animated.View
-              key={key}
-              className="flex-1"
-              entering={FadeIn.duration(200).delay(120 + index * 60)}
-            >
+          {OPTIONS.map(({ key, label, Icon }) => {
+            const on = key === selected;
+            return (
               <Pressable
+                key={key}
                 accessibilityLabel={`${label} sound`}
                 accessibilityRole="button"
                 accessibilityState={{ selected: on }}
-                className="flex-row items-center justify-center gap-1.5 rounded-xl py-2"
+                className="flex-1 flex-row items-center justify-center gap-1.5 rounded-xl py-2"
                 style={{ backgroundColor: on ? accentBg : pillBg }}
                 onPress={() => handleSelect(key)}
               >
@@ -77,9 +105,8 @@ export function SoundPicker({ selected, onSelect }: SoundPickerProps) {
                   {label}
                 </Text>
               </Pressable>
-            </Animated.View>
-          );
-        })}
+            );
+          })}
         </View>
       </View>
     </Animated.View>
