@@ -244,12 +244,11 @@ export function SettingsContent(p: SettingsContentProps) {
                 value={p.completionSoundEnabled}
                 onToggle={(v) => void p.onChangeCompletionSoundEnabled(v)}
               />
-              {p.completionSoundEnabled ? (
-                <SoundPicker
-                  selected={p.completionSoundType}
-                  onSelect={(v) => void p.onChangeCompletionSoundType(v)}
-                />
-              ) : null}
+              <SoundPicker
+                selected={p.completionSoundType}
+                visible={p.completionSoundEnabled}
+                onSelect={(v) => void p.onChangeCompletionSoundType(v)}
+              />
               <SettingsRow
                 highContrastMode={hc}
                 icon={
