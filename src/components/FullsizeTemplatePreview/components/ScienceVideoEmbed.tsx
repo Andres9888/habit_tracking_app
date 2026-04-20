@@ -6,6 +6,7 @@ import React from 'react';
 import { Image, Linking, Pressable, Text, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Play } from 'lucide-react-native';
+import { colors } from '@/theme/colors';
 import { evidenceDetailStyles as s } from '../styles/evidenceDetail.styles';
 import type { Template } from '../../../types/template';
 
@@ -16,7 +17,7 @@ interface ScienceVideoEmbedProps {
 
 function extractYouTubeId(url: string): string | null {
   const match = url.match(
-    /(?:youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|v\/)|youtu\.be\/)([\w-]{11})/,
+    /(?:youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|v\/)|youtu\.be\/)([\w-]{11})/
   );
   return match ? match[1] : null;
 }
@@ -31,8 +32,8 @@ export function ScienceVideoEmbed({ template }: ScienceVideoEmbedProps) {
 
   return (
     <Pressable
-      accessibilityLabel="Watch the science explained on YouTube"
-      accessibilityRole="link"
+      accessibilityLabel='Watch the science explained on YouTube'
+      accessibilityRole='link'
       style={s.videoCard}
       onPress={() => void Linking.openURL(template.youtubeLink!)}
     >
@@ -40,7 +41,7 @@ export function ScienceVideoEmbed({ template }: ScienceVideoEmbedProps) {
         {thumbnailUri ? (
           <Image
             accessibilityIgnoresInvertColors
-            resizeMode="cover"
+            resizeMode='cover'
             source={{ uri: thumbnailUri }}
             style={s.videoThumbnailImage}
           />
@@ -52,7 +53,11 @@ export function ScienceVideoEmbed({ template }: ScienceVideoEmbedProps) {
           style={s.videoThumbnailOverlay}
         />
         <View style={s.playCircle}>
-          <Play color={colors.text.inverse} fill={colors.text.inverse} size={22} />
+          <Play
+            color={colors.text.inverse}
+            fill={colors.text.inverse}
+            size={22}
+          />
         </View>
       </View>
       <View style={s.videoMeta}>

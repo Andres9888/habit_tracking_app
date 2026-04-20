@@ -22,6 +22,7 @@ function FullsizeTemplatePreviewComponent({
   template,
   visible,
   onClose,
+  onBack,
   onImport,
   onCustomize,
   isImporting = false,
@@ -46,6 +47,7 @@ function FullsizeTemplatePreviewComponent({
   const handlers = useHandlers({
     isImported,
     isImporting,
+    onBack,
     onClose,
     onCustomize,
     onImport,

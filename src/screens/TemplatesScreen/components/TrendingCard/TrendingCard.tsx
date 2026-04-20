@@ -31,7 +31,10 @@ export function TrendingCard({
       accessibilityHint='Opens the habit preview'
       accessibilityLabel={`Preview ${name} habit`}
       accessibilityRole='button'
-      style={[s.card, { backgroundColor: colors.card, borderColor: colors.border }]}
+      style={[
+        s.card,
+        { backgroundColor: colors.card, borderColor: colors.border },
+      ]}
       onPress={onPress}
     >
       <View style={[s.iconBox, { backgroundColor: `${iconColor}25` }]}>
@@ -43,16 +46,30 @@ export function TrendingCard({
       </Text>
 
       {description ? (
-        <Text numberOfLines={2} style={[s.description, { color: colors.text.secondary }]}>
+        <Text
+          numberOfLines={2}
+          style={[s.description, { color: colors.text.secondary }]}
+        >
           {description}
         </Text>
       ) : null}
 
       <View style={s.metaRow}>
-        <Text style={[s.frequency, { color: colors.text.tertiary }]}>{frequency}</Text>
+        <Text style={[s.frequency, { color: colors.text.tertiary }]}>
+          {frequency}
+        </Text>
         {hasResearch ? (
-          <View style={[s.scienceBadge, { backgroundColor: colors.status.warningLight }]}>
-            <Text style={[s.scienceText, { color: colors.status.warningText }]}>🔬 Science-backed</Text>
+          <View
+            style={[
+              s.scienceBadge,
+              { backgroundColor: colors.status.warningLight },
+            ]}
+          >
+            <Text
+              style={[s.scienceText, { color: colors.status.warningText }]}
+            >
+              🔬 Science-backed
+            </Text>
           </View>
         ) : null}
       </View>

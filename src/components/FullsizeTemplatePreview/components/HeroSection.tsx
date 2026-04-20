@@ -27,13 +27,20 @@ export function HeroSection({
   iconGlowStyle,
 }: HeroSectionProps) {
   const theme = useAppTheme();
-  const gradientColors = buildHeroGradient(iconColor);
+  const baseGradient = buildHeroGradient(iconColor);
+  // First stop is transparent so the ScrollView's header-matching background
+  // shows through — prevents alpha-stacking that makes the hero top read
+  // darker than the ModalHeader.
+  const gradientColors: readonly [string, string, string] = [
+    'transparent',
+    baseGradient[1],
+    baseGradient[2],
+  ];
   const formattedFrequency =
     FREQUENCY_LABELS[template?.frequency] || template?.frequency || 'Daily';
   const formattedCategory =
     CATEGORY_LABELS[template?.category] || template?.category || 'General';
-  const duration =
-    CATEGORY_DURATION_DEFAULTS[template?.category] || '5-10 min';
+  const duration = CATEGORY_DURATION_DEFAULTS[template?.category] || '5-10 min';
   const popularity = template?.popularityScore ?? 0;
 
   return (
@@ -53,7 +60,7 @@ export function HeroSection({
             ]}
           />
           <View
-            testID="templates-preview-icon"
+            testID='templates-preview-icon'
             style={[
               heroStyles.iconContainer,
               { backgroundColor: `${iconColor}20` },
@@ -64,7 +71,7 @@ export function HeroSection({
         </Animated.View>
 
         <Text
-          testID="templates-preview-name"
+          testID='templates-preview-name'
           style={[
             heroStyles.templateName,
             { fontFamily: theme.custom.fontFamilies.primary.text },
@@ -73,7 +80,7 @@ export function HeroSection({
           {template?.name ?? 'Template'}
         </Text>
 
-        <View testID="templates-preview-pills" style={heroStyles.pillsRow}>
+        <View testID='templates-preview-pills' style={heroStyles.pillsRow}>
           <MetadataPill
             icon={<Clock color={iconColor} size={14} strokeWidth={2} />}
             iconColor={iconColor}
@@ -86,9 +93,7 @@ export function HeroSection({
           >
             {formattedCategory}
           </MetadataPill>
-          <MetadataPill iconColor={iconColor}>
-            {`⏱️ ${duration}`}
-          </MetadataPill>
+          <MetadataPill iconColor={iconColor}>{`⏱️ ${duration}`}</MetadataPill>
           {popularity > 0 && (
             <MetadataPill
               icon={<Users color={iconColor} size={14} strokeWidth={2} />}

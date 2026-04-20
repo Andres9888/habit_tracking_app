@@ -23,16 +23,11 @@ export const evidenceStyles = StyleSheet.create({
     gap: 8,
     marginBottom: 14,
   },
-  headerIcon: {
-    fontSize: typography.heading2.fontSize,
-  },
   headerLabel: {
     color: colors.primary[700],
     fontFamily: fontFamilies.primary.text,
-    fontSize: typography.caption.fontSize,
+    fontSize: typography.bodySmall.fontSize,
     fontWeight: fontWeights.bold,
-    letterSpacing: 0.8,
-    textTransform: 'uppercase',
   },
   quoteText: {
     color: colors.primary[700],

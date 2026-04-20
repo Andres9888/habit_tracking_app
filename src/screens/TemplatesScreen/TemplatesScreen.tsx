@@ -25,7 +25,13 @@ import {
   type GoalCollection,
 } from './data/goalCollections';
 
-function TemplatesScreenContent() {
+interface TemplatesScreenContentProps {
+  onCloseLibrary?: () => void;
+}
+
+function TemplatesScreenContent({
+  onCloseLibrary,
+}: TemplatesScreenContentProps) {
   const props = useTemplatesScreenProps();
   const { data, handlers, mainBrowseData, packConfirm, state, viewNav } = props;
   const { groups, totalCount } = useGroupedTemplates(data.allTemplates);
@@ -93,6 +99,7 @@ function TemplatesScreenContent() {
           showPaywall={state.showPaywall}
           onCloseCustomize={() => state.setShowCustomizeModal(false)}
           onCloseFullsize={() => state.setShowFullsizePreview(false)}
+          onCloseLibrary={onCloseLibrary}
           onClosePaywall={() => state.setShowPaywall(false)}
           onCustomize={handlers.handleCustomizeFromPreview}
           onDirectImport={handlers.handleDirectImport}
@@ -145,6 +152,7 @@ function TemplatesScreenContent() {
             showPaywall={state.showPaywall}
             onCloseCustomize={() => state.setShowCustomizeModal(false)}
             onCloseFullsize={() => state.setShowFullsizePreview(false)}
+            onCloseLibrary={onCloseLibrary}
             onClosePaywall={() => state.setShowPaywall(false)}
             onCustomize={handlers.handleCustomizeFromPreview}
             onDirectImport={handlers.handleDirectImport}
@@ -196,10 +204,16 @@ function TemplatesScreenContent() {
   );
 }
 
-export default function TemplatesScreen() {
+interface TemplatesScreenProps {
+  onCloseLibrary?: () => void;
+}
+
+export default function TemplatesScreen({
+  onCloseLibrary,
+}: TemplatesScreenProps = {}) {
   return (
     <ScreenErrorBoundary screenName='Templates'>
-      <TemplatesScreenContent />
+      <TemplatesScreenContent onCloseLibrary={onCloseLibrary} />
     </ScreenErrorBoundary>
   );
 }

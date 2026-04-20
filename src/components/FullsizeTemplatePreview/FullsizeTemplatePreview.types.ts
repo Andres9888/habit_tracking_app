@@ -11,8 +11,10 @@ export interface FullsizeTemplatePreviewProps {
   template: Doc<'templates'> | null;
   /** Modal visibility */
   visible: boolean;
-  /** Close handler */
+  /** Close handler — called when the X button is tapped */
   onClose: () => void;
+  /** Optional back handler — when provided, a back button is rendered in the header */
+  onBack?: () => void;
   /** Direct import handler (skips customization) */
   onImport: (templateId: Id<'templates'>) => void;
   /** Customize handler (opens existing TemplatePreviewModal) */

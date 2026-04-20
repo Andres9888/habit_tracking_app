@@ -12,6 +12,7 @@ interface UseHandlersProps {
   isImported: boolean;
   reducedMotion: boolean;
   onClose: () => void;
+  onBack?: () => void;
   onImport: (templateId: Id<'templates'>) => void;
   onCustomize: (template: Doc<'templates'>) => void;
 }
@@ -22,6 +23,7 @@ export const useHandlers = ({
   isImported,
   reducedMotion,
   onClose,
+  onBack,
   onImport,
   onCustomize,
 }: UseHandlersProps) => {
@@ -31,6 +33,14 @@ export const useHandlers = ({
     }
     onClose();
   }, [onClose, reducedMotion]);
+
+  const handleBack = useCallback(() => {
+    if (!onBack) return;
+    if (!reducedMotion) {
+      triggerHaptic('tap');
+    }
+    onBack();
+  }, [onBack, reducedMotion]);
 
   const handleImport = useCallback(() => {
     if (!template || isImporting || isImported) return;
@@ -50,6 +60,7 @@ export const useHandlers = ({
 
   return {
     handleClose,
+    handleBack: onBack ? handleBack : undefined,
     handleCustomize,
     handleImport,
   };

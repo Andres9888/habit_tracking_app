@@ -18,14 +18,10 @@ interface CategoryHeroProps {
   onBack: () => void;
 }
 
-export function CategoryHero({
-  habitCount,
-  meta,
-  onBack,
-}: CategoryHeroProps) {
+export function CategoryHero({ habitCount, meta, onBack }: CategoryHeroProps) {
   const { colors } = useThemeColors();
   const insets = useSafeAreaInsets();
-  const countLabel = `📋 ${habitCount} ${habitCount === 1 ? 'habit' : 'habits'}`;
+  const countLabel = `${habitCount} ${habitCount === 1 ? 'habit' : 'habits'}`;
 
   return (
     <View

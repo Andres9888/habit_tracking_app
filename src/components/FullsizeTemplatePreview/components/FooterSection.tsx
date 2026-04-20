@@ -49,7 +49,10 @@ export function FooterSection({
           ]}
         >
           {isImported ? (
-            <View testID="templates-preview-added" style={footerStyles.successButtonWrapper}>
+            <View
+              testID='templates-preview-added'
+              style={footerStyles.successButtonWrapper}
+            >
               <Animated.View
                 pointerEvents='none'
                 style={[footerStyles.successButtonGlow, successButtonGlowStyle]}
@@ -58,7 +61,11 @@ export function FooterSection({
                 style={[footerStyles.successButton, checkmarkAnimatedStyle]}
               >
                 <Animated.View style={successIconBounceStyle}>
-                  <Check color={colors.text.inverse} size={22} strokeWidth={3} />
+                  <Check
+                    color={colors.text.inverse}
+                    size={22}
+                    strokeWidth={3}
+                  />
                 </Animated.View>
                 <Text style={footerStyles.successButtonText}>Added!</Text>
               </Animated.View>
@@ -66,11 +73,11 @@ export function FooterSection({
           ) : (
             <AnimatedPressable
               accessible
-              accessibilityHint='Add this habit template to your list'
-              accessibilityLabel={`Quick add ${templateName} habit`}
+              accessibilityHint='Add this habit to your list'
+              accessibilityLabel={`Add ${templateName} to my habits`}
               accessibilityRole='button'
               disabled={isImporting}
-              testID="templates-preview-quick-add"
+              testID='templates-preview-quick-add'
               style={[
                 footerStyles.importButton,
                 { backgroundColor: iconColor },
@@ -81,26 +88,26 @@ export function FooterSection({
               {...createPressHandlers(importButtonScale)}
             >
               <Text style={footerStyles.importButtonText}>
-                {isImporting ? 'Adding...' : 'Quick Add'}
+                {isImporting ? 'Adding…' : 'Add to my habits'}
               </Text>
             </AnimatedPressable>
           )}
 
-          {isImported ? null : <AnimatedPressable
+          {isImported ? null : (
+            <AnimatedPressable
               accessible
               accessibilityHint='Customize habit details before adding'
-              accessibilityLabel='Customize habit before importing'
+              accessibilityLabel='Customize habit before adding'
               accessibilityRole='button'
               disabled={isImporting}
-              testID="templates-preview-customize"
+              testID='templates-preview-customize'
               style={[footerStyles.customizeLink, customizeButtonStyle]}
               onPress={onCustomize}
               {...createPressHandlers(customizeButtonScale, 0.98)}
             >
-              <Text style={footerStyles.customizeLinkText}>
-                Customize First →
-              </Text>
-            </AnimatedPressable>}
+              <Text style={footerStyles.customizeLinkText}>Customize</Text>
+            </AnimatedPressable>
+          )}
         </View>
       </LinearGradient>
     </View>

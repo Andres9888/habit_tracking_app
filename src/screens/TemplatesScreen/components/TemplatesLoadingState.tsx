@@ -23,7 +23,7 @@ export function TemplatesLoadingState() {
             letterSpacing: -0.35,
           }}
         >
-          Templates
+          Habit library
         </Text>
         <Text
           style={{
@@ -33,7 +33,7 @@ export function TemplatesLoadingState() {
             marginTop: 4,
           }}
         >
-          Start with a category, a curated collection, or a quick add
+          {'Browse by goal, category, or what\u2019s trending'}
         </Text>
       </View>
       <Animated.View

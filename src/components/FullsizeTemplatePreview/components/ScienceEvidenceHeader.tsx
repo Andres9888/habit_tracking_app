@@ -13,14 +13,13 @@ export function ScienceEvidenceHeader() {
   return (
     <>
       <View style={s.header}>
-        <Text style={s.headerIcon}>🔬</Text>
         <Text
           style={[
             s.headerLabel,
             { fontFamily: theme.custom.fontFamilies.primary.text },
           ]}
         >
-          SCIENCE & EVIDENCE
+          The science
         </Text>
       </View>
       <View style={s.divider} />

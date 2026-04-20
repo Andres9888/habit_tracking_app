@@ -22,7 +22,7 @@ export function SearchBar({
   autoFocus,
   onChangeText,
   onClear,
-  inputHint = 'What do you want to improve?',
+  inputHint = 'Search habits',
   value,
 }: SearchBarProps) {
   const { colors } = useThemeColors();
@@ -36,7 +36,11 @@ export function SearchBar({
         { backgroundColor: colors.card, borderColor: colors.border },
       ]}
     >
-      <Search color={placeholderColor} size={iconSizes.medium} strokeWidth={2.5} />
+      <Search
+        color={placeholderColor}
+        size={iconSizes.medium}
+        strokeWidth={2.5}
+      />
       <TextInput
         autoFocus={autoFocus}
         accessibilityLabel='Search habit library'
@@ -53,7 +57,11 @@ export function SearchBar({
           accessibilityRole='button'
           onPress={onClear}
         >
-          <X color={placeholderColor} size={iconSizes.medium} strokeWidth={2.5} />
+          <X
+            color={placeholderColor}
+            size={iconSizes.medium}
+            strokeWidth={2.5}
+          />
         </AnimatedPressable>
       ) : null}
     </View>

@@ -30,7 +30,7 @@ const bodyEnter = FadeInDown.duration(180);
 const bodyExit = FadeOutUp.duration(120);
 
 const HEADER_SUBTITLE =
-  'Pick a transformation. We\u2019ll suggest the science-backed habits to get you there.';
+  'Pick a goal \u2014 we\u2019ll match you with habits proven to work.';
 
 export function MainBrowseView(p: MainBrowseViewProps) {
   const { colors } = useThemeColors();
@@ -40,7 +40,7 @@ export function MainBrowseView(p: MainBrowseViewProps) {
       <ScreenHeader
         leftAction={null}
         subtitle={HEADER_SUBTITLE}
-        title='What do you want to change?'
+        title='What do you want to work on?'
       />
       <Animated.View
         entering={stagger(0)}

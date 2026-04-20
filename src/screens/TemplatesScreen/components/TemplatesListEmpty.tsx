@@ -20,18 +20,20 @@ export function TemplatesListEmpty({
     <View style={styles.emptyStateWrapper}>
       <EmptyState
         hideCTA
-        description='Try adjusting filters or search keywords.'
-        headline='No habits match your filters'
+        description='Try different filters or another search.'
+        headline='No habits match'
         icon='🔍'
       />
-      {hasActiveFilters ? <Button
+      {hasActiveFilters ? (
+        <Button
           size='medium'
           style={{ marginTop: 16 }}
           variant='secondary'
           onPress={onResetFilters}
         >
           Reset filters
-        </Button> : null}
+        </Button>
+      ) : null}
     </View>
   );
 }
