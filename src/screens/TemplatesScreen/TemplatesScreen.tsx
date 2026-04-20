@@ -12,12 +12,12 @@ import {
   useGroupedTemplates,
 } from './components/ExploreAllSection';
 import { PremiumPacksSection } from './components/PremiumPacksSection';
+import { SearchResults } from './components/SearchResults';
 import { TemplatesEmptyState } from './components/TemplatesEmptyState';
 import { TemplatesScreenModals } from './components';
 import { useTemplatesScreenProps } from './hooks/useTemplatesScreenProps';
 import { FeedbackOverlays } from './views/FeedbackOverlays';
 import { MainBrowseView } from './views/MainBrowseView';
-import { renderCategorySearch } from './views/renderCategorySearch';
 import { renderSubView } from './views/renderSubView';
 import {
   GOAL_COLLECTIONS,
@@ -71,7 +71,6 @@ function TemplatesScreenContent() {
     );
   }
 
-  if (state.effectiveViewMode !== 'browse') return renderCategorySearch(props);
   const subView = renderSubView({
     activeView: viewNav.activeView,
     allTemplates: data.allTemplates,
@@ -135,6 +134,7 @@ function TemplatesScreenContent() {
         habitCountsByGoalId={habitCountsByGoalId}
         importedTemplateIds={state.importedTemplateIds}
         importingTemplateId={state.importingTemplateId}
+        isSearchActive={state.isSearchActive}
         modals={
           <TemplatesScreenModals
             importedTemplateIds={state.importedTemplateIds}
@@ -170,6 +170,27 @@ function TemplatesScreenContent() {
         }
         searchAnimatedStyle={props.animations.searchAnimatedStyle}
         searchQuery={state.searchQuery}
+        searchResultsSection={
+          <SearchResults
+            filteredTemplates={props.filteredTemplates}
+            getCategoryLabel={props.getCategoryLabel}
+            hasActiveFilters={state.hasActiveFilters}
+            importedTemplateIds={state.importedTemplateIds}
+            importingTemplateId={state.importingTemplateId}
+            searchQuery={state.searchQuery}
+            selectedCategory={state.selectedCategory}
+            setShowSortOptions={state.setShowSortOptions}
+            showSortOptions={state.showSortOptions}
+            sortOption={state.sortOption}
+            onImport={handlers.handleTemplateImport}
+            onPreview={handlers.handleTemplatePreview}
+            onResetFilters={handlers.handleResetFilters}
+            onSelectSort={handlers.handleSelectSortOption}
+            onToggleSortOptions={() =>
+              state.setShowSortOptions(!state.showSortOptions)
+            }
+          />
+        }
       />
     </>
   );

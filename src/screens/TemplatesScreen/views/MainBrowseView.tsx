@@ -1,12 +1,15 @@
 /**
  * MainBrowseView — Goal-first browse surface
  *
- * Frames habit discovery around user transformation:
- * Header → Search → GoalCollectionGrid (hero) → Trending → Explore All → Curated Bundles
+ * Header → Search (sticky) → (Browse sections | Search results).
+ * SearchBar is lifted above the body swap so it never remounts.
  */
 
-import { ScrollView, View } from 'react-native';
-import Animated, { FadeInDown } from 'react-native-reanimated';
+import { ScrollView, StyleSheet, View } from 'react-native';
+import Animated, {
+  FadeInDown,
+  FadeOutUp,
+} from 'react-native-reanimated';
 import { ScreenHeader } from '../../../components/ScreenHeader';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { durations, springs } from '../../../theme/animations';
@@ -23,6 +26,9 @@ const stagger = (index: number) =>
     .springify()
     .damping(springs.standard.damping);
 
+const bodyEnter = FadeInDown.duration(180);
+const bodyExit = FadeOutUp.duration(120);
+
 const HEADER_SUBTITLE =
   'Pick a transformation. We\u2019ll suggest the science-backed habits to get you there.';
 
@@ -36,51 +42,73 @@ export function MainBrowseView(p: MainBrowseViewProps) {
         subtitle={HEADER_SUBTITLE}
         title='What do you want to change?'
       />
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{
-          paddingBottom: spacing['2xl'],
-          paddingTop: spacing.md,
-        }}
+      <Animated.View
+        entering={stagger(0)}
+        style={[styles.searchSection, p.searchAnimatedStyle]}
       >
+        <SearchBar
+          inputHint='Search habits'
+          value={p.searchQuery}
+          onChangeText={p.onSearchChange}
+          onClear={p.onSearchClear}
+        />
+      </Animated.View>
+      {p.isSearchActive ? (
         <Animated.View
-          entering={stagger(0)}
-          style={[styles.searchSection, p.searchAnimatedStyle]}
+          key='results'
+          entering={bodyEnter}
+          exiting={bodyExit}
+          style={s.body}
         >
-          <SearchBar
-            inputHint='Search habits'
-            value={p.searchQuery}
-            onChangeText={p.onSearchChange}
-            onClear={p.onSearchClear}
-          />
+          {p.searchResultsSection}
         </Animated.View>
-        <Animated.View entering={stagger(1)}>
-          <GoalCollectionGrid
-            featuredBadgeLabel={p.featuredBadgeLabel}
-            featuredGoalId={p.featuredGoalId}
-            habitCountsByGoalId={p.habitCountsByGoalId}
-            onSelectGoal={p.onGoalSelect}
-          />
+      ) : (
+        <Animated.View
+          key='browse'
+          entering={bodyEnter}
+          exiting={bodyExit}
+          style={s.body}
+        >
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{
+              paddingBottom: spacing['2xl'],
+              paddingTop: spacing.md,
+            }}
+          >
+            <Animated.View entering={stagger(1)}>
+              <GoalCollectionGrid
+                featuredBadgeLabel={p.featuredBadgeLabel}
+                featuredGoalId={p.featuredGoalId}
+                habitCountsByGoalId={p.habitCountsByGoalId}
+                onSelectGoal={p.onGoalSelect}
+              />
+            </Animated.View>
+            <Animated.View entering={stagger(2)}>
+              <PopularSection
+                importedTemplateIds={p.importedTemplateIds}
+                importingTemplateId={p.importingTemplateId}
+                templates={p.popularTemplates}
+                onImport={p.onImport}
+                onPreview={p.onPreview}
+                onSeeAll={p.onSeeAll}
+              />
+            </Animated.View>
+            <Animated.View entering={stagger(3)}>
+              {p.exploreAllSection}
+            </Animated.View>
+            <Animated.View entering={stagger(4)}>
+              {p.premiumPacksSection}
+            </Animated.View>
+          </ScrollView>
         </Animated.View>
-        <Animated.View entering={stagger(2)}>
-          <PopularSection
-            importedTemplateIds={p.importedTemplateIds}
-            importingTemplateId={p.importingTemplateId}
-            templates={p.popularTemplates}
-            onImport={p.onImport}
-            onPreview={p.onPreview}
-            onSeeAll={p.onSeeAll}
-          />
-        </Animated.View>
-        <Animated.View entering={stagger(3)}>
-          {p.exploreAllSection}
-        </Animated.View>
-        <Animated.View entering={stagger(4)}>
-          {p.premiumPacksSection}
-        </Animated.View>
-      </ScrollView>
+      )}
       {p.modals}
       {p.feedbackOverlays}
     </View>
   );
 }
+
+const s = StyleSheet.create({
+  body: { flex: 1 },
+});

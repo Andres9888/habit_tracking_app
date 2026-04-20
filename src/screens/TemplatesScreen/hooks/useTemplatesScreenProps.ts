@@ -35,7 +35,7 @@ export function useTemplatesScreenProps() {
   const filteredTemplates = useFilteredTemplates(
     data.allTemplates,
     state.selectedCategory,
-    state.searchQuery,
+    state.debouncedSearchQuery,
     state.sortOption
   );
 

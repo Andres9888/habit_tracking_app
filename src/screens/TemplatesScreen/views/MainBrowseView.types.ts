@@ -16,6 +16,7 @@ export interface MainBrowseViewProps {
   habitCountsByGoalId: Record<string, number>;
   importedTemplateIds: Set<string>;
   importingTemplateId: string | null;
+  isSearchActive: boolean;
   modals: ReactNode;
   onGoalSelect: (goal: GoalCollection) => void;
   onImport: (template: Doc<'templates'>) => void;
@@ -27,4 +28,5 @@ export interface MainBrowseViewProps {
   premiumPacksSection: ReactNode;
   searchAnimatedStyle: AnimatedStyle<ViewStyle>;
   searchQuery: string;
+  searchResultsSection: ReactNode;
 }

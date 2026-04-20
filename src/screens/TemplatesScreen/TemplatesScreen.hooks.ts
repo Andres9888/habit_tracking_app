@@ -59,18 +59,28 @@ export function useTemplatesScreenState({
 
   const safeSearchQuery = searchQuery ?? '';
   const isSearching = safeSearchQuery.trim().length > 0;
+
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState('');
+  useEffect(() => {
+    const t = setTimeout(() => setDebouncedSearchQuery(safeSearchQuery), 150);
+    return () => clearTimeout(t);
+  }, [safeSearchQuery]);
+  const isSearchActive = debouncedSearchQuery.trim().length > 0;
+
   const effectiveViewMode = isSearching ? 'search' : viewMode;
   const hasActiveFilters =
     selectedCategory !== 'all' || Boolean(safeSearchQuery.trim());
 
   return {
     browseTab,
+    debouncedSearchQuery,
     effectiveViewMode,
     expandedCategories,
     flatListRef,
     hasActiveFilters,
     importedTemplateIds,
     importingTemplateId,
+    isSearchActive,
     isSearching,
     isSeeding,
     previewTemplate,
