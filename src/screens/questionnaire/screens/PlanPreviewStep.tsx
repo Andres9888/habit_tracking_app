@@ -1,12 +1,14 @@
-import { Share, Text, View } from 'react-native';
+import { useQuery } from 'convex/react';
+import { useMemo } from 'react';
+import { Share, Text } from 'react-native';
 
+import { api } from '../../../../convex/_generated/api';
 import { useThemeColors } from '@/theme';
 
+import { PlanHabitCard } from '../components/PlanHabitCard';
 import { PrimaryCTA } from '../components/PrimaryCTA';
 import { QuestionnaireScreenFrame } from '../components/QuestionnaireScreenFrame';
 import type { StepProps } from '../QuestionnaireFlow.types';
-
-const PLACEHOLDER_SLOTS = 3;
 
 export function PlanPreviewStep({
   step,
@@ -15,39 +17,44 @@ export function PlanPreviewStep({
   onBack,
 }: StepProps) {
   const { colors } = useThemeColors();
-  const count = Math.max(selectedTemplateIds.length, PLACEHOLDER_SLOTS);
+  const templates = useQuery(api.templates.list, {});
+  const selected = useMemo(() => {
+    if (!templates) return [];
+    return templates.filter((template) =>
+      selectedTemplateIds.includes(template._id)
+    );
+  }, [selectedTemplateIds, templates]);
 
   const handleShare = () => {
-    void Share.share({
-      message: "I'm starting my first 3 habits with Chain Day. Join me — it's free.",
-    });
+    const names = selected.map((template) => template.name).join(', ');
+    const message = names
+      ? `I'm starting ${selected.length} habits with Chain Day — ${names}. Join me.`
+      : "I'm starting my first habits with Chain Day. Join me.";
+    void Share.share({ message });
   };
 
   return (
     <QuestionnaireScreenFrame
       canGoBack
-      footer={<PrimaryCTA label='Continue' onPress={onNext} />}
+      footer={<PrimaryCTA label='Looks great' onPress={onNext} />}
       step={step}
-      subtitle='Built around the areas you picked. You can tweak anything later.'
-      title={`Your ${count}-habit starter plan`}
+      subtitle='Tweak, reorder, or add more once you sign in.'
+      title={`Your ${Math.max(selected.length, 1)}-habit starter plan`}
       onBack={onBack}
     >
-      {Array.from({ length: count }).map((_, index) => (
-        <View
-          key={`slot-${index}`}
-          style={{
-            backgroundColor: colors.card,
-            borderColor: colors.border,
-            borderRadius: 14,
-            borderWidth: 1,
-            marginBottom: 10,
-            padding: 16,
-          }}
-        >
-          <Text style={{ color: colors.text.secondary, fontSize: 14 }}>
-            Habit {index + 1} — selected on the next step
-          </Text>
-        </View>
+      {selected.length === 0 ? (
+        <Text style={{ color: colors.text.secondary, fontSize: 15, lineHeight: 22 }}>
+          We'll suggest 3 habits once you sign in — based on the focus areas you
+          picked.
+        </Text>
+      ) : null}
+      {selected.map((template) => (
+        <PlanHabitCard
+          key={template._id}
+          description={template.description}
+          icon={template.icon}
+          name={template.name}
+        />
       ))}
       <Text
         accessibilityRole='link'
