@@ -2,7 +2,7 @@
  * DetailViewTabs - Segmented control for Calendar / Strength / Goal views.
  * Horizontal icon + label, no hints.
  */
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { View, type LayoutChangeEvent } from 'react-native';
 import Animated, {
   useAnimatedStyle,
@@ -13,6 +13,7 @@ import { Activity, Calendar, Target } from 'lucide-react-native';
 import { springs } from '@/theme/animations';
 import { useThemeColors } from '@/theme';
 import { shadows } from '@/theme/spacing';
+import { useReduceMotion } from '@/hooks/useReduceMotion';
 import { DetailViewTabButton, type DetailView } from './DetailViewTabButton';
 
 interface DetailViewTabsProps {
@@ -31,10 +32,18 @@ export function DetailViewTabs({ activeView, onViewChange }: DetailViewTabsProps
   const containerWidth = useSharedValue(0);
   const activeIndex = TABS.findIndex((t) => t.view === activeView);
   const indicatorX = useSharedValue(activeIndex < 0 ? 0 : activeIndex);
+  const hasMounted = useRef(false);
+  const reduceMotion = useReduceMotion();
 
   useEffect(() => {
     const next = TABS.findIndex((t) => t.view === activeView);
-    indicatorX.value = withSpring(next < 0 ? 0 : next, springs.standard);
+    const target = next < 0 ? 0 : next;
+    if (!hasMounted.current) {
+      indicatorX.value = target;
+      hasMounted.current = true;
+      return;
+    }
+    indicatorX.value = withSpring(target, springs.standard);
   }, [activeView, indicatorX]);
 
   const handleLayout = useCallback(
@@ -68,10 +77,7 @@ export function DetailViewTabs({ activeView, onViewChange }: DetailViewTabsProps
     >
       <Animated.View
         className='absolute bottom-1 top-1 rounded-md'
-        style={[
-          indicatorStyle,
-          { backgroundColor: indicatorBg, ...shadows.card, shadowColor: accentColor },
-        ]}
+        style={[indicatorStyle, { backgroundColor: indicatorBg, ...shadows.card }]}
       />
       <View className='flex-row'>
         {TABS.map(({ icon, label, view }) => (
@@ -81,6 +87,7 @@ export function DetailViewTabs({ activeView, onViewChange }: DetailViewTabsProps
             activeView={activeView}
             icon={icon}
             label={label}
+            reduceMotion={reduceMotion}
             view={view}
             onPress={onViewChange}
           />
