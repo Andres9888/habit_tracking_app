@@ -1,6 +1,32 @@
-import { StepStub } from '../components/StepStub';
-import type { StepProps } from '../QuestionnaireFlow.types';
+import { useAuth } from '@clerk/clerk-expo';
+import { useCallback } from 'react';
 
-export function PaywallStep(props: StepProps) {
-  return <StepStub {...props} title='Start your 7-day free trial' />;
+import { RevenueCatPaywall } from '@/components/RevenueCatPaywall/RevenueCatPaywall';
+
+import type { StepProps } from '../QuestionnaireFlow.types';
+import { useTemplateAutoImport } from '../useTemplateAutoImport';
+
+export function PaywallStep({
+  selectedTemplateIds,
+  onNext,
+}: StepProps) {
+  const { isSignedIn } = useAuth();
+  useTemplateAutoImport(selectedTemplateIds, isSignedIn ?? false);
+
+  const handleClose = useCallback(() => {
+    onNext();
+  }, [onNext]);
+
+  const handlePurchaseSuccess = useCallback(() => {
+    onNext();
+  }, [onNext]);
+
+  return (
+    <RevenueCatPaywall
+      visible
+      onClose={handleClose}
+      onPurchaseSuccess={handlePurchaseSuccess}
+      onRestoreSuccess={handlePurchaseSuccess}
+    />
+  );
 }

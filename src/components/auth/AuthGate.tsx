@@ -2,9 +2,9 @@
  * AuthGate Component
  *
  * Authentication boundary that controls app access.
- * Pre-auth users land in the onboarding questionnaire; existing
- * signed-in users skip straight to the app.
- * Syncs user to Convex database on sign-in.
+ * Pre-auth users land in the onboarding questionnaire; mid-flow signed-in
+ * users finish the paywall step, and existing users skip straight to the
+ * app. Syncs user to Convex database on sign-in.
  */
 
 import { useAuth } from '@clerk/clerk-expo';
@@ -17,7 +17,6 @@ import { api } from '../../../convex/_generated/api';
 import HabitsApp from '../../features/habits/HabitsApp';
 import { useConvexAuthReady } from '../../providers';
 import { BrandedLoadingScreen } from './BrandedLoadingScreen';
-import { useOnboardingStatus } from '../../screens/onboarding/useOnboardingStatus';
 import { QuestionnaireFlow } from '../../screens/questionnaire/QuestionnaireFlow';
 import { useQuestionnaireComplete } from '../../screens/questionnaire/useQuestionnaireComplete';
 import WelcomeScreen from '../../screens/auth/WelcomeScreen';
@@ -27,27 +26,32 @@ const EXIT = FadeOut.duration(300);
 
 type ScreenKey = 'questionnaire' | 'welcome' | 'app';
 
-function getScreenKey(
-  isSignedIn: boolean,
-  questionnaireComplete: boolean,
-  legacyOnboardingComplete: boolean
-): ScreenKey {
-  if (isSignedIn && (legacyOnboardingComplete || questionnaireComplete)) {
-    return 'app';
-  }
-  if (questionnaireComplete) return 'welcome';
-  return 'questionnaire';
+interface RouteArgs {
+  isSignedIn: boolean;
+  questionnaireComplete: boolean;
+  questionnaireInProgress: boolean;
+}
+
+function getScreenKey({
+  isSignedIn,
+  questionnaireComplete,
+  questionnaireInProgress,
+}: RouteArgs): ScreenKey {
+  if (!isSignedIn) return questionnaireComplete ? 'welcome' : 'questionnaire';
+  if (questionnaireComplete) return 'app';
+  if (questionnaireInProgress) return 'questionnaire';
+  return 'app';
 }
 
 export function AuthGate() {
   const { isLoaded, isSignedIn } = useAuth();
   const isConvexReady = useConvexAuthReady();
   const getOrCreateUser = useMutation(api.users.getOrCreateUser);
-  const { complete: legacyOnboardingComplete } = useOnboardingStatus(
-    isSignedIn ?? false
-  );
-  const { complete: questionnaireComplete, markComplete } =
-    useQuestionnaireComplete();
+  const {
+    complete: questionnaireComplete,
+    inProgress: questionnaireInProgress,
+    markComplete,
+  } = useQuestionnaireComplete();
 
   const getOrCreateUserRef = useRef(getOrCreateUser);
   getOrCreateUserRef.current = getOrCreateUser;
@@ -60,17 +64,15 @@ export function AuthGate() {
     }
   }, [isSignedIn, isConvexReady]);
 
-  const questionnaireHydrated = questionnaireComplete !== null;
-  const legacyHydrated = !isSignedIn || legacyOnboardingComplete !== null;
-  if (!isLoaded || !questionnaireHydrated || !legacyHydrated) {
+  if (!isLoaded || questionnaireComplete === null) {
     return <BrandedLoadingScreen />;
   }
 
-  const screenKey = getScreenKey(
-    isSignedIn ?? false,
-    questionnaireComplete ?? false,
-    legacyOnboardingComplete ?? false
-  );
+  const screenKey = getScreenKey({
+    isSignedIn: isSignedIn ?? false,
+    questionnaireComplete: questionnaireComplete ?? false,
+    questionnaireInProgress,
+  });
 
   return (
     <GestureHandlerRootView className='flex-1'>
@@ -81,7 +83,10 @@ export function AuthGate() {
           exiting={EXIT}
           style={{ flex: 1 }}
         >
-          <QuestionnaireFlow onComplete={markComplete} />
+          <QuestionnaireFlow
+            isSignedIn={isSignedIn ?? false}
+            onComplete={markComplete}
+          />
         </Animated.View>
       ) : null}
       {screenKey === 'welcome' ? (
