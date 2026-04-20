@@ -35,7 +35,7 @@ export function AdvancedSheet({
       accessibilityViewIsModal
       statusBarTranslucent
       transparent
-      animationType='slide'
+      animationType='none'
       visible={visible}
       onRequestClose={animateOut}
     >
