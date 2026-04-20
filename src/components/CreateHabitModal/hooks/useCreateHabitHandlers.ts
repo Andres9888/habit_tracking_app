@@ -9,6 +9,7 @@ import { useMutation } from 'convex/react';
 import { api } from '../../../../convex/_generated/api';
 import { formatReminderTime24 } from '../../../utils/notifications';
 import { markFirstHabitCreated } from '../../../hooks/useStreakReminders/useStreakReminderSettings';
+import { useUserDefaultProgressEmojis } from '../../../hooks/useProgressEmojis';
 import { cancelReminder, scheduleReminder } from './useHabitReminders';
 import { validateHabitName } from '../../../utils/validation';
 import type { Id } from '../../../../convex/_generated/dataModel';
@@ -40,6 +41,10 @@ interface EditHabitData extends HabitData {
 export function useCreateHabitHandlers() {
   const createHabit = useMutation(api.habits.create);
   const updateHabit = useMutation(api.habits.update);
+  // Snapshot the user's current global default at create-time so future
+  // changes to "Default growth icons" in Settings never rewrite habits
+  // already on the list. Existing habits keep whatever they had.
+  const userDefaultEmojis = useUserDefaultProgressEmojis();
 
   async function handleEdit({
     habitToEdit,
@@ -154,7 +159,7 @@ export function useCreateHabitHandlers() {
         name: sanitizedName,
         notes: '',
         preferredTime: dayPhase ?? undefined,
-        progressEmojis,
+        progressEmojis: progressEmojis ?? userDefaultEmojis,
         remindersEnabled: hasReminders,
         reminderSound: hasReminders ? (reminderSound ?? undefined) : undefined,
         reminderTime: formattedReminderTime,
