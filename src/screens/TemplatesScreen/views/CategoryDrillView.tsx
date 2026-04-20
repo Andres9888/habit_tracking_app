@@ -1,7 +1,7 @@
 /* eslint-disable max-lines */
 /**
  * CategoryDrillView - Slide-in view showing templates for a single category.
- * With sort controls, section grouping (Popular / All), Top Pick badge, and social proof.
+ * With sort controls, divider-separated popular top 3, Top Pick badge, and social proof.
  */
 
 import {
@@ -29,7 +29,6 @@ import {
 } from '../hooks/useDrillSections';
 import { TemplateListCard } from './TemplateListCard';
 import { CategoryHero } from './CategoryHero';
-import { DrillSectionLabel } from './DrillSectionLabel';
 
 interface CategoryDrillViewProps {
   categoryId: string;
@@ -42,7 +41,7 @@ interface CategoryDrillViewProps {
 }
 
 const SORT_OPTIONS: { key: DrillSort; label: string }[] = [
-  { key: 'popular', label: 'Most used' },
+  { key: 'popular', label: 'Popular' },
   { key: 'az', label: 'A-Z' },
 ];
 
@@ -71,7 +70,8 @@ export function CategoryDrillView({
     item: DrillListItem;
     index: number;
   }) => {
-    if (item.kind === 'header') return <DrillSectionLabel label={item.label} />;
+    if (item.kind === 'divider')
+      return <View style={[s.divider, { backgroundColor: colors.border }]} />;
     return (
       <Animated.View
         entering={FadeInDown.delay(index * durations.stagger)
@@ -162,10 +162,11 @@ export function CategoryDrillView({
         </Pressable>
       </ScrollView>
       <FlatList
+        key={sort}
         data={listData}
         contentContainerStyle={s.list}
         keyExtractor={(item, index) =>
-          item.kind === 'header' ? `header-${index}` : item.template._id
+          item.kind === 'divider' ? `divider-${index}` : item.template._id
         }
         renderItem={renderItem}
       />
@@ -183,6 +184,11 @@ const s = StyleSheet.create({
   chipDivider: { alignSelf: 'center', height: 18, width: 1 },
   chipText: { ...typography.caption, fontWeight: fontWeights.semibold },
   container: { flex: 1 },
+  divider: {
+    height: 1,
+    marginHorizontal: spacing.base,
+    marginVertical: spacing.md,
+  },
   filterBar: { borderBottomWidth: 1, flexShrink: 0 },
   filterBarContent: {
     alignItems: 'center',
