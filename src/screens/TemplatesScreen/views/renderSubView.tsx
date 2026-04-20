@@ -1,11 +1,13 @@
 /**
- * Renders sub-views (category drill, see-all) based on view navigation state
+ * Renders sub-views (category drill, goal drill, see-all) based on view state
  */
 
 import type { ReactElement } from 'react';
 import type { Doc } from '../../../../convex/_generated/dataModel';
+import { GOAL_COLLECTIONS } from '../data/goalCollections';
 import type { TemplateViewState } from '../hooks/useViewNavigation';
 import { CategoryDrillView } from './CategoryDrillView';
+import { GoalDrillView } from './GoalDrillView';
 import { SeeAllView } from './SeeAllView';
 
 interface SubViewProps {
@@ -26,6 +28,13 @@ export function renderSubView(props: SubViewProps): ReactElement | null {
   if (activeView.type === 'category') {
     const templates = allTemplates.filter((t) => t.category === activeView.categoryId);
     return <CategoryDrillView categoryId={activeView.categoryId} templates={templates} {...shared} />;
+  }
+
+  if (activeView.type === 'goal') {
+    const goal = GOAL_COLLECTIONS.find((g) => g.id === activeView.goalId);
+    if (!goal) return null;
+    const templates = allTemplates.filter((t) => goal.categories.includes(t.category));
+    return <GoalDrillView goal={goal} templates={templates} {...shared} />;
   }
 
   if (activeView.type === 'seeAll') {

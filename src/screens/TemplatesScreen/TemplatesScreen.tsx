@@ -30,19 +30,12 @@ function TemplatesScreenContent() {
   const { data, handlers, mainBrowseData, packConfirm, state, viewNav } = props;
   const { groups, totalCount } = useGroupedTemplates(data.allTemplates);
 
-  const handleDrillIntoCategory = useCallback(
-    (categoryId: string) => {
-      state.setSearchQuery('');
-      viewNav.openCategory(categoryId);
-    },
-    [state, viewNav]
-  );
-
   const handleGoalSelect = useCallback(
     (goal: GoalCollection) => {
-      handleDrillIntoCategory(goal.categories[0]);
+      state.setSearchQuery('');
+      viewNav.openGoal(goal.id);
     },
-    [handleDrillIntoCategory]
+    [state, viewNav]
   );
 
   const featuredGoalId = useMemo(() => getFeaturedGoalId(), []);
@@ -55,11 +48,6 @@ function TemplatesScreenContent() {
     });
     return counts;
   }, [data.allTemplates]);
-  const browseAllCategoriesPreviewIcons = useMemo(
-    () => mainBrowseData.categoryList.slice(0, 4).map((cat) => cat.icon),
-    [mainBrowseData.categoryList]
-  );
-  const browseAllCategoriesTotalCount = data.allTemplates?.length ?? 0;
 
   const handleImport = (template: Doc<'templates'>) => {
     void handlers.handleDirectImport(template._id);
@@ -122,9 +110,6 @@ function TemplatesScreenContent() {
   return (
     <>
       <MainBrowseView
-        browseAllCategoriesPreviewIcons={browseAllCategoriesPreviewIcons}
-        browseAllCategoriesTotalCount={browseAllCategoriesTotalCount}
-        browseAllCategoryCount={mainBrowseData.categoryList.length}
         exploreAllSection={
           <ExploreAllSection
             getCategoryLabel={props.getCategoryLabel}
