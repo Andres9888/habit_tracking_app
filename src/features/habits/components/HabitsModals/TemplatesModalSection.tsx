@@ -37,7 +37,7 @@ export function TemplatesModalSection({
     >
       <View className='flex-1' style={{ backgroundColor: colors.background }}>
         <ErrorBoundary>
-          <TemplatesScreen />
+          <TemplatesScreen onCloseLibrary={handleClose} />
         </ErrorBoundary>
         <View className='absolute right-4' style={{ top: insets.top + 8 }}>
           <ModalCloseButton

@@ -23,6 +23,7 @@ export interface PreviewContentAnimatedStyles {
 
 export interface PreviewContentHandlers {
   handleClose: () => void;
+  handleBack?: () => void;
   handleCustomize: () => void;
   handleImport: () => void;
 }

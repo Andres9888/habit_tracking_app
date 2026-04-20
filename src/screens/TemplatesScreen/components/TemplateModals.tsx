@@ -12,6 +12,7 @@ interface TemplateModalsProps {
   importingTemplateId: Id<'templates'> | null;
   onCloseCustomize: () => void;
   onCloseFullsize: () => void;
+  onCloseLibrary?: () => void;
   onCustomize: (template: Doc<'templates'>) => void;
   onDirectImport: (templateId: Id<'templates'>) => Promise<void>;
   onImport: (
@@ -28,6 +29,7 @@ export function TemplateModals({
   importingTemplateId,
   onCloseCustomize,
   onCloseFullsize,
+  onCloseLibrary,
   onCustomize,
   onDirectImport,
   onImport,
@@ -35,10 +37,22 @@ export function TemplateModals({
   showCustomizeModal,
   showFullsizePreview,
 }: TemplateModalsProps) {
-  const handleDirectImport = (templateId: Id<'templates'>) => { void onDirectImport(templateId); };
-  const handleImport = (templateId: Id<'templates'>, customizations?: TemplateCustomizations) => {
+  const handleDirectImport = (templateId: Id<'templates'>) => {
+    void onDirectImport(templateId);
+  };
+  const handleImport = (
+    templateId: Id<'templates'>,
+    customizations?: TemplateCustomizations
+  ) => {
     void onImport(templateId, customizations);
   };
+
+  const handleCloseAll = onCloseLibrary
+    ? () => {
+        onCloseFullsize();
+        onCloseLibrary();
+      }
+    : onCloseFullsize;
 
   return (
     <>
@@ -49,7 +63,8 @@ export function TemplateModals({
         isImporting={importingTemplateId === previewTemplate?._id}
         template={previewTemplate}
         visible={showFullsizePreview}
-        onClose={onCloseFullsize}
+        onBack={onCloseLibrary ? onCloseFullsize : undefined}
+        onClose={handleCloseAll}
         onCustomize={onCustomize}
         onImport={handleDirectImport}
       />

@@ -4,6 +4,7 @@
 
 import React from 'react';
 import { View, ScrollView } from 'react-native';
+import { colors } from '@/theme/colors';
 import { HeroSection } from './HeroSection';
 import { DescriptionSection } from './DescriptionSection';
 import { ScienceEvidenceSection } from './ScienceEvidenceSection';
@@ -18,6 +19,8 @@ interface ScrollableContentProps {
   iconAnimatedStyle: ViewStyle;
   iconGlowStyle: ViewStyle;
   onPairPress?: (category: string) => void;
+  /** Background color for the scroll-view's top overscroll bounce zone (matches header tint). */
+  overscrollTint?: string;
 }
 
 export function ScrollableContent({
@@ -26,12 +29,14 @@ export function ScrollableContent({
   iconAnimatedStyle,
   iconGlowStyle,
   onPairPress,
+  overscrollTint,
 }: ScrollableContentProps) {
   return (
     <ScrollView
       bounces
       contentContainerStyle={layoutStyles.contentContainer}
       showsVerticalScrollIndicator={false}
+      style={overscrollTint ? { backgroundColor: overscrollTint } : undefined}
     >
       <HeroSection
         iconAnimatedStyle={iconAnimatedStyle}
@@ -39,10 +44,15 @@ export function ScrollableContent({
         iconGlowStyle={iconGlowStyle}
         template={template}
       />
-      <DescriptionSection description={template?.description ?? ''} />
-      <ScienceEvidenceSection iconColor={iconColor} template={template} />
-      <PairsWellWith category={template?.category} onPairPress={onPairPress} />
-      <View style={layoutStyles.bottomSpacer} />
+      <View style={{ backgroundColor: colors.gray[50] }}>
+        <DescriptionSection description={template?.description ?? ''} />
+        <ScienceEvidenceSection iconColor={iconColor} template={template} />
+        <PairsWellWith
+          category={template?.category}
+          onPairPress={onPairPress}
+        />
+        <View style={layoutStyles.bottomSpacer} />
+      </View>
     </ScrollView>
   );
 }

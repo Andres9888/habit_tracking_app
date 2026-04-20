@@ -15,6 +15,7 @@ interface TemplatesScreenModalsProps {
   importingTemplateId: Id<'templates'> | null;
   onCloseCustomize: () => void;
   onCloseFullsize: () => void;
+  onCloseLibrary?: () => void;
   onClosePaywall: () => void;
   onCustomize: (template: Doc<'templates'>) => void;
   onDirectImport: (templateId: Id<'templates'>) => Promise<void>;
@@ -43,6 +44,7 @@ export function TemplatesScreenModals(p: TemplatesScreenModalsProps) {
         showFullsizePreview={p.showFullsizePreview}
         onCloseCustomize={p.onCloseCustomize}
         onCloseFullsize={p.onCloseFullsize}
+        onCloseLibrary={p.onCloseLibrary}
         onCustomize={p.onCustomize}
         onDirectImport={p.onDirectImport}
         onImport={p.onImport}

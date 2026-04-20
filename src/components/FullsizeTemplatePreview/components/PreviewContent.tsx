@@ -30,7 +30,7 @@ export function PreviewContent({
   const headerTint = buildHeroGradient(iconColor)[0];
   return (
     <Animated.View
-      testID="templates-preview-modal"
+      testID='templates-preview-modal'
       style={[layoutStyles.container, animatedStyles.contentStyle]}
     >
       <SuccessGlowOverlay animatedStyle={animatedStyles.successGlowStyle} />
@@ -40,12 +40,14 @@ export function PreviewContent({
         }
         tintColor={headerTint}
         topInset={insets.top}
+        onBack={handlers.handleBack}
         onClose={handlers.handleClose}
       />
       <ScrollableContent
         iconAnimatedStyle={animatedStyles.iconAnimatedStyle}
         iconColor={iconColor}
         iconGlowStyle={animatedStyles.iconGlowStyle}
+        overscrollTint={headerTint}
         template={template}
       />
       <FooterSection
