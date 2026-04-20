@@ -7,7 +7,6 @@ export interface GoalCollection {
   id: string;
   emoji: string;
   label: string;
-  description: string;
   promise: string;
   categories: string[];
   bgColor: string;
@@ -21,8 +20,7 @@ export const GOAL_COLLECTIONS: GoalCollection[] = [
     id: 'more-energy',
     emoji: '⚡',
     label: 'Wake up energized',
-    description: 'Morning routines & physical vitality',
-    promise: 'Build a morning routine that gives you steady energy until evening',
+    promise: 'Morning routines that keep you sharp all day',
     categories: ['morning_routine', 'health_fitness'],
     bgColor: '#FEF3C7',
     textColor: '#78350F',
@@ -33,7 +31,6 @@ export const GOAL_COLLECTIONS: GoalCollection[] = [
     id: 'sleep-better',
     emoji: '😴',
     label: 'Sleep deeper',
-    description: 'Wind down, rest deeper, wake refreshed',
     promise: 'Wind down, rest fully, wake refreshed',
     categories: ['sleep', 'recovery', 'breathing'],
     bgColor: '#EFF6FF',
@@ -45,8 +42,7 @@ export const GOAL_COLLECTIONS: GoalCollection[] = [
     id: 'less-stress',
     emoji: '🧘',
     label: 'Stress less',
-    description: 'Calm your mind & regulate your system',
-    promise: 'Calm your mind, regulate your system',
+    promise: 'Calm your mind and regulate your system',
     categories: ['mindfulness', 'breathing', 'mental_health'],
     bgColor: '#F0FDF4',
     textColor: '#14532D',
@@ -57,8 +53,7 @@ export const GOAL_COLLECTIONS: GoalCollection[] = [
     id: 'be-productive',
     emoji: '🎯',
     label: 'Focus deeper',
-    description: 'Focus deeper & build knowledge',
-    promise: 'Build knowledge, beat distraction',
+    promise: 'Beat distraction and do deeper work',
     categories: ['productivity', 'learning'],
     bgColor: '#FAF5FF',
     textColor: '#581C87',
@@ -69,7 +64,6 @@ export const GOAL_COLLECTIONS: GoalCollection[] = [
     id: 'get-healthier',
     emoji: '💪',
     label: 'Get healthier',
-    description: 'Lasting physical habits for a longer life',
     promise: 'Lasting habits for a longer life',
     categories: ['health_fitness', 'longevity'],
     bgColor: '#FFF1F2',

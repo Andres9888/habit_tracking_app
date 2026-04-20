@@ -3,7 +3,11 @@
  */
 
 import { StyleSheet } from 'react-native';
-import { fontFamilies, fontWeights, typography } from '../../../../theme/typography';
+import {
+  fontFamilies,
+  fontWeights,
+  typography,
+} from '../../../../theme/typography';
 import { borderRadius, shadows, spacing } from '../../../../theme/spacing';
 
 export const CARD_WIDTH = 180;
@@ -36,7 +40,12 @@ export const s = StyleSheet.create({
     lineHeight: 17,
     marginTop: spacing.xs,
   },
-  metaRow: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.xs, marginTop: spacing.xs },
+  metaRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: spacing.xs,
+    marginTop: spacing.xs,
+  },
   frequency: {
     ...typography.caption,
     fontFamily: fontFamilies.monospace,

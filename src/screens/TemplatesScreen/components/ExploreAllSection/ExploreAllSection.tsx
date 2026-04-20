@@ -10,15 +10,25 @@ import { SectionHeader } from '../SectionHeader';
 import { CategoryGroupHeader } from './CategoryGroupHeader';
 import { ExploreDivider } from './ExploreDivider';
 import { ExploreHabitRow } from './ExploreHabitRow';
-import type { CategoryGroup, ExploreAllSectionProps } from './ExploreAllSection.types';
+import type {
+  CategoryGroup,
+  ExploreAllSectionProps,
+} from './ExploreAllSection.types';
 
 function CategoryGroupSection({
   defaultExpanded = false,
-  group, importedTemplateIds, importingTemplateId, onImport, onPreview,
+  group,
+  importedTemplateIds,
+  importingTemplateId,
+  onImport,
+  onPreview,
 }: {
   defaultExpanded?: boolean;
   group: CategoryGroup;
-} & Pick<ExploreAllSectionProps, 'importedTemplateIds' | 'importingTemplateId' | 'onImport' | 'onPreview'>) {
+} & Pick<
+  ExploreAllSectionProps,
+  'importedTemplateIds' | 'importingTemplateId' | 'onImport' | 'onPreview'
+>) {
   const [expanded, setExpanded] = useState(defaultExpanded);
 
   return (
@@ -48,7 +58,12 @@ function CategoryGroupSection({
 }
 
 export function ExploreAllSection({
-  groups, importedTemplateIds, importingTemplateId, totalCount, onImport, onPreview,
+  groups,
+  importedTemplateIds,
+  importingTemplateId,
+  totalCount,
+  onImport,
+  onPreview,
 }: ExploreAllSectionProps) {
   const { colors } = useThemeColors();
   if (!groups.length) return null;
@@ -62,7 +77,6 @@ export function ExploreAllSection({
             {totalCount} habits
           </Text>
         }
-        subtitle='Sorted by popularity'
         title='Browse by category'
       />
       {groups.map((group, index) => (

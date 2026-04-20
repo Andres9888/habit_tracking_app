@@ -35,15 +35,17 @@ export function PopularSection({
         rightSlot={
           <Pressable
             testID='templates-trending-see-all'
-            accessibilityLabel='See all trending templates'
+            accessibilityLabel='See all trending habits'
             accessibilityRole='button'
             hitSlop={8}
             onPress={onSeeAll}
           >
-            <Text style={[s.seeAll, { color: colors.primary[600] }]}>See all</Text>
+            <Text style={[s.seeAll, { color: colors.primary[600] }]}>
+              See all
+            </Text>
           </Pressable>
         }
-        title='Trending right now'
+        title='Trending'
       />
       <FlatList
         testID='templates-popular-scroll'
