@@ -1,4 +1,4 @@
-import { useCallback, type ReactElement } from 'react';
+import { useCallback, useEffect, useRef, type ReactElement } from 'react';
 import { View } from 'react-native';
 
 import { ScreenErrorBoundary } from '@/components/ErrorBoundary';
@@ -40,12 +40,28 @@ const STEP_COMPONENTS: Record<
   13: PaywallStep,
 };
 
+const POST_AUTH_STEP: QuestionnaireStep = 13;
+
 interface Props {
+  isSignedIn: boolean;
   onComplete: () => void;
 }
 
-function QuestionnaireFlowContent({ onComplete }: Props) {
+function QuestionnaireFlowContent({ isSignedIn, onComplete }: Props) {
   const api = useQuestionnaireState();
+  const jumpedRef = useRef(false);
+
+  useEffect(() => {
+    if (
+      !jumpedRef.current &&
+      api.hydrated &&
+      isSignedIn &&
+      api.step < POST_AUTH_STEP
+    ) {
+      jumpedRef.current = true;
+      api.setStep(POST_AUTH_STEP);
+    }
+  }, [api, isSignedIn]);
 
   const handleNext = useCallback(() => {
     if (api.step >= TOTAL_STEPS) {
