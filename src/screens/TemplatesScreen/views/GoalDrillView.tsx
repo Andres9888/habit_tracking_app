@@ -1,17 +1,18 @@
 /**
- * CategoryDrillView - Slide-in view showing templates for a single category.
- * Composes CategoryHero + DrillListBody; list logic lives in DrillListBody.
+ * GoalDrillView - Slide-in view showing templates across all of a goal's
+ * categories. Fixes prior behavior where tapping a multi-category goal
+ * only drilled into categories[0].
  */
 
 import { StyleSheet, View } from 'react-native';
 import type { Doc } from '../../../../convex/_generated/dataModel';
 import { useThemeColors } from '../../../theme/ThemeContext';
-import { getCategoryMeta } from '../data/categoryMeta';
-import { CategoryHero } from './CategoryHero';
+import type { GoalCollection } from '../data/goalCollections';
 import { DrillListBody } from './DrillListBody';
+import { GoalHero } from './GoalHero';
 
-interface CategoryDrillViewProps {
-  categoryId: string;
+interface GoalDrillViewProps {
+  goal: GoalCollection;
   importedTemplateIds: Set<string>;
   importingTemplateId: string | null;
   onBack: () => void;
@@ -20,33 +21,28 @@ interface CategoryDrillViewProps {
   templates: Doc<'templates'>[];
 }
 
-export function CategoryDrillView({
-  categoryId,
+export function GoalDrillView({
+  goal,
   importedTemplateIds,
   importingTemplateId,
   onBack,
   onImport,
   onPreview,
   templates,
-}: CategoryDrillViewProps) {
+}: GoalDrillViewProps) {
   const { colors } = useThemeColors();
-  const meta = getCategoryMeta(categoryId);
 
   return (
     <View
-      testID='templates-category-view'
+      testID='templates-goal-view'
       style={[s.container, { backgroundColor: colors.background }]}
     >
-      <CategoryHero
-        habitCount={templates.length}
-        meta={meta}
-        onBack={onBack}
-      />
+      <GoalHero goal={goal} habitCount={templates.length} onBack={onBack} />
       <DrillListBody
         chipColors={{
-          bgColor: meta.bgColor,
-          borderColor: meta.borderColor,
-          textColor: meta.textColor,
+          bgColor: goal.bgColor,
+          borderColor: goal.bgColor,
+          textColor: goal.textColor,
         }}
         importedTemplateIds={importedTemplateIds}
         importingTemplateId={importingTemplateId}

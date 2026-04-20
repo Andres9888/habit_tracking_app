@@ -3,8 +3,10 @@
  */
 
 import React from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import type { GoalCollection } from '../../data/goalCollections';
+import { fontFamilies, fontWeights } from '@/theme/typography';
 import { s } from './GoalCollectionGrid.styles';
 
 interface FeaturedGoalCardProps {
@@ -20,34 +22,85 @@ export function FeaturedGoalCard({
   habitCount,
   onPress,
 }: FeaturedGoalCardProps) {
+  const countText =
+    habitCount === 1 ? '1 habit · Start here →' : `${habitCount} habits · Start here →`;
+
   return (
     <Pressable
       accessibilityLabel={`Featured goal: ${goal.label}. ${goal.promise}`}
       accessibilityRole='button'
-      style={[s.card, s.featuredCard, { backgroundColor: goal.bgColor }]}
+      style={[s.card, s.featuredCard, hero.wrapper]}
       onPress={onPress}
     >
-      <Text style={[s.featuredBadge, { color: goal.textColor }]}>
-        {badgeLabel}
-      </Text>
-      <Text style={s.emojiFeatured}>{goal.emoji}</Text>
-      <View style={s.featuredContent}>
-        <Text style={[s.featuredLabel, { color: goal.textColor }]}>
-          {goal.label}
-        </Text>
-        <Text
-          numberOfLines={2}
-          style={[s.promise, { color: goal.textColor }]}
+      <LinearGradient
+        colors={[goal.bgColor, `${goal.textColor}1F`]}
+        end={{ x: 1, y: 1 }}
+        start={{ x: 0, y: 0 }}
+        style={hero.gradient}
+      >
+        <View style={hero.topRow}>
+          <Text style={[s.featuredBadge, hero.badge, { color: goal.textColor }]}>
+            {badgeLabel}
+          </Text>
+        </View>
+        <View style={hero.body}>
+          <Text style={hero.emoji}>{goal.emoji}</Text>
+          <View style={hero.text}>
+            <Text style={[s.featuredLabel, hero.label, { color: goal.textColor }]}>
+              {goal.label}
+            </Text>
+            <Text
+              numberOfLines={2}
+              style={[s.promise, hero.promise, { color: goal.textColor }]}
+            >
+              {goal.promise}
+            </Text>
+          </View>
+        </View>
+        <View
+          style={[
+            hero.cta,
+            {
+              backgroundColor: 'rgba(255,255,255,0.55)',
+              borderColor: `${goal.textColor}33`,
+            },
+          ]}
         >
-          {goal.promise}
-        </Text>
-        <Text style={[s.meta, { color: goal.textColor, marginTop: 8 }]}>
-          {habitCount} {habitCount === 1 ? 'habit' : 'habits'}
-        </Text>
-      </View>
-      <Text style={[s.arrow, s.arrowFeatured, { color: goal.textColor }]}>
-        →
-      </Text>
+          <Text style={[hero.ctaText, { color: goal.textColor }]}>{countText}</Text>
+        </View>
+      </LinearGradient>
     </Pressable>
   );
 }
+
+const hero = StyleSheet.create({
+  badge: { position: 'relative', right: 0, top: 0 },
+  body: { alignItems: 'flex-end', flexDirection: 'row', gap: 14, marginTop: 14 },
+  cta: {
+    alignSelf: 'flex-start',
+    borderRadius: 9999,
+    borderWidth: 1,
+    marginTop: 14,
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+  },
+  ctaText: {
+    fontFamily: fontFamilies.primary.text,
+    fontSize: 12,
+    fontWeight: fontWeights.semibold,
+  },
+  emoji: { fontSize: 52, lineHeight: 56 },
+  gradient: { borderRadius: 16, overflow: 'hidden', padding: 18 },
+  label: { fontSize: 22, paddingRight: 0 },
+  promise: { fontSize: 13, lineHeight: 18, marginTop: 6, opacity: 0.9 },
+  text: { flex: 1, paddingBottom: 4 },
+  topRow: { flexDirection: 'row', justifyContent: 'flex-start' },
+  wrapper: {
+    alignItems: 'stretch',
+    flexDirection: 'column',
+    gap: 0,
+    justifyContent: 'flex-start',
+    minHeight: 0,
+    padding: 0,
+  },
+});

@@ -2,7 +2,7 @@ import { useCallback, useMemo } from 'react';
 import { Alert, FlatList, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useArchivedHabitsModalState } from './useArchivedHabitsModalState';
-import { AnimatedHabitCard, ArchiveSelectionBar, EmptyState, LimitBanner, ModalHeader } from './components';
+import { AnimatedHabitCard, ArchiveSelectionBar, EmptyState, ModalHeader } from './components';
 import { DangerZoneFooter } from './components/DangerZoneFooter';
 import { LoadingState } from './components/LoadingState';
 import type { ArchivedHabitsModalProps, ArchivedHabit } from './types';
@@ -48,10 +48,6 @@ export default function ArchivedHabitsModal({ onBack }: ArchivedHabitsModalProps
     [state.selectionMode, state.selectedIds.size]
   );
 
-  const showLimitBanner = state.hasReachedHabitLimit && !state.selectionMode;
-  const ListHeader = showLimitBanner
-    ? () => <LimitBanner onUpgradePress={handleUpgradePress} />
-    : null;
   const ListFooter = state.selectionMode
     ? null
     : () => <DangerZoneFooter habitCount={state.archivedHabits.length} onDeleteAll={state.handleDeleteAll} />;
@@ -74,7 +70,6 @@ export default function ArchivedHabitsModal({ onBack }: ArchivedHabitsModalProps
           ItemSeparatorComponent={() => <View style={{ height: 14 }} />}
           keyExtractor={keyExtractor}
           ListFooterComponent={ListFooter}
-          ListHeaderComponent={ListHeader}
           renderItem={renderItem}
           showsVerticalScrollIndicator={false}
         />
