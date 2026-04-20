@@ -7,6 +7,7 @@
  */
 
 import { useCallback, useEffect, useRef } from 'react';
+import { Keyboard } from 'react-native';
 import { Gesture } from 'react-native-gesture-handler';
 import {
   runOnJS,
@@ -51,6 +52,7 @@ export function useSwipeDismiss({ visible, onClose }: UseSwipeDismissProps) {
   const animateOut = useCallback(() => {
     if (isClosing.current) return;
     isClosing.current = true;
+    Keyboard.dismiss();
     backdropOpacity.value = withTiming(0, { duration: 200 });
     translateY.value = withSpring(SCREEN_HEIGHT, springs.exit, () => {
       runOnJS(onCloseRef.current)();
