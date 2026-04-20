@@ -71,7 +71,11 @@ export function ModalHeader({
         ) : (
           <View />
         )}
-        <ModalCloseButton label='Close preview' onClose={onClose} />
+        <ModalCloseButton
+          label='Close preview'
+          variant='subtle'
+          onClose={onClose}
+        />
       </Animated.View>
     </View>
   );
