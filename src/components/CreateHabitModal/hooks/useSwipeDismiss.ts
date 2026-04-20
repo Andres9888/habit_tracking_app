@@ -10,6 +10,7 @@ import { useCallback, useEffect, useRef } from 'react';
 import { Keyboard } from 'react-native';
 import { Gesture } from 'react-native-gesture-handler';
 import {
+  Easing,
   runOnJS,
   useAnimatedStyle,
   useSharedValue,
@@ -39,13 +40,19 @@ export function useSwipeDismiss({ visible, onClose }: UseSwipeDismissProps) {
   const onCloseRef = useRef(onClose);
   onCloseRef.current = onClose;
 
-  // Native Modal animationType='slide' handles the enter animation.
-  // Just reset state so swipe-to-dismiss gesture works from position 0.
+  // Animate sheet up and backdrop in independently so the backdrop fades
+  // in place instead of sliding with the sheet (prevents "backdrop coming up" flash).
   useEffect(() => {
     if (visible) {
       isClosing.current = false;
-      translateY.value = 0;
-      backdropOpacity.value = BACKDROP_TARGET;
+      translateY.value = withTiming(0, {
+        duration: 280,
+        easing: Easing.out(Easing.cubic),
+      });
+      backdropOpacity.value = withTiming(BACKDROP_TARGET, {
+        duration: 280,
+        easing: Easing.out(Easing.cubic),
+      });
     }
   }, [visible]);
 
