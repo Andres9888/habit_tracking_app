@@ -25,7 +25,6 @@ import { ALGORITHM_COPY } from '@/components/AlgorithmPicker';
 import type { AlgorithmMode } from '@/components/AlgorithmPicker';
 import { useUserDefaultProgressEmojis } from '@/hooks/useProgressEmojis';
 import { useReduceMotion } from '@/hooks/useReduceMotion';
-import { SectionLabel } from '@/screens/HabitEditScreen/SectionLabel';
 import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '@/theme/ThemeContext';
 import { fontWeights, typography } from '@/theme/typography';
@@ -94,9 +93,8 @@ export function AdvancedOptionsSection({
 
   return (
     <>
-      <SectionLabel delay={baseDelay} text='ADVANCED' />
       <Animated.View
-        className='mx-6 overflow-hidden rounded-2xl'
+        className='mx-6 mt-6 overflow-hidden rounded-2xl'
         entering={FadeInUp.delay(baseDelay + 40).springify().damping(18)}
         layout={reduceMotion ? undefined : LinearTransition.duration(220)}
         style={{
