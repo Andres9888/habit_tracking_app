@@ -3,7 +3,7 @@ import { Activity, Heart, Zap } from 'lucide-react-native';
 import type { LucideIcon } from 'lucide-react-native';
 
 export type AlgorithmMode = 'forgiving' | 'balanced' | 'strict';
-export type HabitComplexity = 'Simple' | 'Moderate' | 'Complex';
+export type HabitComplexity = 'Simple' | 'Everyday' | 'Complex';
 
 export interface AlgorithmCopyEntry {
   mode: AlgorithmMode;
@@ -18,31 +18,31 @@ export interface AlgorithmCopyEntry {
 export const ALGORITHM_COPY: Record<AlgorithmMode, AlgorithmCopyEntry> = {
   forgiving: {
     mode: 'forgiving',
-    name: 'Forgiving',
+    name: 'Quick Win',
     complexity: 'Simple',
-    examples: 'A glass of water, a vitamin, one push-up.',
+    examples: '',
     description:
-      'Grows quickly and barely dips when you miss — best for tiny habits that are easy to bounce back from.',
+      'Tiny moves you can knock out in seconds. Grows fast and forgives the occasional slip.',
     daysToForm: 18,
     Icon: Heart,
   },
   balanced: {
     mode: 'balanced',
-    name: 'Balanced',
-    complexity: 'Moderate',
-    examples: 'Journaling, reading, stretching.',
+    name: 'Textbook',
+    complexity: 'Everyday',
+    examples: '',
     description:
-      'Steady growth with a real dip when you miss — matches the classic 66-day habit curve from UCL research.',
+      "The research sweet spot. Most habits land near the 66-day mark — steady gains with honest setbacks when you miss. Based on UCL's classic habit-formation study.",
     daysToForm: 66,
     Icon: Activity,
   },
   strict: {
     mode: 'strict',
-    name: 'Strict',
+    name: 'Long Haul',
     complexity: 'Complex',
-    examples: 'Running 5K, meditation, learning an instrument.',
+    examples: '',
     description:
-      'Slow to build and unforgiving when you miss — for effortful habits that demand real consistency.',
+      'Big commitments — running, meditation, practice. Takes months to build and dips hard when you miss; the curve rewards steady showing up.',
     daysToForm: 120,
     Icon: Zap,
   },

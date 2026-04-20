@@ -12,9 +12,9 @@ const OPTIONS: {
   Icon: typeof Heart;
   label: string;
 }[] = [
-  { key: 'forgiving', Icon: Heart, label: 'Forgiving' },
-  { key: 'balanced', Icon: Activity, label: 'Balanced' },
-  { key: 'strict', Icon: Zap, label: 'Strict' },
+  { key: 'forgiving', Icon: Heart, label: 'Quick Win' },
+  { key: 'balanced', Icon: Activity, label: 'Textbook' },
+  { key: 'strict', Icon: Zap, label: 'Long Haul' },
 ];
 
 interface HabitAlgorithmPickerProps {
