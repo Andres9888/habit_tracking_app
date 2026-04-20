@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Habit Pace → Complexity — Copy Variants</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #F3F4F6;
+    --surface: #FFFFFF;
+    --card: #F9FAFB;
+    --border: #E5E7EB;
+    --text-primary: #111827;
+    --text-secondary: #374151;
+    --text-tertiary: #6B7280;
+    --primary-700: #047857;
+    --primary-600: #059669;
+    --primary-100: #D1FAE5;
+    --selected-bg: rgba(5, 150, 105, 0.08);
+    --icon-tint: rgba(0, 0, 0, 0.05);
+    --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.04), 0 4px 12px rgba(0, 0, 0, 0.06);
+    --shadow-sheet: 0 -4px 24px rgba(0, 0, 0, 0.08), 0 -1px 2px rgba(0, 0, 0, 0.04);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text-primary);
+    line-height: 1.4;
+    padding: 32px 24px 80px;
+  }
+  h1 {
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0 0 4px;
+    letter-spacing: -0.01em;
+  }
+  .subtitle {
+    font-size: 14px;
+    color: var(--text-tertiary);
+    margin: 0 0 32px;
+  }
+  .legend {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 18px;
+    margin-bottom: 28px;
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+  .legend strong { color: var(--text-primary); }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(320px, 1fr));
+    gap: 24px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  @media (max-width: 1100px) {
+    .grid { grid-template-columns: 1fr; }
+  }
+  .variant {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .variant-header {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .variant-letter {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--primary-700);
+    background: var(--primary-100);
+    padding: 3px 8px;
+    border-radius: 6px;
+  }
+  .variant-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+  .variant-tag-rec {
+    font-size: 11px;
+    font-weight: 700;
+    color: white;
+    background: var(--primary-700);
+    padding: 3px 8px;
+    border-radius: 6px;
+    letter-spacing: 0.04em;
+  }
+
+  /* ————————————— Row preview ————————————— */
+  .row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 12px 16px;
+    min-height: 64px;
+  }
+  .row-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 12px;
+    background: var(--primary-100);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .row-icon svg { width: 18px; height: 18px; stroke: var(--primary-600); }
+  .row-body { flex: 1; min-width: 0; }
+  .row-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1.3;
+  }
+  .row-sub {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    margin-top: 2px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .row-chevron svg { width: 18px; height: 18px; stroke: var(--text-tertiary); }
+
+  /* ————————————— Sheet preview ————————————— */
+  .sheet {
+    background: var(--surface);
+    border-radius: 24px;
+    box-shadow: var(--shadow-sheet);
+    border: 1px solid var(--border);
+    overflow: hidden;
+  }
+  .sheet-handle-row {
+    display: flex;
+    justify-content: center;
+    padding: 10px 0;
+  }
+  .sheet-handle {
+    width: 36px;
+    height: 5px;
+    border-radius: 3px;
+    background: #D1D5DB;
+  }
+  .sheet-header {
+    padding: 0 20px 12px;
+  }
+  .sheet-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: -0.01em;
+  }
+  .sheet-sub {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    margin-top: 6px;
+    line-height: 1.5;
+  }
+  .sheet-body {
+    padding: 8px 16px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  /* ————————————— Algorithm card ————————————— */
+  .ac {
+    display: flex;
+    gap: 12px;
+    padding: 12px;
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    background: var(--surface);
+  }
+  .ac.selected {
+    border-color: var(--primary-700);
+    background: var(--selected-bg);
+  }
+  .ac-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: var(--icon-tint);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .ac-icon svg { width: 18px; height: 18px; stroke: var(--primary-700); }
+  .ac-body { flex: 1; min-width: 0; }
+  .ac-title-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .ac-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-primary);
+  }
+  .ac-default-pill {
+    background: var(--primary-700);
+    color: white;
+    font-size: 9px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 4px;
+    letter-spacing: 0.04em;
+  }
+  .ac-desc {
+    font-size: 12px;
+    line-height: 1.45;
+    color: var(--text-secondary);
+    margin-top: 3px;
+  }
+  .ac-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 8px;
+    padding: 3px 8px;
+    border-radius: 6px;
+    background: var(--icon-tint);
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-secondary);
+  }
+  .ac-chip svg { width: 12px; height: 12px; stroke: var(--text-secondary); }
+
+  /* ————————————— Notes block ————————————— */
+  .notes {
+    margin-top: 14px;
+    font-size: 12px;
+    color: var(--text-tertiary);
+    padding: 10px 12px;
+    background: var(--surface);
+    border: 1px dashed var(--border);
+    border-radius: 10px;
+    line-height: 1.5;
+  }
+  .notes strong { color: var(--text-primary); }
+
+  /* ————————————— Decision footer ————————————— */
+  .decision {
+    max-width: 1400px;
+    margin: 40px auto 0;
+    padding: 20px 24px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+  .decision h3 { margin: 0 0 8px; color: var(--text-primary); font-size: 16px; }
+  .decision code {
+    background: #F3F4F6;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-family: ui-monospace, Menlo, monospace;
+  }
+</style>
+</head>
+<body>
+
+<h1>Habit Pace — Copy Rework Mock</h1>
+<p class="subtitle">Reframing the picker from <em>algorithm behavior</em> to <em>habit complexity</em>. Three full-copy variants side-by-side.</p>
+
+<div class="legend">
+  <strong>What you're looking at:</strong> each column shows (1) the collapsed Advanced Options row, (2) the opened sheet with header + subtitle, (3) all three option cards. The middle card (default) is marked selected for preview.
+</div>
+
+<div class="grid">
+
+  <!-- ——————————————————————————————————————————— VARIANT A ——————————————————————————————————————————— -->
+  <div class="variant">
+    <div class="variant-header">
+      <span class="variant-letter">A</span>
+      <span class="variant-name">Plain &amp; Clear</span>
+      <span class="variant-tag-rec">RECOMMENDED</span>
+    </div>
+
+    <div class="row">
+      <div class="row-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+      </div>
+      <div class="row-body">
+        <div class="row-title">Habit Complexity</div>
+        <div class="row-sub">Regular · ~66 days to automatic</div>
+      </div>
+      <div class="row-chevron">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
+    </div>
+
+    <div class="sheet">
+      <div class="sheet-handle-row"><div class="sheet-handle"></div></div>
+      <div class="sheet-header">
+        <div class="sheet-title">Habit Complexity</div>
+        <div class="sheet-sub">Pick how complex this habit is. The growth curve adjusts to match — simpler habits build faster; complex ones take real consistency.</div>
+      </div>
+      <div class="sheet-body">
+
+        <div class="ac">
+          <div class="ac-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div>
+          <div class="ac-body">
+            <div class="ac-title-row"><div class="ac-title">Simple</div></div>
+            <div class="ac-desc">Quick, easy wins — a glass of water, a vitamin, one push-up. Builds fast and barely dips on off days.</div>
+            <div class="ac-chip"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>~18 days to automatic</div>
+          </div>
+        </div>
+
+        <div class="ac selected">
+          <div class="ac-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+          <div class="ac-body">
+            <div class="ac-title-row"><div class="ac-title">Regular</div><span class="ac-default-pill">DEFAULT</span></div>
+            <div class="ac-desc">Everyday habits like journaling, reading, or stretching. Follows the classic 66-day curve from UCL research.</div>
+            <div class="ac-chip"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>~66 days to automatic</div>
+          </div>
+        </div>
+
+        <div class="ac">
+          <div class="ac-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
+          <div class="ac-body">
+            <div class="ac-title-row"><div class="ac-title">Complex</div></div>
+            <div class="ac-desc">Demanding habits like running, meditation, or practicing an instrument. Slow, steep climb that rewards real consistency.</div>
+            <div class="ac-chip"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>~120 days to automatic</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="notes">
+      <strong>Tone:</strong> Warm + credible. Mirrors the existing <code>complexity</code> field so the card shows just the name (no redundant "Simple · Simple habits" suffix).
+    </div>
+  </div>
+
+  <!-- ——————————————————————————————————————————— VARIANT B ——————————————————————————————————————————— -->
+  <div class="variant">
+    <div class="variant-header">
+      <span class="variant-letter">B</span>
+      <span class="variant-name">Motivational</span>
+    </div>
+
+    <div class="row">
+      <div class="row-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+      </div>
+      <div class="row-body">
+        <div class="row-title">Habit Type</div>
+        <div class="row-sub">Daily Rhythm · ~66 days to automatic</div>
+      </div>
+      <div class="row-chevron">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
+    </div>
+
+    <div class="sheet">
+      <div class="sheet-handle-row"><div class="sheet-handle"></div></div>
+      <div class="sheet-header">
+        <div class="sheet-title">Habit Type</div>
+        <div class="sheet-sub">Tell us what kind of habit this is and we'll match the growth curve to fit.</div>
+      </div>
+      <div class="sheet-body">
+
+        <div class="ac">
+          <div class="ac-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div>
+          <div class="ac-body">
+            <div class="ac-title-row"><div class="ac-title">Quick Win · Simple habits</div></div>
+            <div class="ac-desc">Tiny moves you can knock out in seconds. Grows fast and forgives the occasional slip.</div>
+            <div class="ac-chip"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>~18 days to automatic</div>
+          </div>
+        </div>
+
+        <div class="ac selected">
+          <div class="ac-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+          <div class="ac-body">
+            <div class="ac-title-row"><div class="ac-title">Daily Rhythm · Moderate habits</div><span class="ac-default-pill">DEFAULT</span></div>
+            <div class="ac-desc">The staples — journaling, reading, stretching. Follows the textbook 66-day path to automatic.</div>
+            <div class="ac-chip"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>~66 days to automatic</div>
+          </div>
+        </div>
+
+        <div class="ac">
+          <div class="ac-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
+          <div class="ac-body">
+            <div class="ac-title-row"><div class="ac-title">Big Lift · Complex habits</div></div>
+            <div class="ac-desc">The real stuff — running, meditation, practice. Takes months, but the payoff is lasting.</div>
+            <div class="ac-chip"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>~120 days to automatic</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="notes">
+      <strong>Tone:</strong> Warm, slightly aspirational. The name adds personality ("Quick Win", "Big Lift") and the complexity suffix still explains what fits.
+    </div>
+  </div>
+
+  <!-- ——————————————————————————————————————————— VARIANT C ——————————————————————————————————————————— -->
+  <div class="variant">
+    <div class="variant-header">
+      <span class="variant-letter">C</span>
+      <span class="variant-name">Science-forward</span>
+    </div>
+
+    <div class="row">
+      <div class="row-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+      </div>
+      <div class="row-body">
+        <div class="row-title">Habit Complexity</div>
+        <div class="row-sub">Moderate · ~66 days to automatic</div>
+      </div>
+      <div class="row-chevron">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
+    </div>
+
+    <div class="sheet">
+      <div class="sheet-handle-row"><div class="sheet-handle"></div></div>
+      <div class="sheet-header">
+        <div class="sheet-title">Habit Complexity</div>
+        <div class="sheet-sub">Habit strength grows with every check-in and dips with every miss. Pick a complexity level — the curve adjusts to match.</div>
+      </div>
+      <div class="sheet-body">
+
+        <div class="ac">
+          <div class="ac-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div>
+          <div class="ac-body">
+            <div class="ac-title-row"><div class="ac-title">Simple</div></div>
+            <div class="ac-desc">Small-effort habits with fast gains. Strength recovers quickly from missed days — ideal for bite-size routines.</div>
+            <div class="ac-chip"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>~18 days to automatic</div>
+          </div>
+        </div>
+
+        <div class="ac selected">
+          <div class="ac-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+          <div class="ac-body">
+            <div class="ac-title-row"><div class="ac-title">Moderate</div><span class="ac-default-pill">DEFAULT</span></div>
+            <div class="ac-desc">Everyday habits matching the 66-day formation curve identified by UCL research. Steady gains, real setbacks.</div>
+            <div class="ac-chip"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>~66 days to automatic</div>
+          </div>
+        </div>
+
+        <div class="ac">
+          <div class="ac-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
+          <div class="ac-body">
+            <div class="ac-title-row"><div class="ac-title">Complex</div></div>
+            <div class="ac-desc">High-effort habits that take months to form. Skipping days carries real weight — the curve demands the consistency these habits need.</div>
+            <div class="ac-chip"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>~120 days to automatic</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="notes">
+      <strong>Tone:</strong> Most credibility-forward. Explicit UCL reference, technical language about strength and recovery.
+    </div>
+  </div>
+
+</div>
+
+<div class="decision">
+  <h3>How to respond</h3>
+  Tell me which variant to ship: <code>A</code>, <code>B</code>, or <code>C</code> — or call out a hybrid (e.g. "A's title + B's descriptions" or "C but swap the middle option name to 'Regular'").
+  Once you pick, I'll apply the changes to <code>algorithmCopy.ts</code> and <code>AdvancedOptionsSection.tsx</code> and verify in the app.
+</div>
+
+</body>
+</html>

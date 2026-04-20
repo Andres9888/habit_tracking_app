@@ -88,7 +88,6 @@ export function AdvancedOptionsSection({
   const presetId = matchPresetId(resolvedEmojis);
   const presetLabel =
     PROGRESS_EMOJI_PRESETS.find((p) => p.id === presetId)?.label ?? 'Custom';
-  const emojiPreview = `${resolvedEmojis.starting} ${resolvedEmojis.building} ${resolvedEmojis.developing} ${resolvedEmojis.strong} ${resolvedEmojis.automatic}`;
   const streakSubtitle =
     streakGoal > 0 ? `Aim for ${streakGoal} day${streakGoal === 1 ? '' : 's'}` : 'No goal set';
 
@@ -142,7 +141,7 @@ export function AdvancedOptionsSection({
             exiting={reduceMotion ? undefined : FadeOut.duration(120)}
           >
             <AdvancedOptionRow
-              accessibilityHint='Opens habit pace picker'
+              accessibilityHint='Opens growth type picker'
               icon={
                 <AlgoIcon
                   color={colors.primary[600]}
@@ -152,7 +151,7 @@ export function AdvancedOptionsSection({
               }
               iconBackground={colors.primary[100]}
               subtitle={algoSubtitle}
-              title='Habit Pace'
+              title='Growth Type'
               onPress={() => setOpenSheet('algorithm')}
             />
             <AdvancedOptionRow
@@ -161,7 +160,7 @@ export function AdvancedOptionsSection({
                 <Text style={{ fontSize: 18 }}>{resolvedEmojis.starting}</Text>
               }
               iconBackground={colors.status.streakLight}
-              subtitle={`${presetLabel} · ${emojiPreview}`}
+              subtitle={`${presetLabel} · levels up every 20%`}
               title='Growth Icons'
               onPress={() => setOpenSheet('growth')}
             />
@@ -184,8 +183,8 @@ export function AdvancedOptionsSection({
       </Animated.View>
 
       <AdvancedSheet
-        subtitle={`Each check-in grows this habit's strength; missing a day lets it dip. Pick the pace that matches the effort required.`}
-        title='Habit Pace'
+        subtitle={`Habit strength grows with every check-in and dips with every miss. Tell us what kind of habit this is and we'll match the growth curve to fit.`}
+        title='Growth Type'
         visible={openSheet === 'algorithm'}
         onClose={() => setOpenSheet(null)}
       >
@@ -196,7 +195,7 @@ export function AdvancedOptionsSection({
       </AdvancedSheet>
 
       <AdvancedSheet
-        subtitle='Pick a theme or customize the emoji for each strength stage.'
+        subtitle='Every 20% of habit strength unlocks the next icon — five stages from Starting Out to Unbreakable. Pick a theme or customize any stage.'
         title='Growth Icons'
         visible={openSheet === 'growth'}
         onClose={() => setOpenSheet(null)}

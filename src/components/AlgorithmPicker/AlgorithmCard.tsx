@@ -73,7 +73,8 @@ export function AlgorithmCard({
           className='mt-0.5 text-[12px] leading-[1.4]'
           style={{ color: colors.text.secondary }}
         >
-          {entry.examples} {entry.description}
+          {entry.examples ? `${entry.examples} ` : ''}
+          {entry.description}
         </Text>
         <View
           className='mt-1.5 flex-row items-center gap-1 self-start rounded-md px-2 py-0.5'
