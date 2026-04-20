@@ -1,14 +1,20 @@
 /**
  * Horizontal scrolling row of preset growth-icon themes.
  */
-import { Pressable, ScrollView, Text, View } from 'react-native';
+import { useMemo } from 'react';
+import { ScrollView, View } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 
+import { useHorizontalScrollFade } from '../EmojiPickerV2/useHorizontalScrollFade';
 import { useThemeColors } from '../../theme/ThemeContext';
-import { fontWeights, typography } from '../../theme/typography';
 import {
   PROGRESS_EMOJI_PRESETS,
   type ProgressEmojiSet,
 } from '../../utils/progressEmojis';
+
+import { ProgressEmojiPresetChip } from './ProgressEmojiPresetChip';
+
+const FADE_WIDTH = 28;
 
 interface Props {
   activePresetId: string | null;
@@ -16,59 +22,70 @@ interface Props {
 }
 
 export function ProgressEmojiPresetRow({ activePresetId, onSelect }: Props) {
-  const { colors: themeColors } = useThemeColors();
+  const { isDark } = useThemeColors();
+  const { handleScroll, showLeftFade, showRightFade } =
+    useHorizontalScrollFade();
+
+  const fadeColors = useMemo(
+    (): [string, string] =>
+      isDark
+        ? ['rgba(31,41,55,1)', 'rgba(31,41,55,0)']
+        : ['rgba(237,234,229,1)', 'rgba(237,234,229,0)'],
+    [isDark]
+  );
 
   return (
-    <ScrollView
-      horizontal
-      contentContainerStyle={{
-        gap: 8,
-        paddingHorizontal: 4,
-        paddingVertical: 4,
-      }}
-      showsHorizontalScrollIndicator={false}
-    >
-      {PROGRESS_EMOJI_PRESETS.map((preset) => {
-        const isActive = preset.id === activePresetId;
-        return (
-          <Pressable
+    <View style={{ position: 'relative' }}>
+      <ScrollView
+        horizontal
+        contentContainerStyle={{
+          gap: 8,
+          paddingHorizontal: 4,
+          paddingVertical: 4,
+        }}
+        scrollEventThrottle={16}
+        showsHorizontalScrollIndicator={false}
+        onScroll={handleScroll}
+      >
+        {PROGRESS_EMOJI_PRESETS.map((preset) => (
+          <ProgressEmojiPresetChip
             key={preset.id}
-            accessibilityLabel={`Apply ${preset.label} preset`}
-            accessibilityRole='button'
-            accessibilityState={{ selected: isActive }}
-            className='rounded-2xl px-3 py-2'
-            style={{
-              backgroundColor: isActive
-                ? themeColors.primary[500]
-                : themeColors.surface,
-              borderWidth: 1,
-              borderColor: isActive
-                ? themeColors.primary[500]
-                : themeColors.cardBorder,
-            }}
+            isActive={preset.id === activePresetId}
+            preset={preset}
             onPress={() => onSelect(preset.emojis)}
-          >
-            <View className='flex-row items-center gap-2'>
-              <Text style={{ fontSize: 16 }}>
-                {preset.emojis.starting}
-                {preset.emojis.developing}
-                {preset.emojis.automatic}
-              </Text>
-              <Text
-                style={{
-                  ...typography.caption,
-                  fontWeight: fontWeights.semibold,
-                  color: isActive
-                    ? themeColors.text.inverse
-                    : themeColors.text.primary,
-                }}
-              >
-                {preset.label}
-              </Text>
-            </View>
-          </Pressable>
-        );
-      })}
-    </ScrollView>
+          />
+        ))}
+      </ScrollView>
+      {showLeftFade ? (
+        <LinearGradient
+          colors={fadeColors}
+          end={{ x: 1, y: 0 }}
+          pointerEvents='none'
+          start={{ x: 0, y: 0 }}
+          style={{
+            bottom: 0,
+            left: 0,
+            position: 'absolute',
+            top: 0,
+            width: FADE_WIDTH,
+          }}
+        />
+      ) : null}
+      {showRightFade ? (
+        <LinearGradient
+          colors={fadeColors}
+          end={{ x: 0, y: 0 }}
+          pointerEvents='none'
+          start={{ x: 1, y: 0 }}
+          style={{
+            bottom: 0,
+            position: 'absolute',
+            right: 0,
+            top: 0,
+            width: FADE_WIDTH,
+          }}
+        />
+      ) : null}
+    </View>
   );
 }
