@@ -3,6 +3,8 @@
  */
 
 export { useEntranceAnimations } from './useEntranceAnimations';
+export { useExitAnimations } from './useExitAnimations';
+export { useDeferredUnmount } from './useDeferredUnmount';
 export { useSuccessAnimations } from './useSuccessAnimations';
 export { useButtonAnimations } from './useButtonAnimations';
 export { useAnimatedStyles } from './useAnimatedStyles';

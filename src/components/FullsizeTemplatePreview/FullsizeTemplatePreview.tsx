@@ -3,13 +3,15 @@
  * A fullsize preview modal for template cards
  */
 
-import React from 'react';
+import React, { useRef } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Modal from '../Modal';
 import { useReduceMotion } from '../../hooks/useReduceMotion';
 import { PreviewContent } from './components';
 import {
   useEntranceAnimations,
+  useExitAnimations,
+  useDeferredUnmount,
   useSuccessAnimations,
   useButtonAnimations,
   useAnimatedStyles,
@@ -30,13 +32,20 @@ function FullsizeTemplatePreviewComponent({
 }: FullsizeTemplatePreviewProps) {
   const insets = useSafeAreaInsets();
   const reducedMotion = useReduceMotion();
-  const iconColor = template?.iconColor?.trim() || DEFAULT_ICON_COLOR;
+
+  const shouldRender = useDeferredUnmount({ duration: 280, reducedMotion, visible });
+  const lastTemplateRef = useRef(template);
+  if (template) lastTemplateRef.current = template;
+  const effectiveTemplate = visible ? template : lastTemplateRef.current;
+
+  const iconColor = effectiveTemplate?.iconColor?.trim() || DEFAULT_ICON_COLOR;
 
   const entranceAnimations = useEntranceAnimations({
     reducedMotion,
-    template,
+    template: effectiveTemplate,
     visible,
   });
+  useExitAnimations({ ...entranceAnimations, reducedMotion, visible });
   const successAnimations = useSuccessAnimations({ isImported, reducedMotion });
   const {
     closeButtonScale,
@@ -52,7 +61,7 @@ function FullsizeTemplatePreviewComponent({
     onCustomize,
     onImport,
     reducedMotion,
-    template,
+    template: effectiveTemplate,
   });
   const animatedStyles = useAnimatedStyles({
     ...entranceAnimations,
@@ -62,7 +71,7 @@ function FullsizeTemplatePreviewComponent({
     ...successAnimations,
   });
 
-  if (!template) return null;
+  if (!shouldRender || !effectiveTemplate) return null;
 
   return (
     <Modal
@@ -72,7 +81,7 @@ function FullsizeTemplatePreviewComponent({
       disableGestureClose
       skipAnimation
       variant='fullScreen'
-      visible={visible}
+      visible={shouldRender}
       onClose={handlers.handleClose}
     >
       <PreviewContent
@@ -87,7 +96,7 @@ function FullsizeTemplatePreviewComponent({
         isImported={isImported}
         isImporting={isImporting}
         reducedMotion={reducedMotion}
-        template={template}
+        template={effectiveTemplate}
       />
     </Modal>
   );
