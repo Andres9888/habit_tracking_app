@@ -1,5 +1,5 @@
 /**
- * NameInputSection - Heading, name input & character counter
+ * NameInputSection - Heading and habit name input
  */
 
 import { Keyboard, Text, TextInput, View } from 'react-native';
@@ -10,6 +10,7 @@ import { buildTextInputHintProps } from '@/utils/textInputHintProps';
 interface NameInputSectionProps {
   habitName: string;
   onHabitNameChange: (text: string) => void;
+  onHabitNameBlur?: () => void;
   showNameError: boolean;
   autoFocus: boolean;
   themeColors: {
@@ -23,6 +24,7 @@ interface NameInputSectionProps {
 export function NameInputSection({
   habitName,
   onHabitNameChange,
+  onHabitNameBlur,
   showNameError,
   autoFocus,
   themeColors,
@@ -51,6 +53,7 @@ export function NameInputSection({
         }}
         value={habitName}
         {...buildTextInputHintProps('e.g. Morning run', themeColors.text.tertiary)}
+        onBlur={onHabitNameBlur}
         onChangeText={onHabitNameChange}
         onSubmitEditing={Keyboard.dismiss}
       />
@@ -63,13 +66,6 @@ export function NameInputSection({
           style={{ color: themeTokens.error }}
         >
           Give your habit a name
-        </Text>
-      ) : habitName.length > 0 ? (
-        <Text
-          className='mt-3 self-end px-1 text-xs'
-          style={{ color: themeColors.text.tertiary }}
-        >
-          {habitName.length}/50
         </Text>
       ) : null}
     </View>

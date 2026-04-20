@@ -25,6 +25,7 @@ function EmojiPickerComponent({
   onSelect,
   habitName,
   hideLabel = false,
+  isLocked = false,
 }: EmojiPickerProps) {
   const { triggerSelection } = useHapticFeedback();
   const reduceMotion = useReduceMotion();
@@ -32,7 +33,8 @@ function EmojiPickerComponent({
   const [isModalVisible, setIsModalVisible] = useState(false);
   const { suggestedEmojis, debouncedHabitName } = useSuggestedEmojis(
     habitName,
-    selectedEmoji
+    selectedEmoji,
+    { isLocked }
   );
 
   const handleEmojiSelect = useCallback(
