@@ -9,6 +9,8 @@ export interface EmojiPickerProps {
   onSelect: (emoji: string | null) => void;
   habitName?: string;
   hideLabel?: boolean; // Hide section label for cleaner centered modal design
+  /** When true, suggestions freeze — used once user engages with the grid */
+  isLocked?: boolean;
 }
 
 export interface EmojiChipProps {

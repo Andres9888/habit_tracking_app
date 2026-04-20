@@ -1,4 +1,4 @@
-import { memo } from 'react';
+import { memo, useCallback, useState } from 'react';
 import { Text, View } from 'react-native';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { NameInputSection } from './NameInputSection';
@@ -35,6 +35,15 @@ const CreateHabitFormCenteredComponent = ({
   onStreakGoalChange,
 }: CreateHabitFormCenteredProps) => {
   const { colors: themeColors, isDark } = useThemeColors();
+  const [committedHabitName, setCommittedHabitName] = useState(habitName);
+  const [isEmojiLocked, setIsEmojiLocked] = useState(selectedEmoji !== null);
+
+  const handleHabitNameBlur = useCallback(() => setCommittedHabitName(habitName), [habitName]);
+
+  const handleEmojiSelect = useCallback((emoji: string | null) => {
+    setIsEmojiLocked(emoji !== null);
+    onEmojiSelect(emoji);
+  }, [onEmojiSelect]);
 
   return (
     <View className='flex-1'>
@@ -45,6 +54,7 @@ const CreateHabitFormCenteredComponent = ({
           isDark={isDark}
           showNameError={showNameError}
           themeColors={themeColors}
+          onHabitNameBlur={handleHabitNameBlur}
           onHabitNameChange={onHabitNameChange}
         />
 
@@ -58,9 +68,10 @@ const CreateHabitFormCenteredComponent = ({
 
         <EmojiPicker
           hideLabel
-          habitName={habitName}
+          habitName={committedHabitName}
+          isLocked={isEmojiLocked}
           selectedEmoji={selectedEmoji}
-          onSelect={onEmojiSelect}
+          onSelect={handleEmojiSelect}
         />
 
         <Text

@@ -9,12 +9,15 @@ import { DEFAULT_EMOJIS, SUGGESTION_DEBOUNCE_MS } from './constants';
 
 export function useSuggestedEmojis(
   habitName: string | undefined,
-  selectedEmoji?: string | null
+  selectedEmoji?: string | null,
+  options?: { isLocked?: boolean }
 ) {
+  const isLocked = options?.isLocked ?? false;
   const [debouncedHabitName, setDebouncedHabitName] = useState(habitName || '');
   const debounceTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
+    if (isLocked) return;
     if (debounceTimeoutRef.current) clearTimeout(debounceTimeoutRef.current);
     debounceTimeoutRef.current = setTimeout(() => {
       setDebouncedHabitName(habitName || '');
@@ -22,7 +25,7 @@ export function useSuggestedEmojis(
     return () => {
       if (debounceTimeoutRef.current) clearTimeout(debounceTimeoutRef.current);
     };
-  }, [habitName]);
+  }, [habitName, isLocked]);
 
   const suggestedEmojis = useMemo(() => {
     let emojis: string[];
