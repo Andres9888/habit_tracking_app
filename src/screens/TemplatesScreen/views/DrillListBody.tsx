@@ -26,7 +26,6 @@ import {
   type DrillListItem,
 } from '../hooks/useDrillSections';
 import { TemplateListCard } from './TemplateListCard';
-import { DrillSectionLabel } from './DrillSectionLabel';
 
 interface DrillChipColors {
   bgColor: string;
@@ -44,7 +43,7 @@ interface DrillListBodyProps {
 }
 
 const SORT_OPTIONS: { key: DrillSort; label: string }[] = [
-  { key: 'popular', label: 'Most used' },
+  { key: 'popular', label: 'Popular' },
   { key: 'az', label: 'A-Z' },
 ];
 
@@ -71,7 +70,8 @@ export function DrillListBody({
     item: DrillListItem;
     index: number;
   }) => {
-    if (item.kind === 'header') return <DrillSectionLabel label={item.label} />;
+    if (item.kind === 'divider')
+      return <View style={[s.divider, { backgroundColor: colors.border }]} />;
     return (
       <Animated.View
         entering={FadeInDown.delay(index * durations.stagger)
@@ -154,10 +154,11 @@ export function DrillListBody({
         </Pressable>
       </ScrollView>
       <FlatList
+        key={sort}
         data={listData}
         contentContainerStyle={s.list}
         keyExtractor={(item, index) =>
-          item.kind === 'header' ? `header-${index}` : item.template._id
+          item.kind === 'divider' ? `divider-${index}` : item.template._id
         }
         renderItem={renderItem}
       />
@@ -174,6 +175,11 @@ const s = StyleSheet.create({
   },
   chipDivider: { alignSelf: 'center', height: 18, width: 1 },
   chipText: { ...typography.caption, fontWeight: fontWeights.semibold },
+  divider: {
+    height: 1,
+    marginHorizontal: spacing.base,
+    marginVertical: spacing.md,
+  },
   filterBar: { borderBottomWidth: 1, flexShrink: 0 },
   filterBarContent: {
     alignItems: 'center',

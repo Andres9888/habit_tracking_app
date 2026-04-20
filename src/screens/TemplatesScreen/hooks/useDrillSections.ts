@@ -1,7 +1,7 @@
 /**
  * Builds section-grouped flat list data for CategoryDrillView.
- * When sort=popular: splits into ⭐ Popular (top 3) + All habits (rest).
- * Other sorts: returns flat template list with no section headers.
+ * When sort=popular: top 3 items, then a divider, then the rest.
+ * Other sorts: returns flat template list with no divider.
  */
 
 import { useMemo } from 'react';
@@ -9,7 +9,7 @@ import type { Doc } from '../../../../convex/_generated/dataModel';
 import type { DrillSort } from './useCategoryDrillFilters';
 
 export type DrillListItem =
-  | { kind: 'header'; label: string }
+  | { kind: 'divider' }
   | {
       kind: 'template';
       template: Doc<'templates'>;
@@ -46,12 +46,12 @@ export function useDrillSections(
 
     const popular = filtered.slice(0, 3);
     const rest = filtered.slice(3);
-    const items: DrillListItem[] = [{ kind: 'header', label: '⭐ Popular' }];
+    const items: DrillListItem[] = [];
 
     for (const [i, t] of popular.entries()) items.push(toItem(t, i === 0));
 
     if (rest.length > 0) {
-      items.push({ kind: 'header', label: 'All habits' });
+      items.push({ kind: 'divider' });
       for (const t of rest) items.push(toItem(t));
     }
 
