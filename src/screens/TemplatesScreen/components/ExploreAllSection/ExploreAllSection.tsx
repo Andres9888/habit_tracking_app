@@ -4,8 +4,9 @@
 
 import { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { fontFamilies } from '../../../../theme/typography';
 import { useThemeColors } from '../../../../theme/ThemeContext';
+import { spacing } from '../../../../theme/spacing';
+import { fontFamilies, typography } from '../../../../theme/typography';
 import { SectionHeader } from '../SectionHeader';
 import { CategoryGroupHeader } from './CategoryGroupHeader';
 import { ExploreDivider } from './ExploreDivider';
@@ -41,18 +42,16 @@ function CategoryGroupSection({
         subtitle={group.subtitle}
         onToggle={() => setExpanded((prev) => !prev)}
       />
-      {expanded
-        ? group.templates.map((item) => (
-            <ExploreHabitRow
-              key={item._id}
-              importedTemplateIds={importedTemplateIds}
-              importingTemplateId={importingTemplateId}
-              item={item}
-              onImport={onImport}
-              onPreview={onPreview}
-            />
-          ))
-        : null}
+      {(expanded ? group.templates : group.templates.slice(0, 2)).map((item) => (
+        <ExploreHabitRow
+          key={item._id}
+          importedTemplateIds={importedTemplateIds}
+          importingTemplateId={importingTemplateId}
+          item={item}
+          onImport={onImport}
+          onPreview={onPreview}
+        />
+      ))}
     </View>
   );
 }
@@ -77,8 +76,11 @@ export function ExploreAllSection({
             {totalCount} habits
           </Text>
         }
-        title='Browse by category'
+        title='Browse by area'
       />
+      <Text style={[s.intro, { color: colors.text.secondary }]}>
+        Every strong habit fits into a larger part of your life.
+      </Text>
       {groups.map((group, index) => (
         <CategoryGroupSection
           key={group.category}
@@ -96,4 +98,5 @@ export function ExploreAllSection({
 
 const s = StyleSheet.create({
   count: { flexShrink: 0, fontFamily: fontFamilies.monospace, fontSize: 12 },
+  intro: { ...typography.caption, paddingBottom: spacing.sm, paddingHorizontal: spacing.base },
 });
