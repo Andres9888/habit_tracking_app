@@ -4,7 +4,7 @@
  *
  * Tests:
  * - predefined palette swatches render in rows
- * - Selection state with scale(1.15) animation and white border ring
+ * - Selection state with enlarged ring padding and white border ring
  * - Haptic feedback on color selection
  * - Accessible color name labels for VoiceOver
  */

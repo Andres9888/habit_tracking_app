@@ -32,7 +32,7 @@ const ColorButtonComponent = ({
     rippleScale,
     scale,
     triggerRipple,
-  } = useColorButtonAnimations({ isSelected, reduceMotion });
+  } = useColorButtonAnimations({ reduceMotion });
 
   const handlePress = useCallback(() => {
     Keyboard.dismiss();
