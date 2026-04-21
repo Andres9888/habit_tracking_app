@@ -56,10 +56,9 @@ export function SettingsRow({
   const colors = getSettingsRowColors(highContrastMode, isDark);
   const { focusStyle, focusHandlers } = useFocusRing({ compact: true });
   const pulseOpacity = useSharedValue(0);
-  const pulseColor = isDark ? 'rgba(52,211,153,0.08)' : 'rgba(5,150,105,0.06)';
   const pulseStyle = useAnimatedStyle(() => ({
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: pulseColor,
+    backgroundColor: colors.pulseBg,
     opacity: pulseOpacity.value,
   }));
 
@@ -91,7 +90,7 @@ export function SettingsRow({
 
   const content = (
     <View
-      className={`flex-row ${subtitle ? 'items-start' : 'items-center'} px-4 py-4 ${showBorder ? 'border-b' : ''}`}
+      className={`flex-row items-center px-4 py-4 ${showBorder ? 'border-b' : ''}`}
       style={{
         backgroundColor: colors.background,
         borderColor: showBorder ? colors.border : undefined,
@@ -141,9 +140,11 @@ export function SettingsRow({
             onValueChange={handleToggle}
           />
         ) : null}
-        {type === 'selection' ? <View className='flex-row items-center gap-1'>
+        {type === 'selection' ? <View className='ml-3 flex-row items-center gap-1' style={{ flexShrink: 1, maxWidth: '45%' }}>
             <Text
-              style={{ ...typography.body, fontWeight: fontWeights.medium, color: colors.value }}
+              ellipsizeMode='tail'
+              numberOfLines={1}
+              style={{ ...typography.body, fontWeight: fontWeights.medium, color: colors.value, flexShrink: 1 }}
             >
               {value as string}
             </Text>

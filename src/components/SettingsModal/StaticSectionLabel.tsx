@@ -19,7 +19,7 @@ export function StaticSectionLabel({
   highContrastMode = false,
 }: StaticSectionLabelProps) {
   const { colors: themeColors } = useThemeColors();
-  const titleColor = highContrastMode ? highContrastColors.accent : themeColors.text.secondary;
+  const titleColor = highContrastMode ? highContrastColors.accent : themeColors.text.primary;
 
   return (
     <View className="flex-row items-center px-4">
@@ -27,7 +27,7 @@ export function StaticSectionLabel({
         {icon ?? null}
       </View>
       <Text
-        style={{ ...typography.overline, color: titleColor }}
+        style={{ ...typography.body, fontSize: 15, fontWeight: fontWeights.semibold, letterSpacing: -0.2, color: titleColor }}
       >
         {title}
       </Text>

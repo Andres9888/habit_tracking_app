@@ -239,7 +239,6 @@ export function SettingsContent(p: SettingsContentProps) {
                 iconBackgroundColor={settingsIcons.sound.bg}
                 label='Completion sound'
                 subtitle='Play sound when checking off'
-                showBorder={!p.completionSoundEnabled}
                 type='toggle'
                 value={p.completionSoundEnabled}
                 onToggle={(v) => void p.onChangeCompletionSoundEnabled(v)}

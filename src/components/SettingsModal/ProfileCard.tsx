@@ -82,7 +82,7 @@ export function ProfileCard({ isPremium, highContrastMode }: ProfileCardProps) {
           {isPremium ? (
             <View
               className='mt-1.5 flex-row items-center self-start rounded-lg px-2 py-0.5'
-              style={{ backgroundColor: themeColors.status.warningLight, gap: 4 }}
+              style={{ backgroundColor: themeColors.status.warningLight, gap: spacing.xs }}
             >
               <Crown color={themeColors.status.warningText} size={iconSizes.micro} />
               <Text

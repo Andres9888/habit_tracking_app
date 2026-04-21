@@ -10,6 +10,7 @@ export interface SettingsRowColors {
   border: string;
   chevron: string;
   label: string;
+  pulseBg: string;
   switchThumb: string;
   switchTrackFalse: string;
   switchTrackTrue: string;
@@ -21,6 +22,7 @@ export const HIGH_CONTRAST_COLORS: SettingsRowColors = {
   border: highContrastColors.border,
   chevron: highContrastColors.accent,
   label: '#ffffff',
+  pulseBg: 'rgba(252,211,77,0.15)',
   switchThumb: '#000000',
   switchTrackFalse: '#525252',
   switchTrackTrue: highContrastColors.accent,
@@ -35,6 +37,8 @@ const buildStandardColors = (isDark: boolean): SettingsRowColors => {
     border: semantic.border,
     chevron: semantic.text.secondary,
     label: semantic.text.primary,
+    // Faint emerald wash used by the toggle pulse animation (animates opacity 0→1→0 on top of card bg)
+    pulseBg: isDark ? 'rgba(52,211,153,0.08)' : 'rgba(5,150,105,0.06)',
     switchThumb: semantic.text.inverse,
     switchTrackFalse: semantic.gray[300],
     switchTrackTrue: semantic.primary[500],

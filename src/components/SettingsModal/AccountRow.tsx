@@ -3,12 +3,11 @@ import { Text, View } from 'react-native';
 import { ChevronRight, Crown } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
 import { typography, fontWeights } from '@/theme/typography';
-import { highContrastColors } from '@/theme/highContrastColors';
 import { useUser } from '@clerk/clerk-expo';
 import { LinearGradient } from 'expo-linear-gradient';
 import { AnimatedPressable } from '../ui/AnimatedPressable';
 import { useThemeColors } from '../../theme/ThemeContext';
-import { borderRadius, shadows } from '../../theme/spacing';
+import { borderRadius, shadows, spacing } from '../../theme/spacing';
 
 interface AccountRowProps {
   highContrastMode: boolean;
@@ -24,7 +23,9 @@ export function AccountRow({ highContrastMode, isPremium, onPress }: AccountRowP
   const email = user?.primaryEmailAddress?.emailAddress;
   const initial = name.charAt(0).toUpperCase();
 
-  const cardBg = highContrastMode ? (isDark ? highContrastColors.background : '#000000') : themeColors.card;
+  const cardBg = highContrastMode
+    ? (isDark ? themeColors.gray[900] : themeColors.text.primary)
+    : themeColors.card;
   const cardBorder = highContrastMode ? themeColors.border : undefined;
 
   return (
@@ -38,7 +39,7 @@ export function AccountRow({ highContrastMode, isPremium, onPress }: AccountRowP
           ...(highContrastMode ? { elevation: 0, shadowColor: 'transparent' } : shadows.card),
         }}
       >
-        <View className='flex-row items-center px-4 py-3.5' style={{ gap: 14 }}>
+        <View className='flex-row items-center px-4 py-4' style={{ gap: spacing.md }}>
           {highContrastMode ? (
             <View
               className='items-center justify-center'
@@ -55,10 +56,10 @@ export function AccountRow({ highContrastMode, isPremium, onPress }: AccountRowP
             </LinearGradient>
           )}
           <View className='flex-1'>
-            <View className='flex-row items-center' style={{ gap: 6 }}>
-              <Text style={{ ...typography.bodySmall, fontSize: 16, fontWeight: fontWeights.semibold, color: themeColors.text.primary }}>{name}</Text>
+            <View className='flex-row items-center' style={{ gap: spacing.sm }}>
+              <Text style={{ ...typography.body, fontWeight: fontWeights.semibold, color: themeColors.text.primary }}>{name}</Text>
               {isPremium ? (
-                <View className='flex-row items-center rounded-md px-1.5 py-0.5' style={{ backgroundColor: themeColors.status.warningLight, gap: 3 }}>
+                <View className='flex-row items-center rounded-md px-1.5 py-0.5' style={{ backgroundColor: themeColors.status.warningLight, gap: spacing.xs }}>
                   <Crown color={themeColors.status.warningText} size={iconSizes.micro} />
                   <Text style={{ ...typography.tabBar, fontWeight: fontWeights.bold, color: themeColors.status.warningText }}>PRO</Text>
                 </View>

@@ -205,7 +205,7 @@ export function StreakRemindersSection({
           entering={FadeInDown.duration(200).springify().damping(18)}
           exiting={FadeOutUp.duration(150)}
         >
-          <View className='px-4 pb-3'>
+          <View style={{ paddingLeft: 72, paddingRight: 16, paddingBottom: 12 }}>
             <Text
               style={{ ...typography.caption, lineHeight: 18, color: themeColors.text.secondary }}
             >
