@@ -48,7 +48,12 @@ export function useSheetAnimations({
             duration: BACKDROP_FADE_IN_DURATION,
             easing: Easing.out(Easing.cubic),
           });
-      translateY.value = reduceMotion ? 0 : withSpring(0, SHEET_SPRING_CONFIG);
+      translateY.value = reduceMotion
+        ? 0
+        : withTiming(0, {
+            duration: BACKDROP_FADE_IN_DURATION,
+            easing: Easing.out(Easing.cubic),
+          });
     } else {
       backdropOpacity.value = reduceMotion
         ? 0
