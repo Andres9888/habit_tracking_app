@@ -1,7 +1,7 @@
 /**
  * EmojiChip Component
- * Individual emoji chip with press animation and green ring when selected
- * Scale 1.0 → 1.08 → 1.0 with spring animation (200ms total)
+ * Individual emoji chip with press animation and green ring when selected.
+ * Press: scale 1.0 → 0.97 → 1.0 (scale-down-only; upscaling rasterized views blurs them).
  * V11 Task 8: Respects reduced motion preference
  */
 
@@ -11,7 +11,6 @@ import Animated, {
   useSharedValue,
   useAnimatedStyle,
   withSpring,
-  withSequence,
   withTiming,
 } from 'react-native-reanimated';
 import type { EmojiChipProps } from './types';
@@ -39,16 +38,11 @@ function EmojiChipComponent({
   const handlePressOut = useCallback(() => {
     'worklet';
     if (reduceMotion) {
-      // No animation in reduced motion mode
       scale.value = 1;
       return;
     }
-    // Celebratory scale 1.0 → 1.08 → 1.0 with spring
-    // Total duration: ~200ms for snappy feel
-    scale.value = withSequence(
-      withTiming(1.08, { duration: 100 }),
-      withSpring(1, springs.standard)
-    );
+    // Spring back to rest without crossing 1.0 — upscaling a rasterized view blurs it.
+    scale.value = withSpring(1, springs.standard);
   }, [scale, reduceMotion]);
 
   const animatedStyle = useAnimatedStyle(() => ({

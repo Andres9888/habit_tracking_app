@@ -43,7 +43,9 @@ export function useStickyBarAnimations(
     }
   }, [selectedColor, colorOpacity]);
 
-  // Bounce animation + haptic when button becomes enabled
+  // Haptic + subtle press-in/out bounce when button becomes enabled.
+  // We scale DOWN then back to 1 (instead of up to 1.02) because upscaling a
+  // rasterized native-driven view stretches its GPU texture and blurs it.
   useEffect(() => {
     if (wasDisabled.current && !disabled) {
       triggerMediumImpact();
@@ -51,7 +53,7 @@ export function useStickyBarAnimations(
         Animated.timing(scale, {
           duration: 100,
           easing: Motion.easing.outEase,
-          toValue: 1.02,
+          toValue: 0.98,
           useNativeDriver: true,
         }),
         Animated.timing(scale, {

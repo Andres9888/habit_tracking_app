@@ -1,6 +1,7 @@
 /**
  * ColorSwatch Component
- * Per spec: 36×36px visual, 48×48px tap, scale 1.15 selected with white+color rings
+ * Per spec: 36×36px visual, 48×48px tap, selected renders at 52×52 via ring padding
+ * (rings are rendered at real size, never stretched via transform — avoids GPU blur)
  */
 
 import { useCallback, useRef } from 'react';
@@ -42,26 +43,26 @@ export const ColorSwatch = ({
   onPressIn,
   onPressOut,
 }: ColorSwatchProps) => {
-  const scale = useRef(new Animated.Value(isSelected ? 1.15 : 1)).current;
+  const scale = useRef(new Animated.Value(1)).current;
 
   const handlePressIn = useCallback(() => {
     Animated.timing(scale, {
       duration: Motion.duration.fast,
-      toValue: isSelected ? 1.1 : 0.95,
+      toValue: 0.95,
       useNativeDriver: true,
     }).start();
     onPressIn();
-  }, [scale, isSelected, onPressIn]);
+  }, [scale, onPressIn]);
 
   const handlePressOut = useCallback(() => {
     Animated.spring(scale, {
       friction: 8,
       tension: 200,
-      toValue: isSelected ? 1.15 : 1,
+      toValue: 1,
       useNativeDriver: true,
     }).start();
     onPressOut();
-  }, [scale, isSelected, onPressOut]);
+  }, [scale, onPressOut]);
 
   return (
     <View
@@ -83,14 +84,14 @@ export const ColorSwatch = ({
           style={{
             backgroundColor: isSelected ? color : 'transparent',
             borderRadius: borderRadius.full,
-            padding: isSelected ? 2 : 0,
+            padding: isSelected ? 3 : 0,
           }}
         >
           <View
             style={{
               backgroundColor: isSelected ? '#fff' : 'transparent',
               borderRadius: borderRadius.full,
-              padding: isSelected ? 3 : 0,
+              padding: isSelected ? 5 : 0,
             }}
           >
             <AnimatedPressable

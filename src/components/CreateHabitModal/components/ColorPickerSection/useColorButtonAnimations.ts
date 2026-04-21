@@ -1,44 +1,17 @@
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useRef } from 'react';
 import { Animated } from 'react-native';
 import { Motion } from '../../../../constants/motion';
 
 interface UseColorButtonAnimationsParams {
-  isSelected: boolean;
   reduceMotion: boolean;
 }
 
 export const useColorButtonAnimations = ({
-  isSelected,
   reduceMotion,
 }: UseColorButtonAnimationsParams) => {
-  const scale = useRef(new Animated.Value(isSelected ? 1.08 : 1)).current;
+  const scale = useRef(new Animated.Value(1)).current;
   const rippleScale = useRef(new Animated.Value(0)).current;
   const rippleOpacity = useRef(new Animated.Value(1)).current;
-  const wasSelected = useRef(isSelected);
-
-  // Animate scale when selection changes
-  useEffect(() => {
-    if (isSelected !== wasSelected.current) {
-      if (reduceMotion) {
-        scale.setValue(isSelected ? 1.08 : 1);
-      } else if (isSelected) {
-        Animated.spring(scale, {
-          damping: 12,
-          stiffness: 180,
-          toValue: 1.08,
-          useNativeDriver: true,
-        }).start();
-      } else {
-        Animated.timing(scale, {
-          duration: Motion.duration.base,
-          easing: Motion.easing.outEase,
-          toValue: 1,
-          useNativeDriver: true,
-        }).start();
-      }
-      wasSelected.current = isSelected;
-    }
-  }, [isSelected, scale, reduceMotion]);
 
   const triggerRipple = useCallback(() => {
     if (reduceMotion) return;
@@ -67,20 +40,20 @@ export const useColorButtonAnimations = ({
     Animated.timing(scale, {
       duration: Motion.duration.fast,
       easing: Motion.easing.inEase,
-      toValue: isSelected ? 1.08 : 0.96,
+      toValue: 0.96,
       useNativeDriver: true,
     }).start();
-  }, [isSelected, scale, reduceMotion]);
+  }, [scale, reduceMotion]);
 
   const animatePressOut = useCallback(() => {
     if (reduceMotion) return;
     Animated.timing(scale, {
       duration: Motion.duration.base,
       easing: Motion.easing.outEase,
-      toValue: isSelected ? 1.08 : 1,
+      toValue: 1,
       useNativeDriver: true,
     }).start();
-  }, [isSelected, scale, reduceMotion]);
+  }, [scale, reduceMotion]);
 
   return {
     animatePressIn,
