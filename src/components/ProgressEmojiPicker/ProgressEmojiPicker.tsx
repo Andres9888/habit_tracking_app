@@ -38,6 +38,7 @@ function ProgressEmojiPickerComponent({
   label,
   toggleRowStyle,
   expandedPanelStyle,
+  customPreset,
 }: ProgressEmojiPickerProps) {
   const { colors: themeColors } = useThemeColors();
   const [expanded, setExpanded] = useState(false);
@@ -47,7 +48,10 @@ function ProgressEmojiPickerComponent({
     () => resolveProgressEmojis(value, fallback),
     [value, fallback]
   );
-  const activePresetId = useMemo(() => matchPresetId(resolved), [resolved]);
+  const activePresetId = useMemo(
+    () => matchPresetId(resolved, customPreset?.emojis),
+    [resolved, customPreset]
+  );
 
   const handlePreset = useCallback(
     (next: ProgressEmojiSet) => onChange(next),
@@ -118,6 +122,7 @@ function ProgressEmojiPickerComponent({
         <View className='mt-3 gap-2' style={expandedPanelStyle}>
           <ProgressEmojiPresetRow
             activePresetId={activePresetId}
+            customPreset={customPreset}
             onSelect={handlePreset}
           />
           {STRENGTH_LEVEL_KEYS.map((k) => (

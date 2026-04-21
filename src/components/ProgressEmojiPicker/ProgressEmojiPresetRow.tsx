@@ -9,6 +9,7 @@ import { useHorizontalScrollFade } from '../EmojiPickerV2/useHorizontalScrollFad
 import { useThemeColors } from '../../theme/ThemeContext';
 import {
   PROGRESS_EMOJI_PRESETS,
+  type ProgressEmojiPreset,
   type ProgressEmojiSet,
 } from '../../utils/progressEmojis';
 
@@ -19,9 +20,14 @@ const FADE_WIDTH = 28;
 interface Props {
   activePresetId: string | null;
   onSelect: (next: ProgressEmojiSet) => void;
+  customPreset?: ProgressEmojiPreset | null;
 }
 
-export function ProgressEmojiPresetRow({ activePresetId, onSelect }: Props) {
+export function ProgressEmojiPresetRow({
+  activePresetId,
+  onSelect,
+  customPreset,
+}: Props) {
   const { isDark } = useThemeColors();
   const { handleScroll, showLeftFade, showRightFade } =
     useHorizontalScrollFade();
@@ -55,6 +61,13 @@ export function ProgressEmojiPresetRow({ activePresetId, onSelect }: Props) {
             onPress={() => onSelect(preset.emojis)}
           />
         ))}
+        {customPreset ? (
+          <ProgressEmojiPresetChip
+            isActive={customPreset.id === activePresetId}
+            preset={customPreset}
+            onPress={() => onSelect(customPreset.emojis)}
+          />
+        ) : null}
       </ScrollView>
       {showLeftFade ? (
         <LinearGradient
