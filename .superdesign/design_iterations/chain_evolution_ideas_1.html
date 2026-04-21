@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Chain Evolution — Ideas</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --primary: #10B981;
+    --primary-dark: #047857;
+    --primary-soft: #D1FAE5;
+    --gray-50: #F9FAFB;
+    --gray-100: #F3F4F6;
+    --gray-200: #E5E7EB;
+    --gray-300: #D1D5DB;
+    --gray-400: #9CA3AF;
+    --gray-500: #6B7280;
+    --gray-700: #374151;
+    --gray-900: #111827;
+    --amber: #F59E0B;
+    --amber-light: #FEF3C7;
+    --gold: #F2B84B;
+    --gold-dark: #D4A23F;
+    --copper: #B87333;
+    --silver: #C8CCD0;
+    --ruby: #DC2626;
+    --vine: #65A30D;
+    --lightning: #3B82F6;
+    --dna: #A855F7;
+  }
+  * { font-family: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif !important; }
+  body {
+    background: linear-gradient(180deg, #FAFAF9 0%, #F4F4F5 100%);
+    min-height: 100vh;
+    color: var(--gray-900);
+  }
+  code { font-family: 'SF Mono', 'Monaco', 'Menlo', monospace !important; }
+
+  .concept-card {
+    background: #FFFFFF;
+    border-radius: 20px;
+    padding: 18px 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.03);
+    border: 1px solid rgba(0,0,0,0.04);
+  }
+  .habit-card {
+    background: linear-gradient(90deg, #FEFCE8 0%, #FFFFFF 18%);
+    border-radius: 18px;
+    padding: 16px 14px 18px 14px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.03);
+    border: 1px solid rgba(0,0,0,0.04);
+    position: relative;
+    overflow: visible;
+  }
+  .habit-card .name { font-weight: 700; font-size: 15px; color: #111827; margin-bottom: 10px; }
+  .habit-card .bar { height: 8px; background: var(--gray-200); border-radius: 4px; overflow: hidden; margin-bottom: 16px; }
+  .habit-card .bar-fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--primary-dark)); border-radius: 4px; }
+
+  /* Chain primitives ---------------------------------------- */
+  .chain-row { display: flex; align-items: center; justify-content: space-between; gap: 0; position: relative; }
+  .chain-cell {
+    position: relative; z-index: 2;
+    width: 40px; height: 40px; border-radius: 10px;
+    background: var(--primary);
+    display: flex; align-items: center; justify-content: center;
+    color: #FFFFFF;
+    flex-shrink: 0;
+    box-shadow: 0 2px 6px rgba(16, 185, 129, 0.25);
+    transition: all 0.2s ease;
+  }
+  .chain-cell svg { width: 18px; height: 18px; }
+  .connector {
+    flex: 1; min-width: 10px; height: 3px;
+    background: var(--primary);
+    opacity: 0.6;
+    border-radius: 2px;
+    margin: 0 -2px;
+    position: relative; z-index: 1;
+  }
+  .chain-cell.today { outline: 3px solid #FEF3C7; outline-offset: 1px; }
+  .chain-cell.empty {
+    background: transparent;
+    border: 2px dashed var(--gray-300);
+    color: var(--gray-400);
+    box-shadow: none;
+  }
+  .chain-cell.broken {
+    background: #FEF2F2;
+    border: 2px dashed #FCA5A5;
+    color: #DC2626;
+    box-shadow: none;
+  }
+  .chain-cell.broken svg { opacity: 0.6; }
+  .connector.ghost { opacity: 0.2; }
+  .connector.missing { background: transparent; border-top: 2px dashed var(--gray-300); height: 0; }
+
+  /* --- TIER 1: Copper wire (days 1-6) --- */
+  .tier-wire .chain-cell {
+    background: linear-gradient(145deg, #D4976B, #B87333);
+    box-shadow: 0 1px 3px rgba(184, 115, 51, 0.3);
+  }
+  .tier-wire .connector {
+    height: 2px; background: var(--copper); opacity: 0.55;
+  }
+
+  /* --- TIER 2: Standard chain (days 7-29) --- */
+  .tier-chain .connector {
+    height: 3px; opacity: 0.7;
+  }
+
+  /* --- TIER 3: Forged iron (days 30-99) --- */
+  .tier-iron .chain-cell {
+    background: linear-gradient(145deg, #059669, #047857);
+    box-shadow: 0 3px 8px rgba(4, 120, 87, 0.35), inset 0 1px 0 rgba(255,255,255,0.2);
+  }
+  .tier-iron .connector {
+    height: 4px;
+    background: linear-gradient(90deg, #065F46, #059669, #065F46);
+    opacity: 0.85;
+    border-radius: 3px;
+  }
+
+  /* --- TIER 4: Gold (days 100-364) --- */
+  .tier-gold .chain-cell {
+    background: linear-gradient(145deg, #F2B84B, #D4A23F);
+    color: #78350F;
+    box-shadow: 0 2px 10px rgba(212, 162, 63, 0.5), inset 0 1px 0 rgba(255,255,255,0.4);
+  }
+  .tier-gold .connector {
+    height: 4.5px;
+    background: linear-gradient(90deg, #D4A23F 0%, #F8D772 50%, #D4A23F 100%);
+    opacity: 1;
+    border-radius: 3px;
+    box-shadow: 0 0 4px rgba(242, 184, 75, 0.5);
+  }
+
+  /* --- TIER 5: Legendary / Engraved platinum (days 365+) --- */
+  .tier-legendary .chain-cell {
+    background: linear-gradient(145deg, #F9FAFB, #E5E7EB);
+    color: #78350F;
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.9),
+      0 0 0 1.5px #F2B84B,
+      0 0 14px rgba(242, 184, 75, 0.6),
+      0 4px 14px rgba(242, 184, 75, 0.3);
+    position: relative;
+    overflow: hidden;
+  }
+  .tier-legendary .chain-cell::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.8) 50%, transparent 70%);
+    transform: translateX(-100%);
+    animation: shimmer-sweep 3s ease-in-out infinite;
+  }
+  .tier-legendary .connector {
+    height: 5px;
+    background: linear-gradient(90deg, #D4A23F 0%, #FFFFFF 50%, #D4A23F 100%);
+    opacity: 1;
+    border-radius: 3px;
+    box-shadow: 0 0 8px rgba(242, 184, 75, 0.6);
+  }
+  @keyframes shimmer-sweep {
+    0%, 100% { transform: translateX(-120%); }
+    50% { transform: translateX(120%); }
+  }
+
+  /* --- Charm ornaments (concept 3) --- */
+  .charm-slot { position: relative; }
+  .charm {
+    position: absolute;
+    top: -22px; left: 50%;
+    transform: translateX(-50%);
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+    background: var(--amber-light);
+    border: 2px solid var(--amber);
+    box-shadow: 0 2px 6px rgba(245, 158, 11, 0.35);
+    z-index: 10;
+    animation: bob 3s ease-in-out infinite;
+  }
+  .charm.gold {
+    background: #FFF8E1;
+    border-color: var(--gold-dark);
+    box-shadow: 0 2px 8px rgba(212, 162, 63, 0.5);
+  }
+  .charm.crown {
+    background: linear-gradient(145deg, #FFF8E1, #F2B84B);
+    border-color: #8B5A2B;
+    box-shadow: 0 3px 10px rgba(242, 184, 75, 0.6);
+  }
+  @keyframes bob {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(-3px); }
+  }
+  .charm-line {
+    position: absolute;
+    top: -4px; left: 50%; transform: translateX(-50%);
+    width: 1.5px; height: 4px;
+    background: var(--gray-400);
+  }
+
+  /* --- Skin: Vine --- */
+  .skin-vine .chain-cell {
+    background: linear-gradient(145deg, #84CC16, #65A30D);
+    border-radius: 50%;
+    box-shadow: 0 2px 6px rgba(101, 163, 13, 0.35);
+  }
+  .skin-vine .connector {
+    height: 6px;
+    background: linear-gradient(90deg, var(--vine), #84CC16, var(--vine));
+    opacity: 0.75;
+    border-radius: 3px;
+    position: relative;
+  }
+  .skin-vine .connector::after {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%; transform: translate(-50%, -50%);
+    width: 6px; height: 6px;
+    background: #65A30D;
+    border-radius: 50%;
+  }
+
+  /* --- Skin: Lightning --- */
+  .skin-lightning .chain-cell {
+    background: linear-gradient(145deg, #FDE68A, #F59E0B);
+    color: #78350F;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(245, 158, 11, 0.4);
+  }
+  .skin-lightning .connector {
+    height: 3px;
+    background: linear-gradient(90deg, #FDE68A, #F59E0B, #FDE68A);
+    opacity: 0.95;
+    border-radius: 2px;
+    filter: drop-shadow(0 0 4px rgba(245, 158, 11, 0.6));
+  }
+
+  /* --- Skin: DNA --- */
+  .skin-dna .chain-cell {
+    background: linear-gradient(145deg, #C084FC, #A855F7);
+    border-radius: 14px;
+    box-shadow: 0 2px 8px rgba(168, 85, 247, 0.35);
+  }
+  .skin-dna .connector {
+    height: 14px;
+    background: transparent;
+    position: relative;
+    border-radius: 0;
+    overflow: visible;
+  }
+  .skin-dna .connector::before,
+  .skin-dna .connector::after {
+    content: '';
+    position: absolute; left: 0; right: 0;
+    height: 2.5px;
+    background: var(--dna);
+    border-radius: 2px;
+  }
+  .skin-dna .connector::before {
+    top: 1px; transform: rotate(3deg); transform-origin: left center;
+  }
+  .skin-dna .connector::after {
+    bottom: 1px; transform: rotate(-3deg); transform-origin: left center;
+  }
+
+  /* --- Skin: Classic (default, for side-by-side compare) --- */
+  .skin-chain .chain-cell {
+    background: linear-gradient(145deg, #10B981, #059669);
+  }
+
+  /* Forge button + spark animation */
+  .forge-btn {
+    cursor: pointer;
+    transition: transform 0.12s ease;
+    user-select: none;
+  }
+  .forge-btn:hover { transform: translateY(-1px) scale(1.03); }
+  .forge-btn:active { transform: scale(0.95); }
+
+  @keyframes forge-flash {
+    0% { background: #FEF3C7; box-shadow: 0 0 0 10px rgba(251, 191, 36, 0.6); }
+    100% { background: linear-gradient(145deg, #10B981, #059669); box-shadow: 0 2px 6px rgba(16, 185, 129, 0.25); }
+  }
+  .forge-flash {
+    animation: forge-flash 0.6s ease-out forwards;
+  }
+  .spark {
+    position: absolute;
+    width: 5px; height: 5px;
+    background: #FBBF24;
+    border-radius: 50%;
+    box-shadow: 0 0 8px #FBBF24, 0 0 3px #FEF3C7;
+    pointer-events: none;
+    opacity: 0;
+    top: 50%; left: 50%;
+  }
+
+  @keyframes repair-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.5); }
+    50% { box-shadow: 0 0 0 6px rgba(220, 38, 38, 0); }
+  }
+  .chain-cell.broken.pulsing {
+    animation: repair-pulse 1.4s ease-out infinite;
+  }
+
+  /* Lineage view -------------------------------------------- */
+  .lineage {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    overflow-x: auto;
+    padding: 22px 4px 14px 4px;
+    scroll-behavior: smooth;
+  }
+  .lineage::-webkit-scrollbar { height: 4px; }
+  .lineage::-webkit-scrollbar-track { background: transparent; }
+  .lineage::-webkit-scrollbar-thumb { background: var(--gray-300); border-radius: 2px; }
+  .ln-dot {
+    flex-shrink: 0;
+    width: 8px; height: 8px;
+    background: var(--primary);
+    border-radius: 50%;
+    opacity: 0.6;
+    position: relative;
+  }
+  .ln-dot.ms7 { background: var(--amber); opacity: 1; width: 12px; height: 12px; box-shadow: 0 0 0 2px #FEF3C7; }
+  .ln-dot.ms30 {
+    background: var(--gold); opacity: 1; width: 14px; height: 14px;
+    box-shadow: 0 0 0 2px #FFF8E1, 0 0 6px rgba(242, 184, 75, 0.7);
+  }
+  .ln-dot.ms100 {
+    background: linear-gradient(145deg, #F9FAFB, #E5E7EB); opacity: 1; width: 16px; height: 16px;
+    box-shadow: 0 0 0 2px var(--gold), 0 0 10px rgba(242, 184, 75, 0.7);
+  }
+  .ln-dot.missed { background: transparent; border: 1.5px dashed var(--gray-300); opacity: 0.8; }
+  .ln-dot.today-mark {
+    background: var(--amber); opacity: 1; width: 12px; height: 12px;
+    outline: 3px solid #FEF3C7;
+  }
+
+  .mini-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--gray-500); font-weight: 700; }
+  .kbd { font-family: 'SF Mono', monospace; background: var(--gray-100); padding: 1.5px 5px; border-radius: 4px; font-size: 11px; color: var(--gray-700); }
+
+  .section-title { font-size: 20px; font-weight: 700; color: var(--gray-900); letter-spacing: -0.02em; }
+  .section-sub { font-size: 14px; color: var(--gray-500); margin-top: 2px; }
+
+  .num-pill {
+    background: var(--primary-soft);
+    color: var(--primary-dark);
+    font-weight: 800;
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 6px;
+    letter-spacing: 0.05em;
+  }
+</style>
+</head>
+<body class="py-10 px-4">
+  <div class="max-w-6xl mx-auto">
+    <!-- Hero ----------------------------------------------------- -->
+    <header class="text-center mb-12">
+      <div class="inline-flex items-center gap-2 text-emerald-700 bg-emerald-50 px-3 py-1.5 rounded-full text-xs font-semibold mb-4 border border-emerald-100">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 0 1 0 10h-2"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+        CHAIN EVOLUTION
+      </div>
+      <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-3">Leaning into the chain metaphor</h1>
+      <p class="text-gray-500 max-w-xl mx-auto text-[15px] leading-relaxed">
+        Five directions, ordered lowest-lift to highest. Each reuses the existing streak tiers in <span class="kbd">strengthConfig.ts</span> — no new data needed.
+      </p>
+    </header>
+
+    <!-- =========== CONCEPT 1: Material Progression =========== -->
+    <section class="mb-16">
+      <div class="flex items-baseline gap-3 mb-5">
+        <span class="num-pill">01</span>
+        <h2 class="section-title">Material progression</h2>
+      </div>
+      <p class="section-sub -mt-3 mb-6 ml-12 max-w-xl">The chain literally upgrades its material at streak milestones. A satisfying forge animation plays on upgrade day.</p>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
+        <!-- Tier 1 -->
+        <div class="concept-card tier-wire">
+          <div class="mini-label mb-1">Day 1–6</div>
+          <div class="text-[13px] font-bold text-gray-900 mb-4">Copper wire</div>
+          <div class="chain-row mb-3">
+            <div class="chain-cell" style="width:34px;height:34px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 0 1 0 10h-2"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div>
+            <div class="connector"></div>
+            <div class="chain-cell" style="width:34px;height:34px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 0 1 0 10h-2"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div>
+            <div class="connector"></div>
+            <div class="chain-cell" style="width:34px;height:34px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 0 1 0 10h-2"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div>
+          </div>
+          <p class="text-[11px] text-gray-500 leading-relaxed">Thin and humble. Feels fragile on purpose — a small chain you just started forging.</p>
+        </div>
+
+        <!-- Tier 2 -->
+        <div class="concept-card tier-chain">
+          <div class="mini-label mb-1">Day 7–29</div>
+          <div class="text-[13px] font-bold text-gray-900 mb-4">Standard chain</div>
+          <div class="chain-row mb-3">
+            <div class="chain-cell"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 0 1 0 10h-2"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div>
+            <div class="connector"></div>
+            <div class="chain-cell"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 0 1 0 10h-2"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div>
+            <div class="connector"></div>
+            <div class="chain-cell"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 0 1 0 10h-2"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div>
+          </div>
+          <p class="text-[11px] text-gray-500 leading-relaxed">What we have today. First real upgrade — 7 days earns you a "real" chain.</p>
+        </div>
+
+        <!-- Tier 3 -->
+        <div class="concept-card tier-iron">
+          <div class="mini-label mb-1">Day 30–99</div>
+          <div class="text-[13px] font-bold text-gray-900 mb-4">Forged iron</div>
+          <div class="chain-row mb-3">
+            <div class="chain-cell"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 0 1 0 10h-2"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div>
+            <div class="connector"></div>
+            <div class="chain-cell"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 0 1 0 10h-2"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div>
+            <div class="connector"></div>
+            <div class="chain-cell"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 0 1 0 10h-2"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div>
+          </div>
+          <p class="text-[11px] text-gray-500 leading-relaxed">Thicker, darker emerald. Feels heavier — you've put the reps in. Subtle bevel shadow.</p>
+        </div>
+
+        <!-- Tier 4 -->
+        <div class="concept-card tier-gold">
+          <div class="mini-label mb-1">Day 100–364</div>
+          <div class="text-[13px] font-bold text-gray-900 mb-4">Gold chain</div>
+          <div class="chain-row mb-3">
+            <div class="chain-cell"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 0 1 0 10h-2"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div>
+            <div class="connector"></div>
+            <div class="chain-cell"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 0 1 0 10h-2"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div>
+            <div class="connector"></div>
+            <div class="chain-cell"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 0 1 0 10h-2"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div>
+          </div>
+          <p class="text-[11px] text-gray-500 leading-relaxed">Warm gold tint, soft glow. Shareable moment. Confetti on the upgrade day.</p>
+        </div>
+
+        <!-- Tier 5 -->
+        <div class="concept-card tier-legendary">
+          <div class="mini-label mb-1">Day 365+</div>
+          <div class="text-[13px] font-bold text-gray-900 mb-4">Legendary</div>
+          <div class="chain-row mb-3">
+            <div class="chain-cell"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 0 1 0 10h-2"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div>
+            <div class="connector"></div>
+            <div class="chain-cell"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 0 1 0 10h-2"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div>
+            <div class="connector"></div>
+            <div class="chain-cell"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 0 1 0 10h-2"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div>
+          </div>
+          <p class="text-[11px] text-gray-500 leading-relaxed">Engraved platinum with slow shimmer. Only unlockable by a yearlong streak.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========== CONCEPT 2: Forge & Repair =========== -->
+    <section class="mb-16">
+      <div class="flex items-baseline gap-3 mb-5">
+        <span class="num-pill">02</span>
+        <h2 class="section-title">Forge &amp; repair</h2>
+      </div>
+      <p class="section-sub -mt-3 mb-6 ml-12 max-w-2xl">Completing = forging a new link (hammer strike + spark). A missed day leaves a visible <em>broken</em> link that can be re-forged with a streak-freeze. Turns "don't break the chain" into a craft loop.</p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <!-- Forge demo -->
+        <div class="concept-card">
+          <div class="mini-label mb-2">Tap the empty slot →</div>
+          <div class="habit-card">
+            <div class="name">Morning workout</div>
+            <div class="bar"><div class="bar-fill" style="width: 64%"></div></div>
+            <div class="chain-row" id="forge-row">
+              <div class="chain-cell"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 0 1 0 10h-2"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div>
+              <div class="connector"></div>
+              <div class="chain-cell"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 0 1 0 10h-2"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div>
+              <div class="connector"></div>
+              <div class="chain-cell"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 0 1 0 10h-2"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div>
+              <div class="connector ghost"></div>
+              <div class="chain-cell empty forge-btn today" id="forge-target" onclick="forgeLink(this)" data-label="Forge today">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              </div>
+            </div>
+          </div>
+          <p class="text-xs text-gray-500 mt-3 leading-relaxed">
+            <span class="font-semibold text-gray-700">Micro-reward:</span> hammer thud + 6 spark particles fan outward on tap.
+            The link slides in with a spring bounce. &lt;200 ms end-to-end.
+          </p>
+        </div>
+
+        <!-- Repair demo -->
+        <div class="concept-card">
+          <div class="mini-label mb-2">Repair broken link →</div>
+          <div class="habit-card">
+            <div class="name">Read 20 min</div>
+            <div class="bar"><div class="bar-fill" style="width: 42%; background: linear-gradient(90deg, #F59E0B, #D97706);"></div></div>
+            <div class="chain-row" id="repair-row">
+              <div class="chain-cell"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 0 1 0 10h-2"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div>
+              <div class="connector"></div>
+              <div class="chain-cell"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 0 1 0 10h-2"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div>
+              <div class="connector missing"></div>
+              <div class="chain-cell broken pulsing forge-btn" onclick="repairLink(this)" id="broken-cell">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M21 3l-7 7"/><path d="M9 21H3v-6"/><path d="M3 21l7-7"/></svg>
+              </div>
+              <div class="connector missing"></div>
+              <div class="chain-cell"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 0 1 0 10h-2"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div>
+              <div class="connector ghost"></div>
+              <div class="chain-cell empty today"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 0 1 0 10h-2"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div>
+            </div>
+            <div class="mt-4 flex items-center justify-between text-xs">
+              <span class="text-gray-500">Broken link on Sun</span>
+              <button class="bg-amber-50 border border-amber-300 text-amber-800 rounded-full px-3 py-1 font-semibold hover:bg-amber-100" onclick="repairLink(document.getElementById('broken-cell'))">
+                Use freeze (2 left)
+              </button>
+            </div>
+          </div>
+          <p class="text-xs text-gray-500 mt-3 leading-relaxed">
+            <span class="font-semibold text-gray-700">Recovery loop:</span> missed day isn't punishment — it's a visible nick on your chain. Fixing it feels like maintenance, not shame.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========== CONCEPT 3: Milestone charms =========== -->
+    <section class="mb-16">
+      <div class="flex items-baseline gap-3 mb-5">
+        <span class="num-pill">03</span>
+        <h2 class="section-title">Milestone charms</h2>
+      </div>
+      <p class="section-sub -mt-3 mb-6 ml-12 max-w-2xl">Small ornaments attach to the chain at 7 / 30 / 100 / 365 days and stay forever. Gives the chain a story — each one is a permanent bookmark.</p>
+
+      <div class="concept-card">
+        <div class="habit-card">
+          <div class="name">Meditate</div>
+          <div class="bar"><div class="bar-fill" style="width: 92%"></div></div>
+          <div class="chain-row tier-gold" style="padding-top: 8px;">
+            <!-- 1 -->
+            <div class="chain-cell charm-slot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 0 1 0 10h-2"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div>
+            <div class="connector"></div>
+            <!-- 2 -->
+            <div class="chain-cell charm-slot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 0 1 0 10h-2"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div>
+            <div class="connector"></div>
+            <!-- 3 - 7-day charm -->
+            <div class="chain-cell charm-slot">
+              <span class="charm-line"></span>
+              <span class="charm" title="7-day streak — first week">⭐</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 0 1 0 10h-2"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+            </div>
+            <div class="connector"></div>
+            <!-- 4 -->
+            <div class="chain-cell charm-slot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 0 1 0 10h-2"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div>
+            <div class="connector"></div>
+            <!-- 5 - 30-day charm -->
+            <div class="chain-cell charm-slot">
+              <span class="charm-line"></span>
+              <span class="charm gold" title="30-day streak — a month">🏅</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 0 1 0 10h-2"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+            </div>
+            <div class="connector"></div>
+            <!-- 6 -->
+            <div class="chain-cell charm-slot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 0 1 0 10h-2"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div>
+            <div class="connector"></div>
+            <!-- 7 -->
+            <div class="chain-cell today charm-slot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 0 1 0 10h-2"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div>
+          </div>
+          <div class="flex items-center justify-between mt-4 text-[11px]">
+            <span class="text-gray-500">Streak <span class="font-bold text-gray-900">47 days</span></span>
+            <span class="text-gray-500">Next charm at day <span class="font-bold text-gray-900">100</span></span>
+          </div>
+        </div>
+        <div class="mt-4 flex flex-wrap gap-3">
+          <div class="flex items-center gap-2 text-xs text-gray-600"><span class="charm" style="position: static; transform: none;">⭐</span> 7-day streak</div>
+          <div class="flex items-center gap-2 text-xs text-gray-600"><span class="charm gold" style="position: static; transform: none;">🏅</span> 30-day streak</div>
+          <div class="flex items-center gap-2 text-xs text-gray-600"><span class="charm crown" style="position: static; transform: none;">👑</span> 100-day streak</div>
+          <div class="flex items-center gap-2 text-xs text-gray-600"><span class="charm" style="position: static; transform: none; background: linear-gradient(145deg, #F9FAFB, #E5E7EB); border-color: #F2B84B;">💎</span> 365-day legendary</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========== CONCEPT 4: Aesthetic skins =========== -->
+    <section class="mb-16">
+      <div class="flex items-baseline gap-3 mb-5">
+        <span class="num-pill">04</span>
+        <h2 class="section-title">Aesthetic skins</h2>
+      </div>
+      <p class="section-sub -mt-3 mb-6 ml-12 max-w-2xl">Per-habit or per-category chain styles. "Chain" fits fitness; "Vine" fits gardening-style habits; "Lightning" fits bursts; "DNA" fits biology. Unlockable with streaks or as a Pro perk.</p>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+        <!-- Classic -->
+        <div class="concept-card skin-chain">
+          <div class="mini-label mb-1">DEFAULT</div>
+          <div class="text-[13px] font-bold text-gray-900 mb-4">Classic chain</div>
+          <div class="chain-row mb-2">
+            <div class="chain-cell"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 0 1 0 10h-2"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div>
+            <div class="connector"></div>
+            <div class="chain-cell"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 0 1 0 10h-2"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div>
+            <div class="connector"></div>
+            <div class="chain-cell"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 0 1 0 10h-2"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div>
+          </div>
+          <p class="text-[11px] text-gray-500">Today's look.</p>
+        </div>
+
+        <!-- Vine -->
+        <div class="concept-card skin-vine">
+          <div class="mini-label mb-1" style="color:#4D7C0F;">BIOLOGY / GROWTH</div>
+          <div class="text-[13px] font-bold text-gray-900 mb-4">Vine</div>
+          <div class="chain-row mb-2">
+            <div class="chain-cell"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 22c5-3 10-6 10-12 0-3-3-6-6-6s-6 3-6 6"/><path d="M14 14c3-2 6-4 6-8 0-2-2-4-4-4s-4 2-4 4"/></svg></div>
+            <div class="connector"></div>
+            <div class="chain-cell"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 22c5-3 10-6 10-12 0-3-3-6-6-6s-6 3-6 6"/><path d="M14 14c3-2 6-4 6-8 0-2-2-4-4-4s-4 2-4 4"/></svg></div>
+            <div class="connector"></div>
+            <div class="chain-cell"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 22c5-3 10-6 10-12 0-3-3-6-6-6s-6 3-6 6"/><path d="M14 14c3-2 6-4 6-8 0-2-2-4-4-4s-4 2-4 4"/></svg></div>
+          </div>
+          <p class="text-[11px] text-gray-500">Grows leaves at milestones.</p>
+        </div>
+
+        <!-- Lightning -->
+        <div class="concept-card skin-lightning">
+          <div class="mini-label mb-1" style="color:#B45309;">ENERGY / BURSTS</div>
+          <div class="text-[13px] font-bold text-gray-900 mb-4">Lightning</div>
+          <div class="chain-row mb-2">
+            <div class="chain-cell"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="13,2 3,14 12,14 11,22 21,10 12,10"/></svg></div>
+            <div class="connector"></div>
+            <div class="chain-cell"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="13,2 3,14 12,14 11,22 21,10 12,10"/></svg></div>
+            <div class="connector"></div>
+            <div class="chain-cell"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="13,2 3,14 12,14 11,22 21,10 12,10"/></svg></div>
+          </div>
+          <p class="text-[11px] text-gray-500">Electric pulse between nodes.</p>
+        </div>
+
+        <!-- DNA -->
+        <div class="concept-card skin-dna">
+          <div class="mini-label mb-1" style="color:#6B21A8;">SCIENCE / LEARN</div>
+          <div class="text-[13px] font-bold text-gray-900 mb-4">DNA helix</div>
+          <div class="chain-row mb-2">
+            <div class="chain-cell"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M3 5c4 0 8 4 8 7s-4 7-8 7"/><path d="M21 5c-4 0-8 4-8 7s4 7 8 7"/><line x1="5" y1="8" x2="19" y2="8"/><line x1="5" y1="16" x2="19" y2="16"/></svg></div>
+            <div class="connector"></div>
+            <div class="chain-cell"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M3 5c4 0 8 4 8 7s-4 7-8 7"/><path d="M21 5c-4 0-8 4-8 7s4 7 8 7"/><line x1="5" y1="8" x2="19" y2="8"/><line x1="5" y1="16" x2="19" y2="16"/></svg></div>
+            <div class="connector"></div>
+            <div class="chain-cell"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M3 5c4 0 8 4 8 7s-4 7-8 7"/><path d="M21 5c-4 0-8 4-8 7s4 7 8 7"/><line x1="5" y1="8" x2="19" y2="8"/><line x1="5" y1="16" x2="19" y2="16"/></svg></div>
+          </div>
+          <p class="text-[11px] text-gray-500">Rungs ladder between links.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========== CONCEPT 5: Lineage view =========== -->
+    <section class="mb-16">
+      <div class="flex items-baseline gap-3 mb-5">
+        <span class="num-pill">05</span>
+        <h2 class="section-title">Lineage view</h2>
+      </div>
+      <p class="section-sub -mt-3 mb-6 ml-12 max-w-2xl">Tap any chain → zoom out to see its entire lifetime. The card only shows the last 5 days; the chain is much longer. Seeing the actual length is the single biggest motivator.</p>
+
+      <div class="concept-card">
+        <div class="habit-card">
+          <div class="flex items-center justify-between mb-2">
+            <div class="name">Push-ups (lifetime)</div>
+            <span class="text-[11px] text-gray-500 font-medium">Longest streak: <span class="font-bold text-gray-900">138 days</span></span>
+          </div>
+          <div class="lineage" id="lineage">
+            <!-- Rendered by JS -->
+          </div>
+          <div class="mt-2 flex items-center gap-5 text-[11px] text-gray-500">
+            <div class="flex items-center gap-1.5"><span class="ln-dot"></span> Day forged</div>
+            <div class="flex items-center gap-1.5"><span class="ln-dot missed"></span> Missed</div>
+            <div class="flex items-center gap-1.5"><span class="ln-dot ms7"></span> Weekly</div>
+            <div class="flex items-center gap-1.5"><span class="ln-dot ms30"></span> Monthly</div>
+            <div class="flex items-center gap-1.5"><span class="ln-dot ms100"></span> 100-day</div>
+          </div>
+        </div>
+        <p class="text-xs text-gray-500 mt-3 leading-relaxed max-w-2xl">
+          <span class="font-semibold text-gray-700">Why it works:</span> the 5-day window on the home card is great for "what's next?" but bad for "what have I done?" A lineage sheet answers the second question without leaving the card's mental model.
+        </p>
+      </div>
+    </section>
+
+    <!-- Recommendation footer ---------------------------------- -->
+    <footer class="concept-card mt-4">
+      <div class="flex items-start gap-3">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-emerald-600 mt-0.5 flex-shrink-0"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        <div>
+          <div class="text-sm font-bold text-gray-900 mb-1">Recommendation</div>
+          <p class="text-sm text-gray-600 leading-relaxed">
+            Start with <strong>Concept 01 (material progression)</strong> — it reuses the <span class="kbd">strengthConfig</span> tiers already in the code and gives the chain a visible evolution story with no new data. Layer <strong>Concept 03 (charms)</strong> on top once 01 ships — purely additive visuals, high emotional payoff. Save <strong>02 / 04 / 05</strong> for a later pack.
+          </p>
+          <p class="text-xs text-gray-400 mt-2">Tradeoff: gamification can cannibalize the habit itself — rewards should be incidental, never block or nag the user.</p>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Interactive bits -->
+  <script>
+    function forgeLink(el) {
+      if (el.classList.contains('forging')) return;
+      el.classList.add('forging');
+      // Swap empty state → filled
+      el.classList.remove('empty');
+      el.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 0 1 0 10h-2"/><line x1="8" y1="12" x2="16" y2="12"/></svg>';
+      el.classList.add('forge-flash');
+
+      // Fire 8 spark particles
+      const rect = el.getBoundingClientRect();
+      for (let i = 0; i < 8; i++) {
+        const s = document.createElement('div');
+        s.className = 'spark';
+        document.body.appendChild(s);
+        s.style.top = (rect.top + rect.height / 2 - 2.5) + 'px';
+        s.style.left = (rect.left + rect.width / 2 - 2.5) + 'px';
+        s.style.position = 'fixed';
+        const angle = (i / 8) * Math.PI * 2;
+        const dist = 40 + Math.random() * 20;
+        const dx = Math.cos(angle) * dist;
+        const dy = Math.sin(angle) * dist - 10;
+        s.animate(
+          [
+            { opacity: 1, transform: 'translate(0, 0) scale(1)' },
+            { opacity: 0, transform: `translate(${dx}px, ${dy}px) scale(0)` },
+          ],
+          { duration: 500 + Math.random() * 200, easing: 'cubic-bezier(.2,.8,.3,1)' }
+        ).onfinish = () => s.remove();
+      }
+
+      // Turn the prev ghost connector into a solid one
+      const prevConnector = el.previousElementSibling;
+      if (prevConnector && prevConnector.classList.contains('ghost')) {
+        prevConnector.classList.remove('ghost');
+      }
+
+      // Reset after 2.2 s so user can replay
+      setTimeout(() => {
+        el.classList.remove('forging', 'forge-flash');
+        el.classList.add('empty', 'today');
+        el.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>';
+        if (prevConnector) prevConnector.classList.add('ghost');
+      }, 2200);
+    }
+
+    function repairLink(el) {
+      if (el.classList.contains('repairing')) return;
+      el.classList.add('repairing');
+      el.classList.remove('broken', 'pulsing');
+      el.classList.add('forge-flash');
+      el.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 0 1 0 10h-2"/><line x1="8" y1="12" x2="16" y2="12"/></svg>';
+
+      // Re-connect the missing connectors
+      const prev = el.previousElementSibling;
+      const next = el.nextElementSibling;
+      if (prev && prev.classList.contains('missing')) {
+        prev.classList.remove('missing');
+      }
+      if (next && next.classList.contains('missing')) {
+        next.classList.remove('missing');
+      }
+
+      // Spark burst
+      const rect = el.getBoundingClientRect();
+      for (let i = 0; i < 6; i++) {
+        const s = document.createElement('div');
+        s.className = 'spark';
+        document.body.appendChild(s);
+        s.style.top = (rect.top + rect.height / 2 - 2.5) + 'px';
+        s.style.left = (rect.left + rect.width / 2 - 2.5) + 'px';
+        s.style.position = 'fixed';
+        const angle = (i / 6) * Math.PI * 2;
+        const dist = 30 + Math.random() * 15;
+        s.animate(
+          [
+            { opacity: 1, transform: 'translate(0,0) scale(1)' },
+            { opacity: 0, transform: `translate(${Math.cos(angle) * dist}px, ${Math.sin(angle) * dist - 6}px) scale(0)` },
+          ],
+          { duration: 500, easing: 'cubic-bezier(.2,.8,.3,1)' }
+        ).onfinish = () => s.remove();
+      }
+
+      setTimeout(() => {
+        // Reset to broken state so the user can replay
+        el.classList.remove('repairing', 'forge-flash');
+        el.classList.add('broken', 'pulsing');
+        if (prev) prev.classList.add('missing');
+        if (next) next.classList.add('missing');
+        el.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M21 3l-7 7"/><path d="M9 21H3v-6"/><path d="M3 21l7-7"/></svg>';
+      }, 2400);
+    }
+
+    // Render a synthetic lineage across ~140 days
+    (() => {
+      const el = document.getElementById('lineage');
+      if (!el) return;
+      const days = 140;
+      const missed = new Set([18, 19, 44, 77, 78, 79, 112, 130]);
+      const frag = document.createDocumentFragment();
+      for (let d = 1; d <= days; d++) {
+        const dot = document.createElement('div');
+        dot.className = 'ln-dot';
+        dot.title = `Day ${d}`;
+        if (missed.has(d)) dot.classList.add('missed');
+        if (d === 7 || d === 14 || d === 21) dot.classList.add('ms7');
+        if (d === 30 || d === 60 || d === 90) dot.classList.add('ms30');
+        if (d === 100) dot.classList.add('ms100');
+        if (d === days) dot.classList.add('today-mark');
+        frag.appendChild(dot);
+      }
+      el.appendChild(frag);
+    })();
+  </script>
+</body>
+</html>
