@@ -2036,6 +2036,28 @@ export const seedAdditionalTemplates = internalMutation({
       category: 'mindfulness',
       createdAt: now,
       description:
+        'Do the 13-minute guided breath-anchoring meditation from Dr. Wendy Suzuki’s NYU lab. Eight weeks of daily practice improved attention, working memory, mood, and emotional regulation in non-experienced meditators.',
+      frequency: FREQUENCY_DAILY,
+      icon: '🧠',
+      iconColor: '#6366F1',
+      name: '13-Minute Focus Meditation',
+      popularityScore: 90,
+      scientificLink:
+        'https://www.sciencedirect.com/science/article/abs/pii/S016643281830322X',
+      scientificReference:
+        'Basso et al. (2019) - Brief, daily meditation enhances attention, memory, mood, and emotional regulation in non-experienced meditators (Wendy Suzuki lab, NYU)',
+      tips: [
+        'Follow the guided audio — don’t try to freestyle it',
+        'Commit to 8 weeks daily; the study’s benefits appeared at that cadence',
+        'Same time each day (morning works best for focus benefits)',
+      ],
+      youtubeLink: 'https://www.youtube.com/watch?v=4GtpuD13nZk',
+    });
+
+    await insertWithTracking({
+      category: 'mindfulness',
+      createdAt: now,
+      description:
         'Take periodic breaks from high-dopamine activities (social media, games, junk food). Resets reward circuitry and increases motivation.',
       frequency: 'weekly',
       icon: '🧘‍♂️',
