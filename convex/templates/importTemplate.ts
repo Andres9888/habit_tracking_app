@@ -10,6 +10,7 @@ import {
   requireValid,
   MAX_HABIT_NAME_LENGTH,
 } from '../lib/inputValidation';
+import { progressEmojisValidator } from '../lib/progressEmojisValidator';
 import { hasPremiumAccess } from '../subscriptions/premiumCheck';
 
 /**
@@ -23,7 +24,16 @@ export const importTemplate = mutation({
         iconColor: v.optional(v.string()),
         name: v.optional(v.string()),
         preferredTime: v.optional(v.string()),
+        progressEmojis: v.optional(progressEmojisValidator),
         reminderTime: v.optional(v.string()),
+        streakGoal: v.optional(v.number()),
+        strengthAlgorithm: v.optional(
+          v.union(
+            v.literal('forgiving'),
+            v.literal('balanced'),
+            v.literal('strict')
+          )
+        ),
       })
     ),
     templateId: v.id('templates'),
@@ -125,6 +135,9 @@ export const importTemplate = mutation({
         ? { daysOfWeek: args.customizations.daysOfWeek }
         : {}),
       frequency: template.frequency,
+      ...(args.customizations?.streakGoal !== undefined
+        ? { goalDuration: args.customizations.streakGoal }
+        : {}),
       icon: template.icon,
       iconColor: validatedIconColor,
       name: validatedName,
@@ -134,9 +147,15 @@ export const importTemplate = mutation({
       ...(args.customizations?.preferredTime
         ? { preferredTime: args.customizations.preferredTime }
         : {}),
+      ...(args.customizations?.progressEmojis
+        ? { progressEmojis: args.customizations.progressEmojis }
+        : {}),
       remindersEnabled: !!validatedReminderTime,
       reminderTime: validatedReminderTime,
       strength: 0,
+      ...(args.customizations?.strengthAlgorithm
+        ? { strengthAlgorithm: args.customizations.strengthAlgorithm }
+        : {}),
       strengthLevel: 'starting',
       strengthUpdatedAt: Date.now(),
       totalCompletions: 0,

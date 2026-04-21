@@ -22,6 +22,7 @@ import { EmojiPicker } from '../../../components/CreateHabitModal/components/Emo
 import { ColorPickerSection } from '../../../components/CreateHabitModal/components/ColorPickerSection';
 import { EnhancedReminderSelector } from '../../../components/CreateHabitModal/components/EnhancedReminderSelector';
 import { HABIT_COLORS } from '../../../components/CreateHabitModal/constants';
+import { AdvancedOptionsSection } from '../../../components/AdvancedOptions';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { borderRadius, shadows } from '../../../theme/spacing';
 import { fontWeights, typography } from '../../../theme/typography';
@@ -58,11 +59,17 @@ export default function TemplatePreviewModal({
     preferredTime,
     selectedDays,
     reminderTime,
+    strengthAlgorithm,
+    progressEmojis,
+    streakGoal,
     handleImport,
     handleColorSelect,
     handleSelectPreferredTime,
     handleToggleDay,
     handleTimeChange,
+    handleStrengthAlgorithmChange,
+    handleProgressEmojisChange,
+    handleStreakGoalChange,
   } = useTemplatePreview({ onClose: animateOut, onImport, template });
 
   const [isFocused, setIsFocused] = useState(false);
@@ -185,7 +192,7 @@ export default function TemplatePreviewModal({
                       entering={entrance(280)}
                     >
                       <Text
-                        className='mb-3 text-center uppercase'
+                        className='text-center uppercase'
                         style={{
                           ...typography.caption,
                           fontWeight: fontWeights.semibold,
@@ -194,6 +201,15 @@ export default function TemplatePreviewModal({
                         }}
                       >
                         Pick a color
+                      </Text>
+                      <Text
+                        className='mb-3 mt-1 text-center'
+                        style={{
+                          ...typography.caption,
+                          color: colors.text.tertiary,
+                        }}
+                      >
+                        Color your habit's icon and progress accents.
                       </Text>
 
                       <Animated.View entering={entrance(60)}>
@@ -221,7 +237,7 @@ export default function TemplatePreviewModal({
                       entering={entrance(340)}
                     >
                       <Text
-                        className='mt-4 mb-3 text-center uppercase'
+                        className='mt-4 text-center uppercase'
                         style={{
                           ...typography.caption,
                           fontWeight: fontWeights.semibold,
@@ -230,6 +246,15 @@ export default function TemplatePreviewModal({
                         }}
                       >
                         Schedule
+                      </Text>
+                      <Text
+                        className='mb-3 mt-1 text-center'
+                        style={{
+                          ...typography.caption,
+                          color: colors.text.tertiary,
+                        }}
+                      >
+                        Choose when — and which days — you'll practice.
                       </Text>
                       <Animated.View
                         className='rounded-2xl p-4'
@@ -251,10 +276,21 @@ export default function TemplatePreviewModal({
                       </Animated.View>
                     </Animated.View>
 
+                    {/* Advanced options - matches Add/Edit screens */}
+                    <AdvancedOptionsSection
+                      baseDelay={340}
+                      progressEmojis={progressEmojis}
+                      streakGoal={streakGoal}
+                      strengthAlgorithm={strengthAlgorithm}
+                      onProgressEmojisChange={handleProgressEmojisChange}
+                      onStreakGoalChange={handleStreakGoalChange}
+                      onStrengthAlgorithmChange={handleStrengthAlgorithmChange}
+                    />
+
                     {/* Template info */}
                     <Animated.View
                       className='px-6 mt-4'
-                      entering={entrance(400)}
+                      entering={entrance(460)}
                     >
                       <TemplateInfo
                         category={template.category}
