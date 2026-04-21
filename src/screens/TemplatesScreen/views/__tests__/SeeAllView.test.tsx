@@ -43,7 +43,7 @@ describe('SeeAllView', () => {
 
   it('renders the shared ScreenHeader with title', () => {
     const { getByText } = render(<SeeAllView {...baseProps} />);
-    expect(getByText('Trending habits')).toBeTruthy();
+    expect(getByText('Popular habits')).toBeTruthy();
   });
 
   it('renders subtitle with template count', () => {

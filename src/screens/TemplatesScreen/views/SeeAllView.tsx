@@ -43,7 +43,7 @@ export function SeeAllView({
     >
       <ScreenHeader
         subtitle={`${habitCountLabel} · sorted by popularity`}
-        title='Trending habits'
+        title='Popular habits'
         onBack={onBack}
       />
       <FlatList
