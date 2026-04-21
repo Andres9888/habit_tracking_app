@@ -1,60 +1,44 @@
 /** TemplatesLoadingState - Shimmer animation, stagger, shadows */
-import { View, Text } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useThemeColors } from '../../../theme/ThemeContext';
-import { fontFamilies } from '../../../theme/typography';
+import { borderRadius, spacing } from '../../../theme/spacing';
+import { typography } from '../../../theme/typography';
 import { ShimmerBox } from './ShimmerBox';
 import { SkeletonCard } from './SkeletonCard';
+
+const CHIP_WIDTHS = [64, 86, 78, 74, 68, 82];
 
 export function TemplatesLoadingState() {
   const { colors } = useThemeColors();
 
   return (
-    <View style={{ flex: 1, backgroundColor: colors.background }}>
-      <View
-        style={{ paddingHorizontal: 20, paddingBottom: 16, paddingTop: 24 }}
-      >
-        <Text
-          style={{
-            color: colors.text.primary,
-            fontFamily: fontFamilies.primary.display,
-            fontSize: 22,
-            fontWeight: '600',
-            letterSpacing: -0.35,
-          }}
-        >
+    <View style={[styles.root, { backgroundColor: colors.background }]}>
+      <View style={styles.header}>
+        <Text style={[typography.heading1, { color: colors.text.primary }]}>
           Templates
         </Text>
         <Text
-          style={{
-            color: colors.text.secondary,
-            fontFamily: fontFamilies.primary.text,
-            fontSize: 17,
-            marginTop: 4,
-          }}
+          style={[
+            typography.body,
+            { color: colors.text.secondary, marginTop: spacing.xs },
+          ]}
         >
           Start with a category, a curated collection, or a quick add
         </Text>
       </View>
       <Animated.View
         entering={FadeInDown.duration(280).springify().damping(18)}
-        style={{ marginHorizontal: 20, marginBottom: 16 }}
+        style={styles.searchShimmer}
       >
-        <ShimmerBox height={48} style={{ borderRadius: 24 }} width='100%' />
+        <ShimmerBox height={48} style={styles.searchShimmerBox} width='100%' />
       </Animated.View>
-      <View
-        style={{
-          flexDirection: 'row',
-          gap: 8,
-          marginBottom: 16,
-          paddingHorizontal: 16,
-        }}
-      >
-        {[64, 86, 78, 74, 68, 82].map((w, i) => (
+      <View style={styles.chipRow}>
+        {CHIP_WIDTHS.map((w, i) => (
           <ShimmerBox
             key={i}
             height={36}
-            style={{ borderRadius: 9999 }}
+            style={styles.chipShimmer}
             width={w}
           />
         ))}
@@ -65,3 +49,30 @@ export function TemplatesLoadingState() {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  chipRow: {
+    flexDirection: 'row',
+    gap: spacing.sm,
+    marginBottom: spacing.base,
+    paddingHorizontal: spacing.base,
+  },
+  chipShimmer: {
+    borderRadius: borderRadius.full,
+  },
+  header: {
+    paddingBottom: spacing.base,
+    paddingHorizontal: spacing.lg,
+    paddingTop: spacing.lg,
+  },
+  root: {
+    flex: 1,
+  },
+  searchShimmer: {
+    marginBottom: spacing.base,
+    marginHorizontal: spacing.lg,
+  },
+  searchShimmerBox: {
+    borderRadius: borderRadius.xl,
+  },
+});
