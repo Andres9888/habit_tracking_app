@@ -23,12 +23,16 @@ import type { LucideIcon } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
 import { ALGORITHM_COPY } from '@/components/AlgorithmPicker';
 import type { AlgorithmMode } from '@/components/AlgorithmPicker';
-import { useUserDefaultProgressEmojis } from '@/hooks/useProgressEmojis';
+import {
+  useUserCustomProgressEmojis,
+  useUserDefaultProgressEmojis,
+} from '@/hooks/useProgressEmojis';
 import { useReduceMotion } from '@/hooks/useReduceMotion';
 import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '@/theme/ThemeContext';
 import { fontWeights, typography } from '@/theme/typography';
 import {
+  CUSTOM_PRESET_ID,
   matchPresetId,
   PROGRESS_EMOJI_PRESETS,
   resolveProgressEmojis,
@@ -61,6 +65,7 @@ export function AdvancedOptionsSection({
   const { colors } = useThemeColors();
   const reduceMotion = useReduceMotion();
   const userDefaultEmojis = useUserDefaultProgressEmojis();
+  const savedCustomEmojis = useUserCustomProgressEmojis();
   const [expanded, setExpanded] = useState(true);
   const [openSheet, setOpenSheet] = useState<SheetKey>(null);
   const chevron = useSharedValue(180);
@@ -84,9 +89,12 @@ export function AdvancedOptionsSection({
   const algoSubtitle = `${algoEntry.name} · ~${algoEntry.daysToForm} days to automatic`;
 
   const resolvedEmojis = resolveProgressEmojis(progressEmojis, userDefaultEmojis);
-  const presetId = matchPresetId(resolvedEmojis);
+  const presetId = matchPresetId(resolvedEmojis, savedCustomEmojis);
   const presetLabel =
-    PROGRESS_EMOJI_PRESETS.find((p) => p.id === presetId)?.label ?? 'Custom';
+    presetId === CUSTOM_PRESET_ID
+      ? 'Custom'
+      : (PROGRESS_EMOJI_PRESETS.find((p) => p.id === presetId)?.label ??
+        'Custom');
   const streakSubtitle =
     streakGoal > 0 ? `Aim for ${streakGoal} day${streakGoal === 1 ? '' : 's'}` : 'No goal set';
 

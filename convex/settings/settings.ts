@@ -47,6 +47,7 @@ export const get = query({
       highContrastMode:
         settings?.highContrastMode ?? DEFAULT_SETTINGS.highContrastMode,
       progressEmojis: settings?.progressEmojis,
+      customProgressEmojis: settings?.customProgressEmojis,
       reduceMotion: settings?.reduceMotion ?? DEFAULT_SETTINGS.reduceMotion,
       showCalendarView:
         settings?.showCalendarView ?? DEFAULT_SETTINGS.showCalendarView,

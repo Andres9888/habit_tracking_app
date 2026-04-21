@@ -5,6 +5,7 @@
 import type { StyleProp, ViewStyle } from 'react-native';
 
 import type {
+  ProgressEmojiPreset,
   ProgressEmojiSet,
   StrengthLevelKey,
 } from '@/utils/progressEmojis';
@@ -22,6 +23,8 @@ export interface ProgressEmojiPickerProps {
   toggleRowStyle?: StyleProp<ViewStyle>;
   /** Style applied to the expanded customization panel. */
   expandedPanelStyle?: StyleProp<ViewStyle>;
+  /** User's saved "Custom" preset. When present, appears as a 6th chip. */
+  customPreset?: ProgressEmojiPreset | null;
 }
 
 export interface ProgressEmojiSlotRowProps {

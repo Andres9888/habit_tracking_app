@@ -85,11 +85,22 @@ export function resolveProgressEmojis(
   return { ...DEFAULT_PROGRESS_EMOJIS, ...userDefault, ...habitOverride };
 }
 
-export function matchPresetId(set: ProgressEmojiSet): string | null {
+export const CUSTOM_PRESET_ID = 'custom';
+
+export function matchPresetId(
+  set: ProgressEmojiSet,
+  customEmojis?: ProgressEmojiSet
+): string | null {
   for (const preset of PROGRESS_EMOJI_PRESETS) {
     if (STRENGTH_LEVEL_KEYS.every((k) => preset.emojis[k] === set[k])) {
       return preset.id;
     }
+  }
+  if (
+    customEmojis &&
+    STRENGTH_LEVEL_KEYS.every((k) => customEmojis[k] === set[k])
+  ) {
+    return CUSTOM_PRESET_ID;
   }
   return null;
 }

@@ -28,3 +28,8 @@ export function useUserDefaultProgressEmojis(): ProgressEmojiSet {
     settings?.progressEmojis ?? undefined
   );
 }
+
+export function useUserCustomProgressEmojis(): ProgressEmojiSet | undefined {
+  const settings = useQuery(api.settings.get);
+  return settings?.customProgressEmojis ?? undefined;
+}
