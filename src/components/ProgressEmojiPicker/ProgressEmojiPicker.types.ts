@@ -25,6 +25,8 @@ export interface ProgressEmojiPickerProps {
   expandedPanelStyle?: StyleProp<ViewStyle>;
   /** User's saved "Custom" preset. When present, appears as a 6th chip. */
   customPreset?: ProgressEmojiPreset | null;
+  /** Custom-chip tap override — called instead of onChange for that chip. */
+  onTapCustom?: () => void;
 }
 
 export interface ProgressEmojiSlotRowProps {

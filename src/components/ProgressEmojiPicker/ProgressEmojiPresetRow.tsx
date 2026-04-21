@@ -21,12 +21,14 @@ interface Props {
   activePresetId: string | null;
   onSelect: (next: ProgressEmojiSet) => void;
   customPreset?: ProgressEmojiPreset | null;
+  onTapCustom?: () => void;
 }
 
 export function ProgressEmojiPresetRow({
   activePresetId,
   onSelect,
   customPreset,
+  onTapCustom,
 }: Props) {
   const { isDark } = useThemeColors();
   const { handleScroll, showLeftFade, showRightFade } =
@@ -65,7 +67,7 @@ export function ProgressEmojiPresetRow({
           <ProgressEmojiPresetChip
             isActive={customPreset.id === activePresetId}
             preset={customPreset}
-            onPress={() => onSelect(customPreset.emojis)}
+            onPress={onTapCustom ?? (() => onSelect(customPreset.emojis))}
           />
         ) : null}
       </ScrollView>

@@ -15,6 +15,7 @@ import {
   CUSTOM_PRESET_ID,
   DEFAULT_PROGRESS_EMOJIS,
   matchPresetId,
+  resolveProgressEmojis,
   STRENGTH_LEVEL_KEYS,
   type ProgressEmojiPreset,
   type ProgressEmojiSet,
@@ -44,12 +45,20 @@ export function GrowthIconsSettingsRow({ highContrastMode }: Props) {
     return matchesDefault ? undefined : currentValue;
   }, [currentValue]);
 
-  const customPreset = useMemo<ProgressEmojiPreset | null>(
-    () =>
-      savedCustom
-        ? { id: CUSTOM_PRESET_ID, label: 'Custom', emojis: savedCustom }
-        : null,
-    [savedCustom]
+  const resolvedSet = useMemo(
+    () => resolveProgressEmojis(pickerValue, DEFAULT_PROGRESS_EMOJIS),
+    [pickerValue]
+  );
+
+  // Custom chip ALWAYS visible. When empty, preview the user's current
+  // resolved set so the chip is useful as a "bookmark this combo" action.
+  const customPreset = useMemo<ProgressEmojiPreset>(
+    () => ({
+      id: CUSTOM_PRESET_ID,
+      label: 'Custom',
+      emojis: savedCustom ?? resolvedSet,
+    }),
+    [savedCustom, resolvedSet]
   );
 
   const handleChange = useCallback(
@@ -68,6 +77,17 @@ export function GrowthIconsSettingsRow({ highContrastMode }: Props) {
     },
     [updateSettings, savedCustom]
   );
+
+  const handleTapCustom = useCallback(() => {
+    if (!savedCustom) {
+      // Seed: save current resolved set as the user's Custom. No change
+      // to progressEmojis — they already see this set.
+      void updateSettings({ customProgressEmojis: resolvedSet });
+      return;
+    }
+    // Apply saved Custom to the active set.
+    void updateSettings({ progressEmojis: savedCustom });
+  }, [savedCustom, resolvedSet, updateSettings]);
 
   return (
     <View>
@@ -91,6 +111,7 @@ export function GrowthIconsSettingsRow({ highContrastMode }: Props) {
         toggleRowStyle={{ paddingLeft: 72, paddingRight: 16 }}
         value={pickerValue}
         onChange={handleChange}
+        onTapCustom={handleTapCustom}
       />
     </View>
   );

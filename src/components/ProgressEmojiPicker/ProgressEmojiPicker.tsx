@@ -39,6 +39,7 @@ function ProgressEmojiPickerComponent({
   toggleRowStyle,
   expandedPanelStyle,
   customPreset,
+  onTapCustom,
 }: ProgressEmojiPickerProps) {
   const { colors: themeColors } = useThemeColors();
   const [expanded, setExpanded] = useState(false);
@@ -124,6 +125,7 @@ function ProgressEmojiPickerComponent({
             activePresetId={activePresetId}
             customPreset={customPreset}
             onSelect={handlePreset}
+            onTapCustom={onTapCustom}
           />
           {STRENGTH_LEVEL_KEYS.map((k) => (
             <ProgressEmojiSlotRow
