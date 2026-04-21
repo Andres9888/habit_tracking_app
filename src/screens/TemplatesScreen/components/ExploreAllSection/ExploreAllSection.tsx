@@ -42,7 +42,7 @@ function CategoryGroupSection({
         subtitle={group.subtitle}
         onToggle={() => setExpanded((prev) => !prev)}
       />
-      {(expanded ? group.templates : group.templates.slice(0, 2)).map((item) => (
+      {(expanded ? group.templates : group.templates.slice(0, 3)).map((item) => (
         <ExploreHabitRow
           key={item._id}
           importedTemplateIds={importedTemplateIds}
@@ -81,10 +81,9 @@ export function ExploreAllSection({
       <Text style={[s.intro, { color: colors.text.secondary }]}>
         Every strong habit fits into a larger part of your life.
       </Text>
-      {groups.map((group, index) => (
+      {groups.map((group) => (
         <CategoryGroupSection
           key={group.category}
-          defaultExpanded={index < 3}
           group={group}
           importedTemplateIds={importedTemplateIds}
           importingTemplateId={importingTemplateId}
