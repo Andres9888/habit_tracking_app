@@ -7,7 +7,6 @@
 
 import { ScrollView, StyleSheet, View } from 'react-native';
 import Animated, { FadeInDown, FadeOutUp } from 'react-native-reanimated';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ScreenHeader } from '../../../components/ScreenHeader';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { durations, springs } from '../../../theme/animations';
@@ -32,7 +31,6 @@ const HEADER_SUBTITLE =
 
 export function MainBrowseView(p: MainBrowseViewProps) {
   const { colors } = useThemeColors();
-  const insets = useSafeAreaInsets();
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
@@ -41,6 +39,17 @@ export function MainBrowseView(p: MainBrowseViewProps) {
         subtitle={HEADER_SUBTITLE}
         title='What do you want to work on?'
       />
+      <Animated.View
+        entering={stagger(0)}
+        style={[styles.searchSection, p.searchAnimatedStyle]}
+      >
+        <SearchBar
+          inputHint='Try: morning walk · journaling · cold shower'
+          value={p.searchQuery}
+          onChangeText={p.onSearchChange}
+          onClear={p.onSearchClear}
+        />
+      </Animated.View>
       {p.isSearchActive ? (
         <Animated.View
           key='results'
@@ -60,7 +69,7 @@ export function MainBrowseView(p: MainBrowseViewProps) {
           <ScrollView
             showsVerticalScrollIndicator={false}
             contentContainerStyle={{
-              paddingBottom: insets.bottom + 88,
+              paddingBottom: spacing['2xl'],
               paddingTop: spacing.md,
             }}
           >
@@ -91,21 +100,6 @@ export function MainBrowseView(p: MainBrowseViewProps) {
           </ScrollView>
         </Animated.View>
       )}
-      <Animated.View
-        entering={stagger(0)}
-        style={[
-          s.floatingSearch,
-          { bottom: insets.bottom + spacing.sm },
-          p.searchAnimatedStyle,
-        ]}
-      >
-        <SearchBar
-          inputHint='Try: morning walk · journaling · cold shower'
-          value={p.searchQuery}
-          onChangeText={p.onSearchChange}
-          onClear={p.onSearchClear}
-        />
-      </Animated.View>
       {p.modals}
       {p.feedbackOverlays}
     </View>
@@ -114,5 +108,4 @@ export function MainBrowseView(p: MainBrowseViewProps) {
 
 const s = StyleSheet.create({
   body: { flex: 1 },
-  floatingSearch: { left: spacing.base, position: 'absolute', right: spacing.base },
 });
