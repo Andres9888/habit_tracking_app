@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
     zIndex: -1,
   },
   dayConnector: {
-    flex: 1,
+    width: '100%',
   },
 });
 
