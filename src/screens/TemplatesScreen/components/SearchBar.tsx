@@ -45,7 +45,15 @@ export function SearchBar({
         autoFocus={autoFocus}
         accessibilityLabel='Search habit library'
         returnKeyType='search'
-        style={[styles.searchInput, { color: colors.text.primary }]}
+        style={[
+          styles.searchInput,
+          {
+            color: colors.text.primary,
+            outlineWidth: 0,
+            outlineStyle: 'none',
+            outlineColor: 'transparent',
+          } as unknown as object,
+        ]}
         value={value}
         {...buildTextInputHintProps(inputHint, placeholderColor)}
         onChangeText={onChangeText}

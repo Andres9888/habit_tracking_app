@@ -76,8 +76,8 @@ export function SocialSignInButton({
       style={[
         animatedStyle,
         provider === 'google'
-          ? { borderColor: colors.border }
-          : { borderColor: 'black' },
+          ? { borderColor: colors.border, backgroundColor: '#FFFFFF' }
+          : { borderColor: '#000000', backgroundColor: '#000000' },
       ]}
       onPress={onPress}
       onPressIn={handlePressIn}
@@ -92,12 +92,12 @@ export function SocialSignInButton({
         ) : provider === 'google' ? (
           <GoogleLogo size={20} />
         ) : (
-          <AppleLogo color={colors.text.inverse} size={20} />
+          <AppleLogo color='#FFFFFF' size={20} />
         )}
       </View>
       <Text
         className='text-[15px] font-semibold'
-        style={{ color: provider === 'google' ? colors.text.primary : colors.text.inverse }}
+        style={{ color: provider === 'google' ? colors.text.primary : '#FFFFFF' }}
       >
         {isLoading ? 'Signing in...' : config.label}
       </Text>

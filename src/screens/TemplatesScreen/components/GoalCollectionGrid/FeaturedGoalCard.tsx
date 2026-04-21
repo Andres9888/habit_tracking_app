@@ -61,12 +61,12 @@ export function FeaturedGoalCard({
           style={[
             hero.cta,
             {
-              backgroundColor: 'rgba(255,255,255,0.55)',
-              borderColor: `${goal.textColor}33`,
+              backgroundColor: goal.textColor,
+              borderColor: goal.textColor,
             },
           ]}
         >
-          <Text style={[hero.ctaText, { color: goal.textColor }]}>{countText}</Text>
+          <Text style={[hero.ctaText, { color: '#FFFFFF' }]}>{countText}</Text>
         </View>
       </LinearGradient>
     </Pressable>

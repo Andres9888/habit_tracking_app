@@ -4,6 +4,7 @@
 
 import React from 'react';
 import { Pressable, Text, View } from 'react-native';
+import { ChevronRight } from 'lucide-react-native';
 import type { GoalCollection } from '../../data/goalCollections';
 import { s } from './GoalCollectionGrid.styles';
 
@@ -35,7 +36,9 @@ export function GoalCard({ goal, habitCount, onPress }: GoalCardProps) {
         <Text style={[s.meta, { color: goal.textColor }]}>
           {habitCount} {habitCount === 1 ? 'habit' : 'habits'}
         </Text>
-        <Text style={[s.arrow, { color: goal.textColor }]}>→</Text>
+        <View style={s.arrow}>
+          <ChevronRight color={goal.textColor} size={14} strokeWidth={2.5} />
+        </View>
       </View>
     </Pressable>
   );

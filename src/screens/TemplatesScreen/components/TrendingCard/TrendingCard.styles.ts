@@ -19,7 +19,7 @@ export const s = StyleSheet.create({
     ...shadows.card,
     borderRadius: borderRadius.large,
     borderWidth: 1.5,
-    padding: spacing.base,
+    padding: spacing.sm,
     width: CARD_WIDTH,
   },
   iconBox: {
@@ -33,12 +33,12 @@ export const s = StyleSheet.create({
   name: {
     ...typography.bodySmall,
     fontWeight: fontWeights.bold,
-    marginTop: spacing.md,
+    marginTop: spacing.sm,
   },
   description: {
     ...typography.caption,
     lineHeight: 17,
-    marginTop: spacing.xs,
+    marginTop: 2,
   },
   metaRow: {
     flexDirection: 'row',
@@ -64,7 +64,7 @@ export const s = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: 'auto' as unknown as number,
-    paddingTop: spacing.md,
+    paddingTop: spacing.sm,
   },
   popularityText: { ...typography.caption },
 });

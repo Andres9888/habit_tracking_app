@@ -47,7 +47,7 @@ export function TrendingCard({
 
       {description ? (
         <Text
-          numberOfLines={2}
+          numberOfLines={1}
           style={[s.description, { color: colors.text.secondary }]}
         >
           {description}
