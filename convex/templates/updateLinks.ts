@@ -24,7 +24,7 @@ export const updateYoutubeLinks = internalMutation({
       youtubeLinksData
     )) {
       const template = templatesByName.get(templateName);
-      if (template && !template.youtubeLink) {
+      if (template && template.youtubeLink !== youtubeLink) {
         await ctx.db.patch(template._id, { youtubeLink });
         updatedCount++;
         updatedNames.push(templateName);

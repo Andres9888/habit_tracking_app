@@ -795,7 +795,7 @@ export const seedTemplates = internalMutation({
         'https://hubermanlab.com/using-nsdr-to-improve-learning-skill-memory/',
       scientificReference:
         'Huberman Lab (2021) - Using NSDR to improve learning and sleep',
-      youtubeLink: 'https://www.youtube.com/watch?v=AKGrmY8UFWU',
+      youtubeLink: 'https://www.youtube.com/watch?v=KHIbgSN2qAU',
     });
 
     await insertWithTracking({
@@ -3160,7 +3160,7 @@ export const updateYoutubeLinks = internalMutation({
       // Health & Fitness Templates
       '10,000 Steps': 'https://www.youtube.com/watch?v=YQ7QGKIx6vY',
 
-      'NSDR Practice': 'https://www.youtube.com/watch?v=AKGrmY8UFWU',
+      'NSDR Practice': 'https://www.youtube.com/watch?v=KHIbgSN2qAU',
 
       'Hydration First': 'https://www.youtube.com/watch?v=81QHxWBJyFg',
 
@@ -3212,7 +3212,7 @@ export const updateYoutubeLinks = internalMutation({
 
       // Recovery templates
       'Sauna Recovery': 'https://www.youtube.com/watch?v=EQ3GjpGq5Y8',
-      'Yoga Nidra/NSDR': 'https://www.youtube.com/watch?v=AKGrmY8UFWU',
+      'Yoga Nidra/NSDR': 'https://www.youtube.com/watch?v=KHIbgSN2qAU',
     };
 
     let updatedCount = 0;
