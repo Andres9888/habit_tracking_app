@@ -2,6 +2,8 @@
  * Type definitions for TemplatePreviewModal
  */
 
+import type { AlgorithmMode } from '@/components/AlgorithmPicker';
+import type { ProgressEmojiSet } from '@/utils/progressEmojis';
 import type { Doc, Id } from '../../../../convex/_generated/dataModel';
 
 /** Customization options when importing a template */
@@ -10,7 +12,10 @@ export interface TemplateCustomizations {
   iconColor?: string;
   name?: string;
   preferredTime?: string;
+  progressEmojis?: ProgressEmojiSet;
   reminderTime?: string;
+  streakGoal?: number;
+  strengthAlgorithm?: AlgorithmMode;
 }
 
 /** Props for the TemplatePreviewModal component */
