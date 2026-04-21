@@ -6,10 +6,7 @@
  */
 
 import { ScrollView, StyleSheet, View } from 'react-native';
-import Animated, {
-  FadeInDown,
-  FadeOutUp,
-} from 'react-native-reanimated';
+import Animated, { FadeInDown, FadeOutUp } from 'react-native-reanimated';
 import { ScreenHeader } from '../../../components/ScreenHeader';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { durations, springs } from '../../../theme/animations';
@@ -47,7 +44,7 @@ export function MainBrowseView(p: MainBrowseViewProps) {
         style={[styles.searchSection, p.searchAnimatedStyle]}
       >
         <SearchBar
-          inputHint='Search habits'
+          inputHint='Try: morning walk · journaling · cold shower'
           value={p.searchQuery}
           onChangeText={p.onSearchChange}
           onClear={p.onSearchClear}
@@ -96,9 +93,6 @@ export function MainBrowseView(p: MainBrowseViewProps) {
             </Animated.View>
             <Animated.View entering={stagger(3)}>
               {p.exploreAllSection}
-            </Animated.View>
-            <Animated.View entering={stagger(4)}>
-              {p.premiumPacksSection}
             </Animated.View>
           </ScrollView>
         </Animated.View>

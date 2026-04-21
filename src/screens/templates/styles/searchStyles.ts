@@ -5,12 +5,17 @@ import { typography } from '@/theme/typography';
 export const searchStyles = StyleSheet.create({
   searchBar: {
     alignItems: 'center',
-    borderRadius: borderRadius.medium,
-    borderWidth: 1.5,
+    borderRadius: borderRadius.full,
+    borderWidth: 1,
+    elevation: 3,
     flexDirection: 'row',
     gap: spacing.sm,
-    height: 44,
+    height: 48,
     paddingHorizontal: spacing.base,
+    shadowColor: '#2D2A26',
+    shadowOffset: { height: 3, width: 0 },
+    shadowOpacity: 0.07,
+    shadowRadius: 10,
   },
   searchInput: {
     ...typography.body,

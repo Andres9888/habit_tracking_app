@@ -33,7 +33,7 @@ export function TemplatesLoadingState() {
             marginTop: 4,
           }}
         >
-          {'Browse by goal, category, or what\u2019s trending'}
+          {'Browse by goal, category, or what\u2019s popular'}
         </Text>
       </View>
       <Animated.View
