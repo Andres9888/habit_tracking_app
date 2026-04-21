@@ -4,6 +4,7 @@
  */
 export const youtubeLinksData: Record<string, string> = {
   '10,000 Steps': 'https://www.youtube.com/watch?v=YQ7QGKIx6vY',
+  '13-Minute Focus Meditation': 'https://www.youtube.com/watch?v=4GtpuD13nZk',
   '16:8 Intermittent Fasting': 'https://www.youtube.com/watch?v=9tRohh0gErM',
   '20-20-20 Eye Rule': 'https://www.youtube.com/watch?v=Birz7e0M_8Y',
   '24-Hour Purchase Rule': 'https://www.youtube.com/watch?v=IpZbw-K-6ts',
