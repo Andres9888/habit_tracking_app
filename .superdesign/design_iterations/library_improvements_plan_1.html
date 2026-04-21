@@ -1,0 +1,655 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Habit Library — Proposed Improvements v1</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&family=Literata:wght@600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    :root {
+      --bg: #f5f1ed;
+      --card: #edeae5;
+      --card-el: #ffffff;
+      --border: #ddd8d2;
+      --text-1: #2d2a26;
+      --text-2: #6b6560;
+      --text-3: #8a8278;
+      --primary: #059669;
+      --primary-dark: #047857;
+      --primary-bg: #d1fae5;
+      --science: #0369a1;
+      --science-bg: #e0f2fe;
+      --science-border: #bae6fd;
+      --streak: #8b6208;
+      --pop-bg: #fff7ed;
+      --pop-border: #fed7aa;
+      --pop-text: #c2410c;
+      --pairs: #7c3aed;
+      --pairs-bg: #f3efff;
+      --pairs-border: #ddd6fe;
+      --ff: 'DM Sans', sans-serif;
+      --ff-display: 'Literata', serif;
+      --r-full: 9999px;
+      --r-lg: 14px;
+      --r-md: 10px;
+      --r-sm: 8px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { -webkit-font-smoothing: antialiased; }
+    body {
+      background: #1c1917;
+      color: #e7e5e4;
+      font-family: var(--ff);
+      min-height: 100vh;
+      padding: 32px 24px 80px;
+      line-height: 1.5;
+    }
+
+    .container {
+      max-width: 1180px;
+      margin: 0 auto;
+    }
+    .page-kicker {
+      color: #a8a29e;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .page-title {
+      color: #f5f5f4;
+      font-family: var(--ff-display);
+      font-size: 30px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .page-sub {
+      color: #a8a29e;
+      font-size: 14px;
+      margin-bottom: 32px;
+      max-width: 680px;
+    }
+
+    .frames {
+      display: grid;
+      grid-template-columns: 380px 1fr;
+      gap: 44px;
+      align-items: start;
+    }
+
+    /* iPhone-ish frame */
+    .phone {
+      background: var(--bg);
+      border-radius: 42px;
+      padding: 14px;
+      box-shadow: 0 30px 60px rgba(0,0,0,0.45), 0 0 0 2px #2d2a26, inset 0 0 0 2px #1c1917;
+      position: sticky;
+      top: 24px;
+    }
+    .phone-inner {
+      background: var(--bg);
+      border-radius: 32px;
+      overflow: hidden;
+      height: 760px;
+      display: flex;
+      flex-direction: column;
+      color: var(--text-1);
+      font-family: var(--ff);
+    }
+    .status-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 22px 4px;
+      font-weight: 700;
+      font-size: 13px;
+      color: var(--text-1);
+    }
+    .status-bar .icons { display: flex; gap: 6px; opacity: 0.85; }
+
+    /* Modal handle + header */
+    .sheet-handle {
+      width: 40px; height: 4px;
+      background: #cfc8bf;
+      border-radius: 999px;
+      margin: 6px auto 6px;
+    }
+    .hero {
+      padding: 14px 20px 16px;
+      background: linear-gradient(180deg, rgba(5,150,105,0.12), rgba(5,150,105,0) 90%);
+      border-bottom: 1px solid var(--border);
+    }
+    .hero-top {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .circ-btn {
+      width: 36px; height: 36px; border-radius: 999px;
+      background: rgba(45,42,38,0.06);
+      display: grid; place-items: center;
+      color: var(--text-1);
+    }
+    .circ-btn svg { width: 18px; height: 18px; }
+    .hero-title {
+      font-family: var(--ff-display);
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text-1);
+      margin-bottom: 2px;
+    }
+    .hero-sub {
+      font-size: 13px;
+      color: var(--text-2);
+    }
+
+    /* Quick filter chips row */
+    .chips-row {
+      padding: 12px 0 10px 16px;
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      position: relative;
+    }
+    .chips-row::-webkit-scrollbar { display: none; }
+    .chip {
+      flex: 0 0 auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      border-radius: var(--r-full);
+      background: var(--card-el);
+      border: 1px solid var(--border);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-2);
+    }
+    .chip.active {
+      background: var(--primary);
+      border-color: var(--primary-dark);
+      color: #ecfdf5;
+    }
+    .chip.science {
+      background: var(--science-bg);
+      border-color: var(--science-border);
+      color: var(--science);
+    }
+    .chip.science.active {
+      background: var(--science);
+      border-color: var(--science);
+      color: #fff;
+    }
+    .chip.pairs {
+      background: var(--pairs-bg);
+      border-color: var(--pairs-border);
+      color: var(--pairs);
+    }
+
+    /* Search + filter bar */
+    .search-bar {
+      margin: 4px 16px 10px;
+      padding: 10px 12px;
+      border-radius: var(--r-md);
+      background: var(--card-el);
+      border: 1px solid var(--border);
+      display: flex; align-items: center; gap: 8px;
+      color: var(--text-3);
+      font-size: 14px;
+    }
+    .search-bar svg { width: 16px; height: 16px; }
+
+    .filter-bar {
+      margin: 0 16px 10px;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 8px;
+    }
+    .result-count {
+      font-size: 12px;
+      color: var(--text-2);
+      font-weight: 600;
+    }
+    .sort-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--text-1);
+      padding: 7px 10px;
+      background: var(--card-el);
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+    }
+    .sort-btn svg { width: 13px; height: 13px; }
+
+    /* Sort dropdown (animated/open) */
+    .sort-wrap { position: relative; }
+    .sort-menu {
+      position: absolute;
+      top: calc(100% + 6px);
+      right: 0;
+      width: 220px;
+      background: var(--card-el);
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+      box-shadow: 0 18px 40px rgba(0,0,0,0.12), 0 2px 6px rgba(0,0,0,0.05);
+      padding: 6px;
+      z-index: 5;
+    }
+    .sort-item {
+      padding: 9px 10px;
+      border-radius: 6px;
+      font-size: 13px;
+      color: var(--text-1);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .sort-item.active { background: #f0ebe4; font-weight: 700; }
+    .sort-item.new {
+      background: linear-gradient(90deg, rgba(124,58,237,0.1), rgba(124,58,237,0));
+      color: var(--pairs);
+      font-weight: 700;
+    }
+    .sort-item.new .badge-new {
+      font-size: 9px;
+      background: var(--pairs);
+      color: #fff;
+      padding: 2px 6px;
+      border-radius: 999px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .sort-item svg { width: 14px; height: 14px; }
+
+    /* Result list */
+    .list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0 0 16px;
+    }
+    .card {
+      margin: 8px 16px;
+      padding: 14px;
+      border-radius: var(--r-lg);
+      background: var(--card-el);
+      border: 1px solid var(--border);
+      display: flex;
+      gap: 12px;
+    }
+    .card .ic {
+      width: 42px; height: 42px;
+      border-radius: 10px;
+      display: grid; place-items: center;
+      font-size: 20px;
+    }
+    .ic.a { background: #dcfce7; }
+    .ic.b { background: #fef3c7; }
+    .ic.c { background: #ede9fe; }
+    .ic.d { background: #cffafe; }
+
+    .card-content { flex: 1; }
+    .card-title-row {
+      display: flex; align-items: flex-start; justify-content: space-between; gap: 10px;
+    }
+    .card-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-1);
+      line-height: 1.25;
+    }
+    .add-btn {
+      flex: 0 0 auto;
+      width: 30px; height: 30px;
+      border-radius: 999px;
+      background: var(--primary);
+      color: #fff;
+      display: grid; place-items: center;
+      font-weight: 700;
+      font-size: 18px;
+      line-height: 1;
+    }
+    .card-desc {
+      font-size: 13px;
+      color: var(--text-2);
+      margin-top: 3px;
+      line-height: 1.4;
+    }
+    .pills {
+      display: flex; flex-wrap: wrap; gap: 6px;
+      margin-top: 10px;
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+    }
+    .pill.pop { background: var(--pop-bg); border-color: var(--pop-border); color: var(--pop-text); }
+    .pill.sci { background: var(--science-bg); border-color: var(--science-border); color: var(--science); }
+    .pill.pairs { background: var(--pairs-bg); border-color: var(--pairs-border); color: var(--pairs); }
+
+    /* Empty state */
+    .empty {
+      margin: 18px 16px 0;
+      padding: 28px 18px;
+      border-radius: var(--r-lg);
+      background: var(--card-el);
+      border: 1px dashed var(--border);
+      text-align: center;
+    }
+    .empty-ic {
+      width: 52px; height: 52px; border-radius: 999px;
+      background: #f5f1ed;
+      display: grid; place-items: center;
+      margin: 0 auto 12px;
+      font-size: 26px;
+    }
+    .empty-title {
+      font-family: var(--ff-display);
+      font-weight: 700;
+      font-size: 17px;
+      color: var(--text-1);
+      margin-bottom: 4px;
+    }
+    .empty-sub {
+      font-size: 13px;
+      color: var(--text-2);
+      max-width: 260px;
+      margin: 0 auto 12px;
+    }
+    .empty-cta {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: var(--primary);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    /* Annotation column */
+    .annot-col { display: flex; flex-direction: column; gap: 16px; }
+    .annot {
+      background: #292524;
+      border: 1px solid #44403c;
+      border-radius: 14px;
+      padding: 16px 18px;
+      display: grid;
+      grid-template-columns: 38px 1fr;
+      gap: 14px;
+      color: #e7e5e4;
+    }
+    .annot .num {
+      width: 30px; height: 30px;
+      border-radius: 999px;
+      background: var(--primary);
+      color: #fff;
+      font-weight: 800;
+      font-size: 14px;
+      display: grid; place-items: center;
+    }
+    .annot h3 {
+      font-family: var(--ff-display);
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 4px;
+      color: #fafaf9;
+    }
+    .annot p {
+      font-size: 13px;
+      line-height: 1.55;
+      color: #d6d3d1;
+    }
+    .annot code {
+      font-family: ui-monospace, monospace;
+      font-size: 12px;
+      color: #fde68a;
+      background: rgba(255,255,255,0.04);
+      padding: 1px 5px;
+      border-radius: 4px;
+    }
+    .annot .tag {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: 999px;
+      margin-left: 8px;
+      background: #44403c;
+      color: #fafaf9;
+    }
+    .annot .tag.a { background: #14532d; color: #bbf7d0; }
+    .annot .tag.b { background: #1e3a8a; color: #bfdbfe; }
+
+    /* Pointer labels on phone */
+    .marker {
+      position: absolute;
+      width: 22px; height: 22px;
+      border-radius: 999px;
+      background: var(--primary);
+      color: #fff;
+      font-weight: 800;
+      font-size: 12px;
+      display: grid; place-items: center;
+      box-shadow: 0 4px 14px rgba(5,150,105,0.5);
+      border: 2px solid #fafaf9;
+    }
+    .phone { position: sticky; }
+    .phone-wrap { position: relative; }
+    /* marker positions over the phone */
+    .m1 { top: 168px; left: -10px; }
+    .m2 { top: 168px; left: 208px; }
+    .m3 { top: 260px; right: 6px; }
+    .m4 { top: 324px; right: 84px; }
+    .m5 { top: 612px; left: 8px; }
+
+    .footer-note {
+      margin-top: 28px;
+      color: #a8a29e;
+      font-size: 12px;
+      line-height: 1.6;
+      max-width: 820px;
+    }
+
+    @media (max-width: 900px) {
+      .frames { grid-template-columns: 1fr; }
+      .phone { position: static; margin: 0 auto; }
+      .marker { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="page-kicker">Habit Library · Proposed Improvements · v1</div>
+    <h1 class="page-title">What I plan to do</h1>
+    <p class="page-sub">
+      Drill view with the proposed polish + feature additions applied. Palette, chip styling, and card layout match the actual app tokens (<code style="font-family:ui-monospace,monospace;background:#292524;padding:1px 6px;border-radius:4px;color:#fde68a;font-size:12px;">warmPalette</code> + existing <code style="font-family:ui-monospace,monospace;background:#292524;padding:1px 6px;border-radius:4px;color:#fde68a;font-size:12px;">TemplateListCard</code> styles). Numbered markers map to annotations on the right.
+    </p>
+
+    <div class="frames">
+      <div class="phone-wrap">
+        <div class="phone">
+          <div class="phone-inner">
+            <div class="status-bar">
+              <span>9:41</span>
+              <span class="icons">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M2 17h20v2H2zm1.15-4.15L4.57 11.4l1.41 1.41-1.41 1.42zm2.84-2.84l1.41-1.41 1.41 1.41-1.41 1.41zm4.24-2.84l1.42-1.41 1.41 1.41-1.41 1.42z"/></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z"/></svg>
+              </span>
+            </div>
+
+            <div class="sheet-handle"></div>
+
+            <div class="hero">
+              <div class="hero-top">
+                <div class="circ-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></div>
+                <div style="font-size:11px; font-weight:700; letter-spacing:0.12em; color:var(--text-3); text-transform:uppercase;">CATEGORY</div>
+                <div class="circ-btn" style="opacity:0.45"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg></div>
+              </div>
+              <div class="hero-title">🌅 Morning routine</div>
+              <div class="hero-sub">28 habits · 12 science-backed · 3 fit your stack</div>
+            </div>
+
+            <div class="chips-row">
+              <div class="chip active">✨ All</div>
+              <div class="chip">🌅 Morning</div>
+              <div class="chip">🧠 Mental</div>
+              <div class="chip">💪 Fitness</div>
+              <div class="chip">😴 Sleep</div>
+              <div class="chip">🧘 Mindful</div>
+              <div class="chip">📚 Learning</div>
+            </div>
+
+            <div class="search-bar">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+              Search habits…
+            </div>
+
+            <div class="filter-bar">
+              <div style="display:flex; gap:6px; flex-wrap:wrap; align-items:center;">
+                <div class="chip science active" style="padding:6px 10px; font-size:12px;">🧬 Science-backed</div>
+                <div class="result-count">· 12 results</div>
+              </div>
+              <div class="sort-wrap">
+                <div class="sort-btn">
+                  Sort: Pairs with you
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+                </div>
+                <div class="sort-menu">
+                  <div class="sort-item">Popular</div>
+                  <div class="sort-item">A–Z</div>
+                  <div class="sort-item new">
+                    ⚡ Pairs with your habits
+                    <span class="badge-new">New</span>
+                  </div>
+                  <div class="sort-item">Newest</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="list">
+              <div class="card">
+                <div class="ic a">☀️</div>
+                <div class="card-content">
+                  <div class="card-title-row">
+                    <div class="card-title">10 minutes of morning sunlight</div>
+                    <div class="add-btn">+</div>
+                  </div>
+                  <div class="card-desc">Set your circadian rhythm with direct light within an hour of waking.</div>
+                  <div class="pills">
+                    <div class="pill sci">🧬 Science-backed</div>
+                    <div class="pill pairs">⚡ Pairs with Morning walk</div>
+                    <div class="pill pop">🔥 2,400+ using</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card">
+                <div class="ic b">💧</div>
+                <div class="card-content">
+                  <div class="card-title-row">
+                    <div class="card-title">Drink a glass of water on waking</div>
+                    <div class="add-btn">+</div>
+                  </div>
+                  <div class="card-desc">Rehydrate before coffee — supports alertness and digestion.</div>
+                  <div class="pills">
+                    <div class="pill sci">🧬 Science-backed</div>
+                    <div class="pill pairs">⚡ Pairs with Coffee ritual</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card">
+                <div class="ic c">🧘</div>
+                <div class="card-content">
+                  <div class="card-title-row">
+                    <div class="card-title">5-minute box breathing</div>
+                    <div class="add-btn">+</div>
+                  </div>
+                  <div class="card-desc">Activate the parasympathetic system before the day begins.</div>
+                  <div class="pills">
+                    <div class="pill sci">🧬 Science-backed</div>
+                    <div class="pill pop">🔥 1,100+ using</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="marker m1">1</div>
+        <div class="marker m2">2</div>
+        <div class="marker m3">3</div>
+        <div class="marker m4">4</div>
+      </div>
+
+      <div class="annot-col">
+        <div class="annot">
+          <div class="num">1</div>
+          <div>
+            <h3>Wire up <code>QuickFilterChips</code> into the drill view <span class="tag a">Polish</span></h3>
+            <p>Component already exists at <code>src/screens/TemplatesScreen/components/QuickFilterChips/</code> — verified via grep it's <em>orphan code</em>, never imported outside its own barrel. Mounting it on <code>DrillListBody</code> lets users switch category without backing out to the main browse. Uses per-category color tokens from <code>getCategoryMeta()</code>.</p>
+          </div>
+        </div>
+
+        <div class="annot">
+          <div class="num">2</div>
+          <div>
+            <h3>"Science-backed" filter chip <span class="tag b">Feature</span></h3>
+            <p>Templates already carry a <code>scientificReference</code> field that drives the science pill on cards — but there's no way to filter by it. Toggle chip lives next to the result count; hooks into <code>useFilteredTemplates</code> as a boolean predicate. Zero schema work.</p>
+          </div>
+        </div>
+
+        <div class="annot">
+          <div class="num">3</div>
+          <div>
+            <h3>"Pairs with your habits" sort option <span class="tag b">Feature</span></h3>
+            <p><code>PairsWellWith</code> data already surfaces in the detail modal. Promote it to a sort: rank templates by overlap with the user's existing habits. Shows a violet "Pairs with X" pill on matching cards, and marks the sort item with a <em>New</em> badge.</p>
+          </div>
+        </div>
+
+        <div class="annot">
+          <div class="num">4</div>
+          <div>
+            <h3>Animate + haptic the sort dropdown <span class="tag a">Polish</span></h3>
+            <p>Currently plain Pressable backdrop, no haptic, no entry animation. Match <code>MainBrowseView</code>'s existing <code>bodyEnter</code>/<code>bodyExit</code> (180ms/120ms). Add <code>triggerHaptic('selection')</code> on sort option tap — same hook already used by <code>QuickFilterChips</code> and <code>ExploreAllSection</code>.</p>
+          </div>
+        </div>
+
+        <div class="annot">
+          <div class="num">—</div>
+          <div>
+            <h3>Not shown, but in scope</h3>
+            <p>Empty-state copy pass on <code>TemplatesEmptyState.tsx</code> (current copy: "Your habit library isn't loaded yet"), and <code>accessibilityHint</code> additions on drill back buttons. Both are tiny touch-ups I'd bundle into the same PR.</p>
+          </div>
+        </div>
+
+        <div class="annot" style="background:#1c1917; border-color:#292524;">
+          <div class="num" style="background:#44403c;">?</div>
+          <div>
+            <h3>Deferred — need your call</h3>
+            <p>
+              <strong>C</strong> (replace hardcoded hex in <code>TemplateListCard.styles.ts</code> with theme tokens) and <strong>D</strong> (decompose 219L <code>TemplatesScreen.tsx</code>, 192L <code>DrillListBody.tsx</code>, consolidate the two preview modals) are hygiene — not visible in the app. Not included above. Flag if you want either folded in.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p class="footer-note">
+      Frame uses the app's real palette: <code style="font-family:ui-monospace,monospace;background:#292524;padding:1px 6px;border-radius:4px;color:#fde68a;font-size:12px;">#F5F1ED</code> canvas, <code style="font-family:ui-monospace,monospace;background:#292524;padding:1px 6px;border-radius:4px;color:#fde68a;font-size:12px;">#EDEAE5</code> card, <code style="font-family:ui-monospace,monospace;background:#292524;padding:1px 6px;border-radius:4px;color:#fde68a;font-size:12px;">#2D2A26</code> foreground, <code style="font-family:ui-monospace,monospace;background:#292524;padding:1px 6px;border-radius:4px;color:#fde68a;font-size:12px;">#059669</code> primary, existing science pill (<code style="font-family:ui-monospace,monospace;background:#292524;padding:1px 6px;border-radius:4px;color:#fde68a;font-size:12px;">#E0F2FE</code>/<code style="font-family:ui-monospace,monospace;background:#292524;padding:1px 6px;border-radius:4px;color:#fde68a;font-size:12px;">#BAE6FD</code>). Violet pairs-accent (<code style="font-family:ui-monospace,monospace;background:#292524;padding:1px 6px;border-radius:4px;color:#fde68a;font-size:12px;">#7C3AED</code>) is the one new token I'd introduce — open to swapping it for an existing one if you have a preference.
+    </p>
+  </div>
+  <script>
+    if (window.lucide) lucide.createIcons();
+  </script>
+</body>
+</html>
