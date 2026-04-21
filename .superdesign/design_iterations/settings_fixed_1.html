@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Settings — design review comparison</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"DM Sans"', 'Inter', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            stone: {
+              50:  '#F5F1ED',
+              100: '#EDEAE5',
+              200: '#DDD8D2',
+              300: '#C4BFB7',
+              500: '#6E6660',
+              700: '#2D2A26',
+            },
+            primary: {
+              100: '#D1FAE5',
+              500: '#10B981',
+              600: '#059669',
+              700: '#047857',
+            },
+          },
+          boxShadow: {
+            card: '0 1px 2px rgba(45,42,38,0.06), 0 1px 1px rgba(45,42,38,0.04)',
+            phone: '0 20px 60px -10px rgba(0,0,0,0.25), 0 10px 30px -5px rgba(0,0,0,0.15)',
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    :root {
+      --bg: #F5F1ED;
+      --card: #EDEAE5;
+      --border: #DDD8D2;
+      --text-primary: #2D2A26;
+      --text-secondary: #6B6560;
+      --text-tertiary: #8E8780;
+      --primary-600: #059669;
+      --primary-100: #D1FAE5;
+    }
+    body { background: #EEEAE4; font-family: 'DM Sans', 'Inter', sans-serif; color: var(--text-primary); -webkit-font-smoothing: antialiased; }
+    .page-title { letter-spacing: -0.5px; }
+    .phone-frame {
+      width: 393px; height: 852px;
+      border-radius: 44px;
+      padding: 8px;
+      background: #111;
+      box-shadow: 0 20px 60px -10px rgba(0,0,0,0.25), 0 10px 30px -5px rgba(0,0,0,0.15);
+      position: relative;
+      flex-shrink: 0;
+    }
+    .phone-screen {
+      width: 100%; height: 100%;
+      border-radius: 36px;
+      overflow: hidden;
+      background: var(--bg);
+      position: relative;
+    }
+    .statusbar {
+      height: 54px;
+      padding: 18px 28px 0 28px;
+      display: flex; align-items: center; justify-content: space-between;
+      font-weight: 600;
+      color: var(--text-primary);
+      font-size: 15px;
+    }
+    .header-title { text-align: center; font-weight: 700; font-size: 17px; letter-spacing: -0.3px; }
+    .header-x {
+      width: 34px; height: 34px; border-radius: 17px;
+      background: rgba(45,42,38,0.08);
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 15px; color: var(--text-secondary);
+    }
+    .card { background: var(--card); border-radius: 16px; overflow: hidden; box-shadow: 0 1px 2px rgba(45,42,38,0.04); }
+    .row { display: flex; align-items: center; padding: 16px; gap: 16px; }
+    .row + .row { border-top: 1px solid var(--border); }
+    .row-icon {
+      width: 40px; height: 40px; border-radius: 12px;
+      display: inline-flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .row-title { font-weight: 600; font-size: 16px; color: var(--text-primary); line-height: 20px; }
+    .row-subtitle { font-size: 13px; color: var(--text-secondary); margin-top: 2px; line-height: 17px; }
+    /* Switch */
+    .switch { width: 48px; height: 30px; border-radius: 999px; background: #C4BFB7; position: relative; flex-shrink: 0; transition: background .2s; }
+    .switch.on { background: var(--primary-600); }
+    .switch::after { content: ""; position: absolute; top: 3px; left: 3px; width: 24px; height: 24px; border-radius: 999px; background: #fff; box-shadow: 0 1px 2px rgba(0,0,0,0.2); transition: left .2s; }
+    .switch.on::after { left: 21px; }
+    /* Segmented */
+    .segmented { display: inline-flex; padding: 3px; border-radius: 10px; background: rgba(45,42,38,0.06); gap: 2px; flex-shrink: 0; }
+    .seg-opt { width: 40px; height: 30px; display: inline-flex; align-items: center; justify-content: center; border-radius: 8px; color: var(--text-tertiary); }
+    .seg-opt.on { background: var(--primary-100); color: var(--primary-600); }
+    /* Section label */
+    .section-label-before { font-size: 12px; font-weight: 500; letter-spacing: 1.2px; text-transform: uppercase; color: var(--text-tertiary); }
+    .section-label-after { font-size: 15px; font-weight: 600; letter-spacing: -0.2px; color: var(--text-primary); }
+    .section-header { display: flex; align-items: center; gap: 10px; padding: 10px 16px; }
+    .annotation {
+      position: absolute; right: -44px;
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 28px; height: 28px; border-radius: 999px;
+      background: #EF4444; color: #fff; font-weight: 700; font-size: 13px;
+      box-shadow: 0 4px 10px rgba(239,68,68,0.35);
+      pointer-events: none;
+    }
+    .annotation-left { left: -44px; right: auto; background: #9CA3AF; box-shadow: 0 4px 10px rgba(0,0,0,0.15); }
+    .legend-card { background: #fff; border: 1px solid #E5E5E0; border-radius: 16px; padding: 22px 28px; box-shadow: 0 1px 2px rgba(45,42,38,0.04); }
+    .legend-num { display: inline-flex; width: 28px; height: 28px; border-radius: 999px; background: #EF4444; color:#fff; font-weight: 700; font-size: 13px; align-items: center; justify-content: center; flex-shrink: 0; }
+    .tag-before { display: inline-block; padding: 4px 10px; border-radius: 999px; background: #6B7280; color: #fff; font-size: 12px; font-weight: 600; letter-spacing: 0.4px; text-transform: uppercase; }
+    .tag-after  { display: inline-block; padding: 4px 10px; border-radius: 999px; background: var(--primary-600); color: #fff; font-size: 12px; font-weight: 600; letter-spacing: 0.4px; text-transform: uppercase; }
+
+    /* Chevron helper */
+    .chev { color: var(--text-tertiary); font-size: 18px; line-height: 1; }
+  </style>
+</head>
+<body class="min-h-screen py-12 px-8">
+  <header class="max-w-6xl mx-auto mb-10">
+    <div class="flex items-center gap-4 mb-2">
+      <div class="h-10 w-1.5 bg-primary-600 rounded-full"></div>
+      <h1 class="page-title text-4xl font-bold tracking-tight text-stone-700">Settings page — design review fixes</h1>
+    </div>
+    <p class="text-stone-500 ml-6 pl-0 text-lg">Current state (left) vs. proposed (right). Callouts map to review findings.</p>
+  </header>
+
+  <main class="max-w-6xl mx-auto flex flex-col items-center gap-12">
+    <!-- Phone comparison -->
+    <section class="flex flex-col md:flex-row gap-24 items-start">
+      <!-- BEFORE -->
+      <div class="flex flex-col items-center gap-4">
+        <span class="tag-before">Before</span>
+        <div class="phone-frame">
+          <div class="phone-screen">
+            <div class="statusbar">
+              <span>8:38</span>
+              <span class="text-xs text-stone-400">●●●● 📶 🔋</span>
+            </div>
+            <div class="relative px-4">
+              <!-- Header -->
+              <div class="flex items-center pb-3 pt-1">
+                <div class="w-8"></div>
+                <h2 class="flex-1 header-title">Settings</h2>
+                <button class="header-x">✕</button>
+              </div>
+
+              <div class="flex flex-col gap-5 pt-2">
+                <!-- Account row (BEFORE: small, fontSize override) -->
+                <div class="card relative">
+                  <span class="annotation annotation-left">1</span>
+                  <div class="row" style="padding: 14px 16px; gap: 14px;">
+                    <div class="w-10 h-10 rounded-full flex items-center justify-center" style="background: linear-gradient(135deg, #047857, #059669); font-weight: 700; color: #fff; font-size: 18px;">A</div>
+                    <div class="flex-1 min-w-0">
+                      <div style="font-size: 16px; font-weight: 600;">Andres</div>
+                      <div class="row-subtitle" style="margin-top: 1px;">andres9888@gmail.com</div>
+                    </div>
+                    <span class="chev">›</span>
+                  </div>
+                </div>
+
+                <!-- Appearance section BEFORE -->
+                <div>
+                  <div class="section-header relative">
+                    <span class="annotation annotation-left">2</span>
+                    <span class="section-label-before">🎨 APPEARANCE</span>
+                    <span class="ml-auto text-stone-400 text-xs">∧</span>
+                  </div>
+                  <div class="card">
+                    <!-- Compact habit cards (centered, no subtitle - visually distinct baseline) -->
+                    <div class="row relative">
+                      <span class="annotation annotation-left">3</span>
+                      <div class="row-icon" style="background: #FCE7F3;"><span>▭</span></div>
+                      <div class="flex-1">
+                        <div class="row-title">Compact habit cards</div>
+                        <div class="row-subtitle">Fit more on screen</div>
+                      </div>
+                      <!-- BEFORE: toggle top-aligned due to subtitle → items-start -->
+                      <div style="align-self: flex-start; margin-top: 2px;"><div class="switch"></div></div>
+                    </div>
+                    <div class="row">
+                      <div class="row-icon" style="background: #DBEAFE;"><span>◻︎</span></div>
+                      <div class="flex-1"><div class="row-title">Day marker shape</div></div>
+                      <div class="segmented"><span class="seg-opt">○</span><span class="seg-opt on">▢</span></div>
+                    </div>
+                    <div class="row">
+                      <div class="row-icon" style="background: #D1FAE5;"><span>💧</span></div>
+                      <div class="flex-1">
+                        <div class="row-title">Gradient streak fill</div>
+                        <div class="row-subtitle">Color fills active streak cells</div>
+                      </div>
+                      <!-- BEFORE: toggle top-aligned (subtitle causes items-start) -->
+                      <div style="align-self: flex-start; margin-top: 2px;"><div class="switch on"></div></div>
+                    </div>
+                    <div class="row">
+                      <div class="row-icon" style="background: #FEF3C7;"><span>🔗</span></div>
+                      <div class="flex-1"><div class="row-title">Completion icon</div></div>
+                      <div class="segmented"><span class="seg-opt on">🔗</span><span class="seg-opt">✓</span></div>
+                    </div>
+                    <!-- Growth Icons composite row BEFORE -->
+                    <div class="relative">
+                      <span class="annotation annotation-left">4</span>
+                      <div class="row">
+                        <div class="row-icon" style="background: #D1FAE5;"><span>✧</span></div>
+                        <div class="flex-1">
+                          <div class="row-title">Default growth icons</div>
+                          <div class="row-subtitle">Pick the 5 emojis used for every habit by default</div>
+                        </div>
+                      </div>
+                      <div class="px-4 pb-3 flex items-center justify-between">
+                        <div class="flex gap-2 text-xl">
+                          <span>💧</span><span>🧗</span><span>🏋️</span><span>💪</span><span>🏆</span>
+                        </div>
+                        <a class="text-primary-600 font-semibold text-sm">Customize</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Behavior teaser -->
+                <div>
+                  <div class="section-header">
+                    <span class="section-label-before">⇅ BEHAVIOR</span>
+                    <span class="ml-auto text-stone-400 text-xs">∧</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AFTER -->
+      <div class="flex flex-col items-center gap-4">
+        <span class="tag-after">After</span>
+        <div class="phone-frame">
+          <div class="phone-screen">
+            <div class="statusbar">
+              <span>8:38</span>
+              <span class="text-xs text-stone-400">●●●● 📶 🔋</span>
+            </div>
+            <div class="relative px-4">
+              <!-- Header -->
+              <div class="flex items-center pb-3 pt-1">
+                <div class="w-8"></div>
+                <h2 class="flex-1 header-title">Settings</h2>
+                <button class="header-x">✕</button>
+              </div>
+
+              <div class="flex flex-col gap-5 pt-2">
+                <!-- UnifiedIdentityCard (AFTER: proper sized, token typography) -->
+                <div class="card relative">
+                  <span class="annotation">1</span>
+                  <div class="row" style="padding: 16px; gap: 12px;">
+                    <div class="w-12 h-12 rounded-full flex items-center justify-center" style="background: linear-gradient(135deg, #047857, #059669); font-weight: 700; color: #fff; font-size: 22px;">A</div>
+                    <div class="flex-1 min-w-0">
+                      <div style="font-size: 17px; font-weight: 600; line-height: 22px;">Andres</div>
+                      <div class="row-subtitle" style="margin-top: 2px;">andres9888@gmail.com</div>
+                    </div>
+                    <span class="chev">›</span>
+                  </div>
+                </div>
+
+                <!-- Appearance section AFTER: heavier header -->
+                <div>
+                  <div class="section-header relative">
+                    <span class="annotation">2</span>
+                    <span style="font-size: 15px; font-weight: 600; letter-spacing: -0.2px; color: var(--text-primary);">🎨 Appearance</span>
+                    <span class="ml-auto text-stone-400 text-xs">∧</span>
+                  </div>
+                  <div class="card">
+                    <!-- Compact habit cards -->
+                    <div class="row relative">
+                      <span class="annotation">3</span>
+                      <div class="row-icon" style="background: #FCE7F3;"><span>▭</span></div>
+                      <div class="flex-1">
+                        <div class="row-title">Compact habit cards</div>
+                        <div class="row-subtitle">Fit more on screen</div>
+                      </div>
+                      <!-- AFTER: toggle centered regardless of subtitle -->
+                      <div class="switch"></div>
+                    </div>
+                    <div class="row">
+                      <div class="row-icon" style="background: #DBEAFE;"><span>◻︎</span></div>
+                      <div class="flex-1"><div class="row-title">Day marker shape</div></div>
+                      <div class="segmented"><span class="seg-opt">○</span><span class="seg-opt on">▢</span></div>
+                    </div>
+                    <div class="row">
+                      <div class="row-icon" style="background: #D1FAE5;"><span>💧</span></div>
+                      <div class="flex-1">
+                        <div class="row-title">Gradient streak fill</div>
+                        <div class="row-subtitle">Color fills active streak cells</div>
+                      </div>
+                      <!-- AFTER: toggle still centered -->
+                      <div class="switch on"></div>
+                    </div>
+                    <div class="row">
+                      <div class="row-icon" style="background: #FEF3C7;"><span>🔗</span></div>
+                      <div class="flex-1"><div class="row-title">Completion icon</div></div>
+                      <div class="segmented"><span class="seg-opt on">🔗</span><span class="seg-opt">✓</span></div>
+                    </div>
+                    <!-- AFTER: Growth Icons as a simple nav row -->
+                    <div class="row relative">
+                      <span class="annotation">4</span>
+                      <div class="row-icon" style="background: #D1FAE5;"><span>✧</span></div>
+                      <div class="flex-1">
+                        <div class="row-title">Default growth icons</div>
+                        <div class="row-subtitle">🌱 🍃 🌳 💪 ⚡ — Space</div>
+                      </div>
+                      <span class="chev">›</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Behavior teaser (AFTER: heavier header) -->
+                <div>
+                  <div class="section-header">
+                    <span style="font-size: 15px; font-weight: 600; letter-spacing: -0.2px; color: var(--text-primary);">⇅ Behavior</span>
+                    <span class="ml-auto text-stone-400 text-xs">∧</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Legend -->
+    <section class="legend-card max-w-5xl w-full">
+      <h2 class="text-lg font-semibold tracking-tight mb-4">What changed — callouts map to design review findings</h2>
+      <ol class="flex flex-col gap-3 text-[15px] leading-relaxed text-stone-700">
+        <li class="flex items-start gap-3">
+          <span class="legend-num">1</span>
+          <div>
+            <strong>Unified <code class="bg-stone-100 px-1.5 py-0.5 rounded text-sm">UserIdentityCard</code></strong> — same component at Settings top (compact) and Account page (hero), shared tokens.
+            <span class="text-stone-500">Before: <code class="text-xs">40×40 avatar · py-3.5 · fontSize: 16 override · gap: 14</code>.</span>
+            <span class="text-primary-600 font-medium">After: <code class="text-xs">48×48 avatar · py-4 · typography.body semibold · gap: spacing.md</code>.</span>
+            <span class="block text-xs text-stone-500 mt-0.5">Finding 1 in the review. Effort: <em>Small</em>.</span>
+          </div>
+        </li>
+        <li class="flex items-start gap-3">
+          <span class="legend-num">2</span>
+          <div>
+            <strong>Section header legibility</strong> — tiny uppercase overline → semibold 15px title-case. Scanning the page by section becomes easier.
+            <span class="block text-xs text-stone-500 mt-0.5">Finding 6. Effort: <em>Trivial</em>.</span>
+          </div>
+        </li>
+        <li class="flex items-start gap-3">
+          <span class="legend-num">3</span>
+          <div>
+            <strong>Toggle baseline locked</strong> — every right-side accessory sits on the same vertical center, regardless of whether the row has a subtitle.
+            <span class="text-stone-500">Cause: <code class="text-xs">items-start</code> on rows with subtitles.</span>
+            <span class="text-primary-600 font-medium">Fix: always <code class="text-xs">items-center</code>; top-align the icon chip instead if needed.</span>
+            <span class="block text-xs text-stone-500 mt-0.5">Finding 2. Effort: <em>Trivial (one line)</em>.</span>
+          </div>
+        </li>
+        <li class="flex items-start gap-3">
+          <span class="legend-num">4</span>
+          <div>
+            <strong>Default growth icons → navigation row + sub-page</strong> — the inline "Customize" half-screen expansion is gone. The row now behaves like every other nav row in the app (icon + label + subtitle with preset + chevron). Tapping opens a dedicated sub-page (mirroring <code class="text-xs">SortPicker</code>).
+            <span class="block text-xs text-stone-500 mt-0.5">Finding 3. Effort: <em>Medium (new sub-page, removes inline expansion logic)</em>.</span>
+          </div>
+        </li>
+      </ol>
+      <div class="mt-6 pt-5 border-t border-stone-200 text-sm text-stone-500">
+        Not shown in this single-screen mock but also in the review:
+        reduce-motion support (Finding 4), tokenizing rgba overlays and gap values (Finding 5), 44×44 compliance on inline pickers (Finding 7),
+        skeleton parity (Finding 9), HC token consolidation (Finding 10), Sign Out placement (Finding 14), Streak Reminders description layout (Finding 15).
+      </div>
+    </section>
+  </main>
+
+  <footer class="max-w-6xl mx-auto mt-14 text-center text-sm text-stone-500">
+    Static HTML mock · Tailwind CDN · DM Sans / Inter · iPhone 14 Pro frame 393×852 · Light mode only (app locks <code>userInterfaceStyle: 'light'</code>).
+    <br />Paired with <code>.context/design-reviews/settings-modal-review.md</code>.
+  </footer>
+</body>
+</html>
