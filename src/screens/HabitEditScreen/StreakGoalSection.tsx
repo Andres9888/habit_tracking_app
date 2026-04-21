@@ -7,7 +7,7 @@ import { Pressable, Text, View } from 'react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 
 import { useThemeColors } from '../../theme/ThemeContext';
-import { typography } from '../../theme/typography';
+import { typography, fontWeights } from '../../theme/typography';
 import useHapticFeedback from '../../hooks/useHapticFeedback';
 
 const PRESETS = [
@@ -44,7 +44,7 @@ export function StreakGoalSection({
         style={{
           ...typography.caption,
           color: colors.text.tertiary,
-          fontWeight: '600',
+          fontWeight: fontWeights.semibold,
           letterSpacing: 0.5,
         }}
       >

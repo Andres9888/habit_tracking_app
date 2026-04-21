@@ -9,7 +9,7 @@ import { useMutation } from 'convex/react';
 import { api } from '../../../../convex/_generated/api';
 import type { Id } from '../../../../convex/_generated/dataModel';
 import { useThemeColors } from '../../../theme/ThemeContext';
-import { typography } from '../../../theme/typography';
+import { typography, fontWeights } from '../../../theme/typography';
 import useHapticFeedback from '../../../hooks/useHapticFeedback';
 import { GoalPresetChip } from './GoalPresetChip';
 
@@ -58,7 +58,7 @@ export function GoalTabEmptyState({ habitId }: GoalTabEmptyStateProps) {
       </Text>
       <Text
         className='mb-1 text-center'
-        style={{ ...typography.bodySmall, color: colors.text.primary, fontWeight: '500' }}
+        style={{ ...typography.bodySmall, color: colors.text.primary, fontWeight: fontWeights.medium }}
       >
         Pick a target — we'll celebrate every milestone.
       </Text>
@@ -91,7 +91,7 @@ export function GoalTabEmptyState({ habitId }: GoalTabEmptyStateProps) {
         style={{ backgroundColor: colors.primary[600], opacity: saving ? 0.6 : 1 }}
         onPress={() => void handleSave()}
       >
-        <Text style={{ color: '#fff', fontWeight: '600', fontSize: 15 }}>
+        <Text style={{ color: '#fff', fontWeight: fontWeights.semibold, fontSize: 15 }}>
           {saving ? 'Setting…' : `Set ${selected === 365 ? '1-year' : `${selected}-day`} goal`}
         </Text>
       </Pressable>
