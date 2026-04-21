@@ -40,11 +40,8 @@ export const SaveButton = ({
         className='h-11 items-center justify-center rounded-full px-6'
         disableAnimation={!canSave}
         style={{
-          backgroundColor: canSave
-            ? colors.primary[600]
-            : isDark
-              ? colors.gray[400]
-              : colors.gray[300],
+          backgroundColor: colors.primary[600],
+          opacity: canSave ? 1 : 0.35,
         }}
         onPress={canSave ? onSave : onInvalidSave}
       >

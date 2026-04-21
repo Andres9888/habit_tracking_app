@@ -60,7 +60,7 @@ export const styles = StyleSheet.create({
   },
   leftZone: { alignItems: 'center' },
   notifDot: {
-    backgroundColor: colors.warning,
+    backgroundColor: colors.primary[500],
     borderRadius: NOTIF_SIZE / 2,
     height: NOTIF_SIZE,
     position: 'absolute',

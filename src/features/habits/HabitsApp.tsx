@@ -12,6 +12,7 @@ import { useEffect, useState } from 'react';
 import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { HabitsPageSkeleton } from '../../components/SkeletonLoader';
+import { EmptyState } from '../../components/EmptyState/EmptyState';
 import { HabitsList } from './components/HabitsList';
 import { BottomActionBar } from './components/BottomActionBar';
 import { SelectionActionBar } from './components/SelectionActionBar';
@@ -80,6 +81,7 @@ function HabitsAppContent() {
   });
 
   const showSkeleton = list.isHabitsLoading && list.habits.length === 0;
+  const showEmptyState = !list.isHabitsLoading && list.habits.length === 0;
   const handleBatchArchivePress = () => {
     void selectionActions.handleBatchArchive();
   };
@@ -96,6 +98,14 @@ function HabitsAppContent() {
         <SyncStatusOverlays />
         {showSkeleton ? (
           <HabitsPageSkeleton reduceMotion={list.reduceMotionPreference} />
+        ) : showEmptyState ? (
+          <Animated.View entering={ENTERING} style={styles.flex1}>
+            <EmptyState
+              variant='noHabits'
+              onCTA={handlers.handleCreateHabitRequest}
+              onQuickStart={handlers.handleCreateHabitRequest}
+            />
+          </Animated.View>
         ) : (
           <Animated.View entering={ENTERING} style={styles.flex1}>
             <HabitsList

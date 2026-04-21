@@ -7,21 +7,12 @@ import { fontFamilies, fontWeights } from '@/theme/typography';
 
 export const s = StyleSheet.create({
   arrow: {
+    alignItems: 'center',
     backgroundColor: 'rgba(0,0,0,0.08)',
     borderRadius: 9999,
-    fontSize: 13,
-    fontWeight: fontWeights.bold,
     height: 24,
-    lineHeight: 24,
-    textAlign: 'center',
+    justifyContent: 'center',
     width: 24,
-  },
-  arrowFeatured: {
-    backgroundColor: 'rgba(0,0,0,0.1)',
-    fontSize: 16,
-    height: 32,
-    lineHeight: 32,
-    width: 32,
   },
   card: {
     borderColor: 'rgba(0,0,0,0.04)',

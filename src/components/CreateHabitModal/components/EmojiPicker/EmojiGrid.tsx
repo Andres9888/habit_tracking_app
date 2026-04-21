@@ -33,6 +33,7 @@ export function EmojiGrid({
       {/* Row 1: First 5 emojis */}
       <Animated.View
         className='flex-row justify-center'
+        style={{ flexDirection: 'row', justifyContent: 'center' }}
         layout={layoutTransition}
       >
         {suggestedEmojis.slice(0, 5).map((emoji) => (
@@ -55,6 +56,7 @@ export function EmojiGrid({
       {/* Row 2: Last 4 emojis */}
       <Animated.View
         className='flex-row justify-center'
+        style={{ flexDirection: 'row', justifyContent: 'center' }}
         layout={layoutTransition}
       >
         {suggestedEmojis.slice(5, 9).map((emoji) => (
