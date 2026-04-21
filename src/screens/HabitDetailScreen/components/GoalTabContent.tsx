@@ -9,7 +9,7 @@ import ErrorBoundary from '../../../components/ErrorBoundary';
 import { StreakGoalCard } from '../../../components/ProgressSectionConsolidated/StreakGoalCard';
 import type { Habit } from '../../../features/habits/types';
 import { useThemeColors } from '../../../theme/ThemeContext';
-import { typography } from '../../../theme/typography';
+import { typography, fontWeights } from '../../../theme/typography';
 import { GoalTabEmptyState } from './GoalTabEmptyState';
 import { GoalWhyAnchor } from './GoalWhyAnchor';
 import { GoalCoachLine } from './GoalCoachLine';
@@ -70,7 +70,7 @@ export function GoalTabContent({ habit, completionRate }: GoalTabContentProps) {
               style={{
                 ...typography.bodySmall,
                 color: colors.text.secondary,
-                fontWeight: '600',
+                fontWeight: fontWeights.semibold,
                 textDecorationLine: 'underline',
               }}
             >

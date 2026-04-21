@@ -5,7 +5,7 @@
 import { Modal, Pressable, Text, View } from 'react-native';
 import type { Id } from '../../../../../convex/_generated/dataModel';
 import { useThemeColors } from '../../../../theme/ThemeContext';
-import { typography } from '../../../../theme/typography';
+import { typography, fontWeights } from '../../../../theme/typography';
 import { GoalPresetChip } from '../GoalPresetChip';
 import { useGoalAdjust } from './GoalAdjustSheet.hooks';
 
@@ -68,7 +68,7 @@ export function GoalAdjustSheet(props: GoalAdjustSheetProps) {
             style={{ backgroundColor: colors.primary[600], opacity: saving ? 0.6 : 1 }}
             onPress={() => void handleUpdate()}
           >
-            <Text style={{ color: '#fff', fontSize: 15, fontWeight: '600' }}>
+            <Text style={{ color: '#fff', fontSize: 15, fontWeight: fontWeights.semibold }}>
               {saving ? 'Saving…' : `Set ${labelFor(selected)} goal`}
             </Text>
           </Pressable>
@@ -79,7 +79,7 @@ export function GoalAdjustSheet(props: GoalAdjustSheetProps) {
             onPress={() => void handleRemove()}
           >
             <Text
-              style={{ ...typography.bodySmall, color: colors.status.error, fontWeight: '600' }}
+              style={{ ...typography.bodySmall, color: colors.status.error, fontWeight: fontWeights.semibold }}
             >
               {confirmRemove ? 'Tap again to confirm' : 'Remove goal'}
             </Text>

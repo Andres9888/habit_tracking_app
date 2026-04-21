@@ -4,7 +4,7 @@
  */
 import { Text, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
-import { typography } from '../../../../theme/typography';
+import { typography, fontWeights } from '../../../../theme/typography';
 import type { Habit } from '../../../../features/habits/types';
 import { useResolveWhy } from './GoalWhyAnchor.hooks';
 
@@ -39,7 +39,7 @@ export function GoalWhyAnchor({ habit }: GoalWhyAnchorProps) {
           style={{
             ...typography.caption,
             color: '#B45309',
-            fontWeight: '700',
+            fontWeight: fontWeights.bold,
             letterSpacing: 0.6,
             textTransform: 'uppercase',
           }}

@@ -3,7 +3,7 @@
  */
 import { Text } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
-import { typography } from '../../../../theme/typography';
+import { typography, fontWeights } from '../../../../theme/typography';
 import { useCoachMessage } from './GoalCoachLine.hooks';
 import type { CoachTone } from './GoalCoachLine.hooks';
 
@@ -52,7 +52,7 @@ export function GoalCoachLine({
         style={{
           ...typography.bodySmall,
           color: palette.text,
-          fontWeight: '500',
+          fontWeight: fontWeights.medium,
         }}
       >
         {coach.message}
