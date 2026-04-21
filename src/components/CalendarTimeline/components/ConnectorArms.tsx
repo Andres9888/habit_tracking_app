@@ -5,6 +5,7 @@ import { STREAK_CONNECTOR } from '../CalendarTimeline.styles';
 import { getTimelineConnectorStrength } from '../connectorStrength';
 import { useConnectorShimmer } from '../hooks/useConnectorShimmer';
 import { useGhostPulse } from '../hooks/useGhostPulse';
+import { getMaterialTier } from '../../HabitChainVisualizer/materialTier';
 import { RING_SIZE } from './DayCellRing.styles';
 import { ConnectorArm } from './ConnectorArm';
 
@@ -18,6 +19,7 @@ interface ConnectorArmsProps {
   ghostRight?: boolean;
   ghostConnectorColor?: string;
   currentStreak?: number;
+  strengthPercent?: number;
   reduceMotion?: boolean;
 }
 
@@ -28,13 +30,15 @@ export const ConnectorArms: React.FC<ConnectorArmsProps> = ({
   ghostLeft = false,
   ghostRight = false,
   ghostConnectorColor,
-  currentStreak = 0,
+  strengthPercent = 0,
   reduceMotion = false,
 }) => {
   const strength = useMemo(
-    () => getTimelineConnectorStrength(currentStreak),
-    [currentStreak]
+    () => getTimelineConnectorStrength(strengthPercent),
+    [strengthPercent]
   );
+  const tier = useMemo(() => getMaterialTier(strengthPercent), [strengthPercent]);
+  const effectiveColor = tier.useAccent ? streakConnectorColor : tier.tierColor;
 
   const hasGhost = (ghostLeft && !connectLeft) || (ghostRight && !connectRight);
   const ghostPulseStyle = useGhostPulse(hasGhost, reduceMotion);
@@ -53,7 +57,7 @@ export const ConnectorArms: React.FC<ConnectorArmsProps> = ({
 
   const glowStyle: ViewStyle | undefined = strength.glow
     ? {
-        shadowColor: streakConnectorColor,
+        shadowColor: effectiveColor,
         shadowOffset: { width: 0, height: 0 },
         shadowOpacity: 0.4,
         shadowRadius: 6,
@@ -61,7 +65,7 @@ export const ConnectorArms: React.FC<ConnectorArmsProps> = ({
     : undefined;
 
   const getColor = (isGhost: boolean) =>
-    isGhost ? (ghostConnectorColor ?? streakConnectorColor) : streakConnectorColor;
+    isGhost ? (ghostConnectorColor ?? effectiveColor) : effectiveColor;
 
   const shared = {
     armBase,

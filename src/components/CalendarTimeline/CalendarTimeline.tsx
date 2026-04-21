@@ -30,6 +30,7 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
   completionIcon,
   compact = false,
   currentStreak,
+  strengthPercent = 0,
 }) => {
   const tl = useCalendarTimelineSetup(
     dates,
@@ -107,6 +108,7 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
               panGesture={tl.panGesture}
               completionIcon={completionIcon}
               reduceMotion={reduceMotion}
+              strengthPercent={strengthPercent}
               weekTransitionStyle={tl.weekTransitionStyle}
             />
           </StripNav>

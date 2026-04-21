@@ -16,7 +16,6 @@ import { springs, durations } from '../../../theme/animations';
 import type { CompletionStatus } from '../CalendarTimeline.types';
 import {
   CIRCUMFERENCE,
-  COMPLETE_GLOW,
   MONTH_PREFIX_COLORS,
   RADIUS,
   RING_SIZE,
@@ -40,6 +39,8 @@ interface DayCellRingProps {
   monthPrefix?: string;
   reduceMotion: boolean;
   isDark: boolean;
+  /** Overall habit-strength percent (0–100). Drives the material tier. */
+  strengthPercent?: number;
 }
 
 export const DayCellRing: React.FC<DayCellRingProps> = ({
@@ -54,10 +55,11 @@ export const DayCellRing: React.FC<DayCellRingProps> = ({
   monthPrefix,
   reduceMotion,
   isDark,
+  strengthPercent,
 }) => {
   const isComplete = completionStatus === 'complete';
   const progress = total > 0 ? completed / total : 0;
-  const rc = getRingColors(isDark, isCurrentDay, completionStatus);
+  const rc = getRingColors(isDark, isCurrentDay, completionStatus, strengthPercent);
   const fillScale = useSharedValue(isComplete && !reduceMotion ? 0 : 1);
   const arcProgress = useSharedValue(reduceMotion ? progress : 0);
 
@@ -80,7 +82,7 @@ export const DayCellRing: React.FC<DayCellRingProps> = ({
 
   if (isComplete) {
     return (
-      <Animated.View style={[styles.container, COMPLETE_GLOW, fillStyle]}>
+      <Animated.View style={[styles.container, rc.completeGlow, fillStyle]}>
         <View style={[styles.solidFill, { backgroundColor: rc.fill }]}>
           {completionIcon === 'chain' ? (
             <Link2 color={rc.checkIcon} size={iconSizes.medium} strokeWidth={2.5} />

@@ -34,6 +34,7 @@ const DayCellComponent: React.FC<DayCellProps> = ({
   ghostRight,
   ghostConnectorColor,
   currentStreak,
+  strengthPercent,
   completionIcon,
 }) => {
   const weekday = format(date, 'EEE');
@@ -70,6 +71,7 @@ const DayCellComponent: React.FC<DayCellProps> = ({
     isUpcoming,
     monthPrefix,
     reduceMotion,
+    strengthPercent,
     total,
     weekday,
   };
@@ -87,6 +89,7 @@ const DayCellComponent: React.FC<DayCellProps> = ({
       ghostRight={Boolean(ghostRight)}
       reduceMotion={reduceMotion}
       streakConnectorColor={streakConnectorColor}
+      strengthPercent={strengthPercent}
     />
   ) : null;
 

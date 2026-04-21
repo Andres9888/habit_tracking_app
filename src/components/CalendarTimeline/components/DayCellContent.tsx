@@ -41,6 +41,7 @@ interface DayCellContentProps {
   monthPrefix?: string;
   reduceMotion: boolean;
   pressed?: boolean;
+  strengthPercent?: number;
 }
 
 /** The visual content of a day cell — weekday label + SVG progress ring */
@@ -59,6 +60,7 @@ export const DayCellContent: React.FC<DayCellContentProps> = ({
   monthPrefix,
   reduceMotion,
   pressed = false,
+  strengthPercent,
 }) => {
   const { isDark } = useThemeColors();
   const todayGlowStyle = useTodayGlow({
@@ -116,6 +118,7 @@ export const DayCellContent: React.FC<DayCellContentProps> = ({
           isUpcoming={isUpcoming}
           monthPrefix={monthPrefix}
           reduceMotion={reduceMotion}
+          strengthPercent={strengthPercent}
           total={total}
         />
       </Animated.View>

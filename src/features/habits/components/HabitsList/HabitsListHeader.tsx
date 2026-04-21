@@ -14,7 +14,9 @@ import ReAnimated, {
   interpolate,
   useAnimatedStyle,
 } from 'react-native-reanimated';
+import { useQuery } from 'convex/react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { api } from '../../../../../convex/_generated/api';
 import { CalendarTimeline } from '../../../../components/CalendarTimeline';
 import { getShelfBackgroundColor } from '../../../../components/CalendarTimeline/CalendarTimeline.styles';
 import { OfflineIndicator } from '../../../../components/SyncStatus';
@@ -59,6 +61,9 @@ function HabitsListHeaderComponent(
     return Math.max(...props.habits.map((h) => props.getStreak(h._id)));
   }, [props.habits, props.getStreak]);
 
+  const strengthStats = useQuery(api.habitStrength.getAllHabitsStrengthStats);
+  const strengthPercent = Math.round((strengthStats?.averageStrength ?? 0) * 100);
+
   return (
     <ReAnimated.View
       className='gap-2 pb-2'
@@ -90,6 +95,7 @@ function HabitsListHeaderComponent(
             currentStreak={currentStreak}
             dates={props.weekDates}
             reduceMotion={props.reduceMotionPreference}
+            strengthPercent={strengthPercent}
             totalHabits={computed.totalHabits}
             trialDaysRemaining={shouldShowBanner ? daysRemaining : null}
             onDayPress={props.onDayPress}
