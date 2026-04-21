@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Chain × Strength — Aligned Material Tiers</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --primary: #10B981;
+    --primary-dark: #047857;
+    --primary-soft: #D1FAE5;
+    --gray-50: #F9FAFB;
+    --gray-100: #F3F4F6;
+    --gray-200: #E5E7EB;
+    --gray-300: #D1D5DB;
+    --gray-400: #9CA3AF;
+    --gray-500: #6B7280;
+    --gray-700: #374151;
+    --gray-900: #111827;
+    --amber: #F59E0B;
+    --amber-light: #FEF3C7;
+    --gold: #F2B84B;
+    --gold-dark: #D4A23F;
+    --copper: #B87333;
+    --silver: #C8CCD0;
+
+    /* Strength level colors mirror STRENGTH_LEVELS */
+    --starting: #84CC16;
+    --starting-light: #ECFCCB;
+    --building: #10B981;
+    --building-light: #D1FAE5;
+    --growing-primary: #059669;
+    --growing-light: #D1FAE5;
+    --strong: #D4A23F;
+    --strong-light: #FEF3C7;
+    --unbreakable: #7C3AED;
+    --unbreakable-light: #EDE9FE;
+  }
+  * { font-family: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif !important; }
+  body {
+    background: linear-gradient(180deg, #FAFAF9 0%, #F4F4F5 100%);
+    min-height: 100vh;
+    color: var(--gray-900);
+  }
+  code, .kbd { font-family: 'SF Mono', 'Monaco', 'Menlo', monospace !important; }
+  .kbd { background: var(--gray-100); padding: 1.5px 5px; border-radius: 4px; font-size: 11px; color: var(--gray-700); }
+
+  .concept-card {
+    background: #FFFFFF;
+    border-radius: 20px;
+    padding: 18px 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.03);
+    border: 1px solid rgba(0,0,0,0.04);
+  }
+  .habit-card {
+    background: linear-gradient(90deg, #FEFCE8 0%, #FFFFFF 18%);
+    border-radius: 18px;
+    padding: 14px 14px 16px 14px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.03);
+    border: 1px solid rgba(0,0,0,0.04);
+    position: relative;
+  }
+  .habit-card .name { font-weight: 700; font-size: 14px; color: #111827; margin-bottom: 8px; }
+  .habit-card .bar { height: 8px; background: var(--gray-200); border-radius: 4px; overflow: hidden; margin-bottom: 14px; position: relative; }
+  .habit-card .bar-fill { height: 100%; border-radius: 4px; }
+  .habit-card .bar-readout {
+    position: absolute;
+    right: 0; top: -18px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--gray-700);
+  }
+
+  /* Chain cells */
+  .chain-row { display: flex; align-items: center; justify-content: space-between; gap: 0; position: relative; }
+  .chain-cell {
+    position: relative; z-index: 2;
+    width: 38px; height: 38px; border-radius: 10px;
+    background: linear-gradient(145deg, #10B981, #059669);
+    display: flex; align-items: center; justify-content: center;
+    color: #FFFFFF;
+    flex-shrink: 0;
+    box-shadow: 0 2px 6px rgba(16, 185, 129, 0.25);
+  }
+  .chain-cell svg { width: 16px; height: 16px; }
+  .connector {
+    flex: 1; min-width: 10px; height: 3px;
+    background: var(--primary);
+    opacity: 0.7;
+    border-radius: 2px;
+    margin: 0 -2px;
+  }
+  .chain-cell.today { outline: 3px solid #FEF3C7; outline-offset: 1px; }
+
+  /* --- Tier 1: Copper --- */
+  .tier-copper .chain-cell {
+    background: #B87333;
+    color: #FEF3C7;
+    box-shadow: 0 1px 3px rgba(184, 115, 51, 0.3);
+  }
+  .tier-copper .connector { height: 2px; background: #B87333; opacity: 0.55; }
+  .tier-copper .bar-fill { background: linear-gradient(90deg, #B87333, #D4976B); }
+
+  /* --- Tier 2: Chain (accent default emerald) --- */
+  .tier-chain .chain-cell { background: linear-gradient(145deg, #10B981, #059669); }
+  .tier-chain .connector { height: 3px; opacity: 0.7; }
+  .tier-chain .bar-fill { background: linear-gradient(90deg, #10B981, #059669); }
+
+  /* --- Tier 3: Iron --- */
+  .tier-iron .chain-cell {
+    background: linear-gradient(145deg, #059669, #047857);
+    box-shadow: 0 3px 8px rgba(4, 120, 87, 0.4), inset 0 1px 0 rgba(255,255,255,0.2);
+  }
+  .tier-iron .connector {
+    height: 4px;
+    background: linear-gradient(90deg, #065F46, #059669, #065F46);
+    opacity: 0.85;
+    box-shadow: 0 0 3px rgba(4, 120, 87, 0.4);
+  }
+  .tier-iron .bar-fill { background: linear-gradient(90deg, #047857, #065F46); }
+
+  /* --- Tier 4: Gold --- */
+  .tier-gold .chain-cell {
+    background: linear-gradient(145deg, #F2B84B, #D4A23F);
+    color: #78350F;
+    box-shadow: 0 2px 10px rgba(212, 162, 63, 0.5), inset 0 1px 0 rgba(255,255,255,0.4);
+  }
+  .tier-gold .connector {
+    height: 4.5px;
+    background: linear-gradient(90deg, #D4A23F 0%, #F8D772 50%, #D4A23F 100%);
+    opacity: 1;
+    box-shadow: 0 0 4px rgba(242, 184, 75, 0.5);
+  }
+  .tier-gold .bar-fill { background: linear-gradient(90deg, #D4A23F, #F2B84B); }
+
+  /* --- Tier 5: Legendary --- */
+  .tier-legendary .chain-cell {
+    background: linear-gradient(145deg, #F9FAFB, #E5E7EB);
+    color: #78350F;
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.9),
+      0 0 0 1.5px #F2B84B,
+      0 0 14px rgba(242, 184, 75, 0.6),
+      0 4px 14px rgba(242, 184, 75, 0.3);
+    position: relative;
+    overflow: hidden;
+  }
+  .tier-legendary .chain-cell::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.8) 50%, transparent 70%);
+    transform: translateX(-100%);
+    animation: shimmer-sweep 3s ease-in-out infinite;
+  }
+  .tier-legendary .connector {
+    height: 5px;
+    background: linear-gradient(90deg, #D4A23F 0%, #FFFFFF 50%, #D4A23F 100%);
+    opacity: 1;
+    box-shadow: 0 0 8px rgba(242, 184, 75, 0.6);
+  }
+  .tier-legendary .bar-fill {
+    background: linear-gradient(90deg, #7C3AED 0%, #D4A23F 50%, #F2B84B 100%);
+    box-shadow: 0 0 6px rgba(124, 58, 237, 0.4);
+  }
+  @keyframes shimmer-sweep {
+    0%, 100% { transform: translateX(-120%); }
+    50% { transform: translateX(120%); }
+  }
+
+  .num-pill {
+    background: var(--primary-soft);
+    color: var(--primary-dark);
+    font-weight: 800;
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 6px;
+    letter-spacing: 0.05em;
+  }
+  .mini-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--gray-500); font-weight: 700; }
+  .section-title { font-size: 20px; font-weight: 700; color: var(--gray-900); letter-spacing: -0.02em; }
+  .section-sub { font-size: 14px; color: var(--gray-500); margin-top: 2px; }
+
+  /* --- Strength spectrum bar --- */
+  .spectrum {
+    position: relative;
+    height: 58px;
+    display: flex;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  }
+  .spectrum-zone {
+    flex: 1;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #FFFFFF;
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .spectrum-zone.z-copper { background: #B87333; }
+  .spectrum-zone.z-chain { background: #059669; }
+  .spectrum-zone.z-iron { background: #065F46; }
+  .spectrum-zone.z-gold { background: #D4A23F; color: #78350F; }
+  .spectrum-zone.z-legendary {
+    background: linear-gradient(90deg, #7C3AED 0%, #D4A23F 70%);
+  }
+  .spectrum-ticks {
+    display: flex;
+    margin-top: 8px;
+    padding: 0 0 24px 0;
+    position: relative;
+  }
+  .spectrum-tick {
+    flex: 1;
+    text-align: center;
+    position: relative;
+  }
+  .spectrum-tick::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 1.5px; height: 6px;
+    background: var(--gray-400);
+  }
+  .spectrum-tick .pct {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--gray-700);
+  }
+  .spectrum-tick .lvl {
+    font-size: 10px;
+    color: var(--gray-500);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-weight: 600;
+  }
+
+  /* Tier card in the gallery row */
+  .tier-card {
+    background: #FFFFFF;
+    border-radius: 18px;
+    padding: 14px;
+    border: 1px solid rgba(0,0,0,0.04);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .tier-card .tier-head {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+  }
+  .tier-card .tier-head .emoji { font-size: 18px; }
+  .tier-card .tier-head .label { font-weight: 800; color: var(--gray-900); font-size: 15px; letter-spacing: -0.01em; }
+  .tier-card .tier-head .range { font-size: 10px; color: var(--gray-500); font-weight: 600; letter-spacing: 0.04em; }
+  .tier-card .material-name {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 700;
+    color: var(--gray-500);
+  }
+
+  .band {
+    height: 3px;
+    border-radius: 2px;
+  }
+</style>
+</head>
+<body class="py-10 px-4">
+<div class="max-w-5xl mx-auto">
+
+  <!-- Hero -->
+  <header class="text-center mb-10">
+    <div class="inline-flex items-center gap-2 text-emerald-700 bg-emerald-50 px-3 py-1.5 rounded-full text-xs font-semibold mb-4 border border-emerald-100">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 0 1 0 10h-2"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+      CHAIN × STRENGTH · ALIGNED
+    </div>
+    <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-3">The chain now reflects habit&nbsp;strength</h1>
+    <p class="text-gray-500 max-w-2xl mx-auto text-[15px] leading-relaxed">
+      Material tiers pull from the same algorithm that drives <span class="kbd">STRENGTH_LEVELS</span>.
+      Strength rises smoothly via exponential smoothing, so the chain <em>earns</em> each upgrade instead of jumping at arbitrary streak days.
+    </p>
+  </header>
+
+  <!-- The mapping spectrum -->
+  <section class="mb-14 concept-card">
+    <div class="flex items-baseline gap-3 mb-5">
+      <span class="num-pill">MAPPING</span>
+      <h2 class="section-title">One algorithm, one scale</h2>
+    </div>
+    <p class="section-sub -mt-3 mb-5 ml-14 max-w-2xl">
+      The strength label the user already sees (🌳 <em>Growing</em>, 💪 <em>Strong</em>, ⚡ <em>Unbreakable</em>) now picks the chain material.
+    </p>
+
+    <div class="spectrum">
+      <div class="spectrum-zone z-copper" style="flex: 20;">🌱 COPPER</div>
+      <div class="spectrum-zone z-chain" style="flex: 20;">🌿 CHAIN</div>
+      <div class="spectrum-zone z-iron" style="flex: 20;">🌳 IRON</div>
+      <div class="spectrum-zone z-gold" style="flex: 20;">💪 GOLD</div>
+      <div class="spectrum-zone z-legendary" style="flex: 20;">⚡ LEGENDARY</div>
+    </div>
+    <div class="spectrum-ticks">
+      <div class="spectrum-tick">
+        <div class="pct">0 %</div>
+        <div class="lvl">Starting Out</div>
+      </div>
+      <div class="spectrum-tick">
+        <div class="pct">20 %</div>
+        <div class="lvl">Building</div>
+      </div>
+      <div class="spectrum-tick">
+        <div class="pct">40 %</div>
+        <div class="lvl">Growing</div>
+      </div>
+      <div class="spectrum-tick">
+        <div class="pct">60 %</div>
+        <div class="lvl">Strong</div>
+      </div>
+      <div class="spectrum-tick">
+        <div class="pct">80 %</div>
+        <div class="lvl">Unbreakable</div>
+      </div>
+      <div class="spectrum-tick" style="flex: 0; min-width: 32px;">
+        <div class="pct">100</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tier gallery -->
+  <section class="mb-14">
+    <div class="flex items-baseline gap-3 mb-5">
+      <span class="num-pill">TIERS</span>
+      <h2 class="section-title">Each tier in context</h2>
+    </div>
+    <p class="section-sub -mt-3 mb-6 ml-14 max-w-2xl">
+      Same habit, five phases of its journey. Strength bar color + chain material + level label stay in lockstep.
+    </p>
+
+    <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+
+      <!-- COPPER -->
+      <div class="tier-card tier-copper">
+        <div class="tier-head">
+          <span class="emoji">🌱</span>
+          <div>
+            <div class="label">Starting Out</div>
+            <div class="range">0 – 19 %</div>
+          </div>
+        </div>
+        <div class="material-name">Copper wire</div>
+        <div class="habit-card" style="padding: 10px;">
+          <div class="name" style="font-size: 12px; margin-bottom: 4px;">Meditate</div>
+          <div class="bar" style="margin-bottom: 10px;">
+            <div class="bar-readout">8 %</div>
+            <div class="bar-fill" style="width: 8%"></div>
+          </div>
+          <div class="chain-row">
+            <div class="chain-cell" style="width: 28px; height: 28px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 0 1 0 10h-2"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div>
+            <div class="connector"></div>
+            <div class="chain-cell" style="width: 28px; height: 28px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 0 1 0 10h-2"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div>
+            <div class="connector"></div>
+            <div class="chain-cell today" style="width: 28px; height: 28px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 0 1 0 10h-2"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div>
+          </div>
+        </div>
+        <p class="text-[11px] text-gray-500 leading-relaxed">Humble, fragile. Reinforces "just keep showing up."</p>
+      </div>
+
+      <!-- CHAIN -->
+      <div class="tier-card tier-chain">
+        <div class="tier-head">
+          <span class="emoji">🌿</span>
+          <div>
+            <div class="label">Building</div>
+            <div class="range">20 – 39 %</div>
+          </div>
+        </div>
+        <div class="material-name">Standard chain</div>
+        <div class="habit-card" style="padding: 10px;">
+          <div class="name" style="font-size: 12px; margin-bottom: 4px;">Meditate</div>
+          <div class="bar" style="margin-bottom: 10px;">
+            <div class="bar-readout">28 %</div>
+            <div class="bar-fill" style="width: 28%"></div>
+          </div>
+          <div class="chain-row">
+            <div class="chain-cell" style="width: 28px; height: 28px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 0 1 0 10h-2"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div>
+            <div class="connector"></div>
+            <div class="chain-cell" style="width: 28px; height: 28px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 0 1 0 10h-2"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div>
+            <div class="connector"></div>
+            <div class="chain-cell today" style="width: 28px; height: 28px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 0 1 0 10h-2"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div>
+          </div>
+        </div>
+        <p class="text-[11px] text-gray-500 leading-relaxed">The app's accent color kicks in — "yes, this is mine."</p>
+      </div>
+
+      <!-- IRON -->
+      <div class="tier-card tier-iron">
+        <div class="tier-head">
+          <span class="emoji">🌳</span>
+          <div>
+            <div class="label">Growing</div>
+            <div class="range">40 – 59 %</div>
+          </div>
+        </div>
+        <div class="material-name">Forged iron</div>
+        <div class="habit-card" style="padding: 10px;">
+          <div class="name" style="font-size: 12px; margin-bottom: 4px;">Meditate</div>
+          <div class="bar" style="margin-bottom: 10px;">
+            <div class="bar-readout">48 %</div>
+            <div class="bar-fill" style="width: 48%"></div>
+          </div>
+          <div class="chain-row">
+            <div class="chain-cell" style="width: 28px; height: 28px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 0 1 0 10h-2"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div>
+            <div class="connector"></div>
+            <div class="chain-cell" style="width: 28px; height: 28px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 0 1 0 10h-2"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div>
+            <div class="connector"></div>
+            <div class="chain-cell today" style="width: 28px; height: 28px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 0 1 0 10h-2"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div>
+          </div>
+        </div>
+        <p class="text-[11px] text-gray-500 leading-relaxed">Thicker, darker. Chain visibly has weight — "I'm serious now."</p>
+      </div>
+
+      <!-- GOLD -->
+      <div class="tier-card tier-gold">
+        <div class="tier-head">
+          <span class="emoji">💪</span>
+          <div>
+            <div class="label">Strong</div>
+            <div class="range">60 – 79 %</div>
+          </div>
+        </div>
+        <div class="material-name">Gold chain</div>
+        <div class="habit-card" style="padding: 10px;">
+          <div class="name" style="font-size: 12px; margin-bottom: 4px;">Meditate</div>
+          <div class="bar" style="margin-bottom: 10px;">
+            <div class="bar-readout">71 %</div>
+            <div class="bar-fill" style="width: 71%"></div>
+          </div>
+          <div class="chain-row">
+            <div class="chain-cell" style="width: 28px; height: 28px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 0 1 0 10h-2"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div>
+            <div class="connector"></div>
+            <div class="chain-cell" style="width: 28px; height: 28px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 0 1 0 10h-2"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div>
+            <div class="connector"></div>
+            <div class="chain-cell today" style="width: 28px; height: 28px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 0 1 0 10h-2"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div>
+          </div>
+        </div>
+        <p class="text-[11px] text-gray-500 leading-relaxed">Warm gold, soft glow. Shareable moment — this gets screenshots.</p>
+      </div>
+
+      <!-- LEGENDARY -->
+      <div class="tier-card tier-legendary">
+        <div class="tier-head">
+          <span class="emoji">⚡</span>
+          <div>
+            <div class="label">Unbreakable</div>
+            <div class="range">80 – 100 %</div>
+          </div>
+        </div>
+        <div class="material-name">Legendary platinum</div>
+        <div class="habit-card" style="padding: 10px;">
+          <div class="name" style="font-size: 12px; margin-bottom: 4px;">Meditate</div>
+          <div class="bar" style="margin-bottom: 10px;">
+            <div class="bar-readout">92 %</div>
+            <div class="bar-fill" style="width: 92%"></div>
+          </div>
+          <div class="chain-row">
+            <div class="chain-cell" style="width: 28px; height: 28px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 0 1 0 10h-2"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div>
+            <div class="connector"></div>
+            <div class="chain-cell" style="width: 28px; height: 28px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 0 1 0 10h-2"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div>
+            <div class="connector"></div>
+            <div class="chain-cell today" style="width: 28px; height: 28px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 0 1 0 10h-2"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div>
+          </div>
+        </div>
+        <p class="text-[11px] text-gray-500 leading-relaxed">Platinum + gold shimmer. Identity — not a streak, a status.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Why it matters -->
+  <section class="mb-14">
+    <div class="flex items-baseline gap-3 mb-5">
+      <span class="num-pill">WHY</span>
+      <h2 class="section-title">Why strength beats streak</h2>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 ml-14">
+      <div class="concept-card">
+        <div class="flex items-start gap-3">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-emerald-600 mt-0.5 flex-shrink-0"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <div>
+            <div class="text-sm font-bold text-gray-900 mb-1">Smooth, not cliff-y</div>
+            <p class="text-[13px] text-gray-600 leading-relaxed">
+              A streak-driven chain toggled tiers the exact day you hit day 7, 30, 100. Strength rises a fraction each completion — so material upgrades feel earned, not automatic.
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="concept-card">
+        <div class="flex items-start gap-3">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-emerald-600 mt-0.5 flex-shrink-0"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+          <div>
+            <div class="text-sm font-bold text-gray-900 mb-1">Forgiving on misses</div>
+            <p class="text-[13px] text-gray-600 leading-relaxed">
+              Miss a day and streak drops to zero — but strength only <em>decays</em> (×0.95). A gold chain after one missed day shows as mid-gold, not reset to copper. Better mirrors reality.
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="concept-card">
+        <div class="flex items-start gap-3">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-emerald-600 mt-0.5 flex-shrink-0"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          <div>
+            <div class="text-sm font-bold text-gray-900 mb-1">One scale, no mixed signals</div>
+            <p class="text-[13px] text-gray-600 leading-relaxed">
+              "Strong 💪" label + gold chain = coherent. Previously, user at streak 100 saw gold chain but label said "Growing" (because habit strength algo hadn't caught up). Now the two views agree.
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="concept-card">
+        <div class="flex items-start gap-3">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-emerald-600 mt-0.5 flex-shrink-0"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+          <div>
+            <div class="text-sm font-bold text-gray-900 mb-1">Hot-start, not cold-start</div>
+            <p class="text-[13px] text-gray-600 leading-relaxed">
+              New users who log a few days see strength climb past 20% quickly → chain tier upgrade (copper → chain). Feels responsive. Streak-only required 7 consecutive days before <em>any</em> visual reward.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Code note -->
+  <footer class="concept-card mt-4">
+    <div class="flex items-start gap-3">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-emerald-600 mt-0.5 flex-shrink-0"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+      <div>
+        <div class="text-sm font-bold text-gray-900 mb-1">Single source of truth</div>
+        <p class="text-[13px] text-gray-600 leading-relaxed">
+          <span class="kbd">getMaterialTier(strengthPercent)</span> in <span class="kbd">materialTier.ts</span> uses thresholds that <em>exactly mirror</em> <span class="kbd">STRENGTH_LEVELS</span> in <span class="kbd">strengthLevels.ts</span>. Change one, the other follows — no drift.
+        </p>
+      </div>
+    </div>
+  </footer>
+
+</div>
+</body>
+</html>

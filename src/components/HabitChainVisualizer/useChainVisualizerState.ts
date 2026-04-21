@@ -12,6 +12,7 @@ interface UseChainVisualizerStateParams {
   celebrationsEnabled: boolean;
   reduceMotionPreference: boolean;
   habitId: Id<'habits'>;
+  isConnectedToPreviousWeek: boolean;
   onToggle: (args: { habitId: Id<'habits'>; date: string }) => void;
   onWeekComplete?: (args: { completedDate: string }) => void;
 }
@@ -22,13 +23,16 @@ export const useChainVisualizerState = ({
   celebrationsEnabled,
   reduceMotionPreference,
   habitId,
+  isConnectedToPreviousWeek,
   onToggle,
   onWeekComplete,
 }: UseChainVisualizerStateParams) => {
-  const { isCompleted, isFutureDate, isToday } = useHabitChainVisualizerLogic(
-    weekDateStrings,
-    weekStatus
-  );
+  const { isCompleted, isFutureDate, isStreakBreak, isToday } =
+    useHabitChainVisualizerLogic(
+      weekDateStrings,
+      weekStatus,
+      isConnectedToPreviousWeek
+    );
   const [activeBurst, setActiveBurst] = useState<string | null>(null);
 
   const { triggerSelection, triggerSuccess } = useHapticFeedback({
@@ -69,6 +73,7 @@ export const useChainVisualizerState = ({
     handleToggleDay,
     isCompleted,
     isFutureDate,
+    isStreakBreak,
     isToday,
     setActiveBurst,
     shouldReduceMotion,

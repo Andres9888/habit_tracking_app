@@ -17,6 +17,14 @@ export type ProgressEmojiSet = Record<StrengthLevelKey, string>;
 export type PartialProgressEmojiSet = Partial<ProgressEmojiSet>;
 
 export const DEFAULT_PROGRESS_EMOJIS: ProgressEmojiSet = {
+  starting: '🪙',
+  building: '🔗',
+  developing: '⚙️',
+  strong: '🥇',
+  automatic: '💎',
+};
+
+const PLANTS_PROGRESS_EMOJIS: ProgressEmojiSet = {
   starting: '🌱',
   building: '🌿',
   developing: '🌳',
@@ -31,7 +39,8 @@ export interface ProgressEmojiPreset {
 }
 
 export const PROGRESS_EMOJI_PRESETS: ProgressEmojiPreset[] = [
-  { id: 'plants', label: 'Plants', emojis: DEFAULT_PROGRESS_EMOJIS },
+  { id: 'chain', label: 'Chain', emojis: DEFAULT_PROGRESS_EMOJIS },
+  { id: 'plants', label: 'Plants', emojis: PLANTS_PROGRESS_EMOJIS },
   {
     id: 'fitness',
     label: 'Fitness',

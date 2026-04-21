@@ -27,12 +27,12 @@ interface ChainDayItemProps {
   celebrationsEnabled: boolean;
   completionIcon: CompletionIcon;
   completed: boolean;
-  connectorColor: string;
-  currentStreak: number;
+  strengthPercent: number;
   dateString: string;
   disabled: boolean;
   highContrastMode: boolean;
   isToday: boolean;
+  missed: boolean;
   onBurstComplete: () => void;
   onPress: () => void;
   shape: DayShape;
@@ -48,12 +48,12 @@ const ChainDayItemComponent: React.FC<ChainDayItemProps> = ({
   celebrationsEnabled,
   completionIcon,
   completed,
-  connectorColor,
-  currentStreak,
+  strengthPercent,
   dateString,
   disabled,
   highContrastMode,
   isToday,
+  missed,
   onBurstComplete,
   onPress,
   shape,
@@ -69,9 +69,11 @@ const ChainDayItemComponent: React.FC<ChainDayItemProps> = ({
       accessibilityLabel={accessibilityLabel}
       completed={completed}
       completionIcon={completionIcon}
+      strengthPercent={strengthPercent}
       disabled={disabled}
       highContrastMode={highContrastMode}
       isToday={isToday}
+      missed={missed}
       shape={shape}
       onPress={onPress}
     />
@@ -85,8 +87,7 @@ const ChainDayItemComponent: React.FC<ChainDayItemProps> = ({
         <DayConnector
           visible
           accentColor={accentColor}
-          baseColor={connectorColor}
-          currentStreak={currentStreak}
+          strengthPercent={strengthPercent}
           style={styles.dayConnector}
         />
       </View> : null}

@@ -15,6 +15,8 @@ export const useHabitDayToggleAnimations = ({
   const completion = useRef(new Animated.Value(completed ? 1 : 0)).current;
   const buttonScale = useRef(new Animated.Value(1)).current;
   const breathingPulse = useRef(new Animated.Value(1)).current;
+  // Warm amber "forge" flash that fades out on the false → true transition.
+  const forgeFlash = useRef(new Animated.Value(0)).current;
   const prevCompletedRef = useRef<boolean | null>(null);
 
   // Combine scale values using Animated.multiply
@@ -48,6 +50,17 @@ export const useHabitDayToggleAnimations = ({
     }
 
     const targetValue = completed ? 1 : 0;
+
+    // Forge flash fires only on the false → true transition.
+    if (completed) {
+      forgeFlash.setValue(1);
+      Animated.timing(forgeFlash, {
+        duration: 500,
+        easing: Easing.out(Easing.cubic),
+        toValue: 0,
+        useNativeDriver: true,
+      }).start();
+    }
 
     // Value changed - animate the transition
     const animation = completed
@@ -129,5 +142,5 @@ export const useHabitDayToggleAnimations = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [completed, isToday]);
 
-  return { buttonScale, combinedScale, completion };
+  return { buttonScale, combinedScale, completion, forgeFlash };
 };

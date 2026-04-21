@@ -14,6 +14,7 @@ import ReAnimated, { type AnimatedStyle } from 'react-native-reanimated';
 import { getStrengthEmoji } from './strengthUtils';
 import { useCountingPercent } from './useCountingPercent';
 import { colors } from '@/theme';
+import { getMaterialTier } from '../HabitChainVisualizer/materialTier';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { borderRadius } from '../../theme/spacing';
 import { typography, fontFamilies } from '../../theme/typography';
@@ -24,6 +25,7 @@ interface StrengthProgressBarProps {
   strengthEmojiAnimatedStyle: AnimatedStyle;
   progressAnimatedStyle: AnimatedStyle;
   emojis?: ProgressEmojiSet;
+  accentColor?: string;
 }
 
 export function StrengthProgressBar({
@@ -31,9 +33,13 @@ export function StrengthProgressBar({
   strengthEmojiAnimatedStyle,
   progressAnimatedStyle,
   emojis,
+  accentColor,
 }: StrengthProgressBarProps) {
   const { colors: themeColors, isDark } = useThemeColors();
   const displayPercent = useCountingPercent(strengthPercent);
+  const tier = getMaterialTier(strengthPercent);
+  const tierFillColor =
+    tier.useAccent && accentColor ? accentColor : tier.tierColor || (isDark ? '#A3E635' : colors.strength.starting);
 
   return (
     <View className='relative mb-3 flex-row items-center justify-between px-3'>
@@ -94,7 +100,7 @@ export function StrengthProgressBar({
           <ReAnimated.View
             style={[
               {
-                backgroundColor: isDark ? '#A3E635' : colors.strength.starting,
+                backgroundColor: tierFillColor,
                 borderRadius: borderRadius.xs,
                 height: '100%',
               },

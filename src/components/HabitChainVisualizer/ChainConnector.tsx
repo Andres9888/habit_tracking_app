@@ -10,16 +10,14 @@ import { DayConnector } from './DayConnector';
 interface ChainConnectorProps {
   visible: boolean;
   accentColor: string;
-  connectorColor: string;
-  currentStreak: number;
+  strengthPercent: number;
   position?: 'start' | 'end';
 }
 
 export function ChainConnector({
   visible,
   accentColor,
-  connectorColor,
-  currentStreak,
+  strengthPercent,
   position = 'start',
 }: ChainConnectorProps) {
   if (!visible) return null;
@@ -48,8 +46,7 @@ export function ChainConnector({
       <DayConnector
         visible
         accentColor={accentColor}
-        baseColor={connectorColor}
-        currentStreak={currentStreak}
+        strengthPercent={strengthPercent}
         style={{ width: '100%' }}
       />
     </View>

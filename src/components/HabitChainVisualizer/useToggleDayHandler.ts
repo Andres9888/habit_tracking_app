@@ -50,9 +50,8 @@ export const useToggleDayHandler = ({
         triggerSelection();
       } else {
         triggerSuccess();
-        if (willCompleteWeek) {
-          setActiveBurst(dateString);
-        }
+        // Forge spark burst fires on every completion, not just week-complete.
+        setActiveBurst(dateString);
       }
 
       onToggle({ date: dateString, habitId });

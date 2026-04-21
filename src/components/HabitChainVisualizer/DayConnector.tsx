@@ -1,25 +1,25 @@
 import React from 'react';
 import { Animated } from 'react-native';
 import type { DayConnectorProps } from './types';
-import { getStrengthConfig } from './strengthConfig';
+import { getMaterialTier } from './materialTier';
 import { useDayConnectorAnimations } from './useDayConnectorAnimations';
 
 /**
- * DayConnector - Visual link between consecutive completed days
- * Features strength-based evolution with shimmer effect for longer streaks.
+ * DayConnector — visual link between consecutive completed days.
+ * Thickness, color, shimmer, and glow all come from the material tier.
  */
 export const DayConnector: React.FC<DayConnectorProps> = ({
   accentColor,
-  baseColor,
-  currentStreak,
+  strengthPercent,
   style,
   visible,
 }) => {
-  const strengthConfig = getStrengthConfig(currentStreak);
-  const connectorColor = strengthConfig.useAccent ? accentColor : baseColor;
+  const tier = getMaterialTier(strengthPercent);
+  const connectorColor = tier.useAccent ? accentColor : tier.tierColor;
+  const glowColor = tier.useAccent ? accentColor : tier.tierColor;
 
   const { opacity, shimmerPosition } = useDayConnectorAnimations({
-    shimmerSpeed: strengthConfig.shimmerSpeed,
+    shimmerSpeed: tier.shimmerSpeed,
     visible,
   });
 
@@ -28,29 +28,28 @@ export const DayConnector: React.FC<DayConnectorProps> = ({
       style={[
         {
           backgroundColor: connectorColor,
-          borderRadius: strengthConfig.height / 2,
-          height: strengthConfig.height,
+          borderRadius: tier.connectorHeight / 2,
+          height: tier.connectorHeight,
           minWidth: 14,
           opacity: opacity.interpolate({
             inputRange: [0, 1],
-            outputRange: [0, strengthConfig.maxOpacity],
+            outputRange: [0, tier.connectorOpacity],
           }),
           overflow: 'hidden',
         },
-        strengthConfig.useAccent &&
-          currentStreak >= 30 && {
-            shadowColor: accentColor,
-            shadowOffset: { height: 0, width: 0 },
-            shadowOpacity: 0.4,
-            shadowRadius: 3,
-          },
+        tier.glow && {
+          shadowColor: glowColor,
+          shadowOffset: { height: 0, width: 0 },
+          shadowOpacity: 0.4,
+          shadowRadius: 3,
+        },
         style,
       ]}
     >
-      {strengthConfig.shimmerSpeed > 0 ? <Animated.View
+      {tier.shimmerSpeed > 0 ? <Animated.View
           style={{
             backgroundColor: 'rgba(255, 255, 255, 0.4)',
-            borderRadius: strengthConfig.height,
+            borderRadius: tier.connectorHeight,
             height: '100%',
             position: 'absolute',
             transform: [

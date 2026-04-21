@@ -3,8 +3,9 @@
  *
  * Pure functions for the 5-tier habit strength system.
  *
- * Default tiers:  🌱 Starting (0–19%)  →  🌿 Building (20–39%)  →  🌳 Developing (40–59%)
- *                 →  💪 Strong (60–79%)  →  ⚡ Automatic (80–100%)
+ * Default tiers mirror the chain material tiers:
+ *   🪙 Copper (0–19%)  →  🔗 Chain (20–39%)  →  ⚙️ Iron (40–59%)
+ *   →  🥇 Gold (60–79%)  →  💎 Legendary (80–100%)
  *
  * Tier emojis are user-customizable per habit via `emojis` parameter.
  */

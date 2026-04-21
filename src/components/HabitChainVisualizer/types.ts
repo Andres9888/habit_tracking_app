@@ -5,17 +5,9 @@ export type DayShape = 'circle' | 'square';
 export type CompletionIcon = 'chain' | 'checkbox';
 export type HabitStatus = 'done' | 'missed' | 'planned';
 
-export interface StrengthConfig {
-  height: number;
-  maxOpacity: number;
-  shimmerSpeed: number;
-  useAccent: boolean;
-}
-
 export interface DayConnectorProps {
   accentColor: string;
-  baseColor: string;
-  currentStreak: number;
+  strengthPercent: number;
   style?: ViewStyle;
   visible: boolean;
 }
@@ -26,10 +18,11 @@ export interface HabitDayToggleProps {
   accessibilityLabel: string;
   completionIcon: CompletionIcon;
   completed: boolean;
-  currentStreak?: number;
+  strengthPercent?: number;
   disabled: boolean;
   highContrastMode: boolean;
   isToday: boolean;
+  missed?: boolean;
   onPress: () => void;
   shape: DayShape;
 }
@@ -38,7 +31,7 @@ export interface HabitChainVisualizerProps {
   accentColor: string;
   celebrationsEnabled?: boolean;
   completionIcon?: CompletionIcon;
-  currentStreak?: number;
+  strengthPercent?: number;
   habitId: Id<'habits'>;
   highContrastMode?: boolean;
   isConnectedToNextWeek?: boolean;

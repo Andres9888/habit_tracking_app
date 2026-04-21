@@ -58,6 +58,7 @@ export function CardContent(props: CardContentProps) {
           />
         ) : props.showHabitStrengthPercentage ? (
           <StrengthProgressBar
+            accentColor={props.effectiveAccentColor}
             emojis={progressEmojis}
             progressAnimatedStyle={props.progressAnimatedStyle}
             strengthEmojiAnimatedStyle={props.strengthEmojiAnimatedStyle}
@@ -75,7 +76,7 @@ export function CardContent(props: CardContentProps) {
           accentColor={props.accentColor}
           celebrationsEnabled={props.celebrationsEnabled}
           completionIcon={props.completionIcon}
-          currentStreak={props.streak}
+          strengthPercent={props.strengthPercent}
           habitId={props.habit._id}
           highContrastMode={props.highContrastMode}
           isConnectedToNextWeek={props.isConnectedToNextWeek}

@@ -6,6 +6,7 @@ interface ChainDayListProps {
   weekDateStrings: string[];
   isCompleted: (index: number) => boolean;
   isFutureDate: (index: number) => boolean;
+  isStreakBreak: (index: number) => boolean;
   isToday: (index: number) => boolean;
   dateLabels: string[];
   todayLabel: string;
@@ -20,8 +21,7 @@ interface ChainDayListProps {
   accentColor?: string;
   celebrationsEnabled: boolean;
   completionIcon: CompletionIcon;
-  connectorColor: string;
-  currentStreak: number;
+  strengthPercent: number;
   highContrastMode: boolean;
   shape: DayShape;
   shouldReduceMotion: boolean;
@@ -63,12 +63,12 @@ export function ChainDayList(props: ChainDayListProps) {
             celebrationsEnabled={props.celebrationsEnabled}
             completed={completed}
             completionIcon={props.completionIcon}
-            connectorColor={props.connectorColor}
-            currentStreak={props.currentStreak}
+            strengthPercent={props.strengthPercent}
             dateString={dateString}
             disabled={disabled}
             highContrastMode={props.highContrastMode}
             isToday={props.isToday(index)}
+            missed={props.isStreakBreak(index)}
             shape={props.shape}
             shouldReduceMotion={props.shouldReduceMotion}
             showConnector={

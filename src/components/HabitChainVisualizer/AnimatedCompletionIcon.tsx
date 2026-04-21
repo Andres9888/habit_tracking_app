@@ -12,12 +12,15 @@ import { colors } from '../../theme/colors';
 interface AnimatedCompletionIconProps {
   completionIcon: 'checkbox' | 'chain';
   completion: Animated.Value;
+  iconColor?: string;
 }
 
 export function AnimatedCompletionIcon({
   completionIcon,
   completion,
+  iconColor,
 }: AnimatedCompletionIconProps) {
+  const resolvedColor = iconColor ?? colors.text.inverse;
   return (
     <Animated.View
       style={{
@@ -33,9 +36,9 @@ export function AnimatedCompletionIcon({
       }}
     >
       {completionIcon === 'checkbox' ? (
-        <Check color={colors.text.inverse} size={iconSizes.medium} strokeWidth={2.5} />
+        <Check color={resolvedColor} size={iconSizes.medium} strokeWidth={2.5} />
       ) : (
-        <ChainLinkIcon color={colors.text.inverse} size={20} variant='stroke' />
+        <ChainLinkIcon color={resolvedColor} size={20} variant='stroke' />
       )}
     </Animated.View>
   );
