@@ -1,6 +1,7 @@
 import { Text, View } from 'react-native';
 
 import { useThemeColors } from '@/theme';
+import { fontWeights } from '@/theme/typography';
 
 interface Props {
   painLabel: string;
@@ -41,7 +42,7 @@ export function PainSolutionRow({ painLabel, icon, title, body }: Props) {
           style={{
             color: colors.text.primary,
             fontSize: 15,
-            fontWeight: '600',
+            fontWeight: fontWeights.semibold,
           }}
         >
           {title}

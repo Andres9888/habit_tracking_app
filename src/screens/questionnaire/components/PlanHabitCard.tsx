@@ -1,6 +1,7 @@
 import { Text, View } from 'react-native';
 
 import { useThemeColors } from '@/theme';
+import { fontWeights } from '@/theme/typography';
 
 interface Props {
   icon: string;
@@ -31,7 +32,7 @@ export function PlanHabitCard({ icon, name, description }: Props) {
           style={{
             color: colors.text.primary,
             fontSize: 16,
-            fontWeight: '600',
+            fontWeight: fontWeights.semibold,
           }}
         >
           {name}

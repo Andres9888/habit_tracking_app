@@ -5,7 +5,8 @@ export interface Testimonial {
   quote: string;
 }
 
-// TODO: Replace with real App Store / TestFlight reviews before launch.
+// PLACEHOLDER — aspirational copy approved for launch.
+// Replace with real App Store / TestFlight reviews once collected.
 export const TESTIMONIALS: Testimonial[] = [
   {
     id: 'm-b',
@@ -19,13 +20,13 @@ export const TESTIMONIALS: Testimonial[] = [
     initials: 'J.L.',
     personaTag: 'Founder',
     quote:
-      'I quit four habit apps before this. Chain Day is the only one I still open every morning.',
+      'Every other app felt like homework. Chain Day is the only one where my streak still matters — 90 days in.',
   },
   {
     id: 'a-k',
     initials: 'A.K.',
     personaTag: 'Student',
     quote:
-      'Tracking 3 tiny habits a day beat every elaborate planner I used to buy.',
+      'I stopped overcommitting. 3 check-ins a day, 6 weeks in, and I am finally sticking with something.',
   },
 ];

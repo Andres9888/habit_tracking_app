@@ -4,6 +4,7 @@ import { Share, Text } from 'react-native';
 
 import { api } from '../../../../convex/_generated/api';
 import { useThemeColors } from '@/theme';
+import { fontWeights } from '@/theme/typography';
 
 import { PlanHabitCard } from '../components/PlanHabitCard';
 import { PrimaryCTA } from '../components/PrimaryCTA';
@@ -39,7 +40,11 @@ export function PlanPreviewStep({
       footer={<PrimaryCTA label='Looks great' onPress={onNext} />}
       step={step}
       subtitle='Tweak, reorder, or add more once you sign in.'
-      title={`Your ${Math.max(selected.length, 1)}-habit starter plan`}
+      title={
+        selected.length > 0
+          ? `Your ${selected.length}-habit starter plan`
+          : 'Your starter plan is ready'
+      }
       onBack={onBack}
     >
       {selected.length === 0 ? (
@@ -61,7 +66,7 @@ export function PlanPreviewStep({
         style={{
           color: colors.primary[600],
           fontSize: 15,
-          fontWeight: '600',
+          fontWeight: fontWeights.semibold,
           marginTop: 12,
           textAlign: 'center',
         }}

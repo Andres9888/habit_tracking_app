@@ -2,6 +2,7 @@ import { useCallback, useState } from 'react';
 import { Text, View } from 'react-native';
 
 import { useThemeColors } from '@/theme';
+import { fontWeights } from '@/theme/typography';
 
 import { QuestionnaireScreenFrame } from '../components/QuestionnaireScreenFrame';
 import { SwipeCard } from '../components/SwipeCard';
@@ -55,7 +56,7 @@ export function PainAmplificationStep({
               style={{
                 color: colors.text.primary,
                 fontSize: 22,
-                fontWeight: '600',
+                fontWeight: fontWeights.semibold,
                 lineHeight: 30,
                 textAlign: 'center',
               }}

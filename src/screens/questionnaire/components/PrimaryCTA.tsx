@@ -1,6 +1,7 @@
 import { ActivityIndicator, Pressable, Text } from 'react-native';
 
 import { useThemeColors } from '@/theme';
+import { fontWeights } from '@/theme/typography';
 
 interface Props {
   label: string;
@@ -45,7 +46,7 @@ export function PrimaryCTA({
           style={{
             color: colors.text.inverse,
             fontSize: 17,
-            fontWeight: '600',
+            fontWeight: fontWeights.semibold,
           }}
         >
           {label}

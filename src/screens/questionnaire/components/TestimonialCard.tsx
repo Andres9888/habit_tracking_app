@@ -1,6 +1,7 @@
 import { Text, View } from 'react-native';
 
 import { useThemeColors } from '@/theme';
+import { fontWeights } from '@/theme/typography';
 
 import type { Testimonial } from '../data/testimonials';
 
@@ -40,14 +41,14 @@ export function TestimonialCard({ testimonial }: Props) {
             style={{
               color: colors.primary[700],
               fontSize: 13,
-              fontWeight: '700',
+              fontWeight: fontWeights.bold,
             }}
           >
             {testimonial.initials}
           </Text>
         </View>
         <Text
-          style={{ color: colors.text.secondary, fontSize: 13, fontWeight: '500' }}
+          style={{ color: colors.text.secondary, fontSize: 13, fontWeight: fontWeights.medium }}
         >
           {testimonial.personaTag}
         </Text>

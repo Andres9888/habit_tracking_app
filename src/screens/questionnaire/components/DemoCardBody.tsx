@@ -1,6 +1,7 @@
 import { Text } from 'react-native';
 
 import { useThemeColors } from '@/theme';
+import { fontWeights } from '@/theme/typography';
 
 interface Props {
   icon: string;
@@ -18,7 +19,7 @@ export function DemoCardBody({ icon, name, description }: Props) {
         style={{
           color: colors.text.primary,
           fontSize: 22,
-          fontWeight: '700',
+          fontWeight: fontWeights.bold,
           marginTop: 12,
           textAlign: 'center',
         }}

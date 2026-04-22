@@ -1,6 +1,7 @@
 import { Text, View } from 'react-native';
 
 import { useThemeColors } from '@/theme';
+import { fontWeights } from '@/theme/typography';
 
 import { PrimaryCTA } from '../components/PrimaryCTA';
 import { QuestionnaireScreenFrame } from '../components/QuestionnaireScreenFrame';
@@ -32,7 +33,7 @@ export function SocialProofStep({ step, onNext, onBack }: StepProps) {
           style={{
             color: colors.primary[700],
             fontSize: 13,
-            fontWeight: '600',
+            fontWeight: fontWeights.semibold,
             letterSpacing: 0.3,
             textTransform: 'uppercase',
           }}

@@ -4,6 +4,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated, { FadeInUp, useReducedMotion } from 'react-native-reanimated';
 
 import { useThemeColors } from '@/theme';
+import { fontWeights } from '@/theme/typography';
 
 import type { QuestionnaireStep } from '../QuestionnaireFlow.types';
 import { QuestionnaireHeader } from './QuestionnaireHeader';
@@ -49,7 +50,7 @@ export function QuestionnaireScreenFrame({
             style={{
               color: colors.text.primary,
               fontSize: 28,
-              fontWeight: '700',
+              fontWeight: fontWeights.bold,
               lineHeight: 34,
             }}
           >
