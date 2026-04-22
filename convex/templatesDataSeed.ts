@@ -324,6 +324,27 @@ export const seedTemplates = internalMutation({
       category: 'health_fitness',
       createdAt: now,
       description:
+        "Dr. Wendy Suzuki's prescription for a sharper, more resilient brain: 30–45 minutes of aerobic exercise, 3–4x per week. Cardio boosts BDNF, grows the hippocampus and prefrontal cortex, and protects against Alzheimer's and dementia.",
+      frequency: 'weekly',
+      icon: '🫀',
+      iconColor: '#F97316',
+      name: '30-Minute Brain-Boosting Cardio',
+      popularityScore: 92,
+      scientificLink: 'https://doi.org/10.3233/BPL-160040',
+      scientificReference:
+        'Basso & Suzuki (2017) - The Effects of Acute Exercise on Mood, Cognition, Neurophysiology, and Neurochemical Pathways: A Review (Wendy Suzuki lab, NYU)',
+      tips: [
+        'Aim for 30–45 minutes, 3–4 times per week — walk, run, cycle, swim, or dance, anything that gets your heart rate up',
+        'Intensity target: break a sweat, able to talk but not sing',
+        'Short on time? Even a 10-minute brisk walk gives a measurable focus and mood bump',
+      ],
+      youtubeLink: 'https://www.youtube.com/watch?v=BHY0FxzoKZE',
+    });
+
+    await insertWithTracking({
+      category: 'health_fitness',
+      createdAt: now,
+      description:
         'Walk 10,000 steps daily. Proven to reduce cardiovascular disease risk and improve mental health.',
       frequency: FREQUENCY_DAILY,
       icon: '👟',

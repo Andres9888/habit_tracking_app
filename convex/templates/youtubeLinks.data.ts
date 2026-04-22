@@ -9,6 +9,7 @@ export const youtubeLinksData: Record<string, string> = {
   '20-20-20 Eye Rule': 'https://www.youtube.com/watch?v=Birz7e0M_8Y',
   '24-Hour Purchase Rule': 'https://www.youtube.com/watch?v=IpZbw-K-6ts',
   '30 Plants Per Week': 'https://www.youtube.com/watch?v=BsljKKT6Y-k',
+  '30-Minute Brain-Boosting Cardio': 'https://www.youtube.com/watch?v=BHY0FxzoKZE',
   '4-7-8 Breathing': 'https://www.youtube.com/watch?v=J5C_VYLnq0I',
   '4-7-8 Relaxing Breath': 'https://www.youtube.com/watch?v=J5C_VYLnq0I',
   '5-Minute Meditation': 'https://www.youtube.com/watch?v=xLXF5aP4CtQ',
