@@ -64,12 +64,6 @@ export function NameInputSection({
           onFocus={() => setIsFocused(true)}
           onSubmitEditing={Keyboard.dismiss}
         />
-        <Text
-          className='mt-2 text-center'
-          style={{ ...typography.caption, color: colors.text.tertiary }}
-        >
-          {habitName.length}/50 characters
-        </Text>
       </Animated.View>
     </View>
   );
