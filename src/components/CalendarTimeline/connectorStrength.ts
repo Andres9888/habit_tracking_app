@@ -1,9 +1,12 @@
 /**
- * Strength-based connector evolution for the CalendarTimeline.
+ * Timeline connector strength derived from the habit-chain material tier.
  *
- * Connectors grow thicker, brighter, and gain shimmer/glow
- * as the user's streak lengthens.
+ * Before: streak-length thresholds (3/5/7/14/30 days).
+ * Now: shares `getMaterialTier` with the HabitChainVisualizer so the
+ * calendar timeline and the per-habit chain evolve in lockstep.
  */
+
+import { getMaterialTier } from '../HabitChainVisualizer/materialTier';
 
 export interface TimelineConnectorStrength {
   height: number;
@@ -15,23 +18,19 @@ export interface TimelineConnectorStrength {
   glow: boolean;
 }
 
+/**
+ * Pick the connector treatment for an overall strength score (0–100).
+ * Mirrors `getMaterialTier` thresholds so the calendar timeline upgrades
+ * its material in lockstep with the per-habit chain.
+ */
 export function getTimelineConnectorStrength(
-  streak: number
+  strengthPercent: number
 ): TimelineConnectorStrength {
-  if (streak >= 30) {
-    return { height: 5, opacity: 0.85, shimmerSpeed: 1000, glow: true };
-  }
-  if (streak >= 14) {
-    return { height: 4.5, opacity: 0.8, shimmerSpeed: 1200, glow: false };
-  }
-  if (streak >= 7) {
-    return { height: 4, opacity: 0.7, shimmerSpeed: 1500, glow: false };
-  }
-  if (streak >= 5) {
-    return { height: 4, opacity: 0.6, shimmerSpeed: 2000, glow: false };
-  }
-  if (streak >= 3) {
-    return { height: 3.5, opacity: 0.5, shimmerSpeed: 0, glow: false };
-  }
-  return { height: 3, opacity: 0.35, shimmerSpeed: 0, glow: false };
+  const tier = getMaterialTier(strengthPercent);
+  return {
+    height: tier.connectorHeight,
+    opacity: tier.connectorOpacity,
+    shimmerSpeed: tier.shimmerSpeed,
+    glow: tier.glow,
+  };
 }

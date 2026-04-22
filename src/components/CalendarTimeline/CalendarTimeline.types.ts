@@ -39,6 +39,8 @@ export interface CalendarTimelineProps {
   onJumpToToday?: () => void;
   /** Best current streak across all habits (for greeting display) */
   currentStreak?: number;
+  /** Overall habit-strength percent (0–100). Drives the material tier. */
+  strengthPercent?: number;
   /** Trial bar: days remaining (renders inline gradient bar when > 0) */
   trialDaysRemaining?: number | null;
   /** Trial bar: upgrade callback */
@@ -87,6 +89,8 @@ export interface DayCellProps {
   ghostConnectorColor?: string;
   /** Current streak length — drives connector strength evolution */
   currentStreak?: number;
+  /** Overall habit-strength percent (0–100). Drives the material tier. */
+  strengthPercent?: number;
   /** Completion icon style for the ring */
   completionIcon?: 'chain' | 'checkbox';
 }

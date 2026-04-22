@@ -4,6 +4,7 @@ import { StyleSheet } from 'react-native';
 import { colors as palette } from '../../../theme/colors';
 import { fontFamilies, fontWeights } from '../../../theme/typography';
 import { darkColors } from '../../../theme/darkColors';
+import { getMaterialTier } from '../../HabitChainVisualizer/materialTier';
 import type { CompletionStatus } from '../CalendarTimeline.types';
 
 export const RING_SIZE = 44;
@@ -30,13 +31,29 @@ export interface RingColors {
   todayBorder: string | undefined;
   text: string;
   checkIcon: string;
+  /** Tier-aware shadow for the completed cell. */
+  completeGlow: {
+    shadowColor: string;
+    shadowOffset: { width: number; height: number };
+    shadowOpacity: number;
+    shadowRadius: number;
+    elevation: number;
+  };
 }
 
 export function getRingColors(
   isDark: boolean,
   isToday: boolean,
-  status: CompletionStatus
+  status: CompletionStatus,
+  strengthPercent = 0
 ): RingColors {
+  const tier = getMaterialTier(strengthPercent);
+  const emeraldProgress = isDark ? PROGRESS_EMERALD_DARK : PROGRESS_EMERALD_LIGHT;
+  const emeraldFill = isDark ? FILL_COMPLETE_DARK : FILL_COMPLETE_LIGHT;
+  const tierFill = tier.useAccent ? emeraldFill : tier.tierColor;
+  const tierStroke = tier.useAccent ? emeraldProgress : tier.tierColor;
+  const tierShadow = tier.cellShadowColor || emeraldProgress;
+
   const isAmber = isToday && status !== 'complete' && status !== 'future';
 
   /* Intentional rgba — derived from streak[300] (#E8B94D) with opacity */
@@ -51,16 +68,13 @@ export function getRingColors(
       : 'rgba(232,185,77,0.35)'
     : undefined;
 
-  const progress = isAmber
-    ? isDark
-      ? AMBER_DARK
-      : AMBER_LIGHT
-    : isDark
-      ? PROGRESS_EMERALD_DARK
-      : PROGRESS_EMERALD_LIGHT;
+  let progress: string;
+  if (isAmber) progress = isDark ? AMBER_DARK : AMBER_LIGHT;
+  else if (status === 'partial') progress = tierStroke;
+  else progress = emeraldProgress;
 
   let text: string = isDark ? darkColors.text.primary : palette.gray[800];
-  if (status === 'complete') text = palette.text.inverse;
+  if (status === 'complete') text = tier.iconColor;
   else if (isToday) text = isDark ? palette.streak[300] : palette.streak[700];
   else if (status === 'future')
     text = isDark ? darkColors.text.tertiary : palette.gray[400];
@@ -68,25 +82,24 @@ export function getRingColors(
   return {
     track: isDark ? TRACK_DARK : TRACK_LIGHT,
     progress,
-    fill: isDark ? FILL_COMPLETE_DARK : FILL_COMPLETE_LIGHT,
+    fill: tierFill,
     todayBg,
     todayBorder,
     text,
-    checkIcon: palette.text.inverse,
+    checkIcon: tier.iconColor,
+    completeGlow: {
+      shadowColor: tierShadow,
+      shadowOffset: { width: 0, height: 0 },
+      shadowOpacity: tier.cellShadowOpacity,
+      shadowRadius: tier.cellShadowRadius + 4,
+      elevation: 4,
+    },
   };
 }
 
 export const MONTH_PREFIX_COLORS = {
   light: palette.primary[600],
   dark: palette.primary[400],
-};
-
-export const COMPLETE_GLOW = {
-  shadowColor: palette.primary[500],
-  shadowOffset: { width: 0, height: 0 },
-  shadowOpacity: 0.4,
-  shadowRadius: 10,
-  elevation: 4,
 };
 
 export const ringStyles = StyleSheet.create({
