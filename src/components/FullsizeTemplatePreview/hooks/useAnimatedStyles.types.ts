@@ -11,10 +11,6 @@ export interface UseAnimatedStylesProps {
   closeButtonOpacity: SharedValue<number>;
   importButtonScale: SharedValue<number>;
   customizeButtonScale: SharedValue<number>;
-  successGlow: SharedValue<number>;
-  successGlowScale: SharedValue<number>;
   checkmarkScale: SharedValue<number>;
-  checkmarkRotation: SharedValue<number>;
-  successButtonGlow: SharedValue<number>;
-  successIconBounce: SharedValue<number>;
+  successPillScale: SharedValue<number>;
 }

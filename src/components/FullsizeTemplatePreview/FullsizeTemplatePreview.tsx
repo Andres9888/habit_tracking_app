@@ -86,7 +86,6 @@ function FullsizeTemplatePreviewComponent({
     >
       <PreviewContent
         animatedStyles={animatedStyles}
-        confettiRef={successAnimations.confettiRef}
         createPressHandlers={createPressHandlers}
         customizeButtonScale={customizeButtonScale}
         handlers={handlers}
@@ -95,7 +94,6 @@ function FullsizeTemplatePreviewComponent({
         insets={insets}
         isImported={isImported}
         isImporting={isImporting}
-        reducedMotion={reducedMotion}
         template={effectiveTemplate}
       />
     </Modal>

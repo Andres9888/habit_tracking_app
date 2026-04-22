@@ -44,12 +44,8 @@ export interface EntranceAnimationValues {
 
 /** Animation values for success state */
 export interface SuccessAnimationValues {
-  successGlow: SharedValue<number>;
-  successGlowScale: SharedValue<number>;
   checkmarkScale: SharedValue<number>;
-  checkmarkRotation: SharedValue<number>;
-  successButtonGlow: SharedValue<number>;
-  successIconBounce: SharedValue<number>;
+  successPillScale: SharedValue<number>;
 }
 
 /** Button scale values for press feedback */
@@ -87,8 +83,7 @@ export interface FooterSectionProps {
   importButtonStyle: object;
   customizeButtonStyle: object;
   checkmarkAnimatedStyle: object;
-  successButtonGlowStyle: object;
-  successIconBounceStyle: object;
+  successPillStyle: object;
   createPressHandlers: (
     scale: SharedValue<number>,
     scaleValue?: number

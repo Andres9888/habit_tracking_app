@@ -3,22 +3,19 @@
  */
 
 import type { ViewStyle } from 'react-native';
-import type ConfettiCannon from 'react-native-confetti-cannon';
 import type { SharedValue } from 'react-native-reanimated';
 import type { Template } from '../../../types/template';
 import type { PressHandlers } from '../FullsizeTemplatePreview.types';
 
 export interface PreviewContentAnimatedStyles {
   contentStyle: ViewStyle;
-  successGlowStyle: ViewStyle;
   closeButtonAnimatedOpacityStyle: ViewStyle;
   iconAnimatedStyle: ViewStyle;
   iconGlowStyle: ViewStyle;
   checkmarkAnimatedStyle: ViewStyle;
   customizeButtonStyle: ViewStyle;
   importButtonStyle: ViewStyle;
-  successButtonGlowStyle: ViewStyle;
-  successIconBounceStyle: ViewStyle;
+  successPillStyle: ViewStyle;
 }
 
 export interface PreviewContentHandlers {
@@ -30,7 +27,6 @@ export interface PreviewContentHandlers {
 
 export interface PreviewContentProps {
   animatedStyles: PreviewContentAnimatedStyles;
-  confettiRef: React.RefObject<ConfettiCannon | null>;
   createPressHandlers: (
     scale: SharedValue<number>,
     scaleValue?: number
@@ -42,6 +38,5 @@ export interface PreviewContentProps {
   insets: { top: number; bottom: number };
   isImported: boolean;
   isImporting: boolean;
-  reducedMotion: boolean;
   template: Template;
 }

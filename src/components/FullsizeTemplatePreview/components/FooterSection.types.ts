@@ -16,8 +16,7 @@ export interface FooterSectionProps {
   importButtonStyle: object;
   customizeButtonStyle: object;
   checkmarkAnimatedStyle: object;
-  successButtonGlowStyle: object;
-  successIconBounceStyle: object;
+  successPillStyle: object;
   createPressHandlers: (
     scale: SharedValue<number>,
     scaleValue?: number

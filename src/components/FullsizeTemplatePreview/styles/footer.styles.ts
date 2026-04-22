@@ -59,27 +59,10 @@ export const footerStyles = StyleSheet.create({
     shadowColor: colors.primary[700],
     shadowOpacity: 0.3,
   },
-  successButtonGlow: {
-    backgroundColor: colors.primary[400],
-    borderRadius: borderRadius.xl,
-    bottom: -8,
-    elevation: 8,
-    left: -8,
-    position: 'absolute',
-    right: -8,
-    shadowColor: colors.primary[400],
-    shadowOffset: { height: 0, width: 0 },
-    shadowOpacity: 0.6,
-    shadowRadius: 20,
-    top: -8,
-  },
   successButtonText: {
     color: colors.text.inverse,
     fontFamily: fontFamilies.primary.text,
     fontSize: 17,
     fontWeight: fontWeights.bold,
-  },
-  successButtonWrapper: {
-    position: 'relative',
   },
 });

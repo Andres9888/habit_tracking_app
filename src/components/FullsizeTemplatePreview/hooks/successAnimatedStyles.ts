@@ -2,39 +2,21 @@ import { useAnimatedStyle } from 'react-native-reanimated';
 import type { UseAnimatedStylesProps } from './useAnimatedStyles.types';
 
 export const useSuccessAnimatedStyles = (props: UseAnimatedStylesProps) => {
-  const successGlowStyle = useAnimatedStyle(() => {
-    'worklet';
-    return {
-      opacity: props.successGlow.value ?? 0,
-      transform: [{ scale: props.successGlowScale.value ?? 1 }],
-    };
-  });
-
   const checkmarkAnimatedStyle = useAnimatedStyle(() => {
     'worklet';
     return {
       opacity: props.checkmarkScale.value ?? 0,
-      transform: [
-        { scale: props.checkmarkScale.value ?? 0 },
-        { rotate: `${Math.round(props.checkmarkRotation.value ?? 0)}deg` },
-      ],
+      transform: [{ scale: props.checkmarkScale.value ?? 0 }],
     };
   });
 
-  const successButtonGlowStyle = useAnimatedStyle(() => {
+  const successPillStyle = useAnimatedStyle(() => {
     'worklet';
-    return { opacity: props.successButtonGlow.value ?? 0 };
-  });
-
-  const successIconBounceStyle = useAnimatedStyle(() => {
-    'worklet';
-    return { transform: [{ translateY: props.successIconBounce.value ?? 0 }] };
+    return { transform: [{ scale: props.successPillScale.value ?? 1 }] };
   });
 
   return {
     checkmarkAnimatedStyle,
-    successButtonGlowStyle,
-    successGlowStyle,
-    successIconBounceStyle,
+    successPillStyle,
   };
 };
