@@ -30,6 +30,7 @@ export function useTemplatePreview({
   onImport,
 }: UseTemplatePreviewProps) {
   const [customName, setCustomName] = useState('');
+  const [customIcon, setCustomIcon] = useState<string | null>(null);
   const [customColor, setCustomColor] = useState(DEFAULT_ICON_COLOR);
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [reminderTime, setReminderTime] = useState(new Date());
@@ -47,6 +48,7 @@ export function useTemplatePreview({
   useEffect(() => {
     if (template) {
       setCustomName(template.name);
+      setCustomIcon(template.icon);
       setCustomColor(safeColor(template.iconColor));
       setReminderTime(new Date());
       setPreferredTime(null);
@@ -84,6 +86,9 @@ export function useTemplatePreview({
     if (customName !== template.name) {
       customizations.name = customName;
     }
+    if (customIcon && customIcon !== template.icon) {
+      customizations.icon = customIcon;
+    }
     if (customColor !== template.iconColor) {
       customizations.iconColor = customColor;
     }
@@ -111,6 +116,7 @@ export function useTemplatePreview({
   }, [
     template,
     customName,
+    customIcon,
     customColor,
     reminderTime,
     showTimePicker,
@@ -130,6 +136,11 @@ export function useTemplatePreview({
   const handleColorSelect = useCallback((color: string) => {
     void triggerHaptic('tap');
     setCustomColor(color);
+  }, []);
+
+  const handleIconSelect = useCallback((icon: string | null) => {
+    void triggerHaptic('tap');
+    setCustomIcon(icon);
   }, []);
 
   const handleTimeChange = useCallback((time: Date) => {
@@ -157,9 +168,11 @@ export function useTemplatePreview({
 
   return {
     customColor,
+    customIcon,
     customName,
     handleClose,
     handleColorSelect,
+    handleIconSelect,
     handleImport,
     handleProgressEmojisChange,
     handleSelectPreferredTime,

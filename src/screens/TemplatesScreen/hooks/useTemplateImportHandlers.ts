@@ -82,7 +82,10 @@ export function useTemplateImportHandlers(o: UseTemplateImportHandlersOptions) {
 
   const handleTemplateImport = useCallback(
     async (id: Id<'templates'>, c?: TemplateCustomizations) => {
-      if (guardImport()) return;
+      if (guardImport()) {
+        o.setShowCustomizeModal(false);
+        return;
+      }
       try {
         o.setImportingTemplateId(id);
         const args = { ...(c ? { customizations: c } : {}), templateId: id };
@@ -99,6 +102,7 @@ export function useTemplateImportHandlers(o: UseTemplateImportHandlersOptions) {
           o.setShowCustomizeModal(false);
         }
       } catch {
+        o.setShowCustomizeModal(false);
         showError();
       } finally {
         o.setImportingTemplateId(null);

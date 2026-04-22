@@ -58,7 +58,7 @@ export function ImportHeader({
       <ModalCloseButton label='Cancel' onClose={handleCancel} />
       <View className='flex-1' />
       <AnimatedPressable
-        accessibilityLabel={isImporting ? 'Importing habit' : 'Import habit'}
+        accessibilityLabel={isImporting ? 'Adding habit' : 'Add this habit'}
         accessibilityRole='button'
         accessibilityState={{ busy: isImporting, disabled: !canImport || isImporting }}
         className='flex-row items-center justify-center gap-2 rounded-full h-11 px-6'
@@ -84,7 +84,7 @@ export function ImportHeader({
             color: canImport && !isImporting ? colors.text.inverse : disabledText,
           }}
         >
-          {isImporting ? 'Importing…' : 'Import'}
+          {isImporting ? 'Adding…' : 'Add this habit'}
         </Text>
       </AnimatedPressable>
     </Animated.View>

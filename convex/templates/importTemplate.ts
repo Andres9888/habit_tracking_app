@@ -21,6 +21,7 @@ export const importTemplate = mutation({
     customizations: v.optional(
       v.object({
         daysOfWeek: v.optional(v.array(v.number())),
+        icon: v.optional(v.string()),
         iconColor: v.optional(v.string()),
         name: v.optional(v.string()),
         preferredTime: v.optional(v.string()),
@@ -138,7 +139,7 @@ export const importTemplate = mutation({
       ...(args.customizations?.streakGoal !== undefined
         ? { goalDuration: args.customizations.streakGoal }
         : {}),
-      icon: template.icon,
+      icon: args.customizations?.icon ?? template.icon,
       iconColor: validatedIconColor,
       name: validatedName,
       notes:
