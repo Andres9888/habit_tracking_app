@@ -1,4 +1,5 @@
 import { Pressable, Text, View } from 'react-native';
+import { useHapticFeedback } from '@/hooks/useHapticFeedback';
 import { useThemeColors } from '@/theme/ThemeContext';
 
 interface OptionRowProps {
@@ -11,12 +12,18 @@ interface OptionRowProps {
 
 export function OptionRow({ icon, label, onPress, selected, sub }: OptionRowProps) {
   const { colors } = useThemeColors();
+  const { triggerSelection } = useHapticFeedback({ isEnabled: true });
+
+  const handlePress = () => {
+    triggerSelection();
+    onPress();
+  };
 
   return (
     <Pressable
       accessibilityRole="button"
       accessibilityState={{ selected }}
-      onPress={onPress}
+      onPress={handlePress}
       style={{
         alignItems: 'center',
         backgroundColor: colors.surface,

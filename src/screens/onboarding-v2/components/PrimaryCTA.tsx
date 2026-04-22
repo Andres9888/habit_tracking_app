@@ -1,4 +1,5 @@
 import { Pressable, Text } from 'react-native';
+import { useHapticFeedback } from '@/hooks/useHapticFeedback';
 import { useThemeColors } from '@/theme/ThemeContext';
 
 interface PrimaryCTAProps {
@@ -15,14 +16,21 @@ export function PrimaryCTA({
   variant = 'dark',
 }: PrimaryCTAProps) {
   const { colors } = useThemeColors();
+  const { triggerLightImpact } = useHapticFeedback({ isEnabled: true });
   const base = variant === 'brand' ? colors.primary[600] : colors.text.primary;
+
+  const handlePress = () => {
+    if (disabled) return;
+    triggerLightImpact();
+    onPress();
+  };
 
   return (
     <Pressable
       accessibilityRole="button"
       accessibilityState={{ disabled }}
       disabled={disabled}
-      onPress={onPress}
+      onPress={handlePress}
       style={{
         alignItems: 'center',
         backgroundColor: base,
