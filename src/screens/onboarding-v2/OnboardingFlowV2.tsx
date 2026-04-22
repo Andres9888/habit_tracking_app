@@ -1,4 +1,5 @@
 import { ActivityIndicator, View } from 'react-native';
+import Animated, { FadeInUp, useReducedMotion } from 'react-native-reanimated';
 
 import { ScreenErrorBoundary } from '@/components/ErrorBoundary';
 import { useThemeColors } from '@/theme/ThemeContext';
@@ -13,6 +14,7 @@ interface OnboardingFlowV2Props {
 
 function OnboardingFlowV2Content({ onComplete }: OnboardingFlowV2Props) {
   const { colors } = useThemeColors();
+  const reduceMotion = useReducedMotion();
   const state = useOnboardingV2State();
 
   if (!state.isHydrated) {
@@ -25,6 +27,9 @@ function OnboardingFlowV2Content({ onComplete }: OnboardingFlowV2Props) {
 
   const StepComponent = STEP_REGISTRY[state.currentStepId];
   const isLastStep = state.currentStepIndex === state.totalSteps - 1;
+  const entering = reduceMotion
+    ? undefined
+    : FadeInUp.duration(260).springify().damping(18);
 
   const handleNext = () => {
     if (isLastStep) {
@@ -41,12 +46,14 @@ function OnboardingFlowV2Content({ onComplete }: OnboardingFlowV2Props) {
       onBack={state.onBack}
       totalSteps={state.totalSteps}
     >
-      <StepComponent
-        answers={state.answers}
-        onAnswerChange={state.updateAnswers}
-        onBack={state.onBack}
-        onNext={handleNext}
-      />
+      <Animated.View entering={entering} key={state.currentStepId} style={{ flex: 1 }}>
+        <StepComponent
+          answers={state.answers}
+          onAnswerChange={state.updateAnswers}
+          onBack={state.onBack}
+          onNext={handleNext}
+        />
+      </Animated.View>
     </StepFrame>
   );
 }

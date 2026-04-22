@@ -1,4 +1,5 @@
 import { Pressable, Text } from 'react-native';
+import { useHapticFeedback } from '@/hooks/useHapticFeedback';
 import { useThemeColors } from '@/theme/ThemeContext';
 
 interface CategoryTileProps {
@@ -10,12 +11,18 @@ interface CategoryTileProps {
 
 export function CategoryTile({ icon, label, onPress, selected }: CategoryTileProps) {
   const { colors } = useThemeColors();
+  const { triggerSelection } = useHapticFeedback({ isEnabled: true });
+
+  const handlePress = () => {
+    triggerSelection();
+    onPress();
+  };
 
   return (
     <Pressable
       accessibilityRole="button"
       accessibilityState={{ selected }}
-      onPress={onPress}
+      onPress={handlePress}
       style={{
         alignItems: 'center',
         backgroundColor: colors.surface,
