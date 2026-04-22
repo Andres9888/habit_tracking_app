@@ -12,22 +12,6 @@ export const getTodayGlowStyle = (borderRadius: number) => ({
   shadowRadius: 8,
 });
 
-export const getCompletedShadowStyle = (
-  isToday: boolean,
-  accentColor: string,
-  tier: MaterialTier
-) => ({
-  elevation: 2,
-  shadowColor: isToday
-    ? GOLDEN_GLOW_COLOR
-    : tier.useAccent
-      ? accentColor
-      : tier.cellShadowColor,
-  shadowOffset: { height: 0, width: 0 },
-  shadowOpacity: tier.cellShadowOpacity,
-  shadowRadius: tier.cellShadowRadius,
-});
-
 export const getBackgroundColor = (
   completed: boolean,
   accentColor: string,

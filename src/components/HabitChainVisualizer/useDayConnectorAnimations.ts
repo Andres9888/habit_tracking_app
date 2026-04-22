@@ -1,5 +1,11 @@
-import { useEffect, useRef } from 'react';
-import { Animated, Easing } from 'react-native';
+import { useEffect } from 'react';
+import {
+  Easing,
+  cancelAnimation,
+  useSharedValue,
+  withRepeat,
+  withTiming,
+} from 'react-native-reanimated';
 
 interface UseDayConnectorAnimationsParams {
   visible: boolean;
@@ -10,48 +16,32 @@ export const useDayConnectorAnimations = ({
   visible,
   shimmerSpeed,
 }: UseDayConnectorAnimationsParams) => {
-  const opacity = useRef(new Animated.Value(visible ? 1 : 0)).current;
-  const shimmerPosition = useRef(new Animated.Value(0)).current;
+  const opacity = useSharedValue(visible ? 1 : 0);
+  const shimmerPosition = useSharedValue(0);
 
   useEffect(() => {
-    const opacityAnimation = Animated.timing(opacity, {
+    opacity.value = withTiming(visible ? 1 : 0, {
       duration: 250,
       easing: Easing.inOut(Easing.ease),
-      toValue: visible ? 1 : 0,
-      useNativeDriver: true,
     });
-    opacityAnimation.start();
-
-    return () => {
-      opacityAnimation.stop();
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [visible]);
+  }, [visible, opacity]);
 
   useEffect(() => {
     if (visible && shimmerSpeed > 0) {
-      const shimmerAnimation = Animated.loop(
-        Animated.sequence([
-          Animated.timing(shimmerPosition, {
-            duration: shimmerSpeed,
-            easing: Easing.inOut(Easing.ease),
-            toValue: 1,
-            useNativeDriver: true,
-          }),
-          Animated.timing(shimmerPosition, {
-            duration: 0,
-            toValue: 0,
-            useNativeDriver: true,
-          }),
-        ])
+      shimmerPosition.value = 0;
+      shimmerPosition.value = withRepeat(
+        withTiming(1, {
+          duration: shimmerSpeed,
+          easing: Easing.inOut(Easing.ease),
+        }),
+        -1,
+        false
       );
-      shimmerAnimation.start();
-      return () => shimmerAnimation.stop();
     } else {
-      shimmerPosition.setValue(0);
+      cancelAnimation(shimmerPosition);
+      shimmerPosition.value = 0;
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [visible, shimmerSpeed]);
+  }, [visible, shimmerSpeed, shimmerPosition]);
 
   return { opacity, shimmerPosition };
 };

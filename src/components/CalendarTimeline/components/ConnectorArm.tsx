@@ -6,23 +6,27 @@ import type { TimelineConnectorStrength } from '../connectorStrength';
 
 const SHIMMER_WIDTH = 20;
 
+type AnimatedStyle = ReturnType<
+  typeof import('react-native-reanimated').useAnimatedStyle
+>;
+
 interface ConnectorArmProps {
   side: 'left' | 'right';
   isGhost: boolean;
-  color: string;
+  colorStyle: AnimatedStyle;
   ringHalf: number;
   armBase: ViewStyle;
   strength: TimelineConnectorStrength;
-  glowStyle?: ViewStyle;
-  ghostPulseStyle: ReturnType<typeof import('react-native-reanimated').useAnimatedStyle>;
-  shimmerStyle: ReturnType<typeof import('react-native-reanimated').useAnimatedStyle>;
+  glowStyle?: AnimatedStyle;
+  ghostPulseStyle: AnimatedStyle;
+  shimmerStyle: AnimatedStyle;
   hasShimmer: boolean;
 }
 
 export const ConnectorArm: React.FC<ConnectorArmProps> = ({
   side,
   isGhost,
-  color,
+  colorStyle,
   ringHalf,
   armBase,
   strength,
@@ -39,7 +43,7 @@ export const ConnectorArm: React.FC<ConnectorArmProps> = ({
   if (isGhost) {
     return (
       <Animated.View
-        style={[armBase, posStyle, { backgroundColor: color }, ghostPulseStyle]}
+        style={[armBase, posStyle, colorStyle, ghostPulseStyle]}
       />
     );
   }
@@ -49,7 +53,8 @@ export const ConnectorArm: React.FC<ConnectorArmProps> = ({
       style={[
         armBase,
         posStyle,
-        { backgroundColor: color, opacity: strength.opacity },
+        { opacity: strength.opacity },
+        colorStyle,
         glowStyle,
       ]}
     >

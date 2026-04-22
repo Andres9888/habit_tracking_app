@@ -2,6 +2,8 @@
 import React, { useEffect } from 'react';
 import { View, Text } from 'react-native';
 import Animated, {
+  interpolate,
+  interpolateColor,
   useAnimatedProps,
   useAnimatedStyle,
   useSharedValue,
@@ -11,8 +13,14 @@ import Animated, {
 import Svg, { Circle, Line } from 'react-native-svg';
 import { Check, Link2 } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
+import {
+  useAnimatedTier,
+  resolveTierColor,
+  resolveTierShadowColor,
+} from '@/hooks/useAnimatedTier';
 
 import { springs, durations } from '../../../theme/animations';
+import { getMaterialTier } from '../../HabitChainVisualizer/materialTier';
 import type { CompletionStatus } from '../CalendarTimeline.types';
 import {
   CIRCUMFERENCE,
@@ -20,6 +28,8 @@ import {
   RADIUS,
   RING_SIZE,
   STROKE_WIDTH,
+  getAccentFill,
+  getAccentStroke,
   getRingColors,
   ringStyles as styles,
 } from './DayCellRing.styles';
@@ -59,7 +69,16 @@ export const DayCellRing: React.FC<DayCellRingProps> = ({
 }) => {
   const isComplete = completionStatus === 'complete';
   const progress = total > 0 ? completed / total : 0;
-  const rc = getRingColors(isDark, isCurrentDay, completionStatus, strengthPercent);
+  const strength = strengthPercent ?? 0;
+  const currentTier = getMaterialTier(strength);
+  const rc = getRingColors(isDark, isCurrentDay, completionStatus, currentTier);
+  const accentStroke = getAccentStroke(isDark);
+  const accentFill = getAccentFill(isDark);
+  const tierAnim = useAnimatedTier(strength);
+  const isAmber =
+    isCurrentDay &&
+    completionStatus !== 'complete' &&
+    completionStatus !== 'future';
   const fillScale = useSharedValue(isComplete && !reduceMotion ? 0 : 1);
   const arcProgress = useSharedValue(reduceMotion ? progress : 0);
 
@@ -73,23 +92,76 @@ export const DayCellRing: React.FC<DayCellRingProps> = ({
     arcProgress.value = withTiming(progress, { duration: durations.progress });
   }, [isComplete, progress, reduceMotion, fillScale, arcProgress]);
 
-  const animatedArcProps = useAnimatedProps(() => ({
-    strokeDashoffset: CIRCUMFERENCE * (1 - arcProgress.value),
-  }));
-  const fillStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: fillScale.value }],
-  }));
+  const animatedArcProps = useAnimatedProps(() => {
+    const base = {
+      strokeDashoffset: CIRCUMFERENCE * (1 - arcProgress.value),
+    };
+    if (isAmber || completionStatus !== 'partial') {
+      return { ...base, stroke: rc.progress };
+    }
+    const fromColor = resolveTierColor(tierAnim.from, accentStroke);
+    const toColor = resolveTierColor(tierAnim.to, accentStroke);
+    return {
+      ...base,
+      stroke: interpolateColor(
+        tierAnim.progress.value,
+        [0, 1],
+        [fromColor, toColor]
+      ),
+    };
+  });
+  const outerGlowStyle = useAnimatedStyle(() => {
+    const fromShadow = resolveTierShadowColor(tierAnim.from, accentStroke);
+    const toShadow = resolveTierShadowColor(tierAnim.to, accentStroke);
+    return {
+      transform: [{ scale: fillScale.value }],
+      shadowColor: interpolateColor(
+        tierAnim.progress.value,
+        [0, 1],
+        [fromShadow, toShadow]
+      ),
+      shadowOpacity: interpolate(
+        tierAnim.progress.value,
+        [0, 1],
+        [tierAnim.from.cellShadowOpacity, tierAnim.to.cellShadowOpacity]
+      ),
+      shadowRadius: interpolate(
+        tierAnim.progress.value,
+        [0, 1],
+        [tierAnim.from.cellShadowRadius + 4, tierAnim.to.cellShadowRadius + 4]
+      ),
+    };
+  });
+  const innerFillStyle = useAnimatedStyle(() => {
+    const fromColor = resolveTierColor(tierAnim.from, accentFill);
+    const toColor = resolveTierColor(tierAnim.to, accentFill);
+    return {
+      backgroundColor: interpolateColor(
+        tierAnim.progress.value,
+        [0, 1],
+        [fromColor, toColor]
+      ),
+    };
+  });
 
   if (isComplete) {
     return (
-      <Animated.View style={[styles.container, rc.completeGlow, fillStyle]}>
-        <View style={[styles.solidFill, { backgroundColor: rc.fill }]}>
+      <Animated.View style={[styles.container, styles.completeGlowBase, outerGlowStyle]}>
+        <Animated.View style={[styles.solidFill, innerFillStyle]}>
           {completionIcon === 'chain' ? (
-            <Link2 color={rc.checkIcon} size={iconSizes.medium} strokeWidth={2.5} />
+            <Link2
+              color={currentTier.iconColor}
+              size={iconSizes.medium}
+              strokeWidth={2.5}
+            />
           ) : (
-            <Check color={rc.checkIcon} size={iconSizes.medium} strokeWidth={2.5} />
+            <Check
+              color={currentTier.iconColor}
+              size={iconSizes.medium}
+              strokeWidth={2.5}
+            />
           )}
-        </View>
+        </Animated.View>
       </Animated.View>
     );
   }
@@ -138,7 +210,6 @@ export const DayCellRing: React.FC<DayCellRingProps> = ({
             cy={HALF}
             fill='transparent'
             r={RADIUS}
-            stroke={rc.progress}
             strokeDasharray={CIRCUMFERENCE}
             strokeLinecap='round'
             strokeWidth={STROKE_WIDTH}

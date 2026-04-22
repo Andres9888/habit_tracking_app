@@ -18,6 +18,13 @@ export {
 
 export { useReduceMotion } from './useReduceMotion';
 
+export {
+  useAnimatedTier,
+  resolveTierColor,
+  resolveTierShadowColor,
+  type AnimatedTier,
+} from './useAnimatedTier';
+
 // ============================================================================
 // HAPTICS & FEEDBACK
 // ============================================================================

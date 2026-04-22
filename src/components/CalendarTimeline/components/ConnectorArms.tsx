@@ -5,9 +5,10 @@ import { STREAK_CONNECTOR } from '../CalendarTimeline.styles';
 import { getTimelineConnectorStrength } from '../connectorStrength';
 import { useConnectorShimmer } from '../hooks/useConnectorShimmer';
 import { useGhostPulse } from '../hooks/useGhostPulse';
-import { getMaterialTier } from '../../HabitChainVisualizer/materialTier';
+import { useAnimatedTier } from '@/hooks/useAnimatedTier';
 import { RING_SIZE } from './DayCellRing.styles';
 import { ConnectorArm } from './ConnectorArm';
+import { useConnectorArmsTierStyles } from './useConnectorArmsTierStyles';
 
 const RING_HALF = RING_SIZE / 2;
 
@@ -37,8 +38,13 @@ export const ConnectorArms: React.FC<ConnectorArmsProps> = ({
     () => getTimelineConnectorStrength(strengthPercent),
     [strengthPercent]
   );
-  const tier = useMemo(() => getMaterialTier(strengthPercent), [strengthPercent]);
-  const effectiveColor = tier.useAccent ? streakConnectorColor : tier.tierColor;
+  const tierAnim = useAnimatedTier(strengthPercent);
+  const { colorStyle, ghostColorStyle, glowStyle } = useConnectorArmsTierStyles({
+    tierAnim,
+    streakConnectorColor,
+    ghostConnectorColor,
+    glow: strength.glow,
+  });
 
   const hasGhost = (ghostLeft && !connectLeft) || (ghostRight && !connectRight);
   const ghostPulseStyle = useGhostPulse(hasGhost, reduceMotion);
@@ -55,18 +61,6 @@ export const ConnectorArms: React.FC<ConnectorArmsProps> = ({
     overflow: 'hidden',
   };
 
-  const glowStyle: ViewStyle | undefined = strength.glow
-    ? {
-        shadowColor: effectiveColor,
-        shadowOffset: { width: 0, height: 0 },
-        shadowOpacity: 0.4,
-        shadowRadius: 6,
-      }
-    : undefined;
-
-  const getColor = (isGhost: boolean) =>
-    isGhost ? (ghostConnectorColor ?? effectiveColor) : effectiveColor;
-
   const shared = {
     armBase,
     ghostPulseStyle,
@@ -82,7 +76,9 @@ export const ConnectorArms: React.FC<ConnectorArmsProps> = ({
       {(connectLeft || ghostLeft) ? (
         <ConnectorArm
           {...shared}
-          color={getColor(ghostLeft && !connectLeft)}
+          colorStyle={
+            ghostLeft && !connectLeft ? ghostColorStyle : colorStyle
+          }
           isGhost={ghostLeft && !connectLeft}
           side='left'
         />
@@ -90,7 +86,9 @@ export const ConnectorArms: React.FC<ConnectorArmsProps> = ({
       {(connectRight || ghostRight) ? (
         <ConnectorArm
           {...shared}
-          color={getColor(ghostRight && !connectRight)}
+          colorStyle={
+            ghostRight && !connectRight ? ghostColorStyle : colorStyle
+          }
           isGhost={ghostRight && !connectRight}
           side='right'
         />
