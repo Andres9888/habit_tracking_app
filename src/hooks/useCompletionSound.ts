@@ -6,7 +6,7 @@
  */
 
 /* eslint-disable @typescript-eslint/no-require-imports */
-import { useCallback, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { Audio } from 'expo-av';
 import type { CompletionSoundType } from '../../convex/settings/types';
 
@@ -21,10 +21,6 @@ interface UseCompletionSoundOptions {
   soundEnabled?: boolean;
   soundType?: CompletionSoundType;
 }
-
-const NOOP = () => {
-  // No-op when sounds disabled
-};
 
 /**
  * Hook for playing completion sounds when marking habits as complete.
@@ -48,14 +44,22 @@ export function useCompletionSound({
   // Use undefined instead of null to avoid type union issues
 
   const soundRef = useRef<Audio.Sound | undefined>(undefined);
+  const loadingRef = useRef(false);
+
+  useEffect(() => {
+    return () => {
+      soundRef.current?.unloadAsync();
+      soundRef.current = undefined;
+    };
+  }, []);
 
   const playCompletionSound = useCallback(async () => {
-    if (!soundEnabled) {
+    if (!soundEnabled || loadingRef.current) {
       return;
     }
 
+    loadingRef.current = true;
     try {
-      // Unload previous sound if exists
       if (soundRef.current) {
         await soundRef.current.unloadAsync();
         soundRef.current = undefined;
@@ -80,15 +84,10 @@ export function useCompletionSound({
     } catch (error) {
       // Silently fail - sounds are non-critical UX enhancements
       if (__DEV__) console.warn('Failed to play completion sound:', error);
+    } finally {
+      loadingRef.current = false;
     }
   }, [soundEnabled, soundType]);
-
-  // Return noop if not enabled
-  if (!soundEnabled) {
-    return {
-      playCompletionSound: NOOP,
-    };
-  }
 
   return {
     playCompletionSound,

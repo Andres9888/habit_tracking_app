@@ -42,7 +42,7 @@ export function PremiumPackCard({ onPress, pack }: PremiumPackCardProps) {
         <View style={s.content}>
           <View style={s.emojiGroup}>
             {pack.emojiGroup.map((e, i) => (
-              <Text key={i} style={s.emoji}>
+              <Text key={`${pack.id}-${i}-${e}`} style={s.emoji}>
                 {e}
               </Text>
             ))}
