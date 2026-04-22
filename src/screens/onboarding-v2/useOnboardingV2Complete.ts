@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { safeSetBoolean } from '@/utils/storage';
 
 import { ONBOARDING_V2_COMPLETE_KEY } from './storageKeys';
@@ -6,14 +6,22 @@ import { ONBOARDING_V2_COMPLETE_KEY } from './storageKeys';
 /**
  * Tracks whether the user has finished the Chain Builder onboarding (v2).
  *
- * DEV/REVIEW MODE: always reports incomplete when signed in so the
- * onboarding shows every launch. Restore the AsyncStorage read below
- * to go back to normal persisted behavior.
+ * DEV/REVIEW MODE: ignores the AsyncStorage flag on launch, so the
+ * onboarding shows every app open. Within a session, calling
+ * `markComplete()` still flips state to true so the user can finish
+ * the flow and reach HabitsApp — on the next launch they see
+ * onboarding again. Restore the `safeGetBoolean` read to go back to
+ * normal persisted behavior.
  */
 export function useOnboardingV2Complete(isSignedIn: boolean) {
-  const complete = isSignedIn ? false : null;
+  const [complete, setComplete] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    setComplete(isSignedIn ? false : null);
+  }, [isSignedIn]);
 
   const markComplete = useCallback(() => {
+    setComplete(true);
     void safeSetBoolean(ONBOARDING_V2_COMPLETE_KEY, true).catch(() => {});
   }, []);
 
