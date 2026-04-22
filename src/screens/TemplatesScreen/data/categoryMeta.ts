@@ -45,9 +45,15 @@ export const CATEGORY_META: Record<string, CategoryMeta> = {
 
 export const DEFAULT_CATEGORY_META: CategoryMeta = {
   bgColor: colors.gray[100], borderColor: colors.gray[200], icon: '📌',
-  isPremium: false, label: 'Other', textColor: colors.gray[700],
+  isPremium: false, label: 'Other',
+  subtitle: 'Relationships, environment, and everything else',
+  textColor: colors.gray[700],
 };
 
 export function getCategoryMeta(categoryId: string): CategoryMeta {
   return CATEGORY_META[categoryId] ?? DEFAULT_CATEGORY_META;
+}
+
+export function isKnownCategory(categoryId: string): boolean {
+  return categoryId in CATEGORY_META;
 }

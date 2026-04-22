@@ -35,7 +35,7 @@ export function ExploreHabitRow({
     <Pressable
       accessibilityLabel={`${item.name} habit`}
       accessibilityRole='button'
-      style={[s.row, { backgroundColor: colors.card, borderColor: colors.border }]}
+      style={s.row}
       onPress={() => onPreview(item)}
     >
       <View style={[s.iconBox, { backgroundColor: iconBg }]}>

@@ -1,12 +1,17 @@
 /**
- * Category header inside Explore All — tappable to expand/collapse habits.
+ * CategoryGroupHeader — tappable accordion row header.
+ * Renders emoji · label/subtitle · count · animated chevron.
  */
 
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { ChevronDown, ChevronRight } from 'lucide-react-native';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import { spacing } from '../../../../theme/spacing';
-import { fontWeights, typography } from '../../../../theme/typography';
+import {
+  fontFamilies,
+  fontWeights,
+  typography,
+} from '../../../../theme/typography';
+import { CategoryChevron } from './CategoryChevron';
 
 interface CategoryGroupHeaderProps {
   count: number;
@@ -19,49 +24,41 @@ interface CategoryGroupHeaderProps {
 
 export function CategoryGroupHeader({
   count,
-  expanded = true,
+  expanded = false,
   icon,
   label,
   onToggle,
   subtitle,
 }: CategoryGroupHeaderProps) {
   const { colors } = useThemeColors();
-  const Chevron = expanded ? ChevronDown : ChevronRight;
 
   const content = (
-    <>
-      <View style={s.topLine}>
-        <Text style={s.icon}>{icon}</Text>
+    <View style={s.row}>
+      <Text style={s.icon}>{icon}</Text>
+      <View style={s.textStack}>
         <Text style={[s.label, { color: colors.text.primary }]}>{label}</Text>
-        <Text style={[s.count, { color: colors.text.tertiary }]}>· {count}</Text>
-        {onToggle ? (
-          <View style={s.chevron}>
-            <Chevron color={colors.text.tertiary} size={18} strokeWidth={2.5} />
-          </View>
+        {subtitle ? (
+          <Text
+            numberOfLines={1}
+            style={[s.subtitle, { color: colors.text.secondary }]}
+          >
+            {subtitle}
+          </Text>
         ) : null}
       </View>
-      {subtitle ? (
-        <Text style={[s.subtitle, { color: colors.text.secondary }]}>
-          {subtitle}
-        </Text>
-      ) : null}
-    </>
+      <Text style={[s.count, { color: colors.text.tertiary }]}>{count}</Text>
+      {onToggle ? <CategoryChevron expanded={expanded} /> : null}
+    </View>
   );
 
-  if (!onToggle) {
-    return (
-      <View style={[s.container, { backgroundColor: colors.background }]}>
-        {content}
-      </View>
-    );
-  }
+  if (!onToggle) return <View style={s.container}>{content}</View>;
 
   return (
     <Pressable
       accessibilityLabel={`${label}, ${expanded ? 'collapse' : 'expand'}`}
       accessibilityRole='button'
       accessibilityState={{ expanded }}
-      style={[s.container, { backgroundColor: colors.background }]}
+      style={s.container}
       onPress={onToggle}
     >
       {content}
@@ -70,14 +67,18 @@ export function CategoryGroupHeader({
 }
 
 const s = StyleSheet.create({
-  chevron: { marginLeft: 'auto' },
   container: {
-    paddingHorizontal: spacing.base,
-    paddingVertical: spacing.sm,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.md,
   },
-  count: { ...typography.caption },
-  icon: { fontSize: 17 },
+  count: {
+    ...typography.caption,
+    fontFamily: fontFamilies.monospace,
+    paddingHorizontal: spacing.sm,
+  },
+  icon: { fontSize: 20, lineHeight: 24 },
   label: { ...typography.body, fontWeight: fontWeights.bold },
-  subtitle: { ...typography.caption, marginTop: 2, paddingLeft: 26 },
-  topLine: { alignItems: 'center', flexDirection: 'row', gap: spacing.sm },
+  row: { alignItems: 'center', flexDirection: 'row', gap: spacing.sm },
+  subtitle: { ...typography.caption, marginTop: 1 },
+  textStack: { flex: 1, minWidth: 0 },
 });

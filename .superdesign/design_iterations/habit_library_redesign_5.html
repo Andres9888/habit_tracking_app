@@ -1,0 +1,520 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Habit Library v5 — Implementation Preview</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Literata:wght@600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #F5F1ED;
+      --card: #EDEAE5;
+      --border: #DDD8D2;
+      --card-open-bg: #FFFBF4;
+      --card-open-border: #E5DED2;
+      --text-1: #2D2A26;
+      --text-2: #6B6560;
+      --text-3: #6E6660;
+      --primary-100: #D1FAE5;
+      --primary-600: #059669;
+      --primary-700: #047857;
+      --r-md: 12px;
+      --r-lg: 16px;
+      --r-full: 9999px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { -webkit-font-smoothing: antialiased; }
+    body {
+      background: #1C1917;
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+      padding: 40px 24px 80px;
+      color: #e7e5e4;
+    }
+
+    .page-title {
+      color: #a8a29e; font-size: 11px; font-weight: 700;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      text-align: center; margin-bottom: 8px;
+    }
+    .page-headline {
+      color: #fafaf9; font-size: 24px; font-weight: 700;
+      text-align: center; margin-bottom: 10px; letter-spacing: -0.3px;
+    }
+    .page-subtitle {
+      color: #a8a29e; font-size: 13px; text-align: center;
+      margin: 0 auto 40px; max-width: 720px; line-height: 1.6;
+    }
+    .page-subtitle strong { color: #22c55e; font-weight: 600; }
+
+    .comparison {
+      display: flex; gap: 40px; justify-content: center;
+      align-items: flex-start; flex-wrap: wrap;
+    }
+    .phone-wrapper { display: flex; flex-direction: column; align-items: center; }
+    .phone-label {
+      font-size: 10px; font-weight: 700;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      text-align: center; margin-bottom: 12px;
+    }
+    .phone-label.before { color: #f59e0b; }
+    .phone-label.after { color: #22c55e; }
+    .phone {
+      width: 390px; height: 780px;
+      background: var(--bg); border-radius: 44px;
+      overflow: hidden; position: relative;
+      box-shadow: 0 0 0 2px #3a3632, 0 32px 80px rgba(0,0,0,0.55);
+      flex-shrink: 0; display: flex; flex-direction: column;
+    }
+    .status-bar {
+      height: 54px; padding: 16px 28px 0;
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 15px; font-weight: 600; color: var(--text-1); flex-shrink: 0;
+    }
+    .status-icons { display: flex; gap: 6px; align-items: center; font-size: 11px; }
+    .screen-content {
+      flex: 1; overflow-y: auto;
+      -webkit-overflow-scrolling: touch; scrollbar-width: none;
+    }
+    .screen-content::-webkit-scrollbar { display: none; }
+
+    .prior-context {
+      padding: 14px 16px; font-size: 10px; color: var(--text-3);
+      text-align: center; font-style: italic; background: rgba(0,0,0,0.02);
+      border-bottom: 1px dashed rgba(0,0,0,0.08);
+    }
+
+    /* Section divider (ExploreDivider equivalent) */
+    .divider {
+      height: 1px; background: var(--border);
+      margin: 20px 16px 14px;
+    }
+
+    /* SectionHeader */
+    .section-header {
+      padding: 0 16px 12px;
+      display: flex; justify-content: space-between; align-items: baseline;
+    }
+    .section-header .title {
+      font-size: 20px; font-weight: 700; color: var(--text-1);
+      letter-spacing: -0.2px;
+    }
+    .section-header .sub {
+      font-size: 13px; color: var(--text-2); margin-top: 2px;
+    }
+    .section-header .total {
+      font-size: 12px; color: var(--text-3);
+      font-family: 'JetBrains Mono', monospace; white-space: nowrap;
+    }
+    .section-header-block { flex: 1; min-width: 0; }
+
+    /* ───── BEFORE (v3 — always-showing top 3) ───── */
+    .cat-group-before { padding: 4px 0 14px; }
+    .cat-group-before-header {
+      display: flex; align-items: center; gap: 10px;
+      padding: 12px 16px 8px;
+    }
+    .cat-group-before-header .gi { font-size: 18px; }
+    .cat-group-before-header .gl {
+      font-size: 16px; font-weight: 700; color: var(--text-1);
+    }
+    .cat-group-before-header .gc { font-size: 13px; color: var(--text-3); }
+    .cat-group-before-sub {
+      font-size: 12px; color: var(--text-2);
+      padding: 0 16px 6px 44px;
+    }
+    .standalone-row {
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px 16px;
+      margin: 4px 16px;
+      background: var(--card);
+      border: 1.5px solid var(--border);
+      border-radius: var(--r-lg);
+    }
+    .standalone-row .ri {
+      width: 44px; height: 44px; border-radius: var(--r-md);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; flex-shrink: 0;
+    }
+    .standalone-row .info { flex: 1; min-width: 0; }
+    .standalone-row .rname { font-size: 15px; font-weight: 600; color: var(--text-1); }
+    .standalone-row .rdesc { font-size: 12px; color: var(--text-2); margin-top: 2px; }
+    .standalone-row .rmeta {
+      display: flex; align-items: center; gap: 6px;
+      margin-top: 4px; font-size: 11px; color: var(--text-3);
+    }
+    .science-pill {
+      background: var(--primary-100); color: var(--primary-700);
+      border-radius: var(--r-full); padding: 1px 8px;
+      font-size: 10px; font-weight: 600;
+    }
+    .dot { width: 3px; height: 3px; border-radius: 50%; background: var(--text-3); }
+    .add-btn {
+      width: 44px; height: 44px; border-radius: 50%;
+      background: var(--primary-600); color: white;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; font-weight: 500; flex-shrink: 0;
+    }
+
+    /* ───── AFTER (v5 — my implementation accordion) ───── */
+    .accordion {
+      padding-top: 4px;
+    }
+    .acc-card {
+      margin: 4px 16px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+      overflow: hidden;
+    }
+    .acc-card.open {
+      background: var(--card-open-bg);
+      border-color: var(--card-open-border);
+    }
+    .acc-head {
+      display: flex; align-items: center; gap: 8px;
+      padding: 12px;
+      cursor: pointer;
+    }
+    .acc-head .ai { font-size: 20px; line-height: 24px; flex-shrink: 0; }
+    .acc-head .at { flex: 1; min-width: 0; }
+    .acc-head .al {
+      font-size: 15px; font-weight: 700; color: var(--text-1);
+    }
+    .acc-head .asub {
+      font-size: 12px; color: var(--text-2); margin-top: 1px;
+    }
+    .acc-head .ac {
+      font-size: 12px; color: var(--text-3);
+      font-family: 'JetBrains Mono', monospace;
+      padding: 0 8px;
+    }
+    .chevron {
+      width: 20px; height: 20px; border-radius: 50%;
+      background: rgba(0,0,0,0.05);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text-3);
+      transition: transform 300ms ease, background 300ms ease, color 300ms ease;
+      flex-shrink: 0;
+    }
+    .chevron svg { width: 12px; height: 12px; stroke-width: 3; }
+    .acc-card.open .chevron {
+      transform: rotate(180deg);
+      background: var(--primary-100);
+      color: var(--primary-700);
+    }
+    .acc-body {
+      background: var(--bg);
+      border-top: 1px solid var(--border);
+      padding: 4px 0;
+    }
+    .acc-row {
+      display: flex; align-items: center; gap: 12px;
+      padding: 8px 12px;
+      background: transparent;
+    }
+    .acc-row .ri {
+      width: 44px; height: 44px; border-radius: var(--r-md);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; flex-shrink: 0;
+    }
+    .acc-row .info { flex: 1; min-width: 0; }
+    .acc-row .rname { font-size: 15px; font-weight: 600; color: var(--text-1); }
+    .acc-row .rdesc { font-size: 12px; color: var(--text-2); margin-top: 2px; }
+    .acc-row .rmeta {
+      display: flex; align-items: center; gap: 6px;
+      margin-top: 4px; font-size: 11px; color: var(--text-3);
+    }
+
+    .annot {
+      position: absolute; z-index: 20;
+      padding: 4px 10px; border-radius: 6px;
+      font-size: 10px; font-weight: 700;
+      letter-spacing: 0.02em; pointer-events: none;
+      white-space: nowrap;
+    }
+    .annot.bad {
+      background: rgba(239,68,68,0.18); color: #f87171;
+      border: 1px solid rgba(239,68,68,0.3);
+    }
+    .annot.good {
+      background: rgba(34,197,94,0.15); color: #4ade80;
+      border: 1px solid rgba(34,197,94,0.3);
+    }
+
+    .callouts {
+      max-width: 880px; margin: 48px auto 0;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+    }
+    .callout {
+      background: #292524; border-radius: 14px; padding: 20px 24px;
+      border-left: 4px solid #22c55e;
+    }
+    .callout.red { border-left-color: #ef4444; }
+    .callout h3 {
+      font-family: 'Literata', serif;
+      font-size: 15px; font-weight: 700; color: #fafaf9;
+      margin-bottom: 10px; letter-spacing: -0.2px;
+    }
+    .callout p { color: #a8a29e; font-size: 12px; line-height: 1.6; }
+    .callout p + p { margin-top: 8px; }
+    .callout strong { color: #fafaf9; font-weight: 600; }
+    .callout code {
+      background: #1c1917; padding: 1px 5px;
+      border-radius: 4px; color: #e7e5e4;
+      font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    }
+    .list-tight { margin-top: 6px; }
+    .list-tight li {
+      color: #a8a29e; font-size: 12px; line-height: 1.6;
+      margin-left: 18px; margin-top: 3px;
+    }
+  </style>
+</head>
+<body>
+
+  <p class="page-title">HABIT LIBRARY · v5 IMPLEMENTATION PREVIEW</p>
+  <p class="page-headline">"Discover more habits" — accordion redesign</p>
+  <p class="page-subtitle">
+    Side-by-side of the "Browse by area" section only — goal hero, search, Popular, Packs stay identical above this.<br>
+    <strong>Left:</strong> current v3. <strong>Right:</strong> my implementation of the v4 accordion spec.
+  </p>
+
+  <div class="comparison">
+
+    <!-- ═══════ BEFORE: current v3 ═══════ -->
+    <div class="phone-wrapper">
+      <div class="phone-label before">BEFORE — current v3</div>
+      <div class="phone">
+        <div class="status-bar"><span>9:41</span><div class="status-icons"><span>●</span><span>●</span><span>●</span></div></div>
+        <div class="screen-content">
+          <div class="prior-context">↑ goal hero · pill search · Popular carousel</div>
+
+          <div class="divider"></div>
+          <div class="section-header">
+            <div class="section-header-block">
+              <div class="title">Browse by area</div>
+            </div>
+            <div class="total">200+ habits</div>
+          </div>
+          <div style="font-size:12px;color:var(--text-2);padding:0 16px 10px;">
+            Every strong habit fits into a larger part of your life.
+          </div>
+
+          <div class="cat-group-before">
+            <div class="cat-group-before-header">
+              <span class="gi">🌅</span>
+              <span class="gl">Morning Routine</span>
+              <span class="gc">· 18</span>
+            </div>
+            <div class="standalone-row">
+              <div class="ri" style="background:#FEF3C7">🌅</div>
+              <div class="info"><div class="rname">Morning Sunlight</div><div class="rdesc">Get 10 min of sunlight within 1 hr of waking</div><div class="rmeta"><span>Daily</span><span class="dot"></span><span class="science-pill">Science</span></div></div>
+              <div class="add-btn">+</div>
+            </div>
+            <div class="standalone-row">
+              <div class="ri" style="background:#FEF3C7">💧</div>
+              <div class="info"><div class="rname">Drink Water First</div><div class="rdesc">16oz water before coffee or food</div><div class="rmeta"><span>Daily</span></div></div>
+              <div class="add-btn">+</div>
+            </div>
+            <div class="standalone-row">
+              <div class="ri" style="background:#FEF3C7">🧘</div>
+              <div class="info"><div class="rname">Morning Stretch</div><div class="rdesc">5 min gentle mobility flow</div><div class="rmeta"><span>Daily</span></div></div>
+              <div class="add-btn">+</div>
+            </div>
+          </div>
+
+          <div class="cat-group-before">
+            <div class="cat-group-before-header">
+              <span class="gi">🧠</span>
+              <span class="gl">Mental Health</span>
+              <span class="gc">· 14</span>
+            </div>
+            <div class="standalone-row">
+              <div class="ri" style="background:#EFF6FF">📝</div>
+              <div class="info"><div class="rname">Gratitude Journal</div><div class="rdesc">3 things you're thankful for</div><div class="rmeta"><span>Daily</span><span class="dot"></span><span class="science-pill">Science</span></div></div>
+              <div class="add-btn">+</div>
+            </div>
+            <div class="standalone-row" style="opacity:0.55">
+              <div class="ri" style="background:#EFF6FF">🧘</div>
+              <div class="info"><div class="rname">Meditation</div><div class="rdesc">10 min silent sit</div><div class="rmeta"><span>Daily</span></div></div>
+              <div class="add-btn">+</div>
+            </div>
+          </div>
+
+          <div class="annot bad" style="bottom:14px;left:50%;transform:translateX(-50%);">
+            … continues ×6 categories = long flat scroll
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════ AFTER: v5 accordion ═══════ -->
+    <div class="phone-wrapper">
+      <div class="phone-label after">AFTER — accordion (my implementation)</div>
+      <div class="phone">
+        <div class="status-bar"><span>9:41</span><div class="status-icons"><span>●</span><span>●</span><span>●</span></div></div>
+        <div class="screen-content">
+          <div class="prior-context">↑ goal hero · pill search · Popular carousel</div>
+
+          <div class="divider"></div>
+          <div class="section-header">
+            <div class="section-header-block">
+              <div class="title">Discover more habits</div>
+              <div class="sub">Tap a category to explore</div>
+            </div>
+            <div class="total">200+ habits</div>
+          </div>
+
+          <div class="accordion">
+
+            <!-- Open example -->
+            <div class="acc-card open">
+              <div class="acc-head">
+                <span class="ai">🌅</span>
+                <div class="at">
+                  <div class="al">Morning Routine</div>
+                  <div class="asub">Start strong, set your day</div>
+                </div>
+                <span class="ac">18</span>
+                <span class="chevron">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                </span>
+              </div>
+              <div class="acc-body">
+                <div class="acc-row">
+                  <div class="ri" style="background:#FEF3C7">🌅</div>
+                  <div class="info"><div class="rname">Morning Sunlight</div><div class="rdesc">Get 10 min of sunlight within 1 hr of waking</div><div class="rmeta"><span>Daily</span><span class="dot"></span><span class="science-pill">Science</span></div></div>
+                  <div class="add-btn">+</div>
+                </div>
+                <div class="acc-row">
+                  <div class="ri" style="background:#FEF3C7">💧</div>
+                  <div class="info"><div class="rname">Drink Water First</div><div class="rdesc">16oz water before coffee or food</div><div class="rmeta"><span>Daily</span></div></div>
+                  <div class="add-btn">+</div>
+                </div>
+                <div class="acc-row">
+                  <div class="ri" style="background:#FEF3C7">🧘</div>
+                  <div class="info"><div class="rname">Morning Stretch</div><div class="rdesc">5 min gentle mobility flow</div><div class="rmeta"><span>Daily</span></div></div>
+                  <div class="add-btn">+</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Closed rows -->
+            <div class="acc-card">
+              <div class="acc-head">
+                <span class="ai">🧠</span>
+                <div class="at">
+                  <div class="al">Mental Health</div>
+                  <div class="asub">Regulate mood & thought patterns</div>
+                </div>
+                <span class="ac">14</span>
+                <span class="chevron">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                </span>
+              </div>
+            </div>
+            <div class="acc-card">
+              <div class="acc-head">
+                <span class="ai">💪</span>
+                <div class="at">
+                  <div class="al">Fitness</div>
+                  <div class="asub">Move more, build strength</div>
+                </div>
+                <span class="ac">16</span>
+                <span class="chevron">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                </span>
+              </div>
+            </div>
+            <div class="acc-card">
+              <div class="acc-head">
+                <span class="ai">😴</span>
+                <div class="at">
+                  <div class="al">Sleep</div>
+                  <div class="asub">Deeper rest, better recovery</div>
+                </div>
+                <span class="ac">12</span>
+                <span class="chevron">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                </span>
+              </div>
+            </div>
+            <div class="acc-card">
+              <div class="acc-head">
+                <span class="ai">🧘</span>
+                <div class="at">
+                  <div class="al">Mindfulness</div>
+                  <div class="asub">Presence & awareness</div>
+                </div>
+                <span class="ac">10</span>
+                <span class="chevron">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                </span>
+              </div>
+            </div>
+            <div class="acc-card">
+              <div class="acc-head">
+                <span class="ai">📚</span>
+                <div class="at">
+                  <div class="al">Learning</div>
+                  <div class="asub">Grow your knowledge daily</div>
+                </div>
+                <span class="ac">8</span>
+                <span class="chevron">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                </span>
+              </div>
+            </div>
+
+          </div>
+          <div style="padding:20px;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="callouts">
+    <div class="callout red">
+      <h3>What's wrong with current v3</h3>
+      <p><strong>Problem 1: Long, flat scroll.</strong> 6 categories × 3 habit rows + headers ≈ 30+ scroll screens before the bottom is reached.</p>
+      <p><strong>Problem 2: Top-3 preview is noise.</strong> A user scanning for the right category reads 18 habit names they don't care about before finding the one they do.</p>
+      <p><strong>Problem 3: Every row looks equally loud.</strong> No hierarchy between "here's the taxonomy" and "here are the habits in one area."</p>
+    </div>
+
+    <div class="callout">
+      <h3>What v5 implementation delivers</h3>
+      <p><strong>Scan first, commit second.</strong> All 6 categories visible as slim cards on one screen. User picks the area, then reads habits.</p>
+      <p><strong>Card + chevron = proper list control.</strong> <code>AccordionCategoryCard</code> with warm-white open bg + <code>CategoryChevron</code> (20×20, rotates 180°, tints <code>primary[100]</code>).</p>
+      <p><strong>Section copy matches intent.</strong> "Discover more habits" / "Tap a category to explore" + monospace habit count.</p>
+      <p><strong>Multiple can stay open</strong> — per-card <code>useState</code>, no radio behavior, so user can compare across categories.</p>
+    </div>
+
+    <div class="callout">
+      <h3>Files touched (5)</h3>
+      <ul class="list-tight">
+        <li><code>ExploreAllSection.tsx</code> — new copy, maps accordion</li>
+        <li><code>CategoryGroupHeader.tsx</code> — uses CategoryChevron, card-tight layout</li>
+        <li><code>ExploreHabitRow.tsx</code> + <code>.styles.ts</code> — stripped standalone border/margin so rows live inside the card body</li>
+        <li><strong>NEW</strong> <code>AccordionCategoryCard.tsx</code> — card wrapper + conditional body</li>
+        <li><strong>NEW</strong> <code>CategoryChevron.tsx</code> — animated rotate + interpolateColor via Reanimated</li>
+      </ul>
+      <p style="margin-top:8px">All files ≤100 lines (max 99). <code>tsc</code> clean on touched files.</p>
+    </div>
+
+    <div class="callout">
+      <h3>Not changed in this pass</h3>
+      <p>Explicit scope boundary — these stay identical:</p>
+      <ul class="list-tight">
+        <li>Goal hero + 2-col transformation grid</li>
+        <li>Pill search bar</li>
+        <li>Popular (Trending carousel)</li>
+        <li>Premium packs section</li>
+        <li>Category drill-in / goal drill-in sub-views</li>
+      </ul>
+      <p style="margin-top:8px">Each of those would need its own mockup pass — surfaced as follow-ups in the approved plan.</p>
+    </div>
+  </div>
+
+</body>
+</html>

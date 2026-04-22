@@ -38,12 +38,9 @@ export const s = StyleSheet.create({
   name: { ...typography.body, fontWeight: fontWeights.semibold },
   row: {
     alignItems: 'center',
-    borderRadius: borderRadius.large,
-    borderWidth: 1.5,
     flexDirection: 'row',
     gap: spacing.md,
-    marginHorizontal: spacing.base,
-    marginVertical: spacing.xs,
-    padding: spacing.md,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
   },
 });

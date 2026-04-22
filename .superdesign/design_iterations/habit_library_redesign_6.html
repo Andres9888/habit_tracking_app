@@ -1,0 +1,533 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Habit Library v6 — Pre-opened 2 + Other merged</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Literata:wght@600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #F5F1ED;
+      --card: #EDEAE5;
+      --border: #DDD8D2;
+      --card-open-bg: #FFFBF4;
+      --card-open-border: #E5DED2;
+      --text-1: #2D2A26;
+      --text-2: #6B6560;
+      --text-3: #6E6660;
+      --primary-100: #D1FAE5;
+      --primary-600: #059669;
+      --primary-700: #047857;
+      --r-md: 12px;
+      --r-lg: 16px;
+      --r-full: 9999px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { -webkit-font-smoothing: antialiased; }
+    body {
+      background: #1C1917;
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+      padding: 40px 24px 80px;
+      color: #e7e5e4;
+    }
+
+    .page-title {
+      color: #a8a29e; font-size: 11px; font-weight: 700;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      text-align: center; margin-bottom: 8px;
+    }
+    .page-headline {
+      color: #fafaf9; font-size: 24px; font-weight: 700;
+      text-align: center; margin-bottom: 10px; letter-spacing: -0.3px;
+    }
+    .page-subtitle {
+      color: #a8a29e; font-size: 13px; text-align: center;
+      margin: 0 auto 36px; max-width: 760px; line-height: 1.6;
+    }
+    .page-subtitle strong { color: #fbbf24; font-weight: 600; }
+
+    .comparison {
+      display: flex; gap: 40px; justify-content: center;
+      align-items: flex-start; flex-wrap: wrap;
+    }
+    .phone-wrapper { display: flex; flex-direction: column; align-items: center; }
+    .phone-label {
+      font-size: 10px; font-weight: 700;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      text-align: center; margin-bottom: 12px;
+    }
+    .phone-label.v5 { color: #9ca3af; }
+    .phone-label.v6 { color: #fbbf24; }
+    .phone {
+      width: 390px; height: 820px;
+      background: var(--bg); border-radius: 44px;
+      overflow: hidden; position: relative;
+      box-shadow: 0 0 0 2px #3a3632, 0 32px 80px rgba(0,0,0,0.55);
+      flex-shrink: 0; display: flex; flex-direction: column;
+    }
+    .status-bar {
+      height: 54px; padding: 16px 28px 0;
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 15px; font-weight: 600; color: var(--text-1); flex-shrink: 0;
+    }
+    .status-icons { display: flex; gap: 6px; align-items: center; font-size: 11px; }
+    .screen-content {
+      flex: 1; overflow-y: auto;
+      -webkit-overflow-scrolling: touch; scrollbar-width: none;
+    }
+    .screen-content::-webkit-scrollbar { display: none; }
+
+    .prior-context {
+      padding: 14px 16px; font-size: 10px; color: var(--text-3);
+      text-align: center; font-style: italic; background: rgba(0,0,0,0.02);
+      border-bottom: 1px dashed rgba(0,0,0,0.08);
+    }
+
+    .divider {
+      height: 1px; background: var(--border);
+      margin: 20px 16px 14px;
+    }
+
+    .section-header {
+      padding: 0 16px 12px;
+      display: flex; justify-content: space-between; align-items: baseline;
+    }
+    .section-header .title {
+      font-size: 20px; font-weight: 700; color: var(--text-1);
+      letter-spacing: -0.2px;
+    }
+    .section-header .sub {
+      font-size: 13px; color: var(--text-2); margin-top: 2px;
+    }
+    .section-header .total {
+      font-size: 12px; color: var(--text-3);
+      font-family: 'JetBrains Mono', monospace; white-space: nowrap;
+    }
+    .section-header-block { flex: 1; min-width: 0; }
+
+    /* Accordion card */
+    .accordion { padding-top: 4px; }
+    .acc-card {
+      margin: 4px 16px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+      overflow: hidden;
+    }
+    .acc-card.open {
+      background: var(--card-open-bg);
+      border-color: var(--card-open-border);
+    }
+    .acc-head {
+      display: flex; align-items: center; gap: 8px;
+      padding: 12px;
+      cursor: pointer;
+    }
+    .acc-head .ai { font-size: 20px; line-height: 24px; flex-shrink: 0; }
+    .acc-head .at { flex: 1; min-width: 0; }
+    .acc-head .al { font-size: 15px; font-weight: 700; color: var(--text-1); }
+    .acc-head .asub { font-size: 12px; color: var(--text-2); margin-top: 1px; }
+    .acc-head .ac {
+      font-size: 12px; color: var(--text-3);
+      font-family: 'JetBrains Mono', monospace;
+      padding: 0 8px;
+    }
+    .chevron {
+      width: 20px; height: 20px; border-radius: 50%;
+      background: rgba(0,0,0,0.05);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text-3);
+      transition: transform 300ms ease, background 300ms ease, color 300ms ease;
+      flex-shrink: 0;
+    }
+    .chevron svg { width: 12px; height: 12px; stroke-width: 3; }
+    .acc-card.open .chevron,
+    .acc-card.preview .chevron.active {
+      transform: rotate(180deg);
+      background: var(--primary-100);
+      color: var(--primary-700);
+    }
+    .acc-body {
+      background: var(--bg);
+      border-top: 1px solid var(--border);
+      padding: 4px 0;
+    }
+    .acc-row {
+      display: flex; align-items: center; gap: 12px;
+      padding: 8px 12px;
+      background: transparent;
+    }
+    .acc-row .ri {
+      width: 44px; height: 44px; border-radius: var(--r-md);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; flex-shrink: 0;
+    }
+    .acc-row .info { flex: 1; min-width: 0; }
+    .acc-row .rname { font-size: 15px; font-weight: 600; color: var(--text-1); }
+    .acc-row .rdesc { font-size: 12px; color: var(--text-2); margin-top: 2px; }
+    .acc-row .rmeta {
+      display: flex; align-items: center; gap: 6px;
+      margin-top: 4px; font-size: 11px; color: var(--text-3);
+    }
+    .science-pill {
+      background: var(--primary-100); color: var(--primary-700);
+      border-radius: var(--r-full); padding: 1px 8px;
+      font-size: 10px; font-weight: 600;
+    }
+    .dot { width: 3px; height: 3px; border-radius: 50%; background: var(--text-3); }
+    .add-btn {
+      width: 44px; height: 44px; border-radius: 50%;
+      background: var(--primary-600); color: white;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; font-weight: 500; flex-shrink: 0;
+    }
+
+    .show-all {
+      display: flex; align-items: center; justify-content: flex-start;
+      gap: 6px;
+      padding: 10px 16px 12px;
+      font-size: 12px; font-weight: 600;
+      color: var(--primary-700);
+    }
+
+    .annot {
+      position: absolute; z-index: 20;
+      padding: 4px 10px; border-radius: 6px;
+      font-size: 10px; font-weight: 700;
+      letter-spacing: 0.02em; pointer-events: none;
+      white-space: nowrap;
+    }
+    .annot.bad {
+      background: rgba(239,68,68,0.2); color: #f87171;
+      border: 1px solid rgba(239,68,68,0.3);
+    }
+    .annot.good {
+      background: rgba(251,191,36,0.2); color: #fbbf24;
+      border: 1px solid rgba(251,191,36,0.4);
+    }
+
+    .callouts {
+      max-width: 880px; margin: 48px auto 0;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+    }
+    .callout {
+      background: #292524; border-radius: 14px; padding: 20px 24px;
+      border-left: 4px solid #fbbf24;
+    }
+    .callout.positive { border-left-color: #22c55e; }
+    .callout h3 {
+      font-family: 'Literata', serif;
+      font-size: 15px; font-weight: 700; color: #fafaf9;
+      margin-bottom: 10px; letter-spacing: -0.2px;
+    }
+    .callout p { color: #a8a29e; font-size: 12px; line-height: 1.6; }
+    .callout p + p { margin-top: 8px; }
+    .callout strong { color: #fafaf9; font-weight: 600; }
+    .callout code {
+      background: #1c1917; padding: 1px 5px;
+      border-radius: 4px; color: #e7e5e4;
+      font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    }
+    .list-tight li {
+      color: #a8a29e; font-size: 12px; line-height: 1.6;
+      margin-left: 18px; margin-top: 3px;
+    }
+
+    /* Generic badge for labeling mockup callouts */
+    .label-chip {
+      display: inline-block; font-size: 9px; font-weight: 700;
+      letter-spacing: 0.04em; text-transform: uppercase;
+      padding: 2px 8px; border-radius: 4px; margin-bottom: 8px;
+    }
+    .label-chip.change { background: rgba(251,191,36,0.2); color: #fbbf24; }
+  </style>
+</head>
+<body>
+
+  <p class="page-title">HABIT LIBRARY · V6 ITERATION</p>
+  <p class="page-headline">"Discover more habits" — pre-opened 2 + "Other" merged</p>
+  <p class="page-subtitle">
+    Two changes from v5: <strong>(1)</strong> each category card shows <strong>2 habits pre-opened</strong> with "Show all N →" to expand the rest.
+    <strong>(2)</strong> the three unmapped categories (<code style="color:#d6d3d1">relationships</code>, <code style="color:#d6d3d1">environmental_design</code>, <code style="color:#d6d3d1">subtraction</code>) that each render as separate "Other" cards → merged into one.
+  </p>
+
+  <div class="comparison">
+
+    <!-- ═══════ v5 (last iteration — fully collapsed) ═══════ -->
+    <div class="phone-wrapper">
+      <div class="phone-label v5">v5 — fully collapsed (last)</div>
+      <div class="phone">
+        <div class="status-bar"><span>9:41</span><div class="status-icons"><span>●</span><span>●</span><span>●</span></div></div>
+        <div class="screen-content">
+          <div class="prior-context">↑ goal hero · pill search · Popular carousel</div>
+          <div class="divider"></div>
+          <div class="section-header">
+            <div class="section-header-block">
+              <div class="title">Discover more habits</div>
+              <div class="sub">Tap a category to explore</div>
+            </div>
+            <div class="total">200+ habits</div>
+          </div>
+          <div class="accordion">
+            <div class="acc-card">
+              <div class="acc-head">
+                <span class="ai">💪</span>
+                <div class="at"><div class="al">Health</div><div class="asub">Strengthen your body with lasting physical habits</div></div>
+                <span class="ac">66</span>
+                <span class="chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+              </div>
+            </div>
+            <div class="acc-card">
+              <div class="acc-head">
+                <span class="ai">🧘</span>
+                <div class="at"><div class="al">Mindfulness</div><div class="asub">Reduce stress and sharpen awareness daily</div></div>
+                <span class="ac">36</span>
+                <span class="chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+              </div>
+            </div>
+            <div class="acc-card">
+              <div class="acc-head">
+                <span class="ai">🎯</span>
+                <div class="at"><div class="al">Productivity</div><div class="asub">Focus deeper and get more done each day</div></div>
+                <span class="ac">33</span>
+                <span class="chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+              </div>
+            </div>
+            <div class="acc-card">
+              <div class="acc-head">
+                <span class="ai">👥</span>
+                <div class="at"><div class="al">Social</div><div class="asub">Nurture relationships and community connections</div></div>
+                <span class="ac">25</span>
+                <span class="chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+              </div>
+            </div>
+            <div class="acc-card">
+              <div class="acc-head">
+                <span class="ai">📌</span>
+                <div class="at"><div class="al">Other</div></div>
+                <span class="ac">5</span>
+                <span class="chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+              </div>
+            </div>
+            <div class="acc-card">
+              <div class="acc-head">
+                <span class="ai">📌</span>
+                <div class="at"><div class="al">Other</div></div>
+                <span class="ac">3</span>
+                <span class="chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+              </div>
+            </div>
+            <div class="acc-card">
+              <div class="acc-head">
+                <span class="ai">📌</span>
+                <div class="at"><div class="al">Other</div></div>
+                <span class="ac">2</span>
+                <span class="chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+              </div>
+            </div>
+          </div>
+          <div class="annot bad" style="bottom:140px;left:16px;right:16px;text-align:center;">
+            3× "Other" cards stack — duplicate label, unclear what's inside each
+          </div>
+          <div class="annot bad" style="bottom:110px;left:16px;right:16px;text-align:center;">
+            No habit hint at all — user must tap to see anything
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════ v6 (pre-opened 2 + Other merged) ═══════ -->
+    <div class="phone-wrapper">
+      <div class="phone-label v6">v6 — pre-opened 2 + Other merged</div>
+      <div class="phone">
+        <div class="status-bar"><span>9:41</span><div class="status-icons"><span>●</span><span>●</span><span>●</span></div></div>
+        <div class="screen-content">
+          <div class="prior-context">↑ goal hero · pill search · Popular carousel</div>
+          <div class="divider"></div>
+          <div class="section-header">
+            <div class="section-header-block">
+              <div class="title">Discover more habits</div>
+              <div class="sub">Preview 2 per category — tap to see all</div>
+            </div>
+            <div class="total">200+ habits</div>
+          </div>
+
+          <div class="accordion">
+
+            <!-- Health — preview 2 -->
+            <div class="acc-card preview">
+              <div class="acc-head">
+                <span class="ai">💪</span>
+                <div class="at">
+                  <div class="al">Health</div>
+                  <div class="asub">Strengthen your body with lasting physical habits</div>
+                </div>
+                <span class="ac">66</span>
+                <span class="chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+              </div>
+              <div class="acc-body">
+                <div class="acc-row">
+                  <div class="ri" style="background:#D1FAE5">🏃</div>
+                  <div class="info"><div class="rname">Daily Walk</div><div class="rdesc">30 min outdoor walk for cardio baseline</div><div class="rmeta"><span>Daily</span><span class="dot"></span><span class="science-pill">Science</span></div></div>
+                  <div class="add-btn">+</div>
+                </div>
+                <div class="acc-row">
+                  <div class="ri" style="background:#D1FAE5">🏋️</div>
+                  <div class="info"><div class="rname">Strength Training</div><div class="rdesc">3× weekly full-body sessions</div><div class="rmeta"><span>3× weekly</span></div></div>
+                  <div class="add-btn">+</div>
+                </div>
+                <div class="show-all">Show all 66 →</div>
+              </div>
+            </div>
+
+            <!-- Mindfulness — preview 2 -->
+            <div class="acc-card preview">
+              <div class="acc-head">
+                <span class="ai">🧘</span>
+                <div class="at">
+                  <div class="al">Mindfulness</div>
+                  <div class="asub">Reduce stress and sharpen awareness daily</div>
+                </div>
+                <span class="ac">36</span>
+                <span class="chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+              </div>
+              <div class="acc-body">
+                <div class="acc-row">
+                  <div class="ri" style="background:#F5F0FF">🧘</div>
+                  <div class="info"><div class="rname">Meditation</div><div class="rdesc">10 min silent sit, mornings</div><div class="rmeta"><span>Daily</span><span class="dot"></span><span class="science-pill">Science</span></div></div>
+                  <div class="add-btn">+</div>
+                </div>
+                <div class="acc-row">
+                  <div class="ri" style="background:#F5F0FF">📝</div>
+                  <div class="info"><div class="rname">Gratitude Journal</div><div class="rdesc">3 things you're thankful for</div><div class="rmeta"><span>Daily</span></div></div>
+                  <div class="add-btn">+</div>
+                </div>
+                <div class="show-all">Show all 36 →</div>
+              </div>
+            </div>
+
+            <!-- Productivity — preview 2 -->
+            <div class="acc-card preview">
+              <div class="acc-head">
+                <span class="ai">🎯</span>
+                <div class="at">
+                  <div class="al">Productivity</div>
+                  <div class="asub">Focus deeper and get more done each day</div>
+                </div>
+                <span class="ac">33</span>
+                <span class="chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+              </div>
+              <div class="acc-body">
+                <div class="acc-row">
+                  <div class="ri" style="background:#EEF4FB">🍅</div>
+                  <div class="info"><div class="rname">Pomodoro Block</div><div class="rdesc">25 min focus + 5 min break</div><div class="rmeta"><span>Daily</span><span class="dot"></span><span class="science-pill">Science</span></div></div>
+                  <div class="add-btn">+</div>
+                </div>
+                <div class="acc-row">
+                  <div class="ri" style="background:#EEF4FB">🚫</div>
+                  <div class="info"><div class="rname">Phone Away at Night</div><div class="rdesc">No phone 1 hour before bed</div><div class="rmeta"><span>Daily</span></div></div>
+                  <div class="add-btn">+</div>
+                </div>
+                <div class="show-all">Show all 33 →</div>
+              </div>
+            </div>
+
+            <!-- Social — preview 2 -->
+            <div class="acc-card preview">
+              <div class="acc-head">
+                <span class="ai">👥</span>
+                <div class="at">
+                  <div class="al">Social</div>
+                  <div class="asub">Nurture relationships and community connections</div>
+                </div>
+                <span class="ac">25</span>
+                <span class="chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+              </div>
+              <div class="acc-body">
+                <div class="acc-row">
+                  <div class="ri" style="background:#FEF3CD">📞</div>
+                  <div class="info"><div class="rname">Call a Friend</div><div class="rdesc">Weekly 15 min call to stay close</div><div class="rmeta"><span>Weekly</span></div></div>
+                  <div class="add-btn">+</div>
+                </div>
+                <div class="acc-row">
+                  <div class="ri" style="background:#FEF3CD">💌</div>
+                  <div class="info"><div class="rname">Send Appreciation</div><div class="rdesc">One genuine "thank you" message</div><div class="rmeta"><span>Daily</span></div></div>
+                  <div class="add-btn">+</div>
+                </div>
+                <div class="show-all">Show all 25 →</div>
+              </div>
+            </div>
+
+            <!-- Other — ONE merged card (was 3) -->
+            <div class="acc-card preview" style="border-left:3px solid rgba(251,191,36,0.5);">
+              <div class="acc-head">
+                <span class="ai">📌</span>
+                <div class="at">
+                  <div class="al">Other</div>
+                  <div class="asub">Relationships, environment, subtraction</div>
+                </div>
+                <span class="ac">10</span>
+                <span class="chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+              </div>
+              <div class="acc-body">
+                <div class="acc-row">
+                  <div class="ri" style="background:#F3F4F6">🤝</div>
+                  <div class="info"><div class="rname">Active Listening</div><div class="rdesc">Present, no interrupting, in one convo/day</div><div class="rmeta"><span>Daily</span></div></div>
+                  <div class="add-btn">+</div>
+                </div>
+                <div class="acc-row">
+                  <div class="ri" style="background:#F3F4F6">🏠</div>
+                  <div class="info"><div class="rname">Clear Nightstand</div><div class="rdesc">Phone-free zone for better sleep</div><div class="rmeta"><span>Daily</span></div></div>
+                  <div class="add-btn">+</div>
+                </div>
+                <div class="show-all">Show all 10 →</div>
+              </div>
+            </div>
+
+          </div>
+          <div class="annot good" style="bottom:14px;left:16px;right:16px;text-align:center;">
+            Every card shows 2 habits — user scans habits AND taxonomy in one scroll
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="callouts">
+
+    <div class="callout">
+      <span class="label-chip change">Change 1</span>
+      <h3>Pre-open 2 habits per category</h3>
+      <p><strong>Why:</strong> v5 was too "enterprise" — closed cards force a tap for any info. Showing 2 habits gives the user a flavor of what's inside without forcing expansion.</p>
+      <p><strong>Why 2 (not 3):</strong> 3 habit rows + header ≈ 240px card — 7 cards won't fit one screen. 2 habit rows + header ≈ 180px — 4 cards per screen, all categories in ~2 scrolls.</p>
+      <p><strong>Implementation:</strong> in <code>AccordionCategoryCard.tsx</code>, always render the first 2 habits. When expanded, render the rest inline + flip chevron. Replace "Show all N →" with a hide action when open.</p>
+    </div>
+
+    <div class="callout">
+      <span class="label-chip change">Change 2</span>
+      <h3>Merge 3 "Other" categories into 1</h3>
+      <p><strong>Why:</strong> <code>relationships</code> (5 habits), <code>environmental_design</code> (3), and <code>subtraction</code> (2) aren't in <code>CATEGORY_META</code>, so each gets labeled "Other 📌" and renders as a separate card — 3 visually identical cards in a row.</p>
+      <p><strong>Implementation:</strong> in <code>useGroupedTemplates.ts</code>, any template whose category isn't in <code>CATEGORY_META</code> gets merged into one <code>'other'</code> key. Export an <code>isKnownCategory</code> helper from <code>categoryMeta.ts</code>. Result: one "Other" card, 10 habits total.</p>
+    </div>
+
+    <div class="callout positive">
+      <h3>Combined effect</h3>
+      <p>From a ~7-card stack of fully-collapsed headers → a ~5-card stack where every card already shows useful content. Roughly the same vertical height, <strong>dramatically more glanceable</strong>.</p>
+      <p>Scroll distance to see every category: ~2 screens (was ~3 in v5, ~7+ in v3 top-3 preview).</p>
+    </div>
+
+    <div class="callout positive">
+      <h3>What's next if approved</h3>
+      <p>Two small code edits:</p>
+      <ul class="list-tight">
+        <li><code>useGroupedTemplates.ts</code> — collapse unmapped categories into <code>'other'</code></li>
+        <li><code>AccordionCategoryCard.tsx</code> — always render first 2 habits, conditional rest on expand</li>
+      </ul>
+      <p style="margin-top:8px">Plus a small export from <code>categoryMeta.ts</code>. All files stay under 100 lines.</p>
+    </div>
+
+  </div>
+
+</body>
+</html>
