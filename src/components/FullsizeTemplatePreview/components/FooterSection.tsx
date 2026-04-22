@@ -23,8 +23,7 @@ export function FooterSection({
   importButtonStyle,
   customizeButtonStyle,
   checkmarkAnimatedStyle,
-  successButtonGlowStyle,
-  successIconBounceStyle,
+  successPillStyle,
   createPressHandlers,
   importButtonScale,
   customizeButtonScale,
@@ -49,27 +48,19 @@ export function FooterSection({
           ]}
         >
           {isImported ? (
-            <View
+            <Animated.View
               testID='templates-preview-added'
-              style={footerStyles.successButtonWrapper}
+              style={[footerStyles.successButton, successPillStyle]}
             >
-              <Animated.View
-                pointerEvents='none'
-                style={[footerStyles.successButtonGlow, successButtonGlowStyle]}
-              />
-              <Animated.View
-                style={[footerStyles.successButton, checkmarkAnimatedStyle]}
-              >
-                <Animated.View style={successIconBounceStyle}>
-                  <Check
-                    color={colors.text.inverse}
-                    size={22}
-                    strokeWidth={3}
-                  />
-                </Animated.View>
-                <Text style={footerStyles.successButtonText}>Added!</Text>
+              <Animated.View style={checkmarkAnimatedStyle}>
+                <Check
+                  color={colors.text.inverse}
+                  size={22}
+                  strokeWidth={3}
+                />
               </Animated.View>
-            </View>
+              <Text style={footerStyles.successButtonText}>Added!</Text>
+            </Animated.View>
           ) : (
             <AnimatedPressable
               accessible

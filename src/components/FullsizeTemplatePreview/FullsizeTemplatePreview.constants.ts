@@ -2,21 +2,6 @@
  * Constants for FullsizeTemplatePreview component
  */
 
-import { Dimensions } from 'react-native';
-
-export const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } =
-  Dimensions.get('window');
-
-/** Confetti colors - celebratory green variants matching success theme */
-export const CONFETTI_COLORS = [
-  '#86EFAC', // Light green
-  '#34D399', // Primary 400
-  '#22c55e', // Success green (matching button)
-  '#10B981', // Primary 500
-  '#059669', // Primary 600
-  '#F59E0B', // Gold accent
-] as const;
-
 /** Default fallback color when iconColor is missing or invalid */
 export const DEFAULT_ICON_COLOR = '#78716c';
 
