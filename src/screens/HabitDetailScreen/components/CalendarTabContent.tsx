@@ -1,7 +1,7 @@
 /**
  * CalendarTabContent — Year heatmap + monthly grid calendar view.
  */
-import Animated, { FadeInDown } from 'react-native-reanimated';
+import Animated, { Easing, FadeInDown } from 'react-native-reanimated';
 import { MonthlyCalendarGrid } from '../../../components/BinaryHeatmap';
 import ErrorBoundary from '../../../components/ErrorBoundary';
 import type { Habit } from '../../../features/habits/types';
@@ -21,7 +21,7 @@ export function CalendarTabContent({
   onDayPress,
 }: CalendarTabContentProps) {
   return (
-    <Animated.View entering={FadeInDown.duration(300).springify().damping(20)}>
+    <Animated.View entering={FadeInDown.duration(300).easing(Easing.out(Easing.cubic))}>
       <ErrorBoundary>
         <YearHeatmapSection
           completedDates={completedDates}

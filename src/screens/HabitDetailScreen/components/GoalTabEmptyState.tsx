@@ -4,7 +4,7 @@
  */
 import { useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
-import Animated, { FadeInDown } from 'react-native-reanimated';
+import Animated, { Easing, FadeInDown } from 'react-native-reanimated';
 import { useMutation } from 'convex/react';
 import { api } from '../../../../convex/_generated/api';
 import type { Id } from '../../../../convex/_generated/dataModel';
@@ -41,7 +41,7 @@ export function GoalTabEmptyState({ habitId }: GoalTabEmptyStateProps) {
   return (
     <Animated.View
       className='items-center px-6 py-10'
-      entering={FadeInDown.duration(300).springify().damping(20)}
+      entering={FadeInDown.duration(300).easing(Easing.out(Easing.cubic))}
     >
       <View
         className='mb-5 h-16 w-16 items-center justify-center rounded-2xl'

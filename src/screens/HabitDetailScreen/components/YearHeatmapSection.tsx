@@ -1,5 +1,5 @@
 import React from 'react';
-import Animated, { FadeInUp } from 'react-native-reanimated';
+import Animated, { Easing, FadeInUp } from 'react-native-reanimated';
 import { BinaryHeatmap } from '../../../components/BinaryHeatmap';
 import { useThemeColors } from '../../../theme';
 import { shadows } from '../../../theme/spacing';
@@ -13,7 +13,7 @@ interface YearHeatmapSectionProps {
   onDayPress?: (date: string, completed: boolean) => void;
 }
 
-const anim = FadeInUp.duration(280).delay(180).springify().damping(18);
+const anim = FadeInUp.duration(280).delay(180).easing(Easing.out(Easing.cubic));
 
 export function YearHeatmapSection({
   completedDates,

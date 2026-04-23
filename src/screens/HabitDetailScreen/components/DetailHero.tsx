@@ -1,7 +1,7 @@
 /** DetailHero - Horizontal: emoji left, name + inline stats right. */
 import React from 'react';
 import { View, Text } from 'react-native';
-import Animated, { FadeInDown } from 'react-native-reanimated';
+import Animated, { Easing, FadeInDown } from 'react-native-reanimated';
 import { Check } from 'lucide-react-native';
 import { useThemeColors } from '../../../theme';
 import { borderRadius } from '../../../theme/spacing';
@@ -17,7 +17,7 @@ interface DetailHeroProps {
   totalCompletions: number;
 }
 
-const ENTERING = FadeInDown.duration(280).delay(100).springify().damping(18);
+const ENTERING = FadeInDown.duration(280).delay(100).easing(Easing.out(Easing.cubic));
 
 export function DetailHero({ habit, isCompletedToday, totalCompletions }: DetailHeroProps) {
   const { colors, isDark } = useThemeColors();

@@ -5,7 +5,7 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
-import Animated, { FadeInUp } from 'react-native-reanimated';
+import Animated, { Easing, FadeInUp } from 'react-native-reanimated';
 import { typography, fontWeights } from '../../../theme/typography';
 
 interface SectionLabelProps {
@@ -16,7 +16,7 @@ interface SectionLabelProps {
 }
 
 const anim = (delay: number) =>
-  FadeInUp.duration(280).delay(delay).springify().damping(18);
+  FadeInUp.duration(280).delay(delay).easing(Easing.out(Easing.cubic));
 
 export function SectionLabel({
   borderColor,

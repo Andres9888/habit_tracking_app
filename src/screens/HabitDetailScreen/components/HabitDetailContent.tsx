@@ -1,7 +1,7 @@
 /** HabitDetailContent - Tabbed layout: Calendar / Strength / Goal */
 import { useCallback, useRef, useState } from 'react';
 import { ScrollView } from 'react-native';
-import Animated, { FadeInDown } from 'react-native-reanimated';
+import Animated, { Easing, FadeInDown } from 'react-native-reanimated';
 import ErrorBoundary from '../../../components/ErrorBoundary';
 import { HabitStrengthSection } from '../../../components/HabitStrengthSection';
 import { useThemeColors } from '../../../theme';
@@ -60,7 +60,7 @@ export function HabitDetailContent({
       {activeView === 'strength' && habit.createdAt ? (
         <Animated.View
           className='mt-2 rounded-2xl'
-          entering={FadeInDown.duration(300).springify().damping(20)}
+          entering={FadeInDown.duration(300).easing(Easing.out(Easing.cubic))}
           style={{ backgroundColor: cardBg, ...shadows.card }}
         >
           <ErrorBoundary>
