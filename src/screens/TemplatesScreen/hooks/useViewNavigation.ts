@@ -7,10 +7,12 @@
 
 import { useCallback, useState } from 'react';
 import {
+  Easing,
   useSharedValue,
-  withSpring,
+  withTiming,
 } from 'react-native-reanimated';
-import { springs } from '../../../theme/animations';
+
+const SLIDE_CONFIG = { duration: 280, easing: Easing.out(Easing.cubic) };
 
 export type TemplateViewState =
   | { type: 'main' }
@@ -27,13 +29,12 @@ export function useViewNavigation() {
 
   const animateIn = useCallback(() => {
     slideProgress.value = 1;
-    slideProgress.value = withSpring(0, springs.bottomSheet);
+    slideProgress.value = withTiming(0, SLIDE_CONFIG);
   }, [slideProgress]);
 
   const animateOut = useCallback(
     (onComplete: () => void) => {
-      slideProgress.value = withSpring(1, springs.exit);
-      // Allow animation to complete before state change
+      slideProgress.value = withTiming(1, SLIDE_CONFIG);
       setTimeout(onComplete, 280);
     },
     [slideProgress]

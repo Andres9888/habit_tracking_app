@@ -6,10 +6,14 @@
  */
 
 import { ScrollView, StyleSheet, View } from 'react-native';
-import Animated, { FadeInDown, FadeOutUp } from 'react-native-reanimated';
+import Animated, {
+  Easing,
+  FadeInDown,
+  FadeOutUp,
+} from 'react-native-reanimated';
 import { ScreenHeader } from '../../../components/ScreenHeader';
 import { useThemeColors } from '../../../theme/ThemeContext';
-import { durations, springs } from '../../../theme/animations';
+import { durations } from '../../../theme/animations';
 import { spacing } from '../../../theme/spacing';
 import { styles } from '../../templates/templatesScreenStyles';
 import { SearchBar } from '../components';
@@ -20,8 +24,7 @@ import type { MainBrowseViewProps } from './MainBrowseView.types';
 const stagger = (index: number) =>
   FadeInDown.delay(index * durations.stagger)
     .duration(durations.enter)
-    .springify()
-    .damping(springs.standard.damping);
+    .easing(Easing.out(Easing.cubic));
 
 const bodyEnter = FadeInDown.duration(180);
 const bodyExit = FadeOutUp.duration(120);
