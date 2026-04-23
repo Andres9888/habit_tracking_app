@@ -5,12 +5,13 @@
 import { useCallback, useEffect } from 'react';
 import { View, type LayoutChangeEvent } from 'react-native';
 import Animated, {
+  Easing,
   useAnimatedStyle,
   useSharedValue,
-  withSpring,
+  withTiming,
 } from 'react-native-reanimated';
 import { Activity, Calendar, Target } from 'lucide-react-native';
-import { springs } from '@/theme/animations';
+import useHapticFeedback from '@/hooks/useHapticFeedback';
 import { useThemeColors } from '@/theme';
 import { shadows } from '@/theme/spacing';
 import { DetailViewTabButton, type DetailView } from './DetailViewTabButton';
@@ -28,13 +29,17 @@ const TABS = [
 ];
 
 export function DetailViewTabs({ activeView, onViewChange }: DetailViewTabsProps) {
+  const { triggerSelection } = useHapticFeedback();
   const containerWidth = useSharedValue(0);
   const activeIndex = TABS.findIndex((t) => t.view === activeView);
   const indicatorX = useSharedValue(activeIndex < 0 ? 0 : activeIndex);
 
   useEffect(() => {
     const next = TABS.findIndex((t) => t.view === activeView);
-    indicatorX.value = withSpring(next < 0 ? 0 : next, springs.standard);
+    indicatorX.value = withTiming(next < 0 ? 0 : next, {
+      duration: 180,
+      easing: Easing.out(Easing.cubic),
+    });
   }, [activeView, indicatorX]);
 
   const handleLayout = useCallback(
@@ -42,6 +47,14 @@ export function DetailViewTabs({ activeView, onViewChange }: DetailViewTabsProps
       containerWidth.value = event.nativeEvent.layout.width;
     },
     [containerWidth]
+  );
+
+  const handleTabPress = useCallback(
+    (view: DetailView) => {
+      if (view !== activeView) triggerSelection();
+      onViewChange(view);
+    },
+    [activeView, onViewChange, triggerSelection]
   );
 
   const indicatorStyle = useAnimatedStyle(() => {
@@ -82,7 +95,7 @@ export function DetailViewTabs({ activeView, onViewChange }: DetailViewTabsProps
             icon={icon}
             label={label}
             view={view}
-            onPress={onViewChange}
+            onPress={handleTabPress}
           />
         ))}
       </View>

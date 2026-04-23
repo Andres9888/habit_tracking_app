@@ -4,7 +4,7 @@
  */
 import { useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
-import Animated, { Easing, FadeInDown } from 'react-native-reanimated';
+import Animated, { FadeIn } from 'react-native-reanimated';
 import ErrorBoundary from '../../../components/ErrorBoundary';
 import { StreakGoalCard } from '../../../components/ProgressSectionConsolidated/StreakGoalCard';
 import type { Habit } from '../../../features/habits/types';
@@ -27,7 +27,7 @@ export function GoalTabContent({ habit, completionRate }: GoalTabContentProps) {
 
   if (!hasGoal) {
     return (
-      <Animated.View entering={FadeInDown.duration(300).easing(Easing.out(Easing.cubic))}>
+      <Animated.View entering={FadeIn.duration(180)}>
         <ErrorBoundary>
           <GoalTabEmptyState habitId={habit._id} />
         </ErrorBoundary>
@@ -42,7 +42,7 @@ export function GoalTabContent({ habit, completionRate }: GoalTabContentProps) {
   return (
     <Animated.View
       className='px-5'
-      entering={FadeInDown.duration(300).easing(Easing.out(Easing.cubic))}
+      entering={FadeIn.duration(180)}
     >
       <ErrorBoundary>
         <GoalWhyAnchor habit={habit} />
