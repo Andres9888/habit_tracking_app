@@ -15,7 +15,12 @@ import {
 } from 'react-native';
 import { KeyboardAvoidingView, Platform } from 'react-native';
 import { GestureDetector } from 'react-native-gesture-handler';
-import Animated, { FadeIn, FadeInDown, FadeInUp } from 'react-native-reanimated';
+import Animated, {
+  Easing,
+  FadeIn,
+  FadeInDown,
+  FadeInUp,
+} from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useSwipeDismiss } from '../../../components/CreateHabitModal/hooks/useSwipeDismiss';
 import { EmojiPicker } from '../../../components/CreateHabitModal/components/EmojiPicker';
@@ -34,7 +39,8 @@ import { TemplateInfo } from './TemplateInfo';
 import { buildTextInputHintProps } from '@/utils/textInputHintProps';
 import type { TemplatePreviewModalProps } from './types';
 
-const entrance = (delay: number) => FadeInUp.delay(delay).springify().damping(18);
+const entrance = (delay: number) =>
+  FadeInUp.delay(delay).duration(280).easing(Easing.out(Easing.cubic));
 
 // eslint-disable-next-line max-lines-per-function
 export default function TemplatePreviewModal({
@@ -142,7 +148,7 @@ export default function TemplatePreviewModal({
                     >
                       <Animated.View
                         className='mb-4'
-                        entering={FadeInDown.duration(280).delay(100).springify().damping(18)}
+                        entering={FadeInDown.duration(280).delay(100).easing(Easing.out(Easing.cubic))}
                       >
                         <TemplatePreview
                           customColor={customColor}
@@ -153,7 +159,7 @@ export default function TemplatePreviewModal({
 
                       <Animated.View
                         className='w-full'
-                        entering={FadeInUp.duration(280).delay(160).springify().damping(18)}
+                        entering={FadeInUp.duration(280).delay(160).easing(Easing.out(Easing.cubic))}
                       >
                         <TextInput
                           accessibilityLabel='Habit name'
@@ -182,7 +188,7 @@ export default function TemplatePreviewModal({
 
                     <Animated.View
                       className='px-6'
-                      entering={FadeInUp.delay(280).springify().damping(18)}
+                      entering={FadeInUp.delay(280).duration(280).easing(Easing.out(Easing.cubic))}
                     >
                       <Text
                         className='mb-3 text-center uppercase'

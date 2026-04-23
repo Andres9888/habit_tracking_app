@@ -5,7 +5,7 @@
  */
 
 import { StyleSheet, Text, View } from 'react-native';
-import Animated, { FadeIn } from 'react-native-reanimated';
+import Animated, { Easing, FadeIn } from 'react-native-reanimated';
 import { Check } from 'lucide-react-native';
 import Modal from '../Modal';
 import { iconSizes } from '@/theme/iconSizes';
@@ -24,7 +24,7 @@ export function PackConfirmSheet({ onCancel, onConfirm, pack, visible }: PackCon
         <Text style={s.title}>{pack.name}</Text>
         <Text style={s.desc}>{pack.habits.length} habits will be added</Text>
         {pack.habits.map((h, i) => (
-          <Animated.View key={i} testID={`templates-pack-confirm-item-${i}`} entering={FadeIn.delay(i * 200)} style={s.row}>
+          <Animated.View key={i} testID={`templates-pack-confirm-item-${i}`} entering={FadeIn.duration(280).delay(i * 60).easing(Easing.out(Easing.cubic))} style={s.row}>
             <Text style={s.emoji}>{h.emoji}</Text>
             <View style={s.rowContent}>
               <Text style={s.habitName}>{h.name}</Text>
