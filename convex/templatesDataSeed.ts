@@ -955,6 +955,28 @@ export const seedTemplates = internalMutation({
         'Huberman Lab (2023) - Temperature regulation for sleep',
     });
 
+    await insertWithTracking({
+      category: 'andrew_huberman',
+      createdAt: now,
+      description:
+        'Listen to pure 40 Hz binaural beats for ~5 minutes before a focused work bout. Huberman cites peer-reviewed evidence that gamma-frequency auditory stimulation improves reaction time, working memory, and verbal recall.',
+      frequency: FREQUENCY_DAILY,
+      icon: '🎧',
+      iconColor: '#7C3AED',
+      name: '40 Hz Binaural Beats',
+      popularityScore: 82,
+      scientificLink: 'https://x.com/hubermanlab/status/1675600356892631040',
+      scientificReference:
+        'Huberman Lab — 40 Hz binaural beats as a data-supported focus tool',
+      tips: [
+        'Use stereo headphones — binaural beats require left/right channel separation',
+        'About 5 minutes before starting deep work is the sweet spot',
+        'Stick to pure tones — versions mixed with rain/ocean sounds are less effective',
+        "Don't use for every work bout — the effect attenuates with overuse",
+      ],
+      youtubeLink: 'https://www.youtube.com/watch?v=pQI64hD2sJw',
+    });
+
     // Social Habits Templates
     await insertWithTracking({
       category: 'social',
