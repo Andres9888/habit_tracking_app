@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Habit Tabs 08 — Scrollspy Anchor + Sticky</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="habit_tabs_theme.css" />
+<style>
+  .phone-frame-scroll {
+    overflow-y: auto;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+  }
+  .phone-frame-scroll::-webkit-scrollbar { display: none; }
+
+  .sticky-wrap {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    background: linear-gradient(180deg, rgba(245,241,237,0.98) 60%, rgba(245,241,237,0.0) 100%);
+    padding-bottom: 10px;
+  }
+  .sticky-wrap .header-condensed {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 16px 4px;
+    opacity: 0;
+    transform: translateY(-4px);
+    transition: all 260ms var(--ease-out-soft);
+    pointer-events: none;
+    position: absolute;
+    left: 0; right: 0; top: 0;
+  }
+  .sticky-wrap[data-pinned="true"] .header-condensed {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+  .sticky-wrap[data-pinned="true"] .header-condensed .title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  .tabs-08 {
+    margin: 6px 16px 0;
+    display: flex;
+    gap: 28px;
+    justify-content: flex-start;
+    padding: 0 8px 10px;
+    position: relative;
+    border-bottom: 1px solid var(--border);
+  }
+  .tabs-08 .tab {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 8px 0 10px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-tertiary);
+    letter-spacing: -0.1px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .tabs-08 .tab i { width: 14px; height: 14px; }
+  .tabs-08 .tab[data-active="true"] { color: var(--forest-700); font-weight: 600; }
+  .tabs-08 .indicator {
+    position: absolute;
+    bottom: -1px;
+    height: 2px;
+    background: var(--forest-600);
+    border-radius: 2px;
+    transition: transform 320ms var(--ease-out-soft), width 320ms var(--ease-out-soft);
+    left: 0;
+  }
+
+  .section {
+    padding: 16px;
+    scroll-margin-top: 72px;
+  }
+  .section h2 {
+    font-family: var(--font-display);
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0 0 12px;
+    color: var(--text-primary);
+  }
+  .section-hairline { height: 1px; background: var(--border); margin: 8px 16px; }
+
+  .strength-bar {
+    margin-top: 8px;
+    height: 10px;
+    background: var(--card);
+    border-radius: 999px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .strength-bar > div {
+    width: 72%;
+    height: 100%;
+    background: linear-gradient(90deg, var(--forest-500), var(--forest-600));
+  }
+
+  .goal-big {
+    font-family: var(--font-display);
+    font-size: 40px;
+    font-weight: 600;
+    color: var(--forest-700);
+    margin: 6px 0 2px;
+  }
+  .goal-sub { font-size: 13px; color: var(--text-secondary); }
+</style>
+</head>
+<body>
+  <div class="stage">
+    <div class="stage-title">08 · Scrollspy Anchor + Sticky</div>
+    <div class="phone-frame phone-frame-scroll" id="frame">
+      <div class="phone-notch"></div>
+      <div class="status-bar"><span>9:41</span><span>●●●● ▐▌</span></div>
+
+      <div class="sticky-wrap" id="sticky" data-pinned="false">
+        <div class="screen-header">
+          <button class="icon-btn"><i data-lucide="chevron-left"></i></button>
+          <button class="icon-btn"><i data-lucide="pencil"></i></button>
+        </div>
+        <div class="header-condensed">
+          <button class="icon-btn"><i data-lucide="chevron-left"></i></button>
+          <div class="title">Morning Meditation</div>
+          <button class="icon-btn"><i data-lucide="pencil"></i></button>
+        </div>
+        <div class="detail-hero">
+          <div class="hero-emoji-ring">🌱</div>
+          <div class="hero-title">Morning Meditation</div>
+          <div class="hero-sub">
+            <span class="streak-pill">🔥 12 day streak</span>
+            <span>·</span>
+            <span>72% strength</span>
+          </div>
+        </div>
+        <div class="tabs-08" id="tabs">
+          <button class="tab" data-target="sec-calendar" data-active="true"><i data-lucide="calendar"></i>Calendar</button>
+          <button class="tab" data-target="sec-strength"><i data-lucide="activity"></i>Strength</button>
+          <button class="tab" data-target="sec-goal"><i data-lucide="target"></i>Goal</button>
+          <div class="indicator"></div>
+        </div>
+      </div>
+
+      <div class="section" id="sec-calendar">
+        <h2>Calendar</h2>
+        <div class="section-title">This month</div>
+        <div class="cal-grid">
+          <div class="cal-dot on"></div><div class="cal-dot on"></div><div class="cal-dot soft"></div><div class="cal-dot on"></div><div class="cal-dot on"></div><div class="cal-dot"></div><div class="cal-dot"></div>
+          <div class="cal-dot on"></div><div class="cal-dot on"></div><div class="cal-dot on"></div><div class="cal-dot soft"></div><div class="cal-dot on"></div><div class="cal-dot on"></div><div class="cal-dot"></div>
+          <div class="cal-dot on"></div><div class="cal-dot on"></div><div class="cal-dot on"></div><div class="cal-dot on"></div><div class="cal-dot soft"></div><div class="cal-dot"></div><div class="cal-dot"></div>
+          <div class="cal-dot on"></div><div class="cal-dot soft"></div><div class="cal-dot on"></div><div class="cal-dot on"></div><div class="cal-dot"></div><div class="cal-dot"></div><div class="cal-dot"></div>
+        </div>
+      </div>
+      <div class="section-hairline"></div>
+      <div class="section" id="sec-strength">
+        <h2>Strength</h2>
+        <div class="section-title">Habit strength · 72%</div>
+        <div class="strength-bar"><div></div></div>
+        <p style="margin-top:10px;font-size:13px;color:var(--text-secondary);line-height:1.5;">You're in the <strong style="color:var(--forest-700)">Strong</strong> phase. Keep going — automaticity begins near 80%.</p>
+      </div>
+      <div class="section-hairline"></div>
+      <div class="section" id="sec-goal">
+        <h2>Goal</h2>
+        <div class="section-title">21 of 30 days</div>
+        <div class="goal-big">21 / 30</div>
+        <div class="goal-sub">On track to finish by April 30</div>
+      </div>
+      <div style="height: 100px"></div>
+    </div>
+    <div class="caption">
+      <h3>Scrollspy Anchor + Sticky</h3>
+      <p>Tabs become scroll-to-section anchors inside one long view. The hero collapses into a condensed sticky header as you scroll; the underline indicator follows the active section automatically. Everything is reachable by scroll — tabs are a shortcut, not a switch.</p>
+      <p><span class="tag">Highest info density</span><span class="tag">No hidden content</span><span class="tag">Biggest UX change</span></p>
+      <p style="margin-top:6px;font-size:12px;color:var(--text-muted);">Try it — scroll inside the phone frame.</p>
+    </div>
+  </div>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script>
+    lucide.createIcons();
+    const frame = document.getElementById('frame');
+    const sticky = document.getElementById('sticky');
+    const tabs = document.querySelectorAll('#tabs .tab');
+    const indicator = document.querySelector('#tabs .indicator');
+    const container = document.getElementById('tabs');
+    const sections = [...tabs].map(t => document.getElementById(t.dataset.target));
+
+    function move(tab) {
+      const base = container.firstElementChild.offsetLeft;
+      indicator.style.width = tab.offsetWidth + 'px';
+      indicator.style.transform = `translateX(${tab.offsetLeft - base}px)`;
+    }
+    requestAnimationFrame(() => move(tabs[0]));
+
+    tabs.forEach(t => t.addEventListener('click', () => {
+      tabs.forEach(x => x.dataset.active = 'false');
+      t.dataset.active = 'true';
+      move(t);
+      document.getElementById(t.dataset.target).scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }));
+
+    frame.addEventListener('scroll', () => {
+      sticky.dataset.pinned = frame.scrollTop > 140 ? 'true' : 'false';
+      const top = frame.scrollTop + 90;
+      let active = 0;
+      sections.forEach((s, i) => { if (s.offsetTop <= top) active = i; });
+      if (tabs[active].dataset.active !== 'true') {
+        tabs.forEach(x => x.dataset.active = 'false');
+        tabs[active].dataset.active = 'true';
+        move(tabs[active]);
+      }
+    });
+  </script>
+</body>
+</html>

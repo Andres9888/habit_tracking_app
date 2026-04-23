@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Tab Alignment Variants</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="habit_tabs_theme.css" />
+<style>
+  body { padding: 40px 20px 80px; }
+  .page {
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+  .page h1 {
+    font-family: var(--font-display);
+    font-size: 32px;
+    font-weight: 700;
+    margin: 0 0 8px;
+    letter-spacing: -0.6px;
+  }
+  .page > p {
+    color: var(--text-secondary);
+    font-size: 15px;
+    margin: 0 0 32px;
+    max-width: 680px;
+    line-height: 1.55;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+    gap: 24px;
+  }
+  .card {
+    background: rgba(255,255,255,0.55);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(45,42,38,0.08);
+    border-radius: 20px;
+    padding: 18px;
+    box-shadow: var(--shadow-card);
+  }
+  .card h2 {
+    font-family: var(--font-display);
+    font-size: 17px;
+    font-weight: 600;
+    margin: 0 0 3px;
+    letter-spacing: -0.2px;
+  }
+  .card p {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin: 0 0 16px;
+    line-height: 1.5;
+  }
+  .card .code {
+    font-family: 'Geist Mono', ui-monospace, monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 0.4px;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  /* "Phone" frame just for the tab */
+  .mini {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .mini-content {
+    padding: 18px 16px;
+    font-size: 12px;
+    color: var(--text-muted);
+    border-top: 1px dashed var(--border);
+    background: repeating-linear-gradient(
+      135deg,
+      var(--bg-muted) 0px,
+      var(--bg-muted) 8px,
+      var(--bg) 8px,
+      var(--bg) 16px
+    );
+  }
+  .mini-content .placeholder-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 12px;
+    font-size: 11px;
+    color: var(--text-tertiary);
+  }
+
+  /* ==== A: Current (centered, small) ==== */
+  .tab-a {
+    display: flex;
+    justify-content: center;
+    gap: 28px;
+    padding: 10px 16px 0;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+  .tab-a .t {
+    padding: 8px 2px 10px;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text-tertiary);
+    cursor: pointer;
+  }
+  .tab-a .t.on { color: var(--text-primary); font-weight: 600; }
+  .tab-a .u { position: absolute; bottom: -1px; left: 50%; transform: translateX(-50%); width: 62px; transform-origin: center; height: 2px; background: var(--forest-600); border-radius: 2px; }
+  .tab-a[data-active="0"] .u { left: calc(50% - 92px); }
+  .tab-a[data-active="1"] .u { left: 50%; transform: translate(-50%, 0); }
+  .tab-a[data-active="2"] .u { left: calc(50% + 92px); transform: translateX(-50%); }
+
+  /* ==== B: Left-aligned (matches content gutter) ==== */
+  .tab-b {
+    display: flex;
+    justify-content: flex-start;
+    gap: 24px;
+    padding: 10px 16px 0;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+  .tab-b .t {
+    padding: 8px 2px 12px;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text-tertiary);
+    cursor: pointer;
+  }
+  .tab-b .t.on { color: var(--text-primary); font-weight: 600; }
+  .tab-b .u { position: absolute; bottom: -1px; height: 2px; background: var(--forest-600); border-radius: 2px; }
+  .tab-b[data-active="0"] .u { left: 16px; width: 64px; }
+  .tab-b[data-active="1"] .u { left: 104px; width: 62px; }
+  .tab-b[data-active="2"] .u { left: 190px; width: 36px; }
+
+  /* ==== C: Left-aligned, bigger/editorial (Outfit 18px) ==== */
+  .tab-c {
+    display: flex;
+    justify-content: flex-start;
+    gap: 24px;
+    padding: 14px 16px 0;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+  .tab-c .t {
+    padding: 6px 0 14px;
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 400;
+    color: var(--text-muted);
+    letter-spacing: -0.3px;
+    cursor: pointer;
+  }
+  .tab-c .t.on { color: var(--text-primary); font-weight: 700; }
+  .tab-c .u { position: absolute; bottom: -1px; height: 2px; background: var(--forest-600); border-radius: 2px; }
+  .tab-c[data-active="0"] .u { left: 16px; width: 74px; }
+  .tab-c[data-active="1"] .u { left: 114px; width: 76px; }
+  .tab-c[data-active="2"] .u { left: 213px; width: 44px; }
+
+  /* ==== D: Equal-width segmented underline ==== */
+  .tab-d {
+    display: flex;
+    padding: 10px 16px 0;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+  .tab-d .t {
+    flex: 1;
+    text-align: center;
+    padding: 8px 0 12px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-tertiary);
+    cursor: pointer;
+  }
+  .tab-d .t.on { color: var(--forest-700); font-weight: 600; }
+  .tab-d .u { position: absolute; bottom: -1px; height: 2px; background: var(--forest-600); border-radius: 2px; width: calc((100% - 32px) / 3); transition: transform 280ms var(--ease-out-soft); }
+  .tab-d[data-active="0"] .u { transform: translateX(16px); }
+  .tab-d[data-active="1"] .u { transform: translateX(calc(100% + 16px - 100%)); left: calc(33.33% + 5px); }
+  .tab-d[data-active="2"] .u { left: calc(66.67% + 11px); }
+
+  /* ==== E: Left, label overline above, dense ==== */
+  .tab-e-label {
+    padding: 14px 16px 2px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.6px;
+    text-transform: uppercase;
+    color: var(--forest-700);
+  }
+  .tab-e {
+    display: flex;
+    justify-content: flex-start;
+    gap: 22px;
+    padding: 0 16px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+  .tab-e .t {
+    padding: 6px 0 12px;
+    font-family: var(--font-display);
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--text-muted);
+    letter-spacing: -0.2px;
+    cursor: pointer;
+  }
+  .tab-e .t.on { color: var(--text-primary); font-weight: 700; }
+  .tab-e .u { position: absolute; bottom: -1px; height: 2px; background: var(--forest-600); border-radius: 2px; }
+  .tab-e[data-active="0"] .u { left: 16px; width: 68px; }
+  .tab-e[data-active="1"] .u { left: 106px; width: 70px; }
+  .tab-e[data-active="2"] .u { left: 198px; width: 40px; }
+
+  /* ==== F: Parchment pill segmented (back to mock 01 style) ==== */
+  .tab-f {
+    margin: 10px 16px 14px;
+    display: flex;
+    background: var(--bg-muted);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 3px;
+    position: relative;
+    box-shadow: inset 0 1px 2px rgba(45,42,38,0.04);
+  }
+  .tab-f .pill {
+    position: absolute;
+    top: 3px;
+    bottom: 3px;
+    width: calc((100% - 6px) / 3);
+    background: var(--card);
+    border: 1px solid rgba(5,150,105,0.22);
+    border-radius: 8px;
+    box-shadow: 0 1px 2px rgba(5,150,105,0.08), 0 2px 8px rgba(45,42,38,0.05);
+    transition: transform 280ms var(--ease-out-soft);
+  }
+  .tab-f .t {
+    flex: 1;
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 8px 0;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-tertiary);
+    cursor: pointer;
+  }
+  .tab-f .t.on { color: var(--forest-700); font-weight: 600; }
+  .tab-f[data-active="0"] .pill { transform: translateX(0); }
+  .tab-f[data-active="1"] .pill { transform: translateX(100%); }
+  .tab-f[data-active="2"] .pill { transform: translateX(200%); }
+
+  .pick-row {
+    margin-top: 16px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .pick-row button {
+    padding: 8px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    border-radius: 999px;
+    border: 1px solid var(--forest-600);
+    background: var(--forest-600);
+    color: #fff;
+    cursor: pointer;
+    transition: transform 160ms var(--ease-out-soft);
+  }
+  .pick-row button:hover { transform: translateY(-1px); }
+</style>
+</head>
+<body>
+<div class="page">
+  <h1>Tab Alignment — 6 Quick Variants</h1>
+  <p>Just the tab strip. Content alignment shown below each with a striped "placeholder content" area so you can see how the tab ties (or doesn't) to content. Click a tab in any variant to see the underline move. Tell me which letter (A–F) reads right.</p>
+
+  <div class="grid">
+
+    <div class="card">
+      <div class="code">A · CURRENT (ships now)</div>
+      <h2>Centered · 15px · 28px gap</h2>
+      <p>What's live now. Centered tabs with small underline. Works but disconnected from left-aligned content below.</p>
+      <div class="mini">
+        <div class="tab-a" data-active="1" onclick="toggle(this, event)">
+          <div class="t" data-i="0">Calendar</div>
+          <div class="t on" data-i="1">Strength</div>
+          <div class="t" data-i="2">Goal</div>
+          <div class="u"></div>
+        </div>
+        <div class="mini-content"><div class="placeholder-card">Content starts at 16px left gutter →</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="code">B · LEFT-ALIGNED (safest fix)</div>
+      <h2>Left · 15px · 24px gap</h2>
+      <p>Same tabs but flush-left at the 16px content gutter. First tab aligns with cards below. Reads anchored, intentional.</p>
+      <div class="mini">
+        <div class="tab-b" data-active="1" onclick="toggle(this, event)">
+          <div class="t" data-i="0">Calendar</div>
+          <div class="t on" data-i="1">Strength</div>
+          <div class="t" data-i="2">Goal</div>
+          <div class="u"></div>
+        </div>
+        <div class="mini-content"><div class="placeholder-card">Content aligns under first tab ↑</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="code">C · LEFT · EDITORIAL (recommended)</div>
+      <h2>Left · Outfit 18px · weight-driven</h2>
+      <p>Bumped to 18px Outfit with stronger weight contrast (400 → 700). Reads like a magazine section header. More authoritative, more premium.</p>
+      <div class="mini">
+        <div class="tab-c" data-active="1" onclick="toggle(this, event)">
+          <div class="t" data-i="0">Calendar</div>
+          <div class="t on" data-i="1">Strength</div>
+          <div class="t" data-i="2">Goal</div>
+          <div class="u"></div>
+        </div>
+        <div class="mini-content"><div class="placeholder-card">Content aligns under "Calendar" ↑</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="code">D · EQUAL-WIDTH SEGMENTED</div>
+      <h2>Full-width · underline · centered labels</h2>
+      <p>Each tab gets an equal third of the screen. Underline tracks the active one. Balanced, formal — like a real segmented control.</p>
+      <div class="mini">
+        <div class="tab-d" data-active="1" onclick="toggle(this, event)">
+          <div class="t" data-i="0">Calendar</div>
+          <div class="t on" data-i="1">Strength</div>
+          <div class="t" data-i="2">Goal</div>
+          <div class="u"></div>
+        </div>
+        <div class="mini-content"><div class="placeholder-card">Tabs span full width, content centered-ish</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="code">E · LEFT + SECTION OVERLINE</div>
+      <h2>Left · with "DETAILS" overline</h2>
+      <p>Adds a small section label above the tabs. Most editorial — tells users "this is a navigator within a single section." Most distinctive.</p>
+      <div class="mini">
+        <div class="tab-e-label">Details</div>
+        <div class="tab-e" data-active="1" onclick="toggle(this, event)">
+          <div class="t" data-i="0">Calendar</div>
+          <div class="t on" data-i="1">Strength</div>
+          <div class="t" data-i="2">Goal</div>
+          <div class="u"></div>
+        </div>
+        <div class="mini-content"><div class="placeholder-card">Overline frames the tabs as one unit</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="code">F · PARCHMENT PILL (non-underline)</div>
+      <h2>Segmented pill · warm track · green hairline</h2>
+      <p>Abandons the underline entirely. Returns to mock #01 — a proper pill segmented control in warm tokens. Most familiar, strongest active affordance.</p>
+      <div class="mini">
+        <div class="tab-f" data-active="1" onclick="toggle(this, event)">
+          <div class="pill"></div>
+          <div class="t" data-i="0">Calendar</div>
+          <div class="t on" data-i="1">Strength</div>
+          <div class="t" data-i="2">Goal</div>
+        </div>
+        <div class="mini-content"><div class="placeholder-card">Pill is self-contained, doesn't need alignment</div></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+<script>
+  function toggle(host, e) {
+    const tab = e.target.closest('.t');
+    if (!tab) return;
+    const idx = tab.dataset.i;
+    host.dataset.active = idx;
+    host.querySelectorAll('.t').forEach(t => t.classList.toggle('on', t.dataset.i === idx));
+  }
+</script>
+</body>
+</html>

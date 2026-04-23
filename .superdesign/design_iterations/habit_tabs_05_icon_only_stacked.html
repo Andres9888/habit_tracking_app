@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Habit Tabs 05 — Icon-Stacked Compact</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="habit_tabs_theme.css" />
+<style>
+  .tabs-05 {
+    margin: 14px 16px 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+  .tabs-05 .tab {
+    background: var(--bg-muted);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 12px 0 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+    color: var(--text-tertiary);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+    transition: all 240ms var(--ease-out-soft);
+    transform: translateY(0);
+  }
+  .tabs-05 .tab[data-active="true"] {
+    background: var(--card);
+    border-color: rgba(5, 150, 105, 0.28);
+    color: var(--forest-700);
+    box-shadow:
+      0 1px 2px rgba(5, 150, 105, 0.10),
+      0 6px 18px rgba(45, 42, 38, 0.08);
+    transform: translateY(-2px);
+  }
+  .tabs-05 .tab i { stroke-width: 2; }
+  .tabs-05 .tab[data-active="true"] i { stroke-width: 2.5; color: var(--forest-600); }
+  .tabs-05 .tab .badge {
+    margin-top: 2px;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: transparent;
+  }
+  .tabs-05 .tab[data-active="true"] .badge { background: var(--forest-600); }
+</style>
+</head>
+<body>
+  <div class="stage">
+    <div class="stage-title">05 · Icon-Stacked Compact</div>
+    <div class="phone-frame">
+      <div class="phone-notch"></div>
+      <div class="status-bar"><span>9:41</span><span>●●●● ▐▌</span></div>
+      <div class="screen-header">
+        <button class="icon-btn"><i data-lucide="chevron-left"></i></button>
+        <button class="icon-btn"><i data-lucide="pencil"></i></button>
+      </div>
+      <div class="detail-hero">
+        <div class="hero-emoji-ring">🌱</div>
+        <div class="hero-title">Morning Meditation</div>
+        <div class="hero-sub">
+          <span class="streak-pill">🔥 12 day streak</span>
+          <span>·</span>
+          <span>72% strength</span>
+        </div>
+      </div>
+      <div class="tabs-05" id="tabs">
+        <button class="tab" data-active="true"><i data-lucide="calendar"></i>CALENDAR<span class="badge"></span></button>
+        <button class="tab"><i data-lucide="activity"></i>STRENGTH<span class="badge"></span></button>
+        <button class="tab"><i data-lucide="target"></i>GOAL<span class="badge"></span></button>
+      </div>
+      <div class="content-card">
+        <div class="section-title">This month</div>
+        <div class="cal-grid">
+          <div class="cal-dot on"></div><div class="cal-dot on"></div><div class="cal-dot soft"></div><div class="cal-dot on"></div><div class="cal-dot on"></div><div class="cal-dot"></div><div class="cal-dot"></div>
+          <div class="cal-dot on"></div><div class="cal-dot on"></div><div class="cal-dot on"></div><div class="cal-dot soft"></div><div class="cal-dot on"></div><div class="cal-dot on"></div><div class="cal-dot"></div>
+          <div class="cal-dot on"></div><div class="cal-dot on"></div><div class="cal-dot on"></div><div class="cal-dot on"></div><div class="cal-dot soft"></div><div class="cal-dot"></div><div class="cal-dot"></div>
+          <div class="cal-dot on"></div><div class="cal-dot soft"></div><div class="cal-dot on"></div><div class="cal-dot on"></div><div class="cal-dot"></div><div class="cal-dot"></div><div class="cal-dot"></div>
+        </div>
+      </div>
+    </div>
+    <div class="caption">
+      <h3>Icon-Stacked Compact</h3>
+      <p>Each tab becomes an independent card that lifts on selection. Icon above label, small green dot for active confirmation. Feels like iOS Health / Apple Fitness — scales gracefully to 4 or 5 tabs if you add "Notes" or "History" later.</p>
+      <p><span class="tag">Most scalable</span><span class="tag">Clearer affordance</span><span class="tag">Takes more vertical space</span></p>
+    </div>
+  </div>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script>
+    lucide.createIcons();
+    const tabs = document.querySelectorAll('#tabs .tab');
+    tabs.forEach(t => t.addEventListener('click', () => {
+      tabs.forEach(x => x.dataset.active = 'false');
+      t.dataset.active = 'true';
+    }));
+  </script>
+</body>
+</html>

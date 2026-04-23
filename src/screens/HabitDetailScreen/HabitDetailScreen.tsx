@@ -1,6 +1,6 @@
 /* eslint-disable max-lines */
 /** HabitDetailScreen - Optimized for 9+ scores across all dimensions */
-import React from 'react';
+import React, { useCallback, useState } from 'react';
 import { View, Modal, KeyboardAvoidingView, Platform } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Edit3 } from 'lucide-react-native';
@@ -8,7 +8,6 @@ import { iconSizes } from '@/theme/iconSizes';
 import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 import { ScreenHeader } from '../../components/ScreenHeader';
 import {
-  DetailHero,
   DetailLoadingState,
   HabitDetailContent,
   HabitDetailModals,
@@ -59,6 +58,10 @@ function HabitDetailScreenContent({
   const handleEdit = () => {
     if (habit) onEdit?.(habit);
   };
+  const [isTitlePinned, setIsTitlePinned] = useState(false);
+  const handlePinnedChange = useCallback((pinned: boolean) => {
+    setIsTitlePinned(pinned);
+  }, []);
 
   return (
     <Modal
@@ -93,19 +96,19 @@ function HabitDetailScreenContent({
                         onPress={handleEdit}
                       />
                     }
+                    title={habit.name}
+                    titleStyle={{ fontSize: 17, fontWeight: '600', letterSpacing: -0.2, lineHeight: 22 }}
+                    titleVisible={isTitlePinned}
                     variant='transparent'
                     onBack={onClose}
-                  />
-                  <DetailHero
-                    habit={habit}
-                    isCompletedToday={screenState.isCompletedToday}
-                    totalCompletions={screenState.totalCompletions}
                   />
                   <HabitDetailContent
                     completedDates={screenState.completedDates}
                     habit={habit}
+                    isCompletedToday={screenState.isCompletedToday}
                     totalCompletions={screenState.totalCompletions}
                     onDayPress={calendarHandlers.handleCalendarDayPress}
+                    onPinnedChange={handlePinnedChange}
                   />
                 </LinearGradient>
               </View>

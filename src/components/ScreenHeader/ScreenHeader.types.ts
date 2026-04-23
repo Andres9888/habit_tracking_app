@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import type { StyleProp, TextStyle } from 'react-native';
 
 export type ScreenHeaderLeftAction = 'back' | 'close' | ReactNode;
 
@@ -10,5 +11,7 @@ export interface ScreenHeaderProps {
   leftAction?: ScreenHeaderLeftAction;
   rightAction?: ReactNode;
   variant?: ScreenHeaderVariant;
+  titleVisible?: boolean;
+  titleStyle?: StyleProp<TextStyle>;
   onBack?: () => void;
 }

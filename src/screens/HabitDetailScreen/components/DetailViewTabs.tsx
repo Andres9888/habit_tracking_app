@@ -1,6 +1,7 @@
 /**
- * DetailViewTabs - Segmented control for Calendar / Strength / Goal views.
- * Horizontal icon + label, no hints.
+ * DetailViewTabs - Parchment-pill segmented control for Calendar / Strength / Goal.
+ * Warm token track, card-color active pill with forest hairline + tonal shadow.
+ * Designed to sit as a sticky header above the section stack.
  */
 import { useCallback, useEffect } from 'react';
 import { View, type LayoutChangeEvent } from 'react-native';
@@ -10,10 +11,8 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import { Activity, Calendar, Target } from 'lucide-react-native';
 import useHapticFeedback from '@/hooks/useHapticFeedback';
 import { useThemeColors } from '@/theme';
-import { shadows } from '@/theme/spacing';
 import { DetailViewTabButton, type DetailView } from './DetailViewTabButton';
 
 interface DetailViewTabsProps {
@@ -21,26 +20,25 @@ interface DetailViewTabsProps {
   onViewChange: (view: DetailView) => void;
 }
 
-const PADDING = 4;
-const TABS = [
-  { icon: Calendar, label: 'Calendar', view: 'calendar' as const },
-  { icon: Activity, label: 'Strength', view: 'strength' as const },
-  { icon: Target, label: 'Goal', view: 'goal' as const },
+const PADDING = 3;
+const TABS: Array<{ label: string; view: DetailView }> = [
+  { label: 'Calendar', view: 'calendar' },
+  { label: 'Strength', view: 'strength' },
+  { label: 'Goal', view: 'goal' },
 ];
+const SPRING = { duration: 280, easing: Easing.out(Easing.cubic) };
 
 export function DetailViewTabs({ activeView, onViewChange }: DetailViewTabsProps) {
   const { triggerSelection } = useHapticFeedback();
+  const { colors, isDark } = useThemeColors();
   const containerWidth = useSharedValue(0);
   const activeIndex = TABS.findIndex((t) => t.view === activeView);
-  const indicatorX = useSharedValue(activeIndex < 0 ? 0 : activeIndex);
+  const indicatorIndex = useSharedValue(activeIndex < 0 ? 0 : activeIndex);
 
   useEffect(() => {
     const next = TABS.findIndex((t) => t.view === activeView);
-    indicatorX.value = withTiming(next < 0 ? 0 : next, {
-      duration: 180,
-      easing: Easing.out(Easing.cubic),
-    });
-  }, [activeView, indicatorX]);
+    indicatorIndex.value = withTiming(next < 0 ? 0 : next, SPRING);
+  }, [activeView, indicatorIndex]);
 
   const handleLayout = useCallback(
     (event: LayoutChangeEvent) => {
@@ -61,38 +59,61 @@ export function DetailViewTabs({ activeView, onViewChange }: DetailViewTabsProps
     const tabWidth = (containerWidth.value - PADDING * 2) / TABS.length;
     if (tabWidth <= 0) return { opacity: 0 };
     return {
-      left: PADDING + indicatorX.value * tabWidth,
       opacity: 1,
+      transform: [{ translateX: PADDING + indicatorIndex.value * tabWidth }],
       width: tabWidth,
     };
   });
 
-  const { colors, isDark } = useThemeColors();
-  const containerBg = isDark ? colors.surface : colors.gray[200];
-  const indicatorBg = isDark ? colors.card : colors.gray[50];
-  const accentColor = isDark ? colors.primary[500] : colors.primary[600];
+  const accentColor = colors.primary[700];
+  const trackBg = isDark ? colors.surface : colors.gray[50];
 
   return (
     <View
-      accessibilityRole='tablist'
-      className='mt-2 rounded-lg'
-      style={{ backgroundColor: containerBg, padding: PADDING }}
-      onLayout={handleLayout}
+      style={{
+        backgroundColor: colors.background,
+        paddingBottom: 10,
+        paddingHorizontal: 16,
+        paddingTop: 6,
+      }}
     >
-      <Animated.View
-        className='absolute bottom-1 top-1 rounded-md'
-        style={[
-          indicatorStyle,
-          { backgroundColor: indicatorBg, ...shadows.card, shadowColor: accentColor },
-        ]}
-      />
-      <View className='flex-row'>
-        {TABS.map(({ icon, label, view }) => (
+      <View
+        accessibilityRole='tablist'
+        style={{
+          backgroundColor: trackBg,
+          borderColor: colors.border,
+          borderRadius: 12,
+          borderWidth: 1,
+          flexDirection: 'row',
+          padding: PADDING,
+          position: 'relative',
+        }}
+        onLayout={handleLayout}
+      >
+        <Animated.View
+          pointerEvents='none'
+          style={[
+            {
+              backgroundColor: colors.card,
+              borderColor: 'rgba(5, 150, 105, 0.22)',
+              borderRadius: 9,
+              borderWidth: 1,
+              bottom: PADDING,
+              position: 'absolute',
+              shadowColor: accentColor,
+              shadowOffset: { height: 1, width: 0 },
+              shadowOpacity: 0.08,
+              shadowRadius: 3,
+              top: PADDING,
+            },
+            indicatorStyle,
+          ]}
+        />
+        {TABS.map(({ label, view }) => (
           <DetailViewTabButton
             key={view}
             accentColor={accentColor}
             activeView={activeView}
-            icon={icon}
             label={label}
             view={view}
             onPress={handleTabPress}

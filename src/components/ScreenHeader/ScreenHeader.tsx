@@ -1,6 +1,11 @@
-import React, { isValidElement } from 'react';
+import React, { isValidElement, useEffect } from 'react';
 import { Pressable, View } from 'react-native';
-import Animated, { FadeInDown } from 'react-native-reanimated';
+import Animated, {
+  FadeInDown,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ChevronLeft, X } from 'lucide-react-native';
 import { useThemeColors } from '../../theme/ThemeContext';
@@ -19,6 +24,8 @@ export function ScreenHeader({
   leftAction = 'back',
   rightAction,
   variant = 'default',
+  titleVisible = true,
+  titleStyle,
   onBack,
 }: ScreenHeaderProps) {
   const insets = useSafeAreaInsets();
@@ -27,6 +34,11 @@ export function ScreenHeader({
     pressScale: 0.92,
     hapticStyle: 'light',
   });
+  const titleOpacity = useSharedValue(titleVisible ? 1 : 0);
+  useEffect(() => {
+    titleOpacity.value = withTiming(titleVisible ? 1 : 0, { duration: 220 });
+  }, [titleVisible, titleOpacity]);
+  const titleAnimatedStyle = useAnimatedStyle(() => ({ opacity: titleOpacity.value }));
 
   const hasNavigation = Boolean(leftAction) || Boolean(rightAction);
   const iconColor = colors.text.primary;
@@ -69,7 +81,7 @@ export function ScreenHeader({
           <View style={styles.left}>{renderLeftAction()}</View>
           {title ? <Animated.Text
               numberOfLines={1}
-              style={[styles.titleCenter, { color: colors.text.primary }]}
+              style={[styles.titleCenter, { color: colors.text.primary }, titleStyle, titleAnimatedStyle]}
             >
               {title}
             </Animated.Text> : null}

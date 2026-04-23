@@ -1,67 +1,81 @@
-/** HabitDetailContent - Tabbed layout: Calendar / Strength / Goal */
-import { useCallback, useRef, useState } from 'react';
-import { ScrollView } from 'react-native';
-import Animated, { FadeIn } from 'react-native-reanimated';
+/**
+ * HabitDetailContent - Scrollspy layout: Hero → sticky tabs → Calendar + Strength + Goal stacked.
+ * Tabs act as anchors, not gatekeepers. Every progress surface is visible in one scroll.
+ */
+import { useRef } from 'react';
+import { ScrollView, View, type LayoutChangeEvent } from 'react-native';
 import ErrorBoundary from '../../../components/ErrorBoundary';
 import { HabitStrengthSection } from '../../../components/HabitStrengthSection';
 import { useThemeColors } from '../../../theme';
 import { shadows } from '../../../theme/spacing';
 import type { Habit } from '../../../features/habits/types';
 import { CalendarTabContent } from './CalendarTabContent';
+import { DetailHero } from './DetailHero';
 import { DetailViewTabs, type DetailView } from './DetailViewTabs';
 import { GoalTabContent } from './GoalTabContent';
 import { computeCompletionRate } from './HabitDetailContent.utils';
+import { useDetailScrollSpy } from './useDetailScrollSpy';
 
 interface HabitDetailContentProps {
   completedDates: Set<string>;
   habit: Habit;
+  isCompletedToday: boolean;
   totalCompletions: number;
   onDayPress: (dateString: string, isCompleted: boolean) => void;
+  onPinnedChange?: (pinned: boolean) => void;
 }
 
 export function HabitDetailContent({
   completedDates,
   habit,
+  isCompletedToday,
   totalCompletions,
   onDayPress,
+  onPinnedChange,
 }: HabitDetailContentProps) {
   const { colors } = useThemeColors();
-  const [activeView, setActiveView] = useState<DetailView>('calendar');
   const scrollRef = useRef<ScrollView>(null);
+  const { activeView, handleScroll, handleSectionLayout, scrollToView } =
+    useDetailScrollSpy(scrollRef, { onPinnedChange });
   const habitColor = habit.color ?? habit.iconColor ?? colors.primary[700];
-  const cardBg = colors.card;
-
-  const handleViewChange = useCallback((view: DetailView) => {
-    setActiveView(view);
-    scrollRef.current?.scrollTo({ animated: true, y: 0 });
-  }, []);
-
   const completionRate = computeCompletionRate(habit, totalCompletions);
+
+  const makeSectionLayoutHandler = (view: DetailView) => (event: LayoutChangeEvent) => {
+    handleSectionLayout(view, event.nativeEvent.layout.y);
+  };
 
   return (
     <ScrollView
       ref={scrollRef}
       bounces
       className='flex-1'
-      contentContainerClassName='pb-8 px-4'
+      contentContainerClassName='pb-16'
+      scrollEventThrottle={16}
       showsVerticalScrollIndicator={false}
+      stickyHeaderIndices={[1]}
+      onScroll={handleScroll}
     >
-      <DetailViewTabs activeView={activeView} onViewChange={handleViewChange} />
+      <DetailHero
+        habit={habit}
+        isCompletedToday={isCompletedToday}
+        totalCompletions={totalCompletions}
+      />
+      <DetailViewTabs activeView={activeView} onViewChange={scrollToView} />
 
-      {activeView === 'calendar' ? (
+      <View className='px-4 pt-2' onLayout={makeSectionLayoutHandler('calendar')}>
         <CalendarTabContent
           completedDates={completedDates}
           habit={habit}
           habitColor={habitColor}
           onDayPress={onDayPress}
         />
-      ) : null}
+      </View>
 
-      {activeView === 'strength' && habit.createdAt ? (
-        <Animated.View
-          className='mt-2 rounded-2xl'
-          entering={FadeIn.duration(180)}
-          style={{ backgroundColor: cardBg, ...shadows.card }}
+      {habit.createdAt ? (
+        <View
+          className='mx-4 mt-4 rounded-2xl'
+          style={{ backgroundColor: colors.card, ...shadows.card }}
+          onLayout={makeSectionLayoutHandler('strength')}
         >
           <ErrorBoundary>
             <HabitStrengthSection
@@ -72,12 +86,12 @@ export function HabitDetailContent({
               habitStrength={habit.strength}
             />
           </ErrorBoundary>
-        </Animated.View>
+        </View>
       ) : null}
 
-      {activeView === 'goal' ? (
+      <View className='mt-4' onLayout={makeSectionLayoutHandler('goal')}>
         <GoalTabContent completionRate={completionRate} habit={habit} />
-      ) : null}
+      </View>
     </ScrollView>
   );
 }

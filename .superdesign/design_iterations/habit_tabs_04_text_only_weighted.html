@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Habit Tabs 04 — Text-Only, Weight-Driven</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="habit_tabs_theme.css" />
+<style>
+  .tabs-04 {
+    margin: 16px 20px 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    position: relative;
+  }
+  .tabs-04 .tab {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 8px 4px 12px;
+    font-family: var(--font-display);
+    font-size: 17px;
+    font-weight: 400;
+    color: var(--text-muted);
+    letter-spacing: -0.2px;
+    position: relative;
+    transition: all 260ms var(--ease-out-soft);
+  }
+  .tabs-04 .tab[data-active="true"] {
+    color: var(--forest-700);
+    font-weight: 700;
+  }
+  .tabs-04 .tab[data-active="true"]::after {
+    content: "";
+    position: absolute;
+    bottom: 4px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--forest-600);
+    box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.12);
+    animation: pop 360ms var(--ease-spring);
+  }
+  @keyframes pop {
+    0% { transform: translateX(-50%) scale(0); opacity: 0; }
+    100% { transform: translateX(-50%) scale(1); opacity: 1; }
+  }
+  .tabs-04-hairline {
+    margin: 0 20px;
+    height: 1px;
+    background: var(--border);
+  }
+</style>
+</head>
+<body>
+  <div class="stage">
+    <div class="stage-title">04 · Text-Only, Weight-Driven</div>
+    <div class="phone-frame">
+      <div class="phone-notch"></div>
+      <div class="status-bar"><span>9:41</span><span>●●●● ▐▌</span></div>
+      <div class="screen-header">
+        <button class="icon-btn"><i data-lucide="chevron-left"></i></button>
+        <button class="icon-btn"><i data-lucide="pencil"></i></button>
+      </div>
+      <div class="detail-hero">
+        <div class="hero-emoji-ring">🌱</div>
+        <div class="hero-title">Morning Meditation</div>
+        <div class="hero-sub">
+          <span class="streak-pill">🔥 12 day streak</span>
+          <span>·</span>
+          <span>72% strength</span>
+        </div>
+      </div>
+      <div class="tabs-04" id="tabs">
+        <button class="tab" data-active="true">Calendar</button>
+        <button class="tab">Strength</button>
+        <button class="tab">Goal</button>
+      </div>
+      <div class="tabs-04-hairline"></div>
+      <div class="content-card">
+        <div class="section-title">This month</div>
+        <div class="cal-grid">
+          <div class="cal-dot on"></div><div class="cal-dot on"></div><div class="cal-dot soft"></div><div class="cal-dot on"></div><div class="cal-dot on"></div><div class="cal-dot"></div><div class="cal-dot"></div>
+          <div class="cal-dot on"></div><div class="cal-dot on"></div><div class="cal-dot on"></div><div class="cal-dot soft"></div><div class="cal-dot on"></div><div class="cal-dot on"></div><div class="cal-dot"></div>
+          <div class="cal-dot on"></div><div class="cal-dot on"></div><div class="cal-dot on"></div><div class="cal-dot on"></div><div class="cal-dot soft"></div><div class="cal-dot"></div><div class="cal-dot"></div>
+          <div class="cal-dot on"></div><div class="cal-dot soft"></div><div class="cal-dot on"></div><div class="cal-dot on"></div><div class="cal-dot"></div><div class="cal-dot"></div><div class="cal-dot"></div>
+        </div>
+      </div>
+    </div>
+    <div class="caption">
+      <h3>Text-Only, Weight-Driven</h3>
+      <p>Drops icons entirely. Active state communicates through weight (700 vs 400), color, and a small green dot. The labels read larger (17px) so the hierarchy comes from typography, not a colored chip.</p>
+      <p><span class="tag">Most mature</span><span class="tag">Scales to 4+ tabs</span><span class="tag">Quieter affordance</span></p>
+    </div>
+  </div>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script>
+    lucide.createIcons();
+    const tabs = document.querySelectorAll('#tabs .tab');
+    tabs.forEach(t => t.addEventListener('click', () => {
+      tabs.forEach(x => x.dataset.active = 'false');
+      t.dataset.active = 'true';
+    }));
+  </script>
+</body>
+</html>
