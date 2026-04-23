@@ -15,6 +15,7 @@ import { StrengthProgressBar } from '../../StrengthProgressBar/StrengthProgressB
 import { PendingSyncBadge } from '../../SyncStatus';
 import { styles } from '../HabitCard.styles';
 import { streakStyles } from '../HabitCard.streakStyles';
+import { RankEmojiTile } from './RankEmojiTile';
 import { StatusIndicator } from './StatusIndicator';
 import { StreakBadge } from './StreakBadge';
 import type { HabitCardContentProps } from './HabitCardContent.types';
@@ -41,7 +42,7 @@ function HabitCardContentComponent({
     <Animated.View style={[styles.content, entranceContentStyle]}>
       <View style={styles.topRow}>
         <View style={styles.habitInfo}>
-          <Text style={styles.icon}>{icon}</Text>
+          <RankEmojiTile icon={icon} strength={strength} />
           <Text
             ellipsizeMode='tail'
             numberOfLines={2}

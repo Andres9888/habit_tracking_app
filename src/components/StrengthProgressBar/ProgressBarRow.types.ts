@@ -15,5 +15,6 @@ export interface ProgressBarRowProps {
   showEmoji: boolean;
   showNextLevel: boolean;
   showPercentage: boolean;
+  strength: number;
   strengthLabel: string;
 }

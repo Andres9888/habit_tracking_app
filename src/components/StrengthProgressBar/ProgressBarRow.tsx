@@ -1,6 +1,6 @@
 /**
  * ProgressBarRow - Top row containing emoji, bar, percentage, next level
- * Enhanced with gradient fill and glow effect at leading edge
+ * Growth emoji renders inside a LoL-style rank tile (bronze → diamond).
  */
 
 import React from 'react';
@@ -10,6 +10,7 @@ import { styles } from './StrengthProgressBar.styles';
 import type { ProgressBarRowProps } from './ProgressBarRow.types';
 import { getGradientColors } from './ProgressBarRow.helpers';
 import { GradientBar } from './GradientBar';
+import { RankEmojiTile } from '../HabitCard/components/RankEmojiTile';
 
 export function ProgressBarRow({
   config,
@@ -21,29 +22,29 @@ export function ProgressBarRow({
   showEmoji,
   showNextLevel,
   showPercentage,
+  strength,
   strengthLabel,
 }: ProgressBarRowProps) {
   return (
     <View style={[styles.topRow, { gap: config.gap }]}>
-      {showEmoji ? <View
+      {showEmoji ? (
+        <Animated.View
           style={[
             styles.emojiContainer,
             {
               height: config.emojiContainerSize,
               width: config.emojiContainerSize,
             },
+            emojiAnimatedStyle,
           ]}
         >
-          <Animated.Text
-            style={[
-              styles.emoji,
-              { fontSize: config.emojiSize },
-              emojiAnimatedStyle,
-            ]}
-          >
-            {currentLevel.emoji}
-          </Animated.Text>
-        </View> : null}
+          <RankEmojiTile
+            icon={currentLevel.emoji}
+            size={config.emojiContainerSize}
+            strength={strength}
+          />
+        </Animated.View>
+      ) : null}
 
       <GradientBar
         barHeight={config.barHeight}
@@ -52,23 +53,27 @@ export function ProgressBarRow({
         showDividers={showDividers}
       />
 
-      {showPercentage ? <Text
+      {showPercentage ? (
+        <Text
           style={[
             styles.percentage,
             { color: currentLevel.color, fontSize: config.fontSize },
           ]}
         >
           {strengthLabel}
-        </Text> : null}
+        </Text>
+      ) : null}
 
-      {showNextLevel && nextLevel ? <View style={styles.nextLevelContainer}>
+      {showNextLevel && nextLevel ? (
+        <View style={styles.nextLevelContainer}>
           <Text style={[styles.arrow, { fontSize: config.fontSize }]}>→</Text>
           <Text
             style={[styles.nextEmoji, { fontSize: config.emojiSize * 0.85 }]}
           >
             {nextLevel.emoji}
           </Text>
-        </View> : null}
+        </View>
+      ) : null}
     </View>
   );
 }

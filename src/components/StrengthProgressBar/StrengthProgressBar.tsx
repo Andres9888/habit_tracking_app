@@ -58,6 +58,7 @@ const StrengthProgressBarInner = ({
         showEmoji={showEmoji}
         showNextLevel={showNextLevel}
         showPercentage={showPercentage}
+        strength={clampedStrength}
         strengthLabel={strengthLabel}
       />
       <ProgressBarBottomRow
