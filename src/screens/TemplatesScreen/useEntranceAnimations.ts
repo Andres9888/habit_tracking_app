@@ -7,12 +7,10 @@ import {
   Easing,
   useAnimatedStyle,
   useSharedValue,
-  withSpring,
   withTiming,
 } from 'react-native-reanimated';
-import { springs } from '@/theme/animations';
 
-const ENTRANCE_SPRING = springs.exit;
+const TRANSLATE_CONFIG = { duration: 280, easing: Easing.out(Easing.cubic) };
 const FADE_CONFIG = { duration: 150, easing: Easing.out(Easing.cubic) };
 const CONTENT_FADE = { duration: 180, easing: Easing.out(Easing.cubic) };
 
@@ -41,13 +39,13 @@ export function useEntranceAnimations({
       return;
     }
 
-    searchTranslateY.value = withSpring(0, ENTRANCE_SPRING);
+    searchTranslateY.value = withTiming(0, TRANSLATE_CONFIG);
     searchOpacity.value = withTiming(1, FADE_CONFIG);
 
-    tabBarTranslateY.value = withSpring(0, ENTRANCE_SPRING);
+    tabBarTranslateY.value = withTiming(0, TRANSLATE_CONFIG);
     tabBarOpacity.value = withTiming(1, FADE_CONFIG);
 
-    contentTranslateY.value = withSpring(0, ENTRANCE_SPRING);
+    contentTranslateY.value = withTiming(0, TRANSLATE_CONFIG);
     contentOpacity.value = withTiming(1, CONTENT_FADE);
   }, [reducedMotion]);
 

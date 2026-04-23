@@ -51,7 +51,10 @@ export const useEntranceAnimations = ({
           duration: 350,
           easing: Easing.out(Easing.cubic),
         });
-        contentTranslateY.value = withSpring(0, Springs.gentle);
+        contentTranslateY.value = withTiming(0, {
+          duration: 400,
+          easing: Easing.out(Easing.cubic),
+        });
         contentOpacity.value = withTiming(1, {
           duration: 400,
           easing: Easing.out(Easing.cubic),

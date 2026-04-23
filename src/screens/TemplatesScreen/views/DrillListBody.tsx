@@ -11,10 +11,10 @@ import {
   Text,
   View,
 } from 'react-native';
-import Animated, { FadeInDown } from 'react-native-reanimated';
+import Animated, { Easing, FadeInDown } from 'react-native-reanimated';
 import type { Doc } from '../../../../convex/_generated/dataModel';
 import { useThemeColors } from '../../../theme/ThemeContext';
-import { durations, springs } from '../../../theme/animations';
+import { durations } from '../../../theme/animations';
 import { borderRadius, spacing } from '../../../theme/spacing';
 import { fontWeights, typography } from '@/theme/typography';
 import {
@@ -76,8 +76,7 @@ export function DrillListBody({
       <Animated.View
         entering={FadeInDown.delay(index * durations.stagger)
           .duration(durations.enter)
-          .springify()
-          .damping(springs.standard.damping)}
+          .easing(Easing.out(Easing.cubic))}
       >
         <TemplateListCard
           getCategoryLabel={() => ''}

@@ -4,12 +4,14 @@
 
 import { useCallback } from 'react';
 import {
+  Easing,
   useAnimatedStyle,
   useSharedValue,
-  withSpring,
+  withTiming,
 } from 'react-native-reanimated';
 import type { LayoutChangeEvent } from 'react-native';
-import { springs } from '@/theme/animations';
+
+const INDICATOR_CONFIG = { duration: 280, easing: Easing.out(Easing.cubic) };
 
 interface UseTabIndicatorOptions {
   reducedMotion: boolean;
@@ -43,7 +45,7 @@ export function useTabIndicator({ reducedMotion }: UseTabIndicatorOptions) {
     (position: 0 | 1) => {
       tabIndicatorPosition.value = reducedMotion
         ? position
-        : withSpring(position, springs.standard);
+        : withTiming(position, INDICATOR_CONFIG);
     },
     [reducedMotion, tabIndicatorPosition]
   );
