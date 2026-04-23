@@ -149,8 +149,8 @@ export const ANIMATION = {
   /** Pulsing dot animation duration (ms) */
   pulseDuration: 2000,
 
-  /** Ring fill animation duration (ms) */
-  ringDuration: 1000,
+  /** Ring fill animation duration (ms) — aligned with theme durations.progress */
+  ringDuration: 800,
 };
 
 // ============================================================================

@@ -10,7 +10,8 @@
 
 import React from 'react';
 import { Text, View } from 'react-native';
-import Animated, { FadeInDown } from 'react-native-reanimated';
+import Animated, { Easing, FadeInDown } from 'react-native-reanimated';
+import { durations } from '@/theme/animations';
 import { useThemeColors } from '@/theme/ThemeContext';
 
 import { useReduceMotion } from '../../hooks/useReduceMotion';
@@ -110,7 +111,7 @@ export const HabitStrengthSection = React.memo(function HabitStrengthSection({
   return (
     <Animated.View
       className='overflow-hidden rounded-2xl shadow-sm'
-      entering={reduceMotion ? undefined : FadeInDown.delay(100).springify().damping(18)}
+      entering={reduceMotion ? undefined : FadeInDown.duration(durations.enter).delay(100).easing(Easing.out(Easing.cubic))}
       style={{
         ...shadows.card,
         backgroundColor: themeColors.card,

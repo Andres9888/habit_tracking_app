@@ -4,13 +4,14 @@
  */
 import React from 'react';
 import { Text, View } from 'react-native';
-import Animated, { FadeInUp } from 'react-native-reanimated';
+import Animated, { Easing, FadeInUp } from 'react-native-reanimated';
+import { durations } from '../../../theme/animations';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { fontFamilies, fontWeights } from '@/theme/typography';
 import { borderRadius, spacing } from '@/theme/spacing';
 
 const anim = (delay: number) =>
-  FadeInUp.duration(280).delay(delay).springify().damping(18);
+  FadeInUp.duration(durations.enter).delay(delay).easing(Easing.out(Easing.cubic));
 
 export function EmptyState() {
   const { colors } = useThemeColors();

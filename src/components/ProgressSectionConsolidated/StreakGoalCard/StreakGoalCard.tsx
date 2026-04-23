@@ -7,8 +7,9 @@
 
 import React from 'react';
 
-import Animated, { FadeInDown } from 'react-native-reanimated';
+import Animated, { Easing, FadeInDown } from 'react-native-reanimated';
 
+import { durations } from '@/theme/animations';
 import { useStreakGoalData } from './StreakGoalCard.hooks';
 import type { StreakGoalCardProps } from './StreakGoalCard.types';
 import { dashboardStyles as s } from './styles/dashboard.styles';
@@ -35,7 +36,7 @@ export const StreakGoalCard = React.memo(function StreakGoalCard({
     <Animated.View
       accessibilityLabel={`Streak goal: ${currentStreak} of ${streakGoal} days, ${daysRemaining} remaining`}
       accessibilityRole="summary"
-      entering={FadeInDown.delay(150).springify().damping(18)}
+      entering={FadeInDown.duration(durations.enter).delay(150).easing(Easing.out(Easing.cubic))}
       style={s.container}
     >
       <CompactHero

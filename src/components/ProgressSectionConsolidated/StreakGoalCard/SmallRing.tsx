@@ -1,10 +1,18 @@
 /**
  * SmallRing — 72px ring variant for the compact hero.
  */
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Text, View } from 'react-native';
 import Svg, { Circle, Defs, LinearGradient, Stop } from 'react-native-svg';
+import Animated, {
+  Easing,
+  useAnimatedProps,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated';
+import { useReduceMotion } from '@/hooks/useReduceMotion';
 import { colors } from '@/theme';
+import { durations } from '@/theme/animations';
 import { compactStyles as s } from './styles/compact.styles';
 
 interface SmallRingProps {
@@ -13,10 +21,25 @@ interface SmallRingProps {
 
 const RADIUS = 30;
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
+const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
 export const SmallRing = React.memo(function SmallRing({ percent }: SmallRingProps) {
   const clamped = Math.max(0, Math.min(100, percent));
-  const offset = CIRCUMFERENCE - (clamped / 100) * CIRCUMFERENCE;
+  const reduceMotion = useReduceMotion();
+  const progress = useSharedValue(reduceMotion ? clamped : 0);
+
+  useEffect(() => {
+    progress.value = reduceMotion
+      ? clamped
+      : withTiming(clamped, {
+          duration: durations.progress,
+          easing: Easing.out(Easing.cubic),
+        });
+  }, [clamped, reduceMotion, progress]);
+
+  const animatedProps = useAnimatedProps(() => ({
+    strokeDashoffset: CIRCUMFERENCE - (progress.value / 100) * CIRCUMFERENCE,
+  }));
 
   return (
     <View style={s.ringSmallWrap}>
@@ -35,7 +58,8 @@ export const SmallRing = React.memo(function SmallRing({ percent }: SmallRingPro
           stroke={colors.gray[200]}
           strokeWidth={5}
         />
-        <Circle
+        <AnimatedCircle
+          animatedProps={animatedProps}
           cx={36}
           cy={36}
           fill="none"
@@ -44,7 +68,7 @@ export const SmallRing = React.memo(function SmallRing({ percent }: SmallRingPro
           rotation={-90}
           stroke="url(#smallRingGrad)"
           strokeDasharray={`${CIRCUMFERENCE}`}
-          strokeDashoffset={offset}
+          strokeDashoffset={CIRCUMFERENCE}
           strokeLinecap="round"
           strokeWidth={5}
         />

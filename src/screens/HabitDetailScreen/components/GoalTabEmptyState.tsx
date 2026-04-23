@@ -8,6 +8,7 @@ import Animated, { Easing, FadeInDown } from 'react-native-reanimated';
 import { useMutation } from 'convex/react';
 import { api } from '../../../../convex/_generated/api';
 import type { Id } from '../../../../convex/_generated/dataModel';
+import { durations } from '../../../theme/animations';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { typography, fontWeights } from '../../../theme/typography';
 import useHapticFeedback from '../../../hooks/useHapticFeedback';
@@ -41,7 +42,7 @@ export function GoalTabEmptyState({ habitId }: GoalTabEmptyStateProps) {
   return (
     <Animated.View
       className='items-center px-6 py-10'
-      entering={FadeInDown.duration(300).easing(Easing.out(Easing.cubic))}
+      entering={FadeInDown.duration(durations.enter).easing(Easing.out(Easing.cubic))}
     >
       <View
         className='mb-5 h-16 w-16 items-center justify-center rounded-2xl'
