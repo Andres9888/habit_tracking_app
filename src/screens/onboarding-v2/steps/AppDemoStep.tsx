@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ActivityIndicator, Pressable, Text, View } from 'react-native';
 import { useThemeColors } from '@/theme/ThemeContext';
 
@@ -14,8 +14,14 @@ export function AppDemoStep({ answers, onAnswerChange, onNext }: StepComponentPr
   const templates = useDemoTemplates(answers.categories);
   const [index, setIndex] = useState(0);
   const kept = answers.pickedTemplateIds;
+  const current = templates?.[index];
+  const outOfTemplates = Boolean(templates) && !current;
 
-  if (!templates) {
+  useEffect(() => {
+    if (outOfTemplates) onNext();
+  }, [outOfTemplates, onNext]);
+
+  if (!templates || !current) {
     return (
       <View style={{ alignItems: 'center', flex: 1, justifyContent: 'center' }}>
         <ActivityIndicator color={colors.primary[600]} />
@@ -23,16 +29,15 @@ export function AppDemoStep({ answers, onAnswerChange, onNext }: StepComponentPr
     );
   }
 
-  const current = templates[index];
-  const atEnd = !current || kept.length >= TARGET_KEEP;
-
-  if (atEnd) {
-    onNext();
-    return null;
-  }
-
   const respond = (keep: boolean) => {
-    if (keep) onAnswerChange({ pickedTemplateIds: [...kept, current._id] });
+    if (keep && kept.length < TARGET_KEEP) {
+      const nextKept = [...kept, current._id];
+      onAnswerChange({ pickedTemplateIds: nextKept });
+      if (nextKept.length >= TARGET_KEEP) {
+        onNext();
+        return;
+      }
+    }
     setIndex(index + 1);
   };
 
