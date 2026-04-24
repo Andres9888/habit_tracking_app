@@ -45,7 +45,7 @@ export function AppDemoStep({ answers, onAnswerChange, onNext }: StepComponentPr
     <View style={{ flex: 1, justifyContent: 'space-between' }}>
       <View>
         <HeroHeader
-          eyebrow={`Step 9 of 13 · Kept ${kept.length} / ${TARGET_KEEP}`}
+          eyebrow={`Kept ${kept.length} / ${TARGET_KEEP}`}
           headline="Swipe through. Keep the ones that feel right."
           sub={`You can change these later. Pick ${TARGET_KEEP - kept.length} more.`}
         />

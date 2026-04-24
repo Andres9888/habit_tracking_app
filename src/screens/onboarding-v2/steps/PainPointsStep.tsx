@@ -24,7 +24,6 @@ export function PainPointsStep({ answers, onAnswerChange, onNext }: StepComponen
         style={{ flex: 1 }}
       >
         <HeroHeader
-          eyebrow="Step 3 of 13"
           headline="What usually stops you from sticking with a new habit?"
           sub="Pick any that feel true. More than one is fine."
         />

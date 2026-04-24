@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { ActivityIndicator, Text, View } from 'react-native';
+import { ActivityIndicator, View } from 'react-native';
 import { useThemeColors } from '@/theme/ThemeContext';
 
 import { HeroHeader } from '../components/HeroHeader';
@@ -24,16 +24,6 @@ export function ProcessingStep({ onNext }: StepComponentProps) {
           sub="Based on what you said, and what usually works for people like you."
         />
       </View>
-      <Text
-        style={{
-          color: colors.text.tertiary,
-          fontSize: 12,
-          marginTop: 24,
-          textAlign: 'center',
-        }}
-      >
-        Step 8 of 13
-      </Text>
     </View>
   );
 }

@@ -31,7 +31,7 @@ export function PainAmplificationStep({ answers, onAnswerChange, onNext }: StepC
     <View style={{ flex: 1, justifyContent: 'space-between' }}>
       <View>
         <HeroHeader
-          eyebrow={`Step 5 of 13 · ${index + 1} of ${total}`}
+          eyebrow={`${index + 1} of ${total}`}
           headline="Does this sound like you?"
           sub="Tap one. You can change your mind later."
         />

@@ -22,7 +22,6 @@ export function SolutionStep({ answers, onNext }: StepComponentProps) {
         style={{ flex: 1 }}
       >
         <HeroHeader
-          eyebrow="Step 6 of 13"
           headline="Here's what you're getting."
           sub="Each thing you told us — addressed directly."
         />

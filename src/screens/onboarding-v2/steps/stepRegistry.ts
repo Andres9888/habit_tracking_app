@@ -5,6 +5,7 @@ import { AccountCreationStep } from './AccountCreationStep';
 import { AppDemoStep } from './AppDemoStep';
 import { CategoryPreferenceStep } from './CategoryPreferenceStep';
 import { GoalStep } from './GoalStep';
+import { NameStep } from './NameStep';
 import { NotificationPrimingStep } from './NotificationPrimingStep';
 import { PainAmplificationStep } from './PainAmplificationStep';
 import { PainPointsStep } from './PainPointsStep';
@@ -20,6 +21,7 @@ export const STEP_REGISTRY: Record<StepId, ComponentType<StepComponentProps>> = 
   appDemo: AppDemoStep,
   categoryPreference: CategoryPreferenceStep,
   goal: GoalStep,
+  name: NameStep,
   notificationPriming: NotificationPrimingStep,
   painAmplification: PainAmplificationStep,
   painPoints: PainPointsStep,

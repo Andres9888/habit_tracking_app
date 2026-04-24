@@ -4,6 +4,7 @@
 
 export type StepId =
   | 'welcome'
+  | 'name'
   | 'goal'
   | 'painPoints'
   | 'socialProof'
@@ -19,6 +20,7 @@ export type StepId =
 
 export const STEP_SEQUENCE: readonly StepId[] = [
   'welcome',
+  'name',
   'goal',
   'painPoints',
   'socialProof',
@@ -34,6 +36,7 @@ export const STEP_SEQUENCE: readonly StepId[] = [
 ] as const;
 
 export interface OnboardingAnswers {
+  name?: string;
   goal?: string;
   painPoints: string[];
   painAgreements: string[];

@@ -16,7 +16,6 @@ export function AccountCreationStep({ onNext }: StepComponentProps) {
     <View style={{ flex: 1, justifyContent: 'space-between' }}>
       <View>
         <HeroHeader
-          eyebrow="Step 12 of 13"
           headline={isSignedIn ? 'Your chain is saved.' : 'Save your chain.'}
           sub={
             isSignedIn

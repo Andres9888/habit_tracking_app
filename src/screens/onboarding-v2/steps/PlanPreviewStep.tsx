@@ -28,7 +28,6 @@ export function PlanPreviewStep({ answers, onNext }: StepComponentProps) {
         style={{ flex: 1 }}
       >
         <HeroHeader
-          eyebrow="Step 10 of 13"
           headline="Your first chain."
           sub="Three habits. One chain each. You'll see strength build as you go."
         />

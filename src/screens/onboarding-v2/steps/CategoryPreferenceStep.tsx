@@ -29,7 +29,6 @@ export function CategoryPreferenceStep({ answers, onAnswerChange, onNext }: Step
         style={{ flex: 1 }}
       >
         <HeroHeader
-          eyebrow="Step 7 of 13"
           headline="Which of these are you working on?"
           sub="Pick a few. We'll draw from here."
         />

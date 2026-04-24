@@ -17,7 +17,6 @@ export function GoalStep({ answers, onAnswerChange, onNext }: StepComponentProps
         style={{ flex: 1 }}
       >
         <HeroHeader
-          eyebrow="Step 2 of 13"
           headline="What are you trying to build?"
           sub="Pick one to start. You can add more later."
         />

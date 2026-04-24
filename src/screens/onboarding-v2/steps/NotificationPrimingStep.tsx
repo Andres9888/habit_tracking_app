@@ -39,7 +39,6 @@ export function NotificationPrimingStep({ answers, onNext }: StepComponentProps)
     <View style={{ flex: 1, justifyContent: 'space-between' }}>
       <View>
         <HeroHeader
-          eyebrow="Step 11 of 13"
           headline="One nudge. At the times you choose."
           sub={`For your ${joinNames(names)}. Nothing else. You can turn them off anytime in Settings.`}
         />

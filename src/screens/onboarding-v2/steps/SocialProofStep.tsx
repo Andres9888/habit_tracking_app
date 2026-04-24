@@ -18,7 +18,6 @@ export function SocialProofStep({ onNext }: StepComponentProps) {
         style={{ flex: 1 }}
       >
         <HeroHeader
-          eyebrow="Step 4 of 13"
           headline="You're not alone in this."
           sub="People who felt the same way and kept going."
         />

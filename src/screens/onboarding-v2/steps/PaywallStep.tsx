@@ -23,7 +23,6 @@ export function PaywallStep({ answers, onNext }: StepComponentProps) {
     <View style={{ flex: 1, justifyContent: 'space-between' }}>
       <View>
         <HeroHeader
-          eyebrow="Step 13 of 13"
           headline="Try ChainDay free."
           sub="Enough time to see your first habit hit iron."
         />
