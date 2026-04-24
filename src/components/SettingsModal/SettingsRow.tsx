@@ -13,6 +13,7 @@ import { ChevronRight } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
 import { typography, fontWeights } from '@/theme/typography';
 import { highContrastColors } from '@/theme/highContrastColors';
+import { durations, enterEasing } from '@/theme/animations';
 import * as Haptics from 'expo-haptics';
 import { AnimatedPressable } from '../ui/AnimatedPressable';
 import { getSettingsRowColors } from './SettingsRow.colors';
@@ -166,7 +167,7 @@ export function SettingsRow({
         {type === 'navigation' ? <View className='flex-row items-center gap-2'>
             {badge != null && badge > 0 ? <Animated.View
                 className='min-w-[22px] items-center justify-center rounded-full px-1.5 py-0.5'
-                entering={ZoomIn.springify().damping(18)}
+                entering={ZoomIn.duration(durations.enter).easing(enterEasing)}
                 style={{ backgroundColor: themeColors.surface }}
               >
                 <Text

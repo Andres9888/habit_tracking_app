@@ -3,6 +3,7 @@ import { Trophy } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
 import { LinearGradient } from 'expo-linear-gradient';
 import Animated, { FadeInDown } from 'react-native-reanimated';
+import { durations, enterEasing } from '../../../theme/animations';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { spacing, borderRadius, shadows } from '../../../theme/spacing';
 import { typography, fontWeights } from '../../../theme/typography';
@@ -21,7 +22,7 @@ export function CharacterCard({ data }: CharacterCardProps) {
 
   return (
     <Animated.View
-      entering={FadeInDown.delay(60).springify().damping(18)}
+      entering={FadeInDown.delay(60).duration(durations.enter).easing(enterEasing)}
       style={[
         styles.card,
         {

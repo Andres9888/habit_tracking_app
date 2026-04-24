@@ -31,6 +31,7 @@ import { useReduceMotion } from '@/hooks/useReduceMotion';
 import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '@/theme/ThemeContext';
 import { fontWeights, typography } from '@/theme/typography';
+import { durations, enterEasing } from '@/theme/animations';
 import {
   CUSTOM_PRESET_ID,
   matchPresetId,
@@ -102,7 +103,7 @@ export function AdvancedOptionsSection({
     <>
       <Animated.View
         className='mx-6 mt-6 overflow-hidden rounded-2xl'
-        entering={FadeInUp.delay(baseDelay + 40).springify().damping(18)}
+        entering={FadeInUp.delay(baseDelay + 40).duration(durations.enter).easing(enterEasing)}
         layout={reduceMotion ? undefined : LinearTransition.duration(220)}
         style={{
           backgroundColor: colors.card,

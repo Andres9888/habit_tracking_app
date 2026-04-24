@@ -7,6 +7,7 @@ import { Pressable, Text, View } from 'react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 
 import { useThemeColors } from '../../theme/ThemeContext';
+import { durations, enterEasing } from '../../theme/animations';
 import { typography, fontWeights } from '../../theme/typography';
 import useHapticFeedback from '../../hooks/useHapticFeedback';
 
@@ -38,7 +39,7 @@ export function StreakGoalSection({
   };
 
   return (
-    <Animated.View entering={FadeInUp.delay(340).springify().damping(18)}>
+    <Animated.View entering={FadeInUp.delay(340).duration(durations.enter).easing(enterEasing)}>
       <Text
         className="mb-2 mt-6 text-center uppercase"
         style={{

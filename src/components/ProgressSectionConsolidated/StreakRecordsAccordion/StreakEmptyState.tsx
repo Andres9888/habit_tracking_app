@@ -11,9 +11,10 @@ import { useThemeColors } from '../../../theme/ThemeContext';
 import { typography } from '@/theme/typography';
 import { borderRadius, spacing } from '@/theme/spacing';
 import { iconSizes } from '@/theme/iconSizes';
+import { enterEasing } from '@/theme/animations';
 
 const anim = (delay: number) =>
-  FadeInUp.duration(280).delay(delay).springify().damping(18);
+  FadeInUp.duration(280).delay(delay).easing(enterEasing);
 
 export function StreakEmptyState() {
   const { colors, isDark } = useThemeColors();

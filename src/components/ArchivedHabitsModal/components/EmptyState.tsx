@@ -3,8 +3,9 @@ import Animated, { FadeInUp } from 'react-native-reanimated';
 import { useThemeColors } from '@/theme/ThemeContext';
 import { borderRadius } from '@/theme/spacing';
 import { typography, fontWeights } from '@/theme/typography';
+import { enterEasing } from '@/theme/animations';
 
-const anim = (delay: number) => FadeInUp.duration(280).delay(delay).springify().damping(18);
+const anim = (delay: number) => FadeInUp.duration(280).delay(delay).easing(enterEasing);
 
 const s = StyleSheet.create({
   container: { alignItems: 'center', justifyContent: 'center', paddingHorizontal: 32, paddingVertical: 64 },

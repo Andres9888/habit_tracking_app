@@ -4,6 +4,7 @@
 
 import { View, Text } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
+import { durations, enterEasing } from '../../theme/animations';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { visualStyles as vs } from './onboarding.visuals.styles';
 
@@ -26,8 +27,8 @@ export function StrengthMeter({ reduceMotion }: { reduceMotion: boolean }) {
             reduceMotion
               ? undefined
               : FadeInDown.delay(400 + i * 200)
-                  .springify()
-                  .damping(18)
+                  .duration(durations.enter)
+                  .easing(enterEasing)
           }
           style={vs.strengthRow}
         >

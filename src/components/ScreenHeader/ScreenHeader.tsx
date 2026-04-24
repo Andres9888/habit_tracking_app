@@ -10,12 +10,12 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ChevronLeft, X } from 'lucide-react-native';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { usePressAnimation } from '../../hooks/usePressAnimation';
-import { durations, springs } from '../../theme/animations';
+import { durations, enterEasing } from '../../theme/animations';
 import type { ScreenHeaderProps } from './ScreenHeader.types';
 import { styles } from './ScreenHeader.styles';
 
-const ENTERING = FadeInDown.delay(0).duration(durations.enter).springify().damping(springs.standard.damping);
-const SUBTITLE_ENTERING = FadeInDown.delay(50).duration(durations.enter).springify().damping(springs.standard.damping);
+const ENTERING = FadeInDown.delay(0).duration(durations.enter).easing(enterEasing);
+const SUBTITLE_ENTERING = FadeInDown.delay(50).duration(durations.enter).easing(enterEasing);
 const ICON_SIZE = 24;
 
 export function ScreenHeader({

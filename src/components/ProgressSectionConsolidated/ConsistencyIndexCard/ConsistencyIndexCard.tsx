@@ -20,6 +20,7 @@ import { ChangeIndicator } from './ChangeIndicator';
 import { triggerHaptic } from '@/utils/haptics';
 import { useThemeColors } from '@/theme/ThemeContext';
 import { iconSizes } from '@/theme/iconSizes';
+import { durations, enterEasing } from '@/theme/animations';
 
 export function ConsistencyIndexCard({
   consistencyIndex,
@@ -48,7 +49,7 @@ export function ConsistencyIndexCard({
       accessibilityRole='summary'
       className='rounded-2xl border p-4 shadow-sm'
       style={{ borderColor: colors.border, backgroundColor: colors.card }}
-      entering={FadeInDown.delay(150).springify().damping(18)}
+      entering={FadeInDown.delay(150).duration(durations.enter).easing(enterEasing)}
     >
       {/* Header */}
       <View className='mb-3 flex-row items-center justify-between'>

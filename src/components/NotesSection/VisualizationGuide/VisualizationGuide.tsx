@@ -22,6 +22,7 @@ import { VisualizationCard } from './VisualizationCard';
 import { QuickTip } from './QuickTip';
 import { iconSizes } from '@/theme/iconSizes';
 import { triggerHaptic } from '@/utils/haptics';
+import { durations, enterEasing } from '@/theme/animations';
 
 export function VisualizationGuide({ habitName }: VisualizationGuideProps) {
   const { colors: themeColors } = useThemeColors();
@@ -71,7 +72,7 @@ export function VisualizationGuide({ habitName }: VisualizationGuideProps) {
       </View>
       <Animated.View
         className='gap-3'
-        entering={FadeInDown.delay(200).springify().damping(18)}
+        entering={FadeInDown.delay(200).duration(durations.enter).easing(enterEasing)}
       >
         <Text className='text-sm font-semibold uppercase tracking-widest' style={{ color: themeColors.text.secondary }}>
           Quick Practice

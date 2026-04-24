@@ -11,9 +11,10 @@ import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { borderRadius } from '@/theme/spacing';
 import { fontFamilies, fontWeights } from '@/theme/typography';
+import { enterEasing } from '@/theme/animations';
 
 const anim = (delay: number) =>
-  FadeInUp.duration(280).delay(delay).springify().damping(18);
+  FadeInUp.duration(280).delay(delay).easing(enterEasing);
 
 interface EmptyStateProps {
   height: number;

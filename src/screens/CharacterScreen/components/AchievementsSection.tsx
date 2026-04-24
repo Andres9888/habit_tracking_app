@@ -1,5 +1,6 @@
 import { View, StyleSheet } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
+import { durations, enterEasing } from '../../../theme/animations';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { spacing } from '../../../theme/spacing';
 import { typography } from '../../../theme/typography';
@@ -21,7 +22,7 @@ export function AchievementsSection({
   return (
     <View style={styles.section}>
       <Animated.Text
-        entering={FadeInDown.delay(BASE_DELAY).springify().damping(18)}
+        entering={FadeInDown.delay(BASE_DELAY).duration(durations.enter).easing(enterEasing)}
         style={[styles.sectionTitle, { color: colors.text.primary }]}
       >
         Recent Achievements

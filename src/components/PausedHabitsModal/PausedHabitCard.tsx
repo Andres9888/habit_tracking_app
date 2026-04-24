@@ -4,6 +4,7 @@ import Animated, { FadeInUp } from 'react-native-reanimated';
 import { useThemeColors } from '../../theme/ThemeContext';
 import type { Id } from '../../../convex/_generated/dataModel';
 import { fontFamilies } from '@/theme/typography';
+import { enterEasing } from '@/theme/animations';
 
 interface PausedHabitCardProps {
   habit: {
@@ -29,8 +30,7 @@ export function PausedHabitCard({
       className='gap-3 rounded-2xl p-4'
       entering={FadeInUp.duration(280)
         .delay(60 + index * 60)
-        .springify()
-        .damping(18)}
+        .easing(enterEasing)}
       style={{
         backgroundColor: colors.card,
         elevation: 4,

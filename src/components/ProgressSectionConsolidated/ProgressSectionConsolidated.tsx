@@ -14,6 +14,7 @@ import { View } from 'react-native';
 
 import Animated, { FadeInDown } from 'react-native-reanimated';
 
+import { durations, enterEasing } from '../../theme/animations';
 import { shadows } from '../../theme/spacing';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { ActionableTipCard } from './ActionableTipCard';
@@ -62,7 +63,7 @@ export function ProgressSectionConsolidated({
     <Animated.View
       accessibilityLabel='Progress section'
       accessibilityRole='summary'
-      entering={FadeInDown.delay(100).springify().damping(18)}
+      entering={FadeInDown.delay(100).duration(durations.enter).easing(enterEasing)}
     >
       {/* Unified Card Container */}
       <View

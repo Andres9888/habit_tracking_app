@@ -5,7 +5,7 @@ import Animated, { FadeInUp } from 'react-native-reanimated';
 import { BlurView } from 'expo-blur';
 import { RotateCcw, Trash2, X } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
-import { durations, springs } from '../../../theme/animations';
+import { durations, enterEasing } from '../../../theme/animations';
 import { borderRadius } from '../../../theme/spacing';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { typography, fontWeights } from '@/theme/typography';
@@ -16,7 +16,7 @@ import {
   CAPSULE_SHADOW,
 } from '../../../features/habits/components/BottomActionBar/BottomActionBar.styles';
 
-const ENTERING = FadeInUp.duration(durations.enter).springify().damping(springs.standard.damping);
+const ENTERING = FadeInUp.duration(durations.enter).easing(enterEasing);
 const CAPSULE_RADIUS = 32;
 const HIT = { bottom: 18, left: 18, right: 18, top: 18 };
 

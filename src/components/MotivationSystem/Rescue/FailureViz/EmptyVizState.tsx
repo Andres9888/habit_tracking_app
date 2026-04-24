@@ -10,9 +10,10 @@ import { iconSizes } from '@/theme/iconSizes';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import { fontFamilies, fontWeights } from '@/theme/typography';
+import { enterEasing } from '@/theme/animations';
 
 const anim = (delay: number) =>
-  FadeInUp.duration(280).delay(delay).springify().damping(18);
+  FadeInUp.duration(280).delay(delay).easing(enterEasing);
 
 export function EmptyVizState() {
   const { colors, isDark } = useThemeColors();

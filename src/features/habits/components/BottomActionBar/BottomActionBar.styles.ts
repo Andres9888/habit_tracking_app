@@ -1,10 +1,10 @@
 import { StyleSheet } from 'react-native';
 import { FadeInUp } from 'react-native-reanimated';
 import { colors } from '@/theme';
-import { durations, springs } from '../../../../theme/animations';
+import { durations, enterEasing } from '../../../../theme/animations';
 import { borderRadius } from '../../../../theme/spacing';
 
-export const ENTERING = FadeInUp.duration(durations.enter).springify().damping(springs.standard.damping);
+export const ENTERING = FadeInUp.duration(durations.enter).easing(enterEasing);
 export const BLUR_INTENSITY = 50;
 export const CAPSULE_RADIUS = 32;
 export const BORDER_LIGHT = 'rgba(255,255,255,0.5)';
