@@ -1,0 +1,432 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Goal Section — Before vs After</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Literata:ital@0;1&family=JetBrains+Mono:wght@400;600;700&display=swap"
+    />
+    <style>
+      :root {
+        --bg-gradient: linear-gradient(180deg, #f5efe6 0%, #efe7db 100%);
+        --card-bg: #edeae5;
+        --text-primary: #2d2a26;
+        --text-secondary: #6b6560;
+        --border-subtle: rgba(45, 42, 38, 0.08);
+        --shadow-card: 0 1px 2px rgba(45, 42, 38, 0.06),
+          0 4px 12px rgba(45, 42, 38, 0.06);
+        --streak-bg: #fff7dc;
+        --streak-border: #f5c752;
+        --streak-text: #a56d12;
+        --parchment-bg: #fff5e8;
+        --parchment-border: #fed7aa;
+        --parchment-label: #b45309;
+      }
+      body {
+        font-family: "Inter", -apple-system, system-ui, sans-serif !important;
+        color: var(--text-primary);
+      }
+      .phone {
+        width: 390px;
+        height: 820px;
+        border-radius: 36px;
+        background: var(--bg-gradient);
+        box-shadow:
+          0 20px 60px rgba(0, 0, 0, 0.2),
+          0 0 0 10px #1a1a1a,
+          0 0 0 12px #2a2a2a;
+        overflow: hidden;
+        position: relative;
+      }
+      .phone-inner {
+        padding: 14px 0 0 0;
+        height: 100%;
+        overflow-y: auto;
+      }
+      .card {
+        background: var(--card-bg);
+        border-radius: 16px;
+        box-shadow: var(--shadow-card);
+      }
+      .mono {
+        font-family: "JetBrains Mono", monospace !important;
+      }
+      .serif-italic {
+        font-family: "Literata", serif !important;
+        font-style: italic;
+      }
+      .parchment {
+        background: var(--parchment-bg);
+        border: 1px solid var(--parchment-border);
+      }
+      .streak-pill {
+        background: var(--streak-bg);
+        border: 1px solid var(--streak-border);
+      }
+      .nested-card {
+        background: #ffffff;
+        border: 1px solid #e5e5e5;
+        border-radius: 10px;
+      }
+      .heatmap-grid {
+        display: grid;
+        grid-template-columns: repeat(26, 1fr);
+        gap: 2px;
+      }
+      .heatmap-cell {
+        aspect-ratio: 1;
+        background: #e8e1d4;
+        border-radius: 2px;
+      }
+      .heatmap-cell.lv1 {
+        background: #d9c9a3;
+      }
+      .heatmap-cell.lv2 {
+        background: #b8964d;
+      }
+      .heatmap-cell.lv3 {
+        background: #8b6a2b;
+      }
+      .ring {
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        background: conic-gradient(#b8964d 0% 62%, #e8e1d4 62% 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+      }
+      .ring::before {
+        content: "";
+        position: absolute;
+        inset: 6px;
+        border-radius: 50%;
+        background: #ffffff;
+      }
+      .ring-label {
+        position: relative;
+        font-size: 14px;
+        font-weight: 700;
+      }
+      .progress-bar {
+        height: 6px;
+        background: #e8e1d4;
+        border-radius: 999px;
+        overflow: hidden;
+      }
+      .progress-bar > span {
+        display: block;
+        height: 100%;
+        width: 62%;
+        background: linear-gradient(90deg, #b8964d, #8b6a2b);
+      }
+      .label-mismatch {
+        color: #b91c1c;
+      }
+      .label-match {
+        color: #047857;
+      }
+      .tag {
+        display: inline-flex;
+        align-items: center;
+        padding: 2px 8px;
+        border-radius: 999px;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.02em;
+      }
+      .tag-before {
+        background: #fee2e2;
+        color: #b91c1c;
+      }
+      .tag-after {
+        background: #d1fae5;
+        color: #047857;
+      }
+    </style>
+  </head>
+  <body class="min-h-screen bg-stone-100 p-8">
+    <header class="mx-auto mb-8 max-w-6xl">
+      <h1 class="text-2xl font-bold tracking-tight">
+        Goal section visual consistency — before vs after
+      </h1>
+      <p class="mt-1 text-sm text-stone-600">
+        Approximated React Native render. Calendar, Strength, Goal sections in
+        scroll order.
+      </p>
+    </header>
+
+    <div class="mx-auto grid max-w-6xl grid-cols-1 gap-10 lg:grid-cols-2">
+      <!-- BEFORE -->
+      <div>
+        <div class="mb-3 flex items-center gap-2">
+          <span class="tag tag-before">BEFORE</span>
+          <span class="text-sm font-semibold label-mismatch">
+            Goal floats flat · nested sub-cards · non-theme colors
+          </span>
+        </div>
+        <div class="phone">
+          <div class="phone-inner">
+            <!-- hero placeholder -->
+            <div class="mx-4 h-20 rounded-2xl bg-white/40"></div>
+            <!-- sticky tabs -->
+            <div class="mx-4 mt-3 flex gap-6 border-b border-stone-300 pb-2 text-xs font-semibold uppercase tracking-wider">
+              <span class="text-stone-700">Calendar</span>
+              <span class="text-stone-400">Strength</span>
+              <span class="text-stone-400">Goal</span>
+            </div>
+
+            <!-- Calendar section (card) -->
+            <div class="card mx-4 mt-3 overflow-hidden p-4">
+              <div class="mb-2 flex items-center justify-between">
+                <span class="text-sm font-semibold">Year Overview</span>
+                <span class="mono text-[10px] text-stone-500">2026</span>
+              </div>
+              <div class="heatmap-grid">
+                <!-- 52 cells -->
+                <template id="hm"></template>
+              </div>
+            </div>
+
+            <!-- Strength section (card) -->
+            <div class="card mx-4 mt-4 overflow-hidden p-4">
+              <div class="mb-3 flex items-center justify-between">
+                <span class="text-base font-bold">Habit Strength</span>
+                <span class="rounded-full bg-white px-2 py-0.5 text-[10px] font-semibold">
+                  1M · 1Y · All
+                </span>
+              </div>
+              <div class="flex items-end gap-3">
+                <span class="mono text-3xl font-bold">72<span class="text-sm text-stone-400">/100</span></span>
+                <span class="mb-1 text-xs text-stone-500">vs last month</span>
+              </div>
+              <div class="mt-3 h-16 rounded-lg bg-gradient-to-br from-amber-100 to-amber-200/40"></div>
+            </div>
+
+            <!-- Goal section — BAD: no outer card, nested sub-cards, px-5 offset -->
+            <div class="mt-4">
+              <div class="px-5">
+                <!-- parchment Why pill -->
+                <div class="parchment mb-3 flex items-start gap-3 rounded-2xl px-4 py-3">
+                  <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-white text-lg">📖</div>
+                  <div>
+                    <div class="text-[10px] font-bold uppercase tracking-widest" style="color: var(--parchment-label)">
+                      My why
+                    </div>
+                    <div class="serif-italic mt-0.5 text-sm" style="color: #44312a">
+                      "Because future me will be grateful."
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Nested sub-cards each with own bg/border -->
+                <div class="nested-card mb-2.5 flex items-center gap-4 p-4">
+                  <div class="ring">
+                    <span class="ring-label">62%</span>
+                  </div>
+                  <div class="flex-1">
+                    <div class="text-xs uppercase tracking-wider text-stone-500">Current</div>
+                    <div class="mono text-xl font-bold">
+                      18 <span class="text-sm text-stone-400">/ 30 days</span>
+                    </div>
+                    <div class="progress-bar mt-2"><span></span></div>
+                  </div>
+                </div>
+
+                <!-- Next milestone pill (intentional gold — keep) -->
+                <div class="streak-pill mb-2.5 flex items-center gap-3 rounded-xl px-4 py-3.5">
+                  <span class="text-2xl">🏆</span>
+                  <div class="flex-1">
+                    <div class="text-[10px] font-bold uppercase tracking-widest" style="color: var(--streak-text)">
+                      Next milestone
+                    </div>
+                    <div class="text-sm font-semibold">Three weeks strong</div>
+                  </div>
+                  <div class="text-right">
+                    <div class="mono text-lg font-bold" style="color: var(--streak-text)">3d</div>
+                    <div class="text-[9px]" style="color: var(--streak-text)">to go</div>
+                  </div>
+                </div>
+
+                <!-- Milestones row (own bg) -->
+                <div class="nested-card mb-2.5 px-4 py-3">
+                  <div class="mb-1 text-[10px] font-semibold uppercase tracking-widest text-stone-500">
+                    Milestones
+                  </div>
+                  <div class="flex gap-2 text-xl">
+                    <span>🌱</span><span>🌿</span><span class="opacity-100">🪴</span
+                    ><span class="opacity-40">🌳</span><span class="opacity-40">🏆</span>
+                  </div>
+                </div>
+
+                <!-- Projected banner (own bg) -->
+                <div class="nested-card flex items-center px-5 py-3.5">
+                  <div>
+                    <div class="text-[10px] font-semibold uppercase tracking-widest text-stone-500">
+                      Projected completion
+                    </div>
+                  </div>
+                  <div class="mono ml-auto text-xs font-semibold text-amber-700">May 11</div>
+                </div>
+
+                <!-- Adjust goal — centered bottom link -->
+                <div class="mt-3 flex justify-center">
+                  <span class="text-xs font-semibold text-stone-500 underline">Adjust goal</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="h-12"></div>
+          </div>
+        </div>
+        <ul class="mt-3 list-disc pl-5 text-xs text-stone-700">
+          <li>Goal area has <b>no outer card</b> — feels unenclosed compared to Calendar &amp; Strength</li>
+          <li>Four stacked <b>sub-cards</b> create "card-inside-screen" clutter</li>
+          <li>Sub-cards use hardcoded <code>light.surface</code> + <code>gray[200]</code> — breaks dark mode</li>
+          <li>Horizontal inset is <code>px-5</code>, not <code>mx-4</code> like Strength</li>
+        </ul>
+      </div>
+
+      <!-- AFTER -->
+      <div>
+        <div class="mb-3 flex items-center gap-2">
+          <span class="tag tag-after">AFTER</span>
+          <span class="text-sm font-semibold label-match">
+            One cohesive card · flat inner content · theme-aware
+          </span>
+        </div>
+        <div class="phone">
+          <div class="phone-inner">
+            <div class="mx-4 h-20 rounded-2xl bg-white/40"></div>
+            <div class="mx-4 mt-3 flex gap-6 border-b border-stone-300 pb-2 text-xs font-semibold uppercase tracking-wider">
+              <span class="text-stone-400">Calendar</span>
+              <span class="text-stone-400">Strength</span>
+              <span class="text-stone-700">Goal</span>
+            </div>
+
+            <!-- Calendar (unchanged) -->
+            <div class="card mx-4 mt-3 overflow-hidden p-4">
+              <div class="mb-2 flex items-center justify-between">
+                <span class="text-sm font-semibold">Year Overview</span>
+                <span class="mono text-[10px] text-stone-500">2026</span>
+              </div>
+              <div class="heatmap-grid"></div>
+            </div>
+
+            <!-- Strength (unchanged) -->
+            <div class="card mx-4 mt-4 overflow-hidden p-4">
+              <div class="mb-3 flex items-center justify-between">
+                <span class="text-base font-bold">Habit Strength</span>
+                <span class="rounded-full bg-white px-2 py-0.5 text-[10px] font-semibold">
+                  1M · 1Y · All
+                </span>
+              </div>
+              <div class="flex items-end gap-3">
+                <span class="mono text-3xl font-bold">72<span class="text-sm text-stone-400">/100</span></span>
+                <span class="mb-1 text-xs text-stone-500">vs last month</span>
+              </div>
+              <div class="mt-3 h-16 rounded-lg bg-gradient-to-br from-amber-100 to-amber-200/40"></div>
+            </div>
+
+            <!-- Goal — NEW: outer card, header row, flat sub-content -->
+            <div class="card mx-4 mt-4 overflow-hidden p-5">
+              <!-- header row: title + trailing Adjust link -->
+              <div class="mb-4 flex items-center justify-between">
+                <span class="text-base font-bold">Goal</span>
+                <span class="text-xs font-semibold text-stone-500 underline">Adjust goal</span>
+              </div>
+
+              <!-- parchment Why (preserved accent) -->
+              <div class="parchment mb-3 flex items-start gap-3 rounded-2xl px-4 py-3">
+                <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-white text-lg">📖</div>
+                <div>
+                  <div class="text-[10px] font-bold uppercase tracking-widest" style="color: var(--parchment-label)">
+                    My why
+                  </div>
+                  <div class="serif-italic mt-0.5 text-sm" style="color: #44312a">
+                    "Because future me will be grateful."
+                  </div>
+                </div>
+              </div>
+
+              <!-- CompactHero — FLAT (no bg, no border) -->
+              <div class="mb-3 flex items-center gap-4">
+                <div class="ring"><span class="ring-label">62%</span></div>
+                <div class="flex-1">
+                  <div class="text-xs uppercase tracking-wider text-stone-500">Current</div>
+                  <div class="mono text-xl font-bold">
+                    18 <span class="text-sm text-stone-400">/ 30 days</span>
+                  </div>
+                  <div class="progress-bar mt-2"><span></span></div>
+                </div>
+              </div>
+
+              <!-- Next milestone pill — kept as intentional gold accent -->
+              <div class="streak-pill mb-3 flex items-center gap-3 rounded-xl px-4 py-3.5">
+                <span class="text-2xl">🏆</span>
+                <div class="flex-1">
+                  <div class="text-[10px] font-bold uppercase tracking-widest" style="color: var(--streak-text)">
+                    Next milestone
+                  </div>
+                  <div class="text-sm font-semibold">Three weeks strong</div>
+                </div>
+                <div class="text-right">
+                  <div class="mono text-lg font-bold" style="color: var(--streak-text)">3d</div>
+                  <div class="text-[9px]" style="color: var(--streak-text)">to go</div>
+                </div>
+              </div>
+
+              <!-- Milestones row — FLAT -->
+              <div class="mb-3">
+                <div class="mb-1 text-[10px] font-semibold uppercase tracking-widest text-stone-500">
+                  Milestones
+                </div>
+                <div class="flex gap-2 text-xl">
+                  <span>🌱</span><span>🌿</span><span>🪴</span
+                  ><span class="opacity-40">🌳</span><span class="opacity-40">🏆</span>
+                </div>
+              </div>
+
+              <!-- Projected banner — FLAT -->
+              <div class="flex items-center">
+                <div class="text-[10px] font-semibold uppercase tracking-widest text-stone-500">
+                  Projected completion
+                </div>
+                <div class="mono ml-auto text-xs font-semibold text-amber-700">May 11</div>
+              </div>
+            </div>
+
+            <div class="h-12"></div>
+          </div>
+        </div>
+        <ul class="mt-3 list-disc pl-5 text-xs text-stone-700">
+          <li>Goal sits in <b>one rounded card</b> aligned with Strength (mx-4, rounded-2xl, colors.card, shadows.card)</li>
+          <li>Section <b>header</b> "Goal" with right-aligned <i>Adjust goal</i> link, mirroring Strength's title pattern</li>
+          <li>CompactHero / MilestonesRow / ProjectedBanner render <b>flat</b> inside the card — no nested chrome</li>
+          <li>Only intentional accents remain: gold <b>Next milestone</b> pill + parchment <b>My why</b> pill</li>
+          <li>Uses <code>colors.card</code> + <code>colors.text.primary</code> — responds to dark mode</li>
+        </ul>
+      </div>
+    </div>
+
+    <script>
+      // fill heatmap grids with pseudo-random cells for visual fidelity
+      function fillHeatmap(container) {
+        for (let i = 0; i < 26 * 7; i++) {
+          const cell = document.createElement("div");
+          cell.className = "heatmap-cell";
+          const roll = Math.random();
+          if (roll > 0.9) cell.classList.add("lv3");
+          else if (roll > 0.7) cell.classList.add("lv2");
+          else if (roll > 0.4) cell.classList.add("lv1");
+          container.appendChild(cell);
+        }
+      }
+      document.querySelectorAll(".heatmap-grid").forEach(fillHeatmap);
+    </script>
+  </body>
+</html>
