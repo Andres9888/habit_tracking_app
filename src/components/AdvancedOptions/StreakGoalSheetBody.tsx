@@ -34,9 +34,7 @@ export function StreakGoalSheetBody({ streakGoal, onStreakGoalChange }: Props) {
         className='mb-4'
         style={{ ...typography.caption, color: colors.text.tertiary }}
       >
-        {streakGoal > 0
-          ? `Aim for ${streakGoal} day${streakGoal === 1 ? '' : 's'}`
-          : 'No goal set'}
+        {streakGoal > 0 ? `${streakGoal}-day target` : 'No target set'}
       </Text>
       <View className='flex-row flex-wrap gap-2'>
         {PRESETS.map(({ days, label }) => {
