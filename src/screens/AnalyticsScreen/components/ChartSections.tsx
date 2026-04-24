@@ -3,9 +3,9 @@
  */
 import React, { memo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { colors } from '../../../theme/colors';
 import { typography } from '../../../theme/typography';
 import { spacing } from '../../../theme/spacing';
+import { useThemeColors } from '../../../theme/ThemeContext';
 import StrengthDistributionChart from '../../../components/StrengthDistributionChart';
 import type { StrengthDistributionData } from '../../../components/StrengthDistributionChart/StrengthDistributionChart.types';
 import TrendLineChart from '../../../components/TrendLineChart';
@@ -22,6 +22,8 @@ export const ChartSections = memo(function ChartSections({
   complianceData,
   isLoading = false,
 }: ChartSectionsProps) {
+  const { colors } = useThemeColors();
+  const titleStyle = [styles.sectionTitle, { color: colors.text.primary }];
   const strengthAccessibilityLabel = strengthDistribution
     ? `Habit strength distribution: ${strengthDistribution.automatic.count} automatic, ${strengthDistribution.strong.count} strong, ${strengthDistribution.developing.count} developing, ${strengthDistribution.building.count} building, ${strengthDistribution.starting.count} starting habits`
     : 'Loading chart';
@@ -34,7 +36,7 @@ export const ChartSections = memo(function ChartSections({
         <Text
           accessibilityLabel='Strength Distribution Chart'
           accessibilityRole='header'
-          style={styles.sectionTitle}
+          style={titleStyle}
         >
           Strength Distribution
         </Text>
@@ -50,7 +52,7 @@ export const ChartSections = memo(function ChartSections({
         <Text
           accessibilityLabel='30-Day Trend Chart'
           accessibilityRole='header'
-          style={styles.sectionTitle}
+          style={titleStyle}
         >
           30-Day Trend
         </Text>
@@ -70,7 +72,7 @@ export const ChartSections = memo(function ChartSections({
         <Text
           accessibilityLabel='Compliance Heatmap Chart'
           accessibilityRole='header'
-          style={styles.sectionTitle}
+          style={titleStyle}
         >
           Compliance Heatmap
         </Text>
@@ -94,5 +96,5 @@ export const ChartSections = memo(function ChartSections({
 
 const styles = StyleSheet.create({
   section: { marginBottom: spacing.xl, paddingHorizontal: spacing.lg },
-  sectionTitle: { ...typography.heading3, color: colors.text.primary, marginBottom: spacing.md },
+  sectionTitle: { ...typography.heading3, marginBottom: spacing.md },
 });

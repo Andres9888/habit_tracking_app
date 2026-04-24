@@ -3,14 +3,12 @@
  */
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { colors } from '../../../theme/colors';
 import { typography } from '../../../theme/typography';
 import { spacing } from '../../../theme/spacing';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import WeeklyInsightsCard from '../../../components/WeeklyInsightsCard';
 import HabitRankingsList from '../../../components/HabitRankingsList';
-import type { WeeklyInsights } from '../AnalyticsScreen.types';
-import type { RankedHabit } from '../AnalyticsScreen.types';
+import type { WeeklyInsights, RankedHabit } from '../AnalyticsScreen.types';
 
 interface InsightsSectionsProps {
   weeklyInsights: WeeklyInsights | undefined;
@@ -41,7 +39,9 @@ export const InsightsSections: React.FC<InsightsSectionsProps> = ({
       </View>
 
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Habit Rankings</Text>
+        <Text style={[styles.sectionTitle, { color: colors.text.primary }]}>
+          Habit Rankings
+        </Text>
         <HabitRankingsList
           habits={rankedHabits.map((h) => ({
             id: h.id,
@@ -66,7 +66,6 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     ...typography.heading3,
-    color: colors.text.primary,
     marginBottom: spacing.md,
   },
 });
