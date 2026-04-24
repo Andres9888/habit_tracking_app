@@ -20,7 +20,7 @@ export function WelcomeStep({ onNext }: StepComponentProps) {
             marginBottom: 40,
           }}
         >
-          {['#B87333', '#B87333', '#6B7280', '#6B7280', '#6B7280', '#D4A82A', '#D4A82A'].map(
+          {['#B87333', '#B87333', '#6B7280', '#6B7280', '#6B7280', '#D4A23F', '#D4A23F'].map(
             (color, i) => (
               <View
                 key={`${color}-${i}`}
