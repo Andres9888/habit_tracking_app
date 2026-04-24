@@ -7,6 +7,7 @@ import { useState } from 'react';
 import { View, Text, TextInput, Keyboard } from 'react-native';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import { useThemeColors } from '../../theme';
+import { enterEasing } from '@/theme/animations';
 import { spacing } from '@/theme/spacing';
 import { typography } from '@/theme/typography';
 import { buildTextInputHintProps } from '@/utils/textInputHintProps';
@@ -30,7 +31,7 @@ export function NameInputSection({
     >
       <Animated.View
         className='mb-6'
-        entering={FadeInDown.duration(280).delay(100).springify().damping(18)}
+        entering={FadeInDown.duration(280).delay(100).easing(enterEasing)}
       >
         <Text
           accessibilityRole='header'
@@ -42,7 +43,7 @@ export function NameInputSection({
       </Animated.View>
 
       {/* Name Input */}
-      <Animated.View className='w-full' entering={FadeInUp.duration(280).delay(160).springify().damping(18)}>
+      <Animated.View className='w-full' entering={FadeInUp.duration(280).delay(160).easing(enterEasing)}>
         <TextInput
           accessibilityLabel='Habit name'
           className='w-full rounded-2xl border-2 px-5 py-4 text-center text-[22px] font-medium'

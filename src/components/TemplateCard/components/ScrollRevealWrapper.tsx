@@ -4,6 +4,7 @@
 
 import React from 'react';
 import Animated, { FadeIn, FadeInUp } from 'react-native-reanimated';
+import { durations, enterEasing } from '../../../theme/animations';
 
 interface ScrollRevealWrapperProps {
   children: React.ReactNode;
@@ -22,7 +23,7 @@ export function ScrollRevealWrapper({
 
   const animation = reducedMotion
     ? FadeIn.duration(0)
-    : FadeInUp.duration(350).springify().damping(18).stiffness(150);
+    : FadeInUp.duration(durations.enter).easing(enterEasing);
 
   return <Animated.View entering={animation}>{children}</Animated.View>;
 }

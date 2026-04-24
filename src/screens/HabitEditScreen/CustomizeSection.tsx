@@ -14,10 +14,11 @@ import { ColorPickerSection } from '../../components/CreateHabitModal/components
 import { EnhancedReminderSelector } from '../../components/CreateHabitModal/components/EnhancedReminderSelector';
 import { HABIT_COLORS } from '../../components/CreateHabitModal/constants';
 import { useThemeColors } from '../../theme/ThemeContext';
+import { durations, enterEasing } from '../../theme/animations';
 import { fontWeights, typography } from '../../theme/typography';
 
 const entrance = (delay: number) =>
-  FadeInUp.delay(delay).springify().damping(18);
+  FadeInUp.delay(delay).duration(durations.enter).easing(enterEasing);
 
 interface CustomizeSectionProps {
   habitName: string;

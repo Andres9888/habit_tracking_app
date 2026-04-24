@@ -4,11 +4,11 @@ import { BlurView } from 'expo-blur';
 import { ChevronLeft } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
 import type { EdgeInsets } from 'react-native-safe-area-context';
-import { durations, springs } from '@/theme/animations';
+import { durations, enterEasing } from '@/theme/animations';
 import { useThemeColors } from '@/theme/ThemeContext';
 import { typography, fontWeights } from '@/theme/typography';
 
-const ENTERING = FadeInDown.duration(durations.enter).springify().damping(springs.standard.damping);
+const ENTERING = FadeInDown.duration(durations.enter).easing(enterEasing);
 
 interface ModalHeaderProps {
   insets: EdgeInsets;

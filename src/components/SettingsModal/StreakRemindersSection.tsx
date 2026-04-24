@@ -15,6 +15,7 @@ import { SettingsRow } from './SettingsRow';
 import { SettingsSection } from './SettingsSection';
 import { AnimatedPressable } from '../ui/AnimatedPressable';
 import { useThemeColors } from '@/theme/ThemeContext';
+import { enterEasing } from '@/theme/animations';
 import {
   timeStringToDate,
   dateToTimeString,
@@ -78,7 +79,7 @@ export function StreakRemindersSection({
         onToggle={(v) => void onToggle(v)}
       />
       {enabled ? <Animated.View
-          entering={FadeInDown.duration(200).springify().damping(18)}
+          entering={FadeInDown.duration(200).easing(enterEasing)}
           exiting={FadeOutUp.duration(150)}
         >
           <View
@@ -202,7 +203,7 @@ export function StreakRemindersSection({
           </View>
         </Animated.View> : null}
       {enabled ? null : <Animated.View
-          entering={FadeInDown.duration(200).springify().damping(18)}
+          entering={FadeInDown.duration(200).easing(enterEasing)}
           exiting={FadeOutUp.duration(150)}
         >
           <View className='px-4 pb-3'>

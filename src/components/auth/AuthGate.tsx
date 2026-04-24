@@ -21,8 +21,9 @@ import { BrandedLoadingScreen } from './BrandedLoadingScreen';
 import { OnboardingScreen } from '../../screens/onboarding/OnboardingScreen';
 import { useOnboardingStatus } from '../../screens/onboarding/useOnboardingStatus';
 import WelcomeScreen from '../../screens/auth/WelcomeScreen';
+import { enterEasing } from '../../theme/animations';
 
-const ENTER = FadeInDown.duration(280).springify().damping(18);
+const ENTER = FadeInDown.duration(280).easing(enterEasing);
 const EXIT = FadeOut.duration(300);
 
 function getScreenKey(isSignedIn: boolean, onboardingComplete: boolean) {

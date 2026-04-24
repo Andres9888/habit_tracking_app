@@ -9,6 +9,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Brain, ChevronDown, ChevronUp } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '@/theme/ThemeContext';
+import { durations, enterEasing } from '@/theme/animations';
 import { TechniqueApproach } from './TechniqueApproach';
 import type { VisualizationCardProps } from './VisualizationGuide.types';
 import { triggerHaptic } from '@/utils/haptics';
@@ -26,7 +27,7 @@ export function VisualizationCard({ technique }: VisualizationCardProps) {
     <Animated.View
       className='overflow-hidden rounded-2xl border'
       style={{ borderColor: themeColors.border, backgroundColor: themeColors.card }}
-      entering={FadeInDown.delay(100).springify().damping(18)}
+      entering={FadeInDown.delay(100).duration(durations.enter).easing(enterEasing)}
     >
       <Pressable
         accessibilityLabel={`${expanded ? 'Collapse' : 'Expand'} ${technique.good.title} technique`}

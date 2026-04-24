@@ -20,7 +20,7 @@ import {
   Volume2,
 } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
-import { durations } from '@/theme/animations';
+import { durations, enterEasing } from '@/theme/animations';
 import Constants from 'expo-constants';
 import { StyleSheet, View } from 'react-native';
 import Animated, {
@@ -53,8 +53,8 @@ const STAGGER = durations.stagger; // 60ms per design system
 const MAX_STAGGER_ITEMS = 6;
 const anim = (index: number) =>
   FadeInDown.delay(Math.min(index, MAX_STAGGER_ITEMS) * STAGGER)
-    .springify()
-    .damping(18);
+    .duration(durations.enter)
+    .easing(enterEasing);
 
 const SCROLL_STYLES = StyleSheet.create({
   wrapper: {

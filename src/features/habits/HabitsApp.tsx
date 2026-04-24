@@ -28,8 +28,9 @@ import { useHabitsAppHandlers } from './useHabitsAppHandlers';
 import { useBottomBarProps } from './useBottomBarProps';
 import { schedulePostLaunchAppPreload } from './postLaunchPreload';
 import { useTemplatesWarmup } from './hooks/useTemplatesWarmup';
+import { enterEasing } from '../../theme/animations';
 
-const ENTERING = FadeInDown.duration(280).springify().damping(18);
+const ENTERING = FadeInDown.duration(280).easing(enterEasing);
 const styles = StyleSheet.create({ flex1: { flex: 1 } });
 
 // eslint-disable-next-line max-lines-per-function

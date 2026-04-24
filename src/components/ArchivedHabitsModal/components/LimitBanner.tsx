@@ -2,12 +2,12 @@ import { Pressable, Text, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { Lock } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
-import { durations, springs } from '@/theme/animations';
+import { durations, enterEasing } from '@/theme/animations';
 import { useThemeColors } from '@/theme/ThemeContext';
 import { borderRadius } from '@/theme/spacing';
 import { fontWeights, typography } from '@/theme/typography';
 
-const ENTERING = FadeInDown.duration(durations.enter).springify().damping(springs.standard.damping);
+const ENTERING = FadeInDown.duration(durations.enter).easing(enterEasing);
 
 interface LimitBannerProps {
   onUpgradePress: () => void;

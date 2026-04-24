@@ -4,7 +4,7 @@ import { Text, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { shadows } from '@/theme';
 import { typography, fontWeights } from '@/theme/typography';
-import { durations, springs } from '@/theme/animations';
+import { durations, enterEasing } from '@/theme/animations';
 import { ScreenHeader } from '@/components/ScreenHeader';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { SORT_SECTIONS } from './SortPicker.constants';
@@ -18,7 +18,7 @@ interface SortPickerProps {
 }
 
 const stagger = (index: number) =>
-  FadeInDown.delay(Math.min(index, 5) * durations.stagger).springify().damping(springs.standard.damping);
+  FadeInDown.delay(Math.min(index, 5) * durations.stagger).duration(durations.enter).easing(enterEasing);
 
 export function SortPicker({ currentMode, onBack, onSelect }: SortPickerProps) {
   const { colors } = useThemeColors();

@@ -19,6 +19,7 @@ import { useThemeColors } from '../../../theme/ThemeContext';
 import type { IntroStepProps } from '../types';
 import { iconSizes } from '@/theme/iconSizes';
 import { triggerHaptic } from '@/utils/haptics';
+import { durations, enterEasing } from '@/theme/animations';
 
 export function IntroStep({ habitName, onNext }: IntroStepProps) {
   const { colors } = useThemeColors();
@@ -26,7 +27,7 @@ export function IntroStep({ habitName, onNext }: IntroStepProps) {
   return (
     <Animated.View
       className='flex-1 gap-6'
-      entering={FadeInDown.springify().damping(18)}
+      entering={FadeInDown.duration(durations.enter).easing(enterEasing)}
     >
       {/* Header */}
       <View className='items-center gap-4'>

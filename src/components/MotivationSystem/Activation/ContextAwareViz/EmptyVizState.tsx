@@ -11,6 +11,7 @@ import { useThemeColors } from '../../../../theme/ThemeContext';
 
 import type { VizType } from './types';
 import { fontFamilies, fontWeights } from '@/theme/typography';
+import { enterEasing } from '@/theme/animations';
 
 interface EmptyVizStateProps {
   type: VizType;
@@ -18,7 +19,7 @@ interface EmptyVizStateProps {
 }
 
 const anim = (delay: number) =>
-  FadeInUp.duration(280).delay(delay).springify().damping(18);
+  FadeInUp.duration(280).delay(delay).easing(enterEasing);
 
 export function EmptyVizState({ type, compact }: EmptyVizStateProps) {
   const { colors, isDark } = useThemeColors();

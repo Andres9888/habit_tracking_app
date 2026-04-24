@@ -2,6 +2,7 @@
 import { View, Text } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useThemeColors } from '../../../theme/ThemeContext';
+import { enterEasing } from '../../../theme/animations';
 import { fontFamilies, fontWeights } from '../../../theme/typography';
 import { ShimmerBox } from './ShimmerBox';
 import { SkeletonCard } from './SkeletonCard';
@@ -37,7 +38,7 @@ export function TemplatesLoadingState() {
         </Text>
       </View>
       <Animated.View
-        entering={FadeInDown.duration(280).springify().damping(18)}
+        entering={FadeInDown.duration(280).easing(enterEasing)}
         style={{ marginHorizontal: 20, marginBottom: 16 }}
       >
         <ShimmerBox height={48} style={{ borderRadius: 24 }} width='100%' />

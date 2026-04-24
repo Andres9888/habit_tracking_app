@@ -13,13 +13,14 @@ import { PausedHabitCard } from './PausedHabitCard';
 import { PausedEmptyState } from './PausedEmptyState';
 import { iconSizes } from '@/theme/iconSizes';
 import { fontFamilies } from '@/theme/typography';
+import { enterEasing } from '@/theme/animations';
 
 interface PausedHabitsModalProps {
   onClose: () => void;
   onBack: () => void;
 }
 
-const anim = FadeInDown.duration(280).springify().damping(18);
+const anim = FadeInDown.duration(280).easing(enterEasing);
 
 export default function PausedHabitsModal({
   onClose,

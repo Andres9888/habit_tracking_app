@@ -2,6 +2,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import { Trophy } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
 import Animated, { FadeInDown } from 'react-native-reanimated';
+import { durations, enterEasing } from '../../../theme/animations';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { fontFamilies, typography, fontWeights } from '../../../theme/typography';
 import { spacing, borderRadius, shadows } from '../../../theme/spacing';
@@ -22,7 +23,7 @@ export function AchievementCard({
 
   return (
     <Animated.View
-      entering={FadeInDown.delay(delay).springify().damping(18)}
+      entering={FadeInDown.delay(delay).duration(durations.enter).easing(enterEasing)}
       style={[
         styles.card,
         {

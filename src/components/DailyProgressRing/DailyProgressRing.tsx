@@ -2,12 +2,12 @@
  * DailyProgressRing — Circular progress indicator for daily habit completion.
  *
  * Shows completed/total as an animated SVG ring with percentage text.
- * Design system: #059669 fill, #e7e5e4 track, springify().damping(18).
+ * Design system: #059669 fill, #e7e5e4 track, cubic ease-out entrance.
  */
 
 import { memo, useEffect } from 'react';
 import { View, Text, Platform } from 'react-native';
-import { springs } from '@/theme/animations';
+import { enterEasing, springs } from '@/theme/animations';
 import { useThemeColors } from '../../theme/ThemeContext';
 import Animated, {
   useSharedValue,
@@ -73,7 +73,7 @@ function DailyProgressRingComponent({
 
   return (
     <Animated.View
-      entering={FadeIn.duration(280).springify().damping(18)}
+      entering={FadeIn.duration(280).easing(enterEasing)}
       style={scaleStyle}
     >
       <View

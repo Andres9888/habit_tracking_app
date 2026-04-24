@@ -10,9 +10,10 @@ import Animated, { FadeInUp } from 'react-native-reanimated';
 import { colors } from '../../theme/colors';
 import { typography } from '../../theme/typography';
 import { spacing, borderRadius, shadows } from '../../theme/spacing';
+import { enterEasing } from '../../theme/animations';
 
 const anim = (delay: number) =>
-  FadeInUp.duration(280).delay(delay).springify().damping(18);
+  FadeInUp.duration(280).delay(delay).easing(enterEasing);
 
 export function EmptyState() {
   return (

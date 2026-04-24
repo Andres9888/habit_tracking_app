@@ -4,6 +4,7 @@
 
 import { View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
+import { durations, enterEasing } from '../../theme/animations';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { visualStyles as styles } from './onboarding.visuals.styles';
 
@@ -31,7 +32,7 @@ function ChainLink({
       entering={
         reduceMotion
           ? undefined
-          : FadeInDown.delay(delay).springify().damping(18)
+          : FadeInDown.delay(delay).duration(durations.enter).easing(enterEasing)
       }
       style={[
         styles.chainLink,

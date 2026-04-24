@@ -6,6 +6,7 @@
 import React, { useMemo } from 'react';
 import { ScrollView, RefreshControl } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
+import { durations, enterEasing } from '../../theme/animations';
 import { colors } from '../../theme/colors';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { PremiumPaywall } from '../../components/PremiumPaywall';
@@ -81,7 +82,7 @@ function AnalyticsScreenContent() {
       }
       style={[styles.container, { backgroundColor: themeColors.background }]}
     >
-      <Animated.View entering={FadeInDown.delay(280).springify().damping(18)}>
+      <Animated.View entering={FadeInDown.delay(280).duration(durations.enter).easing(enterEasing)}>
         <ScreenHeader
           leftAction={null}
           subtitle='Track your habit journey'
@@ -90,13 +91,13 @@ function AnalyticsScreenContent() {
       </Animated.View>
 
       {hasNoHabits ? (
-        <Animated.View entering={FadeInDown.delay(340).springify().damping(18)}>
+        <Animated.View entering={FadeInDown.delay(340).duration(durations.enter).easing(enterEasing)}>
           <EmptyState />
         </Animated.View>
       ) : (
         <>
           <Animated.View
-            entering={FadeInDown.delay(340).springify().damping(18)}
+            entering={FadeInDown.delay(340).duration(durations.enter).easing(enterEasing)}
           >
             <OverviewStats
               isLoading={isLoading}
@@ -106,7 +107,7 @@ function AnalyticsScreenContent() {
           </Animated.View>
 
           <Animated.View
-            entering={FadeInDown.delay(400).springify().damping(18)}
+            entering={FadeInDown.delay(400).duration(durations.enter).easing(enterEasing)}
           >
             <ChartSections
               complianceData={complianceData}
@@ -117,7 +118,7 @@ function AnalyticsScreenContent() {
           </Animated.View>
 
           <Animated.View
-            entering={FadeInDown.delay(460).springify().damping(18)}
+            entering={FadeInDown.delay(460).duration(durations.enter).easing(enterEasing)}
           >
             <InsightsSections
               rankedHabits={rankedHabits}
@@ -127,7 +128,7 @@ function AnalyticsScreenContent() {
           </Animated.View>
 
           <Animated.View
-            entering={FadeInDown.delay(520).springify().damping(18)}
+            entering={FadeInDown.delay(520).duration(durations.enter).easing(enterEasing)}
           >
             <ExportButton onPress={() => void handleExportPress()} />
           </Animated.View>

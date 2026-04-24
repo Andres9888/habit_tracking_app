@@ -5,6 +5,7 @@ import Animated, { FadeInDown, FadeOut } from 'react-native-reanimated';
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import { useThemeColors } from '@/theme/ThemeContext';
 import { shadows } from '@/theme/spacing';
+import { enterEasing } from '@/theme/animations';
 import { AuthErrorProps } from './types';
 import { iconSizes } from '@/theme/iconSizes';
 
@@ -16,7 +17,7 @@ export function AuthError({ message, onDismiss }: AuthErrorProps) {
       accessibilityLiveRegion='assertive'
       accessibilityRole='alert'
       className='mb-4 flex-row items-start gap-3 rounded-2xl border p-4'
-      entering={FadeInDown.duration(280).springify().damping(18)}
+      entering={FadeInDown.duration(280).easing(enterEasing)}
       exiting={FadeOut.duration(150)}
       style={{
         backgroundColor: colors.status.errorLight,

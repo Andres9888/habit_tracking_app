@@ -3,12 +3,17 @@
  * Frontend Redesign Spec 2026-02-14
  *
  * Motion rules:
- * - Entry motion: fade + translateY, 280ms ease-out
+ * - Entry motion: fade + translateY, 280ms cubic ease-out (no springify)
  * - Hierarchy: 60ms stagger, max 5 items
  * - Feedback: spring-based, ≤100ms for taps
  * - Max 3 simultaneous moving elements per viewport
  * - No decorative loops, idle animations, or novelty motion
+ *
+ * Canonical entrance pattern:
+ *   FadeInDown.duration(durations.enter).easing(enterEasing)
  */
+
+import { Easing } from 'react-native-reanimated';
 
 /**
  * Duration Scale (milliseconds)
@@ -126,6 +131,15 @@ export const springs = {
   /** Heavy settling — high damping for stable modal/sheet transitions */
   settle: { damping: 28, mass: 1, stiffness: 180 },
 } as const;
+
+/**
+ * Canonical entrance easing — cubic ease-out.
+ * Use with Reanimated entering animations instead of `.springify().damping(n)`.
+ *
+ * Example:
+ *   entering={FadeInDown.duration(durations.enter).easing(enterEasing)}
+ */
+export const enterEasing = Easing.out(Easing.cubic);
 
 export type Duration = keyof typeof durations;
 export type Spring = keyof typeof springs;

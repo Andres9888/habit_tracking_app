@@ -13,6 +13,7 @@ import type { SummaryStepProps } from '../types';
 import { VisualizationCards } from './VisualizationCards';
 import { iconSizes } from '@/theme/iconSizes';
 import { triggerHaptic } from '@/utils/haptics';
+import { durations, enterEasing } from '@/theme/animations';
 
 export function SummaryStep({
   habitName,
@@ -24,7 +25,7 @@ export function SummaryStep({
   const { colors } = useThemeColors();
 
   return (
-    <Animated.View className='flex-1 gap-5' entering={FadeInDown.springify().damping(18)}>
+    <Animated.View className='flex-1 gap-5' entering={FadeInDown.duration(durations.enter).easing(enterEasing)}>
       {/* Header */}
       <View className='items-center gap-3'>
         <View className='h-16 w-16 items-center justify-center rounded-2xl'>
