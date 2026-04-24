@@ -11,13 +11,9 @@ import { fontFamilies, fontWeights, typography } from '@/theme/typography';
 export const dashboardStyles = StyleSheet.create({
   bannerCard: {
     alignItems: 'center',
-    backgroundColor: colors.light.surface,
-    borderColor: colors.gray[200],
-    borderRadius: borderRadius.medium,
-    borderWidth: 1,
     flexDirection: 'row',
-    paddingHorizontal: 20,
-    paddingVertical: 14,
+    paddingHorizontal: 4,
+    paddingVertical: 8,
   },
   bannerDate: {
     color: colors.primary[600],

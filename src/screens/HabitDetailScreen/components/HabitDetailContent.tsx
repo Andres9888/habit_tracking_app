@@ -89,7 +89,7 @@ export function HabitDetailContent({
         </View>
       ) : null}
 
-      <View className='mt-4' onLayout={makeSectionLayoutHandler('goal')}>
+      <View className='mx-4 mt-4' onLayout={makeSectionLayoutHandler('goal')}>
         <GoalTabContent completionRate={completionRate} habit={habit} />
       </View>
     </ScrollView>

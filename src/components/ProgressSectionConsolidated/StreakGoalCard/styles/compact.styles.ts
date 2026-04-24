@@ -42,12 +42,7 @@ export const compactStyles = StyleSheet.create({
   },
   badgeText: { fontSize: 14 },
   heroCard: {
-    backgroundColor: colors.light.surface,
-    borderColor: colors.gray[200],
-    borderRadius: borderRadius.medium,
-    borderWidth: 1,
-    marginBottom: 10,
-    padding: 16,
+    marginBottom: 14,
   },
   heroMetaRow: {
     flexDirection: 'row',
@@ -94,13 +89,7 @@ export const compactStyles = StyleSheet.create({
     fontWeight: fontWeights.bold,
   },
   milestonesCard: {
-    backgroundColor: colors.light.surface,
-    borderColor: colors.gray[200],
-    borderRadius: borderRadius.medium,
-    borderWidth: 1,
-    marginBottom: 10,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
+    marginBottom: 14,
   },
   milestonesHeader: {
     flexDirection: 'row',
