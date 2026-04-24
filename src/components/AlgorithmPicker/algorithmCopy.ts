@@ -22,7 +22,7 @@ export const ALGORITHM_COPY: Record<AlgorithmMode, AlgorithmCopyEntry> = {
     complexity: 'Simple',
     examples: '',
     description:
-      'Tiny moves you can knock out in seconds. Grows fast and forgives the occasional slip.',
+      'Tiny actions that take seconds. Grows fast, forgives slips.',
     daysToForm: 18,
     Icon: Heart,
   },
@@ -32,7 +32,7 @@ export const ALGORITHM_COPY: Record<AlgorithmMode, AlgorithmCopyEntry> = {
     complexity: 'Everyday',
     examples: '',
     description:
-      "The research sweet spot. Most habits land near the 66-day mark — steady gains with honest setbacks when you miss. Based on UCL's classic habit-formation study.",
+      "The research default — steady gains, honest setbacks on misses. Based on UCL's 66-day study.",
     daysToForm: 66,
     Icon: Activity,
   },
@@ -42,7 +42,7 @@ export const ALGORITHM_COPY: Record<AlgorithmMode, AlgorithmCopyEntry> = {
     complexity: 'Complex',
     examples: '',
     description:
-      'Big commitments — running, meditation, practice. Takes months to build and dips hard when you miss; the curve rewards steady showing up.',
+      'Big commitments like running or meditation. Months to build, drops hard on misses — rewards showing up.',
     daysToForm: 120,
     Icon: Zap,
   },
