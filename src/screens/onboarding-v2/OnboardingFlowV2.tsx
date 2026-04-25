@@ -9,9 +9,15 @@ import { STEP_REGISTRY } from './steps/stepRegistry';
 import { StepId } from './types';
 import { useOnboardingV2State } from './useOnboardingV2State';
 
-// Steps before the question bank (Goal at step 3) hide the progress chrome
-// so Welcome and Name feel like a moment, not a form.
-const STEPS_WITHOUT_PROGRESS: ReadonlySet<StepId> = new Set(['welcome', 'name']);
+// Steps before the question bank hide the progress chrome so the
+// pre-questionnaire screens (welcome → problem → solution → name)
+// feel like a moment, not a form.
+const STEPS_WITHOUT_PROGRESS: ReadonlySet<StepId> = new Set([
+  'welcome',
+  'problem',
+  'solutionIntro',
+  'name',
+]);
 
 interface OnboardingFlowV2Props {
   onComplete: () => void;

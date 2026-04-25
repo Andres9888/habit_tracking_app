@@ -4,6 +4,8 @@
 
 export type StepId =
   | 'welcome'
+  | 'problem'
+  | 'solutionIntro'
   | 'name'
   | 'goal'
   | 'painPoints'
@@ -20,6 +22,8 @@ export type StepId =
 
 export const STEP_SEQUENCE: readonly StepId[] = [
   'welcome',
+  'problem',
+  'solutionIntro',
   'name',
   'goal',
   'painPoints',
