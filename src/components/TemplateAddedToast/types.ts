@@ -16,5 +16,6 @@ export interface TemplateAddedToastProps {
   duration?: number;
   onDismiss?: () => void;
   onViewHabits?: () => void;
+  onAddAnother?: () => void;
   style?: ViewStyle;
 }

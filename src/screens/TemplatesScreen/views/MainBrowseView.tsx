@@ -29,8 +29,11 @@ const stagger = (index: number) =>
 const bodyEnter = FadeInDown.duration(180);
 const bodyExit = FadeOutUp.duration(120);
 
-const HEADER_SUBTITLE =
-  'Pick a goal \u2014 we\u2019ll match you with habits proven to work.';
+const HEADER_SUBTITLE = 'Pick a path \u2014 habits proven to work.';
+
+// Hidden for now \u2014 flip to true to restore the premium packs row.
+// When re-enabling: bump Popular stagger to (3) and exploreAll to (4).
+const SHOW_PREMIUM_PACKS = false;
 
 export function MainBrowseView(p: MainBrowseViewProps) {
   const { colors } = useThemeColors();
@@ -80,10 +83,17 @@ export function MainBrowseView(p: MainBrowseViewProps) {
               <GoalCollectionGrid
                 featuredBadgeLabel={p.featuredBadgeLabel}
                 featuredGoalId={p.featuredGoalId}
+                featuredStarterTemplates={p.featuredStarterTemplates}
                 habitCountsByGoalId={p.habitCountsByGoalId}
+                onPreviewStarter={p.onPreview}
                 onSelectGoal={p.onGoalSelect}
               />
             </Animated.View>
+            {SHOW_PREMIUM_PACKS ? (
+              <Animated.View entering={stagger(2)}>
+                {p.premiumPacksSection}
+              </Animated.View>
+            ) : null}
             <Animated.View entering={stagger(2)}>
               <PopularSection
                 importedTemplateIds={p.importedTemplateIds}

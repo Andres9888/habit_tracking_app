@@ -25,4 +25,10 @@ crons.daily(
   internal.crons.purgeExpiredDeletedHabits
 );
 
+crons.interval(
+  'recompute template popularity',
+  { hours: 2 },
+  internal.templates.popularity.recompute
+);
+
 export default crons;

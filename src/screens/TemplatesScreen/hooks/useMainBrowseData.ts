@@ -10,33 +10,11 @@ import type { Doc } from '../../../../convex/_generated/dataModel';
 import { PREMIUM_PACKS } from '../data/premiumPacks';
 import type { CategoryMeta } from '../data/categoryMeta';
 import { CATEGORY_META } from '../data/categoryMeta';
+import { CATEGORY_PRIORITY, getCategoryPriority } from '../data/categoryPriority';
 
 const POPULAR_LIMIT = 10;
 const PREVIEW_EMOJI_LIMIT = 4;
-const CATEGORY_PRIORITY = [
-  'morning_routine',
-  'mental_health',
-  'health_fitness',
-  'sleep',
-  'mindfulness',
-  'learning',
-  'financial',
-  'productivity',
-  'recovery',
-  'social',
-  'breathing',
-  'creativity',
-  'longevity',
-  'andrew_huberman',
-] as const;
 const QUICK_FILTER_IDS = CATEGORY_PRIORITY.slice(0, 7);
-
-function getCategoryPriority(categoryId: string) {
-  const index = CATEGORY_PRIORITY.indexOf(
-    categoryId as (typeof CATEGORY_PRIORITY)[number]
-  );
-  return index === -1 ? CATEGORY_PRIORITY.length : index;
-}
 
 interface UseMainBrowseDataOptions {
   allTemplates: Doc<'templates'>[] | undefined;
