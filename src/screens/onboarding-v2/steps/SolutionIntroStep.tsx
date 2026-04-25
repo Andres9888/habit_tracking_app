@@ -39,7 +39,7 @@ export function SolutionIntroStep({ onNext }: StepComponentProps) {
               textAlign: 'center',
             }}
           >
-            Your chain{'\n'}doesn&rsquo;t break.
+            Miss a day.{'\n'}The chain shows it.
           </Text>
           <Text
             style={{
@@ -51,7 +51,7 @@ export function SolutionIntroStep({ onNext }: StepComponentProps) {
               textAlign: 'center',
             }}
           >
-            Strength dips. Your tier holds. Every day adds weight to it.
+            But your strength holds. Your tier holds. You don&rsquo;t start over.
           </Text>
         </View>
         <View style={{ alignItems: 'center', paddingBottom: 16 }}>
