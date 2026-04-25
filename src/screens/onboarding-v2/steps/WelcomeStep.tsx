@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Image, Pressable, Text, View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 import Animated, {
   Easing,
   useAnimatedStyle,
@@ -12,8 +12,6 @@ import { useThemeColors } from '@/theme/ThemeContext';
 
 import { StepComponentProps } from '../types';
 
-const WELCOME_ICON = require('../../../assets/onboarding/chainday-welcome-icon.png');
-const ICON_SIZE = 108;
 const PULSE_MS = 1400;
 
 export function WelcomeStep({ onNext }: StepComponentProps) {
@@ -45,28 +43,13 @@ export function WelcomeStep({ onNext }: StepComponentProps) {
     >
       <View style={{ alignItems: 'center', flex: 1, justifyContent: 'space-between' }}>
         <View style={{ alignItems: 'center', flex: 1, justifyContent: 'center' }}>
-          <Image
-            accessibilityLabel="ChainDay icon"
-            accessibilityRole="image"
-            source={WELCOME_ICON}
-            style={{
-              borderRadius: 22,
-              height: ICON_SIZE,
-              shadowColor: colors.gray[900],
-              shadowOffset: { height: 6, width: 0 },
-              shadowOpacity: 0.12,
-              shadowRadius: 18,
-              width: ICON_SIZE,
-            }}
-          />
           <Text
             accessibilityRole="header"
             style={{
               color: colors.text.primary,
-              fontSize: 56,
+              fontSize: 72,
               fontWeight: '800',
-              letterSpacing: -2,
-              marginTop: 40,
+              letterSpacing: -2.5,
               textAlign: 'center',
             }}
           >
