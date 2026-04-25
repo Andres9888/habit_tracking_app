@@ -1,7 +1,7 @@
 /**
  * SmallRing — 72px ring variant for the compact hero.
  */
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { Text, View } from 'react-native';
 import Svg, { Circle, Defs, LinearGradient, Stop } from 'react-native-svg';
 import Animated, {
@@ -11,9 +11,10 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import { useReduceMotion } from '@/hooks/useReduceMotion';
-import { colors } from '@/theme';
+import { colors as staticColors } from '@/theme';
 import { durations } from '@/theme/animations';
-import { compactStyles as s } from './styles/compact.styles';
+import { useThemeColors } from '@/theme/ThemeContext';
+import { createCompactStyles } from './styles/compact.styles';
 
 interface SmallRingProps {
   percent: number;
@@ -24,6 +25,8 @@ const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
 export const SmallRing = React.memo(function SmallRing({ percent }: SmallRingProps) {
+  const { colors } = useThemeColors();
+  const s = useMemo(() => createCompactStyles(colors), [colors]);
   const clamped = Math.max(0, Math.min(100, percent));
   const reduceMotion = useReduceMotion();
   const progress = useSharedValue(reduceMotion ? clamped : 0);
@@ -46,8 +49,8 @@ export const SmallRing = React.memo(function SmallRing({ percent }: SmallRingPro
       <Svg height={72} viewBox="0 0 72 72" width={72}>
         <Defs>
           <LinearGradient id="smallRingGrad" x1="0" x2="1" y1="0" y2="1">
-            <Stop offset="0%" stopColor={colors.primary[600]} />
-            <Stop offset="100%" stopColor={colors.streak[500]} />
+            <Stop offset="0%" stopColor={staticColors.primary[600]} />
+            <Stop offset="100%" stopColor={staticColors.streak[500]} />
           </LinearGradient>
         </Defs>
         <Circle
@@ -55,7 +58,7 @@ export const SmallRing = React.memo(function SmallRing({ percent }: SmallRingPro
           cy={36}
           fill="none"
           r={RADIUS}
-          stroke={colors.gray[200]}
+          stroke={colors.border}
           strokeWidth={5}
         />
         <AnimatedCircle
