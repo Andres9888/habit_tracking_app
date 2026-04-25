@@ -22,6 +22,7 @@ export function TemplateAddedToast({
   duration = DEFAULT_DURATION,
   onDismiss,
   onViewHabits,
+  onAddAnother,
   style,
 }: TemplateAddedToastProps) {
   const theme = useAppTheme();
@@ -74,7 +75,19 @@ export function TemplateAddedToast({
                 {templateData.name} added!
               </Text>
             </View>
-            {onViewHabits ? (
+            {onAddAnother ? (
+              <Pressable
+                accessibilityLabel='Add another habit'
+                accessibilityRole='button'
+                style={styles.actionPill}
+                onPress={() => {
+                  handleDismiss();
+                  onAddAnother();
+                }}
+              >
+                <Text style={styles.actionText}>Add another</Text>
+              </Pressable>
+            ) : onViewHabits ? (
               <Pressable
                 accessibilityLabel='View your habits'
                 accessibilityRole='button'

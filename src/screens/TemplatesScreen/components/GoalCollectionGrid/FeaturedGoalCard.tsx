@@ -1,19 +1,24 @@
 /**
- * FeaturedGoalCard — full-width hero card for the time-aware featured goal
+ * FeaturedGoalCard — hero card for the featured transformation.
+ * Big emoji + label + promise, 3 inline starter habits, primary CTA.
  */
 
 import React from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import type { Doc } from '../../../../../convex/_generated/dataModel';
 import type { GoalCollection } from '../../data/goalCollections';
-import { fontFamilies, fontWeights } from '@/theme/typography';
 import { s } from './GoalCollectionGrid.styles';
+import { hero } from './FeaturedGoalCard.styles';
+import { FeaturedGoalStarterRow } from './FeaturedGoalStarterRow';
 
 interface FeaturedGoalCardProps {
   badgeLabel: string;
   goal: GoalCollection;
   habitCount: number;
   onPress: () => void;
+  onPreviewStarter: (template: Doc<'templates'>) => void;
+  starterTemplates: Doc<'templates'>[];
 }
 
 export function FeaturedGoalCard({
@@ -21,13 +26,16 @@ export function FeaturedGoalCard({
   goal,
   habitCount,
   onPress,
+  onPreviewStarter,
+  starterTemplates,
 }: FeaturedGoalCardProps) {
-  const countText =
-    habitCount === 1 ? '1 habit · Start here →' : `${habitCount} habits · Start here →`;
+  const ctaLabel = 'Start your path';
+  const countLabel =
+    habitCount === 1 ? '1 habit inside' : `${habitCount} habits inside`;
 
   return (
     <Pressable
-      accessibilityLabel={`Featured goal: ${goal.label}. ${goal.promise}`}
+      accessibilityLabel={`${goal.label}. ${goal.promise}. ${countLabel}`}
       accessibilityRole='button'
       style={[s.card, s.featuredCard, hero.wrapper]}
       onPress={onPress}
@@ -39,68 +47,38 @@ export function FeaturedGoalCard({
         style={hero.gradient}
       >
         <View style={hero.topRow}>
-          <Text style={[s.featuredBadge, hero.badge, { color: goal.textColor }]}>
+          <Text style={[hero.badge, { color: goal.textColor }]}>
             {badgeLabel}
           </Text>
         </View>
         <View style={hero.body}>
           <Text style={hero.emoji}>{goal.emoji}</Text>
           <View style={hero.text}>
-            <Text style={[s.featuredLabel, hero.label, { color: goal.textColor }]}>
+            <Text style={[hero.label, { color: goal.textColor }]}>
               {goal.label}
             </Text>
             <Text
               numberOfLines={2}
-              style={[s.promise, hero.promise, { color: goal.textColor }]}
+              style={[hero.promise, { color: goal.textColor }]}
             >
               {goal.promise}
             </Text>
           </View>
         </View>
-        <View
-          style={[
-            hero.cta,
-            {
-              backgroundColor: goal.textColor,
-              borderColor: goal.textColor,
-            },
-          ]}
-        >
-          <Text style={[hero.ctaText, { color: '#FFFFFF' }]}>{countText}</Text>
+        <FeaturedGoalStarterRow
+          accentColor={goal.textColor}
+          templates={starterTemplates}
+          onPreview={onPreviewStarter}
+        />
+        <View style={[hero.cta, { backgroundColor: goal.textColor }]}>
+          <Text style={[hero.ctaPrimary, { color: '#FFFFFF' }]}>
+            {ctaLabel} →
+          </Text>
+          <Text style={[hero.ctaCount, { color: '#FFFFFF' }]}>
+            · {countLabel}
+          </Text>
         </View>
       </LinearGradient>
     </Pressable>
   );
 }
-
-const hero = StyleSheet.create({
-  badge: { position: 'relative', right: 0, top: 0 },
-  body: { alignItems: 'flex-end', flexDirection: 'row', gap: 14, marginTop: 14 },
-  cta: {
-    alignSelf: 'flex-start',
-    borderRadius: 9999,
-    borderWidth: 1,
-    marginTop: 14,
-    paddingHorizontal: 14,
-    paddingVertical: 8,
-  },
-  ctaText: {
-    fontFamily: fontFamilies.primary.text,
-    fontSize: 12,
-    fontWeight: fontWeights.semibold,
-  },
-  emoji: { fontSize: 52, lineHeight: 56 },
-  gradient: { borderRadius: 16, overflow: 'hidden', padding: 18 },
-  label: { fontSize: 22, paddingRight: 0 },
-  promise: { fontSize: 13, lineHeight: 18, marginTop: 6, opacity: 0.9 },
-  text: { flex: 1, paddingBottom: 4 },
-  topRow: { flexDirection: 'row', justifyContent: 'flex-start' },
-  wrapper: {
-    alignItems: 'stretch',
-    flexDirection: 'column',
-    gap: 0,
-    justifyContent: 'flex-start',
-    minHeight: 0,
-    padding: 0,
-  },
-});

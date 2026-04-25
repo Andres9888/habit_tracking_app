@@ -12,6 +12,7 @@ export interface MainBrowseViewProps {
   exploreAllSection: ReactNode;
   featuredBadgeLabel?: string;
   featuredGoalId: string;
+  featuredStarterTemplates: Doc<'templates'>[];
   feedbackOverlays: ReactNode;
   habitCountsByGoalId: Record<string, number>;
   importedTemplateIds: Set<string>;

@@ -22,6 +22,7 @@ export function TrendingCard({
   name,
   onImport,
   onPress,
+  popularityPrefix,
   popularityScore,
 }: TrendingCardProps) {
   const { colors } = useThemeColors();
@@ -76,6 +77,7 @@ export function TrendingCard({
 
       <View style={s.bottomRow}>
         <Text style={[s.popularityText, { color: colors.primary[600] }]}>
+          {popularityPrefix ? `${popularityPrefix} ` : ''}
           {formatPopularity(popularityScore)}
         </Text>
         <AddButton

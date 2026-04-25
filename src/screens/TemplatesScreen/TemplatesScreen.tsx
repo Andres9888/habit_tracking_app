@@ -7,10 +7,8 @@
 import { useCallback, useMemo } from 'react';
 import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 import type { Doc } from '../../../convex/_generated/dataModel';
-import {
-  ExploreAllSection,
-  useGroupedTemplates,
-} from './components/ExploreAllSection';
+import { CategoryRowsSection } from './components/CategoryRowsSection';
+import { useGroupedTemplates } from './components/ExploreAllSection';
 import { PremiumPacksSection } from './components/PremiumPacksSection';
 import { SearchResults } from './components/SearchResults';
 import { TemplatesEmptyState } from './components/TemplatesEmptyState';
@@ -54,6 +52,14 @@ function TemplatesScreenContent({
     });
     return counts;
   }, [data.allTemplates]);
+  const featuredStarterTemplates = useMemo(() => {
+    const featured = GOAL_COLLECTIONS.find((g) => g.id === featuredGoalId);
+    if (!featured || !data.allTemplates) return [];
+    return [...data.allTemplates]
+      .filter((t) => featured.categories.includes(t.category))
+      .sort((a, b) => (b.popularityScore ?? 0) - (a.popularityScore ?? 0))
+      .slice(0, 3);
+  }, [data.allTemplates, featuredGoalId]);
 
   const handleImport = (template: Doc<'templates'>) => {
     void handlers.handleDirectImport(template._id);
@@ -117,17 +123,19 @@ function TemplatesScreenContent({
     <>
       <MainBrowseView
         exploreAllSection={
-          <ExploreAllSection
-            getCategoryLabel={props.getCategoryLabel}
+          <CategoryRowsSection
             groups={groups}
             importedTemplateIds={state.importedTemplateIds}
             importingTemplateId={state.importingTemplateId}
             totalCount={totalCount}
+            onBrowseAll={handleSeeAll}
             onImport={handleImport}
             onPreview={handlers.handleTemplatePreview}
+            onSeeAllRow={viewNav.openCategory}
           />
         }
         featuredGoalId={featuredGoalId}
+        featuredStarterTemplates={featuredStarterTemplates}
         feedbackOverlays={
           <FeedbackOverlays
             showCelebration={state.showCelebration}
