@@ -1,44 +1,29 @@
 import { useCallback, useEffect, useState } from 'react';
-import {
-  safeGetItem,
-  safeGetString,
-  safeSetItem,
-  safeSetString,
-} from '@/utils/storage';
+import { safeSetItem, safeSetString } from '@/utils/storage';
 import {
   INITIAL_ANSWERS,
   OnboardingAnswers,
   STEP_SEQUENCE,
-  StepId,
 } from './types';
 import {
   ONBOARDING_V2_ANSWERS_KEY,
   ONBOARDING_V2_STEP_KEY,
 } from './storageKeys';
 
-function isAnswers(value: unknown): value is OnboardingAnswers {
-  return typeof value === 'object' && value !== null;
-}
-
+/**
+ * DEV/REVIEW MODE: ignores AsyncStorage on launch so onboarding starts
+ * at Welcome with empty answers every time the app opens. Within a
+ * session, handleNext/handleBack/updateAnswers still write to
+ * AsyncStorage — restore the safeGetString/safeGetItem reads in the
+ * mount effect to re-enable cross-launch resume.
+ */
 export function useOnboardingV2State() {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [answers, setAnswers] = useState<OnboardingAnswers>(INITIAL_ANSWERS);
   const [isHydrated, setIsHydrated] = useState(false);
 
   useEffect(() => {
-    void Promise.all([
-      safeGetString(ONBOARDING_V2_STEP_KEY, 'welcome'),
-      safeGetItem<OnboardingAnswers>(
-        ONBOARDING_V2_ANSWERS_KEY,
-        isAnswers,
-        INITIAL_ANSWERS
-      ),
-    ]).then(([stepId, storedAnswers]) => {
-      const idx = STEP_SEQUENCE.indexOf(stepId as StepId);
-      if (idx >= 0) setCurrentStepIndex(idx);
-      setAnswers(storedAnswers);
-      setIsHydrated(true);
-    });
+    setIsHydrated(true);
   }, []);
 
   const persistStepIndex = useCallback((index: number) => {
