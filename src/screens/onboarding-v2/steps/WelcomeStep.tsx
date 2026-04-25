@@ -12,7 +12,7 @@ import { useThemeColors } from '@/theme/ThemeContext';
 
 import { StepComponentProps } from '../types';
 
-const WELCOME_ICON = require('@/assets/onboarding/chainday-welcome-icon.png');
+const WELCOME_ICON = require('../../../assets/onboarding/chainday-welcome-icon.png');
 const ICON_SIZE = 108;
 const PULSE_MS = 1400;
 
