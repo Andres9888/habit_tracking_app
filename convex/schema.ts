@@ -291,6 +291,10 @@ const applicationTables = {
 
     description: v.string(),
 
+    // Best-guess time to do this habit, in minutes. Used to derive the
+    // suggested strength algorithm at habit-creation time.
+    estimatedMinutes: v.optional(v.number()),
+
     // Background color for icon
     frequency: v.string(),
 
@@ -368,6 +372,7 @@ const applicationTables = {
     catTheme: v.boolean(),
 
     celebrationsEnabled: v.optional(v.boolean()),
+    chevronMode: v.optional(v.string()),
     compactView: v.optional(v.boolean()),
 
     // Completion sound settings (Premium feature)
