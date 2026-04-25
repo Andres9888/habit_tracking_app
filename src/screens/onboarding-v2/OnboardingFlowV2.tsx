@@ -6,7 +6,12 @@ import { useThemeColors } from '@/theme/ThemeContext';
 
 import { StepFrame } from './components/StepFrame';
 import { STEP_REGISTRY } from './steps/stepRegistry';
+import { StepId } from './types';
 import { useOnboardingV2State } from './useOnboardingV2State';
+
+// Steps before the question bank (Goal at step 3) hide the progress chrome
+// so Welcome and Name feel like a moment, not a form.
+const STEPS_WITHOUT_PROGRESS: ReadonlySet<StepId> = new Set(['welcome', 'name']);
 
 interface OnboardingFlowV2Props {
   onComplete: () => void;
@@ -43,6 +48,7 @@ function OnboardingFlowV2Content({ onComplete }: OnboardingFlowV2Props) {
     <StepFrame
       canGoBack={state.currentStepIndex > 0}
       currentStep={state.currentStepIndex + 1}
+      hideProgress={STEPS_WITHOUT_PROGRESS.has(state.currentStepId)}
       onBack={state.onBack}
       totalSteps={state.totalSteps}
     >
