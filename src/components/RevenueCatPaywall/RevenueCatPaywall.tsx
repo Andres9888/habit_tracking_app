@@ -12,7 +12,7 @@ import { useRevenueCatPaywall } from './useRevenueCatPaywall';
 import type { RevenueCatPaywallProps } from './types';
 import { WebFallback } from './WebFallback';
 
-const NOOP = () => {};
+function noop() {}
 
 function getPlatformOS(): string | undefined {
   const fallbackPlatform = (globalThis as { __reactNativePlatformOS?: string }).__reactNativePlatformOS;
@@ -22,7 +22,7 @@ function getPlatformOS(): string | undefined {
 export function RevenueCatPaywall(
   props: RevenueCatPaywallProps | undefined,
 ) {
-  const { visible = false, onClose = NOOP } = props ?? {};
+  const { visible = false, onClose = noop, dismissible = true } = props ?? {};
   const platformOS = getPlatformOS();
   const isWebPlatform =
     platformOS
@@ -46,6 +46,7 @@ export function RevenueCatPaywall(
       onClose={onClose}
       onPurchaseSuccess={props?.onPurchaseSuccess}
       onRestoreSuccess={props?.onRestoreSuccess}
+      dismissible={dismissible}
     />
   );
 }
@@ -55,11 +56,12 @@ function PaywallContent({
   onClose,
   onPurchaseSuccess,
   onRestoreSuccess,
+  dismissible = true,
 }: RevenueCatPaywallProps) {
   const paywall = useRevenueCatPaywall({
     onClose,
-    onPurchaseSuccess: onPurchaseSuccess ?? NOOP,
-    onRestoreSuccess: onRestoreSuccess ?? NOOP,
+    onPurchaseSuccess: onPurchaseSuccess ?? noop,
+    onRestoreSuccess: onRestoreSuccess ?? noop,
   });
 
   const planLabel = paywall.selectedPlan === 'annual' ? 'Annual' : 'Monthly';
@@ -69,13 +71,17 @@ function PaywallContent({
     <Modal
       accessibilityViewIsModal
       animationType="slide"
-      presentationStyle="pageSheet"
+      presentationStyle={dismissible ? 'pageSheet' : 'fullScreen'}
       transparent={false}
       visible={visible}
-      onRequestClose={paywall.handleClose}
+      onRequestClose={dismissible ? paywall.handleClose : noop}
     >
       <View style={{ backgroundColor: colors.background, flex: 1 }}>
-        <PaywallHeader disabled={paywall.isProcessing} onClose={paywall.handleClose} />
+        <PaywallHeader
+          disabled={paywall.isProcessing}
+          hideClose={!dismissible}
+          onClose={paywall.handleClose}
+        />
         <ScrollView
           contentContainerStyle={{ paddingBottom: spacing['2xl'] }}
           showsVerticalScrollIndicator={false}

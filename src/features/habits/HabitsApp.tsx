@@ -48,7 +48,7 @@ function HabitsAppContent() {
 
   const { colors } = useThemeColors();
   const { list, modals } = useHabitsApp();
-  const { triggerLightImpact, triggerSelection, triggerWarning } = useHapticFeedback({
+  const { triggerLightImpact, triggerSelection } = useHapticFeedback({
     isEnabled: list.celebrationsEnabled,
     preference: list.reduceMotionPreference,
   });
@@ -65,11 +65,8 @@ function HabitsAppContent() {
   });
 
   const handlers = useHabitsAppHandlers({
-    hasReachedHabitLimit: list.hasReachedHabitLimit,
-    isPremiumUser: list.isPremiumUser,
     openCreateHabitScreen: modals.openCreateHabitScreen,
     triggerSelection,
-    triggerWarning,
   });
 
   const bottomBar = useBottomBarProps({

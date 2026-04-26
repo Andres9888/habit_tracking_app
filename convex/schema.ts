@@ -310,6 +310,9 @@ const applicationTables = {
     // "daily", "weekly", "custom"
     scientificReference: v.string(),
 
+    // Estimated minutes per occurrence — present on legacy seed rows in dev
+    estimatedMinutes: v.optional(v.number()),
+
     // Suggested psychology fields for post-import setup
     suggestedCue: v.optional(v.string()),
     suggestedIdentity: v.optional(v.string()),
@@ -402,6 +405,8 @@ const applicationTables = {
 
     hasPremium: v.optional(v.boolean()),
     highContrastMode: v.optional(v.boolean()),
+    // Retained for backwards compatibility with existing user data
+    chevronMode: v.optional(v.string()),
     // Global default for the 5-stage growth emoji set, overridable per habit.
     progressEmojis: v.optional(progressEmojisValidator),
     // User's saved "Custom" preset — auto-stored when slots are edited in

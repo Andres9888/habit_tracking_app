@@ -25,12 +25,10 @@ export interface HabitsListState {
   completionSoundEnabled: boolean;
   completionSoundType: CompletionSoundType;
   dayShape: HabitSettings['dayShape'];
-  freeHabitLimit: number;
   habits: Habit[];
   habitSortMode: HabitSortMode;
   habitCompletionIcon: HabitSettings['habitCompletionIcon'];
   isHabitsLoading: boolean;
-  hasReachedHabitLimit: boolean;
   weekDates: Date[];
   weekDateStrings: string[];
   canNavigateForward: boolean;
@@ -42,7 +40,6 @@ export interface HabitsListState {
     paddingBottom: number;
   };
   dismissRewardToast: () => void;
-  habitSlotsUsed: number;
   handleDragEnd: (event: { data: Habit[] }) => Promise<void>;
   handleArchive: (habitId: Id<'habits'>) => Promise<void>;
   handleDelete: (habitId: Id<'habits'>) => void;
