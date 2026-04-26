@@ -2,6 +2,7 @@
 import { View, Text } from 'react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { useThemeColors } from '../../theme';
+import { durations, enterEasing } from '../../theme/animations';
 
 interface SectionLabelProps {
   text: string;
@@ -21,7 +22,7 @@ export function SectionLabel({
   return (
     <Animated.View
       className='mb-3 mt-6 flex-row items-center justify-center gap-2 px-6'
-      entering={FadeInUp.delay(delay).springify().damping(18)}
+      entering={FadeInUp.delay(delay).duration(durations.enter).easing(enterEasing)}
     >
       <View className='h-px flex-1' style={{ backgroundColor: borderColor }} />
       <Text

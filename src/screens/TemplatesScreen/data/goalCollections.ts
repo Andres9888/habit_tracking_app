@@ -73,11 +73,9 @@ export const GOAL_COLLECTIONS: GoalCollection[] = [
   },
 ];
 
-/** Returns the goal id that should be featured based on time of day. */
+/** Returns the goal id that should be featured today — rotates once per day. */
 export function getFeaturedGoalId(now: Date = new Date()): string {
-  const hour = now.getHours();
-  if (hour >= 5 && hour < 12) return 'more-energy';
-  if (hour >= 12 && hour < 17) return 'be-productive';
-  if (hour >= 17 && hour < 22) return 'less-stress';
-  return 'sleep-better';
+  const ids = GOAL_COLLECTIONS.map((g) => g.id);
+  const dayIndex = Math.floor(now.getTime() / 86_400_000);
+  return ids[dayIndex % ids.length] ?? ids[0];
 }

@@ -1,9 +1,9 @@
 /** TemplatesLoadingState - Shimmer animation, stagger, shadows */
 import { View, Text } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
-import { borderRadius } from '../../../theme/spacing';
 import { useThemeColors } from '../../../theme/ThemeContext';
-import { typography, fontFamilies, fontWeights } from '../../../theme/typography';
+import { enterEasing } from '../../../theme/animations';
+import { fontFamilies, fontWeights } from '../../../theme/typography';
 import { ShimmerBox } from './ShimmerBox';
 import { SkeletonCard } from './SkeletonCard';
 
@@ -19,7 +19,7 @@ export function TemplatesLoadingState() {
           style={{
             color: colors.text.primary,
             fontFamily: fontFamilies.primary.display,
-            fontSize: typography.heading1.fontSize,
+            fontSize: 22,
             fontWeight: fontWeights.semibold,
             letterSpacing: -0.35,
           }}
@@ -30,7 +30,7 @@ export function TemplatesLoadingState() {
           style={{
             color: colors.text.secondary,
             fontFamily: fontFamilies.primary.text,
-            fontSize: typography.body.fontSize,
+            fontSize: 17,
             marginTop: 4,
           }}
         >
@@ -38,7 +38,7 @@ export function TemplatesLoadingState() {
         </Text>
       </View>
       <Animated.View
-        entering={FadeInDown.duration(280).springify().damping(18)}
+        entering={FadeInDown.duration(280).easing(enterEasing)}
         style={{ marginHorizontal: 20, marginBottom: 16 }}
       >
         <ShimmerBox height={48} style={{ borderRadius: 24 }} width='100%' />
@@ -55,7 +55,7 @@ export function TemplatesLoadingState() {
           <ShimmerBox
             key={i}
             height={36}
-            style={{ borderRadius: borderRadius.full }}
+            style={{ borderRadius: 9999 }}
             width={w}
           />
         ))}

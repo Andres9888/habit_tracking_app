@@ -1,10 +1,11 @@
 import { View } from 'react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { useThemeColors } from '../../../theme/ThemeContext';
-import { typography, fontFamilies, fontWeights } from '@/theme/typography';
+import { fontFamilies, fontWeights } from '@/theme/typography';
+import { enterEasing } from '@/theme/animations';
 
 const anim = (delay: number) =>
-  FadeInUp.duration(280).delay(delay).springify().damping(18);
+  FadeInUp.duration(280).delay(delay).easing(enterEasing);
 
 export const TemplateListEmpty = () => {
   const { colors } = useThemeColors();
@@ -27,7 +28,7 @@ export const TemplateListEmpty = () => {
         style={{
           color: colors.text.primary,
           fontFamily: fontFamilies.primary.text,
-          fontSize: typography.bodySmall.fontSize,
+          fontSize: 14,
           fontWeight: fontWeights.medium,
           marginTop: 8,
         }}
@@ -39,7 +40,7 @@ export const TemplateListEmpty = () => {
         style={{
           color: colors.text.secondary,
           fontFamily: fontFamilies.primary.text,
-          fontSize: typography.caption.fontSize,
+          fontSize: 13,
           marginTop: 4,
         }}
       >

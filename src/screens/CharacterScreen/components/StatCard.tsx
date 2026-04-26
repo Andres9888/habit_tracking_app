@@ -1,5 +1,6 @@
 import { Text, StyleSheet } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
+import { durations, enterEasing } from '../../../theme/animations';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { spacing, borderRadius, shadows } from '../../../theme/spacing';
 import { typography, fontWeights } from '../../../theme/typography';
@@ -14,7 +15,7 @@ export function StatCard({
   const { colors } = useThemeColors();
   return (
     <Animated.View
-      entering={FadeInDown.delay(delay).springify().damping(18)}
+      entering={FadeInDown.delay(delay).duration(durations.enter).easing(enterEasing)}
       style={[
         styles.card,
         {

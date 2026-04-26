@@ -70,6 +70,13 @@ export const s = StyleSheet.create({
     gap: 10,
   },
   gridCard: { flexBasis: '48%', flexGrow: 1, minHeight: 138 },
+  rail: {
+    flexDirection: 'row',
+    gap: 10,
+    paddingRight: 16,
+    paddingTop: 12,
+  },
+  railCard: { minHeight: 138, width: 168 },
   label: {
     fontFamily: fontFamilies.primary.display,
     fontSize: 16,

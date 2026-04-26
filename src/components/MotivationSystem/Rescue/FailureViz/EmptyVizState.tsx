@@ -7,13 +7,13 @@ import React from 'react';
 import { View } from 'react-native';
 import { AlertTriangle } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
-import { borderRadius } from '@/theme/spacing';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { useThemeColors } from '../../../../theme/ThemeContext';
-import { typography, fontFamilies, fontWeights } from '@/theme/typography';
+import { fontFamilies, fontWeights } from '@/theme/typography';
+import { enterEasing } from '@/theme/animations';
 
 const anim = (delay: number) =>
-  FadeInUp.duration(280).delay(delay).springify().damping(18);
+  FadeInUp.duration(280).delay(delay).easing(enterEasing);
 
 export function EmptyVizState() {
   const { colors, isDark } = useThemeColors();
@@ -31,7 +31,7 @@ export function EmptyVizState() {
         style={{
           alignItems: 'center',
           backgroundColor: isDark ? '#3B1A1A' : '#FFF1F2',
-          borderRadius: borderRadius.xl,
+          borderRadius: 24,
           height: 48,
           justifyContent: 'center',
           marginBottom: 12,
@@ -45,7 +45,7 @@ export function EmptyVizState() {
         style={{
           color: colors.text.primary,
           fontFamily: fontFamilies.primary.text,
-          fontSize: typography.bodySmall.fontSize,
+          fontSize: 14,
           fontWeight: fontWeights.medium,
           marginBottom: 4,
           textAlign: 'center',
@@ -58,7 +58,7 @@ export function EmptyVizState() {
         style={{
           color: colors.text.tertiary,
           fontFamily: fontFamilies.primary.text,
-          fontSize: typography.caption.fontSize,
+          fontSize: 13,
           textAlign: 'center',
         }}
       >

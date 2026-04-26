@@ -5,6 +5,7 @@
 
 import React, { useMemo } from 'react';
 import Animated, { FadeInDown } from 'react-native-reanimated';
+import { durations, enterEasing } from '../../theme/animations';
 import type { InsightsSectionProps } from './InsightsSection.types';
 import { MIN_TRACKING_DAYS_FOR_INSIGHTS } from './InsightsSection.constants';
 import {
@@ -61,7 +62,7 @@ export function InsightsSection({
   return (
     <Animated.View
       className='gap-4'
-      entering={FadeInDown.delay(100).springify().damping(18)}
+      entering={FadeInDown.delay(100).duration(durations.enter).easing(enterEasing)}
     >
       <JourneyStatsSection
         daysTracking={daysTracking}

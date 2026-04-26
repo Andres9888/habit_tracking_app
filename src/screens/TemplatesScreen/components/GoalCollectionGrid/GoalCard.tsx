@@ -20,7 +20,7 @@ export function GoalCard({ goal, habitCount, onPress }: GoalCardProps) {
     <Pressable
       accessibilityLabel={`${goal.label}: ${goal.promise}`}
       accessibilityRole='button'
-      style={[s.card, s.gridCard, { backgroundColor: goal.bgColor }]}
+      style={[s.card, s.railCard, { backgroundColor: goal.bgColor }]}
       onPress={onPress}
     >
       <View>

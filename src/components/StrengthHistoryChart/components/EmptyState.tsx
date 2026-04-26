@@ -10,10 +10,11 @@ import Animated, { FadeInUp } from 'react-native-reanimated';
 import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { borderRadius } from '@/theme/spacing';
-import { typography, fontFamilies, fontWeights } from '@/theme/typography';
+import { fontFamilies, fontWeights } from '@/theme/typography';
+import { enterEasing } from '@/theme/animations';
 
 const anim = (delay: number) =>
-  FadeInUp.duration(280).delay(delay).springify().damping(18);
+  FadeInUp.duration(280).delay(delay).easing(enterEasing);
 
 interface EmptyStateProps {
   height: number;
@@ -52,7 +53,7 @@ export function EmptyState({ height }: EmptyStateProps) {
         style={{
           color: colors.text.primary,
           fontFamily: fontFamilies.primary.text,
-          fontSize: typography.body.fontSize,
+          fontSize: 17,
           fontWeight: fontWeights.semibold,
           marginBottom: 4,
           textAlign: 'center',
@@ -65,7 +66,7 @@ export function EmptyState({ height }: EmptyStateProps) {
         style={{
           color: colors.text.secondary,
           fontFamily: fontFamilies.primary.text,
-          fontSize: typography.caption.fontSize,
+          fontSize: 13,
           textAlign: 'center',
         }}
       >

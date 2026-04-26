@@ -4,6 +4,7 @@
 
 import { View, Text } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
+import { durations, enterEasing } from '../../theme/animations';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { visualStyles as vs } from './onboarding.visuals.styles';
 
@@ -34,8 +35,8 @@ export function TemplateGrid({ reduceMotion }: { reduceMotion: boolean }) {
             reduceMotion
               ? undefined
               : FadeIn.delay(300 + i * 60)
-                  .springify()
-                  .damping(18)
+                  .duration(durations.enter)
+                  .easing(enterEasing)
           }
           style={[
             vs.templateItem,

@@ -15,6 +15,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useSwipeDismiss } from '../../components/CreateHabitModal/hooks/useSwipeDismiss';
 import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 import { useThemeColors } from '../../theme/ThemeContext';
+import { durations, enterEasing } from '../../theme/animations';
 import { borderRadius } from '../../theme/spacing';
 import { AdvancedOptionsSection } from '../../components/AdvancedOptions';
 import { EditHeader } from './EditHeader';
@@ -110,7 +111,7 @@ function HabitEditScreenContent({
                       />
                       <Animated.View
                         className='px-6'
-                        entering={FadeInUp.delay(280).springify().damping(18)}
+                        entering={FadeInUp.delay(280).duration(durations.enter).easing(enterEasing)}
                       >
                         <CustomizeSection
                           habitName={state.habitName}

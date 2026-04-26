@@ -2,7 +2,7 @@
 import { View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated, { FadeInDown } from 'react-native-reanimated';
-import { durations } from '@/theme/animations';
+import { durations, enterEasing } from '@/theme/animations';
 import { ScreenHeader } from '../ScreenHeader';
 import { ModalCloseButton } from '../ui/ModalCloseButton';
 import { ProfileCard } from './ProfileCard';
@@ -18,7 +18,7 @@ interface AccountPageProps {
   onPremiumUpsell?: () => void;
 }
 
-const anim = (index: number) => FadeInDown.delay(index * durations.stagger).springify().damping(18);
+const anim = (index: number) => FadeInDown.delay(index * durations.stagger).duration(durations.enter).easing(enterEasing);
 
 export function AccountPage({
   highContrastMode,

@@ -15,8 +15,8 @@ import type { SortOptionConfig } from './types';
 export const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 /**
- * Spring configuration for bottom sheet animations
- * Using softer, more organic spring matching app's FadeInDown.springify().damping(18) pattern
+ * Spring configuration for bottom sheet animations.
+ * Sheet slide uses a softer organic spring (damping 18 / stiffness 150).
  */
 export const SHEET_SPRING_CONFIG = springs.standard;
 

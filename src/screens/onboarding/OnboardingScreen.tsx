@@ -16,6 +16,7 @@ import Animated, {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
+import { durations, enterEasing } from '../../theme/animations';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { DotIndicators } from './DotIndicators';
 import { styles } from './OnboardingScreen.styles';
@@ -57,7 +58,7 @@ function OnboardingScreenContent({ onComplete }: OnboardingScreenProps) {
           entering={
             shouldReduceMotion
               ? undefined
-              : FadeInUp.delay(200).springify().damping(18)
+              : FadeInUp.delay(200).duration(durations.enter).easing(enterEasing)
           }
           style={[styles.title, { color: colors.primary[700] }]}
         >
@@ -67,7 +68,7 @@ function OnboardingScreenContent({ onComplete }: OnboardingScreenProps) {
           entering={
             shouldReduceMotion
               ? undefined
-              : FadeInUp.delay(350).springify().damping(18)
+              : FadeInUp.delay(350).duration(durations.enter).easing(enterEasing)
           }
           style={[styles.subtitle, { color: colors.text.secondary }]}
         >
@@ -118,7 +119,7 @@ function OnboardingScreenContent({ onComplete }: OnboardingScreenProps) {
         {isLastPage ? (
           <Animated.View
             entering={
-              shouldReduceMotion ? undefined : FadeInUp.springify().damping(18)
+              shouldReduceMotion ? undefined : FadeInUp.duration(durations.enter).easing(enterEasing)
             }
           >
             <Pressable

@@ -146,7 +146,8 @@
  * - Feedback: spring-based, ≤100ms for taps
  * - No decorative loops or idle animations
  *
- * Springs: `springify().damping(18)` for smooth, controlled motion
+ * Entrances: `FadeInDown.duration(durations.enter).easing(enterEasing)` (cubic ease-out)
+ * Springs: reserved for feedback (press, celebration) — not entrances
  *
  * ## Color Naming Convention
  *

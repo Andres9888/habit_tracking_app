@@ -7,7 +7,7 @@ import Animated, { FadeInDown } from 'react-native-reanimated';
 import type { Doc } from '../../../../convex/_generated/dataModel';
 import { ScreenHeader } from '../../../components/ScreenHeader';
 import { useThemeColors } from '../../../theme/ThemeContext';
-import { durations, springs } from '../../../theme/animations';
+import { durations, enterEasing } from '../../../theme/animations';
 import { spacing } from '../../../theme/spacing';
 import { formatPopularityCount } from '../hooks/useDrillSections';
 import { getCategoryMeta } from '../data/categoryMeta';
@@ -57,8 +57,7 @@ export function SeeAllView({
           <Animated.View
             entering={FadeInDown.delay(index * durations.stagger)
               .duration(durations.enter)
-              .springify()
-              .damping(springs.standard.damping)}
+              .easing(enterEasing)}
           >
             <TemplateListCard
               getCategoryLabel={getCategoryLabel}

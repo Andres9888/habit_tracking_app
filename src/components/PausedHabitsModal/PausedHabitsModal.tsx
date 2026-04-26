@@ -12,14 +12,15 @@ import { usePausedHabitsModalLogic } from './PausedHabitsModal.hooks';
 import { PausedHabitCard } from './PausedHabitCard';
 import { PausedEmptyState } from './PausedEmptyState';
 import { iconSizes } from '@/theme/iconSizes';
-import { typography, fontFamilies } from '@/theme/typography';
+import { fontFamilies } from '@/theme/typography';
+import { enterEasing } from '@/theme/animations';
 
 interface PausedHabitsModalProps {
   onClose: () => void;
   onBack: () => void;
 }
 
-const anim = FadeInDown.duration(280).springify().damping(18);
+const anim = FadeInDown.duration(280).easing(enterEasing);
 
 export default function PausedHabitsModal({
   onClose,
@@ -59,7 +60,7 @@ export default function PausedHabitsModal({
           </Pressable>
           <Text
             className='flex-1 text-center font-bold'
-            style={{ fontFamily: fontFamilies.primary.text, fontSize: typography.heading1.fontSize, color: themeColors.text.primary }}
+            style={{ fontFamily: fontFamilies.primary.text, fontSize: 22, color: themeColors.text.primary }}
           >
             Paused Habits
           </Text>

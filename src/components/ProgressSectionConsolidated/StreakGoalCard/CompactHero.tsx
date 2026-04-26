@@ -3,10 +3,11 @@
  * Small ring on left; on right: N/goal + "N to go", progress bar,
  * and completion rate + best streak.
  */
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Text, View } from 'react-native';
+import { useThemeColors } from '@/theme/ThemeContext';
 import { SmallRing } from './SmallRing';
-import { compactStyles as s } from './styles/compact.styles';
+import { createCompactStyles } from './styles/compact.styles';
 
 interface CompactHeroProps {
   currentStreak: number;
@@ -25,6 +26,8 @@ export const CompactHero = React.memo(function CompactHero({
   completionRate,
   bestStreak,
 }: CompactHeroProps) {
+  const { colors } = useThemeColors();
+  const s = useMemo(() => createCompactStyles(colors), [colors]);
   const rate = Math.max(0, Math.min(100, Math.round(completionRate)));
   const fillPercent = Math.max(0, Math.min(100, overallPercent));
 

@@ -6,15 +6,20 @@ import React from 'react';
 import { View, Pressable } from 'react-native';
 import { X } from 'lucide-react-native';
 import { colors } from '../../theme/colors/core';
-import { borderRadius, spacing } from '../../theme/spacing';
+import { spacing } from '../../theme/spacing';
 import { iconSizes } from '@/theme/iconSizes';
 
 interface PaywallHeaderProps {
   onClose: () => void;
   disabled?: boolean;
+  hideClose?: boolean;
 }
 
-export function PaywallHeader({ onClose, disabled }: PaywallHeaderProps) {
+export function PaywallHeader({
+  onClose,
+  disabled,
+  hideClose,
+}: PaywallHeaderProps) {
   return (
     <View
       style={{
@@ -29,33 +34,35 @@ export function PaywallHeader({ onClose, disabled }: PaywallHeaderProps) {
       <View
         style={{
           backgroundColor: colors.gray[300],
-          borderRadius: borderRadius.xs,
+          borderRadius: 2.5,
           height: 5,
           width: 36,
         }}
       />
 
       {/* Close button */}
-      <Pressable
-        accessibilityLabel="Close paywall"
-        accessibilityRole="button"
-        disabled={disabled}
-        hitSlop={8}
-        style={{
-          alignItems: 'center',
-          backgroundColor: colors.gray[200],
-          borderRadius: borderRadius.full,
-          height: 32,
-          justifyContent: 'center',
-          position: 'absolute',
-          right: spacing.base,
-          top: spacing.md,
-          width: 32,
-        }}
-        onPress={onClose}
-      >
-        <X color={colors.gray[600]} size={iconSizes.medium} />
-      </Pressable>
+      {hideClose ? null : (
+        <Pressable
+          accessibilityLabel="Close paywall"
+          accessibilityRole="button"
+          disabled={disabled}
+          hitSlop={8}
+          style={{
+            alignItems: 'center',
+            backgroundColor: colors.gray[200],
+            borderRadius: 9999,
+            height: 32,
+            justifyContent: 'center',
+            position: 'absolute',
+            right: spacing.base,
+            top: spacing.md,
+            width: 32,
+          }}
+          onPress={onClose}
+        >
+          <X color={colors.gray[600]} size={iconSizes.medium} />
+        </Pressable>
+      )}
     </View>
   );
 }

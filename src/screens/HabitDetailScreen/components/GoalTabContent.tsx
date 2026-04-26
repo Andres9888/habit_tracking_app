@@ -1,6 +1,6 @@
 /**
  * GoalTabContent — Motivation-first composition around StreakGoalCard.
- * Adds: WhyAnchor (above), CoachLine (below hero), Adjust sheet + trigger.
+ * Wraps content in a theme-aware card matching HabitStrengthSection.
  */
 import { useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
@@ -8,6 +8,7 @@ import Animated, { FadeIn } from 'react-native-reanimated';
 import ErrorBoundary from '../../../components/ErrorBoundary';
 import { StreakGoalCard } from '../../../components/ProgressSectionConsolidated/StreakGoalCard';
 import type { Habit } from '../../../features/habits/types';
+import { shadows } from '../../../theme/spacing';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { typography, fontWeights } from '../../../theme/typography';
 import { GoalTabEmptyState } from './GoalTabEmptyState';
@@ -24,13 +25,20 @@ export function GoalTabContent({ habit, completionRate }: GoalTabContentProps) {
   const { colors } = useThemeColors();
   const [adjustOpen, setAdjustOpen] = useState(false);
   const hasGoal = (habit.goalDuration ?? 0) > 0;
+  const cardStyle = { ...shadows.card, backgroundColor: colors.card };
 
   if (!hasGoal) {
     return (
-      <Animated.View entering={FadeIn.duration(180)}>
-        <ErrorBoundary>
-          <GoalTabEmptyState habitId={habit._id} />
-        </ErrorBoundary>
+      <Animated.View
+        className='overflow-hidden rounded-2xl shadow-sm'
+        entering={FadeIn.duration(180)}
+        style={cardStyle}
+      >
+        <View className='p-5'>
+          <ErrorBoundary>
+            <GoalTabEmptyState habitId={habit._id} />
+          </ErrorBoundary>
+        </View>
       </Animated.View>
     );
   }
@@ -41,29 +49,17 @@ export function GoalTabContent({ habit, completionRate }: GoalTabContentProps) {
 
   return (
     <Animated.View
-      className='px-5'
+      className='overflow-hidden rounded-2xl shadow-sm'
       entering={FadeIn.duration(180)}
+      style={cardStyle}
     >
-      <ErrorBoundary>
-        <GoalWhyAnchor habit={habit} />
-
-        <StreakGoalCard
-          bestStreak={bestStreak}
-          completionRate={completionRate}
-          currentStreak={currentStreak}
-          streakGoal={goalDuration}
-        />
-
-        <GoalCoachLine
-          bestStreak={bestStreak}
-          currentStreak={currentStreak}
-          streakGoal={goalDuration}
-        />
-
-        <View className='items-center pt-3'>
+      <View className='p-5'>
+        <View className='mb-4 flex-row items-center justify-between'>
+          <Text style={{ ...typography.heading3, color: colors.text.primary }}>
+            Goal
+          </Text>
           <Pressable
             accessibilityRole='button'
-            className='px-4 py-2'
             onPress={() => setAdjustOpen(true)}
           >
             <Text
@@ -79,13 +75,30 @@ export function GoalTabContent({ habit, completionRate }: GoalTabContentProps) {
           </Pressable>
         </View>
 
-        <GoalAdjustSheet
-          currentGoal={goalDuration}
-          habitId={habit._id}
-          visible={adjustOpen}
-          onClose={() => setAdjustOpen(false)}
-        />
-      </ErrorBoundary>
+        <ErrorBoundary>
+          <GoalWhyAnchor habit={habit} />
+
+          <StreakGoalCard
+            bestStreak={bestStreak}
+            completionRate={completionRate}
+            currentStreak={currentStreak}
+            streakGoal={goalDuration}
+          />
+
+          <GoalCoachLine
+            bestStreak={bestStreak}
+            currentStreak={currentStreak}
+            streakGoal={goalDuration}
+          />
+
+          <GoalAdjustSheet
+            currentGoal={goalDuration}
+            habitId={habit._id}
+            visible={adjustOpen}
+            onClose={() => setAdjustOpen(false)}
+          />
+        </ErrorBoundary>
+      </View>
     </Animated.View>
   );
 }

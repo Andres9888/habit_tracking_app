@@ -6,12 +6,12 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import { Sparkles, AlertTriangle } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
-import { borderRadius } from '@/theme/spacing';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 
 import type { VizType } from './types';
-import { typography, fontFamilies, fontWeights } from '@/theme/typography';
+import { fontFamilies, fontWeights } from '@/theme/typography';
+import { enterEasing } from '@/theme/animations';
 
 interface EmptyVizStateProps {
   type: VizType;
@@ -19,7 +19,7 @@ interface EmptyVizStateProps {
 }
 
 const anim = (delay: number) =>
-  FadeInUp.duration(280).delay(delay).springify().damping(18);
+  FadeInUp.duration(280).delay(delay).easing(enterEasing);
 
 export function EmptyVizState({ type, compact }: EmptyVizStateProps) {
   const { colors, isDark } = useThemeColors();
@@ -39,7 +39,7 @@ export function EmptyVizState({ type, compact }: EmptyVizStateProps) {
           style={{
             color: accentColor,
             fontFamily: fontFamilies.primary.text,
-            fontSize: typography.bodySmall.fontSize,
+            fontSize: 14,
             fontStyle: 'italic',
             textAlign: 'center',
           }}
@@ -59,7 +59,7 @@ export function EmptyVizState({ type, compact }: EmptyVizStateProps) {
         style={{
           alignItems: 'center',
           backgroundColor: bgColor,
-          borderRadius: borderRadius.xl,
+          borderRadius: 24,
           height: 48,
           justifyContent: 'center',
           marginBottom: 12,
@@ -77,7 +77,7 @@ export function EmptyVizState({ type, compact }: EmptyVizStateProps) {
         style={{
           color: colors.text.primary,
           fontFamily: fontFamilies.primary.text,
-          fontSize: typography.bodySmall.fontSize,
+          fontSize: 14,
           fontWeight: fontWeights.medium,
           marginBottom: 4,
           textAlign: 'center',
@@ -90,7 +90,7 @@ export function EmptyVizState({ type, compact }: EmptyVizStateProps) {
         style={{
           color: colors.text.tertiary,
           fontFamily: fontFamilies.primary.text,
-          fontSize: typography.caption.fontSize,
+          fontSize: 13,
           textAlign: 'center',
         }}
       >

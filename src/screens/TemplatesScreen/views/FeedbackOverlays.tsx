@@ -32,6 +32,7 @@ export function FeedbackOverlays(p: FeedbackOverlaysProps) {
         <TemplateAddedToast
           templateData={p.toastTemplateData}
           visible={p.showToast}
+          onAddAnother={p.onDismissToast}
           onDismiss={p.onDismissToast}
         />
       ) : (

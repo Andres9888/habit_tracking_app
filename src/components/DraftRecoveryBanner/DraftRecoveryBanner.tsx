@@ -7,6 +7,7 @@ import { VARIANT_STYLES } from './constants';
 import type { DraftRecoveryBannerProps } from './types';
 import { iconSizes } from '@/theme/iconSizes';
 import { triggerHaptic } from '@/utils/haptics';
+import { enterEasing } from '@/theme/animations';
 
 export function DraftRecoveryBanner({
   visible,
@@ -60,7 +61,7 @@ export function DraftRecoveryBanner({
   return (
     <Animated.View
       className={`mx-4 mb-3 rounded-xl border ${styles.border} ${styles.bg} p-3`}
-      entering={FadeInDown.duration(280).springify().damping(18)}
+      entering={FadeInDown.duration(280).easing(enterEasing)}
       exiting={FadeOut.duration(150)}
       style={themeStyle ? [themeStyle.bg, themeStyle.border] : undefined}
     >

@@ -45,7 +45,8 @@ export function PopularSection({
             </Text>
           </Pressable>
         }
-        title='Popular'
+        subtitle='What people are starting this week'
+        title='Quick wins to build momentum'
       />
       <FlatList
         testID='templates-popular-scroll'
@@ -54,7 +55,7 @@ export function PopularSection({
         contentContainerStyle={s.list}
         keyExtractor={(item) => item._id}
         showsHorizontalScrollIndicator={false}
-        renderItem={({ item }) => (
+        renderItem={({ index, item }) => (
           <TrendingCard
             description={item.description}
             frequency={item.frequency}
@@ -64,6 +65,7 @@ export function PopularSection({
             isImported={importedTemplateIds.has(item._id)}
             isImporting={importingTemplateId === item._id}
             name={item.name}
+            popularityPrefix={index < 3 ? '🔥' : undefined}
             popularityScore={item.popularityScore ?? 0}
             onImport={() => onImport(item)}
             onPress={() => onPreview(item)}

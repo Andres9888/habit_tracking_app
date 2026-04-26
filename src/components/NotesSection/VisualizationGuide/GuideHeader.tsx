@@ -8,6 +8,7 @@ import Animated, { FadeInDown } from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Eye, Sparkles, Target } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
+import { durations, enterEasing } from '@/theme/animations';
 
 interface GuideHeaderProps {
   habitName?: string;
@@ -17,7 +18,7 @@ export function GuideHeader({ habitName }: GuideHeaderProps) {
   return (
     <Animated.View
       className='overflow-hidden rounded-2xl p-5'
-      entering={FadeInDown.delay(50).springify().damping(18)}
+      entering={FadeInDown.delay(50).duration(durations.enter).easing(enterEasing)}
     >
       <LinearGradient
         className='absolute inset-0 rounded-2xl'

@@ -28,8 +28,9 @@ import { useHabitsAppHandlers } from './useHabitsAppHandlers';
 import { useBottomBarProps } from './useBottomBarProps';
 import { schedulePostLaunchAppPreload } from './postLaunchPreload';
 import { useTemplatesWarmup } from './hooks/useTemplatesWarmup';
+import { enterEasing } from '../../theme/animations';
 
-const ENTERING = FadeInDown.duration(280).springify().damping(18);
+const ENTERING = FadeInDown.duration(280).easing(enterEasing);
 const styles = StyleSheet.create({ flex1: { flex: 1 } });
 
 // eslint-disable-next-line max-lines-per-function
@@ -47,7 +48,7 @@ function HabitsAppContent() {
 
   const { colors } = useThemeColors();
   const { list, modals } = useHabitsApp();
-  const { triggerLightImpact, triggerSelection, triggerWarning } = useHapticFeedback({
+  const { triggerLightImpact, triggerSelection } = useHapticFeedback({
     isEnabled: list.celebrationsEnabled,
     preference: list.reduceMotionPreference,
   });
@@ -64,11 +65,8 @@ function HabitsAppContent() {
   });
 
   const handlers = useHabitsAppHandlers({
-    hasReachedHabitLimit: list.hasReachedHabitLimit,
-    isPremiumUser: list.isPremiumUser,
     openCreateHabitScreen: modals.openCreateHabitScreen,
     triggerSelection,
-    triggerWarning,
   });
 
   const bottomBar = useBottomBarProps({

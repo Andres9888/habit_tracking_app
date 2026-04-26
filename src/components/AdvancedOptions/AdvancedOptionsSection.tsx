@@ -31,6 +31,7 @@ import { useReduceMotion } from '@/hooks/useReduceMotion';
 import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '@/theme/ThemeContext';
 import { fontWeights, typography } from '@/theme/typography';
+import { durations, enterEasing } from '@/theme/animations';
 import {
   CUSTOM_PRESET_ID,
   matchPresetId,
@@ -86,7 +87,7 @@ export function AdvancedOptionsSection({
 
   const algoEntry = ALGORITHM_COPY[strengthAlgorithm];
   const AlgoIcon = ALGO_ICONS[strengthAlgorithm];
-  const algoSubtitle = `${algoEntry.name} · ~${algoEntry.daysToForm} days to automatic`;
+  const algoSubtitle = `${algoEntry.name} · ~${algoEntry.daysToForm}-day build`;
 
   const resolvedEmojis = resolveProgressEmojis(progressEmojis, userDefaultEmojis);
   const presetId = matchPresetId(resolvedEmojis, savedCustomEmojis);
@@ -96,13 +97,13 @@ export function AdvancedOptionsSection({
       : (PROGRESS_EMOJI_PRESETS.find((p) => p.id === presetId)?.label ??
         'Custom');
   const streakSubtitle =
-    streakGoal > 0 ? `Aim for ${streakGoal} day${streakGoal === 1 ? '' : 's'}` : 'No goal set';
+    streakGoal > 0 ? `${streakGoal}-day target` : 'No target set';
 
   return (
     <>
       <Animated.View
         className='mx-6 mt-6 overflow-hidden rounded-2xl'
-        entering={FadeInUp.delay(baseDelay + 40).springify().damping(18)}
+        entering={FadeInUp.delay(baseDelay + 40).duration(durations.enter).easing(enterEasing)}
         layout={reduceMotion ? undefined : LinearTransition.duration(220)}
         style={{
           backgroundColor: colors.card,
@@ -166,7 +167,7 @@ export function AdvancedOptionsSection({
                 <Text style={{ fontSize: 18 }}>{resolvedEmojis.starting}</Text>
               }
               iconBackground={colors.status.streakLight}
-              subtitle={`${presetLabel} · levels up every 20%`}
+              subtitle={`${presetLabel} · 5 stages`}
               title='Growth Icons'
               onPress={() => setOpenSheet('growth')}
             />
@@ -189,7 +190,7 @@ export function AdvancedOptionsSection({
       </Animated.View>
 
       <AdvancedSheet
-        subtitle={`Habit strength grows with every check-in and dips with every miss. Tell us what kind of habit this is and we'll match the growth curve to fit.`}
+        subtitle={`Strength rises with check-ins and dips with misses. Pick the curve that fits this habit.`}
         title='Growth Type'
         visible={openSheet === 'algorithm'}
         onClose={() => setOpenSheet(null)}
@@ -201,7 +202,7 @@ export function AdvancedOptionsSection({
       </AdvancedSheet>
 
       <AdvancedSheet
-        subtitle='Every 20% of habit strength unlocks the next icon — five stages from Starting Out to Unbreakable. Pick a theme or customize any stage.'
+        subtitle='Five stages, one for every 20% of strength. Pick a theme or customize any stage.'
         title='Growth Icons'
         visible={openSheet === 'growth'}
         onClose={() => setOpenSheet(null)}
@@ -216,7 +217,7 @@ export function AdvancedOptionsSection({
       </AdvancedSheet>
 
       <AdvancedSheet
-        subtitle='Pick a target streak length to work toward.'
+        subtitle='Set a streak length to aim for.'
         title='Streak Goal'
         visible={openSheet === 'streak'}
         onClose={() => setOpenSheet(null)}

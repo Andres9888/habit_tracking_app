@@ -14,6 +14,7 @@ import { buildTextInputHintProps } from '@/utils/textInputHintProps';
 import { PromptList } from './PromptList';
 import { NavigationButtons } from './NavigationButtons';
 import type { VisualizationInputStepProps } from '../types';
+import { durations, enterEasing } from '@/theme/animations';
 
 const PROMPTS = [
   'How do you feel after completing this habit?',
@@ -30,7 +31,7 @@ export function PositiveStep({
   const { colors } = useThemeColors();
 
   return (
-    <Animated.View className='flex-1 gap-5' entering={FadeInDown.springify().damping(18)}>
+    <Animated.View className='flex-1 gap-5' entering={FadeInDown.duration(durations.enter).easing(enterEasing)}>
       <View className='items-center gap-3'>
         <View className='h-16 w-16 items-center justify-center rounded-2xl'>
           <LinearGradient

@@ -7,7 +7,6 @@
  */
 
 import { useCallback, useState } from 'react';
-import { Alert } from 'react-native';
 import { logInteraction } from '../../lib/analytics/interactions';
 
 // ---------------------------------------------------------------------------
@@ -18,14 +17,8 @@ import { logInteraction } from '../../lib/analytics/interactions';
 interface UseHabitsAppHandlersParams {
   /** Opens the "new habit" creation screen. */
   openCreateHabitScreen: () => void;
-  /** Whether the current user has an active premium subscription. */
-  isPremiumUser: boolean;
-  /** Whether the free-tier habit limit has been reached. */
-  hasReachedHabitLimit: boolean;
   /** Haptic: light selection tap. */
   triggerSelection: () => void;
-  /** Haptic: warning bump (e.g. limit reached). */
-  triggerWarning: () => void;
 }
 
 /** Values returned by the hook. */
@@ -46,10 +39,7 @@ interface UseHabitsAppHandlersResult {
 
 export function useHabitsAppHandlers({
   openCreateHabitScreen,
-  isPremiumUser,
-  hasReachedHabitLimit,
   triggerSelection,
-  triggerWarning,
 }: UseHabitsAppHandlersParams): UseHabitsAppHandlersResult {
   const [upgradePromptVisible, setUpgradePromptVisible] = useState(false);
   const [paywallVisible, setPaywallVisible] = useState(false);
@@ -87,34 +77,13 @@ export function useHabitsAppHandlers({
   }, []);
 
   /**
-   * Gate-checked entry point for creating a new habit.
-   *
-   * If the user is on the free tier and has hit the limit, shows an alert
-   * with an upsell; otherwise opens the creation screen directly.
+   * Entry point for creating a new habit. The free-tier habit cap was
+   * removed in favour of the trial-then-paywall gate at AuthGate, so this
+   * always proceeds straight to the creation screen.
    */
   const handleCreateHabitRequest = useCallback(() => {
-    if (!isPremiumUser && hasReachedHabitLimit) {
-      triggerWarning();
-      Alert.alert(
-        '🎉 Great progress!',
-        "You've built 3 solid habits! Ready to track more? Upgrade to premium for unlimited habits and advanced insights.",
-        [
-          { style: 'cancel', text: 'Keep 3 Free' },
-          {
-            onPress: () => setPaywallVisible(true),
-            text: 'Unlock Unlimited',
-          },
-        ]
-      );
-      return;
-    }
     openCreateHabitScreen();
-  }, [
-    hasReachedHabitLimit,
-    isPremiumUser,
-    openCreateHabitScreen,
-    triggerWarning,
-  ]);
+  }, [openCreateHabitScreen]);
 
   return {
     handleCreateHabitRequest,

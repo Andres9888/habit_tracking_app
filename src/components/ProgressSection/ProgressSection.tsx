@@ -10,6 +10,7 @@
 import React from 'react';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 
+import { durations, enterEasing } from '../../theme/animations';
 import { YourProgressCard } from './YourProgressCard';
 import { PersonalBestsCard } from './PersonalBestsCard';
 import { ThisMonthCard } from './ThisMonthCard';
@@ -40,7 +41,7 @@ export function ProgressSection({
   return (
     <Animated.View
       className='gap-4'
-      entering={FadeInDown.delay(100).springify().damping(18)}
+      entering={FadeInDown.delay(100).duration(durations.enter).easing(enterEasing)}
     >
       <YourProgressCard
         actionableTip={actionableTip}

@@ -1,9 +1,9 @@
 import { Pressable, Text, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
-import { durations, springs } from '../../../theme/animations';
+import { durations, enterEasing } from '../../../theme/animations';
 import { useThemeColors } from '../../../theme/ThemeContext';
 
-const ENTERING = FadeInDown.delay(durations.stagger).duration(durations.enter).springify().damping(springs.standard.damping);
+const ENTERING = FadeInDown.delay(durations.stagger).duration(durations.enter).easing(enterEasing);
 
 interface StatsSummaryBarProps {
   habitCount: number;

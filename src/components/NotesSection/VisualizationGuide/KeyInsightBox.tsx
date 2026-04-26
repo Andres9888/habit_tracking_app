@@ -9,6 +9,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Zap } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '@/theme/ThemeContext';
+import { durations, enterEasing } from '@/theme/animations';
 
 export function KeyInsightBox() {
   const { colors } = useThemeColors();
@@ -17,7 +18,7 @@ export function KeyInsightBox() {
     <Animated.View
       className='flex-row items-start gap-3 rounded-2xl border p-4'
       style={{ borderColor: colors.status.warningLight }}
-      entering={FadeInDown.delay(100).springify().damping(18)}
+      entering={FadeInDown.delay(100).duration(durations.enter).easing(enterEasing)}
     >
       <LinearGradient
         className='absolute inset-0 rounded-2xl'

@@ -9,7 +9,7 @@ import Animated, {
 import { useThemeColors } from '../../theme';
 import { typography } from '@/theme/typography';
 import { triggerHaptic } from '@/utils/haptics';
-import { springs } from '@/theme/animations';
+import { durations, enterEasing, springs } from '@/theme/animations';
 import { ModalCloseButton } from '@/components/ui/ModalCloseButton';
 
 interface EditHeaderProps {
@@ -52,7 +52,7 @@ export function EditHeader({
   return (
     <Animated.View
       className='flex-row items-center justify-between px-4 pb-2'
-      entering={FadeInDown.delay(0).springify().damping(18)}
+      entering={FadeInDown.delay(0).duration(durations.enter).easing(enterEasing)}
       style={{ paddingTop }}
     >
       <ModalCloseButton label='Cancel' onClose={handleCancel} />

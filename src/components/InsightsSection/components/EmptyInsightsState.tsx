@@ -12,13 +12,14 @@ import type { EmptyInsightsStateProps } from '../InsightsSection.types';
 import { typography, fontFamilies, fontWeights } from '@/theme/typography';
 import { borderRadius, spacing } from '@/theme/spacing';
 import { iconSizes } from '@/theme/iconSizes';
+import { durations, enterEasing } from '@/theme/animations';
 
 export function EmptyInsightsState({ daysRemaining }: EmptyInsightsStateProps) {
   const { colors, isDark } = useThemeColors();
 
   return (
     <Animated.View
-      entering={FadeInDown.delay(100).springify().damping(18)}
+      entering={FadeInDown.delay(100).duration(durations.enter).easing(enterEasing)}
       style={{
         backgroundColor: colors.card,
         borderRadius: borderRadius.card,

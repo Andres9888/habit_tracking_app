@@ -7,6 +7,7 @@ import { iconSizes } from '@/theme/iconSizes';
 import { typography, fontWeights } from '@/theme/typography';
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import { triggerHaptic } from '@/utils/haptics';
+import { durations, enterEasing } from '@/theme/animations';
 import { useThemeColors } from '../../theme/ThemeContext';
 import type { SortPickerOption } from './SortPicker.constants';
 import type { HabitSortMode } from '../../features/habits/types';
@@ -18,7 +19,7 @@ interface SortOptionRowProps {
   onSelect: (mode: HabitSortMode) => void;
 }
 
-const CHECKMARK_ENTERING = ZoomIn.springify().damping(18);
+const CHECKMARK_ENTERING = ZoomIn.duration(durations.enter).easing(enterEasing);
 
 export function SortOptionRow({ option, selected, showBorder, onSelect }: SortOptionRowProps) {
   const { colors, isDark } = useThemeColors();

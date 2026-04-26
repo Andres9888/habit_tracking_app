@@ -8,7 +8,7 @@ import Animated, {
   withTiming,
   FadeInDown,
 } from 'react-native-reanimated';
-import { springs } from '@/theme/animations';
+import { durations, enterEasing, springs } from '@/theme/animations';
 import { useHapticFeedback } from '../../../../hooks/useHapticFeedback';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import type { HabitSortMode } from '../../types';
@@ -88,7 +88,7 @@ export function SortChip({
   return (
     <Animated.View
       entering={
-        reduceMotion ? undefined : FadeInDown.delay(100).springify().damping(18)
+        reduceMotion ? undefined : FadeInDown.delay(100).duration(durations.enter).easing(enterEasing)
       }
     >
       <AnimatedPressable
