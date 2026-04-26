@@ -96,7 +96,7 @@ describe('HabitNameField - V9 Design System', () => {
       const { getByText } = render(<HabitNameField {...defaultProps} />);
       const label = getByText(STRINGS.CREATE_HABIT.nameLabel);
 
-      expect(label.props.className).toContain('text-[13px]');
+      expect(label.props.className).toContain('text-sm');
     });
 
     it('should have semibold font weight on label', () => {

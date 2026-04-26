@@ -18,19 +18,19 @@ export function SocialProofCard() {
       style={{ borderColor: colors.border, backgroundColor: colors.background }}
     >
       <Text
-        className='text-[13px] font-medium uppercase tracking-[2px]'
+        className='text-sm font-medium uppercase tracking-[2px]'
         style={{ color: colors.text.primary }}
       >
         Proven momentum
       </Text>
       <Text
-        className='text-[17px] font-normal leading-[22px]'
+        className='text-base font-normal leading-[22px]'
         style={{ color: colors.text.primary }}
       >
         {`"${SOCIAL_PROOF.quote}"`}
       </Text>
       <Text
-        className='text-[13px] font-normal'
+        className='text-sm font-normal'
         style={{ color: colors.text.secondary }}
       >
         {SOCIAL_PROOF.attribution}

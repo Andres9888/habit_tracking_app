@@ -6,7 +6,7 @@
 import React from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { fontFamilies, fontWeights } from '@/theme/typography';
+import { typography, fontFamilies, fontWeights } from '@/theme/typography';
 
 const STARTER_HABITS = [
   { emoji: '💧', name: 'Drink Water' },
@@ -82,7 +82,7 @@ const startStyles = StyleSheet.create({
   ctaText: {
     color: '#fff',
     fontFamily: fontFamilies.primary.text,
-    fontSize: 13,
+    fontSize: typography.caption.fontSize,
     fontWeight: fontWeights.bold,
   },
   gradient: {
@@ -92,14 +92,14 @@ const startStyles = StyleSheet.create({
   subtitle: {
     color: '#BBF7D0',
     fontFamily: fontFamilies.primary.text,
-    fontSize: 13,
+    fontSize: typography.caption.fontSize,
     lineHeight: 18,
     marginTop: 4,
   },
   title: {
     color: '#fff',
     fontFamily: fontFamilies.primary.display,
-    fontSize: 20,
+    fontSize: typography.heading3.fontSize,
     fontWeight: fontWeights.bold,
   },
   wrapper: {

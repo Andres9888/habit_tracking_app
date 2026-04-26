@@ -5,6 +5,7 @@ import { getTodayString } from '../../utils/getLocalDateString';
  */
 
 import { useState, useEffect, useRef } from 'react';
+import * as Haptics from 'expo-haptics';
 import {
   useSharedValue,
   withSequence,

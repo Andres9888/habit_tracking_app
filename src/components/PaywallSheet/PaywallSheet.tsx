@@ -55,7 +55,7 @@ const s = StyleSheet.create({
   ctaDisabled: { opacity: 0.6 },
   ctaText: { ...typography.button, color: colors.text.inverse },
   description: { ...typography.bodySmall, color: colors.text.secondary, textAlign: 'center' },
-  emoji: { fontSize: 34, textAlign: 'center' },
+  emoji: { fontSize: typography.displayLarge.fontSize, textAlign: 'center' },
   headline: { ...typography.heading2, color: colors.text.primary, textAlign: 'center' },
   perkEmoji: { fontSize: 20 },
   perkIcon: { alignItems: 'center', borderRadius: borderRadius.small, height: 40, justifyContent: 'center', width: 40 },

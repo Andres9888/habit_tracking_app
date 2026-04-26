@@ -36,7 +36,7 @@ export function StatsGrid({
             Completed
           </Text>
         </View>
-        <Text className='text-[22px] font-bold' style={{ color: colors.text }}>
+        <Text className='text-2xl font-bold' style={{ color: colors.text }}>
           {totalCompleted}
         </Text>
         <Text className='text-[10px] font-medium' style={{ color: themeColors.text.tertiary }}>
@@ -58,7 +58,7 @@ export function StatsGrid({
             Perfect Days
           </Text>
         </View>
-        <Text className='text-[22px] font-bold' style={{ color: colors.text }}>
+        <Text className='text-2xl font-bold' style={{ color: colors.text }}>
           {perfectDays}
         </Text>
         <Text className='text-[10px] font-medium' style={{ color: themeColors.text.tertiary }}>

@@ -5,7 +5,7 @@ import { iconSizes } from '@/theme/iconSizes';
 import { format } from 'date-fns';
 
 import { useThemeColors } from '../../../theme/ThemeContext';
-import { fontFamilies, fontWeights } from '@/theme/typography';
+import { typography, fontFamilies, fontWeights } from '@/theme/typography';
 
 interface MiniCalendarNavProps {
   month: Date;
@@ -35,7 +35,7 @@ export const MiniCalendarNav: React.FC<MiniCalendarNavProps> = ({
       <Pressable hitSlop={8} onPress={onPrev}>
         <ChevronLeft color={iconColor} size={iconSizes.medium} />
       </Pressable>
-      <Text style={{ fontFamily: fontFamilies.primary.text, fontSize: 14, fontWeight: fontWeights.bold, color: titleColor }}>
+      <Text style={{ fontFamily: fontFamilies.primary.text, fontSize: typography.bodySmall.fontSize, fontWeight: fontWeights.bold, color: titleColor }}>
         {format(month, 'MMMM yyyy')}
       </Text>
       <Pressable hitSlop={8} onPress={onNext}>

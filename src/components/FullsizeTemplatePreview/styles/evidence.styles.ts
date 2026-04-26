@@ -32,7 +32,7 @@ export const evidenceStyles = StyleSheet.create({
   quoteText: {
     color: colors.primary[700],
     fontFamily: fontFamilies.primary.text,
-    fontSize: 13,
+    fontSize: typography.caption.fontSize,
     fontStyle: 'italic',
     lineHeight: 22,
   },

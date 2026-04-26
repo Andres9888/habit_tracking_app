@@ -76,11 +76,11 @@ function HabitDayToggleRowComponent({
         }}
       >
         <View className='h-10 w-10 items-center justify-center rounded-xl bg-white shadow-sm'>
-          <Text className='text-[20px]'>{habit.icon || '🎯'}</Text>
+          <Text className='text-xl'>{habit.icon || '🎯'}</Text>
         </View>
 
         <Text
-          className='flex-1 text-[15px] font-medium'
+          className='flex-1 text-base font-medium'
           style={{ color: themeColors.text.primary }}
           ellipsizeMode='tail'
           numberOfLines={2}

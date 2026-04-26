@@ -3,6 +3,7 @@ import { Animated, Pressable, Text, View } from 'react-native';
 import { colors } from '@/theme/colors';
 import { useThemeColors } from '@/theme/ThemeContext';
 import { shadows } from '@/theme/spacing';
+import { springs } from '@/theme/animations';
 import { Motion } from '../../../constants/motion';
 import useHapticFeedback from '../../../hooks/useHapticFeedback';
 
@@ -47,8 +48,7 @@ const ChipButton = ({ chip, onPress }: ChipButtonProps) => {
 
   const handlePressOut = useCallback(() => {
     Animated.spring(scale, {
-      damping: 12,
-      stiffness: 200,
+      ...springs.standard,
       toValue: 1,
       useNativeDriver: true,
     }).start();

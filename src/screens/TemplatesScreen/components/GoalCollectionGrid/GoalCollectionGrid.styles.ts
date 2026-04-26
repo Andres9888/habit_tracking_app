@@ -3,20 +3,21 @@
  */
 
 import { StyleSheet } from 'react-native';
-import { fontFamilies, fontWeights } from '@/theme/typography';
+import { borderRadius } from '@/theme/spacing';
+import { typography, fontFamilies, fontWeights } from '@/theme/typography';
 
 export const s = StyleSheet.create({
   arrow: {
     alignItems: 'center',
     backgroundColor: 'rgba(0,0,0,0.08)',
-    borderRadius: 9999,
+    borderRadius: borderRadius.full,
     height: 24,
     justifyContent: 'center',
     width: 24,
   },
   card: {
     borderColor: 'rgba(0,0,0,0.04)',
-    borderRadius: 16,
+    borderRadius: borderRadius.large,
     borderWidth: 1,
     padding: 14,
   },
@@ -35,7 +36,7 @@ export const s = StyleSheet.create({
   emojiFeatured: { fontSize: 42, lineHeight: 44 },
   featuredBadge: {
     backgroundColor: 'rgba(255,255,255,0.55)',
-    borderRadius: 9999,
+    borderRadius: borderRadius.full,
     fontSize: 9,
     fontWeight: fontWeights.bold,
     letterSpacing: 0.5,
@@ -58,7 +59,7 @@ export const s = StyleSheet.create({
   featuredContent: { flex: 1 },
   featuredLabel: {
     fontFamily: fontFamilies.primary.display,
-    fontSize: 17,
+    fontSize: typography.body.fontSize,
     fontWeight: fontWeights.bold,
     letterSpacing: -0.2,
     paddingRight: 84,

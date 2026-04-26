@@ -5,6 +5,7 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import { Lightbulb } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { colors } from '@/theme';
 import { useAppTheme } from '../../../theme';
 import { evidenceStyles as es } from '../styles';
@@ -29,7 +30,7 @@ export function ScienceEvidenceTips({ tips }: ScienceEvidenceTipsProps) {
         accessibilityRole="text"
       >
         <View style={es.header}>
-          <Lightbulb color={colors.primary[600]} size={18} strokeWidth={2} />
+          <Lightbulb color={colors.primary[600]} size={iconSizes.medium} strokeWidth={2} />
           <Text style={[es.headerLabel, { fontFamily }]}>PRACTICAL TIPS</Text>
         </View>
         {tips.map((tip: string, index: number) => (

@@ -29,7 +29,7 @@ export function HabitContent({
       <View style={styles.content}>
         <View style={styles.header}>
           <View style={styles.badge}>
-            <Zap color='#f59e0b' size={12} strokeWidth={2.5} />
+            <Zap color='#f59e0b' size={iconSizes.micro} strokeWidth={2.5} />
             <Text style={styles.badgeText}>Focus on</Text>
           </View>
           <Text style={styles.progress}>

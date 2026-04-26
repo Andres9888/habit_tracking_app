@@ -67,7 +67,7 @@ export function CreateButton({
             }}
           >
             <Check color={colors.text.inverse} size={iconSizes.medium} strokeWidth={2.5} />
-            <Text className='ml-2 text-[17px] font-semibold text-white'>
+            <Text className='ml-2 text-base font-semibold text-white'>
               {STRINGS.CREATE_HABIT.createAction}
             </Text>
           </LinearGradient>

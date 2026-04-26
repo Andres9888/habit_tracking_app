@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { Animated } from 'react-native';
+import { springs } from '@/theme/animations';
 import { Motion } from '../../../../constants/motion';
 
 export function usePremiumTeaserAnimations(habitName: string) {
@@ -18,9 +19,8 @@ export function usePremiumTeaserAnimations(habitName: string) {
           useNativeDriver: true,
         }),
         Animated.spring(slideAnim, {
-          damping: 15,
+          ...springs.standard,
           delay: 500,
-          stiffness: 150,
           toValue: 0,
           useNativeDriver: true,
         }),

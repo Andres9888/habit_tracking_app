@@ -22,14 +22,14 @@ export function LimitBanner({ onUpgradePress }: LimitBannerProps) {
       style={{
         flexDirection: 'row', alignItems: 'flex-start', gap: 10,
         marginHorizontal: 20, marginBottom: 12, padding: 12,
-        borderRadius: 14, borderWidth: 1,
+        borderRadius: borderRadius.medium, borderWidth: 1,
         backgroundColor: colors.status.warningLight,
         borderColor: colors.status.warning,
       }}
     >
       <View
         style={{
-          width: 28, height: 28, borderRadius: 8,
+          width: 28, height: 28, borderRadius: borderRadius.small,
           backgroundColor: colors.status.warningLight,
           alignItems: 'center', justifyContent: 'center',
         }}

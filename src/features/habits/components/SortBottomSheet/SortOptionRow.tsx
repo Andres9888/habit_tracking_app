@@ -93,13 +93,13 @@ export function SortOptionRow({
 
       <View className='flex-1'>
         <Text
-          className='text-[15px] font-medium'
+          className='text-base font-medium'
           style={{ color: themeColors.text.primary }}
         >
           {title}
         </Text>
         <Text
-          className='text-[13px] font-normal'
+          className='text-sm font-normal'
           style={{ color: themeColors.text.secondary }}
         >
           {description}

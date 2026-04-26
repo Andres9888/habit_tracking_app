@@ -4,6 +4,7 @@ import { BlurView } from 'expo-blur';
 import { ChevronLeft } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
 import type { EdgeInsets } from 'react-native-safe-area-context';
+import { borderRadius } from '@/theme/spacing';
 import { durations, springs } from '@/theme/animations';
 import { useThemeColors } from '@/theme/ThemeContext';
 import { typography, fontWeights } from '@/theme/typography';
@@ -46,10 +47,10 @@ export function ModalHeader({ insets, habitCount, selectionMode, onBack, onSelec
             accessibilityState={{ disabled: selectDisabled }}
             disabled={selectDisabled}
             hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-            style={{ paddingHorizontal: 10, paddingVertical: 8, borderRadius: 8, opacity: selectDisabled ? 0.4 : 1 }}
+            style={{ paddingHorizontal: 10, paddingVertical: 8, borderRadius: borderRadius.small, opacity: selectDisabled ? 0.4 : 1 }}
             onPress={onSelectPress}
           >
-            <Text style={{ fontSize: 14, fontWeight: fontWeights.semibold, color: selectColor, letterSpacing: -0.1 }}>
+            <Text style={{ fontSize: typography.bodySmall.fontSize, fontWeight: fontWeights.semibold, color: selectColor, letterSpacing: -0.1 }}>
               {selectLabel}
             </Text>
           </Pressable>

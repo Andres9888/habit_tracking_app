@@ -3,11 +3,11 @@ import Animated, { ZoomIn } from 'react-native-reanimated';
 
 import { useReduceMotion } from '../../../hooks/useReduceMotion';
 import { useThemeColors } from '../../../theme/ThemeContext';
-import { fontFamilies, fontWeights } from '../../../theme/typography';
+import { typography, fontFamilies, fontWeights } from '../../../theme/typography';
 
 const PROGRESS_BASE = {
   fontFamily: fontFamilies.primary.text,
-  fontSize: 14,
+  fontSize: typography.bodySmall.fontSize,
   fontWeight: fontWeights.semibold,
   letterSpacing: -0.2,
 };

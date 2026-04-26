@@ -56,7 +56,7 @@ export const compactStyles = StyleSheet.create({
   },
   heroMetaText: {
     color: colors.gray[500],
-    fontSize: 10,
+    fontSize: typography.tabBar.fontSize,
   },
   heroProgressBar: {
     backgroundColor: colors.gray[200],
@@ -90,7 +90,7 @@ export const compactStyles = StyleSheet.create({
   heroStatValue: {
     color: colors.gray[800],
     fontFamily: fontFamilies.monospace,
-    fontSize: 20,
+    fontSize: typography.heading3.fontSize,
     fontWeight: fontWeights.bold,
   },
   milestonesCard: {
@@ -130,7 +130,7 @@ export const compactStyles = StyleSheet.create({
   nextDays: {
     color: colors.streak[500],
     fontFamily: fontFamilies.monospace,
-    fontSize: 20,
+    fontSize: typography.heading3.fontSize,
     fontWeight: fontWeights.bold,
   },
   nextDaysLabel: {
@@ -148,7 +148,7 @@ export const compactStyles = StyleSheet.create({
   nextName: {
     color: colors.gray[800],
     fontFamily: fontFamilies.primary.display,
-    fontSize: 17,
+    fontSize: typography.body.fontSize,
     fontWeight: fontWeights.bold,
     marginTop: 2,
   },

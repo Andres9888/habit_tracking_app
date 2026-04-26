@@ -59,7 +59,7 @@ export function StatsSummaryBar({
           onPress={onSelectPress}
         >
           <Text
-            className='text-[13px] font-semibold'
+            className='text-sm font-semibold'
             style={{ color: colors.primary[600] }}
           >
             {selectLabel}

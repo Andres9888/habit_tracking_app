@@ -57,7 +57,7 @@ export function QuickPickChips({ sortMode, onSelect }: QuickPickChipsProps) {
               strokeWidth={SORT_OPTION_ICON_STROKE_WIDTH}
             />
             <Text
-              className='text-[13px] font-medium'
+              className='text-sm font-medium'
               style={{
                 color: isSelected ? WHITE_ICON_COLOR : themeColors.text.primary,
               }}

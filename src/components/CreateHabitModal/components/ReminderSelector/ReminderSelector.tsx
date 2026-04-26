@@ -50,7 +50,7 @@ function ReminderSelectorComponent({
     <View className='mb-6 rounded-2xl bg-white p-4' testID='reminder-selector'>
       <Text
         accessibilityRole='text'
-        className='mb-3 text-[13px] font-semibold uppercase'
+        className='mb-3 text-sm font-semibold uppercase'
         style={{ color: themeColors.text.secondary }}
         style={{ letterSpacing: 0.5 }}
       >

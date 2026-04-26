@@ -21,7 +21,7 @@ export const heroStyles = StyleSheet.create({
     textAlign: 'center',
   },
   decorativeCircle: {
-    borderRadius: 9999,
+    borderRadius: borderRadius.full,
     height: 160,
     position: 'absolute',
     right: -40,
@@ -56,7 +56,7 @@ export const heroStyles = StyleSheet.create({
     width: 96,
   },
   iconText: {
-    fontSize: 34,
+    fontSize: typography.displayLarge.fontSize,
   },
   iconWrapper: {
     marginBottom: 20,
@@ -73,7 +73,7 @@ export const heroStyles = StyleSheet.create({
   },
   metadataPillText: {
     fontFamily: fontFamilies.monospace,
-    fontSize: 13,
+    fontSize: typography.caption.fontSize,
     fontWeight: fontWeights.semibold,
   },
   pillsRow: {

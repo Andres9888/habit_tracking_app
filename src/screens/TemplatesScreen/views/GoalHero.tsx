@@ -7,6 +7,7 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ChevronLeft } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { borderRadius, spacing } from '../../../theme/spacing';
 import { fontWeights, typography } from '../../../theme/typography';
@@ -41,7 +42,7 @@ export function GoalHero({ goal, habitCount, onBack }: GoalHeroProps) {
         style={s.backBtn}
         onPress={onBack}
       >
-        <ChevronLeft color={goal.textColor} size={20} strokeWidth={2.5} />
+        <ChevronLeft color={goal.textColor} size={iconSizes.medium} strokeWidth={2.5} />
         <Text style={[s.backLabel, { color: goal.textColor }]}>Library</Text>
       </Pressable>
 

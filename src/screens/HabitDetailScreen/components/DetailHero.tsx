@@ -67,7 +67,7 @@ export function DetailHero({ habit, isCompletedToday, totalCompletions }: Detail
           accessibilityLabel={`Habit: ${habitName}`}
           accessibilityRole='header'
           numberOfLines={1}
-          style={{ color: colors.text.primary, fontFamily: fontFamilies.primary.display, fontSize: 20, fontWeight: fontWeights.bold, lineHeight: 24 }}
+          style={{ color: colors.text.primary, fontFamily: fontFamilies.primary.display, fontSize: typography.heading3.fontSize, fontWeight: fontWeights.bold, lineHeight: 24 }}
         >
           {habitName}
         </Text>

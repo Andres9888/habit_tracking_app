@@ -54,7 +54,7 @@ export const styles = StyleSheet.create({
   },
   scienceHeaderText: {
     fontFamily: fontFamilies.primary.text,
-    fontSize: 13,
+    fontSize: typography.caption.fontSize,
     fontWeight: fontWeights.semibold,
   },
   scienceIcon: {

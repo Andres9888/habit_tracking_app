@@ -4,20 +4,20 @@
 
 import type { ViewStyle, TextStyle } from 'react-native';
 
-import { borderRadius } from '../../../theme/spacing'
-;
+import { borderRadius } from '../../../theme/spacing';
+import { typography } from '../../../theme/typography';
 
 export const headerStyles: Record<string, ViewStyle | TextStyle> = {
   chevronContainer: {
     alignItems: 'center',
     backgroundColor: 'rgba(0,0,0,0.04)',
-    borderRadius: 8,
+    borderRadius: borderRadius.small,
     height: 28,
     justifyContent: 'center',
     width: 28,
   },
   icon: {
-    fontSize: 22,
+    fontSize: typography.heading1.fontSize,
   },
   iconContainer: {
     alignItems: 'center',

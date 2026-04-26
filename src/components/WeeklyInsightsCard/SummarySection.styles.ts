@@ -5,12 +5,12 @@
 import { StyleSheet } from 'react-native';
 import { colors } from '../../theme/colors';
 import { typography } from '../../theme/typography';
-import { spacing } from '../../theme/spacing';
+import { borderRadius, spacing } from '../../theme/spacing';
 
 export const summaryStyles = StyleSheet.create({
   summaryCard: {
     backgroundColor: colors.background,
-    borderRadius: 8,
+    borderRadius: borderRadius.small,
     padding: spacing.md,
   },
   summaryCompletions: {

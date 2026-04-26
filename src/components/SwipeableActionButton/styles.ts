@@ -24,7 +24,7 @@ export const styles = StyleSheet.create({
   },
   swipeIconContainer: {
     alignItems: 'center',
-    borderRadius: 8,
+    borderRadius: borderRadius.small,
     height: 44,
     justifyContent: 'center',
     width: 44,

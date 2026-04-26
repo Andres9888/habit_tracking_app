@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { colors as palette } from '../../../theme/colors';
+import { borderRadius } from '../../../theme/spacing';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import type { StreakGreetingResult } from '../hooks/useStreakGreeting';
 
@@ -57,7 +58,7 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   dot: {
-    borderRadius: 99,
+    borderRadius: borderRadius.full,
     height: 8,
     width: 8,
   },

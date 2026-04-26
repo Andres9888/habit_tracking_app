@@ -5,7 +5,7 @@
 import { StyleSheet } from 'react-native';
 import { colors } from '../../theme/colors';
 import { typography } from '../../theme/typography';
-import { spacing } from '../../theme/spacing';
+import { borderRadius, spacing } from '../../theme/spacing';
 
 export const suggestedActionsStyles = StyleSheet.create({
   actionButton: {
@@ -20,7 +20,7 @@ export const suggestedActionsStyles = StyleSheet.create({
   },
   suggestedActions: {
     backgroundColor: colors.background,
-    borderRadius: 8,
+    borderRadius: borderRadius.small,
     marginTop: spacing.md,
     padding: spacing.sm,
   },

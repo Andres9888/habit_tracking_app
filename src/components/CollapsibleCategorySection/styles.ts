@@ -40,7 +40,7 @@ const baseStyles = StyleSheet.create({
     paddingVertical: 16,
   },
   icon: {
-    fontSize: 22,
+    fontSize: typography.heading1.fontSize,
   },
   iconBadge: {
     alignItems: 'center',

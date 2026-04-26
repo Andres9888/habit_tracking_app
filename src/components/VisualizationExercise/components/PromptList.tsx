@@ -6,6 +6,7 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import type { LucideIcon } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 
 interface PromptListProps {
   title: string;
@@ -37,7 +38,7 @@ export function PromptList({
       <View className='gap-2'>
         {prompts.map((prompt, index) => (
           <View key={index} className='flex-row items-center gap-2'>
-            <Icon color={iconColorValue} size={14} />
+            <Icon color={iconColorValue} size={iconSizes.small} />
             <Text className='text-sm' style={{ color: textColorValue }}>{prompt}</Text>
           </View>
         ))}

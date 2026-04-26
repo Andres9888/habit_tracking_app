@@ -38,7 +38,7 @@ export function AnimatedCompletionIcon({
       {completionIcon === 'checkbox' ? (
         <Check color={resolvedColor} size={iconSizes.medium} strokeWidth={2.5} />
       ) : (
-        <ChainLinkIcon color={resolvedColor} size={20} variant='stroke' />
+        <ChainLinkIcon color={resolvedColor} size={iconSizes.medium} variant='stroke' />
       )}
     </Animated.View>
   );

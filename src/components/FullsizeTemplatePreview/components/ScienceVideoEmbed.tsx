@@ -7,6 +7,7 @@ import { Image, Linking, Pressable, Text, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Play } from 'lucide-react-native';
 import { colors } from '@/theme/colors';
+import { iconSizes } from '@/theme/iconSizes';
 import { evidenceDetailStyles as s } from '../styles/evidenceDetail.styles';
 import type { Template } from '../../../types/template';
 
@@ -56,7 +57,7 @@ export function ScienceVideoEmbed({ template }: ScienceVideoEmbedProps) {
           <Play
             color={colors.text.inverse}
             fill={colors.text.inverse}
-            size={22}
+            size={iconSizes.large}
           />
         </View>
       </View>

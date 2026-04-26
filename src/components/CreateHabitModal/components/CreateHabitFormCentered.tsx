@@ -60,7 +60,7 @@ const CreateHabitFormCenteredComponent = ({
 
         {/* Optional fields section */}
         <Text
-          className='mb-3 text-center text-[13px] font-semibold uppercase'
+          className='mb-3 text-center text-sm font-semibold uppercase'
           style={{ letterSpacing: 0.5, color: themeColors.text.tertiary }}
         >
           Choose an icon
@@ -75,7 +75,7 @@ const CreateHabitFormCenteredComponent = ({
         />
 
         <Text
-          className='mt-4 mb-3 text-center text-[13px] font-semibold uppercase'
+          className='mt-4 mb-3 text-center text-sm font-semibold uppercase'
           style={{ letterSpacing: 0.5, color: themeColors.text.tertiary }}
         >
           Pick a color

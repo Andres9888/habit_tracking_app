@@ -14,7 +14,7 @@ export const EmojiPickerHeader = memo(({ onClose }: EmojiPickerHeaderProps) => {
 
   return (
     <View className='flex-row items-center justify-between border-b px-4 pb-3 pt-4' style={{ borderColor: colors.border }}>
-      <Text className='text-[24px] font-bold tracking-tight' style={{ color: colors.text.primary }}>
+      <Text className='text-2xl font-bold tracking-tight' style={{ color: colors.text.primary }}>
         Choose Icon
       </Text>
       <AnimatedPressable

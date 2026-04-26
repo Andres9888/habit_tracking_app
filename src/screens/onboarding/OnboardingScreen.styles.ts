@@ -59,8 +59,8 @@ export const styles = StyleSheet.create({
     zIndex: 10,
   },
   skipText: {
-    fontWeight: fontWeights.medium,
     ...typography.body,
+    fontWeight: fontWeights.medium,
   },
   subtitle: {
     paddingHorizontal: spacing.base,

@@ -6,7 +6,7 @@ import { StyleSheet } from 'react-native';
 
 import { colors } from '@/theme/colors';
 import { shadows, borderRadius } from '../../../theme/spacing'
-import { fontFamilies, fontWeights } from '../../../theme/typography';
+import { typography, fontFamilies, fontWeights } from '../../../theme/typography';
 
 export const footerStyles = StyleSheet.create({
   customizeLink: {
@@ -16,7 +16,7 @@ export const footerStyles = StyleSheet.create({
   customizeLinkText: {
     color: colors.gray[500],
     fontFamily: fontFamilies.primary.text,
-    fontSize: 13,
+    fontSize: typography.caption.fontSize,
     fontWeight: fontWeights.semibold,
   },
   footer: {
@@ -44,7 +44,7 @@ export const footerStyles = StyleSheet.create({
   importButtonText: {
     color: colors.text.inverse,
     fontFamily: fontFamilies.primary.text,
-    fontSize: 17,
+    fontSize: typography.body.fontSize,
     fontWeight: fontWeights.bold,
   },
   successButton: {
@@ -62,7 +62,7 @@ export const footerStyles = StyleSheet.create({
   successButtonText: {
     color: colors.text.inverse,
     fontFamily: fontFamilies.primary.text,
-    fontSize: 17,
+    fontSize: typography.body.fontSize,
     fontWeight: fontWeights.bold,
   },
 });

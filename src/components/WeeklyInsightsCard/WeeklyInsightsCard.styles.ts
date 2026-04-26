@@ -32,7 +32,7 @@ export const styles = StyleSheet.create({
   badgeText: {
     ...typography.caption,
     color: colors.success,
-    fontSize: 10,
+    fontSize: typography.tabBar.fontSize,
     fontWeight: fontWeights.semibold,
   },
   container: {

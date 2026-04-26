@@ -7,7 +7,7 @@ import { Text } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { borderRadius } from '@/theme/spacing';
-import { fontFamilies } from '@/theme/typography';
+import { typography, fontFamilies } from '@/theme/typography';
 
 interface EmptyStateProps {
   height: number;
@@ -60,7 +60,7 @@ export function BuildingHistoryState({ height }: EmptyStateProps) {
         style={{
           color: colors.text.secondary,
           fontFamily: fontFamilies.primary.text,
-          fontSize: 14,
+          fontSize: typography.bodySmall.fontSize,
           textAlign: 'center',
         }}
       >

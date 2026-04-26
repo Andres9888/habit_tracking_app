@@ -30,13 +30,13 @@ export const styles = StyleSheet.create({
   },
 
   emoji: {
-    fontSize: 34,
+    fontSize: typography.displayLarge.fontSize,
   },
 
   // Emoji badge
   emojiBadge: {
     alignItems: 'center',
-    borderRadius: 9999,
+    borderRadius: borderRadius.full,
     height: 100,
     justifyContent: 'center',
     marginBottom: spacing.lg,
@@ -51,7 +51,7 @@ export const styles = StyleSheet.create({
   },
 
   habitEmoji: {
-    fontSize: 22,
+    fontSize: typography.heading1.fontSize,
     marginRight: spacing.sm,
   },
 
@@ -146,7 +146,7 @@ export const achievementCardStyles = StyleSheet.create({
   badge: {
     alignItems: 'center',
     backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    borderRadius: 24,
+    borderRadius: borderRadius.xl,
     height: 80,
     justifyContent: 'center',
     marginBottom: spacing.base,
@@ -160,7 +160,7 @@ export const achievementCardStyles = StyleSheet.create({
   },
 
   badgeEmoji: {
-    fontSize: 34,
+    fontSize: typography.displayLarge.fontSize,
   },
 
   container: {
@@ -192,7 +192,7 @@ export const achievementCardStyles = StyleSheet.create({
   },
 
   habitEmoji: {
-    fontSize: 20,
+    fontSize: typography.heading3.fontSize,
     marginRight: spacing.sm,
   },
 

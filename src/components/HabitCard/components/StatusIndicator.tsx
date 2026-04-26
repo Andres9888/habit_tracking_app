@@ -12,6 +12,7 @@ import Animated, {
   type SharedValue,
 } from 'react-native-reanimated';
 import { useAppTheme } from '../../../theme';
+import { iconSizes } from '../../../theme/iconSizes';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { styles } from '../HabitCard.styles';
 import { ChainLinkAnimation } from './ChainLinkAnimation';
@@ -61,7 +62,7 @@ export const StatusIndicator = memo(function StatusIndicator({
             hasPendingOfflineOps={hasPendingOfflineOps}
             rotate={chainRotate}
             scale={chainScale}
-            size={18}
+            size={iconSizes.medium}
           />
         </View>
       );

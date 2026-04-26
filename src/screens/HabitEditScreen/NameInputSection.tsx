@@ -45,7 +45,7 @@ export function NameInputSection({
       <Animated.View className='w-full' entering={FadeInUp.duration(280).delay(160).springify().damping(18)}>
         <TextInput
           accessibilityLabel='Habit name'
-          className='w-full rounded-2xl border-2 px-5 py-4 text-center text-[22px] font-medium'
+          className='w-full rounded-2xl border-2 px-5 py-4 text-center text-2xl font-medium'
           maxLength={50}
           returnKeyType='done'
           style={{

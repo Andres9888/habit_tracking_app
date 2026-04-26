@@ -42,7 +42,7 @@ export const visualStyles = StyleSheet.create({
     gap: spacing.md,
   },
   templateEmoji: {
-    fontSize: 22,
+    fontSize: typography.heading1.fontSize,
   },
   templateGrid: {
     flexDirection: 'row',

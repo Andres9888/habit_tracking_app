@@ -16,7 +16,7 @@ import { typography, fontWeights, fontFamilies } from '../../theme/typography';
 
 export const styles = StyleSheet.create({
   cell: {
-    borderRadius: 2,
+    borderRadius: borderRadius.xs,
     height: CELL_SIZE,
     marginRight: CELL_GAP,
     width: CELL_SIZE,
@@ -41,7 +41,7 @@ export const styles = StyleSheet.create({
   dayLabelText: {
     color: COLORS.TEXT_SECONDARY,
     fontFamily: fontFamilies.primary.text,
-    fontSize: 10,
+    fontSize: typography.tabBar.fontSize,
     fontWeight: fontWeights.medium,
     lineHeight: CELL_SIZE,
     textAlign: 'center',
@@ -71,7 +71,7 @@ export const styles = StyleSheet.create({
   monthLabel: {
     color: COLORS.TEXT_SECONDARY,
     fontFamily: fontFamilies.primary.text,
-    fontSize: 10,
+    fontSize: typography.tabBar.fontSize,
     position: 'absolute',
   },
   monthLabelSpacer: {

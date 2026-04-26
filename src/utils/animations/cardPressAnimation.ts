@@ -6,6 +6,7 @@
  */
 
 import { withSpring, type WithSpringConfig } from 'react-native-reanimated';
+import { springs } from '@/theme/animations';
 
 /**
  * Standard card press scale value
@@ -19,12 +20,11 @@ export const CARD_PRESS_SCALE = 0.97;
 export const CARD_REST_SCALE = 1;
 
 /**
- * Spring configuration for card press animations
- * Matches app design system: damping 18, stiffness 150
+ * Spring configuration for card press animations.
+ * Sourced from canonical springs.standard so future tuning happens in one place.
  */
 export const CARD_PRESS_SPRING_CONFIG: WithSpringConfig = {
-  damping: 18,
-  stiffness: 150,
+  ...springs.standard,
 };
 
 /**

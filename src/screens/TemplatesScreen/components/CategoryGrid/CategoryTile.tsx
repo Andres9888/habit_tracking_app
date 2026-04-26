@@ -57,7 +57,7 @@ const s = StyleSheet.create({
   count: { ...typography.caption, marginTop: spacing.xs },
   icon: { fontSize: 28 },
   label: { ...typography.bodySmall, fontWeight: fontWeights.semibold, marginTop: spacing.sm },
-  previewEmoji: { fontSize: 14, opacity: 0.6 },
+  previewEmoji: { fontSize: typography.bodySmall.fontSize, opacity: 0.6 },
   previewRow: {
     flexDirection: 'row',
     gap: spacing.xs,

@@ -15,7 +15,7 @@ import type { ReminderTimePickerProps } from './types';
 import { iconSizes } from '@/theme/iconSizes';
 import { triggerHaptic } from '@/utils/haptics';
 import { borderRadius } from '@/theme/spacing';
-import { fontWeights } from '@/theme/typography';
+import { typography, fontWeights } from '@/theme/typography';
 
 const localStyles = StyleSheet.create({
   timePickerButton: {
@@ -28,7 +28,7 @@ const localStyles = StyleSheet.create({
     paddingVertical: 16,
   },
   timeText: {
-    fontSize: 17,
+    fontSize: typography.body.fontSize,
     fontWeight: fontWeights.semibold,
   },
 });

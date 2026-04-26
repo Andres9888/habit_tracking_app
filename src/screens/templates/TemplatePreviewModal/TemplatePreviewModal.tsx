@@ -163,7 +163,7 @@ export default function TemplatePreviewModal({
                       >
                         <TextInput
                           accessibilityLabel='Habit name'
-                          className='w-full rounded-2xl border-2 px-5 py-4 text-center text-[22px] font-medium'
+                          className='w-full rounded-2xl border-2 px-5 py-4 text-center text-2xl font-medium'
                           editable={!isImporting}
                           maxLength={50}
                           returnKeyType='done'

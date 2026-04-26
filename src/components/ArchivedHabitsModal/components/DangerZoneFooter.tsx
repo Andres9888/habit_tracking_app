@@ -1,5 +1,6 @@
 import { Text } from 'react-native';
 import { useThemeColors } from '@/theme/ThemeContext';
+import { typography } from '@/theme/typography';
 import { AnimatedPressable } from '../../ui';
 
 interface DangerZoneFooterProps {
@@ -19,7 +20,7 @@ export function DangerZoneFooter({ habitCount, onDeleteAll }: DangerZoneFooterPr
       style={{ alignItems: 'center', paddingVertical: 20 }}
       onPress={onDeleteAll}
     >
-      <Text style={{ fontSize: 13, color: colors.text.tertiary }}>
+      <Text style={{ fontSize: typography.caption.fontSize, color: colors.text.tertiary }}>
         Delete all archived habits
       </Text>
     </AnimatedPressable>

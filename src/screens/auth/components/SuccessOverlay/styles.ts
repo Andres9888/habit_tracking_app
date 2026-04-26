@@ -1,12 +1,13 @@
 import { StyleSheet } from 'react-native';
 import { colors } from '@/theme';
-import { fontFamilies, fontWeights } from '@/theme/typography';
+import { borderRadius } from '@/theme/spacing';
+import { typography, fontFamilies, fontWeights } from '@/theme/typography';
 
 export const styles = StyleSheet.create({
   checkmark: {
     alignItems: 'center',
     backgroundColor: colors.primary[500],
-    borderRadius: 24,
+    borderRadius: borderRadius.xl,
     height: 80,
     justifyContent: 'center',
     width: 80,
@@ -14,7 +15,7 @@ export const styles = StyleSheet.create({
   checkmarkText: {
     color: colors.text.inverse,
     fontFamily: fontFamilies.primary.text,
-    fontSize: 34,
+    fontSize: typography.displayLarge.fontSize,
     fontWeight: fontWeights.bold,
   },
   content: {
@@ -36,7 +37,7 @@ export const styles = StyleSheet.create({
   },
   ring: {
     borderColor: colors.primary[500],
-    borderRadius: 9999,
+    borderRadius: borderRadius.full,
     borderWidth: 3,
     height: 100,
     position: 'absolute',
@@ -45,7 +46,7 @@ export const styles = StyleSheet.create({
   successText: {
     color: colors.gray[900],
     fontFamily: fontFamilies.primary.display,
-    fontSize: 22,
+    fontSize: typography.heading1.fontSize,
     fontWeight: fontWeights.bold,
     letterSpacing: 0.5,
     marginTop: 24,

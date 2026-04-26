@@ -2,7 +2,7 @@
 import { StyleSheet } from 'react-native';
 
 import { colors as palette } from '../../../theme/colors';
-import { fontFamilies, fontWeights } from '../../../theme/typography';
+import { typography, fontFamilies, fontWeights } from '../../../theme/typography';
 import { darkColors } from '../../../theme/darkColors';
 import type { MaterialTier } from '../../HabitChainVisualizer/materialTier';
 import type { CompletionStatus } from '../CalendarTimeline.types';
@@ -97,25 +97,25 @@ export const ringStyles = StyleSheet.create({
   },
   dayText: {
     fontFamily: fontFamilies.primary.text,
-    fontSize: 14,
+    fontSize: typography.bodySmall.fontSize,
     fontWeight: fontWeights.bold,
     textAlign: 'center',
   },
   dayTextWithPrefix: {
     fontFamily: fontFamilies.primary.text,
-    fontSize: 13,
+    fontSize: typography.caption.fontSize,
     fontWeight: fontWeights.bold,
     textAlign: 'center',
   },
   dayTextTodayWithPrefix: {
     fontFamily: fontFamilies.primary.text,
-    fontSize: 13,
+    fontSize: typography.caption.fontSize,
     fontWeight: fontWeights.bold,
     textAlign: 'center',
   },
   dayTextToday: {
     fontFamily: fontFamilies.primary.text,
-    fontSize: 14,
+    fontSize: typography.bodySmall.fontSize,
     fontWeight: fontWeights.bold,
     textAlign: 'center',
   },

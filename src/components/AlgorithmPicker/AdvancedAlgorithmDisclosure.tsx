@@ -65,10 +65,10 @@ export function AdvancedAlgorithmDisclosure({ selected, onSelect }: Props) {
         <View className='flex-row items-center gap-2.5'>
           <SlidersHorizontal color={colors.text.secondary} size={iconSizes.small} strokeWidth={2} />
           <View>
-            <Text className='text-[15px] font-semibold' style={{ color: colors.text.primary }}>
+            <Text className='text-base font-semibold' style={{ color: colors.text.primary }}>
               Advanced
             </Text>
-            <Text className='mt-0.5 text-[12px]' style={{ color: colors.text.tertiary }}>
+            <Text className='mt-0.5 text-xs' style={{ color: colors.text.tertiary }}>
               {subtitle}
             </Text>
           </View>

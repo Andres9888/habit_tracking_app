@@ -1,0 +1,1287 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chain Day — Design System Showcase</title>
+
+    <!-- Google Fonts: Literata (display serif), DM Sans (body sans), JetBrains Mono (data/numerics) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Literata:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Tailwind CDN for layout primitives -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Lucide icons (matches the app's canonical library `lucide-react-native`) -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+
+    <style>
+      /* ============================================================
+         CANONICAL TOKENS — Chain Day Design System
+         Sources: src/theme/colors/core.ts
+                  src/theme/typography.ts
+                  src/theme/spacing.ts
+                  src/theme/iconSizes.ts
+                  src/theme/animations.ts
+         ============================================================ */
+      :root {
+        /* Warm stone palette — L0 canvas, L1 surface, borders, foreground */
+        --background: #f5f1ed;
+        --card: #edeae5;
+        --surface-muted: #faf8f5;
+        --border: #ddd8d2;
+        --foreground: #2d2a26;
+
+        /* Primary — forest green (single saturated color, ≤10% visible area rule) */
+        --primary-100: #d1fae5;
+        --primary-300: #6ee7b7;
+        --primary-400: #34d399;
+        --primary-500: #10b981;
+        --primary-600: #059669;
+        --primary-700: #047857;
+
+        /* Streak / progress — burnished gold */
+        --streak-100: #fef3cd;
+        --streak-300: #e8b94d;
+        --streak-500: #8b6208;
+        --streak-600: #936a08;
+        --streak-700: #7d5907;
+
+        /* Gray scale — warm stone neutrals */
+        --gray-50: #faf8f5;
+        --gray-100: #f5f1ed;
+        --gray-200: #ddd8d2;
+        --gray-300: #c4bfb7;
+        --gray-400: #6e6660;
+        --gray-500: #6b6560;
+        --gray-600: #524d47;
+        --gray-700: #3d3833;
+        --gray-800: #2d2a26;
+        --gray-900: #1a1816;
+
+        /* Semantic status */
+        --success: #15793c;
+        --warning: #9a5504;
+        --warning-light: #fef3cd;
+        --error: #b53030;
+        --error-light: #fee2e2;
+        --info: #3872b8;
+
+        /* Premium (subscription purple) */
+        --premium-400: #7b52c4;
+        --premium-500: #8563c7;
+        --premium-600: #6d3ac7;
+        --premium-700: #5a2da8;
+
+        /* Strength levels — habit progression colors */
+        --strength-starting: #4d7a0a;
+        --strength-developing: #0d9488;
+        --strength-building: #16a34a;
+        --strength-strong: #0891b2;
+        --strength-automatic: #059669;
+
+        /* Shadow tokens — warm-toned, #2d2a26 tint */
+        --shadow-subtle: 0 1px 3px 0 rgba(45, 42, 38, 0.04);
+        --shadow-card: 0 2px 8px 0 rgba(45, 42, 38, 0.06);
+        --shadow-fab: 0 4px 16px 0 rgba(45, 42, 38, 0.08);
+        --shadow-modal: 0 8px 24px 0 rgba(45, 42, 38, 0.1);
+        --shadow-alert: 0 12px 32px 0 rgba(45, 42, 38, 0.14);
+
+        /* Fonts */
+        --font-display: 'Literata', Georgia, serif;
+        --font-text: 'DM Sans', -apple-system, sans-serif;
+        --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+      }
+
+      /* ------------------------------------------------------------ */
+      /*  Base reset / page container                                 */
+      /* ------------------------------------------------------------ */
+      html,
+      body {
+        background: var(--background) !important;
+        color: var(--foreground) !important;
+        font-family: var(--font-text) !important;
+        font-size: 17px !important;
+        line-height: 24px !important;
+        margin: 0;
+        padding: 0;
+      }
+
+      /* ------------------------------------------------------------ */
+      /*  Typography helpers — mirror src/theme/typography.ts         */
+      /* ------------------------------------------------------------ */
+      .t-display {
+        font-family: var(--font-display);
+        font-size: 34px;
+        font-weight: 700;
+        letter-spacing: -0.85px;
+        line-height: 41px;
+      }
+      .t-h1 {
+        font-family: var(--font-display);
+        font-size: 22px;
+        font-weight: 700;
+        letter-spacing: -0.35px;
+        line-height: 28px;
+      }
+      .t-h2 {
+        font-family: var(--font-text);
+        font-size: 22px;
+        font-weight: 600;
+        letter-spacing: -0.35px;
+        line-height: 28px;
+      }
+      .t-h3 {
+        font-family: var(--font-text);
+        font-size: 20px;
+        font-weight: 600;
+        letter-spacing: -0.2px;
+        line-height: 26px;
+      }
+      .t-body {
+        font-family: var(--font-text);
+        font-size: 17px;
+        font-weight: 400;
+        line-height: 24px;
+      }
+      .t-body-small {
+        font-family: var(--font-text);
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 20px;
+      }
+      .t-button {
+        font-family: var(--font-text);
+        font-size: 17px;
+        font-weight: 600;
+        letter-spacing: 0.08px;
+        line-height: 24px;
+      }
+      .t-caption {
+        font-family: var(--font-text);
+        font-size: 13px;
+        font-weight: 500;
+        letter-spacing: 0.12px;
+        line-height: 18px;
+      }
+      .t-mono {
+        font-family: var(--font-mono);
+        font-size: 16px;
+        line-height: 24px;
+      }
+      .t-overline {
+        font-family: var(--font-text);
+        font-size: 12px;
+        font-weight: 500;
+        letter-spacing: 1.5px;
+        line-height: 16px;
+        text-transform: uppercase;
+      }
+      .t-tabbar {
+        font-family: var(--font-text);
+        font-size: 10px;
+        font-weight: 500;
+        letter-spacing: 0.1px;
+        line-height: 12px;
+      }
+
+      /* ------------------------------------------------------------ */
+      /*  Section shell                                                */
+      /* ------------------------------------------------------------ */
+      .section {
+        border-bottom: 1px solid var(--border);
+        padding: 56px 32px;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+      .section-eyebrow {
+        color: var(--gray-500);
+        font-family: var(--font-mono);
+        font-size: 12px;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        margin-bottom: 12px;
+      }
+      .section-title {
+        font-family: var(--font-display);
+        font-size: 34px;
+        font-weight: 700;
+        letter-spacing: -0.85px;
+        line-height: 41px;
+        margin: 0 0 8px 0;
+        color: var(--foreground);
+      }
+      .section-lede {
+        color: var(--gray-600);
+        font-size: 17px;
+        line-height: 26px;
+        margin: 0 0 32px 0;
+        max-width: 680px;
+      }
+
+      /* ------------------------------------------------------------ */
+      /*  Cards (canonical surface)                                   */
+      /* ------------------------------------------------------------ */
+      .card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 16px;
+      }
+
+      /* ------------------------------------------------------------ */
+      /*  Color swatches                                              */
+      /* ------------------------------------------------------------ */
+      .swatch {
+        align-items: stretch;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+      .swatch-chip {
+        height: 96px;
+      }
+      .swatch-meta {
+        background: var(--card);
+        padding: 12px 14px;
+      }
+      .swatch-name {
+        color: var(--foreground);
+        font-family: var(--font-text);
+        font-size: 14px;
+        font-weight: 600;
+      }
+      .swatch-hex {
+        color: var(--gray-500);
+        font-family: var(--font-mono);
+        font-size: 12px;
+        margin-top: 2px;
+      }
+      .swatch-role {
+        color: var(--gray-500);
+        font-size: 12px;
+        margin-top: 6px;
+      }
+
+      /* Scale strip (gray 50–900, streak 100–700) */
+      .scale-strip {
+        display: grid;
+        gap: 6px;
+        grid-template-columns: repeat(10, 1fr);
+      }
+      .scale-step {
+        aspect-ratio: 1 / 1;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        padding: 8px;
+      }
+      .scale-step .label {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        text-align: left;
+      }
+
+      /* ------------------------------------------------------------ */
+      /*  Typography demo row                                         */
+      /* ------------------------------------------------------------ */
+      .type-row {
+        align-items: baseline;
+        border-bottom: 1px dashed var(--border);
+        display: grid;
+        gap: 16px;
+        grid-template-columns: 160px 1fr 160px;
+        padding: 20px 0;
+      }
+      .type-row:last-child {
+        border-bottom: 0;
+      }
+      .type-name {
+        color: var(--gray-500);
+        font-family: var(--font-mono);
+        font-size: 12px;
+        letter-spacing: 0.12px;
+        text-transform: uppercase;
+      }
+      .type-spec {
+        color: var(--gray-500);
+        font-family: var(--font-mono);
+        font-size: 12px;
+        text-align: right;
+      }
+
+      /* ------------------------------------------------------------ */
+      /*  Spacing bars                                                */
+      /* ------------------------------------------------------------ */
+      .space-row {
+        align-items: center;
+        display: grid;
+        gap: 16px;
+        grid-template-columns: 80px 1fr 80px;
+        padding: 10px 0;
+      }
+      .space-bar {
+        background: var(--primary-600);
+        border-radius: 4px;
+        height: 16px;
+      }
+      .space-token {
+        color: var(--gray-500);
+        font-family: var(--font-mono);
+        font-size: 12px;
+      }
+
+      /* ------------------------------------------------------------ */
+      /*  Border radius tiles                                         */
+      /* ------------------------------------------------------------ */
+      .radius-tile {
+        align-items: center;
+        background: var(--card);
+        border: 1px solid var(--border);
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        justify-content: center;
+        padding: 24px;
+      }
+      .radius-square {
+        background: var(--primary-600);
+        height: 72px;
+        width: 72px;
+      }
+
+      /* ------------------------------------------------------------ */
+      /*  Shadow elevation tiles                                      */
+      /* ------------------------------------------------------------ */
+      .elev {
+        background: var(--card);
+        border-radius: 16px;
+        padding: 24px;
+      }
+      .elev-box {
+        align-items: center;
+        background: #ffffff;
+        border-radius: 16px;
+        display: flex;
+        height: 96px;
+        justify-content: center;
+      }
+      .elev-0 {
+        box-shadow: var(--shadow-subtle);
+      }
+      .elev-1 {
+        box-shadow: var(--shadow-card);
+      }
+      .elev-2 {
+        box-shadow: var(--shadow-fab);
+      }
+      .elev-3 {
+        box-shadow: var(--shadow-modal);
+      }
+      .elev-4 {
+        box-shadow: var(--shadow-alert);
+      }
+
+      /* ------------------------------------------------------------ */
+      /*  Icon size markers                                           */
+      /* ------------------------------------------------------------ */
+      .icon-row {
+        align-items: flex-end;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 40px;
+      }
+      .icon-bubble {
+        align-items: center;
+        background: var(--primary-100);
+        border: 1px solid var(--primary-300);
+        border-radius: 9999px;
+        color: var(--primary-700);
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+        justify-content: center;
+      }
+
+      /* ------------------------------------------------------------ */
+      /*  Button primitive — proposed Wave 3.1                        */
+      /* ------------------------------------------------------------ */
+      .btn {
+        align-items: center;
+        border: 1px solid transparent;
+        border-radius: 12px;
+        cursor: pointer;
+        display: inline-flex;
+        font-family: var(--font-text);
+        font-weight: 600;
+        gap: 8px;
+        justify-content: center;
+        letter-spacing: 0.08px;
+        transition: transform 180ms cubic-bezier(0.2, 0, 0, 1);
+        user-select: none;
+      }
+      .btn:active {
+        transform: scale(0.98);
+      }
+      .btn-sm {
+        font-size: 14px;
+        height: 32px;
+        padding: 0 16px;
+      }
+      .btn-md {
+        font-size: 17px;
+        height: 44px;
+        padding: 0 24px;
+      }
+      .btn-lg {
+        font-size: 17px;
+        height: 56px;
+        padding: 0 32px;
+      }
+      .btn-primary {
+        background: var(--primary-600);
+        box-shadow: var(--shadow-card);
+        color: #ffffff;
+      }
+      .btn-primary:hover {
+        background: var(--primary-700);
+      }
+      .btn-secondary {
+        background: transparent;
+        border-color: var(--gray-300);
+        color: var(--foreground);
+      }
+      .btn-secondary:hover {
+        background: var(--surface-muted);
+      }
+      .btn-ghost {
+        background: transparent;
+        color: var(--primary-700);
+      }
+      .btn-ghost:hover {
+        background: rgba(5, 150, 105, 0.08);
+      }
+      .btn-icon {
+        border-radius: 9999px;
+        padding: 0;
+        width: 44px;
+      }
+      .btn-icon.btn-sm {
+        height: 32px;
+        width: 32px;
+      }
+      .btn-icon.btn-lg {
+        height: 56px;
+        width: 56px;
+      }
+
+      /* ------------------------------------------------------------ */
+      /*  Empty state template — proposed Wave 3.2                    */
+      /* ------------------------------------------------------------ */
+      .empty {
+        align-items: center;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        padding: 48px 32px;
+        text-align: center;
+      }
+      .empty-icon {
+        align-items: center;
+        background: var(--primary-100);
+        border-radius: 9999px;
+        color: var(--primary-700);
+        display: flex;
+        height: 72px;
+        justify-content: center;
+        width: 72px;
+      }
+
+      /* ------------------------------------------------------------ */
+      /*  Animation timeline                                          */
+      /* ------------------------------------------------------------ */
+      .timeline {
+        display: grid;
+        gap: 10px;
+      }
+      .timeline-row {
+        align-items: center;
+        display: grid;
+        gap: 12px;
+        grid-template-columns: 160px 1fr 80px;
+      }
+      .timeline-bar {
+        background: var(--gray-200);
+        border-radius: 9999px;
+        height: 8px;
+        overflow: hidden;
+        position: relative;
+      }
+      .timeline-fill {
+        animation: fillBar 2400ms ease-out infinite;
+        background: var(--primary-600);
+        border-radius: 9999px;
+        height: 100%;
+      }
+      @keyframes fillBar {
+        0% {
+          transform: translateX(-100%);
+        }
+        40% {
+          transform: translateX(0);
+        }
+        60% {
+          transform: translateX(0);
+        }
+        100% {
+          transform: translateX(-100%);
+        }
+      }
+
+      /* Entrance motion preview */
+      .enter-demo {
+        animation: enterFade 4s cubic-bezier(0.2, 0, 0, 1) infinite;
+      }
+      @keyframes enterFade {
+        0% {
+          opacity: 0;
+          transform: translateY(8px);
+        }
+        20% {
+          opacity: 1;
+          transform: translateY(0);
+        }
+        80% {
+          opacity: 1;
+          transform: translateY(0);
+        }
+        100% {
+          opacity: 0;
+          transform: translateY(8px);
+        }
+      }
+
+      /* ------------------------------------------------------------ */
+      /*  Responsive tweaks                                           */
+      /* ------------------------------------------------------------ */
+      @media (max-width: 768px) {
+        .section {
+          padding: 40px 20px;
+        }
+        .section-title {
+          font-size: 28px;
+          line-height: 34px;
+        }
+        .type-row {
+          grid-template-columns: 1fr;
+        }
+        .type-spec,
+        .type-name {
+          text-align: left;
+        }
+        .scale-strip {
+          grid-template-columns: repeat(5, 1fr);
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- ============================================================ -->
+    <!-- HEADER                                                       -->
+    <!-- ============================================================ -->
+    <header class="section" style="border-bottom: 1px solid var(--border); padding-bottom: 32px;">
+      <div class="section-eyebrow">Chain Day · Design System · 2026-04-24</div>
+      <h1 class="section-title" style="font-size: 44px; line-height: 52px; letter-spacing: -1.1px; margin-top: 4px;">Canonical tokens, one page.</h1>
+      <p class="section-lede">
+        Reference surface for the warm-minimal aesthetic defined across
+        <code style="font-family: var(--font-mono); background: var(--card); border-radius: 4px; padding: 1px 6px;">src/theme/*</code>.
+        Every value on this page matches a token you can import. Adoption is measured in
+        <a href="/DESIGN_CONSISTENCY_REVIEW.md" style="color: var(--primary-700); text-decoration: underline;">DESIGN_CONSISTENCY_REVIEW.md</a>
+        and staged for remediation in
+        <a href="/REMEDIATION_PLAN.md" style="color: var(--primary-700); text-decoration: underline;">REMEDIATION_PLAN.md</a>.
+      </p>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-top: 24px;">
+        <div class="card" style="text-align: left;">
+          <div class="t-overline" style="color: var(--gray-500);">Overall</div>
+          <div class="t-display" style="color: var(--primary-700); margin-top: 4px;">22 <span style="color: var(--gray-400); font-size: 18px;">/ 24</span></div>
+          <div class="t-caption" style="color: var(--gray-500);">+1 vs Apr 5 · +5 vs Mar 19</div>
+        </div>
+        <div class="card">
+          <div class="t-overline" style="color: var(--gray-500);">fontWeight raw</div>
+          <div class="t-display" style="color: var(--primary-700); margin-top: 4px;">5 <span style="color: var(--gray-400); font-size: 18px;">← 229</span></div>
+          <div class="t-caption" style="color: var(--gray-500);">-98% this cycle</div>
+        </div>
+        <div class="card">
+          <div class="t-overline" style="color: var(--gray-500);">iconSizes adoption</div>
+          <div class="t-display" style="color: var(--primary-700); margin-top: 4px;">82% <span style="color: var(--gray-400); font-size: 18px;">← 0%</span></div>
+          <div class="t-caption" style="color: var(--gray-500);">392 refs, 86 raw</div>
+        </div>
+        <div class="card">
+          <div class="t-overline" style="color: var(--gray-500);">Raw hex</div>
+          <div class="t-display" style="color: var(--primary-700); margin-top: 4px;">757 <span style="color: var(--gray-400); font-size: 18px;">← 1,101</span></div>
+          <div class="t-caption" style="color: var(--gray-500);">-31% · long tail next</div>
+        </div>
+      </div>
+    </header>
+
+    <!-- ============================================================ -->
+    <!-- 1. COLORS                                                    -->
+    <!-- ============================================================ -->
+    <section class="section">
+      <div class="section-eyebrow">01 · Color</div>
+      <h2 class="section-title">Warm Minimal Palette</h2>
+      <p class="section-lede">
+        Single saturated color (forest green), warm stone neutrals (#F5F1ED → #1A1816),
+        burnished gold streak accent used at ≤10% visible area. All text/background pairings meet WCAG 2.1 Level AA.
+      </p>
+
+      <!-- Warm stone surfaces (L0 / L1 / borders / foreground) -->
+      <h3 class="t-h3" style="margin: 24px 0 12px 0;">Surfaces — Warm Stone</h3>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px;">
+        <div class="swatch">
+          <div class="swatch-chip" style="background: #f5f1ed;"></div>
+          <div class="swatch-meta">
+            <div class="swatch-name">background</div>
+            <div class="swatch-hex">#F5F1ED</div>
+            <div class="swatch-role">Canvas (L0) · warm parchment</div>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-chip" style="background: #edeae5;"></div>
+          <div class="swatch-meta">
+            <div class="swatch-name">card / surface</div>
+            <div class="swatch-hex">#EDEAE5</div>
+            <div class="swatch-role">Surface (L1) · subtle lift</div>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-chip" style="background: #faf8f5;"></div>
+          <div class="swatch-meta">
+            <div class="swatch-name">surfaceMuted</div>
+            <div class="swatch-hex">#FAF8F5</div>
+            <div class="swatch-role">Subtle section differentiation</div>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-chip" style="background: #ddd8d2;"></div>
+          <div class="swatch-meta">
+            <div class="swatch-name">border</div>
+            <div class="swatch-hex">#DDD8D2</div>
+            <div class="swatch-role">Cards, dividers, separators</div>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-chip" style="background: #2d2a26;"></div>
+          <div class="swatch-meta">
+            <div class="swatch-name">foreground</div>
+            <div class="swatch-hex">#2D2A26</div>
+            <div class="swatch-role">Primary text · high contrast</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Primary & streak accent -->
+      <h3 class="t-h3" style="margin: 32px 0 12px 0;">Brand — Forest Green & Burnished Gold</h3>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px;">
+        <div class="swatch">
+          <div class="swatch-chip" style="background: #059669;"></div>
+          <div class="swatch-meta">
+            <div class="swatch-name">primary.600</div>
+            <div class="swatch-hex">#059669</div>
+            <div class="swatch-role">Buttons, CTA fills</div>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-chip" style="background: #047857;"></div>
+          <div class="swatch-meta">
+            <div class="swatch-name">primary.700</div>
+            <div class="swatch-hex">#047857</div>
+            <div class="swatch-role">High-contrast text on colored surfaces</div>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-chip" style="background: #d1fae5;"></div>
+          <div class="swatch-meta">
+            <div class="swatch-name">primary.100</div>
+            <div class="swatch-hex">#D1FAE5</div>
+            <div class="swatch-role">Light tinted backgrounds</div>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-chip" style="background: #8b6208;"></div>
+          <div class="swatch-meta">
+            <div class="swatch-name">streak.500</div>
+            <div class="swatch-hex">#8B6208</div>
+            <div class="swatch-role">Primary streak color · momentum</div>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-chip" style="background: #e8b94d;"></div>
+          <div class="swatch-meta">
+            <div class="swatch-name">streak.300</div>
+            <div class="swatch-hex">#E8B94D</div>
+            <div class="swatch-role">Light gold accents</div>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-chip" style="background: #fef3cd;"></div>
+          <div class="swatch-meta">
+            <div class="swatch-name">streak.100</div>
+            <div class="swatch-hex">#FEF3CD</div>
+            <div class="swatch-role">Streak background tint</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Semantic status colors -->
+      <h3 class="t-h3" style="margin: 32px 0 12px 0;">Semantic — Status</h3>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px;">
+        <div class="swatch">
+          <div class="swatch-chip" style="background: #15793c;"></div>
+          <div class="swatch-meta">
+            <div class="swatch-name">success</div>
+            <div class="swatch-hex">#15793C</div>
+            <div class="swatch-role">Checkmarks, completions</div>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-chip" style="background: #9a5504;"></div>
+          <div class="swatch-meta">
+            <div class="swatch-name">warning</div>
+            <div class="swatch-hex">#9A5504</div>
+            <div class="swatch-role">Offline, caution states</div>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-chip" style="background: #b53030;"></div>
+          <div class="swatch-meta">
+            <div class="swatch-name">error</div>
+            <div class="swatch-hex">#B53030</div>
+            <div class="swatch-role">Destructive, error states</div>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-chip" style="background: #3872b8;"></div>
+          <div class="swatch-meta">
+            <div class="swatch-name">info</div>
+            <div class="swatch-hex">#3872B8</div>
+            <div class="swatch-role">Informational, help</div>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-chip" style="background: #6d3ac7;"></div>
+          <div class="swatch-meta">
+            <div class="swatch-name">premium.600</div>
+            <div class="swatch-hex">#6D3AC7</div>
+            <div class="swatch-role">Subscription tier</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Gray scale strip -->
+      <h3 class="t-h3" style="margin: 32px 0 12px 0;">Gray Scale (Warm Stone)</h3>
+      <div class="scale-strip">
+        <div class="scale-step" style="background: #faf8f5;"><span class="label" style="color: #2d2a26;">50</span></div>
+        <div class="scale-step" style="background: #f5f1ed;"><span class="label" style="color: #2d2a26;">100</span></div>
+        <div class="scale-step" style="background: #ddd8d2;"><span class="label" style="color: #2d2a26;">200</span></div>
+        <div class="scale-step" style="background: #c4bfb7;"><span class="label" style="color: #2d2a26;">300</span></div>
+        <div class="scale-step" style="background: #6e6660;"><span class="label" style="color: #faf8f5;">400</span></div>
+        <div class="scale-step" style="background: #6b6560;"><span class="label" style="color: #faf8f5;">500</span></div>
+        <div class="scale-step" style="background: #524d47;"><span class="label" style="color: #faf8f5;">600</span></div>
+        <div class="scale-step" style="background: #3d3833;"><span class="label" style="color: #faf8f5;">700</span></div>
+        <div class="scale-step" style="background: #2d2a26;"><span class="label" style="color: #faf8f5;">800</span></div>
+        <div class="scale-step" style="background: #1a1816;"><span class="label" style="color: #faf8f5;">900</span></div>
+      </div>
+
+      <!-- Habit strength progression -->
+      <h3 class="t-h3" style="margin: 32px 0 12px 0;">Habit Strength Levels</h3>
+      <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px;">
+        <div class="card" style="text-align: center; padding: 20px 12px;">
+          <div style="width: 48px; height: 48px; border-radius: 9999px; margin: 0 auto; background: #4d7a0a;"></div>
+          <div class="t-caption" style="margin-top: 12px; font-weight: 600; color: #2d2a26;">Starting</div>
+          <div class="t-caption" style="color: var(--gray-500);">0–20%</div>
+        </div>
+        <div class="card" style="text-align: center; padding: 20px 12px;">
+          <div style="width: 48px; height: 48px; border-radius: 9999px; margin: 0 auto; background: #0d9488;"></div>
+          <div class="t-caption" style="margin-top: 12px; font-weight: 600; color: #2d2a26;">Developing</div>
+          <div class="t-caption" style="color: var(--gray-500);">20–40%</div>
+        </div>
+        <div class="card" style="text-align: center; padding: 20px 12px;">
+          <div style="width: 48px; height: 48px; border-radius: 9999px; margin: 0 auto; background: #16a34a;"></div>
+          <div class="t-caption" style="margin-top: 12px; font-weight: 600; color: #2d2a26;">Building</div>
+          <div class="t-caption" style="color: var(--gray-500);">40–60%</div>
+        </div>
+        <div class="card" style="text-align: center; padding: 20px 12px;">
+          <div style="width: 48px; height: 48px; border-radius: 9999px; margin: 0 auto; background: #0891b2;"></div>
+          <div class="t-caption" style="margin-top: 12px; font-weight: 600; color: #2d2a26;">Strong</div>
+          <div class="t-caption" style="color: var(--gray-500);">60–80%</div>
+        </div>
+        <div class="card" style="text-align: center; padding: 20px 12px;">
+          <div style="width: 48px; height: 48px; border-radius: 9999px; margin: 0 auto; background: #059669;"></div>
+          <div class="t-caption" style="margin-top: 12px; font-weight: 600; color: #2d2a26;">Automatic</div>
+          <div class="t-caption" style="color: var(--gray-500);">80–100%</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- 2. TYPOGRAPHY                                                -->
+    <!-- ============================================================ -->
+    <section class="section">
+      <div class="section-eyebrow">02 · Typography</div>
+      <h2 class="section-title">Type Scale</h2>
+      <p class="section-lede">
+        Literata (serif) for display weight, DM Sans for all UI, JetBrains Mono for numerics.
+        Scale is 34 / 22 / 20 / 17 / 14 / 13 / 12 / 10 with <code style="font-family: var(--font-mono);">typography.*</code> tokens.
+      </p>
+
+      <div class="card" style="padding: 16px 24px;">
+        <div class="type-row">
+          <div class="type-name">displayLarge</div>
+          <div class="t-display">The daily loop becomes who you are.</div>
+          <div class="type-spec">Literata 34 / 700<br/>−0.85 · lh 41</div>
+        </div>
+        <div class="type-row">
+          <div class="type-name">heading1</div>
+          <div class="t-h1">Habit Details</div>
+          <div class="type-spec">Literata 22 / 700<br/>−0.35 · lh 28</div>
+        </div>
+        <div class="type-row">
+          <div class="type-name">heading2</div>
+          <div class="t-h2">This Week</div>
+          <div class="type-spec">DM Sans 22 / 600<br/>−0.35 · lh 28</div>
+        </div>
+        <div class="type-row">
+          <div class="type-name">heading3</div>
+          <div class="t-h3">Morning run</div>
+          <div class="type-spec">DM Sans 20 / 600<br/>−0.20 · lh 26</div>
+        </div>
+        <div class="type-row">
+          <div class="type-name">body</div>
+          <div class="t-body">Consistency beats intensity. Show up today and check the box — that's the whole game.</div>
+          <div class="type-spec">DM Sans 17 / 400<br/>lh 24</div>
+        </div>
+        <div class="type-row">
+          <div class="type-name">bodySmall</div>
+          <div class="t-body-small">Small context under a primary block. Uses 14/20 for comfortable density.</div>
+          <div class="type-spec">DM Sans 14 / 400<br/>lh 20</div>
+        </div>
+        <div class="type-row">
+          <div class="type-name">button</div>
+          <div class="t-button">Continue →</div>
+          <div class="type-spec">DM Sans 17 / 600<br/>+0.08 · lh 24</div>
+        </div>
+        <div class="type-row">
+          <div class="type-name">caption</div>
+          <div class="t-caption">Last completed 2 days ago</div>
+          <div class="type-spec">DM Sans 13 / 500<br/>+0.12 · lh 18</div>
+        </div>
+        <div class="type-row">
+          <div class="type-name">monospace</div>
+          <div class="t-mono">247 · 82% · 00:12:44</div>
+          <div class="type-spec">JetBrains Mono 16 / 400<br/>lh 24</div>
+        </div>
+        <div class="type-row">
+          <div class="type-name">overline</div>
+          <div class="t-overline">Section header</div>
+          <div class="type-spec">DM Sans 12 / 500<br/>+1.5 · lh 16 · UPPER</div>
+        </div>
+        <div class="type-row">
+          <div class="type-name">tabBar</div>
+          <div class="t-tabbar">Habits</div>
+          <div class="type-spec">DM Sans 10 / 500<br/>+0.1 · lh 12</div>
+        </div>
+      </div>
+
+      <!-- Font weight swatches -->
+      <h3 class="t-h3" style="margin: 32px 0 12px 0;">Font Weights</h3>
+      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;">
+        <div class="card"><div class="t-overline" style="color: var(--gray-500);">regular</div><div style="font-family: var(--font-text); font-size: 22px; font-weight: 400;">Aa 400</div></div>
+        <div class="card"><div class="t-overline" style="color: var(--gray-500);">medium</div><div style="font-family: var(--font-text); font-size: 22px; font-weight: 500;">Aa 500</div></div>
+        <div class="card"><div class="t-overline" style="color: var(--gray-500);">semibold</div><div style="font-family: var(--font-text); font-size: 22px; font-weight: 600;">Aa 600</div></div>
+        <div class="card"><div class="t-overline" style="color: var(--gray-500);">bold</div><div style="font-family: var(--font-text); font-size: 22px; font-weight: 700;">Aa 700</div></div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- 3. SPACING                                                   -->
+    <!-- ============================================================ -->
+    <section class="section">
+      <div class="section-eyebrow">03 · Spacing</div>
+      <h2 class="section-title">8-pt Grid</h2>
+      <p class="section-lede">
+        All values are multiples of 4. Component spacing (button height, card padding, list item height)
+        composes these primitives via <code style="font-family: var(--font-mono);">componentSpacing.*</code>.
+      </p>
+
+      <div class="card" style="padding: 16px 24px;">
+        <div class="space-row">
+          <div class="space-token">xs · 4</div>
+          <div><div class="space-bar" style="width: 4px;"></div></div>
+          <div class="type-spec">4px</div>
+        </div>
+        <div class="space-row">
+          <div class="space-token">sm · 8</div>
+          <div><div class="space-bar" style="width: 8px;"></div></div>
+          <div class="type-spec">8px</div>
+        </div>
+        <div class="space-row">
+          <div class="space-token">md · 12</div>
+          <div><div class="space-bar" style="width: 12px;"></div></div>
+          <div class="type-spec">12px</div>
+        </div>
+        <div class="space-row">
+          <div class="space-token">base · 16</div>
+          <div><div class="space-bar" style="width: 16px;"></div></div>
+          <div class="type-spec">16px</div>
+        </div>
+        <div class="space-row">
+          <div class="space-token">lg · 24</div>
+          <div><div class="space-bar" style="width: 24px;"></div></div>
+          <div class="type-spec">24px</div>
+        </div>
+        <div class="space-row">
+          <div class="space-token">xl · 32</div>
+          <div><div class="space-bar" style="width: 32px;"></div></div>
+          <div class="type-spec">32px</div>
+        </div>
+        <div class="space-row">
+          <div class="space-token">2xl · 48</div>
+          <div><div class="space-bar" style="width: 48px;"></div></div>
+          <div class="type-spec">48px</div>
+        </div>
+        <div class="space-row">
+          <div class="space-token">3xl · 64</div>
+          <div><div class="space-bar" style="width: 64px;"></div></div>
+          <div class="type-spec">64px</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- 4. BORDER RADIUS                                             -->
+    <!-- ============================================================ -->
+    <section class="section">
+      <div class="section-eyebrow">04 · Border Radius</div>
+      <h2 class="section-title">Rounding</h2>
+      <p class="section-lede">
+        Always use <code style="font-family: var(--font-mono);">borderRadius.full</code> (= 9999) for pill shapes —
+        26 files still hardcode <code style="font-family: var(--font-mono);">borderRadius: 9999</code>. Wave 1.1 codemod.
+      </p>
+
+      <div style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 16px;">
+        <div class="radius-tile">
+          <div class="radius-square" style="border-radius: 4px;"></div>
+          <div class="t-caption" style="text-align: center;"><strong>xs</strong><br/><span style="color: var(--gray-500);">4px</span></div>
+        </div>
+        <div class="radius-tile">
+          <div class="radius-square" style="border-radius: 8px;"></div>
+          <div class="t-caption" style="text-align: center;"><strong>small · chip</strong><br/><span style="color: var(--gray-500);">8px</span></div>
+        </div>
+        <div class="radius-tile">
+          <div class="radius-square" style="border-radius: 12px;"></div>
+          <div class="t-caption" style="text-align: center;"><strong>medium · button</strong><br/><span style="color: var(--gray-500);">12px</span></div>
+        </div>
+        <div class="radius-tile">
+          <div class="radius-square" style="border-radius: 16px;"></div>
+          <div class="t-caption" style="text-align: center;"><strong>large · card</strong><br/><span style="color: var(--gray-500);">16px</span></div>
+        </div>
+        <div class="radius-tile">
+          <div class="radius-square" style="border-radius: 24px;"></div>
+          <div class="t-caption" style="text-align: center;"><strong>xl</strong><br/><span style="color: var(--gray-500);">24px · modals</span></div>
+        </div>
+        <div class="radius-tile">
+          <div class="radius-square" style="border-radius: 9999px;"></div>
+          <div class="t-caption" style="text-align: center;"><strong>full</strong><br/><span style="color: var(--gray-500);">9999 · pill</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- 5. SHADOWS                                                   -->
+    <!-- ============================================================ -->
+    <section class="section">
+      <div class="section-eyebrow">05 · Shadows</div>
+      <h2 class="section-title">Elevation</h2>
+      <p class="section-lede">
+        5-level system, warm-toned (all shadows tinted with <code style="font-family: var(--font-mono);">#2D2A26</code>).
+        Current adoption is 15% — Wave 1.2 (highest-traffic files first) is the biggest next cycle target.
+      </p>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 20px;">
+        <div class="elev">
+          <div class="elev-box elev-0"></div>
+          <div style="margin-top: 12px;">
+            <div class="t-caption" style="font-weight: 600;">subtle</div>
+            <div class="t-caption" style="color: var(--gray-500);">L0 · chips, badges</div>
+          </div>
+        </div>
+        <div class="elev">
+          <div class="elev-box elev-1"></div>
+          <div style="margin-top: 12px;">
+            <div class="t-caption" style="font-weight: 600;">card</div>
+            <div class="t-caption" style="color: var(--gray-500);">L1 · cards at rest</div>
+          </div>
+        </div>
+        <div class="elev">
+          <div class="elev-box elev-2"></div>
+          <div style="margin-top: 12px;">
+            <div class="t-caption" style="font-weight: 600;">floatingActionButton</div>
+            <div class="t-caption" style="color: var(--gray-500);">L2 · FAB, pressed cards</div>
+          </div>
+        </div>
+        <div class="elev">
+          <div class="elev-box elev-3"></div>
+          <div style="margin-top: 12px;">
+            <div class="t-caption" style="font-weight: 600;">modal</div>
+            <div class="t-caption" style="color: var(--gray-500);">L3 · modals, sheets</div>
+          </div>
+        </div>
+        <div class="elev">
+          <div class="elev-box elev-4"></div>
+          <div style="margin-top: 12px;">
+            <div class="t-caption" style="font-weight: 600;">alert</div>
+            <div class="t-caption" style="color: var(--gray-500);">L4 · alerts, overlays</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- 6. ICON SIZES                                                -->
+    <!-- ============================================================ -->
+    <section class="section">
+      <div class="section-eyebrow">06 · Icon sizes</div>
+      <h2 class="section-title">Icon Scale</h2>
+      <p class="section-lede">
+        Reference via <code style="font-family: var(--font-mono);">iconSizes.micro / small / medium / large / xl / xxl</code>.
+        Went from 0% adoption (Apr 5) to 82% — the single biggest consistency win this cycle.
+      </p>
+
+      <div class="card" style="padding: 32px 24px;">
+        <div class="icon-row">
+          <div class="icon-bubble" style="height: 10px; width: 10px;"></div>
+          <div class="icon-bubble" style="height: 16px; width: 16px;"></div>
+          <div class="icon-bubble" style="height: 20px; width: 20px;"></div>
+          <div class="icon-bubble" style="height: 24px; width: 24px;"></div>
+          <div class="icon-bubble" style="height: 32px; width: 32px;"></div>
+          <div class="icon-bubble" style="height: 48px; width: 48px;"></div>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 40px; margin-top: 16px;">
+          <div class="t-caption" style="text-align: center;"><strong>micro</strong><br/><span style="color: var(--gray-500);">10 · badges</span></div>
+          <div class="t-caption" style="text-align: center;"><strong>small</strong><br/><span style="color: var(--gray-500);">16 · captions</span></div>
+          <div class="t-caption" style="text-align: center;"><strong>medium</strong><br/><span style="color: var(--gray-500);">20 · inline</span></div>
+          <div class="t-caption" style="text-align: center;"><strong>large</strong><br/><span style="color: var(--gray-500);">24 · actions</span></div>
+          <div class="t-caption" style="text-align: center;"><strong>xl</strong><br/><span style="color: var(--gray-500);">32 · feature</span></div>
+          <div class="t-caption" style="text-align: center;"><strong>xxl</strong><br/><span style="color: var(--gray-500);">48 · empty state</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- 7. BUTTON PRIMITIVE (proposed Wave 3.1)                      -->
+    <!-- ============================================================ -->
+    <section class="section">
+      <div class="section-eyebrow">07 · Button primitive · proposed Wave 3.1</div>
+      <h2 class="section-title">Unified Button</h2>
+      <p class="section-lede">
+        Four style variants × three size variants. Today the app has 290 files instantiating inline
+        <code style="font-family: var(--font-mono);">Pressable</code>/<code style="font-family: var(--font-mono);">TouchableOpacity</code>
+        with 10+ distinct padding combinations. This primitive replaces the sprawl.
+      </p>
+
+      <div class="card" style="padding: 32px;">
+        <!-- Variant headers -->
+        <div style="display: grid; grid-template-columns: 100px repeat(4, 1fr); gap: 24px; align-items: center; margin-bottom: 24px;">
+          <div></div>
+          <div class="t-overline" style="color: var(--gray-500); text-align: center;">primary</div>
+          <div class="t-overline" style="color: var(--gray-500); text-align: center;">secondary</div>
+          <div class="t-overline" style="color: var(--gray-500); text-align: center;">ghost</div>
+          <div class="t-overline" style="color: var(--gray-500); text-align: center;">icon</div>
+        </div>
+
+        <!-- Small row -->
+        <div style="display: grid; grid-template-columns: 100px repeat(4, 1fr); gap: 24px; align-items: center; margin-bottom: 20px;">
+          <div class="t-caption" style="color: var(--gray-500);"><strong>sm</strong> · 32h</div>
+          <div style="text-align: center;"><button class="btn btn-primary btn-sm">Continue</button></div>
+          <div style="text-align: center;"><button class="btn btn-secondary btn-sm">Cancel</button></div>
+          <div style="text-align: center;"><button class="btn btn-ghost btn-sm">Skip</button></div>
+          <div style="text-align: center;"><button class="btn btn-primary btn-icon btn-sm" aria-label="Add"><i data-lucide="plus" style="width: 16px; height: 16px;"></i></button></div>
+        </div>
+
+        <!-- Medium row -->
+        <div style="display: grid; grid-template-columns: 100px repeat(4, 1fr); gap: 24px; align-items: center; margin-bottom: 20px;">
+          <div class="t-caption" style="color: var(--gray-500);"><strong>md</strong> · 44h</div>
+          <div style="text-align: center;"><button class="btn btn-primary btn-md">Continue →</button></div>
+          <div style="text-align: center;"><button class="btn btn-secondary btn-md">Cancel</button></div>
+          <div style="text-align: center;"><button class="btn btn-ghost btn-md">Skip</button></div>
+          <div style="text-align: center;"><button class="btn btn-primary btn-icon btn-md" aria-label="Add"><i data-lucide="plus" style="width: 20px; height: 20px;"></i></button></div>
+        </div>
+
+        <!-- Large row -->
+        <div style="display: grid; grid-template-columns: 100px repeat(4, 1fr); gap: 24px; align-items: center;">
+          <div class="t-caption" style="color: var(--gray-500);"><strong>lg</strong> · 56h</div>
+          <div style="text-align: center;"><button class="btn btn-primary btn-lg">Build My First Habit</button></div>
+          <div style="text-align: center;"><button class="btn btn-secondary btn-lg">Maybe later</button></div>
+          <div style="text-align: center;"><button class="btn btn-ghost btn-lg">I'll explore later</button></div>
+          <div style="text-align: center;"><button class="btn btn-primary btn-icon btn-lg" aria-label="Add"><i data-lucide="plus" style="width: 24px; height: 24px;"></i></button></div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top: 16px; padding: 20px 24px;">
+        <div class="t-overline" style="color: var(--gray-500); margin-bottom: 8px;">Token mapping</div>
+        <div class="t-body-small" style="color: var(--gray-600);">
+          <strong>Size height</strong>: sm 32 · md <code style="font-family: var(--font-mono);">componentSpacing.button.height = 44</code> · lg 56 &nbsp;·&nbsp;
+          <strong>Padding</strong>: <code style="font-family: var(--font-mono);">componentSpacing.button.paddingHorizontal = spacing.lg (24)</code> &nbsp;·&nbsp;
+          <strong>Radius</strong>: <code style="font-family: var(--font-mono);">borderRadius.medium (12)</code> (<code style="font-family: var(--font-mono);">.full</code> for icon) &nbsp;·&nbsp;
+          <strong>Typography</strong>: <code style="font-family: var(--font-mono);">typography.button</code> &nbsp;·&nbsp;
+          <strong>Shadow (primary)</strong>: <code style="font-family: var(--font-mono);">shadows.card</code>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- 8. EMPTY STATE TEMPLATE (proposed Wave 3.2)                  -->
+    <!-- ============================================================ -->
+    <section class="section">
+      <div class="section-eyebrow">08 · Empty state · proposed Wave 3.2</div>
+      <h2 class="section-title">Canonical Empty State</h2>
+      <p class="section-lede">
+        17 distinct <code style="font-family: var(--font-mono);">EmptyState.tsx</code> implementations exist today.
+        This template is the shared shape the 10–12 simple cases should consolidate onto; chart-specific ones can extend it.
+      </p>
+
+      <div class="empty">
+        <div class="empty-icon"><i data-lucide="sprout" style="width: 32px; height: 32px;"></i></div>
+        <h3 class="t-h3">No habits yet</h3>
+        <p class="t-body-small" style="color: var(--gray-500); max-width: 340px;">Start with one small thing you want to do every day. The chain builds itself from there.</p>
+        <div style="display: flex; gap: 12px; margin-top: 8px;">
+          <button class="btn btn-primary btn-md"><i data-lucide="plus" style="width: 20px; height: 20px;"></i> Add your first habit</button>
+          <button class="btn btn-ghost btn-md">Browse templates</button>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top: 16px; padding: 20px 24px;">
+        <div class="t-overline" style="color: var(--gray-500); margin-bottom: 8px;">Slots</div>
+        <div class="t-body-small" style="color: var(--gray-600);">
+          <strong>icon</strong> (xxl container, small-48 lucide icon) · <strong>title</strong> (<code style="font-family: var(--font-mono);">typography.heading3</code>) · <strong>body</strong> (<code style="font-family: var(--font-mono);">typography.bodySmall</code>, max-width ~340) · <strong>primaryAction</strong> + optional <strong>secondaryAction</strong>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- 9. ANIMATION                                                 -->
+    <!-- ============================================================ -->
+    <section class="section">
+      <div class="section-eyebrow">09 · Motion</div>
+      <h2 class="section-title">Animation Tokens</h2>
+      <p class="section-lede">
+        Canonical spring: <code style="font-family: var(--font-mono);">damping: 18, stiffness: 150</code> (via
+        <code style="font-family: var(--font-mono);">springs.standard</code> / <code style="font-family: var(--font-mono);">.button</code> /
+        <code style="font-family: var(--font-mono);">.micro</code> / <code style="font-family: var(--font-mono);">.snappy</code>).
+        ~30 files use custom damping/stiffness or the legacy <code style="font-family: var(--font-mono);">Animated.spring</code> friction/tension API — Wave 2.3.
+      </p>
+
+      <!-- Entrance preview -->
+      <div class="card" style="padding: 24px 32px; margin-bottom: 24px;">
+        <div class="t-overline" style="color: var(--gray-500); margin-bottom: 12px;">Entrance — 280ms · ease-out · <code style="font-family: var(--font-mono);">durations.enter</code></div>
+        <div class="enter-demo t-h3">Fade + translateY(8 → 0)</div>
+        <div class="t-caption" style="color: var(--gray-500); margin-top: 8px;">60ms stagger between children (max 5 items per viewport)</div>
+      </div>
+
+      <!-- Duration scale -->
+      <h3 class="t-h3" style="margin: 0 0 16px 0;">Durations</h3>
+      <div class="card" style="padding: 16px 24px;">
+        <div class="timeline">
+          <div class="timeline-row"><div class="type-name">instant · 100</div><div class="timeline-bar"><div class="timeline-fill" style="animation-duration: 100ms;"></div></div><div class="type-spec">feedback</div></div>
+          <div class="timeline-row"><div class="type-name">quick · 150</div><div class="timeline-bar"><div class="timeline-fill" style="animation-duration: 150ms;"></div></div><div class="type-spec">small fades</div></div>
+          <div class="timeline-row"><div class="type-name">reveal · 180</div><div class="timeline-bar"><div class="timeline-fill" style="animation-duration: 180ms;"></div></div><div class="type-spec">quick transitions</div></div>
+          <div class="timeline-row"><div class="type-name">standard · 200</div><div class="timeline-bar"><div class="timeline-fill" style="animation-duration: 200ms;"></div></div><div class="type-spec">default</div></div>
+          <div class="timeline-row"><div class="type-name">transition · 220</div><div class="timeline-bar"><div class="timeline-fill" style="animation-duration: 220ms;"></div></div><div class="type-spec">emphasized</div></div>
+          <div class="timeline-row"><div class="type-name">enter · 280</div><div class="timeline-bar"><div class="timeline-fill" style="animation-duration: 280ms;"></div></div><div class="type-spec">screen/card entry</div></div>
+          <div class="timeline-row"><div class="type-name">moderate · 300</div><div class="timeline-bar"><div class="timeline-fill" style="animation-duration: 300ms;"></div></div><div class="type-spec">page transitions</div></div>
+          <div class="timeline-row"><div class="type-name">emphasis · 400</div><div class="timeline-bar"><div class="timeline-fill" style="animation-duration: 400ms;"></div></div><div class="type-spec">attention</div></div>
+          <div class="timeline-row"><div class="type-name">complex · 600</div><div class="timeline-bar"><div class="timeline-fill" style="animation-duration: 600ms;"></div></div><div class="type-spec">multi-step</div></div>
+          <div class="timeline-row"><div class="type-name">progress · 800</div><div class="timeline-bar"><div class="timeline-fill" style="animation-duration: 800ms;"></div></div><div class="type-spec">ring fills</div></div>
+        </div>
+      </div>
+
+      <!-- Spring presets -->
+      <h3 class="t-h3" style="margin: 32px 0 16px 0;">Springs</h3>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px;">
+        <div class="card">
+          <div class="t-caption" style="font-weight: 600;">standard · button · micro · snappy</div>
+          <div class="t-mono" style="color: var(--gray-500);">damping 18, stiffness 150</div>
+          <div class="t-caption" style="color: var(--gray-500); margin-top: 4px;">Canonical — all micro-interactions</div>
+        </div>
+        <div class="card">
+          <div class="t-caption" style="font-weight: 600;">bottomSheet</div>
+          <div class="t-mono" style="color: var(--gray-500);">damping 26, stiffness 300</div>
+          <div class="t-caption" style="color: var(--gray-500); margin-top: 4px;">Stable slide</div>
+        </div>
+        <div class="card">
+          <div class="t-caption" style="font-weight: 600;">exit</div>
+          <div class="t-mono" style="color: var(--gray-500);">damping 26, mass 1, stiffness 420</div>
+          <div class="t-caption" style="color: var(--gray-500); margin-top: 4px;">Fast dismissal</div>
+        </div>
+        <div class="card">
+          <div class="t-caption" style="font-weight: 600;">gesture</div>
+          <div class="t-mono" style="color: var(--gray-500);">damping 20, mass 1, stiffness 450</div>
+          <div class="t-caption" style="color: var(--gray-500); margin-top: 4px;">Direct manipulation snap-back</div>
+        </div>
+        <div class="card">
+          <div class="t-caption" style="font-weight: 600;">celebration</div>
+          <div class="t-mono" style="color: var(--gray-500);">damping 12, stiffness 200</div>
+          <div class="t-caption" style="color: var(--gray-500); margin-top: 4px;">Completion badges, pops</div>
+        </div>
+        <div class="card">
+          <div class="t-caption" style="font-weight: 600;">gentle</div>
+          <div class="t-mono" style="color: var(--gray-500);">damping 20, stiffness 100</div>
+          <div class="t-caption" style="color: var(--gray-500); margin-top: 4px;">Smooth reveals</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- FOOTER                                                        -->
+    <!-- ============================================================ -->
+    <footer class="section" style="border-bottom: 0;">
+      <div class="section-eyebrow">Sources</div>
+      <h2 class="section-title" style="font-size: 22px; line-height: 28px; letter-spacing: -0.35px;">Canonical files</h2>
+      <div class="t-body-small" style="color: var(--gray-600); max-width: 900px;">
+        <code style="font-family: var(--font-mono);">src/theme/colors/core.ts</code>
+        · <code style="font-family: var(--font-mono);">src/theme/colors/semantic.ts</code>
+        · <code style="font-family: var(--font-mono);">src/theme/darkColors.ts</code>
+        · <code style="font-family: var(--font-mono);">src/theme/typography.ts</code>
+        · <code style="font-family: var(--font-mono);">src/theme/spacing.ts</code>
+        · <code style="font-family: var(--font-mono);">src/theme/iconSizes.ts</code>
+        · <code style="font-family: var(--font-mono);">src/theme/animations.ts</code>
+        · <code style="font-family: var(--font-mono);">src/theme/ThemeContext.tsx</code>
+      </div>
+      <div class="t-caption" style="color: var(--gray-500); margin-top: 16px;">
+        Dark mode is force-locked light per PR #1229. Dark palette exists in <code style="font-family: var(--font-mono);">darkColors.ts</code> but is not in the shipping product. Unlock is a separate track.
+      </div>
+    </footer>
+
+    <script>
+      // Render Lucide icons once the UMD bundle is loaded
+      if (window.lucide) {
+        window.lucide.createIcons();
+      }
+    </script>
+  </body>
+</html>

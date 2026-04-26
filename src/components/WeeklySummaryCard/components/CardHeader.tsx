@@ -21,7 +21,7 @@ export function CardHeader({
           <Star color={colors.accent} fill={colors.accent} size={iconSizes.medium} />
         </Animated.View>
         <Text
-          className='text-[13px] font-bold uppercase tracking-wider'
+          className='text-sm font-bold uppercase tracking-wider'
           style={{ color: colors.text }}
         >
           Week in Review
@@ -29,7 +29,7 @@ export function CardHeader({
       </View>
       {onViewDetails ? <View className='flex-row items-center gap-1'>
           <Text
-            className='text-[13px] font-medium'
+            className='text-sm font-medium'
             style={{ color: colors.accent }}
           >
             Details

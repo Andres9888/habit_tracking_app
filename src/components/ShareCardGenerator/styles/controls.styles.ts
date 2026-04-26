@@ -33,10 +33,10 @@ export const controlsStyles = StyleSheet.create({
     borderColor: colors.primary[500],
   },
   messageInput: {
-    borderRadius: 8,
+    borderRadius: borderRadius.small,
     borderWidth: 1,
     fontFamily: fontFamilies.primary.text,
-    fontSize: 17,
+    fontSize: typography.body.fontSize,
     minHeight: 80,
     padding: 12,
     textAlignVertical: 'top',
@@ -46,14 +46,14 @@ export const controlsStyles = StyleSheet.create({
   },
   optionLabel: {
     fontFamily: fontFamilies.primary.text,
-    fontSize: 17,
+    fontSize: typography.body.fontSize,
     fontWeight: fontWeights.semibold,
     marginBottom: 12,
   },
   platformButton: {
     backgroundColor: colors.gray[100],
     borderColor: colors.border,
-    borderRadius: 8,
+    borderRadius: borderRadius.small,
     borderWidth: 1,
     paddingHorizontal: 16,
     paddingVertical: 8,
@@ -86,7 +86,7 @@ export const controlsStyles = StyleSheet.create({
   },
   toggleSubtext: {
     fontFamily: fontFamilies.primary.text,
-    fontSize: 13,
+    fontSize: typography.caption.fontSize,
     marginTop: 4,
   },
 });

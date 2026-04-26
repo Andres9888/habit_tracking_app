@@ -4,7 +4,7 @@ import Animated, { FadeIn, FadeInUp } from 'react-native-reanimated';
 import { Info, Zap } from 'lucide-react-native';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { borderRadius } from '@/theme/spacing';
-import { fontFamilies, fontWeights } from '@/theme/typography';
+import { typography, fontFamilies, fontWeights } from '@/theme/typography';
 import { iconSizes } from '@/theme/iconSizes';
 
 const SECTION_FADE_DURATION = 400;
@@ -44,7 +44,7 @@ export function EmptyStrengthState({
       testID='habit-strength-history-empty'
     >
       <View style={{ alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between' }}>
-        <Text style={{ color: colors.text.primary, fontFamily: fontFamilies.primary.text, fontSize: 17, fontWeight: fontWeights.semibold }}>
+        <Text style={{ color: colors.text.primary, fontFamily: fontFamilies.primary.text, fontSize: typography.body.fontSize, fontWeight: fontWeights.semibold }}>
           Strength History
         </Text>
         <Pressable
@@ -73,7 +73,7 @@ export function EmptyStrengthState({
           style={{
             alignItems: 'center',
             backgroundColor: isDark ? '#451A03' : '#FEF3C7',
-            borderRadius: 24,
+            borderRadius: borderRadius.xl,
             height: 48,
             justifyContent: 'center',
             marginBottom: 12,
@@ -86,7 +86,7 @@ export function EmptyStrengthState({
           style={{
             color: colors.text.primary,
             fontFamily: fontFamilies.primary.text,
-            fontSize: 17,
+            fontSize: typography.body.fontSize,
             fontWeight: fontWeights.semibold,
             marginBottom: 4,
             textAlign: 'center',
@@ -94,7 +94,7 @@ export function EmptyStrengthState({
         >
           Ready to Build Strength
         </Text>
-        <Text style={{ color: colors.text.secondary, fontFamily: fontFamilies.primary.text, fontSize: 13, textAlign: 'center' }}>
+        <Text style={{ color: colors.text.secondary, fontFamily: fontFamilies.primary.text, fontSize: typography.caption.fontSize, textAlign: 'center' }}>
           {message}
         </Text>
       </View>

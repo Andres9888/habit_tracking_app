@@ -1,8 +1,9 @@
 /** TemplatesLoadingState - Shimmer animation, stagger, shadows */
 import { View, Text } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
+import { borderRadius } from '../../../theme/spacing';
 import { useThemeColors } from '../../../theme/ThemeContext';
-import { fontFamilies, fontWeights } from '../../../theme/typography';
+import { typography, fontFamilies, fontWeights } from '../../../theme/typography';
 import { ShimmerBox } from './ShimmerBox';
 import { SkeletonCard } from './SkeletonCard';
 
@@ -18,7 +19,7 @@ export function TemplatesLoadingState() {
           style={{
             color: colors.text.primary,
             fontFamily: fontFamilies.primary.display,
-            fontSize: 22,
+            fontSize: typography.heading1.fontSize,
             fontWeight: fontWeights.semibold,
             letterSpacing: -0.35,
           }}
@@ -29,7 +30,7 @@ export function TemplatesLoadingState() {
           style={{
             color: colors.text.secondary,
             fontFamily: fontFamilies.primary.text,
-            fontSize: 17,
+            fontSize: typography.body.fontSize,
             marginTop: 4,
           }}
         >
@@ -54,7 +55,7 @@ export function TemplatesLoadingState() {
           <ShimmerBox
             key={i}
             height={36}
-            style={{ borderRadius: 9999 }}
+            style={{ borderRadius: borderRadius.full }}
             width={w}
           />
         ))}

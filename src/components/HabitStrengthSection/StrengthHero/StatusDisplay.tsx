@@ -9,6 +9,7 @@ import { Text, View } from 'react-native';
 import { useThemeColors } from '@/theme/ThemeContext';
 
 import { TrendingDown, TrendingUp } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 
 import { getStrengthColors, getThemeColors, STRENGTH_LABELS } from '../constants';
 import type { StatusDisplayProps } from './types';
@@ -54,8 +55,8 @@ export function StatusDisplay({
 
       {/* Delta badge */}
       <View className='flex-row items-center gap-1'>
-        {deltaIsPositive ? <TrendingUp color={sectionColors.positive} size={14} /> : null}
-        {deltaIsNegative ? <TrendingDown color={sectionColors.negative} size={14} /> : null}
+        {deltaIsPositive ? <TrendingUp color={sectionColors.positive} size={iconSizes.small} /> : null}
+        {deltaIsNegative ? <TrendingDown color={sectionColors.negative} size={iconSizes.small} /> : null}
         <Text
           className='text-sm'
           style={{

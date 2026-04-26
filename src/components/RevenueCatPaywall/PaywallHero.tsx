@@ -6,7 +6,7 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import { colors } from '../../theme/colors/core';
 import { fontFamilies, fontWeights } from '../../theme/typography';
-import { spacing } from '../../theme/spacing';
+import { borderRadius, spacing } from '../../theme/spacing';
 import { PAYWALL_HERO } from './paywall.constants';
 
 export function PaywallHero() {
@@ -17,7 +17,7 @@ export function PaywallHero() {
         style={{
           alignItems: 'center',
           backgroundColor: `${colors.premium[400]}15`,
-          borderRadius: 9999,
+          borderRadius: borderRadius.full,
           height: 64,
           justifyContent: 'center',
           marginBottom: spacing.base,

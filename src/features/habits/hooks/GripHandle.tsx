@@ -10,6 +10,7 @@
 import React, { memo } from 'react';
 import { StyleSheet, View } from 'react-native';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
+import { borderRadius } from '../../../theme/spacing';
 import { useThemeColors } from '../../../theme';
 
 function GripHandleComponent() {
@@ -31,7 +32,7 @@ function GripHandleComponent() {
 
 const styles = StyleSheet.create({
   bar: {
-    borderRadius: 4,
+    borderRadius: borderRadius.xs,
     height: 3,
     marginVertical: 2,
     width: 20,

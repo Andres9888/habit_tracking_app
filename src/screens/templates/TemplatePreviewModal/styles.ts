@@ -5,7 +5,7 @@
 
 import { StyleSheet } from 'react-native';
 import { borderRadius, shadows } from '@/theme/spacing';
-import { fontFamilies, fontWeights } from '@/theme/typography';
+import { typography, fontFamilies, fontWeights } from '@/theme/typography';
 
 export const styles = StyleSheet.create({
   closeButton: {
@@ -45,20 +45,20 @@ export const styles = StyleSheet.create({
   },
   headerTitle: {
     fontFamily: fontFamilies.primary.display,
-    fontSize: 22,
+    fontSize: typography.heading1.fontSize,
     fontWeight: fontWeights.bold,
     letterSpacing: -0.5,
   },
   iconContainer: {
     alignItems: 'center',
-    borderRadius: 24,
+    borderRadius: borderRadius.xl,
     height: 80,
     justifyContent: 'center',
     marginBottom: 16,
     width: 80,
   },
   iconText: {
-    fontSize: 34,
+    fontSize: typography.displayLarge.fontSize,
   },
   importButton: {
     ...shadows.modal,
@@ -67,13 +67,13 @@ export const styles = StyleSheet.create({
     borderRadius: borderRadius.medium,
     borderWidth: 1,
     fontFamily: fontFamilies.primary.text,
-    fontSize: 17,
+    fontSize: typography.body.fontSize,
     paddingHorizontal: 16,
     paddingVertical: 16,
   },
   label: {
     fontFamily: fontFamilies.primary.text,
-    fontSize: 13,
+    fontSize: typography.caption.fontSize,
     fontWeight: fontWeights.semibold,
     marginBottom: 8,
   },

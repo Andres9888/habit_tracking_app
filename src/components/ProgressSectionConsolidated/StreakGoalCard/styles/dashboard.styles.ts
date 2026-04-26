@@ -22,7 +22,7 @@ export const dashboardStyles = StyleSheet.create({
   bannerDate: {
     color: colors.primary[600],
     fontFamily: fontFamilies.monospace,
-    fontSize: 13,
+    fontSize: typography.caption.fontSize,
     fontWeight: fontWeights.semibold,
     marginLeft: 'auto',
   },
@@ -57,7 +57,7 @@ export const dashboardStyles = StyleSheet.create({
   },
   heroNumberDenominator: {
     color: colors.gray[300],
-    fontSize: 14,
+    fontSize: typography.bodySmall.fontSize,
     fontWeight: fontWeights.regular,
   },
   heroRow: {
@@ -77,7 +77,7 @@ export const dashboardStyles = StyleSheet.create({
   },
   metricLabel: {
     color: colors.gray[500],
-    fontSize: 10,
+    fontSize: typography.tabBar.fontSize,
     marginTop: 4,
     textAlign: 'center',
   },
@@ -94,7 +94,7 @@ export const dashboardStyles = StyleSheet.create({
   metricValue: {
     color: colors.gray[800],
     fontFamily: fontFamilies.monospace,
-    fontSize: 20,
+    fontSize: typography.heading3.fontSize,
     fontWeight: fontWeights.bold,
   },
   metricsRow: {
@@ -140,23 +140,23 @@ export const dashboardStyles = StyleSheet.create({
   milestoneLabel: {
     color: colors.gray[800],
     flex: 1,
-    fontSize: 13,
+    fontSize: typography.caption.fontSize,
   },
   milestoneLabelCurrent: {
     color: colors.streak[500],
     flex: 1,
-    fontSize: 13,
+    fontSize: typography.caption.fontSize,
     fontWeight: fontWeights.semibold,
   },
   milestoneLabelDone: {
     color: colors.primary[600],
     flex: 1,
-    fontSize: 13,
+    fontSize: typography.caption.fontSize,
   },
   milestoneLabelFuture: {
     color: colors.gray[300],
     flex: 1,
-    fontSize: 13,
+    fontSize: typography.caption.fontSize,
   },
   milestoneRow: {
     alignItems: 'center',

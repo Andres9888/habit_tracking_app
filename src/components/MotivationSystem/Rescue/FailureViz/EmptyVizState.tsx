@@ -7,9 +7,10 @@ import React from 'react';
 import { View } from 'react-native';
 import { AlertTriangle } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
+import { borderRadius } from '@/theme/spacing';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { useThemeColors } from '../../../../theme/ThemeContext';
-import { fontFamilies, fontWeights } from '@/theme/typography';
+import { typography, fontFamilies, fontWeights } from '@/theme/typography';
 
 const anim = (delay: number) =>
   FadeInUp.duration(280).delay(delay).springify().damping(18);
@@ -30,7 +31,7 @@ export function EmptyVizState() {
         style={{
           alignItems: 'center',
           backgroundColor: isDark ? '#3B1A1A' : '#FFF1F2',
-          borderRadius: 24,
+          borderRadius: borderRadius.xl,
           height: 48,
           justifyContent: 'center',
           marginBottom: 12,
@@ -44,7 +45,7 @@ export function EmptyVizState() {
         style={{
           color: colors.text.primary,
           fontFamily: fontFamilies.primary.text,
-          fontSize: 14,
+          fontSize: typography.bodySmall.fontSize,
           fontWeight: fontWeights.medium,
           marginBottom: 4,
           textAlign: 'center',
@@ -57,7 +58,7 @@ export function EmptyVizState() {
         style={{
           color: colors.text.tertiary,
           fontFamily: fontFamilies.primary.text,
-          fontSize: 13,
+          fontSize: typography.caption.fontSize,
           textAlign: 'center',
         }}
       >

@@ -11,9 +11,10 @@
 import React from 'react';
 import { View, Text, StyleSheet, type ViewStyle } from 'react-native';
 import { Lock, Flame, Sparkles } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { LinearGradient } from 'expo-linear-gradient';
 import { shadows, borderRadius } from '../theme/spacing'
-import { fontFamilies, fontWeights } from '../theme/typography';
+import { typography, fontFamilies, fontWeights } from '../theme/typography';
 import { colors } from '../theme/colors';
 
 type PremiumBadgeVariant = 'pro' | 'popular' | 'new';
@@ -27,7 +28,7 @@ export function PremiumBadge({ variant = 'pro', style }: PremiumBadgeProps) {
   if (variant === 'popular') {
     return (
       <View style={[styles.badge, styles.popularBadge, style]}>
-        <Flame color='#ff4500' size={12} strokeWidth={2.5} />
+        <Flame color='#ff4500' size={iconSizes.micro} strokeWidth={2.5} />
         <Text style={[styles.badgeText, { color: '#ff4500' }]}>Popular</Text>
       </View>
     );
@@ -36,7 +37,7 @@ export function PremiumBadge({ variant = 'pro', style }: PremiumBadgeProps) {
   if (variant === 'new') {
     return (
       <View style={[styles.badge, styles.newBadge]}>
-        <Sparkles color={colors.secondary[500]} size={12} strokeWidth={2.5} />
+        <Sparkles color={colors.secondary[500]} size={iconSizes.micro} strokeWidth={2.5} />
         <Text style={[styles.badgeText, { color: colors.secondary[500] }]}>New</Text>
       </View>
     );
@@ -50,7 +51,7 @@ export function PremiumBadge({ variant = 'pro', style }: PremiumBadgeProps) {
       start={{ x: 0, y: 0 }}
       style={[styles.badge, styles.proBadge, style]}
     >
-      <Lock color={colors.text.inverse} size={12} strokeWidth={2.5} />
+      <Lock color={colors.text.inverse} size={iconSizes.micro} strokeWidth={2.5} />
       <Text style={[styles.badgeText, styles.proBadgeText]}>PRO</Text>
     </LinearGradient>
   );
@@ -73,7 +74,7 @@ const styles = StyleSheet.create({
   },
   badgeText: {
     fontFamily: fontFamilies.primary.text,
-    fontSize: 13,
+    fontSize: typography.caption.fontSize,
     fontWeight: fontWeights.semibold,
     letterSpacing: 0.5,
     textTransform: 'uppercase',

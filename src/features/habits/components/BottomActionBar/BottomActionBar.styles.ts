@@ -53,7 +53,7 @@ export const styles = StyleSheet.create({
   },
   iconTouchArea: {
     alignItems: 'center',
-    borderRadius: 32,
+    borderRadius: borderRadius.xl,
     height: 64,
     justifyContent: 'center',
     width: 64,

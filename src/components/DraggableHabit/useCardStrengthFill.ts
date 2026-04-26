@@ -18,6 +18,7 @@ import {
   withSpring,
   withTiming,
 } from 'react-native-reanimated';
+import { springs } from '@/theme/animations';
 import { useQuery } from 'convex/react';
 import { api } from '../../../convex/_generated/api';
 import { useThemeColors } from '../../theme/ThemeContext';
@@ -46,9 +47,8 @@ export function useCardStrengthFill(
       );
     } else {
       fillWidth.value = withSpring(strengthPercent, {
-        damping: 12,
+        ...springs.gentle,
         mass: 0.8,
-        stiffness: 80,
       });
     }
   }, [strengthPercent, reduceMotion, fillWidth]);

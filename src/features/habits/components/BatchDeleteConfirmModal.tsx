@@ -56,7 +56,7 @@ function BatchDeleteConfirmModalComponent({
 
 const s = StyleSheet.create({
   actions: { flexDirection: 'row', gap: 10 },
-  box: { borderRadius: 24, padding: 28, width: 320 },
+  box: { borderRadius: borderRadius.xl, padding: 28, width: 320 },
   btn: { alignItems: 'center', borderRadius: borderRadius.button, flex: 1, paddingVertical: 12 },
   btnText: { ...typography.bodySmall, fontWeight: fontWeights.semibold },
   cancelBtn: { backgroundColor: 'rgba(255,255,255,0.08)' },
@@ -66,7 +66,7 @@ const s = StyleSheet.create({
     alignItems: 'center',
     alignSelf: 'center',
     backgroundColor: palette.errorLight,
-    borderRadius: 24,
+    borderRadius: borderRadius.xl,
     height: 48,
     justifyContent: 'center',
     marginBottom: 16,

@@ -86,7 +86,7 @@ export function useToastStyles() {
     undoText: {
       color: colors.status.warningText,
       fontFamily: fontFamilies.primary.text,
-      fontSize: 13,
+      fontSize: typography.caption.fontSize,
       fontWeight: fontWeights.bold,
       letterSpacing: 0.3,
     },

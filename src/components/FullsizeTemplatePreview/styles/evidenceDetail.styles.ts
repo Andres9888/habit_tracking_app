@@ -39,14 +39,14 @@ export const evidenceDetailStyles = StyleSheet.create({
   },
   tipNumber: {
     fontFamily: fontFamilies.monospace,
-    fontSize: 13,
+    fontSize: typography.caption.fontSize,
     fontWeight: fontWeights.bold,
   },
   tipText: {
     color: colors.primary[700],
     flex: 1,
     fontFamily: fontFamilies.primary.text,
-    fontSize: 14,
+    fontSize: typography.bodySmall.fontSize,
     lineHeight: 22,
   },
   tipsDivider: {

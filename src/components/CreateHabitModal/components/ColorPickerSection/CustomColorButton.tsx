@@ -3,6 +3,7 @@ import { memo, useCallback, useRef } from 'react';
 import { Animated, Keyboard, View } from 'react-native';
 import useHapticFeedback from '../../../../hooks/useHapticFeedback';
 import { Motion } from '../../../../constants/motion';
+import { colors } from '../../../../theme/colors/core';
 import { borderRadius } from '../../../../theme/spacing';
 import type { CustomColorButtonProps } from './types';
 import { AnimatedPressable } from '../../../ui';
@@ -57,7 +58,7 @@ const CustomColorButtonComponent = ({ onPress }: CustomColorButtonProps) => {
           accessibilityRole='button'
           style={{
             alignItems: 'center',
-            borderColor: '#a8a29e',
+            borderColor: colors.gray[400],
             borderRadius: borderRadius.full,
             borderStyle: 'dashed',
             borderWidth: 2,
@@ -70,7 +71,7 @@ const CustomColorButtonComponent = ({ onPress }: CustomColorButtonProps) => {
           onPressIn={handlePressIn}
           onPressOut={handlePressOut}
         >
-          <Plus color='#a8a29e' size={iconSizes.medium} />
+          <Plus color={colors.gray[400]} size={iconSizes.medium} />
         </AnimatedPressable>
       </Animated.View>
     </View>

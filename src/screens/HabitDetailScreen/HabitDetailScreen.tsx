@@ -5,6 +5,7 @@ import { View, Modal, KeyboardAvoidingView, Platform } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Edit3 } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
+import { typography, fontWeights } from '@/theme/typography';
 import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 import { ScreenHeader } from '../../components/ScreenHeader';
 import {
@@ -97,7 +98,7 @@ function HabitDetailScreenContent({
                       />
                     }
                     title={habit.name}
-                    titleStyle={{ fontSize: 17, fontWeight: '600', letterSpacing: -0.2, lineHeight: 22 }}
+                    titleStyle={{ fontSize: typography.body.fontSize, fontWeight: fontWeights.semibold, letterSpacing: -0.2, lineHeight: 22 }}
                     titleVisible={isTitlePinned}
                     variant='transparent'
                     onBack={onClose}

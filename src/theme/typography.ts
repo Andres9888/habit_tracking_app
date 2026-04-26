@@ -47,7 +47,7 @@ export const fontWeights = {
  * Type Scale (Design System: 34/22/17/13)
  * Display: 34, Title: 22, Body: 17, Caption: 13
  */
-export const typography: Record<string, TextStyle> = {
+export const typography = {
   // Display Large (Onboarding headlines) — 34px Literata
   displayLarge: {
     fontFamily: fontFamilies.primary.display,
@@ -102,6 +102,15 @@ export const typography: Record<string, TextStyle> = {
     lineHeight: 20,
   },
 
+  // Body Bold (emphasized body text — habit names, rank numbers) — 17px bold
+  bodyBold: {
+    fontFamily: fontFamilies.primary.text,
+    fontSize: 17,
+    fontWeight: fontWeights.bold,
+    letterSpacing: 0,
+    lineHeight: 24,
+  },
+
   // Button Text — 17px semibold
   button: {
     fontFamily: fontFamilies.primary.text,
@@ -147,7 +156,7 @@ export const typography: Record<string, TextStyle> = {
     letterSpacing: 0.1,
     lineHeight: 12,
   },
-} as const;
+} as const satisfies Record<string, TextStyle>;
 
 /**
  * Dynamic Type Support

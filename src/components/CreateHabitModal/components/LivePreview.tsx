@@ -59,7 +59,7 @@ export const LivePreview = memo(({ emoji, color, habitName }: LivePreviewProps) 
       {/* Habit Name */}
       <Text
         accessible={false}
-        className='ml-3 flex-1 text-[15px] font-medium'
+        className='ml-3 flex-1 text-base font-medium'
         ellipsizeMode='tail'
         numberOfLines={1}
         style={{ color: themeColors.text.primary }}

@@ -16,7 +16,7 @@ export const achievementCardStyles = StyleSheet.create({
   badge: {
     alignItems: 'center',
     backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    borderRadius: 24,
+    borderRadius: borderRadius.xl,
     height: 80,
     justifyContent: 'center',
     marginBottom: spacing.base,
@@ -44,7 +44,7 @@ export const achievementCardStyles = StyleSheet.create({
     paddingHorizontal: spacing.base,
     paddingVertical: spacing.sm,
   },
-  habitEmoji: { fontSize: 20, marginRight: spacing.sm },
+  habitEmoji: { fontSize: typography.heading3.fontSize, marginRight: spacing.sm },
   habitName: { ...typography.heading3, color: colors.text.inverse },
   streakText: {
     ...typography.displayLarge,

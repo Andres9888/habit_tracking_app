@@ -46,9 +46,8 @@ export function runWidthExpansion(
     withSpring(
       ACCENT_TARGET_WIDTH,
       {
-        damping: 12,
+        ...springs.bouncy,
         mass: 0.8,
-        stiffness: 180,
       },
       (finished) => {
         if (finished) {

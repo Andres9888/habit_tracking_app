@@ -44,7 +44,7 @@ export function ImportButton({
         onPress={onImport}
       >
         {isImporting ? (
-          <ActivityIndicator color='#fff' size={12} />
+          <ActivityIndicator color='#fff' size={iconSizes.micro} />
         ) : isImported ? (
           <Animated.View style={[styles.checkmarkContainer, checkmarkStyle]}>
             <Check color='#fff' size={iconSizes.small} strokeWidth={3} />

@@ -7,7 +7,7 @@ import { Text, View } from 'react-native';
 import Animated, { Easing, FadeInUp } from 'react-native-reanimated';
 import { durations } from '../../../theme/animations';
 import { useThemeColors } from '../../../theme/ThemeContext';
-import { fontFamilies, fontWeights } from '@/theme/typography';
+import { typography, fontFamilies, fontWeights } from '@/theme/typography';
 import { borderRadius, spacing } from '@/theme/spacing';
 
 const anim = (delay: number) =>
@@ -32,7 +32,7 @@ export function EmptyState() {
         style={{
           color: colors.text.primary,
           fontFamily: fontFamilies.primary.text,
-          fontSize: 17,
+          fontSize: typography.body.fontSize,
           fontWeight: fontWeights.bold,
           marginBottom: 8,
         }}
@@ -40,7 +40,7 @@ export function EmptyState() {
         Habit Strength
       </Text>
       <View style={{ alignItems: 'center', justifyContent: 'center', paddingVertical: 32 }}>
-        <Animated.Text entering={anim(0)} style={{ fontSize: 34, marginBottom: 8 }}>
+        <Animated.Text entering={anim(0)} style={{ fontSize: typography.displayLarge.fontSize, marginBottom: 8 }}>
           🌱
         </Animated.Text>
         <Animated.Text
@@ -48,7 +48,7 @@ export function EmptyState() {
           style={{
             color: colors.text.secondary,
             fontFamily: fontFamilies.primary.text,
-            fontSize: 14,
+            fontSize: typography.bodySmall.fontSize,
             textAlign: 'center',
           }}
         >

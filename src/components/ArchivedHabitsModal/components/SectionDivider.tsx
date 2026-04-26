@@ -11,7 +11,7 @@ export function SectionDivider({ label }: SectionDividerProps) {
   return (
     <View className='flex-row items-center gap-2.5 px-5 pb-1 pt-4'>
       <Text
-        className='text-[13px] font-semibold uppercase tracking-wider'
+        className='text-sm font-semibold uppercase tracking-wider'
         style={{ color: colors.text.tertiary }}
       >
         {label}

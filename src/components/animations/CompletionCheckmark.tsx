@@ -21,6 +21,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import { Check } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import {
   SPRING_BOUNCY,
   STAGGER_DELAY,
@@ -99,7 +100,7 @@ export function CompletionCheckmark({
       ]}
     >
       <View className='h-5 w-5 items-center justify-center rounded-full shadow-sm' style={{ backgroundColor: colors.status.success }}>
-        <Check className='text-white' size={12} strokeWidth={3} />
+        <Check className='text-white' size={iconSizes.micro} strokeWidth={3} />
       </View>
     </Animated.View>
   );

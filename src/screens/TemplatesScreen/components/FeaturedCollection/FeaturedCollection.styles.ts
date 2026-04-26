@@ -11,7 +11,7 @@ export const s = StyleSheet.create({
   badge: {
     alignSelf: 'flex-start',
     backgroundColor: 'rgba(255,255,255,0.2)',
-    borderRadius: 9999,
+    borderRadius: borderRadius.full,
     paddingHorizontal: 12,
     paddingVertical: 4,
   },
@@ -23,7 +23,7 @@ export const s = StyleSheet.create({
   },
   chip: {
     backgroundColor: 'rgba(255,255,255,0.18)',
-    borderRadius: 9999,
+    borderRadius: borderRadius.full,
     paddingHorizontal: 12,
     paddingVertical: 4,
   },
@@ -31,7 +31,7 @@ export const s = StyleSheet.create({
   chips: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginTop: 16 },
   circleOne: {
     backgroundColor: 'rgba(255,255,255,0.08)',
-    borderRadius: 9999,
+    borderRadius: borderRadius.full,
     height: 180,
     position: 'absolute',
     right: -40,
@@ -40,7 +40,7 @@ export const s = StyleSheet.create({
   },
   circleTwo: {
     backgroundColor: 'rgba(255,255,255,0.05)',
-    borderRadius: 9999,
+    borderRadius: borderRadius.full,
     bottom: -60,
     height: 200,
     left: -30,
@@ -59,7 +59,7 @@ export const s = StyleSheet.create({
   ctaText: { ...typography.bodySmall, color: colors.text.inverse, fontWeight: fontWeights.bold },
   description: {
     color: 'rgba(255,255,255,0.85)',
-    fontSize: 14,
+    fontSize: typography.bodySmall.fontSize,
     marginTop: 4,
   },
   footer: {

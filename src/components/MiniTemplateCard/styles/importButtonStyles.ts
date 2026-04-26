@@ -3,6 +3,7 @@
  */
 
 import type { ViewStyle, TextStyle } from 'react-native';
+import { borderRadius } from '@/theme/spacing';
 import { typography, fontWeights, fontFamilies} from '@/theme/typography';
 
 export const importButtonStyles: Record<string, ViewStyle | TextStyle> = {
@@ -13,7 +14,7 @@ export const importButtonStyles: Record<string, ViewStyle | TextStyle> = {
   },
   importButton: {
     alignItems: 'center',
-    borderRadius: 8,
+    borderRadius: borderRadius.small,
     flexDirection: 'row',
     gap: 4,
     justifyContent: 'center',

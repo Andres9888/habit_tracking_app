@@ -4,7 +4,8 @@
 
 import React, { useEffect } from 'react';
 import { Text, StyleSheet } from 'react-native';
-import { fontFamilies, fontWeights } from '@/theme/typography';
+import { borderRadius } from '@/theme/spacing';
+import { typography, fontFamilies, fontWeights } from '@/theme/typography';
 import { colors } from '@/theme/colors';
 import Animated, {
   useSharedValue,
@@ -51,7 +52,7 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     backgroundColor: colors.warningLight,
-    borderRadius: 9999,
+    borderRadius: borderRadius.full,
     flexDirection: 'row',
     // pill badge
     gap: 8,
@@ -65,13 +66,13 @@ const styles = StyleSheet.create({
     fontWeight: fontWeights.semibold,
   },
   star: {
-    fontSize: 13, // caption scale
+    fontSize: typography.caption.fontSize, // caption scale
   },
   text: {
     // caption scale
     color: colors.warning,
     fontFamily: fontFamilies.primary.text,
-    fontSize: 13,
+    fontSize: typography.caption.fontSize,
   },
 });
 

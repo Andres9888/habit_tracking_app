@@ -16,7 +16,7 @@ import { useFocusRing } from '../../../utils/accessibility';
 import { useThemeColors } from '../../../theme/ThemeContext';
 
 import type { TabButtonProps } from '../HabitDetailTabs.types';
-import { fontFamilies, fontWeights } from '@/theme/typography';
+import { typography, fontFamilies, fontWeights } from '@/theme/typography';
 import { springs } from '@/theme/animations';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
@@ -58,7 +58,7 @@ export function TabButton({ isActive, label, onPress }: TabButtonProps) {
         style={{
           color: isActive ? activeTextColor : inactiveTextColor,
           fontFamily: fontFamilies.primary.text,
-          fontSize: 13,
+          fontSize: typography.caption.fontSize,
           fontWeight: fontWeights.semibold,
         }}
       >

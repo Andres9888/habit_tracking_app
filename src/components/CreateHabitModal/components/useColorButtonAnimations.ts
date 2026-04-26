@@ -4,6 +4,7 @@
 
 import { useCallback, useEffect, useRef } from 'react';
 import { Animated } from 'react-native';
+import { springs } from '@/theme/animations';
 import { Motion } from '../../../constants/motion';
 
 export function useColorButtonAnimations(isSelected: boolean) {
@@ -20,8 +21,7 @@ export function useColorButtonAnimations(isSelected: boolean) {
           useNativeDriver: true,
         }),
         Animated.spring(scale, {
-          damping: 12,
-          stiffness: 180,
+          ...springs.standard,
           toValue: 1,
           useNativeDriver: true,
         }),

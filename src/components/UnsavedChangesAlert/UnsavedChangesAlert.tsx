@@ -6,6 +6,7 @@
 import { View, Text, Pressable } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import { AlertTriangle } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { Modal } from '../Modal';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { VARIANT_STYLES } from './constants';
@@ -63,7 +64,7 @@ export function UnsavedChangesAlert({
           entering={FadeIn.delay(100).duration(200)}
           style={resolvedIconBg ? { backgroundColor: resolvedIconBg } : undefined}
         >
-          <AlertTriangle color={resolvedIconColor} size={28} />
+          <AlertTriangle color={resolvedIconColor} size={iconSizes.xl} />
         </Animated.View>
 
         <Text

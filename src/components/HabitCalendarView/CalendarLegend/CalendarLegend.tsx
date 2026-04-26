@@ -1,6 +1,7 @@
 import { Text, View } from 'react-native';
 import { useThemeColors } from '../../../theme/ThemeContext';
-import { fontFamilies, fontWeights } from '@/theme/typography';
+import { borderRadius } from '@/theme/spacing';
+import { typography, fontFamilies, fontWeights } from '@/theme/typography';
 
 interface LegendItem {
   label: string;
@@ -8,31 +9,27 @@ interface LegendItem {
   textColor: string;
 }
 
-/**
- * Gets legend items with theme-aware colors for dark mode support.
- * Uses semantic colors from the theme system.
- */
-function getLegendItems(colors: unknown): LegendItem[] {
+function getLegendItems(): LegendItem[] {
   return [
     {
       label: 'Completed',
-      indicatorColor: colors.success?.[500] || '#10B981',
-      textColor: colors.success?.[700] || '#047857',
+      indicatorColor: '#10B981',
+      textColor: '#047857',
     },
     {
       label: 'Missed',
-      indicatorColor: colors.error?.[400] || '#F87171',
-      textColor: colors.error?.[500] || '#EF4444',
+      indicatorColor: '#F87171',
+      textColor: '#EF4444',
     },
     {
       label: 'Today',
-      indicatorColor: colors.success?.[500] || '#10B981',
-      textColor: colors.success?.[600] || '#059669',
+      indicatorColor: '#10B981',
+      textColor: '#059669',
     },
     {
       label: 'Upcoming',
-      indicatorColor: colors.gray?.[300] || '#D1D5DB',
-      textColor: colors.gray?.[400] || '#9CA3AF',
+      indicatorColor: '#D1D5DB',
+      textColor: '#9CA3AF',
     },
   ];
 }
@@ -48,7 +45,7 @@ function getLegendItems(colors: unknown): LegendItem[] {
  */
 export function CalendarLegend() {
   const { colors } = useThemeColors();
-  const legendItems = getLegendItems(colors);
+  const legendItems = getLegendItems();
 
   return (
     <View
@@ -67,14 +64,14 @@ export function CalendarLegend() {
             style={{
               width: 10,
               height: 10,
-              borderRadius: 9999,
+              borderRadius: borderRadius.full,
               backgroundColor: indicatorColor,
             }}
           />
           <Text
             style={{
               fontFamily: fontFamilies.primary.text,
-              fontSize: 10,
+              fontSize: typography.tabBar.fontSize,
               fontWeight: fontWeights.medium,
               color: textColor,
             }}

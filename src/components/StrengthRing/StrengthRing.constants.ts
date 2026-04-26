@@ -2,6 +2,7 @@
  * StrengthRing Constants - Level configs, colors, and size configurations
  */
 import { colors } from '@/theme/colors';
+import { typography } from '@/theme/typography';
 import {
   DEFAULT_PROGRESS_EMOJIS,
   type PartialProgressEmojiSet,
@@ -72,10 +73,10 @@ export const LEVELS: Record<StrengthLevelKey, LevelInfo> = buildLevels();
 export const BACKGROUND_COLOR = colors.gray[200];
 
 export const SIZE_CONFIG: Record<string, SizeConfig> = {
-  large: { fontSize: 22, ringSize: 96, strokeWidth: 10 },
-  medium: { fontSize: 17, ringSize: 72, strokeWidth: 8 },
-  small: { fontSize: 13, ringSize: 48, strokeWidth: 5 },
-  tiny: { fontSize: 10, ringSize: 32, strokeWidth: 4 },
+  large: { fontSize: typography.heading1.fontSize, ringSize: 96, strokeWidth: 10 },
+  medium: { fontSize: typography.body.fontSize, ringSize: 72, strokeWidth: 8 },
+  small: { fontSize: typography.caption.fontSize, ringSize: 48, strokeWidth: 5 },
+  tiny: { fontSize: typography.tabBar.fontSize, ringSize: 32, strokeWidth: 4 },
 };
 
 export const TREND_CONFIG = {

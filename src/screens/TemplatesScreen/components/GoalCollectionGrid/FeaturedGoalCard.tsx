@@ -6,7 +6,8 @@ import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import type { GoalCollection } from '../../data/goalCollections';
-import { fontFamilies, fontWeights } from '@/theme/typography';
+import { borderRadius } from '@/theme/spacing';
+import { typography, fontFamilies, fontWeights } from '@/theme/typography';
 import { s } from './GoalCollectionGrid.styles';
 
 interface FeaturedGoalCardProps {
@@ -78,7 +79,7 @@ const hero = StyleSheet.create({
   body: { alignItems: 'flex-end', flexDirection: 'row', gap: 14, marginTop: 14 },
   cta: {
     alignSelf: 'flex-start',
-    borderRadius: 9999,
+    borderRadius: borderRadius.full,
     borderWidth: 1,
     marginTop: 14,
     paddingHorizontal: 14,
@@ -90,9 +91,9 @@ const hero = StyleSheet.create({
     fontWeight: fontWeights.semibold,
   },
   emoji: { fontSize: 52, lineHeight: 56 },
-  gradient: { borderRadius: 16, overflow: 'hidden', padding: 18 },
-  label: { fontSize: 22, paddingRight: 0 },
-  promise: { fontSize: 13, lineHeight: 18, marginTop: 6, opacity: 0.9 },
+  gradient: { borderRadius: borderRadius.large, overflow: 'hidden', padding: 18 },
+  label: { fontSize: typography.heading1.fontSize, paddingRight: 0 },
+  promise: { fontSize: typography.caption.fontSize, lineHeight: 18, marginTop: 6, opacity: 0.9 },
   text: { flex: 1, paddingBottom: 4 },
   topRow: { flexDirection: 'row', justifyContent: 'flex-start' },
   wrapper: {

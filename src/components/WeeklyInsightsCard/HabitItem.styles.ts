@@ -14,7 +14,7 @@ export const habitItemStyles = StyleSheet.create({
     marginLeft: spacing.xs,
   },
   habitEmoji: {
-    fontSize: 22,
+    fontSize: typography.heading1.fontSize,
     marginRight: spacing.sm,
   },
   habitInfo: {

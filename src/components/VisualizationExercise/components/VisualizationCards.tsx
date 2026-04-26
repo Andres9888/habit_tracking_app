@@ -27,7 +27,7 @@ export function VisualizationCards({
         style={{ borderColor: colors.status.success, backgroundColor: colors.status.successLight }}
       >
         <View className='mb-3 flex-row items-center gap-2'>
-          <Sun color={colors.status.success} size={18} />
+          <Sun color={colors.status.success} size={iconSizes.medium} />
           <Text className='text-sm font-semibold' style={{ color: colors.status.successText }}>
             Success Vision
           </Text>
@@ -40,7 +40,7 @@ export function VisualizationCards({
       {/* Negative */}
       <View className='rounded-2xl p-4' style={{ backgroundColor: colors.status.errorLight, borderWidth: 1, borderColor: colors.status.error }}>
         <View className='mb-3 flex-row items-center gap-2'>
-          <CloudRain color={colors.status.error} size={18} />
+          <CloudRain color={colors.status.error} size={iconSizes.medium} />
           <Text className='text-sm font-semibold' style={{ color: colors.status.errorText }}>
             Failure Consequences
           </Text>

@@ -43,7 +43,7 @@ export const TemplateHero = ({
         <Text className='text-lg font-bold text-[#111827]'>
           {STRINGS.CREATE_HABIT.templateHeroTitle}
         </Text>
-        <Text className='mt-1 text-[13px] font-normal' style={{ color: themeColors.text.secondary }}>
+        <Text className='mt-1 text-sm font-normal' style={{ color: themeColors.text.secondary }}>
           {subtitle}
         </Text>
       </View>

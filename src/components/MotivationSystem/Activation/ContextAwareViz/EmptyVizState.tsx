@@ -6,11 +6,12 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import { Sparkles, AlertTriangle } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
+import { borderRadius } from '@/theme/spacing';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 
 import type { VizType } from './types';
-import { fontFamilies, fontWeights } from '@/theme/typography';
+import { typography, fontFamilies, fontWeights } from '@/theme/typography';
 
 interface EmptyVizStateProps {
   type: VizType;
@@ -38,7 +39,7 @@ export function EmptyVizState({ type, compact }: EmptyVizStateProps) {
           style={{
             color: accentColor,
             fontFamily: fontFamilies.primary.text,
-            fontSize: 14,
+            fontSize: typography.bodySmall.fontSize,
             fontStyle: 'italic',
             textAlign: 'center',
           }}
@@ -58,7 +59,7 @@ export function EmptyVizState({ type, compact }: EmptyVizStateProps) {
         style={{
           alignItems: 'center',
           backgroundColor: bgColor,
-          borderRadius: 24,
+          borderRadius: borderRadius.xl,
           height: 48,
           justifyContent: 'center',
           marginBottom: 12,
@@ -76,7 +77,7 @@ export function EmptyVizState({ type, compact }: EmptyVizStateProps) {
         style={{
           color: colors.text.primary,
           fontFamily: fontFamilies.primary.text,
-          fontSize: 14,
+          fontSize: typography.bodySmall.fontSize,
           fontWeight: fontWeights.medium,
           marginBottom: 4,
           textAlign: 'center',
@@ -89,7 +90,7 @@ export function EmptyVizState({ type, compact }: EmptyVizStateProps) {
         style={{
           color: colors.text.tertiary,
           fontFamily: fontFamilies.primary.text,
-          fontSize: 13,
+          fontSize: typography.caption.fontSize,
           textAlign: 'center',
         }}
       >

@@ -96,7 +96,7 @@ export function SocialSignInButton({
         )}
       </View>
       <Text
-        className='text-[15px] font-semibold'
+        className='text-base font-semibold'
         style={{ color: provider === 'google' ? colors.text.primary : '#FFFFFF' }}
       >
         {isLoading ? 'Signing in...' : config.label}

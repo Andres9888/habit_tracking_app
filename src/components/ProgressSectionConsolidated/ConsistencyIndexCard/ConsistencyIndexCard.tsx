@@ -11,6 +11,7 @@ import React, { useMemo } from 'react';
 import { View, Text, Pressable } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { Activity, Info } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 
 import type { ConsistencyIndexCardProps } from './types';
 import { getScoreColor, getFeedbackMessage } from './helpers';
@@ -19,7 +20,6 @@ import { BreakdownSection } from './BreakdownSection';
 import { ChangeIndicator } from './ChangeIndicator';
 import { triggerHaptic } from '@/utils/haptics';
 import { useThemeColors } from '@/theme/ThemeContext';
-import { iconSizes } from '@/theme/iconSizes';
 
 export function ConsistencyIndexCard({
   consistencyIndex,

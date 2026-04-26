@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { borderRadius } from '@/theme/spacing';
 import { fontWeights, typography } from '@/theme/typography';
 
 export const customizeStyles = StyleSheet.create({
@@ -7,7 +8,7 @@ export const customizeStyles = StyleSheet.create({
   },
   customizeSubtitle: {
     ...typography.caption,
-    borderRadius: 8,
+    borderRadius: borderRadius.small,
     overflow: 'hidden',
     paddingHorizontal: 8,
     paddingVertical: 3,

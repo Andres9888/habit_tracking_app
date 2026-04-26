@@ -197,6 +197,30 @@ export const colors = {
 
   warning: '#9A5504', // WCAG AA 5.08:1 on #F5F1ED
   warningLight: '#FEF3CD',
+
+  /**
+   * Parchment palette — warm aged-paper tones for motivation surfaces.
+   * Used by GoalWhyAnchor and similar "why are you doing this" callouts.
+   * When dark mode is unlocked, define a parchment.dark variant.
+   */
+  parchment: {
+    bg: '#FFF5E8', // Surface background
+    border: '#FED7AA', // Subtle border
+    surface: '#FFFFFF', // Inner card / icon backplate
+    text: '#B45309', // Label / accent text
+    textStrong: '#44312A', // Body text on parchment
+  },
+
+  /**
+   * Tone palettes — semantic encouragement tones for GoalCoachLine and
+   * similar contextual messaging. Each tone has bg/border/text triplet.
+   */
+  tone: {
+    green: { bg: '#E7F6EE', border: '#A7D9BE', text: '#0F5E2C' }, // success / done
+    orange: { bg: '#FFE8DE', border: '#F9B894', text: '#7A2E0A' }, // warmth / encouragement
+    red: { bg: '#FFF1EE', border: '#FCD7CD', text: '#9A2C1A' }, // reset / setback
+    yellow: { bg: '#FFF8EE', border: '#FDE4BD', text: '#7C3F0A' }, // default / neutral coaching
+  },
 } as const;
 
 export type ColorPalette = typeof colors;

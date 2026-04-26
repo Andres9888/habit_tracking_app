@@ -9,7 +9,8 @@ import { StyleSheet, Text, View } from 'react-native';
 import { SkeletonLoader } from './SkeletonLoader';
 import { HabitCardSkeleton } from './HabitCardSkeleton';
 import { useSkeletonTheme } from './useSkeletonTheme';
-import { fontFamilies, fontWeights } from '@/theme/typography';
+import { borderRadius } from '@/theme/spacing';
+import { typography, fontFamilies, fontWeights } from '@/theme/typography';
 
 function ChainIcon({ isDark }: { isDark: boolean }) {
   return (
@@ -62,7 +63,7 @@ export function BrandedLoadingSkeleton() {
 const styles = StyleSheet.create({
   appName: {
     fontFamily: fontFamilies.primary.text,
-    fontSize: 22,
+    fontSize: typography.heading1.fontSize,
     fontWeight: fontWeights.bold,
     letterSpacing: -0.35,
     marginTop: 12,
@@ -81,7 +82,7 @@ const styles = StyleSheet.create({
   },
   iconContainer: {
     alignItems: 'center',
-    borderRadius: 24,
+    borderRadius: borderRadius.xl,
     height: 64,
     justifyContent: 'center',
     width: 64,

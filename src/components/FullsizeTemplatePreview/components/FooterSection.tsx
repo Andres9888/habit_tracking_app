@@ -9,6 +9,7 @@ import Animated from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Check } from 'lucide-react-native';
 import { colors } from '@/theme/colors';
+import { iconSizes } from '@/theme/iconSizes';
 import { footerStyles } from '../styles';
 import type { FooterSectionProps } from './FooterSection.types';
 
@@ -55,7 +56,7 @@ export function FooterSection({
               <Animated.View style={checkmarkAnimatedStyle}>
                 <Check
                   color={colors.text.inverse}
-                  size={22}
+                  size={iconSizes.large}
                   strokeWidth={3}
                 />
               </Animated.View>

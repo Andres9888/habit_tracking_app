@@ -7,11 +7,10 @@ import { springs } from '@/theme/animations';
 
 /**
  * Spring configuration for accent bar slide animation.
- * Uses theme gentle spring with higher damping for a stable slide-in.
+ * Uses canonical gentle preset for a stable, calm slide-in.
  */
 export const ACCENT_SPRING_CONFIG = {
   ...springs.gentle,
-  damping: 24,
 };
 
 /**

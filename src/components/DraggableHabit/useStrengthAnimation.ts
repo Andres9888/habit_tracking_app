@@ -20,6 +20,7 @@ import {
   withDelay,
   Easing as ReanimatedEasing,
 } from 'react-native-reanimated';
+import { springs } from '@/theme/animations';
 
 import { getStrengthLabel } from './strengthUtils';
 import { runLevelUpAnimation, runSubtlePulse } from './animationHelpers';
@@ -64,9 +65,8 @@ export function useStrengthAnimation(
     } else if (isIncreasing) {
       // Satisfying spring animation when strength increases
       progressWidth.value = withSpring(strengthPercent, {
-        damping: 12,
+        ...springs.gentle,
         mass: 0.8,
-        stiffness: 80,
       });
     } else {
       // Decreasing - quick ease out

@@ -49,7 +49,7 @@ export function BrandedLoadingScreen() {
       <View className='items-center'>
         <ChainIcon statusColors={colors.status} />
         <Text
-          className="mb-8 font-['DMSans'] text-[22px] font-bold tracking-wide"
+          className="mb-8 font-['DMSans'] text-2xl font-bold tracking-wide"
           style={{ color: colors.text.primary }}
         >
           Chain Day

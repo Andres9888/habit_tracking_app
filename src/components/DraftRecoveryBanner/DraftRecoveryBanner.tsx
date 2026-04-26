@@ -95,7 +95,7 @@ export function DraftRecoveryBanner({
             hitSlop={{ bottom: 10, left: 10, right: 10, top: 10 }}
             onPress={handleDismiss}
           >
-            <X color={themeStyle?.iconColor ?? styles.iconColor} size={18} />
+            <X color={themeStyle?.iconColor ?? styles.iconColor} size={iconSizes.medium} />
           </Pressable>
         </View>
       </View>

@@ -66,10 +66,10 @@ export function useFeedbackModalStyles() {
       marginBottom: spacing.lg,
     },
     sectionLabel: {
+      ...typography.body,
       color: colors.text.primary,
       fontWeight: fontWeights.semibold,
       marginBottom: spacing.md,
-      ...typography.body,
     },
     selectedIndicator: {
       borderRadius: borderRadius.xs,
@@ -112,10 +112,10 @@ export function useFeedbackModalStyles() {
       width: 40,
     },
     typeLabel: {
+      ...typography.body,
       color: colors.text.primary,
       fontWeight: fontWeights.semibold,
       marginBottom: 2,
-      ...typography.body,
     },
   });
 }

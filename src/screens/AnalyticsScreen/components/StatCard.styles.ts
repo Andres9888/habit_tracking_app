@@ -7,18 +7,18 @@ import { borderRadius, spacing } from '../../../theme/spacing';
 
 export const styles = StyleSheet.create({
   skeletonSubtitle: {
-    borderRadius: 4,
+    borderRadius: borderRadius.xs,
     height: 10,
     width: 60,
   },
   skeletonTitle: {
-    borderRadius: 4,
+    borderRadius: borderRadius.xs,
     height: 12,
     marginBottom: spacing.xs,
     width: 80,
   },
   skeletonValue: {
-    borderRadius: 4,
+    borderRadius: borderRadius.xs,
     height: 28,
     marginBottom: spacing.xs,
     width: 100,
@@ -35,7 +35,7 @@ export const styles = StyleSheet.create({
     shadowRadius: 16,
   },
   statCardEmoji: {
-    fontSize: 22,
+    fontSize: typography.heading1.fontSize,
     marginRight: spacing.xs,
   },
   statCardLoading: {

@@ -29,11 +29,11 @@ export const useStyles = () => {
       maxWidth: 300,
       textAlign: 'center',
     },
-    emoji: { fontSize: 34, marginBottom: 16 },
+    emoji: { fontSize: typography.displayLarge.fontSize, marginBottom: 16 },
     errorMessage: {
       color: isDark ? '#FCA5A5' : themeColors.error,
       fontFamily: 'monospace',
-      fontSize: 13,
+      fontSize: typography.caption.fontSize,
       marginTop: 24,
       maxWidth: 300,
     },

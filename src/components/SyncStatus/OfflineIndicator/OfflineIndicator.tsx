@@ -13,12 +13,13 @@ import { View, Text } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { WifiOff } from 'lucide-react-native';
 
+import { colors } from '../../../theme/colors/core';
 import type { OfflineIndicatorProps } from './types';
 import { styles } from './styles';
 import { useOfflineIndicator } from './useOfflineIndicator';
 
 const ICON_SIZE = 12;
-const ICON_COLOR = '#a8a29e'; // stone-400
+const ICON_COLOR = colors.gray[400];
 
 export function OfflineIndicator({
   visible = false,

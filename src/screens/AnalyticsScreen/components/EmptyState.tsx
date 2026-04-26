@@ -30,7 +30,7 @@ export const EmptyState: React.FC = () => {
         style={{
           alignItems: 'center',
           backgroundColor: colors.primary[100],
-          borderRadius: 24,
+          borderRadius: borderRadius.xl,
           height: 96,
           justifyContent: 'center',
           marginBottom: 24,
@@ -123,7 +123,7 @@ function StepItem({ number, text, colors }: { number: string; text: string; colo
           {number}
         </Text>
       </View>
-      <Text style={{ color: colors.text.primary, fontFamily: fontFamilies.primary.text, fontSize: typography.body.fontSize }}>{text}</Text>
+      <Text style={{ color: colors.text.primary, fontFamily: fontFamilies.primary.text, fontSize: 17 }}>{text}</Text>
     </View>
   );
 }

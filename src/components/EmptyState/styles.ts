@@ -15,8 +15,19 @@ export const styles = StyleSheet.create({
     paddingVertical: 48,
     width: '100%',
   },
+  containerCompact: {
+    alignItems: 'center',
+    paddingHorizontal: 24,
+    paddingVertical: 24,
+    width: '100%',
+  },
   description: {
     marginBottom: 16,
+    maxWidth: 320,
+    textAlign: 'center',
+  },
+  descriptionCompact: {
+    marginBottom: 0,
     maxWidth: 320,
     textAlign: 'center',
   },
@@ -24,9 +35,17 @@ export const styles = StyleSheet.create({
     marginBottom: 8,
     textAlign: 'center',
   },
+  headlineCompact: {
+    marginBottom: 4,
+    textAlign: 'center',
+  },
   icon: {
     fontSize: 64,
     marginBottom: 16,
+  },
+  iconCompact: {
+    fontSize: 34,
+    marginBottom: 12,
   },
   // Quick start templates
   quickStartSection: {

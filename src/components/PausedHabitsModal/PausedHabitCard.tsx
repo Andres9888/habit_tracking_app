@@ -3,7 +3,7 @@ import { Pressable, Text, View } from 'react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { useThemeColors } from '../../theme/ThemeContext';
 import type { Id } from '../../../convex/_generated/dataModel';
-import { fontFamilies } from '@/theme/typography';
+import { typography, fontFamilies } from '@/theme/typography';
 
 interface PausedHabitCardProps {
   habit: {
@@ -43,18 +43,18 @@ export function PausedHabitCard({
       <View className='gap-1'>
         <Text
           className='font-semibold'
-          style={{ color: colors.text.primary, fontFamily: fontFamilies.primary.text, fontSize: 17, lineHeight: 22 }}
+          style={{ color: colors.text.primary, fontFamily: fontFamilies.primary.text, fontSize: typography.body.fontSize, lineHeight: 22 }}
         >
           {habit.name}
         </Text>
         <Text
-          style={{ color: colors.text.tertiary, fontFamily: fontFamilies.primary.text, fontSize: 13, lineHeight: 18 }}
+          style={{ color: colors.text.tertiary, fontFamily: fontFamilies.primary.text, fontSize: typography.caption.fontSize, lineHeight: 18 }}
         >
           Paused{' '}
           {new Date(habit.pausedAt || habit._creationTime).toLocaleDateString()}
         </Text>
         {habit.strengthAtPause === undefined ? null : <Text
-            style={{ color: colors.text.secondary, fontFamily: fontFamilies.primary.text, fontSize: 13, lineHeight: 18 }}
+            style={{ color: colors.text.secondary, fontFamily: fontFamilies.primary.text, fontSize: typography.caption.fontSize, lineHeight: 18 }}
           >
             Strength preserved: {Math.round(habit.strengthAtPause * 100)}%
           </Text>}
@@ -68,7 +68,7 @@ export function PausedHabitCard({
       >
         <Text
           className='font-bold text-white'
-          style={{ fontFamily: fontFamilies.primary.text, fontSize: 13, letterSpacing: 1.5 }}
+          style={{ fontFamily: fontFamilies.primary.text, fontSize: typography.caption.fontSize, letterSpacing: 1.5 }}
         >
           RESUME
         </Text>

@@ -12,7 +12,7 @@ export const styles = StyleSheet.create({
   actionPill: {
     alignItems: 'center',
     backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    borderRadius: 14,
+    borderRadius: borderRadius.medium,
     flexDirection: 'row',
     gap: 4,
     paddingHorizontal: 12,
@@ -38,13 +38,13 @@ export const styles = StyleSheet.create({
   },
   iconBadge: {
     alignItems: 'center',
-    borderRadius: 10,
+    borderRadius: borderRadius.small,
     height: ICON_BADGE_SIZE,
     justifyContent: 'center',
     width: ICON_BADGE_SIZE,
   },
   iconText: {
-    fontSize: 20,
+    fontSize: typography.heading3.fontSize,
   },
   nameText: {
     ...typography.bodySmall,

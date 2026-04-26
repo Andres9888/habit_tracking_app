@@ -42,7 +42,7 @@ export function ScreenErrorFallback({
     },
     errorDetails: {
       backgroundColor: colors.card,
-      borderRadius: 8,
+      borderRadius: borderRadius.small,
       marginTop: 24,
       padding: 12,
       width: '100%',
@@ -50,12 +50,12 @@ export function ScreenErrorFallback({
     errorStack: {
       color: colors.text.tertiary,
       fontFamily: 'Courier',
-      fontSize: 10,
+      fontSize: typography.tabBar.fontSize,
       marginTop: 8,
     },
     errorText: {
       color: colors.text.secondary,
-      fontSize: 13,
+      fontSize: typography.caption.fontSize,
       fontFamily: 'Courier',
     },
     primaryButton: {
