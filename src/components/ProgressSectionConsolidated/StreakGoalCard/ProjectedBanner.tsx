@@ -2,10 +2,11 @@
  * ProjectedBanner — bottom row showing projected goal-completion date.
  */
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Text, View } from 'react-native';
 
-import { dashboardStyles as s } from './styles/dashboard.styles';
+import { useThemeColors } from '@/theme/ThemeContext';
+import { createDashboardStyles } from './styles/dashboard.styles';
 
 interface ProjectedBannerProps {
   projectedDate: Date;
@@ -14,6 +15,8 @@ interface ProjectedBannerProps {
 export const ProjectedBanner = React.memo(function ProjectedBanner({
   projectedDate,
 }: ProjectedBannerProps) {
+  const { colors } = useThemeColors();
+  const s = useMemo(() => createDashboardStyles(colors), [colors]);
   const formatted = projectedDate.toLocaleDateString('en-US', {
     day: 'numeric',
     month: 'short',

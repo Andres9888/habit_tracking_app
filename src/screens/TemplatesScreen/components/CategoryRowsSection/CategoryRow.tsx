@@ -1,61 +1,57 @@
 /**
- * PopularSection - "Trending Now" header + horizontal carousel of TrendingCards
+ * CategoryRow — one horizontal carousel of templates for a single category.
+ * Header shows category icon/label/count + "See all →"; body is a horizontal
+ * FlatList of TrendingCards (matching PopularSection's card pattern).
  */
 
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
-import type { Doc } from '../../../../../convex/_generated/dataModel';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import { spacing } from '../../../../theme/spacing';
 import { typography } from '../../../../theme/typography';
+import { getCategoryMeta } from '../../data/categoryMeta';
 import { SectionHeader } from '../SectionHeader';
 import { TrendingCard } from '../TrendingCard';
+import type { CategoryRowProps } from './CategoryRowsSection.types';
 
-interface PopularSectionProps {
-  importedTemplateIds: Set<string>;
-  importingTemplateId: string | null;
-  onImport: (template: Doc<'templates'>) => void;
-  onPreview: (template: Doc<'templates'>) => void;
-  onSeeAll: () => void;
-  templates: Doc<'templates'>[];
-}
+const ROW_LIMIT = 10;
 
-export function PopularSection({
+export function CategoryRow({
+  group,
   importedTemplateIds,
   importingTemplateId,
   onImport,
   onPreview,
   onSeeAll,
-  templates,
-}: PopularSectionProps) {
+}: CategoryRowProps) {
   const { colors } = useThemeColors();
+  const items = group.templates.slice(0, ROW_LIMIT);
+  const subtitle = getCategoryMeta(group.category).subtitle;
 
   return (
-    <View testID='templates-trending-section' style={s.container}>
+    <View style={s.container}>
       <SectionHeader
+        title={`${group.icon} ${group.label}`}
+        subtitle={subtitle}
         rightSlot={
           <Pressable
-            testID='templates-trending-see-all'
-            accessibilityLabel='See all popular habits'
+            accessibilityLabel={`See all ${group.label} habits`}
             accessibilityRole='button'
             hitSlop={8}
             onPress={onSeeAll}
           >
             <Text style={[s.seeAll, { color: colors.primary[600] }]}>
-              See all
+              See all →
             </Text>
           </Pressable>
         }
-        subtitle='What people are starting this week'
-        title='Quick wins to build momentum'
       />
       <FlatList
-        testID='templates-popular-scroll'
         horizontal
-        data={templates}
+        data={items}
         contentContainerStyle={s.list}
         keyExtractor={(item) => item._id}
         showsHorizontalScrollIndicator={false}
-        renderItem={({ index, item }) => (
+        renderItem={({ item }) => (
           <TrendingCard
             description={item.description}
             frequency={item.frequency}
@@ -65,7 +61,6 @@ export function PopularSection({
             isImported={importedTemplateIds.has(item._id)}
             isImporting={importingTemplateId === item._id}
             name={item.name}
-            popularityPrefix={index < 3 ? '🔥' : undefined}
             popularityScore={item.popularityScore ?? 0}
             onImport={() => onImport(item)}
             onPress={() => onPreview(item)}
@@ -77,7 +72,7 @@ export function PopularSection({
 }
 
 const s = StyleSheet.create({
-  container: { marginTop: spacing.base },
+  container: { marginTop: spacing.lg },
   list: { gap: spacing.md, paddingHorizontal: spacing.base },
-  seeAll: { ...typography.bodySmall },
+  seeAll: { ...typography.bodySmall, fontWeight: '600' },
 });

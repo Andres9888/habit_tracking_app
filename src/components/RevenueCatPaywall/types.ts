@@ -11,4 +11,11 @@ export interface RevenueCatPaywallProps {
   onPurchaseSuccess?: () => void;
   /** Called when a restore is successful */
   onRestoreSuccess?: () => void;
+  /**
+   * Whether the user can dismiss the paywall without subscribing.
+   * Defaults to true. When false, the close button is hidden, the modal
+   * uses fullScreen presentation, and Android back/iOS swipe-down are
+   * suppressed — used for hard-gate placement (e.g. AuthGate).
+   */
+  dismissible?: boolean;
 }

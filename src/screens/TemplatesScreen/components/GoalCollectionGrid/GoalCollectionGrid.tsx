@@ -6,7 +6,8 @@
  */
 
 import React from 'react';
-import { View } from 'react-native';
+import { ScrollView, View } from 'react-native';
+import type { Doc } from '../../../../../convex/_generated/dataModel';
 import { GOAL_COLLECTIONS, type GoalCollection } from '../../data/goalCollections';
 import { FeaturedGoalCard } from './FeaturedGoalCard';
 import { GoalCard } from './GoalCard';
@@ -15,14 +16,18 @@ import { s } from './GoalCollectionGrid.styles';
 interface GoalCollectionGridProps {
   featuredBadgeLabel?: string;
   featuredGoalId: string;
+  featuredStarterTemplates: Doc<'templates'>[];
   habitCountsByGoalId: Record<string, number>;
+  onPreviewStarter: (template: Doc<'templates'>) => void;
   onSelectGoal: (goal: GoalCollection) => void;
 }
 
 export function GoalCollectionGrid({
   featuredBadgeLabel = 'Today\u2019s pick',
   featuredGoalId,
+  featuredStarterTemplates,
   habitCountsByGoalId,
+  onPreviewStarter,
   onSelectGoal,
 }: GoalCollectionGridProps) {
   const featured =
@@ -36,9 +41,15 @@ export function GoalCollectionGrid({
         badgeLabel={featuredBadgeLabel}
         goal={featured}
         habitCount={habitCountsByGoalId[featured.id] ?? 0}
+        starterTemplates={featuredStarterTemplates}
         onPress={() => onSelectGoal(featured)}
+        onPreviewStarter={onPreviewStarter}
       />
-      <View style={s.grid}>
+      <ScrollView
+        horizontal
+        contentContainerStyle={s.rail}
+        showsHorizontalScrollIndicator={false}
+      >
         {others.map((goal) => (
           <GoalCard
             key={goal.id}
@@ -47,7 +58,7 @@ export function GoalCollectionGrid({
             onPress={() => onSelectGoal(goal)}
           />
         ))}
-      </View>
+      </ScrollView>
     </View>
   );
 }

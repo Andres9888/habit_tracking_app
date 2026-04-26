@@ -12,9 +12,14 @@ import { iconSizes } from '@/theme/iconSizes';
 interface PaywallHeaderProps {
   onClose: () => void;
   disabled?: boolean;
+  hideClose?: boolean;
 }
 
-export function PaywallHeader({ onClose, disabled }: PaywallHeaderProps) {
+export function PaywallHeader({
+  onClose,
+  disabled,
+  hideClose,
+}: PaywallHeaderProps) {
   return (
     <View
       style={{
@@ -36,26 +41,28 @@ export function PaywallHeader({ onClose, disabled }: PaywallHeaderProps) {
       />
 
       {/* Close button */}
-      <Pressable
-        accessibilityLabel="Close paywall"
-        accessibilityRole="button"
-        disabled={disabled}
-        hitSlop={8}
-        style={{
-          alignItems: 'center',
-          backgroundColor: colors.gray[200],
-          borderRadius: 9999,
-          height: 32,
-          justifyContent: 'center',
-          position: 'absolute',
-          right: spacing.base,
-          top: spacing.md,
-          width: 32,
-        }}
-        onPress={onClose}
-      >
-        <X color={colors.gray[600]} size={iconSizes.medium} />
-      </Pressable>
+      {hideClose ? null : (
+        <Pressable
+          accessibilityLabel="Close paywall"
+          accessibilityRole="button"
+          disabled={disabled}
+          hitSlop={8}
+          style={{
+            alignItems: 'center',
+            backgroundColor: colors.gray[200],
+            borderRadius: 9999,
+            height: 32,
+            justifyContent: 'center',
+            position: 'absolute',
+            right: spacing.base,
+            top: spacing.md,
+            width: 32,
+          }}
+          onPress={onClose}
+        >
+          <X color={colors.gray[600]} size={iconSizes.medium} />
+        </Pressable>
+      )}
     </View>
   );
 }

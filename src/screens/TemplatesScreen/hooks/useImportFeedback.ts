@@ -3,7 +3,6 @@
  */
 
 import { useCallback, useRef } from 'react';
-import { FREE_HABIT_LIMIT } from '../../../constants';
 import type { UseTemplateImportHandlersOptions } from './useTemplateImportHandlers.types';
 
 export function useImportFeedback(o: UseTemplateImportHandlersOptions) {
@@ -37,13 +36,9 @@ export function useImportFeedback(o: UseTemplateImportHandlersOptions) {
     o.setToastMessage('Failed to import template. Please try again.');
   }, [o.setShowToast, o.setToastMessage, o.setToastTemplateData]);
 
-  const guardImport = useCallback(() => {
-    if (!o.isPremiumUser && o.userHabitCount >= FREE_HABIT_LIMIT) {
-      o.onShowPaywall?.();
-      return true;
-    }
-    return false;
-  }, [o.isPremiumUser, o.userHabitCount, o.onShowPaywall]);
+  // Free habit cap was removed in favour of trial-then-paywall gate at AuthGate.
+  // In-app users always have an entitlement, so import is never blocked here.
+  const guardImport = useCallback(() => false, []);
 
   return { guardImport, showError, showSuccess };
 }

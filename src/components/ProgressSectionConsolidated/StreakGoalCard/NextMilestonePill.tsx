@@ -2,9 +2,10 @@
  * NextMilestonePill — prominent gold card showing the next milestone.
  * Pulls the first "current" milestone from the dashboard list.
  */
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Text, View } from 'react-native';
-import { compactStyles as s } from './styles/compact.styles';
+import { useThemeColors } from '@/theme/ThemeContext';
+import { createCompactStyles } from './styles/compact.styles';
 import type { DashboardMilestone } from './StreakGoalCard.types';
 
 interface NextMilestonePillProps {
@@ -14,6 +15,8 @@ interface NextMilestonePillProps {
 export const NextMilestonePill = React.memo(function NextMilestonePill({
   milestone,
 }: NextMilestonePillProps) {
+  const { colors } = useThemeColors();
+  const s = useMemo(() => createCompactStyles(colors), [colors]);
   if (!milestone) return null;
 
   return (

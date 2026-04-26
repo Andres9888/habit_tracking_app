@@ -36,8 +36,6 @@ import {
   usePendingCreatedHabits,
 } from './optimisticHabitCreationStore';
 
-import { FREE_HABIT_LIMIT } from '@/constants';
-
 type HabitStrengthPrediction = {
   baselineStrength: number;
   strength: number;
@@ -269,12 +267,6 @@ export function useHabitsListState(): HabitsListState {
   const { handleDelete } = useHabitDelete(habits);
   const rewardState = useRewardToast(celebrationsEnabled, getStreak);
 
-  const habitSlotsUsed = isPremiumUser
-    ? habits.length
-    : Math.min(habits.length, FREE_HABIT_LIMIT);
-  const hasReachedHabitLimit =
-    !isPremiumUser && habits.length >= FREE_HABIT_LIMIT;
-
   const openCreateHabitScreen = useCallback(() => {
     // Handled by parent component
   }, []);
@@ -389,11 +381,9 @@ export function useHabitsListState(): HabitsListState {
     completionSoundType,
     contentPadding,
     dayShape,
-    freeHabitLimit: FREE_HABIT_LIMIT,
     habitCompletionIcon,
     habits,
     habitSortMode,
-    hasReachedHabitLimit,
     isHabitsLoading,
     showHabitStrengthPercentage,
     showWeekCompletionBar,
@@ -403,7 +393,6 @@ export function useHabitsListState(): HabitsListState {
     ...rewardState,
     getHabitStatus,
     getStreak,
-    habitSlotsUsed,
     handleDelete,
     handleDragEnd,
     handleHabitPress,

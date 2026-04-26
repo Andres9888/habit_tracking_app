@@ -7,10 +7,7 @@ import { mutation } from '../_generated/server';
 import { createHabitArgs } from './types';
 import { findMaxOrder } from './utils';
 import { validateHabitFields } from './validation';
-import { hasPremiumAccess } from '../subscriptions/premiumCheck';
 import { enforceRateLimit } from '../lib/rateLimit';
-
-const FREE_HABIT_LIMIT = 3;
 
 export const create = mutation({
   args: createHabitArgs,
@@ -33,16 +30,6 @@ export const create = mutation({
       .query('habits')
       .withIndex('by_userId', (q) => q.eq('userId', userId))
       .collect();
-
-    // SEC-005: Free tier limit — only count active (non-archived, non-removed, non-paused) habits.
-    // Paused habits are excluded so users can temporarily pause all 3 and still create new ones.
-    const activeHabits = allHabits.filter((h) => !h.archived && !h.paused);
-    const isPremiumUser = await hasPremiumAccess(ctx, userId);
-    if (!isPremiumUser && activeHabits.length >= FREE_HABIT_LIMIT) {
-      throw new Error(
-        `Free tier is limited to ${FREE_HABIT_LIMIT} habits. Upgrade to premium for unlimited habits.`
-      );
-    }
 
     const maxOrder = findMaxOrder(allHabits);
 

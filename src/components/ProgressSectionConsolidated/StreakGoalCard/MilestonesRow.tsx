@@ -2,16 +2,23 @@
  * MilestonesRow — horizontal scrollable badge chips, one per milestone.
  * Replaces the full vertical MilestonesList in compact mode.
  */
-import React from 'react';
+import React, { useMemo } from 'react';
 import { ScrollView, Text, View } from 'react-native';
-import { compactStyles as s } from './styles/compact.styles';
+import { useThemeColors } from '@/theme/ThemeContext';
+import { createCompactStyles, type CompactStyles } from './styles/compact.styles';
 import type { DashboardMilestone } from './StreakGoalCard.types';
 
 interface MilestonesRowProps {
   milestones: DashboardMilestone[];
 }
 
-function Badge({ milestone: m }: { milestone: DashboardMilestone }) {
+function Badge({
+  milestone: m,
+  s,
+}: {
+  milestone: DashboardMilestone;
+  s: CompactStyles;
+}) {
   const style =
     m.status === 'done'
       ? s.badgeDone
@@ -30,6 +37,8 @@ function Badge({ milestone: m }: { milestone: DashboardMilestone }) {
 export const MilestonesRow = React.memo(function MilestonesRow({
   milestones,
 }: MilestonesRowProps) {
+  const { colors } = useThemeColors();
+  const s = useMemo(() => createCompactStyles(colors), [colors]);
   return (
     <View style={s.milestonesCard}>
       <View style={s.milestonesHeader}>
@@ -41,7 +50,7 @@ export const MilestonesRow = React.memo(function MilestonesRow({
         showsHorizontalScrollIndicator={false}
       >
         {milestones.map((m) => (
-          <Badge key={`${m.days}-${m.isGoalRow ? 'goal' : 'std'}`} milestone={m} />
+          <Badge key={`${m.days}-${m.isGoalRow ? 'goal' : 'std'}`} milestone={m} s={s} />
         ))}
       </ScrollView>
     </View>

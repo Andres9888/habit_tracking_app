@@ -11,7 +11,6 @@ import {
   MAX_HABIT_NAME_LENGTH,
 } from '../lib/inputValidation';
 import { progressEmojisValidator } from '../lib/progressEmojisValidator';
-import { hasPremiumAccess } from '../subscriptions/premiumCheck';
 
 /**
  * Mutation: Import a template to create a new habit
@@ -46,7 +45,6 @@ export const importTemplate = mutation({
       throw new Error('Unauthenticated: Must be logged in to import templates');
     }
     const userId = identity.subject;
-    const isPremiumUser = await hasPremiumAccess(ctx, userId);
 
     const template = await ctx.db.get(args.templateId);
     if (!template) {
@@ -109,14 +107,6 @@ export const importTemplate = mutation({
       .query('habits')
       .withIndex('by_userId', (q) => q.eq('userId', userId))
       .collect();
-
-    // SEC-005: Only count active (non-archived) habits toward the free tier limit
-    const activeHabits = userHabits.filter((h) => !h.archived);
-    if (!isPremiumUser && activeHabits.length >= 3) {
-      throw new Error(
-        'Free tier is limited to 3 habits. Upgrade to premium for unlimited habits.'
-      );
-    }
 
     let maxOrder = 0;
     for (const h of userHabits) {

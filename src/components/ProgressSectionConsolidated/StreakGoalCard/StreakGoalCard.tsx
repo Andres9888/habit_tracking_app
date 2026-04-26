@@ -5,14 +5,15 @@
  * collapsed milestone badge row, projected completion banner.
  */
 
-import React from 'react';
+import React, { useMemo } from 'react';
 
 import Animated, { Easing, FadeInDown } from 'react-native-reanimated';
 
 import { durations } from '@/theme/animations';
+import { useThemeColors } from '@/theme/ThemeContext';
 import { useStreakGoalData } from './StreakGoalCard.hooks';
 import type { StreakGoalCardProps } from './StreakGoalCard.types';
-import { dashboardStyles as s } from './styles/dashboard.styles';
+import { createDashboardStyles } from './styles/dashboard.styles';
 import { CompactHero } from './CompactHero';
 import { NextMilestonePill } from './NextMilestonePill';
 import { MilestonesRow } from './MilestonesRow';
@@ -24,6 +25,8 @@ export const StreakGoalCard = React.memo(function StreakGoalCard({
   bestStreak,
   completionRate,
 }: StreakGoalCardProps) {
+  const { colors } = useThemeColors();
+  const s = useMemo(() => createDashboardStyles(colors), [colors]);
   const { daysRemaining, milestones, overallPercent, projectedDate } =
     useStreakGoalData(currentStreak, streakGoal);
 

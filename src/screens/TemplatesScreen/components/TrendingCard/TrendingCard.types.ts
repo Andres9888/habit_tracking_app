@@ -23,6 +23,8 @@ export interface TrendingCardProps {
   onImport: () => void;
   /** Card body press handler (opens fullsize preview) */
   onPress: () => void;
+  /** Optional emoji/text prefix prepended to popularity (e.g. "🔥") for top-ranked items */
+  popularityPrefix?: string;
   /** Number of users who added this template */
   popularityScore: number;
 }
