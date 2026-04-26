@@ -39,7 +39,7 @@ export function SolutionIntroStep({ onNext }: StepComponentProps) {
               textAlign: 'center',
             }}
           >
-            Miss a day.{'\n'}The chain shows it.
+            Watch a habit{'\n'}become you.
           </Text>
           <Text
             style={{
@@ -51,7 +51,7 @@ export function SolutionIntroStep({ onNext }: StepComponentProps) {
               textAlign: 'center',
             }}
           >
-            But your strength holds. Your tier holds. You don&rsquo;t start over.
+            Miss a day, the chain shows it. But your strength holds. Your tier holds. You don&rsquo;t start over.
           </Text>
         </View>
         <View style={{ alignItems: 'center', paddingBottom: 16 }}>
