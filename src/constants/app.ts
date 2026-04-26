@@ -68,9 +68,6 @@ export const VELOCITY_THRESHOLD = 800;
 // LIMITS & COUNTS
 // ============================================================================
 
-/** Free tier habit limit */
-export const FREE_HABIT_LIMIT = 3;
-
 /** Maximum suggestions shown in empty state */
 export const MAX_SUGGESTIONS = 4;
 

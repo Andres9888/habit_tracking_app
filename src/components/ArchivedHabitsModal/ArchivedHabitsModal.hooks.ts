@@ -2,7 +2,6 @@ import { useMutation, useQuery } from 'convex/react';
 import { Alert } from 'react-native';
 import { api } from '../../../convex/_generated/api';
 import type { Id } from '../../../convex/_generated/dataModel';
-import { FREE_HABIT_LIMIT } from '@/constants';
 import { triggerHaptic } from '@/utils/haptics';
 import { useBatchArchiveActions } from './useBatchArchiveActions';
 import { useArchiveDeleteActions } from './useArchiveDeleteActions';
@@ -10,16 +9,14 @@ import { useArchiveDeleteActions } from './useArchiveDeleteActions';
 export const useArchivedHabitsModalLogic = () => {
   const archivedHabitsData = useQuery(api.habits.listArchived);
   const settingsData = useQuery(api.settings.get);
-  const habitsData = useQuery(api.habits.list);
   const isLoading = archivedHabitsData === undefined;
   const archivedHabits = [...(archivedHabitsData ?? [])].sort(
     (a, b) => (b.archivedAt ?? 0) - (a.archivedAt ?? 0)
   );
   const isPremiumUser = (settingsData as { hasPremium?: boolean } | null)?.hasPremium ?? false;
-  const activeHabitCount = (habitsData ?? []).filter(
-    (h: { archived?: boolean; paused?: boolean }) => !h.archived && !h.paused
-  ).length;
-  const hasReachedHabitLimit = !isPremiumUser && activeHabitCount >= FREE_HABIT_LIMIT;
+  // Free habit cap removed in favour of trial-then-paywall gate at AuthGate.
+  // Restoring an archived habit is never blocked by a slot cap anymore.
+  const hasReachedHabitLimit = false;
   const unarchiveHabit = useMutation(api.habits.unarchive);
   const removeHabit = useMutation(api.habits.remove);
   const deleteAllArchivedMutation = useMutation(api.habits.deleteAllArchived);

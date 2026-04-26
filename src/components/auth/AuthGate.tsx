@@ -10,7 +10,7 @@
 
 import { useAuth } from '@clerk/clerk-expo';
 import { useMutation } from 'convex/react';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import Animated, { FadeInDown, FadeOut } from 'react-native-reanimated';
 
@@ -21,14 +21,23 @@ import { BrandedLoadingScreen } from './BrandedLoadingScreen';
 import { OnboardingScreen } from '../../screens/onboarding/OnboardingScreen';
 import { useOnboardingStatus } from '../../screens/onboarding/useOnboardingStatus';
 import WelcomeScreen from '../../screens/auth/WelcomeScreen';
+import { RevenueCatPaywall } from '../RevenueCatPaywall';
+import { usePremium } from '../../hooks/usePremium';
 import { enterEasing } from '../../theme/animations';
 
 const ENTER = FadeInDown.duration(280).easing(enterEasing);
 const EXIT = FadeOut.duration(300);
 
-function getScreenKey(isSignedIn: boolean, onboardingComplete: boolean) {
-  if (!isSignedIn) return 'welcome' as const;
-  return onboardingComplete ? ('app' as const) : ('onboarding' as const);
+type ScreenKey = 'welcome' | 'onboarding' | 'paywall' | 'app';
+
+function getScreenKey(
+  isSignedIn: boolean,
+  onboardingComplete: boolean,
+  hasEntitlement: boolean
+): ScreenKey {
+  if (!isSignedIn) return 'welcome';
+  if (!onboardingComplete) return 'onboarding';
+  return hasEntitlement ? 'app' : 'paywall';
 }
 
 export function AuthGate() {
@@ -38,6 +47,13 @@ export function AuthGate() {
   const { complete: onboardingComplete, markComplete } = useOnboardingStatus(
     isSignedIn ?? false
   );
+  const { isPremium, isLoading: isPremiumLoading } = usePremium();
+
+  // TODO(paywall-gate): testing-only bypass — remove this state and pass
+  // dismissible={false} on RevenueCatPaywall to restore the hard gate.
+  // Resets on app restart (ephemeral, useState is per-mount).
+  const [paywallDismissedForTesting, setPaywallDismissedForTesting] =
+    useState(false);
 
   const getOrCreateUserRef = useRef(getOrCreateUser);
   getOrCreateUserRef.current = getOrCreateUser;
@@ -50,13 +66,25 @@ export function AuthGate() {
     }
   }, [isSignedIn, isConvexReady]);
 
-  if (!isLoaded || (isSignedIn && onboardingComplete === null)) {
+  // Wait for premium status to resolve before deciding paywall vs app, so the
+  // paywall doesn't flash for users who already have an entitlement.
+  const isWaitingForPremium =
+    isSignedIn === true &&
+    onboardingComplete === true &&
+    isPremiumLoading;
+
+  if (
+    !isLoaded ||
+    (isSignedIn && onboardingComplete === null) ||
+    isWaitingForPremium
+  ) {
     return <BrandedLoadingScreen />;
   }
 
   const screenKey = getScreenKey(
     isSignedIn ?? false,
-    onboardingComplete ?? false
+    onboardingComplete ?? false,
+    isPremium || paywallDismissedForTesting
   );
 
   return (
@@ -77,6 +105,20 @@ export function AuthGate() {
         >
           <OnboardingScreen onComplete={markComplete} />
         </Animated.View> : null}
+      {screenKey === 'paywall' ? (
+        <Animated.View
+          key='paywall'
+          entering={ENTER}
+          exiting={EXIT}
+          style={{ flex: 1 }}
+        >
+          <BrandedLoadingScreen />
+          <RevenueCatPaywall
+            visible
+            onClose={() => setPaywallDismissedForTesting(true)}
+          />
+        </Animated.View>
+      ) : null}
       {screenKey === 'app' ? <Animated.View key='app' entering={ENTER} style={{ flex: 1 }}>
           <HabitsApp />
         </Animated.View> : null}
