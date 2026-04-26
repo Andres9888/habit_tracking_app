@@ -8,6 +8,10 @@ import { StepComponentProps } from '../types';
 
 export function GoalStep({ answers, onAnswerChange, onNext }: StepComponentProps) {
   const selected = answers.goal;
+  const name = answers.name?.trim();
+  const headline = name
+    ? `What are you here for, ${name}?`
+    : 'What are you here for?';
 
   return (
     <View style={{ flex: 1 }}>
@@ -17,7 +21,7 @@ export function GoalStep({ answers, onAnswerChange, onNext }: StepComponentProps
         style={{ flex: 1 }}
       >
         <HeroHeader
-          headline="What are you trying to build?"
+          headline={headline}
           sub="Pick one to start. You can add more later."
         />
         <View style={{ marginTop: 20 }}>
