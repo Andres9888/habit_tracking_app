@@ -53,11 +53,9 @@ function BottomActionBarComponent(props: BottomActionBarProps) {
           <Animated.View style={anim.settingsStyle}>
             <Pressable
               accessibilityLabel='Open settings'
-              accessibilityHint='Long press to select habits'
               accessibilityRole='button'
               hitSlop={iconButtonHitSlop}
               style={styles.iconTouchArea}
-              onLongPress={props.onLongPressSettings}
               onPress={props.onOpenSettings}
               onPressIn={anim.onSettingsPressIn}
               onPressOut={anim.onSettingsPressOut}
