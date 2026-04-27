@@ -134,6 +134,10 @@ export const importTemplate = mutation({
       name: validatedName,
       notes:
         template.description + '\n\nSource: ' + template.scientificReference,
+      // Carry template's structured why/benefits onto the habit so the
+      // detail screen can surface them in the Why & Benefits card.
+      ...(template.benefits ? { benefits: template.benefits } : {}),
+      scienceNote: template.scientificReference,
       order: maxOrder + 1,
       ...(args.customizations?.preferredTime
         ? { preferredTime: args.customizations.preferredTime }

@@ -196,6 +196,12 @@ const applicationTables = {
     // Motivation - user-provided reason for building this habit
     why: v.optional(v.string()),
 
+    // Science-backed benefits of the habit (bulleted list)
+    benefits: v.optional(v.array(v.string())),
+
+    // Short paragraph + reference summarising the science behind the habit
+    scienceNote: v.optional(v.string()),
+
     woopObstacle: v.optional(v.string()),
 
     woopOutcome: v.optional(v.string()),
@@ -320,6 +326,9 @@ const applicationTables = {
 
     // Tips for success - actionable advice for building this habit
     tips: v.optional(v.array(v.string())),
+
+    // Science-backed benefits of the habit (bulleted list)
+    benefits: v.optional(v.array(v.string())),
 
     // Optional YouTube video link
     youtubeLink: v.optional(v.string()),

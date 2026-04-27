@@ -12,7 +12,7 @@ import { shadows } from '../../../theme/spacing';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { typography, fontWeights } from '../../../theme/typography';
 import { GoalTabEmptyState } from './GoalTabEmptyState';
-import { GoalWhyAnchor } from './GoalWhyAnchor';
+import { HabitWhyBenefitsCard } from './HabitWhyBenefitsCard';
 import { GoalCoachLine } from './GoalCoachLine';
 import { GoalAdjustSheet } from './GoalAdjustSheet';
 
@@ -76,7 +76,7 @@ export function GoalTabContent({ habit, completionRate }: GoalTabContentProps) {
         </View>
 
         <ErrorBoundary>
-          <GoalWhyAnchor habit={habit} />
+          <HabitWhyBenefitsCard habit={habit} />
 
           <StreakGoalCard
             bestStreak={bestStreak}
