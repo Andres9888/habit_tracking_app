@@ -9,6 +9,10 @@ import { StepComponentProps } from '../types';
 
 export function SolutionStep({ answers, onNext }: StepComponentProps) {
   const { colors } = useThemeColors();
+  const name = answers.name?.trim();
+  const headline = name
+    ? `What's different\nthis time, ${name}.`
+    : "What's different\nthis time.";
   const filtered = SOLUTION_MAPPINGS.filter((m) =>
     answers.painPoints.includes(m.painId)
   );
@@ -21,10 +25,7 @@ export function SolutionStep({ answers, onNext }: StepComponentProps) {
         showsVerticalScrollIndicator={false}
         style={{ flex: 1 }}
       >
-        <HeroHeader
-          headline="Here's what you're getting."
-          sub="Each thing you told us — addressed directly."
-        />
+        <HeroHeader headline={headline} />
         <View
           style={{
             backgroundColor: colors.surface,
@@ -36,7 +37,13 @@ export function SolutionStep({ answers, onNext }: StepComponentProps) {
           }}
         >
           {rows.map((r, idx) => (
-            <SolutionRow fix={r.fix} isFirst={idx === 0} key={r.painId} pain={r.pain} />
+            <SolutionRow
+              isFirst={idx === 0}
+              key={r.painId}
+              mechanic={r.mechanic}
+              outcome={r.outcome}
+              pain={r.pain}
+            />
           ))}
         </View>
         <View

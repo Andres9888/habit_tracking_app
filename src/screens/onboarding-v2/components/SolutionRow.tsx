@@ -2,12 +2,16 @@ import { Text, View } from 'react-native';
 import { useThemeColors } from '@/theme/ThemeContext';
 
 interface SolutionRowProps {
-  fix: string;
-  isFirst?: boolean;
+  /** Outcome line (bold, primary). */
+  outcome: string;
+  /** Mechanic line (small, supporting). */
+  mechanic: string;
+  /** Echoed pain (small, italic, struck through). */
   pain: string;
+  isFirst?: boolean;
 }
 
-export function SolutionRow({ fix, isFirst, pain }: SolutionRowProps) {
+export function SolutionRow({ outcome, mechanic, pain, isFirst }: SolutionRowProps) {
   const { colors } = useThemeColors();
 
   return (
@@ -23,23 +27,36 @@ export function SolutionRow({ fix, isFirst, pain }: SolutionRowProps) {
         style={{
           color: colors.text.tertiary,
           fontSize: 12,
+          fontStyle: 'italic',
           lineHeight: 16,
-          marginBottom: 4,
+          marginBottom: 6,
+          opacity: 0.7,
+          textDecorationLine: 'line-through',
         }}
       >
-        You said: {pain}
+        &ldquo;{pain}&rdquo;
       </Text>
       <Text
         style={{
           color: colors.text.primary,
-          fontSize: 15,
-          fontWeight: '600',
-          lineHeight: 20,
+          fontSize: 17,
+          fontWeight: '800',
+          letterSpacing: -0.3,
+          lineHeight: 22,
         }}
       >
-        {fix}
+        {outcome}
+      </Text>
+      <Text
+        style={{
+          color: colors.text.secondary,
+          fontSize: 13,
+          lineHeight: 18,
+          marginTop: 4,
+        }}
+      >
+        {mechanic}
       </Text>
     </View>
   );
 }
-
