@@ -9,14 +9,15 @@ import { STEP_REGISTRY } from './steps/stepRegistry';
 import { StepId } from './types';
 import { useOnboardingV2State } from './useOnboardingV2State';
 
-// Steps before the question bank hide the progress chrome so the
-// pre-questionnaire screens (welcome → problem → solution → name)
-// feel like a moment, not a form.
+// Hide progress chrome on screens meant to feel like moments rather than
+// a form: the pre-questionnaire hook + personalization (welcome → problem
+// → solution → name) and the post-plan emotional peak (celebration).
 const STEPS_WITHOUT_PROGRESS: ReadonlySet<StepId> = new Set([
   'welcome',
   'problem',
   'solutionIntro',
   'name',
+  'celebration',
 ]);
 
 interface OnboardingFlowV2Props {

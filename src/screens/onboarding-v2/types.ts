@@ -16,6 +16,8 @@ export type StepId =
   | 'processing'
   | 'appDemo'
   | 'planPreview'
+  | 'firstCheckIn'
+  | 'celebration'
   | 'notificationPriming'
   | 'accountCreation'
   | 'paywall';
@@ -34,6 +36,8 @@ export const STEP_SEQUENCE: readonly StepId[] = [
   'processing',
   'appDemo',
   'planPreview',
+  'firstCheckIn',
+  'celebration',
   'notificationPriming',
   'accountCreation',
   'paywall',
@@ -46,10 +50,12 @@ export interface OnboardingAnswers {
   painAgreements: string[];
   categories: string[];
   pickedTemplateIds: string[];
+  firstCheckInIds: string[];
 }
 
 export const INITIAL_ANSWERS: OnboardingAnswers = {
   categories: [],
+  firstCheckInIds: [],
   painAgreements: [],
   painPoints: [],
   pickedTemplateIds: [],

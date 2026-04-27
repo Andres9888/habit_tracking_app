@@ -4,6 +4,8 @@ import { StepComponentProps, StepId } from '../types';
 import { AccountCreationStep } from './AccountCreationStep';
 import { AppDemoStep } from './AppDemoStep';
 import { CategoryPreferenceStep } from './CategoryPreferenceStep';
+import { CelebrationStep } from './CelebrationStep';
+import { FirstCheckInStep } from './FirstCheckInStep';
 import { GoalStep } from './GoalStep';
 import { NameStep } from './NameStep';
 import { NotificationPrimingStep } from './NotificationPrimingStep';
@@ -22,6 +24,8 @@ export const STEP_REGISTRY: Record<StepId, ComponentType<StepComponentProps>> = 
   accountCreation: AccountCreationStep,
   appDemo: AppDemoStep,
   categoryPreference: CategoryPreferenceStep,
+  celebration: CelebrationStep,
+  firstCheckIn: FirstCheckInStep,
   goal: GoalStep,
   name: NameStep,
   notificationPriming: NotificationPrimingStep,
