@@ -9,7 +9,6 @@ import { FirstCheckInStep } from './FirstCheckInStep';
 import { GoalStep } from './GoalStep';
 import { NameStep } from './NameStep';
 import { NotificationPrimingStep } from './NotificationPrimingStep';
-import { PainAmplificationStep } from './PainAmplificationStep';
 import { PainPointsStep } from './PainPointsStep';
 import { PaywallStep } from './PaywallStep';
 import { PlanPreviewStep } from './PlanPreviewStep';
@@ -29,7 +28,6 @@ export const STEP_REGISTRY: Record<StepId, ComponentType<StepComponentProps>> = 
   goal: GoalStep,
   name: NameStep,
   notificationPriming: NotificationPrimingStep,
-  painAmplification: PainAmplificationStep,
   painPoints: PainPointsStep,
   paywall: PaywallStep,
   planPreview: PlanPreviewStep,

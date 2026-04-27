@@ -10,7 +10,6 @@ export type StepId =
   | 'goal'
   | 'painPoints'
   | 'socialProof'
-  | 'painAmplification'
   | 'solution'
   | 'categoryPreference'
   | 'processing'
@@ -30,7 +29,6 @@ export const STEP_SEQUENCE: readonly StepId[] = [
   'goal',
   'painPoints',
   'socialProof',
-  'painAmplification',
   'solution',
   'categoryPreference',
   'processing',
