@@ -400,6 +400,10 @@ const applicationTables = {
     habitCompletionIcon: v.optional(
       v.union(v.literal('chain'), v.literal('checkbox'))
     ),
+    // Forwards-compat: written by a parallel workspace branch that
+    // groups habits by time-of-day. Stored as a passthrough so this
+    // workspace's deployment doesn't reject existing rows.
+    habitGroupBy: v.optional(v.string()),
     habitSortMode: v.optional(
       v.union(
         v.literal('manual'),
