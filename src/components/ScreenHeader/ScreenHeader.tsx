@@ -26,6 +26,7 @@ export function ScreenHeader({
   variant = 'default',
   titleVisible = true,
   titleStyle,
+  titleNumberOfLines = 1,
   onBack,
 }: ScreenHeaderProps) {
   const insets = useSafeAreaInsets();
@@ -80,7 +81,7 @@ export function ScreenHeader({
         <View style={styles.row}>
           <View style={styles.left}>{renderLeftAction()}</View>
           {title ? <Animated.Text
-              numberOfLines={1}
+              numberOfLines={titleNumberOfLines}
               style={[styles.titleCenter, { color: colors.text.primary }, titleStyle, titleAnimatedStyle]}
             >
               {title}
@@ -90,7 +91,7 @@ export function ScreenHeader({
       ) : (
         title && (
           <Animated.Text
-            numberOfLines={1}
+            numberOfLines={titleNumberOfLines}
             style={[styles.titleLeft, { color: colors.text.primary }]}
           >
             {title}
