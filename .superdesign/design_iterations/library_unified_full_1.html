@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Library Unified — Full Screen</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap"
+      rel="stylesheet"
+    />
+    <link href="library_unified_theme.css" rel="stylesheet" />
+  </head>
+  <body>
+    <div class="caption-bar">Mock A · Full-screen Library</div>
+    <div class="caption-sub">
+      TemplatesScreen, rebuilt around the shared &lt;TemplateBrowse /&gt; primitive
+    </div>
+
+    <div class="frame">
+      <div class="notch"></div>
+      <div class="statusbar">
+        <span>9:41</span>
+        <span>•••</span>
+      </div>
+      <div class="screen">
+        <!-- Header -->
+        <div class="row" style="margin: 8px 0 14px">
+          <h1 class="title">Library</h1>
+          <div class="spacer"></div>
+          <div
+            style="
+              width: 36px;
+              height: 36px;
+              border-radius: 12px;
+              background: var(--card);
+              border: 1px solid var(--border);
+              display: grid;
+              place-items: center;
+              font-size: 18px;
+            "
+          >
+            ⤬
+          </div>
+        </div>
+        <div class="subtitle" style="margin-bottom: 14px">
+          Pick a path — habits proven to work.
+        </div>
+
+        <!-- Search -->
+        <div class="search">
+          <span>🔍</span>
+          <span style="flex: 1">Search the library…</span>
+          <span style="color: var(--text-3); font-size: 14px">⇅</span>
+        </div>
+
+        <!-- Goals -->
+        <div class="section-title">
+          Goals <span class="see-all">See all ›</span>
+        </div>
+        <div class="goals">
+          <div class="goal goal-health">
+            <div class="icon">❤️</div>
+            <div>
+              <div class="name">Health &amp; Fitness</div>
+              <div class="meta">12 habits</div>
+            </div>
+          </div>
+          <div class="goal goal-focus">
+            <div class="icon">🎯</div>
+            <div>
+              <div class="name">Focus &amp; Work</div>
+              <div class="meta">9 habits</div>
+            </div>
+          </div>
+          <div class="goal goal-sleep">
+            <div class="icon">🌙</div>
+            <div>
+              <div class="name">Sleep &amp; Rest</div>
+              <div class="meta">7 habits</div>
+            </div>
+          </div>
+          <div class="goal goal-mind">
+            <div class="icon">🧘</div>
+            <div>
+              <div class="name">Mind &amp; Mood</div>
+              <div class="meta">11 habits</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Popular -->
+        <div class="section-title">
+          Popular this week <span class="see-all">See all ›</span>
+        </div>
+        <div class="popular">
+          <div class="pop-card">
+            <div class="ic" style="background: var(--hero-health)">🏃</div>
+            <div class="name">Morning walk</div>
+            <div class="meta">10 min · daily</div>
+          </div>
+          <div class="pop-card">
+            <div class="ic" style="background: var(--hero-mind)">📚</div>
+            <div class="name">Read 10 pages</div>
+            <div class="meta">15 min · daily</div>
+          </div>
+          <div class="pop-card">
+            <div class="ic" style="background: var(--hero-focus)">💧</div>
+            <div class="name">Drink water</div>
+            <div class="meta">on wake</div>
+          </div>
+        </div>
+
+        <!-- Category section using shared TemplateRow -->
+        <div class="section-title">
+          Health &amp; Fitness <span class="see-all">See all ›</span>
+        </div>
+        <div class="tpl">
+          <div class="ic" style="background: var(--hero-health)">🏃</div>
+          <div class="body">
+            <div class="name">Morning walk</div>
+            <div class="meta">
+              10 min<span class="dot">·</span>daily<span class="dot">·</span>★
+              4.7
+            </div>
+          </div>
+          <button class="btn-add" aria-label="Add">+</button>
+        </div>
+        <div class="tpl">
+          <div class="ic" style="background: var(--hero-focus)">💧</div>
+          <div class="body">
+            <div class="name">Drink water on wake</div>
+            <div class="meta">
+              on wake<span class="dot">·</span>daily<span class="dot">·</span>
+              <span class="badge-imported">✓ added</span>
+            </div>
+          </div>
+          <button class="btn-added" aria-label="Already added">✓</button>
+        </div>
+        <div class="tpl">
+          <div class="ic" style="background: var(--hero-mind)">🧘</div>
+          <div class="body">
+            <div class="name">Box breathing</div>
+            <div class="meta">3 min<span class="dot">·</span>daily</div>
+          </div>
+          <button class="btn-add" aria-label="Add">+</button>
+        </div>
+
+        <div class="section-title">
+          Sleep &amp; Rest <span class="see-all">See all ›</span>
+        </div>
+        <div class="tpl">
+          <div class="ic" style="background: var(--hero-sleep)">📵</div>
+          <div class="body">
+            <div class="name">No phone after 9pm</div>
+            <div class="meta">evening<span class="dot">·</span>daily</div>
+          </div>
+          <button class="btn-add" aria-label="Add">+</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="legend">
+      <b>What changed:</b><br />
+      • Title noun unified to <b>Library</b> (was "What do you want to work on?")<br />
+      • <b>Premium Packs row deleted</b> — was hidden behind a `false` flag in
+      MainBrowseView.tsx:36<br />
+      • <b>Search + sort always visible</b> — same affordance the in-modal
+      browser will get<br />
+      • <b>TemplateRow</b> is now the same primitive used in CreateHabitModal —
+      identical "+ / ✓" affordances, identical "imported" state read from one
+      subscribed source<br />
+      • <b>Goals taxonomy</b> sketched as if it came from server, not from the
+      hardcoded `GOAL_COLLECTIONS` constant
+    </div>
+  </body>
+</html>

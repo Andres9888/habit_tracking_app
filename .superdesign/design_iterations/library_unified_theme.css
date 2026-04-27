@@ -1,0 +1,575 @@
+/* ══════════════════════════════════════════════
+   Library Unified — shared tokens
+   Aligned with habit-library-consistency-v2
+══════════════════════════════════════════════ */
+:root {
+  /* Surface system (warm stone) */
+  --bg: #f5f1ed;
+  --card: #edeae5;
+  --card-hi: #ffffff;
+  --border: #ddd8d2;
+  --border-hi: #c9c3bc;
+  --text-1: #2d2a26;
+  --text-2: #6b6560;
+  --text-3: #8c8680;
+
+  /* Roles */
+  --c-action: #059669;
+  --c-action-dark: #047857;
+  --c-action-bg: #d1fae5;
+  --c-action-bdr: #a7f3d0;
+
+  --c-award: #d97706;
+  --c-award-bg: #fef9c3;
+  --c-award-bdr: #fde68a;
+  --c-award-accent: #f59e0b;
+
+  --c-science: #0369a1;
+  --c-science-bg: #e0f2fe;
+  --c-science-bdr: #bae6fd;
+
+  --c-trend: #c2410c;
+  --c-trend-bg: #fff7ed;
+  --c-trend-bdr: #fed7aa;
+
+  --c-neutral: #6b6560;
+  --c-neutral-bg: #edeae5;
+  --c-neutral-bdr: #ddd8d2;
+
+  /* Goal hero tints */
+  --hero-health: #fee4e2;
+  --hero-focus: #e0f2fe;
+  --hero-sleep: #ede9fe;
+  --hero-mind: #fef3c7;
+
+  /* Typography */
+  --ff: 'DM Sans', sans-serif;
+  --r-full: 9999px;
+  --r-xl: 20px;
+  --r-lg: 14px;
+  --r-md: 10px;
+  --r-sm: 6px;
+
+  --shadow-sm: 0 1px 2px rgba(20, 16, 12, 0.06);
+  --shadow-md: 0 4px 16px rgba(20, 16, 12, 0.08);
+  --shadow-lg: 0 12px 40px rgba(20, 16, 12, 0.18);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+html {
+  -webkit-font-smoothing: antialiased;
+}
+body {
+  background: #1c1917;
+  font-family: var(--ff);
+  color: var(--text-1);
+  min-height: 100vh;
+  padding: 32px 16px;
+}
+
+/* Phone frame */
+.frame {
+  width: 390px;
+  margin: 0 auto;
+  background: var(--bg);
+  border-radius: 44px;
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  position: relative;
+  border: 8px solid #0c0a09;
+}
+.notch {
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 110px;
+  height: 28px;
+  background: #0c0a09;
+  border-radius: 16px;
+  z-index: 10;
+}
+.statusbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 28px 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-1);
+}
+.screen {
+  padding: 12px 18px 24px;
+  min-height: 720px;
+}
+
+/* Captions / page label */
+.caption-bar {
+  text-align: center;
+  color: #d6d3d1;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 18px;
+}
+.caption-sub {
+  text-align: center;
+  color: #a8a29e;
+  font-size: 12px;
+  margin-bottom: 26px;
+  font-weight: 400;
+}
+
+/* Common building blocks */
+.row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.spacer {
+  flex: 1;
+}
+h1.title {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--text-1);
+}
+.subtitle {
+  color: var(--text-2);
+  font-size: 14px;
+  margin-top: 2px;
+}
+.section-title {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  margin: 22px 4px 10px;
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+.section-title .see-all {
+  margin-left: auto;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--c-science);
+}
+
+/* Search */
+.search {
+  background: var(--card-hi);
+  border: 1px solid var(--border);
+  border-radius: var(--r-full);
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  color: var(--text-3);
+  box-shadow: var(--shadow-sm);
+}
+.search.compact {
+  padding: 10px 14px;
+  font-size: 13px;
+}
+
+/* Goal cards */
+.goals {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.goal {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 92px;
+}
+.goal .icon {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--r-md);
+  display: grid;
+  place-items: center;
+  font-size: 18px;
+}
+.goal .name {
+  font-weight: 600;
+  font-size: 14px;
+}
+.goal .meta {
+  font-size: 12px;
+  color: var(--text-2);
+}
+.goal-health .icon {
+  background: var(--hero-health);
+}
+.goal-focus .icon {
+  background: var(--hero-focus);
+}
+.goal-sleep .icon {
+  background: var(--hero-sleep);
+}
+.goal-mind .icon {
+  background: var(--hero-mind);
+}
+
+/* Template row (the shared primitive) */
+.tpl {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  background: var(--card-hi);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  margin-bottom: 8px;
+}
+.tpl.compact {
+  padding: 10px 12px;
+}
+.tpl .ic {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: var(--hero-mind);
+  display: grid;
+  place-items: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+.tpl .body {
+  flex: 1;
+  min-width: 0;
+}
+.tpl .name {
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--text-1);
+}
+.tpl .meta {
+  font-size: 12px;
+  color: var(--text-2);
+  margin-top: 2px;
+}
+.tpl .meta .dot {
+  margin: 0 6px;
+  color: var(--text-3);
+}
+
+/* Action button on row */
+.btn-add {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  background: var(--c-action);
+  color: white;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  flex-shrink: 0;
+  border: none;
+}
+.btn-added {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  background: var(--c-action-bg);
+  color: var(--c-action-dark);
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  flex-shrink: 0;
+  border: 1px solid var(--c-action-bdr);
+}
+
+/* Popular horizontal */
+.popular {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+.pop-card {
+  min-width: 140px;
+  background: var(--card-hi);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 12px;
+}
+.pop-card .ic {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: var(--hero-mind);
+  display: grid;
+  place-items: center;
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+.pop-card .name {
+  font-weight: 600;
+  font-size: 13px;
+}
+.pop-card .meta {
+  font-size: 11px;
+  color: var(--text-2);
+  margin-top: 2px;
+}
+
+/* Tags / chips */
+.chips {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding: 4px 0;
+}
+.chip {
+  flex-shrink: 0;
+  padding: 6px 12px;
+  border-radius: var(--r-full);
+  background: var(--card);
+  border: 1px solid var(--border);
+  font-size: 12px;
+  color: var(--text-2);
+  font-weight: 500;
+}
+.chip.active {
+  background: var(--text-1);
+  color: white;
+  border-color: var(--text-1);
+}
+
+/* Badge */
+.badge-imported {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border-radius: var(--r-full);
+  background: var(--c-action-bg);
+  color: var(--c-action-dark);
+  font-size: 11px;
+  font-weight: 600;
+  border: 1px solid var(--c-action-bdr);
+}
+
+/* Modal scrim demo */
+.scrim {
+  background: rgba(20, 16, 12, 0.55);
+  border-radius: 36px;
+  margin: -12px -18px -24px;
+  padding: 12px 18px 24px;
+  min-height: 720px;
+  position: relative;
+}
+.sheet {
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  bottom: 8px;
+  background: var(--bg);
+  border-radius: 28px 28px 16px 16px;
+  padding: 8px 16px 18px;
+  box-shadow: var(--shadow-lg);
+  max-height: 86%;
+  overflow: hidden;
+}
+.drag {
+  width: 36px;
+  height: 5px;
+  background: var(--border-hi);
+  border-radius: var(--r-full);
+  margin: 6px auto 8px;
+}
+.sheet-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 4px 12px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 12px;
+}
+.sheet-header .cancel {
+  color: var(--text-2);
+  font-size: 14px;
+  font-weight: 500;
+  background: none;
+  border: none;
+}
+.sheet-header .title {
+  font-weight: 600;
+  font-size: 15px;
+}
+.sheet-header .primary {
+  color: var(--c-action);
+  font-size: 14px;
+  font-weight: 700;
+  background: none;
+  border: none;
+}
+
+/* Hero / preview specific */
+.preview-hero {
+  text-align: center;
+  padding: 24px 0 16px;
+}
+.preview-hero .big-icon {
+  width: 88px;
+  height: 88px;
+  border-radius: 24px;
+  background: var(--hero-mind);
+  margin: 0 auto 14px;
+  display: grid;
+  place-items: center;
+  font-size: 44px;
+}
+.preview-hero h2 {
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+.preview-hero .meta {
+  color: var(--text-2);
+  font-size: 13px;
+  margin-top: 6px;
+}
+.science-card {
+  background: var(--c-science-bg);
+  border: 1px solid var(--c-science-bdr);
+  border-radius: var(--r-lg);
+  padding: 14px;
+  margin-top: 18px;
+}
+.science-card .label {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--c-science);
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+.science-card .body {
+  font-size: 14px;
+  color: var(--text-1);
+  line-height: 1.45;
+}
+.science-card .src {
+  font-size: 12px;
+  color: var(--text-2);
+  margin-top: 6px;
+  font-style: italic;
+}
+
+.btn-primary {
+  width: 100%;
+  background: var(--c-action);
+  color: white;
+  border: none;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 15px;
+  padding: 14px;
+  border-radius: var(--r-lg);
+  margin-top: 18px;
+  box-shadow: var(--shadow-sm);
+}
+.btn-secondary {
+  width: 100%;
+  background: transparent;
+  color: var(--text-1);
+  border: 1px solid var(--border-hi);
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 14px;
+  padding: 12px;
+  border-radius: var(--r-lg);
+  margin-top: 10px;
+}
+
+/* Hero in modal browser */
+.tpl-hero {
+  background: linear-gradient(180deg, var(--c-trend-bg), var(--card-hi));
+  border: 1px solid var(--c-trend-bdr);
+  border-radius: var(--r-lg);
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.tpl-hero .label {
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--text-1);
+}
+.tpl-hero .sub {
+  font-size: 12px;
+  color: var(--text-2);
+}
+
+/* Annotations (for explaining what changed) */
+.note {
+  font-size: 11px;
+  color: #a8a29e;
+  margin: 14px 18px 0;
+  text-align: center;
+  font-style: italic;
+}
+.legend {
+  max-width: 390px;
+  margin: 18px auto 0;
+  color: #d6d3d1;
+  font-size: 12px;
+  line-height: 1.6;
+  padding: 14px 16px;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+.legend b {
+  color: #fef3c7;
+}
+
+/* Simple keyboard / advanced fold */
+.advanced {
+  border-top: 1px solid var(--border);
+  padding: 12px 0 0;
+  margin-top: 12px;
+  font-size: 13px;
+  color: var(--text-2);
+}
+.advanced .row-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 4px;
+}
+
+/* Index page (for opening all three) */
+.index-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 24px;
+  max-width: 1300px;
+  margin: 24px auto;
+}
+@media (max-width: 1100px) {
+  .index-grid {
+    grid-template-columns: 1fr;
+  }
+}

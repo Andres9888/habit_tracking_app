@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Library Unified — In-Modal Browser</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap"
+      rel="stylesheet"
+    />
+    <link href="library_unified_theme.css" rel="stylesheet" />
+  </head>
+  <body>
+    <div class="caption-bar">Mock B · In-Modal Browser</div>
+    <div class="caption-sub">
+      CreateHabitModal&apos;s collapsible browser, using the same primitive at compact density
+    </div>
+
+    <div class="frame">
+      <div class="notch"></div>
+      <div class="statusbar">
+        <span>9:41</span>
+        <span>•••</span>
+      </div>
+      <div class="screen">
+        <!-- CreateHabitModal sheet header -->
+        <div
+          class="row"
+          style="
+            padding: 6px 4px 14px;
+            border-bottom: 1px solid var(--border);
+          "
+        >
+          <button
+            style="
+              background: none;
+              border: none;
+              color: var(--text-2);
+              font-family: inherit;
+              font-weight: 500;
+              font-size: 14px;
+            "
+          >
+            Cancel
+          </button>
+          <div class="spacer"></div>
+          <div style="font-weight: 600; font-size: 15px">Create a habit</div>
+          <div class="spacer"></div>
+          <button
+            style="
+              background: none;
+              border: none;
+              color: var(--text-3);
+              font-family: inherit;
+              font-weight: 600;
+              font-size: 14px;
+            "
+          >
+            Save
+          </button>
+        </div>
+
+        <!-- Habit name -->
+        <div style="margin-top: 18px">
+          <div
+            style="
+              font-size: 11px;
+              text-transform: uppercase;
+              letter-spacing: 0.08em;
+              color: var(--text-3);
+              font-weight: 700;
+              margin-bottom: 6px;
+            "
+          >
+            Habit name
+          </div>
+          <div
+            style="
+              background: var(--card-hi);
+              border: 1px solid var(--border);
+              border-radius: 12px;
+              padding: 14px;
+              font-size: 15px;
+              color: var(--text-3);
+            "
+          >
+            What do you want to do?
+          </div>
+        </div>
+
+        <!-- Browse Library hero -->
+        <div style="margin-top: 18px">
+          <div class="tpl-hero">
+            <div style="font-size: 22px">✨</div>
+            <div>
+              <div class="label">Browse Library</div>
+              <div class="sub">Pick a science-backed starter</div>
+            </div>
+            <div class="spacer"></div>
+            <div style="font-size: 18px; color: var(--text-2)">▾</div>
+          </div>
+
+          <!-- Expanded panel -->
+          <div
+            style="
+              background: var(--card-hi);
+              border: 1px solid var(--border);
+              border-radius: 16px;
+              overflow: hidden;
+            "
+          >
+            <!-- NEW: search row -->
+            <div
+              style="
+                padding: 12px 14px;
+                border-bottom: 1px solid var(--border);
+              "
+            >
+              <div class="search compact">
+                <span>🔍</span>
+                <span>Search the library…</span>
+              </div>
+            </div>
+
+            <!-- Category chips -->
+            <div
+              style="
+                padding: 10px 14px;
+                border-bottom: 1px solid var(--border);
+              "
+            >
+              <div class="chips">
+                <span class="chip active">All</span>
+                <span class="chip">Morning</span>
+                <span class="chip">Health</span>
+                <span class="chip">Sleep</span>
+                <span class="chip">Focus</span>
+                <span class="chip">Mind</span>
+              </div>
+            </div>
+
+            <!-- Template rows (compact density, same primitive as full-screen) -->
+            <div style="padding: 10px 14px 14px; max-height: 320px; overflow: hidden">
+              <div class="tpl compact">
+                <div class="ic" style="background: var(--hero-health)">🏃</div>
+                <div class="body">
+                  <div class="name">Morning walk</div>
+                  <div class="meta">
+                    10 min<span class="dot">·</span>daily
+                  </div>
+                </div>
+                <button class="btn-add" aria-label="Add">+</button>
+              </div>
+              <div class="tpl compact">
+                <div class="ic" style="background: var(--hero-mind)">📚</div>
+                <div class="body">
+                  <div class="name">Read 10 pages</div>
+                  <div class="meta">
+                    15 min<span class="dot">·</span>daily
+                  </div>
+                </div>
+                <button class="btn-add" aria-label="Add">+</button>
+              </div>
+              <div class="tpl compact">
+                <div class="ic" style="background: var(--hero-focus)">💧</div>
+                <div class="body">
+                  <div class="name">Drink water on wake</div>
+                  <div class="meta">
+                    on wake<span class="dot">·</span>daily<span class="dot">·</span>
+                    <span class="badge-imported">✓ added</span>
+                  </div>
+                </div>
+                <button class="btn-added" aria-label="Already added">✓</button>
+              </div>
+              <div class="tpl compact" style="opacity: 0.6">
+                <div class="ic" style="background: var(--hero-sleep)">📵</div>
+                <div class="body">
+                  <div class="name">No phone after 9pm</div>
+                  <div class="meta">evening<span class="dot">·</span>daily</div>
+                </div>
+                <button class="btn-add" aria-label="Add">+</button>
+              </div>
+              <div
+                style="
+                  text-align: center;
+                  font-size: 11px;
+                  color: var(--text-3);
+                  padding-top: 6px;
+                "
+              >
+                ↓ scroll for more
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- After the browser, the rest of the create form -->
+        <div
+          style="
+            margin-top: 22px;
+            font-size: 13px;
+            color: var(--text-3);
+            text-align: center;
+          "
+        >
+          Icon · Color · Reminder · Advanced
+        </div>
+      </div>
+    </div>
+
+    <div class="legend">
+      <b>What changed (vs current TemplateBrowser.tsx):</b><br />
+      • <b>Search added</b> — was missing, now matches full-screen affordance
+      (Finding 5)<br />
+      • Copy aligned: <b>"Browse Library"</b> instead of "Browse Templates"
+      (Finding 4)<br />
+      • <b>Same TemplateRow primitive</b> as Mock A at <code>density="compact"</code> — identical "+ / ✓"
+      buttons, "imported" badge, accessibility labels<br />
+      • Server-driven "imported" state — no client-side <code>Set&lt;Id&gt;</code> drift (Finding 6)
+    </div>
+  </body>
+</html>
