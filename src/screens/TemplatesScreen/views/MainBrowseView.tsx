@@ -44,6 +44,7 @@ export function MainBrowseView(p: MainBrowseViewProps) {
         leftAction={null}
         subtitle={HEADER_SUBTITLE}
         title='What do you want to work on?'
+        titleNumberOfLines={2}
       />
       <Animated.View
         entering={stagger(0)}
