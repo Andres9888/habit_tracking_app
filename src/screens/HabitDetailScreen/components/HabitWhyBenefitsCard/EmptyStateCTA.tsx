@@ -1,12 +1,17 @@
-import { Text, View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 import { colors } from '../../../../theme/colors';
 import { typography, fontWeights } from '../../../../theme/typography';
 
-export function EmptyStateCTA() {
+interface EmptyStateCTAProps {
+  onPress: () => void;
+}
+
+export function EmptyStateCTA({ onPress }: EmptyStateCTAProps) {
   return (
-    <View
-      accessibilityLabel='Why and benefits — not yet set'
-      accessibilityRole='summary'
+    <Pressable
+      accessibilityHint='Opens editor for why, identity, benefits, and science note'
+      accessibilityLabel='Add your why and benefits'
+      accessibilityRole='button'
       className='flex-row items-start gap-3 rounded-2xl px-4 py-3.5'
       style={{
         backgroundColor: colors.parchment.bg,
@@ -14,6 +19,7 @@ export function EmptyStateCTA() {
         borderStyle: 'dashed',
         borderWidth: 1,
       }}
+      onPress={onPress}
     >
       <View
         className='h-9 w-9 items-center justify-center rounded-lg'
@@ -42,6 +48,6 @@ export function EmptyStateCTA() {
           Write down what this habit does for you and why it matters.
         </Text>
       </View>
-    </View>
+    </Pressable>
   );
 }
