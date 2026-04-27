@@ -3,7 +3,7 @@
  *
  * Authentication boundary that controls app access.
  * Shows WelcomeScreen for unauthenticated users,
- * OnboardingScreen for first-time users after sign-up,
+ * OnboardingFlowV2 (Chain Builder) for first-time users after sign-up,
  * HabitsApp for authenticated users.
  * Syncs user to Convex database on sign-in.
  */
@@ -18,8 +18,10 @@ import { api } from '../../../convex/_generated/api';
 import HabitsApp from '../../features/habits/HabitsApp';
 import { useConvexAuthReady } from '../../providers';
 import { BrandedLoadingScreen } from './BrandedLoadingScreen';
-import { OnboardingScreen } from '../../screens/onboarding/OnboardingScreen';
-import { useOnboardingStatus } from '../../screens/onboarding/useOnboardingStatus';
+import {
+  OnboardingFlowV2,
+  useOnboardingV2Complete,
+} from '../../screens/onboarding-v2';
 import WelcomeScreen from '../../screens/auth/WelcomeScreen';
 import { RevenueCatPaywall } from '../RevenueCatPaywall';
 import { usePremium } from '../../hooks/usePremium';
@@ -44,7 +46,7 @@ export function AuthGate() {
   const { isLoaded, isSignedIn } = useAuth();
   const isConvexReady = useConvexAuthReady();
   const getOrCreateUser = useMutation(api.users.getOrCreateUser);
-  const { complete: onboardingComplete, markComplete } = useOnboardingStatus(
+  const { complete: onboardingComplete, markComplete } = useOnboardingV2Complete(
     isSignedIn ?? false
   );
   const { isPremium, isLoading: isPremiumLoading } = usePremium();
@@ -103,7 +105,7 @@ export function AuthGate() {
           exiting={EXIT}
           style={{ flex: 1 }}
         >
-          <OnboardingScreen onComplete={markComplete} />
+          <OnboardingFlowV2 onComplete={markComplete} />
         </Animated.View> : null}
       {screenKey === 'paywall' ? (
         <Animated.View
