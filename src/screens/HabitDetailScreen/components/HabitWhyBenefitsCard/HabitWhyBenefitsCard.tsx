@@ -4,6 +4,7 @@
  * a bulleted benefits list, and a science note. Collapsible. Replaces the
  * older single-source GoalWhyAnchor.
  */
+import { ChevronDown, ChevronRight } from 'lucide-react-native';
 import { Pressable, Text, View } from 'react-native';
 import Animated, { Easing, FadeInDown } from 'react-native-reanimated';
 import { durations } from '../../../../theme/animations';
@@ -48,34 +49,39 @@ export function HabitWhyBenefitsCard({ habit }: HabitWhyBenefitsCardProps) {
         className='flex-row items-center justify-between'
         onPress={toggle}
       >
-        <View className='flex-1 pr-2'>
-          <Text
-            style={{
-              ...typography.caption,
-              color: colors.parchment.text,
-              fontWeight: fontWeights.bold,
-              letterSpacing: 1.2,
-              textTransform: 'uppercase',
-            }}
-          >
-            Why &amp; Benefits
-          </Text>
-          {isExpanded || flags.summaryText.length === 0 ? null : (
+        <View className='flex-1 flex-row items-center gap-2 pr-2'>
+          <Text style={{ fontSize: 18 }}>💭</Text>
+          <View className='flex-1'>
             <Text
-              className='mt-0.5'
               style={{
                 ...typography.caption,
-                color: colors.parchment.textStrong,
-                lineHeight: 16,
+                color: colors.parchment.text,
+                fontWeight: fontWeights.bold,
+                letterSpacing: 1.2,
+                textTransform: 'uppercase',
               }}
             >
-              {flags.summaryText}
+              Why &amp; Benefits
             </Text>
-          )}
+            {isExpanded || flags.summaryText.length === 0 ? null : (
+              <Text
+                className='mt-0.5'
+                style={{
+                  ...typography.caption,
+                  color: colors.parchment.textStrong,
+                  lineHeight: 16,
+                }}
+              >
+                {flags.summaryText}
+              </Text>
+            )}
+          </View>
         </View>
-        <Text style={{ color: colors.parchment.text, fontSize: 18 }}>
-          {isExpanded ? '⌃' : '⌄'}
-        </Text>
+        {isExpanded ? (
+          <ChevronDown color={colors.parchment.text} size={18} />
+        ) : (
+          <ChevronRight color={colors.parchment.text} size={18} />
+        )}
       </Pressable>
 
       {isExpanded ? (

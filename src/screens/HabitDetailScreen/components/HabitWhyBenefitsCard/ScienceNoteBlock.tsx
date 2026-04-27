@@ -1,6 +1,7 @@
 import { Text, View } from 'react-native';
 import { colors } from '../../../../theme/colors';
-import { typography, fontWeights } from '../../../../theme/typography';
+import { typography } from '../../../../theme/typography';
+import { SectionDivider } from './SectionDivider';
 
 interface ScienceNoteBlockProps {
   note: string;
@@ -9,18 +10,7 @@ interface ScienceNoteBlockProps {
 export function ScienceNoteBlock({ note }: ScienceNoteBlockProps) {
   return (
     <View>
-      <Text
-        className='mb-2 mt-3'
-        style={{
-          ...typography.caption,
-          color: colors.parchment.text,
-          fontWeight: fontWeights.bold,
-          letterSpacing: 1.2,
-          textTransform: 'uppercase',
-        }}
-      >
-        Science
-      </Text>
+      <SectionDivider label='Science' />
       <View
         className='rounded-xl px-3 py-2.5'
         style={{ backgroundColor: colors.parchment.surface }}

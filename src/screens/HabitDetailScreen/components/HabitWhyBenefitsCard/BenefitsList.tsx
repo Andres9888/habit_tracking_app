@@ -1,6 +1,7 @@
 import { Text, View } from 'react-native';
 import { colors } from '../../../../theme/colors';
-import { typography, fontWeights } from '../../../../theme/typography';
+import { typography } from '../../../../theme/typography';
+import { SectionDivider } from './SectionDivider';
 
 interface BenefitsListProps {
   benefits: string[];
@@ -9,25 +10,15 @@ interface BenefitsListProps {
 export function BenefitsList({ benefits }: BenefitsListProps) {
   return (
     <View>
-      <Text
-        className='mb-2 mt-3'
-        style={{
-          ...typography.caption,
-          color: colors.parchment.text,
-          fontWeight: fontWeights.bold,
-          letterSpacing: 1.2,
-          textTransform: 'uppercase',
-        }}
-      >
-        Benefits
-      </Text>
+      <SectionDivider label='Benefits' />
       {benefits.map((benefit, index) => (
-        <View key={index} className='mb-1 flex-row items-start gap-2'>
+        <View key={index} className='mb-1.5 flex-row items-start'>
           <Text
+            className='mr-2'
             style={{
-              color: colors.parchment.text,
-              fontWeight: fontWeights.bold,
-              lineHeight: 21,
+              color: colors.warning,
+              fontSize: 14,
+              lineHeight: 20,
             }}
           >
             •
@@ -37,7 +28,7 @@ export function BenefitsList({ benefits }: BenefitsListProps) {
             style={{
               ...typography.bodySmall,
               color: colors.parchment.textStrong,
-              lineHeight: 21,
+              lineHeight: 20,
             }}
           >
             {benefit}
