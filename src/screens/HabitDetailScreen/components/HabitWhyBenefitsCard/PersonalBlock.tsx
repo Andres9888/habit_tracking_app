@@ -17,7 +17,7 @@ export function PersonalBlock({ data, isLast }: PersonalBlockProps) {
       style={
         isLast
           ? undefined
-          : { borderBottomColor: colors.parchment.border, borderBottomWidth: 1 }
+          : { borderBottomColor: '#E7E5E4', borderBottomWidth: 1 }
       }
     >
       <View

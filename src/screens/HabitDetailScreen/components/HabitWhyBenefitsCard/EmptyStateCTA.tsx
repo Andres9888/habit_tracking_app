@@ -12,10 +12,10 @@ export function EmptyStateCTA({ onPress }: EmptyStateCTAProps) {
       accessibilityHint='Opens editor for why, identity, benefits, and science note'
       accessibilityLabel='Add your why and benefits'
       accessibilityRole='button'
-      className='flex-row items-start gap-3 rounded-2xl px-4 py-3.5'
+      className='flex-row items-start gap-3 rounded-xl px-4 py-3.5'
       style={{
-        backgroundColor: colors.parchment.bg,
-        borderColor: colors.parchment.border,
+        backgroundColor: '#FAF8F5',
+        borderColor: '#DDD8D2',
         borderStyle: 'dashed',
         borderWidth: 1,
       }}
@@ -23,7 +23,7 @@ export function EmptyStateCTA({ onPress }: EmptyStateCTAProps) {
     >
       <View
         className='h-9 w-9 items-center justify-center rounded-lg'
-        style={{ backgroundColor: colors.parchment.surface }}
+        style={{ backgroundColor: '#FFFFFF' }}
       >
         <Text style={{ color: colors.parchment.text, fontSize: 18 }}>+</Text>
       </View>

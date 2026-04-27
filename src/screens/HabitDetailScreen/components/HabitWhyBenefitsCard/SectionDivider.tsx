@@ -11,7 +11,7 @@ export function SectionDivider({ label }: SectionDividerProps) {
     <View className='my-3 flex-row items-center'>
       <View
         className='flex-1'
-        style={{ backgroundColor: colors.parchment.border, height: 1 }}
+        style={{ backgroundColor: '#E7E5E4', height: 1 }}
       />
       <Text
         className='mx-2'
@@ -28,7 +28,7 @@ export function SectionDivider({ label }: SectionDividerProps) {
       </Text>
       <View
         className='flex-1'
-        style={{ backgroundColor: colors.parchment.border, height: 1 }}
+        style={{ backgroundColor: '#E7E5E4', height: 1 }}
       />
     </View>
   );

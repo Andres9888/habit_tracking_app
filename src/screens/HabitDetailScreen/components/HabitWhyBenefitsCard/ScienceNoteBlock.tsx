@@ -12,8 +12,8 @@ export function ScienceNoteBlock({ note }: ScienceNoteBlockProps) {
     <View>
       <SectionDivider label='Science' />
       <View
-        className='rounded-xl px-3 py-2.5'
-        style={{ backgroundColor: colors.parchment.surface }}
+        className='rounded-lg px-3 py-2.5'
+        style={{ backgroundColor: '#FFFFFF' }}
       >
         <Text
           style={{

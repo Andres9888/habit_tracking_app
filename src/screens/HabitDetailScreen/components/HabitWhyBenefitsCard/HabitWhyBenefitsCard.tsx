@@ -48,13 +48,9 @@ export function HabitWhyBenefitsCard({ habit }: HabitWhyBenefitsCardProps) {
     <>
       <Animated.View
         accessibilityLabel='Why and benefits'
-        className='mx-0 mb-3 rounded-2xl px-4 py-3'
+        className='mx-0 mb-3 rounded-xl px-4 py-3.5'
         entering={FadeInDown.duration(durations.enter).easing(Easing.out(Easing.cubic))}
-        style={{
-          backgroundColor: colors.parchment.bg,
-          borderColor: colors.parchment.border,
-          borderWidth: 1,
-        }}
+        style={{ backgroundColor: '#FAF8F5' }}
       >
         <CardHeader
           isExpanded={isExpanded}
