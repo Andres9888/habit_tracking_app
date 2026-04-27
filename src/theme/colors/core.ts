@@ -221,6 +221,32 @@ export const colors = {
     red: { bg: '#FFF1EE', border: '#FCD7CD', text: '#9A2C1A' }, // reset / setback
     yellow: { bg: '#FFF8EE', border: '#FDE4BD', text: '#7C3F0A' }, // default / neutral coaching
   },
+
+  /**
+   * Material tier palette — chain visualization progression colors.
+   * Used by HabitChainVisualizer/materialTier.ts. Other behavior (shadow
+   * opacity, glow, animation) stays in materialTier.ts; this namespace
+   * holds only the color values so they're tokenizable / dark-mode ready.
+   */
+  material: {
+    copper: {
+      tier: '#B87333', // Tier base color
+      icon: '#FEF3C7', // Icon-on-tier color (warm cream)
+      shadow: '#B87333', // Cell shadow tint
+    },
+    gold: {
+      tier: '#D4A23F',
+      icon: '#78350F', // Dark amber for legibility
+      shadow: '#F2B84B', // Bright gold glow
+    },
+    legendary: {
+      tier: '#F2B84B',
+      icon: '#78350F',
+      shadow: '#F2B84B',
+      cellBackground: '#E5E7EB', // Platinum cell base
+    },
+    iconOnAccent: '#FFFFFF', // Used by `chain` and `iron` tiers (which use accent for tier color)
+  },
 } as const;
 
 export type ColorPalette = typeof colors;

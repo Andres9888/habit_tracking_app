@@ -10,7 +10,7 @@ import { View, Text, Pressable, StyleSheet } from 'react-native';
 
 import { ConfettiSystem, useCelebration, determineBurstType, type CompletionContext } from './index';
 import { borderRadius } from '@/theme/spacing';
-import { typography, fontFamilies } from '@/theme/typography';
+import { typography, fontFamilies, fontWeights } from '@/theme/typography';
 
 /**
  * Example component showing all celebration burst types
@@ -144,7 +144,7 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontFamily: fontFamilies.primary.text,
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: fontWeights.semibold,
   },
   buttonContainer: {
     padding: 20,
@@ -170,7 +170,7 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontFamily: fontFamilies.primary.text,
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: fontWeights.semibold,
   },
   container: {
     flex: 1,
@@ -180,7 +180,7 @@ const styles = StyleSheet.create({
   habitName: {
     fontFamily: fontFamilies.primary.text,
     fontSize: typography.heading3.fontSize,
-    fontWeight: '700',
+    fontWeight: fontWeights.bold,
     marginBottom: 12,
   },
   stat: {
@@ -194,7 +194,7 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: fontFamilies.primary.display,
     fontSize: typography.heading1.fontSize,
-    fontWeight: '700',
+    fontWeight: fontWeights.bold,
     marginBottom: 24,
     textAlign: 'center',
   },
