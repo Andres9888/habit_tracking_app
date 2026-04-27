@@ -2,7 +2,7 @@
  * Weekly insights calculation helpers
  */
 
-import { Id } from '../_generated/dataModel';
+import type { Doc, Id } from '../_generated/dataModel';
 import { HabitChange } from './types';
 
 /**
@@ -10,7 +10,7 @@ import { HabitChange } from './types';
  */
 export function calculateHabitChanges(
   habit: { _id: Id<'habits'>; name: string; icon?: string },
-  trackings: unknown[],
+  trackings: Doc<'tracking'>[],
   oneWeekAgo: Date,
   twoWeeksAgo: Date,
   currentStreak: number
