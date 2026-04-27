@@ -1,6 +1,6 @@
 /**
  * Hero gradient derivation from template iconColor
- * Produces a richer diagonal gradient similar to FeaturedCollection
+ * Produces a richer 3-stop diagonal gradient for hero surfaces.
  */
 
 import { darkenColor } from '../../CreateHabitModal/components/StickyCreateBar/colorUtils';

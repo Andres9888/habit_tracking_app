@@ -1,42 +1,32 @@
 /**
  * MainBrowseView — Goal-first browse surface
  *
- * Header → Search (sticky) → (Browse sections | Search results).
- * SearchBar is lifted above the body swap so it never remounts.
+ * Header → Search (sticky) → Chips → (BrowseSections | Search results).
+ * SearchBar and chips are lifted above the body swap so they never remount.
  */
 
-import { ScrollView, StyleSheet, View } from 'react-native';
-import Animated, {
-  Easing,
-  FadeInDown,
-  FadeOutUp,
-} from 'react-native-reanimated';
+import { StyleSheet, View } from 'react-native';
+import Animated from 'react-native-reanimated';
 import { ScreenHeader } from '../../../components/ScreenHeader';
 import { useThemeColors } from '../../../theme/ThemeContext';
-import { durations } from '../../../theme/animations';
-import { spacing } from '../../../theme/spacing';
 import { styles } from '../../templates/templatesScreenStyles';
 import { SearchBar } from '../components';
-import { GoalCollectionGrid } from '../components/GoalCollectionGrid';
-import { PopularSection } from '../components/PopularSection';
+import { QuickFilterChips } from '../components/QuickFilterChips';
+import { BrowseSections } from './BrowseSections';
+import { bodyEnter, bodyExit, stagger } from './MainBrowseView.helpers';
 import type { MainBrowseViewProps } from './MainBrowseView.types';
 
-const stagger = (index: number) =>
-  FadeInDown.delay(index * durations.stagger)
-    .duration(durations.enter)
-    .easing(Easing.out(Easing.cubic));
+const HEADER_SUBTITLE = 'Pick a path — habits proven to work.';
 
-const bodyEnter = FadeInDown.duration(180);
-const bodyExit = FadeOutUp.duration(120);
-
-const HEADER_SUBTITLE = 'Pick a path \u2014 habits proven to work.';
-
-// Hidden for now \u2014 flip to true to restore the premium packs row.
-// When re-enabling: bump Popular stagger to (3) and exploreAll to (4).
+// Hidden for now — flip to true to restore the premium packs row.
+// When re-enabling: review BrowseSections stagger indices to avoid collision.
 const SHOW_PREMIUM_PACKS = false;
 
 export function MainBrowseView(p: MainBrowseViewProps) {
   const { colors } = useThemeColors();
+  const isCategoryFilterActive = p.selectedCategory !== 'all';
+  const showFilteredResults = p.isSearchActive || isCategoryFilterActive;
+  const showStartHere = p.userHabitCount <= 1;
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
@@ -57,7 +47,16 @@ export function MainBrowseView(p: MainBrowseViewProps) {
           onClear={p.onSearchClear}
         />
       </Animated.View>
-      {p.isSearchActive ? (
+      {p.quickFilterCategories.length > 0 ? (
+        <Animated.View entering={stagger(1)}>
+          <QuickFilterChips
+            activeCategory={isCategoryFilterActive ? p.selectedCategory : null}
+            categories={p.quickFilterCategories}
+            onSelectCategory={p.onSelectCategory}
+          />
+        </Animated.View>
+      ) : null}
+      {showFilteredResults ? (
         <Animated.View
           key='results'
           entering={bodyEnter}
@@ -73,42 +72,24 @@ export function MainBrowseView(p: MainBrowseViewProps) {
           exiting={bodyExit}
           style={s.body}
         >
-          <ScrollView
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={{
-              paddingBottom: spacing['2xl'],
-              paddingTop: spacing.md,
-            }}
-          >
-            <Animated.View entering={stagger(1)}>
-              <GoalCollectionGrid
-                featuredBadgeLabel={p.featuredBadgeLabel}
-                featuredGoalId={p.featuredGoalId}
-                featuredStarterTemplates={p.featuredStarterTemplates}
-                habitCountsByGoalId={p.habitCountsByGoalId}
-                onPreviewStarter={p.onPreview}
-                onSelectGoal={p.onGoalSelect}
-              />
-            </Animated.View>
-            {SHOW_PREMIUM_PACKS ? (
-              <Animated.View entering={stagger(2)}>
-                {p.premiumPacksSection}
-              </Animated.View>
-            ) : null}
-            <Animated.View entering={stagger(2)}>
-              <PopularSection
-                importedTemplateIds={p.importedTemplateIds}
-                importingTemplateId={p.importingTemplateId}
-                templates={p.popularTemplates}
-                onImport={p.onImport}
-                onPreview={p.onPreview}
-                onSeeAll={p.onSeeAll}
-              />
-            </Animated.View>
-            <Animated.View entering={stagger(3)}>
-              {p.exploreAllSection}
-            </Animated.View>
-          </ScrollView>
+          <BrowseSections
+            exploreAllSection={p.exploreAllSection}
+            featuredBadgeLabel={p.featuredBadgeLabel}
+            featuredGoalId={p.featuredGoalId}
+            featuredStarterTemplates={p.featuredStarterTemplates}
+            habitCountsByGoalId={p.habitCountsByGoalId}
+            importedTemplateIds={p.importedTemplateIds}
+            importingTemplateId={p.importingTemplateId}
+            onGoalSelect={p.onGoalSelect}
+            onImport={p.onImport}
+            onPreview={p.onPreview}
+            onSeeAll={p.onSeeAll}
+            onStartHerePress={p.onStartHerePress}
+            popularTemplates={p.popularTemplates}
+            premiumPacksSection={p.premiumPacksSection}
+            showPremiumPacks={SHOW_PREMIUM_PACKS}
+            showStartHere={showStartHere}
+          />
         </Animated.View>
       )}
       {p.modals}

@@ -12,7 +12,7 @@ import { typography, fontFamilies, fontWeights } from '@/theme/typography';
 export const styles = StyleSheet.create({
   container: {
     ...shadows.card,
-    borderRadius: br.large,
+    borderRadius: borderRadius.large,
     borderWidth: 1,
     padding: 16,
   },
