@@ -321,6 +321,10 @@ const applicationTables = {
     // Tips for success - actionable advice for building this habit
     tips: v.optional(v.array(v.string())),
 
+    // Tiny "start small" version of the habit (BJ Fogg / Atomic Habits floor) —
+    // shown inline in template preview as the laughably-easy entry version.
+    startSmallVersion: v.optional(v.string()),
+
     // Optional YouTube video link
     youtubeLink: v.optional(v.string()),
   })

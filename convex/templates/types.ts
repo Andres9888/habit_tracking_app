@@ -39,6 +39,7 @@ export type TemplateInsert = {
   popularityScore?: number;
   scientificLink?: string;
   scientificReference: string;
+  startSmallVersion?: string;
   tips?: string[];
   youtubeLink?: string;
 };

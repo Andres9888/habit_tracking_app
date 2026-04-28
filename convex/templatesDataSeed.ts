@@ -39,6 +39,7 @@ type TemplateInsert = {
   popularityScore?: number;
   scientificLink?: string;
   scientificReference: string;
+  startSmallVersion?: string;
   tips?: string[];
   youtubeLink?: string;
 };
@@ -194,6 +195,7 @@ export const seedTemplates = internalMutation({
       icon: '🧘',
       iconColor: '#10B981',
       name: '5-Minute Meditation',
+      startSmallVersion: 'Take one slow, mindful breath.',
       popularityScore: 95,
       scientificLink:
         'https://jamanetwork.com/journals/jamainternalmedicine/fullarticle/1809754',
@@ -216,6 +218,7 @@ export const seedTemplates = internalMutation({
       icon: '✍️',
       iconColor: '#3B82F6',
       name: 'Morning Pages',
+      startSmallVersion: 'Write a single sentence on the page.',
       popularityScore: 88,
       scientificReference:
         "Cameron (1992) - The Artist's Way creative recovery program",
@@ -230,6 +233,7 @@ export const seedTemplates = internalMutation({
       icon: '💧',
       iconColor: '#60A5FA',
       name: 'Hydration First',
+      startSmallVersion: 'Take one sip of water before anything else.',
       popularityScore: 92,
       scientificReference:
         'Popkin et al. (2010) - Water, hydration, and health',
@@ -250,6 +254,7 @@ export const seedTemplates = internalMutation({
       icon: '🌅',
       iconColor: '#F59E0B',
       name: 'Sunrise Viewing',
+      startSmallVersion: 'Step outside and face the sun for 30 seconds.',
       popularityScore: 85,
       scientificReference:
         'Huberman (2021) - Light exposure and circadian biology',
@@ -265,6 +270,7 @@ export const seedTemplates = internalMutation({
       icon: '🌞',
       iconColor: '#F59E0B',
       name: 'Sun Salutation Flow',
+      startSmallVersion: 'Do one sun salutation.',
       popularityScore: 78,
       scientificReference:
         'Cramer et al. (2016) - Yoga for chronic low back pain',
@@ -279,6 +285,7 @@ export const seedTemplates = internalMutation({
       icon: '❄️',
       iconColor: '#3B82F6',
       name: 'Cold Shower',
+      startSmallVersion: 'End your shower with 10 seconds of cold water.',
       popularityScore: 76,
       scientificReference:
         'Höpfl et al. (2021) - Cold water immersion for recovery',
@@ -294,6 +301,7 @@ export const seedTemplates = internalMutation({
       icon: '🛏️',
       iconColor: '#8B5CF6',
       name: 'Make Your Bed',
+      startSmallVersion: 'Pull up the comforter and smooth it once.',
       popularityScore: 80,
       scientificReference:
         'McRaven (2014) - Make Your Bed: Little Things That Can Change Your Life',
@@ -309,6 +317,7 @@ export const seedTemplates = internalMutation({
       icon: '🏃',
       iconColor: '#EF4444',
       name: '7-Minute Workout',
+      startSmallVersion: 'Do two push-ups (or two squats).',
       popularityScore: 98,
       scientificLink:
         'https://journals.lww.com/acsm-healthfitness/fulltext/2013/05000/high_intensity_circuit_training_using_body_weight_.5.aspx',
@@ -330,6 +339,7 @@ export const seedTemplates = internalMutation({
       icon: '👟',
       iconColor: '#8B5CF6',
       name: '10,000 Steps',
+      startSmallVersion: 'Walk to the end of the block and back.',
       popularityScore: 94,
       scientificReference:
         'Lee et al. (2019) - Association of step volume and intensity',
@@ -350,6 +360,7 @@ export const seedTemplates = internalMutation({
       icon: '💪',
       iconColor: '#059669',
       name: 'Strength Training',
+      startSmallVersion: 'Do 5 push-ups against the wall.',
       popularityScore: 91,
       scientificReference:
         'Westcott (2012) - Resistance training health benefits',
@@ -364,6 +375,7 @@ export const seedTemplates = internalMutation({
       icon: '🤸',
       iconColor: '#EC4899',
       name: 'Stretching Routine',
+      startSmallVersion: 'Reach for your toes once.',
       popularityScore: 86,
       scientificReference:
         'Behm et al. (2016) - Acute effects of muscle stretching',
@@ -379,6 +391,7 @@ export const seedTemplates = internalMutation({
       icon: '🚫',
       iconColor: '#DC2626',
       name: 'No Added Sugar',
+      startSmallVersion: 'Skip the sugar in your next drink.',
       popularityScore: 89,
       scientificReference:
         'Yang et al. (2014) - Added sugar intake and cardiovascular disease',
@@ -393,6 +406,7 @@ export const seedTemplates = internalMutation({
       icon: '🥗',
       iconColor: '#059669',
       name: 'Meal Prepping',
+      startSmallVersion: 'Wash one piece of produce.',
       popularityScore: 83,
       scientificReference:
         'Wolfson & Bleich (2015) - Is cooking at home associated with better diet quality?',
@@ -407,6 +421,7 @@ export const seedTemplates = internalMutation({
       icon: '🧘‍♀️',
       iconColor: '#EC4899',
       name: 'Daily Yoga Practice',
+      startSmallVersion: 'Hold downward dog for one breath.',
       popularityScore: 87,
       scientificReference:
         'Cramer et al. (2014) - Yoga for anxiety and depression',
@@ -421,6 +436,7 @@ export const seedTemplates = internalMutation({
       icon: '🌾',
       iconColor: '#16A34A',
       name: 'High Fiber Diet',
+      startSmallVersion: 'Add one piece of fruit to your next meal.',
       popularityScore: 81,
       scientificReference:
         'McKeown et al. (2009) - Dietary fiber intake and mortality',
@@ -435,6 +451,7 @@ export const seedTemplates = internalMutation({
       icon: '🥤',
       iconColor: '#0284C7',
       name: 'Hydration Tracking',
+      startSmallVersion: 'Log one glass of water.',
       popularityScore: 88,
       scientificReference:
         'Riebl & Davy (2013) - The hydration equation: Update on water balance',
@@ -451,6 +468,7 @@ export const seedTemplates = internalMutation({
       icon: '🧠',
       iconColor: '#7C3AED',
       name: 'Deep Work Session',
+      startSmallVersion: 'Open the doc and write one sentence.',
       popularityScore: 96,
       scientificReference:
         'Newport (2016) - Deep Work: Rules for focused success',
@@ -471,6 +489,7 @@ export const seedTemplates = internalMutation({
       icon: '⏱️',
       iconColor: '#F97316',
       name: 'Pomodoro Technique',
+      startSmallVersion: 'Set a 5-minute timer and start.',
       popularityScore: 93,
       scientificReference: 'Cirillo (2006) - The Pomodoro Technique',
     });
@@ -484,6 +503,7 @@ export const seedTemplates = internalMutation({
       icon: '🎯',
       iconColor: '#0EA5E9',
       name: 'MIT - Most Important Task',
+      startSmallVersion: 'Write down today\'s one most important task.',
       popularityScore: 90,
       scientificReference:
         'Tracy (2007) - Eat That Frog! productivity principle',
@@ -498,6 +518,7 @@ export const seedTemplates = internalMutation({
       icon: '📧',
       iconColor: '#06B6D4',
       name: 'Inbox Zero',
+      startSmallVersion: 'Archive or delete one email.',
       popularityScore: 84,
       scientificReference: 'Mann (2007) - Inbox Zero email management system',
     });
@@ -511,6 +532,7 @@ export const seedTemplates = internalMutation({
       icon: '📝',
       iconColor: '#6366F1',
       name: 'Evening Planning',
+      startSmallVersion: 'Write tomorrow\'s first task on a sticky note.',
       popularityScore: 87,
       scientificReference: 'Baumeister (2011) - Decision fatigue research',
     });
@@ -524,6 +546,7 @@ export const seedTemplates = internalMutation({
       icon: '📅',
       iconColor: '#059669',
       name: 'Time Blocking',
+      startSmallVersion: 'Block 15 minutes on your calendar for one task.',
       popularityScore: 90,
       scientificReference: 'Cal Newport (2016) - Deep Work methodology',
     });
@@ -537,6 +560,7 @@ export const seedTemplates = internalMutation({
       icon: '📚',
       iconColor: '#7C3AED',
       name: 'Daily Learning',
+      startSmallVersion: 'Read one paragraph of something new.',
       popularityScore: 84,
       scientificReference:
         'Dweck (2006) - Mindset: The New Psychology of Success',
@@ -551,6 +575,7 @@ export const seedTemplates = internalMutation({
       icon: '🧹',
       iconColor: '#DC2626',
       name: 'Weekly Desk Cleanup',
+      startSmallVersion: 'Throw away one piece of trash from your desk.',
       popularityScore: 79,
       scientificReference:
         'McMains & Kastner (2011) - Interactions of top-down and bottom-up mechanisms in human visual cortex',
@@ -565,6 +590,7 @@ export const seedTemplates = internalMutation({
       icon: '⏰',
       iconColor: '#F59E0B',
       name: 'Work Breaks',
+      startSmallVersion: 'Stand up and stretch for 30 seconds.',
       popularityScore: 85,
       scientificReference:
         'Trougakos et al. (2014) - Having to do it all: The effects of resource depletion',
@@ -580,6 +606,7 @@ export const seedTemplates = internalMutation({
       icon: '🙏',
       iconColor: '#F59E0B',
       name: 'Gratitude Journaling',
+      startSmallVersion: 'Name one thing you\'re grateful for.',
       popularityScore: 97,
       scientificLink:
         'https://greatergood.berkeley.edu/pdfs/GratitudePDFs/6Emmons-BlessingsBurdens.pdf',
@@ -602,6 +629,7 @@ export const seedTemplates = internalMutation({
       icon: '🌬️',
       iconColor: '#14B8A6',
       name: 'Breathwork Practice',
+      startSmallVersion: 'Take one slow, deep breath.',
       popularityScore: 91,
       scientificReference:
         'Ma et al. (2017) - Breathing meditation for stress reduction',
@@ -617,6 +645,7 @@ export const seedTemplates = internalMutation({
       icon: '🌙',
       iconColor: '#6366F1',
       name: 'Evening Reflection',
+      startSmallVersion: 'Name one thing that went well today.',
       popularityScore: 88,
       scientificReference: 'Kolb (1984) - Experiential learning and reflection',
     });
@@ -630,6 +659,7 @@ export const seedTemplates = internalMutation({
       icon: '📵',
       iconColor: '#10B981',
       name: 'Digital Detox Hour',
+      startSmallVersion: 'Put your phone in another room for 60 seconds.',
       popularityScore: 85,
       scientificReference:
         'Exelmans & Van den Bulck (2016) - Bedtime mobile phone use',
@@ -645,6 +675,7 @@ export const seedTemplates = internalMutation({
       icon: '🌲',
       iconColor: '#059669',
       name: 'Walking in Nature',
+      startSmallVersion: 'Step outside for one full minute.',
       popularityScore: 93,
       scientificReference:
         'Hansen et al. (2017) - Shinrin-yoku (forest bathing) benefits',
@@ -659,6 +690,7 @@ export const seedTemplates = internalMutation({
       icon: '💆',
       iconColor: '#EC4899',
       name: 'Progressive Muscle Relaxation',
+      startSmallVersion: 'Clench and release your fists once.',
       popularityScore: 82,
       scientificReference: 'Jacobson (1929) - Progressive relaxation technique',
     });
@@ -672,6 +704,7 @@ export const seedTemplates = internalMutation({
       icon: '❤️',
       iconColor: '#EF4444',
       name: 'Loving-Kindness Meditation',
+      startSmallVersion: 'Silently wish one person well.',
       popularityScore: 81,
       scientificReference:
         'Fredrickson et al. (2008) - Open hearts build lives: positive emotions',
@@ -686,6 +719,7 @@ export const seedTemplates = internalMutation({
       icon: '✨',
       iconColor: '#F59E0B',
       name: 'Positive Journaling',
+      startSmallVersion: 'Write one good thing from today.',
       popularityScore: 86,
       scientificReference:
         'Lyubomirsky (2008) - The How of Happiness: A Scientific Approach',
@@ -700,6 +734,7 @@ export const seedTemplates = internalMutation({
       icon: '🍽️',
       iconColor: '#059669',
       name: 'Mindful Eating',
+      startSmallVersion: 'Take one bite slowly and notice the taste.',
       popularityScore: 79,
       scientificReference:
         'Kristeller & Wolever (2011) - Mindfulness-based eating awareness training',
@@ -715,6 +750,7 @@ export const seedTemplates = internalMutation({
       icon: '☀️',
       iconColor: '#F59E0B',
       name: 'Morning Sunlight Viewing',
+      startSmallVersion: 'Step outside and face the sun for 30 seconds.',
       popularityScore: 95,
       scientificLink: 'https://hubermanlab.com/toolkit-for-sleep/',
       scientificReference:
@@ -736,6 +772,7 @@ export const seedTemplates = internalMutation({
       icon: '⏰',
       iconColor: '#B45309',
       name: 'Delay Caffeine 90 Minutes',
+      startSmallVersion: 'Drink one glass of water before your coffee.',
       popularityScore: 92,
       scientificLink: 'https://hubermanlab.com/toolkit-for-sleep/',
       scientificReference:
@@ -757,6 +794,7 @@ export const seedTemplates = internalMutation({
       icon: '🚴',
       iconColor: '#2563EB',
       name: 'Zone 2 Cardio Training',
+      startSmallVersion: 'Walk briskly for 5 minutes.',
       popularityScore: 90,
       scientificLink:
         'https://hubermanlab.com/zone-2-training-for-endurance-and-longevity/',
@@ -774,6 +812,7 @@ export const seedTemplates = internalMutation({
       icon: '🧊',
       iconColor: '#38BDF8',
       name: 'Deliberate Cold Exposure',
+      startSmallVersion: 'End your shower with 10 seconds of cold.',
       popularityScore: 88,
       scientificLink:
         'https://hubermanlab.com/optimal-deliberate-cold-exposure-protocols/',
@@ -791,6 +830,7 @@ export const seedTemplates = internalMutation({
       icon: '🛌',
       iconColor: '#7DD3FC',
       name: 'NSDR Practice',
+      startSmallVersion: 'Lie down and breathe slowly for 60 seconds.',
       popularityScore: 89,
       scientificLink:
         'https://hubermanlab.com/using-nsdr-to-improve-learning-skill-memory/',
@@ -808,6 +848,7 @@ export const seedTemplates = internalMutation({
       icon: '😮‍💨',
       iconColor: '#34D399',
       name: 'Physiological Sigh',
+      startSmallVersion: 'Do one double-inhale, long-exhale sigh.',
       popularityScore: 87,
       scientificLink:
         'https://hubermanlab.com/science-supported-tools-to-reduce-stress/',
@@ -825,6 +866,7 @@ export const seedTemplates = internalMutation({
       icon: '💡',
       iconColor: '#FDE047',
       name: 'Evening Light Dimming',
+      startSmallVersion: 'Turn off one overhead light.',
       popularityScore: 86,
       scientificLink: 'https://hubermanlab.com/toolkit-for-sleep/',
       scientificReference:
@@ -841,6 +883,7 @@ export const seedTemplates = internalMutation({
       icon: '🌡️',
       iconColor: '#0EA5E9',
       name: 'Cool Sleep Temperature',
+      startSmallVersion: 'Crack the window before bed.',
       popularityScore: 85,
       scientificLink: 'https://hubermanlab.com/toolkit-for-sleep/',
       scientificReference:
@@ -856,6 +899,7 @@ export const seedTemplates = internalMutation({
       icon: '🍳',
       iconColor: '#F97316',
       name: 'Morning Protein Protocol',
+      startSmallVersion: 'Eat one boiled egg.',
       popularityScore: 84,
       scientificLink: 'https://hubermanlab.com/toolkit-for-sleep/',
       scientificReference:
@@ -871,6 +915,7 @@ export const seedTemplates = internalMutation({
       icon: '🍽️',
       iconColor: '#10B981',
       name: 'Time-Restricted Eating',
+      startSmallVersion: 'Note your first and last bite times today.',
       popularityScore: 88,
       scientificLink: 'https://hubermanlab.com/toolkit-for-sleep/',
       scientificReference:
@@ -887,6 +932,7 @@ export const seedTemplates = internalMutation({
       icon: '⏰',
       iconColor: '#7C3AED',
       name: '16:8 Intermittent Fasting',
+      startSmallVersion: 'Push breakfast back by 30 minutes.',
       popularityScore: 89,
       scientificLink: 'https://hubermanlab.com/toolkit-for-sleep/',
       scientificReference:
@@ -903,6 +949,7 @@ export const seedTemplates = internalMutation({
       icon: '🧖',
       iconColor: '#DC2626',
       name: 'Sauna Therapy',
+      startSmallVersion: 'Sit in a steamy bathroom for 2 minutes.',
       popularityScore: 83,
       scientificLink:
         'https://hubermanlab.com/using-sauna-for-health-optimization/',
@@ -920,6 +967,7 @@ export const seedTemplates = internalMutation({
       icon: '😴',
       iconColor: '#1E40AF',
       name: 'Sleep Optimization',
+      startSmallVersion: 'Set tonight\'s bedtime alarm.',
       popularityScore: 91,
       scientificLink: 'https://hubermanlab.com/toolkit-for-sleep/',
       scientificReference: 'Huberman Lab (2023) - Complete sleep toolkit',
@@ -935,6 +983,7 @@ export const seedTemplates = internalMutation({
       icon: '🌙',
       iconColor: '#0F172A',
       name: 'Darkness Before Sleep',
+      startSmallVersion: 'Close the curtains 60 minutes before bed.',
       popularityScore: 87,
       scientificLink: 'https://hubermanlab.com/toolkit-for-sleep/',
       scientificReference:
@@ -950,6 +999,7 @@ export const seedTemplates = internalMutation({
       icon: '🌡️',
       iconColor: '#06B6D4',
       name: 'Optimal Sleep Temperature',
+      startSmallVersion: 'Lower the thermostat one degree.',
       popularityScore: 85,
       scientificLink: 'https://hubermanlab.com/toolkit-for-sleep/',
       scientificReference:
@@ -966,6 +1016,7 @@ export const seedTemplates = internalMutation({
       icon: '📞',
       iconColor: '#8B5CF6',
       name: 'Daily Social Call',
+      startSmallVersion: 'Send one "thinking of you" text.',
       popularityScore: 87,
       scientificReference:
         'Holt-Lunstad et al. (2010) - Social relationships and mortality',
@@ -985,6 +1036,7 @@ export const seedTemplates = internalMutation({
       icon: '💬',
       iconColor: '#06B6D4',
       name: 'Reach Out Daily',
+      startSmallVersion: 'Send one "thinking of you" text to a friend.',
       popularityScore: 84,
       scientificReference:
         'Gable et al. (2004) - The benefits of supportive relationships',
@@ -999,6 +1051,7 @@ export const seedTemplates = internalMutation({
       icon: '💑',
       iconColor: '#EC4899',
       name: 'Quality Partner Time',
+      startSmallVersion: 'Ask your partner, "how was your day?" with phone down.',
       popularityScore: 86,
       scientificReference:
         'Gottman (1999) - The Seven Principles for Making Marriage Work',
@@ -1013,6 +1066,7 @@ export const seedTemplates = internalMutation({
       icon: '🙏',
       iconColor: '#F59E0B',
       name: 'Express Gratitude',
+      startSmallVersion: 'Tell one person "thank you" out loud.',
       popularityScore: 83,
       scientificReference:
         'Algoe et al. (2010) - Gratitude and relationship satisfaction',
@@ -1027,6 +1081,7 @@ export const seedTemplates = internalMutation({
       icon: '🤝',
       iconColor: '#10B981',
       name: 'Acts of Service',
+      startSmallVersion: 'Hold the door for someone today.',
       popularityScore: 81,
       scientificReference: 'Post (2005) - Altruism, happiness, and health',
     });
@@ -1040,6 +1095,7 @@ export const seedTemplates = internalMutation({
       icon: '👥',
       iconColor: '#6366F1',
       name: 'Group Activities',
+      startSmallVersion: 'Reply yes to one invitation.',
       popularityScore: 79,
       scientificReference: 'Hawkley & Cacioppo (2010) - Loneliness and health',
     });
@@ -1054,6 +1110,7 @@ export const seedTemplates = internalMutation({
       icon: '🛏️',
       iconColor: '#1E3A8A',
       name: 'Consistent Bedtime',
+      startSmallVersion: 'Set tonight\'s bedtime alarm.',
       popularityScore: 92,
       scientificReference:
         'Walker (2017) - Why We Sleep: Unlocking the Power of Sleep',
@@ -1073,6 +1130,7 @@ export const seedTemplates = internalMutation({
       icon: '📱',
       iconColor: '#DC2626',
       name: 'No Screens Before Bed',
+      startSmallVersion: 'Put your phone in another room 5 minutes before bed.',
       popularityScore: 89,
       scientificLink: 'https://www.sleep.org/blue-light-and-sleep/',
       scientificReference:
@@ -1088,6 +1146,7 @@ export const seedTemplates = internalMutation({
       icon: '😴',
       iconColor: '#6366F1',
       name: '4-7-8 Breathing',
+      startSmallVersion: 'Do one round of 4-7-8 breathing.',
       popularityScore: 86,
       scientificReference:
         'Weil (2015) - Breathing: The Master Key to Self-Healing',
@@ -1102,6 +1161,7 @@ export const seedTemplates = internalMutation({
       icon: '☕',
       iconColor: '#92400E',
       name: 'No Afternoon Caffeine',
+      startSmallVersion: 'Skip your next afternoon coffee.',
       popularityScore: 88,
       scientificReference:
         'Drake et al. (2013) - Caffeine effects on sleep taken 0, 3, or 6 hours before going to bed',
@@ -1116,6 +1176,7 @@ export const seedTemplates = internalMutation({
       icon: '🌑',
       iconColor: '#0F172A',
       name: 'Sleep in Complete Darkness',
+      startSmallVersion: 'Pull the curtains fully closed tonight.',
       popularityScore: 84,
       scientificReference:
         'Gooley et al. (2011) - Exposure to room light before bedtime',
@@ -1130,6 +1191,7 @@ export const seedTemplates = internalMutation({
       icon: '🛁',
       iconColor: '#3B82F6',
       name: 'Pre-Sleep Warm Bath',
+      startSmallVersion: 'Run hot water over your hands and face.',
       popularityScore: 81,
       scientificReference:
         'Harding et al. (2019) - Systematic review of warm baths and sleep quality',
@@ -1144,6 +1206,7 @@ export const seedTemplates = internalMutation({
       icon: '💤',
       iconColor: '#4338CA',
       name: '7-9 Hours Sleep',
+      startSmallVersion: 'Set tonight\'s bedtime alarm.',
       popularityScore: 95,
       scientificLink:
         'https://www.sleepfoundation.org/how-sleep-works/how-much-sleep-do-we-really-need',
@@ -1165,6 +1228,7 @@ export const seedTemplates = internalMutation({
       icon: '🚫',
       iconColor: '#991B1B',
       name: 'No Evening Alcohol',
+      startSmallVersion: 'Pour yourself sparkling water tonight.',
       popularityScore: 78,
       scientificReference: 'Ebrahim et al. (2013) - Alcohol and sleep review',
     });
@@ -1179,6 +1243,7 @@ export const seedTemplates = internalMutation({
       icon: '🔄',
       iconColor: '#7C3AED',
       name: 'Spaced Repetition',
+      startSmallVersion: 'Review one flashcard.',
       popularityScore: 91,
       scientificLink: 'https://www.gwern.net/Spaced-repetition',
       scientificReference:
@@ -1194,6 +1259,7 @@ export const seedTemplates = internalMutation({
       icon: '🌍',
       iconColor: '#059669',
       name: 'Daily Language Practice',
+      startSmallVersion: 'Look up one new word.',
       popularityScore: 87,
       scientificReference:
         'Nation (2001) - Learning Vocabulary in Another Language',
@@ -1208,6 +1274,7 @@ export const seedTemplates = internalMutation({
       icon: '👨‍🏫',
       iconColor: '#DC2626',
       name: 'Feynman Technique',
+      startSmallVersion: 'Explain one idea out loud to yourself.',
       popularityScore: 89,
       scientificReference: 'Chi et al. (1989) - Self-explanations and learning',
     });
@@ -1221,6 +1288,7 @@ export const seedTemplates = internalMutation({
       icon: '🧩',
       iconColor: '#2563EB',
       name: 'Active Recall',
+      startSmallVersion: 'Close the book and recall one fact.',
       popularityScore: 93,
       scientificReference:
         'Roediger & Karpicke (2006) - Test-enhanced learning',
@@ -1235,6 +1303,7 @@ export const seedTemplates = internalMutation({
       icon: '📖',
       iconColor: '#B45309',
       name: 'Daily Reading',
+      startSmallVersion: 'Read one page.',
       popularityScore: 94,
       scientificReference: 'Krashen (2004) - The Power of Reading',
     });
@@ -1248,6 +1317,7 @@ export const seedTemplates = internalMutation({
       icon: '🎧',
       iconColor: '#DC2626',
       name: 'Audio Learning',
+      startSmallVersion: 'Listen to a podcast for 60 seconds.',
       popularityScore: 85,
       scientificReference:
         'Rogowsky et al. (2016) - Matching learning style to instructional method',
@@ -1262,6 +1332,7 @@ export const seedTemplates = internalMutation({
       icon: '🎵',
       iconColor: '#EC4899',
       name: 'Music Practice',
+      startSmallVersion: 'Play one scale.',
       popularityScore: 82,
       scientificReference:
         'Herholz & Zatorre (2012) - Musical training as framework for brain plasticity',
@@ -1276,6 +1347,7 @@ export const seedTemplates = internalMutation({
       icon: '✍️',
       iconColor: '#0EA5E9',
       name: 'Handwritten Notes',
+      startSmallVersion: 'Write one sentence by hand.',
       popularityScore: 88,
       scientificReference:
         'Mueller & Oppenheimer (2014) - The Pen Is Mightier Than the Keyboard',
@@ -1290,6 +1362,7 @@ export const seedTemplates = internalMutation({
       icon: '📺',
       iconColor: '#F59E0B',
       name: 'Educational Videos',
+      startSmallVersion: 'Watch a 60-second educational clip.',
       popularityScore: 84,
       scientificReference: 'Mayer (2009) - Multimedia Learning principles',
     });
@@ -1303,6 +1376,7 @@ export const seedTemplates = internalMutation({
       icon: '👥',
       iconColor: '#8B5CF6',
       name: 'Study Groups',
+      startSmallVersion: 'Send one "want to study?" message.',
       popularityScore: 80,
       scientificReference: 'Slavin (1996) - Research on cooperative learning',
     });
@@ -1317,6 +1391,7 @@ export const seedTemplates = internalMutation({
       icon: '💰',
       iconColor: '#059669',
       name: 'Expense Tracking',
+      startSmallVersion: 'Log one expense from today.',
       popularityScore: 90,
       scientificReference:
         'Thaler & Sunstein (2008) - Nudge: Improving Decisions About Health, Wealth, and Happiness',
@@ -1331,6 +1406,7 @@ export const seedTemplates = internalMutation({
       icon: '🏦',
       iconColor: '#2563EB',
       name: 'Automatic Savings',
+      startSmallVersion: 'Move $1 to savings.',
       popularityScore: 93,
       scientificReference: 'Bach (2004) - The Automatic Millionaire',
     });
@@ -1344,6 +1420,7 @@ export const seedTemplates = internalMutation({
       icon: '📊',
       iconColor: '#DC2626',
       name: 'Weekly Budget Review',
+      startSmallVersion: 'Open your bank app and look once.',
       popularityScore: 86,
       scientificReference: 'Ramsey (2013) - The Total Money Makeover',
     });
@@ -1357,6 +1434,7 @@ export const seedTemplates = internalMutation({
       icon: '📈',
       iconColor: '#059669',
       name: 'Regular Investing',
+      startSmallVersion: 'Invest $1 today.',
       popularityScore: 88,
       scientificReference:
         'Bogle (2007) - The Little Book of Common Sense Investing',
@@ -1371,6 +1449,7 @@ export const seedTemplates = internalMutation({
       icon: '⏰',
       iconColor: '#F59E0B',
       name: '24-Hour Purchase Rule',
+      startSmallVersion: 'Wait 60 seconds before clicking buy.',
       popularityScore: 84,
       scientificReference:
         'Mischel (2014) - The Marshmallow Test: Mastering Self-Control',
@@ -1385,6 +1464,7 @@ export const seedTemplates = internalMutation({
       icon: '🍱',
       iconColor: '#16A34A',
       name: 'Bring Lunch',
+      startSmallVersion: 'Make one item for tomorrow\'s lunch.',
       popularityScore: 82,
       scientificReference: 'Ramsey (2013) - Small expenses compound over time',
     });
@@ -1398,6 +1478,7 @@ export const seedTemplates = internalMutation({
       icon: '✂️',
       iconColor: '#DC2626',
       name: 'Subscription Audit',
+      startSmallVersion: 'Open one subscription and check the price.',
       popularityScore: 80,
       scientificReference:
         'Ariely (2008) - Predictably Irrational subscription traps',
@@ -1412,6 +1493,7 @@ export const seedTemplates = internalMutation({
       icon: '📰',
       iconColor: '#0EA5E9',
       name: 'Financial Education',
+      startSmallVersion: 'Read one paragraph about money.',
       popularityScore: 85,
       scientificReference:
         'Lusardi & Mitchell (2014) - The Economic Importance of Financial Literacy',
@@ -1426,6 +1508,7 @@ export const seedTemplates = internalMutation({
       icon: '💬',
       iconColor: '#7C3AED',
       name: 'Negotiate Bills',
+      startSmallVersion: 'Open one bill and find the customer service number.',
       popularityScore: 78,
       scientificReference: 'Ramsey (2013) - The power of negotiation',
     });
@@ -1439,6 +1522,7 @@ export const seedTemplates = internalMutation({
       icon: '🎯',
       iconColor: '#059669',
       name: 'Retirement Contributions',
+      startSmallVersion: 'Move $1 to your retirement account.',
       popularityScore: 91,
       scientificReference:
         'Benartzi & Thaler (2007) - Save More Tomorrow program',
@@ -1454,6 +1538,7 @@ export const seedTemplates = internalMutation({
       icon: '✍️',
       iconColor: '#8B5CF6',
       name: 'Morning Freewriting',
+      startSmallVersion: 'Write one sentence as fast as you can.',
       popularityScore: 87,
       scientificReference: 'Elbow (1998) - Writing Without Teachers',
     });
@@ -1467,6 +1552,7 @@ export const seedTemplates = internalMutation({
       icon: '🎨',
       iconColor: '#EC4899',
       name: 'Daily Sketching',
+      startSmallVersion: 'Doodle for 30 seconds.',
       popularityScore: 83,
       scientificReference: 'Brown (2014) - The Doodle Revolution',
     });
@@ -1480,6 +1566,7 @@ export const seedTemplates = internalMutation({
       icon: '💡',
       iconColor: '#F59E0B',
       name: 'Idea Generation',
+      startSmallVersion: 'Write down one idea.',
       popularityScore: 89,
       scientificReference: 'Altucher (2014) - Becoming an Idea Machine',
     });
@@ -1493,6 +1580,7 @@ export const seedTemplates = internalMutation({
       icon: '📸',
       iconColor: '#0EA5E9',
       name: 'Daily Photography',
+      startSmallVersion: 'Take one photo of something around you.',
       popularityScore: 81,
       scientificReference:
         'Csikszentmihalyi (1996) - Creativity: Flow and the Psychology of Discovery',
@@ -1507,6 +1595,7 @@ export const seedTemplates = internalMutation({
       icon: '📝',
       iconColor: '#7C3AED',
       name: 'Creative Writing',
+      startSmallVersion: 'Write one sentence of fiction.',
       popularityScore: 80,
       scientificReference: 'Kaufman & Gregoire (2015) - Wired to Create',
     });
@@ -1520,6 +1609,7 @@ export const seedTemplates = internalMutation({
       icon: '🧠',
       iconColor: '#06B6D4',
       name: 'Divergent Thinking',
+      startSmallVersion: 'List two different uses for one object.',
       popularityScore: 84,
       scientificReference: 'Guilford (1967) - The Nature of Human Intelligence',
     });
@@ -1533,6 +1623,7 @@ export const seedTemplates = internalMutation({
       icon: '🔀',
       iconColor: '#10B981',
       name: 'Idea Mashup',
+      startSmallVersion: 'Combine two random words into a phrase.',
       popularityScore: 82,
       scientificReference: 'Johansson (2004) - The Medici Effect',
     });
@@ -1546,6 +1637,7 @@ export const seedTemplates = internalMutation({
       icon: '🖼️',
       iconColor: '#DC2626',
       name: 'Art Appreciation',
+      startSmallVersion: 'Open one art image and look for 30 seconds.',
       popularityScore: 77,
       scientificReference:
         'Leder et al. (2004) - A model of aesthetic appreciation',
@@ -1560,6 +1652,7 @@ export const seedTemplates = internalMutation({
       icon: '🎭',
       iconColor: '#F97316',
       name: 'Skill Exploration',
+      startSmallVersion: 'Watch a 60-second tutorial on a new skill.',
       popularityScore: 85,
       scientificReference: 'Carson (2010) - Your Creative Brain',
     });
@@ -1573,6 +1666,7 @@ export const seedTemplates = internalMutation({
       icon: '🚶‍♀️',
       iconColor: '#6366F1',
       name: 'Break Routines',
+      startSmallVersion: 'Take one different turn on your next walk.',
       popularityScore: 79,
       scientificReference:
         'Rock (2009) - Your Brain at Work: breaking patterns',
@@ -1822,6 +1916,7 @@ export const seedAdditionalTemplates = internalMutation({
       icon: '🧍',
       iconColor: '#10B981',
       name: 'Standing Every Hour',
+      startSmallVersion: 'Stand up and stretch for 10 seconds.',
       popularityScore: 91,
       scientificLink: 'https://pubmed.ncbi.nlm.nih.gov/22890825/',
       scientificReference:
@@ -1837,6 +1932,7 @@ export const seedAdditionalTemplates = internalMutation({
       icon: '🪑',
       iconColor: '#6366F1',
       name: 'Posture Check',
+      startSmallVersion: 'Roll your shoulders back once.',
       popularityScore: 84,
       scientificReference:
         'Carney et al. (2010) - Power posing: Brief nonverbal displays affect neuroendocrine levels',
@@ -1851,6 +1947,7 @@ export const seedAdditionalTemplates = internalMutation({
       icon: '🦶',
       iconColor: '#84CC16',
       name: 'Barefoot Grounding',
+      startSmallVersion: 'Stand barefoot on grass for 30 seconds.',
       popularityScore: 79,
       scientificLink: 'https://pubmed.ncbi.nlm.nih.gov/22291721/',
       scientificReference:
@@ -1866,6 +1963,7 @@ export const seedAdditionalTemplates = internalMutation({
       icon: '👁️',
       iconColor: '#0EA5E9',
       name: '20-20-20 Eye Rule',
+      startSmallVersion: 'Look out the window for 20 seconds.',
       popularityScore: 93,
       scientificReference:
         'American Optometric Association - Digital eye strain prevention guidelines',
@@ -1880,6 +1978,7 @@ export const seedAdditionalTemplates = internalMutation({
       icon: '👃',
       iconColor: '#14B8A6',
       name: 'Nasal Breathing',
+      startSmallVersion: 'Take three breaths through your nose.',
       popularityScore: 88,
       scientificReference:
         'Nestor (2020) - Breath: The New Science of a Lost Art',
@@ -1894,6 +1993,7 @@ export const seedAdditionalTemplates = internalMutation({
       icon: '🫀',
       iconColor: '#EF4444',
       name: 'VO2 Max Training',
+      startSmallVersion: 'Sprint up one flight of stairs.',
       popularityScore: 89,
       scientificLink: 'https://peterattiamd.com/outlive/',
       scientificReference:
@@ -1909,6 +2009,7 @@ export const seedAdditionalTemplates = internalMutation({
       icon: '⚖️',
       iconColor: '#8B5CF6',
       name: 'Balance Training',
+      startSmallVersion: 'Stand on one foot for 10 seconds.',
       popularityScore: 85,
       scientificReference:
         'Sherrington et al. (2019) - Exercise for preventing falls in older people living in the community',
@@ -1923,6 +2024,7 @@ export const seedAdditionalTemplates = internalMutation({
       icon: '✊',
       iconColor: '#F97316',
       name: 'Grip Strength Training',
+      startSmallVersion: 'Hang from a bar for 5 seconds.',
       popularityScore: 87,
       scientificLink: 'https://pubmed.ncbi.nlm.nih.gov/25953784/',
       scientificReference:
@@ -1938,6 +2040,7 @@ export const seedAdditionalTemplates = internalMutation({
       icon: '🛀',
       iconColor: '#F43F5E',
       name: 'Heat Therapy Bath',
+      startSmallVersion: 'Run a hot bath and dip your feet in.',
       popularityScore: 82,
       scientificReference:
         'Laukkanen et al. (2018) - Cardiovascular and other health benefits of passive heat therapy',
@@ -1952,6 +2055,7 @@ export const seedAdditionalTemplates = internalMutation({
       icon: '🙆',
       iconColor: '#0891B2',
       name: 'Daily Hanging',
+      startSmallVersion: 'Hang from a doorframe for 5 seconds.',
       popularityScore: 81,
       scientificReference:
         'McGill (2016) - Back Mechanic: spinal decompression techniques',
@@ -1966,6 +2070,7 @@ export const seedAdditionalTemplates = internalMutation({
       icon: '🚶',
       iconColor: '#22C55E',
       name: 'Post-Meal Walk (10 Minutes)',
+      startSmallVersion: 'Walk to the end of your hallway after eating.',
       popularityScore: 88,
       scientificLink: 'https://pubmed.ncbi.nlm.nih.gov/27747394/',
       scientificReference:
@@ -1981,6 +2086,7 @@ export const seedAdditionalTemplates = internalMutation({
       icon: '🪜',
       iconColor: '#EF4444',
       name: 'Exercise Snacks (Stair Climbs)',
+      startSmallVersion: 'Climb one flight of stairs.',
       popularityScore: 84,
       scientificLink: 'https://pubmed.ncbi.nlm.nih.gov/30649897/',
       scientificReference:
@@ -2000,6 +2106,7 @@ export const seedAdditionalTemplates = internalMutation({
       icon: '🧩',
       iconColor: '#A855F7',
       name: 'Brain Games',
+      startSmallVersion: 'Solve one easy puzzle on your phone.',
       popularityScore: 83,
       scientificReference:
         'Park et al. (2014) - The impact of sustained engagement on cognitive function in older adults',
@@ -2014,6 +2121,7 @@ export const seedAdditionalTemplates = internalMutation({
       icon: '📓',
       iconColor: '#64748B',
       name: 'Scheduled Worry Time',
+      startSmallVersion: 'Write one worry on paper.',
       popularityScore: 86,
       scientificReference:
         'Borkovec et al. (1990) - Stimulus control treatment for worry and insomnia',
@@ -2028,6 +2136,7 @@ export const seedAdditionalTemplates = internalMutation({
       icon: '🫥',
       iconColor: '#06B6D4',
       name: 'Body Scan Meditation',
+      startSmallVersion: 'Notice the feeling in your feet for 10 seconds.',
       popularityScore: 88,
       scientificReference:
         'Kabat-Zinn (1990) - Full Catastrophe Living: Using the Wisdom of Your Body and Mind',
@@ -2042,6 +2151,7 @@ export const seedAdditionalTemplates = internalMutation({
       icon: '🧠',
       iconColor: '#6366F1',
       name: '13-Minute Focus Meditation',
+      startSmallVersion: 'Take three slow breaths with eyes closed.',
       popularityScore: 90,
       scientificLink:
         'https://www.sciencedirect.com/science/article/abs/pii/S016643281830322X',
@@ -2064,6 +2174,7 @@ export const seedAdditionalTemplates = internalMutation({
       icon: '🧘‍♂️',
       iconColor: '#475569',
       name: 'Dopamine Reset',
+      startSmallVersion: 'Stay off your phone for 60 seconds.',
       popularityScore: 84,
       scientificReference:
         'Sepah (2019) - The Definitive Guide to Dopamine Fasting 2.0',
@@ -2078,6 +2189,7 @@ export const seedAdditionalTemplates = internalMutation({
       icon: '🔢',
       iconColor: '#7C3AED',
       name: 'Dual N-Back Training',
+      startSmallVersion: 'Do one round of N-back.',
       popularityScore: 80,
       scientificLink: 'https://pubmed.ncbi.nlm.nih.gov/18425231/',
       scientificReference:
@@ -2097,6 +2209,7 @@ export const seedAdditionalTemplates = internalMutation({
       icon: '🛋️',
       iconColor: '#4338CA',
       name: 'Weighted Blanket Sleep',
+      startSmallVersion: 'Drape a heavy blanket over your legs for 60 seconds.',
       popularityScore: 82,
       scientificReference:
         'Ackerley et al. (2015) - Positive effects of a weighted blanket on insomnia',
@@ -2111,6 +2224,7 @@ export const seedAdditionalTemplates = internalMutation({
       icon: '🔊',
       iconColor: '#94A3B8',
       name: 'Sleep Sound Machine',
+      startSmallVersion: 'Play 30 seconds of pink noise.',
       popularityScore: 79,
       scientificReference:
         'Messineo et al. (2017) - Broadband sound administration improves sleep onset latency',
@@ -2125,6 +2239,7 @@ export const seedAdditionalTemplates = internalMutation({
       icon: '💊',
       iconColor: '#10B981',
       name: 'Evening Magnesium',
+      startSmallVersion: 'Take your magnesium pill.',
       popularityScore: 85,
       scientificLink: 'https://pubmed.ncbi.nlm.nih.gov/23853635/',
       scientificReference:
@@ -2140,6 +2255,7 @@ export const seedAdditionalTemplates = internalMutation({
       icon: '🛌',
       iconColor: '#1E40AF',
       name: 'Stimulus Control (CBT-I)',
+      startSmallVersion: 'Sit on the bed only when you\'re sleepy tonight.',
       popularityScore: 86,
       scientificLink: 'https://pubmed.ncbi.nlm.nih.gov/37496454/',
       scientificReference:
@@ -2159,6 +2275,7 @@ export const seedAdditionalTemplates = internalMutation({
       icon: '🌈',
       iconColor: '#F59E0B',
       name: '30 Plants Per Week',
+      startSmallVersion: 'Add one new vegetable to today\'s plate.',
       popularityScore: 92,
       scientificLink: 'https://pubmed.ncbi.nlm.nih.gov/29795809/',
       scientificReference:
@@ -2174,6 +2291,7 @@ export const seedAdditionalTemplates = internalMutation({
       icon: '🥬',
       iconColor: '#84CC16',
       name: 'Daily Fermented Foods',
+      startSmallVersion: 'Take one bite of yogurt or kimchi.',
       popularityScore: 90,
       scientificLink: 'https://pubmed.ncbi.nlm.nih.gov/34256014/',
       scientificReference:
@@ -2189,6 +2307,7 @@ export const seedAdditionalTemplates = internalMutation({
       icon: '🐟',
       iconColor: '#0284C7',
       name: 'Omega-3 Rich Foods',
+      startSmallVersion: 'Eat a few walnuts.',
       popularityScore: 88,
       scientificReference:
         'Dyall (2015) - Long-chain omega-3 fatty acids and the brain: A review of evidence',
@@ -2203,6 +2322,7 @@ export const seedAdditionalTemplates = internalMutation({
       icon: '🥗',
       iconColor: '#22C55E',
       name: 'Eat Greens First',
+      startSmallVersion: 'Take one bite of vegetables before anything else.',
       popularityScore: 86,
       scientificReference:
         'Imai et al. (2014) - Eating vegetables before carbohydrates improves postprandial glucose',
@@ -2217,6 +2337,7 @@ export const seedAdditionalTemplates = internalMutation({
       icon: '🍽️',
       iconColor: '#EF4444',
       name: 'No Late Night Eating',
+      startSmallVersion: 'Set a kitchen-closed timer.',
       popularityScore: 84,
       scientificReference:
         'Fujiwara et al. (2005) - Association between dinner-to-bed time and gastro-esophageal reflux disease',
@@ -2231,6 +2352,7 @@ export const seedAdditionalTemplates = internalMutation({
       icon: '😋',
       iconColor: '#F97316',
       name: 'Mindful Chewing',
+      startSmallVersion: 'Chew your first bite 20 times.',
       popularityScore: 78,
       scientificReference:
         'Zhu & Hollis (2014) - Increasing the number of chews before swallowing reduces meal size',
@@ -2245,6 +2367,7 @@ export const seedAdditionalTemplates = internalMutation({
       icon: '🍗',
       iconColor: '#F97316',
       name: 'Protein Per Meal (25–30g)',
+      startSmallVersion: 'Add one egg to your next meal.',
       popularityScore: 85,
       scientificLink: 'https://pubmed.ncbi.nlm.nih.gov/19057193/',
       scientificReference:
@@ -2260,6 +2383,7 @@ export const seedAdditionalTemplates = internalMutation({
       icon: '🦷',
       iconColor: '#0EA5E9',
       name: 'Interdental Cleaning',
+      startSmallVersion: 'Floss between two teeth.',
       popularityScore: 82,
       scientificLink: 'https://pubmed.ncbi.nlm.nih.gov/22161438/',
       scientificReference:
@@ -2275,6 +2399,7 @@ export const seedAdditionalTemplates = internalMutation({
       icon: '🧼',
       iconColor: '#10B981',
       name: 'Hand Hygiene (Key Times)',
+      startSmallVersion: 'Wash your hands once before your next meal.',
       popularityScore: 83,
       scientificLink: 'https://pubmed.ncbi.nlm.nih.gov/18556606/',
       scientificReference:
@@ -2290,6 +2415,7 @@ export const seedAdditionalTemplates = internalMutation({
       icon: '🧴',
       iconColor: '#FBBF24',
       name: 'Daily Sunscreen',
+      startSmallVersion: 'Dot sunscreen on your nose.',
       popularityScore: 84,
       scientificLink: 'https://pubmed.ncbi.nlm.nih.gov/21135266/',
       scientificReference:
@@ -2309,6 +2435,7 @@ export const seedAdditionalTemplates = internalMutation({
       icon: '🪴',
       iconColor: '#22C55E',
       name: 'House Plant Care',
+      startSmallVersion: 'Touch your plant\'s soil with one finger.',
       popularityScore: 80,
       scientificReference:
         'Lohr et al. (2010) - Interior plants may improve worker productivity',
@@ -2323,6 +2450,7 @@ export const seedAdditionalTemplates = internalMutation({
       icon: '🗑️',
       iconColor: '#64748B',
       name: 'Daily Declutter',
+      startSmallVersion: 'Toss one item you don\'t use.',
       popularityScore: 83,
       scientificReference:
         'Saxbe & Repetti (2010) - No place like home: Home tours correlate with cortisol levels',
@@ -2337,6 +2465,7 @@ export const seedAdditionalTemplates = internalMutation({
       icon: '🪟',
       iconColor: '#38BDF8',
       name: 'Fresh Air Break',
+      startSmallVersion: 'Open a window for 60 seconds.',
       popularityScore: 81,
       scientificLink: 'https://pubmed.ncbi.nlm.nih.gov/26502459/',
       scientificReference:
@@ -2352,6 +2481,7 @@ export const seedAdditionalTemplates = internalMutation({
       icon: '😂',
       iconColor: '#FBBF24',
       name: 'Daily Laughter',
+      startSmallVersion: 'Watch one short comedy clip.',
       popularityScore: 85,
       scientificReference:
         'Bennett & Lengacher (2009) - Humor and laughter may influence health: Complementary therapies review',
@@ -2366,6 +2496,7 @@ export const seedAdditionalTemplates = internalMutation({
       icon: '🐕',
       iconColor: '#F97316',
       name: 'Pet Time',
+      startSmallVersion: 'Pet your animal for 30 seconds.',
       popularityScore: 89,
       scientificReference:
         'Beetz et al. (2012) - Psychosocial and psychophysiological effects of human-animal interactions',
@@ -2384,6 +2515,7 @@ export const seedAdditionalTemplates = internalMutation({
       icon: '👂',
       iconColor: '#8B5CF6',
       name: 'Deep Listening',
+      startSmallVersion: 'Listen to someone for 60 seconds without speaking.',
       popularityScore: 84,
       scientificReference:
         'Rogers (1951) - Client-centered therapy: Its current practice, implications, and theory',
@@ -2398,6 +2530,7 @@ export const seedAdditionalTemplates = internalMutation({
       icon: '💝',
       iconColor: '#EC4899',
       name: 'Random Act of Kindness',
+      startSmallVersion: 'Smile at one stranger today.',
       popularityScore: 91,
       scientificReference:
         'Lyubomirsky et al. (2005) - Pursuing happiness: The architecture of sustainable change',
@@ -2412,6 +2545,7 @@ export const seedAdditionalTemplates = internalMutation({
       icon: '👥',
       iconColor: '#3B82F6',
       name: 'Face-to-Face Time',
+      startSmallVersion: 'Say hi to one person in person today.',
       popularityScore: 87,
       scientificReference:
         'Helliwell & Huang (2013) - Comparing the happiness effects of real and online friends',
@@ -2426,6 +2560,7 @@ export const seedAdditionalTemplates = internalMutation({
       icon: '🚫',
       iconColor: '#DC2626',
       name: 'Boundary Practice',
+      startSmallVersion: 'Say "let me get back to you" to one ask.',
       popularityScore: 82,
       scientificReference:
         'Cloud & Townsend (1992) - Boundaries: When to Say Yes, How to Say No',
@@ -2440,6 +2575,7 @@ export const seedAdditionalTemplates = internalMutation({
       icon: '⭐',
       iconColor: '#FBBF24',
       name: 'Daily Compliment',
+      startSmallVersion: 'Tell one person what you appreciate about them.',
       popularityScore: 83,
       scientificReference:
         'Izuma et al. (2008) - Processing of social and monetary rewards in the human striatum',
@@ -2458,6 +2594,7 @@ export const seedAdditionalTemplates = internalMutation({
       icon: '📵',
       iconColor: '#EF4444',
       name: 'Phone-Free Meals',
+      startSmallVersion: 'Put your phone face-down for one bite.',
       popularityScore: 90,
       scientificReference:
         'Dwyer et al. (2018) - Smartphone use undermines enjoyment of face-to-face social interactions',
@@ -2472,6 +2609,7 @@ export const seedAdditionalTemplates = internalMutation({
       icon: '📱',
       iconColor: '#6366F1',
       name: 'Social Media Limit',
+      startSmallVersion: 'Close the app after 60 seconds.',
       popularityScore: 88,
       scientificLink: 'https://pubmed.ncbi.nlm.nih.gov/30570350/',
       scientificReference:
@@ -2487,6 +2625,7 @@ export const seedAdditionalTemplates = internalMutation({
       icon: '🎯',
       iconColor: '#059669',
       name: 'Single-Tasking',
+      startSmallVersion: 'Close every tab except the one you need.',
       popularityScore: 89,
       scientificReference:
         'Ophir et al. (2009) - Cognitive control in media multitaskers',
@@ -2501,6 +2640,7 @@ export const seedAdditionalTemplates = internalMutation({
       icon: '✈️',
       iconColor: '#0EA5E9',
       name: 'Airplane Mode Morning',
+      startSmallVersion: 'Toggle airplane mode on for 5 minutes after waking.',
       popularityScore: 86,
       scientificReference:
         'Newport (2019) - Digital Minimalism: Choosing a Focused Life in a Noisy World',
@@ -2515,6 +2655,7 @@ export const seedAdditionalTemplates = internalMutation({
       icon: '🧩',
       iconColor: '#7C3AED',
       name: 'If-Then Planning',
+      startSmallVersion: 'Write one if-then sentence on a sticky note.',
       popularityScore: 83,
       scientificLink:
         'https://www.sciencedirect.com/science/article/pii/S0065260106380021',
@@ -2579,6 +2720,7 @@ export const seedNewScienceTemplates = internalMutation({
       icon: '🦷',
       iconColor: '#FFFFFF',
       name: 'Daily Flossing',
+      startSmallVersion: 'Floss between two teeth.',
       popularityScore: 88,
       scientificLink: 'https://pubmed.ncbi.nlm.nih.gov/38116705/',
       scientificReference:
@@ -2594,6 +2736,7 @@ export const seedNewScienceTemplates = internalMutation({
       icon: '🦷',
       iconColor: '#0EA5E9',
       name: 'Regular Dental Checkups',
+      startSmallVersion: 'Open the calendar and pick a dentist date.',
       popularityScore: 85,
       scientificReference:
         'American Dental Association - Preventive care recommendations',
@@ -2612,6 +2755,7 @@ export const seedNewScienceTemplates = internalMutation({
       icon: '🦴',
       iconColor: '#F3F4F6',
       name: 'Calcium Intake Tracking',
+      startSmallVersion: 'Note one calcium-rich food you ate.',
       popularityScore: 86,
       scientificLink:
         'https://www.hopkinsmedicine.org/health/conditions-and-diseases/osteoporosis',
@@ -2628,6 +2772,7 @@ export const seedNewScienceTemplates = internalMutation({
       icon: '🏋️',
       iconColor: '#6366F1',
       name: 'Bone-Strengthening Exercise',
+      startSmallVersion: 'Do 5 bodyweight squats.',
       popularityScore: 89,
       scientificReference:
         'National Osteoporosis Foundation - Weight-bearing exercise guidelines',
@@ -2646,6 +2791,7 @@ export const seedNewScienceTemplates = internalMutation({
       icon: '👂',
       iconColor: '#F59E0B',
       name: 'Hearing Protection',
+      startSmallVersion: 'Tuck earplugs into your bag.',
       popularityScore: 84,
       scientificLink:
         'https://www.nidcd.nih.gov/news/2021/noise-induced-hearing-loss-preventable',
@@ -2662,6 +2808,7 @@ export const seedNewScienceTemplates = internalMutation({
       icon: '🎧',
       iconColor: '#8B5CF6',
       name: 'Safe Listening Volume',
+      startSmallVersion: 'Lower your headphone volume two notches.',
       popularityScore: 87,
       scientificReference:
         'WHO (2019) - Safe listening devices and systems guidelines',
@@ -2680,6 +2827,7 @@ export const seedNewScienceTemplates = internalMutation({
       icon: '☀️',
       iconColor: '#FBBF24',
       name: 'Vitamin D Supplementation',
+      startSmallVersion: 'Take your vitamin D pill.',
       popularityScore: 90,
       scientificLink: 'https://pubmed.ncbi.nlm.nih.gov/40218962/',
       scientificReference:
@@ -2695,6 +2843,7 @@ export const seedNewScienceTemplates = internalMutation({
       icon: '🏥',
       iconColor: '#EF4444',
       name: 'Preventive Health Checkups',
+      startSmallVersion: 'Open the calendar and pick a checkup date.',
       popularityScore: 92,
       scientificReference: 'CDC - Preventive care guidelines for adults',
     });
@@ -2712,6 +2861,7 @@ export const seedNewScienceTemplates = internalMutation({
       icon: '🧴',
       iconColor: '#FDE047',
       name: 'Daily Sun Protection',
+      startSmallVersion: 'Dot SPF on your nose and forehead.',
       popularityScore: 88,
       scientificReference:
         'American Academy of Dermatology - Daily sunscreen recommendations',
@@ -2730,6 +2880,7 @@ export const seedNewScienceTemplates = internalMutation({
       icon: '🔄',
       iconColor: '#10B981',
       name: 'Joint Mobility Routine',
+      startSmallVersion: 'Do five wrist and ankle circles.',
       popularityScore: 85,
       scientificReference:
         'American College of Sports Medicine - Mobility exercise guidelines',
@@ -2748,6 +2899,7 @@ export const seedNewScienceTemplates = internalMutation({
       icon: '🥗',
       iconColor: '#10B981',
       name: 'Mediterranean Plate',
+      startSmallVersion: 'Drizzle olive oil over your next meal.',
       popularityScore: 90,
       scientificLink:
         'https://pubmed.ncbi.nlm.nih.gov/?term=Estruch+2013+PREDIMED+Mediterranean+diet',
@@ -2764,6 +2916,7 @@ export const seedNewScienceTemplates = internalMutation({
       icon: '🥦',
       iconColor: '#22C55E',
       name: 'Veggies First',
+      startSmallVersion: 'Take one bite of vegetables before anything else.',
       popularityScore: 86,
       scientificLink:
         'https://pubmed.ncbi.nlm.nih.gov/?term=Shukla+food+order+vegetables+carbohydrate+postprandial+glucose',
@@ -2780,6 +2933,7 @@ export const seedNewScienceTemplates = internalMutation({
       icon: '🫘',
       iconColor: '#F97316',
       name: 'Legume Serving',
+      startSmallVersion: 'Add a spoonful of beans to your next meal.',
       popularityScore: 84,
       scientificLink:
         'https://pubmed.ncbi.nlm.nih.gov/?term=non-oilseed+pulses+systematic+review+meta-analysis+glycemic+control',
@@ -2796,6 +2950,7 @@ export const seedNewScienceTemplates = internalMutation({
       icon: '🥜',
       iconColor: '#A16207',
       name: 'Daily Nuts Serving',
+      startSmallVersion: 'Eat 5 almonds.',
       popularityScore: 83,
       scientificLink:
         'https://pubmed.ncbi.nlm.nih.gov/?term=nut+consumption+meta-analysis+cardiovascular+mortality',
@@ -2812,6 +2967,7 @@ export const seedNewScienceTemplates = internalMutation({
       icon: '🌾',
       iconColor: '#CA8A04',
       name: 'Whole Grain Swap',
+      startSmallVersion: 'Swap one slice of bread for whole-wheat.',
       popularityScore: 82,
       scientificLink:
         'https://pubmed.ncbi.nlm.nih.gov/?term=whole+grain+meta-analysis+type+2+diabetes+cardiovascular',
@@ -2832,6 +2988,7 @@ export const seedNewScienceTemplates = internalMutation({
       icon: '🩺',
       iconColor: '#EF4444',
       name: 'Blood Pressure Check',
+      startSmallVersion: 'Strap on the cuff and take one reading.',
       popularityScore: 84,
       scientificLink:
         'https://pubmed.ncbi.nlm.nih.gov/?term=self-measured+blood+pressure+monitoring+systematic+review+meta-analysis',
@@ -2848,6 +3005,7 @@ export const seedNewScienceTemplates = internalMutation({
       icon: '👁️',
       iconColor: '#0EA5E9',
       name: 'Annual Eye Exam',
+      startSmallVersion: 'Open the calendar and pick an eye-exam date.',
       popularityScore: 80,
       scientificLink:
         'https://www.cdc.gov/visionhealth/basics/keeping-eyes-healthy.html',
@@ -2864,6 +3022,7 @@ export const seedNewScienceTemplates = internalMutation({
       icon: '🦻',
       iconColor: '#8B5CF6',
       name: 'Annual Hearing Test',
+      startSmallVersion: 'Open the calendar and pick a hearing-test date.',
       popularityScore: 79,
       scientificLink: 'https://www.nidcd.nih.gov/health/hearing',
       scientificReference:
@@ -2879,6 +3038,7 @@ export const seedNewScienceTemplates = internalMutation({
       icon: '🔎',
       iconColor: '#F59E0B',
       name: 'Monthly Skin Self-Exam',
+      startSmallVersion: 'Check one mole in the mirror.',
       popularityScore: 81,
       scientificLink:
         'https://www.aad.org/public/diseases/skin-cancer/find/check-skin',
@@ -2895,6 +3055,7 @@ export const seedNewScienceTemplates = internalMutation({
       icon: '💉',
       iconColor: '#10B981',
       name: 'Vaccination Status Review',
+      startSmallVersion: 'Open your vaccine record and read it.',
       popularityScore: 82,
       scientificLink: 'https://www.cdc.gov/vaccines/schedules/',
       scientificReference:
@@ -2914,6 +3075,7 @@ export const seedNewScienceTemplates = internalMutation({
       icon: '🪑',
       iconColor: '#6366F1',
       name: 'Isometric Wall Sit',
+      startSmallVersion: 'Hold a wall sit for 10 seconds.',
       popularityScore: 83,
       scientificLink:
         'https://pubmed.ncbi.nlm.nih.gov/?term=isometric+exercise+training+systematic+review+meta-analysis+blood+pressure',
@@ -2930,6 +3092,7 @@ export const seedNewScienceTemplates = internalMutation({
       icon: '🤸',
       iconColor: '#14B8A6',
       name: '5-Minute Mobility Snack',
+      startSmallVersion: 'Roll your shoulders and ankles for 30 seconds.',
       popularityScore: 82,
       scientificLink:
         'https://pubmed.ncbi.nlm.nih.gov/?term=interrupting+sitting+light+activity+systematic+review',
@@ -2950,6 +3113,7 @@ export const seedNewScienceTemplates = internalMutation({
       icon: '📋',
       iconColor: '#7C3AED',
       name: 'Weekly Goal Review',
+      startSmallVersion: 'Read last week\'s goals out loud.',
       popularityScore: 89,
       scientificReference:
         'Locke & Latham (2002) - Goal-setting theory and performance',
@@ -2964,6 +3128,7 @@ export const seedNewScienceTemplates = internalMutation({
       icon: '⚡',
       iconColor: '#FBBF24',
       name: 'Energy Level Tracking',
+      startSmallVersion: 'Rate your energy 1-10 right now.',
       popularityScore: 85,
       scientificReference:
         'Kühnel et al. (2017) - Daily energy management and work engagement',
@@ -2982,6 +3147,7 @@ export const seedNewScienceTemplates = internalMutation({
       icon: '🎯',
       iconColor: '#7C3AED',
       name: 'Daily Top 3 Priorities',
+      startSmallVersion: 'Write today\'s one most important task.',
       popularityScore: 86,
       scientificLink:
         'https://pubmed.ncbi.nlm.nih.gov/?term=Masicampo+Baumeister+2011+plan-making+unfulfilled+goals',
@@ -2998,6 +3164,7 @@ export const seedNewScienceTemplates = internalMutation({
       icon: '📨',
       iconColor: '#0EA5E9',
       name: 'Batch Check Messages',
+      startSmallVersion: 'Close your inbox for the next 5 minutes.',
       popularityScore: 84,
       scientificLink:
         'https://pubmed.ncbi.nlm.nih.gov/?term=email+checking+frequency+stress+experiment',
@@ -3014,6 +3181,7 @@ export const seedNewScienceTemplates = internalMutation({
       icon: '🧹',
       iconColor: '#F97316',
       name: 'Two-Minute Tidy',
+      startSmallVersion: 'Put one thing back where it belongs.',
       popularityScore: 82,
       scientificLink:
         'https://pubmed.ncbi.nlm.nih.gov/?term=Saxbe+Repetti+2010+home+environment+cortisol',
@@ -3034,6 +3202,7 @@ export const seedNewScienceTemplates = internalMutation({
       icon: '📦',
       iconColor: '#14B8A6',
       name: 'Box Breathing',
+      startSmallVersion: 'Do one round of 4-4-4-4 breathing.',
       popularityScore: 87,
       scientificReference:
         'Ma et al. (2017) - Effect of diaphragmatic breathing on stress',
@@ -3049,6 +3218,7 @@ export const seedNewScienceTemplates = internalMutation({
       icon: '🌿',
       iconColor: '#059669',
       name: 'Tech-Free Break',
+      startSmallVersion: 'Look out the window for 30 seconds, no phone.',
       popularityScore: 86,
       scientificReference:
         'Ward et al. (2017) - Brain drain: The mere presence of smartphones reduces cognitive capacity',
@@ -3067,6 +3237,7 @@ export const seedNewScienceTemplates = internalMutation({
       icon: '🌙',
       iconColor: '#4338CA',
       name: 'Pre-Sleep Review',
+      startSmallVersion: 'Re-read one paragraph from today.',
       popularityScore: 88,
       scientificReference:
         "Rasch & Born (2013) - About sleep's role in memory consolidation",
@@ -3081,6 +3252,7 @@ export const seedNewScienceTemplates = internalMutation({
       icon: '👨‍🏫',
       iconColor: '#DC2626',
       name: 'Weekly Teaching',
+      startSmallVersion: 'Explain one idea to someone in one sentence.',
       popularityScore: 90,
       scientificReference:
         'Chi et al. (1989) - Self-explanations enhance learning',
@@ -3099,6 +3271,7 @@ export const seedNewScienceTemplates = internalMutation({
       icon: '❓',
       iconColor: '#8B5CF6',
       name: 'Deep Questions',
+      startSmallVersion: 'Ask one person, "what\'s been on your mind?"',
       popularityScore: 83,
       scientificReference:
         'Aron et al. (1997) - The experimental generation of interpersonal closeness',
@@ -3113,6 +3286,7 @@ export const seedNewScienceTemplates = internalMutation({
       icon: '💬',
       iconColor: '#06B6D4',
       name: 'Receive Feedback Gracefully',
+      startSmallVersion: 'Say "thank you" the next time someone gives you feedback.',
       popularityScore: 82,
       scientificReference:
         'Stone & Heen (2014) - Thanks for the Feedback: The Science and Art of Receiving Feedback',
@@ -4229,6 +4403,7 @@ export const seedUniqueTemplates = internalMutation({
       icon: '💼',
       iconColor: '#0A66C2',
       name: 'Career Documentation',
+      startSmallVersion: 'Add one bullet to your resume.',
       popularityScore: 82,
       scientificReference:
         'Seibert et al. (1999) - Proactive career behaviors and career success',
@@ -4243,6 +4418,7 @@ export const seedUniqueTemplates = internalMutation({
       icon: '🤝',
       iconColor: '#059669',
       name: 'Professional Networking',
+      startSmallVersion: 'Send one "thinking of you" message.',
       popularityScore: 85,
       scientificReference: 'Granovetter (1973) - The Strength of Weak Ties',
     });
@@ -4256,6 +4432,7 @@ export const seedUniqueTemplates = internalMutation({
       icon: '📓',
       iconColor: '#7C3AED',
       name: 'Work Insights Journal',
+      startSmallVersion: 'Write one thing you learned today.',
       popularityScore: 81,
       scientificReference:
         'Di Stefano et al. (2016) - Learning by thinking: How reflection aids performance',
@@ -4270,6 +4447,7 @@ export const seedUniqueTemplates = internalMutation({
       icon: '🎤',
       iconColor: '#DC2626',
       name: 'Public Speaking Practice',
+      startSmallVersion: 'Read one sentence aloud to yourself.',
       popularityScore: 84,
       scientificReference:
         'Hofmann et al. (2008) - Exposure-based therapy for public speaking anxiety',
@@ -4284,6 +4462,7 @@ export const seedUniqueTemplates = internalMutation({
       icon: '🗂️',
       iconColor: '#F59E0B',
       name: 'Digital File Organization',
+      startSmallVersion: 'Move one file into the right folder.',
       popularityScore: 79,
       scientificReference:
         'Jones (2007) - Keeping Found Things Found: The Study of Personal Information Management',
@@ -4302,6 +4481,7 @@ export const seedUniqueTemplates = internalMutation({
       icon: '🎲',
       iconColor: '#EC4899',
       name: 'Unstructured Play Time',
+      startSmallVersion: 'Play with no goal for 60 seconds.',
       popularityScore: 83,
       scientificReference:
         'Brown (2009) - Play: How It Shapes the Brain, Opens the Imagination',
@@ -4316,6 +4496,7 @@ export const seedUniqueTemplates = internalMutation({
       icon: '🧱',
       iconColor: '#F97316',
       name: 'Hands-On Building',
+      startSmallVersion: 'Pick up the materials and lay them out.',
       popularityScore: 81,
       scientificReference:
         'Csikszentmihalyi (1990) - Flow: The Psychology of Optimal Experience',
@@ -4330,6 +4511,7 @@ export const seedUniqueTemplates = internalMutation({
       icon: '👨‍🍳',
       iconColor: '#EA580C',
       name: 'Experimental Cooking',
+      startSmallVersion: 'Add one new spice to your next dish.',
       popularityScore: 84,
       scientificReference:
         'Farmer et al. (2018) - Cooking frequency and dietary quality',
@@ -4344,6 +4526,7 @@ export const seedUniqueTemplates = internalMutation({
       icon: '🌱',
       iconColor: '#22C55E',
       name: 'Gardening Therapy',
+      startSmallVersion: 'Touch the soil of one plant.',
       popularityScore: 86,
       scientificReference:
         'Van Den Berg & Custers (2011) - Gardening promotes neuroendocrine and affective restoration',
@@ -4358,6 +4541,7 @@ export const seedUniqueTemplates = internalMutation({
       icon: '🎤',
       iconColor: '#A855F7',
       name: 'Daily Singing',
+      startSmallVersion: 'Hum one verse of a song.',
       popularityScore: 82,
       scientificReference:
         'Grape et al. (2003) - Does singing promote well-being?: Effects on wellbeing and physiological variables',
@@ -4372,6 +4556,7 @@ export const seedUniqueTemplates = internalMutation({
       icon: '💃',
       iconColor: '#F43F5E',
       name: 'Free Dance Session',
+      startSmallVersion: 'Sway for 30 seconds.',
       popularityScore: 85,
       scientificReference:
         'Koch et al. (2019) - Effects of dance movement therapy on depression',
@@ -4386,6 +4571,7 @@ export const seedUniqueTemplates = internalMutation({
       icon: '🖍️',
       iconColor: '#0EA5E9',
       name: 'Coloring Practice',
+      startSmallVersion: 'Fill in one shape with color.',
       popularityScore: 80,
       scientificReference:
         'Curry & Kasser (2005) - Can coloring mandalas reduce anxiety?',
@@ -4404,6 +4590,7 @@ export const seedUniqueTemplates = internalMutation({
       icon: '🐦',
       iconColor: '#0D9488',
       name: 'Bird Watching',
+      startSmallVersion: 'Look out the window and find one bird.',
       popularityScore: 78,
       scientificReference:
         'Cox et al. (2017) - Doses of neighborhood nature: Benefits for mental health',
@@ -4418,6 +4605,7 @@ export const seedUniqueTemplates = internalMutation({
       icon: '💧',
       iconColor: '#0284C7',
       name: 'Blue Space Time',
+      startSmallVersion: 'Play 30 seconds of water sounds.',
       popularityScore: 83,
       scientificReference:
         'White et al. (2010) - Blue space exposure and psychological well-being',
@@ -4432,6 +4620,7 @@ export const seedUniqueTemplates = internalMutation({
       icon: '🌌',
       iconColor: '#1E3A8A',
       name: 'Stargazing',
+      startSmallVersion: 'Step outside and find one star.',
       popularityScore: 79,
       scientificReference:
         'Piff et al. (2015) - Awe, the small self, and prosocial behavior',
@@ -4446,6 +4635,7 @@ export const seedUniqueTemplates = internalMutation({
       icon: '🌧️',
       iconColor: '#64748B',
       name: 'Rain Walking',
+      startSmallVersion: 'Step outside and feel one raindrop.',
       popularityScore: 74,
       scientificReference:
         'Jiang et al. (2018) - Effects of natural sounds on stress recovery',
@@ -4460,6 +4650,7 @@ export const seedUniqueTemplates = internalMutation({
       icon: '☁️',
       iconColor: '#94A3B8',
       name: 'Cloud Watching',
+      startSmallVersion: 'Look up and find one cloud shape.',
       popularityScore: 75,
       scientificReference:
         'Beaty et al. (2016) - Creative cognition and brain network dynamics',
@@ -4478,6 +4669,7 @@ export const seedUniqueTemplates = internalMutation({
       icon: '🫨',
       iconColor: '#F97316',
       name: 'Tension Release Shaking',
+      startSmallVersion: 'Shake your hands out for 10 seconds.',
       popularityScore: 80,
       scientificReference:
         'Berceli (2008) - Tension and Trauma Release Exercises (TRE)',
@@ -4492,6 +4684,7 @@ export const seedUniqueTemplates = internalMutation({
       icon: '🙌',
       iconColor: '#EC4899',
       name: 'Self-Massage Ritual',
+      startSmallVersion: 'Rub your hands together for 30 seconds.',
       popularityScore: 82,
       scientificReference:
         'Field et al. (2005) - Cortisol decreases and serotonin and dopamine increase following massage therapy',
@@ -4506,6 +4699,7 @@ export const seedUniqueTemplates = internalMutation({
       icon: '😌',
       iconColor: '#8B5CF6',
       name: 'Facial Relaxation',
+      startSmallVersion: 'Unclench your jaw for one breath.',
       popularityScore: 78,
       scientificReference:
         'Cram (1980) - EMG and the relaxation response: jaw muscle tension and stress',
@@ -4520,6 +4714,7 @@ export const seedUniqueTemplates = internalMutation({
       icon: '🦶',
       iconColor: '#A16207',
       name: 'Foot Grounding',
+      startSmallVersion: 'Press both feet into the floor for 10 seconds.',
       popularityScore: 77,
       scientificReference:
         'Farb et al. (2015) - Interoception, contemplative practice, and health',
@@ -4534,6 +4729,7 @@ export const seedUniqueTemplates = internalMutation({
       icon: '🎾',
       iconColor: '#84CC16',
       name: 'Foot Rolling',
+      startSmallVersion: 'Roll your foot over a tennis ball for 10 seconds.',
       popularityScore: 79,
       scientificReference:
         'Renan-Ordine et al. (2011) - Effects of myofascial release on mechanical sensitivity',
@@ -4552,6 +4748,7 @@ export const seedUniqueTemplates = internalMutation({
       icon: '🎯',
       iconColor: '#DC2626',
       name: 'Purpose Statement Review',
+      startSmallVersion: 'Read your mission statement out loud once.',
       popularityScore: 86,
       scientificReference:
         'Hill & Turiano (2014) - Purpose in life and mortality',
@@ -4566,6 +4763,7 @@ export const seedUniqueTemplates = internalMutation({
       icon: '🔮',
       iconColor: '#7C3AED',
       name: 'Future Self Visualization',
+      startSmallVersion: 'Picture your future self for one breath.',
       popularityScore: 83,
       scientificReference:
         'Hershfield (2011) - Future self-continuity: How conceptions of the future self transform decision-making',
@@ -4580,6 +4778,7 @@ export const seedUniqueTemplates = internalMutation({
       icon: '✉️',
       iconColor: '#059669',
       name: 'Letter to Future Self',
+      startSmallVersion: 'Write one sentence to your future self.',
       popularityScore: 80,
       scientificReference:
         'Wilson et al. (2005) - Affective forecasting and the durability bias',
@@ -4594,6 +4793,7 @@ export const seedUniqueTemplates = internalMutation({
       icon: '⏳',
       iconColor: '#64748B',
       name: 'Mortality Reflection',
+      startSmallVersion: 'Picture today as your last for one breath.',
       popularityScore: 76,
       scientificReference:
         'Cozzolino et al. (2004) - Greed, death, and values: Mortality salience and meaning',
@@ -4608,6 +4808,7 @@ export const seedUniqueTemplates = internalMutation({
       icon: '🏛️',
       iconColor: '#B45309',
       name: 'Legacy Action',
+      startSmallVersion: 'Name one thing you want to leave behind.',
       popularityScore: 78,
       scientificReference:
         'McAdams & de St. Aubin (1992) - Generativity and adult development',
@@ -4626,6 +4827,7 @@ export const seedUniqueTemplates = internalMutation({
       icon: '🧴',
       iconColor: '#FBBF24',
       name: 'Mindful Moisturizing',
+      startSmallVersion: 'Rub lotion into your hands slowly.',
       popularityScore: 77,
       scientificReference:
         'Neff (2003) - Self-compassion and physical self-care practices',
@@ -4640,6 +4842,7 @@ export const seedUniqueTemplates = internalMutation({
       icon: '🛁',
       iconColor: '#38BDF8',
       name: 'Epsom Salt Bath',
+      startSmallVersion: 'Soak your feet in warm water for 60 seconds.',
       popularityScore: 81,
       scientificReference:
         'Proksch et al. (2017) - Percutaneous absorption of magnesium',
@@ -4654,6 +4857,7 @@ export const seedUniqueTemplates = internalMutation({
       icon: '🧖‍♀️',
       iconColor: '#A855F7',
       name: 'Face Mask Ritual',
+      startSmallVersion: 'Splash your face with water and breathe slowly.',
       popularityScore: 78,
       scientificReference:
         'Gilbert (2009) - The Compassionate Mind: self-soothing systems',
@@ -4668,6 +4872,7 @@ export const seedUniqueTemplates = internalMutation({
       icon: '👕',
       iconColor: '#6366F1',
       name: 'Comfort Clothes Transition',
+      startSmallVersion: 'Change into one comfortable item.',
       popularityScore: 79,
       scientificReference:
         'Adam & Galinsky (2012) - Enclothed cognition: systematic influence of clothes',
@@ -4682,6 +4887,7 @@ export const seedUniqueTemplates = internalMutation({
       icon: '🕯️',
       iconColor: '#F59E0B',
       name: 'Candlelight Relaxation',
+      startSmallVersion: 'Light one candle and watch it for 30 seconds.',
       popularityScore: 80,
       scientificReference: 'Cajochen (2007) - Alerting effects of light',
     });
@@ -4699,6 +4905,7 @@ export const seedUniqueTemplates = internalMutation({
       icon: '🍽️',
       iconColor: '#F97316',
       name: 'Highs and Lows Ritual',
+      startSmallVersion: 'Ask one person, "what was your high today?"',
       popularityScore: 88,
       scientificReference:
         'Fiese et al. (2002) - Family routines and rituals: A context for development',
@@ -4713,6 +4920,7 @@ export const seedUniqueTemplates = internalMutation({
       icon: '🤗',
       iconColor: '#EC4899',
       name: '6-Second Hug',
+      startSmallVersion: 'Give one 6-second hug today.',
       popularityScore: 87,
       scientificReference:
         'Gottman (1999) - The importance of extended physical affection in relationships',
@@ -4727,6 +4935,7 @@ export const seedUniqueTemplates = internalMutation({
       icon: '❤️',
       iconColor: '#DC2626',
       name: 'Weekly Date Night',
+      startSmallVersion: 'Block 30 minutes on the calendar for your partner.',
       popularityScore: 91,
       scientificReference:
         'Wilcox & Dew (2012) - Date nights and marital satisfaction',
@@ -4741,6 +4950,7 @@ export const seedUniqueTemplates = internalMutation({
       icon: '📱',
       iconColor: '#3B82F6',
       name: 'Friend Check-Ins',
+      startSmallVersion: 'Send one friend a "how are you really?" text.',
       popularityScore: 84,
       scientificReference:
         'Hall (2019) - How many hours does it take to make a friend?',
@@ -4755,6 +4965,7 @@ export const seedUniqueTemplates = internalMutation({
       icon: '💌',
       iconColor: '#F43F5E',
       name: 'Handwritten Letters',
+      startSmallVersion: 'Write one sentence on a postcard.',
       popularityScore: 79,
       scientificReference:
         'Gino & Flynn (2018) - Undervaluing gratitude: Receivers appreciation of gratitude expressions',
@@ -4773,6 +4984,7 @@ export const seedUniqueTemplates = internalMutation({
       icon: '🗣️',
       iconColor: '#059669',
       name: 'Language Word Learning',
+      startSmallVersion: 'Look up one new word.',
       popularityScore: 86,
       scientificReference:
         'Bialystok et al. (2007) - Bilingualism as protection against onset of dementia',
@@ -4787,6 +4999,7 @@ export const seedUniqueTemplates = internalMutation({
       icon: '🗺️',
       iconColor: '#F59E0B',
       name: 'Navigation Novelty',
+      startSmallVersion: 'Take one new turn on your walk.',
       popularityScore: 77,
       scientificReference:
         'Maguire et al. (2000) - Navigation-related structural change in the hippocampi of taxi drivers',
@@ -4801,6 +5014,7 @@ export const seedUniqueTemplates = internalMutation({
       icon: '🧩',
       iconColor: '#7C3AED',
       name: 'Daily Logic Puzzle',
+      startSmallVersion: 'Solve one easy puzzle.',
       popularityScore: 84,
       scientificReference:
         'Verghese et al. (2003) - Leisure activities and the risk of dementia',
@@ -4815,6 +5029,7 @@ export const seedUniqueTemplates = internalMutation({
       icon: '📜',
       iconColor: '#B45309',
       name: 'Memory Challenges',
+      startSmallVersion: 'Memorize one phone number digit by digit.',
       popularityScore: 78,
       scientificReference:
         'Nyberg et al. (2003) - Neural correlates of successful memory encoding',
@@ -4829,6 +5044,7 @@ export const seedUniqueTemplates = internalMutation({
       icon: '🎬',
       iconColor: '#DC2626',
       name: 'Documentary Learning',
+      startSmallVersion: 'Watch a 60-second clip of something new.',
       popularityScore: 82,
       scientificReference:
         'Gruber et al. (2014) - States of curiosity modulate learning and memory',
@@ -4847,6 +5063,7 @@ export const seedUniqueTemplates = internalMutation({
       icon: '🌸',
       iconColor: '#D946EF',
       name: 'Aromatherapy Practice',
+      startSmallVersion: 'Take one slow inhale of an essential oil.',
       popularityScore: 79,
       scientificReference:
         'Moss et al. (2003) - Aromas of rosemary and lavender essential oils affect cognition and mood',
@@ -4861,6 +5078,7 @@ export const seedUniqueTemplates = internalMutation({
       icon: '🤫',
       iconColor: '#64748B',
       name: 'Silent Eating',
+      startSmallVersion: 'Take one bite in silence with no phone.',
       popularityScore: 76,
       scientificReference:
         'Robinson et al. (2014) - Eating attentively: A systematic review of eating with attention',
@@ -4875,6 +5093,7 @@ export const seedUniqueTemplates = internalMutation({
       icon: '🚽',
       iconColor: '#10B981',
       name: 'Bathroom Squats',
+      startSmallVersion: 'Do one squat after washing your hands.',
       popularityScore: 83,
       scientificReference:
         'Clear (2018) - Atomic Habits: habit stacking methodology',
@@ -4889,6 +5108,7 @@ export const seedUniqueTemplates = internalMutation({
       icon: '🥛',
       iconColor: '#38BDF8',
       name: 'Pre-Meal Water',
+      startSmallVersion: 'Take one sip of water before your next bite.',
       popularityScore: 85,
       scientificReference:
         'Davy et al. (2008) - Water consumption reduces energy intake at a breakfast meal',
@@ -4903,6 +5123,7 @@ export const seedUniqueTemplates = internalMutation({
       icon: '🦵',
       iconColor: '#F97316',
       name: 'Toothbrush Calf Raises',
+      startSmallVersion: 'Do 3 calf raises while brushing teeth.',
       popularityScore: 80,
       scientificReference:
         'Clear (2018) - Atomic Habits: Two-minute rule for habit formation',
@@ -4921,6 +5142,7 @@ export const seedUniqueTemplates = internalMutation({
       icon: '🪟',
       iconColor: '#FBBF24',
       name: 'Morning Window Gaze',
+      startSmallVersion: 'Look out the window for 10 seconds.',
       popularityScore: 82,
       scientificReference:
         'Huberman (2021) - Morning light exposure before device use',
@@ -4935,6 +5157,7 @@ export const seedUniqueTemplates = internalMutation({
       icon: '😊',
       iconColor: '#FBBF24',
       name: 'Morning Mirror Smile',
+      startSmallVersion: 'Smile at yourself for 3 seconds.',
       popularityScore: 77,
       scientificReference:
         'Kraft & Pressman (2012) - Grin and bear it: Smiling facilitates stress recovery',
@@ -4949,6 +5172,7 @@ export const seedUniqueTemplates = internalMutation({
       icon: '🌅',
       iconColor: '#F97316',
       name: 'Wake-Up Movement',
+      startSmallVersion: 'Do 10 seconds of arm circles.',
       popularityScore: 84,
       scientificReference:
         'Kredlow et al. (2015) - Effects of physical activity on sleep',
@@ -4967,6 +5191,7 @@ export const seedUniqueTemplates = internalMutation({
       icon: '🧠',
       iconColor: '#6366F1',
       name: 'Evening Brain Dump',
+      startSmallVersion: 'Write one worry on paper before bed.',
       popularityScore: 86,
       scientificReference:
         'Scullin et al. (2018) - The effects of bedtime writing on difficulty falling asleep',
@@ -4981,6 +5206,7 @@ export const seedUniqueTemplates = internalMutation({
       icon: '👔',
       iconColor: '#8B5CF6',
       name: 'Next-Day Prep',
+      startSmallVersion: 'Lay out tomorrow\'s shirt.',
       popularityScore: 83,
       scientificReference:
         'Baumeister & Tierney (2011) - Willpower: Rediscovering the Greatest Human Strength',
@@ -4995,6 +5221,7 @@ export const seedUniqueTemplates = internalMutation({
       icon: '👓',
       iconColor: '#F59E0B',
       name: 'Blue Light Blocking',
+      startSmallVersion: 'Switch your phone to night mode.',
       popularityScore: 84,
       scientificReference:
         'Shechter et al. (2018) - Blocking nocturnal blue light improves sleep',
@@ -5013,6 +5240,7 @@ export const seedUniqueTemplates = internalMutation({
       icon: '🙏',
       iconColor: '#059669',
       name: 'Pre-Purchase Gratitude',
+      startSmallVersion: 'Name one thing you already own and love.',
       popularityScore: 79,
       scientificReference:
         'Lambert et al. (2009) - Gratitude reduces materialism',
@@ -5027,6 +5255,7 @@ export const seedUniqueTemplates = internalMutation({
       icon: '🪙',
       iconColor: '#84CC16',
       name: 'Round-Up Savings',
+      startSmallVersion: 'Move spare change to savings.',
       popularityScore: 81,
       scientificReference:
         'Thaler (2004) - Save More Tomorrow: Behavioral economics of saving',
@@ -5041,6 +5270,7 @@ export const seedUniqueTemplates = internalMutation({
       icon: '📊',
       iconColor: '#3B82F6',
       name: 'Net Worth Check',
+      startSmallVersion: 'Open your finance app and look once.',
       popularityScore: 82,
       scientificReference:
         'Fernandes et al. (2014) - Financial literacy, financial education, and downstream financial behaviors',
@@ -5104,6 +5334,7 @@ export const seedResearchBackedTemplates = internalMutation({
       icon: '💬',
       iconColor: '#F43F5E',
       name: 'Stress-Reducing Conversation',
+      startSmallVersion: 'Ask your partner, "how was your day?" with phone down.',
       popularityScore: 88,
       scientificReference:
         'Gottman Institute - 40-year longitudinal couples research',
@@ -5123,6 +5354,7 @@ export const seedResearchBackedTemplates = internalMutation({
       icon: '❤️',
       iconColor: '#F43F5E',
       name: 'Express Daily Appreciation',
+      startSmallVersion: 'Tell your partner one thing you appreciate.',
       popularityScore: 90,
       scientificReference:
         'Gottman (1999) - The Marriage Clinic: 5:1 positive-to-negative interaction ratio',
@@ -5142,6 +5374,7 @@ export const seedResearchBackedTemplates = internalMutation({
       icon: '🗺️',
       iconColor: '#F43F5E',
       name: 'Love Maps Question',
+      startSmallVersion: 'Ask your partner one curious question.',
       popularityScore: 85,
       scientificReference:
         'Gottman Institute - Sound Relationship House theory',
@@ -5161,6 +5394,7 @@ export const seedResearchBackedTemplates = internalMutation({
       icon: '💋',
       iconColor: '#F43F5E',
       name: 'Six-Second Kiss',
+      startSmallVersion: 'Give your partner one 6-second kiss.',
       popularityScore: 82,
       scientificReference:
         'Gottman Institute - Rituals of connection research',
@@ -5180,6 +5414,7 @@ export const seedResearchBackedTemplates = internalMutation({
       icon: '📅',
       iconColor: '#F43F5E',
       name: 'Standing Social Events',
+      startSmallVersion: 'Reply yes to one invitation.',
       popularityScore: 83,
       scientificReference:
         'Holt-Lunstad et al. (2010) - Social relationships and mortality risk meta-analysis',
@@ -5203,6 +5438,7 @@ export const seedResearchBackedTemplates = internalMutation({
       icon: '📵',
       iconColor: '#7C3AED',
       name: 'Phone-Free First Hour',
+      startSmallVersion: 'Leave your phone in another room for 5 minutes after waking.',
       popularityScore: 91,
       scientificReference:
         'Attention restoration theory — Kaplan (1995); extended by smartphone research 2020-2025',
@@ -5222,6 +5458,7 @@ export const seedResearchBackedTemplates = internalMutation({
       icon: '☕',
       iconColor: '#7C3AED',
       name: 'Caffeine Cutoff',
+      startSmallVersion: 'Switch to water at 2 PM today.',
       popularityScore: 89,
       scientificLink: 'https://pubmed.ncbi.nlm.nih.gov/24235903/',
       scientificReference:
@@ -5246,6 +5483,7 @@ export const seedResearchBackedTemplates = internalMutation({
       icon: '🏠',
       iconColor: '#059669',
       name: 'Evening Environment Reset',
+      startSmallVersion: 'Put one thing back where it belongs.',
       popularityScore: 87,
       scientificReference:
         'Mazar & Wood (2022) - Environmental cues and habitual behavior, Annual Review of Psychology',
@@ -5265,6 +5503,7 @@ export const seedResearchBackedTemplates = internalMutation({
       icon: '🚧',
       iconColor: '#059669',
       name: 'Friction Addition',
+      startSmallVersion: 'Log out of one app you check too much.',
       popularityScore: 82,
       scientificReference:
         'Verplanken et al. (2021) - Habit discontinuity hypothesis, University of Bath',
@@ -5284,6 +5523,7 @@ export const seedResearchBackedTemplates = internalMutation({
       icon: '👁️',
       iconColor: '#059669',
       name: 'Visual Cue Placement',
+      startSmallVersion: 'Place one object somewhere you\'ll see it.',
       popularityScore: 80,
       scientificReference:
         'Stawarz et al. (2015) - Event-based cues outperform reminders for habit formation',
@@ -5307,6 +5547,7 @@ export const seedResearchBackedTemplates = internalMutation({
       icon: '🚶',
       iconColor: '#10B981',
       name: '7,000 Steps',
+      startSmallVersion: 'Take a 2-minute walk around your block.',
       popularityScore: 92,
       scientificLink:
         'https://www.thelancet.com/journals/lanpub/article/PIIS2468-2667(25)00164-1/fulltext',
@@ -5328,6 +5569,7 @@ export const seedResearchBackedTemplates = internalMutation({
       icon: '🥩',
       iconColor: '#10B981',
       name: 'Daily Protein Target',
+      startSmallVersion: 'Add one boiled egg to your day.',
       popularityScore: 86,
       scientificLink: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC8978023/',
       scientificReference:
@@ -5352,6 +5594,7 @@ export const seedResearchBackedTemplates = internalMutation({
       icon: '📋',
       iconColor: '#3B82F6',
       name: 'Weekly Review',
+      startSmallVersion: 'Write one win from this week.',
       popularityScore: 87,
       scientificReference:
         'Implementation intentions research — Gollwitzer (1999); planning increases follow-through 2-3x',
@@ -5371,6 +5614,7 @@ export const seedResearchBackedTemplates = internalMutation({
       icon: '🎧',
       iconColor: '#3B82F6',
       name: 'Temptation Bundling',
+      startSmallVersion: 'Queue your favorite podcast for your next walk.',
       popularityScore: 85,
       scientificLink:
         'https://pubsonline.informs.org/doi/10.1287/mnsc.2013.1784',
@@ -5392,6 +5636,7 @@ export const seedResearchBackedTemplates = internalMutation({
       icon: '🎯',
       iconColor: '#3B82F6',
       name: 'Quarterly Quest Setting',
+      startSmallVersion: 'Write one 90-day goal.',
       popularityScore: 80,
       scientificReference:
         'Locke & Latham (2002) - Goal setting theory; shorter feedback loops increase persistence',
@@ -5415,6 +5660,7 @@ export const seedResearchBackedTemplates = internalMutation({
       icon: '🎉',
       iconColor: '#8B5CF6',
       name: 'Post-Behavior Celebration',
+      startSmallVersion: 'Smile and say "yes!" after your next task.',
       popularityScore: 84,
       scientificReference:
         'Fogg (2020) - Tiny Habits, Stanford Behavior Design Lab (40,000+ participants)',
@@ -5434,6 +5680,7 @@ export const seedResearchBackedTemplates = internalMutation({
       icon: '🚶‍♂️',
       iconColor: '#8B5CF6',
       name: 'Unstimulated Walk',
+      startSmallVersion: 'Walk to the mailbox with no headphones.',
       popularityScore: 83,
       scientificReference:
         'Kaplan (1995) - Attention Restoration Theory; Dr. Alok Kanojia (HealthyGamerGG)',
@@ -5453,6 +5700,7 @@ export const seedResearchBackedTemplates = internalMutation({
       icon: '✏️',
       iconColor: '#8B5CF6',
       name: 'Single-Sentence Journal',
+      startSmallVersion: 'Write one sentence about today.',
       popularityScore: 86,
       scientificReference:
         'Pennebaker (2004) - Expressive writing and health; updated through 2023',
@@ -5472,6 +5720,7 @@ export const seedResearchBackedTemplates = internalMutation({
       icon: '🪞',
       iconColor: '#8B5CF6',
       name: 'Identity Journaling',
+      startSmallVersion: 'Write the words "I am someone who..." once.',
       popularityScore: 84,
       scientificReference:
         'Berzonsky et al. (2023) - Identity and habit persistence, Identity: An International Journal',
@@ -5495,6 +5744,7 @@ export const seedResearchBackedTemplates = internalMutation({
       icon: '🎯',
       iconColor: '#7C3AED',
       name: 'Deliberate Skill Practice',
+      startSmallVersion: 'Practice one rep at the edge of your skill.',
       popularityScore: 85,
       scientificLink: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC6731745/',
       scientificReference:
@@ -5515,6 +5765,7 @@ export const seedResearchBackedTemplates = internalMutation({
       icon: '🧩',
       iconColor: '#7C3AED',
       name: 'Novel Learning Session',
+      startSmallVersion: 'Look up one fact about something new.',
       popularityScore: 83,
       scientificReference:
         'Merzenich et al. (2014) - Neuroplasticity and cognitive training; Harvard Health neuroplasticity review',
@@ -5538,6 +5789,7 @@ export const seedResearchBackedTemplates = internalMutation({
       icon: '🤝',
       iconColor: '#F43F5E',
       name: 'Weekly Networking Outreach',
+      startSmallVersion: 'Send one professional message.',
       popularityScore: 81,
       scientificReference:
         'Wolff & Moser (2009) - Effects of Networking on Career Success, Journal of Applied Psychology',
@@ -5557,6 +5809,7 @@ export const seedResearchBackedTemplates = internalMutation({
       icon: '👋',
       iconColor: '#F43F5E',
       name: 'Daily Meaningful Interaction',
+      startSmallVersion: 'Call one person for 60 seconds.',
       popularityScore: 86,
       scientificReference:
         'Holt-Lunstad et al. (2010) - Social relationships and mortality risk meta-analysis',
@@ -5580,6 +5833,7 @@ export const seedResearchBackedTemplates = internalMutation({
       icon: '📢',
       iconColor: '#10B981',
       name: 'Loud Budgeting',
+      startSmallVersion: 'Tell one person what you\'re skipping today.',
       popularityScore: 78,
       scientificReference:
         'Commitment device research — Milkman (2021); social accountability increases follow-through 65%',
@@ -5710,5 +5964,291 @@ export const relabelExistingTemplates = internalMutation({
     }
 
     return { success: true, updatedCount, updatedNames };
+  },
+});
+
+/**
+ * Backfill: patch `startSmallVersion` on existing template rows that pre-date
+ * the field. Idempotent — only patches rows where the value is currently
+ * undefined and a mapping exists by name. Run with:
+ *   npx convex run templatesDataSeed:backfillStartSmallVersion
+ */
+export const backfillStartSmallVersion = internalMutation({
+  args: {},
+  handler: async (ctx) => {
+    let patchedCount = 0;
+    const skipped: string[] = [];
+
+    const startSmallByName: Record<string, string> = {
+      '5-Minute Meditation': 'Take one slow, mindful breath.',
+      'Morning Pages': 'Write a single sentence on the page.',
+      'Hydration First': 'Take one sip of water before anything else.',
+      'Sunrise Viewing': 'Step outside and face the sun for 30 seconds.',
+      'Sun Salutation Flow': 'Do one sun salutation.',
+      'Cold Shower': 'End your shower with 10 seconds of cold water.',
+      'Make Your Bed': 'Pull up the comforter and smooth it once.',
+      '7-Minute Workout': 'Do two push-ups (or two squats).',
+      '10,000 Steps': 'Walk to the end of the block and back.',
+      'Strength Training': 'Do 5 push-ups against the wall.',
+      'Stretching Routine': 'Reach for your toes once.',
+      'No Added Sugar': 'Skip the sugar in your next drink.',
+      'Meal Prepping': 'Wash one piece of produce.',
+      'Daily Yoga Practice': 'Hold downward dog for one breath.',
+      'High Fiber Diet': 'Add one piece of fruit to your next meal.',
+      'Hydration Tracking': 'Log one glass of water.',
+      'Deep Work Session': 'Open the doc and write one sentence.',
+      'Pomodoro Technique': 'Set a 5-minute timer and start.',
+      'MIT - Most Important Task': 'Write down today\'s one most important task.',
+      'Inbox Zero': 'Archive or delete one email.',
+      'Evening Planning': 'Write tomorrow\'s first task on a sticky note.',
+      'Time Blocking': 'Block 15 minutes on your calendar for one task.',
+      'Daily Learning': 'Read one paragraph of something new.',
+      'Weekly Desk Cleanup': 'Throw away one piece of trash from your desk.',
+      'Work Breaks': 'Stand up and stretch for 30 seconds.',
+      'Gratitude Journaling': 'Name one thing you\'re grateful for.',
+      'Breathwork Practice': 'Take one slow, deep breath.',
+      'Evening Reflection': 'Name one thing that went well today.',
+      'Digital Detox Hour': 'Put your phone in another room for 60 seconds.',
+      'Walking in Nature': 'Step outside for one full minute.',
+      'Progressive Muscle Relaxation': 'Clench and release your fists once.',
+      'Loving-Kindness Meditation': 'Silently wish one person well.',
+      'Positive Journaling': 'Write one good thing from today.',
+      'Mindful Eating': 'Take one bite slowly and notice the taste.',
+      'Morning Sunlight Viewing': 'Step outside and face the sun for 30 seconds.',
+      'Delay Caffeine 90 Minutes': 'Drink one glass of water before your coffee.',
+      'Zone 2 Cardio Training': 'Walk briskly for 5 minutes.',
+      'Deliberate Cold Exposure': 'End your shower with 10 seconds of cold.',
+      'NSDR Practice': 'Lie down and breathe slowly for 60 seconds.',
+      'Physiological Sigh': 'Do one double-inhale, long-exhale sigh.',
+      'Evening Light Dimming': 'Turn off one overhead light.',
+      'Cool Sleep Temperature': 'Crack the window before bed.',
+      'Morning Protein Protocol': 'Eat one boiled egg.',
+      'Time-Restricted Eating': 'Note your first and last bite times today.',
+      '16:8 Intermittent Fasting': 'Push breakfast back by 30 minutes.',
+      'Sauna Therapy': 'Sit in a steamy bathroom for 2 minutes.',
+      'Sleep Optimization': 'Set tonight\'s bedtime alarm.',
+      'Darkness Before Sleep': 'Close the curtains 60 minutes before bed.',
+      'Optimal Sleep Temperature': 'Lower the thermostat one degree.',
+      'Daily Social Call': 'Send one "thinking of you" text.',
+      'Reach Out Daily': 'Send one "thinking of you" text to a friend.',
+      'Quality Partner Time': 'Ask your partner, "how was your day?" with phone down.',
+      'Express Gratitude': 'Tell one person "thank you" out loud.',
+      'Acts of Service': 'Hold the door for someone today.',
+      'Group Activities': 'Reply yes to one invitation.',
+      'Consistent Bedtime': 'Set tonight\'s bedtime alarm.',
+      'No Screens Before Bed': 'Put your phone in another room 5 minutes before bed.',
+      '4-7-8 Breathing': 'Do one round of 4-7-8 breathing.',
+      'No Afternoon Caffeine': 'Skip your next afternoon coffee.',
+      'Sleep in Complete Darkness': 'Pull the curtains fully closed tonight.',
+      'Pre-Sleep Warm Bath': 'Run hot water over your hands and face.',
+      '7-9 Hours Sleep': 'Set tonight\'s bedtime alarm.',
+      'No Evening Alcohol': 'Pour yourself sparkling water tonight.',
+      'Spaced Repetition': 'Review one flashcard.',
+      'Daily Language Practice': 'Look up one new word.',
+      'Feynman Technique': 'Explain one idea out loud to yourself.',
+      'Active Recall': 'Close the book and recall one fact.',
+      'Daily Reading': 'Read one page.',
+      'Audio Learning': 'Listen to a podcast for 60 seconds.',
+      'Music Practice': 'Play one scale.',
+      'Handwritten Notes': 'Write one sentence by hand.',
+      'Educational Videos': 'Watch a 60-second educational clip.',
+      'Study Groups': 'Send one "want to study?" message.',
+      'Expense Tracking': 'Log one expense from today.',
+      'Automatic Savings': 'Move $1 to savings.',
+      'Weekly Budget Review': 'Open your bank app and look once.',
+      'Regular Investing': 'Invest $1 today.',
+      '24-Hour Purchase Rule': 'Wait 60 seconds before clicking buy.',
+      'Bring Lunch': 'Make one item for tomorrow\'s lunch.',
+      'Subscription Audit': 'Open one subscription and check the price.',
+      'Financial Education': 'Read one paragraph about money.',
+      'Negotiate Bills': 'Open one bill and find the customer service number.',
+      'Retirement Contributions': 'Move $1 to your retirement account.',
+      'Morning Freewriting': 'Write one sentence as fast as you can.',
+      'Daily Sketching': 'Doodle for 30 seconds.',
+      'Idea Generation': 'Write down one idea.',
+      'Daily Photography': 'Take one photo of something around you.',
+      'Creative Writing': 'Write one sentence of fiction.',
+      'Divergent Thinking': 'List two different uses for one object.',
+      'Idea Mashup': 'Combine two random words into a phrase.',
+      'Art Appreciation': 'Open one art image and look for 30 seconds.',
+      'Skill Exploration': 'Watch a 60-second tutorial on a new skill.',
+      'Break Routines': 'Take one different turn on your next walk.',
+      'Standing Every Hour': 'Stand up and stretch for 10 seconds.',
+      'Posture Check': 'Roll your shoulders back once.',
+      'Barefoot Grounding': 'Stand barefoot on grass for 30 seconds.',
+      '20-20-20 Eye Rule': 'Look out the window for 20 seconds.',
+      'Nasal Breathing': 'Take three breaths through your nose.',
+      'VO2 Max Training': 'Sprint up one flight of stairs.',
+      'Balance Training': 'Stand on one foot for 10 seconds.',
+      'Grip Strength Training': 'Hang from a bar for 5 seconds.',
+      'Heat Therapy Bath': 'Run a hot bath and dip your feet in.',
+      'Daily Hanging': 'Hang from a doorframe for 5 seconds.',
+      'Post-Meal Walk (10 Minutes)': 'Walk to the end of your hallway after eating.',
+      'Exercise Snacks (Stair Climbs)': 'Climb one flight of stairs.',
+      'Brain Games': 'Solve one easy puzzle on your phone.',
+      'Scheduled Worry Time': 'Write one worry on paper.',
+      'Body Scan Meditation': 'Notice the feeling in your feet for 10 seconds.',
+      '13-Minute Focus Meditation': 'Take three slow breaths with eyes closed.',
+      'Dopamine Reset': 'Stay off your phone for 60 seconds.',
+      'Dual N-Back Training': 'Do one round of N-back.',
+      'Weighted Blanket Sleep': 'Drape a heavy blanket over your legs for 60 seconds.',
+      'Sleep Sound Machine': 'Play 30 seconds of pink noise.',
+      'Evening Magnesium': 'Take your magnesium pill.',
+      'Stimulus Control (CBT-I)': 'Sit on the bed only when you\'re sleepy tonight.',
+      '30 Plants Per Week': 'Add one new vegetable to today\'s plate.',
+      'Daily Fermented Foods': 'Take one bite of yogurt or kimchi.',
+      'Omega-3 Rich Foods': 'Eat a few walnuts.',
+      'Eat Greens First': 'Take one bite of vegetables before anything else.',
+      'No Late Night Eating': 'Set a kitchen-closed timer.',
+      'Mindful Chewing': 'Chew your first bite 20 times.',
+      'Protein Per Meal (25–30g)': 'Add one egg to your next meal.',
+      'Interdental Cleaning': 'Floss between two teeth.',
+      'Hand Hygiene (Key Times)': 'Wash your hands once before your next meal.',
+      'Daily Sunscreen': 'Dot sunscreen on your nose.',
+      'House Plant Care': 'Touch your plant\'s soil with one finger.',
+      'Daily Declutter': 'Toss one item you don\'t use.',
+      'Fresh Air Break': 'Open a window for 60 seconds.',
+      'Daily Laughter': 'Watch one short comedy clip.',
+      'Pet Time': 'Pet your animal for 30 seconds.',
+      'Deep Listening': 'Listen to someone for 60 seconds without speaking.',
+      'Random Act of Kindness': 'Smile at one stranger today.',
+      'Face-to-Face Time': 'Say hi to one person in person today.',
+      'Boundary Practice': 'Say "let me get back to you" to one ask.',
+      'Daily Compliment': 'Tell one person what you appreciate about them.',
+      'Phone-Free Meals': 'Put your phone face-down for one bite.',
+      'Social Media Limit': 'Close the app after 60 seconds.',
+      'Single-Tasking': 'Close every tab except the one you need.',
+      'Airplane Mode Morning': 'Toggle airplane mode on for 5 minutes after waking.',
+      'If-Then Planning': 'Write one if-then sentence on a sticky note.',
+      'Daily Flossing': 'Floss between two teeth.',
+      'Regular Dental Checkups': 'Open the calendar and pick a dentist date.',
+      'Calcium Intake Tracking': 'Note one calcium-rich food you ate.',
+      'Bone-Strengthening Exercise': 'Do 5 bodyweight squats.',
+      'Hearing Protection': 'Tuck earplugs into your bag.',
+      'Safe Listening Volume': 'Lower your headphone volume two notches.',
+      'Vitamin D Supplementation': 'Take your vitamin D pill.',
+      'Preventive Health Checkups': 'Open the calendar and pick a checkup date.',
+      'Daily Sun Protection': 'Dot SPF on your nose and forehead.',
+      'Joint Mobility Routine': 'Do five wrist and ankle circles.',
+      'Mediterranean Plate': 'Drizzle olive oil over your next meal.',
+      'Veggies First': 'Take one bite of vegetables before anything else.',
+      'Legume Serving': 'Add a spoonful of beans to your next meal.',
+      'Daily Nuts Serving': 'Eat 5 almonds.',
+      'Whole Grain Swap': 'Swap one slice of bread for whole-wheat.',
+      'Blood Pressure Check': 'Strap on the cuff and take one reading.',
+      'Annual Eye Exam': 'Open the calendar and pick an eye-exam date.',
+      'Annual Hearing Test': 'Open the calendar and pick a hearing-test date.',
+      'Monthly Skin Self-Exam': 'Check one mole in the mirror.',
+      'Vaccination Status Review': 'Open your vaccine record and read it.',
+      'Isometric Wall Sit': 'Hold a wall sit for 10 seconds.',
+      '5-Minute Mobility Snack': 'Roll your shoulders and ankles for 30 seconds.',
+      'Weekly Goal Review': 'Read last week\'s goals out loud.',
+      'Energy Level Tracking': 'Rate your energy 1-10 right now.',
+      'Daily Top 3 Priorities': 'Write today\'s one most important task.',
+      'Batch Check Messages': 'Close your inbox for the next 5 minutes.',
+      'Two-Minute Tidy': 'Put one thing back where it belongs.',
+      'Box Breathing': 'Do one round of 4-4-4-4 breathing.',
+      'Tech-Free Break': 'Look out the window for 30 seconds, no phone.',
+      'Pre-Sleep Review': 'Re-read one paragraph from today.',
+      'Weekly Teaching': 'Explain one idea to someone in one sentence.',
+      'Deep Questions': 'Ask one person, "what\'s been on your mind?"',
+      'Receive Feedback Gracefully': 'Say "thank you" the next time someone gives you feedback.',
+      'Career Documentation': 'Add one bullet to your resume.',
+      'Professional Networking': 'Send one "thinking of you" message.',
+      'Work Insights Journal': 'Write one thing you learned today.',
+      'Public Speaking Practice': 'Read one sentence aloud to yourself.',
+      'Digital File Organization': 'Move one file into the right folder.',
+      'Unstructured Play Time': 'Play with no goal for 60 seconds.',
+      'Hands-On Building': 'Pick up the materials and lay them out.',
+      'Experimental Cooking': 'Add one new spice to your next dish.',
+      'Gardening Therapy': 'Touch the soil of one plant.',
+      'Daily Singing': 'Hum one verse of a song.',
+      'Free Dance Session': 'Sway for 30 seconds.',
+      'Coloring Practice': 'Fill in one shape with color.',
+      'Bird Watching': 'Look out the window and find one bird.',
+      'Blue Space Time': 'Play 30 seconds of water sounds.',
+      'Stargazing': 'Step outside and find one star.',
+      'Rain Walking': 'Step outside and feel one raindrop.',
+      'Cloud Watching': 'Look up and find one cloud shape.',
+      'Tension Release Shaking': 'Shake your hands out for 10 seconds.',
+      'Self-Massage Ritual': 'Rub your hands together for 30 seconds.',
+      'Facial Relaxation': 'Unclench your jaw for one breath.',
+      'Foot Grounding': 'Press both feet into the floor for 10 seconds.',
+      'Foot Rolling': 'Roll your foot over a tennis ball for 10 seconds.',
+      'Purpose Statement Review': 'Read your mission statement out loud once.',
+      'Future Self Visualization': 'Picture your future self for one breath.',
+      'Letter to Future Self': 'Write one sentence to your future self.',
+      'Mortality Reflection': 'Picture today as your last for one breath.',
+      'Legacy Action': 'Name one thing you want to leave behind.',
+      'Mindful Moisturizing': 'Rub lotion into your hands slowly.',
+      'Epsom Salt Bath': 'Soak your feet in warm water for 60 seconds.',
+      'Face Mask Ritual': 'Splash your face with water and breathe slowly.',
+      'Comfort Clothes Transition': 'Change into one comfortable item.',
+      'Candlelight Relaxation': 'Light one candle and watch it for 30 seconds.',
+      'Highs and Lows Ritual': 'Ask one person, "what was your high today?"',
+      '6-Second Hug': 'Give one 6-second hug today.',
+      'Weekly Date Night': 'Block 30 minutes on the calendar for your partner.',
+      'Friend Check-Ins': 'Send one friend a "how are you really?" text.',
+      'Handwritten Letters': 'Write one sentence on a postcard.',
+      'Language Word Learning': 'Look up one new word.',
+      'Navigation Novelty': 'Take one new turn on your walk.',
+      'Daily Logic Puzzle': 'Solve one easy puzzle.',
+      'Memory Challenges': 'Memorize one phone number digit by digit.',
+      'Documentary Learning': 'Watch a 60-second clip of something new.',
+      'Aromatherapy Practice': 'Take one slow inhale of an essential oil.',
+      'Silent Eating': 'Take one bite in silence with no phone.',
+      'Bathroom Squats': 'Do one squat after washing your hands.',
+      'Pre-Meal Water': 'Take one sip of water before your next bite.',
+      'Toothbrush Calf Raises': 'Do 3 calf raises while brushing teeth.',
+      'Morning Window Gaze': 'Look out the window for 10 seconds.',
+      'Morning Mirror Smile': 'Smile at yourself for 3 seconds.',
+      'Wake-Up Movement': 'Do 10 seconds of arm circles.',
+      'Evening Brain Dump': 'Write one worry on paper before bed.',
+      'Next-Day Prep': 'Lay out tomorrow\'s shirt.',
+      'Blue Light Blocking': 'Switch your phone to night mode.',
+      'Pre-Purchase Gratitude': 'Name one thing you already own and love.',
+      'Round-Up Savings': 'Move spare change to savings.',
+      'Net Worth Check': 'Open your finance app and look once.',
+      'Stress-Reducing Conversation': 'Ask your partner, "how was your day?" with phone down.',
+      'Express Daily Appreciation': 'Tell your partner one thing you appreciate.',
+      'Love Maps Question': 'Ask your partner one curious question.',
+      'Six-Second Kiss': 'Give your partner one 6-second kiss.',
+      'Standing Social Events': 'Reply yes to one invitation.',
+      'Phone-Free First Hour': 'Leave your phone in another room for 5 minutes after waking.',
+      'Caffeine Cutoff': 'Switch to water at 2 PM today.',
+      'Evening Environment Reset': 'Put one thing back where it belongs.',
+      'Friction Addition': 'Log out of one app you check too much.',
+      'Visual Cue Placement': 'Place one object somewhere you\'ll see it.',
+      '7,000 Steps': 'Take a 2-minute walk around your block.',
+      'Daily Protein Target': 'Add one boiled egg to your day.',
+      'Weekly Review': 'Write one win from this week.',
+      'Temptation Bundling': 'Queue your favorite podcast for your next walk.',
+      'Quarterly Quest Setting': 'Write one 90-day goal.',
+      'Post-Behavior Celebration': 'Smile and say "yes!" after your next task.',
+      'Unstimulated Walk': 'Walk to the mailbox with no headphones.',
+      'Single-Sentence Journal': 'Write one sentence about today.',
+      'Identity Journaling': 'Write the words "I am someone who..." once.',
+      'Deliberate Skill Practice': 'Practice one rep at the edge of your skill.',
+      'Novel Learning Session': 'Look up one fact about something new.',
+      'Weekly Networking Outreach': 'Send one professional message.',
+      'Daily Meaningful Interaction': 'Call one person for 60 seconds.',
+      'Loud Budgeting': 'Tell one person what you\'re skipping today.',
+    };
+
+    for (const [name, startSmallVersion] of Object.entries(startSmallByName)) {
+      const template = await ctx.db
+        .query('templates')
+        .filter((q) => q.eq(q.field('name'), name))
+        .first();
+      if (!template) {
+        skipped.push(name);
+        continue;
+      }
+      if (template.startSmallVersion) continue;
+      await ctx.db.patch(template._id, { startSmallVersion });
+      patchedCount++;
+    }
+
+    return { success: true, patchedCount, skipped };
   },
 });
