@@ -4,12 +4,10 @@ import { useThemeColors } from '@/theme/ThemeContext';
 
 import { api } from '../../../../convex/_generated/api';
 import { HeroHeader } from '../components/HeroHeader';
-import { PlanHabitCard } from '../components/PlanHabitCard';
+import { PlanPathCard } from '../components/PlanPathCard';
 import { PrimaryCTA } from '../components/PrimaryCTA';
+import { estimatePath } from '../data/pathLength';
 import { StepComponentProps } from '../types';
-
-const IRON_DAYS_BY_INDEX = [40, 52, 45];
-const TIMINGS = ['Mornings', 'Evenings', 'Evenings'];
 
 export function PlanPreviewStep({ answers, onNext }: StepComponentProps) {
   const { colors } = useThemeColors();
@@ -20,6 +18,11 @@ export function PlanPreviewStep({ answers, onNext }: StepComponentProps) {
         .filter((t): t is NonNullable<typeof t> => Boolean(t))
     : [];
 
+  const name = answers.name?.trim();
+  const headline = name
+    ? `${name},\nthree paths.`
+    : 'Three paths.';
+
   return (
     <View style={{ flex: 1 }}>
       <ScrollView
@@ -28,20 +31,23 @@ export function PlanPreviewStep({ answers, onNext }: StepComponentProps) {
         style={{ flex: 1 }}
       >
         <HeroHeader
-          headline="Your first chain."
-          sub="Three habits. One chain each. You'll see strength build as you go."
+          headline={headline}
+          sub="Each habit takes a different time to form. Each day, one closer."
         />
         <View style={{ marginTop: 20 }}>
-          {picked.map((t, i) => (
-            <PlanHabitCard
-              daysToIron={IRON_DAYS_BY_INDEX[i] ?? 45}
-              icon={t.icon}
-              iconColor={t.iconColor}
-              key={t._id}
-              name={t.name}
-              timing={TIMINGS[i] ?? 'Anytime'}
-            />
-          ))}
+          {picked.map((t) => {
+            const path = estimatePath(t.name);
+            return (
+              <PlanPathCard
+                days={path.days}
+                difficultyLabel={path.difficultyLabel}
+                icon={t.icon}
+                iconColor={t.iconColor}
+                key={t._id}
+                name={t.name}
+              />
+            );
+          })}
         </View>
         <View
           style={{
@@ -52,12 +58,12 @@ export function PlanPreviewStep({ answers, onNext }: StepComponentProps) {
           }}
         >
           <Text style={{ color: colors.primary[700], fontSize: 13, lineHeight: 19 }}>
-            Average time to iron tier: 45 days. That&rsquo;s the honest number.
+            Miss a day? The countdown pauses. Your strength holds. The path waits.
           </Text>
         </View>
       </ScrollView>
       <View style={{ paddingTop: 12 }}>
-        <PrimaryCTA label="Keep going" onPress={onNext} />
+        <PrimaryCTA label="Begin Day 1" onPress={onNext} />
       </View>
     </View>
   );
