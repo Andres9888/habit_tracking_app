@@ -51,7 +51,7 @@ export function SolutionIntroStep({ onNext }: StepComponentProps) {
               textAlign: 'center',
             }}
           >
-            Miss a day, the chain shows it. But your strength holds. Your tier holds. You don&rsquo;t start over.
+            Each habit is a path. Each day brings you one closer. Miss a day &mdash; your strength holds, the path waits.
           </Text>
         </View>
         <View style={{ alignItems: 'center', paddingBottom: 16 }}>
