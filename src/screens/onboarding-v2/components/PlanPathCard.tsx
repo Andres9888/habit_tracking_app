@@ -46,19 +46,20 @@ export function PlanPathCard({
         >
           <Text style={{ fontSize: 18 }}>{icon}</Text>
         </View>
-        <Text style={{ color: colors.text.primary, flex: 1, fontSize: 15, fontWeight: '700' }}>
-          {name}
-        </Text>
-        <View
-          style={{
-            backgroundColor: 'rgba(184, 115, 51, 0.12)',
-            borderRadius: 8,
-            paddingHorizontal: 8,
-            paddingVertical: 2,
-          }}
-        >
-          <Text style={{ color: '#8B5A2B', fontSize: 11, fontWeight: '700' }}>
-            {days} DAYS
+        <View style={{ flex: 1 }}>
+          <Text
+            style={{
+              color: colors.text.tertiary,
+              fontSize: 10,
+              fontWeight: '600',
+              letterSpacing: 1.2,
+              textTransform: 'uppercase',
+            }}
+          >
+            Route · {days} days · {difficultyLabel}
+          </Text>
+          <Text style={{ color: colors.text.primary, fontSize: 15, fontWeight: '700' }}>
+            {name}
           </Text>
         </View>
       </View>
@@ -68,8 +69,13 @@ export function PlanPathCard({
         <TierMarker leftPercent={TIER_POSITIONS.gold * 100} tier="gold" />
         <DayOneMarker />
       </View>
-      <Text style={{ color: colors.text.tertiary, fontSize: 12, marginTop: 10 }}>
-        Day 1 · iron in {ironDay} · habit formed in {days} ({difficultyLabel})
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 8 }}>
+        <Text style={{ color: '#B87333', fontSize: 10, fontWeight: '700' }}>Copper</Text>
+        <Text style={{ color: '#6B7280', fontSize: 10, fontWeight: '700' }}>Iron Ridge</Text>
+        <Text style={{ color: '#D4A23F', fontSize: 10, fontWeight: '700' }}>Gold Summit</Text>
+      </View>
+      <Text style={{ color: colors.text.secondary, fontSize: 12, marginTop: 10 }}>
+        📍 Day 1 · next stop: Iron Ridge in {ironDay} days
       </Text>
     </View>
   );

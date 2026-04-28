@@ -20,8 +20,8 @@ export function PlanPreviewStep({ answers, onNext }: StepComponentProps) {
 
   const name = answers.name?.trim();
   const headline = name
-    ? `${name},\nthree paths.`
-    : 'Three paths.';
+    ? `${name},\nyour habit map.`
+    : 'Your habit map.';
 
   return (
     <View style={{ flex: 1 }}>
@@ -32,7 +32,7 @@ export function PlanPreviewStep({ answers, onNext }: StepComponentProps) {
       >
         <HeroHeader
           headline={headline}
-          sub="Each habit takes a different time to form. Each day, one closer."
+          sub="Three routes. Each takes a different time. Each day, one closer."
         />
         <View style={{ marginTop: 20 }}>
           {picked.map((t) => {
@@ -58,7 +58,7 @@ export function PlanPreviewStep({ answers, onNext }: StepComponentProps) {
           }}
         >
           <Text style={{ color: colors.primary[700], fontSize: 13, lineHeight: 19 }}>
-            Miss a day? The countdown pauses. Your strength holds. The path waits.
+            Miss a day? Detour. We recalculate the route. Your strength holds.
           </Text>
         </View>
       </ScrollView>
