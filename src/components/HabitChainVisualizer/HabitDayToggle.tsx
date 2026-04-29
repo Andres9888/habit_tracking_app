@@ -92,6 +92,7 @@ export const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
           onPressOut={handlePressOut}
         >
           <HabitDayToggleContent
+            completed={completed}
             missed={missed}
             forgeFlash={forgeFlash}
             completion={completion}
