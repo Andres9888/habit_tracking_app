@@ -5,13 +5,14 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { useAppTheme } from '../../../theme';
+import { typography } from '../../../theme/typography';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { styles as baseStyles } from './styles';
 import type { TemplatePreviewProps } from './types';
 
 const localStyles = StyleSheet.create({
   templateDescription: {
-    fontSize: 17,
+    fontSize: typography.body.fontSize,
     lineHeight: 22,
     textAlign: 'center',
   },

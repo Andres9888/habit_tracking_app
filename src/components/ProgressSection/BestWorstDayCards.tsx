@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { Trophy, AlertTriangle, ChevronRight } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '@/theme/ThemeContext';
 
 import type { DayStats } from './types';
@@ -31,7 +32,7 @@ export function BestWorstDayCards({
         style={{ borderColor: colors.status.successLight, backgroundColor: colors.status.successLight }}
       >
         <View className='mb-1 flex-row items-center gap-1.5'>
-          <Trophy color={colors.status.success} size={14} />
+          <Trophy color={colors.status.success} size={iconSizes.small} />
           <Text className='text-xs font-medium' style={{ color: colors.status.successText }}>Best Day</Text>
         </View>
         <Text className='text-lg font-bold' style={{ color: colors.status.successText }}>
@@ -52,10 +53,10 @@ export function BestWorstDayCards({
       >
         <View className='mb-1 flex-row items-center justify-between'>
           <View className='flex-row items-center gap-1.5'>
-            <AlertTriangle color={colors.status.warning} size={14} />
+            <AlertTriangle color={colors.status.warning} size={iconSizes.small} />
             <Text className='text-xs font-medium' style={{ color: colors.status.warningText }}>Focus On</Text>
           </View>
-          <ChevronRight color={colors.status.warning} size={14} />
+          <ChevronRight color={colors.status.warning} size={iconSizes.small} />
         </View>
         <Text className='text-lg font-bold' style={{ color: colors.status.warningText }}>{worstDay.day}</Text>
         <Text className='text-xs' style={{ color: colors.status.warningText }}>

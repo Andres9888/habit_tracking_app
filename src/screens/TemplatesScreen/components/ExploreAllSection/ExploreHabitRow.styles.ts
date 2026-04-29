@@ -20,9 +20,9 @@ export const s = StyleSheet.create({
     paddingHorizontal: spacing.sm,
     paddingVertical: 2,
   },
-  badgeText: { fontSize: 10, fontWeight: fontWeights.semibold },
+  badgeText: { fontSize: typography.tabBar.fontSize, fontWeight: fontWeights.semibold },
   desc: { ...typography.caption, lineHeight: 17 },
-  dot: { borderRadius: 4, height: 3, width: 3 },
+  dot: { borderRadius: borderRadius.xs, height: 3, width: 3 },
   emoji: { fontSize: 20 },
   freq: { ...typography.caption },
   iconBox: {

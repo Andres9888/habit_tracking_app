@@ -1,57 +1,80 @@
 /**
- * Science & Evidence section layout and header styles
+ * Science & Evidence section styles — citation footnote layout.
+ *
+ * Two-zone layout: green gradient hero + neutral tips zone.
+ * Pill, citation lines, and "why it works" overline.
  */
 
 import { StyleSheet } from 'react-native';
 
 import { colors } from '@/theme';
-import { borderRadius, spacing } from '../../../theme/spacing';
-import { typography, fontWeights, fontFamilies } from '@/theme/typography';
+import { borderRadius, shadows, spacing } from '../../../theme/spacing';
+import { fontFamilies, fontWeights } from '@/theme/typography';
 
 export const evidenceStyles = StyleSheet.create({
-  divider: {
-    backgroundColor: `${colors.primary[500]}20`,
-    height: 1,
-    marginBottom: 14,
-  },
-  gradient: {
+  bottomZone: {
+    backgroundColor: colors.gray[50],
+    borderTopColor: colors.gray[200],
+    borderTopWidth: 1,
     padding: spacing.lg,
   },
-  header: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    gap: 8,
-    marginBottom: 14,
+  citation: {
+    marginBottom: spacing.lg,
   },
-  headerLabel: {
-    color: colors.primary[700],
+  paperText: {
+    color: colors.gray[600],
     fontFamily: fontFamilies.primary.text,
-    fontSize: typography.bodySmall.fontSize,
-    fontWeight: fontWeights.bold,
-  },
-  quoteText: {
-    color: colors.primary[700],
-    fontFamily: fontFamilies.primary.text,
-    fontSize: 13,
+    fontSize: 13.5,
     fontStyle: 'italic',
-    lineHeight: 22,
+    lineHeight: 20,
   },
-  researchLink: {
-    ...typography.caption,
+  pill: {
+    alignItems: 'center',
     alignSelf: 'flex-start',
-    borderBottomColor: `${colors.primary[600]}66`,
-    borderBottomWidth: 1,
-    color: colors.primary[600],
-    fontWeight: fontWeights.semibold,
-    marginTop: spacing.sm,
-    paddingBottom: 1,
+    backgroundColor: '#FFFFFF',
+    borderRadius: borderRadius.full,
+    flexDirection: 'row',
+    gap: 7,
+    marginBottom: spacing.md,
+    paddingHorizontal: spacing.md,
+    paddingVertical: 6,
+    ...shadows.subtle,
+  },
+  pillText: {
+    color: colors.primary[700],
+    fontFamily: fontFamilies.primary.text,
+    fontSize: 11,
+    fontWeight: fontWeights.bold,
+    letterSpacing: 1.4,
+    textTransform: 'uppercase',
   },
   section: {
-    borderLeftColor: colors.primary[500],
+    backgroundColor: '#FFFFFF',
+    borderLeftColor: colors.primary[600],
     borderLeftWidth: 3,
     borderRadius: borderRadius.large,
     marginHorizontal: spacing.lg,
     marginTop: spacing.lg,
     overflow: 'hidden',
+    ...shadows.card,
+  },
+  sourceText: {
+    color: colors.gray[800],
+    fontFamily: fontFamilies.primary.text,
+    fontSize: 15,
+    fontWeight: fontWeights.semibold,
+    marginBottom: 4,
+  },
+  topZone: {
+    padding: spacing.lg,
+  },
+  whyOverline: {
+    color: colors.primary[700],
+    fontFamily: fontFamilies.primary.text,
+    fontSize: 11,
+    fontWeight: fontWeights.bold,
+    letterSpacing: 1.6,
+    marginBottom: spacing.lg,
+    textTransform: 'uppercase',
   },
 });

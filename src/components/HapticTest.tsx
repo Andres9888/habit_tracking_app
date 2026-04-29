@@ -214,7 +214,7 @@ const styles = StyleSheet.create({
   },
   infoBox: {
     backgroundColor: '#e3f2fd',
-    borderRadius: 8,
+    borderRadius: borderRadius.small,
     marginTop: 24,
     padding: 12,
   },
@@ -229,7 +229,7 @@ const styles = StyleSheet.create({
   },
   statusBox: {
     backgroundColor: '#f5f5f5',
-    borderRadius: 8,
+    borderRadius: borderRadius.small,
     marginBottom: 16,
     padding: 16,
   },

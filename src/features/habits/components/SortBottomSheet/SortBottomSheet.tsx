@@ -77,7 +77,7 @@ export function SortBottomSheet({
 
               <View className='flex-row items-center justify-between px-5 pb-4'>
                 <Text
-                  className='text-[17px] font-bold'
+                  className='text-base font-bold'
                   style={{ color: themeColors.text.primary }}
                 >
                   Sort Habits

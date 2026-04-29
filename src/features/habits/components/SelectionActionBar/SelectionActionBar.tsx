@@ -10,7 +10,7 @@ import { colors as palette } from '../../../../theme/colors';
 import { borderRadius } from '../../../../theme/spacing';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import { BLUR_INTENSITY, BORDER_DARK, BORDER_LIGHT, CAPSULE_SHADOW } from '../BottomActionBar/BottomActionBar.styles';
-import { fontWeights } from '@/theme/typography';
+import { typography, fontWeights } from '@/theme/typography';
 
 const ENTERING = FadeInUp.duration(durations.enter).easing(enterEasing);
 const EXITING = FadeOutDown.duration(durations.quick);
@@ -85,7 +85,7 @@ function SelectionActionBarComponent({
 const s = StyleSheet.create({
   btn: { alignItems: 'center', borderRadius: borderRadius.xl, height: 44, justifyContent: 'center', width: 44 },
   capsuleBorder: { ...StyleSheet.absoluteFillObject, borderRadius: CAPSULE_RADIUS, borderWidth: 1 },
-  count: { fontSize: 13, fontWeight: fontWeights.semibold, paddingHorizontal: 12 },
+  count: { fontSize: typography.caption.fontSize, fontWeight: fontWeights.semibold, paddingHorizontal: 12 },
   disabled: { opacity: 0.35 },
   glassBg: { ...StyleSheet.absoluteFillObject, borderRadius: CAPSULE_RADIUS, overflow: 'hidden' },
   row: { alignItems: 'center', flexDirection: 'row', paddingHorizontal: 16, paddingVertical: 8 },

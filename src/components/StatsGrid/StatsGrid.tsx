@@ -42,7 +42,7 @@ export function StatsGrid({
     <View className='rounded-2xl p-4 shadow-sm' style={{ backgroundColor: themeColors.card, shadowColor: themeColors.border }}>
       {/* Header */}
       <View className='mb-4 flex-row items-center justify-center gap-2'>
-        <BarChart3 color={themeColors.text.secondary} size={18} />
+        <BarChart3 color={themeColors.text.secondary} size={iconSizes.medium} />
         <Text className='text-lg font-semibold' style={{ color: themeColors.text.primary }}>Statistics</Text>
       </View>
 

@@ -10,7 +10,7 @@ import { typography, fontWeights, fontFamilies} from '../../../theme/typography'
 export const containerStyles = StyleSheet.create({
   closeButton: {
     fontFamily: fontFamilies.primary.text,
-    fontSize: 17,
+    fontSize: typography.body.fontSize,
     fontWeight: fontWeights.semibold,
   },
   container: {

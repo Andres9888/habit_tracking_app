@@ -11,7 +11,7 @@ import { QUOTES } from './quotes';
 import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { borderRadius } from '@/theme/spacing';
-import { fontFamilies, fontWeights } from '@/theme/typography';
+import { typography, fontFamilies, fontWeights } from '@/theme/typography';
 
 interface DailyQuoteProps {
   /** Override the quote (optional) */
@@ -50,7 +50,7 @@ export function DailyQuote({
         author: {
           color: colors.gray[500],
           fontFamily: fontFamilies.primary.text,
-          fontSize: 13,
+          fontSize: typography.caption.fontSize,
           fontWeight: fontWeights.medium,
         },
         container: {
@@ -74,7 +74,7 @@ export function DailyQuote({
         quoteText: {
           color: colors.gray[600],
           fontFamily: fontFamilies.primary.text,
-          fontSize: 13,
+          fontSize: typography.caption.fontSize,
           fontStyle: 'italic',
           lineHeight: 22,
         },
@@ -105,7 +105,7 @@ export function DailyQuote({
             style={styles.refreshButton}
             onPress={onRefresh}
           >
-            <RefreshCw color={colors.gray[400]} size={14} />
+            <RefreshCw color={colors.gray[400]} size={iconSizes.small} />
           </Pressable> : null}
       </View>
     </Animated.View>

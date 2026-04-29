@@ -6,6 +6,7 @@
 
 import { useRef, useState, useEffect } from 'react';
 import { Animated } from 'react-native';
+import { springs } from '@/theme/animations';
 import { Motion } from '../../../../constants/motion';
 import type { ValidationResult } from './types';
 
@@ -55,8 +56,7 @@ export function useHeroNameInputAnimations(value: string) {
               useNativeDriver: true,
             }),
             Animated.spring(validationTranslateY, {
-              damping: 15,
-              stiffness: 200,
+              ...springs.standard,
               toValue: 0,
               useNativeDriver: true,
             }),

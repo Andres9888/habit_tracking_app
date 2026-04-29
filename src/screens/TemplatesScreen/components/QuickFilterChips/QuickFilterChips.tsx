@@ -11,7 +11,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import { borderRadius, spacing } from '@/theme/spacing';
 import { triggerHaptic } from '@/utils/haptics';
-import { fontWeights } from '@/theme/typography';
+import { typography, fontWeights } from '@/theme/typography';
 import { getCategoryMeta } from '../../data/categoryMeta';
 
 export interface ChipCategory {
@@ -139,7 +139,7 @@ const s = StyleSheet.create({
     paddingHorizontal: spacing.base,
     paddingVertical: spacing.sm,
   },
-  chipText: { fontSize: 13, fontWeight: fontWeights.semibold, lineHeight: 16 },
+  chipText: { fontSize: typography.caption.fontSize, fontWeight: fontWeights.semibold, lineHeight: 16 },
   container: {
     minHeight: 44,
   },

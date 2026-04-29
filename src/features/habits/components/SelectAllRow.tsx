@@ -9,7 +9,7 @@ import { Checkbox } from '../../../components/Checkbox';
 import { durations } from '../../../theme/animations';
 import { colors as palette } from '../../../theme/colors';
 import { useThemeColors } from '../../../theme/ThemeContext';
-import { fontWeights } from '@/theme/typography';
+import { typography, fontWeights } from '@/theme/typography';
 
 interface SelectAllRowProps {
   selectedCount: number;
@@ -49,8 +49,8 @@ function SelectAllRowComponent({
 }
 
 const s = StyleSheet.create({
-  count: { color: palette.premium[500], fontSize: 13, fontWeight: fontWeights.semibold },
-  label: { flex: 1, fontSize: 14, fontWeight: fontWeights.medium },
+  count: { color: palette.premium[500], fontSize: typography.caption.fontSize, fontWeight: fontWeights.semibold },
+  label: { flex: 1, fontSize: typography.bodySmall.fontSize, fontWeight: fontWeights.medium },
   row: {
     alignItems: 'center',
     flexDirection: 'row',

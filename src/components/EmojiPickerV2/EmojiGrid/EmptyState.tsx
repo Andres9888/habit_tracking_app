@@ -1,28 +1,23 @@
-import { Text } from 'react-native';
-import { Search } from 'lucide-react-native';
-import Animated, { FadeIn } from 'react-native-reanimated';
-import { useThemeColors } from '../../../theme/ThemeContext';
-
-import { styles } from './styles';
-import { iconSizes } from '@/theme/iconSizes';
-
 /**
- * Empty state shown when no emojis match search
+ * EmojiPicker EmptyState — shown when no emojis match search.
+ * Migrated to canonical primitive (compact, lucide search icon).
  */
+import { Search } from 'lucide-react-native';
+import { useThemeColors } from '../../../theme/ThemeContext';
+import { iconSizes } from '@/theme/iconSizes';
+import { EmptyState as CanonicalEmptyState } from '../../EmptyState/EmptyState';
+
 export function EmptyState() {
   const { colors } = useThemeColors();
 
   return (
-    <Animated.View entering={FadeIn.duration(250)} style={styles.emptyState}>
-      <Search color={colors.text.tertiary} size={iconSizes.xxl} />
-      <Text style={[styles.emptyStateTitle, { color: colors.text.primary }]}>
-        No emojis found
-      </Text>
-      <Text
-        style={[styles.emptyStateSubtitle, { color: colors.text.tertiary }]}
-      >
-        Try a different search term
-      </Text>
-    </Animated.View>
+    <CanonicalEmptyState
+      variant='noResults'
+      size='compact'
+      icon={<Search color={colors.text.tertiary} size={iconSizes.xxl} />}
+      headline='No emojis found'
+      description='Try a different search term'
+      hideCTA
+    />
   );
 }

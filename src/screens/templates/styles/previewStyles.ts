@@ -3,6 +3,7 @@ import { colors } from '../../../theme/colors';
 import { lightColors } from '../../../theme/darkColors';
 import type { SemanticColors } from '../../../theme/darkColors';
 import { borderRadius } from '../../../theme/spacing';
+import { typography } from '../../../theme/typography';
 
 type PreviewThemeColors = Pick<SemanticColors, 'primary'> & {
   error: string;
@@ -21,7 +22,7 @@ export const getPreviewStyles = (themeColors: PreviewThemeColors) =>
       alignItems: 'center',
     },
     previewIcon: {
-      fontSize: 34,
+      fontSize: typography.displayLarge.fontSize,
     },
     previewIconContainer: {
       alignItems: 'center',
@@ -51,10 +52,10 @@ export const getPreviewStyles = (themeColors: PreviewThemeColors) =>
       marginTop: 8,
     },
     scienceIcon: {
-      fontSize: 17,
+      fontSize: typography.body.fontSize,
     },
     youtubeIcon: {
-      fontSize: 17,
+      fontSize: typography.body.fontSize,
     },
     youtubeIconWrapper: {
       alignItems: 'center',

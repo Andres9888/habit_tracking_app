@@ -12,7 +12,7 @@ export const labelStyles = StyleSheet.create({
   dayLabel: {
     ...typography.caption,
     color: colors.text.tertiary,
-    fontSize: 10,
+    fontSize: typography.tabBar.fontSize,
     textAlign: 'center',
   },
   dayLabelCell: {
@@ -39,6 +39,6 @@ export const labelStyles = StyleSheet.create({
   monthLabelText: {
     ...typography.caption,
     color: colors.text.secondary,
-    fontSize: 10,
+    fontSize: typography.tabBar.fontSize,
   },
 });

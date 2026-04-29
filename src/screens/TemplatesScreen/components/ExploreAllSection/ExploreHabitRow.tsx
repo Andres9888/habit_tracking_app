@@ -80,7 +80,7 @@ export function ExploreHabitRow({
         ) : isImported ? (
           <Check color={colors.primary[700]} size={iconSizes.small} strokeWidth={3} />
         ) : (
-          <Plus color={colors.text.inverse} size={18} strokeWidth={2.5} />
+          <Plus color={colors.text.inverse} size={iconSizes.medium} strokeWidth={2.5} />
         )}
       </AnimatedPressable>
     </Pressable>

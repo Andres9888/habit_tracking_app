@@ -29,7 +29,7 @@ export const DayCell = memo(function DayCell({
       accessibilityRole='text'
       className='flex-1 items-center gap-2'
     >
-      <Text className='text-center text-[13px] font-medium uppercase leading-[18px] tracking-[0.34px]' style={{ color: themeColors.text.secondary }}>
+      <Text className='text-center text-sm font-medium uppercase leading-[18px] tracking-[0.34px]' style={{ color: themeColors.text.secondary }}>
         {weekday}
       </Text>
       <View
@@ -38,7 +38,7 @@ export const DayCell = memo(function DayCell({
         } ${isUpcoming && !isCurrentDay ? 'opacity-50' : ''}`}
       >
         <Text
-          className={`text-center text-[17px] font-medium leading-[25.5px] tracking-[-0.43px] ${
+          className={`text-center text-base font-medium leading-[25.5px] tracking-[-0.43px] ${
             isCurrentDay ? 'text-white' : 'text-[#364153]'
           }`}
         >

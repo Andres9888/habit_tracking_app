@@ -67,20 +67,20 @@ export function UpgradePrompt({
             <Text className='text-[32px]'>🚀</Text>
           </View>
           <Text
-            className='text-center text-[24px] font-bold tracking-tight'
+            className='text-center text-2xl font-bold tracking-tight'
             style={{ color: colors.text.primary }}
           >
             Ready to build more habits?
           </Text>
           <Text
-            className='text-center text-[15px] font-normal leading-[20px]'
+            className='text-center text-base font-normal leading-[20px]'
             style={{ color: colors.text.secondary }}
           >
             Track unlimited habits across all areas of your life. Premium
             members build stronger routines and stay consistent 2x longer.
           </Text>
           <View className='items-center rounded-2xl px-4 py-3' style={{ backgroundColor: colors.status.premiumLight }}>
-            <Text className='text-center text-[13px] font-semibold' style={{ color: colors.status.premiumText }}>
+            <Text className='text-center text-sm font-semibold' style={{ color: colors.status.premiumText }}>
               $0 for 7 days · Cancel anytime
             </Text>
           </View>
@@ -101,7 +101,7 @@ export function UpgradePrompt({
               end={{ x: 1, y: 0 }}
               start={{ x: 0, y: 0 }}
             />
-            <Text className='text-[17px] font-semibold text-white'>
+            <Text className='text-base font-semibold text-white'>
               Start Free Trial →
             </Text>
           </Pressable>
@@ -119,7 +119,7 @@ export function UpgradePrompt({
             onPress={handleClose}
           >
             <Text
-              className='text-[15px] font-normal'
+              className='text-base font-normal'
               style={{ color: colors.text.secondary }}
             >
               Maybe later

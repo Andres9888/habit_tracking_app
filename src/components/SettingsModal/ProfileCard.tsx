@@ -47,7 +47,7 @@ export function ProfileCard({ isPremium, highContrastMode }: ProfileCardProps) {
               width: 52,
             }}
           >
-            <Text className='text-[22px] font-bold' style={{ color: themeColors.text.inverse }}>
+            <Text className='text-2xl font-bold' style={{ color: themeColors.text.inverse }}>
               {initial}
             </Text>
           </View>
@@ -62,7 +62,7 @@ export function ProfileCard({ isPremium, highContrastMode }: ProfileCardProps) {
               width: 52,
             }}
           >
-            <Text className='text-[22px] font-bold text-white'>{initial}</Text>
+            <Text className='text-2xl font-bold text-white'>{initial}</Text>
           </LinearGradient>
         )}
         <View className='flex-1'>
@@ -86,7 +86,7 @@ export function ProfileCard({ isPremium, highContrastMode }: ProfileCardProps) {
             >
               <Crown color={themeColors.status.warningText} size={iconSizes.micro} />
               <Text
-                className='text-[11px] font-bold'
+                className='text-xs font-bold'
                 style={{ color: themeColors.status.warningText }}
               >
                 PRO

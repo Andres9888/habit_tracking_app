@@ -64,7 +64,7 @@ export function StrengthProgressBar({
       {/* Column 5: Animated counting percentage */}
       <View className='flex-1 items-center'>
         <Text
-          className='text-[13px] font-bold'
+          className='text-sm font-bold'
           style={{
             color: isDark ? '#A3E635' : colors.strength.starting,
             marginLeft: 12,

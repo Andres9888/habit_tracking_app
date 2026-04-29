@@ -4,7 +4,7 @@
 
 import { StyleSheet } from 'react-native';
 import { borderRadius } from '@/theme/spacing';
-import { fontFamilies, fontWeights } from '@/theme/typography';
+import { typography, fontFamilies, fontWeights } from '@/theme/typography';
 
 export const styles = StyleSheet.create({
   container: {
@@ -20,7 +20,7 @@ export const styles = StyleSheet.create({
     gap: 12,
   },
   habitIcon: {
-    fontSize: 22,
+    fontSize: typography.heading1.fontSize,
   },
   message: {
     flex: 1,
@@ -37,11 +37,11 @@ export const styles = StyleSheet.create({
     paddingVertical: 4,
   },
   streakEmoji: {
-    fontSize: 13,
+    fontSize: typography.caption.fontSize,
   },
   streakText: {
     fontFamily: fontFamilies.primary.text,
-    fontSize: 13,
+    fontSize: typography.caption.fontSize,
     fontWeight: fontWeights.bold,
   },
   toast: {

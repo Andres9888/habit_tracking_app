@@ -5,7 +5,7 @@
 import { StyleSheet, Text, View } from 'react-native';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import { spacing } from '../../../../theme/spacing';
-import { fontWeights } from '../../../../theme/typography';
+import { typography, fontWeights } from '../../../../theme/typography';
 
 export function ExploreDivider() {
   const { colors } = useThemeColors();
@@ -31,7 +31,7 @@ const s = StyleSheet.create({
     paddingHorizontal: spacing.base,
   },
   label: {
-    fontSize: 10,
+    fontSize: typography.tabBar.fontSize,
     fontWeight: fontWeights.semibold,
     letterSpacing: 0.8,
     textTransform: 'uppercase',

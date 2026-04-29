@@ -9,7 +9,7 @@ import Animated, { FadeInDown } from 'react-native-reanimated';
 import { BarChart3, Calendar } from 'lucide-react-native';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import type { EmptyInsightsStateProps } from '../InsightsSection.types';
-import { fontFamilies, fontWeights } from '@/theme/typography';
+import { typography, fontFamilies, fontWeights } from '@/theme/typography';
 import { borderRadius, spacing } from '@/theme/spacing';
 import { iconSizes } from '@/theme/iconSizes';
 import { durations, enterEasing } from '@/theme/animations';
@@ -44,7 +44,7 @@ export function EmptyInsightsState({ daysRemaining }: EmptyInsightsStateProps) {
             style={{
               alignItems: 'center',
               backgroundColor: isDark ? '#2E1065' : '#F5F3FF',
-              borderRadius: 8,
+              borderRadius: borderRadius.small,
               height: 32,
               justifyContent: 'center',
               width: 32,
@@ -52,7 +52,7 @@ export function EmptyInsightsState({ daysRemaining }: EmptyInsightsStateProps) {
           >
             <BarChart3 color={isDark ? '#C4B5FD' : '#A78BFA'} size={iconSizes.small} />
           </View>
-          <Text style={{ color: colors.text.secondary, fontFamily: fontFamilies.primary.text, fontSize: 17, fontWeight: fontWeights.bold }}>
+          <Text style={{ color: colors.text.secondary, fontFamily: fontFamilies.primary.text, fontSize: typography.body.fontSize, fontWeight: fontWeights.bold }}>
             Insights
           </Text>
         </View>
@@ -65,14 +65,14 @@ export function EmptyInsightsState({ daysRemaining }: EmptyInsightsStateProps) {
           }}
         >
           <Calendar color={colors.text.tertiary} size={iconSizes.xl} style={{ marginBottom: 8 }} />
-          <Text style={{ color: colors.text.secondary, fontFamily: fontFamilies.primary.text, fontSize: 14, textAlign: 'center' }}>
+          <Text style={{ color: colors.text.secondary, fontFamily: fontFamilies.primary.text, fontSize: typography.bodySmall.fontSize, textAlign: 'center' }}>
             Keep tracking for insights
           </Text>
           <Text
             style={{
               color: colors.text.tertiary,
               fontFamily: fontFamilies.primary.text,
-              fontSize: 13,
+              fontSize: typography.caption.fontSize,
               marginTop: 4,
               textAlign: 'center',
             }}

@@ -4,6 +4,7 @@
 
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { ChevronDown, ChevronRight } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import { spacing } from '../../../../theme/spacing';
 import { fontWeights, typography } from '../../../../theme/typography';
@@ -36,7 +37,7 @@ export function CategoryGroupHeader({
         <Text style={[s.count, { color: colors.text.tertiary }]}>· {count}</Text>
         {onToggle ? (
           <View style={s.chevron}>
-            <Chevron color={colors.text.tertiary} size={18} strokeWidth={2.5} />
+            <Chevron color={colors.text.tertiary} size={iconSizes.medium} strokeWidth={2.5} />
           </View>
         ) : null}
       </View>

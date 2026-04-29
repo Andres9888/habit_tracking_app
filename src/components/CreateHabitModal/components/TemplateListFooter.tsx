@@ -104,7 +104,7 @@ export const TemplateListFooter = ({ onClose }: TemplateListFooterProps) => {
           onPressIn={handlePressIn}
           onPressOut={handlePressOut}
         >
-          <Text className='mr-2 text-[15px] font-semibold' style={{ color: themeColors.text.primary }}>
+          <Text className='mr-2 text-base font-semibold' style={{ color: themeColors.text.primary }}>
             Hide habits
           </Text>
           <ChevronDown color='#1c1917' size={iconSizes.small} />

@@ -44,7 +44,7 @@ export const ColorPickerContent = ({
     <View className='mb-6'>
       {hideLabel ? null : <Text
           accessibilityRole='text'
-          className='mb-3 text-[13px] font-semibold uppercase'
+          className='mb-3 text-sm font-semibold uppercase'
           style={{ letterSpacing: 0.5, color: themeColors.text.tertiary }}
         >
           {STRINGS.CREATE_HABIT.colorLabel}

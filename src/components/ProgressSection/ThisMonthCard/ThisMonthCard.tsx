@@ -16,6 +16,7 @@ import { View, Text, Pressable, AccessibilityInfo } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import { BarChart3, ChevronRight } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '@/theme/ThemeContext';
 
 import type { ThisMonthCardProps } from '../types';
@@ -66,7 +67,7 @@ export function ThisMonthCard({
         <View className='mb-3 flex-row items-center justify-between'>
           <View className='flex-row items-center gap-2'>
             <View className='h-7 w-7 items-center justify-center rounded-lg' style={{ backgroundColor: themeColors.status.premiumLight }}>
-              <BarChart3 color={themeColors.status.premium} size={14} />
+              <BarChart3 color={themeColors.status.premium} size={iconSizes.small} />
             </View>
             <Text className='text-sm font-semibold' style={{ color: themeColors.text.primary }}>
               This Month
@@ -79,7 +80,7 @@ export function ThisMonthCard({
             onPress={onSeeAllPress}
           >
             <Text className='text-xs font-medium' style={{ color: themeColors.status.premiumText }}>See All</Text>
-            <ChevronRight color={themeColors.status.premium} size={14} />
+            <ChevronRight color={themeColors.status.premium} size={iconSizes.small} />
           </Pressable>
         </View>
 

@@ -13,12 +13,13 @@ import { View, Text } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { RefreshCw } from 'lucide-react-native';
 
+import { colors } from '../../../theme/colors/core';
 import type { SyncingIndicatorProps } from './types';
 import { styles } from './styles';
 import { useSyncingIndicator } from './useSyncingIndicator';
 
 const ICON_SIZE = 12;
-const ICON_COLOR = '#d97706'; // amber-600
+const ICON_COLOR = colors.warning;
 
 export function SyncingIndicator({
   visible = false,

@@ -55,7 +55,7 @@ export function AlgorithmCard({
       <View className='flex-1'>
         <View className='flex-row items-center gap-2'>
           <Text
-            className='text-[14px] font-bold'
+            className='text-sm font-bold'
             style={{ color: colors.text.primary }}
           >
             {entry.name} · {entry.complexity} habits
@@ -70,7 +70,7 @@ export function AlgorithmCard({
           ) : null}
         </View>
         <Text
-          className='mt-0.5 text-[12px] leading-[1.4]'
+          className='mt-0.5 text-xs leading-[1.4]'
           style={{ color: colors.text.secondary }}
         >
           {entry.examples ? `${entry.examples} ` : ''}
@@ -82,7 +82,7 @@ export function AlgorithmCard({
         >
           <Clock color={colors.text.secondary} size={iconSizes.micro} strokeWidth={2} />
           <Text
-            className='text-[11px] font-semibold'
+            className='text-xs font-semibold'
             style={{ color: colors.text.secondary }}
           >
             ~{entry.daysToForm} days to automatic

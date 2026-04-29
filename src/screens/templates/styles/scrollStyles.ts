@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { borderRadius } from '@/theme/spacing';
 import { fontWeights, typography } from '@/theme/typography';
 
 export const scrollStyles = StyleSheet.create({
@@ -21,7 +22,7 @@ export const scrollStyles = StyleSheet.create({
   },
   scrollHintChip: {
     alignItems: 'center',
-    borderRadius: 9999,
+    borderRadius: borderRadius.full,
     elevation: 2,
     flexDirection: 'row',
     paddingHorizontal: 14,

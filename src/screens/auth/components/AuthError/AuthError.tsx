@@ -29,7 +29,7 @@ export function AuthError({ message, onDismiss }: AuthErrorProps) {
         <AlertCircle color={colors.status.error} size={iconSizes.medium} strokeWidth={2.5} />
       </View>
       <View className='flex-1'>
-        <Text className='text-[17px] font-medium leading-[22px]' style={{ color: colors.status.errorText }}>
+        <Text className='text-base font-medium leading-[22px]' style={{ color: colors.status.errorText }}>
           {message}
         </Text>
       </View>

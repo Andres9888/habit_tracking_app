@@ -12,6 +12,7 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
+import { borderRadius } from '../../theme/spacing';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { typography } from '@/theme/typography';
 import { springs } from '@/theme/animations';
@@ -54,7 +55,7 @@ export function RetryButton({ onRetry }: RetryButtonProps) {
       style={[
         {
           backgroundColor: colors.primary[500],
-          borderRadius: 8,
+          borderRadius: borderRadius.small,
           paddingHorizontal: 24,
           paddingVertical: 12,
         },

@@ -14,7 +14,7 @@ import { AnimatedPressable } from '../../ui/AnimatedPressable';
 import { colors as palette } from '../../../theme/colors';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { durations } from '../../../theme/animations';
-import { fontFamilies, fontWeights } from '../../../theme/typography';
+import { typography, fontFamilies, fontWeights } from '../../../theme/typography';
 import { borderRadius } from '../../../theme/spacing';
 import { getDatePillColors } from '../theme';
 
@@ -109,7 +109,7 @@ export const WeekNavRow: React.FC<WeekNavRowProps> = ({
           <Text style={[s.dateText, { color: colors.text.secondary }]}>
             {dateSuffix}
           </Text>
-          <ChevronDown color={colors.gray[300]} size={12} strokeWidth={2} />
+          <ChevronDown color={colors.gray[300]} size={iconSizes.micro} strokeWidth={2} />
         </View>
       </AnimatedPressable>
 
@@ -144,18 +144,18 @@ const CHIP_BASE = {
 const s = StyleSheet.create({
   chipText: {
     fontFamily: fontFamilies.primary.text,
-    fontSize: 10,
+    fontSize: typography.tabBar.fontSize,
     fontWeight: fontWeights.bold,
     letterSpacing: 0.3,
   },
   dateText: {
     fontFamily: fontFamilies.primary.text,
-    fontSize: 14,
+    fontSize: typography.bodySmall.fontSize,
     fontWeight: fontWeights.medium,
   },
   monthText: {
     fontFamily: fontFamilies.primary.text,
-    fontSize: 14,
+    fontSize: typography.bodySmall.fontSize,
     fontWeight: fontWeights.bold,
   },
   pill: { ...CHIP_BASE, borderWidth: 1, gap: 5 },

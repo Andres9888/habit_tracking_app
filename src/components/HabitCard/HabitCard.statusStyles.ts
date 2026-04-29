@@ -84,5 +84,5 @@ export const statusStyles = StyleSheet.create({
     justifyContent: 'center',
     width: 24,
   },
-  warningText: { fontFamily: fontFamilies.primary.text, fontSize: typography.caption.fontSize },
+  warningText: { fontFamily: fontFamilies.primary.text, fontSize: 13 },
 });

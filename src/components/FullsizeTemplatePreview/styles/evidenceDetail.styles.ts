@@ -1,83 +1,65 @@
 /**
- * Video embed and tips styles for the Science & Evidence section
+ * Science section detail styles — video card, tip checkmark halos.
  */
 
 import { StyleSheet } from 'react-native';
 
 import { colors } from '@/theme';
-import { borderRadius, spacing } from '../../../theme/spacing';
-import { typography, fontWeights, fontFamilies } from '@/theme/typography';
+import { borderRadius, shadows, spacing } from '../../../theme/spacing';
+import { fontFamilies } from '@/theme/typography';
 
 const PLAY_ICON_SIZE = 56;
+const TIP_HALO_SIZE = 26;
 
 export const evidenceDetailStyles = StyleSheet.create({
   playCircle: {
     alignItems: 'center',
-    backgroundColor: colors.error,
+    backgroundColor: 'rgba(255,255,255,0.96)',
     borderRadius: PLAY_ICON_SIZE / 2,
     elevation: 4,
     height: PLAY_ICON_SIZE,
     justifyContent: 'center',
-    shadowColor: colors.error,
+    paddingLeft: 3,
+    shadowColor: '#000',
     shadowOffset: { height: 4, width: 0 },
-    shadowOpacity: 0.35,
+    shadowOpacity: 0.25,
     shadowRadius: 12,
     width: PLAY_ICON_SIZE,
   },
-  tipIconContainer: {
+  tipCheckHalo: {
     alignItems: 'center',
-    borderRadius: borderRadius.medium,
-    height: 24,
+    backgroundColor: colors.primary[100],
+    borderColor: colors.primary[500],
+    borderRadius: TIP_HALO_SIZE / 2,
+    borderWidth: 1.5,
+    height: TIP_HALO_SIZE,
     justifyContent: 'center',
-    width: 24,
+    marginTop: 2,
+    width: TIP_HALO_SIZE,
   },
   tipItem: {
     alignItems: 'flex-start',
     flexDirection: 'row',
-    gap: 12,
-    marginBottom: 10,
-  },
-  tipNumber: {
-    fontFamily: fontFamilies.monospace,
-    fontSize: 13,
-    fontWeight: fontWeights.bold,
+    gap: 14,
+    marginBottom: spacing.base,
   },
   tipText: {
-    color: colors.primary[700],
+    color: colors.gray[800],
     flex: 1,
     fontFamily: fontFamilies.primary.text,
-    fontSize: 14,
-    lineHeight: 22,
-  },
-  tipsDivider: {
-    backgroundColor: `${colors.primary[500]}20`,
-    height: 1,
-    marginVertical: spacing.md,
+    fontSize: 17,
+    lineHeight: 28,
   },
   videoCard: {
-    borderColor: `${colors.primary[500]}18`,
+    backgroundColor: colors.gray[200],
     borderRadius: borderRadius.medium,
-    borderWidth: 1,
-    marginTop: spacing.md,
     overflow: 'hidden',
-  },
-  videoLabel: {
-    ...typography.bodySmall,
-    color: colors.gray[800],
-    fontWeight: fontWeights.semibold,
-  },
-  videoMeta: {
-    padding: 12,
-  },
-  videoSubtitle: {
-    ...typography.caption,
-    color: colors.gray[400],
-    marginTop: 2,
+    ...shadows.card,
   },
   videoThumbnail: {
     alignItems: 'center',
     backgroundColor: colors.gray[200],
-    height: 180,
+    height: 168,
     justifyContent: 'center',
     position: 'relative',
   },

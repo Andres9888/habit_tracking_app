@@ -5,7 +5,7 @@
 
 import { Pressable, Text } from 'react-native';
 import { useThemeColors } from '@/theme';
-import { fontWeights } from '@/theme/typography';
+import { typography, fontWeights } from '@/theme/typography';
 
 export type DetailView = 'calendar' | 'strength' | 'goal';
 
@@ -38,7 +38,7 @@ export function DetailViewTabButton({
       <Text
         style={{
           color: isActive ? accentColor : colors.text.tertiary,
-          fontSize: 13,
+          fontSize: typography.caption.fontSize,
           fontWeight: isActive ? fontWeights.semibold : fontWeights.medium,
           letterSpacing: 0.1,
         }}

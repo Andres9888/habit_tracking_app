@@ -16,7 +16,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { borderRadius } from '@/theme/spacing';
-import { fontFamilies, fontWeights } from '@/theme/typography';
+import { typography, fontFamilies, fontWeights } from '@/theme/typography';
 
 export interface ConflictNotificationProps {
   visible: boolean;
@@ -172,14 +172,14 @@ const styles = StyleSheet.create({
   iconContainer: { marginRight: 12 },
   message: {
     fontFamily: fontFamilies.primary.text,
-    fontSize: 13,
+    fontSize: typography.caption.fontSize,
     fontWeight: fontWeights.regular,
     lineHeight: 18,
   },
   textContainer: { flex: 1 },
   title: {
     fontFamily: fontFamilies.primary.text,
-    fontSize: 14,
+    fontSize: typography.bodySmall.fontSize,
     fontWeight: fontWeights.semibold,
     marginBottom: 3,
   },

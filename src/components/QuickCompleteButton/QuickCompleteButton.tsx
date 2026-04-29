@@ -76,7 +76,7 @@ export function QuickCompleteButton({
         <View className='relative h-7 w-7 items-center justify-center'>
           {localCompleted ? (
             <Animated.View style={checkAnimatedStyle}>
-              <Check color={colors.status.success} size={28} strokeWidth={3} />
+              <Check color={colors.status.success} size={iconSizes.xl} strokeWidth={3} />
             </Animated.View>
           ) : (
             <Zap className='text-white' fill='white' size={iconSizes.large} />
@@ -84,7 +84,7 @@ export function QuickCompleteButton({
         </View>
 
         <Text
-          className='text-[15px] font-semibold'
+          className='text-base font-semibold'
           style={{ color: localCompleted ? colors.status.successText : colors.text.inverse }}
         >
           {localCompleted ? 'Done for Today' : 'Complete Today'}

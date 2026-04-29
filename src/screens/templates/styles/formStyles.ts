@@ -14,7 +14,7 @@ export const formStyles = StyleSheet.create({
     marginTop: 12,
   },
   colorSwatch: {
-    borderRadius: 9999,
+    borderRadius: borderRadius.full,
     height: 44,
     width: 44,
   },
@@ -38,7 +38,7 @@ export const formStyles = StyleSheet.create({
     paddingVertical: 12,
   },
   reminderChip: {
-    borderRadius: 9999,
+    borderRadius: borderRadius.full,
     borderWidth: 1,
     paddingHorizontal: 12,
     paddingVertical: 8,

@@ -27,11 +27,11 @@ export function SheetHeader({
   return (
     <View className='flex-row items-center justify-between px-5 pb-4'>
       <View className='flex-1'>
-        <Text className='text-[17px] font-bold' style={{ color: colors.text.primary }}>
+        <Text className='text-base font-bold' style={{ color: colors.text.primary }}>
           {displayDate}
         </Text>
-        {isToday ? <Text className='text-[13px] font-medium' style={{ color: colors.status.warning }}>Today</Text> : null}
-        {totalCount > 0 ? <Text className='mt-0.5 text-[13px] font-normal' style={{ color: colors.text.secondary }}>
+        {isToday ? <Text className='text-sm font-medium' style={{ color: colors.status.warning }}>Today</Text> : null}
+        {totalCount > 0 ? <Text className='mt-0.5 text-sm font-normal' style={{ color: colors.text.secondary }}>
             {completedCount} of {totalCount} completed
           </Text> : null}
       </View>

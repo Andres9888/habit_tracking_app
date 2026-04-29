@@ -20,8 +20,32 @@ export const heroStyles = StyleSheet.create({
     lineHeight: 26,
     textAlign: 'center',
   },
+  startSmallRow: {
+    alignItems: 'flex-start',
+    borderTopColor: colors.gray[200],
+    borderTopWidth: StyleSheet.hairlineWidth,
+    flexDirection: 'row',
+    gap: 8,
+    marginTop: 14,
+    paddingTop: 12,
+  },
+  startSmallSparkle: {
+    fontSize: 14,
+    lineHeight: 22,
+  },
+  startSmallText: {
+    color: colors.gray[600],
+    flex: 1,
+    fontFamily: fontFamilies.primary.text,
+    fontSize: typography.body.fontSize,
+    lineHeight: 22,
+    textAlign: 'left',
+  },
+  startSmallLabel: {
+    fontWeight: fontWeights.bold,
+  },
   decorativeCircle: {
-    borderRadius: 9999,
+    borderRadius: borderRadius.full,
     height: 160,
     position: 'absolute',
     right: -40,
@@ -56,7 +80,7 @@ export const heroStyles = StyleSheet.create({
     width: 96,
   },
   iconText: {
-    fontSize: 34,
+    fontSize: typography.displayLarge.fontSize,
   },
   iconWrapper: {
     marginBottom: 20,
@@ -73,7 +97,7 @@ export const heroStyles = StyleSheet.create({
   },
   metadataPillText: {
     fontFamily: fontFamilies.monospace,
-    fontSize: 13,
+    fontSize: typography.caption.fontSize,
     fontWeight: fontWeights.semibold,
   },
   pillsRow: {

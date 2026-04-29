@@ -3,6 +3,7 @@
  */
 import { Text } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
+import { colors } from '../../../../theme/colors';
 import { typography, fontWeights } from '../../../../theme/typography';
 import { useCoachMessage } from './GoalCoachLine.hooks';
 import type { CoachTone } from './GoalCoachLine.hooks';
@@ -14,16 +15,10 @@ interface GoalCoachLineProps {
 }
 
 function toneColors(tone: CoachTone) {
-  if (tone === 'done') {
-    return { bg: '#E7F6EE', border: '#A7D9BE', text: '#0F5E2C' };
-  }
-  if (tone === 'reset') {
-    return { bg: '#FFF1EE', border: '#FCD7CD', text: '#9A2C1A' };
-  }
-  if (tone === 'home') {
-    return { bg: '#FFE8DE', border: '#F9B894', text: '#7A2E0A' };
-  }
-  return { bg: '#FFF8EE', border: '#FDE4BD', text: '#7C3F0A' };
+  if (tone === 'done') return colors.tone.green;
+  if (tone === 'reset') return colors.tone.red;
+  if (tone === 'home') return colors.tone.orange;
+  return colors.tone.yellow;
 }
 
 export function GoalCoachLine({

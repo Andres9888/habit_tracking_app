@@ -83,7 +83,7 @@ export function SummaryStep({
             end={{ x: 1, y: 0 }}
             start={{ x: 0, y: 0 }}
           />
-          <Save className='text-white' size={18} />
+          <Save className='text-white' size={iconSizes.medium} />
           <Text className='text-sm font-semibold text-white'>Save</Text>
         </Pressable>
       </View>

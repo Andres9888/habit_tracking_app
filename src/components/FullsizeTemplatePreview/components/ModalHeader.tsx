@@ -9,6 +9,7 @@ import { ChevronLeft } from 'lucide-react-native';
 import { StyleSheet, View } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { colors } from '@/theme/colors';
+import { iconSizes } from '@/theme/iconSizes';
 import { borderRadius } from '@/theme/spacing';
 import { triggerHaptic } from '@/utils/haptics';
 import { AnimatedPressable } from '../../ui/AnimatedPressable';
@@ -64,7 +65,7 @@ export function ModalHeader({
           >
             <ChevronLeft
               color={themeColors.text.secondary}
-              size={24}
+              size={iconSizes.large}
               strokeWidth={2.5}
             />
           </AnimatedPressable>
@@ -91,7 +92,7 @@ const s = StyleSheet.create({
   },
   handle: {
     backgroundColor: colors.gray[300],
-    borderRadius: 2,
+    borderRadius: borderRadius.xs,
     height: 4,
     width: 40,
   },

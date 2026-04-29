@@ -20,13 +20,13 @@ export function LoadingTimeoutCard({ onRetry }: LoadingTimeoutCardProps) {
       style={{ backgroundColor: colors.card, borderColor: colors.border }}
     >
       <Text
-        className="mb-2 text-center font-['DMSans'] text-[17px] font-semibold"
+        className="mb-2 text-center font-['DMSans'] text-base font-semibold"
         style={{ color: colors.text.primary }}
       >
         Taking longer than expected
       </Text>
       <Text
-        className="mb-5 text-center font-['DMSans'] text-[13px] leading-5"
+        className="mb-5 text-center font-['DMSans'] text-sm leading-5"
         style={{ color: colors.text.secondary }}
       >
         We&apos;re having trouble connecting. Check your internet connection and
@@ -40,7 +40,7 @@ export function LoadingTimeoutCard({ onRetry }: LoadingTimeoutCardProps) {
         onPress={onRetry}
       >
         <Text
-          className="font-['DMSans'] text-[17px] font-semibold"
+          className="font-['DMSans'] text-base font-semibold"
           style={{ color: colors.text.inverse }}
         >
           Try Again

@@ -56,7 +56,7 @@ export const styles = StyleSheet.create({
   tooltip: {
     ...shadows.modal,
     backgroundColor: colors.background,
-    borderRadius: 8,
+    borderRadius: borderRadius.small,
     padding: spacing.sm,
     position: 'absolute',
     right: spacing.md,

@@ -34,10 +34,8 @@ export function useStrengthRingAnimation({
 
   useEffect(() => {
     animatedStrength.value = withSpring(strength, {
-      damping: 15,
-      mass: 1,
+      ...springs.gentle,
       overshootClamping: false,
-      stiffness: 100,
     });
 
     const levelChanged = previousLevelRef.current !== levelLabel;

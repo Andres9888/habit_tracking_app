@@ -54,7 +54,7 @@ export function StatsCard({
       <View className='flex-row items-center justify-between'>
         {/* Current Streak */}
         <View className='items-center'>
-          <Text className='text-[22px] font-bold' style={{ color: colors.status.streak }}>
+          <Text className='text-2xl font-bold' style={{ color: colors.status.streak }}>
             {currentStreak}
           </Text>
           <Text className='mt-1 text-center text-sm font-medium leading-5' style={{ color: colors.text.secondary }}>
@@ -64,7 +64,7 @@ export function StatsCard({
 
         {/* Best Streak */}
         <View className='items-center'>
-          <Text className='text-[22px] font-bold' style={{ color: colors.text.primary }}>
+          <Text className='text-2xl font-bold' style={{ color: colors.text.primary }}>
             {bestStreak}
           </Text>
           <Text className='mt-1 text-center text-sm font-medium leading-5' style={{ color: colors.text.secondary }}>
@@ -74,7 +74,7 @@ export function StatsCard({
 
         {/* Completion Percentage */}
         <View className='items-center'>
-          <Text className='text-[22px] font-bold' style={{ color: colors.status.successText }}>
+          <Text className='text-2xl font-bold' style={{ color: colors.status.successText }}>
             {completionPercentage}%
           </Text>
           <Text className='mt-1 text-center text-sm font-medium leading-5' style={{ color: colors.text.secondary }}>

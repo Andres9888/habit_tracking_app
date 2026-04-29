@@ -8,7 +8,7 @@ import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { ChevronRight } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
 import { borderRadius } from '@/theme/spacing';
-import { fontFamilies, fontWeights } from '@/theme/typography';
+import { typography, fontFamilies, fontWeights } from '@/theme/typography';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { CATEGORY_PAIRINGS } from '../../../screens/TemplatesScreen/data/habitPairings';
 import { getCategoryMeta } from '../../../screens/TemplatesScreen/data/categoryMeta';
@@ -91,7 +91,7 @@ const pairStyles = StyleSheet.create({
   cardText: { flex: 1, gap: 2 },
   cardTitle: {
     fontFamily: fontFamilies.primary.text,
-    fontSize: 13,
+    fontSize: typography.caption.fontSize,
     fontWeight: fontWeights.semibold,
   },
   container: {

@@ -12,6 +12,7 @@ import React from 'react';
 import { Pressable, Text, View } from 'react-native';
 import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 import { Check, Circle } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '@/theme/ThemeContext';
 import { MiniConfettiBurst } from './MiniConfettiBurst';
 import { useHeaderToggle } from './useHeaderToggle';
@@ -72,12 +73,12 @@ export function HeaderCompleteToggle({
       >
         {localCompleted ? (
           <>
-            <Check className='text-white' size={14} strokeWidth={3} />
+            <Check className='text-white' size={iconSizes.small} strokeWidth={3} />
             <Text className='text-xs font-semibold text-white'>Done</Text>
           </>
         ) : (
           <>
-            <Circle color={colors.status.success} size={14} strokeWidth={2} />
+            <Circle color={colors.status.success} size={iconSizes.small} strokeWidth={2} />
             <Text className='text-xs font-semibold' style={{ color: colors.status.success }}>
               Mark Done
             </Text>

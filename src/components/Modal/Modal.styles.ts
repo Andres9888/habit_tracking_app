@@ -4,6 +4,7 @@
  */
 
 import { StyleSheet } from 'react-native';
+import { borderRadius } from '../../theme/spacing';
 import { SCREEN_HEIGHT } from './Modal.constants';
 
 export const styles = StyleSheet.create({
@@ -35,7 +36,7 @@ export const styles = StyleSheet.create({
     width: '100%',
   },
   pullIndicator: {
-    borderRadius: 4,
+    borderRadius: borderRadius.xs,
     height: 4,
     width: 40,
   },

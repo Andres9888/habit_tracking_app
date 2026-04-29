@@ -57,9 +57,9 @@ export function CategoryFilterItem({
             className='h-2 w-2 rounded-full'
             style={{ backgroundColor: colors.bgSelected }}
           />}
-        <Text className='text-[15px]'>{category.icon}</Text>
+        <Text className='text-base'>{category.icon}</Text>
         <Text
-          className='text-[15px] font-semibold'
+          className='text-base font-semibold'
           style={{ color: selected ? themeTokens.text.inverse : colors.text }}
         >
           {category.label}

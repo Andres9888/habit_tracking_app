@@ -37,14 +37,16 @@ export interface MaterialTier {
   glow: boolean;
 }
 
-export const LEGENDARY_CELL_BACKGROUND = '#E5E7EB';
+import { colors } from '@/theme/colors';
+
+export const LEGENDARY_CELL_BACKGROUND = colors.material.legendary.cellBackground;
 
 const COPPER: MaterialTier = {
   name: 'copper',
   useAccent: false,
-  tierColor: '#B87333',
-  iconColor: '#FEF3C7',
-  cellShadowColor: '#B87333',
+  tierColor: colors.material.copper.tier,
+  iconColor: colors.material.copper.icon,
+  cellShadowColor: colors.material.copper.shadow,
   cellShadowOpacity: 0.25,
   cellShadowRadius: 3,
   connectorHeight: 2,
@@ -57,7 +59,7 @@ const CHAIN: MaterialTier = {
   name: 'chain',
   useAccent: true,
   tierColor: '',
-  iconColor: '#FFFFFF',
+  iconColor: colors.material.iconOnAccent,
   cellShadowColor: '',
   cellShadowOpacity: 0.3,
   cellShadowRadius: 5,
@@ -71,7 +73,7 @@ const IRON: MaterialTier = {
   name: 'iron',
   useAccent: true,
   tierColor: '',
-  iconColor: '#FFFFFF',
+  iconColor: colors.material.iconOnAccent,
   cellShadowColor: '',
   cellShadowOpacity: 0.5,
   cellShadowRadius: 8,
@@ -84,9 +86,9 @@ const IRON: MaterialTier = {
 const GOLD: MaterialTier = {
   name: 'gold',
   useAccent: false,
-  tierColor: '#D4A23F',
-  iconColor: '#78350F',
-  cellShadowColor: '#F2B84B',
+  tierColor: colors.material.gold.tier,
+  iconColor: colors.material.gold.icon,
+  cellShadowColor: colors.material.gold.shadow,
   cellShadowOpacity: 0.55,
   cellShadowRadius: 10,
   connectorHeight: 4.5,
@@ -98,9 +100,9 @@ const GOLD: MaterialTier = {
 const LEGENDARY: MaterialTier = {
   name: 'legendary',
   useAccent: false,
-  tierColor: '#F2B84B',
-  iconColor: '#78350F',
-  cellShadowColor: '#F2B84B',
+  tierColor: colors.material.legendary.tier,
+  iconColor: colors.material.legendary.icon,
+  cellShadowColor: colors.material.legendary.shadow,
   cellShadowOpacity: 0.65,
   cellShadowRadius: 14,
   connectorHeight: 5,

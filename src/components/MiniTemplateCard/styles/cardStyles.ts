@@ -31,7 +31,7 @@ export const cardStyles: Record<string, ViewStyle | TextStyle> = {
   },
   description: {
     fontFamily: fontFamilies.primary.text,
-    fontSize: 13,
+    fontSize: typography.caption.fontSize,
     lineHeight: 18,
     marginBottom: 36,
   },
@@ -52,7 +52,7 @@ export const cardStyles: Record<string, ViewStyle | TextStyle> = {
   },
   subtitle: {
     fontFamily: fontFamilies.primary.text,
-    fontSize: 13,
+    fontSize: typography.caption.fontSize,
     fontWeight: fontWeights.medium,
     lineHeight: 16,
     marginBottom: 4,

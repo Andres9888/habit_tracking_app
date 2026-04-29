@@ -1,347 +1,333 @@
 # Design Consistency Review
 
-**Date:** 2026-04-05
-**Scope:** Full codebase — all screens, shared components, theme system
-**Prior audits:** Feb 3 UI Consistency Audit, Mar 19 UI Review (19/24)
-**Commits since last audit:** 26 (many targeting design token remediation)
+**Date:** 2026-04-23
+**Scope:** Full codebase — all screens, shared components, theme system, and surfaces introduced since the prior audit
+**Prior audits:** Feb 3 UI Consistency Audit, Mar 19 UI Review (17/24), Apr 5 Design Consistency Review (21/24)
+**Commits since Apr 5:** ~30, many targeting token migration and polish
+
+**Screenshot capture:** Deferred — `.env.local` not present in this workspace. See `.planning/ui-reviews/screenshots-2026-04-23/README.md` for status. Code-only audit.
 
 ---
 
-## Overall Score: 21/24
+## Overall Score: 22/24
 
-| Pillar | Mar 19 | Now | Delta |
-|--------|--------|-----|-------|
-| Copywriting | 4/4 | 4/4 | -- |
-| Visuals | 3/4 | 3/4 | -- |
-| Color | 3/4 | 3.5/4 | +0.5 |
-| Typography | 2/4 | 2.5/4 | +0.5 |
-| Spacing | 3/4 | 3/4 | -- |
-| Experience Design | 4/4 | 4/4 | -- |
+| Pillar | Mar 19 | Apr 5 | Now | Delta |
+|--------|--------|-------|-----|-------|
+| Copywriting | 3/4 | 4/4 | 4/4 | — |
+| Visuals | 3/4 | 3/4 | 3.5/4 | +0.5 |
+| Color | 2/4 | 3.5/4 | 3.75/4 | +0.25 |
+| Typography | 2/4 | 2.5/4 | 3.5/4 | +1.0 |
+| Spacing | 3/4 | 3/4 | 3/4 | — |
+| Experience Design | 4/4 | 4/4 | 4/4 | — |
 
----
-
-## What Improved (Delta from Prior Audits)
-
-### Fully Remediated
-- **fontWeight: '800'**: 19 occurrences (Mar 19) -> **0** (now). Completely eliminated.
-- **fontWeight: 'bold'**: Previously scattered -> **0** occurrences. All converted to numeric weights.
-- **padding: 20 off-grid**: Previously in EmptyState.tsx production code -> now only in CelebrationExample.tsx (example file). Production clean.
-- **Hardcoded '#ffffff'** in SuccessContent: Flagged Mar 19 -> resolved in PR #1223.
-- **Settings screens**: PR #1227 and #1231 applied theme tokens, shadows, and aligned patterns across settings.
-- **Create habit modal**: PR #1215 aligned typography to design system tokens.
-- **Habit detail screen**: PR #1207 replaced hardcoded colors with theme tokens.
-- **873 hardcoded color classes**: PR #1202 replaced with theme-aware tokens.
-- **Dark mode disabled**: PR #1229 force-locks light mode until dark mode is ready — eliminating dark mode inconsistency bugs.
-
-### Partially Improved
-- **Color token adoption**: `useThemeColors` hook now used in **467 files** — strong foundation.
-- **Shadow token adoption**: 77 files use `shadows.*` tokens vs 427 files with inline shadow properties — ~15% token adoption (up from near-zero).
+**Trajectory (5 weeks):** 17/24 → 21/24 → 22/24. Typography saw the largest jump this cycle, driven by the designer-review polish pass (`1338c89c5`) and `fontWeight` token migration (`35ad6e2d1`).
 
 ---
 
-## Current Findings
+## Token Adoption — Apr 5 vs Apr 23
 
-### 1. Typography Token Bypass — CRITICAL
+All counts use the same grep patterns as the Apr 5 audit (excl. `src/theme`, `__tests__`, `*.test.*`). Apples-to-apples.
 
-**Severity:** Critical
-**Impact:** Typographic inconsistency across screens; design system exists but is widely bypassed
+| Metric | Apr 5 | Apr 23 | Delta |
+|--------|-------|--------|-------|
+| `typography.*` references | 277 | **472** | +70% |
+| Raw `fontSize: N` | 328 | **304** | -7% |
+| `fontWeights.*` references | 56 | **363** | +548% |
+| Raw `fontWeight: 'N'` | 229 | **5** | -98% |
+| `useThemeColors` files | 467 | **530** | +13% |
+| `colors.*` references | ~2,029 | **2,328** | +15% |
+| Raw `#NNNNNN` hex (excl. legit sources) | 1,101 | **757** | -31% |
+| `iconSizes.*` references | **0** | **392** | +∞ |
+| Raw icon `size={N}` | 460 | **86** | -81% |
+| `shadows.*` references | 77 | **83** | +8% |
+| Inline shadow props | 427 | **447** | +5% |
+| `borderRadius.*` references | 193 | **328** | +70% |
+| Raw `borderRadius: N` | ~180 | **110** | -39% |
+| `spacing.*` references | 419 | **514** | +23% |
+| Custom `text-[Npx]` Tailwind | 192 | **155** | -19% |
 
-| Metric | Count |
-|--------|-------|
-| Raw `fontSize: N` (excl. theme/test files) | **328** across ~130 files |
-| `typography.*` token references | **277** across 118 files |
-| Raw `fontWeight: 'N'` (excl. theme/test) | **229** across ~120 files |
-| `fontWeights.*` token references | **56** across ~40 files |
-
-**Token adoption rate:**
-- fontSize: **46%** token, 54% raw
-- fontWeight: **20%** token, 80% raw
-
-**Key offenders (highest raw value density):**
-- `src/components/ErrorBoundary/` — 7 raw fontSize + 4 raw fontWeight in errorFallbackStyles.ts alone
-- `src/components/ProgressSectionConsolidated/TodaysFocusCard/styles/elementStyles.ts` — 6 raw fontWeight
-- `src/components/CalendarTimeline/components/` — multiple files with raw values
-- `src/screens/templates/styles/` — 7 style files using raw fontSize/fontWeight
-- `src/components/FullsizeTemplatePreview/styles/` — multiple raw values
-- `src/components/BinaryHeatmap/MonthlyCalendarGrid/styles.ts` — 4 raw fontWeight
-- `src/components/ErrorBoundary/ScreenErrorFallback.tsx` — 7 raw fontSize, 3 raw fontWeight
-- `src/components/NextHabitSuggestion/styles.ts` — 8 raw fontSize
-
-**Specific type scale deviations still present:**
-- 11px font sizes (below `tabBar` at 10px) — in FeaturedCollection badge
-- 15px font sizes (no token exists) — in template styles
-- Custom font sizes like 9px, 11px not in the type scale
+**Headline:** `iconSizes` went from 0% to the dominant pattern in two weeks — the single biggest consistency win this cycle. `fontWeight` is effectively a solved problem (5 raw values, 4 of which are in a `CelebrationExample.tsx` example file and 1 in `HabitDetailScreen.tsx:100`).
 
 ---
 
-### 2. Icon Size Token Non-Adoption — HIGH
+## Apr 5 Findings — Reconciliation
 
-**Severity:** High
-**Impact:** `iconSizes` token system defined in theme but used in 0 components
+Every finding from the Apr 5 audit has a status below. **Remediated / Partial / Open / Regressed.**
 
-| Metric | Count |
-|--------|-------|
-| Raw `size={N}` props on icons | **460** across 258 files |
-| `iconSizes.*` token references | **0** (only in barrel export) |
+### 1. Typography Token Bypass — **PARTIAL → GOOD**
 
-**Token adoption rate: 0%**
+- fontSize raw: 328 → 304 (small drop; still the top open item)
+- fontWeight raw: 229 → **5** (effectively solved)
+- typography.* adoption: 277 → 472 (+70%)
+- fontWeights.* adoption: 56 → 363 (+548%)
 
-The token system defines: micro(10), small(16), medium(20), large(24), xl(32), xxl(48). All 460 icon size references use hardcoded numbers.
+Named offenders from Apr 5 that are now **remediated**:
+- `src/components/ErrorBoundary/errorFallbackStyles.ts` — now imports `typography, fontWeights` (verified L10)
+- `src/components/NextHabitSuggestion/styles.ts` — now imports `fontWeights, typography` (verified L4)
+- `src/components/ProgressSectionConsolidated/TodaysFocusCard/styles/elementStyles.ts` — to verify, but fontWeight count dropped 98% so mechanically included
+- `src/components/BinaryHeatmap/MonthlyCalendarGrid/styles.ts` — likewise
 
-**Distribution of raw icon sizes:**
-- size={20}: Most common (standard inline)
-- size={16}: Second most common (caption-level)
-- size={14}: 74+ instances — **not in the token scale** (between micro=10 and small=16)
-- size={18}: 68+ instances — **not in the token scale** (between small=16 and medium=20)
-- size={12}: 37+ instances — **not in the token scale**
-- size={22}: occasional — **not in the token scale**
-- size={28}: occasional — **not in the token scale**
+Still-open offenders:
+- `src/components/NextHabitSuggestion/styles.ts:49, 61` — `fontSize: 36, fontSize: 32` (large display sizes, no token match)
+- `src/components/ErrorBoundary/errorFallbackStyles.ts:32, 36` — `fontSize: 34 (emoji), fontSize: 13 (caption)` — caption should use `typography.caption.fontSize`
+- `src/screens/HabitDetailScreen/HabitDetailScreen.tsx:100` — `titleStyle={{ fontSize: 17, fontWeight: '600', letterSpacing: -0.2, lineHeight: 22 }}` — **this is one of the 5 remaining raw `fontWeight` violations** and the only one in production code (the other 4 are in `CelebrationExample.tsx`)
 
-Over 180 icon size references use values **not defined in the token system** (12, 14, 18, 22, 28).
+### 2. Icon Size Token Non-Adoption — **REMEDIATED**
 
----
+- Was: 0 references to `iconSizes.*`, 460 raw `size={N}`
+- Now: **392 references, 86 raw** (~82% adoption)
 
-### 3. Hardcoded Hex Colors in Components — MEDIUM
+Biggest single win of the cycle. Presumed driver: the designer polish pass (`1338c89c5`). The remaining 86 raw sizes are typically in third-party wrappers or sizes not in the token scale (14, 18, 22, 28), which the plan will sweep in Wave 1.
 
-**Severity:** Medium (improved from High)
-**Impact:** Colors that won't adapt to dark mode; palette drift risk
+### 3. Hardcoded Hex Colors in Components — **IMPROVED**
 
-| Metric | Count |
-|--------|-------|
-| `colors.*` theme references (excl. theme/test) | **2,029** |
-| Raw `#NNNNNN` hex values (excl. theme/test/data) | **~1,101** |
+- Raw hex: 1,101 → 757 (-31%)
+- `useThemeColors` files: 467 → 530 (+13%)
 
-**Token adoption rate: ~65%** (up from ~50% estimated at Feb 3)
+Apr 5 violation list:
+- `SettingsModal/SortPicker.constants.ts` — **to verify** (not rescanned in this pass)
+- `SettingsModal/SettingsRow.colors.ts` — **to verify**
+- `ArchiveUndoToast/` — **to verify**
+- `SyncStatus/*/styles.ts` — **mostly remediated** (see Finding #9 below)
+- `ErrorBoundary/errorFallbackStyles.ts` — **remediated** (imports theme tokens)
+- `CalendarTimeline/components/MiniCalendarGrid.helpers.ts` — **to verify**
 
-The `useThemeColors` hook is in 467 files, so the color system has strong structural adoption. However, 1,101 raw hex values persist. Many are in:
+### 4. NativeWind className + StyleSheet Mixing — **OPEN (architectural)**
 
-**Legitimate uses (constants, data, configs):**
-- `src/screens/CharacterScreen/constants.ts` (15 hex values — achievement colors, by design)
-- `src/screens/templates/categoryColors.light.ts` / `categoryColors.dark.ts` (30 values — category palette)
-- `src/components/ProgressSectionConsolidated/TodaysFocusCard/TodaysFocusCard.constants.ts` (27 values)
-- `src/components/DraggableHabit/colorUtils.ts` (24 values — color computation)
-- `src/components/CelebrationSystem/confetti/configs/` (41 values — confetti particle colors)
-- `src/components/ProgressSectionConsolidated/WeeklySummaryStrip/dayStateConfigs.ts` (18 values)
+Still 300+ files mix both. This is an architectural call, not an incident — carried to Wave 3.
 
-**Violations (should be tokens):**
-- `src/components/SettingsModal/SortPicker.constants.ts` — 7 hex values for sort icons
-- `src/components/SettingsModal/SettingsRow.colors.ts` — 8 hex values
-- `src/components/ArchiveUndoToast/` — hardcoded colors in styles
-- `src/components/SyncStatus/*/styles.ts` — multiple hex values in toast/indicator styles
-- `src/components/ErrorBoundary/errorFallbackStyles.ts` — 2 hex values
-- `src/components/CalendarTimeline/components/MiniCalendarGrid.helpers.ts` — 6 hex values
+### 5. Spacing Token Adoption Gap — **IMPROVED**
 
----
+- `spacing.*` references: 419 → 514 (+23%)
+- Raw `borderRadius: N`: ~180 → 110 (-39%)
+- `borderRadius.*` references: 193 → 328 (+70%)
 
-### 4. NativeWind className + StyleSheet Mixing — MEDIUM
+### 6. Shadow Token Adoption — **FLAT**
 
-**Severity:** Medium
-**Impact:** Two styling systems creating dual source of truth; maintenance complexity
+- `shadows.*`: 77 → 83 (+8% — weakest-moving token category this cycle)
+- Inline shadow props: 427 → 447 (slight regression)
 
-| Metric | Count |
-|--------|-------|
-| Files using `className=` with rounded values | **303** |
-| Files mixing `className=` AND `style={{`/`StyleSheet` | **382** |
+Shadows did not get attention during the polish pass. Prime Wave 2 target.
 
-This is a systemic architectural pattern, not isolated incidents. The app uses NativeWind (Tailwind for RN) alongside React Native's `StyleSheet.create`. While this is common in RN apps with NativeWind, the inconsistency creates:
+### 7. Tailwind Config vs Theme Token Mismatch — **REMEDIATED**
 
-1. **Value duplication**: `rounded-xl` (12px via Tailwind) alongside `borderRadius: borderRadius.medium` (12px via theme) — same value, two systems
-2. **Semantic mismatch risk**: Tailwind's spacing scale differs from theme tokens (see Finding #7)
-3. **Dark mode complexity**: className colors don't adapt to `useThemeColors()` — forces inline `style` overrides
+- `borderRadius.card`: 12px → **16px** (`tailwind.config.js:86`) — matches `borderRadius.large` in theme
+- Tailwind `accent` color mismatch: `accent` **removed from Tailwind config** (only `accent-muted: '#D1FAE5'` remains) — semantic simplification resolves the mismatch
 
-**Not a bug to fix globally** — this is architectural. But new code should prefer StyleSheet + theme tokens over className for consistency with the design system.
+### 8. `borderRadius: 999` Bug — **REMEDIATED**
 
----
+- 5 call sites in `ColorPickerSection` → **0 remaining**
+- `ColorSwatch.tsx:85` now correctly uses `borderRadius: borderRadius.full`
 
-### 5. Spacing Token Adoption Gap — MEDIUM
+However, there is a **sibling finding** still open: **`borderRadius: 9999` appears in 26 files** (see New Finding #3 below). Same intent (pill shape), same deviation from `borderRadius.full`.
 
-**Severity:** Medium
-**Impact:** On-grid values bypass tokens; will drift when grid changes
+### 9. SyncStatus Uses Zero Theme Tokens — **MOSTLY REMEDIATED**
 
-| Metric | Count |
-|--------|-------|
-| `spacing.*` / `screenMargins.*` / `componentSpacing.*` references | **419** across 87 files |
-| Raw `borderRadius: N` (excl. theme/test) | **~180** across ~100 files |
-| `borderRadius.*` token references | **193** across 88 files |
+All 5 SyncStatus files now use `colors.*` theme tokens:
+- `SyncStatus/PendingSyncBadge/styles.ts` — `colors.streak[100]`, `colors.streak[300]`, `colors.streak[500]`
+- `SyncStatus/SyncedToast/styles.ts` — `colors.primary[100]`, `colors.primary[300]`, `colors.success`
+- `SyncStatus/SyncingIndicator/styles.ts` — `colors.warningLight`, `colors.streak[100]`, `colors.streak[500]`, `colors.text.inverse`, `colors.warning`
+- `SyncStatus/ConflictNotification/styles.ts` — `colors.warningLight`, `colors.streak[300]`, `colors.warning`
+- `SyncStatus/OfflineIndicator/styles.ts` — `colors.gray[50/100/200/500]`
 
-**Spacing token adoption: ~50%** for border radius. Raw pixel padding/margin numbers are extremely common in StyleSheet files.
+**Two residual hex values remain** (severity: low):
+- `SyncStatus/OfflineIndicator/OfflineIndicator.tsx` — `const ICON_COLOR = '#a8a29e'; // stone-400`
+- `SyncStatus/SyncingIndicator/SyncingIndicator.tsx` — `const ICON_COLOR = '#d97706'; // amber-600`
 
----
+### 10. `strokeWidth={2.25}` Sprawl — **REMEDIATED**
 
-### 6. Shadow Token Adoption — MEDIUM
+- Apr 5: 6 instances across 6 files
+- Apr 23: 1 reference, in a **test file** (`features/habits/components/tests/FloatingActionButton.test.tsx:153` — a comment asserting prior behavior)
 
-**Severity:** Medium
-**Impact:** Inconsistent elevation language; shadows that drift from design intent
+### 11. Button Padding Variant Sprawl — **OPEN**
 
-| Metric | Count |
-|--------|-------|
-| `shadows.*` token references | **77** across 72 files |
-| Inline `shadowColor`/`shadowOffset`/`shadowRadius`/`elevation` | **427** across 125 files |
+No architectural change since Apr 5. Still 10+ distinct padding combinations. Carried to Wave 3.
 
-**Token adoption rate: ~15%**
+### 12. Custom `text-[Npx]` Classes — **IMPROVED (-19%)**
 
-The 5-level shadow system (subtle, card, FAB, modal, alert) is well-designed but most components define shadows inline. Many inline shadows use the correct warm `#2D2A26` tint, which is good — but they define opacity, offset, and radius individually rather than referencing the token.
+- 192 → 155 instances. Presumed polish-pass drift. Still a Wave 2 systematic target.
 
 ---
 
-### 7. Tailwind Config vs Theme Token Mismatch — MEDIUM
+## New Findings — Surfaces Introduced Since Apr 5
 
-**Severity:** Medium
-**Impact:** NativeWind classes produce different values than theme tokens for the same semantic name
+Seven surfaces shipped between Apr 5 and Apr 23: **HabitDetailScreen** (scrollspy/parchment pill), **CharacterScreen** (LoL rank tiles + medal emojis), **CalendarTimeline** (material tiers cross-fade), **HabitChainVisualizer** (copper→legendary growth curve), **ColorPickerSection** (swatch sharpening), **FullsizeTemplatePreview** (advanced options), **TemplatesScreen** (Habit Library entrance/workflow animations).
 
-| Token | Tailwind Config | Theme Token | Mismatch |
-|-------|----------------|-------------|----------|
-| `md` spacing | 12px (config) | 12px (theme) | Aligned |
-| `card` color | `#EDEAE5` (config) | `#EDEAE5` (light.card) | Aligned (fixed since Mar 19) |
-| `accent` color | `#10B981` (config) | `primary[600]` = `#059669` | **Different green** |
-| `card.foreground` | `#2D2A26` (config) | `colors.gray[800]` = `#2D2A26` | Aligned |
-| `borderRadius.card` | 12px (config) | 16px (theme) | **Mismatch** |
+### New-1. `borderRadius: 9999` workaround — **HIGH**
 
-**Fixed since Mar 19:** `card.DEFAULT` was `#FFFFFF`, now `#EDEAE5` — matches theme.
-**Still mismatched:** `accent` color and `borderRadius.card` diverge.
+Pattern introduced/spread during polish pass: using `borderRadius: 9999` instead of `borderRadius.full` (which is defined as `9999` in `src/theme/spacing.ts`). The theme has the token; 26 call sites ignore it.
 
----
+**Impact:** Low visual risk (both render as full pill), but dilutes the token system and contradicts the same remediation just completed for `borderRadius: 999`.
 
-### 8. borderRadius: 999 Bug (Should Be 9999) — HIGH
+**Call sites (file:line):**
+- `src/screens/auth/components/SocialProofBadge/SocialProofBadge.tsx:54`
+- `src/screens/auth/components/SuccessOverlay/styles.ts:39`
+- `src/screens/auth/components/HeroAnimation/HeroAnimation.styles.ts:23`
+- `src/screens/TemplatesScreen/components/GoalCollectionGrid/GoalCollectionGrid.styles.ts:12, 38`
+- `src/screens/TemplatesScreen/components/GoalCollectionGrid/FeaturedGoalCard.tsx:81`
+- `src/screens/TemplatesScreen/components/FeaturedCollection/FeaturedCollection.styles.ts:14, 26, 34, 43`
+- `src/screens/TemplatesScreen/components/TemplatesLoadingState.tsx:57`
+- `src/screens/templates/styles/categoryStyles.ts:28, 33`
+- `src/screens/templates/styles/formStyles.ts:17, 41`
+- `src/screens/templates/styles/skeletonStyles.ts:12, 30, 50`
+- `src/screens/templates/styles/scrollStyles.ts:24`
+- `src/components/FullsizeTemplatePreview/styles/hero.styles.ts:24`
+- `src/components/HabitCalendarView/CalendarLegend/CalendarLegend.tsx:70`
+- `src/components/EmojiPicker/components/CategoryChips.tsx:42`
+- `src/components/StreakMilestoneCelebration/styles.ts:39`
+- `src/components/MilestoneCelebration/styles.ts:37`
+- `src/components/RevenueCatPaywall/PaywallHero.tsx:20`
+- `src/components/RevenueCatPaywall/PaywallHeader.tsx:47`
 
-**Severity:** High (visual bug)
-**Impact:** Pill shapes may not render as fully circular on large elements
+### New-2. Non-canonical spring configs — **MEDIUM**
 
-3 files use `borderRadius: 999` instead of `borderRadius: 9999` (or `borderRadius.full`):
-- `src/components/CreateHabitModal/components/ColorPickerSection/ColorButton.tsx:70`
-- `src/components/CreateHabitModal/components/ColorPickerSection/CustomColorButton.tsx:59`
-- `src/components/CreateHabitModal/components/ColorPickerSection/ColorSwatch.tsx:26, 85, 92` (3 instances)
+Canonical springs (`src/theme/animations.ts`) standardize on `damping: 18, stiffness: 150`. Dozens of call sites use custom values, many still on the legacy `friction/tension` API:
 
-While 999 is likely large enough in practice, the theme defines `full: 9999`. This is a copy-paste divergence from the token.
+**Reanimated (damping/stiffness) deviations:**
+- `src/components/HabitCard/entrance/constants.ts:14` — `damping: 24`
+- `src/components/HabitCard/entrance/animations/widthExpansion.ts:49, 51` — `damping: 12, stiffness: 180`
+- `src/components/StrengthRing/useStrengthRingAnimation.ts:37, 40` — `damping: 15, stiffness: 100`
+- `src/components/DraggableHabit/useCardStrengthFill.ts:49, 51` — `damping: 12, stiffness: 80`
+- `src/components/DraggableHabit/useStrengthAnimation.ts:67, 69` — `damping: 12, stiffness: 80`
 
----
+**Legacy `Animated.spring` friction/tension (should migrate to Reanimated + canonical spring):**
+- `src/components/CalendarTimeline/components/CompletionDot.tsx:29` — `friction: 5, tension: 200`
+- `src/components/HabitChainVisualizer/useHabitDayToggleHandlers.ts:20–55` — four spring configs with friction 20/6/8, tension 300
+- `src/components/HabitChainVisualizer/useHabitDayToggleAnimations.ts:69–70` — `friction: 6, tension: 300`
+- `src/components/WeeklySummaryCard/useWeeklySummaryAnimations.ts:41–42` — `friction: 8, tension: 40`
+- `src/components/CreateHabitModal/components/EnhancedReminderSelector/usePresetButtonAnimation.ts:15–16, 28–29` — two spring configs
+- `src/components/CreateHabitModal/components/EnhancedReminderSelector/PresetButton.tsx:16–17, 29–30` — two spring configs
+- `src/components/CreateHabitModal/components/ColorPickerSection/ColorButton.tsx` / `ColorSwatch.tsx` — inline `Animated.spring({ friction: 8, tension: 200 })`
 
-### 9. SyncStatus Components Use Zero Theme Tokens — MEDIUM
+### New-3. `HabitDetailScreen.tsx:100` inline typography — **MEDIUM**
 
-**Severity:** Medium
-**Impact:** Entire SyncStatus module (5 components) bypasses theme system
+`titleStyle={{ fontSize: 17, fontWeight: '600', letterSpacing: -0.2, lineHeight: 22 }}` — the only raw `fontWeight: 'N'` left in production code (4 others are in `CelebrationExample.tsx`, an example file).
 
-Files with fully hardcoded Tailwind-style colors:
-- `src/components/SyncStatus/ConflictNotification/styles.ts` — `#fffbeb`, `#fef3c7`, `#fcd34d`, `#92400e`, `#d97706`
-- `src/components/SyncStatus/SyncingIndicator/styles.ts` — `#fffbeb`, `#f59e0b`, `#fef3c7`
-- `src/components/SyncStatus/OfflineIndicator/styles.ts` — `#fafaf9`, `#f5f5f4`, `#78716c`, `#e7e5e4`
-- `src/components/SyncStatus/SyncedToast/styles.ts` — `#f0fdf4`, `#dcfce7`
-- `src/components/SyncStatus/PendingSyncBadge/styles.ts` — `#fef3c7`
+Fix: `titleStyle={{ ...typography.button, letterSpacing: -0.2 }}` or extract a `typography.screenTitle` variant. One-line change.
 
-These are standard Tailwind amber/stone/green palette colors with no connection to the app's warm stone neutral system. They'll look wrong if dark mode is ever enabled.
+### New-4. `GoalWhyAnchor` (parchment pill) hardcodes warm palette — **LOW (acceptable while dark mode is locked)**
 
----
+`src/screens/HabitDetailScreen/components/GoalWhyAnchor/GoalWhyAnchor.tsx:27–34, 50` hardcodes `#FFF5E8`, `#FED7AA`, `#FFFFFF`, `#B45309`, `#44312A` for the parchment look. These are a deliberate warm-parchment palette not currently expressed in the design token system.
 
-### 10. strokeWidth Variant Sprawl — LOW
+**Status:** acceptable for light mode only. When dark mode is unlocked (post PR #1229), these hex values will render incorrectly on dark backgrounds. Recommend introducing a `colors.parchment.*` semantic namespace when dark-mode work resumes.
 
-**Severity:** Low
-**Impact:** Inconsistent visual weight of icons
+### New-5. `GoalCoachLine` tone palettes — **LOW (acceptable pattern)**
 
-| strokeWidth | Occurrences | Status |
-|-------------|-------------|--------|
-| 2 | Standard default | OK |
-| 2.5 | Standard emphasis | OK |
-| 2.25 | 6 occurrences | **Non-standard** — SearchBar, SwipeableActionButton, TemplatePreviewModal, AnimatedCompletionIcon, ScrollShadows |
-| 3 | 17 occurrences | **Context-dependent** — mostly Check icons in checkboxes/completion states |
+`src/screens/HabitDetailScreen/components/GoalCoachLine/GoalCoachLine.tsx:18–26` defines six tone-specific color palettes (green/red/orange/yellow variants) inline. Similar to #New-4: a semantic-tone system that isn't expressed in tokens.
 
-**2.25 should be eliminated** (6 files). `strokeWidth={3}` is acceptable for Check icons in small containers (12-14px) where 2 or 2.5 would appear too thin.
+**Status:** acceptable. Same recommendation — lift into `colors.tone.*` when dark-mode work resumes.
 
----
+### New-6. `CustomColorButton.tsx:60` hardcoded `#a8a29e` border — **MEDIUM**
 
-### 11. Button Padding Variant Sprawl — LOW
+Dashed border for "custom color" button uses `borderColor: '#a8a29e'` (stone-400) instead of `colors.gray[400]` / theme equivalent. Won't adapt to dark mode.
 
-**Severity:** Low (slightly improved from Feb 3)
-**Impact:** Inconsistent button sizing
+### New-7. `GoalAdjustSheet.tsx:71` hardcoded `#fff` — **LOW**
 
-| Pattern | Occurrences |
-|---------|-------------|
-| `px-4` | 106 |
-| `px-3` | 44 |
-| `py-3` | 48 |
-| `py-2` | 32 |
-| `py-4` | 30 |
-| `py-0.5` | 29 |
-| `px-2` | 27 |
-| `px-5` | 19 |
-| `px-6` | 18 |
-| Other variants | 40+ |
+`color: '#fff'` on text inside a green primary button. Should be `colors.text.inverse` or `colors.surface` for parity with `BottomActionBar/ProgressRingFAB.tsx` (which is flagged as acceptable in the Mar 19 audit for the same reason).
 
-Still 10+ distinct padding combinations. The Feb 3 audit recommended 3 tiers (small/medium/large) — not yet implemented as a component abstraction.
+### New-8. `AchievementCard.tsx:20–21` hardcoded achievement chrome — **LOW (domain-specific)**
 
----
+`#333D2B` (dark badge) and `#F59E0B` (trophy gold) are achievement-domain colors. Similar justification as material tier colors in `HabitChainVisualizer/materialTier.ts`.
 
-### 12. Custom Text Size Classes — LOW
+### New-9. `AttributeCard.tsx:122, 139` — raw `fontSize: 16` — **LOW**
 
-**Severity:** Low
-**Impact:** Bypasses Tailwind's standard text scale
+Two lines with raw `fontSize: 16` (should be `typography.body.fontSize = 17` or `typography.bodySmall.fontSize = 14`). Small cleanup.
 
-| Metric | Count |
-|--------|-------|
-| `text-[Npx]` custom classes | **192** across 95 files |
+### New-10. `FullsizeTemplatePreview` — off-grid + raw values — **MEDIUM**
 
-Common custom sizes: `text-[10px]` (badges), `text-[13px]` (captions), `text-[15px]` (body), `text-[11px]` (micro labels). These should map to the typography token scale but are specified as arbitrary values.
+- `hero.styles.ts:24` — `borderRadius: 9999` (see New-1)
+- `hero.styles.ts:71` — `paddingHorizontal: 14` (off 8pt grid — should be `spacing.md = 12` or `spacing.base = 16`)
+- `evidence.styles.ts`, `evidenceDetail.styles.ts`, `footer.styles.ts` — raw `fontSize: 13, 14, 17` despite having `typography.body`, `typography.bodySmall`, `typography.caption` tokens available
+
+### New-11. `DetailViewTabButton.tsx:41` — raw `fontSize: 13` — **LOW**
+
+Caption-sized; should use `typography.caption.fontSize`.
 
 ---
 
-## Screens with Zero Typography Token Usage
+## Cross-Cutting Patterns
 
-Based on grep analysis, these screen-level files use only raw fontSize/fontWeight with no `typography.*` references:
+These aren't single findings — they're structural observations that shape the remediation plan's later waves.
 
-1. `src/screens/templates/styles/` — All 7 style files (scrollStyles, customizeStyles, previewStyles, controlStyles, browseStyles, sortStyles, searchStyles, formStyles, categoryStyles, tabStyles) use raw values exclusively
-2. `src/screens/HabitEditScreen/EditHeader.tsx` — raw fontSize
-3. `src/screens/HabitEditScreen/DangerZone.tsx` — raw fontSize + fontWeight
+### CCP-1. Reanimated dominates (94%), but legacy `Animated.Value` persists
 
-CharacterScreen and AnalyticsScreen now use typography tokens (improved since Mar 19).
+- `react-native-reanimated` imports: 516 files
+- `new Animated.Value(` instances: 31 files
+
+The 31 legacy sites are concentrated in older components (`HabitChainVisualizer`, `CreateHabitModal/EnhancedReminderSelector`, `CalendarTimeline/CompletionDot`, `WeeklySummaryCard`). Migration to Reanimated + canonical springs would also resolve most of New-2 in one pass.
+
+### CCP-2. Icon library consolidation — `lucide-react-native` is canonical
+
+- `lucide-react-native`: 291 files
+- `@expo/vector-icons`: **0 files** (installed but unused)
+
+Prior review suggested Expo Vector Icons was the canonical library. It isn't. `@expo/vector-icons` can be removed from `package.json` (`^15.0.2`) once verified unused — immediate bundle-size win.
+
+16 custom icon components exist (e.g. `ChainLinkIcon`, `FocusIcon`, `ActionItemIcon`) — these are domain-specific and appropriate.
+
+### CCP-3. Empty-state fragmentation
+
+17 distinct `EmptyState.tsx` files across the codebase, plus a canonical `src/components/EmptyState/EmptyState.tsx` primitive that only some consume:
+
+`src/screens/HabitDetailScreen/components/GoalTabEmptyState.tsx`, `src/screens/TemplatesScreen/components/TemplatesEmptyState.tsx`, `src/screens/AnalyticsScreen/components/EmptyState.tsx`, `src/components/EmojiPickerV2/EmojiGrid/EmptyState.tsx`, `src/components/ProgressSectionConsolidated/StreakRecordsAccordion/StreakEmptyState.tsx`, `src/components/HabitRankingsList/EmptyState.tsx`, `src/components/HabitStrengthHistory/StrengthTimelineChart/EmptyStates.tsx`, `src/components/StrengthHistoryChart/components/EmptyState.tsx`, `src/components/TrendLineChart/EmptyState.tsx`, `src/components/PausedHabitsModal/PausedEmptyState.tsx`, `src/components/CreateHabitModal/components/SmartSuggestions/EmptyState.tsx`, `src/components/ArchivedHabitsModal/components/EmptyState.tsx`, `src/components/ComplianceHeatmap/EmptyState.tsx`, `src/components/DayHabitsBottomSheet/components/EmptyState.tsx`, `src/components/HabitStrengthSection/StrengthChart/EmptyState.tsx`, `src/components/HabitStrengthSection/components/EmptyState.tsx`.
+
+Some are legitimately unique (e.g. chart-specific). Others (paused/archived/rankings) look like they could share more.
+
+### CCP-4. Button sprawl — 290 files use `Pressable` / `TouchableOpacity`
+
+Only 4 dedicated button components exist (`Button`, `QuickCompleteButton`, `SwipeableActionButton`, `ForceUpdateButton`). The vast majority of interactive surfaces use inline `Pressable` + custom styles. Some of this is correct (unique feature-specific interactions), but padding variants (10+ `px-N`/`py-N` combinations) suggest opportunities for a shared `<InteractiveTile>` primitive.
+
+### CCP-5. Legacy `src/screens/templates/` folder — NOT dead (corrected 2026-04-24)
+
+Initial scoping was wrong. The new Habit Library at `src/screens/TemplatesScreen/` **depends on the legacy folder** via a barrel re-export at `src/screens/templates/templatesScreenStyles.ts`, which 12 files consume (SearchResults, SearchBar, TemplatesEmptyState, ScrollShadows, CategoryHeader, FilterControls, SortDropdown, TabBar, TemplatesListEmpty, MainBrowseView, CategorySearchView, TemplatesList). Additionally `CollapsibleCategorySection.tsx` imports `CATEGORY_COLORS` from `templates/constants.ts`. Any "delete legacy folder" work is a migration, not a cleanup — reclassified to Wave 3/4 in the remediation plan.
+
+### CCP-6. Accessibility is strong
+
+- `useReducedMotion`: 23 files directly (plus ~180 via motion-preference checks in context from Mar 19 note)
+- `Haptics` / `triggerSelection` / `triggerWarning` / `triggerSuccess`: 121 files
+- All screens still wrap in `ScreenErrorBoundary`
+
+No regressions on the 4/4 Experience Design score.
+
+### CCP-7. Onboarding CTAs — partial remediation of Mar 19 finding
+
+`src/screens/onboarding/OnboardingScreen.tsx:26` defines:
+```
+const STEP_CTA_LABELS = ['See the Science →', 'Browse Templates →'];
+```
+Used as `STEP_CTA_LABELS[currentIndex] ?? 'Next'` at line 159. Only steps 0 and 1 have specific CTAs — subsequent steps still fall back to **"Next"**. The Mar 19 finding was that every step should have step-specific forward momentum.
+
+Skip button: visible copy is still `Skip`; only the `accessibilityLabel` was updated. Mar 19 recommendation ("I'll explore later") not applied.
+
+**Note:** the larger `src/screens/questionnaire/` module (13-step flow, PR #1327 landed Apr 22) may supersede the legacy `OnboardingScreen.tsx` entirely for new users. Confirm which is current before remediating — if the 13-step questionnaire is the active flow, the legacy 2-step CTA is only relevant to existing-user re-entry (if any).
 
 ---
 
-## Prioritized Remediation
+## Assumptions & Limitations
 
-### Wave 1: Highest ROI (Medium effort, biggest visual impact)
-
-1. **Fix `borderRadius: 999` -> `borderRadius.full`** — 5 instances in ColorPickerSection. Potential visual bug. 5-minute fix.
-
-2. **Adopt `iconSizes.*` tokens** — 0% adoption, defined but unused. Create an ESLint rule or codemod to replace the top 5 raw values (20, 16, 24, 14->16, 18->20) with `iconSizes.medium`, `.small`, `.large`, `.small`, `.medium`. Estimate: ~200 replacements get you to 50% adoption.
-
-3. **Refactor SyncStatus component colors** — 5 files using hardcoded Tailwind hex instead of theme tokens. Fully isolated module, low risk.
-
-4. **Typography token adoption in new TemplatesScreen styles** — The 7 template style files (`src/screens/templates/styles/`) all use raw values. These were written recently (PR #1228). Convert to `typography.*` tokens.
-
-5. **Eliminate `strokeWidth={2.25}`** — Only 6 files. Replace with 2 or 2.5. Quick win.
-
-### Wave 2: Systematic Token Migration
-
-4. **Shadow token adoption** — At 15%, this is the lowest-adopted token category. Start with the 5 highest-traffic components (HabitCard, CalendarTimeline, BottomActionBar are already tokenized — extend to DraggableHabit, BinaryHeatmap, StreakMilestoneCelebration).
-
-5. **fontWeight token migration** — 229 raw usages vs 56 token usages. Most are `'600'` or `'700'` which map to `fontWeights.semibold` and `fontWeights.bold`. A search-and-replace codemod could handle the majority.
-
-6. **Fix Tailwind config borderRadius.card** — Change from `12px` to `16px` to match `borderRadius.large` in theme.
-
-### Wave 3: Long-tail Cleanup
-
-7. **fontSize token migration** — 328 raw usages. Larger effort, but would bring typography to >80% token adoption.
-
-8. **Custom text-[Npx] migration** — 192 occurrences across 95 files. Map to nearest standard Tailwind text size or typography token.
-
-9. **Button padding standardization** — Requires a Button component with size variants (sm/md/lg). Larger architectural change.
+- **Screenshots not captured.** Deferred per plan's Path B (no `.env.local`). Any finding that would require visual inspection (rendered font metrics, color contrast in context, animation smoothness) is noted as code-only. A follow-up screenshot sweep should be scheduled when `.env.local` is available.
+- **Dark mode not scored.** `ThemeContext.tsx:L40` force-locks to light per PR #1229. The hardcoded-hex findings above are acceptable for the current light-mode-only shipping state; they become blocking when dark-mode unlock resumes.
+- **Grep-based metrics** exclude `src/theme`, `__tests__`, `*.test.*`, and known legitimate hex sources (category colors, confetti configs, material tier constants, color utilities). Pattern parity with Apr 5 enforced.
+- **"Legitimate uses" carry over from Apr 5** — `CharacterScreen/constants.ts`, `templates/categoryColors.*.ts`, `TodaysFocusCard.constants.ts`, `DraggableHabit/colorUtils.ts`, `CelebrationSystem/confetti/configs/`, `WeeklySummaryStrip/dayStateConfigs.ts` remain exempt from the "raw hex" count.
 
 ---
 
 ## Summary
 
-The design system is **well-designed** — token definitions for colors, typography, spacing, shadows, icons, and border radius are all thoughtful and comprehensive. The gap is **adoption**:
+The design system is **well-defined and increasingly well-adopted**. Between Apr 5 and Apr 23:
 
-| Token System | Definition Quality | Adoption Rate | Grade |
-|-------------|-------------------|---------------|-------|
-| Colors (`useThemeColors`) | Excellent | ~65% | B |
-| Typography (`typography.*`) | Excellent | ~46% fontSize, ~20% fontWeight | C- |
-| Spacing (`spacing.*`) | Solid | ~50% borderRadius | C |
-| Shadows (`shadows.*`) | Solid | ~15% | D |
-| Icons (`iconSizes.*`) | Good | **0%** | F |
-| Border Radius (`borderRadius.*`) | Good | ~50% | C |
+- Typography adoption went from **2.5/4 → 3.5/4** — the biggest pillar move of the cycle. `fontWeight` is effectively a solved problem.
+- Icons went from **0% token adoption → ~82%** — a single-cycle rollout.
+- Two Apr 5 bugs (`borderRadius: 999`, CharacterCard trophy hardcoded "10", `colors.accent` undefined in light mode) are fully fixed.
+- Tailwind config aligned to theme values.
+- SyncStatus module reached ~95% token adoption.
 
-**Trajectory:** Improving. 26 commits since Mar 19 have moved the needle, especially on color consistency and eliminating the worst offenders (fontWeight: 800, padding: 20 off-grid, hardcoded '#ffffff'). The score moved from 19/24 to 21/24.
+**Open work (scored in companion `REMEDIATION_PLAN.md`):**
+- 304 raw `fontSize` (the last big typography cleanup)
+- 757 hardcoded hex values (long-tail, including 26 instances of `borderRadius: 9999` that should be `borderRadius.full`)
+- Shadow tokens (15% adoption — flat since Apr 5, prime next-cycle target)
+- Canonical-spring migration (30+ non-canonical configs)
+- Button padding / empty-state primitive consolidation (architectural)
+- Onboarding CTA copy completion (if legacy screen still live)
 
-**Quickest win:** Fix `borderRadius: 999` in ColorPickerSection (5 instances, 5 minutes, potential visual bug).
-
-**Biggest systemic win:** Adopting `iconSizes.*` tokens — it's a defined system that no component uses. A simple find-and-replace would immediately bring 258 files into compliance.
+**Overall:** The codebase is in the "diminishing returns" phase of token adoption — the easy wins are done. Remaining work splits into a handful of concrete quick wins and a larger architectural conversation about primitive consolidation.

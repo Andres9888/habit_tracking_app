@@ -31,12 +31,12 @@ export function BestDayCard({ dayLabel, rate, colors }: BestDayCardProps) {
         >
           Best Day
         </Text>
-        <Text className='text-[15px] font-bold' style={{ color: colors.text }}>
+        <Text className='text-base font-bold' style={{ color: colors.text }}>
           {dayLabel}
         </Text>
       </View>
       <View className='items-end'>
-        <Text className='text-[17px] font-bold' style={{ color: colors.text }}>
+        <Text className='text-base font-bold' style={{ color: colors.text }}>
           {rate}%
         </Text>
         <Text className='text-[10px] font-medium' style={{ color: themeColors.text.tertiary }}>

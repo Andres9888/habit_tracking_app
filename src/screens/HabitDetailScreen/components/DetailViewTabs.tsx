@@ -12,6 +12,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import useHapticFeedback from '@/hooks/useHapticFeedback';
+import { borderRadius } from '@/theme/spacing';
 import { useThemeColors } from '@/theme';
 import { DetailViewTabButton, type DetailView } from './DetailViewTabButton';
 
@@ -82,7 +83,7 @@ export function DetailViewTabs({ activeView, onViewChange }: DetailViewTabsProps
         style={{
           backgroundColor: trackBg,
           borderColor: colors.border,
-          borderRadius: 12,
+          borderRadius: borderRadius.medium,
           borderWidth: 1,
           flexDirection: 'row',
           padding: PADDING,
@@ -96,7 +97,7 @@ export function DetailViewTabs({ activeView, onViewChange }: DetailViewTabsProps
             {
               backgroundColor: colors.card,
               borderColor: 'rgba(5, 150, 105, 0.22)',
-              borderRadius: 9,
+              borderRadius: borderRadius.small,
               borderWidth: 1,
               bottom: PADDING,
               position: 'absolute',

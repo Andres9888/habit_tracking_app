@@ -8,6 +8,7 @@ import { View, Text } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Clock, Sparkles, Users } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { useAppTheme } from '../../../theme';
 import { heroStyles } from '../styles';
 import {
@@ -82,13 +83,13 @@ export function HeroSection({
 
         <View testID='templates-preview-pills' style={heroStyles.pillsRow}>
           <MetadataPill
-            icon={<Clock color={iconColor} size={14} strokeWidth={2} />}
+            icon={<Clock color={iconColor} size={iconSizes.small} strokeWidth={2} />}
             iconColor={iconColor}
           >
             {formattedFrequency}
           </MetadataPill>
           <MetadataPill
-            icon={<Sparkles color={iconColor} size={14} strokeWidth={2} />}
+            icon={<Sparkles color={iconColor} size={iconSizes.small} strokeWidth={2} />}
             iconColor={iconColor}
           >
             {formattedCategory}
@@ -96,7 +97,7 @@ export function HeroSection({
           <MetadataPill iconColor={iconColor}>{`⏱️ ${duration}`}</MetadataPill>
           {popularity > 0 && (
             <MetadataPill
-              icon={<Users color={iconColor} size={14} strokeWidth={2} />}
+              icon={<Users color={iconColor} size={iconSizes.small} strokeWidth={2} />}
               iconColor={iconColor}
             >
               {formatPopularity(popularity)}

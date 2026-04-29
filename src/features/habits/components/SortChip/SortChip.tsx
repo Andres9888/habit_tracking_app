@@ -111,7 +111,7 @@ export function SortChip({
         {/* Left side: icon + label */}
         <View className='flex-row items-center gap-2'>
           <LayoutList color={colors.text.secondary} size={iconSizes.medium} strokeWidth={2} />
-          <Text className='text-[14px] font-semibold' style={{ color: colors.text.primary }}>
+          <Text className='text-sm font-semibold' style={{ color: colors.text.primary }}>
             My Habits
           </Text>
         </View>
@@ -119,7 +119,7 @@ export function SortChip({
         {/* Right side: sort icon + sort label + chevron */}
         <View className='flex-row items-center gap-1'>
           <ArrowUpDown color={colors.text.tertiary} size={iconSizes.small} strokeWidth={2} />
-          <Text className='text-[13px] font-normal' style={{ color: colors.text.tertiary }}>
+          <Text className='text-sm font-normal' style={{ color: colors.text.tertiary }}>
             {sortLabel}
           </Text>
           <ChevronRight color={colors.text.tertiary} size={iconSizes.small} strokeWidth={2} />

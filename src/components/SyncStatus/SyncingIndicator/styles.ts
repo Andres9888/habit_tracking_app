@@ -35,7 +35,7 @@ export const styles = StyleSheet.create({
   countText: {
     color: colors.text.inverse,
     fontFamily: fontFamilies.monospace,
-    fontSize: 10,
+    fontSize: typography.tabBar.fontSize,
     fontWeight: fontWeights.semibold,
     textAlign: 'center',
   },

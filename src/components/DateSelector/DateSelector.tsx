@@ -45,7 +45,7 @@ const DateSelectorComponent: React.FC<DateSelectorProps> = ({
           <ChevronLeft color={themeColors.text.primary} size={iconSizes.small} strokeWidth={2} />
         </Pressable>
 
-        <Text className='text-[17px] leading-5 tracking-[-0.15px]' style={{ color: themeColors.text.primary }}>
+        <Text className='text-base leading-5 tracking-[-0.15px]' style={{ color: themeColors.text.primary }}>
           {dateRangeText}
         </Text>
 

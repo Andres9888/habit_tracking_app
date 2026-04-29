@@ -38,10 +38,10 @@ function RewardCelebrationToastComponent({
       style={{ opacity, transform: [{ translateY }] }}
     >
       <View className='rounded-3xl p-5' style={{ backgroundColor: themeColors.card, shadowColor: themeColors.border, shadowOffset: { height: 4, width: 0 }, shadowOpacity: 0.3, shadowRadius: 12, elevation: 6 }}>
-        <Text className='text-[17px] font-bold leading-[24px]' style={{ color: themeColors.text.primary }}>
+        <Text className='text-base font-bold leading-[24px]' style={{ color: themeColors.text.primary }}>
           {title}
         </Text>
-        <Text className='mt-2 text-[17px] leading-[22px]' style={{ color: themeColors.text.primary }}>
+        <Text className='mt-2 text-base leading-[22px]' style={{ color: themeColors.text.primary }}>
           {message}
         </Text>
         <View className='mt-3 rounded-2xl p-3'>
@@ -51,7 +51,7 @@ function RewardCelebrationToastComponent({
             end={{ x: 1, y: 1 }}
             start={{ x: 0, y: 0 }}
           />
-          <Text className='text-[13px] font-semibold' style={{ color: themeColors.status.premium }}>
+          <Text className='text-sm font-semibold' style={{ color: themeColors.status.premium }}>
             ✨ {premiumCTA.benefit}
           </Text>
         </View>
@@ -66,7 +66,7 @@ function RewardCelebrationToastComponent({
               onSecondaryAction();
             }}
           >
-            <Text className='text-[17px] font-semibold leading-[22px]' style={{ color: themeColors.text.primary }}>
+            <Text className='text-base font-semibold leading-[22px]' style={{ color: themeColors.text.primary }}>
               Share
             </Text>
           </AnimatedPressable>
@@ -80,7 +80,7 @@ function RewardCelebrationToastComponent({
               onPrimaryAction();
             }}
           >
-            <Text className='text-[17px] font-semibold leading-[22px] text-white'>
+            <Text className='text-base font-semibold leading-[22px] text-white'>
               {premiumCTA.text}
             </Text>
           </AnimatedPressable>
@@ -93,7 +93,7 @@ function RewardCelebrationToastComponent({
             onDismiss();
           }}
         >
-          <Text className='text-[13px] font-medium uppercase leading-[18px] tracking-wider' style={{ color: themeColors.text.secondary }}>
+          <Text className='text-sm font-medium uppercase leading-[18px] tracking-wider' style={{ color: themeColors.text.secondary }}>
             Not now
           </Text>
         </AnimatedPressable>

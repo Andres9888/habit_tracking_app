@@ -11,7 +11,7 @@ import { useThemeColors } from '../../../theme/ThemeContext';
 
 import { CHART_HEIGHT } from '../constants';
 import { borderRadius } from '@/theme/spacing';
-import { fontFamilies } from '@/theme/typography';
+import { typography, fontFamilies } from '@/theme/typography';
 
 /**
  * Displays a message when chart has insufficient data.
@@ -36,7 +36,7 @@ export const EmptyState = React.memo(function EmptyState() {
         style={{
           color: colors.text.secondary,
           fontFamily: fontFamilies.primary.text,
-          fontSize: 14,
+          fontSize: typography.bodySmall.fontSize,
           textAlign: 'center',
         }}
       >

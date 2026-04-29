@@ -1,5 +1,6 @@
 import React from 'react';
 import { View } from 'react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { borderRadius, shadows } from '../../theme/spacing';
 import { ChainLinkIcon } from '../ChainLinkIcon/ChainLinkIcon';
@@ -53,7 +54,7 @@ export const ChainConnector: React.FC = () => {
       >
         <ChainLinkIcon
           color={themeColors.text.secondary}
-          size={16}
+          size={iconSizes.small}
           variant='stroke'
         />
       </View>

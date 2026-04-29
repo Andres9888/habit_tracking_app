@@ -6,7 +6,7 @@ import { Text, View, StyleSheet } from 'react-native';
 import { Link, Activity, Trophy } from 'lucide-react-native';
 import { useThemeColors } from '@/theme/ThemeContext';
 import { borderRadius } from '@/theme/spacing';
-import { fontFamilies, fontWeights } from '@/theme/typography';
+import { typography, fontFamilies, fontWeights } from '@/theme/typography';
 import { iconSizes } from '@/theme/iconSizes';
 
 const PROPS = [
@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
   },
   iconBox: {
     alignItems: 'center',
-    borderRadius: 10,
+    borderRadius: borderRadius.small,
     height: 36,
     justifyContent: 'center',
     width: 36,
@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontFamily: fontFamilies.primary.text,
-    fontSize: 14,
+    fontSize: typography.bodySmall.fontSize,
     fontWeight: fontWeights.medium,
   },
 });

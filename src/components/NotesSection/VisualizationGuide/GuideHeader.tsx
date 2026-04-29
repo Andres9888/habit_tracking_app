@@ -49,7 +49,7 @@ export function GuideHeader({ habitName }: GuideHeaderProps) {
         </Text>
       </View>
       {habitName ? <View className='mt-3 flex-row items-center gap-2'>
-          <Target color='rgba(255,255,255,0.7)' size={14} />
+          <Target color='rgba(255,255,255,0.7)' size={iconSizes.small} />
           <Text className='text-xs' style={{ color: 'rgba(255,255,255,0.7)' }}>
             Apply these techniques to:{' '}
             <Text className='font-medium text-white'>{habitName}</Text>

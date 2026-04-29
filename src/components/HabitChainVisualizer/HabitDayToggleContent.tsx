@@ -1,6 +1,7 @@
 import React from 'react';
 import { Animated, StyleSheet, View } from 'react-native';
 import { Unlink } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import type { Animated as AnimatedType } from 'react-native';
 
 import { AnimatedCompletionIcon } from './AnimatedCompletionIcon';
@@ -38,7 +39,7 @@ export const HabitDayToggleContent: React.FC<Props> = ({
         style={StyleSheet.absoluteFillObject}
         className='items-center justify-center'
       >
-        <Unlink color={MISSED_BORDER} size={18} strokeWidth={2.5} />
+        <Unlink color={MISSED_BORDER} size={iconSizes.medium} strokeWidth={2.5} />
       </View>
     ) : (
       <AnimatedCompletionIcon

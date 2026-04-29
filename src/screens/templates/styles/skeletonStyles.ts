@@ -9,7 +9,7 @@ export const getSkeletonStyles = (
   StyleSheet.create({
     skeletonBadge: {
       backgroundColor: themeColors.border,
-      borderRadius: 9999,
+      borderRadius: borderRadius.full,
       height: 14,
       width: 60,
     },
@@ -27,27 +27,27 @@ export const getSkeletonStyles = (
     },
     skeletonIcon: {
       backgroundColor: themeColors.border,
-      borderRadius: 9999,
+      borderRadius: borderRadius.full,
       height: 48,
       width: 48,
     },
     skeletonLine: {
       backgroundColor: themeColors.border,
-      borderRadius: 8,
+      borderRadius: borderRadius.small,
       height: 12,
       marginTop: 8,
       width: '60%',
     },
     skeletonLineLarge: {
       backgroundColor: themeColors.border,
-      borderRadius: 8,
+      borderRadius: borderRadius.small,
       height: 16,
       marginTop: 16,
       width: '80%',
     },
     skeletonSearch: {
       backgroundColor: themeColors.border,
-      borderRadius: 9999,
+      borderRadius: borderRadius.full,
       height: 44,
       marginBottom: 16,
       marginHorizontal: 16,

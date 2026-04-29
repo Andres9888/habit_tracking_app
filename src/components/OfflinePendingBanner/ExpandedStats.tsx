@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { AlertTriangle } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { styles } from './OfflinePendingBanner.styles';
 import { TYPE_LABELS } from './constants';
 import { formatRelativeTime } from './utils';
@@ -43,7 +44,7 @@ export function ExpandedStats({
 
         {/* Failed items warning */}
         {stats.failedItems > 0 ? <View style={styles.warningContainer}>
-            <AlertTriangle color='#F59E0B' size={14} />
+            <AlertTriangle color='#F59E0B' size={iconSizes.small} />
             <Text style={styles.warningText}>
               {stats.failedItems} item{stats.failedItems === 1 ? '' : 's'}{' '}
               failed to sync

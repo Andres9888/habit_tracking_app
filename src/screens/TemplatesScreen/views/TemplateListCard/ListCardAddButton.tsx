@@ -10,6 +10,7 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 import { Check } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import { springs } from '../../../../theme/animations';
 import { borderRadius, spacing } from '../../../../theme/spacing';
@@ -66,7 +67,7 @@ export function ListCardAddButton({
         <ActivityIndicator color={colors.text.inverse} size='small' />
       ) : isImported ? (
         <>
-          <Check color={colors.primary[700]} size={14} strokeWidth={3} />
+          <Check color={colors.primary[700]} size={iconSizes.small} strokeWidth={3} />
           <Text style={[s.label, { color: colors.primary[700] }]}>Added</Text>
         </>
       ) : (

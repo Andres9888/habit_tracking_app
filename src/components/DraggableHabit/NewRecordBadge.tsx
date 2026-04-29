@@ -47,7 +47,7 @@ export function NewRecordBadge({
         strokeWidth={2.5}
       />
       <Text
-        className='text-[13px] font-bold uppercase tracking-wide'
+        className='text-sm font-bold uppercase tracking-wide'
         style={{ color: isDark ? colors.streak[300] : colors.warning }}
       >
         New Personal Record! 🎉

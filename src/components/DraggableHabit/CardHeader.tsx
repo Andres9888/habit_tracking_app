@@ -71,14 +71,14 @@ export function CardHeader({
             className={`${isCompactMode ? 'h-7 w-7' : 'h-9 w-9'} items-center justify-center rounded-xl`}
             style={getIconContainerStyle(iconBg, accentColor, highContrastMode)}
           >
-            <Text className={isCompactMode ? 'text-[18px] leading-[22px]' : 'text-[22px] leading-[26px]'}>{emoji}</Text>
+            <Text className={isCompactMode ? 'text-lg leading-[22px]' : 'text-2xl leading-[26px]'}>{emoji}</Text>
           </View>
         </ReAnimated.View>
       </View>
       <View style={{ flex: 4, paddingLeft: 8, paddingRight: 12 }}>
         <View className='flex-row items-center gap-2'>
           <Text
-            className={`shrink ${isCompactMode ? 'text-[15px] font-semibold leading-[20px]' : 'text-[17px] font-bold leading-[22px]'}`}
+            className={`shrink ${isCompactMode ? 'text-base font-semibold leading-[20px]' : 'text-base font-bold leading-[22px]'}`}
             ellipsizeMode='tail'
             numberOfLines={2}
             style={{ color: colors.primaryText, letterSpacing: -0.3 }}
@@ -93,7 +93,7 @@ export function CardHeader({
               className='rounded-full px-2 py-0.5'
               style={{ backgroundColor: colors.premium[400] }}
             >
-              <Text className='text-[11px] font-semibold text-white'>
+              <Text className='text-xs font-semibold text-white'>
                 Paused
               </Text>
             </View>
@@ -108,7 +108,7 @@ export function CardHeader({
         </View>
         {showBestStreak ? (
           <Text
-            className='mt-0.5 text-[13px] font-medium'
+            className='mt-0.5 text-sm font-medium'
             style={{ color: themeColors.text.tertiary }}
           >
             Best: {bestStreak} days

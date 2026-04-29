@@ -119,6 +119,11 @@ function TemplatesScreenContent({
     );
   }
 
+  const handleSelectChipCategory = (categoryId: string | null) => {
+    state.setSearchQuery('');
+    state.setSelectedCategory((categoryId ?? 'all') as typeof state.selectedCategory);
+  };
+
   return (
     <>
       <MainBrowseView
@@ -177,6 +182,8 @@ function TemplatesScreenContent({
         onSearchChange={state.setSearchQuery}
         onSearchClear={() => state.setSearchQuery('')}
         onSeeAll={handleSeeAll}
+        onSelectCategory={handleSelectChipCategory}
+        onStartHerePress={handleSeeAll}
         popularTemplates={mainBrowseData.popularTemplates}
         premiumPacksSection={
           <PremiumPacksSection
@@ -184,6 +191,7 @@ function TemplatesScreenContent({
             onPackPress={packConfirm.handlePackPress}
           />
         }
+        quickFilterCategories={mainBrowseData.quickFilterCategories}
         searchAnimatedStyle={props.animations.searchAnimatedStyle}
         searchQuery={state.searchQuery}
         searchResultsSection={
@@ -207,6 +215,8 @@ function TemplatesScreenContent({
             }
           />
         }
+        selectedCategory={state.selectedCategory}
+        userHabitCount={data.userHabitCount}
       />
     </>
   );

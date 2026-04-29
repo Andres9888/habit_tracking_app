@@ -22,14 +22,14 @@ export function CompletionRateDisplay({
           {completionRate}%
         </Text>
         <Text
-          className='mb-2 text-[15px] font-medium'
+          className='mb-2 text-base font-medium'
           style={{ color: colors.accent }}
         >
           completion
         </Text>
       </View>
       <Text
-        className='mb-4 text-[17px] font-semibold'
+        className='mb-4 text-base font-semibold'
         style={{ color: colors.text }}
       >
         {messageText}

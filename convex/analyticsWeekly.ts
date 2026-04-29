@@ -44,7 +44,7 @@ export const getWeeklyInsights = query({
     const twoWeeksAgoKey = twoWeeksAgo.toISOString().slice(0, 10);
     const trackings = await ctx.db
       .query('tracking')
-      .withIndex('by_user_and_date', (q: unknown) =>
+      .withIndex('by_user_and_date', (q) =>
         q.eq('userId', identity.subject).gte('date', twoWeeksAgoKey)
       )
       .collect();

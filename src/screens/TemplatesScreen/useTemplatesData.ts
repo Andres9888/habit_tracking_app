@@ -7,28 +7,18 @@ import { useMemo } from 'react';
 import { api } from '../../../convex/_generated/api';
 import type { CategoryFilter } from '../templates/templates.types';
 import type { Doc } from '../../../convex/_generated/dataModel';
+import { CATEGORY_META } from './data/categoryMeta';
 
 const FALLBACK_CATEGORIES: CategoryFilter[] = [
   { icon: '✨', id: 'all', label: 'All' },
 ];
 
-const CATEGORY_METADATA: Record<string, Omit<CategoryFilter, 'id'>> = {
-  andrew_huberman: { icon: '🔬', label: 'Huberman' },
-  breathing: { icon: '🌬️', label: 'Breathing' },
-  creativity: { icon: '🎨', label: 'Creativity' },
+// Categories that exist in the schema + seed data but aren't yet in
+// CATEGORY_META (which also carries chip colors). Promote to CATEGORY_META
+// when someone makes a deliberate color call for them.
+const EXTRA_LABELS: Record<string, Pick<CategoryFilter, 'icon' | 'label'>> = {
   environmental_design: { icon: '🏠', label: 'Environment' },
-  financial: { icon: '💰', label: 'Financial' },
-  health_fitness: { icon: '💪', label: 'Health' },
-  learning: { icon: '📚', label: 'Learning' },
-  longevity: { icon: '🧬', label: 'Longevity' },
-  mental_health: { icon: '🧠', label: 'Mental Health' },
-  mindfulness: { icon: '🧘', label: 'Mindfulness' },
-  morning_routine: { icon: '🌅', label: 'Morning' },
-  productivity: { icon: '🎯', label: 'Productivity' },
-  recovery: { icon: '🔄', label: 'Recovery' },
   relationships: { icon: '💑', label: 'Relationships' },
-  sleep: { icon: '😴', label: 'Sleep' },
-  social: { icon: '👥', label: 'Social' },
   subtraction: { icon: '➖', label: 'Less Is More' },
 };
 
@@ -42,14 +32,19 @@ function getCategoriesFromTemplates(templates: Doc<'templates'>[] | undefined) {
   ].sort();
 
   const normalized = uniqueCategories.map((category) => {
-    const metadata = CATEGORY_METADATA[category as string] ?? {
-      icon: '📌',
-      label:
-        typeof category === 'string'
-          ? category.charAt(0).toUpperCase() +
-            category.slice(1).replaceAll('_', ' ')
-          : 'Template',
-    };
+    const id = category as string;
+    const canonical = CATEGORY_META[id];
+    const extra = EXTRA_LABELS[id];
+    const metadata = canonical
+      ? { icon: canonical.icon, label: canonical.label }
+      : (extra ?? {
+          icon: '📌',
+          label:
+            typeof category === 'string'
+              ? category.charAt(0).toUpperCase() +
+                category.slice(1).replaceAll('_', ' ')
+              : 'Template',
+        });
 
     return {
       ...metadata,

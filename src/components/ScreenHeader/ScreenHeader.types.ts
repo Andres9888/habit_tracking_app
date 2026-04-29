@@ -13,5 +13,6 @@ export interface ScreenHeaderProps {
   variant?: ScreenHeaderVariant;
   titleVisible?: boolean;
   titleStyle?: StyleProp<TextStyle>;
+  titleNumberOfLines?: number;
   onBack?: () => void;
 }

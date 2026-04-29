@@ -1,7 +1,7 @@
 import { memo } from 'react';
 import { Pressable, ScrollView, Text } from 'react-native';
 import { useThemeColors } from '@/theme/ThemeContext';
-import { shadows } from '../../../theme/spacing';
+import { borderRadius, shadows } from '../../../theme/spacing';
 import { typography, fontWeights, fontFamilies} from '../../../theme/typography';
 import { HABIT_CATEGORIES } from '../../../constants/habitEmojis';
 
@@ -39,7 +39,7 @@ export const CategoryChips = memo(
                 ...shadows.subtle,
                 alignItems: 'center',
                 backgroundColor: isSelected ? '#1c1917' : 'white',
-                borderRadius: 9999,
+                borderRadius: borderRadius.full,
                 flexDirection: 'row',
                 gap: 4,
                 paddingHorizontal: 12,
@@ -48,7 +48,7 @@ export const CategoryChips = memo(
             ]}
             onPress={() => onCategorySelect(category.id)}
           >
-            <Text style={{ fontSize: typography.bodySmall.fontSize }}>
+            <Text style={{ fontSize: 14 }}>
               {category.icon}
             </Text>
             <Text

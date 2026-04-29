@@ -6,19 +6,19 @@
 
 import { StyleSheet } from 'react-native';
 
-import { shadows, borderRadius as br } from '../../../theme/spacing';
+import { shadows, borderRadius } from '../../../theme/spacing';
 import { typography, fontFamilies, fontWeights } from '@/theme/typography';
 
 export const styles = StyleSheet.create({
   container: {
     ...shadows.card,
-    borderRadius: br.large,
+    borderRadius: borderRadius.large,
     borderWidth: 1,
     padding: 16,
   },
   dayCell: {
     alignItems: 'center',
-    borderRadius: 10,
+    borderRadius: borderRadius.small,
     height: 36,
     justifyContent: 'center',
     width: 36,
@@ -35,7 +35,7 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   dot: {
-    borderRadius: 2.5,
+    borderRadius: borderRadius.xs,
     bottom: 3,
     height: 5,
     position: 'absolute',
@@ -48,14 +48,14 @@ export const styles = StyleSheet.create({
   },
   headerText: {
     fontFamily: fontFamilies.primary.text,
-    fontSize: 10,
+    fontSize: typography.tabBar.fontSize,
     fontWeight: fontWeights.semibold,
     letterSpacing: 0.3,
     textTransform: 'uppercase',
   },
   navButton: {
     alignItems: 'center',
-    borderRadius: 10,
+    borderRadius: borderRadius.small,
     borderWidth: 1,
     height: 34,
     justifyContent: 'center',
@@ -75,7 +75,7 @@ export const styles = StyleSheet.create({
   },
   monthButton: {
     alignItems: 'center',
-    borderRadius: 10,
+    borderRadius: borderRadius.small,
     borderWidth: 1,
     flexDirection: 'row',
     gap: 6,
@@ -85,7 +85,7 @@ export const styles = StyleSheet.create({
   },
   monthText: {
     fontFamily: fontFamilies.primary.text,
-    fontSize: 13,
+    fontSize: typography.caption.fontSize,
     fontWeight: fontWeights.bold,
   },
   row: {
@@ -99,7 +99,7 @@ export const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   streakCircle: {
-    borderRadius: 5,
+    borderRadius: borderRadius.xs,
     bottom: 3,
     height: 6,
     position: 'absolute',

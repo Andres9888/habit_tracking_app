@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { colors } from '@/theme';
+import { borderRadius } from '@/theme/spacing';
 
 export const styles = StyleSheet.create({
   absoluteEmoji: {
@@ -20,7 +21,7 @@ export const styles = StyleSheet.create({
   emojiContainer: {
     alignItems: 'center',
     backgroundColor: colors.gray[50],
-    borderRadius: 9999,
+    borderRadius: borderRadius.full,
     height: 120,
     justifyContent: 'center',
     width: 120,

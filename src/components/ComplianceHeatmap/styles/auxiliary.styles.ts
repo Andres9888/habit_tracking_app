@@ -41,7 +41,7 @@ export const auxiliaryStyles = StyleSheet.create({
     paddingTop: spacing.md,
   },
   legendCell: {
-    borderRadius: 2,
+    borderRadius: borderRadius.xs,
     height: 12,
     marginHorizontal: 2,
     width: 12,
@@ -49,7 +49,7 @@ export const auxiliaryStyles = StyleSheet.create({
   legendLabel: {
     ...typography.caption,
     color: colors.text.tertiary,
-    fontSize: 13,
+    fontSize: typography.caption.fontSize,
     marginHorizontal: spacing.xs,
   },
   summary: {
@@ -59,6 +59,6 @@ export const auxiliaryStyles = StyleSheet.create({
   summaryText: {
     ...typography.caption,
     color: colors.text.tertiary,
-    fontSize: 13,
+    fontSize: typography.caption.fontSize,
   },
 });

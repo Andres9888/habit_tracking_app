@@ -14,13 +14,13 @@ import {
   ChevronDown,
   ChevronUp,
 } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import type { VisualizationGuideProps } from './VisualizationGuide.types';
 import { VISUALIZATION_TECHNIQUES } from './visualizationTechniques';
 import { GuideHeader } from './GuideHeader';
 import { KeyInsightBox } from './KeyInsightBox';
 import { VisualizationCard } from './VisualizationCard';
 import { QuickTip } from './QuickTip';
-import { iconSizes } from '@/theme/iconSizes';
 import { triggerHaptic } from '@/utils/haptics';
 import { durations, enterEasing } from '@/theme/animations';
 

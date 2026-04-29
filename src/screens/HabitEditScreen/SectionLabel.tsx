@@ -26,7 +26,7 @@ export function SectionLabel({
     >
       <View className='h-px flex-1' style={{ backgroundColor: borderColor }} />
       <Text
-        className='text-[13px] font-semibold tracking-wider'
+        className='text-sm font-semibold tracking-wider'
         style={{ color }}
       >
         {text}

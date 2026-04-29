@@ -25,12 +25,12 @@ export const categoryStyles = StyleSheet.create({
     ...shadows.subtle,
   },
   categoryColorDot: {
-    borderRadius: 9999,
+    borderRadius: borderRadius.full,
     height: 6,
     width: 6,
   },
   categoryCount: {
-    borderRadius: 9999,
+    borderRadius: borderRadius.full,
     marginLeft: 4,
     paddingHorizontal: 8,
     paddingVertical: 2,
@@ -52,7 +52,7 @@ export const categoryStyles = StyleSheet.create({
     gap: 14,
   },
   categoryIcon: {
-    fontSize: 17,
+    fontSize: typography.body.fontSize,
   },
   categoryScrollGradient: {
     height: '100%',

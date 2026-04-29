@@ -73,14 +73,14 @@ const TemplateListItemComponent = ({
           </View>
           <View className='flex-1'>
             <Text
-              className='text-[15px] font-semibold'
+              className='text-base font-semibold'
               numberOfLines={1}
               style={{ color: themeColors.text.primary }}
             >
               {template.name}
             </Text>
             <Text
-              className='text-[13px] font-normal'
+              className='text-sm font-normal'
               numberOfLines={2}
               style={{ color: themeColors.text.secondary }}
             >

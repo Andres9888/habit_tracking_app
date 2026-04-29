@@ -6,6 +6,7 @@ import type { ReactNode } from 'react';
 import type { ViewStyle } from 'react-native';
 import type { AnimatedStyle } from 'react-native-reanimated';
 import type { Doc } from '../../../../convex/_generated/dataModel';
+import type { ChipCategory } from '../components/QuickFilterChips';
 import type { GoalCollection } from '../data/goalCollections';
 
 export interface MainBrowseViewProps {
@@ -25,9 +26,14 @@ export interface MainBrowseViewProps {
   onSearchChange: (text: string) => void;
   onSearchClear: () => void;
   onSeeAll: () => void;
+  onSelectCategory: (categoryId: string | null) => void;
+  onStartHerePress: () => void;
   popularTemplates: Doc<'templates'>[];
   premiumPacksSection: ReactNode;
+  quickFilterCategories: ChipCategory[];
   searchAnimatedStyle: AnimatedStyle<ViewStyle>;
   searchQuery: string;
   searchResultsSection: ReactNode;
+  selectedCategory: string;
+  userHabitCount: number;
 }

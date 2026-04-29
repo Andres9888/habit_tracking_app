@@ -14,25 +14,25 @@ import Animated, {
 } from 'react-native-reanimated';
 import type { DayBarProps } from '../InsightsSection.types';
 import { DAY_LABELS_SHORT } from '../InsightsSection.constants';
-import { colors } from '@/theme';
+import { colors as palette } from '@/theme';
 import { springs } from '@/theme/animations';
 import { useThemeColors } from '@/theme/ThemeContext';
 
 /**
- * Get background hex color based on day statistics
+ * Get background hex color based on day statistics. Uses the static
+ * palette (not theme-aware) since these are chart-data accent colors.
  */
 function getBarHexColor(
   isBest: boolean,
   isWorst: boolean,
   rate: number,
-  colors: { gray: { 200: string; 300: string } }
 ): string {
-  if (isBest) return colors.primary[500]; // emerald-500
+  if (isBest) return palette.primary[500]; // emerald-500
   if (isWorst && rate < 70) return '#fbbf24'; // amber-400 (no exact token)
-  if (rate >= 80) return colors.primary[400]; // emerald-400
-  if (rate >= 60) return colors.secondary[400]; // blue-400
-  if (rate >= 40) return colors.gray[300];
-  return colors.gray[200];
+  if (rate >= 80) return palette.primary[400]; // emerald-400
+  if (rate >= 60) return palette.secondary[400]; // blue-400
+  if (rate >= 40) return palette.gray[300];
+  return palette.gray[200];
 }
 
 export function DayBar({
@@ -64,14 +64,14 @@ export function DayBar({
     opacity: opacity.value,
   }));
 
-  const bgHex = getBarHexColor(isBest, isWorst, dayStats.rate, colors);
+  const bgHex = getBarHexColor(isBest, isWorst, dayStats.rate);
   const labelColor = isBest
-    ? colors.primary[600] // emerald-600
+    ? palette.primary[600] // emerald-600
     : isWorst
       ? '#d97706' // amber-600 (no exact token)
       : colors.text.secondary;
   const rateColor = isBest
-    ? colors.primary[700] // emerald-700
+    ? palette.primary[700] // emerald-700
     : isWorst
       ? '#b45309' // amber-700 (no exact token)
       : colors.text.tertiary;

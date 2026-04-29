@@ -3,6 +3,8 @@
  */
 
 import { StyleSheet } from 'react-native';
+import { borderRadius } from '../../theme/spacing';
+import { typography } from '../../theme/typography';
 import { milestoneColors } from '../../theme/milestone-colors';
 
 export const styles = StyleSheet.create({
@@ -34,7 +36,7 @@ export const styles = StyleSheet.create({
     textAlign: 'center',
   },
   glow: {
-    borderRadius: 9999,
+    borderRadius: borderRadius.full,
     elevation: 20,
     height: 160,
     position: 'absolute',
@@ -57,7 +59,7 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   percentage: {
-    fontSize: 34,
+    fontSize: typography.displayLarge.fontSize,
     lineHeight: 56,
   },
   percentageContainer: {

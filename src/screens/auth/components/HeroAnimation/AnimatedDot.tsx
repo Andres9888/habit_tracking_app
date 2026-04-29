@@ -4,6 +4,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { StyleSheet } from 'react-native';
 import { colors } from '@/theme/colors';
+import { borderRadius } from '@/theme/spacing';
 
 interface AnimatedDotProps {
   index: number;
@@ -24,7 +25,7 @@ export function AnimatedDot({ index, progress }: AnimatedDotProps) {
 
 const styles = StyleSheet.create({
   dot: {
-    borderRadius: 4,
+    borderRadius: borderRadius.xs,
     height: 8,
     width: 8,
   },

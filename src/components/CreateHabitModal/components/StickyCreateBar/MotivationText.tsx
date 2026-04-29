@@ -18,7 +18,7 @@ export function MotivationText() {
       accessibilityRole='text'
       className='mb-3 items-center'
     >
-      <Text className='text-[13px]' style={{ color: colors.text.secondary }}>
+      <Text className='text-sm' style={{ color: colors.text.secondary }}>
         <Text className='font-semibold' style={{ color: '#059669' }}>
           {STRINGS.CREATE_HABIT.motivationHighlight}
         </Text>

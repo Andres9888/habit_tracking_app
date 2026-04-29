@@ -119,7 +119,7 @@ export function IntroStep({ habitName, onNext }: IntroStepProps) {
           end={{ x: 1, y: 0 }}
           start={{ x: 0, y: 0 }}
         />
-        <Text className='text-[15px] font-semibold text-white'>
+        <Text className='text-base font-semibold text-white'>
           Begin Exercise
         </Text>
         <ChevronRight className='text-white' size={iconSizes.medium} />

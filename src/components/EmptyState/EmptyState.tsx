@@ -22,9 +22,12 @@ import { TemplateChip } from './TemplateChip';
 
 export function EmptyState({
   variant = 'noHabits',
+  size = 'default',
   icon,
+  iconBackplate,
   headline,
   description,
+  actionSlot,
   ctaLabel,
   onCTA,
   onQuickStart,
@@ -42,24 +45,42 @@ export function EmptyState({
   const displayHeadline = headline || config.headline;
   const displayDescription = description || config.description;
   const displayCTALabel = ctaLabel || config.ctaLabel;
+  const isCompact = size === 'compact';
+  const isStringIcon = typeof displayIcon === 'string';
 
   return (
     <View
       accessible
       accessibilityLabel={`${displayHeadline}. ${displayDescription}`}
       accessibilityRole='text'
-      style={[styles.container, style]}
+      style={[isCompact ? styles.containerCompact : styles.container, style]}
     >
-      {/* Icon/Illustration */}
-      <Animated.Text style={[styles.icon, iconStyle]}>
-        {displayIcon}
-      </Animated.Text>
+      {/* Icon/Illustration — string emoji or custom ReactNode, optionally wrapped in a backplate */}
+      {iconBackplate ? (
+        <Animated.View style={[{ marginBottom: isCompact ? 12 : 16 }, iconBackplate, iconStyle]}>
+          {isStringIcon ? (
+            <Animated.Text style={isCompact ? styles.iconCompact : styles.icon}>
+              {displayIcon}
+            </Animated.Text>
+          ) : (
+            displayIcon
+          )}
+        </Animated.View>
+      ) : isStringIcon ? (
+        <Animated.Text style={[isCompact ? styles.iconCompact : styles.icon, iconStyle]}>
+          {displayIcon}
+        </Animated.Text>
+      ) : (
+        <Animated.View style={[{ marginBottom: isCompact ? 12 : 16 }, iconStyle]}>
+          {displayIcon}
+        </Animated.View>
+      )}
 
       {/* Headline */}
       <Animated.Text
         style={[
           theme.custom.typography.heading2,
-          styles.headline,
+          isCompact ? styles.headlineCompact : styles.headline,
           { color: colors.text.primary },
           headlineStyle,
         ]}
@@ -71,13 +92,16 @@ export function EmptyState({
       <Animated.Text
         style={[
           theme.custom.typography.body,
-          styles.description,
+          isCompact ? styles.descriptionCompact : styles.description,
           { color: colors.text.secondary },
           descriptionStyle,
         ]}
       >
         {displayDescription}
       </Animated.Text>
+
+      {/* Optional inline action slot — tip cards, hint rows, inline action chips */}
+      {actionSlot ? <Animated.View style={descriptionStyle}>{actionSlot}</Animated.View> : null}
 
       {/* Quick Start Templates (noHabits variant only) */}
       {variant === 'noHabits' && onQuickStart ? <Animated.View style={[styles.quickStartSection, descriptionStyle]}>

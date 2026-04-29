@@ -25,7 +25,7 @@ export function DetailHeroStat({
         style={{
           color: valueColor,
           fontFamily: fontFamilies.monospace,
-          fontSize: 13,
+          fontSize: typography.caption.fontSize,
           fontWeight: fontWeights.semibold,
         }}
       >
