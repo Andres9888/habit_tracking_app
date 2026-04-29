@@ -31,7 +31,15 @@ export const useHabitDayToggleAnimations = ({
   // but the animated value was initialized before the final props arrived.
   useLayoutEffect(() => {
     if (prevCompletedRef.current === null) {
-      completion.setValue(completed ? 1 : 0);
+      const initialValue = completed ? 1 : 0;
+      completion.setValue(initialValue);
+      // Force a native-side commit so the compositor reflects the value
+      // even if the JS setValue didn't propagate (known native-driver desync).
+      Animated.timing(completion, {
+        duration: 0,
+        toValue: initialValue,
+        useNativeDriver: true,
+      }).start();
     }
   }, [completed, completion]);
 

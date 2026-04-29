@@ -12,6 +12,7 @@ const MISSED_BORDER = '#DC2626';
 
 interface Props {
   missed: boolean;
+  completed: boolean;
   forgeFlash: AnimatedType.Value;
   completion: AnimatedType.Value;
   completionIcon: CompletionIcon | undefined;
@@ -20,6 +21,7 @@ interface Props {
 
 export const HabitDayToggleContent: React.FC<Props> = ({
   missed,
+  completed,
   forgeFlash,
   completion,
   completionIcon,
@@ -43,6 +45,7 @@ export const HabitDayToggleContent: React.FC<Props> = ({
       </View>
     ) : (
       <AnimatedCompletionIcon
+        completed={completed}
         completion={completion}
         completionIcon={completionIcon}
         iconColor={iconColor}
