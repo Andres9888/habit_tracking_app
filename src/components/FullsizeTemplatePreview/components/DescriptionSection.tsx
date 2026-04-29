@@ -27,19 +27,6 @@ export function DescriptionSection({
       <Text style={[heroStyles.descriptionText, { fontFamily }]}>
         {description}
       </Text>
-      {startSmallVersion ? (
-        <View style={heroStyles.startSmallRow}>
-          <Text style={heroStyles.startSmallSparkle}>✨</Text>
-          <Text style={[heroStyles.startSmallText, { fontFamily }]}>
-            <Text
-              style={[heroStyles.startSmallLabel, labelColor ? { color: labelColor } : null]}
-            >
-              Start small:
-            </Text>{' '}
-            {startSmallVersion}
-          </Text>
-        </View>
-      ) : null}
     </View>
   );
 }

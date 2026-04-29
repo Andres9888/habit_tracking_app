@@ -1,25 +1,26 @@
 /**
- * Elevated video embed card with YouTube thumbnail image
+ * YouTube thumbnail card — visual hook for the Watch action pill.
  */
 
 import React from 'react';
-import { Image, Linking, Pressable, Text, View } from 'react-native';
+import { Image, Linking, Pressable, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Play } from 'lucide-react-native';
+
 import { colors } from '@/theme/colors';
 import { iconSizes } from '@/theme/iconSizes';
 import { evidenceDetailStyles as s } from '../styles/evidenceDetail.styles';
 import type { Template } from '../../../types/template';
 
 interface ScienceVideoEmbedProps {
-  iconColor: string;
   template: Template;
 }
 
+const YOUTUBE_ID_RE =
+  /(?:youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|v\/)|youtu\.be\/)([\w-]{11})/;
+
 function extractYouTubeId(url: string): string | null {
-  const match = url.match(
-    /(?:youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|v\/)|youtu\.be\/)([\w-]{11})/
-  );
+  const match = url.match(YOUTUBE_ID_RE);
   return match ? match[1] : null;
 }
 
@@ -33,8 +34,8 @@ export function ScienceVideoEmbed({ template }: ScienceVideoEmbedProps) {
 
   return (
     <Pressable
-      accessibilityLabel='Watch the science explained on YouTube'
-      accessibilityRole='link'
+      accessibilityLabel="Watch the science explained on YouTube"
+      accessibilityRole="link"
       style={s.videoCard}
       onPress={() => void Linking.openURL(template.youtubeLink!)}
     >
@@ -42,30 +43,20 @@ export function ScienceVideoEmbed({ template }: ScienceVideoEmbedProps) {
         {thumbnailUri ? (
           <Image
             accessibilityIgnoresInvertColors
-            resizeMode='cover'
+            resizeMode="cover"
             source={{ uri: thumbnailUri }}
             style={s.videoThumbnailImage}
           />
         ) : null}
         <LinearGradient
-          colors={['rgba(0,0,0,0.15)', 'rgba(0,0,0,0.45)']}
+          colors={['rgba(0,0,0,0.05)', 'rgba(0,0,0,0.45)']}
           start={{ x: 0, y: 0 }}
           end={{ x: 0, y: 1 }}
           style={s.videoThumbnailOverlay}
         />
         <View style={s.playCircle}>
-          <Play
-            color={colors.text.inverse}
-            fill={colors.text.inverse}
-            size={iconSizes.large}
-          />
+          <Play color={colors.gray[900]} fill={colors.gray[900]} size={iconSizes.large} />
         </View>
-      </View>
-      <View style={s.videoMeta}>
-        <Text style={s.videoLabel}>Watch: The science explained</Text>
-        <Text style={s.videoSubtitle}>
-          Learn the research behind this habit on YouTube
-        </Text>
       </View>
     </Pressable>
   );
