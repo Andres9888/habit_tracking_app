@@ -3862,6 +3862,22 @@ export const seedScienceTemplates = internalMutation({
       category: 'recovery',
       createdAt: now,
       description:
+        'Spend 10-20 minutes in front of a red/near-infrared light panel (660nm + 850nm). Photobiomodulation supports skin health, muscle recovery, and mitochondrial energy production.',
+      frequency: FREQUENCY_DAILY,
+      icon: '🔴',
+      iconColor: '#DC2626',
+      name: 'Red Light Therapy',
+      startSmallVersion: 'Stand in front of the panel for 60 seconds.',
+      popularityScore: 75,
+      scientificLink: 'https://pubmed.ncbi.nlm.nih.gov/28748217/',
+      scientificReference:
+        'Hamblin (2017) - Mechanisms and applications of the anti-inflammatory effects of photobiomodulation',
+    });
+
+    await ctx.db.insert('templates', {
+      category: 'recovery',
+      createdAt: now,
+      description:
         'Practice yoga nidra or NSDR (non-sleep deep rest) for 10-20 minutes. Accelerates learning, restores dopamine, and improves sleep.',
       frequency: FREQUENCY_DAILY,
       icon: '🛌',
@@ -6250,5 +6266,42 @@ export const backfillStartSmallVersion = internalMutation({
     }
 
     return { success: true, patchedCount, skipped };
+  },
+});
+
+/**
+ * Internal Mutation: Insert ONLY the "Red Light Therapy" template.
+ * SEC: Internal only — run once from the Convex dashboard after deploy.
+ * Safe to re-run: skips if a template with this name already exists.
+ */
+export const insertRedLightTherapyTemplate = internalMutation({
+  args: {},
+  handler: async (ctx) => {
+    const existing = await ctx.db
+      .query('templates')
+      .filter((q) => q.eq(q.field('name'), 'Red Light Therapy'))
+      .first();
+
+    if (existing) {
+      return { inserted: false, reason: 'already exists' as const };
+    }
+
+    await ctx.db.insert('templates', {
+      category: 'recovery',
+      createdAt: Date.now(),
+      description:
+        'Spend 10-20 minutes in front of a red/near-infrared light panel (660nm + 850nm). Photobiomodulation supports skin health, muscle recovery, and mitochondrial energy production.',
+      frequency: FREQUENCY_DAILY,
+      icon: '🔴',
+      iconColor: '#DC2626',
+      name: 'Red Light Therapy',
+      startSmallVersion: 'Stand in front of the panel for 60 seconds.',
+      popularityScore: 75,
+      scientificLink: 'https://pubmed.ncbi.nlm.nih.gov/28748217/',
+      scientificReference:
+        'Hamblin (2017) - Mechanisms and applications of the anti-inflammatory effects of photobiomodulation',
+    });
+
+    return { inserted: true };
   },
 });
