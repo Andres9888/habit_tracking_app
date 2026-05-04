@@ -11,7 +11,7 @@
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#059669"
+      "backgroundColor": "#F6F1E9"
     },
     "assetBundlePatterns": ["assets/*", "assets/sounds/*"],
     "jsEngine": "hermes",
