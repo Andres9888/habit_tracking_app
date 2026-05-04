@@ -73,6 +73,7 @@ export const removedHabitDataValidator = v.object({
 
 /** Update habit args validator */
 export const updateHabitArgs = {
+  benefits: v.optional(v.array(v.string())),
   cueAfterBehavior: v.optional(v.string()),
   cueLocation: v.optional(v.string()),
   cueTime: v.optional(v.string()),
@@ -94,6 +95,7 @@ export const updateHabitArgs = {
   remindersEnabled: v.optional(v.boolean()),
   reminderSound: v.optional(v.string()),
   reminderTime: v.optional(v.string()),
+  scienceNote: v.optional(v.string()),
   strengthAlgorithm: v.optional(
     v.union(v.literal('forgiving'), v.literal('balanced'), v.literal('strict'))
   ),

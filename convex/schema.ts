@@ -51,9 +51,6 @@ const applicationTables = {
 
     archivedAt: v.optional(v.number()),
 
-    // Free-text "benefits" list captured during habit setup (legacy field, still in DB)
-    benefits: v.optional(v.array(v.string())),
-
     bestStreak: v.optional(v.number()),
 
     // ISO date string (YYYY-MM-DD)
@@ -151,9 +148,6 @@ const applicationTables = {
 
     resumedAt: v.optional(v.number()),
 
-    // Free-text science note captured during habit setup (legacy field, still in DB)
-    scienceNote: v.optional(v.string()),
-
     // Habit Strength System (Klein et al., 2011; Zhang et al., 2021)
     // Computed habit strength (0-1)
     strength: v.optional(v.number()),
@@ -205,6 +199,12 @@ const applicationTables = {
 
     // Motivation - user-provided reason for building this habit
     why: v.optional(v.string()),
+
+    // Science-backed benefits of the habit (bulleted list)
+    benefits: v.optional(v.array(v.string())),
+
+    // Short paragraph + reference summarising the science behind the habit
+    scienceNote: v.optional(v.string()),
 
     woopObstacle: v.optional(v.string()),
 
@@ -335,6 +335,9 @@ const applicationTables = {
     // shown inline in template preview as the laughably-easy entry version.
     startSmallVersion: v.optional(v.string()),
 
+    // Science-backed benefits of the habit (bulleted list)
+    benefits: v.optional(v.array(v.string())),
+
     // Optional YouTube video link
     youtubeLink: v.optional(v.string()),
   })
@@ -406,7 +409,7 @@ const applicationTables = {
     habitCompletionIcon: v.optional(
       v.union(v.literal('chain'), v.literal('checkbox'))
     ),
-    // Legacy grouping preference still present in DB (e.g. "time_of_day")
+    // Optional grouping preference (e.g. "time_of_day")
     habitGroupBy: v.optional(v.string()),
     habitSortMode: v.optional(
       v.union(

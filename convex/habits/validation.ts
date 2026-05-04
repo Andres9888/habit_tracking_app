@@ -34,6 +34,8 @@ interface HabitArgs {
   why?: string;
   frequency?: string;
   goalUnit?: string;
+  scienceNote?: string;
+  benefits?: string[];
 }
 
 /** Validated habit fields */
@@ -53,7 +55,12 @@ interface ValidatedHabitFields {
   why?: string;
   frequency?: string;
   goalUnit?: string;
+  scienceNote?: string;
+  benefits?: string[];
 }
+
+const MAX_BENEFITS_ITEMS = 10;
+const MAX_BENEFIT_LENGTH = 200;
 
 /**
  * Validate all habit fields and return sanitized values.
@@ -234,6 +241,29 @@ export function validateHabitUpdateFields(
   if (args.goalUnit !== undefined) {
     const goalUnitResult = validateShortText(args.goalUnit, 50, 'Goal unit');
     result.goalUnit = requireValid(goalUnitResult, args.goalUnit);
+  }
+
+  if (args.scienceNote !== undefined) {
+    const scienceResult = validateLongText(
+      args.scienceNote,
+      MAX_LONG_TEXT_LENGTH,
+      'Science note'
+    );
+    result.scienceNote = requireValid(scienceResult, args.scienceNote);
+  }
+
+  if (args.benefits !== undefined) {
+    if (args.benefits.length > MAX_BENEFITS_ITEMS) {
+      throw new Error(
+        `Benefits cannot exceed ${MAX_BENEFITS_ITEMS} items`
+      );
+    }
+    result.benefits = args.benefits
+      .map((item) => {
+        const r = validateShortText(item, MAX_BENEFIT_LENGTH, 'Benefit');
+        return requireValid(r, item);
+      })
+      .filter((s): s is string => typeof s === 'string' && s.length > 0);
   }
 
   return result;

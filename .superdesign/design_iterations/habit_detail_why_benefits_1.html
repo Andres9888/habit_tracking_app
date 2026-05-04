@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Habit Detail — Why & Benefits Section</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif !important; background: #18181b !important; margin: 0; padding: 40px 24px; }
+    h1, h2, h3, p, span, div { font-family: 'Inter', sans-serif !important; }
+
+    .stage-title { color: #fafaf9; font-size: 28px; font-weight: 700; text-align: center; margin: 0 0 8px; }
+    .stage-sub   { color: #a8a29e; font-size: 14px; text-align: center; margin: 0 0 32px; }
+
+    .phones { display: flex; gap: 32px; justify-content: center; flex-wrap: wrap; }
+
+    .phone-frame {
+      width: 375px;
+      height: 812px;
+      background: #fafaf9;
+      border-radius: 44px;
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 25px 80px -12px rgba(0,0,0,0.6);
+      flex-shrink: 0;
+    }
+    .notch {
+      position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+      width: 126px; height: 34px; background: #000;
+      border-radius: 0 0 20px 20px; z-index: 50;
+    }
+    .safe-area-top { height: 54px; }
+    .frame-label {
+      color: #fafaf9; font-size: 13px; font-weight: 600;
+      text-align: center; margin-top: 16px; letter-spacing: 0.3px;
+    }
+    .frame-label .pill {
+      display: inline-block; background: rgba(245,158,11,0.15); color: #fbbf24;
+      padding: 4px 10px; border-radius: 999px; font-size: 11px; font-weight: 700;
+      letter-spacing: 1px; text-transform: uppercase; margin-right: 8px;
+    }
+
+    .scroll-content {
+      height: calc(812px - 54px); overflow-y: auto; scrollbar-width: none;
+      padding: 0 16px 24px;
+    }
+    .scroll-content::-webkit-scrollbar { display: none; }
+
+    /* Hero */
+    .hero {
+      display: flex; align-items: center; gap: 12px; padding: 12px 4px 16px;
+    }
+    .hero .emoji { font-size: 32px; }
+    .hero .title { font-size: 22px; font-weight: 700; color: #1c1917; }
+    .hero .stats { display: flex; gap: 14px; margin-top: 4px; font-size: 12px; color: #78716c; }
+    .hero .stats span { font-weight: 600; }
+    .hero .stats .num { color: #1c1917; }
+
+    /* Tabs */
+    .tabs {
+      display: flex; gap: 4px; background: #f1ede8; padding: 4px;
+      border-radius: 999px; margin-bottom: 16px;
+    }
+    .tab {
+      flex: 1; text-align: center; font-size: 13px; font-weight: 600;
+      padding: 8px 0; color: #78716c; border-radius: 999px;
+    }
+    .tab.active {
+      background: white; color: #1c1917;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05), 0 1px 3px rgba(0,0,0,0.04);
+    }
+
+    /* Goal card outer (matches GoalTabContent's wrapper) */
+    .goal-card {
+      background: white; border-radius: 16px; padding: 18px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.04);
+    }
+    .goal-card-header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 14px;
+    }
+    .goal-card-header .title { font-size: 17px; font-weight: 700; color: #1c1917; }
+    .goal-card-header .adjust {
+      font-size: 12px; font-weight: 600; color: #78716c;
+      text-decoration: underline; text-underline-offset: 2px;
+    }
+
+    /* The NEW Why & Benefits card */
+    .wb-card {
+      background: linear-gradient(180deg, #fffbeb 0%, #fef3c7 100%);
+      border: 1px solid #fde68a;
+      border-radius: 14px;
+      padding: 14px 14px 16px;
+      margin-bottom: 14px;
+    }
+    .wb-card.empty {
+      background: #faf6f1;
+      border: 1px dashed #d6d3d1;
+      cursor: pointer;
+    }
+    .wb-header {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 8px;
+    }
+    .wb-header .left { display: flex; align-items: center; gap: 8px; }
+    .wb-header .icon { font-size: 18px; }
+    .wb-header .label { font-size: 14px; font-weight: 700; color: #78350f; }
+    .wb-header .chev { color: #b45309; }
+    .wb-summary {
+      font-size: 11px; color: #92400e; margin-top: 2px;
+      letter-spacing: 0.2px;
+    }
+
+    /* Personal block */
+    .personal-row {
+      display: flex; gap: 10px; padding: 10px 0;
+      border-bottom: 1px solid rgba(180,83,9,0.12);
+    }
+    .personal-row:last-child { border-bottom: none; }
+    .personal-row .pemoji { font-size: 18px; line-height: 1.2; }
+    .personal-row .ptext { flex: 1; }
+    .personal-row .plabel {
+      font-size: 10px; font-weight: 700; letter-spacing: 1px;
+      text-transform: uppercase; color: #b45309; margin-bottom: 2px;
+    }
+    .personal-row .pval { font-size: 13px; color: #44403c; line-height: 1.45; font-style: italic; }
+
+    /* Section divider inside card */
+    .wb-section-label {
+      display: flex; align-items: center; gap: 8px; margin: 14px 0 8px;
+    }
+    .wb-section-label::before, .wb-section-label::after {
+      content: ''; flex: 1; height: 1px; background: rgba(180,83,9,0.18);
+    }
+    .wb-section-label span {
+      font-size: 10px !important; font-weight: 700 !important;
+      letter-spacing: 1.5px !important; color: #b45309 !important;
+      text-transform: uppercase;
+    }
+
+    /* Benefits list */
+    .benefits { list-style: none; padding: 0; margin: 0; }
+    .benefits li {
+      display: flex; gap: 8px; padding: 5px 0;
+      font-size: 13px; color: #44403c; line-height: 1.45;
+    }
+    .benefits li::before {
+      content: '•'; color: #f59e0b; font-weight: 700;
+      flex-shrink: 0; line-height: 1.45;
+    }
+
+    /* Science note */
+    .science-note {
+      font-size: 12px; color: #57534e; line-height: 1.5;
+      background: rgba(255,255,255,0.5); border-radius: 10px;
+      padding: 10px 12px; margin-top: 4px;
+    }
+    .science-note .ref {
+      display: block; margin-top: 6px;
+      font-size: 10px; color: #92400e; font-weight: 600;
+    }
+
+    /* Empty state CTA */
+    .empty-cta {
+      display: flex; align-items: flex-start; gap: 10px;
+    }
+    .empty-cta .plus {
+      width: 28px; height: 28px; border-radius: 999px;
+      background: #f1ede8; color: #78716c;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; font-weight: 600; flex-shrink: 0;
+    }
+    .empty-cta .ctitle {
+      font-size: 14px; font-weight: 700; color: #44403c;
+    }
+    .empty-cta .cdesc {
+      font-size: 12px; color: #78716c; margin-top: 2px; line-height: 1.4;
+    }
+
+    /* Streak goal placeholder */
+    .streak-goal {
+      background: #faf6f1; border-radius: 12px; padding: 14px;
+      margin-top: 14px;
+    }
+    .sg-row { display: flex; justify-content: space-between; align-items: baseline; }
+    .sg-num { font-size: 28px; font-weight: 800; color: #1c1917; }
+    .sg-label { font-size: 11px; color: #78716c; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; }
+    .sg-bar { height: 8px; background: #e7e5e4; border-radius: 999px; margin-top: 10px; overflow: hidden; }
+    .sg-bar-fill { height: 100%; background: linear-gradient(90deg, #fbbf24, #f59e0b); width: 23%; border-radius: 999px; }
+
+    .coach {
+      margin-top: 12px; font-size: 12px; color: #78716c;
+      font-style: italic; padding: 0 2px;
+    }
+
+    /* Annotation */
+    .annotation {
+      position: absolute; bottom: -56px; left: 0; right: 0;
+      text-align: center; color: #d6d3d1; font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+  <h1 class="stage-title">Why &amp; Benefits — Goal Tab Insertion</h1>
+  <p class="stage-sub">New collapsible card replaces today's <code style="background:rgba(255,255,255,0.08);padding:1px 6px;border-radius:4px;color:#fbbf24">GoalWhyAnchor</code> &amp; sits above <code style="background:rgba(255,255,255,0.08);padding:1px 6px;border-radius:4px;color:#fbbf24">StreakGoalCard</code>. Three states shown.</p>
+
+  <div class="phones">
+
+    <!-- ====== STATE 1: EXPANDED, RICH CONTENT ====== -->
+    <div>
+      <div class="phone-frame">
+        <div class="notch"></div>
+        <div class="safe-area-top"></div>
+        <div class="scroll-content">
+
+          <!-- Hero -->
+          <div class="hero">
+            <span class="emoji">🏃</span>
+            <div>
+              <div class="title">Morning run</div>
+              <div class="stats">
+                <span>🔥 <span class="num">7</span> day</span>
+                <span>⭐ <span class="num">14</span> best</span>
+                <span>✓ <span class="num">42</span> total</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tabs -->
+          <div class="tabs">
+            <div class="tab">Calendar</div>
+            <div class="tab">Strength</div>
+            <div class="tab active">Goal</div>
+          </div>
+
+          <!-- Goal card -->
+          <div class="goal-card">
+            <div class="goal-card-header">
+              <div class="title">Goal</div>
+              <div class="adjust">Adjust goal</div>
+            </div>
+
+            <!-- THE NEW WHY & BENEFITS CARD -->
+            <div class="wb-card">
+              <div class="wb-header">
+                <div class="left">
+                  <span class="icon">💭</span>
+                  <span class="label">Why &amp; Benefits</span>
+                </div>
+                <i data-lucide="chevron-down" class="chev" style="width:18px;height:18px"></i>
+              </div>
+
+              <!-- Personal block -->
+              <div style="margin-top: 10px;">
+                <div class="personal-row">
+                  <span class="pemoji">💭</span>
+                  <div class="ptext">
+                    <div class="plabel">Your why</div>
+                    <div class="pval">"More energy for my kids."</div>
+                  </div>
+                </div>
+                <div class="personal-row">
+                  <span class="pemoji">🌱</span>
+                  <div class="ptext">
+                    <div class="plabel">Who you're becoming</div>
+                    <div class="pval">"Someone who moves daily."</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Benefits -->
+              <div class="wb-section-label"><span>Benefits</span></div>
+              <ul class="benefits">
+                <li>Boosts mood within 30 minutes</li>
+                <li>Improves sleep quality and depth</li>
+                <li>Lowers resting heart rate over weeks</li>
+                <li>Sharpens focus for the rest of the day</li>
+              </ul>
+
+              <!-- Science note -->
+              <div class="wb-section-label"><span>Science</span></div>
+              <div class="science-note">
+                A 2019 meta-analysis found that 30 min/day of moderate aerobic activity reduced depression risk by 26% across 49 studies.
+                <span class="ref">Schuch et al., American Journal of Psychiatry (2019)</span>
+              </div>
+            </div>
+
+            <!-- Streak goal -->
+            <div class="streak-goal">
+              <div class="sg-row">
+                <div>
+                  <div class="sg-num">7<span style="font-size:14px;color:#a8a29e;font-weight:600">/30</span></div>
+                  <div class="sg-label">Day streak goal</div>
+                </div>
+                <div style="font-size:24px">🎯</div>
+              </div>
+              <div class="sg-bar"><div class="sg-bar-fill"></div></div>
+            </div>
+
+            <p class="coach">"23 more days. You've got this."</p>
+          </div>
+
+        </div>
+      </div>
+      <div class="frame-label"><span class="pill">A</span>Default — template-derived habit, expanded</div>
+    </div>
+
+    <!-- ====== STATE 2: COLLAPSED ====== -->
+    <div>
+      <div class="phone-frame">
+        <div class="notch"></div>
+        <div class="safe-area-top"></div>
+        <div class="scroll-content">
+
+          <div class="hero">
+            <span class="emoji">🏃</span>
+            <div>
+              <div class="title">Morning run</div>
+              <div class="stats">
+                <span>🔥 <span class="num">7</span> day</span>
+                <span>⭐ <span class="num">14</span> best</span>
+                <span>✓ <span class="num">42</span> total</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="tabs">
+            <div class="tab">Calendar</div>
+            <div class="tab">Strength</div>
+            <div class="tab active">Goal</div>
+          </div>
+
+          <div class="goal-card">
+            <div class="goal-card-header">
+              <div class="title">Goal</div>
+              <div class="adjust">Adjust goal</div>
+            </div>
+
+            <!-- COLLAPSED card -->
+            <div class="wb-card" style="padding: 12px 14px;">
+              <div class="wb-header">
+                <div class="left">
+                  <span class="icon">💭</span>
+                  <div>
+                    <div class="label">Why &amp; Benefits</div>
+                    <div class="wb-summary">Your why · 4 benefits · science</div>
+                  </div>
+                </div>
+                <i data-lucide="chevron-right" class="chev" style="width:18px;height:18px"></i>
+              </div>
+            </div>
+
+            <div class="streak-goal">
+              <div class="sg-row">
+                <div>
+                  <div class="sg-num">7<span style="font-size:14px;color:#a8a29e;font-weight:600">/30</span></div>
+                  <div class="sg-label">Day streak goal</div>
+                </div>
+                <div style="font-size:24px">🎯</div>
+              </div>
+              <div class="sg-bar"><div class="sg-bar-fill"></div></div>
+            </div>
+
+            <p class="coach">"23 more days. You've got this."</p>
+          </div>
+
+          <p style="margin-top:14px;font-size:11px;color:#a8a29e;text-align:center;font-style:italic">
+            More room for the streak goal &amp; coach line below the fold.
+          </p>
+
+        </div>
+      </div>
+      <div class="frame-label"><span class="pill">B</span>Collapsed — single tap, peek summary</div>
+    </div>
+
+    <!-- ====== STATE 3: EMPTY HABIT (CUSTOM, UNFILLED) ====== -->
+    <div>
+      <div class="phone-frame">
+        <div class="notch"></div>
+        <div class="safe-area-top"></div>
+        <div class="scroll-content">
+
+          <div class="hero">
+            <span class="emoji">📚</span>
+            <div>
+              <div class="title">Read 10 pages</div>
+              <div class="stats">
+                <span>🔥 <span class="num">2</span> day</span>
+                <span>⭐ <span class="num">5</span> best</span>
+                <span>✓ <span class="num">9</span> total</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="tabs">
+            <div class="tab">Calendar</div>
+            <div class="tab">Strength</div>
+            <div class="tab active">Goal</div>
+          </div>
+
+          <div class="goal-card">
+            <div class="goal-card-header">
+              <div class="title">Goal</div>
+              <div class="adjust">Adjust goal</div>
+            </div>
+
+            <!-- EMPTY CTA card -->
+            <div class="wb-card empty">
+              <div class="empty-cta">
+                <div class="plus">+</div>
+                <div>
+                  <div class="ctitle">Add your why &amp; benefits</div>
+                  <div class="cdesc">Write down what this habit does for you and why it matters. Future you will thank you on hard days.</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="streak-goal">
+              <div class="sg-row">
+                <div>
+                  <div class="sg-num">2<span style="font-size:14px;color:#a8a29e;font-weight:600">/14</span></div>
+                  <div class="sg-label">Day streak goal</div>
+                </div>
+                <div style="font-size:24px">🎯</div>
+              </div>
+              <div class="sg-bar"><div class="sg-bar-fill" style="width:14%"></div></div>
+            </div>
+
+            <p class="coach">"Brand new habits feel hardest. Day 3 is a turning point."</p>
+          </div>
+
+        </div>
+      </div>
+      <div class="frame-label"><span class="pill">C</span>Empty — custom habit, soft CTA</div>
+    </div>
+
+  </div>
+
+  <p style="color:#71717a;font-size:12px;text-align:center;margin-top:48px;max-width:720px;margin-left:auto;margin-right:auto;line-height:1.6">
+    <strong style="color:#fafaf9">Insertion point:</strong> <code style="background:rgba(255,255,255,0.08);padding:2px 6px;border-radius:4px;color:#fbbf24">GoalTabContent.tsx</code> — replaces <code style="background:rgba(255,255,255,0.08);padding:2px 6px;border-radius:4px;color:#fbbf24">&lt;GoalWhyAnchor /&gt;</code> at line 79, sits above <code style="background:rgba(255,255,255,0.08);padding:2px 6px;border-radius:4px;color:#fbbf24">&lt;StreakGoalCard /&gt;</code> at line 81. Schema: adds <code style="background:rgba(255,255,255,0.08);padding:2px 6px;border-radius:4px;color:#fbbf24">benefits[]</code> + <code style="background:rgba(255,255,255,0.08);padding:2px 6px;border-radius:4px;color:#fbbf24">scienceNote</code> to the habit, copied from template at creation.
+  </p>
+
+  <script>lucide.createIcons();</script>
+</body>
+</html>
