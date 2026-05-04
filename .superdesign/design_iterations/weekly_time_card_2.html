@@ -1,0 +1,376 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Weekly Time Card — in context (HabitDetailScreen)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@600;700&family=Literata:wght@600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #f5f1ed;
+        --card: #fffdfa;
+        --surface: #edeae5;
+        --gray-50: #f8f5f1;
+        --border: #e3ddd5;
+        --text-primary: #2d2a26;
+        --text-secondary: #6b6560;
+        --text-tertiary: #968e86;
+        --accent: #b8742d; /* the habit color used for this mock */
+        --accent-soft: rgba(184, 116, 45, 0.1);
+        --accent-ring: rgba(184, 116, 45, 0.55);
+        --primary-700: #047857;
+        --warning: #9a5504;
+        --warning-light: #fef3cd;
+        --success: #15793c;
+        --error: #9a2c1a;
+        --shadow-card: 0 1px 2px rgba(45, 42, 38, 0.06),
+          0 4px 12px rgba(45, 42, 38, 0.05);
+      }
+      html,
+      body {
+        background: #ece5dc;
+        font-family: "Inter", system-ui, -apple-system, sans-serif !important;
+        color: var(--text-primary);
+      }
+      .display {
+        font-family: "Literata", Georgia, serif !important;
+      }
+      .mono {
+        font-family: "JetBrains Mono", ui-monospace, monospace !important;
+      }
+      .phone {
+        width: 390px;
+        background: var(--bg);
+        border-radius: 38px;
+        box-shadow: 0 30px 60px rgba(45, 42, 38, 0.18),
+          0 0 0 8px rgba(45, 42, 38, 0.05);
+        overflow: hidden;
+        position: relative;
+      }
+      .phone::before {
+        content: "";
+        position: absolute;
+        top: 6px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 110px;
+        height: 28px;
+        background: #1a1714;
+        border-radius: 999px;
+        z-index: 30;
+      }
+      .screen-header {
+        padding: 50px 16px 12px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .icon-btn {
+        width: 32px;
+        height: 32px;
+        border-radius: 16px;
+        background: rgba(45, 42, 38, 0.06);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        color: var(--text-primary);
+      }
+      .edit-pill {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 12px;
+        border-radius: 999px;
+        background: var(--surface);
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--text-primary);
+      }
+      .card {
+        background: var(--card);
+        border-radius: 16px;
+        box-shadow: var(--shadow-card);
+        margin: 0 16px;
+      }
+      .day-cell {
+        flex: 1;
+        text-align: center;
+        padding: 8px 0;
+        border-radius: 8px;
+        border: 1px solid transparent;
+      }
+      .day-cell--filled {
+        background: var(--accent-soft);
+      }
+      .day-cell--today {
+        border-color: var(--accent-ring);
+      }
+      .tab-track {
+        margin: 6px 16px 10px;
+        background: var(--gray-50);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 3px;
+        position: relative;
+        display: flex;
+      }
+      .tab {
+        flex: 1;
+        padding: 8px 0;
+        text-align: center;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text-secondary);
+        z-index: 2;
+      }
+      .tab--active {
+        color: var(--text-primary);
+      }
+      .tab-pill {
+        position: absolute;
+        top: 3px;
+        bottom: 3px;
+        width: calc((100% - 6px) / 3);
+        background: var(--card);
+        border-radius: 11px;
+        border: 1px solid rgba(5, 150, 105, 0.22);
+        box-shadow: 0 1px 3px rgba(4, 120, 87, 0.1);
+        z-index: 1;
+        transition: transform 280ms ease;
+      }
+      .heat-cell {
+        width: 14px;
+        height: 14px;
+        border-radius: 3px;
+      }
+      .legend-arrow {
+        position: absolute;
+        font-size: 10px;
+        color: var(--accent);
+        font-weight: 700;
+        background: var(--card);
+        padding: 4px 8px;
+        border-radius: 999px;
+        border: 1.5px solid var(--accent);
+        white-space: nowrap;
+        box-shadow: 0 4px 12px rgba(184, 116, 45, 0.2);
+      }
+    </style>
+  </head>
+
+  <body class="min-h-screen p-10">
+    <header class="mx-auto mb-10 max-w-7xl">
+      <p class="inline-block rounded-full border bg-white/60 px-3 py-1 text-[11px] uppercase tracking-wide" style="border-color: var(--border); color: var(--text-secondary)">
+        Where it lives — HabitDetailScreen
+      </p>
+      <h1 class="display mt-3 text-3xl font-bold tracking-tight">Weekly Time card in the habit detail page</h1>
+      <p class="mt-1 max-w-2xl text-sm" style="color: var(--text-secondary)">
+        The card slots into the existing scroll between the Strength section and the Goal section. The Calendar / Strength / Goal scrollspy tabs above are unchanged — the new card just lives in the scroll like the others.
+      </p>
+    </header>
+
+    <section class="mx-auto grid max-w-7xl gap-10 lg:grid-cols-2">
+      <!-- LEFT: full screen, top of scroll -->
+      <div>
+        <p class="mb-3 inline-block rounded-full border bg-white/60 px-3 py-1 text-[11px] uppercase tracking-wide" style="border-color: var(--border); color: var(--text-secondary)">
+          Top of the screen — for context
+        </p>
+
+        <div class="phone">
+          <!-- Screen header -->
+          <div class="screen-header">
+            <div class="icon-btn">✕</div>
+            <div class="display text-[15px] font-semibold opacity-0">Meditation</div>
+            <div class="edit-pill"><span>✎</span> Edit Habit</div>
+          </div>
+
+          <!-- Hero -->
+          <div class="flex items-center gap-3 px-5 py-2">
+            <div
+              class="flex h-[46px] w-[46px] items-center justify-center rounded-2xl"
+              style="background: var(--accent); box-shadow: 0 4px 12px rgba(184, 116, 45, 0.35)"
+            >
+              <span class="text-2xl">🧘</span>
+            </div>
+            <div class="flex-1">
+              <div class="display text-[20px] font-bold leading-6">Meditation</div>
+              <div class="mt-1 flex items-center gap-2 text-[12px]" style="color: var(--text-secondary)">
+                <span>🔥 <span class="mono font-semibold" style="color: var(--text-primary)">12</span> streak</span>
+                <span class="h-[3px] w-[3px] rounded-full" style="background: #d3cdc4"></span>
+                <span>⭐ <span class="mono font-semibold" style="color: var(--text-primary)">21</span> best</span>
+                <span class="h-[3px] w-[3px] rounded-full" style="background: #d3cdc4"></span>
+                <span>✓ <span class="mono font-semibold" style="color: var(--text-primary)">87</span> total</span>
+              </div>
+              <div class="mt-1 text-[11px]" style="color: var(--text-tertiary)">Every day · Morning</div>
+            </div>
+          </div>
+
+          <!-- Sticky tabs -->
+          <div class="tab-track">
+            <div class="tab-pill" style="transform: translateX(0)"></div>
+            <div class="tab tab--active">Calendar</div>
+            <div class="tab">Strength</div>
+            <div class="tab">Goal</div>
+          </div>
+
+          <!-- Calendar card -->
+          <div class="card mb-3 p-5">
+            <div class="mb-3 flex items-center justify-between">
+              <div class="text-base font-semibold">May 2026</div>
+              <div class="text-xs" style="color: var(--text-secondary)">19 / 30 days</div>
+            </div>
+            <div class="grid grid-cols-7 gap-1.5">
+              <!-- 35 cells faking a heatmap -->
+              <script>document.write(Array.from({length:35}, (_,i)=>{
+                const filled = [0,1,3,4,5,7,8,9,11,14,15,16,18,21,22,23,25,28,29,30].includes(i);
+                const today = i===17;
+                const bg = filled ? '#b8742d' : '#ede4d6';
+                const ring = today ? 'box-shadow: 0 0 0 2px var(--accent-ring);' : '';
+                return `<div class="h-7 rounded-md" style="background:${bg};${ring}"></div>`;
+              }).join(''))</script>
+            </div>
+            <div class="mt-3 flex justify-end gap-1.5 text-[10px]" style="color: var(--text-tertiary)">
+              <span>less</span>
+              <div class="heat-cell" style="background: #ede4d6"></div>
+              <div class="heat-cell" style="background: #e6c697"></div>
+              <div class="heat-cell" style="background: #d29759"></div>
+              <div class="heat-cell" style="background: #b8742d"></div>
+              <span>more</span>
+            </div>
+          </div>
+
+          <!-- Strength preview (truncated) -->
+          <div class="card mb-3 p-5">
+            <div class="mb-2 flex items-center justify-between">
+              <div class="text-base font-semibold">Habit Strength</div>
+              <div class="rounded-full px-2 py-0.5 text-[10px] font-semibold" style="background: var(--warning-light); color: var(--warning)">Building</div>
+            </div>
+            <div class="flex items-baseline gap-2">
+              <div class="mono text-[34px] font-bold">68</div>
+              <div class="text-xs" style="color: var(--text-secondary)">/ 100</div>
+            </div>
+            <div class="mt-3 h-2 w-full overflow-hidden rounded-full" style="background: var(--surface)">
+              <div class="h-full rounded-full" style="width: 68%; background: var(--warning)"></div>
+            </div>
+            <div class="mt-2 text-[11px]" style="color: var(--text-tertiary)">
+              You're building strong momentum. Keep going.
+            </div>
+          </div>
+
+          <!-- Hint pointing down -->
+          <div class="px-5 pb-6 pt-2 text-center text-[11px]" style="color: var(--text-tertiary)">
+            ↓ scroll for the new "This week" time card ↓
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: scrolled view showing Strength → WeeklyTime → Goal -->
+      <div class="relative">
+        <p class="mb-3 inline-block rounded-full border px-3 py-1 text-[11px] font-semibold uppercase tracking-wide" style="border-color: var(--accent); color: var(--accent); background: var(--card)">
+          Where the new card lives — between Strength &amp; Goal
+        </p>
+
+        <div class="phone">
+          <!-- Strength card (tail) -->
+          <div class="card mb-3 mt-12 p-5">
+            <div class="mb-2 flex items-center justify-between">
+              <div class="text-base font-semibold">Habit Strength</div>
+              <div class="rounded-full px-2 py-0.5 text-[10px] font-semibold" style="background: var(--warning-light); color: var(--warning)">Building</div>
+            </div>
+            <div class="flex items-baseline gap-2">
+              <div class="mono text-[34px] font-bold">68</div>
+              <div class="text-xs" style="color: var(--text-secondary)">/ 100</div>
+            </div>
+            <div class="mt-3 h-2 w-full overflow-hidden rounded-full" style="background: var(--surface)">
+              <div class="h-full rounded-full" style="width: 68%; background: var(--warning)"></div>
+            </div>
+            <div class="mt-2 text-[11px]" style="color: var(--text-tertiary)">You're building strong momentum.</div>
+          </div>
+
+          <!-- Weekly Time card (the new one — highlighted) -->
+          <div class="relative mt-1">
+            <div
+              class="card relative p-5"
+              style="
+                box-shadow:
+                  0 1px 2px rgba(45, 42, 38, 0.06),
+                  0 4px 12px rgba(45, 42, 38, 0.05),
+                  0 0 0 2px var(--accent);
+              "
+            >
+              <div class="mb-3 flex items-center justify-between">
+                <h3 class="text-base font-semibold">This week</h3>
+                <div class="flex items-center gap-1 text-[13px] font-semibold" style="color: var(--text-secondary)">
+                  <span class="text-base leading-none">＋</span> Log time
+                </div>
+              </div>
+              <div class="mb-4 flex items-baseline gap-2">
+                <span>⏱️</span>
+                <span class="mono text-[28px] font-bold">2h 15m</span>
+                <span class="text-xs" style="color: var(--text-secondary)">total this week</span>
+              </div>
+              <div class="flex justify-between gap-1">
+                <div class="day-cell day-cell--filled"><div class="text-[11px] font-medium" style="color: var(--text-tertiary)">M</div><div class="mt-0.5 text-[11px] font-semibold">30m</div></div>
+                <div class="day-cell"><div class="text-[11px] font-medium" style="color: var(--text-tertiary)">T</div><div class="mt-0.5 text-[11px]" style="color: var(--text-tertiary)">—</div></div>
+                <div class="day-cell day-cell--filled day-cell--today"><div class="text-[11px] font-medium" style="color: var(--text-tertiary)">W</div><div class="mt-0.5 text-[11px] font-semibold">45m</div></div>
+                <div class="day-cell day-cell--filled"><div class="text-[11px] font-medium" style="color: var(--text-tertiary)">T</div><div class="mt-0.5 text-[11px] font-semibold">1h</div></div>
+                <div class="day-cell"><div class="text-[11px] font-medium" style="color: var(--text-tertiary)">F</div><div class="mt-0.5 text-[11px]" style="color: var(--text-tertiary)">—</div></div>
+                <div class="day-cell"><div class="text-[11px] font-medium" style="color: var(--text-tertiary)">S</div><div class="mt-0.5 text-[11px]" style="color: var(--text-tertiary)">—</div></div>
+                <div class="day-cell"><div class="text-[11px] font-medium" style="color: var(--text-tertiary)">S</div><div class="mt-0.5 text-[11px]" style="color: var(--text-tertiary)">—</div></div>
+              </div>
+            </div>
+            <div class="legend-arrow" style="top: -14px; right: 32px">NEW · Weekly Time</div>
+          </div>
+
+          <!-- Goal card -->
+          <div class="card mt-3 p-5">
+            <div class="mb-3 flex items-center justify-between">
+              <div class="display text-base font-semibold">Goal</div>
+              <div class="text-xs font-semibold underline" style="color: var(--text-secondary)">Adjust goal</div>
+            </div>
+            <div
+              class="mb-3 rounded-xl px-3 py-2 text-[12px]"
+              style="background: #fff5e8; border: 1px solid #fed7aa; color: #44312a"
+            >
+              <span style="color: #b45309; font-weight: 600">Why:</span> calmer mornings &amp; clearer focus
+            </div>
+            <div class="flex items-baseline justify-between">
+              <div class="mono text-[28px] font-bold">12 <span class="text-base font-medium" style="color: var(--text-secondary)">/ 30</span></div>
+              <div class="text-[11px] font-semibold" style="color: var(--success)">on track</div>
+            </div>
+            <div class="mt-3 h-2 w-full overflow-hidden rounded-full" style="background: var(--surface)">
+              <div class="h-full rounded-full" style="width: 40%; background: var(--success)"></div>
+            </div>
+            <div class="mt-2 text-[11px]" style="color: var(--text-tertiary)">18 days to your 30-day streak goal.</div>
+          </div>
+
+          <div class="h-10"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="mx-auto mt-14 max-w-5xl">
+      <h2 class="display text-xl font-bold">Why this slot?</h2>
+      <ul class="mt-3 space-y-2 text-sm" style="color: var(--text-secondary)">
+        <li><b>Calendar</b> answers <i>"which days?"</i></li>
+        <li><b>Strength</b> answers <i>"how solid is the habit?"</i></li>
+        <li><b>This week</b> answers <i>"how long total?"</i> — the question you just asked.</li>
+        <li><b>Goal</b> answers <i>"how far from my target?"</i></li>
+      </ul>
+      <p class="mt-3 text-sm" style="color: var(--text-secondary)">
+        First-step scope: this card only. No new tab, no schema beyond the optional <code>minutes</code> field on the existing tracking row, no streak/strength changes. We can iterate to a deeper time-history view (monthly / all-time totals) later.
+      </p>
+    </section>
+
+    <footer class="mx-auto mt-12 max-w-5xl text-xs" style="color: var(--text-tertiary)">
+      Mock fidelity: phone uses the actual app tokens — parchment background <code>#F5F1ED</code>, card <code>#FFFDFA</code>, surface <code>#EDEAE5</code>, Literata for display, Inter for body, JetBrains Mono for numerals. Habit accent shown as <code>#B8742D</code>; in the app it pulls <code>habit.color</code>.
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Weekly Time Card — mockup</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@600;700&family=Literata:wght@600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #f5f1ed;
+        --card: #ffffff;
+        --surface: #edeae5;
+        --border: #e3ddd5;
+        --text-primary: #2d2a26;
+        --text-secondary: #6b6560;
+        --text-tertiary: #968e86;
+        --primary-600: #b8742d; /* habit color used in app */
+        --primary-200: #f3d8b6;
+        --error: #9a2c1a;
+        --shadow-card: 0 1px 2px rgba(45, 42, 38, 0.06),
+          0 4px 12px rgba(45, 42, 38, 0.04);
+      }
+      html,
+      body {
+        background: var(--bg);
+        font-family: "Inter", system-ui, -apple-system, sans-serif !important;
+        color: var(--text-primary);
+      }
+      .mono {
+        font-family: "JetBrains Mono", ui-monospace, Menlo, monospace !important;
+      }
+      .card {
+        background: var(--card);
+        border-radius: 16px;
+        box-shadow: var(--shadow-card);
+        overflow: hidden;
+      }
+      .day-cell {
+        flex: 1;
+        text-align: center;
+        padding: 8px 0;
+        border-radius: 8px;
+        border: 1px solid transparent;
+      }
+      .day-cell--filled {
+        background: rgba(184, 116, 45, 0.08);
+      }
+      .day-cell--today {
+        border-color: var(--primary-600);
+      }
+      .label-tab {
+        background: rgba(45, 42, 38, 0.04);
+        border: 1px solid rgba(45, 42, 38, 0.06);
+        border-radius: 999px;
+        padding: 4px 10px;
+        font-size: 11px;
+        color: var(--text-secondary);
+      }
+      .phone {
+        width: 380px;
+        background: var(--bg);
+        border-radius: 36px;
+        padding: 20px 14px 24px;
+        box-shadow: 0 30px 60px rgba(45, 42, 38, 0.18),
+          0 0 0 8px rgba(45, 42, 38, 0.04);
+      }
+      .phone-header {
+        font-family: "Literata", serif !important;
+        font-weight: 600;
+        font-size: 17px;
+        text-align: center;
+        color: var(--text-primary);
+        padding: 6px 0 14px;
+      }
+      .pill-btn {
+        background: var(--surface);
+        border-radius: 10px;
+        padding: 8px 14px;
+        font-weight: 600;
+        font-size: 13px;
+        color: var(--text-primary);
+      }
+      .cta {
+        background: var(--primary-600);
+        color: white;
+        border-radius: 12px;
+        padding: 14px 0;
+        text-align: center;
+        font-weight: 600;
+        font-size: 15px;
+      }
+      .input-faux {
+        background: var(--surface);
+        border-radius: 12px;
+        min-width: 130px;
+        text-align: center;
+        padding: 10px 16px;
+        font-size: 28px;
+        font-weight: 600;
+        color: var(--text-primary);
+        font-family: "Inter", sans-serif !important;
+      }
+    </style>
+  </head>
+
+  <body class="min-h-screen p-10">
+    <header class="mx-auto mb-10 max-w-6xl">
+      <p class="label-tab inline-block">HabitDetailScreen → between Strength and Goal</p>
+      <h1 class="mt-3 text-3xl font-bold tracking-tight">Weekly Time card — three states + Log-time sheet</h1>
+      <p class="mt-1 text-sm" style="color: var(--text-secondary)">
+        Static mockup of the React Native UI. Real card is live-bound via Convex; numbers update on save.
+      </p>
+    </header>
+
+    <section class="mx-auto grid max-w-6xl gap-6 lg:grid-cols-3">
+      <!-- STATE 1: Empty week -->
+      <div class="phone">
+        <div class="phone-header">Meditation</div>
+        <p class="px-2 pb-2 text-[11px] uppercase tracking-wide" style="color: var(--text-tertiary)">
+          State A — empty
+        </p>
+
+        <div class="card p-5">
+          <div class="mb-3 flex items-center justify-between">
+            <h3 class="text-base font-semibold" style="color: var(--text-primary)">This week</h3>
+            <button class="flex items-center gap-1 text-sm font-semibold" style="color: var(--text-secondary)">
+              <span class="text-base leading-none">＋</span> Log time
+            </button>
+          </div>
+
+          <div class="mb-4 flex items-baseline gap-2">
+            <span>⏱️</span>
+            <span class="mono text-[28px] font-bold" style="color: var(--text-tertiary)">—</span>
+            <span class="text-xs" style="color: var(--text-secondary)">total this week</span>
+          </div>
+
+          <div class="flex justify-between gap-1">
+            <div class="day-cell"><div class="text-[11px] font-medium" style="color: var(--text-tertiary)">M</div><div class="mt-0.5 text-[11px]" style="color: var(--text-tertiary)">—</div></div>
+            <div class="day-cell"><div class="text-[11px] font-medium" style="color: var(--text-tertiary)">T</div><div class="mt-0.5 text-[11px]" style="color: var(--text-tertiary)">—</div></div>
+            <div class="day-cell day-cell--today"><div class="text-[11px] font-medium" style="color: var(--text-tertiary)">W</div><div class="mt-0.5 text-[11px]" style="color: var(--text-tertiary)">—</div></div>
+            <div class="day-cell"><div class="text-[11px] font-medium" style="color: var(--text-tertiary)">T</div><div class="mt-0.5 text-[11px]" style="color: var(--text-tertiary)">—</div></div>
+            <div class="day-cell"><div class="text-[11px] font-medium" style="color: var(--text-tertiary)">F</div><div class="mt-0.5 text-[11px]" style="color: var(--text-tertiary)">—</div></div>
+            <div class="day-cell"><div class="text-[11px] font-medium" style="color: var(--text-tertiary)">S</div><div class="mt-0.5 text-[11px]" style="color: var(--text-tertiary)">—</div></div>
+            <div class="day-cell"><div class="text-[11px] font-medium" style="color: var(--text-tertiary)">S</div><div class="mt-0.5 text-[11px]" style="color: var(--text-tertiary)">—</div></div>
+          </div>
+        </div>
+
+        <p class="px-2 pt-3 text-[11px]" style="color: var(--text-tertiary)">
+          Nothing logged this week. Today's cell has the colored ring.
+        </p>
+      </div>
+
+      <!-- STATE 2: Partial -->
+      <div class="phone">
+        <div class="phone-header">Meditation</div>
+        <p class="px-2 pb-2 text-[11px] uppercase tracking-wide" style="color: var(--text-tertiary)">
+          State B — partial
+        </p>
+
+        <div class="card p-5">
+          <div class="mb-3 flex items-center justify-between">
+            <h3 class="text-base font-semibold">This week</h3>
+            <button class="flex items-center gap-1 text-sm font-semibold" style="color: var(--text-secondary)">
+              <span class="text-base leading-none">＋</span> Log time
+            </button>
+          </div>
+
+          <div class="mb-4 flex items-baseline gap-2">
+            <span>⏱️</span>
+            <span class="mono text-[28px] font-bold">2h 15m</span>
+            <span class="text-xs" style="color: var(--text-secondary)">total this week</span>
+          </div>
+
+          <div class="flex justify-between gap-1">
+            <div class="day-cell day-cell--filled"><div class="text-[11px] font-medium" style="color: var(--text-tertiary)">M</div><div class="mt-0.5 text-[11px] font-semibold">30m</div></div>
+            <div class="day-cell"><div class="text-[11px] font-medium" style="color: var(--text-tertiary)">T</div><div class="mt-0.5 text-[11px]" style="color: var(--text-tertiary)">—</div></div>
+            <div class="day-cell day-cell--filled day-cell--today"><div class="text-[11px] font-medium" style="color: var(--text-tertiary)">W</div><div class="mt-0.5 text-[11px] font-semibold">45m</div></div>
+            <div class="day-cell day-cell--filled"><div class="text-[11px] font-medium" style="color: var(--text-tertiary)">T</div><div class="mt-0.5 text-[11px] font-semibold">1h</div></div>
+            <div class="day-cell"><div class="text-[11px] font-medium" style="color: var(--text-tertiary)">F</div><div class="mt-0.5 text-[11px]" style="color: var(--text-tertiary)">—</div></div>
+            <div class="day-cell"><div class="text-[11px] font-medium" style="color: var(--text-tertiary)">S</div><div class="mt-0.5 text-[11px]" style="color: var(--text-tertiary)">—</div></div>
+            <div class="day-cell"><div class="text-[11px] font-medium" style="color: var(--text-tertiary)">S</div><div class="mt-0.5 text-[11px]" style="color: var(--text-tertiary)">—</div></div>
+          </div>
+        </div>
+
+        <p class="px-2 pt-3 text-[11px]" style="color: var(--text-tertiary)">
+          Filled cells get a soft tint of the habit's accent color. Tapping any cell opens the editor pre-filled.
+        </p>
+      </div>
+
+      <!-- STATE 3: Full -->
+      <div class="phone">
+        <div class="phone-header">Meditation</div>
+        <p class="px-2 pb-2 text-[11px] uppercase tracking-wide" style="color: var(--text-tertiary)">
+          State C — strong week
+        </p>
+
+        <div class="card p-5">
+          <div class="mb-3 flex items-center justify-between">
+            <h3 class="text-base font-semibold">This week</h3>
+            <button class="flex items-center gap-1 text-sm font-semibold" style="color: var(--text-secondary)">
+              <span class="text-base leading-none">＋</span> Log time
+            </button>
+          </div>
+
+          <div class="mb-4 flex items-baseline gap-2">
+            <span>⏱️</span>
+            <span class="mono text-[28px] font-bold">5h 15m</span>
+            <span class="text-xs" style="color: var(--text-secondary)">total this week</span>
+          </div>
+
+          <div class="flex justify-between gap-1">
+            <div class="day-cell day-cell--filled"><div class="text-[11px] font-medium" style="color: var(--text-tertiary)">M</div><div class="mt-0.5 text-[11px] font-semibold">45m</div></div>
+            <div class="day-cell day-cell--filled"><div class="text-[11px] font-medium" style="color: var(--text-tertiary)">T</div><div class="mt-0.5 text-[11px] font-semibold">30m</div></div>
+            <div class="day-cell day-cell--filled day-cell--today"><div class="text-[11px] font-medium" style="color: var(--text-tertiary)">W</div><div class="mt-0.5 text-[11px] font-semibold">1h</div></div>
+            <div class="day-cell day-cell--filled"><div class="text-[11px] font-medium" style="color: var(--text-tertiary)">T</div><div class="mt-0.5 text-[11px] font-semibold">45m</div></div>
+            <div class="day-cell day-cell--filled"><div class="text-[11px] font-medium" style="color: var(--text-tertiary)">F</div><div class="mt-0.5 text-[11px] font-semibold">30m</div></div>
+            <div class="day-cell day-cell--filled"><div class="text-[11px] font-medium" style="color: var(--text-tertiary)">S</div><div class="mt-0.5 text-[11px] font-semibold">1.2h</div></div>
+            <div class="day-cell day-cell--filled"><div class="text-[11px] font-medium" style="color: var(--text-tertiary)">S</div><div class="mt-0.5 text-[11px] font-semibold">15m</div></div>
+          </div>
+        </div>
+
+        <p class="px-2 pt-3 text-[11px]" style="color: var(--text-tertiary)">
+          Total formats progressively: 45 → "45m"; 75 → "1h 15m"; 315 → "5h 15m". Per-day uses compact form.
+        </p>
+      </div>
+    </section>
+
+    <section class="mx-auto mt-12 max-w-6xl">
+      <h2 class="mb-4 text-lg font-semibold">Log-time sheet</h2>
+      <div class="grid gap-6 lg:grid-cols-2">
+        <!-- Sheet: new entry -->
+        <div class="phone relative" style="height: 640px">
+          <p class="px-2 pb-2 text-[11px] uppercase tracking-wide" style="color: var(--text-tertiary)">
+            Sheet — new entry
+          </p>
+          <div class="absolute inset-0 rounded-[36px]" style="background: rgba(0, 0, 0, 0.4)"></div>
+          <div
+            class="absolute bottom-3 left-3 right-3 rounded-t-3xl px-5 pb-10 pt-3"
+            style="background: var(--card)"
+          >
+            <div class="mx-auto mb-4 h-1 w-10 rounded-full" style="background: var(--border)"></div>
+            <h3 class="text-center text-lg font-semibold" style="font-family: Literata, serif">Log time</h3>
+            <p class="mb-4 mt-1 text-center text-xs" style="color: var(--text-secondary)">
+              Wednesday, May 6
+            </p>
+            <div class="mb-3 flex items-center justify-center gap-2">
+              <div class="input-faux">30</div>
+              <span class="text-base" style="color: var(--text-secondary)">minutes</span>
+            </div>
+            <div class="mb-5 flex justify-center gap-2">
+              <span class="pill-btn">15m</span>
+              <span class="pill-btn">30m</span>
+              <span class="pill-btn">45m</span>
+              <span class="pill-btn">60m</span>
+            </div>
+            <div class="cta">Save</div>
+          </div>
+        </div>
+
+        <!-- Sheet: editing -->
+        <div class="phone relative" style="height: 640px">
+          <p class="px-2 pb-2 text-[11px] uppercase tracking-wide" style="color: var(--text-tertiary)">
+            Sheet — editing existing entry
+          </p>
+          <div class="absolute inset-0 rounded-[36px]" style="background: rgba(0, 0, 0, 0.4)"></div>
+          <div
+            class="absolute bottom-3 left-3 right-3 rounded-t-3xl px-5 pb-10 pt-3"
+            style="background: var(--card)"
+          >
+            <div class="mx-auto mb-4 h-1 w-10 rounded-full" style="background: var(--border)"></div>
+            <h3 class="text-center text-lg font-semibold" style="font-family: Literata, serif">Log time</h3>
+            <p class="mb-4 mt-1 text-center text-xs" style="color: var(--text-secondary)">
+              Monday, May 4
+            </p>
+            <div class="mb-3 flex items-center justify-center gap-2">
+              <div class="input-faux">45</div>
+              <span class="text-base" style="color: var(--text-secondary)">minutes</span>
+            </div>
+            <div class="mb-5 flex justify-center gap-2">
+              <span class="pill-btn">15m</span>
+              <span class="pill-btn">30m</span>
+              <span class="pill-btn">45m</span>
+              <span class="pill-btn">60m</span>
+            </div>
+            <div class="cta mb-2">Save</div>
+            <div class="text-center text-sm font-semibold" style="color: var(--error)">Clear</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="mx-auto mt-12 max-w-6xl text-xs" style="color: var(--text-tertiary)">
+      Mock fidelity: app uses theme tokens (colors.card / colors.primary[600] / shadows.card). Per-day cells call openEditor(date), header CTA opens with today's date.
+    </footer>
+  </body>
+</html>

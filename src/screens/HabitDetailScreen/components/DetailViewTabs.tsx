@@ -25,6 +25,7 @@ const PADDING = 3;
 const TABS: Array<{ label: string; view: DetailView }> = [
   { label: 'Calendar', view: 'calendar' },
   { label: 'Strength', view: 'strength' },
+  { label: 'Time', view: 'time' },
   { label: 'Goal', view: 'goal' },
 ];
 const SPRING = { duration: 280, easing: Easing.out(Easing.cubic) };

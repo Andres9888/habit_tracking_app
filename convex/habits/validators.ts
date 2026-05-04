@@ -29,6 +29,8 @@ export const fullHabitValidator = v.object({
   frequency: v.optional(v.string()),
   goalDuration: v.optional(v.number()),
   goalUnit: v.optional(v.string()),
+  dailyMinutesGoal: v.optional(v.number()),
+  weeklyMinutesGoal: v.optional(v.number()),
   habitDecayParam: v.optional(v.number()),
   habitGainParam: v.optional(v.number()),
   icon: v.optional(v.string()),
@@ -82,5 +84,6 @@ export const trackingRecordValidator = v.object({
   completed: v.boolean(),
   date: v.string(),
   habitId: v.id('habits'),
+  minutes: v.optional(v.number()),
   userId: v.optional(v.string()),
 });

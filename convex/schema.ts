@@ -87,6 +87,10 @@ const applicationTables = {
     // Goal value
     goalUnit: v.optional(v.string()),
 
+    // Optional time-based goals (per-habit, weekly card)
+    dailyMinutesGoal: v.optional(v.number()),
+    weeklyMinutesGoal: v.optional(v.number()),
+
     // HDP - validated optimal: 0.15-0.2 (default: 0.175)
     habitDecayParam: v.optional(v.number()),
 
@@ -354,6 +358,7 @@ const applicationTables = {
     completed: v.boolean(),
     date: v.string(),
     habitId: v.id('habits'),
+    minutes: v.optional(v.number()),
     userId: v.optional(v.string()),
   })
     .index('by_habit_and_date', ['habitId', 'date'])

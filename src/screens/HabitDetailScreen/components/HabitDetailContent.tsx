@@ -15,6 +15,7 @@ import { DetailViewTabs, type DetailView } from './DetailViewTabs';
 import { GoalTabContent } from './GoalTabContent';
 import { computeCompletionRate } from './HabitDetailContent.utils';
 import { useDetailScrollSpy } from './useDetailScrollSpy';
+import { WeeklyTimeCard } from './WeeklyTimeCard';
 
 interface HabitDetailContentProps {
   completedDates: Set<string>;
@@ -88,6 +89,17 @@ export function HabitDetailContent({
           </ErrorBoundary>
         </View>
       ) : null}
+
+      <View className='mx-4 mt-4' onLayout={makeSectionLayoutHandler('time')}>
+        <ErrorBoundary>
+          <WeeklyTimeCard
+            dailyMinutesGoal={habit.dailyMinutesGoal}
+            habitColor={habitColor}
+            habitId={habit._id}
+            weeklyMinutesGoal={habit.weeklyMinutesGoal}
+          />
+        </ErrorBoundary>
+      </View>
 
       <View className='mx-4 mt-4' onLayout={makeSectionLayoutHandler('goal')}>
         <GoalTabContent completionRate={completionRate} habit={habit} />

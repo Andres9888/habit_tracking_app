@@ -9,3 +9,4 @@ export { HeaderButton } from './HeaderButton';
 export { UndoToasts } from './UndoToasts';
 export { HabitDetailContent } from './HabitDetailContent';
 export { HabitDetailModals } from './HabitDetailModals';
+export { WeeklyTimeCard } from './WeeklyTimeCard';

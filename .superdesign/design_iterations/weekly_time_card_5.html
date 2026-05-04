@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Weekly Time Card — goal progress tracking</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@600;700&family=Literata:wght@600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #f5f1ed;
+        --card: #fffdfa;
+        --surface: #edeae5;
+        --border: #e3ddd5;
+        --text-primary: #2d2a26;
+        --text-secondary: #6b6560;
+        --text-tertiary: #968e86;
+        --accent: #b8742d;
+        --accent-soft: rgba(184, 116, 45, 0.1);
+        --accent-soft2: rgba(184, 116, 45, 0.18);
+        --accent-strong: #9c5e1d;
+        --accent-ring: rgba(184, 116, 45, 0.55);
+        --success: #15793c;
+        --warning: #9a5504;
+        --shadow-card: 0 1px 2px rgba(45, 42, 38, 0.06),
+          0 4px 12px rgba(45, 42, 38, 0.05);
+      }
+      html, body {
+        background: #ece5dc;
+        font-family: "Inter", system-ui, -apple-system, sans-serif !important;
+        color: var(--text-primary);
+      }
+      .display { font-family: "Literata", Georgia, serif !important; }
+      .mono { font-family: "JetBrains Mono", ui-monospace, monospace !important; }
+
+      .phone {
+        width: 380px;
+        background: var(--bg);
+        border-radius: 28px;
+        box-shadow: 0 18px 50px rgba(45, 42, 38, 0.16),
+          0 0 0 6px rgba(45, 42, 38, 0.04);
+        padding: 22px 16px;
+      }
+      .card {
+        background: var(--card);
+        border-radius: 16px;
+        box-shadow: var(--shadow-card);
+        padding: 18px;
+      }
+
+      .cell {
+        flex: 1;
+        text-align: center;
+        padding: 6px 0 4px;
+        border-radius: 10px;
+        border: 1px solid transparent;
+      }
+      .cell.empty { border: 1px dashed rgba(45, 42, 38, 0.16); }
+      .cell.filled {
+        background: var(--accent-soft);
+        border-color: rgba(184, 116, 45, 0.18);
+      }
+      .cell.complete {
+        background: var(--accent-soft2);
+        border-color: var(--accent);
+      }
+      .cell.today { box-shadow: 0 0 0 1px var(--accent); }
+      .cell .day { font-size: 11px; font-weight: 500; color: var(--text-tertiary); }
+      .cell .val { font-size: 11px; font-weight: 600; margin-top: 1px; }
+      .cell .plus { font-size: 11px; color: var(--text-tertiary); margin-top: 1px; }
+      .cell .bar {
+        height: 2.5px;
+        margin: 4px 6px 0;
+        background: rgba(45, 42, 38, 0.08);
+        border-radius: 99px;
+        overflow: hidden;
+      }
+      .cell .bar > span { display: block; height: 100%; background: var(--accent); border-radius: 99px; }
+
+      .week-bar {
+        height: 6px;
+        background: var(--surface);
+        border-radius: 99px;
+        overflow: hidden;
+      }
+      .week-bar > span { display: block; height: 100%; background: var(--accent); }
+
+      .stat-row {
+        background: rgba(184, 116, 45, 0.06);
+        border-radius: 10px;
+        padding: 8px 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 8px;
+        font-size: 11px;
+        color: var(--text-secondary);
+      }
+      .stat-row b { color: var(--text-primary); font-weight: 600; }
+
+      .pace-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 11px;
+        font-weight: 600;
+        padding: 2px 8px;
+        border-radius: 999px;
+      }
+      .pace-good {
+        background: rgba(21, 121, 60, 0.1);
+        color: var(--success);
+      }
+      .pace-warn {
+        background: rgba(154, 85, 4, 0.12);
+        color: var(--warning);
+      }
+      .streak-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 3px;
+        font-size: 11px;
+        font-weight: 600;
+        padding: 1px 8px;
+        border-radius: 999px;
+        background: rgba(184, 116, 45, 0.12);
+        color: var(--accent-strong);
+      }
+      .label-pill {
+        display: inline-block;
+        background: var(--card);
+        border: 1px solid var(--border);
+        color: var(--text-secondary);
+        padding: 3px 10px;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        border-radius: 999px;
+      }
+      .label-pill.accent { border-color: var(--accent); color: var(--accent); }
+
+      .annotation {
+        position: absolute;
+        font-size: 11px;
+        color: var(--accent);
+        background: var(--card);
+        border: 1.5px solid var(--accent);
+        padding: 4px 8px;
+        border-radius: 999px;
+        font-weight: 600;
+        white-space: nowrap;
+        box-shadow: 0 4px 12px rgba(184, 116, 45, 0.18);
+      }
+    </style>
+  </head>
+
+  <body class="min-h-screen p-10">
+    <header class="mx-auto mb-10 max-w-7xl">
+      <p class="label-pill accent">Goal progress tracking</p>
+      <h1 class="display mt-3 text-3xl font-bold tracking-tight">Just-the-time-goals progress</h1>
+      <p class="mt-1 max-w-3xl text-sm" style="color: var(--text-secondary)">
+        Two new things on the existing card: an "on pace" indicator next to the weekly goal, and a streak pill next to the daily goal. Both only show when the relevant goal exists.
+      </p>
+    </header>
+
+    <section class="mx-auto grid max-w-7xl gap-8 lg:grid-cols-3">
+      <!-- Weekly only -->
+      <div>
+        <p class="label-pill mb-3">Weekly goal · on-pace stats</p>
+        <div class="phone">
+          <div class="card">
+            <div class="mb-3 flex items-center justify-between">
+              <h3 class="text-base font-semibold">Last 7 days</h3>
+              <div class="text-[12px] font-semibold" style="color: var(--text-secondary)">⊕ 5h · ＋ Log</div>
+            </div>
+
+            <div class="mb-1 flex items-center gap-2">
+              <span class="text-[18px]">⏱️</span>
+              <span class="mono text-[26px] font-bold">2h 15m</span>
+              <span class="text-[11px] ml-auto" style="color: var(--text-secondary)">/ 5h</span>
+              <span class="text-[12px] font-semibold" style="color: var(--accent)">45%</span>
+            </div>
+            <div class="week-bar mb-2"><span style="width: 45%"></span></div>
+            <div class="stat-row mb-4">
+              <span><b>32m</b> avg/day</span>
+              <span class="pace-pill pace-good">▲ on pace</span>
+              <span><b>2h 45m</b> to go</span>
+            </div>
+
+            <div class="flex justify-between gap-1">
+              <div class="cell filled"><div class="day">T</div><div class="val">30m</div></div>
+              <div class="cell empty"><div class="day">W</div><div class="plus">＋</div></div>
+              <div class="cell filled"><div class="day">T</div><div class="val">45m</div></div>
+              <div class="cell filled"><div class="day">F</div><div class="val">1h</div></div>
+              <div class="cell empty"><div class="day">S</div><div class="plus">＋</div></div>
+              <div class="cell empty"><div class="day">S</div><div class="plus">＋</div></div>
+              <div class="cell today empty"><div class="day">M</div><div class="plus">＋</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Daily only -->
+      <div>
+        <p class="label-pill mb-3">Daily goal · streak + hit rate</p>
+        <div class="phone">
+          <div class="card">
+            <div class="mb-3 flex items-center justify-between">
+              <h3 class="text-base font-semibold">Last 7 days</h3>
+              <div class="text-[12px] font-semibold" style="color: var(--text-secondary)">⊕ 30m/day · ＋ Log</div>
+            </div>
+
+            <div class="mb-3 flex items-center gap-2">
+              <span class="text-[18px]">⏱️</span>
+              <span class="mono text-[26px] font-bold">2h 15m</span>
+              <span class="text-[11px]" style="color: var(--text-secondary)">total</span>
+            </div>
+
+            <div class="mb-3 flex items-center gap-2">
+              <span class="text-[12px]" style="color: var(--text-tertiary)">Daily target <b style="color: var(--text-primary)">30m</b> · <b style="color: var(--text-primary)">3 of 7</b> hit</span>
+              <span class="streak-pill ml-auto">🔥 2 in a row</span>
+            </div>
+
+            <div class="flex justify-between gap-1">
+              <div class="cell complete"><div class="day">T</div><div class="val">30m</div><div class="bar"><span style="width:100%"></span></div></div>
+              <div class="cell empty"><div class="day">W</div><div class="plus">＋</div></div>
+              <div class="cell complete"><div class="day">T</div><div class="val">45m</div><div class="bar"><span style="width:100%"></span></div></div>
+              <div class="cell complete"><div class="day">F</div><div class="val">1h</div><div class="bar"><span style="width:100%"></span></div></div>
+              <div class="cell empty"><div class="day">S</div><div class="plus">＋</div></div>
+              <div class="cell empty"><div class="day">S</div><div class="plus">＋</div></div>
+              <div class="cell today empty"><div class="day">M</div><div class="plus">＋</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Both -->
+      <div class="relative">
+        <p class="label-pill accent mb-3">Both · recommended</p>
+        <div class="phone">
+          <div class="card">
+            <div class="mb-3 flex items-center justify-between">
+              <h3 class="text-base font-semibold">Last 7 days</h3>
+              <div class="text-[12px] font-semibold" style="color: var(--text-secondary)">⊕ 30m · 5h · ＋ Log</div>
+            </div>
+
+            <div class="mb-1 flex items-center gap-2">
+              <span class="text-[18px]">⏱️</span>
+              <span class="mono text-[26px] font-bold">2h 15m</span>
+              <span class="text-[11px] ml-auto" style="color: var(--text-secondary)">/ 5h</span>
+              <span class="text-[12px] font-semibold" style="color: var(--accent)">45%</span>
+            </div>
+            <div class="week-bar mb-2"><span style="width: 45%"></span></div>
+            <div class="stat-row mb-3">
+              <span><b>32m</b> avg/day</span>
+              <span class="pace-pill pace-good">▲ on pace</span>
+              <span><b>2h 45m</b> to go</span>
+            </div>
+
+            <div class="mb-3 flex items-center gap-2">
+              <span class="text-[12px]" style="color: var(--text-tertiary)">Daily <b style="color: var(--text-primary)">30m</b> · <b style="color: var(--text-primary)">3 of 7</b> hit</span>
+              <span class="streak-pill ml-auto">🔥 2 in a row</span>
+            </div>
+
+            <div class="flex justify-between gap-1">
+              <div class="cell complete"><div class="day">T</div><div class="val">30m</div><div class="bar"><span style="width:100%"></span></div></div>
+              <div class="cell empty"><div class="day">W</div><div class="plus">＋</div></div>
+              <div class="cell complete"><div class="day">T</div><div class="val">45m</div><div class="bar"><span style="width:100%"></span></div></div>
+              <div class="cell complete"><div class="day">F</div><div class="val">1h</div><div class="bar"><span style="width:100%"></span></div></div>
+              <div class="cell empty"><div class="day">S</div><div class="plus">＋</div></div>
+              <div class="cell empty"><div class="day">S</div><div class="plus">＋</div></div>
+              <div class="cell today empty"><div class="day">M</div><div class="plus">＋</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="annotation" style="top: 168px; right: -40px">on-pace pill</div>
+        <div class="annotation" style="top: 232px; right: -40px">streak pill</div>
+      </div>
+    </section>
+
+    <!-- Pace state variants -->
+    <section class="mx-auto mt-12 max-w-7xl">
+      <h2 class="display text-xl font-bold">Pace pill states</h2>
+      <p class="mt-1 max-w-3xl text-sm" style="color: var(--text-secondary)">
+        Computed from current total vs goal × (days elapsed / 7). Three states:
+      </p>
+      <div class="mt-4 grid gap-4 lg:grid-cols-3">
+        <div class="card flex items-center gap-3" style="padding: 14px">
+          <span class="pace-pill pace-good">▲ on pace</span>
+          <span class="text-[12px]" style="color: var(--text-secondary)">total ≥ proportional goal</span>
+        </div>
+        <div class="card flex items-center gap-3" style="padding: 14px">
+          <span class="pace-pill pace-warn">▼ behind</span>
+          <span class="text-[12px]" style="color: var(--text-secondary)">total &lt; proportional goal by &gt; 10%</span>
+        </div>
+        <div class="card flex items-center gap-3" style="padding: 14px">
+          <span class="pace-pill pace-good" style="background: rgba(184, 116, 45, 0.12); color: var(--accent-strong)">★ goal hit</span>
+          <span class="text-[12px]" style="color: var(--text-secondary)">total ≥ goal (week complete)</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="mx-auto mt-12 max-w-5xl">
+      <h2 class="display text-xl font-bold">What we add</h2>
+      <table class="mt-4 w-full text-sm">
+        <thead style="color: var(--text-tertiary)">
+          <tr class="border-b" style="border-color: var(--border)">
+            <th class="py-2 text-left">Stat</th>
+            <th class="py-2 text-left">Formula</th>
+            <th class="py-2 text-left">Shows when</th>
+          </tr>
+        </thead>
+        <tbody style="color: var(--text-secondary)">
+          <tr class="border-b" style="border-color: var(--border)">
+            <td class="py-2"><b style="color: var(--text-primary)">Avg / day</b></td>
+            <td class="py-2 font-mono text-xs">total ÷ days_elapsed</td>
+            <td class="py-2">weekly goal set</td>
+          </tr>
+          <tr class="border-b" style="border-color: var(--border)">
+            <td class="py-2"><b style="color: var(--text-primary)">On pace pill</b></td>
+            <td class="py-2 font-mono text-xs">total vs (goal × days_elapsed/7)</td>
+            <td class="py-2">weekly goal set</td>
+          </tr>
+          <tr class="border-b" style="border-color: var(--border)">
+            <td class="py-2"><b style="color: var(--text-primary)">Time to go</b></td>
+            <td class="py-2 font-mono text-xs">max(0, goal − total)</td>
+            <td class="py-2">weekly goal set</td>
+          </tr>
+          <tr class="border-b" style="border-color: var(--border)">
+            <td class="py-2"><b style="color: var(--text-primary)">Daily streak</b></td>
+            <td class="py-2 font-mono text-xs">consecutive trailing days where minutes ≥ daily_goal</td>
+            <td class="py-2">daily goal set</td>
+          </tr>
+          <tr>
+            <td class="py-2"><b style="color: var(--text-primary)">Hit rate</b></td>
+            <td class="py-2 font-mono text-xs">days where minutes ≥ daily_goal / 7</td>
+            <td class="py-2">daily goal set (already shown)</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <footer class="mx-auto mt-10 max-w-5xl text-xs" style="color: var(--text-tertiary)">
+      All stats computed client-side from the existing <code>byDate</code> Convex response — no schema changes, no new queries. ~30 lines of code, mostly in <code>WeeklyTimeCard.tsx</code> + a tiny <code>computeProgressStats.ts</code> helper.
+    </footer>
+  </body>
+</html>

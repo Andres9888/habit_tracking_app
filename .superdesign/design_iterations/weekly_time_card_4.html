@@ -1,0 +1,376 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Weekly Time Card — daily + weekly goals</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@600;700&family=Literata:wght@600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #f5f1ed;
+        --card: #fffdfa;
+        --surface: #edeae5;
+        --border: #e3ddd5;
+        --text-primary: #2d2a26;
+        --text-secondary: #6b6560;
+        --text-tertiary: #968e86;
+        --accent: #b8742d;
+        --accent-soft: rgba(184, 116, 45, 0.1);
+        --accent-soft2: rgba(184, 116, 45, 0.16);
+        --accent-strong: #9c5e1d;
+        --accent-ring: rgba(184, 116, 45, 0.55);
+        --success: #15793c;
+        --shadow-card: 0 1px 2px rgba(45, 42, 38, 0.06),
+          0 4px 12px rgba(45, 42, 38, 0.05);
+      }
+      html,
+      body {
+        background: #ece5dc;
+        font-family: "Inter", system-ui, -apple-system, sans-serif !important;
+        color: var(--text-primary);
+      }
+      .display { font-family: "Literata", Georgia, serif !important; }
+      .mono { font-family: "JetBrains Mono", ui-monospace, monospace !important; }
+
+      .phone {
+        width: 380px;
+        background: var(--bg);
+        border-radius: 28px;
+        box-shadow: 0 18px 50px rgba(45, 42, 38, 0.16),
+          0 0 0 6px rgba(45, 42, 38, 0.04);
+        padding: 22px 16px;
+      }
+      .card {
+        background: var(--card);
+        border-radius: 16px;
+        box-shadow: var(--shadow-card);
+        padding: 18px;
+      }
+
+      .label-pill {
+        display: inline-block;
+        background: var(--card);
+        border: 1px solid var(--border);
+        color: var(--text-secondary);
+        padding: 3px 10px;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        border-radius: 999px;
+      }
+      .label-pill.accent {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+
+      /* Day cell with daily-goal progress */
+      .cell {
+        flex: 1;
+        text-align: center;
+        padding: 6px 0 4px;
+        border-radius: 10px;
+        border: 1px solid transparent;
+        position: relative;
+      }
+      .cell.empty {
+        border: 1px dashed rgba(45, 42, 38, 0.16);
+      }
+      .cell.filled {
+        background: var(--accent-soft);
+        border-color: rgba(184, 116, 45, 0.18);
+      }
+      .cell.complete {
+        background: var(--accent-soft2);
+        border-color: var(--accent);
+      }
+      .cell.today { box-shadow: 0 0 0 1px var(--accent); }
+
+      .cell .day { font-size: 11px; font-weight: 500; color: var(--text-tertiary); }
+      .cell .val { font-size: 11px; font-weight: 600; margin-top: 1px; }
+      .cell .plus { font-size: 11px; color: var(--text-tertiary); margin-top: 1px; }
+      .cell .bar {
+        height: 3px;
+        margin: 4px 4px 0;
+        background: rgba(45, 42, 38, 0.08);
+        border-radius: 99px;
+        overflow: hidden;
+      }
+      .cell .bar > span {
+        display: block;
+        height: 100%;
+        background: var(--accent);
+        border-radius: 99px;
+      }
+      .cell.complete .bar > span { background: var(--accent-strong); }
+
+      /* Weekly progress bar */
+      .week-bar {
+        height: 6px;
+        background: var(--surface);
+        border-radius: 99px;
+        overflow: hidden;
+      }
+      .week-bar > span { display: block; height: 100%; background: var(--accent); }
+
+      .icon-btn {
+        background: var(--surface);
+        border-radius: 10px;
+        padding: 6px 10px;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--text-primary);
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+      }
+      .annotation {
+        position: absolute;
+        font-size: 11px;
+        color: var(--accent);
+        background: var(--card);
+        border: 1.5px solid var(--accent);
+        padding: 4px 8px;
+        border-radius: 999px;
+        font-weight: 600;
+        white-space: nowrap;
+        box-shadow: 0 4px 12px rgba(184, 116, 45, 0.18);
+      }
+
+      .input-faux {
+        background: var(--surface);
+        border-radius: 12px;
+        min-width: 110px;
+        text-align: center;
+        padding: 10px 14px;
+        font-size: 24px;
+        font-weight: 600;
+        color: var(--text-primary);
+      }
+      .chip {
+        background: var(--surface);
+        border-radius: 999px;
+        padding: 6px 12px;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--text-primary);
+      }
+      .chip.selected {
+        background: var(--accent);
+        color: white;
+      }
+      .cta {
+        background: var(--accent);
+        color: white;
+        border-radius: 12px;
+        padding: 12px 0;
+        text-align: center;
+        font-weight: 600;
+        font-size: 14px;
+      }
+    </style>
+  </head>
+
+  <body class="min-h-screen p-10">
+    <header class="mx-auto mb-10 max-w-7xl">
+      <p class="label-pill accent">Weekly + Daily goals</p>
+      <h1 class="display mt-3 text-3xl font-bold tracking-tight">Time goals — both weekly and daily, at the same time</h1>
+      <p class="mt-1 max-w-3xl text-sm" style="color: var(--text-secondary)">
+        A habit can carry an optional <code>dailyMinutesGoal</code> (e.g., 30 min/day) and an optional <code>weeklyMinutesGoal</code> (e.g., 5h/week). Either or both. Card adapts based on which are set.
+      </p>
+    </header>
+
+    <!-- Row 1: 4 card states -->
+    <section class="mx-auto grid max-w-7xl gap-8 lg:grid-cols-4">
+      <!-- A. No goals -->
+      <div>
+        <p class="label-pill mb-3">A. No goals</p>
+        <div class="phone">
+          <div class="card">
+            <div class="mb-3 flex items-center justify-between">
+              <h3 class="text-base font-semibold">This week</h3>
+              <button class="icon-btn">⚑ Set goals</button>
+            </div>
+            <div class="mb-4 flex items-baseline gap-2">
+              <span>⏱️</span>
+              <span class="mono text-[26px] font-bold">2h 15m</span>
+              <span class="text-[11px]" style="color: var(--text-secondary)">total</span>
+            </div>
+            <div class="flex justify-between gap-1">
+              <div class="cell filled"><div class="day">M</div><div class="val">30m</div></div>
+              <div class="cell empty"><div class="day">T</div><div class="plus">＋</div></div>
+              <div class="cell filled today"><div class="day">W</div><div class="val">45m</div></div>
+              <div class="cell filled"><div class="day">T</div><div class="val">1h</div></div>
+              <div class="cell empty"><div class="day">F</div><div class="plus">＋</div></div>
+              <div class="cell empty"><div class="day">S</div><div class="plus">＋</div></div>
+              <div class="cell empty"><div class="day">S</div><div class="plus">＋</div></div>
+            </div>
+            <p class="mt-3 text-center text-[11px]" style="color: var(--text-tertiary)">Tap any day to log</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- B. Weekly only -->
+      <div>
+        <p class="label-pill mb-3">B. Weekly goal only · 5h</p>
+        <div class="phone">
+          <div class="card">
+            <div class="mb-3 flex items-center justify-between">
+              <h3 class="text-base font-semibold">This week</h3>
+              <button class="icon-btn">⚑ 5h</button>
+            </div>
+            <div class="mb-1 flex items-baseline gap-2">
+              <span>⏱️</span>
+              <span class="mono text-[26px] font-bold">2h 15m</span>
+              <span class="text-[11px]" style="color: var(--text-secondary)">/ 5h</span>
+              <span class="ml-auto text-[11px] font-semibold" style="color: var(--accent)">45%</span>
+            </div>
+            <div class="week-bar mb-4"><span style="width: 45%"></span></div>
+            <div class="flex justify-between gap-1">
+              <div class="cell filled"><div class="day">M</div><div class="val">30m</div></div>
+              <div class="cell empty"><div class="day">T</div><div class="plus">＋</div></div>
+              <div class="cell filled today"><div class="day">W</div><div class="val">45m</div></div>
+              <div class="cell filled"><div class="day">T</div><div class="val">1h</div></div>
+              <div class="cell empty"><div class="day">F</div><div class="plus">＋</div></div>
+              <div class="cell empty"><div class="day">S</div><div class="plus">＋</div></div>
+              <div class="cell empty"><div class="day">S</div><div class="plus">＋</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- C. Daily only -->
+      <div>
+        <p class="label-pill mb-3">C. Daily goal only · 30m</p>
+        <div class="phone">
+          <div class="card">
+            <div class="mb-3 flex items-center justify-between">
+              <h3 class="text-base font-semibold">This week</h3>
+              <button class="icon-btn">⚑ 30m/day</button>
+            </div>
+            <div class="mb-4 flex items-baseline gap-2">
+              <span>⏱️</span>
+              <span class="mono text-[26px] font-bold">2h 15m</span>
+              <span class="text-[11px]" style="color: var(--text-secondary)">total · daily 30m</span>
+            </div>
+            <div class="flex justify-between gap-1">
+              <div class="cell complete"><div class="day">M</div><div class="val">30m</div><div class="bar"><span style="width:100%"></span></div></div>
+              <div class="cell empty"><div class="day">T</div><div class="plus">＋</div></div>
+              <div class="cell complete today"><div class="day">W</div><div class="val">45m</div><div class="bar"><span style="width:100%"></span></div></div>
+              <div class="cell complete"><div class="day">T</div><div class="val">1h</div><div class="bar"><span style="width:100%"></span></div></div>
+              <div class="cell empty"><div class="day">F</div><div class="plus">＋</div></div>
+              <div class="cell empty"><div class="day">S</div><div class="plus">＋</div></div>
+              <div class="cell empty"><div class="day">S</div><div class="plus">＋</div></div>
+            </div>
+            <p class="mt-3 text-center text-[11px]" style="color: var(--text-tertiary)">3 of 7 days hit goal</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- D. Both -->
+      <div class="relative">
+        <p class="label-pill accent mb-3">D. Both goals · recommended</p>
+        <div class="phone">
+          <div class="card">
+            <div class="mb-3 flex items-center justify-between">
+              <h3 class="text-base font-semibold">This week</h3>
+              <button class="icon-btn">⚑ 30m · 5h</button>
+            </div>
+            <div class="mb-1 flex items-baseline gap-2">
+              <span>⏱️</span>
+              <span class="mono text-[26px] font-bold">2h 15m</span>
+              <span class="text-[11px]" style="color: var(--text-secondary)">/ 5h</span>
+              <span class="ml-auto text-[11px] font-semibold" style="color: var(--accent)">45%</span>
+            </div>
+            <div class="week-bar mb-2"><span style="width: 45%"></span></div>
+            <p class="mb-3 text-[11px]" style="color: var(--text-tertiary)">Daily target 30m · 3 of 7 hit</p>
+            <div class="flex justify-between gap-1">
+              <div class="cell complete"><div class="day">M</div><div class="val">30m</div><div class="bar"><span style="width:100%"></span></div></div>
+              <div class="cell empty"><div class="day">T</div><div class="plus">＋</div></div>
+              <div class="cell complete today"><div class="day">W</div><div class="val">45m</div><div class="bar"><span style="width:100%"></span></div></div>
+              <div class="cell complete"><div class="day">T</div><div class="val">1h</div><div class="bar"><span style="width:100%"></span></div></div>
+              <div class="cell empty"><div class="day">F</div><div class="plus">＋</div></div>
+              <div class="cell empty"><div class="day">S</div><div class="plus">＋</div></div>
+              <div class="cell empty"><div class="day">S</div><div class="plus">＋</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="annotation" style="top: 100px; right: -30px; transform: rotate(2deg)">weekly bar</div>
+        <div class="annotation" style="top: 168px; right: 32px;">daily target line</div>
+        <div class="annotation" style="top: 230px; right: -16px;">per-cell fill = % of daily</div>
+      </div>
+    </section>
+
+    <!-- Row 2: Set-goal sheet variants -->
+    <section class="mx-auto mt-12 max-w-7xl">
+      <h2 class="display text-xl font-bold">Set-goal bottom sheet</h2>
+      <p class="mt-1 max-w-3xl text-sm" style="color: var(--text-secondary)">
+        Two segmented panes — Daily and Weekly — each with quick-pick chips and a numeric input. Either can be left blank/cleared.
+      </p>
+
+      <div class="mt-5 grid gap-8 lg:grid-cols-2">
+        <!-- Sheet -->
+        <div class="phone relative" style="height: 580px">
+          <p class="label-pill accent mb-3">Sheet — set both</p>
+          <div class="absolute inset-0 rounded-[28px]" style="background: rgba(0, 0, 0, 0.4)"></div>
+          <div class="absolute bottom-3 left-3 right-3 rounded-t-3xl px-5 pb-8 pt-3" style="background: var(--card)">
+            <div class="mx-auto mb-4 h-1 w-10 rounded-full" style="background: var(--border)"></div>
+            <h3 class="text-center text-lg font-semibold display">Time goals</h3>
+            <p class="mb-4 mt-1 text-center text-xs" style="color: var(--text-secondary)">Either, neither, or both</p>
+
+            <p class="mb-2 text-[11px] font-semibold uppercase tracking-wider" style="color: var(--text-tertiary)">Daily target</p>
+            <div class="mb-2 flex items-center justify-center gap-2">
+              <div class="input-faux">30</div>
+              <span class="text-sm" style="color: var(--text-secondary)">min/day</span>
+            </div>
+            <div class="mb-5 flex justify-center gap-2">
+              <span class="chip">10m</span><span class="chip">20m</span><span class="chip selected">30m</span><span class="chip">45m</span><span class="chip">60m</span>
+            </div>
+
+            <p class="mb-2 text-[11px] font-semibold uppercase tracking-wider" style="color: var(--text-tertiary)">Weekly target</p>
+            <div class="mb-2 flex items-center justify-center gap-2">
+              <div class="input-faux">5</div>
+              <span class="text-sm" style="color: var(--text-secondary)">hours/week</span>
+            </div>
+            <div class="mb-5 flex justify-center gap-2">
+              <span class="chip">1h</span><span class="chip">2h</span><span class="chip">3h</span><span class="chip selected">5h</span><span class="chip">10h</span>
+            </div>
+
+            <div class="cta mb-2">Save goals</div>
+            <div class="text-center text-xs font-semibold" style="color: var(--text-tertiary)">Clear all</div>
+          </div>
+        </div>
+
+        <!-- Placement options -->
+        <div>
+          <p class="label-pill mb-3">Where to put the trigger?</p>
+          <ul class="space-y-3 text-sm" style="color: var(--text-secondary)">
+            <li class="card" style="padding: 14px"><b style="color: var(--text-primary)">1. Inline only</b> — small ⚑ pill in the card header (current mockup). Tap opens the sheet. <i>Pro:</i> goal lives next to the data it shapes. <i>Con:</i> goal-setting is mixed with goal-viewing.</li>
+            <li class="card" style="padding: 14px"><b style="color: var(--text-primary)">2. Goal tab only</b> — add a "Time goals" subsection inside the existing Goal tab, alongside the streak goal. <i>Pro:</i> all goals in one place. <i>Con:</i> two scrolls away from where you'd see the time data.</li>
+            <li class="card" style="padding: 14px"><b style="color: var(--text-primary)">3. Both</b> — pill on the card opens the sheet directly; Goal tab also lists the time targets and lets you edit them there too. <i>Pro:</i> visible from both surfaces. <i>Con:</i> two code paths writing to the same fields.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="mx-auto mt-12 max-w-5xl">
+      <h2 class="display text-xl font-bold">Logic rules</h2>
+      <ul class="mt-3 space-y-2 text-sm" style="color: var(--text-secondary)">
+        <li><b>Both unset</b> → today's behavior. Total + cells, no progress bars.</li>
+        <li><b>Weekly only</b> → top progress bar against weekly total.</li>
+        <li><b>Daily only</b> → per-cell mini bar; cells turn solid when ≥ daily; "X of 7 hit" caption.</li>
+        <li><b>Both</b> → weekly bar on top, per-cell mini bar, both captions. Cell completion uses daily; week bar uses weekly.</li>
+        <li><b>Daily can exceed</b> → if cell hits 60m on a 30m goal, bar caps at 100% and cell stays "complete." Overage shown in the value (e.g., "60m").</li>
+      </ul>
+    </section>
+
+    <footer class="mx-auto mt-10 max-w-5xl text-xs" style="color: var(--text-tertiary)">
+      Schema: add <code>dailyMinutesGoal: v.optional(v.number())</code> and <code>weeklyMinutesGoal: v.optional(v.number())</code> to <code>habits</code>. New mutation <code>habits.setTimeGoals({ habitId, daily?, weekly? })</code>. Sheet UI mirrors the existing Log-time sheet pattern (drag handle, chips, save, clear).
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Weekly Time Card — discoverability iterations</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@600;700&family=Literata:wght@600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #f5f1ed;
+        --card: #fffdfa;
+        --surface: #edeae5;
+        --border: #e3ddd5;
+        --text-primary: #2d2a26;
+        --text-secondary: #6b6560;
+        --text-tertiary: #968e86;
+        --accent: #b8742d;
+        --accent-soft: rgba(184, 116, 45, 0.1);
+        --accent-soft2: rgba(184, 116, 45, 0.16);
+        --accent-ring: rgba(184, 116, 45, 0.55);
+        --shadow-card: 0 1px 2px rgba(45, 42, 38, 0.06),
+          0 4px 12px rgba(45, 42, 38, 0.05);
+      }
+      html,
+      body {
+        background: #ece5dc;
+        font-family: "Inter", system-ui, -apple-system, sans-serif !important;
+        color: var(--text-primary);
+      }
+      .display {
+        font-family: "Literata", Georgia, serif !important;
+      }
+      .mono {
+        font-family: "JetBrains Mono", ui-monospace, monospace !important;
+      }
+      .phone {
+        width: 390px;
+        background: var(--bg);
+        border-radius: 28px;
+        box-shadow: 0 20px 50px rgba(45, 42, 38, 0.16),
+          0 0 0 6px rgba(45, 42, 38, 0.04);
+        padding: 22px 16px;
+      }
+      .card {
+        background: var(--card);
+        border-radius: 16px;
+        box-shadow: var(--shadow-card);
+        padding: 20px;
+      }
+
+      /* Day cell — version BEFORE (current) */
+      .cell-current {
+        flex: 1;
+        text-align: center;
+        padding: 8px 0;
+        border-radius: 8px;
+        border: 1px solid transparent;
+      }
+      .cell-current.filled {
+        background: var(--accent-soft);
+      }
+      .cell-current.today {
+        border-color: var(--accent-ring);
+      }
+
+      /* Day cell — version AFTER (A + B) */
+      .cell-new {
+        flex: 1;
+        text-align: center;
+        padding: 8px 0 6px;
+        border-radius: 10px;
+        border: 1px dashed transparent;
+        position: relative;
+        transition: background 120ms ease, transform 120ms ease;
+      }
+      .cell-new.empty {
+        border-color: rgba(45, 42, 38, 0.14);
+        background: transparent;
+      }
+      .cell-new.filled {
+        background: var(--accent-soft);
+        border: 1px solid rgba(184, 116, 45, 0.18);
+        border-style: solid;
+      }
+      .cell-new.today {
+        border-color: var(--accent-ring);
+        border-style: solid;
+      }
+      .cell-new.pressed {
+        background: var(--accent-soft2);
+        transform: scale(0.96);
+      }
+      .cell-new .plus {
+        font-size: 11px;
+        color: var(--text-tertiary);
+        margin-top: 2px;
+      }
+      .cell-new.filled .plus {
+        display: none;
+      }
+
+      .label {
+        display: inline-block;
+        background: var(--card);
+        border: 1px solid var(--border);
+        color: var(--text-secondary);
+        padding: 3px 10px;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        border-radius: 999px;
+      }
+      .label.accent {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+
+      .annotation {
+        position: absolute;
+        font-size: 11px;
+        color: var(--accent);
+        background: var(--card);
+        border: 1.5px solid var(--accent);
+        padding: 4px 8px;
+        border-radius: 999px;
+        font-weight: 600;
+        white-space: nowrap;
+        box-shadow: 0 4px 12px rgba(184, 116, 45, 0.18);
+      }
+    </style>
+  </head>
+
+  <body class="min-h-screen p-10">
+    <header class="mx-auto mb-10 max-w-7xl">
+      <p class="label">Discoverability iterations · A (hint) + B (cell affordance)</p>
+      <h1 class="display mt-3 text-3xl font-bold tracking-tight">Make day cells feel tappable</h1>
+      <p class="mt-1 max-w-2xl text-sm" style="color: var(--text-secondary)">
+        The cells are already tappable in code — but they don't look it. Two small adds: dashed border on empty cells with a tiny "＋" hint, plus one line of helper text below the row.
+      </p>
+    </header>
+
+    <section class="mx-auto grid max-w-7xl gap-10 lg:grid-cols-3">
+      <!-- BEFORE -->
+      <div>
+        <p class="label mb-3 inline-block">Before — current</p>
+        <div class="phone">
+          <div class="card">
+            <div class="mb-3 flex items-center justify-between">
+              <h3 class="text-base font-semibold">This week</h3>
+              <button class="flex items-center gap-1 text-sm font-semibold" style="color: var(--text-secondary)">
+                <span class="text-base leading-none">＋</span> Log time
+              </button>
+            </div>
+            <div class="mb-4 flex items-baseline gap-2">
+              <span>⏱️</span>
+              <span class="mono text-[28px] font-bold">2h 15m</span>
+              <span class="text-xs" style="color: var(--text-secondary)">total this week</span>
+            </div>
+            <div class="flex justify-between gap-1">
+              <div class="cell-current filled"><div class="text-[11px] font-medium" style="color: var(--text-tertiary)">M</div><div class="mt-0.5 text-[11px] font-semibold">30m</div></div>
+              <div class="cell-current"><div class="text-[11px] font-medium" style="color: var(--text-tertiary)">T</div><div class="mt-0.5 text-[11px]" style="color: var(--text-tertiary)">—</div></div>
+              <div class="cell-current filled today"><div class="text-[11px] font-medium" style="color: var(--text-tertiary)">W</div><div class="mt-0.5 text-[11px] font-semibold">45m</div></div>
+              <div class="cell-current filled"><div class="text-[11px] font-medium" style="color: var(--text-tertiary)">T</div><div class="mt-0.5 text-[11px] font-semibold">1h</div></div>
+              <div class="cell-current"><div class="text-[11px] font-medium" style="color: var(--text-tertiary)">F</div><div class="mt-0.5 text-[11px]" style="color: var(--text-tertiary)">—</div></div>
+              <div class="cell-current"><div class="text-[11px] font-medium" style="color: var(--text-tertiary)">S</div><div class="mt-0.5 text-[11px]" style="color: var(--text-tertiary)">—</div></div>
+              <div class="cell-current"><div class="text-[11px] font-medium" style="color: var(--text-tertiary)">S</div><div class="mt-0.5 text-[11px]" style="color: var(--text-tertiary)">—</div></div>
+            </div>
+          </div>
+          <p class="mt-3 px-2 text-[11px]" style="color: var(--text-tertiary)">
+            Empty cells just say "—". Looks like a label, not a button.
+          </p>
+        </div>
+      </div>
+
+      <!-- AFTER (idle) -->
+      <div class="relative">
+        <p class="label accent mb-3 inline-block">Proposed — idle state</p>
+        <div class="phone">
+          <div class="card">
+            <div class="mb-3 flex items-center justify-between">
+              <h3 class="text-base font-semibold">This week</h3>
+              <button class="flex items-center gap-1 text-sm font-semibold" style="color: var(--text-secondary)">
+                <span class="text-base leading-none">＋</span> Log time
+              </button>
+            </div>
+            <div class="mb-4 flex items-baseline gap-2">
+              <span>⏱️</span>
+              <span class="mono text-[28px] font-bold">2h 15m</span>
+              <span class="text-xs" style="color: var(--text-secondary)">total this week</span>
+            </div>
+            <div class="flex justify-between gap-1">
+              <div class="cell-new filled"><div class="text-[11px] font-medium" style="color: var(--text-tertiary)">M</div><div class="mt-0.5 text-[11px] font-semibold">30m</div></div>
+              <div class="cell-new empty"><div class="text-[11px] font-medium" style="color: var(--text-tertiary)">T</div><div class="plus">＋</div></div>
+              <div class="cell-new filled today"><div class="text-[11px] font-medium" style="color: var(--text-tertiary)">W</div><div class="mt-0.5 text-[11px] font-semibold">45m</div></div>
+              <div class="cell-new filled"><div class="text-[11px] font-medium" style="color: var(--text-tertiary)">T</div><div class="mt-0.5 text-[11px] font-semibold">1h</div></div>
+              <div class="cell-new empty"><div class="text-[11px] font-medium" style="color: var(--text-tertiary)">F</div><div class="plus">＋</div></div>
+              <div class="cell-new empty"><div class="text-[11px] font-medium" style="color: var(--text-tertiary)">S</div><div class="plus">＋</div></div>
+              <div class="cell-new empty"><div class="text-[11px] font-medium" style="color: var(--text-tertiary)">S</div><div class="plus">＋</div></div>
+            </div>
+            <p class="mt-3 text-center text-[11px]" style="color: var(--text-tertiary)">
+              Tap any day to log time
+            </p>
+          </div>
+          <p class="mt-3 px-2 text-[11px]" style="color: var(--text-tertiary)">
+            Empty cells: dashed border + tiny ＋. Filled cells: solid soft tint. Today: ring. Hint line below.
+          </p>
+        </div>
+        <div class="annotation" style="top: 168px; right: -22px; transform: rotate(2deg)">＋ on empty cells</div>
+        <div class="annotation" style="top: 248px; right: 56px">hint line</div>
+      </div>
+
+      <!-- AFTER (pressed) -->
+      <div>
+        <p class="label accent mb-3 inline-block">Proposed — pressed</p>
+        <div class="phone">
+          <div class="card">
+            <div class="mb-3 flex items-center justify-between">
+              <h3 class="text-base font-semibold">This week</h3>
+              <button class="flex items-center gap-1 text-sm font-semibold" style="color: var(--text-secondary)">
+                <span class="text-base leading-none">＋</span> Log time
+              </button>
+            </div>
+            <div class="mb-4 flex items-baseline gap-2">
+              <span>⏱️</span>
+              <span class="mono text-[28px] font-bold">2h 15m</span>
+              <span class="text-xs" style="color: var(--text-secondary)">total this week</span>
+            </div>
+            <div class="flex justify-between gap-1">
+              <div class="cell-new filled"><div class="text-[11px] font-medium" style="color: var(--text-tertiary)">M</div><div class="mt-0.5 text-[11px] font-semibold">30m</div></div>
+              <div class="cell-new empty"><div class="text-[11px] font-medium" style="color: var(--text-tertiary)">T</div><div class="plus">＋</div></div>
+              <div class="cell-new filled today"><div class="text-[11px] font-medium" style="color: var(--text-tertiary)">W</div><div class="mt-0.5 text-[11px] font-semibold">45m</div></div>
+              <div class="cell-new filled"><div class="text-[11px] font-medium" style="color: var(--text-tertiary)">T</div><div class="mt-0.5 text-[11px] font-semibold">1h</div></div>
+              <div class="cell-new empty pressed"><div class="text-[11px] font-medium" style="color: var(--text-tertiary)">F</div><div class="plus" style="color: var(--accent)">＋</div></div>
+              <div class="cell-new empty"><div class="text-[11px] font-medium" style="color: var(--text-tertiary)">S</div><div class="plus">＋</div></div>
+              <div class="cell-new empty"><div class="text-[11px] font-medium" style="color: var(--text-tertiary)">S</div><div class="plus">＋</div></div>
+            </div>
+            <p class="mt-3 text-center text-[11px]" style="color: var(--text-tertiary)">
+              Tap any day to log time
+            </p>
+          </div>
+          <p class="mt-3 px-2 text-[11px]" style="color: var(--text-tertiary)">
+            Tapping Friday: cell scales 0.96, fills with darker tint, ＋ goes accent. Sheet opens for that date.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="mx-auto mt-12 max-w-5xl">
+      <h2 class="display text-xl font-bold">Behavior summary</h2>
+      <ul class="mt-3 space-y-2 text-sm" style="color: var(--text-secondary)">
+        <li><b>Empty days</b> — dashed border, tiny ＋ underneath the day letter. Communicates "you can fill me in."</li>
+        <li><b>Filled days</b> — solid soft tint of the habit color, no ＋. Just shows the value.</li>
+        <li><b>Today</b> — solid border in the habit's accent color. Filled or empty, today is always anchored.</li>
+        <li><b>Pressed</b> — cell scales to 0.96 and tint deepens for the duration of the touch (120ms ease).</li>
+        <li><b>Hint</b> — a single muted line below the row: <i>Tap any day to log time</i>. Removable once we see analytics show people use it.</li>
+      </ul>
+      <p class="mt-3 text-sm" style="color: var(--text-secondary)">
+        Code change: ~15 lines in <code>WeeklyTimeBreakdown.tsx</code> + 1 hint line in <code>WeeklyTimeCard.tsx</code>. No behavior change — same <code>onDayPress(date)</code>, same sheet.
+      </p>
+    </section>
+
+    <footer class="mx-auto mt-12 max-w-5xl text-xs" style="color: var(--text-tertiary)">
+      Cells render at the same height as today's version. Dashed border is 1px <code>rgba(45,42,38,0.14)</code>. ＋ is text — no icon swap, no extra dependency.
+    </footer>
+  </body>
+</html>
