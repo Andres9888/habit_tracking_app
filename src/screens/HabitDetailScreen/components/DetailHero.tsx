@@ -4,7 +4,6 @@ import { View, Text } from 'react-native';
 import Animated, { Easing, FadeInDown } from 'react-native-reanimated';
 import { Check } from 'lucide-react-native';
 import { useThemeColors } from '../../../theme';
-import { borderRadius } from '../../../theme/spacing';
 import { typography, fontFamilies, fontWeights } from '../../../theme/typography';
 import type { Habit } from '../HabitDetailScreen.types';
 import { DetailHeroStat } from './DetailHeroStat';
@@ -27,7 +26,6 @@ export function DetailHero({ habit, isCompletedToday, totalCompletions }: Detail
   const defaultIconBg = isDark ? colors.primary[100] : colors.status.warningLight;
   const defaultIconShadow = isDark ? colors.primary[500] : colors.status.warning;
   const schedule = formatSchedule(habit);
-  const dotStyle = { backgroundColor: colors.gray[300], borderRadius: borderRadius.full, height: 3, width: 3 };
   const statProps = { labelColor: colors.text.secondary, valueColor: colors.text.primary };
 
   return (
@@ -72,11 +70,9 @@ export function DetailHero({ habit, isCompletedToday, totalCompletions }: Detail
           {habitName}
         </Text>
 
-        <View className='mt-1 flex-row items-center' style={{ gap: 10 }}>
+        <View className='mt-1 flex-row items-center' style={{ gap: 12 }}>
           <DetailHeroStat emoji='🔥' label='streak' value={habit.currentStreak ?? 0} {...statProps} />
-          <View style={dotStyle} />
           <DetailHeroStat emoji='⭐' label='best' value={habit.bestStreak ?? 0} {...statProps} />
-          <View style={dotStyle} />
           <DetailHeroStat emoji='✓' label='total' value={totalCompletions} {...statProps} />
         </View>
 
