@@ -25,6 +25,7 @@ export const fullHabitValidator = v.object({
   cueLocation: v.optional(v.string()),
   cueTime: v.optional(v.string()),
   currentStreak: v.optional(v.number()),
+  dailyMinutesGoal: v.optional(v.number()),
   daysOfWeek: v.optional(v.array(v.number())),
   frequency: v.optional(v.string()),
   goalDuration: v.optional(v.number()),
@@ -68,6 +69,7 @@ export const fullHabitValidator = v.object({
   vizSuccessBody: v.optional(v.string()),
   vizSuccessEmotion: v.optional(v.string()),
   vizSuccessMind: v.optional(v.string()),
+  weeklyMinutesGoal: v.optional(v.number()),
   why: v.optional(v.string()),
   woopObstacle: v.optional(v.string()),
   woopOutcome: v.optional(v.string()),
@@ -82,5 +84,6 @@ export const trackingRecordValidator = v.object({
   completed: v.boolean(),
   date: v.string(),
   habitId: v.id('habits'),
+  minutes: v.optional(v.number()),
   userId: v.optional(v.string()),
 });

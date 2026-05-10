@@ -71,6 +71,11 @@ const applicationTables = {
     // Streak Tracking System (Story 1.3)
     currentStreak: v.optional(v.number()),
 
+    // Legacy time-based goal fields — kept as optional passthrough so older
+    // docs validate. Not actively read by app code.
+    dailyMinutesGoal: v.optional(v.number()),
+    weeklyMinutesGoal: v.optional(v.number()),
+
     // "daily", "weekly", "custom"
     daysOfWeek: v.optional(v.array(v.number())),
 
@@ -327,6 +332,9 @@ const applicationTables = {
     // Tips for success - actionable advice for building this habit
     tips: v.optional(v.array(v.string())),
 
+    // Legacy: short "start small" variant present on older seed rows
+    startSmallVersion: v.optional(v.string()),
+
     // Science-backed benefits of the habit (bulleted list)
     benefits: v.optional(v.array(v.string())),
 
@@ -353,6 +361,8 @@ const applicationTables = {
     completed: v.boolean(),
     date: v.string(),
     habitId: v.id('habits'),
+    // Legacy minutes-tracked field on older docs — kept as optional passthrough.
+    minutes: v.optional(v.number()),
     userId: v.optional(v.string()),
   })
     .index('by_habit_and_date', ['habitId', 'date'])
