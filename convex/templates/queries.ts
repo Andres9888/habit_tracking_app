@@ -124,6 +124,34 @@ export const getImportedTemplateIds = query({
 });
 
 /**
+ * Query: Get template provenance for a habit, scoped to the current user.
+ * Returns null if the habit was not imported from a template (or no auth).
+ * Used by Why & Benefits card to show the "Scientific Benefits" treatment.
+ */
+export const getProvenanceForHabit = query({
+  args: { habitId: v.id('habits') },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) return null;
+
+    const usage = await ctx.db
+      .query('templateUsage')
+      .withIndex('by_habit', (q) => q.eq('habitId', args.habitId))
+      .first();
+    if (!usage || usage.userId !== identity.subject) return null;
+
+    const template = await ctx.db.get(usage.templateId);
+    if (!template) return null;
+
+    return {
+      scientificLink: template.scientificLink ?? null,
+      scientificReference: template.scientificReference,
+      templateName: template.name,
+    };
+  },
+});
+
+/**
  * Query: List all template names (for debugging)
  * PERF: Use index scan to avoid full table scan
  */
