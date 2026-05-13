@@ -6,6 +6,7 @@ import { useMemo } from 'react';
 import type { Doc } from '../../../convex/_generated/dataModel';
 import type { Category, SortOption } from '../templates/constants';
 import { getCategoryMeta } from './data/categoryMeta';
+import { isHighRoiTemplate, isQuickTemplate } from './data/templateFilters';
 
 function normalizeSearchValue(value: string | null | undefined) {
   return (value ?? '').trim().toLowerCase();
@@ -82,8 +83,13 @@ export function useFilteredTemplates(
     if (!allTemplates) return [];
 
     let data = [...allTemplates];
-    if (selectedCategory !== 'all')
+    if (selectedCategory === 'quick') {
+      data = data.filter(isQuickTemplate);
+    } else if (selectedCategory === 'high-roi') {
+      data = data.filter(isHighRoiTemplate);
+    } else if (selectedCategory !== 'all') {
       data = data.filter((t) => t.category === selectedCategory);
+    }
 
     const safeSearchQuery = normalizeSearchValue(searchQuery);
     if (safeSearchQuery) {

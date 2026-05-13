@@ -88,4 +88,75 @@ describe('useFilteredTemplates', () => {
 
     expect(getByTestId('results').props.children).toContain('morning-1');
   });
+
+  it('filters to short-duration templates when selectedCategory is "quick"', () => {
+    const presetTemplates = [
+      {
+        ...baseTemplate,
+        _id: 'quick-1',
+        category: 'mindfulness',
+        description: 'Take 2 minutes to breathe.',
+        name: '2-Minute Reset',
+      },
+      {
+        ...baseTemplate,
+        _id: 'quick-2',
+        category: 'morning_routine',
+        description: 'A brief gratitude moment to start the day.',
+        name: 'Gratitude Note',
+      },
+      {
+        ...baseTemplate,
+        _id: 'long-1',
+        category: 'health_fitness',
+        description: 'A 30-minute strength session for full body.',
+        name: '30-Minute Run',
+      },
+    ] as never;
+
+    const { getByTestId } = render(
+      <Harness searchQuery='' selectedCategory='quick' templates={presetTemplates} />
+    );
+
+    const results = getByTestId('results').props.children;
+    expect(results).toContain('quick-1');
+    expect(results).toContain('quick-2');
+    expect(results).not.toContain('long-1');
+  });
+
+  it('filters to high-popularity or richly-curated templates when selectedCategory is "high-roi"', () => {
+    const presetTemplates = [
+      {
+        ...baseTemplate,
+        _id: 'roi-high-1',
+        category: 'health_fitness',
+        name: '7-Minute Workout',
+        popularityScore: 98,
+      },
+      {
+        ...baseTemplate,
+        _id: 'roi-curated-1',
+        category: 'morning_routine',
+        name: 'Morning Sunlight',
+        popularityScore: 0,
+        tips: ['Step outside within 30 min', 'Aim for 5-10 minutes', 'Skip sunglasses'],
+      },
+      {
+        ...baseTemplate,
+        _id: 'roi-low-1',
+        category: 'creativity',
+        name: 'Sketch a doodle',
+        popularityScore: 60,
+      },
+    ] as never;
+
+    const { getByTestId } = render(
+      <Harness searchQuery='' selectedCategory='high-roi' templates={presetTemplates} />
+    );
+
+    const results = getByTestId('results').props.children;
+    expect(results).toContain('roi-high-1');
+    expect(results).toContain('roi-curated-1');
+    expect(results).not.toContain('roi-low-1');
+  });
 });

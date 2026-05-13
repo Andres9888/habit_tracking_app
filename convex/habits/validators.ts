@@ -18,6 +18,10 @@ export const fullHabitValidator = v.object({
   accessibilityUpdatedAt: v.optional(v.number()),
   archived: v.optional(v.boolean()),
   archivedAt: v.optional(v.number()),
+  // Legacy stale field on some habit rows; field was removed from schema but
+  // pre-existing rows still carry it. Allowed through as v.any() to unblock
+  // the list query — clean up via a one-off mutation when convenient.
+  benefits: v.optional(v.any()),
   bestStreak: v.optional(v.number()),
   consecutiveDays: v.optional(v.number()),
   createdAt: v.number(),
@@ -51,6 +55,7 @@ export const fullHabitValidator = v.object({
   reminderSound: v.optional(v.string()),
   reminderTime: v.optional(v.string()),
   resumedAt: v.optional(v.number()),
+  scienceNote: v.optional(v.any()),
   strength: v.optional(v.number()),
   strengthAlgorithm: v.optional(
     v.union(v.literal('forgiving'), v.literal('balanced'), v.literal('strict'))
