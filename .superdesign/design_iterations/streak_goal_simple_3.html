@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Goal tab — streak container only</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Literata:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'DM Sans', sans-serif !important;
+    background: #1A1816 !important; color: #FAF8F5 !important;
+    padding: 48px 24px 80px !important; min-height: 100vh !important;
+  }
+  h1, h2, h3, h4 { font-family: 'Literata', serif !important; }
+  .mono { font-family: 'JetBrains Mono', monospace !important; }
+
+  .row-wrap { display: flex; gap: 32px; flex-wrap: wrap; justify-content: center; align-items: flex-start; }
+  .phone-col { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+  .phone-label { font-size: 13px; color: #A39C93; letter-spacing: 0.4px; text-transform: uppercase; font-weight: 600; }
+  .phone-sub { font-size: 12px; color: #6D6761; text-align: center; max-width: 420px; line-height: 1.4; }
+
+  .phone {
+    width: 420px !important; height: 720px !important;
+    background: #F5F1ED !important; border-radius: 52px !important;
+    overflow: hidden !important; position: relative !important;
+    box-shadow: 0 0 0 3px #2D2A26, 0 0 0 6px #3D3833, 0 25px 60px rgba(0,0,0,0.5) !important;
+    flex-shrink: 0 !important;
+  }
+  .phone-screen {
+    width: 100% !important; height: 100% !important;
+    padding: 56px 0 0 !important; overflow-y: auto !important;
+    scrollbar-width: none !important;
+  }
+  .phone-screen::-webkit-scrollbar { display: none !important; }
+  .status-bar {
+    position: absolute !important; top: 0 !important; left: 0 !important; right: 0 !important;
+    height: 48px !important; background: #F5F1ED !important;
+    display: flex !important; align-items: center !important; justify-content: space-between !important;
+    padding: 0 28px !important;
+    z-index: 10 !important; font-size: 15px !important; font-weight: 600 !important; color: #2D2A26 !important;
+  }
+
+  /* Habit head */
+  .habit-head { display: flex; align-items: center; gap: 12px; padding: 14px 20px 10px; }
+  .habit-emoji {
+    width: 48px; height: 48px; background: #F97316; border-radius: 14px;
+    display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0;
+  }
+  .habit-name { font-family: 'Literata', serif; font-size: 20px; font-weight: 600; color: #2D2A26; }
+  .habit-meta { font-size: 12px; color: #6D6761; margin-top: 2px; }
+
+  /* Tabs */
+  .tabs-wrap { padding: 8px 20px 14px; }
+  .tabs { background: #EDEAE5; border-radius: 12px; display: flex; padding: 4px; position: relative; }
+  .tab { flex: 1; text-align: center; padding: 8px 0; font-size: 13px; font-weight: 600; color: #6D6761; border-radius: 9px; }
+  .tab.active { color: #2D2A26; background: #FFFFFF; box-shadow: 0 1px 2px rgba(0,0,0,0.06); }
+
+  /* Card */
+  .card {
+    background: #FFFFFF; border-radius: 20px; border: 1px solid #EBE5DE;
+    margin: 0 20px 14px; padding: 22px 20px;
+  }
+  .card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+  .card-title { font-family: 'Literata', serif; font-size: 18px; font-weight: 600; color: #2D2A26; }
+  .adjust-link {
+    font-size: 13px; font-weight: 600; color: #6D6761; text-decoration: underline; text-underline-offset: 3px;
+  }
+
+  /* Hero */
+  .hero { display: flex; flex-direction: column; align-items: center; padding: 6px 0 4px; }
+  .hero-eyebrow { font-size: 11px; color: #6D6761; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 700; }
+  .hero-count {
+    font-family: 'Literata', serif; font-size: 72px; font-weight: 600; color: #2D2A26;
+    line-height: 1; letter-spacing: -2px; margin-top: 6px;
+  }
+  .hero-of {
+    font-family: 'DM Sans', sans-serif; font-size: 16px; color: #6D6761; margin-top: 8px;
+  }
+  .hero-of strong { color: #2D2A26; font-weight: 600; }
+
+  /* Progress bar */
+  .progress-wrap { margin-top: 22px; }
+  .progress-track {
+    height: 10px; background: #EDEAE5; border-radius: 9999px; overflow: hidden; position: relative;
+  }
+  .progress-fill {
+    height: 100%; width: 71%;
+    background: linear-gradient(90deg, #F97316 0%, #FB923C 100%);
+    border-radius: 9999px;
+  }
+  .progress-meta { display: flex; justify-content: space-between; margin-top: 8px; font-size: 12px; color: #6D6761; }
+  .progress-meta strong { color: #2D2A26; font-weight: 600; }
+
+  /* Coach line */
+  .coach {
+    margin: 14px 20px 14px; padding: 14px 16px;
+    background: linear-gradient(135deg, #FFF4E6 0%, #FFEDD5 100%);
+    border: 1px solid #FED7AA; border-radius: 16px;
+    display: flex; align-items: flex-start; gap: 12px;
+  }
+  .coach-icon {
+    width: 32px; height: 32px; border-radius: 9px; background: #FFFFFF;
+    display: flex; align-items: center; justify-content: center; font-size: 16px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05); flex-shrink: 0;
+  }
+  .coach-body { flex: 1; }
+  .coach-title { font-size: 14px; font-weight: 600; color: #7C2D12; }
+  .coach-text { font-size: 13px; color: #92400E; margin-top: 2px; line-height: 1.45; }
+
+  /* Footer projected */
+  .projected {
+    margin: 6px 20px 0; padding: 12px 14px;
+    background: #FAFAF9; border: 1px solid #EBE5DE; border-radius: 14px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .projected-icon {
+    width: 28px; height: 28px; border-radius: 8px; background: #EDEAE5;
+    display: flex; align-items: center; justify-content: center; font-size: 14px;
+  }
+  .projected-text { font-size: 13px; color: #6D6761; }
+  .projected-text strong { color: #2D2A26; font-weight: 600; }
+
+  /* Tag */
+  .tag {
+    display: inline-block; background: rgba(249, 115, 22, 0.10); color: #C2410C;
+    border-radius: 9999px; padding: 4px 10px; font-size: 11px; font-weight: 600;
+    letter-spacing: 0.04em; text-transform: uppercase;
+  }
+
+  .doc-head { max-width: 720px; margin: 0 auto 40px; text-align: center; }
+  .doc-head .tag-dark {
+    background: rgba(255, 237, 213, 0.12); color: #FED7AA; padding: 6px 12px; border-radius: 9999px;
+    font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+  }
+  .doc-head h1 { font-size: 32px; font-weight: 600; letter-spacing: -0.5px; color: #FAF5EE; margin-top: 14px; }
+  .doc-head p { font-size: 14px; color: #A39C93; margin-top: 10px; line-height: 1.5; }
+  .doc-list { font-size: 13px; color: #C4BFB7; margin-top: 12px; line-height: 1.7; }
+  .doc-list span { color: #FED7AA; font-weight: 600; }
+</style>
+</head>
+<body>
+
+<div class="doc-head">
+  <span class="tag-dark">Goals tab · streak container only</span>
+  <h1>Just the streak container</h1>
+  <p>All the wording is back from v1 — numbers, "of 100 days", progress labels, projected date. The orange "You got this" coach card is gone.</p>
+  <p class="doc-list">
+    Removed: <span>"You got this" coach card</span><br>
+    Kept: <span>current vs goal</span> · <span>"of 100 days"</span> · <span>progress bar + labels</span> · <span>projected date</span>
+  </p>
+</div>
+
+<div class="row-wrap">
+
+  <div class="phone-col">
+    <div class="phone-label">Goal tab — active goal</div>
+    <div class="phone">
+      <div class="status-bar">
+        <span>9:41</span>
+        <span style="display: inline-flex; gap: 6px; align-items: center;">
+          <span>•••</span><span style="font-size: 12px;">📶</span><span style="font-size: 12px;">🔋</span>
+        </span>
+      </div>
+      <div class="phone-screen">
+        <div class="habit-head">
+          <div class="habit-emoji">🧘</div>
+          <div>
+            <div class="habit-name">10 min meditation</div>
+            <div class="habit-meta">Daily · forgiving</div>
+          </div>
+        </div>
+
+        <div class="tabs-wrap">
+          <div class="tabs">
+            <div class="tab">Calendar</div>
+            <div class="tab">Strength</div>
+            <div class="tab active">Goal</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Aiming for 100 days</div>
+            <span class="adjust-link">Adjust</span>
+          </div>
+
+          <div class="hero">
+            <div class="hero-eyebrow">Current streak</div>
+            <div class="hero-count">71</div>
+            <div class="hero-of">of <strong>100 days</strong></div>
+          </div>
+
+          <div class="progress-wrap">
+            <div class="progress-track"><div class="progress-fill"></div></div>
+            <div class="progress-meta">
+              <span><strong>71%</strong> complete</span>
+              <span><strong>29</strong> to go</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="projected">
+          <div class="projected-icon">📅</div>
+          <div class="projected-text">At your pace, you'll hit it around <strong>June 11</strong>.</div>
+        </div>
+      </div>
+    </div>
+    <div class="phone-sub">Active goal · 71/100 days. Streak container + projected date. No coach card.</div>
+  </div>
+
+</div>
+
+</body>
+</html>
