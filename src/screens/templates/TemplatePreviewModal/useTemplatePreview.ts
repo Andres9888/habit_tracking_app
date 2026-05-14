@@ -3,8 +3,9 @@
  * Hook for TemplatePreviewModal business logic
  */
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import type { AlgorithmMode } from '@/components/AlgorithmPicker';
+import { algorithmForMinutes } from '@/utils/algorithmFromDuration';
 import type { ProgressEmojiSet } from '@/utils/progressEmojis';
 import type { Doc, Id } from '../../../../convex/_generated/dataModel';
 import { DEFAULT_ICON_COLOR, safeColor } from './constants';
@@ -39,6 +40,9 @@ export function useTemplatePreview({
   const [strengthAlgorithm, setStrengthAlgorithm] = useState<AlgorithmMode>(
     DEFAULT_STRENGTH_ALGORITHM
   );
+  const initialStrengthAlgorithmRef = useRef<AlgorithmMode>(
+    DEFAULT_STRENGTH_ALGORITHM
+  );
   const [progressEmojis, setProgressEmojis] = useState<
     ProgressEmojiSet | undefined
   >(undefined);
@@ -53,7 +57,12 @@ export function useTemplatePreview({
       setReminderTime(new Date());
       setPreferredTime(null);
       setSelectedDays(ALL_DAYS);
-      setStrengthAlgorithm(DEFAULT_STRENGTH_ALGORITHM);
+      const derived =
+        typeof template.estimatedMinutes === 'number'
+          ? algorithmForMinutes(template.estimatedMinutes)
+          : DEFAULT_STRENGTH_ALGORITHM;
+      initialStrengthAlgorithmRef.current = derived;
+      setStrengthAlgorithm(derived);
       setProgressEmojis(undefined);
       setStreakGoal(DEFAULT_STREAK_GOAL);
     }
@@ -102,7 +111,7 @@ export function useTemplatePreview({
     if (!isAllDays) {
       customizations.daysOfWeek = selectedDays;
     }
-    if (strengthAlgorithm !== DEFAULT_STRENGTH_ALGORITHM) {
+    if (strengthAlgorithm !== initialStrengthAlgorithmRef.current) {
       customizations.strengthAlgorithm = strengthAlgorithm;
     }
     if (progressEmojis !== undefined) {
