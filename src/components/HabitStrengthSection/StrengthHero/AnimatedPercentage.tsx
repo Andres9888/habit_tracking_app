@@ -10,6 +10,7 @@ import { useThemeColors } from '@/theme/ThemeContext';
 
 import { runOnJS, useDerivedValue } from 'react-native-reanimated';
 
+import { RING_INNER_WIDTH } from '../constants';
 import type { AnimatedPercentageProps } from './types';
 
 /**
@@ -32,6 +33,16 @@ export function AnimatedPercentage({ animatedValue }: AnimatedPercentageProps) {
   }, [animatedValue]);
 
   return (
-    <Text className='text-2xl font-bold' style={{ color: themeColors.text.primary }}>{displayValue}%</Text>
+    <Text
+      adjustsFontSizeToFit
+      className='text-2xl font-bold'
+      numberOfLines={1}
+      style={{
+        color: themeColors.text.primary,
+        minimumFontScale: 0.75,
+        textAlign: 'center',
+        width: RING_INNER_WIDTH,
+      }}
+    >{displayValue}%</Text>
   );
 }
