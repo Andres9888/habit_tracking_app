@@ -87,6 +87,10 @@ const applicationTables = {
     // Goal value
     goalUnit: v.optional(v.string()),
 
+    // Legacy fields retained on older docs; not written by current code
+    dailyMinutesGoal: v.optional(v.number()),
+    weeklyMinutesGoal: v.optional(v.number()),
+
     // HDP - validated optimal: 0.15-0.2 (default: 0.175)
     habitDecayParam: v.optional(v.number()),
 
