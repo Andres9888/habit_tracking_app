@@ -87,6 +87,15 @@ const applicationTables = {
     // Goal value
     goalUnit: v.optional(v.string()),
 
+    // Template difficulty estimate copied from imported templates.
+    growthType: v.optional(
+      v.union(v.literal('simple'), v.literal('average'), v.literal('complex'))
+    ),
+
+    // Legacy fields from removed minutes-goal feature; present on existing habit rows
+    dailyMinutesGoal: v.optional(v.number()),
+    weeklyMinutesGoal: v.optional(v.number()),
+
     // HDP - validated optimal: 0.15-0.2 (default: 0.175)
     habitDecayParam: v.optional(v.number()),
 
@@ -297,6 +306,9 @@ const applicationTables = {
 
     description: v.string(),
 
+    // Legacy educational benefits list present on existing template rows.
+    benefits: v.optional(v.array(v.string())),
+
     // Background color for icon
     frequency: v.string(),
 
@@ -318,6 +330,12 @@ const applicationTables = {
 
     // Estimated minutes per occurrence — present on legacy seed rows in dev
     estimatedMinutes: v.optional(v.number()),
+
+    // Growth type — how hard / long the habit is to build.
+    // Maps to a "days to automate" estimate (Lally et al. 2010, median 66 days, range 18-254).
+    growthType: v.optional(
+      v.union(v.literal('simple'), v.literal('average'), v.literal('complex'))
+    ),
 
     // Suggested psychology fields for post-import setup
     suggestedCue: v.optional(v.string()),
@@ -354,6 +372,8 @@ const applicationTables = {
     completed: v.boolean(),
     date: v.string(),
     habitId: v.id('habits'),
+    // Legacy minutes completion value from removed minutes-goal feature.
+    minutes: v.optional(v.number()),
     userId: v.optional(v.string()),
   })
     .index('by_habit_and_date', ['habitId', 'date'])

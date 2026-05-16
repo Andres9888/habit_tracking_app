@@ -96,6 +96,7 @@ export function TemplateListCard({
           <CardFooterMeta
             categoryLabel={categoryLabel}
             frequency={item.frequency}
+            growthType={item.growthType}
             matchReason={matchReason}
             popularityCount={popularityCount}
           />

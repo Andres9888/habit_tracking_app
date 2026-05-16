@@ -134,6 +134,7 @@ export function useHabitEditScreen({
 
   return {
     habitName,
+    growthType: habit?.growthType,
     handleColorSelect,
     handleDelete,
     handleEmojiSelect,

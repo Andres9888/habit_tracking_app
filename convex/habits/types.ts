@@ -43,6 +43,9 @@ export const removedHabitDataValidator = v.object({
   frequency: v.optional(v.string()),
   goalDuration: v.optional(v.number()),
   goalUnit: v.optional(v.string()),
+  growthType: v.optional(
+    v.union(v.literal('simple'), v.literal('average'), v.literal('complex'))
+  ),
   icon: v.optional(v.string()),
   iconColor: v.optional(v.string()),
   identity: v.optional(v.string()),

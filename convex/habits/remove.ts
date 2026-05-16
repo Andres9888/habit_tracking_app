@@ -20,6 +20,7 @@ interface RemovedHabitPayload {
     frequency?: string;
     goalDuration?: number;
     goalUnit?: string;
+    growthType?: 'simple' | 'average' | 'complex';
     icon?: string;
     iconColor?: string;
     identity?: string;
@@ -103,6 +104,7 @@ export const remove = mutation({
         frequency: habit.frequency,
         goalDuration: habit.goalDuration,
         goalUnit: habit.goalUnit,
+        growthType: habit.growthType,
         icon: habit.icon,
         iconColor: habit.iconColor,
         identity: habit.identity,
