@@ -13,7 +13,6 @@ import { CalendarTabContent } from './CalendarTabContent';
 import { DetailHero } from './DetailHero';
 import { DetailViewTabs, type DetailView } from './DetailViewTabs';
 import { GoalTabContent } from './GoalTabContent';
-import { computeCompletionRate } from './HabitDetailContent.utils';
 import { useDetailScrollSpy } from './useDetailScrollSpy';
 
 interface HabitDetailContentProps {
@@ -38,7 +37,6 @@ export function HabitDetailContent({
   const { activeView, handleScroll, handleSectionLayout, scrollToView } =
     useDetailScrollSpy(scrollRef, { onPinnedChange });
   const habitColor = habit.color ?? habit.iconColor ?? colors.primary[700];
-  const completionRate = computeCompletionRate(habit, totalCompletions);
 
   const makeSectionLayoutHandler = (view: DetailView) => (event: LayoutChangeEvent) => {
     handleSectionLayout(view, event.nativeEvent.layout.y);
@@ -90,7 +88,7 @@ export function HabitDetailContent({
       ) : null}
 
       <View className='mx-4 mt-4' onLayout={makeSectionLayoutHandler('goal')}>
-        <GoalTabContent completionRate={completionRate} habit={habit} />
+        <GoalTabContent habit={habit} />
       </View>
     </ScrollView>
   );

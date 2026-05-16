@@ -17,6 +17,8 @@ export const RING_SIZE = 64; // Reduced from 72 to fit above fold
 export const RING_STROKE_WIDTH = 5; // Slightly thinner for smaller ring
 export const RING_RADIUS = (RING_SIZE - RING_STROKE_WIDTH) / 2;
 export const RING_CIRCUMFERENCE = 2 * Math.PI * RING_RADIUS;
+/** Usable inner width for centered text inside the ring (subtracting stroke on both sides) */
+export const RING_INNER_WIDTH = RING_SIZE - RING_STROKE_WIDTH * 2;
 
 /** Chart dimensions (compact for above-fold layout) */
 export const CHART_HEIGHT = 88; // Reduced from 112 to fit above fold

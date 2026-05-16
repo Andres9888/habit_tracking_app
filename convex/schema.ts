@@ -92,7 +92,7 @@ const applicationTables = {
       v.union(v.literal('simple'), v.literal('average'), v.literal('complex'))
     ),
 
-    // Legacy fields from removed minutes-goal feature; present on existing habit rows
+    // Legacy fields retained on older docs; not written by current code
     dailyMinutesGoal: v.optional(v.number()),
     weeklyMinutesGoal: v.optional(v.number()),
 
@@ -328,7 +328,8 @@ const applicationTables = {
     // "daily", "weekly", "custom"
     scientificReference: v.string(),
 
-    // Estimated minutes per occurrence — present on legacy seed rows in dev
+    // Best-guess time to do this habit, in minutes. Used to derive the
+    // suggested strength algorithm at habit-creation time.
     estimatedMinutes: v.optional(v.number()),
 
     // Growth type — how hard / long the habit is to build.
@@ -401,6 +402,7 @@ const applicationTables = {
     catTheme: v.boolean(),
 
     celebrationsEnabled: v.optional(v.boolean()),
+    chevronMode: v.optional(v.string()),
     compactView: v.optional(v.boolean()),
 
     // Completion sound settings (Premium feature)

@@ -23,6 +23,8 @@ interface ModalHeaderProps {
   onBack?: () => void;
   onClose: () => void;
   tintColor?: string;
+  /** Reanimated style applied to the outer container — overrides tintColor when scrolled. */
+  animatedBgStyle?: object;
 }
 
 export function ModalHeader({
@@ -31,6 +33,7 @@ export function ModalHeader({
   onBack,
   onClose,
   tintColor,
+  animatedBgStyle,
 }: ModalHeaderProps) {
   const { colors: themeColors, isDark } = useThemeColors();
   const subtleBg = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.04)';
@@ -42,7 +45,12 @@ export function ModalHeader({
   };
 
   return (
-    <View style={tintColor ? { backgroundColor: tintColor } : undefined}>
+    <Animated.View
+      style={[
+        tintColor ? { backgroundColor: tintColor } : undefined,
+        animatedBgStyle,
+      ]}
+    >
       <View testID='templates-preview-handle' style={s.handleRow}>
         <View style={s.handle} />
       </View>
@@ -78,7 +86,7 @@ export function ModalHeader({
           onClose={onClose}
         />
       </Animated.View>
-    </View>
+    </Animated.View>
   );
 }
 

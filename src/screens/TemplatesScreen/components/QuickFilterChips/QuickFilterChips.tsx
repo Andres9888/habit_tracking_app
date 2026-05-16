@@ -37,6 +37,9 @@ export const CHIP_CATEGORIES: ChipCategory[] = [
   { icon: '💰', id: 'financial', label: 'Finance' },
 ];
 
+const QUICK_ACTIVE_META = { bgColor: '#FBBF24', borderColor: '#F59E0B', textColor: '#78350F' };
+const ROI_ACTIVE_META = { bgColor: '#FEE2E2', borderColor: '#EF4444', textColor: '#7F1D1D' };
+
 function Chip({
   active,
   activeMeta,
@@ -108,6 +111,18 @@ export function QuickFilterChips({
           label='✨ All'
           onPress={() => onSelectCategory(null)}
         />
+        <Chip
+          active={activeCategory === 'quick'}
+          activeMeta={QUICK_ACTIVE_META}
+          label='⚡ Quick'
+          onPress={() => onSelectCategory('quick')}
+        />
+        <Chip
+          active={activeCategory === 'high-roi'}
+          activeMeta={ROI_ACTIVE_META}
+          label='🔥 High ROI'
+          onPress={() => onSelectCategory('high-roi')}
+        />
         {categories.map((cat) => (
           <Chip
             key={cat.id}
@@ -118,13 +133,15 @@ export function QuickFilterChips({
           />
         ))}
       </ScrollView>
-      <LinearGradient
-        colors={[fadeTransparent, fadeBg]}
-        end={{ x: 1, y: 0 }}
-        pointerEvents='none'
-        start={{ x: 0, y: 0 }}
-        style={s.fade}
-      />
+      <View accessibilityElementsHidden pointerEvents='none' style={s.scrollHint}>
+        <LinearGradient
+          colors={[fadeTransparent, fadeBg]}
+          end={{ x: 1, y: 0 }}
+          start={{ x: 0, y: 0 }}
+          style={StyleSheet.absoluteFill}
+        />
+        <Text style={[s.chevron, { color: colors.text.tertiary }]}>›</Text>
+      </View>
     </View>
   );
 }
@@ -139,23 +156,31 @@ const s = StyleSheet.create({
     paddingHorizontal: spacing.base,
     paddingVertical: spacing.sm,
   },
+  chevron: {
+    fontSize: 22,
+    fontWeight: fontWeights.semibold,
+    lineHeight: 22,
+    paddingRight: 12,
+  },
   chipText: { fontSize: typography.caption.fontSize, fontWeight: fontWeights.semibold, lineHeight: 16 },
   container: {
     minHeight: 44,
-  },
-  fade: {
-    bottom: 0,
-    position: 'absolute',
-    right: 0,
-    top: 0,
-    width: spacing.xl,
   },
   row: {
     alignItems: 'center',
     gap: spacing.sm,
     paddingHorizontal: spacing.base,
-    paddingRight: 40,
+    paddingRight: 72,
     paddingVertical: spacing.xs,
+  },
+  scrollHint: {
+    alignItems: 'flex-end',
+    bottom: 0,
+    justifyContent: 'center',
+    position: 'absolute',
+    right: 0,
+    top: 0,
+    width: 64,
   },
   wrapper: {
     position: 'relative',

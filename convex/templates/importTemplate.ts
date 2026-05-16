@@ -153,9 +153,16 @@ export const importTemplate = mutation({
       remindersEnabled: !!validatedReminderTime,
       reminderTime: validatedReminderTime,
       strength: 0,
-      ...(args.customizations?.strengthAlgorithm
-        ? { strengthAlgorithm: args.customizations.strengthAlgorithm }
-        : {}),
+      ...(() => {
+        if (args.customizations?.strengthAlgorithm) {
+          return { strengthAlgorithm: args.customizations.strengthAlgorithm };
+        }
+        const minutes = template.estimatedMinutes;
+        if (typeof minutes !== 'number') return {};
+        const derived =
+          minutes <= 2 ? 'forgiving' : minutes <= 20 ? 'balanced' : 'strict';
+        return { strengthAlgorithm: derived as 'forgiving' | 'balanced' | 'strict' };
+      })(),
       strengthLevel: 'starting',
       strengthUpdatedAt: Date.now(),
       totalCompletions: 0,

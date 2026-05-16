@@ -18,7 +18,10 @@ export const fullHabitValidator = v.object({
   accessibilityUpdatedAt: v.optional(v.number()),
   archived: v.optional(v.boolean()),
   archivedAt: v.optional(v.number()),
-  benefits: v.optional(v.array(v.string())),
+  // Legacy stale field on some habit rows; field was removed from schema but
+  // pre-existing rows still carry it. Allowed through as v.any() to unblock
+  // the list query — clean up via a one-off mutation when convenient.
+  benefits: v.optional(v.any()),
   bestStreak: v.optional(v.number()),
   consecutiveDays: v.optional(v.number()),
   createdAt: v.number(),
@@ -33,7 +36,7 @@ export const fullHabitValidator = v.object({
   growthType: v.optional(
     v.union(v.literal('simple'), v.literal('average'), v.literal('complex'))
   ),
-  // Legacy fields from removed minutes-goal feature; present on existing habit rows
+  // Legacy fields retained on older docs; not written by current code
   dailyMinutesGoal: v.optional(v.number()),
   weeklyMinutesGoal: v.optional(v.number()),
   habitDecayParam: v.optional(v.number()),
@@ -58,7 +61,7 @@ export const fullHabitValidator = v.object({
   reminderSound: v.optional(v.string()),
   reminderTime: v.optional(v.string()),
   resumedAt: v.optional(v.number()),
-  scienceNote: v.optional(v.string()),
+  scienceNote: v.optional(v.any()),
   strength: v.optional(v.number()),
   strengthAlgorithm: v.optional(
     v.union(v.literal('forgiving'), v.literal('balanced'), v.literal('strict'))
@@ -76,6 +79,7 @@ export const fullHabitValidator = v.object({
   vizSuccessBody: v.optional(v.string()),
   vizSuccessEmotion: v.optional(v.string()),
   vizSuccessMind: v.optional(v.string()),
+  weeklyMinutesGoal: v.optional(v.number()),
   why: v.optional(v.string()),
   woopObstacle: v.optional(v.string()),
   woopOutcome: v.optional(v.string()),

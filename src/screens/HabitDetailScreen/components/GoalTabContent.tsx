@@ -1,30 +1,29 @@
 /**
- * GoalTabContent — Motivation-first composition around StreakGoalCard.
- * Wraps content in a theme-aware card matching HabitStrengthSection.
+ * GoalTabContent — Streak-target focused view for the Goal tab.
+ * Wraps the simple streak hero in a theme-aware card.
  */
 import { useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import ErrorBoundary from '../../../components/ErrorBoundary';
-import { StreakGoalCard } from '../../../components/ProgressSectionConsolidated/StreakGoalCard';
 import type { Habit } from '../../../features/habits/types';
 import { shadows } from '../../../theme/spacing';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { typography, fontWeights } from '../../../theme/typography';
+import { GoalAdjustSheet } from './GoalAdjustSheet';
 import { GoalTabEmptyState } from './GoalTabEmptyState';
 import { GoalWhyAnchor } from './GoalWhyAnchor';
-import { GoalCoachLine } from './GoalCoachLine';
-import { GoalAdjustSheet } from './GoalAdjustSheet';
+import { SimpleStreakGoalHero } from './SimpleStreakGoalHero';
 
 interface GoalTabContentProps {
   habit: Habit;
-  completionRate: number;
 }
 
-export function GoalTabContent({ habit, completionRate }: GoalTabContentProps) {
+export function GoalTabContent({ habit }: GoalTabContentProps) {
   const { colors } = useThemeColors();
   const [adjustOpen, setAdjustOpen] = useState(false);
-  const hasGoal = (habit.goalDuration ?? 0) > 0;
+  const goalDuration = habit.goalDuration ?? 0;
+  const hasGoal = goalDuration > 0;
   const cardStyle = { ...shadows.card, backgroundColor: colors.card };
 
   if (!hasGoal) {
@@ -44,8 +43,8 @@ export function GoalTabContent({ habit, completionRate }: GoalTabContentProps) {
   }
 
   const currentStreak = habit.currentStreak ?? 0;
-  const bestStreak = habit.bestStreak ?? currentStreak;
-  const goalDuration = habit.goalDuration ?? 0;
+  const habitColor = habit.color ?? habit.iconColor ?? colors.primary[700];
+  const title = `Aiming for ${goalDuration} ${goalDuration === 1 ? 'day' : 'days'}`;
 
   return (
     <Animated.View
@@ -56,12 +55,9 @@ export function GoalTabContent({ habit, completionRate }: GoalTabContentProps) {
       <View className='p-5'>
         <View className='mb-4 flex-row items-center justify-between'>
           <Text style={{ ...typography.heading3, color: colors.text.primary }}>
-            Goal
+            {title}
           </Text>
-          <Pressable
-            accessibilityRole='button'
-            onPress={() => setAdjustOpen(true)}
-          >
+          <Pressable accessibilityRole='button' onPress={() => setAdjustOpen(true)}>
             <Text
               style={{
                 ...typography.bodySmall,
@@ -70,27 +66,18 @@ export function GoalTabContent({ habit, completionRate }: GoalTabContentProps) {
                 textDecorationLine: 'underline',
               }}
             >
-              Adjust goal
+              Adjust
             </Text>
           </Pressable>
         </View>
 
         <ErrorBoundary>
           <GoalWhyAnchor habit={habit} />
-
-          <StreakGoalCard
-            bestStreak={bestStreak}
-            completionRate={completionRate}
+          <SimpleStreakGoalHero
             currentStreak={currentStreak}
+            habitColor={habitColor}
             streakGoal={goalDuration}
           />
-
-          <GoalCoachLine
-            bestStreak={bestStreak}
-            currentStreak={currentStreak}
-            streakGoal={goalDuration}
-          />
-
           <GoalAdjustSheet
             currentGoal={goalDuration}
             habitId={habit._id}

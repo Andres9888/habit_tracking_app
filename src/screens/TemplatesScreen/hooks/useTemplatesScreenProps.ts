@@ -75,8 +75,11 @@ export function useTemplatesScreenProps() {
     userHabitCount: data.userHabitCount,
   });
 
-  const getCategoryLabel = (categoryId: string) =>
-    data.categories?.find((c) => c.id === categoryId)?.label || categoryId;
+  const getCategoryLabel = (categoryId: string) => {
+    if (categoryId === 'quick') return 'Quick';
+    if (categoryId === 'high-roi') return 'High ROI';
+    return data.categories?.find((c) => c.id === categoryId)?.label || categoryId;
+  };
 
   const handleTabPress = (tab: BrowseTab) => {
     state.setBrowseTab(tab);

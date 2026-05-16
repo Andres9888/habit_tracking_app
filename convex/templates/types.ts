@@ -35,6 +35,7 @@ export type TemplateInsert = {
   category: TemplateCategory;
   createdAt: number;
   description: string;
+  estimatedMinutes?: number;
   frequency: string;
   growthType?: GrowthType;
   icon: string;

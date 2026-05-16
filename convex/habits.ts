@@ -32,6 +32,7 @@ export { pause, resume } from './habits/pause';
 export { remove, restore } from './habits/remove';
 export { reorderHabits } from './habits/reorder';
 export { toggleHabit } from './habits/toggle';
+export { cleanupLegacyGoalFields } from './habits/cleanupLegacyGoalFields';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Query exports
