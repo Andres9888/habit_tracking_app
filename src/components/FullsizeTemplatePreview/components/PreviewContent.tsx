@@ -6,6 +6,7 @@ import React from 'react';
 import Animated from 'react-native-reanimated';
 import { layoutStyles } from '../styles';
 import { buildHeroGradient } from '../utils/heroGradient';
+import { useHeaderTintAnimation } from '../hooks/useHeaderTintAnimation';
 import { ModalHeader } from './ModalHeader';
 import { ScrollableContent } from './ScrollableContent';
 import { FooterSection } from './FooterSection';
@@ -24,12 +25,15 @@ export function PreviewContent({
   template,
 }: PreviewContentProps) {
   const headerTint = buildHeroGradient(iconColor)[0];
+  const { scrollHandler, onHeroLayout, animatedBgStyle } =
+    useHeaderTintAnimation(headerTint);
   return (
     <Animated.View
       testID='templates-preview-modal'
       style={[layoutStyles.container, animatedStyles.contentStyle]}
     >
       <ModalHeader
+        animatedBgStyle={animatedBgStyle}
         closeButtonAnimatedOpacityStyle={
           animatedStyles.closeButtonAnimatedOpacityStyle
         }
@@ -43,7 +47,9 @@ export function PreviewContent({
         iconColor={iconColor}
         iconGlowStyle={animatedStyles.iconGlowStyle}
         overscrollTint={headerTint}
+        scrollHandler={scrollHandler}
         template={template}
+        onHeroLayout={onHeroLayout}
       />
       <FooterSection
         bottomInset={insets.bottom}
