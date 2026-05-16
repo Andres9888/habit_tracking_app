@@ -5,12 +5,14 @@
 import { Text, View } from 'react-native';
 import { Search } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
+import { getGrowthTypeMeta, type GrowthType } from '@/utils/growthTypeMeta';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import { styles } from './TemplateListCard.styles';
 
 interface CardFooterMetaProps {
   categoryLabel: string;
   frequency: string | undefined;
+  growthType?: GrowthType;
   matchReason: string | null;
   popularityCount?: string | null;
 }
@@ -18,14 +20,28 @@ interface CardFooterMetaProps {
 export function CardFooterMeta({
   categoryLabel,
   frequency,
+  growthType,
   matchReason,
   popularityCount,
 }: CardFooterMetaProps) {
   const { colors } = useThemeColors();
+  const growthMeta = getGrowthTypeMeta(growthType);
 
   return (
     <>
       <View style={styles.metaRow}>
+        {growthMeta ? (
+          <View
+            style={[
+              styles.metaPill,
+              { backgroundColor: growthMeta.pillBg, borderColor: growthMeta.pillBg },
+            ]}
+          >
+            <Text style={[styles.metaLabel, { color: growthMeta.pillFg }]}>
+              {growthMeta.label} · ~{growthMeta.days}d
+            </Text>
+          </View>
+        ) : null}
         {frequency ? (
           <View
             style={[

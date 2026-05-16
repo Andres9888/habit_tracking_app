@@ -126,6 +126,7 @@ function HabitEditScreenContent({
                         />
                       </Animated.View>
                       <AdvancedOptionsSection
+                        growthType={state.growthType}
                         progressEmojis={state.progressEmojis}
                         streakGoal={state.streakGoal}
                         strengthAlgorithm={state.strengthAlgorithm}

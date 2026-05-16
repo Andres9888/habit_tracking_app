@@ -28,11 +28,15 @@ export type TemplateCategory =
 /**
  * Template insert type for database operations
  */
+export type GrowthType = 'simple' | 'average' | 'complex';
+
 export type TemplateInsert = {
+  benefits?: string[];
   category: TemplateCategory;
   createdAt: number;
   description: string;
   frequency: string;
+  growthType?: GrowthType;
   icon: string;
   iconColor: string;
   name: string;

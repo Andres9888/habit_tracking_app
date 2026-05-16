@@ -7,8 +7,9 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Clock, Sparkles, Users } from 'lucide-react-native';
+import { Clock, Sparkles, Sprout, Users } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
+import { getGrowthTypeMeta } from '@/utils/growthTypeMeta';
 import { useAppTheme } from '../../../theme';
 import { heroStyles } from '../styles';
 import {
@@ -43,6 +44,7 @@ export function HeroSection({
     CATEGORY_LABELS[template?.category] || template?.category || 'General';
   const duration = CATEGORY_DURATION_DEFAULTS[template?.category] || '5-10 min';
   const popularity = template?.popularityScore ?? 0;
+  const growthMeta = getGrowthTypeMeta(template?.growthType);
 
   return (
     <LinearGradient
@@ -95,6 +97,14 @@ export function HeroSection({
             {formattedCategory}
           </MetadataPill>
           <MetadataPill iconColor={iconColor}>{`⏱️ ${duration}`}</MetadataPill>
+          {growthMeta ? (
+            <MetadataPill
+              icon={<Sprout color={iconColor} size={iconSizes.small} strokeWidth={2} />}
+              iconColor={iconColor}
+            >
+              {`${growthMeta.label} · ~${growthMeta.days}d`}
+            </MetadataPill>
+          ) : null}
           {popularity > 0 && (
             <MetadataPill
               icon={<Users color={iconColor} size={iconSizes.small} strokeWidth={2} />}

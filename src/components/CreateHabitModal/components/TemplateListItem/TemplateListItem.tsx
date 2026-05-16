@@ -9,6 +9,7 @@ import { useReduceMotion } from '../../../../hooks/useReduceMotion';
 import type { HabitTemplate } from '../../types';
 import { useTemplateListItemAnimations } from './useTemplateListItemAnimations';
 import { useTemplateListItemHandlers } from './useTemplateListItemHandlers';
+import { getGrowthTypeMeta } from '@/utils/growthTypeMeta';
 import { iconSizes } from '@/theme/iconSizes';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
@@ -50,6 +51,8 @@ const TemplateListItemComponent = ({
     triggerLightImpact,
   });
 
+  const growthMeta = getGrowthTypeMeta(template.growthType);
+
   return (
     <Animated.View style={entranceAnimatedStyle}>
       <View className='flex-row items-center gap-3 border-b p-4' style={{ borderColor: themeColors.border }}>
@@ -81,19 +84,42 @@ const TemplateListItemComponent = ({
             </Text>
             <Text
               className='text-sm font-normal'
-              numberOfLines={2}
+              numberOfLines={growthMeta ? 1 : 2}
               style={{ color: themeColors.text.secondary }}
             >
               {template.description}
             </Text>
           </View>
+          {growthMeta ? (
+            <View className='ml-2 items-end' style={{ gap: 4 }}>
+              <View
+                className='rounded-full px-2 py-0.5'
+                style={{ backgroundColor: growthMeta.pillBg }}
+              >
+                <Text
+                  className='text-[11px] font-semibold'
+                  style={{ color: growthMeta.pillFg, letterSpacing: 0.2 }}
+                >
+                  {growthMeta.label}
+                </Text>
+              </View>
+              <Text
+                className='text-[11px] font-medium'
+                style={{ color: themeColors.text.tertiary }}
+              >
+                ~{growthMeta.days}d
+              </Text>
+            </View>
+          ) : null}
         </AnimatedPressable>
         <AnimatedPressable
           accessibilityLabel={`View science for ${template.name}`}
           accessibilityRole='button'
           className='h-11 w-11 items-center justify-center rounded-full'
-          style={{ backgroundColor: themeColors.status.infoLight }}
-          style={scienceAnimatedStyle}
+          style={[
+            { backgroundColor: themeColors.status.infoLight },
+            scienceAnimatedStyle,
+          ]}
           onPress={() => {
             triggerSelection();
             onViewScience(template);

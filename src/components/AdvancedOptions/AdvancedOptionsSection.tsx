@@ -16,6 +16,7 @@ import {
   ChevronDown,
   Heart,
   SlidersHorizontal,
+  Sprout,
   Target,
   Zap,
 } from 'lucide-react-native';
@@ -38,6 +39,7 @@ import {
   PROGRESS_EMOJI_PRESETS,
   resolveProgressEmojis,
 } from '@/utils/progressEmojis';
+import { getGrowthTypeMeta } from '@/utils/growthTypeMeta';
 import { AdvancedOptionRow } from './AdvancedOptionRow';
 import { AdvancedSheet } from './AdvancedSheet';
 import { AlgorithmSheetBody } from './AlgorithmSheetBody';
@@ -55,6 +57,7 @@ type SheetKey = 'algorithm' | 'growth' | 'streak' | null;
 
 // eslint-disable-next-line max-lines-per-function
 export function AdvancedOptionsSection({
+  growthType,
   strengthAlgorithm,
   progressEmojis,
   streakGoal,
@@ -88,6 +91,7 @@ export function AdvancedOptionsSection({
   const algoEntry = ALGORITHM_COPY[strengthAlgorithm];
   const AlgoIcon = ALGO_ICONS[strengthAlgorithm];
   const algoSubtitle = `${algoEntry.name} · ~${algoEntry.daysToForm}-day build`;
+  const growthMeta = getGrowthTypeMeta(growthType);
 
   const resolvedEmojis = resolveProgressEmojis(progressEmojis, userDefaultEmojis);
   const presetId = matchPresetId(resolvedEmojis, savedCustomEmojis);
@@ -147,8 +151,57 @@ export function AdvancedOptionsSection({
             entering={reduceMotion ? undefined : FadeIn.duration(160)}
             exiting={reduceMotion ? undefined : FadeOut.duration(120)}
           >
+            {growthMeta ? (
+              <View
+                accessibilityLabel='Growth Type'
+                className='flex-row items-center gap-3 rounded-2xl px-4 py-3.5'
+                style={{
+                  backgroundColor: colors.card,
+                  borderWidth: 1,
+                  borderColor: colors.border,
+                  minHeight: 64,
+                }}
+              >
+                <View
+                  className='items-center justify-center rounded-xl'
+                  style={{
+                    backgroundColor: growthMeta.pillBg,
+                    height: 36,
+                    width: 36,
+                  }}
+                >
+                  <Sprout
+                    color={growthMeta.pillFg}
+                    size={iconSizes.small}
+                    strokeWidth={2}
+                  />
+                </View>
+                <View className='flex-1'>
+                  <Text
+                    numberOfLines={1}
+                    style={{
+                      ...typography.body,
+                      fontWeight: fontWeights.semibold,
+                      color: colors.text.primary,
+                    }}
+                  >
+                    Growth Type
+                  </Text>
+                  <Text
+                    numberOfLines={1}
+                    style={{
+                      ...typography.caption,
+                      color: colors.text.tertiary,
+                      marginTop: 2,
+                    }}
+                  >
+                    {growthMeta.label} · ~{growthMeta.days}-day build
+                  </Text>
+                </View>
+              </View>
+            ) : null}
             <AdvancedOptionRow
-              accessibilityHint='Opens growth type picker'
+              accessibilityHint='Opens strength curve picker'
               icon={
                 <AlgoIcon
                   color={colors.primary[600]}
@@ -158,7 +211,7 @@ export function AdvancedOptionsSection({
               }
               iconBackground={colors.primary[100]}
               subtitle={algoSubtitle}
-              title='Growth Type'
+              title='Strength Curve'
               onPress={() => setOpenSheet('algorithm')}
             />
             <AdvancedOptionRow
@@ -191,7 +244,7 @@ export function AdvancedOptionsSection({
 
       <AdvancedSheet
         subtitle={`Strength rises with check-ins and dips with misses. Pick the curve that fits this habit.`}
-        title='Growth Type'
+        title='Strength Curve'
         visible={openSheet === 'algorithm'}
         onClose={() => setOpenSheet(null)}
       >

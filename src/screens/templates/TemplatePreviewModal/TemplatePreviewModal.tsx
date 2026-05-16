@@ -243,6 +243,7 @@ export default function TemplatePreviewModal({
                     </Animated.View>
 
                     <AdvancedOptionsSection
+                      growthType={template.growthType}
                       progressEmojis={progressEmojis}
                       streakGoal={streakGoal}
                       strengthAlgorithm={strengthAlgorithm}

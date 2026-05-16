@@ -1,7 +1,9 @@
 import type { AlgorithmMode } from '@/components/AlgorithmPicker';
+import type { GrowthType } from '@/utils/growthTypeMeta';
 import type { ProgressEmojiSet } from '@/utils/progressEmojis';
 
 export interface AdvancedOptionsSectionProps {
+  growthType?: GrowthType;
   strengthAlgorithm: AlgorithmMode;
   progressEmojis: ProgressEmojiSet | undefined;
   streakGoal: number;
