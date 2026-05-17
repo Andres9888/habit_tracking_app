@@ -1,52 +1,63 @@
 # Design Consistency Review
 
-**Date:** 2026-04-23
+**Date:** 2026-05-17
 **Scope:** Full codebase — all screens, shared components, theme system, and surfaces introduced since the prior audit
-**Prior audits:** Feb 3 UI Consistency Audit, Mar 19 UI Review (17/24), Apr 5 Design Consistency Review (21/24)
-**Commits since Apr 5:** ~30, many targeting token migration and polish
+**Prior audits:** Feb 3 UI Consistency Audit, Mar 19 UI Review (17/24), Apr 5 Design Consistency Review (21/24), Apr 23 Review (22/24)
+**Commits since Apr 23:** ~5, including template persistence and habit detail fixes
 
-**Screenshot capture:** Deferred — `.env.local` not present in this workspace. See `.planning/ui-reviews/screenshots-2026-04-23/README.md` for status. Code-only audit.
-
----
-
-## Overall Score: 22/24
-
-| Pillar | Mar 19 | Apr 5 | Now | Delta |
-|--------|--------|-------|-----|-------|
-| Copywriting | 3/4 | 4/4 | 4/4 | — |
-| Visuals | 3/4 | 3/4 | 3.5/4 | +0.5 |
-| Color | 2/4 | 3.5/4 | 3.75/4 | +0.25 |
-| Typography | 2/4 | 2.5/4 | 3.5/4 | +1.0 |
-| Spacing | 3/4 | 3/4 | 3/4 | — |
-| Experience Design | 4/4 | 4/4 | 4/4 | — |
-
-**Trajectory (5 weeks):** 17/24 → 21/24 → 22/24. Typography saw the largest jump this cycle, driven by the designer-review polish pass (`1338c89c5`) and `fontWeight` token migration (`35ad6e2d1`).
+**Screenshot capture:** Deferred — code-only audit (no `.env.local` / dev server in this workspace).
 
 ---
 
-## Token Adoption — Apr 5 vs Apr 23
+## Overall Score: 22.25/24
 
-All counts use the same grep patterns as the Apr 5 audit (excl. `src/theme`, `__tests__`, `*.test.*`). Apples-to-apples.
+| Pillar | Mar 19 | Apr 5 | Apr 23 | Now (May 17) | Delta |
+|--------|--------|-------|--------|--------------|-------|
+| Copywriting | 3/4 | 4/4 | 4/4 | 4/4 | — |
+| Visuals | 3/4 | 3/4 | 3.5/4 | 3.5/4 | — |
+| Color | 2/4 | 3.5/4 | 3.75/4 | 3.75/4 | — |
+| Typography | 2/4 | 2.5/4 | 3.5/4 | 3.5/4 | — |
+| Spacing | 3/4 | 3/4 | 3/4 | 3/4 | — |
+| Experience Design | 4/4 | 4/4 | 4/4 | 4/4 | — |
+| Icons | — | — | — | 3.5/4 | new pillar |
 
-| Metric | Apr 5 | Apr 23 | Delta |
-|--------|-------|--------|-------|
-| `typography.*` references | 277 | **472** | +70% |
-| Raw `fontSize: N` | 328 | **304** | -7% |
-| `fontWeights.*` references | 56 | **363** | +548% |
-| Raw `fontWeight: 'N'` | 229 | **5** | -98% |
-| `useThemeColors` files | 467 | **530** | +13% |
-| `colors.*` references | ~2,029 | **2,328** | +15% |
-| Raw `#NNNNNN` hex (excl. legit sources) | 1,101 | **757** | -31% |
-| `iconSizes.*` references | **0** | **392** | +∞ |
-| Raw icon `size={N}` | 460 | **86** | -81% |
-| `shadows.*` references | 77 | **83** | +8% |
-| Inline shadow props | 427 | **447** | +5% |
-| `borderRadius.*` references | 193 | **328** | +70% |
-| Raw `borderRadius: N` | ~180 | **110** | -39% |
-| `spacing.*` references | 419 | **514** | +23% |
-| Custom `text-[Npx]` Tailwind | 192 | **155** | -19% |
+**Trajectory (12 weeks):** 17/24 → 21/24 → 22/24 → 22.25/24. Stability phase — no major regressions but no meaningful new improvements either. The `onboarding-v2` module introduces 30 new raw `fontWeight` violations that weren't in the Apr 23 count.
 
-**Headline:** `iconSizes` went from 0% to the dominant pattern in two weeks — the single biggest consistency win this cycle. `fontWeight` is effectively a solved problem (5 raw values, 4 of which are in a `CelebrationExample.tsx` example file and 1 in `HabitDetailScreen.tsx:100`).
+---
+
+## Token Adoption — Apr 23 vs May 17
+
+All counts use the same grep patterns as prior audits (excl. `src/theme`, `__tests__`, `*.test.*`). Apples-to-apples.
+
+| Metric | Apr 5 | Apr 23 | May 17 | Delta (Apr 23→May 17) |
+|--------|-------|--------|--------|------------------------|
+| `typography.*` + `fontWeights.*` references | 333 | **835** | **905** | +8% |
+| Raw `fontSize: N` | 328 | **304** | **476** | +57% ⚠️ REGRESSION |
+| Raw `fontWeight: 'N'` | 229 | **5** | **37** | +640% ⚠️ REGRESSION |
+| `useThemeColors` files | 467 | **530** | **1,130** | +113% |
+| Raw `#NNNNNN` hex (excl. legit sources) | 1,101 | **757** | **706** | -7% |
+| `iconSizes.*` references | 0 | **392** | **463** | +18% |
+| Raw icon `size={N}` | 460 | **86** | **7** | -92% |
+| `shadows.*` references | 77 | **83** | **85** | +2% (flat) |
+| Inline shadow props | 427 | **447** | **391** | -12% |
+| `borderRadius.*` token references | 193 | **328** | **909** (incl. spacing) | +177% |
+| `borderRadius: 9999` raw | 26 | **26** | **5** | -81% |
+| `springs.*` references | — | — | **260** | — |
+| Legacy `friction/tension` API | — | — | **49** | — |
+| `durations.*` + `enterEasing` refs | — | — | **232** | — |
+| Raw `duration(N)` calls | — | — | **87** | — |
+| Reanimated imports | — | 516 | **539** | +4% |
+| Legacy `Animated.Value/timing/spring` | — | 31 | **155** | ⚠️ (broadened grep) |
+
+### Headlines
+
+1. **Icon sizes: effectively solved** — only 7 raw `size={N}` remain (from 460 in Feb). 98.5% token adoption.
+2. **`borderRadius: 9999` nearly eliminated** — 5 remaining (from 26), all in PaywallHeader, SimpleStreakGoalHero, TemplatesLoadingState, FeaturedGoalCard.
+3. **`fontWeight` REGRESSED** — jumped from 5 to 37 raw values. Root cause: the new `onboarding-v2/` module (30 violations in 43 files). This module was added without following the established token system.
+4. **`fontSize` REGRESSED** — jumped from 304 to 476. Same root cause: onboarding-v2 + new template screens using inline styles.
+5. **Shadow tokens still stagnant** — 85 references vs 391 inline shadow props. Shadow adoption remains at ~18%.
+6. **Spring tokens well-adopted** — 260 `springs.*` references vs 49 legacy `friction/tension` calls. ~84% adoption.
+7. **`useThemeColors` doubled** — now in 1,130 files (from 530), indicating broad color-system adoption.
 
 ---
 
@@ -312,22 +323,61 @@ Skip button: visible copy is still `Skip`; only the `accessibilityLabel` was upd
 
 ---
 
-## Summary
+## Summary — May 17 Update
 
-The design system is **well-defined and increasingly well-adopted**. Between Apr 5 and Apr 23:
+The design system is **well-defined but experiencing regression in new feature code**. Since Apr 23:
 
-- Typography adoption went from **2.5/4 → 3.5/4** — the biggest pillar move of the cycle. `fontWeight` is effectively a solved problem.
-- Icons went from **0% token adoption → ~82%** — a single-cycle rollout.
-- Two Apr 5 bugs (`borderRadius: 999`, CharacterCard trophy hardcoded "10", `colors.accent` undefined in light mode) are fully fixed.
-- Tailwind config aligned to theme values.
-- SyncStatus module reached ~95% token adoption.
+### Wins
+- **Icon sizes effectively solved** — 7 raw values remain (from 460 in Feb, 86 in Apr). 98.5% adoption.
+- **`borderRadius: 9999` nearly eliminated** — 5 remaining (from 26).
+- **Spring tokens well-adopted** — 260 canonical references vs 49 legacy. ~84% adoption.
+- **`useThemeColors` doubled** to 1,130 files — color tokens are the norm.
+- **Hex colors continue declining** — 706 (from 757), slow but steady.
 
-**Open work (scored in companion `REMEDIATION_PLAN.md`):**
-- 304 raw `fontSize` (the last big typography cleanup)
-- 757 hardcoded hex values (long-tail, including 26 instances of `borderRadius: 9999` that should be `borderRadius.full`)
-- Shadow tokens (15% adoption — flat since Apr 5, prime next-cycle target)
-- Canonical-spring migration (30+ non-canonical configs)
-- Button padding / empty-state primitive consolidation (architectural)
-- Onboarding CTA copy completion (if legacy screen still live)
+### Regressions
+- **`onboarding-v2/` module shipped without token compliance** — introduces 30 raw `fontWeight` values and ~50 raw `fontSize` values. This is the single largest regression source.
+- **Shadow token adoption remains stagnant** at ~18% (85 token refs vs 391 inline). No improvement in 6 weeks.
+- **Legacy `Animated` API persists** in 155 call sites (concentrated in HabitChainVisualizer, WeeklySummaryCard, CreateHabitModal, DayHabitsBottomSheet).
 
-**Overall:** The codebase is in the "diminishing returns" phase of token adoption — the easy wins are done. Remaining work splits into a handful of concrete quick wins and a larger architectural conversation about primitive consolidation.
+### Priority Remediation
+
+| Priority | Issue | Effort | Impact |
+|----------|-------|--------|--------|
+| **P0** | Onboarding-v2 token compliance (30 fontWeight, ~50 fontSize) | 2-3h | Prevents regression from spreading |
+| **P1** | 5 remaining `borderRadius: 9999` → `borderRadius.full` | 15min | Complete the token migration |
+| **P1** | Shadow token migration (391 inline → `shadows.*`) | 4-6h | Largest remaining token gap |
+| **P2** | Legacy `friction/tension` spring migration (49 calls) | 3-4h | Remove legacy Animated dependency |
+| **P2** | 3 remaining inline `fontWeight` violations in production code | 15min | Quick win |
+| **P3** | Raw `duration(N)` → `durations.*` (87 calls) | 2h | Animation consistency |
+| **P3** | Button padding variant consolidation | Architectural | Long-term structural |
+
+### Files Requiring Immediate Attention
+
+**Onboarding-V2 (new, non-compliant):**
+- `src/screens/onboarding-v2/components/StepStub.tsx` — 3 raw fontWeight, 3 raw fontSize
+- `src/screens/onboarding-v2/components/DemoCard.tsx` — 2 raw fontWeight, 2 raw fontSize
+- `src/screens/onboarding-v2/components/PlanHabitCard.tsx` — multiple raw values
+- `src/screens/onboarding-v2/components/CategoryTile.tsx` — raw fontWeight
+
+**Existing code (carried from Apr 23):**
+- `src/components/RevenueCatPaywall/PaywallHeader.tsx:53` — `borderRadius: 9999`
+- `src/screens/HabitDetailScreen/components/SimpleStreakGoalHero.tsx:73` — `borderRadius: 9999`
+- `src/components/AdvancedOptions/StreakGoalSheetBody.tsx:64` — raw fontWeight
+- `src/components/CalendarTimeline/components/DayCellContent.tsx:96` — raw fontWeight
+
+**Legacy animation (concentrated):**
+- `src/components/HabitChainVisualizer/useHabitDayToggleHandlers.ts` — 8 friction/tension values
+- `src/components/HabitChainVisualizer/useHabitDayToggleAnimations.ts` — 2 friction/tension
+- `src/components/WeeklySummaryCard/useWeeklySummaryAnimations.ts` — 2 friction/tension
+- `src/components/DayHabitsBottomSheet/HabitDayToggleRow/useToggleAnimations.ts` — 4 friction/tension
+- `src/components/CreateHabitModal/components/TemplatesLinkSection.tsx` — 4 friction/tension
+
+### Overall Assessment
+
+The core design system (`src/theme/`) is comprehensive and well-structured: typography scale (12 variants), spacing (8-values on 4px grid), colors (semantic + scale), icons (6 sizes), shadows (5 levels), animations (14 springs, 16 durations). The problem is not the system — it's enforcement. New feature code (onboarding-v2) shipped without following established patterns, suggesting the team needs:
+
+1. **A lint rule blocking raw `fontWeight`/`fontSize` in new code** (ESLint custom rule or PR review checklist)
+2. **Shadow token awareness** — the `shadows.*` tokens are unused in most new code because developers default to inline `shadowOffset`/`shadowOpacity`
+3. **Animated → Reanimated migration guide** for the remaining 155 legacy call sites
+
+Score will improve to **23/24** once P0 (onboarding-v2 compliance) and P1 (shadows, borderRadius) are addressed.
