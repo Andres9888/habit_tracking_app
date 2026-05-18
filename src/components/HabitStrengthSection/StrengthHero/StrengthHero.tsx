@@ -35,19 +35,14 @@ import { useStrengthHeroAnimations } from './useStrengthHeroAnimations';
 export const StrengthHero = React.memo(function StrengthHero({
   strength,
   label,
-  delta,
-  deltaLabel,
-  color,
+  deltaVsWeek,
+  deltaVsMonth,
 }: StrengthHeroProps) {
   const { colors: themeColors } = useThemeColors();
   const strengthColors = getStrengthColors(themeColors);
-  // Guard against invalid label - default to 'weak'
   const safeLabel = label && strengthColors[label] ? label : 'weak';
-  // Get colors based on strength level
   const colors = strengthColors[safeLabel];
-  const ringColor = color || colors.primary;
 
-  // Animation state
   const { animatedStrength, roundedStrength } =
     useStrengthHeroAnimations(strength);
 
@@ -55,10 +50,15 @@ export const StrengthHero = React.memo(function StrengthHero({
     <View className='flex-row items-center'>
       <ProgressRing
         animatedStrength={animatedStrength}
-        ringColor={ringColor}
+        label={safeLabel}
+        ringColor={colors.primary}
         roundedStrength={roundedStrength}
       />
-      <StatusDisplay delta={delta} deltaLabel={deltaLabel} label={label} />
+      <StatusDisplay
+        deltaVsMonth={deltaVsMonth}
+        deltaVsWeek={deltaVsWeek}
+        label={label}
+      />
     </View>
   );
 });

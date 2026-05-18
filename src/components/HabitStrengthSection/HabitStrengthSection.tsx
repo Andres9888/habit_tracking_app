@@ -1,11 +1,10 @@
 /**
- * HabitStrengthSection Component (Redesigned)
+ * HabitStrengthSection Component
  *
- * Comprehensive habit strength display combining:
- * - Time range switcher (1M/1Y/All)
- * - Circular progress ring with animated fill
+ * - Circular progress ring (tier-colored) with hero microcopy
  * - Full-width timeline chart with bezier curves
- * - Comparison stats row
+ * - Chart-only time range toggle (1M / 3M / 1Y)
+ * - Comparison stats row (since start / last month / last week)
  */
 
 import React from 'react';
@@ -15,10 +14,11 @@ import { durations } from '@/theme/animations';
 import { useThemeColors } from '@/theme/ThemeContext';
 
 import { useReduceMotion } from '../../hooks/useReduceMotion';
-import { shadows, spacing } from '../../theme/spacing';
+import { shadows } from '../../theme/spacing';
 import { typography } from '../../theme/typography';
-import { SkeletonLoader } from '../SkeletonLoader/SkeletonLoader';
 import { getThemeColors } from './constants';
+import { HabitStrengthEmptyState } from './HabitStrengthEmptyState';
+import { HabitStrengthLoading } from './HabitStrengthLoading';
 import { useHabitStrengthData } from './HabitStrengthSection.hooks';
 import { StrengthChart } from './StrengthChart';
 import { StrengthHero } from './StrengthHero';
@@ -47,65 +47,11 @@ export const HabitStrengthSection = React.memo(function HabitStrengthSection({
   } = useHabitStrengthData({ completedDates, habitCreatedAt, habitStrength });
 
   if (isCalculating) {
-    return (
-      <View
-        accessible
-        accessibilityLabel='Calculating habit strength'
-        accessibilityRole='progressbar'
-        className='rounded-2xl p-5 shadow-sm'
-        style={{ backgroundColor: themeColors.card }}
-      >
-        <View className='mb-4 flex-row items-center justify-between'>
-          <SkeletonLoader borderRadius={6} height={20} reduceMotion={reduceMotion} width={140} />
-          <SkeletonLoader borderRadius={999} height={28} reduceMotion={reduceMotion} width={120} />
-        </View>
-        <View className='mb-5 flex-row items-end gap-3'>
-          <SkeletonLoader borderRadius={8} height={44} reduceMotion={reduceMotion} width={120} />
-          <SkeletonLoader borderRadius={6} height={14} reduceMotion={reduceMotion} width={80} />
-        </View>
-        <SkeletonLoader borderRadius={12} height={120} reduceMotion={reduceMotion} />
-        <View className='mt-4 flex-row gap-3'>
-          <SkeletonLoader borderRadius={6} height={40} reduceMotion={reduceMotion} width='30%' />
-          <SkeletonLoader borderRadius={6} height={40} reduceMotion={reduceMotion} width='30%' />
-          <SkeletonLoader borderRadius={6} height={40} reduceMotion={reduceMotion} width='30%' />
-        </View>
-      </View>
-    );
+    return <HabitStrengthLoading />;
   }
 
   if (isEmpty) {
-    return (
-      <View className='rounded-2xl p-5 shadow-sm' style={{ backgroundColor: themeColors.card }}>
-        <Text style={{ ...typography.heading3, marginBottom: spacing.sm, color: themeColors.text.primary }}>
-          Habit Strength
-        </Text>
-        <View
-          className='items-center rounded-2xl px-6 py-8'
-          style={{
-            backgroundColor: themeColors.background,
-            borderColor: themeColors.border,
-            borderStyle: 'dashed',
-            borderWidth: 1,
-          }}
-        >
-          <View
-            className='mb-3 h-14 w-14 items-center justify-center rounded-full'
-            style={{ backgroundColor: themeColors.card }}
-          >
-            <Text className='text-3xl'>🌱</Text>
-          </View>
-          <Text style={{ ...typography.heading3, color: themeColors.text.primary, textAlign: 'center' }}>
-            Not enough data yet
-          </Text>
-          <Text
-            className='mt-1 text-center'
-            style={{ color: themeColors.text.secondary, maxWidth: 260 }}
-          >
-            Complete your first day to start building strength.
-          </Text>
-        </View>
-      </View>
-    );
+    return <HabitStrengthEmptyState />;
   }
 
   return (
@@ -120,21 +66,30 @@ export const HabitStrengthSection = React.memo(function HabitStrengthSection({
       }}
     >
       <View className='p-5'>
-        <View className='mb-4 flex-row items-center justify-between'>
-          <Text style={{ ...typography.heading3, color: themeColors.text.primary }}>
-            Habit Strength
-          </Text>
-          <TimeRangeToggle value={timeRange} onChange={setTimeRange} />
-        </View>
+        <Text
+          className='mb-4'
+          style={{ ...typography.heading3, color: themeColors.text.primary }}
+        >
+          Habit Strength
+        </Text>
 
         <View className='mb-4'>
           <StrengthHero
-            color={habitColor}
-            delta={extendedMetrics.deltaVsMonth}
-            deltaLabel='vs last month'
+            deltaVsMonth={extendedMetrics.deltaVsMonth}
+            deltaVsWeek={extendedMetrics.deltaVsWeek}
             label={strengthLabel}
             strength={currentStrength}
           />
+        </View>
+
+        <View className='mb-2 flex-row items-center justify-between'>
+          <Text
+            className='text-xs uppercase'
+            style={{ color: themeColors.text.tertiary, letterSpacing: 0.6 }}
+          >
+            Chart range
+          </Text>
+          <TimeRangeToggle value={timeRange} onChange={setTimeRange} />
         </View>
 
         <View className='-mx-5 mb-4'>

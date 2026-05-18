@@ -32,6 +32,7 @@ export function ProgressRing({
   roundedStrength,
   ringColor,
   animatedStrength,
+  label,
 }: ProgressRingProps) {
   const { colors: themeColors } = useThemeColors();
   const sectionColors = getThemeColors(themeColors);
@@ -49,7 +50,7 @@ export function ProgressRing({
 
   return (
     <View
-      accessibilityLabel={`Habit strength ${roundedStrength}%, ${STRENGTH_LABELS.strong}`}
+      accessibilityLabel={`Habit strength ${roundedStrength}%, ${STRENGTH_LABELS[label]}`}
       accessibilityRole='progressbar'
       accessibilityValue={{ max: 100, min: 0, now: roundedStrength }}
       style={{ height: RING_SIZE, width: RING_SIZE }}

@@ -16,14 +16,11 @@ export interface StrengthHeroProps {
   /** Strength label (weak/developing/strong) */
   label: StrengthLabel;
 
-  /** Change vs previous period (e.g., "+12%") */
-  delta: number;
+  /** Change over the trailing 7 days */
+  deltaVsWeek: number;
 
-  /** Delta comparison period label (e.g., "vs last month") */
-  deltaLabel: string;
-
-  /** Optional custom color override */
-  color?: string;
+  /** Change over the trailing 30 days */
+  deltaVsMonth: number;
 }
 
 /**
@@ -40,6 +37,7 @@ export interface ProgressRingProps {
   roundedStrength: number;
   ringColor: string;
   animatedStrength: SharedValue<number>;
+  label: StrengthLabel;
 }
 
 /**
@@ -47,6 +45,6 @@ export interface ProgressRingProps {
  */
 export interface StatusDisplayProps {
   label: StrengthLabel;
-  delta: number;
-  deltaLabel: string;
+  deltaVsWeek: number;
+  deltaVsMonth: number;
 }
