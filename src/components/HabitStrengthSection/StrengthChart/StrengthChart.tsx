@@ -20,6 +20,8 @@ import type { StrengthChartProps } from '../types';
 
 import { ChartCurve } from './ChartCurve';
 import { ChartGrid } from './ChartGrid';
+import { ChartMilestones } from './ChartMilestones';
+import { ChartYAxis } from './ChartYAxis';
 import { EmptyState } from './EmptyState';
 import { PulsingDot } from './PulsingDot';
 import {
@@ -51,7 +53,7 @@ export const StrengthChart = React.memo(function StrengthChart({
   // Guard against undefined/null data early
   const safeData = data ?? [];
 
-  const { lastPoint, pathD, fillPathD, pathLength } = useChartData({
+  const { lastPoint, pathD, fillPathD, pathLength, points } = useChartData({
     chartWidth,
     data: safeData,
   });
@@ -91,6 +93,7 @@ export const StrengthChart = React.memo(function StrengthChart({
           gridLines={gridLines}
           paddingX={CHART_PADDING_X}
         />
+        <ChartYAxis chartWidth={chartWidth} />
         <ChartCurve
           animatedPathProps={animatedPathProps}
           chartColor={chartColor}
@@ -98,6 +101,7 @@ export const StrengthChart = React.memo(function StrengthChart({
           pathD={pathD}
           pathLength={pathLength}
         />
+        <ChartMilestones color={chartColor} points={points} />
         <PulsingDot
           animatedDotProps={animatedDotProps}
           color={chartColor}

@@ -7,6 +7,7 @@ import type { StrengthSnapshot } from '../../HabitStrengthHistory/types';
 import {
   CHART_HEIGHT,
   CHART_PADDING_BOTTOM,
+  CHART_PADDING_LEFT,
   CHART_PADDING_TOP,
   CHART_PADDING_X,
 } from '../constants';
@@ -25,7 +26,7 @@ export function useChartData({
   chartWidth,
 }: UseChartDataOptions): ChartPathData {
   return useMemo(() => {
-    const chartAreaWidth = chartWidth - CHART_PADDING_X * 2;
+    const chartAreaWidth = chartWidth - CHART_PADDING_LEFT - CHART_PADDING_X;
     const chartAreaHeight =
       CHART_HEIGHT - CHART_PADDING_TOP - CHART_PADDING_BOTTOM;
 
@@ -43,12 +44,13 @@ export function useChartData({
       .filter((snapshot): snapshot is StrengthSnapshot => snapshot != null)
       .map((snapshot, index, arr) => ({
         x:
-          CHART_PADDING_X +
+          CHART_PADDING_LEFT +
           (index / Math.max(1, arr.length - 1)) * chartAreaWidth,
         y:
           CHART_PADDING_TOP +
           chartAreaHeight -
           ((snapshot.strength ?? 0) / 100) * chartAreaHeight,
+        strength: snapshot.strength ?? 0,
       }));
 
     const curvePath = catmullRomToBezier(mappedPoints);

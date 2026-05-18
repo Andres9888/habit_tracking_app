@@ -16,6 +16,7 @@ import { useThemeColors } from '@/theme/ThemeContext';
 import { useReduceMotion } from '../../hooks/useReduceMotion';
 import { shadows } from '../../theme/spacing';
 import { typography } from '../../theme/typography';
+import { AlgorithmModeChip } from './AlgorithmModeChip';
 import { getThemeColors } from './constants';
 import { HabitStrengthEmptyState } from './HabitStrengthEmptyState';
 import { HabitStrengthLoading } from './HabitStrengthLoading';
@@ -31,6 +32,7 @@ export const HabitStrengthSection = React.memo(function HabitStrengthSection({
   habitCreatedAt,
   habitColor,
   habitStrength,
+  strengthAlgorithm,
 }: HabitStrengthSectionProps) {
   const { colors: themeColors } = useThemeColors();
   const sectionColors = getThemeColors(themeColors);
@@ -66,12 +68,12 @@ export const HabitStrengthSection = React.memo(function HabitStrengthSection({
       }}
     >
       <View className='p-5'>
-        <Text
-          className='mb-4'
-          style={{ ...typography.heading3, color: themeColors.text.primary }}
-        >
-          Habit Strength
-        </Text>
+        <View className='mb-3 flex-row items-center justify-between'>
+          <Text style={{ ...typography.heading3, color: themeColors.text.primary }}>
+            Habit Strength
+          </Text>
+          <AlgorithmModeChip habitMode={strengthAlgorithm} />
+        </View>
 
         <View className='mb-4'>
           <StrengthHero

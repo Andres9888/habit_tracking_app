@@ -4,10 +4,11 @@
  * Internal types used by chart sub-components.
  */
 
-/** A point on the chart with x,y coordinates */
+/** A point on the chart with x,y coordinates and source strength */
 export interface ChartPoint {
   x: number;
   y: number;
+  strength?: number;
 }
 
 /** Computed chart path data */

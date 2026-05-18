@@ -12,22 +12,29 @@ import type { StrengthLabel } from '../HabitStrengthHistory/types';
 // Layout & Sizing
 // ============================================================================
 
-/** Circular progress ring dimensions (compact for above-fold layout) */
-export const RING_SIZE = 64; // Reduced from 72 to fit above fold
-export const RING_STROKE_WIDTH = 5; // Slightly thinner for smaller ring
+/** Circular progress ring dimensions — anchored hero for the detail page */
+export const RING_SIZE = 104;
+export const RING_STROKE_WIDTH = 9;
 export const RING_RADIUS = (RING_SIZE - RING_STROKE_WIDTH) / 2;
 export const RING_CIRCUMFERENCE = 2 * Math.PI * RING_RADIUS;
 /** Usable inner width for centered text inside the ring (subtracting stroke on both sides) */
 export const RING_INNER_WIDTH = RING_SIZE - RING_STROKE_WIDTH * 2;
 
-/** Chart dimensions (compact for above-fold layout) */
-export const CHART_HEIGHT = 88; // Reduced from 112 to fit above fold
+/** Chart dimensions — taller to make the curve and Y-axis readable */
+export const CHART_HEIGHT = 140;
 export const CHART_PADDING_X = 16;
-export const CHART_PADDING_TOP = 6; // Reduced from 8
-export const CHART_PADDING_BOTTOM = 20; // Reduced from 24, space for X-axis labels
+export const CHART_PADDING_TOP = 8;
+export const CHART_PADDING_BOTTOM = 22;
+export const CHART_PADDING_LEFT = 32; // room for Y-axis labels
+
+/** Habit-formed threshold (matches Lally 2010 calibration in algorithmConfig.ts) */
+export const HABIT_FORMED_THRESHOLD = 85;
+
+/** Strength milestones (first-crossing values to celebrate on the chart) */
+export const MILESTONE_THRESHOLDS = [25, 50, 70] as const;
 
 /** Grid line configuration */
-export const GRID_LINE_COUNT = 3; // 0%, 50%, 100%
+export const GRID_LINE_COUNT = 4; // 0%, 50%, 85%, 100%
 export const GRID_LINE_DASH = '4,4';
 export const GRID_LINE_OPACITY = 0.2;
 
@@ -93,43 +100,7 @@ export function getThemeColors(colors: SemanticColors) {
   };
 }
 
-/**
- * @deprecated Use getStrengthColors(colors) instead for theme-aware colors.
- * Kept for backward compatibility with external consumers.
- */
-export const STRENGTH_COLORS: Record<StrengthLabel, StrengthColorSet> = {
-  developing: {
-    background: '#fffbeb',
-    gradient: { end: 'rgba(245, 158, 11, 0.02)', start: 'rgba(245, 158, 11, 0.25)' },
-    primary: '#f59e0b',
-  },
-  strong: {
-    background: '#ecfdf5',
-    gradient: { end: 'rgba(16, 185, 129, 0.02)', start: 'rgba(16, 185, 129, 0.25)' },
-    primary: '#10b981',
-  },
-  weak: {
-    background: '#fef2f2',
-    gradient: { end: 'rgba(239, 68, 68, 0.02)', start: 'rgba(239, 68, 68, 0.25)' },
-    primary: '#ef4444',
-  },
-};
-
-/**
- * @deprecated Use getThemeColors(colors) instead for theme-aware colors.
- * Kept for backward compatibility with external consumers.
- */
-export const COLORS = {
-  border: '#e7e5e4',
-  cardBackground: '#ffffff',
-  gridLine: '#d6d3d1',
-  negative: '#ef4444',
-  positive: '#15793C',
-  ringTrack: '#f5f5f4',
-  textMuted: '#a8a29e',
-  textPrimary: '#1c1917',
-  textSecondary: '#78716c',
-};
+export { COLORS, STRENGTH_COLORS } from './legacyConstants';
 
 // ============================================================================
 // Animation Timing

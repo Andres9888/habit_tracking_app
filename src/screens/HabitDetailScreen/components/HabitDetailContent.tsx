@@ -82,6 +82,7 @@ export function HabitDetailContent({
               habitCreatedAt={habit.createdAt}
               habitId={habit._id}
               habitStrength={habit.strength}
+              strengthAlgorithm={habit.strengthAlgorithm}
             />
           </ErrorBoundary>
         </View>

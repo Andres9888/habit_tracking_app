@@ -39,6 +39,9 @@ export interface HabitStrengthSectionProps {
    * This ensures consistency with HabitCard which uses habit.strength.
    */
   habitStrength?: number;
+
+  /** Per-habit algorithm mode override (defaults to balanced) */
+  strengthAlgorithm?: string | null;
 }
 
 /**
