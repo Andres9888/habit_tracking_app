@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Strength Curve — Concept-first variations</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #efece4;
+    --card: #fbfaf6;
+    --text: #14171a;
+    --text-2: #4a5057;
+    --text-3: #8a8f96;
+    --border: rgba(20,23,26,0.10);
+    --border-strong: rgba(20,23,26,0.18);
+    --primary: #0f8a6a;
+    --primary-soft: #d6efe5;
+    --primary-tint: rgba(15,138,106,0.10);
+    --primary-strong: #086148;
+    --orange: #d97a3a;
+    --orange-soft: #f8e2cf;
+    --purple: #6b5ca8;
+    --purple-soft: #e1ddf3;
+    --miss: #c84a4a;
+    --bar-empty: #e8e5dd;
+  }
+  html, body { font-family: 'Inter', system-ui, -apple-system, sans-serif !important; background: #d8d5cd; padding-bottom: 60px; }
+  .col { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+  .heading { text-align: center; max-width: 320px; }
+  .heading .bet { font-size: 10.5px; font-weight: 700; color: var(--primary-strong); text-transform: uppercase; letter-spacing: 0.10em; }
+  .heading h2 { font-size: 15px; font-weight: 800; color: var(--text); margin-top: 2px; }
+  .heading p { font-size: 11.5px; color: var(--text-2); margin-top: 6px; line-height: 1.45; }
+  .heading .why { background: rgba(15,138,106,0.06); border-left: 3px solid var(--primary); padding: 6px 8px; margin-top: 6px; font-size: 10.5px; text-align: left; color: var(--text-2); border-radius: 4px; }
+  .heading .why strong { color: var(--primary-strong); }
+  .phone { width: 320px; height: 692px; border-radius: 38px; background: var(--bg); box-shadow: 0 14px 28px -12px rgba(0,0,0,0.30), 0 0 0 6px #111 inset, 0 0 0 8px #2a2a2a; overflow: hidden; position: relative; }
+  .notch { position: absolute; left: 50%; top: 8px; transform: translateX(-50%); width: 90px; height: 22px; background: #000; border-radius: 14px; z-index: 50; }
+  .status-bar { position: absolute; left: 0; right: 0; top: 0; height: 40px; z-index: 40; display: flex; align-items: center; justify-content: space-between; padding: 14px 22px 0 22px; font-size: 12px; font-weight: 600; color: #0a0a0a; }
+  .header-bar { background: rgba(239,236,228,0.95); }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; }
+  /* Habit card mockup (matches actual app habit row) */
+  .habit-card { background: #fff; border-radius: 14px; padding: 10px 12px; border: 1px solid var(--border); }
+  .habit-icon { width: 36px; height: 36px; border-radius: 50%; background: var(--primary-soft); display: flex; align-items: center; justify-content: center; font-size: 18px; }
+  .habit-icon-orange { background: var(--orange-soft); }
+  .habit-icon-purple { background: var(--purple-soft); }
+  .bar-track { width: 100%; height: 7px; background: var(--bar-empty); border-radius: 999px; overflow: hidden; }
+  .bar-fill { height: 100%; background: var(--primary); border-radius: 999px; }
+  .check-tick { width: 22px; height: 22px; border-radius: 50%; background: var(--primary); display: flex; align-items: center; justify-content: center; }
+  .check-empty { width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--border-strong); }
+  .check-x { width: 22px; height: 22px; border-radius: 50%; background: var(--miss); display: flex; align-items: center; justify-content: center; color: #fff; }
+  .tier-pill { display: inline-flex; align-items: center; gap: 4px; padding: 3px 9px; border-radius: 999px; font-size: 10.5px; font-weight: 700; }
+  .tier-simple { background: var(--orange-soft); color: #7A2E0A; }
+  .tier-regular { background: var(--primary-soft); color: var(--primary-strong); }
+  .tier-complex { background: var(--purple-soft); color: #3F2F75; }
+  .miss-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--miss); display: inline-block; }
+  .check-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--primary); display: inline-block; }
+  /* mini override tile */
+  .mini-tile { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 8px; }
+  .grid-line { stroke: rgba(20,23,26,0.06); stroke-dasharray: 2 4; }
+  .miss-marker { fill: var(--miss); }
+  /* phone header helper */
+  .phone-header { position: absolute; top: 40px; left: 0; right: 0; z-index: 30; background: rgba(239,236,228,0.95); display: flex; align-items: center; justify-content: space-between; padding: 6px 14px; }
+  .phone-header .back { width: 28px; height: 28px; border-radius: 50%; background: rgba(255,255,255,0.7); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; }
+  .phone-header .title { font-size: 13px; font-weight: 600; }
+  .phone-header .done { background: var(--primary); color: #fff; font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 999px; }
+  .body { padding-top: 84px; }
+</style>
+</head>
+<body class="flex items-start justify-center gap-6 flex-wrap pt-8">
+
+<!-- ============ V1 — Vertical Filmstrip ============ -->
+<div class="col">
+  <div class="heading">
+    <div class="bet">V1 · VERTICAL FILMSTRIP</div>
+    <h2>"Here's your habit card across time."</h2>
+    <div class="why"><strong>Why easier:</strong> Shows the LITERAL habit-card UI the user will see daily, repeated at 3 time points. Zero mental translation — they recognize "the bar" instantly.</div>
+  </div>
+  <div class="phone">
+    <div class="notch"></div>
+    <div class="status-bar"><span>9:41</span><div class="flex items-center gap-1"><i data-lucide="signal" class="w-3 h-3"></i><i data-lucide="wifi" class="w-3 h-3"></i><i data-lucide="battery-full" class="w-3.5 h-3.5 text-green-700"></i></div></div>
+    <div class="phone-header"><button class="back"><i data-lucide="chevron-left" class="w-4 h-4"></i></button><div class="title">Strength curve</div><button class="done">Done</button></div>
+    <div class="body px-3">
+      <div class="text-center mb-3">
+        <span class="tier-pill tier-regular">🌱 Regular habit · 5-15 min daily</span>
+        <h1 class="text-[16px] font-extrabold mt-2 leading-tight" style="color: var(--text);">Here's how your habit will grow</h1>
+      </div>
+
+      <!-- 3 habit cards stacked -->
+      <div class="space-y-2">
+        <div class="habit-card flex items-center gap-2">
+          <div class="check-empty"></div>
+          <div class="habit-icon" style="width: 28px; height: 28px; font-size: 14px;">📖</div>
+          <div class="flex-1">
+            <div class="flex items-center justify-between mb-1">
+              <span class="text-[11.5px] font-semibold" style="color: var(--text);">Read 10 min</span>
+              <span class="text-[9px] font-bold" style="color: var(--text-3);">DAY 1 · WK 1</span>
+            </div>
+            <div class="bar-track"><div class="bar-fill" style="width: 5%;"></div></div>
+            <p class="text-[9.5px] mt-0.5" style="color: var(--text-3);">Today, fresh start</p>
+          </div>
+        </div>
+        <div class="habit-card flex items-center gap-2">
+          <div class="check-tick"><i data-lucide="check" class="w-3 h-3 text-white"></i></div>
+          <div class="habit-icon" style="width: 28px; height: 28px; font-size: 14px;">📖</div>
+          <div class="flex-1">
+            <div class="flex items-center justify-between mb-1">
+              <span class="text-[11.5px] font-semibold" style="color: var(--text);">Read 10 min</span>
+              <span class="text-[9px] font-bold" style="color: var(--text-3);">DAY 33 · WK 5</span>
+            </div>
+            <div class="bar-track"><div class="bar-fill" style="width: 52%;"></div></div>
+            <p class="text-[9.5px] mt-0.5" style="color: var(--text-3);">Feels routine</p>
+          </div>
+        </div>
+        <div class="habit-card flex items-center gap-2" style="border-color: var(--primary); box-shadow: 0 0 0 2px rgba(15,138,106,0.10);">
+          <div class="check-tick"><i data-lucide="check" class="w-3 h-3 text-white"></i></div>
+          <div class="habit-icon" style="width: 28px; height: 28px; font-size: 14px;">📖</div>
+          <div class="flex-1">
+            <div class="flex items-center justify-between mb-1">
+              <span class="text-[11.5px] font-semibold" style="color: var(--text);">Read 10 min</span>
+              <span class="text-[9px] font-bold" style="color: var(--primary);">DAY 66 ✨ AUTOMATIC</span>
+            </div>
+            <div class="bar-track"><div class="bar-fill" style="width: 100%;"></div></div>
+            <p class="text-[9.5px] mt-0.5" style="color: var(--primary);">Second nature</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Override row -->
+      <p class="text-[9.5px] font-bold tracking-wider text-center mt-3 mb-1.5" style="color: var(--text-3);">OR PICK A DIFFERENT COMPLEXITY</p>
+      <div class="grid grid-cols-2 gap-1.5">
+        <div class="mini-tile">
+          <span class="tier-pill tier-simple" style="font-size: 9px; padding: 1px 5px;">⚡ Simple</span>
+          <div class="text-[10px] mt-1" style="color: var(--text);"><strong>~2.5 wk</strong> <span style="color: var(--text-3);">(18d)</span></div>
+        </div>
+        <div class="mini-tile">
+          <span class="tier-pill tier-complex" style="font-size: 9px; padding: 1px 5px;">🏔️ Complex</span>
+          <div class="text-[10px] mt-1" style="color: var(--text);"><strong>~4 mo</strong> <span style="color: var(--text-3);">(120d)</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ V2 — With Miss Day (filmstrip + setback) ============ -->
+<div class="col">
+  <div class="heading">
+    <div class="bet">V2 · FILMSTRIP + MISS</div>
+    <h2>"Shows the recovery story."</h2>
+    <div class="why"><strong>Why easier:</strong> Adds the MISS panel between Day 33 and Day 66 — user sees the bar drop AND recover. Teaches both halves of the mechanic in one strip.</div>
+  </div>
+  <div class="phone">
+    <div class="notch"></div>
+    <div class="status-bar"><span>9:41</span><div class="flex items-center gap-1"><i data-lucide="signal" class="w-3 h-3"></i><i data-lucide="wifi" class="w-3 h-3"></i><i data-lucide="battery-full" class="w-3.5 h-3.5 text-green-700"></i></div></div>
+    <div class="phone-header"><button class="back"><i data-lucide="chevron-left" class="w-4 h-4"></i></button><div class="title">Strength curve</div><button class="done">Done</button></div>
+    <div class="body px-3">
+      <div class="text-center mb-3">
+        <span class="tier-pill tier-regular">🌱 Regular habit · 5-15 min daily</span>
+        <h1 class="text-[16px] font-extrabold mt-2 leading-tight" style="color: var(--text);">Check-ins build it.<br/>Misses dip it.</h1>
+      </div>
+
+      <div class="space-y-1.5">
+        <div class="habit-card flex items-center gap-2">
+          <div class="check-tick"><i data-lucide="check" class="w-3 h-3 text-white"></i></div>
+          <div class="habit-icon" style="width: 26px; height: 26px; font-size: 13px;">📖</div>
+          <div class="flex-1">
+            <div class="flex items-center justify-between mb-0.5"><span class="text-[10.5px] font-semibold">Read 10 min</span><span class="text-[8.5px] font-bold" style="color: var(--text-3);">DAY 1</span></div>
+            <div class="bar-track" style="height: 6px;"><div class="bar-fill" style="width: 5%;"></div></div>
+          </div>
+        </div>
+        <div class="habit-card flex items-center gap-2">
+          <div class="check-tick"><i data-lucide="check" class="w-3 h-3 text-white"></i></div>
+          <div class="habit-icon" style="width: 26px; height: 26px; font-size: 13px;">📖</div>
+          <div class="flex-1">
+            <div class="flex items-center justify-between mb-0.5"><span class="text-[10.5px] font-semibold">Read 10 min</span><span class="text-[8.5px] font-bold" style="color: var(--text-3);">DAY 33</span></div>
+            <div class="bar-track" style="height: 6px;"><div class="bar-fill" style="width: 52%;"></div></div>
+          </div>
+        </div>
+        <!-- MISS DAY (highlighted in red) -->
+        <div class="habit-card flex items-center gap-2" style="border: 1px solid var(--miss); background: rgba(200,74,74,0.06);">
+          <div class="check-x"><i data-lucide="x" class="w-3 h-3"></i></div>
+          <div class="habit-icon" style="width: 26px; height: 26px; font-size: 13px;">📖</div>
+          <div class="flex-1">
+            <div class="flex items-center justify-between mb-0.5"><span class="text-[10.5px] font-semibold">Read 10 min</span><span class="text-[8.5px] font-bold" style="color: var(--miss);">DAY 34 · MISSED ↓</span></div>
+            <div class="bar-track" style="height: 6px;"><div class="bar-fill" style="width: 45%; background: var(--miss);"></div></div>
+          </div>
+        </div>
+        <p class="text-[9.5px] text-center italic" style="color: var(--miss);">Bar drops 7% on a miss · keeps going on your next check-in</p>
+        <div class="habit-card flex items-center gap-2" style="border-color: var(--primary); box-shadow: 0 0 0 2px rgba(15,138,106,0.10);">
+          <div class="check-tick"><i data-lucide="check" class="w-3 h-3 text-white"></i></div>
+          <div class="habit-icon" style="width: 26px; height: 26px; font-size: 13px;">📖</div>
+          <div class="flex-1">
+            <div class="flex items-center justify-between mb-0.5"><span class="text-[10.5px] font-semibold">Read 10 min</span><span class="text-[8.5px] font-bold" style="color: var(--primary);">DAY 66 ✨ AUTOMATIC</span></div>
+            <div class="bar-track" style="height: 6px;"><div class="bar-fill" style="width: 100%;"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <p class="text-[9.5px] font-bold tracking-wider text-center mt-3 mb-1.5" style="color: var(--text-3);">OR PICK A DIFFERENT COMPLEXITY</p>
+      <div class="grid grid-cols-2 gap-1.5">
+        <div class="mini-tile"><span class="tier-pill tier-simple" style="font-size: 9px; padding: 1px 5px;">⚡ Simple</span><div class="text-[10px] mt-1"><strong>~2.5 wk</strong> <span style="color: var(--text-3);">(18d)</span></div></div>
+        <div class="mini-tile"><span class="tier-pill tier-complex" style="font-size: 9px; padding: 1px 5px;">🏔️ Complex</span><div class="text-[10px] mt-1"><strong>~4 mo</strong> <span style="color: var(--text-3);">(120d)</span></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ V3 — Anatomy Diagram ============ -->
+<div class="col">
+  <div class="heading">
+    <div class="bet">V3 · ANATOMY DIAGRAM</div>
+    <h2>"Labels the UI literally."</h2>
+    <div class="why"><strong>Why easier:</strong> One big habit card with arrows pointing to "← strength bar" and "← today's check-in." Teaches by labeling the very pixels the user will see.</div>
+  </div>
+  <div class="phone">
+    <div class="notch"></div>
+    <div class="status-bar"><span>9:41</span><div class="flex items-center gap-1"><i data-lucide="signal" class="w-3 h-3"></i><i data-lucide="wifi" class="w-3 h-3"></i><i data-lucide="battery-full" class="w-3.5 h-3.5 text-green-700"></i></div></div>
+    <div class="phone-header"><button class="back"><i data-lucide="chevron-left" class="w-4 h-4"></i></button><div class="title">Strength curve</div><button class="done">Done</button></div>
+    <div class="body px-3">
+      <div class="text-center mb-3">
+        <h1 class="text-[16px] font-extrabold leading-tight" style="color: var(--text);">What's strength?</h1>
+        <p class="text-[11px] mt-1" style="color: var(--text-2);">It's the bar on each habit card.</p>
+      </div>
+
+      <!-- Big habit card with annotations -->
+      <div class="habit-card mx-2 mb-3" style="padding: 14px;">
+        <div class="flex items-center gap-2 mb-2">
+          <div class="check-tick" style="position: relative;">
+            <i data-lucide="check" class="w-3 h-3 text-white"></i>
+          </div>
+          <div class="habit-icon" style="width: 32px; height: 32px;">📖</div>
+          <div class="flex-1">
+            <span class="text-[12.5px] font-semibold" style="color: var(--text);">Read 10 min</span>
+          </div>
+        </div>
+        <div style="position: relative;">
+          <div class="bar-track" style="height: 9px;"><div class="bar-fill" style="width: 58%;"></div></div>
+          <!-- arrow + label -->
+          <div style="position: absolute; right: -8px; top: 14px; display: flex; align-items: center; gap: 4px;">
+            <span style="font-size: 9.5px; font-weight: 700; color: var(--primary);">← strength bar</span>
+          </div>
+        </div>
+        <p class="text-[10.5px] mt-6" style="color: var(--text-2);">Fills with check-ins. Dips on misses.</p>
+      </div>
+
+      <!-- Pinned mini explainer -->
+      <div class="card p-2.5 mx-2 mb-3">
+        <div class="flex items-center gap-2 mb-1.5">
+          <div class="check-dot"></div>
+          <span class="text-[11px]" style="color: var(--text-2);"><strong>Check in</strong> → bar fills</span>
+        </div>
+        <div class="flex items-center gap-2 mb-1.5">
+          <div class="miss-dot"></div>
+          <span class="text-[11px]" style="color: var(--text-2);"><strong>Miss a day</strong> → bar dips</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-[14px]">✨</span>
+          <span class="text-[11px]" style="color: var(--text-2);"><strong>100%</strong> → automatic (habit formed)</span>
+        </div>
+      </div>
+
+      <!-- Tier picker (compact) -->
+      <p class="text-[9.5px] font-bold tracking-wider text-center mb-1.5" style="color: var(--text-3);">HOW FAST? — PICK FOR THIS HABIT</p>
+      <div class="grid grid-cols-3 gap-1.5 mx-2">
+        <div class="mini-tile text-center"><span class="tier-pill tier-simple" style="font-size: 9px; padding: 1px 5px;">⚡ Simple</span><div class="text-[9.5px] mt-1"><strong>~2.5 wk</strong><br/>18 days</div></div>
+        <div class="mini-tile text-center" style="border-color: var(--primary); box-shadow: 0 0 0 2px rgba(15,138,106,0.10);"><span class="tier-pill tier-regular" style="font-size: 9px; padding: 1px 5px;">🌱 Regular</span><div class="text-[9.5px] mt-1"><strong>~9 wk</strong><br/>66 days</div></div>
+        <div class="mini-tile text-center"><span class="tier-pill tier-complex" style="font-size: 9px; padding: 1px 5px;">🏔️ Complex</span><div class="text-[9.5px] mt-1"><strong>~4 mo</strong><br/>120 days</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ V4 — Before/After Big Comparison ============ -->
+<div class="col">
+  <div class="heading">
+    <div class="bet">V4 · BEFORE / AFTER</div>
+    <h2>"Today vs locked-in."</h2>
+    <div class="why"><strong>Why easier:</strong> Two extremes anchor the mental model. Less data, more emotional payoff — "this is what I'm aiming for." Sells the outcome.</div>
+  </div>
+  <div class="phone">
+    <div class="notch"></div>
+    <div class="status-bar"><span>9:41</span><div class="flex items-center gap-1"><i data-lucide="signal" class="w-3 h-3"></i><i data-lucide="wifi" class="w-3 h-3"></i><i data-lucide="battery-full" class="w-3.5 h-3.5 text-green-700"></i></div></div>
+    <div class="phone-header"><button class="back"><i data-lucide="chevron-left" class="w-4 h-4"></i></button><div class="title">Strength curve</div><button class="done">Done</button></div>
+    <div class="body px-3">
+      <div class="text-center mb-3">
+        <span class="tier-pill tier-regular">🌱 Regular habit · 5-15 min daily</span>
+        <h1 class="text-[16px] font-extrabold mt-2 leading-tight" style="color: var(--text);">In ~9 weeks (66 days)<br/>your bar fills up.</h1>
+      </div>
+
+      <!-- BEFORE -->
+      <div class="text-center mb-1">
+        <span class="text-[9.5px] font-bold tracking-wider" style="color: var(--text-3);">TODAY · DAY 1</span>
+      </div>
+      <div class="habit-card mx-2 mb-4" style="padding: 14px;">
+        <div class="flex items-center gap-2 mb-2">
+          <div class="check-empty"></div>
+          <div class="habit-icon" style="width: 30px; height: 30px;">📖</div>
+          <span class="text-[12px] font-semibold flex-1" style="color: var(--text);">Read 10 min</span>
+          <span class="text-[10px] font-bold" style="color: var(--text-3);">5%</span>
+        </div>
+        <div class="bar-track" style="height: 8px;"><div class="bar-fill" style="width: 5%;"></div></div>
+      </div>
+
+      <!-- big arrow -->
+      <div class="flex items-center justify-center gap-2 mb-3">
+        <span class="text-[9.5px]" style="color: var(--text-3);">~66 daily check-ins</span>
+        <i data-lucide="arrow-down" class="w-4 h-4" style="color: var(--primary);"></i>
+      </div>
+
+      <!-- AFTER -->
+      <div class="text-center mb-1">
+        <span class="text-[9.5px] font-bold tracking-wider" style="color: var(--primary);">DAY 66 ✨ AUTOMATIC</span>
+      </div>
+      <div class="habit-card mx-2 mb-3" style="padding: 14px; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(15,138,106,0.10);">
+        <div class="flex items-center gap-2 mb-2">
+          <div class="check-tick"><i data-lucide="check" class="w-3 h-3 text-white"></i></div>
+          <div class="habit-icon" style="width: 30px; height: 30px;">📖</div>
+          <span class="text-[12px] font-semibold flex-1" style="color: var(--text);">Read 10 min</span>
+          <span class="text-[10px] font-bold" style="color: var(--primary);">100%</span>
+        </div>
+        <div class="bar-track" style="height: 8px;"><div class="bar-fill" style="width: 100%;"></div></div>
+        <p class="text-[10px] mt-1.5" style="color: var(--primary);">✨ Second nature. No willpower needed.</p>
+      </div>
+
+      <!-- Override -->
+      <p class="text-[9.5px] font-bold tracking-wider text-center mb-1.5" style="color: var(--text-3);">PICK A DIFFERENT COMPLEXITY</p>
+      <div class="grid grid-cols-2 gap-1.5 mx-2">
+        <div class="mini-tile"><span class="tier-pill tier-simple" style="font-size: 9px; padding: 1px 5px;">⚡ Simple</span><div class="text-[9.5px] mt-1"><strong>~2.5 wk</strong> · 18d</div></div>
+        <div class="mini-tile"><span class="tier-pill tier-complex" style="font-size: 9px; padding: 1px 5px;">🏔️ Complex</span><div class="text-[9.5px] mt-1"><strong>~4 mo</strong> · 120d</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ V5 — Big animated bar + tier pills ============ -->
+<div class="col">
+  <div class="heading">
+    <div class="bet">V5 · GIANT BAR HERO</div>
+    <h2>"Lead with the bar itself."</h2>
+    <div class="why"><strong>Why easier:</strong> A single, oversized strength bar at the top — labeled START / TODAY / AUTOMATIC. The metaphor IS the visual. No curves, no charts, just the thing.</div>
+  </div>
+  <div class="phone">
+    <div class="notch"></div>
+    <div class="status-bar"><span>9:41</span><div class="flex items-center gap-1"><i data-lucide="signal" class="w-3 h-3"></i><i data-lucide="wifi" class="w-3 h-3"></i><i data-lucide="battery-full" class="w-3.5 h-3.5 text-green-700"></i></div></div>
+    <div class="phone-header"><button class="back"><i data-lucide="chevron-left" class="w-4 h-4"></i></button><div class="title">Strength curve</div><button class="done">Done</button></div>
+    <div class="body px-3">
+      <div class="text-center mb-3">
+        <h1 class="text-[16px] font-extrabold leading-tight" style="color: var(--text);">Strength fills like this.</h1>
+        <p class="text-[11px] mt-1" style="color: var(--text-2);">Check in daily to grow it. Miss to dip it.</p>
+      </div>
+
+      <!-- GIANT BAR -->
+      <div class="card p-4 mb-3">
+        <div class="flex items-center justify-between mb-1.5">
+          <span class="text-[10px] font-bold tracking-wider" style="color: var(--text-3);">DAY 1</span>
+          <span class="text-[10px] font-bold tracking-wider" style="color: var(--text-3);">DAY 33</span>
+          <span class="text-[10px] font-bold tracking-wider" style="color: var(--primary);">DAY 66 ✨</span>
+        </div>
+        <div style="position: relative; height: 22px; background: var(--bar-empty); border-radius: 999px; overflow: hidden;">
+          <div style="position: absolute; left: 0; top: 0; height: 100%; width: 50%; background: linear-gradient(90deg, var(--primary) 0%, var(--primary-strong) 100%); border-radius: 999px;"></div>
+          <!-- miss tick mark -->
+          <div style="position: absolute; left: 38%; top: -3px; height: 28px; width: 2px; background: var(--miss);"></div>
+        </div>
+        <div class="flex items-center justify-between mt-1.5">
+          <span class="text-[9.5px]" style="color: var(--text-3);">Fresh start</span>
+          <span class="text-[9.5px] font-semibold" style="color: var(--text);">← halfway · feels routine</span>
+          <span class="text-[9.5px]" style="color: var(--primary);">Automatic</span>
+        </div>
+      </div>
+
+      <!-- mini stat row -->
+      <div class="grid grid-cols-2 gap-1.5 mb-3">
+        <div class="card p-2 text-center" style="border-left: 3px solid var(--primary);">
+          <div class="text-[16px]">✓</div>
+          <div class="text-[10px] font-bold mt-0.5" style="color: var(--text);">Check in</div>
+          <div class="text-[9.5px]" style="color: var(--text-3);">Bar fills ~1.5%</div>
+        </div>
+        <div class="card p-2 text-center" style="border-left: 3px solid var(--miss);">
+          <div class="text-[16px] text-red-600">✗</div>
+          <div class="text-[10px] font-bold mt-0.5" style="color: var(--text);">Miss a day</div>
+          <div class="text-[9.5px]" style="color: var(--text-3);">Bar dips ~7%</div>
+        </div>
+      </div>
+
+      <!-- Tier row (all three visible) -->
+      <p class="text-[9.5px] font-bold tracking-wider text-center mb-1.5" style="color: var(--text-3);">HOW FAST FOR THIS HABIT?</p>
+      <div class="grid grid-cols-3 gap-1.5">
+        <div class="mini-tile text-center"><span class="tier-pill tier-simple" style="font-size: 9px; padding: 1px 5px;">⚡ Simple</span><div class="text-[9px] mt-1" style="color: var(--text);"><strong>~2.5 wk</strong><br/>18d</div></div>
+        <div class="mini-tile text-center" style="border-color: var(--primary); box-shadow: 0 0 0 2px rgba(15,138,106,0.10);"><span class="tier-pill tier-regular" style="font-size: 9px; padding: 1px 5px;">🌱 Regular</span><div class="text-[9px] mt-1"><strong>~9 wk</strong><br/>66d</div></div>
+        <div class="mini-tile text-center"><span class="tier-pill tier-complex" style="font-size: 9px; padding: 1px 5px;">🏔️ Complex</span><div class="text-[9px] mt-1"><strong>~4 mo</strong><br/>120d</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ V6 — Storyboard (3 squares horizontal) ============ -->
+<div class="col">
+  <div class="heading">
+    <div class="bet">V6 · 3-PANEL STORYBOARD</div>
+    <h2>"Comic-style snapshots."</h2>
+    <div class="why"><strong>Why easier:</strong> Horizontal panels create narrative — "first… then… finally." Each panel is a habit-card snapshot. Brain consumes stories faster than charts.</div>
+  </div>
+  <div class="phone">
+    <div class="notch"></div>
+    <div class="status-bar"><span>9:41</span><div class="flex items-center gap-1"><i data-lucide="signal" class="w-3 h-3"></i><i data-lucide="wifi" class="w-3 h-3"></i><i data-lucide="battery-full" class="w-3.5 h-3.5 text-green-700"></i></div></div>
+    <div class="phone-header"><button class="back"><i data-lucide="chevron-left" class="w-4 h-4"></i></button><div class="title">Strength curve</div><button class="done">Done</button></div>
+    <div class="body px-3">
+      <div class="text-center mb-3">
+        <span class="tier-pill tier-regular">🌱 Regular habit · 5-15 min daily</span>
+        <h1 class="text-[15px] font-extrabold mt-2 leading-tight" style="color: var(--text);">Your habit, ~9 weeks from now</h1>
+      </div>
+
+      <!-- 3 panel grid -->
+      <div class="grid grid-cols-3 gap-1.5 mb-3">
+        <div class="card p-2 text-center">
+          <div class="text-[9px] font-bold tracking-wider mb-1" style="color: var(--text-3);">WK 1</div>
+          <div class="text-[18px] mb-1">📖</div>
+          <div class="bar-track" style="height: 5px;"><div class="bar-fill" style="width: 5%;"></div></div>
+          <div class="text-[9px] mt-1.5" style="color: var(--text-3);">Fresh start</div>
+        </div>
+        <div class="card p-2 text-center">
+          <div class="text-[9px] font-bold tracking-wider mb-1" style="color: var(--text-3);">WK 5</div>
+          <div class="text-[18px] mb-1">📖</div>
+          <div class="bar-track" style="height: 5px;"><div class="bar-fill" style="width: 52%;"></div></div>
+          <div class="text-[9px] mt-1.5" style="color: var(--text-3);">Feels routine</div>
+        </div>
+        <div class="card p-2 text-center" style="border-color: var(--primary); box-shadow: 0 0 0 2px rgba(15,138,106,0.10);">
+          <div class="text-[9px] font-bold tracking-wider mb-1" style="color: var(--primary);">WK 9 ✨</div>
+          <div class="text-[18px] mb-1">📖</div>
+          <div class="bar-track" style="height: 5px;"><div class="bar-fill" style="width: 100%;"></div></div>
+          <div class="text-[9px] mt-1.5" style="color: var(--primary);">Automatic</div>
+        </div>
+      </div>
+
+      <!-- caption -->
+      <div class="card p-2.5 mb-3">
+        <div class="flex items-center gap-2 mb-1">
+          <div class="check-dot"></div>
+          <span class="text-[10.5px]" style="color: var(--text-2);">Each <strong>check-in</strong> fills the bar a little</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <div class="miss-dot"></div>
+          <span class="text-[10.5px]" style="color: var(--text-2);">A <strong>miss</strong> dips it — recovers on next check-in</span>
+        </div>
+      </div>
+
+      <p class="text-[9.5px] font-bold tracking-wider text-center mb-1.5" style="color: var(--text-3);">OR PICK A DIFFERENT COMPLEXITY</p>
+      <div class="grid grid-cols-2 gap-1.5">
+        <div class="mini-tile"><span class="tier-pill tier-simple" style="font-size: 9px; padding: 1px 5px;">⚡ Simple</span><div class="text-[10px] mt-1"><strong>~2.5 wk</strong> · 18d</div></div>
+        <div class="mini-tile"><span class="tier-pill tier-complex" style="font-size: 9px; padding: 1px 5px;">🏔️ Complex</span><div class="text-[10px] mt-1"><strong>~4 mo</strong> · 120d</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ V7 — Tutorial card (mechanic-first) ============ -->
+<div class="col">
+  <div class="heading">
+    <div class="bet">V7 · TUTORIAL CARD</div>
+    <h2>"Teach the mechanic in 4 lines."</h2>
+    <div class="why"><strong>Why easier:</strong> Numbered, dense, no chart. For users who'd rather read 4 rules than interpret a visual. Tier picker follows naturally below.</div>
+  </div>
+  <div class="phone">
+    <div class="notch"></div>
+    <div class="status-bar"><span>9:41</span><div class="flex items-center gap-1"><i data-lucide="signal" class="w-3 h-3"></i><i data-lucide="wifi" class="w-3 h-3"></i><i data-lucide="battery-full" class="w-3.5 h-3.5 text-green-700"></i></div></div>
+    <div class="phone-header"><button class="back"><i data-lucide="chevron-left" class="w-4 h-4"></i></button><div class="title">Strength curve</div><button class="done">Done</button></div>
+    <div class="body px-3">
+      <div class="text-center mb-3">
+        <h1 class="text-[16px] font-extrabold leading-tight" style="color: var(--text);">How strength works</h1>
+      </div>
+
+      <!-- Tutorial steps -->
+      <div class="card p-3 mb-3 mx-1">
+        <div class="space-y-2.5">
+          <div class="flex items-start gap-2.5">
+            <span class="w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-extrabold text-white" style="background: var(--primary);">1</span>
+            <div class="flex-1">
+              <div class="text-[11.5px]" style="color: var(--text);"><strong>Strength</strong> = the bar on each habit card.</div>
+              <div class="bar-track mt-1.5" style="height: 6px;"><div class="bar-fill" style="width: 60%;"></div></div>
+            </div>
+          </div>
+          <div class="flex items-start gap-2.5">
+            <span class="w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-extrabold text-white" style="background: var(--primary);">2</span>
+            <div class="text-[11.5px]" style="color: var(--text);"><strong>Check in</strong> → bar fills <span style="color: var(--primary);">↑</span></div>
+          </div>
+          <div class="flex items-start gap-2.5">
+            <span class="w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-extrabold text-white" style="background: var(--primary);">3</span>
+            <div class="text-[11.5px]" style="color: var(--text);"><strong>Miss a day</strong> → bar dips <span style="color: var(--miss);">↓</span></div>
+          </div>
+          <div class="flex items-start gap-2.5">
+            <span class="w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-extrabold text-white" style="background: var(--primary);">4</span>
+            <div class="text-[11.5px]" style="color: var(--text);"><strong>Hit 100%</strong> → habit is automatic ✨</div>
+          </div>
+        </div>
+      </div>
+
+      <h2 class="text-[13px] font-bold mt-2 mb-2 px-1" style="color: var(--text);">Pick how fast for this habit</h2>
+      <div class="space-y-1.5">
+        <div class="card p-2 flex items-center gap-2">
+          <span class="tier-pill tier-simple" style="font-size: 10px;">⚡ Simple</span>
+          <span class="text-[10.5px]" style="color: var(--text-3);">seconds daily</span>
+          <span class="text-[10.5px] ml-auto"><strong>~2.5 wk</strong> · 18d</span>
+        </div>
+        <div class="card p-2 flex items-center gap-2" style="border-color: var(--primary); box-shadow: 0 0 0 2px rgba(15,138,106,0.10);">
+          <span class="tier-pill tier-regular" style="font-size: 10px;">🌱 Regular</span>
+          <span class="text-[10.5px]" style="color: var(--text-3);">5-15 min</span>
+          <span class="text-[10.5px] ml-auto"><strong>~9 wk</strong> · 66d</span>
+          <i data-lucide="check" class="w-4 h-4 ml-1" style="color: var(--primary);"></i>
+        </div>
+        <div class="card p-2 flex items-center gap-2">
+          <span class="tier-pill tier-complex" style="font-size: 10px;">🏔️ Complex</span>
+          <span class="text-[10.5px]" style="color: var(--text-3);">30+ min</span>
+          <span class="text-[10.5px] ml-auto"><strong>~4 mo</strong> · 120d</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ V8 — Hybrid: Filmstrip + Mini Curve ============ -->
+<div class="col">
+  <div class="heading">
+    <div class="bet">V8 · FILMSTRIP + CURVE (hybrid)</div>
+    <h2>"Bar leads. Curve supports."</h2>
+    <div class="why"><strong>Why easier:</strong> Filmstrip is the headline (concrete, recognized). Mini curve below adds "and here's what's happening between the snapshots." Best of both modalities.</div>
+  </div>
+  <div class="phone">
+    <div class="notch"></div>
+    <div class="status-bar"><span>9:41</span><div class="flex items-center gap-1"><i data-lucide="signal" class="w-3 h-3"></i><i data-lucide="wifi" class="w-3 h-3"></i><i data-lucide="battery-full" class="w-3.5 h-3.5 text-green-700"></i></div></div>
+    <div class="phone-header"><button class="back"><i data-lucide="chevron-left" class="w-4 h-4"></i></button><div class="title">Strength curve</div><button class="done">Done</button></div>
+    <div class="body px-3">
+      <div class="text-center mb-3">
+        <span class="tier-pill tier-regular">🌱 Regular habit · 5-15 min daily</span>
+        <h1 class="text-[15px] font-extrabold mt-2 leading-tight" style="color: var(--text);">~9 weeks (66 days) to automatic</h1>
+      </div>
+
+      <!-- 3 panel filmstrip -->
+      <div class="grid grid-cols-3 gap-1.5 mb-2">
+        <div class="card p-1.5 text-center">
+          <div class="text-[14px]">📖</div>
+          <div class="bar-track mt-1" style="height: 4px;"><div class="bar-fill" style="width: 5%;"></div></div>
+          <div class="text-[8.5px] mt-1 font-bold" style="color: var(--text-3);">WK 1</div>
+        </div>
+        <div class="card p-1.5 text-center">
+          <div class="text-[14px]">📖</div>
+          <div class="bar-track mt-1" style="height: 4px;"><div class="bar-fill" style="width: 52%;"></div></div>
+          <div class="text-[8.5px] mt-1 font-bold" style="color: var(--text-3);">WK 5</div>
+        </div>
+        <div class="card p-1.5 text-center" style="border-color: var(--primary); box-shadow: 0 0 0 2px rgba(15,138,106,0.10);">
+          <div class="text-[14px]">📖</div>
+          <div class="bar-track mt-1" style="height: 4px;"><div class="bar-fill" style="width: 100%;"></div></div>
+          <div class="text-[8.5px] mt-1 font-bold" style="color: var(--primary);">WK 9 ✨</div>
+        </div>
+      </div>
+
+      <!-- Mini supporting curve -->
+      <div class="card p-2.5 mb-3" style="background: var(--primary-tint);">
+        <div class="text-[9.5px] font-bold tracking-wider mb-1" style="color: var(--text-3);">↑ STRENGTH OVER TIME</div>
+        <svg viewBox="0 0 320 50" class="w-full" style="height: 38px;" preserveAspectRatio="none">
+          <path d="M 4 46 C 60 42, 110 36, 160 25 C 200 16, 220 22, 240 28 C 260 32, 280 18, 316 6" fill="none" stroke="var(--primary)" stroke-width="2.4" stroke-linecap="round"/>
+          <circle class="miss-marker" cx="240" cy="28" r="2.5"/>
+        </svg>
+        <div class="flex justify-between text-[8.5px] font-bold tracking-wider" style="color: var(--text-3);">
+          <span>DAY 1</span><span>RED DOT = MISS</span><span>DAY 66</span>
+        </div>
+      </div>
+
+      <p class="text-[9.5px] font-bold tracking-wider text-center mb-1.5" style="color: var(--text-3);">OR PICK A DIFFERENT COMPLEXITY</p>
+      <div class="grid grid-cols-2 gap-1.5">
+        <div class="mini-tile"><span class="tier-pill tier-simple" style="font-size: 9px; padding: 1px 5px;">⚡ Simple</span><div class="text-[10px] mt-1"><strong>~2.5 wk</strong> · 18d</div></div>
+        <div class="mini-tile"><span class="tier-pill tier-complex" style="font-size: 9px; padding: 1px 5px;">🏔️ Complex</span><div class="text-[10px] mt-1"><strong>~4 mo</strong> · 120d</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>lucide.createIcons();</script>
+</body>
+</html>

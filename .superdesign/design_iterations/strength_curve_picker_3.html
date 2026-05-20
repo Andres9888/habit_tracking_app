@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Strength Curve Picker — Teaching Layout v3</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #efece4;
+    --card: #fbfaf6;
+    --text: #14171a;
+    --text-2: #4a5057;
+    --text-3: #8a8f96;
+    --border: rgba(20,23,26,0.10);
+    --primary: #0f8a6a;
+    --primary-soft: #d6efe5;
+    --primary-tint: rgba(15,138,106,0.08);
+    --orange: #d97a3a;
+    --orange-soft: #f8e2cf;
+    --purple: #6b5ca8;
+    --purple-soft: #e1ddf3;
+    --miss: #c84a4a;
+    --auto-band: rgba(15,138,106,0.10);
+    --auto-band-line: rgba(15,138,106,0.35);
+  }
+  html, body { font-family: 'Inter', system-ui, -apple-system, sans-serif !important; background: #e6e3dc; }
+  .phone {
+    width: 390px; height: 844px;
+    border-radius: 48px;
+    background: var(--bg);
+    box-shadow: 0 30px 60px -20px rgba(0,0,0,0.35), 0 0 0 8px #111 inset, 0 0 0 10px #2a2a2a;
+    overflow: hidden;
+    position: relative;
+  }
+  .notch { position: absolute; left: 50%; top: 10px; transform: translateX(-50%); width: 120px; height: 32px; background: #000; border-radius: 20px; z-index: 50; }
+  .status-bar { position: absolute; left: 0; right: 0; top: 0; height: 50px; z-index: 40; display: flex; align-items: center; justify-content: space-between; padding: 18px 28px 0 28px; font-size: 15px; font-weight: 600; color: #0a0a0a; }
+  .header-bar { background: rgba(239,236,228,0.95); }
+  .chart-card { background: var(--card); border: 1px solid var(--border); border-radius: 18px; }
+  .grid-line { stroke: rgba(20,23,26,0.08); stroke-dasharray: 2 4; }
+  .axis-tick { font-size: 9px; font-weight: 700; fill: var(--text-3); letter-spacing: 0.06em; }
+  .annotation { font-size: 10px; font-weight: 600; fill: var(--text-2); }
+  .miss-marker { fill: var(--miss); stroke: #fff; stroke-width: 2; }
+  .checkin-marker { fill: var(--primary); stroke: #fff; stroke-width: 2; }
+  .pick-card { background: var(--card); border: 1.5px solid var(--border); border-radius: 14px; transition: all 0.2s; }
+  .pick-card.active { border-color: currentColor; background: #fff; box-shadow: 0 0 0 3px rgba(15,138,106,0.10); }
+  .pill-default { background: var(--primary); color: #fff; font-size: 8.5px; font-weight: 800; letter-spacing: 0.04em; padding: 1px 5px; border-radius: 4px; }
+  .check-circle { background: var(--primary); }
+  .legend-dot { width: 8px; height: 8px; border-radius: 999px; display: inline-block; border: 2px solid #fff; box-shadow: 0 0 0 1px rgba(20,23,26,0.20); }
+</style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-8 gap-8 flex-wrap">
+
+  <div class="phone">
+    <div class="notch"></div>
+    <div class="status-bar">
+      <span>9:41</span>
+      <div class="flex items-center gap-1.5">
+        <i data-lucide="signal" class="w-4 h-4"></i>
+        <i data-lucide="wifi" class="w-4 h-4"></i>
+        <i data-lucide="battery-full" class="w-5 h-5 text-green-700"></i>
+      </div>
+    </div>
+
+    <div class="absolute top-[50px] left-0 right-0 z-30 header-bar">
+      <div class="flex items-center justify-between px-5 py-2.5">
+        <button class="w-9 h-9 rounded-full bg-white/70 border flex items-center justify-center" style="border-color: var(--border);">
+          <i data-lucide="chevron-left" class="w-5 h-5" style="color: var(--text);"></i>
+        </button>
+        <div class="text-[15px] font-semibold" style="color: var(--text);">Strength curve</div>
+        <button class="rounded-full px-4 py-1.5 text-[13px] font-semibold text-white" style="background: var(--primary);">Done</button>
+      </div>
+    </div>
+
+    <div style="padding-top: 102px;">
+      <!-- Hero -->
+      <div class="px-5 pt-2 pb-2">
+        <h1 class="text-[20px] font-extrabold leading-tight" style="color: var(--text);">
+          How will this habit get stronger?
+        </h1>
+        <p class="text-[12px] leading-snug mt-0.5" style="color: var(--text-2);">
+          <span style="color: var(--text);" class="font-semibold">Strength</span> is the bar you see on each habit. It rises when you check in and dips when you miss. Tap a curve below to preview.
+        </p>
+      </div>
+
+      <!-- BIG ANNOTATED CHART (Textbook selected by default) -->
+      <div class="mx-4 mb-3 chart-card p-3">
+        <div class="flex items-center justify-between mb-1.5">
+          <div class="flex items-center gap-2">
+            <div class="w-7 h-7 rounded-lg flex items-center justify-center" style="background: var(--primary-soft);">
+              <i data-lucide="activity" class="w-4 h-4" style="color: var(--primary);"></i>
+            </div>
+            <div>
+              <div class="flex items-center gap-1.5">
+                <span class="text-[13px] font-bold" style="color: var(--text);">Textbook</span>
+                <span class="pill-default">DEFAULT</span>
+              </div>
+              <div class="text-[10px]" style="color: var(--text-3);">~66 days to automatic · UCL study</div>
+            </div>
+          </div>
+        </div>
+        <!-- The annotated SVG -->
+        <svg viewBox="0 0 340 180" class="w-full" style="height: 180px;">
+          <!-- automatic band -->
+          <rect x="32" y="18" width="296" height="28" fill="var(--auto-band)"/>
+          <line x1="32" y1="46" x2="328" y2="46" stroke="var(--auto-band-line)" stroke-dasharray="3 3" stroke-width="1"/>
+          <text x="324" y="32" text-anchor="end" class="annotation" style="fill: var(--primary);">AUTOMATIC ZONE</text>
+
+          <!-- Y axis ticks -->
+          <text x="28" y="22" text-anchor="end" class="axis-tick">100%</text>
+          <text x="28" y="92" text-anchor="end" class="axis-tick">50%</text>
+          <text x="28" y="160" text-anchor="end" class="axis-tick">0%</text>
+
+          <!-- grid lines -->
+          <line class="grid-line" x1="32" y1="18" x2="328" y2="18"/>
+          <line class="grid-line" x1="32" y1="88" x2="328" y2="88"/>
+          <line class="grid-line" x1="32" y1="158" x2="328" y2="158"/>
+
+          <!-- Y axis line -->
+          <line x1="32" y1="14" x2="32" y2="158" stroke="rgba(20,23,26,0.18)" stroke-width="1"/>
+          <!-- X axis line -->
+          <line x1="32" y1="158" x2="328" y2="158" stroke="rgba(20,23,26,0.18)" stroke-width="1"/>
+
+          <!-- Vertical Y label (rotated) -->
+          <text transform="rotate(-90 12 90)" x="12" y="90" text-anchor="middle" class="annotation" style="fill: var(--text-3); letter-spacing: 0.10em; font-size: 9px; text-transform: uppercase;">Strength</text>
+
+          <!-- Textbook curve (balanced) — drawn in chart coords (x: 32..328, y: 18 top .. 158 bottom) -->
+          <path d="M 32 154
+                   C 78 152, 120 138, 158 118
+                   C 184 104, 200 110, 218 122
+                   C 236 132, 250 110, 280 70
+                   C 304 42, 320 28, 328 22"
+                fill="none" stroke="var(--primary)" stroke-width="3" stroke-linecap="round"/>
+          <path d="M 32 154
+                   C 78 152, 120 138, 158 118
+                   C 184 104, 200 110, 218 122
+                   C 236 132, 250 110, 280 70
+                   C 304 42, 320 28, 328 22
+                   L 328 158 L 32 158 Z"
+                fill="var(--primary)" opacity="0.10"/>
+
+          <!-- check-in marker (early growth point) -->
+          <circle class="checkin-marker" cx="120" cy="138" r="4.5"/>
+          <text x="118" y="130" text-anchor="middle" class="annotation" style="fill: var(--primary);">check-in</text>
+
+          <!-- miss marker -->
+          <circle class="miss-marker" cx="218" cy="122" r="4.5"/>
+          <text x="218" y="114" text-anchor="middle" class="annotation" style="fill: var(--miss);">missed a day</text>
+
+          <!-- X axis labels -->
+          <text x="32" y="172" text-anchor="start" class="axis-tick">DAY 1</text>
+          <text x="180" y="172" text-anchor="middle" class="axis-tick">~ DAY 33</text>
+          <text x="328" y="172" text-anchor="end" class="axis-tick">DAY 66</text>
+        </svg>
+      </div>
+
+      <!-- Subtle hint line -->
+      <div class="px-5 mb-2 flex items-center gap-3 text-[10.5px]" style="color: var(--text-3);">
+        <span class="flex items-center gap-1.5">
+          <span class="legend-dot" style="background: var(--primary);"></span> grow on check-in
+        </span>
+        <span class="flex items-center gap-1.5">
+          <span class="legend-dot" style="background: var(--miss);"></span> dip on miss
+        </span>
+      </div>
+
+      <!-- Picker section header -->
+      <div class="px-5 pt-1 pb-1.5">
+        <p class="text-[10.5px] font-bold tracking-wider uppercase" style="color: var(--text-3);">Pick a curve</p>
+      </div>
+
+      <!-- 3 picker cards in row -->
+      <div class="px-4 flex gap-2">
+        <button class="pick-card flex-1 p-2.5" style="color: var(--orange);">
+          <div class="flex items-center gap-1.5 mb-0.5">
+            <div class="w-6 h-6 rounded-md flex items-center justify-center" style="background: var(--orange-soft);">
+              <i data-lucide="zap" class="w-3.5 h-3.5" style="color: var(--orange);"></i>
+            </div>
+            <span class="text-[12px] font-bold" style="color: var(--text);">Quick Win</span>
+          </div>
+          <div class="text-[10px]" style="color: var(--text-3);">~18 days · water · vitamins</div>
+        </button>
+
+        <button class="pick-card active flex-1 p-2.5 relative" style="color: var(--primary);">
+          <div class="flex items-center gap-1.5 mb-0.5">
+            <div class="w-6 h-6 rounded-md flex items-center justify-center" style="background: var(--primary-soft);">
+              <i data-lucide="activity" class="w-3.5 h-3.5" style="color: var(--primary);"></i>
+            </div>
+            <span class="text-[12px] font-bold" style="color: var(--text);">Textbook</span>
+            <div class="check-circle w-4 h-4 rounded-full flex items-center justify-center ml-auto">
+              <i data-lucide="check" class="w-2.5 h-2.5 text-white"></i>
+            </div>
+          </div>
+          <div class="text-[10px]" style="color: var(--text-3);">~66 days · read · walk</div>
+        </button>
+
+        <button class="pick-card flex-1 p-2.5" style="color: var(--purple);">
+          <div class="flex items-center gap-1.5 mb-0.5">
+            <div class="w-6 h-6 rounded-md flex items-center justify-center" style="background: var(--purple-soft);">
+              <i data-lucide="mountain" class="w-3.5 h-3.5" style="color: var(--purple);"></i>
+            </div>
+            <span class="text-[12px] font-bold" style="color: var(--text);">Long Haul</span>
+          </div>
+          <div class="text-[10px]" style="color: var(--text-3);">~120 days · running</div>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>lucide.createIcons();</script>
+</body>
+</html>
