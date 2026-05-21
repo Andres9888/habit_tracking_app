@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Strength Curve — E Hybrid Refinements</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #efece4;
+    --card: #fbfaf6;
+    --text: #14171a;
+    --text-2: #4a5057;
+    --text-3: #8a8f96;
+    --border: rgba(20,23,26,0.10);
+    --primary: #0f8a6a;
+    --primary-soft: #d6efe5;
+    --primary-tint: rgba(15,138,106,0.10);
+    --primary-strong: #086148;
+    --orange: #d97a3a;
+    --orange-soft: #f8e2cf;
+    --purple: #6b5ca8;
+    --purple-soft: #e1ddf3;
+    --miss: #c84a4a;
+    --filled-dot: var(--primary);
+    --empty-dot: rgba(20,23,26,0.08);
+  }
+  html, body { font-family: 'Inter', system-ui, -apple-system, sans-serif !important; background: #d8d5cd; padding-bottom: 40px; }
+  .col { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+  .heading { text-align: center; max-width: 360px; }
+  .heading .bet { font-size: 11px; font-weight: 700; color: var(--primary-strong); text-transform: uppercase; letter-spacing: 0.10em; }
+  .heading h2 { font-size: 17px; font-weight: 800; color: var(--text); margin-top: 2px; }
+  .heading p { font-size: 12px; color: var(--text-2); margin-top: 6px; line-height: 1.45; }
+  .phone {
+    width: 360px; height: 780px;
+    border-radius: 44px;
+    background: var(--bg);
+    box-shadow: 0 18px 36px -16px rgba(0,0,0,0.30), 0 0 0 7px #111 inset, 0 0 0 9px #2a2a2a;
+    overflow: hidden; position: relative;
+  }
+  .notch { position: absolute; left: 50%; top: 9px; transform: translateX(-50%); width: 110px; height: 28px; background: #000; border-radius: 18px; z-index: 50; }
+  .status-bar { position: absolute; left: 0; right: 0; top: 0; height: 46px; z-index: 40; display: flex; align-items: center; justify-content: space-between; padding: 16px 26px 0 26px; font-size: 14px; font-weight: 600; color: #0a0a0a; }
+  .header-bar { background: rgba(239,236,228,0.95); }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; }
+  .card-selected { border: 1.5px solid var(--primary); background: #fff; box-shadow: 0 0 0 3px rgba(15,138,106,0.10); }
+  .check-circle { background: var(--primary); }
+  .miss-marker { fill: var(--miss); }
+  .grid-line { stroke: rgba(20,23,26,0.06); stroke-dasharray: 2 4; }
+  .pill { font-size: 9.5px; font-weight: 800; letter-spacing: 0.05em; padding: 2px 7px; border-radius: 999px; text-transform: uppercase; }
+  .tier-pill { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 999px; font-size: 11px; font-weight: 700; }
+  .tier-simple { background: var(--orange-soft); color: #7A2E0A; }
+  .tier-regular { background: var(--primary-soft); color: var(--primary-strong); }
+  .tier-complex { background: var(--purple-soft); color: #3F2F75; }
+  /* day-ruler */
+  .ruler { display: grid; grid-template-columns: repeat(9, 1fr); gap: 2px; }
+  .ruler-week { height: 8px; border-radius: 3px; background: var(--primary); opacity: 0.85; }
+  .ruler-week.dim { opacity: 0.15; }
+</style>
+</head>
+<body class="flex items-start justify-center gap-8 flex-wrap pt-8">
+
+<!-- ============ E1 — Complexity tier front, day-as-weeks ============ -->
+<div class="col">
+  <div class="heading">
+    <div class="bet">E1 · TIER + WEEKS</div>
+    <h2>"Tier badge upfront. Days → weeks."</h2>
+    <p>Leads with the habit type (Regular Habit). Translates 66 days → "~9 weeks of daily check-ins" so the timeline is tangible.</p>
+  </div>
+  <div class="phone">
+    <div class="notch"></div>
+    <div class="status-bar"><span>9:41</span><div class="flex items-center gap-1"><i data-lucide="signal" class="w-3.5 h-3.5"></i><i data-lucide="wifi" class="w-3.5 h-3.5"></i><i data-lucide="battery-full" class="w-4 h-4 text-green-700"></i></div></div>
+    <div class="absolute top-[46px] left-0 right-0 z-30 header-bar">
+      <div class="flex items-center justify-between px-4 py-2">
+        <button class="w-8 h-8 rounded-full bg-white/70 border flex items-center justify-center" style="border-color: var(--border);"><i data-lucide="chevron-left" class="w-4 h-4"></i></button>
+        <div class="text-[14px] font-semibold">Strength curve</div>
+        <button class="rounded-full px-3.5 py-1 text-[12px] font-semibold text-white" style="background: var(--primary);">Done</button>
+      </div>
+    </div>
+    <div style="padding-top: 92px;">
+      <div class="px-5 pt-4 pb-2 text-center">
+        <div class="inline-flex items-center gap-1 rounded-full px-2.5 py-1 mb-3" style="background: var(--primary-tint);">
+          <i data-lucide="sparkles" class="w-3 h-3" style="color: var(--primary);"></i>
+          <span class="text-[10.5px] font-bold" style="color: var(--primary);">PICKED FOR YOUR HABIT</span>
+        </div>
+        <span class="tier-pill tier-regular">🌱 Regular habit</span>
+        <h1 class="text-[22px] font-extrabold leading-tight mt-3" style="color: var(--text);">Second nature in<br/>~9 weeks <span style="color: var(--text-3); font-weight: 700;">(66 days)</span></h1>
+        <p class="text-[12px] mt-2" style="color: var(--text-2);">The textbook formation time from UCL research. Daily check-ins build the curve; misses dip it.</p>
+      </div>
+
+      <!-- Week ruler -->
+      <div class="mx-5 mt-3 mb-2 px-3 py-3 rounded-xl" style="background: var(--card);">
+        <div class="flex items-center justify-between text-[10px] font-bold tracking-wider mb-1.5" style="color: var(--text-3);">
+          <span>WK 1 · DAY 1</span><span>WK 5 · DAY 33</span><span>WK 9 · DAY 66 ✨</span>
+        </div>
+        <div class="ruler">
+          <div class="ruler-week"></div><div class="ruler-week"></div><div class="ruler-week"></div><div class="ruler-week"></div><div class="ruler-week"></div><div class="ruler-week"></div><div class="ruler-week"></div><div class="ruler-week"></div><div class="ruler-week"></div>
+        </div>
+        <p class="text-[10.5px] mt-2" style="color: var(--text-2);">
+          Strength grows on check-ins, dips on misses — slowly enough to forgive a bad day, fast enough to feel progress.
+        </p>
+      </div>
+
+      <!-- Override -->
+      <div class="px-5 pt-2 pb-2">
+        <p class="text-[11px] text-center" style="color: var(--text-3);">Or build a different kind of habit</p>
+      </div>
+      <div class="px-4 flex gap-2">
+        <button class="card flex-1 p-2.5 text-center">
+          <div class="tier-pill tier-simple" style="font-size: 9.5px; padding: 2px 6px;">⚡ Simple</div>
+          <div class="text-[11px] font-bold mt-1" style="color: var(--text);">~2.5 weeks <span style="color: var(--text-3); font-weight: 600;">(18 days)</span></div>
+          <div class="text-[9.5px]" style="color: var(--text-3);">Drink water · floss</div>
+        </button>
+        <button class="card flex-1 p-2.5 text-center">
+          <div class="tier-pill tier-complex" style="font-size: 9.5px; padding: 2px 6px;">🏔️ Complex</div>
+          <div class="text-[11px] font-bold mt-1" style="color: var(--text);">~4 months <span style="color: var(--text-3); font-weight: 600;">(120 days)</span></div>
+          <div class="text-[9.5px]" style="color: var(--text-3);">Run · write daily</div>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ E2 — Curve preview + numbered explanation ============ -->
+<div class="col">
+  <div class="heading">
+    <div class="bet">E2 · CURVE + LABELED MILESTONES</div>
+    <h2>"Show the curve. Mark the milestones."</h2>
+    <p>Outcome up top, then a curve with three labeled checkpoints (start, halfway, automatic). Makes "Day 66" concrete and visual.</p>
+  </div>
+  <div class="phone">
+    <div class="notch"></div>
+    <div class="status-bar"><span>9:41</span><div class="flex items-center gap-1"><i data-lucide="signal" class="w-3.5 h-3.5"></i><i data-lucide="wifi" class="w-3.5 h-3.5"></i><i data-lucide="battery-full" class="w-4 h-4 text-green-700"></i></div></div>
+    <div class="absolute top-[46px] left-0 right-0 z-30 header-bar">
+      <div class="flex items-center justify-between px-4 py-2">
+        <button class="w-8 h-8 rounded-full bg-white/70 border flex items-center justify-center" style="border-color: var(--border);"><i data-lucide="chevron-left" class="w-4 h-4"></i></button>
+        <div class="text-[14px] font-semibold">Strength curve</div>
+        <button class="rounded-full px-3.5 py-1 text-[12px] font-semibold text-white" style="background: var(--primary);">Done</button>
+      </div>
+    </div>
+    <div style="padding-top: 92px;">
+      <div class="px-5 pt-3 pb-2 text-center">
+        <span class="tier-pill tier-regular">🌱 Regular habit</span>
+        <h1 class="text-[21px] font-extrabold leading-tight mt-2" style="color: var(--text);">Becomes second nature in<br/>~9 weeks <span style="color: var(--text-3); font-weight: 700;">(66 days)</span></h1>
+      </div>
+
+      <!-- Big annotated mini-chart with milestones -->
+      <div class="mx-4 mt-2 mb-3 card p-3">
+        <svg viewBox="0 0 320 100" class="w-full" style="height: 110px;">
+          <!-- automatic band -->
+          <rect x="0" y="0" width="320" height="14" fill="rgba(15,138,106,0.10)"/>
+          <text x="316" y="10" text-anchor="end" font-size="8" font-weight="700" fill="var(--primary)" letter-spacing="0.06em">AUTOMATIC</text>
+          <line class="grid-line" x1="0" y1="50" x2="320" y2="50"/>
+          <line class="grid-line" x1="0" y1="90" x2="320" y2="90"/>
+
+          <path d="M 8 92 C 60 86, 110 76, 155 60 C 195 46, 215 52, 240 62 C 260 70, 275 50, 305 22 C 314 14, 318 10, 318 9" fill="none" stroke="var(--primary)" stroke-width="3" stroke-linecap="round"/>
+          <path d="M 8 92 C 60 86, 110 76, 155 60 C 195 46, 215 52, 240 62 C 260 70, 275 50, 305 22 C 314 14, 318 10, 318 9 L 318 92 L 8 92 Z" fill="var(--primary)" opacity="0.12"/>
+
+          <!-- milestones -->
+          <circle cx="8" cy="92" r="4" fill="var(--primary)" stroke="#fff" stroke-width="2"/>
+          <circle cx="155" cy="60" r="4" fill="var(--primary)" stroke="#fff" stroke-width="2"/>
+          <circle cx="318" cy="9" r="4" fill="var(--primary)" stroke="#fff" stroke-width="2"/>
+          <circle class="miss-marker" cx="240" cy="62" r="3" stroke="#fff" stroke-width="1.5"/>
+        </svg>
+        <!-- milestone labels under the chart -->
+        <div class="grid grid-cols-3 gap-1 mt-2 text-center">
+          <div>
+            <div class="text-[10px] font-extrabold" style="color: var(--text);">WK 1 · DAY 1</div>
+            <div class="text-[10px]" style="color: var(--text-3);">Today, fresh start</div>
+          </div>
+          <div>
+            <div class="text-[10px] font-extrabold" style="color: var(--text);">WK 5 · DAY 33</div>
+            <div class="text-[10px]" style="color: var(--text-3);">Feels routine</div>
+          </div>
+          <div>
+            <div class="text-[10px] font-extrabold" style="color: var(--primary);">WK 9 · DAY 66 ✨</div>
+            <div class="text-[10px]" style="color: var(--text-3);">Automatic</div>
+          </div>
+        </div>
+        <p class="text-[10px] text-center mt-2 italic" style="color: var(--miss);">Red dot = a miss day. Strength dips, then recovers on your next check-in.</p>
+      </div>
+
+      <!-- Override -->
+      <div class="px-4 flex gap-2">
+        <button class="card flex-1 p-2.5 text-center">
+          <div class="tier-pill tier-simple" style="font-size: 9.5px; padding: 2px 6px;">⚡ Simple</div>
+          <div class="text-[10.5px] mt-1" style="color: var(--text-2);"><strong>~2.5 weeks</strong> · 18 days</div>
+        </button>
+        <button class="card flex-1 p-2.5 text-center">
+          <div class="tier-pill tier-complex" style="font-size: 9.5px; padding: 2px 6px;">🏔️ Complex</div>
+          <div class="text-[10.5px] mt-1" style="color: var(--text-2);"><strong>~4 months</strong> · 120 days</div>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ E3 — Triple-tier hero w/ inline weekly meter ============ -->
+<div class="col">
+  <div class="heading">
+    <div class="bet">E3 · COMPLEXITY-FIRST HERO</div>
+    <h2>"Tier IS the choice."</h2>
+    <p>The decision frame: "Is this a Simple, Regular, or Complex habit?" Default picked but tiers stacked equally — clearer mental model.</p>
+  </div>
+  <div class="phone">
+    <div class="notch"></div>
+    <div class="status-bar"><span>9:41</span><div class="flex items-center gap-1"><i data-lucide="signal" class="w-3.5 h-3.5"></i><i data-lucide="wifi" class="w-3.5 h-3.5"></i><i data-lucide="battery-full" class="w-4 h-4 text-green-700"></i></div></div>
+    <div class="absolute top-[46px] left-0 right-0 z-30 header-bar">
+      <div class="flex items-center justify-between px-4 py-2">
+        <button class="w-8 h-8 rounded-full bg-white/70 border flex items-center justify-center" style="border-color: var(--border);"><i data-lucide="chevron-left" class="w-4 h-4"></i></button>
+        <div class="text-[14px] font-semibold">Strength curve</div>
+        <button class="rounded-full px-3.5 py-1 text-[12px] font-semibold text-white" style="background: var(--primary);">Done</button>
+      </div>
+    </div>
+    <div style="padding-top: 92px;">
+      <div class="px-5 pt-2 pb-3">
+        <h1 class="text-[20px] font-extrabold leading-tight" style="color: var(--text);">How complex is this habit?</h1>
+        <p class="text-[11.5px] mt-0.5" style="color: var(--text-2);">We use it to set how fast your <strong style="color: var(--text);">strength bar</strong> grows.</p>
+      </div>
+
+      <!-- Tier card: Simple -->
+      <div class="mx-3 mb-2 card p-3">
+        <div class="flex items-start gap-3">
+          <div class="text-[26px] leading-none">⚡</div>
+          <div class="flex-1">
+            <div class="flex items-center gap-2">
+              <span class="text-[14px] font-bold" style="color: var(--text);">Simple</span>
+              <span class="text-[10.5px]" style="color: var(--text-3);">· seconds</span>
+            </div>
+            <div class="text-[11px] mt-0.5" style="color: var(--text-2);">Locks in by <strong>~2.5 weeks (18 days)</strong>. Forgives slips.</div>
+            <div class="text-[10px] mt-0.5" style="color: var(--text-3);">Drink water · take vitamins · floss</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tier card: Regular (selected default) -->
+      <div class="mx-3 mb-2 card card-selected p-3">
+        <div class="flex items-start gap-3">
+          <div class="text-[26px] leading-none">🌱</div>
+          <div class="flex-1">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="text-[14px] font-bold" style="color: var(--text);">Regular</span>
+              <span class="text-[10.5px]" style="color: var(--text-3);">· 5-15 min</span>
+              <span class="pill" style="background: var(--primary); color: #fff;">DEFAULT</span>
+            </div>
+            <div class="text-[11px] mt-0.5" style="color: var(--text-2);">Second nature in <strong>~9 weeks (66 days)</strong>. UCL textbook curve.</div>
+            <div class="text-[10px] mt-0.5" style="color: var(--text-3);">Read · walk · meditate · journal</div>
+          </div>
+          <div class="check-circle w-6 h-6 rounded-full flex items-center justify-center">
+            <i data-lucide="check" class="w-3.5 h-3.5 text-white"></i>
+          </div>
+        </div>
+        <!-- inline mini curve to show the chosen one -->
+        <div class="mt-2.5 rounded-md p-2 pb-1" style="background: var(--primary-tint);">
+          <svg viewBox="0 0 320 36" class="w-full" style="height: 30px;" preserveAspectRatio="none">
+            <path d="M 4 32 C 60 28, 110 22, 160 16 C 200 10, 220 14, 240 18 C 260 22, 280 10, 316 4" fill="none" stroke="var(--primary)" stroke-width="2.2" stroke-linecap="round"/>
+            <circle class="miss-marker" cx="240" cy="18" r="2.5"/>
+          </svg>
+          <div class="flex justify-between text-[9px] font-bold tracking-wider mt-0.5" style="color: var(--text-3);">
+            <span>WEEK 1 · DAY 1</span><span>WEEK 9 · DAY 66 ✨</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tier card: Complex -->
+      <div class="mx-3 mb-2 card p-3">
+        <div class="flex items-start gap-3">
+          <div class="text-[26px] leading-none">🏔️</div>
+          <div class="flex-1">
+            <div class="flex items-center gap-2">
+              <span class="text-[14px] font-bold" style="color: var(--text);">Complex</span>
+              <span class="text-[10.5px]" style="color: var(--text-3);">· 30+ min</span>
+            </div>
+            <div class="text-[11px] mt-0.5" style="color: var(--text-2);">Identity-level after <strong>~4 months (120 days)</strong>. Misses sting.</div>
+            <div class="text-[10px] mt-0.5" style="color: var(--text-3);">Run · 30-min meditate · write daily</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom explainer -->
+      <div class="mx-4 mt-2 px-3 py-2 rounded-xl" style="background: rgba(20,23,26,0.04);">
+        <p class="text-[10.5px] leading-snug" style="color: var(--text-2);">
+          <i data-lucide="info" class="inline w-3 h-3" style="color: var(--text-3); vertical-align: -1px;"></i>
+          <strong style="color: var(--text);">Strength</strong> = the bar on each habit. Grows on check-ins, dips on misses.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>lucide.createIcons();</script>
+</body>
+</html>

@@ -40,9 +40,9 @@ import {
   resolveProgressEmojis,
 } from '@/utils/progressEmojis';
 import { getGrowthTypeMeta } from '@/utils/growthTypeMeta';
+import { StrengthCurvePickerModal } from '@/screens/StrengthCurvePicker';
 import { AdvancedOptionRow } from './AdvancedOptionRow';
 import { AdvancedSheet } from './AdvancedSheet';
-import { AlgorithmSheetBody } from './AlgorithmSheetBody';
 import { GrowthIconsSheetBody } from './GrowthIconsSheetBody';
 import { StreakGoalSheetBody } from './StreakGoalSheetBody';
 import type { AdvancedOptionsSectionProps } from './AdvancedOptions.types';
@@ -242,17 +242,12 @@ export function AdvancedOptionsSection({
         ) : null}
       </Animated.View>
 
-      <AdvancedSheet
-        subtitle={`Strength rises with check-ins and dips with misses. Pick the curve that fits this habit.`}
-        title='Strength Curve'
+      <StrengthCurvePickerModal
+        selected={strengthAlgorithm}
         visible={openSheet === 'algorithm'}
         onClose={() => setOpenSheet(null)}
-      >
-        <AlgorithmSheetBody
-          selected={strengthAlgorithm}
-          onSelect={onStrengthAlgorithmChange}
-        />
-      </AdvancedSheet>
+        onSelect={onStrengthAlgorithmChange}
+      />
 
       <AdvancedSheet
         subtitle='Five stages, one for every 20% of strength. Pick a theme or customize any stage.'
