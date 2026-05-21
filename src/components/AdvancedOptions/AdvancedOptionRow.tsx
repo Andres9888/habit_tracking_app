@@ -1,17 +1,17 @@
-/** Single row inside the Advanced Options section: icon · title/subtitle · chevron. */
+/** Single row inside the Advanced Options section: icon · title/subtitle/description · edit affordance. */
 import type { ReactNode } from 'react';
 import { Pressable, Text, View } from 'react-native';
-import { ChevronRight } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
-import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '@/theme/ThemeContext';
 import { fontWeights, typography } from '@/theme/typography';
+import { AdvancedOptionEditAffordance } from './AdvancedOptionEditAffordance';
 
 interface AdvancedOptionRowProps {
   icon: ReactNode;
   iconBackground: string;
   title: string;
   subtitle: string;
+  description?: string;
   onPress: () => void;
   accessibilityHint?: string;
 }
@@ -21,6 +21,7 @@ export function AdvancedOptionRow({
   iconBackground,
   title,
   subtitle,
+  description,
   onPress,
   accessibilityHint,
 }: AdvancedOptionRowProps) {
@@ -31,18 +32,23 @@ export function AdvancedOptionRow({
     onPress();
   };
 
+  const a11yHint = description
+    ? `${description} ${accessibilityHint ?? ''}`.trim()
+    : accessibilityHint;
+
   return (
     <Pressable
-      accessibilityHint={accessibilityHint}
+      accessibilityHint={a11yHint}
       accessibilityLabel={title}
       accessibilityRole='button'
       className='flex-row items-center gap-3 rounded-2xl px-4 py-3.5'
-      style={{
-        backgroundColor: colors.card,
+      style={({ pressed }) => ({
+        backgroundColor: pressed ? colors.primary[100] : colors.background,
         borderWidth: 1,
-        borderColor: colors.border,
+        borderColor: pressed ? colors.primary[300] : colors.cardBorder,
         minHeight: 64,
-      }}
+        opacity: pressed ? 0.92 : 1,
+      })}
       onPress={handlePress}
     >
       <View
@@ -66,18 +72,30 @@ export function AdvancedOptionRow({
           numberOfLines={1}
           style={{
             ...typography.caption,
-            color: colors.text.tertiary,
+            color: colors.text.secondary,
             marginTop: 2,
           }}
         >
           {subtitle}
         </Text>
+        {description ? (
+          <Text
+            accessibilityElementsHidden
+            importantForAccessibility='no'
+            numberOfLines={2}
+            style={{
+              ...typography.caption,
+              fontSize: 12,
+              lineHeight: 16,
+              color: colors.text.tertiary,
+              marginTop: 4,
+            }}
+          >
+            {description}
+          </Text>
+        ) : null}
       </View>
-      <ChevronRight
-        color={colors.text.tertiary}
-        size={iconSizes.small}
-        strokeWidth={2}
-      />
+      <AdvancedOptionEditAffordance />
     </Pressable>
   );
 }

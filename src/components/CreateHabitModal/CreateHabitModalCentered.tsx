@@ -53,6 +53,15 @@ export default function CreateHabitModalCentered(props: CreateHabitModalProps) {
     }
   }, [visible, isEditMode]);
 
+  // Flash the native scroll indicator on open so users see the form is scrollable.
+  useEffect(() => {
+    if (!visible) return;
+    const id = setTimeout(() => {
+      scrollViewRef.current?.flashScrollIndicators();
+    }, 350);
+    return () => clearTimeout(id);
+  }, [visible]);
+
   return (
     <Modal
       accessibilityViewIsModal
