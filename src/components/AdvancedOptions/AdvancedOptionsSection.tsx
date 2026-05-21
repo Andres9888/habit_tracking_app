@@ -70,7 +70,7 @@ export function AdvancedOptionsSection({
   const reduceMotion = useReduceMotion();
   const userDefaultEmojis = useUserDefaultProgressEmojis();
   const savedCustomEmojis = useUserCustomProgressEmojis();
-  const [expanded, setExpanded] = useState(true);
+  const [expanded, setExpanded] = useState(false);
   const [openSheet, setOpenSheet] = useState<SheetKey>(null);
   const chevron = useSharedValue(180);
   const duration = reduceMotion ? 0 : 200;
@@ -116,6 +116,7 @@ export function AdvancedOptionsSection({
         }}
       >
         <Pressable
+          accessibilityLabel='More to customize, 3 options'
           accessibilityRole='button'
           accessibilityState={{ expanded }}
           className='flex-row items-center justify-between p-4'
@@ -134,16 +135,27 @@ export function AdvancedOptionsSection({
                 color: colors.text.primary,
               }}
             >
-              Advanced
+              More to customize
             </Text>
           </View>
-          <Animated.View style={chevronStyle}>
-            <ChevronDown
-              color={colors.text.tertiary}
-              size={iconSizes.small}
-              strokeWidth={2}
-            />
-          </Animated.View>
+          <View className='flex-row items-center gap-2'>
+            <Text
+              style={{
+                ...typography.caption,
+                color: colors.text.tertiary,
+                fontWeight: fontWeights.semibold,
+              }}
+            >
+              3
+            </Text>
+            <Animated.View style={chevronStyle}>
+              <ChevronDown
+                color={colors.text.tertiary}
+                size={iconSizes.small}
+                strokeWidth={2}
+              />
+            </Animated.View>
+          </View>
         </Pressable>
         {expanded ? (
           <Animated.View
