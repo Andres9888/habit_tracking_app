@@ -151,57 +151,46 @@ export function AdvancedOptionsSection({
             entering={reduceMotion ? undefined : FadeIn.duration(160)}
             exiting={reduceMotion ? undefined : FadeOut.duration(120)}
           >
+            <Text
+              style={{
+                ...typography.caption,
+                color: colors.text.tertiary,
+                paddingHorizontal: 4,
+                marginBottom: 2,
+              }}
+            >
+              Tap any option below to customize how this habit grows.
+            </Text>
             {growthMeta ? (
               <View
-                accessibilityLabel='Growth Type'
-                className='flex-row items-center gap-3 rounded-2xl px-4 py-3.5'
+                accessibilityLabel={`Growth Type: ${growthMeta.label}`}
+                className='flex-row items-center self-start rounded-full px-3 py-1.5'
                 style={{
-                  backgroundColor: colors.card,
-                  borderWidth: 1,
-                  borderColor: colors.border,
-                  minHeight: 64,
+                  backgroundColor: growthMeta.pillBg,
+                  marginLeft: 4,
                 }}
               >
-                <View
-                  className='items-center justify-center rounded-xl'
+                <Sprout
+                  color={growthMeta.pillFg}
+                  size={14}
+                  strokeWidth={2.5}
+                />
+                <Text
                   style={{
-                    backgroundColor: growthMeta.pillBg,
-                    height: 36,
-                    width: 36,
+                    ...typography.caption,
+                    fontSize: 12,
+                    fontWeight: fontWeights.semibold,
+                    color: growthMeta.pillFg,
+                    marginLeft: 6,
                   }}
                 >
-                  <Sprout
-                    color={growthMeta.pillFg}
-                    size={iconSizes.small}
-                    strokeWidth={2}
-                  />
-                </View>
-                <View className='flex-1'>
-                  <Text
-                    numberOfLines={1}
-                    style={{
-                      ...typography.body,
-                      fontWeight: fontWeights.semibold,
-                      color: colors.text.primary,
-                    }}
-                  >
-                    Growth Type
-                  </Text>
-                  <Text
-                    numberOfLines={1}
-                    style={{
-                      ...typography.caption,
-                      color: colors.text.tertiary,
-                      marginTop: 2,
-                    }}
-                  >
-                    {growthMeta.label} · ~{growthMeta.days}-day build
-                  </Text>
-                </View>
+                  Growth Type · {growthMeta.label} · ~{growthMeta.days}-day build
+                </Text>
               </View>
             ) : null}
             <AdvancedOptionRow
               accessibilityHint='Opens strength curve picker'
+              description="How your habit's strength grows and resets when you miss days."
               icon={
                 <AlgoIcon
                   color={colors.primary[600]}
@@ -216,6 +205,7 @@ export function AdvancedOptionsSection({
             />
             <AdvancedOptionRow
               accessibilityHint='Opens growth icons picker'
+              description="The 5-stage emoji progression shown on your habit's strength bar."
               icon={
                 <Text style={{ fontSize: 18 }}>{resolvedEmojis.starting}</Text>
               }
@@ -226,6 +216,7 @@ export function AdvancedOptionsSection({
             />
             <AdvancedOptionRow
               accessibilityHint='Opens streak goal picker'
+              description="A motivational target — purely visual, no penalty if you miss it."
               icon={
                 <Target
                   color={colors.status.streakText}
