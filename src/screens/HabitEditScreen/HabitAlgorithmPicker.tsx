@@ -1,6 +1,6 @@
 /** HabitAlgorithmPicker — Per-habit strength algorithm selector */
 import { Pressable, View } from 'react-native';
-import { Heart, Activity, Zap } from 'lucide-react-native';
+import { Sprout, TrendingUp, Mountain } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
 import * as Haptics from 'expo-haptics';
 import { useThemeColors } from '../../theme/ThemeContext';
@@ -9,12 +9,12 @@ type AlgorithmOption = 'forgiving' | 'balanced' | 'strict';
 
 const OPTIONS: {
   key: AlgorithmOption;
-  Icon: typeof Heart;
+  Icon: typeof Sprout;
   label: string;
 }[] = [
-  { key: 'forgiving', Icon: Heart, label: 'Simple' },
-  { key: 'balanced', Icon: Activity, label: 'Average' },
-  { key: 'strict', Icon: Zap, label: 'Complex' },
+  { key: 'forgiving', Icon: Sprout, label: 'Simple' },
+  { key: 'balanced', Icon: TrendingUp, label: 'Average' },
+  { key: 'strict', Icon: Mountain, label: 'Complex' },
 ];
 
 interface HabitAlgorithmPickerProps {
