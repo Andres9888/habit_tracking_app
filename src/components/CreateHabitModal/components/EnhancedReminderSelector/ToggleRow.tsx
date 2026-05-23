@@ -32,10 +32,10 @@ export function ToggleRow(props?: ToggleRowProps) {
     >
       <View className='flex-row items-center gap-3'>
         <View
-          className='h-10 w-10 items-center justify-center rounded-full'
-          style={{ backgroundColor: colors.primary[100] }}
+          className='h-9 w-9 items-center justify-center rounded-xl'
+          style={{ backgroundColor: colors.surface }}
         >
-          <Bell color={colors.primary[600]} size={iconSizes.medium} />
+          <Bell color={colors.primary[700]} size={iconSizes.small} />
         </View>
         <Text
           className='text-base font-medium'

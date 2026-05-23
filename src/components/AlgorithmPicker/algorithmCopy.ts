@@ -1,5 +1,5 @@
 /** Single source of truth for habit-strength algorithm picker copy. */
-import { Activity, Heart, Zap } from 'lucide-react-native';
+import { Mountain, Sprout, TrendingUp } from 'lucide-react-native';
 import type { LucideIcon } from 'lucide-react-native';
 
 export type AlgorithmMode = 'forgiving' | 'balanced' | 'strict';
@@ -21,7 +21,7 @@ export const ALGORITHM_COPY: Record<AlgorithmMode, AlgorithmCopyEntry> = {
     description:
       'Tiny actions that take seconds. Grows fast, forgives slips.',
     daysToForm: 18,
-    Icon: Heart,
+    Icon: Sprout,
   },
   balanced: {
     mode: 'balanced',
@@ -30,7 +30,7 @@ export const ALGORITHM_COPY: Record<AlgorithmMode, AlgorithmCopyEntry> = {
     description:
       "The research default — steady gains, honest setbacks on misses. Based on UCL's 66-day study.",
     daysToForm: 66,
-    Icon: Activity,
+    Icon: TrendingUp,
   },
   strict: {
     mode: 'strict',
@@ -39,7 +39,7 @@ export const ALGORITHM_COPY: Record<AlgorithmMode, AlgorithmCopyEntry> = {
     description:
       'Big commitments like running or meditation. Months to build, drops hard on misses — rewards showing up.',
     daysToForm: 120,
-    Icon: Zap,
+    Icon: Mountain,
   },
 };
 

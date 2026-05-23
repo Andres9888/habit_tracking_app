@@ -1,6 +1,6 @@
 /** Single row inside the Advanced Options section: icon · title/subtitle/description · edit affordance. */
 import type { ReactNode } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { useThemeColors } from '@/theme/ThemeContext';
 import { fontWeights, typography } from '@/theme/typography';
@@ -14,6 +14,7 @@ interface AdvancedOptionRowProps {
   description?: string;
   onPress: () => void;
   accessibilityHint?: string;
+  isFirst?: boolean;
 }
 
 export function AdvancedOptionRow({
@@ -24,6 +25,7 @@ export function AdvancedOptionRow({
   description,
   onPress,
   accessibilityHint,
+  isFirst = false,
 }: AdvancedOptionRowProps) {
   const { colors } = useThemeColors();
 
@@ -41,13 +43,12 @@ export function AdvancedOptionRow({
       accessibilityHint={a11yHint}
       accessibilityLabel={title}
       accessibilityRole='button'
-      className='flex-row items-center gap-3 rounded-2xl px-4 py-3.5'
+      className='flex-row items-center gap-3 py-3.5'
       style={({ pressed }) => ({
-        backgroundColor: pressed ? colors.primary[100] : colors.background,
-        borderWidth: 1,
-        borderColor: pressed ? colors.primary[300] : colors.cardBorder,
+        borderTopWidth: isFirst ? 0 : StyleSheet.hairlineWidth,
+        borderTopColor: colors.cardBorder,
         minHeight: 64,
-        opacity: pressed ? 0.92 : 1,
+        opacity: pressed ? 0.6 : 1,
       })}
       onPress={handlePress}
     >
