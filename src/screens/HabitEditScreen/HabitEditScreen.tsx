@@ -1,5 +1,6 @@
 /* eslint-disable max-lines */
 /** HabitEditScreen - Matches Create modal style (bottom sheet, stagger animations) */
+import { useRef } from 'react';
 import {
   Keyboard,
   Modal,
@@ -42,6 +43,7 @@ function HabitEditScreenContent({
     onClose: animateOut,
     onHabitRemoved,
   });
+  const scrollViewRef = useRef<ScrollView>(null);
   return (
     <Modal
       accessibilityViewIsModal
@@ -96,6 +98,7 @@ function HabitEditScreenContent({
                     onSave={() => void state.handleSave()}
                   />
                   <ScrollView
+                    ref={scrollViewRef}
                     className='flex-1'
                     contentContainerStyle={{
                       paddingBottom: insets.bottom + 32,
@@ -130,6 +133,9 @@ function HabitEditScreenContent({
                         progressEmojis={state.progressEmojis}
                         streakGoal={state.streakGoal}
                         strengthAlgorithm={state.strengthAlgorithm}
+                        onExpand={() =>
+                          scrollViewRef.current?.scrollToEnd({ animated: true })
+                        }
                         onProgressEmojisChange={
                           state.handleProgressEmojisChange
                         }

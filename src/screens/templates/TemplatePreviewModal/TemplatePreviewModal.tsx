@@ -2,7 +2,7 @@
  * Template Preview Modal - Matches Edit Habit bottom sheet design
  */
 
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   Keyboard,
   Modal,
@@ -77,6 +77,7 @@ export default function TemplatePreviewModal({
   } = useTemplatePreview({ onClose: animateOut, onImport, template });
 
   const [isFocused, setIsFocused] = useState(false);
+  const scrollViewRef = useRef<ScrollView>(null);
 
   if (!template) return null;
 
@@ -130,6 +131,7 @@ export default function TemplatePreviewModal({
                 />
 
                 <ScrollView
+                  ref={scrollViewRef}
                   className='flex-1'
                   contentContainerStyle={{
                     paddingBottom: insets.bottom + 32,
@@ -247,6 +249,9 @@ export default function TemplatePreviewModal({
                       progressEmojis={progressEmojis}
                       streakGoal={streakGoal}
                       strengthAlgorithm={strengthAlgorithm}
+                      onExpand={() =>
+                        scrollViewRef.current?.scrollToEnd({ animated: true })
+                      }
                       onProgressEmojisChange={handleProgressEmojisChange}
                       onStreakGoalChange={handleStreakGoalChange}
                       onStrengthAlgorithmChange={handleStrengthAlgorithmChange}

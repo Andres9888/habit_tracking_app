@@ -33,6 +33,7 @@ const CreateHabitFormCenteredComponent = ({
   onProgressEmojisChange,
   streakGoal,
   onStreakGoalChange,
+  onAdvancedExpand,
 }: CreateHabitFormCenteredProps) => {
   const { colors: themeColors, isDark } = useThemeColors();
   const [committedHabitName, setCommittedHabitName] = useState(habitName);
@@ -101,6 +102,7 @@ const CreateHabitFormCenteredComponent = ({
         progressEmojis={progressEmojis}
         streakGoal={streakGoal}
         strengthAlgorithm={strengthAlgorithm}
+        onExpand={onAdvancedExpand}
         onProgressEmojisChange={onProgressEmojisChange}
         onStreakGoalChange={onStreakGoalChange}
         onStrengthAlgorithmChange={onStrengthAlgorithmChange}
