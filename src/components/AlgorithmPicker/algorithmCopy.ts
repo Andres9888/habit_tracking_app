@@ -3,12 +3,10 @@ import { Activity, Heart, Zap } from 'lucide-react-native';
 import type { LucideIcon } from 'lucide-react-native';
 
 export type AlgorithmMode = 'forgiving' | 'balanced' | 'strict';
-export type HabitComplexity = 'Simple' | 'Everyday' | 'Complex';
 
 export interface AlgorithmCopyEntry {
   mode: AlgorithmMode;
   name: string;
-  complexity: HabitComplexity;
   examples: string;
   description: string;
   daysToForm: number;
@@ -18,8 +16,7 @@ export interface AlgorithmCopyEntry {
 export const ALGORITHM_COPY: Record<AlgorithmMode, AlgorithmCopyEntry> = {
   forgiving: {
     mode: 'forgiving',
-    name: 'Quick Win',
-    complexity: 'Simple',
+    name: 'Simple',
     examples: '',
     description:
       'Tiny actions that take seconds. Grows fast, forgives slips.',
@@ -28,8 +25,7 @@ export const ALGORITHM_COPY: Record<AlgorithmMode, AlgorithmCopyEntry> = {
   },
   balanced: {
     mode: 'balanced',
-    name: 'Textbook',
-    complexity: 'Everyday',
+    name: 'Average',
     examples: '',
     description:
       "The research default — steady gains, honest setbacks on misses. Based on UCL's 66-day study.",
@@ -38,8 +34,7 @@ export const ALGORITHM_COPY: Record<AlgorithmMode, AlgorithmCopyEntry> = {
   },
   strict: {
     mode: 'strict',
-    name: 'Long Haul',
-    complexity: 'Complex',
+    name: 'Complex',
     examples: '',
     description:
       'Big commitments like running or meditation. Months to build, drops hard on misses — rewards showing up.',

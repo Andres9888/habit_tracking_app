@@ -31,4 +31,6 @@ export interface CreateHabitFormCenteredProps {
   /** Streak goal in days (0 = no goal) */
   streakGoal: number;
   onStreakGoalChange: (days: number) => void;
+  /** Called after the Advanced section expands so the parent can scroll it into view. */
+  onAdvancedExpand?: () => void;
 }

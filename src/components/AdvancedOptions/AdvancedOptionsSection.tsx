@@ -1,6 +1,6 @@
 /* eslint-disable max-lines */
 /** AdvancedOptionsSection — consolidated per-habit Advanced controls. */
-import { useEffect, useState } from 'react';
+import { type ReactNode, useEffect, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import Animated, {
   FadeIn,
@@ -15,7 +15,6 @@ import {
   Activity,
   ChevronDown,
   Heart,
-  SlidersHorizontal,
   Sprout,
   Target,
   Zap,
@@ -32,6 +31,7 @@ import { useReduceMotion } from '@/hooks/useReduceMotion';
 import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '@/theme/ThemeContext';
 import { fontWeights, typography } from '@/theme/typography';
+import { shadows } from '@/theme/spacing';
 import { durations, enterEasing } from '@/theme/animations';
 import {
   CUSTOM_PRESET_ID,
@@ -65,8 +65,9 @@ export function AdvancedOptionsSection({
   onProgressEmojisChange,
   onStreakGoalChange,
   baseDelay = 320,
+  onExpand,
 }: AdvancedOptionsSectionProps) {
-  const { colors } = useThemeColors();
+  const { colors, isDark } = useThemeColors();
   const reduceMotion = useReduceMotion();
   const userDefaultEmojis = useUserDefaultProgressEmojis();
   const savedCustomEmojis = useUserCustomProgressEmojis();
@@ -78,6 +79,13 @@ export function AdvancedOptionsSection({
   useEffect(() => {
     chevron.value = withTiming(expanded ? 180 : 0, { duration });
   }, [expanded, duration, chevron]);
+
+  useEffect(() => {
+    if (!expanded || !onExpand) return;
+    // Wait for the expanded body's LinearTransition layout to settle before scrolling.
+    const t = setTimeout(onExpand, reduceMotion ? 0 : 240);
+    return () => clearTimeout(t);
+  }, [expanded, onExpand, reduceMotion]);
 
   const chevronStyle = useAnimatedStyle(() => ({
     transform: [{ rotate: `${chevron.value}deg` }],
@@ -106,60 +114,98 @@ export function AdvancedOptionsSection({
   return (
     <>
       <Animated.View
-        className='mx-6 mt-6 overflow-hidden rounded-2xl'
+        className='mt-6 px-6'
         entering={FadeInUp.delay(baseDelay + 40).duration(durations.enter).easing(enterEasing)}
         layout={reduceMotion ? undefined : LinearTransition.duration(220)}
-        style={{
-          backgroundColor: colors.card,
-          borderWidth: 1,
-          borderColor: colors.border,
-        }}
       >
         <Pressable
           accessibilityLabel='More to customize, 3 options'
           accessibilityRole='button'
           accessibilityState={{ expanded }}
-          className='flex-row items-center justify-between p-4'
+          className='rounded-2xl px-4 py-3.5'
+          style={({ pressed }) => ({
+            backgroundColor: pressed
+              ? colors.primary[100]
+              : isDark
+                ? colors.card
+                : '#FFFFFF',
+            borderWidth: 1,
+            borderColor: pressed ? colors.primary[300] : colors.cardBorder,
+            opacity: pressed ? 0.92 : 1,
+            ...shadows.card,
+          })}
           onPress={toggle}
         >
-          <View className='flex-row items-center gap-2.5'>
-            <SlidersHorizontal
-              color={colors.text.secondary}
-              size={iconSizes.small}
-              strokeWidth={2}
-            />
+          <View className='items-center'>
             <Text
+              className='uppercase'
               style={{
-                ...typography.body,
+                ...typography.caption,
+                fontSize: 12,
                 fontWeight: fontWeights.semibold,
-                color: colors.text.primary,
+                letterSpacing: 0.5,
+                color: colors.text.secondary,
               }}
             >
               More to customize
             </Text>
           </View>
-          <View className='flex-row items-center gap-2'>
+          <View className='mt-3 flex-row flex-wrap justify-center gap-2'>
+            <PreviewChip
+              backgroundColor={colors.status.errorLight}
+              foregroundColor={colors.status.errorText}
+              icon={
+                <AlgoIcon
+                  color={colors.status.errorText}
+                  size={12}
+                  strokeWidth={2.5}
+                />
+              }
+              label={algoEntry.name}
+            />
+            <PreviewChip
+              backgroundColor={colors.primary[100]}
+              foregroundColor={colors.primary[700]}
+              icon={<Text style={{ fontSize: 12 }}>{resolvedEmojis.starting}</Text>}
+              label={presetLabel}
+            />
+            <PreviewChip
+              backgroundColor={colors.status.streakLight}
+              foregroundColor={colors.status.streakText}
+              icon={
+                <Target
+                  color={colors.status.streakText}
+                  size={12}
+                  strokeWidth={2.5}
+                />
+              }
+              label={streakGoal > 0 ? `${streakGoal}-day` : 'No target'}
+            />
+          </View>
+          <View
+            className='mt-4 flex-row items-center justify-center gap-1.5 rounded-xl py-3'
+            style={{ backgroundColor: colors.primary[600] }}
+          >
             <Text
+              className='uppercase'
               style={{
                 ...typography.caption,
-                color: colors.text.tertiary,
-                fontWeight: fontWeights.semibold,
+                fontSize: 13,
+                fontWeight: fontWeights.bold,
+                letterSpacing: 0.5,
+                color: '#FFFFFF',
               }}
             >
-              3
+              {expanded ? 'Hide options' : 'Customize'}
             </Text>
             <Animated.View style={chevronStyle}>
-              <ChevronDown
-                color={colors.text.tertiary}
-                size={iconSizes.small}
-                strokeWidth={2}
-              />
+              <ChevronDown color='#FFFFFF' size={iconSizes.small} strokeWidth={2.5} />
             </Animated.View>
           </View>
         </Pressable>
         {expanded ? (
           <Animated.View
-            className='gap-2.5 px-3 pb-3'
+            className='gap-2.5 pb-2 pt-1'
             entering={reduceMotion ? undefined : FadeIn.duration(160)}
             exiting={reduceMotion ? undefined : FadeOut.duration(120)}
           >
@@ -167,7 +213,6 @@ export function AdvancedOptionsSection({
               style={{
                 ...typography.caption,
                 color: colors.text.tertiary,
-                paddingHorizontal: 4,
                 marginBottom: 2,
               }}
             >
@@ -179,7 +224,6 @@ export function AdvancedOptionsSection({
                 className='flex-row items-center self-start rounded-full px-3 py-1.5'
                 style={{
                   backgroundColor: growthMeta.pillBg,
-                  marginLeft: 4,
                 }}
               >
                 <Sprout
@@ -279,5 +323,38 @@ export function AdvancedOptionsSection({
         />
       </AdvancedSheet>
     </>
+  );
+}
+
+interface PreviewChipProps {
+  icon: ReactNode;
+  label: string;
+  backgroundColor: string;
+  foregroundColor: string;
+}
+
+function PreviewChip({
+  icon,
+  label,
+  backgroundColor,
+  foregroundColor,
+}: PreviewChipProps) {
+  return (
+    <View
+      className='flex-row items-center gap-1 rounded-full px-2.5 py-1'
+      style={{ backgroundColor }}
+    >
+      {icon}
+      <Text
+        style={{
+          ...typography.caption,
+          fontSize: 11,
+          fontWeight: fontWeights.semibold,
+          color: foregroundColor,
+        }}
+      >
+        {label}
+      </Text>
+    </View>
   );
 }

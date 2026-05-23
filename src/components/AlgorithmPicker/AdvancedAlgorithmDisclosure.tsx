@@ -37,7 +37,7 @@ export function AdvancedAlgorithmDisclosure({ selected, onSelect }: Props) {
   }, [expanded, duration, chevron]);
 
   const activeMode: AlgorithmMode = selected;
-  const subtitle = `Using ${ALGORITHM_COPY[activeMode].name} (${ALGORITHM_COPY[activeMode].complexity})`;
+  const subtitle = `Using ${ALGORITHM_COPY[activeMode].name}`;
 
   const chevronStyle = useAnimatedStyle(() => ({
     transform: [{ rotate: `${chevron.value}deg` }],

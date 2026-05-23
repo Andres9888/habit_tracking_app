@@ -34,7 +34,7 @@ export function AlgorithmCard({
 
   return (
     <Pressable
-      accessibilityLabel={`${entry.name}, ${entry.complexity} habits`}
+      accessibilityLabel={entry.name}
       accessibilityRole={onPress ? 'radio' : 'none'}
       accessibilityState={{ selected, disabled: !onPress }}
       className='mb-2 flex-row gap-3 rounded-xl p-3'
@@ -58,7 +58,7 @@ export function AlgorithmCard({
             className='text-sm font-bold'
             style={{ color: colors.text.primary }}
           >
-            {entry.name} · {entry.complexity} habits
+            {entry.name}
           </Text>
           {showDefaultPill ? (
             <View

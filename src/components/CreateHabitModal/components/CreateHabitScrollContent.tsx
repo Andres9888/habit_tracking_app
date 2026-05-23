@@ -70,6 +70,9 @@ export function CreateHabitScrollContent({
             showNameError={showNameError}
             streakGoal={form.streakGoal}
             strengthAlgorithm={form.strengthAlgorithm}
+            onAdvancedExpand={() =>
+              scrollViewRef.current?.scrollToEnd({ animated: true })
+            }
             onColorSelect={callbacks.handleColorSelect}
             onEmojiSelect={callbacks.handleEmojiSelect}
             onHabitNameChange={callbacks.handleNameChange}
