@@ -5,6 +5,8 @@
  */
 
 import { View } from 'react-native';
+import { Gesture, GestureDetector } from 'react-native-gesture-handler';
+import { runOnJS } from 'react-native-reanimated';
 import {
   format,
   startOfMonth,
@@ -16,9 +18,12 @@ import {
 } from 'date-fns';
 import { useState } from 'react';
 import type { Id } from '../../../../convex/_generated/dataModel';
+import { triggerHaptic } from '@/utils/haptics';
 import { MonthNavigator } from './MonthNavigator';
 import { DayNamesRow } from './DayNamesRow';
 import { DayCell } from './DayCell';
+
+const SWIPE_THRESHOLD = 50;
 
 interface MonthlyCalendarProps {
   habitId: Id<'habits'>;
@@ -48,16 +53,26 @@ export function MonthlyCalendar({
   };
 
   const goToPreviousMonth = () => {
+    void triggerHaptic('selection');
     const newDate = new Date(currentDate);
     newDate.setMonth(newDate.getMonth() - 1);
     setCurrentDate(newDate);
   };
 
   const goToNextMonth = () => {
+    void triggerHaptic('selection');
     const newDate = new Date(currentDate);
     newDate.setMonth(newDate.getMonth() + 1);
     setCurrentDate(newDate);
   };
+
+  const swipeGesture = Gesture.Pan()
+    .activeOffsetX([-15, 15])
+    .failOffsetY([-20, 20])
+    .onEnd((event) => {
+      if (event.translationX < -SWIPE_THRESHOLD) runOnJS(goToNextMonth)();
+      else if (event.translationX > SWIPE_THRESHOLD) runOnJS(goToPreviousMonth)();
+    });
 
   return (
     <View>
@@ -67,22 +82,24 @@ export function MonthlyCalendar({
         onPreviousMonth={goToPreviousMonth}
       />
       <DayNamesRow />
-      <View className='flex-row flex-wrap'>
-        {emptyDays.map((i) => (
-          <View key={`empty-${i}`} className='mb-2 h-7 w-[14.28%]' />
-        ))}
-        {daysInMonth.map((date) => (
-          <DayCell
-            key={format(date, 'yyyy-MM-dd')}
-            date={date}
-            hasCompletion={isCompleted(date)}
-            isToday={isSameDay(date, today)}
-            onToggle={() =>
-              toggleHabit({ date: format(date, 'yyyy-MM-dd'), habitId })
-            }
-          />
-        ))}
-      </View>
+      <GestureDetector gesture={swipeGesture}>
+        <View className='flex-row flex-wrap'>
+          {emptyDays.map((i) => (
+            <View key={`empty-${i}`} className='mb-2 h-7 w-[14.28%]' />
+          ))}
+          {daysInMonth.map((date) => (
+            <DayCell
+              key={format(date, 'yyyy-MM-dd')}
+              date={date}
+              hasCompletion={isCompleted(date)}
+              isToday={isSameDay(date, today)}
+              onToggle={() =>
+                toggleHabit({ date: format(date, 'yyyy-MM-dd'), habitId })
+              }
+            />
+          ))}
+        </View>
+      </GestureDetector>
     </View>
   );
 }
