@@ -11,7 +11,7 @@ import type { AlgorithmMode } from './algorithmCopy';
 interface AlgorithmCardsListProps {
   selected: AlgorithmMode;
   onSelect: (mode: AlgorithmMode) => void;
-  /** When true, marks the default (balanced/Textbook) card with a DEFAULT pill. */
+  /** When true, marks the default (balanced/Average) card with a DEFAULT pill. */
   markDefault?: boolean;
 }
 
