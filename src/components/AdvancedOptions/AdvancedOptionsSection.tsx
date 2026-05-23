@@ -11,18 +11,9 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import {
-  Activity,
-  ChevronDown,
-  Heart,
-  Sprout,
-  Target,
-  Zap,
-} from 'lucide-react-native';
-import type { LucideIcon } from 'lucide-react-native';
+import { ChevronDown, Sprout, Target } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
 import { ALGORITHM_COPY } from '@/components/AlgorithmPicker';
-import type { AlgorithmMode } from '@/components/AlgorithmPicker';
 import {
   useUserCustomProgressEmojis,
   useUserDefaultProgressEmojis,
@@ -41,17 +32,12 @@ import {
 } from '@/utils/progressEmojis';
 import { getGrowthTypeMeta } from '@/utils/growthTypeMeta';
 import { StrengthCurvePickerModal } from '@/screens/StrengthCurvePicker';
+import { MODE_STYLES } from '@/screens/StrengthCurvePicker/strengthCurveModeStyles';
 import { AdvancedOptionRow } from './AdvancedOptionRow';
 import { AdvancedSheet } from './AdvancedSheet';
 import { GrowthIconsSheetBody } from './GrowthIconsSheetBody';
 import { StreakGoalSheetBody } from './StreakGoalSheetBody';
 import type { AdvancedOptionsSectionProps } from './AdvancedOptions.types';
-
-const ALGO_ICONS: Record<AlgorithmMode, LucideIcon> = {
-  forgiving: Heart,
-  balanced: Activity,
-  strict: Zap,
-};
 
 type SheetKey = 'algorithm' | 'growth' | 'streak' | null;
 
@@ -67,7 +53,7 @@ export function AdvancedOptionsSection({
   baseDelay = 320,
   onExpand,
 }: AdvancedOptionsSectionProps) {
-  const { colors, isDark } = useThemeColors();
+  const { colors } = useThemeColors();
   const reduceMotion = useReduceMotion();
   const userDefaultEmojis = useUserDefaultProgressEmojis();
   const savedCustomEmojis = useUserCustomProgressEmojis();
@@ -97,7 +83,8 @@ export function AdvancedOptionsSection({
   };
 
   const algoEntry = ALGORITHM_COPY[strengthAlgorithm];
-  const AlgoIcon = ALGO_ICONS[strengthAlgorithm];
+  const algoStyle = MODE_STYLES[strengthAlgorithm];
+  const AlgoIcon = algoStyle.Icon;
   const algoSubtitle = `${algoEntry.name} · ~${algoEntry.daysToForm}-day build`;
   const growthMeta = getGrowthTypeMeta(growthType);
 
@@ -109,7 +96,7 @@ export function AdvancedOptionsSection({
       : (PROGRESS_EMOJI_PRESETS.find((p) => p.id === presetId)?.label ??
         'Custom');
   const streakSubtitle =
-    streakGoal > 0 ? `${streakGoal}-day target` : 'No target set';
+    streakGoal > 0 ? `${streakGoal}-day goal` : 'No goal set';
 
   return (
     <>
@@ -118,21 +105,22 @@ export function AdvancedOptionsSection({
         entering={FadeInUp.delay(baseDelay + 40).duration(durations.enter).easing(enterEasing)}
         layout={reduceMotion ? undefined : LinearTransition.duration(220)}
       >
+        <View
+          style={{
+            backgroundColor: colors.card,
+            borderWidth: 1,
+            borderColor: colors.cardBorder,
+            borderRadius: 16,
+            ...shadows.subtle,
+          }}
+        >
         <Pressable
           accessibilityLabel='More to customize, 3 options'
           accessibilityRole='button'
           accessibilityState={{ expanded }}
-          className='rounded-2xl px-4 py-3.5'
+          className='px-4 py-3.5'
           style={({ pressed }) => ({
-            backgroundColor: pressed
-              ? colors.primary[100]
-              : isDark
-                ? colors.card
-                : '#FFFFFF',
-            borderWidth: 1,
-            borderColor: pressed ? colors.primary[300] : colors.cardBorder,
-            opacity: pressed ? 0.92 : 1,
-            ...shadows.card,
+            opacity: pressed ? 0.7 : 1,
           })}
           onPress={toggle}
         >
@@ -152,11 +140,11 @@ export function AdvancedOptionsSection({
           </View>
           <View className='mt-3 flex-row flex-wrap justify-center gap-2'>
             <PreviewChip
-              backgroundColor={colors.status.errorLight}
-              foregroundColor={colors.status.errorText}
+              backgroundColor={algoStyle.iconTileBackground}
+              foregroundColor={algoStyle.iconColor}
               icon={
                 <AlgoIcon
-                  color={colors.status.errorText}
+                  color={algoStyle.iconColor}
                   size={12}
                   strokeWidth={2.5}
                 />
@@ -179,7 +167,7 @@ export function AdvancedOptionsSection({
                   strokeWidth={2.5}
                 />
               }
-              label={streakGoal > 0 ? `${streakGoal}-day` : 'No target'}
+              label={streakGoal > 0 ? `${streakGoal}-day` : 'No goal set'}
             />
           </View>
           <View
@@ -205,7 +193,7 @@ export function AdvancedOptionsSection({
         </Pressable>
         {expanded ? (
           <Animated.View
-            className='gap-2.5 pb-2 pt-1'
+            className='px-4 pb-3 pt-1'
             entering={reduceMotion ? undefined : FadeIn.duration(160)}
             exiting={reduceMotion ? undefined : FadeOut.duration(120)}
           >
@@ -213,7 +201,7 @@ export function AdvancedOptionsSection({
               style={{
                 ...typography.caption,
                 color: colors.text.tertiary,
-                marginBottom: 2,
+                marginBottom: growthMeta ? 8 : 4,
               }}
             >
               Tap any option below to customize how this habit grows.
@@ -221,7 +209,7 @@ export function AdvancedOptionsSection({
             {growthMeta ? (
               <View
                 accessibilityLabel={`Growth Type: ${growthMeta.label}`}
-                className='flex-row items-center self-start rounded-full px-3 py-1.5'
+                className='mb-1 flex-row items-center self-start rounded-full px-3 py-1.5'
                 style={{
                   backgroundColor: growthMeta.pillBg,
                 }}
@@ -245,16 +233,17 @@ export function AdvancedOptionsSection({
               </View>
             ) : null}
             <AdvancedOptionRow
+              isFirst
               accessibilityHint='Opens strength curve picker'
               description="How your habit's strength grows and resets when you miss days."
               icon={
                 <AlgoIcon
-                  color={colors.primary[600]}
+                  color={colors.primary[700]}
                   size={iconSizes.small}
                   strokeWidth={2}
                 />
               }
-              iconBackground={colors.primary[100]}
+              iconBackground={colors.surface}
               subtitle={algoSubtitle}
               title='Strength Curve'
               onPress={() => setOpenSheet('algorithm')}
@@ -265,7 +254,7 @@ export function AdvancedOptionsSection({
               icon={
                 <Text style={{ fontSize: 18 }}>{resolvedEmojis.starting}</Text>
               }
-              iconBackground={colors.status.streakLight}
+              iconBackground={colors.surface}
               subtitle={`${presetLabel} · 5 stages`}
               title='Growth Icons'
               onPress={() => setOpenSheet('growth')}
@@ -275,18 +264,19 @@ export function AdvancedOptionsSection({
               description="A motivational target — purely visual, no penalty if you miss it."
               icon={
                 <Target
-                  color={colors.status.streakText}
+                  color={colors.primary[700]}
                   size={iconSizes.small}
                   strokeWidth={2}
                 />
               }
-              iconBackground={colors.status.streakLight}
+              iconBackground={colors.surface}
               subtitle={streakSubtitle}
               title='Streak Goal'
               onPress={() => setOpenSheet('streak')}
             />
           </Animated.View>
         ) : null}
+        </View>
       </Animated.View>
 
       <StrengthCurvePickerModal
