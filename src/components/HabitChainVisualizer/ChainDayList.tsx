@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { ChainDayItem } from './ChainDayItem';
 import type { CompletionIcon, DayShape } from './types';
 
@@ -38,17 +38,23 @@ function getAccessibilityLabel(
     : `${dateLabel}: ${completed ? 'Completed' : 'Not completed'}`;
 }
 
-export function ChainDayList(props: ChainDayListProps) {
+function ChainDayListComponent(props: ChainDayListProps) {
+  const accent = props.accentColor ?? '';
+  const lastIndex = props.weekDateStrings.length - 1;
   return (
     <>
       {props.weekDateStrings.map((dateString, index) => {
         const completed = props.isCompleted(index);
         const disabled = props.isFutureDate(index);
-        const isLastItem = index === props.weekDateStrings.length - 1;
+        const showConnector =
+          props.showConnectors &&
+          index !== lastIndex &&
+          completed &&
+          props.isCompleted(index + 1);
         return (
           <ChainDayItem
             key={dateString}
-            accentColor={props.accentColor ?? ''}
+            accentColor={accent}
             accessibilityHint={
               disabled
                 ? 'Future dates are unavailable'
@@ -71,11 +77,7 @@ export function ChainDayList(props: ChainDayListProps) {
             missed={props.isStreakBreak(index)}
             shape={props.shape}
             shouldReduceMotion={props.shouldReduceMotion}
-            showConnector={
-              props.showConnectors &&
-              !isLastItem &&
-              completed ? props.isCompleted(index + 1) : null
-            }
+            showConnector={showConnector}
             onBurstComplete={props.onBurstComplete}
             onPress={() =>
               props.handleToggleDay(dateString, completed, disabled, index)
@@ -86,3 +88,5 @@ export function ChainDayList(props: ChainDayListProps) {
     </>
   );
 }
+
+export const ChainDayList = memo(ChainDayListComponent);

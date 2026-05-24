@@ -5,6 +5,32 @@
 import { addDays, format, parse, startOfDay } from 'date-fns';
 import type { HabitStatus } from '../types';
 
+type StatusGetter = (habitId: string, dateString: string) => HabitStatus;
+
+const nextDateStringCache = new Map<string, string | null>();
+const connectionCache = new WeakMap<StatusGetter, Map<string, boolean>>();
+
+function getNextDateString(lastDateString: string): string | null {
+  const cached = nextDateStringCache.get(lastDateString);
+  if (cached !== undefined) return cached;
+  try {
+    const lastDate = parse(lastDateString, 'yyyy-MM-dd', new Date());
+    const nextDate = addDays(lastDate, 1);
+    const today = startOfDay(new Date());
+    if (nextDate > today) {
+      nextDateStringCache.set(lastDateString, null);
+      return null;
+    }
+    const nextDateString = format(nextDate, 'yyyy-MM-dd');
+    nextDateStringCache.set(lastDateString, nextDateString);
+    return nextDateString;
+  } catch (error) {
+    if (__DEV__) console.warn('Error calculating next date status', error);
+    nextDateStringCache.set(lastDateString, null);
+    return null;
+  }
+}
+
 /**
  * Checks if the day after the last date in the week was completed.
  * Used to show connecting chain extending to next weeks.
@@ -14,22 +40,22 @@ import type { HabitStatus } from '../types';
 export function getNextWeekConnection(
   lastDateString: string | undefined,
   habitId: string,
-  getHabitStatus: (habitId: string, dateString: string) => HabitStatus
+  getHabitStatus: StatusGetter
 ): boolean {
   if (!lastDateString) return false;
+  const nextDateString = getNextDateString(lastDateString);
+  if (!nextDateString) return false;
 
-  try {
-    const lastDate = parse(lastDateString, 'yyyy-MM-dd', new Date());
-    const nextDate = addDays(lastDate, 1);
-    const today = startOfDay(new Date());
-
-    // Don't show connection to future dates
-    if (nextDate > today) return false;
-
-    const nextDateString = format(nextDate, 'yyyy-MM-dd');
-    return getHabitStatus(habitId, nextDateString) === 'done';
-  } catch (error) {
-    if (__DEV__) console.warn('Error calculating next date status', error);
-    return false;
+  let getterCache = connectionCache.get(getHabitStatus);
+  if (!getterCache) {
+    getterCache = new Map();
+    connectionCache.set(getHabitStatus, getterCache);
   }
+  const cacheKey = `${habitId}|${nextDateString}`;
+  const cached = getterCache.get(cacheKey);
+  if (cached !== undefined) return cached;
+
+  const result = getHabitStatus(habitId, nextDateString) === 'done';
+  getterCache.set(cacheKey, result);
+  return result;
 }

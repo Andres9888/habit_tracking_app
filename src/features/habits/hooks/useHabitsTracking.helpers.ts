@@ -4,7 +4,7 @@ import type { HabitStatus } from '../types';
 
 type PlannedStatus = Exclude<HabitStatus, 'done'>;
 type TrackingEntry = { completed: boolean; date: string; habitId: string };
-type TrackingQueryArgs = { dates: string[] } | { endDate: string; startDate: string };
+type TrackingQueryArgs = { endDate: string; startDate: string };
 export type DateStatusInfo = { isValid: boolean; status: PlannedStatus };
 
 export function normalizeToday(today: Date) {
@@ -13,14 +13,16 @@ export function normalizeToday(today: Date) {
   return normalizedToday;
 }
 
-export function buildTrackingQueryArgs(extendedDateStrings: string[]): TrackingQueryArgs {
-  const first = extendedDateStrings[0];
-  const last = extendedDateStrings.at(-1);
-  const startDate = first && last && first < last ? first : last;
-  const endDate = first && last && first < last ? last : first;
-  return startDate && endDate
-    ? { endDate, startDate }
-    : { dates: extendedDateStrings };
+export function buildTrackingQueryArgs(
+  firstDateString: string | undefined,
+  lastDateString: string | undefined
+): TrackingQueryArgs {
+  const first = firstDateString ?? '';
+  const last = lastDateString ?? first;
+  const ascending = first && last ? first <= last : true;
+  return ascending
+    ? { endDate: last, startDate: first }
+    : { endDate: first, startDate: last };
 }
 
 export function buildCompletedDatesByHabit(

@@ -45,7 +45,10 @@ export const useChainVisualizerState = ({
     [celebrationsEnabled, reduceMotionPreference]
   );
 
-  const todayLabel = format(new Date(), 'MMM d, EEE').toUpperCase();
+  const todayLabel = useMemo(
+    () => format(new Date(), 'MMM d, EEE').toUpperCase(),
+    []
+  );
 
   const dateLabels = useMemo(
     () =>

@@ -3,9 +3,11 @@ import {
   eachDayOfInterval,
   format,
   startOfDay,
-  subMonths,
 } from 'date-fns';
 import { useCallback, useMemo, useState } from 'react';
+
+const PREDICTION_LOOKBACK_DAYS = 14;
+const CONNECTION_LOOKAHEAD_DAYS = 1;
 
 export function useHabitsWeekDates() {
   const today = useMemo(() => startOfDay(new Date()), []);
@@ -23,10 +25,12 @@ export function useHabitsWeekDates() {
   );
 
   const extendedDateRange = useMemo(() => {
-    const endDate = today;
-    const startDate = subMonths(endDate, 12);
+    const firstVisibleDate = weekDates[0] ?? today;
+    const lastVisibleDate = weekDates.at(-1) ?? today;
+    const startDate = addDays(firstVisibleDate, -PREDICTION_LOOKBACK_DAYS);
+    const endDate = addDays(lastVisibleDate, CONNECTION_LOOKAHEAD_DAYS);
     return eachDayOfInterval({ end: endDate, start: startDate });
-  }, [today]);
+  }, [today, weekDates]);
 
   const extendedDateStrings = useMemo(
     () => extendedDateRange.map((date) => format(date, 'yyyy-MM-dd')),

@@ -1,4 +1,5 @@
 import { parse, startOfDay } from 'date-fns';
+import { useCallback, useMemo } from 'react';
 import type { HabitStatus } from './types';
 
 export const useHabitChainVisualizerLogic = (
@@ -6,27 +7,47 @@ export const useHabitChainVisualizerLogic = (
   weekStatus: HabitStatus[],
   isConnectedToPreviousWeek: boolean
 ) => {
-  const today = startOfDay(new Date());
+  const todayTime = useMemo(() => startOfDay(new Date()).getTime(), []);
 
-  const isFutureDate = (index: number): boolean => {
-    const parsed = parse(weekDateStrings[index], 'yyyy-MM-dd', new Date());
-    const normalized = startOfDay(parsed);
-    return normalized.getTime() > today.getTime();
-  };
+  const dateTimes = useMemo(
+    () =>
+      weekDateStrings.map((dateString) =>
+        startOfDay(parse(dateString, 'yyyy-MM-dd', new Date())).getTime()
+      ),
+    [weekDateStrings]
+  );
 
-  const isCompleted = (index: number): boolean => weekStatus[index] === 'done';
+  const completedIndices = useMemo(() => {
+    const set = new Set<number>();
+    weekStatus.forEach((status, index) => {
+      if (status === 'done') set.add(index);
+    });
+    return set;
+  }, [weekStatus]);
 
-  const isStreakBreak = (index: number): boolean => {
-    if (weekStatus[index] !== 'missed') return false;
-    if (index === 0) return isConnectedToPreviousWeek;
-    return weekStatus[index - 1] === 'done';
-  };
+  const isFutureDate = useCallback(
+    (index: number): boolean => (dateTimes[index] ?? 0) > todayTime,
+    [dateTimes, todayTime]
+  );
 
-  const isToday = (index: number): boolean => {
-    const parsed = parse(weekDateStrings[index], 'yyyy-MM-dd', new Date());
-    const normalized = startOfDay(parsed);
-    return normalized.getTime() === today.getTime();
-  };
+  const isCompleted = useCallback(
+    (index: number): boolean => completedIndices.has(index),
+    [completedIndices]
+  );
+
+  const isStreakBreak = useCallback(
+    (index: number): boolean => {
+      if (weekStatus[index] !== 'missed') return false;
+      if (index === 0) return isConnectedToPreviousWeek;
+      return weekStatus[index - 1] === 'done';
+    },
+    [isConnectedToPreviousWeek, weekStatus]
+  );
+
+  const isToday = useCallback(
+    (index: number): boolean => (dateTimes[index] ?? -1) === todayTime,
+    [dateTimes, todayTime]
+  );
 
   return {
     isCompleted,

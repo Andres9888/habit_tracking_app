@@ -31,4 +31,11 @@ crons.interval(
   internal.templates.popularity.recompute
 );
 
+crons.daily(
+  'recalculate stale habit strength',
+  { hourUTC: 8, minuteUTC: 0 },
+  internal.habits.recalculateStaleStrength.recalculateStaleStrength,
+  {}
+);
+
 export default crons;

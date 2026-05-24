@@ -81,3 +81,5 @@ dev-debug.log
 # Auto Claude data directory
 .auto-claude/
 node_modules
+
+Plans/

@@ -19,7 +19,12 @@ export function useHabitsTracking(extendedDateStrings: string[], today: Date) {
     () => normalizeToday(today),
     [today.getDate(), today.getFullYear(), today.getMonth()]
   );
-  const queryArgs = useMemo(() => buildTrackingQueryArgs(extendedDateStrings), [extendedDateStrings]);
+  const firstDateString = extendedDateStrings[0];
+  const lastDateString = extendedDateStrings.at(-1);
+  const queryArgs = useMemo(
+    () => buildTrackingQueryArgs(firstDateString, lastDateString),
+    [firstDateString, lastDateString]
+  );
   const tracking = useQuery(api.habits.getTracking, queryArgs) ?? [];
   const { pendingToggles } = useOptimisticStore();
   const completedDatesByHabit = useMemo(() => {
