@@ -11,14 +11,17 @@ import {
   withTiming,
   runOnJS,
 } from 'react-native-reanimated';
-import { springs } from '@/theme/animations';
+import { durations, enterEasing, springs } from '@/theme/animations';
 import {
   SHEET_HEIGHT_COLLAPSED,
   SHEET_HEIGHT_EXPANDED,
 } from './EmojiPickerSheet.styles';
 import { useSheetStyles } from './useSheetStyles';
 
-const SPRING_CONFIG = springs.sheet;
+const SHEET_TIMING_CONFIG = {
+  duration: durations.transition,
+  easing: enterEasing,
+};
 const DISMISS_THRESHOLD = 0.25;
 const DISMISS_VELOCITY = 500;
 
@@ -39,29 +42,29 @@ export function useSheetAnimations(visible: boolean, onClose: () => void) {
     if (visible) {
       sheetHeight.value = SHEET_HEIGHT_COLLAPSED;
       const offset = SHEET_HEIGHT_EXPANDED - SHEET_HEIGHT_COLLAPSED;
-      translateY.value = withSpring(offset, SPRING_CONFIG);
+      translateY.value = withTiming(offset, SHEET_TIMING_CONFIG);
       backdropOpacity.value = withTiming(1, { duration: 300 });
     } else {
-      translateY.value = withSpring(SHEET_HEIGHT_EXPANDED, SPRING_CONFIG);
+      translateY.value = withTiming(SHEET_HEIGHT_EXPANDED, SHEET_TIMING_CONFIG);
       backdropOpacity.value = withTiming(0, { duration: 300 });
     }
   }, [visible]);
 
   const closeSheet = useCallback(() => {
-    translateY.value = withSpring(SHEET_HEIGHT_EXPANDED, SPRING_CONFIG);
+    translateY.value = withTiming(SHEET_HEIGHT_EXPANDED, SHEET_TIMING_CONFIG);
     backdropOpacity.value = withTiming(0, { duration: 200 });
-    setTimeout(onClose, 200);
+    setTimeout(onClose, durations.transition);
   }, [onClose]);
 
   const expandSheet = useCallback(() => {
     sheetHeight.value = SHEET_HEIGHT_EXPANDED;
-    translateY.value = withSpring(0, SPRING_CONFIG);
+    translateY.value = withTiming(0, SHEET_TIMING_CONFIG);
   }, []);
 
   const collapseSheet = useCallback(() => {
     sheetHeight.value = SHEET_HEIGHT_COLLAPSED;
     const offset = SHEET_HEIGHT_EXPANDED - SHEET_HEIGHT_COLLAPSED;
-    translateY.value = withSpring(offset, SPRING_CONFIG);
+    translateY.value = withTiming(offset, SHEET_TIMING_CONFIG);
   }, []);
 
   const gesture = Gesture.Pan()
@@ -78,7 +81,7 @@ export function useSheetAnimations(visible: boolean, onClose: () => void) {
         runOnJS(closeSheet)();
       } else {
         const offset = SHEET_HEIGHT_EXPANDED - sheetHeight.value;
-        translateY.value = withSpring(offset, SPRING_CONFIG);
+        translateY.value = withSpring(offset, springs.gesture);
       }
     });
 

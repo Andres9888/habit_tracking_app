@@ -1,5 +1,6 @@
 import { useCallback, useRef } from 'react';
 import { Animated } from 'react-native';
+import { durations } from '@/theme/animations';
 import { Motion } from '../../../../constants/motion';
 
 interface UseColorButtonAnimationsParams {
@@ -21,13 +22,13 @@ export const useColorButtonAnimations = ({
 
     Animated.parallel([
       Animated.timing(rippleScale, {
-        duration: 300,
+        duration: durations.moderate,
         easing: Motion.easing.outEase,
         toValue: 2,
         useNativeDriver: true,
       }),
       Animated.timing(rippleOpacity, {
-        duration: 300,
+        duration: durations.moderate,
         easing: Motion.easing.outEase,
         toValue: 0,
         useNativeDriver: true,

@@ -9,15 +9,17 @@ import {
   Easing,
 } from 'react-native-reanimated';
 
+import { durations, enterEasing, springs } from '@/theme/animations';
 import {
   SCREEN_HEIGHT,
-  SHEET_SPRING_CONFIG,
   DISMISS_THRESHOLD,
   VELOCITY_THRESHOLD,
   BACKDROP_FADE_IN_DURATION,
   BACKDROP_FADE_OUT_DURATION,
   BACKDROP_OPACITY,
 } from './constants';
+
+const SHEET_TIMING_CONFIG = { duration: durations.enter, easing: enterEasing };
 
 interface UseSheetAnimationsOptions {
   visible: boolean;
@@ -63,7 +65,7 @@ export function useSheetAnimations({
           });
       translateY.value = reduceMotion
         ? SCREEN_HEIGHT
-        : withSpring(SCREEN_HEIGHT, SHEET_SPRING_CONFIG);
+        : withTiming(SCREEN_HEIGHT, SHEET_TIMING_CONFIG);
     }
   }, [visible, reduceMotion, backdropOpacity, translateY]);
 
@@ -80,11 +82,11 @@ export function useSheetAnimations({
         event.translationY > DISMISS_THRESHOLD ||
         velocityY > VELOCITY_THRESHOLD
       ) {
-        translateY.value = withSpring(SCREEN_HEIGHT, SHEET_SPRING_CONFIG);
+        translateY.value = withTiming(SCREEN_HEIGHT, SHEET_TIMING_CONFIG);
         runOnJS(triggerLightImpact)();
         runOnJS(onClose)();
       } else {
-        translateY.value = withSpring(0, SHEET_SPRING_CONFIG);
+        translateY.value = withSpring(0, springs.gesture);
       }
     });
 
