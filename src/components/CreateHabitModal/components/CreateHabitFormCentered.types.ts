@@ -2,6 +2,8 @@
  * Types for CreateHabitFormCentered
  */
 
+import type { RefObject } from 'react';
+import type { View } from 'react-native';
 import type { ProgressEmojiSet } from '../../../utils/progressEmojis';
 
 export interface CreateHabitFormCenteredProps {
@@ -13,6 +15,8 @@ export interface CreateHabitFormCenteredProps {
   selectedColor: string;
   onColorSelect: (color: string) => void;
   reminderEnabled: boolean;
+  /** Ref for scrolling the daily reminder block into view */
+  reminderSectionRef?: RefObject<View | null>;
   /** Reminder time as Date object for EnhancedReminderSelector */
   reminderTime: Date;
   onReminderToggle: (enabled: boolean) => void;

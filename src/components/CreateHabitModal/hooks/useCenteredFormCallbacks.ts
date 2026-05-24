@@ -5,8 +5,9 @@
  */
 
 import { useCallback, type RefObject } from 'react';
-import type { ScrollView as ScrollViewType } from 'react-native';
+import type { ScrollView as ScrollViewType, View } from 'react-native';
 import { triggerHaptic } from '@/utils/haptics';
+import { scrollToSectionInScrollView } from '@/utils/scrollToSectionInScrollView';
 
 interface FormState {
   setHabitName: (name: string) => void;
@@ -20,6 +21,8 @@ interface UseCenteredFormCallbacksProps {
   form: FormState;
   setShowNameError: (show: boolean) => void;
   scrollViewRef: RefObject<ScrollViewType | null>;
+  scrollContentRef: RefObject<View | null>;
+  reminderSectionRef: RefObject<View | null>;
   handleCreate: () => Promise<void>;
 }
 
@@ -30,6 +33,8 @@ export function useCenteredFormCallbacks({
   form,
   setShowNameError,
   scrollViewRef,
+  scrollContentRef,
+  reminderSectionRef,
   handleCreate,
 }: UseCenteredFormCallbacksProps) {
   const handleEmojiSelect = useCallback(
@@ -66,14 +71,19 @@ export function useCenteredFormCallbacks({
     (enabled: boolean) => {
       void triggerHaptic('toggle');
       form.setRemindersEnabled(enabled);
-      // Auto-scroll to show reminder options when enabled
-      if (enabled) {
-        setTimeout(() => {
-          scrollViewRef.current?.scrollToEnd({ animated: true });
-        }, 100);
-      }
+      // Keep daily reminder anchored in view when expanding or collapsing.
+      scrollToSectionInScrollView(
+        scrollViewRef,
+        scrollContentRef,
+        reminderSectionRef
+      );
     },
-    [form.setRemindersEnabled, scrollViewRef]
+    [
+      form.setRemindersEnabled,
+      scrollViewRef,
+      scrollContentRef,
+      reminderSectionRef,
+    ]
   );
 
   const handleReminderTimeChange = useCallback(

@@ -14,7 +14,7 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import type { ScrollView as ScrollViewType } from 'react-native';
+import type { ScrollView as ScrollViewType, View as ViewType } from 'react-native';
 
 import { GestureDetector } from 'react-native-gesture-handler';
 import Animated from 'react-native-reanimated';
@@ -32,6 +32,8 @@ export default function CreateHabitModalCentered(props: CreateHabitModalProps) {
   const { visible, onClose } = props;
   const { isEditMode, form, handleCreate } = useCreateHabitModal(props);
   const scrollViewRef = useRef<ScrollViewType>(null);
+  const scrollContentRef = useRef<ViewType>(null);
+  const reminderSectionRef = useRef<ViewType>(null);
   const [showNameError, setShowNameError] = useState(false);
   const { colors } = useThemeColors();
   const { animateOut, backdropStyle, panGesture, sheetStyle } = useSwipeDismiss(
@@ -42,6 +44,8 @@ export default function CreateHabitModalCentered(props: CreateHabitModalProps) {
     form,
     handleCreate,
     scrollViewRef,
+    scrollContentRef,
+    reminderSectionRef,
     setShowNameError,
   });
 
@@ -105,6 +109,8 @@ export default function CreateHabitModalCentered(props: CreateHabitModalProps) {
               <CreateHabitScrollContent
                 callbacks={callbacks}
                 form={form}
+                reminderSectionRef={reminderSectionRef}
+                scrollContentRef={scrollContentRef}
                 scrollViewRef={scrollViewRef}
                 showNameError={showNameError}
               />

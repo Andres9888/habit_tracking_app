@@ -1,15 +1,8 @@
 /* eslint-disable max-lines */
 /** HabitEditScreen - Matches Create modal style (bottom sheet, stagger animations) */
 import { useCallback, useRef } from 'react';
-import {
-  findNodeHandle,
-  Keyboard,
-  Modal,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  View,
-} from 'react-native';
+import { Keyboard, Modal, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { scrollToSectionInScrollView } from '@/utils/scrollToSectionInScrollView';
 import { KeyboardAvoidingView, Platform } from 'react-native';
 import { GestureDetector } from 'react-native-gesture-handler';
 import Animated, { FadeIn, FadeInUp } from 'react-native-reanimated';
@@ -51,26 +44,11 @@ function HabitEditScreenContent({
   const handleReminderToggle = useCallback(
     (enabled: boolean) => {
       state.handleReminderToggle(enabled);
-      if (!enabled) return;
-      // Wait for expanded reminder content to finish laying out, then scroll
-      // so the daily-reminder container's top sits at the top of the viewport.
-      setTimeout(() => {
-        const node = reminderSectionRef.current;
-        const contentNode = scrollContentRef.current;
-        if (!node || !contentNode) return;
-        const contentHandle = findNodeHandle(contentNode);
-        if (contentHandle == null) return;
-        node.measureLayout(
-          contentHandle,
-          (_x, y) => {
-            scrollViewRef.current?.scrollTo({
-              y: Math.max(0, y - 8),
-              animated: true,
-            });
-          },
-          () => {}
-        );
-      }, 250);
+      scrollToSectionInScrollView(
+        scrollViewRef,
+        scrollContentRef,
+        reminderSectionRef
+      );
     },
     [state]
   );

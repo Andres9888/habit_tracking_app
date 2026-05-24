@@ -22,6 +22,7 @@ const CreateHabitFormCenteredComponent = ({
   selectedColor,
   onColorSelect,
   reminderEnabled,
+  reminderSectionRef,
   reminderTime,
   onReminderToggle,
   onReminderTimeChange,
@@ -89,12 +90,14 @@ const CreateHabitFormCenteredComponent = ({
           onSelectColor={onColorSelect}
         />
 
-        <EnhancedReminderSelector
-          enabled={reminderEnabled}
-          reminderTime={reminderTime}
-          onTimeChange={onReminderTimeChange}
-          onToggle={onReminderToggle}
-        />
+        <View ref={reminderSectionRef} collapsable={false}>
+          <EnhancedReminderSelector
+            enabled={reminderEnabled}
+            reminderTime={reminderTime}
+            onTimeChange={onReminderTimeChange}
+            onToggle={onReminderToggle}
+          />
+        </View>
       </View>
 
       <AdvancedOptionsSection
