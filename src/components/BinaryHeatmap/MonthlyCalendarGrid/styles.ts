@@ -9,12 +9,17 @@ import { StyleSheet } from 'react-native';
 import { shadows, borderRadius } from '../../../theme/spacing';
 import { typography, fontFamilies, fontWeights } from '@/theme/typography';
 
+const WEEK_ROW_HEIGHT = 41;
+const MONTH_GRID_HEIGHT = 6 * WEEK_ROW_HEIGHT;
+
 export const styles = StyleSheet.create({
   container: {
     ...shadows.card,
+    alignSelf: 'stretch',
     borderRadius: borderRadius.large,
     borderWidth: 1,
     padding: 16,
+    width: '100%',
   },
   dayCell: {
     alignItems: 'center',
@@ -79,24 +84,27 @@ export const styles = StyleSheet.create({
     borderWidth: 1,
     flexDirection: 'row',
     gap: 6,
-    minWidth: 110,
+    justifyContent: 'center',
     paddingHorizontal: 12,
     paddingVertical: 5,
+    width: 118,
   },
   monthText: {
     fontFamily: fontFamilies.primary.text,
     fontSize: typography.caption.fontSize,
     fontWeight: fontWeights.bold,
+    flexShrink: 0,
   },
   row: {
     flexDirection: 'row',
     marginBottom: 1,
   },
   weeksContainer: {
-    // Fixed height for 6 rows (40px each + 1px margin) prevents layout shift
-    // when navigating between months with 5 vs 6 weeks
-    minHeight: 6 * 41,
+    height: MONTH_GRID_HEIGHT,
     overflow: 'hidden',
+  },
+  weeksPage: {
+    height: MONTH_GRID_HEIGHT,
   },
   streakCircle: {
     borderRadius: borderRadius.xs,
