@@ -9,6 +9,7 @@ import {
   Easing,
 } from 'react-native-reanimated';
 
+import { durations, enterEasing, springs } from '@/theme/animations';
 import { useHapticFeedback } from '../../../../hooks/useHapticFeedback';
 import type { HabitSortMode } from '../../types';
 import {
@@ -17,9 +18,10 @@ import {
   BACKDROP_VISIBLE_OPACITY,
   DISMISS_THRESHOLD,
   SCREEN_HEIGHT,
-  SHEET_SPRING_CONFIG,
   VELOCITY_THRESHOLD,
 } from './constants';
+
+const SHEET_TIMING_CONFIG = { duration: durations.enter, easing: enterEasing };
 
 interface UseSortBottomSheetOptions {
   visible: boolean;
@@ -47,7 +49,9 @@ export function useSortBottomSheet({
             duration: BACKDROP_FADE_IN_DURATION_MS,
             easing: Easing.out(Easing.cubic),
           });
-      translateY.value = reduceMotion ? 0 : withSpring(0, SHEET_SPRING_CONFIG);
+      translateY.value = reduceMotion
+        ? 0
+        : withTiming(0, SHEET_TIMING_CONFIG);
     } else {
       backdropOpacity.value = reduceMotion
         ? 0
@@ -57,7 +61,7 @@ export function useSortBottomSheet({
           });
       translateY.value = reduceMotion
         ? SCREEN_HEIGHT
-        : withSpring(SCREEN_HEIGHT, SHEET_SPRING_CONFIG);
+        : withTiming(SCREEN_HEIGHT, SHEET_TIMING_CONFIG);
     }
   }, [visible, reduceMotion, backdropOpacity, translateY]);
 
@@ -73,11 +77,11 @@ export function useSortBottomSheet({
         event.translationY > DISMISS_THRESHOLD ||
         velocityY > VELOCITY_THRESHOLD
       ) {
-        translateY.value = withSpring(SCREEN_HEIGHT, SHEET_SPRING_CONFIG);
+        translateY.value = withTiming(SCREEN_HEIGHT, SHEET_TIMING_CONFIG);
         runOnJS(triggerLightImpact)();
         runOnJS(onClose)();
       } else {
-        translateY.value = withSpring(0, SHEET_SPRING_CONFIG);
+        translateY.value = withSpring(0, springs.gesture);
       }
     });
 

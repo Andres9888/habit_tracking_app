@@ -9,6 +9,7 @@ import Animated, {
   LinearTransition,
 } from 'react-native-reanimated';
 import { View } from 'react-native';
+import { durations } from '@/theme/animations';
 import { EmojiChip } from './EmojiChip';
 
 interface EmojiGridProps {
@@ -18,9 +19,7 @@ interface EmojiGridProps {
   onEmojiSelect: (emoji: string) => void;
 }
 
-const layoutTransition = LinearTransition.springify()
-  .damping(15)
-  .stiffness(120);
+const layoutTransition = LinearTransition.duration(durations.transition);
 
 export function EmojiGrid({
   suggestedEmojis,

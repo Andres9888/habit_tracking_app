@@ -16,6 +16,7 @@ import Animated, {
   useSharedValue,
   useAnimatedStyle,
   withSpring,
+  withTiming,
   runOnJS,
 } from 'react-native-reanimated';
 
@@ -23,8 +24,10 @@ import { useThemeColors } from '../../theme/ThemeContext';
 import type { QuickActionsSheetProps } from './types';
 import { SheetHeader } from './SheetHeader';
 import { ActionsList } from './ActionsList';
-import { springs } from '@/theme/animations';
+import { durations, enterEasing, springs } from '@/theme/animations';
 import { triggerHaptic } from '@/utils/haptics';
+
+const SHEET_TIMING_CONFIG = { duration: durations.enter, easing: enterEasing };
 
 const DISMISS_THRESHOLD = 100;
 const VELOCITY_THRESHOLD = 500;
@@ -70,10 +73,10 @@ export const QuickActionsSheet = ({
         event.translationY > DISMISS_THRESHOLD ||
         velocityY > VELOCITY_THRESHOLD
       ) {
-        translateY.value = withSpring(SCREEN_HEIGHT, springs.standard);
+        translateY.value = withTiming(SCREEN_HEIGHT, SHEET_TIMING_CONFIG);
         runOnJS(handleDismiss)();
       } else {
-        translateY.value = withSpring(0, springs.standard);
+        translateY.value = withSpring(0, springs.gesture);
       }
     });
 
@@ -102,8 +105,8 @@ export const QuickActionsSheet = ({
     >
       <Animated.View
         className='absolute inset-0 bg-black/50'
-        entering={FadeIn.duration(200)}
-        exiting={FadeOut.duration(200)}
+        entering={FadeIn.duration(durations.standard)}
+        exiting={FadeOut.duration(durations.standard)}
       >
         <Pressable
           accessibilityLabel='Close quick actions'
@@ -117,8 +120,8 @@ export const QuickActionsSheet = ({
         <View collapsable={false}>
           <Animated.View
             className='absolute bottom-0 left-0 right-0 rounded-t-3xl shadow-xl'
-            entering={SlideInDown.springify().damping(18).stiffness(150)}
-            exiting={SlideOutDown.springify().damping(20).stiffness(200)}
+            entering={SlideInDown.duration(durations.enter).easing(enterEasing)}
+            exiting={SlideOutDown.duration(durations.enter).easing(enterEasing)}
             style={[{ paddingBottom: insets.bottom + 16, backgroundColor: colors.surface }, sheetAnimatedStyle]}
           >
             <SheetHeader

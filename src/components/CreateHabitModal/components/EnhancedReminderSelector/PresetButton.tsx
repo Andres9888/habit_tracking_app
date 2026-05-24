@@ -3,38 +3,41 @@
  * Per spec: 48px height, Morning/Midday/Evening with time labels
  */
 
-import { memo, useCallback, useRef } from 'react';
-import { Animated, Pressable, Text, View } from 'react-native';
+import { memo, useCallback } from 'react';
+import { Pressable, Text, View } from 'react-native';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+  withTiming,
+} from 'react-native-reanimated';
+import { durations, springs } from '@/theme/animations';
 import { useThemeColors } from '@/theme/ThemeContext';
 import type { PresetButtonProps } from './types';
 
 const useButtonAnimation = (reduceMotion: boolean) => {
-  const scaleAnim = useRef(new Animated.Value(1)).current;
+  const scale = useSharedValue(1);
 
   const handlePressIn = useCallback(() => {
+    'worklet';
     if (reduceMotion) return;
-    Animated.spring(scaleAnim, {
-      friction: 10,
-      tension: 300,
-      toValue: 0.96,
-      useNativeDriver: true,
-    }).start();
-  }, [scaleAnim, reduceMotion]);
+    scale.value = withTiming(0.97, { duration: durations.instant });
+  }, [scale, reduceMotion]);
 
   const handlePressOut = useCallback(() => {
+    'worklet';
     if (reduceMotion) {
-      scaleAnim.setValue(1);
+      scale.value = 1;
       return;
     }
-    Animated.spring(scaleAnim, {
-      friction: 15,
-      tension: 150,
-      toValue: 1,
-      useNativeDriver: true,
-    }).start();
-  }, [scaleAnim, reduceMotion]);
+    scale.value = withSpring(1, springs.standard);
+  }, [scale, reduceMotion]);
 
-  return { handlePressIn, handlePressOut, scaleAnim };
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
+
+  return { animatedStyle, handlePressIn, handlePressOut };
 };
 
 function PresetButtonComponent({
@@ -43,7 +46,7 @@ function PresetButtonComponent({
   onPress,
   reduceMotion,
 }: PresetButtonProps) {
-  const { scaleAnim, handlePressIn, handlePressOut } =
+  const { animatedStyle, handlePressIn, handlePressOut } =
     useButtonAnimation(reduceMotion);
   const { colors } = useThemeColors();
 
@@ -60,13 +63,15 @@ function PresetButtonComponent({
     >
       <Animated.View
         className='items-center justify-center rounded-2xl px-3'
-        style={{
-          backgroundColor: isSelected ? colors.primary[100] : colors.card,
-          borderColor: isSelected ? colors.primary[500] : colors.cardBorder,
-          borderWidth: isSelected ? 2 : 1,
-          height: 48,
-          transform: [{ scale: scaleAnim }],
-        }}
+        style={[
+          {
+            backgroundColor: isSelected ? colors.primary[100] : colors.card,
+            borderColor: isSelected ? colors.primary[500] : colors.cardBorder,
+            borderWidth: isSelected ? 2 : 1,
+            height: 48,
+          },
+          animatedStyle,
+        ]}
       >
         <View className='flex-row items-center gap-1.5'>
           <Text className='text-base'>{preset.emoji}</Text>

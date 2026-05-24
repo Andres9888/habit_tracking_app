@@ -1,24 +1,23 @@
 /**
- * useSwipeDismiss — spring-based sheet transition with swipe-to-dismiss.
+ * useSwipeDismiss — sheet transition with swipe-to-dismiss.
  *
- * Enter: spring slide-up (bottomSheet spring) + backdrop fade-in
- * Exit: spring slide-down (exit spring) + backdrop fade-out, then onClose
- * Swipe: gesture tracking with proportional backdrop fade, haptic on threshold
+ * Enter: timing slide-up + backdrop fade-in (durations.enter / enterEasing)
+ * Exit: timing slide-down + backdrop fade-out, then onClose
+ * Swipe: gesture tracking with proportional backdrop fade, haptic on threshold;
+ *        partial-drag snap-back stays on springs.gesture (small correction).
  */
 
 import { useCallback, useEffect, useRef } from 'react';
 import { Keyboard } from 'react-native';
 import { Gesture } from 'react-native-gesture-handler';
 import {
-  Easing,
   runOnJS,
   useAnimatedStyle,
   useSharedValue,
-  withSequence,
   withSpring,
   withTiming,
 } from 'react-native-reanimated';
-import { springs } from '@/theme/animations';
+import { durations, enterEasing, springs } from '@/theme/animations';
 import { HapticPatterns } from '@/utils/haptics/patterns';
 import {
   DISMISS_THRESHOLD,
@@ -46,12 +45,12 @@ export function useSwipeDismiss({ visible, onClose }: UseSwipeDismissProps) {
     if (visible) {
       isClosing.current = false;
       translateY.value = withTiming(0, {
-        duration: 280,
-        easing: Easing.out(Easing.cubic),
+        duration: durations.enter,
+        easing: enterEasing,
       });
       backdropOpacity.value = withTiming(BACKDROP_TARGET, {
-        duration: 280,
-        easing: Easing.out(Easing.cubic),
+        duration: durations.enter,
+        easing: enterEasing,
       });
     }
   }, [visible]);
@@ -61,9 +60,13 @@ export function useSwipeDismiss({ visible, onClose }: UseSwipeDismissProps) {
     isClosing.current = true;
     Keyboard.dismiss();
     backdropOpacity.value = withTiming(0, { duration: 200 });
-    translateY.value = withSpring(SCREEN_HEIGHT, springs.exit, () => {
-      runOnJS(onCloseRef.current)();
-    });
+    translateY.value = withTiming(
+      SCREEN_HEIGHT,
+      { duration: durations.enter, easing: enterEasing },
+      (finished) => {
+        if (finished) runOnJS(onCloseRef.current)();
+      }
+    );
   }, []);
 
   const panGesture = Gesture.Pan()
