@@ -1,6 +1,6 @@
 /* eslint-disable max-lines */
 /** AdvancedOptionsSection — consolidated per-habit Advanced controls. */
-import { type ReactNode, useEffect, useState } from 'react';
+import { type ReactNode, useEffect, useRef, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import Animated, {
   FadeIn,
@@ -66,12 +66,20 @@ export function AdvancedOptionsSection({
     chevron.value = withTiming(expanded ? 180 : 0, { duration });
   }, [expanded, duration, chevron]);
 
+  const onExpandRef = useRef(onExpand);
   useEffect(() => {
-    if (!expanded || !onExpand) return;
+    onExpandRef.current = onExpand;
+  });
+
+  useEffect(() => {
+    if (!expanded) return;
     // Wait for the expanded body's LinearTransition layout to settle before scrolling.
-    const t = setTimeout(onExpand, reduceMotion ? 0 : 240);
+    const t = setTimeout(
+      () => onExpandRef.current?.(),
+      reduceMotion ? 0 : 240
+    );
     return () => clearTimeout(t);
-  }, [expanded, onExpand, reduceMotion]);
+  }, [expanded, reduceMotion]);
 
   const chevronStyle = useAnimatedStyle(() => ({
     transform: [{ rotate: `${chevron.value}deg` }],
@@ -194,8 +202,8 @@ export function AdvancedOptionsSection({
         {expanded ? (
           <Animated.View
             className='px-4 pb-3 pt-1'
-            entering={reduceMotion ? undefined : FadeIn.duration(160)}
-            exiting={reduceMotion ? undefined : FadeOut.duration(120)}
+            entering={reduceMotion ? undefined : FadeIn.duration(durations.reveal)}
+            exiting={reduceMotion ? undefined : FadeOut.duration(durations.transition)}
           >
             <Text
               style={{

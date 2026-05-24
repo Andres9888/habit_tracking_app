@@ -9,13 +9,11 @@ import { iconSizes } from '@/theme/iconSizes';
 import { typography, fontWeights } from '@/theme/typography';
 import { highContrastColors } from '@/theme/highContrastColors';
 import { Platform, Text, View } from 'react-native';
-import Animated, { FadeInDown, FadeOutUp } from 'react-native-reanimated';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { SettingsRow } from './SettingsRow';
 import { SettingsSection } from './SettingsSection';
 import { AnimatedPressable } from '../ui/AnimatedPressable';
 import { useThemeColors } from '@/theme/ThemeContext';
-import { enterEasing } from '@/theme/animations';
 import {
   timeStringToDate,
   dateToTimeString,
@@ -78,10 +76,7 @@ export function StreakRemindersSection({
         value={enabled}
         onToggle={(v) => void onToggle(v)}
       />
-      {enabled ? <Animated.View
-          entering={FadeInDown.duration(200).easing(enterEasing)}
-          exiting={FadeOutUp.duration(150)}
-        >
+      {enabled ? <View>
           <View
             style={{
               backgroundColor: insetBackground,
@@ -201,11 +196,8 @@ export function StreakRemindersSection({
               )}
             </View>
           </View>
-        </Animated.View> : null}
-      {enabled ? null : <Animated.View
-          entering={FadeInDown.duration(200).easing(enterEasing)}
-          exiting={FadeOutUp.duration(150)}
-        >
+        </View> : null}
+      {enabled ? null : <View>
           <View className='px-4 pb-3'>
             <Text
               style={{ ...typography.caption, lineHeight: 18, color: themeColors.text.secondary }}
@@ -214,7 +206,7 @@ export function StreakRemindersSection({
               streak by your chosen time.
             </Text>
           </View>
-        </Animated.View>}
+        </View>}
     </SettingsSection>
   );
 }

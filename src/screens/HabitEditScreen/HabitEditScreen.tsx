@@ -1,7 +1,8 @@
 /* eslint-disable max-lines */
 /** HabitEditScreen - Matches Create modal style (bottom sheet, stagger animations) */
-import { useRef } from 'react';
+import { useCallback, useRef } from 'react';
 import {
+  findNodeHandle,
   Keyboard,
   Modal,
   Pressable,
@@ -44,6 +45,36 @@ function HabitEditScreenContent({
     onHabitRemoved,
   });
   const scrollViewRef = useRef<ScrollView>(null);
+  const scrollContentRef = useRef<View>(null);
+  const reminderSectionRef = useRef<View>(null);
+
+  const handleReminderToggle = useCallback(
+    (enabled: boolean) => {
+      state.handleReminderToggle(enabled);
+      if (!enabled) return;
+      // Wait for expanded reminder content to finish laying out, then scroll
+      // so the daily-reminder container's top sits at the top of the viewport.
+      setTimeout(() => {
+        const node = reminderSectionRef.current;
+        const contentNode = scrollContentRef.current;
+        if (!node || !contentNode) return;
+        const contentHandle = findNodeHandle(contentNode);
+        if (contentHandle == null) return;
+        node.measureLayout(
+          contentHandle,
+          (_x, y) => {
+            scrollViewRef.current?.scrollTo({
+              y: Math.max(0, y - 8),
+              animated: true,
+            });
+          },
+          () => {}
+        );
+      }, 250);
+    },
+    [state]
+  );
+
   return (
     <Modal
       accessibilityViewIsModal
@@ -107,7 +138,8 @@ function HabitEditScreenContent({
                     keyboardShouldPersistTaps='handled'
                     showsVerticalScrollIndicator={false}
                   >
-                    <Pressable onPress={Keyboard.dismiss}>
+                    <View ref={scrollContentRef} collapsable={false}>
+                      <Pressable onPress={Keyboard.dismiss}>
                       <NameInputSection
                         habitName={state.habitName}
                         onChangeText={state.setHabitName}
@@ -119,13 +151,14 @@ function HabitEditScreenContent({
                         <CustomizeSection
                           habitName={state.habitName}
                           remindersEnabled={state.remindersEnabled}
+                          reminderSectionRef={reminderSectionRef}
                           reminderTime={state.reminderTime}
                           selectedColor={state.selectedColor}
                           selectedEmoji={state.selectedEmoji}
                           onColorSelect={state.handleColorSelect}
                           onEmojiSelect={state.handleEmojiSelect}
                           onReminderTimeChange={state.handleReminderTimeChange}
-                          onReminderToggle={state.handleReminderToggle}
+                          onReminderToggle={handleReminderToggle}
                         />
                       </Animated.View>
                       <AdvancedOptionsSection
@@ -144,7 +177,8 @@ function HabitEditScreenContent({
                           state.handleStrengthAlgorithmChange
                         }
                       />
-                    </Pressable>
+                      </Pressable>
+                    </View>
                   </ScrollView>
                 </Animated.View>
               )}

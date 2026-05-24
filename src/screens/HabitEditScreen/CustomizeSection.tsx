@@ -7,6 +7,7 @@
  * - Daily reminder scheduling
  */
 
+import type { RefObject } from 'react';
 import { Text, View } from 'react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { EmojiPicker } from '../../components/CreateHabitModal/components/EmojiPicker';
@@ -26,6 +27,7 @@ interface CustomizeSectionProps {
   selectedColor: string;
   remindersEnabled: boolean;
   reminderTime: Date;
+  reminderSectionRef?: RefObject<View | null>;
   onEmojiSelect: (emoji: string | null) => void;
   onColorSelect: (color: string) => void;
   onReminderToggle: (enabled: boolean) => void;
@@ -38,6 +40,7 @@ export function CustomizeSection({
   selectedColor,
   remindersEnabled,
   reminderTime,
+  reminderSectionRef,
   onEmojiSelect,
   onColorSelect,
   onReminderToggle,
@@ -90,12 +93,14 @@ export function CustomizeSection({
       </Animated.View>
 
       <Animated.View entering={entrance(120)}>
-        <EnhancedReminderSelector
-          enabled={remindersEnabled}
-          reminderTime={reminderTime}
-          onTimeChange={onReminderTimeChange}
-          onToggle={onReminderToggle}
-        />
+        <View ref={reminderSectionRef} collapsable={false}>
+          <EnhancedReminderSelector
+            enabled={remindersEnabled}
+            reminderTime={reminderTime}
+            onTimeChange={onReminderTimeChange}
+            onToggle={onReminderToggle}
+          />
+        </View>
       </Animated.View>
     </View>
   );
