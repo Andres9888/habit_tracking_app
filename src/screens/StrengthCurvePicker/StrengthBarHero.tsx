@@ -3,7 +3,6 @@ import { useEffect } from 'react';
 import { Text, View } from 'react-native';
 import Animated, {
   FadeInDown,
-  FadeInUp,
   useAnimatedStyle,
   useSharedValue,
   withDelay,
@@ -50,31 +49,29 @@ export function StrengthBarHero({ mode, scale = 1 }: { mode: AlgorithmMode; scal
     >
       <Animated.View
         key={`labels-${mode}`}
-        className='flex-row items-center justify-between'
+        className='flex-row items-start justify-between'
         entering={reduceMotion ? undefined : FadeInDown.duration(260)}
-        style={{ marginBottom: 8 * scale }}
+        style={{ marginBottom: 10 * scale }}
       >
-        <Text className='font-extrabold tracking-wider' style={{ color: colors.text.tertiary, fontSize: 12 * scale }}>DAY 1</Text>
-        <Text className='font-extrabold tracking-wider' style={{ color: colors.text.tertiary, fontSize: 12 * scale }}>{tier.midpointLabel}</Text>
-        <Text className='font-extrabold tracking-wider' style={{ color: accent, fontSize: 12 * scale }}>{tier.automaticMilestone}</Text>
+        <View className='items-start'>
+          <Text className='font-extrabold tracking-wider' style={{ color: colors.text.tertiary, fontSize: 12 * scale }}>DAY 1</Text>
+          <Text style={{ color: colors.text.tertiary, fontSize: 11 * scale, marginTop: 1 * scale }}>{STRENGTH_CURVE_PICKER_COPY.freshStartLabel}</Text>
+        </View>
+        <View className='items-center'>
+          <Text className='font-extrabold tracking-wider' style={{ color: colors.text.tertiary, fontSize: 12 * scale }}>{tier.midpointLabel}</Text>
+          <Text className='font-semibold' style={{ color: colors.text.primary, fontSize: 11 * scale, marginTop: 1 * scale }}>{tier.midpointSub}</Text>
+        </View>
+        <View className='items-end'>
+          <Text className='font-extrabold tracking-wider' style={{ color: accent, fontSize: 12 * scale }}>{tier.automaticMilestone}</Text>
+          <Text style={{ color: accent, fontSize: 11 * scale, marginTop: 1 * scale }}>{STRENGTH_CURVE_PICKER_COPY.automaticLabel}</Text>
+        </View>
       </Animated.View>
 
-      <View style={{ height: 36 * scale, backgroundColor: empty, borderRadius: 999, position: 'relative', overflow: 'hidden' }}>
+      <View style={{ height: 28 * scale, backgroundColor: empty, borderRadius: 999, position: 'relative', overflow: 'hidden' }}>
         <Animated.View key={`fill-${mode}`} style={[{ position: 'absolute', left: 0, top: 0, bottom: 0, borderRadius: 999, overflow: 'hidden' }, fillStyle]}>
           <LinearGradient colors={[accent, accent]} end={{ x: 1, y: 0 }} start={{ x: 0, y: 0 }} style={{ flex: 1 }} />
         </Animated.View>
       </View>
-
-      <Animated.View
-        key={`phases-${mode}`}
-        className='flex-row items-center justify-between'
-        entering={reduceMotion ? undefined : FadeInUp.delay(180).duration(280)}
-        style={{ marginTop: 8 * scale }}
-      >
-        <Text style={{ color: colors.text.tertiary, fontSize: 11 * scale }}>{STRENGTH_CURVE_PICKER_COPY.freshStartLabel}</Text>
-        <Text className='font-semibold' style={{ color: colors.text.primary, fontSize: 11 * scale }}>{tier.midpointSub}</Text>
-        <Text style={{ color: accent, fontSize: 11 * scale }}>{STRENGTH_CURVE_PICKER_COPY.automaticLabel}</Text>
-      </Animated.View>
     </View>
   );
 }

@@ -11,6 +11,8 @@ export const STRENGTH_CURVE_PICKER_COPY = {
   automaticLabel: 'Automatic',
   checkInLabel: 'Check in',
   missLabel: 'Skip a day',
+  checkInUnit: 'per check-in',
+  missUnit: 'per missed day',
 } as const;
 
 export interface TierCopy {

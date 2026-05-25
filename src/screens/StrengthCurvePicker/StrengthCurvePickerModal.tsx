@@ -60,18 +60,20 @@ export function StrengthCurvePickerModal({ visible, selected, onSelect, onClose 
         </Animated.View>
         <StrengthBarHero mode={selected} scale={scale} />
         <MechanicStatRow mode={selected} scale={scale} />
-        <Animated.Text
-          className='text-center font-bold tracking-wider'
+        <Animated.View
+          className='flex-row items-center justify-center gap-2 px-6'
           entering={reduceMotion ? undefined : FadeInDown.delay(180).duration(260)}
-          style={{
-            color: colors.text.tertiary,
-            fontSize: 10.5 * scale,
-            marginTop: 14 * scale,
-            marginBottom: 8 * scale,
-          }}
+          style={{ marginTop: 14 * scale, marginBottom: 8 * scale }}
         >
-          {STRENGTH_CURVE_PICKER_COPY.pickerSectionLabel.toUpperCase()}
-        </Animated.Text>
+          <View className='h-px flex-1' style={{ backgroundColor: colors.border }} />
+          <Text
+            className='font-semibold tracking-wider'
+            style={{ color: colors.text.tertiary, fontSize: 13 * scale }}
+          >
+            {STRENGTH_CURVE_PICKER_COPY.pickerSectionLabel.toUpperCase()}
+          </Text>
+          <View className='h-px flex-1' style={{ backgroundColor: colors.border }} />
+        </Animated.View>
         <TierPickerRow scale={scale} selected={selected} onSelect={onSelect} />
         <View style={{ marginBottom: insets.bottom + 16 }}>
           <TierDetailCard mode={selected} scale={scale} />

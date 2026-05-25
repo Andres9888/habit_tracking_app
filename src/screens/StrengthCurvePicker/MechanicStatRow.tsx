@@ -21,7 +21,6 @@ export function MechanicStatRow({ mode, scale = 1 }: { mode: AlgorithmMode; scal
     backgroundColor: colors.card,
     borderColor: colors.border,
     borderWidth: 1,
-    borderLeftWidth: 4,
     padding: 12 * scale,
   } as const;
 
@@ -31,28 +30,34 @@ export function MechanicStatRow({ mode, scale = 1 }: { mode: AlgorithmMode; scal
         key={`gain-${mode}`}
         entering={gain}
         className='flex-1 items-center rounded-2xl'
-        style={{ ...cardStyle, borderLeftColor: accent }}
+        style={cardStyle}
       >
-        <Text style={{ color: accent, fontSize: 24 * scale, lineHeight: 26 * scale }}>✓</Text>
+        <Text style={{ color: accent, fontSize: 18 * scale, lineHeight: 20 * scale }}>✓</Text>
         <Text className='font-bold' style={{ color: colors.text.primary, fontSize: 12 * scale, marginTop: 2 * scale }}>
           {STRENGTH_CURVE_PICKER_COPY.checkInLabel}
         </Text>
-        <Text className='font-extrabold' style={{ color: accent, fontSize: 22 * scale, marginTop: 2 * scale }}>
+        <Text className='font-extrabold' style={{ color: accent, fontSize: 22 * scale }}>
           {tier.fillPercent}
+        </Text>
+        <Text style={{ color: colors.text.tertiary, fontSize: 10 * scale, marginTop: 1 * scale }}>
+          {STRENGTH_CURVE_PICKER_COPY.checkInUnit}
         </Text>
       </Animated.View>
       <Animated.View
         key={`dip-${mode}`}
         entering={dip}
         className='flex-1 items-center rounded-2xl'
-        style={{ ...cardStyle, borderLeftColor: MISS_COLOR }}
+        style={cardStyle}
       >
-        <Text style={{ color: MISS_COLOR, fontSize: 24 * scale, lineHeight: 26 * scale }}>✗</Text>
+        <Text style={{ color: MISS_COLOR, fontSize: 18 * scale, lineHeight: 20 * scale }}>✗</Text>
         <Text className='font-bold' style={{ color: colors.text.primary, fontSize: 12 * scale, marginTop: 2 * scale }}>
           {STRENGTH_CURVE_PICKER_COPY.missLabel}
         </Text>
-        <Text className='font-extrabold' style={{ color: MISS_COLOR, fontSize: 22 * scale, marginTop: 2 * scale }}>
+        <Text className='font-extrabold' style={{ color: MISS_COLOR, fontSize: 22 * scale }}>
           {tier.dipPercent}
+        </Text>
+        <Text style={{ color: colors.text.tertiary, fontSize: 10 * scale, marginTop: 1 * scale }}>
+          {STRENGTH_CURVE_PICKER_COPY.missUnit}
         </Text>
       </Animated.View>
     </View>
