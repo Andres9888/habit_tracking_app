@@ -2,6 +2,8 @@
  * Types for CreateHabitFormCentered
  */
 
+import type { RefObject } from 'react';
+import type { View as ViewType } from 'react-native';
 import type { ProgressEmojiSet } from '../../../utils/progressEmojis';
 
 export interface CreateHabitFormCenteredProps {
@@ -33,4 +35,6 @@ export interface CreateHabitFormCenteredProps {
   onStreakGoalChange: (days: number) => void;
   /** Called after the Advanced section expands so the parent can scroll it into view. */
   onAdvancedExpand?: () => void;
+  /** Ref attached to the daily reminder container so the parent can measure and scroll to it. */
+  reminderSectionRef?: RefObject<ViewType | null>;
 }
