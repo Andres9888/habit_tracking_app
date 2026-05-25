@@ -243,7 +243,7 @@ export function AdvancedOptionsSection({
             <AdvancedOptionRow
               isFirst
               accessibilityHint='Opens strength curve picker'
-              description="How your habit's strength grows and resets when you miss days."
+              description="How strength builds — and resets when you miss days."
               icon={
                 <AlgoIcon
                   color={colors.primary[700]}
@@ -258,7 +258,7 @@ export function AdvancedOptionsSection({
             />
             <AdvancedOptionRow
               accessibilityHint='Opens growth icons picker'
-              description="The 5-stage emoji progression shown on your habit's strength bar."
+              description="Five emojis that mark your habit's strength stages."
               icon={
                 <Text style={{ fontSize: 18 }}>{resolvedEmojis.starting}</Text>
               }
@@ -269,7 +269,7 @@ export function AdvancedOptionsSection({
             />
             <AdvancedOptionRow
               accessibilityHint='Opens streak goal picker'
-              description="A motivational target — purely visual, no penalty if you miss it."
+              description="A visual target — no penalty if you miss it."
               icon={
                 <Target
                   color={colors.primary[700]}
