@@ -3,7 +3,7 @@
 **Date:** 2026-04-23
 **Source audit:** `DESIGN_CONSISTENCY_REVIEW.md` (2026-04-23, 22/24)
 **Companion:** `.planning/ui-reviews/full-app-UI-REVIEW-2026-04-23.md` (6-pillar)
-**Status:** Plan only — no implementation.
+**Status:** Wave 1.1 partially implemented (2026-05-25) — `borderRadius: 9999` → `0` in `src/`. Calendar legend + modal tab colors tokenized.
 
 Each wave ships with explicit "Done when" criteria tied to token-adoption counts so progress is measurable.
 

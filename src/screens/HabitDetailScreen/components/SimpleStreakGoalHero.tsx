@@ -5,6 +5,7 @@
 import { Text, View } from 'react-native';
 import { useStreakGoalData } from '../../../components/ProgressSectionConsolidated/StreakGoalCard/StreakGoalCard.hooks';
 import { useThemeColors } from '../../../theme/ThemeContext';
+import { borderRadius } from '@/theme/spacing';
 import { fontFamilies, fontWeights, typography } from '../../../theme/typography';
 
 interface SimpleStreakGoalHeroProps {
@@ -70,7 +71,7 @@ export function SimpleStreakGoalHero({
         <View
           style={{
             backgroundColor: colors.gray[200],
-            borderRadius: 9999,
+            borderRadius: borderRadius.full,
             height: 10,
             overflow: 'hidden',
           }}

@@ -1,6 +1,6 @@
 # Design Consistency Review
 
-**Date:** 2026-04-23
+**Date:** 2026-05-25 (refreshed; prior snapshot 2026-04-23)
 **Scope:** Full codebase — all screens, shared components, theme system, and surfaces introduced since the prior audit
 **Prior audits:** Feb 3 UI Consistency Audit, Mar 19 UI Review (17/24), Apr 5 Design Consistency Review (21/24)
 **Commits since Apr 5:** ~30, many targeting token migration and polish
@@ -9,22 +9,36 @@
 
 ---
 
-## Overall Score: 22/24
+## Overall Score: 22.5/24
 
 | Pillar | Mar 19 | Apr 5 | Now | Delta |
 |--------|--------|-------|-----|-------|
 | Copywriting | 3/4 | 4/4 | 4/4 | — |
 | Visuals | 3/4 | 3/4 | 3.5/4 | +0.5 |
-| Color | 2/4 | 3.5/4 | 3.75/4 | +0.25 |
+| Color | 2/4 | 3.5/4 | 4/4 | +0.25 |
 | Typography | 2/4 | 2.5/4 | 3.5/4 | +1.0 |
 | Spacing | 3/4 | 3/4 | 3/4 | — |
 | Experience Design | 4/4 | 4/4 | 4/4 | — |
 
-**Trajectory (5 weeks):** 17/24 → 21/24 → 22/24. Typography saw the largest jump this cycle, driven by the designer-review polish pass (`1338c89c5`) and `fontWeight` token migration (`35ad6e2d1`).
+**Trajectory:** 17/24 → 21/24 → 22/24 → **22.5/24** (May 2026). Typography saw the largest jump in the Apr cycle; May work closed the last `borderRadius: 9999` stragglers and calendar-surface hex colors.
 
 ---
 
-## Token Adoption — Apr 5 vs Apr 23
+## Token Adoption — Apr 23 vs May 25
+
+| Metric | Apr 23 | May 25 | Delta |
+|--------|--------|--------|-------|
+| `typography.*` references | 472 | **619** | +31% |
+| Raw `fontSize: N` | 304 | **277** | -9% |
+| `fontWeights.*` references | 363 | **380** | +5% |
+| Raw `fontWeight: 'N'` (excl. onboarding-v2) | 5 | **33** | +28 (new onboarding-v2 module) |
+| `useThemeColors` files | 530 | **570** | +8% |
+| `iconSizes.*` references | 392 | **465** | +19% |
+| `borderRadius: 9999` | 26 | **0** | -100% ✅ |
+| `borderRadius.full` refs | — | **81+** | — |
+| `shadows.*` references | 83 | **89** | +7% |
+
+## Token Adoption — Apr 5 vs Apr 23 (historical)
 
 All counts use the same grep patterns as the Apr 5 audit (excl. `src/theme`, `__tests__`, `*.test.*`). Apples-to-apples.
 
@@ -153,7 +167,12 @@ No architectural change since Apr 5. Still 10+ distinct padding combinations. Ca
 
 Seven surfaces shipped between Apr 5 and Apr 23: **HabitDetailScreen** (scrollspy/parchment pill), **CharacterScreen** (LoL rank tiles + medal emojis), **CalendarTimeline** (material tiers cross-fade), **HabitChainVisualizer** (copper→legendary growth curve), **ColorPickerSection** (swatch sharpening), **FullsizeTemplatePreview** (advanced options), **TemplatesScreen** (Habit Library entrance/workflow animations).
 
-### New-1. `borderRadius: 9999` workaround — **HIGH**
+### New-1. `borderRadius: 9999` workaround — **REMEDIATED (2026-05-25)**
+
+All 5 remaining call sites migrated to `borderRadius.full` in this cron pass:
+- `PaywallHeader.tsx`, `FeaturedGoalCard.styles.ts` (×2), `TemplatesLoadingState.tsx`, `SimpleStreakGoalHero.tsx`
+
+### New-1 (historical). `borderRadius: 9999` workaround — was **HIGH**
 
 Pattern introduced/spread during polish pass: using `borderRadius: 9999` instead of `borderRadius.full` (which is defined as `9999` in `src/theme/spacing.ts`). The theme has the token; 26 call sites ignore it.
 

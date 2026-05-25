@@ -3,6 +3,7 @@ import { View, Text } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { enterEasing } from '../../../theme/animations';
+import { borderRadius } from '@/theme/spacing';
 import { fontFamilies, fontWeights } from '../../../theme/typography';
 import { ShimmerBox } from './ShimmerBox';
 import { SkeletonCard } from './SkeletonCard';
@@ -55,7 +56,7 @@ export function TemplatesLoadingState() {
           <ShimmerBox
             key={i}
             height={36}
-            style={{ borderRadius: 9999 }}
+            style={{ borderRadius: borderRadius.full }}
             width={w}
           />
         ))}

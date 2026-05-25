@@ -1,4 +1,5 @@
 import { Text, View } from 'react-native';
+import type { SemanticColors } from '../../../theme/darkColors';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { borderRadius } from '@/theme/spacing';
 import { typography, fontFamilies, fontWeights } from '@/theme/typography';
@@ -9,27 +10,27 @@ interface LegendItem {
   textColor: string;
 }
 
-function getLegendItems(): LegendItem[] {
+function getLegendItems(colors: SemanticColors): LegendItem[] {
   return [
     {
       label: 'Completed',
-      indicatorColor: '#10B981',
-      textColor: '#047857',
+      indicatorColor: colors.primary[500],
+      textColor: colors.primary[700],
     },
     {
       label: 'Missed',
-      indicatorColor: '#F87171',
-      textColor: '#EF4444',
+      indicatorColor: colors.error,
+      textColor: colors.error,
     },
     {
       label: 'Today',
-      indicatorColor: '#10B981',
-      textColor: '#059669',
+      indicatorColor: colors.primary[500],
+      textColor: colors.primary[600],
     },
     {
       label: 'Upcoming',
-      indicatorColor: '#D1D5DB',
-      textColor: '#9CA3AF',
+      indicatorColor: colors.gray[300],
+      textColor: colors.gray[400],
     },
   ];
 }
@@ -45,7 +46,7 @@ function getLegendItems(): LegendItem[] {
  */
 export function CalendarLegend() {
   const { colors } = useThemeColors();
-  const legendItems = getLegendItems();
+  const legendItems = getLegendItems(colors);
 
   return (
     <View

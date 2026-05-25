@@ -70,13 +70,19 @@ export function ActivityLog({ tracking }: ActivityLogProps) {
             {/* Right side - Time with Icon */}
             <View className='flex-row items-center gap-2'>
               {activity.completed ? (
-                <CheckCircle2 color='#10b981' fill='#10b981' size={iconSizes.medium} />
+                <CheckCircle2
+                  color={colors.primary[500]}
+                  fill={colors.primary[500]}
+                  size={iconSizes.medium}
+                />
               ) : (
-                <FastForward color='#a8a29e' size={iconSizes.medium} />
+                <FastForward color={colors.gray[400]} size={iconSizes.medium} />
               )}
               <Text
                 className='text-sm font-semibold'
-                style={{ color: activity.completed ? '#047857' : colors.text.secondary }}
+                style={{
+                  color: activity.completed ? colors.primary[700] : colors.text.secondary,
+                }}
               >
                 {formatActivityTime(activity._creationTime)}
               </Text>
