@@ -53,7 +53,7 @@ export function useStrengthAnimation(
     opacity: emojiOpacity.value,
     transform: [
       { scale: emojiScale.value },
-      { rotate: `${Math.round(emojiRotation.value)}deg` },
+      { rotate: `${emojiRotation.value}deg` },
     ],
   }));
 
