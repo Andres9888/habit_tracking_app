@@ -34,6 +34,7 @@ const CreateHabitFormCenteredComponent = ({
   streakGoal,
   onStreakGoalChange,
   onAdvancedExpand,
+  reminderSectionRef,
 }: CreateHabitFormCenteredProps) => {
   const { colors: themeColors, isDark } = useThemeColors();
   const [committedHabitName, setCommittedHabitName] = useState(habitName);
@@ -89,12 +90,14 @@ const CreateHabitFormCenteredComponent = ({
           onSelectColor={onColorSelect}
         />
 
-        <EnhancedReminderSelector
-          enabled={reminderEnabled}
-          reminderTime={reminderTime}
-          onTimeChange={onReminderTimeChange}
-          onToggle={onReminderToggle}
-        />
+        <View ref={reminderSectionRef} collapsable={false}>
+          <EnhancedReminderSelector
+            enabled={reminderEnabled}
+            reminderTime={reminderTime}
+            onTimeChange={onReminderTimeChange}
+            onToggle={onReminderToggle}
+          />
+        </View>
       </View>
 
       <AdvancedOptionsSection

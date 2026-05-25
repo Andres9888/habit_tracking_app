@@ -5,7 +5,7 @@
  */
 
 import { useCallback, type RefObject } from 'react';
-import type { ScrollView as ScrollViewType } from 'react-native';
+import type { ScrollView as ScrollViewType, View } from 'react-native';
 import { triggerHaptic } from '@/utils/haptics';
 
 interface FormState {
@@ -20,6 +20,8 @@ interface UseCenteredFormCallbacksProps {
   form: FormState;
   setShowNameError: (show: boolean) => void;
   scrollViewRef: RefObject<ScrollViewType | null>;
+  reminderSectionRef: RefObject<View | null>;
+  scrollContentRef: RefObject<View | null>;
   handleCreate: () => Promise<void>;
 }
 
@@ -30,6 +32,8 @@ export function useCenteredFormCallbacks({
   form,
   setShowNameError,
   scrollViewRef,
+  reminderSectionRef,
+  scrollContentRef,
   handleCreate,
 }: UseCenteredFormCallbacksProps) {
   const handleEmojiSelect = useCallback(
@@ -66,14 +70,30 @@ export function useCenteredFormCallbacks({
     (enabled: boolean) => {
       void triggerHaptic('toggle');
       form.setRemindersEnabled(enabled);
-      // Auto-scroll to show reminder options when enabled
-      if (enabled) {
-        setTimeout(() => {
-          scrollViewRef.current?.scrollToEnd({ animated: true });
-        }, 100);
-      }
+      if (!enabled) return;
+      // After the reminder section expands, align its top with the viewport
+      // top so the user lands on it instead of the Advanced section below.
+      setTimeout(() => {
+        const node = reminderSectionRef.current;
+        const contentNode = scrollContentRef.current;
+        if (!node || !contentNode) return;
+        // RN 0.81 Fabric: measureLayout accepts a HostInstance directly.
+        // Passing findNodeHandle's number is rejected with "ref to a native
+        // component" — pass the ref's current value instead.
+        node.measureLayout(
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          contentNode as any,
+          (_x, y) => {
+            scrollViewRef.current?.scrollTo({
+              y: Math.max(0, y - 8),
+              animated: true,
+            });
+          },
+          () => {}
+        );
+      }, 250);
     },
-    [form.setRemindersEnabled, scrollViewRef]
+    [form.setRemindersEnabled, scrollViewRef, reminderSectionRef, scrollContentRef]
   );
 
   const handleReminderTimeChange = useCallback(

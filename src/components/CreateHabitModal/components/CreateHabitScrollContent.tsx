@@ -8,7 +8,7 @@ import {
   ScrollView,
   View,
 } from 'react-native';
-import type { ScrollView as ScrollViewType } from 'react-native';
+import type { ScrollView as ScrollViewType, View as ViewType } from 'react-native';
 import { useSharedValue } from 'react-native-reanimated';
 import { CreateHabitFormCentered } from './CreateHabitFormCentered';
 import { ScrollForMoreHint } from './ScrollForMoreHint';
@@ -20,6 +20,8 @@ interface CreateHabitScrollContentProps {
   form: ReturnType<typeof useHabitForm>;
   callbacks: ReturnType<typeof useCenteredFormCallbacks>;
   scrollViewRef: RefObject<ScrollViewType | null>;
+  scrollContentRef: RefObject<ViewType | null>;
+  reminderSectionRef: RefObject<ViewType | null>;
   showNameError: boolean;
 }
 
@@ -27,6 +29,8 @@ export function CreateHabitScrollContent({
   form,
   callbacks,
   scrollViewRef,
+  scrollContentRef,
+  reminderSectionRef,
   showNameError,
 }: CreateHabitScrollContentProps) {
   const scrollY = useSharedValue(0);
@@ -57,33 +61,36 @@ export function CreateHabitScrollContent({
         }}
         onScroll={handleScroll}
       >
-        <Pressable accessible={false} onPress={Keyboard.dismiss}>
-          <CreateHabitFormCentered
-            autoFocus
-            colors={HABIT_COLORS}
-            habitName={form.habitName}
-            progressEmojis={form.progressEmojis}
-            reminderEnabled={form.remindersEnabled}
-            reminderTime={form.reminderTime}
-            selectedColor={form.selectedColor}
-            selectedEmoji={form.selectedEmoji}
-            showNameError={showNameError}
-            streakGoal={form.streakGoal}
-            strengthAlgorithm={form.strengthAlgorithm}
-            onAdvancedExpand={() =>
-              scrollViewRef.current?.scrollToEnd({ animated: true })
-            }
-            onColorSelect={callbacks.handleColorSelect}
-            onEmojiSelect={callbacks.handleEmojiSelect}
-            onHabitNameChange={callbacks.handleNameChange}
-            onProgressEmojisChange={form.setProgressEmojis}
-            onReminderTimeChange={callbacks.handleReminderTimeChange}
-            onReminderToggle={callbacks.handleReminderToggle}
-            onStreakGoalChange={form.setStreakGoal}
-            onStrengthAlgorithmChange={form.setStrengthAlgorithm}
-            onSubmit={callbacks.handleSubmit}
-          />
-        </Pressable>
+        <View ref={scrollContentRef} collapsable={false}>
+          <Pressable accessible={false} onPress={Keyboard.dismiss}>
+            <CreateHabitFormCentered
+              autoFocus
+              colors={HABIT_COLORS}
+              habitName={form.habitName}
+              progressEmojis={form.progressEmojis}
+              reminderEnabled={form.remindersEnabled}
+              reminderSectionRef={reminderSectionRef}
+              reminderTime={form.reminderTime}
+              selectedColor={form.selectedColor}
+              selectedEmoji={form.selectedEmoji}
+              showNameError={showNameError}
+              streakGoal={form.streakGoal}
+              strengthAlgorithm={form.strengthAlgorithm}
+              onAdvancedExpand={() =>
+                scrollViewRef.current?.scrollToEnd({ animated: true })
+              }
+              onColorSelect={callbacks.handleColorSelect}
+              onEmojiSelect={callbacks.handleEmojiSelect}
+              onHabitNameChange={callbacks.handleNameChange}
+              onProgressEmojisChange={form.setProgressEmojis}
+              onReminderTimeChange={callbacks.handleReminderTimeChange}
+              onReminderToggle={callbacks.handleReminderToggle}
+              onStreakGoalChange={form.setStreakGoal}
+              onStrengthAlgorithmChange={form.setStrengthAlgorithm}
+              onSubmit={callbacks.handleSubmit}
+            />
+          </Pressable>
+        </View>
       </ScrollView>
       <ScrollForMoreHint
         contentHeight={contentHeight}
