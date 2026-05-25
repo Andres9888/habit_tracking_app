@@ -11,6 +11,7 @@ import { PREMIUM_PACKS } from '../data/premiumPacks';
 import type { CategoryMeta } from '../data/categoryMeta';
 import { CATEGORY_META } from '../data/categoryMeta';
 import { CATEGORY_PRIORITY, getCategoryPriority } from '../data/categoryPriority';
+import { sortTemplatesByImportState } from '../utils/sortTemplatesByImportState';
 
 const POPULAR_LIMIT = 10;
 const PREVIEW_EMOJI_LIMIT = 4;
@@ -18,21 +19,27 @@ const QUICK_FILTER_IDS = CATEGORY_PRIORITY.slice(0, 7);
 
 interface UseMainBrowseDataOptions {
   allTemplates: Doc<'templates'>[] | undefined;
+  importedTemplateIds: Set<string>;
   isPremiumUser: boolean;
   userHabitCount: number;
 }
 
 export function useMainBrowseData({
   allTemplates,
+  importedTemplateIds,
   isPremiumUser,
   userHabitCount,
 }: UseMainBrowseDataOptions) {
   const popularTemplates = useMemo(() => {
     if (!allTemplates) return [];
-    return [...allTemplates]
-      .sort((a, b) => (b.popularityScore ?? 0) - (a.popularityScore ?? 0))
-      .slice(0, POPULAR_LIMIT);
-  }, [allTemplates]);
+    const sorted = [...allTemplates].sort(
+      (a, b) => (b.popularityScore ?? 0) - (a.popularityScore ?? 0)
+    );
+    return sortTemplatesByImportState(sorted, importedTemplateIds).slice(
+      0,
+      POPULAR_LIMIT
+    );
+  }, [allTemplates, importedTemplateIds]);
 
   const categoryList = useMemo(() => {
     if (!allTemplates) return [];

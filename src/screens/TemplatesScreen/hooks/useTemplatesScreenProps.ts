@@ -48,12 +48,15 @@ export function useTemplatesScreenProps() {
     seedTemplates: data.seedTemplates,
     setShowCelebration: state.setShowCelebration,
     setExpandedCategories: state.setExpandedCategories,
+    setFeedbackHabitId: state.setFeedbackHabitId,
+    setFeedbackVariant: state.setFeedbackVariant,
     setImportedTemplateIds: state.setImportedTemplateIds,
     setImportingTemplateId: state.setImportingTemplateId,
     setIsSeeding: state.setIsSeeding,
     setPreviewTemplate: state.setPreviewTemplate,
     setSearchQuery: state.setSearchQuery,
     setSelectedCategory: state.setSelectedCategory,
+    setSessionImportCount: state.setSessionImportCount,
     setShowCustomizeModal: state.setShowCustomizeModal,
     setShowFullsizePreview: state.setShowFullsizePreview,
     setShowSortOptions: state.setShowSortOptions,
@@ -71,6 +74,7 @@ export function useTemplatesScreenProps() {
   );
   const mainBrowseData = useMainBrowseData({
     allTemplates: data.allTemplates,
+    importedTemplateIds: state.importedTemplateIds,
     isPremiumUser: data.isPremiumUser,
     userHabitCount: data.userHabitCount,
   });

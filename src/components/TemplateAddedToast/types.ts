@@ -14,8 +14,12 @@ export interface TemplateAddedToastProps {
   visible: boolean;
   templateData: TemplateToastData | null;
   duration?: number;
+  variant?: 'success' | 'already_exists';
+  sessionImportCount?: number;
   onDismiss?: () => void;
-  onViewHabits?: () => void;
+  onViewHabit?: () => void;
   onAddAnother?: () => void;
+  /** @deprecated use onViewHabit */
+  onViewHabits?: () => void;
   style?: ViewStyle;
 }

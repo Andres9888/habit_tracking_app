@@ -6,10 +6,9 @@
 
 import { useCallback, useMemo } from 'react';
 import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
-import type { Doc } from '../../../convex/_generated/dataModel';
-import { CategoryRowsSection } from './components/CategoryRowsSection';
+import type { Doc, Id } from '../../../convex/_generated/dataModel';
+import { BrowseCategoriesLink } from './components/BrowseCategoriesLink';
 import { useGroupedTemplates } from './components/ExploreAllSection';
-import { PremiumPacksSection } from './components/PremiumPacksSection';
 import { SearchResults } from './components/SearchResults';
 import { TemplatesEmptyState } from './components/TemplatesEmptyState';
 import { TemplatesScreenModals } from './components';
@@ -18,21 +17,62 @@ import { FeedbackOverlays } from './views/FeedbackOverlays';
 import { MainBrowseView } from './views/MainBrowseView';
 import { renderSubView } from './views/renderSubView';
 import {
+  buildCategoryGridItems,
+} from './views/CategoriesGridView';
+import {
   GOAL_COLLECTIONS,
   getFeaturedGoalId,
   type GoalCollection,
 } from './data/goalCollections';
+import { filterStarterTemplates } from './data/starterHabits';
+import { sortTemplatesByImportState } from './utils/sortTemplatesByImportState';
 
 interface TemplatesScreenContentProps {
   onCloseLibrary?: () => void;
+  onViewHabit?: (habitId: Id<'habits'>) => void;
 }
 
 function TemplatesScreenContent({
   onCloseLibrary,
+  onViewHabit,
 }: TemplatesScreenContentProps) {
   const props = useTemplatesScreenProps();
   const { data, handlers, mainBrowseData, packConfirm, state, viewNav } = props;
-  const { groups, totalCount } = useGroupedTemplates(data.allTemplates);
+  const { groups } = useGroupedTemplates(data.allTemplates);
+  const categoryGridItems = useMemo(
+    () => buildCategoryGridItems(groups),
+    [groups]
+  );
+  const starterTemplates = useMemo(
+    () => filterStarterTemplates(data.allTemplates),
+    [data.allTemplates]
+  );
+  const sortedFilteredTemplates = useMemo(
+    () =>
+      sortTemplatesByImportState(
+        props.filteredTemplates,
+        state.importedTemplateIds
+      ),
+    [props.filteredTemplates, state.importedTemplateIds]
+  );
+
+  const handleDismissFeedback = useCallback(() => {
+    state.setShowToast(false);
+    state.setShowCelebration(false);
+    state.setFeedbackHabitId(null);
+    state.setFeedbackVariant(null);
+  }, [state]);
+
+  const handleAddAnother = useCallback(() => {
+    handleDismissFeedback();
+  }, [handleDismissFeedback]);
+
+  const handleViewHabit = useCallback(() => {
+    if (state.feedbackHabitId) {
+      onViewHabit?.(state.feedbackHabitId);
+    }
+    handleDismissFeedback();
+  }, [handleDismissFeedback, onViewHabit, state.feedbackHabitId]);
 
   const handleGoalSelect = useCallback(
     (goal: GoalCollection) => {
@@ -62,6 +102,7 @@ function TemplatesScreenContent({
   }, [data.allTemplates, featuredGoalId]);
 
   const handleImport = (template: Doc<'templates'>) => {
+    state.setPreviewTemplate(template);
     void handlers.handleDirectImport(template._id);
   };
   const handleSeedTemplates = () => {
@@ -73,6 +114,16 @@ function TemplatesScreenContent({
   const handleSeeAll = () => {
     void viewNav.openSeeAll();
   };
+  const handleOpenStarters = () => {
+    void viewNav.openStarters();
+  };
+  const handleOpenCategories = () => {
+    void viewNav.openCategories();
+  };
+  const handleBrowseByGoal = useCallback(() => {
+    const featured = GOAL_COLLECTIONS.find((g) => g.id === featuredGoalId);
+    if (featured) handleGoalSelect(featured);
+  }, [featuredGoalId, handleGoalSelect]);
 
   if (!data.isLoading && !data.allTemplates?.length) {
     return (
@@ -86,10 +137,12 @@ function TemplatesScreenContent({
   const subView = renderSubView({
     activeView: viewNav.activeView,
     allTemplates: data.allTemplates,
+    categoryGridItems,
     importedTemplateIds: state.importedTemplateIds,
     importingTemplateId: state.importingTemplateId,
     onBack: viewNav.goBack,
     onImport: handleImport,
+    onOpenCategory: viewNav.openCategory,
     onPreview: handlers.handleTemplatePreview,
   });
   if (subView) {
@@ -97,23 +150,30 @@ function TemplatesScreenContent({
       <>
         {subView}
         <TemplatesScreenModals
-          importedTemplateIds={state.importedTemplateIds}
           importingTemplateId={state.importingTemplateId}
           previewTemplate={state.previewTemplate}
           showCustomizeModal={state.showCustomizeModal}
-          showFullsizePreview={state.showFullsizePreview}
           showPaywall={state.showPaywall}
           onCloseCustomize={() => state.setShowCustomizeModal(false)}
-          onCloseFullsize={() => state.setShowFullsizePreview(false)}
-          onCloseLibrary={onCloseLibrary}
           onClosePaywall={() => state.setShowPaywall(false)}
-          onCustomize={handlers.handleCustomizeFromPreview}
           onDirectImport={handlers.handleDirectImport}
           onImport={handlers.handleTemplateImport}
           packConfirmPack={packConfirm.selectedPack}
           packConfirmVisible={!!packConfirm.selectedPack}
           onPackCancel={packConfirm.handleCancel}
           onPackConfirm={handlePackConfirm}
+        />
+        <FeedbackOverlays
+          feedbackVariant={state.feedbackVariant}
+          sessionImportCount={state.sessionImportCount}
+          showCelebration={state.showCelebration}
+          showToast={state.showToast}
+          toastMessage={state.toastMessage}
+          toastTemplateData={state.toastTemplateData}
+          onAddAnother={handleAddAnother}
+          onDismissCelebration={handleDismissFeedback}
+          onDismissToast={handleDismissFeedback}
+          onViewHabit={handleViewHabit}
         />
       </>
     );
@@ -127,28 +187,26 @@ function TemplatesScreenContent({
   return (
     <>
       <MainBrowseView
-        exploreAllSection={
-          <CategoryRowsSection
-            groups={groups}
-            importedTemplateIds={state.importedTemplateIds}
-            importingTemplateId={state.importingTemplateId}
-            totalCount={totalCount}
-            onBrowseAll={handleSeeAll}
-            onImport={handleImport}
-            onPreview={handlers.handleTemplatePreview}
-            onSeeAllRow={viewNav.openCategory}
+        browseCategoriesLink={
+          <BrowseCategoriesLink
+            categoryCount={groups.length}
+            onPress={handleOpenCategories}
           />
         }
         featuredGoalId={featuredGoalId}
         featuredStarterTemplates={featuredStarterTemplates}
         feedbackOverlays={
           <FeedbackOverlays
+            feedbackVariant={state.feedbackVariant}
+            sessionImportCount={state.sessionImportCount}
             showCelebration={state.showCelebration}
             showToast={state.showToast}
             toastMessage={state.toastMessage}
             toastTemplateData={state.toastTemplateData}
-            onDismissCelebration={() => state.setShowCelebration(false)}
-            onDismissToast={() => state.setShowToast(false)}
+            onAddAnother={handleAddAnother}
+            onDismissCelebration={handleDismissFeedback}
+            onDismissToast={handleDismissFeedback}
+            onViewHabit={handleViewHabit}
           />
         }
         habitCountsByGoalId={habitCountsByGoalId}
@@ -157,17 +215,12 @@ function TemplatesScreenContent({
         isSearchActive={state.isSearchActive}
         modals={
           <TemplatesScreenModals
-            importedTemplateIds={state.importedTemplateIds}
             importingTemplateId={state.importingTemplateId}
             previewTemplate={state.previewTemplate}
             showCustomizeModal={state.showCustomizeModal}
-            showFullsizePreview={state.showFullsizePreview}
             showPaywall={state.showPaywall}
             onCloseCustomize={() => state.setShowCustomizeModal(false)}
-            onCloseFullsize={() => state.setShowFullsizePreview(false)}
-            onCloseLibrary={onCloseLibrary}
             onClosePaywall={() => state.setShowPaywall(false)}
-            onCustomize={handlers.handleCustomizeFromPreview}
             onDirectImport={handlers.handleDirectImport}
             onImport={handlers.handleTemplateImport}
             packConfirmPack={packConfirm.selectedPack}
@@ -176,6 +229,7 @@ function TemplatesScreenContent({
             onPackConfirm={handlePackConfirm}
           />
         }
+        onBrowseByGoal={handleBrowseByGoal}
         onGoalSelect={handleGoalSelect}
         onImport={handleImport}
         onPreview={handlers.handleTemplatePreview}
@@ -183,20 +237,14 @@ function TemplatesScreenContent({
         onSearchClear={() => state.setSearchQuery('')}
         onSeeAll={handleSeeAll}
         onSelectCategory={handleSelectChipCategory}
-        onStartHerePress={handleSeeAll}
+        onStartHerePress={handleOpenStarters}
         popularTemplates={mainBrowseData.popularTemplates}
-        premiumPacksSection={
-          <PremiumPacksSection
-            packs={mainBrowseData.premiumPacks}
-            onPackPress={packConfirm.handlePackPress}
-          />
-        }
         quickFilterCategories={mainBrowseData.quickFilterCategories}
         searchAnimatedStyle={props.animations.searchAnimatedStyle}
         searchQuery={state.searchQuery}
         searchResultsSection={
           <SearchResults
-            filteredTemplates={props.filteredTemplates}
+            filteredTemplates={sortedFilteredTemplates}
             getCategoryLabel={props.getCategoryLabel}
             hasActiveFilters={state.hasActiveFilters}
             importedTemplateIds={state.importedTemplateIds}
@@ -216,6 +264,8 @@ function TemplatesScreenContent({
           />
         }
         selectedCategory={state.selectedCategory}
+        sessionImportCount={state.sessionImportCount}
+        starterTemplates={starterTemplates}
         userHabitCount={data.userHabitCount}
       />
     </>
@@ -224,14 +274,19 @@ function TemplatesScreenContent({
 
 interface TemplatesScreenProps {
   onCloseLibrary?: () => void;
+  onViewHabit?: (habitId: Id<'habits'>) => void;
 }
 
 export default function TemplatesScreen({
   onCloseLibrary,
+  onViewHabit,
 }: TemplatesScreenProps = {}) {
   return (
     <ScreenErrorBoundary screenName='Templates'>
-      <TemplatesScreenContent onCloseLibrary={onCloseLibrary} />
+      <TemplatesScreenContent
+        onCloseLibrary={onCloseLibrary}
+        onViewHabit={onViewHabit}
+      />
     </ScreenErrorBoundary>
   );
 }

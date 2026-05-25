@@ -37,13 +37,18 @@ export function SearchResults(p: SearchResultsProps) {
   const { colors } = useThemeColors();
   const count = p.filteredTemplates.length;
   const label = count === 1 ? 'habit' : 'habits';
+  const trimmedQuery = p.searchQuery.trim();
+  const headerText = trimmedQuery
+    ? `${count} ${label} for "${trimmedQuery}"`
+    : p.selectedCategory !== 'all'
+      ? `${count} ${label} · ${p.getCategoryLabel(p.selectedCategory)}`
+      : `${count} ${label}`;
 
   return (
     <View style={s.wrap}>
       <View style={s.resultHeader}>
         <Text style={[s.count, { color: colors.text.secondary }]}>
-          <Text style={s.countNumber}>{count}</Text> {label} for "
-          <Text style={s.countQuery}>{p.searchQuery}</Text>"
+          {headerText}
         </Text>
         <FilterControls
           showSortOptions={p.showSortOptions}

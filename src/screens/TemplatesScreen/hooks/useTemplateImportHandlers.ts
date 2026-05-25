@@ -10,7 +10,8 @@ import type { UseTemplateImportHandlersOptions } from './useTemplateImportHandle
 
 export function useTemplateImportHandlers(o: UseTemplateImportHandlersOptions) {
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const { guardImport, showError, showSuccess } = useImportFeedback(o);
+  const { guardImport, showAlreadyImported, showError, showSuccess } =
+    useImportFeedback(o);
 
   useEffect(
     () => () => {
@@ -22,9 +23,10 @@ export function useTemplateImportHandlers(o: UseTemplateImportHandlersOptions) {
   const handleTemplatePreview = useCallback(
     (t: Doc<'templates'>) => {
       o.setPreviewTemplate(t);
-      o.setShowFullsizePreview(true);
+      o.setShowCustomizeModal(true);
+      o.setShowFullsizePreview(false);
     },
-    [o.setPreviewTemplate, o.setShowFullsizePreview]
+    [o.setPreviewTemplate, o.setShowCustomizeModal, o.setShowFullsizePreview]
   );
 
   const handleCustomizeFromPreview = useCallback(
@@ -36,11 +38,34 @@ export function useTemplateImportHandlers(o: UseTemplateImportHandlersOptions) {
     [o.setPreviewTemplate, o.setShowCustomizeModal, o.setShowFullsizePreview]
   );
 
-  const showAlreadyImported = useCallback(() => {
-    o.setToastTemplateData(null);
-    o.setShowToast(true);
-    o.setToastMessage('You\'ve already added this habit');
-  }, [o.setShowToast, o.setToastMessage, o.setToastTemplateData]);
+  const handleImportResult = useCallback(
+    (
+      res: {
+        alreadyExists?: boolean;
+        habitId?: Id<'habits'>;
+        success?: boolean;
+      },
+      templateId: Id<'templates'>
+    ) => {
+      if (res.alreadyExists) {
+        o.setImportedTemplateIds((p) => new Set(p).add(templateId));
+        if (res.habitId) showAlreadyImported(res.habitId);
+        else showError();
+        return true;
+      }
+      if (res.success && res.habitId) {
+        o.setImportedTemplateIds((p) => new Set(p).add(templateId));
+        showSuccess(res.habitId);
+        return true;
+      }
+      if (res.success) {
+        showError();
+        return false;
+      }
+      return false;
+    },
+    [o.setImportedTemplateIds, showAlreadyImported, showSuccess]
+  );
 
   const handleDirectImport = useCallback(
     async (id: Id<'templates'>) => {
@@ -48,17 +73,10 @@ export function useTemplateImportHandlers(o: UseTemplateImportHandlersOptions) {
       try {
         o.setImportingTemplateId(id);
         const res = await o.importTemplate({ templateId: id });
-        if (res.alreadyExists) {
-          o.setImportedTemplateIds((p) => new Set(p).add(id));
-          showAlreadyImported();
-          return;
-        }
-        if (res.success) {
-          o.setImportedTemplateIds((p) => new Set(p).add(id));
-          showSuccess();
+        if (handleImportResult(res, id)) {
           if (timeoutRef.current) clearTimeout(timeoutRef.current);
           timeoutRef.current = setTimeout(
-            () => o.setShowFullsizePreview(false),
+            () => o.setShowCustomizeModal(false),
             1000
           );
         }
@@ -69,13 +87,11 @@ export function useTemplateImportHandlers(o: UseTemplateImportHandlersOptions) {
       }
     },
     [
-      o.importTemplate,
-      o.setImportedTemplateIds,
-      o.setImportingTemplateId,
-      o.setShowFullsizePreview,
       guardImport,
-      showAlreadyImported,
-      showSuccess,
+      handleImportResult,
+      o.importTemplate,
+      o.setImportingTemplateId,
+      o.setShowCustomizeModal,
       showError,
     ]
   );
@@ -90,15 +106,7 @@ export function useTemplateImportHandlers(o: UseTemplateImportHandlersOptions) {
         o.setImportingTemplateId(id);
         const args = { ...(c ? { customizations: c } : {}), templateId: id };
         const res = await o.importTemplate(args);
-        if (res.alreadyExists) {
-          o.setImportedTemplateIds((p) => new Set(p).add(id));
-          showAlreadyImported();
-          o.setShowCustomizeModal(false);
-          return;
-        }
-        if (res.success) {
-          o.setImportedTemplateIds((p) => new Set(p).add(id));
-          showSuccess();
+        if (handleImportResult(res, id)) {
           o.setShowCustomizeModal(false);
         }
       } catch {
@@ -109,13 +117,11 @@ export function useTemplateImportHandlers(o: UseTemplateImportHandlersOptions) {
       }
     },
     [
+      guardImport,
+      handleImportResult,
       o.importTemplate,
-      o.setImportedTemplateIds,
       o.setImportingTemplateId,
       o.setShowCustomizeModal,
-      guardImport,
-      showAlreadyImported,
-      showSuccess,
       showError,
     ]
   );

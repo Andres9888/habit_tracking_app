@@ -34,7 +34,11 @@ export function TrendingCard({
       accessibilityRole='button'
       style={[
         s.card,
-        { backgroundColor: colors.card, borderColor: colors.border },
+        {
+          backgroundColor: colors.card,
+          borderColor: colors.border,
+          opacity: isImported ? 0.55 : 1,
+        },
       ]}
       onPress={onPress}
     >

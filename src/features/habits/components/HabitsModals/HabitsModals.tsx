@@ -48,6 +48,8 @@ export function HabitsModals({ state }: HabitsModalsProps) {
       <ErrorBoundary fallback={null}>
         <TemplatesModalSection
           closeTemplatesScreen={state.closeTemplatesScreen}
+          habits={state.habits}
+          openHabitDetail={state.openHabitDetail}
           reduceMotionPreference={state.reduceMotionPreference}
           showTemplatesScreen={state.showTemplatesScreen}
         />

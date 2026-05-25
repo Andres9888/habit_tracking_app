@@ -10,7 +10,7 @@ import type { ChipCategory } from '../components/QuickFilterChips';
 import type { GoalCollection } from '../data/goalCollections';
 
 export interface MainBrowseViewProps {
-  exploreAllSection: ReactNode;
+  browseCategoriesLink: ReactNode;
   featuredBadgeLabel?: string;
   featuredGoalId: string;
   featuredStarterTemplates: Doc<'templates'>[];
@@ -20,6 +20,7 @@ export interface MainBrowseViewProps {
   importingTemplateId: string | null;
   isSearchActive: boolean;
   modals: ReactNode;
+  onBrowseByGoal: () => void;
   onGoalSelect: (goal: GoalCollection) => void;
   onImport: (template: Doc<'templates'>) => void;
   onPreview: (template: Doc<'templates'>) => void;
@@ -29,11 +30,12 @@ export interface MainBrowseViewProps {
   onSelectCategory: (categoryId: string | null) => void;
   onStartHerePress: () => void;
   popularTemplates: Doc<'templates'>[];
-  premiumPacksSection: ReactNode;
   quickFilterCategories: ChipCategory[];
   searchAnimatedStyle: AnimatedStyle<ViewStyle>;
   searchQuery: string;
   searchResultsSection: ReactNode;
   selectedCategory: string;
+  sessionImportCount: number;
+  starterTemplates: Doc<'templates'>[];
   userHabitCount: number;
 }

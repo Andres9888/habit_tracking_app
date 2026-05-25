@@ -1,7 +1,6 @@
 /**
  * TemplateAddedToast Component
- * Celebratory toast shown after successfully importing a habit template.
- * Shows template icon, name, and optional "View" action.
+ * Action card shown after importing a habit template.
  */
 
 import React from 'react';
@@ -20,7 +19,10 @@ export function TemplateAddedToast({
   visible,
   templateData,
   duration = DEFAULT_DURATION,
+  variant = 'success',
+  sessionImportCount = 0,
   onDismiss,
+  onViewHabit,
   onViewHabits,
   onAddAnother,
   style,
@@ -28,13 +30,25 @@ export function TemplateAddedToast({
   const theme = useAppTheme();
   const insets = useSafeAreaInsets();
   const color = templateData?.color ?? FALLBACK_COLOR;
+  const viewHabit = onViewHabit ?? onViewHabits;
 
   const { toastStyle, iconStyle, handleDismiss, panGesture } =
     useTemplateAddedToastAnimations({ duration, onDismiss, visible });
 
   if (!visible || !templateData) return null;
 
-  const label = `${templateData.name} added to your habits`;
+  const title =
+    variant === 'already_exists'
+      ? `'${templateData.name}' is already in your habits`
+      : `Added '${templateData.name}' to your habits`;
+  const encouragement =
+    variant === 'success' && sessionImportCount > 1
+      ? `Nice — you've added ${sessionImportCount} today`
+      : variant === 'success'
+        ? 'Nice start — keep the momentum going'
+        : 'You can open it to review or track progress';
+  const primaryLabel =
+    variant === 'already_exists' ? 'Open existing habit' : 'View my habit';
 
   return (
     <View
@@ -46,7 +60,7 @@ export function TemplateAddedToast({
           <Animated.View
             accessible
             testID='templates-toast'
-            accessibilityLabel={label}
+            accessibilityLabel={title}
             accessibilityLiveRegion='polite'
             accessibilityRole='alert'
             style={[
@@ -71,35 +85,42 @@ export function TemplateAddedToast({
               >
                 <Text style={styles.iconText}>{templateData.icon}</Text>
               </Animated.View>
-              <Text testID='templates-toast-name' numberOfLines={1} style={styles.nameText}>
-                {templateData.name} added!
-              </Text>
+              <View style={styles.copy}>
+                <Text testID='templates-toast-name' numberOfLines={2} style={styles.nameText}>
+                  {title}
+                </Text>
+                <Text numberOfLines={2} style={styles.subText}>
+                  {encouragement}
+                </Text>
+              </View>
             </View>
-            {onAddAnother ? (
-              <Pressable
-                accessibilityLabel='Add another habit'
-                accessibilityRole='button'
-                style={styles.actionPill}
-                onPress={() => {
-                  handleDismiss();
-                  onAddAnother();
-                }}
-              >
-                <Text style={styles.actionText}>Add another</Text>
-              </Pressable>
-            ) : onViewHabits ? (
-              <Pressable
-                accessibilityLabel='View your habits'
-                accessibilityRole='button'
-                style={styles.actionPill}
-                onPress={() => {
-                  handleDismiss();
-                  onViewHabits();
-                }}
-              >
-                <Text style={styles.actionText}>View →</Text>
-              </Pressable>
-            ) : null}
+            <View style={styles.actionColumn}>
+              {viewHabit ? (
+                <Pressable
+                  accessibilityLabel={primaryLabel}
+                  accessibilityRole='button'
+                  style={[styles.actionPill, { backgroundColor: color }]}
+                  onPress={() => {
+                    handleDismiss();
+                    viewHabit();
+                  }}
+                >
+                  <Text style={styles.actionText}>{primaryLabel}</Text>
+                </Pressable>
+              ) : null}
+              {onAddAnother ? (
+                <Pressable
+                  accessibilityLabel='Add another habit'
+                  accessibilityRole='button'
+                  onPress={() => {
+                    handleDismiss();
+                    onAddAnother();
+                  }}
+                >
+                  <Text style={styles.addAnotherText}>Add another</Text>
+                </Pressable>
+              ) : null}
+            </View>
           </Animated.View>
         </View>
       </GestureDetector>

@@ -11,7 +11,7 @@ export const DISMISS_THRESHOLD = 50;
 export const VELOCITY_THRESHOLD = 500;
 
 /** Default auto-dismiss duration (ms) */
-export const DEFAULT_DURATION = 5000;
+export const DEFAULT_DURATION = 8000;
 
 /** Fallback color when template has no iconColor */
 export const FALLBACK_COLOR = '#22c55e';

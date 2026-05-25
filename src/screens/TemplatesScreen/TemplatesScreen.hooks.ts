@@ -51,6 +51,13 @@ export function useTemplatesScreenState({
   const [toastMessage, setToastMessage] = useState('');
   const [toastTemplateData, setToastTemplateData] =
     useState<TemplateToastData | null>(null);
+  const [feedbackHabitId, setFeedbackHabitId] = useState<Id<'habits'> | null>(
+    null
+  );
+  const [feedbackVariant, setFeedbackVariant] = useState<
+    'success' | 'already_exists' | null
+  >(null);
+  const [sessionImportCount, setSessionImportCount] = useState(0);
   const [importingTemplateId, setImportingTemplateId] =
     useState<Id<'templates'> | null>(null);
   const [showSortOptions, setShowSortOptions] = useState(false);
@@ -76,6 +83,8 @@ export function useTemplatesScreenState({
     debouncedSearchQuery,
     effectiveViewMode,
     expandedCategories,
+    feedbackHabitId,
+    feedbackVariant,
     flatListRef,
     hasActiveFilters,
     importedTemplateIds,
@@ -86,15 +95,19 @@ export function useTemplatesScreenState({
     previewTemplate,
     searchQuery,
     selectedCategory,
+    sessionImportCount,
     setBrowseTab,
     setShowCelebration,
     setExpandedCategories,
+    setFeedbackHabitId,
+    setFeedbackVariant,
     setImportedTemplateIds,
     setImportingTemplateId,
     setIsSeeding,
     setPreviewTemplate,
     setSearchQuery,
     setSelectedCategory,
+    setSessionImportCount,
     setShowCustomizeModal,
     setShowFullsizePreview,
     setShowPaywall,

@@ -1,9 +1,5 @@
 /**
  * BrowseSections — scroll content for MainBrowseView's non-filtered branch.
- *
- * Owns: StartHereCard (conditional) → GoalCollectionGrid → PopularSection →
- * PremiumPacks (gated) → ExploreAll. Stagger indices shift up when
- * StartHereCard is shown so subsequent sections animate after it.
  */
 
 import type { ReactNode } from 'react';
@@ -14,29 +10,32 @@ import type { Doc } from '../../../../convex/_generated/dataModel';
 import { GoalCollectionGrid } from '../components/GoalCollectionGrid';
 import { PopularSection } from '../components/PopularSection';
 import { StartHereCard } from '../components/StartHereCard';
+import { StarterHabitList } from '../components/StarterHabitList';
 import type { GoalCollection } from '../data/goalCollections';
 import { stagger } from './MainBrowseView.helpers';
 
 interface BrowseSectionsProps {
-  exploreAllSection: ReactNode;
+  browseCategoriesLink: ReactNode;
   featuredBadgeLabel?: string;
   featuredGoalId: string;
   featuredStarterTemplates: Doc<'templates'>[];
   habitCountsByGoalId: Record<string, number>;
   importedTemplateIds: Set<string>;
   importingTemplateId: string | null;
+  isFirstTimeUser: boolean;
+  onBrowseByGoal: () => void;
   onGoalSelect: (goal: GoalCollection) => void;
   onImport: (template: Doc<'templates'>) => void;
   onPreview: (template: Doc<'templates'>) => void;
   onSeeAll: () => void;
   onStartHerePress: () => void;
   popularTemplates: Doc<'templates'>[];
-  premiumPacksSection: ReactNode;
-  showPremiumPacks: boolean;
-  showStartHere: boolean;
+  starterTemplates: Doc<'templates'>[];
 }
 
 export function BrowseSections(p: BrowseSectionsProps) {
+  const showStarterList = p.isFirstTimeUser && p.starterTemplates.length > 0;
+
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
@@ -45,38 +44,51 @@ export function BrowseSections(p: BrowseSectionsProps) {
         paddingTop: spacing.md,
       }}
     >
-      {p.showStartHere ? (
+      {showStarterList ? (
+        <Animated.View entering={stagger(2)}>
+          <StarterHabitList
+            importedTemplateIds={p.importedTemplateIds}
+            importingTemplateId={p.importingTemplateId}
+            templates={p.starterTemplates}
+            onBrowseByGoal={p.onBrowseByGoal}
+            onImport={p.onImport}
+            onPreview={p.onPreview}
+          />
+        </Animated.View>
+      ) : p.isFirstTimeUser ? (
         <Animated.View entering={stagger(2)}>
           <StartHereCard onPress={p.onStartHerePress} />
         </Animated.View>
       ) : null}
-      <Animated.View entering={stagger(p.showStartHere ? 3 : 2)}>
-        <GoalCollectionGrid
-          featuredBadgeLabel={p.featuredBadgeLabel}
-          featuredGoalId={p.featuredGoalId}
-          featuredStarterTemplates={p.featuredStarterTemplates}
-          habitCountsByGoalId={p.habitCountsByGoalId}
-          onPreviewStarter={p.onPreview}
-          onSelectGoal={p.onGoalSelect}
-        />
-      </Animated.View>
-      {p.showPremiumPacks ? (
-        <Animated.View entering={stagger(p.showStartHere ? 4 : 3)}>
-          {p.premiumPacksSection}
+
+      {!showStarterList ? (
+        <Animated.View entering={stagger(p.isFirstTimeUser ? 3 : 2)}>
+          <GoalCollectionGrid
+            featuredBadgeLabel={p.featuredBadgeLabel}
+            featuredGoalId={p.featuredGoalId}
+            featuredStarterTemplates={p.featuredStarterTemplates}
+            habitCountsByGoalId={p.habitCountsByGoalId}
+            onPreviewStarter={p.onPreview}
+            onSelectGoal={p.onGoalSelect}
+          />
         </Animated.View>
       ) : null}
-      <Animated.View entering={stagger(p.showStartHere ? 4 : 3)}>
-        <PopularSection
-          importedTemplateIds={p.importedTemplateIds}
-          importingTemplateId={p.importingTemplateId}
-          templates={p.popularTemplates}
-          onImport={p.onImport}
-          onPreview={p.onPreview}
-          onSeeAll={p.onSeeAll}
-        />
-      </Animated.View>
-      <Animated.View entering={stagger(p.showStartHere ? 5 : 4)}>
-        {p.exploreAllSection}
+
+      {!showStarterList ? (
+        <Animated.View entering={stagger(p.isFirstTimeUser ? 4 : 3)}>
+          <PopularSection
+            importedTemplateIds={p.importedTemplateIds}
+            importingTemplateId={p.importingTemplateId}
+            templates={p.popularTemplates}
+            onImport={p.onImport}
+            onPreview={p.onPreview}
+            onSeeAll={p.onSeeAll}
+          />
+        </Animated.View>
+      ) : null}
+
+      <Animated.View entering={stagger(showStarterList ? 3 : p.isFirstTimeUser ? 5 : 4)}>
+        {p.browseCategoriesLink}
       </Animated.View>
     </ScrollView>
   );

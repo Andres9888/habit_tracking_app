@@ -1,5 +1,5 @@
 /**
- * SeeAllView - Full list of popular templates
+ * StarterHabitsView — filtered list of the 5 curated starter habits.
  */
 
 import { FlatList, StyleSheet, View } from 'react-native';
@@ -9,15 +9,14 @@ import { ScreenHeader } from '../../../components/ScreenHeader';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { durations, enterEasing } from '../../../theme/animations';
 import { spacing } from '../../../theme/spacing';
-import { formatPopularityCount } from '../hooks/useDrillSections';
 import { getCategoryMeta } from '../data/categoryMeta';
-import { sortTemplatesByImportState } from '../utils/sortTemplatesByImportState';
 import { TemplateListCard } from './TemplateListCard';
+import { formatPopularityCount } from '../hooks/useDrillSections';
 
 const getCategoryLabel = (categoryId: string) =>
   getCategoryMeta(categoryId).label;
 
-interface SeeAllViewProps {
+interface StarterHabitsViewProps {
   importedTemplateIds: Set<string>;
   importingTemplateId: string | null;
   onBack: () => void;
@@ -26,36 +25,28 @@ interface SeeAllViewProps {
   templates: Doc<'templates'>[];
 }
 
-export function SeeAllView({
+export function StarterHabitsView({
   importedTemplateIds,
   importingTemplateId,
   onBack,
   onImport,
   onPreview,
   templates,
-}: SeeAllViewProps) {
+}: StarterHabitsViewProps) {
   const { colors } = useThemeColors();
-  const sortedTemplates = sortTemplatesByImportState(templates, importedTemplateIds);
-  const habitCountLabel = `${sortedTemplates.length} habit${sortedTemplates.length === 1 ? '' : 's'}`;
 
   return (
-    <View
-      testID='templates-see-all-view'
-      style={[s.container, { backgroundColor: colors.background }]}
-    >
+    <View style={[s.container, { backgroundColor: colors.background }]}>
       <ScreenHeader
-        subtitle={`${habitCountLabel} · sorted by popularity`}
-        title='Popular habits'
+        subtitle='Under 5 min each · highest stick rate'
+        title='Starter habits'
         onBack={onBack}
       />
       <FlatList
-        data={sortedTemplates}
-        contentContainerStyle={{
-          paddingBottom: spacing['2xl'],
-          paddingTop: spacing.xs,
-        }}
+        data={templates}
+        contentContainerStyle={s.list}
         keyExtractor={(item) => item._id}
-        renderItem={({ item, index }) => (
+        renderItem={({ index, item }) => (
           <Animated.View
             entering={FadeInDown.delay(index * durations.stagger)
               .duration(durations.enter)
@@ -68,8 +59,8 @@ export function SeeAllView({
               item={item}
               popularityCount={formatPopularityCount(item.popularityScore)}
               searchQuery=''
-              onImport={(_templateId) => onImport(item)}
-              onPreview={(_template) => onPreview(item)}
+              onImport={() => onImport(item)}
+              onPreview={() => onPreview(item)}
             />
           </Animated.View>
         )}
@@ -80,4 +71,5 @@ export function SeeAllView({
 
 const s = StyleSheet.create({
   container: { flex: 1 },
+  list: { paddingBottom: spacing['2xl'], paddingTop: spacing.xs },
 });

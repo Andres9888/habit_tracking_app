@@ -10,11 +10,12 @@ import type { TemplatesModalSectionProps } from './HabitsModals.types';
 
 /**
  * Templates modal section - displays templates screen in full-screen modal
- * Uses native Modal animationType='slide' to match Settings panel
  */
 export function TemplatesModalSection({
-  showTemplatesScreen,
   closeTemplatesScreen,
+  habits,
+  openHabitDetail,
+  showTemplatesScreen,
 }: TemplatesModalSectionProps) {
   const insets = useSafeAreaInsets();
   const { colors } = useThemeColors();
@@ -23,6 +24,13 @@ export function TemplatesModalSection({
   const handleClose = () => {
     trigger('tap');
     closeTemplatesScreen();
+  };
+
+  const handleViewHabit = (habitId: string) => {
+    const habit = habits.find((item) => item._id === habitId);
+    if (!habit) return;
+    closeTemplatesScreen();
+    openHabitDetail(habit);
   };
 
   return (
@@ -37,7 +45,10 @@ export function TemplatesModalSection({
     >
       <View className='flex-1' style={{ backgroundColor: colors.background }}>
         <ErrorBoundary>
-          <TemplatesScreen onCloseLibrary={handleClose} />
+          <TemplatesScreen
+            onCloseLibrary={handleClose}
+            onViewHabit={handleViewHabit}
+          />
         </ErrorBoundary>
         <View className='absolute right-4' style={{ top: insets.top + 8 }}>
           <ModalCloseButton

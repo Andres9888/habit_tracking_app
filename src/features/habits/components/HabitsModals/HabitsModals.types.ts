@@ -68,8 +68,10 @@ export interface ShareAndPauseModalsProps {
 
 /** Props for the TemplatesModalSection component */
 export interface TemplatesModalSectionProps {
+  habits: HabitsModalsState['habits'];
   showTemplatesScreen: boolean;
   closeTemplatesScreen: () => void;
+  openHabitDetail: HabitsModalsState['openHabitDetail'];
   reduceMotionPreference: boolean;
 }
 

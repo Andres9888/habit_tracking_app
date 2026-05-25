@@ -16,6 +16,12 @@ export interface UseTemplateImportHandlersOptions {
   previewTemplate: Doc<'templates'> | null;
   isPremiumUser: boolean;
   onShowPaywall?: () => void;
+  setFeedbackHabitId: React.Dispatch<
+    React.SetStateAction<Id<'habits'> | null>
+  >;
+  setFeedbackVariant: React.Dispatch<
+    React.SetStateAction<'success' | 'already_exists' | null>
+  >;
   setImportedTemplateIds: React.Dispatch<React.SetStateAction<Set<string>>>;
   setImportingTemplateId: React.Dispatch<
     React.SetStateAction<Id<'templates'> | null>
@@ -23,6 +29,7 @@ export interface UseTemplateImportHandlersOptions {
   setPreviewTemplate: React.Dispatch<
     React.SetStateAction<Doc<'templates'> | null>
   >;
+  setSessionImportCount: React.Dispatch<React.SetStateAction<number>>;
   setShowCustomizeModal: React.Dispatch<React.SetStateAction<boolean>>;
   setShowCelebration: React.Dispatch<React.SetStateAction<boolean>>;
   setShowFullsizePreview: React.Dispatch<React.SetStateAction<boolean>>;

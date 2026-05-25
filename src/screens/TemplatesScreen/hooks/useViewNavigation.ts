@@ -17,6 +17,8 @@ const SLIDE_CONFIG = { duration: 280, easing: Easing.out(Easing.cubic) };
 export type TemplateViewState =
   | { type: 'main' }
   | { type: 'seeAll' }
+  | { type: 'starters' }
+  | { type: 'categories' }
   | { type: 'category'; categoryId: string }
   | { type: 'goal'; goalId: string }
   | { type: 'search' };
@@ -42,6 +44,16 @@ export function useViewNavigation() {
 
   const openSeeAll = useCallback(() => {
     setActiveView({ type: 'seeAll' });
+    animateIn();
+  }, [animateIn]);
+
+  const openStarters = useCallback(() => {
+    setActiveView({ type: 'starters' });
+    animateIn();
+  }, [animateIn]);
+
+  const openCategories = useCallback(() => {
+    setActiveView({ type: 'categories' });
     animateIn();
   }, [animateIn]);
 
@@ -80,7 +92,9 @@ export function useViewNavigation() {
     openCategory,
     openGoal,
     openSearch,
+    openCategories,
     openSeeAll,
+    openStarters,
     slideProgress,
   };
 }

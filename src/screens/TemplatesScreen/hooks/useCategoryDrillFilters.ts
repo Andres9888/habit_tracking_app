@@ -4,6 +4,7 @@
 
 import { useCallback, useMemo, useState } from 'react';
 import type { Doc } from '../../../../convex/_generated/dataModel';
+import { sortTemplatesByImportState } from '../utils/sortTemplatesByImportState';
 
 export type DrillSort = 'popular' | 'az';
 
@@ -21,12 +22,18 @@ export function useCategoryDrillFilters(
 
     switch (sort) {
       case 'popular': {
-        return [...result].sort(
-          (a, b) => (b.popularityScore ?? 0) - (a.popularityScore ?? 0)
+        return sortTemplatesByImportState(
+          [...result].sort(
+            (a, b) => (b.popularityScore ?? 0) - (a.popularityScore ?? 0)
+          ),
+          importedTemplateIds
         );
       }
       case 'az': {
-        return [...result].sort((a, b) => a.name.localeCompare(b.name));
+        return sortTemplatesByImportState(
+          [...result].sort((a, b) => a.name.localeCompare(b.name)),
+          importedTemplateIds
+        );
       }
       default: {
         return result;

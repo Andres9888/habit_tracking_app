@@ -1,8 +1,5 @@
 /**
  * MainBrowseView — Goal-first browse surface
- *
- * Header → Search (sticky) → Chips → (BrowseSections | Search results).
- * SearchBar and chips are lifted above the body swap so they never remount.
  */
 
 import { StyleSheet, View } from 'react-native';
@@ -12,26 +9,28 @@ import { useThemeColors } from '../../../theme/ThemeContext';
 import { styles } from '../../templates/templatesScreenStyles';
 import { SearchBar } from '../components';
 import { QuickFilterChips } from '../components/QuickFilterChips';
+import { SessionProgressPill } from '../components/SessionProgressPill';
 import { BrowseSections } from './BrowseSections';
 import { bodyEnter, bodyExit, stagger } from './MainBrowseView.helpers';
 import type { MainBrowseViewProps } from './MainBrowseView.types';
 
 const HEADER_SUBTITLE = 'Pick a path — habits proven to work.';
 
-// Hidden for now — flip to true to restore the premium packs row.
-// When re-enabling: review BrowseSections stagger indices to avoid collision.
-const SHOW_PREMIUM_PACKS = false;
-
 export function MainBrowseView(p: MainBrowseViewProps) {
   const { colors } = useThemeColors();
   const isCategoryFilterActive = p.selectedCategory !== 'all';
   const showFilteredResults = p.isSearchActive || isCategoryFilterActive;
-  const showStartHere = p.userHabitCount <= 1;
+  const isFirstTimeUser = p.userHabitCount <= 1;
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       <ScreenHeader
         leftAction={null}
+        rightAction={
+          p.sessionImportCount > 0 ? (
+            <SessionProgressPill count={p.sessionImportCount} />
+          ) : undefined
+        }
         subtitle={HEADER_SUBTITLE}
         title='What do you want to work on?'
         titleNumberOfLines={2}
@@ -73,22 +72,22 @@ export function MainBrowseView(p: MainBrowseViewProps) {
           style={s.body}
         >
           <BrowseSections
-            exploreAllSection={p.exploreAllSection}
+            browseCategoriesLink={p.browseCategoriesLink}
             featuredBadgeLabel={p.featuredBadgeLabel}
             featuredGoalId={p.featuredGoalId}
             featuredStarterTemplates={p.featuredStarterTemplates}
             habitCountsByGoalId={p.habitCountsByGoalId}
             importedTemplateIds={p.importedTemplateIds}
             importingTemplateId={p.importingTemplateId}
+            isFirstTimeUser={isFirstTimeUser}
+            onBrowseByGoal={p.onBrowseByGoal}
             onGoalSelect={p.onGoalSelect}
             onImport={p.onImport}
             onPreview={p.onPreview}
             onSeeAll={p.onSeeAll}
             onStartHerePress={p.onStartHerePress}
             popularTemplates={p.popularTemplates}
-            premiumPacksSection={p.premiumPacksSection}
-            showPremiumPacks={SHOW_PREMIUM_PACKS}
-            showStartHere={showStartHere}
+            starterTemplates={p.starterTemplates}
           />
         </Animated.View>
       )}

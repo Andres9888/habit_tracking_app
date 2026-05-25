@@ -19,6 +19,12 @@ export interface UseTemplateHandlersOptions {
   previewTemplate: Doc<'templates'> | null;
   seedTemplates: (args: Record<string, never>) => Promise<unknown>;
   setExpandedCategories: React.Dispatch<React.SetStateAction<Set<string>>>;
+  setFeedbackHabitId: React.Dispatch<
+    React.SetStateAction<Id<'habits'> | null>
+  >;
+  setFeedbackVariant: React.Dispatch<
+    React.SetStateAction<'success' | 'already_exists' | null>
+  >;
   setImportedTemplateIds: React.Dispatch<React.SetStateAction<Set<string>>>;
   setImportingTemplateId: React.Dispatch<
     React.SetStateAction<Id<'templates'> | null>
@@ -29,6 +35,7 @@ export interface UseTemplateHandlersOptions {
   >;
   setSearchQuery: React.Dispatch<React.SetStateAction<string>>;
   setSelectedCategory: React.Dispatch<React.SetStateAction<Category>>;
+  setSessionImportCount: React.Dispatch<React.SetStateAction<number>>;
   setShowCelebration: React.Dispatch<React.SetStateAction<boolean>>;
   setShowCustomizeModal: React.Dispatch<React.SetStateAction<boolean>>;
   setShowFullsizePreview: React.Dispatch<React.SetStateAction<boolean>>;

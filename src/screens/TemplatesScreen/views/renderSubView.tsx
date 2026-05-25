@@ -6,24 +6,58 @@ import type { ReactElement } from 'react';
 import type { Doc } from '../../../../convex/_generated/dataModel';
 import { GOAL_COLLECTIONS } from '../data/goalCollections';
 import type { TemplateViewState } from '../hooks/useViewNavigation';
+import type { CategoryGridItem } from './CategoriesGridView';
+import { CategoriesGridView } from './CategoriesGridView';
 import { CategoryDrillView } from './CategoryDrillView';
 import { GoalDrillView } from './GoalDrillView';
 import { SeeAllView } from './SeeAllView';
+import { StarterHabitsView } from './StarterHabitsView';
+import { filterStarterTemplates } from '../data/starterHabits';
 
 interface SubViewProps {
   activeView: TemplateViewState;
   allTemplates: Doc<'templates'>[] | undefined;
+  categoryGridItems: CategoryGridItem[];
   importedTemplateIds: Set<string>;
   importingTemplateId: string | null;
   onBack: () => void;
   onImport: (template: Doc<'templates'>) => void;
+  onOpenCategory: (categoryId: string) => void;
   onPreview: (template: Doc<'templates'>) => void;
 }
 
 export function renderSubView(props: SubViewProps): ReactElement | null {
-  const { activeView, allTemplates = [], importedTemplateIds,
-    importingTemplateId, onBack, onImport, onPreview } = props;
+  const {
+    activeView,
+    allTemplates = [],
+    categoryGridItems,
+    importedTemplateIds,
+    importingTemplateId,
+    onBack,
+    onImport,
+    onOpenCategory,
+    onPreview,
+  } = props;
   const shared = { importedTemplateIds, importingTemplateId, onBack, onImport, onPreview };
+
+  if (activeView.type === 'starters') {
+    return (
+      <StarterHabitsView
+        templates={filterStarterTemplates(allTemplates)}
+        {...shared}
+      />
+    );
+  }
+
+  if (activeView.type === 'categories') {
+    return (
+      <CategoriesGridView
+        categories={categoryGridItems}
+        onBack={onBack}
+        onSelectCategory={onOpenCategory}
+      />
+    );
+  }
 
   if (activeView.type === 'category') {
     const templates = allTemplates.filter((t) => t.category === activeView.categoryId);

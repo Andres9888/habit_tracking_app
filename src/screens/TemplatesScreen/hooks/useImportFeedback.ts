@@ -3,42 +3,94 @@
  */
 
 import { useCallback, useRef } from 'react';
+import type { Id } from '../../../../convex/_generated/dataModel';
 import type { UseTemplateImportHandlersOptions } from './useTemplateImportHandlers.types';
 
-export function useImportFeedback(o: UseTemplateImportHandlersOptions) {
+type FeedbackOptions = Pick<
+  UseTemplateImportHandlersOptions,
+  | 'previewTemplate'
+  | 'setFeedbackHabitId'
+  | 'setFeedbackVariant'
+  | 'setSessionImportCount'
+  | 'setShowCelebration'
+  | 'setShowToast'
+  | 'setToastMessage'
+  | 'setToastTemplateData'
+  | 'userHabitCount'
+>;
+
+export function useImportFeedback(o: FeedbackOptions) {
   const previewRef = useRef(o.previewTemplate);
   previewRef.current = o.previewTemplate;
   const habitCountRef = useRef(o.userHabitCount);
   habitCountRef.current = o.userHabitCount;
 
-  const showSuccess = useCallback(() => {
-    const t = previewRef.current;
-    const data = t
-      ? { color: t.iconColor ?? '#22c55e', icon: t.icon ?? '✓', name: t.name }
-      : null;
-    o.setToastTemplateData(data);
-    if (habitCountRef.current === 0) {
-      o.setShowCelebration(true);
-    } else {
-      o.setShowToast(true);
-    }
-    o.setToastMessage('Imported habit successfully');
+  const showImportFeedback = useCallback(
+    (
+      habitId: Id<'habits'>,
+      variant: 'success' | 'already_exists',
+      templateOverride?: FeedbackOptions['previewTemplate']
+    ) => {
+      const t = templateOverride ?? previewRef.current;
+      const data = t
+        ? { color: t.iconColor ?? '#22c55e', icon: t.icon ?? '✓', name: t.name }
+        : null;
+
+      o.setFeedbackHabitId(habitId);
+      o.setFeedbackVariant(variant);
+      o.setToastTemplateData(data);
+      if (variant === 'success') {
+        o.setSessionImportCount((count) => count + 1);
+      }
+
+      if (variant === 'success' && habitCountRef.current === 0) {
+        o.setShowCelebration(true);
+      } else {
+        o.setShowToast(true);
+      }
+
+      o.setToastMessage(
+        variant === 'already_exists'
+          ? 'You already added this habit'
+          : 'Imported habit successfully'
+      );
+    },
+    [
+      o.setFeedbackHabitId,
+      o.setFeedbackVariant,
+      o.setSessionImportCount,
+      o.setShowCelebration,
+      o.setShowToast,
+      o.setToastMessage,
+      o.setToastTemplateData,
+    ]
+  );
+
+  const showSuccess = useCallback(
+    (habitId: Id<'habits'>) => showImportFeedback(habitId, 'success'),
+    [showImportFeedback]
+  );
+
+  const showAlreadyImported = useCallback(
+    (habitId: Id<'habits'>) => showImportFeedback(habitId, 'already_exists'),
+    [showImportFeedback]
+  );
+
+  const showError = useCallback(() => {
+    o.setFeedbackHabitId(null);
+    o.setFeedbackVariant(null);
+    o.setToastTemplateData(null);
+    o.setShowToast(true);
+    o.setToastMessage('Failed to import template. Please try again.');
   }, [
-    o.setShowCelebration,
+    o.setFeedbackHabitId,
+    o.setFeedbackVariant,
     o.setShowToast,
     o.setToastMessage,
     o.setToastTemplateData,
   ]);
 
-  const showError = useCallback(() => {
-    o.setToastTemplateData(null);
-    o.setShowToast(true);
-    o.setToastMessage('Failed to import template. Please try again.');
-  }, [o.setShowToast, o.setToastMessage, o.setToastTemplateData]);
-
-  // Free habit cap was removed in favour of trial-then-paywall gate at AuthGate.
-  // In-app users always have an entitlement, so import is never blocked here.
   const guardImport = useCallback(() => false, []);
 
-  return { guardImport, showError, showSuccess };
+  return { guardImport, showAlreadyImported, showError, showSuccess };
 }
