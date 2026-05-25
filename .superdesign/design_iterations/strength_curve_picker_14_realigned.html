@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Strength Curve Picker — re-aligned mock</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Literata:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:       #F4EFE6;
+    --surface:  #FFFFFF;
+    --card:     #FFFFFF;
+    --border:   #E5DFD2;
+    --gray-100: #EFEAE0;
+
+    --text-primary:   #1F1B16;
+    --text-secondary: #5B544A;
+    --text-tertiary:  #8A8275;
+    --text-inverse:   #FFFFFF;
+
+    --primary-100: #D6EFE5;
+    --primary-600: #0F8A6A;
+    --primary-700: #086148;
+
+    --tier-forgiving:  #D97A3A;
+    --tier-balanced:   #086148;
+    --tier-strict:     #8563C7;
+
+    --pill-orange-bg:  #FAE8D6;
+    --pill-orange-fg:  #8A4A1D;
+    --pill-green-bg:   #D6EFE5;
+    --pill-green-fg:   #086148;
+    --pill-purple-bg:  #EEE7FA;
+    --pill-purple-fg:  #3F2F75;
+
+    --miss-color: #C84A4A;
+  }
+
+  html, body { background: #2A2722; font-family: 'DM Sans', system-ui, sans-serif; margin: 0; }
+
+  .phone {
+    width: 390px;
+    height: 844px;
+    background: var(--bg);
+    border-radius: 48px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.5), 0 0 0 12px #1c1a18, 0 0 0 13px #3a3530;
+  }
+
+  .statusbar {
+    height: 47px;
+    padding: 0 28px;
+    display: flex; align-items: center; justify-content: space-between;
+    font-weight: 600; font-size: 16px; color: var(--text-primary);
+  }
+  .notch {
+    position: absolute; top: 12px; left: 50%; transform: translateX(-50%);
+    width: 120px; height: 32px; border-radius: 999px; background: #000;
+    z-index: 10;
+  }
+
+  .header { padding: 8px 16px 8px 16px; display: flex; align-items: center; justify-content: space-between; }
+  .modal-close {
+    width: 44px; height: 44px; border-radius: 999px;
+    background: var(--surface);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .done-pill {
+    height: 44px; padding: 0 24px; border-radius: 999px;
+    background: var(--primary-600);
+    color: var(--text-inverse);
+    font-weight: 600; font-size: 17px; letter-spacing: -0.41px;
+    display: flex; align-items: center; justify-content: center;
+    border: none; cursor: pointer;
+  }
+
+  .hero { padding: 12px 20px 4px; text-align: center; }
+  .hero-title { font-weight: 800; font-size: 24px; color: var(--text-primary); line-height: 1.15; }
+  .hero-sub   { font-weight: 400; font-size: 13px; color: var(--text-secondary); margin-top: 4px; }
+
+  .bar-card {
+    margin: 8px 16px 0;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 16px;
+  }
+  .bar-labels { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+  .bar-label  { font-weight: 800; font-size: 12px; letter-spacing: 0.6px; color: var(--text-tertiary); }
+  .bar-label.accent { color: var(--tier-balanced); }
+  .bar-track {
+    height: 28px; background: #E8E5DD; border-radius: 999px; overflow: hidden; position: relative;
+  }
+  .bar-fill { height: 100%; width: 50%; background: var(--tier-balanced); border-radius: 999px; }
+  .bar-sublabels { display: flex; align-items: center; justify-content: space-between; margin-top: 8px; }
+  .bar-sub { font-weight: 400; font-size: 11px; color: var(--text-tertiary); }
+  .bar-sub.mid { font-weight: 600; color: var(--text-primary); }
+  .bar-sub.accent { color: var(--tier-balanced); }
+
+  .mech-row { display: flex; margin: 12px 16px 0; gap: 10px; }
+  .mech-card {
+    flex: 1; background: var(--card); border: 1px solid var(--border);
+    border-radius: 16px; padding: 12px;
+    display: flex; flex-direction: column; align-items: center;
+  }
+  .mech-glyph { font-size: 18px; line-height: 20px; }
+  .mech-glyph.gain { color: var(--tier-balanced); }
+  .mech-glyph.miss { color: var(--miss-color); }
+  .mech-label { font-weight: 700; font-size: 12px; color: var(--text-primary); margin-top: 2px; }
+  .mech-num   { font-weight: 800; font-size: 22px; }
+  .mech-num.gain { color: var(--tier-balanced); }
+  .mech-num.miss { color: var(--miss-color); }
+  .mech-unit  { font-weight: 400; font-size: 10px; color: var(--text-tertiary); margin-top: 1px; }
+
+  .section-row {
+    display: flex; align-items: center; justify-content: center;
+    gap: 8px; padding: 0 24px; margin: 14px 0 8px;
+  }
+  .section-line { height: 1px; flex: 1; background: var(--border); }
+  .section-text {
+    font-weight: 600; font-size: 13px;
+    letter-spacing: 1.0px; color: var(--text-tertiary);
+    text-transform: uppercase;
+  }
+
+  .tier-row { display: flex; margin: 0 16px; gap: 10px; }
+  .tier-tile {
+    flex: 1; background: var(--card); border: 1.5px solid var(--border);
+    border-radius: 16px; padding: 10px;
+    display: flex; flex-direction: column; align-items: center;
+  }
+  .tier-tile.selected.balanced { background: var(--pill-green-bg);   border-color: var(--tier-balanced); }
+  .tier-tile.selected.forgiving { background: var(--pill-orange-bg); border-color: var(--tier-forgiving); }
+  .tier-tile.selected.strict   { background: var(--pill-purple-bg);  border-color: var(--tier-strict); }
+
+  .tier-pill {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 2px 6px; border-radius: 999px;
+    font-weight: 700; font-size: 12px;
+  }
+  .tier-pill.balanced  { background: var(--pill-green-bg);  color: var(--pill-green-fg); }
+  .tier-pill.forgiving { background: var(--pill-orange-bg); color: var(--pill-orange-fg); }
+  .tier-pill.strict    { background: var(--pill-purple-bg); color: var(--pill-purple-fg); }
+  .tier-tile.selected .tier-pill { background: var(--card); }
+
+  .tier-weeks { font-weight: 800; font-size: 15px; color: var(--text-primary); margin-top: 6px; }
+  .tier-days  { font-weight: 400; font-size: 11px; color: var(--text-tertiary); }
+
+  .detail-card {
+    margin: 8px 16px 32px;
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 16px; padding: 14px;
+  }
+  .detail-desc { font-weight: 400; font-size: 12px; line-height: 16px; color: var(--text-secondary); }
+  .chip-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .chip {
+    padding: 2px 8px; border-radius: 999px;
+    background: var(--gray-100); border: 1px solid var(--border);
+    font-weight: 500; font-size: 11px; color: var(--text-secondary);
+  }
+
+  .stage { display: flex; gap: 40px; align-items: flex-start; padding: 40px; min-height: 100vh; }
+  .annotate { color: #E8DFCF; font-size: 13px; max-width: 360px; line-height: 1.5; }
+  .annotate h2 { font-weight: 700; color: #fff; font-size: 18px; margin-bottom: 12px; }
+  .annotate ul { list-style: none; padding: 0; margin: 0; }
+  .annotate li { padding: 10px 0; border-bottom: 1px solid #3a3530; }
+  .annotate .tag {
+    display: inline-block; padding: 2px 6px; border-radius: 4px;
+    background: #086148; color: #D6EFE5; font-size: 10px;
+    font-weight: 700; letter-spacing: 0.5px; margin-right: 6px;
+    text-transform: uppercase;
+  }
+  .annotate code {
+    background: #3a3530; color: #fff; padding: 1px 5px; border-radius: 3px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11.5px;
+  }
+</style>
+</head>
+<body>
+  <div class="stage">
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="statusbar">
+        <span>9:41</span>
+        <span style="font-weight: 500;">● ● ● ●</span>
+      </div>
+
+      <div class="header">
+        <div class="modal-close" aria-label="Cancel">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#5B544A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </div>
+        <button class="done-pill">Done</button>
+      </div>
+
+      <div class="hero">
+        <div class="hero-title">Strength fills like this.</div>
+        <div class="hero-sub">Check in to grow it. Miss a day and it dips.</div>
+      </div>
+
+      <div class="bar-card">
+        <div class="bar-labels">
+          <span class="bar-label">DAY 1</span>
+          <span class="bar-label">DAY 33</span>
+          <span class="bar-label accent">DAY 66 ✨</span>
+        </div>
+        <div class="bar-track"><div class="bar-fill"></div></div>
+        <div class="bar-sublabels">
+          <span class="bar-sub">Fresh start</span>
+          <span class="bar-sub mid">Feels routine</span>
+          <span class="bar-sub accent">Automatic</span>
+        </div>
+      </div>
+
+      <div class="mech-row">
+        <div class="mech-card">
+          <div class="mech-glyph gain">✓</div>
+          <div class="mech-label">Check in</div>
+          <div class="mech-num gain">+1.5%</div>
+          <div class="mech-unit">per check-in</div>
+        </div>
+        <div class="mech-card">
+          <div class="mech-glyph miss">✗</div>
+          <div class="mech-label">Skip a day</div>
+          <div class="mech-num miss">−5%</div>
+          <div class="mech-unit">per missed day</div>
+        </div>
+      </div>
+
+      <div class="section-row">
+        <div class="section-line"></div>
+        <span class="section-text">What kind of habit is this?</span>
+        <div class="section-line"></div>
+      </div>
+
+      <div class="tier-row">
+        <div class="tier-tile">
+          <div class="tier-pill forgiving"><span>⚡</span><span>Simple</span></div>
+          <div class="tier-weeks">~2.5 wk</div>
+          <div class="tier-days">18d</div>
+        </div>
+        <div class="tier-tile selected balanced">
+          <div class="tier-pill balanced"><span>🌱</span><span>Regular</span></div>
+          <div class="tier-weeks">~9 wk</div>
+          <div class="tier-days">66d</div>
+        </div>
+        <div class="tier-tile">
+          <div class="tier-pill strict"><span>🏔️</span><span>Complex</span></div>
+          <div class="tier-weeks">~4 mo</div>
+          <div class="tier-days">120d</div>
+        </div>
+      </div>
+
+      <div class="detail-card">
+        <div class="detail-desc">A daily action that takes 5–15 minutes. Forms steadily and bounces back from honest setbacks.</div>
+        <div class="chip-row">
+          <span class="chip">📖 Read 10 min</span>
+          <span class="chip">🚶 Daily walk</span>
+          <span class="chip">🧘 Meditate</span>
+          <span class="chip">✏️ Journal</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="annotate">
+      <h2>Re-aligned to app conventions</h2>
+      <ul>
+        <li><span class="tag">Header</span> Shared <code>ModalCloseButton</code> (X, 44×44) on left + green Done pill (44h, <code>typography.button</code>). No centered title — matches <code>EditHeader</code> exactly.</li>
+        <li><span class="tag">Section</span> UPPERCASE + <code>tracking-wider</code> + <code>h-px</code> dividers on both sides. Matches <code>SectionLabel.tsx</code>.</li>
+        <li><span class="tag">Mechanic</span> Dropped 4px colored left stripes (app-unique). Accent stays in glyph + number. Added <code>per check-in</code> / <code>per missed day</code> captions.</li>
+        <li><span class="tag">Tier</span> Selection = tinted bg + 1.5px accent border (matches <code>AlgorithmCard</code>). No check badge below. Tiles are shorter.</li>
+        <li><span class="tag">Hero bar</span> Bar height 36 → 28px.</li>
+        <li><span class="tag">Detail</span> Dropped duplicate pill + duration row + colored left stripe. Description + chips only.</li>
+      </ul>
+    </div>
+  </div>
+</body>
+</html>

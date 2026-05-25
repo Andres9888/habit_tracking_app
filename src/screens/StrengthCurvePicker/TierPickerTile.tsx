@@ -1,5 +1,4 @@
 /** TierPickerTile — single tier tile with spring press scale. */
-import { Check } from 'lucide-react-native';
 import { Pressable, Text, View } from 'react-native';
 import Animated, {
   useAnimatedStyle,
@@ -27,7 +26,6 @@ export function TierPickerTile({ mode, tier, style, isSelected, onSelect, scale 
   const reduceMotion = useReduceMotion();
   const pressScale = useSharedValue(1);
   const animatedStyle = useAnimatedStyle(() => ({ transform: [{ scale: pressScale.value }] }));
-  const checkSize = 24 * scale;
 
   return (
     <Pressable
@@ -50,9 +48,9 @@ export function TierPickerTile({ mode, tier, style, isSelected, onSelect, scale 
         className='items-center rounded-2xl'
         style={[
           {
-            backgroundColor: colors.card,
+            backgroundColor: isSelected ? style.tierPillBg : colors.card,
             borderColor: isSelected ? style.curveColor : colors.border,
-            borderWidth: isSelected ? 2 : 1.5,
+            borderWidth: 1.5,
             padding: 10 * scale,
             width: '100%',
           },
@@ -61,29 +59,25 @@ export function TierPickerTile({ mode, tier, style, isSelected, onSelect, scale 
       >
         <View
           className='flex-row items-center rounded-full'
-          style={{ backgroundColor: style.tierPillBg, gap: 4 * scale, paddingHorizontal: 6 * scale, paddingVertical: 2 * scale }}
+          style={{ backgroundColor: isSelected ? colors.card : style.tierPillBg, gap: 3 * scale, paddingHorizontal: 6 * scale, paddingVertical: 2 * scale }}
         >
-          <Text style={{ fontSize: 13 * scale }}>{tier.emoji}</Text>
-          <Text className='font-bold' style={{ color: style.tierPillFg, fontSize: 12 * scale }}>
+          <style.Icon
+            color={style.tierPillFg}
+            size={12 * scale}
+            strokeWidth={isSelected ? 2.5 : 2}
+          />
+          <Text
+            adjustsFontSizeToFit
+            className='font-bold'
+            numberOfLines={1}
+            style={{ color: style.tierPillFg, fontSize: 12 * scale }}
+          >
             {tier.tierName}
           </Text>
         </View>
         <Text className='font-extrabold' style={{ color: colors.text.primary, fontSize: 15 * scale, marginTop: 6 * scale }}>
           {tier.formationWeeks}
         </Text>
-        <Text style={{ color: colors.text.tertiary, fontSize: 11 * scale }}>
-          {tier.formationDays}
-        </Text>
-        {isSelected ? (
-          <View
-            className='items-center justify-center rounded-full'
-            style={{ backgroundColor: style.curveColor, height: checkSize, width: checkSize, marginTop: 6 * scale }}
-          >
-            <Check color='#fff' size={14 * scale} strokeWidth={3} />
-          </View>
-        ) : (
-          <View style={{ height: checkSize, width: checkSize, marginTop: 6 * scale }} />
-        )}
       </Animated.View>
     </Pressable>
   );

@@ -1,8 +1,10 @@
-/** Sticky translucent header for the Strength Curve picker. */
+/** Sticky translucent header for the Strength Curve picker — back-only, auto-save. */
 import { ChevronLeft } from 'lucide-react-native';
-import { Pressable, Text, View } from 'react-native';
+import { View } from 'react-native';
+import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
+import { borderRadius } from '@/theme/spacing';
+import { triggerHaptic } from '@/utils/haptics';
 import { useThemeColors } from '@/theme/ThemeContext';
-import { STRENGTH_CURVE_PICKER_COPY } from './StrengthCurvePicker.copy';
 
 interface Props {
   topInset: number;
@@ -11,42 +13,28 @@ interface Props {
 
 export function StrengthCurvePickerHeader({ topInset, onClose }: Props) {
   const { colors } = useThemeColors();
+  const handlePress = () => {
+    void triggerHaptic('tap');
+    onClose();
+  };
   return (
-    <View
-      style={{
-        backgroundColor: colors.surface,
-        borderBottomColor: colors.border,
-        borderBottomWidth: 1,
-        paddingTop: topInset,
-      }}
-    >
-      <View className='flex-row items-center justify-between px-5 py-3'>
-        <Pressable
-          accessibilityLabel='Close'
+    <View style={{ paddingTop: topInset }}>
+      <View className='flex-row items-center px-4 pb-2'>
+        <AnimatedPressable
+          accessibilityLabel='Back'
           accessibilityRole='button'
-          className='h-9 w-9 items-center justify-center rounded-full'
-          style={{ backgroundColor: colors.gray[100], borderColor: colors.border, borderWidth: 1 }}
-          onPress={onClose}
+          style={{
+            alignItems: 'center',
+            backgroundColor: colors.surface,
+            borderRadius: borderRadius.full,
+            height: 44,
+            justifyContent: 'center',
+            width: 44,
+          }}
+          onPress={handlePress}
         >
-          <ChevronLeft color={colors.text.primary} size={20} strokeWidth={2} />
-        </Pressable>
-        <Text
-          className='text-[15px] font-semibold'
-          style={{ color: colors.text.primary }}
-        >
-          {STRENGTH_CURVE_PICKER_COPY.headerTitle}
-        </Text>
-        <Pressable
-          accessibilityLabel={STRENGTH_CURVE_PICKER_COPY.doneLabel}
-          accessibilityRole='button'
-          className='rounded-full px-4 py-1.5'
-          style={{ backgroundColor: colors.primary[600] }}
-          onPress={onClose}
-        >
-          <Text className='text-[13px] font-semibold text-white'>
-            {STRENGTH_CURVE_PICKER_COPY.doneLabel}
-          </Text>
-        </Pressable>
+          <ChevronLeft color={colors.text.secondary} size={24} strokeWidth={2.5} />
+        </AnimatedPressable>
       </View>
     </View>
   );
