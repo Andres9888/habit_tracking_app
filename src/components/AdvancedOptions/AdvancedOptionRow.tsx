@@ -47,7 +47,7 @@ export function AdvancedOptionRow({
       style={({ pressed }) => ({
         borderTopWidth: isFirst ? 0 : StyleSheet.hairlineWidth,
         borderTopColor: colors.cardBorder,
-        minHeight: 64,
+        minHeight: 72,
         backgroundColor: pressed ? colors.gray[200] : 'transparent',
         borderRadius: 12,
       })}
@@ -58,7 +58,6 @@ export function AdvancedOptionRow({
           <View className='h-9 w-9 items-center justify-center rounded-xl' style={{ backgroundColor: iconBackground }}>{icon}</View>
           <View className='flex-1'>
             <Text
-              numberOfLines={1}
               style={{
                 ...typography.body,
                 fontWeight: fontWeights.semibold,
@@ -68,7 +67,6 @@ export function AdvancedOptionRow({
               {title}
             </Text>
             <Text
-              numberOfLines={1}
               style={{
                 ...typography.caption,
                 color: colors.text.secondary,
@@ -81,7 +79,7 @@ export function AdvancedOptionRow({
               <Text
                 accessibilityElementsHidden
                 importantForAccessibility='no'
-                numberOfLines={2}
+                numberOfLines={3}
                 style={{
                   ...typography.caption,
                   fontSize: 12,
