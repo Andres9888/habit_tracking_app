@@ -71,7 +71,7 @@ export function Button({
           borderRadius:
             variant === 'icon'
               ? config.height / 2
-              : mergedBorderRadius.small,
+              : mergedBorderRadius.button ?? mergedBorderRadius.medium,
           height: config.height,
           paddingHorizontal: variant === 'icon' ? 0 : config.paddingHorizontal,
         },

@@ -2,6 +2,7 @@ import React from 'react';
 import { View, ViewProps, type StyleProp, type ViewStyle } from 'react-native';
 import clsx from 'clsx';
 import { useThemeColors } from '../../theme/ThemeContext';
+import { borderRadius, shadows, spacing } from '../../theme/spacing';
 
 export interface CardProps extends ViewProps {
   style?: StyleProp<ViewStyle>;
@@ -15,11 +16,16 @@ export function Card({
   const { colors } = useThemeColors();
   return (
     <View
-      className={clsx(
-        'rounded-xl border shadow-sm',
-        className
-      )}
-      style={[{ backgroundColor: colors.card, borderColor: colors.cardBorder }, style]}
+      className={clsx('border', className)}
+      style={[
+        shadows.card,
+        {
+          backgroundColor: colors.card,
+          borderColor: colors.cardBorder,
+          borderRadius: borderRadius.card,
+        },
+        style,
+      ]}
       {...props}
     />
   );
@@ -33,8 +39,11 @@ export function CardHeader({
   const { colors } = useThemeColors();
   return (
     <View
-      className={clsx('border-b p-4', className)}
-      style={[{ borderColor: colors.border }, style]}
+      className={clsx('border-b', className)}
+      style={[
+        { borderColor: colors.border, padding: spacing.base },
+        style,
+      ]}
       {...props}
     />
   );
@@ -45,7 +54,13 @@ export function CardContent({
   className,
   ...props
 }: ViewProps & { className?: string }) {
-  return <View className={clsx('p-4', className)} style={style} {...props} />;
+  return (
+    <View
+      className={className}
+      style={[{ padding: spacing.base }, style]}
+      {...props}
+    />
+  );
 }
 
 export default Card;

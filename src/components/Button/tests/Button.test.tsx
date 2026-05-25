@@ -285,7 +285,7 @@ describe('Button - Phase 2', () => {
 
     it('should use theme border radius', () => {
       const { root } = renderWithTheme(<Button>Rounded</Button>);
-      // Should use theme.custom.borderRadius.small
+      // Should use theme.custom.borderRadius.button (12px)
       expect(root).toBeTruthy();
     });
   });
