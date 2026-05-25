@@ -59,15 +59,32 @@ export const useHabitDayToggleAnimations = ({
 
     const targetValue = completed ? 1 : 0;
 
+    let cancelled = false;
+    let forgeFlashAnimation: Animated.CompositeAnimation | null = null;
+    let forgeFlashSafetyTimer: ReturnType<typeof setTimeout> | null = null;
+
     // Forge flash fires only on the false → true transition.
     if (completed) {
       forgeFlash.setValue(1);
-      Animated.timing(forgeFlash, {
+      forgeFlashAnimation = Animated.timing(forgeFlash, {
         duration: 500,
         easing: Easing.out(Easing.cubic),
         toValue: 0,
         useNativeDriver: true,
-      }).start();
+      });
+      forgeFlashAnimation.start(({ finished }) => {
+        if (!finished && !cancelled) {
+          forgeFlash.setValue(0);
+        }
+      });
+      // Safety net: if the native-driver animation silently fails or the
+      // callback is lost, force opacity to 0 so the amber overlay doesn't
+      // stay painted on the cell (600ms > 500ms animation duration).
+      forgeFlashSafetyTimer = setTimeout(() => {
+        if (!cancelled) {
+          forgeFlash.setValue(0);
+        }
+      }, 600);
     }
 
     // Value changed - animate the transition
@@ -93,8 +110,6 @@ export const useHabitDayToggleAnimations = ({
           useNativeDriver: true,
         });
 
-    let cancelled = false;
-
     animation.start(({ finished }) => {
       // If the animation was interrupted by something other than our
       // cleanup (e.g., a native driver issue), force the final value
@@ -117,6 +132,12 @@ export const useHabitDayToggleAnimations = ({
       cancelled = true;
       clearTimeout(safetyTimer);
       animation.stop();
+      if (forgeFlashSafetyTimer !== null) {
+        clearTimeout(forgeFlashSafetyTimer);
+      }
+      if (forgeFlashAnimation !== null) {
+        forgeFlashAnimation.stop();
+      }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [completed]);
