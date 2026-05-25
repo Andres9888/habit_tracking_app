@@ -1,18 +1,16 @@
 /**
- * View navigation state machine for Templates screen
- *
- * Manages transitions between: main | seeAll | category | search
- * Uses Reanimated shared values for 280ms slide animations.
+ * View navigation for Templates screen — wraps useViewStack with animation
  */
 
-import { useCallback, useState } from 'react';
-import {
-  Easing,
-  useSharedValue,
-  withTiming,
-} from 'react-native-reanimated';
+import { useCallback } from 'react';
+import { Easing, useSharedValue, withTiming } from 'react-native-reanimated';
+import { useViewStack } from './useViewStack';
 
 const SLIDE_CONFIG = { duration: 280, easing: Easing.out(Easing.cubic) };
+
+export type DetailSourcePath =
+  | 'goal' | 'category' | 'search'
+  | 'guide' | 'trending' | 'starter' | 'pairing';
 
 export type TemplateViewState =
   | { type: 'main' }
@@ -21,12 +19,12 @@ export type TemplateViewState =
   | { type: 'categories' }
   | { type: 'category'; categoryId: string }
   | { type: 'goal'; goalId: string }
-  | { type: 'search' };
+  | { type: 'search' }
+  | { type: 'detail'; templateId: string; sourcePath: DetailSourcePath }
+  | { type: 'guidedPicker' };
 
 export function useViewNavigation() {
-  const [activeView, setActiveView] = useState<TemplateViewState>({
-    type: 'main',
-  });
+  const viewStack = useViewStack();
   const slideProgress = useSharedValue(0);
 
   const animateIn = useCallback(() => {
@@ -34,67 +32,31 @@ export function useViewNavigation() {
     slideProgress.value = withTiming(0, SLIDE_CONFIG);
   }, [slideProgress]);
 
-  const animateOut = useCallback(
-    (onComplete: () => void) => {
-      slideProgress.value = withTiming(1, SLIDE_CONFIG);
-      setTimeout(onComplete, 280);
-    },
-    [slideProgress]
+  const pushWithAnim = useCallback(
+    (view: TemplateViewState) => { viewStack.push(view); animateIn(); },
+    [viewStack, animateIn]
   );
-
-  const openSeeAll = useCallback(() => {
-    setActiveView({ type: 'seeAll' });
-    animateIn();
-  }, [animateIn]);
-
-  const openStarters = useCallback(() => {
-    setActiveView({ type: 'starters' });
-    animateIn();
-  }, [animateIn]);
-
-  const openCategories = useCallback(() => {
-    setActiveView({ type: 'categories' });
-    animateIn();
-  }, [animateIn]);
-
-  const openCategory = useCallback(
-    (categoryId: string) => {
-      setActiveView({ type: 'category', categoryId });
-      animateIn();
-    },
-    [animateIn]
-  );
-
-  const openGoal = useCallback(
-    (goalId: string) => {
-      setActiveView({ type: 'goal', goalId });
-      animateIn();
-    },
-    [animateIn]
-  );
-
-  const openSearch = useCallback(() => {
-    setActiveView({ type: 'search' });
-  }, []);
 
   const goBack = useCallback(() => {
-    animateOut(() => setActiveView({ type: 'main' }));
-  }, [animateOut]);
-
-  const closeSearch = useCallback(() => {
-    setActiveView({ type: 'main' });
-  }, []);
+    slideProgress.value = withTiming(1, SLIDE_CONFIG);
+    setTimeout(() => viewStack.pop(), 280);
+  }, [slideProgress, viewStack]);
 
   return {
-    activeView,
-    closeSearch,
+    activeView: viewStack.current,
+    canGoBack: viewStack.canGoBack,
+    closeSearch: () => viewStack.pop(),
     goBack,
-    openCategory,
-    openGoal,
-    openSearch,
-    openCategories,
-    openSeeAll,
-    openStarters,
+    openCategory: (id: string) => pushWithAnim({ type: 'category', categoryId: id }),
+    openCategories: () => pushWithAnim({ type: 'categories' }),
+    openDetail: (templateId: string, sourcePath: DetailSourcePath) =>
+      pushWithAnim({ type: 'detail', templateId, sourcePath }),
+    openGoal: (id: string) => pushWithAnim({ type: 'goal', goalId: id }),
+    openGuidedPicker: () => pushWithAnim({ type: 'guidedPicker' }),
+    openSearch: () => viewStack.push({ type: 'search' }),
+    openSeeAll: () => pushWithAnim({ type: 'seeAll' }),
+    openStarters: () => pushWithAnim({ type: 'starters' }),
+    resetToMain: () => viewStack.reset(),
     slideProgress,
   };
 }

@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Habit Detail — Confidence (v2)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { -webkit-font-smoothing: antialiased; }
+    .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.25s ease; }
+    .accordion-content.open { max-height: 500px; }
+  </style>
+</head>
+<body class="min-h-screen bg-slate-950 text-slate-100">
+  <main class="mx-auto max-w-md px-4 pb-28 pt-4" data-component="HabitDetailView">
+
+    <nav class="mb-4 flex items-center gap-3" data-component="DetailNavBar">
+      <button class="flex h-8 w-8 items-center justify-center rounded-full border border-slate-700 bg-slate-900 text-slate-400" data-component="BackButton">←</button>
+      <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">Habit preview</p>
+    </nav>
+
+    <header class="mb-4" data-component="TemplatePreviewHeader">
+      <div class="flex items-center gap-3">
+        <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-400/20 text-2xl">💧</div>
+        <div>
+          <h1 class="text-xl font-bold">Drink Water</h1>
+          <p class="text-sm text-slate-400">Health · Hydration</p>
+        </div>
+      </div>
+    </header>
+
+    <section class="mb-4 rounded-2xl border border-emerald-300/30 bg-emerald-400/10 p-4" data-component="ConfidencePromiseCard">
+      <p class="text-xs font-semibold uppercase tracking-wider text-emerald-300">Promise</p>
+      <p class="mt-1 text-sm font-medium text-emerald-100">Stay hydrated so your energy is steadier through the afternoon.</p>
+      <div data-component="FeasibilityMetaRow" class="mt-3 flex flex-wrap gap-2 text-xs">
+        <span class="rounded-full border border-slate-700 bg-slate-900 px-3 py-1 font-semibold">⏱ 2 min/day</span>
+        <span class="rounded-full border border-slate-700 bg-slate-900 px-3 py-1 font-semibold">Gentle start</span>
+        <span class="rounded-full border border-slate-700 bg-slate-900 px-3 py-1 font-semibold">Easy</span>
+      </div>
+    </section>
+
+    <section class="mb-4 rounded-2xl border border-slate-800 bg-slate-900 p-4" data-component="WhyThisWorksSection">
+      <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400">Why this works</h2>
+      <ul class="mt-2 space-y-1.5 text-sm text-slate-300">
+        <li class="flex gap-2"><span class="text-emerald-400">•</span> Supports stable concentration during late-morning work.</li>
+        <li class="flex gap-2"><span class="text-emerald-400">•</span> Reduces afternoon fatigue and mindless snacking.</li>
+        <li class="flex gap-2"><span class="text-emerald-400">•</span> Improves workout recovery and perceived effort.</li>
+      </ul>
+      <p class="mt-3 text-xs text-slate-500">Science: Journal of Nutrition (2019), hydration and cognitive performance. <a href="#" class="font-semibold text-emerald-400">Read reference</a></p>
+    </section>
+
+    <section class="mb-4 rounded-2xl border border-slate-800 bg-slate-900 p-4" data-component="HowYoullDoItSection">
+      <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400">How you'll do it</h2>
+      <div class="mt-2 space-y-2 text-sm text-slate-300">
+        <p><span class="font-semibold text-slate-100">Cue:</span> After I start my coffee, I take 4 sips of water.</p>
+        <p><span class="font-semibold text-slate-100">Start small:</span> Minimum version is just 4 sips.</p>
+        <p><span class="font-semibold text-slate-100">Tip:</span> Keep bottle visible on your desk or kitchen counter.</p>
+      </div>
+    </section>
+
+    <section class="mb-4 rounded-2xl border border-slate-800 bg-slate-900/60 p-4" data-component="IdentitySection">
+      <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400">Who you'll become</h2>
+      <p class="mt-2 text-sm text-slate-200 italic">"I'm someone who takes care of my body before I feel depleted."</p>
+    </section>
+
+    <section class="mb-4 rounded-2xl border border-slate-800 bg-slate-900 p-4" data-component="CustomizeAccordion">
+      <button id="customize-toggle" class="flex w-full items-center justify-between">
+        <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400">Customize</h2>
+        <span id="customize-arrow" class="text-xs text-slate-500 transition-transform">▸</span>
+      </button>
+      <div id="customize-content" class="accordion-content">
+        <div class="mt-3 grid grid-cols-2 gap-2 text-sm">
+          <div class="rounded-xl border border-slate-700 bg-slate-800 px-3 py-2 text-slate-300">Name: Drink Water</div>
+          <div class="rounded-xl border border-slate-700 bg-slate-800 px-3 py-2 text-slate-300">Icon: 💧</div>
+          <div class="rounded-xl border border-slate-700 bg-slate-800 px-3 py-2 text-slate-300">Reminder: 9:00 AM</div>
+          <div class="rounded-xl border border-slate-700 bg-slate-800 px-3 py-2 text-slate-300">Progression: Gentle</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="mb-4 rounded-2xl border border-slate-800 bg-slate-900 p-4" data-component="TemplatePairingsSection">
+      <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400">Pairs well with</h2>
+      <p class="mt-1 text-xs text-slate-500">From templatePairings — habits that stack naturally.</p>
+      <div class="mt-3 space-y-2">
+        <div class="flex items-center justify-between rounded-xl border border-slate-700 bg-slate-800 p-3">
+          <div>
+            <p class="text-sm font-semibold">🤸 Morning Stretch</p>
+            <p class="text-xs text-slate-400">Natural stack after hydration.</p>
+          </div>
+          <button class="rounded-lg border border-slate-600 px-2 py-1 text-xs text-slate-300">Add</button>
+        </div>
+        <div class="flex items-center justify-between rounded-xl border border-slate-700 bg-slate-800 p-3">
+          <div>
+            <p class="text-sm font-semibold">🚶 5-min Walk</p>
+            <p class="text-xs text-slate-400">Build momentum for movement goals.</p>
+          </div>
+          <button class="rounded-lg border border-slate-600 px-2 py-1 text-xs text-slate-300">Add</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="fixed bottom-0 left-0 right-0 border-t border-slate-800 bg-slate-950/95 backdrop-blur" data-component="StickyAddFooter">
+    <div class="mx-auto flex max-w-md gap-3 px-4 py-3">
+      <button class="flex-1 rounded-xl bg-emerald-600 py-3 text-sm font-semibold text-white">Add habit</button>
+      <button class="rounded-xl border border-slate-700 bg-slate-900 px-4 py-3 text-sm font-semibold text-slate-300">Skip</button>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('customize-toggle').addEventListener('click', () => {
+      const content = document.getElementById('customize-content');
+      const arrow = document.getElementById('customize-arrow');
+      content.classList.toggle('open');
+      arrow.style.transform = content.classList.contains('open') ? 'rotate(90deg)' : '';
+    });
+  </script>
+</body>
+</html>

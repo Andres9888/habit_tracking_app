@@ -1,0 +1,12 @@
+```
+═══ PAI ═══════════════════════════
+📃 CONTENT: main now lives in the primary repo, not a worktree
+🔧 CHANGE: Removed raleigh worktree; checked out main in primary repo
+✅ VERIFY: `git worktree list` shows main at `/Users/andres/Code/habit_tracking_app`; `cursor/37ca114f` no longer checked out
+📋 SUMMARY:
+  - Raleigh Conductor worktree force-removed
+  - Primary repo switched from cursor/37ca114f to main
+  - Main branch up to date with origin/main
+  - Your shell may still be in the deleted raleigh path
+🗣️ PAI: cd to /Users/andres/Code/habit_tracking_app — main is home now.
+```

@@ -20,7 +20,7 @@ export function useTemplateImportHandlers(o: UseTemplateImportHandlersOptions) {
     []
   );
 
-  const handleTemplatePreview = useCallback(
+  const handleCustomizeOpen = useCallback(
     (t: Doc<'templates'>) => {
       o.setPreviewTemplate(t);
       o.setShowCustomizeModal(true);
@@ -28,6 +28,9 @@ export function useTemplateImportHandlers(o: UseTemplateImportHandlersOptions) {
     },
     [o.setPreviewTemplate, o.setShowCustomizeModal, o.setShowFullsizePreview]
   );
+
+  // Keep backward-compat alias for existing call sites during migration
+  const handleTemplatePreview = handleCustomizeOpen;
 
   const handleCustomizeFromPreview = useCallback(
     (t: Doc<'templates'>) => {
@@ -128,6 +131,7 @@ export function useTemplateImportHandlers(o: UseTemplateImportHandlersOptions) {
 
   return {
     handleCustomizeFromPreview,
+    handleCustomizeOpen,
     handleDirectImport,
     handleTemplateImport,
     handleTemplatePreview,

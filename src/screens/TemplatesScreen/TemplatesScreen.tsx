@@ -4,7 +4,7 @@
  * Browse and import science-backed habit templates
  */
 
-import { useCallback, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 import type { Doc, Id } from '../../../convex/_generated/dataModel';
 import { BrowseCategoriesLink } from './components/BrowseCategoriesLink';
@@ -13,7 +13,10 @@ import { SearchResults } from './components/SearchResults';
 import { TemplatesEmptyState } from './components/TemplatesEmptyState';
 import { TemplatesScreenModals } from './components';
 import { useTemplatesScreenProps } from './hooks/useTemplatesScreenProps';
+import { useUserSegment } from './hooks/useUserSegment';
+import { useLibraryAnalytics } from './hooks/useLibraryAnalytics';
 import { FeedbackOverlays } from './views/FeedbackOverlays';
+import { ImportSuccessView } from './views/ImportSuccessView';
 import { MainBrowseView } from './views/MainBrowseView';
 import { renderSubView } from './views/renderSubView';
 import {
@@ -38,6 +41,19 @@ function TemplatesScreenContent({
 }: TemplatesScreenContentProps) {
   const props = useTemplatesScreenProps();
   const { data, handlers, mainBrowseData, packConfirm, state, viewNav } = props;
+  const segment = useUserSegment({
+    userHabitCount: data.userHabitCount ?? 0,
+    isPremiumUser: data.isPremiumUser ?? false,
+  });
+  const [successTemplate, setSuccessTemplate] = useState<Doc<'templates'> | null>(null);
+  const successViewActive = successTemplate !== null;
+  const analytics = useLibraryAnalytics(segment.baseSegment, segment.landingVariant);
+
+  useEffect(() => {
+    analytics.trackLibraryOpen('direct');
+    analytics.trackLandingVariantShown();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const { groups } = useGroupedTemplates(data.allTemplates);
   const categoryGridItems = useMemo(
     () => buildCategoryGridItems(groups),
@@ -101,10 +117,20 @@ function TemplatesScreenContent({
       .slice(0, 3);
   }, [data.allTemplates, featuredGoalId]);
 
-  const handleImport = (template: Doc<'templates'>) => {
+  const handleImport = useCallback((template: Doc<'templates'>) => {
     state.setPreviewTemplate(template);
-    void handlers.handleDirectImport(template._id);
-  };
+    const isFirstImport = (data.userHabitCount ?? 0) === 0;
+    void handlers.handleDirectImport(template._id).then(() => {
+      analytics.trackLibraryAdd({ fromCustomize: false, isFirstImport, path: 'trending', templateId: template._id });
+      setSuccessTemplate(template);
+      if (isFirstImport) {
+        state.setShowCelebration(false);
+        state.setShowToast(false);
+      }
+    }).catch(() => {
+      // fallback: let existing toast handle it
+    });
+  }, [analytics, data.userHabitCount, handlers, state]);
   const handleSeedTemplates = () => {
     void handlers.handleSeedTemplates();
   };
@@ -134,6 +160,27 @@ function TemplatesScreenContent({
     );
   }
 
+  if (successViewActive && successTemplate) {
+    const isFirstImport = (data.userHabitCount ?? 0) <= 1;
+    return (
+      <ImportSuccessView
+        allTemplates={data.allTemplates ?? []}
+        isFirstImport={isFirstImport}
+        template={successTemplate}
+        onAddPairing={handleImport}
+        onCloseLibrary={() => { setSuccessTemplate(null); onCloseLibrary?.(); }}
+        onDismiss={() => setSuccessTemplate(null)}
+        onOpenGuidedPicker={() => { setSuccessTemplate(null); viewNav.openGuidedPicker(); }}
+        onPreviewPairing={(t) => { setSuccessTemplate(null); viewNav.openDetail(t._id, 'pairing'); }}
+      />
+    );
+  }
+
+  const handleCustomize = useCallback((template: Doc<'templates'>) => {
+    state.setPreviewTemplate(template);
+    state.setShowCustomizeModal(true);
+  }, [state]);
+
   const subView = renderSubView({
     activeView: viewNav.activeView,
     allTemplates: data.allTemplates,
@@ -141,9 +188,14 @@ function TemplatesScreenContent({
     importedTemplateIds: state.importedTemplateIds,
     importingTemplateId: state.importingTemplateId,
     onBack: viewNav.goBack,
+    onCustomize: handleCustomize,
     onImport: handleImport,
     onOpenCategory: viewNav.openCategory,
-    onPreview: handlers.handleTemplatePreview,
+    onOpenDetail: (templateId, sourcePath) =>
+      viewNav.openDetail(templateId, sourcePath as Parameters<typeof viewNav.openDetail>[1]),
+    onPreview: (template) => viewNav.openDetail(template._id, 'trending'),
+    onTrackDetailOpen: (templateId, sourcePath) =>
+      analytics.trackDetailOpen(templateId, sourcePath as Parameters<typeof analytics.trackDetailOpen>[1]),
   });
   if (subView) {
     return (
@@ -229,10 +281,13 @@ function TemplatesScreenContent({
             onPackConfirm={handlePackConfirm}
           />
         }
+        helpMeChooseCopy={segment.helpMeChooseCopy}
+        landingVariant={segment.landingVariant}
         onBrowseByGoal={handleBrowseByGoal}
         onGoalSelect={handleGoalSelect}
+        onHelpMeChoose={viewNav.openGuidedPicker}
         onImport={handleImport}
-        onPreview={handlers.handleTemplatePreview}
+        onPreview={(template) => viewNav.openDetail(template._id, 'trending')}
         onSearchChange={state.setSearchQuery}
         onSearchClear={() => state.setSearchQuery('')}
         onSeeAll={handleSeeAll}

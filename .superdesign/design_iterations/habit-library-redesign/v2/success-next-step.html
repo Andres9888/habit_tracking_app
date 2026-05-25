@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Habit Added — Success (v2)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { -webkit-font-smoothing: antialiased; }
+    @keyframes checkPop { 0% { transform: scale(0); } 60% { transform: scale(1.2); } 100% { transform: scale(1); } }
+    .check-anim { animation: checkPop 0.5s ease forwards; }
+    .first-import-hidden { display: none; }
+  </style>
+</head>
+<body class="min-h-screen bg-slate-950 text-slate-100">
+  <main class="mx-auto max-w-md px-4 pb-28 pt-8" data-component="ImportSuccessView">
+
+    <div class="flex flex-col items-center text-center mb-6" data-component="ImportSuccessHeader">
+      <div class="check-anim mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-400/20 text-3xl">✓</div>
+      <h1 class="text-2xl font-bold">Habit added!</h1>
+      <p class="mt-1 text-lg text-emerald-300 font-semibold">💧 Drink Water</p>
+      <p class="mt-2 text-sm text-slate-400">Great call. This is now part of your daily plan.</p>
+    </div>
+
+    <section class="mb-6 rounded-2xl border border-slate-800 bg-slate-900 p-4" data-component="WhatsNextSection">
+      <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">What's next?</h2>
+      <div class="space-y-2" data-component="NextStepRecommendationList">
+        <button class="flex w-full items-center gap-3 rounded-xl border border-slate-700 bg-slate-800 p-3 text-left">
+          <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-amber-400/20 text-lg">🔔</span>
+          <div>
+            <p class="text-sm font-semibold">Set a reminder</p>
+            <p class="text-xs text-slate-400">Lock in your cue — after coffee, 9:00 AM</p>
+          </div>
+          <span class="ml-auto text-slate-600">›</span>
+        </button>
+        <button class="flex w-full items-center gap-3 rounded-xl border border-slate-700 bg-slate-800 p-3 text-left">
+          <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-violet-400/20 text-lg">🔗</span>
+          <div>
+            <p class="text-sm font-semibold">Build a stack</p>
+            <p class="text-xs text-slate-400">Pair with Morning Stretch for momentum</p>
+          </div>
+          <span class="ml-auto text-slate-600">›</span>
+        </button>
+        <button class="flex w-full items-center gap-3 rounded-xl border border-slate-700 bg-slate-800 p-3 text-left">
+          <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-sky-400/20 text-lg">📤</span>
+          <div>
+            <p class="text-sm font-semibold">Share</p>
+            <p class="text-xs text-slate-400">Invite a friend to build this habit together</p>
+          </div>
+          <span class="ml-auto text-slate-600">›</span>
+        </button>
+        <button class="flex w-full items-center gap-3 rounded-xl border border-slate-700 bg-slate-800 p-3 text-left">
+          <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-emerald-400/20 text-lg">➕</span>
+          <div>
+            <p class="text-sm font-semibold">Add another habit</p>
+            <p class="text-xs text-slate-400">Browse the library for your next pick</p>
+          </div>
+          <span class="ml-auto text-slate-600">›</span>
+        </button>
+      </div>
+    </section>
+
+    <section class="mb-6 rounded-2xl border border-amber-400/30 bg-amber-400/10 p-4" data-component="FirstImportBranchCard" id="first-import">
+      <p class="text-xs font-semibold uppercase tracking-wider text-amber-300">First habit — nice work 🎉</p>
+      <p class="mt-2 text-sm text-amber-100">You're off to a strong start. Want a quick guide to pick your second habit?</p>
+      <button class="mt-3 w-full rounded-xl bg-amber-500 py-2.5 text-sm font-semibold text-slate-900">Take the 30-second guide</button>
+    </section>
+
+  </main>
+
+  <footer class="fixed bottom-0 left-0 right-0 border-t border-slate-800 bg-slate-950/95 backdrop-blur" data-component="DoneFooter">
+    <div class="mx-auto max-w-md px-4 py-3">
+      <button class="w-full rounded-xl border border-slate-700 bg-slate-900 py-3 text-sm font-semibold text-slate-200">Done</button>
+    </div>
+  </footer>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('first') === 'false') {
+      document.getElementById('first-import').classList.add('first-import-hidden');
+    }
+  </script>
+</body>
+</html>

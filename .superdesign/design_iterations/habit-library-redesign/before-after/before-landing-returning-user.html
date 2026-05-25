@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BEFORE — Habit Library Landing (Returning User)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>body{font-family:ui-sans-serif,system-ui,-apple-system,sans-serif !important}</style>
+</head>
+<body class="min-h-screen bg-slate-950 text-slate-100">
+  <main class="mx-auto max-w-md px-4 pb-24 pt-4" data-component="MainBrowseView">
+    <header class="mb-4 flex items-start justify-between gap-3 rounded-2xl border border-slate-800 bg-slate-900/80 p-4" data-component="ScreenHeader">
+      <div class="min-w-0">
+        <h1 class="text-xl font-bold leading-tight">What do you want to work on?</h1>
+        <p class="mt-1 text-sm text-slate-400">Pick a path — habits proven to work.</p>
+      </div>
+      <div class="shrink-0 rounded-full border border-emerald-300/30 bg-emerald-400/10 px-3 py-1 text-xs font-semibold text-emerald-300" data-component="SessionProgressPill">2 added today ✓</div>
+    </header>
+
+    <section class="mb-3 rounded-xl border border-slate-800 bg-slate-900 p-3" data-component="SearchBar">
+      <p class="text-sm text-slate-500">🔎 Try: morning walk · journaling · cold shower</p>
+    </section>
+
+    <section class="relative mb-4" data-component="QuickFilterChips">
+      <div class="flex gap-2 overflow-x-auto pb-1">
+        <span class="rounded-full border border-slate-700 bg-slate-800 px-3 py-1 text-xs whitespace-nowrap">✨ All</span>
+        <span class="rounded-full border border-amber-600 bg-amber-500/20 px-3 py-1 text-xs text-amber-200 whitespace-nowrap">⚡ Quick</span>
+        <span class="rounded-full border border-rose-600 bg-rose-500/20 px-3 py-1 text-xs text-rose-200 whitespace-nowrap">🔥 High ROI</span>
+        <span class="rounded-full border border-slate-700 bg-slate-800 px-3 py-1 text-xs whitespace-nowrap">🌅 Morning</span>
+        <span class="rounded-full border border-slate-700 bg-slate-800 px-3 py-1 text-xs whitespace-nowrap">🧠 Mental</span>
+        <span class="rounded-full border border-slate-700 bg-slate-800 px-3 py-1 text-xs whitespace-nowrap">💪 Fitness</span>
+        <span class="rounded-full border border-slate-700 bg-slate-800 px-3 py-1 text-xs whitespace-nowrap">😴 Sleep</span>
+      </div>
+    </section>
+
+    <!-- BrowseSections — non-first-time branch: GoalCollectionGrid + PopularSection -->
+    <section class="mb-4" data-component="GoalCollectionGrid">
+      <article class="rounded-2xl border border-amber-500/40 bg-gradient-to-br from-amber-300/20 to-amber-700/10 p-4" data-component="FeaturedGoalCard">
+        <p class="text-[10px] font-bold uppercase tracking-[0.1em] text-amber-200">Today's pick</p>
+        <div class="mt-2 flex items-center gap-3">
+          <span class="text-3xl">⚡</span>
+          <div>
+            <h2 class="text-lg font-bold text-amber-100">Wake up energized</h2>
+            <p class="text-xs text-amber-100/80">Morning routines that keep you sharp all day</p>
+          </div>
+        </div>
+        <div class="mt-3 grid grid-cols-3 gap-2" data-component="FeaturedGoalStarterRow">
+          <div class="rounded-lg border border-amber-300/30 bg-slate-900/50 p-2 text-[11px]"><div class="text-base">☀️</div>Sunlight</div>
+          <div class="rounded-lg border border-amber-300/30 bg-slate-900/50 p-2 text-[11px]"><div class="text-base">🚶</div>Walk</div>
+          <div class="rounded-lg border border-amber-300/30 bg-slate-900/50 p-2 text-[11px]"><div class="text-base">💧</div>Hydrate</div>
+        </div>
+        <div class="mt-3 inline-flex items-center gap-1 rounded-full bg-amber-200 px-3 py-1.5 text-xs font-semibold text-amber-900">Start your path → · 12 habits inside</div>
+      </article>
+
+      <div class="mt-3 flex gap-2 overflow-x-auto" data-component="GoalCardRail">
+        <div class="min-w-[140px] rounded-xl border border-sky-400/30 bg-sky-500/10 p-3 text-sm">
+          <div class="text-xl">😴</div>
+          <p class="mt-1 font-semibold text-sky-100">Sleep deeper</p>
+          <p class="text-[11px] text-sky-200/70">9 habits</p>
+        </div>
+        <div class="min-w-[140px] rounded-xl border border-emerald-400/30 bg-emerald-500/10 p-3 text-sm">
+          <div class="text-xl">🧘</div>
+          <p class="mt-1 font-semibold text-emerald-100">Stress less</p>
+          <p class="text-[11px] text-emerald-200/70">11 habits</p>
+        </div>
+        <div class="min-w-[140px] rounded-xl border border-violet-400/30 bg-violet-500/10 p-3 text-sm">
+          <div class="text-xl">🎯</div>
+          <p class="mt-1 font-semibold text-violet-100">Focus deeper</p>
+          <p class="text-[11px] text-violet-200/70">8 habits</p>
+        </div>
+        <div class="min-w-[140px] rounded-xl border border-rose-400/30 bg-rose-500/10 p-3 text-sm">
+          <div class="text-xl">💪</div>
+          <p class="mt-1 font-semibold text-rose-100">Get healthier</p>
+          <p class="text-[11px] text-rose-200/70">14 habits</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="mb-4" data-component="PopularSection">
+      <div class="mb-3 flex items-start justify-between gap-3 px-1" data-component="SectionHeader">
+        <div>
+          <h3 class="text-base font-bold">Quick wins to build momentum</h3>
+          <p class="text-xs text-slate-400">What people are starting this week</p>
+        </div>
+        <span class="text-sm font-medium text-emerald-300">See all</span>
+      </div>
+      <div class="flex gap-3 overflow-x-auto pb-1" data-component="TrendingCardRail">
+        <article class="min-w-[180px] rounded-xl border border-slate-700 bg-slate-900 p-3" data-component="TrendingCard">
+          <div class="flex items-center justify-between"><span class="text-2xl">📵</span><span class="text-[10px] font-semibold text-rose-300">🔥 Trending</span></div>
+          <p class="mt-2 text-sm font-semibold">No-phone morning</p>
+          <p class="mt-1 text-[11px] text-slate-400">Daily · 2 min · 🔬</p>
+          <button class="mt-3 w-full rounded-lg border border-emerald-400/40 bg-emerald-500/10 py-1.5 text-xs font-semibold text-emerald-200">+ Add</button>
+        </article>
+        <article class="min-w-[180px] rounded-xl border border-slate-700 bg-slate-900 p-3" data-component="TrendingCard">
+          <div class="flex items-center justify-between"><span class="text-2xl">🌙</span><span class="text-[10px] font-semibold text-rose-300">🔥 Trending</span></div>
+          <p class="mt-2 text-sm font-semibold">Evening reset</p>
+          <p class="mt-1 text-[11px] text-slate-400">Daily · 5 min</p>
+          <button class="mt-3 w-full rounded-lg border border-emerald-400/40 bg-emerald-500/10 py-1.5 text-xs font-semibold text-emerald-200">+ Add</button>
+        </article>
+        <article class="min-w-[180px] rounded-xl border border-slate-700 bg-slate-900 p-3" data-component="TrendingCard">
+          <div class="flex items-center justify-between"><span class="text-2xl">🧹</span><span class="text-[10px] font-semibold text-rose-300">🔥 Trending</span></div>
+          <p class="mt-2 text-sm font-semibold">10-min tidy</p>
+          <p class="mt-1 text-[11px] text-slate-400">Daily · 10 min</p>
+          <button class="mt-3 w-full rounded-lg border border-emerald-400/40 bg-emerald-500/10 py-1.5 text-xs font-semibold text-emerald-200">+ Add</button>
+        </article>
+      </div>
+    </section>
+
+    <section class="rounded-xl border border-slate-700 bg-slate-900 p-4" data-component="BrowseCategoriesLink">
+      <div class="flex items-center justify-between">
+        <span class="text-sm font-bold">Browse all categories</span>
+        <span class="text-emerald-300">→</span>
+      </div>
+    </section>
+
+    <!-- NOTE: No floating "Help me choose" pill / guided picker entry exists in current code. -->
+  </main>
+</body>
+</html>

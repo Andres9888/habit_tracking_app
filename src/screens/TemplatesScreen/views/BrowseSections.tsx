@@ -12,6 +12,7 @@ import { PopularSection } from '../components/PopularSection';
 import { StartHereCard } from '../components/StartHereCard';
 import { StarterHabitList } from '../components/StarterHabitList';
 import type { GoalCollection } from '../data/goalCollections';
+import type { LandingVariant } from '../hooks/useUserSegment';
 import { stagger } from './MainBrowseView.helpers';
 
 interface BrowseSectionsProps {
@@ -23,6 +24,7 @@ interface BrowseSectionsProps {
   importedTemplateIds: Set<string>;
   importingTemplateId: string | null;
   isFirstTimeUser: boolean;
+  landingVariant?: LandingVariant;
   onBrowseByGoal: () => void;
   onGoalSelect: (goal: GoalCollection) => void;
   onImport: (template: Doc<'templates'>) => void;

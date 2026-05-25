@@ -1,52 +1,58 @@
 /**
- * Renders sub-views (category drill, goal drill, see-all) based on view state
+ * Renders sub-views based on view state (category drill, goal drill, see-all, detail, picker)
  */
 
 import type { ReactElement } from 'react';
-import type { Doc } from '../../../../convex/_generated/dataModel';
+import { Text, View } from 'react-native';
 import { GOAL_COLLECTIONS } from '../data/goalCollections';
-import type { TemplateViewState } from '../hooks/useViewNavigation';
-import type { CategoryGridItem } from './CategoriesGridView';
+import { filterStarterTemplates } from '../data/starterHabits';
 import { CategoriesGridView } from './CategoriesGridView';
 import { CategoryDrillView } from './CategoryDrillView';
 import { GoalDrillView } from './GoalDrillView';
+import { GuidedPickerView } from './GuidedPickerView';
+import { HabitDetailView } from './HabitDetailView';
+import type { SubViewProps } from './renderSubView.types';
 import { SeeAllView } from './SeeAllView';
 import { StarterHabitsView } from './StarterHabitsView';
-import { filterStarterTemplates } from '../data/starterHabits';
 
-interface SubViewProps {
-  activeView: TemplateViewState;
-  allTemplates: Doc<'templates'>[] | undefined;
-  categoryGridItems: CategoryGridItem[];
-  importedTemplateIds: Set<string>;
-  importingTemplateId: string | null;
-  onBack: () => void;
-  onImport: (template: Doc<'templates'>) => void;
-  onOpenCategory: (categoryId: string) => void;
-  onPreview: (template: Doc<'templates'>) => void;
-}
+export type { SubViewProps } from './renderSubView.types';
 
 export function renderSubView(props: SubViewProps): ReactElement | null {
-  const {
-    activeView,
-    allTemplates = [],
-    categoryGridItems,
-    importedTemplateIds,
-    importingTemplateId,
-    onBack,
-    onImport,
-    onOpenCategory,
-    onPreview,
-  } = props;
+  const { activeView, allTemplates = [], categoryGridItems, importedTemplateIds, importingTemplateId, onBack, onCustomize, onImport, onOpenCategory, onPreview, onTrackDetailOpen } = props;
   const shared = { importedTemplateIds, importingTemplateId, onBack, onImport, onPreview };
 
-  if (activeView.type === 'starters') {
+  if (activeView.type === 'detail') {
+    const template = allTemplates.find((t) => t._id === activeView.templateId);
+    if (!template) return <View><Text>Template not found</Text></View>;
     return (
-      <StarterHabitsView
-        templates={filterStarterTemplates(allTemplates)}
-        {...shared}
+      <HabitDetailView
+        importedTemplateIds={importedTemplateIds}
+        importingTemplateId={importingTemplateId}
+        sourcePath={activeView.sourcePath}
+        template={template}
+        onBack={onBack}
+        onCustomize={onCustomize}
+        onImport={onImport}
+        onTrackOpen={onTrackDetailOpen}
       />
     );
+  }
+
+  if (activeView.type === 'guidedPicker') {
+    return (
+      <GuidedPickerView
+        allTemplates={allTemplates}
+        importedTemplateIds={importedTemplateIds}
+        importingTemplateId={importingTemplateId}
+        onBack={onBack}
+        onImport={onImport}
+        onPreview={onPreview}
+      />
+    );
+  }
+
+  if (activeView.type === 'starters') {
+    return <StarterHabitsView templates={filterStarterTemplates(allTemplates)} {...shared} />;
   }
 
   if (activeView.type === 'categories') {

@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BEFORE — Import Success (Toast)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>body{font-family:ui-sans-serif,system-ui,-apple-system,sans-serif !important}</style>
+</head>
+<body class="min-h-screen bg-slate-950 text-slate-100">
+  <main class="relative mx-auto min-h-[760px] max-w-md px-4 pb-32 pt-4" data-component="MainBrowseView">
+    <!-- Faded background landing to show toast appears over the browse surface -->
+    <header class="mb-4 flex items-start justify-between gap-3 rounded-2xl border border-slate-800 bg-slate-900/80 p-4 opacity-60" data-component="ScreenHeader">
+      <div class="min-w-0">
+        <h1 class="text-xl font-bold leading-tight">What do you want to work on?</h1>
+        <p class="mt-1 text-sm text-slate-400">Pick a path — habits proven to work.</p>
+      </div>
+      <div class="shrink-0 rounded-full border border-emerald-300/30 bg-emerald-400/10 px-3 py-1 text-xs font-semibold text-emerald-300" data-component="SessionProgressPill">2 added today ✓</div>
+    </header>
+
+    <section class="mb-3 rounded-xl border border-slate-800 bg-slate-900 p-3 opacity-60" data-component="SearchBar">
+      <p class="text-sm text-slate-500">🔎 Try: morning walk · journaling · cold shower</p>
+    </section>
+
+    <section class="mb-4 opacity-60" data-component="GoalCollectionGrid">
+      <article class="rounded-2xl border border-amber-500/40 bg-amber-400/10 p-4">
+        <p class="text-[10px] font-bold uppercase tracking-[0.1em] text-amber-200">Today's pick</p>
+        <h2 class="mt-1 text-base font-bold text-amber-100">⚡ Wake up energized</h2>
+        <p class="text-xs text-amber-100/80">Morning routines that keep you sharp all day</p>
+      </article>
+    </section>
+
+    <!-- TemplateAddedToast — anchored bottom of screen, slides up from below -->
+    <div class="absolute inset-x-4 bottom-4" data-component="TemplateAddedToast">
+      <div class="flex items-start gap-3 rounded-2xl border-l-4 border-l-sky-400 bg-[#1a1a2e] p-3 shadow-2xl">
+        <div class="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-sky-400/15 text-2xl">💧</div>
+        <div class="min-w-0 flex-1">
+          <p class="text-sm font-bold leading-tight text-white">Added 'Drink Water' to your habits</p>
+          <p class="mt-0.5 text-[11px] text-slate-300">Nice — you've added 2 today</p>
+        </div>
+        <div class="flex shrink-0 flex-col items-end gap-1">
+          <button class="rounded-full bg-sky-400 px-3 py-1.5 text-xs font-bold text-sky-950">View my habit</button>
+          <button class="text-[11px] font-semibold text-slate-300">Add another</button>
+        </div>
+      </div>
+    </div>
+
+    <!--
+      NOTE: A full-screen CelebrationOverlay also exists and shows on certain milestones
+      (e.g., first-import or session count thresholds) with confetti + "Go to habits" / "Add another".
+      The most common state on a routine import is the bottom toast shown above.
+    -->
+  </main>
+</body>
+</html>

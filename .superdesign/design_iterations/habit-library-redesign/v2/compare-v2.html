@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Habit Library — v1 vs v2 Comparison</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+    .frame {
+      width: 390px;
+      height: 760px;
+      border-radius: 28px;
+      overflow: hidden;
+      background: #0f172a;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.45), 0 0 0 8px #111827, 0 0 0 9px #1f2937;
+    }
+    .frame iframe { width: 100%; height: 100%; border: 0; background: #0f172a; }
+    .pane[hidden] { display: none; }
+    .tab-active { background: #0f172a !important; color: #fff !important; }
+  </style>
+</head>
+<body class="min-h-screen bg-slate-100 text-slate-900">
+  <header class="border-b border-slate-200 bg-white/80 backdrop-blur">
+    <div class="mx-auto flex max-w-6xl flex-col gap-2 px-6 py-5 sm:flex-row sm:items-end sm:justify-between">
+      <div>
+        <h1 class="text-2xl font-bold tracking-tight">Habit Library — v1 vs v2</h1>
+        <p class="mt-1 text-sm text-slate-500">Side-by-side comparison of v1 redesign mocks (left) vs v2 review-feedback updates (right). Same dark mobile frame, ~390px width.</p>
+      </div>
+      <div class="text-xs text-slate-500">
+        <span class="rounded-full bg-emerald-100 px-2 py-1 font-semibold text-emerald-800">v2 updates</span>
+        <span class="ml-2">Based on review feedback.</span>
+      </div>
+    </div>
+
+    <nav id="tabs" class="mx-auto flex max-w-6xl gap-2 overflow-x-auto px-6 pb-4">
+      <button data-tab="landing" class="tab tab-active rounded-full border border-slate-300 px-4 py-1.5 text-sm font-semibold text-slate-600">Landing</button>
+      <button data-tab="guided" class="tab rounded-full border border-slate-300 px-4 py-1.5 text-sm font-semibold text-slate-600">Guided Picker</button>
+      <button data-tab="detail" class="tab rounded-full border border-slate-300 px-4 py-1.5 text-sm font-semibold text-slate-600">Detail</button>
+      <button data-tab="success" class="tab rounded-full border border-slate-300 px-4 py-1.5 text-sm font-semibold text-slate-600">Success</button>
+    </nav>
+  </header>
+
+  <main class="mx-auto max-w-6xl px-6 py-8">
+
+    <!-- LANDING -->
+    <section class="pane" data-pane="landing">
+      <div class="mb-4 flex items-center justify-between text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">
+        <span>v1 — original redesign</span>
+        <span>v2 — review feedback</span>
+      </div>
+      <div class="grid grid-cols-1 gap-8 md:grid-cols-2 md:gap-6 lg:gap-10 place-items-center">
+        <div class="frame"><iframe src="../landing-new-user.html" title="v1: Landing (new user)"></iframe></div>
+        <div class="frame"><iframe src="./landing-new-user.html" title="v2: Landing (new user)"></iframe></div>
+      </div>
+      <div class="mx-auto mt-6 max-w-3xl rounded-2xl border border-slate-200 bg-white p-5 text-sm leading-relaxed text-slate-700">
+        <p class="mb-2 text-xs font-bold uppercase tracking-[0.1em] text-slate-500">What changed &amp; why</p>
+        <ul class="list-disc space-y-1 pl-5">
+          <li><b>Header: "What do you want to work on?" → "Start one small habit today"</b> — Reduces decision paralysis. The old header implied a big commitment; the new one frames it as low-stakes and invites a single action.</li>
+          <li><b>Subtitle: "Pick a path" → "Pick one that feels easy — you can always add more."</b> — Reassures new users they won't be locked in, lowering the bar to first action.</li>
+          <li><b>"Not sure? 30-sec guide" → "Help me choose"</b> — Simpler label; same floating pill, same guided-picker destination. "Help me choose" is clearer and shorter.</li>
+          <li><b>Added GoalCollectionGrid</b> — 2×2 visual grid (Health, Focus, Sleep, Morning) gives browse-by-goal a more scannable layout before the "Browse all" link.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- GUIDED PICKER -->
+    <section class="pane" data-pane="guided" hidden>
+      <div class="mb-4 flex items-center justify-between text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">
+        <span>v1 — three-question form</span>
+        <span>v2 — progressive disclosure</span>
+      </div>
+      <div class="grid grid-cols-1 gap-8 md:grid-cols-2 md:gap-6 lg:gap-10 place-items-center">
+        <div class="frame"><iframe src="../guided-picker.html" title="v1: Guided Picker"></iframe></div>
+        <div class="frame"><iframe src="./guided-picker.html" title="v2: Guided Picker"></iframe></div>
+      </div>
+      <div class="mx-auto mt-6 max-w-3xl rounded-2xl border border-slate-200 bg-white p-5 text-sm leading-relaxed text-slate-700">
+        <p class="mb-2 text-xs font-bold uppercase tracking-[0.1em] text-slate-500">What changed &amp; why</p>
+        <ul class="list-disc space-y-1 pl-5">
+          <li><b>Complete structural rework: form-then-results → progressive results</b> — v1 showed all 3 questions upfront in a left panel and results in a right panel. v2 shows only Q1 (area of life), with results appearing immediately below as the user taps a category. This reduces effort-to-first-result from ~3 taps to 1.</li>
+          <li><b>"Refine your results" expandable section</b> — Q2 (time) and Q3 (style) are collapsed by default. Users who want more precision can expand; users who are happy with area-only results can skip. This respects Hick's Law — fewer choices visible = faster decisions.</li>
+          <li><b>Each result card shows "Why this matches you" line</b> — Moves the match reasoning inline into each card instead of a separate MatchReasonList. Reduces eye-tracking distance and makes the value proposition per-template immediately clear.</li>
+          <li><b>Show 3 initially, "Show more" to expand</b> — Prevents overwhelm. The v1 showed all 3 in a separate panel; v2 shows 3 inline with a progressive-load button for 3 more.</li>
+          <li><b>Escape routes: "Edit answers" + "Browse all instead"</b> — At the bottom of results. Ensures users never feel trapped in the guided flow.</li>
+          <li><b>Adapted to dark mobile frame</b> — v1 was desktop-only light theme. v2 matches the app's actual dark mobile UI for realistic preview.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- DETAIL -->
+    <section class="pane" data-pane="detail" hidden>
+      <div class="mb-4 flex items-center justify-between text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">
+        <span>v1 — confidence detail</span>
+        <span>v2 — updated detail</span>
+      </div>
+      <div class="grid grid-cols-1 gap-8 md:grid-cols-2 md:gap-6 lg:gap-10 place-items-center">
+        <div class="frame"><iframe src="../habit-detail-confidence.html" title="v1: Habit Detail"></iframe></div>
+        <div class="frame"><iframe src="./habit-detail-confidence.html" title="v2: Habit Detail"></iframe></div>
+      </div>
+      <div class="mx-auto mt-6 max-w-3xl rounded-2xl border border-slate-200 bg-white p-5 text-sm leading-relaxed text-slate-700">
+        <p class="mb-2 text-xs font-bold uppercase tracking-[0.1em] text-slate-500">What changed &amp; why</p>
+        <ul class="list-disc space-y-1 pl-5">
+          <li><b>Back button (← instead of just ✕ close)</b> — Supports view-stack navigation. Users can return to the guided picker or browse list without losing context. The v1 close button implied dismissal; the back button implies a breadcrumb trail.</li>
+          <li><b>"Pairs well with" sourced from templatePairings</b> — v1 used the generic "habitPairings" label. v2 explicitly notes "From templatePairings" to clarify the data source and distinguish from user-created pairings. Subtle copy change but important for component architecture clarity.</li>
+          <li><b>Adapted to dark mobile frame</b> — v1 was a desktop light-theme wireframe. v2 matches the actual app's dark mobile UI with the same visual language as the other screens (slate-950 background, emerald accents, rounded cards).</li>
+          <li><b>Same confidence-first layout preserved</b> — Promise → Feasibility → Why it works → How you'll do it → Identity → Customize accordion. The structure was validated and unchanged.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- SUCCESS -->
+    <section class="pane" data-pane="success" hidden>
+      <div class="mb-4 flex items-center justify-between text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">
+        <span>v1 — success next-step</span>
+        <span>v2 — full-view success</span>
+      </div>
+      <div class="grid grid-cols-1 gap-8 md:grid-cols-2 md:gap-6 lg:gap-10 place-items-center">
+        <div class="frame"><iframe src="../success-next-step.html" title="v1: Success"></iframe></div>
+        <div class="frame"><iframe src="./success-next-step.html" title="v2: Success"></iframe></div>
+      </div>
+      <div class="mx-auto mt-6 max-w-3xl rounded-2xl border border-slate-200 bg-white p-5 text-sm leading-relaxed text-slate-700">
+        <p class="mb-2 text-xs font-bold uppercase tracking-[0.1em] text-slate-500">What changed &amp; why</p>
+        <ul class="list-disc space-y-1 pl-5">
+          <li><b>Full-screen view instead of a toast or inline card</b> — v1 used a desktop-layout with side panels. v2 takes over the entire screen after import. This creates a clear "moment" — the user just did something meaningful and the UI celebrates it without distracting them with layout chrome.</li>
+          <li><b>Clear "What's next?" action list</b> — Four structured next steps: Set reminder, Build a stack (pairing), Share, Add another. Each is a tappable row with icon, title, and subtitle. v1 had similar recommendations but they were text cards, not interactive action rows.</li>
+          <li><b>"Done" button closes the library entirely</b> — Sticky footer with a "Done" button. Users can explicitly dismiss the entire library flow and return to their daily view. v1 had "View today's plan" which is similar but the naming was ambiguous.</li>
+          <li><b>First-import variant</b> — Shows a highlighted amber card: "First habit — nice work 🎉" with "Take the 30-second guide" as the primary CTA. Activated via <code>?first=true</code> query param. This emphasizes the guided picker as the natural next step for users who just added their very first habit.</li>
+        </ul>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="mx-auto max-w-6xl px-6 pb-10 text-xs text-slate-500">
+    <p>v1 files: <code>../landing-new-user.html</code>, <code>../guided-picker.html</code>, <code>../habit-detail-confidence.html</code>, <code>../success-next-step.html</code></p>
+    <p class="mt-1">v2 files: <code>./landing-new-user.html</code>, <code>./guided-picker.html</code>, <code>./habit-detail-confidence.html</code>, <code>./success-next-step.html</code></p>
+  </footer>
+
+  <script>
+    const tabs = document.querySelectorAll('#tabs .tab');
+    const panes = document.querySelectorAll('section.pane');
+    tabs.forEach(t => t.addEventListener('click', () => {
+      tabs.forEach(x => x.classList.remove('tab-active'));
+      t.classList.add('tab-active');
+      const target = t.getAttribute('data-tab');
+      panes.forEach(p => {
+        p.hidden = p.getAttribute('data-pane') !== target;
+      });
+    }));
+  </script>
+</body>
+</html>

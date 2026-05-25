@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BEFORE — Habit Library Landing (New User)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>body{font-family:ui-sans-serif,system-ui,-apple-system,sans-serif !important}</style>
+</head>
+<body class="min-h-screen bg-slate-950 text-slate-100">
+  <main class="mx-auto max-w-md px-4 pb-24 pt-4" data-component="MainBrowseView">
+    <header class="mb-4 rounded-2xl border border-slate-800 bg-slate-900/80 p-4" data-component="ScreenHeader">
+      <h1 class="text-xl font-bold leading-tight">What do you want to work on?</h1>
+      <p class="mt-1 text-sm text-slate-400">Pick a path — habits proven to work.</p>
+      <!-- SessionProgressPill is conditionally rendered when sessionImportCount > 0; new users typically have count = 0 so it is omitted here. -->
+    </header>
+
+    <section class="mb-3 rounded-xl border border-slate-800 bg-slate-900 p-3" data-component="SearchBar">
+      <p class="text-sm text-slate-500">🔎 Try: morning walk · journaling · cold shower</p>
+    </section>
+
+    <section class="relative mb-4" data-component="QuickFilterChips">
+      <div class="flex gap-2 overflow-x-auto pb-1">
+        <span class="rounded-full border border-slate-700 bg-slate-800 px-3 py-1 text-xs whitespace-nowrap">✨ All</span>
+        <span class="rounded-full border border-amber-600 bg-amber-500/20 px-3 py-1 text-xs text-amber-200 whitespace-nowrap">⚡ Quick</span>
+        <span class="rounded-full border border-rose-600 bg-rose-500/20 px-3 py-1 text-xs text-rose-200 whitespace-nowrap">🔥 High ROI</span>
+        <span class="rounded-full border border-slate-700 bg-slate-800 px-3 py-1 text-xs whitespace-nowrap">🌅 Morning</span>
+        <span class="rounded-full border border-slate-700 bg-slate-800 px-3 py-1 text-xs whitespace-nowrap">🧠 Mental</span>
+        <span class="rounded-full border border-slate-700 bg-slate-800 px-3 py-1 text-xs whitespace-nowrap">💪 Fitness</span>
+      </div>
+    </section>
+
+    <!-- BrowseSections — first-time-user branch (isFirstTimeUser && starterTemplates.length > 0) -->
+    <section class="mb-4 rounded-2xl border border-emerald-300/30 bg-emerald-400/10 p-4" data-component="StarterHabitList">
+      <p class="text-[10px] font-bold tracking-[0.08em] text-emerald-300">NEW HERE?</p>
+      <h2 class="mt-1 text-lg font-bold text-white">Start with these 5</h2>
+      <p class="mt-1 text-sm text-emerald-100/80">A simple starter pack — proven, easy to stick with.</p>
+      <div class="mt-3 space-y-2">
+        <article class="flex items-center justify-between gap-2 rounded-xl border border-slate-700 bg-slate-900 px-3 py-2">
+          <div class="flex items-center gap-2 min-w-0">
+            <div class="grid h-9 w-9 place-items-center rounded-lg bg-sky-500/20 text-lg">💧</div>
+            <div class="min-w-0">
+              <p class="truncate text-sm font-semibold">Drink Water</p>
+              <p class="text-[11px] text-slate-400">2 min · daily</p>
+            </div>
+          </div>
+          <button class="rounded-full bg-emerald-500/90 px-3 py-1 text-xs font-semibold text-emerald-950">Add</button>
+        </article>
+        <article class="flex items-center justify-between gap-2 rounded-xl border border-slate-700 bg-slate-900 px-3 py-2">
+          <div class="flex items-center gap-2 min-w-0">
+            <div class="grid h-9 w-9 place-items-center rounded-lg bg-violet-500/20 text-lg">🧘</div>
+            <div class="min-w-0">
+              <p class="truncate text-sm font-semibold">2-Min Meditate</p>
+              <p class="text-[11px] text-slate-400">2 min · daily</p>
+            </div>
+          </div>
+          <button class="rounded-full bg-emerald-500/90 px-3 py-1 text-xs font-semibold text-emerald-950">Add</button>
+        </article>
+        <article class="flex items-center justify-between gap-2 rounded-xl border border-slate-700 bg-slate-900 px-3 py-2">
+          <div class="flex items-center gap-2 min-w-0">
+            <div class="grid h-9 w-9 place-items-center rounded-lg bg-emerald-500/20 text-lg">🚶</div>
+            <div class="min-w-0">
+              <p class="truncate text-sm font-semibold">10-Min Walk</p>
+              <p class="text-[11px] text-slate-400">10 min · daily</p>
+            </div>
+          </div>
+          <button class="rounded-full bg-emerald-500/90 px-3 py-1 text-xs font-semibold text-emerald-950">Add</button>
+        </article>
+        <article class="flex items-center justify-between gap-2 rounded-xl border border-slate-700 bg-slate-900 px-3 py-2">
+          <div class="flex items-center gap-2 min-w-0">
+            <div class="grid h-9 w-9 place-items-center rounded-lg bg-amber-500/20 text-lg">📓</div>
+            <div class="min-w-0">
+              <p class="truncate text-sm font-semibold">Daily Journal</p>
+              <p class="text-[11px] text-slate-400">3 min · daily</p>
+            </div>
+          </div>
+          <button class="rounded-full bg-emerald-500/90 px-3 py-1 text-xs font-semibold text-emerald-950">Add</button>
+        </article>
+        <article class="flex items-center justify-between gap-2 rounded-xl border border-slate-700 bg-slate-900 px-3 py-2">
+          <div class="flex items-center gap-2 min-w-0">
+            <div class="grid h-9 w-9 place-items-center rounded-lg bg-fuchsia-500/20 text-lg">📵</div>
+            <div class="min-w-0">
+              <p class="truncate text-sm font-semibold">No-Phone Hour</p>
+              <p class="text-[11px] text-slate-400">60 min · daily</p>
+            </div>
+          </div>
+          <button class="rounded-full bg-emerald-500/90 px-3 py-1 text-xs font-semibold text-emerald-950">Add</button>
+        </article>
+      </div>
+      <p class="mt-3 text-center text-sm font-medium text-slate-300">Or browse by goal →</p>
+    </section>
+
+    <section class="rounded-xl border border-slate-700 bg-slate-900 p-4" data-component="BrowseCategoriesLink">
+      <div class="flex items-center justify-between">
+        <span class="text-sm font-bold">Browse all categories</span>
+        <span class="text-emerald-300">→</span>
+      </div>
+    </section>
+
+    <!-- NOTE: No floating "Help me choose / 30-sec guide" pill exists in current code. -->
+  </main>
+</body>
+</html>

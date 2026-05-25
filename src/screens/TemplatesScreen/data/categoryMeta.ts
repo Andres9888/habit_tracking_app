@@ -40,6 +40,9 @@ export const CATEGORY_META: Record<string, CategoryMeta> = {
   recovery: { bgColor: T.gold.bg, borderColor: T.gold.border, icon: '🔄', isPremium: false, label: 'Recovery', subtitle: 'Rest and restore for sustainable performance', textColor: T.gold.text },
   sleep: { bgColor: T.blue.bg, borderColor: T.blue.border, icon: '😴', isPremium: false, label: 'Sleep', subtitle: 'Wind down and optimize rest for peak recovery', textColor: T.blue.text },
   social: { bgColor: T.gold.bg, borderColor: T.gold.border, icon: '👥', isPremium: false, label: 'Social', subtitle: 'Nurture relationships and community connections', textColor: T.gold.text },
+  relationships: { bgColor: T.gold.bg, borderColor: T.gold.border, icon: '❤️', isPremium: false, label: 'Relationships', subtitle: 'Nurture meaningful connections daily', textColor: T.gold.text },
+  environmental_design: { bgColor: T.blue.bg, borderColor: T.blue.border, icon: '🏠', isPremium: false, label: 'Environment', subtitle: 'Design your space for better habits', textColor: T.blue.text },
+  subtraction: { bgColor: T.purple.bg, borderColor: T.purple.border, icon: '✂️', isPremium: false, label: 'Subtraction', subtitle: 'Remove what holds you back', textColor: T.purple.text },
 };
 /* eslint-enable max-len */
 

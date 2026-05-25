@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Habit Library — Before vs After</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+    .frame {
+      width: 390px;
+      height: 760px;
+      border-radius: 28px;
+      overflow: hidden;
+      background: #0f172a;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.45), 0 0 0 8px #111827, 0 0 0 9px #1f2937;
+    }
+    .frame iframe { width: 100%; height: 100%; border: 0; background: #0f172a; }
+    .pane[hidden] { display: none; }
+    .tab-active { background: #0f172a; color: #fff; }
+  </style>
+</head>
+<body class="min-h-screen bg-slate-100 text-slate-900">
+  <header class="border-b border-slate-200 bg-white/80 backdrop-blur">
+    <div class="mx-auto flex max-w-6xl flex-col gap-2 px-6 py-5 sm:flex-row sm:items-end sm:justify-between">
+      <div>
+        <h1 class="text-2xl font-bold tracking-tight">Habit Library — Before vs After</h1>
+        <p class="mt-1 text-sm text-slate-500">Side-by-side structural comparison of the current app vs the redesign mocks. Same Tailwind, same dark mobile frame, same ~390px width.</p>
+      </div>
+      <div class="text-xs text-slate-500">
+        <span class="rounded-full bg-slate-200 px-2 py-1 font-semibold text-slate-700">Mocks only</span>
+        <span class="ml-2">No app source modified.</span>
+      </div>
+    </div>
+
+    <nav id="tabs" class="mx-auto flex max-w-6xl gap-2 overflow-x-auto px-6 pb-4">
+      <button data-tab="landing-new" class="tab tab-active rounded-full border border-slate-300 px-4 py-1.5 text-sm font-semibold text-slate-600">Landing (new)</button>
+      <button data-tab="landing-returning" class="tab rounded-full border border-slate-300 px-4 py-1.5 text-sm font-semibold text-slate-600">Landing (returning)</button>
+      <button data-tab="habit-detail" class="tab rounded-full border border-slate-300 px-4 py-1.5 text-sm font-semibold text-slate-600">Habit detail</button>
+      <button data-tab="success" class="tab rounded-full border border-slate-300 px-4 py-1.5 text-sm font-semibold text-slate-600">Success</button>
+    </nav>
+  </header>
+
+  <main class="mx-auto max-w-6xl px-6 py-8">
+
+    <!-- LANDING NEW USER -->
+    <section class="pane" data-pane="landing-new">
+      <div class="mb-4 flex items-center justify-between text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">
+        <span>Before — current app</span>
+        <span>After — redesign</span>
+      </div>
+      <div class="grid grid-cols-1 gap-8 md:grid-cols-2 md:gap-6 lg:gap-10 place-items-center">
+        <div class="frame"><iframe src="./before-landing-new-user.html" title="Before: Landing (new user)"></iframe></div>
+        <div class="frame"><iframe src="../landing-new-user.html" title="After: Landing (new user)"></iframe></div>
+      </div>
+      <div class="mx-auto mt-6 max-w-3xl rounded-2xl border border-slate-200 bg-white p-5 text-sm leading-relaxed text-slate-700">
+        <p class="mb-2 text-xs font-bold uppercase tracking-[0.1em] text-slate-500">Key changes</p>
+        <ul class="list-disc space-y-1 pl-5">
+          <li><b>Adds a floating "Not sure? 30-sec guide" pill</b> — a guided-picker entry point. The current app has no such affordance: users must scroll the starter list or browse by goal cold.</li>
+          <li><b>Tightens StarterHabitList copy and visual rhythm</b> — same "Start with these 5" framing, but the redesign collapses to 3 visible rows so the guided-picker pill remains the dominant next step.</li>
+          <li><b>Same MainBrowseView shell</b> (header → search → chips → starter pack → "Browse all categories"). Structure is preserved on purpose; the redesign is additive at this level.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- LANDING RETURNING USER -->
+    <section class="pane" data-pane="landing-returning" hidden>
+      <div class="mb-4 flex items-center justify-between text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">
+        <span>Before — current app</span>
+        <span>After — redesign</span>
+      </div>
+      <div class="grid grid-cols-1 gap-8 md:grid-cols-2 md:gap-6 lg:gap-10 place-items-center">
+        <div class="frame"><iframe src="./before-landing-returning-user.html" title="Before: Landing (returning user)"></iframe></div>
+        <div class="frame"><iframe src="../landing-returning-user.html" title="After: Landing (returning user)"></iframe></div>
+      </div>
+      <div class="mx-auto mt-6 max-w-3xl rounded-2xl border border-slate-200 bg-white p-5 text-sm leading-relaxed text-slate-700">
+        <p class="mb-2 text-xs font-bold uppercase tracking-[0.1em] text-slate-500">Key changes</p>
+        <ul class="list-disc space-y-1 pl-5">
+          <li><b>Adds a persistent "Help me choose" pill</b> for returning users too — current app drops them straight into goal/popular browsing with no triage path.</li>
+          <li><b>Simplifies the FeaturedGoalCard CTA</b> — current shows "Start your path → · 12 habits inside"; redesign trims the count copy and emphasizes the inline 3-starter row as the real CTA.</li>
+          <li><b>Compresses the popular rail</b> — current uses richer TrendingCard cells (icon + trending tag + Add button per card); redesign reduces to titles for scanning, deferring "Add" to the detail screen.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- HABIT DETAIL -->
+    <section class="pane" data-pane="habit-detail" hidden>
+      <div class="mb-4 flex items-center justify-between text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">
+        <span>Before — TemplatePreviewModal</span>
+        <span>After — Confidence detail</span>
+      </div>
+      <div class="grid grid-cols-1 gap-8 md:grid-cols-2 md:gap-6 lg:gap-10 place-items-center">
+        <div class="frame"><iframe src="./before-habit-detail.html" title="Before: Habit detail"></iframe></div>
+        <div class="frame" style="height:760px;width:560px;background:#f7f7f5;box-shadow:0 12px 40px rgba(0,0,0,0.25), 0 0 0 8px #e7e5e4, 0 0 0 9px #d6d3d1;border-radius:28px;overflow:hidden;"><iframe src="../habit-detail-confidence.html" title="After: Habit detail (confidence)"></iframe></div>
+      </div>
+      <div class="mx-auto mt-6 max-w-3xl rounded-2xl border border-slate-200 bg-white p-5 text-sm leading-relaxed text-slate-700">
+        <p class="mb-2 text-xs font-bold uppercase tracking-[0.1em] text-slate-500">Key changes</p>
+        <ul class="list-disc space-y-1 pl-5">
+          <li><b>Reframes the sheet from "customize this template" to "should you commit to this habit?"</b> — current opens straight on icon/color/reminder/advanced options; redesign opens on a Promise card with feasibility meta (time, style, difficulty) and primary "Add habit" CTA.</li>
+          <li><b>Adds confidence-building sections</b>: <i>Why this works</i> (with a research citation), <i>How you'll do it</i> (cue + start-small + tip), <i>Who you'll become</i> (identity statement). None of these exist today.</li>
+          <li><b>Demotes customization</b> — name, icon, color, reminder, advanced options collapse into a single <i>Customize</i> accordion. Reduces the cognitive load on the moment of decision.</li>
+          <li><b>Adds "Pairs well with"</b> — habit-stacking suggestions, absent in the current modal.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- SUCCESS -->
+    <section class="pane" data-pane="success" hidden>
+      <div class="mb-4 flex items-center justify-between text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">
+        <span>Before — TemplateAddedToast</span>
+        <span>After — What's-next surface</span>
+      </div>
+      <div class="grid grid-cols-1 gap-8 md:grid-cols-2 md:gap-6 lg:gap-10 place-items-center">
+        <div class="frame"><iframe src="./before-success.html" title="Before: Import success toast"></iframe></div>
+        <div class="frame" style="height:760px;width:560px;background:#f7f7f5;box-shadow:0 12px 40px rgba(0,0,0,0.25), 0 0 0 8px #e7e5e4, 0 0 0 9px #d6d3d1;border-radius:28px;overflow:hidden;"><iframe src="../success-next-step.html" title="After: Success next-step"></iframe></div>
+      </div>
+      <div class="mx-auto mt-6 max-w-3xl rounded-2xl border border-slate-200 bg-white p-5 text-sm leading-relaxed text-slate-700">
+        <p class="mb-2 text-xs font-bold uppercase tracking-[0.1em] text-slate-500">Key changes</p>
+        <ul class="list-disc space-y-1 pl-5">
+          <li><b>Replaces a transient bottom toast with a dedicated "What's next?" surface</b> — current behavior dismisses in ~5s with two actions ("View my habit" / "Add another"). Redesign keeps the user in a deliberate post-add flow.</li>
+          <li><b>Promotes second-action prompts</b>: set reminder time, build a stack (pair with another habit), share, add another. Today these are buried in the detail modal or require the user to navigate manually.</li>
+          <li><b>Keeps the celebratory tone but moves it from confetti overlay to a calm, persistent green confirmation card</b>, reducing motion-heavy interruption while still confirming the win.</li>
+        </ul>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="mx-auto max-w-6xl px-6 pb-10 text-xs text-slate-500">
+    <p>Files: <code>before-landing-new-user.html</code>, <code>before-landing-returning-user.html</code>, <code>before-habit-detail.html</code>, <code>before-success.html</code> — paired against the existing <code>../landing-*.html</code>, <code>../habit-detail-confidence.html</code>, <code>../success-next-step.html</code>.</p>
+  </footer>
+
+  <script>
+    const tabs = document.querySelectorAll('#tabs .tab');
+    const panes = document.querySelectorAll('section.pane');
+    tabs.forEach(t => t.addEventListener('click', () => {
+      tabs.forEach(x => x.classList.remove('tab-active'));
+      t.classList.add('tab-active');
+      const target = t.getAttribute('data-tab');
+      panes.forEach(p => {
+        p.hidden = p.getAttribute('data-pane') !== target;
+      });
+    }));
+  </script>
+</body>
+</html>

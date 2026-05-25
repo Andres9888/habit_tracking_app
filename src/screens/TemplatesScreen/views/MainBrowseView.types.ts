@@ -8,8 +8,12 @@ import type { AnimatedStyle } from 'react-native-reanimated';
 import type { Doc } from '../../../../convex/_generated/dataModel';
 import type { ChipCategory } from '../components/QuickFilterChips';
 import type { GoalCollection } from '../data/goalCollections';
+import type { LandingVariant } from '../hooks/useUserSegment';
 
 export interface MainBrowseViewProps {
+  helpMeChooseCopy?: string;
+  landingVariant?: LandingVariant;
+  onHelpMeChoose?: () => void;
   browseCategoriesLink: ReactNode;
   featuredBadgeLabel?: string;
   featuredGoalId: string;
