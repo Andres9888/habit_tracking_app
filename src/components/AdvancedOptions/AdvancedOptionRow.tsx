@@ -1,4 +1,4 @@
-/** Single row inside the Advanced Options section: icon · title/subtitle/description · edit affordance. */
+/** Advanced Options row: whole row is the tap target; pressed state washes the row + tints the hint. */
 import type { ReactNode } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import * as Haptics from 'expo-haptics';
@@ -41,62 +41,62 @@ export function AdvancedOptionRow({
   return (
     <Pressable
       accessibilityHint={a11yHint}
-      accessibilityLabel={title}
+      accessibilityLabel={`${title}, tap to edit`}
       accessibilityRole='button'
       className='flex-row items-center gap-3 py-3.5'
       style={({ pressed }) => ({
         borderTopWidth: isFirst ? 0 : StyleSheet.hairlineWidth,
         borderTopColor: colors.cardBorder,
         minHeight: 64,
-        opacity: pressed ? 0.6 : 1,
+        backgroundColor: pressed ? colors.gray[200] : 'transparent',
+        borderRadius: 12,
       })}
       onPress={handlePress}
     >
-      <View
-        className='items-center justify-center rounded-xl'
-        style={{ backgroundColor: iconBackground, height: 36, width: 36 }}
-      >
-        {icon}
-      </View>
-      <View className='flex-1'>
-        <Text
-          numberOfLines={1}
-          style={{
-            ...typography.body,
-            fontWeight: fontWeights.semibold,
-            color: colors.text.primary,
-          }}
-        >
-          {title}
-        </Text>
-        <Text
-          numberOfLines={1}
-          style={{
-            ...typography.caption,
-            color: colors.text.secondary,
-            marginTop: 2,
-          }}
-        >
-          {subtitle}
-        </Text>
-        {description ? (
-          <Text
-            accessibilityElementsHidden
-            importantForAccessibility='no'
-            numberOfLines={2}
-            style={{
-              ...typography.caption,
-              fontSize: 12,
-              lineHeight: 16,
-              color: colors.text.tertiary,
-              marginTop: 4,
-            }}
-          >
-            {description}
-          </Text>
-        ) : null}
-      </View>
-      <AdvancedOptionEditAffordance />
+      {({ pressed }) => (
+        <>
+          <View className='h-9 w-9 items-center justify-center rounded-xl' style={{ backgroundColor: iconBackground }}>{icon}</View>
+          <View className='flex-1'>
+            <Text
+              numberOfLines={1}
+              style={{
+                ...typography.body,
+                fontWeight: fontWeights.semibold,
+                color: colors.text.primary,
+              }}
+            >
+              {title}
+            </Text>
+            <Text
+              numberOfLines={1}
+              style={{
+                ...typography.caption,
+                color: colors.text.secondary,
+                marginTop: 2,
+              }}
+            >
+              {subtitle}
+            </Text>
+            {description ? (
+              <Text
+                accessibilityElementsHidden
+                importantForAccessibility='no'
+                numberOfLines={2}
+                style={{
+                  ...typography.caption,
+                  fontSize: 12,
+                  lineHeight: 16,
+                  color: colors.text.tertiary,
+                  marginTop: 4,
+                }}
+              >
+                {description}
+              </Text>
+            ) : null}
+          </View>
+          <AdvancedOptionEditAffordance pressed={pressed} />
+        </>
+      )}
     </Pressable>
   );
 }
