@@ -33,3 +33,14 @@ export const BOTTOM_SHEET_SPRING_CONFIG = springs.bottomSheet;
 /** Gesture thresholds for dismissal */
 export const DISMISS_THRESHOLD = 120;
 export const VELOCITY_THRESHOLD = 800;
+
+/**
+ * Per-variant exit animation duration (ms). Used to defer unmount until the
+ * animation in runExitAnimation has time to play out. Slight buffer included
+ * so the closing animation always finishes before the component leaves the tree.
+ */
+export const EXIT_DURATIONS = {
+  bottomSheet: 450,
+  fullScreen: 320,
+  centerAlert: 220,
+} as const;

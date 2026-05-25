@@ -3,10 +3,11 @@
  * Variants: Bottom Sheet, Full Screen, Center Alert
  */
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Modal as RNModal, StyleSheet, View } from 'react-native';
 import type { ModalProps } from './Modal.types';
 import { styles } from './Modal.styles';
+import { EXIT_DURATIONS } from './Modal.constants';
 import { useReduceMotion } from './useReduceMotion';
 import { useModalAnimations } from './useModalAnimations';
 import { useModalStyles } from './useModalStyles';
@@ -28,6 +29,20 @@ export function Modal({
   skipAnimation = false,
 }: ModalProps) {
   const reduceMotion = skipAnimation || useReduceMotion(respectReduceMotion);
+  const [shouldRender, setShouldRender] = useState(visible);
+
+  useEffect(() => {
+    if (visible) {
+      setShouldRender(true);
+      return;
+    }
+    if (reduceMotion) {
+      setShouldRender(false);
+      return;
+    }
+    const timeout = setTimeout(() => setShouldRender(false), EXIT_DURATIONS[variant]);
+    return () => clearTimeout(timeout);
+  }, [visible, reduceMotion, variant]);
   const animationValues = useModalAnimations({
     backdropOpacity,
     reduceMotion,
@@ -79,7 +94,7 @@ export function Modal({
     </>
   );
 
-  if (!visible) return null;
+  if (!shouldRender) return null;
 
   if (inline) {
     return (
@@ -106,7 +121,7 @@ export function Modal({
       statusBarTranslucent
       transparent
       animationType='none'
-      visible={visible}
+      visible={shouldRender}
       onRequestClose={onClose}
     >
       <View
