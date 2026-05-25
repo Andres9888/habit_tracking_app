@@ -52,31 +52,31 @@ export function animateEmoji(
   levelChanged: boolean
 ) {
   if (levelChanged) {
-    emojiOpacity.value = withTiming(0.3, {
-      duration: durations.quick,
-      easing: Easing.out(Easing.ease),
+    // Choreographed with RankEmojiTile cross-fade. Single, soft motion —
+    // gentle scale dip + subtle tilt, no wobble, no overshoot. Matches the
+    // cubic ease of the big tile so both emojis read as one event.
+    const SOFT_EASE = Easing.bezier(0.4, 0, 0.2, 1);
+    emojiOpacity.value = withTiming(0.55, {
+      duration: 140,
+      easing: SOFT_EASE,
     });
-    emojiScale.value = withTiming(0.6, {
-      duration: durations.quick,
-      easing: Easing.out(Easing.ease),
+    emojiScale.value = withTiming(0.85, {
+      duration: 140,
+      easing: SOFT_EASE,
     });
     emojiRotation.value = withSequence(
-      withTiming(-8, { duration: 80, easing: Easing.inOut(Easing.ease) }),
-      withTiming(8, { duration: 80, easing: Easing.inOut(Easing.ease) }),
-      withTiming(0, { duration: 60, easing: Easing.out(Easing.ease) })
+      withTiming(-4, { duration: 140, easing: SOFT_EASE }),
+      withTiming(0, { duration: 200, easing: SOFT_EASE })
     );
     emojiOpacity.value = withDelay(
-      150,
-      withTiming(1, {
-        duration: durations.standard,
-        easing: Easing.out(Easing.ease),
-      })
+      120,
+      withTiming(1, { duration: 220, easing: SOFT_EASE })
     );
     emojiScale.value = withDelay(
-      150,
+      120,
       withSequence(
-        withSpring(1.4, springs.bouncy),
-        withSpring(1, springs.bouncy)
+        withTiming(1.1, { duration: 140, easing: SOFT_EASE }),
+        withSpring(1, springs.gentle)
       )
     );
   } else {

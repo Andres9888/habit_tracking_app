@@ -9,6 +9,10 @@ import {
   type PartialProgressEmojiSet,
   type StrengthLevelKey,
 } from '@/utils/progressEmojis';
+import {
+  STRENGTH_LEVEL_THRESHOLDS,
+  STRENGTH_TIER_INDEX,
+} from '@/utils/strengthThresholds';
 
 import type { LevelConfig, SizeConfig } from './StrengthProgressBar.types';
 
@@ -20,35 +24,35 @@ const LEVEL_META: LevelMeta[] = [
     colorBg: colors.strength.startingLight,
     key: 'starting',
     label: 'Starting',
-    threshold: 0,
+    threshold: STRENGTH_LEVEL_THRESHOLDS[STRENGTH_TIER_INDEX.starting],
   },
   {
     color: colors.strength.building,
     colorBg: colors.strength.buildingLight,
     key: 'building',
     label: 'Building',
-    threshold: 20,
+    threshold: STRENGTH_LEVEL_THRESHOLDS[STRENGTH_TIER_INDEX.building],
   },
   {
     color: colors.strength.developing,
     colorBg: colors.strength.developingLight,
     key: 'developing',
     label: 'Developing',
-    threshold: 40,
+    threshold: STRENGTH_LEVEL_THRESHOLDS[STRENGTH_TIER_INDEX.developing],
   },
   {
     color: colors.strength.strong,
     colorBg: colors.strength.strongLight,
     key: 'strong',
     label: 'Strong',
-    threshold: 60,
+    threshold: STRENGTH_LEVEL_THRESHOLDS[STRENGTH_TIER_INDEX.strong],
   },
   {
     color: colors.strength.automatic,
     colorBg: colors.strength.automaticLight,
     key: 'automatic',
     label: 'Automatic',
-    threshold: 80,
+    threshold: STRENGTH_LEVEL_THRESHOLDS[STRENGTH_TIER_INDEX.automatic],
   },
 ];
 
@@ -88,7 +92,7 @@ export const SIZE_CONFIG: Record<'compact' | 'default' | 'large', SizeConfig> =
     },
   };
 
-export const DIVIDER_POSITIONS = [20, 40, 60, 80];
+export const DIVIDER_POSITIONS = STRENGTH_LEVEL_THRESHOLDS.slice(1);
 
 export function getCurrentLevel(
   strength: number,

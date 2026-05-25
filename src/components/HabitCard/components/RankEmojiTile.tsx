@@ -5,7 +5,7 @@
  * `size` prop configures edge length; all internals scale from it.
  */
 
-import React, { useEffect, useState } from 'react';
+import React, { memo, useEffect, useMemo, useState } from 'react';
 import { View, Text, Platform } from 'react-native';
 import Animated, {
   Easing,
@@ -26,7 +26,10 @@ import {
 } from './RankEmojiTile.styles';
 import type { RankEmojiTileProps } from './RankEmojiTile.types';
 
-const TRANSITION_MS = 400;
+const TRANSITION_MS = 360;
+// Material-style symmetric bezier — softer perceived fade than Easing.out(cubic),
+// matched to the mini-emoji curve so the two land as one event.
+const TRANSITION_EASING = Easing.bezier(0.4, 0, 0.2, 1);
 
 const glow = (t: RankTier, scale: number) =>
   Platform.OS === 'android'
@@ -47,30 +50,30 @@ const Gradient = ({ tier, radius }: { tier: RankTier; radius: number }) => (
   />
 );
 
-export function RankEmojiTile({
+function RankEmojiTileInner({
   icon,
   strength,
   size = DEFAULT_TILE_SIZE,
 }: RankEmojiTileProps) {
   const reducedMotion = useReducedMotion();
-  const v = getSizeVars(size);
-  const [{ from, to }, setTiers] = useState(() => {
-    const t = getRankTier(strength);
-    return { from: t, to: t };
-  });
+  const v = useMemo(() => getSizeVars(size), [size]);
+  const nextTier = useMemo(() => getRankTier(strength), [strength]);
+  const [{ from, to }, setTiers] = useState(() => ({
+    from: nextTier,
+    to: nextTier,
+  }));
   const progress = useSharedValue(1);
   const shimmer = useSharedValue(0);
 
   useEffect(() => {
-    const next = getRankTier(strength);
-    if (next.name === to.name) return;
-    setTiers({ from: to, to: next });
+    if (nextTier.name === to.name) return;
+    setTiers({ from: to, to: nextTier });
     progress.value = 0;
     progress.value = withTiming(1, {
       duration: reducedMotion ? 0 : TRANSITION_MS,
-      easing: Easing.out(Easing.cubic),
+      easing: TRANSITION_EASING,
     });
-  }, [strength, to, progress, reducedMotion]);
+  }, [nextTier, to, progress, reducedMotion]);
 
   useEffect(() => {
     if (reducedMotion || to.shimmerSpeed === 0) {
@@ -83,6 +86,7 @@ export function RankEmojiTile({
       -1,
       false
     );
+    return () => cancelAnimation(shimmer);
   }, [to, shimmer, reducedMotion]);
 
   const toStyle = useAnimatedStyle(() => ({ opacity: progress.value }));
@@ -147,3 +151,5 @@ export function RankEmojiTile({
     </View>
   );
 }
+
+export const RankEmojiTile = memo(RankEmojiTileInner);

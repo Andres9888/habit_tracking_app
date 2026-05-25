@@ -1,9 +1,11 @@
 /**
  * LoL-flavored rank palette for the home habit card emoji tile.
  *
- * Thresholds mirror STRENGTH_LEVELS (and materialTier.ts) so rank, chain
- * material, and strength label stay in lockstep.
+ * Thresholds derive from STRENGTH_LEVEL_THRESHOLDS so rank, chain material,
+ * and strength label stay in lockstep — never diverge.
  */
+
+import { STRENGTH_LEVEL_THRESHOLDS } from '@/utils/strengthThresholds';
 
 export type RankName = 'bronze' | 'silver' | 'gold' | 'platinum' | 'diamond';
 
@@ -87,10 +89,12 @@ export const RANK_TIERS = {
   diamond: DIAMOND,
 } as const;
 
+const [, T_SILVER, T_GOLD, T_PLATINUM, T_DIAMOND] = STRENGTH_LEVEL_THRESHOLDS;
+
 export function getRankTier(strengthPercent: number): RankTier {
-  if (strengthPercent >= 80) return DIAMOND;
-  if (strengthPercent >= 60) return PLATINUM;
-  if (strengthPercent >= 40) return GOLD;
-  if (strengthPercent >= 20) return SILVER;
+  if (strengthPercent >= T_DIAMOND) return DIAMOND;
+  if (strengthPercent >= T_PLATINUM) return PLATINUM;
+  if (strengthPercent >= T_GOLD) return GOLD;
+  if (strengthPercent >= T_SILVER) return SILVER;
   return Number.isFinite(strengthPercent) ? BRONZE : DEFAULT_ACCENT;
 }
