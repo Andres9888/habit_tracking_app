@@ -1,0 +1,596 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Analytics Section Headings — Before / After Theme Fix</title>
+    <link
+      rel="preconnect"
+      href="https://fonts.googleapis.com"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=DM+Sans:wght@500;600;700&display=swap"
+    />
+    <style>
+      :root {
+        --light-bg: #f5f1ed;
+        --light-card: #edeae5;
+        --light-border: #ddd8d2;
+        --light-text-primary: #2d2a26;
+        --light-text-secondary: #6b6560;
+        --dark-bg: #111827;
+        --dark-card: #1f2937;
+        --dark-border: #374151;
+        --dark-text-primary: #f9fafb;
+        --dark-text-secondary: #9ca3af;
+        --strength-automatic: #15793c;
+        --strength-strong: #0891b2;
+        --strength-developing: #d97706;
+        --strength-building: #9a5504;
+        --strength-starting: #4d7a0a;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: "Inter", system-ui, sans-serif;
+        background: #ece8e1;
+        color: #1f1d1a;
+      }
+
+      .page {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 40px 28px 56px;
+      }
+
+      .page-header {
+        margin-bottom: 28px;
+      }
+
+      .eyebrow {
+        font-size: 12px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: #6b6560;
+        font-weight: 600;
+      }
+
+      .page-title {
+        margin: 6px 0 4px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 30px;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+      }
+
+      .page-subtitle {
+        margin: 0;
+        color: #4a4540;
+        font-size: 15px;
+        line-height: 1.5;
+        max-width: 760px;
+      }
+
+      .stage {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 20px;
+        margin-top: 28px;
+      }
+
+      .frame {
+        border-radius: 22px;
+        overflow: hidden;
+        box-shadow:
+          0 1px 0 rgba(0, 0, 0, 0.05),
+          0 18px 38px -22px rgba(0, 0, 0, 0.35);
+        background: #fff;
+      }
+
+      .frame-meta {
+        padding: 16px 18px 14px;
+        border-bottom: 1px solid #e6e0d8;
+        background: #fffefb;
+      }
+
+      .frame-meta .label {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: #6b6560;
+      }
+
+      .frame-meta .title {
+        margin: 4px 0 2px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 16px;
+        font-weight: 700;
+        color: #1f1d1a;
+      }
+
+      .frame-meta .note {
+        margin: 0;
+        font-size: 12.5px;
+        line-height: 1.45;
+        color: #4a4540;
+      }
+
+      .frame-meta .verdict {
+        display: inline-block;
+        margin-top: 8px;
+        padding: 3px 9px;
+        border-radius: 999px;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+      }
+
+      .verdict.ok {
+        background: rgba(21, 121, 60, 0.12);
+        color: #15793c;
+      }
+
+      .verdict.bug {
+        background: rgba(220, 38, 38, 0.12);
+        color: #b91c1c;
+      }
+
+      .device {
+        padding: 22px 18px 26px;
+        min-height: 540px;
+      }
+
+      .device.light {
+        background: var(--light-bg);
+      }
+
+      .device.dark {
+        background: var(--dark-bg);
+      }
+
+      .device-status {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 11.5px;
+        font-weight: 600;
+        margin-bottom: 14px;
+        opacity: 0.75;
+      }
+
+      .device.light .device-status {
+        color: var(--light-text-secondary);
+      }
+
+      .device.dark .device-status {
+        color: var(--dark-text-secondary);
+      }
+
+      .screen-title {
+        font-family: "DM Sans", sans-serif;
+        font-size: 22px;
+        font-weight: 700;
+        margin: 0 0 4px;
+      }
+
+      .screen-subtitle {
+        margin: 0 0 18px;
+        font-size: 12.5px;
+        line-height: 1.4;
+      }
+
+      .device.light .screen-title {
+        color: var(--light-text-primary);
+      }
+
+      .device.light .screen-subtitle {
+        color: var(--light-text-secondary);
+      }
+
+      .device.dark .screen-title {
+        color: var(--dark-text-primary);
+      }
+
+      .device.dark .screen-subtitle {
+        color: var(--dark-text-secondary);
+      }
+
+      .section-heading {
+        font-family: "DM Sans", sans-serif;
+        font-size: 16px;
+        font-weight: 700;
+        letter-spacing: -0.005em;
+        margin: 16px 0 10px;
+      }
+
+      .device.light .section-heading {
+        color: var(--light-text-primary);
+      }
+
+      .device.dark.before .section-heading {
+        color: var(--light-text-primary);
+      }
+
+      .device.dark.after .section-heading {
+        color: var(--dark-text-primary);
+      }
+
+      .device.dark.before .section-heading::after {
+        content: " ← unreadable";
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        color: #f87171;
+      }
+
+      .card {
+        border-radius: 16px;
+        padding: 14px 14px 16px;
+        border: 1px solid transparent;
+      }
+
+      .device.light .card {
+        background: var(--light-card);
+        border-color: var(--light-border);
+      }
+
+      .device.dark .card {
+        background: var(--dark-card);
+        border-color: var(--dark-border);
+      }
+
+      .bars {
+        display: flex;
+        align-items: flex-end;
+        gap: 8px;
+        height: 90px;
+        padding: 8px 4px 4px;
+      }
+
+      .bar {
+        flex: 1;
+        border-radius: 6px 6px 2px 2px;
+        background: var(--strength-developing);
+      }
+
+      .bar:nth-child(1) {
+        height: 72%;
+        background: var(--strength-automatic);
+      }
+
+      .bar:nth-child(2) {
+        height: 56%;
+        background: var(--strength-strong);
+      }
+
+      .bar:nth-child(3) {
+        height: 78%;
+        background: var(--strength-developing);
+      }
+
+      .bar:nth-child(4) {
+        height: 38%;
+        background: var(--strength-building);
+      }
+
+      .bar:nth-child(5) {
+        height: 24%;
+        background: var(--strength-starting);
+      }
+
+      .bar-labels {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 8px;
+        font-size: 10.5px;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+      }
+
+      .device.light .bar-labels {
+        color: var(--light-text-secondary);
+      }
+
+      .device.dark .bar-labels {
+        color: var(--dark-text-secondary);
+      }
+
+      .rank-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 9px 4px;
+        font-size: 13px;
+        font-weight: 500;
+      }
+
+      .rank-row + .rank-row {
+        border-top: 1px solid;
+      }
+
+      .device.light .rank-row + .rank-row {
+        border-color: rgba(0, 0, 0, 0.06);
+      }
+
+      .device.dark .rank-row + .rank-row {
+        border-color: rgba(255, 255, 255, 0.06);
+      }
+
+      .rank-name {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+      }
+
+      .medal {
+        width: 22px;
+        text-align: center;
+        font-size: 14px;
+      }
+
+      .strength-pct {
+        font-variant-numeric: tabular-nums;
+        font-weight: 700;
+      }
+
+      .device.light .rank-row {
+        color: var(--light-text-primary);
+      }
+
+      .device.dark .rank-row {
+        color: var(--dark-text-primary);
+      }
+
+      .device.light .strength-pct {
+        color: var(--strength-automatic);
+      }
+
+      .device.dark .strength-pct {
+        color: #34d399;
+      }
+
+      .legend {
+        margin-top: 32px;
+        padding: 18px 22px;
+        background: #fffefb;
+        border: 1px solid #e6e0d8;
+        border-radius: 14px;
+        font-size: 13px;
+        line-height: 1.6;
+      }
+
+      .legend code {
+        font-family: "JetBrains Mono", ui-monospace, monospace;
+        font-size: 12px;
+        background: rgba(0, 0, 0, 0.06);
+        padding: 1px 6px;
+        border-radius: 4px;
+      }
+
+      .legend strong {
+        font-weight: 700;
+      }
+
+      @media (max-width: 1000px) {
+        .stage {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <header class="page-header">
+        <div class="eyebrow">commit dc5ece75 · fix(analytics)</div>
+        <h1 class="page-title">Themeable section headings in Analytics</h1>
+        <p class="page-subtitle">
+          Four section headings (Strength Distribution, 30-Day Trend, Compliance
+          Heatmap, Habit Rankings) had <code>color: colors.text.primary</code>
+          baked into StyleSheet from the static light-mode palette. In dark
+          mode, that rendered near-black text on a near-black background. Fix
+          routes the heading color through <code>useThemeColors()</code> so it
+          tracks the active theme.
+        </p>
+      </header>
+
+      <section class="stage">
+        <!-- LIGHT MODE: works in both versions -->
+        <article class="frame">
+          <header class="frame-meta">
+            <div class="label">Light mode · unchanged</div>
+            <div class="title">Already correct</div>
+            <p class="note">
+              Static color matched the light palette, so light mode looked fine
+              before and after.
+            </p>
+            <span class="verdict ok">No change</span>
+          </header>
+          <div class="device light">
+            <div class="device-status">
+              <span>9:41</span>
+              <span>Analytics</span>
+            </div>
+            <h2 class="screen-title">Analytics</h2>
+            <p class="screen-subtitle">Weekly performance · 7 habits tracked</p>
+
+            <h3 class="section-heading">Strength Distribution</h3>
+            <div class="card">
+              <div class="bars">
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+              </div>
+              <div class="bar-labels">
+                <span>AUTO</span><span>STRONG</span><span>DEV</span><span
+                  >BUILD</span
+                ><span>START</span>
+              </div>
+            </div>
+
+            <h3 class="section-heading">Habit Rankings</h3>
+            <div class="card">
+              <div class="rank-row">
+                <div class="rank-name">
+                  <span class="medal">🥇</span><span>Morning meditation</span>
+                </div>
+                <span class="strength-pct">92%</span>
+              </div>
+              <div class="rank-row">
+                <div class="rank-name">
+                  <span class="medal">🥈</span><span>Read 20 pages</span>
+                </div>
+                <span class="strength-pct">81%</span>
+              </div>
+              <div class="rank-row">
+                <div class="rank-name">
+                  <span class="medal">🥉</span><span>Cold shower</span>
+                </div>
+                <span class="strength-pct">74%</span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- DARK MODE: BEFORE -->
+        <article class="frame">
+          <header class="frame-meta">
+            <div class="label">Dark mode · before</div>
+            <div class="title">Headings nearly invisible</div>
+            <p class="note">
+              <code>styles.sectionTitle</code> baked
+              <code>#2D2A26</code> from the static light palette into the
+              StyleSheet — illegible on the dark canvas.
+            </p>
+            <span class="verdict bug">Theme bug</span>
+          </header>
+          <div class="device dark before">
+            <div class="device-status">
+              <span>9:41</span>
+              <span>Analytics</span>
+            </div>
+            <h2 class="screen-title">Analytics</h2>
+            <p class="screen-subtitle">Weekly performance · 7 habits tracked</p>
+
+            <h3 class="section-heading">Strength Distribution</h3>
+            <div class="card">
+              <div class="bars">
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+              </div>
+              <div class="bar-labels">
+                <span>AUTO</span><span>STRONG</span><span>DEV</span><span
+                  >BUILD</span
+                ><span>START</span>
+              </div>
+            </div>
+
+            <h3 class="section-heading">Habit Rankings</h3>
+            <div class="card">
+              <div class="rank-row">
+                <div class="rank-name">
+                  <span class="medal">🥇</span><span>Morning meditation</span>
+                </div>
+                <span class="strength-pct">92%</span>
+              </div>
+              <div class="rank-row">
+                <div class="rank-name">
+                  <span class="medal">🥈</span><span>Read 20 pages</span>
+                </div>
+                <span class="strength-pct">81%</span>
+              </div>
+              <div class="rank-row">
+                <div class="rank-name">
+                  <span class="medal">🥉</span><span>Cold shower</span>
+                </div>
+                <span class="strength-pct">74%</span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- DARK MODE: AFTER -->
+        <article class="frame">
+          <header class="frame-meta">
+            <div class="label">Dark mode · after</div>
+            <div class="title">Routed through useThemeColors()</div>
+            <p class="note">
+              Heading color now reads from the active theme
+              (<code>#F9FAFB</code> in dark), matching the pattern already used
+              by the “Weekly Insights” heading.
+            </p>
+            <span class="verdict ok">Fixed</span>
+          </header>
+          <div class="device dark after">
+            <div class="device-status">
+              <span>9:41</span>
+              <span>Analytics</span>
+            </div>
+            <h2 class="screen-title">Analytics</h2>
+            <p class="screen-subtitle">Weekly performance · 7 habits tracked</p>
+
+            <h3 class="section-heading">Strength Distribution</h3>
+            <div class="card">
+              <div class="bars">
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+              </div>
+              <div class="bar-labels">
+                <span>AUTO</span><span>STRONG</span><span>DEV</span><span
+                  >BUILD</span
+                ><span>START</span>
+              </div>
+            </div>
+
+            <h3 class="section-heading">Habit Rankings</h3>
+            <div class="card">
+              <div class="rank-row">
+                <div class="rank-name">
+                  <span class="medal">🥇</span><span>Morning meditation</span>
+                </div>
+                <span class="strength-pct">92%</span>
+              </div>
+              <div class="rank-row">
+                <div class="rank-name">
+                  <span class="medal">🥈</span><span>Read 20 pages</span>
+                </div>
+                <span class="strength-pct">81%</span>
+              </div>
+              <div class="rank-row">
+                <div class="rank-name">
+                  <span class="medal">🥉</span><span>Cold shower</span>
+                </div>
+                <span class="strength-pct">74%</span>
+              </div>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <aside class="legend">
+        <strong>Affected headings:</strong> Strength Distribution · 30-Day Trend
+        · Compliance Heatmap · Habit Rankings ·
+        <br />
+        <strong>Files:</strong>
+        <code>src/screens/AnalyticsScreen/components/ChartSections.tsx</code> ·
+        <code>src/screens/AnalyticsScreen/components/InsightsSections.tsx</code>
+      </aside>
+    </div>
+  </body>
+</html>
