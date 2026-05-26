@@ -1,0 +1,587 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Habit Library UX Improvements — Mock</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Literata:wght@600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #f5f1ed;
+      --card: #edeae5;
+      --border: #ddd8d2;
+      --text-1: #2d2a26;
+      --text-2: #6b6560;
+      --text-3: #6e6660;
+      --action: #059669;
+      --action-bg: #d1fae5;
+      --action-border: #6ee7b7;
+      --ff: 'DM Sans', sans-serif;
+      --ff-display: 'Literata', serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #1c1917;
+      font-family: var(--ff);
+      min-height: 100vh;
+      padding: 32px 20px 64px;
+      color: #fafaf9;
+    }
+    .page-title {
+      text-align: center;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #a8a29e;
+      margin-bottom: 8px;
+    }
+    .page-sub {
+      text-align: center;
+      font-size: 14px;
+      color: #78716c;
+      max-width: 720px;
+      margin: 0 auto 32px;
+      line-height: 1.5;
+    }
+    .row {
+      display: flex;
+      gap: 40px;
+      justify-content: center;
+      flex-wrap: wrap;
+      align-items: flex-start;
+    }
+    .wrap { display: flex; flex-direction: column; align-items: center; }
+    .label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .label.a { color: #22c55e; }
+    .label.b { color: #f59e0b; }
+    .phone {
+      width: 390px;
+      height: 844px;
+      background: var(--bg);
+      border-radius: 44px;
+      overflow: hidden;
+      box-shadow: 0 0 0 2px #3a3632, 0 32px 80px rgba(0,0,0,0.55);
+      display: flex;
+      flex-direction: column;
+    }
+    .status {
+      height: 54px;
+      padding: 16px 28px 0;
+      display: flex;
+      justify-content: space-between;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-1);
+    }
+    .scroll {
+      flex: 1;
+      overflow-y: auto;
+      scrollbar-width: none;
+    }
+    .scroll::-webkit-scrollbar { display: none; }
+
+    /* Header */
+    .hdr {
+      padding: 8px 20px 12px;
+      position: relative;
+    }
+    .hdr h1 {
+      font-family: var(--ff-display);
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--text-1);
+      line-height: 1.15;
+      padding-right: 72px;
+    }
+    .hdr .sub {
+      font-size: 13px;
+      color: var(--text-2);
+      margin-top: 4px;
+      line-height: 1.4;
+      padding-right: 48px;
+    }
+    .pill {
+      position: absolute;
+      top: 10px;
+      right: 16px;
+      background: var(--action-bg);
+      border: 1px solid var(--action-border);
+      color: var(--action);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 6px 10px;
+      border-radius: 999px;
+    }
+    .close {
+      position: absolute;
+      top: 48px;
+      right: 16px;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: rgba(0,0,0,0.06);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-2);
+      font-size: 18px;
+    }
+
+    /* Search + chips */
+    .search {
+      margin: 0 16px 10px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-3);
+      font-size: 14px;
+    }
+    .chip-rail {
+      display: flex;
+      gap: 8px;
+      padding: 0 16px 12px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .chip-rail::-webkit-scrollbar { display: none; }
+    .chip {
+      flex-shrink: 0;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-1);
+    }
+    .chip.on {
+      background: var(--text-1);
+      color: #fff;
+      border-color: var(--text-1);
+    }
+
+    /* Stack banner */
+    .stack {
+      margin: 0 16px 14px;
+      padding: 14px;
+      border-radius: 14px;
+      background: var(--action-bg);
+      border: 1px solid var(--action-border);
+    }
+    .stack .ey {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: #047857;
+      margin-bottom: 4px;
+    }
+    .stack .t {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-1);
+    }
+    .stack .s {
+      font-size: 12px;
+      color: var(--text-2);
+      margin-top: 4px;
+      line-height: 1.4;
+    }
+
+    /* Section */
+    .sec-h {
+      padding: 8px 16px 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+    .sec-h .t {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--text-1);
+    }
+    .sec-h .sub {
+      font-size: 11px;
+      color: var(--text-2);
+      margin-top: 2px;
+    }
+    .sec-h .link {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--action);
+    }
+
+    /* Trending cards */
+    .rail {
+      display: flex;
+      gap: 12px;
+      padding: 0 16px 16px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .rail::-webkit-scrollbar { display: none; }
+    .tcard {
+      flex-shrink: 0;
+      width: 160px;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px;
+    }
+    .tcard.added {
+      background: #f0fdf6;
+      border-color: #a7f3d0;
+    }
+    .tcard .ico {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      margin-bottom: 8px;
+    }
+    .tcard .nm {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-1);
+      line-height: 1.25;
+    }
+    .tcard .meta {
+      font-size: 10px;
+      color: var(--text-3);
+      margin-top: 4px;
+    }
+    .tcard .add {
+      margin-top: 10px;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--action);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      margin-left: auto;
+    }
+    .tcard .done {
+      margin-top: 10px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--action);
+      text-align: right;
+    }
+
+    /* Collapsible paths */
+    .paths-toggle {
+      padding: 0 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      cursor: pointer;
+    }
+    .chev {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: rgba(0,0,0,0.05);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      color: var(--text-2);
+      margin-top: 6px;
+      flex-shrink: 0;
+    }
+    .goal-chips {
+      display: flex;
+      gap: 8px;
+      padding: 4px 16px 14px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .goal-chips::-webkit-scrollbar { display: none; }
+    .gchip {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 12px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+      border: 1px solid var(--border);
+    }
+    .gchip.fe { border-width: 2px; border-color: #78350f; }
+
+    /* Featured goal (expanded state - hidden in mock A) */
+    .featured {
+      margin: 0 16px 12px;
+      border-radius: 16px;
+      overflow: hidden;
+      background: linear-gradient(135deg, #fef3c7, rgba(120,53,15,0.12));
+      border: 1px solid #fcd34d;
+      padding: 16px;
+    }
+    .featured .badge {
+      font-size: 10px;
+      font-weight: 700;
+      color: #78350f;
+      letter-spacing: 0.05em;
+    }
+    .featured .row2 {
+      display: flex;
+      gap: 12px;
+      margin-top: 10px;
+      align-items: center;
+    }
+    .featured .em { font-size: 36px; }
+    .featured .lbl {
+      font-size: 18px;
+      font-weight: 700;
+      color: #78350f;
+    }
+    .featured .pr {
+      font-size: 12px;
+      color: #92400e;
+      margin-top: 2px;
+    }
+
+    /* Starter list */
+    .starter-banner {
+      margin: 0 16px 12px;
+      padding: 14px;
+      border-radius: 14px;
+      background: var(--action-bg);
+      border: 1px solid var(--action-border);
+    }
+    .starter-banner .ey {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: #047857;
+    }
+    .starter-banner .t {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--text-1);
+      margin-top: 4px;
+    }
+    .habit-row {
+      margin: 0 16px 8px;
+      padding: 10px 12px;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .habit-row .ri {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+    }
+    .habit-row .info { flex: 1; }
+    .habit-row .nm { font-size: 13px; font-weight: 700; color: var(--text-1); }
+    .habit-row .meta { font-size: 11px; color: var(--text-3); margin-top: 2px; }
+
+    .browse-link {
+      margin: 12px 16px 24px;
+      padding: 14px;
+      border-radius: 12px;
+      border: 1px dashed var(--border);
+      text-align: center;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-2);
+    }
+
+    .legend {
+      max-width: 900px;
+      margin: 40px auto 0;
+      background: #292524;
+      border-radius: 14px;
+      padding: 20px 24px;
+      border-left: 4px solid #22c55e;
+    }
+    .legend h3 { font-size: 16px; margin-bottom: 10px; }
+    .legend ul { color: #a8a29e; font-size: 13px; line-height: 1.7; padding-left: 18px; }
+    .legend li strong { color: #fafaf9; }
+  </style>
+</head>
+<body>
+  <p class="page-title">Habit Library — UX Improvements Mock</p>
+  <p class="page-sub">Shipped layout: returning users get quick wins first + collapsed transformation paths. First-time users keep full goal hero.</p>
+
+  <div class="row">
+    <!-- RETURNING USER -->
+    <div class="wrap">
+      <div class="label a">Returning user · 2 habits added this visit</div>
+      <div class="phone">
+        <div class="status"><span>9:41</span><span>●●●</span></div>
+        <div class="scroll">
+          <div class="hdr">
+            <div class="pill">+2 this visit</div>
+            <div class="close">×</div>
+            <h1>Habit Library</h1>
+            <p class="sub">2 habits added this visit — keep building your stack.</p>
+          </div>
+
+          <div class="search">🔍 Search by goal, habit name, or category</div>
+          <div class="chip-rail">
+            <span class="chip on">All</span>
+            <span class="chip">🌅 Morning</span>
+            <span class="chip">🧠 Mind</span>
+            <span class="chip">💪 Fitness</span>
+            <span class="chip">😴 Sleep</span>
+          </div>
+
+          <div class="stack">
+            <div class="ey">BUILDING YOUR STACK</div>
+            <div class="t">2 habits added — great momentum</div>
+            <div class="s">Pair habits that support the same transformation for best results.</div>
+          </div>
+
+          <div class="sec-h">
+            <div>
+              <div class="t">Quick wins to build momentum</div>
+              <div class="sub">What people are starting this week</div>
+            </div>
+            <span class="link">See all</span>
+          </div>
+          <div class="rail">
+            <div class="tcard">
+              <div class="ico" style="background:#fef3c7">🌅</div>
+              <div class="nm">Morning Sunlight</div>
+              <div class="meta">🔥 Daily · 5 min</div>
+              <div class="add">+</div>
+            </div>
+            <div class="tcard added">
+              <div class="ico" style="background:#eff6ff">💧</div>
+              <div class="nm">Drink Water First</div>
+              <div class="meta">Daily · 1 min</div>
+              <div class="done">✓ Added</div>
+            </div>
+            <div class="tcard">
+              <div class="ico" style="background:#f0fdf4">🧘</div>
+              <div class="nm">5-Min Meditation</div>
+              <div class="meta">Daily · 5 min</div>
+              <div class="add">+</div>
+            </div>
+          </div>
+
+          <div class="paths-toggle">
+            <div class="sec-h" style="padding:8px 0 10px; flex:1">
+              <div>
+                <div class="t">Pick your transformation</div>
+                <div class="sub">Tap a goal below or expand for full paths</div>
+              </div>
+            </div>
+            <div class="chev">▼</div>
+          </div>
+          <div class="goal-chips">
+            <span class="gchip fe" style="background:#fef3c7;color:#78350f">⚡ Wake up energized</span>
+            <span class="gchip" style="background:#eff6ff;color:#1e3a5f">😴 Sleep deeper</span>
+            <span class="gchip" style="background:#f0fdf4;color:#14532d">🧘 Stress less</span>
+            <span class="gchip" style="background:#faf5ff;color:#581c87">🎯 Focus deeper</span>
+            <span class="gchip" style="background:#fff1f2;color:#881337">💪 Get healthier</span>
+          </div>
+
+          <div class="browse-link">Browse all 14 categories →</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FIRST-TIME USER -->
+    <div class="wrap">
+      <div class="label b">First-time user · starter path</div>
+      <div class="phone">
+        <div class="status"><span>9:41</span><span>●●●</span></div>
+        <div class="scroll">
+          <div class="hdr">
+            <div class="close">×</div>
+            <h1>What do you want to work on?</h1>
+            <p class="sub">Science-backed habits to start your transformation.</p>
+          </div>
+
+          <div class="search">🔍 Try: morning walk · journaling · cold shower</div>
+          <div class="chip-rail">
+            <span class="chip on">All</span>
+            <span class="chip">🌅 Morning</span>
+            <span class="chip">🧠 Mind</span>
+            <span class="chip">💪 Fitness</span>
+          </div>
+
+          <div class="starter-banner">
+            <div class="ey">NEW HERE?</div>
+            <div class="t">Start with these 5</div>
+            <div class="s" style="font-size:12px;color:var(--text-2);margin-top:4px">A simple starter pack — proven, easy to stick with.</div>
+          </div>
+          <div class="habit-row">
+            <div class="ri" style="background:#fef3c7">🌅</div>
+            <div class="info"><div class="nm">Morning Sunlight</div><div class="meta">5 min · Daily</div></div>
+            <div class="add" style="width:32px;height:32px;border-radius:50%;background:var(--action);color:#fff;display:flex;align-items:center;justify-content:center">+</div>
+          </div>
+          <div class="habit-row">
+            <div class="ri" style="background:#eff6ff">💧</div>
+            <div class="info"><div class="nm">Drink Water First</div><div class="meta">1 min · Daily</div></div>
+            <div class="add" style="width:32px;height:32px;border-radius:50%;background:var(--action);color:#fff;display:flex;align-items:center;justify-content:center">+</div>
+          </div>
+          <div class="habit-row">
+            <div class="ri" style="background:#f0fdf4">📝</div>
+            <div class="info"><div class="nm">Gratitude Journal</div><div class="meta">3 min · Daily</div></div>
+            <div class="add" style="width:32px;height:32px;border-radius:50%;background:var(--action);color:#fff;display:flex;align-items:center;justify-content:center">+</div>
+          </div>
+
+          <div class="sec-h">
+            <div>
+              <div class="t">Pick your transformation</div>
+              <div class="sub">Curated stacks for common goals</div>
+            </div>
+          </div>
+          <div class="featured">
+            <div class="badge">TODAY'S PICK</div>
+            <div class="row2">
+              <div class="em">⚡</div>
+              <div>
+                <div class="lbl">Wake up energized</div>
+                <div class="pr">Morning routines that keep you sharp all day</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="browse-link">Browse all 14 categories →</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="legend">
+    <h3>What changed (left = returning, right = first-time)</h3>
+    <ul>
+      <li><strong>Quick wins first</strong> — Popular carousel moves above transformation paths for returning users.</li>
+      <li><strong>Collapsed paths</strong> — Goal grid hidden by default; goal chips give one-tap entry to each transformation.</li>
+      <li><strong>Stack builder banner</strong> — Appears after importing habits in the same session.</li>
+      <li><strong>Dynamic header</strong> — Title and subtitle reflect session progress.</li>
+      <li><strong>First-time unchanged priority</strong> — Starter list + expanded featured goal remain upfront.</li>
+    </ul>
+  </div>
+</body>
+</html>

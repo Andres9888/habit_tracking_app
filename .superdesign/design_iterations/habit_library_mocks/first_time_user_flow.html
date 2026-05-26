@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>First-Time User Flow — Habit Library Mock</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,600;9..40,700&family=Literata:wght@600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="habit_library_mock_theme.css" />
+  <style>body.phone-only { background: #0c0a09; }</style>
+</head>
+<body class="phone-only">
+  <div class="phone" id="phone">
+    <div class="status"><span>9:41</span><span>●●●</span></div>
+    <div class="scroll">
+      <div class="scroll-inner" id="scrollInner">
+        <div class="hdr">
+          <div class="close">×</div>
+          <h1>What do you want to work on?</h1>
+          <p class="sub">Science-backed habits to start your transformation.</p>
+        </div>
+        <div class="search">🔍 Try: morning walk · journaling · cold shower</div>
+        <div class="chip-rail">
+          <span class="chip on">All</span>
+          <span class="chip">🌅 Morning</span>
+          <span class="chip">🧠 Mind</span>
+          <span class="chip">💪 Fitness</span>
+        </div>
+        <div class="starter-banner">
+          <div class="ey">NEW HERE?</div>
+          <div class="t">Start with these 5</div>
+          <div class="s" style="font-size:12px;color:var(--text-2);margin-top:4px">A simple starter pack — proven, easy to stick with.</div>
+        </div>
+        <div class="habit-row" id="row1">
+          <div class="ri" style="background:#fef3c7">🌅</div>
+          <div class="info"><div class="nm">Morning Sunlight</div><div class="meta">5 min · Daily</div></div>
+          <div class="add" style="width:32px;height:32px;border-radius:50%;background:var(--action);color:#fff;display:flex;align-items:center;justify-content:center">+</div>
+        </div>
+        <div class="habit-row" id="row2">
+          <div class="ri" style="background:#eff6ff">💧</div>
+          <div class="info"><div class="nm">Drink Water First</div><div class="meta">1 min · Daily</div></div>
+          <div class="add" style="width:32px;height:32px;border-radius:50%;background:var(--action);color:#fff;display:flex;align-items:center;justify-content:center">+</div>
+        </div>
+        <div class="habit-row" id="row3">
+          <div class="ri" style="background:#f0fdf4">📝</div>
+          <div class="info"><div class="nm">Gratitude Journal</div><div class="meta">3 min · Daily</div></div>
+          <div class="add" style="width:32px;height:32px;border-radius:50%;background:var(--action);color:#fff;display:flex;align-items:center;justify-content:center">+</div>
+        </div>
+        <div class="sec-h">
+          <div>
+            <div class="t">Pick your transformation</div>
+            <div class="sub">Curated stacks for common goals</div>
+          </div>
+        </div>
+        <div class="featured" id="featured">
+          <div class="badge">TODAY'S PICK</div>
+          <div class="row2">
+            <div class="em">⚡</div>
+            <div>
+              <div class="lbl">Wake up energized</div>
+              <div class="pr">Morning routines that keep you sharp all day</div>
+            </div>
+          </div>
+        </div>
+        <div class="sec-h">
+          <div>
+            <div class="t">Quick wins to build momentum</div>
+            <div class="sub">What people are starting this week</div>
+          </div>
+        </div>
+        <div class="rail">
+          <div class="tcard"><div class="ico" style="background:#fef3c7">🌅</div><div class="nm">Morning Sunlight</div><div class="meta">Daily · 5 min</div><div class="add">+</div></div>
+          <div class="tcard"><div class="ico" style="background:#eff6ff">💧</div><div class="nm">Drink Water First</div><div class="meta">Daily · 1 min</div><div class="add">+</div></div>
+        </div>
+        <div class="browse-link">Browse all 14 categories →</div>
+      </div>
+    </div>
+    <div class="cursor" id="cursor"></div>
+    <div class="caption" id="caption"></div>
+  </div>
+  <script>
+    const scrollInner = document.getElementById('scrollInner');
+    const cursor = document.getElementById('cursor');
+    const caption = document.getElementById('caption');
+    let started = false;
+    function setScroll(y) { scrollInner.style.transform = `translateY(-${y}px)`; scrollInner.style.transition = 'transform 0.7s ease'; }
+    function moveCursor(x, y) { cursor.classList.add('show'); cursor.style.transform = `translate(${x}px, ${y}px)`; }
+    function hideCursor() { cursor.classList.remove('show'); }
+    function showCap(text) { if (!text) { caption.classList.remove('show'); return; } caption.textContent = text; caption.classList.add('show'); }
+    function highlightRow(id) {
+      const el = document.getElementById(id);
+      el.style.boxShadow = '0 0 0 3px rgba(5,150,105,0.35)';
+      el.style.borderColor = '#6ee7b7';
+      setTimeout(() => { el.style.boxShadow = ''; el.style.borderColor = ''; }, 600);
+    }
+    const steps = [
+      { t: 0, cap: 'First visit: goal-first headline', fn: () => setScroll(0) },
+      { t: 1000, cap: 'Starter pack — easy first wins', fn: () => { moveCursor(320, 340); highlightRow('row1'); } },
+      { t: 2200, cap: 'Add a starter habit with one tap', fn: () => { moveCursor(330, 400); highlightRow('row2'); } },
+      { t: 3400, cap: 'Transformation paths stay prominent', fn: () => { hideCursor(); setScroll(280); } },
+      { t: 4600, cap: 'Featured goal hero for today\'s pick', fn: () => {
+        document.getElementById('featured').style.boxShadow = '0 0 0 3px rgba(252,211,77,0.6)';
+        moveCursor(180, 520);
+      }},
+      { t: 5800, cap: 'Popular habits below for discovery', fn: () => { hideCursor(); setScroll(480); } },
+    ];
+    function runTimeline() {
+      if (started) return;
+      started = true;
+      steps.forEach(({ t, cap, fn }) => setTimeout(() => { showCap(cap); fn(); }, t));
+      setTimeout(() => showCap(''), 6600);
+    }
+    window.advanceFrame = () => { if (!started) runTimeline(); };
+    window.getDurationMs = () => 7000;
+    if (!window.__RECORDING__) setTimeout(runTimeline, 400);
+  </script>
+</body>
+</html>
