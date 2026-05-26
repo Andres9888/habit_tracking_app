@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="900" viewBox="0 0 1200 900">
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#fffdf8"/>
+      <stop offset="1" stop-color="#fff1df"/>
+    </linearGradient>
+    <linearGradient id="green" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#34a474"/>
+      <stop offset="1" stop-color="#1f7a55"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="0" dy="28" stdDeviation="28" flood-color="#271c12" flood-opacity="0.22"/>
+    </filter>
+    <style>
+      .title{font:900 56px 'DM Sans',Arial,sans-serif;fill:#201713;letter-spacing:-2px}
+      .h2{font:900 42px 'DM Sans',Arial,sans-serif;fill:#201713;letter-spacing:-1.4px}
+      .label{font:900 18px 'DM Sans',Arial,sans-serif;fill:#0f4f38;letter-spacing:2.4px}
+      .body{font:500 25px 'DM Sans',Arial,sans-serif;fill:#7b6c5c}
+      .small{font:800 18px 'DM Sans',Arial,sans-serif;fill:#7b6c5c}
+      .metric{font:900 32px 'DM Sans',Arial,sans-serif;fill:#201713}
+      .score{font:900 66px 'DM Sans',Arial,sans-serif;fill:#0f4f38}
+      .white{fill:#fffaf2}
+    </style>
+  </defs>
+  <rect width="1200" height="900" rx="0" fill="#171412"/>
+  <circle cx="194" cy="92" r="250" fill="#d9822b" opacity=".22"/>
+  <circle cx="1010" cy="160" r="310" fill="#1f7a55" opacity=".24"/>
+  <text x="84" y="110" class="title" fill="#fff7ed">Improved Habit Strength section</text>
+  <text x="88" y="156" class="body" fill="#d8c6af">Make the score explain itself, then tell the user what to do next.</text>
+
+  <g transform="translate(90 220)" filter="url(#shadow)">
+    <rect width="1020" height="570" rx="56" fill="url(#bg)" stroke="#6d4c2f" stroke-opacity=".13"/>
+    <circle cx="902" cy="80" r="180" fill="#1f7a55" opacity=".12"/>
+
+    <text x="58" y="72" class="label">HABIT STRENGTH</text>
+    <g transform="translate(800 44)">
+      <rect width="154" height="42" rx="21" fill="#f0e5d8"/>
+      <rect x="51" y="4" width="48" height="34" rx="17" fill="#fffaf2"/>
+      <text x="18" y="28" class="small">1M</text>
+      <text x="65" y="28" class="small" fill="#0f4f38">3M</text>
+      <text x="113" y="28" class="small">1Y</text>
+    </g>
+
+    <g transform="translate(62 120)">
+      <circle cx="100" cy="100" r="88" fill="none" stroke="#e8ded0" stroke-width="22"/>
+      <path d="M100 12 A88 88 0 1 1 16 126" fill="none" stroke="url(#green)" stroke-width="22" stroke-linecap="round"/>
+      <circle cx="100" cy="100" r="58" fill="#fffaf2"/>
+      <text x="100" y="93" text-anchor="middle" class="score">71%</text>
+      <text x="100" y="127" text-anchor="middle" class="small">Strong</text>
+    </g>
+
+    <g transform="translate(290 132)">
+      <text x="0" y="44" class="h2">Almost automatic</text>
+      <text x="0" y="88" class="body">You are 9 points from the next tier. Keep the next 3</text>
+      <text x="0" y="120" class="body">scheduled days to protect momentum.</text>
+      <rect x="0" y="150" width="210" height="46" rx="23" fill="#dff2e6"/>
+      <text x="25" y="181" class="small" fill="#0f4f38">+8% vs last month</text>
+    </g>
+
+    <g transform="translate(62 350)">
+      <g>
+        <rect width="278" height="92" rx="24" fill="#fffaf2" stroke="#3f2a1b" stroke-opacity=".10"/>
+        <text x="24" y="39" class="metric">83%</text>
+        <text x="24" y="68" class="small">schedule kept in last 14 days</text>
+      </g>
+      <g transform="translate(304 0)">
+        <rect width="278" height="92" rx="24" fill="#fffaf2" stroke="#3f2a1b" stroke-opacity=".10"/>
+        <text x="24" y="39" class="metric">2 misses</text>
+        <text x="24" y="68" class="small">dragged strength down most</text>
+      </g>
+      <g transform="translate(608 0)">
+        <rect width="278" height="92" rx="24" fill="#fffaf2" stroke="#3f2a1b" stroke-opacity=".10"/>
+        <text x="24" y="39" class="metric">3 days</text>
+        <text x="24" y="68" class="small">to reach Automatic tier</text>
+      </g>
+    </g>
+
+    <g transform="translate(62 472)">
+      <rect width="886" height="58" rx="24" fill="#fff0d8" stroke="#d9822b" stroke-opacity=".22"/>
+      <rect x="18" y="12" width="34" height="34" rx="12" fill="#fffaf2"/>
+      <path d="M29 35 L42 22 M34 22 H42 V30" stroke="#d9822b" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="70" y="26" class="small" fill="#201713">Best next move: walk before 9 AM tomorrow</text>
+      <text x="70" y="48" class="small" font-weight="500">Completing early recovers the missed-day dip fastest.</text>
+    </g>
+  </g>
+</svg>
