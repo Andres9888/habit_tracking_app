@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Habit Strength Section — Detail Page Improvements</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Mono:wght@500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0c0a09;
+      --surface: #fafaf9;
+      --card: #ffffff;
+      --teal: #14b8a6;
+      --teal-dark: #0d9488;
+      --stone-400: #a8a29e;
+      --stone-600: #57534e;
+      --stone-800: #292524;
+      --amber: #d97706;
+      --emerald: #059669;
+    }
+    * { font-family: 'DM Sans', sans-serif !important; box-sizing: border-box; }
+    body { background: var(--bg) !important; color: #fafaf9; margin: 0; padding: 24px; }
+    h1, h2, h3 { font-weight: 700 !important; }
+    .mono { font-family: 'Space Mono', monospace !important; }
+
+    .phone {
+      width: 358px;
+      background: linear-gradient(180deg, #fafaf9 0%, #f5f5f4 55%, #eceae6 100%);
+      border-radius: 36px;
+      overflow: hidden;
+      box-shadow: 0 32px 64px -16px rgba(0,0,0,0.55);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .phone-inner { padding: 12px 16px 20px; }
+
+    .section-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #78716c;
+      margin-bottom: 8px;
+    }
+
+    .strength-card {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 16px;
+      box-shadow: 0 1px 3px rgba(41,37,36,0.06);
+    }
+
+    .toggle {
+      display: flex;
+      background: #f5f5f4;
+      border-radius: 8px;
+      padding: 3px;
+      gap: 2px;
+    }
+    .toggle span {
+      padding: 5px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #78716c;
+      cursor: pointer;
+    }
+    .toggle span.on {
+      background: white;
+      color: #1c1917;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+    }
+
+    .ring-wrap { position: relative; width: 64px; height: 64px; flex-shrink: 0; }
+    .ring-wrap.lg { width: 88px; height: 88px; }
+    .ring-wrap svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+    .ring-center {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; color: #1c1917;
+    }
+
+    .chart-mini { height: 72px; margin: 0 -8px; }
+    .stats-row {
+      display: flex;
+      background: #fafaf9;
+      border-radius: 10px;
+      padding: 8px 4px;
+    }
+    .stat { flex: 1; text-align: center; }
+    .stat .lbl { font-size: 10px; color: #a8a29e; }
+    .stat .val { font-size: 13px; font-weight: 600; }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .badge-weak { background: #fef2f2; color: #dc2626; }
+    .badge-building { background: #fffbeb; color: #d97706; }
+    .badge-established { background: #ecfdf5; color: #059669; }
+
+    .insight {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      font-size: 12px;
+      line-height: 1.45;
+    }
+    .insight-teal { background: #f0fdfa; color: #115e59; border: 1px solid #99f6e4; }
+    .insight-amber { background: #fffbeb; color: #92400e; border: 1px solid #fde68a; }
+
+    .tier-ladder {
+      display: flex;
+      gap: 4px;
+      margin-top: 10px;
+    }
+    .tier-step {
+      flex: 1;
+      height: 4px;
+      border-radius: 2px;
+      background: #e7e5e4;
+    }
+    .tier-step.done { background: var(--teal); }
+    .tier-step.current { background: linear-gradient(90deg, var(--teal) 40%, #e7e5e4 40%); }
+
+    .concept-tag {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      margin-bottom: 12px;
+    }
+    .tag-current { background: #44403c; color: #d6d3d1; }
+    .tag-rec { background: #064e3b; color: #6ee7b7; border: 1px solid #34d399; }
+    .tag-alt { background: #292524; color: #a8a29e; }
+
+    .scroll-row {
+      display: flex;
+      gap: 28px;
+      overflow-x: auto;
+      padding-bottom: 24px;
+      scroll-snap-type: x mandatory;
+    }
+    .scroll-row > * { scroll-snap-align: start; flex-shrink: 0; }
+
+    .issues li, .wins li {
+      font-size: 12px;
+      line-height: 1.5;
+      margin-bottom: 4px;
+      color: #a8a29e;
+    }
+    .issues li::marker { color: #f87171; }
+    .wins li::marker { color: #34d399; }
+
+    .spark { height: 36px; display: flex; align-items: flex-end; gap: 3px; }
+    .spark div {
+      flex: 1;
+      background: var(--teal);
+      border-radius: 2px 2px 0 0;
+      opacity: 0.35;
+    }
+    .spark div.hi { opacity: 1; }
+
+    .stage-emoji { font-size: 28px; line-height: 1; }
+    .stage-track {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 12px 0 8px;
+      position: relative;
+    }
+    .stage-track::before {
+      content: '';
+      position: absolute;
+      left: 14px; right: 14px; top: 50%;
+      height: 2px;
+      background: #e7e5e4;
+      z-index: 0;
+    }
+    .stage-dot {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: white;
+      border: 2px solid #e7e5e4;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px;
+      z-index: 1;
+      position: relative;
+    }
+    .stage-dot.active { border-color: var(--teal); box-shadow: 0 0 0 3px rgba(20,184,166,0.2); }
+    .stage-dot.done { background: #f0fdfa; border-color: var(--teal); }
+
+    .help-link {
+      font-size: 11px;
+      color: #78716c;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: 8px;
+      cursor: pointer;
+    }
+
+    .compare-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      max-width: 900px;
+      margin: 0 auto 48px;
+    }
+    @media (max-width: 800px) {
+      .compare-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="text-center max-w-3xl mx-auto mb-10">
+    <p class="text-stone-500 text-sm mb-2 mono">Habit Detail · Progress scroll · Strength anchor</p>
+    <h1 class="text-3xl mb-3">Habit Strength Section — Improvement Mockups</h1>
+    <p class="text-stone-400 text-sm leading-relaxed">
+      Based on <code class="text-stone-300 bg-stone-900 px-1 rounded">HabitStrengthSection</code> in the detail page scroll.
+      Goal: make strength feel like <strong class="text-stone-200">momentum</strong>, not judgment — and explain what the number means.
+    </p>
+  </header>
+
+  <!-- BEFORE / AFTER HERO -->
+  <section class="compare-grid">
+    <div>
+      <p class="section-label text-red-400/80">Current (production)</p>
+      <div class="phone opacity-90">
+        <div class="phone-inner">
+          <div class="flex items-center gap-2 mb-3 pb-2 border-b border-stone-200/60">
+            <span class="text-xl">🧘</span>
+            <span class="font-bold text-stone-800 text-sm">Morning Meditation</span>
+          </div>
+          <div class="strength-card" id="current-card">
+            <div class="flex justify-between items-center mb-3">
+              <h3 class="text-base font-bold text-stone-800">Habit Strength</h3>
+              <div class="toggle">
+                <span>1M</span><span>3M</span><span class="on">1Y</span><span>All</span>
+              </div>
+            </div>
+            <div class="flex items-center gap-3 mb-3">
+              <div class="ring-wrap">
+                <svg viewBox="0 0 64 64">
+                  <circle cx="32" cy="32" r="28" fill="none" stroke="#f5f5f4" stroke-width="5"/>
+                  <circle cx="32" cy="32" r="28" fill="none" stroke="#14b8a6" stroke-width="5"
+                    stroke-dasharray="175.9" stroke-dashoffset="161.8" stroke-linecap="round"/>
+                </svg>
+                <div class="ring-center text-lg">8%</div>
+              </div>
+              <div>
+                <span class="badge badge-weak">Weak</span>
+                <p class="text-xs text-stone-500 mt-1">↗ +8% <span class="text-stone-400">vs last month</span></p>
+              </div>
+            </div>
+            <svg class="chart-mini w-full" viewBox="0 0 320 72" preserveAspectRatio="none">
+              <defs>
+                <linearGradient id="g1" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#14b8a6" stop-opacity="0.25"/>
+                  <stop offset="100%" stop-color="#14b8a6" stop-opacity="0"/>
+                </linearGradient>
+              </defs>
+              <path d="M0,60 Q40,55 80,50 T160,35 T240,28 T320,22 L320,72 L0,72 Z" fill="url(#g1)"/>
+              <path d="M0,60 Q40,55 80,50 T160,35 T240,28 T320,22" fill="none" stroke="#14b8a6" stroke-width="2.5"/>
+            </svg>
+            <div class="stats-row mt-3">
+              <div class="stat"><div class="lbl">Since Start</div><div class="val text-teal-600">8%</div></div>
+              <div class="stat"><div class="lbl">Last Month</div><div class="val text-teal-600">+8%</div></div>
+              <div class="stat"><div class="lbl">Last Week</div><div class="val text-teal-600">+8%</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <ul class="issues mt-4 pl-4">
+        <li>“Weak” feels punitive at 8% — users disengage</li>
+        <li>Three stats often repeat the same story as the delta</li>
+        <li>No explanation of what “strength” measures</li>
+        <li>Chart has no milestones — hard to see “where I’m going”</li>
+        <li>Double card wrapper adds visual weight on detail page</li>
+      </ul>
+    </div>
+
+    <div>
+      <p class="section-label text-emerald-400">Recommended · Concept A</p>
+      <div class="phone border-2 border-emerald-500/40">
+        <div class="phone-inner">
+          <div class="flex items-center gap-2 mb-3 pb-2 border-b border-stone-200/60">
+            <span class="text-xl">🧘</span>
+            <span class="font-bold text-stone-800 text-sm">Morning Meditation</span>
+          </div>
+          <div class="strength-card">
+            <div class="flex justify-between items-start mb-2">
+              <div>
+                <h3 class="text-base font-bold text-stone-800">Habit Strength</h3>
+                <p class="text-[11px] text-stone-500 mt-0.5">How automatic this habit feels</p>
+              </div>
+              <div class="toggle">
+                <span>1M</span><span class="on">3M</span><span>1Y</span><span>All</span>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-4 py-2">
+              <div class="ring-wrap lg">
+                <svg viewBox="0 0 88 88">
+                  <circle cx="44" cy="44" r="38" fill="none" stroke="#f5f5f4" stroke-width="6"/>
+                  <circle cx="44" cy="44" r="38" fill="none" stroke="#14b8a6" stroke-width="6"
+                    stroke-dasharray="238.8" stroke-dashoffset="219.7" stroke-linecap="round"/>
+                </svg>
+                <div class="ring-center text-2xl">8%</div>
+              </div>
+              <div class="flex-1 min-w-0">
+                <span class="badge badge-building">🌱 Building</span>
+                <p class="text-sm font-semibold text-stone-800 mt-2">12% to <span class="text-teal-600">Established</span></p>
+                <div class="tier-ladder">
+                  <div class="tier-step done"></div>
+                  <div class="tier-step current"></div>
+                  <div class="tier-step"></div>
+                  <div class="tier-step"></div>
+                </div>
+                <p class="text-[10px] text-stone-400 mt-1">Seed → Building → Established → Automatic</p>
+              </div>
+            </div>
+
+            <div class="insight insight-teal mt-2">
+              <span>💡</span>
+              <span><strong>+8% this month.</strong> Completing today moves you ~0.4% closer to Established. Streak shield active (3-day).</span>
+            </div>
+
+            <svg class="chart-mini w-full mt-3" viewBox="0 0 320 72">
+              <line x1="0" y1="54" x2="320" y2="54" stroke="#d6d3d1" stroke-dasharray="4,4" opacity="0.5"/>
+              <line x1="0" y1="36" x2="320" y2="36" stroke="#d6d3d1" stroke-dasharray="4,4" opacity="0.35"/>
+              <text x="4" y="52" fill="#a8a29e" font-size="8">25%</text>
+              <text x="4" y="34" fill="#a8a29e" font-size="8">50%</text>
+              <circle cx="240" cy="28" r="10" fill="none" stroke="#d97706" stroke-width="1" stroke-dasharray="2,2" opacity="0.6"/>
+              <text x="228" y="18" fill="#d97706" font-size="7" font-weight="600">Est.</text>
+              <path d="M0,58 Q50,54 100,48 T200,38 T280,30 T320,26" fill="none" stroke="#14b8a6" stroke-width="2.5"/>
+              <circle cx="320" cy="26" r="4" fill="#14b8a6"/>
+            </svg>
+
+            <div class="flex gap-2 mt-3">
+              <div class="flex-1 rounded-lg bg-stone-50 px-3 py-2 text-center">
+                <div class="text-[10px] text-stone-400">Trend (3M)</div>
+                <div class="text-sm font-bold text-emerald-600">↗ +8%</div>
+              </div>
+              <div class="flex-1 rounded-lg bg-stone-50 px-3 py-2 text-center">
+                <div class="text-[10px] text-stone-400">Best streak</div>
+                <div class="text-sm font-bold text-stone-800">5 days</div>
+              </div>
+            </div>
+
+            <div class="help-link">
+              <i data-lucide="help-circle" style="width:12px;height:12px"></i>
+              What is habit strength?
+            </div>
+          </div>
+        </div>
+      </div>
+      <ul class="wins mt-4 pl-4">
+        <li>Growth labels (Building) vs judgment (Weak)</li>
+        <li>Next milestone visible — motivates without shame</li>
+        <li>One insight line replaces redundant stat columns</li>
+        <li>Chart milestones at 25% / 50% / Established</li>
+        <li>“What is strength?” reduces support confusion</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- THREE CONCEPTS SCROLL -->
+  <h2 class="text-xl text-center mb-2">Three design directions</h2>
+  <p class="text-stone-500 text-sm text-center mb-8 max-w-xl mx-auto">All fit inside the existing scrollspy “Strength” anchor on Habit Detail.</p>
+
+  <div class="scroll-row px-2">
+
+    <!-- Concept A -->
+    <div>
+      <span class="concept-tag tag-rec">★ A · Momentum narrative (recommended)</span>
+      <div class="phone">
+        <div class="phone-inner">
+          <div class="strength-card">
+            <div class="flex justify-between mb-2">
+              <h3 class="text-sm font-bold text-stone-800">Habit Strength</h3>
+              <div class="toggle"><span class="on">3M</span><span>1Y</span></div>
+            </div>
+            <div class="flex gap-3 items-center">
+              <div class="ring-wrap lg">
+                <svg viewBox="0 0 88 88"><circle cx="44" cy="44" r="38" fill="none" stroke="#f5f5f4" stroke-width="6"/><circle cx="44" cy="44" r="38" fill="none" stroke="#14b8a6" stroke-width="6" stroke-dasharray="238.8" stroke-dashoffset="200" stroke-linecap="round"/></svg>
+                <div class="ring-center text-xl">26%</div>
+              </div>
+              <div>
+                <span class="badge badge-building">🌿 Building</span>
+                <p class="text-xs font-semibold text-stone-700 mt-1">9% to Established</p>
+                <div class="tier-ladder"><div class="tier-step done"></div><div class="tier-step current"></div><div class="tier-step"></div><div class="tier-step"></div></div>
+              </div>
+            </div>
+            <div class="insight insight-teal mt-3"><span>💡</span><span>You're gaining momentum — 4 completions this month vs 2 last month.</span></div>
+            <svg class="chart-mini w-full" viewBox="0 0 300 60"><path d="M0,50 Q75,45 150,30 T300,18" fill="none" stroke="#14b8a6" stroke-width="2"/></svg>
+            <div class="flex gap-2 mt-2">
+              <div class="flex-1 bg-stone-50 rounded-lg py-2 text-center text-xs"><span class="text-stone-400 block">3M trend</span><strong class="text-emerald-600">+12%</strong></div>
+              <div class="flex-1 bg-stone-50 rounded-lg py-2 text-center text-xs"><span class="text-stone-400 block">Shield</span><strong>🛡️ 5d</strong></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="text-xs text-stone-500 mt-3 max-w-[358px]">Best balance: keeps ring + chart, adds tier ladder + insight. Maps to <code class="text-stone-400">StrengthHero</code> + new <code class="text-stone-400">StrengthInsight</code>.</p>
+    </div>
+
+    <!-- Concept B -->
+    <div>
+      <span class="concept-tag tag-alt">B · Compact dashboard</span>
+      <div class="phone">
+        <div class="phone-inner">
+          <div class="strength-card" style="padding:14px">
+            <div class="flex justify-between items-center mb-3">
+              <h3 class="text-sm font-bold text-stone-800">Strength</h3>
+              <span class="text-2xl font-bold text-teal-600 mono">42%</span>
+            </div>
+            <div class="spark mb-2">
+              <div style="height:30%"></div><div style="height:45%"></div><div style="height:35%"></div>
+              <div class="hi" style="height:55%"></div><div class="hi" style="height:70%"></div><div class="hi" style="height:65%"></div>
+              <div style="height:50%"></div><div class="hi" style="height:80%"></div><div style="height:60%"></div>
+              <div class="hi" style="height:90%"></div><div style="height:75%"></div><div class="hi" style="height:100%"></div>
+            </div>
+            <div class="flex justify-between text-[10px] text-stone-400 mb-3 px-1">
+              <span>Jan</span><span>Feb</span><span>Mar</span><span class="text-teal-600 font-semibold">Now</span>
+            </div>
+            <div class="insight insight-amber">
+              <span>📈</span>
+              <span>Steady climb — up 14% over 90 days. Next tier at 50%.</span>
+            </div>
+            <div class="help-link justify-center mt-2">How is this calculated?</div>
+          </div>
+        </div>
+      </div>
+      <p class="text-xs text-stone-500 mt-3 max-w-[358px]">Lowest vertical space — good if calendar above fold is priority. Drops ring; uses sparkline only.</p>
+    </div>
+
+    <!-- Concept C -->
+    <div>
+      <span class="concept-tag tag-alt">C · Stage journey</span>
+      <div class="phone">
+        <div class="phone-inner">
+          <div class="strength-card text-center">
+            <h3 class="text-sm font-bold text-stone-800 text-left mb-1">Your habit journey</h3>
+            <p class="text-[11px] text-stone-500 text-left mb-3">Stage 2 of 4 · Building momentum</p>
+            <div class="stage-track px-2">
+              <div class="stage-dot done">🌱</div>
+              <div class="stage-dot active">🌿</div>
+              <div class="stage-dot">🌳</div>
+              <div class="stage-dot">⚡</div>
+            </div>
+            <p class="stage-emoji my-2">🌿</p>
+            <p class="text-lg font-bold text-stone-800">26% strength</p>
+            <p class="text-xs text-stone-500 mb-3">Complete 3 more days to reach 🌳 Established</p>
+            <div class="h-2 bg-stone-100 rounded-full overflow-hidden">
+              <div class="h-full bg-gradient-to-r from-teal-400 to-teal-600 rounded-full" style="width:52%"></div>
+            </div>
+            <p class="text-[10px] text-stone-400 mt-1">26 / 50% to next stage</p>
+            <div class="insight insight-teal mt-4 text-left">
+              <span>✨</span>
+              <span>Missed days hurt less when your week is strong — shield reduced last drop by 60%.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="text-xs text-stone-500 mt-3 max-w-[358px]">Most emotional / game-like. Great for early habits; less chart detail for power users.</p>
+    </div>
+
+  </div>
+
+  <!-- WIREFRAME -->
+  <section class="max-w-2xl mx-auto mt-12 p-6 bg-stone-900/80 rounded-2xl border border-stone-800">
+    <h2 class="text-lg mb-4">Recommended layout (Concept A) — ASCII</h2>
+    <pre class="text-xs text-stone-400 leading-relaxed mono overflow-x-auto" style="font-family: 'Space Mono', monospace !important;">
+┌─────────────────────────────────────────┐
+│ Habit Strength          [1M][3M][1Y][All]│
+│ How automatic this habit feels          │
+├─────────────────────────────────────────┤
+│  ╭──────╮   🌱 Building                 │
+│  │ 26% │   9% to Established            │
+│  ╰──────╯   [████░░░░] tier ladder      │
+├─────────────────────────────────────────┤
+│ 💡 Insight: contextual one-liner        │
+├─────────────────────────────────────────┤
+│     ～～ strength curve ～～  ○ Est.    │
+│     (milestone gridlines 25/50/75)      │
+├─────────────────────────────────────────┤
+│  [ 3M trend +12% ]  [ Shield 🛡️ 5d ]   │
+├─────────────────────────────────────────┤
+│  ⓘ What is habit strength?  → sheet     │
+└─────────────────────────────────────────┘
+    </pre>
+  </section>
+
+  <!-- IMPLEMENTATION NOTES -->
+  <section class="max-w-3xl mx-auto mt-10 mb-16">
+    <h2 class="text-lg mb-4">Implementation map (React Native)</h2>
+    <div class="grid md:grid-cols-2 gap-4 text-sm">
+      <div class="bg-stone-900 rounded-xl p-4 border border-stone-800">
+        <h3 class="text-emerald-400 font-semibold mb-2">Reuse</h3>
+        <ul class="text-stone-400 space-y-1 text-xs">
+          <li><code>HabitStrengthSection.tsx</code> — shell</li>
+          <li><code>StrengthHero</code> + <code>ProgressRing</code></li>
+          <li><code>StrengthChart</code> — add milestone lines</li>
+          <li><code>TimeRangeToggle</code> — add 3M if missing</li>
+        </ul>
+      </div>
+      <div class="bg-stone-900 rounded-xl p-4 border border-stone-800">
+        <h3 class="text-amber-400 font-semibold mb-2">New / change</h3>
+        <ul class="text-stone-400 space-y-1 text-xs">
+          <li><code>STRENGTH_LABELS</code> → Seed/Building/Established/Automatic</li>
+          <li><code>StrengthTierLadder.tsx</code> — next milestone %</li>
+          <li><code>StrengthInsightRow.tsx</code> — dynamic copy</li>
+          <li><code>StrengthExplainerSheet</code> — bottom sheet</li>
+          <li>Remove outer card wrapper in <code>HabitDetailContent</code></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <script>lucide.createIcons();</script>
+</body>
+</html>
