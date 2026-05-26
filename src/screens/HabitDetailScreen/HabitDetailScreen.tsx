@@ -91,9 +91,11 @@ function HabitDetailScreenContent({
                     leftAction='close'
                     rightAction={
                       <HeaderButton
+                        accessibilityHint='Customize name, schedule, reminders, and goals'
+                        compact={isTitlePinned}
                         icon={<Edit3 size={iconSizes.small} strokeWidth={2.5} />}
-                        label='Edit habit'
-                        text='Edit Habit'
+                        label='Edit habit details'
+                        text='Edit details'
                         onPress={handleEdit}
                       />
                     }
