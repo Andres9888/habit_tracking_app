@@ -1,7 +1,13 @@
 /* eslint-disable max-lines */
 /** HabitDetailScreen - Optimized for 9+ scores across all dimensions */
 import React, { useCallback, useState } from 'react';
-import { View, Modal, KeyboardAvoidingView, Platform } from 'react-native';
+import {
+  View,
+  Modal,
+  KeyboardAvoidingView,
+  Platform,
+  type ColorValue,
+} from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Edit3 } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
@@ -36,9 +42,9 @@ function HabitDetailScreenContent({
   visible,
 }: HabitDetailScreenProps) {
   const { isDark } = useThemeColors();
-  const bgGradient = isDark
-    ? DETAIL_BG_GRADIENT_DARK
-    : DETAIL_BG_GRADIENT_LIGHT;
+  const bgGradient = (
+    isDark ? DETAIL_BG_GRADIENT_DARK : DETAIL_BG_GRADIENT_LIGHT
+  ) as readonly [ColorValue, ColorValue, ...ColorValue[]];
   const screenState = useHabitDetailScreenState({
     habitCreatedAt: habit?.createdAt,
     habitId: habit?._id,
@@ -83,7 +89,7 @@ function HabitDetailScreenContent({
             <View className='flex-1 bg-black/50'>
               <View className='flex-1 overflow-hidden rounded-t-3xl shadow-2xl'>
                 <LinearGradient
-                  colors={bgGradient as unknown as string[]}
+                  colors={bgGradient}
                   locations={[0, 0.5, 1]}
                   style={{ flex: 1 }}
                 >
