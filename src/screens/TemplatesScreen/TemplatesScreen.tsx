@@ -264,9 +264,9 @@ function TemplatesScreenContent({
           />
         }
         selectedCategory={state.selectedCategory}
-        sessionImportCount={state.sessionImportCount}
-        starterTemplates={starterTemplates}
-        userHabitCount={data.userHabitCount}
+            sessionImportCount={state.sessionImportCount}
+            starterTemplates={starterTemplates}
+            userHabitCount={data.userHabitCount ?? 0}
       />
     </>
   );

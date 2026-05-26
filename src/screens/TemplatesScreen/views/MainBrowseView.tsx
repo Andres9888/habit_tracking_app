@@ -10,17 +10,23 @@ import { styles } from '../../templates/templatesScreenStyles';
 import { SearchBar } from '../components';
 import { QuickFilterChips } from '../components/QuickFilterChips';
 import { SessionProgressPill } from '../components/SessionProgressPill';
+import { getLibraryHeaderCopy } from '../utils/getLibraryHeaderCopy';
 import { BrowseSections } from './BrowseSections';
 import { bodyEnter, bodyExit, stagger } from './MainBrowseView.helpers';
 import type { MainBrowseViewProps } from './MainBrowseView.types';
-
-const HEADER_SUBTITLE = 'Pick a path — habits proven to work.';
 
 export function MainBrowseView(p: MainBrowseViewProps) {
   const { colors } = useThemeColors();
   const isCategoryFilterActive = p.selectedCategory !== 'all';
   const showFilteredResults = p.isSearchActive || isCategoryFilterActive;
   const isFirstTimeUser = p.userHabitCount <= 1;
+  const headerCopy = getLibraryHeaderCopy(
+    isFirstTimeUser,
+    p.sessionImportCount
+  );
+  const searchHint = isFirstTimeUser
+    ? 'Try: morning walk · journaling · cold shower'
+    : 'Search by goal, habit name, or category';
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
@@ -31,8 +37,8 @@ export function MainBrowseView(p: MainBrowseViewProps) {
             <SessionProgressPill count={p.sessionImportCount} />
           ) : undefined
         }
-        subtitle={HEADER_SUBTITLE}
-        title='What do you want to work on?'
+        subtitle={headerCopy.subtitle}
+        title={headerCopy.title}
         titleNumberOfLines={2}
       />
       <Animated.View
@@ -40,7 +46,7 @@ export function MainBrowseView(p: MainBrowseViewProps) {
         style={[styles.searchSection, p.searchAnimatedStyle]}
       >
         <SearchBar
-          inputHint='Try: morning walk · journaling · cold shower'
+          inputHint={searchHint}
           value={p.searchQuery}
           onChangeText={p.onSearchChange}
           onClear={p.onSearchClear}
@@ -87,6 +93,7 @@ export function MainBrowseView(p: MainBrowseViewProps) {
             onSeeAll={p.onSeeAll}
             onStartHerePress={p.onStartHerePress}
             popularTemplates={p.popularTemplates}
+            sessionImportCount={p.sessionImportCount}
             starterTemplates={p.starterTemplates}
           />
         </Animated.View>

@@ -1,10 +1,11 @@
 /**
- * Empty state with seed templates button
+ * Empty state — auto-loads the habit library on first open when unseeded.
  */
 
-import { View } from 'react-native';
-import Button from '../../../components/Button/Button';
+import { useEffect, useRef } from 'react';
+import { ActivityIndicator, View } from 'react-native';
 import EmptyState from '../../../components/EmptyState';
+import { useThemeColors } from '../../../theme/ThemeContext';
 import { styles } from '../../templates/templatesScreenStyles';
 
 interface TemplatesEmptyStateProps {
@@ -16,24 +17,32 @@ export function TemplatesEmptyState({
   isSeeding,
   onSeedTemplates,
 }: TemplatesEmptyStateProps) {
+  const { colors } = useThemeColors();
+  const didRequestSeed = useRef(false);
+
+  useEffect(() => {
+    if (didRequestSeed.current || isSeeding) return;
+    didRequestSeed.current = true;
+    onSeedTemplates();
+  }, [isSeeding, onSeedTemplates]);
+
   return (
     <View style={styles.container}>
       <EmptyState
         hideCTA
-        description='Tap below to load it.'
-        headline={'Your habit library isn\u2019t loaded yet'}
+        description={
+          isSeeding
+            ? 'Loading science-backed habits for you…'
+            : 'Preparing your habit library…'
+        }
+        headline='Setting up your Habit Library'
         icon='📚'
       />
-      <View style={{ marginTop: 24, paddingHorizontal: 24 }}>
-        <Button
-          disabled={isSeeding}
-          size='large'
-          variant='primary'
-          onPress={onSeedTemplates}
-        >
-          {isSeeding ? 'Loading…' : 'Load library'}
-        </Button>
-      </View>
+      {isSeeding ? (
+        <View style={{ alignItems: 'center', marginTop: 24 }}>
+          <ActivityIndicator color={colors.primary[600]} size='large' />
+        </View>
+      ) : null}
     </View>
   );
 }
