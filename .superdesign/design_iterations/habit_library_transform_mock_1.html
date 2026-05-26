@@ -1,0 +1,433 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Habit Library Mock — Transformation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Inter:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root{
+        --bg:#FAF7F2;
+        --card:#FFFFFF;
+        --border:rgba(62,33,17,.10);
+        --text:#3A2416;
+        --muted:rgba(58,36,22,.62);
+        --green:#059669;
+        --green-2:#047857;
+        --brown:#4B2D17;
+        --brown-2:#2F1C0E;
+        --amber:#F59E0B;
+        --amber-2:#D97706;
+      }
+      *{box-sizing:border-box}
+      body{
+        margin:0;
+        background:linear-gradient(180deg,#fff,rgba(0,0,0,.02));
+        font-family:"DM Sans", Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+        color:var(--text);
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        min-height:100vh;
+        padding:18px;
+      }
+      .device{
+        width:390px;
+        border-radius:48px;
+        padding:10px;
+        background:#0b0b0f;
+        box-shadow:0 20px 60px rgba(0,0,0,.25);
+      }
+      .screen{
+        border-radius:38px;
+        overflow:hidden;
+        background:var(--bg);
+        height:820px;
+        position:relative;
+      }
+      .statusbar{
+        height:38px;
+        padding:10px 18px 0;
+        display:flex;
+        justify-content:space-between;
+        color:rgba(0,0,0,.6);
+        font-weight:600;
+        font-size:12px;
+      }
+      .content{
+        padding:4px 18px 22px;
+        height:calc(100% - 38px);
+        overflow:auto;
+      }
+      .h1{
+        font-family:Inter, "DM Sans", system-ui, sans-serif;
+        font-size:20px;
+        line-height:24px;
+        font-weight:800;
+        margin:2px 0 6px;
+        letter-spacing:-.2px;
+      }
+      .subtitle{
+        font-size:12.5px;
+        line-height:16px;
+        color:var(--muted);
+        font-weight:600;
+        margin-bottom:14px;
+      }
+      .search{
+        display:flex;
+        align-items:center;
+        gap:10px;
+        border:1px solid var(--border);
+        background:rgba(255,255,255,.78);
+        border-radius:14px;
+        padding:12px 12px;
+        margin-bottom:12px;
+      }
+      .search .hint{
+        color:rgba(58,36,22,.45);
+        font-weight:600;
+        font-size:12.5px;
+        white-space:nowrap;
+        overflow:hidden;
+        text-overflow:ellipsis;
+      }
+      .chipRow{
+        display:flex;
+        gap:10px;
+        margin:6px 0 14px;
+      }
+      .chip{
+        border:1px solid var(--border);
+        background:rgba(255,255,255,.70);
+        padding:10px 12px;
+        border-radius:999px;
+        display:flex;
+        align-items:center;
+        gap:8px;
+        font-weight:800;
+        font-size:12px;
+        box-shadow:0 6px 14px rgba(0,0,0,.06);
+      }
+      .hero{
+        background:linear-gradient(135deg,var(--amber) 0%, #FDE68A 40%, rgba(245,158,11,.35) 100%);
+        border-radius:18px;
+        border:1px solid rgba(0,0,0,.08);
+        padding:16px;
+        position:relative;
+        margin-bottom:16px;
+      }
+      .heroBadge{
+        position:absolute;
+        right:14px;
+        top:12px;
+        background:rgba(0,0,0,.06);
+        color:rgba(75,45,23,.9);
+        font-weight:900;
+        font-size:10px;
+        letter-spacing:.7px;
+        text-transform:uppercase;
+        padding:7px 10px;
+        border-radius:999px;
+      }
+      .heroGrid{
+        display:flex;
+        align-items:stretch;
+        gap:14px;
+        padding-top:6px;
+      }
+      .heroEmoji{
+        font-size:50px;
+        width:64px;
+        display:flex;
+        align-items:flex-start;
+        justify-content:center;
+        margin-top:8px;
+      }
+      .heroText{flex:1; min-width:0}
+      .heroTitle{
+        font-weight:900;
+        font-size:16px;
+        margin-top:2px;
+        margin-bottom:4px;
+      }
+      .heroPromise{
+        color:rgba(75,45,23,.86);
+        font-weight:700;
+        font-size:12.5px;
+        line-height:16px;
+        margin-bottom:8px;
+      }
+      .outcomePill{
+        display:inline-flex;
+        align-items:center;
+        gap:8px;
+        background:rgba(245,158,11,.18);
+        color:rgba(75,45,23,.95);
+        border:1px solid rgba(75,45,23,.15);
+        border-radius:999px;
+        padding:7px 10px;
+        font-weight:900;
+        font-size:12px;
+      }
+      .starterRow{
+        display:flex;
+        gap:10px;
+        margin-top:14px;
+      }
+      .starterCard{
+        flex:1;
+        background:rgba(255,255,255,.65);
+        border:1px solid rgba(0,0,0,.08);
+        border-radius:14px;
+        padding:10px 10px;
+        display:flex;
+        align-items:center;
+        gap:8px;
+        font-weight:800;
+        font-size:12px;
+      }
+      .heroCTA{
+        margin-top:14px;
+        width:100%;
+        border:none;
+        background:linear-gradient(135deg,var(--brown) 0%, var(--brown-2) 100%);
+        color:#fff;
+        border-radius:14px;
+        padding:12px 14px;
+        font-weight:900;
+        font-size:13.5px;
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        box-shadow:0 10px 22px rgba(75,45,23,.25);
+      }
+      .sectionHead{
+        display:flex;
+        justify-content:space-between;
+        align-items:flex-end;
+        margin:4px 0 10px;
+      }
+      .sectionTitle{
+        font-weight:900;
+        font-size:14px;
+      }
+      .sectionSub{
+        font-size:12px;
+        color:var(--muted);
+        font-weight:700;
+        margin-top:3px;
+      }
+      .seeAll{
+        color:var(--green);
+        font-weight:900;
+        font-size:13px;
+        user-select:none;
+      }
+      .inlineList{
+        display:flex;
+        flex-direction:column;
+        gap:10px;
+        margin-bottom:10px;
+      }
+      .inlineCard{
+        background:rgba(255,255,255,.78);
+        border:1px solid var(--border);
+        border-radius:16px;
+        padding:12px;
+        display:flex;
+        gap:10px;
+        align-items:center;
+        box-shadow:0 10px 20px rgba(0,0,0,.05);
+      }
+      .inlineIconBox{
+        width:44px;
+        height:44px;
+        border-radius:12px;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        border:1px solid rgba(0,0,0,.05);
+        flex:0 0 auto;
+      }
+      .inlineMain{flex:1; min-width:0}
+      .inlineName{
+        font-weight:900;
+        font-size:13px;
+        margin-bottom:3px;
+        white-space:nowrap;
+        overflow:hidden;
+        text-overflow:ellipsis;
+      }
+      .inlineMeta{
+        font-size:12px;
+        font-weight:800;
+        color:rgba(58,36,22,.64);
+      }
+      .pop{
+        color:rgba(5,150,105,.95);
+        font-weight:900;
+      }
+      .addBtn{
+        border:none;
+        background:linear-gradient(180deg,rgba(5,150,105,.18),rgba(5,150,105,.10));
+        color:var(--green-2);
+        font-weight:1000;
+        padding:10px 12px;
+        border-radius:999px;
+        cursor:pointer;
+        border:1px solid rgba(5,150,105,.25);
+      }
+      .railWrap{
+        position:relative;
+        margin-top:8px;
+      }
+      .railFade{
+        pointer-events:none;
+        position:absolute;
+        inset:0;
+        background:linear-gradient(90deg, var(--bg) 0%, rgba(250,247,242,0) 26%, rgba(250,247,242,0) 74%, var(--bg) 100%);
+      }
+      .rail{
+        display:flex;
+        gap:10px;
+        overflow:auto;
+        padding-bottom:6px;
+        scroll-snap-type:x mandatory;
+      }
+      .tinyPeek{
+        min-width:165px;
+        scroll-snap-align:start;
+        height:140px;
+        border-radius:18px;
+        background:rgba(255,255,255,.78);
+        border:1px solid var(--border);
+        padding:12px;
+        box-shadow:0 10px 20px rgba(0,0,0,.05);
+      }
+      .tinyPeek .t1{font-size:24px; margin-bottom:8px}
+      .tinyPeek .t2{font-weight:900; font-size:13px; margin-bottom:6px}
+      .tinyPeek .t3{font-weight:800; color:var(--muted); font-size:12px}
+      .bottomLink{
+        margin:18px 0 6px;
+        color:rgba(58,36,22,.62);
+        font-weight:900;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="device" aria-label="Mobile mock device frame">
+      <div class="screen">
+        <div class="statusbar">
+          <div>9:41</div>
+          <div>⋯  ◻︎</div>
+        </div>
+        <div class="content">
+          <div class="h1">What do you want to work on?</div>
+          <div class="subtitle">200+ science-backed habits. Pick a goal — we'll do the structure.</div>
+
+          <div class="search">
+            <div style="font-size:16px">🔎</div>
+            <div class="hint">Try: morning walk · journaling · cold shower</div>
+          </div>
+
+          <div class="chipRow">
+            <div class="chip">Morning ☀️</div>
+            <div class="chip">Health 💪</div>
+            <div class="chip">Mind 🧘</div>
+            <div class="chip">Sleep 😴</div>
+          </div>
+
+          <div class="hero">
+            <div class="heroBadge">TODAY'S PICK</div>
+            <div class="heroGrid">
+              <div class="heroEmoji">⚡</div>
+              <div class="heroText">
+                <div class="heroTitle">Wake up energized</div>
+                <div class="heroPromise">Morning routines that keep you sharp all day</div>
+                <div class="outcomePill">✦ Wake without snooze in 14 days</div>
+                <div class="starterRow">
+                  <div class="starterCard"><span>💧</span><span>Drink 16oz</span></div>
+                  <div class="starterCard"><span>🧘</span><span>2-Min meditate</span></div>
+                  <div class="starterCard"><span>📝</span><span>Gratitude</span></div>
+                </div>
+              </div>
+            </div>
+            <button class="heroCTA" type="button">
+              <span>Start your path →</span>
+              <span style="opacity:.9">· 12 habits inside</span>
+            </button>
+          </div>
+
+          <div class="sectionHead">
+            <div>
+              <div class="sectionTitle">Quick wins to build momentum</div>
+              <div class="sectionSub">What people are starting this week</div>
+            </div>
+            <div class="seeAll">See all</div>
+          </div>
+
+          <div class="inlineList">
+            <div class="inlineCard">
+              <div class="inlineIconBox" style="background:rgba(59,130,246,.12)"><span style="font-size:20px">💧</span></div>
+              <div class="inlineMain">
+                <div class="inlineName">Drink 16oz water</div>
+                <div class="inlineMeta"><span class="pop">🔥 12.4k</span> · Daily · 🔬 Science-backed</div>
+              </div>
+              <button class="addBtn" data-added="false" type="button">Add</button>
+            </div>
+
+            <div class="inlineCard">
+              <div class="inlineIconBox" style="background:rgba(5,150,105,.12)"><span style="font-size:20px">🧘</span></div>
+              <div class="inlineMain">
+                <div class="inlineName">2-Min meditation</div>
+                <div class="inlineMeta"><span class="pop">🔥 9.8k</span> · Daily · 🔬 Science-backed</div>
+              </div>
+              <button class="addBtn" data-added="false" type="button">Add</button>
+            </div>
+
+            <div class="inlineCard">
+              <div class="inlineIconBox" style="background:rgba(245,158,11,.14)"><span style="font-size:20px">📝</span></div>
+              <div class="inlineMain">
+                <div class="inlineName">Gratitude journal</div>
+                <div class="inlineMeta"><span class="pop">🔥 8.1k</span> · Daily · 🔬 Science-backed</div>
+              </div>
+              <button class="addBtn" data-added="false" type="button">Add</button>
+            </div>
+          </div>
+
+          <div class="railWrap" aria-label="Trending carousel rail peek">
+            <div class="rail" id="rail">
+              <div class="tinyPeek"><div class="t1">🥛</div><div class="t2">Hydration first</div><div class="t3">🔥 7.2k · Daily</div></div>
+              <div class="tinyPeek"><div class="t1">🧠</div><div class="t2">Deep work</div><div class="t3">🔥 6.9k · 3x/week</div></div>
+              <div class="tinyPeek"><div class="t1">🌿</div><div class="t2">Stress reset</div><div class="t3">🔥 6.1k · Daily</div></div>
+              <div class="tinyPeek"><div class="t1">🌙</div><div class="t2">Night wind-down</div><div class="t3">🔥 5.7k · Every night</div></div>
+            </div>
+            <div class="railFade"></div>
+          </div>
+
+          <div class="bottomLink">Browse all categories →</div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Tiny mock interaction: toggle Add -> Added ✓
+      document.querySelectorAll('.addBtn').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const already = btn.getAttribute('data-added') === 'true';
+          if (already) return;
+          btn.setAttribute('data-added', 'true');
+          btn.textContent = 'Added ✓';
+          btn.style.opacity = '.7';
+        });
+      });
+    </script>
+  </body>
+</html>
+
