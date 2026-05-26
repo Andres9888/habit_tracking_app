@@ -91,14 +91,22 @@ function HabitDetailScreenContent({
                     leftAction='close'
                     rightAction={
                       <HeaderButton
-                        icon={<Edit3 size={iconSizes.small} strokeWidth={2.5} />}
-                        label='Edit habit'
-                        text='Edit Habit'
+                        icon={
+                          <Edit3 size={iconSizes.small} strokeWidth={2.5} />
+                        }
+                        hint='Opens the editor for this habit name, schedule, goal, and motivation.'
+                        label='Edit habit details'
+                        text='Edit'
                         onPress={handleEdit}
                       />
                     }
                     title={habit.name}
-                    titleStyle={{ fontSize: typography.body.fontSize, fontWeight: fontWeights.semibold, letterSpacing: -0.2, lineHeight: 22 }}
+                    titleStyle={{
+                      fontSize: typography.body.fontSize,
+                      fontWeight: fontWeights.semibold,
+                      letterSpacing: -0.2,
+                      lineHeight: 22,
+                    }}
                     titleVisible={isTitlePinned}
                     variant='transparent'
                     onBack={onClose}

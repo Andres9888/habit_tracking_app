@@ -9,7 +9,7 @@ import Animated, {
 import { triggerHaptic } from '@/utils/haptics';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { typography, fontWeights } from '../../../theme/typography';
-import { borderRadius, spacing, componentSpacing } from '../../../theme/spacing';
+import { borderRadius, spacing } from '../../../theme/spacing';
 import { OPACITY } from '../../../constants/ui-values';
 import { buttonShadow } from './DetailHeader.constants';
 import { springs } from '@/theme/animations';
@@ -20,6 +20,7 @@ interface HeaderButtonProps {
   onPress: () => void;
   icon: React.ReactNode;
   label: string;
+  hint?: string;
   text?: string;
 }
 
@@ -27,34 +28,33 @@ export function HeaderButton({
   onPress,
   icon,
   label,
+  hint,
   text,
 }: HeaderButtonProps) {
   const scale = useSharedValue(1);
   const { colors, isDark } = useThemeColors();
-  const animStyle = useAnimatedStyle(() => ({ transform: [{ scale: scale.value }] }));
+  const animStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
 
   const handlePress = () => {
     void triggerHaptic('tap');
     onPress();
   };
 
-  const iconColor = colors.text.secondary;
+  const iconColor = text ? colors.primary[700] : colors.text.secondary;
+  const textButtonColors = {
+    backgroundColor: isDark ? colors.primary[100] : colors.status.successLight,
+    borderColor: colors.primary[300],
+  };
 
   if (text) {
     return (
       <AnimatedPressable
+        accessibilityHint={hint}
         accessibilityLabel={label}
         accessibilityRole='button'
-        style={[
-          s.textButton,
-          animStyle,
-          {
-            backgroundColor: isDark
-              ? 'rgba(255,255,255,0.08)'
-              : 'rgba(0,0,0,0.04)',
-            borderColor: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.08)',
-          },
-        ]}
+        style={[s.textButton, animStyle, textButtonColors]}
         onPress={handlePress}
         onPressIn={() => {
           scale.value = withSpring(0.92, springs.button);
@@ -93,10 +93,18 @@ export function HeaderButton({
 }
 
 const s = StyleSheet.create({
-  textButton: { alignItems: 'center', borderRadius: borderRadius.xl, borderWidth: 1, flexDirection: 'row', gap: spacing.sm, height: componentSpacing.button.height, paddingHorizontal: spacing.base },
+  textButton: {
+    alignItems: 'center',
+    borderRadius: borderRadius.full,
+    borderWidth: 1,
+    flexDirection: 'row',
+    gap: spacing.xs,
+    height: 40,
+    paddingHorizontal: spacing.md,
+  },
   textLabel: {
     ...typography.bodySmall,
-    fontWeight: fontWeights.medium,
+    fontWeight: fontWeights.semibold,
     letterSpacing: -0.2,
   },
 });
