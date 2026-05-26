@@ -16,11 +16,21 @@ import { springs } from '@/theme/animations';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
+type HeaderButtonTone = 'subtle' | 'accent';
+
 interface HeaderButtonProps {
   onPress: () => void;
   icon: React.ReactNode;
   label: string;
   text?: string;
+  /**
+   * Visual emphasis.
+   * - `subtle`: neutral pill (default, used for low-priority actions).
+   * - `accent`: tinted with the primary brand color for higher affordance.
+   *   Use for actions we want users to discover (e.g. Edit, which is the
+   *   gateway to customization & premium features).
+   */
+  tone?: HeaderButtonTone;
 }
 
 export function HeaderButton({
@@ -28,6 +38,7 @@ export function HeaderButton({
   icon,
   label,
   text,
+  tone = 'subtle',
 }: HeaderButtonProps) {
   const scale = useSharedValue(1);
   const { colors, isDark } = useThemeColors();
@@ -38,9 +49,20 @@ export function HeaderButton({
     onPress();
   };
 
-  const iconColor = colors.text.secondary;
+  const subtleFg = colors.text.secondary;
+  const accentFg = colors.primary[700];
+  const iconColor = tone === 'accent' ? accentFg : subtleFg;
 
   if (text) {
+    const accentBg = isDark ? 'rgba(110,231,183,0.14)' : 'rgba(5,150,105,0.10)';
+    const accentBorder = isDark
+      ? 'rgba(110,231,183,0.22)'
+      : 'rgba(5,150,105,0.20)';
+    const subtleBg = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.04)';
+    const subtleBorder = isDark
+      ? 'rgba(255,255,255,0.1)'
+      : 'rgba(0,0,0,0.08)';
+
     return (
       <AnimatedPressable
         accessibilityLabel={label}
@@ -49,10 +71,8 @@ export function HeaderButton({
           s.textButton,
           animStyle,
           {
-            backgroundColor: isDark
-              ? 'rgba(255,255,255,0.08)'
-              : 'rgba(0,0,0,0.04)',
-            borderColor: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.08)',
+            backgroundColor: tone === 'accent' ? accentBg : subtleBg,
+            borderColor: tone === 'accent' ? accentBorder : subtleBorder,
           },
         ]}
         onPress={handlePress}
@@ -63,12 +83,23 @@ export function HeaderButton({
           scale.value = withSpring(1, springs.button);
         }}
       >
-        <View style={{ opacity: OPACITY.high }}>
+        <View style={{ opacity: tone === 'accent' ? 1 : OPACITY.high }}>
           {React.cloneElement(icon as React.ReactElement<{ color: string }>, {
             color: iconColor,
           })}
         </View>
-        <Text style={[s.textLabel, { color: iconColor }]}>{text}</Text>
+        <Text
+          style={[
+            s.textLabel,
+            {
+              color: iconColor,
+              fontWeight:
+                tone === 'accent' ? fontWeights.semibold : fontWeights.medium,
+            },
+          ]}
+        >
+          {text}
+        </Text>
       </AnimatedPressable>
     );
   }
