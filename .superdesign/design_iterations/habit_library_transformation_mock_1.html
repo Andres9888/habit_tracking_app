@@ -1,0 +1,366 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Habit Library Transformation Mock</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        box-sizing: border-box !important;
+      }
+      body {
+        align-items: center !important;
+        background: #171412 !important;
+        color: #231f20 !important;
+        display: flex !important;
+        font-family: Inter, sans-serif !important;
+        justify-content: center !important;
+        margin: 0 !important;
+        min-height: 100vh !important;
+        padding: 28px !important;
+      }
+      .phone {
+        background: #f8f3ec !important;
+        border: 10px solid #0f0d0b !important;
+        border-radius: 42px !important;
+        box-shadow: 0 24px 80px rgb(0 0 0 / 0.45) !important;
+        height: 812px !important;
+        overflow: hidden !important;
+        width: 375px !important;
+      }
+      .screen {
+        height: 100% !important;
+        overflow: hidden !important;
+        padding: 20px 16px 28px !important;
+      }
+      .status {
+        display: flex !important;
+        font-size: 12px !important;
+        font-weight: 700 !important;
+        justify-content: space-between !important;
+        margin-bottom: 24px !important;
+      }
+      h1 {
+        color: #292422 !important;
+        font-size: 29px !important;
+        letter-spacing: -1px !important;
+        line-height: 1.05 !important;
+        margin: 0 !important;
+      }
+      .subtitle {
+        color: #756b62 !important;
+        font-size: 14px !important;
+        font-weight: 600 !important;
+        line-height: 1.45 !important;
+        margin: 8px 0 16px !important;
+      }
+      .search {
+        align-items: center !important;
+        background: #fffaf2 !important;
+        border: 1px solid #e6d9c8 !important;
+        border-radius: 18px !important;
+        color: #948a80 !important;
+        display: flex !important;
+        font-size: 13px !important;
+        font-weight: 600 !important;
+        gap: 10px !important;
+        padding: 14px !important;
+      }
+      .chips {
+        display: flex !important;
+        gap: 8px !important;
+        margin: 12px -16px 16px 0 !important;
+        overflow: hidden !important;
+      }
+      .chip {
+        background: #fffaf2 !important;
+        border: 1px solid #e7dccd !important;
+        border-radius: 999px !important;
+        color: #62594f !important;
+        flex: 0 0 auto !important;
+        font-size: 12px !important;
+        font-weight: 800 !important;
+        padding: 10px 14px !important;
+      }
+      .guide {
+        background: #ede7d5 !important;
+        border: 1px solid #d9cfae !important;
+        border-radius: 20px !important;
+        margin-bottom: 16px !important;
+        padding: 16px !important;
+      }
+      .eyebrow {
+        color: #6f5f20 !important;
+        font-size: 10px !important;
+        font-weight: 900 !important;
+        letter-spacing: 1px !important;
+        margin-bottom: 4px !important;
+      }
+      .guide h2 {
+        font-size: 18px !important;
+        letter-spacing: -0.4px !important;
+        margin: 0 0 6px !important;
+      }
+      .guide p {
+        color: #665f57 !important;
+        font-size: 13px !important;
+        font-weight: 600 !important;
+        line-height: 1.45 !important;
+        margin: 0 !important;
+      }
+      .steps {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        gap: 8px !important;
+        margin-top: 14px !important;
+      }
+      .step {
+        align-items: center !important;
+        display: flex !important;
+        gap: 6px !important;
+      }
+      .num {
+        align-items: center !important;
+        background: #8b741d !important;
+        border-radius: 50% !important;
+        color: white !important;
+        display: flex !important;
+        font-size: 11px !important;
+        font-weight: 900 !important;
+        height: 22px !important;
+        justify-content: center !important;
+        width: 22px !important;
+      }
+      .step span:last-child {
+        color: #6b6259 !important;
+        font-size: 11px !important;
+        font-weight: 800 !important;
+      }
+      .hero {
+        background: linear-gradient(135deg, #fef3c7, #efe2c4) !important;
+        border-radius: 22px !important;
+        margin-bottom: 12px !important;
+        padding: 18px !important;
+      }
+      .badge {
+        background: rgb(255 255 255 / 0.58) !important;
+        border-radius: 999px !important;
+        color: #78350f !important;
+        display: inline-block !important;
+        font-size: 9px !important;
+        font-weight: 900 !important;
+        letter-spacing: 0.8px !important;
+        padding: 4px 10px !important;
+        text-transform: uppercase !important;
+      }
+      .hero-main {
+        display: flex !important;
+        gap: 14px !important;
+        margin-top: 14px !important;
+      }
+      .emoji {
+        font-size: 58px !important;
+        line-height: 1 !important;
+      }
+      .hero h2 {
+        color: #78350f !important;
+        font-size: 24px !important;
+        letter-spacing: -0.7px !important;
+        line-height: 1.05 !important;
+        margin: 4px 0 !important;
+      }
+      .hero-copy {
+        color: #78350f !important;
+        font-size: 14px !important;
+        font-weight: 700 !important;
+        line-height: 1.35 !important;
+        opacity: 0.9 !important;
+      }
+      .mini-list {
+        display: flex !important;
+        gap: 8px !important;
+        margin-top: 14px !important;
+      }
+      .mini {
+        background: rgb(255 255 255 / 0.55) !important;
+        border-radius: 14px !important;
+        color: #78350f !important;
+        flex: 1 !important;
+        font-size: 11px !important;
+        font-weight: 800 !important;
+        line-height: 1.25 !important;
+        padding: 9px !important;
+      }
+      .cta {
+        background: #78350f !important;
+        border-radius: 999px !important;
+        color: white !important;
+        display: inline-flex !important;
+        font-size: 13px !important;
+        font-weight: 900 !important;
+        gap: 8px !important;
+        margin-top: 16px !important;
+        padding: 11px 16px !important;
+      }
+      .rail {
+        display: flex !important;
+        gap: 10px !important;
+        margin-right: -16px !important;
+        overflow: hidden !important;
+      }
+      .goal {
+        border-radius: 18px !important;
+        flex: 0 0 162px !important;
+        min-height: 142px !important;
+        padding: 14px !important;
+      }
+      .goal:nth-child(1) {
+        background: #eff6ff !important;
+        color: #1e3a5f !important;
+      }
+      .goal:nth-child(2) {
+        background: #f0fdf4 !important;
+        color: #14532d !important;
+      }
+      .goal:nth-child(3) {
+        background: #faf5ff !important;
+        color: #581c87 !important;
+      }
+      .goal .g-emoji {
+        font-size: 30px !important;
+      }
+      .goal h3 {
+        font-size: 16px !important;
+        margin: 6px 0 4px !important;
+      }
+      .goal p {
+        font-size: 12px !important;
+        font-weight: 700 !important;
+        line-height: 1.35 !important;
+        margin: 0 !important;
+        opacity: 0.82 !important;
+      }
+      .popular {
+        margin-top: 18px !important;
+      }
+      .popular h2 {
+        font-size: 19px !important;
+        letter-spacing: -0.5px !important;
+        margin: 0 !important;
+      }
+      .popular p {
+        color: #776d63 !important;
+        font-size: 12px !important;
+        font-weight: 700 !important;
+        margin: 3px 0 10px !important;
+      }
+      .cards {
+        display: flex !important;
+        gap: 10px !important;
+      }
+      .habit {
+        background: #fffaf2 !important;
+        border: 1px solid #e7dccd !important;
+        border-radius: 18px !important;
+        flex: 1 !important;
+        padding: 12px !important;
+      }
+      .habit b {
+        display: block !important;
+        font-size: 13px !important;
+        line-height: 1.2 !important;
+        margin-top: 8px !important;
+      }
+      .habit small {
+        color: #81766c !important;
+        display: block !important;
+        font-weight: 700 !important;
+        margin-top: 5px !important;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="phone">
+      <section class="screen">
+        <div class="status"><span>9:41</span><span>●●● WiFi 96%</span></div>
+        <h1>Choose your next transformation</h1>
+        <p class="subtitle">
+          Pick an outcome, then start with one small habit that moves it
+          forward.
+        </p>
+
+        <div class="search">⌕ Already know the habit? Try journaling or evening walk</div>
+        <div class="chips">
+          <div class="chip">✨ All</div>
+          <div class="chip">⚡ Quick</div>
+          <div class="chip">🔥 High ROI</div>
+          <div class="chip">🌅 Morning</div>
+        </div>
+
+        <section class="guide">
+          <div class="eyebrow">FIND YOUR PATH</div>
+          <h2>Start with the change you want.</h2>
+          <p>
+            We narrow the library to small habits that move that outcome
+            forward, so you can start without overthinking.
+          </p>
+          <div class="steps">
+            <div class="step"><span class="num">1</span><span>Choose outcome</span></div>
+            <div class="step"><span class="num">2</span><span>Preview path</span></div>
+            <div class="step"><span class="num">3</span><span>Add one habit</span></div>
+          </div>
+        </section>
+
+        <section class="hero">
+          <span class="badge">Recommended path today</span>
+          <div class="hero-main">
+            <div class="emoji">⚡</div>
+            <div>
+              <h2>Wake up energized</h2>
+              <div class="hero-copy">Morning routines that keep you sharp all day</div>
+            </div>
+          </div>
+          <div class="mini-list">
+            <div class="mini">💧 Drink Water</div>
+            <div class="mini">🚶 Morning Walk</div>
+            <div class="mini">🧘 2-Min Reset</div>
+          </div>
+          <div class="cta">Preview this path → <span>12 habits inside</span></div>
+        </section>
+
+        <div class="rail">
+          <div class="goal">
+            <div class="g-emoji">😴</div>
+            <h3>Sleep deeper</h3>
+            <p>Wind down, rest fully, wake refreshed</p>
+          </div>
+          <div class="goal">
+            <div class="g-emoji">🧘</div>
+            <h3>Stress less</h3>
+            <p>Calm your mind and regulate your system</p>
+          </div>
+          <div class="goal">
+            <div class="g-emoji">🎯</div>
+            <h3>Focus deeper</h3>
+            <p>Beat distraction and do deeper work</p>
+          </div>
+        </div>
+
+        <section class="popular">
+          <h2>Quick wins to build momentum</h2>
+          <p>What people are starting this week</p>
+          <div class="cards">
+            <div class="habit"><span>📝</span><b>Daily Journal</b><small>5 min · Daily</small></div>
+            <div class="habit"><span>💪</span><b>10 Pushups</b><small>3 min · Daily</small></div>
+          </div>
+        </section>
+      </section>
+    </main>
+  </body>
+</html>
