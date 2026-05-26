@@ -92,12 +92,19 @@ export function StarterHabitList({
         accessibilityLabel='Browse habits by goal'
         accessibilityRole='button'
         hitSlop={8}
-        style={s.escape}
+        style={[
+          s.escape,
+          {
+            backgroundColor: colors.card,
+            borderColor: colors.border,
+          },
+        ]}
         onPress={onBrowseByGoal}
       >
-        <Text style={[s.escapeText, { color: colors.text.secondary }]}>
-          Or browse by goal →
+        <Text style={[s.escapeText, { color: colors.text.primary }]}>
+          Or browse by goal
         </Text>
+        <Text style={[s.escapeArrow, { color: colors.text.primary }]}>→</Text>
       </Pressable>
     </View>
   );
@@ -111,8 +118,19 @@ const s = StyleSheet.create({
     padding: spacing.base,
   },
   copy: { flex: 1, minWidth: 0 },
-  escape: { alignItems: 'center', marginTop: spacing.md, paddingVertical: spacing.sm },
-  escapeText: { ...typography.bodySmall, fontWeight: fontWeights.medium },
+  escape: {
+    alignItems: 'center',
+    alignSelf: 'center',
+    borderRadius: borderRadius.full,
+    borderWidth: 1,
+    flexDirection: 'row',
+    gap: 6,
+    marginTop: spacing.md,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+  },
+  escapeArrow: { ...typography.bodySmall, fontWeight: fontWeights.bold },
+  escapeText: { ...typography.bodySmall, fontWeight: fontWeights.semibold },
   eyebrow: {
     ...typography.caption,
     fontWeight: fontWeights.bold,

@@ -7,7 +7,10 @@ export interface GoalCollection {
   id: string;
   emoji: string;
   label: string;
+  /** One-line vision of who this user becomes */
   promise: string;
+  /** Concrete, measurable outcome surfaced on cards (e.g. "Wake without snooze in 14 days") */
+  outcome: string;
   categories: string[];
   bgColor: string;
   textColor: string;
@@ -21,6 +24,7 @@ export const GOAL_COLLECTIONS: GoalCollection[] = [
     emoji: '⚡',
     label: 'Wake up energized',
     promise: 'Morning routines that keep you sharp all day',
+    outcome: 'Wake without snooze in 14 days',
     categories: ['morning_routine', 'health_fitness'],
     bgColor: '#FEF3C7',
     textColor: '#78350F',
@@ -32,6 +36,7 @@ export const GOAL_COLLECTIONS: GoalCollection[] = [
     emoji: '😴',
     label: 'Sleep deeper',
     promise: 'Wind down, rest fully, wake refreshed',
+    outcome: 'Fall asleep 30% faster in 2 weeks',
     categories: ['sleep', 'recovery', 'breathing'],
     bgColor: '#EFF6FF',
     textColor: '#1E3A5F',
@@ -43,6 +48,7 @@ export const GOAL_COLLECTIONS: GoalCollection[] = [
     emoji: '🧘',
     label: 'Stress less',
     promise: 'Calm your mind and regulate your system',
+    outcome: 'Drop daily stress in 10 minutes a day',
     categories: ['mindfulness', 'breathing', 'mental_health'],
     bgColor: '#F0FDF4',
     textColor: '#14532D',
@@ -54,6 +60,7 @@ export const GOAL_COLLECTIONS: GoalCollection[] = [
     emoji: '🎯',
     label: 'Focus deeper',
     promise: 'Beat distraction and do deeper work',
+    outcome: 'Reclaim 2 hrs of focus every day',
     categories: ['productivity', 'learning'],
     bgColor: '#FAF5FF',
     textColor: '#581C87',
@@ -65,6 +72,7 @@ export const GOAL_COLLECTIONS: GoalCollection[] = [
     emoji: '💪',
     label: 'Get healthier',
     promise: 'Lasting habits for a longer life',
+    outcome: 'Feel stronger in 21 days',
     categories: ['health_fitness', 'longevity'],
     bgColor: '#FFF1F2',
     textColor: '#881337',

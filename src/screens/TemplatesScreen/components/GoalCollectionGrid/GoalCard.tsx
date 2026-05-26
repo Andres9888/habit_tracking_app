@@ -18,7 +18,7 @@ interface GoalCardProps {
 export function GoalCard({ goal, habitCount, onPress }: GoalCardProps) {
   return (
     <Pressable
-      accessibilityLabel={`${goal.label}: ${goal.promise}`}
+      accessibilityLabel={`${goal.label}. ${goal.outcome}. ${habitCount} habits.`}
       accessibilityRole='button'
       style={[s.card, s.railCard, { backgroundColor: goal.bgColor }]}
       onPress={onPress}
@@ -28,9 +28,9 @@ export function GoalCard({ goal, habitCount, onPress }: GoalCardProps) {
         <Text style={[s.label, { color: goal.textColor }]}>{goal.label}</Text>
         <Text
           numberOfLines={2}
-          style={[s.promise, { color: goal.textColor }]}
+          style={[s.outcome, { color: goal.textColor }]}
         >
-          {goal.promise}
+          ✦ {goal.outcome}
         </Text>
       </View>
       <View style={s.cardBottomRow}>

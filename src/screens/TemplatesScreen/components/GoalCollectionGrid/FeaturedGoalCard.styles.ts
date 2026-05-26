@@ -42,6 +42,19 @@ export const hero = StyleSheet.create({
   },
   emoji: { fontSize: 60, lineHeight: 64 },
   gradient: { borderRadius: 18, overflow: 'hidden', padding: 18 },
+  outcome: {
+    alignSelf: 'flex-start',
+    borderRadius: 9999,
+    marginTop: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+  },
+  outcomeText: {
+    fontFamily: fontFamilies.primary.text,
+    fontSize: 11,
+    fontWeight: fontWeights.semibold,
+    letterSpacing: 0.1,
+  },
   label: {
     fontFamily: fontFamilies.primary.display,
     fontSize: 24,

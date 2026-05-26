@@ -97,4 +97,13 @@ export const s = StyleSheet.create({
     marginTop: 4,
     opacity: 0.85,
   },
+  outcome: {
+    fontFamily: fontFamilies.primary.text,
+    fontSize: 12,
+    fontWeight: fontWeights.semibold,
+    letterSpacing: 0.05,
+    lineHeight: 16,
+    marginTop: 6,
+    opacity: 0.92,
+  },
 });

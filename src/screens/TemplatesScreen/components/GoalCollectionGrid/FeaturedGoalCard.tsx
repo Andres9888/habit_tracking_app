@@ -35,7 +35,7 @@ export function FeaturedGoalCard({
 
   return (
     <Pressable
-      accessibilityLabel={`${goal.label}. ${goal.promise}. ${countLabel}`}
+      accessibilityLabel={`${goal.label}. ${goal.promise}. Outcome: ${goal.outcome}. ${countLabel}`}
       accessibilityRole='button'
       style={[s.card, s.featuredCard, hero.wrapper]}
       onPress={onPress}
@@ -63,6 +63,19 @@ export function FeaturedGoalCard({
             >
               {goal.promise}
             </Text>
+            <View
+              style={[
+                hero.outcome,
+                { backgroundColor: `${goal.textColor}1A` },
+              ]}
+            >
+              <Text
+                numberOfLines={1}
+                style={[hero.outcomeText, { color: goal.textColor }]}
+              >
+                ✦ {goal.outcome}
+              </Text>
+            </View>
           </View>
         </View>
         <FeaturedGoalStarterRow

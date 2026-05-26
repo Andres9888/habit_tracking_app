@@ -14,13 +14,15 @@ import { BrowseSections } from './BrowseSections';
 import { bodyEnter, bodyExit, stagger } from './MainBrowseView.helpers';
 import type { MainBrowseViewProps } from './MainBrowseView.types';
 
-const HEADER_SUBTITLE = 'Pick a path — habits proven to work.';
+const NEW_USER_SUBTITLE =
+  '200+ science-backed habits. Pick a goal — we’ll do the structure.';
 
 export function MainBrowseView(p: MainBrowseViewProps) {
   const { colors } = useThemeColors();
   const isCategoryFilterActive = p.selectedCategory !== 'all';
   const showFilteredResults = p.isSearchActive || isCategoryFilterActive;
   const isFirstTimeUser = p.userHabitCount <= 1;
+  const headerSubtitle = isFirstTimeUser ? NEW_USER_SUBTITLE : undefined;
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
@@ -31,7 +33,7 @@ export function MainBrowseView(p: MainBrowseViewProps) {
             <SessionProgressPill count={p.sessionImportCount} />
           ) : undefined
         }
-        subtitle={HEADER_SUBTITLE}
+        subtitle={headerSubtitle}
         title='What do you want to work on?'
         titleNumberOfLines={2}
       />
