@@ -14,7 +14,8 @@ import { BrowseSections } from './BrowseSections';
 import { bodyEnter, bodyExit, stagger } from './MainBrowseView.helpers';
 import type { MainBrowseViewProps } from './MainBrowseView.types';
 
-const HEADER_SUBTITLE = 'Pick a path — habits proven to work.';
+const HEADER_SUBTITLE =
+  'Pick an outcome, then start with one small habit that moves it forward.';
 
 export function MainBrowseView(p: MainBrowseViewProps) {
   const { colors } = useThemeColors();
@@ -32,7 +33,7 @@ export function MainBrowseView(p: MainBrowseViewProps) {
           ) : undefined
         }
         subtitle={HEADER_SUBTITLE}
-        title='What do you want to work on?'
+        title='Choose your next transformation'
         titleNumberOfLines={2}
       />
       <Animated.View
@@ -40,7 +41,7 @@ export function MainBrowseView(p: MainBrowseViewProps) {
         style={[styles.searchSection, p.searchAnimatedStyle]}
       >
         <SearchBar
-          inputHint='Try: morning walk · journaling · cold shower'
+          inputHint='Already know the habit? Try journaling or evening walk'
           value={p.searchQuery}
           onChangeText={p.onSearchChange}
           onClear={p.onSearchClear}

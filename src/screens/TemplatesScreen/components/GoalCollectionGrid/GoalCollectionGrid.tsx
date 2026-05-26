@@ -23,7 +23,7 @@ interface GoalCollectionGridProps {
 }
 
 export function GoalCollectionGrid({
-  featuredBadgeLabel = 'Today\u2019s pick',
+  featuredBadgeLabel = 'Recommended path today',
   featuredGoalId,
   featuredStarterTemplates,
   habitCountsByGoalId,

@@ -11,6 +11,7 @@ import { GoalCollectionGrid } from '../components/GoalCollectionGrid';
 import { PopularSection } from '../components/PopularSection';
 import { StartHereCard } from '../components/StartHereCard';
 import { StarterHabitList } from '../components/StarterHabitList';
+import { TransformationGuideCard } from '../components/TransformationGuideCard';
 import type { GoalCollection } from '../data/goalCollections';
 import { stagger } from './MainBrowseView.helpers';
 
@@ -63,6 +64,7 @@ export function BrowseSections(p: BrowseSectionsProps) {
 
       {!showStarterList ? (
         <Animated.View entering={stagger(p.isFirstTimeUser ? 3 : 2)}>
+          <TransformationGuideCard />
           <GoalCollectionGrid
             featuredBadgeLabel={p.featuredBadgeLabel}
             featuredGoalId={p.featuredGoalId}

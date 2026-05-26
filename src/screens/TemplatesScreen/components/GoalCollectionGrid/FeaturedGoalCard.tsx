@@ -29,7 +29,7 @@ export function FeaturedGoalCard({
   onPreviewStarter,
   starterTemplates,
 }: FeaturedGoalCardProps) {
-  const ctaLabel = 'Start your path';
+  const ctaLabel = 'Preview this path';
   const countLabel =
     habitCount === 1 ? '1 habit inside' : `${habitCount} habits inside`;
 
@@ -75,7 +75,7 @@ export function FeaturedGoalCard({
             {ctaLabel} →
           </Text>
           <Text style={[hero.ctaCount, { color: '#FFFFFF' }]}>
-            · {countLabel}
+            {countLabel}
           </Text>
         </View>
       </LinearGradient>
