@@ -1,5 +1,5 @@
 /* eslint-disable max-lines */
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useQuery } from 'convex/react';
 import { api } from '../../../convex/_generated/api';
 import type { Id } from '../../../convex/_generated/dataModel';
@@ -30,6 +30,11 @@ export function useHabitEditScreen({
   const defaultEmoji = '💪';
 
   const habit = useQuery(api.habits.get, habitId ? { habitId } : 'skip');
+
+  // Track whether form state has been hydrated from the habit query.
+  // isLoading stays true until this flips so the skeleton covers the one-render
+  // gap between habit arriving and useEffect populating form state.
+  const formInitializedRef = useRef(false);
 
   const [habitName, setHabitName] = useState('');
   const [selectedEmoji, setSelectedEmoji] = useState<string | null>('💪');
@@ -65,6 +70,7 @@ export function useHabitEditScreen({
           : 'balanced'
       );
       setProgressEmojis(habit.progressEmojis ?? undefined);
+      formInitializedRef.current = true;
     }
   }, [habit]);
 
@@ -144,7 +150,7 @@ export function useHabitEditScreen({
     handleReminderToggle,
     handleStreakGoalChange,
     handleStrengthAlgorithmChange,
-    isLoading: habitId != null && habit === undefined,
+    isLoading: habitId != null && (habit === undefined || !formInitializedRef.current),
     progressEmojis,
     remindersEnabled,
     handleSave,

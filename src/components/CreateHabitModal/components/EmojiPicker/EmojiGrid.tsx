@@ -1,15 +1,12 @@
 /**
  * EmojiGrid Component
- * Displays emojis in 5-4 triangle layout with animations
+ * Displays emojis in 5-4 triangle layout. Chips appear and disappear with the
+ * sheet — no layout transitions, no entrance fades. Each chip is in a fixed
+ * 64x64 container so position swaps are key-based mounts, not reflows.
  */
 
-import Animated, {
-  FadeIn,
-  FadeOut,
-  LinearTransition,
-} from 'react-native-reanimated';
+import Animated, { FadeOut } from 'react-native-reanimated';
 import { View } from 'react-native';
-import { durations } from '@/theme/animations';
 import { EmojiChip } from './EmojiChip';
 
 interface EmojiGridProps {
@@ -18,8 +15,6 @@ interface EmojiGridProps {
   reduceMotion: boolean;
   onEmojiSelect: (emoji: string) => void;
 }
-
-const layoutTransition = LinearTransition.duration(durations.transition);
 
 export function EmojiGrid({
   suggestedEmojis,
@@ -30,18 +25,12 @@ export function EmojiGrid({
   return (
     <View className='items-center'>
       {/* Row 1: First 5 emojis */}
-      <Animated.View
+      <View
         className='flex-row justify-center'
         style={{ flexDirection: 'row', justifyContent: 'center' }}
-        layout={layoutTransition}
       >
         {suggestedEmojis.slice(0, 5).map((emoji) => (
-          <Animated.View
-            key={emoji}
-            entering={FadeIn.duration(200)}
-            exiting={FadeOut.duration(150)}
-            layout={layoutTransition}
-          >
+          <Animated.View key={emoji} exiting={FadeOut.duration(150)}>
             <EmojiChip
               emoji={emoji}
               isSelected={selectedEmoji === emoji}
@@ -50,21 +39,15 @@ export function EmojiGrid({
             />
           </Animated.View>
         ))}
-      </Animated.View>
+      </View>
 
       {/* Row 2: Last 4 emojis */}
-      <Animated.View
+      <View
         className='flex-row justify-center'
         style={{ flexDirection: 'row', justifyContent: 'center' }}
-        layout={layoutTransition}
       >
         {suggestedEmojis.slice(5, 9).map((emoji) => (
-          <Animated.View
-            key={emoji}
-            entering={FadeIn.duration(200)}
-            exiting={FadeOut.duration(150)}
-            layout={layoutTransition}
-          >
+          <Animated.View key={emoji} exiting={FadeOut.duration(150)}>
             <EmojiChip
               emoji={emoji}
               isSelected={selectedEmoji === emoji}
@@ -73,7 +56,7 @@ export function EmojiGrid({
             />
           </Animated.View>
         ))}
-      </Animated.View>
+      </View>
     </View>
   );
 }

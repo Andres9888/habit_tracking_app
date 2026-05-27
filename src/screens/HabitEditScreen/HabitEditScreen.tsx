@@ -12,12 +12,11 @@ import {
 } from 'react-native';
 import { KeyboardAvoidingView, Platform } from 'react-native';
 import { GestureDetector } from 'react-native-gesture-handler';
-import Animated, { FadeIn, FadeInUp } from 'react-native-reanimated';
+import Animated from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useSwipeDismiss } from '../../components/CreateHabitModal/hooks/useSwipeDismiss';
 import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 import { useThemeColors } from '../../theme/ThemeContext';
-import { durations, enterEasing } from '../../theme/animations';
 import { borderRadius } from '../../theme/spacing';
 import { AdvancedOptionsSection } from '../../components/AdvancedOptions';
 import { EditHeader } from './EditHeader';
@@ -106,10 +105,7 @@ function HabitEditScreenContent({
                   <HabitEditSkeleton />
                 </View>
               ) : (
-                <Animated.View
-                  entering={FadeIn.duration(300)}
-                  style={{ flex: 1 }}
-                >
+                <View style={{ flex: 1 }}>
                   <View style={styles.dragHandleRow}>
                     <View
                       style={[
@@ -144,10 +140,7 @@ function HabitEditScreenContent({
                         habitName={state.habitName}
                         onChangeText={state.setHabitName}
                       />
-                      <Animated.View
-                        className='px-6'
-                        entering={FadeInUp.delay(280).duration(durations.enter).easing(enterEasing)}
-                      >
+                      <View className='px-6'>
                         <CustomizeSection
                           habitName={state.habitName}
                           remindersEnabled={state.remindersEnabled}
@@ -160,7 +153,7 @@ function HabitEditScreenContent({
                           onReminderTimeChange={state.handleReminderTimeChange}
                           onReminderToggle={handleReminderToggle}
                         />
-                      </Animated.View>
+                      </View>
                       <AdvancedOptionsSection
                         growthType={state.growthType}
                         progressEmojis={state.progressEmojis}
@@ -180,7 +173,7 @@ function HabitEditScreenContent({
                       </Pressable>
                     </View>
                   </ScrollView>
-                </Animated.View>
+                </View>
               )}
             </KeyboardAvoidingView>
           </Animated.View>

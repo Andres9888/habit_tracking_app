@@ -4,7 +4,6 @@ import { type ReactNode, useEffect, useRef, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import Animated, {
   FadeIn,
-  FadeInUp,
   FadeOut,
   LinearTransition,
   useAnimatedStyle,
@@ -23,7 +22,7 @@ import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '@/theme/ThemeContext';
 import { fontWeights, typography } from '@/theme/typography';
 import { shadows } from '@/theme/spacing';
-import { durations, enterEasing } from '@/theme/animations';
+import { durations } from '@/theme/animations';
 import {
   CUSTOM_PRESET_ID,
   matchPresetId,
@@ -50,7 +49,6 @@ export function AdvancedOptionsSection({
   onStrengthAlgorithmChange,
   onProgressEmojisChange,
   onStreakGoalChange,
-  baseDelay = 320,
   onExpand,
 }: AdvancedOptionsSectionProps) {
   const { colors } = useThemeColors();
@@ -110,7 +108,6 @@ export function AdvancedOptionsSection({
     <>
       <Animated.View
         className='mt-6 px-6'
-        entering={FadeInUp.delay(baseDelay + 40).duration(durations.enter).easing(enterEasing)}
         layout={reduceMotion ? undefined : LinearTransition.duration(220)}
       >
         <View

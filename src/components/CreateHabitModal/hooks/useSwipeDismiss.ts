@@ -1,10 +1,18 @@
 /**
  * useSwipeDismiss — sheet transition with swipe-to-dismiss.
  *
- * Enter: timing slide-up + backdrop fade-in (durations.enter / enterEasing)
- * Exit: timing slide-down + backdrop fade-out, then onClose
+ * Enter: timing slide-up + backdrop fade-in (durations.sheet / enterEasing).
+ *        Uses `durations.sheet` (~360ms) to match the cadence of the native
+ *        iOS Modal slide animation used by Settings and Templates — all
+ *        modal surfaces feel paced the same, even though Create/Edit are
+ *        bottom sheets rather than full-screen modals.
+ * Exit: timing slide-down + backdrop fade-out, then onClose.
  * Swipe: gesture tracking with proportional backdrop fade, haptic on threshold;
  *        partial-drag snap-back stays on springs.gesture (small correction).
+ *
+ * Why bottom-sheet (not native slide) for Create/Edit: focused secondary tasks
+ * benefit from preserving context — you can see the dim habits list behind the
+ * sheet. iOS HIG: bottom sheets for secondary tasks, full-screen for navigation.
  */
 
 import { useCallback, useEffect, useRef } from 'react';
@@ -19,6 +27,7 @@ import {
 } from 'react-native-reanimated';
 import { durations, enterEasing, springs } from '@/theme/animations';
 import { HapticPatterns } from '@/utils/haptics/patterns';
+import { useReduceMotion } from '@/hooks/useReduceMotion';
 import {
   DISMISS_THRESHOLD,
   SCREEN_HEIGHT,
@@ -38,36 +47,55 @@ export function useSwipeDismiss({ visible, onClose }: UseSwipeDismissProps) {
   const isClosing = useRef(false);
   const onCloseRef = useRef(onClose);
   onCloseRef.current = onClose;
+  const reduceMotion = useReduceMotion();
 
-  // Animate sheet up and backdrop in independently so the backdrop fades
-  // in place instead of sliding with the sheet (prevents "backdrop coming up" flash).
+  // Sheet and backdrop arrive together on the canonical 280ms cubic ease-out
+  // (design system rule: "Entry motion: fade + translateY, 280ms cubic ease-out,
+  // no springify"). Matches DayHabitsBottomSheet / EmojiPickerV2 — calm, no
+  // overshoot wobble. With reduce-motion enabled, snap directly to final state.
   useEffect(() => {
     if (visible) {
       isClosing.current = false;
+      if (reduceMotion) {
+        translateY.value = 0;
+        backdropOpacity.value = BACKDROP_TARGET;
+        return;
+      }
       translateY.value = withTiming(0, {
-        duration: durations.enter,
+        duration: durations.sheet,
         easing: enterEasing,
       });
       backdropOpacity.value = withTiming(BACKDROP_TARGET, {
-        duration: durations.enter,
+        duration: durations.sheet,
         easing: enterEasing,
       });
     }
-  }, [visible]);
+  }, [visible, reduceMotion]);
 
   const animateOut = useCallback(() => {
     if (isClosing.current) return;
     isClosing.current = true;
     Keyboard.dismiss();
-    backdropOpacity.value = withTiming(0, { duration: 200 });
+    if (reduceMotion) {
+      backdropOpacity.value = 0;
+      translateY.value = SCREEN_HEIGHT;
+      onCloseRef.current();
+      return;
+    }
+    // Backdrop and sheet exit on the same duration so the dim doesn't disappear
+    // before the sheet has finished sliding away.
+    backdropOpacity.value = withTiming(0, {
+      duration: durations.sheet,
+      easing: enterEasing,
+    });
     translateY.value = withTiming(
       SCREEN_HEIGHT,
-      { duration: durations.enter, easing: enterEasing },
+      { duration: durations.sheet, easing: enterEasing },
       (finished) => {
         if (finished) runOnJS(onCloseRef.current)();
       }
     );
-  }, []);
+  }, [reduceMotion]);
 
   const panGesture = Gesture.Pan()
     .onUpdate((event) => {

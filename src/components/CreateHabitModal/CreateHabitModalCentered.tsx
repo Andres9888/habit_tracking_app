@@ -1,8 +1,9 @@
 /**
  * CreateHabitModalCentered - Full-screen modal for habit creation
  *
- * Spring-based sheet transition with animated backdrop.
- * Enter: spring slide-up + fade. Exit: spring slide-down + fade, then unmount.
+ * Native iOS slide animation (`animationType='slide'`) — matches Settings and
+ * Templates so all three bottom-bar actions feel identical. No custom Reanimated
+ * sheet needed; the OS handles the transition.
  */
 
 import { useEffect, useRef, useState } from 'react';
@@ -10,22 +11,15 @@ import {
   KeyboardAvoidingView,
   Modal,
   Platform,
-  Pressable,
-  StyleSheet,
   View,
 } from 'react-native';
 import type { ScrollView as ScrollViewType, View as ViewType } from 'react-native';
 
-import { GestureDetector } from 'react-native-gesture-handler';
-import Animated from 'react-native-reanimated';
-
 import { useThemeColors } from '../../theme/ThemeContext';
-import { borderRadius } from '../../theme/spacing';
 import { CreateHabitScrollContent } from './components/CreateHabitScrollContent';
 import { ModalHeader } from './components/ModalHeader';
 import { useCenteredFormCallbacks } from './hooks/useCenteredFormCallbacks';
 import { useCreateHabitModal } from './hooks/useCreateHabitModal';
-import { useSwipeDismiss } from './hooks/useSwipeDismiss';
 import type { CreateHabitModalProps } from './types';
 
 export default function CreateHabitModalCentered(props: CreateHabitModalProps) {
@@ -36,9 +30,6 @@ export default function CreateHabitModalCentered(props: CreateHabitModalProps) {
   const reminderSectionRef = useRef<ViewType>(null);
   const [showNameError, setShowNameError] = useState(false);
   const { colors } = useThemeColors();
-  const { animateOut, backdropStyle, panGesture, sheetStyle } = useSwipeDismiss(
-    { visible, onClose }
-  );
 
   const callbacks = useCenteredFormCallbacks({
     form,
@@ -69,61 +60,34 @@ export default function CreateHabitModalCentered(props: CreateHabitModalProps) {
   return (
     <Modal
       accessibilityViewIsModal
+      animationType='slide'
+      presentationStyle='overFullScreen'
       transparent
-      animationType='none'
       visible={visible}
-      onRequestClose={animateOut}
+      onRequestClose={onClose}
     >
-      <View className='flex-1'>
-        <Pressable style={StyleSheet.absoluteFill} onPress={animateOut}>
-          <Animated.View className='flex-1 bg-black' style={backdropStyle} />
-        </Pressable>
-        <GestureDetector gesture={panGesture}>
-          <Animated.View
-            className='overflow-hidden rounded-t-3xl shadow-2xl'
-            style={[
-              styles.sheet,
-              sheetStyle,
-              { backgroundColor: colors.surface },
-            ]}
-          >
-            <KeyboardAvoidingView
-              behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-              className='flex-1'
-            >
-              <View style={styles.dragHandleRow}>
-                <View
-                  style={[
-                    styles.dragHandle,
-                    { backgroundColor: colors.gray[300] },
-                  ]}
-                />
-              </View>
-              <ModalHeader
-                habitName={form.habitName}
-                isEditMode={isEditMode}
-                onClose={animateOut}
-                onSave={callbacks.handleSave}
-                onValidationError={callbacks.handleValidationError}
-              />
-              <CreateHabitScrollContent
-                callbacks={callbacks}
-                form={form}
-                reminderSectionRef={reminderSectionRef}
-                scrollContentRef={scrollContentRef}
-                scrollViewRef={scrollViewRef}
-                showNameError={showNameError}
-              />
-            </KeyboardAvoidingView>
-          </Animated.View>
-        </GestureDetector>
+      <View className='flex-1' style={{ backgroundColor: colors.surface }}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          className='flex-1'
+        >
+          <ModalHeader
+            habitName={form.habitName}
+            isEditMode={isEditMode}
+            onClose={onClose}
+            onSave={callbacks.handleSave}
+            onValidationError={callbacks.handleValidationError}
+          />
+          <CreateHabitScrollContent
+            callbacks={callbacks}
+            form={form}
+            reminderSectionRef={reminderSectionRef}
+            scrollContentRef={scrollContentRef}
+            scrollViewRef={scrollViewRef}
+            showNameError={showNameError}
+          />
+        </KeyboardAvoidingView>
       </View>
     </Modal>
   );
 }
-
-const styles = StyleSheet.create({
-  dragHandle: { borderRadius: borderRadius.xs, height: 5, width: 36 },
-  dragHandleRow: { alignItems: 'center', paddingBottom: 4, paddingTop: 8 },
-  sheet: StyleSheet.absoluteFillObject,
-});

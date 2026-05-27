@@ -9,17 +9,12 @@
 
 import type { RefObject } from 'react';
 import { Text, View } from 'react-native';
-import Animated, { FadeInUp } from 'react-native-reanimated';
 import { EmojiPicker } from '../../components/CreateHabitModal/components/EmojiPicker';
 import { ColorPickerSection } from '../../components/CreateHabitModal/components/ColorPickerSection';
 import { EnhancedReminderSelector } from '../../components/CreateHabitModal/components/EnhancedReminderSelector';
 import { HABIT_COLORS } from '../../components/CreateHabitModal/constants';
 import { useThemeColors } from '../../theme/ThemeContext';
-import { durations, enterEasing } from '../../theme/animations';
 import { fontWeights, typography } from '../../theme/typography';
-
-const entrance = (delay: number) =>
-  FadeInUp.delay(delay).duration(durations.enter).easing(enterEasing);
 
 interface CustomizeSectionProps {
   habitName: string;
@@ -62,14 +57,12 @@ export function CustomizeSection({
         Choose an icon
       </Text>
 
-      <Animated.View entering={entrance(0)}>
-        <EmojiPicker
-          hideLabel
-          habitName={habitName}
-          selectedEmoji={selectedEmoji}
-          onSelect={onEmojiSelect}
-        />
-      </Animated.View>
+      <EmojiPicker
+        hideLabel
+        habitName={habitName}
+        selectedEmoji={selectedEmoji}
+        onSelect={onEmojiSelect}
+      />
 
       <Text
         className='mb-3 mt-4 text-center uppercase'
@@ -83,25 +76,21 @@ export function CustomizeSection({
         Pick a color
       </Text>
 
-      <Animated.View entering={entrance(60)}>
-        <ColorPickerSection
-          hideLabel
-          colors={HABIT_COLORS}
-          selectedColor={selectedColor}
-          onSelectColor={onColorSelect}
-        />
-      </Animated.View>
+      <ColorPickerSection
+        hideLabel
+        colors={HABIT_COLORS}
+        selectedColor={selectedColor}
+        onSelectColor={onColorSelect}
+      />
 
-      <Animated.View entering={entrance(120)}>
-        <View ref={reminderSectionRef} collapsable={false}>
-          <EnhancedReminderSelector
-            enabled={remindersEnabled}
-            reminderTime={reminderTime}
-            onTimeChange={onReminderTimeChange}
-            onToggle={onReminderToggle}
-          />
-        </View>
-      </Animated.View>
+      <View ref={reminderSectionRef} collapsable={false}>
+        <EnhancedReminderSelector
+          enabled={remindersEnabled}
+          reminderTime={reminderTime}
+          onTimeChange={onReminderTimeChange}
+          onToggle={onReminderToggle}
+        />
+      </View>
     </View>
   );
 }

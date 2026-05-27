@@ -101,7 +101,6 @@ const CreateHabitFormCenteredComponent = ({
       </View>
 
       <AdvancedOptionsSection
-        baseDelay={0}
         progressEmojis={progressEmojis}
         streakGoal={streakGoal}
         strengthAlgorithm={strengthAlgorithm}

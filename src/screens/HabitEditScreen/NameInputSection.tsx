@@ -5,9 +5,7 @@
 
 import { useState } from 'react';
 import { View, Text, TextInput, Keyboard } from 'react-native';
-import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import { useThemeColors } from '../../theme';
-import { enterEasing } from '@/theme/animations';
 import { spacing } from '@/theme/spacing';
 import { typography } from '@/theme/typography';
 import { buildTextInputHintProps } from '@/utils/textInputHintProps';
@@ -29,10 +27,7 @@ export function NameInputSection({
       className='items-center px-6'
       style={{ marginBottom: spacing['2xl'], marginTop: spacing.xl }}
     >
-      <Animated.View
-        className='mb-6'
-        entering={FadeInDown.duration(280).delay(100).easing(enterEasing)}
-      >
+      <View className='mb-6'>
         <Text
           accessibilityRole='header'
           className='text-center leading-tight'
@@ -40,10 +35,10 @@ export function NameInputSection({
         >
           Edit your habit
         </Text>
-      </Animated.View>
+      </View>
 
       {/* Name Input */}
-      <Animated.View className='w-full' entering={FadeInUp.duration(280).delay(160).easing(enterEasing)}>
+      <View className='w-full'>
         <TextInput
           accessibilityLabel='Habit name'
           className='w-full rounded-2xl border-2 px-5 py-4 text-center text-2xl font-medium'
@@ -65,7 +60,7 @@ export function NameInputSection({
           onFocus={() => setIsFocused(true)}
           onSubmitEditing={Keyboard.dismiss}
         />
-      </Animated.View>
+      </View>
     </View>
   );
 }

@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { Text, View } from 'react-native';
-import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
+import Animated, { FadeOut } from 'react-native-reanimated';
 import { Clock } from 'lucide-react-native';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { iconSizes } from '@/theme/iconSizes';
@@ -88,7 +88,6 @@ export const NextReminderBadge = ({
     <Animated.View
       accessibilityLabel={`Next reminder: ${text}`}
       accessibilityRole='text'
-      entering={FadeIn.duration(200).delay(100)}
       exiting={FadeOut.duration(150)}
       testID='next-reminder-badge'
     >

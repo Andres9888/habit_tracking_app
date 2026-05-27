@@ -21,7 +21,7 @@ import {
   VELOCITY_THRESHOLD,
 } from './constants';
 
-const SHEET_TIMING_CONFIG = { duration: durations.enter, easing: enterEasing };
+const SHEET_TIMING_CONFIG = { duration: durations.sheet, easing: enterEasing };
 
 interface UseSortBottomSheetOptions {
   visible: boolean;

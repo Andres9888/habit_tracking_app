@@ -15,9 +15,18 @@ export function useSuggestedEmojis(
   const isLocked = options?.isLocked ?? false;
   const [debouncedHabitName, setDebouncedHabitName] = useState(habitName || '');
   const debounceTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // First non-empty habitName lands instantly (no debounce). This avoids a
+  // visible chip-shuffle ~300ms after Edit opens, when habit data arrives
+  // after the EmojiPicker has already mounted with an empty name.
+  const hasInitializedRef = useRef(Boolean(habitName));
 
   useEffect(() => {
     if (isLocked) return;
+    if (!hasInitializedRef.current && habitName) {
+      hasInitializedRef.current = true;
+      setDebouncedHabitName(habitName);
+      return;
+    }
     if (debounceTimeoutRef.current) clearTimeout(debounceTimeoutRef.current);
     debounceTimeoutRef.current = setTimeout(() => {
       setDebouncedHabitName(habitName || '');
