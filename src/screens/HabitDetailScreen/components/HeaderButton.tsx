@@ -11,16 +11,39 @@ import { useThemeColors } from '../../../theme/ThemeContext';
 import { typography, fontWeights } from '../../../theme/typography';
 import { borderRadius, spacing, componentSpacing } from '../../../theme/spacing';
 import { OPACITY } from '../../../constants/ui-values';
-import { buttonShadow } from './DetailHeader.constants';
 import { springs } from '@/theme/animations';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
+
+type HeaderButtonTone = 'subtle' | 'accent';
 
 interface HeaderButtonProps {
   onPress: () => void;
   icon: React.ReactNode;
   label: string;
   text?: string;
+  tone?: HeaderButtonTone;
+  /** Icon-only layout — frees header space when the title pins on scroll. */
+  compact?: boolean;
+}
+
+function toneColors(
+  tone: HeaderButtonTone,
+  isDark: boolean,
+  colors: ReturnType<typeof useThemeColors>['colors']
+) {
+  if (tone === 'accent') {
+    return {
+      bg: isDark ? 'rgba(110,231,183,0.14)' : 'rgba(5,150,105,0.10)',
+      border: isDark ? 'rgba(110,231,183,0.22)' : 'rgba(5,150,105,0.20)',
+      fg: colors.primary[700],
+    };
+  }
+  return {
+    bg: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.04)',
+    border: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.08)',
+    fg: colors.text.secondary,
+  };
 }
 
 export function HeaderButton({
@@ -28,72 +51,79 @@ export function HeaderButton({
   icon,
   label,
   text,
+  tone = 'subtle',
+  compact = false,
 }: HeaderButtonProps) {
   const scale = useSharedValue(1);
   const { colors, isDark } = useThemeColors();
   const animStyle = useAnimatedStyle(() => ({ transform: [{ scale: scale.value }] }));
+  const { bg, border, fg } = toneColors(tone, isDark, colors);
+  const showText = Boolean(text) && !compact;
 
   const handlePress = () => {
     void triggerHaptic('tap');
     onPress();
   };
 
-  const iconColor = colors.text.secondary;
-
-  if (text) {
-    return (
-      <AnimatedPressable
-        accessibilityLabel={label}
-        accessibilityRole='button'
-        style={[
-          s.textButton,
-          animStyle,
-          {
-            backgroundColor: isDark
-              ? 'rgba(255,255,255,0.08)'
-              : 'rgba(0,0,0,0.04)',
-            borderColor: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.08)',
-          },
-        ]}
-        onPress={handlePress}
-        onPressIn={() => {
-          scale.value = withSpring(0.92, springs.button);
-        }}
-        onPressOut={() => {
-          scale.value = withSpring(1, springs.button);
-        }}
-      >
-        <View style={{ opacity: OPACITY.high }}>
-          {React.cloneElement(icon as React.ReactElement<{ color: string }>, {
-            color: iconColor,
-          })}
-        </View>
-        <Text style={[s.textLabel, { color: iconColor }]}>{text}</Text>
-      </AnimatedPressable>
-    );
-  }
+  const pressHandlers = {
+    onPress: handlePress,
+    onPressIn: () => {
+      scale.value = withSpring(0.92, springs.button);
+    },
+    onPressOut: () => {
+      scale.value = withSpring(1, springs.button);
+    },
+  };
 
   return (
     <AnimatedPressable
       accessibilityLabel={label}
       accessibilityRole='button'
-      className='h-11 w-11 items-center justify-center rounded-full'
-      style={[buttonShadow, animStyle, { backgroundColor: colors.card }]}
-      onPress={handlePress}
-      onPressIn={() => {
-        scale.value = withSpring(0.92, springs.button);
-      }}
-      onPressOut={() => {
-        scale.value = withSpring(1, springs.button);
-      }}
+      style={[
+        showText ? s.textButton : s.compactButton,
+        animStyle,
+        { backgroundColor: bg, borderColor: border },
+      ]}
+      {...pressHandlers}
     >
-      {icon}
+      <View style={{ opacity: tone === 'accent' ? 1 : OPACITY.high }}>
+        {React.cloneElement(icon as React.ReactElement<{ color: string }>, { color: fg })}
+      </View>
+      {showText ? (
+        <Text
+          style={[
+            s.textLabel,
+            {
+              color: fg,
+              fontWeight: tone === 'accent' ? fontWeights.semibold : fontWeights.medium,
+            },
+          ]}
+        >
+          {text}
+        </Text>
+      ) : null}
     </AnimatedPressable>
   );
 }
 
 const s = StyleSheet.create({
-  textButton: { alignItems: 'center', borderRadius: borderRadius.xl, borderWidth: 1, flexDirection: 'row', gap: spacing.sm, height: componentSpacing.button.height, paddingHorizontal: spacing.base },
+  compactButton: {
+    alignItems: 'center',
+    borderRadius: borderRadius.xl,
+    borderWidth: 1,
+    height: 40,
+    justifyContent: 'center',
+    width: 40,
+  },
+  textButton: {
+    alignItems: 'center',
+    borderRadius: borderRadius.xl,
+    borderWidth: 1,
+    flexDirection: 'row',
+    gap: spacing.sm,
+    height: componentSpacing.button.height,
+    paddingHorizontal: spacing.base,
+  },
   textLabel: {
     ...typography.bodySmall,
     fontWeight: fontWeights.medium,
