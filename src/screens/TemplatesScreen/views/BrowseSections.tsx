@@ -45,8 +45,9 @@ export function BrowseSections(p: BrowseSectionsProps) {
         paddingTop: spacing.md,
       }}
     >
-      {showStarterList ? (
-        <Animated.View entering={stagger(2)}>
+      <Animated.View entering={stagger(2)}>
+        <TransformationGuideCard />
+        {showStarterList ? (
           <StarterHabitList
             importedTemplateIds={p.importedTemplateIds}
             importingTemplateId={p.importingTemplateId}
@@ -55,16 +56,13 @@ export function BrowseSections(p: BrowseSectionsProps) {
             onImport={p.onImport}
             onPreview={p.onPreview}
           />
-        </Animated.View>
-      ) : p.isFirstTimeUser ? (
-        <Animated.View entering={stagger(2)}>
+        ) : p.isFirstTimeUser ? (
           <StartHereCard onPress={p.onStartHerePress} />
-        </Animated.View>
-      ) : null}
+        ) : null}
+      </Animated.View>
 
       {!showStarterList ? (
         <Animated.View entering={stagger(p.isFirstTimeUser ? 3 : 2)}>
-          <TransformationGuideCard />
           <GoalCollectionGrid
             featuredBadgeLabel={p.featuredBadgeLabel}
             featuredGoalId={p.featuredGoalId}

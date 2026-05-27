@@ -1,5 +1,5 @@
 /**
- * MainBrowseView — Goal-first browse surface
+ * MainBrowseView — Transformation-first browse surface
  */
 
 import { StyleSheet, View } from 'react-native';

@@ -5,7 +5,7 @@ import { fontWeights, typography } from '../../../theme/typography';
 
 const STEPS = [
   { label: 'Choose outcome', marker: '1' },
-  { label: 'Preview the path', marker: '2' },
+  { label: 'Preview path', marker: '2' },
   { label: 'Add one habit', marker: '3' },
 ] as const;
 
@@ -14,6 +14,7 @@ export function TransformationGuideCard() {
 
   return (
     <View
+      testID='templates-transformation-guide'
       style={[
         s.card,
         {
