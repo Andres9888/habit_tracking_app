@@ -19,7 +19,7 @@ import {
 import { useSheetStyles } from './useSheetStyles';
 
 const SHEET_TIMING_CONFIG = {
-  duration: durations.transition,
+  duration: durations.sheet,
   easing: enterEasing,
 };
 const DISMISS_THRESHOLD = 0.25;
@@ -43,17 +43,17 @@ export function useSheetAnimations(visible: boolean, onClose: () => void) {
       sheetHeight.value = SHEET_HEIGHT_COLLAPSED;
       const offset = SHEET_HEIGHT_EXPANDED - SHEET_HEIGHT_COLLAPSED;
       translateY.value = withTiming(offset, SHEET_TIMING_CONFIG);
-      backdropOpacity.value = withTiming(1, { duration: 300 });
+      backdropOpacity.value = withTiming(1, { duration: durations.sheet });
     } else {
       translateY.value = withTiming(SHEET_HEIGHT_EXPANDED, SHEET_TIMING_CONFIG);
-      backdropOpacity.value = withTiming(0, { duration: 300 });
+      backdropOpacity.value = withTiming(0, { duration: durations.sheet });
     }
   }, [visible]);
 
   const closeSheet = useCallback(() => {
     translateY.value = withTiming(SHEET_HEIGHT_EXPANDED, SHEET_TIMING_CONFIG);
-    backdropOpacity.value = withTiming(0, { duration: 200 });
-    setTimeout(onClose, durations.transition);
+    backdropOpacity.value = withTiming(0, { duration: durations.sheet });
+    setTimeout(onClose, durations.sheet);
   }, [onClose]);
 
   const expandSheet = useCallback(() => {

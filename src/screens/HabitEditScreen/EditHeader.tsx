@@ -1,7 +1,6 @@
 /** EditHeader - Dark mode aware */
 import { View, Pressable, Text, Keyboard, ActivityIndicator } from 'react-native';
 import Animated, {
-  FadeInDown,
   useAnimatedStyle,
   useSharedValue,
   withSpring,
@@ -9,7 +8,7 @@ import Animated, {
 import { useThemeColors } from '../../theme';
 import { typography } from '@/theme/typography';
 import { triggerHaptic } from '@/utils/haptics';
-import { durations, enterEasing, springs } from '@/theme/animations';
+import { springs } from '@/theme/animations';
 import { ModalCloseButton } from '@/components/ui/ModalCloseButton';
 
 interface EditHeaderProps {
@@ -50,9 +49,8 @@ export function EditHeader({
   const disabledText = isDark ? colors.text.tertiary : '#78716C';
 
   return (
-    <Animated.View
+    <View
       className='flex-row items-center justify-between px-4 pb-2'
-      entering={FadeInDown.delay(0).duration(durations.enter).easing(enterEasing)}
       style={{ paddingTop }}
     >
       <ModalCloseButton label='Cancel' onClose={handleCancel} />
@@ -87,6 +85,6 @@ export function EditHeader({
           {isSaving ? 'Saving…' : 'Save'}
         </Text>
       </AnimatedPressable>
-    </Animated.View>
+    </View>
   );
 }

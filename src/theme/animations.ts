@@ -34,6 +34,14 @@ export const durations = {
   /** Screen/card entry */
   enter: 280,
 
+  /**
+   * Bottom-sheet enter/exit. Matches native iOS Modal animationType='slide'
+   * cadence (~360ms) used by Settings and Templates so all modal surfaces
+   * feel paced the same, even though Create/Edit are bottom sheets rather
+   * than full-screen modals.
+   */
+  sheet: 360,
+
   /** Button presses, toggles — immediate feedback */
   instant: 100,
 

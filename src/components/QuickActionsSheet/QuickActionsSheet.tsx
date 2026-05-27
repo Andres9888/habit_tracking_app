@@ -27,7 +27,7 @@ import { ActionsList } from './ActionsList';
 import { durations, enterEasing, springs } from '@/theme/animations';
 import { triggerHaptic } from '@/utils/haptics';
 
-const SHEET_TIMING_CONFIG = { duration: durations.enter, easing: enterEasing };
+const SHEET_TIMING_CONFIG = { duration: durations.sheet, easing: enterEasing };
 
 const DISMISS_THRESHOLD = 100;
 const VELOCITY_THRESHOLD = 500;
@@ -105,8 +105,8 @@ export const QuickActionsSheet = ({
     >
       <Animated.View
         className='absolute inset-0 bg-black/50'
-        entering={FadeIn.duration(durations.standard)}
-        exiting={FadeOut.duration(durations.standard)}
+        entering={FadeIn.duration(durations.sheet)}
+        exiting={FadeOut.duration(durations.sheet)}
       >
         <Pressable
           accessibilityLabel='Close quick actions'
@@ -120,8 +120,8 @@ export const QuickActionsSheet = ({
         <View collapsable={false}>
           <Animated.View
             className='absolute bottom-0 left-0 right-0 rounded-t-3xl shadow-xl'
-            entering={SlideInDown.duration(durations.enter).easing(enterEasing)}
-            exiting={SlideOutDown.duration(durations.enter).easing(enterEasing)}
+            entering={SlideInDown.duration(durations.sheet).easing(enterEasing)}
+            exiting={SlideOutDown.duration(durations.sheet).easing(enterEasing)}
             style={[{ paddingBottom: insets.bottom + 16, backgroundColor: colors.surface }, sheetAnimatedStyle]}
           >
             <SheetHeader
