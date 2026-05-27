@@ -8,6 +8,7 @@ import { Bell, ChevronRight, Clock, Crown } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
 import { typography, fontWeights } from '@/theme/typography';
 import { highContrastColors } from '@/theme/highContrastColors';
+import { componentSpacing, spacing } from '@/theme/spacing';
 import { Platform, Text, View } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { SettingsRow } from './SettingsRow';
@@ -55,8 +56,12 @@ export function StreakRemindersSection({
   const insetBackground = isDark
     ? 'rgba(255,255,255,0.03)'
     : 'rgba(0,0,0,0.02)';
-  const insetBorder = highContrastMode ? highContrastColors.border : themeColors.border;
-  const insetCardBackground = highContrastMode ? highContrastColors.background : themeColors.surface;
+  const insetBorder = highContrastMode
+    ? highContrastColors.border
+    : themeColors.border;
+  const insetCardBackground = highContrastMode
+    ? highContrastColors.background
+    : themeColors.surface;
 
   const handleTimeChange = (_event: unknown, selectedDate?: Date) => {
     if (Platform.OS === nativeHandsetPlatform) setShowTimePicker(false);
@@ -64,7 +69,14 @@ export function StreakRemindersSection({
   };
 
   return (
-    <SettingsSection collapsible={collapsible} highContrastMode={highContrastMode} icon={icon} isExpanded={isExpanded} title='Notifications' onToggle={onToggleSection}>
+    <SettingsSection
+      collapsible={collapsible}
+      highContrastMode={highContrastMode}
+      icon={icon}
+      isExpanded={isExpanded}
+      title='Notifications'
+      onToggle={onToggleSection}
+    >
       <SettingsRow
         highContrastMode={highContrastMode}
         icon={<Bell color={settings.bell.icon} size={iconSizes.small} />}
@@ -76,12 +88,13 @@ export function StreakRemindersSection({
         value={enabled}
         onToggle={(v) => void onToggle(v)}
       />
-      {enabled ? <View>
+      {enabled ? (
+        <View>
           <View
             style={{
               backgroundColor: insetBackground,
               paddingBottom: 10,
-              paddingLeft: 56, // icon (40px) + gap (16px)
+              paddingLeft: componentSpacing.avatar.size + spacing.base, // 40 + 16 = 56
               paddingRight: 10,
               paddingTop: 8,
             }}
@@ -107,7 +120,9 @@ export function StreakRemindersSection({
                     className='items-center justify-center rounded-[10px]'
                     style={{
                       backgroundColor: settings.clock.bg,
-                      borderColor: highContrastMode ? highContrastColors.accent : 'transparent',
+                      borderColor: highContrastMode
+                        ? highContrastColors.accent
+                        : 'transparent',
                       borderWidth: highContrastMode ? 1 : 0,
                       height: 36,
                       width: 36,
@@ -117,12 +132,20 @@ export function StreakRemindersSection({
                   </View>
                   <Text
                     className='flex-1'
-                    style={{ ...typography.body, fontWeight: fontWeights.semibold, color: themeColors.text.primary }}
+                    style={{
+                      ...typography.body,
+                      fontWeight: fontWeights.semibold,
+                      color: themeColors.text.primary,
+                    }}
                   >
                     Reminder time
                   </Text>
                   <Text
-                    style={{ ...typography.body, fontWeight: fontWeights.medium, color: themeColors.text.secondary }}
+                    style={{
+                      ...typography.body,
+                      fontWeight: fontWeights.medium,
+                      color: themeColors.text.secondary,
+                    }}
                   >
                     {formatDisplayTime(reminderTime)}
                   </Text>
@@ -172,16 +195,26 @@ export function StreakRemindersSection({
                         width: 36,
                       }}
                     >
-                      <Crown color={settings.premiumTime.icon} size={iconSizes.small} />
+                      <Crown
+                        color={settings.premiumTime.icon}
+                        size={iconSizes.small}
+                      />
                     </View>
                     <View className='flex-1'>
                       <Text
-                        style={{ ...typography.body, fontWeight: fontWeights.semibold, color: themeColors.text.primary }}
+                        style={{
+                          ...typography.body,
+                          fontWeight: fontWeights.semibold,
+                          color: themeColors.text.primary,
+                        }}
                       >
                         Custom times per habit
                       </Text>
                       <Text
-                        style={{ ...typography.caption, color: themeColors.text.secondary }}
+                        style={{
+                          ...typography.caption,
+                          color: themeColors.text.secondary,
+                        }}
                       >
                         Premium lets each habit keep its own reminder schedule
                       </Text>
@@ -196,17 +229,24 @@ export function StreakRemindersSection({
               )}
             </View>
           </View>
-        </View> : null}
-      {enabled ? null : <View>
+        </View>
+      ) : null}
+      {enabled ? null : (
+        <View>
           <View className='px-4 pb-3'>
             <Text
-              style={{ ...typography.caption, lineHeight: 18, color: themeColors.text.secondary }}
+              style={{
+                ...typography.caption,
+                lineHeight: 18,
+                color: themeColors.text.secondary,
+              }}
             >
               Get a reminder if you haven't completed a habit with an active
               streak by your chosen time.
             </Text>
           </View>
-        </View>}
+        </View>
+      )}
     </SettingsSection>
   );
 }

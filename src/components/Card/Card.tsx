@@ -15,11 +15,11 @@ export function Card({
   const { colors } = useThemeColors();
   return (
     <View
-      className={clsx(
-        'rounded-xl border shadow-sm',
-        className
-      )}
-      style={[{ backgroundColor: colors.card, borderColor: colors.cardBorder }, style]}
+      className={clsx('rounded-2xl border shadow-sm', className)}
+      style={[
+        { backgroundColor: colors.card, borderColor: colors.cardBorder },
+        style,
+      ]}
       {...props}
     />
   );

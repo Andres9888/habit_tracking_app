@@ -7,12 +7,13 @@
 import { StyleSheet } from 'react-native';
 
 import { shadows, borderRadius } from '../../../../theme/spacing';
-import { typography, fontFamilies, fontWeights} from '@/theme/typography';
+import { overlays } from '@/theme/colors';
+import { typography, fontFamilies, fontWeights } from '@/theme/typography';
 
 export const elementStyles = StyleSheet.create({
   badgeContainer: {
     alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.25)',
+    backgroundColor: overlays.glassLight,
     borderRadius: borderRadius.full,
     height: 56,
     justifyContent: 'center',
@@ -66,7 +67,7 @@ export const elementStyles = StyleSheet.create({
   },
   iconContainer: {
     alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    backgroundColor: overlays.glassLight,
     borderRadius: borderRadius.xl,
     height: 48,
     justifyContent: 'center',
@@ -83,7 +84,7 @@ export const elementStyles = StyleSheet.create({
   },
   shareButton: {
     alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    backgroundColor: overlays.glassLight,
     borderRadius: borderRadius.xl,
     height: 40,
     justifyContent: 'center',

@@ -7,7 +7,7 @@ import React from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { ChevronRight } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
-import { borderRadius } from '@/theme/spacing';
+import { borderRadius, spacing } from '@/theme/spacing';
 import { typography, fontFamilies, fontWeights } from '@/theme/typography';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { CATEGORY_PAIRINGS } from '../../../screens/TemplatesScreen/data/habitPairings';
@@ -26,7 +26,7 @@ export function PairsWellWith({ category, onPairPress }: PairsWellWithProps) {
 
   return (
     <View style={pairStyles.container}>
-      <Text style={[pairStyles.title, { color: colors.text }]}>
+      <Text style={[pairStyles.title, { color: colors.text.primary }]}>
         Pairs well with
       </Text>
       <View style={pairStyles.list}>
@@ -39,16 +39,13 @@ export function PairsWellWith({ category, onPairPress }: PairsWellWithProps) {
               onPress={() => onPairPress?.(pairing.targetCategory)}
             >
               <View
-                style={[
-                  pairStyles.iconBox,
-                  { backgroundColor: meta.bgColor },
-                ]}
+                style={[pairStyles.iconBox, { backgroundColor: meta.bgColor }]}
               >
                 <Text style={pairStyles.iconText}>{meta.icon}</Text>
               </View>
               <View style={pairStyles.cardText}>
                 <Text
-                  style={[pairStyles.cardTitle, { color: colors.text }]}
+                  style={[pairStyles.cardTitle, { color: colors.text.primary }]}
                 >
                   {meta.label}
                 </Text>
@@ -56,14 +53,14 @@ export function PairsWellWith({ category, onPairPress }: PairsWellWithProps) {
                   numberOfLines={2}
                   style={[
                     pairStyles.cardReason,
-                    { color: colors.textSecondary },
+                    { color: colors.text.secondary },
                   ]}
                 >
                   {pairing.reason}
                 </Text>
               </View>
               <ChevronRight
-                color={colors.textSecondary}
+                color={colors.text.secondary}
                 size={iconSizes.small}
                 strokeWidth={2}
               />
@@ -95,9 +92,9 @@ const pairStyles = StyleSheet.create({
     fontWeight: fontWeights.semibold,
   },
   container: {
-    gap: 8,
-    paddingHorizontal: 20,
-    paddingVertical: 8,
+    gap: spacing.sm,
+    paddingHorizontal: spacing.base + spacing.xs, // 16 + 4 = 20
+    paddingVertical: spacing.sm,
   },
   iconBox: {
     alignItems: 'center',

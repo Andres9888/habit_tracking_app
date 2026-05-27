@@ -17,7 +17,7 @@ import { typography, fontWeights } from '@/theme/typography';
 import { SettingsSection } from '../SettingsSection';
 import { SettingsRow } from '../SettingsRow';
 import { AnimatedPressable } from '../../ui/AnimatedPressable';
-import { colors as palette } from '@/theme/colors';
+import { colors as palette, overlays } from '@/theme/colors';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { durations } from '@/theme/animations';
 
@@ -56,22 +56,33 @@ export function PremiumStatus({ highContrast, isPremium, onUpgrade }: Props) {
   useEffect(() => {
     if (isPremium) return;
     shimmerPos.value = withRepeat(
-      withTiming(1, { duration: SHIMMER_DURATION, easing: Easing.inOut(Easing.ease) }),
+      withTiming(1, {
+        duration: SHIMMER_DURATION,
+        easing: Easing.inOut(Easing.ease),
+      }),
       -1,
-      false,
+      false
     );
     proBadgeScale.value = withRepeat(
       withSequence(
-        withTiming(1.06, { duration: durations.loop, easing: Easing.inOut(Easing.ease) }),
-        withTiming(1, { duration: durations.loop, easing: Easing.inOut(Easing.ease) }),
+        withTiming(1.06, {
+          duration: durations.loop,
+          easing: Easing.inOut(Easing.ease),
+        }),
+        withTiming(1, {
+          duration: durations.loop,
+          easing: Easing.inOut(Easing.ease),
+        })
       ),
       -1,
-      false,
+      false
     );
   }, [isPremium, shimmerPos, proBadgeScale]);
 
   const shimmerStyle = useAnimatedStyle(() => ({
-    transform: [{ translateX: interpolate(shimmerPos.value, [0, 1], [-200, 400]) }],
+    transform: [
+      { translateX: interpolate(shimmerPos.value, [0, 1], [-200, 400]) },
+    ],
     opacity: 0.12,
   }));
 
@@ -92,7 +103,11 @@ export function PremiumStatus({ highContrast, isPremium, onUpgrade }: Props) {
           <View className='flex-1'>
             <View className='flex-row items-center gap-2'>
               <Text
-                style={{ ...typography.body, fontWeight: fontWeights.semibold, color: themeColors.text.primary }}
+                style={{
+                  ...typography.body,
+                  fontWeight: fontWeights.semibold,
+                  color: themeColors.text.primary,
+                }}
               >
                 Premium
               </Text>
@@ -101,7 +116,12 @@ export function PremiumStatus({ highContrast, isPremium, onUpgrade }: Props) {
                 style={{ backgroundColor: themeColors.status.streakLight }}
               >
                 <Text
-                  style={{ ...typography.tabBar, fontWeight: fontWeights.bold, textTransform: 'uppercase', color: settings.crown.icon }}
+                  style={{
+                    ...typography.tabBar,
+                    fontWeight: fontWeights.bold,
+                    textTransform: 'uppercase',
+                    color: settings.crown.icon,
+                  }}
                 >
                   Active
                 </Text>
@@ -109,7 +129,10 @@ export function PremiumStatus({ highContrast, isPremium, onUpgrade }: Props) {
             </View>
             <Text
               className='mt-0.5'
-              style={{ ...typography.caption, color: themeColors.text.secondary }}
+              style={{
+                ...typography.caption,
+                color: themeColors.text.secondary,
+              }}
             >
               All features unlocked
             </Text>
@@ -117,7 +140,9 @@ export function PremiumStatus({ highContrast, isPremium, onUpgrade }: Props) {
         </View>
         <SettingsRow
           highContrastMode={highContrast}
-          icon={<Settings color={settings.manageSub.icon} size={iconSizes.small} />}
+          icon={
+            <Settings color={settings.manageSub.icon} size={iconSizes.small} />
+          }
           iconBackgroundColor={settings.manageSub.bg}
           label='Manage Subscription'
           showBorder={false}
@@ -130,14 +155,20 @@ export function PremiumStatus({ highContrast, isPremium, onUpgrade }: Props) {
 
   // Premium gradient uses custom indigo/violet tones on a non-semantic surface
   const gradientColors = isDark
-    ? ['#2e1f5e', '#1e1b4b', '#312e81'] as const
-    : ['#8b5cf6', '#6366f1', '#818cf8'] as const;
+    ? (['#2e1f5e', '#1e1b4b', '#312e81'] as const)
+    : (['#8b5cf6', '#6366f1', '#818cf8'] as const);
 
   return (
     <View className='gap-2'>
       <Text
         className='px-1'
-        style={{ ...typography.caption, fontWeight: fontWeights.semibold, textTransform: 'uppercase', letterSpacing: 0.7, color: themeColors.text.secondary }}
+        style={{
+          ...typography.caption,
+          fontWeight: fontWeights.semibold,
+          textTransform: 'uppercase',
+          letterSpacing: 0.7,
+          color: themeColors.text.secondary,
+        }}
       >
         Subscription
       </Text>
@@ -174,19 +205,28 @@ export function PremiumStatus({ highContrast, isPremium, onUpgrade }: Props) {
           <View className='flex-row items-center'>
             <View
               className='mr-4 h-10 w-10 items-center justify-center rounded-xl'
-              style={{ backgroundColor: 'rgba(255,255,255,0.15)' }}
+              style={{ backgroundColor: overlays.glassLight }}
             >
               <Zap color={palette.text.inverse} size={iconSizes.medium} />
             </View>
             <View className='flex-1'>
               <Text
-                style={{ ...typography.body, fontWeight: fontWeights.bold, color: isDark ? '#E0E7FF' : palette.text.inverse }}
+                style={{
+                  ...typography.body,
+                  fontWeight: fontWeights.bold,
+                  color: isDark ? '#E0E7FF' : palette.text.inverse,
+                }}
               >
                 Upgrade to Premium
               </Text>
               <Text
                 className='mt-0.5'
-                style={{ ...typography.caption, color: isDark ? 'rgba(224,231,255,0.6)' : 'rgba(255,255,255,0.8)' }}
+                style={{
+                  ...typography.caption,
+                  color: isDark
+                    ? 'rgba(224,231,255,0.6)'
+                    : overlays.subTextOnHero,
+                }}
               >
                 Unlock sounds, reminders & more
               </Text>
@@ -194,12 +234,18 @@ export function PremiumStatus({ highContrast, isPremium, onUpgrade }: Props) {
             <Animated.View
               className='rounded-full px-3.5 py-1.5'
               style={[
-                { backgroundColor: 'rgba(255,255,255,0.2)' },
+                { backgroundColor: overlays.glassLight },
                 badgePulseStyle,
               ]}
             >
               <Text
-                style={{ ...typography.caption, fontWeight: fontWeights.bold, color: isDark ? themeColors.status.premiumText : palette.text.inverse }}
+                style={{
+                  ...typography.caption,
+                  fontWeight: fontWeights.bold,
+                  color: isDark
+                    ? themeColors.status.premiumText
+                    : palette.text.inverse,
+                }}
               >
                 PRO
               </Text>
