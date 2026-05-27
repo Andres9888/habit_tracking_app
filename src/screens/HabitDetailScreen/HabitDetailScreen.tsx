@@ -91,6 +91,7 @@ function HabitDetailScreenContent({
                     leftAction='close'
                     rightAction={
                       <HeaderButton
+                        compact={isTitlePinned}
                         icon={<Edit3 size={iconSizes.small} strokeWidth={2.5} />}
                         label='Edit habit'
                         text='Edit'
