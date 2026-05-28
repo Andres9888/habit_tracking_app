@@ -103,10 +103,6 @@ export function useCenteredFormCallbacks({
     [form.setReminderTime]
   );
 
-  const handleSubmit = useCallback(() => {
-    void handleCreate();
-  }, [handleCreate]);
-
   const handleSave = useCallback(() => {
     void handleCreate();
   }, [handleCreate]);
@@ -118,7 +114,6 @@ export function useCenteredFormCallbacks({
     handleReminderTimeChange,
     handleReminderToggle,
     handleSave,
-    handleSubmit,
     handleValidationError,
   };
 }

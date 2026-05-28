@@ -13,6 +13,7 @@ import type { ModalHeaderProps } from './types';
 export const ModalHeader = ({
   isEditMode,
   habitName,
+  isSaving = false,
   onClose,
   onSave,
   onValidationError,
@@ -30,16 +31,14 @@ export const ModalHeader = ({
       className='flex-row items-center justify-between px-4 pb-2'
       style={{ paddingTop: Math.max(insets.top + 4, 12) }}
     >
-      <ModalCloseButton
-        label={STRINGS.CREATE_HABIT.close}
-        onClose={onClose}
-      />
+      <ModalCloseButton label={STRINGS.CREATE_HABIT.close} onClose={onClose} />
 
       <View className='flex-1' />
 
       <SaveButton
         canSave={canSave}
         isEditMode={isEditMode}
+        isSaving={isSaving}
         shakeValue={shakeValue}
         onInvalidSave={triggerShake}
         onSave={onSave}

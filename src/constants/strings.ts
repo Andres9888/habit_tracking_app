@@ -32,6 +32,8 @@ export const STRINGS = {
 
     save: 'Save',
 
+    saving: 'Saving…',
+
     sound: 'Sound',
 
     templateCTA: 'Browse curated habits',

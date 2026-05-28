@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import type { ScrollView as ScrollViewType, View as ViewType } from 'react-native';
 import { useSharedValue } from 'react-native-reanimated';
-import { CreateHabitFormCentered } from './CreateHabitFormCentered';
+import { HabitFormBody } from './HabitFormBody';
 import { ScrollForMoreHint } from './ScrollForMoreHint';
 import { HABIT_COLORS } from '../constants';
 import type { useCenteredFormCallbacks } from '../hooks/useCenteredFormCallbacks';
@@ -63,7 +63,7 @@ export function CreateHabitScrollContent({
       >
         <View ref={scrollContentRef} collapsable={false}>
           <Pressable accessible={false} onPress={Keyboard.dismiss}>
-            <CreateHabitFormCentered
+            <HabitFormBody
               autoFocus
               colors={HABIT_COLORS}
               habitName={form.habitName}
@@ -87,7 +87,6 @@ export function CreateHabitScrollContent({
               onReminderToggle={callbacks.handleReminderToggle}
               onStreakGoalChange={form.setStreakGoal}
               onStrengthAlgorithmChange={form.setStrengthAlgorithm}
-              onSubmit={callbacks.handleSubmit}
             />
           </Pressable>
         </View>

@@ -1,14 +1,30 @@
 /**
- * Types for CreateHabitFormCentered
+ * Types for HabitFormBody — the form body shared by Add and Edit.
  */
 
 import type { RefObject } from 'react';
 import type { View as ViewType } from 'react-native';
 import type { ProgressEmojiSet } from '../../../utils/progressEmojis';
+import type { GrowthType } from '@/utils/growthTypeMeta';
 
-export interface CreateHabitFormCenteredProps {
+export interface HabitFormBodyProps {
   habitName: string;
   onHabitNameChange: (value: string) => void;
+  /** Heading above the name input — mode-driven (create vs edit) */
+  title?: string;
+  /** Name input placeholder — mode-driven */
+  placeholder?: string;
+  /** Growth type pill shown in the Advanced section (edit mode) */
+  growthType?: GrowthType;
+  /** Called when the name input loses focus */
+  onHabitNameBlur?: () => void;
+  /**
+   * Initial emoji-lock state. Locked = name-driven emoji suggestions stop
+   * refreshing. Defaults to `selectedEmoji !== null` (create: locks once a
+   * habit is pre-filled). Edit passes `false` so suggestions refresh while the
+   * user retypes the name, then lock on the first manual pick.
+   */
+  initialEmojiLocked?: boolean;
   selectedEmoji: string | null;
   onEmojiSelect: (emoji: string | null) => void;
   colors: readonly string[];
@@ -20,7 +36,6 @@ export interface CreateHabitFormCenteredProps {
   onReminderToggle: (enabled: boolean) => void;
   /** Called when reminder time changes (preset or custom selection) */
   onReminderTimeChange: (time: Date) => void;
-  onSubmit: () => void;
   autoFocus?: boolean;
   /** Whether to show validation error for empty habit name */
   showNameError?: boolean;

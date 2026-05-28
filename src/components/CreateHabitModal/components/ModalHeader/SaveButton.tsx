@@ -1,8 +1,9 @@
 /**
- * Save button with validation shake animation
- * Dark-mode aware: uses emerald for active state, muted for disabled
+ * Save button with validation shake animation.
+ * Dark-mode aware: emerald fill for active state, dimmed when disabled,
+ * spinner + "Saving…" while a save is in flight.
  */
-import { Animated, Text } from 'react-native';
+import { ActivityIndicator, Animated, Text } from 'react-native';
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import STRINGS from '../../../../constants/strings';
@@ -10,6 +11,8 @@ import STRINGS from '../../../../constants/strings';
 interface SaveButtonProps {
   isEditMode: boolean;
   canSave: boolean;
+  /** True while the save mutation is in flight (shows spinner, blocks taps) */
+  isSaving?: boolean;
   onSave: () => void;
   onInvalidSave: () => void;
   shakeValue: Animated.Value;
@@ -18,38 +21,41 @@ interface SaveButtonProps {
 export const SaveButton = ({
   isEditMode,
   canSave,
+  isSaving = false,
   onSave,
   onInvalidSave,
   shakeValue,
 }: SaveButtonProps) => {
-  const { colors, isDark } = useThemeColors();
+  const { colors } = useThemeColors();
+  const label = isSaving
+    ? STRINGS.CREATE_HABIT.saving
+    : isEditMode
+      ? STRINGS.CREATE_HABIT.save
+      : STRINGS.CREATE_HABIT.createAction;
+
+  const handlePress = isSaving ? () => {} : canSave ? onSave : onInvalidSave;
 
   return (
-    <Animated.View
-      style={{
-        transform: [{ translateX: shakeValue }],
-      }}
-    >
+    <Animated.View style={{ transform: [{ translateX: shakeValue }] }}>
       <AnimatedPressable
         accessibilityHint={canSave ? '' : 'Enter a habit name first'}
         accessibilityLabel={
           isEditMode ? 'Save habit changes' : STRINGS.CREATE_HABIT.createAction
         }
         accessibilityRole='button'
-        accessibilityState={{ disabled: !canSave }}
-        className='h-11 items-center justify-center rounded-full px-6'
-        disableAnimation={!canSave}
+        accessibilityState={{ busy: isSaving, disabled: !canSave || isSaving }}
+        className='h-11 flex-row items-center justify-center gap-2 rounded-full px-6'
+        disableAnimation={!canSave || isSaving}
         style={{
           backgroundColor: colors.primary[600],
           opacity: canSave ? 1 : 0.35,
         }}
-        onPress={canSave ? onSave : onInvalidSave}
+        onPress={handlePress}
       >
-        <Text className='text-base font-semibold text-white'>
-          {isEditMode
-            ? STRINGS.CREATE_HABIT.save
-            : STRINGS.CREATE_HABIT.createAction}
-        </Text>
+        {isSaving ? (
+          <ActivityIndicator color={colors.text.inverse} size='small' />
+        ) : null}
+        <Text className='text-base font-semibold text-white'>{label}</Text>
       </AnimatedPressable>
     </Animated.View>
   );

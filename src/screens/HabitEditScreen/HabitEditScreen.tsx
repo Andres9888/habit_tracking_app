@@ -1,28 +1,29 @@
 /* eslint-disable max-lines */
-/** HabitEditScreen - Matches Create modal style (bottom sheet, stagger animations) */
-import { useCallback, useRef } from 'react';
+/**
+ * HabitEditScreen - Full-screen slide modal for editing a habit.
+ *
+ * Matches CreateHabitModal (and Settings / Templates): native iOS
+ * `animationType='slide'` so all bottom-bar actions feel identical. Shares the
+ * same ModalHeader and habit form body as the create flow.
+ */
+import { useCallback, useRef, useState } from 'react';
 import {
   findNodeHandle,
   Keyboard,
+  KeyboardAvoidingView,
   Modal,
+  Platform,
   Pressable,
   ScrollView,
-  StyleSheet,
   View,
 } from 'react-native';
-import { KeyboardAvoidingView, Platform } from 'react-native';
-import { GestureDetector } from 'react-native-gesture-handler';
-import Animated from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useSwipeDismiss } from '../../components/CreateHabitModal/hooks/useSwipeDismiss';
 import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 import { useThemeColors } from '../../theme/ThemeContext';
-import { borderRadius } from '../../theme/spacing';
-import { AdvancedOptionsSection } from '../../components/AdvancedOptions';
-import { EditHeader } from './EditHeader';
+import { HabitFormBody } from '../../components/CreateHabitModal/components/HabitFormBody';
+import { ModalHeader } from '../../components/CreateHabitModal/components/ModalHeader';
+import { HABIT_COLORS } from '../../components/CreateHabitModal/constants';
 import { HabitEditSkeleton } from './HabitEditSkeleton';
-import { NameInputSection } from './NameInputSection';
-import { CustomizeSection } from './CustomizeSection';
 import { useHabitEditScreen } from './useHabitEditScreen';
 import type { HabitEditScreenProps } from './types';
 
@@ -35,24 +36,36 @@ function HabitEditScreenContent({
 }: HabitEditScreenProps) {
   const insets = useSafeAreaInsets();
   const { colors: themeColors } = useThemeColors();
-  const { animateOut, backdropStyle, panGesture, sheetStyle } = useSwipeDismiss(
-    { visible, onClose }
-  );
+  // Dismiss the keyboard on every exit path (save-success, delete, cancel,
+  // Android back) — the old swipe-dismiss did this in animateOut().
+  const handleClose = useCallback(() => {
+    Keyboard.dismiss();
+    onClose();
+  }, [onClose]);
   const state = useHabitEditScreen({
     habitId,
-    onClose: animateOut,
+    onClose: handleClose,
     onHabitRemoved,
   });
   const scrollViewRef = useRef<ScrollView>(null);
   const scrollContentRef = useRef<View>(null);
   const reminderSectionRef = useRef<View>(null);
+  const [showNameError, setShowNameError] = useState(false);
+
+  const handleNameChange = useCallback(
+    (text: string) => {
+      setShowNameError(false);
+      state.setHabitName(text);
+    },
+    [state.setHabitName]
+  );
 
   const handleReminderToggle = useCallback(
     (enabled: boolean) => {
       state.handleReminderToggle(enabled);
       if (!enabled) return;
-      // Wait for expanded reminder content to finish laying out, then scroll
-      // so the daily-reminder container's top sits at the top of the viewport.
+      // Wait for expanded reminder content to lay out, then scroll its top
+      // to the top of the viewport.
       setTimeout(() => {
         const node = reminderSectionRef.current;
         const contentNode = scrollContentRef.current;
@@ -61,123 +74,89 @@ function HabitEditScreenContent({
         if (contentHandle == null) return;
         node.measureLayout(
           contentHandle,
-          (_x, y) => {
-            scrollViewRef.current?.scrollTo({
-              y: Math.max(0, y - 8),
-              animated: true,
-            });
-          },
+          (_x, y) =>
+            scrollViewRef.current?.scrollTo({ y: Math.max(0, y - 8), animated: true }),
           () => {}
         );
       }, 250);
     },
-    [state]
+    [state.handleReminderToggle]
   );
 
   return (
     <Modal
       accessibilityViewIsModal
-      statusBarTranslucent
+      animationType='slide'
+      presentationStyle='overFullScreen'
       transparent
-      animationType='none'
       visible={visible}
-      onRequestClose={animateOut}
+      onRequestClose={handleClose}
     >
-      <View className='flex-1'>
-        <Pressable style={StyleSheet.absoluteFill} onPress={animateOut}>
-          <Animated.View className='flex-1 bg-black' style={backdropStyle} />
-        </Pressable>
-        <GestureDetector gesture={panGesture}>
-          <Animated.View
-            className='overflow-hidden rounded-t-3xl shadow-2xl'
-            style={[
-              styles.sheet,
-              sheetStyle,
-              { backgroundColor: themeColors.surface },
-            ]}
-          >
-            <KeyboardAvoidingView
-              behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-              className='flex-1'
-            >
-              {state.isLoading ? (
-                <View style={{ paddingTop: Math.max(insets.top + 4, 12) }}>
-                  <HabitEditSkeleton />
-                </View>
-              ) : (
-                <View style={{ flex: 1 }}>
-                  <View style={styles.dragHandleRow}>
-                    <View
-                      style={[
-                        styles.dragHandle,
-                        { backgroundColor: themeColors.gray[300] },
-                      ]}
+      <View className='flex-1' style={{ backgroundColor: themeColors.surface }}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          className='flex-1'
+        >
+          {state.isLoading ? (
+            <View style={{ paddingTop: Math.max(insets.top + 4, 12) }}>
+              <HabitEditSkeleton />
+            </View>
+          ) : (
+            <>
+              <ModalHeader
+                isEditMode
+                habitName={state.habitName}
+                isSaving={state.isSaving}
+                onClose={handleClose}
+                onSave={() => void state.handleSave()}
+                onValidationError={() => setShowNameError(true)}
+              />
+              <ScrollView
+                ref={scrollViewRef}
+                className='flex-1'
+                contentContainerStyle={{ paddingBottom: insets.bottom + 32 }}
+                keyboardDismissMode='on-drag'
+                keyboardShouldPersistTaps='handled'
+                showsVerticalScrollIndicator={false}
+              >
+                <View ref={scrollContentRef} collapsable={false}>
+                  <Pressable onPress={Keyboard.dismiss}>
+                    <HabitFormBody
+                      colors={HABIT_COLORS}
+                      growthType={state.growthType}
+                      habitName={state.habitName}
+                      initialEmojiLocked={false}
+                      placeholder='Update your habit name'
+                      progressEmojis={state.progressEmojis}
+                      reminderEnabled={state.remindersEnabled}
+                      reminderSectionRef={reminderSectionRef}
+                      reminderTime={state.reminderTime}
+                      selectedColor={state.selectedColor}
+                      selectedEmoji={state.selectedEmoji}
+                      showNameError={showNameError}
+                      streakGoal={state.streakGoal}
+                      strengthAlgorithm={state.strengthAlgorithm}
+                      title='Edit your habit'
+                      onAdvancedExpand={() =>
+                        scrollViewRef.current?.scrollToEnd({ animated: true })
+                      }
+                      onColorSelect={state.handleColorSelect}
+                      onEmojiSelect={state.handleEmojiSelect}
+                      onHabitNameChange={handleNameChange}
+                      onProgressEmojisChange={state.handleProgressEmojisChange}
+                      onReminderTimeChange={state.handleReminderTimeChange}
+                      onReminderToggle={handleReminderToggle}
+                      onStreakGoalChange={state.handleStreakGoalChange}
+                      onStrengthAlgorithmChange={
+                        state.handleStrengthAlgorithmChange
+                      }
                     />
-                  </View>
-                  <EditHeader
-                    canSave={state.habitName.trim().length > 0}
-                    isSaving={state.isSaving}
-                    paddingTop={Math.max(insets.top + 4, 12)}
-                    onCancel={() => {
-                      state.triggerSelection();
-                      animateOut();
-                    }}
-                    onSave={() => void state.handleSave()}
-                  />
-                  <ScrollView
-                    ref={scrollViewRef}
-                    className='flex-1'
-                    contentContainerStyle={{
-                      paddingBottom: insets.bottom + 32,
-                    }}
-                    keyboardDismissMode='on-drag'
-                    keyboardShouldPersistTaps='handled'
-                    showsVerticalScrollIndicator={false}
-                  >
-                    <View ref={scrollContentRef} collapsable={false}>
-                      <Pressable onPress={Keyboard.dismiss}>
-                      <NameInputSection
-                        habitName={state.habitName}
-                        onChangeText={state.setHabitName}
-                      />
-                      <View className='px-6'>
-                        <CustomizeSection
-                          habitName={state.habitName}
-                          remindersEnabled={state.remindersEnabled}
-                          reminderSectionRef={reminderSectionRef}
-                          reminderTime={state.reminderTime}
-                          selectedColor={state.selectedColor}
-                          selectedEmoji={state.selectedEmoji}
-                          onColorSelect={state.handleColorSelect}
-                          onEmojiSelect={state.handleEmojiSelect}
-                          onReminderTimeChange={state.handleReminderTimeChange}
-                          onReminderToggle={handleReminderToggle}
-                        />
-                      </View>
-                      <AdvancedOptionsSection
-                        growthType={state.growthType}
-                        progressEmojis={state.progressEmojis}
-                        streakGoal={state.streakGoal}
-                        strengthAlgorithm={state.strengthAlgorithm}
-                        onExpand={() =>
-                          scrollViewRef.current?.scrollToEnd({ animated: true })
-                        }
-                        onProgressEmojisChange={
-                          state.handleProgressEmojisChange
-                        }
-                        onStreakGoalChange={state.handleStreakGoalChange}
-                        onStrengthAlgorithmChange={
-                          state.handleStrengthAlgorithmChange
-                        }
-                      />
-                      </Pressable>
-                    </View>
-                  </ScrollView>
+                  </Pressable>
                 </View>
-              )}
-            </KeyboardAvoidingView>
-          </Animated.View>
-        </GestureDetector>
+              </ScrollView>
+            </>
+          )}
+        </KeyboardAvoidingView>
       </View>
     </Modal>
   );
@@ -192,9 +171,3 @@ export default function HabitEditScreen(props: HabitEditScreenProps) {
     </ScreenErrorBoundary>
   );
 }
-
-const styles = StyleSheet.create({
-  dragHandle: { borderRadius: borderRadius.xs, height: 5, width: 36 },
-  dragHandleRow: { alignItems: 'center', paddingBottom: 4, paddingTop: 8 },
-  sheet: StyleSheet.absoluteFillObject,
-});
