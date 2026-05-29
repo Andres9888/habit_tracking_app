@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Library — recommended idea (Option B)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Literata:opsz,wght@7..72,600;7..72,700;7..72,800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root{
+      --bg:#f5f1ed; --surface:#ffffff;
+      --text-1:#2d2a26; --text-2:#6b6560; --text-3:#938c85;
+      --primary:#059669; --primary-700:#047857;
+      --border:#e4ded7; --border-soft:#ece7e0;
+      --energy-bg:#FEF3C7; --energy-tx:#78350F;
+      --sleep-bg:#EFF6FF; --sleep-tx:#1E3A5F;
+      --stress-bg:#ECFBF2; --stress-tx:#14532D;
+      --focus-bg:#FAF5FF; --focus-tx:#581C87;
+      --health-bg:#FFF1F2; --health-tx:#881337;
+      --shadow-sm:0 1px 2px rgba(45,42,38,.05);
+      --shadow-md:0 6px 18px rgba(45,42,38,.08);
+      --shadow-lg:0 30px 70px rgba(45,42,38,.20);
+    }
+    *{box-sizing:border-box;}
+    body{
+      margin:0;min-height:100vh;font-family:'DM Sans',sans-serif;color:var(--text-1);
+      background:
+        radial-gradient(circle at 12% 6%, rgba(5,150,105,.10), transparent 36%),
+        radial-gradient(circle at 90% 96%, rgba(180,83,9,.06), transparent 42%),
+        linear-gradient(180deg,#f8f5f0 0%,#efe9e0 100%);
+      display:flex;flex-direction:column;align-items:center;padding:40px 20px 60px;
+    }
+    .cap{max-width:430px;text-align:center;margin-bottom:22px;}
+    .cap .eyebrow{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--primary-700);margin-bottom:8px;}
+    .cap h1{font-family:'Literata',serif;font-weight:800;font-size:24px;letter-spacing:-.02em;margin:0 0 6px;}
+    .cap p{color:var(--text-2);font-size:13.5px;margin:0;line-height:1.5;}
+    .cap p b{color:var(--text-1);}
+
+    .phone{width:412px;background:var(--bg);border-radius:46px;border:1px solid var(--border);box-shadow:var(--shadow-lg);overflow:hidden;}
+    .screen{position:relative;}
+    .statusbar{position:relative;display:flex;justify-content:space-between;align-items:center;padding:15px 28px 4px;font-size:13.5px;font-weight:700;}
+    .statusbar .notch{position:absolute;left:50%;top:12px;transform:translateX(-50%);width:104px;height:28px;background:#15110d;border-radius:16px;}
+    .statusbar .dots{display:flex;gap:6px;align-items:center;}
+    .statusbar .dots svg{width:17px;height:17px;}
+    .content{padding:8px 18px 20px;}
+
+    .lib-head{display:flex;justify-content:space-between;align-items:flex-start;padding:8px 4px 2px;gap:12px;}
+    .lib-head h2{font-family:'Literata',serif;font-weight:800;font-size:26px;letter-spacing:-.02em;margin:0;line-height:1.12;}
+    .lib-head .sub{color:var(--text-2);font-size:13px;line-height:1.4;margin-top:7px;}
+    .lib-head .x{flex-shrink:0;width:32px;height:32px;border-radius:50%;background:rgba(0,0,0,.05);display:flex;align-items:center;justify-content:center;color:var(--text-2);}
+    .lib-head .x svg{width:17px;height:17px;}
+
+    /* search */
+    .search{margin:16px 4px 0;display:flex;align-items:center;gap:10px;padding:14px 16px;border-radius:999px;background:var(--surface);border:1px solid var(--border);box-shadow:var(--shadow-sm);}
+    .search svg{width:19px;height:19px;color:var(--text-3);}
+    .search .ph{color:var(--text-3);font-size:14.5px;font-weight:500;flex:1;}
+
+    /* attribute lens row (the idea) */
+    .lenses{display:flex;gap:8px;padding:14px 4px 4px;overflow:hidden;}
+    .lens{display:inline-flex;align-items:center;gap:6px;white-space:nowrap;font-size:13px;font-weight:700;border-radius:999px;padding:9px 14px;border:1px solid var(--border);background:var(--surface);color:var(--text-2);}
+    .lens.on{background:var(--primary);border-color:var(--primary-700);color:#fff;}
+    .lens.quick{background:#FBBF24;border-color:#F59E0B;color:#78350F;}
+    .lens.roi{color:#7F1D1D;}
+
+    /* featured */
+    .featured{position:relative;border-radius:22px;padding:18px;margin:18px 4px 0;overflow:hidden;background:linear-gradient(135deg,var(--stress-bg) 0%,#c6ecd4 100%);border:1px solid rgba(20,83,45,.12);box-shadow:var(--shadow-md);}
+    .featured .badge{display:inline-flex;align-items:center;gap:5px;font-family:'JetBrains Mono',monospace;font-size:9.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--stress-tx);background:rgba(255,255,255,.6);border-radius:999px;padding:5px 10px;}
+    .featured .fb{display:flex;gap:13px;align-items:center;margin:14px 0 13px;}
+    .featured .fe{font-size:36px;width:58px;height:58px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.55);border-radius:17px;}
+    .featured .ft{font-family:'Literata',serif;font-weight:800;font-size:22px;color:var(--stress-tx);margin:0 0 3px;letter-spacing:-.01em;}
+    .featured .fp{color:var(--stress-tx);opacity:.82;font-size:13px;line-height:1.35;}
+    .starters{display:flex;gap:8px;margin-bottom:14px;}
+    .starter{flex:1;text-align:center;}
+    .starter .si{font-size:19px;width:40px;height:40px;margin:0 auto 6px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.5);border-radius:12px;}
+    .starter .sl{font-size:10px;color:var(--stress-tx);opacity:.78;line-height:1.2;font-weight:600;}
+    .featured .fcta{display:flex;align-items:center;gap:8px;background:var(--stress-tx);color:#fff;font-size:13.5px;font-weight:700;padding:12px 16px;border-radius:14px;justify-content:center;}
+    .featured .fcta svg{width:16px;height:16px;}
+    .featured .fcta .cnt{opacity:.8;font-weight:600;}
+
+    /* section label */
+    .sl-row{display:flex;align-items:baseline;justify-content:space-between;padding:20px 4px 0;}
+    .sl-row h3{font-family:'Literata',serif;font-weight:800;font-size:17px;margin:0;letter-spacing:-.01em;}
+    .sl-row .see{font-size:12.5px;font-weight:700;color:var(--primary-700);}
+    .sl-sub{font-size:12px;color:var(--text-3);padding:2px 4px 0;}
+
+    /* rail */
+    .rail{display:flex;gap:11px;padding:13px 4px 2px;overflow:hidden;}
+    .rcard{flex:0 0 156px;border-radius:17px;padding:14px 13px;border:1px solid rgba(0,0,0,.05);min-height:120px;display:flex;flex-direction:column;justify-content:space-between;}
+    .rcard .re{font-size:24px;width:44px;height:44px;border-radius:13px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.55);margin-bottom:9px;}
+    .rcard .rt{font-family:'Literata',serif;font-weight:700;font-size:15.5px;margin:0 0 3px;letter-spacing:-.01em;}
+    .rcard .rp{font-size:11px;line-height:1.3;opacity:.78;margin-bottom:10px;}
+    .rcard .rf{display:flex;align-items:center;justify-content:space-between;}
+    .rcard .rc{font-size:11px;font-weight:700;opacity:.85;}
+    .rcard .ra{width:23px;height:23px;border-radius:50%;background:rgba(255,255,255,.55);display:flex;align-items:center;justify-content:center;}
+    .rcard .ra svg{width:14px;height:14px;}
+    .c-energy{background:var(--energy-bg);color:var(--energy-tx);}
+    .c-sleep{background:var(--sleep-bg);color:var(--sleep-tx);}
+    .c-focus{background:var(--focus-bg);color:var(--focus-tx);}
+    .c-health{background:var(--health-bg);color:var(--health-tx);}
+
+    /* quick wins list */
+    .qw{padding:6px 4px 0;}
+    .qrow{display:flex;align-items:center;gap:12px;padding:12px 13px;border-radius:15px;background:var(--surface);border:1px solid var(--border);box-shadow:var(--shadow-sm);margin-top:10px;}
+    .qrow .qi{font-size:21px;width:42px;height:42px;flex-shrink:0;border-radius:12px;display:flex;align-items:center;justify-content:center;background:#faf6f0;border:1px solid var(--border-soft);}
+    .qrow .qt{flex:1;}
+    .qrow .qt .n{font-size:13.5px;font-weight:700;color:var(--text-1);}
+    .qrow .qt .m{font-size:11.5px;color:var(--text-3);margin-top:2px;}
+    .qrow .add{width:30px;height:30px;border-radius:50%;background:var(--primary);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+    .qrow .add svg{width:16px;height:16px;color:#fff;}
+
+    /* browse all */
+    .browse{margin:16px 4px 6px;padding:14px 16px;border-radius:16px;background:var(--surface);border:1px dashed var(--border);display:flex;align-items:center;justify-content:space-between;}
+    .browse .t{font-size:13.5px;font-weight:700;color:var(--text-1);}
+    .browse .s{font-size:11.5px;color:var(--text-3);margin-top:2px;}
+    .browse .ic{color:var(--text-3);}
+    .browse .ic svg{width:18px;height:18px;}
+  </style>
+</head>
+<body>
+  <div class="cap">
+    <div class="eyebrow">Recommended · Option B</div>
+    <h1>One calm lens row, no duplicate chips</h1>
+    <p>The 7 category chips are gone (they duplicated the cards). In their place: <b>All · Quick wins · High ROI · New</b> — filters that add a different axis, not a copy of the transformations.</p>
+  </div>
+
+  <div class="phone"><div class="screen">
+    <div class="statusbar"><span>9:41</span><div class="notch"></div><div class="dots"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></div></div>
+    <div class="content">
+      <div class="lib-head">
+        <div>
+          <h2>Choose your next<br>transformation</h2>
+          <div class="sub">Pick an outcome, then start with one small habit that moves it forward.</div>
+        </div>
+        <div class="x"><i data-lucide="x"></i></div>
+      </div>
+
+      <!-- search -->
+      <div class="search"><i data-lucide="search"></i><span class="ph">Find an outcome or habit…</span></div>
+
+      <!-- THE IDEA: attribute-only lens row -->
+      <div class="lenses">
+        <span class="lens on">All</span>
+        <span class="lens quick">⚡ Quick wins</span>
+        <span class="lens roi">🔥 High ROI</span>
+        <span class="lens">✨ New</span>
+      </div>
+
+      <!-- featured -->
+      <div class="featured">
+        <span class="badge"><i data-lucide="star" style="width:11px;height:11px"></i> Today’s pick</span>
+        <div class="fb"><div class="fe">🧘</div><div><p class="ft">Stress less</p><div class="fp">Calm your mind and regulate your system</div></div></div>
+        <div class="starters">
+          <div class="starter"><div class="si">🧠</div><div class="sl">13-Min Focus Meditation</div></div>
+          <div class="starter"><div class="si">💎</div><div class="sl">Identity Journaling</div></div>
+          <div class="starter"><div class="si">✏️</div><div class="sl">Single-Sentence Journal</div></div>
+        </div>
+        <div class="fcta">Start your path <i data-lucide="arrow-right"></i> <span class="cnt">· 62 habits inside</span></div>
+      </div>
+
+      <!-- more transformations -->
+      <div class="sl-row"><h3>More transformations</h3></div>
+      <div class="rail">
+        <div class="rcard c-energy"><div><div class="re">⚡</div><p class="rt">Wake up energized</p><div class="rp">Morning routines that keep you sharp</div></div><div class="rf"><span class="rc">91 habits</span><span class="ra"><i data-lucide="chevron-right"></i></span></div></div>
+        <div class="rcard c-sleep"><div><div class="re">😴</div><p class="rt">Sleep deeper</p><div class="rp">Wind down, rest fully</div></div><div class="rf"><span class="rc">46 habits</span><span class="ra"><i data-lucide="chevron-right"></i></span></div></div>
+        <div class="rcard c-focus"><div><div class="re">🎯</div><p class="rt">Focus deeper</p><div class="rp">Beat distraction, do deep work</div></div><div class="rf"><span class="rc">64</span><span class="ra"><i data-lucide="chevron-right"></i></span></div></div>
+      </div>
+
+      <!-- quick wins -->
+      <div class="sl-row"><h3>Quick wins to build momentum</h3><span class="see">See all</span></div>
+      <div class="sl-sub">What people are starting this week</div>
+      <div class="qw">
+        <div class="qrow"><div class="qi">❤️</div><div class="qt"><div class="n">2-Minute Breathing Reset</div><div class="m">2 min · Stress less · proven</div></div><div class="add"><i data-lucide="plus"></i></div></div>
+        <div class="qrow"><div class="qi">🧠</div><div class="qt"><div class="n">One-Line Gratitude</div><div class="m">1 min · Mental · proven</div></div><div class="add"><i data-lucide="plus"></i></div></div>
+        <div class="qrow"><div class="qi">💧</div><div class="qt"><div class="n">Glass of Water on Waking</div><div class="m">1 min · Energy · proven</div></div><div class="add"><i data-lucide="plus"></i></div></div>
+      </div>
+
+      <!-- browse all -->
+      <div class="browse">
+        <div><div class="t">Not sure where to start?</div><div class="s">Browse all habits &amp; categories</div></div>
+        <div class="ic"><i data-lucide="layout-grid"></i></div>
+      </div>
+    </div>
+  </div></div>
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script>lucide.createIcons();</script>
+</body>
+</html>
