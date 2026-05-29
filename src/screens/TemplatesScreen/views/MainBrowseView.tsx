@@ -4,17 +4,13 @@
 
 import { StyleSheet, View } from 'react-native';
 import Animated from 'react-native-reanimated';
-import { ScreenHeader } from '../../../components/ScreenHeader';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { styles } from '../../templates/templatesScreenStyles';
-import { SearchBar } from '../components';
+import { LibraryHero } from '../components/LibraryHero';
 import { QuickFilterChips } from '../components/QuickFilterChips';
-import { SessionProgressPill } from '../components/SessionProgressPill';
 import { BrowseSections } from './BrowseSections';
 import { bodyEnter, bodyExit, stagger } from './MainBrowseView.helpers';
 import type { MainBrowseViewProps } from './MainBrowseView.types';
-
-const HEADER_SUBTITLE = 'Pick a path — habits proven to work.';
 
 export function MainBrowseView(p: MainBrowseViewProps) {
   const { colors } = useThemeColors();
@@ -24,28 +20,12 @@ export function MainBrowseView(p: MainBrowseViewProps) {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
-      <ScreenHeader
-        leftAction={null}
-        rightAction={
-          p.sessionImportCount > 0 ? (
-            <SessionProgressPill count={p.sessionImportCount} />
-          ) : undefined
-        }
-        subtitle={HEADER_SUBTITLE}
-        title='What do you want to work on?'
-        titleNumberOfLines={2}
+      <LibraryHero
+        searchQuery={p.searchQuery}
+        sessionImportCount={p.sessionImportCount}
+        onSearchChange={p.onSearchChange}
+        onSearchClear={p.onSearchClear}
       />
-      <Animated.View
-        entering={stagger(0)}
-        style={[styles.searchSection, p.searchAnimatedStyle]}
-      >
-        <SearchBar
-          inputHint='Try: morning walk · journaling · cold shower'
-          value={p.searchQuery}
-          onChangeText={p.onSearchChange}
-          onClear={p.onSearchClear}
-        />
-      </Animated.View>
       {p.quickFilterCategories.length > 0 ? (
         <Animated.View entering={stagger(1)}>
           <QuickFilterChips
