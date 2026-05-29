@@ -1,27 +1,20 @@
-/**
- * EmptyState Component
- * Based on UX Specification Section 4.2 & Section 8.2 (Empty State Transitions)
- *
- * Purpose: Guide users when no data exists
- * Variants: No Habits (first-time), No Data Yet (<7 days), No Results (search/filter), Premium Locked
- * Elements: Illustration/icon, headline, description, CTA button
- * Usage: Home screen (no habits), Analytics (no data), Search results
- */
-
 import React from 'react';
 import { View } from 'react-native';
 import Animated from 'react-native-reanimated';
-import { useAppTheme } from '../../theme';
+import { spacing } from '../../theme/spacing';
+import { typography } from '../../theme/typography';
 import { useThemeColors } from '../../theme/ThemeContext';
 import Button from '../Button/Button';
-import type { EmptyStateProps } from './types';
-import { VARIANT_CONFIG, QUICK_START_TEMPLATES } from './constants';
-import { useEmptyStateAnimations } from './useEmptyStateAnimations';
-import { styles } from './styles';
+import { EmptyStateIcon } from './EmptyStateIcon';
 import { TemplateChip } from './TemplateChip';
+import { QUICK_START_TEMPLATES, SCALE_CONFIG, VARIANT_CONFIG } from './constants';
+import { styles } from './styles';
+import type { EmptyStateProps } from './types';
+import { useEmptyStateAnimations } from './useEmptyStateAnimations';
 
 export function EmptyState({
   variant = 'noHabits',
+  scale = 'section',
   size = 'default',
   icon,
   iconBackplate,
@@ -34,100 +27,57 @@ export function EmptyState({
   hideCTA = false,
   style,
 }: EmptyStateProps) {
-  const theme = useAppTheme();
   const { colors } = useThemeColors();
-  const config = VARIANT_CONFIG[variant];
-  const { iconStyle, headlineStyle, descriptionStyle, ctaStyle } =
-    useEmptyStateAnimations(variant);
-
-  // Use custom values or fall back to variant config
-  const displayIcon = icon || config.icon;
-  const displayHeadline = headline || config.headline;
-  const displayDescription = description || config.description;
-  const displayCTALabel = ctaLabel || config.ctaLabel;
+  const { ctaLabel: fallbackCTA, description: fallbackDescription, headline: fallbackHeadline, icon: fallbackIcon } = VARIANT_CONFIG[variant];
+  const scaleConfig = SCALE_CONFIG[scale];
+  const { iconStyle, headlineStyle, descriptionStyle, ctaStyle } = useEmptyStateAnimations(variant);
+  const displayIcon = icon || fallbackIcon;
+  const displayHeadline = headline || fallbackHeadline;
+  const displayDescription = description || fallbackDescription;
+  const displayCTALabel = ctaLabel || fallbackCTA;
   const isCompact = size === 'compact';
-  const isStringIcon = typeof displayIcon === 'string';
+  // Legacy compact remains the stronger layout override; scale still controls typography and CTA size.
+  const iconSize = isCompact ? 34 : scaleConfig.iconSize; // No iconSizes token matches the legacy compact emoji size.
+  const iconMarginBottom = isCompact ? spacing.md : scaleConfig.iconMarginBottom;
+  const paddingY = isCompact ? spacing.lg : scaleConfig.paddingY;
+  const titleMarginBottom = isCompact ? spacing.xs : spacing.sm;
+  const descriptionMarginBottom = isCompact ? 0 : spacing.base;
 
   return (
     <View
       accessible
       accessibilityLabel={`${displayHeadline}. ${displayDescription}`}
       accessibilityRole='text'
-      style={[isCompact ? styles.containerCompact : styles.container, style]}
+      style={[isCompact ? styles.containerCompact : styles.container, { paddingVertical: paddingY }, style]}
     >
-      {/* Icon/Illustration — string emoji or custom ReactNode, optionally wrapped in a backplate */}
-      {iconBackplate ? (
-        <Animated.View style={[{ marginBottom: isCompact ? 12 : 16 }, iconBackplate, iconStyle]}>
-          {isStringIcon ? (
-            <Animated.Text style={isCompact ? styles.iconCompact : styles.icon}>
-              {displayIcon}
-            </Animated.Text>
-          ) : (
-            displayIcon
-          )}
-        </Animated.View>
-      ) : isStringIcon ? (
-        <Animated.Text style={[isCompact ? styles.iconCompact : styles.icon, iconStyle]}>
-          {displayIcon}
-        </Animated.Text>
-      ) : (
-        <Animated.View style={[{ marginBottom: isCompact ? 12 : 16 }, iconStyle]}>
-          {displayIcon}
-        </Animated.View>
-      )}
-
-      {/* Headline */}
+      <EmptyStateIcon icon={displayIcon} iconBackplate={iconBackplate} iconSize={iconSize} marginBottom={iconMarginBottom} style={iconStyle} />
       <Animated.Text
-        style={[
-          theme.custom.typography.heading2,
-          isCompact ? styles.headlineCompact : styles.headline,
-          { color: colors.text.primary },
-          headlineStyle,
-        ]}
+        style={[typography[scaleConfig.titleStyle], styles.headline, { color: colors.text.primary, marginBottom: titleMarginBottom }, headlineStyle]}
       >
         {displayHeadline}
       </Animated.Text>
-
-      {/* Description */}
       <Animated.Text
-        style={[
-          theme.custom.typography.body,
-          isCompact ? styles.descriptionCompact : styles.description,
-          { color: colors.text.secondary },
-          descriptionStyle,
-        ]}
+        style={[typography[scaleConfig.descriptionStyle], styles.description, { color: colors.text.secondary, marginBottom: descriptionMarginBottom }, descriptionStyle]}
       >
         {displayDescription}
       </Animated.Text>
-
-      {/* Optional inline action slot — tip cards, hint rows, inline action chips */}
       {actionSlot ? <Animated.View style={descriptionStyle}>{actionSlot}</Animated.View> : null}
-
-      {/* Quick Start Templates (noHabits variant only) */}
-      {variant === 'noHabits' && onQuickStart ? <Animated.View style={[styles.quickStartSection, descriptionStyle]}>
+      {variant === 'noHabits' && onQuickStart ? (
+        <Animated.View style={[styles.quickStartSection, descriptionStyle]}>
           <View style={styles.templateRow}>
             {QUICK_START_TEMPLATES.map((template) => (
-              <TemplateChip
-                key={template.name}
-                template={template}
-                onPress={onQuickStart}
-              />
+              <TemplateChip key={template.name} template={template} onPress={onQuickStart} />
             ))}
           </View>
-        </Animated.View> : null}
-
-      {/* CTA Button */}
-      {!hideCTA && onCTA ? <Animated.View style={ctaStyle}>
-          <Button
-            accessibilityHint={`Tap to ${displayCTALabel.toLowerCase()}`}
-            accessibilityLabel={displayCTALabel}
-            size='medium'
-            variant='primary'
-            onPress={onCTA}
-          >
+        </Animated.View>
+      ) : null}
+      {!hideCTA && onCTA ? (
+        <Animated.View style={ctaStyle}>
+          <Button accessibilityHint={`Tap to ${displayCTALabel.toLowerCase()}`} accessibilityLabel={displayCTALabel} size={scaleConfig.buttonSize} variant='primary' onPress={onCTA}>
             {displayCTALabel}
           </Button>
-        </Animated.View> : null}
+        </Animated.View>
+      ) : null}
     </View>
   );
 }

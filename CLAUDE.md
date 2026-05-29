@@ -474,8 +474,10 @@ npm run lint:max-lines-report # Generate JSON report
 
 ### Critical Files Requiring Decomposition
 
-These 3 files are 1000+ lines and high priority:
+None currently. The three previously-listed offenders are resolved:
 
-1. `HabitsEmptyState.tsx` (1,094 lines)
-2. `FullsizeTemplatePreview.tsx` (1,047 lines)
-3. `TodaysFocusCard.tsx` (991 lines)
+- `HabitsEmptyState.tsx` removed in PR #1216 (Apr 2026 — the dedicated empty-state screen was replaced with the normal habits page rendering when the last habit is deleted).
+- `FullsizeTemplatePreview.tsx` decomposed to ~103 lines.
+- `TodaysFocusCard.tsx` decomposed to ~102 lines.
+
+Run `npm run lint:max-lines` to surface any new violations.

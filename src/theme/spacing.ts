@@ -32,6 +32,9 @@ export const screenMargins = {
  * Component Spacing
  */
 export const componentSpacing = {
+  avatar: {
+    size: 40,
+  },
   button: {
     height: 44,
     paddingHorizontal: spacing.lg,
@@ -40,6 +43,9 @@ export const componentSpacing = {
     marginHorizontal: spacing.base,
     marginVertical: spacing.sm,
     padding: spacing.base,
+  },
+  iconButton: {
+    size: 40,
   },
   input: {
     height: 44,

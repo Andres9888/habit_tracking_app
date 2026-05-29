@@ -1,66 +1,44 @@
-/**
- * EmptyState Styles
- */
-
 import { StyleSheet } from 'react-native';
-import { borderRadius } from '../../theme/spacing';
-import { typography, fontWeights, fontFamilies} from '../../theme/typography';
+import { spacing, borderRadius } from '../../theme/spacing';
+import { fontFamilies, fontWeights, typography } from '../../theme/typography';
 
 export const styles = StyleSheet.create({
+  // Scale-driven padding, margins, and typography are applied inline from SCALE_CONFIG.
   container: {
     alignItems: 'center',
     flex: 1,
     justifyContent: 'center',
-    paddingHorizontal: 24,
-    paddingVertical: 48,
+    paddingHorizontal: spacing.lg,
     width: '100%',
   },
   containerCompact: {
     alignItems: 'center',
-    paddingHorizontal: 24,
-    paddingVertical: 24,
+    paddingHorizontal: spacing.lg,
     width: '100%',
   },
   description: {
-    marginBottom: 16,
-    maxWidth: 320,
-    textAlign: 'center',
-  },
-  descriptionCompact: {
-    marginBottom: 0,
     maxWidth: 320,
     textAlign: 'center',
   },
   headline: {
-    marginBottom: 8,
     textAlign: 'center',
   },
-  headlineCompact: {
-    marginBottom: 4,
+  iconText: {
     textAlign: 'center',
   },
-  icon: {
-    fontSize: 64,
-    marginBottom: 16,
-  },
-  iconCompact: {
-    fontSize: 34,
-    marginBottom: 12,
-  },
-  // Quick start templates
   quickStartSection: {
     alignItems: 'center',
-    marginBottom: 24,
-    marginTop: 8,
+    marginBottom: spacing.lg,
+    marginTop: spacing.sm,
     width: '100%',
   },
   templateChip: {
     alignItems: 'center',
     borderRadius: borderRadius.card,
     flexDirection: 'row',
-    gap: 8,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
+    gap: spacing.sm,
+    paddingHorizontal: spacing.base,
+    paddingVertical: spacing.md,
   },
   templateChipPressed: {
     transform: [{ scale: 0.98 }],
@@ -76,7 +54,7 @@ export const styles = StyleSheet.create({
   templateRow: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 8,
+    gap: spacing.sm,
     justifyContent: 'center',
   },
 });

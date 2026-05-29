@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Library — Search + Chips zone (A vs B)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Literata:opsz,wght@7..72,600;7..72,700;7..72,800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg:#f5f1ed; --surface:#ffffff;
+      --text-1:#2d2a26; --text-2:#6b6560; --text-3:#938c85;
+      --primary:#059669; --primary-700:#047857; --primary-50:#e7f6ef;
+      --border:#e4ded7; --border-soft:#ece7e0;
+      --energy-bg:#FEF3C7; --energy-tx:#78350F;
+      --sleep-bg:#EFF6FF; --sleep-tx:#1E3A5F;
+      --stress-bg:#ECFBF2; --stress-tx:#14532D;
+      --focus-bg:#FAF5FF; --focus-tx:#581C87;
+      --shadow-sm:0 1px 2px rgba(45,42,38,0.05);
+      --shadow-md:0 6px 18px rgba(45,42,38,0.08);
+      --shadow-lg:0 30px 70px rgba(45,42,38,0.20);
+    }
+    *{box-sizing:border-box;}
+    body{
+      margin:0;min-height:100vh;font-family:'DM Sans',sans-serif;color:var(--text-1);
+      background:
+        radial-gradient(circle at 8% 4%, rgba(5,150,105,0.09), transparent 34%),
+        radial-gradient(circle at 95% 98%, rgba(180,83,9,0.06), transparent 42%),
+        linear-gradient(180deg,#f8f5f0 0%,#efe9e0 100%);
+      padding:42px 24px 64px;
+    }
+    .head{max-width:1080px;margin:0 auto 26px;text-align:center;}
+    .head .eyebrow{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--primary-700);margin-bottom:10px;}
+    .head h1{font-family:'Literata',serif;font-weight:800;font-size:29px;letter-spacing:-.02em;margin:0 0 8px;}
+    .head p{color:var(--text-2);font-size:14px;max-width:600px;margin:0 auto;line-height:1.55;}
+
+    .cols{max-width:1080px;margin:0 auto;display:flex;gap:48px;justify-content:center;flex-wrap:wrap;}
+    .col{width:392px;}
+    .col-cap{display:flex;align-items:center;gap:9px;margin:0 4px 14px;}
+    .col-cap .tag{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:12px;letter-spacing:.06em;color:#fff;background:var(--primary);border-radius:8px;padding:4px 10px;}
+    .col-cap .t{font-size:14.5px;font-weight:700;}
+    .col-cap .t span{color:var(--text-3);font-weight:600;}
+
+    .phone{width:392px;background:var(--bg);border-radius:42px;border:1px solid var(--border);box-shadow:var(--shadow-lg);overflow:hidden;}
+    .screen{position:relative;}
+
+    .statusbar{position:relative;display:flex;justify-content:space-between;align-items:center;padding:14px 26px 4px;font-size:13px;font-weight:700;}
+    .statusbar .notch{position:absolute;left:50%;top:11px;transform:translateX(-50%);width:96px;height:26px;background:#15110d;border-radius:16px;}
+    .statusbar .dots{display:flex;gap:5px;align-items:center;}
+    .statusbar .dots svg{width:16px;height:16px;}
+
+    .content{padding:8px 18px 18px;}
+
+    .lib-head{display:flex;justify-content:space-between;align-items:flex-start;padding:6px 4px 2px;gap:10px;}
+    .lib-head h2{font-family:'Literata',serif;font-weight:800;font-size:25px;letter-spacing:-.02em;margin:0;line-height:1.12;}
+    .lib-head .sub{color:var(--text-2);font-size:12.5px;line-height:1.4;margin-top:6px;}
+    .lib-head .x{flex-shrink:0;width:30px;height:30px;border-radius:50%;background:rgba(0,0,0,0.05);display:flex;align-items:center;justify-content:center;color:var(--text-2);}
+    .lib-head .x svg{width:16px;height:16px;}
+
+    .search{margin:14px 4px 0;display:flex;align-items:center;gap:10px;padding:13px 15px;border-radius:999px;background:var(--surface);border:1px solid var(--border);box-shadow:var(--shadow-sm);}
+    .search svg{width:18px;height:18px;color:var(--text-3);}
+    .search .ph{color:var(--text-3);font-size:14px;font-weight:500;flex:1;}
+    .search .filt{display:flex;align-items:center;gap:5px;color:var(--text-2);font-size:11.5px;font-weight:700;border-left:1px solid var(--border);padding-left:10px;}
+    .search .filt svg{width:15px;height:15px;color:var(--text-2);}
+
+    /* zone highlight */
+    .zone{position:relative;border-radius:16px;margin:10px 0 0;}
+    .zone.hot{outline:2px dashed rgba(5,150,105,.5);outline-offset:6px;}
+    .zone-tag{position:absolute;right:6px;top:-9px;z-index:2;font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#fff;background:var(--primary);border-radius:6px;padding:2px 7px;}
+
+    /* attribute lens row (B) */
+    .lenses{display:flex;gap:8px;padding:14px 4px 2px;overflow:hidden;}
+    .lens{display:inline-flex;align-items:center;gap:5px;white-space:nowrap;font-size:12.5px;font-weight:700;border-radius:999px;padding:8px 13px;border:1px solid var(--border);background:var(--surface);color:var(--text-2);}
+    .lens.on{background:var(--primary);border-color:var(--primary-700);color:#fff;}
+    .lens.quick.on{background:#FBBF24;border-color:#F59E0B;color:#78350F;}
+    .lens.roi.on{background:#FEE2E2;border-color:#EF4444;color:#7F1D1D;}
+
+    /* old/busy chip strip for reference */
+    .oldchips{display:flex;gap:7px;padding:12px 4px 2px;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,#000 84%,transparent);}
+    .ochip{white-space:nowrap;font-size:12px;font-weight:700;border-radius:999px;padding:7px 11px;border:1px solid var(--border);background:var(--surface);color:var(--text-2);}
+    .ochip.on{background:var(--primary);border-color:var(--primary-700);color:#fff;}
+
+    .none-note{margin:12px 4px 0;font-size:11.5px;color:var(--text-3);font-style:italic;display:flex;align-items:center;gap:6px;}
+    .none-note svg{width:14px;height:14px;}
+
+    /* featured */
+    .featured{position:relative;border-radius:20px;padding:16px;margin:16px 4px 0;overflow:hidden;background:linear-gradient(135deg,var(--stress-bg) 0%,#c9ecd6 100%);border:1px solid rgba(20,83,45,.12);box-shadow:var(--shadow-md);}
+    .featured .badge{display:inline-flex;align-items:center;gap:5px;font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--stress-tx);background:rgba(255,255,255,.6);border-radius:999px;padding:4px 9px;}
+    .featured .fb{display:flex;gap:12px;align-items:center;margin:13px 0 12px;}
+    .featured .fe{font-size:34px;width:54px;height:54px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.55);border-radius:16px;}
+    .featured .ft{font-family:'Literata',serif;font-weight:800;font-size:20px;color:var(--stress-tx);margin:0 0 2px;letter-spacing:-.01em;}
+    .featured .fp{color:var(--stress-tx);opacity:.82;font-size:12.5px;line-height:1.35;}
+    .starters{display:flex;gap:8px;margin-bottom:13px;}
+    .starter{flex:1;text-align:center;}
+    .starter .si{font-size:18px;width:38px;height:38px;margin:0 auto 5px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.5);border-radius:11px;}
+    .starter .sl{font-size:9.5px;color:var(--stress-tx);opacity:.78;line-height:1.2;font-weight:600;}
+    .featured .fcta{display:flex;align-items:center;gap:8px;background:var(--stress-tx);color:#fff;font-size:13px;font-weight:700;padding:11px 15px;border-radius:13px;justify-content:center;}
+    .featured .fcta svg{width:15px;height:15px;}
+    .featured .fcta .cnt{opacity:.8;font-weight:600;}
+
+    /* rail */
+    .rail{display:flex;gap:10px;padding:14px 4px 2px;overflow:hidden;}
+    .rcard{flex:0 0 150px;border-radius:16px;padding:13px 12px;border:1px solid rgba(0,0,0,.05);min-height:118px;display:flex;flex-direction:column;justify-content:space-between;}
+    .rcard .re{font-size:23px;width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.55);margin-bottom:8px;}
+    .rcard .rt{font-family:'Literata',serif;font-weight:700;font-size:15px;margin:0 0 3px;letter-spacing:-.01em;}
+    .rcard .rp{font-size:11px;line-height:1.3;opacity:.78;margin-bottom:9px;}
+    .rcard .rf{display:flex;align-items:center;justify-content:space-between;}
+    .rcard .rc{font-size:10.5px;font-weight:700;opacity:.85;}
+    .rcard .ra{width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.55);display:flex;align-items:center;justify-content:center;}
+    .rcard .ra svg{width:13px;height:13px;}
+    .c-energy{background:var(--energy-bg);color:var(--energy-tx);}
+    .c-sleep{background:var(--sleep-bg);color:var(--sleep-tx);}
+    .c-focus{background:var(--focus-bg);color:var(--focus-tx);}
+
+    .qwins{padding:18px 4px 0;}
+    .qwins .qh{display:flex;align-items:center;justify-content:space-between;}
+    .qwins .qh h3{font-family:'Literata',serif;font-weight:800;font-size:17px;margin:0;letter-spacing:-.01em;}
+    .qwins .qh .see{font-size:12.5px;font-weight:700;color:var(--primary-700);}
+    .qwins .qs{font-size:12px;color:var(--text-3);margin-top:2px;}
+
+    /* annotations under cols */
+    .why{max-width:1080px;margin:34px auto 0;display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+    .card{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:20px 22px;box-shadow:var(--shadow-sm);}
+    .card .ct{display:flex;align-items:center;gap:9px;margin-bottom:12px;}
+    .card .ct .tg{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:12px;color:#fff;background:var(--primary);border-radius:8px;padding:4px 10px;}
+    .card .ct h4{font-family:'Literata',serif;font-weight:800;font-size:17px;margin:0;}
+    .card ul{margin:0;padding-left:18px;}
+    .card li{font-size:13px;color:var(--text-2);line-height:1.55;margin-bottom:7px;}
+    .card li b{color:var(--text-1);}
+    .verdict{max-width:1080px;margin:22px auto 0;padding:16px 20px;background:var(--primary-50);border:1px solid #bfe6d4;border-radius:16px;font-size:13.5px;color:#14532d;line-height:1.55;}
+    .verdict b{color:#0b3d27;}
+
+    @media (max-width:900px){ .why{grid-template-columns:1fr;} }
+  </style>
+</head>
+<body>
+  <div class="head">
+    <div class="eyebrow">Library · Search + Chips zone</div>
+    <h1>What to do about the search bar &amp; chips</h1>
+    <p>Same page, two options for the highlighted zone. Everything below it (featured pick, transformation rail, quick wins) stays exactly as it is today.</p>
+  </div>
+
+  <div class="cols">
+    <!-- ================= OPTION A ================= -->
+    <div class="col">
+      <div class="col-cap"><span class="tag">A</span><span class="t">Search-only landing <span>· chips live in search</span></span></div>
+      <div class="phone"><div class="screen">
+        <div class="statusbar"><span>9:41</span><div class="notch"></div><div class="dots"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></div></div>
+        <div class="content">
+          <div class="lib-head">
+            <div>
+              <h2>Choose your next<br>transformation</h2>
+              <div class="sub">Pick an outcome, then start with one small habit that moves it forward.</div>
+            </div>
+            <div class="x"><i data-lucide="x"></i></div>
+          </div>
+
+          <div class="zone hot">
+            <span class="zone-tag">the zone</span>
+            <div class="search">
+              <i data-lucide="search"></i>
+              <span class="ph">Find an outcome or habit…</span>
+            </div>
+            <div class="none-note"><i data-lucide="corner-down-right"></i> Filters &amp; categories appear here once you start searching</div>
+          </div>
+
+          <!-- featured -->
+          <div class="featured">
+            <span class="badge"><i data-lucide="star" style="width:11px;height:11px"></i> Today’s pick</span>
+            <div class="fb"><div class="fe">🧘</div><div><p class="ft">Stress less</p><div class="fp">Calm your mind and regulate your system</div></div></div>
+            <div class="starters">
+              <div class="starter"><div class="si">🧠</div><div class="sl">13-Min Focus Meditation</div></div>
+              <div class="starter"><div class="si">💎</div><div class="sl">Identity Journaling</div></div>
+              <div class="starter"><div class="si">✏️</div><div class="sl">Single-Sentence Journal</div></div>
+            </div>
+            <div class="fcta">Start your path <i data-lucide="arrow-right"></i> <span class="cnt">· 62 habits inside</span></div>
+          </div>
+
+          <!-- rail -->
+          <div class="rail">
+            <div class="rcard c-energy"><div><div class="re">⚡</div><p class="rt">Wake up energized</p><div class="rp">Morning routines that keep you sharp</div></div><div class="rf"><span class="rc">91 habits</span><span class="ra"><i data-lucide="chevron-right"></i></span></div></div>
+            <div class="rcard c-sleep"><div><div class="re">😴</div><p class="rt">Sleep deeper</p><div class="rp">Wind down, rest fully</div></div><div class="rf"><span class="rc">46 habits</span><span class="ra"><i data-lucide="chevron-right"></i></span></div></div>
+            <div class="rcard c-focus"><div><div class="re">🎯</div><p class="rt">Focus deeper</p></div><div class="rf"><span class="rc">64</span><span class="ra"><i data-lucide="chevron-right"></i></span></div></div>
+          </div>
+
+          <div class="qwins"><div class="qh"><h3>Quick wins to build momentum</h3><span class="see">See all</span></div><div class="qs">What people are starting this week</div></div>
+        </div>
+      </div></div>
+    </div>
+
+    <!-- ================= OPTION B ================= -->
+    <div class="col">
+      <div class="col-cap"><span class="tag">B</span><span class="t">Attribute lenses only <span>· no category chips</span></span></div>
+      <div class="phone"><div class="screen">
+        <div class="statusbar"><span>9:41</span><div class="notch"></div><div class="dots"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></div></div>
+        <div class="content">
+          <div class="lib-head">
+            <div>
+              <h2>Choose your next<br>transformation</h2>
+              <div class="sub">Pick an outcome, then start with one small habit that moves it forward.</div>
+            </div>
+            <div class="x"><i data-lucide="x"></i></div>
+          </div>
+
+          <div class="zone hot">
+            <span class="zone-tag">the zone</span>
+            <div class="search">
+              <i data-lucide="search"></i>
+              <span class="ph">Find an outcome or habit…</span>
+            </div>
+            <div class="lenses">
+              <span class="lens on">All</span>
+              <span class="lens quick on" style="background:#FBBF24;border-color:#F59E0B;color:#78350F;">⚡ Quick wins</span>
+              <span class="lens roi" >🔥 High ROI</span>
+              <span class="lens">✨ New</span>
+            </div>
+          </div>
+
+          <!-- featured -->
+          <div class="featured">
+            <span class="badge"><i data-lucide="star" style="width:11px;height:11px"></i> Today’s pick</span>
+            <div class="fb"><div class="fe">🧘</div><div><p class="ft">Stress less</p><div class="fp">Calm your mind and regulate your system</div></div></div>
+            <div class="starters">
+              <div class="starter"><div class="si">🧠</div><div class="sl">13-Min Focus Meditation</div></div>
+              <div class="starter"><div class="si">💎</div><div class="sl">Identity Journaling</div></div>
+              <div class="starter"><div class="si">✏️</div><div class="sl">Single-Sentence Journal</div></div>
+            </div>
+            <div class="fcta">Start your path <i data-lucide="arrow-right"></i> <span class="cnt">· 62 habits inside</span></div>
+          </div>
+
+          <!-- rail -->
+          <div class="rail">
+            <div class="rcard c-energy"><div><div class="re">⚡</div><p class="rt">Wake up energized</p><div class="rp">Morning routines that keep you sharp</div></div><div class="rf"><span class="rc">91 habits</span><span class="ra"><i data-lucide="chevron-right"></i></span></div></div>
+            <div class="rcard c-sleep"><div><div class="re">😴</div><p class="rt">Sleep deeper</p><div class="rp">Wind down, rest fully</div></div><div class="rf"><span class="rc">46 habits</span><span class="ra"><i data-lucide="chevron-right"></i></span></div></div>
+            <div class="rcard c-focus"><div><div class="re">🎯</div><p class="rt">Focus deeper</p></div><div class="rf"><span class="rc">64</span><span class="ra"><i data-lucide="chevron-right"></i></span></div></div>
+          </div>
+
+          <div class="qwins"><div class="qh"><h3>Quick wins to build momentum</h3><span class="see">See all</span></div><div class="qs">What people are starting this week</div></div>
+        </div>
+      </div></div>
+    </div>
+  </div>
+
+  <!-- annotations -->
+  <div class="why">
+    <div class="card">
+      <div class="ct"><span class="tg">A</span><h4>Search-only landing</h4></div>
+      <ul>
+        <li><b>Cleanest possible.</b> Header → search → straight into transformations. Nothing competes.</li>
+        <li>Category + attribute chips appear <b>only inside search/results</b>, where filtering actually makes sense.</li>
+        <li>Fully commits to “choose a transformation” as the one job of the page.</li>
+        <li>Trade-off: <b>Quick wins / High ROI</b> lose their always-visible entry point (still reachable via the “Quick wins” section + search).</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="ct"><span class="tg">B</span><h4>Attribute lenses only</h4></div>
+      <ul>
+        <li>Drops the <b>7 category chips</b> (Morning/Sleep/Fitness…) — they duplicated the transformation cards.</li>
+        <li>Keeps a short row of <b>cross-cutting lenses</b> (All · Quick wins · High ROI · New) that add a *different* axis, not a duplicate one.</li>
+        <li>Preserves the momentum hooks (“Quick wins”, “High ROI”) right at the top.</li>
+        <li>Trade-off: still one row under the header — slightly busier than A, but far calmer than today’s 10-chip strip.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="verdict">
+    <b>Recommendation:</b> Go with <b>B</b> if “Quick wins / High ROI” are valuable discovery hooks you want visible by default — it removes the redundancy (the actual problem) while keeping the useful filters. Choose <b>A</b> if you want the page to feel as quiet and decisive as possible. Either way, the <b>7 category chips come off the landing</b> — that’s the change that fixes the busyness.
+  </div>
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

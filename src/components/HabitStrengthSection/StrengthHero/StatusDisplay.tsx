@@ -21,6 +21,7 @@ export function StatusDisplay({
   label,
   delta,
   deltaLabel,
+  tierDisplayLabel,
 }: StatusDisplayProps) {
   const { colors: themeColors } = useThemeColors();
   const strengthColors = getStrengthColors(themeColors);
@@ -49,7 +50,7 @@ export function StatusDisplay({
           className='text-sm font-semibold'
           style={{ color: colors.primary }}
         >
-          {STRENGTH_LABELS[safeLabel]}
+          {tierDisplayLabel ?? STRENGTH_LABELS[safeLabel]}
         </Text>
       </View>
 

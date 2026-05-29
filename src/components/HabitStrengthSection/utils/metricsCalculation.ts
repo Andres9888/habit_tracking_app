@@ -5,7 +5,11 @@
  */
 
 import type { StrengthSnapshot } from '../../HabitStrengthHistory/types';
-import { getStrengthLabel } from '../../HabitStrengthHistory/strengthUtils';
+import {
+  calculateStrengthExtremes,
+  getStrengthLabel,
+} from '../../HabitStrengthHistory/strengthUtils';
+import { getProgressToNextLevel } from '../../ProgressSectionConsolidated/types/levelHelpers';
 import type { TimeRange, ExtendedStrengthMetrics } from '../types';
 import { filterHistoryByTimeRange } from './historyFilters';
 import { calculateWeekDelta, calculateMonthDelta } from './deltaCalculations';
@@ -53,7 +57,8 @@ export function calculateExtendedMetrics(
   // Filter history by time range
   const filteredHistory = filterHistoryByTimeRange(strengthHistory, timeRange);
 
-  // Get strength label
+  const { peak } = calculateStrengthExtremes(strengthHistory);
+  const { nextLevel, pointsToNext } = getProgressToNextLevel(currentStrength);
   const label = getStrengthLabel(currentStrength);
 
   return {
@@ -61,7 +66,11 @@ export function calculateExtendedMetrics(
     deltaVsMonth,
     deltaVsWeek,
     label,
-    sinceStart: Math.round(currentStrength), // Since start = current (started at 0)
+    nextTierLabel: nextLevel?.label ?? null,
+    nextTierThreshold: nextLevel?.min ?? null,
+    peak: Math.round(peak.strength),
+    pointsToNextTier: Math.max(0, Math.round(pointsToNext)),
+    sinceStart: Math.round(currentStrength),
     strengthHistory: filteredHistory,
   };
 }

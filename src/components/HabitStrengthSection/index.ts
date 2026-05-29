@@ -23,6 +23,8 @@ export { TimeRangeToggle } from './TimeRangeToggle';
 export { StrengthHero } from './StrengthHero';
 export { StrengthChart } from './StrengthChart';
 export { StrengthStatsRow } from './StrengthStatsRow';
+export { TierJourneyStrip } from './TierJourneyStrip';
+export { StrengthActionTip } from './StrengthActionTip';
 
 // Types
 export type {

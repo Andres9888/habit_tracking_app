@@ -8,7 +8,7 @@ import { useUser } from '@clerk/clerk-expo';
 import { LinearGradient } from 'expo-linear-gradient';
 import { AnimatedPressable } from '../ui/AnimatedPressable';
 import { useThemeColors } from '../../theme/ThemeContext';
-import { borderRadius, shadows } from '../../theme/spacing';
+import { borderRadius, componentSpacing, shadows } from '../../theme/spacing';
 
 interface AccountRowProps {
   highContrastMode: boolean;
@@ -42,16 +42,16 @@ export function AccountRow({ highContrastMode, isPremium, onPress }: AccountRowP
           {highContrastMode ? (
             <View
               className='items-center justify-center'
-              style={{ backgroundColor: themeColors.text.primary, borderRadius: borderRadius.full, height: 40, width: 40 }}
+              style={{ backgroundColor: themeColors.text.primary, borderRadius: borderRadius.full, height: componentSpacing.avatar.size, width: componentSpacing.avatar.size }}
             >
-              <Text style={{ fontSize: 18, fontWeight: fontWeights.bold, color: themeColors.text.inverse }}>{initial}</Text>
+              <Text style={{ fontSize: typography.body.fontSize, fontWeight: fontWeights.bold, color: themeColors.text.inverse }}>{initial}</Text>
             </View>
           ) : (
             <LinearGradient
               colors={[themeColors.primary[700], themeColors.primary[600]]}
-              style={{ alignItems: 'center', borderRadius: borderRadius.full, height: 40, justifyContent: 'center', width: 40 }}
+              style={{ alignItems: 'center', borderRadius: borderRadius.full, height: componentSpacing.avatar.size, justifyContent: 'center', width: componentSpacing.avatar.size }}
             >
-              <Text style={{ fontSize: 18, fontWeight: fontWeights.bold, color: 'white' }}>{initial}</Text>
+              <Text style={{ fontSize: typography.body.fontSize, fontWeight: fontWeights.bold, color: 'white' }}>{initial}</Text>
             </LinearGradient>
           )}
           <View className='flex-1'>

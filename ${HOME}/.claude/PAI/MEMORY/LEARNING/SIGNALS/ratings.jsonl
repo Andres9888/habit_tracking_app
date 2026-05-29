@@ -1,0 +1,10 @@
+{"timestamp":"2026-05-26T19:45:10-07:00","rating":5,"session_id":"66b9ae47-be57-4fa6-8eef-a968835d5ba7","source":"implicit","sentiment_summary":"Inference failed: Failed to parse JSON response","confidence":0.3}
+{"timestamp":"2026-05-26T19:45:18-07:00","rating":5,"session_id":"7f5fdd2b-25f9-47de-b435-f8e15933e1ae","source":"implicit","sentiment_summary":"Setup instructions provided; no reaction visible to previous response","confidence":0.45}
+{"timestamp":"2026-05-26T19:50:42-07:00","rating":3,"session_id":"7f5fdd2b-25f9-47de-b435-f8e15933e1ae","source":"implicit","sentiment_summary":"Repeated request after missing deliverable expectation","confidence":0.85}
+{"timestamp":"2026-05-26T19:59:14-07:00","rating":5,"session_id":"7f5fdd2b-25f9-47de-b435-f8e15933e1ae","source":"implicit","sentiment_summary":"Inference failed: Timeout after 15000ms","confidence":0.3}
+{"timestamp":"2026-05-26T20:44:32-07:00","rating":5,"session_id":"7f5fdd2b-25f9-47de-b435-f8e15933e1ae","source":"implicit","sentiment_summary":"Inference failed: Timeout after 15000ms","confidence":0.3}
+{"timestamp":"2026-05-27T04:30:28-07:00","rating":3,"session_id":"7f5fdd2b-25f9-47de-b435-f8e15933e1ae","source":"implicit","sentiment_summary":"User repeating request after unhelpful AI response","confidence":0.75}
+{"timestamp":"2026-05-27T05:40:26-07:00","rating":5,"session_id":"7f5fdd2b-25f9-47de-b435-f8e15933e1ae","source":"implicit","sentiment_summary":"Inference failed: Timeout after 15000ms","confidence":0.3}
+{"timestamp":"2026-05-27T05:50:47-07:00","rating":4,"session_id":"7f5fdd2b-25f9-47de-b435-f8e15933e1ae","source":"implicit","sentiment_summary":"Impatient redirect; skipping requested A/B/C choice","confidence":0.68}
+{"timestamp":"2026-05-27T06:08:24-07:00","rating":5,"session_id":"7f5fdd2b-25f9-47de-b435-f8e15933e1ae","source":"implicit","sentiment_summary":"Inference failed: Timeout after 15000ms","confidence":0.3}
+{"timestamp":"2026-05-27T06:12:05-07:00","rating":6,"session_id":"7f5fdd2b-25f9-47de-b435-f8e15933e1ae","source":"implicit","sentiment_summary":"Focused follow-up question; engaging with previous answer","confidence":0.65}

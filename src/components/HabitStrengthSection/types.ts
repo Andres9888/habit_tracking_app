@@ -87,20 +87,23 @@ export interface StrengthChartProps {
 
   /** Optional custom color override */
   color?: string;
+
+  /** Next tier threshold (0–100) for milestone guide line; omit at max tier */
+  nextTierThreshold?: number;
 }
 
 /**
  * Props for the StrengthStatsRow component.
  */
 export interface StrengthStatsRowProps {
-  /** Change since habit creation */
-  sinceStart: number;
+  /** Highest recorded strength in the selected range */
+  peak: number;
 
-  /** Change in the last month */
-  lastMonth: number;
+  /** Change vs 30 days ago */
+  deltaVsMonth: number;
 
-  /** Change in the last week */
-  lastWeek: number;
+  /** Percentage points until the next tier (0 if at max tier) */
+  pointsToNextTier: number;
 }
 
 /**
@@ -125,4 +128,16 @@ export interface ExtendedStrengthMetrics {
 
   /** Filtered strength history for the selected time range */
   strengthHistory: StrengthSnapshot[];
+
+  /** Peak strength from full history */
+  peak: number;
+
+  /** Points until next 5-tier milestone (0 at max tier) */
+  pointsToNextTier: number;
+
+  /** Label of the next tier, or null at max */
+  nextTierLabel: string | null;
+
+  /** Threshold % of the next tier (for chart guide line) */
+  nextTierThreshold: number | null;
 }

@@ -1,0 +1,8 @@
+{
+  "rating": 3,
+  "summary": "Repeated request after missing deliverable expectation",
+  "detailed_context": "User explicitly requested a visual mock ('show me a mock what you will change'). The previous response provided a text summary of findings instead of the requested visual artifact. User is now asking again—a clear signal of frustration. This indicates the AI missed the core request and failed to deliver the expected output on the first attempt. The terse repetition signals mild frustration ('that's not what I asked for').",
+  "session_id": "7f5fdd2b-25f9-47de-b435-f8e15933e1ae",
+  "captured_at": "2026-05-27T02:50:52.576Z",
+  "transcript_source": "7f5fdd2b-25f9-47de-b435-f8e15933e1ae.jsonl"
+}

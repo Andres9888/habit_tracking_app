@@ -32,6 +32,8 @@ export interface ChartGridProps {
   chartWidth: number;
   /** Horizontal padding */
   paddingX: number;
+  /** Optional Y position for next-tier milestone guide line */
+  milestoneLineY?: number;
 }
 
 /** Props for the ChartCurve component */

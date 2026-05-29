@@ -19,10 +19,13 @@ import { shadows, spacing } from '../../theme/spacing';
 import { typography } from '../../theme/typography';
 import { SkeletonLoader } from '../SkeletonLoader/SkeletonLoader';
 import { getThemeColors } from './constants';
+import { getLevelFromStrength } from '../ProgressSectionConsolidated/types/levelHelpers';
 import { useHabitStrengthData } from './HabitStrengthSection.hooks';
+import { StrengthActionTip } from './StrengthActionTip';
 import { StrengthChart } from './StrengthChart';
 import { StrengthHero } from './StrengthHero';
 import { StrengthStatsRow } from './StrengthStatsRow';
+import { TierJourneyStrip } from './TierJourneyStrip';
 import { TimeRangeToggle } from './TimeRangeToggle';
 import type { HabitStrengthSectionProps } from './types';
 
@@ -127,6 +130,8 @@ export const HabitStrengthSection = React.memo(function HabitStrengthSection({
           <TimeRangeToggle value={timeRange} onChange={setTimeRange} />
         </View>
 
+        <TierJourneyStrip accentColor={habitColor} strength={currentStrength} />
+
         <View className='mb-4'>
           <StrengthHero
             color={habitColor}
@@ -134,6 +139,7 @@ export const HabitStrengthSection = React.memo(function HabitStrengthSection({
             deltaLabel='vs last month'
             label={strengthLabel}
             strength={currentStrength}
+            tierDisplayLabel={getLevelFromStrength(currentStrength).label}
           />
         </View>
 
@@ -142,14 +148,22 @@ export const HabitStrengthSection = React.memo(function HabitStrengthSection({
             color={habitColor}
             currentStrength={currentStrength}
             data={chartData}
+            nextTierThreshold={
+              extendedMetrics.nextTierThreshold ?? undefined
+            }
             timeRange={timeRange}
           />
         </View>
 
         <StrengthStatsRow
-          lastMonth={extendedMetrics.deltaVsMonth}
-          lastWeek={extendedMetrics.deltaVsWeek}
-          sinceStart={extendedMetrics.sinceStart}
+          deltaVsMonth={extendedMetrics.deltaVsMonth}
+          peak={extendedMetrics.peak}
+          pointsToNextTier={extendedMetrics.pointsToNextTier}
+        />
+
+        <StrengthActionTip
+          nextTierLabel={extendedMetrics.nextTierLabel}
+          pointsToNext={extendedMetrics.pointsToNextTier}
         />
       </View>
     </Animated.View>

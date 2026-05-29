@@ -7,7 +7,7 @@ import React from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { ChevronRight } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
-import { borderRadius } from '@/theme/spacing';
+import { borderRadius, spacing } from '@/theme/spacing';
 import { typography, fontFamilies, fontWeights } from '@/theme/typography';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { CATEGORY_PAIRINGS } from '../../../screens/TemplatesScreen/data/habitPairings';
@@ -95,9 +95,9 @@ const pairStyles = StyleSheet.create({
     fontWeight: fontWeights.semibold,
   },
   container: {
-    gap: 8,
-    paddingHorizontal: 20,
-    paddingVertical: 8,
+    gap: spacing.sm,
+    paddingHorizontal: spacing.base + spacing.xs, // 16 + 4 = 20
+    paddingVertical: spacing.sm,
   },
   iconBox: {
     alignItems: 'center',

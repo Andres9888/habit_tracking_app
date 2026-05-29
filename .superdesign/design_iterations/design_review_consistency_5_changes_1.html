@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design Consistency Review — 5 Changes</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Literata:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'DM Sans', sans-serif !important;
+    background: #1a1816 !important;
+    color: #F5F1ED !important;
+    padding: 32px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  h1 {
+    font-family: 'Literata', serif !important;
+    font-size: 36px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    letter-spacing: -0.5px;
+  }
+  .subtitle { color: #8B857C; font-size: 14px; margin-bottom: 24px; line-height: 1.6; }
+  .meta-row { display:flex; gap:24px; margin-bottom:48px; font-size:12px; color:#8B857C; }
+  .meta-row strong { color:#F5F1ED; font-weight:600; }
+
+  .toc {
+    background:#2D2A26; border-radius:16px; padding:20px 24px; margin-bottom:48px;
+    border-left:3px solid #059669;
+  }
+  .toc-title { font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#8B857C; margin-bottom:12px; }
+  .toc-list { list-style:none; display:flex; flex-wrap:wrap; gap:16px 32px; }
+  .toc-list a { color:#F5F1ED; text-decoration:none; font-size:14px; font-weight:500; border-bottom:1px dashed #3D3833; padding-bottom:2px; }
+  .toc-list a:hover { color:#34D399; border-color:#34D399; }
+  .toc-list .num { color:#8B6208; font-weight:700; margin-right:6px; font-family:'Literata',serif; }
+
+  .section { margin-bottom:72px; scroll-margin-top:24px; }
+  .section-header { display:flex; align-items:baseline; gap:16px; margin-bottom:8px; }
+  .section-num {
+    font-family:'Literata', serif !important;
+    font-size: 56px; font-weight:700; color:#8B6208; line-height:1; letter-spacing:-2px;
+    flex-shrink: 0; min-width: 72px;
+  }
+  .section-title { font-family:'Literata',serif !important; font-size:24px; font-weight:600; letter-spacing:-0.2px; }
+  .section-desc { font-size:14px; color:#8B857C; margin-bottom:24px; padding-left:88px; line-height:1.6; }
+
+  .compare-row { display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-bottom:24px; padding-left:88px; }
+  .compare-col {}
+  .compare-label {
+    font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:2px;
+    margin-bottom:12px; padding:5px 12px; border-radius:6px; display:inline-block;
+  }
+  .label-before { background:#B53030; color:#fff; }
+  .label-after { background:#059669; color:#fff; }
+
+  /* Phone frame */
+  .phone {
+    width:100%; max-width:420px; border-radius:28px; overflow:hidden;
+    border:2px solid #3D3833; background:#F5F1ED;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+  }
+  .phone-inner { padding:20px 16px; background:#F5F1ED; min-height:280px; }
+  .phone-header { font-family:'Literata',serif; font-size:18px; font-weight:600; color:#1A1816; margin-bottom:14px; padding:0 4px; }
+
+  /* Habit Card */
+  .habit-card {
+    background:#FFFFFF; padding:14px; margin-bottom:10px; border:1px solid #E5E2DE;
+    display:flex; align-items:center; gap:12px; box-shadow:0 2px 6px rgba(45,42,38,0.05);
+  }
+  .habit-card-12 { border-radius:12px; }
+  .habit-card-16 { border-radius:16px; }
+  .habit-icon-emoji { width:38px; height:38px; border-radius:10px; background:#ECFDF5; color:#047857; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; }
+  .habit-name { font-weight:600; font-size:14px; color:#1A1816; margin-bottom:3px; }
+  .habit-meta { font-size:11px; color:#6B6560; display:flex; align-items:center; gap:6px; }
+  .strength-dots { display:inline-flex; gap:2px; }
+  .strength-dots span { width:5px; height:5px; border-radius:50%; background:#D6CFC4; }
+  .strength-dots span.on { background:#059669; }
+
+  /* Generic Card */
+  .generic-card { background:#FFFFFF; padding:14px; margin-bottom:10px; border:1px solid #E5E2DE; box-shadow:0 2px 6px rgba(45,42,38,0.05); }
+  .generic-card-12 { border-radius:12px; }
+  .generic-card-16 { border-radius:16px; }
+  .generic-card-title { font-weight:600; font-size:14px; color:#1A1816; margin-bottom:6px; display:flex; align-items:center; gap:8px; }
+  .generic-card-body { font-size:12px; color:#6B6560; line-height:1.5; }
+
+  .mismatch-arrow { display:flex; align-items:center; gap:6px; margin:-2px 0 4px 0; font-size:10px; color:#B53030; padding-left:8px; }
+  .match-arrow { display:flex; align-items:center; gap:6px; margin:-2px 0 4px 0; font-size:10px; color:#059669; padding-left:8px; }
+
+  /* Hero focus card */
+  .hero-row { display:grid; grid-template-columns:repeat(7, 1fr); gap:6px; }
+  .hero-card {
+    border-radius:14px; padding:12px 10px; color:#fff; min-height:120px;
+    display:flex; flex-direction:column; justify-content:space-between;
+  }
+  .hero-state-label { font-size:9px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; opacity:0.85; }
+  .hero-icon { font-size:18px; }
+  .hero-msg { font-size:10px; font-weight:600; opacity:0.95; line-height:1.3; }
+
+  /* old palette */
+  .h-old-starting    { background:linear-gradient(135deg,#3b82f6,#6366f1); }
+  .h-old-building    { background:linear-gradient(135deg,#14b8a6,#06b6d4); }
+  .h-old-thriving    { background:linear-gradient(135deg,#10b981,#14b8a6); }
+  .h-old-completed   { background:linear-gradient(135deg,#22c55e,#10b981); }
+  .h-old-celebrate   { background:linear-gradient(135deg,#F59E0B,#D97706); }
+  .h-old-struggling  { background:linear-gradient(135deg,#f59e0b,#f97316); }
+  .h-old-recovering  { background:linear-gradient(135deg,#8b5cf6,#a855f7); }
+
+  /* new palette */
+  .h-new-starting    { background:linear-gradient(135deg,#6EE7B7,#059669); }
+  .h-new-building    { background:linear-gradient(135deg,#059669,#065F46); }
+  .h-new-thriving    { background:linear-gradient(135deg,#047857,#8B6208); }
+  .h-new-completed   { background:linear-gradient(135deg,#059669,#065F46); }
+  .h-new-celebrate   { background:linear-gradient(135deg,#FBBF24,#8B6208); }
+  .h-new-struggling  { background:linear-gradient(135deg,#BBB1A4,#7A6E5F); }
+  .h-new-recovering  { background:linear-gradient(135deg,#9A8E7E,#059669); }
+
+  .palette-label { text-align:center; font-size:10px; color:#8B857C; margin-top:8px; font-style:italic; }
+
+  /* Big hero (for badges demo) */
+  .big-hero { border-radius:20px; padding:24px; color:#fff; background:linear-gradient(135deg,#10b981,#0D7F5F); min-height:200px; }
+  .big-hero-new { background:linear-gradient(135deg,#059669,#065F46); }
+  .glass-badge { padding:6px 12px; border-radius:8px; color:#fff; font-size:11px; font-weight:500; display:inline-flex; align-items:center; gap:6px; backdrop-filter:blur(8px); }
+  .g-15 { background:rgba(255,255,255,0.15); }
+  .g-20 { background:rgba(255,255,255,0.20); }
+  .g-25 { background:rgba(255,255,255,0.25); }
+  .badge-row { display:flex; flex-wrap:wrap; gap:8px; margin-top:14px; }
+
+  /* Settings rows */
+  .settings-row { background:#FFFFFF; padding:12px 14px; border-bottom:1px solid #E5E2DE; display:flex; align-items:center; gap:12px; }
+  .settings-row:first-child { border-top-left-radius:14px; border-top-right-radius:14px; }
+  .settings-row:last-child { border-bottom-left-radius:14px; border-bottom-right-radius:14px; border-bottom:none; }
+  .avatar { background:#059669; color:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; flex-shrink:0; }
+  .avatar-40 { width:40px; height:40px; font-size:16px; }
+  .avatar-48 { width:48px; height:48px; font-size:18px; }
+  .settings-name { font-size:14px; color:#1A1816; font-weight:600; }
+  .settings-meta { font-size:12px; color:#6B6560; }
+  .settings-secondary { padding-left:56px !important; font-size:14px; color:#1A1816; padding:12px 14px 12px 56px; background:#FFFFFF; border-bottom:1px solid #E5E2DE; }
+  .settings-broken .settings-secondary { padding-left:56px !important; }
+  .overlap-warning { background:#FEE2E2; color:#B53030; font-size:10px; padding:2px 8px; border-radius:4px; margin-left:8px; display:inline-block; font-weight:600; }
+  .settings-fixed-secondary { background:#FFFFFF; border-bottom:1px solid #E5E2DE; display:flex; }
+  .settings-token-pad { font-size:14px; color:#1A1816; padding:12px 14px; }
+
+  /* Empty states */
+  .empty-grid-before { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .empty-mock {
+    background:#FFFFFF; border:1px solid #E5E2DE; border-radius:12px; padding:14px;
+    min-height:120px; display:flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center; gap:6px;
+  }
+  .empty-mock .icon { font-size:22px; }
+  .empty-mock .title { font-size:11px; font-weight:600; color:#1A1816; }
+  .empty-mock .desc { font-size:10px; color:#6B6560; line-height:1.4; }
+  .empty-mock .cta { font-size:10px; color:#059669; font-weight:600; padding:3px 8px; border:1px solid #059669; border-radius:6px; margin-top:2px; }
+  .empty-mock-tiny { padding:8px 12px; min-height:48px; font-size:11px; color:#6B6560; }
+  .empty-shape-A { padding:24px 14px; }
+  .empty-shape-B { padding:10px 14px; min-height:60px; }
+  .empty-shape-C { background:transparent; border:1px dashed #D6CFC4; }
+  .empty-shape-D { background:#FAF7F2; }
+  .empty-shape-E { padding:6px; }
+  .file-label { font-size:9px; color:#8B6208; margin-top:6px; font-family:'DM Sans',monospace; }
+
+  .empty-variant {
+    background:#FFFFFF; border:1px solid #E5E2DE; border-radius:14px; padding:20px;
+    display:flex; flex-direction:column; align-items:center; gap:8px; text-align:center;
+  }
+  .empty-variant.hero { padding:32px 20px; }
+  .empty-variant.section { padding:20px 16px; }
+  .empty-variant.inline { padding:10px 14px; flex-direction:row; justify-content:center; gap:10px; }
+  .empty-variant .v-icon-hero { font-size:40px; }
+  .empty-variant .v-icon-section { font-size:24px; }
+  .empty-variant .v-icon-inline { font-size:14px; }
+  .empty-variant .v-title-hero { font-family:'Literata',serif; font-weight:600; font-size:18px; color:#1A1816; }
+  .empty-variant .v-title-section { font-weight:600; font-size:14px; color:#1A1816; }
+  .empty-variant .v-title-inline { font-size:12px; color:#6B6560; }
+  .empty-variant .v-desc { font-size:11px; color:#6B6560; }
+  .empty-variant .v-cta { font-size:11px; color:#fff; background:#059669; padding:7px 16px; border-radius:10px; font-weight:600; margin-top:4px; }
+  .variant-label { font-size:10px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:#8B857C; margin-top:8px; text-align:center; }
+
+  /* Why box */
+  .why {
+    margin: 8px 0 0 88px;
+    background:#2D2A26; border-left:3px solid #059669; border-radius:0 16px 16px 0;
+    padding:20px 24px;
+  }
+  .why h4 { font-family:'Literata',serif !important; font-size:14px; font-weight:600; color:#34D399; margin-bottom:10px; letter-spacing:0.5px; text-transform:uppercase; }
+  .why ol { padding-left:18px; color:#D1CCC4; font-size:14px; line-height:1.7; }
+  .why ol li { margin-bottom:6px; }
+  .why strong { color:#F5F1ED; }
+
+  /* Code change note */
+  .change-note { font-size:11px; color:#8B857C; margin-top:8px; padding-left:12px; border-left:2px solid #3D3833; line-height:1.6; }
+  .change-note code { background:#2D2A26; padding:1px 6px; border-radius:3px; font-size:11px; color:#FBBF24; font-family:ui-monospace,monospace; }
+
+  .summary-table { margin-top:24px; background:#2D2A26; border-radius:16px; padding:24px; }
+  .summary-table h3 { font-family:'Literata',serif; font-size:18px; margin-bottom:16px; color:#F5F1ED; }
+  .summary-table table { width:100%; border-collapse:collapse; font-size:13px; }
+  .summary-table th { text-align:left; padding:10px 12px; color:#8B857C; font-weight:600; font-size:11px; text-transform:uppercase; letter-spacing:1px; border-bottom:1px solid #3D3833; }
+  .summary-table td { padding:12px; border-bottom:1px solid #3D3833; color:#D1CCC4; }
+  .summary-table tr:last-child td { border-bottom:none; }
+  .summary-table .impact-loud { color:#FBBF24; font-weight:600; }
+  .summary-table .impact-subtle { color:#8B857C; }
+
+  .footer { margin-top:64px; padding:24px; text-align:center; color:#57534E; font-size:12px; border-top:1px solid #3D3833; }
+
+  @media (max-width:1024px) {
+    .compare-row { grid-template-columns:1fr; padding-left:0; }
+    .section-desc { padding-left:0; }
+    .why { margin-left:0; }
+    .hero-row { grid-template-columns:repeat(4,1fr); }
+  }
+</style>
+</head>
+<body>
+
+<h1>Design Consistency Review</h1>
+<p class="subtitle">5 changes that tighten the design language. All changes route through the existing theme system (`/src/theme/`) — no new design language to learn, just stop bypassing the tokens you already have.</p>
+
+<div class="meta-row">
+  <div><strong>App</strong> · Nagoya v3</div>
+  <div><strong>Net code</strong> · −1,100 / +110 LOC</div>
+  <div><strong>Critical files cleared</strong> · 1 of 3</div>
+  <div><strong>Implementation effort</strong> · ~6h end-to-end</div>
+</div>
+
+<div class="toc">
+  <div class="toc-title">The 5 Changes</div>
+  <ul class="toc-list">
+    <li><a href="#c1"><span class="num">01</span>Card radius unified</a></li>
+    <li><a href="#c2"><span class="num">02</span>Focus gradients re-palettize</a></li>
+    <li><a href="#c3"><span class="num">03</span>Glass overlay tokens</a></li>
+    <li><a href="#c4"><span class="num">04</span>Settings spacing tokens</a></li>
+    <li><a href="#c5"><span class="num">05</span>EmptyState — 11 → 3 variants</a></li>
+  </ul>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- CHANGE 1: CARD RADIUS -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<div class="section" id="c1">
+  <div class="section-header">
+    <div class="section-num">01</div>
+    <div class="section-title">Card Border Radius — 12px → 16px</div>
+  </div>
+  <p class="section-desc">The shared <code>&lt;Card&gt;</code> primitive uses Tailwind's <code>rounded-xl</code> (12px) but the theme's canonical card radius is 16px — and every other card primitive (HabitCard, TemplateCard, hero) renders at 16px. The result: a subtle, persistent shape mismatch wherever <code>&lt;Card&gt;</code> sits next to a habit card.</p>
+
+  <div class="compare-row">
+    <div class="compare-col">
+      <div class="compare-label label-before">Before</div>
+      <div class="phone"><div class="phone-inner">
+        <div class="phone-header">Today</div>
+        <div class="habit-card habit-card-16">
+          <div class="habit-icon-emoji">⚡</div>
+          <div style="flex:1;">
+            <div class="habit-name">Read 10 pages</div>
+            <div class="habit-meta">
+              <span class="strength-dots"><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span><span></span></span>
+              80% · 12d streak
+            </div>
+          </div>
+        </div>
+        <div class="habit-card habit-card-16">
+          <div class="habit-icon-emoji">💪</div>
+          <div style="flex:1;">
+            <div class="habit-name">Push-ups</div>
+            <div class="habit-meta">
+              <span class="strength-dots"><span class="on"></span><span class="on"></span><span class="on"></span><span></span><span></span></span>
+              60% · 5d streak
+            </div>
+          </div>
+        </div>
+        <div class="generic-card generic-card-12">
+          <div class="generic-card-title">📊 Your weekly insights</div>
+          <div class="generic-card-body">You completed 5 of 7 days this week.</div>
+        </div>
+        <div class="mismatch-arrow">↑ 12px corners — doesn't match the cards above (16px)</div>
+      </div></div>
+      <div class="change-note">
+        <code>Card.tsx:19</code> uses <code>rounded-xl</code> (12px)<br>
+        HabitCard, TemplateCard, hero cards all render at 16px<br>
+        Theme token: <code>borderRadius.card = 16</code>
+      </div>
+    </div>
+
+    <div class="compare-col">
+      <div class="compare-label label-after">After</div>
+      <div class="phone"><div class="phone-inner">
+        <div class="phone-header">Today</div>
+        <div class="habit-card habit-card-16">
+          <div class="habit-icon-emoji">⚡</div>
+          <div style="flex:1;">
+            <div class="habit-name">Read 10 pages</div>
+            <div class="habit-meta">
+              <span class="strength-dots"><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span><span></span></span>
+              80% · 12d streak
+            </div>
+          </div>
+        </div>
+        <div class="habit-card habit-card-16">
+          <div class="habit-icon-emoji">💪</div>
+          <div style="flex:1;">
+            <div class="habit-name">Push-ups</div>
+            <div class="habit-meta">
+              <span class="strength-dots"><span class="on"></span><span class="on"></span><span class="on"></span><span></span><span></span></span>
+              60% · 5d streak
+            </div>
+          </div>
+        </div>
+        <div class="generic-card generic-card-16">
+          <div class="generic-card-title">📊 Your weekly insights</div>
+          <div class="generic-card-body">You completed 5 of 7 days this week.</div>
+        </div>
+        <div class="match-arrow">✓ 16px corners — matches the cards above</div>
+      </div></div>
+      <div class="change-note">
+        Change: <code>rounded-xl</code> → <code>rounded-2xl</code><br>
+        File: <code>src/components/Card/Card.tsx:19</code><br>
+        Surface: every <code>&lt;Card&gt;</code> consumer auto-updates
+      </div>
+    </div>
+  </div>
+
+  <div class="why">
+    <h4>Why it's better</h4>
+    <ol>
+      <li><strong>Eye stops snagging.</strong> The visual system detects shape mismatch subconsciously. 12 vs 16 reads as "two kinds of thing" even when both are cards.</li>
+      <li><strong>Hierarchy clarity.</strong> "Card" should mean ONE shape. Two radii silently imply two categories — but there's only one.</li>
+      <li><strong>Cheap win.</strong> One Tailwind class change in <em>one</em> file. Every consumer of <code>&lt;Card&gt;</code> auto-updates.</li>
+    </ol>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- CHANGE 2: TODAYS FOCUS CARD GRADIENTS -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<div class="section" id="c2">
+  <div class="section-header">
+    <div class="section-num">02</div>
+    <div class="section-title">Today's Focus Gradients — Brand Coherence</div>
+  </div>
+  <p class="section-desc">The Today's Focus hero card cycles through 7 states. Its gradients come from completely different color families (teal, violet, blue, orange) than the rest of the app — which is built on warm minimal (forest green, warm stone, burnished gold). The most visible card in the app looks like it was sourced from a different design system.</p>
+
+  <div class="compare-row">
+    <div class="compare-col">
+      <div class="compare-label label-before">Before — Rainbow</div>
+      <div class="phone"><div class="phone-inner" style="padding-bottom:8px;">
+        <div class="phone-header">Today's Focus — 7 States</div>
+        <div class="hero-row">
+          <div class="hero-card h-old-starting"><div class="hero-state-label">Start</div><div class="hero-icon">✨</div><div class="hero-msg">3 days unlocks!</div></div>
+          <div class="hero-card h-old-building"><div class="hero-state-label">Build</div><div class="hero-icon">📈</div><div class="hero-msg">3d strong</div></div>
+          <div class="hero-card h-old-thriving"><div class="hero-state-label">Thrive</div><div class="hero-icon">🎯</div><div class="hero-msg">Next milestone</div></div>
+          <div class="hero-card h-old-completed"><div class="hero-state-label">Done</div><div class="hero-icon">✓</div><div class="hero-msg">Streak!</div></div>
+          <div class="hero-card h-old-celebrate"><div class="hero-state-label">Win</div><div class="hero-icon">🏆</div><div class="hero-msg">30 days!</div></div>
+          <div class="hero-card h-old-struggling"><div class="hero-state-label">Slip</div><div class="hero-icon">♥</div><div class="hero-msg">Fresh start</div></div>
+          <div class="hero-card h-old-recovering"><div class="hero-state-label">Back</div><div class="hero-icon">↻</div><div class="hero-msg">Best streak</div></div>
+        </div>
+        <div class="palette-label">7 states · 7 unrelated color families · feels like a lottery picker</div>
+      </div></div>
+      <div class="change-note">
+        Hardcoded hex in <code>TodaysFocusCard.constants.ts:47-107</code><br>
+        Colors used: <code>#3b82f6</code> <code>#14b8a6</code> <code>#8b5cf6</code> <code>#f97316</code><br>
+        None of these exist in the warm-minimal theme palette
+      </div>
+    </div>
+
+    <div class="compare-col">
+      <div class="compare-label label-after">After — One Brand, Seven Moods</div>
+      <div class="phone"><div class="phone-inner" style="padding-bottom:8px;">
+        <div class="phone-header">Today's Focus — 7 States</div>
+        <div class="hero-row">
+          <div class="hero-card h-new-starting"><div class="hero-state-label">Start</div><div class="hero-icon">✨</div><div class="hero-msg">3 days unlocks!</div></div>
+          <div class="hero-card h-new-building"><div class="hero-state-label">Build</div><div class="hero-icon">📈</div><div class="hero-msg">3d strong</div></div>
+          <div class="hero-card h-new-thriving"><div class="hero-state-label">Thrive</div><div class="hero-icon">🎯</div><div class="hero-msg">Next milestone</div></div>
+          <div class="hero-card h-new-completed"><div class="hero-state-label">Done</div><div class="hero-icon">✓</div><div class="hero-msg">Streak!</div></div>
+          <div class="hero-card h-new-celebrate"><div class="hero-state-label">Win</div><div class="hero-icon">🏆</div><div class="hero-msg">30 days!</div></div>
+          <div class="hero-card h-new-struggling"><div class="hero-state-label">Slip</div><div class="hero-icon">♥</div><div class="hero-msg">Fresh start</div></div>
+          <div class="hero-card h-new-recovering"><div class="hero-state-label">Back</div><div class="hero-icon">↻</div><div class="hero-msg">Best streak</div></div>
+        </div>
+        <div class="palette-label">7 states · 1 brand · green for momentum · gold for peak · warm stone for low energy</div>
+      </div></div>
+      <div class="change-note">
+        New file: <code>src/theme/colors/focusStates.ts</code><br>
+        Gradients sourced from existing <code>primary.*</code> / <code>gold.*</code> / <code>warmStone.*</code><br>
+        <code>TodaysFocusCard.constants.ts</code> imports tokens instead of hex
+      </div>
+    </div>
+  </div>
+
+  <div class="why">
+    <h4>Why it's better</h4>
+    <ol>
+      <li><strong>Brand promise delivered.</strong> "Warm Minimal" means one saturated color + warm stone + gold. Today, that promise breaks on the most visible card.</li>
+      <li><strong>Gold becomes meaningful.</strong> Reserved for thriving + celebrating. Users learn "gold = peak." Right now it shows up under "struggling" too, diluting the signal.</li>
+      <li><strong>No more shame colors.</strong> "Every day is a fresh start" should not be rendered in alarm-orange. Warm stone says "we're with you" instead.</li>
+      <li><strong>Habit emoji icons stop competing.</strong> Bright teal/violet gradients fight the user's chosen icon. Brand-colored gradients let the icon be the visual anchor.</li>
+    </ol>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- CHANGE 3: GLASS OVERLAY OPACITY -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<div class="section" id="c3">
+  <div class="section-header">
+    <div class="section-num">03</div>
+    <div class="section-title">Glass Overlay Tokens — 0.15 / 0.20 / 0.25 → one value</div>
+  </div>
+  <p class="section-desc">Badges on hero cards use a translucent "frosted glass" background. Today, those opacities drift between 0.15, 0.20, and 0.25 depending on which file rendered them. The 5–10% gap is invisible consciously, but the eye still detects "these aren't the same material" and trust drops a notch.</p>
+
+  <div class="compare-row">
+    <div class="compare-col">
+      <div class="compare-label label-before">Before</div>
+      <div class="phone"><div class="phone-inner">
+        <div class="phone-header">Today</div>
+        <div class="big-hero">
+          <div style="font-size:11px; font-weight:600; letter-spacing:1.5px; text-transform:uppercase; opacity:0.85;">Building</div>
+          <div style="font-family:'Literata',serif; font-size:22px; font-weight:600; margin-top:8px;">12 days strong</div>
+          <div style="font-size:12px; opacity:0.9; margin-top:4px;">Keep going — next milestone is 30 days.</div>
+          <div class="badge-row">
+            <span class="glass-badge g-25">⚡ 12 day streak</span>
+            <span class="glass-badge g-20">🎯 Goal: 30 days</span>
+            <span class="glass-badge g-15">💎 Premium</span>
+          </div>
+          <div style="font-size:10px; opacity:0.7; margin-top:14px; padding-top:10px; border-top:1px solid rgba(255,255,255,0.1);">↑ three badges, three different opacities</div>
+        </div>
+      </div></div>
+      <div class="change-note">
+        <code>rgba(255,255,255,0.25)</code> — TodaysFocusCard.constants.ts<br>
+        <code>rgba(255,255,255,0.20)</code> — elementStyles.ts<br>
+        <code>rgba(255,255,255,0.15)</code> — PremiumStatus.tsx
+      </div>
+    </div>
+
+    <div class="compare-col">
+      <div class="compare-label label-after">After</div>
+      <div class="phone"><div class="phone-inner">
+        <div class="phone-header">Today</div>
+        <div class="big-hero big-hero-new">
+          <div style="font-size:11px; font-weight:600; letter-spacing:1.5px; text-transform:uppercase; opacity:0.85;">Building</div>
+          <div style="font-family:'Literata',serif; font-size:22px; font-weight:600; margin-top:8px;">12 days strong</div>
+          <div style="font-size:12px; opacity:0.9; margin-top:4px;">Keep going — next milestone is 30 days.</div>
+          <div class="badge-row">
+            <span class="glass-badge g-20">⚡ 12 day streak</span>
+            <span class="glass-badge g-20">🎯 Goal: 30 days</span>
+            <span class="glass-badge g-20">💎 Premium</span>
+          </div>
+          <div style="font-size:10px; opacity:0.7; margin-top:14px; padding-top:10px; border-top:1px solid rgba(255,255,255,0.1);">✓ all badges share the same glass material</div>
+        </div>
+      </div></div>
+      <div class="change-note">
+        New file: <code>src/theme/colors/overlays.ts</code><br>
+        <code>overlays.glassLight = rgba(255,255,255,0.20)</code><br>
+        Designer dials it once, all surfaces follow
+      </div>
+    </div>
+  </div>
+
+  <div class="why">
+    <h4>Why it's better</h4>
+    <ol>
+      <li><strong>Visual material coherence.</strong> Three badges at three opacities feel like a collage. One opacity = one material.</li>
+      <li><strong>Designer dials it once.</strong> Want glass slightly more opaque app-wide? Change <code>glassLight</code> from 0.20 → 0.22. No grep-and-replace across 7 files.</li>
+      <li><strong>Drift prevention.</strong> The next engineer adds a new badge somewhere — they reach for the token (because it exists) instead of inventing 0.23.</li>
+    </ol>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- CHANGE 4: SETTINGS SPACING -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<div class="section" id="c4">
+  <div class="section-header">
+    <div class="section-num">04</div>
+    <div class="section-title">Settings Spacing — Magic Numbers → Tokens</div>
+  </div>
+  <p class="section-desc">SettingsModal has the worst magic-number density: <code>paddingLeft: 56</code> with a comment "icon(40px) + gap(16px)" — that's a calculation, not a token. If the avatar grows to 48px tomorrow, the padding doesn't follow. Layout silently breaks.</p>
+
+  <div class="compare-row">
+    <div class="compare-col">
+      <div class="compare-label label-before">Before — and what happens when avatar grows</div>
+      <div class="phone"><div class="phone-inner">
+        <div class="phone-header">Settings</div>
+        <div style="margin-bottom:6px; font-size:10px; color:#8B857C;">Today (avatar 40px, padding 56px):</div>
+        <div style="border-radius:14px; overflow:hidden; margin-bottom:14px;">
+          <div class="settings-row" style="border-top-left-radius:14px;border-top-right-radius:14px;">
+            <div class="avatar avatar-40">A</div>
+            <div><div class="settings-name">Account</div><div class="settings-meta">andres@example.com</div></div>
+          </div>
+          <div class="settings-secondary">Notifications</div>
+          <div class="settings-secondary" style="border-bottom-left-radius:14px;border-bottom-right-radius:14px;border-bottom:none;">Streak Goals</div>
+        </div>
+        <div style="margin-bottom:6px; font-size:10px; color:#B53030;">Tomorrow (avatar grows to 48px, padding stays 56px):</div>
+        <div style="border-radius:14px; overflow:hidden;">
+          <div class="settings-row" style="border-top-left-radius:14px;border-top-right-radius:14px;">
+            <div class="avatar avatar-48">A</div>
+            <div style="margin-left:-8px;"><div class="settings-name" style="color:#B53030;">ccount</div><div class="settings-meta" style="color:#B53030;">ndres@example.com</div><div class="overlap-warning">overlaps!</div></div>
+          </div>
+          <div class="settings-secondary" style="color:#B53030;">Notifications</div>
+          <div class="settings-secondary" style="border-bottom-left-radius:14px;border-bottom-right-radius:14px;border-bottom:none;color:#B53030;">Streak Goals</div>
+        </div>
+      </div></div>
+      <div class="change-note">
+        <code>paddingLeft: 56  // icon(40) + gap(16)</code> — a calculation<br>
+        <code>height: 40, width: 40, fontSize: 18</code> — magic numbers<br>
+        File: <code>StreakRemindersSection.tsx:47, AccountRow.tsx:18</code>
+      </div>
+    </div>
+
+    <div class="compare-col">
+      <div class="compare-label label-after">After</div>
+      <div class="phone"><div class="phone-inner">
+        <div class="phone-header">Settings</div>
+        <div style="margin-bottom:6px; font-size:10px; color:#8B857C;">Today (avatar = spacing['2xl']):</div>
+        <div style="border-radius:14px; overflow:hidden; margin-bottom:14px;">
+          <div class="settings-row" style="border-top-left-radius:14px;border-top-right-radius:14px;">
+            <div class="avatar avatar-40">A</div>
+            <div><div class="settings-name">Account</div><div class="settings-meta">andres@example.com</div></div>
+          </div>
+          <div class="settings-secondary">Notifications</div>
+          <div class="settings-secondary" style="border-bottom-left-radius:14px;border-bottom-right-radius:14px;border-bottom:none;">Streak Goals</div>
+        </div>
+        <div style="margin-bottom:6px; font-size:10px; color:#059669;">Tomorrow (avatar grows — padding follows automatically):</div>
+        <div style="border-radius:14px; overflow:hidden;">
+          <div class="settings-row" style="border-top-left-radius:14px;border-top-right-radius:14px;">
+            <div class="avatar avatar-48">A</div>
+            <div><div class="settings-name">Account</div><div class="settings-meta">andres@example.com</div></div>
+          </div>
+          <div class="settings-secondary" style="padding-left:64px !important;">Notifications</div>
+          <div class="settings-secondary" style="padding-left:64px !important;border-bottom-left-radius:14px;border-bottom-right-radius:14px;border-bottom:none;">Streak Goals</div>
+        </div>
+      </div></div>
+      <div class="change-note">
+        <code>paddingLeft: spacing['2xl'] + spacing.base</code><br>
+        <code>height: componentSpacing.avatar.size</code><br>
+        Layout describes intent, not arithmetic
+      </div>
+    </div>
+  </div>
+
+  <div class="why">
+    <h4>Why it's better</h4>
+    <ol>
+      <li><strong>The layout describes its intent.</strong> <code>spacing['2xl'] + spacing.base</code> reads as "avatar slot plus a base gap." <code>56</code> reads as "magic number, don't touch."</li>
+      <li><strong>One source of truth.</strong> Avatar resizes? Padding follows. No silent breakage when the design changes a token.</li>
+      <li><strong>Reviewers catch drift.</strong> Code review spots <code>padding: 56</code> and asks why. Tokenized code reads as correct by construction.</li>
+    </ol>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- CHANGE 5: EMPTYSTATE -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<div class="section" id="c5">
+  <div class="section-header">
+    <div class="section-num">05</div>
+    <div class="section-title">EmptyState — 11 Variants → 3</div>
+  </div>
+  <p class="section-desc">11+ bespoke empty state components across the app, each inventing its own padding, icon size, typography, and CTA style. The same "nothing here yet" message has 11 different shapes. Plus <code>HabitsEmptyState.tsx</code> is 1,094 lines — one of the 3 critical files flagged in CLAUDE.md.</p>
+
+  <div class="compare-row">
+    <div class="compare-col">
+      <div class="compare-label label-before">Before — 11 Different Shapes</div>
+      <div class="phone"><div class="phone-inner">
+        <div class="phone-header">A tour of "nothing here yet"</div>
+        <div class="empty-grid-before">
+          <div>
+            <div class="empty-mock empty-shape-A">
+              <div class="icon">🌱</div>
+              <div class="title">Plant your first habit</div>
+              <div class="desc">Start small. One habit a day.</div>
+              <div class="cta">+ Add Habit</div>
+            </div>
+            <div class="file-label">HabitsEmptyState · 1094 LOC</div>
+          </div>
+          <div>
+            <div class="empty-mock">
+              <div class="icon">🔍</div>
+              <div class="title">No matches</div>
+              <div class="desc">Try clearing filters</div>
+              <div class="cta">Clear filters</div>
+            </div>
+            <div class="file-label">TemplatesEmpty</div>
+          </div>
+          <div>
+            <div class="empty-mock empty-shape-B">
+              <div style="display:flex;align-items:center;gap:6px;"><span style="font-size:14px;">📊</span><span class="title">No insights yet</span></div>
+              <div class="desc" style="margin-top:0;">Track 3+ days first</div>
+            </div>
+            <div class="file-label">AnalyticsEmpty</div>
+          </div>
+          <div>
+            <div class="empty-mock empty-shape-C">
+              <div style="font-size:11px;color:#8B857C;">no records</div>
+            </div>
+            <div class="file-label">StreakEmpty</div>
+          </div>
+          <div>
+            <div class="empty-mock empty-shape-D">
+              <div class="icon">⏸</div>
+              <div class="title">Nothing paused</div>
+            </div>
+            <div class="file-label">PausedEmpty</div>
+          </div>
+          <div>
+            <div class="empty-mock empty-shape-E">
+              <div style="font-size:10px;color:#8B857C;padding:4px;">⋯</div>
+            </div>
+            <div class="file-label">GoalTabEmpty</div>
+          </div>
+        </div>
+        <div style="font-size:11px;color:#B53030;margin-top:14px;text-align:center;font-weight:600;">+ 5 more variants across the codebase</div>
+      </div></div>
+      <div class="change-note">
+        11 files, 11 different design choices<br>
+        <code>HabitsEmptyState.tsx</code> = 1,094 lines<br>
+        Listed as critical file in CLAUDE.md
+      </div>
+    </div>
+
+    <div class="compare-col">
+      <div class="compare-label label-after">After — One Component, Three Variants</div>
+      <div class="phone"><div class="phone-inner">
+        <div class="phone-header">&lt;EmptyState variant="..." /&gt;</div>
+
+        <div class="empty-variant hero">
+          <div class="v-icon-hero">🌱</div>
+          <div class="v-title-hero">Plant your first habit</div>
+          <div class="v-desc">Start small. One habit a day.</div>
+          <div class="v-cta">+ Add Habit</div>
+        </div>
+        <div class="variant-label">variant="hero"</div>
+
+        <div style="margin-top:14px;"></div>
+        <div class="empty-variant section">
+          <div class="v-icon-section">📊</div>
+          <div class="v-title-section">No insights yet</div>
+          <div class="v-desc">Track 3+ days first</div>
+        </div>
+        <div class="variant-label">variant="section"</div>
+
+        <div style="margin-top:14px;"></div>
+        <div class="empty-variant inline">
+          <div class="v-icon-inline">⋯</div>
+          <div class="v-title-inline">nothing here yet</div>
+        </div>
+        <div class="variant-label">variant="inline"</div>
+      </div></div>
+      <div class="change-note">
+        One component: <code>src/components/EmptyState/</code><br>
+        Three variants: <code>hero</code> · <code>section</code> · <code>inline</code><br>
+        <code>HabitsEmptyState.tsx</code>: 1,094 → ~25 lines
+      </div>
+    </div>
+  </div>
+
+  <div class="why">
+    <h4>Why it's better</h4>
+    <ol>
+      <li><strong>One pattern users learn.</strong> Empty state ANYWHERE in the app reads as the same shape — icon → title → copy → action. 11 different shapes today.</li>
+      <li><strong>1,094 → ~25 lines.</strong> Directly clears 1 of the 3 critical files flagged in CLAUDE.md's code-readability initiative.</li>
+      <li><strong>Engineers stop reinventing.</strong> New screen needs an empty state? Four props. No design decisions to make. No new code to write.</li>
+      <li><strong>Accessibility free.</strong> The shared component bakes in <code>accessibilityRole</code>, focus rings, contrast — every empty state inherits these instead of each missing different pieces.</li>
+      <li><strong>Design changes propagate.</strong> Designer wants empty states warmer? Update once. All 11 surfaces update together.</li>
+    </ol>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- SUMMARY TABLE -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-num">↗</div>
+    <div class="section-title">Summary</div>
+  </div>
+
+  <div class="summary-table">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Change</th>
+          <th>Files</th>
+          <th>LOC Δ</th>
+          <th>User Impact</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>01</td>
+          <td>Card radius unified</td>
+          <td>1 line, 1 file</td>
+          <td>±0</td>
+          <td class="impact-subtle">Subtle — corners stop mismatching</td>
+        </tr>
+        <tr>
+          <td>02</td>
+          <td>Focus gradients re-palettize</td>
+          <td>2 files</td>
+          <td>+20 / −7</td>
+          <td class="impact-loud">Loud — Today screen looks brand-coherent</td>
+        </tr>
+        <tr>
+          <td>03</td>
+          <td>Glass overlay tokens</td>
+          <td>4 files</td>
+          <td>+15 / −15</td>
+          <td class="impact-subtle">Subtle — hero materials feel solid</td>
+        </tr>
+        <tr>
+          <td>04</td>
+          <td>Settings spacing tokens</td>
+          <td>3 files</td>
+          <td>+6 / −10</td>
+          <td class="impact-subtle">Invisible (good) — layouts self-heal</td>
+        </tr>
+        <tr>
+          <td>05</td>
+          <td>EmptyState unification</td>
+          <td>12 files</td>
+          <td>+50 / −1,200</td>
+          <td class="impact-loud">Cumulative — 11 screens feel like one app</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="why" style="margin-left:0; margin-top:24px;">
+    <h4>Open Questions Before Implementation</h4>
+    <ol>
+      <li><strong>Change 02 (gradients):</strong> the current rainbow might be intentional mood-coding by hue. My proposal is brand-coherent but more uniform. Which matters more — mood-coding by hue, or brand coherence?</li>
+      <li><strong>Change 04 (spacing):</strong> add a new <code>avatar: 40</code> token, or snap to existing <code>spacing['2xl'] = 48</code> and accept the 8px size shift?</li>
+      <li><strong>Change 05 (EmptyState):</strong> migrate all 11 callsites in one PR, or 2–3 PRs (canonical component first, then phased migrations)?</li>
+    </ol>
+  </div>
+</div>
+
+<div class="footer">
+  Standalone HTML mockup · No app source code modified · Open in Chrome for review<br>
+  Generated by PAI · /Users/andres/conductor/workspaces/habit_tracking_app/nagoya-v3/.superdesign/design_iterations/design_review_consistency_5_changes_1.html
+</div>
+
+</body>
+</html>

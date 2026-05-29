@@ -1,21 +1,5 @@
 /**
- * StrengthStatsRow Component
- *
- * Three-column layout displaying comparison metrics:
- * - Since Start: Total growth since habit creation
- * - Last Month: Month-over-month change
- * - Last Week: Week-over-week change
- *
- * Positive changes are highlighted in emerald.
- *
- * @example
- * ```tsx
- * <StrengthStatsRow
- *   sinceStart={72}
- *   lastMonth={12}
- *   lastWeek={3}
- * />
- * ```
+ * StrengthStatsRow — Peak, month delta, and distance to next tier.
  */
 
 import React from 'react';
@@ -25,36 +9,36 @@ import { useThemeColors } from '@/theme/ThemeContext';
 import { getThemeColors } from './constants';
 import type { StrengthStatsRowProps } from './types';
 
-/**
- * Format a delta value for display with + or - prefix.
- */
 function formatDelta(value: number): string {
   if (value === 0) return '0%';
   return value > 0 ? `+${value}%` : `${value}%`;
 }
 
-/**
- * Single stat column component (compact version for above-fold layout).
- */
 function StatColumn({
   label,
   value,
   isPositive,
+  valueColor,
 }: {
   label: string;
   value: string;
-  isPositive: boolean;
+  isPositive?: boolean;
+  valueColor?: string;
 }) {
   const { colors: themeColors } = useThemeColors();
   const sectionColors = getThemeColors(themeColors);
 
   return (
     <View className='flex-1 items-center'>
-      <Text className='text-[10px]' style={{ color: themeColors.text.tertiary }}>{label}</Text>
+      <Text className='text-[10px]' style={{ color: themeColors.text.tertiary }}>
+        {label}
+      </Text>
       <Text
         className='text-sm font-semibold'
         style={{
-          color: isPositive ? sectionColors.positive : sectionColors.textPrimary,
+          color:
+            valueColor ??
+            (isPositive ? sectionColors.positive : sectionColors.textPrimary),
         }}
       >
         {value}
@@ -63,9 +47,6 @@ function StatColumn({
   );
 }
 
-/**
- * Vertical divider between stat columns (compact height).
- */
 function Divider() {
   const { colors: themeColors } = useThemeColors();
   return (
@@ -73,52 +54,56 @@ function Divider() {
   );
 }
 
-/**
- * StrengthStatsRow displays three comparison metrics in a row (compact version).
- */
 export const StrengthStatsRow = React.memo(function StrengthStatsRow({
-  sinceStart,
-  lastMonth,
-  lastWeek,
+  peak,
+  deltaVsMonth,
+  pointsToNextTier,
 }: StrengthStatsRowProps) {
   const { colors: themeColors } = useThemeColors();
-  // Guard against NaN/undefined values - default to 0
-  const safeSinceStart =
-    typeof sinceStart === 'number' && !Number.isNaN(sinceStart)
-      ? sinceStart
+  const sectionColors = getThemeColors(themeColors);
+
+  const safePeak =
+    typeof peak === 'number' && !Number.isNaN(peak) ? peak : 0;
+  const safeDelta =
+    typeof deltaVsMonth === 'number' && !Number.isNaN(deltaVsMonth)
+      ? deltaVsMonth
       : 0;
-  const safeLastMonth =
-    typeof lastMonth === 'number' && !Number.isNaN(lastMonth) ? lastMonth : 0;
-  const safeLastWeek =
-    typeof lastWeek === 'number' && !Number.isNaN(lastWeek) ? lastWeek : 0;
+  const safeToNext =
+    typeof pointsToNextTier === 'number' && !Number.isNaN(pointsToNextTier)
+      ? pointsToNextTier
+      : 0;
+
+  const deltaIsPositive = safeDelta > 0;
+  const deltaIsNegative = safeDelta < 0;
+  const nextValue =
+    safeToNext <= 0 ? 'Max' : `−${Math.round(safeToNext)}%`;
 
   return (
     <View
-      accessibilityLabel={`Statistics: ${safeSinceStart}% since start, ${formatDelta(safeLastMonth)} last month, ${formatDelta(safeLastWeek)} last week`}
+      accessibilityLabel={`Peak ${safePeak} percent, ${formatDelta(safeDelta)} versus last month, ${nextValue} to next tier`}
       className='flex-row items-center justify-between rounded-lg px-3 py-2'
       style={{ backgroundColor: themeColors.background }}
     >
-      <StatColumn
-        isPositive={safeSinceStart > 0}
-        label='Since Start'
-        value={`${safeSinceStart}%`}
-      />
+      <StatColumn label='Peak' value={`${safePeak}%`} />
 
       <Divider />
 
       <StatColumn
-        isPositive={safeLastMonth > 0}
-        label='Last Month'
-        value={formatDelta(safeLastMonth)}
+        isPositive={deltaIsPositive}
+        label='vs Month'
+        value={formatDelta(safeDelta)}
+        valueColor={
+          deltaIsPositive
+            ? sectionColors.positive
+            : deltaIsNegative
+              ? sectionColors.negative
+              : sectionColors.textPrimary
+        }
       />
 
       <Divider />
 
-      <StatColumn
-        isPositive={safeLastWeek > 0}
-        label='Last Week'
-        value={formatDelta(safeLastWeek)}
-      />
+      <StatColumn label='Next tier' value={nextValue} />
     </View>
   );
 });

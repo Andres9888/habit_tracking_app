@@ -38,6 +38,7 @@ export const StrengthHero = React.memo(function StrengthHero({
   delta,
   deltaLabel,
   color,
+  tierDisplayLabel,
 }: StrengthHeroProps) {
   const { colors: themeColors } = useThemeColors();
   const strengthColors = getStrengthColors(themeColors);
@@ -58,7 +59,12 @@ export const StrengthHero = React.memo(function StrengthHero({
         ringColor={ringColor}
         roundedStrength={roundedStrength}
       />
-      <StatusDisplay delta={delta} deltaLabel={deltaLabel} label={label} />
+      <StatusDisplay
+        delta={delta}
+        deltaLabel={deltaLabel}
+        label={label}
+        tierDisplayLabel={tierDisplayLabel}
+      />
     </View>
   );
 });

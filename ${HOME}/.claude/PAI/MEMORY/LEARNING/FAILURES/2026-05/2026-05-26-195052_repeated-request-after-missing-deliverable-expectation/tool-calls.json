@@ -1,0 +1,29 @@
+[
+  {
+    "name": "Agent",
+    "input": {
+      "description": "Map design system architecture",
+      "subagent_type": "Explore",
+      "prompt": "I'm doing a design consistency review of a habit tracking app at /Users/andres/conductor/workspaces/habit_tracking_app/nagoya-v3. Map the design system foundation so I know what's supposed to be consistent.\n\nSearch \"very thorough\" — I need the complete design language picture.\n\nReport back on:\n1. **Theme/tokens**: Find theme files, design tokens, color palettes, typography scales, spacing systems. Are they centralized (theme provider, constants file) or scattered? What colors/fonts/spacing values are defined?\n2. **Tech stack**: Is this React Native, React web, Expo? What styling system — StyleSheet, Tailwind, styled-components, Restyle, Tamagui, NativeWind? Where does theming live?\n3. **Shared primitives**: List the foundational UI primitives (Button, Text, Card, Input, Modal, etc.) — where they live, what variants exist, what props they expose.\n4. **Icon system**: What icon library? Are icons used consistently (sizes, weights)?\n5. **Dark/light mode**: Is there theming support? How is it implemented?\n\nGive me file paths for each. Under 800 words. I'll use this to spot inconsistencies in a follow-up pass."
+    },
+    "timestamp": "2026-05-27T02:45:35.324Z"
+  },
+  {
+    "name": "Agent",
+    "input": {
+      "description": "Audit screens for consistency",
+      "subagent_type": "Explore",
+      "prompt": "I'm doing a design consistency review of a habit tracking app at /Users/andres/conductor/workspaces/habit_tracking_app/nagoya-v3. Walk the screens/feature surface and identify each major view so I can spot visual and interaction inconsistencies later.\n\nSearch \"very thorough\" — I want a complete tour.\n\nReport back on:\n1. **Screen inventory**: List every screen/route in the app — Today/Home, Habits, Stats, Settings, Onboarding, Templates, Empty States, etc. File paths for each top-level screen component.\n2. **Navigation**: What navigation library is used? Tab bar, stack, drawer? File paths.\n3. **Card patterns**: Find all the \"card-like\" components (HabitCard, TemplateCard, TodaysFocusCard, etc.). Note their file paths and roughly how they differ visually (radius, padding, shadow, border).\n4. **List patterns**: Where are habits/items rendered as lists? Are FlatList/SectionList/ScrollView used consistently? Different row heights, separators?\n5. **Empty states**: Find all empty state components (EmptyState, HabitsEmptyState, etc.). Are they visually consistent?\n6. **Modals/sheets/overlays**: Bottom sheets, modals, toasts, celebration overlays — find them, list paths, note visual style.\n7. **Forms/inputs**: Where are form patterns used (Settings, AddHabit, etc.)? Are they consistent?\n\nFor each, just list paths + a 1-line characterization. Under 1000 words. Aim for breadth — I'll go deep on the problem spots after."
+    },
+    "timestamp": "2026-05-27T02:45:44.482Z"
+  },
+  {
+    "name": "Agent",
+    "input": {
+      "description": "Find design debt and inconsistencies",
+      "subagent_type": "Explore",
+      "prompt": "I'm doing a design consistency review of a habit tracking app at /Users/andres/conductor/workspaces/habit_tracking_app/nagoya-v3. Hunt for the specific signals of design debt — hardcoded values, magic numbers, divergent styling, TODOs, and recent design churn.\n\nSearch \"very thorough\".\n\nReport back on:\n1. **Hardcoded colors**: Grep for hex codes (`#[0-9A-Fa-f]{3,8}`), `rgb(`, `rgba(` in tsx/ts files. Count occurrences per file, identify worst offenders. Are any colors used inconsistently (e.g. 3 shades of similar gray)?\n2. **Hardcoded spacing**: Look for inline padding/margin numbers vs theme spacing tokens. Note files that ignore tokens.\n3. **Hardcoded fonts**: Look for `fontFamily:` strings, `fontSize:` numbers — are they pulled from a theme or set inline?\n4. **Inline StyleSheet vs theme**: Look for components that use raw `StyleSheet.create` with literal values vs ones that consume theme.\n5. **TODO/FIXME/HACK comments related to design**: Grep for design-related TODOs.\n6. **Recent design-touched files**: `git log --since=\"30 days ago\" --name-only --pretty=format:` and list which UI files changed most recently. Note any churn patterns (same file repeatedly tweaked).\n7. **The 3 known offenders**: Read the first 200 lines of HabitsEmptyState.tsx, FullsizeTemplatePreview.tsx, and TodaysFocusCard.tsx. Note: are they internally consistent with each other? Do they share design tokens or each invent their own?\n8. **Component duplication**: Any components that look like reimplementations of the same idea (multiple Button variants, multiple Card components without a shared base)?\n\nBe specific — give file:line references where useful. Under 1200 words."
+    },
+    "timestamp": "2026-05-27T02:45:54.682Z"
+  }
+]

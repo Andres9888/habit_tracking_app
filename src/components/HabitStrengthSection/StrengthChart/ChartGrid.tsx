@@ -26,6 +26,7 @@ export const ChartGrid = React.memo(function ChartGrid({
   gridLines,
   chartWidth,
   paddingX = CHART_PADDING_X,
+  milestoneLineY,
 }: ChartGridProps) {
   const { colors: themeColors } = useThemeColors();
   const sectionColors = getThemeColors(themeColors);
@@ -45,6 +46,18 @@ export const ChartGrid = React.memo(function ChartGrid({
           y2={y}
         />
       ))}
+      {typeof milestoneLineY === 'number' ? (
+        <Line
+          opacity={0.55}
+          stroke={sectionColors.textMuted}
+          strokeDasharray='3,3'
+          strokeWidth={1}
+          x1={paddingX}
+          x2={chartWidth - paddingX}
+          y1={milestoneLineY}
+          y2={milestoneLineY}
+        />
+      ) : null}
     </G>
   );
 });

@@ -24,6 +24,9 @@ export interface StrengthHeroProps {
 
   /** Optional custom color override */
   color?: string;
+
+  /** 5-tier display label (e.g. Unbreakable); overrides STRENGTH_LABELS when set */
+  tierDisplayLabel?: string;
 }
 
 /**
@@ -49,4 +52,5 @@ export interface StatusDisplayProps {
   label: StrengthLabel;
   delta: number;
   deltaLabel: string;
+  tierDisplayLabel?: string;
 }

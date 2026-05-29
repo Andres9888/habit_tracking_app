@@ -177,9 +177,9 @@ export const TIME_RANGE_DAYS = {
 // Strength Labels
 // ============================================================================
 
-/** Human-readable labels for strength levels */
+/** Human-readable labels for strength levels (encouraging, not punitive) */
 export const STRENGTH_LABELS: Record<StrengthLabel, string> = {
-  developing: 'Developing',
+  developing: 'Growing',
   strong: 'Strong',
-  weak: 'Weak',
+  weak: 'Building',
 };

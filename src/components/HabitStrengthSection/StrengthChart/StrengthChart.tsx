@@ -13,6 +13,7 @@ import { useReduceMotion } from '../../../hooks/useReduceMotion';
 import {
   CHART_HEIGHT,
   CHART_PADDING_BOTTOM,
+  CHART_PADDING_TOP,
   CHART_PADDING_X,
   getStrengthColors,
 } from '../constants';
@@ -31,10 +32,18 @@ import { useChartGridLines } from './useChartGridLines';
 import { useStrengthChartAnimations } from './useStrengthChartAnimations';
 import { XAxisLabels } from './XAxisLabels';
 
+function strengthToChartY(strengthPercent: number): number {
+  const chartAreaHeight =
+    CHART_HEIGHT - CHART_PADDING_TOP - CHART_PADDING_BOTTOM;
+  const clamped = Math.min(100, Math.max(0, strengthPercent));
+  return CHART_PADDING_TOP + chartAreaHeight * (1 - clamped / 100);
+}
+
 export const StrengthChart = React.memo(function StrengthChart({
   data,
   currentStrength,
   color,
+  nextTierThreshold,
 }: StrengthChartProps) {
   const [chartWidth, setChartWidth] = useState(300);
   const { colors: themeColors } = useThemeColors();
@@ -56,6 +65,13 @@ export const StrengthChart = React.memo(function StrengthChart({
     data: safeData,
   });
   const gridLines = useChartGridLines();
+  const milestoneLineY = useMemo(
+    () =>
+      typeof nextTierThreshold === 'number'
+        ? strengthToChartY(nextTierThreshold)
+        : undefined,
+    [nextTierThreshold]
+  );
   const { animatedPathProps, animatedDotProps } = useStrengthChartAnimations({
     dataLength: safeData.length,
     pathLength,
@@ -89,6 +105,7 @@ export const StrengthChart = React.memo(function StrengthChart({
         <ChartGrid
           chartWidth={chartWidth}
           gridLines={gridLines}
+          milestoneLineY={milestoneLineY}
           paddingX={CHART_PADDING_X}
         />
         <ChartCurve

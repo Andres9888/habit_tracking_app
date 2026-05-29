@@ -8,6 +8,7 @@ import { Bell, ChevronRight, Clock, Crown } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
 import { typography, fontWeights } from '@/theme/typography';
 import { highContrastColors } from '@/theme/highContrastColors';
+import { componentSpacing, spacing } from '@/theme/spacing';
 import { Platform, Text, View } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { SettingsRow } from './SettingsRow';
@@ -81,7 +82,7 @@ export function StreakRemindersSection({
             style={{
               backgroundColor: insetBackground,
               paddingBottom: 10,
-              paddingLeft: 56, // icon (40px) + gap (16px)
+              paddingLeft: componentSpacing.avatar.size + spacing.base, // 40 + 16 = 56
               paddingRight: 10,
               paddingTop: 8,
             }}

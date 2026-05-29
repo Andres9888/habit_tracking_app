@@ -14,7 +14,8 @@ import {
   Trophy,
 } from 'lucide-react-native';
 
-import { colors as themeTokens } from '@/theme/colors';
+import { colors as themeTokens, overlays } from '@/theme/colors';
+import { focusStateGradients } from '@/theme/colors/focusStates';
 import type { FocusState, FocusStateConfig } from '../TodaysFocusCardTypes';
 
 /** Animation timing constants */
@@ -44,65 +45,65 @@ export const FOCUS_STATE_CONFIGS: Record<FocusState, FocusStateConfig> = {
   building: {
     getGoalLabel: () => '7 days',
     getMessage: (streak: number) => `${streak} days strong - keep going!`,
-    gradientColors: ['#14b8a6', '#06b6d4'], // teal-500 → cyan-500
+    gradientColors: focusStateGradients.building,
     icon: TrendingUp,
     iconColor: themeTokens.text.inverse,
-    subTextColor: 'rgba(255, 255, 255, 0.9)',
+    subTextColor: overlays.subTextOnHero,
     textColor: themeTokens.text.inverse,
   },
   celebrating: {
     getGoalLabel: () => 'next',
     getMessage: (milestone: number) => `🎉 You hit ${milestone} days!`,
-    gradientColors: ['#F59E0B', '#D97706'], // amber-500 → amber-600
+    gradientColors: focusStateGradients.celebrating,
     icon: Trophy,
     iconColor: themeTokens.text.inverse,
-    subTextColor: 'rgba(255, 255, 255, 0.9)',
+    subTextColor: overlays.subTextOnHero,
     textColor: themeTokens.text.inverse,
   },
   completed: {
     getGoalLabel: () => '🔥',
     getMessage: (streak: number) => `${streak} day streak and counting!`,
-    gradientColors: ['#22c55e', '#10b981'], // green-500 → success
+    gradientColors: focusStateGradients.completed,
     icon: CheckCircle2,
     iconColor: themeTokens.text.inverse,
-    subTextColor: 'rgba(255, 255, 255, 0.9)',
+    subTextColor: overlays.subTextOnHero,
     textColor: themeTokens.text.inverse,
   },
   recovering: {
     getGoalLabel: () => 'best streak',
     getMessage: (bestStreak: number) =>
       `You've done ${bestStreak} before. Do it again!`,
-    gradientColors: ['#8b5cf6', '#a855f7'], // violet-500 → purple-500
+    gradientColors: focusStateGradients.recovering,
     icon: RefreshCw,
     iconColor: themeTokens.text.inverse,
-    subTextColor: 'rgba(255, 255, 255, 0.9)',
+    subTextColor: overlays.subTextOnHero,
     textColor: themeTokens.text.inverse,
   },
   starting: {
     getGoalLabel: () => '3 days',
     getMessage: () => '3 days unlocks momentum!',
-    gradientColors: ['#3b82f6', '#6366f1'], // blue-500 → indigo-500
+    gradientColors: focusStateGradients.starting,
     icon: Sparkles,
     iconColor: themeTokens.text.inverse,
-    subTextColor: 'rgba(255, 255, 255, 0.9)',
+    subTextColor: overlays.subTextOnHero,
     textColor: themeTokens.text.inverse,
   },
   struggling: {
     getGoalLabel: () => '1 day',
     getMessage: () => 'Every day is a fresh start!',
-    gradientColors: ['#f59e0b', '#f97316'], // amber-500 → orange-500
+    gradientColors: focusStateGradients.struggling,
     icon: Heart,
     iconColor: themeTokens.text.inverse,
-    subTextColor: 'rgba(255, 255, 255, 0.9)',
+    subTextColor: overlays.subTextOnHero,
     textColor: themeTokens.text.inverse,
   },
   thriving: {
     getGoalLabel: () => 'next milestone',
     getMessage: (goal: number) => `Complete today to hit ${goal} days!`,
-    gradientColors: ['#10b981', '#14b8a6'], // success → teal-500
+    gradientColors: focusStateGradients.thriving,
     icon: Crosshair,
     iconColor: themeTokens.text.inverse,
-    subTextColor: 'rgba(255, 255, 255, 0.9)',
+    subTextColor: overlays.subTextOnHero,
     textColor: themeTokens.text.inverse,
   },
 };

@@ -17,7 +17,7 @@ import { typography, fontWeights } from '@/theme/typography';
 import { SettingsSection } from '../SettingsSection';
 import { SettingsRow } from '../SettingsRow';
 import { AnimatedPressable } from '../../ui/AnimatedPressable';
-import { colors as palette } from '@/theme/colors';
+import { colors as palette, overlays } from '@/theme/colors';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { durations } from '@/theme/animations';
 
@@ -174,7 +174,7 @@ export function PremiumStatus({ highContrast, isPremium, onUpgrade }: Props) {
           <View className='flex-row items-center'>
             <View
               className='mr-4 h-10 w-10 items-center justify-center rounded-xl'
-              style={{ backgroundColor: 'rgba(255,255,255,0.15)' }}
+              style={{ backgroundColor: overlays.glassLight }}
             >
               <Zap color={palette.text.inverse} size={iconSizes.medium} />
             </View>
@@ -186,7 +186,7 @@ export function PremiumStatus({ highContrast, isPremium, onUpgrade }: Props) {
               </Text>
               <Text
                 className='mt-0.5'
-                style={{ ...typography.caption, color: isDark ? 'rgba(224,231,255,0.6)' : 'rgba(255,255,255,0.8)' }}
+                style={{ ...typography.caption, color: isDark ? 'rgba(224,231,255,0.6)' : overlays.subTextOnHero }}
               >
                 Unlock sounds, reminders & more
               </Text>
@@ -194,7 +194,7 @@ export function PremiumStatus({ highContrast, isPremium, onUpgrade }: Props) {
             <Animated.View
               className='rounded-full px-3.5 py-1.5'
               style={[
-                { backgroundColor: 'rgba(255,255,255,0.2)' },
+                { backgroundColor: overlays.glassLight },
                 badgePulseStyle,
               ]}
             >
