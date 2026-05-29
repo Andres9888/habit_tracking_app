@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Habit Strength — where does the progress bar go?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300..800&display=swap" rel="stylesheet" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+:root{
+  --bg:#F5F1ED; --bg-muted:#FAF8F5; --card:#EDEAE5; --card-2:#F0EDE8;
+  --border:#DDD8D2; --border-strong:#C4BFB7;
+  --text-primary:#2D2A26; --text-secondary:#6B6560; --text-tertiary:#6E6660; --text-muted:#8C857E;
+  /* canonical 5-level strength colors (colors.strength.*) */
+  --s-starting:#4D7A0A; --s-building:#16a34a; --s-developing:#0d9488; --s-strong:#0891b2; --s-automatic:#059669;
+  --s-strong-bg:#cffafe; --s-dev-bg:#ccfbf1; --s-build-bg:#dcfce7; --s-start-bg:#ecfccb; --s-auto-bg:#D4F0E2;
+  --shadow-card:0 1px 2px rgba(45,42,38,.04),0 2px 8px rgba(45,42,38,.06);
+  --radius-sm:8px; --radius-md:12px; --radius-lg:16px; --radius-pill:9999px;
+  --font:'Outfit',ui-sans-serif,-apple-system,system-ui,sans-serif;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;font-family:var(--font);color:var(--text-primary);-webkit-font-smoothing:antialiased;}
+body{background:radial-gradient(1200px 600px at 20% -10%,#F8F4EF 0%,transparent 60%),linear-gradient(180deg,#F2EEE8 0%,#EDE8E1 100%);min-height:100vh;padding:44px 24px 80px;}
+.page-title{text-align:center;margin:0 0 6px;font-size:23px;font-weight:700;letter-spacing:-.3px;}
+.page-sub{text-align:center;color:var(--text-secondary);margin:0 0 36px;font-size:13.5px;}
+.rail{display:flex;gap:40px;justify-content:center;align-items:flex-start;flex-wrap:wrap;}
+.col{display:flex;flex-direction:column;align-items:center;}
+.vtag{margin-bottom:16px;text-align:center;max-width:360px;}
+.vtag b{display:block;font-size:16px;font-weight:700;}
+.vtag span{font-size:12.5px;color:var(--text-secondary);}
+.phone{width:390px;background:var(--bg);border-radius:48px;border:10px solid #1b1916;box-shadow:0 30px 80px rgba(27,25,22,.25);position:relative;overflow:hidden;}
+.notch{position:absolute;top:10px;left:50%;transform:translateX(-50%);width:110px;height:30px;background:#1b1916;border-radius:20px;z-index:10;}
+.statusbar{height:44px;display:flex;align-items:flex-end;justify-content:space-between;padding:0 28px 6px;font-size:14px;font-weight:600;}
+.dhead{display:flex;align-items:center;justify-content:space-between;padding:6px 14px;}
+.iconbtn{width:36px;height:36px;border-radius:11px;display:grid;place-items:center;color:var(--text-primary);}
+.dtitle{font-size:15px;font-weight:600;}
+.tabs{display:flex;gap:4px;margin:2px 16px 0;padding:3px;background:var(--bg-muted);border:1px solid var(--border);border-radius:var(--radius-pill);}
+.tab{flex:1;text-align:center;font-size:13px;font-weight:600;color:var(--text-secondary);padding:7px 0;border-radius:var(--radius-pill);}
+.tab.on{background:#fff;color:var(--text-primary);box-shadow:0 1px 3px rgba(45,42,38,.12);}
+.card{margin:14px 16px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px;box-shadow:var(--shadow-card);}
+.card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
+.card-h{font-size:18px;font-weight:700;letter-spacing:-.2px;}
+.range{display:flex;gap:2px;padding:2px;background:var(--bg-muted);border-radius:var(--radius-pill);}
+.range b{font-size:11px;font-weight:600;color:var(--text-secondary);padding:4px 9px;border-radius:var(--radius-pill);}
+.range b.on{background:#fff;color:var(--text-primary);}
+
+/* hero ring */
+.hero-ring{position:relative;width:124px;height:124px;margin:12px auto 4px;}
+.hero-ring .emoji{position:absolute;top:28px;left:0;right:0;text-align:center;font-size:28px;}
+.hero-ring .pct{position:absolute;top:58px;left:0;right:0;text-align:center;font-size:29px;font-weight:800;letter-spacing:-1px;}
+.hero-ring .pl{position:absolute;top:90px;left:0;right:0;text-align:center;font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--text-tertiary);}
+.stage-name{text-align:center;font-size:20px;font-weight:700;color:var(--s-strong);}
+.next-line{text-align:center;font-size:13px;color:var(--text-secondary);margin-top:2px;}
+.next-line b{color:var(--text-primary);font-weight:700;}
+.subbar{height:7px;border-radius:99px;background:var(--bg-muted);margin:11px auto 4px;width:70%;overflow:hidden;border:1px solid var(--border);}
+.subbar i{display:block;height:100%;width:40%;border-radius:99px;background:linear-gradient(90deg,#22b8cf,var(--s-strong));}
+
+/* dot milestone track (shows all 5 picked emojis) */
+.track{display:flex;align-items:flex-start;margin:18px 2px 4px;}
+.stop{display:flex;flex-direction:column;align-items:center;gap:5px;width:50px;}
+.stop .bubble{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-size:15px;background:var(--bg-muted);border:1px solid var(--border);opacity:.55;}
+.stop.done .bubble{opacity:1;}
+.stop.cur .bubble{font-size:18px;border-width:2px;transform:scale(1.18);}
+.stop .lbl{font-size:9px;font-weight:600;color:var(--text-tertiary);}
+.stop.cur .lbl{font-weight:700;}
+.seg{flex:1;height:3px;background:var(--border);margin-top:16px;border-radius:99px;}
+.seg.fill{}
+
+/* horizontal StrengthProgressBar (the canonical component) */
+.pbar{margin-top:6px;}
+.pbar-row{display:flex;align-items:center;gap:9px;}
+.pbar-tile{width:34px;height:34px;border-radius:9px;display:grid;place-items:center;font-size:18px;
+  background:linear-gradient(135deg,#e6f6fa,#b8e6ef);border:1px solid #9cd6e3;box-shadow:inset 0 1px 1px rgba(255,255,255,.6);}
+.pbar-track{flex:1;height:9px;border-radius:99px;background:var(--bg-muted);position:relative;overflow:hidden;border:1px solid var(--border);}
+.pbar-fill{position:absolute;left:0;top:0;bottom:0;width:68%;border-radius:99px;background:linear-gradient(90deg,#22b8cf,var(--s-strong));}
+.pbar-div{position:absolute;top:0;bottom:0;width:1px;background:rgba(0,0,0,.12);}
+.pbar-pct{font-size:14px;font-weight:700;color:var(--s-strong);}
+.pbar-next{display:flex;align-items:center;gap:4px;font-size:14px;color:var(--text-tertiary);}
+.pbar-bottom{display:flex;justify-content:flex-end;margin-top:6px;font-size:11.5px;color:var(--text-tertiary);font-weight:600;}
+
+.spark{margin:16px -6px 0;}
+.trendmsg{display:flex;align-items:center;gap:7px;justify-content:center;margin-top:10px;font-size:13px;font-weight:600;color:var(--s-automatic);}
+.trendmsg svg{width:15px;height:15px;}
+.stats{display:flex;margin-top:14px;background:var(--bg-muted);border-radius:var(--radius-md);padding:11px 6px;}
+.stat{flex:1;text-align:center;}
+.stat .k{font-size:10px;color:var(--text-tertiary);}
+.stat .v{font-size:15px;font-weight:700;margin-top:2px;}
+.stat .v.up{color:var(--s-automatic);}
+.divider{width:1px;height:26px;background:var(--border);align-self:center;}
+.recommend{display:inline-block;margin-top:8px;padding:3px 10px;border-radius:99px;background:var(--s-auto-bg);color:var(--s-automatic);font-size:11px;font-weight:700;}
+</style>
+</head>
+<body>
+<h1 class="page-title">Where does “the progress bar” go?</h1>
+<p class="page-sub">Same data — <b>Morning Run · 68% · 🏆 Strong</b> · default Ranks emojis. Three ways to combine the bar with the milestone track.</p>
+
+<div class="rail" id="rail"></div>
+
+<script>
+const RING = `
+  <div class="hero-ring">
+    <svg width="124" height="124" viewBox="0 0 124 124">
+      <circle cx="62" cy="62" r="54" fill="none" stroke="#E5E0D8" stroke-width="11"/>
+      <circle cx="62" cy="62" r="54" fill="none" stroke="#0891b2" stroke-width="11" stroke-linecap="round"
+        stroke-dasharray="339.29" stroke-dashoffset="108.6" transform="rotate(-90 62 62)"/>
+    </svg>
+    <div class="emoji">🏆</div><div class="pct">68%</div><div class="pl">Strength</div>
+  </div>
+  <div class="stage-name">Strong</div>`;
+
+const NEXTLINE = `<div class="next-line"><b>12%</b> to 💎 Automatic</div><div class="subbar"><i></i></div>`;
+
+const DOTS = `
+  <div class="track">
+    <div class="stop done"><div class="bubble" style="background:var(--s-start-bg);border-color:var(--s-starting)">🥉</div><div class="lbl" style="color:var(--s-starting)">Starting</div></div>
+    <div class="seg fill" style="background:var(--s-building)"></div>
+    <div class="stop done"><div class="bubble" style="background:var(--s-build-bg);border-color:var(--s-building)">🥈</div><div class="lbl" style="color:var(--s-building)">Building</div></div>
+    <div class="seg fill" style="background:var(--s-developing)"></div>
+    <div class="stop done"><div class="bubble" style="background:var(--s-dev-bg);border-color:var(--s-developing)">🥇</div><div class="lbl" style="color:var(--s-developing)">Developing</div></div>
+    <div class="seg fill" style="background:var(--s-strong)"></div>
+    <div class="stop cur"><div class="bubble" style="background:var(--s-strong-bg);border-color:var(--s-strong)">🏆</div><div class="lbl" style="color:var(--s-strong)">Strong</div></div>
+    <div class="seg"></div>
+    <div class="stop"><div class="bubble">💎</div><div class="lbl">Automatic</div></div>
+  </div>`;
+
+// the canonical horizontal StrengthProgressBar. opts: pct(show %), next(show next hint)
+function PBAR({pct=true, next=true} = {}){
+  return `
+  <div class="pbar">
+    <div class="pbar-row">
+      <div class="pbar-tile">🏆</div>
+      <div class="pbar-track">
+        <div class="pbar-fill"></div>
+        <div class="pbar-div" style="left:20%"></div><div class="pbar-div" style="left:40%"></div>
+        <div class="pbar-div" style="left:60%"></div><div class="pbar-div" style="left:80%"></div>
+      </div>
+      ${pct ? '<div class="pbar-pct">68%</div>' : ''}
+      ${next ? '<div class="pbar-next">→ 💎</div>' : ''}
+    </div>
+    ${next ? '<div class="pbar-bottom">12% to Automatic</div>' : ''}
+  </div>`;
+}
+
+const SPARK = `
+  <div class="spark"><svg width="100%" height="50" viewBox="0 0 320 50" preserveAspectRatio="none">
+    <defs><linearGradient id="f" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0891b2" stop-opacity=".2"/><stop offset="1" stop-color="#0891b2" stop-opacity="0"/></linearGradient></defs>
+    <path d="M0,40 C40,38 60,34 90,30 C120,26 150,24 180,18 C210,12 250,11 320,6 L320,50 L0,50 Z" fill="url(#f)"/>
+    <path d="M0,40 C40,38 60,34 90,30 C120,26 150,24 180,18 C210,12 250,11 320,6" fill="none" stroke="#0891b2" stroke-width="2.5" stroke-linecap="round"/>
+    <circle cx="320" cy="6" r="4.5" fill="#0891b2"/></svg></div>
+  <div class="trendmsg"><i data-lucide="trending-up"></i> Strongest it's been in 30 days</div>`;
+
+const STATS = `
+  <div class="stats">
+    <div class="stat"><div class="k">Since start</div><div class="v up">+68%</div></div><div class="divider"></div>
+    <div class="stat"><div class="k">This month</div><div class="v up">+12%</div></div><div class="divider"></div>
+    <div class="stat"><div class="k">This week</div><div class="v up">+4%</div></div>
+  </div>`;
+
+function frame(title, sub, body, rec){
+  return `<div class="col">
+    <div class="vtag"><b>${title}</b><span>${sub}</span>${rec?`<br><span class="recommend">${rec}</span>`:''}</div>
+    <div class="phone"><div class="notch"></div>
+      <div class="statusbar"><span>9:41</span><span>􀙇 􀋲 􀛨</span></div>
+      <div class="dhead"><button class="iconbtn"><i data-lucide="x"></i></button><div class="dtitle">Morning Run</div><button class="iconbtn"><i data-lucide="pencil"></i></button></div>
+      <div class="tabs"><div class="tab">Calendar</div><div class="tab on">Strength</div><div class="tab">Goal</div></div>
+      <div class="card"><div class="card-head"><div class="card-h">Habit Strength</div><div class="range"><b>1M</b><b class="on">3M</b><b>1Y</b></div></div>
+        ${body}
+      </div>
+    </div>
+  </div>`;
+}
+
+// Option 1: replace dots with bar. Ring keeps its prominent "% to next" line.
+const opt1 = RING + NEXTLINE + PBAR({pct:false, next:false}) + SPARK + STATS;
+// Option 2: keep BOTH — dots (all 5 emojis) + live bar below.
+const opt2 = RING + DOTS + PBAR({pct:false, next:true}) + SPARK + STATS;
+// Option 3: replace dots, drop ring's next-line — the bar carries % + next.
+const opt3 = RING + PBAR({pct:true, next:true}) + SPARK + STATS;
+
+document.getElementById('rail').innerHTML =
+  frame('Option 1 · Bar replaces dots', 'ring keeps the “12% to 💎” headline; bar = clean live fill', opt1, '★ my pick') +
+  frame('Option 2 · Keep both', 'dots show all 5 picked emojis, bar shows the live position below', opt2) +
+  frame('Option 3 · Bar only, no headline', 'bar carries %, → next, and “12% to Automatic”', opt3);
+
+lucide.createIcons();
+</script>
+</body>
+</html>
