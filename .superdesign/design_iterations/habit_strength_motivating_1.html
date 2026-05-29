@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Habit Strength — Motivating Redesign (3 variants)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300..800&display=swap" rel="stylesheet" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+:root{
+  --bg:#F5F1ED; --bg-muted:#FAF8F5; --card:#EDEAE5; --card-2:#F0EDE8;
+  --border:#DDD8D2; --border-strong:#C4BFB7;
+  --text-primary:#2D2A26; --text-secondary:#6B6560; --text-tertiary:#6E6660; --text-muted:#8C857E;
+  --forest-100:#D1FAE5; --forest-300:#6EE7B7; --forest-500:#10B981; --forest-600:#059669; --forest-700:#047857;
+  --gold-300:#E8B94D; --gold-500:#8B6208; --gold-600:#936A08; --gold-light:#FEF3CD;
+  --shadow-card:0 1px 2px rgba(45,42,38,.04),0 2px 8px rgba(45,42,38,.06);
+  --shadow-lift:0 2px 4px rgba(45,42,38,.06),0 8px 24px rgba(45,42,38,.10);
+  --shadow-forest:0 2px 8px rgba(5,150,105,.18),0 8px 20px rgba(5,150,105,.12);
+  --radius-sm:8px; --radius-md:12px; --radius-lg:16px; --radius-xl:24px; --radius-pill:9999px;
+  --font:'Outfit',ui-sans-serif,-apple-system,system-ui,sans-serif;
+  --ease:cubic-bezier(.22,1,.36,1); --spring:cubic-bezier(.34,1.56,.64,1);
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;font-family:var(--font);color:var(--text-primary);-webkit-font-smoothing:antialiased;}
+body{
+  background:radial-gradient(1200px 600px at 20% -10%,#F8F4EF 0%,transparent 60%),
+             radial-gradient(900px 500px at 120% 110%,#F0ECE6 0%,transparent 55%),
+             linear-gradient(180deg,#F2EEE8 0%,#EDE8E1 100%);
+  min-height:100vh; padding:48px 24px 80px;
+}
+.page-title{text-align:center;color:var(--text-primary);margin:0 0 6px;font-size:24px;font-weight:700;letter-spacing:-.3px;}
+.page-sub{text-align:center;color:var(--text-secondary);margin:0 0 40px;font-size:14px;}
+.rail{display:flex;gap:40px;justify-content:center;align-items:flex-start;flex-wrap:wrap;}
+.col{display:flex;flex-direction:column;align-items:center;}
+.variant-tag{margin-bottom:16px;text-align:center;}
+.variant-tag b{display:block;font-size:16px;font-weight:700;color:var(--text-primary);}
+.variant-tag span{font-size:12.5px;color:var(--text-secondary);}
+
+.phone{
+  width:390px;height:790px;background:var(--bg);border-radius:48px;border:10px solid #1b1916;
+  box-shadow:0 30px 80px rgba(27,25,22,.25),0 10px 30px rgba(27,25,22,.15);
+  position:relative;overflow:hidden;display:flex;flex-direction:column;
+}
+.notch{position:absolute;top:10px;left:50%;transform:translateX(-50%);width:110px;height:30px;background:#1b1916;border-radius:20px;z-index:10;}
+.statusbar{height:44px;display:flex;align-items:flex-end;justify-content:space-between;padding:0 28px 6px;font-size:14px;font-weight:600;}
+.scr{flex:1;overflow:hidden;display:flex;flex-direction:column;}
+
+/* shared detail chrome */
+.dhead{display:flex;align-items:center;justify-content:space-between;padding:6px 14px;}
+.iconbtn{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;color:var(--text-primary);background:transparent;border:none;cursor:pointer;}
+.iconbtn:hover{background:rgba(45,42,38,.06);}
+.dtitle{font-size:15px;font-weight:600;}
+.tabs{display:flex;gap:4px;margin:2px 16px 0;padding:3px;background:var(--bg-muted);border:1px solid var(--border);border-radius:var(--radius-pill);}
+.tab{flex:1;text-align:center;font-size:13px;font-weight:600;color:var(--text-secondary);padding:7px 0;border-radius:var(--radius-pill);}
+.tab.on{background:#fff;color:var(--text-primary);box-shadow:0 1px 3px rgba(45,42,38,.12);}
+
+.card{margin:14px 16px 0;background:var(--card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px;box-shadow:var(--shadow-card);}
+.card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;}
+.card-h{font-size:18px;font-weight:700;letter-spacing:-.2px;}
+.range{display:flex;gap:2px;padding:2px;background:var(--bg-muted);border-radius:var(--radius-pill);}
+.range b{font-size:11px;font-weight:600;color:var(--text-secondary);padding:4px 9px;border-radius:var(--radius-pill);cursor:pointer;}
+.range b.on{background:#fff;color:var(--text-primary);box-shadow:0 1px 2px rgba(0,0,0,.1);}
+
+/* ===== Variant A : Journey to Automatic ===== */
+.hero-ring{position:relative;width:128px;height:128px;margin:14px auto 6px;}
+.hero-ring .emoji{position:absolute;top:30px;left:0;right:0;text-align:center;font-size:30px;}
+.hero-ring .pct{position:absolute;top:60px;left:0;right:0;text-align:center;font-size:30px;font-weight:800;letter-spacing:-1px;color:var(--text-primary);}
+.hero-ring .pctlabel{position:absolute;top:94px;left:0;right:0;text-align:center;font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--text-tertiary);}
+.stage-name{text-align:center;font-size:20px;font-weight:700;color:var(--forest-700);}
+.next-line{text-align:center;font-size:13px;color:var(--text-secondary);margin-top:2px;}
+.next-line b{color:var(--text-primary);font-weight:700;}
+.subbar{height:7px;border-radius:99px;background:var(--bg-muted);margin:12px 6px 4px;overflow:hidden;border:1px solid var(--border);}
+.subbar i{display:block;height:100%;width:53%;border-radius:99px;background:linear-gradient(90deg,var(--forest-500),var(--forest-600));}
+
+.track{display:flex;align-items:center;margin:20px 4px 6px;}
+.stop{display:flex;flex-direction:column;align-items:center;gap:5px;position:relative;z-index:2;}
+.stop .bubble{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;font-size:20px;background:var(--bg-muted);border:2px solid var(--border);color:var(--text-muted);}
+.stop.done .bubble{background:var(--forest-100);border-color:var(--forest-500);}
+.stop.cur .bubble{background:var(--forest-600);border-color:var(--forest-700);box-shadow:var(--shadow-forest);transform:scale(1.18);font-size:22px;}
+.stop .lbl{font-size:10.5px;font-weight:600;color:var(--text-tertiary);}
+.stop.cur .lbl{color:var(--forest-700);font-weight:700;}
+.seg{flex:1;height:3px;background:var(--border);margin:0 -2px 18px;border-radius:99px;}
+.seg.fill{background:var(--forest-500);}
+
+.spark{margin:18px -4px 0;}
+.trendmsg{display:flex;align-items:center;gap:7px;justify-content:center;margin-top:10px;font-size:13px;font-weight:600;color:var(--forest-700);}
+.trendmsg svg{width:15px;height:15px;}
+.stats{display:flex;margin-top:16px;background:var(--bg-muted);border-radius:var(--radius-md);padding:11px 6px;}
+.stat{flex:1;text-align:center;}
+.stat .k{font-size:10px;color:var(--text-tertiary);font-weight:500;}
+.stat .v{font-size:15px;font-weight:700;margin-top:2px;}
+.stat .v.up{color:var(--forest-600);}
+.divider{width:1px;height:26px;background:var(--border);align-self:center;}
+
+/* ===== Variant B : Momentum hero ===== */
+.bbanner{display:flex;align-items:center;gap:9px;background:linear-gradient(90deg,var(--forest-100),#E6FBF1);border:1px solid var(--forest-300);border-radius:var(--radius-md);padding:10px 13px;margin-top:14px;}
+.bbanner .ic{font-size:18px;}
+.bbanner .t{font-size:13px;font-weight:700;color:var(--forest-700);}
+.bbanner .s{font-size:11.5px;color:var(--text-secondary);}
+.bigchart{position:relative;margin:18px -6px 0;height:150px;}
+.bigchart .overlay{position:absolute;top:6px;left:8px;}
+.bigchart .ovpct{font-size:42px;font-weight:800;letter-spacing:-2px;line-height:1;color:var(--text-primary);}
+.stage-pill{display:inline-flex;align-items:center;gap:5px;margin-top:6px;padding:4px 11px;border-radius:var(--radius-pill);background:var(--forest-100);color:var(--forest-700);font-size:12.5px;font-weight:700;}
+.b-track{display:flex;align-items:center;margin:8px 4px 0;}
+.b-track .dot{width:11px;height:11px;border-radius:50%;background:var(--border);}
+.b-track .dot.done{background:var(--forest-500);}
+.b-track .dot.cur{background:var(--forest-700);box-shadow:0 0 0 4px var(--forest-100);}
+.b-track .bar{flex:1;height:3px;background:var(--border);}
+.b-track .bar.fill{background:var(--forest-500);}
+.b-foot{display:flex;justify-content:space-between;margin:7px 2px 0;font-size:10px;color:var(--text-tertiary);font-weight:600;}
+
+/* ===== Variant C : Growth / plant ===== */
+.jar{position:relative;width:150px;height:200px;margin:16px auto 4px;}
+.jar .fillwrap{position:absolute;inset:0;border-radius:20px;background:var(--bg-muted);border:1px solid var(--border);overflow:hidden;}
+.jar .water{position:absolute;left:0;right:0;bottom:0;height:68%;background:linear-gradient(180deg,rgba(16,185,129,.30),rgba(5,150,105,.55));}
+.jar .water::before{content:"";position:absolute;top:-7px;left:0;right:0;height:14px;background:var(--forest-300);opacity:.6;border-radius:50%;}
+.jar .plant{position:absolute;left:0;right:0;bottom:54%;text-align:center;font-size:54px;filter:drop-shadow(0 4px 8px rgba(5,150,105,.25));}
+.jar .pctbig{position:absolute;left:0;right:0;top:14px;text-align:center;font-size:26px;font-weight:800;color:var(--forest-700);}
+.c-stagerow{display:flex;justify-content:center;gap:6px;margin-top:8px;}
+.c-stagerow span{font-size:18px;opacity:.32;filter:grayscale(1);}
+.c-stagerow span.on{opacity:1;filter:none;transform:scale(1.25);}
+.c-caption{text-align:center;font-size:13.5px;color:var(--text-secondary);margin-top:14px;line-height:1.5;padding:0 6px;}
+.c-caption b{color:var(--forest-700);font-weight:700;}
+
+.note{width:390px;margin:18px auto 0;background:rgba(255,255,255,.6);border:1px solid rgba(45,42,38,.08);border-radius:var(--radius-md);padding:12px 14px;font-size:12px;color:var(--text-secondary);line-height:1.5;}
+.note b{color:var(--text-primary);}
+</style>
+</head>
+<body>
+<h1 class="page-title">Habit Strength — more motivating</h1>
+<p class="page-sub">Same data (<b>“Morning Run” · 68% · 🏆 Strong</b>) shown three ways. 5-level system (0/20/40/60/80); emojis follow the user's picked set — default <b>Ranks</b> 🥉🥈🥇🏆💎 shown. No red, no “Weak”.</p>
+
+<div class="rail">
+
+  <!-- ================= VARIANT A ================= -->
+  <div class="col">
+    <div class="variant-tag"><b>A · Journey to Automatic</b><span>milestone-track led — recommended</span></div>
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="statusbar"><span>9:41</span><span>􀙇 􀋲 􀛨</span></div>
+      <div class="scr">
+        <div class="dhead"><button class="iconbtn"><i data-lucide="x"></i></button><div class="dtitle">Morning Run</div><button class="iconbtn"><i data-lucide="pencil"></i></button></div>
+        <div class="tabs"><div class="tab">Calendar</div><div class="tab on">Strength</div><div class="tab">Goal</div></div>
+
+        <div class="card">
+          <div class="card-head"><div class="card-h">Habit Strength</div>
+            <div class="range"><b>1M</b><b class="on">3M</b><b>1Y</b></div></div>
+
+          <div class="hero-ring">
+            <svg width="128" height="128" viewBox="0 0 128 128">
+              <circle cx="64" cy="64" r="56" fill="none" stroke="#E5E0D8" stroke-width="11"/>
+              <circle cx="64" cy="64" r="56" fill="none" stroke="url(#gA)" stroke-width="11" stroke-linecap="round"
+                stroke-dasharray="351.86" stroke-dashoffset="112.6" transform="rotate(-90 64 64)"/>
+              <defs><linearGradient id="gA" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#6EE7B7"/><stop offset="1" stop-color="#059669"/></linearGradient></defs>
+            </svg>
+            <div class="emoji">🏆</div>
+            <div class="pct">68%</div>
+            <div class="pctlabel">Strength</div>
+          </div>
+          <div class="stage-name">Strong</div>
+          <div class="next-line"><b>12%</b> to 💎 Automatic</div>
+          <div class="subbar"><i style="width:40%;"></i></div>
+
+          <div class="track">
+            <div class="stop done"><div class="bubble">🥉</div><div class="lbl">Starting</div></div>
+            <div class="seg fill"></div>
+            <div class="stop done"><div class="bubble">🥈</div><div class="lbl">Building</div></div>
+            <div class="seg fill"></div>
+            <div class="stop done"><div class="bubble">🥇</div><div class="lbl">Developing</div></div>
+            <div class="seg fill"></div>
+            <div class="stop cur"><div class="bubble">🏆</div><div class="lbl">Strong</div></div>
+            <div class="seg"></div>
+            <div class="stop"><div class="bubble">💎</div><div class="lbl">Automatic</div></div>
+          </div>
+
+          <div class="spark">
+            <svg width="100%" height="56" viewBox="0 0 320 56" preserveAspectRatio="none">
+              <defs><linearGradient id="fA" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#059669" stop-opacity=".22"/><stop offset="1" stop-color="#059669" stop-opacity="0"/></linearGradient></defs>
+              <path d="M0,44 C40,42 60,38 90,34 C120,30 150,28 180,22 C210,16 250,14 320,8 L320,56 L0,56 Z" fill="url(#fA)"/>
+              <path d="M0,44 C40,42 60,38 90,34 C120,30 150,28 180,22 C210,16 250,14 320,8" fill="none" stroke="#059669" stroke-width="2.5" stroke-linecap="round"/>
+              <circle cx="320" cy="8" r="4.5" fill="#059669"/>
+            </svg>
+          </div>
+          <div class="trendmsg"><i data-lucide="trending-up"></i> Strongest it's been in 30 days</div>
+
+          <div class="stats">
+            <div class="stat"><div class="k">Since start</div><div class="v up">+68%</div></div>
+            <div class="divider"></div>
+            <div class="stat"><div class="k">This month</div><div class="v up">+12%</div></div>
+            <div class="divider"></div>
+            <div class="stat"><div class="k">This week</div><div class="v up">+4%</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= VARIANT B ================= -->
+  <div class="col">
+    <div class="variant-tag"><b>B · Momentum hero</b><span>trend-line led</span></div>
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="statusbar"><span>9:41</span><span>􀙇 􀋲 􀛨</span></div>
+      <div class="scr">
+        <div class="dhead"><button class="iconbtn"><i data-lucide="x"></i></button><div class="dtitle">Morning Run</div><button class="iconbtn"><i data-lucide="pencil"></i></button></div>
+        <div class="tabs"><div class="tab">Calendar</div><div class="tab on">Strength</div><div class="tab">Goal</div></div>
+
+        <div class="card">
+          <div class="card-head"><div class="card-h">Habit Strength</div>
+            <div class="range"><b>1M</b><b class="on">3M</b><b>1Y</b></div></div>
+
+          <div class="bbanner"><span class="ic">🔥</span><div><div class="t">On your strongest streak yet</div><div class="s">Up 12% this month — keep showing up</div></div></div>
+
+          <div class="bigchart">
+            <div class="overlay"><div class="ovpct">68%</div><div class="stage-pill">💪 Strong</div></div>
+            <svg width="100%" height="150" viewBox="0 0 340 150" preserveAspectRatio="none">
+              <defs><linearGradient id="fB" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#059669" stop-opacity=".28"/><stop offset="1" stop-color="#059669" stop-opacity="0"/></linearGradient></defs>
+              <line x1="0" y1="50" x2="340" y2="50" stroke="#DDD8D2" stroke-width="1" stroke-dasharray="4,5"/>
+              <line x1="0" y1="100" x2="340" y2="100" stroke="#DDD8D2" stroke-width="1" stroke-dasharray="4,5"/>
+              <path d="M0,128 C50,124 80,116 120,104 C160,92 190,86 230,66 C270,46 300,40 340,30 L340,150 L0,150 Z" fill="url(#fB)"/>
+              <path d="M0,128 C50,124 80,116 120,104 C160,92 190,86 230,66 C270,46 300,40 340,30" fill="none" stroke="#059669" stroke-width="3" stroke-linecap="round"/>
+              <circle cx="340" cy="30" r="5.5" fill="#059669"/><circle cx="340" cy="30" r="11" fill="#059669" opacity=".18"/>
+            </svg>
+          </div>
+
+          <div class="b-track">
+            <div class="dot done"></div><div class="bar fill"></div>
+            <div class="dot done"></div><div class="bar fill"></div>
+            <div class="dot cur"></div><div class="bar"></div>
+            <div class="dot"></div>
+          </div>
+          <div class="b-foot"><span>🌱 Starting</span><span>🌿 Building</span><span>💪 Strong</span><span>⚡ Auto</span></div>
+
+          <div class="stats" style="margin-top:18px;">
+            <div class="stat"><div class="k">Since start</div><div class="v up">+68%</div></div>
+            <div class="divider"></div>
+            <div class="stat"><div class="k">This month</div><div class="v up">+12%</div></div>
+            <div class="divider"></div>
+            <div class="stat"><div class="k">To automatic</div><div class="v">17%</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= VARIANT C ================= -->
+  <div class="col">
+    <div class="variant-tag"><b>C · Growth metaphor</b><span>exploratory idea spike</span></div>
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="statusbar"><span>9:41</span><span>􀙇 􀋲 􀛨</span></div>
+      <div class="scr">
+        <div class="dhead"><button class="iconbtn"><i data-lucide="x"></i></button><div class="dtitle">Morning Run</div><button class="iconbtn"><i data-lucide="pencil"></i></button></div>
+        <div class="tabs"><div class="tab">Calendar</div><div class="tab on">Strength</div><div class="tab">Goal</div></div>
+
+        <div class="card">
+          <div class="card-head"><div class="card-h">Habit Strength</div>
+            <div class="range"><b>1M</b><b class="on">3M</b><b>1Y</b></div></div>
+
+          <div class="jar">
+            <div class="fillwrap"><div class="water"></div></div>
+            <div class="pctbig">68%</div>
+            <div class="plant">🌳</div>
+          </div>
+          <div class="c-stagerow"><span class="on">🌱</span><span class="on">🌿</span><span class="on">💪</span><span>⚡</span></div>
+          <div class="c-caption">Your habit is <b>Strong</b> and growing.<br/>Just <b>17% more</b> until it runs on autopilot. ⚡</div>
+
+          <div class="spark" style="margin-top:18px;">
+            <svg width="100%" height="48" viewBox="0 0 320 48" preserveAspectRatio="none">
+              <path d="M0,38 C40,36 60,32 90,28 C120,24 150,22 180,18 C210,14 250,12 320,6" fill="none" stroke="#059669" stroke-width="2.5" stroke-linecap="round"/>
+              <circle cx="320" cy="6" r="4" fill="#059669"/>
+            </svg>
+          </div>
+          <div class="trendmsg" style="margin-top:8px;"><i data-lucide="sprout"></i> Grown 12% this month</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="note">
+  <b>What changed vs. today:</b> today's UI shows a red <b>“Weak”</b> badge on a red→green alarm scale.
+  These use the app's existing backend stages (🌱 Starting → 🌿 Building → 💪 Strong → ⚡ Automatic) in forest-green only,
+  add <b>progress-to-next-stage</b> (the missing goal-gradient motivator), and react with positive copy.
+  Data shown is whatever <code>habit.strength</code> already provides — no calculation changes.
+</div>
+
+<script>lucide.createIcons();</script>
+</body>
+</html>

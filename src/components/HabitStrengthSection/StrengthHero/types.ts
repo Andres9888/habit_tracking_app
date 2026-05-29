@@ -4,7 +4,7 @@
 
 import type { SharedValue } from 'react-native-reanimated';
 
-import type { StrengthLabel } from '../../HabitStrengthHistory/types';
+import type { StrengthJourney } from '../journey';
 
 /**
  * Props for the StrengthHero component.
@@ -13,17 +13,8 @@ export interface StrengthHeroProps {
   /** Current strength percentage (0-100) */
   strength: number;
 
-  /** Strength label (weak/developing/strong) */
-  label: StrengthLabel;
-
-  /** Change vs previous period (e.g., "+12%") */
-  delta: number;
-
-  /** Delta comparison period label (e.g., "vs last month") */
-  deltaLabel: string;
-
-  /** Optional custom color override */
-  color?: string;
+  /** Resolved journey (current level, next level, progress) with user emojis */
+  journey: StrengthJourney;
 }
 
 /**
@@ -40,13 +31,8 @@ export interface ProgressRingProps {
   roundedStrength: number;
   ringColor: string;
   animatedStrength: SharedValue<number>;
-}
-
-/**
- * Props for the StatusDisplay component.
- */
-export interface StatusDisplayProps {
-  label: StrengthLabel;
-  delta: number;
-  deltaLabel: string;
+  /** Stage emoji shown above the percentage inside the ring */
+  emoji: string;
+  /** Accessible stage name (e.g. "Strong") */
+  label: string;
 }
