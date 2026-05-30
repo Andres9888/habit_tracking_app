@@ -32,14 +32,14 @@ export function SettingsSectionHeader({
 }: SettingsSectionHeaderProps) {
   const { colors: themeColors } = useThemeColors();
 
-  const titleColor = highContrastMode ? highContrastColors.accent : themeColors.text.secondary;
+  const titleColor = highContrastMode ? highContrastColors.accent : themeColors.text.primary;
 
   return (
     <Pressable
       accessibilityHint={`Double tap to ${isExpanded ? 'collapse' : 'expand'} ${title} settings`}
       accessibilityRole="button"
       accessibilityState={{ expanded: isExpanded }}
-      className="flex-row items-center justify-between px-4 py-2.5"
+      className="flex-row items-center justify-between px-4 py-3"
       onPress={onToggle}
     >
       <View className="flex-row items-center">
@@ -47,7 +47,13 @@ export function SettingsSectionHeader({
           {icon ?? null}
         </View>
         <Text
-          style={{ ...typography.overline, color: titleColor }}
+          style={{
+            fontFamily: typography.heading3.fontFamily,
+            fontSize: 15,
+            fontWeight: fontWeights.bold,
+            letterSpacing: -0.2,
+            color: titleColor,
+          }}
         >
           {title}
         </Text>

@@ -1,13 +1,28 @@
 /**
- * DetailViewTabButton - Centered text button for the pill-segmented tab row.
- * Equal-width (flex: 1), no icon, weight-driven active state.
+ * DetailViewTabButton - Icon + label button for the pill-segmented tab row.
+ * Equal-width (flex: 1), weight-driven active state, subtle active icon pop.
  */
 
+import { useEffect } from 'react';
 import { Pressable, Text } from 'react-native';
+import Animated, {
+  Easing,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated';
+import { Activity, CalendarDays, Target, type LucideIcon } from 'lucide-react-native';
 import { useThemeColors } from '@/theme';
+import { iconSizes } from '@/theme/iconSizes';
 import { typography, fontWeights } from '@/theme/typography';
 
 export type DetailView = 'calendar' | 'strength' | 'goal';
+
+const ICONS: Record<DetailView, LucideIcon> = {
+  calendar: CalendarDays,
+  goal: Target,
+  strength: Activity,
+};
 
 interface DetailViewTabButtonProps {
   accentColor: string;
@@ -26,18 +41,44 @@ export function DetailViewTabButton({
 }: DetailViewTabButtonProps) {
   const { colors } = useThemeColors();
   const isActive = activeView === view;
+  const Icon = ICONS[view];
+  const pop = useSharedValue(isActive ? 1 : 0);
+
+  useEffect(() => {
+    pop.value = withTiming(isActive ? 1 : 0, {
+      duration: 200,
+      easing: Easing.out(Easing.cubic),
+    });
+  }, [isActive, pop]);
+
+  const iconStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: 1 + pop.value * 0.08 }],
+  }));
+
+  const color = isActive ? accentColor : colors.text.tertiary;
 
   return (
     <Pressable
       accessibilityRole='tab'
       accessibilityState={{ selected: isActive }}
       hitSlop={4}
-      style={{ alignItems: 'center', flex: 1, justifyContent: 'center', paddingVertical: 9, zIndex: 1 }}
+      style={{
+        alignItems: 'center',
+        flex: 1,
+        flexDirection: 'row',
+        gap: 6,
+        justifyContent: 'center',
+        paddingVertical: 9,
+        zIndex: 1,
+      }}
       onPress={() => onPress(view)}
     >
+      <Animated.View style={iconStyle}>
+        <Icon color={color} size={iconSizes.small} strokeWidth={2.1} />
+      </Animated.View>
       <Text
         style={{
-          color: isActive ? accentColor : colors.text.tertiary,
+          color,
           fontSize: typography.caption.fontSize,
           fontWeight: isActive ? fontWeights.semibold : fontWeights.medium,
           letterSpacing: 0.1,

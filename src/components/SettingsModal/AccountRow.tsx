@@ -1,14 +1,11 @@
-/** AccountRow — Compact tappable card that opens the Account sub-page */
-import { Text, View } from 'react-native';
-import { ChevronRight, Crown } from 'lucide-react-native';
-import { iconSizes } from '@/theme/iconSizes';
-import { typography, fontWeights } from '@/theme/typography';
-import { highContrastColors } from '@/theme/highContrastColors';
+/** AccountRow — Brand gradient hero card that opens the Account sub-page */
 import { useUser } from '@clerk/clerk-expo';
 import { LinearGradient } from 'expo-linear-gradient';
 import { AnimatedPressable } from '../ui/AnimatedPressable';
 import { useThemeColors } from '../../theme/ThemeContext';
-import { borderRadius, componentSpacing, shadows } from '../../theme/spacing';
+import { borderRadius, shadows } from '../../theme/spacing';
+import { AccountRowContent, type AccountRowPalette } from './AccountRowContent';
+import { HighContrastAccountRow } from './HighContrastAccountRow';
 
 interface AccountRowProps {
   highContrastMode: boolean;
@@ -16,24 +13,45 @@ interface AccountRowProps {
   onPress: () => void;
 }
 
+/** Fixed forest-green gradient (independent of the inverted dark scale) */
+const LIGHT_GRADIENT = ['#047857', '#059669', '#10B981'] as const;
+const DARK_GRADIENT = ['#065F46', '#047857', '#059669'] as const;
+
+const GRADIENT_PALETTE: AccountRowPalette = {
+  avatarBg: 'rgba(255,255,255,0.18)',
+  avatarBorderColor: 'rgba(255,255,255,0.35)',
+  avatarBorderWidth: 1.5,
+  avatarTextColor: '#FFFFFF',
+  textColor: '#FFFFFF',
+  subColor: 'rgba(255,255,255,0.82)',
+  chevronColor: 'rgba(255,255,255,0.85)',
+  badgeBg: 'rgba(255,255,255,0.22)',
+  badgeFg: '#FFFFFF',
+};
+
 export function AccountRow({
   highContrastMode,
   isPremium,
   onPress,
 }: AccountRowProps) {
   const { user } = useUser();
-  const { colors: themeColors, isDark } = useThemeColors();
+  const { isDark } = useThemeColors();
 
   const name = user?.firstName ?? user?.username ?? 'User';
   const email = user?.primaryEmailAddress?.emailAddress;
   const initial = name.charAt(0).toUpperCase();
 
-  const cardBg = highContrastMode
-    ? isDark
-      ? highContrastColors.background
-      : '#000000'
-    : themeColors.card;
-  const cardBorder = highContrastMode ? themeColors.border : undefined;
+  if (highContrastMode) {
+    return (
+      <HighContrastAccountRow
+        email={email}
+        initial={initial}
+        isPremium={isPremium}
+        name={name}
+        onPress={onPress}
+      />
+    );
+  }
 
   return (
     <AnimatedPressable
@@ -41,115 +59,28 @@ export function AccountRow({
       accessibilityRole='button'
       onPress={onPress}
     >
-      <View
-        className='overflow-hidden rounded-2xl'
+      <LinearGradient
+        colors={isDark ? DARK_GRADIENT : LIGHT_GRADIENT}
+        end={{ x: 1, y: 1 }}
+        start={{ x: 0, y: 0 }}
         style={{
-          backgroundColor: cardBg,
-          borderColor: cardBorder,
-          borderWidth: highContrastMode ? 1 : 0,
-          ...(highContrastMode
-            ? { elevation: 0, shadowColor: 'transparent' }
-            : shadows.card),
+          // Softer card shadow (not the heavy FAB glow) so the hero sits
+          // calmly above the green-tinted rows instead of competing with them
+          borderRadius: borderRadius.large,
+          ...shadows.card,
+          shadowColor: '#047857',
         }}
       >
-        <View className='flex-row items-center px-4 py-3.5' style={{ gap: 14 }}>
-          {highContrastMode ? (
-            <View
-              className='items-center justify-center'
-              style={{
-                backgroundColor: themeColors.text.primary,
-                borderRadius: borderRadius.full,
-                height: componentSpacing.avatar.size,
-                width: componentSpacing.avatar.size,
-              }}
-            >
-              <Text
-                style={{
-                  fontSize: typography.body.fontSize,
-                  fontWeight: fontWeights.bold,
-                  color: themeColors.text.inverse,
-                }}
-              >
-                {initial}
-              </Text>
-            </View>
-          ) : (
-            <LinearGradient
-              colors={[themeColors.primary[700], themeColors.primary[600]]}
-              style={{
-                alignItems: 'center',
-                borderRadius: borderRadius.full,
-                height: componentSpacing.avatar.size,
-                justifyContent: 'center',
-                width: componentSpacing.avatar.size,
-              }}
-            >
-              <Text
-                style={{
-                  fontSize: typography.body.fontSize,
-                  fontWeight: fontWeights.bold,
-                  color: 'white',
-                }}
-              >
-                {initial}
-              </Text>
-            </LinearGradient>
-          )}
-          <View className='flex-1'>
-            <View className='flex-row items-center' style={{ gap: 6 }}>
-              <Text
-                style={{
-                  ...typography.bodySmall,
-                  fontSize: 16,
-                  fontWeight: fontWeights.semibold,
-                  color: themeColors.text.primary,
-                }}
-              >
-                {name}
-              </Text>
-              {isPremium ? (
-                <View
-                  className='flex-row items-center rounded-md px-1.5 py-0.5'
-                  style={{
-                    backgroundColor: themeColors.status.warningLight,
-                    gap: 3,
-                  }}
-                >
-                  <Crown
-                    color={themeColors.status.warningText}
-                    size={iconSizes.micro}
-                  />
-                  <Text
-                    style={{
-                      ...typography.tabBar,
-                      fontWeight: fontWeights.bold,
-                      color: themeColors.status.warningText,
-                    }}
-                  >
-                    PRO
-                  </Text>
-                </View>
-              ) : null}
-            </View>
-            {email ? (
-              <Text
-                className='mt-0.5'
-                numberOfLines={1}
-                style={{
-                  ...typography.caption,
-                  color: themeColors.text.secondary,
-                }}
-              >
-                {email}
-              </Text>
-            ) : null}
-          </View>
-          <ChevronRight
-            color={themeColors.text.tertiary}
-            size={iconSizes.medium}
-          />
-        </View>
-      </View>
+        <AccountRowContent
+          avatarSize={48}
+          email={email}
+          initial={initial}
+          isPremium={isPremium}
+          name={name}
+          nameSize={18}
+          palette={GRADIENT_PALETTE}
+        />
+      </LinearGradient>
     </AnimatedPressable>
   );
 }

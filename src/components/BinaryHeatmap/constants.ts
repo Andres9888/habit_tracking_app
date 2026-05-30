@@ -16,7 +16,7 @@
 
 import { colors } from '@/theme/colors';
 
-export const CELL_SIZE = 10;
+export const CELL_SIZE = 13;
 
 /**
  * Gap between cells (in pixels)

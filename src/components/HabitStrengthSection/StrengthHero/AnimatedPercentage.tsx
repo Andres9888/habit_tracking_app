@@ -35,7 +35,7 @@ export function AnimatedPercentage({ animatedValue }: AnimatedPercentageProps) {
   return (
     <Text
       adjustsFontSizeToFit
-      className='text-2xl font-bold'
+      className='text-3xl font-extrabold'
       numberOfLines={1}
       style={{
         color: themeColors.text.primary,

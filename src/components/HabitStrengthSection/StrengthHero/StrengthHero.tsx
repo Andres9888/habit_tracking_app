@@ -1,31 +1,23 @@
 /**
  * StrengthHero Component
  *
- * Displays the current habit strength with:
- * - Circular progress ring (72x72px) with animated fill
- * - Percentage number with count-up animation
- * - Strength label (Strong/Developing/Weak)
- * - Delta badge showing change vs previous period
+ * The centered hero for the Strength section:
+ * - Large progress ring with the current level's emoji + animated percentage
+ * - Level name (Starting / Building / Developing / Strong / Automatic)
+ *
+ * The "X% to <next level>" goal-gradient hint lives on the StrengthProgressBar
+ * below, so the hero stays a clean, proud focal point.
  *
  * @example
  * ```tsx
- * <StrengthHero
- *   strength={72}
- *   label="strong"
- *   delta={12}
- *   deltaLabel="vs last month"
- * />
+ * <StrengthHero strength={68} journey={journey} />
  * ```
  */
 
 import React from 'react';
-import { View } from 'react-native';
+import { Text, View } from 'react-native';
 
-import { useThemeColors } from '@/theme/ThemeContext';
-
-import { getStrengthColors } from '../constants';
 import { ProgressRing } from './ProgressRing';
-import { StatusDisplay } from './StatusDisplay';
 import type { StrengthHeroProps } from './types';
 import { useStrengthHeroAnimations } from './useStrengthHeroAnimations';
 
@@ -34,31 +26,26 @@ import { useStrengthHeroAnimations } from './useStrengthHeroAnimations';
  */
 export const StrengthHero = React.memo(function StrengthHero({
   strength,
-  label,
-  delta,
-  deltaLabel,
-  color,
+  journey,
 }: StrengthHeroProps) {
-  const { colors: themeColors } = useThemeColors();
-  const strengthColors = getStrengthColors(themeColors);
-  // Guard against invalid label - default to 'weak'
-  const safeLabel = label && strengthColors[label] ? label : 'weak';
-  // Get colors based on strength level
-  const colors = strengthColors[safeLabel];
-  const ringColor = color || colors.primary;
+  const { current } = journey;
+  const stageColor = current.color;
 
-  // Animation state
   const { animatedStrength, roundedStrength } =
     useStrengthHeroAnimations(strength);
 
   return (
-    <View className='flex-row items-center'>
+    <View className='items-center'>
       <ProgressRing
         animatedStrength={animatedStrength}
-        ringColor={ringColor}
+        emoji={current.emoji}
+        label={current.label}
+        ringColor={stageColor}
         roundedStrength={roundedStrength}
       />
-      <StatusDisplay delta={delta} deltaLabel={deltaLabel} label={label} />
+      <Text className='mt-2.5 text-xl font-bold' style={{ color: stageColor }}>
+        {current.label}
+      </Text>
     </View>
   );
 });

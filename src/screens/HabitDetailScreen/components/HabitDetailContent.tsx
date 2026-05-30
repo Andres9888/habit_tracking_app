@@ -6,6 +6,7 @@ import { useRef } from 'react';
 import { ScrollView, View, type LayoutChangeEvent } from 'react-native';
 import ErrorBoundary from '../../../components/ErrorBoundary';
 import { HabitStrengthSection } from '../../../components/HabitStrengthSection';
+import { useProgressEmojis } from '../../../hooks/useProgressEmojis';
 import { useThemeColors } from '../../../theme';
 import { shadows } from '../../../theme/spacing';
 import type { Habit } from '../../../features/habits/types';
@@ -37,6 +38,7 @@ export function HabitDetailContent({
   const { activeView, handleScroll, handleSectionLayout, scrollToView } =
     useDetailScrollSpy(scrollRef, { onPinnedChange });
   const habitColor = habit.color ?? habit.iconColor ?? colors.primary[700];
+  const progressEmojis = useProgressEmojis(habit);
 
   const makeSectionLayoutHandler = (view: DetailView) => (event: LayoutChangeEvent) => {
     handleSectionLayout(view, event.nativeEvent.layout.y);
@@ -82,6 +84,7 @@ export function HabitDetailContent({
               habitCreatedAt={habit.createdAt}
               habitId={habit._id}
               habitStrength={habit.strength}
+              progressEmojis={progressEmojis}
             />
           </ErrorBoundary>
         </View>

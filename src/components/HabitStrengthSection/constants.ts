@@ -12,9 +12,9 @@ import type { StrengthLabel } from '../HabitStrengthHistory/types';
 // Layout & Sizing
 // ============================================================================
 
-/** Circular progress ring dimensions (compact for above-fold layout) */
-export const RING_SIZE = 64; // Reduced from 72 to fit above fold
-export const RING_STROKE_WIDTH = 5; // Slightly thinner for smaller ring
+/** Circular progress ring dimensions — hero-sized so strength reads as a moment of pride */
+export const RING_SIZE = 116;
+export const RING_STROKE_WIDTH = 9;
 export const RING_RADIUS = (RING_SIZE - RING_STROKE_WIDTH) / 2;
 export const RING_CIRCUMFERENCE = 2 * Math.PI * RING_RADIUS;
 /** Usable inner width for centered text inside the ring (subtracting stroke on both sides) */

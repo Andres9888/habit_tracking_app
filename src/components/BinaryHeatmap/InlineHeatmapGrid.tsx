@@ -8,12 +8,13 @@
 import React, { memo, useMemo, useRef } from 'react';
 import { View, Text, ScrollView } from 'react-native';
 import type { ScrollView as ScrollViewType } from 'react-native';
-import { Pressable } from 'react-native';
 
 import type { BinaryMonthLabel, BinaryDay } from './types';
 import { CELL_SIZE, CELL_GAP, GRID } from './constants';
 import { styles } from './BinaryHeatmapNew.styles';
-import { getCellBackgroundColor, transformWeeksToRows } from './cellHelpers';
+import { transformWeeksToRows } from './cellHelpers';
+import { HeatmapCell } from './HeatmapCell';
+import { useThemeColors } from '@/theme/ThemeContext';
 
 const DAY_LABELS = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 
@@ -21,7 +22,11 @@ export interface InlineHeatmapGridProps {
   weeks: (BinaryDay | null)[][];
   monthLabels: BinaryMonthLabel[];
   habitColor: string;
-  onCellPress?: (date: string, completed: boolean) => void;
+  onCellPress?: (
+    date: string,
+    completed: boolean,
+    position?: { x: number; y: number }
+  ) => void;
 }
 
 export const InlineHeatmapGrid = memo(function InlineHeatmapGrid({
@@ -30,9 +35,11 @@ export const InlineHeatmapGrid = memo(function InlineHeatmapGrid({
   habitColor,
   onCellPress,
 }: InlineHeatmapGridProps) {
+  const { colors, isDark } = useThemeColors();
   const rows = useMemo(() => transformWeeksToRows(weeks, GRID.ROWS), [weeks]);
   const gridContentWidth = weeks.length * (CELL_SIZE + CELL_GAP);
   const scrollRef = useRef<ScrollViewType>(null);
+  const labelColor = { color: colors.text.tertiary };
 
   return (
     <View style={styles.gridContainer}>
@@ -40,7 +47,7 @@ export const InlineHeatmapGrid = memo(function InlineHeatmapGrid({
         <View style={styles.monthLabelSpacer} />
         {DAY_LABELS.map((label, index) => (
           <View key={`label-${index}`} style={styles.dayLabelCell}>
-            <Text style={styles.dayLabelText}>{label}</Text>
+            <Text style={[styles.dayLabelText, labelColor]}>{label}</Text>
           </View>
         ))}
       </View>
@@ -60,6 +67,7 @@ export const InlineHeatmapGrid = memo(function InlineHeatmapGrid({
                 key={`month-${i}`}
                 style={[
                   styles.monthLabel,
+                  labelColor,
                   { left: ml.weekIndex * (CELL_SIZE + CELL_GAP) },
                 ]}
               >
@@ -69,36 +77,15 @@ export const InlineHeatmapGrid = memo(function InlineHeatmapGrid({
           </View>
           {rows.map((row, dayIndex) => (
             <View key={`row-${dayIndex}`} style={styles.gridRow}>
-              {row.map((day, weekIndex) => {
-                const cellStyle = [
-                  styles.cell,
-                  {
-                    backgroundColor: getCellBackgroundColor(day, habitColor),
-                    borderColor: day?.isToday ? habitColor : 'transparent',
-                    borderWidth: day?.isToday ? 2 : 0,
-                    opacity: day?.isFuture ? 0.4 : 1,
-                  },
-                ];
-                if (!day) {
-                  return (
-                    <View
-                      key={`empty-${dayIndex}-${weekIndex}`}
-                      style={cellStyle}
-                    />
-                  );
-                }
-                if (!onCellPress || day.isFuture || day.isBeforeCreation) {
-                  return <View key={day.date} style={cellStyle} />;
-                }
-                return (
-                  <Pressable
-                    key={day.date}
-                    accessibilityRole='button'
-                    style={cellStyle}
-                    onPress={() => onCellPress(day.date, day.completed)}
-                  />
-                );
-              })}
+              {row.map((day, weekIndex) => (
+                <HeatmapCell
+                  key={day?.date ?? `empty-${dayIndex}-${weekIndex}`}
+                  day={day}
+                  habitColor={habitColor}
+                  isDark={isDark}
+                  onCellPress={onCellPress}
+                />
+              ))}
             </View>
           ))}
         </View>

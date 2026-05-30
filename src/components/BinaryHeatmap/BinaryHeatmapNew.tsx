@@ -6,15 +6,17 @@
  */
 
 import React, { memo, useState, useMemo, useCallback, useRef } from 'react';
-import { View, Text } from 'react-native';
+import { View } from 'react-native';
 
 import type { BinaryHeatmapProps, BinaryDay } from './types';
 import { HeatmapLegend } from './HeatmapLegend';
 import { HeatmapTooltip } from './HeatmapTooltip';
+import { HeatmapHeader } from './HeatmapHeader';
 import { InlineHeatmapGrid } from './InlineHeatmapGrid';
 import { generateBinaryGrid } from './utils';
 import { styles } from './BinaryHeatmapNew.styles';
 import { createDayLookupMap } from './cellHelpers';
+import { useThemeColors } from '@/theme/ThemeContext';
 
 export const BinaryHeatmap = memo(function BinaryHeatmap({
   habitId: _habitId,
@@ -27,6 +29,7 @@ export const BinaryHeatmap = memo(function BinaryHeatmap({
   showCompletionRate = true,
   onDayPress,
 }: BinaryHeatmapProps) {
+  const { colors, isDark } = useThemeColors();
   const [tooltipDay, setTooltipDay] = useState<BinaryDay | null>(null);
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
   const [tooltipVisible, setTooltipVisible] = useState(false);
@@ -46,15 +49,18 @@ export const BinaryHeatmap = memo(function BinaryHeatmap({
   const dayLookupMapRef = useRef(dayLookupMap);
   dayLookupMapRef.current = dayLookupMap;
 
-  const handleCellPress = useCallback((date: string, completed: boolean) => {
-    const day = dayLookupMapRef.current.get(date);
-    if (day) {
-      setTooltipDay(day);
-      setTooltipPosition({ x: 100, y: 50 });
-      setTooltipVisible(true);
-    }
-    onDayPressRef.current?.(date, completed);
-  }, []);
+  const handleCellPress = useCallback(
+    (date: string, completed: boolean, position?: { x: number; y: number }) => {
+      const day = dayLookupMapRef.current.get(date);
+      if (day) {
+        setTooltipDay(day);
+        setTooltipPosition(position ?? { x: 100, y: 50 });
+        setTooltipVisible(true);
+      }
+      onDayPressRef.current?.(date, completed);
+    },
+    []
+  );
 
   const handleTooltipClose = useCallback(() => {
     setTooltipVisible(false);
@@ -62,10 +68,24 @@ export const BinaryHeatmap = memo(function BinaryHeatmap({
   }, []);
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>{title}</Text>
-      </View>
+    <View
+      accessible
+      accessibilityLabel='Habit completion heatmap'
+      accessibilityRole='summary'
+      style={[
+        styles.container,
+        {
+          backgroundColor: isDark ? colors.card : '#FFFFFF',
+          borderColor: colors.border,
+        },
+      ]}
+    >
+      <HeatmapHeader
+        habitColor={habitColor}
+        showStat={showCompletionRate}
+        stats={gridData.stats}
+        title={title}
+      />
       <View style={styles.gridWrapper}>
         <InlineHeatmapGrid
           habitColor={habitColor}
@@ -77,7 +97,7 @@ export const BinaryHeatmap = memo(function BinaryHeatmap({
       <HeatmapLegend
         completionRate={gridData.stats.completionRate}
         habitColor={habitColor}
-        showCompletionRate={showCompletionRate}
+        showCompletionRate={false}
       />
       {tooltipDay ? (
         <HeatmapTooltip

@@ -3,28 +3,53 @@
  */
 
 import type { BinaryDay } from './types';
-import { COLORS } from './constants';
+import { hexToRgba } from './MonthlyCalendarGrid/colors';
 
 /**
- * Determines the background color for a heatmap cell
+ * Alpha applied to the habit color for "missed" (eligible, not completed) cells.
+ * HabitKit-style: empty days are a faint tint of the habit color — not gray — so
+ * the whole grid reads as one cohesive color field. Brighter in dark mode so the
+ * tint stays visible against the dark card surface.
+ */
+const MISSED_TINT_ALPHA_LIGHT = 0.15;
+const MISSED_TINT_ALPHA_DARK = 0.25;
+
+/**
+ * Faint neutral fill for days before the habit existed. Kept visible (not
+ * transparent) so the grid reads as a complete rectangle of boxes — like
+ * HabitKit — while staying clearly fainter and un-tinted vs. "missed" days.
+ */
+const BEFORE_CREATION_LIGHT = 'rgba(0, 0, 0, 0.05)';
+const BEFORE_CREATION_DARK = 'rgba(255, 255, 255, 0.06)';
+
+/**
+ * Determines the background color for a heatmap cell.
+ *
+ * Cells are monochromatic — every state is derived from the habit's own color:
+ * - done            → solid habit color
+ * - missed / future → faint tint of the habit color (future is further dimmed
+ *                      via opacity by the renderer)
+ * - beforeCreation  → faint neutral box (visible placeholder, no habit tint)
+ * - null padding    → transparent
+ *
+ * @param isDark - current theme; controls tint strength for visibility
  */
 export function getCellBackgroundColor(
   day: BinaryDay | null,
-  habitColor: string
+  habitColor: string,
+  isDark: boolean = false
 ): string {
   if (day === null) {
     return 'transparent';
   }
   if (day.isBeforeCreation) {
-    return COLORS.CELL_BEFORE_CREATION;
-  }
-  if (day.isFuture) {
-    return COLORS.CELL_FUTURE;
+    return isDark ? BEFORE_CREATION_DARK : BEFORE_CREATION_LIGHT;
   }
   if (day.completed) {
     return habitColor;
   }
-  return COLORS.CELL_EMPTY;
+  const alpha = isDark ? MISSED_TINT_ALPHA_DARK : MISSED_TINT_ALPHA_LIGHT;
+  return hexToRgba(habitColor, alpha);
 }
 
 /**

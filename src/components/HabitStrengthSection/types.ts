@@ -7,7 +7,10 @@
  * @see habit-strength-redesign-spec.md for design details
  */
 
+import type { ProgressEmojiSet } from '@/utils/progressEmojis';
+
 import type { StrengthLabel, StrengthSnapshot } from '../HabitStrengthHistory/types';
+import type { StrengthJourney } from './journey';
 
 /**
  * Time range options for filtering strength history.
@@ -39,6 +42,13 @@ export interface HabitStrengthSectionProps {
    * This ensures consistency with HabitCard which uses habit.strength.
    */
   habitStrength?: number;
+
+  /**
+   * Resolved 5-level progress emoji set (per-habit override → user default →
+   * built-in). Drives the ring, milestone track, and next-level copy so they
+   * match whatever icon set the user picked.
+   */
+  progressEmojis: ProgressEmojiSet;
 }
 
 /**
@@ -59,17 +69,8 @@ export interface StrengthHeroProps {
   /** Current strength percentage (0-100) */
   strength: number;
 
-  /** Strength label (weak/developing/strong) */
-  label: StrengthLabel;
-
-  /** Change vs previous period (e.g., "+12%") */
-  delta: number;
-
-  /** Delta comparison period label (e.g., "vs last month") */
-  deltaLabel: string;
-
-  /** Optional custom color override */
-  color?: string;
+  /** Resolved journey with the user's chosen emojis and per-level colors */
+  journey: StrengthJourney;
 }
 
 /**

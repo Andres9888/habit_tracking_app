@@ -15,22 +15,27 @@ import { durations } from '@/theme/animations';
 import { useThemeColors } from '@/theme/ThemeContext';
 
 import { useReduceMotion } from '../../hooks/useReduceMotion';
-import { shadows, spacing } from '../../theme/spacing';
+import { shadows } from '../../theme/spacing';
 import { typography } from '../../theme/typography';
-import { SkeletonLoader } from '../SkeletonLoader/SkeletonLoader';
+import { StrengthProgressBar } from '../StrengthProgressBar';
 import { getThemeColors } from './constants';
 import { useHabitStrengthData } from './HabitStrengthSection.hooks';
+import { getStrengthJourney } from './journey';
+import { MilestoneTrack } from './MilestoneTrack';
 import { StrengthChart } from './StrengthChart';
+import { StrengthEmptyState } from './StrengthEmptyState';
 import { StrengthHero } from './StrengthHero';
+import { StrengthSkeleton } from './StrengthSkeleton';
 import { StrengthStatsRow } from './StrengthStatsRow';
 import { TimeRangeToggle } from './TimeRangeToggle';
+import { TrendMessage } from './TrendMessage';
 import type { HabitStrengthSectionProps } from './types';
 
 export const HabitStrengthSection = React.memo(function HabitStrengthSection({
   completedDates,
   habitCreatedAt,
-  habitColor,
   habitStrength,
+  progressEmojis,
 }: HabitStrengthSectionProps) {
   const { colors: themeColors } = useThemeColors();
   const sectionColors = getThemeColors(themeColors);
@@ -42,71 +47,17 @@ export const HabitStrengthSection = React.memo(function HabitStrengthSection({
     isCalculating,
     isEmpty,
     setTimeRange,
-    strengthLabel,
     timeRange,
   } = useHabitStrengthData({ completedDates, habitCreatedAt, habitStrength });
 
-  if (isCalculating) {
-    return (
-      <View
-        accessible
-        accessibilityLabel='Calculating habit strength'
-        accessibilityRole='progressbar'
-        className='rounded-2xl p-5 shadow-sm'
-        style={{ backgroundColor: themeColors.card }}
-      >
-        <View className='mb-4 flex-row items-center justify-between'>
-          <SkeletonLoader borderRadius={6} height={20} reduceMotion={reduceMotion} width={140} />
-          <SkeletonLoader borderRadius={999} height={28} reduceMotion={reduceMotion} width={120} />
-        </View>
-        <View className='mb-5 flex-row items-end gap-3'>
-          <SkeletonLoader borderRadius={8} height={44} reduceMotion={reduceMotion} width={120} />
-          <SkeletonLoader borderRadius={6} height={14} reduceMotion={reduceMotion} width={80} />
-        </View>
-        <SkeletonLoader borderRadius={12} height={120} reduceMotion={reduceMotion} />
-        <View className='mt-4 flex-row gap-3'>
-          <SkeletonLoader borderRadius={6} height={40} reduceMotion={reduceMotion} width='30%' />
-          <SkeletonLoader borderRadius={6} height={40} reduceMotion={reduceMotion} width='30%' />
-          <SkeletonLoader borderRadius={6} height={40} reduceMotion={reduceMotion} width='30%' />
-        </View>
-      </View>
-    );
-  }
+  // The journey reads as level progression, so the ring + chart follow the
+  // current level's color (shown across StrengthProgressBar and HabitCard too).
+  const journey = getStrengthJourney(currentStrength, progressEmojis);
+  const stageColor = journey.current.color;
 
-  if (isEmpty) {
-    return (
-      <View className='rounded-2xl p-5 shadow-sm' style={{ backgroundColor: themeColors.card }}>
-        <Text style={{ ...typography.heading3, marginBottom: spacing.sm, color: themeColors.text.primary }}>
-          Habit Strength
-        </Text>
-        <View
-          className='items-center rounded-2xl px-6 py-8'
-          style={{
-            backgroundColor: themeColors.background,
-            borderColor: themeColors.border,
-            borderStyle: 'dashed',
-            borderWidth: 1,
-          }}
-        >
-          <View
-            className='mb-3 h-14 w-14 items-center justify-center rounded-full'
-            style={{ backgroundColor: themeColors.card }}
-          >
-            <Text className='text-3xl'>🌱</Text>
-          </View>
-          <Text style={{ ...typography.heading3, color: themeColors.text.primary, textAlign: 'center' }}>
-            Not enough data yet
-          </Text>
-          <Text
-            className='mt-1 text-center'
-            style={{ color: themeColors.text.secondary, maxWidth: 260 }}
-          >
-            Complete your first day to start building strength.
-          </Text>
-        </View>
-      </View>
-    );
-  }
+  if (isCalculating) return <StrengthSkeleton />;
+
+  if (isEmpty) return <StrengthEmptyState startingEmoji={progressEmojis.starting} />;
 
   return (
     <Animated.View
@@ -127,24 +78,35 @@ export const HabitStrengthSection = React.memo(function HabitStrengthSection({
           <TimeRangeToggle value={timeRange} onChange={setTimeRange} />
         </View>
 
+        <View className='mb-5'>
+          <StrengthHero journey={journey} strength={currentStrength} />
+        </View>
+
         <View className='mb-4'>
-          <StrengthHero
-            color={habitColor}
-            delta={extendedMetrics.deltaVsMonth}
-            deltaLabel='vs last month'
-            label={strengthLabel}
+          <MilestoneTrack currentIndex={journey.index} levels={journey.levels} />
+        </View>
+
+        <View className='mb-5'>
+          <StrengthProgressBar
+            emojiOverrides={progressEmojis}
+            showLabel={false}
+            showNextLevel
+            showPercentage={false}
+            size='large'
             strength={currentStrength}
           />
         </View>
 
-        <View className='-mx-5 mb-4'>
+        <View className='-mx-5 mb-3'>
           <StrengthChart
-            color={habitColor}
+            color={stageColor}
             currentStrength={currentStrength}
             data={chartData}
             timeRange={timeRange}
           />
         </View>
+
+        <TrendMessage delta={extendedMetrics.deltaVsMonth} />
 
         <StrengthStatsRow
           lastMonth={extendedMetrics.deltaVsMonth}

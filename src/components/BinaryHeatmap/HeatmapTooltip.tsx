@@ -56,7 +56,12 @@ export const HeatmapTooltip = memo(function HeatmapTooltip({
 
   if (!visible) return null;
 
-  const tooltipStyle = { left: position.x, top: position.y - TOOLTIP.OFFSET };
+  // Anchor above the tapped cell so the downward arrow points back at it.
+  // ~30px tooltip body + arrow, lifted clear of the finger.
+  const tooltipStyle = {
+    left: position.x,
+    top: position.y - 30 - TOOLTIP.OFFSET,
+  };
 
   return (
     <Modal
