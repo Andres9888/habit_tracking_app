@@ -27,8 +27,9 @@ export function SettingsSection({
 
   const cardStyle = {
     backgroundColor: hc ? highContrastColors.background : themeColors.card,
-    borderColor: hc ? highContrastColors.border : undefined,
-    borderWidth: hc ? 1 : 0,
+    // Hairline border on every card so sections read as distinct, premium planes
+    borderColor: hc ? highContrastColors.border : themeColors.border,
+    borderWidth: 1,
     ...(hc ? { elevation: 0, shadowColor: 'transparent' } : shadows.card),
   };
 

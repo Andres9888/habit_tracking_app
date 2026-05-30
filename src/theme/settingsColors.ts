@@ -20,79 +20,68 @@ interface IconColor {
   bg: string;
 }
 
-/** Dark mode settings colors - darker backgrounds with brighter icons */
-export const darkSettingsColors: SettingsColors = {
-  // Preferences
-  checkbox: { icon: '#fbbf24', bg: '#3b2a10' },
-  compact: { icon: '#fb7185', bg: '#4c1d2c' },
-  circle: { icon: '#93c5fd', bg: '#1e3a5f' },
-  gradient: { icon: '#6ee7b7', bg: '#0f3b31' },
-  sound: { icon: '#fbbf24', bg: '#3b2a10' },
-  calendarHeader: { icon: '#d6d3d1', bg: '#2c2824' },
-  strength: { icon: '#a78bfa', bg: '#31214b' },
-  // Data
-  sort: { icon: '#c4b5fd', bg: '#31214b' },
-  export: { icon: '#6ee7b7', bg: '#0f3b31' },
-  archive: { icon: '#d6d3d1', bg: '#2c2824' },
-  // Notifications
-  bell: { icon: '#fdba74', bg: '#4a2410' },
-  clock: { icon: '#93c5fd', bg: '#1e3a5f' },
-  premiumTime: { icon: '#fbbf24', bg: '#3b2a10' },
-  // Account
-  user: { icon: '#6ee7b7', bg: '#0f3b31' },
-  signOut: { icon: '#fca5a5', bg: '#4b1f1f' },
-  deleteAccount: { icon: '#fca5a5', bg: '#4b1f1f' },
-  // Premium
-  crown: { icon: '#fbbf24', bg: '#3b2a10' },
-  zap: { icon: '#c4b5fd', bg: '#31214b' },
-  manageSub: { icon: '#c4b5fd', bg: '#31214b' },
-  // App
-  star: { icon: '#fbbf24', bg: '#3b2a10' },
-  share: { icon: '#6ee7b7', bg: '#0f3b31' },
-  feedback: { icon: '#93c5fd', bg: '#1e3a5f' },
-  whatsNew: { icon: '#c4b5fd', bg: '#31214b' },
-  // Legal
-  legal: { icon: '#d6d3d1', bg: '#2c2824' },
-  // About
-  info: { icon: '#d6d3d1', bg: '#2c2824' },
-};
+/**
+ * Calm brand-tint palette: one soft forest-green tile (green glyph on a pale
+ * green surface) for all rows. Warm and unmistakably on-brand without the old
+ * rainbow of saturated hues — color stays cohesive and premium. Reserved for
+ * STATE (switches, the account hero) plus DESTRUCTIVE actions, which stay
+ * red-tinted so they remain instantly distinguishable.
+ */
+const lightTint: IconColor = { icon: '#047857', bg: '#E2F1EA' };
+const lightDestructive: IconColor = { icon: '#B53030', bg: '#FEE2E2' };
+const darkTint: IconColor = { icon: '#34D399', bg: 'rgba(52,211,153,0.14)' };
+const darkDestructive: IconColor = { icon: '#FCA5A5', bg: '#4B1F1F' };
 
-/** Light mode settings colors - light backgrounds with colored icons */
-export const lightSettingsColors: SettingsColors = {
+const buildSettingsColors = (
+  base: IconColor,
+  destructive: IconColor
+): SettingsColors => ({
   // Preferences
-  checkbox: { icon: '#a16207', bg: '#fef3c7' },
-  compact: { icon: '#be123c', bg: '#ffe4e6' },
-  circle: { icon: '#1d4ed8', bg: '#dbeafe' },
-  gradient: { icon: '#047857', bg: '#d1fae5' },
-  sound: { icon: '#b45309', bg: '#fef3c7' },
-  calendarHeader: { icon: '#57534e', bg: '#f5f5f4' },
-  strength: { icon: '#7c3aed', bg: '#ede9fe' },
+  checkbox: base,
+  compact: base,
+  circle: base,
+  gradient: base,
+  sound: base,
+  calendarHeader: base,
+  strength: base,
   // Data
-  sort: { icon: '#6d28d9', bg: '#ede9fe' },
-  export: { icon: '#047857', bg: '#d1fae5' },
-  archive: { icon: '#78716c', bg: '#e7e5e4' },
+  sort: base,
+  export: base,
+  archive: base,
   // Notifications
-  bell: { icon: '#c2410c', bg: '#ffedd5' },
-  clock: { icon: '#1d4ed8', bg: '#dbeafe' },
-  premiumTime: { icon: '#a16207', bg: '#fef3c7' },
+  bell: base,
+  clock: base,
+  premiumTime: base,
   // Account
-  user: { icon: '#047857', bg: '#d1fae5' },
-  signOut: { icon: '#b53030', bg: '#fee2e2' },
-  deleteAccount: { icon: '#b53030', bg: '#fee2e2' },
+  user: base,
+  signOut: destructive,
+  deleteAccount: destructive,
   // Premium
-  crown: { icon: '#a16207', bg: '#fef3c7' },
-  zap: { icon: '#6d28d9', bg: '#ede9fe' },
-  manageSub: { icon: '#6d28d9', bg: '#ede9fe' },
+  crown: base,
+  zap: base,
+  manageSub: base,
   // App
-  star: { icon: '#a16207', bg: '#fef3c7' },
-  share: { icon: '#047857', bg: '#d1fae5' },
-  feedback: { icon: '#1d4ed8', bg: '#dbeafe' },
-  whatsNew: { icon: '#6d28d9', bg: '#ede9fe' },
+  star: base,
+  share: base,
+  feedback: base,
+  whatsNew: base,
   // Legal
-  legal: { icon: '#78716c', bg: '#e7e5e4' },
+  legal: base,
   // About
-  info: { icon: '#78716c', bg: '#e7e5e4' },
-};
+  info: base,
+});
+
+/** Dark mode settings colors — soft brand-green tiles, destructive stays red */
+export const darkSettingsColors: SettingsColors = buildSettingsColors(
+  darkTint,
+  darkDestructive
+);
+
+/** Light mode settings colors — soft brand-green tiles, destructive stays red */
+export const lightSettingsColors: SettingsColors = buildSettingsColors(
+  lightTint,
+  lightDestructive
+);
 
 /** Settings color type definition */
 export interface SettingsColors {
