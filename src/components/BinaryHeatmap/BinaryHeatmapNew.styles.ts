@@ -11,7 +11,7 @@ import {
   DAY_LABEL_WIDTH,
   MONTH_LABEL,
 } from './constants';
-import { borderRadius } from '../../theme/spacing';
+import { borderRadius, shadows } from '../../theme/spacing';
 import { typography, fontWeights, fontFamilies } from '../../theme/typography';
 
 export const styles = StyleSheet.create({
@@ -22,9 +22,13 @@ export const styles = StyleSheet.create({
     width: CELL_SIZE,
   },
   container: {
+    ...shadows.card,
+    alignSelf: 'stretch',
     backgroundColor: COLORS.CARD_BACKGROUND,
-    borderRadius: borderRadius.medium,
+    borderRadius: borderRadius.large,
+    borderWidth: 1,
     padding: 16,
+    width: '100%',
   },
   dayLabelCell: {
     alignItems: 'center',
@@ -67,6 +71,21 @@ export const styles = StyleSheet.create({
     fontFamily: fontFamilies.primary.text,
     fontSize: typography.bodySmall.fontSize,
     fontWeight: fontWeights.semibold,
+  },
+  headerStat: {
+    alignItems: 'flex-end',
+  },
+  headerStatCount: {
+    color: COLORS.TEXT_SECONDARY,
+    fontFamily: fontFamilies.primary.text,
+    fontSize: typography.tabBar.fontSize,
+    marginTop: 1,
+  },
+  headerStatPct: {
+    fontFamily: fontFamilies.monospace,
+    fontSize: 18,
+    fontWeight: fontWeights.semibold,
+    lineHeight: 20,
   },
   monthLabel: {
     color: COLORS.TEXT_SECONDARY,

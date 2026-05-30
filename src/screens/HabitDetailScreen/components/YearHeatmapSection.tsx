@@ -1,8 +1,6 @@
 import React from 'react';
 import Animated, { Easing, FadeInUp } from 'react-native-reanimated';
 import { BinaryHeatmap } from '../../../components/BinaryHeatmap';
-import { useThemeColors } from '../../../theme';
-import { shadows } from '../../../theme/spacing';
 import type { Id } from '../../../../convex/_generated/dataModel';
 
 interface YearHeatmapSectionProps {
@@ -22,22 +20,15 @@ export function YearHeatmapSection({
   habitId,
   onDayPress,
 }: YearHeatmapSectionProps) {
-  const { colors } = useThemeColors();
-  const cardBg = colors.card;
-
   return (
-    <Animated.View
-      className='mb-3 overflow-hidden rounded-2xl'
-      entering={anim}
-      style={{ backgroundColor: cardBg, ...shadows.card }}
-    >
+    <Animated.View className='mb-4' entering={anim}>
       <BinaryHeatmap
         completedDates={completedDates}
         currentStreak={0}
         habitColor={habitColor}
         habitCreatedAt={habitCreatedAt}
         habitId={habitId}
-        showCompletionRate={false}
+        showCompletionRate
         timeRange='1y'
         title='Year Overview'
         onDayPress={onDayPress}

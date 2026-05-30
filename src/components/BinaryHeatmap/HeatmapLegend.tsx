@@ -17,6 +17,7 @@ import { spacing } from '@/theme/spacing';
 import { useThemeColors } from '@/theme/ThemeContext';
 import type { HeatmapLegendProps } from './types';
 import { LEGEND_INDICATOR_SIZE, COLORS, CELL_BORDER_RADIUS } from './constants';
+import { hexToRgba } from './MonthlyCalendarGrid/colors';
 
 /**
  * Format completion rate as a rounded percentage string
@@ -39,7 +40,8 @@ export const HeatmapLegend = memo(function HeatmapLegend({
   completionRate,
   showCompletionRate = true,
 }: HeatmapLegendProps) {
-  const { colors: themeColors } = useThemeColors();
+  const { colors: themeColors, isDark } = useThemeColors();
+  const missedTint = hexToRgba(habitColor, isDark ? 0.25 : 0.15);
   return (
     <View
       accessible
@@ -57,10 +59,7 @@ export const HeatmapLegend = memo(function HeatmapLegend({
           style={styles.indicator}
         >
           <View
-            style={[
-              styles.indicatorSquare,
-              { backgroundColor: COLORS.CELL_EMPTY },
-            ]}
+            style={[styles.indicatorSquare, { backgroundColor: missedTint }]}
           />
           <Text style={[styles.indicatorLabel, { color: themeColors.text.secondary }]}>Missed</Text>
         </View>
