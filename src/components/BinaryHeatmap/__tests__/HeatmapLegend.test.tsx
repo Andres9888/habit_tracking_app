@@ -7,11 +7,6 @@
 import React from 'react';
 import { render } from '@testing-library/react-native';
 import { HeatmapLegend } from '../HeatmapLegend';
-import {
-  COLORS,
-  LEGEND_INDICATOR_SIZE,
-  CELL_BORDER_RADIUS,
-} from '../constants';
 
 describe('HeatmapLegend', () => {
   const defaultProps = {
@@ -35,7 +30,7 @@ describe('HeatmapLegend', () => {
     it('should render completion percentage', () => {
       const { getByText } = render(<HeatmapLegend {...defaultProps} />);
 
-      expect(getByText('86% compl')).toBeTruthy();
+      expect(getByText('86% completion')).toBeTruthy();
     });
 
     it('should render both indicators and percentage simultaneously', () => {
@@ -44,7 +39,7 @@ describe('HeatmapLegend', () => {
       // All three elements should be present
       expect(getByText('Missed')).toBeTruthy();
       expect(getByText('Done')).toBeTruthy();
-      expect(getByText('86% compl')).toBeTruthy();
+      expect(getByText('86% completion')).toBeTruthy();
     });
   });
 
@@ -54,7 +49,7 @@ describe('HeatmapLegend', () => {
         <HeatmapLegend habitColor='#10b981' completionRate={85.7} />
       );
 
-      expect(getByText('86% compl')).toBeTruthy();
+      expect(getByText('86% completion')).toBeTruthy();
     });
 
     it('should handle 0% completion', () => {
@@ -62,7 +57,7 @@ describe('HeatmapLegend', () => {
         <HeatmapLegend habitColor='#10b981' completionRate={0} />
       );
 
-      expect(getByText('0% compl')).toBeTruthy();
+      expect(getByText('0% completion')).toBeTruthy();
     });
 
     it('should handle 100% completion', () => {
@@ -70,7 +65,7 @@ describe('HeatmapLegend', () => {
         <HeatmapLegend habitColor='#10b981' completionRate={100} />
       );
 
-      expect(getByText('100% compl')).toBeTruthy();
+      expect(getByText('100% completion')).toBeTruthy();
     });
 
     it('should round down 49.4 to 49%', () => {
@@ -78,7 +73,7 @@ describe('HeatmapLegend', () => {
         <HeatmapLegend habitColor='#10b981' completionRate={49.4} />
       );
 
-      expect(getByText('49% compl')).toBeTruthy();
+      expect(getByText('49% completion')).toBeTruthy();
     });
 
     it('should round up 49.5 to 50%', () => {
@@ -86,7 +81,7 @@ describe('HeatmapLegend', () => {
         <HeatmapLegend habitColor='#10b981' completionRate={49.5} />
       );
 
-      expect(getByText('50% compl')).toBeTruthy();
+      expect(getByText('50% completion')).toBeTruthy();
     });
 
     it('should handle single digit percentages', () => {
@@ -94,7 +89,7 @@ describe('HeatmapLegend', () => {
         <HeatmapLegend habitColor='#10b981' completionRate={5} />
       );
 
-      expect(getByText('5% compl')).toBeTruthy();
+      expect(getByText('5% completion')).toBeTruthy();
     });
   });
 
@@ -229,11 +224,11 @@ describe('HeatmapLegend', () => {
         <HeatmapLegend habitColor='#10b981' completionRate={50} />
       );
 
-      expect(getByText('50% compl')).toBeTruthy();
+      expect(getByText('50% completion')).toBeTruthy();
 
       rerender(<HeatmapLegend habitColor='#10b981' completionRate={75} />);
 
-      expect(getByText('75% compl')).toBeTruthy();
+      expect(getByText('75% completion')).toBeTruthy();
     });
 
     it('should handle both props changing simultaneously', () => {
@@ -241,11 +236,11 @@ describe('HeatmapLegend', () => {
         <HeatmapLegend habitColor='#10b981' completionRate={50} />
       );
 
-      expect(getByText('50% compl')).toBeTruthy();
+      expect(getByText('50% completion')).toBeTruthy();
 
       rerender(<HeatmapLegend habitColor='#ef4444' completionRate={100} />);
 
-      expect(getByText('100% compl')).toBeTruthy();
+      expect(getByText('100% completion')).toBeTruthy();
     });
   });
 
@@ -255,7 +250,7 @@ describe('HeatmapLegend', () => {
         <HeatmapLegend habitColor='#10b981' completionRate={1} />
       );
 
-      expect(getByText('1% compl')).toBeTruthy();
+      expect(getByText('1% completion')).toBeTruthy();
     });
 
     it('should handle very high completion rate (99%)', () => {
@@ -263,7 +258,7 @@ describe('HeatmapLegend', () => {
         <HeatmapLegend habitColor='#10b981' completionRate={99} />
       );
 
-      expect(getByText('99% compl')).toBeTruthy();
+      expect(getByText('99% completion')).toBeTruthy();
     });
 
     it('should handle completion rate just above 0 (0.4)', () => {
@@ -271,7 +266,7 @@ describe('HeatmapLegend', () => {
         <HeatmapLegend habitColor='#10b981' completionRate={0.4} />
       );
 
-      expect(getByText('0% compl')).toBeTruthy();
+      expect(getByText('0% completion')).toBeTruthy();
     });
 
     it('should handle completion rate just below 100 (99.9)', () => {
@@ -279,7 +274,7 @@ describe('HeatmapLegend', () => {
         <HeatmapLegend habitColor='#10b981' completionRate={99.9} />
       );
 
-      expect(getByText('100% compl')).toBeTruthy();
+      expect(getByText('100% completion')).toBeTruthy();
     });
   });
 
@@ -298,7 +293,7 @@ describe('HeatmapLegend', () => {
       // Both text elements should exist (order is handled by flexbox)
       expect(getByText('Missed')).toBeTruthy();
       expect(getByText('Done')).toBeTruthy();
-      expect(getByText('86% compl')).toBeTruthy();
+      expect(getByText('86% completion')).toBeTruthy();
     });
   });
 });
