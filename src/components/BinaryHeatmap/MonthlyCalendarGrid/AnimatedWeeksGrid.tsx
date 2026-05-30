@@ -9,9 +9,9 @@ import type { DayData } from './types';
 interface AnimatedWeeksGridProps {
   direction: 'left' | 'right';
   habitColor: string;
+  completedBg: string;
   monthKey: string;
   onPress: (dateString: string, isCompleted: boolean) => void;
-  showChain: boolean;
   textColors: { muted: string; primary: string; tertiary: string };
   weeks: DayData[][];
 }
@@ -19,9 +19,9 @@ interface AnimatedWeeksGridProps {
 export const AnimatedWeeksGrid = memo(function AnimatedWeeksGrid({
   direction,
   habitColor,
+  completedBg,
   monthKey,
   onPress,
-  showChain,
   textColors,
   weeks,
 }: AnimatedWeeksGridProps) {
@@ -54,8 +54,7 @@ export const AnimatedWeeksGrid = memo(function AnimatedWeeksGrid({
           <View key={`week-${weekIndex}`} style={styles.row}>
             <ChainConnectors
               week={week}
-              habitColor={habitColor}
-              visible={showChain}
+              completedBg={completedBg}
               rowWidth={rowWidth}
             />
             {(week ?? []).map((day) => (
@@ -63,6 +62,7 @@ export const AnimatedWeeksGrid = memo(function AnimatedWeeksGrid({
                 key={day.dateString}
                 day={day}
                 habitColor={habitColor}
+                completedBg={completedBg}
                 textColors={textColors}
                 onPress={onPress}
               />

@@ -23,7 +23,7 @@ export const styles = StyleSheet.create({
   },
   dayCell: {
     alignItems: 'center',
-    borderRadius: borderRadius.small,
+    borderRadius: borderRadius.medium,
     height: 36,
     justifyContent: 'center',
     width: 36,
@@ -105,13 +105,6 @@ export const styles = StyleSheet.create({
   },
   weeksPage: {
     height: MONTH_GRID_HEIGHT,
-  },
-  streakCircle: {
-    borderRadius: borderRadius.xs,
-    bottom: 3,
-    height: 6,
-    position: 'absolute',
-    width: 6,
   },
   todayText: {
     fontWeight: fontWeights.bold,

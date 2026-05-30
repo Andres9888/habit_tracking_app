@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Calendar Chain — HabitKit-inspired (recommended)</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { font-family: 'Inter', sans-serif; }
+  body { background: #ece7e0; }
+  .phone { width: 390px; border-radius: 28px; padding: 20px; }
+  .card { border-radius: 20px; border-width: 1px; padding: 18px; }
+  .lab { font-size: 11px; letter-spacing: .4px; text-transform: uppercase; font-weight: 600; }
+  .cell { width: 42px; height: 44px; border-radius: 13px; display:flex; flex-direction:column; align-items:center; justify-content:center; position:relative; gap:3px; }
+  .num { font-size: 15px; font-weight: 700; line-height: 1; }
+  .dot { width: 5px; height: 5px; border-radius: 50%; }
+  .hmcell { width: 9px; height: 9px; border-radius: 2.5px; }
+  .stat { flex:1; display:flex; flex-direction:column; align-items:center; gap:2px; }
+  .stat .v { font-size:17px; font-weight:800; }
+  .stat .k { font-size:10px; letter-spacing:.3px; text-transform:uppercase; font-weight:600; }
+</style>
+</head>
+<body class="min-h-screen py-10 px-6">
+  <div class="max-w-6xl mx-auto">
+    <h1 class="text-2xl font-bold text-stone-800 mb-1">HabitKit-inspired — Heatmap + Calm Calendar + Insight <span class="text-base font-semibold text-emerald-700">(recommended)</span></h1>
+    <p class="text-stone-500 mb-8 max-w-2xl">Density lives in the heatmap on top. The calendar stays calm: only <em>completed</em> days get a soft tint + tiny dot, missed days are just the number, today gets a ring. The insight strip adds the motivation HabitKit's screen omits. No marks on empty days, no chain toggle.</p>
+    <div class="flex flex-wrap gap-8 justify-center">
+      <div id="light"></div>
+      <div id="dark"></div>
+    </div>
+  </div>
+<script>
+const COMPLETED=new Set([1,2,3,4,5,6,7,8,9,10,13,14,15,20,21,22,23,24,25,26]);
+const TODAY=26, Y=2026, M=4;
+const WD=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+
+function buildCells(){
+  const first=new Date(Y,M,1), off=(first.getDay()+6)%7, start=new Date(Y,M,1-off), cells=[];
+  for(let i=0;i<42;i++){ const d=new Date(start); d.setDate(start.getDate()+i);
+    const cur=d.getMonth()===M, n=d.getDate();
+    const completed=cur&&COMPLETED.has(n), today=cur&&n===TODAY, future=cur&&n>TODAY, missed=cur&&!completed&&!future;
+    cells.push({n,cur,completed,today,future,missed,dow:(d.getDay()+6)%7}); }
+  return cells;
+}
+function stats(cells){
+  let cs=0; for(let n=TODAY;n>=1;n--){ if(COMPLETED.has(n)) cs++; else break; }
+  const arr=[...COMPLETED].sort((a,b)=>a-b); let best=0,run=0,prev=null;
+  arr.forEach(n=>{ run=(prev!==null&&n===prev+1)?run+1:1; best=Math.max(best,run); prev=n; });
+  const done=arr.filter(n=>n<=TODAY).length, rate=Math.round(done/TODAY*100);
+  const cnt=[0,0,0,0,0,0,0]; cells.forEach(c=>{ if(c.completed) cnt[c.dow]++; });
+  let bi=0; cnt.forEach((v,i)=>{ if(v>cnt[bi]) bi=i; });
+  return {cs,best,rate,strong:WD[bi]};
+}
+// deterministic pseudo-random for heatmap intensity
+function rnd(i){ const x=Math.sin(i*12.9898)*43758.5453; return x-Math.floor(x); }
+
+const T={
+  light:{ phone:'#F5F1ED', card:'#FFFFFF', border:'#DDD8D2', primary:'#2D2A26', sec:'#6B6560', ter:'#A8A29A', habit:'#059669', tint:'rgba(5,150,105,.13)', dot:'#059669', empty:'#EFEAE3', gold:'#936A08', goldbg:'#FBF3DF', divider:'#EDE8E1' },
+  dark:{ phone:'#0B1220', card:'#1F2937', border:'#374151', primary:'#F9FAFB', sec:'#9CA3AF', ter:'#6B7280', habit:'#34D399', tint:'rgba(52,211,153,.18)', dot:'#34D399', empty:'#283341', gold:'#E8B94D', goldbg:'#2A2616', divider:'#2A3340' }
+};
+function mix(hex,t){ return hex; }
+
+function heatmap(c){
+  const weeks=20, days=7, months=['Jan','Feb','Mar','Apr','May'];
+  let h=`<div class="mb-1 flex" style="padding-left:18px;gap:34px">`;
+  months.forEach(m=>h+=`<span class="lab" style="color:${c.ter}">${m}</span>`);
+  h+=`</div><div style="display:flex;gap:6px">`;
+  // left weekday labels
+  h+=`<div style="display:flex;flex-direction:column;justify-content:space-between;height:${days*12-3}px;padding:1px 0">`;
+  ['Mon','Wed','Fri'].forEach(d=>h+=`<span class="lab" style="color:${c.ter};font-size:9px">${d[0]}</span>`);
+  h+=`</div>`;
+  h+=`<div style="display:grid;grid-template-rows:repeat(7,9px);grid-auto-flow:column;grid-auto-columns:9px;gap:3px">`;
+  for(let i=0;i<weeks*days;i++){
+    const r=rnd(i+1);
+    let bg=c.empty;
+    if(r>0.45){ const intensity = r>0.85?1 : r>0.68?0.6 : 0.32; bg=`color-mix(in srgb, ${c.habit} ${Math.round(intensity*100)}%, ${c.empty})`; }
+    h+=`<div class="hmcell" style="background:${bg}"></div>`;
+  }
+  h+=`</div></div>`;
+  return h;
+}
+
+function render(mode){
+  const c=T[mode], cells=buildCells(), s=stats(cells);
+  let html=`<div class="phone" style="background:${c.phone}">`;
+  html+=`<div class="text-center mb-3 lab" style="color:${c.ter}">${mode} mode</div>`;
+  html+=`<div class="card" style="background:${c.card};border-color:${c.border}">`;
+
+  // 1) Heatmap "month map"
+  html+=`<div class="lab mb-2" style="color:${c.sec}">Year overview</div>`;
+  html+=heatmap(c);
+
+  // divider
+  html+=`<div style="height:1px;background:${c.divider};margin:16px 0"></div>`;
+
+  // 2) Calendar header
+  html+=`<div class="flex items-center justify-between mb-3">
+    <span style="color:${c.primary};font-weight:700;font-size:16px">May 2026</span>
+    <div class="flex items-center gap-2">
+      <div class="flex items-center gap-1 px-2.5 py-1 rounded-full" style="background:${c.goldbg}">
+        <span style="font-size:13px">🔥</span><span style="color:${c.gold};font-weight:700;font-size:13px">${s.cs}</span></div>
+      <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="border:1px solid ${c.border};color:${c.sec}">‹</div>
+      <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="border:1px solid ${c.border};color:${c.sec}">›</div>
+    </div></div>`;
+  html+=`<div class="grid grid-cols-7 mb-1">`;
+  WD.forEach(d=>html+=`<div class="text-center lab" style="color:${c.ter}">${d}</div>`);
+  html+=`</div>`;
+  html+=`<div class="grid grid-cols-7 justify-items-center">`;
+  cells.forEach(cell=>{
+    if(!cell.cur){ html+=`<div class="cell"><span class="num" style="color:${c.ter};opacity:.3">${cell.n}</span></div>`; return; }
+    let bg='',txt=c.primary,dot='';
+    if(cell.completed){ bg=`background:${c.tint}`; dot=`<div class="dot" style="background:${c.dot}"></div>`; }
+    else if(cell.future){ txt=c.ter; }
+    else if(cell.missed){ txt=c.sec; }
+    let ring = cell.today ? `box-shadow:inset 0 0 0 2px ${c.habit}` : '';
+    html+=`<div class="cell" style="${bg};${ring}"><span class="num" style="color:${txt}">${cell.n}</span>${dot||'<div class="dot" style="background:transparent"></div>'}</div>`;
+  });
+  html+=`</div>`;
+
+  // 3) Insight strip
+  html+=`<div class="flex items-stretch mt-3 pt-4" style="border-top:1px solid ${c.divider}">`;
+  const items=[
+    {v:`🔥 ${s.cs}`, k:'Streak', col:c.gold},
+    {v:s.strong, k:'Strongest', col:c.primary},
+    {v:`${s.rate}%`, k:'This month', col:c.primary},
+    {v:s.best, k:'Best run', col:c.primary},
+  ];
+  items.forEach((it,i)=>{
+    html+=`<div class="stat"><span class="v" style="color:${it.col}">${it.v}</span><span class="k" style="color:${c.ter}">${it.k}</span></div>`;
+    if(i<items.length-1) html+=`<div style="width:1px;background:${c.divider};margin:2px 0"></div>`;
+  });
+  html+=`</div>`;
+
+  html+=`</div></div>`;
+  return html;
+}
+document.getElementById('light').innerHTML=render('light');
+document.getElementById('dark').innerHTML=render('dark');
+</script>
+</body>
+</html>

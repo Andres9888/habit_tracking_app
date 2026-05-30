@@ -1,18 +1,23 @@
-import React, { useEffect, memo } from 'react';
+/**
+ * ChainConnectors
+ *
+ * Always-on, calm "soft ribbon": fills the gap between consecutive completed
+ * days in a week row with the same solid tint as the day cells, so a run reads
+ * as one continuous rounded pill. Misses break the ribbon — that gap is the
+ * "don't break the chain" cue. Rendered behind the cells (no own color beyond
+ * the shared tint), so it adds the chain back without reintroducing clutter.
+ */
+
+import React, { memo } from 'react';
 import { View, StyleSheet } from 'react-native';
-import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withTiming,
-} from 'react-native-reanimated';
 import type { DayData } from './types';
 
 const CELL_SIZE = 36;
 
 interface ChainConnectorsProps {
   week: DayData[];
-  habitColor: string;
-  visible: boolean;
+  /** Pre-blended solid tint, identical to the completed cell background. */
+  completedBg: string;
   rowWidth: number;
 }
 
@@ -22,45 +27,31 @@ function isLinkable(d: DayData | undefined): boolean {
 
 export const ChainConnectors = memo(function ChainConnectors({
   week,
-  habitColor,
-  visible,
+  completedBg,
   rowWidth,
 }: ChainConnectorsProps) {
-  const opacity = useSharedValue(visible ? 0.85 : 0);
-
-  useEffect(() => {
-    opacity.value = withTiming(visible ? 0.85 : 0, { duration: 220 });
-  }, [visible, opacity]);
-
-  const animatedStyle = useAnimatedStyle(() => ({ opacity: opacity.value }));
-
-  const segments: number[] = [];
-  for (let i = 0; i < 6; i++) {
-    if (isLinkable(week[i]) && isLinkable(week[i + 1])) {
-      segments.push(i);
-    }
-  }
+  if (rowWidth <= 0) return null;
 
   const pitch = rowWidth / 7;
-  const gapWidth = pitch - CELL_SIZE;
-  const canRender = rowWidth > 0 && gapWidth > 0 && segments.length > 0;
-
-  if (!canRender) return null;
+  const bridges: number[] = [];
+  for (let i = 0; i < 6; i++) {
+    if (isLinkable(week[i]) && isLinkable(week[i + 1])) bridges.push(i);
+  }
+  if (bridges.length === 0) return null;
 
   return (
     <View pointerEvents='none' style={styles.overlay}>
-      {segments.map((i) => (
-        <Animated.View
-          key={`conn-${i}`}
-          style={[
-            styles.connector,
-            {
-              backgroundColor: habitColor,
-              left: (i + 0.5) * pitch + CELL_SIZE / 2,
-              width: gapWidth,
-            },
-            animatedStyle,
-          ]}
+      {bridges.map((i) => (
+        <View
+          key={`bridge-${i}`}
+          style={{
+            backgroundColor: completedBg,
+            height: CELL_SIZE,
+            left: (i + 0.5) * pitch,
+            position: 'absolute',
+            top: 2,
+            width: pitch,
+          }}
         />
       ))}
     </View>
@@ -68,13 +59,5 @@ export const ChainConnectors = memo(function ChainConnectors({
 });
 
 const styles = StyleSheet.create({
-  overlay: {
-    ...StyleSheet.absoluteFillObject,
-  },
-  connector: {
-    position: 'absolute',
-    top: 18,
-    height: 4,
-    borderRadius: 2,
-  },
+  overlay: { ...StyleSheet.absoluteFillObject },
 });

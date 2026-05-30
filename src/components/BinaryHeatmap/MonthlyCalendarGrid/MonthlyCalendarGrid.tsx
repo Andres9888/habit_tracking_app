@@ -8,8 +8,11 @@ import { triggerHaptic } from '@/utils/haptics';
 import type { MonthlyCalendarGridProps } from './types';
 import { styles } from './styles';
 import { useCalendarDays } from './useCalendarDays';
+import { useMonthInsights } from './useMonthInsights';
+import { completedTint } from './chainColors';
 import { AnimatedWeeksGrid } from './AnimatedWeeksGrid';
 import { MonthNavigation } from './MonthNavigation';
+import { MonthInsightStrip } from './MonthInsightStrip';
 
 const DAY_HEADERS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 const HORIZONTAL_SWIPE_THRESHOLD = 50;
@@ -24,13 +27,19 @@ export const MonthlyCalendarGrid = memo(function MonthlyCalendarGrid({
 }: MonthlyCalendarGridProps) {
   const { colors, isDark } = useThemeColors();
   const [currentMonth, setCurrentMonth] = useState(new Date());
-  const [showChain, setShowChain] = useState(false);
   const directionRef = useRef<'left' | 'right'>('right');
   const { weeks } = useCalendarDays({
     completedDates,
     currentMonth,
     habitCreatedAt,
   });
+  const insights = useMonthInsights(completedDates, currentMonth);
+
+  const cardColor = isDark ? colors.card : '#FFFFFF';
+  const completedBg = useMemo(
+    () => completedTint(habitColor, cardColor),
+    [habitColor, cardColor]
+  );
 
   const textColors = useMemo(
     () => ({
@@ -92,11 +101,6 @@ export const MonthlyCalendarGrid = memo(function MonthlyCalendarGrid({
     [onDayPress]
   );
 
-  const toggleChain = useCallback(() => {
-    void triggerHaptic('selection');
-    setShowChain((v) => !v);
-  }, []);
-
   return (
     <View
       style={[
@@ -109,11 +113,8 @@ export const MonthlyCalendarGrid = memo(function MonthlyCalendarGrid({
     >
       <MonthNavigation
         currentMonth={currentMonth}
-        habitColor={habitColor}
         onNextMonth={goToNextMonth}
         onPreviousMonth={goToPreviousMonth}
-        onToggleChain={toggleChain}
-        showChain={showChain}
       />
 
       <GestureDetector gesture={monthSwipeGesture}>
@@ -133,14 +134,16 @@ export const MonthlyCalendarGrid = memo(function MonthlyCalendarGrid({
           <AnimatedWeeksGrid
             direction={directionRef.current}
             habitColor={habitColor}
+            completedBg={completedBg}
             monthKey={format(currentMonth, 'yyyy-MM')}
             onPress={handleDayPress}
-            showChain={showChain}
             textColors={textColors}
             weeks={weeks}
           />
         </View>
       </GestureDetector>
+
+      <MonthInsightStrip {...insights} />
     </View>
   );
 });
