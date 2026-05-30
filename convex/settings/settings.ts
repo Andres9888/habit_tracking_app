@@ -58,6 +58,9 @@ export const get = query({
       showEmojis: settings?.showEmojis ?? DEFAULT_SETTINGS.showEmojis,
       showGradientFill:
         settings?.showGradientFill ?? DEFAULT_SETTINGS.showGradientFill,
+      showStreakConnections:
+        settings?.showStreakConnections ??
+        DEFAULT_SETTINGS.showStreakConnections,
       showMotivationalMessages:
         settings?.showMotivationalMessages ??
         DEFAULT_SETTINGS.showMotivationalMessages,

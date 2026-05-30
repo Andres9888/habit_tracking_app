@@ -8,6 +8,7 @@ export interface SettingsModalSettingsDocument {
   highContrastMode?: boolean;
   useDyslexicFont?: boolean;
   showGradientFill?: boolean;
+  showStreakConnections?: boolean;
   stickyCalendarHeader?: boolean;
   habitSortMode?: string;
 }
@@ -81,6 +82,8 @@ export interface SettingsContentProps {
   ) => void | Promise<void>;
   onChangeDayShape: (value: 'circle' | 'square') => void | Promise<void>;
   onChangeShowGradientFill: (value: boolean) => void | Promise<void>;
+  showStreakConnections: boolean;
+  onChangeShowStreakConnections: (value: boolean) => void | Promise<void>;
   archivedHabitsCount?: number;
   onOpenAccount: () => void;
   onOpenArchivedHabits: () => void;

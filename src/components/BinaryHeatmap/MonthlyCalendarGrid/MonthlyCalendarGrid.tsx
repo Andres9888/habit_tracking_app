@@ -2,9 +2,11 @@ import React, { memo, useState, useCallback, useMemo, useRef } from 'react';
 import { View, Text } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { runOnJS } from 'react-native-reanimated';
+import { useQuery } from 'convex/react';
 import { addMonths, subMonths, format } from 'date-fns';
 import { useThemeColors } from '@/theme';
 import { triggerHaptic } from '@/utils/haptics';
+import { api } from '../../../../convex/_generated/api';
 import type { MonthlyCalendarGridProps } from './types';
 import { styles } from './styles';
 import { useCalendarDays } from './useCalendarDays';
@@ -34,6 +36,8 @@ export const MonthlyCalendarGrid = memo(function MonthlyCalendarGrid({
     habitCreatedAt,
   });
   const insights = useMonthInsights(completedDates, currentMonth);
+  const settings = useQuery(api.settings.get);
+  const showConnections = settings?.showStreakConnections ?? true;
 
   const cardColor = isDark ? colors.card : '#FFFFFF';
   const completedBg = useMemo(
@@ -137,6 +141,7 @@ export const MonthlyCalendarGrid = memo(function MonthlyCalendarGrid({
             completedBg={completedBg}
             monthKey={format(currentMonth, 'yyyy-MM')}
             onPress={handleDayPress}
+            showConnections={showConnections}
             textColors={textColors}
             weeks={weeks}
           />

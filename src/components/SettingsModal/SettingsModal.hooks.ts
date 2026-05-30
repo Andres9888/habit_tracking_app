@@ -41,6 +41,8 @@ export const useSettingsModalLogic = ({
   const [useDyslexicFont, setUseDyslexicFontState] = useState(false);
   const [compactView, setCompactViewState] = useState(false);
   const [showGradientFill, setShowGradientFillState] = useState(true);
+  const [showStreakConnections, setShowStreakConnectionsState] =
+    useState(true);
 
   useEffect(() => {
     if (settings) {
@@ -50,6 +52,7 @@ export const useSettingsModalLogic = ({
       setUseDyslexicFontState(settings.useDyslexicFont);
       setCompactViewState(settings.compactView ?? false);
       setShowGradientFillState(settings.showGradientFill ?? true);
+      setShowStreakConnectionsState(settings.showStreakConnections ?? true);
     }
   }, [settings]);
 
@@ -103,6 +106,10 @@ export const useSettingsModalLogic = ({
     setShowGradientFillState(value);
     await update({ showGradientFill: value });
   };
+  const setShowStreakConnections = async (value: boolean) => {
+    setShowStreakConnectionsState(value);
+    await update({ showStreakConnections: value });
+  };
 
   const habitSortMode = (settings?.habitSortMode as string) ?? 'manual';
   const setHabitSortMode = async (value: string) => {
@@ -122,9 +129,11 @@ export const useSettingsModalLogic = ({
     setHighContrastMode,
     setReduceMotion,
     setShowGradientFill,
+    setShowStreakConnections,
     setUseDyslexicFont,
     setView,
     showGradientFill,
+    showStreakConnections,
     useDyslexicFont,
     view,
   };

@@ -12,6 +12,7 @@ interface AnimatedWeeksGridProps {
   completedBg: string;
   monthKey: string;
   onPress: (dateString: string, isCompleted: boolean) => void;
+  showConnections: boolean;
   textColors: { muted: string; primary: string; tertiary: string };
   weeks: DayData[][];
 }
@@ -22,6 +23,7 @@ export const AnimatedWeeksGrid = memo(function AnimatedWeeksGrid({
   completedBg,
   monthKey,
   onPress,
+  showConnections,
   textColors,
   weeks,
 }: AnimatedWeeksGridProps) {
@@ -52,11 +54,13 @@ export const AnimatedWeeksGrid = memo(function AnimatedWeeksGrid({
       >
         {(weeks ?? []).map((week, weekIndex) => (
           <View key={`week-${weekIndex}`} style={styles.row}>
-            <ChainConnectors
-              week={week}
-              completedBg={completedBg}
-              rowWidth={rowWidth}
-            />
+            {showConnections ? (
+              <ChainConnectors
+                week={week}
+                completedBg={completedBg}
+                rowWidth={rowWidth}
+              />
+            ) : null}
             {(week ?? []).map((day) => (
               <CalendarDay
                 key={day.dateString}
