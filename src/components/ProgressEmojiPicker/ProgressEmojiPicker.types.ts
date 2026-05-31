@@ -2,7 +2,7 @@
  * ProgressEmojiPicker types
  */
 
-import type { StyleProp, ViewStyle } from 'react-native';
+import type { LayoutChangeEvent, StyleProp, ViewStyle } from 'react-native';
 
 import type {
   ProgressEmojiPreset,
@@ -32,4 +32,32 @@ export interface ProgressEmojiSlotRowProps {
   stageLabel: string;
   emoji: string;
   onPress: (stageKey: StrengthLevelKey) => void;
+}
+
+export interface ProgressEmojiToggleRowProps {
+  /** Resolved per-stage set rendered as the preview glyphs. */
+  resolved: ProgressEmojiSet;
+  /** Whether the customization panel is open. */
+  expanded: boolean;
+  /** Toggles the panel; fired by both the glyph row and the action label. */
+  onToggle: () => void;
+  /** Style applied to the row container. */
+  toggleRowStyle?: StyleProp<ViewStyle>;
+  /** Optional caption rendered above the row. */
+  label?: string;
+}
+
+export interface ProgressEmojiPanelProps {
+  resolved: ProgressEmojiSet;
+  activePresetId: string | null;
+  customPreset?: ProgressEmojiPreset | null;
+  /** Whether to show the "Reset to default" affordance. */
+  showReset: boolean;
+  /** Style applied to the panel content container. */
+  panelStyle?: StyleProp<ViewStyle>;
+  onPreset: (next: ProgressEmojiSet) => void;
+  onSlotPress: (stageKey: StrengthLevelKey) => void;
+  onReset: () => void;
+  /** Measures the panel's natural height for the expand animation. */
+  onLayout: (event: LayoutChangeEvent) => void;
 }
