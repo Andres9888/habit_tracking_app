@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Progress Notes — Chain Day Mock</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    body { font-family: 'Inter', ui-sans-serif, system-ui, sans-serif; }
+    .phone {
+      width: 390px; max-width: 100%;
+      border-radius: 2.5rem;
+      box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.25);
+      border: 10px solid #0f172a;
+      overflow: hidden;
+      background: #f8fafc;
+    }
+    .screen { display: none; min-height: 680px; }
+    .screen.active { display: flex; flex-direction: column; }
+    .tab-btn.active { color: #059669; border-color: #059669; background: #ecfdf5; }
+    .day-dot { width: 36px; height: 36px; border-radius: 9999px; font-size: 12px; font-weight: 700; }
+    .day-dot.done { background: #10b981; color: white; }
+    .day-dot.note { box-shadow: 0 0 0 3px #fef3c7, 0 0 0 5px #f59e0b; }
+    .signal-pill { font-size: 11px; padding: 2px 8px; border-radius: 9999px; font-weight: 600; }
+    .signal-better { background: #d1fae5; color: #047857; }
+    .signal-same { background: #e2e8f0; color: #475569; }
+    .signal-worse { background: #fee2e2; color: #b91c1c; }
+    .timeline-line { width: 2px; background: #e2e8f0; margin-left: 17px; }
+    .chip { padding: 6px 12px; border-radius: 9999px; font-size: 13px; border: 1.5px solid #e2e8f0; cursor: pointer; transition: all 0.15s; }
+    .chip.selected { border-color: #059669; background: #ecfdf5; color: #047857; font-weight: 600; }
+    @keyframes slideUp { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    .sheet { animation: slideUp 0.35s cubic-bezier(0.4, 0, 0.2, 1); }
+  </style>
+</head>
+<body class="bg-slate-100 min-h-screen py-10 px-4">
+  <div class="max-w-6xl mx-auto">
+    <header class="mb-8 text-center md:text-left">
+      <p class="text-xs font-semibold uppercase tracking-wider text-emerald-600 mb-1">Chain Day concept mock</p>
+      <h1 class="text-3xl font-bold text-slate-900">Progress Notes — real world vs. the chain</h1>
+      <p class="text-slate-600 mt-2 max-w-2xl">
+        Today the app tracks <strong>did you show up</strong> (<code>tracking</code> rows).
+        This mock adds <strong>what changed out there</strong> — quick signals + optional notes tied to each day.
+      </p>
+    </header>
+
+    <div class="flex flex-col lg:flex-row gap-10 items-start justify-center">
+      <!-- Phone -->
+      <div class="phone mx-auto shrink-0">
+        <div class="bg-slate-900 h-7 flex items-center justify-center">
+          <div class="w-20 h-1 rounded-full bg-slate-700"></div>
+        </div>
+
+        <!-- Screen 1: Habit detail timeline -->
+        <div id="screen-timeline" class="screen active">
+          <div class="px-4 pt-4 pb-2 bg-white border-b border-slate-100">
+            <div class="flex items-center gap-3">
+              <div class="w-12 h-12 rounded-xl bg-indigo-50 flex items-center justify-center text-2xl">🧘</div>
+              <div>
+                <h2 class="font-semibold text-lg text-slate-900">Morning meditation</h2>
+                <p class="text-sm text-slate-500">12-day chain · 68% strength</p>
+              </div>
+            </div>
+          </div>
+          <div class="flex-1 overflow-y-auto px-4 py-4 space-y-4">
+            <div class="rounded-xl bg-emerald-50 border border-emerald-100 p-3">
+              <p class="text-sm text-emerald-800"><span class="font-semibold">Real-world trend:</span> Calmer mornings 4 of last 5 sessions</p>
+            </div>
+            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide">This week</p>
+            <div class="flex justify-between mb-2" id="week-strip"></div>
+            <div class="space-y-0" id="journal-list"></div>
+          </div>
+          <button onclick="showScreen('capture')" class="mx-4 mb-4 py-3 rounded-xl bg-emerald-600 text-white font-semibold text-sm shadow-lg shadow-emerald-600/30">
+            + Log how today felt
+          </button>
+        </div>
+
+        <!-- Screen 2: Quick capture sheet -->
+        <div id="screen-capture" class="screen">
+          <div class="flex-1 flex flex-col justify-end">
+            <div class="sheet bg-white rounded-t-3xl p-5 shadow-2xl">
+              <div class="w-10 h-1 bg-slate-200 rounded-full mx-auto mb-4"></div>
+              <p class="text-center text-sm text-slate-500 mb-1">You completed meditation</p>
+              <h3 class="text-center text-lg font-semibold text-slate-900 mb-4">How did it land in real life?</h3>
+              <p class="text-xs font-medium text-slate-500 mb-2">Quick signal</p>
+              <div class="flex gap-2 mb-4" id="signal-chips">
+                <button type="button" class="chip flex-1 text-center" data-signal="better">↑ Better</button>
+                <button type="button" class="chip flex-1 text-center" data-signal="same">→ Same</button>
+                <button type="button" class="chip flex-1 text-center" data-signal="worse">↓ Worse</button>
+              </div>
+              <p class="text-xs font-medium text-slate-500 mb-2">Optional note</p>
+              <textarea id="note-input" rows="3" placeholder="e.g. Fell back asleep faster. Less doom-scrolling before work." class="w-full rounded-xl border border-slate-200 p-3 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-emerald-500"></textarea>
+              <div class="flex gap-2 mt-3">
+                <button type="button" onclick="showScreen('timeline')" class="flex-1 py-3 rounded-xl border border-slate-200 text-slate-600 font-medium text-sm">Skip</button>
+                <button type="button" onclick="saveNote()" class="flex-1 py-3 rounded-xl bg-emerald-600 text-white font-semibold text-sm">Save</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Screen 3: Progress story -->
+        <div id="screen-story" class="screen">
+          <div class="px-4 pt-4 pb-2 bg-white border-b">
+            <h2 class="font-semibold text-lg">Progress story</h2>
+            <p class="text-sm text-slate-500">Chain + real-world signals</p>
+          </div>
+          <div class="flex-1 overflow-y-auto p-4 space-y-4">
+            <div class="grid grid-cols-2 gap-3">
+              <div class="bg-white rounded-xl p-3 border border-slate-100">
+                <p class="text-2xl font-bold text-emerald-600">12</p>
+                <p class="text-xs text-slate-500">Day chain</p>
+              </div>
+              <div class="bg-white rounded-xl p-3 border border-slate-100">
+                <p class="text-2xl font-bold text-amber-600">73%</p>
+                <p class="text-xs text-slate-500">Days with “better” signal</p>
+              </div>
+            </div>
+            <div class="bg-white rounded-xl p-4 border border-slate-100">
+              <p class="text-sm font-medium text-slate-700 mb-3">Dual track (last 14 days)</p>
+              <div class="space-y-2 text-xs" id="dual-track"></div>
+            </div>
+            <p class="text-xs text-slate-500 leading-relaxed">
+              When chain is up but signals flat, the app can nudge: “You’re showing up — is the habit delivering?”
+            </p>
+          </div>
+        </div>
+
+        <!-- Bottom nav -->
+        <div class="flex border-t border-slate-200 bg-white">
+          <button type="button" class="tab-btn active flex-1 py-3 text-xs font-medium border-t-2 border-transparent" data-tab="timeline" onclick="showScreen('timeline')">Journal</button>
+          <button type="button" class="tab-btn flex-1 py-3 text-xs font-medium border-t-2 border-transparent" data-tab="capture" onclick="showScreen('capture')">Capture</button>
+          <button type="button" class="tab-btn flex-1 py-3 text-xs font-medium border-t-2 border-transparent" data-tab="story" onclick="showScreen('story')">Story</button>
+        </div>
+      </div>
+
+      <!-- Architecture panel -->
+      <div class="flex-1 max-w-xl space-y-6">
+        <section class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+          <h2 class="font-semibold text-slate-900 mb-3">How it would work</h2>
+          <div class="space-y-4 text-sm text-slate-600">
+            <div>
+              <p class="font-medium text-slate-800">1. Chain (existing)</p>
+              <p class="mt-1"><code>tracking</code> — habitId + date + completed boolean → streaks & strength</p>
+            </div>
+            <div>
+              <p class="font-medium text-slate-800">2. Progress entry (new)</p>
+              <p class="mt-1"><code>progressEntries</code> — same habitId + date, plus signal, note, optional metrics</p>
+            </div>
+            <div>
+              <p class="font-medium text-slate-800">3. Habit-level anchor (existing)</p>
+              <p class="mt-1"><code>habits.notes</code> — static “why” blurb; <code>why</code> / WOOP stay on habit doc</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="bg-slate-900 rounded-2xl p-6 text-slate-300 text-xs font-mono overflow-x-auto">
+          <p class="text-emerald-400 mb-2">// convex/schema.ts (sketch)</p>
+          <pre>progressEntries: defineTable({
+  habitId: v.id("habits"),
+  userId: v.string(),
+  date: v.string(), // YYYY-MM-DD
+  signal: v.optional(
+    v.union(
+      v.literal("better"),
+      v.literal("same"),
+      v.literal("worse"),
+    ),
+  ),
+  body: v.optional(v.string()),
+  metrics: v.optional(v.array(
+    v.object({ label: v.string(), value: v.number() }),
+  )),
+}).index("by_habit_and_date", ["habitId", "date"])</pre>
+        </section>
+
+        <section class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+          <h2 class="font-semibold text-slate-900 mb-2">Trigger points</h2>
+          <ul class="text-sm text-slate-600 space-y-2 list-disc pl-5">
+            <li>After toggle complete → optional 5-second sheet (mock screen 2)</li>
+            <li>Tap a day on calendar → view/edit that day’s entry</li>
+            <li>Weekly check-in on habits with goals (“Sleep quality 1–5”)</li>
+            <li>Voice note → reuse Motivation Workshop UI, store on same table</li>
+          </ul>
+        </section>
+
+        <p class="text-xs text-slate-500">Open this file in a browser. Use the phone tabs and “Log how today felt” to try the flow.</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const ENTRIES = [
+      { date: 'May 25', day: 'S', done: true, signal: 'better', note: 'Woke up without snoozing. Felt present at breakfast.' },
+      { date: 'May 26', day: 'M', done: true, signal: 'better', note: 'Shorter mental fog before meetings.' },
+      { date: 'May 27', day: 'T', done: true, signal: 'same', note: 'Did the sit but mind wandered whole time.' },
+      { date: 'May 28', day: 'W', done: true, signal: 'better', note: null },
+      { date: 'May 29', day: 'T', done: true, signal: 'worse', note: 'Stressful day — meditation felt like another todo.' },
+      { date: 'May 30', day: 'F', done: true, signal: 'better', note: '10 min only but mood lifted after.' },
+      { date: 'May 31', day: 'S', done: true, signal: null, note: null },
+    ];
+
+    let selectedSignal = null;
+
+    function renderWeekStrip() {
+      const el = document.getElementById('week-strip');
+      el.innerHTML = ENTRIES.map((e) => {
+        const cls = ['day-dot', 'flex', 'items-center', 'justify-center', e.done ? 'done' : '', e.note ? 'note' : ''].filter(Boolean).join(' ');
+        return `<div class="flex flex-col items-center gap-1">
+          <div class="${cls}">${e.day}</div>
+          ${e.signal ? `<span class="signal-pill signal-${e.signal}">${e.signal}</span>` : '<span class="h-5"></span>'}
+        </div>`;
+      }).join('');
+    }
+
+    function renderJournal() {
+      const el = document.getElementById('journal-list');
+      el.innerHTML = [...ENTRIES].reverse().map((e, i, arr) => {
+        const line = i < arr.length - 1 ? '<div class="timeline-line h-4"></div>' : '';
+        const body = e.note
+          ? `<p class="text-sm text-slate-700 mt-1">${e.note}</p>`
+          : (e.done && !e.signal ? '<p class="text-sm text-slate-400 mt-1 italic">Chain only — tap to add real-world note</p>' : '');
+        const sig = e.signal ? `<span class="signal-pill signal-${e.signal}">${e.signal}</span>` : '';
+        return `<div class="flex gap-3">
+          <div class="w-9 h-9 rounded-full ${e.done ? 'bg-emerald-500' : 'bg-slate-200'} flex items-center justify-center text-white text-xs shrink-0">✓</div>
+          <div class="flex-1 pb-3">
+            <div class="flex items-center gap-2">
+              <span class="font-medium text-slate-800">${e.date}</span>${sig}
+            </div>${body}
+          </div>
+        </div>${line}`;
+      }).join('');
+    }
+
+    function renderDualTrack() {
+      const el = document.getElementById('dual-track');
+      el.innerHTML = ENTRIES.slice(-7).map((e) => {
+        const chain = e.done ? '█' : '░';
+        const sig = e.signal === 'better' ? '▲' : e.signal === 'worse' ? '▼' : e.signal === 'same' ? '●' : '·';
+        const bar = e.signal === 'better' ? 'bg-emerald-400' : e.signal === 'worse' ? 'bg-red-300' : 'bg-slate-300';
+        return `<div class="flex items-center gap-2">
+          <span class="w-8 text-slate-500">${e.day}</span>
+          <span class="w-4 text-emerald-600">${chain}</span>
+          <div class="flex-1 h-2 rounded-full bg-slate-100 overflow-hidden"><div class="h-full ${bar} w-${e.signal ? 'full' : '1/4'}"></div></div>
+          <span class="w-4">${sig}</span>
+        </div>`;
+      }).join('');
+    }
+
+    function showScreen(name) {
+      document.querySelectorAll('.screen').forEach((s) => s.classList.remove('active'));
+      document.getElementById('screen-' + name).classList.add('active');
+      document.querySelectorAll('.tab-btn').forEach((b) => {
+        b.classList.toggle('active', b.dataset.tab === name);
+      });
+    }
+
+    document.getElementById('signal-chips').addEventListener('click', (ev) => {
+      const btn = ev.target.closest('[data-signal]');
+      if (!btn) return;
+      selectedSignal = btn.dataset.signal;
+      document.querySelectorAll('#signal-chips .chip').forEach((c) => c.classList.toggle('selected', c === btn));
+    });
+
+    function saveNote() {
+      const text = document.getElementById('note-input').value.trim();
+      const last = ENTRIES[ENTRIES.length - 1];
+      last.signal = selectedSignal || 'same';
+      last.note = text || 'Quick log saved.';
+      renderWeekStrip();
+      renderJournal();
+      renderDualTrack();
+      document.getElementById('note-input').value = '';
+      selectedSignal = null;
+      document.querySelectorAll('#signal-chips .chip').forEach((c) => c.classList.remove('selected'));
+      showScreen('timeline');
+    }
+
+    renderWeekStrip();
+    renderJournal();
+    renderDualTrack();
+  </script>
+</body>
+</html>
