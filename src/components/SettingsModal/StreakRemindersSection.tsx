@@ -117,7 +117,7 @@ export function StreakRemindersSection({
                   style={{ gap: 12 }}
                 >
                   <View
-                    className='items-center justify-center rounded-[10px]'
+                    className='items-center justify-center rounded-xl'
                     style={{
                       backgroundColor: settings.clock.bg,
                       borderColor: highContrastMode
@@ -188,7 +188,7 @@ export function StreakRemindersSection({
                     }}
                   >
                     <View
-                      className='items-center justify-center rounded-[10px]'
+                      className='items-center justify-center rounded-xl'
                       style={{
                         backgroundColor: settings.premiumTime.bg,
                         height: 36,

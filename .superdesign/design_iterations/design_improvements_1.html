@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Settings Design Improvements · Before / After</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Literata:wght@600;700&display=swap" rel="stylesheet" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  :root{
+    --l-bg:#F5F1ED; --l-card:#EDEAE5; --l-border:#DDD8D2;
+    --l-text:#2D2A26; --l-text2:#6B6560; --l-accent:#047857;
+    --d-bg:#111827; --d-card:#1F2937; --d-border:#374151;
+    --d-text:#F9FAFB; --d-text2:#9CA3AF; --d-accent:#34D399;
+    /* The two shadow systems */
+    --shadow-sm:0 1px 2px 0 rgba(0,0,0,0.05);            /* Tailwind shadow-sm (current Card) */
+    --shadows-card:0 2px 8px 0 rgba(45,42,38,0.06);       /* shadows.card token (warm, rest of app) */
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#e6e6e6;padding:40px 28px 90px;line-height:1.45}
+  h1{font-family:'Literata',serif;font-size:26px;font-weight:700;letter-spacing:-.4px;margin-bottom:6px}
+  .sub{color:#9aa0a6;font-size:14px;margin-bottom:8px;max-width:820px}
+  code{font-family:ui-monospace,Menlo,monospace;font-size:12px;background:#11161d;border:1px solid #262c34;padding:1px 6px;border-radius:6px;color:#cbd2da}
+
+  .section-h{font-family:'Literata',serif;font-size:17px;color:#e8ebee;margin:38px auto 6px;max-width:1080px;font-weight:700;display:flex;align-items:center;gap:10px}
+  .section-d{color:#9aa0a6;font-size:13px;max-width:1080px;margin:0 auto 16px}
+  .line{flex:1;height:1px;background:#222933}
+
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:26px;max-width:1080px;margin:0 auto}
+  @media(max-width:840px){.grid{grid-template-columns:1fr}}
+  .panel{border-radius:18px;padding:22px;border:1px solid #20262e;background:#161b22}
+  .ptitle{display:flex;align-items:center;gap:9px;font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#8b929c;margin-bottom:18px}
+  .badge{font-size:10px;font-weight:700;padding:2px 7px;border-radius:999px;letter-spacing:.06em}
+  .badge.before{background:rgba(180,80,60,.18);color:#e8917a}
+  .badge.after{background:rgba(45,150,105,.2);color:#5dd6a0}
+
+  .surface{border-radius:16px;padding:16px;background:var(--l-bg)}
+  .surface.dark{background:var(--d-bg)}
+
+  /* settings card + rows */
+  .card{border-radius:16px;border:1px solid var(--l-border);background:var(--l-card);overflow:hidden}
+  .seclabel{display:flex;align-items:center;gap:10px;padding:13px 16px;border-bottom:1px solid var(--l-border)}
+  .seclabel .si{width:28px;height:28px;display:flex;align-items:center;justify-content:center}
+  .seclabel .si svg{width:20px;height:20px;color:var(--l-text)}
+  .seclabel .st{font-size:17px;font-weight:600;letter-spacing:-.2px;color:var(--l-text)}
+  .row{display:flex;align-items:center;padding:14px 16px;background:var(--l-bg)}
+  .row+.row{border-top:1px solid var(--l-border)}
+
+  /* icon badge — THIS is what change #1 touches */
+  .ibadge{width:36px;height:36px;display:flex;align-items:center;justify-content:center;margin-right:14px;flex-shrink:0;background:#E2EFE8}
+  .ibadge svg{width:18px;height:18px;color:var(--l-accent)}
+  .r10{border-radius:10px}   /* before — off-scale */
+  .r12{border-radius:12px}   /* after — borderRadius.medium / rounded-xl */
+  .rowtext .t{font-size:16px;font-weight:600;color:var(--l-text);letter-spacing:-.2px}
+  .rowtext .s{font-size:13px;font-weight:500;color:var(--l-text2);margin-top:1px}
+  .ref{margin-left:auto;font-size:11px;color:#9aa0a6;font-style:italic}
+
+  .notes{margin-top:16px;display:flex;flex-direction:column;gap:8px}
+  .note{display:flex;align-items:flex-start;gap:9px;font-size:13px;color:#aeb4bd}
+  .dot{width:7px;height:7px;border-radius:50%;margin-top:6px;flex-shrink:0}
+  .dot.bad{background:#e8917a} .dot.good{background:#5dd6a0}
+
+  /* Change #2 — shadows */
+  .shadowstage{display:flex;gap:26px;justify-content:center;padding:30px 10px 14px}
+  .gcard{width:210px;border-radius:16px;border:1px solid var(--l-border);background:var(--l-card);padding:18px}
+  .gcard .gh{font-size:15px;font-weight:600;color:var(--l-text);margin-bottom:6px}
+  .gcard .gp{font-size:13px;color:var(--l-text2)}
+  .sh-before{box-shadow:var(--shadow-sm)}
+  .sh-after{box-shadow:var(--shadows-card)}
+  .stagelabel{text-align:center;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#8b929c;margin-bottom:4px}
+  .shadowval{text-align:center;font-size:11px;color:#7f8893;font-family:ui-monospace,Menlo,monospace;margin-top:12px}
+</style>
+</head>
+<body>
+  <h1>Proposed Settings / App Design Improvements</h1>
+  <p class="sub">Mock of the next two changes I offered. Faithful to <code>src/theme</code> tokens. Both are token-hygiene / consistency fixes — no behavior change.</p>
+
+  <!-- CHANGE 1 -->
+  <div class="section-h">Change #1 — finish the radius fix<span class="line"></span></div>
+  <p class="section-d">Two notification icon badges in <code>StreakRemindersSection.tsx</code> (lines 120, 191) still use off-scale <code>rounded-[10px]</code>, while every other Settings icon badge is <code>rounded-xl</code> (12px). On the same screen we just audited. The fix matches them.</p>
+  <div class="grid">
+    <div class="panel">
+      <div class="ptitle">Before <span class="badge before">current</span></div>
+      <div class="surface">
+        <div class="card">
+          <div class="seclabel"><span class="si"><i data-lucide="bell-ring"></i></span><span class="st">Streak reminders</span></div>
+          <div class="row">
+            <div class="ibadge r10"><i data-lucide="clock"></i></div>
+            <div class="rowtext"><div class="t">Reminder time</div><div class="s">9:00 AM</div></div>
+            <span class="ref">10px</span>
+          </div>
+          <div class="row">
+            <div class="ibadge r10"><i data-lucide="calendar"></i></div>
+            <div class="rowtext"><div class="t">Repeat</div><div class="s">Every day</div></div>
+            <span class="ref">10px</span>
+          </div>
+          <div class="row">
+            <div class="ibadge r12"><i data-lucide="folder-open"></i></div>
+            <div class="rowtext"><div class="t">Archived habits</div><div class="s">A normal SettingsRow badge</div></div>
+            <span class="ref">12px ✓</span>
+          </div>
+        </div>
+      </div>
+      <div class="notes"><div class="note"><span class="dot bad"></span><span>Notification badges (10px) don't match the standard badge (12px) right below them.</span></div></div>
+    </div>
+
+    <div class="panel">
+      <div class="ptitle">After <span class="badge after">aligned</span></div>
+      <div class="surface">
+        <div class="card">
+          <div class="seclabel"><span class="si"><i data-lucide="bell-ring"></i></span><span class="st">Streak reminders</span></div>
+          <div class="row">
+            <div class="ibadge r12"><i data-lucide="clock"></i></div>
+            <div class="rowtext"><div class="t">Reminder time</div><div class="s">9:00 AM</div></div>
+            <span class="ref">12px ✓</span>
+          </div>
+          <div class="row">
+            <div class="ibadge r12"><i data-lucide="calendar"></i></div>
+            <div class="rowtext"><div class="t">Repeat</div><div class="s">Every day</div></div>
+            <span class="ref">12px ✓</span>
+          </div>
+          <div class="row">
+            <div class="ibadge r12"><i data-lucide="folder-open"></i></div>
+            <div class="rowtext"><div class="t">Archived habits</div><div class="s">A normal SettingsRow badge</div></div>
+            <span class="ref">12px ✓</span>
+          </div>
+        </div>
+      </div>
+      <div class="notes"><div class="note"><span class="dot good"></span><span>All badges now <code>rounded-xl</code> = <code>borderRadius.medium</code> (12px). Screen reads uniform.</span></div></div>
+    </div>
+  </div>
+
+  <!-- CHANGE 2 -->
+  <div class="section-h">Change #2 — unify the shared Card shadow<span class="line"></span></div>
+  <p class="section-d">The shared <code>Card/Card.tsx</code> primitive uses Tailwind <code>shadow-sm</code> (cool, generic). The rest of the app (HabitCard, SettingsSection) uses the warm <code>shadows.card</code> token. So a generic <code>&lt;Card&gt;</code> casts a different shadow than the hero cards. Pointing Card at <code>shadows.card</code> makes them match.</p>
+  <div class="panel" style="max-width:1080px;margin:0 auto">
+    <div class="surface" style="padding:0">
+      <div class="shadowstage">
+        <div>
+          <div class="stagelabel">Before · <span style="color:#e8917a">shadow-sm</span></div>
+          <div class="gcard sh-before">
+            <div class="gh">Generic Card</div>
+            <div class="gp">Thin, cool, 1px offset.</div>
+          </div>
+          <div class="shadowval">0 1px 2px rgba(0,0,0,.05)</div>
+        </div>
+        <div>
+          <div class="stagelabel">After · <span style="color:#5dd6a0">shadows.card</span></div>
+          <div class="gcard sh-after">
+            <div class="gh">Generic Card</div>
+            <div class="gp">Warm, elevation-3, matches hero cards.</div>
+          </div>
+          <div class="shadowval">0 2px 8px rgba(45,42,38,.06)</div>
+        </div>
+        <div>
+          <div class="stagelabel">Reference · HabitCard</div>
+          <div class="gcard sh-after">
+            <div class="gh">HabitCard</div>
+            <div class="gp">Already uses shadows.card.</div>
+          </div>
+          <div class="shadowval">0 2px 8px rgba(45,42,38,.06)</div>
+        </div>
+      </div>
+    </div>
+    <div class="notes">
+      <div class="note"><span class="dot bad"></span><span><b>Before:</b> generic Card (left) sits flatter/cooler than the HabitCard reference (right) — subtle but inconsistent across screens.</span></div>
+      <div class="note"><span class="dot good"></span><span><b>After:</b> middle = right. Every card in the app shares one warm elevation language.</span></div>
+    </div>
+  </div>
+
+  <script>lucide.createIcons();</script>
+</body>
+</html>
