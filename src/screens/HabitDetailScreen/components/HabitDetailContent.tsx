@@ -8,7 +8,6 @@ import ErrorBoundary from '../../../components/ErrorBoundary';
 import { HabitStrengthSection } from '../../../components/HabitStrengthSection';
 import { useProgressEmojis } from '../../../hooks/useProgressEmojis';
 import { useThemeColors } from '../../../theme';
-import { shadows } from '../../../theme/spacing';
 import type { Habit } from '../../../features/habits/types';
 import { CalendarTabContent } from './CalendarTabContent';
 import { DetailHero } from './DetailHero';
@@ -72,11 +71,7 @@ export function HabitDetailContent({
       </View>
 
       {habit.createdAt ? (
-        <View
-          className='mx-4 mt-4 rounded-2xl'
-          style={{ backgroundColor: colors.card, ...shadows.card }}
-          onLayout={makeSectionLayoutHandler('strength')}
-        >
+        <View className='mx-4 mt-4' onLayout={makeSectionLayoutHandler('strength')}>
           <ErrorBoundary>
             <HabitStrengthSection
               completedDates={completedDates}

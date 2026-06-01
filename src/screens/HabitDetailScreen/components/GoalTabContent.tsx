@@ -7,6 +7,7 @@ import { Pressable, Text, View } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import ErrorBoundary from '../../../components/ErrorBoundary';
 import type { Habit } from '../../../features/habits/types';
+import { colors as palette } from '../../../theme/colors';
 import { shadows } from '../../../theme/spacing';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { typography, fontWeights } from '../../../theme/typography';
@@ -20,11 +21,13 @@ interface GoalTabContentProps {
 }
 
 export function GoalTabContent({ habit }: GoalTabContentProps) {
-  const { colors } = useThemeColors();
+  const { colors, isDark } = useThemeColors();
   const [adjustOpen, setAdjustOpen] = useState(false);
   const goalDuration = habit.goalDuration ?? 0;
   const hasGoal = goalDuration > 0;
-  const cardStyle = { ...shadows.card, backgroundColor: colors.card };
+  // Warm near-white card surface — same surface as the home HabitCard
+  // (colors.light.surfaceMuted). Keep the theme card token in dark mode.
+  const cardStyle = { ...shadows.card, backgroundColor: isDark ? colors.card : palette.light.surfaceMuted };
 
   if (!hasGoal) {
     return (

@@ -17,6 +17,7 @@ import { generateBinaryGrid } from './utils';
 import { styles } from './BinaryHeatmapNew.styles';
 import { createDayLookupMap } from './cellHelpers';
 import { useThemeColors } from '@/theme/ThemeContext';
+import { colors as palette } from '@/theme/colors';
 
 export const BinaryHeatmap = memo(function BinaryHeatmap({
   habitId: _habitId,
@@ -75,7 +76,7 @@ export const BinaryHeatmap = memo(function BinaryHeatmap({
       style={[
         styles.container,
         {
-          backgroundColor: isDark ? colors.card : '#FFFFFF',
+          backgroundColor: isDark ? colors.card : palette.light.surfaceMuted,
           borderColor: colors.border,
         },
       ]}

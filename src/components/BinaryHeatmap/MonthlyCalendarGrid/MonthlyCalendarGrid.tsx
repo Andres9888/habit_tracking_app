@@ -5,6 +5,7 @@ import { runOnJS } from 'react-native-reanimated';
 import { useQuery } from 'convex/react';
 import { addMonths, subMonths, format } from 'date-fns';
 import { useThemeColors } from '@/theme';
+import { colors as palette } from '@/theme/colors';
 import { triggerHaptic } from '@/utils/haptics';
 import { api } from '../../../../convex/_generated/api';
 import type { MonthlyCalendarGridProps } from './types';
@@ -39,7 +40,7 @@ export const MonthlyCalendarGrid = memo(function MonthlyCalendarGrid({
   const settings = useQuery(api.settings.get);
   const showConnections = settings?.showStreakConnections ?? true;
 
-  const cardColor = isDark ? colors.card : '#FFFFFF';
+  const cardColor = isDark ? colors.card : palette.light.surfaceMuted;
   const completedBg = useMemo(
     () => completedTint(habitColor, cardColor),
     [habitColor, cardColor]
@@ -110,7 +111,7 @@ export const MonthlyCalendarGrid = memo(function MonthlyCalendarGrid({
       style={[
         styles.container,
         {
-          backgroundColor: isDark ? colors.card : '#FFFFFF',
+          backgroundColor: isDark ? colors.card : palette.light.surfaceMuted,
           borderColor: colors.border,
         },
       ]}

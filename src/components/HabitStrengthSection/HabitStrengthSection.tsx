@@ -13,12 +13,12 @@ import { Text, View } from 'react-native';
 import Animated, { Easing, FadeInDown } from 'react-native-reanimated';
 import { durations } from '@/theme/animations';
 import { useThemeColors } from '@/theme/ThemeContext';
+import { colors as palette } from '@/theme/colors';
 
 import { useReduceMotion } from '../../hooks/useReduceMotion';
 import { shadows } from '../../theme/spacing';
 import { typography } from '../../theme/typography';
 import { StrengthProgressBar } from '../StrengthProgressBar';
-import { getThemeColors } from './constants';
 import { useHabitStrengthData } from './HabitStrengthSection.hooks';
 import { getStrengthJourney } from './journey';
 import { MilestoneTrack } from './MilestoneTrack';
@@ -37,8 +37,7 @@ export const HabitStrengthSection = React.memo(function HabitStrengthSection({
   habitStrength,
   progressEmojis,
 }: HabitStrengthSectionProps) {
-  const { colors: themeColors } = useThemeColors();
-  const sectionColors = getThemeColors(themeColors);
+  const { colors: themeColors, isDark } = useThemeColors();
   const reduceMotion = useReduceMotion();
   const {
     chartData,
@@ -65,9 +64,9 @@ export const HabitStrengthSection = React.memo(function HabitStrengthSection({
       entering={reduceMotion ? undefined : FadeInDown.duration(durations.enter).delay(100).easing(Easing.out(Easing.cubic))}
       style={{
         ...shadows.card,
-        backgroundColor: themeColors.card,
-        shadowColor: sectionColors.textPrimary,
-        shadowOpacity: 0.05,
+        // Warm near-white card surface — the same surface the home HabitCard
+        // uses (colors.light.surfaceMuted). Keep the theme card token in dark.
+        backgroundColor: isDark ? themeColors.card : palette.light.surfaceMuted,
       }}
     >
       <View className='p-5'>
