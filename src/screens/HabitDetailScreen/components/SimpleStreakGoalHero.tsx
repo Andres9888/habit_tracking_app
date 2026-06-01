@@ -3,10 +3,12 @@
  * Replaces the milestone-heavy StreakGoalCard inside the Goal tab.
  */
 import { Text, View } from 'react-native';
+import Animated from 'react-native-reanimated';
 import { useStreakGoalData } from '../../../components/ProgressSectionConsolidated/StreakGoalCard/StreakGoalCard.hooks';
 import { borderRadius } from '../../../theme/spacing';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { fontFamilies, fontWeights, typography } from '../../../theme/typography';
+import { useStreakGoalAnimation } from './SimpleStreakGoalHero.hooks';
 
 interface SimpleStreakGoalHeroProps {
   currentStreak: number;
@@ -28,6 +30,10 @@ export function SimpleStreakGoalHero({
   const { overallPercent, daysRemaining } = useStreakGoalData(
     currentStreak,
     streakGoal
+  );
+  const { barStyle, percentText, daysText } = useStreakGoalAnimation(
+    overallPercent,
+    daysRemaining
   );
   const goalLabel = `${streakGoal} ${streakGoal === 1 ? 'day' : 'days'}`;
 
@@ -74,6 +80,8 @@ export function SimpleStreakGoalHero({
 
       <View className='mt-5'>
         <View
+          accessibilityRole='progressbar'
+          accessibilityValue={{ max: 100, min: 0, now: overallPercent }}
           style={{
             backgroundColor: colors.gray[200],
             borderRadius: borderRadius.full,
@@ -81,24 +89,20 @@ export function SimpleStreakGoalHero({
             overflow: 'hidden',
           }}
         >
-          <View
-            style={{
-              backgroundColor: habitColor,
-              height: '100%',
-              width: `${overallPercent}%`,
-            }}
+          <Animated.View
+            style={[{ backgroundColor: habitColor, height: '100%' }, barStyle]}
           />
         </View>
         <View className='mt-2 flex-row justify-between'>
           <Text style={{ ...typography.caption, color: colors.text.secondary }}>
             <Text style={{ color: colors.text.primary, fontWeight: fontWeights.semibold }}>
-              {overallPercent}%
+              {percentText}%
             </Text>{' '}
             complete
           </Text>
           <Text style={{ ...typography.caption, color: colors.text.secondary }}>
             <Text style={{ color: colors.text.primary, fontWeight: fontWeights.semibold }}>
-              {daysRemaining}
+              {daysText}
             </Text>{' '}
             to go
           </Text>
