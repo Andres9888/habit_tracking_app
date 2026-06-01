@@ -14,6 +14,7 @@ import { useThemeColors } from '../../../theme/ThemeContext';
 import { typography, fontFamilies, fontWeights } from '../../../theme/typography';
 import useHapticFeedback from '../../../hooks/useHapticFeedback';
 import { GoalPresetChip } from './GoalPresetChip';
+import { GoalCtaLabel } from './GoalCtaLabel';
 
 const PRESETS = [7, 21, 30, 66, 100, 365];
 const RECOMMENDED = 66;
@@ -90,11 +91,15 @@ export function GoalTabEmptyState({ habitId }: GoalTabEmptyStateProps) {
       <Button
         accessibilityLabel='Set streak goal'
         disabled={saving}
+        fullWidth
         loading={saving}
         variant='primary'
         onPress={() => void handleSave()}
       >
-        {`Set ${selected === 365 ? '1-year' : `${selected}-day`} goal`}
+        <GoalCtaLabel
+          label={`Set ${selected === 365 ? '1-year' : `${selected}-day`} goal`}
+          trigger={selected}
+        />
       </Button>
 
       <Text

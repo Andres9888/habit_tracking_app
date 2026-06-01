@@ -27,7 +27,10 @@ export function GoalPresetChip({
       style={{
         backgroundColor: selected ? colors.status.streakLight : colors.card,
         borderColor: selected ? colors.status.streak : colors.border,
-        borderWidth: recommended && !selected ? 1.5 : 1,
+        // Keep the recommended chip's border width constant (selected or not) so
+        // toggling it in/out of selection doesn't change row height — RN counts
+        // border in an element's laid-out box, and the row hugs its tallest chip.
+        borderWidth: recommended ? 1.5 : 1,
       }}
       onPress={onPress}
     >
