@@ -1,16 +1,16 @@
 /**
  * CalendarDay Component
  *
- * Individual day cell for the monthly calendar.
- * Uses the habit's own color for completion indicators.
- * Accepts theme colors from parent to avoid 42x useThemeColors calls.
+ * Individual day cell for the monthly calendar (HabitKit-inspired, calm).
+ * Only *completed* days are marked — a soft habit-color tint plus a small dot.
+ * Missed days are left as a plain number, today gets a ring. This keeps the
+ * grid uncluttered: we mark what was done, not what wasn't.
  */
 
 import React, { memo } from 'react';
 import { View, Text, Pressable } from 'react-native';
 import type { DayData } from './types';
 import { styles } from './styles';
-import { colors as themeTokens } from '@/theme/colors';
 import { fontWeights } from '@/theme/typography';
 
 interface CalendarDayColors {
@@ -22,6 +22,8 @@ interface CalendarDayColors {
 interface CalendarDayProps {
   day: DayData;
   habitColor: string;
+  /** Pre-blended solid tint shared with the ribbon connectors. */
+  completedBg: string;
   textColors: CalendarDayColors;
   onPress: (dateString: string, isCompleted: boolean) => void;
 }
@@ -35,6 +37,7 @@ function getTextColor(day: DayData, c: CalendarDayColors): string {
 export const CalendarDay = memo(function CalendarDay({
   day,
   habitColor,
+  completedBg,
   textColors,
   onPress,
 }: CalendarDayProps) {
@@ -46,13 +49,8 @@ export const CalendarDay = memo(function CalendarDay({
   );
   const isToday = Boolean(day?.isToday);
 
-  const dotStyle = showCompleted
-    ? { backgroundColor: habitColor }
-    : showMissed
-      ? { backgroundColor: 'transparent', borderWidth: 1.5, borderColor: habitColor }
-      : undefined;
-
-  const cellBg = showCompleted ? `${habitColor}18` : undefined;
+  // Solid tint shared with the ribbon connectors so runs merge seamlessly.
+  const cellBg = showCompleted ? completedBg : undefined;
 
   return (
     <Pressable
@@ -77,24 +75,22 @@ export const CalendarDay = memo(function CalendarDay({
         style={[
           styles.dayCell,
           cellBg ? { backgroundColor: cellBg } : undefined,
-          isToday && {
-            backgroundColor: showCompleted ? habitColor : 'transparent',
-            borderColor: habitColor,
-            borderWidth: 2,
-          },
+          isToday && { borderColor: habitColor, borderWidth: 2 },
         ]}
       >
         <Text
           style={[
             styles.dayText,
-            { color: isToday && showCompleted ? themeTokens.text.inverse : getTextColor(day, textColors) },
+            { color: getTextColor(day, textColors) },
             isToday && styles.todayText,
-            showCompleted && !isToday && { fontWeight: fontWeights.semibold },
+            showCompleted && { fontWeight: fontWeights.semibold },
           ]}
         >
           {day?.dayNumber ?? ''}
         </Text>
-        {dotStyle && !isToday ? <View style={[styles.streakCircle, dotStyle]} /> : null}
+        {showCompleted ? (
+          <View style={[styles.dot, { backgroundColor: habitColor }]} />
+        ) : null}
       </View>
     </Pressable>
   );

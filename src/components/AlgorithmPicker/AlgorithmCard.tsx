@@ -47,7 +47,7 @@ export function AlgorithmCard({
       onPress={handlePress}
     >
       <View
-        className='h-9 w-9 items-center justify-center rounded-[10px]'
+        className='h-9 w-9 items-center justify-center rounded-xl'
         style={{ backgroundColor: iconTint }}
       >
         <entry.Icon color={accent} size={iconSizes.small} strokeWidth={2} />

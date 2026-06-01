@@ -458,6 +458,9 @@ const applicationTables = {
 
     showGradientFill: v.optional(v.boolean()),
 
+    // Draw connecting "chain ribbon" between consecutive completed calendar days.
+    showStreakConnections: v.optional(v.boolean()),
+
     showMotivationalMessages: v.boolean(),
 
     // Retained for backwards compatibility with existing user data

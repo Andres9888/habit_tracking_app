@@ -50,6 +50,8 @@ function SettingsModalContent({
     habitSortMode,
     showGradientFill,
     setShowGradientFill,
+    showStreakConnections,
+    setShowStreakConnections,
     setHabitSortMode,
     view,
     setView,
@@ -177,6 +179,7 @@ function SettingsModalContent({
               isHighContrastActive={isHighContrastActive}
               isPremium={isPremium}
               showGradientFill={showGradientFill}
+              showStreakConnections={showStreakConnections}
               stickyCalendarHeader={stickyCalendarHeader}
               streakRemindersEnabled={streakRemindersEnabled}
               streakReminderTime={streakReminderTime}
@@ -185,6 +188,7 @@ function SettingsModalContent({
               onChangeDayShape={onChangeDayShape}
               onChangeHabitCompletionIcon={onChangeHabitCompletionIcon}
               onChangeShowGradientFill={setShowGradientFill}
+              onChangeShowStreakConnections={setShowStreakConnections}
               onChangeStickyCalendarHeader={onChangeStickyCalendarHeader}
               onChangeStreakReminderTime={onChangeStreakReminderTime}
               onOpenAccount={() => setView('account')}

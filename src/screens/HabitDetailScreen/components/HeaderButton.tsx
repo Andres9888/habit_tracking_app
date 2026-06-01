@@ -7,6 +7,7 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 import { triggerHaptic } from '@/utils/haptics';
+import { withAlpha } from '@/theme';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { typography, fontWeights } from '../../../theme/typography';
 import { borderRadius, spacing, componentSpacing } from '../../../theme/spacing';
@@ -34,14 +35,15 @@ function toneColors(
 ) {
   if (tone === 'accent') {
     return {
-      bg: isDark ? 'rgba(110,231,183,0.14)' : 'rgba(5,150,105,0.10)',
-      border: isDark ? 'rgba(110,231,183,0.22)' : 'rgba(5,150,105,0.20)',
+      bg: withAlpha(colors.primary[600], isDark ? 0.14 : 0.1),
+      border: withAlpha(colors.primary[600], isDark ? 0.22 : 0.2),
       fg: colors.primary[700],
     };
   }
+  const neutral = isDark ? '#FFFFFF' : '#000000';
   return {
-    bg: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.04)',
-    border: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.08)',
+    bg: withAlpha(neutral, isDark ? 0.08 : 0.04),
+    border: withAlpha(neutral, isDark ? 0.1 : 0.08),
     fg: colors.text.secondary,
   };
 }

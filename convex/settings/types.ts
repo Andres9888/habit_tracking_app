@@ -40,6 +40,7 @@ export const DEFAULT_SETTINGS = {
   showConsistency: true,
   showEmojis: true,
   showGradientFill: true,
+  showStreakConnections: true,
   showMotivationalMessages: true,
   showStreaks: true,
   stickyCalendarHeader: false,

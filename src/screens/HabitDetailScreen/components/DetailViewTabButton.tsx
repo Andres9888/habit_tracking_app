@@ -18,6 +18,10 @@ import { typography, fontWeights } from '@/theme/typography';
 
 export type DetailView = 'calendar' | 'strength' | 'goal';
 
+/** Off-grid tab metrics tuned for the compact segmented control. */
+const ICON_LABEL_GAP = 6;
+const TAB_PADDING_V = 9;
+
 const ICONS: Record<DetailView, LucideIcon> = {
   calendar: CalendarDays,
   goal: Target,
@@ -66,9 +70,9 @@ export function DetailViewTabButton({
         alignItems: 'center',
         flex: 1,
         flexDirection: 'row',
-        gap: 6,
+        gap: ICON_LABEL_GAP,
         justifyContent: 'center',
-        paddingVertical: 9,
+        paddingVertical: TAB_PADDING_V,
         zIndex: 1,
       }}
       onPress={() => onPress(view)}

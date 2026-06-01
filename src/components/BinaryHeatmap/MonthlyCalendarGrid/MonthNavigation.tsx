@@ -4,12 +4,7 @@
 
 import React, { memo } from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
-import {
-  ChevronLeft,
-  ChevronRight,
-  Calendar,
-  Link2,
-} from 'lucide-react-native';
+import { ChevronLeft, ChevronRight, Calendar } from 'lucide-react-native';
 import { format, isValid } from 'date-fns';
 import { useThemeColors } from '@/theme';
 import { styles } from './styles';
@@ -28,20 +23,14 @@ function safeFormat(date: Date, formatStr: string, fallback: string): string {
 
 interface MonthNavigationProps {
   currentMonth: Date;
-  habitColor: string;
   onPreviousMonth: () => void;
   onNextMonth: () => void;
-  onToggleChain: () => void;
-  showChain: boolean;
 }
 
 export const MonthNavigation = memo(function MonthNavigation({
   currentMonth,
-  habitColor,
   onPreviousMonth,
   onNextMonth,
-  onToggleChain,
-  showChain,
 }: MonthNavigationProps) {
   const { colors } = useThemeColors();
   const iconColor = colors.text.secondary;
@@ -58,21 +47,6 @@ export const MonthNavigation = memo(function MonthNavigation({
           <Text style={[styles.monthText, { color: colors.text.primary }]}>
             {safeFormat(currentMonth, 'MMM yyyy', 'Month')}
           </Text>
-        </Pressable>
-        <Pressable
-          accessibilityLabel={`Toggle chain connectors. Currently ${showChain ? 'on' : 'off'}.`}
-          accessibilityRole='button'
-          hitSlop={TAP_SLOP}
-          style={[
-            styles.navButton,
-            { borderColor: showChain ? habitColor : colors.border },
-          ]}
-          onPress={onToggleChain}
-        >
-          <Link2
-            color={showChain ? habitColor : iconColor}
-            size={iconSizes.small}
-          />
         </Pressable>
       </View>
 

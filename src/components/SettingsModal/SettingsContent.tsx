@@ -175,6 +175,21 @@ export function SettingsContent(p: SettingsContentProps) {
               <SettingsRow
                 highContrastMode={hc}
                 icon={
+                  <Link2
+                    color={settingsIcons.checkbox.icon}
+                    size={iconSize}
+                  />
+                }
+                iconBackgroundColor={settingsIcons.checkbox.bg}
+                label='Streak connections'
+                subtitle='Link completed days into a chain on the calendar'
+                type='toggle'
+                value={p.showStreakConnections}
+                onToggle={(v) => void p.onChangeShowStreakConnections(v)}
+              />
+              <SettingsRow
+                highContrastMode={hc}
+                icon={
                   p.habitCompletionIcon === 'checkbox' ? (
                     <Check
                       color={settingsIcons.checkbox.icon}

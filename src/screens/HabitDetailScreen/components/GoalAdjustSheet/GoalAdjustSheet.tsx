@@ -4,8 +4,10 @@
  */
 import { Modal, Pressable, Text, View } from 'react-native';
 import type { Id } from '../../../../../convex/_generated/dataModel';
+import { Button } from '../../../../components/Button';
+import { spacing } from '../../../../theme/spacing';
 import { useThemeColors } from '../../../../theme/ThemeContext';
-import { typography, fontWeights } from '../../../../theme/typography';
+import { typography, fontFamilies, fontWeights } from '../../../../theme/typography';
 import { GoalPresetChip } from '../GoalPresetChip';
 import { useGoalAdjust } from './GoalAdjustSheet.hooks';
 
@@ -40,7 +42,7 @@ export function GoalAdjustSheet(props: GoalAdjustSheetProps) {
           />
           <Text
             className='text-center'
-            style={{ ...typography.heading3, color: colors.text.primary, fontFamily: 'Literata' }}
+            style={{ ...typography.heading3, color: colors.text.primary, fontFamily: fontFamilies.primary.display }}
           >
             Adjust your goal
           </Text>
@@ -61,17 +63,17 @@ export function GoalAdjustSheet(props: GoalAdjustSheetProps) {
               />
             ))}
           </View>
-          <Pressable
-            accessibilityRole='button'
-            className='mb-2 items-center rounded-xl px-6 py-3.5'
+          <Button
+            accessibilityLabel='Save goal'
             disabled={saving}
-            style={{ backgroundColor: colors.primary[600], opacity: saving ? 0.6 : 1 }}
+            fullWidth
+            loading={saving}
+            style={{ marginBottom: spacing.sm }}
+            variant='primary'
             onPress={() => void handleUpdate()}
           >
-            <Text style={{ color: '#fff', fontSize: 15, fontWeight: fontWeights.semibold }}>
-              {saving ? 'Saving…' : `Set ${labelFor(selected)} goal`}
-            </Text>
-          </Pressable>
+            {`Set ${labelFor(selected)} goal`}
+          </Button>
           <Pressable
             accessibilityRole='button'
             className='items-center rounded-xl px-6 py-3'

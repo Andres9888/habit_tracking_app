@@ -2,7 +2,6 @@
 /** HabitDetailScreen - Optimized for 9+ scores across all dimensions */
 import React, { useCallback, useState } from 'react';
 import { View, Modal, KeyboardAvoidingView, Platform } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
 import { Edit3 } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
 import { typography, fontWeights } from '@/theme/typography';
@@ -14,11 +13,9 @@ import {
   HabitDetailModals,
   HeaderButton,
 } from './components';
-import {
-  DETAIL_BG_GRADIENT_LIGHT,
-  DETAIL_BG_GRADIENT_DARK,
-  buildModalsProps,
-} from './HabitDetailScreen.constants';
+import { buildModalsProps } from './HabitDetailScreen.constants';
+import { overlays } from '../../theme/colors';
+import { shadows } from '../../theme/spacing';
 import { useThemeColors } from '../../theme';
 import { useHabitDetailScreenState } from './useHabitDetailScreenState';
 import { useCalendarHandlers } from './useCalendarHandlers';
@@ -35,10 +32,7 @@ function HabitDetailScreenContent({
   tracking = [],
   visible,
 }: HabitDetailScreenProps) {
-  const { isDark } = useThemeColors();
-  const bgGradient = isDark
-    ? DETAIL_BG_GRADIENT_DARK
-    : DETAIL_BG_GRADIENT_LIGHT;
+  const { colors } = useThemeColors();
   const screenState = useHabitDetailScreenState({
     habitCreatedAt: habit?.createdAt,
     habitId: habit?._id,
@@ -80,40 +74,37 @@ function HabitDetailScreenContent({
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
             className='flex-1'
           >
-            <View className='flex-1 bg-black/50'>
-              <View className='flex-1 overflow-hidden rounded-t-3xl shadow-2xl'>
-                <LinearGradient
-                  colors={bgGradient as unknown as string[]}
-                  locations={[0, 0.5, 1]}
-                  style={{ flex: 1 }}
-                >
-                  <ScreenHeader
-                    leftAction='close'
-                    rightAction={
-                      <HeaderButton
-                        compact={isTitlePinned}
-                        icon={<Edit3 size={iconSizes.small} strokeWidth={2.5} />}
-                        label='Edit habit'
-                        text='Edit'
-                        tone='accent'
-                        onPress={handleEdit}
-                      />
-                    }
-                    title={habit.name}
-                    titleStyle={{ fontSize: typography.body.fontSize, fontWeight: fontWeights.semibold, letterSpacing: -0.2, lineHeight: 22 }}
-                    titleVisible={isTitlePinned}
-                    variant='transparent'
-                    onBack={onClose}
-                  />
-                  <HabitDetailContent
-                    completedDates={screenState.completedDates}
-                    habit={habit}
-                    isCompletedToday={screenState.isCompletedToday}
-                    totalCompletions={screenState.totalCompletions}
-                    onDayPress={calendarHandlers.handleCalendarDayPress}
-                    onPinnedChange={handlePinnedChange}
-                  />
-                </LinearGradient>
+            <View className='flex-1' style={{ backgroundColor: overlays.scrim }}>
+              <View
+                className='flex-1 overflow-hidden rounded-t-3xl'
+                style={{ backgroundColor: colors.background, ...shadows.modal }}
+              >
+                <ScreenHeader
+                  leftAction='close'
+                  rightAction={
+                    <HeaderButton
+                      compact={isTitlePinned}
+                      icon={<Edit3 size={iconSizes.small} strokeWidth={2.5} />}
+                      label='Edit habit'
+                      text='Edit'
+                      tone='accent'
+                      onPress={handleEdit}
+                    />
+                  }
+                  title={habit.name}
+                  titleStyle={{ ...typography.body, fontWeight: fontWeights.semibold, letterSpacing: -0.2 }}
+                  titleVisible={isTitlePinned}
+                  variant='transparent'
+                  onBack={onClose}
+                />
+                <HabitDetailContent
+                  completedDates={screenState.completedDates}
+                  habit={habit}
+                  isCompletedToday={screenState.isCompletedToday}
+                  totalCompletions={screenState.totalCompletions}
+                  onDayPress={calendarHandlers.handleCalendarDayPress}
+                  onPinnedChange={handlePinnedChange}
+                />
               </View>
             </View>
           </KeyboardAvoidingView>

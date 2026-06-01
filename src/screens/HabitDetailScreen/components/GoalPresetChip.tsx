@@ -3,7 +3,7 @@
  */
 import { Pressable, Text } from 'react-native';
 import { useThemeColors } from '../../../theme/ThemeContext';
-import { typography } from '../../../theme/typography';
+import { typography, fontWeights } from '../../../theme/typography';
 
 interface GoalPresetChipProps {
   days: number;
@@ -35,7 +35,7 @@ export function GoalPresetChip({
         style={{
           ...typography.bodySmall,
           color: selected ? colors.status.streakText : colors.text.secondary,
-          fontWeight: selected ? '700' : '500',
+          fontWeight: selected ? fontWeights.bold : fontWeights.medium,
         }}
       >
         {days === 365 ? '1yr' : `${days}d`}

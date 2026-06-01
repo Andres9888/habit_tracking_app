@@ -87,6 +87,10 @@ export function sanitizeSettingsPayload(payload: unknown): UnknownRecord {
     output.showGradientFill = source.showGradientFill;
   }
 
+  if (isValidBoolean(source.showStreakConnections)) {
+    output.showStreakConnections = source.showStreakConnections;
+  }
+
   if (isValidBoolean(source.showMotivationalMessages)) {
     output.showMotivationalMessages = source.showMotivationalMessages;
   }

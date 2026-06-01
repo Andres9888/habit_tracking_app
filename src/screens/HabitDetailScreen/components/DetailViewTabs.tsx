@@ -12,8 +12,8 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import useHapticFeedback from '@/hooks/useHapticFeedback';
-import { borderRadius } from '@/theme/spacing';
-import { useThemeColors } from '@/theme';
+import { borderRadius, shadows, spacing } from '@/theme/spacing';
+import { useThemeColors, withAlpha } from '@/theme';
 import { DetailViewTabButton, type DetailView } from './DetailViewTabButton';
 
 interface DetailViewTabsProps {
@@ -22,6 +22,9 @@ interface DetailViewTabsProps {
 }
 
 const PADDING = 3;
+/** Off-grid track insets tuned to seat the sticky pill above the section stack. */
+const TRACK_PADDING_TOP = 6;
+const TRACK_PADDING_BOTTOM = 10;
 const TABS: Array<{ label: string; view: DetailView }> = [
   { label: 'Calendar', view: 'calendar' },
   { label: 'Strength', view: 'strength' },
@@ -73,9 +76,9 @@ export function DetailViewTabs({ activeView, onViewChange }: DetailViewTabsProps
     <View
       style={{
         backgroundColor: colors.background,
-        paddingBottom: 10,
-        paddingHorizontal: 16,
-        paddingTop: 6,
+        paddingBottom: TRACK_PADDING_BOTTOM,
+        paddingHorizontal: spacing.base,
+        paddingTop: TRACK_PADDING_TOP,
       }}
     >
       <View
@@ -95,16 +98,15 @@ export function DetailViewTabs({ activeView, onViewChange }: DetailViewTabsProps
           pointerEvents='none'
           style={[
             {
+              ...shadows.card,
               backgroundColor: colors.card,
-              borderColor: 'rgba(5, 150, 105, 0.22)',
+              borderColor: withAlpha(colors.primary[600], 0.22),
               borderRadius: borderRadius.small,
               borderWidth: 1,
               bottom: PADDING,
               position: 'absolute',
               shadowColor: accentColor,
-              shadowOffset: { height: 2, width: 0 },
               shadowOpacity: 0.12,
-              shadowRadius: 6,
               top: PADDING,
             },
             indicatorStyle,

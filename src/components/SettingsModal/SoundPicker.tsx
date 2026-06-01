@@ -15,6 +15,7 @@ import { Volume1, Droplet, TrendingUp } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
 import { typography, fontWeights } from '@/theme/typography';
 import { useThemeColors } from '../../theme/ThemeContext';
+import { getSegmentedControlColors } from './SegmentedControl.colors';
 import { useSoundPreview } from './SoundPicker.hooks';
 import type { CompletionSoundType } from '../../../convex/settings/types';
 
@@ -63,10 +64,8 @@ export function SoundPicker({ visible, selected, onSelect }: SoundPickerProps) {
 
   if (!everVisible) return null;
 
-  const accent = colors.primary[600];
-  /* Intentional rgba — alpha overlays on theme surfaces */
-  const accentBg = isDark ? 'rgba(52,211,153,0.12)' : 'rgba(5,150,105,0.08)';
-  const pillBg = isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)';
+  const { accent, selectedBg, containerBg } = getSegmentedControlColors(isDark);
+  /* Tray wrapper background is unique to the collapsing sound row */
   const trayBg = isDark ? 'rgba(0,0,0,0.2)' : 'rgba(0,0,0,0.02)';
 
   return (
@@ -87,7 +86,7 @@ export function SoundPicker({ visible, selected, onSelect }: SoundPickerProps) {
                 accessibilityRole="button"
                 accessibilityState={{ selected: on }}
                 className="flex-1 flex-row items-center justify-center gap-1.5 rounded-xl py-2"
-                style={{ backgroundColor: on ? accentBg : pillBg }}
+                style={{ backgroundColor: on ? selectedBg : containerBg }}
                 onPress={() => handleSelect(key)}
               >
                 <Icon

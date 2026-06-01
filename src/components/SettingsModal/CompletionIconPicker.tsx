@@ -4,6 +4,7 @@ import { Check, Link2 } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
 import * as Haptics from 'expo-haptics';
 import { useThemeColors } from '../../theme/ThemeContext';
+import { getSegmentedControlColors } from './SegmentedControl.colors';
 
 type CompletionIcon = 'chain' | 'checkbox';
 
@@ -22,11 +23,7 @@ export function CompletionIconPicker({
   onSelect,
 }: CompletionIconPickerProps) {
   const { colors, isDark } = useThemeColors();
-
-  const accent = colors.primary[700];
-  /* Intentional rgba — alpha overlays on theme surfaces */
-  const accentBg = isDark ? 'rgba(52,211,153,0.18)' : 'rgba(5,150,105,0.12)';
-  const containerBg = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.05)';
+  const { accent, selectedBg, containerBg } = getSegmentedControlColors(isDark);
 
   const handleSelect = (key: CompletionIcon) => {
     if (key === selected) return;
@@ -37,7 +34,7 @@ export function CompletionIconPicker({
   return (
     <View
       accessibilityRole='radiogroup'
-      className='flex-row rounded-[10px] p-[3px]'
+      className='flex-row rounded-xl p-[3px]'
       style={{ backgroundColor: containerBg, gap: 2 }}
     >
       {OPTIONS.map(({ key, Icon }) => {
@@ -53,7 +50,7 @@ export function CompletionIconPicker({
             style={{
               width: 40,
               height: 36,
-              backgroundColor: isSelected ? accentBg : 'transparent',
+              backgroundColor: isSelected ? selectedBg : 'transparent',
             }}
             onPress={() => handleSelect(key)}
           >

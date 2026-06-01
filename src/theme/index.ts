@@ -595,7 +595,7 @@ export default extendedTheme;
  * import { colors, typography, spacing } from '@/theme';
  * ```
  */
-export { colors } from './colors';
+export { colors, withAlpha } from './colors';
 export { typography } from './typography';
 export { spacing, borderRadius, shadows, componentSpacing } from './spacing';
 export { durations, easings, springs } from './animations';
