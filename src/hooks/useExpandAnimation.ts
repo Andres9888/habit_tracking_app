@@ -4,11 +4,10 @@ import { useCallback, useEffect, useRef } from 'react';
 import {
   useSharedValue,
   useAnimatedStyle,
-  withTiming,
+  withSpring,
   interpolate,
-  Easing,
 } from 'react-native-reanimated';
-import { ANIMATION_DURATIONS } from '@/constants/animations';
+import { springs } from '@/theme/animations';
 
 interface UseExpandAnimationProps {
   defaultExpanded: boolean;
@@ -40,19 +39,17 @@ export function useExpandAnimation({
   const animateToggle = useCallback(
     (newExpanded: boolean) => {
       isUserToggle.current = true;
-      const duration = reduceMotion ? 0 : ANIMATION_DURATIONS.STANDARD;
       const targetValue = newExpanded ? 1 : 0;
       const chevronTarget = newExpanded ? 180 : 0;
 
-      expandProgress.value = withTiming(targetValue, {
-        duration,
-        easing: Easing.out(Easing.ease),
-      });
+      if (reduceMotion) {
+        expandProgress.value = targetValue;
+        chevronRotation.value = chevronTarget;
+        return;
+      }
 
-      chevronRotation.value = withTiming(chevronTarget, {
-        duration,
-        easing: Easing.out(Easing.ease),
-      });
+      expandProgress.value = withSpring(targetValue, springs.gentle);
+      chevronRotation.value = withSpring(chevronTarget, springs.gentle);
     },
     [reduceMotion, expandProgress, chevronRotation]
   );
@@ -64,7 +61,7 @@ export function useExpandAnimation({
       [0, contentHeight]
     );
     return {
-      height: hasContentMeasured ? height : 'auto',
+      height: hasContentMeasured ? height : defaultExpanded ? 'auto' : 0,
       opacity: expandProgress.value,
       overflow: 'hidden',
     };

@@ -3,24 +3,23 @@
  *
  * The panel is rendered (clipped to height 0) from mount so its natural height
  * is measured before the first open — this avoids the first-open height jump.
- * Opening uses an ease-in-out curve (zero velocity at both ends — no jerk away
- * from rest, no abrupt stop) for a smooth, even expand; closing uses a quicker
- * ease-in so dismissal stays responsive. Height and opacity are interpolated
- * from a single `progress` value and cannot overshoot, and Reduce Motion
- * collapses both to an instant transition.
+ * Open and close share the house `springs.gentle` curve — critically damped, so
+ * it settles naturally with no overshoot, matching every accordion/disclosure in
+ * the app (see useExpandAnimation). Height and opacity are interpolated from a
+ * single `progress` value and cannot overshoot, and Reduce Motion collapses both
+ * to an instant transition.
  */
 import { useEffect, useState } from 'react';
 import type { LayoutChangeEvent } from 'react-native';
 import {
-  Easing,
   Extrapolation,
   interpolate,
   useAnimatedStyle,
   useSharedValue,
-  withTiming,
+  withSpring,
 } from 'react-native-reanimated';
 
-import { durations } from '@/theme/animations';
+import { springs } from '@/theme/animations';
 
 export function useProgressPickerAnimation(
   expanded: boolean,
@@ -30,14 +29,11 @@ export function useProgressPickerAnimation(
   const progress = useSharedValue(expanded ? 1 : 0);
 
   useEffect(() => {
-    progress.value = withTiming(expanded ? 1 : 0, {
-      duration: reduceMotion
-        ? 0
-        : expanded
-          ? durations.moderate
-          : durations.transition,
-      easing: expanded ? Easing.inOut(Easing.cubic) : Easing.in(Easing.cubic),
-    });
+    if (reduceMotion) {
+      progress.value = expanded ? 1 : 0;
+      return;
+    }
+    progress.value = withSpring(expanded ? 1 : 0, springs.gentle);
   }, [expanded, reduceMotion, progress]);
 
   const animatedStyle = useAnimatedStyle(() => ({

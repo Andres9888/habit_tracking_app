@@ -1,24 +1,15 @@
 /** AdvancedAlgorithmDisclosure — Collapsible card wrapping the algorithm picker for per-habit screens. */
-import { useEffect, useState } from 'react';
-import { Pressable, Text, View } from 'react-native';
-import Animated, {
-  FadeIn,
-  FadeOut,
-  LinearTransition,
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from 'react-native-reanimated';
+import { useCallback, useState } from 'react';
+import { Pressable, Text, View, type LayoutChangeEvent } from 'react-native';
+import Animated from 'react-native-reanimated';
 import { ChevronDown, SlidersHorizontal } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
 import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '@/theme/ThemeContext';
 import { useReduceMotion } from '@/hooks/useReduceMotion';
+import { useExpandAnimation } from '@/hooks/useExpandAnimation';
 import { AdvancedAlgorithmBody } from './AdvancedAlgorithmBody';
-import {
-  ALGORITHM_COPY,
-  type AlgorithmMode,
-} from './algorithmCopy';
+import { ALGORITHM_COPY, type AlgorithmMode } from './algorithmCopy';
 
 interface Props {
   selected: AlgorithmMode;
@@ -29,32 +20,43 @@ export function AdvancedAlgorithmDisclosure({ selected, onSelect }: Props) {
   const { colors } = useThemeColors();
   const reduceMotion = useReduceMotion();
   const [expanded, setExpanded] = useState(false);
-  const chevron = useSharedValue(0);
-  const duration = reduceMotion ? 0 : 200;
+  const [contentHeight, setContentHeight] = useState(0);
+  const [hasContentMeasured, setHasContentMeasured] = useState(false);
 
-  useEffect(() => {
-    chevron.value = withTiming(expanded ? 180 : 0, { duration });
-  }, [expanded, duration, chevron]);
+  const { animateToggle, chevronAnimatedStyle, contentAnimatedStyle } =
+    useExpandAnimation({
+      defaultExpanded: false,
+      reduceMotion,
+      contentHeight,
+      hasContentMeasured,
+    });
+
+  const handleContentLayout = useCallback((event: LayoutChangeEvent) => {
+    const { height } = event.nativeEvent.layout;
+    if (height > 0) {
+      setContentHeight(height);
+      setHasContentMeasured(true);
+    }
+  }, []);
 
   const activeMode: AlgorithmMode = selected;
   const subtitle = `Using ${ALGORITHM_COPY[activeMode].name}`;
-
-  const chevronStyle = useAnimatedStyle(() => ({
-    transform: [{ rotate: `${chevron.value}deg` }],
-  }));
 
   const toggle = () => {
     void Haptics.selectionAsync();
     const next = !expanded;
     setExpanded(next);
-    chevron.value = withTiming(next ? 180 : 0, { duration });
+    animateToggle(next);
   };
 
   return (
-    <Animated.View
+    <View
       className='overflow-hidden rounded-2xl'
-      layout={reduceMotion ? undefined : LinearTransition.duration(220)}
-      style={{ borderWidth: 1, borderColor: colors.border, backgroundColor: colors.card }}
+      style={{
+        borderWidth: 1,
+        borderColor: colors.border,
+        backgroundColor: colors.card,
+      }}
     >
       <Pressable
         accessibilityRole='button'
@@ -63,31 +65,44 @@ export function AdvancedAlgorithmDisclosure({ selected, onSelect }: Props) {
         onPress={toggle}
       >
         <View className='flex-row items-center gap-2.5'>
-          <SlidersHorizontal color={colors.text.secondary} size={iconSizes.small} strokeWidth={2} />
+          <SlidersHorizontal
+            color={colors.text.secondary}
+            size={iconSizes.small}
+            strokeWidth={2}
+          />
           <View>
-            <Text className='text-base font-semibold' style={{ color: colors.text.primary }}>
+            <Text
+              className='text-base font-semibold'
+              style={{ color: colors.text.primary }}
+            >
               Advanced
             </Text>
-            <Text className='mt-0.5 text-xs' style={{ color: colors.text.tertiary }}>
+            <Text
+              className='mt-0.5 text-xs'
+              style={{ color: colors.text.tertiary }}
+            >
               {subtitle}
             </Text>
           </View>
         </View>
-        <Animated.View style={chevronStyle}>
-          <ChevronDown color={colors.text.tertiary} size={iconSizes.small} strokeWidth={2} />
-        </Animated.View>
-      </Pressable>
-      {expanded ? (
-        <Animated.View
-          entering={reduceMotion ? undefined : FadeIn.duration(160)}
-          exiting={reduceMotion ? undefined : FadeOut.duration(120)}
-        >
-          <AdvancedAlgorithmBody
-            activeMode={activeMode}
-            onSelect={onSelect}
+        <Animated.View style={chevronAnimatedStyle}>
+          <ChevronDown
+            color={colors.text.tertiary}
+            size={iconSizes.small}
+            strokeWidth={2}
           />
         </Animated.View>
-      ) : null}
-    </Animated.View>
+      </Pressable>
+      <Animated.View
+        accessibilityElementsHidden={!expanded}
+        importantForAccessibility={expanded ? 'auto' : 'no-hide-descendants'}
+        pointerEvents={expanded ? 'auto' : 'none'}
+        style={contentAnimatedStyle}
+      >
+        <View onLayout={handleContentLayout}>
+          <AdvancedAlgorithmBody activeMode={activeMode} onSelect={onSelect} />
+        </View>
+      </Animated.View>
+    </View>
   );
 }
