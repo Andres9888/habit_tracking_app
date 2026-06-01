@@ -278,6 +278,9 @@
     renderWeekStrip();
     renderJournal();
     renderDualTrack();
+
+    const hashScreen = { '#capture': 'capture', '#story': 'story', '#journal': 'timeline', '#timeline': 'timeline' }[location.hash];
+    if (hashScreen) showScreen(hashScreen);
   </script>
 </body>
 </html>
