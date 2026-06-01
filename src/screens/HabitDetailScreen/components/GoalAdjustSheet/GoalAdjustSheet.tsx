@@ -1,19 +1,20 @@
 /**
  * GoalAdjustSheet — Bottom-sheet for changing or removing the streak goal.
- * Reuses GoalPresetChip. Remove uses tap-again-to-confirm.
+ *
+ * Uses animationType='none' + an animated backdrop (useSwipeDismiss) rather than
+ * the native slide modal. A nested native `slide` Modal renders an opaque black
+ * background on iOS; this matches the proven pattern in AdvancedSheet.
  */
-import { Modal, Pressable, Text, View } from 'react-native';
+import { Modal, Pressable, StyleSheet, View } from 'react-native';
+import { GestureDetector } from 'react-native-gesture-handler';
+import Animated from 'react-native-reanimated';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import type { Id } from '../../../../../convex/_generated/dataModel';
-import { Button } from '../../../../components/Button';
-import { spacing } from '../../../../theme/spacing';
+import { useSwipeDismiss } from '../../../../components/CreateHabitModal/hooks/useSwipeDismiss';
+import { shadows } from '../../../../theme/spacing';
 import { useThemeColors } from '../../../../theme/ThemeContext';
-import { typography, fontFamilies, fontWeights } from '../../../../theme/typography';
-import { GoalPresetChip } from '../GoalPresetChip';
 import { useGoalAdjust } from './GoalAdjustSheet.hooks';
-
-const PRESETS = [7, 21, 30, 66, 100, 365];
-const RECOMMENDED = 66;
-const labelFor = (d: number) => (d === 365 ? '1-year' : `${d}-day`);
+import { GoalAdjustSheetBody } from './GoalAdjustSheetBody';
 
 interface GoalAdjustSheetProps {
   habitId: Id<'habits'>;
@@ -25,69 +26,40 @@ interface GoalAdjustSheetProps {
 export function GoalAdjustSheet(props: GoalAdjustSheetProps) {
   const { currentGoal, visible, onClose } = props;
   const { colors } = useThemeColors();
-  const { confirmRemove, handleRemove, handleSelect, handleUpdate, saving, selected } =
-    useGoalAdjust(props);
+  const insets = useSafeAreaInsets();
+  const { animateOut, backdropStyle, panGesture, sheetStyle } = useSwipeDismiss({
+    visible,
+    onClose,
+  });
+  // Route every close (save, remove, swipe, backdrop) through animateOut so the
+  // sheet slides away instead of snapping shut.
+  const goal = useGoalAdjust({ ...props, onClose: animateOut });
 
   return (
-    <Modal animationType='slide' transparent visible={visible} onRequestClose={onClose}>
-      <Pressable className='flex-1 justify-end bg-black/40' onPress={onClose}>
-        <Pressable
-          className='rounded-t-3xl px-5 pb-10 pt-3'
-          style={{ backgroundColor: colors.card }}
-          onPress={(event) => event.stopPropagation()}
-        >
-          <View
-            className='mx-auto mb-4 h-1 w-10 rounded-full'
-            style={{ backgroundColor: colors.border }}
-          />
-          <Text
-            className='text-center'
-            style={{ ...typography.heading3, color: colors.text.primary, fontFamily: fontFamilies.primary.display }}
-          >
-            Adjust your goal
-          </Text>
-          <Text
-            className='mb-4 mt-1 text-center'
-            style={{ ...typography.caption, color: colors.text.secondary }}
-          >
-            Currently: {currentGoal > 0 ? `${labelFor(currentGoal)} streak` : 'none'}
-          </Text>
-          <View className='mb-5 flex-row flex-wrap justify-center gap-2'>
-            {PRESETS.map((days) => (
-              <GoalPresetChip
-                key={days}
-                days={days}
-                recommended={days === RECOMMENDED}
-                selected={days === selected}
-                onPress={() => handleSelect(days)}
-              />
-            ))}
-          </View>
-          <Button
-            accessibilityLabel='Save goal'
-            disabled={saving}
-            fullWidth
-            loading={saving}
-            style={{ marginBottom: spacing.sm }}
-            variant='primary'
-            onPress={() => void handleUpdate()}
-          >
-            {`Set ${labelFor(selected)} goal`}
-          </Button>
-          <Pressable
-            accessibilityRole='button'
-            className='items-center rounded-xl px-6 py-3'
-            disabled={saving}
-            onPress={() => void handleRemove()}
-          >
-            <Text
-              style={{ ...typography.bodySmall, color: colors.status.error, fontWeight: fontWeights.semibold }}
-            >
-              {confirmRemove ? 'Tap again to confirm' : 'Remove goal'}
-            </Text>
-          </Pressable>
+    <Modal
+      accessibilityViewIsModal
+      statusBarTranslucent
+      transparent
+      animationType='none'
+      visible={visible}
+      onRequestClose={animateOut}
+    >
+      <View className='flex-1'>
+        <Pressable style={StyleSheet.absoluteFill} onPress={animateOut}>
+          <Animated.View className='flex-1 bg-black' style={backdropStyle} />
         </Pressable>
-      </Pressable>
+        <GestureDetector gesture={panGesture}>
+          <Animated.View
+            className='absolute bottom-0 left-0 right-0 rounded-t-3xl px-5 pt-3'
+            style={[
+              sheetStyle,
+              { backgroundColor: colors.card, paddingBottom: insets.bottom + 28, ...shadows.modal },
+            ]}
+          >
+            <GoalAdjustSheetBody currentGoal={currentGoal} goal={goal} />
+          </Animated.View>
+        </GestureDetector>
+      </View>
     </Modal>
   );
 }
