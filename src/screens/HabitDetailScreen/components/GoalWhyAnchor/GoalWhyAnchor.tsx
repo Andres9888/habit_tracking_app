@@ -5,14 +5,21 @@
 import { Text, View } from 'react-native';
 import Animated, { Easing, FadeInDown } from 'react-native-reanimated';
 import { durations } from '../../../../theme/animations';
+// Parchment is a static (non-theme-aware) palette — dark-mode parchment is not
+// unlocked yet, so this intentionally reads from the static colors module.
 import { colors } from '../../../../theme/colors';
-import { typography, fontWeights } from '../../../../theme/typography';
+import { typography, fontFamilies, fontWeights } from '../../../../theme/typography';
 import type { Habit } from '../../../../features/habits/types';
 import { useResolveWhy } from './GoalWhyAnchor.hooks';
 
 interface GoalWhyAnchorProps {
   habit: Habit;
 }
+
+const WHY_ICON_SIZE = 18;
+/** Serif quote sized between bodySmall (14) and body (17) — no token equivalent. */
+const WHY_QUOTE_SIZE = 15;
+const WHY_QUOTE_LINE = 21;
 
 export function GoalWhyAnchor({ habit }: GoalWhyAnchorProps) {
   const resolved = useResolveWhy(habit);
@@ -34,7 +41,7 @@ export function GoalWhyAnchor({ habit }: GoalWhyAnchorProps) {
         className='h-9 w-9 items-center justify-center rounded-lg'
         style={{ backgroundColor: colors.parchment.surface }}
       >
-        <Text style={{ fontSize: 18 }}>{resolved.icon}</Text>
+        <Text style={{ fontSize: WHY_ICON_SIZE }}>{resolved.icon}</Text>
       </View>
       <View className='flex-1'>
         <Text
@@ -53,10 +60,10 @@ export function GoalWhyAnchor({ habit }: GoalWhyAnchorProps) {
           style={{
             ...typography.bodySmall,
             color: colors.parchment.textStrong,
-            fontFamily: 'Literata',
-            fontSize: 15,
+            fontFamily: fontFamilies.primary.display,
+            fontSize: WHY_QUOTE_SIZE,
             fontStyle: 'italic',
-            lineHeight: 21,
+            lineHeight: WHY_QUOTE_LINE,
           }}
         >
           “{resolved.value}”

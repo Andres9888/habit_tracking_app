@@ -3,19 +3,21 @@
  * Inline preset picker with "RECOMMENDED" emphasis on 66d.
  */
 import { useState } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import Animated, { Easing, FadeInDown } from 'react-native-reanimated';
 import { useMutation } from 'convex/react';
 import { api } from '../../../../convex/_generated/api';
 import type { Id } from '../../../../convex/_generated/dataModel';
+import { Button } from '../../../components/Button';
 import { durations } from '../../../theme/animations';
 import { useThemeColors } from '../../../theme/ThemeContext';
-import { typography, fontWeights } from '../../../theme/typography';
+import { typography, fontFamilies, fontWeights } from '../../../theme/typography';
 import useHapticFeedback from '../../../hooks/useHapticFeedback';
 import { GoalPresetChip } from './GoalPresetChip';
 
 const PRESETS = [7, 21, 30, 66, 100, 365];
 const RECOMMENDED = 66;
+const TARGET_EMOJI_SIZE = 30;
 
 interface GoalTabEmptyStateProps {
   habitId: Id<'habits'>;
@@ -48,12 +50,12 @@ export function GoalTabEmptyState({ habitId }: GoalTabEmptyStateProps) {
         className='mb-5 h-16 w-16 items-center justify-center rounded-2xl'
         style={{ backgroundColor: colors.status.streakLight }}
       >
-        <Text style={{ fontSize: 30 }}>🎯</Text>
+        <Text style={{ fontSize: TARGET_EMOJI_SIZE }}>🎯</Text>
       </View>
 
       <Text
         className='mb-2 text-center'
-        style={{ ...typography.heading2, color: colors.text.primary, fontFamily: 'Literata' }}
+        style={{ ...typography.heading2, color: colors.text.primary, fontFamily: fontFamilies.primary.display }}
       >
         Set a streak goal
       </Text>
@@ -85,17 +87,15 @@ export function GoalTabEmptyState({ habitId }: GoalTabEmptyStateProps) {
         ))}
       </View>
 
-      <Pressable
-        accessibilityRole='button'
-        className='rounded-xl px-6 py-3.5'
+      <Button
+        accessibilityLabel='Set streak goal'
         disabled={saving}
-        style={{ backgroundColor: colors.primary[600], opacity: saving ? 0.6 : 1 }}
+        loading={saving}
+        variant='primary'
         onPress={() => void handleSave()}
       >
-        <Text style={{ color: '#fff', fontWeight: fontWeights.semibold, fontSize: 15 }}>
-          {saving ? 'Setting…' : `Set ${selected === 365 ? '1-year' : `${selected}-day`} goal`}
-        </Text>
-      </Pressable>
+        {`Set ${selected === 365 ? '1-year' : `${selected}-day`} goal`}
+      </Button>
 
       <Text
         className='mt-4 text-center'

@@ -4,6 +4,7 @@
  */
 import { Text, View } from 'react-native';
 import { useStreakGoalData } from '../../../components/ProgressSectionConsolidated/StreakGoalCard/StreakGoalCard.hooks';
+import { borderRadius } from '../../../theme/spacing';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { fontFamilies, fontWeights, typography } from '../../../theme/typography';
 
@@ -12,6 +13,11 @@ interface SimpleStreakGoalHeroProps {
   streakGoal: number;
   habitColor: string;
 }
+
+/** Oversized hero numeral — intentionally larger than any typography token. */
+const STREAK_NUMBER_SIZE = 72;
+const STREAK_NUMBER_LINE = 76;
+const PROGRESS_BAR_HEIGHT = 10;
 
 export function SimpleStreakGoalHero({
   currentStreak,
@@ -43,10 +49,10 @@ export function SimpleStreakGoalHero({
           style={{
             color: colors.text.primary,
             fontFamily: fontFamilies.primary.display,
-            fontSize: 72,
+            fontSize: STREAK_NUMBER_SIZE,
             fontWeight: fontWeights.semibold,
             letterSpacing: -2,
-            lineHeight: 76,
+            lineHeight: STREAK_NUMBER_LINE,
             marginTop: 6,
           }}
         >
@@ -70,8 +76,8 @@ export function SimpleStreakGoalHero({
         <View
           style={{
             backgroundColor: colors.gray[200],
-            borderRadius: 9999,
-            height: 10,
+            borderRadius: borderRadius.full,
+            height: PROGRESS_BAR_HEIGHT,
             overflow: 'hidden',
           }}
         >
