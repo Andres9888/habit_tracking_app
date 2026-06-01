@@ -36,6 +36,7 @@ export const HabitStrengthSection = React.memo(function HabitStrengthSection({
   habitCreatedAt,
   habitStrength,
   progressEmojis,
+  onMarkTodayComplete,
 }: HabitStrengthSectionProps) {
   const { colors: themeColors } = useThemeColors();
   const sectionColors = getThemeColors(themeColors);
@@ -57,7 +58,13 @@ export const HabitStrengthSection = React.memo(function HabitStrengthSection({
 
   if (isCalculating) return <StrengthSkeleton />;
 
-  if (isEmpty) return <StrengthEmptyState startingEmoji={progressEmojis.starting} />;
+  if (isEmpty)
+    return (
+      <StrengthEmptyState
+        startingEmoji={progressEmojis.starting}
+        onMarkTodayComplete={onMarkTodayComplete}
+      />
+    );
 
   return (
     <Animated.View

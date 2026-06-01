@@ -49,6 +49,12 @@ export interface HabitStrengthSectionProps {
    * match whatever icon set the user picked.
    */
   progressEmojis: ProgressEmojiSet;
+
+  /**
+   * Marks today complete from the zero-data empty state. Reuses the same toggle
+   * the calendar uses; the first completion flips the card to the live view.
+   */
+  onMarkTodayComplete?: () => void;
 }
 
 /**

@@ -7,6 +7,7 @@ import { ScrollView, View, type LayoutChangeEvent } from 'react-native';
 import ErrorBoundary from '../../../components/ErrorBoundary';
 import { HabitStrengthSection } from '../../../components/HabitStrengthSection';
 import { useProgressEmojis } from '../../../hooks/useProgressEmojis';
+import { getLocalDateString } from '../../../utils/getLocalDateString';
 import { useThemeColors } from '../../../theme';
 import { shadows } from '../../../theme/spacing';
 import type { Habit } from '../../../features/habits/types';
@@ -85,6 +86,7 @@ export function HabitDetailContent({
               habitId={habit._id}
               habitStrength={habit.strength}
               progressEmojis={progressEmojis}
+              onMarkTodayComplete={() => onDayPress(getLocalDateString(), false)}
             />
           </ErrorBoundary>
         </View>
