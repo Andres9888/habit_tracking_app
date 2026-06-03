@@ -13,12 +13,16 @@ import type { StrengthLabel } from '../HabitStrengthHistory/types';
 // ============================================================================
 
 /** Circular progress ring dimensions — hero-sized so strength reads as a moment of pride */
-export const RING_SIZE = 116;
+export const RING_SIZE = 128;
 export const RING_STROKE_WIDTH = 9;
 export const RING_RADIUS = (RING_SIZE - RING_STROKE_WIDTH) / 2;
 export const RING_CIRCUMFERENCE = 2 * Math.PI * RING_RADIUS;
 /** Usable inner width for centered text inside the ring (subtracting stroke on both sides) */
 export const RING_INNER_WIDTH = RING_SIZE - RING_STROKE_WIDTH * 2;
+/** Horizontal padding so percentage text never touches the inner stroke */
+export const RING_CENTER_TEXT_WIDTH = RING_INNER_WIDTH - 12;
+/** Level emoji sits in the ring gap at 12 o'clock */
+export const RING_EMOJI_FONT_SIZE = 22;
 
 /** Chart dimensions (compact for above-fold layout) */
 export const CHART_HEIGHT = 88; // Reduced from 112 to fit above fold
