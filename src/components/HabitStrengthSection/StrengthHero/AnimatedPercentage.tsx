@@ -4,14 +4,15 @@
  * Displays a counting percentage animation using Reanimated.
  */
 
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Text } from 'react-native';
 import { useThemeColors } from '@/theme/ThemeContext';
 
 import { runOnJS, useDerivedValue } from 'react-native-reanimated';
 
-import { RING_INNER_WIDTH } from '../constants';
+import { RING_CENTER_TEXT_WIDTH } from '../constants';
 import type { AnimatedPercentageProps } from './types';
+import { getPercentageFontSize } from './percentageFontSize';
 
 /**
  * Animated text component that displays a counting percentage.
@@ -22,8 +23,6 @@ export function AnimatedPercentage({ animatedValue }: AnimatedPercentageProps) {
 
   useDerivedValue(() => {
     'worklet';
-    // Use Math.trunc to ensure integer (avoids Reanimated precision errors)
-    // Guard against NaN/undefined - default to 0
     const rawValue = animatedValue.value;
     const value =
       typeof rawValue === 'number' && !Number.isNaN(rawValue) ? rawValue : 0;
@@ -32,17 +31,26 @@ export function AnimatedPercentage({ animatedValue }: AnimatedPercentageProps) {
     return rounded;
   }, [animatedValue]);
 
+  const fontSize = useMemo(
+    () => getPercentageFontSize(displayValue),
+    [displayValue]
+  );
+
   return (
     <Text
       adjustsFontSizeToFit
-      className='text-3xl font-extrabold'
+      className='font-extrabold'
       numberOfLines={1}
       style={{
         color: themeColors.text.primary,
-        minimumFontScale: 0.75,
+        fontSize,
+        includeFontPadding: false,
+        letterSpacing: -0.5,
+        lineHeight: fontSize + 2,
+        minimumFontScale: 0.65,
         textAlign: 'center',
-        width: RING_INNER_WIDTH,
+        width: RING_CENTER_TEXT_WIDTH,
       }}
-    >{displayValue}%</Text>
+    >{`${displayValue}%`}</Text>
   );
 }
