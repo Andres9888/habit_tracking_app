@@ -15,6 +15,7 @@ import { useThemeColors } from '@/theme/ThemeContext';
 import {
   getThemeColors,
   RING_CIRCUMFERENCE,
+  RING_EMOJI_FONT_SIZE,
   RING_RADIUS,
   RING_SIZE,
   RING_STROKE_WIDTH,
@@ -38,7 +39,6 @@ export function ProgressRing({
   const sectionColors = getThemeColors(themeColors);
   const center = RING_SIZE / 2;
 
-  // Animated props for the progress circle
   const animatedCircleProps = useAnimatedProps(() => {
     'worklet';
     const strengthValue = animatedStrength.value ?? 0;
@@ -56,7 +56,6 @@ export function ProgressRing({
       style={{ height: RING_SIZE, width: RING_SIZE }}
     >
       <Svg height={RING_SIZE} width={RING_SIZE}>
-        {/* Background track */}
         <Circle
           cx={center}
           cy={center}
@@ -65,7 +64,6 @@ export function ProgressRing({
           stroke={sectionColors.ringTrack}
           strokeWidth={RING_STROKE_WIDTH}
         />
-        {/* Progress arc */}
         <AnimatedCircle
           animatedProps={animatedCircleProps}
           cx={center}
@@ -82,16 +80,36 @@ export function ProgressRing({
         />
       </Svg>
 
-      {/* Center content — emoji over percentage over label */}
+      <Text
+        accessibilityElementsHidden
+        style={{
+          fontSize: RING_EMOJI_FONT_SIZE,
+          left: 0,
+          lineHeight: RING_EMOJI_FONT_SIZE,
+          position: 'absolute',
+          right: 0,
+          textAlign: 'center',
+          top: 1,
+        }}
+      >
+        {emoji}
+      </Text>
+
       <View
         accessibilityElementsHidden
         className='absolute inset-0 items-center justify-center'
+        style={{ paddingTop: RING_EMOJI_FONT_SIZE * 0.35 }}
       >
-        <Text style={{ fontSize: 26, marginBottom: -2 }}>{emoji}</Text>
         <AnimatedPercentage animatedValue={animatedStrength} />
         <Text
-          className='text-[9px] font-semibold'
-          style={{ color: sectionColors.textMuted, letterSpacing: 1 }}
+          className='font-semibold'
+          style={{
+            color: sectionColors.textMuted,
+            fontSize: 9,
+            letterSpacing: 1,
+            lineHeight: 11,
+            marginTop: 1,
+          }}
         >
           STRENGTH
         </Text>
