@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings Improvements — Before / After</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'DM Sans', -apple-system, sans-serif;
+      background: linear-gradient(160deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+      color: #f8fafc;
+      min-height: 100vh;
+      padding: 40px 24px 60px;
+    }
+    .page { max-width: 1400px; margin: 0 auto; }
+    h1 {
+      font-size: 32px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      margin-bottom: 8px;
+    }
+    .subtitle { color: #94a3b8; font-size: 15px; margin-bottom: 32px; max-width: 720px; line-height: 1.6; }
+    .comparison {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      margin-bottom: 48px;
+    }
+    @media (max-width: 960px) { .comparison { grid-template-columns: 1fr; } }
+    .panel-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 6px 14px;
+      border-radius: 999px;
+      margin-bottom: 16px;
+    }
+    .label-before { background: rgba(239, 68, 68, 0.15); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.3); }
+    .label-after { background: rgba(16, 185, 129, 0.15); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.3); }
+    .panel-title { font-size: 20px; font-weight: 700; margin-bottom: 4px; color: #e2e8f0; }
+    .panel-desc { font-size: 13px; color: #64748b; margin-bottom: 20px; line-height: 1.5; }
+
+    .phone {
+      width: 320px;
+      height: 680px;
+      background: #fafaf9;
+      border-radius: 36px;
+      overflow: hidden;
+      box-shadow: 0 0 0 2px #334155, 0 24px 48px rgba(0,0,0,0.45);
+      display: flex;
+      flex-direction: column;
+      margin: 0 auto;
+    }
+    .phone-header {
+      padding: 48px 16px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #fafaf9;
+    }
+    .phone-title { font-size: 20px; font-weight: 700; color: #1c1917; }
+    .close-dot {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: #f5f5f4; display: flex; align-items: center; justify-content: center;
+    }
+    .scroll { flex: 1; overflow: hidden; padding: 0 12px 16px; }
+    .account-card {
+      background: #fff; border-radius: 14px; padding: 14px;
+      display: flex; align-items: center; gap: 12px;
+      margin-bottom: 14px;
+      box-shadow: 0 2px 8px rgba(28,25,23,0.06);
+    }
+    .avatar {
+      width: 44px; height: 44px; border-radius: 50%;
+      background: linear-gradient(135deg, #059669, #10b981);
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-weight: 700; font-size: 16px;
+    }
+    .section { margin-bottom: 12px; }
+    .section-head {
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.06em; color: #a8a29e;
+      padding: 0 4px 6px; display: flex; align-items: center; gap: 6px;
+    }
+    .section-head svg { width: 14px; height: 14px; }
+    .card {
+      background: #fff; border-radius: 14px; overflow: hidden;
+      box-shadow: 0 2px 8px rgba(28,25,23,0.06);
+    }
+    .row {
+      display: flex; align-items: center; gap: 10px;
+      padding: 11px 12px; border-bottom: 1px solid #f5f5f4;
+      font-size: 14px;
+    }
+    .row:last-child { border-bottom: none; }
+    .row-icon {
+      width: 32px; height: 32px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .row-icon svg { width: 15px; height: 15px; }
+    .row-text { flex: 1; min-width: 0; }
+    .row-label { font-weight: 600; color: #1c1917; font-size: 13px; line-height: 1.25; }
+    .row-sub { font-size: 11px; color: #a8a29e; margin-top: 1px; }
+    .toggle {
+      width: 42px; height: 24px; border-radius: 12px; background: #e7e5e4;
+      position: relative; flex-shrink: 0;
+    }
+    .toggle.on { background: #059669; }
+    .toggle::after {
+      content: ''; position: absolute; width: 20px; height: 20px;
+      background: #fff; border-radius: 50%; top: 2px; left: 2px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.12);
+    }
+    .toggle.on::after { left: 20px; }
+    .chev { color: #d6d3d1; flex-shrink: 0; }
+    .chev svg { width: 14px; height: 14px; }
+    .badge {
+      background: #f5f5f4; color: #78716c; font-size: 11px; font-weight: 700;
+      padding: 2px 7px; border-radius: 999px;
+    }
+    .pill {
+      font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 6px;
+    }
+    .pill-missing { background: #fee2e2; color: #dc2626; }
+    .pill-new { background: #dcfce7; color: #16a34a; }
+    .pill-fixed { background: #dbeafe; color: #2563eb; }
+
+    /* Issue markers — before */
+    .issue-gap {
+      border: 1.5px dashed #fca5a5;
+      border-radius: 14px;
+      margin-bottom: 12px;
+      padding: 8px 10px;
+      background: rgba(254, 226, 226, 0.35);
+    }
+    .issue-gap-label {
+      font-size: 10px; font-weight: 700; color: #dc2626;
+      text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px;
+    }
+    .issue-gap p { font-size: 11px; color: #991b1b; line-height: 1.4; }
+
+    /* New section highlight — after */
+    .new-section { position: relative; }
+    .new-section::before {
+      content: 'NEW';
+      position: absolute; top: -6px; right: 8px;
+      font-size: 9px; font-weight: 800; letter-spacing: 0.05em;
+      background: #059669; color: #fff; padding: 2px 6px; border-radius: 4px;
+      z-index: 2;
+    }
+    .banner {
+      background: #fff7ed; border: 1px solid #fed7aa; border-radius: 10px;
+      padding: 8px 10px; margin-bottom: 12px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .banner svg { width: 14px; height: 14px; color: #ea580c; flex-shrink: 0; }
+    .banner-text { font-size: 11px; color: #9a3412; line-height: 1.35; flex: 1; }
+    .banner-btn {
+      font-size: 10px; font-weight: 700; color: #ea580c;
+      background: #fff; border: 1px solid #fdba74; border-radius: 6px;
+      padding: 4px 8px; white-space: nowrap;
+    }
+
+    /* Skeleton loading — after inset */
+    .skeleton-row {
+      display: flex; gap: 10px; padding: 11px 12px; align-items: center;
+    }
+    .sk { background: #e7e5e4; border-radius: 6px; animation: pulse 1.5s ease infinite; }
+    .sk-icon { width: 32px; height: 32px; border-radius: 10px; }
+    .sk-line { height: 10px; flex: 1; }
+    .sk-line.short { max-width: 60%; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
+
+    .changes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+    }
+    .change-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px;
+      padding: 18px;
+    }
+    .change-card h3 { font-size: 15px; font-weight: 700; margin-bottom: 6px; color: #e2e8f0; }
+    .change-card p { font-size: 13px; color: #94a3b8; line-height: 1.55; }
+    .change-card .tag {
+      display: inline-block; font-size: 10px; font-weight: 700;
+      padding: 2px 8px; border-radius: 4px; margin-bottom: 8px;
+    }
+    .tag-p1 { background: rgba(239,68,68,0.2); color: #fca5a5; }
+    .tag-p2 { background: rgba(245,158,11,0.2); color: #fcd34d; }
+    .tag-p3 { background: rgba(59,130,246,0.2); color: #93c5fd; }
+
+    .extras {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 16px;
+    }
+    @media (max-width: 1100px) { .extras { grid-template-columns: 1fr; } }
+    .extra-label { font-size: 14px; font-weight: 600; color: #cbd5e1; margin-bottom: 12px; text-align: center; }
+  </style>
+</head>
+<body>
+  <div class="page" id="capture-root">
+    <h1>Settings Page — Before & After</h1>
+    <p class="subtitle">
+      Side-by-side mockups based on the codebase audit. The <strong>Before</strong> panel reflects the current
+      <code>SettingsContent</code> layout. The <strong>After</strong> panel adds missing settings, clearer sections,
+      reliability UX, and account improvements.
+    </p>
+
+    <div class="comparison">
+      <!-- BEFORE -->
+      <div>
+        <span class="panel-label label-before">● Before — Current</span>
+        <div class="panel-title">What users see today</div>
+        <div class="panel-desc">6 collapsible sections. Several backend settings wired but hidden. No loading or error feedback.</div>
+        <div class="phone" id="phone-before">
+          <div class="phone-header">
+            <div style="width:36px"></div>
+            <div class="phone-title">Settings</div>
+            <div class="close-dot"><i data-lucide="x" style="width:18px;height:18px;color:#78716c"></i></div>
+          </div>
+          <div class="scroll">
+            <div class="account-card">
+              <div class="avatar">JD</div>
+              <div>
+                <div style="font-weight:600;font-size:14px;color:#1c1917">Jane Doe</div>
+                <div style="font-size:11px;color:#a8a29e">Account settings ›</div>
+              </div>
+            </div>
+
+            <div class="section">
+              <div class="section-head"><i data-lucide="palette"></i> Appearance</div>
+              <div class="card">
+                <div class="row"><div class="row-icon" style="background:#ecfdf5"><i data-lucide="rows-3" style="color:#059669"></i></div><div class="row-text"><div class="row-label">Compact habit cards</div></div><div class="toggle"></div></div>
+                <div class="row"><div class="row-icon" style="background:#ede9fe"><i data-lucide="square" style="color:#7c3aed"></i></div><div class="row-text"><div class="row-label">Day marker shape</div></div><span style="font-size:11px;color:#a8a29e">Square</span></div>
+                <div class="row"><div class="row-icon" style="background:#cffafe"><i data-lucide="droplets" style="color:#0891b2"></i></div><div class="row-text"><div class="row-label">Gradient streak fill</div></div><div class="toggle on"></div></div>
+                <div class="row"><div class="row-icon" style="background:#dcfce7"><i data-lucide="link-2" style="color:#16a34a"></i></div><div class="row-text"><div class="row-label">Streak connections</div></div><div class="toggle on"></div></div>
+                <div class="row"><div class="row-icon" style="background:#dcfce7"><i data-lucide="check" style="color:#16a34a"></i></div><div class="row-text"><div class="row-label">Completion icon</div></div><span style="font-size:11px;color:#a8a29e">Chain</span></div>
+                <div class="row"><div class="row-icon" style="background:#fef3c7"><i data-lucide="sparkles" style="color:#d97706"></i></div><div class="row-text"><div class="row-label">Growth icons</div></div><div class="chev"><i data-lucide="chevron-right"></i></div></div>
+              </div>
+            </div>
+
+            <div class="issue-gap">
+              <div class="issue-gap-label">⚠ Missing — no UI</div>
+              <p>Dark mode, high contrast, reduce motion, dyslexic font, show streaks/emojis/strength %, celebrations</p>
+            </div>
+
+            <div class="section">
+              <div class="section-head"><i data-lucide="sliders-horizontal"></i> Behavior</div>
+              <div class="card">
+                <div class="row"><div class="row-icon" style="background:#ede9fe"><i data-lucide="arrow-up-down" style="color:#7c3aed"></i></div><div class="row-text"><div class="row-label">Sort order</div></div><span style="font-size:11px;color:#a8a29e">Custom</span><div class="chev"><i data-lucide="chevron-right"></i></div></div>
+                <div class="row"><div class="row-icon" style="background:#fef3c7"><i data-lucide="volume-2" style="color:#d97706"></i></div><div class="row-text"><div class="row-label">Completion sound</div></div><div class="toggle"></div></div>
+                <div class="row"><div class="row-icon" style="background:#fee2e2"><i data-lucide="calendar" style="color:#dc2626"></i></div><div class="row-text"><div class="row-label">Sticky month header</div></div><div class="toggle"></div></div>
+              </div>
+            </div>
+
+            <div class="section">
+              <div class="section-head"><i data-lucide="folder-open"></i> Habit Management</div>
+              <div class="card">
+                <div class="row"><div class="row-icon" style="background:#e0e7ff"><i data-lucide="book-open" style="color:#4f46e5"></i></div><div class="row-text"><div class="row-label">Archived habits</div></div><span class="badge">3</span><div class="chev"><i data-lucide="chevron-right"></i></div></div>
+                <div class="row"><div class="row-icon" style="background:#dbeafe"><i data-lucide="download" style="color:#2563eb"></i></div><div class="row-text"><div class="row-label">Export habits data</div></div><div class="chev"><i data-lucide="chevron-right"></i></div></div>
+              </div>
+            </div>
+
+            <div class="section">
+              <div class="section-head"><i data-lucide="bell-ring"></i> Notifications</div>
+              <div class="card">
+                <div class="row"><div class="row-icon" style="background:#fce7f3"><i data-lucide="bell" style="color:#db2777"></i></div><div class="row-text"><div class="row-label">Streak reminders</div></div><div class="toggle on"></div></div>
+              </div>
+            </div>
+
+            <div class="issue-gap">
+              <div class="issue-gap-label">⚠ Reliability gaps</div>
+              <p>isLoading never wired · toggle errors silent · export has no spinner · error retry is no-op</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AFTER -->
+      <div>
+        <span class="panel-label label-after">● After — Proposed</span>
+        <div class="panel-title">Improved settings experience</div>
+        <div class="panel-desc">New Accessibility + Display sections, renamed Data, permission banner, subscription link, and feedback UX.</div>
+        <div class="phone" id="phone-after">
+          <div class="phone-header">
+            <div style="width:36px"></div>
+            <div class="phone-title">Settings</div>
+            <div class="close-dot"><i data-lucide="x" style="width:18px;height:18px;color:#78716c"></i></div>
+          </div>
+          <div class="scroll">
+            <div class="account-card">
+              <div class="avatar">JD</div>
+              <div style="flex:1">
+                <div style="font-weight:600;font-size:14px;color:#1c1917">Jane Doe</div>
+                <div style="font-size:11px;color:#a8a29e">Premium · Manage account ›</div>
+              </div>
+              <span class="pill pill-new">+ sub link</span>
+            </div>
+
+            <div class="section">
+              <div class="section-head"><i data-lucide="palette"></i> Appearance</div>
+              <div class="card">
+                <div class="row"><div class="row-icon" style="background:#ecfdf5"><i data-lucide="rows-3" style="color:#059669"></i></div><div class="row-text"><div class="row-label">Compact habit cards</div><div class="row-sub">Fit more on screen</div></div><div class="toggle"></div></div>
+                <div class="row"><div class="row-icon" style="background:#ede9fe"><i data-lucide="square" style="color:#7c3aed"></i></div><div class="row-text"><div class="row-label">Day marker shape</div></div><span style="font-size:11px;color:#a8a29e">Square</span></div>
+                <div class="row"><div class="row-icon" style="background:#cffafe"><i data-lucide="droplets" style="color:#0891b2"></i></div><div class="row-text"><div class="row-label">Gradient streak fill</div></div><div class="toggle on"></div></div>
+                <div class="row"><div class="row-icon" style="background:#dcfce7"><i data-lucide="link-2" style="color:#16a34a"></i></div><div class="row-text"><div class="row-label">Streak connections</div></div><div class="toggle on"></div></div>
+                <div class="row"><div class="row-icon" style="background:#dcfce7"><i data-lucide="check" style="color:#16a34a"></i></div><div class="row-text"><div class="row-label">Checkbox style for completed habits</div><div class="row-sub">Clearer label</div></div><span style="font-size:11px;color:#a8a29e">Chain</span></div>
+              </div>
+            </div>
+
+            <div class="section new-section">
+              <div class="section-head"><i data-lucide="accessibility"></i> Accessibility</div>
+              <div class="card">
+                <div class="row"><div class="row-icon" style="background:#f3e8ff"><i data-lucide="moon" style="color:#9333ea"></i></div><div class="row-text"><div class="row-label">Theme</div></div><span style="font-size:11px;color:#a8a29e">System</span></div>
+                <div class="row"><div class="row-icon" style="background:#fef3c7"><i data-lucide="contrast" style="color:#d97706"></i></div><div class="row-text"><div class="row-label">High contrast</div></div><div class="toggle"></div></div>
+                <div class="row"><div class="row-icon" style="background:#e0e7ff"><i data-lucide="minimize-2" style="color:#4f46e5"></i></div><div class="row-text"><div class="row-label">Reduce motion</div></div><div class="toggle"></div></div>
+                <div class="row"><div class="row-icon" style="background:#fce7f3"><i data-lucide="type" style="color:#db2777"></i></div><div class="row-text"><div class="row-label">Dyslexia-friendly font</div></div><div class="toggle"></div></div>
+              </div>
+            </div>
+
+            <div class="section new-section">
+              <div class="section-head"><i data-lucide="eye"></i> Display</div>
+              <div class="card">
+                <div class="row"><div class="row-icon" style="background:#fef3c7"><i data-lucide="flame" style="color:#d97706"></i></div><div class="row-text"><div class="row-label">Show streak counts</div></div><div class="toggle on"></div></div>
+                <div class="row"><div class="row-icon" style="background:#dcfce7"><i data-lucide="percent" style="color:#16a34a"></i></div><div class="row-text"><div class="row-label">Habit strength percentage</div></div><div class="toggle on"></div></div>
+                <div class="row"><div class="row-icon" style="background:#fce7f3"><i data-lucide="party-popper" style="color:#db2777"></i></div><div class="row-text"><div class="row-label">Celebrations & messages</div></div><div class="toggle on"></div></div>
+              </div>
+            </div>
+
+            <div class="section">
+              <div class="section-head"><i data-lucide="sliders-horizontal"></i> Behavior</div>
+              <div class="card">
+                <div class="row"><div class="row-icon" style="background:#ede9fe"><i data-lucide="arrow-up-down" style="color:#7c3aed"></i></div><div class="row-text"><div class="row-label">Sort order</div></div><span style="font-size:11px;color:#a8a29e">Custom</span><div class="chev"><i data-lucide="chevron-right"></i></div></div>
+                <div class="row"><div class="row-icon" style="background:#fef3c7"><i data-lucide="volume-2" style="color:#d97706"></i></div><div class="row-text"><div class="row-label">Play sound on completion</div></div><div class="toggle"></div></div>
+              </div>
+            </div>
+
+            <div class="section">
+              <div class="section-head"><i data-lucide="database"></i> Data <span class="pill pill-fixed" style="margin-left:4px">renamed</span></div>
+              <div class="card">
+                <div class="row"><div class="row-icon" style="background:#e0e7ff"><i data-lucide="book-open" style="color:#4f46e5"></i></div><div class="row-text"><div class="row-label">Archived habits</div></div><span class="badge">3</span><div class="chev"><i data-lucide="chevron-right"></i></div></div>
+                <div class="row"><div class="row-icon" style="background:#dbeafe"><i data-lucide="download" style="color:#2563eb"></i></div><div class="row-text"><div class="row-label">Export habits & stats</div><div class="row-sub">Shows spinner while exporting</div></div><div class="chev"><i data-lucide="chevron-right"></i></div></div>
+              </div>
+            </div>
+
+            <div class="banner">
+              <i data-lucide="bell-off"></i>
+              <div class="banner-text">Notifications blocked — streak reminders won't fire</div>
+              <div class="banner-btn">Open Settings</div>
+            </div>
+
+            <div class="section">
+              <div class="section-head"><i data-lucide="bell-ring"></i> Notifications</div>
+              <div class="card">
+                <div class="row"><div class="row-icon" style="background:#fce7f3"><i data-lucide="bell" style="color:#db2777"></i></div><div class="row-text"><div class="row-label">Streak reminders</div><div class="row-sub">8:00 PM</div></div><div class="toggle on"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Extra states -->
+    <h2 style="font-size: 22px; font-weight: 700; margin-bottom: 8px;">Additional states</h2>
+    <p style="color: #64748b; font-size: 14px; margin-bottom: 20px;">Loading skeleton and account page improvements.</p>
+
+    <div class="extras">
+      <div>
+        <div class="extra-label">Loading (wire isLoading)</div>
+        <div class="phone" style="height: 420px;">
+          <div class="phone-header">
+            <div style="width:36px"></div>
+            <div class="phone-title">Settings</div>
+            <div class="close-dot"><i data-lucide="x" style="width:18px;height:18px;color:#78716c"></i></div>
+          </div>
+          <div class="scroll" style="padding-top:8px">
+            <div class="card" style="margin-bottom:12px">
+              <div class="skeleton-row"><div class="sk sk-icon"></div><div style="flex:1"><div class="sk sk-line short" style="margin-bottom:6px"></div><div class="sk sk-line" style="max-width:40%"></div></div></div>
+            </div>
+            <div class="card" style="margin-bottom:12px">
+              <div class="skeleton-row"><div class="sk sk-icon"></div><div class="sk sk-line"></div></div>
+              <div class="skeleton-row"><div class="sk sk-icon"></div><div class="sk sk-line short"></div></div>
+              <div class="skeleton-row"><div class="sk sk-icon"></div><div class="sk sk-line"></div></div>
+            </div>
+            <div class="card">
+              <div class="skeleton-row"><div class="sk sk-icon"></div><div class="sk sk-line short"></div></div>
+              <div class="skeleton-row"><div class="sk sk-icon"></div><div class="sk sk-line"></div></div>
+            </div>
+            <p style="text-align:center;font-size:11px;color:#a8a29e;margin-top:12px">SettingsModalSkeleton while Convex loads</p>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="extra-label">Account page — Before</div>
+        <div class="phone" style="height: 420px;">
+          <div class="phone-header">
+            <div class="close-dot" style="width:28px;height:28px"><i data-lucide="arrow-left" style="width:16px;height:16px;color:#78716c"></i></div>
+            <div class="phone-title">Account</div>
+            <div class="close-dot"><i data-lucide="x" style="width:18px;height:18px;color:#78716c"></i></div>
+          </div>
+          <div class="scroll">
+            <div class="account-card"><div class="avatar">JD</div><div><div style="font-weight:600;font-size:14px;color:#1c1917">Jane Doe</div><div style="font-size:11px;color:#a8a29e">Premium member</div></div></div>
+            <div class="section"><div class="section-head">Premium</div><div class="card"><div class="row"><div class="row-text"><div class="row-label">Upgrade to Premium</div></div><div class="chev"><i data-lucide="chevron-right"></i></div></div></div></div>
+            <div class="section"><div class="section-head">Actions</div><div class="card"><div class="row"><div class="row-text"><div class="row-label">Sign out</div></div></div><div class="row"><div class="row-text"><div class="row-label" style="color:#dc2626">Delete account</div></div></div></div></div>
+            <div class="issue-gap" style="margin-top:12px"><div class="issue-gap-label">Missing</div><p>No "Manage Subscription" link for premium users</p></div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="extra-label">Account page — After</div>
+        <div class="phone" style="height: 420px;">
+          <div class="phone-header">
+            <div class="close-dot" style="width:28px;height:28px"><i data-lucide="arrow-left" style="width:16px;height:16px;color:#78716c"></i></div>
+            <div class="phone-title">Account</div>
+            <div class="close-dot"><i data-lucide="x" style="width:18px;height:18px;color:#78716c"></i></div>
+          </div>
+          <div class="scroll">
+            <div class="account-card"><div class="avatar">JD</div><div><div style="font-weight:600;font-size:14px;color:#1c1917">Jane Doe</div><div style="font-size:11px;color:#a8a29e">Premium · Active</div></div><span style="background:#fef3c7;color:#d97706;font-size:10px;font-weight:700;padding:3px 8px;border-radius:6px">PRO</span></div>
+            <div class="section"><div class="section-head">Subscription</div><div class="card"><div class="row"><div class="row-icon" style="background:#fef3c7"><i data-lucide="crown" style="color:#d97706"></i></div><div class="row-text"><div class="row-label">Manage subscription</div><div class="row-sub">Opens App Store settings</div></div><div class="chev"><i data-lucide="external-link"></i></div></div></div></div>
+            <div class="section"><div class="section-head">Actions</div><div class="card"><div class="row"><div class="row-text"><div class="row-label">Sign out</div></div></div><div class="row"><div class="row-text"><div class="row-label" style="color:#dc2626">Delete account</div></div></div></div></div>
+            <div style="background:#ecfdf5;border:1px solid #a7f3d0;border-radius:10px;padding:8px 10px;margin-top:12px;font-size:11px;color:#065f46;line-height:1.4">
+              Toggle save failed → toast: "Couldn't save setting. Try again." + revert
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Change summary -->
+    <h2 style="font-size: 22px; font-weight: 700; margin: 48px 0 16px;">Change summary</h2>
+    <div class="changes-grid">
+      <div class="change-card"><span class="tag tag-p1">P1</span><h3>Expose hidden settings</h3><p>Add Accessibility and Display sections for prefs already in Convex hooks but not rendered in SettingsContent.</p></div>
+      <div class="change-card"><span class="tag tag-p1">P1</span><h3>Wire loading skeleton</h3><p>Pass isLoading={settings === undefined} so SettingsModalSkeleton shows during Convex fetch.</p></div>
+      <div class="change-card"><span class="tag tag-p1">P1</span><h3>Mutation error feedback</h3><p>Revert optimistic toggles on failure and show a toast or alert — no more silent desync.</p></div>
+      <div class="change-card"><span class="tag tag-p2">P2</span><h3>Manage subscription</h3><p>Premium users get a direct link to App Store subscription management on the Account page.</p></div>
+      <div class="change-card"><span class="tag tag-p2">P2</span><h3>Permission banner</h3><p>When notifications are denied, show an inline banner with "Open Settings" — same pattern as create-habit flow.</p></div>
+      <div class="change-card"><span class="tag tag-p2">P2</span><h3>Clearer labels & naming</h3><p>Rename "Habit Management" → "Data", improve toggle copy, group sounds under Behavior.</p></div>
+      <div class="change-card"><span class="tag tag-p3">P3</span><h3>Dark mode picker</h3><p>Theme selector (System / Light / Dark) once ThemeContext fully supports it end-to-end.</p></div>
+      <div class="change-card"><span class="tag tag-p3">P3</span><h3>Decompose SettingsContent</h3><p>Split 381-line file into section components to meet the 100-line decomposition standard.</p></div>
+    </div>
+  </div>
+
+  <script>lucide.createIcons();</script>
+</body>
+</html>
