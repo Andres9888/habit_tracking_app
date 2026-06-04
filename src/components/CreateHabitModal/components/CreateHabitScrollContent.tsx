@@ -8,8 +8,12 @@ import {
   ScrollView,
   View,
 } from 'react-native';
-import type { ScrollView as ScrollViewType, View as ViewType } from 'react-native';
+import type {
+  ScrollView as ScrollViewType,
+  View as ViewType,
+} from 'react-native';
 import { useSharedValue } from 'react-native-reanimated';
+import { spacing } from '@/theme/spacing';
 import { HabitFormBody } from './HabitFormBody';
 import { ScrollForMoreHint } from './ScrollForMoreHint';
 import { HABIT_COLORS } from '../constants';
@@ -49,7 +53,7 @@ export function CreateHabitScrollContent({
       <ScrollView
         ref={scrollViewRef}
         className='flex-1'
-        contentContainerStyle={{ paddingBottom: 120 }}
+        contentContainerStyle={{ paddingBottom: spacing.xl }}
         keyboardDismissMode='on-drag'
         keyboardShouldPersistTaps='handled'
         scrollEventThrottle={16}

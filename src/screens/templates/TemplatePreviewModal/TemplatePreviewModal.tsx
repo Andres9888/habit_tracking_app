@@ -134,7 +134,7 @@ export default function TemplatePreviewModal({
                   ref={scrollViewRef}
                   className='flex-1'
                   contentContainerStyle={{
-                    paddingBottom: insets.bottom + 32,
+                    paddingBottom: insets.bottom + spacing.xl,
                   }}
                   keyboardDismissMode='on-drag'
                   keyboardShouldPersistTaps='handled'
@@ -150,7 +150,9 @@ export default function TemplatePreviewModal({
                     >
                       <Animated.View
                         className='mb-4'
-                        entering={FadeInDown.duration(280).delay(100).easing(Easing.out(Easing.cubic))}
+                        entering={FadeInDown.duration(280)
+                          .delay(100)
+                          .easing(Easing.out(Easing.cubic))}
                       >
                         <TemplatePreview
                           customColor={customColor}
@@ -161,7 +163,9 @@ export default function TemplatePreviewModal({
 
                       <Animated.View
                         className='w-full'
-                        entering={FadeInUp.duration(280).delay(160).easing(Easing.out(Easing.cubic))}
+                        entering={FadeInUp.duration(280)
+                          .delay(160)
+                          .easing(Easing.out(Easing.cubic))}
                       >
                         <TextInput
                           accessibilityLabel='Habit name'
@@ -173,7 +177,9 @@ export default function TemplatePreviewModal({
                             lineHeight: 28,
                             color: colors.text.primary,
                             backgroundColor: isDark ? colors.card : '#FFFFFF',
-                            borderColor: isFocused ? colors.primary[600] : colors.border,
+                            borderColor: isFocused
+                              ? colors.primary[600]
+                              : colors.border,
                           }}
                           value={customName}
                           {...buildTextInputHintProps(
@@ -190,7 +196,9 @@ export default function TemplatePreviewModal({
 
                     <Animated.View
                       className='px-6'
-                      entering={FadeInUp.delay(280).duration(280).easing(Easing.out(Easing.cubic))}
+                      entering={FadeInUp.delay(280)
+                        .duration(280)
+                        .easing(Easing.out(Easing.cubic))}
                     >
                       <Text
                         className='mb-3 text-center uppercase'

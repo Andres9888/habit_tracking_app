@@ -5,15 +5,17 @@ import {
   useSharedValue,
   useAnimatedStyle,
   withSpring,
+  withTiming,
   interpolate,
 } from 'react-native-reanimated';
-import { springs } from '@/theme/animations';
+import { durations, enterEasing, springs } from '@/theme/animations';
 
 interface UseExpandAnimationProps {
   defaultExpanded: boolean;
   reduceMotion: boolean;
   contentHeight: number;
   hasContentMeasured: boolean;
+  motion?: 'spring' | 'timing';
 }
 
 export function useExpandAnimation({
@@ -21,6 +23,7 @@ export function useExpandAnimation({
   reduceMotion,
   contentHeight,
   hasContentMeasured,
+  motion = 'spring',
 }: UseExpandAnimationProps) {
   const expandProgress = useSharedValue(defaultExpanded ? 1 : 0);
   const chevronRotation = useSharedValue(defaultExpanded ? 180 : 0);
@@ -48,10 +51,20 @@ export function useExpandAnimation({
         return;
       }
 
+      if (motion === 'timing') {
+        const config = {
+          duration: durations.enter,
+          easing: enterEasing,
+        };
+        expandProgress.value = withTiming(targetValue, config);
+        chevronRotation.value = withTiming(chevronTarget, config);
+        return;
+      }
+
       expandProgress.value = withSpring(targetValue, springs.gentle);
       chevronRotation.value = withSpring(chevronTarget, springs.gentle);
     },
-    [reduceMotion, expandProgress, chevronRotation]
+    [reduceMotion, motion, expandProgress, chevronRotation]
   );
 
   const contentAnimatedStyle = useAnimatedStyle(() => {

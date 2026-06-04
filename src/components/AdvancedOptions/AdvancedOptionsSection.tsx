@@ -64,12 +64,12 @@ export function AdvancedOptionsSection({
 
   useEffect(() => {
     if (!expanded) return;
-    // Wait for the height animation to settle before scrolling the section into view.
-    const t = setTimeout(
+    // Wait for the measured layout to settle before nudging the section into view.
+    const scroll = setTimeout(
       () => onExpandRef.current?.(),
       reduceMotion ? 0 : durations.enter
     );
-    return () => clearTimeout(t);
+    return () => clearTimeout(scroll);
   }, [expanded, reduceMotion]);
 
   const toggle = () => {

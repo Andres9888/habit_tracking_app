@@ -21,6 +21,7 @@ export function useAdvancedOptionsAccordion({
       contentHeight,
       defaultExpanded: isExpanded,
       hasContentMeasured,
+      motion: 'timing',
       reduceMotion,
     });
 

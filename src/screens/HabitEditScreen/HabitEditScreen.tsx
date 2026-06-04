@@ -20,6 +20,7 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 import { useThemeColors } from '../../theme/ThemeContext';
+import { spacing } from '../../theme/spacing';
 import { HabitFormBody } from '../../components/CreateHabitModal/components/HabitFormBody';
 import { ModalHeader } from '../../components/CreateHabitModal/components/ModalHeader';
 import { HABIT_COLORS } from '../../components/CreateHabitModal/constants';
@@ -75,7 +76,10 @@ function HabitEditScreenContent({
         node.measureLayout(
           contentHandle,
           (_x, y) =>
-            scrollViewRef.current?.scrollTo({ y: Math.max(0, y - 8), animated: true }),
+            scrollViewRef.current?.scrollTo({
+              y: Math.max(0, y - 8),
+              animated: true,
+            }),
           () => {}
         );
       }, 250);
@@ -114,7 +118,9 @@ function HabitEditScreenContent({
               <ScrollView
                 ref={scrollViewRef}
                 className='flex-1'
-                contentContainerStyle={{ paddingBottom: insets.bottom + 32 }}
+                contentContainerStyle={{
+                  paddingBottom: insets.bottom + spacing.xl,
+                }}
                 keyboardDismissMode='on-drag'
                 keyboardShouldPersistTaps='handled'
                 showsVerticalScrollIndicator={false}
