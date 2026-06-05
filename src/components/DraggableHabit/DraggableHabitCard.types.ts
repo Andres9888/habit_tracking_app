@@ -16,6 +16,7 @@
 import type { AnimatedStyle, SharedValue } from 'react-native-reanimated';
 import type { Id } from '../../../convex/_generated/dataModel';
 import type { CardColors, Habit, HabitStatus } from './types';
+import type { PartialProgressEmojiSet } from '../../utils/progressEmojis';
 
 /** Animated style for the strength emoji (scale + rotate on level-up). */
 export type StrengthEmojiAnimatedStyle = AnimatedStyle;
@@ -42,6 +43,7 @@ export interface DraggableHabitCardProps {
   completionIcon: 'chain' | 'checkbox';
   dayShape: 'circle' | 'square';
   emoji: string;
+  enableTodayPulse: boolean;
   entranceAccentStyle: object;
   entranceCardStyle: object;
   entranceContentStyle: object;
@@ -80,6 +82,7 @@ export interface DraggableHabitCardProps {
   progressAnimatedStyle: ProgressAnimatedStyle;
   toggleHabit: (args: { habitId: Id<'habits'>; date: string }) => void;
   translateY: SharedValue<number>;
+  userProgressEmojis?: PartialProgressEmojiSet;
   weekDateStrings: string[];
   weekStatus: HabitStatus[];
   /** Selection mode: whether this card is currently selected. */
@@ -88,4 +91,6 @@ export interface DraggableHabitCardProps {
   showSelectionOverlay?: boolean;
   /** Selection mode: called when the checkbox is toggled. */
   onToggleSelection?: () => void;
+  /** Nudge the Details pill on first card while the coach hint is visible. */
+  enableChevronNudge?: boolean;
 }

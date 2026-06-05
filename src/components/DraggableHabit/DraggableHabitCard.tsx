@@ -102,7 +102,9 @@ function DraggableHabitCardComponent(props: DraggableHabitCardProps) {
         accessibilityHint={
           props.showSelectionOverlay
             ? 'Tap to toggle selection'
-            : `Tap to view details${hasSwipeActions ? ', swipe left for actions' : ''}`
+            : `Tap card to view habit details. Tap a day in the row below to check in.${
+                hasSwipeActions ? ' Swipe left for actions.' : ''
+              }`
         }
         accessibilityLabel={`${props.habit.name}, ${props.streak} day streak`}
         accessibilityRole='button'

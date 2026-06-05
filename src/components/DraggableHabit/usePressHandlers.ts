@@ -36,6 +36,7 @@ export function usePressHandlers({
   };
 
   const handlePressIn = () => {
+    triggerSelection();
     cardScale.value = withSpring(CARD_PRESS_SCALE, springs.button);
   };
 

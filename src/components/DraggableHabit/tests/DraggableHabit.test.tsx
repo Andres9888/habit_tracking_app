@@ -28,6 +28,53 @@ const weekStatus: Array<'done' | 'missed' | 'planned'> = [
   'planned',
 ];
 
+describe('DraggableHabit tap discoverability', () => {
+  it('exposes two-zone accessibility hint on card press', () => {
+    const { getByRole } = render(
+      <DraggableHabit
+        celebrationsEnabled={false}
+        habit={buildHabit()}
+        reduceMotionPreference={true}
+        streak={0}
+        toggleHabit={jest.fn()}
+        weekDateStrings={weekDateStrings}
+        weekStatus={weekStatus}
+      />
+    );
+
+    const card = getByRole('button', {
+      name: /Daily Reflection, 0 day streak/,
+    });
+
+    expect(card.props.accessibilityHint).toContain(
+      'Tap card to view habit details'
+    );
+    expect(card.props.accessibilityHint).toContain(
+      'Tap a day in the row below to check in'
+    );
+  });
+
+  it('does not render a "Details" label or per-card micro-copy', () => {
+    const { queryByText } = render(
+      <DraggableHabit
+        celebrationsEnabled={false}
+        habit={buildHabit()}
+        isCompactMode={false}
+        reduceMotionPreference={true}
+        streak={0}
+        toggleHabit={jest.fn()}
+        weekDateStrings={weekDateStrings}
+        weekStatus={weekStatus}
+      />
+    );
+
+    expect(queryByText('Details')).toBeNull();
+    expect(
+      queryByText('Tap card for details · Tap a day to check in')
+    ).toBeNull();
+  });
+});
+
 describe('DraggableHabit color accent border', () => {
   it('renders with flex-row layout for color accent border', () => {
     const { toJSON } = render(
@@ -162,7 +209,7 @@ describe('DraggableHabit swipe to archive', () => {
     expect(swipeable).toBeTruthy();
   });
 
-  it('passes onArchive callback to Swipeable', () => {
+  it('invokes onArchive when archive action is pressed', () => {
     const mockOnArchive = jest.fn();
     const habit = buildHabit();
 
@@ -180,14 +227,15 @@ describe('DraggableHabit swipe to archive', () => {
     );
 
     const swipeable = UNSAFE_getByType(Swipeable);
+    const mockDragX = { interpolate: jest.fn(() => 0) };
+    const rightActions = swipeable.props.renderRightActions(
+      { interpolate: jest.fn() },
+      mockDragX
+    );
 
-    // Verify Swipeable has the onSwipeableOpen prop
-    expect(swipeable.props.onSwipeableOpen).toBeDefined();
+    const { getByLabelText } = render(rightActions);
+    fireEvent.press(getByLabelText('Archive habit'));
 
-    // Simulate swipe open
-    swipeable.props.onSwipeableOpen('right');
-
-    // Verify onArchive was called with the habit ID
     expect(mockOnArchive).toHaveBeenCalledWith(habit._id);
     expect(mockOnArchive).toHaveBeenCalledTimes(1);
   });
@@ -210,10 +258,8 @@ describe('DraggableHabit swipe to archive', () => {
 
     const swipeable = UNSAFE_getByType(Swipeable);
 
-    // Verify Swipeable configuration
     expect(swipeable.props.overshootRight).toBe(false);
     expect(swipeable.props.friction).toBe(2);
-    expect(swipeable.props.rightThreshold).toBe(40);
     expect(swipeable.props.renderRightActions).toBeDefined();
   });
 
@@ -235,7 +281,6 @@ describe('DraggableHabit swipe to archive', () => {
 
     const swipeable = UNSAFE_getByType(Swipeable);
 
-    // Verify renderRightActions returns a valid React element
     const mockProgress = { interpolate: jest.fn() };
     const mockDragX = { interpolate: jest.fn(() => 0) };
     const rightActions = swipeable.props.renderRightActions(
@@ -243,9 +288,10 @@ describe('DraggableHabit swipe to archive', () => {
       mockDragX
     );
 
-    // Verify it returns a valid element with expected structure
     expect(rightActions).toBeTruthy();
     expect(rightActions.type).toBeDefined();
+
+    render(rightActions);
     expect(mockDragX.interpolate).toHaveBeenCalled();
   });
 

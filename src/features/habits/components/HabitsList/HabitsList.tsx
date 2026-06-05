@@ -22,17 +22,31 @@
  * ```
  */
 
+import { useCallback } from 'react';
 import { useHabitRenderItem } from '../../hooks/useHabitRenderItem';
+import { useHabitCardDetailHint } from '../../hooks/useHabitCardDetailHint';
 import { useHabitsListState } from './useHabitsListState';
 import { useHabitsListHandlers } from './useHabitsListHandlers';
 import { HabitsListContent } from './HabitsListContent';
 import { ENTRANCE_STAGGER_DELAY } from './constants';
 import type { HabitsListProps } from './HabitsList.types';
+import type { Habit } from '../../types';
 
 export function HabitsList(props: HabitsListProps) {
   const { list, modals, onCreateHabitRequest } = props;
 
   const state = useHabitsListState();
+
+  const { dismissDetailHint, markDetailOpened, showDetailHint } =
+    useHabitCardDetailHint({ totalHabits: list.habits.length });
+
+  const handleHabitPressWithHint = useCallback(
+    (habit: Habit) => {
+      void markDetailOpened();
+      list.handleHabitPress(habit);
+    },
+    [list.handleHabitPress, markDetailOpened]
+  );
 
   const handlers = useHabitsListHandlers({
     list,
@@ -56,7 +70,8 @@ export function HabitsList(props: HabitsListProps) {
     getStreak: list.getStreak,
     handleArchive: list.handleArchive,
     handleDelete: list.handleDelete,
-    handleHabitPress: list.handleHabitPress,
+    handleHabitPress: handleHabitPressWithHint,
+    showDetailHint,
     isSelectionMode: props.isSelectionMode,
     selectedIds: props.selectedIds,
     onToggleSelection: props.onToggleSelection,
@@ -78,6 +93,8 @@ export function HabitsList(props: HabitsListProps) {
       props={props}
       renderItem={renderItem}
       state={state}
+      showDetailHint={showDetailHint}
+      onDismissDetailHint={dismissDetailHint}
     />
   );
 }

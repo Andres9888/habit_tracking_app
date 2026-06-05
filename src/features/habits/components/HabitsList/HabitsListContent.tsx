@@ -17,10 +17,7 @@ import { Platform, View, type StyleProp, type ViewStyle } from 'react-native';
 import DraggableFlatList, {
   type RenderItemParams,
 } from 'react-native-draggable-flatlist';
-import {
-  renderHabitsListHeader,
-  renderHabitRow,
-} from './HabitsListRenders';
+import { renderHabitsListHeader, renderHabitRow } from './HabitsListRenders';
 import { HabitsListModals } from './HabitsListModals';
 import { StickyHeaderContext } from '../../../../components/CalendarTimeline/StickyHeaderContext';
 import { useStickyHeader } from './useStickyHeader';
@@ -44,6 +41,8 @@ export function HabitsListContent({
   state,
   handlers,
   renderItem,
+  showDetailHint,
+  onDismissDetailHint,
 }: HabitsListContentProps) {
   const {
     list,
@@ -61,10 +60,7 @@ export function HabitsListContent({
       paddingHorizontal: list.contentPadding.paddingHorizontal,
       paddingTop: 0,
     }),
-    [
-      list.contentPadding.paddingBottom,
-      list.contentPadding.paddingHorizontal,
-    ]
+    [list.contentPadding.paddingBottom, list.contentPadding.paddingHorizontal]
   );
 
   const headerWrapperStyle = useMemo<StyleProp<ViewStyle>>(
@@ -75,8 +71,15 @@ export function HabitsListContent({
   );
 
   const listHeaderComponent = useMemo(
-    () => renderHabitsListHeader({ handlers, props, state }),
-    [handlers, props, state]
+    () =>
+      renderHabitsListHeader({
+        handlers,
+        props,
+        state,
+        showDetailHint,
+        onDismissDetailHint,
+      }),
+    [handlers, props, state, showDetailHint, onDismissDetailHint]
   );
 
   const renderHabitItem = useCallback(

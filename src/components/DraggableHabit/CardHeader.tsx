@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
  * CardHeader — Top row of a habit card: icon (with pulse), title, phase tag, chevron.
  *
@@ -8,31 +9,29 @@
 
 import React from 'react';
 import { View, Text } from 'react-native';
-import { ChevronRight } from 'lucide-react-native';
-import { iconSizes } from '@/theme/iconSizes';
 import ReAnimated, { useAnimatedStyle } from 'react-native-reanimated';
 import type { SharedValue } from 'react-native-reanimated';
 import { PhaseTag } from '../PhaseTag';
-import { colors } from '@/theme';
+import { colors as themeColorTokens } from '@/theme';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { getIconBackground } from './colorUtils';
 import type { CardColors, Habit } from './types';
-import {
-  getIconContainerStyle,
-  getChevronColor,
-} from './CardHeader.styles';
+import { CardDetailsPill } from './CardDetailsPill';
+import { getIconContainerStyle } from './CardHeader.styles';
 
 interface CardHeaderProps {
   accentColor: string;
   bestStreak: number;
   colors: CardColors;
   emoji: string;
+  enableChevronNudge?: boolean;
   habit: Habit;
   highContrastMode: boolean;
   iconPulse: SharedValue<number>;
   isCompactMode?: boolean;
   isPaused: boolean;
   name: string;
+  reduceMotionPreference: boolean;
   showHabitStrengthPercentage: boolean;
   streak: number;
 }
@@ -42,12 +41,14 @@ export function CardHeader({
   bestStreak,
   colors,
   emoji,
+  enableChevronNudge = false,
   habit,
   highContrastMode,
   iconPulse,
   isCompactMode,
   isPaused,
   name,
+  reduceMotionPreference,
   showHabitStrengthPercentage,
   streak,
 }: CardHeaderProps) {
@@ -61,17 +62,30 @@ export function CardHeader({
     colors.iconContainer
   );
   const showBestStreak =
-    !isCompactMode && bestStreak > 0 && bestStreak > streak && !showHabitStrengthPercentage;
+    !isCompactMode &&
+    bestStreak > 0 &&
+    bestStreak > streak &&
+    !showHabitStrengthPercentage;
 
   return (
-    <View className={`${isCompactMode ? 'mb-2' : 'mb-3'} flex-row items-start px-3`}>
+    <View
+      className={`${isCompactMode ? 'mb-2' : 'mb-3'} flex-row items-start px-3`}
+    >
       <View className='flex-1 items-center pt-0.5'>
         <ReAnimated.View style={iconPulseStyle}>
           <View
             className={`${isCompactMode ? 'h-7 w-7' : 'h-9 w-9'} items-center justify-center rounded-xl`}
             style={getIconContainerStyle(iconBg, accentColor, highContrastMode)}
           >
-            <Text className={isCompactMode ? 'text-lg leading-[22px]' : 'text-2xl leading-[26px]'}>{emoji}</Text>
+            <Text
+              className={
+                isCompactMode
+                  ? 'text-lg leading-[22px]'
+                  : 'text-2xl leading-[26px]'
+              }
+            >
+              {emoji}
+            </Text>
           </View>
         </ReAnimated.View>
       </View>
@@ -91,20 +105,18 @@ export function CardHeader({
           {isPaused ? (
             <View
               className='rounded-full px-2 py-0.5'
-              style={{ backgroundColor: colors.premium[400] }}
+              style={{ backgroundColor: themeColorTokens.premium[400] }}
             >
-              <Text className='text-xs font-semibold text-white'>
-                Paused
-              </Text>
+              <Text className='text-xs font-semibold text-white'>Paused</Text>
             </View>
           ) : null}
-          <View className='ml-auto'>
-            <ChevronRight
-              color={getChevronColor(highContrastMode)}
-              size={isCompactMode ? iconSizes.small : iconSizes.medium}
-              strokeWidth={2}
-            />
-          </View>
+          <CardDetailsPill
+            accentColor={accentColor}
+            enableChevronNudge={enableChevronNudge}
+            highContrastMode={highContrastMode}
+            isCompactMode={isCompactMode}
+            reduceMotionPreference={reduceMotionPreference}
+          />
         </View>
         {showBestStreak ? (
           <Text

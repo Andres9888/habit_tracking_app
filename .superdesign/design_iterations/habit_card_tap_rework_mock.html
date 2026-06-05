@@ -1,0 +1,397 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Habit Card Tap — Rework</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+      :root {
+        --bg: #f5f1ed;
+        --card: #edeae5;
+        --border: #ddd8d2;
+        --text: #2d2a26;
+        --text2: #6b6560;
+        --text3: #8b847d;
+        --accent: #059669;
+        --accent-soft: rgba(5, 150, 105, 0.1);
+      }
+      * {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+      }
+      body {
+        background: #e7e2db;
+        margin: 0;
+        padding: 40px 16px 80px;
+      }
+      .phone {
+        width: 340px;
+        background: var(--bg);
+        border-radius: 36px;
+        padding: 18px 14px 26px;
+        box-shadow: 0 22px 50px -12px rgba(0, 0, 0, 0.28);
+        border: 1px solid rgba(0, 0, 0, 0.05);
+      }
+      .card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 24px;
+        position: relative;
+        overflow: hidden;
+      }
+      .accent-strip {
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 4px;
+        background: var(--accent);
+      }
+      .dot {
+        width: 26px;
+        height: 26px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .dot-done {
+        background: var(--accent);
+      }
+      .dot-plan {
+        background: rgba(0, 0, 0, 0.05);
+        border: 1.5px dashed rgba(0, 0, 0, 0.18);
+      }
+      .dot-miss {
+        background: rgba(0, 0, 0, 0.04);
+      }
+      .tag-bad {
+        background: #fce8e6;
+        color: #b42318;
+      }
+      .tag-good {
+        background: #e3f2ea;
+        color: #15793c;
+      }
+      .tag-warn {
+        background: #fef3cd;
+        color: #9a5504;
+      }
+      .pill-noisy {
+        background: var(--accent-soft);
+        color: var(--accent);
+      }
+      .section-label {
+        letter-spacing: 0.12em;
+      }
+      .legend b {
+        display: inline-block;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="mx-auto mb-9 max-w-[760px] text-center">
+      <h1 class="text-[26px] font-extrabold text-[#2D2A26]">
+        Habit Card Tap — Rework
+      </h1>
+      <p
+        class="mx-auto mt-2 max-w-[560px] text-sm leading-relaxed text-[#6B6560]"
+      >
+        The current build stacks three always-on affordances plus a green banner
+        — too noisy on a list of cards. The rework collapses this to
+        <b>one quiet right-edge chevron</b> +
+        <b>one neutral, one-time coach hint</b>.
+      </p>
+    </div>
+
+    <div class="flex flex-wrap items-start justify-center gap-12">
+      <!-- ============ BEFORE ============ -->
+      <div>
+        <div class="mb-4 text-center">
+          <span
+            class="section-label text-[11px] font-bold uppercase text-[#B42318]"
+            >Before · Current build</span
+          >
+          <p class="mt-1 text-xs text-[#6B6560]">3 competing signals</p>
+        </div>
+        <div class="phone">
+          <!-- green banner -->
+          <div
+            class="mx-1 mb-3 flex items-start gap-2 rounded-2xl px-3.5 py-3"
+            style="background: #d1fae5; border: 1px solid #059669"
+          >
+            <div class="flex-1">
+              <div class="text-[13px] font-bold text-[#2D2A26]">
+                Tap a habit card
+              </div>
+              <div class="mt-0.5 text-[11px] leading-snug text-[#6B6560]">
+                Open progress, calendar, and settings. Tap a day below to check
+                in.
+              </div>
+            </div>
+            <i data-lucide="x" class="mt-0.5 h-4 w-4 text-[#8B847D]"></i>
+          </div>
+
+          <!-- noisy card -->
+          <div class="card mb-3 p-4">
+            <div class="accent-strip"></div>
+            <div class="flex items-center gap-2 pl-1">
+              <div
+                class="flex h-9 w-9 items-center justify-center rounded-xl bg-[#D4F0E2] text-xl"
+              >
+                🏃
+              </div>
+              <span class="shrink text-[15px] font-bold text-[#2D2A26]"
+                >Morning Run</span
+              >
+              <span
+                class="tag-warn rounded-full px-2 py-0.5 text-[10px] font-semibold"
+                >AM</span
+              >
+              <!-- inline details pill crowding the title -->
+              <span
+                class="pill-noisy ml-auto flex items-center gap-0.5 rounded-full px-2 py-1 text-[11px] font-semibold"
+              >
+                Details <i data-lucide="chevron-right" class="h-3.5 w-3.5"></i>
+              </span>
+            </div>
+            <div class="mx-1 my-3 h-[1.5px] rounded-full bg-[#DDD8D2]"></div>
+            <div class="flex justify-between px-1">
+              <div class="dot dot-done">
+                <i data-lucide="check" class="h-4 w-4 text-white"></i>
+              </div>
+              <div class="dot dot-done">
+                <i data-lucide="check" class="h-4 w-4 text-white"></i>
+              </div>
+              <div class="dot dot-miss"></div>
+              <div class="dot dot-done">
+                <i data-lucide="check" class="h-4 w-4 text-white"></i>
+              </div>
+              <div class="dot dot-plan"></div>
+              <div class="dot dot-plan"></div>
+              <div class="dot dot-plan"></div>
+            </div>
+            <!-- micro-copy line -->
+            <div class="mt-2.5 pl-1 text-[11px] font-medium text-[#8B847D]">
+              Tap card for details · Tap a day to check in
+            </div>
+          </div>
+
+          <div class="card p-4">
+            <div class="accent-strip" style="background: #0891b2"></div>
+            <div class="flex items-center gap-2 pl-1">
+              <div
+                class="flex h-9 w-9 items-center justify-center rounded-xl bg-[#cffafe] text-xl"
+              >
+                📚
+              </div>
+              <span class="shrink text-[15px] font-bold text-[#2D2A26]"
+                >Read 20 min</span
+              >
+              <span
+                class="pill-noisy ml-auto flex items-center gap-0.5 rounded-full px-2 py-1 text-[11px] font-semibold"
+                style="background: rgba(8, 145, 178, 0.1); color: #0891b2"
+              >
+                Details <i data-lucide="chevron-right" class="h-3.5 w-3.5"></i>
+              </span>
+            </div>
+            <div class="mx-1 my-3 h-[1.5px] rounded-full bg-[#DDD8D2]"></div>
+            <div class="flex justify-between px-1">
+              <div class="dot dot-done">
+                <i
+                  data-lucide="check"
+                  class="h-4 w-4 text-white"
+                  style="color: #fff"
+                ></i>
+              </div>
+              <div class="dot dot-plan"></div>
+              <div class="dot dot-done">
+                <i data-lucide="check" class="h-4 w-4 text-white"></i>
+              </div>
+              <div class="dot dot-plan"></div>
+              <div class="dot dot-plan"></div>
+              <div class="dot dot-plan"></div>
+              <div class="dot dot-plan"></div>
+            </div>
+            <div class="mt-2.5 pl-1 text-[11px] font-medium text-[#8B847D]">
+              Tap card for details · Tap a day to check in
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ AFTER ============ -->
+      <div>
+        <div class="mb-4 text-center">
+          <span
+            class="section-label text-[11px] font-bold uppercase text-[#15793C]"
+            >After · Quiet disclosure</span
+          >
+          <p class="mt-1 text-xs text-[#6B6560]">
+            Quiet header chevron + 1 one-time hint
+          </p>
+        </div>
+        <div class="phone">
+          <!-- neutral one-time hint -->
+          <div
+            class="mx-1 mb-3 flex items-start gap-2.5 rounded-2xl px-3.5 py-3"
+            style="background: #edeae5; border: 1px solid #ddd8d2"
+          >
+            <i
+              data-lucide="hand-pointer"
+              class="mt-0.5 h-[18px] w-[18px] text-[#059669]"
+            ></i>
+            <div class="flex-1">
+              <div class="text-[13px] font-bold text-[#2D2A26]">
+                Two ways to use a card
+              </div>
+              <div class="mt-0.5 text-[11px] leading-snug text-[#6B6560]">
+                Tap the <b>card</b> to open details · tap a <b>day</b> to check
+                in.
+              </div>
+            </div>
+            <i data-lucide="x" class="mt-0.5 h-4 w-4 text-[#8B847D]"></i>
+          </div>
+
+          <!-- clean card 1: quiet chevron kept in header top-right -->
+          <div class="card mb-3 p-4">
+            <div class="accent-strip"></div>
+            <div class="flex items-center gap-2 pl-1">
+              <div
+                class="flex h-9 w-9 items-center justify-center rounded-xl bg-[#D4F0E2] text-xl"
+              >
+                🏃
+              </div>
+              <span class="text-[15px] font-bold text-[#2D2A26]"
+                >Morning Run</span
+              >
+              <span
+                class="tag-warn rounded-full px-2 py-0.5 text-[10px] font-semibold"
+                >AM</span
+              >
+              <!-- quiet chevron, same position, no text, no pill bg -->
+              <i
+                data-lucide="chevron-right"
+                class="ml-auto h-5 w-5"
+                style="color: #b9b2a9"
+              ></i>
+            </div>
+            <div class="mx-1 my-3 h-[1.5px] rounded-full bg-[#DDD8D2]"></div>
+            <div class="flex gap-2.5 px-1">
+              <div class="dot dot-done">
+                <i data-lucide="check" class="h-4 w-4 text-white"></i>
+              </div>
+              <div class="dot dot-done">
+                <i data-lucide="check" class="h-4 w-4 text-white"></i>
+              </div>
+              <div class="dot dot-miss"></div>
+              <div class="dot dot-done">
+                <i data-lucide="check" class="h-4 w-4 text-white"></i>
+              </div>
+              <div class="dot dot-plan"></div>
+              <div class="dot dot-plan"></div>
+              <div class="dot dot-plan"></div>
+            </div>
+          </div>
+
+          <!-- clean card 2 -->
+          <div class="card p-4">
+            <div class="accent-strip" style="background: #0891b2"></div>
+            <div class="flex items-center gap-2 pl-1">
+              <div
+                class="flex h-9 w-9 items-center justify-center rounded-xl bg-[#cffafe] text-xl"
+              >
+                📚
+              </div>
+              <span class="text-[15px] font-bold text-[#2D2A26]"
+                >Read 20 min</span
+              >
+              <i
+                data-lucide="chevron-right"
+                class="ml-auto h-5 w-5"
+                style="color: #b9b2a9"
+              ></i>
+            </div>
+            <div class="mx-1 my-3 h-[1.5px] rounded-full bg-[#DDD8D2]"></div>
+            <div class="flex gap-2.5 px-1">
+              <div class="dot dot-done">
+                <i data-lucide="check" class="h-4 w-4 text-white"></i>
+              </div>
+              <div class="dot dot-plan"></div>
+              <div class="dot dot-done">
+                <i data-lucide="check" class="h-4 w-4 text-white"></i>
+              </div>
+              <div class="dot dot-plan"></div>
+              <div class="dot dot-plan"></div>
+              <div class="dot dot-plan"></div>
+              <div class="dot dot-plan"></div>
+            </div>
+          </div>
+
+          <p
+            class="mt-4 px-3 text-center text-[11px] leading-snug text-[#8B847D]"
+          >
+            Same chevron position you have now — just no "Details" text and no
+            colored pill. First card's chevron does one subtle nudge while the
+            hint is active.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- rationale -->
+    <div
+      class="mx-auto mt-14 max-w-[760px] rounded-3xl border border-[#DDD8D2] bg-white/60 p-7"
+    >
+      <h2 class="mb-4 text-lg font-extrabold text-[#2D2A26]">
+        What changed & why
+      </h2>
+      <div class="grid gap-5 text-sm sm:grid-cols-3">
+        <div>
+          <div
+            class="mb-1.5 flex items-center gap-1.5 font-bold text-[#B42318]"
+          >
+            <i data-lucide="minus-circle" class="h-4 w-4"></i> Removed
+          </div>
+          <ul class="space-y-1.5 text-[13px] leading-snug text-[#6B6560]">
+            <li>Inline "Details" pill (crowded the title row)</li>
+            <li>Per-card micro-copy line (clutter ×N cards)</li>
+            <li>Green success banner (wrong semantics)</li>
+          </ul>
+        </div>
+        <div>
+          <div
+            class="mb-1.5 flex items-center gap-1.5 font-bold text-[#15793C]"
+          >
+            <i data-lucide="plus-circle" class="h-4 w-4"></i> Added
+          </div>
+          <ul class="space-y-1.5 text-[13px] leading-snug text-[#6B6560]">
+            <li>
+              Quiet header chevron — same position, no text, no pill background
+            </li>
+            <li>Neutral, one-time coach hint that names both zones</li>
+          </ul>
+        </div>
+        <div>
+          <div
+            class="mb-1.5 flex items-center gap-1.5 font-bold text-[#059669]"
+          >
+            <i data-lucide="check-circle" class="h-4 w-4"></i> Kept
+          </div>
+          <ul class="space-y-1.5 text-[13px] leading-snug text-[#6B6560]">
+            <li>One-time SecureStore lifecycle (dismiss / opened-once)</li>
+            <li>First-card chevron nudge (respects reduce-motion)</li>
+            <li>Two-zone accessibility hint</li>
+            <li>Light haptic on press-in</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      lucide.createIcons();
+    </script>
+  </body>
+</html>

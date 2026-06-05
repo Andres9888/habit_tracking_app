@@ -3,10 +3,9 @@
  *
  * Animates a `width: N%` style that drives the {@link StrengthFillBackground}
  * gradient behind the card content. First render uses a delayed ease-in;
- * subsequent changes use a spring. Reads `showGradientFill` from Convex settings
- * directly to avoid prop-threading through the component tree.
+ * subsequent changes use a spring.
  *
- * @returns `{ isDark, showGradientFill, strengthFillStyle }`
+ * @returns `{ isDark, strengthFillStyle }`
  */
 
 import { useEffect, useRef } from 'react';
@@ -19,8 +18,6 @@ import {
   withTiming,
 } from 'react-native-reanimated';
 import { springs } from '@/theme/animations';
-import { useQuery } from 'convex/react';
-import { api } from '../../../convex/_generated/api';
 import { useThemeColors } from '../../theme/ThemeContext';
 
 export function useCardStrengthFill(
@@ -28,8 +25,6 @@ export function useCardStrengthFill(
   reduceMotion: boolean
 ) {
   const { isDark } = useThemeColors();
-  const settings = useQuery(api.settings.get);
-  const showGradientFill = settings?.showGradientFill ?? true;
   const fillWidth = useSharedValue(0);
   const isFirstRender = useRef(true);
 
@@ -57,5 +52,5 @@ export function useCardStrengthFill(
     width: `${fillWidth.value}%`,
   }));
 
-  return { isDark, showGradientFill, strengthFillStyle };
+  return { isDark, strengthFillStyle };
 }

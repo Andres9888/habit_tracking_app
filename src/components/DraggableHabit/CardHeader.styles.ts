@@ -31,6 +31,16 @@ export const TITLE_OVERLAY_STYLE: ViewStyle = {
   top: 0,
 };
 
-export function getChevronColor(highContrastMode: boolean): string {
-  return highContrastMode ? colors.streak[300] : colors.gray[300];
+/**
+ * Quiet disclosure chevron color.
+ *
+ * Normal mode uses a soft warm gray (the standard "row opens" cue, kept
+ * deliberately low-emphasis). High-contrast mode bumps to a visible streak tone.
+ */
+export function getChevronColor(
+  highContrastMode: boolean,
+  _accentColor?: string
+): string {
+  if (highContrastMode) return colors.streak[300];
+  return colors.gray[300];
 }

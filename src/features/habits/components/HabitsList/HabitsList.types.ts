@@ -43,6 +43,8 @@ export interface HabitsListContentProps {
   renderItem: ReturnType<
     typeof import('../../hooks/useHabitRenderItem').useHabitRenderItem
   >;
+  showDetailHint?: boolean;
+  onDismissDetailHint?: () => void;
 }
 
 export interface UseHabitsListHandlersOptions {

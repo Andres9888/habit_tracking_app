@@ -1,0 +1,1041 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Habit Card Tap — UX Variants Gallery</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --page-bg: #0f0f10;
+        --bg: #f5f5f4;
+        --phone: #fafaf9;
+        --card: #ffffff;
+        --border: #e7e5e4;
+        --text: #1c1917;
+        --text-2: #78716c;
+        --text-3: #a8a29e;
+        --accent: #059669;
+        --accent-tint: rgba(5, 150, 105, 0.12);
+        --banner-bg: #ecfdf5;
+        --banner-border: #a7f3d0;
+        --chain-bg: #f5f5f4;
+        --success: #34d399;
+        --warn: #fbbf24;
+        --radius-card: 20px;
+        --font: 'DM Sans', system-ui, sans-serif;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: var(--font);
+        background: var(--page-bg);
+        color: #f5f5f4;
+        padding: 32px 20px 100px;
+        line-height: 1.5;
+      }
+      h1 {
+        font-size: 26px;
+        font-weight: 800;
+        text-align: center;
+        margin-bottom: 8px;
+      }
+      .sub {
+        text-align: center;
+        color: #a8a29e;
+        font-size: 14px;
+        margin-bottom: 32px;
+        max-width: 680px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .gallery {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+        gap: 28px;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .variant-card {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid #2a2a30;
+        border-radius: 20px;
+        overflow: hidden;
+        transition: border-color 0.2s;
+      }
+      .variant-card:hover {
+        border-color: #3f3f46;
+      }
+
+      .variant-meta {
+        padding: 16px 18px 12px;
+        border-bottom: 1px solid #2a2a30;
+      }
+      .variant-num {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.6px;
+        text-transform: uppercase;
+        color: var(--success);
+        margin-bottom: 4px;
+      }
+      .variant-name {
+        font-size: 17px;
+        font-weight: 700;
+        color: #f5f5f4;
+        margin-bottom: 6px;
+      }
+      .variant-desc {
+        font-size: 12px;
+        color: #a8a29e;
+        line-height: 1.45;
+        margin-bottom: 10px;
+      }
+      .ratings {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+      .pill {
+        font-size: 10px;
+        font-weight: 600;
+        padding: 3px 8px;
+        border-radius: 999px;
+        border: 1px solid #3f3f46;
+      }
+      .pill.clarity-high {
+        background: #14352a;
+        color: #7ee2b8;
+        border-color: #065f46;
+      }
+      .pill.clarity-med {
+        background: #292524;
+        color: #fcd34d;
+        border-color: #44403c;
+      }
+      .pill.noise-low {
+        background: #1c1917;
+        color: #a8a29e;
+      }
+      .pill.noise-med {
+        background: #292524;
+        color: #d6d3d1;
+      }
+      .pill.noise-high {
+        background: #3a2326;
+        color: #fca5a5;
+      }
+      .pill.cost-low {
+        background: #1e1b4b;
+        color: #a5b4fc;
+        border-color: #312e81;
+      }
+      .pill.cost-med {
+        background: #292524;
+        color: #d6d3d1;
+      }
+      .pill.cost-high {
+        background: #3a2326;
+        color: #fca5a5;
+      }
+
+      .mock-wrap {
+        background: var(--bg);
+        padding: 14px;
+        min-height: 280px;
+        position: relative;
+      }
+      .mini-screen {
+        background: var(--phone);
+        border-radius: 16px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        font-size: 12px;
+        color: var(--text);
+      }
+
+      /* shared habit card pieces */
+      .h-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-card);
+        overflow: hidden;
+        display: flex;
+        margin: 10px 12px;
+      }
+      .accent {
+        width: 4px;
+        background: var(--accent);
+        flex-shrink: 0;
+      }
+      .h-body {
+        flex: 1;
+      }
+      .h-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 10px 8px;
+      }
+      .h-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 10px;
+        background: var(--accent-tint);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        flex-shrink: 0;
+      }
+      .h-title {
+        font-weight: 700;
+        font-size: 13px;
+        flex: 1;
+      }
+      .h-subtitle {
+        font-size: 10px;
+        color: var(--text-3);
+        margin-top: 2px;
+        font-weight: 500;
+      }
+      .details-pill {
+        font-size: 10px;
+        font-weight: 600;
+        color: var(--accent);
+        background: var(--accent-tint);
+        padding: 3px 8px;
+        border-radius: 999px;
+        white-space: nowrap;
+      }
+      .details-btn {
+        font-size: 10px;
+        font-weight: 600;
+        color: white;
+        background: var(--accent);
+        padding: 5px 10px;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+      }
+      .details-btn:hover {
+        filter: brightness(1.08);
+      }
+      .chev-gray {
+        color: #d6d3d1;
+        font-size: 18px;
+        margin-left: auto;
+      }
+
+      .chain-zone {
+        padding: 8px 10px 10px 14px;
+      }
+      .chain-zone.alt {
+        background: var(--chain-bg);
+        border-top: 1px solid var(--border);
+      }
+      .header-zone {
+        background: #fff;
+      }
+      .header-zone.nav {
+        background: #fafaf9;
+        border-bottom: 1px dashed var(--border);
+      }
+
+      .dots {
+        display: flex;
+        gap: 5px;
+        align-items: center;
+      }
+      .dot {
+        width: 26px;
+        height: 26px;
+        border-radius: 7px;
+        border: 1.5px solid #d6d3d1;
+        background: #f5f5f4;
+      }
+      .dot.done {
+        background: var(--accent);
+        border-color: var(--accent);
+      }
+      .dot.today {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 2px var(--accent-tint);
+      }
+      .micro {
+        font-size: 9px;
+        color: var(--text-3);
+        margin-top: 6px;
+      }
+
+      .coach {
+        margin: 8px 12px 0;
+        padding: 8px 10px;
+        border-radius: 12px;
+        background: var(--banner-bg);
+        border: 1px solid var(--banner-border);
+        font-size: 10px;
+      }
+      .coach b {
+        display: block;
+        font-size: 11px;
+        margin-bottom: 2px;
+      }
+
+      .section-sub {
+        margin: 8px 12px 4px;
+        font-size: 10px;
+        color: var(--text-2);
+        text-align: center;
+        font-weight: 500;
+      }
+
+      .chips {
+        display: flex;
+        gap: 4px;
+        flex-wrap: wrap;
+        padding: 0 10px 8px;
+      }
+      .chip {
+        font-size: 9px;
+        font-weight: 600;
+        padding: 4px 8px;
+        border-radius: 999px;
+        border: 1px solid var(--border);
+        background: #fafaf9;
+        color: var(--text-2);
+        cursor: pointer;
+      }
+      .chip:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+
+      .ghost-open {
+        position: relative;
+      }
+      .ghost-open .overlay {
+        position: absolute;
+        inset: 0 0 auto 0;
+        height: 52px;
+        background: rgba(5, 150, 105, 0.08);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--accent);
+        border-bottom: 1px dashed rgba(5, 150, 105, 0.3);
+        pointer-events: none;
+      }
+
+      .swipe-hint {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin: 0 12px 6px;
+        font-size: 9px;
+        color: var(--text-3);
+      }
+      .swipe-arrow {
+        color: var(--accent);
+        font-weight: 700;
+        animation: swipePulse 1.5s ease infinite;
+      }
+      @keyframes swipePulse {
+        0%,
+        100% {
+          opacity: 0.4;
+          transform: translateX(0);
+        }
+        50% {
+          opacity: 1;
+          transform: translateX(4px);
+        }
+      }
+
+      .h-card.swipeable {
+        transform: translateX(8px);
+        transition: transform 0.3s;
+      }
+      .h-card.swipeable:hover {
+        transform: translateX(16px);
+      }
+
+      /* toast */
+      .toast-wrap {
+        padding: 12px;
+        position: relative;
+        min-height: 120px;
+      }
+      .toast {
+        position: absolute;
+        bottom: 12px;
+        left: 12px;
+        right: 12px;
+        background: #1c1917;
+        color: #fafaf9;
+        padding: 10px 12px;
+        border-radius: 12px;
+        font-size: 11px;
+        line-height: 1.4;
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+        animation: toastIn 0.4s ease;
+      }
+      @keyframes toastIn {
+        from {
+          opacity: 0;
+          transform: translateY(12px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .toast-dismiss {
+        margin-left: auto;
+        background: none;
+        border: none;
+        color: #a8a29e;
+        cursor: pointer;
+        font-size: 14px;
+        padding: 0 2px;
+      }
+      .toast.hidden {
+        display: none;
+      }
+
+      .cal-mini {
+        padding: 10px 12px;
+        border-bottom: 1px solid var(--border);
+        background: #fff;
+        font-size: 10px;
+        color: var(--text-2);
+      }
+      .cal-mini strong {
+        color: var(--text);
+        font-size: 18px;
+      }
+
+      /* comparison table */
+      .compare-section {
+        max-width: 1200px;
+        margin: 48px auto 0;
+        padding: 24px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid #2a2a30;
+        border-radius: 20px;
+      }
+      .compare-section h2 {
+        font-size: 18px;
+        margin-bottom: 16px;
+      }
+      .compare-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 12px;
+      }
+      .compare-table th,
+      .compare-table td {
+        border: 1px solid #2a2a30;
+        padding: 10px 12px;
+        text-align: left;
+      }
+      .compare-table th {
+        background: rgba(255, 255, 255, 0.06);
+        color: #e7e5e4;
+        font-weight: 600;
+      }
+      .compare-table td {
+        color: #a8a29e;
+      }
+      .compare-table td:first-child {
+        color: #e7e5e4;
+        font-weight: 500;
+      }
+      .compare-table tr.highlight {
+        background: rgba(5, 150, 105, 0.08);
+      }
+      .compare-table tr.highlight td:first-child {
+        color: var(--success);
+      }
+
+      .dot-rating {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        margin-right: 4px;
+        vertical-align: middle;
+      }
+      .dot-rating.hi {
+        background: var(--success);
+      }
+      .dot-rating.med {
+        background: var(--warn);
+      }
+      .dot-rating.lo {
+        background: #78716c;
+      }
+
+      @media (max-width: 700px) {
+        .gallery {
+          grid-template-columns: 1fr;
+        }
+        .compare-table {
+          font-size: 10px;
+        }
+        .compare-table th,
+        .compare-table td {
+          padding: 8px 6px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Habit Card Tap — UX Variants</h1>
+    <p class="sub">
+      10 approaches to make “tap card → detail” vs “tap day → check in”
+      discoverable on the habits list. Scroll to compare.
+    </p>
+
+    <div class="gallery">
+      <!-- 1 Current plan -->
+      <article class="variant-card">
+        <div class="variant-meta">
+          <div class="variant-num">Variant 01 · Shipped plan</div>
+          <div class="variant-name">Current plan (layered)</div>
+          <div class="variant-desc">
+            Details pill + one-time coach banner + micro-copy under chain.
+            Chevron nudge on first card.
+          </div>
+          <div class="ratings">
+            <span class="pill clarity-high">Clarity: High</span>
+            <span class="pill noise-med">Noise: Medium</span>
+            <span class="pill cost-med">Dev: Medium</span>
+          </div>
+        </div>
+        <div class="mock-wrap">
+          <div class="mini-screen">
+            <div class="cal-mini"><strong>67%</strong> today</div>
+            <div class="coach">
+              <b>Tap a habit card</b>Open progress & settings. Tap a day to
+              check in.
+            </div>
+            <div class="h-card">
+              <div class="accent"></div>
+              <div class="h-body">
+                <div class="h-header">
+                  <div class="h-icon">📖</div>
+                  <div class="h-title">Read 20 min</div>
+                  <span class="details-pill">Details ›</span>
+                </div>
+                <div class="chain-zone">
+                  <div class="dots">
+                    <div class="dot done"></div>
+                    <div class="dot done"></div>
+                    <div class="dot done"></div>
+                    <div class="dot today"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                  </div>
+                  <div class="micro">
+                    Tap card for details · Tap a day to check in
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- 2 Header zone -->
+      <article class="variant-card">
+        <div class="variant-meta">
+          <div class="variant-num">Variant 02</div>
+          <div class="variant-name">Header zone only</div>
+          <div class="variant-desc">
+            Top third styled as navigable list row; chain area gets distinct
+            background. Spatial separation, minimal copy.
+          </div>
+          <div class="ratings">
+            <span class="pill clarity-high">Clarity: High</span>
+            <span class="pill noise-low">Noise: Low</span>
+            <span class="pill cost-med">Dev: Medium</span>
+          </div>
+        </div>
+        <div class="mock-wrap">
+          <div class="mini-screen">
+            <div class="h-card" style="margin-top: 12px">
+              <div class="accent"></div>
+              <div class="h-body">
+                <div class="header-zone nav h-header">
+                  <div class="h-icon">📖</div>
+                  <div>
+                    <div class="h-title">Read 20 min</div>
+                  </div>
+                  <span class="chev-gray">›</span>
+                </div>
+                <div class="chain-zone alt">
+                  <div class="dots">
+                    <div class="dot done"></div>
+                    <div class="dot done"></div>
+                    <div class="dot today"></div>
+                    <div class="dot"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- 3 Explicit button -->
+      <article class="variant-card">
+        <div class="variant-meta">
+          <div class="variant-num">Variant 03</div>
+          <div class="variant-name">Explicit Details button</div>
+          <div class="variant-desc">
+            Small labeled button in header instead of implying whole card is
+            tappable. Clearest affordance, smaller target.
+          </div>
+          <div class="ratings">
+            <span class="pill clarity-high">Clarity: Very high</span>
+            <span class="pill noise-med">Noise: Medium</span>
+            <span class="pill cost-low">Dev: Low</span>
+          </div>
+        </div>
+        <div class="mock-wrap">
+          <div class="mini-screen">
+            <div class="h-card" style="margin-top: 12px">
+              <div class="accent"></div>
+              <div class="h-body">
+                <div class="h-header">
+                  <div class="h-icon">📖</div>
+                  <div class="h-title">Read 20 min</div>
+                  <button type="button" class="details-btn">Details</button>
+                </div>
+                <div class="chain-zone">
+                  <div class="dots">
+                    <div class="dot done"></div>
+                    <div class="dot today"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- 4 Section subtitle -->
+      <article class="variant-card">
+        <div class="variant-meta">
+          <div class="variant-num">Variant 04</div>
+          <div class="variant-name">Section subtitle</div>
+          <div class="variant-desc">
+            Single line above the habit list instead of per-card micro-copy.
+            Less repetition, weaker per-card cue.
+          </div>
+          <div class="ratings">
+            <span class="pill clarity-med">Clarity: Medium</span>
+            <span class="pill noise-low">Noise: Low</span>
+            <span class="pill cost-low">Dev: Low</span>
+          </div>
+        </div>
+        <div class="mock-wrap">
+          <div class="mini-screen">
+            <div class="cal-mini"><strong>67%</strong> today</div>
+            <div class="section-sub">
+              Tap card for details · Tap a day to check in
+            </div>
+            <div class="h-card">
+              <div class="accent"></div>
+              <div class="h-body">
+                <div class="h-header">
+                  <div class="h-icon">📖</div>
+                  <div class="h-title">Read 20 min</div>
+                  <span class="chev-gray">›</span>
+                </div>
+                <div class="chain-zone">
+                  <div class="dots">
+                    <div class="dot done"></div>
+                    <div class="dot today"></div>
+                    <div class="dot"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- 5 Post-check-in toast -->
+      <article class="variant-card">
+        <div class="variant-meta">
+          <div class="variant-num">Variant 05</div>
+          <div class="variant-name">Post-check-in toast</div>
+          <div class="variant-desc">
+            After first day toggle, toast teaches card → detail. Contextual, low
+            visual noise, one-time moment.
+          </div>
+          <div class="ratings">
+            <span class="pill clarity-high">Clarity: High</span>
+            <span class="pill noise-low">Noise: Low</span>
+            <span class="pill cost-low">Dev: Low</span>
+          </div>
+        </div>
+        <div class="mock-wrap">
+          <div class="mini-screen toast-wrap">
+            <div class="h-card" style="margin: 0">
+              <div class="accent"></div>
+              <div class="h-body">
+                <div class="h-header">
+                  <div class="h-icon">📖</div>
+                  <div class="h-title">Read 20 min</div>
+                  <span class="chev-gray">›</span>
+                </div>
+                <div class="chain-zone">
+                  <div class="dots">
+                    <div class="dot done"></div>
+                    <div class="dot done"></div>
+                    <div class="dot today"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="toast" id="toast5">
+              <span>Want more? Tap the card for calendar & strength.</span>
+              <button type="button" class="toast-dismiss" data-target="toast5">
+                ×
+              </button>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- 6 Chips strip -->
+      <article class="variant-card">
+        <div class="variant-meta">
+          <div class="variant-num">Variant 06</div>
+          <div class="variant-name">Tappable chips strip</div>
+          <div class="variant-desc">
+            Progress · Calendar · Settings chips under title. Very explicit
+            destinations, adds UI chrome.
+          </div>
+          <div class="ratings">
+            <span class="pill clarity-high">Clarity: Very high</span>
+            <span class="pill noise-high">Noise: High</span>
+            <span class="pill cost-med">Dev: Medium</span>
+          </div>
+        </div>
+        <div class="mock-wrap">
+          <div class="mini-screen">
+            <div class="h-card" style="margin-top: 12px">
+              <div class="accent"></div>
+              <div class="h-body">
+                <div class="h-header">
+                  <div class="h-icon">📖</div>
+                  <div class="h-title">Read 20 min</div>
+                </div>
+                <div class="chips">
+                  <span class="chip">Progress</span>
+                  <span class="chip">Calendar</span>
+                  <span class="chip">Settings</span>
+                </div>
+                <div class="chain-zone alt">
+                  <div class="dots">
+                    <div class="dot done"></div>
+                    <div class="dot today"></div>
+                    <div class="dot"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- 7 Subtitle under name -->
+      <article class="variant-card">
+        <div class="variant-meta">
+          <div class="variant-num">Variant 07</div>
+          <div class="variant-name">Subtitle under name</div>
+          <div class="variant-desc">
+            Persistent “View progress & calendar” under habit name. Always on,
+            no banner needed.
+          </div>
+          <div class="ratings">
+            <span class="pill clarity-med">Clarity: Medium–High</span>
+            <span class="pill noise-med">Noise: Medium</span>
+            <span class="pill cost-low">Dev: Low</span>
+          </div>
+        </div>
+        <div class="mock-wrap">
+          <div class="mini-screen">
+            <div class="h-card" style="margin-top: 12px">
+              <div class="accent"></div>
+              <div class="h-body">
+                <div class="h-header">
+                  <div class="h-icon">📖</div>
+                  <div>
+                    <div class="h-title">Read 20 min</div>
+                    <div class="h-subtitle">View progress & calendar</div>
+                  </div>
+                  <span class="chev-gray">›</span>
+                </div>
+                <div class="chain-zone">
+                  <div class="dots">
+                    <div class="dot done"></div>
+                    <div class="dot today"></div>
+                    <div class="dot"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- 8 Ghost Open -->
+      <article class="variant-card">
+        <div class="variant-meta">
+          <div class="variant-num">Variant 08</div>
+          <div class="variant-name">Ghost “Open” overlay</div>
+          <div class="variant-desc">
+            Faint “Open” label on first card header until detail opened once.
+            Strong first-run cue, fades away.
+          </div>
+          <div class="ratings">
+            <span class="pill clarity-high">Clarity: High (first visit)</span>
+            <span class="pill noise-med">Noise: Medium (temporary)</span>
+            <span class="pill cost-low">Dev: Low</span>
+          </div>
+        </div>
+        <div class="mock-wrap">
+          <div class="mini-screen">
+            <div class="h-card ghost-open" style="margin-top: 12px">
+              <div class="accent"></div>
+              <div class="h-body">
+                <div class="overlay">Open ›</div>
+                <div class="h-header" style="padding-top: 14px">
+                  <div class="h-icon">📖</div>
+                  <div class="h-title">Read 20 min</div>
+                </div>
+                <div class="chain-zone">
+                  <div class="dots">
+                    <div class="dot today"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- 9 Swipe right -->
+      <article class="variant-card">
+        <div class="variant-meta">
+          <div class="variant-num">Variant 09</div>
+          <div class="variant-name">Swipe-right hint</div>
+          <div class="variant-desc">
+            Swipe right opens detail (left keeps archive). Powerful but hidden
+            gesture — needs strong teaching.
+          </div>
+          <div class="ratings">
+            <span class="pill clarity-med">Clarity: Medium (if taught)</span>
+            <span class="pill noise-med">Noise: Medium</span>
+            <span class="pill cost-high">Dev: High</span>
+          </div>
+        </div>
+        <div class="mock-wrap">
+          <div class="mini-screen">
+            <div class="swipe-hint">
+              <span class="swipe-arrow">››</span> Swipe right for details
+            </div>
+            <div class="h-card swipeable">
+              <div class="accent"></div>
+              <div class="h-body">
+                <div class="h-header">
+                  <div class="h-icon">📖</div>
+                  <div class="h-title">Read 20 min</div>
+                </div>
+                <div class="chain-zone">
+                  <div class="dots">
+                    <div class="dot done"></div>
+                    <div class="dot today"></div>
+                    <div class="dot"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              style="margin: 4px 12px 0; font-size: 9px; color: var(--text-3)"
+            >
+              ← swipe left: archive
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- 10 Combo recommendation -->
+      <article class="variant-card">
+        <div class="variant-meta">
+          <div class="variant-num">Variant 10 · Combo</div>
+          <div class="variant-name">Plan + post-check-in toast</div>
+          <div class="variant-desc">
+            Layer current plan with contextual toast after first check-in. Best
+            teach moment + persistent affordances.
+          </div>
+          <div class="ratings">
+            <span class="pill clarity-high">Clarity: Very high</span>
+            <span class="pill noise-med">Noise: Medium</span>
+            <span class="pill cost-med">Dev: Medium</span>
+          </div>
+        </div>
+        <div class="mock-wrap">
+          <div class="mini-screen toast-wrap">
+            <div class="coach" style="margin-top: 8px">
+              <b>Tap a habit card</b> for progress & settings
+            </div>
+            <div class="h-card" style="margin: 8px 12px 0">
+              <div class="accent"></div>
+              <div class="h-body">
+                <div class="h-header">
+                  <div class="h-icon">📖</div>
+                  <div class="h-title">Read 20 min</div>
+                  <span class="details-pill">Details ›</span>
+                </div>
+                <div class="chain-zone">
+                  <div class="dots">
+                    <div class="dot done"></div>
+                    <div class="dot done"></div>
+                    <div class="dot today"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="toast" id="toast10" style="bottom: 8px">
+              <span>Nice! Tap the card for calendar & strength.</span>
+              <button type="button" class="toast-dismiss" data-target="toast10">
+                ×
+              </button>
+            </div>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <section class="compare-section">
+      <h2>Comparison matrix</h2>
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th>Variant</th>
+            <th>Clarity</th>
+            <th>Visual noise</th>
+            <th>Dev cost</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="highlight">
+            <td>01 Current plan</td>
+            <td><span class="dot-rating hi"></span>High</td>
+            <td><span class="dot-rating med"></span>Medium</td>
+            <td><span class="dot-rating med"></span>Medium</td>
+            <td>Balanced default; banner auto-dismisses</td>
+          </tr>
+          <tr>
+            <td>02 Header zone</td>
+            <td><span class="dot-rating hi"></span>High</td>
+            <td><span class="dot-rating lo"></span>Low</td>
+            <td><span class="dot-rating med"></span>Medium</td>
+            <td>Spatial learning, no extra copy</td>
+          </tr>
+          <tr>
+            <td>03 Details button</td>
+            <td><span class="dot-rating hi"></span>Very high</td>
+            <td><span class="dot-rating med"></span>Medium</td>
+            <td><span class="dot-rating lo"></span>Low</td>
+            <td>Smallest tap target for detail</td>
+          </tr>
+          <tr>
+            <td>04 Section subtitle</td>
+            <td><span class="dot-rating med"></span>Medium</td>
+            <td><span class="dot-rating lo"></span>Low</td>
+            <td><span class="dot-rating lo"></span>Low</td>
+            <td>Easy add-on to any variant</td>
+          </tr>
+          <tr>
+            <td>05 Post-check-in toast</td>
+            <td><span class="dot-rating hi"></span>High</td>
+            <td><span class="dot-rating lo"></span>Low</td>
+            <td><span class="dot-rating lo"></span>Low</td>
+            <td>Teaches at moment of engagement</td>
+          </tr>
+          <tr>
+            <td>06 Chips strip</td>
+            <td><span class="dot-rating hi"></span>Very high</td>
+            <td><span class="dot-rating hi"></span>High</td>
+            <td><span class="dot-rating med"></span>Medium</td>
+            <td>Busy cards; good for power users</td>
+          </tr>
+          <tr>
+            <td>07 Subtitle under name</td>
+            <td><span class="dot-rating med"></span>Med–High</td>
+            <td><span class="dot-rating med"></span>Medium</td>
+            <td><span class="dot-rating lo"></span>Low</td>
+            <td>Always-on; no one-time banner</td>
+          </tr>
+          <tr>
+            <td>08 Ghost Open</td>
+            <td><span class="dot-rating hi"></span>High (1st visit)</td>
+            <td><span class="dot-rating med"></span>Medium (temp)</td>
+            <td><span class="dot-rating lo"></span>Low</td>
+            <td>Pair with SecureStore flag</td>
+          </tr>
+          <tr>
+            <td>09 Swipe right</td>
+            <td><span class="dot-rating med"></span>Medium</td>
+            <td><span class="dot-rating med"></span>Medium</td>
+            <td><span class="dot-rating hi"></span>High</td>
+            <td>Conflicts with swipe-left archive</td>
+          </tr>
+          <tr class="highlight">
+            <td>10 Plan + toast combo</td>
+            <td><span class="dot-rating hi"></span>Very high</td>
+            <td><span class="dot-rating med"></span>Medium</td>
+            <td><span class="dot-rating med"></span>Medium</td>
+            <td>Recommended A/B against plan alone</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <script>
+      document.querySelectorAll('.toast-dismiss').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var id = btn.getAttribute('data-target');
+          var el = document.getElementById(id);
+          if (el) el.classList.add('hidden');
+        });
+      });
+    </script>
+  </body>
+</html>
