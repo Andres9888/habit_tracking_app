@@ -27,8 +27,10 @@ export function useHabitRenderItem(args: UseHabitRenderItemArgs) {
     selectedIds,
     onToggleSelection,
     showConnectors = true,
+    showGradientFill = true,
     showHabitStrengthPercentage,
     toggleHabit,
+    userProgressEmojis,
     weekDateStrings,
   } = args;
 
@@ -61,10 +63,12 @@ export function useHabitRenderItem(args: UseHabitRenderItemArgs) {
           notifyWeekCompletion={notifyWeekCompletion}
           reduceMotionPreference={reduceMotionPreference}
           showConnectors={showConnectors}
+          showGradientFill={showGradientFill}
           showHabitStrengthPercentage={Boolean(showHabitStrengthPercentage)}
           streak={renderData.streak}
           toggleHabit={toggleHabit}
           triggerEntrance={Boolean(renderData.triggerEntrance)}
+          userProgressEmojis={userProgressEmojis}
           weekDateStrings={weekDateStrings}
           weekStatus={renderData.weekStatus}
           onHabitEntranceComplete={onHabitEntranceComplete}

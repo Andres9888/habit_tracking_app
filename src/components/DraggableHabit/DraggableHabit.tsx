@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
  * @module DraggableHabit
  *
@@ -73,10 +74,12 @@ function DraggableHabit(props: DraggableHabitProps) {
     showSelectionOverlay,
     reduceMotionPreference,
     showConnectors = true,
+    showGradientFill = true,
     showHabitStrengthPercentage = false,
     streak,
     toggleHabit,
     triggerEntrance = true,
+    userProgressEmojis,
     weekDateStrings,
     weekStatus,
   } = props;
@@ -119,7 +122,7 @@ function DraggableHabit(props: DraggableHabitProps) {
     useStrengthAnimation(state.strengthPercent, reduceMotionPreference);
 
   // 6. Watercolor fill background width
-  const { isDark, showGradientFill, strengthFillStyle } = useCardStrengthFill(
+  const { isDark, strengthFillStyle } = useCardStrengthFill(
     state.strengthPercent,
     reduceMotionPreference
   );
@@ -163,6 +166,7 @@ function DraggableHabit(props: DraggableHabitProps) {
       strengthEmojiAnimatedStyle={strengthEmojiAnimatedStyle}
       strengthFillStyle={strengthFillStyle}
       toggleHabit={toggleHabit}
+      userProgressEmojis={userProgressEmojis}
       weekDateStrings={weekDateStrings}
       weekStatus={weekStatus}
       onArchive={onArchive}

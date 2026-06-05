@@ -43,7 +43,9 @@ type HabitRenderContentProps = {
   | 'selectedIds'
   | 'onToggleSelection'
   | 'showConnectors'
+  | 'showGradientFill'
   | 'toggleHabit'
+  | 'userProgressEmojis'
   | 'weekDateStrings'
 >;
 
@@ -76,8 +78,10 @@ function HabitRenderContentComponent({
   onHabitEntranceComplete,
   reduceMotionPreference,
   showConnectors,
+  showGradientFill,
   showHabitStrengthPercentage,
   toggleHabit,
+  userProgressEmojis,
   weekDateStrings,
 }: HabitRenderContentProps) {
   const isOptimisticHabit = isOptimisticHabitId(item._id);
@@ -152,10 +156,12 @@ function HabitRenderContentComponent({
           isPaused={item.paused ?? false}
           reduceMotionPreference={reduceMotionPreference}
           showConnectors={showConnectors}
+          showGradientFill={showGradientFill}
           showHabitStrengthPercentage={showHabitStrengthPercentage ?? false}
           streak={streak}
           toggleHabit={handleToggleHabit}
           triggerEntrance={triggerEntrance}
+          userProgressEmojis={userProgressEmojis}
           weekDateStrings={weekDateStrings}
           weekStatus={weekStatus}
           isSelected={isSelectionMode ? selectedIds?.has(item._id) : undefined}

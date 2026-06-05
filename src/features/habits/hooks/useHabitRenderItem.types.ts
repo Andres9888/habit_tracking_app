@@ -6,6 +6,8 @@ import type { Id } from '../../../../convex/_generated/dataModel';
 import type { Habit, HabitStatus } from '../types';
 import type { HabitCardEntranceVariant } from '../../../components/HabitCard/useHabitCardEntrance';
 
+import type { PartialProgressEmojiSet } from '../../../utils/progressEmojis';
+
 export interface UseHabitRenderItemArgs {
   celebrationsEnabled: boolean;
   compactView?: boolean;
@@ -21,11 +23,13 @@ export interface UseHabitRenderItemArgs {
   notifyWeekCompletion: (args: { habit: Habit; completedDate: string }) => void;
   reduceMotionPreference: boolean;
   showConnectors?: boolean;
+  showGradientFill?: boolean;
   showHabitStrengthPercentage?: boolean;
   toggleHabit: (args: {
     habitId: Id<'habits'>;
     date: string;
   }) => Promise<unknown> | void;
+  userProgressEmojis?: PartialProgressEmojiSet;
   weekDateStrings: string[];
   /**
    * Animation variant for habit card entrance.

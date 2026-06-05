@@ -12,6 +12,7 @@ import { addDays, format, parse } from 'date-fns';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useMutation, useQuery } from 'convex/react';
 import { api } from '../../../../convex/_generated/api';
+import type { PartialProgressEmojiSet } from '../../../utils/progressEmojis';
 import type {
   Habit,
   HabitStatus,
@@ -24,6 +25,7 @@ import { useHabitsSorting } from './useHabitsSorting';
 import { useHabitsArchive } from './useHabitsArchive';
 import { useHabitDelete } from './useHabitDelete';
 import { useRewardToast } from './useRewardToast';
+import { useHabitsListHeaderStats } from './useHabitsListHeaderStats';
 import { useOptimisticToggleMutation } from '../../../lib/optimistic';
 import { useOptimisticDragEnd } from './useOptimisticDragEnd';
 import { useIsOnline } from '../../../contexts/NetworkStatusContext';
@@ -103,6 +105,11 @@ function countRecentCompletions(
   return completions;
 }
 
+type HabitsListSettings = HabitSettings & {
+  progressEmojis?: PartialProgressEmojiSet;
+  showGradientFill?: boolean;
+};
+
 export function useHabitsListState(): HabitsListState {
   const [showHabitStrengthPercentage] = useState(true);
   const isOnline = useIsOnline();
@@ -125,7 +132,9 @@ export function useHabitsListState(): HabitsListState {
   }
 
   const settingsQuery = useQuery(api.settings.get);
-  const settings = (settingsQuery ?? undefined) as HabitSettings | undefined;
+  const settings = (settingsQuery ?? undefined) as
+    | HabitsListSettings
+    | undefined;
   const celebrationsEnabled = settings?.showMotivationalMessages ?? true;
   const compactView = settings?.compactView ?? false;
   const completionSoundEnabled = settings?.completionSoundEnabled ?? false;
@@ -136,6 +145,8 @@ export function useHabitsListState(): HabitsListState {
   const reduceMotionPreference = settings?.reduceMotion ?? false;
   const isPremiumUser = settings?.hasPremium ?? false;
   const showWeekCompletionBar = settings?.showWeekCompletionBar ?? true;
+  const showGradientFill = settings?.showGradientFill ?? true;
+  const userProgressEmojis = settings?.progressEmojis ?? undefined;
 
   // Completion sound hook (premium feature)
   const { playCompletionSound } = useCompletionSound({
@@ -170,10 +181,10 @@ export function useHabitsListState(): HabitsListState {
       return habitsFromQuery;
     }
 
-    const maxOrder = habitsFromQuery.reduce(
-      (currentMax, habit) => Math.max(currentMax, habit.order ?? currentMax),
-      0
-    );
+    let maxOrder = 0;
+    for (const habit of habitsFromQuery) {
+      maxOrder = Math.max(maxOrder, habit.order ?? maxOrder);
+    }
 
     return [
       ...habitsFromQuery,
@@ -261,6 +272,13 @@ export function useHabitsListState(): HabitsListState {
     getStreak,
     habitsFromQuery: habitsWithPredictedStrength,
     habitSortMode,
+  });
+
+  const headerStats = useHabitsListHeaderStats({
+    getHabitStatus,
+    getStreak,
+    habits,
+    weekDateStrings: weekDatesState.weekDateStrings,
   });
 
   const archiveState = useHabitsArchive(habits);
@@ -374,19 +392,25 @@ export function useHabitsListState(): HabitsListState {
   );
 
   return {
+    averageStrengthPercent: headerStats.averageStrengthPercent,
     canNavigateForward: weekDatesState.canNavigateForward,
     celebrationsEnabled,
     compactView,
+    completedToday: headerStats.completedToday,
+    completionByDay: headerStats.completionByDay,
     completionSoundEnabled,
     completionSoundType,
     contentPadding,
+    currentStreak: headerStats.currentStreak,
     dayShape,
     habitCompletionIcon,
     habits,
     habitSortMode,
     isHabitsLoading,
+    showGradientFill,
     showHabitStrengthPercentage,
     showWeekCompletionBar,
+    userProgressEmojis,
     weekDates: weekDatesState.weekDates,
     weekDateStrings: weekDatesState.weekDateStrings,
     ...archiveState,

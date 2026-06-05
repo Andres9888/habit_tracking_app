@@ -8,6 +8,8 @@
 import type { Id } from '../../../../convex/_generated/dataModel';
 import type { CompletionSoundType } from '../../../../convex/settings/types';
 import type { ToggleMutationResult } from '../../../lib/optimistic';
+import type { DayCompletionStatus } from '../../../components/CalendarTimeline';
+import type { PartialProgressEmojiSet } from '../../../utils/progressEmojis';
 import type {
   Habit,
   HabitSettings,
@@ -20,8 +22,11 @@ import type {
 export type ToggleMutationResult = { success: boolean; error?: string };
 
 export interface HabitsListState {
+  averageStrengthPercent: number;
   celebrationsEnabled: boolean;
   compactView: boolean;
+  completedToday: number;
+  completionByDay: Record<string, DayCompletionStatus>;
   completionSoundEnabled: boolean;
   completionSoundType: CompletionSoundType;
   dayShape: HabitSettings['dayShape'];
@@ -32,8 +37,11 @@ export interface HabitsListState {
   weekDates: Date[];
   weekDateStrings: string[];
   canNavigateForward: boolean;
+  currentStreak: number;
+  showGradientFill: boolean;
   showHabitStrengthPercentage: boolean;
   showWeekCompletionBar: boolean;
+  userProgressEmojis?: PartialProgressEmojiSet;
   contentPadding: {
     paddingHorizontal: number;
     paddingTop: number;

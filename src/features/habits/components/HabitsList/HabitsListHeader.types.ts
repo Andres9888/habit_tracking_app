@@ -9,12 +9,16 @@
  */
 
 import type { Animated } from 'react-native';
+import type { DayCompletionStatus } from '../../../../components/CalendarTimeline';
 
 export interface HabitsListHeaderProps {
-  habits: Array<{ _id: string }>;
+  averageStrengthPercent: number;
+  completedToday: number;
+  completionByDay: Record<string, DayCompletionStatus>;
   weekDateStrings: string[];
   weekDates: Date[];
   canNavigateForward: boolean;
+  currentStreak: number;
   justCreatedHabitId: string | null;
   reduceMotionPreference: boolean;
   completionIcon?: 'chain' | 'checkbox';
@@ -22,8 +26,7 @@ export interface HabitsListHeaderProps {
   headerTranslateY: Animated.Value;
   calendarOpacity: Animated.Value;
   calendarTranslateY: Animated.Value;
-  getHabitStatus: (habitId: string, dateString: string) => string;
-  getStreak: (habitId: string) => number;
+  totalHabits: number;
   onDayPress: (date: Date) => void;
   onJumpToToday: () => void;
   onNextWeek: () => void;

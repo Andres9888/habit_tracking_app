@@ -68,7 +68,9 @@ export function HabitsList(props: HabitsListProps) {
     seenHabitIds: state.seenHabitIdsRef.current,
     shouldTriggerEntrance: state.shouldTriggerHabitEntrance,
     showHabitStrengthPercentage: list.showHabitStrengthPercentage,
+    showGradientFill: list.showGradientFill,
     toggleHabit: list.toggleHabit,
+    userProgressEmojis: list.userProgressEmojis,
     weekDateStrings: list.weekDateStrings,
   });
 

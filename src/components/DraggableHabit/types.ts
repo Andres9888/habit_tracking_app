@@ -10,6 +10,7 @@
 
 import type { Id } from '../../../convex/_generated/dataModel';
 import type { HabitCardEntranceVariant } from '../HabitCard/useHabitCardEntrance';
+import type { PartialProgressEmojiSet } from '../../utils/progressEmojis';
 
 /** Completion status for a single day in the week view. */
 export type HabitStatus = 'done' | 'missed' | 'planned';
@@ -46,6 +47,7 @@ export interface Habit {
   strengthUpdatedAt?: number;
   /** Highest streak ever achieved for this habit. */
   bestStreak?: number;
+  progressEmojis?: PartialProgressEmojiSet;
 }
 
 /**
@@ -82,10 +84,12 @@ export interface DraggableHabitProps {
   previousStreak?: number;
   reduceMotionPreference: boolean;
   showConnectors?: boolean;
+  showGradientFill?: boolean;
   showHabitStrengthPercentage?: boolean;
   streak: number;
   toggleHabit: (args: { habitId: Id<'habits'>; date: string }) => void;
   triggerEntrance?: boolean;
+  userProgressEmojis?: PartialProgressEmojiSet;
   weekDateStrings: string[];
   weekStatus: HabitStatus[];
   /** Selection mode: whether this card is currently selected. */

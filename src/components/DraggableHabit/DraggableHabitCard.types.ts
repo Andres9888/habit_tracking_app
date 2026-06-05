@@ -16,6 +16,7 @@
 import type { AnimatedStyle, SharedValue } from 'react-native-reanimated';
 import type { Id } from '../../../convex/_generated/dataModel';
 import type { CardColors, Habit, HabitStatus } from './types';
+import type { PartialProgressEmojiSet } from '../../utils/progressEmojis';
 
 /** Animated style for the strength emoji (scale + rotate on level-up). */
 export type StrengthEmojiAnimatedStyle = AnimatedStyle;
@@ -80,6 +81,7 @@ export interface DraggableHabitCardProps {
   progressAnimatedStyle: ProgressAnimatedStyle;
   toggleHabit: (args: { habitId: Id<'habits'>; date: string }) => void;
   translateY: SharedValue<number>;
+  userProgressEmojis?: PartialProgressEmojiSet;
   weekDateStrings: string[];
   weekStatus: HabitStatus[];
   /** Selection mode: whether this card is currently selected. */

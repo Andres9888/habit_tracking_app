@@ -41,18 +41,20 @@ export function renderHabitsListHeader({
   return (
     <View style={{ elevation: 20, zIndex: 20 }}>
       <HabitsListHeader
+        averageStrengthPercent={list.averageStrengthPercent}
         calendarOpacity={state.calendarOpacity}
         calendarTranslateY={state.calendarTranslateY}
         canNavigateForward={canNavigateForward}
         compactView={list.compactView}
+        completedToday={list.completedToday}
+        completionByDay={list.completionByDay}
         completionIcon={list.habitCompletionIcon}
-        getHabitStatus={list.getHabitStatus}
-        getStreak={list.getStreak}
-        habits={list.habits}
+        currentStreak={list.currentStreak}
         headerOpacity={state.headerOpacity}
         headerTranslateY={state.headerTranslateY}
         justCreatedHabitId={state.justCreatedHabitId}
         reduceMotionPreference={list.reduceMotionPreference}
+        totalHabits={list.habits.length}
         weekDates={weekDates}
         weekDateStrings={list.weekDateStrings}
         onDayPress={state.handleDayPress}
@@ -61,12 +63,14 @@ export function renderHabitsListHeader({
         onPreviousWeek={onPreviousWeek}
         onUpgradePress={onUpgradeIntent}
       />
-      {props.isSelectionMode ? <SelectAllRow
+      {props.isSelectionMode ? (
+        <SelectAllRow
           isAllSelected={props.isAllSelected ?? false}
           selectedCount={props.selectedCount ?? 0}
           totalCount={list.habits.length}
           onToggleSelectAll={handleToggleSelectAll}
-        /> : null}
+        />
+      ) : null}
     </View>
   );
 }

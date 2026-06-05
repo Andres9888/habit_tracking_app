@@ -2,21 +2,19 @@
  * HabitsListHeader — animated header rendered above the habit rows.
  *
  * Contains (top-to-bottom):
- * 1. **OfflineIndicator** — shown when the device loses connectivity.
+ * 1. **OfflineIndicator** — US3 offline indicator for lost connectivity.
  * 2. **CalendarTimeline** — unified header with greeting, progress, and week strip.
  *
  * Action buttons have moved to the BottomActionBar.
  */
 
-import React, { memo, useMemo } from 'react';
+import React, { memo } from 'react';
 import { Animated, View } from 'react-native';
 import ReAnimated, {
   interpolate,
   useAnimatedStyle,
 } from 'react-native-reanimated';
-import { useQuery } from 'convex/react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { api } from '../../../../../convex/_generated/api';
 import { CalendarTimeline } from '../../../../components/CalendarTimeline';
 import { getShelfBackgroundColor } from '../../../../components/CalendarTimeline/CalendarTimeline.styles';
 import { OfflineIndicator } from '../../../../components/SyncStatus';
@@ -47,22 +45,12 @@ function HabitsListHeaderComponent(
     ),
   }));
 
-  const computed = useHabitsListHeaderComputed({
-    getHabitStatus: props.getHabitStatus,
-    habits: props.habits,
+  const { isOffline, shouldShowTimeline } = useHabitsListHeaderComputed({
     justCreatedHabitId: props.justCreatedHabitId,
-    weekDateStrings: props.weekDateStrings,
+    totalHabits: props.totalHabits,
   });
 
   const { shouldShowBanner, daysRemaining } = useTrialCountdown();
-
-  const currentStreak = useMemo(() => {
-    if (props.habits.length === 0) return 0;
-    return Math.max(...props.habits.map((h) => props.getStreak(h._id)));
-  }, [props.habits, props.getStreak]);
-
-  const strengthStats = useQuery(api.habitStrength.getAllHabitsStrengthStats);
-  const strengthPercent = Math.round((strengthStats?.averageStrength ?? 0) * 100);
 
   return (
     <ReAnimated.View
@@ -76,10 +64,11 @@ function HabitsListHeaderComponent(
       <View className='absolute left-0 right-0 top-4 z-10 flex-row justify-center'>
         <OfflineIndicator
           testID='habits-offline-indicator'
-          visible={computed.isOffline}
+          visible={isOffline}
         />
       </View>
-      {computed.shouldShowTimeline ? <Animated.View
+      {shouldShowTimeline ? (
+        <Animated.View
           style={{
             opacity: props.calendarOpacity,
             transform: [{ translateY: props.calendarTranslateY }],
@@ -89,14 +78,14 @@ function HabitsListHeaderComponent(
             compact={props.compactView}
             disableFutureDayPress
             canNavigateForward={props.canNavigateForward}
-            completedToday={computed.completedToday}
+            completedToday={props.completedToday}
             completionIcon={props.completionIcon}
-            completionByDay={computed.completionByDay}
-            currentStreak={currentStreak}
+            completionByDay={props.completionByDay}
+            currentStreak={props.currentStreak}
             dates={props.weekDates}
             reduceMotion={props.reduceMotionPreference}
-            strengthPercent={strengthPercent}
-            totalHabits={computed.totalHabits}
+            strengthPercent={props.averageStrengthPercent}
+            totalHabits={props.totalHabits}
             trialDaysRemaining={shouldShowBanner ? daysRemaining : null}
             onDayPress={props.onDayPress}
             onJumpToToday={props.onJumpToToday}
@@ -104,7 +93,8 @@ function HabitsListHeaderComponent(
             onPreviousWeek={props.onPreviousWeek}
             onUpgrade={props.onUpgradePress}
           />
-        </Animated.View> : null}
+        </Animated.View>
+      ) : null}
     </ReAnimated.View>
   );
 }
