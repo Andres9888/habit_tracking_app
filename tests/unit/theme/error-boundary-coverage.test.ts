@@ -86,6 +86,20 @@ describe('Secondary ErrorBoundary in HabitDetailContent', () => {
     );
   });
 
+  it('wraps calendar section via CalendarTabContent', () => {
+    expect(source).toMatch(/<CalendarTabContent[\s\S]*?\/>/);
+  });
+});
+
+describe('Secondary ErrorBoundary in CalendarTabContent', () => {
+  const source = readSource(
+    'screens/HabitDetailScreen/components/CalendarTabContent.tsx'
+  );
+
+  it('imports ErrorBoundary component', () => {
+    expect(source).toMatch(/import.*ErrorBoundary/);
+  });
+
   it('wraps MonthlyCalendarGrid with ErrorBoundary', () => {
     expect(source).toMatch(
       /<ErrorBoundary>[\s\S]*?<MonthlyCalendarGrid[\s\S]*?<\/ErrorBoundary>/

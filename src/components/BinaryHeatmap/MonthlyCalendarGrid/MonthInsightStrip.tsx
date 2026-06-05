@@ -40,7 +40,8 @@ export const MonthInsightStrip = memo(function MonthInsightStrip({
   bestRun,
   strongestDay,
   monthRate,
-}: MonthInsights) {
+  showStreak = true,
+}: MonthInsights & { showStreak?: boolean }) {
   const { colors, isDark } = useThemeColors();
   const gold = isDark ? palette.streak[300] : palette.streak[700];
   const divider = colors.border;
@@ -48,16 +49,35 @@ export const MonthInsightStrip = memo(function MonthInsightStrip({
   const muted = colors.text.tertiary;
 
   const items: StatProps[] = [
+    ...(showStreak
+      ? [
+          {
+            value: String(currentStreak),
+            label: 'Streak',
+            color: gold,
+            labelColor: muted,
+            icon: <Flame color={gold} size={iconSizes.small} fill={gold} />,
+          } satisfies StatProps,
+        ]
+      : []),
     {
-      value: String(currentStreak),
-      label: 'Streak',
-      color: gold,
+      value: strongestDay,
+      label: 'Strongest',
+      color: primary,
       labelColor: muted,
-      icon: <Flame color={gold} size={iconSizes.small} fill={gold} />,
     },
-    { value: strongestDay, label: 'Strongest', color: primary, labelColor: muted },
-    { value: `${monthRate}%`, label: 'This month', color: primary, labelColor: muted },
-    { value: String(bestRun), label: 'Best run', color: primary, labelColor: muted },
+    {
+      value: `${monthRate}%`,
+      label: 'This month',
+      color: primary,
+      labelColor: muted,
+    },
+    {
+      value: String(bestRun),
+      label: 'Best run',
+      color: primary,
+      labelColor: muted,
+    },
   ];
 
   return (

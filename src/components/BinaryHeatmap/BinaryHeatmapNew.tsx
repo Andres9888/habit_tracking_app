@@ -1,13 +1,5 @@
-/**
- * BinaryHeatmap Component
- *
- * Main container component for the GitHub-style binary heatmap.
- * Grid rendering is delegated to InlineHeatmapGrid to maintain file size.
- */
-
 import React, { memo, useState, useMemo, useCallback, useRef } from 'react';
 import { View } from 'react-native';
-
 import type { BinaryHeatmapProps, BinaryDay } from './types';
 import { HeatmapLegend } from './HeatmapLegend';
 import { HeatmapTooltip } from './HeatmapTooltip';
@@ -28,6 +20,7 @@ export const BinaryHeatmap = memo(function BinaryHeatmap({
   timeRange = '6m',
   title = 'Activity',
   showCompletionRate = true,
+  compact = false,
   onDayPress,
 }: BinaryHeatmapProps) {
   const { colors, isDark } = useThemeColors();
@@ -63,11 +56,6 @@ export const BinaryHeatmap = memo(function BinaryHeatmap({
     []
   );
 
-  const handleTooltipClose = useCallback(() => {
-    setTooltipVisible(false);
-    setTooltipDay(null);
-  }, []);
-
   return (
     <View
       accessible
@@ -75,6 +63,7 @@ export const BinaryHeatmap = memo(function BinaryHeatmap({
       accessibilityRole='summary'
       style={[
         styles.container,
+        compact && { paddingBottom: 12, paddingTop: 12 },
         {
           backgroundColor: isDark ? colors.card : palette.light.surfaceMuted,
           borderColor: colors.border,
@@ -87,7 +76,7 @@ export const BinaryHeatmap = memo(function BinaryHeatmap({
         stats={gridData.stats}
         title={title}
       />
-      <View style={styles.gridWrapper}>
+      <View style={[styles.gridWrapper, compact && { marginTop: 8 }]}>
         <InlineHeatmapGrid
           habitColor={habitColor}
           monthLabels={gridData.monthLabels}
@@ -95,21 +84,24 @@ export const BinaryHeatmap = memo(function BinaryHeatmap({
           weeks={gridData.weeks}
         />
       </View>
-      <HeatmapLegend
-        completionRate={gridData.stats.completionRate}
-        habitColor={habitColor}
-        showCompletionRate={false}
-      />
+      {compact ? null : (
+        <HeatmapLegend
+          completionRate={gridData.stats.completionRate}
+          habitColor={habitColor}
+          showCompletionRate={false}
+        />
+      )}
       {tooltipDay ? (
         <HeatmapTooltip
           day={tooltipDay}
           position={tooltipPosition}
           visible={tooltipVisible}
-          onClose={handleTooltipClose}
+          onClose={() => {
+            setTooltipVisible(false);
+            setTooltipDay(null);
+          }}
         />
       ) : null}
     </View>
   );
 });
-
-export default BinaryHeatmap;

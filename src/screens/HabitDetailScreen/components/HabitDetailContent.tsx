@@ -6,9 +6,9 @@ import { useRef } from 'react';
 import { ScrollView, View, type LayoutChangeEvent } from 'react-native';
 import ErrorBoundary from '../../../components/ErrorBoundary';
 import { HabitStrengthSection } from '../../../components/HabitStrengthSection';
+import type { Habit } from '../../../features/habits/types';
 import { useProgressEmojis } from '../../../hooks/useProgressEmojis';
 import { useThemeColors } from '../../../theme';
-import type { Habit } from '../../../features/habits/types';
 import { CalendarTabContent } from './CalendarTabContent';
 import { DetailHero } from './DetailHero';
 import { DetailViewTabs, type DetailView } from './DetailViewTabs';
@@ -19,6 +19,7 @@ interface HabitDetailContentProps {
   completedDates: Set<string>;
   habit: Habit;
   isCompletedToday: boolean;
+  isTogglingCalendar?: boolean;
   totalCompletions: number;
   onDayPress: (dateString: string, isCompleted: boolean) => void;
   onPinnedChange?: (pinned: boolean) => void;
@@ -28,6 +29,7 @@ export function HabitDetailContent({
   completedDates,
   habit,
   isCompletedToday,
+  isTogglingCalendar = false,
   totalCompletions,
   onDayPress,
   onPinnedChange,
@@ -39,9 +41,10 @@ export function HabitDetailContent({
   const habitColor = habit.color ?? habit.iconColor ?? colors.primary[700];
   const progressEmojis = useProgressEmojis(habit);
 
-  const makeSectionLayoutHandler = (view: DetailView) => (event: LayoutChangeEvent) => {
-    handleSectionLayout(view, event.nativeEvent.layout.y);
-  };
+  const makeSectionLayoutHandler =
+    (view: DetailView) => (event: LayoutChangeEvent) => {
+      handleSectionLayout(view, event.nativeEvent.layout.y);
+    };
 
   return (
     <ScrollView
@@ -61,17 +64,24 @@ export function HabitDetailContent({
       />
       <DetailViewTabs activeView={activeView} onViewChange={scrollToView} />
 
-      <View className='px-4 pt-2' onLayout={makeSectionLayoutHandler('calendar')}>
+      <View
+        className='mx-4 mt-3'
+        onLayout={makeSectionLayoutHandler('calendar')}
+      >
         <CalendarTabContent
           completedDates={completedDates}
           habit={habit}
           habitColor={habitColor}
+          isToggling={isTogglingCalendar}
           onDayPress={onDayPress}
         />
       </View>
 
       {habit.createdAt ? (
-        <View className='mx-4 mt-4' onLayout={makeSectionLayoutHandler('strength')}>
+        <View
+          className='mx-4 mt-4'
+          onLayout={makeSectionLayoutHandler('strength')}
+        >
           <ErrorBoundary>
             <HabitStrengthSection
               completedDates={completedDates}

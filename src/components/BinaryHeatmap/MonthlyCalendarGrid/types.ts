@@ -22,5 +22,13 @@ export interface MonthlyCalendarGridProps {
   completedDates: Set<string>;
   habitColor: string;
   habitCreatedAt?: number;
+  /** Controlled month — when set, grid follows this date. */
+  currentMonth?: Date;
+  onCurrentMonthChange?: (month: Date) => void;
+  /** Solid habit-color fills for completed days (detail screen). */
+  useSolidCompletedFill?: boolean;
+  /** Hide streak stat in insight strip (hero already shows streak). */
+  showStreakInInsights?: boolean;
+  isToggling?: boolean;
   onDayPress?: (date: string, completed: boolean) => void;
 }

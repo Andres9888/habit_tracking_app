@@ -1,10 +1,6 @@
 /**
- * CalendarDay Component
- *
- * Individual day cell for the monthly calendar (HabitKit-inspired, calm).
- * Only *completed* days are marked — a soft habit-color tint plus a small dot.
- * Missed days are left as a plain number, today gets a ring. This keeps the
- * grid uncluttered: we mark what was done, not what wasn't.
+ * CalendarDay — individual day cell for the monthly calendar grid.
+ * Completed days use either a soft tint (default) or solid habit-color fill (detail).
  */
 
 import React, { memo } from 'react';
@@ -14,6 +10,7 @@ import { styles } from './styles';
 import { fontWeights } from '@/theme/typography';
 
 interface CalendarDayColors {
+  inverse: string;
   muted: string;
   primary: string;
   tertiary: string;
@@ -22,13 +19,20 @@ interface CalendarDayColors {
 interface CalendarDayProps {
   day: DayData;
   habitColor: string;
-  /** Pre-blended solid tint shared with the ribbon connectors. */
   completedBg: string;
   textColors: CalendarDayColors;
+  useSolidCompletedFill?: boolean;
+  isToggling?: boolean;
   onPress: (dateString: string, isCompleted: boolean) => void;
 }
 
-function getTextColor(day: DayData, c: CalendarDayColors): string {
+function getTextColor(
+  day: DayData,
+  c: CalendarDayColors,
+  showCompleted: boolean,
+  useSolid: boolean
+): string {
+  if (showCompleted && useSolid) return c.inverse;
   if (!day?.isCurrentMonth) return c.muted;
   if (day?.isFuture) return c.tertiary;
   return c.primary;
@@ -39,6 +43,8 @@ export const CalendarDay = memo(function CalendarDay({
   habitColor,
   completedBg,
   textColors,
+  useSolidCompletedFill = false,
+  isToggling = false,
   onPress,
 }: CalendarDayProps) {
   const showCompleted = Boolean(
@@ -48,9 +54,11 @@ export const CalendarDay = memo(function CalendarDay({
     day?.isMissed && day?.isCurrentMonth && !day?.isFuture
   );
   const isToday = Boolean(day?.isToday);
-
-  // Solid tint shared with the ribbon connectors so runs merge seamlessly.
+  const isDisabled = Boolean(
+    day?.isFuture || !day?.isCurrentMonth || isToggling
+  );
   const cellBg = showCompleted ? completedBg : undefined;
+  const todayPending = isToday && !showCompleted;
 
   return (
     <Pressable
@@ -63,11 +71,8 @@ export const CalendarDay = memo(function CalendarDay({
             : 'Press to mark as complete'
       }
       accessibilityRole='button'
-      accessibilityState={{
-        disabled: Boolean(day?.isFuture || !day?.isCurrentMonth),
-        selected: showCompleted,
-      }}
-      disabled={Boolean(day?.isFuture || !day?.isCurrentMonth)}
+      accessibilityState={{ disabled: isDisabled, selected: showCompleted }}
+      disabled={isDisabled}
       style={styles.dayWrapper}
       onPress={() => onPress(day?.dateString ?? '', Boolean(day?.isCompleted))}
     >
@@ -75,20 +80,33 @@ export const CalendarDay = memo(function CalendarDay({
         style={[
           styles.dayCell,
           cellBg ? { backgroundColor: cellBg } : undefined,
-          isToday && { borderColor: habitColor, borderWidth: 2 },
+          todayPending && {
+            backgroundColor: `${habitColor}1A`,
+            borderColor: habitColor,
+            borderWidth: 2,
+          },
+          isToday &&
+            showCompleted && { borderColor: habitColor, borderWidth: 2 },
         ]}
       >
         <Text
           style={[
             styles.dayText,
-            { color: getTextColor(day, textColors) },
+            {
+              color: getTextColor(
+                day,
+                textColors,
+                showCompleted,
+                useSolidCompletedFill
+              ),
+            },
             isToday && styles.todayText,
             showCompleted && { fontWeight: fontWeights.semibold },
           ]}
         >
           {day?.dayNumber ?? ''}
         </Text>
-        {showCompleted ? (
+        {showCompleted && !useSolidCompletedFill ? (
           <View style={[styles.dot, { backgroundColor: habitColor }]} />
         ) : null}
       </View>

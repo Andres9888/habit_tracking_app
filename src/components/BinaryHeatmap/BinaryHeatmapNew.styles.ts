@@ -1,7 +1,3 @@
-/**
- * Styles for BinaryHeatmapNew Component
- */
-
 import { StyleSheet } from 'react-native';
 
 import {

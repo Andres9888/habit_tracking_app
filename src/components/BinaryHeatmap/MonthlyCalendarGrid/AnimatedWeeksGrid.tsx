@@ -13,7 +13,14 @@ interface AnimatedWeeksGridProps {
   monthKey: string;
   onPress: (dateString: string, isCompleted: boolean) => void;
   showConnections: boolean;
-  textColors: { muted: string; primary: string; tertiary: string };
+  textColors: {
+    inverse: string;
+    muted: string;
+    primary: string;
+    tertiary: string;
+  };
+  useSolidCompletedFill?: boolean;
+  isToggling?: boolean;
   weeks: DayData[][];
 }
 
@@ -25,6 +32,8 @@ export const AnimatedWeeksGrid = memo(function AnimatedWeeksGrid({
   onPress,
   showConnections,
   textColors,
+  useSolidCompletedFill = false,
+  isToggling = false,
   weeks,
 }: AnimatedWeeksGridProps) {
   const [rowWidth, setRowWidth] = useState(0);
@@ -64,10 +73,12 @@ export const AnimatedWeeksGrid = memo(function AnimatedWeeksGrid({
             {(week ?? []).map((day) => (
               <CalendarDay
                 key={day.dateString}
+                completedBg={completedBg}
                 day={day}
                 habitColor={habitColor}
-                completedBg={completedBg}
+                isToggling={isToggling}
                 textColors={textColors}
+                useSolidCompletedFill={useSolidCompletedFill}
                 onPress={onPress}
               />
             ))}

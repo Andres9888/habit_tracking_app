@@ -1,15 +1,18 @@
 /** DetailHero - Horizontal: emoji left, name + inline stats right. */
-import React from 'react';
-import { View, Text } from 'react-native';
-import Animated, { Easing, FadeInDown } from 'react-native-reanimated';
 import { Check } from 'lucide-react-native';
+import { Text, View } from 'react-native';
+import Animated, { Easing, FadeInDown } from 'react-native-reanimated';
 import { useThemeColors } from '../../../theme';
 import { spacing } from '../../../theme/spacing';
-import { typography, fontFamilies, fontWeights } from '../../../theme/typography';
+import {
+  fontFamilies,
+  fontWeights,
+  typography,
+} from '../../../theme/typography';
 import type { Habit } from '../HabitDetailScreen.types';
-import { DetailHeroStat } from './DetailHeroStat';
 import { iconShadow } from './DetailHeader.constants';
-import { formatSchedule } from './DetailHero.utils';
+import { formatSchedule, getHabitDisplayName } from './DetailHero.utils';
+import { DetailHeroStat } from './DetailHeroStat';
 
 interface DetailHeroProps {
   habit: Habit;
@@ -17,25 +20,36 @@ interface DetailHeroProps {
   totalCompletions: number;
 }
 
-const ENTERING = FadeInDown.duration(280).delay(100).easing(Easing.out(Easing.cubic));
+const ENTERING = FadeInDown.duration(280)
+  .delay(100)
+  .easing(Easing.out(Easing.cubic));
 
 /** Hero-only dimensions with no shared token equivalent. */
 const ICON_TILE = 46;
 const ICON_EMOJI = 24;
 const CHECK_BADGE = 18;
 
-export function DetailHero({ habit, isCompletedToday, totalCompletions }: DetailHeroProps) {
+export function DetailHero({
+  habit,
+  isCompletedToday,
+  totalCompletions,
+}: DetailHeroProps) {
   const { colors } = useThemeColors();
-  const habitName = habit.icon
-    ? (habit.name ?? '').replace(/^(?![0-9#*])\p{Emoji}\s*/u, '')
-    : (habit.name ?? 'Habit');
+  const habitName = getHabitDisplayName(habit);
   const defaultIconBg = colors.primary[100];
   const defaultIconShadow = colors.primary[500];
   const schedule = formatSchedule(habit);
-  const statProps = { labelColor: colors.text.secondary, valueColor: colors.text.primary };
+  const statProps = {
+    labelColor: colors.text.secondary,
+    valueColor: colors.text.primary,
+  };
 
   return (
-    <Animated.View className='flex-row items-center px-5 py-2' entering={ENTERING} style={{ gap: spacing.md }}>
+    <Animated.View
+      className='flex-row items-center px-5 py-1'
+      entering={ENTERING}
+      style={{ gap: spacing.md }}
+    >
       {habit.icon ? (
         <View
           accessibilityLabel={`Habit icon: ${habit.icon}${isCompletedToday ? ', completed today' : ''}`}
@@ -48,7 +62,9 @@ export function DetailHero({ habit, isCompletedToday, totalCompletions }: Detail
             width: ICON_TILE,
           }}
         >
-          <Text style={{ color: colors.text.primary, fontSize: ICON_EMOJI }}>{habit.icon}</Text>
+          <Text style={{ color: colors.text.primary, fontSize: ICON_EMOJI }}>
+            {habit.icon}
+          </Text>
           {isCompletedToday ? (
             <View
               className='absolute -bottom-1 -right-1 items-center justify-center rounded-full'
@@ -71,21 +87,49 @@ export function DetailHero({ habit, isCompletedToday, totalCompletions }: Detail
           accessibilityLabel={`Habit: ${habitName}`}
           accessibilityRole='header'
           numberOfLines={1}
-          style={{ color: colors.text.primary, fontFamily: fontFamilies.primary.display, fontSize: typography.heading3.fontSize, fontWeight: fontWeights.bold, lineHeight: typography.body.lineHeight }}
+          style={{
+            color: colors.text.primary,
+            fontFamily: fontFamilies.primary.display,
+            fontSize: typography.heading3.fontSize,
+            fontWeight: fontWeights.bold,
+            lineHeight: typography.body.lineHeight,
+          }}
         >
           {habitName}
         </Text>
 
-        <View className='mt-1 flex-row items-center' style={{ gap: spacing.md }}>
-          <DetailHeroStat emoji='🔥' label='streak' value={habit.currentStreak ?? 0} {...statProps} />
-          <DetailHeroStat emoji='⭐' label='best' value={habit.bestStreak ?? 0} {...statProps} />
-          <DetailHeroStat emoji='✓' label='total' value={totalCompletions} {...statProps} />
+        <View
+          className='mt-1 flex-row items-center'
+          style={{ gap: spacing.md }}
+        >
+          <DetailHeroStat
+            emoji='🔥'
+            label='streak'
+            value={habit.currentStreak ?? 0}
+            {...statProps}
+          />
+          <DetailHeroStat
+            emoji='⭐'
+            label='best'
+            value={habit.bestStreak ?? 0}
+            {...statProps}
+          />
+          <DetailHeroStat
+            emoji='✓'
+            label='total'
+            value={totalCompletions}
+            {...statProps}
+          />
         </View>
 
         {schedule ? (
           <Text
             accessibilityLabel={`Schedule: ${schedule}`}
-            style={{ ...typography.caption, color: colors.text.tertiary, marginTop: 2 }}
+            style={{
+              ...typography.caption,
+              color: colors.text.tertiary,
+              marginTop: 2,
+            }}
           >
             {schedule}
           </Text>

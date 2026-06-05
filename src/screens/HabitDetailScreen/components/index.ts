@@ -4,6 +4,7 @@
  */
 
 export { DetailHero } from './DetailHero';
+export { getHabitDisplayName } from './DetailHero.utils';
 export { DetailLoadingState } from './DetailLoadingState';
 export { HeaderButton } from './HeaderButton';
 export { UndoToasts } from './UndoToasts';

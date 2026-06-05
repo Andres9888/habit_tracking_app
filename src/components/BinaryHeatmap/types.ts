@@ -120,6 +120,9 @@ export interface BinaryHeatmapProps {
   /** Whether to show the completion rate in the legend (defaults to true) */
   showCompletionRate?: boolean;
 
+  /** Compact banner mode: tighter padding, hides the Missed/Done legend */
+  compact?: boolean;
+
   /** Optional callback for time range changes (legacy test compatibility) */
   onTimeRangeChange?: (range: TimeRange) => void;
 }

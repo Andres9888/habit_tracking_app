@@ -1,25 +1,26 @@
 /* eslint-disable max-lines */
 /** HabitDetailScreen - Optimized for 9+ scores across all dimensions */
-import React, { useCallback, useState } from 'react';
-import { View, Modal, KeyboardAvoidingView, Platform } from 'react-native';
-import { Edit3 } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
-import { typography, fontWeights } from '@/theme/typography';
+import { fontWeights, typography } from '@/theme/typography';
+import { Edit3 } from 'lucide-react-native';
+import { useCallback, useState } from 'react';
+import { KeyboardAvoidingView, Modal, Platform, View } from 'react-native';
 import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 import { ScreenHeader } from '../../components/ScreenHeader';
+import { useThemeColors } from '../../theme';
+import { overlays } from '../../theme/colors';
+import { shadows } from '../../theme/spacing';
 import {
   DetailLoadingState,
+  getHabitDisplayName,
   HabitDetailContent,
   HabitDetailModals,
   HeaderButton,
 } from './components';
 import { buildModalsProps } from './HabitDetailScreen.constants';
-import { overlays } from '../../theme/colors';
-import { shadows } from '../../theme/spacing';
-import { useThemeColors } from '../../theme';
-import { useHabitDetailScreenState } from './useHabitDetailScreenState';
-import { useCalendarHandlers } from './useCalendarHandlers';
 import type { HabitDetailScreenProps } from './HabitDetailScreen.types';
+import { useCalendarHandlers } from './useCalendarHandlers';
+import { useHabitDetailScreenState } from './useHabitDetailScreenState';
 
 // eslint-disable-next-line max-lines-per-function
 function HabitDetailScreenContent({
@@ -74,7 +75,10 @@ function HabitDetailScreenContent({
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
             className='flex-1'
           >
-            <View className='flex-1' style={{ backgroundColor: overlays.scrim }}>
+            <View
+              className='flex-1'
+              style={{ backgroundColor: overlays.scrim }}
+            >
               <View
                 className='flex-1 overflow-hidden rounded-t-3xl'
                 style={{ backgroundColor: colors.background, ...shadows.modal }}
@@ -87,12 +91,17 @@ function HabitDetailScreenContent({
                       icon={<Edit3 size={iconSizes.small} strokeWidth={2.5} />}
                       label='Edit habit'
                       text='Edit'
-                      tone='accent'
+                      tone='subtle'
                       onPress={handleEdit}
                     />
                   }
-                  title={habit.name}
-                  titleStyle={{ ...typography.body, fontWeight: fontWeights.semibold, letterSpacing: -0.2 }}
+                  surfaceVisible={isTitlePinned}
+                  title={getHabitDisplayName(habit)}
+                  titleStyle={{
+                    ...typography.body,
+                    fontWeight: fontWeights.semibold,
+                    letterSpacing: -0.2,
+                  }}
                   titleVisible={isTitlePinned}
                   variant='transparent'
                   onBack={onClose}
@@ -101,6 +110,7 @@ function HabitDetailScreenContent({
                   completedDates={screenState.completedDates}
                   habit={habit}
                   isCompletedToday={screenState.isCompletedToday}
+                  isTogglingCalendar={screenState.isTogglingCalendar}
                   totalCompletions={screenState.totalCompletions}
                   onDayPress={calendarHandlers.handleCalendarDayPress}
                   onPinnedChange={handlePinnedChange}
