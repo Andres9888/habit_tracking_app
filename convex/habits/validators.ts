@@ -79,7 +79,6 @@ export const fullHabitValidator = v.object({
   vizSuccessBody: v.optional(v.string()),
   vizSuccessEmotion: v.optional(v.string()),
   vizSuccessMind: v.optional(v.string()),
-  weeklyMinutesGoal: v.optional(v.number()),
   why: v.optional(v.string()),
   woopObstacle: v.optional(v.string()),
   woopOutcome: v.optional(v.string()),

@@ -6,8 +6,10 @@ import { useUser } from '@clerk/clerk-expo';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { shadows, spacing } from '../../theme/spacing';
 import { typography, fontWeights } from '../../theme/typography';
+import { EditableUserAvatar } from './EditableUserAvatar';
 import { ProfileStatsRow } from './ProfileStatsRow';
-import { UserAvatar } from './UserAvatar';
+import { useChangeProfileImage } from './useChangeProfileImage';
+import { useProfileDisplayImage } from './useProfileDisplayImage';
 import { useProfileStats } from './useProfileStats';
 
 interface ProfileCardProps {
@@ -19,6 +21,8 @@ export function ProfileCard({ isPremium, highContrastMode }: ProfileCardProps) {
   const { user } = useUser();
   const { colors: themeColors } = useThemeColors();
   const stats = useProfileStats();
+  const { imageUrl } = useProfileDisplayImage();
+  const { isUpdating, openPhotoPicker } = useChangeProfileImage();
 
   const name =
     [user?.firstName, user?.lastName].filter(Boolean).join(' ') ||
@@ -43,27 +47,37 @@ export function ProfileCard({ isPremium, highContrastMode }: ProfileCardProps) {
       }}
     >
       <View className='items-center px-4 pb-1 pt-5' style={{ gap: spacing.md }}>
-        <UserAvatar
-          imageUrl={user?.imageUrl}
+        <EditableUserAvatar
+          imageUrl={imageUrl}
           initial={initial}
+          isUpdating={isUpdating}
           palette={{
-            avatarBg: themeColors.primary[100],
+            avatarBg: themeColors.primary[700],
             avatarBorderColor: themeColors.border,
             avatarBorderWidth: highContrastMode ? 1 : 0,
             avatarTextColor: themeColors.text.inverse,
-            gradientColors: [themeColors.primary[700], themeColors.primary[600]],
+            gradientColors: [
+              themeColors.primary[700],
+              themeColors.primary[600],
+            ],
           }}
           size={72}
           useGradient={!highContrastMode}
+          onPress={openPhotoPicker}
         />
         <View className='items-center'>
-          <Text style={{ ...typography.heading3, color: themeColors.text.primary }}>
+          <Text
+            style={{ ...typography.heading3, color: themeColors.text.primary }}
+          >
             {name}
           </Text>
           {email ? (
             <Text
               className='mt-0.5'
-              style={{ ...typography.caption, color: themeColors.text.secondary }}
+              style={{
+                ...typography.caption,
+                color: themeColors.text.secondary,
+              }}
             >
               {email}
             </Text>
@@ -71,12 +85,21 @@ export function ProfileCard({ isPremium, highContrastMode }: ProfileCardProps) {
           {isPremium ? (
             <View
               className='mt-1.5 flex-row items-center rounded-lg px-2 py-0.5'
-              style={{ backgroundColor: themeColors.status.warningLight, gap: 4 }}
+              style={{
+                backgroundColor: themeColors.status.warningLight,
+                gap: 4,
+              }}
             >
-              <Crown color={themeColors.status.warningText} size={iconSizes.micro} />
+              <Crown
+                color={themeColors.status.warningText}
+                size={iconSizes.micro}
+              />
               <Text
                 className='text-xs font-bold'
-                style={{ color: themeColors.status.warningText, fontWeight: fontWeights.bold }}
+                style={{
+                  color: themeColors.status.warningText,
+                  fontWeight: fontWeights.bold,
+                }}
               >
                 PRO
               </Text>

@@ -6,6 +6,7 @@ import { useThemeColors } from '../../theme/ThemeContext';
 import { borderRadius, shadows } from '../../theme/spacing';
 import { AccountRowContent, type AccountRowPalette } from './AccountRowContent';
 import { HighContrastAccountRow } from './HighContrastAccountRow';
+import { useProfileDisplayImage } from './useProfileDisplayImage';
 
 interface AccountRowProps {
   highContrastMode: boolean;
@@ -36,10 +37,10 @@ export function AccountRow({
 }: AccountRowProps) {
   const { user } = useUser();
   const { isDark } = useThemeColors();
+  const { imageUrl } = useProfileDisplayImage();
 
   const name = user?.firstName ?? user?.username ?? 'User';
   const email = user?.primaryEmailAddress?.emailAddress;
-  const imageUrl = user?.imageUrl;
   const initial = name.charAt(0).toUpperCase();
 
   if (highContrastMode) {

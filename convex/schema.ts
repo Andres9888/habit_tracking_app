@@ -388,6 +388,7 @@ const applicationTables = {
     // Clerk user ID (subject from JWT)
     email: v.optional(v.string()),
     imageUrl: v.optional(v.string()),
+    profileImageStorageId: v.optional(v.id('_storage')),
     isAnonymous: v.optional(v.boolean()),
     lastLoginAt: v.optional(v.number()),
     name: v.optional(v.string()), // Legacy field for anonymous users
@@ -439,8 +440,6 @@ const applicationTables = {
 
     hasPremium: v.optional(v.boolean()),
     highContrastMode: v.optional(v.boolean()),
-    // Retained for backwards compatibility with existing user data
-    chevronMode: v.optional(v.string()),
     // Global default for the 5-stage growth emoji set, overridable per habit.
     progressEmojis: v.optional(progressEmojisValidator),
     // User's saved "Custom" preset — auto-stored when slots are edited in

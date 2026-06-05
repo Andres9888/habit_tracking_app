@@ -9,6 +9,7 @@ import { shadows } from '../../theme/spacing';
 import { typography, fontWeights } from '../../theme/typography';
 import { ProfileStatsRow } from './ProfileStatsRow';
 import { UserAvatar } from './UserAvatar';
+import { useProfileDisplayImage } from './useProfileDisplayImage';
 import { useProfileStats } from './useProfileStats';
 
 interface ProfileHeroCardProps {
@@ -31,7 +32,7 @@ export function ProfileHeroCard({
     user?.username ||
     'User';
   const initial = name.charAt(0).toUpperCase();
-  const imageUrl = user?.imageUrl;
+  const { imageUrl } = useProfileDisplayImage();
 
   return (
     <AnimatedPressable
@@ -42,15 +43,22 @@ export function ProfileHeroCard({
       <View
         className='overflow-hidden rounded-2xl'
         style={{
-          backgroundColor: highContrastMode ? themeColors.card : themeColors.card,
+          backgroundColor: highContrastMode
+            ? themeColors.card
+            : themeColors.card,
           borderColor: highContrastMode ? themeColors.border : undefined,
           borderWidth: highContrastMode ? 1 : 0,
-          ...(highContrastMode ? { elevation: 0, shadowColor: 'transparent' } : shadows.card),
+          ...(highContrastMode
+            ? { elevation: 0, shadowColor: 'transparent' }
+            : shadows.card),
         }}
       >
         <View className='items-center px-4 pb-1 pt-5'>
           <View className='absolute right-3 top-3'>
-            <ChevronRight color={themeColors.text.tertiary} size={iconSizes.medium} />
+            <ChevronRight
+              color={themeColors.text.tertiary}
+              size={iconSizes.medium}
+            />
           </View>
           <UserAvatar
             imageUrl={imageUrl}
@@ -60,7 +68,10 @@ export function ProfileHeroCard({
               avatarBorderColor: themeColors.border,
               avatarBorderWidth: 2,
               avatarTextColor: themeColors.primary[700],
-              gradientColors: [themeColors.primary[700], themeColors.primary[600]],
+              gradientColors: [
+                themeColors.primary[700],
+                themeColors.primary[600],
+              ],
             }}
             size={72}
             useGradient
@@ -78,9 +89,15 @@ export function ProfileHeroCard({
             {isPremium ? (
               <View
                 className='flex-row items-center rounded-md px-1.5 py-0.5'
-                style={{ backgroundColor: themeColors.status.warningLight, gap: 3 }}
+                style={{
+                  backgroundColor: themeColors.status.warningLight,
+                  gap: 3,
+                }}
               >
-                <Crown color={themeColors.status.warningText} size={iconSizes.micro} />
+                <Crown
+                  color={themeColors.status.warningText}
+                  size={iconSizes.micro}
+                />
                 <Text
                   style={{
                     ...typography.tabBar,
