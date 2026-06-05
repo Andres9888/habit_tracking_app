@@ -12,8 +12,8 @@
 import React from 'react';
 import { View } from 'react-native';
 import { HabitChainVisualizer } from '../HabitChainVisualizer';
-import { useProgressEmojis } from '../../hooks/useProgressEmojis';
 import { useThemeColors } from '../../theme/ThemeContext';
+import { resolveProgressEmojis } from '../../utils/progressEmojis';
 import { CardHeader } from './CardHeader';
 import { NewRecordBadge } from './NewRecordBadge';
 import { StrengthProgressBar } from './StrengthProgressBar';
@@ -27,7 +27,10 @@ interface CardContentProps extends DraggableHabitCardProps {
 export function CardContent(props: CardContentProps) {
   const { colors: themeColors } = useThemeColors();
   const compact = props.isCompactMode;
-  const progressEmojis = useProgressEmojis(props.habit);
+  const progressEmojis = resolveProgressEmojis(
+    props.habit.progressEmojis,
+    props.userProgressEmojis
+  );
   return (
     <>
       <View className={compact ? 'pt-3' : 'pt-4'}>
@@ -36,12 +39,14 @@ export function CardContent(props: CardContentProps) {
           bestStreak={props.bestStreak}
           colors={props.colors}
           emoji={props.emoji}
+          enableChevronNudge={props.enableChevronNudge}
           habit={props.habit}
           highContrastMode={props.highContrastMode}
           iconPulse={props.iconPulse}
           isCompactMode={compact}
           isPaused={props.isPaused}
           name={props.name}
+          reduceMotionPreference={props.reduceMotionPreference}
           showHabitStrengthPercentage={props.showHabitStrengthPercentage}
           streak={props.streak}
         />
@@ -76,6 +81,7 @@ export function CardContent(props: CardContentProps) {
           accentColor={props.accentColor}
           celebrationsEnabled={props.celebrationsEnabled}
           completionIcon={props.completionIcon}
+          enableTodayPulse={props.enableTodayPulse}
           strengthPercent={props.strengthPercent}
           habitId={props.habit._id}
           highContrastMode={props.highContrastMode}

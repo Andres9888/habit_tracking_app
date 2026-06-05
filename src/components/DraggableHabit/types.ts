@@ -8,45 +8,14 @@
  * used after state/animation computation, see {@link DraggableHabitCard.types.ts}.
  */
 
-import type { Id } from '../../../convex/_generated/dataModel';
+import type { Doc, Id } from '../../../convex/_generated/dataModel';
 import type { HabitCardEntranceVariant } from '../HabitCard/useHabitCardEntrance';
+import type { PartialProgressEmojiSet } from '../../utils/progressEmojis';
 
 /** Completion status for a single day in the week view. */
 export type HabitStatus = 'done' | 'missed' | 'planned';
 
-/**
- * A habit record from the Convex backend.
- *
- * Includes core identity (name, icon, color), streak/strength metadata,
- * and optional organisational fields (tags, order, archived).
- */
-export interface Habit {
-  _id: Id<'habits'>;
-  name: string;
-  notes?: string;
-  createdAt: number;
-  _creationTime: number;
-  /** Custom emoji icon (overrides emoji extracted from name). */
-  icon?: string;
-  /** Explicit accent color hex (overrides deterministic color picker). */
-  color?: string;
-  /** @deprecated Legacy field — use `color` instead. */
-  iconColor?: string;
-  /** Sort position in the habits list (drag-to-reorder). */
-  order?: number;
-  /** User's preferred time of day, e.g. "morning" | "evening". */
-  preferredTime?: string;
-  tags?: string[];
-  userId?: string;
-  archived?: boolean;
-  archivedAt?: number;
-  /** Habit strength as a 0–1 decimal (server-computed). */
-  strength?: number;
-  strengthLevel?: string;
-  strengthUpdatedAt?: number;
-  /** Highest streak ever achieved for this habit. */
-  bestStreak?: number;
-}
+export type Habit = Doc<'habits'>;
 
 /**
  * Props for the top-level `<DraggableHabit>` component.
@@ -62,6 +31,7 @@ export interface DraggableHabitProps {
   /** Stagger delay (ms) for entrance animation in a list. */
   entranceDelay?: number;
   entranceVariant?: HabitCardEntranceVariant;
+  enableTodayPulse?: boolean;
   habit: Habit;
   highContrastMode?: boolean;
   isCompactMode?: boolean;
@@ -82,10 +52,12 @@ export interface DraggableHabitProps {
   previousStreak?: number;
   reduceMotionPreference: boolean;
   showConnectors?: boolean;
+  showGradientFill?: boolean;
   showHabitStrengthPercentage?: boolean;
   streak: number;
   toggleHabit: (args: { habitId: Id<'habits'>; date: string }) => void;
   triggerEntrance?: boolean;
+  userProgressEmojis?: PartialProgressEmojiSet;
   weekDateStrings: string[];
   weekStatus: HabitStatus[];
   /** Selection mode: whether this card is currently selected. */
@@ -94,6 +66,8 @@ export interface DraggableHabitProps {
   showSelectionOverlay?: boolean;
   /** Selection mode: called when the checkbox is toggled. */
   onToggleSelection?: () => void;
+  /** Nudge the Details pill on first card while the coach hint is visible. */
+  enableChevronNudge?: boolean;
 }
 
 /**

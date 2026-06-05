@@ -27,6 +27,7 @@ interface ChainDayItemProps {
   celebrationsEnabled: boolean;
   completionIcon: CompletionIcon;
   completed: boolean;
+  enableTodayPulse: boolean;
   strengthPercent: number;
   dateString: string;
   disabled: boolean;
@@ -48,6 +49,7 @@ const ChainDayItemComponent: React.FC<ChainDayItemProps> = ({
   celebrationsEnabled,
   completionIcon,
   completed,
+  enableTodayPulse,
   strengthPercent,
   dateString,
   disabled,
@@ -69,6 +71,7 @@ const ChainDayItemComponent: React.FC<ChainDayItemProps> = ({
       accessibilityLabel={accessibilityLabel}
       completed={completed}
       completionIcon={completionIcon}
+      enableTodayPulse={enableTodayPulse}
       strengthPercent={strengthPercent}
       disabled={disabled}
       highContrastMode={highContrastMode}
@@ -79,18 +82,20 @@ const ChainDayItemComponent: React.FC<ChainDayItemProps> = ({
     />
     <SparkleBurst
       color={accentColor}
-      isActive={activeBurst === dateString ? celebrationsEnabled : null}
+      isActive={Boolean(activeBurst === dateString && celebrationsEnabled)}
       reduceMotion={shouldReduceMotion}
       onComplete={onBurstComplete}
     />
-    {showConnector ? <View pointerEvents='none' style={styles.connectorContainer}>
+    {showConnector ? (
+      <View pointerEvents='none' style={styles.connectorContainer}>
         <DayConnector
           visible
           accentColor={accentColor}
           strengthPercent={strengthPercent}
           style={styles.dayConnector}
         />
-      </View> : null}
+      </View>
+    ) : null}
   </View>
 );
 

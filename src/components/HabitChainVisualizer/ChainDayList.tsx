@@ -21,6 +21,7 @@ interface ChainDayListProps {
   accentColor?: string;
   celebrationsEnabled: boolean;
   completionIcon: CompletionIcon;
+  enableTodayPulse: boolean;
   strengthPercent: number;
   highContrastMode: boolean;
   shape: DayShape;
@@ -69,6 +70,7 @@ function ChainDayListComponent(props: ChainDayListProps) {
             celebrationsEnabled={props.celebrationsEnabled}
             completed={completed}
             completionIcon={props.completionIcon}
+            enableTodayPulse={props.enableTodayPulse}
             strengthPercent={props.strengthPercent}
             dateString={dateString}
             disabled={disabled}

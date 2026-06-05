@@ -20,6 +20,8 @@ type HabitRenderContentProps = {
   streak: number;
   isConnectedToNextWeek: boolean;
   isConnectedToPreviousWeek: boolean;
+  enableTodayPulse: boolean;
+  enableChevronNudge?: boolean;
   drag?: () => void;
   showHabitStrengthPercentage: boolean;
   handlePause?: (habitId: Id<'habits'>) => void;
@@ -43,7 +45,9 @@ type HabitRenderContentProps = {
   | 'selectedIds'
   | 'onToggleSelection'
   | 'showConnectors'
+  | 'showGradientFill'
   | 'toggleHabit'
+  | 'userProgressEmojis'
   | 'weekDateStrings'
 >;
 
@@ -56,6 +60,8 @@ function HabitRenderContentComponent({
   streak,
   isConnectedToNextWeek,
   isConnectedToPreviousWeek,
+  enableTodayPulse,
+  enableChevronNudge,
   drag,
   celebrationsEnabled,
   compactView,
@@ -76,8 +82,10 @@ function HabitRenderContentComponent({
   onHabitEntranceComplete,
   reduceMotionPreference,
   showConnectors,
+  showGradientFill,
   showHabitStrengthPercentage,
   toggleHabit,
+  userProgressEmojis,
   weekDateStrings,
 }: HabitRenderContentProps) {
   const isOptimisticHabit = isOptimisticHabitId(item._id);
@@ -143,6 +151,8 @@ function HabitRenderContentComponent({
           completionIcon={completionIcon}
           isCompactMode={compactView}
           dayShape={dayShape}
+          enableChevronNudge={enableChevronNudge}
+          enableTodayPulse={enableTodayPulse}
           entranceDelay={entranceDelay}
           entranceVariant={entranceVariant}
           habit={item}
@@ -152,10 +162,12 @@ function HabitRenderContentComponent({
           isPaused={item.paused ?? false}
           reduceMotionPreference={reduceMotionPreference}
           showConnectors={showConnectors}
+          showGradientFill={showGradientFill}
           showHabitStrengthPercentage={showHabitStrengthPercentage ?? false}
           streak={streak}
           toggleHabit={handleToggleHabit}
           triggerEntrance={triggerEntrance}
+          userProgressEmojis={userProgressEmojis}
           weekDateStrings={weekDateStrings}
           weekStatus={weekStatus}
           isSelected={isSelectionMode ? selectedIds?.has(item._id) : undefined}

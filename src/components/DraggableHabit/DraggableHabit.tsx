@@ -1,38 +1,5 @@
-/**
- * @module DraggableHabit
- *
- * Top-level habit card component used in the main habits list.
- *
- * ## Architecture
- *
- * ```
- * DraggableHabit (this file)       — orchestrator, no UI of its own
- *   ├─ useDraggableHabitState      — derives colors, emoji, streak records
- *   ├─ useHabitCardEntrance        — width-expansion entrance animation
- *   ├─ useDraggableHabitAnimations — fade, scale, glow, record badge
- *   ├─ useStrengthAnimation        — progress bar + emoji Reanimated styles
- *   ├─ useCardStrengthFill         — watercolor fill width animation
- *   └─ usePressHandlers            — pressIn/Out scale, long-press, swipe-archive
- *       ↓ all results spread into ↓
- *   DraggableHabitCard             — pure renderer (Pressable → Animated views)
- *     ├─ CardHeader                — icon, title, phase tag, best-streak label
- *     ├─ StrengthProgressBar       — animated bar + counting percentage
- *     ├─ HabitChainVisualizer      — 7-day dot chain (external component)
- *     └─ WeekCompleteIndicator     — "✨ Perfect Week ✨" badge
- * ```
- *
- * ## Drag-to-reorder
- *
- * Reordering is NOT handled here — the parent FlatList (via react-native-draggable-flatlist)
- * wraps each DraggableHabit and manages drag gestures. This component's role is limited to:
- * - Triggering haptic feedback on `onLongPress` (drag initiation)
- * - Applying `cardScale` spring animation on press-in / press-out
- *
- * ## Memo boundary
- *
- * The export is wrapped in `React.memo` so the FlatList can skip re-renders
- * when a sibling card's props change but this card's haven't.
- */
+/* eslint-disable max-lines */
+/** Top-level memoized habit-card orchestrator for the main list. */
 
 import React, { memo } from 'react';
 import { useHabitCardEntrance } from '../HabitCard/useHabitCardEntrance';
@@ -50,6 +17,8 @@ function DraggableHabit(props: DraggableHabitProps) {
     celebrationsEnabled,
     completionIcon = 'chain',
     dayShape = 'square',
+    enableChevronNudge = false,
+    enableTodayPulse = true,
     entranceDelay = 0,
     entranceVariant = 'widthExpansion',
     habit,
@@ -73,10 +42,12 @@ function DraggableHabit(props: DraggableHabitProps) {
     showSelectionOverlay,
     reduceMotionPreference,
     showConnectors = true,
+    showGradientFill = true,
     showHabitStrengthPercentage = false,
     streak,
     toggleHabit,
     triggerEntrance = true,
+    userProgressEmojis,
     weekDateStrings,
     weekStatus,
   } = props;
@@ -119,7 +90,7 @@ function DraggableHabit(props: DraggableHabitProps) {
     useStrengthAnimation(state.strengthPercent, reduceMotionPreference);
 
   // 6. Watercolor fill background width
-  const { isDark, showGradientFill, strengthFillStyle } = useCardStrengthFill(
+  const { isDark, strengthFillStyle } = useCardStrengthFill(
     state.strengthPercent,
     reduceMotionPreference
   );
@@ -141,6 +112,8 @@ function DraggableHabit(props: DraggableHabitProps) {
       celebrationsEnabled={celebrationsEnabled}
       completionIcon={completionIcon}
       dayShape={dayShape}
+      enableChevronNudge={enableChevronNudge}
+      enableTodayPulse={enableTodayPulse}
       entranceAccentStyle={entrance.accentStyle}
       entranceCardStyle={entrance.cardStyle}
       entranceContentStyle={entrance.contentStyle}
@@ -164,6 +137,7 @@ function DraggableHabit(props: DraggableHabitProps) {
       strengthFillStyle={strengthFillStyle}
       toggleHabit={toggleHabit}
       weekDateStrings={weekDateStrings}
+      userProgressEmojis={userProgressEmojis}
       weekStatus={weekStatus}
       onArchive={onArchive}
       onDelete={onDelete}

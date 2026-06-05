@@ -18,20 +18,21 @@ export interface HabitDayToggleProps {
   accessibilityLabel: string;
   completionIcon: CompletionIcon;
   completed: boolean;
-  strengthPercent?: number;
   disabled: boolean;
+  enableTodayPulse?: boolean;
   highContrastMode: boolean;
   isToday: boolean;
   missed?: boolean;
   onPress: () => void;
   shape: DayShape;
+  strengthPercent?: number;
 }
 
 export interface HabitChainVisualizerProps {
   accentColor: string;
   celebrationsEnabled?: boolean;
   completionIcon?: CompletionIcon;
-  strengthPercent?: number;
+  enableTodayPulse?: boolean;
   habitId: Id<'habits'>;
   highContrastMode?: boolean;
   isConnectedToNextWeek?: boolean;
@@ -41,6 +42,7 @@ export interface HabitChainVisualizerProps {
   reduceMotionPreference?: boolean;
   shape?: DayShape;
   showConnectors?: boolean;
+  strengthPercent?: number;
   weekDateStrings: string[];
   weekStatus: HabitStatus[];
 }

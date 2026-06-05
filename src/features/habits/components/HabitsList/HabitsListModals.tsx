@@ -7,6 +7,7 @@
  */
 
 import { DayHabitsBottomSheet } from '../../../../components/DayHabitsBottomSheet';
+import type { Id } from '../../../../../convex/_generated/dataModel';
 import type { Habit, HabitStatus } from '../../types';
 import { UpgradePrompt } from './UpgradePrompt';
 
@@ -18,7 +19,10 @@ export interface HabitsListModalsProps {
   onCloseDaySheet: () => void;
   habits: Habit[];
   getHabitStatus: (habitId: string, dateString: string) => HabitStatus;
-  toggleHabit: (args: { habitId: string; date: string }) => Promise<unknown>;
+  toggleHabit: (args: {
+    habitId: Id<'habits'>;
+    date: string;
+  }) => Promise<unknown>;
   reduceMotion: boolean;
 }
 

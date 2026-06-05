@@ -10,6 +10,7 @@
 import type { Doc, Id } from '../../../convex/_generated/dataModel';
 import type { CompletionSoundType } from '../../../convex/settings/types';
 import type { MilestoneAchievement } from '../../hooks/useMilestoneDetection';
+import type { PartialProgressEmojiSet } from '../../utils/progressEmojis';
 
 // ---------------------------------------------------------------------------
 // 1. Core entities
@@ -74,11 +75,13 @@ export interface HabitSettings {
   habitSortMode: HabitSortMode;
   hasPremium: boolean;
   highContrastMode: boolean;
+  progressEmojis?: PartialProgressEmojiSet;
   reduceMotion: boolean;
   showCalendarView: boolean;
   showCharacterScreen: boolean;
   showConsistency: boolean;
   showEmojis: boolean;
+  showGradientFill: boolean;
   showMotivationalMessages: boolean;
   showStreaks: boolean;
   stickyCalendarHeader: boolean;

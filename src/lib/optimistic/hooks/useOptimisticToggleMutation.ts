@@ -7,7 +7,7 @@
  * @see docs/offline-habit-sync.md T010
  */
 
-import { useCallback } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import type { Id } from '../../../../convex/_generated/dataModel';
 import { optimisticStore } from '../store';
 import type { ToggleOperationPayload } from '../types';
@@ -46,13 +46,23 @@ export function useOptimisticToggleMutation(
   options?: OptimisticToggleOptions
 ) {
   const isOnline = options?.isOnline ?? true;
+  const serverMutationRef = useRef(serverMutation);
+  const getCurrentStatusRef = useRef(getCurrentStatus);
+
+  useEffect(() => {
+    serverMutationRef.current = serverMutation;
+    getCurrentStatusRef.current = getCurrentStatus;
+  }, [getCurrentStatus, serverMutation]);
 
   return useCallback(
     async (args: {
       habitId: Id<'habits'>;
       date: string;
     }): Promise<ToggleMutationResult> => {
-      const currentlyCompleted = getCurrentStatus(args.habitId, args.date);
+      const currentlyCompleted = getCurrentStatusRef.current(
+        args.habitId,
+        args.date
+      );
       const toCompleted = !currentlyCompleted;
 
       const payload: ToggleOperationPayload = {
@@ -78,7 +88,7 @@ export function useOptimisticToggleMutation(
 
       // Online path: try server mutation
       try {
-        await serverMutation(args);
+        await serverMutationRef.current(args);
         optimisticStore.confirm(operationId);
         return { queued: false };
       } catch (error) {
@@ -100,6 +110,6 @@ export function useOptimisticToggleMutation(
         throw error;
       }
     },
-    [serverMutation, getCurrentStatus, isOnline]
+    [isOnline]
   );
 }

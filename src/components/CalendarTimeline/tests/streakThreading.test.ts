@@ -16,17 +16,12 @@ describe('Streak threading: HabitsListHeader', () => {
     '../../../features/habits/components/HabitsList/HabitsListHeader.tsx'
   );
 
-  it('imports useMemo for streak computation', () => {
-    expect(source).toContain('useMemo');
-  });
-
-  it('computes currentStreak from getStreak', () => {
-    expect(source).toContain('getStreak');
-    expect(source).toContain('currentStreak');
+  it('receives precomputed currentStreak from props', () => {
+    expect(source).toContain('props.currentStreak');
   });
 
   it('passes currentStreak to CalendarTimeline', () => {
-    expect(source).toContain('currentStreak={currentStreak}');
+    expect(source).toContain('currentStreak={props.currentStreak}');
   });
 });
 
@@ -35,8 +30,8 @@ describe('Streak threading: HabitsListHeader types', () => {
     '../../../features/habits/components/HabitsList/HabitsListHeader.types.ts'
   );
 
-  it('includes getStreak in HabitsListHeaderProps', () => {
-    expect(source).toContain('getStreak');
+  it('includes currentStreak in HabitsListHeaderProps', () => {
+    expect(source).toContain('currentStreak: number');
   });
 });
 

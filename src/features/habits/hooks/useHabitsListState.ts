@@ -30,6 +30,7 @@ import { useIsOnline } from '../../../contexts/NetworkStatusContext';
 import { useToggleHabitWithTimezone } from '../../../hooks/useToggleHabitWithTimezone';
 import { useCompletionSound } from '../../../hooks/useCompletionSound';
 import { validateHabitsArray } from '../../../utils/validation';
+import { getLocalDateString } from '../../../utils/getLocalDateString';
 import type { HabitsListState } from './types';
 import {
   optimisticHabitCreationStore,
@@ -136,6 +137,8 @@ export function useHabitsListState(): HabitsListState {
   const reduceMotionPreference = settings?.reduceMotion ?? false;
   const isPremiumUser = settings?.hasPremium ?? false;
   const showWeekCompletionBar = settings?.showWeekCompletionBar ?? true;
+  const showGradientFill = settings?.showGradientFill ?? true;
+  const userProgressEmojis = settings?.progressEmojis;
 
   // Completion sound hook (premium feature)
   const { playCompletionSound } = useCompletionSound({
@@ -152,9 +155,14 @@ export function useHabitsListState(): HabitsListState {
   const [predictedStrengths, setPredictedStrengths] = useState<
     Map<Habit['_id'], HabitStrengthPrediction>
   >(new Map());
+  const predictedStrengthsRef = useRef(predictedStrengths);
   const cleanupTimersRef = useRef(
     new Map<Habit['_id'], ReturnType<typeof setTimeout>>()
   );
+
+  useEffect(() => {
+    predictedStrengthsRef.current = predictedStrengths;
+  }, [predictedStrengths]);
 
   const habitsById = useMemo(
     () => new Map(habitsFromQuery.map((habit) => [habit._id, habit] as const)),
@@ -170,10 +178,10 @@ export function useHabitsListState(): HabitsListState {
       return habitsFromQuery;
     }
 
-    const maxOrder = habitsFromQuery.reduce(
-      (currentMax, habit) => Math.max(currentMax, habit.order ?? currentMax),
-      0
-    );
+    let maxOrder = 0;
+    for (const habit of habitsFromQuery) {
+      maxOrder = Math.max(maxOrder, habit.order ?? maxOrder);
+    }
 
     return [
       ...habitsFromQuery,
@@ -263,6 +271,55 @@ export function useHabitsListState(): HabitsListState {
     habitSortMode,
   });
 
+  const todayString = getLocalDateString();
+  const {
+    averageStrengthPercent,
+    completedToday,
+    completionByDay,
+    currentStreak,
+  } = useMemo(() => {
+    const dayTotals: HabitsListState['completionByDay'] = {};
+    const totalHabits = habits.length;
+
+    for (const dateString of weekDatesState.weekDateStrings) {
+      dayTotals[dateString] = { completed: 0, total: totalHabits };
+    }
+
+    let todayCompleted = 0;
+    let maxStreak = 0;
+    let strengthSum = 0;
+
+    for (const habit of habits) {
+      const streak = getStreak(habit._id);
+      if (streak > maxStreak) maxStreak = streak;
+      strengthSum += habit.strength ?? 0;
+
+      if (getHabitStatus(habit._id, todayString) === 'done') {
+        todayCompleted += 1;
+      }
+
+      for (const dateString of weekDatesState.weekDateStrings) {
+        if (getHabitStatus(habit._id, dateString) === 'done') {
+          dayTotals[dateString].completed += 1;
+        }
+      }
+    }
+
+    return {
+      averageStrengthPercent:
+        totalHabits > 0 ? Math.round((strengthSum / totalHabits) * 100) : 0,
+      completedToday: todayCompleted,
+      completionByDay: dayTotals,
+      currentStreak: maxStreak,
+    };
+  }, [
+    getHabitStatus,
+    getStreak,
+    habits,
+    todayString,
+    weekDatesState.weekDateStrings,
+  ]);
+
   const archiveState = useHabitsArchive(habits);
   const { handleDelete } = useHabitDelete(habits);
   const rewardState = useRewardToast(celebrationsEnabled, getStreak);
@@ -298,7 +355,9 @@ export function useHabitsListState(): HabitsListState {
 
       if (habit) {
         const currentStrength =
-          predictedStrengths.get(args.habitId)?.strength ?? habit.strength ?? 0;
+          predictedStrengthsRef.current.get(args.habitId)?.strength ??
+          habit.strength ??
+          0;
         const completionsLast7Days = countRecentCompletions(
           getHabitStatus,
           args.habitId,
@@ -352,7 +411,7 @@ export function useHabitsListState(): HabitsListState {
 
       // Play sound if marking as complete (not uncompleting)
       if (!currentlyCompleted) {
-        playCompletionSound();
+        void playCompletionSound();
       }
 
       return result;
@@ -363,7 +422,6 @@ export function useHabitsListState(): HabitsListState {
       habitsById,
       isCompleted,
       playCompletionSound,
-      predictedStrengths,
     ]
   );
 
@@ -374,19 +432,25 @@ export function useHabitsListState(): HabitsListState {
   );
 
   return {
+    averageStrengthPercent,
     canNavigateForward: weekDatesState.canNavigateForward,
     celebrationsEnabled,
     compactView,
+    completedToday,
+    completionByDay,
     completionSoundEnabled,
     completionSoundType,
     contentPadding,
+    currentStreak,
     dayShape,
     habitCompletionIcon,
     habits,
     habitSortMode,
     isHabitsLoading,
+    showGradientFill,
     showHabitStrengthPercentage,
     showWeekCompletionBar,
+    userProgressEmojis,
     weekDates: weekDatesState.weekDates,
     weekDateStrings: weekDatesState.weekDateStrings,
     ...archiveState,

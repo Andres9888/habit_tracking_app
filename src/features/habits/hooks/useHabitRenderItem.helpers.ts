@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import type { Habit, HabitStatus } from '../types';
 import { getNextWeekConnection } from './getNextWeekConnection';
 import { getPreviousWeekConnection } from './getPreviousWeekConnection';
@@ -68,8 +69,11 @@ export function getRenderItemDependencies(args: UseHabitRenderItemArgs) {
     args.seenHabitIds,
     args.shouldTriggerEntrance,
     args.showConnectors,
+    args.showGradientFill,
+    args.showDetailHint,
     args.showHabitStrengthPercentage,
     args.toggleHabit,
+    args.userProgressEmojis,
     args.weekDateStrings,
   ];
 }
@@ -79,10 +83,7 @@ const weekStatusCache = new WeakMap<
   Map<string, HabitStatus[]>
 >();
 
-function buildWeekStatusCacheKey(
-  habitId: string,
-  weekDateStrings: string[]
-) {
+function buildWeekStatusCacheKey(habitId: string, weekDateStrings: string[]) {
   return `${habitId}|${weekDateStrings.join(',')}`;
 }
 

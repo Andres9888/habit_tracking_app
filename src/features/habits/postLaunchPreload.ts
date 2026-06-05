@@ -52,8 +52,8 @@ export function schedulePostLaunchAppPreload(): () => void {
       void preloadPostLaunchAppParts();
     },
     {
-      fallbackDelayMs: 120,
-      timeoutMs: 1500,
+      fallbackDelayMs: 1500,
+      timeoutMs: 3000,
     }
   );
 

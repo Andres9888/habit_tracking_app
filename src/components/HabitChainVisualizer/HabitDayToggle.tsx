@@ -1,32 +1,26 @@
-import React from 'react';
-import { Animated, Pressable } from 'react-native';
+import { Animated, type ViewStyle } from 'react-native';
 import Reanimated from 'react-native-reanimated';
-import clsx from 'clsx';
 import { useAnimatedTier } from '@/hooks/useAnimatedTier';
 
 import type { HabitDayToggleProps } from './types';
 import { useHabitDayToggleAnimations } from './useHabitDayToggleAnimations';
 import { useHabitDayToggleHandlers } from './useHabitDayToggleHandlers';
 import { useHabitDayToggleTierStyles } from './useHabitDayToggleTierStyles';
-import {
-  getTodayGlowStyle,
-  getBackgroundColor,
-  getBorderColor,
-} from './habitDayToggleStyles';
+import * as toggleStyles from './habitDayToggleStyles';
 import { HabitDayToggleContent } from './HabitDayToggleContent';
+import { HabitDayTogglePressable } from './HabitDayTogglePressable';
 import { getMaterialTier } from './materialTier';
-
-const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 const MISSED_BG = '#FEF2F2';
 const MISSED_BORDER = '#DC2626';
 
-export const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
+export function HabitDayToggle({
   accentColor,
   accessibilityHint,
   accessibilityLabel,
   completionIcon,
   completed,
+  enableTodayPulse = true,
   strengthPercent,
   disabled,
   highContrastMode,
@@ -34,9 +28,12 @@ export const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
   missed = false,
   onPress,
   shape,
-}) => {
-  const { completion, buttonScale, combinedScale, forgeFlash } =
-    useHabitDayToggleAnimations({ completed, isToday });
+}: HabitDayToggleProps) {
+  const { completion, buttonScale, combinedScale } =
+    useHabitDayToggleAnimations({
+      completed,
+      isToday: enableTodayPulse && isToday,
+    });
   const { handlePressIn, handlePressOut, handlePress } =
     useHabitDayToggleHandlers({ buttonScale, completed, onPress });
 
@@ -44,8 +41,19 @@ export const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
   const tier = getMaterialTier(strength);
   const tierAnim = useAnimatedTier(strength);
   const borderRadius = shape === 'circle' ? 22 : 10;
-  const tierBackground = getBackgroundColor(completed, accentColor, highContrastMode, tier);
-  const tierBorder = getBorderColor(completed, isToday, accentColor, highContrastMode, tier);
+  const tierBackground = toggleStyles.getBackgroundColor(
+    completed,
+    accentColor,
+    highContrastMode,
+    tier
+  );
+  const tierBorder = toggleStyles.getBorderColor(
+    completed,
+    isToday,
+    accentColor,
+    highContrastMode,
+    tier
+  );
   const staticBackground = missed ? MISSED_BG : tierBackground;
   const staticBorder = missed ? MISSED_BORDER : tierBorder;
   const borderWidth = missed || !completed || tier.name === 'legendary' ? 2 : 0;
@@ -62,31 +70,25 @@ export const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
     staticBorder,
   });
 
-  const outerFrame = {
+  const outerFrame: ViewStyle = {
     borderRadius,
-    borderStyle: (missed ? 'dashed' : 'solid') as 'dashed' | 'solid',
+    borderStyle: missed ? 'dashed' : 'solid',
     borderWidth,
     height: 44,
     width: 44,
   };
 
   return (
-    <Animated.View style={isToday ? getTodayGlowStyle(borderRadius) : undefined}>
+    <Animated.View
+      style={isToday ? toggleStyles.getTodayGlowStyle(borderRadius) : undefined}
+    >
       <Reanimated.View style={[outerFrame, cellStyle, shadowStyle]}>
-        <AnimatedPressable
+        <HabitDayTogglePressable
           accessibilityHint={accessibilityHint}
           accessibilityLabel={accessibilityLabel}
-          accessibilityRole='button'
-          accessibilityState={{ disabled }}
-          className={clsx('items-center justify-center')}
+          borderRadius={borderRadius}
+          combinedScale={combinedScale}
           disabled={disabled}
-          style={{
-            borderRadius,
-            flex: 1,
-            opacity: disabled ? 0.5 : 1,
-            overflow: 'hidden',
-            transform: [{ scale: combinedScale }],
-          }}
           onPress={handlePress}
           onPressIn={handlePressIn}
           onPressOut={handlePressOut}
@@ -94,13 +96,12 @@ export const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
           <HabitDayToggleContent
             completed={completed}
             missed={missed}
-            forgeFlash={forgeFlash}
             completion={completion}
             completionIcon={completionIcon}
             iconColor={tier.iconColor}
           />
-        </AnimatedPressable>
+        </HabitDayTogglePressable>
       </Reanimated.View>
     </Animated.View>
   );
-};
+}
