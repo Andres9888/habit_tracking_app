@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Formed Habits — UX Mockup</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    :root {
+      --stone-50: #fafaf9;
+      --stone-100: #f5f5f4;
+      --stone-200: #e7e5e4;
+      --stone-300: #d6d3d1;
+      --stone-400: #a8a29e;
+      --stone-500: #78716c;
+      --stone-600: #57534e;
+      --stone-700: #44403c;
+      --stone-800: #292524;
+      --stone-900: #1c1917;
+      --emerald-400: #34d399;
+      --emerald-500: #10b981;
+      --emerald-600: #059669;
+      --gold-300: #fcd34d;
+      --gold-400: #fbbf24;
+      --gold-500: #f59e0b;
+      --amber-500: #f59e0b;
+      --rose-500: #f43f5e;
+      --violet-500: #8b5cf6;
+      --card-radius: 24px;
+      --font: 'Outfit', ui-sans-serif, system-ui, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: var(--font) !important;
+      background: #0f0e0d !important;
+      color: var(--stone-50);
+      -webkit-font-smoothing: antialiased;
+    }
+    h1, h2, h3, p { margin: 0; }
+
+    .page-header {
+      text-align: center;
+      padding: 48px 24px 32px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .page-header .tag {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--gold-400);
+      background: rgba(251, 191, 36, 0.12);
+      border: 1px solid rgba(251, 191, 36, 0.25);
+      padding: 5px 12px;
+      border-radius: 999px;
+      margin-bottom: 14px;
+    }
+    .page-header h1 {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+    .page-header p {
+      margin-top: 10px;
+      font-size: 15px;
+      color: var(--stone-400);
+      line-height: 1.55;
+      max-width: 640px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .concept-box {
+      max-width: 900px;
+      margin: 0 auto 40px;
+      padding: 0 24px;
+    }
+    .concept-box .inner {
+      background: var(--stone-800);
+      border: 1px solid var(--stone-700);
+      border-radius: 16px;
+      padding: 18px 20px;
+      font-size: 14px;
+      color: var(--stone-300);
+      line-height: 1.6;
+    }
+    .concept-box strong { color: var(--stone-50); }
+    .concept-box ul { margin: 10px 0 0 18px; padding: 0; }
+    .concept-box li { margin-bottom: 6px; }
+
+    .rail {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 48px 32px;
+      justify-content: center;
+      padding: 0 24px 80px;
+    }
+    .col { display: flex; flex-direction: column; align-items: center; }
+    .variant-label {
+      text-align: center;
+      margin-bottom: 14px;
+      max-width: 320px;
+    }
+    .variant-label b {
+      display: block;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--stone-100);
+    }
+    .variant-label span {
+      font-size: 12.5px;
+      color: var(--stone-500);
+      line-height: 1.45;
+      margin-top: 4px;
+      display: block;
+    }
+
+    .phone {
+      width: 390px;
+      height: 844px;
+      background: var(--stone-900);
+      border-radius: 48px;
+      border: 10px solid var(--stone-800);
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+    .notch {
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 110px;
+      height: 30px;
+      background: var(--stone-800);
+      border-radius: 20px;
+      z-index: 20;
+    }
+    .status {
+      height: 52px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      padding: 0 28px 8px;
+      font-size: 15px;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+    .scr {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding-bottom: 24px;
+    }
+    .scr::-webkit-scrollbar { width: 0; }
+
+    /* shared components */
+    .app-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 4px 16px 12px;
+    }
+    .app-header h2 {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+    }
+    .icon-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      border: none;
+      background: var(--stone-800);
+      color: var(--stone-200);
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+    }
+
+    .habit-card {
+      margin: 0 16px 10px;
+      background: var(--stone-800);
+      border-radius: var(--card-radius);
+      display: flex;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      position: relative;
+    }
+    .habit-card.formed {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, var(--stone-800) 55%);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+    }
+    .habit-card.ready {
+      border: 1px dashed rgba(251, 191, 36, 0.35);
+    }
+    .accent {
+      width: 4px;
+      flex-shrink: 0;
+      border-radius: var(--card-radius) 0 0 var(--card-radius);
+    }
+    .card-body {
+      flex: 1;
+      padding: 14px 16px 14px 12px;
+      min-width: 0;
+    }
+    .card-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .card-title {
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+    }
+    .card-meta {
+      font-size: 13px;
+      color: var(--stone-400);
+      margin-top: 3px;
+    }
+    .emoji-lg { font-size: 28px; line-height: 1; }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      padding: 4px 8px;
+      border-radius: 8px;
+      flex-shrink: 0;
+    }
+    .badge-formed {
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--emerald-400);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+    .badge-auto {
+      background: rgba(251, 191, 36, 0.12);
+      color: var(--gold-300);
+      border: 1px solid rgba(251, 191, 36, 0.25);
+    }
+
+    .strength-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .strength-bar {
+      flex: 1;
+      height: 4px;
+      background: var(--stone-700);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+    .strength-fill {
+      height: 100%;
+      border-radius: 99px;
+      background: linear-gradient(90deg, var(--emerald-500), var(--emerald-400));
+    }
+    .strength-fill.gold {
+      background: linear-gradient(90deg, var(--gold-500), var(--gold-300));
+    }
+    .strength-pct {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--emerald-400);
+      min-width: 36px;
+      text-align: right;
+    }
+
+    /* banner */
+    .ready-banner {
+      margin: 0 16px 14px;
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, rgba(251, 191, 36, 0.12), rgba(16, 185, 129, 0.08));
+      border: 1px solid rgba(251, 191, 36, 0.25);
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+    .ready-banner .sparkle { font-size: 26px; flex-shrink: 0; }
+    .ready-banner h3 { font-size: 15px; font-weight: 700; }
+    .ready-banner p {
+      font-size: 12.5px;
+      color: var(--stone-400);
+      margin-top: 4px;
+      line-height: 1.45;
+    }
+    .ready-banner button {
+      margin-top: 10px;
+      font-family: var(--font);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--stone-900);
+      background: var(--gold-400);
+      border: none;
+      padding: 8px 14px;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    /* section header */
+    .section-hd {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 16px 8px;
+    }
+    .section-hd h3 {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--stone-500);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .section-hd a {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--emerald-400);
+      text-decoration: none;
+    }
+
+    /* formed list header */
+    .formed-hero {
+      margin: 0 16px 16px;
+      padding: 20px;
+      border-radius: 20px;
+      background: linear-gradient(145deg, rgba(16, 185, 129, 0.18), rgba(251, 191, 36, 0.08));
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      text-align: center;
+    }
+    .formed-hero .trophy { font-size: 40px; margin-bottom: 8px; }
+    .formed-hero h2 { font-size: 20px; font-weight: 800; }
+    .formed-hero p {
+      font-size: 13px;
+      color: var(--stone-400);
+      margin-top: 6px;
+      line-height: 1.45;
+    }
+    .stat-pills {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      margin-top: 14px;
+    }
+    .stat-pill {
+      background: rgba(0, 0, 0, 0.25);
+      border-radius: 12px;
+      padding: 8px 14px;
+      font-size: 12px;
+    }
+    .stat-pill b { display: block; font-size: 18px; font-weight: 800; color: var(--gold-300); }
+
+    .nav-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 4px 16px 12px;
+    }
+    .nav-header h2 { font-size: 18px; font-weight: 700; flex: 1; text-align: center; margin-right: 40px; }
+
+    .card-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .card-actions button {
+      flex: 1;
+      font-family: var(--font);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 8px;
+      border-radius: 10px;
+      border: 1px solid var(--stone-600);
+      background: transparent;
+      color: var(--stone-300);
+      cursor: pointer;
+    }
+    .card-actions button.primary {
+      background: rgba(16, 185, 129, 0.15);
+      border-color: rgba(16, 185, 129, 0.35);
+      color: var(--emerald-400);
+    }
+
+    /* swipe demo */
+    .swipe-wrap {
+      margin: 0 16px 10px;
+      display: flex;
+      border-radius: var(--card-radius);
+      overflow: hidden;
+      height: 88px;
+    }
+    .swipe-card {
+      flex: 1;
+      background: var(--stone-800);
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      gap: 12px;
+      min-width: 0;
+      transform: translateX(-20px);
+    }
+    .swipe-actions {
+      display: flex;
+      flex-shrink: 0;
+    }
+    .swipe-btn {
+      width: 72px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      font-size: 11px;
+      font-weight: 700;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-family: var(--font);
+    }
+    .swipe-btn.delete { background: #dc2626; }
+    .swipe-btn.archive { background: #d97706; }
+    .swipe-btn.form { background: linear-gradient(180deg, #059669, #047857); }
+
+    /* modal overlay */
+    .phone.modal-view .scr {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .modal-bg {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(4px);
+    }
+    .celebration-modal {
+      position: relative;
+      z-index: 5;
+      width: 100%;
+      max-width: 320px;
+      background: var(--stone-800);
+      border-radius: 28px;
+      padding: 28px 24px 22px;
+      text-align: center;
+      border: 1px solid rgba(251, 191, 36, 0.3);
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+    }
+    @keyframes confetti-pop {
+      0%, 100% { transform: scale(1) rotate(0deg); }
+      50% { transform: scale(1.15) rotate(8deg); }
+    }
+    .celebration-modal .hero-emoji {
+      font-size: 56px;
+      animation: confetti-pop 1.2s ease-in-out infinite;
+    }
+    .celebration-modal h2 {
+      font-size: 22px;
+      font-weight: 800;
+      margin-top: 12px;
+      background: linear-gradient(90deg, var(--gold-300), var(--emerald-400));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .celebration-modal .sub {
+      font-size: 14px;
+      color: var(--stone-400);
+      margin-top: 8px;
+      line-height: 1.5;
+    }
+    .celebration-stats {
+      display: flex;
+      gap: 10px;
+      margin: 18px 0;
+    }
+    .celebration-stats .cs {
+      flex: 1;
+      background: var(--stone-900);
+      border-radius: 14px;
+      padding: 12px 8px;
+    }
+    .celebration-stats .cs b {
+      display: block;
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--emerald-400);
+    }
+    .celebration-stats .cs span {
+      font-size: 10px;
+      color: var(--stone-500);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .modal-btns { display: flex; flex-direction: column; gap: 8px; }
+    .modal-btns button {
+      font-family: var(--font);
+      font-size: 15px;
+      font-weight: 700;
+      padding: 14px;
+      border-radius: 14px;
+      border: none;
+      cursor: pointer;
+    }
+    .modal-btns .main {
+      background: linear-gradient(135deg, var(--emerald-500), var(--emerald-600));
+      color: white;
+    }
+    .modal-btns .ghost {
+      background: transparent;
+      color: var(--stone-400);
+    }
+
+    /* empty state */
+    .empty-formed {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 32px;
+      text-align: center;
+    }
+    .empty-formed .illus { font-size: 64px; opacity: 0.9; margin-bottom: 16px; }
+    .empty-formed h3 { font-size: 20px; font-weight: 700; }
+    .empty-formed p {
+      font-size: 14px;
+      color: var(--stone-400);
+      margin-top: 10px;
+      line-height: 1.55;
+    }
+    .journey-dots {
+      display: flex;
+      gap: 6px;
+      margin-top: 20px;
+    }
+    .journey-dots span {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--stone-700);
+    }
+    .journey-dots span.on { background: var(--emerald-500); }
+    .journey-dots span.gold { background: var(--gold-400); }
+
+    /* detail CTA */
+    .detail-cta {
+      margin: 16px;
+      padding: 18px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(251, 191, 36, 0.08));
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+    .detail-cta .row {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+    .detail-cta h3 { font-size: 16px; font-weight: 700; }
+    .detail-cta p {
+      font-size: 12.5px;
+      color: var(--stone-400);
+      margin-top: 4px;
+      line-height: 1.45;
+    }
+    .detail-cta button {
+      width: 100%;
+      margin-top: 14px;
+      font-family: var(--font);
+      font-size: 15px;
+      font-weight: 700;
+      padding: 14px;
+      border: none;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--gold-500), var(--gold-400));
+      color: var(--stone-900);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .chain-mini {
+      display: flex;
+      gap: 3px;
+      margin-top: 8px;
+    }
+    .chain-mini i {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--emerald-500);
+    }
+    .chain-mini i.miss { background: var(--stone-600); }
+
+    @keyframes glow-pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+      50% { box-shadow: 0 0 20px 4px rgba(16, 185, 129, 0.25); }
+    }
+    .habit-card.ready { animation: glow-pulse 2.5s ease-in-out infinite; }
+  </style>
+</head>
+<body>
+  <header class="page-header">
+    <span class="tag">Concept mockup</span>
+    <h1>Formed Habits</h1>
+    <p>
+      Habits that reached <strong style="color:var(--gold-300)">Automatic</strong> strength (85%+) can be
+      celebrated as <em>formed</em> — distinct from archive. They move to a hall-of-fame, stay trackable,
+      and free focus on habits still building.
+    </p>
+  </header>
+
+  <div class="concept-box">
+    <div class="inner">
+      <strong>Product intent</strong> (from deferred plan + strength algorithm)
+      <ul>
+        <li><strong>Trigger:</strong> Habit at Automatic level (85–100% strength) — user chooses to mark as formed</li>
+        <li><strong>Not archive:</strong> Formed habits celebrate completion; archived habits pause/remove from active list</li>
+        <li><strong>Entry points:</strong> Swipe “Form” button, habit detail CTA, or prompt banner on home</li>
+        <li><strong>After forming:</strong> Optional maintenance mode (lighter tracking) or view-only in Formed collection</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="rail">
+    <!-- A: Home with ready banner + formed section -->
+    <div class="col">
+      <div class="variant-label">
+        <b>A — Home: ready + formed section</b>
+        <span>Banner surfaces habits at Automatic. Collapsed “Formed” section keeps today’s list focused.</span>
+      </div>
+      <div class="phone">
+        <div class="notch"></div>
+        <div class="status"><span>9:41</span><span>􀛨</span></div>
+        <div class="scr">
+          <div class="app-header">
+            <h2>Today</h2>
+            <button class="icon-btn" type="button"><i data-lucide="settings" width="20"></i></button>
+          </div>
+
+          <div class="ready-banner">
+            <span class="sparkle">✨</span>
+            <div>
+              <h3>Morning Meditation is Automatic</h3>
+              <p>92% strength — ready to mark as a formed habit?</p>
+              <button type="button">Celebrate habit formed</button>
+            </div>
+          </div>
+
+          <div class="section-hd">
+            <h3>Active · 4</h3>
+          </div>
+
+          <div class="habit-card ready">
+            <div class="accent" style="background: var(--violet-500)"></div>
+            <div class="card-body">
+              <div class="card-top">
+                <div>
+                  <div class="card-title">Morning Meditation</div>
+                  <div class="card-meta">Daily · 47 day streak</div>
+                </div>
+                <span class="emoji-lg">🧘</span>
+              </div>
+              <div class="strength-row">
+                <div class="strength-bar"><div class="strength-fill gold" style="width:92%"></div></div>
+                <span class="strength-pct" style="color:var(--gold-300)">92%</span>
+              </div>
+              <span class="badge badge-auto" style="margin-top:8px">⚡ Automatic</span>
+            </div>
+          </div>
+
+          <div class="habit-card">
+            <div class="accent" style="background: var(--emerald-500)"></div>
+            <div class="card-body">
+              <div class="card-top">
+                <div>
+                  <div class="card-title">Morning Run</div>
+                  <div class="card-meta">Mon Wed Fri · 12 day streak</div>
+                </div>
+                <span class="emoji-lg">🏃</span>
+              </div>
+              <div class="strength-row">
+                <div class="strength-bar"><div class="strength-fill" style="width:58%"></div></div>
+                <span class="strength-pct" style="color:var(--stone-400)">58%</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="section-hd">
+            <h3>🏆 Formed · 2</h3>
+            <a href="#">See all</a>
+          </div>
+
+          <div class="habit-card formed" style="opacity:0.85">
+            <div class="accent" style="background: var(--gold-400)"></div>
+            <div class="card-body">
+              <div class="card-top">
+                <div>
+                  <div class="card-title">Read 20 pages</div>
+                  <div class="card-meta">Formed Jan 8 · maintaining</div>
+                </div>
+                <span class="badge badge-formed">🏆 Formed</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- B: Formed habits collection -->
+    <div class="col">
+      <div class="variant-label">
+        <b>B — Formed Habits screen</b>
+        <span>Dedicated collection (like Archived) with stats and restore-to-active option.</span>
+      </div>
+      <div class="phone">
+        <div class="notch"></div>
+        <div class="status"><span>9:41</span><span>􀛨</span></div>
+        <div class="scr">
+          <div class="nav-header">
+            <button class="icon-btn" type="button"><i data-lucide="arrow-left" width="20"></i></button>
+            <h2>Formed Habits</h2>
+          </div>
+
+          <div class="formed-hero">
+            <div class="trophy">🏆</div>
+            <h2>Your formed habits</h2>
+            <p>Behaviors you've made automatic. Keep them visible or move back to active tracking.</p>
+            <div class="stat-pills">
+              <div class="stat-pill"><b>3</b> formed</div>
+              <div class="stat-pill"><b>214</b> total days</div>
+              <div class="stat-pill"><b>89%</b> avg strength</div>
+            </div>
+          </div>
+
+          <div class="habit-card formed">
+            <div class="accent" style="background: var(--gold-400)"></div>
+            <div class="card-body">
+              <div class="card-top">
+                <div>
+                  <div class="card-title">Read 20 pages</div>
+                  <div class="card-meta">Formed Jan 8, 2026 · 94% at formation</div>
+                </div>
+                <span class="emoji-lg">📖</span>
+              </div>
+              <div class="chain-mini">
+                <i></i><i></i><i></i><i></i><i></i><i></i><i class="miss"></i><i></i><i></i><i></i>
+              </div>
+              <div class="card-actions">
+                <button type="button">View journey</button>
+                <button type="button" class="primary">Move to active</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="habit-card formed">
+            <div class="accent" style="background: var(--emerald-500)"></div>
+            <div class="card-body">
+              <div class="card-top">
+                <div>
+                  <div class="card-title">Drink water</div>
+                  <div class="card-meta">Formed Dec 2, 2025 · 88% at formation</div>
+                </div>
+                <span class="emoji-lg">💧</span>
+              </div>
+              <div class="card-actions">
+                <button type="button">View journey</button>
+                <button type="button">Archive</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="habit-card formed">
+            <div class="accent" style="background: var(--violet-500)"></div>
+            <div class="card-body">
+              <div class="card-top">
+                <div>
+                  <div class="card-title">Evening stretch</div>
+                  <div class="card-meta">Formed Nov 14, 2025 · 91% at formation</div>
+                </div>
+                <span class="emoji-lg">🤸</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- C: Celebration modal -->
+    <div class="col">
+      <div class="variant-label">
+        <b>C — Formation celebration</b>
+        <span>Shown when user confirms “Mark as formed” — milestone moment.</span>
+      </div>
+      <div class="phone modal-view">
+        <div class="notch"></div>
+        <div class="status"><span>9:41</span><span>􀛨</span></div>
+        <div class="scr">
+          <div class="modal-bg"></div>
+          <div class="celebration-modal">
+            <div class="hero-emoji">🧘</div>
+            <h2>Habit Formed!</h2>
+            <p class="sub">
+              <strong style="color:var(--stone-200)">Morning Meditation</strong> is now automatic.
+              You built this over 47 days.
+            </p>
+            <div class="celebration-stats">
+              <div class="cs"><b>92%</b><span>Strength</span></div>
+              <div class="cs"><b>47</b><span>Day streak</span></div>
+              <div class="cs"><b>312</b><span>Completions</span></div>
+            </div>
+            <div class="modal-btns">
+              <button class="main" type="button">View in Formed Habits</button>
+              <button class="ghost" type="button">Keep on Today list</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- D: Swipe actions -->
+    <div class="col">
+      <div class="variant-label">
+        <b>D — Swipe: Form action</b>
+        <span>Third swipe button (emerald) alongside Delete and Archive.</span>
+      </div>
+      <div class="phone">
+        <div class="notch"></div>
+        <div class="status"><span>9:41</span><span>􀛨</span></div>
+        <div class="scr" style="padding-top:80px">
+          <p style="text-align:center;font-size:13px;color:var(--stone-500);padding:0 24px 20px">
+            Swipe left reveals three actions. <strong style="color:var(--emerald-400)">Form</strong> only enabled at Automatic (85%+).
+          </p>
+          <div class="swipe-wrap">
+            <div class="swipe-card">
+              <span class="emoji-lg">🧘</span>
+              <div>
+                <div class="card-title">Morning Meditation</div>
+                <div class="card-meta">92% · Automatic</div>
+              </div>
+            </div>
+            <div class="swipe-actions">
+              <button class="swipe-btn delete" type="button">
+                <i data-lucide="trash-2" width="20"></i>
+                Delete
+              </button>
+              <button class="swipe-btn archive" type="button">
+                <i data-lucide="archive" width="20"></i>
+                Archive
+              </button>
+              <button class="swipe-btn form" type="button">
+                <i data-lucide="award" width="20"></i>
+                Form
+              </button>
+            </div>
+          </div>
+          <div class="swipe-wrap" style="margin-top:16px;opacity:0.55">
+            <div class="swipe-card">
+              <span class="emoji-lg">🏃</span>
+              <div>
+                <div class="card-title">Morning Run</div>
+                <div class="card-meta">58% · Developing</div>
+              </div>
+            </div>
+            <div class="swipe-actions">
+              <button class="swipe-btn delete" type="button"><i data-lucide="trash-2" width="20"></i>Delete</button>
+              <button class="swipe-btn archive" type="button"><i data-lucide="archive" width="20"></i>Archive</button>
+              <button class="swipe-btn form" type="button" style="opacity:0.35;filter:grayscale(0.5)">
+                <i data-lucide="award" width="20"></i>Form
+              </button>
+            </div>
+          </div>
+          <p style="font-size:12px;color:var(--stone-500);text-align:center;padding:16px">
+            Form disabled until Automatic level
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- E: Empty formed -->
+    <div class="col">
+      <div class="variant-label">
+        <b>E — Empty formed state</b>
+        <span>Before first formation — shows journey preview.</span>
+      </div>
+      <div class="phone">
+        <div class="notch"></div>
+        <div class="status"><span>9:41</span><span>􀛨</span></div>
+        <div class="scr" style="display:flex;flex-direction:column">
+          <div class="nav-header">
+            <button class="icon-btn" type="button"><i data-lucide="arrow-left" width="20"></i></button>
+            <h2>Formed Habits</h2>
+          </div>
+          <div class="empty-formed">
+            <div class="illus">🌱→⚡</div>
+            <h3>No formed habits yet</h3>
+            <p>
+              When a habit reaches <strong style="color:var(--gold-300)">Automatic</strong> strength,
+              you can celebrate it here. Your hall of fame starts with one habit at a time.
+            </p>
+            <div class="journey-dots">
+              <span class="on"></span><span class="on"></span><span class="on"></span><span class="gold"></span><span></span>
+            </div>
+            <p style="font-size:12px;margin-top:12px;color:var(--stone-500)">
+              Starting → Building → Developing → Strong → <strong style="color:var(--emerald-400)">Automatic</strong>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- F: Detail CTA -->
+    <div class="col">
+      <div class="variant-label">
+        <b>F — Habit detail CTA</b>
+        <span>Primary action on strength tab when at Automatic level.</span>
+      </div>
+      <div class="phone">
+        <div class="notch"></div>
+        <div class="status"><span>9:41</span><span>􀛨</span></div>
+        <div class="scr">
+          <div class="nav-header">
+            <button class="icon-btn" type="button"><i data-lucide="arrow-left" width="20"></i></button>
+            <h2>Morning Meditation</h2>
+          </div>
+          <div style="text-align:center;padding:20px 16px 8px">
+            <div style="font-size:48px">⚡</div>
+            <div style="font-size:36px;font-weight:800;margin-top:8px">92%</div>
+            <div style="font-size:14px;color:var(--emerald-400);font-weight:700;margin-top:4px">Automatic</div>
+            <div style="font-size:13px;color:var(--stone-500);margin-top:6px">Fully automatic — habit is well-established</div>
+          </div>
+          <div class="detail-cta">
+            <div class="row">
+              <span style="font-size:32px">🏆</span>
+              <div>
+                <h3>Ready to mark as formed?</h3>
+                <p>Celebrate this win and optionally move it out of your daily focus list.</p>
+              </div>
+            </div>
+            <button type="button">
+              <i data-lucide="award" width="18"></i>
+              Mark habit as formed
+            </button>
+          </div>
+          <p style="font-size:12px;color:var(--stone-500);text-align:center;padding:12px 24px;line-height:1.5">
+            Forming doesn’t delete data — you can always view stats or return to active tracking.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>
