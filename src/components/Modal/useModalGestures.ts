@@ -11,16 +11,21 @@ import {
   runOnJS,
   type SharedValue,
 } from 'react-native-reanimated';
+import { durations, enterEasing } from '@/theme/animations';
 import { HapticPatterns } from '../../utils/haptics/patterns';
 import type { ModalVariant } from './Modal.types';
 import {
   SCREEN_HEIGHT,
   DISMISS_THRESHOLD,
   VELOCITY_THRESHOLD,
-  BOTTOM_SHEET_SPRING_CONFIG,
-  EXIT_SPRING_CONFIG,
   GESTURE_SPRING_CONFIG,
 } from './Modal.constants';
+
+const SHEET_ENTER = { duration: durations.sheet, easing: enterEasing };
+const SHEET_EXIT = {
+  duration: durations.sheet,
+  easing: Easing.in(Easing.cubic),
+};
 
 interface UseModalGesturesParams {
   variant: ModalVariant;
@@ -54,14 +59,11 @@ export function useModalGestures({
         event.translationY > DISMISS_THRESHOLD ||
         velocityY > VELOCITY_THRESHOLD
       ) {
-        translateY.value = withSpring(
-          SCREEN_HEIGHT,
-          BOTTOM_SHEET_SPRING_CONFIG
-        );
+        translateY.value = withTiming(SCREEN_HEIGHT, SHEET_EXIT);
         runOnJS(HapticPatterns.tap)();
         runOnJS(onClose)();
       } else {
-        translateY.value = withSpring(0, BOTTOM_SHEET_SPRING_CONFIG);
+        translateY.value = withTiming(0, SHEET_ENTER);
       }
     });
 

@@ -24,10 +24,7 @@ export const EXIT_SPRING_CONFIG = springs.exit;
 /** Snappy spring for interactive gestures */
 export const GESTURE_SPRING_CONFIG = springs.gesture;
 
-/**
- * Organic spring for bottom sheet
- * No overshootClamping - tiny overshoot gives organic feel
- */
+/** @deprecated Bottom sheets use timing-based slide (durations.sheet). Kept for legacy refs. */
 export const BOTTOM_SHEET_SPRING_CONFIG = springs.bottomSheet;
 
 /** Gesture thresholds for dismissal */
@@ -40,7 +37,7 @@ export const VELOCITY_THRESHOLD = 800;
  * so the closing animation always finishes before the component leaves the tree.
  */
 export const EXIT_DURATIONS = {
-  bottomSheet: 450,
+  bottomSheet: 380,
   fullScreen: 370,
   centerAlert: 220,
 } as const;

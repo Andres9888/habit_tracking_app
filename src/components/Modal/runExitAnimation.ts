@@ -3,13 +3,10 @@
  * Handles exit animations for each modal variant
  */
 
-import { withSpring, withTiming } from 'react-native-reanimated';
+import { withTiming } from 'react-native-reanimated';
+import { durations } from '@/theme/animations';
 import type { ModalVariant } from './Modal.types';
-import {
-  SCREEN_HEIGHT,
-  EXIT_SPRING_CONFIG,
-  BOTTOM_SHEET_SPRING_CONFIG,
-} from './Modal.constants';
+import { SCREEN_HEIGHT } from './Modal.constants';
 import type { AnimationValues } from './modalAnimationEffects.types';
 import { fadeOut } from './modalAnimationHelpers';
 
@@ -28,10 +25,12 @@ export function runExitAnimation(
 
   switch (variant) {
     case 'bottomSheet': {
-      backdropOpacityValue.value = useReduced ? 0 : withTiming(0, fadeOut(200));
+      backdropOpacityValue.value = useReduced
+        ? 0
+        : withTiming(0, fadeOut(durations.sheet));
       translateY.value = useReduced
         ? SCREEN_HEIGHT
-        : withSpring(SCREEN_HEIGHT, BOTTOM_SHEET_SPRING_CONFIG);
+        : withTiming(SCREEN_HEIGHT, fadeOut(durations.sheet));
       break;
     }
     case 'fullScreen': {
