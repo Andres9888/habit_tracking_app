@@ -68,7 +68,6 @@ export function useHabitData(params: HabitDataParams) {
 }
 
 interface CleanupParams {
-  resetForm: () => void;
   closeColorPicker: () => void;
   setShowTimePicker: (show: boolean) => void;
   triggerSuccess: () => void;
@@ -76,7 +75,6 @@ interface CleanupParams {
 }
 
 export function useModalCleanup({
-  resetForm,
   closeColorPicker,
   setShowTimePicker,
   triggerSuccess,
@@ -88,5 +86,5 @@ export function useModalCleanup({
     setShowTimePicker(false);
     triggerSuccess();
     onClose();
-  }, [resetForm, closeColorPicker, setShowTimePicker, triggerSuccess, onClose]);
+  }, [closeColorPicker, setShowTimePicker, triggerSuccess, onClose]);
 }

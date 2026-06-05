@@ -41,6 +41,6 @@ export const VELOCITY_THRESHOLD = 800;
  */
 export const EXIT_DURATIONS = {
   bottomSheet: 450,
-  fullScreen: 320,
+  fullScreen: 370,
   centerAlert: 220,
 } as const;

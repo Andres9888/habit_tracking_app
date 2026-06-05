@@ -3,6 +3,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { useQuery } from 'convex/react';
 import { api } from '../../../convex/_generated/api';
 import type { Id } from '../../../convex/_generated/dataModel';
+import type { Habit } from '../../features/habits/types';
 import {
   createDateFromTimeString,
   getDefaultReminderTime,
@@ -15,64 +16,89 @@ import { parseHabitName } from '../../components/CreateHabitModal/utils';
 
 interface UseHabitEditScreenProps {
   habitId: Id<'habits'> | null;
+  initialHabit?: Habit | null;
   onClose: () => void;
   onHabitRemoved?: () => void;
 }
 
 type StrengthAlgorithm = 'forgiving' | 'balanced' | 'strict';
+const DEFAULT_EMOJI = '💪';
+const DEFAULT_COLOR = '#10B981';
+
+function getEditFormValues(habit?: Habit | null) {
+  const parsedName = parseHabitName(habit?.name ?? '');
+  const mode = habit?.strengthAlgorithm;
+
+  return {
+    habitName: parsedName.name || habit?.name || '',
+    progressEmojis: habit?.progressEmojis ?? undefined,
+    reminderTime: createDateFromTimeString(
+      habit?.reminderTime,
+      getDefaultReminderTime()
+    ),
+    remindersEnabled: habit?.remindersEnabled ?? false,
+    selectedColor: habit?.color || habit?.iconColor || DEFAULT_COLOR,
+    selectedEmoji: habit?.icon ?? parsedName.emoji ?? DEFAULT_EMOJI,
+    streakGoal: habit?.goalDuration ?? 0,
+    strengthAlgorithm:
+      mode === 'forgiving' || mode === 'balanced' || mode === 'strict'
+        ? mode
+        : 'balanced',
+  };
+}
 
 export function useHabitEditScreen({
   habitId,
+  initialHabit,
   onClose,
   onHabitRemoved,
 }: UseHabitEditScreenProps) {
   const { triggerSelection, triggerSuccess } = useHapticFeedback();
-  const defaultEmoji = '💪';
+  const initialFormValues = getEditFormValues(initialHabit);
 
   const habit = useQuery(api.habits.get, habitId ? { habitId } : 'skip');
 
   // Track whether form state has been hydrated from the habit query.
   // isLoading stays true until this flips so the skeleton covers the one-render
   // gap between habit arriving and useEffect populating form state.
-  const formInitializedRef = useRef(false);
+  const formInitializedRef = useRef(Boolean(initialHabit));
 
-  const [habitName, setHabitName] = useState('');
-  const [selectedEmoji, setSelectedEmoji] = useState<string | null>('💪');
-  const [selectedColor, setSelectedColor] = useState('#DBEAFE');
-  const [remindersEnabled, setRemindersEnabled] = useState(false);
-  const [reminderTime, setReminderTime] = useState<Date>(() =>
-    getDefaultReminderTime()
+  const [habitName, setHabitName] = useState(initialFormValues.habitName);
+  const [selectedEmoji, setSelectedEmoji] = useState<string | null>(
+    initialFormValues.selectedEmoji
   );
-  const [streakGoal, setStreakGoal] = useState(0);
-  const [strengthAlgorithm, setStrengthAlgorithm] =
-    useState<StrengthAlgorithm>('balanced');
+  const [selectedColor, setSelectedColor] = useState(
+    initialFormValues.selectedColor
+  );
+  const [remindersEnabled, setRemindersEnabled] = useState(
+    initialFormValues.remindersEnabled
+  );
+  const [reminderTime, setReminderTime] = useState<Date>(
+    initialFormValues.reminderTime
+  );
+  const [streakGoal, setStreakGoal] = useState(initialFormValues.streakGoal);
+  const [strengthAlgorithm, setStrengthAlgorithm] = useState<StrengthAlgorithm>(
+    initialFormValues.strengthAlgorithm
+  );
   const [progressEmojis, setProgressEmojis] = useState<
     ProgressEmojiSet | undefined
-  >();
+  >(initialFormValues.progressEmojis);
 
   useEffect(() => {
-    if (habit) {
-      const parsedName = parseHabitName(habit.name ?? '');
-      const selectedIcon = habit.icon ?? parsedName.emoji;
+    const sourceHabit = habit ?? initialHabit;
+    if (!sourceHabit) return;
 
-      setHabitName(parsedName.name || habit.name || '');
-      setSelectedEmoji(selectedIcon || defaultEmoji);
-      setSelectedColor(habit.color || habit.iconColor || '#10B981');
-      setRemindersEnabled(habit.remindersEnabled ?? false);
-      setReminderTime(
-        createDateFromTimeString(habit.reminderTime, getDefaultReminderTime())
-      );
-      setStreakGoal(habit.goalDuration ?? 0);
-      const mode = habit.strengthAlgorithm;
-      setStrengthAlgorithm(
-        mode === 'forgiving' || mode === 'balanced' || mode === 'strict'
-          ? mode
-          : 'balanced'
-      );
-      setProgressEmojis(habit.progressEmojis ?? undefined);
-      formInitializedRef.current = true;
-    }
-  }, [habit]);
+    const values = getEditFormValues(sourceHabit);
+    setHabitName(values.habitName);
+    setSelectedEmoji(values.selectedEmoji);
+    setSelectedColor(values.selectedColor);
+    setRemindersEnabled(values.remindersEnabled);
+    setReminderTime(values.reminderTime);
+    setStreakGoal(values.streakGoal);
+    setStrengthAlgorithm(values.strengthAlgorithm);
+    setProgressEmojis(values.progressEmojis);
+    formInitializedRef.current = true;
+  }, [habit, initialHabit]);
 
   const { handleSave, isSaving } = useHabitSaveHandler({
     habitId,
@@ -150,7 +176,10 @@ export function useHabitEditScreen({
     handleReminderToggle,
     handleStreakGoalChange,
     handleStrengthAlgorithmChange,
-    isLoading: habitId != null && (habit === undefined || !formInitializedRef.current),
+    isLoading:
+      habitId != null &&
+      !initialHabit &&
+      (habit === undefined || !formInitializedRef.current),
     progressEmojis,
     remindersEnabled,
     handleSave,

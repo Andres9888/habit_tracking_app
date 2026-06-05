@@ -1,5 +1,7 @@
+import { useEffect, useState } from 'react';
 import ErrorBoundary from '../../../../components/ErrorBoundary';
 import CreateHabitModal from '../../../../components/CreateHabitModal';
+import { EXIT_DURATIONS } from '../../../../components/Modal/Modal.constants';
 import type { CreateHabitModalSectionProps } from './HabitsModals.types';
 
 /**
@@ -10,14 +12,32 @@ export function CreateHabitModalSection({
   habitToEdit,
   closeCreateHabit,
 }: CreateHabitModalSectionProps) {
-  if (!showCreateHabit) {
+  const [shouldRender, setShouldRender] = useState(showCreateHabit);
+  const [renderedHabitToEdit, setRenderedHabitToEdit] = useState(habitToEdit);
+
+  useEffect(() => {
+    if (showCreateHabit) {
+      setRenderedHabitToEdit(habitToEdit);
+      setShouldRender(true);
+      return;
+    }
+
+    const timeout = setTimeout(() => {
+      setShouldRender(false);
+      setRenderedHabitToEdit(null);
+    }, EXIT_DURATIONS.fullScreen);
+
+    return () => clearTimeout(timeout);
+  }, [habitToEdit, showCreateHabit]);
+
+  if (!shouldRender) {
     return null;
   }
 
   return (
     <ErrorBoundary fallback={null}>
       <CreateHabitModal
-        habitToEdit={habitToEdit || undefined}
+        habitToEdit={renderedHabitToEdit || undefined}
         visible={showCreateHabit}
         onClose={closeCreateHabit}
       />

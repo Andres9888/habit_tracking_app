@@ -1,8 +1,10 @@
 import type { Id } from '../../../convex/_generated/dataModel';
+import type { Habit } from '../../features/habits/types';
 
 export interface HabitEditScreenProps {
   visible: boolean;
   habitId: Id<'habits'> | null;
+  initialHabit?: Habit | null;
   onClose: () => void;
   onHabitRemoved?: () => void;
   onOpenCueEditor?: () => void;

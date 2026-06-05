@@ -2,16 +2,14 @@
 /**
  * HabitEditScreen - Full-screen slide modal for editing a habit.
  *
- * Matches CreateHabitModal (and Settings / Templates): native iOS
- * `animationType='slide'` so all bottom-bar actions feel identical. Shares the
- * same ModalHeader and habit form body as the create flow.
+ * Matches CreateHabitModal with an app-controlled full-screen slide so close
+ * can play the entrance path in reverse before unmount.
  */
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   findNodeHandle,
   Keyboard,
   KeyboardAvoidingView,
-  Modal,
   Platform,
   Pressable,
   ScrollView,
@@ -19,6 +17,8 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
+import Modal from '../../components/Modal';
+import { EXIT_DURATIONS } from '../../components/Modal/Modal.constants';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { spacing } from '../../theme/spacing';
 import { HabitFormBody } from '../../components/CreateHabitModal/components/HabitFormBody';
@@ -32,6 +32,7 @@ import type { HabitEditScreenProps } from './types';
 function HabitEditScreenContent({
   visible,
   habitId,
+  initialHabit,
   onClose,
   onHabitRemoved,
 }: HabitEditScreenProps) {
@@ -45,6 +46,7 @@ function HabitEditScreenContent({
   }, [onClose]);
   const state = useHabitEditScreen({
     habitId,
+    initialHabit,
     onClose: handleClose,
     onHabitRemoved,
   });
@@ -89,12 +91,16 @@ function HabitEditScreenContent({
 
   return (
     <Modal
-      accessibilityViewIsModal
-      animationType='slide'
-      presentationStyle='overFullScreen'
-      transparent
+      disableBackdropClose
+      disableGestureClose
+      backdropOpacity={0}
+      variant='fullScreen'
       visible={visible}
-      onRequestClose={handleClose}
+      onClose={handleClose}
+      style={{
+        borderTopLeftRadius: 0,
+        borderTopRightRadius: 0,
+      }}
     >
       <View className='flex-1' style={{ backgroundColor: themeColors.surface }}>
         <KeyboardAvoidingView
@@ -169,11 +175,40 @@ function HabitEditScreenContent({
 }
 
 export default function HabitEditScreen(props: HabitEditScreenProps) {
-  if (!props.visible || !props.habitId) return null;
+  const [shouldRender, setShouldRender] = useState(
+    props.visible && !!props.habitId
+  );
+  const [renderedHabitId, setRenderedHabitId] = useState(props.habitId);
+  const [renderedInitialHabit, setRenderedInitialHabit] = useState(
+    props.initialHabit
+  );
+
+  useEffect(() => {
+    if (props.visible && props.habitId) {
+      setRenderedHabitId(props.habitId);
+      setRenderedInitialHabit(props.initialHabit);
+      setShouldRender(true);
+      return;
+    }
+
+    const timeout = setTimeout(() => {
+      setShouldRender(false);
+      setRenderedHabitId(null);
+      setRenderedInitialHabit(null);
+    }, EXIT_DURATIONS.fullScreen);
+
+    return () => clearTimeout(timeout);
+  }, [props.habitId, props.initialHabit, props.visible]);
+
+  if (!shouldRender || !renderedHabitId) return null;
 
   return (
     <ScreenErrorBoundary screenName='Edit Habit' onGoBack={props.onClose}>
-      <HabitEditScreenContent {...props} />
+      <HabitEditScreenContent
+        {...props}
+        habitId={renderedHabitId}
+        initialHabit={renderedInitialHabit}
+      />
     </ScreenErrorBoundary>
   );
 }

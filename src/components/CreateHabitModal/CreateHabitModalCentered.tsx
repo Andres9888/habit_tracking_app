@@ -1,21 +1,19 @@
 /**
  * CreateHabitModalCentered - Full-screen modal for habit creation
  *
- * Native iOS slide animation (`animationType='slide'`) — matches Settings and
- * Templates so all three bottom-bar actions feel identical. No custom Reanimated
- * sheet needed; the OS handles the transition.
+ * Full-screen modal for habit creation/editing. Uses the app modal animator so
+ * dismissals can play the same slide path as entrances in reverse.
  */
 
 import { useEffect, useRef, useState } from 'react';
-import {
-  KeyboardAvoidingView,
-  Modal,
-  Platform,
-  View,
+import { KeyboardAvoidingView, Platform, View } from 'react-native';
+import type {
+  ScrollView as ScrollViewType,
+  View as ViewType,
 } from 'react-native';
-import type { ScrollView as ScrollViewType, View as ViewType } from 'react-native';
 
 import { useThemeColors } from '../../theme/ThemeContext';
+import Modal from '../Modal';
 import { CreateHabitScrollContent } from './components/CreateHabitScrollContent';
 import { ModalHeader } from './components/ModalHeader';
 import { useCenteredFormCallbacks } from './hooks/useCenteredFormCallbacks';
@@ -59,12 +57,16 @@ export default function CreateHabitModalCentered(props: CreateHabitModalProps) {
 
   return (
     <Modal
-      accessibilityViewIsModal
-      animationType='slide'
-      presentationStyle='overFullScreen'
-      transparent
+      disableBackdropClose
+      disableGestureClose
+      backdropOpacity={0}
+      variant='fullScreen'
       visible={visible}
-      onRequestClose={onClose}
+      onClose={onClose}
+      style={{
+        borderTopLeftRadius: 0,
+        borderTopRightRadius: 0,
+      }}
     >
       <View className='flex-1' style={{ backgroundColor: colors.surface }}>
         <KeyboardAvoidingView

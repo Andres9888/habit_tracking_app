@@ -65,6 +65,7 @@ export function CalendarAndDetailModals(props: CalendarAndDetailModalsProps) {
           editOverlay={
             <HabitEditScreen
               habitId={habitToEdit?._id ?? null}
+              initialHabit={habitToEdit}
               visible={showEditScreen}
               onClose={closeEditScreen}
               onHabitRemoved={() => {

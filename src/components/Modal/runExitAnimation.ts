@@ -37,9 +37,7 @@ export function runExitAnimation(
     case 'fullScreen': {
       // Match native Modal animationType='slide' — no backdrop, timing-based
       backdropOpacityValue.value = 0;
-      fullScreenProgress.value = useReduced
-        ? 0
-        : withTiming(0, fadeOut(300));
+      fullScreenProgress.value = useReduced ? 0 : withTiming(0, fadeOut(350));
       break;
     }
     case 'centerAlert': {
