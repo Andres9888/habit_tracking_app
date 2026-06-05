@@ -39,12 +39,14 @@ export function AccountRow({
 
   const name = user?.firstName ?? user?.username ?? 'User';
   const email = user?.primaryEmailAddress?.emailAddress;
+  const imageUrl = user?.imageUrl;
   const initial = name.charAt(0).toUpperCase();
 
   if (highContrastMode) {
     return (
       <HighContrastAccountRow
         email={email}
+        imageUrl={imageUrl}
         initial={initial}
         isPremium={isPremium}
         name={name}
@@ -74,6 +76,7 @@ export function AccountRow({
         <AccountRowContent
           avatarSize={48}
           email={email}
+          imageUrl={imageUrl}
           initial={initial}
           isPremium={isPremium}
           name={name}

@@ -32,7 +32,7 @@ import Animated, {
 import { CompletionIconPicker } from './CompletionIconPicker';
 import { DayShapePicker } from './DayShapePicker';
 import { GrowthIconsSettingsRow } from './GrowthIconsSettingsRow';
-import { AccountRow } from './AccountRow';
+import { ProfileHeroCard } from './ProfileHeroCard';
 import { SettingsRow } from './SettingsRow';
 import { SettingsSection } from './SettingsSection';
 import { SoundPicker } from './SoundPicker';
@@ -109,7 +109,7 @@ export function SettingsContent(p: SettingsContentProps) {
       >
         <View className='gap-5'>
           <Animated.View entering={anim(0)}>
-            <AccountRow
+            <ProfileHeroCard
               highContrastMode={hc}
               isPremium={p.isPremium}
               onPress={p.onOpenAccount}

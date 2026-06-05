@@ -1,12 +1,14 @@
-/** ProfileCard — User identity anchor at top of settings */
+/** ProfileCard — User identity anchor at top of account page */
 import { Text, View } from 'react-native';
 import { Crown } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
 import { useUser } from '@clerk/clerk-expo';
-import { LinearGradient } from 'expo-linear-gradient';
 import { useThemeColors } from '../../theme/ThemeContext';
-import { borderRadius, shadows, spacing } from '../../theme/spacing';
-import { typography } from '../../theme/typography';
+import { shadows, spacing } from '../../theme/spacing';
+import { typography, fontWeights } from '../../theme/typography';
+import { ProfileStatsRow } from './ProfileStatsRow';
+import { UserAvatar } from './UserAvatar';
+import { useProfileStats } from './useProfileStats';
 
 interface ProfileCardProps {
   isPremium: boolean;
@@ -15,13 +17,17 @@ interface ProfileCardProps {
 
 export function ProfileCard({ isPremium, highContrastMode }: ProfileCardProps) {
   const { user } = useUser();
-  const { colors: themeColors, isDark } = useThemeColors();
+  const { colors: themeColors } = useThemeColors();
+  const stats = useProfileStats();
 
-  const name = user?.firstName ?? user?.username ?? 'User';
+  const name =
+    [user?.firstName, user?.lastName].filter(Boolean).join(' ') ||
+    user?.username ||
+    'User';
   const email = user?.primaryEmailAddress?.emailAddress;
   const initial = name.charAt(0).toUpperCase();
 
-  const cardBg = highContrastMode ? (isDark ? themeColors.gray[900] : themeColors.text.primary) : themeColors.card;
+  const cardBg = highContrastMode ? themeColors.card : themeColors.card;
   const cardBorder = highContrastMode ? themeColors.border : undefined;
 
   return (
@@ -36,39 +42,22 @@ export function ProfileCard({ isPremium, highContrastMode }: ProfileCardProps) {
           : shadows.card),
       }}
     >
-      <View className='flex-row items-center px-4 py-4' style={{ gap: spacing.md }}>
-        {highContrastMode ? (
-          <View
-            className='items-center justify-center'
-            style={{
-              backgroundColor: themeColors.text.primary,
-              borderRadius: borderRadius.full,
-              height: 52,
-              width: 52,
-            }}
-          >
-            <Text className='text-2xl font-bold' style={{ color: themeColors.text.inverse }}>
-              {initial}
-            </Text>
-          </View>
-        ) : (
-          <LinearGradient
-            colors={[themeColors.primary[700], themeColors.primary[600]]}
-            style={{
-              alignItems: 'center',
-              borderRadius: borderRadius.full,
-              height: 52,
-              justifyContent: 'center',
-              width: 52,
-            }}
-          >
-            <Text className='text-2xl font-bold text-white'>{initial}</Text>
-          </LinearGradient>
-        )}
-        <View className='flex-1'>
-          <Text
-            style={{ ...typography.heading3, color: themeColors.text.primary }}
-          >
+      <View className='items-center px-4 pb-1 pt-5' style={{ gap: spacing.md }}>
+        <UserAvatar
+          imageUrl={user?.imageUrl}
+          initial={initial}
+          palette={{
+            avatarBg: themeColors.primary[100],
+            avatarBorderColor: themeColors.border,
+            avatarBorderWidth: highContrastMode ? 1 : 0,
+            avatarTextColor: themeColors.text.inverse,
+            gradientColors: [themeColors.primary[700], themeColors.primary[600]],
+          }}
+          size={72}
+          useGradient={!highContrastMode}
+        />
+        <View className='items-center'>
+          <Text style={{ ...typography.heading3, color: themeColors.text.primary }}>
             {name}
           </Text>
           {email ? (
@@ -81,13 +70,13 @@ export function ProfileCard({ isPremium, highContrastMode }: ProfileCardProps) {
           ) : null}
           {isPremium ? (
             <View
-              className='mt-1.5 flex-row items-center self-start rounded-lg px-2 py-0.5'
+              className='mt-1.5 flex-row items-center rounded-lg px-2 py-0.5'
               style={{ backgroundColor: themeColors.status.warningLight, gap: 4 }}
             >
               <Crown color={themeColors.status.warningText} size={iconSizes.micro} />
               <Text
                 className='text-xs font-bold'
-                style={{ color: themeColors.status.warningText }}
+                style={{ color: themeColors.status.warningText, fontWeight: fontWeights.bold }}
               >
                 PRO
               </Text>
@@ -95,6 +84,7 @@ export function ProfileCard({ isPremium, highContrastMode }: ProfileCardProps) {
           ) : null}
         </View>
       </View>
+      <ProfileStatsRow stats={stats} />
     </View>
   );
 }
