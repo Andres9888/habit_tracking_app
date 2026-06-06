@@ -3,8 +3,9 @@ import type { ReactNode } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { useThemeColors } from '@/theme/ThemeContext';
-import { fontWeights, typography } from '@/theme/typography';
+import { typography } from '@/theme/typography';
 import { AdvancedOptionEditAffordance } from './AdvancedOptionEditAffordance';
+import { AdvancedOptionRowTitle } from './AdvancedOptionRowTitle';
 
 interface AdvancedOptionRowProps {
   icon: ReactNode;
@@ -13,6 +14,7 @@ interface AdvancedOptionRowProps {
   subtitle: string;
   description?: string;
   onPress: () => void;
+  onInfoPress?: () => void;
   accessibilityHint?: string;
   isFirst?: boolean;
 }
@@ -24,6 +26,7 @@ export function AdvancedOptionRow({
   subtitle,
   description,
   onPress,
+  onInfoPress,
   accessibilityHint,
   isFirst = false,
 }: AdvancedOptionRowProps) {
@@ -55,17 +58,14 @@ export function AdvancedOptionRow({
     >
       {({ pressed }) => (
         <>
-          <View className='h-9 w-9 items-center justify-center rounded-xl' style={{ backgroundColor: iconBackground }}>{icon}</View>
+          <View
+            className='h-9 w-9 items-center justify-center rounded-xl'
+            style={{ backgroundColor: iconBackground }}
+          >
+            {icon}
+          </View>
           <View className='flex-1'>
-            <Text
-              style={{
-                ...typography.body,
-                fontWeight: fontWeights.semibold,
-                color: colors.text.primary,
-              }}
-            >
-              {title}
-            </Text>
+            <AdvancedOptionRowTitle title={title} onInfoPress={onInfoPress} />
             <Text
               style={{
                 ...typography.caption,

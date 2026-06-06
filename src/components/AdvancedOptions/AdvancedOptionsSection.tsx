@@ -29,9 +29,19 @@ import { AdvancedOptionRow } from './AdvancedOptionRow';
 import { AdvancedSheet } from './AdvancedSheet';
 import { GrowthIconsSheetBody } from './GrowthIconsSheetBody';
 import { StreakGoalSheetBody } from './StreakGoalSheetBody';
+import { StrengthCurveHint } from './StrengthCurveHint';
+import { StrengthCurveSheetBody } from './StrengthCurveSheetBody';
 import type { AdvancedOptionsSectionProps } from './AdvancedOptions.types';
 
 type SheetKey = 'algorithm' | 'growth' | 'streak' | null;
+
+function openSheetFromChip(
+  key: SheetKey,
+  setOpenSheet: (key: SheetKey) => void
+) {
+  void Haptics.selectionAsync();
+  setOpenSheet(key);
+}
 
 // eslint-disable-next-line max-lines-per-function
 export function AdvancedOptionsSection({
@@ -49,6 +59,8 @@ export function AdvancedOptionsSection({
   const savedCustomEmojis = useUserCustomProgressEmojis();
   const [expanded, setExpanded] = useState(false);
   const [openSheet, setOpenSheet] = useState<SheetKey>(null);
+  const [strengthHintVisible, setStrengthHintVisible] = useState(false);
+  const [fullPickerVisible, setFullPickerVisible] = useState(false);
   const {
     animateToggle,
     chevronAnimatedStyle,
@@ -64,7 +76,6 @@ export function AdvancedOptionsSection({
 
   useEffect(() => {
     if (!expanded) return;
-    // Wait for the measured layout to settle before nudging the section into view.
     const scroll = setTimeout(
       () => onExpandRef.current?.(),
       reduceMotion ? 0 : durations.enter
@@ -96,6 +107,12 @@ export function AdvancedOptionsSection({
         'Custom');
   const streakSubtitle =
     streakGoal > 0 ? `${streakGoal}-day goal` : 'No goal set';
+
+  const openFullPicker = () => {
+    setOpenSheet(null);
+    setStrengthHintVisible(false);
+    setTimeout(() => setFullPickerVisible(true), 80);
+  };
 
   return (
     <>
@@ -135,6 +152,7 @@ export function AdvancedOptionsSection({
             </View>
             <View className='mt-3 flex-row flex-wrap justify-center gap-2'>
               <PreviewChip
+                accessibilityLabel={`Strength curve, ${algoEntry.name}`}
                 backgroundColor={algoStyle.iconTileBackground}
                 foregroundColor={algoStyle.iconColor}
                 icon={
@@ -145,8 +163,10 @@ export function AdvancedOptionsSection({
                   />
                 }
                 label={algoEntry.name}
+                onPress={() => openSheetFromChip('algorithm', setOpenSheet)}
               />
               <PreviewChip
+                accessibilityLabel={`Growth icons, ${presetLabel}`}
                 backgroundColor={colors.primary[100]}
                 foregroundColor={colors.primary[700]}
                 icon={
@@ -155,8 +175,10 @@ export function AdvancedOptionsSection({
                   </Text>
                 }
                 label={presetLabel}
+                onPress={() => openSheetFromChip('growth', setOpenSheet)}
               />
               <PreviewChip
+                accessibilityLabel={`Streak goal, ${streakSubtitle}`}
                 backgroundColor={colors.status.streakLight}
                 foregroundColor={colors.status.streakText}
                 icon={
@@ -167,6 +189,7 @@ export function AdvancedOptionsSection({
                   />
                 }
                 label={streakGoal > 0 ? `${streakGoal}-day` : 'No goal set'}
+                onPress={() => openSheetFromChip('streak', setOpenSheet)}
               />
             </View>
             <View
@@ -241,7 +264,7 @@ export function AdvancedOptionsSection({
               ) : null}
               <AdvancedOptionRow
                 isFirst
-                accessibilityHint='Opens strength curve picker'
+                accessibilityHint='Opens strength curve sheet'
                 description='How strength builds — and resets when you miss days.'
                 icon={
                   <AlgoIcon
@@ -253,6 +276,7 @@ export function AdvancedOptionsSection({
                 iconBackground={colors.surface}
                 subtitle={algoSubtitle}
                 title='Strength Curve'
+                onInfoPress={() => setStrengthHintVisible(true)}
                 onPress={() => setOpenSheet('algorithm')}
               />
               <AdvancedOptionRow
@@ -288,12 +312,31 @@ export function AdvancedOptionsSection({
         </View>
       </View>
 
+      <StrengthCurveHint
+        visible={strengthHintVisible}
+        onClose={() => setStrengthHintVisible(false)}
+        onLearnMore={openFullPicker}
+      />
+
       <StrengthCurvePickerModal
         selected={strengthAlgorithm}
-        visible={openSheet === 'algorithm'}
-        onClose={() => setOpenSheet(null)}
+        visible={fullPickerVisible}
+        onClose={() => setFullPickerVisible(false)}
         onSelect={onStrengthAlgorithmChange}
       />
+
+      <AdvancedSheet
+        subtitle='How strength builds — and resets when you miss days.'
+        title='Strength Curve'
+        visible={openSheet === 'algorithm'}
+        onClose={() => setOpenSheet(null)}
+      >
+        <StrengthCurveSheetBody
+          selected={strengthAlgorithm}
+          onLearnMore={openFullPicker}
+          onSelect={onStrengthAlgorithmChange}
+        />
+      </AdvancedSheet>
 
       <AdvancedSheet
         subtitle='Five stages, one for every 20% of strength. Pick a theme or customize any stage.'
@@ -330,6 +373,8 @@ interface PreviewChipProps {
   label: string;
   backgroundColor: string;
   foregroundColor: string;
+  accessibilityLabel: string;
+  onPress: () => void;
 }
 
 function PreviewChip({
@@ -337,11 +382,16 @@ function PreviewChip({
   label,
   backgroundColor,
   foregroundColor,
+  accessibilityLabel,
+  onPress,
 }: PreviewChipProps) {
   return (
-    <View
+    <Pressable
+      accessibilityLabel={accessibilityLabel}
+      accessibilityRole='button'
       className='flex-row items-center gap-1 rounded-full px-2.5 py-1'
       style={{ backgroundColor }}
+      onPress={onPress}
     >
       {icon}
       <Text
@@ -354,6 +404,6 @@ function PreviewChip({
       >
         {label}
       </Text>
-    </View>
+    </Pressable>
   );
 }
