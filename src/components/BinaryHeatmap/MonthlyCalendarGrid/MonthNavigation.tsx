@@ -25,12 +25,18 @@ interface MonthNavigationProps {
   currentMonth: Date;
   onPreviousMonth: () => void;
   onNextMonth: () => void;
+  onOpenMonthPicker?: () => void;
+  canGoPrevious?: boolean;
+  canGoNext?: boolean;
 }
 
 export const MonthNavigation = memo(function MonthNavigation({
   currentMonth,
   onPreviousMonth,
   onNextMonth,
+  onOpenMonthPicker,
+  canGoPrevious = true,
+  canGoNext = true,
 }: MonthNavigationProps) {
   const { colors } = useThemeColors();
   const iconColor = colors.text.secondary;
@@ -39,9 +45,10 @@ export const MonthNavigation = memo(function MonthNavigation({
     <View style={headerStyles.row}>
       <View style={headerStyles.leftGroup}>
         <Pressable
-          accessibilityLabel={`Current month: ${safeFormat(currentMonth, 'MMMM yyyy', 'Month')}`}
-          accessibilityRole='header'
+          accessibilityLabel={`Current month: ${safeFormat(currentMonth, 'MMMM yyyy', 'Month')}. Tap to choose month`}
+          accessibilityRole='button'
           style={[styles.monthButton, { borderColor: colors.border }]}
+          onPress={onOpenMonthPicker}
         >
           <Calendar color={iconColor} size={iconSizes.small} />
           <Text style={[styles.monthText, { color: colors.text.primary }]}>
@@ -54,7 +61,11 @@ export const MonthNavigation = memo(function MonthNavigation({
         <Pressable
           accessibilityLabel='Previous month'
           accessibilityRole='button'
-          style={[styles.navButton, { borderColor: colors.border }]}
+          disabled={!canGoPrevious}
+          style={[
+            styles.navButton,
+            { borderColor: colors.border, opacity: canGoPrevious ? 1 : 0.35 },
+          ]}
           hitSlop={TAP_SLOP}
           onPress={onPreviousMonth}
         >
@@ -63,7 +74,11 @@ export const MonthNavigation = memo(function MonthNavigation({
         <Pressable
           accessibilityLabel='Next month'
           accessibilityRole='button'
-          style={[styles.navButton, { borderColor: colors.border }]}
+          disabled={!canGoNext}
+          style={[
+            styles.navButton,
+            { borderColor: colors.border, opacity: canGoNext ? 1 : 0.35 },
+          ]}
           hitSlop={TAP_SLOP}
           onPress={onNextMonth}
         >

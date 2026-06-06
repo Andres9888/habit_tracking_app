@@ -1,20 +1,14 @@
-import React, { memo, useCallback, useMemo } from 'react';
-import { View, Text } from 'react-native';
-import { GestureDetector } from 'react-native-gesture-handler';
-import { useQuery } from 'convex/react';
-import { format } from 'date-fns';
+import React, { memo } from 'react';
+import { View } from 'react-native';
 import { useThemeColors } from '@/theme';
 import { colors as palette } from '@/theme/colors';
-import { api } from '../../../../convex/_generated/api';
 import type { MonthlyCalendarGridProps } from './types';
 import { styles } from './styles';
-import { useCalendarDays } from './useCalendarDays';
-import { useMonthInsights } from './useMonthInsights';
-import { completedTint } from './chainColors';
-import { AnimatedWeeksGrid } from './AnimatedWeeksGrid';
 import { MonthNavigation } from './MonthNavigation';
+import { MonthPicker } from './MonthPicker';
 import { MonthInsightStrip } from './MonthInsightStrip';
-import { useMonthGridNavigation } from './useMonthGridNavigation';
+import { CalendarSwipeSection } from './CalendarSwipeSection';
+import { useMonthlyCalendarGridState } from './useMonthlyCalendarGridState';
 
 export const MonthlyCalendarGrid = memo(function MonthlyCalendarGrid({
   completedDates,
@@ -28,37 +22,16 @@ export const MonthlyCalendarGrid = memo(function MonthlyCalendarGrid({
   onDayPress,
 }: MonthlyCalendarGridProps) {
   const { colors, isDark } = useThemeColors();
-  const {
-    currentMonth,
-    directionRef,
-    goToNextMonth,
-    goToPreviousMonth,
-    monthSwipeGesture,
-  } = useMonthGridNavigation(controlledMonth, onCurrentMonthChange);
-
-  const { weeks } = useCalendarDays({
+  const state = useMonthlyCalendarGridState({
     completedDates,
-    currentMonth,
+    habitColor,
     habitCreatedAt,
+    currentMonth: controlledMonth,
+    onCurrentMonthChange,
+    useSolidCompletedFill,
+    isToggling,
+    onDayPress,
   });
-  const insights = useMonthInsights(completedDates, currentMonth);
-  const settings = useQuery(api.settings.get);
-  const showConnections = settings?.showStreakConnections ?? true;
-
-  const cardColor = isDark ? colors.card : palette.light.surfaceMuted;
-  const completedBg = useMemo(
-    () =>
-      useSolidCompletedFill ? habitColor : completedTint(habitColor, cardColor),
-    [useSolidCompletedFill, habitColor, cardColor]
-  );
-
-  const handleDayPress = useCallback(
-    (dateString: string, completed: boolean) => {
-      if (isToggling) return;
-      onDayPress?.(dateString, completed);
-    },
-    [isToggling, onDayPress]
-  );
 
   return (
     <View
@@ -67,50 +40,50 @@ export const MonthlyCalendarGrid = memo(function MonthlyCalendarGrid({
         {
           backgroundColor: isDark ? colors.card : palette.light.surfaceMuted,
           borderColor: colors.border,
-          opacity: isToggling ? 0.65 : 1,
+          opacity: state.isToggling ? 0.65 : 1,
         },
       ]}
     >
       <MonthNavigation
-        currentMonth={currentMonth}
-        onNextMonth={goToNextMonth}
-        onPreviousMonth={goToPreviousMonth}
+        canGoNext={state.navigation.canGoNextMonth}
+        canGoPrevious={state.navigation.canGoPreviousMonth}
+        currentMonth={state.navigation.currentMonth}
+        onNextMonth={state.navigation.goToNextMonth}
+        onOpenMonthPicker={() => state.setPickerVisible(true)}
+        onPreviousMonth={state.navigation.goToPreviousMonth}
       />
-      <GestureDetector gesture={monthSwipeGesture}>
-        <View collapsable={false}>
-          <View style={styles.row}>
-            {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((day) => (
-              <View key={day} style={styles.headerCell}>
-                <Text
-                  style={[styles.headerText, { color: colors.text.tertiary }]}
-                >
-                  {day}
-                </Text>
-              </View>
-            ))}
-          </View>
-
-          <AnimatedWeeksGrid
-            completedBg={completedBg}
-            direction={directionRef.current}
-            habitColor={habitColor}
-            isToggling={isToggling}
-            monthKey={format(currentMonth, 'yyyy-MM')}
-            showConnections={showConnections}
-            textColors={{
-              inverse: colors.text.inverse,
-              muted: colors.gray[300],
-              primary: colors.text.primary,
-              tertiary: colors.text.tertiary,
-            }}
-            useSolidCompletedFill={useSolidCompletedFill}
-            weeks={weeks}
-            onPress={handleDayPress}
-          />
-        </View>
-      </GestureDetector>
-
-      <MonthInsightStrip {...insights} showStreak={showStreakInInsights} />
+      <CalendarSwipeSection
+        completedBg={state.completedBg}
+        direction={state.navigation.directionRef.current}
+        gesture={state.navigation.monthSwipeGesture}
+        habitColor={habitColor}
+        isToggling={state.isToggling}
+        month={state.navigation.currentMonth}
+        showConnections={state.showConnections}
+        tertiaryColor={colors.text.tertiary}
+        textColors={{
+          inverse: colors.text.inverse,
+          muted: colors.gray[300],
+          primary: colors.text.primary,
+          tertiary: colors.text.tertiary,
+        }}
+        useSolidCompletedFill={useSolidCompletedFill}
+        weeks={state.weeks}
+        onPress={state.handleDayPress}
+      />
+      <MonthInsightStrip
+        {...state.insights}
+        showStreak={showStreakInInsights}
+      />
+      <MonthPicker
+        currentMonth={state.navigation.currentMonth}
+        habitColor={habitColor}
+        maxDate={state.maxMonth}
+        minDate={state.minMonth}
+        visible={state.pickerVisible}
+        onClose={() => state.setPickerVisible(false)}
+        onSelectMonth={state.navigation.goToMonth}
+      />
     </View>
   );
 });
