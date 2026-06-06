@@ -4,14 +4,13 @@
  * Layout (same 5-column grid as CardHeader via {@link HabitCardGridRow}):
  * - Column 1: Animated tier emoji
  * - Columns 2–4: Progress bar track
- * - Column 5: Animated counting percentage text
+ * - Column 5: Demoted percentage text (bar is the primary signal)
  */
 
 import React from 'react';
 import { Text, View } from 'react-native';
 import ReAnimated, { type AnimatedStyle } from 'react-native-reanimated';
 import { getStrengthEmoji } from './strengthUtils';
-import { useCountingPercent } from './useCountingPercent';
 import { colors } from '@/theme';
 import { getMaterialTier } from '../HabitChainVisualizer/materialTier';
 import { useThemeColors } from '../../theme/ThemeContext';
@@ -36,8 +35,7 @@ export function StrengthProgressBar({
   emojis,
   accentColor,
 }: StrengthProgressBarProps) {
-  const { isDark } = useThemeColors();
-  const displayPercent = useCountingPercent(strengthPercent);
+  const { colors: themeColors, isDark } = useThemeColors();
   const tier = getMaterialTier(strengthPercent);
   const tierFillColor =
     tier.useAccent && accentColor
@@ -64,11 +62,13 @@ export function StrengthProgressBar({
         </View>
       }
       col5={
+        // Bar is the primary progress signal, so the percent is demoted:
+        // small + muted, and static (no counting animation) to cut list noise.
         <Text
-          className='text-sm font-bold'
-          style={{ color: isDark ? '#A3E635' : colors.strength.starting }}
+          className='text-xs font-semibold'
+          style={{ color: themeColors.gray[500] }}
         >
-          {displayPercent}%
+          {Math.round(strengthPercent)}%
         </Text>
       }
       overlay={
