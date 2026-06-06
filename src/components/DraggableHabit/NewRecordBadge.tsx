@@ -26,7 +26,7 @@ export function NewRecordBadge({
 
   return (
     <ReAnimated.View
-      className='mx-3 mb-3 flex-row items-center justify-center gap-1.5 rounded-full py-2'
+      className='mb-3 flex-row items-center justify-center gap-1.5 rounded-full py-2'
       style={[
         {
           borderColor: isDark ? colors.warning : colors.streak[300],
@@ -37,7 +37,11 @@ export function NewRecordBadge({
     >
       <LinearGradient
         className='absolute inset-0 rounded-full'
-        colors={isDark ? [colors.gray[900], colors.warning] : [colors.warningLight, colors.streak[100]]}
+        colors={
+          isDark
+            ? [colors.gray[900], colors.warning]
+            : [colors.warningLight, colors.streak[100]]
+        }
         end={{ x: 1, y: 0 }}
         start={{ x: 0, y: 0 }}
       />

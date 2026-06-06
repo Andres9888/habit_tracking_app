@@ -1,17 +1,11 @@
 import React, { memo } from 'react';
 import { View } from 'react-native';
-import { GestureDetector } from 'react-native-gesture-handler';
 import { format } from 'date-fns';
 import { useCalendarTimelineSetup } from './CalendarTimeline.derived';
 import { getShelfStyle } from './CalendarTimeline.styles';
 import type { CalendarTimelineProps } from './CalendarTimeline.types';
-import {
-  DayStrip,
-  InlineTrialBar,
-  MiniCalendarPopup,
-  StripNav,
-  WeekNavRow,
-} from './components';
+import { CalendarTimelineWeekStrip } from './components/CalendarTimelineWeekStrip';
+import { InlineTrialBar, MiniCalendarPopup } from './components';
 
 const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
   dates,
@@ -61,58 +55,39 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
   }
 
   return (
-    <View style={getShelfStyle(tl.isDark)} className={compact ? 'pb-2 pt-1' : 'pb-4 pt-2'}>
+    <View
+      style={getShelfStyle(tl.isDark)}
+      className={compact ? 'pb-2 pt-1' : 'pb-4 pt-2'}
+    >
       <View>
-        {trialDaysRemaining != null && trialDaysRemaining > 0 && onUpgrade ? <View className='px-6'>
+        {trialDaysRemaining != null && trialDaysRemaining > 0 && onUpgrade ? (
+          <View className='px-6'>
             <InlineTrialBar
               daysRemaining={trialDaysRemaining}
               onUpgrade={onUpgrade}
             />
-          </View> : null}
-        <GestureDetector gesture={tl.headerPanGesture}>
-          <View
-            className={compact ? 'mb-1' : 'mb-3'}
-            collapsable={false}
-            style={{ paddingHorizontal: 40 }}
-          >
-            <WeekNavRow
-              dateSuffix={dateSuffix}
-              isViewingPast={isViewingPast}
-              monthName={monthName}
-              onDateRangePress={tl.openCalendar}
-              onJumpToToday={onJumpToToday}
-            />
           </View>
-        </GestureDetector>
-        <View style={{ paddingHorizontal: 40 }}>
-          <StripNav
-            canNavigateForward={canNavigateForward}
-            onNextWeek={onNextWeek}
-            onPreviousWeek={onPreviousWeek}
-            reduceMotion={reduceMotion}
-          >
-            <DayStrip
-              augmentedColors={tl.augmentedColors}
-              completionCounts={tl.completionCounts}
-              completionStatuses={tl.completionStatuses}
-              connectorColor={tl.connectorColor}
-              currentStreak={currentStreak}
-              dates={dates}
-              disableFutureDayPress={disableFutureDayPress}
-              ghostConnectorColor={tl.ghostConnectorColor}
-              hasCompletionData={Object.keys(completionByDay).length > 0}
-              isDayPressEnabled={isDayPressEnabled ?? !!onDayPress}
-              isFuture={tl.isFuture}
-              isToday={tl.isToday}
-              onDayPress={onDayPress}
-              panGesture={tl.panGesture}
-              completionIcon={completionIcon}
-              reduceMotion={reduceMotion}
-              strengthPercent={strengthPercent}
-              weekTransitionStyle={tl.weekTransitionStyle}
-            />
-          </StripNav>
-        </View>
+        ) : null}
+        <CalendarTimelineWeekStrip
+          canNavigateForward={canNavigateForward}
+          compact={compact}
+          completionByDay={completionByDay}
+          completionIcon={completionIcon}
+          currentStreak={currentStreak}
+          dateSuffix={dateSuffix}
+          dates={dates}
+          disableFutureDayPress={disableFutureDayPress}
+          isDayPressEnabled={isDayPressEnabled ?? !!onDayPress}
+          isViewingPast={isViewingPast}
+          monthName={monthName}
+          onDayPress={onDayPress}
+          onJumpToToday={onJumpToToday}
+          onNextWeek={onNextWeek}
+          onPreviousWeek={onPreviousWeek}
+          reduceMotion={reduceMotion}
+          strengthPercent={strengthPercent}
+          tl={tl}
+        />
         <MiniCalendarPopup
           completionByDay={completionByDay}
           visible={tl.calendarOpen}

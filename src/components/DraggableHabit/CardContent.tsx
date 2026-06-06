@@ -19,6 +19,10 @@ import { NewRecordBadge } from './NewRecordBadge';
 import { StrengthProgressBar } from './StrengthProgressBar';
 import { WeekCompleteIndicator } from './WeekCompleteIndicator';
 import type { DraggableHabitCardProps } from './DraggableHabitCard.types';
+import {
+  CARD_CHAIN_PADDING_RIGHT,
+  CARD_HORIZONTAL_PADDING,
+} from './cardLayout.constants';
 
 interface CardContentProps extends DraggableHabitCardProps {
   effectiveAccentColor: string;
@@ -33,7 +37,7 @@ export function CardContent(props: CardContentProps) {
   );
   return (
     <>
-      <View className={compact ? 'pt-3' : 'pt-4'}>
+      <View className={`px-3 ${compact ? 'pt-3' : 'pt-4'}`}>
         <CardHeader
           accentColor={props.accentColor}
           bestStreak={props.bestStreak}
@@ -56,7 +60,7 @@ export function CardContent(props: CardContentProps) {
         ) : null}
         {compact ? (
           <View
-            className='mx-3 mb-2 h-[1px] rounded-full'
+            className='mb-2 h-[1px] rounded-full'
             style={{ backgroundColor: themeColors.gray[200] }}
           />
         ) : props.showHabitStrengthPercentage ? (
@@ -69,12 +73,18 @@ export function CardContent(props: CardContentProps) {
           />
         ) : (
           <View
-            className='mx-3 mb-3 h-[1.5px] rounded-full'
+            className='mb-3 h-[1.5px] rounded-full'
             style={{ backgroundColor: themeColors.gray[200] }}
           />
         )}
       </View>
-      <View className={compact ? 'pb-3 pl-3 pr-4' : 'pb-5 pl-3 pr-4'}>
+      <View
+        className={compact ? 'pb-3' : 'pb-4'}
+        style={{
+          paddingLeft: CARD_HORIZONTAL_PADDING,
+          paddingRight: CARD_CHAIN_PADDING_RIGHT,
+        }}
+      >
         <HabitChainVisualizer
           accentColor={props.accentColor}
           celebrationsEnabled={props.celebrationsEnabled}

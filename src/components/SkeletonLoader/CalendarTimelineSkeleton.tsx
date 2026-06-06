@@ -4,12 +4,13 @@
  */
 import React from 'react';
 import { View } from 'react-native';
+import { WEEK_STRIP_HORIZONTAL_PADDING } from '../../constants/weekStripLayout';
 import { SkeletonLoader } from './SkeletonLoader';
 import { useSkeletonTheme } from './useSkeletonTheme';
 import type { ReduceMotionProps } from './types';
 
 const DAY_INDICES = [0, 1, 2, 3, 4, 5, 6];
-const STRIP_PADDING = { paddingHorizontal: 40 };
+const STRIP_PADDING = { paddingHorizontal: WEEK_STRIP_HORIZONTAL_PADDING };
 
 export function CalendarTimelineSkeleton({
   reduceMotion = false,

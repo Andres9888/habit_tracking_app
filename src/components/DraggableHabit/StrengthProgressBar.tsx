@@ -1,24 +1,25 @@
-/* eslint-disable max-lines */
 /**
  * StrengthProgressBar — Visualises habit strength as an animated segmented bar.
  *
- * Layout (same 5-column grid as CardHeader):
- * - Column 1: Animated tier emoji (🌱→🌿→🌳→💪→⚡)
- * - Columns 2–4: Progress bar with dividers at 20/40/60/80%
+ * Layout (same 5-column grid as CardHeader via {@link HabitCardGridRow}):
+ * - Column 1: Animated tier emoji
+ * - Columns 2–4: Progress bar track
  * - Column 5: Animated counting percentage text
  */
 
 import React from 'react';
-import { View, Text } from 'react-native';
+import { Text, View } from 'react-native';
 import ReAnimated, { type AnimatedStyle } from 'react-native-reanimated';
 import { getStrengthEmoji } from './strengthUtils';
 import { useCountingPercent } from './useCountingPercent';
 import { colors } from '@/theme';
 import { getMaterialTier } from '../HabitChainVisualizer/materialTier';
 import { useThemeColors } from '../../theme/ThemeContext';
-import { borderRadius } from '../../theme/spacing';
 import { typography, fontFamilies } from '../../theme/typography';
 import type { ProgressEmojiSet } from '../../utils/progressEmojis';
+import { HabitCardGridRow } from './HabitCardGridRow';
+import { CARD_ICON_SIZE } from './cardLayout.constants';
+import { StrengthProgressBarTrack } from './StrengthProgressBarTrack';
 
 interface StrengthProgressBarProps {
   strengthPercent: number;
@@ -35,17 +36,22 @@ export function StrengthProgressBar({
   emojis,
   accentColor,
 }: StrengthProgressBarProps) {
-  const { colors: themeColors, isDark } = useThemeColors();
+  const { isDark } = useThemeColors();
   const displayPercent = useCountingPercent(strengthPercent);
   const tier = getMaterialTier(strengthPercent);
   const tierFillColor =
-    tier.useAccent && accentColor ? accentColor : tier.tierColor || (isDark ? '#A3E635' : colors.strength.starting);
+    tier.useAccent && accentColor
+      ? accentColor
+      : tier.tierColor || (isDark ? '#A3E635' : colors.strength.starting);
 
   return (
-    <View className='relative mb-3 flex-row items-center justify-between px-3'>
-      {/* Column 1: Animated plant emoji — h-9 w-9 matches CardHeader icon */}
-      <View className='flex-1 items-center justify-center'>
-        <View className='h-9 w-9 items-center justify-center'>
+    <HabitCardGridRow
+      className='mb-3'
+      col1={
+        <View
+          className='items-center justify-center'
+          style={{ height: CARD_ICON_SIZE, width: CARD_ICON_SIZE }}
+        >
           <ReAnimated.Text
             style={[
               { fontFamily: fontFamilies.primary.text },
@@ -56,73 +62,21 @@ export function StrengthProgressBar({
             {getStrengthEmoji(strengthPercent, emojis)}
           </ReAnimated.Text>
         </View>
-      </View>
-      {/* Grid spacers */}
-      <View className='flex-1' />
-      <View className='flex-1' />
-      <View className='flex-1' />
-      {/* Column 5: Animated counting percentage */}
-      <View className='flex-1 items-center'>
+      }
+      col5={
         <Text
           className='text-sm font-bold'
-          style={{
-            color: isDark ? '#A3E635' : colors.strength.starting,
-            marginLeft: 12,
-          }}
+          style={{ color: isDark ? '#A3E635' : colors.strength.starting }}
         >
           {displayPercent}%
         </Text>
-      </View>
-      {/* Progress bar overlay */}
-      <View
-        pointerEvents='none'
-        style={{
-          bottom: 0,
-          justifyContent: 'center',
-          left: '20%',
-          position: 'absolute',
-          right: '22%',
-          top: 0,
-        }}
-      >
-        <View
-          style={{
-            backgroundColor: themeColors.gray[200],
-            borderRadius: borderRadius.xs,
-            height: 8,
-            marginHorizontal: 8,
-            overflow: 'hidden',
-            position: 'relative',
-            width: '100%',
-          }}
-        >
-          {/* Animated progress bar fill */}
-          <ReAnimated.View
-            style={[
-              {
-                backgroundColor: tierFillColor,
-                borderRadius: borderRadius.xs,
-                height: '100%',
-              },
-              progressAnimatedStyle,
-            ]}
-          />
-          {/* Dividers at 20%, 40%, 60%, 80% */}
-          {[20, 40, 60, 80].map((pos) => (
-            <View
-              key={pos}
-              style={{
-                backgroundColor: 'rgba(0,0,0,0.15)',
-                height: '100%',
-                left: `${pos}%`,
-                position: 'absolute',
-                top: 0,
-                width: 1,
-              }}
-            />
-          ))}
-        </View>
-      </View>
-    </View>
+      }
+      overlay={
+        <StrengthProgressBarTrack
+          progressAnimatedStyle={progressAnimatedStyle}
+          tierFillColor={tierFillColor}
+        />
+      }
+    />
   );
 }
