@@ -51,6 +51,7 @@ export function TierPickerTile({ mode, tier, style, isSelected, onSelect, scale 
             backgroundColor: isSelected ? style.tierPillBg : colors.card,
             borderColor: isSelected ? style.curveColor : colors.border,
             borderWidth: 1.5,
+            minHeight: 72 * scale,
             padding: 10 * scale,
             width: '100%',
           },

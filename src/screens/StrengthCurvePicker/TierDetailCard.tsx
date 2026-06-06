@@ -1,20 +1,22 @@
 /** TierDetailCard — explainer card for the currently selected tier (Option B). */
 import { Text, View } from 'react-native';
-import Animated, { FadeInDown } from 'react-native-reanimated';
 import type { AlgorithmMode } from '@/components/AlgorithmPicker';
-import { useReduceMotion } from '@/hooks/useReduceMotion';
 import { useThemeColors } from '@/theme/ThemeContext';
 import { TIER_COPY } from './StrengthCurvePicker.copy';
+import {
+  TIER_DETAIL_DESCRIPTION_LINE_HEIGHT,
+  tierDetailChipRowMinHeight,
+  tierDetailDescriptionMinHeight,
+} from './tierDetailLayout';
 
 export function TierDetailCard({ mode, scale = 1 }: { mode: AlgorithmMode; scale?: number }) {
   const { colors } = useThemeColors();
-  const reduceMotion = useReduceMotion();
   const tier = TIER_COPY[mode];
+  const descriptionFontSize = 12 * scale;
+  const lineHeight = TIER_DETAIL_DESCRIPTION_LINE_HEIGHT * scale;
 
   return (
-    <Animated.View
-      key={mode}
-      entering={reduceMotion ? undefined : FadeInDown.duration(280)}
+    <View
       className='mx-4 rounded-2xl'
       style={{
         backgroundColor: colors.card,
@@ -24,10 +26,25 @@ export function TierDetailCard({ mode, scale = 1 }: { mode: AlgorithmMode; scale
         padding: 14 * scale,
       }}
     >
-      <Text style={{ color: colors.text.secondary, fontSize: 12 * scale, lineHeight: 16 * scale }}>
-        {tier.description}
-      </Text>
-      <View className='flex-row flex-wrap' style={{ gap: 6 * scale, marginTop: 8 * scale }}>
+      <View style={{ justifyContent: 'flex-start', minHeight: tierDetailDescriptionMinHeight(scale) }}>
+        <Text
+          style={{
+            color: colors.text.secondary,
+            fontSize: descriptionFontSize,
+            lineHeight,
+          }}
+        >
+          {tier.description}
+        </Text>
+      </View>
+      <View
+        className='flex-row flex-wrap'
+        style={{
+          gap: 6 * scale,
+          marginTop: 8 * scale,
+          minHeight: tierDetailChipRowMinHeight(scale),
+        }}
+      >
         {tier.exampleChips.map((chip) => (
           <View
             key={chip}
@@ -46,6 +63,6 @@ export function TierDetailCard({ mode, scale = 1 }: { mode: AlgorithmMode; scale
           </View>
         ))}
       </View>
-    </Animated.View>
+    </View>
   );
 }
