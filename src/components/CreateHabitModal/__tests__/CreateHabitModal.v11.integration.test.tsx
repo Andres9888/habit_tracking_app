@@ -609,8 +609,11 @@ describe('CreateHabitModal V11 Integration Tests', () => {
         expect(getByText('Test Habit')).toBeDefined();
       });
 
-      // Close modal
+      // Close modal and wait for post-dismiss reset
       rerender(<CreateHabitModal {...defaultProps} visible={false} />);
+      await act(async () => {
+        jest.advanceTimersByTime(400);
+      });
 
       // Reopen modal
       rerender(<CreateHabitModal {...defaultProps} visible={true} />);

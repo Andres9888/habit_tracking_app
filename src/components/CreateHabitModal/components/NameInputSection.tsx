@@ -1,18 +1,21 @@
 /**
  * NameInputSection - Shared habit-name heading + input for both Add and Edit.
  *
- * Theme-aware internally. Border shows the error color when invalid and the
- * primary color while focused (error takes precedence). Title and placeholder
- * are mode-driven props so create and edit can share one component.
+ * Theme-aware internally. Focused state uses emerald border + glow (V11 pattern).
+ * Title and placeholder are mode-driven props so create and edit can share one component.
  */
 
 import { useState } from 'react';
 import { Keyboard, Text, TextInput, View } from 'react-native';
+import Animated from 'react-native-reanimated';
 import { spacing } from '@/theme/spacing';
 import { typography } from '@/theme/typography';
 import { useThemeColors } from '@/theme/ThemeContext';
 import STRINGS from '@/constants/strings';
 import { buildTextInputHintProps } from '@/utils/textInputHintProps';
+import { useFocusedGreenInputStyle } from './useFocusedGreenInputStyle';
+
+const AnimatedTextInput = Animated.createAnimatedComponent(TextInput);
 
 interface NameInputSectionProps {
   habitName: string;
@@ -26,7 +29,6 @@ interface NameInputSectionProps {
   autoFocus?: boolean;
 }
 
-// eslint-disable-next-line max-lines-per-function
 export function NameInputSection({
   habitName,
   onHabitNameChange,
@@ -38,12 +40,11 @@ export function NameInputSection({
 }: NameInputSectionProps) {
   const { colors, isDark } = useThemeColors();
   const [isFocused, setIsFocused] = useState(false);
-
-  const borderColor = showNameError
-    ? colors.status.error
-    : isFocused
-      ? colors.primary[500]
-      : colors.border;
+  const focusedInputStyle = useFocusedGreenInputStyle(
+    isFocused,
+    showNameError,
+    colors.border
+  );
 
   const handleBlur = () => {
     setIsFocused(false);
@@ -63,18 +64,21 @@ export function NameInputSection({
         {title}
       </Text>
 
-      <TextInput
+      <AnimatedTextInput
+        key={autoFocus ? 'habit-name-focused' : 'habit-name-idle'}
         accessibilityLabel='Habit name'
         autoFocus={autoFocus}
-        className='w-full rounded-2xl border-2 px-5 py-4 text-center text-2xl font-semibold'
+        className='w-full rounded-2xl px-5 py-4 text-center text-2xl font-semibold'
         maxLength={50}
         returnKeyType='done'
-        style={{
-          lineHeight: 28,
-          color: colors.text.primary,
-          backgroundColor: isDark ? colors.card : '#FFFFFF',
-          borderColor,
-        }}
+        style={[
+          focusedInputStyle,
+          {
+            lineHeight: 28,
+            color: colors.text.primary,
+            backgroundColor: isDark ? colors.card : '#FFFFFF',
+          },
+        ]}
         value={habitName}
         {...buildTextInputHintProps(placeholder, colors.text.tertiary)}
         onBlur={handleBlur}

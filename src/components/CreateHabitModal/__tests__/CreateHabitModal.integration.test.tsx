@@ -433,8 +433,11 @@ describe('CreateHabitModal Integration - Template → Form Flow', () => {
         expect(meditateCard.props.accessibilityState?.selected).toBe(true);
       });
 
-      // Close modal
+      // Close modal and wait for post-dismiss reset
       rerender(<CreateHabitModal {...defaultProps} visible={false} />);
+      await act(async () => {
+        jest.advanceTimersByTime(400);
+      });
 
       // Reopen modal
       rerender(<CreateHabitModal {...defaultProps} visible={true} />);

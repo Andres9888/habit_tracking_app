@@ -16,6 +16,7 @@ import { useHabitNamePlaceholder } from '../hooks/useHabitNamePlaceholder';
 
 interface CreateHabitScrollContentProps {
   active: boolean;
+  visible: boolean;
   form: ReturnType<typeof useHabitForm>;
   callbacks: ReturnType<typeof useCenteredFormCallbacks>;
   scrollViewRef: RefObject<ScrollViewType | null>;
@@ -26,6 +27,7 @@ interface CreateHabitScrollContentProps {
 
 export function CreateHabitScrollContent({
   active,
+  visible,
   form,
   callbacks,
   scrollViewRef,
@@ -58,7 +60,7 @@ export function CreateHabitScrollContent({
         <View ref={scrollContentRef} collapsable={false}>
           <Pressable accessible={false} onPress={Keyboard.dismiss}>
             <HabitFormBody
-              autoFocus={isPlaceholderReady}
+              autoFocus={visible ? isPlaceholderReady : null}
               colors={HABIT_COLORS}
               habitName={form.habitName}
               placeholder={isPlaceholderReady ? habitNamePlaceholder : ''}
