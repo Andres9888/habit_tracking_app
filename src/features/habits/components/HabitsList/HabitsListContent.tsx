@@ -17,10 +17,7 @@ import { Platform, View, type StyleProp, type ViewStyle } from 'react-native';
 import DraggableFlatList, {
   type RenderItemParams,
 } from 'react-native-draggable-flatlist';
-import {
-  renderHabitsListHeader,
-  renderHabitRow,
-} from './HabitsListRenders';
+import { renderHabitsListHeader, renderHabitRow } from './HabitsListRenders';
 import { HabitsListModals } from './HabitsListModals';
 import { StickyHeaderContext } from '../../../../components/CalendarTimeline/StickyHeaderContext';
 import { useStickyHeader } from './useStickyHeader';
@@ -28,6 +25,10 @@ import type { Habit } from '../../types';
 import type { HabitsListContentProps } from './HabitsList.types';
 
 const REMOVE_CLIPPED_SUBVIEWS = Platform.OS === 'android';
+const INITIAL_HABITS_TO_RENDER = 12;
+const HABITS_TO_RENDER_PER_BATCH = 12;
+const HABITS_BATCHING_PERIOD_MS = 16;
+const HABITS_WINDOW_SIZE = 11;
 
 const HeaderWrapper = memo(function HeaderWrapper({
   children,
@@ -45,13 +46,8 @@ export function HabitsListContent({
   handlers,
   renderItem,
 }: HabitsListContentProps) {
-  const {
-    list,
-    modals,
-    upgradePromptVisible,
-    onUpgradeDismiss,
-    onUpgradeConfirm,
-  } = props;
+  const { list, upgradePromptVisible, onUpgradeDismiss, onUpgradeConfirm } =
+    props;
 
   const stickyEnabled = props.modals.settings?.stickyCalendarHeader ?? false;
   const { scrollHandler, contextValue } = useStickyHeader(stickyEnabled);
@@ -61,10 +57,7 @@ export function HabitsListContent({
       paddingHorizontal: list.contentPadding.paddingHorizontal,
       paddingTop: 0,
     }),
-    [
-      list.contentPadding.paddingBottom,
-      list.contentPadding.paddingHorizontal,
-    ]
+    [list.contentPadding.paddingBottom, list.contentPadding.paddingHorizontal]
   );
 
   const headerWrapperStyle = useMemo<StyleProp<ViewStyle>>(
@@ -119,14 +112,15 @@ export function HabitsListContent({
             }
             contentContainerStyle={contentContainerStyle}
             data={list.habits}
-            initialNumToRender={8}
+            initialNumToRender={INITIAL_HABITS_TO_RENDER}
             keyExtractor={handlers.keyExtractor}
-            maxToRenderPerBatch={6}
+            maxToRenderPerBatch={HABITS_TO_RENDER_PER_BATCH}
             removeClippedSubviews={REMOVE_CLIPPED_SUBVIEWS}
             renderItem={renderHabitItem}
             scrollEventThrottle={16}
             showsVerticalScrollIndicator={false}
-            windowSize={7}
+            updateCellsBatchingPeriod={HABITS_BATCHING_PERIOD_MS}
+            windowSize={HABITS_WINDOW_SIZE}
             onDragBegin={handlers.handleDragBegin}
             onDragEnd={(params) => {
               void list.handleDragEnd(params);
