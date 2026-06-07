@@ -1,20 +1,21 @@
-import React, { memo, useCallback, useMemo } from 'react';
-import { View, Text } from 'react-native';
-import { GestureDetector } from 'react-native-gesture-handler';
-import { useQuery } from 'convex/react';
-import { format } from 'date-fns';
 import { useThemeColors } from '@/theme';
 import { colors as palette } from '@/theme/colors';
+import { useQuery } from 'convex/react';
+import { format } from 'date-fns';
+import { memo, useCallback, useMemo } from 'react';
+import { View } from 'react-native';
+import { GestureDetector } from 'react-native-gesture-handler';
 import { api } from '../../../../convex/_generated/api';
-import type { MonthlyCalendarGridProps } from './types';
-import { styles } from './styles';
-import { useCalendarDays } from './useCalendarDays';
-import { useMonthInsights } from './useMonthInsights';
-import { completedTint } from './chainColors';
 import { AnimatedWeeksGrid } from './AnimatedWeeksGrid';
-import { MonthNavigation } from './MonthNavigation';
+import { completedTint } from './chainColors';
 import { MonthInsightStrip } from './MonthInsightStrip';
+import { MonthNavigation } from './MonthNavigation';
+import { styles } from './styles';
+import type { MonthlyCalendarGridProps } from './types';
+import { useCalendarDays } from './useCalendarDays';
 import { useMonthGridNavigation } from './useMonthGridNavigation';
+import { useMonthInsights } from './useMonthInsights';
+import { WeekdayHeaderRow } from './WeekdayHeaderRow';
 
 export const MonthlyCalendarGrid = memo(function MonthlyCalendarGrid({
   completedDates,
@@ -30,7 +31,7 @@ export const MonthlyCalendarGrid = memo(function MonthlyCalendarGrid({
   const { colors, isDark } = useThemeColors();
   const {
     currentMonth,
-    directionRef,
+    slideDirection,
     goToNextMonth,
     goToPreviousMonth,
     monthSwipeGesture,
@@ -78,21 +79,11 @@ export const MonthlyCalendarGrid = memo(function MonthlyCalendarGrid({
       />
       <GestureDetector gesture={monthSwipeGesture}>
         <View collapsable={false}>
-          <View style={styles.row}>
-            {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((day) => (
-              <View key={day} style={styles.headerCell}>
-                <Text
-                  style={[styles.headerText, { color: colors.text.tertiary }]}
-                >
-                  {day}
-                </Text>
-              </View>
-            ))}
-          </View>
+          <WeekdayHeaderRow labelColor={colors.text.tertiary} />
 
           <AnimatedWeeksGrid
             completedBg={completedBg}
-            direction={directionRef.current}
+            direction={slideDirection}
             habitColor={habitColor}
             isToggling={isToggling}
             monthKey={format(currentMonth, 'yyyy-MM')}
