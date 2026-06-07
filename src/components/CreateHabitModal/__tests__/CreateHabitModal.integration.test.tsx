@@ -243,9 +243,7 @@ describe('CreateHabitModal Integration - Template → Form Flow', () => {
 
   describe('Form Modifications Clear Template Selection', () => {
     it('should clear quick pick selection when name is manually changed', async () => {
-      const { getByLabelText, getByPlaceholderText } = render(
-        <CreateHabitModal {...defaultProps} />
-      );
+      const { getByLabelText } = render(<CreateHabitModal {...defaultProps} />);
 
       // First select a quick pick
       const meditateCard = getByLabelText('Quick pick: Meditate');
@@ -255,8 +253,8 @@ describe('CreateHabitModal Integration - Template → Form Flow', () => {
         expect(meditateCard.props.accessibilityState?.selected).toBe(true);
       });
 
-      // Now manually change the name (hint from STRINGS.CREATE_HABIT.namePrompt)
-      const nameInput = getByPlaceholderText(STRINGS.CREATE_HABIT.namePrompt);
+      // Now manually change the name via the habit name field
+      const nameInput = getByLabelText('Habit name');
       fireEvent.changeText(nameInput, 'Custom Habit');
 
       // Quick pick should no longer be selected
@@ -372,12 +370,12 @@ describe('CreateHabitModal Integration - Template → Form Flow', () => {
     });
 
     it('should update preview when name is manually typed', async () => {
-      const { getByPlaceholderText, getByText } = render(
+      const { getByLabelText, getByText } = render(
         <CreateHabitModal {...defaultProps} />
       );
 
-      // Hint is sourced from STRINGS.CREATE_HABIT.namePrompt
-      const nameInput = getByPlaceholderText(STRINGS.CREATE_HABIT.namePrompt);
+      // Name field uses accessibilityLabel "Habit name"
+      const nameInput = getByLabelText('Habit name');
       fireEvent.changeText(nameInput, 'My Custom Habit');
 
       await waitFor(() => {
@@ -555,12 +553,12 @@ describe('CreateHabitModal Integration - Template → Form Flow', () => {
 
   describe('V8 Full Habit Creation Flow', () => {
     it('should have all form fields properly populated before create', async () => {
-      const { getByPlaceholderText, getByTestId, getAllByLabelText } = render(
+      const { getByLabelText, getByTestId, getAllByLabelText } = render(
         <CreateHabitModal {...defaultProps} />
       );
 
       // 1. Fill in habit name
-      const nameInput = getByPlaceholderText(STRINGS.CREATE_HABIT.namePrompt);
+      const nameInput = getByLabelText('Habit name');
       fireEvent.changeText(nameInput, 'Morning Meditation');
 
       // 2. Select a color (Teal - #14B8A6)
@@ -593,12 +591,12 @@ describe('CreateHabitModal Integration - Template → Form Flow', () => {
     });
 
     it('should configure reminders disabled when None is selected', async () => {
-      const { getByPlaceholderText, getByTestId, getAllByLabelText } = render(
+      const { getByLabelText, getByTestId, getAllByLabelText } = render(
         <CreateHabitModal {...defaultProps} />
       );
 
       // Fill in habit name
-      const nameInput = getByPlaceholderText(STRINGS.CREATE_HABIT.namePrompt);
+      const nameInput = getByLabelText('Habit name');
       fireEvent.changeText(nameInput, 'Daily Journal');
 
       // None reminder should be selected by default
@@ -652,12 +650,12 @@ describe('CreateHabitModal Integration - Template → Form Flow', () => {
     });
 
     it('should have Evening reminder configured properly', async () => {
-      const { getByPlaceholderText, getByTestId, getAllByLabelText } = render(
+      const { getByLabelText, getByTestId, getAllByLabelText } = render(
         <CreateHabitModal {...defaultProps} />
       );
 
       // Fill in habit name
-      const nameInput = getByPlaceholderText(STRINGS.CREATE_HABIT.namePrompt);
+      const nameInput = getByLabelText('Habit name');
       fireEvent.changeText(nameInput, 'Evening Reading');
 
       // Select Evening reminder
@@ -690,12 +688,12 @@ describe('CreateHabitModal Integration - Template → Form Flow', () => {
     });
 
     it('should have Midday reminder configured properly', async () => {
-      const { getByPlaceholderText, getByTestId, getAllByLabelText } = render(
+      const { getByLabelText, getByTestId, getAllByLabelText } = render(
         <CreateHabitModal {...defaultProps} />
       );
 
       // Fill in habit name
-      const nameInput = getByPlaceholderText(STRINGS.CREATE_HABIT.namePrompt);
+      const nameInput = getByLabelText('Habit name');
       fireEvent.changeText(nameInput, 'Midday Stretch');
 
       // Select Midday reminder

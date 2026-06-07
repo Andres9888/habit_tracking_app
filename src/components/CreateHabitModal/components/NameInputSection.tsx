@@ -11,6 +11,7 @@ import { Keyboard, Text, TextInput, View } from 'react-native';
 import { spacing } from '@/theme/spacing';
 import { typography } from '@/theme/typography';
 import { useThemeColors } from '@/theme/ThemeContext';
+import STRINGS from '@/constants/strings';
 import { buildTextInputHintProps } from '@/utils/textInputHintProps';
 
 interface NameInputSectionProps {
@@ -30,8 +31,8 @@ export function NameInputSection({
   habitName,
   onHabitNameChange,
   onHabitNameBlur,
-  title = 'Name your new habit',
-  placeholder = 'e.g. Morning run',
+  title = STRINGS.CREATE_HABIT.nameTitle,
+  placeholder = STRINGS.CREATE_HABIT.namePlaceholder,
   showNameError = false,
   autoFocus = false,
 }: NameInputSectionProps) {

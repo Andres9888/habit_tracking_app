@@ -1,26 +1,21 @@
-import { useCallback } from 'react';
 import type { RefObject } from 'react';
-import {
-  Keyboard,
-  type NativeScrollEvent,
-  type NativeSyntheticEvent,
-  Pressable,
-  ScrollView,
-  View,
-} from 'react-native';
+import { Keyboard, Pressable, ScrollView, View } from 'react-native';
 import type {
   ScrollView as ScrollViewType,
   View as ViewType,
 } from 'react-native';
-import { useSharedValue } from 'react-native-reanimated';
+import STRINGS from '@/constants/strings';
 import { spacing } from '@/theme/spacing';
 import { HabitFormBody } from './HabitFormBody';
 import { ScrollForMoreHint } from './ScrollForMoreHint';
+import { useCreateHabitScrollMetrics } from './useCreateHabitScrollMetrics';
 import { HABIT_COLORS } from '../constants';
 import type { useCenteredFormCallbacks } from '../hooks/useCenteredFormCallbacks';
 import type { useHabitForm } from '../hooks/useHabitForm';
+import { useHabitNamePlaceholder } from '../hooks/useHabitNamePlaceholder';
 
 interface CreateHabitScrollContentProps {
+  active: boolean;
   form: ReturnType<typeof useHabitForm>;
   callbacks: ReturnType<typeof useCenteredFormCallbacks>;
   scrollViewRef: RefObject<ScrollViewType | null>;
@@ -30,6 +25,7 @@ interface CreateHabitScrollContentProps {
 }
 
 export function CreateHabitScrollContent({
+  active,
   form,
   callbacks,
   scrollViewRef,
@@ -37,16 +33,10 @@ export function CreateHabitScrollContent({
   reminderSectionRef,
   showNameError,
 }: CreateHabitScrollContentProps) {
-  const scrollY = useSharedValue(0);
-  const viewportHeight = useSharedValue(0);
-  const contentHeight = useSharedValue(0);
-
-  const handleScroll = useCallback(
-    (e: NativeSyntheticEvent<NativeScrollEvent>) => {
-      scrollY.value = e.nativeEvent.contentOffset.y;
-    },
-    [scrollY]
-  );
+  const { isReady: isPlaceholderReady, placeholder: habitNamePlaceholder } =
+    useHabitNamePlaceholder(active);
+  const { contentHeight, handleScroll, scrollY, viewportHeight } =
+    useCreateHabitScrollMetrics();
 
   return (
     <View className='flex-1'>
@@ -68,9 +58,11 @@ export function CreateHabitScrollContent({
         <View ref={scrollContentRef} collapsable={false}>
           <Pressable accessible={false} onPress={Keyboard.dismiss}>
             <HabitFormBody
-              autoFocus
+              autoFocus={isPlaceholderReady}
               colors={HABIT_COLORS}
               habitName={form.habitName}
+              placeholder={isPlaceholderReady ? habitNamePlaceholder : ''}
+              title={STRINGS.CREATE_HABIT.nameTitle}
               progressEmojis={form.progressEmojis}
               reminderEnabled={form.remindersEnabled}
               reminderSectionRef={reminderSectionRef}

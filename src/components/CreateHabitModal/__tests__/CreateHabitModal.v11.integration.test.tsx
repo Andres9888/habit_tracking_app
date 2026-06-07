@@ -175,11 +175,11 @@ describe('CreateHabitModal V11 Integration Tests', () => {
 
   describe('Live Preview Real-Time Updates', () => {
     it('should update preview immediately when habit name changes', async () => {
-      const { getByPlaceholderText, getByText } = render(
+      const { getByLabelText, getByText } = render(
         <CreateHabitModal {...defaultProps} />
       );
 
-      const input = getByPlaceholderText(STRINGS.CREATE_HABIT.namePrompt);
+      const input = getByLabelText('Habit name');
 
       // Type a habit name
       fireEvent.changeText(input, 'Morning Jog');
@@ -231,7 +231,7 @@ describe('CreateHabitModal V11 Integration Tests', () => {
 
     it('should update all preview elements simultaneously', async () => {
       const {
-        getByPlaceholderText,
+        getByLabelText,
         getAllByTestId,
         getByTestId,
         getByText,
@@ -239,7 +239,7 @@ describe('CreateHabitModal V11 Integration Tests', () => {
       } = render(<CreateHabitModal {...defaultProps} />);
 
       // 1. Set name
-      const input = getByPlaceholderText(STRINGS.CREATE_HABIT.namePrompt);
+      const input = getByLabelText('Habit name');
       fireEvent.changeText(input, 'Read Daily');
 
       // 2. Select emoji
@@ -259,11 +259,11 @@ describe('CreateHabitModal V11 Integration Tests', () => {
     });
 
     it('should not cause full modal re-render on input change', async () => {
-      const { getByPlaceholderText, getByText } = render(
+      const { getByLabelText, getByText } = render(
         <CreateHabitModal {...defaultProps} />
       );
 
-      const input = getByPlaceholderText(STRINGS.CREATE_HABIT.namePrompt);
+      const input = getByLabelText('Habit name');
 
       // Type multiple characters quickly
       fireEvent.changeText(input, 'R');
@@ -292,11 +292,11 @@ describe('CreateHabitModal V11 Integration Tests', () => {
     });
 
     it('should disable button when habit name has only 1 character', async () => {
-      const { getByPlaceholderText, getAllByLabelText } = render(
+      const { getByLabelText, getAllByLabelText } = render(
         <CreateHabitModal {...defaultProps} />
       );
 
-      const input = getByPlaceholderText(STRINGS.CREATE_HABIT.namePrompt);
+      const input = getByLabelText('Habit name');
       fireEvent.changeText(input, 'R');
 
       await waitFor(() => {
@@ -310,11 +310,11 @@ describe('CreateHabitModal V11 Integration Tests', () => {
     });
 
     it('should enable button when habit name has 2+ characters', async () => {
-      const { getByPlaceholderText, getAllByLabelText } = render(
+      const { getByLabelText, getAllByLabelText } = render(
         <CreateHabitModal {...defaultProps} />
       );
 
-      const input = getByPlaceholderText(STRINGS.CREATE_HABIT.namePrompt);
+      const input = getByLabelText('Habit name');
       fireEvent.changeText(input, 'Re');
 
       await waitFor(() => {
@@ -328,11 +328,11 @@ describe('CreateHabitModal V11 Integration Tests', () => {
     });
 
     it('should disable button when name is only whitespace', async () => {
-      const { getByPlaceholderText, getAllByLabelText } = render(
+      const { getByLabelText, getAllByLabelText } = render(
         <CreateHabitModal {...defaultProps} />
       );
 
-      const input = getByPlaceholderText(STRINGS.CREATE_HABIT.namePrompt);
+      const input = getByLabelText('Habit name');
       fireEvent.changeText(input, '   ');
 
       await waitFor(() => {
@@ -346,11 +346,11 @@ describe('CreateHabitModal V11 Integration Tests', () => {
     });
 
     it('should re-disable button when name is cleared', async () => {
-      const { getByPlaceholderText, getAllByLabelText } = render(
+      const { getByLabelText, getAllByLabelText } = render(
         <CreateHabitModal {...defaultProps} />
       );
 
-      const input = getByPlaceholderText(STRINGS.CREATE_HABIT.namePrompt);
+      const input = getByLabelText('Habit name');
 
       // First enable
       fireEvent.changeText(input, 'Read');
@@ -376,11 +376,11 @@ describe('CreateHabitModal V11 Integration Tests', () => {
 
   describe('Smart Emoji Suggestions', () => {
     it('should show reading-related emojis when habit name contains "read"', async () => {
-      const { getByPlaceholderText, getAllByTestId } = render(
+      const { getByLabelText, getAllByTestId } = render(
         <CreateHabitModal {...defaultProps} />
       );
 
-      const input = getByPlaceholderText(STRINGS.CREATE_HABIT.namePrompt);
+      const input = getByLabelText('Habit name');
       fireEvent.changeText(input, 'Read daily');
 
       // Should show book emoji in suggestions
@@ -391,11 +391,11 @@ describe('CreateHabitModal V11 Integration Tests', () => {
     });
 
     it('should show workout-related emojis when habit name contains "workout"', async () => {
-      const { getByPlaceholderText, getAllByTestId } = render(
+      const { getByLabelText, getAllByTestId } = render(
         <CreateHabitModal {...defaultProps} />
       );
 
-      const input = getByPlaceholderText(STRINGS.CREATE_HABIT.namePrompt);
+      const input = getByLabelText('Habit name');
       fireEvent.changeText(input, 'Morning workout');
 
       // Should show muscle emoji in suggestions
@@ -406,11 +406,11 @@ describe('CreateHabitModal V11 Integration Tests', () => {
     });
 
     it('should show meditation-related emojis when habit name contains "meditate"', async () => {
-      const { getByPlaceholderText, getAllByTestId } = render(
+      const { getByLabelText, getAllByTestId } = render(
         <CreateHabitModal {...defaultProps} />
       );
 
-      const input = getByPlaceholderText(STRINGS.CREATE_HABIT.namePrompt);
+      const input = getByLabelText('Habit name');
       fireEvent.changeText(input, 'Meditate 10 mins');
 
       // Should show meditation emoji in suggestions
@@ -421,11 +421,11 @@ describe('CreateHabitModal V11 Integration Tests', () => {
     });
 
     it('should show water-related emojis when habit name contains "water"', async () => {
-      const { getByPlaceholderText, getAllByTestId } = render(
+      const { getByLabelText, getAllByTestId } = render(
         <CreateHabitModal {...defaultProps} />
       );
 
-      const input = getByPlaceholderText(STRINGS.CREATE_HABIT.namePrompt);
+      const input = getByLabelText('Habit name');
       fireEvent.changeText(input, 'Drink water');
 
       // Should show water emoji in suggestions
@@ -436,11 +436,11 @@ describe('CreateHabitModal V11 Integration Tests', () => {
     });
 
     it('should show default emojis when habit name has no keywords', async () => {
-      const { getByPlaceholderText, getAllByTestId } = render(
+      const { getByLabelText, getAllByTestId } = render(
         <CreateHabitModal {...defaultProps} />
       );
 
-      const input = getByPlaceholderText(STRINGS.CREATE_HABIT.namePrompt);
+      const input = getByLabelText('Habit name');
       fireEvent.changeText(input, 'XYZABC');
 
       // Should show default emoji (target)
@@ -451,11 +451,9 @@ describe('CreateHabitModal V11 Integration Tests', () => {
     });
 
     it('should debounce emoji suggestions to prevent jittery updates', async () => {
-      const { getByPlaceholderText } = render(
-        <CreateHabitModal {...defaultProps} />
-      );
+      const { getByLabelText } = render(<CreateHabitModal {...defaultProps} />);
 
-      const input = getByPlaceholderText(STRINGS.CREATE_HABIT.namePrompt);
+      const input = getByLabelText('Habit name');
 
       // Type quickly
       fireEvent.changeText(input, 'r');
@@ -473,11 +471,11 @@ describe('CreateHabitModal V11 Integration Tests', () => {
     });
 
     it('should update suggestions when habit name changes category', async () => {
-      const { getByPlaceholderText, getAllByTestId, queryAllByTestId } = render(
+      const { getByLabelText, getAllByTestId, queryAllByTestId } = render(
         <CreateHabitModal {...defaultProps} />
       );
 
-      const input = getByPlaceholderText(STRINGS.CREATE_HABIT.namePrompt);
+      const input = getByLabelText('Habit name');
 
       // First type "read"
       fireEvent.changeText(input, 'Read');
@@ -500,11 +498,11 @@ describe('CreateHabitModal V11 Integration Tests', () => {
     });
 
     it('should be case-insensitive for keyword matching', async () => {
-      const { getByPlaceholderText, getAllByTestId } = render(
+      const { getByLabelText, getAllByTestId } = render(
         <CreateHabitModal {...defaultProps} />
       );
 
-      const input = getByPlaceholderText(STRINGS.CREATE_HABIT.namePrompt);
+      const input = getByLabelText('Habit name');
       fireEvent.changeText(input, 'READ DAILY');
 
       jest.advanceTimersByTime(300);
@@ -526,11 +524,11 @@ describe('CreateHabitModal V11 Integration Tests', () => {
     });
 
     it('should not show counter when name is 20 characters or less', async () => {
-      const { getByPlaceholderText, queryByText } = render(
+      const { getByLabelText, queryByText } = render(
         <CreateHabitModal {...defaultProps} />
       );
 
-      const input = getByPlaceholderText(STRINGS.CREATE_HABIT.namePrompt);
+      const input = getByLabelText('Habit name');
       fireEvent.changeText(input, '12345678901234567890'); // Exactly 20
 
       await waitFor(() => {
@@ -539,11 +537,11 @@ describe('CreateHabitModal V11 Integration Tests', () => {
     });
 
     it('should show counter when name exceeds 20 characters', async () => {
-      const { getByPlaceholderText, getByText } = render(
+      const { getByLabelText, getByText } = render(
         <CreateHabitModal {...defaultProps} />
       );
 
-      const input = getByPlaceholderText(STRINGS.CREATE_HABIT.namePrompt);
+      const input = getByLabelText('Habit name');
       fireEvent.changeText(input, '123456789012345678901'); // 21 characters
 
       await waitFor(() => {
@@ -552,11 +550,11 @@ describe('CreateHabitModal V11 Integration Tests', () => {
     });
 
     it('should show warning color when name exceeds 30 characters', async () => {
-      const { getByPlaceholderText, getByText } = render(
+      const { getByLabelText, getByText } = render(
         <CreateHabitModal {...defaultProps} />
       );
 
-      const input = getByPlaceholderText(STRINGS.CREATE_HABIT.namePrompt);
+      const input = getByLabelText('Habit name');
       fireEvent.changeText(input, '1234567890123456789012345678901'); // 31 characters
 
       await waitFor(() => {
@@ -567,11 +565,11 @@ describe('CreateHabitModal V11 Integration Tests', () => {
     });
 
     it('should show error color when name exceeds 40 characters', async () => {
-      const { getByPlaceholderText, getByText } = render(
+      const { getByLabelText, getByText } = render(
         <CreateHabitModal {...defaultProps} />
       );
 
-      const input = getByPlaceholderText(STRINGS.CREATE_HABIT.namePrompt);
+      const input = getByLabelText('Habit name');
       fireEvent.changeText(input, '12345678901234567890123456789012345678901'); // 41 characters
 
       await waitFor(() => {
@@ -584,12 +582,12 @@ describe('CreateHabitModal V11 Integration Tests', () => {
 
   describe('Progressive Spacing Visual Hierarchy', () => {
     it('should render all sections with progressive spacing', () => {
-      const { getByText, getByPlaceholderText } = render(
+      const { getByText, getByLabelText } = render(
         <CreateHabitModal {...defaultProps} />
       );
 
       // Verify all sections are rendered
-      expect(getByPlaceholderText(STRINGS.CREATE_HABIT.namePrompt)).toBeDefined(); // Input
+      expect(getByLabelText('Habit name')).toBeDefined(); // Input
       expect(getByText('Icon')).toBeDefined(); // Emoji section
       expect(getByText('Color')).toBeDefined(); // Color section
       expect(getByText('Daily reminder')).toBeDefined(); // Reminder section
@@ -599,12 +597,12 @@ describe('CreateHabitModal V11 Integration Tests', () => {
 
   describe('Form Reset on Modal Close/Open', () => {
     it('should reset form when modal is closed and reopened', async () => {
-      const { getByPlaceholderText, getByText, queryByText, rerender } = render(
+      const { getByLabelText, getByText, queryByText, rerender } = render(
         <CreateHabitModal {...defaultProps} />
       );
 
       // Fill in some data
-      const input = getByPlaceholderText(STRINGS.CREATE_HABIT.namePrompt);
+      const input = getByLabelText('Habit name');
       fireEvent.changeText(input, 'Test Habit');
 
       await waitFor(() => {
@@ -627,12 +625,12 @@ describe('CreateHabitModal V11 Integration Tests', () => {
 
   describe('Accessibility Support', () => {
     it('should have proper accessibility labels on all interactive elements', () => {
-      const { getByPlaceholderText, getAllByLabelText } = render(
+      const { getByLabelText, getAllByLabelText } = render(
         <CreateHabitModal {...defaultProps} />
       );
 
       // Input field
-      expect(getByPlaceholderText(STRINGS.CREATE_HABIT.namePrompt)).toBeDefined();
+      expect(getByLabelText('Habit name')).toBeDefined();
 
       // Create button
       const createButtons = getAllByLabelText('Create habit');
@@ -640,11 +638,9 @@ describe('CreateHabitModal V11 Integration Tests', () => {
     });
 
     it('should announce preview updates for screen readers', async () => {
-      const { getByPlaceholderText } = render(
-        <CreateHabitModal {...defaultProps} />
-      );
+      const { getByLabelText } = render(<CreateHabitModal {...defaultProps} />);
 
-      const input = getByPlaceholderText(STRINGS.CREATE_HABIT.namePrompt);
+      const input = getByLabelText('Habit name');
       fireEvent.changeText(input, 'Morning Run');
 
       // Accessibility announcement should include preview info
@@ -656,11 +652,11 @@ describe('CreateHabitModal V11 Integration Tests', () => {
 
   describe('Edge Cases', () => {
     it('should handle very long habit names gracefully', async () => {
-      const { getByPlaceholderText, getByText } = render(
+      const { getByLabelText, getByText } = render(
         <CreateHabitModal {...defaultProps} />
       );
 
-      const input = getByPlaceholderText(STRINGS.CREATE_HABIT.namePrompt);
+      const input = getByLabelText('Habit name');
       const longName = 'A'.repeat(100);
       fireEvent.changeText(input, longName);
 
@@ -671,11 +667,11 @@ describe('CreateHabitModal V11 Integration Tests', () => {
     });
 
     it('should handle special characters in habit name', async () => {
-      const { getByPlaceholderText, getByText } = render(
+      const { getByLabelText, getByText } = render(
         <CreateHabitModal {...defaultProps} />
       );
 
-      const input = getByPlaceholderText(STRINGS.CREATE_HABIT.namePrompt);
+      const input = getByLabelText('Habit name');
       fireEvent.changeText(input, 'Test@#$%^&*()');
 
       await waitFor(() => {
@@ -684,11 +680,11 @@ describe('CreateHabitModal V11 Integration Tests', () => {
     });
 
     it('should handle emoji characters in habit name', async () => {
-      const { getByPlaceholderText, getByText } = render(
+      const { getByLabelText, getByText } = render(
         <CreateHabitModal {...defaultProps} />
       );
 
-      const input = getByPlaceholderText(STRINGS.CREATE_HABIT.namePrompt);
+      const input = getByLabelText('Habit name');
       fireEvent.changeText(input, 'Test 🎯 Habit');
 
       await waitFor(() => {

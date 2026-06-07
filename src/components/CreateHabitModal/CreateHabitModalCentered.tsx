@@ -81,6 +81,7 @@ export default function CreateHabitModalCentered(props: CreateHabitModalProps) {
             onValidationError={callbacks.handleValidationError}
           />
           <CreateHabitScrollContent
+            active={visible ? !isEditMode : null}
             callbacks={callbacks}
             form={form}
             reminderSectionRef={reminderSectionRef}
