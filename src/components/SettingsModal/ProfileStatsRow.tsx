@@ -1,42 +1,72 @@
-/** ProfileStatsRow — Habit It-style three-column stats strip */
+/** ProfileStatsRow — three-column stats strip below profile hero */
 import { View } from 'react-native';
+import Animated, { FadeIn, useReducedMotion } from 'react-native-reanimated';
 import { Activity, CheckCircle2, Star } from 'lucide-react-native';
+import { durations, enterEasing } from '@/theme/animations';
+import { useThemeColors } from '../../theme/ThemeContext';
 import { ProfileStatItem } from './ProfileStatItem';
+import { getProfileStatColors } from './getProfileStatColors';
 import type { ProfileStats } from './profileStats.types';
 
 interface ProfileStatsRowProps {
+  highContrastMode?: boolean;
+  isLoading?: boolean;
   stats: ProfileStats;
 }
 
-const STAT_COLORS = {
-  activeHabits: '#EA580C',
-  flawlessDays: '#16A34A',
-  lifetimeCompletions: '#2563EB',
-} as const;
+export function ProfileStatsRow({
+  highContrastMode = false,
+  isLoading = false,
+  stats,
+}: ProfileStatsRowProps) {
+  const { colors: themeColors } = useThemeColors();
+  const reduceMotion = useReducedMotion();
+  const palette = getProfileStatColors(themeColors, highContrastMode);
 
-export function ProfileStatsRow({ stats }: ProfileStatsRowProps) {
-  return (
-    <View className='flex-row border-t px-2 py-4' style={{ borderTopColor: 'rgba(0,0,0,0.06)' }}>
+  const content = (
+    <View
+      className='flex-row px-2 py-4'
+      style={{ borderTopColor: palette.borderTop, borderTopWidth: 1 }}
+    >
       <ProfileStatItem
-        color={STAT_COLORS.activeHabits}
+        color={palette.activeHabits}
+        dividerColor={palette.divider}
         icon={Activity}
+        isLoading={isLoading}
         label='Active Habits'
+        labelColor={palette.label}
         value={stats.activeHabits}
       />
       <ProfileStatItem
-        color={STAT_COLORS.flawlessDays}
+        color={palette.flawlessDays}
+        dividerColor={palette.divider}
         icon={Star}
+        isLoading={isLoading}
         label='Flawless Days'
+        labelColor={palette.label}
         showDivider
         value={stats.flawlessDays}
       />
       <ProfileStatItem
-        color={STAT_COLORS.lifetimeCompletions}
+        color={palette.lifetimeCompletions}
+        dividerColor={palette.divider}
         icon={CheckCircle2}
+        isLoading={isLoading}
         label='Lifetime Completions'
+        labelColor={palette.label}
         showDivider
         value={stats.lifetimeCompletions}
       />
     </View>
+  );
+
+  if (isLoading || reduceMotion) return content;
+
+  return (
+    <Animated.View
+      entering={FadeIn.duration(durations.enter).easing(enterEasing)}
+    >
+      {content}
+    </Animated.View>
   );
 }

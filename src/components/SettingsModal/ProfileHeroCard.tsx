@@ -1,15 +1,16 @@
 /** ProfileHeroCard — centered avatar, name, and stats (Habit It-inspired) */
 import { Text, View } from 'react-native';
-import { useUser } from '@clerk/clerk-expo';
-import { ChevronRight, Crown } from 'lucide-react-native';
+import { ChevronRight } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
 import { AnimatedPressable } from '../ui/AnimatedPressable';
 import { useThemeColors } from '../../theme/ThemeContext';
-import { shadows } from '../../theme/spacing';
 import { typography, fontWeights } from '../../theme/typography';
+import { getProfileCardShellStyle } from './profileCardShellStyle';
+import { ProfilePremiumBadge } from './ProfilePremiumBadge';
 import { ProfileStatsRow } from './ProfileStatsRow';
 import { UserAvatar } from './UserAvatar';
 import { useProfileDisplayImage } from './useProfileDisplayImage';
+import { useProfileDisplayName } from './useProfileDisplayName';
 import { useProfileStats } from './useProfileStats';
 
 interface ProfileHeroCardProps {
@@ -23,15 +24,9 @@ export function ProfileHeroCard({
   isPremium,
   onPress,
 }: ProfileHeroCardProps) {
-  const { user } = useUser();
   const { colors: themeColors } = useThemeColors();
-  const stats = useProfileStats();
-
-  const name =
-    [user?.firstName, user?.lastName].filter(Boolean).join(' ') ||
-    user?.username ||
-    'User';
-  const initial = name.charAt(0).toUpperCase();
+  const { initial, name } = useProfileDisplayName();
+  const { isLoading: statsLoading, stats } = useProfileStats();
   const { imageUrl } = useProfileDisplayImage();
 
   return (
@@ -42,16 +37,7 @@ export function ProfileHeroCard({
     >
       <View
         className='overflow-hidden rounded-2xl'
-        style={{
-          backgroundColor: highContrastMode
-            ? themeColors.card
-            : themeColors.card,
-          borderColor: highContrastMode ? themeColors.border : undefined,
-          borderWidth: highContrastMode ? 1 : 0,
-          ...(highContrastMode
-            ? { elevation: 0, shadowColor: 'transparent' }
-            : shadows.card),
-        }}
+        style={getProfileCardShellStyle(highContrastMode, themeColors)}
       >
         <View className='items-center px-4 pb-1 pt-5'>
           <View className='absolute right-3 top-3'>
@@ -86,32 +72,14 @@ export function ProfileHeroCard({
             >
               {name}
             </Text>
-            {isPremium ? (
-              <View
-                className='flex-row items-center rounded-md px-1.5 py-0.5'
-                style={{
-                  backgroundColor: themeColors.status.warningLight,
-                  gap: 3,
-                }}
-              >
-                <Crown
-                  color={themeColors.status.warningText}
-                  size={iconSizes.micro}
-                />
-                <Text
-                  style={{
-                    ...typography.tabBar,
-                    color: themeColors.status.warningText,
-                    fontWeight: fontWeights.bold,
-                  }}
-                >
-                  PRO
-                </Text>
-              </View>
-            ) : null}
+            {isPremium ? <ProfilePremiumBadge variant='compact' /> : null}
           </View>
         </View>
-        <ProfileStatsRow stats={stats} />
+        <ProfileStatsRow
+          highContrastMode={highContrastMode}
+          isLoading={statsLoading}
+          stats={stats}
+        />
       </View>
     </AnimatedPressable>
   );
