@@ -8,10 +8,10 @@ import unicorn from 'eslint-plugin-unicorn';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 import prettierConfig from 'eslint-config-prettier';
+import eslintReact from '@eslint-react/eslint-plugin';
 
 const require = createRequire(import.meta.url);
 const eslintComments = require('eslint-plugin-eslint-comments');
-const eslintReact = require('@eslint-react/eslint-plugin');
 const factoryPlugin = require('@factory/eslint-plugin');
 const factoryFrontend = require('@factory/eslint-plugin/configs/frontend');
 const jestPlugin = require('eslint-plugin-jest');
@@ -21,7 +21,9 @@ const unusedImports = require('eslint-plugin-unused-imports');
 
 const filterUnsupportedRules = (rules = {}) =>
   Object.fromEntries(
-    Object.entries(rules).filter(([ruleName]) => !ruleName.startsWith('import/'))
+    Object.entries(rules).filter(
+      ([ruleName]) => !ruleName.startsWith('import/')
+    )
   );
 
 const factoryRuleOverrides = {
@@ -239,7 +241,7 @@ export default tseslint.config(
       // 6. Type imports (keep separate)
 
       // Additional TypeScript safety
-      'complexity': ['warn', 10],
+      complexity: ['warn', 10],
       '@typescript-eslint/no-floating-promises': 'warn',
       '@typescript-eslint/no-misused-promises': 'warn',
       '@typescript-eslint/no-unsafe-enum-comparison': 'off', // RevenueCat SDK has type mismatches
