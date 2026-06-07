@@ -7,6 +7,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { EXIT_DURATIONS } from '../Modal/Modal.constants';
+import { createHabitMotion } from './createHabitMotion';
 import { KeyboardAvoidingView, Platform, View } from 'react-native';
 import type {
   ScrollView as ScrollViewType,
@@ -53,7 +54,7 @@ export default function CreateHabitModalCentered(props: CreateHabitModalProps) {
     if (!visible) return;
     const id = setTimeout(() => {
       scrollViewRef.current?.flashScrollIndicators();
-    }, 350);
+    }, createHabitMotion.contentReadyMs);
     return () => clearTimeout(id);
   }, [visible]);
 

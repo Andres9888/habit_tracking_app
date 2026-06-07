@@ -1,29 +1,21 @@
 /**
  * NameInputSection - Shared habit-name heading + input for both Add and Edit.
- *
- * Theme-aware internally. Focused state uses emerald border + glow (V11 pattern).
- * Title and placeholder are mode-driven props so create and edit can share one component.
  */
 
 import { useState } from 'react';
-import { Keyboard, Text, TextInput, View } from 'react-native';
-import Animated from 'react-native-reanimated';
+import { Text, View } from 'react-native';
 import { spacing } from '@/theme/spacing';
 import { typography } from '@/theme/typography';
 import { useThemeColors } from '@/theme/ThemeContext';
 import STRINGS from '@/constants/strings';
-import { buildTextInputHintProps } from '@/utils/textInputHintProps';
+import { HabitNameInputField } from './HabitNameInputField';
 import { useFocusedGreenInputStyle } from './useFocusedGreenInputStyle';
-
-const AnimatedTextInput = Animated.createAnimatedComponent(TextInput);
 
 interface NameInputSectionProps {
   habitName: string;
   onHabitNameChange: (text: string) => void;
   onHabitNameBlur?: () => void;
-  /** Heading above the input (e.g. "Name your new habit" / "Edit your habit") */
   title?: string;
-  /** Input placeholder text */
   placeholder?: string;
   showNameError?: boolean;
   autoFocus?: boolean;
@@ -46,11 +38,6 @@ export function NameInputSection({
     colors.border
   );
 
-  const handleBlur = () => {
-    setIsFocused(false);
-    onHabitNameBlur?.();
-  };
-
   return (
     <View
       className='items-center px-6'
@@ -64,27 +51,20 @@ export function NameInputSection({
         {title}
       </Text>
 
-      <AnimatedTextInput
-        key={autoFocus ? 'habit-name-focused' : 'habit-name-idle'}
-        accessibilityLabel='Habit name'
+      <HabitNameInputField
         autoFocus={autoFocus}
-        className='w-full rounded-2xl px-5 py-4 text-center text-2xl font-semibold'
-        maxLength={50}
-        returnKeyType='done'
-        style={[
-          focusedInputStyle,
-          {
-            lineHeight: 28,
-            color: colors.text.primary,
-            backgroundColor: isDark ? colors.card : '#FFFFFF',
-          },
-        ]}
-        value={habitName}
-        {...buildTextInputHintProps(placeholder, colors.text.tertiary)}
-        onBlur={handleBlur}
+        backgroundColor={isDark ? colors.card : '#FFFFFF'}
+        borderStyle={focusedInputStyle}
+        habitName={habitName}
+        hintColor={colors.text.tertiary}
+        placeholder={placeholder}
+        textColor={colors.text.primary}
+        onBlur={() => {
+          setIsFocused(false);
+          onHabitNameBlur?.();
+        }}
         onChangeText={onHabitNameChange}
         onFocus={() => setIsFocused(true)}
-        onSubmitEditing={Keyboard.dismiss}
       />
 
       {showNameError ? (

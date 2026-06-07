@@ -60,7 +60,7 @@ export function CreateHabitScrollContent({
         <View ref={scrollContentRef} collapsable={false}>
           <Pressable accessible={false} onPress={Keyboard.dismiss}>
             <HabitFormBody
-              autoFocus={visible ? isPlaceholderReady : null}
+              autoFocus={visible}
               colors={HABIT_COLORS}
               habitName={form.habitName}
               placeholder={isPlaceholderReady ? habitNamePlaceholder : ''}

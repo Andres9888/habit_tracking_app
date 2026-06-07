@@ -4,6 +4,8 @@ import {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
+import { useReduceMotion } from '@/hooks/useReduceMotion';
+import { createHabitMotion } from '../createHabitMotion';
 
 const FOCUS_GREEN = '#10B981';
 const ERROR_RED = '#EF4444';
@@ -15,13 +17,15 @@ export function useFocusedGreenInputStyle(
   hasError: boolean,
   defaultBorderColor: string = DEFAULT_BORDER
 ) {
+  const reduceMotion = useReduceMotion();
   const focusProgress = useSharedValue(0);
 
   useEffect(() => {
-    focusProgress.value = withTiming(isFocused && !hasError ? 1 : 0, {
-      duration: 200,
-    });
-  }, [focusProgress, hasError, isFocused]);
+    const target = isFocused && !hasError ? 1 : 0;
+    focusProgress.value = reduceMotion
+      ? target
+      : withTiming(target, createHabitMotion.inputFocusRing);
+  }, [focusProgress, hasError, isFocused, reduceMotion]);
 
   return useAnimatedStyle(
     () => ({

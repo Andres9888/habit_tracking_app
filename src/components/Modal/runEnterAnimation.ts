@@ -7,6 +7,7 @@ import { withSpring, withTiming } from 'react-native-reanimated';
 import { durations, enterEasing, springs } from '@/theme/animations';
 import type { ModalVariant } from './Modal.types';
 import type { AnimationValues } from './modalAnimationEffects.types';
+import { FULL_SCREEN_ENTER_MS } from './Modal.constants';
 import { fadeIn } from './modalAnimationHelpers';
 
 const SHEET_ENTER = { duration: durations.sheet, easing: enterEasing };
@@ -37,7 +38,9 @@ export function runEnterAnimation(
     case 'fullScreen': {
       // Match native Modal animationType='slide' — no backdrop, timing-based
       backdropOpacityValue.value = 0;
-      fullScreenProgress.value = useReduced ? 1 : withTiming(1, fadeIn(350));
+      fullScreenProgress.value = useReduced
+        ? 1
+        : withTiming(1, fadeIn(FULL_SCREEN_ENTER_MS));
       fullScreenGestureY.value = 0;
       break;
     }
