@@ -1,7 +1,7 @@
 /** TierDetailCard — explainer card for the currently selected tier (Option B). */
-import { Text, View } from 'react-native';
 import type { AlgorithmMode } from '@/components/AlgorithmPicker';
 import { useThemeColors } from '@/theme/ThemeContext';
+import { Text, View } from 'react-native';
 import { TIER_COPY } from './StrengthCurvePicker.copy';
 import {
   TIER_DETAIL_DESCRIPTION_LINE_HEIGHT,
@@ -9,7 +9,13 @@ import {
   tierDetailDescriptionMinHeight,
 } from './tierDetailLayout';
 
-export function TierDetailCard({ mode, scale = 1 }: { mode: AlgorithmMode; scale?: number }) {
+export function TierDetailCard({
+  mode,
+  scale = 1,
+}: {
+  mode: AlgorithmMode;
+  scale?: number;
+}) {
   const { colors } = useThemeColors();
   const tier = TIER_COPY[mode];
   const descriptionFontSize = 12 * scale;
@@ -26,7 +32,12 @@ export function TierDetailCard({ mode, scale = 1 }: { mode: AlgorithmMode; scale
         padding: 14 * scale,
       }}
     >
-      <View style={{ justifyContent: 'flex-start', minHeight: tierDetailDescriptionMinHeight(scale) }}>
+      <View
+        style={{
+          justifyContent: 'flex-start',
+          minHeight: tierDetailDescriptionMinHeight(scale),
+        }}
+      >
         <Text
           style={{
             color: colors.text.secondary,
@@ -57,7 +68,10 @@ export function TierDetailCard({ mode, scale = 1 }: { mode: AlgorithmMode; scale
               paddingVertical: 2 * scale,
             }}
           >
-            <Text className='font-medium' style={{ color: colors.text.secondary, fontSize: 11 * scale }}>
+            <Text
+              className='font-medium'
+              style={{ color: colors.text.secondary, fontSize: 11 * scale }}
+            >
               {chip}
             </Text>
           </View>
