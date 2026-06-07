@@ -27,6 +27,7 @@ export const RATE_LIMITS = {
   'habit.toggle': { limit: 120, windowMs: 60_000 },
   'habit.update': { limit: 60, windowMs: 60_000 },
   'user.getOrCreate': { limit: 10, windowMs: 60_000 },
+  'user.updateProfileImage': { limit: 10, windowMs: 60_000 },
 } as const satisfies Record<string, RateLimitConfig>;
 
 export type RateLimitAction = keyof typeof RATE_LIMITS;

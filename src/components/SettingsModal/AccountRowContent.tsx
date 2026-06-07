@@ -3,7 +3,7 @@ import { Text, View } from 'react-native';
 import { ChevronRight, Crown } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
 import { typography, fontWeights } from '@/theme/typography';
-import { borderRadius } from '../../theme/spacing';
+import { UserAvatar } from './UserAvatar';
 
 export interface AccountRowPalette {
   avatarBg: string;
@@ -20,6 +20,7 @@ export interface AccountRowPalette {
 interface Props {
   name: string;
   email?: string;
+  imageUrl?: string | null;
   initial: string;
   isPremium: boolean;
   avatarSize: number;
@@ -30,6 +31,7 @@ interface Props {
 export function AccountRowContent({
   name,
   email,
+  imageUrl,
   initial,
   isPremium,
   avatarSize,
@@ -38,27 +40,17 @@ export function AccountRowContent({
 }: Props) {
   return (
     <View className='flex-row items-center px-4 py-3.5' style={{ gap: 14 }}>
-      <View
-        className='items-center justify-center'
-        style={{
-          backgroundColor: p.avatarBg,
-          borderColor: p.avatarBorderColor,
-          borderWidth: p.avatarBorderWidth,
-          borderRadius: borderRadius.full,
-          height: avatarSize,
-          width: avatarSize,
+      <UserAvatar
+        imageUrl={imageUrl}
+        initial={initial}
+        palette={{
+          avatarBg: p.avatarBg,
+          avatarBorderColor: p.avatarBorderColor,
+          avatarBorderWidth: p.avatarBorderWidth,
+          avatarTextColor: p.avatarTextColor,
         }}
-      >
-        <Text
-          style={{
-            color: p.avatarTextColor,
-            fontSize: Math.round(avatarSize * 0.42),
-            fontWeight: fontWeights.bold,
-          }}
-        >
-          {initial}
-        </Text>
-      </View>
+        size={avatarSize}
+      />
       <View className='flex-1'>
         <View className='flex-row items-center' style={{ gap: 6 }}>
           <Text

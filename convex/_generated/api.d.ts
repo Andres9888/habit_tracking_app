@@ -101,6 +101,7 @@ import type * as tracking_index from "../tracking/index.js";
 import type * as tracking_strengthUpdater from "../tracking/strengthUpdater.js";
 import type * as tracking from "../tracking.js";
 import type * as users from "../users.js";
+import type * as usersProfileImage from "../usersProfileImage.js";
 import type * as webhooks_revenuecat from "../webhooks/revenuecat.js";
 import type * as webhooks_revenuecatSignature from "../webhooks/revenuecatSignature.js";
 
@@ -201,6 +202,7 @@ declare const fullApi: ApiFromModules<{
   "tracking/strengthUpdater": typeof tracking_strengthUpdater;
   tracking: typeof tracking;
   users: typeof users;
+  usersProfileImage: typeof usersProfileImage;
   "webhooks/revenuecat": typeof webhooks_revenuecat;
   "webhooks/revenuecatSignature": typeof webhooks_revenuecatSignature;
 }>;

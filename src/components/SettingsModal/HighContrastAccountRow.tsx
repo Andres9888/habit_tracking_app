@@ -9,6 +9,7 @@ import { AccountRowContent, type AccountRowPalette } from './AccountRowContent';
 interface Props {
   name: string;
   email?: string;
+  imageUrl?: string | null;
   initial: string;
   isPremium: boolean;
   onPress: () => void;
@@ -17,6 +18,7 @@ interface Props {
 export function HighContrastAccountRow({
   name,
   email,
+  imageUrl,
   initial,
   isPremium,
   onPress,
@@ -52,6 +54,7 @@ export function HighContrastAccountRow({
         <AccountRowContent
           avatarSize={componentSpacing.avatar.size}
           email={email}
+          imageUrl={imageUrl}
           initial={initial}
           isPremium={isPremium}
           name={name}
