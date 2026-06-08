@@ -33,6 +33,7 @@ export const useHabitDayToggleAnimations = ({
     if (prevCompletedRef.current === null) {
       const initialValue = completed ? 1 : 0;
       completion.setValue(initialValue);
+      forgeFlash.setValue(0);
       // Force a native-side commit so the compositor reflects the value
       // even if the JS setValue didn't propagate (known native-driver desync).
       Animated.timing(completion, {
@@ -41,7 +42,7 @@ export const useHabitDayToggleAnimations = ({
         useNativeDriver: true,
       }).start();
     }
-  }, [completed, completion]);
+  }, [completed, completion, forgeFlash]);
 
   useEffect(() => {
     const prevCompleted = prevCompletedRef.current;
@@ -85,6 +86,8 @@ export const useHabitDayToggleAnimations = ({
           forgeFlash.setValue(0);
         }
       }, 600);
+    } else {
+      forgeFlash.setValue(0);
     }
 
     // Value changed - animate the transition
@@ -138,6 +141,7 @@ export const useHabitDayToggleAnimations = ({
       if (forgeFlashAnimation !== null) {
         forgeFlashAnimation.stop();
       }
+      forgeFlash.setValue(0);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [completed]);

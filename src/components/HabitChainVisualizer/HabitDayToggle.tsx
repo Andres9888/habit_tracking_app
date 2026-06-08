@@ -63,7 +63,9 @@ export const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
   });
 
   const outerFrame = {
+    backgroundColor: staticBackground,
     borderRadius,
+    borderColor: staticBorder,
     borderStyle: (missed ? 'dashed' : 'solid') as 'dashed' | 'solid',
     borderWidth,
     height: 44,
@@ -72,7 +74,13 @@ export const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
 
   return (
     <Animated.View style={isToday ? getTodayGlowStyle(borderRadius) : undefined}>
-      <Reanimated.View style={[outerFrame, cellStyle, shadowStyle]}>
+      <Reanimated.View
+        style={[
+          outerFrame,
+          completed && !missed ? cellStyle : null,
+          shadowStyle,
+        ]}
+      >
         <AnimatedPressable
           accessibilityHint={accessibilityHint}
           accessibilityLabel={accessibilityLabel}
