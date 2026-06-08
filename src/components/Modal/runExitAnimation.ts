@@ -6,7 +6,7 @@
 import { withTiming } from 'react-native-reanimated';
 import { durations } from '@/theme/animations';
 import type { ModalVariant } from './Modal.types';
-import { SCREEN_HEIGHT } from './Modal.constants';
+import { FULL_SCREEN_ENTER_MS, SCREEN_HEIGHT } from './Modal.constants';
 import type { AnimationValues } from './modalAnimationEffects.types';
 import { fadeOut } from './modalAnimationHelpers';
 
@@ -36,7 +36,9 @@ export function runExitAnimation(
     case 'fullScreen': {
       // Match native Modal animationType='slide' — no backdrop, timing-based
       backdropOpacityValue.value = 0;
-      fullScreenProgress.value = useReduced ? 0 : withTiming(0, fadeOut(350));
+      fullScreenProgress.value = useReduced
+        ? 0
+        : withTiming(0, fadeOut(FULL_SCREEN_ENTER_MS));
       break;
     }
     case 'centerAlert': {

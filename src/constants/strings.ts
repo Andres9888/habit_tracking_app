@@ -5,6 +5,8 @@
  * Helps maintain consistency and enables future i18n support.
  */
 
+import { DEFAULT_HABIT_NAME_PLACEHOLDER } from './habitNamePlaceholders';
+
 export const STRINGS = {
   CREATE_HABIT: {
     close: 'Close',
@@ -15,7 +17,9 @@ export const STRINGS = {
     motivationHighlight: 'Start your streak today',
     motivationSuffix: ' — consistency is key 🔥',
     nameLabel: 'Habit name',
+    namePlaceholder: DEFAULT_HABIT_NAME_PLACEHOLDER,
     namePrompt: 'Name your habit',
+    nameTitle: 'Name your new habit',
     // V9 additions
     orCreateYourOwn: 'or create your own',
 

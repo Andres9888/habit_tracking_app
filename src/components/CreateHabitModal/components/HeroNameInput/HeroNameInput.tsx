@@ -6,6 +6,7 @@
 
 import { useEffect, useRef } from 'react';
 import { Animated, Text, TextInput, View } from 'react-native';
+import { useHabitNamePlaceholder } from '../../hooks/useHabitNamePlaceholder';
 import { colors } from '@/theme/colors';
 import { useThemeColors } from '@/theme/ThemeContext';
 import { buildTextInputHintProps } from '@/utils/textInputHintProps';
@@ -19,6 +20,8 @@ export const HeroNameInput = ({
   onChange,
   value,
 }: HeroNameInputProps) => {
+  const { isReady: isPlaceholderReady, placeholder: habitNamePlaceholder } =
+    useHabitNamePlaceholder(true);
   const { colors: themeColors } = useThemeColors();
   const charCount = value.length;
   const isNearLimit = charCount > 40;
@@ -65,7 +68,7 @@ export const HeroNameInput = ({
           blurOnSubmit
           accessibilityHint='Enter the name of your new habit'
           accessibilityLabel='Habit name input'
-          autoFocus={autoFocus}
+          autoFocus={autoFocus ? isPlaceholderReady : null}
           className='h-16 rounded-2xl bg-white px-5 pr-16 text-lg font-medium shadow-sm'
           maxLength={MAX_LENGTH}
           returnKeyType='done'
@@ -76,31 +79,43 @@ export const HeroNameInput = ({
             color: themeColors.text.primary,
           }}
           value={value}
-          {...buildTextInputHintProps('Name your habit', '#a8a29e')}
+          {...buildTextInputHintProps(
+            isPlaceholderReady ? habitNamePlaceholder : '',
+            '#a8a29e'
+          )}
           onChangeText={onChange}
         />
 
         <View className='-transtone-y-1/2 absolute right-4 top-1/2'>
           <Text
             className='text-xs font-medium'
-            style={{ color: isNearLimit ? themeColors.status.warning : themeColors.text.tertiary }}
+            style={{
+              color: isNearLimit
+                ? themeColors.status.warning
+                : themeColors.text.tertiary,
+            }}
           >
             {charCount}/{MAX_LENGTH}
           </Text>
         </View>
       </View>
 
-      {validation ? <Animated.View
+      {validation ? (
+        <Animated.View
           className='mt-2'
           style={{
             opacity: validationOpacity,
             transform: [{ translateY: validationTranslateY }],
           }}
         >
-          <Text className='text-sm font-medium' style={{ color: getValidationColor() }}>
+          <Text
+            className='text-sm font-medium'
+            style={{ color: getValidationColor() }}
+          >
             {validation.message}
           </Text>
-        </Animated.View> : null}
+        </Animated.View>
+      ) : null}
     </View>
   );
 };

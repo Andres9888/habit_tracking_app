@@ -13,6 +13,7 @@
 
 import React from 'react';
 import { render, fireEvent, waitFor } from '@testing-library/react-native';
+import STRINGS from '../../../../constants/strings';
 import { HabitNameField } from '../HabitNameField';
 
 // Mock useHapticFeedback
@@ -63,7 +64,9 @@ describe('HabitNameField - V11 Validation Logic', () => {
 
   describe('V11 Character Counter Visibility', () => {
     it('should NOT show counter when input is empty', () => {
-      const { queryByText } = render(<HabitNameField {...defaultProps} value='' />);
+      const { queryByText } = render(
+        <HabitNameField {...defaultProps} value='' />
+      );
       expect(queryByText(/\/40/)).toBeNull();
     });
 
@@ -240,7 +243,7 @@ describe('HabitNameField - V11 Validation Logic', () => {
         <HabitNameField {...defaultProps} />
       );
 
-      const input = getByPlaceholderText('Name your habit...');
+      const input = getByPlaceholderText(STRINGS.CREATE_HABIT.namePrompt);
       expect(input.props.maxLength).toBe(50);
     });
 

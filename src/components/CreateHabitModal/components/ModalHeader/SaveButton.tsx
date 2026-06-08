@@ -7,6 +7,7 @@ import { ActivityIndicator, Animated, Text } from 'react-native';
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import STRINGS from '../../../../constants/strings';
+import { useSaveButtonAnimatedStyle } from './useSaveButtonAnimatedStyle';
 
 interface SaveButtonProps {
   isEditMode: boolean;
@@ -27,6 +28,7 @@ export const SaveButton = ({
   shakeValue,
 }: SaveButtonProps) => {
   const { colors } = useThemeColors();
+  const saveButtonStyle = useSaveButtonAnimatedStyle(canSave);
   const label = isSaving
     ? STRINGS.CREATE_HABIT.saving
     : isEditMode
@@ -46,10 +48,7 @@ export const SaveButton = ({
         accessibilityState={{ busy: isSaving, disabled: !canSave || isSaving }}
         className='h-11 flex-row items-center justify-center gap-2 rounded-full px-6'
         disableAnimation={!canSave || isSaving}
-        style={{
-          backgroundColor: colors.primary[600],
-          opacity: canSave ? 1 : 0.35,
-        }}
+        style={[saveButtonStyle, { backgroundColor: colors.primary[600] }]}
         onPress={handlePress}
       >
         {isSaving ? (

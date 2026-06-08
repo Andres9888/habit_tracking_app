@@ -31,6 +31,9 @@ export const BOTTOM_SHEET_SPRING_CONFIG = springs.bottomSheet;
 export const DISMISS_THRESHOLD = 120;
 export const VELOCITY_THRESHOLD = 800;
 
+/** Full-screen modal slide duration — matches runEnterAnimation / runExitAnimation. */
+export const FULL_SCREEN_ENTER_MS = 350;
+
 /**
  * Per-variant exit animation duration (ms). Used to defer unmount until the
  * animation in runExitAnimation has time to play out. Slight buffer included
@@ -38,6 +41,6 @@ export const VELOCITY_THRESHOLD = 800;
  */
 export const EXIT_DURATIONS = {
   bottomSheet: 380,
-  fullScreen: 370,
+  fullScreen: FULL_SCREEN_ENTER_MS + 20,
   centerAlert: 220,
 } as const;

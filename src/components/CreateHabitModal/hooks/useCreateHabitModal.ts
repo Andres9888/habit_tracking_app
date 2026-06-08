@@ -5,7 +5,7 @@ import useHapticFeedback from '../../../hooks/useHapticFeedback';
 import { checkReminderPermissions } from './useHabitReminders';
 import { useCreateHabitHandlers } from './useCreateHabitHandlers';
 import {
-  useVisibilityReset,
+  useDeferredFormResetOnClose,
   useHabitData,
   useModalCleanup,
 } from './useCreateHabitModalEffects';
@@ -18,7 +18,7 @@ export const useCreateHabitModal = (props: CreateHabitModalProps) => {
   const { handleEdit, handleCreate: createNewHabit } = useCreateHabitHandlers();
   const isSaving = useRef(false);
 
-  useVisibilityReset({
+  useDeferredFormResetOnClose({
     isEditMode,
     resetForm: form.resetForm,
     visible,
@@ -41,7 +41,6 @@ export const useCreateHabitModal = (props: CreateHabitModalProps) => {
   const cleanup = useModalCleanup({
     closeColorPicker: form.closeColorPicker,
     onClose,
-    resetForm: form.resetForm,
     setShowTimePicker: form.setShowTimePicker,
     triggerSuccess,
   });

@@ -29,6 +29,7 @@ import { AdvancedOptionRow } from './AdvancedOptionRow';
 import { AdvancedSheet } from './AdvancedSheet';
 import { GrowthIconsSheetBody } from './GrowthIconsSheetBody';
 import { StreakGoalSheetBody } from './StreakGoalSheetBody';
+import { StrengthCurveSheetBody } from './StrengthCurveSheetBody';
 import type { AdvancedOptionsSectionProps } from './AdvancedOptions.types';
 
 type SheetKey = 'algorithm' | 'growth' | 'streak' | null;
@@ -49,6 +50,7 @@ export function AdvancedOptionsSection({
   const savedCustomEmojis = useUserCustomProgressEmojis();
   const [expanded, setExpanded] = useState(false);
   const [openSheet, setOpenSheet] = useState<SheetKey>(null);
+  const [fullPickerVisible, setFullPickerVisible] = useState(false);
   const {
     animateToggle,
     chevronAnimatedStyle,
@@ -96,6 +98,11 @@ export function AdvancedOptionsSection({
         'Custom');
   const streakSubtitle =
     streakGoal > 0 ? `${streakGoal}-day goal` : 'No goal set';
+
+  const openFullPicker = () => {
+    setOpenSheet(null);
+    setTimeout(() => setFullPickerVisible(true), 80);
+  };
 
   return (
     <>
@@ -290,10 +297,23 @@ export function AdvancedOptionsSection({
 
       <StrengthCurvePickerModal
         selected={strengthAlgorithm}
-        visible={openSheet === 'algorithm'}
-        onClose={() => setOpenSheet(null)}
+        visible={fullPickerVisible}
+        onClose={() => setFullPickerVisible(false)}
         onSelect={onStrengthAlgorithmChange}
       />
+
+      <AdvancedSheet
+        subtitle='How strength builds — and resets when you miss days.'
+        title='Strength Curve'
+        visible={openSheet === 'algorithm'}
+        onClose={() => setOpenSheet(null)}
+      >
+        <StrengthCurveSheetBody
+          selected={strengthAlgorithm}
+          onLearnMore={openFullPicker}
+          onSelect={onStrengthAlgorithmChange}
+        />
+      </AdvancedSheet>
 
       <AdvancedSheet
         subtitle='Five stages, one for every 20% of strength. Pick a theme or customize any stage.'

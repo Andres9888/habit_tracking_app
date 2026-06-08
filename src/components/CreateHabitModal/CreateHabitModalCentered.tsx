@@ -6,6 +6,8 @@
  */
 
 import { useEffect, useRef, useState } from 'react';
+import { EXIT_DURATIONS } from '../Modal/Modal.constants';
+import { createHabitMotion } from './createHabitMotion';
 import { KeyboardAvoidingView, Platform, View } from 'react-native';
 import type {
   ScrollView as ScrollViewType,
@@ -38,12 +40,13 @@ export default function CreateHabitModalCentered(props: CreateHabitModalProps) {
     setShowNameError,
   });
 
-  // Reset form when modal opens (and not in edit mode)
   useEffect(() => {
-    if (visible && !isEditMode) {
-      form.resetForm();
-      setShowNameError(false);
-    }
+    if (visible || isEditMode) return;
+    const timeout = setTimeout(
+      () => setShowNameError(false),
+      EXIT_DURATIONS.fullScreen
+    );
+    return () => clearTimeout(timeout);
   }, [visible, isEditMode]);
 
   // Flash the native scroll indicator on open so users see the form is scrollable.
@@ -51,7 +54,7 @@ export default function CreateHabitModalCentered(props: CreateHabitModalProps) {
     if (!visible) return;
     const id = setTimeout(() => {
       scrollViewRef.current?.flashScrollIndicators();
-    }, 350);
+    }, createHabitMotion.contentReadyMs);
     return () => clearTimeout(id);
   }, [visible]);
 
@@ -81,6 +84,8 @@ export default function CreateHabitModalCentered(props: CreateHabitModalProps) {
             onValidationError={callbacks.handleValidationError}
           />
           <CreateHabitScrollContent
+            active={!isEditMode}
+            visible={visible}
             callbacks={callbacks}
             form={form}
             reminderSectionRef={reminderSectionRef}

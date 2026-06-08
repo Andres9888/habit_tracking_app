@@ -3,6 +3,7 @@
  */
 
 import { useEffect, useCallback, useMemo } from 'react';
+import { EXIT_DURATIONS } from '../../Modal/Modal.constants';
 import type { ProgressEmojiSet } from '../../../utils/progressEmojis';
 
 interface UseModalEffectsParams {
@@ -11,14 +12,17 @@ interface UseModalEffectsParams {
   resetForm: () => void;
 }
 
-export function useVisibilityReset({
+/** Clears create form after the exit animation finishes, not when dismiss starts. */
+export function useDeferredFormResetOnClose({
   visible,
   isEditMode,
   resetForm,
 }: UseModalEffectsParams) {
   useEffect(() => {
-    if (!visible || isEditMode) return;
-    resetForm();
+    if (visible || isEditMode) return;
+
+    const timeout = setTimeout(resetForm, EXIT_DURATIONS.fullScreen);
+    return () => clearTimeout(timeout);
   }, [visible, isEditMode, resetForm]);
 }
 
@@ -81,7 +85,6 @@ export function useModalCleanup({
   onClose,
 }: CleanupParams) {
   return useCallback(() => {
-    resetForm();
     closeColorPicker();
     setShowTimePicker(false);
     triggerSuccess();
