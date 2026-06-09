@@ -6,6 +6,8 @@ interface UseHabitDayToggleAnimationsParams {
   isToday: boolean;
 }
 
+const INITIAL_COMPLETION_FLASH_GUARD_MS = 600;
+
 export const useHabitDayToggleAnimations = ({
   completed,
   isToday,
@@ -18,6 +20,7 @@ export const useHabitDayToggleAnimations = ({
   // Warm amber "forge" flash that fades out on the false → true transition.
   const forgeFlash = useRef(new Animated.Value(0)).current;
   const prevCompletedRef = useRef<boolean | null>(null);
+  const completionFlashReadyRef = useRef(false);
 
   // Combine scale values using Animated.multiply
   const combinedScale = useMemo(
@@ -25,6 +28,13 @@ export const useHabitDayToggleAnimations = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      completionFlashReadyRef.current = true;
+    }, INITIAL_COMPLETION_FLASH_GUARD_MS);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Sync animated value immediately before paint to prevent flicker.
   // This handles cases where the component renders with a completed state
@@ -65,7 +75,7 @@ export const useHabitDayToggleAnimations = ({
     let forgeFlashSafetyTimer: ReturnType<typeof setTimeout> | null = null;
 
     // Forge flash fires only on the false → true transition.
-    if (completed) {
+    if (completed && completionFlashReadyRef.current) {
       forgeFlash.setValue(1);
       forgeFlashAnimation = Animated.timing(forgeFlash, {
         duration: 500,

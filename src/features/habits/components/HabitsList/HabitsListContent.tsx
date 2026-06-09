@@ -119,14 +119,15 @@ export function HabitsListContent({
             }
             contentContainerStyle={contentContainerStyle}
             data={list.habits}
-            initialNumToRender={8}
+            initialNumToRender={12}
             keyExtractor={handlers.keyExtractor}
-            maxToRenderPerBatch={6}
+            maxToRenderPerBatch={12}
             removeClippedSubviews={REMOVE_CLIPPED_SUBVIEWS}
             renderItem={renderHabitItem}
             scrollEventThrottle={16}
             showsVerticalScrollIndicator={false}
-            windowSize={7}
+            updateCellsBatchingPeriod={16}
+            windowSize={11}
             onDragBegin={handlers.handleDragBegin}
             onDragEnd={(params) => {
               void list.handleDragEnd(params);

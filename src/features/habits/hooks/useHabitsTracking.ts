@@ -25,7 +25,9 @@ export function useHabitsTracking(extendedDateStrings: string[], today: Date) {
     () => buildTrackingQueryArgs(firstDateString, lastDateString),
     [firstDateString, lastDateString]
   );
-  const tracking = useQuery(api.habits.getTracking, queryArgs) ?? [];
+  const trackingQuery = useQuery(api.habits.getTracking, queryArgs);
+  const tracking = trackingQuery ?? [];
+  const isTrackingLoading = trackingQuery === undefined;
   const { pendingToggles } = useOptimisticStore();
   const completedDatesByHabit = useMemo(() => {
     return buildCompletedDatesByHabit(tracking, pendingToggles);
@@ -34,7 +36,10 @@ export function useHabitsTracking(extendedDateStrings: string[], today: Date) {
     () => buildStreakByHabit(completedDatesByHabit, stableToday),
     [completedDatesByHabit, stableToday]
   );
-  const getStreak = useCallback((habitId: string) => streakByHabit.get(habitId) ?? 0, [streakByHabit]);
+  const getStreak = useCallback(
+    (habitId: string) => streakByHabit.get(habitId) ?? 0,
+    [streakByHabit]
+  );
   const dateStatusCache = useMemo(
     () => buildDateStatusCache(extendedDateStrings, stableToday),
     [extendedDateStrings, stableToday]
@@ -44,18 +49,25 @@ export function useHabitsTracking(extendedDateStrings: string[], today: Date) {
     (habitId: string, dateString: string): HabitStatus => {
       const normalizedDateString = dateString.trim();
       if (!normalizedDateString) return 'planned';
-      const dateStatusInfo = getDateStatusInfo(dateStatusCache, normalizedDateString, stableToday);
+      const dateStatusInfo = getDateStatusInfo(
+        dateStatusCache,
+        normalizedDateString,
+        stableToday
+      );
       if (!dateStatusInfo.isValid) return 'planned';
-      if (completedDatesByHabit.get(habitId)?.has(normalizedDateString)) return 'done';
+      if (completedDatesByHabit.get(habitId)?.has(normalizedDateString)) {
+        return 'done';
+      }
       return dateStatusInfo.status;
     },
     [completedDatesByHabit, dateStatusCache, stableToday]
   );
 
   const isCompleted = useCallback(
-    (habitId: Id<'habits'>, date: string): boolean => getHabitStatus(habitId, date) === 'done',
+    (habitId: Id<'habits'>, date: string): boolean =>
+      getHabitStatus(habitId, date) === 'done',
     [getHabitStatus]
   );
 
-  return { getHabitStatus, getStreak, isCompleted, tracking };
+  return { getHabitStatus, getStreak, isCompleted, isTrackingLoading, tracking };
 }

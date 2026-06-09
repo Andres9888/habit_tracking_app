@@ -23,7 +23,7 @@ export function useHabitCardEntrance({
   const reduceMotion = useReduceMotion();
   const hasTriggered = useRef(false);
 
-  const values = useEntranceAnimationValues();
+  const values = useEntranceAnimationValues(!autoTrigger);
 
   const { resetAnimation, setInstantVisible, triggerEntrance } =
     useEntranceHandlers({

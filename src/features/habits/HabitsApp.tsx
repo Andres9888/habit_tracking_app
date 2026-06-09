@@ -105,7 +105,7 @@ function HabitsAppContent() {
             />
           </Animated.View>
         ) : (
-          <Animated.View entering={ENTERING} style={styles.flex1}>
+          <View style={styles.flex1}>
             <HabitsList
               canNavigateForward={list.canNavigateForward}
               isAllSelected={selection.isAllSelected}
@@ -127,7 +127,7 @@ function HabitsAppContent() {
               onUpgradeDismiss={handlers.handleUpgradeDismiss}
               onUpgradeIntent={handlers.handleUpgradeIntent}
             />
-          </Animated.View>
+          </View>
         )}
         {selection.isSelectionMode ? (
             <SelectionActionBar

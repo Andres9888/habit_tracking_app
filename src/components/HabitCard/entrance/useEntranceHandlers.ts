@@ -37,6 +37,7 @@ export function useEntranceHandlers({
       onAnimationCompleteRef.current?.();
       return;
     }
+    resetAnimation();
     values.isAnimating.value = true;
     const execute = () => {
       switch (variant) {
@@ -61,6 +62,7 @@ export function useEntranceHandlers({
     else execute();
   }, [
     reduceMotion,
+    resetAnimation,
     variant,
     delay,
     setInstantVisible,

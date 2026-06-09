@@ -124,7 +124,7 @@ export function useHabitsListState(): HabitsListState {
   );
   const habitsFromQuery = habitsValidation.limited;
   const pendingCreatedHabits = usePendingCreatedHabits();
-  const isHabitsLoading = habitsQuery === undefined;
+  const isHabitsQueryLoading = habitsQuery === undefined;
 
   // Warn if habits array was limited
   if (habitsValidation.warning && __DEV__) {
@@ -156,10 +156,10 @@ export function useHabitsListState(): HabitsListState {
 
   const weekDatesState = useHabitsWeekDates();
   const { today, extendedDateStrings } = weekDatesState;
-  const { getStreak, getHabitStatus, isCompleted } = useHabitsTracking(
-    extendedDateStrings,
-    today
-  );
+  const { getStreak, getHabitStatus, isCompleted, isTrackingLoading } =
+    useHabitsTracking(extendedDateStrings, today);
+  const isHabitsLoading =
+    isHabitsQueryLoading || (isOnline && isTrackingLoading);
   const [predictedStrengths, setPredictedStrengths] = useState<
     Map<Habit['_id'], HabitStrengthPrediction>
   >(new Map());
