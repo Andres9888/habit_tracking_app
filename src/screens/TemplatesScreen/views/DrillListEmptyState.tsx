@@ -3,9 +3,9 @@
  */
 
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { useThemeColors } from '../../../../theme/ThemeContext';
-import { spacing } from '../../../../theme/spacing';
-import { typography } from '../../../../theme/typography';
+import { useThemeColors } from '../../../theme/ThemeContext';
+import { spacing } from '../../../theme/spacing';
+import { typography } from '../../../theme/typography';
 
 interface DrillListEmptyStateProps {
   onBrowseCategories?: () => void;

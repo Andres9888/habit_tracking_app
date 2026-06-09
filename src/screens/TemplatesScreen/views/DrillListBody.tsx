@@ -26,7 +26,7 @@ import {
   useDrillSections,
   type DrillListItem,
 } from '../hooks/useDrillSections';
-import { DrillListEmptyState } from '../components/DrillListEmptyState';
+import { DrillListEmptyState } from './DrillListEmptyState';
 import { TemplateListCard } from './TemplateListCard';
 
 interface DrillChipColors {

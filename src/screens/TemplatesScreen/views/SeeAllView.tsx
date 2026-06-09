@@ -12,7 +12,7 @@ import { spacing } from '../../../theme/spacing';
 import { formatPopularityCount } from '../hooks/useDrillSections';
 import { getCategoryMeta } from '../data/categoryMeta';
 import { sortTemplatesByImportState } from '../utils/sortTemplatesByImportState';
-import { DrillListEmptyState } from '../components/DrillListEmptyState';
+import { DrillListEmptyState } from './DrillListEmptyState';
 import { TemplateListCard } from './TemplateListCard';
 
 const getCategoryLabel = (categoryId: string) =>
