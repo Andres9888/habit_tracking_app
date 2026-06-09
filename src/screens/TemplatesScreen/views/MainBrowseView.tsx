@@ -67,7 +67,9 @@ export function MainBrowseView(p: MainBrowseViewProps) {
             onSeeAll={p.onSeeAll}
             onStartHerePress={p.onStartHerePress}
             popularTemplates={p.popularTemplates}
+            recommendations={p.recommendations}
             starterTemplates={p.starterTemplates}
+            weeklyImportCounts={p.weeklyImportCounts}
           />
         </Animated.View>
       )}

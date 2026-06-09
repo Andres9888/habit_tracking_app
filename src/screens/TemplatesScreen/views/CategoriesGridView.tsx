@@ -44,7 +44,10 @@ export function CategoriesGridView({
         showsVerticalScrollIndicator={false}
         contentContainerStyle={s.content}
       >
-        <CategoryGrid categories={categories} onSelectCategory={onSelectCategory} />
+        <CategoryGrid
+          categories={categories}
+          onSelectCategory={onSelectCategory}
+        />
       </ScrollView>
     </View>
   );
@@ -59,7 +62,7 @@ export function buildCategoryGridItems(groups: CategoryGroup[]) {
       count: group.templates.length,
       icon: meta.icon,
       label: meta.label,
-      previewEmojis: group.templates.slice(0, 3).map((t) => t.icon),
+      previewEmojis: group.templates.slice(0, 4).map((t) => t.icon),
       textColor: meta.textColor,
     };
   });

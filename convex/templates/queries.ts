@@ -1,6 +1,6 @@
 /**
  * Template query functions
- * 
+ *
  * SEC-PUBLIC: All template queries are intentionally public.
  * Templates are a browsable library meant to be accessible before login
  * to encourage user onboarding. They contain no user data.
@@ -56,7 +56,7 @@ export const getPopular = query({
   args: { limit: v.optional(v.number()) },
   handler: async (ctx, args) => {
     const limit = args.limit || 10;
-    
+
     // PERF: Fetch all templates but with index scan
     const templates = await ctx.db
       .query('templates')

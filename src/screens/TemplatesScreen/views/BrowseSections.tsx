@@ -7,11 +7,12 @@ import { ScrollView } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { spacing } from '../../../theme/spacing';
 import type { Doc } from '../../../../convex/_generated/dataModel';
-import { GoalCollectionGrid } from '../components/GoalCollectionGrid';
-import { PopularSection } from '../components/PopularSection';
-import { StartHereCard } from '../components/StartHereCard';
-import { StarterHabitList } from '../components/StarterHabitList';
+import { ForYouSection } from '../components/ForYouSection';
 import type { GoalCollection } from '../data/goalCollections';
+import type { RecommendedTemplate } from '../hooks/scoreRecommendedTemplates';
+import { BrowseCatalogSections } from './BrowseCatalogSections';
+import { BrowseStarterSection } from './BrowseStarterSection';
+import { browseStaggerIndex } from './BrowseSections.stagger';
 import { stagger } from './MainBrowseView.helpers';
 
 interface BrowseSectionsProps {
@@ -30,11 +31,18 @@ interface BrowseSectionsProps {
   onSeeAll: () => void;
   onStartHerePress: () => void;
   popularTemplates: Doc<'templates'>[];
+  recommendations: RecommendedTemplate[];
   starterTemplates: Doc<'templates'>[];
+  weeklyImportCounts?: Record<string, number>;
 }
 
 export function BrowseSections(p: BrowseSectionsProps) {
   const showStarterList = p.isFirstTimeUser && p.starterTemplates.length > 0;
+  const staggerOpts = {
+    isFirstTimeUser: p.isFirstTimeUser,
+    recommendationCount: p.recommendations.length,
+    showStarterList,
+  };
 
   return (
     <ScrollView
@@ -44,52 +52,52 @@ export function BrowseSections(p: BrowseSectionsProps) {
         paddingTop: spacing.md,
       }}
     >
-      {showStarterList ? (
-        <Animated.View entering={stagger(2)}>
-          <StarterHabitList
+      <BrowseStarterSection
+        importedTemplateIds={p.importedTemplateIds}
+        importingTemplateId={p.importingTemplateId}
+        isFirstTimeUser={p.isFirstTimeUser}
+        recommendationCount={p.recommendations.length}
+        showStarterList={showStarterList}
+        starterTemplates={p.starterTemplates}
+        onBrowseByGoal={p.onBrowseByGoal}
+        onImport={p.onImport}
+        onPreview={p.onPreview}
+        onStartHerePress={p.onStartHerePress}
+      />
+      {!showStarterList && p.recommendations.length > 0 ? (
+        <Animated.View
+          entering={stagger(
+            browseStaggerIndex({ ...staggerOpts, section: 'forYou' })
+          )}
+        >
+          <ForYouSection
             importedTemplateIds={p.importedTemplateIds}
             importingTemplateId={p.importingTemplateId}
-            templates={p.starterTemplates}
-            onBrowseByGoal={p.onBrowseByGoal}
+            recommendations={p.recommendations}
+            weeklyImportCounts={p.weeklyImportCounts}
             onImport={p.onImport}
             onPreview={p.onPreview}
           />
         </Animated.View>
-      ) : p.isFirstTimeUser ? (
-        <Animated.View entering={stagger(2)}>
-          <StartHereCard onPress={p.onStartHerePress} />
-        </Animated.View>
       ) : null}
-
-      {!showStarterList ? (
-        <Animated.View entering={stagger(p.isFirstTimeUser ? 3 : 2)}>
-          <GoalCollectionGrid
-            featuredBadgeLabel={p.featuredBadgeLabel}
-            featuredGoalId={p.featuredGoalId}
-            featuredStarterTemplates={p.featuredStarterTemplates}
-            habitCountsByGoalId={p.habitCountsByGoalId}
-            onPreviewStarter={p.onPreview}
-            onSelectGoal={p.onGoalSelect}
-          />
-        </Animated.View>
-      ) : null}
-
-      {!showStarterList ? (
-        <Animated.View entering={stagger(p.isFirstTimeUser ? 4 : 3)}>
-          <PopularSection
-            importedTemplateIds={p.importedTemplateIds}
-            importingTemplateId={p.importingTemplateId}
-            templates={p.popularTemplates}
-            onImport={p.onImport}
-            onPreview={p.onPreview}
-            onSeeAll={p.onSeeAll}
-          />
-        </Animated.View>
-      ) : null}
-
-      <Animated.View entering={stagger(showStarterList ? 3 : p.isFirstTimeUser ? 5 : 4)}>
-        {p.browseCategoriesLink}
-      </Animated.View>
+      <BrowseCatalogSections
+        browseCategoriesLink={p.browseCategoriesLink}
+        featuredBadgeLabel={p.featuredBadgeLabel}
+        featuredGoalId={p.featuredGoalId}
+        featuredStarterTemplates={p.featuredStarterTemplates}
+        habitCountsByGoalId={p.habitCountsByGoalId}
+        importedTemplateIds={p.importedTemplateIds}
+        importingTemplateId={p.importingTemplateId}
+        isFirstTimeUser={p.isFirstTimeUser}
+        popularTemplates={p.popularTemplates}
+        recommendationCount={p.recommendations.length}
+        showStarterList={showStarterList}
+        weeklyImportCounts={p.weeklyImportCounts}
+        onGoalSelect={p.onGoalSelect}
+        onImport={p.onImport}
+        onPreview={p.onPreview}
+        onSeeAll={p.onSeeAll}
+      />
     </ScrollView>
   );
 }

@@ -11,14 +11,15 @@ import { BrowseCategoriesLink } from './components/BrowseCategoriesLink';
 import { useGroupedTemplates } from './components/ExploreAllSection';
 import { SearchResults } from './components/SearchResults';
 import { TemplatesEmptyState } from './components/TemplatesEmptyState';
+import { TemplatesLoadingState } from './components/TemplatesLoadingState';
 import { TemplatesScreenModals } from './components';
+import { useRecommendedTemplates } from './hooks/useRecommendedTemplates';
+import { useTemplateImportCounts } from './hooks/useTemplateImportCounts';
 import { useTemplatesScreenProps } from './hooks/useTemplatesScreenProps';
 import { FeedbackOverlays } from './views/FeedbackOverlays';
 import { MainBrowseView } from './views/MainBrowseView';
 import { renderSubView } from './views/renderSubView';
-import {
-  buildCategoryGridItems,
-} from './views/CategoriesGridView';
+import { buildCategoryGridItems } from './views/CategoriesGridView';
 import {
   GOAL_COLLECTIONS,
   getFeaturedGoalId,
@@ -85,13 +86,28 @@ function TemplatesScreenContent({
   const featuredGoalId = useMemo(() => getFeaturedGoalId(), []);
   const habitCountsByGoalId = useMemo(() => {
     const counts: Record<string, number> = {};
-    GOAL_COLLECTIONS.forEach((goal) => {
+    for (const goal of GOAL_COLLECTIONS) {
       counts[goal.id] =
         data.allTemplates?.filter((t) => goal.categories.includes(t.category))
           .length ?? 0;
-    });
+    }
     return counts;
   }, [data.allTemplates]);
+  const recommendations = useRecommendedTemplates({
+    allTemplates: data.allTemplates,
+    importedTemplateIds: state.importedTemplateIds,
+    userHabitCount: data.userHabitCount,
+    userHabits: data.userHabits,
+  });
+  const socialProofTemplateIds = useMemo(() => {
+    const ids = [
+      ...mainBrowseData.popularTemplates.map((template) => template._id),
+      ...recommendations.map((entry) => entry.template._id),
+    ];
+    return ids;
+  }, [mainBrowseData.popularTemplates, recommendations]);
+  const weeklyImportCounts = useTemplateImportCounts(socialProofTemplateIds);
+
   const featuredStarterTemplates = useMemo(() => {
     const featured = GOAL_COLLECTIONS.find((g) => g.id === featuredGoalId);
     if (!featured || !data.allTemplates) return [];
@@ -125,7 +141,11 @@ function TemplatesScreenContent({
     if (featured) handleGoalSelect(featured);
   }, [featuredGoalId, handleGoalSelect]);
 
-  if (!data.isLoading && !data.allTemplates?.length) {
+  if (data.isLoading) {
+    return <TemplatesLoadingState />;
+  }
+
+  if (!data.allTemplates?.length) {
     return (
       <TemplatesEmptyState
         isSeeding={state.isSeeding}
@@ -141,6 +161,7 @@ function TemplatesScreenContent({
     importedTemplateIds: state.importedTemplateIds,
     importingTemplateId: state.importingTemplateId,
     onBack: viewNav.goBack,
+    onBrowseCategories: handleOpenCategories,
     onImport: handleImport,
     onOpenCategory: viewNav.openCategory,
     onPreview: handlers.handleTemplatePreview,
@@ -181,94 +202,96 @@ function TemplatesScreenContent({
 
   const handleSelectChipCategory = (categoryId: string | null) => {
     state.setSearchQuery('');
-    state.setSelectedCategory((categoryId ?? 'all') as typeof state.selectedCategory);
+    state.setSelectedCategory(
+      (categoryId ?? 'all') as typeof state.selectedCategory
+    );
   };
 
   return (
-    <>
-      <MainBrowseView
-        browseCategoriesLink={
-          <BrowseCategoriesLink
-            categoryCount={groups.length}
-            onPress={handleOpenCategories}
-          />
-        }
-        featuredGoalId={featuredGoalId}
-        featuredStarterTemplates={featuredStarterTemplates}
-        feedbackOverlays={
-          <FeedbackOverlays
-            feedbackVariant={state.feedbackVariant}
-            sessionImportCount={state.sessionImportCount}
-            showCelebration={state.showCelebration}
-            showToast={state.showToast}
-            toastMessage={state.toastMessage}
-            toastTemplateData={state.toastTemplateData}
-            onAddAnother={handleAddAnother}
-            onDismissCelebration={handleDismissFeedback}
-            onDismissToast={handleDismissFeedback}
-            onViewHabit={handleViewHabit}
-          />
-        }
-        habitCountsByGoalId={habitCountsByGoalId}
-        importedTemplateIds={state.importedTemplateIds}
-        importingTemplateId={state.importingTemplateId}
-        isSearchActive={state.isSearchActive}
-        modals={
-          <TemplatesScreenModals
-            importingTemplateId={state.importingTemplateId}
-            previewTemplate={state.previewTemplate}
-            showCustomizeModal={state.showCustomizeModal}
-            showPaywall={state.showPaywall}
-            onCloseCustomize={() => state.setShowCustomizeModal(false)}
-            onClosePaywall={() => state.setShowPaywall(false)}
-            onDirectImport={handlers.handleDirectImport}
-            onImport={handlers.handleTemplateImport}
-            packConfirmPack={packConfirm.selectedPack}
-            packConfirmVisible={!!packConfirm.selectedPack}
-            onPackCancel={packConfirm.handleCancel}
-            onPackConfirm={handlePackConfirm}
-          />
-        }
-        onBrowseByGoal={handleBrowseByGoal}
-        onGoalSelect={handleGoalSelect}
-        onImport={handleImport}
-        onPreview={handlers.handleTemplatePreview}
-        onSearchChange={state.setSearchQuery}
-        onSearchClear={() => state.setSearchQuery('')}
-        onSeeAll={handleSeeAll}
-        onSelectCategory={handleSelectChipCategory}
-        onStartHerePress={handleOpenStarters}
-        popularTemplates={mainBrowseData.popularTemplates}
-        quickFilterCategories={mainBrowseData.quickFilterCategories}
-        searchAnimatedStyle={props.animations.searchAnimatedStyle}
-        searchQuery={state.searchQuery}
-        searchResultsSection={
-          <SearchResults
-            filteredTemplates={sortedFilteredTemplates}
-            getCategoryLabel={props.getCategoryLabel}
-            hasActiveFilters={state.hasActiveFilters}
-            importedTemplateIds={state.importedTemplateIds}
-            importingTemplateId={state.importingTemplateId}
-            searchQuery={state.searchQuery}
-            selectedCategory={state.selectedCategory}
-            setShowSortOptions={state.setShowSortOptions}
-            showSortOptions={state.showSortOptions}
-            sortOption={state.sortOption}
-            onImport={handlers.handleTemplateImport}
-            onPreview={handlers.handleTemplatePreview}
-            onResetFilters={handlers.handleResetFilters}
-            onSelectSort={handlers.handleSelectSortOption}
-            onToggleSortOptions={() =>
-              state.setShowSortOptions(!state.showSortOptions)
-            }
-          />
-        }
-        selectedCategory={state.selectedCategory}
-        sessionImportCount={state.sessionImportCount}
-        starterTemplates={starterTemplates}
-        userHabitCount={data.userHabitCount}
-      />
-    </>
+    <MainBrowseView
+      browseCategoriesLink={
+        <BrowseCategoriesLink
+          categoryCount={groups.length}
+          onPress={handleOpenCategories}
+        />
+      }
+      featuredGoalId={featuredGoalId}
+      featuredStarterTemplates={featuredStarterTemplates}
+      feedbackOverlays={
+        <FeedbackOverlays
+          feedbackVariant={state.feedbackVariant}
+          sessionImportCount={state.sessionImportCount}
+          showCelebration={state.showCelebration}
+          showToast={state.showToast}
+          toastMessage={state.toastMessage}
+          toastTemplateData={state.toastTemplateData}
+          onAddAnother={handleAddAnother}
+          onDismissCelebration={handleDismissFeedback}
+          onDismissToast={handleDismissFeedback}
+          onViewHabit={handleViewHabit}
+        />
+      }
+      habitCountsByGoalId={habitCountsByGoalId}
+      importedTemplateIds={state.importedTemplateIds}
+      importingTemplateId={state.importingTemplateId}
+      isSearchActive={state.isSearchActive}
+      modals={
+        <TemplatesScreenModals
+          importingTemplateId={state.importingTemplateId}
+          previewTemplate={state.previewTemplate}
+          showCustomizeModal={state.showCustomizeModal}
+          showPaywall={state.showPaywall}
+          onCloseCustomize={() => state.setShowCustomizeModal(false)}
+          onClosePaywall={() => state.setShowPaywall(false)}
+          onDirectImport={handlers.handleDirectImport}
+          onImport={handlers.handleTemplateImport}
+          packConfirmPack={packConfirm.selectedPack}
+          packConfirmVisible={!!packConfirm.selectedPack}
+          onPackCancel={packConfirm.handleCancel}
+          onPackConfirm={handlePackConfirm}
+        />
+      }
+      onBrowseByGoal={handleBrowseByGoal}
+      onGoalSelect={handleGoalSelect}
+      onImport={handleImport}
+      onPreview={handlers.handleTemplatePreview}
+      onSearchChange={state.setSearchQuery}
+      onSearchClear={() => state.setSearchQuery('')}
+      onSeeAll={handleSeeAll}
+      onSelectCategory={handleSelectChipCategory}
+      onStartHerePress={handleOpenStarters}
+      popularTemplates={mainBrowseData.popularTemplates}
+      quickFilterCategories={mainBrowseData.quickFilterCategories}
+      recommendations={recommendations}
+      weeklyImportCounts={weeklyImportCounts}
+      searchAnimatedStyle={props.animations.searchAnimatedStyle}
+      searchQuery={state.searchQuery}
+      searchResultsSection={
+        <SearchResults
+          filteredTemplates={sortedFilteredTemplates}
+          getCategoryLabel={props.getCategoryLabel}
+          hasActiveFilters={state.hasActiveFilters}
+          importedTemplateIds={state.importedTemplateIds}
+          importingTemplateId={state.importingTemplateId}
+          searchQuery={state.searchQuery}
+          selectedCategory={state.selectedCategory}
+          setShowSortOptions={state.setShowSortOptions}
+          showSortOptions={state.showSortOptions}
+          sortOption={state.sortOption}
+          onImport={handlers.handleTemplateImport}
+          onPreview={handlers.handleTemplatePreview}
+          onResetFilters={handlers.handleResetFilters}
+          onSelectSort={handlers.handleSelectSortOption}
+          onToggleSortOptions={() =>
+            state.setShowSortOptions(!state.showSortOptions)
+          }
+        />
+      }
+      selectedCategory={state.selectedCategory}
+      sessionImportCount={state.sessionImportCount}
+      starterTemplates={starterTemplates}
+      userHabitCount={data.userHabitCount}
+    />
   );
 }
 

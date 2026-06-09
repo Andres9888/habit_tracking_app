@@ -11,6 +11,7 @@ export interface TemplateListCardProps {
   item: Doc<'templates'>;
   importingTemplateId: Id<'templates'> | null;
   popularityCount?: string | null;
+  weeklyImportCount?: number;
   searchQuery: string;
   onImport: (templateId: Id<'templates'>) => void;
   onPreview: (template: Doc<'templates'>) => void;

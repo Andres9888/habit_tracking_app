@@ -85,6 +85,7 @@ export function useTemplatesData() {
     isPremiumUser,
     seedTemplates,
     userHabitCount,
+    userHabits,
   };
 }
 

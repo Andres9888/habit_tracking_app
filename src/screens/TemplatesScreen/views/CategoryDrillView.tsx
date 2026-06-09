@@ -15,6 +15,7 @@ interface CategoryDrillViewProps {
   importedTemplateIds: Set<string>;
   importingTemplateId: string | null;
   onBack: () => void;
+  onBrowseCategories?: () => void;
   onImport: (template: Doc<'templates'>) => void;
   onPreview: (template: Doc<'templates'>) => void;
   templates: Doc<'templates'>[];
@@ -25,6 +26,7 @@ export function CategoryDrillView({
   importedTemplateIds,
   importingTemplateId,
   onBack,
+  onBrowseCategories,
   onImport,
   onPreview,
   templates,
@@ -37,11 +39,7 @@ export function CategoryDrillView({
       testID='templates-category-view'
       style={[s.container, { backgroundColor: colors.background }]}
     >
-      <CategoryHero
-        habitCount={templates.length}
-        meta={meta}
-        onBack={onBack}
-      />
+      <CategoryHero habitCount={templates.length} meta={meta} onBack={onBack} />
       <DrillListBody
         chipColors={{
           bgColor: meta.bgColor,
@@ -51,6 +49,7 @@ export function CategoryDrillView({
         importedTemplateIds={importedTemplateIds}
         importingTemplateId={importingTemplateId}
         templates={templates}
+        onBrowseCategories={onBrowseCategories}
         onImport={onImport}
         onPreview={onPreview}
       />

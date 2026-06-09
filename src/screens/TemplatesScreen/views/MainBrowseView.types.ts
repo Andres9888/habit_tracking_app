@@ -8,6 +8,7 @@ import type { AnimatedStyle } from 'react-native-reanimated';
 import type { Doc } from '../../../../convex/_generated/dataModel';
 import type { ChipCategory } from '../components/QuickFilterChips';
 import type { GoalCollection } from '../data/goalCollections';
+import type { RecommendedTemplate } from '../hooks/scoreRecommendedTemplates';
 
 export interface MainBrowseViewProps {
   browseCategoriesLink: ReactNode;
@@ -31,6 +32,8 @@ export interface MainBrowseViewProps {
   onStartHerePress: () => void;
   popularTemplates: Doc<'templates'>[];
   quickFilterCategories: ChipCategory[];
+  recommendations: RecommendedTemplate[];
+  weeklyImportCounts?: Record<string, number>;
   searchAnimatedStyle: AnimatedStyle<ViewStyle>;
   searchQuery: string;
   searchResultsSection: ReactNode;

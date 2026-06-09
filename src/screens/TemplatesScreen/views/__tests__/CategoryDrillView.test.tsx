@@ -72,7 +72,7 @@ describe('CategoryDrillView', () => {
     const { getByText, queryByText } = render(
       <CategoryDrillView {...baseProps} />
     );
-    expect(getByText('📋 1 habit')).toBeTruthy();
+    expect(getByText('1 habit')).toBeTruthy();
     expect(queryByText(/science-backed/)).toBeNull();
   });
 

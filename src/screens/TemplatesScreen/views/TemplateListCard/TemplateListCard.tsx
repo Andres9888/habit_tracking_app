@@ -8,6 +8,7 @@ import { Pressable, Text, View } from 'react-native';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import { fontWeights, typography } from '../../../../theme/typography';
 import type { TemplateListCardProps } from './TemplateListCard.types';
+import { formatWeeklyImports } from '../../utils/formatWeeklyImports';
 import { getMatchReason } from './getMatchReason';
 import { styles } from './TemplateListCard.styles';
 import { CardFooterMeta } from './CardFooterMeta';
@@ -21,6 +22,7 @@ export function TemplateListCard({
   importingTemplateId,
   popularityCount,
   searchQuery,
+  weeklyImportCount,
   onImport,
   onPreview,
 }: TemplateListCardProps) {
@@ -29,6 +31,8 @@ export function TemplateListCard({
   const isImported = importedTemplateIds.has(item._id);
   const categoryLabel = getCategoryLabel(item.category);
   const matchReason = getMatchReason(item, searchQuery, getCategoryLabel);
+  const weeklyLabel = formatWeeklyImports(weeklyImportCount);
+  const socialProofLabel = weeklyLabel ?? popularityCount ?? null;
 
   return (
     <Pressable
@@ -38,9 +42,11 @@ export function TemplateListCard({
         styles.card,
         isTopPick && styles.topPickAccent,
         {
-          backgroundColor: isImported ? '#F0FDF6' : colors.card,
+          backgroundColor: isImported
+            ? colors.status.successLight
+            : colors.card,
           borderColor: isImported
-            ? '#A7F3D0'
+            ? colors.status.successText
             : isTopPick
               ? '#FCD34D'
               : colors.border,
@@ -98,7 +104,7 @@ export function TemplateListCard({
             frequency={item.frequency}
             growthType={item.growthType}
             matchReason={matchReason}
-            popularityCount={popularityCount}
+            socialProofLabel={socialProofLabel}
           />
         </View>
       </View>

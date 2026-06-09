@@ -6,6 +6,7 @@
 
 import { Pressable, Text, View } from 'react-native';
 import { useThemeColors } from '../../../../theme/ThemeContext';
+import { formatWeeklyImports } from '../../utils/formatWeeklyImports';
 import { AddButton } from './AddButton';
 import { formatPopularity } from './formatPopularity';
 import { s } from './TrendingCard.styles';
@@ -24,8 +25,10 @@ export function TrendingCard({
   onPress,
   popularityPrefix,
   popularityScore,
+  weeklyImportCount,
 }: TrendingCardProps) {
   const { colors } = useThemeColors();
+  const weeklyLabel = formatWeeklyImports(weeklyImportCount);
 
   return (
     <Pressable
@@ -70,9 +73,7 @@ export function TrendingCard({
               { backgroundColor: colors.status.warningLight },
             ]}
           >
-            <Text
-              style={[s.scienceText, { color: colors.status.warningText }]}
-            >
+            <Text style={[s.scienceText, { color: colors.status.warningText }]}>
               🔬 Science-backed
             </Text>
           </View>
@@ -81,8 +82,9 @@ export function TrendingCard({
 
       <View style={s.bottomRow}>
         <Text style={[s.popularityText, { color: colors.primary[600] }]}>
-          {popularityPrefix ? `${popularityPrefix} ` : ''}
-          {formatPopularity(popularityScore)}
+          {weeklyLabel
+            ? `🔥 ${weeklyLabel}`
+            : `${popularityPrefix ? `${popularityPrefix} ` : ''}${formatPopularity(popularityScore)}`}
         </Text>
         <AddButton
           isImported={isImported}

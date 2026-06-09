@@ -17,6 +17,7 @@ interface PopularSectionProps {
   onPreview: (template: Doc<'templates'>) => void;
   onSeeAll: () => void;
   templates: Doc<'templates'>[];
+  weeklyImportCounts?: Record<string, number>;
 }
 
 export function PopularSection({
@@ -26,6 +27,7 @@ export function PopularSection({
   onPreview,
   onSeeAll,
   templates,
+  weeklyImportCounts,
 }: PopularSectionProps) {
   const { colors } = useThemeColors();
 
@@ -67,6 +69,7 @@ export function PopularSection({
             name={item.name}
             popularityPrefix={index < 3 ? '🔥' : undefined}
             popularityScore={item.popularityScore ?? 0}
+            weeklyImportCount={weeklyImportCounts?.[item._id]}
             onImport={() => onImport(item)}
             onPress={() => onPreview(item)}
           />

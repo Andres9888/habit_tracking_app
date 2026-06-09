@@ -27,6 +27,8 @@ export interface TrendingCardProps {
   popularityPrefix?: string;
   /** Number of users who added this template */
   popularityScore: number;
+  /** Imports in the last 7 days; shown when above threshold */
+  weeklyImportCount?: number;
 }
 
 export interface AddButtonProps {

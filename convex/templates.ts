@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { internal } from './_generated/api';
 import { internalMutation, mutation } from './_generated/server';
 
@@ -34,6 +35,7 @@ const requireAuthenticatedUser = async (
 // ─────────────────────────────────────────────────────────────────────────────
 // Query exports
 // ─────────────────────────────────────────────────────────────────────────────
+export { getImportCounts } from './templates/importCounts';
 export {
   getById,
   getImportedTemplateIds,

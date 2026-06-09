@@ -12,6 +12,7 @@ import { spacing } from '../../../theme/spacing';
 import { formatPopularityCount } from '../hooks/useDrillSections';
 import { getCategoryMeta } from '../data/categoryMeta';
 import { sortTemplatesByImportState } from '../utils/sortTemplatesByImportState';
+import { DrillListEmptyState } from '../components/DrillListEmptyState';
 import { TemplateListCard } from './TemplateListCard';
 
 const getCategoryLabel = (categoryId: string) =>
@@ -35,8 +36,27 @@ export function SeeAllView({
   templates,
 }: SeeAllViewProps) {
   const { colors } = useThemeColors();
-  const sortedTemplates = sortTemplatesByImportState(templates, importedTemplateIds);
+  const sortedTemplates = sortTemplatesByImportState(
+    templates,
+    importedTemplateIds
+  );
   const habitCountLabel = `${sortedTemplates.length} habit${sortedTemplates.length === 1 ? '' : 's'}`;
+
+  if (sortedTemplates.length === 0) {
+    return (
+      <View
+        testID='templates-see-all-view'
+        style={[s.container, { backgroundColor: colors.background }]}
+      >
+        <ScreenHeader
+          subtitle='No habits to show'
+          title='Popular habits'
+          onBack={onBack}
+        />
+        <DrillListEmptyState title='No popular habits yet' />
+      </View>
+    );
+  }
 
   return (
     <View

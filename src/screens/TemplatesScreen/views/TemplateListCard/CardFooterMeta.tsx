@@ -15,6 +15,7 @@ interface CardFooterMetaProps {
   growthType?: GrowthType;
   matchReason: string | null;
   popularityCount?: string | null;
+  socialProofLabel?: string | null;
 }
 
 export function CardFooterMeta({
@@ -23,6 +24,7 @@ export function CardFooterMeta({
   growthType,
   matchReason,
   popularityCount,
+  socialProofLabel,
 }: CardFooterMetaProps) {
   const { colors } = useThemeColors();
   const growthMeta = getGrowthTypeMeta(growthType);
@@ -34,7 +36,10 @@ export function CardFooterMeta({
           <View
             style={[
               styles.metaPill,
-              { backgroundColor: growthMeta.pillBg, borderColor: growthMeta.pillBg },
+              {
+                backgroundColor: growthMeta.pillBg,
+                borderColor: growthMeta.pillBg,
+              },
             ]}
           >
             <Text style={[styles.metaLabel, { color: growthMeta.pillFg }]}>
@@ -72,10 +77,10 @@ export function CardFooterMeta({
             </Text>
           </View>
         ) : null}
-        {popularityCount ? (
+        {socialProofLabel || popularityCount ? (
           <View style={styles.popularityPill}>
             <Text style={[styles.metaLabel, { color: '#C2410C' }]}>
-              🔥 {popularityCount} added
+              🔥 {socialProofLabel ?? `${popularityCount} added`}
             </Text>
           </View>
         ) : null}
@@ -88,7 +93,11 @@ export function CardFooterMeta({
             { backgroundColor: `${colors.primary[600]}10` },
           ]}
         >
-          <Search color={colors.primary[700]} size={iconSizes.micro} strokeWidth={2.5} />
+          <Search
+            color={colors.primary[700]}
+            size={iconSizes.micro}
+            strokeWidth={2.5}
+          />
           <Text style={[styles.matchText, { color: colors.primary[700] }]}>
             {matchReason}
           </Text>

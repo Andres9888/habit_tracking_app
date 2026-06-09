@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
  * DrillListBody — shared filter chips + habit list for category and goal drills.
  * Hero is composed by the parent; this component owns only the list chrome.
@@ -25,6 +26,7 @@ import {
   useDrillSections,
   type DrillListItem,
 } from '../hooks/useDrillSections';
+import { DrillListEmptyState } from '../components/DrillListEmptyState';
 import { TemplateListCard } from './TemplateListCard';
 
 interface DrillChipColors {
@@ -37,6 +39,7 @@ interface DrillListBodyProps {
   chipColors: DrillChipColors;
   importedTemplateIds: Set<string>;
   importingTemplateId: string | null;
+  onBrowseCategories?: () => void;
   onImport: (template: Doc<'templates'>) => void;
   onPreview: (template: Doc<'templates'>) => void;
   templates: Doc<'templates'>[];
@@ -51,6 +54,7 @@ export function DrillListBody({
   chipColors,
   importedTemplateIds,
   importingTemplateId,
+  onBrowseCategories,
   onImport,
   onPreview,
   templates,
@@ -92,6 +96,10 @@ export function DrillListBody({
       </Animated.View>
     );
   };
+
+  if (templates.length === 0) {
+    return <DrillListEmptyState onBrowseCategories={onBrowseCategories} />;
+  }
 
   return (
     <>

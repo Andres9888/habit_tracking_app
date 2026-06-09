@@ -16,6 +16,7 @@ interface GoalDrillViewProps {
   importedTemplateIds: Set<string>;
   importingTemplateId: string | null;
   onBack: () => void;
+  onBrowseCategories?: () => void;
   onImport: (template: Doc<'templates'>) => void;
   onPreview: (template: Doc<'templates'>) => void;
   templates: Doc<'templates'>[];
@@ -26,6 +27,7 @@ export function GoalDrillView({
   importedTemplateIds,
   importingTemplateId,
   onBack,
+  onBrowseCategories,
   onImport,
   onPreview,
   templates,
@@ -47,6 +49,7 @@ export function GoalDrillView({
         importedTemplateIds={importedTemplateIds}
         importingTemplateId={importingTemplateId}
         templates={templates}
+        onBrowseCategories={onBrowseCategories}
         onImport={onImport}
         onPreview={onPreview}
       />
