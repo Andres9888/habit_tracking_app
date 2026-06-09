@@ -1,5 +1,4 @@
 import { Text, type TextLayoutEvent } from 'react-native';
-import { HABIT_NAME_INPUT_HORIZONTAL_PADDING } from './useCenteredPlaceholderCaretInset';
 
 interface HabitNamePlaceholderMeasurerProps {
   fieldWidth: number;
@@ -7,30 +6,21 @@ interface HabitNamePlaceholderMeasurerProps {
   onTextLayout: (event: TextLayoutEvent) => void;
 }
 
-/** Mirrors centered, ellipsized placeholder layout to locate the first glyph. */
+/** Measures placeholder text so the empty-field caret can start at its first glyph. */
 export function HabitNamePlaceholderMeasurer({
   fieldWidth,
   text,
   onTextLayout,
 }: HabitNamePlaceholderMeasurerProps) {
-  const innerWidth = Math.max(
-    0,
-    fieldWidth - HABIT_NAME_INPUT_HORIZONTAL_PADDING * 2
-  );
-
-  if (innerWidth <= 0) return null;
+  if (fieldWidth <= 0) return null;
 
   return (
     <Text
-      ellipsizeMode='tail'
       numberOfLines={1}
       pointerEvents='none'
       className='absolute text-2xl font-semibold opacity-0'
       style={{
-        left: HABIT_NAME_INPUT_HORIZONTAL_PADDING,
         lineHeight: 28,
-        textAlign: 'center',
-        width: innerWidth,
       }}
       onTextLayout={onTextLayout}
     >

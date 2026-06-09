@@ -1,28 +1,10 @@
-import {
-  Keyboard,
-  TextInput,
-  View,
-  type StyleProp,
-  type ViewStyle,
-} from 'react-native';
+import { Keyboard, TextInput, View } from 'react-native';
 import Animated from 'react-native-reanimated';
+import { HabitNamePlaceholderCaret } from './HabitNamePlaceholderCaret';
 import { HabitNamePlaceholderMeasurer } from './HabitNamePlaceholderMeasurer';
 import { HabitNamePlaceholderOverlay } from './HabitNamePlaceholderOverlay';
-import { useCenteredPlaceholderCaretInset } from './useCenteredPlaceholderCaretInset';
-import { useHabitNameInputFocus } from './useHabitNameInputFocus';
-
-interface HabitNameInputFieldProps {
-  autoFocus: boolean;
-  backgroundColor: string;
-  borderStyle: StyleProp<ViewStyle>;
-  habitName: string;
-  hintColor: string;
-  placeholder: string;
-  textColor: string;
-  onBlur: () => void;
-  onChangeText: (text: string) => void;
-  onFocus: () => void;
-}
+import type { HabitNameInputFieldProps } from './HabitNameInputField.types';
+import { useHabitNameInputField } from './useHabitNameInputField';
 
 export function HabitNameInputField({
   autoFocus,
@@ -36,20 +18,27 @@ export function HabitNameInputField({
   onChangeText,
   onFocus,
 }: HabitNameInputFieldProps) {
-  const inputRef = useHabitNameInputFocus(autoFocus);
   const {
-    fieldWidth,
-    inputTextStyle,
-    measurePlaceholder,
-    onFieldLayout,
-    onPlaceholderTextLayout,
-    placeholder: measuredPlaceholder,
-  } = useCenteredPlaceholderCaretInset(habitName, placeholder);
+    inputRef,
+    caretState,
+    shouldReplaceNativeCaret,
+    showPlaceholderCaret,
+    handleBlur,
+    handleFocus,
+  } = useHabitNameInputField(
+    autoFocus,
+    habitName,
+    placeholder,
+    onBlur,
+    onFocus
+  );
 
   return (
     <View
       className='relative w-full'
-      onLayout={(event) => onFieldLayout(event.nativeEvent.layout.width)}
+      onLayout={(event) =>
+        caretState.onFieldLayout(event.nativeEvent.layout.width)
+      }
     >
       <Animated.View
         className='overflow-hidden rounded-2xl'
@@ -60,6 +49,7 @@ export function HabitNameInputField({
           accessibilityHint={placeholder || undefined}
           accessibilityLabel='Habit name'
           className='w-full px-0 py-4 text-2xl font-semibold'
+          caretHidden={shouldReplaceNativeCaret}
           maxLength={50}
           placeholder=''
           returnKeyType='done'
@@ -67,20 +57,23 @@ export function HabitNameInputField({
             lineHeight: 28,
             color: textColor,
             backgroundColor,
-            ...inputTextStyle,
+            ...caretState.inputTextStyle,
           }}
           value={habitName}
-          onBlur={onBlur}
+          onBlur={handleBlur}
           onChangeText={onChangeText}
-          onFocus={onFocus}
+          onFocus={handleFocus}
           onSubmitEditing={Keyboard.dismiss}
         />
+        {showPlaceholderCaret ? (
+          <HabitNamePlaceholderCaret left={caretState.caretInset} />
+        ) : null}
       </Animated.View>
-      {measurePlaceholder ? (
+      {caretState.measurePlaceholder ? (
         <HabitNamePlaceholderMeasurer
-          fieldWidth={fieldWidth}
-          text={measuredPlaceholder}
-          onTextLayout={onPlaceholderTextLayout}
+          fieldWidth={caretState.fieldWidth}
+          text={caretState.placeholder}
+          onTextLayout={caretState.onPlaceholderTextLayout}
         />
       ) : null}
       <HabitNamePlaceholderOverlay

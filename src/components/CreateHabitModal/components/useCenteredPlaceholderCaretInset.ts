@@ -1,8 +1,15 @@
 import { useEffect, useMemo, useState } from 'react';
 import type { TextLayoutEvent } from 'react-native';
+import {
+  buildHabitNameInputTextStyle,
+  getCenteredPlaceholderCaretInset,
+} from './centeredPlaceholderCaretInset.helpers';
 
-export const HABIT_NAME_INPUT_HORIZONTAL_PADDING = 20;
-export const HABIT_NAME_PLACEHOLDER_CARET_GAP = 1;
+export {
+  getCenteredPlaceholderCaretInset,
+  HABIT_NAME_INPUT_HORIZONTAL_PADDING,
+  HABIT_NAME_PLACEHOLDER_CARET_GAP,
+} from './centeredPlaceholderCaretInset.helpers';
 
 /** Centered text while empty, with the caret at the first visible placeholder glyph. */
 export function useCenteredPlaceholderCaretInset(
@@ -10,46 +17,34 @@ export function useCenteredPlaceholderCaretInset(
   placeholder: string
 ) {
   const [fieldWidth, setFieldWidth] = useState(0);
-  const [caretInset, setCaretInset] = useState(
-    HABIT_NAME_INPUT_HORIZONTAL_PADDING
+  const [placeholderTextWidth, setPlaceholderTextWidth] = useState(0);
+  const caretInset = getCenteredPlaceholderCaretInset(
+    fieldWidth,
+    placeholderTextWidth
   );
   const isEmpty = habitName.length === 0;
+  const isPlaceholderCaretReady = fieldWidth > 0 && placeholderTextWidth > 0;
 
   useEffect(() => {
-    setCaretInset(HABIT_NAME_INPUT_HORIZONTAL_PADDING);
-  }, [fieldWidth, placeholder]);
+    setPlaceholderTextWidth(0);
+  }, [placeholder]);
 
-  const inputTextStyle = useMemo(() => {
-    if (!isEmpty) {
-      return {
-        paddingHorizontal: HABIT_NAME_INPUT_HORIZONTAL_PADDING,
-        textAlign: 'center' as const,
-      };
-    }
-
-    return {
-      paddingLeft: caretInset,
-      paddingRight: HABIT_NAME_INPUT_HORIZONTAL_PADDING,
-      textAlign: 'left' as const,
-    };
-  }, [caretInset, isEmpty]);
+  const inputTextStyle = useMemo(
+    () => buildHabitNameInputTextStyle(caretInset, isEmpty),
+    [caretInset, isEmpty]
+  );
 
   const onPlaceholderTextLayout = (event: TextLayoutEvent) => {
     const line = event.nativeEvent.lines[0];
     if (!line) return;
-    setCaretInset(
-      Math.max(
-        HABIT_NAME_INPUT_HORIZONTAL_PADDING,
-        HABIT_NAME_INPUT_HORIZONTAL_PADDING +
-          line.x -
-          HABIT_NAME_PLACEHOLDER_CARET_GAP
-      )
-    );
+    setPlaceholderTextWidth(line.width);
   };
 
   return {
+    caretInset,
     fieldWidth,
     inputTextStyle,
+    isPlaceholderCaretReady,
     measurePlaceholder: isEmpty && placeholder.length > 0,
     onFieldLayout: (width: number) => setFieldWidth(width),
     onPlaceholderTextLayout,
