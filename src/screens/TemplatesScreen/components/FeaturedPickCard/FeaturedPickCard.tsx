@@ -13,6 +13,7 @@ import { styles as s } from './FeaturedPickCard.styles';
 interface FeaturedPickCardProps {
   isImported: boolean;
   isImporting: boolean;
+  label?: string;
   onImport: (template: Doc<'templates'>) => void;
   onPreview: (template: Doc<'templates'>) => void;
   template: Doc<'templates'>;
@@ -21,6 +22,7 @@ interface FeaturedPickCardProps {
 export function FeaturedPickCard({
   isImported,
   isImporting,
+  label = 'Start here',
   onImport,
   onPreview,
   template,
@@ -30,7 +32,7 @@ export function FeaturedPickCard({
 
   return (
     <Pressable
-      accessibilityLabel={`Start here: ${template.name}`}
+      accessibilityLabel={`${label}: ${template.name}`}
       accessibilityRole='button'
       testID='templates-featured-pick'
       style={[
@@ -44,7 +46,7 @@ export function FeaturedPickCard({
       onPress={() => onPreview(template)}
     >
       <View style={[s.accent, { backgroundColor: colors.primary[600] }]} />
-      <Text style={[s.label, { color: colors.primary[700] }]}>Start here</Text>
+      <Text style={[s.label, { color: colors.primary[700] }]}>{label}</Text>
       <View style={s.row}>
         <View
           style={[

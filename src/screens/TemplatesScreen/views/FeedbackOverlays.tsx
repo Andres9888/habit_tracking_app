@@ -1,15 +1,17 @@
 /**
- * Shared feedback overlays: celebration, toast, and error toast.
+ * Shared feedback overlays: Make-It-Stick sheet (first import), toast,
+ * and error toast.
  */
 
-import {
-  CelebrationOverlay,
-  TemplateAddedToast,
-} from '../../../components/TemplateAddedToast';
+import type { Doc, Id } from '../../../../convex/_generated/dataModel';
+import { MakeItStickSheet } from '../../../components/MakeItStickSheet';
+import { TemplateAddedToast } from '../../../components/TemplateAddedToast';
 import type { TemplateToastData } from '../../../components/TemplateAddedToast';
 import Toast from '../../../components/Toast';
 
 interface FeedbackOverlaysProps {
+  feedbackHabitId?: Id<'habits'> | null;
+  feedbackTemplate?: Doc<'templates'> | null;
   feedbackVariant: 'success' | 'already_exists' | null;
   sessionImportCount: number;
   showCelebration: boolean;
@@ -25,11 +27,11 @@ interface FeedbackOverlaysProps {
 export function FeedbackOverlays(p: FeedbackOverlaysProps) {
   return (
     <>
-      <CelebrationOverlay
-        templateData={p.toastTemplateData}
+      <MakeItStickSheet
+        habitId={p.feedbackHabitId ?? null}
+        template={p.feedbackTemplate ?? null}
         visible={p.showCelebration}
-        onAddAnother={p.onAddAnother}
-        onGoToHabits={p.onViewHabit}
+        onDone={p.onDismissCelebration}
       />
       {p.toastTemplateData ? (
         <TemplateAddedToast

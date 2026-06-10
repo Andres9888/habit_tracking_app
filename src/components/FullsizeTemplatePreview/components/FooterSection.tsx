@@ -1,19 +1,23 @@
 /**
  * Footer section for FullsizeTemplatePreview
- * Contains import and customize buttons with success state
+ * Start-small commitment CTA (when available) + secondary actions.
  */
 
 import React from 'react';
-import { View, Text, Pressable } from 'react-native';
-import Animated from 'react-native-reanimated';
+import { View, Text } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Check } from 'lucide-react-native';
-import { colors } from '@/theme/colors';
-import { iconSizes } from '@/theme/iconSizes';
 import { footerStyles } from '../styles';
+import { FooterPrimaryAction } from './FooterPrimaryAction';
+import { FooterSecondaryActions } from './FooterSecondaryActions';
 import type { FooterSectionProps } from './FooterSection.types';
 
-const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
+const COMMIT_MICROLINE =
+  'Too small to fail — tiny starts survive week one. You can always do more.';
+
+function buildStartSmallLabel(startSmallVersion: string): string {
+  const trimmed = startSmallVersion.trim().replace(/\.$/, '');
+  return `Start small — ${trimmed.charAt(0).toLowerCase()}${trimmed.slice(1)}`;
+}
 
 export function FooterSection({
   templateName,
@@ -21,6 +25,7 @@ export function FooterSection({
   isImporting,
   isImported,
   bottomInset,
+  startSmallVersion,
   importButtonStyle,
   customizeButtonStyle,
   checkmarkAnimatedStyle,
@@ -31,6 +36,10 @@ export function FooterSection({
   onImport,
   onCustomize,
 }: FooterSectionProps) {
+  const importLabel = startSmallVersion
+    ? buildStartSmallLabel(startSmallVersion)
+    : 'Add to my habits';
+
   return (
     <View style={footerStyles.footerGradientWrapper}>
       {/* Intentional rgba gradient — fades from transparent to gray[50] (#FAF8F5) */}
@@ -48,57 +57,33 @@ export function FooterSection({
             { paddingBottom: Math.max(bottomInset, 20) },
           ]}
         >
-          {isImported ? (
-            <Animated.View
-              testID='templates-preview-added'
-              style={[footerStyles.successButton, successPillStyle]}
-            >
-              <Animated.View style={checkmarkAnimatedStyle}>
-                <Check
-                  color={colors.text.inverse}
-                  size={iconSizes.large}
-                  strokeWidth={3}
-                />
-              </Animated.View>
-              <Text style={footerStyles.successButtonText}>Added!</Text>
-            </Animated.View>
-          ) : (
-            <AnimatedPressable
-              accessible
-              accessibilityHint='Add this habit to your list'
-              accessibilityLabel={`Add ${templateName} to my habits`}
-              accessibilityRole='button'
-              disabled={isImporting}
-              testID='templates-preview-quick-add'
-              style={[
-                footerStyles.importButton,
-                { backgroundColor: iconColor },
-                isImporting && { opacity: 0.5 },
-                importButtonStyle,
-              ]}
-              onPress={onImport}
-              {...createPressHandlers(importButtonScale)}
-            >
-              <Text style={footerStyles.importButtonText}>
-                {isImporting ? 'Adding…' : 'Add to my habits'}
-              </Text>
-            </AnimatedPressable>
-          )}
-
+          {!isImported && startSmallVersion ? (
+            <Text style={footerStyles.commitMicroline}>{COMMIT_MICROLINE}</Text>
+          ) : null}
+          <FooterPrimaryAction
+            checkmarkAnimatedStyle={checkmarkAnimatedStyle}
+            createPressHandlers={createPressHandlers}
+            iconColor={iconColor}
+            importButtonScale={importButtonScale}
+            importButtonStyle={importButtonStyle}
+            importLabel={importLabel}
+            isImported={isImported}
+            isImporting={isImporting}
+            successPillStyle={successPillStyle}
+            templateName={templateName}
+            onImport={onImport}
+          />
           {isImported ? null : (
-            <AnimatedPressable
-              accessible
-              accessibilityHint='Customize habit details before adding'
-              accessibilityLabel='Customize habit before adding'
-              accessibilityRole='button'
-              disabled={isImporting}
-              testID='templates-preview-customize'
-              style={[footerStyles.customizeLink, customizeButtonStyle]}
-              onPress={onCustomize}
-              {...createPressHandlers(customizeButtonScale, 0.98)}
-            >
-              <Text style={footerStyles.customizeLinkText}>Customize</Text>
-            </AnimatedPressable>
+            <FooterSecondaryActions
+              createPressHandlers={createPressHandlers}
+              customizeButtonScale={customizeButtonScale}
+              customizeButtonStyle={customizeButtonStyle}
+              hasStartSmall={!!startSmallVersion}
+              isImporting={isImporting}
+              templateName={templateName}
+              onCustomize={onCustomize}
+              onImport={onImport}
+            />
           )}
         </View>
       </LinearGradient>

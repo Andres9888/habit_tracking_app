@@ -13,6 +13,7 @@ export interface FooterSectionProps {
   isImporting: boolean;
   isImported: boolean;
   bottomInset: number;
+  startSmallVersion?: string;
   importButtonStyle: object;
   customizeButtonStyle: object;
   checkmarkAnimatedStyle: object;

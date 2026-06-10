@@ -43,20 +43,9 @@ export function useMainBrowseData({
     );
   }, [allTemplates, importedTemplateIds]);
 
-  // Top pick for the "Start here" card — highest-popularity template the
-  // user hasn't imported yet (popularTemplates already sorts non-imported
-  // first, by popularity within each group).
-  const featuredTemplate = popularTemplates[0] ?? null;
-
   const browseRowSections = useMemo(
-    () =>
-      buildBrowseRowSections({
-        allTemplates,
-        featuredTemplate,
-        importedTemplateIds,
-        popularTemplates,
-      }),
-    [allTemplates, featuredTemplate, importedTemplateIds, popularTemplates]
+    () => buildBrowseRowSections({ allTemplates, popularTemplates }),
+    [allTemplates, popularTemplates]
   );
 
   const categoryList = useMemo(
@@ -79,7 +68,6 @@ export function useMainBrowseData({
   return {
     browseRowSections,
     categoryList,
-    featuredTemplate,
     isPremiumUser,
     popularTemplates,
     premiumPacks: PREMIUM_PACKS,

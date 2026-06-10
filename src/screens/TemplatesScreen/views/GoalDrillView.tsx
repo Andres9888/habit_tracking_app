@@ -8,8 +8,8 @@ import { StyleSheet, View } from 'react-native';
 import type { Doc } from '../../../../convex/_generated/dataModel';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import type { GoalCollection } from '../data/goalCollections';
-import { DrillListBody } from './DrillListBody';
 import { GoalHero } from './GoalHero';
+import { GoalPathBody } from './GoalPathBody';
 
 interface GoalDrillViewProps {
   goal: GoalCollection;
@@ -37,13 +37,13 @@ export function GoalDrillView({
       testID='templates-goal-view'
       style={[s.container, { backgroundColor: colors.background }]}
     >
-      <GoalHero goal={goal} habitCount={templates.length} onBack={onBack} />
-      <DrillListBody
-        chipColors={{
-          bgColor: goal.bgColor,
-          borderColor: goal.bgColor,
-          textColor: goal.textColor,
-        }}
+      <GoalHero
+        goal={goal}
+        habitCount={templates.length}
+        showPathNote
+        onBack={onBack}
+      />
+      <GoalPathBody
         importedTemplateIds={importedTemplateIds}
         importingTemplateId={importingTemplateId}
         templates={templates}

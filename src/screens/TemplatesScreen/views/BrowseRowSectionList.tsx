@@ -38,14 +38,14 @@ export function BrowseRowSectionList(p: BrowseRowSectionListProps) {
             rightSlot={
               section.key === 'popular' ? (
                 <Pressable
-                  accessibilityLabel='See all popular habits'
+                  accessibilityLabel='Browse all habits'
                   accessibilityRole='button'
                   hitSlop={8}
                   testID='templates-trending-see-all'
                   onPress={p.onSeeAll}
                 >
                   <Text style={[s.seeAll, { color: colors.primary[600] }]}>
-                    See all
+                    Browse all
                   </Text>
                 </Pressable>
               ) : undefined

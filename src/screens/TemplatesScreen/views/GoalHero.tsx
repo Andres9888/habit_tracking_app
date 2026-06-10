@@ -4,22 +4,31 @@
  * subtitle slot can't carry for multi-category goals).
  */
 
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ChevronLeft } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '../../../theme/ThemeContext';
-import { borderRadius, spacing } from '../../../theme/spacing';
-import { fontWeights, typography } from '../../../theme/typography';
+import { spacing } from '../../../theme/spacing';
 import type { GoalCollection } from '../data/goalCollections';
+import { styles as s } from './GoalHero.styles';
+
+const PATH_MECHANICS_NOTE =
+  'How paths work: start with one habit. Add the next once it sticks.';
 
 interface GoalHeroProps {
   goal: GoalCollection;
   habitCount: number;
   onBack: () => void;
+  showPathNote?: boolean;
 }
 
-export function GoalHero({ goal, habitCount, onBack }: GoalHeroProps) {
+export function GoalHero({
+  goal,
+  habitCount,
+  onBack,
+  showPathNote = false,
+}: GoalHeroProps) {
   const { colors } = useThemeColors();
   const insets = useSafeAreaInsets();
   const countLabel = `📋 ${habitCount} ${habitCount === 1 ? 'habit' : 'habits'}`;
@@ -42,7 +51,11 @@ export function GoalHero({ goal, habitCount, onBack }: GoalHeroProps) {
         style={s.backBtn}
         onPress={onBack}
       >
-        <ChevronLeft color={goal.textColor} size={iconSizes.medium} strokeWidth={2.5} />
+        <ChevronLeft
+          color={goal.textColor}
+          size={iconSizes.medium}
+          strokeWidth={2.5}
+        />
         <Text style={[s.backLabel, { color: goal.textColor }]}>Library</Text>
       </Pressable>
 
@@ -75,47 +88,13 @@ export function GoalHero({ goal, habitCount, onBack }: GoalHeroProps) {
           </View>
         </View>
       </View>
+      {showPathNote ? (
+        <View style={s.pathNote}>
+          <Text style={[s.pathNoteText, { color: goal.textColor }]}>
+            {PATH_MECHANICS_NOTE}
+          </Text>
+        </View>
+      ) : null}
     </View>
   );
 }
-
-const s = StyleSheet.create({
-  backBtn: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    gap: spacing.xs,
-    marginBottom: spacing.md,
-  },
-  backLabel: { ...typography.body, fontWeight: fontWeights.semibold },
-  badgeRow: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: spacing.sm,
-    marginTop: spacing.xs,
-  },
-  content: { alignItems: 'flex-start', flexDirection: 'row', gap: spacing.md },
-  countBadge: {
-    borderRadius: borderRadius.full,
-    borderWidth: 1,
-    paddingHorizontal: spacing.sm,
-    paddingVertical: spacing.xs,
-  },
-  countText: { ...typography.caption, fontWeight: fontWeights.semibold },
-  hero: {
-    borderBottomWidth: 1,
-    paddingBottom: spacing.md,
-    paddingHorizontal: spacing.base,
-  },
-  iconText: { fontSize: 26 },
-  iconWrap: {
-    alignItems: 'center',
-    borderRadius: borderRadius.medium,
-    height: 52,
-    justifyContent: 'center',
-    width: 52,
-  },
-  subtitle: { ...typography.bodySmall, marginTop: 2 },
-  textBlock: { flex: 1 },
-  title: { ...typography.heading2, letterSpacing: -0.4 },
-});

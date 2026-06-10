@@ -52,16 +52,20 @@ export function MainBrowseView(p: MainBrowseViewProps) {
         >
           <BrowseSections
             browseCategoriesLink={p.browseCategoriesLink}
-            featuredTemplate={p.featuredTemplate}
+            featuredGoalId={p.featuredGoalId}
+            featuredStarterTemplates={p.featuredStarterTemplates}
+            habitCountsByGoalId={p.habitCountsByGoalId}
             importedTemplateIds={p.importedTemplateIds}
             importingTemplateId={p.importingTemplateId}
             isFirstTimeUser={isFirstTimeUser}
             onBrowseByGoal={p.onBrowseByGoal}
+            onGoalSelect={p.onGoalSelect}
             onImport={p.onImport}
             onPreview={p.onPreview}
             onSeeAll={p.onSeeAll}
             onStartHerePress={p.onStartHerePress}
             rowSections={p.rowSections}
+            startedCountsByGoalId={p.startedCountsByGoalId}
             starterTemplates={p.starterTemplates}
           />
         </Animated.View>
