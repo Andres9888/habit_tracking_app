@@ -1,5 +1,6 @@
 /**
  * BrowseSections — scroll content for MainBrowseView's non-filtered branch.
+ * Minimal & Clean: one featured pick, then quiet row sections.
  */
 
 import type { ReactNode } from 'react';
@@ -7,29 +8,25 @@ import { ScrollView } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { spacing } from '../../../theme/spacing';
 import type { Doc } from '../../../../convex/_generated/dataModel';
-import { GoalCollectionGrid } from '../components/GoalCollectionGrid';
-import { PopularSection } from '../components/PopularSection';
+import { FeaturedPickCard } from '../components/FeaturedPickCard';
 import { StartHereCard } from '../components/StartHereCard';
 import { StarterHabitList } from '../components/StarterHabitList';
-import type { GoalCollection } from '../data/goalCollections';
+import type { BrowseRowSection } from '../hooks/useMainBrowseData';
+import { BrowseRowSectionList } from './BrowseRowSectionList';
 import { stagger } from './MainBrowseView.helpers';
 
 interface BrowseSectionsProps {
   browseCategoriesLink: ReactNode;
-  featuredBadgeLabel?: string;
-  featuredGoalId: string;
-  featuredStarterTemplates: Doc<'templates'>[];
-  habitCountsByGoalId: Record<string, number>;
+  featuredTemplate: Doc<'templates'> | null;
   importedTemplateIds: Set<string>;
   importingTemplateId: string | null;
   isFirstTimeUser: boolean;
   onBrowseByGoal: () => void;
-  onGoalSelect: (goal: GoalCollection) => void;
   onImport: (template: Doc<'templates'>) => void;
   onPreview: (template: Doc<'templates'>) => void;
   onSeeAll: () => void;
   onStartHerePress: () => void;
-  popularTemplates: Doc<'templates'>[];
+  rowSections: BrowseRowSection[];
   starterTemplates: Doc<'templates'>[];
 }
 
@@ -55,39 +52,39 @@ export function BrowseSections(p: BrowseSectionsProps) {
             onPreview={p.onPreview}
           />
         </Animated.View>
-      ) : p.isFirstTimeUser ? (
-        <Animated.View entering={stagger(2)}>
-          <StartHereCard onPress={p.onStartHerePress} />
-        </Animated.View>
-      ) : null}
-
-      {!showStarterList ? (
-        <Animated.View entering={stagger(p.isFirstTimeUser ? 3 : 2)}>
-          <GoalCollectionGrid
-            featuredBadgeLabel={p.featuredBadgeLabel}
-            featuredGoalId={p.featuredGoalId}
-            featuredStarterTemplates={p.featuredStarterTemplates}
-            habitCountsByGoalId={p.habitCountsByGoalId}
-            onPreviewStarter={p.onPreview}
-            onSelectGoal={p.onGoalSelect}
-          />
-        </Animated.View>
-      ) : null}
-
-      {!showStarterList ? (
-        <Animated.View entering={stagger(p.isFirstTimeUser ? 4 : 3)}>
-          <PopularSection
+      ) : (
+        <>
+          {p.isFirstTimeUser ? (
+            <Animated.View entering={stagger(2)}>
+              <StartHereCard onPress={p.onStartHerePress} />
+            </Animated.View>
+          ) : null}
+          {p.featuredTemplate ? (
+            <Animated.View entering={stagger(2)}>
+              <FeaturedPickCard
+                isImported={p.importedTemplateIds.has(p.featuredTemplate._id)}
+                isImporting={p.importingTemplateId === p.featuredTemplate._id}
+                template={p.featuredTemplate}
+                onImport={p.onImport}
+                onPreview={p.onPreview}
+              />
+            </Animated.View>
+          ) : null}
+          <BrowseRowSectionList
             importedTemplateIds={p.importedTemplateIds}
             importingTemplateId={p.importingTemplateId}
-            templates={p.popularTemplates}
+            sections={p.rowSections}
+            staggerOffset={3}
             onImport={p.onImport}
             onPreview={p.onPreview}
             onSeeAll={p.onSeeAll}
           />
-        </Animated.View>
-      ) : null}
+        </>
+      )}
 
-      <Animated.View entering={stagger(showStarterList ? 3 : p.isFirstTimeUser ? 5 : 4)}>
+      <Animated.View
+        entering={stagger(showStarterList ? 3 : 3 + p.rowSections.length)}
+      >
         {p.browseCategoriesLink}
       </Animated.View>
     </ScrollView>

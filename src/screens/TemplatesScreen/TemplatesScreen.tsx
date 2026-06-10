@@ -16,9 +16,7 @@ import { useTemplatesScreenProps } from './hooks/useTemplatesScreenProps';
 import { FeedbackOverlays } from './views/FeedbackOverlays';
 import { MainBrowseView } from './views/MainBrowseView';
 import { renderSubView } from './views/renderSubView';
-import {
-  buildCategoryGridItems,
-} from './views/CategoriesGridView';
+import { buildCategoryGridItems } from './views/CategoriesGridView';
 import {
   GOAL_COLLECTIONS,
   getFeaturedGoalId,
@@ -83,23 +81,6 @@ function TemplatesScreenContent({
   );
 
   const featuredGoalId = useMemo(() => getFeaturedGoalId(), []);
-  const habitCountsByGoalId = useMemo(() => {
-    const counts: Record<string, number> = {};
-    GOAL_COLLECTIONS.forEach((goal) => {
-      counts[goal.id] =
-        data.allTemplates?.filter((t) => goal.categories.includes(t.category))
-          .length ?? 0;
-    });
-    return counts;
-  }, [data.allTemplates]);
-  const featuredStarterTemplates = useMemo(() => {
-    const featured = GOAL_COLLECTIONS.find((g) => g.id === featuredGoalId);
-    if (!featured || !data.allTemplates) return [];
-    return [...data.allTemplates]
-      .filter((t) => featured.categories.includes(t.category))
-      .sort((a, b) => (b.popularityScore ?? 0) - (a.popularityScore ?? 0))
-      .slice(0, 3);
-  }, [data.allTemplates, featuredGoalId]);
 
   const handleImport = (template: Doc<'templates'>) => {
     state.setPreviewTemplate(template);
@@ -181,94 +162,89 @@ function TemplatesScreenContent({
 
   const handleSelectChipCategory = (categoryId: string | null) => {
     state.setSearchQuery('');
-    state.setSelectedCategory((categoryId ?? 'all') as typeof state.selectedCategory);
+    state.setSelectedCategory(
+      (categoryId ?? 'all') as typeof state.selectedCategory
+    );
   };
 
   return (
-    <>
-      <MainBrowseView
-        browseCategoriesLink={
-          <BrowseCategoriesLink
-            categoryCount={groups.length}
-            onPress={handleOpenCategories}
-          />
-        }
-        featuredGoalId={featuredGoalId}
-        featuredStarterTemplates={featuredStarterTemplates}
-        feedbackOverlays={
-          <FeedbackOverlays
-            feedbackVariant={state.feedbackVariant}
-            sessionImportCount={state.sessionImportCount}
-            showCelebration={state.showCelebration}
-            showToast={state.showToast}
-            toastMessage={state.toastMessage}
-            toastTemplateData={state.toastTemplateData}
-            onAddAnother={handleAddAnother}
-            onDismissCelebration={handleDismissFeedback}
-            onDismissToast={handleDismissFeedback}
-            onViewHabit={handleViewHabit}
-          />
-        }
-        habitCountsByGoalId={habitCountsByGoalId}
-        importedTemplateIds={state.importedTemplateIds}
-        importingTemplateId={state.importingTemplateId}
-        isSearchActive={state.isSearchActive}
-        modals={
-          <TemplatesScreenModals
-            importingTemplateId={state.importingTemplateId}
-            previewTemplate={state.previewTemplate}
-            showCustomizeModal={state.showCustomizeModal}
-            showPaywall={state.showPaywall}
-            onCloseCustomize={() => state.setShowCustomizeModal(false)}
-            onClosePaywall={() => state.setShowPaywall(false)}
-            onDirectImport={handlers.handleDirectImport}
-            onImport={handlers.handleTemplateImport}
-            packConfirmPack={packConfirm.selectedPack}
-            packConfirmVisible={!!packConfirm.selectedPack}
-            onPackCancel={packConfirm.handleCancel}
-            onPackConfirm={handlePackConfirm}
-          />
-        }
-        onBrowseByGoal={handleBrowseByGoal}
-        onGoalSelect={handleGoalSelect}
-        onImport={handleImport}
-        onPreview={handlers.handleTemplatePreview}
-        onSearchChange={state.setSearchQuery}
-        onSearchClear={() => state.setSearchQuery('')}
-        onSeeAll={handleSeeAll}
-        onSelectCategory={handleSelectChipCategory}
-        onStartHerePress={handleOpenStarters}
-        popularTemplates={mainBrowseData.popularTemplates}
-        quickFilterCategories={mainBrowseData.quickFilterCategories}
-        searchAnimatedStyle={props.animations.searchAnimatedStyle}
-        searchQuery={state.searchQuery}
-        searchResultsSection={
-          <SearchResults
-            filteredTemplates={sortedFilteredTemplates}
-            getCategoryLabel={props.getCategoryLabel}
-            hasActiveFilters={state.hasActiveFilters}
-            importedTemplateIds={state.importedTemplateIds}
-            importingTemplateId={state.importingTemplateId}
-            searchQuery={state.searchQuery}
-            selectedCategory={state.selectedCategory}
-            setShowSortOptions={state.setShowSortOptions}
-            showSortOptions={state.showSortOptions}
-            sortOption={state.sortOption}
-            onImport={handlers.handleTemplateImport}
-            onPreview={handlers.handleTemplatePreview}
-            onResetFilters={handlers.handleResetFilters}
-            onSelectSort={handlers.handleSelectSortOption}
-            onToggleSortOptions={() =>
-              state.setShowSortOptions(!state.showSortOptions)
-            }
-          />
-        }
-        selectedCategory={state.selectedCategory}
-        sessionImportCount={state.sessionImportCount}
-        starterTemplates={starterTemplates}
-        userHabitCount={data.userHabitCount}
-      />
-    </>
+    <MainBrowseView
+      browseCategoriesLink={
+        <BrowseCategoriesLink
+          categoryCount={groups.length}
+          onPress={handleOpenCategories}
+        />
+      }
+      featuredTemplate={mainBrowseData.featuredTemplate}
+      feedbackOverlays={
+        <FeedbackOverlays
+          feedbackVariant={state.feedbackVariant}
+          sessionImportCount={state.sessionImportCount}
+          showCelebration={state.showCelebration}
+          showToast={state.showToast}
+          toastMessage={state.toastMessage}
+          toastTemplateData={state.toastTemplateData}
+          onAddAnother={handleAddAnother}
+          onDismissCelebration={handleDismissFeedback}
+          onDismissToast={handleDismissFeedback}
+          onViewHabit={handleViewHabit}
+        />
+      }
+      importedTemplateIds={state.importedTemplateIds}
+      importingTemplateId={state.importingTemplateId}
+      isSearchActive={state.isSearchActive}
+      modals={
+        <TemplatesScreenModals
+          importingTemplateId={state.importingTemplateId}
+          previewTemplate={state.previewTemplate}
+          showCustomizeModal={state.showCustomizeModal}
+          showPaywall={state.showPaywall}
+          onCloseCustomize={() => state.setShowCustomizeModal(false)}
+          onClosePaywall={() => state.setShowPaywall(false)}
+          onDirectImport={handlers.handleDirectImport}
+          onImport={handlers.handleTemplateImport}
+          packConfirmPack={packConfirm.selectedPack}
+          packConfirmVisible={!!packConfirm.selectedPack}
+          onPackCancel={packConfirm.handleCancel}
+          onPackConfirm={handlePackConfirm}
+        />
+      }
+      onBrowseByGoal={handleBrowseByGoal}
+      onImport={handleImport}
+      onPreview={handlers.handleTemplatePreview}
+      onSearchChange={state.setSearchQuery}
+      onSearchClear={() => state.setSearchQuery('')}
+      onSeeAll={handleSeeAll}
+      onSelectCategory={handleSelectChipCategory}
+      onStartHerePress={handleOpenStarters}
+      quickFilterCategories={mainBrowseData.quickFilterCategories}
+      rowSections={mainBrowseData.browseRowSections}
+      searchQuery={state.searchQuery}
+      searchResultsSection={
+        <SearchResults
+          filteredTemplates={sortedFilteredTemplates}
+          getCategoryLabel={props.getCategoryLabel}
+          hasActiveFilters={state.hasActiveFilters}
+          importedTemplateIds={state.importedTemplateIds}
+          importingTemplateId={state.importingTemplateId}
+          searchQuery={state.searchQuery}
+          selectedCategory={state.selectedCategory}
+          setShowSortOptions={state.setShowSortOptions}
+          showSortOptions={state.showSortOptions}
+          sortOption={state.sortOption}
+          onImport={handlers.handleTemplateImport}
+          onPreview={handlers.handleTemplatePreview}
+          onResetFilters={handlers.handleResetFilters}
+          onSelectSort={handlers.handleSelectSortOption}
+          onToggleSortOptions={() =>
+            state.setShowSortOptions(!state.showSortOptions)
+          }
+        />
+      }
+      selectedCategory={state.selectedCategory}
+      starterTemplates={starterTemplates}
+      userHabitCount={data.userHabitCount}
+    />
   );
 }
 

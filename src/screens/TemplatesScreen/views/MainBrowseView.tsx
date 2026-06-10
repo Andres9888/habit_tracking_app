@@ -1,5 +1,5 @@
 /**
- * MainBrowseView — Goal-first browse surface
+ * MainBrowseView — Minimal & Clean browse surface
  */
 
 import { StyleSheet, View } from 'react-native';
@@ -22,7 +22,6 @@ export function MainBrowseView(p: MainBrowseViewProps) {
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       <LibraryHero
         searchQuery={p.searchQuery}
-        sessionImportCount={p.sessionImportCount}
         onSearchChange={p.onSearchChange}
         onSearchClear={p.onSearchClear}
       />
@@ -53,20 +52,16 @@ export function MainBrowseView(p: MainBrowseViewProps) {
         >
           <BrowseSections
             browseCategoriesLink={p.browseCategoriesLink}
-            featuredBadgeLabel={p.featuredBadgeLabel}
-            featuredGoalId={p.featuredGoalId}
-            featuredStarterTemplates={p.featuredStarterTemplates}
-            habitCountsByGoalId={p.habitCountsByGoalId}
+            featuredTemplate={p.featuredTemplate}
             importedTemplateIds={p.importedTemplateIds}
             importingTemplateId={p.importingTemplateId}
             isFirstTimeUser={isFirstTimeUser}
             onBrowseByGoal={p.onBrowseByGoal}
-            onGoalSelect={p.onGoalSelect}
             onImport={p.onImport}
             onPreview={p.onPreview}
             onSeeAll={p.onSeeAll}
             onStartHerePress={p.onStartHerePress}
-            popularTemplates={p.popularTemplates}
+            rowSections={p.rowSections}
             starterTemplates={p.starterTemplates}
           />
         </Animated.View>
