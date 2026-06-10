@@ -47,6 +47,10 @@ function SettingsModalContent({
   const {
     compactView,
     setCompactView,
+    darkModePreference,
+    setDarkModePreference,
+    highContrastMode,
+    setHighContrastMode,
     habitSortMode,
     showGradientFill,
     setShowGradientFill,
@@ -173,6 +177,10 @@ function SettingsModalContent({
               onChangeCompactView={setCompactView}
               completionSoundEnabled={completionSoundEnabled}
               completionSoundType={completionSoundType}
+              darkModePreference={darkModePreference}
+              onChangeDarkModePreference={setDarkModePreference}
+              highContrastEnabled={highContrastMode}
+              onChangeHighContrast={setHighContrastMode}
               dayShape={dayShape}
               habitCompletionIcon={habitCompletionIcon}
               habitSortMode={habitSortMode}
