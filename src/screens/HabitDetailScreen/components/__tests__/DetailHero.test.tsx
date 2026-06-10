@@ -82,26 +82,18 @@ describe('DetailHero', () => {
     expect(getByText('5-Minute Meditation')).toBeTruthy();
   });
 
-  it('renders schedule chips for frequency and preferred time', () => {
-    const scheduledHabit = {
-      ...(mockHabit as object),
-      frequency: 'daily',
-      preferredTime: 'morning',
-    };
-    const { getByText, getByLabelText } = render(
-      <DetailHero habit={scheduledHabit as never} totalCompletions={89} />
+  it('renders the journey line from daysTracking', () => {
+    const { getByText } = render(
+      <DetailHero daysTracking={6} habit={mockHabit} totalCompletions={89} />
     );
-    expect(getByText('Daily')).toBeTruthy();
-    expect(getByText('Mornings')).toBeTruthy();
-    expect(getByLabelText('Schedule: Daily, Mornings')).toBeTruthy();
+    expect(getByText('Day 7 of your journey')).toBeTruthy();
   });
 
-  it('defaults to a Daily chip when habit has no explicit frequency', () => {
-    const { getByText, queryByText } = render(
+  it('defaults the journey line to day 1 without daysTracking', () => {
+    const { getByText } = render(
       <DetailHero habit={mockHabit} totalCompletions={89} />
     );
-    expect(getByText('Daily')).toBeTruthy();
-    expect(queryByText('Mornings')).toBeNull();
+    expect(getByText('Day 1 of your journey')).toBeTruthy();
   });
 
   it('has accessible header role on habit name', () => {

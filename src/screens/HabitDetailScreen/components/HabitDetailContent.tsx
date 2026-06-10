@@ -17,6 +17,7 @@ import { useDetailScrollSpy } from './useDetailScrollSpy';
 
 interface HabitDetailContentProps {
   completedDates: Set<string>;
+  daysTracking?: number;
   habit: Habit;
   isCompletedToday: boolean;
   isTogglingCalendar?: boolean;
@@ -27,6 +28,7 @@ interface HabitDetailContentProps {
 
 export function HabitDetailContent({
   completedDates,
+  daysTracking,
   habit,
   isCompletedToday,
   isTogglingCalendar = false,
@@ -58,6 +60,7 @@ export function HabitDetailContent({
       onScroll={handleScroll}
     >
       <DetailHero
+        daysTracking={daysTracking}
         habit={habit}
         isCompletedToday={isCompletedToday}
         totalCompletions={totalCompletions}

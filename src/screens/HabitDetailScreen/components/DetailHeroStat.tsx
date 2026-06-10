@@ -1,11 +1,13 @@
-/** DetailHeroStat - Single emoji + number + label item for the hero stats row. */
+/** DetailHeroStat - Centered number-over-label column for the hero stat row. */
 import React from 'react';
 import { Text, View } from 'react-native';
-import { spacing } from '../../../theme/spacing';
-import { typography, fontFamilies, fontWeights } from '../../../theme/typography';
+import {
+  fontFamilies,
+  fontWeights,
+  typography,
+} from '../../../theme/typography';
 
 interface DetailHeroStatProps {
-  emoji: string;
   label: string;
   value: number;
   valueColor: string;
@@ -13,26 +15,31 @@ interface DetailHeroStatProps {
 }
 
 export function DetailHeroStat({
-  emoji,
   label,
   value,
   valueColor,
   labelColor,
 }: DetailHeroStatProps) {
   return (
-    <View className='flex-row items-center' style={{ gap: spacing.xs }}>
-      <Text style={{ fontSize: typography.overline.fontSize }}>{emoji}</Text>
+    <View className='flex-1 items-center'>
       <Text
         style={{
           color: valueColor,
           fontFamily: fontFamilies.monospace,
-          fontSize: typography.caption.fontSize,
-          fontWeight: fontWeights.semibold,
+          fontSize: typography.heading3.fontSize,
+          fontWeight: fontWeights.bold,
         }}
       >
         {value}
       </Text>
-      <Text style={{ ...typography.caption, color: labelColor, fontSize: typography.overline.fontSize }}>
+      <Text
+        style={{
+          ...typography.caption,
+          color: labelColor,
+          fontSize: typography.overline.fontSize,
+          marginTop: 2,
+        }}
+      >
         {label}
       </Text>
     </View>

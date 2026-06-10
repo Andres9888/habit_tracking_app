@@ -1,13 +1,13 @@
-/** DetailHeroIcon - Colored icon tile with completed-today check badge. */
+/** DetailHeroIcon - Large centered icon tile with completed-today check badge. */
 import { Check } from 'lucide-react-native';
 import { Text, View } from 'react-native';
 import { useThemeColors } from '../../../theme';
 import { iconShadow } from './DetailHeader.constants';
 
 /** Hero-only dimensions with no shared token equivalent. */
-const ICON_TILE = 46;
-const ICON_EMOJI = 24;
-const CHECK_BADGE = 18;
+const ICON_TILE = 72;
+const ICON_EMOJI = 36;
+const CHECK_BADGE = 22;
 
 interface DetailHeroIconProps {
   color?: string;
@@ -25,7 +25,7 @@ export function DetailHeroIcon({
   return (
     <View
       accessibilityLabel={`Habit icon: ${icon}${isCompletedToday ? ', completed today' : ''}`}
-      className='items-center justify-center rounded-2xl'
+      className='items-center justify-center rounded-3xl'
       style={{
         ...iconShadow,
         backgroundColor: color || colors.primary[100],
@@ -48,7 +48,7 @@ export function DetailHeroIcon({
             width: CHECK_BADGE,
           }}
         >
-          <Check color={colors.text.inverse} size={10} strokeWidth={3} />
+          <Check color={colors.text.inverse} size={12} strokeWidth={3} />
         </View>
       ) : null}
     </View>

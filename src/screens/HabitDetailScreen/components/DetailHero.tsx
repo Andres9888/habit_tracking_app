@@ -1,5 +1,5 @@
-/** DetailHero - Horizontal: emoji left, name + inline stats right. */
-import { Text, View } from 'react-native';
+/** DetailHero - Minimal centered: large icon, name, journey line, stat row. */
+import { StyleSheet, Text, View } from 'react-native';
 import Animated, { Easing, FadeInDown } from 'react-native-reanimated';
 import { useThemeColors } from '../../../theme';
 import { spacing } from '../../../theme/spacing';
@@ -11,10 +11,10 @@ import {
 import type { Habit } from '../HabitDetailScreen.types';
 import { getHabitDisplayName } from './DetailHero.utils';
 import { DetailHeroIcon } from './DetailHeroIcon';
-import { DetailHeroSchedule } from './DetailHeroSchedule';
 import { DetailHeroStat } from './DetailHeroStat';
 
 interface DetailHeroProps {
+  daysTracking?: number;
   habit: Habit;
   isCompletedToday?: boolean;
   totalCompletions: number;
@@ -24,7 +24,10 @@ const ENTERING = FadeInDown.duration(280)
   .delay(100)
   .easing(Easing.out(Easing.cubic));
 
+const DIVIDER_HEIGHT = 28;
+
 export function DetailHero({
+  daysTracking = 0,
   habit,
   isCompletedToday,
   totalCompletions,
@@ -35,13 +38,14 @@ export function DetailHero({
     labelColor: colors.text.secondary,
     valueColor: colors.text.primary,
   };
+  const divider = {
+    backgroundColor: colors.border,
+    height: DIVIDER_HEIGHT,
+    width: StyleSheet.hairlineWidth,
+  };
 
   return (
-    <Animated.View
-      className='flex-row items-center px-5 py-1'
-      entering={ENTERING}
-      style={{ gap: spacing.md }}
-    >
+    <Animated.View className='items-center px-5 pb-1 pt-2' entering={ENTERING}>
       {habit.icon ? (
         <DetailHeroIcon
           color={habit.color ?? habit.iconColor}
@@ -50,47 +54,48 @@ export function DetailHero({
         />
       ) : null}
 
-      <View className='flex-1'>
-        <Text
-          accessibilityLabel={`Habit: ${habitName}`}
-          accessibilityRole='header'
-          numberOfLines={1}
-          style={{
-            color: colors.text.primary,
-            fontFamily: fontFamilies.primary.display,
-            fontSize: typography.heading3.fontSize,
-            fontWeight: fontWeights.bold,
-            lineHeight: typography.body.lineHeight,
-          }}
-        >
-          {habitName}
-        </Text>
+      <Text
+        accessibilityLabel={`Habit: ${habitName}`}
+        accessibilityRole='header'
+        numberOfLines={1}
+        style={{
+          color: colors.text.primary,
+          fontFamily: fontFamilies.primary.display,
+          fontSize: typography.heading3.fontSize,
+          fontWeight: fontWeights.bold,
+          marginTop: spacing.md,
+        }}
+      >
+        {habitName}
+      </Text>
 
-        <View
-          className='mt-1 flex-row items-center'
-          style={{ gap: spacing.md }}
-        >
-          <DetailHeroStat
-            emoji='🔥'
-            label='streak'
-            value={habit.currentStreak ?? 0}
-            {...statProps}
-          />
-          <DetailHeroStat
-            emoji='⭐'
-            label='best'
-            value={habit.bestStreak ?? 0}
-            {...statProps}
-          />
-          <DetailHeroStat
-            emoji='✓'
-            label='total'
-            value={totalCompletions}
-            {...statProps}
-          />
-        </View>
+      <Text
+        style={{
+          ...typography.caption,
+          color: colors.text.tertiary,
+          marginTop: spacing.xs,
+        }}
+      >
+        Day {daysTracking + 1} of your journey
+      </Text>
 
-        <DetailHeroSchedule habit={habit} />
+      <View
+        className='w-full flex-row items-center'
+        style={{ marginTop: spacing.base }}
+      >
+        <DetailHeroStat
+          label='streak'
+          value={habit.currentStreak ?? 0}
+          {...statProps}
+        />
+        <View style={divider} />
+        <DetailHeroStat
+          label='best'
+          value={habit.bestStreak ?? 0}
+          {...statProps}
+        />
+        <View style={divider} />
+        <DetailHeroStat label='total' value={totalCompletions} {...statProps} />
       </View>
     </Animated.View>
   );
