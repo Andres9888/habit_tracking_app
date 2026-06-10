@@ -65,6 +65,7 @@ function DraggableHabit(props: DraggableHabitProps) {
     onDelete,
     onEntranceComplete,
     onLongPress,
+    onMarkFormed,
     onPause,
     onPress,
     onResume,
@@ -171,6 +172,7 @@ function DraggableHabit(props: DraggableHabitProps) {
       weekStatus={weekStatus}
       onArchive={onArchive}
       onDelete={onDelete}
+      onMarkFormed={onMarkFormed}
       onPause={onPause}
       onPress={onPress}
       onResume={onResume}

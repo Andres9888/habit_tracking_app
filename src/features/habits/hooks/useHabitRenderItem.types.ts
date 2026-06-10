@@ -17,6 +17,7 @@ export interface UseHabitRenderItemArgs {
   getStreak: (habitId: string) => number;
   handleArchive: (habitId: Id<'habits'>) => Promise<void> | void;
   handleDelete: (habitId: Id<'habits'>) => void;
+  handleMarkFormed: (habitId: Id<'habits'>) => Promise<void> | void;
   handleHabitPress: (habit: Habit) => void;
   highlightHabitId?: Id<'habits'> | null;
   isReorderingEnabled: boolean;

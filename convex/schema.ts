@@ -77,6 +77,11 @@ const applicationTables = {
     // "daily", "weekly", "custom"
     daysOfWeek: v.optional(v.array(v.number())),
 
+    // Formed habit — mastered and retired with honors (right-swipe action)
+    formed: v.optional(v.boolean()),
+
+    formedAt: v.optional(v.number()),
+
     // "Regret, shame, broken promise"
     // Background color for icon
     frequency: v.optional(v.string()),

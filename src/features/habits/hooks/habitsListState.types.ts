@@ -51,6 +51,11 @@ export interface HabitsListState {
   handleDragEnd: (event: { data: Habit[] }) => Promise<void>;
   handleArchive: (habitId: Id<'habits'>) => Promise<void>;
   handleDelete: (habitId: Id<'habits'>) => void;
+  handleMarkFormed: (habitId: Id<'habits'>) => Promise<void>;
+  /** Undo toast state for the formed-habit celebration (null = hidden) */
+  formedToast: { habitId: Id<'habits'>; habitName: string } | null;
+  handleUndoFormed: () => Promise<void>;
+  dismissFormedToast: () => void;
   handleHabitPress: (habit: Habit) => void;
   handleJumpToToday: () => void;
   handleNextWeek: () => void;

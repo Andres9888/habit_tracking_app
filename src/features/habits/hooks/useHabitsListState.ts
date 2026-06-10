@@ -23,6 +23,7 @@ import { useHabitsWeekDates } from './useHabitsWeekDates';
 import { useHabitsTracking } from './useHabitsTracking';
 import { useHabitsSorting } from './useHabitsSorting';
 import { useHabitsArchive } from './useHabitsArchive';
+import { useHabitsFormed } from './useHabitsFormed';
 import { useHabitDelete } from './useHabitDelete';
 import { useRewardToast } from './useRewardToast';
 import { useHabitsListHeaderStats } from './useHabitsListHeaderStats';
@@ -282,6 +283,7 @@ export function useHabitsListState(): HabitsListState {
   });
 
   const archiveState = useHabitsArchive(habits);
+  const formedState = useHabitsFormed(habits);
   const { handleDelete } = useHabitDelete(habits);
   const rewardState = useRewardToast(celebrationsEnabled, getStreak);
 
@@ -414,6 +416,7 @@ export function useHabitsListState(): HabitsListState {
     weekDates: weekDatesState.weekDates,
     weekDateStrings: weekDatesState.weekDateStrings,
     ...archiveState,
+    ...formedState,
     ...rewardState,
     getHabitStatus,
     getStreak,

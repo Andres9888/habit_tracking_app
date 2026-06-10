@@ -22,6 +22,7 @@ import {
   renderHabitRow,
 } from './HabitsListRenders';
 import { HabitsListModals } from './HabitsListModals';
+import { FormedHabitsSection } from '../FormedHabitsSection';
 import { StickyHeaderContext } from '../../../../components/CalendarTimeline/StickyHeaderContext';
 import { useStickyHeader } from './useStickyHeader';
 import type { Habit } from '../../types';
@@ -103,6 +104,9 @@ export function HabitsListContent({
         {stickyEnabled ? listHeaderComponent : null}
         <View style={{ flex: 1, overflow: 'hidden' }}>
           <DraggableFlatList<Habit>
+            ListFooterComponent={
+              props.isSelectionMode ? undefined : <FormedHabitsSection />
+            }
             ListHeaderComponent={
               stickyEnabled ? undefined : (
                 <HeaderWrapper style={headerWrapperStyle}>

@@ -76,6 +76,7 @@ export interface DraggableHabitProps {
   onDelete?: (habitId: Id<'habits'>) => void;
   onEntranceComplete?: () => void;
   onLongPress?: ((habit?: Habit) => void) | (() => void);
+  onMarkFormed?: (habitId: Id<'habits'>) => void;
   onPause?: (habitId: Id<'habits'>) => void;
   onPress?: (habit: Habit) => void;
   onResume?: (habitId: Id<'habits'>) => void;

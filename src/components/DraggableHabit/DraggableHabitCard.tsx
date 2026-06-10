@@ -26,6 +26,7 @@ import { Pressable, StyleSheet } from 'react-native';
 import { Swipeable } from 'react-native-gesture-handler';
 import ReAnimated, { useAnimatedStyle } from 'react-native-reanimated';
 import { SwipeActions } from './SwipeActions';
+import { FormedAction } from './FormedAction';
 import { CardContent } from './CardContent';
 import { SelectionOverlay } from './SelectionOverlay';
 import { StrengthFillBackground } from '../HabitCard/components/StrengthFillBackground';
@@ -82,7 +83,12 @@ function DraggableHabitCardComponent(props: DraggableHabitCardProps) {
     props.onDelete?.(props.habit._id);
   }, [props.onDelete, props.habit._id]);
 
-  const hasSwipeActions = props.onArchive || props.onDelete;
+  const handleMarkFormedPress = useCallback(() => {
+    props.onMarkFormed?.(props.habit._id);
+  }, [props.onMarkFormed, props.habit._id]);
+
+  const hasSwipeActions =
+    props.onArchive || props.onDelete || props.onMarkFormed;
 
   const habitCard = (
     <ReAnimated.View
@@ -102,7 +108,7 @@ function DraggableHabitCardComponent(props: DraggableHabitCardProps) {
         accessibilityHint={
           props.showSelectionOverlay
             ? 'Tap to toggle selection'
-            : `Tap to view details${hasSwipeActions ? ', swipe left for actions' : ''}`
+            : `Tap to view details${props.onArchive || props.onDelete ? ', swipe left for actions' : ''}${props.onMarkFormed ? ', swipe right to mark as formed' : ''}`
         }
         accessibilityLabel={`${props.habit.name}, ${props.streak} day streak`}
         accessibilityRole='button'
@@ -170,14 +176,29 @@ function DraggableHabitCardComponent(props: DraggableHabitCardProps) {
   return (
     <Swipeable
       friction={2}
+      overshootLeft={false}
       overshootRight={false}
-      renderRightActions={(_, dragX) => (
-        <SwipeActions
-          dragX={dragX}
-          onArchive={handleArchivePress}
-          onDelete={handleDeletePress}
-        />
-      )}
+      renderLeftActions={
+        props.onMarkFormed
+          ? (_, dragX) => (
+              <FormedAction
+                dragX={dragX}
+                onMarkFormed={handleMarkFormedPress}
+              />
+            )
+          : undefined
+      }
+      renderRightActions={
+        props.onArchive || props.onDelete
+          ? (_, dragX) => (
+              <SwipeActions
+                dragX={dragX}
+                onArchive={handleArchivePress}
+                onDelete={handleDeletePress}
+              />
+            )
+          : undefined
+      }
     >
       {habitCard}
     </Swipeable>

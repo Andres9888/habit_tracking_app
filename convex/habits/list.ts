@@ -20,8 +20,11 @@ export const list = query({
       .withIndex('by_userId', (q) => q.eq('userId', identity.subject))
       .collect();
 
-    // Filter out archived habits but include paused habits (they'll be shown differently in UI)
-    const activeHabits = habits.filter((h) => h.archived !== true);
+    // Filter out archived and formed habits but include paused habits
+    // (paused are shown differently in UI; formed live in their own section)
+    const activeHabits = habits.filter(
+      (h) => h.archived !== true && h.formed !== true
+    );
 
     // Sort by order field (ascending), use _creationTime as fallback
     const sortedHabits = activeHabits.sort((a, b) => {

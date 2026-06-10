@@ -1,5 +1,4 @@
-/* eslint-disable max-lines */
-/** Habit Archive Mutations — Archive, unarchive, and bulk delete */
+/** Formed Habit Mutations — mark a mastered habit as formed (retired with honors) */
 import { v } from 'convex/values';
 import { mutation, query } from '../_generated/server';
 import { hasPremiumAccess } from '../subscriptions/premiumCheck';
@@ -13,33 +12,33 @@ function requireAuth(identity: unknown, action: string) {
     throw new Error(`Unauthenticated: Must be logged in to ${action}`);
 }
 
-export const archive = mutation({
+export const markFormed = mutation({
   args: { habitId: v.id('habits') },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
-    requireAuth(identity, 'archive habits');
+    requireAuth(identity, 'mark habits as formed');
     const habit = await ctx.db.get(args.habitId);
     if (!habit) throw new Error('Habit not found');
     if (habit.userId !== identity!.subject)
-      throw new Error('Not authorized to archive this habit');
+      throw new Error('Not authorized to update this habit');
     await ctx.db.patch(args.habitId, {
-      archived: true,
-      archivedAt: Date.now(),
+      formed: true,
+      formedAt: Date.now(),
     });
     return null;
   },
   returns: v.null(),
 });
 
-export const unarchive = mutation({
+export const unmarkFormed = mutation({
   args: { habitId: v.id('habits') },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
-    requireAuth(identity, 'unarchive habits');
+    requireAuth(identity, 'restore formed habits');
     const habit = await ctx.db.get(args.habitId);
     if (!habit) throw new Error('Habit not found');
     if (habit.userId !== identity!.subject)
-      throw new Error('Not authorized to unarchive this habit');
+      throw new Error('Not authorized to update this habit');
     const activeHabits = await ctx.db
       .query('habits')
       .withIndex('by_userId', (q) => q.eq('userId', identity!.subject))
@@ -50,17 +49,17 @@ export const unarchive = mutation({
         )
       )
       .collect();
-    // SEC-005: Free tier limit check on unarchive
+    // Mirror of SEC-005 unarchive check: restoring counts against the free tier
     const nonPausedActive = activeHabits.filter((h) => !h.paused);
     const isPremiumUser = await hasPremiumAccess(ctx, identity!.subject);
     if (!isPremiumUser && nonPausedActive.length >= FREE_HABIT_LIMIT) {
       throw new Error(
-        `Free tier is limited to ${FREE_HABIT_LIMIT} active habits. Upgrade to premium or delete an active habit to restore this one.`
+        `Free tier is limited to ${FREE_HABIT_LIMIT} active habits. Upgrade to premium or delete an active habit to resume this one.`
       );
     }
     await ctx.db.patch(args.habitId, {
-      archived: false,
-      archivedAt: undefined,
+      formed: false,
+      formedAt: undefined,
       order: findMaxOrder(activeHabits) + 1,
     });
     return null;
@@ -68,64 +67,43 @@ export const unarchive = mutation({
   returns: v.null(),
 });
 
-export const listArchived = query({
+export const listFormed = query({
   args: {},
   handler: async (ctx) => {
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) return [];
-    return await ctx.db
+    const formedHabits = await ctx.db
       .query('habits')
       .withIndex('by_userId', (q) => q.eq('userId', identity.subject))
-      .filter((q) => q.eq(q.field('archived'), true))
+      .filter((q) =>
+        q.and(
+          q.eq(q.field('formed'), true),
+          q.neq(q.field('archived'), true)
+        )
+      )
       .collect();
+    // Most recently formed first
+    return formedHabits.sort((a, b) => (b.formedAt ?? 0) - (a.formedAt ?? 0));
   },
   returns: v.array(fullHabitValidator),
 });
 
-export const listArchivedCount = query({
+export const listFormedCount = query({
   args: {},
   handler: async (ctx) => {
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) return 0;
-    const archivedHabits = await ctx.db
+    const formedHabits = await ctx.db
       .query('habits')
       .withIndex('by_userId', (q) => q.eq('userId', identity.subject))
-      .filter((q) => q.eq(q.field('archived'), true))
+      .filter((q) =>
+        q.and(
+          q.eq(q.field('formed'), true),
+          q.neq(q.field('archived'), true)
+        )
+      )
       .collect();
-    return archivedHabits.length;
+    return formedHabits.length;
   },
   returns: v.number(),
-});
-
-export const deleteAllArchived = mutation({
-  args: {},
-  handler: async (ctx) => {
-    const identity = await ctx.auth.getUserIdentity();
-    requireAuth(identity, 'delete archived habits');
-    const archivedHabits = await ctx.db
-      .query('habits')
-      .withIndex('by_userId', (q) => q.eq('userId', identity!.subject))
-      .filter((q) => q.eq(q.field('archived'), true))
-      .collect();
-    let deletedCount = 0;
-    for (const habit of archivedHabits) {
-      const records = await ctx.db
-        .query('tracking')
-        .withIndex('by_habit_and_date', (q) => q.eq('habitId', habit._id))
-        .collect();
-      const templateUsageEntries = await ctx.db
-        .query('templateUsage')
-        .withIndex('by_habit', (q) => q.eq('habitId', habit._id))
-        .collect();
-
-      for (const record of records) await ctx.db.delete(record._id);
-      for (const usageEntry of templateUsageEntries)
-        await ctx.db.delete(usageEntry._id);
-
-      await ctx.db.delete(habit._id);
-      deletedCount++;
-    }
-    return { deletedCount };
-  },
-  returns: v.object({ deletedCount: v.number() }),
 });

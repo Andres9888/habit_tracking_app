@@ -145,6 +145,12 @@ function HabitsAppContent() {
             batchArchiveUndoVisible={selectionActions.batchArchiveUndoVisible}
             confirmDeleteCount={selectionActions.deleteCount}
             confirmDeleteVisible={selectionActions.confirmDeleteVisible}
+            formedToastHabitName={list.formedToast?.habitName ?? ''}
+            formedToastVisible={list.formedToast !== null}
+            onFormedDismiss={list.dismissFormedToast}
+            onFormedUndo={() => {
+              void list.handleUndoFormed();
+            }}
             modals={modals}
             paywallVisible={handlers.paywallVisible}
             onBatchArchiveDismiss={selectionActions.dismissBatchArchiveUndo}

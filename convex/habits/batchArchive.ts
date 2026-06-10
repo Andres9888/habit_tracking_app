@@ -42,7 +42,12 @@ export const batchUnarchive = mutation({
     const activeHabits = await ctx.db
       .query('habits')
       .withIndex('by_userId', (q) => q.eq('userId', identity.subject))
-      .filter((q) => q.neq(q.field('archived'), true))
+      .filter((q) =>
+        q.and(
+          q.neq(q.field('archived'), true),
+          q.neq(q.field('formed'), true)
+        )
+      )
       .collect();
     const habitsToUnarchive = [];
     for (const habitId of uniqueHabitIds) {

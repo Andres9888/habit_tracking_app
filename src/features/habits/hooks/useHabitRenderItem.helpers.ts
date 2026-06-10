@@ -61,6 +61,7 @@ export function getRenderItemDependencies(args: UseHabitRenderItemArgs) {
     args.handleArchive,
     args.handleDelete,
     args.handleHabitPress,
+    args.handleMarkFormed,
     args.highlightHabitId,
     args.isReorderingEnabled,
     args.notifyWeekCompletion,

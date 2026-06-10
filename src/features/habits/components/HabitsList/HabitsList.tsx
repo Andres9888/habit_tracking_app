@@ -57,6 +57,7 @@ export function HabitsList(props: HabitsListProps) {
     handleArchive: list.handleArchive,
     handleDelete: list.handleDelete,
     handleHabitPress: list.handleHabitPress,
+    handleMarkFormed: list.handleMarkFormed,
     isSelectionMode: props.isSelectionMode,
     selectedIds: props.selectedIds,
     onToggleSelection: props.onToggleSelection,

@@ -34,6 +34,7 @@ type HabitRenderContentProps = {
   | 'handleArchive'
   | 'handleDelete'
   | 'handleHabitPress'
+  | 'handleMarkFormed'
   | 'highlightHabitId'
   | 'isReorderingEnabled'
   | 'notifyWeekCompletion'
@@ -67,6 +68,7 @@ function HabitRenderContentComponent({
   handleArchive,
   handleDelete,
   handleHabitPress,
+  handleMarkFormed,
   handlePause,
   handleResume,
   highlightHabitId,
@@ -171,6 +173,9 @@ function HabitRenderContentComponent({
           }
           onDelete={
             isSelectionMode || isOptimisticHabit ? undefined : handleDelete
+          }
+          onMarkFormed={
+            isSelectionMode || isOptimisticHabit ? undefined : handleMarkFormed
           }
           onEntranceComplete={handleEntranceComplete}
           onLongPress={handleLongPress}

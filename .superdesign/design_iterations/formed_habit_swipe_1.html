@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Formed Habit — Right Swipe Mockup</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: #0a0a0a;
+      color: #e5e5e5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+      overflow-x: hidden;
+    }
+
+    h1 {
+      font-size: 28px !important;
+      font-weight: 700 !important;
+      margin-bottom: 8px !important;
+      color: #fafafa !important;
+      text-align: center;
+    }
+
+    .subtitle {
+      font-size: 15px;
+      color: #737373;
+      margin-bottom: 40px;
+      text-align: center;
+      max-width: 520px;
+      line-height: 1.5;
+    }
+
+    .section-label {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: #525252;
+      margin-bottom: 16px;
+      width: 100%;
+      max-width: 420px;
+      text-align: left;
+    }
+
+    .divider {
+      width: 100%;
+      max-width: 880px;
+      height: 1px;
+      background: #262626;
+      margin: 16px 0 40px;
+    }
+
+    /* ─── Interactive Demo ─── */
+    .demo-section {
+      width: 100%;
+      max-width: 420px;
+      margin-bottom: 48px;
+      position: relative;
+    }
+
+    .demo-instruction {
+      font-size: 13px;
+      color: #525252;
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    .demo-card-wrapper {
+      position: relative;
+      border-radius: 20px;
+      overflow: hidden;
+      height: 76px;
+      margin-bottom: 12px;
+    }
+
+    .demo-card {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 16px;
+      background: #1e1e1e;
+      border-radius: 20px;
+      border: 1px solid #2a2a2a;
+      height: 76px;
+      z-index: 2;
+      cursor: grab;
+      user-select: none;
+      touch-action: pan-y;
+      transition: transform 0.05s linear;
+    }
+
+    .demo-card.snapping {
+      transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    /* Formed action sits on the LEFT (revealed by right swipe) */
+    .formed-actions {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      display: flex;
+    }
+
+    .action-formed {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      height: 100%;
+      width: 96px;
+      color: #1c1300;
+      cursor: pointer;
+      border: none;
+      background: linear-gradient(135deg, #fbbf24, #eab308);
+      border-top-left-radius: 20px;
+      border-bottom-left-radius: 20px;
+      transition: filter 0.15s;
+      font-family: inherit;
+    }
+
+    .action-formed:hover { filter: brightness(1.1); }
+
+    .action-formed span {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+    }
+
+    .accent-strip {
+      width: 4px;
+      align-self: stretch;
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+
+    .habit-emoji { font-size: 28px; flex-shrink: 0; }
+
+    .habit-info { flex: 1; min-width: 0; }
+
+    .habit-name {
+      font-size: 15px;
+      font-weight: 600;
+      color: #fafafa;
+      margin-bottom: 3px;
+    }
+
+    .habit-streak { font-size: 12px; color: #737373; }
+    .habit-streak strong { color: #a3a3a3; }
+
+    .habit-check {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 2px solid #404040;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .habit-check.done {
+      background: #22c55e;
+      border-color: #22c55e;
+    }
+
+    .strength-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: rgba(251, 191, 36, 0.12);
+      color: #fbbf24;
+    }
+
+    /* Celebration toast */
+    .toast {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      background: linear-gradient(135deg, rgba(251,191,36,0.12), rgba(234,179,8,0.06));
+      border: 1px solid rgba(251, 191, 36, 0.35);
+      border-radius: 14px;
+      padding: 12px 16px;
+      margin-top: 12px;
+      animation: slideUp 0.3s ease-out;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .toast.visible { display: flex; }
+
+    .toast-text { flex: 1; font-size: 13px; color: #fde68a; font-weight: 500; }
+
+    .toast-undo {
+      font-size: 13px;
+      font-weight: 700;
+      color: #fbbf24;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 8px;
+      background: rgba(251, 191, 36, 0.12);
+      border: none;
+      font-family: inherit;
+    }
+
+    .toast-progress {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      height: 2px;
+      background: #fbbf24;
+      width: 100%;
+      transform-origin: left;
+    }
+
+    .toast.visible .toast-progress { animation: progress 5s linear forwards; }
+
+    @keyframes progress { from { transform: scaleX(1); } to { transform: scaleX(0); } }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Confetti */
+    .confetti-piece {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      border-radius: 2px;
+      pointer-events: none;
+      z-index: 50;
+      animation: confettiFall 1.2s ease-out forwards;
+    }
+
+    @keyframes confettiFall {
+      0%   { opacity: 1; transform: translate(0, 0) rotate(0deg) scale(1); }
+      100% { opacity: 0; transform: translate(var(--dx), var(--dy)) rotate(540deg) scale(0.6); }
+    }
+
+    .demo-buttons {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      margin-top: 8px;
+    }
+
+    .demo-btn {
+      font-size: 12px;
+      padding: 6px 12px;
+      border-radius: 8px;
+      border: 1px solid #404040;
+      background: #262626;
+      color: #a3a3a3;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .demo-btn.gold {
+      border-color: #ca8a04;
+      background: rgba(234, 179, 8, 0.12);
+      color: #fbbf24;
+    }
+
+    /* ─── Phone frame ─── */
+    .phone-frame {
+      width: 390px;
+      background: #171717;
+      border-radius: 40px;
+      border: 3px solid #262626;
+      padding: 60px 0 40px;
+      margin-bottom: 48px;
+      overflow: hidden;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.5);
+    }
+
+    .status-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 28px;
+      margin-bottom: 20px;
+    }
+
+    .status-time { font-size: 15px; font-weight: 600; color: #fafafa; }
+    .status-icons { display: flex; gap: 6px; align-items: center; }
+
+    .header { padding: 0 24px; margin-bottom: 24px; }
+    .header h2 { font-size: 28px !important; font-weight: 700 !important; color: #fafafa !important; }
+
+    .habit-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 0 16px;
+    }
+
+    .habit-card-wrapper {
+      position: relative;
+      border-radius: 20px;
+      overflow: hidden;
+      height: 76px;
+    }
+
+    .habit-card {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 16px;
+      background: #1e1e1e;
+      border-radius: 20px;
+      border: 1px solid #2a2a2a;
+      height: 76px;
+      z-index: 2;
+      user-select: none;
+    }
+
+    .habit-card.swiped-right { transform: translateX(96px); }
+
+    /* Formed section (Variant A) */
+    .formed-section-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      margin-top: 18px;
+      cursor: pointer;
+      border-radius: 12px;
+    }
+
+    .formed-section-header:hover { background: #1c1c1c; }
+
+    .formed-section-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #fbbf24;
+      letter-spacing: 0.3px;
+      flex: 1;
+    }
+
+    .formed-count {
+      font-size: 11px;
+      font-weight: 700;
+      color: #1c1300;
+      background: #fbbf24;
+      border-radius: 999px;
+      padding: 1px 8px;
+    }
+
+    .habit-card.formed {
+      background: linear-gradient(135deg, rgba(251,191,36,0.07), rgba(30,30,30,1) 55%);
+      border-color: rgba(251, 191, 36, 0.25);
+    }
+
+    .formed-trophy {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: rgba(251, 191, 36, 0.15);
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Settings row (Variant B) */
+    .settings-list {
+      background: #1e1e1e;
+      border: 1px solid #2a2a2a;
+      border-radius: 20px;
+      margin: 0 16px;
+      overflow: hidden;
+    }
+
+    .settings-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      cursor: pointer;
+    }
+
+    .settings-row + .settings-row { border-top: 1px solid #2a2a2a; }
+    .settings-row:hover { background: #242424; }
+
+    .settings-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .settings-text { flex: 1; }
+    .settings-label { font-size: 15px; font-weight: 600; color: #fafafa; }
+    .settings-sub { font-size: 12px; color: #737373; margin-top: 2px; }
+
+    .settings-badge {
+      font-size: 12px;
+      font-weight: 700;
+      color: #1c1300;
+      background: #fbbf24;
+      border-radius: 999px;
+      padding: 2px 9px;
+    }
+
+    /* Variant comparison */
+    .comparison {
+      display: flex;
+      gap: 32px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 24px;
+      align-items: flex-start;
+    }
+
+    .variant-card { width: 390px; }
+
+    .variant-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #fafafa;
+      text-align: center;
+      margin-bottom: 4px;
+    }
+
+    .variant-desc {
+      font-size: 13px;
+      color: #737373;
+      text-align: center;
+      margin-bottom: 16px;
+      line-height: 1.5;
+    }
+
+    .variant-frame {
+      background: #171717;
+      border-radius: 32px;
+      border: 3px solid #262626;
+      padding: 28px 0;
+      overflow: hidden;
+    }
+
+    @media (max-width: 900px) {
+      .comparison { flex-direction: column; align-items: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Formed Habit — Right Swipe 🏆</h1>
+  <p class="subtitle">
+    Swipe <strong style="color:#fbbf24">right</strong> on a habit to mark it as <strong style="color:#fbbf24">Formed</strong> — the celebratory mirror of swipe-left delete/archive.
+    Below: the gesture, the celebration, and two options for where formed habits live.
+  </p>
+
+  <div class="divider"></div>
+
+  <!-- ─── Interactive Demo ─── -->
+  <p class="section-label">Interactive demo — drag the card RIGHT</p>
+  <div class="demo-section" id="demoSection">
+    <p class="demo-instruction">Drag right to reveal the Formed action. Full swipe right = mark as formed (confetti 🎉)</p>
+
+    <div class="demo-card-wrapper" id="demoWrapper">
+      <div class="formed-actions">
+        <button class="action-formed" onclick="doFormed()">
+          <i data-lucide="trophy" style="width:20px;height:20px;color:#1c1300"></i>
+          <span>Formed</span>
+        </button>
+      </div>
+      <div class="demo-card" id="demoCard">
+        <div class="accent-strip" style="background:#22c55e"></div>
+        <span class="habit-emoji">🏃</span>
+        <div class="habit-info">
+          <div class="habit-name">Morning Run</div>
+          <div class="habit-streak"><span class="strength-pill">⚡ Automatic</span> &nbsp;<strong>87 day</strong> streak</div>
+        </div>
+        <div class="habit-check done">
+          <i data-lucide="check" style="width:16px;height:16px;color:white"></i>
+        </div>
+      </div>
+    </div>
+
+    <div class="demo-buttons">
+      <button class="demo-btn" onclick="snapTo(0)">Reset</button>
+      <button class="demo-btn" onclick="snapTo(96)">Show Action</button>
+      <button class="demo-btn gold" onclick="doFormed()">Full Swipe → Formed</button>
+    </div>
+
+    <div class="toast" id="formedToast">
+      <span style="font-size:18px">🏆</span>
+      <span class="toast-text">"Morning Run" is now a formed habit!</span>
+      <button class="toast-undo" onclick="undoFormed()">UNDO</button>
+      <div class="toast-progress"></div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ─── Gesture in context ─── -->
+  <p class="section-label" style="max-width:420px">In-context: both swipe directions</p>
+  <div class="phone-frame">
+    <div class="status-bar">
+      <span class="status-time">9:41</span>
+      <div class="status-icons">
+        <i data-lucide="signal" style="width:14px;height:14px;color:#fafafa"></i>
+        <i data-lucide="wifi" style="width:14px;height:14px;color:#fafafa"></i>
+        <i data-lucide="battery-full" style="width:14px;height:14px;color:#fafafa"></i>
+      </div>
+    </div>
+
+    <div class="header"><h2>Today</h2></div>
+
+    <div class="habit-list">
+      <!-- swiped RIGHT showing Formed -->
+      <div class="habit-card-wrapper">
+        <div class="formed-actions">
+          <div class="action-formed" style="cursor:default">
+            <i data-lucide="trophy" style="width:20px;height:20px;color:#1c1300"></i>
+            <span>Formed</span>
+          </div>
+        </div>
+        <div class="habit-card swiped-right">
+          <div class="accent-strip" style="background:#22c55e"></div>
+          <span class="habit-emoji">🏃</span>
+          <div class="habit-info">
+            <div class="habit-name">Morning Run</div>
+            <div class="habit-streak"><strong>87 day</strong> streak</div>
+          </div>
+          <div class="habit-check done">
+            <i data-lucide="check" style="width:16px;height:16px;color:white"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- normal -->
+      <div class="habit-card-wrapper">
+        <div class="habit-card">
+          <div class="accent-strip" style="background:#8b5cf6"></div>
+          <span class="habit-emoji">📖</span>
+          <div class="habit-info">
+            <div class="habit-name">Read 30 mins</div>
+            <div class="habit-streak"><strong>7 day</strong> streak</div>
+          </div>
+          <div class="habit-check"></div>
+        </div>
+      </div>
+
+      <!-- swiped LEFT (existing) -->
+      <div class="habit-card-wrapper">
+        <div style="position:absolute;right:0;top:0;bottom:0;display:flex">
+          <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;width:80px;background:#dc2626;color:white">
+            <i data-lucide="trash-2" style="width:20px;height:20px;color:white"></i>
+            <span style="font-size:11px;font-weight:600">Delete</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;width:80px;background:#d97706;color:white;border-top-right-radius:20px;border-bottom-right-radius:20px">
+            <i data-lucide="archive" style="width:20px;height:20px;color:white"></i>
+            <span style="font-size:11px;font-weight:600">Archive</span>
+          </div>
+        </div>
+        <div class="habit-card" style="transform:translateX(-160px)">
+          <div class="accent-strip" style="background:#f59e0b"></div>
+          <span class="habit-emoji">🧘</span>
+          <div class="habit-info">
+            <div class="habit-name">Meditate</div>
+            <div class="habit-streak"><strong>12 day</strong> streak</div>
+          </div>
+          <div class="habit-check"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ─── Where formed habits live ─── -->
+  <p class="section-label" style="max-width:880px">Where do formed habits live? Two options</p>
+  <div class="comparison">
+
+    <!-- Variant A -->
+    <div class="variant-card">
+      <div class="variant-title">A — Formed section in main list</div>
+      <p class="variant-desc">Collapsible trophy section at the bottom of the habits page.<br/>Always visible — your trophy shelf.</p>
+      <div class="variant-frame">
+        <div class="habit-list">
+          <div class="habit-card-wrapper">
+            <div class="habit-card">
+              <div class="accent-strip" style="background:#8b5cf6"></div>
+              <span class="habit-emoji">📖</span>
+              <div class="habit-info">
+                <div class="habit-name">Read 30 mins</div>
+                <div class="habit-streak"><strong>7 day</strong> streak</div>
+              </div>
+              <div class="habit-check"></div>
+            </div>
+          </div>
+          <div class="habit-card-wrapper">
+            <div class="habit-card">
+              <div class="accent-strip" style="background:#3b82f6"></div>
+              <span class="habit-emoji">💧</span>
+              <div class="habit-info">
+                <div class="habit-name">Drink Water</div>
+                <div class="habit-streak"><strong>45 day</strong> streak</div>
+              </div>
+              <div class="habit-check done">
+                <i data-lucide="check" style="width:16px;height:16px;color:white"></i>
+              </div>
+            </div>
+          </div>
+
+          <div class="formed-section-header" onclick="toggleFormed()">
+            <i data-lucide="trophy" style="width:16px;height:16px;color:#fbbf24"></i>
+            <span class="formed-section-title">Formed habits</span>
+            <span class="formed-count">2</span>
+            <i data-lucide="chevron-down" id="formedChevron" style="width:16px;height:16px;color:#737373"></i>
+          </div>
+
+          <div id="formedSectionBody">
+            <div class="habit-card-wrapper" style="margin-bottom:10px">
+              <div class="habit-card formed">
+                <div class="accent-strip" style="background:#fbbf24"></div>
+                <span class="habit-emoji">🏃</span>
+                <div class="habit-info">
+                  <div class="habit-name">Morning Run</div>
+                  <div class="habit-streak">Formed after <strong>87 days</strong> · May 12</div>
+                </div>
+                <div class="formed-trophy">
+                  <i data-lucide="trophy" style="width:14px;height:14px;color:#fbbf24"></i>
+                </div>
+              </div>
+            </div>
+            <div class="habit-card-wrapper">
+              <div class="habit-card formed">
+                <div class="accent-strip" style="background:#fbbf24"></div>
+                <span class="habit-emoji">🦷</span>
+                <div class="habit-info">
+                  <div class="habit-name">Floss</div>
+                  <div class="habit-streak">Formed after <strong>112 days</strong> · Mar 3</div>
+                </div>
+                <div class="formed-trophy">
+                  <i data-lucide="trophy" style="width:14px;height:14px;color:#fbbf24"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Variant B -->
+    <div class="variant-card">
+      <div class="variant-title">B — Hidden, in Settings (like Archived)</div>
+      <p class="variant-desc">Formed habits leave the main list. Viewable in a<br/>"Formed habits" modal from Settings, next to Archived.</p>
+      <div class="variant-frame">
+        <div style="padding:0 24px 16px">
+          <div style="font-size:20px;font-weight:700;color:#fafafa">Settings</div>
+          <div style="font-size:12px;color:#737373;margin-top:2px">Habit management</div>
+        </div>
+        <div class="settings-list">
+          <div class="settings-row">
+            <div class="settings-icon" style="background:rgba(251,191,36,0.15)">
+              <i data-lucide="trophy" style="width:16px;height:16px;color:#fbbf24"></i>
+            </div>
+            <div class="settings-text">
+              <div class="settings-label">Formed habits</div>
+              <div class="settings-sub">Your hall of fame — habits you've mastered</div>
+            </div>
+            <span class="settings-badge">2</span>
+            <i data-lucide="chevron-right" style="width:16px;height:16px;color:#525252"></i>
+          </div>
+          <div class="settings-row">
+            <div class="settings-icon" style="background:rgba(217,119,6,0.15)">
+              <i data-lucide="archive" style="width:16px;height:16px;color:#d97706"></i>
+            </div>
+            <div class="settings-text">
+              <div class="settings-label">Archived habits</div>
+              <div class="settings-sub">View and restore hidden habits</div>
+            </div>
+            <span class="settings-badge" style="background:#404040;color:#d4d4d4">3</span>
+            <i data-lucide="chevron-right" style="width:16px;height:16px;color:#525252"></i>
+          </div>
+        </div>
+
+        <div style="padding:20px 24px 4px">
+          <div style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:#525252;margin-bottom:12px">Formed habits modal preview</div>
+        </div>
+        <div class="habit-list">
+          <div class="habit-card-wrapper">
+            <div class="habit-card formed">
+              <div class="accent-strip" style="background:#fbbf24"></div>
+              <span class="habit-emoji">🏃</span>
+              <div class="habit-info">
+                <div class="habit-name">Morning Run</div>
+                <div class="habit-streak">Formed after <strong>87 days</strong> · May 12</div>
+              </div>
+              <button class="demo-btn" style="font-size:11px">Resume</button>
+            </div>
+          </div>
+          <div class="habit-card-wrapper">
+            <div class="habit-card formed">
+              <div class="accent-strip" style="background:#fbbf24"></div>
+              <span class="habit-emoji">🦷</span>
+              <div class="habit-info">
+                <div class="habit-name">Floss</div>
+                <div class="habit-streak">Formed after <strong>112 days</strong> · Mar 3</div>
+              </div>
+              <button class="demo-btn" style="font-size:11px">Resume</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p style="font-size:13px;color:#525252;text-align:center;max-width:560px;line-height:1.6;margin-bottom:40px">
+    Open question in both variants: is a formed habit <strong style="color:#a3a3a3">retired</strong> (no more daily check-offs, frozen as an achievement)
+    or <strong style="color:#a3a3a3">still trackable</strong>? The "Resume" button in B and the muted cards in A assume retired-but-restorable.
+  </p>
+
+  <script>
+    lucide.createIcons();
+
+    const demoCard = document.getElementById('demoCard');
+    const demoSection = document.getElementById('demoSection');
+    let startX = 0, currentX = 0, isDragging = false;
+
+    function onStart(clientX) {
+      isDragging = true;
+      startX = clientX - currentX;
+      demoCard.classList.remove('snapping');
+    }
+
+    function onMove(clientX) {
+      if (!isDragging) return;
+      let newX = clientX - startX;
+      if (newX < 0) newX = 0;
+      if (newX > 220) newX = 220;
+      currentX = newX;
+      demoCard.style.transform = `translateX(${newX}px)`;
+    }
+
+    function onEnd() {
+      if (!isDragging) return;
+      isDragging = false;
+      demoCard.classList.add('snapping');
+      if (currentX > 180) doFormed();
+      else if (currentX > 48) snapTo(96);
+      else snapTo(0);
+    }
+
+    demoCard.addEventListener('mousedown', e => onStart(e.clientX));
+    document.addEventListener('mousemove', e => onMove(e.clientX));
+    document.addEventListener('mouseup', onEnd);
+    demoCard.addEventListener('touchstart', e => onStart(e.touches[0].clientX));
+    document.addEventListener('touchmove', e => onMove(e.touches[0].clientX));
+    document.addEventListener('touchend', onEnd);
+
+    function snapTo(x) {
+      currentX = x;
+      demoCard.classList.add('snapping');
+      demoCard.style.transform = `translateX(${x}px)`;
+    }
+
+    function doFormed() {
+      demoCard.classList.add('snapping');
+      demoCard.style.transform = 'translateX(440px)';
+      currentX = 440;
+      burstConfetti();
+      const toast = document.getElementById('formedToast');
+      toast.classList.remove('visible');
+      void toast.offsetWidth; // restart animations
+      setTimeout(() => toast.classList.add('visible'), 250);
+    }
+
+    function undoFormed() {
+      document.getElementById('formedToast').classList.remove('visible');
+      snapTo(0);
+    }
+
+    function burstConfetti() {
+      const colors = ['#fbbf24', '#f59e0b', '#22c55e', '#8b5cf6', '#3b82f6', '#ec4899'];
+      const wrapper = document.getElementById('demoWrapper');
+      const rect = wrapper.getBoundingClientRect();
+      const sectionRect = demoSection.getBoundingClientRect();
+      for (let i = 0; i < 36; i++) {
+        const p = document.createElement('div');
+        p.className = 'confetti-piece';
+        p.style.background = colors[i % colors.length];
+        p.style.left = (rect.left - sectionRect.left + rect.width / 2 + (i % 9 - 4) * 12) + 'px';
+        p.style.top = (rect.top - sectionRect.top + rect.height / 2) + 'px';
+        const angle = (i / 36) * Math.PI * 2;
+        const dist = 90 + (i % 5) * 35;
+        p.style.setProperty('--dx', Math.cos(angle) * dist + 'px');
+        p.style.setProperty('--dy', (Math.sin(angle) * dist - 70) + 'px');
+        demoSection.appendChild(p);
+        setTimeout(() => p.remove(), 1300);
+      }
+    }
+
+    function toggleFormed() {
+      const body = document.getElementById('formedSectionBody');
+      const hidden = body.style.display === 'none';
+      body.style.display = hidden ? 'block' : 'none';
+    }
+  </script>
+
+</body>
+</html>

@@ -5,6 +5,7 @@
 
 import { lazy, Suspense } from 'react';
 import { ArchiveUndoToast } from '../../../components/ArchiveUndoToast';
+import { FormedUndoToast } from '../../../components/FormedUndoToast';
 import { BatchDeleteConfirmModal } from './BatchDeleteConfirmModal';
 import { HabitsModals } from './HabitsModals';
 import WebToaster from './WebToaster';
@@ -27,6 +28,11 @@ interface HabitsAppOverlaysProps {
   batchArchiveUndoCount: number;
   onBatchArchiveUndo: () => void;
   onBatchArchiveDismiss: () => void;
+  /** Formed habit undo (right-swipe celebration) */
+  formedToastVisible: boolean;
+  formedToastHabitName: string;
+  onFormedUndo: () => void;
+  onFormedDismiss: () => void;
   /** Batch delete confirmation */
   confirmDeleteVisible: boolean;
   confirmDeleteCount: number;
@@ -43,6 +49,10 @@ export function HabitsAppOverlays({
   batchArchiveUndoCount,
   onBatchArchiveUndo,
   onBatchArchiveDismiss,
+  formedToastVisible,
+  formedToastHabitName,
+  onFormedUndo,
+  onFormedDismiss,
   confirmDeleteVisible,
   confirmDeleteCount,
   onConfirmDeleteCancel,
@@ -60,6 +70,16 @@ export function HabitsAppOverlays({
         onDismiss={onBatchArchiveDismiss}
         onUndo={(): void => {
           void onBatchArchiveUndo();
+        }}
+      />
+
+      <FormedUndoToast
+        duration={TOAST_DURATION_MS}
+        habitName={formedToastHabitName}
+        visible={formedToastVisible}
+        onDismiss={onFormedDismiss}
+        onUndo={(): void => {
+          void onFormedUndo();
         }}
       />
 

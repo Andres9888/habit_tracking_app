@@ -18,6 +18,7 @@ export function useHabitRenderItem(args: UseHabitRenderItemArgs) {
     handleArchive,
     handleDelete,
     handleHabitPress,
+    handleMarkFormed,
     highlightHabitId,
     isReorderingEnabled,
     notifyWeekCompletion,
@@ -51,6 +52,7 @@ export function useHabitRenderItem(args: UseHabitRenderItemArgs) {
           handleArchive={handleArchive}
           handleDelete={handleDelete}
           handleHabitPress={handleHabitPress}
+          handleMarkFormed={handleMarkFormed}
           highlightHabitId={highlightHabitId}
           isActive={Boolean(isActive)}
           isConnectedToNextWeek={renderData.isConnectedToNextWeek}
