@@ -323,5 +323,44 @@ export default tseslint.config(
       'max-lines': 'off',
       'max-lines-per-function': 'off',
     },
+  },
+  // === Design-System Lint Guards ===
+  // Warns when source files use raw values that should come from theme tokens.
+  // Excludes theme definition files themselves (**/theme/**) so the token
+  // declarations don't self-trigger. sourceIgnores also excludes tests, dist, etc.
+  {
+    files: ['**/*.{ts,tsx}'],
+    ignores: [
+      ...sourceIgnores,
+      '**/theme/**', // exclude theme files (animations, colors, spacing, typography…)
+    ],
+    rules: {
+      'no-restricted-syntax': ['warn',
+        {
+          selector: "CallExpression[callee.type='MemberExpression'][callee.property.name='springify']",
+          message: "Use .easing(enterEasing) instead of .springify() for entrance animations. See src/theme/animations.ts"
+        },
+        {
+          selector: "JSXAttribute[name.name='className'] Literal[value=/shadow-sm|shadow-md|shadow-lg|shadow-xl|shadow-2xl/]",
+          message: "Use theme shadow tokens (shadows.*) instead of Tailwind shadow-* classes. See src/theme/spacing.ts"
+        },
+        {
+          selector: "ObjectExpression:has(> Property[key.name='damping']):has(> Property[key.name='stiffness'])",
+          message: "Use spring presets from @/theme/animations (springs.*) instead of inline {damping, stiffness} configs"
+        },
+        {
+          selector: "Property[key.name='borderRadius'][value.value=9999]",
+          message: "Use borderRadius.full from theme instead of 9999"
+        },
+        {
+          selector: "Property[key.name='fontSize'][value.type='Literal']",
+          message: "Use typography tokens from @/theme/typography instead of raw fontSize values"
+        },
+        {
+          selector: "Literal[value=/^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/]",
+          message: "Use color tokens from @/theme/colors instead of raw hex values"
+        },
+      ]
+    }
   }
 );

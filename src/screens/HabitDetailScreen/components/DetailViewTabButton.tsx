@@ -4,7 +4,7 @@
  */
 
 import { useEffect } from 'react';
-import { Pressable, Text } from 'react-native';
+import { Text } from 'react-native';
 import Animated, {
   Easing,
   useAnimatedStyle,
@@ -13,6 +13,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { Activity, CalendarDays, Target, type LucideIcon } from 'lucide-react-native';
 import { useThemeColors } from '@/theme';
+import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import { iconSizes } from '@/theme/iconSizes';
 import { typography, fontWeights } from '@/theme/typography';
 
@@ -62,7 +63,7 @@ export function DetailViewTabButton({
   const color = isActive ? accentColor : colors.text.tertiary;
 
   return (
-    <Pressable
+    <AnimatedPressable
       accessibilityRole='tab'
       accessibilityState={{ selected: isActive }}
       hitSlop={4}
@@ -90,6 +91,6 @@ export function DetailViewTabButton({
       >
         {label}
       </Text>
-    </Pressable>
+    </AnimatedPressable>
   );
 }
