@@ -9,6 +9,7 @@ import { clsx } from 'clsx';
 
 import { useHapticFeedback } from '../hooks/useHapticFeedback';
 import { useThemeColors } from '../theme/ThemeContext';
+import { shadows } from '../theme/spacing';
 import { AnimatedPressable } from './ui';
 
 type CheckboxSize = 'sm' | 'md' | 'lg';
@@ -75,12 +76,12 @@ export const Checkbox = React.forwardRef<View, CheckboxProps>(function Checkbox(
     >
       <View
         className={clsx(
-          'items-center justify-center rounded border shadow-sm',
+          'items-center justify-center rounded border',
           sizeClasses[size].box,
           isActive && variantClasses[variant],
           disabled && 'opacity-50'
         )}
-        style={isActive
+        style={[shadows.card, isActive
           ? (variant === 'neutral' || variant === 'primary')
             ? { backgroundColor: colors.text.primary, borderColor: colors.text.primary }
             : variant === 'success'
@@ -88,7 +89,7 @@ export const Checkbox = React.forwardRef<View, CheckboxProps>(function Checkbox(
               : variant === 'danger'
                 ? { backgroundColor: colors.status.error, borderColor: colors.status.error }
                 : undefined
-          : { backgroundColor: colors.card, borderColor: colors.border }}
+          : { backgroundColor: colors.card, borderColor: colors.border }]}
       >
         {isActive ? <Text
             className={clsx('font-bold text-white', sizeClasses[size].text)}

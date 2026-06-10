@@ -60,7 +60,7 @@ export const HabitStrengthSection = React.memo(function HabitStrengthSection({
 
   return (
     <Animated.View
-      className='overflow-hidden rounded-2xl shadow-sm'
+      className='overflow-hidden rounded-2xl'
       entering={reduceMotion ? undefined : FadeInDown.duration(durations.enter).delay(100).easing(Easing.out(Easing.cubic))}
       style={{
         ...shadows.card,

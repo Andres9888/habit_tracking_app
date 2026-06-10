@@ -2,6 +2,7 @@
 import { memo, useCallback, useState } from 'react';
 import { Animated, Pressable, Text, View } from 'react-native';
 import { useThemeColors } from '@/theme/ThemeContext';
+import { shadows } from '@/theme/spacing';
 
 import { getEmojiAndName } from '@/components/DraggableHabit/DraggableHabit.hooks';
 
@@ -75,7 +76,7 @@ function HabitDayToggleRowComponent({
           void handlePress();
         }}
       >
-        <View className='h-10 w-10 items-center justify-center rounded-xl bg-white shadow-sm'>
+        <View className='h-10 w-10 items-center justify-center rounded-xl bg-white' style={shadows.card}>
           <Text className='text-xl'>{habit.icon || '🎯'}</Text>
         </View>
 

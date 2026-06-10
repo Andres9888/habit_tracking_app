@@ -4,11 +4,12 @@
 
 import { StyleSheet } from 'react-native';
 import { fontFamilies, fontWeights } from '@/theme/typography';
+import { borderRadius as themeRadius } from '@/theme/spacing';
 
 export const hero = StyleSheet.create({
   badge: {
     backgroundColor: 'rgba(255,255,255,0.55)',
-    borderRadius: 9999,
+    borderRadius: themeRadius.full,
     fontSize: 9,
     fontWeight: fontWeights.bold,
     letterSpacing: 0.5,
@@ -21,7 +22,7 @@ export const hero = StyleSheet.create({
   cta: {
     alignItems: 'center',
     alignSelf: 'flex-start',
-    borderRadius: 9999,
+    borderRadius: themeRadius.full,
     flexDirection: 'row',
     gap: 8,
     marginTop: 18,

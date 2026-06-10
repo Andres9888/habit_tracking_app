@@ -32,7 +32,7 @@ export function GoalTabContent({ habit }: GoalTabContentProps) {
   if (!hasGoal) {
     return (
       <Animated.View
-        className='overflow-hidden rounded-2xl shadow-sm'
+        className='overflow-hidden rounded-2xl'
         entering={FadeIn.duration(180)}
         style={cardStyle}
       >
@@ -51,7 +51,7 @@ export function GoalTabContent({ habit }: GoalTabContentProps) {
 
   return (
     <Animated.View
-      className='overflow-hidden rounded-2xl shadow-sm'
+      className='overflow-hidden rounded-2xl'
       entering={FadeIn.duration(180)}
       style={cardStyle}
     >

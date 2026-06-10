@@ -17,6 +17,7 @@ import React, { useCallback, useEffect } from 'react';
 import { Pressable, Text, View } from 'react-native';
 
 import { useThemeColors } from '@/theme/ThemeContext';
+import { shadows } from '@/theme/spacing';
 import { triggerHaptic } from '@/utils/haptics';
 import Animated, {
   useAnimatedStyle,
@@ -81,7 +82,7 @@ export const TimeRangeToggle = React.memo(function TimeRangeToggle({
     >
       {/* Animated indicator background */}
       <AnimatedView
-        className="absolute rounded-full bg-white shadow-sm"
+        className="absolute rounded-full bg-white"
         style={[
           {
             height: 28,
@@ -90,6 +91,7 @@ export const TimeRangeToggle = React.memo(function TimeRangeToggle({
             width: segmentWidth,
           },
           indicatorStyle,
+          shadows.card,
         ]}
       />
 

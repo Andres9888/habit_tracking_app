@@ -1,6 +1,7 @@
 import { memo } from 'react';
 import { Text, View } from 'react-native';
 import { useThemeColors } from '@/theme/ThemeContext';
+import { shadows } from '@/theme/spacing';
 
 /**
  * V11 Live Preview Micro-Component
@@ -45,7 +46,8 @@ export const LivePreview = memo(({ emoji, color, habitName }: LivePreviewProps) 
       accessibilityHint='This shows how your habit will appear in the list'
       accessibilityLabel={accessibilityLabel}
       accessibilityRole='text'
-      className='mb-3 mt-3 flex-row items-center rounded-2xl bg-white p-3 shadow-sm'
+      className='mb-3 mt-3 flex-row items-center rounded-2xl bg-white p-3'
+      style={shadows.card}
     >
       {/* Emoji Icon with Color Background */}
       <View

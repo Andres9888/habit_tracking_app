@@ -1,4 +1,5 @@
 import { Animated, View } from 'react-native';
+import { shadows } from '@/theme/spacing';
 import type { Category, CategoryFilter, HabitTemplate } from '../types';
 import { CategoryFilters } from './CategoryFilters';
 import { TemplateHero } from './TemplateHero';
@@ -60,9 +61,9 @@ export const TemplateBrowser = ({ isEditMode, template, onViewScience }: Templat
         onPress={handleHeroPress}
       />
       {isTemplateBrowserVisible ? <Animated.View
-          className='mb-6 overflow-hidden rounded-3xl bg-white shadow-lg shadow-black/10'
+          className='mb-6 overflow-hidden rounded-3xl bg-white'
           pointerEvents={isTemplateBrowserOpen ? 'auto' : 'none'}
-          style={{ elevation: 2, opacity: templateBrowserAnim, transform: [{ translateY: templateBrowserTranslate }] }}
+          style={[{ elevation: 2, opacity: templateBrowserAnim, transform: [{ translateY: templateBrowserTranslate }] }, shadows.floatingActionButton]}
         >
           <CategoryFilters
             categories={categories}

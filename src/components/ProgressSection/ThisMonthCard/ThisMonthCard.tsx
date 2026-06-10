@@ -18,6 +18,7 @@ import Animated, { FadeIn } from 'react-native-reanimated';
 import { BarChart3, ChevronRight } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '@/theme/ThemeContext';
+import { shadows } from '@/theme/spacing';
 
 import type { ThisMonthCardProps } from '../types';
 import { useDayStats } from './useDayStats';
@@ -50,8 +51,8 @@ export function ThisMonthCard({
     <View
       accessible
       accessibilityLabel={`This month: ${completedDays} of ${totalDays} days completed, ${thisMonthRate}% success rate`}
-      className='overflow-hidden rounded-2xl shadow-sm'
-      style={{ shadowColor: themeColors.border }}
+      className='overflow-hidden rounded-2xl'
+      style={shadows.card}
     >
       {/* Gradient Background */}
       <LinearGradient

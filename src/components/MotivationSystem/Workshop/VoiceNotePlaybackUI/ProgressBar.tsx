@@ -16,6 +16,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import { useThemeColors } from '../../../../theme/ThemeContext';
+import { shadows } from '../../../../theme/spacing';
 import type { ProgressBarProps } from './types';
 import { triggerHaptic } from '@/utils/haptics';
 
@@ -95,8 +96,8 @@ export function ProgressBar({
 
       {/* Thumb indicator */}
       <Animated.View
-        className='absolute top-1/2 h-3 w-3 -translate-y-1/2 rounded-full shadow-sm'
-        style={[thumbStyle, { backgroundColor: colors.status.success }]}
+        className='absolute top-1/2 h-3 w-3 -translate-y-1/2 rounded-full'
+        style={[thumbStyle, { backgroundColor: colors.status.success }, shadows.card]}
       />
     </Pressable>
   );

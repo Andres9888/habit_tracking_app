@@ -10,6 +10,7 @@ import { Check } from 'lucide-react-native';
 import STRINGS from '../../../../constants/strings';
 import { colors } from '../../../../theme/colors';
 import { iconSizes } from '@/theme/iconSizes';
+import { shadows } from '@/theme/spacing';
 
 interface CreateButtonProps {
   disabled: boolean;
@@ -33,7 +34,7 @@ export function CreateButton({
 }: CreateButtonProps) {
   return (
     // OPTIMIZED: Stronger shadow, larger padding
-    <View className='rounded-2xl bg-white p-2.5 shadow-xl'>
+    <View className='rounded-2xl bg-white p-2.5' style={shadows.modal}>
       <Animated.View style={{ opacity: colorOpacity, transform: [{ scale }] }}>
         <Pressable
           accessibilityHint={
