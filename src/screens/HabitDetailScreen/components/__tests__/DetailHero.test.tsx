@@ -96,11 +96,12 @@ describe('DetailHero', () => {
     expect(getByLabelText('Schedule: Daily, Mornings')).toBeTruthy();
   });
 
-  it('renders no schedule chips when habit has no schedule', () => {
-    const { queryByText } = render(
+  it('defaults to a Daily chip when habit has no explicit frequency', () => {
+    const { getByText, queryByText } = render(
       <DetailHero habit={mockHabit} totalCompletions={89} />
     );
-    expect(queryByText('Daily')).toBeNull();
+    expect(getByText('Daily')).toBeTruthy();
+    expect(queryByText('Mornings')).toBeNull();
   });
 
   it('has accessible header role on habit name', () => {

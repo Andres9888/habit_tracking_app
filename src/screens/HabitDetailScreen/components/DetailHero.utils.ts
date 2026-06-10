@@ -33,7 +33,10 @@ function isPreferredTimeKey(value: string): value is PreferredTimeKey {
   return value in TIME_LABELS;
 }
 
-/** Split habit frequency + preferredTime into chip-ready parts */
+/**
+ * Split habit frequency + preferredTime into chip-ready parts. Habits without
+ * an explicit frequency are daily — same default the edit form applies.
+ */
 export function getScheduleParts(habit: {
   daysOfWeek?: number[];
   frequency?: string;
@@ -41,7 +44,7 @@ export function getScheduleParts(habit: {
 }): ScheduleParts {
   const parts: ScheduleParts = {};
 
-  if (habit.frequency === 'daily') {
+  if (!habit.frequency || habit.frequency === 'daily') {
     parts.frequencyLabel = 'Daily';
   } else if (habit.frequency === 'weekly' && habit.daysOfWeek?.length) {
     parts.frequencyLabel = habit.daysOfWeek
