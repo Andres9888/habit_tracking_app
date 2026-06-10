@@ -1,0 +1,1711 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Habit Library — Workflow V3 Storyboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;0,7..72,700;1,7..72,400&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #f5f1ed;
+        --surface: #fff;
+        --lift: #edeae5;
+        --primary: #059669;
+        --primary-deep: #047857;
+        --primary-tint: #ecfdf5;
+        --text: #2d2a26;
+        --text-2: #6b6560;
+        --text-3: #6e6660;
+        --border: #ddd8d2;
+        --serif: 'Literata', Georgia, serif;
+        --sans: 'DM Sans', -apple-system, sans-serif;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: var(--sans);
+        background: #e6e1da;
+        color: var(--text);
+        padding: 40px 32px 56px;
+      }
+
+      /* ── Page header ── */
+      .page-eyebrow {
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--text-2);
+      }
+      .page-title {
+        font-family: var(--serif);
+        font-size: 28px;
+        font-weight: 600;
+        margin-top: 4px;
+      }
+      .page-sub {
+        font-size: 14px;
+        color: var(--text-2);
+        margin-top: 6px;
+        max-width: 760px;
+        line-height: 1.5;
+      }
+
+      /* ── Fast path banner ── */
+      .fastpath {
+        margin: 22px 0 18px;
+        border-top: 2px dashed var(--primary);
+        padding-top: 8px;
+        display: flex;
+        justify-content: center;
+      }
+      .fastpath span {
+        font-size: 11.5px;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--primary-deep);
+        background: var(--primary-tint);
+        border-radius: 999px;
+        padding: 5px 14px;
+      }
+
+      /* ── Journey row ── */
+      .journey {
+        display: flex;
+        align-items: flex-start;
+        gap: 0;
+        overflow-x: auto;
+        padding-bottom: 16px;
+      }
+      .step {
+        flex: none;
+        width: 392px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .arrow {
+        flex: none;
+        align-self: flex-start;
+        margin-top: 380px;
+        width: 92px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+        padding: 0 6px;
+      }
+      .arrow .line {
+        font-size: 26px;
+        color: var(--text-2);
+      }
+      .arrow .lbl {
+        font-size: 10.5px;
+        font-weight: 600;
+        color: var(--text-2);
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 4px 8px;
+        text-align: center;
+        line-height: 1.35;
+      }
+
+      /* ── Phone frame ── */
+      .phone {
+        width: 375px;
+        height: 812px;
+        background: var(--bg);
+        border-radius: 40px;
+        border: 9px solid #2d2a26;
+        box-shadow: 0 20px 48px rgba(45, 42, 38, 0.3);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+      .statusbar {
+        height: 36px;
+        flex: none;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 22px;
+        font-size: 12px;
+        font-weight: 600;
+      }
+      .screen {
+        flex: 1;
+        overflow-y: auto;
+        scrollbar-width: none;
+        display: flex;
+        flex-direction: column;
+      }
+      .screen::-webkit-scrollbar {
+        display: none;
+      }
+      .scrollbody {
+        flex: 1;
+        overflow-y: auto;
+        scrollbar-width: none;
+      }
+      .scrollbody::-webkit-scrollbar {
+        display: none;
+      }
+
+      /* ── Shared bits ── */
+      .overline {
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--text-3);
+        padding: 18px 16px 8px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .overline a {
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0;
+        text-transform: none;
+        color: var(--primary-deep);
+        text-decoration: none;
+      }
+      .pill {
+        font-size: 11px;
+        font-weight: 500;
+        color: var(--text-2);
+        background: var(--lift);
+        border-radius: 999px;
+        padding: 3px 9px;
+        white-space: nowrap;
+      }
+      .science-micro {
+        font-size: 11px;
+        color: var(--text-3);
+        white-space: nowrap;
+      }
+      .btn-add {
+        flex: none;
+        font-family: var(--sans);
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--primary-deep);
+        background: rgba(5, 150, 105, 0.1);
+        border: none;
+        border-radius: 999px;
+        padding: 7px 13px;
+        cursor: pointer;
+      }
+      .btn-add.added {
+        background: transparent;
+        color: var(--primary-deep);
+      }
+      .row {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 11px 12px;
+        margin: 0 16px 8px;
+      }
+      .row.added {
+        background: var(--primary-tint);
+        border-color: #a7f3d0;
+      }
+      .row .emoji {
+        width: 42px;
+        height: 42px;
+        flex: none;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 21px;
+      }
+      .row .body {
+        flex: 1;
+        min-width: 0;
+      }
+      .row h4 {
+        font-size: 14.5px;
+        font-weight: 600;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .row p {
+        font-size: 12px;
+        color: var(--text-2);
+        margin-top: 1px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .row .meta {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        margin-top: 4px;
+      }
+      .tabbar {
+        flex: none;
+        display: flex;
+        border-top: 1px solid var(--border);
+        background: rgba(245, 241, 237, 0.97);
+        padding: 8px 0 18px;
+      }
+      .tab {
+        flex: 1;
+        text-align: center;
+        font-size: 9.5px;
+        font-weight: 500;
+        color: var(--text-3);
+        position: relative;
+      }
+      .tab .ticon {
+        font-size: 18px;
+        display: block;
+        margin-bottom: 2px;
+      }
+      .tab.active {
+        color: var(--primary-deep);
+        font-weight: 700;
+      }
+      .tab .dot {
+        position: absolute;
+        top: -2px;
+        right: 28%;
+        width: 8px;
+        height: 8px;
+        border-radius: 99px;
+        background: var(--primary);
+      }
+
+      /* ── S1: hero + featured + rail ── */
+      .hero1 {
+        background: linear-gradient(
+          180deg,
+          rgba(251, 191, 116, 0.55),
+          rgba(254, 215, 170, 0.3) 45%,
+          #f5f1ed
+        );
+        padding: 8px 16px 12px;
+      }
+      .hero1 .sunrow {
+        display: flex;
+        justify-content: flex-end;
+        font-size: 22px;
+      }
+      .hero1 h1 {
+        font-family: var(--serif);
+        font-size: 23px;
+        font-weight: 700;
+        letter-spacing: -0.3px;
+      }
+      .hero1 .sub {
+        font-size: 13px;
+        color: var(--text-2);
+        margin-top: 4px;
+        max-width: 290px;
+        line-height: 1.4;
+      }
+      .search {
+        margin-top: 10px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        padding: 9px 14px;
+        color: var(--text-3);
+        font-size: 13.5px;
+      }
+      .trust {
+        font-size: 11.5px;
+        color: var(--text-2);
+        margin-top: 8px;
+      }
+      .featured {
+        margin: 10px 16px 0;
+        border-radius: 16px;
+        padding: 14px;
+        background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+        border: 1px solid rgba(20, 83, 45, 0.08);
+        position: relative;
+      }
+      .featured .badge {
+        display: inline-block;
+        font-size: 9.5px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        color: #14532d;
+        background: rgba(255, 255, 255, 0.7);
+        border-radius: 6px;
+        padding: 3px 8px;
+      }
+      .featured .frow {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-top: 8px;
+      }
+      .featured .femoji {
+        font-size: 44px;
+        line-height: 1;
+      }
+      .featured h2 {
+        font-family: var(--serif);
+        font-size: 21px;
+        font-weight: 700;
+        color: #14532d;
+      }
+      .featured .promise {
+        font-size: 12.5px;
+        color: #2f5b40;
+        margin-top: 1px;
+      }
+      .minis {
+        display: flex;
+        gap: 7px;
+        margin-top: 11px;
+      }
+      .mini {
+        flex: 1;
+        background: rgba(255, 255, 255, 0.65);
+        border-radius: 10px;
+        padding: 8px 7px;
+        text-align: center;
+      }
+      .mini .mi {
+        font-size: 17px;
+      }
+      .mini .mn {
+        font-size: 10px;
+        font-weight: 600;
+        color: #14532d;
+        margin-top: 3px;
+        line-height: 1.25;
+      }
+      .featured .cta {
+        display: flex;
+        align-items: baseline;
+        gap: 7px;
+        margin-top: 11px;
+      }
+      .featured .cta b {
+        font-size: 13.5px;
+        font-weight: 700;
+        color: var(--primary-deep);
+      }
+      .featured .cta span {
+        font-size: 11px;
+        color: #2f5b40;
+        opacity: 0.85;
+      }
+      .rail {
+        display: flex;
+        gap: 9px;
+        padding: 12px 16px 2px;
+        overflow-x: auto;
+        scrollbar-width: none;
+      }
+      .rail::-webkit-scrollbar {
+        display: none;
+      }
+      .gcard {
+        flex: none;
+        width: 142px;
+        height: 116px;
+        border-radius: 16px;
+        padding: 11px;
+        border: 1px solid rgba(0, 0, 0, 0.04);
+        display: flex;
+        flex-direction: column;
+      }
+      .gcard .ge {
+        font-size: 24px;
+      }
+      .gcard .gl {
+        font-size: 13.5px;
+        font-weight: 700;
+        margin-top: 4px;
+      }
+      .gcard .gp {
+        font-size: 10.5px;
+        line-height: 1.3;
+        opacity: 0.8;
+        margin-top: 2px;
+      }
+      .gcard .gm {
+        font-size: 10px;
+        font-weight: 600;
+        margin-top: auto;
+        opacity: 0.75;
+      }
+      .gcard .gprog {
+        display: flex;
+        gap: 4px;
+        align-items: center;
+        margin-top: auto;
+      }
+      .gcard .gdot {
+        width: 7px;
+        height: 7px;
+        border-radius: 99px;
+        border: 1.5px solid currentColor;
+        opacity: 0.5;
+      }
+      .gcard .gdot.fill {
+        background: var(--primary);
+        border-color: var(--primary);
+        opacity: 1;
+      }
+
+      /* ── S2: path ── */
+      .hero2 {
+        background: linear-gradient(
+          180deg,
+          rgba(187, 247, 208, 0.55),
+          rgba(220, 252, 231, 0.3) 45%,
+          #f5f1ed
+        );
+        padding: 8px 16px 14px;
+      }
+      .hero2 .back {
+        font-size: 13px;
+        font-weight: 600;
+        color: #14532d;
+      }
+      .hero2 .ge {
+        font-size: 38px;
+        margin-top: 8px;
+      }
+      .hero2 h1 {
+        font-family: var(--serif);
+        font-size: 22px;
+        font-weight: 700;
+        color: #14532d;
+        margin-top: 4px;
+      }
+      .hero2 .sub {
+        font-size: 13px;
+        color: var(--text-2);
+        margin-top: 3px;
+      }
+      .mech {
+        margin: 10px 0 0;
+        display: inline-block;
+        background: rgba(255, 255, 255, 0.65);
+        border-radius: 999px;
+        padding: 6px 12px;
+        font-size: 11.5px;
+        font-weight: 600;
+        color: #14532d;
+      }
+      .reco {
+        margin: 4px 16px 0;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 12px;
+        box-shadow: 0 2px 8px rgba(45, 42, 38, 0.08);
+        position: relative;
+      }
+      .reco .rbadge {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        color: var(--primary-deep);
+        background: var(--primary-tint);
+        border-radius: 6px;
+        padding: 3px 7px;
+      }
+      .reco .rrow {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+      }
+      .reco .remoji {
+        width: 44px;
+        height: 44px;
+        flex: none;
+        border-radius: 12px;
+        background: rgba(16, 185, 129, 0.12);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+      }
+      .reco h4 {
+        font-size: 15px;
+        font-weight: 700;
+      }
+      .reco p {
+        font-size: 12px;
+        color: var(--text-2);
+        margin-top: 1px;
+      }
+      .reco .meta {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        margin-top: 5px;
+      }
+      .reco .ractions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 10px;
+      }
+      .reco .details {
+        font-size: 12.5px;
+        font-weight: 700;
+        color: var(--text-2);
+      }
+      .pathfoot {
+        text-align: center;
+        font-size: 11.5px;
+        color: var(--text-2);
+        padding: 12px 28px 8px;
+        line-height: 1.45;
+      }
+
+      /* ── S3: detail ── */
+      .nav3 {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 6px 16px;
+      }
+      .nav3 .back {
+        font-size: 20px;
+        color: var(--text-2);
+      }
+      .idhead {
+        text-align: center;
+        padding: 4px 20px 6px;
+      }
+      .idhead .bigtile {
+        width: 62px;
+        height: 62px;
+        border-radius: 18px;
+        background: #f0fdf4;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 32px;
+      }
+      .idhead h1 {
+        font-family: var(--serif);
+        font-size: 22px;
+        font-weight: 700;
+        margin-top: 8px;
+      }
+      .idhead .pills {
+        display: flex;
+        justify-content: center;
+        gap: 7px;
+        margin-top: 6px;
+      }
+      .idhead .desc {
+        font-size: 13px;
+        color: var(--text-2);
+        margin-top: 7px;
+        line-height: 1.4;
+      }
+      .scicard {
+        margin: 12px 16px 0;
+        border-radius: 16px;
+        padding: 13px 14px;
+        background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+      }
+      .scicard .lab {
+        font-size: 10.5px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        color: var(--primary-deep);
+      }
+      .scicard .cite {
+        font-size: 12.5px;
+        color: #14532d;
+        margin-top: 6px;
+        line-height: 1.4;
+      }
+      .scicard .spills {
+        display: flex;
+        gap: 8px;
+        margin-top: 10px;
+      }
+      .scicard .sp {
+        font-size: 12px;
+        font-weight: 700;
+        border-radius: 999px;
+        padding: 7px 13px;
+      }
+      .scicard .sp.fill {
+        background: var(--primary);
+        color: #fff;
+      }
+      .scicard .sp.line {
+        background: rgba(255, 255, 255, 0.7);
+        color: var(--primary-deep);
+      }
+      .tip {
+        display: flex;
+        gap: 10px;
+        align-items: flex-start;
+        padding: 5px 18px;
+      }
+      .tip .halo {
+        width: 22px;
+        height: 22px;
+        flex: none;
+        border-radius: 99px;
+        background: var(--primary-tint);
+        color: var(--primary);
+        font-size: 12px;
+        font-weight: 800;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .tip p {
+        font-size: 12.5px;
+        line-height: 1.45;
+        color: var(--text);
+        padding-top: 2px;
+      }
+      .pair {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 10px 12px;
+        margin: 0 16px 7px;
+      }
+      .pair .pe {
+        font-size: 20px;
+      }
+      .pair b {
+        font-size: 13px;
+      }
+      .pair p {
+        font-size: 11.5px;
+        color: var(--text-2);
+        margin-top: 1px;
+      }
+      .commit {
+        flex: none;
+        background: var(--surface);
+        border-top: 1px solid var(--border);
+        border-radius: 22px 22px 0 0;
+        padding: 12px 16px 18px;
+      }
+      .commit .micro {
+        text-align: center;
+        font-size: 11.5px;
+        color: var(--text-2);
+        margin-bottom: 9px;
+      }
+      .commit .cta {
+        display: block;
+        width: 100%;
+        border: none;
+        background: var(--primary);
+        color: #fff;
+        font-family: var(--sans);
+        font-size: 15px;
+        font-weight: 700;
+        border-radius: 14px;
+        padding: 15px;
+        cursor: pointer;
+      }
+      .commit .alt {
+        display: block;
+        text-align: center;
+        font-size: 12.5px;
+        font-weight: 600;
+        color: var(--text-2);
+        margin-top: 9px;
+      }
+
+      /* ── S4: make it stick ── */
+      .celebrate {
+        position: relative;
+        background: linear-gradient(
+          180deg,
+          rgba(251, 191, 116, 0.55),
+          rgba(254, 215, 170, 0.3) 45%,
+          #f5f1ed
+        );
+        text-align: center;
+        padding: 26px 20px 16px;
+        overflow: hidden;
+      }
+      .confetti i {
+        position: absolute;
+        width: 9px;
+        height: 9px;
+        border-radius: 3px;
+        opacity: 0.9;
+      }
+      .checkring {
+        width: 52px;
+        height: 52px;
+        border-radius: 99px;
+        background: var(--primary);
+        color: #fff;
+        font-size: 26px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 0 0 8px rgba(5, 150, 105, 0.15);
+      }
+      .celebrate h1 {
+        font-family: var(--serif);
+        font-size: 21px;
+        font-weight: 700;
+        margin-top: 12px;
+      }
+      .celebrate .sub {
+        font-size: 13px;
+        color: var(--text-2);
+        margin-top: 3px;
+      }
+      .recap {
+        margin: 10px 16px 0;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        padding: 9px 14px;
+        font-size: 12px;
+        text-align: center;
+        color: var(--text);
+      }
+      .cuehelp {
+        font-size: 12px;
+        color: var(--text-2);
+        padding: 0 16px 8px;
+      }
+      .chips4 {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 7px;
+        padding: 0 16px;
+      }
+      .cchip {
+        font-size: 12px;
+        font-weight: 600;
+        border-radius: 999px;
+        border: 1.5px solid var(--border);
+        background: var(--surface);
+        color: var(--text-2);
+        padding: 8px 13px;
+      }
+      .cchip.sel {
+        background: var(--primary-tint);
+        border-color: var(--primary-deep);
+        color: var(--primary-deep);
+      }
+      .cchip.ghost {
+        border-style: dashed;
+      }
+      .expect {
+        margin: 14px 16px 0;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 13px 14px;
+      }
+      .expect p {
+        font-size: 12px;
+        line-height: 1.5;
+        color: var(--text);
+      }
+      .chain {
+        display: flex;
+        align-items: center;
+        margin-top: 12px;
+      }
+      .cday {
+        width: 26px;
+        height: 26px;
+        border-radius: 99px;
+        border: 2px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 10px;
+        font-weight: 700;
+        color: var(--text-3);
+        background: var(--bg);
+      }
+      .cday.fill {
+        background: var(--primary);
+        border-color: var(--primary);
+        color: #fff;
+        box-shadow: 0 0 0 4px rgba(5, 150, 105, 0.18);
+      }
+      .clink {
+        flex: 1;
+        height: 2px;
+        background: var(--border);
+      }
+      .identity {
+        font-family: var(--serif);
+        font-style: italic;
+        font-size: 13.5px;
+        text-align: center;
+        color: var(--text);
+        padding: 14px 30px 0;
+        line-height: 1.5;
+      }
+      .stick-cta {
+        margin: 14px 16px 0;
+      }
+      .stick-cta .cta {
+        display: block;
+        width: 100%;
+        border: none;
+        background: var(--primary);
+        color: #fff;
+        font-family: var(--sans);
+        font-size: 15px;
+        font-weight: 700;
+        border-radius: 14px;
+        padding: 14px;
+        cursor: pointer;
+      }
+      .stick-cta .skip {
+        display: block;
+        text-align: center;
+        font-size: 12.5px;
+        font-weight: 600;
+        color: var(--text-2);
+        margin-top: 9px;
+      }
+
+      /* ── S5: return ── */
+      .toast {
+        margin: 8px 16px 0;
+        background: #2d2a26;
+        color: #fff;
+        border-radius: 13px;
+        padding: 10px 14px;
+        font-size: 12.5px;
+        font-weight: 600;
+        display: flex;
+        gap: 8px;
+        align-items: center;
+      }
+      .toast .tk {
+        color: #6ee7b7;
+        font-weight: 800;
+      }
+      .hero5 {
+        background: linear-gradient(
+          180deg,
+          rgba(251, 191, 116, 0.4),
+          rgba(254, 215, 170, 0.22) 45%,
+          #f5f1ed
+        );
+        padding: 12px 16px 10px;
+      }
+      .hero5 h1 {
+        font-family: var(--serif);
+        font-size: 21px;
+        font-weight: 700;
+      }
+      .hero5 .coach {
+        font-size: 12.5px;
+        color: var(--text-2);
+        margin-top: 4px;
+      }
+      .upnext {
+        margin: 6px 16px 0;
+        border-radius: 16px;
+        padding: 13px;
+        background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+        border: 1px solid rgba(20, 83, 45, 0.08);
+      }
+      .upnext .badge {
+        display: inline-block;
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: 0.07em;
+        color: #14532d;
+        background: rgba(255, 255, 255, 0.7);
+        border-radius: 6px;
+        padding: 3px 7px;
+      }
+      .upnext .urow {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+        margin-top: 9px;
+      }
+      .upnext .uemoji {
+        width: 42px;
+        height: 42px;
+        flex: none;
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.7);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 21px;
+      }
+      .upnext h4 {
+        font-size: 14.5px;
+        font-weight: 700;
+        color: #14532d;
+      }
+      .upnext p {
+        font-size: 11.5px;
+        color: #2f5b40;
+        margin-top: 1px;
+      }
+      .upnext .umeta {
+        font-size: 10.5px;
+        color: #2f5b40;
+        opacity: 0.85;
+        margin-top: 4px;
+      }
+      .upnext .ufoot {
+        font-size: 11px;
+        color: #2f5b40;
+        opacity: 0.85;
+        margin-top: 9px;
+      }
+      .addedday {
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--primary-deep);
+        white-space: nowrap;
+      }
+
+      /* ── Annotations + rationale ── */
+      .caption {
+        width: 360px;
+        margin-top: 14px;
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 13px 15px;
+      }
+      .caption h3 {
+        font-size: 13px;
+        font-weight: 700;
+      }
+      .caption h3 span {
+        color: var(--primary-deep);
+      }
+      .caption ul {
+        margin: 7px 0 0 16px;
+      }
+      .caption li {
+        font-size: 12px;
+        color: var(--text-2);
+        line-height: 1.5;
+        margin-bottom: 3px;
+      }
+      .rationale {
+        margin-top: 30px;
+      }
+      .rationale h2 {
+        font-family: var(--serif);
+        font-size: 20px;
+        font-weight: 600;
+        margin-bottom: 12px;
+      }
+      .rgrid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 12px;
+      }
+      .rcard {
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 14px 16px;
+      }
+      .rcard b {
+        font-size: 13px;
+        display: block;
+        margin-bottom: 5px;
+      }
+      .rcard p {
+        font-size: 12.5px;
+        color: var(--text-2);
+        line-height: 1.55;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page-eyebrow">Habit Library — Workflow V3</div>
+    <div class="page-title">From outcome to first habit in three taps</div>
+    <div class="page-sub">
+      Old warmth for the emotional choice, new minimalism for the rational one —
+      education sequenced across the whole journey, never blocking the add. All
+      copy is real app content (goal collections, template science fields,
+      onboarding lines).
+    </div>
+
+    <div class="fastpath">
+      <span
+        >⚡ Fast path — any “+ Add” adds instantly with the quiet green state;
+        the “Make it stick” screen then appears as a dismissible sheet (first
+        add only)</span
+      >
+    </div>
+
+    <div class="journey">
+      <!-- ════════ FRAME 1 — Transformation Hub ════════ -->
+      <div class="step">
+        <div class="phone">
+          <div class="screen">
+            <div class="statusbar"><span>9:41</span><span>􀙇 􀛨</span></div>
+            <div class="scrollbody">
+              <div class="hero1">
+                <div class="sunrow">☀️</div>
+                <h1>Choose your next transformation</h1>
+                <div class="sub">
+                  Pick an outcome, then start with one small habit that moves it
+                  forward.
+                </div>
+                <div class="search">⌕&nbsp; Find an outcome or habit</div>
+                <div class="trust">
+                  🔬 Every habit in here is research-backed.
+                </div>
+              </div>
+              <div class="featured">
+                <span class="badge">TODAY'S PICK</span>
+                <div class="frow">
+                  <div class="femoji">🧘</div>
+                  <div>
+                    <h2>Stress less</h2>
+                    <div class="promise">
+                      Calm your mind and regulate your system.
+                    </div>
+                  </div>
+                </div>
+                <div class="minis">
+                  <div class="mini">
+                    <div class="mi">🧘</div>
+                    <div class="mn">5-Min Meditation</div>
+                  </div>
+                  <div class="mini">
+                    <div class="mi">🙏</div>
+                    <div class="mn">Gratitude</div>
+                  </div>
+                  <div class="mini">
+                    <div class="mi">✍️</div>
+                    <div class="mn">Morning Pages</div>
+                  </div>
+                </div>
+                <div class="cta">
+                  <b>Start your path →</b><span>· 4 habits inside</span>
+                </div>
+              </div>
+              <div class="rail">
+                <div class="gcard" style="background: #fef3c7; color: #78350f">
+                  <div class="ge">⚡</div>
+                  <div class="gl">Wake up energized</div>
+                  <div class="gp">
+                    Morning routines that keep you sharp all day
+                  </div>
+                  <div class="gm">8 habits ›</div>
+                </div>
+                <div class="gcard" style="background: #eff6ff; color: #1e3a5f">
+                  <div class="ge">😴</div>
+                  <div class="gl">Sleep deeper</div>
+                  <div class="gp">Wind down, rest fully, wake refreshed</div>
+                  <div class="gm">6 habits ›</div>
+                </div>
+                <div class="gcard" style="background: #faf5ff; color: #581c87">
+                  <div class="ge">🎯</div>
+                  <div class="gl">Focus deeper</div>
+                  <div class="gp">Beat distraction and do deeper work</div>
+                  <div class="gm">7 habits ›</div>
+                </div>
+                <div class="gcard" style="background: #fff1f2; color: #881337">
+                  <div class="ge">💪</div>
+                  <div class="gl">Get healthier</div>
+                  <div class="gp">Lasting habits for a longer life</div>
+                  <div class="gm">9 habits ›</div>
+                </div>
+              </div>
+              <div class="overline">
+                Or just start — one tap <a>Browse all</a>
+              </div>
+              <div class="row">
+                <div class="emoji" style="background: rgba(96, 165, 250, 0.14)">
+                  💧
+                </div>
+                <div class="body">
+                  <h4>Hydration First</h4>
+                  <p>A full glass of water before anything else.</p>
+                  <div class="meta">
+                    <span class="pill">1 min · Daily</span
+                    ><span class="science-micro">🔬 Research-backed</span>
+                  </div>
+                </div>
+                <button class="btn-add">+ Add</button>
+              </div>
+              <div class="row">
+                <div class="emoji" style="background: rgba(139, 92, 246, 0.12)">
+                  🛏️
+                </div>
+                <div class="body">
+                  <h4>Make Your Bed</h4>
+                  <p>Win the first task of the day.</p>
+                  <div class="meta">
+                    <span class="pill">2 min · Daily</span>
+                  </div>
+                </div>
+                <button class="btn-add">+ Add</button>
+              </div>
+              <div class="row added">
+                <div class="emoji" style="background: rgba(16, 185, 129, 0.14)">
+                  🙏
+                </div>
+                <div class="body">
+                  <h4>Gratitude Journaling</h4>
+                  <p>Name one thing you're grateful for.</p>
+                  <div class="meta">
+                    <span class="pill">5 min · Daily</span
+                    ><span class="science-micro">🔬 Emmons (2003)</span>
+                  </div>
+                </div>
+                <span class="addedday">✓ Added</span>
+              </div>
+              <div style="height: 14px"></div>
+            </div>
+            <div class="tabbar">
+              <div class="tab"><span class="ticon">☀️</span>Today</div>
+              <div class="tab active"><span class="ticon">📚</span>Library</div>
+              <div class="tab"><span class="ticon">📊</span>Progress</div>
+            </div>
+          </div>
+        </div>
+        <div class="caption">
+          <h3>
+            <span>S1 · Transformation Hub</span> — which outcome do I want?
+          </h3>
+          <ul>
+            <li>
+              <b>Old look restored:</b> warm gradient hero, sun, serif title,
+              Today's-pick goal card, colored goal rail.
+            </li>
+            <li>
+              <b>Education:</b> one framing sentence + 🔬 trust mark. Zero
+              reading tax before the choice.
+            </li>
+            <li>
+              <b>Fast path kept:</b> minimal one-tap rows below ("Or just
+              start") with the quiet green added state.
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="arrow">
+        <div class="line">→</div>
+        <div class="lbl">Taps “Stress less”<br />(Today's pick)</div>
+      </div>
+
+      <!-- ════════ FRAME 2 — Transformation Path ════════ -->
+      <div class="step">
+        <div class="phone">
+          <div class="screen">
+            <div class="statusbar"><span>9:41</span><span>􀙇 􀛨</span></div>
+            <div class="scrollbody">
+              <div class="hero2">
+                <div class="back">‹ Library</div>
+                <div class="ge">🧘</div>
+                <h1>Stress less</h1>
+                <div class="sub">Calm your mind and regulate your system.</div>
+                <span class="mech"
+                  >How paths work: start with one habit. Add the next once it
+                  sticks.</span
+                >
+              </div>
+              <div class="overline">Start here</div>
+              <div class="reco">
+                <span class="rbadge">MOST POPULAR FIRST STEP</span>
+                <div class="rrow">
+                  <div class="remoji">🧘</div>
+                  <div style="flex: 1; min-width: 0">
+                    <h4>5-Minute Meditation</h4>
+                    <p>
+                      Sit, breathe, notice. A reset for your nervous system.
+                    </p>
+                    <div class="meta">
+                      <span class="pill">5 min · Daily</span
+                      ><span class="science-micro">🔬 Goyal et al. (2014)</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="ractions">
+                  <button
+                    class="btn-add"
+                    style="background: var(--primary); color: #fff"
+                  >
+                    + Add
+                  </button>
+                  <span class="details">Details ›</span>
+                </div>
+              </div>
+              <div class="overline">Then build on it</div>
+              <div class="row">
+                <div class="emoji" style="background: rgba(16, 185, 129, 0.14)">
+                  🙏
+                </div>
+                <div class="body">
+                  <h4>Gratitude Journaling</h4>
+                  <p>Name one thing you're grateful for.</p>
+                  <div class="meta">
+                    <span class="pill">5 min · Daily</span
+                    ><span class="science-micro">🔬 Emmons (2003)</span>
+                  </div>
+                </div>
+                <button class="btn-add">+ Add</button>
+              </div>
+              <div class="row">
+                <div class="emoji" style="background: rgba(59, 130, 246, 0.12)">
+                  ✍️
+                </div>
+                <div class="body">
+                  <h4>Morning Pages</h4>
+                  <p>Three pages, no editing. Brain unclogged.</p>
+                  <div class="meta">
+                    <span class="pill">10 min · Daily</span>
+                  </div>
+                </div>
+                <button class="btn-add">+ Add</button>
+              </div>
+              <div class="row">
+                <div class="emoji" style="background: rgba(59, 130, 246, 0.14)">
+                  ❄️
+                </div>
+                <div class="body">
+                  <h4>Cold Shower</h4>
+                  <p>30 seconds of cold to train your stress response.</p>
+                  <div class="meta">
+                    <span class="pill">1 min · Daily</span
+                    ><span class="science-micro">🔬 Research-backed</span>
+                  </div>
+                </div>
+                <button class="btn-add">+ Add</button>
+              </div>
+              <div class="pathfoot">
+                You can add any of these later — paths are a sequence, not a
+                bundle.
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="caption">
+          <h3>
+            <span>S2 · Transformation Path</span> — which habit starts it?
+          </h3>
+          <ul>
+            <li>
+              <b>Old look:</b> goal-tinted gradient header with emoji, serif
+              title, promise line.
+            </li>
+            <li>
+              <b>Education:</b> one line of path mechanics ("start with one") —
+              fights the overcommit-then-quit failure mode at selection time.
+              Citations per row, no essays.
+            </li>
+            <li>
+              <b>One recommended first step</b> (elevated card) instead of a
+              flat list of 12.
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="arrow">
+        <div class="line">→</div>
+        <div class="lbl">Taps the recommended habit row</div>
+      </div>
+
+      <!-- ════════ FRAME 3 — Habit Detail ════════ -->
+      <div class="step">
+        <div class="phone">
+          <div class="screen">
+            <div class="statusbar"><span>9:41</span><span>􀙇 􀛨</span></div>
+            <div class="nav3">
+              <span class="back">‹</span><button class="btn-add">+ Add</button>
+            </div>
+            <div class="scrollbody">
+              <div class="idhead">
+                <div class="bigtile">🧘</div>
+                <h1>5-Minute Meditation</h1>
+                <div class="pills">
+                  <span class="pill">5 min · Daily</span
+                  ><span class="pill">🌱 ~66 days to automatic</span>
+                </div>
+                <div class="desc">
+                  Sit, breathe, notice. A reset for your nervous system.
+                </div>
+              </div>
+              <div class="scicard">
+                <div class="lab">🔬 SCIENCE-BACKED</div>
+                <div class="cite">
+                  Goyal et al. (2014) — Meditation programs for psychological
+                  stress and well-being.
+                </div>
+                <div class="spills">
+                  <span class="sp fill">▶ Watch (2 min)</span
+                  ><span class="sp line">Read the paper</span>
+                </div>
+              </div>
+              <div class="overline">Why it works</div>
+              <div class="tip">
+                <div class="halo">✓</div>
+                <p>Same time each morning builds the habit faster.</p>
+              </div>
+              <div class="tip">
+                <div class="halo">✓</div>
+                <p>
+                  One mindful breath still counts — consistency beats duration.
+                </p>
+              </div>
+              <div class="tip">
+                <div class="halo">✓</div>
+                <p>Lowers baseline stress in weeks, not months.</p>
+              </div>
+              <div class="overline">Pairs well with</div>
+              <div class="pair">
+                <span class="pe">😴</span>
+                <div>
+                  <b>Sleep deeper</b>
+                  <p>Wind down with breathwork before bed.</p>
+                </div>
+              </div>
+              <div class="pair">
+                <span class="pe">🙏</span>
+                <div>
+                  <b>Gratitude Journaling</b>
+                  <p>Stack gratitude right after your breath.</p>
+                </div>
+              </div>
+              <div style="height: 10px"></div>
+            </div>
+            <div class="commit">
+              <div class="micro">
+                Too small to fail — tiny starts survive week one. You can always
+                do more.
+              </div>
+              <button class="cta">
+                Start small — one slow, mindful breath
+              </button>
+              <span class="alt">Start with the full 5 minutes</span>
+            </div>
+          </div>
+        </div>
+        <div class="caption">
+          <h3>
+            <span>S3 · Habit Detail</span> — how big do I start? (the tap IS the
+            add)
+          </h3>
+          <ul>
+            <li>
+              <b>Education:</b> the heavy "why" lives here — science zone earns
+              belief, tips build confidence, right before commitment.
+            </li>
+            <li>
+              <b>Start-small at the CTA:</b> the BJ Fogg floor is the primary
+              button; the full version is demoted to a text link. Day-7 survival
+              &gt; day-1 ambition.
+            </li>
+            <li>
+              Quiet "+ Add" stays top-right — the fast path never disappears.
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="arrow">
+        <div class="line">→</div>
+        <div class="lbl">“Start small” —<br />this tap adds the habit</div>
+      </div>
+
+      <!-- ════════ FRAME 4 — Make It Stick ════════ -->
+      <div class="step">
+        <div class="phone">
+          <div class="screen">
+            <div class="statusbar"><span>9:41</span><span>􀙇 􀛨</span></div>
+            <div class="scrollbody">
+              <div class="celebrate">
+                <div class="confetti">
+                  <i style="left: 8%; top: 18%; background: #f59e0b"></i
+                  ><i style="left: 22%; top: 55%; background: #3b82f6"></i>
+                  <i style="left: 36%; top: 12%; background: #059669"></i
+                  ><i style="left: 64%; top: 16%; background: #8b5cf6"></i>
+                  <i style="left: 80%; top: 48%; background: #f43f5e"></i
+                  ><i style="left: 90%; top: 20%; background: #f59e0b"></i>
+                  <i style="left: 14%; top: 78%; background: #8b5cf6"></i
+                  ><i style="left: 74%; top: 74%; background: #059669"></i>
+                </div>
+                <div class="checkring">✓</div>
+                <h1>Your first habit is set up.</h1>
+                <div class="sub">Let's build a streak.</div>
+              </div>
+              <div class="recap">
+                🧘 5-Minute Meditation · starting small: “Take one slow, mindful
+                breath.”
+              </div>
+              <div class="overline">Anchor it to something you already do</div>
+              <div class="cuehelp">Habits stick when they have a trigger.</div>
+              <div class="chips4">
+                <span class="cchip sel">After I pour my morning coffee</span>
+                <span class="cchip">After I brush my teeth</span>
+                <span class="cchip">When I sit down at my desk</span>
+                <span class="cchip ghost">Custom…</span>
+              </div>
+              <div class="expect">
+                <p>
+                  The average habit takes <b>~66 days</b> to feel automatic
+                  (Lally et al., 2010). Plan for setbacks — missing a day
+                  doesn't break anything.
+                </p>
+                <div class="chain">
+                  <div class="cday fill">1</div>
+                  <div class="clink"></div>
+                  <div class="cday">2</div>
+                  <div class="clink"></div>
+                  <div class="cday">3</div>
+                  <div class="clink"></div>
+                  <div class="cday">4</div>
+                  <div class="clink"></div>
+                  <div class="cday">5</div>
+                  <div class="clink"></div>
+                  <div class="cday">6</div>
+                  <div class="clink"></div>
+                  <div class="cday">7</div>
+                </div>
+              </div>
+              <div class="identity">
+                Every rep is a vote for: “I'm someone who stays calm under
+                pressure.”
+              </div>
+              <div class="stick-cta">
+                <button class="cta">Lock it in</button>
+                <span class="skip">Skip for now</span>
+              </div>
+              <div style="height: 16px"></div>
+            </div>
+          </div>
+        </div>
+        <div class="caption">
+          <h3><span>S4 · Make It Stick</span> — when will you do it?</h3>
+          <ul>
+            <li>
+              <b>Education at peak motivation:</b> cue anchoring, the 66-day
+              expectation, and the identity vote land immediately
+              <i>after</i> commitment — the only moment they're actionable.
+            </li>
+            <li>
+              <b>Pre-selected suggested cue</b> → the decision can be one
+              confirming tap. Fully skippable.
+            </li>
+            <li>
+              After a one-tap "+ Add" this same content appears as a dismissible
+              sheet (first add only).
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="arrow">
+        <div class="line">→</div>
+        <div class="lbl">“Lock it in” →<br />back to Library</div>
+      </div>
+
+      <!-- ════════ FRAME 5 — Momentum Return ════════ -->
+      <div class="step">
+        <div class="phone">
+          <div class="screen">
+            <div class="statusbar"><span>9:41</span><span>􀙇 􀛨</span></div>
+            <div class="scrollbody">
+              <div class="toast">
+                <span class="tk">✓</span> Nice start — keep the momentum going
+              </div>
+              <div class="hero5">
+                <h1>Your path is started</h1>
+                <div class="coach">
+                  🌱 First week is the hardest. Show up today.
+                </div>
+              </div>
+              <div class="overline" style="padding-top: 8px">
+                Up next on your path
+              </div>
+              <div class="upnext">
+                <span class="badge">WHEN MEDITATION STICKS</span>
+                <div class="urow">
+                  <div class="uemoji">🙏</div>
+                  <div style="flex: 1; min-width: 0">
+                    <h4>Gratitude Journaling</h4>
+                    <p>Pairs well: stack gratitude right after your breath.</p>
+                    <div class="umeta">5 min · Daily · 🔬 Emmons (2003)</div>
+                  </div>
+                  <button class="btn-add">+ Add</button>
+                </div>
+                <div class="ufoot">
+                  No rush — most people add habit #2 in week 2.
+                </div>
+              </div>
+              <div class="overline">Your transformations</div>
+              <div class="rail" style="padding-top: 2px">
+                <div class="gcard" style="background: #f0fdf4; color: #14532d">
+                  <div class="ge">🧘</div>
+                  <div class="gl">Stress less</div>
+                  <div class="gp">1 of 4 started</div>
+                  <div class="gprog">
+                    <div class="gdot fill"></div>
+                    <div class="gdot"></div>
+                    <div class="gdot"></div>
+                    <div class="gdot"></div>
+                  </div>
+                </div>
+                <div class="gcard" style="background: #fef3c7; color: #78350f">
+                  <div class="ge">⚡</div>
+                  <div class="gl">Wake up energized</div>
+                  <div class="gp">
+                    Morning routines that keep you sharp all day
+                  </div>
+                  <div class="gm">8 habits ›</div>
+                </div>
+                <div class="gcard" style="background: #eff6ff; color: #1e3a5f">
+                  <div class="ge">😴</div>
+                  <div class="gl">Sleep deeper</div>
+                  <div class="gp">Wind down, rest fully, wake refreshed</div>
+                  <div class="gm">6 habits ›</div>
+                </div>
+              </div>
+              <div class="overline">Popular</div>
+              <div class="row added">
+                <div class="emoji" style="background: rgba(16, 185, 129, 0.14)">
+                  🧘
+                </div>
+                <div class="body">
+                  <h4>5-Minute Meditation</h4>
+                  <p>Sit, breathe, notice. A reset for your nervous system.</p>
+                  <div class="meta">
+                    <span class="pill">5 min · Daily</span>
+                  </div>
+                </div>
+                <span class="addedday">✓ Added · Day 1</span>
+              </div>
+              <div class="row">
+                <div class="emoji" style="background: rgba(239, 68, 68, 0.12)">
+                  🏃
+                </div>
+                <div class="body">
+                  <h4>7-Minute Workout</h4>
+                  <p>Full-body, science-based, no equipment.</p>
+                  <div class="meta">
+                    <span class="pill">7 min · Daily</span
+                    ><span class="science-micro">🔬 Jordan et al. (2013)</span>
+                  </div>
+                </div>
+                <button class="btn-add">+ Add</button>
+              </div>
+              <div style="height: 14px"></div>
+            </div>
+            <div class="tabbar">
+              <div class="tab">
+                <span class="ticon">☀️</span>Today<span class="dot"></span>
+              </div>
+              <div class="tab active"><span class="ticon">📚</span>Library</div>
+              <div class="tab"><span class="ticon">📊</span>Progress</div>
+            </div>
+          </div>
+        </div>
+        <div class="caption">
+          <h3><span>S5 · Momentum Return</span> — no decision required</h3>
+          <ul>
+            <li>
+              <b>Education:</b> sequencing expectation ("habit #2 in week 2"),
+              pairing logic, coach line. Activation isn't done until rep&nbsp;1
+              — the green dot routes to Today.
+            </li>
+            <li>
+              Goal card flips to <b>progress mode</b> ("1 of 4 started"); added
+              rows show "✓ Added · Day 1".
+            </li>
+            <li>The library becomes a return loop, not a one-shot catalog.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="rationale">
+      <h2>Design rationale</h2>
+      <div class="rgrid">
+        <div class="rcard">
+          <b>1 · Education is sequenced, never stacked</b>
+          <p>
+            S1 frames the outcome in one sentence, S3 proves the habit, S4
+            teaches sticking only after commitment, S5 sets the return loop.
+            Each lesson arrives at the only moment it's actionable.
+          </p>
+        </div>
+        <div class="rcard">
+          <b>2 · The fast path is sacred</b>
+          <p>
+            Every screen has a one-tap "+ Add"; education catches up post-add as
+            a dismissible sheet. Time-to-first-add stays at one tap while
+            stick-mechanics still reach every first-time adder.
+          </p>
+        </div>
+        <div class="rcard">
+          <b>3 · Warmth for emotional choices, minimalism for rational ones</b>
+          <p>
+            Gradients and goal colors appear where the user chooses an identity
+            or celebrates; compact white rows appear where they compare options.
+            Color carries meaning, not decoration.
+          </p>
+        </div>
+        <div class="rcard">
+          <b>4 · Start-small at the moment of commitment</b>
+          <p>
+            The primary CTA is the tiny version ("one slow, mindful breath");
+            the full version is a text link. Trades day-1 ambition for day-7
+            survival — the retention metric that drives revenue.
+          </p>
+        </div>
+        <div class="rcard">
+          <b>5 · One decision per screen</b>
+          <p>
+            Outcome → first habit → start size → cue → (optional) next habit.
+            Everything else is glanceable in one line or less.
+          </p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
