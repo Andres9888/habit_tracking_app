@@ -149,5 +149,8 @@ export const springs = {
  */
 export const enterEasing = Easing.out(Easing.cubic);
 
+/** Canonical exit easing — cubic ease-in for collapses and dismissals. */
+export const exitEasing = Easing.in(Easing.cubic);
+
 export type Duration = keyof typeof durations;
 export type Spring = keyof typeof springs;

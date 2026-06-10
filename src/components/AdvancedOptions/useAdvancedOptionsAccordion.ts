@@ -16,25 +16,26 @@ export function useAdvancedOptionsAccordion({
   const [contentHeight, setContentHeight] = useState(0);
   const [hasContentMeasured, setHasContentMeasured] = useState(false);
 
-  const { animateToggle, contentAnimatedStyle, chevronAnimatedStyle } =
-    useExpandAnimation({
-      contentHeight,
-      defaultExpanded: isExpanded,
-      hasContentMeasured,
-      motion: 'timing',
-      reduceMotion,
-    });
+  const { chevronAnimatedStyle, contentAnimatedStyle } = useExpandAnimation({
+    contentHeight,
+    defaultExpanded: isExpanded,
+    hasContentMeasured,
+    motion: 'timing',
+    reduceMotion,
+  });
 
-  const handleContentLayout = useCallback((event: LayoutChangeEvent) => {
-    const { height } = event.nativeEvent.layout;
-    if (height > 0) {
-      setContentHeight(height);
+  const handleContentLayout = useCallback(
+    (event: LayoutChangeEvent) => {
+      const { height } = event.nativeEvent.layout;
+      if (height <= 0) return;
+      if (hasContentMeasured && !isExpanded) return;
+      setContentHeight((prev) => (prev === height ? prev : height));
       setHasContentMeasured(true);
-    }
-  }, []);
+    },
+    [hasContentMeasured, isExpanded]
+  );
 
   return {
-    animateToggle,
     chevronAnimatedStyle,
     contentAnimatedStyle,
     handleContentLayout,

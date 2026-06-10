@@ -52,7 +52,6 @@ export function AdvancedOptionsSection({
   const [openSheet, setOpenSheet] = useState<SheetKey>(null);
   const [fullPickerVisible, setFullPickerVisible] = useState(false);
   const {
-    animateToggle,
     chevronAnimatedStyle,
     contentAnimatedStyle,
     handleContentLayout,
@@ -76,7 +75,6 @@ export function AdvancedOptionsSection({
 
   const toggle = () => {
     void Haptics.selectionAsync();
-    animateToggle(!expanded);
     setExpanded((v) => !v);
   };
 
