@@ -10,7 +10,7 @@ import type { Habit } from '../../../features/habits/types';
 import { useProgressEmojis } from '../../../hooks/useProgressEmojis';
 import { useThemeColors } from '../../../theme';
 import { CalendarTabContent } from './CalendarTabContent';
-import { DetailHero } from './DetailHero';
+import { DetailHeroSection } from './DetailHeroSection';
 import { DetailViewTabs, type DetailView } from './DetailViewTabs';
 import { GoalTabContent } from './GoalTabContent';
 import { useDetailScrollSpy } from './useDetailScrollSpy';
@@ -59,11 +59,13 @@ export function HabitDetailContent({
       stickyHeaderIndices={[1]}
       onScroll={handleScroll}
     >
-      <DetailHero
+      <DetailHeroSection
         daysTracking={daysTracking}
         habit={habit}
         isCompletedToday={isCompletedToday}
+        isToggling={isTogglingCalendar}
         totalCompletions={totalCompletions}
+        onDayPress={onDayPress}
       />
       <DetailViewTabs activeView={activeView} onViewChange={scrollToView} />
 
