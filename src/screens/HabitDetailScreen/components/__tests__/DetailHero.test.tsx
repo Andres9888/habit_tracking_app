@@ -9,6 +9,8 @@ jest.mock('../../../../theme/ThemeContext', () => ({
   useThemeColors: () => ({
     colors: {
       background: '#fff',
+      border: '#e7e5e4',
+      gray: { 50: '#fafaf9' },
       status: { success: '#22c55e' },
       text: {
         primary: '#1a1a1a',
@@ -78,6 +80,27 @@ describe('DetailHero', () => {
       <DetailHero habit={digitHabit as never} totalCompletions={0} />
     );
     expect(getByText('5-Minute Meditation')).toBeTruthy();
+  });
+
+  it('renders schedule chips for frequency and preferred time', () => {
+    const scheduledHabit = {
+      ...(mockHabit as object),
+      frequency: 'daily',
+      preferredTime: 'morning',
+    };
+    const { getByText, getByLabelText } = render(
+      <DetailHero habit={scheduledHabit as never} totalCompletions={89} />
+    );
+    expect(getByText('Daily')).toBeTruthy();
+    expect(getByText('Mornings')).toBeTruthy();
+    expect(getByLabelText('Schedule: Daily, Mornings')).toBeTruthy();
+  });
+
+  it('renders no schedule chips when habit has no schedule', () => {
+    const { queryByText } = render(
+      <DetailHero habit={mockHabit} totalCompletions={89} />
+    );
+    expect(queryByText('Daily')).toBeNull();
   });
 
   it('has accessible header role on habit name', () => {

@@ -16,33 +16,48 @@ export function getHabitDisplayName(habit: {
 
 const DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] as const;
 
-const TIME_LABELS: Record<string, string> = {
-  morning: 'Mornings',
+const TIME_LABELS = {
   afternoon: 'Afternoons',
   evening: 'Evenings',
-};
+  morning: 'Mornings',
+} as const;
 
-/** Format habit frequency + preferredTime into a human-readable string */
-export function formatSchedule(habit: {
+export type PreferredTimeKey = keyof typeof TIME_LABELS;
+
+export interface ScheduleParts {
+  frequencyLabel?: string;
+  time?: { key: PreferredTimeKey; label: string };
+}
+
+function isPreferredTimeKey(value: string): value is PreferredTimeKey {
+  return value in TIME_LABELS;
+}
+
+/** Split habit frequency + preferredTime into chip-ready parts */
+export function getScheduleParts(habit: {
   daysOfWeek?: number[];
   frequency?: string;
   preferredTime?: string;
-}): string | undefined {
-  const parts: string[] = [];
+}): ScheduleParts {
+  const parts: ScheduleParts = {};
 
   if (habit.frequency === 'daily') {
-    parts.push('Daily');
+    parts.frequencyLabel = 'Daily';
   } else if (habit.frequency === 'weekly' && habit.daysOfWeek?.length) {
-    parts.push(habit.daysOfWeek.map((d) => DAY_NAMES[d] ?? '').join(', '));
+    parts.frequencyLabel = habit.daysOfWeek
+      .map((d) => DAY_NAMES[d] ?? '')
+      .join(', ');
   } else if (habit.frequency) {
-    parts.push(
-      habit.frequency.charAt(0).toUpperCase() + habit.frequency.slice(1)
-    );
+    parts.frequencyLabel =
+      habit.frequency.charAt(0).toUpperCase() + habit.frequency.slice(1);
   }
 
-  if (habit.preferredTime && TIME_LABELS[habit.preferredTime]) {
-    parts.push(TIME_LABELS[habit.preferredTime]);
+  if (habit.preferredTime && isPreferredTimeKey(habit.preferredTime)) {
+    parts.time = {
+      key: habit.preferredTime,
+      label: TIME_LABELS[habit.preferredTime],
+    };
   }
 
-  return parts.length > 0 ? parts.join(' \u00B7 ') : undefined;
+  return parts;
 }
