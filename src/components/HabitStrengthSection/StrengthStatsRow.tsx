@@ -1,80 +1,30 @@
 /**
  * StrengthStatsRow Component
  *
- * Three-column layout displaying comparison metrics:
- * - Since Start: Total growth since habit creation
- * - Last Month: Month-over-month change
- * - Last Week: Week-over-week change
- *
- * Positive changes are highlighted in emerald.
- *
- * @example
- * ```tsx
- * <StrengthStatsRow
- *   sinceStart={72}
- *   lastMonth={12}
- *   lastWeek={3}
- * />
- * ```
+ * Three-column comparison metrics (since start / last month / last week)
+ * in the shared detail-page stat idiom. Positive changes carry the single
+ * green accent.
  */
 
 import React from 'react';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
+import { StatColumn, StatHairline } from '@/components/ui';
 import { useThemeColors } from '@/theme/ThemeContext';
 
 import { getThemeColors } from './constants';
 import type { StrengthStatsRowProps } from './types';
 
-/**
- * Format a delta value for display with + or - prefix.
- */
+/** Format a delta value for display with + or - prefix. */
 function formatDelta(value: number): string {
   if (value === 0) return '0%';
   return value > 0 ? `+${value}%` : `${value}%`;
 }
 
-/**
- * Single stat column component (compact version for above-fold layout).
- */
-function StatColumn({
-  label,
-  value,
-  isPositive,
-}: {
-  label: string;
-  value: string;
-  isPositive: boolean;
-}) {
-  const { colors: themeColors } = useThemeColors();
-  const sectionColors = getThemeColors(themeColors);
-
-  return (
-    <View className='flex-1 items-center'>
-      <Text className='text-[10px]' style={{ color: themeColors.text.tertiary }}>{label}</Text>
-      <Text
-        className='text-sm font-semibold'
-        style={{
-          color: isPositive ? sectionColors.positive : sectionColors.textPrimary,
-        }}
-      >
-        {value}
-      </Text>
-    </View>
-  );
-}
+const safe = (value: number | undefined): number =>
+  typeof value === 'number' && !Number.isNaN(value) ? value : 0;
 
 /**
- * Vertical divider between stat columns (compact height).
- */
-function Divider() {
-  const { colors: themeColors } = useThemeColors();
-  return (
-    <View className='h-6 w-px' style={{ backgroundColor: themeColors.border }} />
-  );
-}
-
-/**
- * StrengthStatsRow displays three comparison metrics in a row (compact version).
+ * StrengthStatsRow displays three comparison metrics in a row.
  */
 export const StrengthStatsRow = React.memo(function StrengthStatsRow({
   sinceStart,
@@ -82,43 +32,47 @@ export const StrengthStatsRow = React.memo(function StrengthStatsRow({
   lastWeek,
 }: StrengthStatsRowProps) {
   const { colors: themeColors } = useThemeColors();
-  // Guard against NaN/undefined values - default to 0
-  const safeSinceStart =
-    typeof sinceStart === 'number' && !Number.isNaN(sinceStart)
-      ? sinceStart
-      : 0;
-  const safeLastMonth =
-    typeof lastMonth === 'number' && !Number.isNaN(lastMonth) ? lastMonth : 0;
-  const safeLastWeek =
-    typeof lastWeek === 'number' && !Number.isNaN(lastWeek) ? lastWeek : 0;
+  const sectionColors = getThemeColors(themeColors);
+
+  const items = [
+    {
+      label: 'since start',
+      raw: safe(sinceStart),
+      value: `${safe(sinceStart)}%`,
+    },
+    {
+      label: 'last month',
+      raw: safe(lastMonth),
+      value: formatDelta(safe(lastMonth)),
+    },
+    {
+      label: 'last week',
+      raw: safe(lastWeek),
+      value: formatDelta(safe(lastWeek)),
+    },
+  ];
 
   return (
     <View
-      accessibilityLabel={`Statistics: ${safeSinceStart}% since start, ${formatDelta(safeLastMonth)} last month, ${formatDelta(safeLastWeek)} last week`}
-      className='flex-row items-center justify-between rounded-lg px-3 py-2'
-      style={{ backgroundColor: themeColors.background }}
+      accessibilityLabel={`Statistics: ${items[0].value} since start, ${items[1].value} last month, ${items[2].value} last week`}
+      className='flex-row items-center'
+      style={{
+        borderTopColor: themeColors.border,
+        borderTopWidth: 1,
+        paddingTop: 12,
+      }}
     >
-      <StatColumn
-        isPositive={safeSinceStart > 0}
-        label='Since Start'
-        value={`${safeSinceStart}%`}
-      />
-
-      <Divider />
-
-      <StatColumn
-        isPositive={safeLastMonth > 0}
-        label='Last Month'
-        value={formatDelta(safeLastMonth)}
-      />
-
-      <Divider />
-
-      <StatColumn
-        isPositive={safeLastWeek > 0}
-        label='Last Week'
-        value={formatDelta(safeLastWeek)}
-      />
+      {items.map((item, i) => (
+        <React.Fragment key={item.label}>
+          <StatColumn
+            label={item.label}
+            size='compact'
+            value={item.value}
+            valueColor={item.raw > 0 ? sectionColors.positive : undefined}
+          />
+          {i < items.length - 1 ? <StatHairline /> : null}
+        </React.Fragment>
+      ))}
     </View>
   );
 });

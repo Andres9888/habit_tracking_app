@@ -31,8 +31,6 @@ export interface ProgressRingProps {
   roundedStrength: number;
   ringColor: string;
   animatedStrength: SharedValue<number>;
-  /** Stage emoji shown above the percentage inside the ring */
-  emoji: string;
   /** Accessible stage name (e.g. "Strong") */
   label: string;
 }
