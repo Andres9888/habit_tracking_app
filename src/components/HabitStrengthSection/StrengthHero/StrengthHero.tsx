@@ -2,7 +2,7 @@
  * StrengthHero Component
  *
  * The centered hero for the Strength section:
- * - Large progress ring with the current level's emoji + animated percentage
+ * - Large progress ring with the animated percentage
  * - Level name (Starting / Building / Developing / Strong / Automatic)
  *
  * The "X% to <next level>" goal-gradient hint lives on the StrengthProgressBar
@@ -17,6 +17,8 @@
 import React from 'react';
 import { Text, View } from 'react-native';
 
+import { useThemeColors } from '@/theme/ThemeContext';
+
 import { ProgressRing } from './ProgressRing';
 import type { StrengthHeroProps } from './types';
 import { useStrengthHeroAnimations } from './useStrengthHeroAnimations';
@@ -28,6 +30,7 @@ export const StrengthHero = React.memo(function StrengthHero({
   strength,
   journey,
 }: StrengthHeroProps) {
+  const { colors } = useThemeColors();
   const { current } = journey;
   const stageColor = current.color;
 
@@ -38,12 +41,14 @@ export const StrengthHero = React.memo(function StrengthHero({
     <View className='items-center'>
       <ProgressRing
         animatedStrength={animatedStrength}
-        emoji={current.emoji}
         label={current.label}
         ringColor={stageColor}
         roundedStrength={roundedStrength}
       />
-      <Text className='mt-2.5 text-xl font-bold' style={{ color: stageColor }}>
+      <Text
+        className='mt-2.5 text-xl font-bold'
+        style={{ color: colors.text.primary }}
+      >
         {current.label}
       </Text>
     </View>

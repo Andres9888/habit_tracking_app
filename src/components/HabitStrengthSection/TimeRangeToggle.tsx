@@ -24,6 +24,7 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 import { springs } from '@/theme/animations';
+import { shadows } from '@/theme/spacing';
 
 import { useReduceMotion } from '../../hooks/useReduceMotion';
 import { TIME_RANGE_OPTIONS } from './constants';
@@ -38,17 +39,25 @@ export const TimeRangeToggle = React.memo(function TimeRangeToggle({
   value,
   onChange,
 }: TimeRangeToggleProps) {
-  const { colors: themeColors } = useThemeColors();
+  const { colors: themeColors, isDark } = useThemeColors();
   const reduceMotion = useReduceMotion();
 
   // Calculate selected index for indicator position (default to 0 if not found)
-  const selectedIndex = Math.max(0, TIME_RANGE_OPTIONS.findIndex((opt) => opt.value === value));
+  const selectedIndex = Math.max(
+    0,
+    TIME_RANGE_OPTIONS.findIndex((opt) => opt.value === value)
+  );
   const indicatorPosition = useSharedValue(selectedIndex);
 
   // Update indicator position when value changes
   useEffect(() => {
-    const newIndex = Math.max(0, TIME_RANGE_OPTIONS.findIndex((opt) => opt.value === value));
-    indicatorPosition.value = reduceMotion ? newIndex : withSpring(newIndex, springs.sheet);
+    const newIndex = Math.max(
+      0,
+      TIME_RANGE_OPTIONS.findIndex((opt) => opt.value === value)
+    );
+    indicatorPosition.value = reduceMotion
+      ? newIndex
+      : withSpring(newIndex, springs.sheet);
   }, [value, reduceMotion, indicatorPosition]);
 
   const handlePress = useCallback(
@@ -74,16 +83,20 @@ export const TimeRangeToggle = React.memo(function TimeRangeToggle({
 
   return (
     <View
-      accessibilityLabel="Time range selection"
-      accessibilityRole="tablist"
-      className="flex-row rounded-full p-0.5"
-      style={{ backgroundColor: themeColors.background }}
+      accessibilityLabel='Time range selection'
+      accessibilityRole='tablist'
+      className='flex-row rounded-full p-0.5'
+      style={{
+        backgroundColor: isDark ? themeColors.surface : themeColors.gray[100],
+      }}
     >
       {/* Animated indicator background */}
       <AnimatedView
-        className="absolute rounded-full bg-white shadow-sm"
+        className='absolute rounded-full'
         style={[
           {
+            ...shadows.subtle,
+            backgroundColor: themeColors.card,
             height: 28,
             left: 2,
             top: 2,
@@ -101,16 +114,20 @@ export const TimeRangeToggle = React.memo(function TimeRangeToggle({
           <Pressable
             key={option.value}
             accessibilityLabel={`${option.label} time range`}
-            accessibilityRole="tab"
+            accessibilityRole='tab'
             accessibilityState={{ selected: isSelected }}
-            className="items-center justify-center"
+            className='items-center justify-center'
             hitSlop={{ top: 8, bottom: 8 }}
             style={{ height: 28, width: segmentWidth }}
             onPress={() => handlePress(option.value)}
           >
             <Text
               className='text-xs font-semibold'
-              style={{ color: isSelected ? themeColors.text.primary : themeColors.text.secondary }}
+              style={{
+                color: isSelected
+                  ? themeColors.text.primary
+                  : themeColors.text.secondary,
+              }}
             >
               {option.label}
             </Text>

@@ -19,6 +19,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Trophy } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '@/theme/ThemeContext';
+import { shadows } from '@/theme/spacing';
 
 import type { PersonalBestsCardProps } from './types';
 import { usePulseAnimation } from './PersonalBestsCard.hooks';
@@ -43,8 +44,8 @@ export function PersonalBestsCard({
     <View
       accessible
       accessibilityLabel={`Personal bests${currentStreak > 0 ? `, current streak ${currentStreak} days` : ''}`}
-      className='overflow-hidden rounded-2xl shadow-sm'
-      style={{ shadowColor: themeColors.border }}
+      className='overflow-hidden rounded-2xl'
+      style={shadows.card}
     >
       <LinearGradient
         className='absolute inset-0'

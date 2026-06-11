@@ -9,6 +9,7 @@ import { CategoryChips } from './components/CategoryChips';
 import { EmojiGrid } from './components/EmojiGrid';
 import { NoIconButton } from './components/NoIconButton';
 import { useThemeColors } from '../../theme/ThemeContext';
+import { shadows } from '../../theme/spacing';
 import type { EmojiPickerProps } from './EmojiPicker.types';
 
 export const EmojiPicker = memo(
@@ -41,8 +42,8 @@ export const EmojiPicker = memo(
       >
         <View className='flex-1 bg-black/50'>
           <View
-            className='overflow-hidden rounded-t-3xl shadow-2xl'
-            style={{ backgroundColor: colors.surface, height: '85%', marginTop: 'auto' }}
+            className='overflow-hidden rounded-t-3xl'
+            style={[{ backgroundColor: colors.surface, height: '85%', marginTop: 'auto' }, shadows.alert]}
           >
             <EmojiPickerHeader onClose={handlers.handleClose} />
 

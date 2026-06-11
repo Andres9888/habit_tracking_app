@@ -1,18 +1,17 @@
 /**
  * DetailViewTabButton - Icon + label button for the pill-segmented tab row.
- * Equal-width (flex: 1), weight-driven active state, subtle active icon pop.
+ * Equal-width (flex: 1), weight- and color-driven active state.
  */
 
-import { useEffect } from 'react';
-import { Pressable, Text } from 'react-native';
-import Animated, {
-  Easing,
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from 'react-native-reanimated';
-import { Activity, CalendarDays, Target, type LucideIcon } from 'lucide-react-native';
+import { Text } from 'react-native';
+import {
+  Activity,
+  CalendarDays,
+  Target,
+  type LucideIcon,
+} from 'lucide-react-native';
 import { useThemeColors } from '@/theme';
+import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import { iconSizes } from '@/theme/iconSizes';
 import { typography, fontWeights } from '@/theme/typography';
 
@@ -29,7 +28,6 @@ const ICONS: Record<DetailView, LucideIcon> = {
 };
 
 interface DetailViewTabButtonProps {
-  accentColor: string;
   activeView: DetailView;
   label: string;
   view: DetailView;
@@ -37,7 +35,6 @@ interface DetailViewTabButtonProps {
 }
 
 export function DetailViewTabButton({
-  accentColor,
   activeView,
   label,
   view,
@@ -46,23 +43,10 @@ export function DetailViewTabButton({
   const { colors } = useThemeColors();
   const isActive = activeView === view;
   const Icon = ICONS[view];
-  const pop = useSharedValue(isActive ? 1 : 0);
-
-  useEffect(() => {
-    pop.value = withTiming(isActive ? 1 : 0, {
-      duration: 200,
-      easing: Easing.out(Easing.cubic),
-    });
-  }, [isActive, pop]);
-
-  const iconStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: 1 + pop.value * 0.08 }],
-  }));
-
-  const color = isActive ? accentColor : colors.text.tertiary;
+  const color = isActive ? colors.text.primary : colors.text.tertiary;
 
   return (
-    <Pressable
+    <AnimatedPressable
       accessibilityRole='tab'
       accessibilityState={{ selected: isActive }}
       hitSlop={4}
@@ -77,9 +61,7 @@ export function DetailViewTabButton({
       }}
       onPress={() => onPress(view)}
     >
-      <Animated.View style={iconStyle}>
-        <Icon color={color} size={iconSizes.small} strokeWidth={2.1} />
-      </Animated.View>
+      <Icon color={color} size={iconSizes.small} strokeWidth={2.1} />
       <Text
         style={{
           color,
@@ -90,6 +72,6 @@ export function DetailViewTabButton({
       >
         {label}
       </Text>
-    </Pressable>
+    </AnimatedPressable>
   );
 }

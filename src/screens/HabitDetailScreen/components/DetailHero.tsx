@@ -1,7 +1,7 @@
-/** DetailHero - Horizontal: emoji left, name + inline stats right. */
-import { Check } from 'lucide-react-native';
+/** DetailHero - Minimal centered: large icon, name, journey line, stat row. */
 import { Text, View } from 'react-native';
 import Animated, { Easing, FadeInDown } from 'react-native-reanimated';
+import { StatColumn, StatHairline } from '../../../components/ui';
 import { useThemeColors } from '../../../theme';
 import { spacing } from '../../../theme/spacing';
 import {
@@ -10,11 +10,11 @@ import {
   typography,
 } from '../../../theme/typography';
 import type { Habit } from '../HabitDetailScreen.types';
-import { iconShadow } from './DetailHeader.constants';
-import { formatSchedule, getHabitDisplayName } from './DetailHero.utils';
-import { DetailHeroStat } from './DetailHeroStat';
+import { getHabitDisplayName } from './DetailHero.utils';
+import { DetailHeroIcon } from './DetailHeroIcon';
 
 interface DetailHeroProps {
+  daysTracking?: number;
   habit: Habit;
   isCompletedToday?: boolean;
   totalCompletions: number;
@@ -24,116 +24,64 @@ const ENTERING = FadeInDown.duration(280)
   .delay(100)
   .easing(Easing.out(Easing.cubic));
 
-/** Hero-only dimensions with no shared token equivalent. */
-const ICON_TILE = 46;
-const ICON_EMOJI = 24;
-const CHECK_BADGE = 18;
-
 export function DetailHero({
+  daysTracking = 0,
   habit,
   isCompletedToday,
   totalCompletions,
 }: DetailHeroProps) {
   const { colors } = useThemeColors();
   const habitName = getHabitDisplayName(habit);
-  const defaultIconBg = colors.primary[100];
-  const defaultIconShadow = colors.primary[500];
-  const schedule = formatSchedule(habit);
-  const statProps = {
-    labelColor: colors.text.secondary,
-    valueColor: colors.text.primary,
-  };
+  const statProps = { labelColor: colors.text.secondary };
 
   return (
-    <Animated.View
-      className='flex-row items-center px-5 py-1'
-      entering={ENTERING}
-      style={{ gap: spacing.md }}
-    >
+    <Animated.View className='items-center px-5 pb-1 pt-2' entering={ENTERING}>
       {habit.icon ? (
-        <View
-          accessibilityLabel={`Habit icon: ${habit.icon}${isCompletedToday ? ', completed today' : ''}`}
-          className='items-center justify-center rounded-2xl'
-          style={{
-            ...iconShadow,
-            backgroundColor: (habit.color ?? habit.iconColor) || defaultIconBg,
-            height: ICON_TILE,
-            shadowColor: (habit.color ?? habit.iconColor) || defaultIconShadow,
-            width: ICON_TILE,
-          }}
-        >
-          <Text style={{ color: colors.text.primary, fontSize: ICON_EMOJI }}>
-            {habit.icon}
-          </Text>
-          {isCompletedToday ? (
-            <View
-              className='absolute -bottom-1 -right-1 items-center justify-center rounded-full'
-              style={{
-                backgroundColor: colors.status.success,
-                borderColor: colors.background,
-                borderWidth: 2,
-                height: CHECK_BADGE,
-                width: CHECK_BADGE,
-              }}
-            >
-              <Check color={colors.text.inverse} size={10} strokeWidth={3} />
-            </View>
-          ) : null}
-        </View>
+        <DetailHeroIcon
+          color={habit.color ?? habit.iconColor}
+          icon={habit.icon}
+          isCompletedToday={isCompletedToday}
+        />
       ) : null}
 
-      <View className='flex-1'>
-        <Text
-          accessibilityLabel={`Habit: ${habitName}`}
-          accessibilityRole='header'
-          numberOfLines={1}
-          style={{
-            color: colors.text.primary,
-            fontFamily: fontFamilies.primary.display,
-            fontSize: typography.heading3.fontSize,
-            fontWeight: fontWeights.bold,
-            lineHeight: typography.body.lineHeight,
-          }}
-        >
-          {habitName}
-        </Text>
+      <Text
+        accessibilityLabel={`Habit: ${habitName}`}
+        accessibilityRole='header'
+        numberOfLines={1}
+        style={{
+          color: colors.text.primary,
+          fontFamily: fontFamilies.primary.display,
+          fontSize: typography.heading3.fontSize,
+          fontWeight: fontWeights.bold,
+          marginTop: spacing.md,
+        }}
+      >
+        {habitName}
+      </Text>
 
-        <View
-          className='mt-1 flex-row items-center'
-          style={{ gap: spacing.md }}
-        >
-          <DetailHeroStat
-            emoji='🔥'
-            label='streak'
-            value={habit.currentStreak ?? 0}
-            {...statProps}
-          />
-          <DetailHeroStat
-            emoji='⭐'
-            label='best'
-            value={habit.bestStreak ?? 0}
-            {...statProps}
-          />
-          <DetailHeroStat
-            emoji='✓'
-            label='total'
-            value={totalCompletions}
-            {...statProps}
-          />
-        </View>
+      <Text
+        style={{
+          ...typography.caption,
+          color: colors.text.tertiary,
+          marginTop: spacing.xs,
+        }}
+      >
+        Day {daysTracking + 1} of your journey
+      </Text>
 
-        {schedule ? (
-          <Text
-            accessibilityLabel={`Schedule: ${schedule}`}
-            style={{
-              ...typography.caption,
-              color: colors.text.tertiary,
-              marginTop: 2,
-            }}
-          >
-            {schedule}
-          </Text>
-        ) : null}
+      <View
+        className='w-full flex-row items-center'
+        style={{ marginTop: spacing.base }}
+      >
+        <StatColumn
+          label='streak'
+          value={habit.currentStreak ?? 0}
+          {...statProps}
+        />
+        <StatHairline />
+        <StatColumn label='best' value={habit.bestStreak ?? 0} {...statProps} />
+        <StatHairline />
+        <StatColumn label='total' value={totalCompletions} {...statProps} />
       </View>
     </Animated.View>
   );

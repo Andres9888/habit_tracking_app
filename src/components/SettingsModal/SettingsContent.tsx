@@ -5,18 +5,12 @@ import {
   BellRing,
   BookOpen,
   Calendar,
-  Check,
-  Circle,
   Download,
-  Droplets,
   FolderOpen,
   Heart,
   Info,
-  Link2,
   Palette,
-  Rows3,
   SlidersHorizontal,
-  Square,
   Volume2,
 } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
@@ -29,16 +23,13 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated';
-import { CompletionIconPicker } from './CompletionIconPicker';
-import { DayShapePicker } from './DayShapePicker';
-import { GrowthIconsSettingsRow } from './GrowthIconsSettingsRow';
 import { ProfileHeroCard } from './ProfileHeroCard';
 import { SettingsRow } from './SettingsRow';
 import { SettingsSection } from './SettingsSection';
 import { SoundPicker } from './SoundPicker';
 import { StreakRemindersSection } from './StreakRemindersSection';
 import { useAccountActions } from './useAccountActions';
-import { AppActions, AboutLegalSection } from './sections';
+import { AppActions, AppearanceSection, AboutLegalSection } from './sections';
 import { FeedbackModal } from '../FeedbackModal';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { SORT_LABEL_MAP } from './SortPicker.constants';
@@ -118,102 +109,26 @@ export function SettingsContent(p: SettingsContentProps) {
 
           {/* Appearance Section */}
           <Animated.View entering={anim(1)}>
-            <SettingsSection
-              collapsible
+            <AppearanceSection
+              compactView={p.compactView}
+              darkModePreference={p.darkModePreference}
+              dayShape={p.dayShape}
+              habitCompletionIcon={p.habitCompletionIcon}
+              highContrastEnabled={p.highContrastEnabled}
               highContrastMode={hc}
               icon={<Palette color={sectionIconColor} size={iconSize} />}
               isExpanded={sectionStates.appearance}
-              title='Appearance'
-              onToggle={() => toggleSection(SECTION_IDS.appearance)}
-            >
-              <SettingsRow
-                highContrastMode={hc}
-                icon={
-                  <Rows3 color={settingsIcons.compact.icon} size={iconSize} />
-                }
-                iconBackgroundColor={settingsIcons.compact.bg}
-                label='Compact habit cards'
-                subtitle='Fit more on screen'
-                type='toggle'
-                value={p.compactView}
-                onToggle={(v) => void p.onChangeCompactView(v)}
-              />
-              <SettingsRow
-                highContrastMode={hc}
-                icon={
-                  p.dayShape === 'circle' ? (
-                    <Circle color={settingsIcons.circle.icon} size={iconSize} />
-                  ) : (
-                    <Square color={settingsIcons.circle.icon} size={iconSize} />
-                  )
-                }
-                iconBackgroundColor={settingsIcons.circle.bg}
-                label='Day marker shape'
-                rightAccessory={
-                  <DayShapePicker
-                    selected={p.dayShape}
-                    onSelect={(v) => void p.onChangeDayShape(v)}
-                  />
-                }
-                type='info'
-              />
-              <SettingsRow
-                highContrastMode={hc}
-                icon={
-                  <Droplets
-                    color={settingsIcons.gradient.icon}
-                    size={iconSize}
-                  />
-                }
-                iconBackgroundColor={settingsIcons.gradient.bg}
-                label='Gradient streak fill'
-                subtitle='Color fills active streak cells'
-                type='toggle'
-                value={p.showGradientFill}
-                onToggle={(v) => void p.onChangeShowGradientFill(v)}
-              />
-              <SettingsRow
-                highContrastMode={hc}
-                icon={
-                  <Link2
-                    color={settingsIcons.checkbox.icon}
-                    size={iconSize}
-                  />
-                }
-                iconBackgroundColor={settingsIcons.checkbox.bg}
-                label='Streak connections'
-                subtitle='Link completed days into a chain on the calendar'
-                type='toggle'
-                value={p.showStreakConnections}
-                onToggle={(v) => void p.onChangeShowStreakConnections(v)}
-              />
-              <SettingsRow
-                highContrastMode={hc}
-                icon={
-                  p.habitCompletionIcon === 'checkbox' ? (
-                    <Check
-                      color={settingsIcons.checkbox.icon}
-                      size={iconSize}
-                    />
-                  ) : (
-                    <Link2
-                      color={settingsIcons.checkbox.icon}
-                      size={iconSize}
-                    />
-                  )
-                }
-                iconBackgroundColor={settingsIcons.checkbox.bg}
-                label='Completion icon'
-                rightAccessory={
-                  <CompletionIconPicker
-                    selected={p.habitCompletionIcon}
-                    onSelect={(v) => void p.onChangeHabitCompletionIcon(v)}
-                  />
-                }
-                type='info'
-              />
-              <GrowthIconsSettingsRow highContrastMode={hc} />
-            </SettingsSection>
+              showGradientFill={p.showGradientFill}
+              showStreakConnections={p.showStreakConnections}
+              onChangeCompactView={p.onChangeCompactView}
+              onChangeDarkModePreference={p.onChangeDarkModePreference}
+              onChangeDayShape={p.onChangeDayShape}
+              onChangeHabitCompletionIcon={p.onChangeHabitCompletionIcon}
+              onChangeHighContrast={p.onChangeHighContrast}
+              onChangeShowGradientFill={p.onChangeShowGradientFill}
+              onChangeShowStreakConnections={p.onChangeShowStreakConnections}
+              onToggleSection={() => toggleSection(SECTION_IDS.appearance)}
+            />
           </Animated.View>
 
           {/* Behavior Section */}

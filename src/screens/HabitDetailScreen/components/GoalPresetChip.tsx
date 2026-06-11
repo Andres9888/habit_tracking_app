@@ -2,7 +2,7 @@
  * GoalPresetChip — Single preset day-count chip for streak goal picker.
  */
 import { Pressable, Text } from 'react-native';
-import { useThemeColors } from '../../../theme/ThemeContext';
+import { useThemeColors, withAlpha } from '../../../theme';
 import { typography, fontWeights } from '../../../theme/typography';
 
 interface GoalPresetChipProps {
@@ -25,8 +25,10 @@ export function GoalPresetChip({
       accessibilityState={{ selected }}
       className='rounded-full px-4 py-2'
       style={{
-        backgroundColor: selected ? colors.status.streakLight : colors.card,
-        borderColor: selected ? colors.status.streak : colors.border,
+        backgroundColor: selected
+          ? withAlpha(colors.primary[600], 0.1)
+          : colors.card,
+        borderColor: selected ? colors.primary[600] : colors.border,
         // Keep the recommended chip's border width constant (selected or not) so
         // toggling it in/out of selection doesn't change row height — RN counts
         // border in an element's laid-out box, and the row hugs its tallest chip.
@@ -37,7 +39,7 @@ export function GoalPresetChip({
       <Text
         style={{
           ...typography.bodySmall,
-          color: selected ? colors.status.streakText : colors.text.secondary,
+          color: selected ? colors.primary[700] : colors.text.secondary,
           fontWeight: selected ? fontWeights.bold : fontWeights.medium,
         }}
       >

@@ -11,7 +11,7 @@
 import React from 'react';
 import { Text, View } from 'react-native';
 
-import { useThemeColors } from '@/theme/ThemeContext';
+import { useThemeColors, withAlpha } from '@/theme';
 
 import type { LevelConfig } from '../../StrengthProgressBar/StrengthProgressBar.types';
 
@@ -44,27 +44,34 @@ export const MilestoneTrack = React.memo(function MilestoneTrack({
             {i > 0 ? (
               <View
                 className='mt-4 h-0.5 flex-1 rounded-full'
-                style={{ backgroundColor: reached ? level.color : colors.border }}
+                style={{
+                  backgroundColor: reached
+                    ? colors.primary[600]
+                    : colors.border,
+                }}
               />
             ) : null}
             <View className='items-center' style={{ width: STOP_WIDTH }}>
               <View
                 className='h-9 w-9 items-center justify-center rounded-full'
                 style={{
-                  backgroundColor: reached ? level.colorBg : colors.background,
-                  borderColor: reached ? level.color : colors.border,
+                  backgroundColor: reached
+                    ? withAlpha(colors.primary[600], 0.1)
+                    : colors.background,
+                  borderColor: reached ? colors.primary[600] : colors.border,
                   borderWidth: current ? 2 : 1,
                   opacity: reached ? 1 : 0.55,
-                  transform: current ? [{ scale: 1.18 }] : undefined,
                 }}
               >
-                <Text style={{ fontSize: current ? 18 : 15 }}>{level.emoji}</Text>
+                <Text style={{ fontSize: current ? 18 : 15 }}>
+                  {level.emoji}
+                </Text>
               </View>
               <Text
                 className='mt-2 text-[9px]'
                 numberOfLines={1}
                 style={{
-                  color: current ? level.color : colors.text.tertiary,
+                  color: current ? colors.text.primary : colors.text.tertiary,
                   fontWeight: current ? '700' : '500',
                   maxWidth: STOP_WIDTH,
                   textAlign: 'center',

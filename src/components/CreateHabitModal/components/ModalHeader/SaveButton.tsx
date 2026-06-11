@@ -3,7 +3,9 @@
  * Dark-mode aware: emerald fill for active state, dimmed when disabled,
  * spinner + "Saving…" while a save is in flight.
  */
-import { ActivityIndicator, Animated, Text } from 'react-native';
+import { useMemo } from 'react';
+import { ActivityIndicator, Animated } from 'react-native';
+import ReAnimated from 'react-native-reanimated';
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import STRINGS from '../../../../constants/strings';
@@ -28,7 +30,20 @@ export const SaveButton = ({
   shakeValue,
 }: SaveButtonProps) => {
   const { colors } = useThemeColors();
-  const saveButtonStyle = useSaveButtonAnimatedStyle(canSave);
+  // Stable palette: keeps the worklets from rebuilding every render.
+  const palette = useMemo(
+    () => ({
+      disabledBg: colors.border,
+      disabledLabel: colors.text.tertiary,
+      enabledBg: colors.primary[600],
+      enabledLabel: colors.text.inverse,
+    }),
+    [colors]
+  );
+  const { containerStyle, labelStyle } = useSaveButtonAnimatedStyle(
+    canSave,
+    palette
+  );
   const label = isSaving
     ? STRINGS.CREATE_HABIT.saving
     : isEditMode
@@ -48,13 +63,15 @@ export const SaveButton = ({
         accessibilityState={{ busy: isSaving, disabled: !canSave || isSaving }}
         className='h-11 flex-row items-center justify-center gap-2 rounded-full px-6'
         disableAnimation={!canSave || isSaving}
-        style={[saveButtonStyle, { backgroundColor: colors.primary[600] }]}
+        style={containerStyle}
         onPress={handlePress}
       >
         {isSaving ? (
           <ActivityIndicator color={colors.text.inverse} size='small' />
         ) : null}
-        <Text className='text-base font-semibold text-white'>{label}</Text>
+        <ReAnimated.Text className='text-base font-semibold' style={labelStyle}>
+          {label}
+        </ReAnimated.Text>
       </AnimatedPressable>
     </Animated.View>
   );

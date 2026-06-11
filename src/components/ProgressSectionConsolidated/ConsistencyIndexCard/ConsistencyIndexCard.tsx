@@ -19,6 +19,7 @@ import { BreakdownSection } from './BreakdownSection';
 import { ChangeIndicator } from './ChangeIndicator';
 import { triggerHaptic } from '@/utils/haptics';
 import { useThemeColors } from '@/theme/ThemeContext';
+import { shadows } from '@/theme/spacing';
 import { iconSizes } from '@/theme/iconSizes';
 import { durations, enterEasing } from '@/theme/animations';
 
@@ -47,8 +48,8 @@ export function ConsistencyIndexCard({
     <Animated.View
       accessibilityLabel={`Consistency Index: ${overall} percent overall`}
       accessibilityRole='summary'
-      className='rounded-2xl border p-4 shadow-sm'
-      style={{ borderColor: colors.border, backgroundColor: colors.card }}
+      className='rounded-2xl border p-4'
+      style={[{ borderColor: colors.border, backgroundColor: colors.card }, shadows.card]}
       entering={FadeInDown.delay(150).duration(durations.enter).easing(enterEasing)}
     >
       {/* Header */}

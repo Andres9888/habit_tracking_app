@@ -108,6 +108,7 @@ function HabitDetailScreenContent({
                 />
                 <HabitDetailContent
                   completedDates={screenState.completedDates}
+                  daysTracking={screenState.daysTracking}
                   habit={habit}
                   isCompletedToday={screenState.isCompletedToday}
                   isTogglingCalendar={screenState.isTogglingCalendar}

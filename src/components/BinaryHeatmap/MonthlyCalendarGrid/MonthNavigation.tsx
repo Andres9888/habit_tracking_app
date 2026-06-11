@@ -1,14 +1,15 @@
 /**
- * MonthNavigation - Top header row: month name + prev/next chevrons.
+ * MonthNavigation - Top header row: plain month label + round prev/next
+ * chevron buttons (minimal, borderless).
  */
 
 import React, { memo } from 'react';
-import { View, Text, Pressable, StyleSheet } from 'react-native';
-import { ChevronLeft, ChevronRight, Calendar } from 'lucide-react-native';
+import { View, Text, Pressable } from 'react-native';
+import { ChevronLeft, ChevronRight } from 'lucide-react-native';
 import { format, isValid } from 'date-fns';
 import { useThemeColors } from '@/theme';
-import { styles } from './styles';
 import { iconSizes } from '@/theme/iconSizes';
+import { navStyles } from './MonthNavigation.styles';
 
 const TAP_SLOP = { bottom: 10, left: 10, right: 10, top: 10 };
 
@@ -32,29 +33,25 @@ export const MonthNavigation = memo(function MonthNavigation({
   onPreviousMonth,
   onNextMonth,
 }: MonthNavigationProps) {
-  const { colors } = useThemeColors();
+  const { colors, isDark } = useThemeColors();
   const iconColor = colors.text.secondary;
+  const buttonBg = isDark ? colors.surface : colors.gray[100];
 
   return (
-    <View style={headerStyles.row}>
-      <View style={headerStyles.leftGroup}>
-        <Pressable
-          accessibilityLabel={`Current month: ${safeFormat(currentMonth, 'MMMM yyyy', 'Month')}`}
-          accessibilityRole='header'
-          style={[styles.monthButton, { borderColor: colors.border }]}
-        >
-          <Calendar color={iconColor} size={iconSizes.small} />
-          <Text style={[styles.monthText, { color: colors.text.primary }]}>
-            {safeFormat(currentMonth, 'MMM yyyy', 'Month')}
-          </Text>
-        </Pressable>
-      </View>
+    <View style={navStyles.row}>
+      <Text
+        accessibilityLabel={`Current month: ${safeFormat(currentMonth, 'MMMM yyyy', 'Month')}`}
+        accessibilityRole='header'
+        style={[navStyles.monthText, { color: colors.text.primary }]}
+      >
+        {safeFormat(currentMonth, 'MMMM yyyy', 'Month')}
+      </Text>
 
-      <View style={styles.navButtons}>
+      <View style={navStyles.navButtons}>
         <Pressable
           accessibilityLabel='Previous month'
           accessibilityRole='button'
-          style={[styles.navButton, { borderColor: colors.border }]}
+          style={[navStyles.navButton, { backgroundColor: buttonBg }]}
           hitSlop={TAP_SLOP}
           onPress={onPreviousMonth}
         >
@@ -63,7 +60,7 @@ export const MonthNavigation = memo(function MonthNavigation({
         <Pressable
           accessibilityLabel='Next month'
           accessibilityRole='button'
-          style={[styles.navButton, { borderColor: colors.border }]}
+          style={[navStyles.navButton, { backgroundColor: buttonBg }]}
           hitSlop={TAP_SLOP}
           onPress={onNextMonth}
         >
@@ -72,19 +69,4 @@ export const MonthNavigation = memo(function MonthNavigation({
       </View>
     </View>
   );
-});
-
-const headerStyles = StyleSheet.create({
-  leftGroup: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    gap: 8,
-  },
-  row: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    gap: 10,
-    justifyContent: 'space-between',
-    marginBottom: 10,
-  },
 });

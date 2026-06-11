@@ -21,6 +21,7 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import { useThemeColors } from '../../theme/ThemeContext';
+import { shadows } from '../../theme/spacing';
 import type { QuickActionsSheetProps } from './types';
 import { SheetHeader } from './SheetHeader';
 import { ActionsList } from './ActionsList';
@@ -119,10 +120,10 @@ export const QuickActionsSheet = ({
       <GestureDetector gesture={panGesture}>
         <View collapsable={false}>
           <Animated.View
-            className='absolute bottom-0 left-0 right-0 rounded-t-3xl shadow-xl'
+            className='absolute bottom-0 left-0 right-0 rounded-t-3xl'
             entering={SlideInDown.duration(durations.sheet).easing(enterEasing)}
             exiting={SlideOutDown.duration(durations.sheet).easing(enterEasing)}
-            style={[{ paddingBottom: insets.bottom + 16, backgroundColor: colors.surface }, sheetAnimatedStyle]}
+            style={[{ paddingBottom: insets.bottom + 16, backgroundColor: colors.surface }, sheetAnimatedStyle, shadows.modal]}
           >
             <SheetHeader
               habitIcon={habit.icon}

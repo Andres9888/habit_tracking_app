@@ -1,7 +1,7 @@
 /** SettingsSectionHeader - Pressable header with animated chevron for collapsible sections */
 
 import { ReactNode } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import Animated from 'react-native-reanimated';
 import type { AnimatedStyle } from 'react-native-reanimated';
 import type { ViewStyle } from 'react-native';
@@ -10,6 +10,7 @@ import { iconSizes } from '@/theme/iconSizes';
 import { typography, fontWeights } from '@/theme/typography';
 import { highContrastColors } from '@/theme/highContrastColors';
 import { useThemeColors } from '@/theme/ThemeContext';
+import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 
 interface SettingsSectionHeaderProps {
   title: string;
@@ -35,7 +36,7 @@ export function SettingsSectionHeader({
   const titleColor = highContrastMode ? highContrastColors.accent : themeColors.text.primary;
 
   return (
-    <Pressable
+    <AnimatedPressable
       accessibilityHint={`Double tap to ${isExpanded ? 'collapse' : 'expand'} ${title} settings`}
       accessibilityRole="button"
       accessibilityState={{ expanded: isExpanded }}
@@ -78,6 +79,6 @@ export function SettingsSectionHeader({
           size={iconSizes.small}
         />
       </Animated.View>
-    </Pressable>
+    </AnimatedPressable>
   );
 }

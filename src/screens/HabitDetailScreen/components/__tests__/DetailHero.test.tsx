@@ -9,6 +9,8 @@ jest.mock('../../../../theme/ThemeContext', () => ({
   useThemeColors: () => ({
     colors: {
       background: '#fff',
+      border: '#e7e5e4',
+      gray: { 50: '#fafaf9' },
       status: { success: '#22c55e' },
       text: {
         primary: '#1a1a1a',
@@ -78,6 +80,20 @@ describe('DetailHero', () => {
       <DetailHero habit={digitHabit as never} totalCompletions={0} />
     );
     expect(getByText('5-Minute Meditation')).toBeTruthy();
+  });
+
+  it('renders the journey line from daysTracking', () => {
+    const { getByText } = render(
+      <DetailHero daysTracking={6} habit={mockHabit} totalCompletions={89} />
+    );
+    expect(getByText('Day 7 of your journey')).toBeTruthy();
+  });
+
+  it('defaults the journey line to day 1 without daysTracking', () => {
+    const { getByText } = render(
+      <DetailHero habit={mockHabit} totalCompletions={89} />
+    );
+    expect(getByText('Day 1 of your journey')).toBeTruthy();
   });
 
   it('has accessible header role on habit name', () => {

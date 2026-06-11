@@ -109,10 +109,13 @@ function HabitRenderContentComponent({
     () => onToggleSelection?.(item._id),
     [onToggleSelection, item._id]
   );
-  const handleToggleHabit = (args: Parameters<typeof toggleHabit>[0]) => {
-    if (isOptimisticHabit) return;
-    void toggleHabit(args);
-  };
+  const handleToggleHabit = useCallback(
+    (args: Parameters<typeof toggleHabit>[0]) => {
+      if (isOptimisticHabit) return;
+      void toggleHabit(args);
+    },
+    [isOptimisticHabit, toggleHabit]
+  );
 
   // Animated style for the active drag state — no scale to avoid GPU blur
   const activeStyle = useAnimatedStyle(() => ({
