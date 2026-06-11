@@ -1,7 +1,8 @@
 /** Compact strength tier picker inside AdvancedSheet. */
-import { Pressable, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import { ALGORITHM_ORDER } from '@/components/AlgorithmPicker';
 import type { AlgorithmMode } from '@/components/AlgorithmPicker';
+import { StrengthCurveCtaCard } from '@/screens/StrengthCurvePicker/StrengthCurveCtaCard';
 import { TierContentCrossfade } from '@/screens/StrengthCurvePicker/TierContentCrossfade';
 import { TIER_COPY } from '@/screens/StrengthCurvePicker/StrengthCurvePicker.copy';
 import { MODE_STYLES } from '@/screens/StrengthCurvePicker/strengthCurveModeStyles';
@@ -11,7 +12,7 @@ import {
   tierDetailDescriptionMinHeight,
 } from '@/screens/StrengthCurvePicker/tierDetailLayout';
 import { useThemeColors } from '@/theme/ThemeContext';
-import { fontWeights, typography } from '@/theme/typography';
+import { typography } from '@/theme/typography';
 
 interface Props {
   selected: AlgorithmMode;
@@ -62,25 +63,7 @@ export function StrengthCurveSheetBody({
           </Text>
         </TierContentCrossfade>
       </View>
-      <Pressable
-        accessibilityHint='Opens detailed strength curve visualization'
-        accessibilityLabel='See how strength builds'
-        accessibilityRole='button'
-        hitSlop={8}
-        onPress={onLearnMore}
-      >
-        <Text
-          style={{
-            ...typography.bodySmall,
-            color: colors.primary[600],
-            fontWeight: fontWeights.semibold,
-            marginTop: 16,
-            textDecorationLine: 'underline',
-          }}
-        >
-          See how strength builds
-        </Text>
-      </Pressable>
+      <StrengthCurveCtaCard mode={selected} onPress={onLearnMore} />
     </View>
   );
 }
